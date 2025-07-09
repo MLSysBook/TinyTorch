@@ -1,94 +1,399 @@
-# TinyTorch: Build a Machine Learning System from Scratch
+# Tiny🔥Torch: Build a Machine Learning System from Scratch
 
 TinyTorch is a pedagogical project designed to accompany the *Machine Learning Systems* textbook. Inspired by OS and compiler courses where students build entire systems from first principles, TinyTorch guides you through building a complete ML training and inference runtime — from autograd to data pipelines, optimizers to profilers — **entirely from scratch**.
 
-This is not a PyTorch tutorial. In TinyTorch, you’ll **write the components that frameworks like PyTorch are built on.**
+This is not a PyTorch tutorial. In TinyTorch, you'll **write the components that frameworks like PyTorch are built on.**
 
 ---
 
-## 🧠 Project Goals
+## 🎯 What You'll Build
 
-- **Systems Understanding**: Learn how modern ML systems are constructed, not just how to use them.
-- **Full-Stack ML Infra**: Build core components such as tensor classes, autograd engine, data loaders, optimizers, profilers, and benchmarking tools.
-- **Modularity**: Understand abstraction boundaries in ML systems — what belongs in a model vs. a trainer vs. a runtime.
-- **Infrastructure Thinking**: Learn how design decisions impact performance, reproducibility, deployment, and maintainability.
+By the end of this project, you'll have implemented a fully functional ML system capable of:
 
----
+- **Training neural networks** (MLPs, CNNs) on real datasets (MNIST, CIFAR-10)
+- **Automatic differentiation** with a custom autograd engine
+- **Memory-efficient data loading** with custom DataLoader implementations
+- **Multiple optimization algorithms** (SGD, Adam, RMSprop)
+- **Performance profiling** and bottleneck identification
+- **Model compression** through pruning and quantization
+- **Custom compute kernels** for matrix operations
+- **Production monitoring** with MLOps infrastructure
+- **Reproducible experiments** with checkpointing and logging
 
-## 📚 Curriculum Integration
-
-TinyTorch aligns with **Chapters 1–13** of the *Machine Learning Systems* textbook. Each chapter is paired with a corresponding system component you’ll implement. This forms a progressively richer ML infrastructure, culminating in a working system that can train and evaluate models on real data.
-
-| Chapter | Component |
-|--------|-----------|
-| 1–2 | CLI + system architecture scaffold |
-| 3 | Forward/backward engine for MLP |
-| 4 | CNN layers: Conv2D, MaxPool |
-| 5 | Configs + artifact logging |
-| 6 | DataLoader and Dataset |
-| 7 | Autograd engine |
-| 8 | Training loop and optimizers |
-| 9 | Profiling tools |
-| 10 | Pruning and quantization |
-| 11 | Custom matmul kernels |
-| 12 | Benchmarking harness |
-| 13 | Checkpointing + experiment reproducibility |
+**End Goal**: Train a CNN on CIFAR-10 achieving >85% accuracy using only your implementation.
 
 ---
 
-## 📦 Repository Structure (early preview)
+## 🧠 Project Goals & Learning Objectives
 
-tinytorch/
-├── core/
-│ ├── tensor.py # Autograd and data storage
-│ ├── modules.py # Layers and model composition
-│ ├── dataloader.py # Data loading and batching
-│ ├── optimizer.py # SGD, Adam, etc.
-│ ├── trainer.py # Training loop
-│ ├── profiler.py # Runtime measurement
-│ └── benchmark.py # Latency, throughput, energy est.
-├── configs/
-│ └── default.yaml
-├── logs/
-│ └── run_YYYY_MM_DD/
-├── main.py # CLI entrypoint
-└── README.md
+### Core Learning Objectives
+- **Systems Understanding**: Learn how modern ML systems are constructed, not just how to use them
+- **Full-Stack ML Infrastructure**: Build core components from tensor operations to training orchestration
+- **Performance Engineering**: Understand computational and memory bottlenecks in ML workloads
+- **Software Architecture**: Design modular, extensible systems with clean abstractions
+- **Infrastructure Thinking**: Make design decisions that impact performance, reproducibility, and maintainability
+
+### Technical Skills Gained
+- **Low-level ML Implementation**: Tensor operations, gradient computation, optimization algorithms
+- **Memory Management**: Efficient data structures, gradient accumulation, batch processing
+- **Performance Optimization**: Profiling, kernel optimization, memory access patterns
+- **System Design**: Modular architecture, clean APIs, extensible frameworks
+- **Testing & Validation**: Numerical stability, gradient checking, performance regression testing
+
+---
+
+## 🏗️ System Architecture
+
+### Core Components Overview
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                    TinyTorch System                         │
+├─────────────────────────────────────────────────────────────┤
+│  CLI Interface (bin/tito.py)                               │
+├─────────────────────────────────────────────────────────────┤
+│  Training Orchestration (trainer.py)                       │
+├─────────────────────────────────────────────────────────────┤
+│  Model Definition     │  Data Pipeline    │  Optimization   │
+│  (modules.py)         │  (dataloader.py)  │  (optimizer.py) │
+├─────────────────────────────────────────────────────────────┤
+│  Automatic Differentiation Engine (autograd)               │
+├─────────────────────────────────────────────────────────────┤
+│  Tensor Operations & Storage (tensor.py)                   │
+├─────────────────────────────────────────────────────────────┤
+│  Profiling & MLOps (profiler.py, mlops.py)                 │
+└─────────────────────────────────────────────────────────────┘
+```
+
+### Design Principles
+1. **Modularity**: Each component has a single responsibility and clean interfaces
+2. **Composability**: Components can be mixed and matched for different use cases
+3. **Performance**: Designed for efficiency without sacrificing readability
+4. **Extensibility**: Easy to add new layers, optimizers, and functionality
+5. **Debuggability**: Built-in profiling and logging for understanding system behavior
+
+---
+
+## 📚 Curriculum Integration & Roadmap
+
+TinyTorch aligns with **Chapters 1–13** of the *Machine Learning Systems* textbook. Each project builds progressively toward a complete ML infrastructure.
+
+### Course Progression
+
+| Order | Project | Chapter | Component | Learning Focus | Deliverable |
+|-------|---------|---------|-----------|----------------|-------------|
+| 0 | `setup` | - | Setup & Onboarding | Environment setup, tool familiarity | Working dev environment + basic commands |
+| 1 | `tensor` | 1-2 | Core Tensor System | Tensor operations, memory management | Working Tensor class with basic ops |
+| 2 | `mlp` | 3 | Multi-Layer Perceptron | Forward/backward pass, gradient computation | Train simple MLP on MNIST |
+| 3 | `cnn` | 4 | Convolutional Networks | Convolution, pooling operations | Conv2D and MaxPool implementations |
+| 4 | `autograd` | 5 | Automatic Differentiation | Computational graphs, autodiff | Complete autograd engine |
+| 5 | `data` | 6 | Data Pipeline | Efficient data loading, batching | Custom DataLoader with transformations |
+| 6 | `training` | 7-8 | Training Loop | Optimization algorithms, metrics | SGD, Adam optimizers + training harness |
+| 7 | `config` | 9 | Configuration System | Experiment management, logging | YAML configs + structured logging |
+| 8 | `profiling` | 10 | Performance Tools | Performance measurement, debugging | Memory/compute profiler with visualizations |
+| 9 | `compression` | 11 | Model Compression | Pruning, quantization techniques | Compress model while maintaining accuracy |
+| 10 | `kernels` | 12 | Custom Kernels | Low-level optimization, vectorization | Optimized matrix multiplication kernels |
+| 11 | `benchmarking` | 13 | Performance Evaluation | Performance testing, comparison | Comprehensive benchmarking suite |
+| 12 | `mlops` | 14 | MLOps & Monitoring | Data drift detection, continuous updates | Production monitoring and auto-retraining system |
+
+> **Note**: Project directories use descriptive names (e.g., `projects/tensor/`, `projects/autograd/`) for clarity. The order above represents the recommended learning sequence and can be adjusted as the curriculum evolves.
+
+### Milestone Targets
+- **Week 1**: Environment setup (`setup`) and basic command familiarity
+- **Week 3**: Core tensor operations (`tensor`) working
+- **Week 5**: Train MLP on MNIST (`mlp`) achieving >95% accuracy  
+- **Week 8**: Train CNN on CIFAR-10 (`cnn`) achieving >80% accuracy
+- **Week 10**: Complete autograd engine (`autograd`) with gradient checking
+- **Week 12**: Optimized system with profiling tools (`profiling`)
+- **Final**: Complete system with MLOps monitoring (`mlops`)
+
+---
+
+## 📦 Course Repository Structure
+
+```
+TinyTorch/
+├── bin/                           # Command-line interfaces
+│   └── tito.py                    # Main TinyTorch CLI (tito)
+├── tinytorch/                     # Core ML system package
+│   ├── core/                      # Core ML components
+│   │   ├── __init__.py
+│   │   ├── tensor.py              # Tensor class with autograd support
+│   │   ├── autograd.py            # Automatic differentiation engine
+│   │   ├── modules.py             # Neural network layers and models
+│   │   ├── functional.py          # Core operations (conv2d, relu, etc.)
+│   │   ├── dataloader.py          # Data loading and preprocessing
+│   │   ├── optimizer.py           # Optimization algorithms
+│   │   ├── trainer.py             # Training loop orchestration
+│   │   ├── profiler.py            # Performance measurement tools
+│   │   ├── benchmark.py           # Benchmarking and evaluation
+│   │   ├── mlops.py               # MLOps and production monitoring
+│   │   └── utils.py               # Utility functions
+│   ├── configs/                   # Configuration files
+│   │   ├── default.yaml           # Default training configuration
+│   │   ├── models/                # Model-specific configs
+│   │   └── datasets/              # Dataset-specific configs
+│   └── datasets/                  # Dataset implementations
+│       ├── __init__.py
+│       ├── mnist.py
+│       ├── cifar10.py
+│       └── transforms.py
+├── projects/                      # Component-specific projects
+│   ├── setup/                    # Environment setup & onboarding
+│   ├── tensor/                   # Core tensor implementation
+│   ├── mlp/                      # Multi-layer perceptron
+│   ├── cnn/                      # Convolutional neural networks
+│   ├── config/                   # Configuration system
+│   ├── data/                     # Data pipeline & loading
+│   ├── autograd/                 # Automatic differentiation
+│   ├── training/                 # Training loop & optimization
+│   ├── profiling/                # Performance profiling tools
+│   ├── compression/              # Model compression techniques
+│   ├── kernels/                  # Custom compute kernels
+│   ├── benchmarking/             # Performance benchmarking
+│   └── mlops/                    # MLOps & production monitoring
+├── docs/                         # Course documentation
+│   ├── tutorials/                # Step-by-step tutorials
+│   ├── api/                      # API documentation
+│   └── lectures/                 # Lecture materials
+├── notebooks/                    # Jupyter tutorials and demos
+├── examples/                     # Working examples and demos
+│   ├── train_mnist_mlp.py
+│   ├── train_cifar_cnn.py
+│   └── benchmark_ops.py
+├── tests/                        # Comprehensive test suite
+│   ├── test_tensor.py
+│   ├── test_autograd.py
+│   ├── test_modules.py
+│   └── test_training.py
+├── grading/                      # Course grading materials
+│   ├── rubrics/                  # Assignment rubrics
+│   ├── autograders/              # Automated grading scripts
+│   └── solutions/               # Reference solutions
+├── resources/                    # Course resources
+│   ├── datasets/                 # Course datasets
+│   ├── pretrained/              # Pre-trained models
+│   └── references/              # Reference materials
+├── logs/                         # Training logs and artifacts
+│   └── runs/
+├── checkpoints/                  # Model checkpoints
+├── requirements.txt              # Python dependencies
+└── README.md                     # This file
+```
 
 ---
 
 ## 🚀 Getting Started
 
-Each chapter will introduce a new concept and a programming assignment that builds toward the full TinyTorch runtime.
+### Prerequisites
+- **Python 3.8+** (type hints and modern features required)
+- **NumPy** (numerical computations)
+- **Optional**: Numba (JIT compilation for performance)
+- **Development**: pytest, black, mypy (for testing and code quality)
 
-**To begin:**
-1. Clone this repository.
-2. Follow the instructions in `chapters/01-intro/README.md` to implement the CLI.
-3. Proceed incrementally — each module builds on the last.
+### Quick Start
+```bash
+# Clone and setup
+git clone <repository-url>
+cd TinyTorch
+pip install -r requirements.txt
+
+# Run your first training
+python bin/tito.py train --config tinytorch/configs/default.yaml
+
+# Check system status
+python bin/tito.py info --show-architecture
+```
+
+### For Instructors
+```bash
+# Set up the complete course environment
+pip install -r requirements.txt
+
+# Generate course materials
+python bin/tito.py generate-projects
+python bin/tito.py setup-autograders
+
+# View course progress
+python bin/tito.py course-status
+```
+
+### For Students
+```bash
+# Start with Project 0: Setup  
+cd projects/setup/
+python bin/tito.py project init
+
+# Then move through the sequence
+cd projects/tensor/     # Project 1: Core tensors
+cd projects/mlp/        # Project 2: Multi-layer perceptron  
+cd projects/autograd/   # Project 4: Automatic differentiation
+
+# Run tests and submit
+python bin/tito.py test --project tensor
+python bin/tito.py submit --project tensor
+```
 
 ---
 
-## 💡 Philosophy
+## 🎯 Implementation Guidelines
 
-> “You don’t really understand a system until you’ve built it.”
+### Code Quality Standards
+- **Type Hints**: All public APIs must have complete type annotations
+- **Documentation**: Docstrings for all classes and public methods
+- **Testing**: >90% code coverage with unit and integration tests
+- **Performance**: Profile-guided optimization with benchmarking
+- **Style**: Black code formatting, consistent naming conventions
 
-TinyTorch aims to give students that understanding — by reconstructing the guts of machine learning infrastructure in a clean, minimal, yet fully functional form.
+### API Design Principles
+- **Familiar Interface**: Similar to PyTorch where it makes sense (for learning transfer)
+- **Explicit Over Implicit**: Clear parameter names and behavior
+- **Composable**: Small, focused components that work together
+- **Debuggable**: Rich error messages and debugging hooks
 
-By the end, you’ll not only have built a system capable of training neural networks — you’ll understand every line that makes it work.
+### Performance Targets
+- **MNIST MLP**: <5 seconds per epoch on modern laptop
+- **CIFAR-10 CNN**: <30 seconds per epoch on modern laptop
+- **Memory Usage**: <2GB RAM for standard training runs
+- **Numerical Stability**: Gradient checking passes for all operations
 
 ---
 
-## 🧰 Requirements
+## 🧪 Testing & Validation Strategy
 
-- Python 3.8+
-- NumPy
-- (Optional: Numba for kernel acceleration)
+### Test Categories
+1. **Unit Tests**: Individual component functionality
+2. **Integration Tests**: Component interaction and data flow
+3. **Numerical Tests**: Gradient checking and mathematical correctness
+4. **Performance Tests**: Regression testing for speed and memory
+5. **End-to-End Tests**: Complete training runs with known results
 
-No PyTorch. No TensorFlow. No black boxes.
+### Validation Methodology
+- **Gradient Checking**: Numerical verification of all autodiff operations
+- **Reference Comparisons**: Output validation against NumPy/PyTorch (where applicable)
+- **Convergence Testing**: Training curves must match expected behavior
+- **Ablation Studies**: Systematic testing of individual components
+
+---
+
+## 💡 Educational Philosophy
+
+> "You don't really understand a system until you've built it."
+
+### Learning Through Building
+TinyTorch emphasizes **active construction** over passive consumption. Students don't just learn about autograd—they implement it. They don't just use optimizers—they write them from scratch.
+
+### Systems Thinking
+By building a complete system, students understand:
+- **Abstraction Boundaries**: What belongs where in the system hierarchy
+- **Performance Trade-offs**: How design decisions impact speed and memory
+- **Debugging Strategies**: How to trace problems through complex systems
+- **Integration Challenges**: How components interact and depend on each other
+
+### Real-World Relevance
+Every component in TinyTorch has a direct analog in production ML systems. The skills learned here transfer directly to understanding and contributing to frameworks like PyTorch, TensorFlow, and JAX.
+
+---
+
+## 🔧 Advanced Features & Extensions
+
+### Chapter 13: MLOps Deep Dive
+
+**Core MLOps Components** (Chapter 13 will implement):
+- **Data Drift Detection**: Statistical tests for distribution shifts in input features
+- **Model Performance Monitoring**: Track accuracy, latency, and throughput in production  
+- **Automatic Retraining Triggers**: When to retrain based on performance degradation
+- **A/B Testing Framework**: Compare model versions safely in production
+- **Model Registry**: Version control and metadata tracking for deployed models
+- **Alert Systems**: Notifications for model failures or performance drops
+- **Rollback Mechanisms**: Safe deployment and quick rollback strategies
+
+**Production Integration**:
+- **REST API Serving**: Deploy models as web services
+- **Batch Inference Pipelines**: Large-scale offline predictions
+- **Feature Store Integration**: Consistent feature engineering across training/serving
+- **Monitoring Dashboards**: Real-time system health visualization
+
+### Optional Advanced Components
+- **Mixed Precision Training**: FP16/FP32 mixed precision implementation
+- **Distributed Training**: Multi-GPU and multi-node training support
+- **Dynamic Graphs**: Support for variable computation graphs
+- **Custom Operators**: Framework for implementing new operations
+- **JIT Compilation**: Integration with Numba or custom compilation
+
+### Research Extensions
+- **Novel Optimizers**: Implement cutting-edge optimization algorithms
+- **Architecture Search**: Automated neural architecture search
+- **Compression Techniques**: Advanced pruning and quantization methods
+- **Hardware Acceleration**: GPU kernels and specialized hardware support
+
+---
+
+## 📊 Success Metrics
+
+### Technical Milestones
+- [ ] Train MLP on MNIST achieving >95% accuracy
+- [ ] Implement working autograd engine with gradient checking
+- [ ] Train CNN on CIFAR-10 achieving >85% accuracy
+- [ ] Profile and optimize for 2x performance improvement
+- [ ] Complete all core project implementations
+
+### Learning Outcomes Assessment
+- **Code Reviews**: Peer and instructor evaluation of implementations
+- **Design Document**: Architecture decisions and trade-off analysis
+- **Performance Analysis**: Profiling report and optimization strategy
+- **Presentation**: Explain system design and key insights learned
+
+---
+
+## 🤝 Course Management
+
+### For Instructors
+
+**Project Management**:
+- Each chapter has structured projects in `projects/XX-name/`
+- Rubrics and grading criteria in `grading/rubrics/`
+- Automated testing and grading in `grading/autograders/`
+- Reference solutions in `grading/solutions/`
+
+**Progress Tracking**:
+- Student progress dashboards
+- Automated testing and feedback
+- Performance benchmarking
+- Code quality metrics
+
+### For Students
+
+**Development Process**:
+1. **Start Each Project**: Read project description in `projects/XX-name/README.md`
+2. **Implement Features**: Follow step-by-step guided implementation
+3. **Run Tests**: Use automated tests to validate implementation
+4. **Submit Work**: Automated submission and grading system
+5. **Get Feedback**: Detailed feedback on implementation and performance
+
+### Getting Help
+- **Documentation**: Comprehensive docs in `docs/`
+- **Tutorials**: Step-by-step tutorials in `notebooks/`
+- **Office Hours**: Regular sessions for questions and debugging
+- **Peer Discussion**: Collaborative learning encouraged
+- **Issue Tracking**: GitHub issues for bugs and feature requests
 
 ---
 
 ## 📬 License and Attribution
 
-TinyTorch is part of the *Machine Learning Systems* course and textbook by Vijay Janapa Reddi et al. Inspired by systems-style projects like xv6, PintOS, and cs231n assignments.
+TinyTorch is part of the *Machine Learning Systems* course and textbook by Vijay Janapa Reddi et al. Inspired by systems-style pedagogical projects like xv6 (OS), PintOS (OS), and cs231n assignments (ML).
 
-License: MIT
+**License**: MIT  
+**Citation**: Please cite the Machine Learning Systems textbook when using this educational material.
+
+---
+
+## 🔗 Additional Resources
+
+- **Textbook**: *Machine Learning Systems* (Chapters 1-13)
+- **Course Website**: [Course URL]
+- **Video Lectures**: Complementary video content for each chapter
+- **External Reading**: Curated list of papers and blog posts
+- **Community Forum**: Discussion and Q&A platform
+- **Office Hours**: [Schedule and locations]
