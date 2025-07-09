@@ -1,19 +1,26 @@
-# Core dependencies
-numpy>=1.21.0
+# TinyTorch Course Dependencies
+# Compatible with Python 3.8-3.13
 
-# Optional performance dependencies
-numba>=0.56.0
+# Build tools (required first)
+setuptools>=70.0.0
+wheel>=0.42.0
 
-# Development dependencies
-pytest>=6.0.0
-black>=21.0.0
-mypy>=0.910
+# Core numerical computing (use compatible versions)
+numpy>=1.21.0,<2.0.0
+matplotlib>=3.5.0
+PyYAML>=6.0
 
-# Configuration and logging
-pyyaml>=5.4.0
+# Testing framework
+pytest>=7.0.0
+pytest-cov>=4.0.0
 
-# For visualization and plotting (optional)
-matplotlib>=3.3.0
+# Optional performance (uncomment if needed)
+# numba>=0.58.0
 
-# Type hints for older Python versions
-typing-extensions>=3.10.0 
+# Development tools (recommended)
+black>=23.0.0
+mypy>=1.0.0
+flake8>=6.0.0
+
+# Type checking support
+typing-extensions>=4.0.0 
