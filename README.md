@@ -109,13 +109,10 @@ Each project is inspired by key themes from the [*Machine Learning Systems*](htt
 
 ### Milestone Targets
 
-**Part I: The Essentials (Chapters 1-4)**
 - **Week 1**: Environment setup (`setup`) and basic command familiarity
 - **Week 3**: Basic tensor operations (`tensor`) working
 - **Week 5**: Train MLP on MNIST (`mlp`) with manual backprop achieving >90% accuracy  
 - **Week 7**: Train CNN on CIFAR-10 (`cnn`) basic implementation achieving >70% accuracy
-
-**Part II: Engineering Principles (Chapters 5-13)**  
 - **Week 9**: Data pipeline (`data`) operational with efficient loading
 - **Week 11**: Complete autograd engine and training framework (`training`) working
 - **Week 13**: Optimized system with profiling tools (`profiling`)
@@ -202,17 +199,12 @@ TinyTorch/
 ### 📋 Project Sequence
 Each project builds on the previous ones. Click the links to jump to specific instructions:
 
-### 📖 Part I: The Essentials (Chapters 1-4)
 | Order | Project | Status | Description | Instructions |
 |-------|---------|--------|-------------|--------------|
 | 0 | **Setup** | 🚀 **START HERE** | Environment & CLI setup | [`projects/setup/README.md`](projects/setup/README.md) |
 | 1 | **Tensor** | ⏳ Coming Next | Basic tensor operations | [`projects/tensor/README.md`](projects/tensor/README.md) |
 | 2 | **MLP** | ⏳ Future | Multi-layer perceptron (manual backprop) | [`projects/mlp/README.md`](projects/mlp/README.md) |
 | 3 | **CNN** | ⏳ Future | Convolutional networks (basic) | [`projects/cnn/README.md`](projects/cnn/README.md) |
-
-### 🏗️ Part II: Engineering Principles (Chapters 5-13)
-| Order | Project | Status | Description | Instructions |
-|-------|---------|--------|-------------|--------------|
 | 4 | **Data** | ⏳ Future | Data loading pipeline | [`projects/data/README.md`](projects/data/README.md) |
 | 5 | **Training** | ⏳ Future | Autograd engine & optimization | [`projects/training/README.md`](projects/training/README.md) |
 | 6 | **Profiling** | ⏳ Future | Performance profiling | [`projects/profiling/README.md`](projects/profiling/README.md) |
@@ -226,9 +218,9 @@ Each project builds on the previous ones. Click the links to jump to specific in
 
 1. **📖 Read the overview** (you're here!)
 2. **🎯 Detailed guidance**: [`COURSE_GUIDE.md`](COURSE_GUIDE.md) (comprehensive walkthrough)
-3. **🔧 Environment setup**: [`projects/setup/README.md`](projects/setup/README.md)
-4. **✅ Verify setup**: Run `python3 projects/setup/check_setup.py`
-5. **📖 Part I - Start with The Essentials**: [`projects/tensor/README.md`](projects/tensor/README.md)
+3. **🚀 One-command setup**: `python3 bin/tito.py setup` (sets up everything!)
+4. **✅ Run activation**: Follow the command it gives you (usually `bin/activate-tinytorch.sh`)
+5. **📖 Start building**: [`projects/setup/README.md`](projects/setup/README.md)
 
 ### Prerequisites
 - **Python 3.8+** (type hints and modern features required)
@@ -242,18 +234,14 @@ Each project builds on the previous ones. Click the links to jump to specific in
 git clone <repository-url>
 cd TinyTorch
 
-# Automated setup (creates virtual environment + installs dependencies)
-python3 projects/setup/create_env.py
+# ONE SMART COMMAND - shows clear commands to copy
+python3 bin/tito.py setup
+# ↳ First time: Creates environment, installs dependencies, shows activation command
+# ↳ Already exists: Shows activation command to copy
+# ↳ Already active: Can show deactivation command
 
-# Activate environment (do this every time you work)
-source tinytorch-env/bin/activate  # macOS/Linux
-# OR: tinytorch-env\Scripts\activate  # Windows
-
-# Verify setup
-python3 projects/setup/check_setup.py
-
-# Check system status
-python3 bin/tito.py info --show-architecture
+# Copy and run the highlighted command, then:
+tito info  # Check system status
 ```
 
 ### For Instructors
@@ -271,9 +259,9 @@ python3 bin/tito.py course-status
 
 ### For Students
 ```bash
-# Start with environment setup (IMPORTANT!)
-python3 projects/setup/create_env.py
-source tinytorch-env/bin/activate  # Always activate first!
+# ONE SMART COMMAND - handles everything (IMPORTANT!)
+python3 bin/tito.py setup
+# ↳ Shows clear commands to copy and paste!
 
 # Start with Project 0: Setup  
 cd projects/setup/

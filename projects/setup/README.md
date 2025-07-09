@@ -13,55 +13,46 @@ By the end of this project, you will:
 
 ## 📋 Setup Checklist
 
-### Step 1: Environment Setup
+### Step 1: One-Command Environment Setup
 
-**Check Python Version**
+**The Only Command You Need** 🚀
 ```bash
-python3 --version  # Should be 3.8 or higher
+bin/activate-tinytorch.sh
 ```
 
-**Create Virtual Environment** (REQUIRED)
+This smart script handles everything:
+- 🆕 **First time**: Creates environment, installs dependencies, activates it
+- 💤 **Already exists**: Just activates the existing environment  
+- ✅ **Already active**: Already good to go!
+
+**Super Simple Workflow!** ⚡
 ```bash
-# Create isolated environment for TinyTorch
-python3 -m venv tinytorch-env
+# First time or any time - just run:
+bin/activate-tinytorch.sh
 
-# Activate it (you'll do this every time)
-source tinytorch-env/bin/activate  # macOS/Linux
-# OR on Windows: tinytorch-env\Scripts\activate
+# Then you're ready:
+tito info      # Check system status
+tito test      # Run tests
+tito doctor    # Diagnose any issues
 
-# Verify you're in the virtual environment
-which python  # Should show path with tinytorch-env
+# When done:
+deactivate     # Exit the environment
 ```
 
-**Install Dependencies**
-```bash
-# Make sure you're in the activated virtual environment!
-pip install --upgrade pip
-pip install -r requirements.txt
-```
-
-**Verify Installation**
-```bash
-python3 -c "import numpy, matplotlib, yaml; print('✅ Core dependencies installed')"
-```
-
-> **⚠️ Important**: Always activate your virtual environment before working:
-> ```bash
-> source tinytorch-env/bin/activate  # Run this every time you start working
-> ```
+> **💡 Dead simple!** One script does everything - no setup commands, no complexity.
 
 ### Step 2: System Verification
 
 **Test the CLI**
 ```bash
-python3 bin/tito.py --version
-python3 bin/tito.py info
+tito --version    # (after running bin/activate-tinytorch.sh)
+tito info
 ```
 You should see the Tiny🔥Torch banner and system status.
 
 **Check Project Structure**
 ```bash
-python3 bin/tito.py info --show-architecture
+tito info --show-architecture
 ```
 This shows the system architecture you'll be building.
 
@@ -70,13 +61,13 @@ This shows the system architecture you'll be building.
 **Learn Status Commands**
 ```bash
 # Check implementation status
-python3 bin/tito.py info
+tito info
 
 # Test specific project (you'll use this constantly)
-python3 bin/tito.py test --project setup
+tito test --project setup
 
 # Get help on any command
-python3 bin/tito.py train --help
+tito --help
 ```
 
 ## 🚀 Hello World Implementation
@@ -112,7 +103,7 @@ def hello_tinytorch() -> str:
 python3 -m pytest projects/setup/test_setup.py -v
 
 # Or run the CLI test command
-python3 bin/tito.py test --project setup
+tito test --project setup
 
 # Run comprehensive setup check
 python3 projects/setup/check_setup.py
@@ -150,7 +141,7 @@ Next steps:
   cat README.md
 
 You can now submit this project:
-  python3 bin/tito.py submit --project setup
+  tito submit --project setup
 ```
 
 ## 📚 What You've Learned
