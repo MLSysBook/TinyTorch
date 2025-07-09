@@ -45,7 +45,7 @@ def check_python_version():
 
 def create_virtual_environment():
     """Create the TinyTorch virtual environment."""
-    env_path = Path("tinytorch-env")
+    env_path = Path(".venv")
     
     if env_path.exists():
         print(f"⚠️  Virtual environment already exists at {env_path}")
@@ -58,7 +58,7 @@ def create_virtual_environment():
             return True
     
     # Create virtual environment
-    result = run_command([sys.executable, "-m", "venv", "tinytorch-env"])
+    result = run_command([sys.executable, "-m", "venv", ".venv"])
     if result is None:
         print("❌ Failed to create virtual environment")
         return False
@@ -69,9 +69,9 @@ def create_virtual_environment():
 def get_venv_python():
     """Get the path to Python in the virtual environment."""
     if sys.platform == "win32":
-        return Path("tinytorch-env/Scripts/python.exe")
+        return Path(".venv/Scripts/python.exe")
     else:
-        return Path("tinytorch-env/bin/python")
+        return Path(".venv/bin/python")
 
 def install_dependencies():
     """Install required dependencies in the virtual environment."""
@@ -151,9 +151,9 @@ def print_next_steps():
     print("=" * 60)
     
     if sys.platform == "win32":
-        activate_cmd = "tinytorch-env\\Scripts\\activate"
+        activate_cmd = ".venv\\Scripts\\activate"
     else:
-        activate_cmd = "source tinytorch-env/bin/activate"
+        activate_cmd = "source .venv/bin/activate"
     
     print(f"""
 Next steps:

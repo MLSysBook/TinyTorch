@@ -33,7 +33,7 @@ Track your progress through the course:
 ### Daily Workflow
 ```bash
 cd TinyTorch
-source tinytorch-env/bin/activate  # Always activate first!
+source .venv/bin/activate  # Always activate first!
 python3 bin/tito.py info           # Check system status
 ```
 
