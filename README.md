@@ -3,7 +3,7 @@
 
 TinyTorch is a pedagogical project designed to accompany the [*Machine Learning Systems*](https://mlsysbook.ai) textbook. 
 
-Inspired by OS and compiler courses where students build entire systems from first principles, TinyTorch guides studnets through building a complete ML training and inference runtime, from autograd to data pipelines, optimizers to profilers. You’ll implement **everything, entirely from scratch.** The intent is to train the next generation of AI systems engineers. 
+Inspired by OS and compiler courses where students build entire systems from first principles, TinyTorch is designed to guide students through building a complete ML training and inference runtime system, from autograd to data pipelines, optimizers to profilers. You’ll implement **everything, entirely from scratch.** The intent is to train the next generation of AI systems engineers. 
 
 This is not a PyTorch tutorial. In TinyTorch, you'll **write the components that frameworks like PyTorch are built on.**
 
