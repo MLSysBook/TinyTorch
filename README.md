@@ -78,25 +78,25 @@ By the end of this project, you'll have implemented a fully functional ML system
 
 TinyTorch aligns with **Chapters 1–13** of the *Machine Learning Systems* textbook. Each project builds progressively toward a complete ML infrastructure.
 
-### Course Progression
+### 📚 Course Details & Learning Objectives
 
-| Order | Project | Chapter | Component | Learning Focus | Deliverable |
-|-------|---------|---------|-----------|----------------|-------------|
-| 0 | `setup` | - | Setup & Onboarding | Environment setup, tool familiarity | Working dev environment + basic commands |
-| 1 | `tensor` | 1-2 | Core Tensor System | Tensor operations, memory management | Working Tensor class with basic ops |
-| 2 | `mlp` | 3 | Multi-Layer Perceptron | Forward/backward pass, gradient computation | Train simple MLP on MNIST |
-| 3 | `cnn` | 4 | Convolutional Networks | Convolution, pooling operations | Conv2D and MaxPool implementations |
-| 4 | `autograd` | 5 | Automatic Differentiation | Computational graphs, autodiff | Complete autograd engine |
-| 5 | `data` | 6 | Data Pipeline | Efficient data loading, batching | Custom DataLoader with transformations |
-| 6 | `training` | 7-8 | Training Loop | Optimization algorithms, metrics | SGD, Adam optimizers + training harness |
-| 7 | `config` | 9 | Configuration System | Experiment management, logging | YAML configs + structured logging |
-| 8 | `profiling` | 10 | Performance Tools | Performance measurement, debugging | Memory/compute profiler with visualizations |
-| 9 | `compression` | 11 | Model Compression | Pruning, quantization techniques | Compress model while maintaining accuracy |
-| 10 | `kernels` | 12 | Custom Kernels | Low-level optimization, vectorization | Optimized matrix multiplication kernels |
-| 11 | `benchmarking` | 13 | Performance Evaluation | Performance testing, comparison | Comprehensive benchmarking suite |
-| 12 | `mlops` | 14 | MLOps & Monitoring | Data drift detection, continuous updates | Production monitoring and auto-retraining system |
+Each project corresponds to specific chapters in the *Machine Learning Systems* textbook:
 
-> **Note**: Project directories use descriptive names (e.g., `projects/tensor/`, `projects/autograd/`) for clarity. The order above represents the recommended learning sequence and can be adjusted as the curriculum evolves.
+| Project | Chapters | Core Learning | Key Deliverable |
+|---------|----------|---------------|-----------------|
+| Setup | - | Environment setup, tool familiarity | Working dev environment + CLI |
+| Tensor | 1-2 | Tensor operations, memory management | Working Tensor class with basic ops |
+| MLP | 3 | Forward/backward pass, gradient computation | Train simple MLP on MNIST |
+| CNN | 4 | Convolution, pooling operations | Conv2D and MaxPool implementations |
+| Autograd | 5 | Computational graphs, autodiff | Complete autograd engine |
+| Data | 6 | Efficient data loading, batching | Custom DataLoader with transformations |
+| Training | 7-8 | Optimization algorithms, metrics | SGD, Adam optimizers + training harness |
+| Config | 9 | Experiment management, logging | YAML configs + structured logging |
+| Profiling | 10 | Performance measurement, debugging | Memory/compute profiler with visualizations |
+| Compression | 11 | Pruning, quantization techniques | Compress model while maintaining accuracy |
+| Kernels | 12 | Low-level optimization, vectorization | Optimized matrix multiplication kernels |
+| Benchmarking | 13 | Performance testing, comparison | Comprehensive benchmarking suite |
+| MLOps | 14 | Data drift detection, continuous updates | Production monitoring and auto-retraining system |
 
 ### Milestone Targets
 - **Week 1**: Environment setup (`setup`) and basic command familiarity
@@ -183,7 +183,37 @@ TinyTorch/
 
 ---
 
-## 🚀 Getting Started
+## 🎯 Course Navigation & Getting Started
+
+**New to TinyTorch?** Start here: [`projects/setup/README.md`](projects/setup/README.md)
+
+### 📋 Project Sequence
+Each project builds on the previous ones. Click the links to jump to specific instructions:
+
+| Order | Project | Status | Description | Instructions |
+|-------|---------|--------|-------------|--------------|
+| 0 | **Setup** | 🚀 **START HERE** | Environment & CLI setup | [`projects/setup/README.md`](projects/setup/README.md) |
+| 1 | **Tensor** | ⏳ Coming Next | Core tensor operations | [`projects/tensor/README.md`](projects/tensor/README.md) |
+| 2 | **MLP** | ⏳ Future | Multi-layer perceptron | [`projects/mlp/README.md`](projects/mlp/README.md) |
+| 3 | **CNN** | ⏳ Future | Convolutional networks | [`projects/cnn/README.md`](projects/cnn/README.md) |
+| 4 | **Autograd** | ⏳ Future | Automatic differentiation | [`projects/autograd/README.md`](projects/autograd/README.md) |
+| 5 | **Data** | ⏳ Future | Data loading pipeline | [`projects/data/README.md`](projects/data/README.md) |
+| 6 | **Training** | ⏳ Future | Training loop & optimization | [`projects/training/README.md`](projects/training/README.md) |
+| 7 | **Config** | ⏳ Future | Configuration system | [`projects/config/README.md`](projects/config/README.md) |
+| 8 | **Profiling** | ⏳ Future | Performance profiling | [`projects/profiling/README.md`](projects/profiling/README.md) |
+| 9 | **Compression** | ⏳ Future | Model compression | [`projects/compression/README.md`](projects/compression/README.md) |
+| 10 | **Kernels** | ⏳ Future | Custom compute kernels | [`projects/kernels/README.md`](projects/kernels/README.md) |
+| 11 | **Benchmarking** | ⏳ Future | Performance benchmarking | [`projects/benchmarking/README.md`](projects/benchmarking/README.md) |
+| 12 | **MLOps** | ⏳ Future | Production monitoring | [`projects/mlops/README.md`](projects/mlops/README.md) |
+
+### 🚀 Quick Start Guide
+**First time?** Follow this exact sequence:
+
+1. **📖 Read the overview** (you're here!)
+2. **🎯 Detailed guidance**: [`COURSE_GUIDE.md`](COURSE_GUIDE.md) (comprehensive walkthrough)
+3. **🔧 Environment setup**: [`projects/setup/README.md`](projects/setup/README.md)
+4. **✅ Verify setup**: Run `python3 projects/setup/check_setup.py`
+5. **🎯 Start Project 1**: [`projects/tensor/README.md`](projects/tensor/README.md)
 
 ### Prerequisites
 - **Python 3.8+** (type hints and modern features required)
@@ -191,18 +221,24 @@ TinyTorch/
 - **Optional**: Numba (JIT compilation for performance)
 - **Development**: pytest, black, mypy (for testing and code quality)
 
-### Quick Start
+### Environment Setup
 ```bash
-# Clone and setup
+# Clone and setup environment
 git clone <repository-url>
 cd TinyTorch
-pip install -r requirements.txt
 
-# Run your first training
-python bin/tito.py train --config tinytorch/configs/default.yaml
+# Automated setup (creates virtual environment + installs dependencies)
+python3 projects/setup/create_env.py
+
+# Activate environment (do this every time you work)
+source tinytorch-env/bin/activate  # macOS/Linux
+# OR: tinytorch-env\Scripts\activate  # Windows
+
+# Verify setup
+python3 projects/setup/check_setup.py
 
 # Check system status
-python bin/tito.py info --show-architecture
+python3 bin/tito.py info --show-architecture
 ```
 
 ### For Instructors
@@ -211,27 +247,32 @@ python bin/tito.py info --show-architecture
 pip install -r requirements.txt
 
 # Generate course materials
-python bin/tito.py generate-projects
-python bin/tito.py setup-autograders
+python3 bin/tito.py generate-projects
+python3 bin/tito.py setup-autograders
 
 # View course progress
-python bin/tito.py course-status
+python3 bin/tito.py course-status
 ```
 
 ### For Students
 ```bash
+# Start with environment setup (IMPORTANT!)
+python3 projects/setup/create_env.py
+source tinytorch-env/bin/activate  # Always activate first!
+
 # Start with Project 0: Setup  
 cd projects/setup/
-python bin/tito.py project init
+cat README.md  # Read instructions
+python3 -m pytest test_setup.py -v  # Run tests
 
 # Then move through the sequence
-cd projects/tensor/     # Project 1: Core tensors
-cd projects/mlp/        # Project 2: Multi-layer perceptron  
-cd projects/autograd/   # Project 4: Automatic differentiation
+cd ../tensor/           # Project 1: Core tensors
+cd ../mlp/              # Project 2: Multi-layer perceptron  
+cd ../autograd/         # Project 3: Automatic differentiation
 
-# Run tests and submit
-python bin/tito.py test --project tensor
-python bin/tito.py submit --project tensor
+# Always run tests before submitting
+python3 -m pytest projects/tensor/test_tensor.py -v
+python3 bin/tito.py submit --project tensor
 ```
 
 ---

@@ -1,36 +1,15 @@
 """
-TinyTorch Core Module
+TinyTorch Core Components
 
-Core components of the TinyTorch ML system including tensors, autograd,
-neural network modules, optimizers, and training infrastructure.
+This package contains the fundamental building blocks of the TinyTorch ML system:
+- Tensor operations and storage
+- Automatic differentiation engine  
+- Neural network modules and layers
+- Training and optimization algorithms
 """
 
-from .tensor import Tensor
-from .modules import Module, Linear, Conv2d, MaxPool2d
-from .optimizer import Optimizer, SGD, Adam
-from .trainer import Trainer
-from .mlops import (
-    DataDriftDetector, 
-    ModelMonitor, 
-    ModelRegistry, 
-    ABTestFramework, 
-    ProductionServer
-)
-
-__version__ = "0.1.0"
-__all__ = [
-    "Tensor",
-    "Module", 
-    "Linear",
-    "Conv2d", 
-    "MaxPool2d",
-    "Optimizer",
-    "SGD",
-    "Adam", 
-    "Trainer",
-    "DataDriftDetector",
-    "ModelMonitor", 
-    "ModelRegistry",
-    "ABTestFramework",
-    "ProductionServer"
-] 
+# Core imports will be added as components are implemented
+# from .tensor import Tensor
+# from .autograd import backward
+# from .modules import Linear, Conv2d
+# from .optimizer import SGD, Adam 
