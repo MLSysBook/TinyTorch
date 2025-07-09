@@ -1,0 +1,19 @@
+# Core dependencies
+numpy>=1.21.0
+
+# Optional performance dependencies
+numba>=0.56.0
+
+# Development dependencies
+pytest>=6.0.0
+black>=21.0.0
+mypy>=0.910
+
+# Configuration and logging
+pyyaml>=5.4.0
+
+# For visualization and plotting (optional)
+matplotlib>=3.3.0
+
+# Type hints for older Python versions
+typing-extensions>=3.10.0 
