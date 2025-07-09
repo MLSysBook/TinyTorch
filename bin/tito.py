@@ -464,7 +464,7 @@ def cmd_doctor(args):
     env_table.add_row("Python", "[green]✅ OK[/green]", f"{sys.version.split()[0]} ({sys.platform})")
     
     # Virtual environment - check if it exists and if we're using it
-    venv_path = Path("tinytorch-env")
+    venv_path = Path(".venv")
     venv_exists = venv_path.exists()
     in_venv = (
         # Method 1: Check VIRTUAL_ENV environment variable (most reliable for activation)

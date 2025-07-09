@@ -1,23 +1,39 @@
-# Project Setup: Environment & Onboarding
+# 🔥 Module 01: Setup & Environment
 
-Welcome to Tiny🔥Torch! This setup project gets your development environment ready and introduces you to the workflow you'll use throughout the course.
+Welcome to your first TinyTorch module! This setup project gets your development environment ready and introduces you to the workflow you'll use throughout the course.
 
 ## 🎯 Learning Objectives
 
-By the end of this project, you will:
+By the end of this module, you will:
 - ✅ Have a fully working development environment
 - ✅ Understand the `tito` CLI workflow  
 - ✅ Know how to check system status and run tests
 - ✅ Have implemented your first TinyTorch component
 - ✅ Be ready to build the entire ML system
 
-## 📋 Setup Checklist
+## 📋 Module Structure
 
-### Step 1: One-Command Environment Setup
+```
+modules/setup/
+├── README.md                    # 📖 This file - Module overview
+├── notebook/                    # 📓 Interactive development
+│   └── setup_dev.ipynb         # Main development notebook
+├── tutorials/                   # 🎓 Step-by-step learning guides
+│   └── 01_setup_basics.ipynb   # Setup fundamentals tutorial
+├── test_setup.py               # 🧪 Automated tests
+├── check_setup.py              # ✅ Manual verification
+├── create_env.py               # 🔧 Environment creation
+├── QUICKSTART.md               # ⚡ Quick start guide
+└── solutions/                  # 🔑 Reference solutions (instructors)
+    └── solution_setup.py
+```
 
-**The Only Command You Need** 🚀
+## 🚀 Getting Started
+
+### Step 1: Environment Setup
 ```bash
-bin/activate-tinytorch.sh
+# The only command you need!
+source bin/activate-tinytorch.sh
 ```
 
 This smart script handles everything:
@@ -25,66 +41,63 @@ This smart script handles everything:
 - 💤 **Already exists**: Just activates the existing environment  
 - ✅ **Already active**: Already good to go!
 
-**Super Simple Workflow!** ⚡
-```bash
-# First time or any time - just run:
-bin/activate-tinytorch.sh
-
-# Then you're ready:
-tito info      # Check system status
-tito test      # Run tests
-tito doctor    # Diagnose any issues
-
-# When done:
-deactivate     # Exit the environment
-```
-
-> **💡 Dead simple!** One script does everything - no setup commands, no complexity.
+**Important**: Use `source` (not `./`) to activate in your current shell!
 
 ### Step 2: System Verification
-
-**Test the CLI**
 ```bash
-tito --version    # (after running bin/activate-tinytorch.sh)
+# Check that everything is working
+tito --version
 tito info
-```
-You should see the Tiny🔥Torch banner and system status.
-
-**Check Project Structure**
-```bash
 tito info --show-architecture
 ```
-This shows the system architecture you'll be building.
 
-### Step 3: Development Workflow
-
-**Learn Status Commands**
+### Step 3: Read the Tutorial (Recommended)
 ```bash
-# Check implementation status
-tito info
+# Start Jupyter
+tito jupyter --lab
 
-# Test specific project (you'll use this constantly)
-tito test --project setup
-
-# Get help on any command
-tito --help
+# Then open this tutorial:
+# tutorials/01_setup_basics.ipynb - Learn the workflow
 ```
 
-## 🚀 Hello World Implementation
-
-Now let's implement your first TinyTorch component! You'll add a simple greeting function to the system.
-
-**Your Task**: Implement a `hello_tinytorch()` function in `tinytorch/core/utils.py`
-
-**Step 1: Open the utils file**
+### Step 4: Implement Your First Function
 ```bash
-# Look at the current file
-cat tinytorch/core/utils.py
+# Open the main development notebook
+# Navigate to: notebook/setup_dev.ipynb
+
+# Work through the implementation step by step:
+# 1. Environment check
+# 2. Import verification
+# 3. Function implementation
+# 4. Testing and validation
 ```
 
-**Step 2: Implement the function**
+### Step 5: Test Your Implementation
+```bash
+# Run automated tests
+tito test --module setup
 
-Add this function to `tinytorch/core/utils.py`:
+# Run manual verification
+python check_setup.py
+
+# Test integration
+python -c "from tinytorch.core.utils import hello_tinytorch; print(hello_tinytorch())"
+```
+
+### Step 6: Submit Your Work
+```bash
+# Submit when ready
+tito submit --module setup
+
+# Move to next module
+cd ../tensor/
+cat README.md
+```
+
+## 📚 What You'll Implement
+
+### Hello World Function
+Your task is to implement a `hello_tinytorch()` function in `tinytorch/core/utils.py`:
 
 ```python
 def hello_tinytorch() -> str:
@@ -97,70 +110,114 @@ def hello_tinytorch() -> str:
     return "🔥 Welcome to TinyTorch! Ready to build ML systems from scratch! 🔥"
 ```
 
-**Step 3: Test your implementation**
+### Requirements
+1. **Function signature**: Must be named `hello_tinytorch()` with return type `-> str`
+2. **Return value**: Must return a non-empty string
+3. **Content**: Must contain welcoming content (welcome, hello, tinytorch, ready)
+4. **Branding**: Must include the 🔥 emoji (TinyTorch branding)
+5. **Documentation**: Must have proper docstring explaining the function
+
+## 🧪 Testing Your Implementation
+
+### Automated Tests
 ```bash
-# Run the pytest test suite
-python3 -m pytest projects/setup/test_setup.py -v
-
-# Or run the CLI test command
-tito test --project setup
-
-# Run comprehensive setup check
-python3 projects/setup/check_setup.py
+tito test --module setup
 ```
+This runs comprehensive tests for:
+- ✅ Function exists and can be imported
+- ✅ Returns correct type (string)
+- ✅ Returns non-empty content
+- ✅ Contains welcoming content
+- ✅ Contains 🔥 emoji
+- ✅ Has proper documentation
 
-## 🧪 Verification & Next Steps
-
-**Run the setup checker**
+### Manual Verification
 ```bash
-python3 projects/setup/check_setup.py
+python check_setup.py
+```
+This provides human-readable feedback on:
+- 📊 Environment status
+- 🔍 Function implementation
+- 💡 Specific error messages
+- 📋 Next steps guidance
+
+### Direct Testing
+```python
+from tinytorch.core.utils import hello_tinytorch
+result = hello_tinytorch()
+print(result)
 ```
 
-This will verify:
-- ✅ Environment is correctly configured
-- ✅ All dependencies are installed
-- ✅ CLI commands work properly
-- ✅ Your hello world function is implemented
-- ✅ You're ready for the next project
+## 🎯 Success Criteria
 
-**Expected Output:**
-```
-🔥 TinyTorch Setup Verification 🔥
-==================================
+Your implementation is complete when:
 
-✅ Python version: 3.x.x (compatible)
-✅ Dependencies: All installed correctly
-✅ CLI commands: Working properly
-✅ hello_tinytorch(): Implemented correctly
-✅ Test suite: All tests passing
+1. **All automated tests pass**: `tito test --module setup` shows ✅
+2. **Manual verification passes**: `python check_setup.py` shows all tests passed
+3. **Function works correctly**: Returns proper greeting with 🔥 emoji
+4. **Environment is ready**: All CLI commands work properly
 
-🎉 Setup complete! You're ready to build an ML system from scratch.
+## 📖 Learning Resources
 
-Next steps:
-  cd ../tensor/
-  cat README.md
+### Tutorial Notebooks
+- **01_setup_basics.ipynb**: Introduction to TinyTorch workflow and development process
 
-You can now submit this project:
-  tito submit --project setup
-```
+### Key Concepts to Understand
+- **Project structure**: How modules are organized
+- **Development workflow**: Using notebooks, tests, and CLI
+- **Testing process**: Automated vs manual verification
+- **Environment management**: Virtual environments and dependencies
 
-## 📚 What You've Learned
+## 🔧 Implementation Tips
 
-- **Environment setup**: Python, dependencies, development tools
-- **CLI workflow**: Using `tito` commands for testing and status checks
-- **Project structure**: How code is organized in TinyTorch
-- **Implementation pattern**: Where to write code and how to test it
-- **Verification process**: Using automated checkers to validate your work
+### Start Simple
+1. **Read the tutorial**: Understand the workflow first
+2. **Check the environment**: Make sure everything is working
+3. **Implement the function**: Add it to the correct file
+4. **Test frequently**: Run tests after each change
 
-## 🎯 Next Project
+### Common Patterns
+- **File location**: Always add functions to the correct module file
+- **Import testing**: Test imports before implementing
+- **Error messages**: Read error messages carefully for guidance
+- **Documentation**: Always add proper docstrings
 
-Once setup passes, move to your first real implementation:
+### Common Pitfalls
+- **Wrong file**: Make sure you're editing `tinytorch/core/utils.py`
+- **Syntax errors**: Check your Python syntax carefully
+- **Missing requirements**: Ensure your function meets all requirements
+- **Import issues**: Make sure your function can be imported
 
-```bash
-cd ../tensor/
-cat README.md  # Start building the core tensor system
-```
+## 🚀 Next Steps
 
----
+Once you complete this module:
 
-**Need help?** Check the main README.md or ask in office hours! 
+1. **Move to Tensor module**: `cd ../tensor/`
+2. **Build core tensors**: Implement the fundamental data structure
+3. **Learn operations**: Add arithmetic and utility methods
+4. **Test thoroughly**: Use the comprehensive testing framework
+
+## 💡 Need Help?
+
+### Common Issues
+- **Environment not working**: Run `bin/activate-tinytorch.sh`
+- **Import errors**: Check file paths and syntax
+- **Test failures**: Read error messages for specific guidance
+- **CLI not working**: Make sure environment is activated
+
+### Getting Support
+- **Check tutorials**: The tutorial notebook has detailed explanations
+- **Run verification**: `python check_setup.py` provides specific feedback
+- **Review tests**: The test files show exactly what's expected
+
+## 🎉 You're Starting Something Amazing!
+
+This setup module introduces you to the TinyTorch development workflow:
+- **Environment management**: Virtual environments and dependencies
+- **Testing framework**: Automated and manual verification
+- **CLI workflow**: Using `tito` commands for development
+- **Project structure**: Understanding how modules are organized
+
+This foundation will support everything you build in the coming modules!
+
+Good luck, and happy coding! 🔥 
