@@ -1,6 +1,6 @@
 # Tiny🔥Torch: Build a Machine Learning System from Scratch
 
-TinyTorch is a pedagogical project designed to accompany the *Machine Learning Systems* textbook. Inspired by OS and compiler courses where students build entire systems from first principles, TinyTorch guides you through building a complete ML training and inference runtime — from autograd to data pipelines, optimizers to profilers — **entirely from scratch**.
+TinyTorch is a pedagogical project designed to accompany the [*Machine Learning Systems*](https://mlsysbook.ai) textbook. Inspired by OS and compiler courses where students build entire systems from first principles, TinyTorch guides you through building a complete ML training and inference runtime — from autograd to data pipelines, optimizers to profilers — **entirely from scratch**.
 
 This is not a PyTorch tutorial. In TinyTorch, you'll **write the components that frameworks like PyTorch are built on.**
 
@@ -76,36 +76,50 @@ By the end of this project, you'll have implemented a fully functional ML system
 
 ## 📚 Curriculum Integration & Roadmap
 
-TinyTorch aligns with **Chapters 1–13** of the *Machine Learning Systems* textbook. Each project builds progressively toward a complete ML infrastructure.
+TinyTorch aligns with **Chapters 1–13** of the [*Machine Learning Systems*](https://mlsysbook.ai) textbook. Each project builds progressively toward a complete ML infrastructure.
 
 ### 📚 Course Details & Learning Objectives
 
-Each project corresponds to specific chapters in the *Machine Learning Systems* textbook:
+Each project is inspired by key themes from the [*Machine Learning Systems*](https://mlsysbook.ai) textbook:
 
-| Project | Chapters | Core Learning | Key Deliverable |
-|---------|----------|---------------|-----------------|
-| Setup | - | Environment setup, tool familiarity | Working dev environment + CLI |
-| Tensor | 1-2 | Tensor operations, memory management | Working Tensor class with basic ops |
-| MLP | 3 | Forward/backward pass, gradient computation | Train simple MLP on MNIST |
-| CNN | 4 | Convolution, pooling operations | Conv2D and MaxPool implementations |
-| Autograd | 5 | Computational graphs, autodiff | Complete autograd engine |
-| Data | 6 | Efficient data loading, batching | Custom DataLoader with transformations |
-| Training | 7-8 | Optimization algorithms, metrics | SGD, Adam optimizers + training harness |
-| Config | 9 | Experiment management, logging | YAML configs + structured logging |
-| Profiling | 10 | Performance measurement, debugging | Memory/compute profiler with visualizations |
-| Compression | 11 | Pruning, quantization techniques | Compress model while maintaining accuracy |
-| Kernels | 12 | Low-level optimization, vectorization | Optimized matrix multiplication kernels |
-| Benchmarking | 13 | Performance testing, comparison | Comprehensive benchmarking suite |
-| MLOps | 14 | Data drift detection, continuous updates | Production monitoring and auto-retraining system |
+### 📖 Part I: The Essentials (Chapters 1-4)
+*Core principles, components, and architectures*
+
+| Project | Chapter | Core Learning | Key Deliverable |
+|---------|---------|---------------|-----------------|
+| Setup | 1 (Introduction) | Environment setup, tool familiarity | Working dev environment + CLI |
+| Tensor | 2 (ML Systems) | Basic tensor operations, NumPy-style | Simple Tensor class with math ops |
+| MLP | 3 (DL Primer) | Forward pass, manual backprop | Train MLP on MNIST (manual gradients) |
+| CNN | 4 (DNN Architectures) | Convolution concepts, architectures | Basic conv implementation |
+
+### 🏗️ Part II: Engineering Principles (Chapters 5-13)
+*Workflows, data engineering, optimization strategies, and operational challenges*
+
+| Project | Chapter | Core Learning | Key Deliverable |
+|---------|---------|---------------|-----------------|
+| Data | 6 (Data Engineering) | Efficient data loading, batching | Custom DataLoader with transformations |
+| Training | 8 (AI Training) | **Autograd engine**, optimization algorithms | Complete training system with autodiff |
+| Profiling | 9 (Efficient AI) | Performance measurement, debugging | Memory/compute profiler with visualizations |
+| Compression | 10 (Model Optimizations) | Pruning, quantization techniques | Compress model while maintaining accuracy |
+| Kernels | 11 (AI Acceleration) | Low-level optimization, vectorization | Optimized matrix multiplication kernels |
+| Benchmarking | 12 (Benchmarking AI) | Performance testing, comparison | Comprehensive benchmarking suite |
+| MLOps | 13 (ML Operations) | Production monitoring, deployment | MLOps pipeline with drift detection |
+
+**Note**: Chapters 5 (AI Workflow) and 7 (AI Frameworks) provide conceptual frameworks that inform the systems projects. Part III (AI Best Practice, Chapters 14-18) and Part IV (Closing Perspectives, Chapters 19-20) focus on deployment considerations and emerging trends covered through readings and discussions.
 
 ### Milestone Targets
+
+**Part I: The Essentials (Chapters 1-4)**
 - **Week 1**: Environment setup (`setup`) and basic command familiarity
-- **Week 3**: Core tensor operations (`tensor`) working
-- **Week 5**: Train MLP on MNIST (`mlp`) achieving >95% accuracy  
-- **Week 8**: Train CNN on CIFAR-10 (`cnn`) achieving >80% accuracy
-- **Week 10**: Complete autograd engine (`autograd`) with gradient checking
-- **Week 12**: Optimized system with profiling tools (`profiling`)
-- **Final**: Complete system with MLOps monitoring (`mlops`)
+- **Week 3**: Basic tensor operations (`tensor`) working
+- **Week 5**: Train MLP on MNIST (`mlp`) with manual backprop achieving >90% accuracy  
+- **Week 7**: Train CNN on CIFAR-10 (`cnn`) basic implementation achieving >70% accuracy
+
+**Part II: Engineering Principles (Chapters 5-13)**  
+- **Week 9**: Data pipeline (`data`) operational with efficient loading
+- **Week 11**: Complete autograd engine and training framework (`training`) working
+- **Week 13**: Optimized system with profiling tools (`profiling`)
+- **Final**: Complete production system with MLOps monitoring (`mlops`)
 
 ---
 
@@ -140,13 +154,11 @@ TinyTorch/
 │       └── transforms.py
 ├── projects/                      # Component-specific projects
 │   ├── setup/                    # Environment setup & onboarding
-│   ├── tensor/                   # Core tensor implementation
-│   ├── mlp/                      # Multi-layer perceptron
-│   ├── cnn/                      # Convolutional neural networks
-│   ├── config/                   # Configuration system
+│   ├── tensor/                   # Basic tensor implementation
+│   ├── mlp/                      # Multi-layer perceptron (manual backprop)
+│   ├── cnn/                      # Convolutional neural networks (basic)
 │   ├── data/                     # Data pipeline & loading
-│   ├── autograd/                 # Automatic differentiation
-│   ├── training/                 # Training loop & optimization
+│   ├── training/                 # Autograd engine & training optimization
 │   ├── profiling/                # Performance profiling tools
 │   ├── compression/              # Model compression techniques
 │   ├── kernels/                  # Custom compute kernels
@@ -190,21 +202,24 @@ TinyTorch/
 ### 📋 Project Sequence
 Each project builds on the previous ones. Click the links to jump to specific instructions:
 
+### 📖 Part I: The Essentials (Chapters 1-4)
 | Order | Project | Status | Description | Instructions |
 |-------|---------|--------|-------------|--------------|
 | 0 | **Setup** | 🚀 **START HERE** | Environment & CLI setup | [`projects/setup/README.md`](projects/setup/README.md) |
-| 1 | **Tensor** | ⏳ Coming Next | Core tensor operations | [`projects/tensor/README.md`](projects/tensor/README.md) |
-| 2 | **MLP** | ⏳ Future | Multi-layer perceptron | [`projects/mlp/README.md`](projects/mlp/README.md) |
-| 3 | **CNN** | ⏳ Future | Convolutional networks | [`projects/cnn/README.md`](projects/cnn/README.md) |
-| 4 | **Autograd** | ⏳ Future | Automatic differentiation | [`projects/autograd/README.md`](projects/autograd/README.md) |
-| 5 | **Data** | ⏳ Future | Data loading pipeline | [`projects/data/README.md`](projects/data/README.md) |
-| 6 | **Training** | ⏳ Future | Training loop & optimization | [`projects/training/README.md`](projects/training/README.md) |
-| 7 | **Config** | ⏳ Future | Configuration system | [`projects/config/README.md`](projects/config/README.md) |
-| 8 | **Profiling** | ⏳ Future | Performance profiling | [`projects/profiling/README.md`](projects/profiling/README.md) |
-| 9 | **Compression** | ⏳ Future | Model compression | [`projects/compression/README.md`](projects/compression/README.md) |
-| 10 | **Kernels** | ⏳ Future | Custom compute kernels | [`projects/kernels/README.md`](projects/kernels/README.md) |
-| 11 | **Benchmarking** | ⏳ Future | Performance benchmarking | [`projects/benchmarking/README.md`](projects/benchmarking/README.md) |
-| 12 | **MLOps** | ⏳ Future | Production monitoring | [`projects/mlops/README.md`](projects/mlops/README.md) |
+| 1 | **Tensor** | ⏳ Coming Next | Basic tensor operations | [`projects/tensor/README.md`](projects/tensor/README.md) |
+| 2 | **MLP** | ⏳ Future | Multi-layer perceptron (manual backprop) | [`projects/mlp/README.md`](projects/mlp/README.md) |
+| 3 | **CNN** | ⏳ Future | Convolutional networks (basic) | [`projects/cnn/README.md`](projects/cnn/README.md) |
+
+### 🏗️ Part II: Engineering Principles (Chapters 5-13)
+| Order | Project | Status | Description | Instructions |
+|-------|---------|--------|-------------|--------------|
+| 4 | **Data** | ⏳ Future | Data loading pipeline | [`projects/data/README.md`](projects/data/README.md) |
+| 5 | **Training** | ⏳ Future | Autograd engine & optimization | [`projects/training/README.md`](projects/training/README.md) |
+| 6 | **Profiling** | ⏳ Future | Performance profiling | [`projects/profiling/README.md`](projects/profiling/README.md) |
+| 7 | **Compression** | ⏳ Future | Model compression | [`projects/compression/README.md`](projects/compression/README.md) |
+| 8 | **Kernels** | ⏳ Future | Custom compute kernels | [`projects/kernels/README.md`](projects/kernels/README.md) |
+| 9 | **Benchmarking** | ⏳ Future | Performance benchmarking | [`projects/benchmarking/README.md`](projects/benchmarking/README.md) |
+| 10 | **MLOps** | ⏳ Future | Production monitoring | [`projects/mlops/README.md`](projects/mlops/README.md) |
 
 ### 🚀 Quick Start Guide
 **First time?** Follow this exact sequence:
@@ -213,7 +228,7 @@ Each project builds on the previous ones. Click the links to jump to specific in
 2. **🎯 Detailed guidance**: [`COURSE_GUIDE.md`](COURSE_GUIDE.md) (comprehensive walkthrough)
 3. **🔧 Environment setup**: [`projects/setup/README.md`](projects/setup/README.md)
 4. **✅ Verify setup**: Run `python3 projects/setup/check_setup.py`
-5. **🎯 Start Project 1**: [`projects/tensor/README.md`](projects/tensor/README.md)
+5. **📖 Part I - Start with The Essentials**: [`projects/tensor/README.md`](projects/tensor/README.md)
 
 ### Prerequisites
 - **Python 3.8+** (type hints and modern features required)
@@ -265,14 +280,21 @@ cd projects/setup/
 cat README.md  # Read instructions
 python3 -m pytest test_setup.py -v  # Run tests
 
-# Then move through the sequence
-cd ../tensor/           # Project 1: Core tensors
-cd ../mlp/              # Project 2: Multi-layer perceptron  
-cd ../autograd/         # Project 3: Automatic differentiation
+# Then move through the sequence (Part I: The Essentials)
+cd ../tensor/           # Project 1: Basic tensors
+cd ../mlp/              # Project 2: Multi-layer perceptron (manual backprop)
+cd ../cnn/              # Project 3: Convolutional networks (basic)
+
+# Part II: Engineering Principles  
+cd ../data/             # Project 4: Data pipeline
+cd ../training/         # Project 5: Autograd engine & training
 
 # Always run tests before submitting
 python3 -m pytest projects/tensor/test_tensor.py -v
 python3 bin/tito.py submit --project tensor
+
+python3 -m pytest projects/mlp/test_mlp.py -v
+python3 bin/tito.py submit --project mlp
 ```
 
 ---
@@ -432,9 +454,9 @@ TinyTorch is part of the *Machine Learning Systems* course and textbook by Vijay
 
 ## 🔗 Additional Resources
 
-- **Textbook**: *Machine Learning Systems* (Chapters 1-13)
-- **Course Website**: [Course URL]
-- **Video Lectures**: Complementary video content for each chapter
-- **External Reading**: Curated list of papers and blog posts
-- **Community Forum**: Discussion and Q&A platform
-- **Office Hours**: [Schedule and locations]
+- **Textbook**: [*Machine Learning Systems*](https://mlsysbook.ai) (Chapters 1-13) | [PDF](https://mlsysbook.ai/Machine-Learning-Systems.pdf)
+- **Course Website**: Coming soon
+- **Video Lectures**: Coming soon
+- **External Reading**: Coming soon
+- **Community Forum**: [GitHub Discussions](../../discussions)
+- **Office Hours**: Coming soon
