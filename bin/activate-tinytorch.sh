@@ -2,14 +2,14 @@
 # TinyTorch Environment Activation & Setup
 
 # Check if virtual environment exists, create if not
-if [ ! -d "tinytorch-env" ]; then
+if [ ! -d ".venv" ]; then
     echo "🆕 First time setup - creating environment..."
-    python3 -m venv tinytorch-env || {
+    python3 -m venv .venv || {
         echo "❌ Failed to create virtual environment"
         exit 1
     }
     echo "📦 Installing dependencies..."
-    tinytorch-env/bin/pip install -r requirements.txt || {
+    .venv/bin/pip install -r requirements.txt || {
         echo "❌ Failed to install dependencies"
         exit 1
     }
@@ -17,7 +17,7 @@ if [ ! -d "tinytorch-env" ]; then
 fi
 
 echo "🔥 Activating TinyTorch environment..."
-source tinytorch-env/bin/activate
+source .venv/bin/activate
 
 # Create tito alias for convenience
 alias tito="python3 bin/tito.py"
@@ -27,3 +27,4 @@ echo "💡 Quick commands:"
 echo "   tito info      - Check system status"
 echo "   tito test      - Run tests" 
 echo "   tito doctor    - Diagnose issues"
+echo "   jupyter notebook  - Start Jupyter for interactive development"
