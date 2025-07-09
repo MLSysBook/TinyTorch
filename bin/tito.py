@@ -258,7 +258,7 @@ def cmd_info(args):
     nav_text.append("🎯 Detailed Guide: ", style="dim") 
     nav_text.append("COURSE_GUIDE.md\n", style="cyan underline")
     nav_text.append("🚀 Start Here: ", style="dim")
-    nav_text.append("projects/setup/README.md", style="cyan underline")
+    nav_text.append("modules/setup/README.md", style="cyan underline")
     
     console.print(Panel(nav_text, title="📋 Course Navigation", border_style="bright_green"))
     console.print()
