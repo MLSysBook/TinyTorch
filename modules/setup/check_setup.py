@@ -45,7 +45,7 @@ def check_virtual_environment():
         return True
     else:
         print("⚠️  Virtual environment: Not detected")
-        print("   Recommendation: Use 'source tinytorch-env/bin/activate'")
+        print("   Recommendation: Use 'source .venv/bin/activate'")
         print("   (This is strongly recommended for consistency)")
         return True  # Don't fail, just warn
 

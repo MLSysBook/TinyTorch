@@ -1,9 +1,6 @@
-# Tiny🔥Torch
-**_Build a Machine Learning System from Scratch._**
+# Tiny🔥Torch: Build a Machine Learning System from Scratch
 
-TinyTorch is a pedagogical project designed to accompany the [*Machine Learning Systems*](https://mlsysbook.ai) textbook. 
-
-Inspired by OS and compiler courses where students build entire systems from first principles, TinyTorch is designed to guide students through building a complete ML training and inference runtime system, from autograd to data pipelines, optimizers to profilers. You’ll implement **everything, entirely from scratch.** The intent is to train the next generation of AI systems engineers. 
+TinyTorch is a pedagogical project designed to accompany the [*Machine Learning Systems*](https://mlsysbook.ai) textbook. Inspired by OS and compiler courses where students build entire systems from first principles, TinyTorch guides you through building a complete ML training and inference runtime — from autograd to data pipelines, optimizers to profilers — **entirely from scratch**.
 
 This is not a PyTorch tutorial. In TinyTorch, you'll **write the components that frameworks like PyTorch are built on.**
 
@@ -13,7 +10,7 @@ This is not a PyTorch tutorial. In TinyTorch, you'll **write the components that
 
 By the end of this project, you'll have implemented a fully functional ML system capable of:
 
-- **Training neural networks** (MLPs, CNNs) on real datasets (MNIST, CIFAR-10)
+- **Training neural networks** (MLPs, CNNs) on real datasets 10)
 - **Automatic differentiation** with a custom autograd engine
 - **Memory-efficient data loading** with custom DataLoader implementations
 - **Multiple optimization algorithms** (SGD, Adam, RMSprop)
@@ -152,18 +149,18 @@ TinyTorch/
 │       ├── mnist.py
 │       ├── cifar10.py
 │       └── transforms.py
-├── projects/                      # Component-specific projects
-│   ├── setup/                    # Environment setup & onboarding
-│   ├── tensor/                   # Basic tensor implementation
-│   ├── mlp/                      # Multi-layer perceptron (manual backprop)
-│   ├── cnn/                      # Convolutional neural networks (basic)
-│   ├── data/                     # Data pipeline & loading
-│   ├── training/                 # Autograd engine & training optimization
-│   ├── profiling/                # Performance profiling tools
-│   ├── compression/              # Model compression techniques
-│   ├── kernels/                  # Custom compute kernels
-│   ├── benchmarking/             # Performance benchmarking
-│   └── mlops/                    # MLOps & production monitoring
+├── modules/                      # 🧩 System Modules
+│   ├── 01_setup/                # Environment setup & onboarding
+│   ├── 02_tensor/               # Basic tensor implementation
+│   ├── 03_mlp/                  # Multi-layer perceptron (manual backprop)
+│   ├── 04_cnn/                  # Convolutional neural networks (basic)
+│   ├── 05_data/                 # Data pipeline & loading
+│   ├── 06_training/             # Autograd engine & training optimization
+│   ├── 07_profiling/            # Performance profiling tools
+│   ├── 08_compression/          # Model compression techniques
+│   ├── 09_kernels/              # Custom compute kernels
+│   ├── 10_benchmarking/         # Performance benchmarking
+│   └── 11_mlops/                # MLOps & production monitoring
 ├── docs/                         # Course documentation
 │   ├── tutorials/                # Step-by-step tutorials
 │   ├── api/                      # API documentation
@@ -197,24 +194,24 @@ TinyTorch/
 
 ## 🎯 Course Navigation & Getting Started
 
-**New to TinyTorch?** Start here: [`projects/setup/README.md`](projects/setup/README.md)
+**New to TinyTorch?** Start here: [`modules/01_setup/README.md`](modules/01_setup/README.md)
 
-### 📋 Project Sequence
-Each project builds on the previous ones. Click the links to jump to specific instructions:
+### 📋 Module Sequence
+Each module builds on the previous ones. Click the links to jump to specific instructions:
 
-| Order | Project | Status | Description | Instructions |
-|-------|---------|--------|-------------|--------------|
-| 0 | **Setup** | 🚀 **START HERE** | Environment & CLI setup | [`projects/setup/README.md`](projects/setup/README.md) |
-| 1 | **Tensor** | ⏳ Coming Next | Basic tensor operations | [`projects/tensor/README.md`](projects/tensor/README.md) |
-| 2 | **MLP** | ⏳ Future | Multi-layer perceptron (manual backprop) | [`projects/mlp/README.md`](projects/mlp/README.md) |
-| 3 | **CNN** | ⏳ Future | Convolutional networks (basic) | [`projects/cnn/README.md`](projects/cnn/README.md) |
-| 4 | **Data** | ⏳ Future | Data loading pipeline | [`projects/data/README.md`](projects/data/README.md) |
-| 5 | **Training** | ⏳ Future | Autograd engine & optimization | [`projects/training/README.md`](projects/training/README.md) |
-| 6 | **Profiling** | ⏳ Future | Performance profiling | [`projects/profiling/README.md`](projects/profiling/README.md) |
-| 7 | **Compression** | ⏳ Future | Model compression | [`projects/compression/README.md`](projects/compression/README.md) |
-| 8 | **Kernels** | ⏳ Future | Custom compute kernels | [`projects/kernels/README.md`](projects/kernels/README.md) |
-| 9 | **Benchmarking** | ⏳ Future | Performance benchmarking | [`projects/benchmarking/README.md`](projects/benchmarking/README.md) |
-| 10 | **MLOps** | ⏳ Future | Production monitoring | [`projects/mlops/README.md`](projects/mlops/README.md) |
+| Order | Module | Status | Description | Instructions |
+|-------|--------|--------|-------------|--------------|
+| 0 | **Setup** | 🚀 **START HERE** | Environment & CLI setup | [`modules/01_setup/README.md`](modules/01_setup/README.md) |
+| 1 | **Tensor** | ⏳ Coming Next | Basic tensor operations | [`modules/02_tensor/README.md`](modules/02_tensor/README.md) |
+| 2 | **MLP** | ⏳ Future | Multi-layer perceptron (manual backprop) | [`modules/03_mlp/README.md`](modules/03_mlp/README.md) |
+| 3 | **CNN** | ⏳ Future | Convolutional networks (basic) | [`modules/04_cnn/README.md`](modules/04_cnn/README.md) |
+| 4 | **Data** | ⏳ Future | Data loading pipeline | [`modules/05_data/README.md`](modules/05_data/README.md) |
+| 5 | **Training** | ⏳ Future | Autograd engine & optimization | [`modules/06_training/README.md`](modules/06_training/README.md) |
+| 6 | **Profiling** | ⏳ Future | Performance profiling | [`modules/07_profiling/README.md`](modules/07_profiling/README.md) |
+| 7 | **Compression** | ⏳ Future | Model compression | [`modules/08_compression/README.md`](modules/08_compression/README.md) |
+| 8 | **Kernels** | ⏳ Future | Custom compute kernels | [`modules/09_kernels/README.md`](modules/09_kernels/README.md) |
+| 9 | **Benchmarking** | ⏳ Future | Performance benchmarking | [`modules/10_benchmarking/README.md`](modules/10_benchmarking/README.md) |
+| 10 | **MLOps** | ⏳ Future | Production monitoring | [`modules/11_mlops/README.md`](modules/11_mlops/README.md) |
 
 ### 🚀 Quick Start Guide
 **First time?** Follow this exact sequence:

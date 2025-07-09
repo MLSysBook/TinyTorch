@@ -172,7 +172,7 @@ def validate_environment():
     in_venv = (hasattr(sys, 'real_prefix') or 
                (hasattr(sys, 'base_prefix') and sys.base_prefix != sys.prefix))
     if not in_venv:
-        issues.append("Virtual environment not activated. Run: source tinytorch-env/bin/activate")
+        issues.append("Virtual environment not activated. Run: source .venv/bin/activate")
     
     # Check Python version
     if sys.version_info < (3, 8):
@@ -221,7 +221,7 @@ def cmd_info(args):
     info_text.append(f"Working Directory: {os.getcwd()}\n", style="cyan")
     
     # Virtual environment check - use same robust detection as doctor
-    venv_path = Path("tinytorch-env")
+    venv_path = Path(".venv")
     venv_exists = venv_path.exists()
     in_venv = (
         # Method 1: Check VIRTUAL_ENV environment variable (most reliable for activation)
@@ -264,7 +264,7 @@ def cmd_info(args):
     console.print()
     
     # Implementation status
-    projects = [
+    modules = [
         ("Setup", "hello_tinytorch function", check_setup_status),
         ("Tensor", "basic tensor operations", check_tensor_status),
         ("MLP", "multi-layer perceptron (manual)", check_mlp_status),
@@ -278,14 +278,14 @@ def cmd_info(args):
         ("MLOps", "production monitoring", check_mlops_status),
     ]
     
-    # Project Status Table
-    status_table = Table(title="🚀 Project Implementation Status", show_header=True, header_style="bold blue")
+    # Module Status Table
+    status_table = Table(title="🚀 Module Implementation Status", show_header=True, header_style="bold blue")
     status_table.add_column("ID", style="dim", width=3, justify="center")
     status_table.add_column("Project", style="bold cyan", width=12)
     status_table.add_column("Status", width=18, justify="center")
     status_table.add_column("Description", style="dim", width=40)
     
-    for i, (name, desc, check_func) in enumerate(projects):
+    for i, (name, desc, check_func) in enumerate(modules):
         status_text = check_func()
         if "✅" in status_text:
             status_style = "[green]✅ Implemented[/green]"
@@ -342,19 +342,19 @@ def cmd_info(args):
         console.print(Panel(arch_tree, title="🏗️ System Architecture", border_style="bright_blue"))
 
 def cmd_test(args):
-    """Run tests for a specific project."""
-    valid_projects = ["setup", "tensor", "mlp", "cnn", "data", "training", 
-                      "profiling", "compression", "kernels", "benchmarking", "mlops"]
+    """Run tests for a specific module."""
+    valid_modules = ["setup", "tensor", "mlp", "cnn", "data", "training", 
+                     "profiling", "compression", "kernels", "benchmarking", "mlops"]
     
     if args.all:
         # Run all tests with progress bar
         import subprocess
-        failed_projects = []
+        failed_modules = []
         
         # Count existing test files
-        existing_tests = [p for p in valid_projects if Path(f"projects/{p}/test_{p}.py").exists()]
+        existing_tests = [p for p in valid_modules if Path(f"modules/{p}/test_{p}.py").exists()]
         
-        console.print(Panel(f"🧪 Running tests for {len(existing_tests)} projects", 
+        console.print(Panel(f"🧪 Running tests for {len(existing_tests)} modules", 
                           title="Test Suite", border_style="bright_cyan"))
         
         with Progress(
@@ -367,24 +367,24 @@ def cmd_test(args):
             
             task = progress.add_task("Running tests...", total=len(existing_tests))
             
-            for project in existing_tests:
-                progress.update(task, description=f"Testing {project}...")
+            for module in existing_tests:
+                progress.update(task, description=f"Testing {module}...")
                 
-                test_file = f"projects/{project}/test_{project}.py"
+                test_file = f"modules/{module}/test_{module}.py"
                 result = subprocess.run([sys.executable, "-m", "pytest", test_file, "-v"], 
                                       capture_output=True, text=True)
                 
                 if result.returncode != 0:
-                    failed_projects.append(project)
-                    console.print(f"[red]❌ {project} tests failed[/red]")
+                    failed_modules.append(module)
+                    console.print(f"[red]❌ {module} tests failed[/red]")
                 else:
-                    console.print(f"[green]✅ {project} tests passed[/green]")
+                    console.print(f"[green]✅ {module} tests passed[/green]")
                 
                 progress.advance(task)
         
         # Results summary
-        if failed_projects:
-            console.print(Panel(f"[red]❌ Failed projects: {', '.join(failed_projects)}[/red]", 
+        if failed_modules:
+            console.print(Panel(f"[red]❌ Failed modules: {', '.join(failed_modules)}[/red]", 
                               title="Test Results", border_style="red"))
             return 1
         else:
@@ -392,17 +392,17 @@ def cmd_test(args):
                               title="Test Results", border_style="green"))
             return 0
     
-    elif args.project in valid_projects:
-        # Run specific project tests
+    elif args.module in valid_modules:
+        # Run specific module tests
         import subprocess
-        test_file = f"projects/{args.project}/test_{args.project}.py"
+        test_file = f"modules/{args.module}/test_{args.module}.py"
         
-        console.print(Panel(f"🧪 Running tests for project: [bold cyan]{args.project}[/bold cyan]", 
-                          title="Single Project Test", border_style="bright_cyan"))
+        console.print(Panel(f"🧪 Running tests for module: [bold cyan]{args.module}[/bold cyan]", 
+                          title="Single Module Test", border_style="bright_cyan"))
         
         if not Path(test_file).exists():
             console.print(Panel(f"[yellow]⏳ Test file not found: {test_file}\n"
-                              f"Project '{args.project}' may not be implemented yet.[/yellow]", 
+                              f"Module '{args.module}' may not be implemented yet.[/yellow]", 
                               title="Test Not Found", border_style="yellow"))
             return 1
         
@@ -414,36 +414,36 @@ def cmd_test(args):
         
         # Show result summary
         if result.returncode == 0:
-            console.print(Panel(f"[green]✅ All tests passed for {args.project}![/green]", 
+            console.print(Panel(f"[green]✅ All tests passed for {args.module}![/green]", 
                               title="Test Results", border_style="green"))
         else:
-            console.print(Panel(f"[red]❌ Some tests failed for {args.project}[/red]", 
+            console.print(Panel(f"[red]❌ Some tests failed for {args.module}[/red]", 
                               title="Test Results", border_style="red"))
         
         return result.returncode
     else:
-        console.print(Panel(f"[red]❌ Unknown project: {args.project}[/red]\n"
-                          f"Valid projects: {', '.join(valid_projects)}", 
-                          title="Invalid Project", border_style="red"))
+        console.print(Panel(f"[red]❌ Unknown module: {args.module}[/red]\n"
+                          f"Valid modules: {', '.join(valid_modules)}", 
+                          title="Invalid Module", border_style="red"))
         return 1
 
 def cmd_submit(args):
-    """Submit project for grading."""
+    """Submit module for grading."""
     submit_text = Text()
-    submit_text.append(f"📤 Submitting project: {args.project}\n\n", style="bold cyan")
+    submit_text.append(f"📤 Submitting module: {args.module}\n\n", style="bold cyan")
     submit_text.append("🚧 Submission system not yet implemented.\n\n", style="yellow")
     submit_text.append("For now, make sure all tests pass with:\n", style="dim")
-    submit_text.append(f"   python -m pytest projects/{args.project}/test_*.py -v", style="bold white")
+    submit_text.append(f"   python -m pytest modules/{args.module}/test_*.py -v", style="bold white")
     
-    console.print(Panel(submit_text, title="Project Submission", border_style="bright_yellow"))
+    console.print(Panel(submit_text, title="Module Submission", border_style="bright_yellow"))
 
 def cmd_status(args):
-    """Check project status."""
+    """Check module status."""
     status_text = Text()
-    status_text.append(f"📊 Status for project: {args.project}\n\n", style="bold cyan")
+    status_text.append(f"📊 Status for module: {args.module}\n\n", style="bold cyan")
     status_text.append("🚧 Status system not yet implemented.", style="yellow")
     
-    console.print(Panel(status_text, title="Project Status", border_style="bright_yellow"))
+    console.print(Panel(status_text, title="Module Status", border_style="bright_yellow"))
 
 
 
@@ -481,7 +481,7 @@ def cmd_doctor(args):
         venv_status = "[yellow]✅ Ready (Not Active)[/yellow]"
     else:
         venv_status = "[red]❌ Not Found[/red]"
-    env_table.add_row("Virtual Environment", venv_status, "tinytorch-env")
+    env_table.add_row("Virtual Environment", venv_status, ".venv")
     
     # Dependencies
     dependencies = ['numpy', 'matplotlib', 'pytest', 'yaml', 'black', 'rich']
@@ -496,8 +496,8 @@ def cmd_doctor(args):
     console.print(env_table)
     console.print()
     
-    # Project structure table
-    struct_table = Table(title="Project Structure", show_header=True, header_style="bold magenta")
+    # Module structure table
+    struct_table = Table(title="Module Structure", show_header=True, header_style="bold magenta")
     struct_table.add_column("Path", style="cyan", width=25)
     struct_table.add_column("Status", justify="left")
     struct_table.add_column("Type", style="dim", width=25)
@@ -505,7 +505,7 @@ def cmd_doctor(args):
     required_paths = [
         ('tinytorch/', 'Package directory'),
         ('tinytorch/core/', 'Core module directory'),
-        ('projects/', 'Project directory'),
+        ('modules/', 'Module directory'),
         ('bin/tito.py', 'CLI script'),
         ('requirements.txt', 'Dependencies file')
     ]
@@ -519,10 +519,107 @@ def cmd_doctor(args):
     console.print(struct_table)
     console.print()
     
-    # Project implementations
+    # Module implementations
     console.print(Panel("📋 Implementation Status", 
-                       title="Project Status", border_style="bright_blue"))
+                       title="Module Status", border_style="bright_blue"))
     cmd_info(argparse.Namespace(hello=False, show_architecture=False))
+
+def cmd_jupyter(args):
+    """Start Jupyter notebook server."""
+    import subprocess
+    
+    console.print(Panel("📓 Jupyter Notebook Server", 
+                       title="Interactive Development", border_style="bright_green"))
+    
+    # Determine which Jupyter to start
+    if args.lab:
+        cmd = ["jupyter", "lab", "--port", str(args.port)]
+        console.print(f"🚀 Starting JupyterLab on port {args.port}...")
+    else:
+        cmd = ["jupyter", "notebook", "--port", str(args.port)]
+        console.print(f"🚀 Starting Jupyter Notebook on port {args.port}...")
+    
+    console.print("💡 Open your browser to the URL shown above")
+    console.print("📁 Navigate to your module's notebook directory")
+    console.print("🔄 Press Ctrl+C to stop the server")
+    
+    try:
+        subprocess.run(cmd)
+    except KeyboardInterrupt:
+        console.print("\n🛑 Jupyter server stopped")
+    except FileNotFoundError:
+        console.print(Panel("[red]❌ Jupyter not found. Install with: pip install jupyter[/red]", 
+                          title="Error", border_style="red"))
+        return 1
+    
+    return 0
+
+def cmd_nbdev(args):
+    """Run nbdev commands for notebook development."""
+    import subprocess
+    
+    console.print(Panel("📓 nbdev Notebook Development", 
+                       title="Notebook Tools", border_style="bright_cyan"))
+    
+    if args.build_lib:
+        console.print("🔨 Building library from notebooks...")
+        result = subprocess.run(["nbdev_build_lib"], capture_output=True, text=True)
+        if result.returncode == 0:
+            console.print(Panel("[green]✅ Library built successfully![/green]", 
+                              title="Build Success", border_style="green"))
+        else:
+            console.print(Panel(f"[red]❌ Build failed: {result.stderr}[/red]", 
+                              title="Build Error", border_style="red"))
+        return result.returncode
+    
+    elif args.build_docs:
+        console.print("📚 Building documentation from notebooks...")
+        result = subprocess.run(["nbdev_build_docs"], capture_output=True, text=True)
+        if result.returncode == 0:
+            console.print(Panel("[green]✅ Documentation built successfully![/green]", 
+                              title="Docs Success", border_style="green"))
+        else:
+            console.print(Panel(f"[red]❌ Docs build failed: {result.stderr}[/red]", 
+                              title="Docs Error", border_style="red"))
+        return result.returncode
+    
+    elif args.test:
+        console.print("🧪 Running notebook tests...")
+        result = subprocess.run(["nbdev_test"], capture_output=True, text=True)
+        if result.returncode == 0:
+            console.print(Panel("[green]✅ All notebook tests passed![/green]", 
+                              title="Test Success", border_style="green"))
+        else:
+            console.print(Panel(f"[red]❌ Some tests failed: {result.stderr}[/red]", 
+                              title="Test Error", border_style="red"))
+        return result.returncode
+    
+    elif args.clean:
+        console.print("🧹 Cleaning notebook build artifacts...")
+        result = subprocess.run(["nbdev_clean_nbs"], capture_output=True, text=True)
+        if result.returncode == 0:
+            console.print(Panel("[green]✅ Cleaned successfully![/green]", 
+                              title="Clean Success", border_style="green"))
+        else:
+            console.print(Panel(f"[red]❌ Clean failed: {result.stderr}[/red]", 
+                              title="Clean Error", border_style="red"))
+        return result.returncode
+    
+    else:
+        help_text = Text()
+        help_text.append("📓 nbdev Commands:\n\n", style="bold cyan")
+        help_text.append("  tito nbdev --build-lib    - Build library from notebooks\n", style="white")
+        help_text.append("  tito nbdev --build-docs   - Build documentation\n", style="white")
+        help_text.append("  tito nbdev --test         - Run notebook tests\n", style="white")
+        help_text.append("  tito nbdev --clean        - Clean build artifacts\n\n", style="white")
+        help_text.append("💡 Development workflow:\n", style="bold yellow")
+        help_text.append("  1. Work in modules/*/notebook/*_dev.ipynb\n", style="dim")
+        help_text.append("  2. Test interactively\n", style="dim")
+        help_text.append("  3. Run: tito nbdev --build-lib\n", style="dim")
+        help_text.append("  4. Test compiled package\n", style="dim")
+        
+        console.print(Panel(help_text, title="nbdev Help", border_style="bright_cyan"))
+        return 0
 
 def main():
     """Main CLI entry point."""
@@ -542,20 +639,33 @@ def main():
     info_parser.add_argument("--show-architecture", action="store_true", help="Show system architecture")
     
     # Test command
-    test_parser = subparsers.add_parser("test", help="Run project tests")
-    test_parser.add_argument("--project", help="Project to test")
-    test_parser.add_argument("--all", action="store_true", help="Run all project tests")
+    test_parser = subparsers.add_parser("test", help="Run module tests")
+    test_parser.add_argument("--module", help="Module to test")
+    test_parser.add_argument("--all", action="store_true", help="Run all module tests")
     
     # Submit command
-    submit_parser = subparsers.add_parser("submit", help="Submit project")
-    submit_parser.add_argument("--project", required=True, help="Project to submit")
+    submit_parser = subparsers.add_parser("submit", help="Submit module")
+    submit_parser.add_argument("--module", required=True, help="Module to submit")
     
     # Status command
-    status_parser = subparsers.add_parser("status", help="Check project status")
-    status_parser.add_argument("--project", required=True, help="Project to check")
+    status_parser = subparsers.add_parser("status", help="Check module status")
+    status_parser.add_argument("--module", required=True, help="Module to check")
     
     # Doctor command
     doctor_parser = subparsers.add_parser("doctor", help="Run environment diagnosis")
+    
+    # nbdev commands
+    nbdev_parser = subparsers.add_parser("nbdev", help="nbdev notebook development commands")
+    nbdev_parser.add_argument("--build-lib", action="store_true", help="Build library from notebooks")
+    nbdev_parser.add_argument("--build-docs", action="store_true", help="Build documentation from notebooks")
+    nbdev_parser.add_argument("--test", action="store_true", help="Run notebook tests")
+    nbdev_parser.add_argument("--clean", action="store_true", help="Clean notebook build artifacts")
+    
+    # Jupyter command
+    jupyter_parser = subparsers.add_parser("jupyter", help="Start Jupyter notebook server")
+    jupyter_parser.add_argument("--notebook", action="store_true", help="Start classic notebook")
+    jupyter_parser.add_argument("--lab", action="store_true", help="Start JupyterLab")
+    jupyter_parser.add_argument("--port", type=int, default=8888, help="Port to run on (default: 8888)")
     
     args = parser.parse_args()
     
@@ -570,10 +680,10 @@ def main():
     
     # Validate test command arguments
     if args.command == "test":
-        if not args.all and not args.project:
+        if not args.all and not args.module:
             error_text = Text()
-            error_text.append("❌ Error: Must specify either --project or --all\n\n", style="bold red")
-            error_text.append("Usage: python bin/tito.py test --project <name> | --all", style="cyan")
+            error_text.append("❌ Error: Must specify either --module or --all\n\n", style="bold red")
+            error_text.append("Usage: python bin/tito.py test --module <name> | --all", style="cyan")
             console.print(Panel(error_text, title="Invalid Arguments", border_style="red"))
             return 1
     
@@ -588,6 +698,10 @@ def main():
         cmd_status(args)
     elif args.command == "doctor":
         cmd_doctor(args)
+    elif args.command == "nbdev":
+        return cmd_nbdev(args)
+    elif args.command == "jupyter":
+        return cmd_jupyter(args)
     else:
         parser.print_help()
         return 1

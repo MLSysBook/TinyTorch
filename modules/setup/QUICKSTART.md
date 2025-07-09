@@ -17,8 +17,8 @@ python3 projects/setup/create_env.py
 
 **Step 3**: Activate environment and verify
 ```bash
-source tinytorch-env/bin/activate  # macOS/Linux
-# OR: tinytorch-env\Scripts\activate  # Windows
+source .venv/bin/activate  # macOS/Linux
+# OR: .venv\Scripts\activate  # Windows
 
 python3 projects/setup/check_setup.py
 ```
@@ -31,8 +31,8 @@ python3 projects/setup/check_setup.py
 
 **Step 1**: Create virtual environment
 ```bash
-python3 -m venv tinytorch-env
-source tinytorch-env/bin/activate
+python3 -m venv .venv
+source .venv/bin/activate
 ```
 
 **Step 2**: Install dependencies
@@ -53,7 +53,7 @@ python3 projects/setup/check_setup.py
 **Start working** (run this every time):
 ```bash
 cd TinyTorch
-source tinytorch-env/bin/activate  # Always activate first!
+source .venv/bin/activate  # Always activate first!
 ```
 
 **Check status**:
@@ -72,7 +72,7 @@ python3 -m pytest projects/setup/test_setup.py -v
 
 **"ModuleNotFoundError"**: You forgot to activate your virtual environment
 ```bash
-source tinytorch-env/bin/activate
+source .venv/bin/activate
 ```
 
 **"Command not found"**: Make sure you're in the TinyTorch directory
@@ -83,7 +83,7 @@ ls  # Should see bin/, projects/, requirements.txt
 
 **Dependencies missing**: Reinstall in the virtual environment
 ```bash
-source tinytorch-env/bin/activate
+source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
