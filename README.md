@@ -45,12 +45,12 @@ cd modules/setup/
 cat README.md
 
 # Open the development notebook
-jupyter lab setup.ipynb
+jupyter lab setup_dev.ipynb
 ```
 
 ### 3. Development Workflow
 
-1. **Work in module notebooks** (`modules/[module]/[module].ipynb`)
+1. **Work in module notebooks** (`modules/[module]/[module]_dev.ipynb`)
 2. **Mark code for export** with `#| export` directives
 3. **Export to package** with `python bin/tito.py sync`
 4. **Test your code** with `python bin/tito.py test --module [module]`
@@ -84,7 +84,7 @@ TinyTorch follows a progressive module structure. Each module builds on the prev
 | `python bin/tito.py test --module [name]` | Test specific module | Test tensor module |
 | `python bin/tito.py test --all` | Run all tests | Test everything |
 | `python bin/tito.py info` | Check implementation status | Show progress |
-| `jupyter lab [module].ipynb` | Start module development | Open tensor notebook |
+| `jupyter lab [module]_dev.ipynb` | Start module development | Open tensor notebook |
 
 ## 📦 Package Structure
 
@@ -132,7 +132,7 @@ cd modules/[module-name]/
 cat README.md
 
 # 3. Open development notebook
-jupyter lab [module-name].ipynb
+jupyter lab [module-name]_dev.ipynb
 
 # 4. Implement functions with #| export
 # 5. Test interactively in notebook
@@ -162,7 +162,7 @@ Each module follows a consistent structure:
 ```
 modules/[module-name]/
 ├── README.md              # 📖 Module overview and instructions
-├── [module-name].ipynb    # 📓 Main development notebook
+├── [module-name]_dev.ipynb    # 📓 Main development notebook
 ├── test_[module].py       # 🧪 Automated tests
 └── check_[module].py      # ✅ Manual verification (optional)
 ```

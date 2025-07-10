@@ -64,7 +64,7 @@ cat README.md
 ### Step 3: Open the Development Notebook
 ```bash
 # Start Jupyter Lab
-jupyter lab setup.ipynb
+jupyter lab setup_dev.ipynb
 
 # The notebook will open in your browser at http://localhost:8888
 ```
@@ -125,7 +125,7 @@ graph LR
 | Command | Purpose | When to Use |
 |---------|---------|-------------|
 | `cat README.md` | Read module overview | Start of each module |
-| `jupyter lab [module].ipynb` | Open development environment | Implement code |
+| `jupyter lab [module]_dev.ipynb` | Open development environment | Implement code |
 | `python bin/tito.py sync` | Export notebooks to package | After coding in notebook |
 | `python bin/tito.py test --module [name]` | Test your implementation | Verify correctness |
 | `python bin/tito.py info` | Check system status | Anytime |
@@ -146,7 +146,7 @@ cat README.md
 
 ### Step 3: Start Building
 ```bash
-jupyter lab tensor.ipynb
+jupyter lab tensor_dev.ipynb
 ```
 
 In this module, you'll implement:
@@ -211,7 +211,7 @@ python bin/tito.py test --module setup -v
 pip install jupyter jupyterlab
 
 # Try classic notebook instead
-jupyter notebook modules/setup/setup.ipynb
+jupyter notebook modules/setup/setup_dev.ipynb
 ```
 
 ## 📚 Learning Path
@@ -281,7 +281,7 @@ You now have everything you need to start building ML systems from scratch!
 # Quick reminder of the workflow:
 cd modules/setup/          # Navigate to module
 cat README.md             # Read overview
-jupyter lab setup.ipynb   # Start implementing
+jupyter lab setup_dev.ipynb   # Start implementing
 # [work in notebook]
 python bin/tito.py sync   # Export to package
 python bin/tito.py test --module setup  # Test implementation
