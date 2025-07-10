@@ -205,12 +205,12 @@ class DeveloperProfile:
     """
     
     def __init__(self, name="Vijay Janapa Reddi", affiliation="Harvard University", 
-                 email="vijay@seas.harvard.edu", github_username="vjreddi"):
+                 email="vj@eecs.harvard.edu", github_username="profvjreddi", ascii_art=None):
         """
         Initialize developer profile.
         
         TODO: Store developer information with sensible defaults.
-        Students should be able to customize this with their own info.
+        Students should be able to customize this with their own info and ASCII art.
         """
         raise NotImplementedError("Student implementation required")
     
@@ -218,7 +218,7 @@ class DeveloperProfile:
         """
         Return formatted developer information.
         
-        TODO: Format developer info as a professional signature.
+        TODO: Format developer info as a professional signature with optional ASCII art.
         """
         raise NotImplementedError("Student implementation required")
     
@@ -229,6 +229,14 @@ class DeveloperProfile:
         TODO: Return a concise signature like "Built by Name (@github)"
         """
         raise NotImplementedError("Student implementation required")
+    
+    def get_ascii_art(self):
+        """
+        Get ASCII art for the profile.
+        
+        TODO: Return custom ASCII art or default flame.
+        """
+        raise NotImplementedError("Student implementation required")
 
 # %%
 #| hide
@@ -236,12 +244,43 @@ class DeveloperProfile:
 class DeveloperProfile:
     """Developer profile for personalizing TinyTorch experience."""
     
+    # Default TinyTorch flame ASCII art
+    DEFAULT_FLAME = """
+    🔥 TinyTorch Developer 🔥
+         .  .  .  .  .  .
+        .    .  .  .  .   .
+       .  .    .  .  .  .  .
+      .  .  .    .  .  .  .  .
+     .  .  .  .    .  .  .  .  .
+    .  .  .  .  .    .  .  .  .  .
+   .  .  .  .  .  .    .  .  .  .  .
+  .  .  .  .  .  .  .    .  .  .  .  .
+ .  .  .  .  .  .  .  .    .  .  .  .  .
+.  .  .  .  .  .  .  .  .    .  .  .  .  .
+ \\  \\  \\  \\  \\  \\  \\  \\  \\  /  /  /  /  /  /
+  \\  \\  \\  \\  \\  \\  \\  \\  /  /  /  /  /  /
+   \\  \\  \\  \\  \\  \\  \\  /  /  /  /  /  /
+    \\  \\  \\  \\  \\  \\  /  /  /  /  /  /
+     \\  \\  \\  \\  \\  /  /  /  /  /  /
+      \\  \\  \\  \\  /  /  /  /  /
+       \\  \\  \\  /  /  /  /  /  /
+        \\  \\  /  /  /  /  /  /
+         \\  /  /  /  /  /  /
+          \\/  /  /  /  /  /
+           \\/  /  /  /  /
+            \\/  /  /  /
+             \\/  /  /
+              \\/  /
+               \\/
+    """
+    
     def __init__(self, name="Vijay Janapa Reddi", affiliation="Harvard University", 
-                 email="vijay@seas.harvard.edu", github_username="vjreddi"):
+                 email="vj@eecs.harvard.edu", github_username="profvjreddi", ascii_art=None):
         self.name = name
         self.affiliation = affiliation
         self.email = email
         self.github_username = github_username
+        self.ascii_art = ascii_art or self.DEFAULT_FLAME
     
     def __str__(self):
         return f"👨‍💻 {self.name} | {self.affiliation} | @{self.github_username}"
@@ -249,6 +288,21 @@ class DeveloperProfile:
     def get_signature(self):
         """Get a short signature for code headers."""
         return f"Built by {self.name} (@{self.github_username})"
+    
+    def get_ascii_art(self):
+        """Get ASCII art for the profile."""
+        return self.ascii_art
+    
+    def get_full_profile(self):
+        """Get complete profile with ASCII art."""
+        return f"""{self.ascii_art}
+        
+👨‍💻 Developer: {self.name}
+🏛️  Affiliation: {self.affiliation}
+📧 Email: {self.email}
+🐙 GitHub: @{self.github_username}
+🔥 Ready to build ML systems from scratch!
+"""
 
 # %% [markdown]
 """
@@ -267,6 +321,14 @@ try:
     print(f"Signature: {default_profile.get_signature()}")
     print()
     
+    print("🎨 ASCII Art Preview:")
+    print(default_profile.get_ascii_art())
+    print()
+    
+    print("🔥 Full Profile Display:")
+    print(default_profile.get_full_profile())
+    print()
+    
     # TODO: Students should customize this with their own information!
     print("🎯 YOUR TURN: Create your own profile!")
     print("Uncomment and modify the lines below:")
@@ -274,10 +336,15 @@ try:
     print("#     name='Your Name',")
     print("#     affiliation='Your University/Company',")
     print("#     email='your.email@example.com',")
-    print("#     github_username='yourgithub'")
+    print("#     github_username='yourgithub',")
+    print("#     ascii_art='''")
+    print("#     Your Custom ASCII Art Here!")
+    print("#     Maybe your initials, a logo, or something fun!")
+    print("#     '''")
     print("# )")
     print("# print(f'My Profile: {my_profile}')")
     print("# print(f'My Signature: {my_profile.get_signature()}')")
+    print("# print(my_profile.get_full_profile())")
     
 except NotImplementedError as e:
     print(f"⚠️  {e}")
@@ -290,10 +357,27 @@ except NotImplementedError as e:
 **For Students**: Make TinyTorch truly yours by:
 
 1. **Update your profile** in the cell above with your real information
-2. **Create a custom hello message** that includes your name
+2. **Create custom ASCII art** - your initials, a simple logo, or something that represents you
 3. **Add your signature** to code you write throughout the course
+4. **Show off your full profile** with the `get_full_profile()` method
 
 This isn't just about customization - it's about taking ownership of your learning journey in ML systems!
+
+**ASCII Art Ideas:**
+- Your initials in block letters
+- A simple logo or symbol that represents you
+- Your university mascot in ASCII
+- A coding-themed design
+- Something that motivates you!
+
+**Example custom ASCII art:**
+```
+    A   L   I   C   E
+   /\\ | | | | /\\ |
+  /  \\| | | |/  \\|
+ /    \\ | | /    \\
+/      \\|_|/      \\
+```
 
 **Example personalized hello:**
 ```python
