@@ -204,6 +204,15 @@ class DeveloperProfile:
     Default to course instructor but allow students to personalize.
     """
     
+    @staticmethod
+    def _load_default_flame():
+        """
+        Load the default TinyTorch flame ASCII art from file.
+        
+        TODO: Implement file loading for tinytorch_flame.txt with fallback.
+        """
+        raise NotImplementedError("Student implementation required")
+    
     def __init__(self, name="Vijay Janapa Reddi", affiliation="Harvard University", 
                  email="vj@eecs.harvard.edu", github_username="profvjreddi", ascii_art=None):
         """
@@ -234,7 +243,7 @@ class DeveloperProfile:
         """
         Get ASCII art for the profile.
         
-        TODO: Return custom ASCII art or default flame.
+        TODO: Return custom ASCII art or default flame loaded from file.
         """
         raise NotImplementedError("Student implementation required")
 
@@ -244,8 +253,27 @@ class DeveloperProfile:
 class DeveloperProfile:
     """Developer profile for personalizing TinyTorch experience."""
     
-    # Default TinyTorch flame ASCII art
-    DEFAULT_FLAME = """
+    @staticmethod
+    def _load_default_flame():
+        """Load the default TinyTorch flame ASCII art from file."""
+        try:
+            # Try to load from the same directory as this module
+            import os
+            current_dir = os.path.dirname(__file__)
+            flame_path = os.path.join(current_dir, 'tinytorch_flame.txt')
+            
+            with open(flame_path, 'r', encoding='utf-8') as f:
+                flame_art = f.read()
+            
+            # Add the Tiny🔥Torch text below the flame
+            return f"""{flame_art}
+                    
+                    Tiny🔥Torch
+            Build ML Systems from Scratch!
+            """
+        except (FileNotFoundError, IOError):
+            # Fallback to simple flame if file not found
+            return """
     🔥 TinyTorch Developer 🔥
          .  .  .  .  .  .
         .    .  .  .  .   .
@@ -262,7 +290,7 @@ class DeveloperProfile:
    \\  \\  \\  \\  \\  \\  \\  /  /  /  /  /  /
     \\  \\  \\  \\  \\  \\  /  /  /  /  /  /
      \\  \\  \\  \\  \\  /  /  /  /  /  /
-      \\  \\  \\  \\  /  /  /  /  /
+      \\  \\  \\  \\  /  /  /  /  /  /
        \\  \\  \\  /  /  /  /  /  /
         \\  \\  /  /  /  /  /  /
          \\  /  /  /  /  /  /
@@ -272,7 +300,10 @@ class DeveloperProfile:
              \\/  /  /
               \\/  /
                \\/
-    """
+                    
+                    Tiny🔥Torch
+            Build ML Systems from Scratch!
+            """
     
     def __init__(self, name="Vijay Janapa Reddi", affiliation="Harvard University", 
                  email="vj@eecs.harvard.edu", github_username="profvjreddi", ascii_art=None):
@@ -280,7 +311,7 @@ class DeveloperProfile:
         self.affiliation = affiliation
         self.email = email
         self.github_username = github_username
-        self.ascii_art = ascii_art or self.DEFAULT_FLAME
+        self.ascii_art = ascii_art or self._load_default_flame()
     
     def __str__(self):
         return f"👨‍💻 {self.name} | {self.affiliation} | @{self.github_username}"
@@ -358,10 +389,29 @@ except NotImplementedError as e:
 
 1. **Update your profile** in the cell above with your real information
 2. **Create custom ASCII art** - your initials, a simple logo, or something that represents you
-3. **Add your signature** to code you write throughout the course
-4. **Show off your full profile** with the `get_full_profile()` method
+3. **Customize the flame file** - edit `tinytorch_flame.txt` to create your own default art
+4. **Add your signature** to code you write throughout the course
+5. **Show off your full profile** with the `get_full_profile()` method
 
 This isn't just about customization - it's about taking ownership of your learning journey in ML systems!
+
+**ASCII Art Customization Options:**
+
+**Option 1: Custom ASCII Art Parameter**
+```python
+my_profile = DeveloperProfile(
+    name="Your Name",
+    ascii_art='''
+    Your Custom ASCII Art Here!
+    Maybe your initials, a logo, or something fun!
+    '''
+)
+```
+
+**Option 2: Edit the Default Flame File**
+- Edit `tinytorch_flame.txt` in this directory
+- Replace with your own ASCII art design
+- All students using defaults will see your custom art!
 
 **ASCII Art Ideas:**
 - Your initials in block letters
@@ -378,6 +428,11 @@ This isn't just about customization - it's about taking ownership of your learni
  /    \\ | | /    \\
 /      \\|_|/      \\
 ```
+
+**Pro Tip**: The `tinytorch_flame.txt` file contains the beautiful default flame art. You can:
+- Edit it directly for a personalized default
+- Create your own `.txt` file and modify the code to load it
+- Use online ASCII art generators for inspiration
 
 **Example personalized hello:**
 ```python

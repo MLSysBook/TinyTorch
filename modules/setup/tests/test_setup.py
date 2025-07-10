@@ -188,8 +188,9 @@ class TestDeveloperProfile:
         ascii_art = profile.get_ascii_art()
         
         assert isinstance(ascii_art, str)
-        assert "🔥 TinyTorch Developer 🔥" in ascii_art
-        assert len(ascii_art) > 50  # Should be substantial ASCII art
+        assert "Tiny🔥Torch" in ascii_art
+        assert "Build ML Systems from Scratch!" in ascii_art
+        assert len(ascii_art) > 100  # Should be substantial ASCII art from file
         
         # Test custom ASCII art
         custom_art = "My Custom Art!"
@@ -202,7 +203,8 @@ class TestDeveloperProfile:
         full_profile = profile.get_full_profile()
         
         assert isinstance(full_profile, str)
-        assert "🔥 TinyTorch Developer 🔥" in full_profile
+        assert "Tiny🔥Torch" in full_profile
+        assert "Build ML Systems from Scratch!" in full_profile
         assert "👨‍💻 Developer: Vijay Janapa Reddi" in full_profile
         assert "🏛️  Affiliation: Harvard University" in full_profile
         assert "📧 Email: vj@eecs.harvard.edu" in full_profile
@@ -224,8 +226,9 @@ class TestDeveloperProfile:
         assert profile.affiliation == "Harvard University"
         assert profile.email == "vj@eecs.harvard.edu"
         
-        # Should still have default ASCII art
-        assert "🔥 TinyTorch Developer 🔥" in profile.get_ascii_art()
+        # Should still have default ASCII art from file
+        assert "Tiny🔥Torch" in profile.get_ascii_art()
+        assert "Build ML Systems from Scratch!" in profile.get_ascii_art()
 
 
 class TestModuleIntegration:
