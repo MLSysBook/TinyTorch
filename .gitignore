@@ -135,7 +135,7 @@ wandb/
 # Everything else is auto-generated and shouldn't be tracked
 
 # OLD STRUCTURE - Remove these when migrating
-modules/
+# modules/ - Now using modules/ for educational structure
 # We now use notebooks/ and let nbdev handle exports
 
 # Training artifacts
