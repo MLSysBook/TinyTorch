@@ -1,6 +1,10 @@
 
 # Testing Patterns for TinyTorch
 
+## Testing Framework Requirement
+
+**ALWAYS USE PYTEST** - TinyTorch uses pytest as the standard testing framework for all tests. Never use manual testing, unittest, or custom test runners. All test files must be compatible with pytest.
+
 ## Test File Structure
 
 ### Module Tests (`modules/{module}/tests/test_{module}.py`)
@@ -8,11 +12,13 @@
 - Validate both student TODOs and hidden solutions
 - Should work with both incomplete and complete implementations
 - Import from the parent module's development file
+- **Must use pytest** with proper test classes and assertions
 
 ### Package Tests (`tinytorch/tests/`)  
 - Test the exported package functionality
 - Integration tests across components
 - Production-level validation
+- **Must use pytest** with comprehensive test coverage
 
 ## Test Naming Convention
 
@@ -27,7 +33,9 @@ tinytorch/tests/test_tensor.py
 tinytorch/tests/test_autograd.py
 ```
 
-## Test Structure Pattern
+## Test Structure Pattern (REQUIRED)
+
+**All tests must follow this pytest pattern:**
 
 ```python
 import pytest
@@ -65,20 +73,32 @@ class TestComponentName:
         pass
 ```
 
+## pytest Features to Use
+
+- **Test classes** for organizing related tests
+- **pytest fixtures** for setup/teardown (e.g., `capsys`, `monkeypatch`)
+- **Parametrized tests** for testing multiple inputs
+- **pytest.raises()** for exception testing
+- **assert statements** with descriptive messages
+- **Test discovery** - pytest automatically finds test files
+
 ## Running Tests
 
 ```bash
-# Test specific module
+# Test specific module (recommended)
 python bin/tito.py test --module tensor
 
 # Test all modules
 python bin/tito.py test --all
 
-# Run specific test file directly
+# Run specific test file directly with pytest
 python -m pytest modules/tensor/tests/test_tensor.py -v
 
 # Run from within module directory
 cd modules/tensor && python -m pytest tests/ -v
+
+# Run with coverage
+python -m pytest modules/tensor/tests/ --cov=tensor_dev -v
 ```
 
 ## Test Categories
@@ -90,10 +110,81 @@ cd modules/tensor && python -m pytest tests/ -v
 
 ## Key Testing Principles
 
+- **Always use pytest** - No exceptions, no manual testing
 - Tests should pass with both TODO stubs and complete implementations
 - Educational tests should guide student learning
 - Package tests ensure production readiness
 - All tests should be fast and isolated
 - Use descriptive test names that explain what's being tested
 - Import from module development files, not the package (for module tests)
+- Use pytest fixtures for common setup/teardown operations
+- Group related tests in test classes
+- Use parametrized tests for multiple similar test cases
+
+## Example Comprehensive Test Structure
+
+```python
+import pytest
+from pathlib import Path
+import sys
+
+# Add parent directory to path
+sys.path.insert(0, str(Path(__file__).parent.parent))
+
+from setup_dev import hello_tinytorch, SystemInfo, DeveloperProfile
+
+class TestBasicFunctions:
+    """Test basic module functions."""
+    
+    def test_hello_tinytorch_executes(self):
+        """Test function runs without error."""
+        hello_tinytorch()
+    
+    def test_hello_tinytorch_output(self, capsys):
+        """Test function produces expected output."""
+        hello_tinytorch()
+        captured = capsys.readouterr()
+        assert "TinyTorch" in captured.out
+
+class TestSystemInfo:
+    """Test SystemInfo class."""
+    
+    def test_creation(self):
+        """Test class instantiation."""
+        info = SystemInfo()
+        assert hasattr(info, 'python_version')
+    
+    def test_compatibility(self):
+        """Test compatibility checking."""
+        info = SystemInfo()
+        assert isinstance(info.is_compatible(), bool)
+
+class TestFileOperations:
+    """Test file-related operations."""
+    
+    def test_missing_file_handling(self, monkeypatch):
+        """Test graceful handling of missing files."""
+        # Use monkeypatch to mock file operations
+        pass
+```
+
+## DO NOT USE
+
+- Manual test runners (custom functions that execute tests)
+- unittest framework
+- Simple assert statements without pytest structure
+- Print-based testing
+- Custom test discovery mechanisms
+- Any testing approach that doesn't integrate with pytest
+
+## Integration with TinyTorch CLI
+
+The `tito.py` CLI tool expects pytest-compatible test files and uses pytest internally:
+
+```python
+# In bin/tito.py
+result = subprocess.run([sys.executable, "-m", "pytest", test_file, "-v"])
+```
+
+This ensures all tests run through pytest with consistent output and reporting.
  
