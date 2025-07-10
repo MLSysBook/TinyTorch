@@ -16,7 +16,7 @@ By the end of this module, you will:
 ```
 modules/tensor/
 ├── README.md           # 📖 This file - Module overview
-├── tensor.ipynb        # 📓 Main development notebook
+├── tensor_dev.ipynb        # 📓 Main development notebook
 ├── test_tensor.py      # 🧪 Automated tests  
 └── check_tensor.py     # ✅ Manual verification (coming soon)
 ```
@@ -35,7 +35,7 @@ python bin/tito.py test --module setup  # Should pass
 cd modules/tensor/
 
 # Open the development notebook
-jupyter lab tensor.ipynb
+jupyter lab tensor_dev.ipynb
 ```
 
 ### Step 3: Work Through the Implementation
