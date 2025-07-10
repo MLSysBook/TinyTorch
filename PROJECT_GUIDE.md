@@ -41,7 +41,7 @@ python bin/tito.py info            # Check system status
 
 Each module follows this pattern:
 1. **Read overview**: `modules/[name]/README.md`
-2. **Work in notebook**: `modules/[name]/[name].ipynb`
+2. **Work in notebook**: `modules/[name]/[name]_dev.ipynb`
 3. **Export code**: `python bin/tito.py sync`
 4. **Run tests**: `python bin/tito.py test --module [name]`
 5. **Move to next module when tests pass**
