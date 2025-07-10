@@ -1,71 +1,55 @@
-# Module 0: Setup
+# Setup Module
 
-## Learning Objectives
+Welcome to TinyTorch! This is your first module in the Machine Learning Systems course.
 
-This module teaches you the **TinyTorch development workflow**. By the end, you'll be comfortable with:
+## Overview
 
-- Writing code in Jupyter notebooks using nbdev conventions
-- Exporting notebook code to Python modules
-- Running tests and using the TinyTorch CLI
-- Understanding the development rhythm you'll use for all modules
+The setup module is a simple introduction to TinyTorch that displays beautiful ASCII art to get you started on your ML systems journey.
 
-## What You'll Build
+## Files
 
-A simple "Hello World" system that demonstrates the complete development cycle:
+- `setup_dev.py` - Main development file with the hello_tinytorch() function
+- `setup_dev.ipynb` - Jupyter notebook version (auto-generated)
+- `tinytorch_flame.txt` - ASCII art file containing the TinyTorch flame design
+- `tests/test_setup.py` - Simple tests for the module
+- `README.md` - This file
 
-- Basic utility functions
-- A simple `SystemInfo` class
-- Tests to verify everything works
-- Experience with the full notebook → export → test workflow
+## Usage
 
-## Module Structure
+### Python Script
+```python
+from setup_dev import hello_tinytorch
 
-```
-modules/setup/
-├── setup_dev.ipynb        # 📓 Main development notebook
-├── README.md              # 📖 This guide
-└── __init__.py            # 📦 Module marker
+hello_tinytorch()
 ```
 
-## Development Workflow
+### Jupyter Notebook
+Open `setup_dev.ipynb` and run the cells to see the ASCII art displayed.
 
-### 1. Work in the Notebook
+## Testing
+
+Run the tests to verify everything works:
+
 ```bash
-cd modules/setup
-jupyter lab setup_dev.ipynb
+python3 tests/test_setup.py
 ```
 
-### 2. Export Your Code
-```bash
-python bin/tito.py sync
-```
+## ASCII Art Customization
 
-### 3. Test Your Implementation
-```bash
-python bin/tito.py test --module setup
-```
+The ASCII art is loaded from `tinytorch_flame.txt`. You can customize it by:
 
-### 4. Check Your Progress
-```bash
-python bin/tito.py info
-```
+1. **Edit the file directly**: Modify `tinytorch_flame.txt` with your own ASCII art
+2. **Create your own design**: Replace the flame with your initials, logo, or any design you like
 
-## Key Concepts
+## What You'll Learn
 
-- **nbdev workflow**: Write in notebooks, export to Python
-- **Export directive**: Use `#| export` to mark code for export
-- **Module → Package mapping**: This module exports to `tinytorch/core/utils.py`
-- **Teaching vs. Building**: Learn by modules, build by function (see VISION.md)
-- **Test integration**: Tests run automatically via CLI
-- **Module development**: Each module is self-contained
+This simple module introduces:
+- Basic Python file structure
+- File I/O operations
+- Error handling (fallback when file not found)
+- Testing with simple assertions
+- The TinyTorch development workflow
 
-## Success Criteria
+## Next Steps
 
-✅ All tests pass  
-✅ Code exports cleanly to `tinytorch/core/utils.py`  
-✅ You understand the development rhythm  
-✅ Ready to tackle the Tensor module  
-
----
-
-**Next Module**: [Tensor](../tensor/) - Core data structures and operations 
+Once you've explored this module, you're ready to move on to the tensor module where you'll build the core data structures for TinyTorch! 
