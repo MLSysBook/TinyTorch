@@ -135,7 +135,13 @@ class TestTensorUtils:
         if hasattr(t, 'mean'):
             result = t.mean()
             expected = 2.0
-            assert abs(result - expected) < 1e-6 or (hasattr(result, 'data') and abs(result.data - expected) < 1e-6)
+            # Handle both scalar and Tensor results
+            if hasattr(result, 'item'):
+                assert abs(result.item() - expected) < 1e-6
+            elif hasattr(result, 'data'):
+                assert abs(result.data - expected) < 1e-6
+            else:
+                assert abs(result - expected) < 1e-6
     
     def test_reshape_exists(self):
         """Test that reshape method exists (may not be implemented yet)."""
