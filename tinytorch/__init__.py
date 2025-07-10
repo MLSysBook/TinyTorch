@@ -1,14 +1,14 @@
 """
-Tiny🔥Torch: A complete ML system built from scratch.
+TinyTorch: Build ML Systems from Scratch
 
-TinyTorch is a pedagogical project for learning how machine learning 
-systems work by implementing every component from first principles.
+A comprehensive machine learning systems course where you implement 
+every component from tensors to production monitoring.
+
+This package is auto-generated from Jupyter notebooks using nbdev.
+Students work in notebooks/, and all Python code is exported automatically.
 """
 
 __version__ = "0.1.0"
-__author__ = "TinyTorch Students"
 
-# Core components will be imported here as they're implemented
-# from .core.tensor import Tensor
-# from .core.autograd import Variable
-# from .core.modules import Module 
+# Main exports will be added automatically by nbdev
+# Students should not edit this file manually 

@@ -352,7 +352,7 @@ def cmd_test(args):
         failed_modules = []
         
         # Count existing test files
-        existing_tests = [p for p in valid_modules if Path(f"modules/{p}/test_{p}.py").exists()]
+        existing_tests = [p for p in valid_modules if Path(f"tests/test_{p}.py").exists()]
         
         console.print(Panel(f"🧪 Running tests for {len(existing_tests)} modules", 
                           title="Test Suite", border_style="bright_cyan"))
@@ -370,7 +370,7 @@ def cmd_test(args):
             for module in existing_tests:
                 progress.update(task, description=f"Testing {module}...")
                 
-                test_file = f"modules/{module}/test_{module}.py"
+                test_file = f"tests/test_{module}.py"
                 result = subprocess.run([sys.executable, "-m", "pytest", test_file, "-v"], 
                                       capture_output=True, text=True)
                 
@@ -395,7 +395,7 @@ def cmd_test(args):
     elif args.module in valid_modules:
         # Run specific module tests
         import subprocess
-        test_file = f"modules/{args.module}/test_{args.module}.py"
+        test_file = f"tests/test_{args.module}.py"
         
         console.print(Panel(f"🧪 Running tests for module: [bold cyan]{args.module}[/bold cyan]", 
                           title="Single Module Test", border_style="bright_cyan"))
@@ -433,7 +433,7 @@ def cmd_submit(args):
     submit_text.append(f"📤 Submitting module: {args.module}\n\n", style="bold cyan")
     submit_text.append("🚧 Submission system not yet implemented.\n\n", style="yellow")
     submit_text.append("For now, make sure all tests pass with:\n", style="dim")
-    submit_text.append(f"   python -m pytest modules/{args.module}/test_*.py -v", style="bold white")
+    submit_text.append(f"   python -m pytest tests/test_{args.module}.py -v", style="bold white")
     
     console.print(Panel(submit_text, title="Module Submission", border_style="bright_yellow"))
 
@@ -554,6 +554,63 @@ def cmd_jupyter(args):
     
     return 0
 
+def cmd_sync(args):
+    """Export notebook code to Python package using nbdev."""
+    import subprocess
+    
+    console.print(Panel("🔄 Synchronizing Notebooks to Package", 
+                       title="nbdev Export", border_style="bright_cyan"))
+    
+    console.print("🔄 Exporting notebook code to tinytorch package...")
+    
+    try:
+        result = subprocess.run(["nbdev_export"], capture_output=True, text=True, cwd=Path.cwd())
+        
+        if result.returncode == 0:
+            console.print(Panel("[green]✅ Successfully exported notebook code to tinytorch package![/green]", 
+                              title="Export Success", border_style="green"))
+            
+            # Show what was exported
+            exports_text = Text()
+            exports_text.append("📦 Exported modules:\n", style="bold cyan")
+            
+            # Check for exported files
+            tinytorch_path = Path("tinytorch")
+            if tinytorch_path.exists():
+                for py_file in tinytorch_path.rglob("*.py"):
+                    if py_file.name != "__init__.py" and py_file.stat().st_size > 100:  # Non-empty files
+                        rel_path = py_file.relative_to(tinytorch_path)
+                        exports_text.append(f"  ✅ tinytorch/{rel_path}\n", style="green")
+            
+            exports_text.append("\n💡 Next steps:\n", style="bold yellow")
+            exports_text.append("  • Run: tito test --module setup\n", style="white")
+            exports_text.append("  • Or: tito test --all\n", style="white")
+            
+            console.print(Panel(exports_text, title="Export Summary", border_style="bright_green"))
+            
+        else:
+            error_msg = result.stderr.strip() if result.stderr else "Unknown error"
+            console.print(Panel(f"[red]❌ Export failed:\n{error_msg}[/red]", 
+                              title="Export Error", border_style="red"))
+            
+            # Helpful error guidance
+            help_text = Text()
+            help_text.append("💡 Common issues:\n", style="bold yellow")
+            help_text.append("  • Missing #| default_exp directive in notebook\n", style="white")
+            help_text.append("  • Syntax errors in exported code\n", style="white")
+            help_text.append("  • Missing settings.ini configuration\n", style="white")
+            help_text.append("\n🔧 Run 'tito doctor' for detailed diagnosis", style="cyan")
+            
+            console.print(Panel(help_text, title="Troubleshooting", border_style="yellow"))
+            
+        return result.returncode
+        
+    except FileNotFoundError:
+        console.print(Panel("[red]❌ nbdev not found. Install with: pip install nbdev[/red]", 
+                          title="Missing Dependency", border_style="red"))
+        return 1
+
+
 def cmd_nbdev(args):
     """Run nbdev commands for notebook development."""
     import subprocess
@@ -561,20 +618,12 @@ def cmd_nbdev(args):
     console.print(Panel("📓 nbdev Notebook Development", 
                        title="Notebook Tools", border_style="bright_cyan"))
     
-    if args.build_lib:
-        console.print("🔨 Building library from notebooks...")
-        result = subprocess.run(["nbdev_build_lib"], capture_output=True, text=True)
-        if result.returncode == 0:
-            console.print(Panel("[green]✅ Library built successfully![/green]", 
-                              title="Build Success", border_style="green"))
-        else:
-            console.print(Panel(f"[red]❌ Build failed: {result.stderr}[/red]", 
-                              title="Build Error", border_style="red"))
-        return result.returncode
+    if args.export:
+        return cmd_sync(args)  # Use the same logic as sync command
     
     elif args.build_docs:
         console.print("📚 Building documentation from notebooks...")
-        result = subprocess.run(["nbdev_build_docs"], capture_output=True, text=True)
+        result = subprocess.run(["nbdev_docs"], capture_output=True, text=True)
         if result.returncode == 0:
             console.print(Panel("[green]✅ Documentation built successfully![/green]", 
                               title="Docs Success", border_style="green"))
@@ -595,8 +644,8 @@ def cmd_nbdev(args):
         return result.returncode
     
     elif args.clean:
-        console.print("🧹 Cleaning notebook build artifacts...")
-        result = subprocess.run(["nbdev_clean_nbs"], capture_output=True, text=True)
+        console.print("🧹 Cleaning notebook outputs...")
+        result = subprocess.run(["nbdev_clean"], capture_output=True, text=True)
         if result.returncode == 0:
             console.print(Panel("[green]✅ Cleaned successfully![/green]", 
                               title="Clean Success", border_style="green"))
@@ -608,15 +657,16 @@ def cmd_nbdev(args):
     else:
         help_text = Text()
         help_text.append("📓 nbdev Commands:\n\n", style="bold cyan")
-        help_text.append("  tito nbdev --build-lib    - Build library from notebooks\n", style="white")
+        help_text.append("  tito sync                 - Export notebooks to Python package\n", style="white")
+        help_text.append("  tito nbdev --export       - Same as sync\n", style="white") 
         help_text.append("  tito nbdev --build-docs   - Build documentation\n", style="white")
         help_text.append("  tito nbdev --test         - Run notebook tests\n", style="white")
-        help_text.append("  tito nbdev --clean        - Clean build artifacts\n\n", style="white")
+        help_text.append("  tito nbdev --clean        - Clean notebook outputs\n\n", style="white")
         help_text.append("💡 Development workflow:\n", style="bold yellow")
-        help_text.append("  1. Work in modules/*/notebook/*_dev.ipynb\n", style="dim")
-        help_text.append("  2. Test interactively\n", style="dim")
-        help_text.append("  3. Run: tito nbdev --build-lib\n", style="dim")
-        help_text.append("  4. Test compiled package\n", style="dim")
+        help_text.append("  1. Work in notebooks/*.ipynb\n", style="dim")
+        help_text.append("  2. Test interactively in notebook\n", style="dim")
+        help_text.append("  3. Run: tito sync\n", style="dim")
+        help_text.append("  4. Run: tito test\n", style="dim")
         
         console.print(Panel(help_text, title="nbdev Help", border_style="bright_cyan"))
         return 0
@@ -654,12 +704,15 @@ def main():
     # Doctor command
     doctor_parser = subparsers.add_parser("doctor", help="Run environment diagnosis")
     
+    # Sync command (primary nbdev export)
+    sync_parser = subparsers.add_parser("sync", help="Export notebook code to Python package")
+    
     # nbdev commands
     nbdev_parser = subparsers.add_parser("nbdev", help="nbdev notebook development commands")
-    nbdev_parser.add_argument("--build-lib", action="store_true", help="Build library from notebooks")
+    nbdev_parser.add_argument("--export", action="store_true", help="Export notebooks to Python package")
     nbdev_parser.add_argument("--build-docs", action="store_true", help="Build documentation from notebooks")
     nbdev_parser.add_argument("--test", action="store_true", help="Run notebook tests")
-    nbdev_parser.add_argument("--clean", action="store_true", help="Clean notebook build artifacts")
+    nbdev_parser.add_argument("--clean", action="store_true", help="Clean notebook outputs")
     
     # Jupyter command
     jupyter_parser = subparsers.add_parser("jupyter", help="Start Jupyter notebook server")
@@ -698,6 +751,8 @@ def main():
         cmd_status(args)
     elif args.command == "doctor":
         cmd_doctor(args)
+    elif args.command == "sync":
+        return cmd_sync(args)
     elif args.command == "nbdev":
         return cmd_nbdev(args)
     elif args.command == "jupyter":
