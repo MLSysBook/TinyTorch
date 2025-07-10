@@ -1,7 +1,3 @@
----
-alwaysApply: true
-description: TinyTorch Project Structure Guide
----
 
 # TinyTorch Project Structure Guide
 
@@ -40,8 +36,9 @@ Each module follows the NBDev educational pattern:
 modules/{module_name}/
 ├── {module_name}_dev.py     # Main Python source (Jupytext format)
 ├── {module_name}_dev.ipynb  # Generated notebook (auto-created)
-├── test_{module_name}.py    # Tests
-└── README.md               # Documentation
+├── README.md               # Documentation
+└── tests/                  # Test directory
+    └── test_{module_name}.py # Module tests
 ```
 
 ## Development Workflow
@@ -52,6 +49,8 @@ modules/{module_name}/
 4. **Build**: Code exports to `tinytorch/core/{component}.py`
 
 The `#| default_exp` directive controls where code exports to in the package.
+ 
 
 
 The `#| default_exp` directive controls where code exports to in the package.
+ 

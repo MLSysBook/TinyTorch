@@ -1,6 +1,3 @@
----
-description: Development workflow for TinyTorch, including CLI tool usage, development cycle, and module structure.
----
 
 # TinyTorch Development Workflow
 
@@ -44,7 +41,7 @@ python bin/tito.py test --module tensor
    - Updates package structure
 
 3. **Test**: `python bin/tito.py test --module {module}`
-   - Runs module-specific tests
+   - Runs module-specific tests from `modules/{module}/tests/`
    - Validates exported package code
    - Ensures everything works end-to-end
 
@@ -58,6 +55,8 @@ python bin/tito.py test --module tensor
 modules/{module}/{module}_dev.py  →  modules/{module}/{module}_dev.ipynb
                                  ↓
                             tinytorch/core/{component}.py
+                                 ↑
+                    modules/{module}/tests/test_{module}.py
 ```
 
 ## Module Structure
@@ -65,7 +64,12 @@ modules/{module}/{module}_dev.py  →  modules/{module}/{module}_dev.ipynb
 Each module should be self-contained with:
 - `{module}_dev.py` - Main development file (Python source)
 - `{module}_dev.ipynb` - Generated notebook (auto-created)
-- `test_{module}.py` - Module tests
-- `README.md` - Documentation
+- `README.md` - Module documentation
+- `tests/` - Test directory
+  - `test_{module}.py` - Module tests
 
 Students run and pass all tests locally within the module before using nbdev to export code to the tinytorch package and build/test the overall package.
+ 
+
+Students run and pass all tests locally within the module before using nbdev to export code to the tinytorch package and build/test the overall package.
+ 

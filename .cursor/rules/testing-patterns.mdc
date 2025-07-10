@@ -3,10 +3,11 @@
 
 ## Test File Structure
 
-### Module Tests (`modules/{module}/test_{module}.py`)
+### Module Tests (`modules/{module}/tests/test_{module}.py`)
 - Test the educational module implementations
 - Validate both student TODOs and hidden solutions
 - Should work with both incomplete and complete implementations
+- Import from the parent module's development file
 
 ### Package Tests (`tinytorch/tests/`)  
 - Test the exported package functionality
@@ -17,9 +18,9 @@
 
 ```python
 # Module tests
-modules/setup/test_setup.py
-modules/tensor/test_tensor.py
-modules/autograd/test_autograd.py
+modules/setup/tests/test_setup.py
+modules/tensor/tests/test_tensor.py
+modules/autograd/tests/test_autograd.py
 
 # Package tests  
 tinytorch/tests/test_tensor.py
@@ -30,8 +31,14 @@ tinytorch/tests/test_autograd.py
 
 ```python
 import pytest
-from modules.{module}.{module}_dev import ComponentName
-# or from tinytorch.core.component import ComponentName
+import sys
+import os
+
+# Add parent directory to path for module imports
+sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
+
+# Import from the module's development file
+from {module}_dev import ComponentName
 
 class TestComponentName:
     """Test suite for ComponentName functionality."""
@@ -67,11 +74,11 @@ python bin/tito.py test --module tensor
 # Test all modules
 python bin/tito.py test --all
 
-# Run package tests directly
-pytest tinytorch/tests/
+# Run specific test file directly
+python -m pytest modules/tensor/tests/test_tensor.py -v
 
-# Run specific test file
-pytest modules/tensor/test_tensor.py -v
+# Run from within module directory
+cd modules/tensor && python -m pytest tests/ -v
 ```
 
 ## Test Categories
@@ -88,9 +95,5 @@ pytest modules/tensor/test_tensor.py -v
 - Package tests ensure production readiness
 - All tests should be fast and isolated
 - Use descriptive test names that explain what's being tested
-
-- All tests should be fast and isolated
-- Use descriptive test names that explain what's being tested
-
-- All tests should be fast and isolated
-- Use descriptive test names that explain what's being tested
+- Import from module development files, not the package (for module tests)
+ 
