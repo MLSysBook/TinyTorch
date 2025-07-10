@@ -1,15 +1,12 @@
 """
-TinyTorch Core Components
+Core TinyTorch components.
 
-This package contains the fundamental building blocks of the TinyTorch ML system:
-- Tensor operations and storage
-- Automatic differentiation engine  
-- Neural network modules and layers
-- Training and optimization algorithms
-"""
+This module contains the fundamental building blocks:
+- utils: Utility functions 
+- tensor: Core tensor implementation
+- autograd: Automatic differentiation
+- modules: Neural network layers
+- optimizers: Training optimizers
 
-# Core imports will be added as components are implemented
-# from .tensor import Tensor
-# from .autograd import backward
-# from .modules import Linear, Conv2d
-# from .optimizer import SGD, Adam 
+All code is auto-generated from notebooks. Do not edit manually.
+""" 
