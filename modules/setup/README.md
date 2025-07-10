@@ -11,7 +11,7 @@ The setup module is a simple introduction to TinyTorch that displays beautiful A
 - `setup_dev.py` - Main development file with the hello_tinytorch() function
 - `setup_dev.ipynb` - Jupyter notebook version (auto-generated)
 - `tinytorch_flame.txt` - ASCII art file containing the TinyTorch flame design
-- `tests/test_setup.py` - Simple tests for the module
+- `tests/test_setup.py` - pytest test suite for the module
 - `README.md` - This file
 
 ## Usage
@@ -28,11 +28,24 @@ Open `setup_dev.ipynb` and run the cells to see the ASCII art displayed.
 
 ## Testing
 
-Run the tests to verify everything works:
+Run the tests using pytest:
 
 ```bash
-python3 tests/test_setup.py
+# Using the TinyTorch CLI (recommended)
+python bin/tito.py test --module setup
+
+# Or directly with pytest
+python -m pytest modules/setup/tests/test_setup.py -v
 ```
+
+### Test Coverage
+
+The test suite includes:
+- ✅ Function execution without errors
+- ✅ Correct output content (ASCII art and branding)
+- ✅ ASCII art file existence and content validation
+- ✅ Graceful handling of missing files
+- ✅ Error recovery and fallback behavior
 
 ## ASCII Art Customization
 
@@ -47,7 +60,7 @@ This simple module introduces:
 - Basic Python file structure
 - File I/O operations
 - Error handling (fallback when file not found)
-- Testing with simple assertions
+- pytest testing framework and best practices
 - The TinyTorch development workflow
 
 ## Next Steps
