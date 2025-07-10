@@ -67,13 +67,19 @@ def hello_tinytorch():
     """
     A simple hello world function for TinyTorch.
     
-    TODO: Make this return a more welcoming message about TinyTorch.
+    TODO: Implement this function to return a welcoming message about TinyTorch.
+    Make it encouraging and mention what students will build.
     """
-    return "Hello from TinyTorch! 🔥"
+    raise NotImplementedError("Student implementation required")
 
 def add_numbers(a, b):
-    """Add two numbers together."""
-    return a + b
+    """
+    Add two numbers together.
+    
+    TODO: Implement addition of two numbers.
+    This is the foundation of all mathematical operations in ML.
+    """
+    raise NotImplementedError("Student implementation required")
 
 # %%
 #| hide
@@ -82,10 +88,28 @@ def hello_tinytorch():
     """A simple hello world function for TinyTorch."""
     return "🔥 Welcome to TinyTorch! Ready to build ML systems from scratch? Let's go! 🔥"
 
+def add_numbers(a, b):
+    """Add two numbers together."""
+    return a + b
+
+# %% [markdown]
+"""
+### 🧪 Test Your Implementation
+
+Once you implement the functions above, run this cell to test them:
+"""
+
 # %%
-# Test the functions in the notebook
-print(hello_tinytorch())
-print(f"2 + 3 = {add_numbers(2, 3)}")
+# Test the functions in the notebook (will fail until implemented)
+try:
+    print("Testing hello_tinytorch():")
+    print(hello_tinytorch())
+    print()
+    print("Testing add_numbers():")
+    print(f"2 + 3 = {add_numbers(2, 3)}")
+except NotImplementedError as e:
+    print(f"⚠️  {e}")
+    print("Implement the functions above first!")
 
 # %% [markdown]
 """
@@ -95,6 +119,40 @@ Let's create a simple class that will help us understand system information. Thi
 """
 
 # %%
+#| export
+class SystemInfo:
+    """
+    Simple system information class.
+    
+    TODO: Implement this class to collect and display system information.
+    """
+    
+    def __init__(self):
+        """
+        Initialize system information collection.
+        
+        TODO: Collect Python version, platform, and machine information.
+        """
+        raise NotImplementedError("Student implementation required")
+    
+    def __str__(self):
+        """
+        Return human-readable system information.
+        
+        TODO: Format system info as a readable string.
+        """
+        raise NotImplementedError("Student implementation required")
+    
+    def is_compatible(self):
+        """
+        Check if system meets minimum requirements.
+        
+        TODO: Check if Python version is >= 3.8
+        """
+        raise NotImplementedError("Student implementation required")
+
+# %%
+#| hide
 #| export
 class SystemInfo:
     """Simple system information class."""
@@ -111,11 +169,23 @@ class SystemInfo:
         """Check if system meets minimum requirements."""
         return self.python_version >= (3, 8)
 
+# %% [markdown]
+"""
+### 🧪 Test Your SystemInfo Class
+
+Once you implement the SystemInfo class above, run this cell to test it:
+"""
+
 # %%
-# Test the SystemInfo class
-info = SystemInfo()
-print(f"System: {info}")
-print(f"Compatible: {info.is_compatible()}")
+# Test the SystemInfo class (will fail until implemented)
+try:
+    print("Testing SystemInfo class:")
+    info = SystemInfo()
+    print(f"System: {info}")
+    print(f"Compatible: {info.is_compatible()}")
+except NotImplementedError as e:
+    print(f"⚠️  {e}")
+    print("Implement the SystemInfo class above first!")
 
 # %% [markdown]
 """
@@ -136,6 +206,8 @@ This will export the code marked with `#| export` to `tinytorch/core/utils.py`.
 4. Handles imports and dependencies automatically
 
 **🔍 Verification**: After export, check `tinytorch/core/utils.py` - you'll see your functions there with auto-generated headers pointing back to this notebook!
+
+**Note**: The export process will use the instructor solutions (from `#|hide` cells) so the package will have working implementations even if you haven't completed the exercises yet.
 """
 
 # %% [markdown]
