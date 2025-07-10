@@ -1,4 +1,4 @@
-# TinyTorch - Notebook-first ML Systems Course
+# TinyTorch - Module-first ML Systems Course
 # Makefile for convenience commands
 
 .PHONY: help install sync test clean docs jupyter lab setup
@@ -21,8 +21,8 @@ help:
 	@echo "  doctor      Run environment diagnosis"
 	@echo ""
 	@echo "Development workflow:"
-	@echo "  1. make jupyter     # Work in notebooks/"
-	@echo "  2. make sync        # Export to Python"
+	@echo "  1. make jupyter     # Work in modules/[name]/[name].ipynb"
+	@echo "  2. make sync        # Export to tinytorch package"
 	@echo "  3. make test        # Run tests"
 	@echo "  4. make docs        # Build docs (optional)"
 
