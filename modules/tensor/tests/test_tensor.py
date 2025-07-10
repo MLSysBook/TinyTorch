@@ -10,11 +10,11 @@ import os
 import pytest
 import numpy as np
 
-# Add project root to path for imports
-project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
-sys.path.insert(0, project_root)
+# Add the parent directory to path to import tensor_dev
+sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
 
-from tinytorch.core.tensor import Tensor
+# Import from the module's development file
+from tensor_dev import Tensor
 
 class TestTensorCreation:
     """Test tensor creation from different data types."""
