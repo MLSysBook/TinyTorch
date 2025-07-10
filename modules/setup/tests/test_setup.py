@@ -12,7 +12,7 @@ import os
 sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
 
 # Import from the module's development file
-from setup_dev import hello_tinytorch, add_numbers, SystemInfo
+from setup_dev import hello_tinytorch, add_numbers, SystemInfo, DeveloperProfile
 
 
 def approx_equal(a, b, tolerance=1e-9):
@@ -116,6 +116,80 @@ class TestSystemInfo:
         assert info.is_compatible() is True
 
 
+class TestDeveloperProfile:
+    """Test DeveloperProfile class."""
+    
+    def test_developer_profile_creation_defaults(self):
+        """Test DeveloperProfile with default values."""
+        profile = DeveloperProfile()
+        
+        # Check default values
+        assert profile.name == "Vijay Janapa Reddi"
+        assert profile.affiliation == "Harvard University"
+        assert profile.email == "vijay@seas.harvard.edu"
+        assert profile.github_username == "vjreddi"
+    
+    def test_developer_profile_creation_custom(self):
+        """Test DeveloperProfile with custom values."""
+        profile = DeveloperProfile(
+            name="Test Student",
+            affiliation="Test University",
+            email="test@example.com",
+            github_username="teststudent"
+        )
+        
+        assert profile.name == "Test Student"
+        assert profile.affiliation == "Test University"
+        assert profile.email == "test@example.com"
+        assert profile.github_username == "teststudent"
+    
+    def test_developer_profile_str(self):
+        """Test DeveloperProfile string representation."""
+        profile = DeveloperProfile()
+        str_repr = str(profile)
+        
+        assert isinstance(str_repr, str)
+        assert "👨‍💻" in str_repr
+        assert "Vijay Janapa Reddi" in str_repr
+        assert "Harvard University" in str_repr
+        assert "@vjreddi" in str_repr
+    
+    def test_developer_profile_signature(self):
+        """Test DeveloperProfile signature method."""
+        profile = DeveloperProfile()
+        signature = profile.get_signature()
+        
+        assert isinstance(signature, str)
+        assert "Built by" in signature
+        assert "Vijay Janapa Reddi" in signature
+        assert "@vjreddi" in signature
+    
+    def test_developer_profile_custom_signature(self):
+        """Test DeveloperProfile signature with custom values."""
+        profile = DeveloperProfile(
+            name="Jane Doe",
+            github_username="janedoe"
+        )
+        signature = profile.get_signature()
+        
+        assert "Built by Jane Doe (@janedoe)" == signature
+    
+    def test_developer_profile_partial_customization(self):
+        """Test DeveloperProfile with partial customization."""
+        profile = DeveloperProfile(
+            name="Custom Name",
+            github_username="customuser"
+        )
+        
+        # Custom values should be set
+        assert profile.name == "Custom Name"
+        assert profile.github_username == "customuser"
+        
+        # Defaults should remain
+        assert profile.affiliation == "Harvard University"
+        assert profile.email == "vijay@seas.harvard.edu"
+
+
 class TestModuleIntegration:
     """Test integration between different parts of the setup module."""
     
@@ -168,6 +242,17 @@ def run_setup_tests():
         ("test_compatibility_logic", test_system_info.test_compatibility_logic),
     ])
     
+    # Test DeveloperProfile class
+    test_developer_profile = TestDeveloperProfile()
+    tests.extend([
+        ("test_developer_profile_creation_defaults", test_developer_profile.test_developer_profile_creation_defaults),
+        ("test_developer_profile_creation_custom", test_developer_profile.test_developer_profile_creation_custom),
+        ("test_developer_profile_str", test_developer_profile.test_developer_profile_str),
+        ("test_developer_profile_signature", test_developer_profile.test_developer_profile_signature),
+        ("test_developer_profile_custom_signature", test_developer_profile.test_developer_profile_custom_signature),
+        ("test_developer_profile_partial_customization", test_developer_profile.test_developer_profile_partial_customization),
+    ])
+
     # Test integration
     test_integration = TestModuleIntegration()
     tests.extend([

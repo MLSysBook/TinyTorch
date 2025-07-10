@@ -189,7 +189,123 @@ except NotImplementedError as e:
 
 # %% [markdown]
 """
-## Step 3: Try the Export Process
+## Step 3: Developer Personalization
+
+Let's make TinyTorch yours! Create a developer profile that will identify you throughout your ML systems journey.
+"""
+
+# %%
+#| export
+class DeveloperProfile:
+    """
+    Developer profile for personalizing TinyTorch experience.
+    
+    TODO: Implement this class to store and display developer information.
+    Default to course instructor but allow students to personalize.
+    """
+    
+    def __init__(self, name="Vijay Janapa Reddi", affiliation="Harvard University", 
+                 email="vijay@seas.harvard.edu", github_username="vjreddi"):
+        """
+        Initialize developer profile.
+        
+        TODO: Store developer information with sensible defaults.
+        Students should be able to customize this with their own info.
+        """
+        raise NotImplementedError("Student implementation required")
+    
+    def __str__(self):
+        """
+        Return formatted developer information.
+        
+        TODO: Format developer info as a professional signature.
+        """
+        raise NotImplementedError("Student implementation required")
+    
+    def get_signature(self):
+        """
+        Get a short signature for code headers.
+        
+        TODO: Return a concise signature like "Built by Name (@github)"
+        """
+        raise NotImplementedError("Student implementation required")
+
+# %%
+#| hide
+#| export
+class DeveloperProfile:
+    """Developer profile for personalizing TinyTorch experience."""
+    
+    def __init__(self, name="Vijay Janapa Reddi", affiliation="Harvard University", 
+                 email="vijay@seas.harvard.edu", github_username="vjreddi"):
+        self.name = name
+        self.affiliation = affiliation
+        self.email = email
+        self.github_username = github_username
+    
+    def __str__(self):
+        return f"👨‍💻 {self.name} | {self.affiliation} | @{self.github_username}"
+    
+    def get_signature(self):
+        """Get a short signature for code headers."""
+        return f"Built by {self.name} (@{self.github_username})"
+
+# %% [markdown]
+"""
+### 🧪 Test Your Developer Profile
+
+Customize your developer profile! Replace the default information with your own:
+"""
+
+# %%
+# Test the DeveloperProfile class
+try:
+    print("Testing DeveloperProfile (with defaults):")
+    # Default profile (instructor)
+    default_profile = DeveloperProfile()
+    print(f"Profile: {default_profile}")
+    print(f"Signature: {default_profile.get_signature()}")
+    print()
+    
+    # TODO: Students should customize this with their own information!
+    print("🎯 YOUR TURN: Create your own profile!")
+    print("Uncomment and modify the lines below:")
+    print("# my_profile = DeveloperProfile(")
+    print("#     name='Your Name',")
+    print("#     affiliation='Your University/Company',")
+    print("#     email='your.email@example.com',")
+    print("#     github_username='yourgithub'")
+    print("# )")
+    print("# print(f'My Profile: {my_profile}')")
+    print("# print(f'My Signature: {my_profile.get_signature()}')")
+    
+except NotImplementedError as e:
+    print(f"⚠️  {e}")
+    print("Implement the DeveloperProfile class above first!")
+
+# %% [markdown]
+"""
+### 🎨 Personalization Challenge
+
+**For Students**: Make TinyTorch truly yours by:
+
+1. **Update your profile** in the cell above with your real information
+2. **Create a custom hello message** that includes your name
+3. **Add your signature** to code you write throughout the course
+
+This isn't just about customization - it's about taking ownership of your learning journey in ML systems!
+
+**Example personalized hello:**
+```python
+def my_hello_tinytorch():
+    profile = DeveloperProfile(name="Your Name", github_username="yourgithub")
+    return f"🔥 Welcome to TinyTorch! I'm {profile.name} and I'm ready to build ML systems from scratch! Let's go! 🔥"
+```
+"""
+
+# %% [markdown]
+"""
+## Step 4: Try the Export Process
 
 Now let's export our code! In your terminal, run:
 
@@ -212,7 +328,7 @@ This will export the code marked with `#| export` to `tinytorch/core/utils.py`.
 
 # %% [markdown]
 """
-## Step 4: Run Tests
+## Step 5: Run Tests
 
 After exporting, run the tests:
 
@@ -222,7 +338,7 @@ python bin/tito.py test --module setup
 
 This will run all tests for the setup module and verify your implementation works correctly.
 
-## Step 5: Check Your Progress
+## Step 6: Check Your Progress
 
 See your overall progress:
 
