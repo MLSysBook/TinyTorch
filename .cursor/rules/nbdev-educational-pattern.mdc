@@ -1,0 +1,77 @@
+# NBDev Educational Pattern for TinyTorch Modules
+
+When working with module development files (`*_dev.py`), follow this educational structure:
+
+## File Format
+Use Jupytext percent format with NBDev directives:
+
+```python
+# ---
+# jupyter:
+#   jupytext:
+#     text_representation:
+#       extension: .py
+#       format_name: percent
+#       format_version: '1.3'
+#       jupytext_version: 1.17.1
+# ---
+
+# %% [markdown]
+"""
+# Module X: Title - Brief Description
+
+Educational introduction and learning goals...
+"""
+
+# %%
+#| default_exp core.component_name
+
+# Setup and imports
+import required_libraries
+
+# %% [markdown]
+"""
+## Step 1: Concept Explanation
+Educational content explaining the concept...
+"""
+
+# %%
+#| export
+class ComponentName:
+    """
+    Component description.
+    
+    TODO: Student implementation instructions.
+    """
+    def method(self):
+        raise NotImplementedError("Student implementation required")
+
+# %%
+#| hide
+#| export  
+class ComponentName:
+    """Complete implementation (hidden from students)."""
+    def method(self):
+        # Actual implementation
+        pass
+
+## Key NBDev Directives
+
+- `#| default_exp core.module` - Sets export destination in tinytorch package
+- `#| export` - Marks code for export to package
+- `#| hide` - Hides cell from students (instructor solution)
+- `# %% [markdown]` - Markdown cells for explanations
+- `# %%` - Code cells
+
+## Educational Structure
+
+1. **Introduction**: Module overview and learning goals
+2. **Step-by-step**: Break concepts into digestible steps  
+3. **TODO/Implementation**: Student implementation sections
+4. **Hidden Solutions**: Complete implementations marked with `#| hide`
+5. **Tests**: Interactive testing cells for immediate feedback
+6. **Export Instructions**: How to sync and test the module
+
+## Naming Convention
+
+Module files should be named `{module_name}_dev.py` to indicate development notebooks, following the established pattern from [modules/setup/setup_dev.py](mdc:modules/setup/setup_dev.py) and [modules/tensor/tensor_dev.py](mdc:modules/tensor/tensor_dev.py).

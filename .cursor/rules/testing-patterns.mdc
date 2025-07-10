@@ -1,0 +1,96 @@
+---
+title: Testing Patterns for TinyTorch
+---
+
+# Testing Patterns for TinyTorch
+
+## Test File Structure
+
+### Module Tests (`modules/{module}/test_{module}.py`)
+- Test the educational module implementations
+- Validate both student TODOs and hidden solutions
+- Should work with both incomplete and complete implementations
+
+### Package Tests (`tinytorch/tests/`)  
+- Test the exported package functionality
+- Integration tests across components
+- Production-level validation
+
+## Test Naming Convention
+
+```python
+# Module tests
+modules/setup/test_setup.py
+modules/tensor/test_tensor.py
+modules/autograd/test_autograd.py
+
+# Package tests  
+tinytorch/tests/test_tensor.py
+tinytorch/tests/test_autograd.py
+```
+
+## Test Structure Pattern
+
+```python
+import pytest
+from modules.{module}.{module}_dev import ComponentName
+# or from tinytorch.core.component import ComponentName
+
+class TestComponentName:
+    """Test suite for ComponentName functionality."""
+    
+    def test_basic_functionality(self):
+        """Test basic component operations."""
+        # Arrange
+        component = ComponentName()
+        
+        # Act
+        result = component.method()
+        
+        # Assert
+        assert result == expected_value
+    
+    def test_edge_cases(self):
+        """Test edge cases and error conditions."""
+        with pytest.raises(ValueError):
+            ComponentName(invalid_input)
+    
+    def test_integration(self):
+        """Test integration with other components."""
+        # Test how this component works with others
+        pass
+```
+
+## Running Tests
+
+```bash
+# Test specific module
+python bin/tito.py test --module tensor
+
+# Test all modules
+python bin/tito.py test --all
+
+# Run package tests directly
+pytest tinytorch/tests/
+
+# Run specific test file
+pytest modules/tensor/test_tensor.py -v
+```
+
+## Test Categories
+
+1. **Unit Tests**: Individual component functionality
+2. **Integration Tests**: Component interactions  
+3. **Educational Tests**: Validate learning objectives
+4. **Package Tests**: End-to-end package validation
+
+## Key Testing Principles
+
+- Tests should pass with both TODO stubs and complete implementations
+- Educational tests should guide student learning
+- Package tests ensure production readiness
+- All tests should be fast and isolated
+- Use descriptive test names that explain what's being tested
+
+- All tests should be fast and isolated
+- Use descriptive test names that explain what's being tested
