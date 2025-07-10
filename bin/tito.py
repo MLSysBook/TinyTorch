@@ -558,13 +558,30 @@ def cmd_sync(args):
     """Export notebook code to Python package using nbdev."""
     import subprocess
     
-    console.print(Panel("🔄 Synchronizing Notebooks to Package", 
-                       title="nbdev Export", border_style="bright_cyan"))
-    
-    console.print("🔄 Exporting notebook code to tinytorch package...")
+    # Determine what to sync
+    if hasattr(args, 'module') and args.module:
+        module_path = f"modules/{args.module}"
+        if not Path(module_path).exists():
+            console.print(Panel(f"[red]❌ Module '{args.module}' not found at {module_path}[/red]", 
+                              title="Module Not Found", border_style="red"))
+            return 1
+        
+        console.print(Panel(f"🔄 Synchronizing Module: {args.module}", 
+                           title="nbdev Export", border_style="bright_cyan"))
+        console.print(f"🔄 Exporting {args.module} notebook to tinytorch package...")
+        
+        # Use nbdev_export with --path for specific module
+        cmd = ["nbdev_export", "--path", module_path]
+    else:
+        console.print(Panel("🔄 Synchronizing All Notebooks to Package", 
+                           title="nbdev Export", border_style="bright_cyan"))
+        console.print("🔄 Exporting all notebook code to tinytorch package...")
+        
+        # Use nbdev_export for all modules  
+        cmd = ["nbdev_export"]
     
     try:
-        result = subprocess.run(["nbdev_export"], capture_output=True, text=True, cwd=Path.cwd())
+        result = subprocess.run(cmd, capture_output=True, text=True, cwd=Path.cwd())
         
         if result.returncode == 0:
             console.print(Panel("[green]✅ Successfully exported notebook code to tinytorch package![/green]", 
@@ -706,6 +723,7 @@ def main():
     
     # Sync command (primary nbdev export)
     sync_parser = subparsers.add_parser("sync", help="Export notebook code to Python package")
+    sync_parser.add_argument("--module", help="Sync specific module (e.g., setup, tensor)")
     
     # nbdev commands
     nbdev_parser = subparsers.add_parser("nbdev", help="nbdev notebook development commands")
