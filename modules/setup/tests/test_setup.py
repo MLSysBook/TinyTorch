@@ -126,22 +126,29 @@ class TestDeveloperProfile:
         # Check default values
         assert profile.name == "Vijay Janapa Reddi"
         assert profile.affiliation == "Harvard University"
-        assert profile.email == "vijay@seas.harvard.edu"
-        assert profile.github_username == "vjreddi"
+        assert profile.email == "vj@eecs.harvard.edu"
+        assert profile.github_username == "profvjreddi"
+        assert profile.ascii_art is not None  # Should have default flame
     
     def test_developer_profile_creation_custom(self):
         """Test DeveloperProfile with custom values."""
+        custom_art = """
+        Custom ASCII Art
+        ****************
+        """
         profile = DeveloperProfile(
             name="Test Student",
             affiliation="Test University",
             email="test@example.com",
-            github_username="teststudent"
+            github_username="teststudent",
+            ascii_art=custom_art
         )
         
         assert profile.name == "Test Student"
         assert profile.affiliation == "Test University"
         assert profile.email == "test@example.com"
         assert profile.github_username == "teststudent"
+        assert profile.ascii_art == custom_art
     
     def test_developer_profile_str(self):
         """Test DeveloperProfile string representation."""
@@ -152,7 +159,7 @@ class TestDeveloperProfile:
         assert "👨‍💻" in str_repr
         assert "Vijay Janapa Reddi" in str_repr
         assert "Harvard University" in str_repr
-        assert "@vjreddi" in str_repr
+        assert "@profvjreddi" in str_repr
     
     def test_developer_profile_signature(self):
         """Test DeveloperProfile signature method."""
@@ -162,7 +169,7 @@ class TestDeveloperProfile:
         assert isinstance(signature, str)
         assert "Built by" in signature
         assert "Vijay Janapa Reddi" in signature
-        assert "@vjreddi" in signature
+        assert "@profvjreddi" in signature
     
     def test_developer_profile_custom_signature(self):
         """Test DeveloperProfile signature with custom values."""
@@ -173,6 +180,34 @@ class TestDeveloperProfile:
         signature = profile.get_signature()
         
         assert "Built by Jane Doe (@janedoe)" == signature
+    
+    def test_developer_profile_ascii_art(self):
+        """Test DeveloperProfile ASCII art functionality."""
+        # Test default ASCII art
+        profile = DeveloperProfile()
+        ascii_art = profile.get_ascii_art()
+        
+        assert isinstance(ascii_art, str)
+        assert "🔥 TinyTorch Developer 🔥" in ascii_art
+        assert len(ascii_art) > 50  # Should be substantial ASCII art
+        
+        # Test custom ASCII art
+        custom_art = "My Custom Art!"
+        custom_profile = DeveloperProfile(ascii_art=custom_art)
+        assert custom_profile.get_ascii_art() == custom_art
+    
+    def test_developer_profile_full_profile(self):
+        """Test DeveloperProfile full profile display."""
+        profile = DeveloperProfile()
+        full_profile = profile.get_full_profile()
+        
+        assert isinstance(full_profile, str)
+        assert "🔥 TinyTorch Developer 🔥" in full_profile
+        assert "👨‍💻 Developer: Vijay Janapa Reddi" in full_profile
+        assert "🏛️  Affiliation: Harvard University" in full_profile
+        assert "📧 Email: vj@eecs.harvard.edu" in full_profile
+        assert "🐙 GitHub: @profvjreddi" in full_profile
+        assert "🔥 Ready to build ML systems from scratch!" in full_profile
     
     def test_developer_profile_partial_customization(self):
         """Test DeveloperProfile with partial customization."""
@@ -187,7 +222,10 @@ class TestDeveloperProfile:
         
         # Defaults should remain
         assert profile.affiliation == "Harvard University"
-        assert profile.email == "vijay@seas.harvard.edu"
+        assert profile.email == "vj@eecs.harvard.edu"
+        
+        # Should still have default ASCII art
+        assert "🔥 TinyTorch Developer 🔥" in profile.get_ascii_art()
 
 
 class TestModuleIntegration:
@@ -250,6 +288,8 @@ def run_setup_tests():
         ("test_developer_profile_str", test_developer_profile.test_developer_profile_str),
         ("test_developer_profile_signature", test_developer_profile.test_developer_profile_signature),
         ("test_developer_profile_custom_signature", test_developer_profile.test_developer_profile_custom_signature),
+        ("test_developer_profile_ascii_art", test_developer_profile.test_developer_profile_ascii_art),
+        ("test_developer_profile_full_profile", test_developer_profile.test_developer_profile_full_profile),
         ("test_developer_profile_partial_customization", test_developer_profile.test_developer_profile_partial_customization),
     ])
 
