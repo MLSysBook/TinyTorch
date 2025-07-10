@@ -103,10 +103,10 @@ Once you implement the functions above, run this cell to test them:
 # Test the functions in the notebook (will fail until implemented)
 try:
     print("Testing hello_tinytorch():")
-print(hello_tinytorch())
+    print(hello_tinytorch())
     print()
     print("Testing add_numbers():")
-print(f"2 + 3 = {add_numbers(2, 3)}")
+    print(f"2 + 3 = {add_numbers(2, 3)}")
 except NotImplementedError as e:
     print(f"⚠️  {e}")
     print("Implement the functions above first!")
@@ -180,9 +180,9 @@ Once you implement the SystemInfo class above, run this cell to test it:
 # Test the SystemInfo class (will fail until implemented)
 try:
     print("Testing SystemInfo class:")
-info = SystemInfo()
-print(f"System: {info}")
-print(f"Compatible: {info.is_compatible()}")
+    info = SystemInfo()
+    print(f"System: {info}")
+    print(f"Compatible: {info.is_compatible()}")
 except NotImplementedError as e:
     print(f"⚠️  {e}")
     print("Implement the SystemInfo class above first!")
