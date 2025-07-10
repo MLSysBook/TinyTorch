@@ -1,3 +1,7 @@
+---
+description: Development workflow for TinyTorch, including CLI tool usage, development cycle, and module structure.
+---
+
 # TinyTorch Development Workflow
 
 ## CLI Tool: `tito.py`

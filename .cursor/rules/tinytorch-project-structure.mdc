@@ -1,3 +1,8 @@
+---
+alwaysApply: true
+description: TinyTorch Project Structure Guide
+---
+
 # TinyTorch Project Structure Guide
 
 This is an educational ML Systems course repository organized into progressive modules that build a complete ML framework from scratch.
@@ -47,7 +52,6 @@ modules/{module_name}/
 4. **Build**: Code exports to `tinytorch/core/{component}.py`
 
 The `#| default_exp` directive controls where code exports to in the package.
-description:
-globs:
-alwaysApply: false
----
+
+
+The `#| default_exp` directive controls where code exports to in the package.
