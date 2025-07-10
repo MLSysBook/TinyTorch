@@ -1,3 +1,8 @@
+---
+globs: modules/**/*_dev.py
+description: NBDev educational coding pattern and structure for TinyTorch module development files
+---
+
 # NBDev Educational Pattern for TinyTorch Modules
 
 When working with module development files (`*_dev.py`), follow this educational structure:
@@ -54,6 +59,7 @@ class ComponentName:
     def method(self):
         # Actual implementation
         pass
+```
 
 ## Key NBDev Directives
 
