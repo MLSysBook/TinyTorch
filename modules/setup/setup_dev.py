@@ -259,7 +259,13 @@ class DeveloperProfile:
         try:
             # Try to load from the same directory as this module
             import os
-            current_dir = os.path.dirname(__file__)
+            try:
+                # Try to get the directory of the current file
+                current_dir = os.path.dirname(__file__)
+            except NameError:
+                # If __file__ is not defined (e.g., in notebook), use current directory
+                current_dir = os.getcwd()
+            
             flame_path = os.path.join(current_dir, 'tinytorch_flame.txt')
             
             with open(flame_path, 'r', encoding='utf-8') as f:
