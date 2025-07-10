@@ -88,6 +88,28 @@ By the end of TinyTorch, students should be able to:
 
 ---
 
+## Module → Package Export Conventions
+
+**🎓 Teaching vs. 🔧 Building Structure**: TinyTorch separates learning organization from production code organization:
+
+| **Learning Module** | **Export Target** | **Purpose** |
+|---------------------|-------------------|-------------|
+| `modules/setup/` | `tinytorch/core/utils.py` | System utilities, environment setup |
+| `modules/tensor/` | `tinytorch/core/tensor.py` | Core tensor data structure |
+| `modules/mlp/` | `tinytorch/nn/linear.py` | Linear layers and MLPs |
+| `modules/cnn/` | `tinytorch/nn/conv.py` | Convolutional layers |
+| `modules/autograd/` | `tinytorch/core/autograd.py` | Automatic differentiation |
+| `modules/data/` | `tinytorch/data/` | Data loading and processing |
+| `modules/training/` | `tinytorch/optim/` | Optimizers and training loops |
+| `modules/profiling/` | `tinytorch/profiling/` | Performance analysis tools |
+
+**Why this separation?**
+- **Learning**: Modules progress conceptually (setup → tensors → neural networks)
+- **Building**: Package organized functionally (core, nn, data, optim)
+- **Real-world**: Mirrors professional ML framework structure (like PyTorch)
+
+---
+
 ## Module Progression Logic
 
 TinyTorch aligns with Chapters 5 through 13 of the *Machine Learning Systems* textbook. While each module can be tackled independently, the design encourages a sequential path that mirrors the increasing complexity of ML systems development.

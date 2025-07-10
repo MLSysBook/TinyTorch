@@ -54,6 +54,8 @@ python bin/tito.py info
 
 - **nbdev workflow**: Write in notebooks, export to Python
 - **Export directive**: Use `#| export` to mark code for export
+- **Module → Package mapping**: This module exports to `tinytorch/core/utils.py`
+- **Teaching vs. Building**: Learn by modules, build by function (see VISION.md)
 - **Test integration**: Tests run automatically via CLI
 - **Module development**: Each module is self-contained
 
