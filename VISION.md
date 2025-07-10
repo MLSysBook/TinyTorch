@@ -1,97 +1,136 @@
-# Tiny🔥Torch Vision & Pedagogical Approach
+# Tiny🔥Torch: A Systems Engineering Lab for ML Frameworks
+
+**TinyTorch** is the hands-on companion to the [*Machine Learning Systems*](https://mlsysbook.ai) textbook. It adopts a **systems-first approach** to machine learning—not just teaching what ML models are, but how they execute on real infrastructure. Inspired by operating systems and compiler courses that build systems from first principles, TinyTorch guides students through the construction of a complete ML training and inference runtime, from scratch.
+
+TinyTorch is not about using PyTorch—it’s about writing the components that PyTorch is built on. Students implement tensors, autograd engines, data pipelines, optimizers, profilers, and deployment scaffolding, all while confronting the design trade-offs that shape modern ML systems.
+
+---
 
 ## Core Philosophy
 
-TinyTorch is a **systems-first approach** to understanding machine learning frameworks. Rather than teaching ML theory in isolation, we focus on the **systems engineering challenges** that arise when implementing ML concepts at scale.
+ML is often introduced as a series of mathematical abstractions: matrix operations, activation functions, gradients. But systems engineers know that models don’t run equations—they run **loops over data**, under real-world constraints like memory hierarchies, compute bottlenecks, and hardware interfaces.
 
-## Learning Approach: "Loops to Systems"
+TinyTorch starts at the loop level—where theory meets implementation—and builds upward to full system complexity. At each step, it emphasizes the **systems engineering challenges** introduced by ML concepts, helping students understand not just what ML does, but how it works under the hood.
+
+---
+
+## Learning Approach: “Loops to Systems”
 
 ### The Central Insight
-Students often learn ML algorithms as mathematical abstractions (matrix multiplications, activation functions, gradients). But the real systems challenges emerge when you ask:
 
-- **How do these loops actually execute?**
-- **What are the memory access patterns?**
-- **Where are the performance bottlenecks?**
-- **How do you make this scale?**
+The real systems challenges emerge when students ask:
+
+* **How do these loops actually execute?**
+* **What are the memory access patterns?**
+* **Where are the performance bottlenecks?**
+* **How do we make this scale to large workloads?**
 
 ### Example: DL Primer → DNN Architectures
-When we teach **DL Primer** concepts (forward pass, backprop), the focus isn't on the math - it's on:
-- **Data layout**: How tensors flow through memory
-- **Compute patterns**: How nested loops translate to system performance
-- **Interface design**: How layers compose and communicate
 
-When we teach **DNN Architectures** (MLPs, CNNs), we're really teaching:
-- **System abstractions**: How to design modular, composable components
-- **Memory management**: How activation maps and weights are stored/accessed
-- **Computational efficiency**: Why certain architectural choices matter for systems
+In the *DL Primer* module, the focus is not on the math of backpropagation, but on:
+
+* **Data layout**: How tensors flow through memory
+* **Compute patterns**: How nested loops affect system performance
+* **Interface design**: How layers compose into extensible abstractions
+
+In the *DNN Architectures* module (MLPs, CNNs), the systems lens shifts to:
+
+* **Modular abstractions**: Composable, pluggable layer design
+* **Memory locality**: Efficient storage and reuse of activations and weights
+* **Performance trade-offs**: How architectural design choices shape system behavior
+
+---
 
 ## Module Design Principles
 
 ### 1. Systems Engineering Focus
-Every module should answer: "What systems challenges does this concept introduce?"
+
+Every module begins by asking: *“What systems challenges does this concept introduce?”* Students learn to frame ML operations in terms of memory hierarchies, computational throughput, interface stability, and scalability.
 
 ### 2. Progressive Complexity
-Start with simple forward passes, then add complexity:
-- Forward pass (understand data flow)
-- Backward pass (understand gradient flow)
-- Optimization (understand parameter updates)
-- Scale (understand performance)
+
+Each module builds on the previous one:
+
+* Start with forward pass execution (data flow)
+* Add gradient computation (graph tracking and backpropagation)
+* Introduce parameter updates (optimizers and training loops)
+* Scale to large data (I/O pipelines, batching, parallelism)
 
 ### 3. Hands-On Implementation
-Students build the actual systems, not just use them. This forces confrontation with:
-- Memory layout decisions
-- API design choices
-- Performance trade-offs
-- Debugging complex systems
+
+Students write the systems themselves—not wrappers or stubs. They make real decisions about:
+
+* Memory layout and management
+* API design and abstraction boundaries
+* Performance bottlenecks and instrumentation
+* Debugging multi-stage systems under constraints
 
 ### 4. Real-World Constraints
-Every implementation should consider:
-- **Performance**: How fast does it run?
-- **Memory**: How much RAM does it use?
-- **Scalability**: How does it handle larger problems?
-- **Maintainability**: How easy is it to extend?
+
+Every implementation addresses:
+
+* **Performance**: Runtime efficiency, vectorization, and bottlenecks
+* **Memory**: Allocation, reuse, and growth under training workloads
+* **Scalability**: Behavior on large models and datasets
+* **Maintainability**: Clean abstractions and extensibility for new components
+
+---
 
 ## Target Learning Outcomes
 
 By the end of TinyTorch, students should be able to:
 
-1. **Read PyTorch/TensorFlow source code** and understand the systems decisions
-2. **Debug performance issues** in ML training pipelines
-3. **Design new ML system components** with proper abstractions
-4. **Make informed trade-offs** between accuracy, speed, and memory
-5. **Think like a systems engineer** when approaching ML problems
+1. **Understand the internal structure** of ML frameworks like PyTorch and TensorFlow
+2. **Debug performance and correctness issues** in ML pipelines
+3. **Design modular ML infrastructure components** with clean interfaces
+4. **Analyze trade-offs** in accuracy, runtime, and memory footprint
+5. **Apply systems thinking** to the design and evaluation of ML code
+
+---
 
 ## Module Progression Logic
 
-### Foundation (Modules 0-1)
-- **Setup**: Development environment as a system
-- **Tensor**: Core data structures and memory management
+TinyTorch aligns with Chapters 5 through 13 of the *Machine Learning Systems* textbook. While each module can be tackled independently, the design encourages a sequential path that mirrors the increasing complexity of ML systems development.
 
-### Core ML Systems (Modules 2-4)
-- **MLP**: Basic forward pass systems, loop structures
-- **CNN**: Advanced memory patterns, convolution as systems challenge
-- **Autograd**: Complex graph computation, memory management for gradients
+### Foundation (Modules 0–1)
 
-### Data & Training Systems (Modules 5-6)
-- **Data**: I/O pipelines, batching, preprocessing as systems problems
-- **Training**: Putting it all together, optimization loops, checkpointing
+* **Setup**: The development environment as a system
+* **Tensor**: Core data structures and memory management primitives
 
-### Production Systems (Modules 7-12)
-- **Config**: Experiment management systems
-- **Profiling**: Performance analysis tools
-- **Compression**: Model optimization techniques
-- **Kernels**: Custom compute optimization
-- **Benchmarking**: Measurement and comparison frameworks
-- **MLOps**: Deployment and monitoring systems
+### Core ML Systems (Modules 2–4)
+
+* **MLP**: Forward pass mechanics and loop construction
+* **CNN**: Convolution as a system design challenge (locality, reuse)
+* **Autograd**: Graph construction, gradient tracking, and memory reuse
+
+### Data & Training Systems (Modules 5–6)
+
+* **Data**: Input pipelines, prefetching, and transformation as systems problems
+* **Training**: Coordinating forward, backward, update, and checkpoint stages
+
+### Production Systems (Modules 7–12)
+
+* **Config**: Managing experimental scaffolding
+* **Profiling**: Instrumentation and performance diagnostics
+* **Compression**: Quantization and pruning from a systems perspective
+* **Kernels**: Custom kernel interfaces and tuning
+* **Benchmarking**: Building metrics pipelines and evaluation frameworks
+* **MLOps**: Deployment, monitoring, and system lifecycle concerns
+
+---
 
 ## Success Metrics
 
 Students succeed when they can:
-- **Explain** why PyTorch made certain design decisions
-- **Predict** where performance bottlenecks will occur
-- **Implement** new layer types or optimization algorithms
-- **Debug** complex training issues by understanding the underlying systems
+
+* **Explain** design choices in frameworks like PyTorch
+* **Predict** where performance bottlenecks will occur
+* **Implement** new layer types or optimization algorithms
+* **Debug** issues in multi-stage training systems
+* **Reason** about trade-offs across the full ML systems stack
 
 ---
 
-*This document serves as our "ground truth" for course design decisions. When in doubt about module content or progression, refer back to these principles.* 
+## Course Development Ground Truth
+
+This document serves as the canonical guide for TinyTorch module development. When in doubt about what a module should cover, how it should be structured, or how deeply it should engage with implementation, refer back to these guiding principles.
