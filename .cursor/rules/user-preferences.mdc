@@ -37,3 +37,4 @@ These preferences ensure consistency across the TinyTorch educational framework 
 - **Package structure**: Code exports from `modules/` to `tinytorch/` package
 
 These preferences ensure consistency across the TinyTorch educational framework and smooth development workflow.
+ 

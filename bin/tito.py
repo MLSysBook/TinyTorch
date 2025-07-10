@@ -351,8 +351,12 @@ def cmd_test(args):
         import subprocess
         failed_modules = []
         
-        # Count existing test files
-        existing_tests = [p for p in valid_modules if Path(f"tests/test_{p}.py").exists()]
+        # Count existing test files in modules/{module}/tests/
+        existing_tests = []
+        for module in valid_modules:
+            test_path = Path(f"modules/{module}/tests/test_{module}.py")
+            if test_path.exists():
+                existing_tests.append(module)
         
         console.print(Panel(f"🧪 Running tests for {len(existing_tests)} modules", 
                           title="Test Suite", border_style="bright_cyan"))
@@ -370,7 +374,7 @@ def cmd_test(args):
             for module in existing_tests:
                 progress.update(task, description=f"Testing {module}...")
                 
-                test_file = f"tests/test_{module}.py"
+                test_file = f"modules/{module}/tests/test_{module}.py"
                 result = subprocess.run([sys.executable, "-m", "pytest", test_file, "-v"], 
                                       capture_output=True, text=True)
                 
@@ -395,7 +399,7 @@ def cmd_test(args):
     elif args.module in valid_modules:
         # Run specific module tests
         import subprocess
-        test_file = f"tests/test_{args.module}.py"
+        test_file = f"modules/{args.module}/tests/test_{args.module}.py"
         
         console.print(Panel(f"🧪 Running tests for module: [bold cyan]{args.module}[/bold cyan]", 
                           title="Single Module Test", border_style="bright_cyan"))
@@ -433,7 +437,7 @@ def cmd_submit(args):
     submit_text.append(f"📤 Submitting module: {args.module}\n\n", style="bold cyan")
     submit_text.append("🚧 Submission system not yet implemented.\n\n", style="yellow")
     submit_text.append("For now, make sure all tests pass with:\n", style="dim")
-    submit_text.append(f"   python -m pytest tests/test_{args.module}.py -v", style="bold white")
+    submit_text.append(f"   python -m pytest modules/{args.module}/tests/test_{args.module}.py -v", style="bold white")
     
     console.print(Panel(submit_text, title="Module Submission", border_style="bright_yellow"))
 
