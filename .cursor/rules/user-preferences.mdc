@@ -1,3 +1,8 @@
+---
+alwaysApply: true
+description: User preferences and conventions for the TinyTorch educational framework.
+---
+
 # User Preferences and Conventions
 
 ## Development Preferences
@@ -27,7 +32,8 @@
 - **Package structure**: Code exports from `modules/` to `tinytorch/` package
 
 These preferences ensure consistency across the TinyTorch educational framework and smooth development workflow.
-description:
-globs:
-alwaysApply: false
----
+
+- **Educational directives**: Use `#| hide` for instructor solutions, visible sections for student work
+- **Package structure**: Code exports from `modules/` to `tinytorch/` package
+
+These preferences ensure consistency across the TinyTorch educational framework and smooth development workflow.
