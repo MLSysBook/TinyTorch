@@ -1,0 +1,67 @@
+# TinyTorch Development Workflow
+
+## CLI Tool: `tito.py`
+
+The main development tool is [bin/tito.py](mdc:bin/tito.py). Common commands:
+
+### Module Development
+```bash
+# Sync module: Python source → notebook → package export
+python bin/tito.py sync --module {module_name}
+
+# Test specific module
+python bin/tito.py test --module {module_name}
+
+# Get project info and status
+python bin/tito.py info
+```
+
+### Examples
+```bash
+# Work with setup module
+python bin/tito.py sync --module setup
+python bin/tito.py test --module setup
+
+# Work with tensor module  
+python bin/tito.py sync --module tensor
+python bin/tito.py test --module tensor
+```
+
+## Development Cycle
+
+1. **Edit**: Modify `modules/{module}/{module}_dev.py`
+   - Use `#| export` to mark code for package export
+   - Use `#| hide` for instructor solutions
+   - Follow NBDev educational pattern
+
+2. **Sync**: `python bin/tito.py sync --module {module}`
+   - Converts Python source to Jupyter notebook
+   - Exports marked code to `tinytorch/` package
+   - Updates package structure
+
+3. **Test**: `python bin/tito.py test --module {module}`
+   - Runs module-specific tests
+   - Validates exported package code
+   - Ensures everything works end-to-end
+
+4. **Commit**: Regular commits at good stages
+   - User prefers committing when reaching good milestones
+   - Clean up experimental files before committing
+
+## File Relationships
+
+```
+modules/{module}/{module}_dev.py  →  modules/{module}/{module}_dev.ipynb
+                                 ↓
+                            tinytorch/core/{component}.py
+```
+
+## Module Structure
+
+Each module should be self-contained with:
+- `{module}_dev.py` - Main development file (Python source)
+- `{module}_dev.ipynb` - Generated notebook (auto-created)
+- `test_{module}.py` - Module tests
+- `README.md` - Documentation
+
+Students run and pass all tests locally within the module before using nbdev to export code to the tinytorch package and build/test the overall package.
