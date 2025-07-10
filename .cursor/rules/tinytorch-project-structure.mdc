@@ -1,0 +1,53 @@
+# TinyTorch Project Structure Guide
+
+This is an educational ML Systems course repository organized into progressive modules that build a complete ML framework from scratch.
+
+## Core Architecture
+
+**🎓 Teaching vs. 🔧 Building**: The project has two parallel structures:
+- **Learning side**: `modules/` - Educational content organized by concepts
+- **Building side**: `tinytorch/` - Production package organized by function
+
+## Key Directories
+
+### Learning Side (`modules/`)
+- [modules/setup/](mdc:modules/setup/) - Development workflow and environment setup
+- [modules/tensor/](mdc:modules/tensor/) - Core tensor data structure (Module 1)
+- [modules/autograd/](mdc:modules/autograd/) - Automatic differentiation
+- [modules/mlp/](mdc:modules/mlp/) - Multi-layer perceptrons
+- [modules/cnn/](mdc:modules/cnn/) - Convolutional neural networks
+- [modules/training/](mdc:modules/training/) - Training loops and optimization
+- [modules/mlops/](mdc:modules/mlops/) - Production ML operations
+
+### Building Side (`tinytorch/`)
+- [tinytorch/core/](mdc:tinytorch/core/) - Core framework components (tensor, autograd, etc.)
+- [tinytorch/datasets/](mdc:tinytorch/datasets/) - Data loading utilities
+- [tinytorch/configs/](mdc:tinytorch/configs/) - Configuration management
+
+### Development Tools
+- [bin/tito.py](mdc:bin/tito.py) - Main CLI tool for sync, test, and build operations
+- [bin/activate-tinytorch.sh](mdc:bin/activate-tinytorch.sh) - Environment activation script
+
+## Module Structure Pattern
+
+Each module follows the NBDev educational pattern:
+```
+modules/{module_name}/
+├── {module_name}_dev.py     # Main Python source (Jupytext format)
+├── {module_name}_dev.ipynb  # Generated notebook (auto-created)
+├── test_{module_name}.py    # Tests
+└── README.md               # Documentation
+```
+
+## Development Workflow
+
+1. **Write**: Edit `modules/{module}/module_dev.py` with `#| export` directives
+2. **Sync**: Run `python bin/tito.py sync --module {module}` 
+3. **Test**: Run `python bin/tito.py test --module {module}`
+4. **Build**: Code exports to `tinytorch/core/{component}.py`
+
+The `#| default_exp` directive controls where code exports to in the package.
+description:
+globs:
+alwaysApply: false
+---

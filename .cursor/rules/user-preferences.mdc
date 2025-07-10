@@ -1,0 +1,33 @@
+# User Preferences and Conventions
+
+## Development Preferences
+
+- **Module naming**: Use `{module_name}_dev.py` for development files (e.g., `tensor_dev.py`)
+- **Commit frequency**: Check code into repo at good milestone stages
+- **README focus**: Keep main project README focused on overarching goals, not module details
+- **Component terminology**: Call code components 'modules' instead of 'parts'
+
+## Educational Workflow
+
+- **Self-contained modules**: Each module under `modules/` should be self-contained
+- **Local testing first**: Students run and pass all tests locally within the module before exporting
+- **Progressive learning**: Start simple, build complexity gradually
+- **Notebook conversion**: Prefer writing Python files with markdown syntax, convert to Jupyter afterwards
+
+## File Organization
+
+- **Source-first approach**: Start with Python source files, generate notebooks from them
+- **Clean structure**: Remove experimental/temporary files before committing
+- **Consistent patterns**: Follow established patterns across all modules
+
+## NBDev Integration
+
+- **Export workflow**: Use `#| export` directives to mark code for package export
+- **Educational directives**: Use `#| hide` for instructor solutions, visible sections for student work
+- **Package structure**: Code exports from `modules/` to `tinytorch/` package
+
+These preferences ensure consistency across the TinyTorch educational framework and smooth development workflow.
+description:
+globs:
+alwaysApply: false
+---
