@@ -1,0 +1,268 @@
+# TinyTorch Module Development Best Practices
+
+## Core Principles
+
+### Real Data, Real Systems
+- **Use production datasets**: No mock/fake data - students work with CIFAR-10, ImageNet, etc.
+- **Show progress feedback**: Downloads, training need visual progress indicators
+- **Cache for efficiency**: Download once, use repeatedly
+- **Real-world scale**: Use actual dataset sizes, not toy examples
+- **Systems thinking**: Consider performance, memory, caching, user experience
+
+### Immediate Visual Feedback
+- **Visual confirmation**: Students see their code working (images, plots, results)
+- **Development vs. Export separation**: Rich feedback in `_dev.py`, clean exports to package
+- **Progress indicators**: Status messages, progress bars for long operations
+- **Real-time validation**: Students can verify each step immediately
+
+### Educational Excellence
+- **"Build → Use → Understand → Repeat"**: Follow this cycle religiously
+- **Progressive complexity**: Easy → Medium → Hard with clear difficulty indicators
+- **Comprehensive guidance**: TODO sections with approach, examples, hints, systems thinking
+- **Real-world connections**: Connect every concept to production ML engineering
+
+## Implementation Patterns
+
+### Student Implementation Structure
+```python
+def student_method(self, params):
+    """
+    TODO: Clear, specific task description
+    
+    APPROACH:
+    1. Concrete first step with specific guidance
+    2. Concrete second step with specific guidance
+    3. Concrete third step with specific guidance
+    
+    EXAMPLE:
+    Input: actual_data_example
+    Expected: concrete_expected_output
+    
+    HINTS:
+    - Helpful guidance without giving code
+    - Systems thinking consideration
+    - Real-world connection
+    
+    SYSTEMS THINKING:
+    - Performance consideration
+    - Scalability question
+    - User experience aspect
+    """
+    raise NotImplementedError("Student implementation required")
+```
+
+### Progress Feedback Pattern
+```python
+def _download_progress_hook(self, count, block_size, total_size):
+    """Progress callback for downloads."""
+    if total_size > 0:
+        percent = min(100, (count * block_size * 100) // total_size)
+        mb_downloaded = (count * block_size) / (1024 * 1024)
+        mb_total = total_size / (1024 * 1024)
+        
+        # Visual progress bar
+        bar_length = 50
+        filled_length = int(bar_length * percent // 100)
+        bar = '█' * filled_length + '░' * (bar_length - filled_length)
+        
+        print(f'\r📥 [{bar}] {percent}% ({mb_downloaded:.1f}/{mb_total:.1f} MB)', 
+              end='', flush=True)
+```
+
+### Visual Feedback Pattern (Development Only)
+```python
+def show_data_samples(dataset, num_samples=8):
+    """Show grid of actual data samples (development only)."""
+    # NOT exported to package - development feedback only
+    if not _should_show_plots():
+        return
+        
+    fig, axes = plt.subplots(2, 4, figsize=(12, 6))
+    for i in range(num_samples):
+        image, label = dataset[i]
+        # Show actual data with proper visualization
+        axes[i//4, i%4].imshow(image.transpose(1, 2, 0))
+        axes[i//4, i%4].set_title(f'Class: {label}')
+    plt.show()
+```
+
+## Testing Requirements
+
+### Real Data Testing
+```python
+# ✅ GOOD: Use actual datasets
+def test_cifar10_dataset():
+    dataset = CIFAR10Dataset('data/cifar10/', train=True, download=True)
+    assert len(dataset) == 50000  # Actual CIFAR-10 size
+    image, label = dataset[0]
+    assert image.shape == (3, 32, 32)  # Real image dimensions
+    assert 0 <= label <= 9  # Real class labels
+
+# ❌ BAD: Mock/synthetic data
+def test_mock_dataset():
+    dataset = MockDataset(size=100)  # Fake data
+    assert len(dataset) == 100  # Meaningless test
+```
+
+### Progressive Real Data Validation
+```python
+def test_complete_pipeline():
+    """Test entire pipeline with real data."""
+    # Test with actual production data
+    pipeline = create_data_pipeline('data/cifar10/', batch_size=32)
+    
+    # Verify real data properties
+    batch_images, batch_labels = next(iter(pipeline))
+    assert batch_images.shape == (32, 3, 32, 32)  # Real batch dimensions
+    assert batch_labels.shape == (32,)  # Real label shape
+    assert batch_images.dtype == torch.float32  # Real data type
+    assert 0 <= batch_labels.min() <= batch_labels.max() <= 9  # Real classes
+```
+
+## Module Structure Requirements
+
+### File Organization
+```
+modules/{module}/
+├── {module}_dev.py              # Complete implementation
+├── {module}_dev.ipynb           # Generated notebook
+├── tests/
+│   └── test_{module}.py         # Real data tests
+├── README.md                    # Module guide
+└── data/                        # Cached datasets (if needed)
+```
+
+### NBDev Structure
+```python
+# ---
+# jupyter:
+#   jupytext:
+#     text_representation:
+#       extension: .py
+#       format_name: percent
+#       format_version: '1.3'
+#       jupytext_version: 1.17.1
+# ---
+
+# %% [markdown]
+"""
+# Module: {Title} - {Purpose}
+
+## Learning Objectives
+- ✅ Build {core_concept} from scratch
+- ✅ Use it with real data ({dataset_name})
+- ✅ Understand {key_insight}
+- ✅ Connect to production ML systems
+"""
+
+# %%
+#| default_exp core.{module}
+import numpy as np
+import matplotlib.pyplot as plt
+from typing import Union, List, Optional
+
+# %%
+#| export
+class MainClass:
+    """Student-facing implementation with comprehensive TODO."""
+    def __init__(self, params):
+        # Comprehensive TODO guidance here
+        raise NotImplementedError("Student implementation required")
+
+# %%
+#| hide
+#| export
+class MainClass:
+    """Complete implementation (hidden from students)."""
+    def __init__(self, params):
+        # Actual working implementation
+        pass
+```
+
+## Quality Standards
+
+### Before Release Checklist
+- [ ] Uses real data, not synthetic/mock data
+- [ ] Includes progress feedback for long operations
+- [ ] Visual feedback functions (development only, not exported)
+- [ ] Tests use actual datasets at realistic scales
+- [ ] TODO guidance includes systems thinking
+- [ ] Clean separation between development and exports
+- [ ] Follows "Build → Use → Understand → Repeat" progression
+
+### Student Experience Requirements
+- [ ] Clear learning progression
+- [ ] Immediate feedback and validation
+- [ ] Real-world relevance and connections
+- [ ] Motivating and engaging content
+- [ ] Smooth transition to next modules
+
+## Key Anti-Patterns to Avoid
+
+### ❌ Don't Use Mock Data
+```python
+# BAD: Synthetic/mock data
+class MockDataset:
+    def __init__(self, size):
+        self.data = np.random.randn(size, 784)  # Fake data
+        
+# GOOD: Real data
+class CIFAR10Dataset:
+    def __init__(self, root, train=True, download=True):
+        self._download_if_needed()  # Real CIFAR-10 data
+```
+
+### ❌ Don't Skip Progress Feedback
+```python
+# BAD: Silent long operations
+def download_data():
+    urllib.request.urlretrieve(url, filename)  # No feedback
+    
+# GOOD: Progress feedback
+def download_data():
+    urllib.request.urlretrieve(url, filename, reporthook=self._progress_hook)
+```
+
+### ❌ Don't Export Visual Functions
+```python
+# BAD: Visual functions in package exports
+#| export
+def show_images(data):
+    plt.imshow(data)  # Creates matplotlib dependency in package
+    
+# GOOD: Development-only visual functions
+def show_images(data):
+    if not _should_show_plots():
+        return
+    plt.imshow(data)  # Not exported, development only
+```
+
+## Development Workflow
+
+1. **Start with real data**: Choose production dataset first
+2. **Write complete implementation**: Get it working before adding markers
+3. **Add rich feedback**: Visual confirmation, progress indicators
+4. **Test the student path**: Follow your own TODO guidance
+5. **Optimize user experience**: Consider performance, caching, error messages
+
+## Success Metrics
+
+**Students should be able to:**
+- Explain what they built in simple terms
+- Modify code to solve related problems
+- Connect module concepts to real ML systems
+- Debug issues by understanding the system
+
+**Modules should achieve:**
+- High student engagement and completion rates
+- Smooth progression to next modules
+- Real-world relevance and production quality
+- Consistent patterns across the curriculum
+
+---
+
+**Remember**: We're teaching ML systems engineering, not just algorithms. Every module should reflect real-world practices and challenges while maintaining the "Build → Use → Understand" educational cycle.
+description:
+globs:
+alwaysApply: false
+---
