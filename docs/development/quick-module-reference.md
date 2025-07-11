@@ -34,7 +34,7 @@ class YourClass:
 ### 3. Convert and Generate
 ```bash
 # Convert Python to notebook
-python3 tools/py_to_notebook.py modules/{module}/{module}_dev.py
+python bin/tito.py notebooks --module {module}
 
 # Generate student version
 python3 bin/generate_student_notebooks.py --module {module}
@@ -105,7 +105,7 @@ mkdir modules/{module}
 cp modules/example/example_dev.py modules/{module}/{module}_dev.py
 
 # Full workflow
-python3 tools/py_to_notebook.py modules/{module}/{module}_dev.py
+python bin/tito.py notebooks --module {module}
 python3 bin/generate_student_notebooks.py --module {module}
 
 # Test everything

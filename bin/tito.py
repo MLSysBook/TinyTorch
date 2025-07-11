@@ -816,25 +816,31 @@ def cmd_notebooks(args):
         # Build all modules
         console.print(f"🔄 Building notebooks for {len(dev_files)} modules...")
     
-    # Convert each file
+    # Convert each file using the separate tool
     success_count = 0
     error_count = 0
     
     for dev_file in dev_files:
         try:
-            # Use the existing py_to_notebook.py tool
+            # Use the separate py_to_notebook.py tool
             result = subprocess.run([
                 sys.executable, "tools/py_to_notebook.py", str(dev_file)
             ], capture_output=True, text=True)
             
+            module_name = dev_file.parent.name
+            
             if result.returncode == 0:
                 success_count += 1
-                module_name = dev_file.parent.name
-                console.print(f"  ✅ {module_name}: {dev_file.name} → {dev_file.with_suffix('.ipynb').name}")
+                # Extract success message from the tool output
+                output_lines = result.stdout.strip().split('\n')
+                success_msg = output_lines[-1] if output_lines else f"{dev_file.name} → {dev_file.with_suffix('.ipynb').name}"
+                # Clean up the message to remove the ✅ emoji since we'll add our own
+                clean_msg = success_msg.replace('✅ ', '').replace('Converted ', '')
+                console.print(f"  ✅ {module_name}: {clean_msg}")
             else:
                 error_count += 1
-                module_name = dev_file.parent.name
-                console.print(f"  ❌ {module_name}: {result.stderr.strip()}")
+                error_msg = result.stderr.strip() if result.stderr.strip() else "Conversion failed"
+                console.print(f"  ❌ {module_name}: {error_msg}")
                 
         except Exception as e:
             error_count += 1

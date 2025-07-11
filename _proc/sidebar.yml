@@ -1,0 +1,9 @@
+website:
+  sidebar:
+    contents:
+      - section: layers
+        contents:
+          - layers/layers_dev.ipynb
+      - section: setup
+        contents:
+          - setup/setup_dev.ipynb

@@ -37,7 +37,7 @@ Mark what students should implement vs. what to provide.
 ### Step 4: Convert and Generate
 ```bash
 # Convert Python to notebook
-python3 tools/py_to_notebook.py modules/{module}/{module}_dev.py
+python bin/tito.py notebooks --module {module}
 
 # Generate student version
 python3 bin/generate_student_notebooks.py --module {module}
@@ -203,7 +203,7 @@ Students implement:
 
 ### Convert Python to Notebook
 ```bash
-python3 tools/py_to_notebook.py modules/{module}/{module}_dev.py
+python bin/tito.py notebooks --module {module}
 ```
 
 ### Generate Student Version
