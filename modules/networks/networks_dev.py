@@ -545,8 +545,11 @@ try:
     ])
     
     # Visualize the network
-    visualize_network_architecture(test_network, "Test Network Architecture")
-    print("✅ Network visualization created!")
+    if _should_show_plots():
+        visualize_network_architecture(test_network, "Test Network Architecture")
+        print("✅ Network visualization created!")
+    else:
+        print("✅ Network visualization skipped during testing")
     
 except Exception as e:
     print(f"❌ Error: {e}")
@@ -657,8 +660,11 @@ try:
     test_input = Tensor([[1.0, 2.0, 3.0]])
     
     # Visualize data flow
-    visualize_data_flow(test_network, test_input, "Test Network Data Flow")
-    print("✅ Data flow visualization created!")
+    if _should_show_plots():
+        visualize_data_flow(test_network, test_input, "Test Network Data Flow")
+        print("✅ Data flow visualization created!")
+    else:
+        print("✅ Data flow visualization skipped during testing")
     
 except Exception as e:
     print(f"❌ Error: {e}")
@@ -768,8 +774,11 @@ try:
     test_input = Tensor([[1.0, 2.0, 3.0]])
     
     # Compare networks
-    compare_networks(networks, names, test_input, "Network Architecture Comparison")
-    print("✅ Network comparison created!")
+    if _should_show_plots():
+        compare_networks(networks, names, test_input, "Network Architecture Comparison")
+        print("✅ Network comparison created!")
+    else:
+        print("✅ Network comparison skipped during testing")
     
 except Exception as e:
     print(f"❌ Error: {e}")
@@ -1054,8 +1063,11 @@ try:
     test_input = Tensor([[1.0, 2.0, 3.0]])
     
     # Analyze behavior
-    analyze_network_behavior(test_network, test_input, "Test Network Behavior")
-    print("✅ Network behavior analysis created!")
+    if _should_show_plots():
+        analyze_network_behavior(test_network, test_input, "Test Network Behavior")
+        print("✅ Network behavior analysis created!")
+    else:
+        print("✅ Network behavior analysis skipped during testing")
     
 except Exception as e:
     print(f"❌ Error: {e}")
