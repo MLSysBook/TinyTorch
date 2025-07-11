@@ -20,6 +20,15 @@ from .core.console import get_console, print_banner, print_error
 from .core.exceptions import TinyTorchCLIError
 from .commands.base import BaseCommand
 from .commands.notebooks import NotebooksCommand
+from .commands.info import InfoCommand
+from .commands.test import TestCommand
+from .commands.doctor import DoctorCommand
+from .commands.sync import SyncCommand
+from .commands.reset import ResetCommand
+from .commands.jupyter import JupyterCommand
+from .commands.nbdev import NbdevCommand
+from .commands.submit import SubmitCommand
+from .commands.status import StatusCommand
 
 # Configure logging
 logging.basicConfig(
@@ -42,7 +51,15 @@ class TinyTorchCLI:
         self.console = get_console()
         self.commands: Dict[str, Type[BaseCommand]] = {
             'notebooks': NotebooksCommand,
-            # Add other commands here as we refactor them
+            'info': InfoCommand,
+            'test': TestCommand,
+            'doctor': DoctorCommand,
+            'sync': SyncCommand,
+            'reset': ResetCommand,
+            'jupyter': JupyterCommand,
+            'nbdev': NbdevCommand,
+            'submit': SubmitCommand,
+            'status': StatusCommand,
         }
     
     def create_parser(self) -> argparse.ArgumentParser:

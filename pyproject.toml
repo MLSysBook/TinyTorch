@@ -3,11 +3,11 @@ requires = ["setuptools>=64.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "tinytorch"
+name="tinytorch"
 version = "0.1.0"
 description = "TinyTorch: Build ML Systems from Scratch"
 readme = "README.md"
-requires-python = ">=3.8"
+requires-python=">=3.8"
 authors = [
     {name = "TinyTorch Team", email = "team@tinytorch.ai"}
 ]
