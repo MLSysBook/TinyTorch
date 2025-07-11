@@ -22,6 +22,26 @@ Welcome to the CNN module! Here you'll implement the core building block of mode
 - (Stretch) Explore stride, padding, pooling, and multi-channel input
 """
 
+# %% [markdown]
+"""
+## 📦 Where This Code Lives in the Final Package
+
+**Learning Side:** You work in `modules/cnn/cnn_dev.py`  
+**Building Side:** Code exports to `tinytorch.core.layers`
+
+```python
+# Final package structure:
+from tinytorch.core.layers import Dense, Conv2D  # Both layers together!
+from tinytorch.core.activations import ReLU
+from tinytorch.core.tensor import Tensor
+```
+
+**Why this matters:**
+- **Learning:** Focused modules for deep understanding
+- **Production:** Proper organization like PyTorch's `torch.nn`
+- **Consistency:** All layers (Dense, Conv2D) live together in `core.layers`
+"""
+
 # %%
 #| default_exp core.cnn
 

@@ -30,13 +30,26 @@ Welcome to the Layers module! This is where neural networks begin. You'll implem
 This module builds on the **activations** module:
 - **activations** → **layers** → **networks**
 - Clean separation of concerns: math functions → layer building blocks → full networks
+"""
 
-## Module → Package Structure
-**🎓 Teaching vs. 🔧 Building**: 
-- **Learning side**: Work in `modules/layers/layers_dev.py`  
-- **Building side**: Exports to `tinytorch/core/layers.py`
+# %% [markdown]
+"""
+## 📦 Where This Code Lives in the Final Package
 
-This module builds the fundamental transformations that compose into neural networks.
+**Learning Side:** You work in `modules/layers/layers_dev.py`  
+**Building Side:** Code exports to `tinytorch.core.layers`
+
+```python
+# Final package structure:
+from tinytorch.core.layers import Dense, Conv2D  # All layers together!
+from tinytorch.core.activations import ReLU, Sigmoid, Tanh
+from tinytorch.core.tensor import Tensor
+```
+
+**Why this matters:**
+- **Learning:** Focused modules for deep understanding
+- **Production:** Proper organization like PyTorch's `torch.nn`
+- **Consistency:** All layers (Dense, Conv2D) live together in `core.layers`
 """
 
 # %%

@@ -20,12 +20,27 @@ Welcome to the Tensor module! This is where TinyTorch really begins. You'll impl
 - Handle shape management, data types, and memory layout
 - Build the foundation for neural networks and automatic differentiation
 
-## Module → Package Structure
-**🎓 Teaching vs. 🔧 Building**: 
-- **Learning side**: Work in `modules/tensor/tensor_dev.py`  
-- **Building side**: Exports to `tinytorch/core/tensor.py`
+"""
 
-This module builds the core data structure that all other TinyTorch components will use.
+# %% [markdown]
+"""
+## 📦 Where This Code Lives in the Final Package
+
+**Learning Side:** You work in `modules/tensor/tensor_dev.py`  
+**Building Side:** Code exports to `tinytorch.core.tensor`
+
+```python
+# Final package structure:
+from tinytorch.core.tensor import Tensor
+from tinytorch.core.layers import Dense, Conv2D
+from tinytorch.core.activations import ReLU, Sigmoid, Tanh
+```
+
+**Why this matters:**
+- **Learning:** Focused modules for deep understanding
+- **Production:** Proper organization like PyTorch's `torch.tensor`
+- **Consistency:** Core data structure lives in `core.tensor`
+"""
 """
 
 # %%
