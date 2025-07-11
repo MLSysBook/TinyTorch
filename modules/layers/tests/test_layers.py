@@ -18,7 +18,11 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
 
 # Import from the module's development file
 # Note: This imports the instructor version with full implementation
-from layers_dev import Dense, ReLU, Sigmoid, Tanh, Tensor
+from layers_dev import Dense, Tensor
+
+# Import activation functions from the activations module
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(__file__)), '..', 'activations'))
+from activations_dev import ReLU, Sigmoid, Tanh
 
 def safe_numpy(tensor):
     """Get numpy array from tensor, using .numpy() if available, otherwise .data"""

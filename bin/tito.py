@@ -343,7 +343,7 @@ def cmd_info(args):
 
 def cmd_test(args):
     """Run tests for a specific module."""
-    valid_modules = ["setup", "tensor", "layers", "cnn", "data", "training", 
+    valid_modules = ["setup", "tensor", "activations", "layers", "cnn", "data", "training", 
                      "profiling", "compression", "kernels", "benchmarking", "mlops"]
     
     if args.all:
