@@ -99,7 +99,7 @@ By the end of TinyTorch, students should be able to:
 | `modules/mlp/` | `tinytorch/nn/linear.py` | Linear layers and MLPs |
 | `modules/cnn/` | `tinytorch/nn/conv.py` | Convolutional layers |
 | `modules/autograd/` | `tinytorch/core/autograd.py` | Automatic differentiation |
-| `modules/data/` | `tinytorch/data/` | Data loading and processing |
+| `modules/dataloader/` | `tinytorch/core/dataloader` | Data loading and processing |
 | `modules/training/` | `tinytorch/optim/` | Optimizers and training loops |
 | `modules/profiling/` | `tinytorch/profiling/` | Performance analysis tools |
 

@@ -41,7 +41,7 @@
 # Module tests
 modules/setup/tests/test_setup.py
 modules/tensor/tests/test_tensor.py
-modules/data/tests/test_data.py
+modules/dataloader/tests/test_dataloader.py
 
 # Package tests  
 tinytorch/tests/test_tensor.py
@@ -206,7 +206,7 @@ import time
 # Add parent directory to path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from data_dev import CIFAR10Dataset, DataLoader, create_data_pipeline
+from dataloader_dev import CIFAR10Dataset, DataLoader, create_data_pipeline
 
 class TestCIFAR10Dataset:
     """Test CIFAR-10 dataset with real data."""
