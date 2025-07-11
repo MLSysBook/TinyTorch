@@ -3,8 +3,8 @@
 Convert Python files with cell markers to Jupyter notebooks.
 
 Usage:
-    python3 tools/py_to_notebook.py modules/tensor/tensor_dev.py
-    python3 tools/py_to_notebook.py modules/tensor/tensor_dev.py --output custom_name.ipynb
+    python3 bin/py_to_notebook.py modules/tensor/tensor_dev.py
+    python3 bin/py_to_notebook.py modules/tensor/tensor_dev.py --output custom_name.ipynb
 """
 
 import argparse

@@ -106,7 +106,7 @@ cp modules/example/example_dev.py modules/{module}/{module}_dev.py
 
 # Full workflow
 python bin/tito.py notebooks --module {module}
-python3 bin/generate_student_notebooks.py --module {module}
+python bin/generate_student_notebooks.py --module {module}
 
 # Test everything
 python bin/tito.py test --module {module}

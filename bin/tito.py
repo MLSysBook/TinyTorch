@@ -824,7 +824,7 @@ def cmd_notebooks(args):
         try:
             # Use the separate py_to_notebook.py tool
             result = subprocess.run([
-                sys.executable, "tools/py_to_notebook.py", str(dev_file)
+                sys.executable, "bin/py_to_notebook.py", str(dev_file)
             ], capture_output=True, text=True)
             
             module_name = dev_file.parent.name
