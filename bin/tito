@@ -2,7 +2,7 @@
 """
 TinyTorch CLI Wrapper
 
-Backward compatibility wrapper that calls the new professional CLI structure.
+Backward compatibility wrapper that calls the professional CLI structure.
 """
 
 import sys
@@ -12,8 +12,8 @@ from pathlib import Path
 project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root))
 
-# Import and run the new CLI
-from tinytorch.cli.main import main
+# Import and run the CLI
+from tito.main import main
 
 if __name__ == "__main__":
     sys.exit(main()) 
