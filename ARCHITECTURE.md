@@ -1,13 +1,46 @@
-# TinyTorch CLI Architecture
+# TinyTorch Project Architecture
 
 ## 🏗️ Senior Software Engineer Design Principles
 
-This CLI follows industry-standard software engineering practices and patterns used in production systems.
+This project follows industry-standard software engineering practices with proper separation of concerns between the **ML framework** and **development tools**.
 
-## 📁 Architecture Overview
+## 📁 Project Structure Overview
 
 ```
-tinytorch/cli/
+TinyTorch/
+├── tinytorch/                   # 🧠 Core ML Framework
+│   ├── core/                   # Core tensor operations, layers, etc.
+│   ├── training/               # Training loops, optimizers
+│   ├── models/                 # Pre-built model architectures
+│   └── ...                     # Other ML framework components
+├── tito/                       # 🔧 Development CLI Tool
+│   ├── main.py                 # CLI entry point
+│   ├── core/                   # CLI core functionality
+│   ├── commands/               # CLI commands
+│   └── tools/                  # CLI utilities
+├── modules/                    # 📚 Educational modules
+├── bin/                        # 🚀 Executable scripts
+└── docs/                       # 📖 Documentation
+```
+
+## 🎯 Architectural Separation
+
+### **TinyTorch Framework** (`tinytorch/`)
+- **Purpose**: Core ML framework for production use
+- **Dependencies**: Minimal (numpy, essential ML libraries)
+- **Users**: Students, researchers, ML practitioners
+- **Scope**: Tensors, layers, training, models, inference
+
+### **Tito CLI Tool** (`tito/`)
+- **Purpose**: Development and management tool for building the framework
+- **Dependencies**: Rich CLI libraries, development tools
+- **Users**: Course instructors, framework developers
+- **Scope**: Module generation, testing, notebook conversion, project management
+
+## 🔧 Tito CLI Architecture
+
+```
+tito/
 ├── __init__.py              # Package initialization
 ├── main.py                  # Professional CLI entry point
 ├── core/                    # Core CLI functionality
@@ -26,197 +59,141 @@ tinytorch/cli/
 
 ## 🎯 Design Patterns Applied
 
-### 1. **Command Pattern**
+### 1. **Separation of Concerns**
+- **Framework**: Pure ML functionality
+- **CLI**: Development and management tools
+- **Modules**: Educational content and exercises
+
+### 2. **Command Pattern**
 - Each CLI command is a separate class implementing `BaseCommand`
 - Consistent interface for all commands
 - Easy to add new commands without modifying existing code
 
-### 2. **Dependency Injection**
+### 3. **Dependency Injection**
 - Commands receive configuration through constructor
 - Testable and loosely coupled
 - Easy to mock for testing
 
-### 3. **Template Method Pattern**
-- `BaseCommand` provides common functionality
-- Subclasses implement specific behavior
-- Consistent error handling across all commands
-
-### 4. **Factory Pattern**
-- Commands are registered and instantiated dynamically
-- Easy to extend with new commands
-- Clean separation of command creation and execution
-
-### 5. **Single Responsibility Principle**
+### 4. **Single Responsibility Principle**
 - Each module has one clear purpose
-- Console output separated from business logic
+- CLI separated from framework logic
 - Configuration management isolated
-
-## 🔧 Key Features
-
-### Professional Error Handling
-```python
-class TinyTorchCLIError(Exception):
-    """Base exception for all CLI errors."""
-    pass
-
-class ValidationError(TinyTorchCLIError):
-    """Raised when validation fails."""
-    pass
-```
-
-### Centralized Configuration
-```python
-@dataclass
-class CLIConfig:
-    """Configuration for TinyTorch CLI."""
-    project_root: Path
-    modules_dir: Path
-    tinytorch_dir: Path
-    # ... with validation and auto-detection
-```
-
-### Logging Integration
-```python
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-    handlers=[
-        logging.FileHandler('tinytorch-cli.log'),
-        logging.StreamHandler(sys.stderr)
-    ]
-)
-```
-
-### Type Safety
-- Full type hints throughout
-- MyPy configuration for static type checking
-- Runtime type validation where needed
 
 ## 🚀 Usage Examples
 
-### Professional CLI Interface
+### Framework Usage (Production)
+```python
+# Core ML framework usage
+import tinytorch as tt
+
+# Create tensors
+x = tt.Tensor([1, 2, 3])
+y = tt.Tensor([4, 5, 6])
+z = x + y
+
+# Build models
+model = tt.Sequential([
+    tt.Linear(784, 128),
+    tt.ReLU(),
+    tt.Linear(128, 10)
+])
+```
+
+### CLI Tool Usage (Development)
 ```bash
-# Modern help system
-tito --help
-tito notebooks --help
-
-# Global options
-tito --verbose notebooks --module tensor
-tito --no-color notebooks --dry-run
-
-# Advanced features
-tito notebooks --force --module layers
-```
-
-### Programmatic Usage
-```python
-from tinytorch.cli.main import TinyTorchCLI
-
-cli = TinyTorchCLI()
-exit_code = cli.run(['notebooks', '--module', 'tensor'])
-```
-
-## 🧪 Testing Strategy
-
-### Unit Testing
-- Each command class can be tested independently
-- Mock configuration and dependencies
-- Test error conditions and edge cases
-
-### Integration Testing
-- Test full CLI workflows
-- Validate configuration loading
-- Test subprocess interactions
-
-### Example Test Structure
-```python
-def test_notebooks_command():
-    config = CLIConfig.from_project_root(test_project_root)
-    command = NotebooksCommand(config)
-    
-    # Test with mock arguments
-    args = Namespace(module='test', dry_run=True)
-    result = command.run(args)
-    
-    assert result == 0
+# Development and management
+tito notebooks --module tensor
+tito test --module layers
+tito sync --all
+tito doctor
 ```
 
 ## 📦 Installation & Distribution
 
+### Core Framework
+```bash
+pip install tinytorch
+```
+
+### Development Tools
+```bash
+pip install tinytorch[dev]  # Includes tito CLI
+```
+
 ### Entry Points
 ```toml
 [project.scripts]
-tito = "tinytorch.cli.main:main"
-py-to-notebook = "tinytorch.cli.tools.py_to_notebook:main"
+tito = "tito.main:main"
 ```
 
-### Professional Package Structure
-- Proper `pyproject.toml` configuration
-- Development dependencies separated
-- Code quality tools configured (black, isort, mypy)
-- Semantic versioning
+## 🔄 Benefits of This Architecture
 
-## 🔄 Extensibility
+### For Framework Users
+- **Clean API**: No CLI dependencies in core framework
+- **Lightweight**: Minimal dependencies for production use
+- **Focused**: Pure ML functionality without development noise
 
-### Adding New Commands
-1. Create command class inheriting from `BaseCommand`
-2. Implement required methods
-3. Register in `main.py`
-4. Add tests
-
-```python
-class NewCommand(BaseCommand):
-    @property
-    def name(self) -> str:
-        return "new-command"
-    
-    def add_arguments(self, parser: ArgumentParser) -> None:
-        parser.add_argument('--option', help='Command option')
-    
-    def run(self, args: Namespace) -> int:
-        # Implementation here
-        return 0
-```
-
-## 📊 Benefits Achieved
-
-### For Developers
+### For Framework Developers
+- **Powerful Tools**: Rich CLI for development tasks
 - **Maintainable**: Clear separation of concerns
-- **Testable**: Dependency injection and interfaces
-- **Extensible**: Easy to add new features
-- **Debuggable**: Proper logging and error handling
+- **Extensible**: Easy to add new development commands
 
-### For Users
-- **Reliable**: Robust error handling and validation
-- **Consistent**: Uniform interface across all commands
-- **Helpful**: Clear error messages and help text
-- **Fast**: Efficient execution with proper resource management
+### For Course Instructors
+- **Management Tools**: CLI for course administration
+- **Module Generation**: Automated notebook and exercise creation
+- **Testing Infrastructure**: Comprehensive testing commands
 
-### For DevOps
-- **Installable**: Proper package structure
-- **Configurable**: Environment-aware configuration
-- **Monitorable**: Comprehensive logging
-- **Deployable**: Professional packaging and distribution
+## 🎓 Educational Benefits
 
-## 🎓 Learning Outcomes
+### Clear Mental Model
+- **tinytorch**: "The ML framework I'm learning"
+- **tito**: "The tool that helps me build and manage the framework"
+- **modules**: "The lessons and exercises"
 
-This architecture demonstrates:
-- How to structure a professional CLI application
-- Industry-standard Python packaging
-- Design patterns in practice
-- Error handling best practices
-- Testing strategies for CLI applications
-- Configuration management patterns
-- Logging and monitoring integration
+### Professional Practice
+- Shows how real software projects separate concerns
+- Demonstrates proper package structure
+- Teaches dependency management
 
 ## 🔮 Future Enhancements
 
-- Plugin system for third-party commands
-- Configuration file support (YAML/TOML)
-- Shell completion support
-- Progress bars for long-running operations
-- Parallel command execution
-- Remote command execution
-- API integration capabilities
+### Framework (`tinytorch/`)
+- Advanced tensor operations
+- GPU acceleration
+- Distributed training
+- Model deployment utilities
 
-This architecture provides a solid foundation for scaling the CLI to enterprise-level requirements while maintaining educational value and ease of use. 
+### CLI Tool (`tito/`)
+- Plugin system for custom commands
+- Configuration file support
+- Shell completion
+- Remote development support
+
+## 📊 Comparison: Before vs After
+
+### Before (Mixed Architecture)
+```
+tinytorch/
+├── core/           # ML framework
+├── cli/            # CLI mixed in framework
+└── ...
+```
+**Issues**: CLI dependencies pollute framework, unclear separation
+
+### After (Clean Architecture)
+```
+tinytorch/          # Pure ML framework
+tito/              # Development CLI tool
+modules/           # Educational content
+```
+**Benefits**: Clean separation, focused dependencies, clear purpose
+
+## 🎯 Key Takeaways
+
+1. **Separation of Concerns**: Framework and tools are separate
+2. **Dependency Management**: Core framework stays lightweight
+3. **User Experience**: Clear distinction between using vs building
+4. **Professional Practice**: Industry-standard project organization
+5. **Educational Value**: Teaches proper software architecture
+
+This architecture demonstrates how senior engineers structure complex projects with multiple concerns, ensuring each component has a clear purpose and minimal dependencies. 
