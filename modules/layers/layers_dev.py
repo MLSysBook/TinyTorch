@@ -17,14 +17,19 @@ Welcome to the Layers module! This is where neural networks begin. You'll implem
 ## Learning Goals
 - Understand layers as functions that transform tensors: `y = f(x)`
 - Implement Dense layers with linear transformations: `y = Wx + b`
-- Add activation functions for nonlinearity (ReLU, Sigmoid, Tanh)
+- Use activation functions from the activations module for nonlinearity
 - See how neural networks are just function composition
 - Build intuition before diving into training
 
 ## Build → Use → Understand
-1. **Build**: Dense layers and activation functions
+1. **Build**: Dense layers using activation functions as building blocks
 2. **Use**: Transform tensors and see immediate results
 3. **Understand**: How neural networks transform information
+
+## Module Dependencies
+This module builds on the **activations** module:
+- **activations** → **layers** → **networks**
+- Clean separation of concerns: math functions → layer building blocks → full networks
 
 ## Module → Package Structure
 **🎓 Teaching vs. 🔧 Building**: 
@@ -50,6 +55,9 @@ import math
 import sys
 from typing import Union, Optional, Callable
 from tinytorch.core.tensor import Tensor
+
+# Import activation functions from the activations module
+from tinytorch.core.activations import ReLU, Sigmoid, Tanh
 
 # Import our Tensor class
 # sys.path.append('../../')
@@ -203,12 +211,11 @@ try:
     print(f"Input: {x.data}")
     print(f"Output: {y.data}")
     
-    # Test with batch of examples
+    # Test with batch
     x_batch = Tensor([[1.0, 2.0, 3.0], [4.0, 5.0, 6.0]])  # Shape: (2, 3)
     y_batch = layer(x_batch)
     print(f"\nBatch input shape: {x_batch.shape}")
     print(f"Batch output shape: {y_batch.shape}")
-    print(f"Batch output: {y_batch.data}")
     
     print("✅ Dense layer working!")
     
@@ -218,14 +225,20 @@ except Exception as e:
 
 # %% [markdown]
 """
-## Step 2: Activation Functions
+## Step 2: Activation Functions - Adding Nonlinearity
 
-Dense layers alone can only learn **linear** transformations. But most real-world problems need **nonlinear** transformations.
+Now we'll use the activation functions from the **activations** module! 
 
-**Activation functions** add nonlinearity:
-- **ReLU**: `max(0, x)` - Most common, simple and effective
-- **Sigmoid**: `1 / (1 + e^(-x))` - Squashes to (0, 1)
-- **Tanh**: `tanh(x)` - Squashes to (-1, 1)
+**Clean Architecture**: We import the activation functions rather than redefining them:
+```python
+from tinytorch.core.activations import ReLU, Sigmoid, Tanh
+```
+
+**Why this matters**:
+- **Separation of concerns**: Math functions vs. layer building blocks
+- **Reusability**: Activations can be used anywhere in the system
+- **Maintainability**: One place to update activation implementations
+- **Composability**: Clean imports make neural networks easier to build
 
 **Why nonlinearity matters**: Without it, stacking layers is pointless!
 ```
@@ -234,178 +247,43 @@ Linear → NonLinear → Linear = Can learn complex patterns
 ```
 """
 
-# %%
-#| export
-class ReLU:
-    """
-    ReLU Activation: f(x) = max(0, x)
-    
-    The most popular activation function in deep learning.
-    Simple, effective, and computationally efficient.
-    
-    TODO: Implement ReLU activation function.
-    """
-    
-    def forward(self, x: Tensor) -> Tensor:
-        """
-        Apply ReLU: f(x) = max(0, x)
-        
-        Args:
-            x: Input tensor
-            
-        Returns:
-            Output tensor with ReLU applied element-wise
-            
-        TODO: Implement element-wise max(0, x) operation
-        """
-        raise NotImplementedError("Student implementation required")
-    
-    def __call__(self, x: Tensor) -> Tensor:
-        """Make activation callable: relu(x) same as relu.forward(x)"""
-        return self.forward(x)
-
-# %%
-#| hide
-#| export
-class ReLU:
-    """ReLU Activation: f(x) = max(0, x)"""
-    
-    def forward(self, x: Tensor) -> Tensor:
-        """Apply ReLU: f(x) = max(0, x)"""
-        return Tensor(np.maximum(0, x.data))
-    
-    def __call__(self, x: Tensor) -> Tensor:
-        return self.forward(x)
-
-# %%
-#| export
-class Sigmoid:
-    """
-    Sigmoid Activation: f(x) = 1 / (1 + e^(-x))
-    
-    Squashes input to range (0, 1). Often used for binary classification.
-    
-    TODO: Implement Sigmoid activation function.
-    """
-    
-    def forward(self, x: Tensor) -> Tensor:
-        """
-        Apply Sigmoid: f(x) = 1 / (1 + e^(-x))
-        
-        Args:
-            x: Input tensor
-            
-        Returns:
-            Output tensor with Sigmoid applied element-wise
-            
-        TODO: Implement sigmoid function (be careful with numerical stability!)
-        """
-        raise NotImplementedError("Student implementation required")
-    
-    def __call__(self, x: Tensor) -> Tensor:
-        return self.forward(x)
-
-# %%
-#| hide
-#| export
-class Sigmoid:
-    """Sigmoid Activation: f(x) = 1 / (1 + e^(-x))"""
-    
-    def forward(self, x: Tensor) -> Tensor:
-        """Apply Sigmoid with numerical stability"""
-        # Use the numerically stable version to avoid overflow
-        # For x >= 0: sigmoid(x) = 1 / (1 + exp(-x))
-        # For x < 0: sigmoid(x) = exp(x) / (1 + exp(x))
-        x_data = x.data
-        result = np.zeros_like(x_data)
-        
-        # Stable computation
-        positive_mask = x_data >= 0
-        result[positive_mask] = 1.0 / (1.0 + np.exp(-x_data[positive_mask]))
-        result[~positive_mask] = np.exp(x_data[~positive_mask]) / (1.0 + np.exp(x_data[~positive_mask]))
-        
-        return Tensor(result)
-    
-    def __call__(self, x: Tensor) -> Tensor:
-        return self.forward(x)
-
-# %%
-#| export
-class Tanh:
-    """
-    Tanh Activation: f(x) = tanh(x)
-    
-    Squashes input to range (-1, 1). Zero-centered output.
-    
-    TODO: Implement Tanh activation function.
-    """
-    
-    def forward(self, x: Tensor) -> Tensor:
-        """
-        Apply Tanh: f(x) = tanh(x)
-        
-        Args:
-            x: Input tensor
-            
-        Returns:
-            Output tensor with Tanh applied element-wise
-            
-        TODO: Implement tanh function
-        """
-        raise NotImplementedError("Student implementation required")
-    
-    def __call__(self, x: Tensor) -> Tensor:
-        return self.forward(x)
-
-# %%
-#| hide
-#| export
-class Tanh:
-    """Tanh Activation: f(x) = tanh(x)"""
-    
-    def forward(self, x: Tensor) -> Tensor:
-        """Apply Tanh"""
-        return Tensor(np.tanh(x.data))
-    
-    def __call__(self, x: Tensor) -> Tensor:
-        return self.forward(x)
-
 # %% [markdown]
 """
-### 🧪 Test Your Activation Functions
+### 🧪 Test Activation Functions from Activations Module
 
-Once you implement the activation functions above, run this cell to test them:
+Let's test that we can use the activation functions from the activations module:
 """
 
 # %%
-# Test activation functions
+# Test activation functions from activations module
 try:
-    print("=== Testing Activation Functions ===")
+    print("=== Testing Activation Functions from Activations Module ===")
     
     # Test data: mix of positive, negative, and zero
     x = Tensor([[-2.0, -1.0, 0.0, 1.0, 2.0]])
     print(f"Input: {x.data}")
     
-    # Test ReLU
+    # Test ReLU from activations module
     relu = ReLU()
     y_relu = relu(x)
     print(f"ReLU output: {y_relu.data}")
     
-    # Test Sigmoid
+    # Test Sigmoid from activations module
     sigmoid = Sigmoid()
     y_sigmoid = sigmoid(x)
     print(f"Sigmoid output: {y_sigmoid.data}")
     
-    # Test Tanh
+    # Test Tanh from activations module
     tanh = Tanh()
     y_tanh = tanh(x)
     print(f"Tanh output: {y_tanh.data}")
     
-    print("✅ Activation functions working!")
+    print("✅ Activation functions from activations module working!")
+    print("🎉 Clean architecture: layers module uses activations module!")
     
 except Exception as e:
     print(f"❌ Error: {e}")
-    print("Make sure to implement the activation functions above!")
+    print("Make sure the activations module is properly exported!")
 
 # %% [markdown]
 """
@@ -418,6 +296,11 @@ Input → Dense → ReLU → Dense → Sigmoid → Output
 ```
 
 This is a 2-layer neural network that can learn complex nonlinear patterns!
+
+**Notice the clean architecture**:
+- Dense layers handle linear transformations
+- Activation functions (from activations module) handle nonlinearity
+- Composition creates complex behaviors from simple building blocks
 """
 
 # %%
@@ -431,9 +314,9 @@ try:
     # Output: 2 neurons with Sigmoid
     
     layer1 = Dense(input_size=3, output_size=4)
-    activation1 = ReLU()
+    activation1 = ReLU()  # From activations module
     layer2 = Dense(input_size=4, output_size=2)
-    activation2 = Sigmoid()
+    activation2 = Sigmoid()  # From activations module
     
     print("Network architecture:")
     print(f"  Input: 3 features")
@@ -458,28 +341,36 @@ try:
     print(f"Output values: {output.data}")
     
     print("\n🎉 Neural network working! You just built your first neural network!")
+    print("🏗️  Clean architecture: Dense layers + Activations module = Neural Network")
     print("Notice how the network transforms 3D input into 2D output through learned transformations.")
     
 except Exception as e:
     print(f"❌ Error: {e}")
-    print("Make sure to implement the layers and activations above!")
+    print("Make sure to implement the layers and check activations module!")
 
 # %% [markdown]
 """
 ## Step 4: Understanding What We Built
 
-Congratulations! You just implemented the fundamental building blocks of neural networks:
+Congratulations! You just implemented a clean, modular neural network architecture:
 
 ### 🧱 **What You Built**
 1. **Dense Layer**: Linear transformation `y = Wx + b`
-2. **Activation Functions**: Nonlinear transformations (ReLU, Sigmoid, Tanh)
+2. **Activation Functions**: Imported from activations module (ReLU, Sigmoid, Tanh)
 3. **Layer Composition**: Chaining layers to build networks
+
+### 🏗️ **Clean Architecture Benefits**
+- **Separation of concerns**: Math functions vs. layer building blocks
+- **Reusability**: Activations can be used across different modules
+- **Maintainability**: One place to update activation implementations
+- **Composability**: Clean imports make complex networks easier to build
 
 ### 🎯 **Key Insights**
 - **Layers are functions**: They transform tensors from one space to another
 - **Composition creates complexity**: Simple layers → complex networks
 - **Nonlinearity is crucial**: Without it, deep networks are just linear transformations
 - **Neural networks are function approximators**: They learn to map inputs to outputs
+- **Modular design**: Building blocks can be combined in many ways
 
 ### 🚀 **What's Next**
 In the next modules, you'll learn:
@@ -498,7 +389,7 @@ Then test your implementation:
 python bin/tito.py test --module layers
 ```
 
-**Great job! You've built the foundation of neural networks!** 🎉
+**Great job! You've built a clean, modular foundation for neural networks!** 🎉
 """
 
 # %%
@@ -514,9 +405,9 @@ try:
     # Build a 3-layer network for digit classification
     # 784 → 128 → 64 → 10
     layer1 = Dense(input_size=image_size, output_size=128)
-    relu1 = ReLU()
+    relu1 = ReLU()  # From activations module
     layer2 = Dense(input_size=128, output_size=64)
-    relu2 = ReLU()
+    relu2 = ReLU()  # From activations module
     layer3 = Dense(input_size=64, output_size=num_classes)
     softmax = Sigmoid()  # Using Sigmoid as a simple "probability-like" output
     
@@ -541,8 +432,38 @@ try:
     print(f"  Sample predictions: {predictions.data[0]}")  # First image predictions
     
     print("\n🎉 You built a neural network that could classify images!")
+    print("🏗️  Clean architecture: Dense layers + Activations module = Image Classifier")
     print("With training, this network could learn to recognize handwritten digits!")
     
 except Exception as e:
     print(f"❌ Error: {e}")
-    print("Check your layer implementations!") 
+    print("Check your layer implementations and activations module!")
+
+# %% [markdown]
+"""
+## 🎓 Module Summary
+
+### What You Learned
+1. **Layer Architecture**: Dense layers as linear transformations
+2. **Clean Dependencies**: Layers module uses activations module
+3. **Function Composition**: Simple building blocks → complex networks
+4. **Modular Design**: Separation of concerns for maintainable code
+
+### Key Architectural Insight
+```
+activations (math functions) → layers (building blocks) → networks (applications)
+```
+
+This clean dependency graph makes the system:
+- **Understandable**: Each module has a clear purpose
+- **Testable**: Each module can be tested independently
+- **Reusable**: Components can be used across different contexts
+- **Maintainable**: Changes are localized to appropriate modules
+
+### Next Steps
+- **Training**: Learn how networks learn from data
+- **Advanced Architectures**: CNNs, RNNs, Transformers
+- **Applications**: Real-world machine learning problems
+
+**Congratulations on building a clean, modular neural network foundation!** 🚀
+""" 
