@@ -26,7 +26,7 @@ logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
     handlers=[
-        logging.FileHandler('tinytorch-cli.log'),
+        logging.FileHandler('tito-cli.log'),
         logging.StreamHandler(sys.stderr)
     ]
 )
