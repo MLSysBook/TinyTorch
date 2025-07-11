@@ -22,6 +22,11 @@ from rich.text import Text
 from rich.tree import Tree
 from rich.progress import Progress, SpinnerColumn, BarColumn, TextColumn
 
+# Add this import at the top with other imports
+import subprocess
+import json
+import re
+
 # Add the project root to Python path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
@@ -770,6 +775,90 @@ def cmd_reset(args):
     
     return 0
 
+def cmd_notebooks(args):
+    """Build all notebooks from Python files in modules."""
+    from pathlib import Path
+    import subprocess
+    
+    console.print(Panel("📓 Building Notebooks from Python Files", 
+                       title="Notebook Generation", border_style="bright_cyan"))
+    
+    modules_dir = Path("modules")
+    if not modules_dir.exists():
+        console.print(Panel("[red]❌ modules/ directory not found[/red]", 
+                          title="Error", border_style="red"))
+        return 1
+    
+    # Find all *_dev.py files in modules
+    dev_files = []
+    for module_dir in modules_dir.iterdir():
+        if module_dir.is_dir():
+            dev_py = module_dir / f"{module_dir.name}_dev.py"
+            if dev_py.exists():
+                dev_files.append(dev_py)
+    
+    if not dev_files:
+        console.print(Panel("[yellow]⚠️  No *_dev.py files found in modules/[/yellow]", 
+                          title="Nothing to Convert", border_style="yellow"))
+        return 0
+    
+    # Determine what to build
+    if hasattr(args, 'module') and args.module:
+        # Build specific module
+        module_file = modules_dir / args.module / f"{args.module}_dev.py"
+        if not module_file.exists():
+            console.print(Panel(f"[red]❌ Module '{args.module}' not found or no {args.module}_dev.py file[/red]", 
+                              title="Module Not Found", border_style="red"))
+            return 1
+        dev_files = [module_file]
+        console.print(f"🔄 Building notebook for module: {args.module}")
+    else:
+        # Build all modules
+        console.print(f"🔄 Building notebooks for {len(dev_files)} modules...")
+    
+    # Convert each file
+    success_count = 0
+    error_count = 0
+    
+    for dev_file in dev_files:
+        try:
+            # Use the existing py_to_notebook.py tool
+            result = subprocess.run([
+                sys.executable, "tools/py_to_notebook.py", str(dev_file)
+            ], capture_output=True, text=True)
+            
+            if result.returncode == 0:
+                success_count += 1
+                module_name = dev_file.parent.name
+                console.print(f"  ✅ {module_name}: {dev_file.name} → {dev_file.with_suffix('.ipynb').name}")
+            else:
+                error_count += 1
+                module_name = dev_file.parent.name
+                console.print(f"  ❌ {module_name}: {result.stderr.strip()}")
+                
+        except Exception as e:
+            error_count += 1
+            module_name = dev_file.parent.name
+            console.print(f"  ❌ {module_name}: {str(e)}")
+    
+    # Summary
+    summary_text = Text()
+    if success_count > 0:
+        summary_text.append(f"✅ Successfully built {success_count} notebook(s)\n", style="bold green")
+    if error_count > 0:
+        summary_text.append(f"❌ Failed to build {error_count} notebook(s)\n", style="bold red")
+    
+    if success_count > 0:
+        summary_text.append("\n💡 Next steps:\n", style="bold yellow")
+        summary_text.append("  • Open notebooks with: jupyter lab\n", style="white")
+        summary_text.append("  • Work interactively in the notebooks\n", style="white")
+        summary_text.append("  • Export code with: tito sync\n", style="white")
+        summary_text.append("  • Run tests with: tito test\n", style="white")
+    
+    console.print(Panel(summary_text, title="Notebook Generation Complete", border_style="green" if error_count == 0 else "yellow"))
+    
+    return 0 if error_count == 0 else 1
+
 
 def main():
     """Main CLI entry point."""
@@ -780,8 +869,6 @@ def main():
     parser.add_argument("--version", action="store_true", help="Show version")
     
     subparsers = parser.add_subparsers(dest="command", help="Available commands")
-    
-
     
     # Info command
     info_parser = subparsers.add_parser("info", help="Show system information")
@@ -811,6 +898,10 @@ def main():
     # Reset command
     reset_parser = subparsers.add_parser("reset", help="Reset tinytorch package to clean state")
     reset_parser.add_argument("--force", action="store_true", help="Skip confirmation prompt")
+    
+    # Notebooks command
+    notebooks_parser = subparsers.add_parser("notebooks", help="Build notebooks from Python files")
+    notebooks_parser.add_argument("--module", help="Build notebook for specific module")
     
     # nbdev commands
     nbdev_parser = subparsers.add_parser("nbdev", help="nbdev notebook development commands")
@@ -860,6 +951,8 @@ def main():
         return cmd_sync(args)
     elif args.command == "reset":
         return cmd_reset(args)
+    elif args.command == "notebooks":
+        return cmd_notebooks(args)
     elif args.command == "nbdev":
         return cmd_nbdev(args)
     elif args.command == "jupyter":
