@@ -93,6 +93,45 @@ Let's start with the most important layer: **Dense** (also called Linear or Full
 
 # %%
 #| export
+def matmul_naive(A: np.ndarray, B: np.ndarray) -> np.ndarray:
+    """
+    Naive matrix multiplication using explicit for-loops.
+    
+    This helps you understand what matrix multiplication really does!
+    
+    Args:
+        A: Matrix of shape (m, n)
+        B: Matrix of shape (n, p)
+        
+    Returns:
+        Matrix of shape (m, p) where C[i,j] = sum(A[i,k] * B[k,j] for k in range(n))
+        
+    TODO: Implement matrix multiplication using three nested for-loops.
+    """
+    raise NotImplementedError("Student implementation required")
+
+# %%
+#| hide
+#| export
+def matmul_naive(A: np.ndarray, B: np.ndarray) -> np.ndarray:
+    """
+    Naive matrix multiplication using explicit for-loops.
+    
+    This helps you understand what matrix multiplication really does!
+    """
+    m, n = A.shape
+    n2, p = B.shape
+    assert n == n2, f"Matrix shapes don't match: A({m},{n}) @ B({n2},{p})"
+    
+    C = np.zeros((m, p))
+    for i in range(m):
+        for j in range(p):
+            for k in range(n):
+                C[i, j] += A[i, k] * B[k, j]
+    return C
+
+# %%
+#| export
 class Dense:
     """
     Dense (Linear) Layer: y = Wx + b
@@ -104,16 +143,24 @@ class Dense:
         input_size: Number of input features
         output_size: Number of output features
         use_bias: Whether to include bias term (default: True)
+        use_naive_matmul: Whether to use naive matrix multiplication (for learning)
         
     TODO: Implement the Dense layer with weight initialization and forward pass.
     """
     
-    def __init__(self, input_size: int, output_size: int, use_bias: bool = True):
+    def __init__(self, input_size: int, output_size: int, use_bias: bool = True, 
+                 use_naive_matmul: bool = False):
         """
         Initialize Dense layer with random weights.
         
+        Args:
+            input_size: Number of input features
+            output_size: Number of output features
+            use_bias: Whether to include bias term
+            use_naive_matmul: Use naive matrix multiplication (for learning)
+            
         TODO: 
-        1. Store layer parameters (input_size, output_size, use_bias)
+        1. Store layer parameters (input_size, output_size, use_bias, use_naive_matmul)
         2. Initialize weights with small random values
         3. Initialize bias to zeros (if use_bias=True)
         """
@@ -130,6 +177,9 @@ class Dense:
             Output tensor of shape (batch_size, output_size)
             
         TODO: Implement matrix multiplication and bias addition
+        - Use self.use_naive_matmul to choose between NumPy and naive implementation
+        - If use_naive_matmul=True, use matmul_naive(x.data, self.weights.data)
+        - If use_naive_matmul=False, use x.data @ self.weights.data
         """
         raise NotImplementedError("Student implementation required")
     
@@ -148,11 +198,13 @@ class Dense:
     Performs linear transformation: matrix multiplication + bias addition.
     """
     
-    def __init__(self, input_size: int, output_size: int, use_bias: bool = True):
+    def __init__(self, input_size: int, output_size: int, use_bias: bool = True, 
+                 use_naive_matmul: bool = False):
         """Initialize Dense layer with random weights."""
         self.input_size = input_size
         self.output_size = output_size
         self.use_bias = use_bias
+        self.use_naive_matmul = use_naive_matmul
         
         # Initialize weights with Xavier/Glorot initialization
         # This helps with gradient flow during training
@@ -169,11 +221,13 @@ class Dense:
     
     def forward(self, x: Tensor) -> Tensor:
         """Forward pass: y = Wx + b"""
-        # Matrix multiplication: x @ weights
-        # x shape: (batch_size, input_size)
-        # weights shape: (input_size, output_size)
-        # result shape: (batch_size, output_size)
-        output = Tensor(x.data @ self.weights.data)
+        # Choose matrix multiplication implementation
+        if self.use_naive_matmul:
+            # Use naive implementation (for learning)
+            output = Tensor(matmul_naive(x.data, self.weights.data))
+        else:
+            # Use NumPy's optimized implementation (for speed)
+            output = Tensor(x.data @ self.weights.data)
         
         # Add bias if present
         if self.bias is not None:
@@ -222,6 +276,130 @@ try:
 except Exception as e:
     print(f"❌ Error: {e}")
     print("Make sure to implement the Dense layer above!")
+
+# %% [markdown]
+"""
+## Step 1.5: Understanding Matrix Multiplication
+
+Let's compare the naive matrix multiplication with NumPy's optimized version!
+"""
+
+# %%
+# Test matrix multiplication implementations
+try:
+    print("=== Testing Matrix Multiplication Implementations ===")
+    
+    # Create small test matrices
+    A = np.array([[1, 2], [3, 4]], dtype=np.float32)  # 2x2
+    B = np.array([[5, 6], [7, 8]], dtype=np.float32)  # 2x2
+    
+    print(f"Matrix A (2x2):\n{A}")
+    print(f"Matrix B (2x2):\n{B}")
+    
+    # Test NumPy's implementation
+    C_numpy = A @ B
+    print(f"\nNumPy result (A @ B):\n{C_numpy}")
+    
+    # Test naive implementation
+    C_naive = matmul_naive(A, B)
+    print(f"Naive result:\n{C_naive}")
+    
+    # Compare results
+    if np.allclose(C_numpy, C_naive):
+        print("✅ Both implementations give the same result!")
+    else:
+        print("❌ Results differ! Check your naive implementation.")
+    
+    # Show the computation step by step
+    print(f"\n📊 Step-by-step computation for C[0,0]:")
+    print(f"C[0,0] = A[0,0]*B[0,0] + A[0,1]*B[1,0]")
+    print(f"C[0,0] = {A[0,0]}*{B[0,0]} + {A[0,1]}*{B[1,0]}")
+    print(f"C[0,0] = {A[0,0]*B[0,0]} + {A[0,1]*B[1,0]}")
+    print(f"C[0,0] = {A[0,0]*B[0,0] + A[0,1]*B[1,0]}")
+    print(f"Expected: {C_numpy[0,0]}")
+    
+except Exception as e:
+    print(f"❌ Error: {e}")
+    print("Make sure to implement matmul_naive above!")
+
+# %%
+# Performance comparison
+try:
+    print("=== Performance Comparison ===")
+    
+    # Create larger matrices for timing
+    size = 50
+    A = np.random.randn(size, size).astype(np.float32)
+    B = np.random.randn(size, size).astype(np.float32)
+    
+    import time
+    
+    # Time NumPy implementation
+    start_time = time.time()
+    C_numpy = A @ B
+    numpy_time = time.time() - start_time
+    
+    # Time naive implementation
+    start_time = time.time()
+    C_naive = matmul_naive(A, B)
+    naive_time = time.time() - start_time
+    
+    print(f"Matrix size: {size}x{size}")
+    print(f"NumPy time: {numpy_time:.6f} seconds")
+    print(f"Naive time: {naive_time:.6f} seconds")
+    print(f"Speedup: {naive_time/numpy_time:.1f}x slower")
+    
+    # Verify results are the same
+    if np.allclose(C_numpy, C_naive):
+        print("✅ Results are identical!")
+    else:
+        print("❌ Results differ!")
+    
+    print(f"\n💡 Why is NumPy so much faster?")
+    print(f"   • Vectorized operations (no Python loops)")
+    print(f"   • Optimized C/Fortran backend")
+    print(f"   • Cache-friendly memory access")
+    print(f"   • Parallel processing")
+    
+except Exception as e:
+    print(f"❌ Error: {e}")
+    print("Make sure to implement matmul_naive above!")
+
+# %%
+# Test Dense layer with both implementations
+try:
+    print("=== Testing Dense Layer with Both Implementations ===")
+    
+    # Create test data
+    x = Tensor([[1.0, 2.0, 3.0], [4.0, 5.0, 6.0]])  # Shape: (2, 3)
+    
+    # Test with NumPy implementation
+    layer_numpy = Dense(input_size=3, output_size=2, use_naive_matmul=False)
+    y_numpy = layer_numpy(x)
+    
+    # Test with naive implementation
+    layer_naive = Dense(input_size=3, output_size=2, use_naive_matmul=True)
+    y_naive = layer_naive(x)
+    
+    print(f"Input shape: {x.shape}")
+    print(f"NumPy output: {y_numpy.data}")
+    print(f"Naive output: {y_naive.data}")
+    
+    # Compare results
+    if np.allclose(y_numpy.data, y_naive.data):
+        print("✅ Both Dense implementations give the same result!")
+    else:
+        print("❌ Results differ! Check your implementations.")
+    
+    print(f"\n🎯 Key Insight:")
+    print(f"   • Both implementations compute the same mathematical operation")
+    print(f"   • NumPy is much faster but hides the computation")
+    print(f"   • Naive implementation shows you exactly what's happening")
+    print(f"   • Understanding the naive version helps you understand neural networks!")
+    
+except Exception as e:
+    print(f"❌ Error: {e}")
+    print("Make sure to implement both matmul_naive and Dense layer!")
 
 # %% [markdown]
 """
