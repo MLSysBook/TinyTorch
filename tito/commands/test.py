@@ -32,7 +32,7 @@ class TestCommand(BaseCommand):
 
     def run(self, args: Namespace) -> int:
         console = self.console
-        valid_modules = ["setup", "tensor", "activations", "layers", "networks", "cnn", "data", "training", 
+        valid_modules = ["setup", "tensor", "activations", "layers", "networks", "cnn", "dataloader", "training", 
                          "profiling", "compression", "kernels", "benchmarking", "mlops"]
         
         if args.all:
