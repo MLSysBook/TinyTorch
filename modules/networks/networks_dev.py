@@ -30,13 +30,27 @@ Welcome to the Networks module! This is where we compose layers into complete ne
 This module builds on previous modules:
 - **tensor** → **activations** → **layers** → **networks**
 - Clean composition: math functions → building blocks → complete systems
+"""
 
-## Module → Package Structure
-**🎓 Teaching vs. 🔧 Building**: 
-- **Learning side**: Work in `modules/networks/networks_dev.py`  
-- **Building side**: Exports to `tinytorch/core/networks.py`
+# %% [markdown]
+"""
+## 📦 Where This Code Lives in the Final Package
 
-This module teaches how to compose layers into complete neural network architectures.
+**Learning Side:** You work in `modules/networks/networks_dev.py`  
+**Building Side:** Code exports to `tinytorch.core.networks`
+
+```python
+# Final package structure:
+from tinytorch.core.networks import Sequential, MLP
+from tinytorch.core.layers import Dense, Conv2D
+from tinytorch.core.activations import ReLU, Sigmoid, Tanh
+from tinytorch.core.tensor import Tensor
+```
+
+**Why this matters:**
+- **Learning:** Focused modules for deep understanding
+- **Production:** Proper organization like PyTorch's `torch.nn`
+- **Consistency:** All network architectures live together in `core.networks`
 """
 
 # %%
@@ -87,22 +101,46 @@ def _should_show_plots():
 """
 ## Step 1: What is a Network?
 
-A **network** is a composition of layers that transforms input data into output predictions. Think of it as:
+### Definition
+A **network** is a composition of layers that transforms input data into output predictions. Think of it as a pipeline of transformations:
 
 ```
 Input → Layer1 → Layer2 → Layer3 → Output
 ```
 
-**The fundamental insight**: Neural networks are just function composition!
+### Why Networks Matter
+- **Function composition**: Complex behavior from simple building blocks
+- **Learnable parameters**: Each layer has weights that can be learned
+- **Architecture design**: Different layouts solve different problems
+- **Real-world applications**: Classification, regression, generation, etc.
+
+### The Fundamental Insight
+**Neural networks are just function composition!**
 - Each layer is a function: `f_i(x)`
 - The network is: `f(x) = f_n(...f_2(f_1(x)))`
 - Complex behavior emerges from simple building blocks
 
-**Why networks matter**:
-- They solve real problems (classification, regression, etc.)
-- Architecture determines what problems you can solve
-- Understanding networks = understanding deep learning
-- They're the foundation for all modern AI
+### Real-World Examples
+- **MLP (Multi-Layer Perceptron)**: Classic feedforward network
+- **CNN (Convolutional Neural Network)**: For image processing
+- **RNN (Recurrent Neural Network)**: For sequential data
+- **Transformer**: For attention-based processing
+
+### Visual Intuition
+```
+Input: [1, 2, 3] (3 features)
+Layer1: [1.4, 2.8] (linear transformation)
+Layer2: [1.4, 2.8] (nonlinearity)
+Layer3: [0.7] (final prediction)
+```
+
+### The Math Behind It
+For a network with layers `f_1, f_2, ..., f_n`:
+```
+f(x) = f_n(f_{n-1}(...f_2(f_1(x))))
+```
+
+Each layer transforms the data, and the final output is the composition of all these transformations.
 
 Let's start by building the most fundamental network: **Sequential**.
 """
@@ -120,6 +158,27 @@ class Sequential:
         layers: List of layers to compose
         
     TODO: Implement the Sequential network with forward pass.
+    
+    APPROACH:
+    1. Store the list of layers as an instance variable
+    2. Implement forward pass that applies each layer in sequence
+    3. Make the network callable for easy use
+    
+    EXAMPLE:
+    network = Sequential([
+        Dense(3, 4),
+        ReLU(),
+        Dense(4, 2),
+        Sigmoid()
+    ])
+    x = Tensor([[1, 2, 3]])
+    y = network(x)  # Forward pass through all layers
+    
+    HINTS:
+    - Store layers in self.layers
+    - Use a for loop to apply each layer in order
+    - Each layer's output becomes the next layer's input
+    - Return the final output
     """
     
     def __init__(self, layers: List):
@@ -130,6 +189,14 @@ class Sequential:
             layers: List of layers to compose in order
             
         TODO: Store the layers and implement forward pass
+        
+        STEP-BY-STEP:
+        1. Store the layers list as self.layers
+        2. This creates the network architecture
+        
+        EXAMPLE:
+        Sequential([Dense(3,4), ReLU(), Dense(4,2)])
+        creates a 3-layer network: Dense → ReLU → Dense
         """
         raise NotImplementedError("Student implementation required")
     
@@ -144,6 +211,25 @@ class Sequential:
             Output tensor after passing through all layers
             
         TODO: Implement sequential forward pass through all layers
+        
+        STEP-BY-STEP:
+        1. Start with the input tensor: current = x
+        2. Loop through each layer in self.layers
+        3. Apply each layer: current = layer(current)
+        4. Return the final output
+        
+        EXAMPLE:
+        Input: Tensor([[1, 2, 3]])
+        Layer1 (Dense): Tensor([[1.4, 2.8]])
+        Layer2 (ReLU): Tensor([[1.4, 2.8]])
+        Layer3 (Dense): Tensor([[0.7]])
+        Output: Tensor([[0.7]])
+        
+        HINTS:
+        - Use a for loop: for layer in self.layers:
+        - Apply each layer: current = layer(current)
+        - The output of one layer becomes input to the next
+        - Return the final result
         """
         raise NotImplementedError("Student implementation required")
     
@@ -180,292 +266,80 @@ class Sequential:
 # %% [markdown]
 """
 ### 🧪 Test Your Sequential Network
-
-Once you implement the Sequential network above, run this cell to test it:
 """
 
 # %%
 # Test the Sequential network
+print("Testing Sequential network...")
+
 try:
-    print("=== Testing Sequential Network ===")
-    
     # Create a simple 2-layer network: 3 → 4 → 2
     network = Sequential([
-        Dense(3, 4),
+        Dense(input_size=3, output_size=4),
         ReLU(),
-        Dense(4, 2),
+        Dense(input_size=4, output_size=2),
         Sigmoid()
     ])
     
+    print(f"✅ Network created with {len(network.layers)} layers")
+    
     # Test with sample data
-    x = Tensor([[1.0, 2.0, 3.0], [4.0, 5.0, 6.0]])
-    print(f"Input shape: {x.shape}")
-    print(f"Input data: {x.data}")
+    x = Tensor([[1.0, 2.0, 3.0]])
+    print(f"✅ Input: {x}")
     
     # Forward pass
-    output = network(x)
-    print(f"Output shape: {output.shape}")
-    print(f"Output data: {output.data}")
+    y = network(x)
+    print(f"✅ Output: {y}")
+    print(f"✅ Output shape: {y.shape}")
     
-    print("✅ Sequential network working!")
+    # Verify the network works
+    assert y.shape == (1, 2), f"❌ Expected shape (1, 2), got {y.shape}"
+    assert np.all(y.data >= 0) and np.all(y.data <= 1), "❌ Sigmoid output should be between 0 and 1"
+    print("🎉 Sequential network works!")
     
 except Exception as e:
     print(f"❌ Error: {e}")
-    print("Make sure to implement the Sequential network!")
+    print("Make sure to implement the Sequential network above!")
 
 # %% [markdown]
 """
-## Step 2: Network Visualization
+## Step 2: Understanding Network Architecture
 
-Now let's create powerful visualizations to understand what our networks look like and how they work!
-"""
+Now let's explore how different network architectures affect the network's capabilities.
 
-# %%
-#| export
-def visualize_network_architecture(network: Sequential, title: str = "Network Architecture"):
-    """
-    Create a visual representation of network architecture.
-    
-    Args:
-        network: Sequential network to visualize
-        title: Title for the plot
-    """
-    if not _should_show_plots():
-        print("📊 Plots disabled during testing - this is normal!")
-        return
-    
-    fig, ax = plt.subplots(1, 1, figsize=(12, 8))
-    
-    # Network parameters
-    layer_count = len(network.layers)
-    layer_height = 0.8
-    layer_spacing = 1.2
-    
-    # Colors for different layer types
-    colors = {
-        'Dense': '#4CAF50',      # Green
-        'ReLU': '#2196F3',       # Blue
-        'Sigmoid': '#FF9800',    # Orange
-        'Tanh': '#9C27B0',       # Purple
-        'default': '#757575'      # Gray
-    }
-    
-    # Draw layers
-    for i, layer in enumerate(network.layers):
-        # Determine layer type and color
-        layer_type = type(layer).__name__
-        color = colors.get(layer_type, colors['default'])
-        
-        # Layer position
-        x = i * layer_spacing
-        y = 0
-        
-        # Create layer box
-        layer_box = FancyBboxPatch(
-            (x - 0.3, y - layer_height/2),
-            0.6, layer_height,
-            boxstyle="round,pad=0.1",
-            facecolor=color,
-            edgecolor='black',
-            linewidth=2,
-            alpha=0.8
-        )
-        ax.add_patch(layer_box)
-        
-        # Add layer label
-        ax.text(x, y, layer_type, ha='center', va='center', 
-                fontsize=10, fontweight='bold', color='white')
-        
-        # Add layer details
-        if hasattr(layer, 'input_size') and hasattr(layer, 'output_size'):
-            details = f"{layer.input_size}→{layer.output_size}"
-            ax.text(x, y - 0.3, details, ha='center', va='center',
-                   fontsize=8, color='white')
-        
-        # Draw connections to next layer
-        if i < layer_count - 1:
-            next_x = (i + 1) * layer_spacing
-            connection = ConnectionPatch(
-                (x + 0.3, y), (next_x - 0.3, y),
-                "data", "data",
-                arrowstyle="->", shrinkA=5, shrinkB=5,
-                mutation_scale=20, fc="black", lw=2
-            )
-            ax.add_patch(connection)
-    
-    # Formatting
-    ax.set_xlim(-0.5, (layer_count - 1) * layer_spacing + 0.5)
-    ax.set_ylim(-1, 1)
-    ax.set_aspect('equal')
-    ax.axis('off')
-    
-    # Add title
-    plt.title(title, fontsize=16, fontweight='bold', pad=20)
-    
-    # Add legend
-    legend_elements = []
-    for layer_type, color in colors.items():
-        if layer_type != 'default':
-            legend_elements.append(patches.Patch(color=color, label=layer_type))
-    
-    ax.legend(handles=legend_elements, loc='upper right', bbox_to_anchor=(1, 1))
-    
-    plt.tight_layout()
-    plt.show()
+### What is Network Architecture?
+**Architecture** refers to how layers are arranged and connected. It determines:
+- **Capacity**: How complex patterns the network can learn
+- **Efficiency**: How many parameters and computations needed
+- **Specialization**: What types of problems it's good at
 
-# %%
-#| export
-def visualize_data_flow(network: Sequential, input_data: Tensor, title: str = "Data Flow Through Network"):
-    """
-    Visualize how data flows through the network.
-    
-    Args:
-        network: Sequential network
-        input_data: Input tensor
-        title: Title for the plot
-    """
-    if not _should_show_plots():
-        print("📊 Plots disabled during testing - this is normal!")
-        return
-    
-    # Get intermediate outputs
-    intermediate_outputs = []
-    x = input_data
-    
-    for i, layer in enumerate(network.layers):
-        x = layer(x)
-        intermediate_outputs.append({
-            'layer': network.layers[i],
-            'output': x,
-            'layer_index': i
-        })
-    
-    # Create visualization
-    fig, axes = plt.subplots(2, len(network.layers), figsize=(4*len(network.layers), 8))
-    if len(network.layers) == 1:
-        axes = axes.reshape(1, -1)
-    
-    for i, (layer, output) in enumerate(zip(network.layers, intermediate_outputs)):
-        # Top row: Layer information
-        ax_top = axes[0, i] if len(network.layers) > 1 else axes[0]
-        
-        # Layer type and details
-        layer_type = type(layer).__name__
-        ax_top.text(0.5, 0.8, layer_type, ha='center', va='center',
-                   fontsize=12, fontweight='bold')
-        
-        if hasattr(layer, 'input_size') and hasattr(layer, 'output_size'):
-            ax_top.text(0.5, 0.6, f"{layer.input_size} → {layer.output_size}", 
-                       ha='center', va='center', fontsize=10)
-        
-        # Output shape
-        ax_top.text(0.5, 0.4, f"Shape: {output['output'].shape}", 
-                   ha='center', va='center', fontsize=9)
-        
-        # Output statistics
-        output_data = output['output'].data
-        ax_top.text(0.5, 0.2, f"Mean: {np.mean(output_data):.3f}", 
-                   ha='center', va='center', fontsize=9)
-        ax_top.text(0.5, 0.1, f"Std: {np.std(output_data):.3f}", 
-                   ha='center', va='center', fontsize=9)
-        
-        ax_top.set_xlim(0, 1)
-        ax_top.set_ylim(0, 1)
-        ax_top.axis('off')
-        
-        # Bottom row: Output visualization
-        ax_bottom = axes[1, i] if len(network.layers) > 1 else axes[1]
-        
-        # Show output as heatmap or histogram
-        output_data = output['output'].data.flatten()
-        
-        if len(output_data) <= 20:  # Small output - show as bars
-            ax_bottom.bar(range(len(output_data)), output_data, alpha=0.7)
-            ax_bottom.set_title(f"Layer {i+1} Output")
-            ax_bottom.set_xlabel("Output Index")
-            ax_bottom.set_ylabel("Value")
-        else:  # Large output - show histogram
-            ax_bottom.hist(output_data, bins=20, alpha=0.7, edgecolor='black')
-            ax_bottom.set_title(f"Layer {i+1} Output Distribution")
-            ax_bottom.set_xlabel("Value")
-            ax_bottom.set_ylabel("Frequency")
-        
-        ax_bottom.grid(True, alpha=0.3)
-    
-    plt.suptitle(title, fontsize=14, fontweight='bold')
-    plt.tight_layout()
-    plt.show()
+### Common Architectures
 
-# %%
-#| export
-def compare_networks(networks: List[Sequential], network_names: List[str], 
-                    input_data: Tensor, title: str = "Network Comparison"):
-    """
-    Compare different network architectures side-by-side.
-    
-    Args:
-        networks: List of networks to compare
-        network_names: Names for each network
-        input_data: Input tensor to test with
-        title: Title for the plot
-    """
-    if not _should_show_plots():
-        print("📊 Plots disabled during testing - this is normal!")
-        return
-    
-    fig, axes = plt.subplots(2, len(networks), figsize=(6*len(networks), 10))
-    if len(networks) == 1:
-        axes = axes.reshape(2, -1)
-    
-    for i, (network, name) in enumerate(zip(networks, network_names)):
-        # Get network output
-        output = network(input_data)
-        
-        # Top row: Architecture visualization
-        ax_top = axes[0, i] if len(networks) > 1 else axes[0]
-        
-        # Count layer types
-        layer_types = {}
-        for layer in network.layers:
-            layer_type = type(layer).__name__
-            layer_types[layer_type] = layer_types.get(layer_type, 0) + 1
-        
-        # Create pie chart of layer types
-        if layer_types:
-            labels = list(layer_types.keys())
-            sizes = list(layer_types.values())
-            colors = plt.cm.Set3(np.linspace(0, 1, len(labels)))
-            
-            ax_top.pie(sizes, labels=labels, autopct='%1.1f%%', colors=colors)
-            ax_top.set_title(f"{name}\nLayer Distribution")
-        
-        # Bottom row: Output comparison
-        ax_bottom = axes[1, i] if len(networks) > 1 else axes[1]
-        
-        output_data = output.data.flatten()
-        
-        # Show output statistics
-        ax_bottom.hist(output_data, bins=20, alpha=0.7, edgecolor='black')
-        ax_bottom.axvline(np.mean(output_data), color='red', linestyle='--', 
-                         label=f'Mean: {np.mean(output_data):.3f}')
-        ax_bottom.axvline(np.median(output_data), color='green', linestyle='--',
-                         label=f'Median: {np.median(output_data):.3f}')
-        
-        ax_bottom.set_title(f"{name} Output Distribution")
-        ax_bottom.set_xlabel("Output Value")
-        ax_bottom.set_ylabel("Frequency")
-        ax_bottom.legend()
-        ax_bottom.grid(True, alpha=0.3)
-    
-    plt.suptitle(title, fontsize=16, fontweight='bold')
-    plt.tight_layout()
-    plt.show()
+#### 1. **MLP (Multi-Layer Perceptron)**
+```
+Input → Dense → ReLU → Dense → ReLU → Dense → Output
+```
+- **Use case**: General-purpose learning
+- **Strengths**: Universal approximation, simple to understand
+- **Weaknesses**: Doesn't exploit spatial structure
 
-# %% [markdown]
-"""
-## Step 3: Building Common Architectures
+#### 2. **CNN (Convolutional Neural Network)**
+```
+Input → Conv2D → ReLU → Conv2D → ReLU → Dense → Output
+```
+- **Use case**: Image processing, spatial data
+- **Strengths**: Parameter sharing, translation invariance
+- **Weaknesses**: Fixed spatial structure
 
-Now let's build some common neural network architectures and visualize them!
+#### 3. **Deep Network**
+```
+Input → Dense → ReLU → Dense → ReLU → Dense → ReLU → Dense → Output
+```
+- **Use case**: Complex pattern recognition
+- **Strengths**: High capacity, can learn complex functions
+- **Weaknesses**: More parameters, harder to train
+
+Let's build some common architectures!
 """
 
 # %%
@@ -479,223 +353,449 @@ def create_mlp(input_size: int, hidden_sizes: List[int], output_size: int,
         input_size: Number of input features
         hidden_sizes: List of hidden layer sizes
         output_size: Number of output features
-        activation: Activation function for hidden layers
-        output_activation: Activation function for output layer
+        activation: Activation function for hidden layers (default: ReLU)
+        output_activation: Activation function for output layer (default: Sigmoid)
         
     Returns:
-        Sequential network
+        Sequential network with MLP architecture
+        
+    TODO: Implement MLP creation with alternating Dense and activation layers.
+    
+    APPROACH:
+    1. Start with an empty list of layers
+    2. Add the first Dense layer: input_size → first hidden size
+    3. For each hidden layer:
+       - Add activation function
+       - Add Dense layer connecting to next hidden size
+    4. Add final activation function
+    5. Add final Dense layer: last hidden size → output_size
+    6. Add output activation function
+    7. Return Sequential(layers)
+    
+    EXAMPLE:
+    create_mlp(3, [4, 2], 1) creates:
+    Dense(3→4) → ReLU → Dense(4→2) → ReLU → Dense(2→1) → Sigmoid
+    
+    HINTS:
+    - Start with layers = []
+    - Add Dense layers with appropriate input/output sizes
+    - Add activation functions between Dense layers
+    - Don't forget the final output activation
     """
+    raise NotImplementedError("Student implementation required")
+
+# %%
+#| hide
+#| export
+def create_mlp(input_size: int, hidden_sizes: List[int], output_size: int, 
+               activation=ReLU, output_activation=Sigmoid) -> Sequential:
+    """Create a Multi-Layer Perceptron (MLP) network."""
     layers = []
     
-    # Input layer
-    if hidden_sizes:
-        layers.append(Dense(input_size, hidden_sizes[0]))
+    # Add first layer
+    current_size = input_size
+    for hidden_size in hidden_sizes:
+        layers.append(Dense(input_size=current_size, output_size=hidden_size))
         layers.append(activation())
-        
-        # Hidden layers
-        for i in range(len(hidden_sizes) - 1):
-            layers.append(Dense(hidden_sizes[i], hidden_sizes[i + 1]))
-            layers.append(activation())
-        
-        # Output layer
-        layers.append(Dense(hidden_sizes[-1], output_size))
-    else:
-        # Direct input to output
-        layers.append(Dense(input_size, output_size))
+        current_size = hidden_size
     
+    # Add output layer
+    layers.append(Dense(input_size=current_size, output_size=output_size))
     layers.append(output_activation())
     
     return Sequential(layers)
 
+# %% [markdown]
+"""
+### 🧪 Test Your MLP Creation
+"""
+
 # %%
-# Test MLP creation and visualization
+# Test MLP creation
+print("Testing MLP creation...")
+
 try:
-    print("=== Testing MLP Creation and Visualization ===")
-    
     # Create different MLP architectures
-    mlp_small = create_mlp(input_size=3, hidden_sizes=[4], output_size=2)
-    mlp_medium = create_mlp(input_size=10, hidden_sizes=[16, 8], output_size=3)
-    mlp_large = create_mlp(input_size=784, hidden_sizes=[128, 64, 32], output_size=10)
+    mlp1 = create_mlp(input_size=3, hidden_sizes=[4], output_size=1)
+    mlp2 = create_mlp(input_size=5, hidden_sizes=[8, 4], output_size=2)
+    mlp3 = create_mlp(input_size=2, hidden_sizes=[10, 6, 3], output_size=1, activation=Tanh)
     
-    print("Created MLP architectures:")
-    print(f"  Small: 3 → 4 → 2")
-    print(f"  Medium: 10 → 16 → 8 → 3")
-    print(f"  Large: 784 → 128 → 64 → 32 → 10")
+    print(f"✅ MLP1: {len(mlp1.layers)} layers")
+    print(f"✅ MLP2: {len(mlp2.layers)} layers")
+    print(f"✅ MLP3: {len(mlp3.layers)} layers")
     
-    # Test with sample data
-    x = Tensor(np.random.randn(5, 3).astype(np.float32))
+    # Test forward pass
+    x = Tensor([[1.0, 2.0, 3.0]])
+    y1 = mlp1(x)
+    print(f"✅ MLP1 output: {y1}")
     
-    # Visualize architectures
-    visualize_network_architecture(mlp_small, "Small MLP Architecture")
-    visualize_network_architecture(mlp_medium, "Medium MLP Architecture")
-    visualize_network_architecture(mlp_large, "Large MLP Architecture")
+    x2 = Tensor([[1.0, 2.0, 3.0, 4.0, 5.0]])
+    y2 = mlp2(x2)
+    print(f"✅ MLP2 output: {y2}")
     
-    # Visualize data flow
-    visualize_data_flow(mlp_small, x, "Data Flow Through Small MLP")
-    
-    # Compare networks
-    networks = [mlp_small, mlp_medium]
-    names = ["Small MLP", "Medium MLP"]
-    compare_networks(networks, names, x, "MLP Architecture Comparison")
-    
-    print("✅ MLP creation and visualization working!")
+    print("🎉 MLP creation works!")
     
 except Exception as e:
     print(f"❌ Error: {e}")
-    print("Make sure to implement the visualization functions!")
+    print("Make sure to implement create_mlp above!")
 
 # %% [markdown]
 """
-## Step 4: Understanding Network Behavior
+## Step 3: Network Visualization and Analysis
 
-Let's analyze how different network architectures behave with different types of input data.
+Let's create tools to visualize and analyze network architectures. This helps us understand what our networks are doing.
+
+### Why Visualization Matters
+- **Architecture understanding**: See how data flows through the network
+- **Debugging**: Identify bottlenecks and issues
+- **Design**: Compare different architectures
+- **Communication**: Explain networks to others
+
+### What We'll Build
+1. **Architecture visualization**: Show layer connections
+2. **Data flow visualization**: See how data transforms
+3. **Network comparison**: Compare different architectures
+4. **Behavior analysis**: Understand network capabilities
 """
 
 # %%
 #| export
-def analyze_network_behavior(network: Sequential, input_data: Tensor, 
-                           title: str = "Network Behavior Analysis"):
+def visualize_network_architecture(network: Sequential, title: str = "Network Architecture"):
     """
-    Analyze how a network behaves with different types of input.
+    Visualize the architecture of a Sequential network.
     
     Args:
-        network: Network to analyze
-        input_data: Input tensor
+        network: Sequential network to visualize
         title: Title for the plot
+        
+    TODO: Create a visualization showing the network structure.
+    
+    APPROACH:
+    1. Create a matplotlib figure
+    2. For each layer, draw a box showing its type and size
+    3. Connect the boxes with arrows showing data flow
+    4. Add labels and formatting
+    
+    EXAMPLE:
+    Input → Dense(3→4) → ReLU → Dense(4→2) → Sigmoid → Output
+    
+    HINTS:
+    - Use plt.subplots() to create the figure
+    - Use plt.text() to add layer labels
+    - Use plt.arrow() to show connections
+    - Add proper spacing and formatting
     """
-    if not _should_show_plots():
-        print("📊 Plots disabled during testing - this is normal!")
-        return
-    
-    fig, axes = plt.subplots(2, 3, figsize=(15, 10))
-    
-    # 1. Input vs Output relationship
-    ax1 = axes[0, 0]
-    input_flat = input_data.data.flatten()
-    output = network(input_data)
-    output_flat = output.data.flatten()
-    
-    ax1.scatter(input_flat, output_flat, alpha=0.6)
-    ax1.plot([input_flat.min(), input_flat.max()], 
-             [input_flat.min(), input_flat.max()], 'r--', alpha=0.5, label='y=x')
-    ax1.set_xlabel('Input Values')
-    ax1.set_ylabel('Output Values')
-    ax1.set_title('Input vs Output')
-    ax1.legend()
-    ax1.grid(True, alpha=0.3)
-    
-    # 2. Output distribution
-    ax2 = axes[0, 1]
-    ax2.hist(output_flat, bins=20, alpha=0.7, edgecolor='black')
-    ax2.axvline(np.mean(output_flat), color='red', linestyle='--', 
-                label=f'Mean: {np.mean(output_flat):.3f}')
-    ax2.set_xlabel('Output Values')
-    ax2.set_ylabel('Frequency')
-    ax2.set_title('Output Distribution')
-    ax2.legend()
-    ax2.grid(True, alpha=0.3)
-    
-    # 3. Layer-by-layer activation patterns
-    ax3 = axes[0, 2]
-    activations = []
-    x = input_data
-    
-    for layer in network.layers:
-        x = layer(x)
-        if hasattr(layer, 'input_size'):  # Dense layer
-            activations.append(np.mean(x.data))
-        else:  # Activation layer
-            activations.append(np.mean(x.data))
-    
-    ax3.plot(range(len(activations)), activations, 'bo-', linewidth=2, markersize=8)
-    ax3.set_xlabel('Layer Index')
-    ax3.set_ylabel('Mean Activation')
-    ax3.set_title('Layer-by-Layer Activations')
-    ax3.grid(True, alpha=0.3)
-    
-    # 4. Network depth analysis
-    ax4 = axes[1, 0]
-    layer_types = [type(layer).__name__ for layer in network.layers]
-    layer_counts = {}
-    for layer_type in layer_types:
-        layer_counts[layer_type] = layer_counts.get(layer_type, 0) + 1
-    
-    if layer_counts:
-        ax4.bar(layer_counts.keys(), layer_counts.values(), alpha=0.7)
-        ax4.set_xlabel('Layer Type')
-        ax4.set_ylabel('Count')
-        ax4.set_title('Layer Type Distribution')
-        ax4.grid(True, alpha=0.3)
-    
-    # 5. Shape transformation
-    ax5 = axes[1, 1]
-    shapes = [input_data.shape]
-    x = input_data
-    
-    for layer in network.layers:
-        x = layer(x)
-        shapes.append(x.shape)
-    
-    layer_indices = range(len(shapes))
-    shape_sizes = [np.prod(shape) for shape in shapes]
-    
-    ax5.plot(layer_indices, shape_sizes, 'go-', linewidth=2, markersize=8)
-    ax5.set_xlabel('Layer Index')
-    ax5.set_ylabel('Tensor Size')
-    ax5.set_title('Shape Transformation')
-    ax5.grid(True, alpha=0.3)
-    
-    # 6. Network summary
-    ax6 = axes[1, 2]
-    ax6.axis('off')
-    
-    summary_text = f"""
-Network Summary:
-• Total Layers: {len(network.layers)}
-• Input Shape: {input_data.shape}
-• Output Shape: {output.shape}
-• Parameters: {sum(np.prod(layer.weights.data.shape) if hasattr(layer, 'weights') else 0 for layer in network.layers)}
-• Architecture: {' → '.join([type(layer).__name__ for layer in network.layers])}
-    """
-    
-    ax6.text(0.05, 0.95, summary_text, transform=ax6.transAxes, 
-             fontsize=10, verticalalignment='top', fontfamily='monospace')
-    
-    plt.suptitle(title, fontsize=16, fontweight='bold')
-    plt.tight_layout()
-    plt.show()
+    raise NotImplementedError("Student implementation required")
 
 # %%
-# Test network behavior analysis
-try:
-    print("=== Testing Network Behavior Analysis ===")
+#| hide
+#| export
+def visualize_network_architecture(network: Sequential, title: str = "Network Architecture"):
+    """Visualize the architecture of a Sequential network."""
+    if not _should_show_plots():
+        print("📊 Visualization disabled during testing")
+        return
     
-    # Create a network for analysis
-    network = create_mlp(input_size=5, hidden_sizes=[8, 4], output_size=2)
+    fig, ax = plt.subplots(1, 1, figsize=(12, 6))
     
-    # Test with different types of input
-    x_normal = Tensor(np.random.randn(10, 5).astype(np.float32))
-    x_uniform = Tensor(np.random.uniform(-1, 1, (10, 5)).astype(np.float32))
-    x_zeros = Tensor(np.zeros((10, 5)).astype(np.float32))
+    # Calculate positions
+    num_layers = len(network.layers)
+    x_positions = np.linspace(0, 10, num_layers + 2)
     
-    print("Analyzing network behavior with different inputs...")
+    # Draw input
+    ax.text(x_positions[0], 0, 'Input', ha='center', va='center', 
+            bbox=dict(boxstyle='round,pad=0.3', facecolor='lightblue'))
     
-    # Analyze behavior
-    analyze_network_behavior(network, x_normal, "Network Behavior: Normal Input")
-    analyze_network_behavior(network, x_uniform, "Network Behavior: Uniform Input")
-    analyze_network_behavior(network, x_zeros, "Network Behavior: Zero Input")
+    # Draw layers
+    for i, layer in enumerate(network.layers):
+        layer_name = type(layer).__name__
+        ax.text(x_positions[i+1], 0, layer_name, ha='center', va='center',
+                bbox=dict(boxstyle='round,pad=0.3', facecolor='lightgreen'))
+        
+        # Draw arrow
+        ax.arrow(x_positions[i], 0, 0.8, 0, head_width=0.1, head_length=0.1, 
+                fc='black', ec='black')
     
-    print("✅ Network behavior analysis working!")
+    # Draw output
+    ax.text(x_positions[-1], 0, 'Output', ha='center', va='center',
+            bbox=dict(boxstyle='round,pad=0.3', facecolor='lightcoral'))
     
-except Exception as e:
-    print(f"❌ Error: {e}")
-    print("Make sure to implement the behavior analysis function!")
+    ax.set_xlim(-0.5, 10.5)
+    ax.set_ylim(-0.5, 0.5)
+    ax.set_title(title)
+    ax.axis('off')
+    plt.show()
 
 # %% [markdown]
 """
-## Step 5: Practical Applications
+### 🧪 Test Network Visualization
+"""
 
-Let's see how our networks can be applied to real-world problems!
+# %%
+# Test network visualization
+print("Testing network visualization...")
+
+try:
+    # Create a test network
+    test_network = Sequential([
+        Dense(input_size=3, output_size=4),
+        ReLU(),
+        Dense(input_size=4, output_size=2),
+        Sigmoid()
+    ])
+    
+    # Visualize the network
+    visualize_network_architecture(test_network, "Test Network Architecture")
+    print("✅ Network visualization created!")
+    
+except Exception as e:
+    print(f"❌ Error: {e}")
+    print("Make sure to implement visualize_network_architecture above!")
+
+# %% [markdown]
+"""
+## Step 4: Data Flow Analysis
+
+Let's create tools to analyze how data flows through the network. This helps us understand what each layer is doing.
+
+### Why Data Flow Analysis Matters
+- **Debugging**: See where data gets corrupted
+- **Optimization**: Identify bottlenecks
+- **Understanding**: Learn what each layer learns
+- **Design**: Choose appropriate layer sizes
+"""
+
+# %%
+#| export
+def visualize_data_flow(network: Sequential, input_data: Tensor, title: str = "Data Flow Through Network"):
+    """
+    Visualize how data flows through the network.
+    
+    Args:
+        network: Sequential network to analyze
+        input_data: Input tensor to trace through the network
+        title: Title for the plot
+        
+    TODO: Create a visualization showing how data transforms through each layer.
+    
+    APPROACH:
+    1. Trace the input through each layer
+    2. Record the output of each layer
+    3. Create a visualization showing the transformations
+    4. Add statistics (mean, std, range) for each layer
+    
+    EXAMPLE:
+    Input: [1, 2, 3] → Layer1: [1.4, 2.8] → Layer2: [1.4, 2.8] → Output: [0.7]
+    
+    HINTS:
+    - Use a for loop to apply each layer
+    - Store intermediate outputs
+    - Use plt.subplot() to create multiple subplots
+    - Show statistics for each layer output
+    """
+    raise NotImplementedError("Student implementation required")
+
+# %%
+#| hide
+#| export
+def visualize_data_flow(network: Sequential, input_data: Tensor, title: str = "Data Flow Through Network"):
+    """Visualize how data flows through the network."""
+    if not _should_show_plots():
+        print("📊 Visualization disabled during testing")
+        return
+    
+    # Trace data through network
+    current_data = input_data
+    layer_outputs = [current_data.data.flatten()]
+    layer_names = ['Input']
+    
+    for layer in network.layers:
+        current_data = layer(current_data)
+        layer_outputs.append(current_data.data.flatten())
+        layer_names.append(type(layer).__name__)
+    
+    # Create visualization
+    fig, axes = plt.subplots(2, len(layer_outputs), figsize=(15, 8))
+    
+    for i, (output, name) in enumerate(zip(layer_outputs, layer_names)):
+        # Histogram
+        axes[0, i].hist(output, bins=20, alpha=0.7)
+        axes[0, i].set_title(f'{name}\nShape: {output.shape}')
+        axes[0, i].set_xlabel('Value')
+        axes[0, i].set_ylabel('Frequency')
+        
+        # Statistics
+        stats_text = f'Mean: {np.mean(output):.3f}\nStd: {np.std(output):.3f}\nRange: [{np.min(output):.3f}, {np.max(output):.3f}]'
+        axes[1, i].text(0.1, 0.5, stats_text, transform=axes[1, i].transAxes, 
+                        verticalalignment='center', fontsize=10)
+        axes[1, i].set_title(f'{name} Statistics')
+        axes[1, i].axis('off')
+    
+    plt.suptitle(title)
+    plt.tight_layout()
+    plt.show()
+
+# %% [markdown]
+"""
+### 🧪 Test Data Flow Visualization
+"""
+
+# %%
+# Test data flow visualization
+print("Testing data flow visualization...")
+
+try:
+    # Create a test network
+    test_network = Sequential([
+        Dense(input_size=3, output_size=4),
+        ReLU(),
+        Dense(input_size=4, output_size=2),
+        Sigmoid()
+    ])
+    
+    # Test input
+    test_input = Tensor([[1.0, 2.0, 3.0]])
+    
+    # Visualize data flow
+    visualize_data_flow(test_network, test_input, "Test Network Data Flow")
+    print("✅ Data flow visualization created!")
+    
+except Exception as e:
+    print(f"❌ Error: {e}")
+    print("Make sure to implement visualize_data_flow above!")
+
+# %% [markdown]
+"""
+## Step 5: Network Comparison and Analysis
+
+Let's create tools to compare different network architectures and understand their capabilities.
+
+### Why Network Comparison Matters
+- **Architecture selection**: Choose the right network for your problem
+- **Performance analysis**: Understand trade-offs between different designs
+- **Design insights**: Learn what makes networks effective
+- **Research**: Compare new architectures to baselines
+"""
+
+# %%
+#| export
+def compare_networks(networks: List[Sequential], network_names: List[str], 
+                    input_data: Tensor, title: str = "Network Comparison"):
+    """
+    Compare multiple networks on the same input.
+    
+    Args:
+        networks: List of Sequential networks to compare
+        network_names: Names for each network
+        input_data: Input tensor to test all networks
+        title: Title for the plot
+        
+    TODO: Create a comparison visualization showing how different networks process the same input.
+    
+    APPROACH:
+    1. Run the same input through each network
+    2. Collect the outputs and intermediate results
+    3. Create a visualization comparing the results
+    4. Show statistics and differences
+    
+    EXAMPLE:
+    Compare MLP vs Deep Network vs Wide Network on same input
+    
+    HINTS:
+    - Use a for loop to test each network
+    - Store outputs and any relevant statistics
+    - Use plt.subplot() to create comparison plots
+    - Show both outputs and intermediate layer results
+    """
+    raise NotImplementedError("Student implementation required")
+
+# %%
+#| hide
+#| export
+def compare_networks(networks: List[Sequential], network_names: List[str], 
+                    input_data: Tensor, title: str = "Network Comparison"):
+    """Compare multiple networks on the same input."""
+    if not _should_show_plots():
+        print("📊 Visualization disabled during testing")
+        return
+    
+    # Test all networks
+    outputs = []
+    for network in networks:
+        output = network(input_data)
+        outputs.append(output.data.flatten())
+    
+    # Create comparison plot
+    fig, axes = plt.subplots(2, len(networks), figsize=(15, 8))
+    
+    for i, (output, name) in enumerate(zip(outputs, network_names)):
+        # Output distribution
+        axes[0, i].hist(output, bins=20, alpha=0.7)
+        axes[0, i].set_title(f'{name}\nOutput Distribution')
+        axes[0, i].set_xlabel('Value')
+        axes[0, i].set_ylabel('Frequency')
+        
+        # Statistics
+        stats_text = f'Mean: {np.mean(output):.3f}\nStd: {np.std(output):.3f}\nRange: [{np.min(output):.3f}, {np.max(output):.3f}]\nSize: {len(output)}'
+        axes[1, i].text(0.1, 0.5, stats_text, transform=axes[1, i].transAxes, 
+                        verticalalignment='center', fontsize=10)
+        axes[1, i].set_title(f'{name} Statistics')
+        axes[1, i].axis('off')
+    
+    plt.suptitle(title)
+    plt.tight_layout()
+    plt.show()
+
+# %% [markdown]
+"""
+### 🧪 Test Network Comparison
+"""
+
+# %%
+# Test network comparison
+print("Testing network comparison...")
+
+try:
+    # Create different networks
+    network1 = create_mlp(input_size=3, hidden_sizes=[4], output_size=1)
+    network2 = create_mlp(input_size=3, hidden_sizes=[8, 4], output_size=1)
+    network3 = create_mlp(input_size=3, hidden_sizes=[2], output_size=1, activation=Tanh)
+    
+    networks = [network1, network2, network3]
+    names = ["Small MLP", "Deep MLP", "Tanh MLP"]
+    
+    # Test input
+    test_input = Tensor([[1.0, 2.0, 3.0]])
+    
+    # Compare networks
+    compare_networks(networks, names, test_input, "Network Architecture Comparison")
+    print("✅ Network comparison created!")
+    
+except Exception as e:
+    print(f"❌ Error: {e}")
+    print("Make sure to implement compare_networks above!")
+
+# %% [markdown]
+"""
+## Step 6: Practical Network Architectures
+
+Now let's create some practical network architectures for common machine learning tasks.
+
+### Common Network Types
+
+#### 1. **Classification Networks**
+- **Binary classification**: Output single probability
+- **Multi-class classification**: Output probability distribution
+- **Use cases**: Image classification, spam detection, sentiment analysis
+
+#### 2. **Regression Networks**
+- **Single output**: Predict continuous value
+- **Multiple outputs**: Predict multiple values
+- **Use cases**: Price prediction, temperature forecasting, demand estimation
+
+#### 3. **Feature Extraction Networks**
+- **Encoder networks**: Compress data into features
+- **Use cases**: Dimensionality reduction, feature learning, representation learning
 """
 
 # %%
@@ -703,135 +803,311 @@ Let's see how our networks can be applied to real-world problems!
 def create_classification_network(input_size: int, num_classes: int, 
                                 hidden_sizes: List[int] = None) -> Sequential:
     """
-    Create a network for classification problems.
+    Create a network for classification tasks.
     
     Args:
         input_size: Number of input features
         num_classes: Number of output classes
-        hidden_sizes: List of hidden layer sizes (default: [input_size//2])
+        hidden_sizes: List of hidden layer sizes (default: [input_size * 2])
         
     Returns:
         Sequential network for classification
-    """
-    if hidden_sizes is None:
-        hidden_sizes = [input_size // 2]
+        
+    TODO: Implement classification network creation.
     
-    return create_mlp(
-        input_size=input_size,
-        hidden_sizes=hidden_sizes,
-        output_size=num_classes,
-        activation=ReLU,
-        output_activation=Sigmoid
-    )
+    APPROACH:
+    1. Use default hidden sizes if none provided
+    2. Create MLP with appropriate architecture
+    3. Use Sigmoid for binary classification (num_classes=1)
+    4. Use appropriate activation for multi-class
+    
+    EXAMPLE:
+    create_classification_network(10, 3) creates:
+    Dense(10→20) → ReLU → Dense(20→3) → Sigmoid
+    
+    HINTS:
+    - Use create_mlp() function
+    - Choose appropriate output activation based on num_classes
+    - For binary classification (num_classes=1), use Sigmoid
+    - For multi-class, you could use Sigmoid or no activation
+    """
+    raise NotImplementedError("Student implementation required")
+
+# %%
+#| hide
+#| export
+def create_classification_network(input_size: int, num_classes: int, 
+                                hidden_sizes: List[int] = None) -> Sequential:
+    """Create a network for classification tasks."""
+    if hidden_sizes is None:
+        hidden_sizes = [input_size * 2]
+    
+    return create_mlp(input_size, hidden_sizes, num_classes, 
+                     activation=ReLU, output_activation=Sigmoid)
 
 # %%
 #| export
 def create_regression_network(input_size: int, output_size: int = 1,
                              hidden_sizes: List[int] = None) -> Sequential:
     """
-    Create a network for regression problems.
+    Create a network for regression tasks.
     
     Args:
         input_size: Number of input features
         output_size: Number of output values (default: 1)
-        hidden_sizes: List of hidden layer sizes (default: [input_size//2])
+        hidden_sizes: List of hidden layer sizes (default: [input_size * 2])
         
     Returns:
         Sequential network for regression
-    """
-    if hidden_sizes is None:
-        hidden_sizes = [input_size // 2]
+        
+    TODO: Implement regression network creation.
     
-    return create_mlp(
-        input_size=input_size,
-        hidden_sizes=hidden_sizes,
-        output_size=output_size,
-        activation=ReLU,
-        output_activation=Tanh  # No activation for regression
-    )
+    APPROACH:
+    1. Use default hidden sizes if none provided
+    2. Create MLP with appropriate architecture
+    3. Use no activation on output layer (linear output)
+    
+    EXAMPLE:
+    create_regression_network(5, 1) creates:
+    Dense(5→10) → ReLU → Dense(10→1) (no activation)
+    
+    HINTS:
+    - Use create_mlp() but with no output activation
+    - For regression, we want linear outputs (no activation)
+    - You can pass None or identity function as output_activation
+    """
+    raise NotImplementedError("Student implementation required")
 
 # %%
-# Test practical applications
-try:
-    print("=== Testing Practical Applications ===")
+#| hide
+#| export
+def create_regression_network(input_size: int, output_size: int = 1,
+                             hidden_sizes: List[int] = None) -> Sequential:
+    """Create a network for regression tasks."""
+    if hidden_sizes is None:
+        hidden_sizes = [input_size * 2]
     
-    # Create networks for different tasks
-    digit_classifier = create_classification_network(
-        input_size=784,  # 28x28 image
-        num_classes=10,  # 10 digits
-        hidden_sizes=[128, 64]
-    )
+    # Create layers without output activation for regression
+    layers = []
+    current_size = input_size
     
-    sentiment_analyzer = create_classification_network(
-        input_size=100,  # 100-dimensional word embeddings
-        num_classes=2,   # Positive/Negative
-        hidden_sizes=[32, 16]
-    )
+    for hidden_size in hidden_sizes:
+        layers.append(Dense(input_size=current_size, output_size=hidden_size))
+        layers.append(ReLU())
+        current_size = hidden_size
     
-    house_price_predictor = create_regression_network(
-        input_size=13,   # 13 house features
-        output_size=1,   # 1 price prediction
-        hidden_sizes=[8, 4]
-    )
+    # Add output layer without activation
+    layers.append(Dense(input_size=current_size, output_size=output_size))
     
-    print("Created networks for different applications:")
-    print(f"  Digit Classifier: 784 → 128 → 64 → 10")
-    print(f"  Sentiment Analyzer: 100 → 32 → 16 → 2")
-    print(f"  House Price Predictor: 13 → 8 → 4 → 1")
-    
-    # Test with sample data
-    digit_input = Tensor(np.random.randn(1, 784).astype(np.float32))
-    sentiment_input = Tensor(np.random.randn(1, 100).astype(np.float32))
-    house_input = Tensor(np.random.randn(1, 13).astype(np.float32))
-    
-    # Get predictions
-    digit_pred = digit_classifier(digit_input)
-    sentiment_pred = sentiment_analyzer(sentiment_input)
-    house_pred = house_price_predictor(house_input)
-    
-    print(f"\nSample predictions:")
-    print(f"  Digit classifier output: {digit_pred.data[0]}")
-    print(f"  Sentiment analyzer output: {sentiment_pred.data[0]}")
-    print(f"  House price predictor output: {house_pred.data[0]}")
-    
-    # Visualize architectures
-    visualize_network_architecture(digit_classifier, "Digit Classification Network")
-    visualize_network_architecture(sentiment_analyzer, "Sentiment Analysis Network")
-    visualize_network_architecture(house_price_predictor, "House Price Prediction Network")
-    
-    print("✅ Practical applications working!")
-    
-except Exception as e:
-    print(f"❌ Error: {e}")
-    print("Make sure to implement the application functions!")
+    return Sequential(layers)
 
 # %% [markdown]
 """
-## 🎓 Module Summary
+### 🧪 Test Practical Networks
+"""
 
-### What You Learned
-1. **Network Composition**: Building complete networks from layers
-2. **Architecture Design**: How to choose network structures
-3. **Visualization**: Understanding networks through visual analysis
-4. **Practical Applications**: Real-world network use cases
+# %%
+# Test practical networks
+print("Testing practical networks...")
 
-### Key Architectural Insights
-- **Function Composition**: Networks as `f(x) = layer_n(...layer_1(x))`
-- **Modular Design**: Clean separation between layers and networks
-- **Visual Understanding**: How to analyze network behavior
-- **Application Patterns**: Classification vs regression architectures
+try:
+    # Test classification network
+    class_net = create_classification_network(input_size=5, num_classes=1)
+    x_class = Tensor([[1.0, 2.0, 3.0, 4.0, 5.0]])
+    y_class = class_net(x_class)
+    print(f"✅ Classification output: {y_class}")
+    print(f"✅ Output range: [{np.min(y_class.data):.3f}, {np.max(y_class.data):.3f}]")
+    
+    # Test regression network
+    reg_net = create_regression_network(input_size=3, output_size=1)
+    x_reg = Tensor([[1.0, 2.0, 3.0]])
+    y_reg = reg_net(x_reg)
+    print(f"✅ Regression output: {y_reg}")
+    print(f"✅ Output range: [{np.min(y_reg.data):.3f}, {np.max(y_reg.data):.3f}]")
+    
+    print("🎉 Practical networks work!")
+    
+except Exception as e:
+    print(f"❌ Error: {e}")
+    print("Make sure to implement the network creation functions above!")
 
-### Network Design Principles
-- **Depth vs Width**: Trade-offs in network architecture
-- **Activation Functions**: How they affect network behavior
-- **Shape Management**: Understanding tensor transformations
-- **Practical Considerations**: Choosing architectures for specific tasks
+# %% [markdown]
+"""
+## Step 7: Network Behavior Analysis
 
-### Next Steps
-- **Training**: Learn how networks learn from data (autograd, optimization)
-- **Advanced Architectures**: CNNs, RNNs, Transformers
-- **Real Data**: Working with actual datasets
-- **Production**: Deploying networks in real applications
+Let's create tools to analyze how networks behave with different inputs and understand their capabilities.
 
-**Congratulations on mastering neural network architectures!** 🚀
-""" 
+### Why Behavior Analysis Matters
+- **Understanding**: Learn what patterns networks can learn
+- **Debugging**: Identify when networks fail
+- **Design**: Choose appropriate architectures
+- **Validation**: Ensure networks work as expected
+"""
+
+# %%
+#| export
+def analyze_network_behavior(network: Sequential, input_data: Tensor, 
+                           title: str = "Network Behavior Analysis"):
+    """
+    Analyze how a network behaves with different inputs.
+    
+    Args:
+        network: Sequential network to analyze
+        input_data: Input tensor to test
+        title: Title for the plot
+        
+    TODO: Create an analysis showing network behavior and capabilities.
+    
+    APPROACH:
+    1. Test the network with the given input
+    2. Analyze the output characteristics
+    3. Test with variations of the input
+    4. Create visualizations showing behavior patterns
+    
+    EXAMPLE:
+    Test network with original input and noisy versions
+    Show how output changes with input variations
+    
+    HINTS:
+    - Test the original input
+    - Create variations (noise, scaling, etc.)
+    - Compare outputs across variations
+    - Show statistics and patterns
+    """
+    raise NotImplementedError("Student implementation required")
+
+# %%
+#| hide
+#| export
+def analyze_network_behavior(network: Sequential, input_data: Tensor, 
+                           title: str = "Network Behavior Analysis"):
+    """Analyze how a network behaves with different inputs."""
+    if not _should_show_plots():
+        print("📊 Visualization disabled during testing")
+        return
+    
+    # Test original input
+    original_output = network(input_data)
+    
+    # Create variations
+    noise_levels = [0.0, 0.1, 0.2, 0.5]
+    outputs = []
+    
+    for noise in noise_levels:
+        noisy_input = Tensor(input_data.data + noise * np.random.randn(*input_data.data.shape))
+        output = network(noisy_input)
+        outputs.append(output.data.flatten())
+    
+    # Create analysis plot
+    fig, axes = plt.subplots(2, 2, figsize=(12, 10))
+    
+    # Original output
+    axes[0, 0].hist(outputs[0], bins=20, alpha=0.7)
+    axes[0, 0].set_title('Original Input Output')
+    axes[0, 0].set_xlabel('Value')
+    axes[0, 0].set_ylabel('Frequency')
+    
+    # Output stability
+    output_means = [np.mean(out) for out in outputs]
+    output_stds = [np.std(out) for out in outputs]
+    axes[0, 1].plot(noise_levels, output_means, 'bo-', label='Mean')
+    axes[0, 1].fill_between(noise_levels, 
+                           [m-s for m, s in zip(output_means, output_stds)],
+                           [m+s for m, s in zip(output_means, output_stds)], 
+                           alpha=0.3, label='±1 Std')
+    axes[0, 1].set_xlabel('Noise Level')
+    axes[0, 1].set_ylabel('Output Value')
+    axes[0, 1].set_title('Output Stability')
+    axes[0, 1].legend()
+    
+    # Output distribution comparison
+    for i, (output, noise) in enumerate(zip(outputs, noise_levels)):
+        axes[1, 0].hist(output, bins=20, alpha=0.5, label=f'Noise={noise}')
+    axes[1, 0].set_xlabel('Output Value')
+    axes[1, 0].set_ylabel('Frequency')
+    axes[1, 0].set_title('Output Distribution Comparison')
+    axes[1, 0].legend()
+    
+    # Statistics
+    stats_text = f'Original Mean: {np.mean(outputs[0]):.3f}\nOriginal Std: {np.std(outputs[0]):.3f}\nOutput Range: [{np.min(outputs[0]):.3f}, {np.max(outputs[0]):.3f}]'
+    axes[1, 1].text(0.1, 0.5, stats_text, transform=axes[1, 1].transAxes, 
+                    verticalalignment='center', fontsize=10)
+    axes[1, 1].set_title('Network Statistics')
+    axes[1, 1].axis('off')
+    
+    plt.suptitle(title)
+    plt.tight_layout()
+    plt.show()
+
+# %% [markdown]
+"""
+### 🧪 Test Network Behavior Analysis
+"""
+
+# %%
+# Test network behavior analysis
+print("Testing network behavior analysis...")
+
+try:
+    # Create a test network
+    test_network = create_classification_network(input_size=3, num_classes=1)
+    test_input = Tensor([[1.0, 2.0, 3.0]])
+    
+    # Analyze behavior
+    analyze_network_behavior(test_network, test_input, "Test Network Behavior")
+    print("✅ Network behavior analysis created!")
+    
+except Exception as e:
+    print(f"❌ Error: {e}")
+    print("Make sure to implement analyze_network_behavior above!")
+
+# %% [markdown]
+"""
+## 🎯 Module Summary
+
+Congratulations! You've built the foundation of neural network architectures:
+
+### What You've Accomplished
+✅ **Sequential Networks**: Composing layers into complete architectures  
+✅ **MLP Creation**: Building multi-layer perceptrons  
+✅ **Network Visualization**: Understanding architecture and data flow  
+✅ **Network Comparison**: Analyzing different architectures  
+✅ **Practical Networks**: Classification and regression networks  
+✅ **Behavior Analysis**: Understanding network capabilities  
+
+### Key Concepts You've Learned
+- **Networks** are compositions of layers that transform data
+- **Architecture design** determines network capabilities
+- **Sequential networks** are the most fundamental building block
+- **Different architectures** solve different problems
+- **Visualization tools** help understand network behavior
+
+### What's Next
+In the next modules, you'll build on this foundation:
+- **Autograd**: Enable automatic differentiation for training
+- **Training**: Learn parameters using gradients and optimizers
+- **Loss Functions**: Define objectives for learning
+- **Applications**: Solve real problems with neural networks
+
+### Real-World Connection
+Your network architectures are now ready to:
+- Compose layers into complete neural networks
+- Create specialized architectures for different tasks
+- Analyze and understand network behavior
+- Integrate with the rest of the TinyTorch ecosystem
+
+**Ready for the next challenge?** Let's move on to automatic differentiation to enable training!
+"""
+
+# %%
+# Final verification
+print("\n" + "="*50)
+print("🎉 NETWORKS MODULE COMPLETE!")
+print("="*50)
+print("✅ Sequential network implementation")
+print("✅ MLP creation and architecture design")
+print("✅ Network visualization and analysis")
+print("✅ Network comparison tools")
+print("✅ Practical classification and regression networks")
+print("✅ Network behavior analysis")
+print("\n🚀 Ready to enable training with autograd in the next module!") 
