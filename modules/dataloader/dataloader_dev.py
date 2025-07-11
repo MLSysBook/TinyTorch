@@ -36,12 +36,12 @@ This module builds on previous modules:
 """
 ## 📦 Where This Code Lives in the Final Package
 
-**Learning Side:** You work in `modules/data/data_dev.py`  
-**Building Side:** Code exports to `tinytorch.core.data`
+**Learning Side:** You work in `modules/dataloader/dataloader_dev.py`  
+**Building Side:** Code exports to `tinytorch.core.dataloader`
 
 ```python
 # Final package structure:
-from tinytorch.core.data import Dataset, DataLoader, CIFAR10Dataset
+from tinytorch.core.dataloader import Dataset, DataLoader, CIFAR10Dataset
 from tinytorch.core.tensor import Tensor
 from tinytorch.core.networks import Sequential
 ```
@@ -53,7 +53,7 @@ from tinytorch.core.networks import Sequential
 """
 
 # %%
-#| default_exp core.data
+#| default_exp core.dataloader
 
 # Setup and imports
 import numpy as np

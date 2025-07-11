@@ -1,5 +1,5 @@
 """
-Tests for TinyTorch Data module.
+Tests for TinyTorch DataLoader module.
 
 Tests follow the "Build → Use → Understand" pattern:
 1. Build Dataset → Test with local test data
@@ -19,11 +19,11 @@ import shutil
 import pickle
 from pathlib import Path
 
-# Add the parent directory to path to import data_dev
+# Add the parent directory to path to import dataloader_dev
 sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
 
 # Import from the module's development file
-from data_dev import Dataset, DataLoader, CIFAR10Dataset, Normalizer, create_data_pipeline, Tensor
+from dataloader_dev import Dataset, DataLoader, CIFAR10Dataset, Normalizer, create_data_pipeline, Tensor
 
 def safe_numpy(tensor):
     """Get numpy array from tensor, using .data attribute"""
