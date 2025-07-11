@@ -208,7 +208,7 @@ python bin/tito.py notebooks --module {module}
 
 ### Generate Student Version
 ```bash
-python3 bin/generate_student_notebooks.py --module {module}
+python bin/generate_student_notebooks.py --module {module}
 ```
 
 ### Test Complete Workflow
