@@ -41,6 +41,23 @@ Linear → Activation → Linear = Can learn complex patterns!
 
 Each function serves different purposes and has different mathematical properties.
 
+## 📦 Where This Code Lives in the Final Package
+
+**Learning Side:** You work in `modules/activations/activations_dev.py`  
+**Building Side:** Code exports to `tinytorch.core.activations`
+
+```python
+# Final package structure:
+from tinytorch.core.activations import ReLU, Sigmoid, Tanh
+from tinytorch.core.tensor import Tensor
+from tinytorch.core.layers import Dense, Conv2D
+```
+
+**Why this matters:**
+- **Learning:** Focused modules for deep understanding
+- **Production:** Proper organization like PyTorch's `torch.nn.functional`
+- **Consistency:** All activation functions live together in `core.activations`
+
 ---
 
 Let's start building! 🚀
