@@ -1,31 +1,31 @@
 
 # TinyTorch Development Workflow
 
-## CLI Tool: `tito.py`
+## CLI Tool: `tito`
 
-The main development tool is [bin/tito.py](mdc:bin/tito.py). Common commands:
+The main development tool is the `tito` CLI. Common commands:
 
 ### Module Development
 ```bash
 # Sync module: Python source → notebook → package export
-python bin/tito.py sync --module {module_name}
+tito sync --module {module_name}
 
 # Test specific module (uses pytest internally)
-python bin/tito.py test --module {module_name}
+tito test --module {module_name}
 
 # Get project info and status
-python bin/tito.py info
+tito info
 ```
 
 ### Examples
 ```bash
 # Work with setup module
-python bin/tito.py sync --module setup
-python bin/tito.py test --module setup
+tito sync --module setup
+tito test --module setup
 
 # Work with tensor module  
-python bin/tito.py sync --module tensor
-python bin/tito.py test --module tensor
+tito sync --module tensor
+tito test --module tensor
 ```
 
 ## Development Cycle
@@ -35,19 +35,20 @@ python bin/tito.py test --module tensor
    - Use `#| hide` for instructor solutions
    - Follow NBDev educational pattern
 
-2. **Sync**: `python bin/tito.py sync --module {module}`
+2. **Sync**: `tito sync --module {module}`
    - Converts Python source to Jupyter notebook
    - Exports marked code to `tinytorch/` package
    - Updates package structure
 
-3. **Test**: `python bin/tito.py test --module {module}`
+3. **Test**: `tito test --module {module}`
    - Runs module-specific pytest tests from `modules/{module}/tests/`
    - Uses pytest framework for all test execution
    - Validates exported package code
    - Ensures everything works end-to-end
 
 4. **Commit**: Regular commits at good stages
-   - User prefers committing when reaching good milestones
+   - See [Git Workflow Guidelines](mdc:.cursor/rules/git-workflow.mdc) for commit strategies
+   - Commit when reaching good milestones
    - Clean up experimental files before committing
 
 ## Testing Requirements
@@ -77,4 +78,14 @@ Each module should be self-contained with:
   - `test_{module}.py` - Module tests (pytest format)
 
 Students run and pass all pytest tests locally within the module before using nbdev to export code to the tinytorch package and build/test the overall package.
+
+## Git Workflow
+
+For commit strategies and Git best practices, see [Git Workflow Guidelines](mdc:.cursor/rules/git-workflow.mdc).
+
+Key principles:
+- **Incremental commits** for easy reverts
+- **Test before committing** to avoid broken commits
+- **Use feature branches** for larger changes
+- **Descriptive commit messages** that explain what changed
  

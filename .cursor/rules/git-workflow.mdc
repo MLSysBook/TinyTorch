@@ -1,0 +1,272 @@
+# Git Workflow Guidelines for TinyTorch Development
+
+## 🎯 **Philosophy: Incremental Commits for Easy Reverts**
+
+The goal is to make commits that are:
+- **Small enough** to revert safely
+- **Focused enough** to understand what changed
+- **Frequent enough** to avoid losing work
+- **Practical enough** for ad-hoc development
+
+## 📝 **Commit Message Format**
+
+```
+TYPE: Brief description
+
+- Bullet point of what changed
+- Another change if needed
+- Reference to issue/feature if applicable
+
+Examples:
+- RESTORE: Complete CLI functionality in new architecture
+- FIX: Missing imports in tensor module
+- FEAT: Add new test command to CLI
+- REFACTOR: Move CLI commands to class-based architecture
+```
+
+## 🔄 **When to Commit**
+
+### ✅ **Good Commit Moments:**
+- **Feature complete**: A command/functionality is fully working
+- **Bug fix**: A specific issue is resolved
+- **Refactor complete**: A chunk of refactoring is done and tested
+- **Test suite**: All tests pass after changes
+- **Documentation**: A section of docs is updated
+- **End of work session**: Before switching to different task
+
+### ❌ **Avoid Committing:**
+- **Broken state**: Code that doesn't run
+- **Half-finished features**: Incomplete functionality
+- **Multiple unrelated changes**: Mixing different concerns
+
+## 🌿 **Branch Strategy for Ad-hoc Development**
+
+### **Main Branch (`main`)**
+- **Keep stable**: Only working, tested code
+- **Merge from feature branches**: When features are complete
+- **Quick fixes**: Small, safe fixes can go directly to main
+
+### **Feature Branches**
+```bash
+# Create feature branch
+git checkout -b feature/cli-restore
+
+# Work on feature
+# ... make changes ...
+
+# Test your changes
+tito test --all
+
+# Commit incrementally
+git add .
+git commit -m "FEAT: Add info command to new CLI"
+
+# Push feature branch
+git push origin feature/cli-restore
+
+# When complete, merge to main
+git checkout main
+git merge feature/cli-restore
+```
+
+### **Quick Development Flow**
+```bash
+# For small, focused changes (most common)
+git add .
+git commit -m "FIX: Missing Union import in tensor.py"
+git push
+
+# For larger changes, use feature branch
+git checkout -b feature/new-command
+# ... work ...
+git commit -m "FEAT: Add doctor command with environment checks"
+git push origin feature/new-command
+```
+
+## 🎯 **Practical Guidelines for Ad-hoc Development**
+
+### **1. Commit Size Guidelines**
+- **Small**: 1-3 files changed, single concern
+- **Medium**: 5-10 files, related functionality
+- **Large**: 10+ files, major feature (consider breaking up)
+
+### **2. Before Committing Checklist**
+- [ ] Code runs without errors
+- [ ] Tests pass (if applicable)
+- [ ] Changes are focused and related
+- [ ] Commit message explains what and why
+
+### **3. Revert-Friendly Commits**
+```bash
+# If you need to revert the last commit
+git revert HEAD
+
+# If you need to revert to a specific commit
+git revert <commit-hash>
+
+# If you need to undo uncommitted changes
+git checkout -- <file>
+```
+
+## 🚀 **Common Workflows**
+
+### **Quick Fix Workflow**
+```bash
+# Make small fix
+git add .
+git commit -m "FIX: Add missing import in tensor module"
+git push
+```
+
+### **Feature Development Workflow**
+```bash
+# Start feature
+git checkout -b feature/new-command
+
+# Work incrementally
+git add .
+git commit -m "FEAT: Add command class structure"
+git commit -m "FEAT: Implement command logic"
+git commit -m "TEST: Add tests for new command"
+
+# Complete feature
+git push origin feature/new-command
+# Create PR or merge directly
+```
+
+### **Emergency Fix Workflow**
+```bash
+# Hot fix on main
+git checkout main
+# Make fix
+git add .
+git commit -m "HOTFIX: Fix critical CLI error"
+git push
+```
+
+## 📋 **Commit Message Examples**
+
+### **Good Examples:**
+```
+RESTORE: Complete CLI functionality in new architecture
+
+- Ported all commands from bin/tito.py to new tito/ CLI architecture
+- Added InfoCommand with system info and module status
+- Added TestCommand with pytest integration
+- All commands now work with 'tito' command in shell
+```
+
+```
+FIX: Missing imports in tensor module
+
+- Added Union, List, Optional, Tuple imports
+- Resolves NameError in tensor operations
+- Required for CLI info command to work properly
+```
+
+```
+FEAT: Add doctor command for environment diagnosis
+
+- Comprehensive environment validation
+- Dependency checking
+- Module structure verification
+- Rich terminal output with tables
+```
+
+### **Avoid:**
+```
+- "Fixed stuff"
+- "Updated things"
+- "More changes"
+- "WIP"
+```
+
+## 🔧 **Git Configuration Tips**
+
+### **Set up helpful aliases:**
+```bash
+# Add to ~/.gitconfig
+[alias]
+    st = status
+    co = checkout
+    br = branch
+    ci = commit
+    unstage = reset HEAD --
+    last = log -1 HEAD
+    visual = !gitk
+```
+
+### **Useful commands:**
+```bash
+# See what you're about to commit
+git diff --cached
+
+# See recent commits
+git log --oneline -10
+
+# See what files changed
+git diff --name-only HEAD~1
+
+# Stash work in progress
+git stash
+git stash pop
+```
+
+## 🎯 **For This Project Specifically**
+
+### **CLI Development:**
+- Commit each command when it's working
+- Test commands before committing
+- Use descriptive commit messages mentioning the command
+
+### **Module Development:**
+- Commit when a module's tests pass
+- Commit when notebook exports work
+- Commit when documentation is updated
+
+### **Framework Development:**
+- Commit when core functionality works
+- Commit when tests pass
+- Commit when imports are fixed
+
+## 🚨 **When Things Go Wrong**
+
+### **Accidentally committed broken code:**
+```bash
+git revert HEAD
+# Fix the issue
+git add .
+git commit -m "FIX: Resolve the issue from previous commit"
+```
+
+### **Need to undo last commit but keep changes:**
+```bash
+git reset --soft HEAD~1
+# Make changes
+git add .
+git commit -m "Better commit message"
+```
+
+### **Need to split a large commit:**
+```bash
+git reset --soft HEAD~1
+git add <first-set-of-files>
+git commit -m "First part of changes"
+git add <remaining-files>
+git commit -m "Second part of changes"
+```
+
+## 📊 **Summary**
+
+**For ad-hoc development, focus on:**
+1. **Small, focused commits** that can be easily reverted
+2. **Descriptive commit messages** that explain what changed
+3. **Test before committing** to avoid broken commits
+4. **Use feature branches** for larger changes
+5. **Commit frequently** to avoid losing work
+
+**Remember:** It's better to have many small commits than one large commit that's hard to revert or understand.
+description:
+globs:
+alwaysApply: false
+---
