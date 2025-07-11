@@ -78,7 +78,7 @@ class InfoCommand(BaseCommand):
             ("Networks", "neural network architectures", self.check_networks_status),
             ("MLP", "multi-layer perceptron (manual)", self.check_mlp_status),
             ("CNN", "convolutional networks (basic)", self.check_cnn_status),
-            ("Data", "data loading pipeline", self.check_data_status),
+            ("DataLoader", "data loading pipeline", self.check_data_status),
             ("Training", "autograd engine & optimization", self.check_training_status),
             ("Profiling", "performance profiling", self.check_profiling_status),
             ("Compression", "model compression", self.check_compression_status),
