@@ -1,279 +1,318 @@
 # 📖 TinyTorch Module Development Guide
 
-A complete guide for creating educational modules that automatically generate student exercise versions.
+**Complete methodology for creating educational modules with real-world ML engineering practices.**
 
 ## 🎯 Philosophy
 
-**Write once, teach everywhere.** Create complete, working implementations with embedded pedagogical markers that automatically generate student exercise notebooks.
+**"Build → Use → Understand → Repeat"** with real data and immediate feedback.
 
-## 🏗️ Module Development Workflow
+Create complete, working implementations that automatically generate student exercise versions while maintaining production-quality exports.
 
-### Step 1: Plan the Learning Journey
-Before coding, decide:
-- **What should students implement?** (core learning objectives)
-- **What should be provided?** (utilities, complex setup, advanced features)
-- **What's the difficulty progression?** (easy → medium → hard)
+## 🔑 Core Principles
 
-### Step 2: Write Complete Implementation
-Create `modules/{module}/{module}_dev.py` with:
+### **Real Data, Real Systems**
+- **Use production datasets**: No mock/fake data - students work with CIFAR-10, not synthetic data
+- **Show progress feedback**: Downloads, training need visual progress indicators  
+- **Cache for efficiency**: Download once, use repeatedly
+- **Real-world scale**: Use actual dataset sizes, not toy examples
+
+### **Immediate Visual Feedback**
+- **Visual confirmation**: Students see their code working (images, plots, results)
+- **Development vs. Export separation**: Rich feedback in `_dev.py`, clean exports to package
+- **Progress indicators**: Status messages, progress bars for long operations
+- **Real-time validation**: Students can verify each step immediately
+
+### **Educational Excellence**
+- **Progressive complexity**: Easy → Medium → Hard with clear difficulty indicators
+- **Comprehensive guidance**: TODO sections with approach, examples, hints, systems thinking
+- **Real-world connections**: Connect every concept to production ML engineering
+- **Immediate testing**: Test each component with real inputs as you build
+
+## 🏗️ Development Workflow
+
+### Step 1: Choose the Learning Pattern
+- **Select engagement pattern**: Reflect, Analyze, or Optimize?
+- **Use the Pattern Selection Guide** from [Pedagogical Principles](../pedagogy/pedagogical-principles.md):
+  - **Build → Use → Reflect**: Early modules, design decisions, systems thinking
+  - **Build → Use → Analyze**: Middle modules, technical depth, performance
+  - **Build → Use → Optimize**: Advanced modules, iteration, production focus
+- **Document your choice** with clear rationale
+
+### Step 2: Plan the Learning Journey
+- **Define learning objectives**: What should students implement vs. receive?
+- **Choose real data**: What production dataset will they use?
+- **Design progression**: How does complexity build through the module?
+- **Map to production**: How does this connect to real ML systems?
+- **Design pattern-specific activities**: Questions, exercises, or challenges
+
+### Step 3: Write Complete Implementation
+Create `modules/{module}/{module}_dev.py` with NBDev structure:
+
 ```python
+# ---
+# jupyter:
+#   jupytext:
+#     text_representation:
+#       extension: .py
+#       format_name: percent
+#       format_version: '1.3'
+#       jupytext_version: 1.17.1
+# ---
+
 # %% [markdown]
-# # Module Title: Learning Objectives
-# 
-# Brief description of what students will build and learn.
+"""
+# Module: {Title} - {Purpose}
+
+## 🎯 Learning Pattern: Build → Use → [Pattern]
+
+**Pattern Choice**: [Reflect/Analyze/Optimize]
+**Rationale**: [Why this pattern fits the learning objectives]
+
+**Key Activities**:
+- [Pattern-specific activity 1]
+- [Pattern-specific activity 2]
+- [Pattern-specific activity 3]
+
+## Learning Objectives
+- ✅ Build {core_concept} from scratch
+- ✅ Use it with real data ({dataset_name})
+- ✅ [Engage] through {pattern_specific_activities}
+- ✅ Connect to production ML systems
+
+## What You'll Build
+{description_of_what_students_build}
+"""
 
 # %%
-#| keep_imports
+#| default_exp core.{module}
 import numpy as np
-from typing import Union, List
+import matplotlib.pyplot as plt
+from typing import Union, List, Optional
 
 # %%
-# Complete working implementation with markers...
+#| export
+class MainClass:
+    """
+    {Description of the class}
+    
+    TODO: {What students need to implement}
+    
+    APPROACH:
+    1. {Step 1 with specific guidance}
+    2. {Step 2 with specific guidance}
+    3. {Step 3 with specific guidance}
+    
+    EXAMPLE:
+    Input: {concrete_example}
+    Expected: {expected_output}
+    
+    HINTS:
+    - {Helpful hint about approach}
+    - {Systems thinking hint}
+    - {Real-world connection}
+    """
+    def __init__(self, params):
+        raise NotImplementedError("Student implementation required")
+
+# %%
+#| hide
+#| export
+class MainClass:
+    """Complete implementation (hidden from students)."""
+    def __init__(self, params):
+        # Actual working implementation
+        pass
+
+# %% [markdown]
+"""
+## 🧪 Test Your Implementation
+"""
+
+# %%
+# Test with real data
+try:
+    # Test student implementation
+    result = MainClass(real_data_example)
+    print(f"✅ Success: {result}")
+except NotImplementedError:
+    print("⚠️ Implement the class above first!")
+
+# Visual feedback (development only - not exported)
+def show_results(data):
+    """Show visual confirmation of working code."""
+    plt.figure(figsize=(10, 6))
+    # Visualization code
+    plt.show()
+
+if _should_show_plots():
+    show_results(real_data)
 ```
 
-### Step 3: Add Pedagogical Markers
-Mark what students should implement vs. what to provide.
+### Step 4: Create Tests with Real Data
+Create `modules/{module}/tests/test_{module}.py`:
 
-### Step 4: Convert and Generate
+```python
+import pytest
+import numpy as np
+from {module}_dev import MainClass
+
+def test_with_real_data():
+    """Test with actual production data."""
+    # Use real datasets, not mocks
+    real_data = load_real_dataset()
+    
+    instance = MainClass(real_data)
+    result = instance.process()
+    
+    # Test real properties
+    assert result.shape == expected_real_shape
+    assert result.dtype == expected_real_dtype
+    # Test with actual data characteristics
+```
+
+### Step 5: Convert and Export
 ```bash
-# Convert Python to notebook
+# Convert to notebook
 python bin/tito.py notebooks --module {module}
 
-# Generate student version
-python3 bin/generate_student_notebooks.py --module {module}
+# Export to package
+python bin/tito.py sync --module {module}
+
+# Test everything
+python bin/tito.py test --module {module}
 ```
 
-## 🏷️ Marker System
+## 🏷️ NBDev Directives
 
-### Exercise Markers
-```python
-#| exercise_start
-#| difficulty: easy|medium|hard
-#| hint: Helpful guidance without giving away the solution
-#| hint: Multiple hints allowed for complex methods
-#| solution_test: What students should verify after implementation
-def method_to_implement(self, params):
-    """Complete function signature and docstring."""
-    # Full working implementation
-    return result
-#| exercise_end
-```
+### Core Directives
+- `#| default_exp core.{module}` - Sets export destination
+- `#| export` - Marks code for export to package
+- `#| hide` + `#| export` - Hidden implementation (instructor solution)
+- `# %% [markdown]` - Markdown cells for explanations
+- `# %%` - Code cells
 
-### Preservation Markers
-```python
-#| keep_imports
-import statements  # Preserved in student version
-
-#| keep_complete  
-def utility_method(self):
-    """Keep entire implementation - too complex/not educational."""
-    return complex_implementation()
-
-#| remove_cell
-# This entire cell removed from student version
-instructor_only_code()
-```
+### Educational Structure
+- **Concept explanation** → **Implementation guidance** → **Hidden solution** → **Testing** → **Visual feedback**
 
 ## 🎨 Difficulty System
 
-Use visual indicators that students immediately understand:
+- **🟢 Easy (5-10 min)**: Constructor, properties, basic operations
+- **🟡 Medium (10-20 min)**: Conditional logic, data processing, error handling  
+- **🔴 Hard (20+ min)**: Complex algorithms, system integration, optimization
 
-- **🟢 Easy (5-10 min)**: Basic implementation, clear patterns
-  - Constructor with simple type conversion
-  - Property getters  
-  - Basic arithmetic operations
+## 📋 Implementation Guidelines
 
-- **🟡 Medium (10-20 min)**: Moderate complexity, some edge cases
-  - Methods with conditional logic
-  - Shape manipulation
-  - Error handling
+### Students Implement (Core Learning)
+- **Main functionality**: Core algorithms and data structures
+- **Data processing**: Loading, preprocessing, batching
+- **Error handling**: Input validation, type checking
+- **Basic operations**: Mathematical operations, transformations
 
-- **🔴 Hard (20+ min)**: Complex logic, multiple concepts
-  - Broadcasting operations
-  - Advanced algorithms
-  - Integration between components
+### Students Receive (Focus on Learning Goals)
+- **Complex setup**: Download progress bars, caching systems
+- **Utility functions**: Visualization, debugging helpers
+- **Advanced features**: Optimization, GPU support
+- **Infrastructure**: Test frameworks, import management
 
-## 📋 What Students Should Implement vs. Receive
-
-### ✅ **Students Implement** (Active Learning)
-- **Core functionality**: Main learning objectives
-- **Basic operations**: Addition, multiplication, etc.
-- **Essential properties**: Shape, size, dtype
-- **Error handling**: Type checking, validation
-- **Simple algorithms**: Reshape, transpose, reductions
-
-### 🎁 **Students Receive** (Focus on Learning Goals)
-- **Complex setup code**: Initialization boilerplate
-- **Utility functions**: String formatting, type checking helpers
-- **Advanced features**: GPU support, optimization, broadcasting
-- **Infrastructure**: Test frameworks, import statements
-- **Edge case handling**: Complex error messages, corner cases
-
-## 📝 Writing Guidelines
-
-### Function Structure
-Always provide complete signatures and docstrings:
+### TODO Guidance Quality
 ```python
-#| exercise_start
-#| difficulty: medium
-#| hint: Use numpy broadcasting for element-wise operations
-#| solution_test: Result should be same shape as inputs
-def __add__(self, other: Union['Tensor', int, float]) -> 'Tensor':
-    """
-    Add this tensor with another tensor or scalar.
-    
-    Args:
-        other: Another Tensor or scalar value
-        
-    Returns:
-        Tensor: New tensor with element-wise addition result
-        
-    Raises:
-        TypeError: If other is not a compatible type
-    """
-    if isinstance(other, Tensor):
-        return Tensor(self._data + other._data)
-    else:
-        return Tensor(self._data + other)
-#| exercise_end
-```
+"""
+TODO: {Clear, specific task}
 
-### Hint Guidelines
-- **Be helpful, not prescriptive**: Guide thinking, don't give code
-- **Progressive disclosure**: Start general, get more specific
-- **Reference relevant concepts**: "Use numpy broadcasting", "Check instance type"
+APPROACH:
+1. {Concrete first step}
+2. {Concrete second step}  
+3. {Concrete third step}
 
-Good hints:
-```python
-#| hint: Convert input to numpy array for consistent handling
-#| hint: Use isinstance() to check if input is a Tensor or scalar
-#| hint: Remember to return a new Tensor object, not numpy array
-```
+EXAMPLE:
+Input: {actual_data_example}
+Expected: {concrete_expected_output}
 
-Bad hints:
-```python
-#| hint: Write: return Tensor(self._data + other._data)  # Too specific!
-#| hint: Add the data  # Too vague!
-```
+HINTS:
+- {Helpful guidance without giving code}
+- {Systems thinking consideration}
+- {Real-world connection}
 
-### Solution Tests
-Help students verify their implementation:
-```python
-#| solution_test: Tensor([1,2]) + Tensor([3,4]) should equal Tensor([4,6])
-#| solution_test: Tensor([1,2]) + 5 should equal Tensor([6,7])
-#| solution_test: Result should be a Tensor object, not numpy array
+SYSTEMS THINKING:
+- {Performance consideration}
+- {Scalability question}
+- {User experience aspect}
+"""
 ```
 
 ## 🗂️ Module Structure
 
 ```
 modules/{module}/
-├── {module}_dev.py          # 🔧 Complete implementation (instructor)
-├── {module}_dev.ipynb       # 📓 Generated from .py file  
-├── {module}_dev_student.ipynb # 🎓 Auto-generated exercise version
-├── test_{module}.py         # 🧪 Comprehensive test suite
-├── check_{module}.py        # ✅ Manual verification script
-└── README.md               # 📖 Module overview and setup
+├── {module}_dev.py              # 🔧 Complete implementation
+├── {module}_dev.ipynb           # 📓 Generated notebook
+├── tests/
+│   └── test_{module}.py         # 🧪 Real data tests
+├── README.md                    # 📖 Module guide
+└── data/                        # 📊 Cached datasets (if needed)
 ```
 
-## 🎯 Module Examples
+## ✅ Quality Standards
 
-### Easy Module (Tensor Basics)
-Students implement:
-- 🟢 Constructor (`__init__`)
-- 🟢 Properties (`shape`, `size`, `dtype`)  
-- 🟢 Basic arithmetic (`__add__`, `__sub__`)
-- 🟡 Utilities (`reshape`, `transpose`)
+### Before Release
+- [ ] Uses real data, not synthetic/mock data
+- [ ] Includes progress feedback for long operations
+- [ ] Visual feedback functions (development only)
+- [ ] Tests use actual datasets at realistic scales
+- [ ] TODO guidance includes systems thinking
+- [ ] Clean separation between development and exports
+- [ ] Follows "Build → Use → Understand" progression
 
-### Medium Module (Autograd)
-Students implement:
-- 🟡 Forward pass computation
-- 🟡 Gradient accumulation
-- 🔴 Backward pass algorithm
-- 🔴 Chain rule application
-
-### Hard Module (Neural Networks)
-Students implement:
-- 🟡 Layer forward pass
-- 🔴 Loss computation  
-- 🔴 Backpropagation
-- 🔴 Parameter updates
-
-## 🛠️ Development Tools
-
-### Convert Python to Notebook
-```bash
-python bin/tito.py notebooks --module {module}
-```
-
-### Generate Student Version
-```bash
-python bin/generate_student_notebooks.py --module {module}
-```
-
-### Test Complete Workflow
-```bash
-# Test instructor version
-cd modules/{module}
-jupyter lab {module}_dev.ipynb
-
-# Test student version  
-jupyter lab {module}_dev_student.ipynb
-
-# Verify exports work
-python bin/tito.py sync --module {module}
-python bin/tito.py test --module {module}
-```
-
-## ✅ Quality Checklist
-
-Before releasing a module:
-
-**Instructor Version:**
-- [ ] Complete implementation works and passes all tests
-- [ ] All methods have proper type hints and docstrings
-- [ ] Markers are correctly placed and consistent
-- [ ] Code follows TinyTorch style guidelines
-
-**Student Version:**
-- [ ] Generated notebook preserves function signatures
-- [ ] Hints are helpful but not prescriptive
-- [ ] Difficulty progression makes sense
-- [ ] Tests provide clear verification guidance
-- [ ] Students can run and get feedback immediately
-
-**Integration:**
-- [ ] Module exports correctly to tinytorch package
-- [ ] Tests pass with student implementation stubs
-- [ ] README explains module purpose and workflow
-- [ ] Follows established module naming conventions
+### Integration Requirements
+- [ ] Exports correctly to `tinytorch.core.{module}`
+- [ ] No circular dependencies
+- [ ] Consistent with existing module patterns
+- [ ] Compatible with TinyTorch CLI tools
 
 ## 💡 Best Practices
 
-### For Instructors
-1. **Start with learning goals**: What should students understand after this module?
-2. **Write complete first**: Get the full solution working before adding markers
-3. **Think like a student**: What would be confusing? What needs guidance?
-4. **Test the student path**: Try implementing following your own hints
+### Development Process
+1. **Start with real data**: Choose production dataset first
+2. **Write complete implementation**: Get it working before adding markers
+3. **Add rich feedback**: Visual confirmation, progress indicators
+4. **Test the student path**: Follow your own TODO guidance
+5. **Optimize user experience**: Consider performance, caching, error messages
 
-### For Markers
-1. **Be consistent**: Use same difficulty criteria across modules
-2. **Progressive complexity**: Easy concepts early, hard concepts later  
-3. **Meaningful hints**: Guide understanding, not just implementation
-4. **Clear boundaries**: Be explicit about what students implement vs. receive
+### Systems Thinking
+- **Performance**: How does this scale with larger datasets?
+- **Caching**: How do we avoid repeated expensive operations?
+- **User Experience**: How do students know the code is working?
+- **Production Relevance**: How does this connect to real ML systems?
 
-### For Generator
-1. **Preserve signatures**: Students need to know the interface
-2. **Keep docstrings**: Essential for understanding purpose
-3. **Clean output**: Remove implementation but keep structure
-4. **Test guidance**: Help students verify their work
+### Educational Design
+- **Immediate gratification**: Students see results quickly
+- **Progressive complexity**: Build understanding step by step
+- **Real-world connections**: Connect every concept to production
+- **Visual confirmation**: Students see their code working
 
-## 🔄 Iteration and Improvement
+## 🔄 Continuous Improvement
 
 After teaching with a module:
-1. **Collect feedback**: What confused students? What was too easy/hard?
-2. **Update markers**: Adjust difficulty, improve hints
-3. **Refine scope**: Move methods between implement/provide categories
-4. **Share learnings**: Update this guide with discoveries
+1. **Monitor student experience**: Where do they get stuck?
+2. **Improve guidance**: Better TODO instructions, clearer hints
+3. **Enhance feedback**: More visual confirmation, better progress indicators
+4. **Optimize performance**: Faster data loading, better caching
+5. **Update documentation**: Share learnings with other developers
 
-Remember: The goal is **active learning through hands-on implementation**, not just demonstration! 
+## 🎯 Success Metrics
+
+**Students should be able to:**
+- Explain what they built in simple terms
+- Modify code to solve related problems
+- Connect module concepts to real ML systems
+- Debug issues by understanding the system
+
+**Modules should achieve:**
+- High student engagement and completion rates
+- Smooth progression to next modules
+- Real-world relevance and production quality
+- Consistent patterns across the curriculum
+
+---
+
+**Remember**: We're teaching ML systems engineering, not just algorithms. Every module should reflect real-world practices and challenges while maintaining the "Build → Use → Understand" educational cycle. 
