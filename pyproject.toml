@@ -37,6 +37,7 @@ dev = [
     "mypy>=0.950",
     "rich>=12.0.0",  # For CLI development tools
     "pytest>=7.0.0",
+    "pytest-timeout>=2.1.0",  # For test timeouts
 ]
 
 # CLI development tools (separate from core framework)
@@ -69,3 +70,28 @@ python_version = "3.8"
 warn_return_any = true
 warn_unused_configs = true
 disallow_untyped_defs = true
+
+[tool.pytest.ini_options]
+# Test timeouts and configuration
+timeout = 300  # 5 minutes timeout for all tests
+timeout_method = "thread"  # Use thread-based timeout
+addopts = [
+    "-v",
+    "--tb=short",
+    "--strict-markers",
+    "--strict-config",
+    "--disable-warnings",
+    "--timeout=300",
+]
+testpaths = [
+    "tests",
+    "modules/*/tests",
+]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+markers = [
+    "slow: marks tests as slow (deselect with '-m \"not slow\"')",
+    "integration: marks tests as integration tests",
+    "unit: marks tests as unit tests",
+]

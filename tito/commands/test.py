@@ -63,14 +63,21 @@ class TestCommand(BaseCommand):
                     progress.update(task, description=f"Testing {module}...")
                     
                     test_file = f"modules/{module}/tests/test_{module}.py"
-                    result = subprocess.run([sys.executable, "-m", "pytest", test_file, "-v"], 
-                                          capture_output=True, text=True)
-                    
-                    if result.returncode != 0:
+                    try:
+                        result = subprocess.run([sys.executable, "-m", "pytest", test_file, "-v"], 
+                                              capture_output=True, text=True, timeout=300)
+                        
+                        if result.returncode != 0:
+                            failed_modules.append(module)
+                            console.print(f"[red]❌ {module} tests failed[/red]")
+                        else:
+                            console.print(f"[green]✅ {module} tests passed[/green]")
+                    except subprocess.TimeoutExpired:
                         failed_modules.append(module)
-                        console.print(f"[red]❌ {module} tests failed[/red]")
-                    else:
-                        console.print(f"[green]✅ {module} tests passed[/green]")
+                        console.print(f"[red]❌ {module} tests timed out (5 minutes)[/red]")
+                    except Exception as e:
+                        failed_modules.append(module)
+                        console.print(f"[red]❌ {module} tests failed with error: {e}[/red]")
                     
                     progress.advance(task)
             
@@ -99,23 +106,32 @@ class TestCommand(BaseCommand):
             
             console.print(f"Running: pytest {test_file} -v")
             
-            result = subprocess.run([sys.executable, "-m", "pytest", test_file, "-v"], 
-                                  capture_output=True, text=True)
-            
-            # Print test output
-            if result.stdout:
-                console.print(result.stdout)
-            if result.stderr:
-                console.print(result.stderr)
-            
-            if result.returncode == 0:
-                console.print(Panel("[green]✅ All tests passed for {}![/green]".format(args.module), 
-                                  title="Test Results", border_style="green"))
-            else:
-                console.print(Panel("[red]❌ Some tests failed for {}[/red]".format(args.module), 
+            try:
+                result = subprocess.run([sys.executable, "-m", "pytest", test_file, "-v"], 
+                                      capture_output=True, text=True, timeout=300)
+                
+                # Print test output
+                if result.stdout:
+                    console.print(result.stdout)
+                if result.stderr:
+                    console.print(result.stderr)
+                
+                if result.returncode == 0:
+                    console.print(Panel("[green]✅ All tests passed for {}![/green]".format(args.module), 
+                                      title="Test Results", border_style="green"))
+                else:
+                    console.print(Panel("[red]❌ Some tests failed for {}[/red]".format(args.module), 
+                                      title="Test Results", border_style="red"))
+                
+                return result.returncode
+            except subprocess.TimeoutExpired:
+                console.print(Panel("[red]❌ Tests timed out after 5 minutes for {}[/red]".format(args.module), 
                                   title="Test Results", border_style="red"))
-            
-            return result.returncode
+                return 1
+            except Exception as e:
+                console.print(Panel("[red]❌ Test execution failed: {}[/red]".format(str(e)), 
+                                  title="Test Results", border_style="red"))
+                return 1
         
         else:
             console.print(Panel(f"[red]❌ Invalid module: {args.module}\n"
