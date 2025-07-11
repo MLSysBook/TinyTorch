@@ -133,10 +133,10 @@ python bin/tito.py test --module tensor
 
 ---
 
-### 📊 Module 5: Data
+### 📊 Module 5: DataLoader
 **Goal**: Efficient data loading
 **Prerequisites**: Module 4 complete
-**Location**: [`modules/data/`](modules/data/)
+**Location**: [`modules/dataloader/`](modules/dataloader/)
 
 **Key Tasks**:
 - [ ] Custom `DataLoader` implementation
