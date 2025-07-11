@@ -11,6 +11,10 @@ After completing this module, you will:
 - See how architecture affects capability
 - Master forward pass inference (no training yet!)
 
+> **Note:**
+> **MLP (Multi-Layer Perceptron) is not a fundamental building block, but a use case of composing Dense layers and activations in sequence.**
+> In TinyTorch, you will learn to build MLPs by composing primitives, not as a separate module. This approach helps you see that all architectures (MLP, CNN, etc.) are just patterns of composition, not new primitives.
+
 ## 🧠 Build → Use → Understand
 
 This module follows the TinyTorch pedagogical framework:
