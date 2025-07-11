@@ -74,6 +74,8 @@ class InfoCommand(BaseCommand):
         modules = [
             ("Setup", "hello_tinytorch function", self.check_setup_status),
             ("Tensor", "basic tensor operations", self.check_tensor_status),
+            ("Layers", "neural network building blocks", self.check_layers_status),
+            ("Networks", "neural network architectures", self.check_networks_status),
             ("MLP", "multi-layer perceptron (manual)", self.check_mlp_status),
             ("CNN", "convolutional networks (basic)", self.check_cnn_status),
             ("Data", "data loading pipeline", self.check_data_status),
@@ -149,6 +151,32 @@ class InfoCommand(BaseCommand):
             t1 = Tensor([1, 2, 3])
             t2 = Tensor([4, 5, 6])
             _ = t1 + t2
+            return "✅ Implemented"
+        except (ImportError, NotImplementedError):
+            return "⏳ Not Started"
+    
+    def check_layers_status(self):
+        try:
+            from tinytorch.core.layers import Dense
+            from tinytorch.core.activations import ReLU
+            from tinytorch.core.tensor import Tensor
+            layer = Dense(3, 4)
+            activation = ReLU()
+            x = Tensor([[1, 2, 3]])
+            _ = activation(layer(x))
+            return "✅ Implemented"
+        except (ImportError, NotImplementedError):
+            return "⏳ Not Started"
+    
+    def check_networks_status(self):
+        try:
+            from tinytorch.core.networks import Sequential
+            from tinytorch.core.layers import Dense
+            from tinytorch.core.activations import ReLU, Sigmoid
+            from tinytorch.core.tensor import Tensor
+            network = Sequential([Dense(3, 4), ReLU(), Dense(4, 2), Sigmoid()])
+            x = Tensor([[1, 2, 3]])
+            _ = network(x)
             return "✅ Implemented"
         except (ImportError, NotImplementedError):
             return "⏳ Not Started"
