@@ -1,0 +1,9 @@
+project:
+  output-dir: _docs
+
+website:
+  title: "TinyTorch"
+  site-url: "https://tinytorch.github.io/TinyTorch/"
+  description: "Build ML Systems from Scratch - A hands-on systems course"
+  repo-branch: main
+  repo-url: "https://github.com/tinytorch/TinyTorch/"
