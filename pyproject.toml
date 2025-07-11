@@ -3,9 +3,69 @@ requires = ["setuptools>=64.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name="tinytorch"
-requires-python=">=3.8"
-dynamic = [ "keywords", "description", "version", "dependencies", "optional-dependencies", "readme", "license", "authors", "classifiers", "entry-points", "scripts", "urls"]
+name = "tinytorch"
+version = "0.1.0"
+description = "TinyTorch: Build ML Systems from Scratch"
+readme = "README.md"
+requires-python = ">=3.8"
+authors = [
+    {name = "TinyTorch Team", email = "team@tinytorch.ai"}
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Education",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Education",
+]
+dependencies = [
+    "numpy>=1.21.0",
+    "rich>=12.0.0",
+    "pytest>=7.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "jupyter>=1.0.0",
+    "jupyterlab>=3.0.0",
+    "black>=22.0.0",
+    "isort>=5.0.0",
+    "flake8>=4.0.0",
+    "mypy>=0.950",
+]
+
+[project.scripts]
+tito = "tinytorch.cli.main:main"
+py-to-notebook = "tinytorch.cli.tools.py_to_notebook:main"
+
+[project.urls]
+Homepage = "https://github.com/tinytorch/tinytorch"
+Documentation = "https://tinytorch.readthedocs.io"
+Repository = "https://github.com/tinytorch/tinytorch"
+Issues = "https://github.com/tinytorch/tinytorch/issues"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["tinytorch*"]
 
 [tool.uv]
 cache-keys = [{ file = "pyproject.toml" }, { file = "settings.ini" }, { file = "setup.py" }]
+
+[tool.black]
+line-length = 88
+target-version = ['py38']
+
+[tool.isort]
+profile = "black"
+line_length = 88
+
+[tool.mypy]
+python_version = "3.8"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
