@@ -1,49 +1,93 @@
 # 📚 TinyTorch Documentation
 
-Welcome to the TinyTorch documentation! This directory contains all the guides, principles, and references for building and using TinyTorch.
+Welcome to the TinyTorch documentation! This directory contains guides organized by audience and purpose.
 
-## 🎓 For Students
+## 🎯 **Find Your Documentation**
 
-**Start here if you're taking the ML Systems course:**
+### 🎓 **Students** (Taking the ML Systems Course)
+**Start here if you're learning ML systems:**
 
-- [Project Guide](students/project-guide.md) - Track your progress through all 12 modules
-- [Quickstart](../quickstart.md) - Get up and running quickly
-- [Main README](../README.md) - Project overview and introduction
+- **[Project Guide](students/project-guide.md)** - Track your progress through all 12 modules
+- **[Quickstart](../quickstart.md)** - Get up and running quickly
+- **[Main README](../README.md)** - Project overview and introduction
 
-## 🎯 Educational Philosophy
+### 👨‍🏫 **Instructors** (Teaching or Designing the Course)
+**Understanding the educational philosophy:**
 
-**Understanding how TinyTorch is designed for learning:**
+- **[Pedagogical Principles](pedagogy/pedagogical-principles.md)** - The "Build → Use → Understand" framework
+- **[Vision](pedagogy/vision.md)** - High-level course philosophy and learning approach
+- **[Testing Architecture](pedagogy/testing-architecture.md)** - Dual testing system for education
 
-- [Pedagogical Principles](pedagogy/pedagogical-principles.md) - The "Build → Use → Understand" framework
-- [Vision](pedagogy/vision.md) - High-level course philosophy and learning approach
-- [Testing Architecture](pedagogy/testing-architecture.md) - Dual testing system for education
+### 🔧 **Human Developers** (Building New Modules)
+**Creating or contributing to TinyTorch modules:**
 
-## 🔧 For Module Developers
+- **[Development Guide](development/README.md)** - Start here for complete development methodology
+- **[Module Development Guide](development/module-development-guide.md)** - Educational design and best practices
+- **[Module Creation Checklist](development/module-creation-checklist.md)** - Step-by-step process
+- **[Quick Reference](development/quick-module-reference.md)** - Commands and common patterns
 
-**Building new modules or contributing to TinyTorch:**
+### 🤖 **AI Assistants** (Development Support)
+**Coding patterns and quality enforcement:**
 
-- [Module Development Guide](development/module-development-guide.md) - Complete guide to building modules
-- [Module Generation Guide](development/module-generation-guide.md) - Automated module creation
-- [Standard Module Guide](development/standard-module-guide.md) - Module standards and conventions
-- [Quick Module Reference](development/quick-module-reference.md) - Fast reference for common tasks
+- **`.cursor/rules/`** - Specific implementation patterns, code examples, and anti-patterns
+- **Automatic guidance** during development through cursor rules
 
-## 🗂️ Documentation Structure
+## 📊 **Documentation Architecture**
 
+### **Clear Audience Separation**
 ```
 docs/
-├── pedagogy/           # Educational philosophy and principles
-├── development/        # Module development guides
-├── students/          # Student-facing documentation
-└── README.md          # This file
+├── students/           # 🎓 Course participants
+│   └── project-guide.md    # Module progression and workflow
+├── pedagogy/          # 👨‍🏫 Instructors and course designers  
+│   ├── pedagogical-principles.md  # Educational theory
+│   ├── vision.md              # Course philosophy
+│   └── testing-architecture.md   # Assessment strategy
+├── development/       # 🔧 Human module developers
+│   ├── README.md              # Development methodology
+│   ├── module-development-guide.md  # Complete guide
+│   ├── module-creation-checklist.md # Step-by-step process
+│   └── quick-module-reference.md   # Commands and patterns
+└── README.md          # 📍 This file - navigation hub
+
+.cursor/rules/         # 🤖 AI assistants (not in docs/)
+├── module-development-best-practices.mdc  # Coding patterns
+├── testing-patterns.mdc                   # Test requirements
+└── nbdev-educational-pattern.mdc          # NBDev structure
 ```
 
-## 🚀 Quick Navigation
+### **No Duplication by Design**
+- **Students**: Course navigation and module progression
+- **Instructors**: Educational philosophy and theory
+- **Human Developers**: Methodology, workflow, and educational design
+- **AI Assistants**: Specific coding patterns and implementation examples
 
-- **New to TinyTorch?** → Start with [Project Guide](students/project-guide.md)
-- **Building modules?** → Check [Module Development Guide](development/module-development-guide.md)
-- **Understanding the pedagogy?** → Read [Pedagogical Principles](pedagogy/pedagogical-principles.md)
-- **Need quick help?** → Use [Quick Module Reference](development/quick-module-reference.md)
+## 🚀 **Quick Navigation**
+
+| I am a... | I want to... | Go to... |
+|-----------|--------------|----------|
+| **Student** | Start the course | [Project Guide](students/project-guide.md) |
+| **Student** | Get unstuck on setup | [Quickstart](../quickstart.md) |
+| **Instructor** | Understand the pedagogy | [Pedagogical Principles](pedagogy/pedagogical-principles.md) |
+| **Instructor** | Design a new course | [Vision](pedagogy/vision.md) |
+| **Developer** | Build a new module | [Development Guide](development/README.md) |
+| **Developer** | Need quick help | [Quick Reference](development/quick-module-reference.md) |
+| **Contributor** | Understand the philosophy | [Pedagogical Principles](pedagogy/pedagogical-principles.md) |
+
+## 🔑 **Core Principles** (Across All Documentation)
+
+### **Educational Excellence**
+- **"Build → Use → Understand → Repeat"** - Every module follows this cycle
+- **Real-world relevance** - Connect to production ML engineering
+- **Immediate feedback** - Students see their code working
+- **Progressive complexity** - Build understanding step by step
+
+### **Real Data, Real Systems**
+- Use production datasets (CIFAR-10, ImageNet), not synthetic data
+- Include progress feedback for downloads and long operations  
+- Test with realistic scales and performance constraints
+- Think about caching, user experience, and systems concerns
 
 ---
 
-*All documentation follows the TinyTorch pedagogical principle: **Build → Use → Understand → Repeat*** 
+*All documentation follows the TinyTorch principle: **Build → Use → Understand → Repeat*** 
