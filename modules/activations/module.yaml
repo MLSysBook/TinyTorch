@@ -3,7 +3,7 @@
 
 # Basic Information
 name: "activations"
-title: "Activations - Mathematical Functions for Neural Networks"
+title: "Activations"
 description: "Implement the mathematical functions that give neural networks their power to learn complex patterns"
 version: "1.0.0"
 author: "TinyTorch Team"

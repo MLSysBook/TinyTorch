@@ -3,7 +3,7 @@
 
 # Basic Information
 name: "tensor"
-title: "Tensor - Core Data Structure"
+title: "Tensor"
 description: "Implement the fundamental data structure that powers all ML systems - N-dimensional arrays with ML-specific operations"
 version: "1.0.0"
 author: "TinyTorch Team"

@@ -3,7 +3,7 @@
 
 # Basic Information
 name: "autograd"
-title: "Autograd - Automatic Differentiation"
+title: "Autograd"
 description: "Implement automatic differentiation for neural network training - the engine that makes backpropagation possible"
 version: "0.1.0"
 author: "TinyTorch Team"

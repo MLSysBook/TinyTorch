@@ -18,7 +18,7 @@ def generate_metadata_template(module_name: str, interactive: bool = False) -> s
     # Default values
     defaults = {
         'name': module_name,
-        'title': f"{module_name.title()} - Brief Description",
+        'title': module_name.title(),  # Just the module name, capitalized
         'description': f"Implement {module_name} functionality for TinyTorch",
         'version': "1.0.0",
         'author': "TinyTorch Team",
@@ -176,7 +176,7 @@ def main():
     
     print(f"✅ Generated metadata template: {output_path}")
     print(f"📝 Please edit the file to customize the metadata for your module")
-    print(f"🧪 Test with: python bin/tito status --metadata")
+    print(f"🧪 Test with: python bin/tito module status --metadata")
 
 if __name__ == "__main__":
     main() 
