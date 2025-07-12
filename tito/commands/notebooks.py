@@ -1,5 +1,5 @@
 """
-Notebooks command for building Jupyter notebooks from Python files.
+Notebooks command for building Jupyter notebooks from Python files using Jupytext.
 """
 
 import subprocess
@@ -15,7 +15,7 @@ from .base import BaseCommand
 from ..core.exceptions import ExecutionError, ModuleNotFoundError
 
 class NotebooksCommand(BaseCommand):
-    """Command to build Jupyter notebooks from Python files."""
+    """Command to build Jupyter notebooks from Python files using Jupytext."""
     
     @property
     def name(self) -> str:
@@ -62,33 +62,31 @@ class NotebooksCommand(BaseCommand):
         return dev_files
     
     def _convert_file(self, dev_file: Path) -> Tuple[bool, str]:
-        """Convert a single Python file to notebook."""
+        """Convert a single Python file to notebook using Jupytext."""
         try:
-            py_to_notebook_tool = self.config.bin_dir / "py_to_notebook.py"
+            # Use Jupytext to convert Python file to notebook
             result = subprocess.run([
-                sys.executable, str(py_to_notebook_tool), str(dev_file)
-            ], capture_output=True, text=True, timeout=30)
+                "jupytext", "--to", "notebook", str(dev_file)
+            ], capture_output=True, text=True, timeout=30, cwd=dev_file.parent)
             
             if result.returncode == 0:
-                # Extract success message from the tool output
-                output_lines = result.stdout.strip().split('\n')
-                success_msg = output_lines[-1] if output_lines else f"{dev_file.name} → {dev_file.with_suffix('.ipynb').name}"
-                # Clean up the message
-                clean_msg = success_msg.replace('✅ ', '').replace('Converted ', '')
-                return True, clean_msg
+                notebook_file = dev_file.with_suffix('.ipynb')
+                return True, f"{dev_file.name} → {notebook_file.name}"
             else:
                 error_msg = result.stderr.strip() if result.stderr.strip() else "Conversion failed"
                 return False, error_msg
                 
         except subprocess.TimeoutExpired:
             return False, "Conversion timed out"
+        except FileNotFoundError:
+            return False, "Jupytext not found. Install with: pip install jupytext"
         except Exception as e:
             return False, f"Error: {str(e)}"
     
     def run(self, args: Namespace) -> int:
         """Execute the notebooks command."""
         self.console.print(Panel(
-            "📓 Building Notebooks from Python Files", 
+            "📓 Building Notebooks from Python Files (using Jupytext)", 
             title="Notebook Generation", 
             border_style="bright_cyan"
         ))
@@ -149,8 +147,8 @@ class NotebooksCommand(BaseCommand):
             summary_text.append("\n💡 Next steps:\n", style="bold yellow")
             summary_text.append("  • Open notebooks with: jupyter lab\n", style="white")
             summary_text.append("  • Work interactively in the notebooks\n", style="white")
-            summary_text.append("  • Export code with: tito sync\n", style="white")
-            summary_text.append("  • Run tests with: tito test\n", style="white")
+            summary_text.append("  • Export code with: tito package sync\n", style="white")
+            summary_text.append("  • Run tests with: tito module test\n", style="white")
         
         border_style = "green" if error_count == 0 else "yellow"
         self.console.print(Panel(

@@ -4,6 +4,6 @@ CLI Tools package.
 Contains utility tools used by the CLI commands.
 """
 
-from .py_to_notebook import convert_py_to_notebook
+# No tools currently - py_to_notebook removed in favor of Jupytext
 
-__all__ = ['convert_py_to_notebook'] 
+__all__ = [] 
