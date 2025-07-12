@@ -22,8 +22,8 @@ class ExportCommand(BaseCommand):
         return "Export notebook code to Python package"
 
     def add_arguments(self, parser: ArgumentParser) -> None:
-        group = parser.add_mutually_exclusive_group(required=True)
-        group.add_argument("--module", help="Export specific module (e.g., setup, tensor)")
+        group = parser.add_mutually_exclusive_group(required=False)
+        group.add_argument("module", nargs="?", help="Export specific module (e.g., setup, tensor)")
         group.add_argument("--all", action="store_true", help="Export all modules")
 
     def _get_export_target(self, module_path: Path) -> str:
@@ -87,7 +87,7 @@ class ExportCommand(BaseCommand):
         
         exports_text.append("\n💡 Next steps:\n", style="bold yellow")
         exports_text.append("  • Run: tito module test --all\n", style="white")
-        exports_text.append("  • Or: tito module test --module <name>\n", style="white")
+        exports_text.append("  • Or: tito module test <module_name>\n", style="white")
         
         console.print(Panel(exports_text, title="Export Summary", border_style="bright_green"))
 
@@ -116,7 +116,7 @@ class ExportCommand(BaseCommand):
             # Use nbdev_export for all modules  
             cmd = ["nbdev_export"]
         else:
-            console.print(Panel("[red]❌ Must specify either --module <name> or --all[/red]", 
+            console.print(Panel("[red]❌ Must specify either a module name or --all[/red]", 
                               title="Missing Arguments", border_style="red"))
             return 1
         

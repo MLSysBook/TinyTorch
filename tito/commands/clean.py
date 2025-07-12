@@ -20,7 +20,7 @@ class CleanCommand(BaseCommand):
         return "Clean up module directories (notebooks, cache, etc.)"
 
     def add_arguments(self, parser: ArgumentParser) -> None:
-        parser.add_argument("--module", help="Clean specific module only")
+        parser.add_argument("module", nargs="?", help="Clean specific module only")
         parser.add_argument("--notebooks", action="store_true", help="Remove generated notebook files")
         parser.add_argument("--cache", action="store_true", help="Remove Python cache files")
         parser.add_argument("--all", action="store_true", help="Remove notebooks and cache (default)")
