@@ -39,6 +39,8 @@ Let's get started!
 # %%
 #| default_exp core.utils
 
+# %%
+#| export
 # Setup imports and environment
 import sys
 import platform

@@ -69,33 +69,14 @@ c.Exchange.timezone = "UTC"
 c.NbGraderConfig.logfile = "nbgrader.log"
 c.NbGraderConfig.log_level = "INFO"
 
-# Custom TinyTorch Configuration
-c.TinyTorchConfig = {
-    "modules": {
-        "setup": {
-            "points": 100,
-            "difficulty": "easy",
-            "estimated_time": "1-2 hours"
-        },
-        "tensor": {
-            "points": 100,
-            "difficulty": "medium",
-            "estimated_time": "2-3 hours"
-        },
-        "activations": {
-            "points": 100,
-            "difficulty": "medium",
-            "estimated_time": "2-3 hours"
-        },
-        "layers": {
-            "points": 100,
-            "difficulty": "hard",
-            "estimated_time": "3-4 hours"
-        }
-    },
-    "grading": {
-        "partial_credit": True,
-        "late_penalty": 0.1,  # 10% per day late
-        "max_attempts": 3
-    }
-} 
+# Custom TinyTorch Configuration (stored as comments for reference)
+# Each module is worth 100 points:
+# - setup: 100 points (easy, 1-2 hours)
+# - tensor: 100 points (medium, 2-3 hours) 
+# - activations: 100 points (medium, 2-3 hours)
+# - layers: 100 points (hard, 3-4 hours)
+#
+# Grading policy:
+# - Partial credit enabled
+# - Late penalty: 10% per day
+# - Max attempts: 3 
