@@ -14,7 +14,7 @@ class CLIConfig:
     
     # Project paths
     project_root: Path
-    modules_dir: Path
+    assignments_dir: Path
     tinytorch_dir: Path
     bin_dir: Path
     
@@ -47,7 +47,7 @@ class CLIConfig:
         
         return cls(
             project_root=project_root,
-            modules_dir=project_root / 'modules',
+            assignments_dir=project_root / 'assignments' / 'source',
             tinytorch_dir=project_root / 'tinytorch',
             bin_dir=project_root / 'bin'
         )
@@ -68,8 +68,8 @@ class CLIConfig:
             issues.append("Virtual environment not activated. Run: source .venv/bin/activate")
         
         # Check required directories
-        if not self.modules_dir.exists():
-            issues.append(f"Modules directory not found: {self.modules_dir}")
+        if not self.assignments_dir.exists():
+            issues.append(f"Assignments directory not found: {self.assignments_dir}")
         
         if not self.tinytorch_dir.exists():
             issues.append(f"TinyTorch package not found: {self.tinytorch_dir}")

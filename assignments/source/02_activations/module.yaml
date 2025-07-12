@@ -1,0 +1,11 @@
+# TinyTorch Module Metadata
+# Essential system information for CLI tools and build systems
+
+name: "activations"
+title: "Activation Functions"
+description: "Neural network activation functions (ReLU, Sigmoid, Tanh)"
+
+# Dependencies - Used by CLI for module ordering and prerequisites
+dependencies:
+  prerequisites: ["tensor"]
+  enables: ["layers", "networks"] 
