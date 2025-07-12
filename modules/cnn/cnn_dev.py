@@ -54,7 +54,7 @@ from tinytorch.core.tensor import Tensor
 #| export
 import numpy as np
 from typing import List, Tuple, Optional
-from .tensor import Tensor
+from tinytorch.core.tensor import Tensor
 
 # Setup and imports (for development)
 import matplotlib.pyplot as plt

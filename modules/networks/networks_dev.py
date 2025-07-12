@@ -65,10 +65,10 @@ import matplotlib.patches as patches
 from matplotlib.patches import FancyBboxPatch, ConnectionPatch
 import seaborn as sns
 
-# Import our building blocks
+# Import all the building blocks we need
 from tinytorch.core.tensor import Tensor
 from tinytorch.core.layers import Dense
-from tinytorch.core.activations import ReLU, Sigmoid, Tanh
+from tinytorch.core.activations import ReLU, Sigmoid, Tanh, Softmax
 
 print("🔥 TinyTorch Networks Module")
 print(f"NumPy version: {np.__version__}")
@@ -849,10 +849,13 @@ def create_classification_network(input_size: int, num_classes: int,
                                 hidden_sizes: List[int] = None) -> Sequential:
     """Create a network for classification tasks."""
     if hidden_sizes is None:
-        hidden_sizes = [input_size * 2]
+        hidden_sizes = [input_size // 2]  # Use input_size // 2 as default
+    
+    # Choose appropriate output activation
+    output_activation = Sigmoid if num_classes == 1 else Softmax
     
     return create_mlp(input_size, hidden_sizes, num_classes, 
-                     activation=ReLU, output_activation=Sigmoid)
+                     activation=ReLU, output_activation=output_activation)
 
 # %%
 #| export
@@ -894,21 +897,11 @@ def create_regression_network(input_size: int, output_size: int = 1,
                              hidden_sizes: List[int] = None) -> Sequential:
     """Create a network for regression tasks."""
     if hidden_sizes is None:
-        hidden_sizes = [input_size * 2]
+        hidden_sizes = [input_size // 2]  # Use input_size // 2 as default
     
-    # Create layers without output activation for regression
-    layers = []
-    current_size = input_size
-    
-    for hidden_size in hidden_sizes:
-        layers.append(Dense(input_size=current_size, output_size=hidden_size))
-        layers.append(ReLU())
-        current_size = hidden_size
-    
-    # Add output layer without activation
-    layers.append(Dense(input_size=current_size, output_size=output_size))
-    
-    return Sequential(layers)
+    # Create MLP with Tanh output activation for regression
+    return create_mlp(input_size, hidden_sizes, output_size, 
+                     activation=ReLU, output_activation=Tanh)
 
 # %% [markdown]
 """

@@ -54,6 +54,8 @@ from tinytorch.core.layers import Dense, Conv2D
 # %%
 #| default_exp core.activations
 
+__all__ = ['ReLU', 'Sigmoid', 'Tanh', 'Softmax']
+
 # Setup and imports
 import math
 import numpy as np
@@ -713,3 +715,86 @@ print("✅ Tanh activation function")
 print("✅ Activation comparison and usage")
 print("✅ Real-world network integration")
 print("\n🚀 Ready to build layers in the next module!") 
+
+# %%
+#| export
+class Softmax:
+    """
+    Softmax Activation: f(x) = exp(x) / sum(exp(x))
+    
+    Converts logits to probability distribution. Used for multi-class classification.
+    Output sums to 1.0 across the last dimension.
+    
+    TODO: Implement Softmax activation function.
+    
+    APPROACH:
+    1. Extract the numpy array from the input tensor
+    2. Apply softmax formula: exp(x) / sum(exp(x))
+    3. Handle numerical stability (subtract max for stability)
+    4. Return a new Tensor with the result
+    
+    EXAMPLE:
+    Input: Tensor([[1.0, 2.0, 3.0]])
+    Output: Tensor([[0.09, 0.24, 0.67]]) (sums to 1.0)
+    
+    HINTS:
+    - Use x.data to get the numpy array
+    - For stability: x_stable = x - np.max(x, axis=-1, keepdims=True)
+    - Then: exp_x = np.exp(x_stable)
+    - Finally: softmax = exp_x / np.sum(exp_x, axis=-1, keepdims=True)
+    """
+    
+    def forward(self, x: Tensor) -> Tensor:
+        """
+        Apply Softmax: f(x) = exp(x) / sum(exp(x))
+        
+        Args:
+            x: Input tensor (logits)
+            
+        Returns:
+            Output tensor with Softmax applied (probabilities)
+            
+        TODO: Implement numerically stable softmax
+        
+        STEP-BY-STEP:
+        1. Get the numpy array: data = x.data
+        2. Subtract max for stability: stable = data - np.max(data, axis=-1, keepdims=True)
+        3. Compute exponentials: exp_vals = np.exp(stable)
+        4. Normalize: result = exp_vals / np.sum(exp_vals, axis=-1, keepdims=True)
+        5. Return Tensor(result)
+        
+        EXAMPLE:
+        Input: Tensor([[1.0, 2.0, 3.0]])
+        Expected: Tensor([[0.09, 0.24, 0.67]]) (approximately, sums to 1.0)
+        
+        HINTS:
+        - axis=-1 means along the last dimension
+        - keepdims=True preserves dimensions for broadcasting
+        - This creates a probability distribution that sums to 1.0
+        """
+        raise NotImplementedError("Student implementation required")
+    
+    def __call__(self, x: Tensor) -> Tensor:
+        return self.forward(x)
+
+# %%
+#| hide
+#| export
+class Softmax:
+    """Softmax Activation: f(x) = exp(x) / sum(exp(x))"""
+    
+    def forward(self, x: Tensor) -> Tensor:
+        """Apply Softmax with numerical stability"""
+        # Subtract max for numerical stability
+        x_stable = x.data - np.max(x.data, axis=-1, keepdims=True)
+        
+        # Compute exponentials
+        exp_vals = np.exp(x_stable)
+        
+        # Normalize to get probabilities
+        result = exp_vals / np.sum(exp_vals, axis=-1, keepdims=True)
+        
+        return Tensor(result)
+    
+    def __call__(self, x: Tensor) -> Tensor:
+        return self.forward(x) 
