@@ -6,7 +6,7 @@ from argparse import ArgumentParser, Namespace
 from rich.panel import Panel
 
 from .base import BaseCommand
-from .sync import SyncCommand
+from .export import ExportCommand
 from .reset import ResetCommand
 from .nbdev import NbdevCommand
 
@@ -26,13 +26,13 @@ class PackageCommand(BaseCommand):
             metavar='SUBCOMMAND'
         )
         
-        # Sync subcommand
-        sync_parser = subparsers.add_parser(
-            'sync',
+        # Export subcommand
+        export_parser = subparsers.add_parser(
+            'export',
             help='Export notebook code to Python package'
         )
-        sync_cmd = SyncCommand(self.config)
-        sync_cmd.add_arguments(sync_parser)
+        export_cmd = ExportCommand(self.config)
+        export_cmd.add_arguments(export_parser)
         
         # Reset subcommand
         reset_parser = subparsers.add_parser(
@@ -57,11 +57,11 @@ class PackageCommand(BaseCommand):
             console.print(Panel(
                 "[bold cyan]Package Commands[/bold cyan]\n\n"
                 "Available subcommands:\n"
-                "  • [bold]sync[/bold]   - Export notebook code to Python package\n"
-                "  • [bold]reset[/bold]  - Reset tinytorch package to clean state\n"
-                "  • [bold]nbdev[/bold]  - nbdev notebook development commands\n\n"
+                "  • [bold]export[/bold]  - Export notebook code to Python package\n"
+                "  • [bold]reset[/bold]   - Reset tinytorch package to clean state\n"
+                "  • [bold]nbdev[/bold]   - nbdev notebook development commands\n\n"
                 "[dim]Examples:[/dim]\n"
-                "[dim]  tito package sync --module tensor[/dim]\n"
+                "[dim]  tito package export --module tensor[/dim]\n"
                 "[dim]  tito package reset --force[/dim]\n"
                 "[dim]  tito package nbdev --export[/dim]",
                 title="Package Command Group",
@@ -70,8 +70,8 @@ class PackageCommand(BaseCommand):
             return 0
         
         # Execute the appropriate subcommand
-        if args.package_command == 'sync':
-            cmd = SyncCommand(self.config)
+        if args.package_command == 'export':
+            cmd = ExportCommand(self.config)
             return cmd.execute(args)
         elif args.package_command == 'reset':
             cmd = ResetCommand(self.config)

@@ -11,22 +11,22 @@ from rich.text import Text
 
 from .base import BaseCommand
 
-class SyncCommand(BaseCommand):
+class ExportCommand(BaseCommand):
     @property
     def name(self) -> str:
-        return "sync"
+        return "export"
 
     @property
     def description(self) -> str:
         return "Export notebook code to Python package"
 
     def add_arguments(self, parser: ArgumentParser) -> None:
-        parser.add_argument("--module", help="Sync specific module (e.g., setup, tensor)")
+        parser.add_argument("--module", help="Export specific module (e.g., setup, tensor)")
 
     def run(self, args: Namespace) -> int:
         console = self.console
         
-        # Determine what to sync
+        # Determine what to export
         if hasattr(args, 'module') and args.module:
             module_path = f"modules/{args.module}"
             if not Path(module_path).exists():
@@ -34,14 +34,14 @@ class SyncCommand(BaseCommand):
                                   title="Module Not Found", border_style="red"))
                 return 1
             
-            console.print(Panel(f"🔄 Synchronizing Module: {args.module}", 
+            console.print(Panel(f"🔄 Exporting Module: {args.module}", 
                                title="nbdev Export", border_style="bright_cyan"))
             console.print(f"🔄 Exporting {args.module} notebook to tinytorch package...")
             
             # Use nbdev_export with --path for specific module
             cmd = ["nbdev_export", "--path", module_path]
         else:
-            console.print(Panel("🔄 Synchronizing All Notebooks to Package", 
+            console.print(Panel("🔄 Exporting All Notebooks to Package", 
                                title="nbdev Export", border_style="bright_cyan"))
             console.print("🔄 Exporting all notebook code to tinytorch package...")
             

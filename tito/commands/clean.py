@@ -144,7 +144,7 @@ class CleanCommand(BaseCommand):
             result_text.append("\n💡 Next steps:\n", style="bold yellow")
             result_text.append("  • Run: tito module notebooks      - Regenerate notebooks\n", style="white")
             result_text.append("  • Run: tito module test --all     - Test all modules\n", style="white")
-            result_text.append("  • Run: tito package sync          - Export to package\n", style="white")
+            result_text.append("  • Run: tito package export        - Export to package\n", style="white")
         
         border_style = "green" if error_count == 0 else "yellow"
         console.print(Panel(result_text, title="Cleanup Complete", border_style=border_style))

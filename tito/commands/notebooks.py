@@ -147,7 +147,7 @@ class NotebooksCommand(BaseCommand):
             summary_text.append("\n💡 Next steps:\n", style="bold yellow")
             summary_text.append("  • Open notebooks with: jupyter lab\n", style="white")
             summary_text.append("  • Work interactively in the notebooks\n", style="white")
-            summary_text.append("  • Export code with: tito package sync\n", style="white")
+            summary_text.append("  • Export code with: tito package export\n", style="white")
             summary_text.append("  • Run tests with: tito module test\n", style="white")
         
         border_style = "green" if error_count == 0 else "yellow"
