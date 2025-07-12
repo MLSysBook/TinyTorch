@@ -5,6 +5,7 @@ Status command for TinyTorch CLI: checks status of all modules in modules/ direc
 import subprocess
 import sys
 import yaml
+import re
 from argparse import ArgumentParser, Namespace
 from pathlib import Path
 from rich.panel import Panel
@@ -25,6 +26,27 @@ class StatusCommand(BaseCommand):
     def add_arguments(self, parser: ArgumentParser) -> None:
         parser.add_argument("--details", action="store_true", help="Show detailed file structure")
         parser.add_argument("--metadata", action="store_true", help="Show module metadata information")
+
+    def _get_export_target(self, module_path: Path) -> str:
+        """
+        Read the actual export target from the dev file's #| default_exp directive.
+        Same logic as the export command.
+        """
+        dev_file = module_path / f"{module_path.name}_dev.py"
+        if not dev_file.exists():
+            return "unknown"
+        
+        try:
+            with open(dev_file, 'r', encoding='utf-8') as f:
+                content = f.read()
+                # Look for #| default_exp directive
+                match = re.search(r'#\|\s*default_exp\s+([^\n\r]+)', content)
+                if match:
+                    return match.group(1).strip()
+        except Exception:
+            pass
+        
+        return "unknown"
 
     def run(self, args: Namespace) -> int:
         console = self.console
@@ -59,7 +81,7 @@ class StatusCommand(BaseCommand):
         
         if args.metadata:
             status_table.add_column("Export", width=15, justify="center")
-            status_table.add_column("Components", width=15, justify="center")
+            status_table.add_column("Prerequisites", width=15, justify="center")
         
         # Check each module
         modules_status = []
@@ -80,9 +102,14 @@ class StatusCommand(BaseCommand):
             # Add metadata columns if requested
             if args.metadata:
                 metadata = status.get('metadata', {})
-                row.append(metadata.get('exports_to', 'unknown'))
-                components = metadata.get('components', [])
-                row.append(f"{len(components)} items" if components else 'none')
+                # Get export target from dev file (source of truth)
+                export_target = self._get_export_target(module_dir)
+                row.append(export_target if export_target != "unknown" else 'unknown')
+                
+                # Show prerequisites from dependencies
+                deps = metadata.get('dependencies', {})
+                prereqs = deps.get('prerequisites', [])
+                row.append(', '.join(prereqs) if prereqs else 'none')
             
             status_table.add_row(*row)
         
@@ -222,9 +249,11 @@ class StatusCommand(BaseCommand):
         if metadata.get('description'):
             console.print(f"📝 {metadata['description']}")
         
-        # Export info (no longer showing static status)
-        if metadata.get('exports_to'):
-            console.print(f"📦 Exports to: {metadata['exports_to']}")
+        # Export info (read from dev file - source of truth)
+        module_path = Path(f"modules/{module_name}")
+        export_target = self._get_export_target(module_path)
+        if export_target != "unknown":
+            console.print(f"📦 Exports to: {export_target}")
         
         # Dependencies
         if metadata.get('dependencies'):

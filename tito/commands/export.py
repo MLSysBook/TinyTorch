@@ -1,9 +1,10 @@
 """
-Sync command for TinyTorch CLI: exports notebook code to Python package using nbdev.
+Export command for TinyTorch CLI: exports notebook code to Python package using nbdev.
 """
 
 import subprocess
 import sys
+import re
 from argparse import ArgumentParser, Namespace
 from pathlib import Path
 from rich.panel import Panel
@@ -22,6 +23,71 @@ class ExportCommand(BaseCommand):
 
     def add_arguments(self, parser: ArgumentParser) -> None:
         parser.add_argument("--module", help="Export specific module (e.g., setup, tensor)")
+
+    def _get_export_target(self, module_path: Path) -> str:
+        """
+        Read the actual export target from the dev file's #| default_exp directive.
+        This is the source of truth, not the YAML file.
+        """
+        dev_file = module_path / f"{module_path.name}_dev.py"
+        if not dev_file.exists():
+            return "unknown"
+        
+        try:
+            with open(dev_file, 'r', encoding='utf-8') as f:
+                content = f.read()
+                # Look for #| default_exp directive with more flexible regex
+                match = re.search(r'#\|\s*default_exp\s+([^\n\r]+)', content)
+                if match:
+                    return match.group(1).strip()
+        except Exception as e:
+            # Debug: print the error for troubleshooting
+            print(f"Debug: Error reading {dev_file}: {e}")
+        
+        return "unknown"
+
+    def _show_export_details(self, console, module_name: str = None):
+        """Show detailed export information including where each module exports to."""
+        exports_text = Text()
+        exports_text.append("📦 Export Details:\n", style="bold cyan")
+        
+        if module_name:
+            # Single module export
+            module_path = Path(f"modules/{module_name}")
+            export_target = self._get_export_target(module_path)
+            if export_target != "unknown":
+                target_file = export_target.replace('.', '/') + '.py'
+                exports_text.append(f"  🔄 {module_name} → tinytorch/{target_file}\n", style="green")
+                exports_text.append(f"     Source: modules/{module_name}/{module_name}_dev.py\n", style="dim")
+                exports_text.append(f"     Target: tinytorch/{target_file}\n", style="dim")
+            else:
+                exports_text.append(f"  ❓ {module_name} → export target not found\n", style="yellow")
+        else:
+            # All modules export
+            modules_dir = Path("modules")
+            if modules_dir.exists():
+                exclude_dirs = {'.quarto', '__pycache__', '.git', '.pytest_cache'}
+                for module_dir in modules_dir.iterdir():
+                    if module_dir.is_dir() and module_dir.name not in exclude_dirs:
+                        export_target = self._get_export_target(module_dir)
+                        if export_target != "unknown":
+                            target_file = export_target.replace('.', '/') + '.py'
+                            exports_text.append(f"  🔄 {module_dir.name} → tinytorch/{target_file}\n", style="green")
+        
+        # Show what was actually created
+        exports_text.append("\n📁 Generated Files:\n", style="bold cyan")
+        tinytorch_path = Path("tinytorch")
+        if tinytorch_path.exists():
+            for py_file in tinytorch_path.rglob("*.py"):
+                if py_file.name != "__init__.py" and py_file.stat().st_size > 100:  # Non-empty files
+                    rel_path = py_file.relative_to(tinytorch_path)
+                    exports_text.append(f"  ✅ tinytorch/{rel_path}\n", style="green")
+        
+        exports_text.append("\n💡 Next steps:\n", style="bold yellow")
+        exports_text.append("  • Run: tito module test --all\n", style="white")
+        exports_text.append("  • Or: tito module test --module <name>\n", style="white")
+        
+        console.print(Panel(exports_text, title="Export Summary", border_style="bright_green"))
 
     def run(self, args: Namespace) -> int:
         console = self.console
@@ -55,23 +121,8 @@ class ExportCommand(BaseCommand):
                 console.print(Panel("[green]✅ Successfully exported notebook code to tinytorch package![/green]", 
                                   title="Export Success", border_style="green"))
                 
-                # Show what was exported
-                exports_text = Text()
-                exports_text.append("📦 Exported modules:\n", style="bold cyan")
-                
-                # Check for exported files
-                tinytorch_path = Path("tinytorch")
-                if tinytorch_path.exists():
-                    for py_file in tinytorch_path.rglob("*.py"):
-                        if py_file.name != "__init__.py" and py_file.stat().st_size > 100:  # Non-empty files
-                            rel_path = py_file.relative_to(tinytorch_path)
-                            exports_text.append(f"  ✅ tinytorch/{rel_path}\n", style="green")
-                
-                exports_text.append("\n💡 Next steps:\n", style="bold yellow")
-                exports_text.append("  • Run: tito test --module setup\n", style="white")
-                exports_text.append("  • Or: tito test --all\n", style="white")
-                
-                console.print(Panel(exports_text, title="Export Summary", border_style="bright_green"))
+                # Show detailed export information
+                self._show_export_details(console, args.module if hasattr(args, 'module') else None)
                 
             else:
                 error_msg = result.stderr.strip() if result.stderr else "Unknown error"
@@ -84,7 +135,7 @@ class ExportCommand(BaseCommand):
                 help_text.append("  • Missing #| default_exp directive in notebook\n", style="white")
                 help_text.append("  • Syntax errors in exported code\n", style="white")
                 help_text.append("  • Missing settings.ini configuration\n", style="white")
-                help_text.append("\n🔧 Run 'tito doctor' for detailed diagnosis", style="cyan")
+                help_text.append("\n🔧 Run 'tito system doctor' for detailed diagnosis", style="cyan")
                 
                 console.print(Panel(help_text, title="Troubleshooting", border_style="yellow"))
                 
