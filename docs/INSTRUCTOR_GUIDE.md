@@ -72,6 +72,35 @@ python -c "from tinytorch.core.activations import ReLU; print(ReLU()([-1, 0, 1])
 - **01_tensor**: Tensor arithmetic (when remaining tests pass)
 - **Future modules**: Autograd, training, optimization
 
+## 🛠️ **Instructor Workflow** (Solution → Student Version)
+
+### **Step 1: Create/Edit Solution**
+```bash
+cd modules/00_setup
+jupyter lab setup_dev.py         # Edit instructor solution
+```
+
+### **Step 2: Test Solution**
+```bash
+python -m pytest modules/00_setup/tests/ -v  # Verify solution works
+```
+
+### **Step 3: Generate Student Version**
+```bash
+tito nbgrader generate 00_setup   # Create student assignment
+```
+
+### **Step 4: Release to Students**
+```bash
+tito nbgrader release 00_setup    # Deploy to student environment
+```
+
+### **Step 5: Collect & Grade**
+```bash
+tito nbgrader collect 00_setup    # Collect submissions
+tito nbgrader autograde 00_setup  # Auto-grade with tests
+```
+
 ## 🛠️ **Student Workflow** (5 Simple Steps)
 
 ### **Step 1: Open Module**
@@ -140,10 +169,19 @@ tito module export XX         # Export module to package
 jupyter lab XX_dev.py         # Open module for development
 ```
 
+### **NBGrader Workflow (Instructor → Student)**
+```bash
+tito nbgrader generate XX     # Generate student version from instructor solution
+tito nbgrader generate --all  # Generate all student assignments
+tito nbgrader status          # Check assignment status
+tito nbgrader release XX      # Release assignment to students
+tito nbgrader collect XX      # Collect student submissions
+tito nbgrader autograde XX    # Auto-grade submissions
+```
+
 ### **Student Help**
 ```bash
 cat modules/XX/README.md      # Module overview
-tito nbgrader generate XX     # Generate student version
 tito package reset            # Reset package state
 ```
 
