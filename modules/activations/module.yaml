@@ -1,101 +1,28 @@
 # TinyTorch Module Metadata
-# This file contains structured information about the module for CLI tools and documentation
+# Essential system information for CLI tools and build systems
 
-# Basic Information
 name: "activations"
 title: "Activations"
-description: "Implement the mathematical functions that give neural networks their power to learn complex patterns"
+description: "Neural network activation functions (ReLU, Sigmoid, Tanh)"
+status: "complete"  # complete, in_progress, not_started
 version: "1.0.0"
-author: "TinyTorch Team"
-last_updated: "2024-12-19"
-
-# Module Status
-status: "complete"  # complete, in_progress, not_started, deprecated
-implementation_status: "stable"  # stable, beta, alpha, experimental
-
-# Learning Information
-learning_objectives:
-  - "Understand why activation functions are essential for neural networks"
-  - "Implement the three most important activation functions: ReLU, Sigmoid, and Tanh"
-  - "Test functions with various inputs to understand their behavior"
-  - "Grasp the mathematical properties that make each function useful"
-
-key_concepts:
-  - "Nonlinearity"
-  - "Activation functions"
-  - "Mathematical properties"
-  - "Function composition"
-  - "Neural network foundations"
 
 # Dependencies
 dependencies:
   prerequisites: ["setup", "tensor"]
-  builds_on: ["tensor"]
   enables: ["layers", "networks"]
 
-# Educational Metadata
-difficulty: "beginner"  # beginner, intermediate, advanced
-estimated_time: "2-3 hours"
-pedagogical_pattern: "Build → Use → Understand"
-
-# Implementation Details
-components:
-  - name: "ReLU"
-    type: "function"
-    description: "Rectified Linear Unit: f(x) = max(0, x)"
-    status: "complete"
-  
-  - name: "Sigmoid"
-    type: "function"
-    description: "Sigmoid function: f(x) = 1 / (1 + e^(-x))"
-    status: "complete"
-  
-  - name: "Tanh"
-    type: "function"
-    description: "Hyperbolic tangent: f(x) = tanh(x)"
-    status: "complete"
-
-# Package Export Information
+# Package Export
 exports_to: "tinytorch.core.activations"
-export_directive: "core.activations"
-
-# Testing Information
-test_coverage: "comprehensive"  # comprehensive, partial, minimal, none
-test_count: 12
-test_categories:
-  - "ReLU function behavior"
-  - "Sigmoid function behavior"
-  - "Tanh function behavior"
-  - "Edge cases and numerical stability"
-  - "Function properties"
-  - "Visualization tests"
 
 # File Structure
-required_files:
-  - "activations_dev.py"
-  - "activations_dev.ipynb"
-  - "tests/test_activations.py"
-  - "README.md"
+files:
+  dev_file: "activations_dev.py"
+  test_file: "tests/test_activations.py"
+  readme: "README.md"
 
-# Systems Focus
-systems_concepts:
-  - "Numerical stability"
-  - "Mathematical implementation"
-  - "Function design patterns"
-  - "Visualization techniques"
-  - "Testing mathematical functions"
-
-# Real-world Applications
-applications:
-  - "Neural network nonlinearity"
-  - "Hidden layer transformations"
-  - "Output layer activations"
-  - "Gradient flow control"
-
-# Next Steps
-next_modules: ["layers", "networks"]
-completion_criteria:
-  - "All tests pass"
-  - "Can visualize activation functions"
-  - "Understand nonlinearity importance"
-  - "Ready for layer composition" 
+# Components
+components:
+  - "ReLU"
+  - "Sigmoid" 
+  - "Tanh" 
