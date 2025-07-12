@@ -38,9 +38,9 @@ class TestCommand(BaseCommand):
             failed_modules = []
             
             # Find all modules with tests
-            source_dir = Path("assignments/source")
+            source_dir = Path("modules/source")
             if not source_dir.exists():
-                console.print(Panel("[red]❌ assignments/source/ directory not found[/red]", 
+                console.print(Panel("[red]❌ modules/source/ directory not found[/red]", 
                                   title="Error", border_style="red"))
                 return 1
             
@@ -56,12 +56,13 @@ class TestCommand(BaseCommand):
                     else:
                         short_name = module_name
                     
-                    test_file = module_dir / "tests" / f"test_{short_name}.py"
-                    if test_file.exists():
+                    # Check for centralized test file
+                    centralized_test = Path("tests") / f"test_{short_name}.py"
+                    if centralized_test.exists():
                         existing_tests.append(module_dir.name)
             
             if not existing_tests:
-                console.print(Panel("[yellow]⚠️  No test files found in assignments/source/[/yellow]", 
+                console.print(Panel("[yellow]⚠️  No test files found in tests/ directory[/yellow]", 
                                   title="No Tests", border_style="yellow"))
                 return 0
             
@@ -87,7 +88,7 @@ class TestCommand(BaseCommand):
                     else:
                         short_name = module
                     
-                    test_file = f"assignments/source/{module}/tests/test_{short_name}.py"
+                    test_file = f"tests/test_{short_name}.py"
                     try:
                         result = subprocess.run([sys.executable, "-m", "pytest", test_file, "-v"], 
                                               capture_output=True, text=True, timeout=300)
@@ -125,7 +126,7 @@ class TestCommand(BaseCommand):
             else:
                 short_name = module_name
             
-            test_file = f"assignments/source/{args.module}/tests/test_{short_name}.py"
+            test_file = f"tests/test_{short_name}.py"
             
             console.print(Panel(f"🧪 Running tests for module: [bold cyan]{args.module}[/bold cyan]", 
                               title="Single Module Test", border_style="bright_cyan"))
@@ -170,7 +171,7 @@ class TestCommand(BaseCommand):
         
         else:
             # List available modules
-            source_dir = Path("assignments/source")
+            source_dir = Path("modules/source")
             if source_dir.exists():
                 available_modules = []
                 for module_dir in source_dir.iterdir():
@@ -192,6 +193,6 @@ class TestCommand(BaseCommand):
                                   f"[dim]For all modules: tito module test --all[/dim]", 
                                   title="Module Required", border_style="red"))
             else:
-                console.print(Panel("[red]❌ No assignments/source directory found[/red]", 
+                console.print(Panel("[red]❌ No modules/source directory found[/red]", 
                                   title="Error", border_style="red"))
             return 1 
