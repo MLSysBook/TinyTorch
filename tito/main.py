@@ -59,6 +59,8 @@ class TinyTorchCLI:
             'module': ModuleCommand,
             'package': PackageCommand,
             'nbgrader': NBGraderCommand,
+            # Convenience commands
+            'export': ExportCommand,
         }
     
     def create_parser(self) -> argparse.ArgumentParser:
@@ -77,7 +79,8 @@ Command Groups:
 Examples:
   tito system info              Show system information
   tito module status --metadata Module status with metadata
-  tito package export           Export notebooks to package
+  tito export 01_tensor         Export specific module to package
+  tito export --all             Export all modules to package
   tito nbgrader generate setup  Generate assignment from setup module
             """
         )
@@ -174,7 +177,8 @@ Examples:
                     "[bold]Quick Start:[/bold]\n"
                     "  [dim]tito system info[/dim]              - Show system information\n"
                     "  [dim]tito module status --metadata[/dim] - Module status with metadata\n"
-                    "  [dim]tito package export[/dim]           - Export notebooks to package\n"
+                    "  [dim]tito export 01_tensor[/dim]         - Export specific module to package\n"
+                    "  [dim]tito export --all[/dim]             - Export all modules to package\n"
                     "  [dim]tito nbgrader generate setup[/dim]  - Generate assignment from setup module\n\n"
                     "[bold]Get Help:[/bold]\n"
                     "  [dim]tito system[/dim]                   - Show system subcommands\n"

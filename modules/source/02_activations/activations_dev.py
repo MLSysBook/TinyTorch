@@ -10,25 +10,26 @@
 
 # %% [markdown]
 """
-# Module 3: Activation Functions - The Spark of Intelligence
+# Module 2: Activations - Nonlinearity in Neural Networks
 
-**Learning Goals:**
+Welcome to the Activations module! This is where neural networks get their power through nonlinearity.
+
+## Learning Goals
 - Understand why activation functions are essential for neural networks
-- Implement four fundamental activation functions from scratch
-- Learn the mathematical properties and use cases of each activation
-- Visualize activation function behavior and understand their impact
+- Implement the four most important activation functions: ReLU, Sigmoid, Tanh, and Softmax
+- Visualize how activations transform data and enable complex learning
+- See how activations work with layers to build powerful networks
+- Master the NBGrader workflow with comprehensive testing
 
-**Why This Matters:**
-Without activation functions, neural networks would just be linear transformations - no matter how many layers you stack, you'd only get linear relationships. Activation functions introduce the nonlinearity that allows neural networks to learn complex patterns and approximate any function.
-
-**Real-World Context:**
-Every neural network you've heard of - from image recognition to language models - relies on activation functions. Understanding them deeply is crucial for designing effective architectures and debugging training issues.
+## Build → Use → Understand
+1. **Build**: Activation functions that add nonlinearity
+2. **Use**: Transform tensors and see immediate results
+3. **Understand**: How nonlinearity enables complex pattern learning
 """
 
-# %%
+# %% nbgrader={"grade": false, "grade_id": "activations-imports", "locked": false, "schema_version": 3, "solution": false, "task": false}
 #| default_exp core.activations
 
-# %%
 #| export
 import math
 import numpy as np
@@ -37,10 +38,15 @@ import os
 import sys
 from typing import Union, List
 
-# Import our Tensor class from the main package (rock solid foundation)
-from tinytorch.core.tensor import Tensor
+# Import our Tensor class - try from package first, then from local module
+try:
+    from tinytorch.core.tensor import Tensor
+except ImportError:
+    # For development, import from local tensor module
+    sys.path.append(os.path.join(os.path.dirname(__file__), '..', '01_tensor'))
+    from tensor_dev import Tensor
 
-# %%
+# %% nbgrader={"grade": false, "grade_id": "activations-setup", "locked": false, "schema_version": 3, "solution": false, "task": false}
 #| hide
 #| export
 def _should_show_plots():
@@ -57,7 +63,7 @@ def _should_show_plots():
     # Show plots in development mode (when not in test mode)
     return not is_pytest
 
-# %%
+# %% nbgrader={"grade": false, "grade_id": "activations-visualization", "locked": false, "schema_version": 3, "solution": false, "task": false}
 #| hide
 #| export
 def visualize_activation_function(activation_fn, name: str, x_range: tuple = (-5, 5), num_points: int = 100):
@@ -109,6 +115,59 @@ def visualize_activation_on_data(activation_fn, name: str, data: Tensor):
 
 # %% [markdown]
 """
+## 📦 Where This Code Lives in the Final Package
+
+**Learning Side:** You work in `modules/source/02_activations/activations_dev.py`  
+**Building Side:** Code exports to `tinytorch.core.activations`
+
+```python
+# Final package structure:
+from tinytorch.core.activations import ReLU, Sigmoid, Tanh, Softmax  # All activations together!
+from tinytorch.core.tensor import Tensor  # The foundation
+from tinytorch.core.layers import Dense, Conv2D  # Coming next!
+```
+
+**Why this matters:**
+- **Learning:** Focused modules for deep understanding
+- **Production:** Proper organization like PyTorch's `torch.nn.functional`
+- **Consistency:** All activation functions live together in `core.activations`
+- **Integration:** Works seamlessly with tensors and layers
+"""
+
+# %% [markdown]
+"""
+## 🧠 The Mathematical Foundation of Nonlinearity
+
+### The Universal Approximation Theorem
+**Key Insight:** Neural networks with nonlinear activation functions can approximate any continuous function!
+
+```
+Without activation: f(x) = W₃(W₂(W₁x + b₁) + b₂) + b₃ = Wx + b (still linear!)
+With activation: f(x) = W₃σ(W₂σ(W₁x + b₁) + b₂) + b₃ (nonlinear!)
+```
+
+### Why Nonlinearity is Critical
+- **Linear Limitations**: Without activations, any deep network collapses to a single linear transformation
+- **Feature Learning**: Nonlinear functions create complex decision boundaries
+- **Representation Power**: Each layer can learn different levels of abstraction
+- **Biological Inspiration**: Neurons fire (activate) only above certain thresholds
+
+### Mathematical Properties We Care About
+- **Differentiability**: For gradient-based optimization
+- **Computational Efficiency**: Fast forward and backward passes
+- **Numerical Stability**: Avoiding vanishing/exploding gradients
+- **Sparsity**: Some activations (like ReLU) produce sparse representations
+
+### Connection to Real ML Systems
+Every major framework has these same activations:
+- **PyTorch**: `torch.nn.ReLU()`, `torch.nn.Sigmoid()`, etc.
+- **TensorFlow**: `tf.nn.relu()`, `tf.nn.sigmoid()`, etc.
+- **JAX**: `jax.nn.relu()`, `jax.nn.sigmoid()`, etc.
+- **TinyTorch**: `tinytorch.core.activations.ReLU()` (what we're building!)
+"""
+
+# %% [markdown]
+"""
 ## Step 1: What is an Activation Function?
 
 ### Definition
@@ -134,7 +193,7 @@ Think of activation functions as **decision makers** at each neuron:
 - **Softmax**: "Convert to probabilities that sum to 1"
 
 ### Connection to Previous Modules
-In Module 2 (Layers), we learned how to transform data through linear operations (matrix multiplication + bias). Now we add the nonlinear activation functions that make neural networks powerful.
+In Module 1 (Tensor), we learned how to store and manipulate data. Now we add the nonlinear functions that make neural networks powerful.
 """
 
 # %% [markdown]
@@ -163,12 +222,25 @@ f(x) = max(0, x)
 ReLU is like a **one-way valve** - it only lets positive "pressure" through, blocking negative values completely.
 
 ### When to Use ReLU
-- **Hidden layers** in most neural networks
-- **Convolutional layers** in image processing
-- **When you want sparse activations**
+- **Hidden layers** in most neural networks (90% of cases)
+- **Convolutional layers** in image processing (CNNs)
+- **When you want sparse activations** (many zeros)
+- **Deep networks** (doesn't suffer from vanishing gradients)
+
+### Real-World Applications
+- **Image Classification**: ResNet, VGG, AlexNet all use ReLU
+- **Object Detection**: YOLO, R-CNN use ReLU in backbone networks
+- **Natural Language Processing**: Transformer models use ReLU in feedforward layers
+- **Recommendation Systems**: Deep collaborative filtering with ReLU
+
+### Mathematical Properties
+- **Derivative**: f'(x) = 1 if x > 0, else 0
+- **Range**: [0, ∞)
+- **Sparsity**: Outputs exactly 0 for negative inputs
+- **Computational Cost**: O(1) - just a max operation
 """
 
-# %%
+# %% nbgrader={"grade": false, "grade_id": "relu-class", "locked": false, "schema_version": 3, "solution": true, "task": false}
 #| export
 class ReLU:
     """
@@ -197,738 +269,455 @@ class ReLU:
         - Remember to return a new Tensor object
         - The shape should remain the same as input
         """
-        raise NotImplementedError("Student implementation required")
-    
-    def __call__(self, x: Tensor) -> Tensor:
-        """Allow calling the activation like a function: relu(x)"""
-        return self.forward(x)
-
-# %%
-#| hide
-#| export
-class ReLU:
-    """ReLU Activation: f(x) = max(0, x)"""
-    
-    def forward(self, x: Tensor) -> Tensor:
+        ### BEGIN SOLUTION
         result = np.maximum(0, x.data)
         return Tensor(result)
-        
+        ### END SOLUTION
+    
     def __call__(self, x: Tensor) -> Tensor:
+        """Make the class callable: relu(x) instead of relu.forward(x)"""
         return self.forward(x)
 
 # %% [markdown]
 """
-### 🧪 Test Your ReLU Implementation
-
-Let's test your ReLU implementation right away to make sure it's working correctly:
-"""
-
-# %%
-try:
-    # Create ReLU activation
-    relu = ReLU()
-    
-    # Test 1: Basic functionality
-    print("🔧 Testing ReLU Implementation")
-    print("=" * 40)
-    
-    # Test with mixed positive/negative values
-    test_input = Tensor([[-2, -1, 0, 1, 2]])
-    expected = Tensor([[0, 0, 0, 1, 2]])
-    
-    result = relu(test_input)
-    print(f"Input:    {test_input.data.flatten()}")
-    print(f"Output:   {result.data.flatten()}")
-    print(f"Expected: {expected.data.flatten()}")
-    
-    # Verify correctness
-    if np.allclose(result.data, expected.data):
-        print("✅ Basic ReLU test passed!")
-    else:
-        print("❌ Basic ReLU test failed!")
-        print("   Check your max(0, x) implementation")
-    
-    # Test 2: Edge cases
-    edge_cases = Tensor([[-100, -0.1, 0, 0.1, 100]])
-    edge_result = relu(edge_cases)
-    expected_edge = np.array([[0, 0, 0, 0.1, 100]])
-    
-    print(f"\nEdge cases: {edge_cases.data.flatten()}")
-    print(f"Output:     {edge_result.data.flatten()}")
-    
-    if np.allclose(edge_result.data, expected_edge):
-        print("✅ Edge case test passed!")
-    else:
-        print("❌ Edge case test failed!")
-    
-    # Test 3: Shape preservation
-    multi_dim = Tensor([[1, -1], [2, -2], [0, 3]])
-    multi_result = relu(multi_dim)
-    
-    if multi_result.data.shape == multi_dim.data.shape:
-        print("✅ Shape preservation test passed!")
-    else:
-        print("❌ Shape preservation test failed!")
-        print(f"   Expected shape: {multi_dim.data.shape}, got: {multi_result.data.shape}")
-    
-    print("✅ ReLU tests complete!")
-    
-except NotImplementedError:
-    print("⚠️  ReLU not implemented yet - complete the forward method above!")
-except Exception as e:
-    print(f"❌ Error in ReLU: {e}")
-    print("   Check your implementation in the forward method")
-
-print()  # Add spacing
-
-# %%
-# 🎨 ReLU Visualization (development only - not exported)
-if _should_show_plots():
-    try:
-        relu = ReLU()
-        print("🎨 Visualizing ReLU behavior...")
-        visualize_activation_function(relu, "ReLU", x_range=(-3, 3))
-        
-        # Show ReLU with real data
-        sample_data = Tensor([[-2.5, -1.0, -0.5, 0.0, 0.5, 1.0, 2.5]])
-        visualize_activation_on_data(relu, "ReLU", sample_data)
-    except:
-        pass  # Skip if ReLU not implemented
-
-# %% [markdown]
-"""
-## Step 3: Sigmoid - The Smooth Classifier
+## Step 3: Sigmoid - The Smooth Squasher
 
 ### What is Sigmoid?
-**Sigmoid** is a smooth, S-shaped activation function that squashes inputs to the range (0, 1).
+**Sigmoid** is a smooth S-shaped function that squashes inputs to the range (0, 1).
 
 **Mathematical Definition:**
 ```
 f(x) = 1 / (1 + e^(-x))
 ```
 
-**Key Properties:**
+**Properties:**
 - **Range**: (0, 1) - never exactly 0 or 1
 - **Smooth**: Differentiable everywhere
 - **Monotonic**: Always increasing
-- **Symmetric**: Around the point (0, 0.5)
+- **Centered**: Around 0.5
 
 ### Why Sigmoid is Useful
-1. **Probability interpretation**: Output can be interpreted as probability
-2. **Smooth gradients**: Nice for optimization
-3. **Bounded output**: Prevents extreme values
+1. **Probabilistic**: Output can be interpreted as probabilities
+2. **Bounded**: Output is always between 0 and 1
+3. **Smooth**: Good for gradient-based optimization
+4. **Historical**: Was the standard before ReLU
 
 ### Real-World Analogy
-Sigmoid is like a **smooth dimmer switch** - it gradually transitions from "off" (near 0) to "on" (near 1), unlike ReLU's sharp cutoff.
+Sigmoid is like a **soft switch** - it gradually turns on as input increases, unlike ReLU's hard cutoff.
+
+### Real-World Applications
+- **Binary Classification**: Final layer for yes/no decisions (spam detection, medical diagnosis)
+- **Logistic Regression**: The classic ML algorithm uses sigmoid
+- **Attention Mechanisms**: Gating mechanisms in LSTM/GRU
+- **Probability Estimation**: When you need outputs between 0 and 1
+
+### Mathematical Properties
+- **Derivative**: f'(x) = f(x)(1 - f(x)) - elegant and efficient!
+- **Range**: (0, 1) - never exactly 0 or 1
+- **Symmetry**: Sigmoid(0) = 0.5 (centered)
+- **Saturation**: Gradients approach 0 for large |x| (vanishing gradient problem)
 
 ### When to Use Sigmoid
 - **Binary classification** (output layer)
-- **Gate mechanisms** (in LSTMs)
-- **When you need probabilities**
-
-### Numerical Stability Note
-For very large positive or negative inputs, sigmoid can cause numerical issues. We'll handle this with clipping.
+- **Gates** in LSTM/GRU networks
+- **When you need probabilistic outputs**
+- **Avoid in deep networks** (vanishing gradients)
 """
 
-# %%
+# %% nbgrader={"grade": false, "grade_id": "sigmoid-class", "locked": false, "schema_version": 3, "solution": true, "task": false}
 #| export
 class Sigmoid:
     """
     Sigmoid Activation Function: f(x) = 1 / (1 + e^(-x))
     
-    Squashes inputs to the range (0, 1), useful for binary classification
-    and probability interpretation.
+    Smooth S-shaped function that squashes inputs to (0, 1).
+    Useful for binary classification and probabilistic outputs.
     """
     
     def forward(self, x: Tensor) -> Tensor:
         """
         Apply Sigmoid activation: f(x) = 1 / (1 + e^(-x))
         
-        TODO: Implement Sigmoid activation
+        TODO: Implement Sigmoid activation with numerical stability
         
         APPROACH:
-        1. For numerical stability, clip x to reasonable range (e.g., -500 to 500)
-        2. Compute 1 / (1 + exp(-x)) for each element
+        1. Clip input values to prevent overflow (e.g., between -500 and 500)
+        2. Apply the sigmoid formula: 1 / (1 + exp(-x))
         3. Return a new Tensor with the results
         
         EXAMPLE:
-        Input: Tensor([[-2, -1, 0, 1, 2]])
-        Expected: Tensor([[0.119, 0.269, 0.5, 0.731, 0.881]]) (approximately)
+        Input: Tensor([[-2, 0, 2]])
+        Expected: Tensor([[0.119, 0.5, 0.881]]) (approximately)
         
         HINTS:
         - Use np.clip(x.data, -500, 500) for numerical stability
-        - Use np.exp(-clipped_x) for the exponential
-        - Formula: 1 / (1 + np.exp(-clipped_x))
-        - Remember to return a new Tensor object
+        - Use np.exp() for the exponential function
+        - Be careful with very large/small inputs to avoid overflow
         """
-        raise NotImplementedError("Student implementation required")
-    
-    def __call__(self, x: Tensor) -> Tensor:
-        """Allow calling the activation like a function: sigmoid(x)"""
-        return self.forward(x)
-
-# %%
-#| hide
-#| export
-class Sigmoid:
-    """Sigmoid Activation: f(x) = 1 / (1 + e^(-x))"""
-    
-    def forward(self, x: Tensor) -> Tensor:
+        ### BEGIN SOLUTION
         # Clip for numerical stability
         clipped = np.clip(x.data, -500, 500)
         result = 1 / (1 + np.exp(-clipped))
         return Tensor(result)
-        
+        ### END SOLUTION
+    
     def __call__(self, x: Tensor) -> Tensor:
+        """Make the class callable: sigmoid(x) instead of sigmoid.forward(x)"""
         return self.forward(x)
 
 # %% [markdown]
 """
-### 🧪 Test Your Sigmoid Implementation
-
-Let's test your Sigmoid implementation to ensure it's working correctly:
-"""
-
-# %%
-try:
-    # Create Sigmoid activation
-    sigmoid = Sigmoid()
-    
-    print("🔧 Testing Sigmoid Implementation")
-    print("=" * 40)
-    
-    # Test 1: Basic functionality
-    test_input = Tensor([[-2, -1, 0, 1, 2]])
-    result = sigmoid(test_input)
-    
-    print(f"Input:  {test_input.data.flatten()}")
-    print(f"Output: {result.data.flatten()}")
-    
-    # Check properties
-    # 1. All outputs should be between 0 and 1
-    if np.all(result.data >= 0) and np.all(result.data <= 1):
-        print("✅ Range test passed: all outputs in (0, 1)")
-    else:
-        print("❌ Range test failed: outputs should be in (0, 1)")
-    
-    # 2. Sigmoid(0) should be 0.5
-    zero_input = Tensor([[0]])
-    zero_result = sigmoid(zero_input)
-    if abs(zero_result.data.item() - 0.5) < 1e-6:
-        print("✅ Sigmoid(0) = 0.5 test passed!")
-    else:
-        print(f"❌ Sigmoid(0) should be 0.5, got {zero_result.data.item()}")
-    
-    # 3. Test symmetry: sigmoid(-x) = 1 - sigmoid(x)
-    x_val = 2.0
-    pos_result = sigmoid(Tensor([[x_val]])).data.item()
-    neg_result = sigmoid(Tensor([[-x_val]])).data.item()
-    
-    if abs(pos_result + neg_result - 1.0) < 1e-6:
-        print("✅ Symmetry test passed!")
-    else:
-        print(f"❌ Symmetry test failed: sigmoid({x_val}) + sigmoid({-x_val}) should equal 1")
-    
-    # 4. Test numerical stability with extreme values
-    extreme_input = Tensor([[-1000, 1000]])
-    extreme_result = sigmoid(extreme_input)
-    
-    # Should not produce NaN or inf
-    if not np.any(np.isnan(extreme_result.data)) and not np.any(np.isinf(extreme_result.data)):
-        print("✅ Numerical stability test passed!")
-    else:
-        print("❌ Numerical stability test failed: extreme values produced NaN/inf")
-    
-    print("✅ Sigmoid tests complete!")
-    
-    # 🎨 Visualize Sigmoid behavior (development only)
-    if _should_show_plots():
-        print("\n🎨 Visualizing Sigmoid behavior...")
-        visualize_activation_function(sigmoid, "Sigmoid", x_range=(-5, 5))
-        
-        # Show Sigmoid with real data
-        sample_data = Tensor([[-3.0, -1.0, 0.0, 1.0, 3.0]])
-        visualize_activation_on_data(sigmoid, "Sigmoid", sample_data)
-    
-except NotImplementedError:
-    print("⚠️  Sigmoid not implemented yet - complete the forward method above!")
-except Exception as e:
-    print(f"❌ Error in Sigmoid: {e}")
-    print("   Check your implementation in the forward method")
-
-print()  # Add spacing
-
-# %% [markdown]
-"""
-## Step 4: Tanh - The Centered Alternative
+## Step 4: Tanh - The Zero-Centered Squasher
 
 ### What is Tanh?
-**Tanh (Hyperbolic Tangent)** is similar to Sigmoid but centered around zero, with range (-1, 1).
+**Tanh (Hyperbolic Tangent)** is similar to Sigmoid but centered around zero.
 
 **Mathematical Definition:**
 ```
-f(x) = (e^x - e^(-x)) / (e^x + e^(-x))
+f(x) = tanh(x) = (e^x - e^(-x)) / (e^x + e^(-x))
 ```
 
-**Alternative form:**
-```
-f(x) = 2 * sigmoid(2x) - 1
-```
-
-**Key Properties:**
+**Properties:**
 - **Range**: (-1, 1) - symmetric around zero
-- **Zero-centered**: Output has mean closer to zero
+- **Zero-centered**: Output averages to zero
 - **Smooth**: Differentiable everywhere
-- **Stronger gradients**: Steeper than sigmoid
+- **Stronger gradients**: Than sigmoid in some regions
 
-### Why Tanh is Better Than Sigmoid
-1. **Zero-centered**: Helps with gradient flow in deep networks
-2. **Stronger gradients**: Faster convergence in some cases
-3. **Symmetric**: Better for certain applications
+### Why Tanh is Useful
+1. **Zero-centered**: Better for training (gradients don't all have same sign)
+2. **Symmetric**: Treats positive and negative inputs equally
+3. **Stronger gradients**: Can help with training dynamics
+4. **Bounded**: Output is always between -1 and 1
 
 ### Real-World Analogy
-Tanh is like a **balanced scale** - it can tip strongly in either direction (-1 to +1) but defaults to neutral (0).
+Tanh is like a **balanced scale** - it can tip positive or negative, with zero as the neutral point.
 
 ### When to Use Tanh
 - **Hidden layers** (alternative to ReLU)
-- **Recurrent networks** (RNNs, LSTMs)
+- **RNNs** (traditional choice)
 - **When you need zero-centered outputs**
 """
 
-# %%
+# %% nbgrader={"grade": false, "grade_id": "tanh-class", "locked": false, "schema_version": 3, "solution": true, "task": false}
 #| export
 class Tanh:
     """
-    Tanh Activation Function: f(x) = (e^x - e^(-x)) / (e^x + e^(-x))
+    Tanh Activation Function: f(x) = tanh(x)
     
-    Zero-centered activation function with range (-1, 1).
-    Often preferred over Sigmoid for hidden layers.
+    Zero-centered S-shaped function that squashes inputs to (-1, 1).
+    Better than sigmoid for hidden layers due to zero-centered outputs.
     """
     
     def forward(self, x: Tensor) -> Tensor:
         """
-        Apply Tanh activation: f(x) = (e^x - e^(-x)) / (e^x + e^(-x))
+        Apply Tanh activation: f(x) = tanh(x)
         
         TODO: Implement Tanh activation
         
         APPROACH:
-        1. Use numpy's built-in tanh function: np.tanh(x.data)
-        2. Return a new Tensor with the results
-        
-        ALTERNATIVE APPROACH:
-        1. Compute e^x and e^(-x)
-        2. Use formula: (e^x - e^(-x)) / (e^x + e^(-x))
+        1. Use NumPy's tanh function for numerical stability
+        2. Apply to the tensor data
+        3. Return a new Tensor with the results
         
         EXAMPLE:
-        Input: Tensor([[-2, -1, 0, 1, 2]])
-        Expected: Tensor([[-0.964, -0.762, 0.0, 0.762, 0.964]]) (approximately)
+        Input: Tensor([[-2, 0, 2]])
+        Expected: Tensor([[-0.964, 0.0, 0.964]]) (approximately)
         
         HINTS:
-        - np.tanh() is the simplest approach
-        - Output range is (-1, 1)
-        - tanh(0) = 0 (zero-centered)
-        - Remember to return a new Tensor object
+        - Use np.tanh(x.data) - NumPy handles the math
+        - Much simpler than implementing the formula manually
+        - NumPy's tanh is numerically stable
         """
-        raise NotImplementedError("Student implementation required")
-    
-    def __call__(self, x: Tensor) -> Tensor:
-        """Allow calling the activation like a function: tanh(x)"""
-        return self.forward(x)
-
-# %%
-#| hide
-#| export
-class Tanh:
-    """Tanh Activation: f(x) = (e^x - e^(-x)) / (e^x + e^(-x))"""
-    
-    def forward(self, x: Tensor) -> Tensor:
+        ### BEGIN SOLUTION
         result = np.tanh(x.data)
         return Tensor(result)
-        
+        ### END SOLUTION
+    
     def __call__(self, x: Tensor) -> Tensor:
+        """Make the class callable: tanh(x) instead of tanh.forward(x)"""
         return self.forward(x)
 
 # %% [markdown]
 """
-### 🧪 Test Your Tanh Implementation
-
-Let's test your Tanh implementation to ensure it's working correctly:
-"""
-
-# %%
-try:
-    # Create Tanh activation
-    tanh = Tanh()
-    
-    print("🔧 Testing Tanh Implementation")
-    print("=" * 40)
-    
-    # Test 1: Basic functionality
-    test_input = Tensor([[-2, -1, 0, 1, 2]])
-    result = tanh(test_input)
-    
-    print(f"Input:  {test_input.data.flatten()}")
-    print(f"Output: {result.data.flatten()}")
-    
-    # Check properties
-    # 1. All outputs should be between -1 and 1
-    if np.all(result.data >= -1) and np.all(result.data <= 1):
-        print("✅ Range test passed: all outputs in (-1, 1)")
-    else:
-        print("❌ Range test failed: outputs should be in (-1, 1)")
-    
-    # 2. Tanh(0) should be 0
-    zero_input = Tensor([[0]])
-    zero_result = tanh(zero_input)
-    if abs(zero_result.data.item()) < 1e-6:
-        print("✅ Tanh(0) = 0 test passed!")
-    else:
-        print(f"❌ Tanh(0) should be 0, got {zero_result.data.item()}")
-    
-    # 3. Test antisymmetry: tanh(-x) = -tanh(x)
-    x_val = 1.5
-    pos_result = tanh(Tensor([[x_val]])).data.item()
-    neg_result = tanh(Tensor([[-x_val]])).data.item()
-    
-    if abs(pos_result + neg_result) < 1e-6:
-        print("✅ Antisymmetry test passed!")
-    else:
-        print(f"❌ Antisymmetry test failed: tanh({x_val}) + tanh({-x_val}) should equal 0")
-    
-    # 4. Test that tanh is stronger than sigmoid
-    # For the same input, |tanh(x)| should be > |sigmoid(x) - 0.5|
-    test_val = 1.0
-    tanh_result = abs(tanh(Tensor([[test_val]])).data.item())
-    sigmoid_result = abs(sigmoid(Tensor([[test_val]])).data.item() - 0.5)
-    
-    if tanh_result > sigmoid_result:
-        print("✅ Stronger gradient test passed!")
-    else:
-        print("❌ Tanh should have stronger gradients than sigmoid")
-    
-    print("✅ Tanh tests complete!")
-    
-    # 🎨 Visualize Tanh behavior (development only)
-    if _should_show_plots():
-        print("\n🎨 Visualizing Tanh behavior...")
-        visualize_activation_function(tanh, "Tanh", x_range=(-3, 3))
-        
-        # Show Tanh with real data
-        sample_data = Tensor([[-2.0, -1.0, 0.0, 1.0, 2.0]])
-        visualize_activation_on_data(tanh, "Tanh", sample_data)
-    
-except NotImplementedError:
-    print("⚠️  Tanh not implemented yet - complete the forward method above!")
-except Exception as e:
-    print(f"❌ Error in Tanh: {e}")
-    print("   Check your implementation in the forward method")
-
-print()  # Add spacing
-
-# %% [markdown]
-"""
-## Step 5: Softmax - The Probability Maker
+## Step 5: Softmax - The Probability Converter
 
 ### What is Softmax?
-**Softmax** converts a vector of real numbers into a probability distribution. It's essential for multi-class classification.
+**Softmax** converts a vector of numbers into a probability distribution.
 
 **Mathematical Definition:**
 ```
 f(x_i) = e^(x_i) / Σ(e^(x_j)) for all j
 ```
 
-**Key Properties:**
-- **Probability distribution**: All outputs sum to 1
-- **Non-negative**: All outputs ≥ 0
-- **Differentiable**: Smooth for optimization
-- **Relative**: Emphasizes the largest input
+**Properties:**
+- **Probabilities**: All outputs sum to 1
+- **Non-negative**: All outputs are ≥ 0
+- **Differentiable**: Smooth everywhere
+- **Competitive**: Amplifies differences between inputs
 
-### Why Softmax is Special
-1. **Probability interpretation**: Perfect for classification
-2. **Competitive**: Emphasizes the winner (largest input)
-3. **Differentiable**: Works well with gradient descent
+### Why Softmax is Essential
+1. **Multi-class classification**: Converts logits to probabilities
+2. **Attention mechanisms**: Focuses on important elements
+3. **Interpretable**: Output can be understood as confidence
+4. **Competitive**: Emphasizes the largest input
 
 ### Real-World Analogy
-Softmax is like **voting with enthusiasm** - not only does the most popular choice win, but the "votes" are weighted by how much more popular it is.
+Softmax is like **dividing a pie** - it takes any set of numbers and converts them into slices that sum to 100%.
 
 ### When to Use Softmax
 - **Multi-class classification** (output layer)
-- **Attention mechanisms** (in Transformers)
+- **Attention mechanisms** in transformers
 - **When you need probability distributions**
-
-### Numerical Stability Note
-For numerical stability, we subtract the maximum value before computing exponentials.
 """
 
-# %%
+# %% nbgrader={"grade": false, "grade_id": "softmax-class", "locked": false, "schema_version": 3, "solution": true, "task": false}
 #| export
 class Softmax:
     """
     Softmax Activation Function: f(x_i) = e^(x_i) / Σ(e^(x_j))
     
-    Converts a vector of real numbers into a probability distribution.
-    Essential for multi-class classification.
+    Converts a vector of numbers into a probability distribution.
+    Essential for multi-class classification and attention mechanisms.
     """
     
     def forward(self, x: Tensor) -> Tensor:
         """
         Apply Softmax activation: f(x_i) = e^(x_i) / Σ(e^(x_j))
         
-        TODO: Implement Softmax activation
+        TODO: Implement Softmax activation with numerical stability
         
         APPROACH:
-        1. For numerical stability, subtract the maximum value from each row
-        2. Compute exponentials of the shifted values
-        3. Divide each exponential by the sum of exponentials in its row
+        1. Subtract max value from inputs for numerical stability
+        2. Compute exponentials: e^(x_i - max)
+        3. Divide by sum of exponentials
         4. Return a new Tensor with the results
         
         EXAMPLE:
         Input: Tensor([[1, 2, 3]])
-        Expected: Tensor([[0.090, 0.245, 0.665]]) (approximately)
-        Sum should be 1.0
+        Expected: Tensor([[0.09, 0.24, 0.67]]) (approximately, sums to 1)
         
         HINTS:
-        - Use np.max(x.data, axis=1, keepdims=True) to find row maximums
-        - Subtract max from x.data for numerical stability
+        - Use np.max(x.data, axis=-1, keepdims=True) for stability
         - Use np.exp() for exponentials
-        - Use np.sum(exp_vals, axis=1, keepdims=True) for row sums
-        - Remember to return a new Tensor object
+        - Use np.sum() for the denominator
+        - Make sure the result sums to 1 along the last axis
         """
-        raise NotImplementedError("Student implementation required")
-    
-    def __call__(self, x: Tensor) -> Tensor:
-        """Allow calling the activation like a function: softmax(x)"""
-        return self.forward(x)
-
-# %%
-#| hide
-#| export
-class Softmax:
-    """Softmax Activation: f(x_i) = e^(x_i) / Σ(e^(x_j))"""
-    
-    def forward(self, x: Tensor) -> Tensor:
+        ### BEGIN SOLUTION
         # Subtract max for numerical stability
-        shifted = x.data - np.max(x.data, axis=1, keepdims=True)
-        exp_vals = np.exp(shifted)
-        result = exp_vals / np.sum(exp_vals, axis=1, keepdims=True)
-        return Tensor(result)
+        x_max = np.max(x.data, axis=-1, keepdims=True)
+        x_shifted = x.data - x_max
         
+        # Compute softmax
+        exp_x = np.exp(x_shifted)
+        sum_exp = np.sum(exp_x, axis=-1, keepdims=True)
+        result = exp_x / sum_exp
+        
+        return Tensor(result)
+        ### END SOLUTION
+    
     def __call__(self, x: Tensor) -> Tensor:
+        """Make the class callable: softmax(x) instead of softmax.forward(x)"""
         return self.forward(x)
 
 # %% [markdown]
 """
-### 🧪 Test Your Softmax Implementation
+### 🧪 Test Your Activation Functions
 
-Let's test your Softmax implementation to ensure it's working correctly:
+Once you implement the activation functions above, run these cells to test them:
 """
 
-# %%
-try:
-    # Create Softmax activation
-    softmax = Softmax()
-    
-    print("🔧 Testing Softmax Implementation")
-    print("=" * 40)
-    
-    # Test 1: Basic functionality
-    test_input = Tensor([[1, 2, 3]])
-    result = softmax(test_input)
-    
-    print(f"Input:  {test_input.data.flatten()}")
-    print(f"Output: {result.data.flatten()}")
-    
-    # Check properties
-    # 1. All outputs should be non-negative
-    if np.all(result.data >= 0):
-        print("✅ Non-negative test passed!")
-    else:
-        print("❌ Non-negative test failed: all outputs should be ≥ 0")
-    
-    # 2. Sum should equal 1 (probability distribution)
-    row_sums = np.sum(result.data, axis=1)
-    if np.allclose(row_sums, 1.0):
-        print("✅ Probability distribution test passed!")
-    else:
-        print(f"❌ Sum test failed: sum should be 1.0, got {row_sums}")
-    
-    # 3. Test with multiple rows
-    multi_input = Tensor([[1, 2, 3], [0, 0, 0], [10, 20, 30]])
-    multi_result = softmax(multi_input)
-    multi_sums = np.sum(multi_result.data, axis=1)
-    
-    if np.allclose(multi_sums, 1.0):
-        print("✅ Multi-row test passed!")
-    else:
-        print(f"❌ Multi-row test failed: all row sums should be 1.0, got {multi_sums}")
-    
-    # 4. Test numerical stability
-    large_input = Tensor([[1000, 1001, 1002]])
-    large_result = softmax(large_input)
-    
-    # Should not produce NaN or inf
-    if not np.any(np.isnan(large_result.data)) and not np.any(np.isinf(large_result.data)):
-        print("✅ Numerical stability test passed!")
-    else:
-        print("❌ Numerical stability test failed: large values produced NaN/inf")
-    
-    # 5. Test that largest input gets highest probability
-    test_logits = Tensor([[1, 5, 2]])
-    test_probs = softmax(test_logits)
-    max_idx = np.argmax(test_probs.data)
-    
-    if max_idx == 1:  # Second element (index 1) should be largest
-        print("✅ Max probability test passed!")
-    else:
-        print("❌ Max probability test failed: largest input should get highest probability")
-    
-    print("✅ Softmax tests complete!")
-    
-    # 🎨 Visualize Softmax behavior (development only)
-    if _should_show_plots():
-        print("\n🎨 Visualizing Softmax behavior...")
-        # Note: Softmax is different - it's a vector function, so we show it differently
-        sample_logits = Tensor([[1.0, 2.0, 3.0]])  # Simple 3-class example
-        softmax_output = softmax(sample_logits)
-        
-        print(f"   Example: logits {sample_logits.data.flatten()} → probabilities {softmax_output.data.flatten()}")
-        print(f"   Sum of probabilities: {softmax_output.data.sum():.6f} (should be 1.0)")
-        
-        # Show how different input scales affect output
-        scale_examples = [
-            Tensor([[1.0, 2.0, 3.0]]),    # Original
-            Tensor([[2.0, 4.0, 6.0]]),    # Scaled up
-            Tensor([[0.1, 0.2, 0.3]]),    # Scaled down
-        ]
-        
-        print("\n   📊 Scale sensitivity:")
-        for i, example in enumerate(scale_examples):
-            output = softmax(example)
-            print(f"   Scale {i+1}: {example.data.flatten()} → {output.data.flatten()}")
-    
-except NotImplementedError:
-    print("⚠️  Softmax not implemented yet - complete the forward method above!")
-except Exception as e:
-    print(f"❌ Error in Softmax: {e}")
-    print("   Check your implementation in the forward method")
+# %% nbgrader={"grade": true, "grade_id": "test-relu", "locked": true, "points": 20, "schema_version": 3, "solution": false, "task": false}
+# Test ReLU activation
+print("Testing ReLU activation...")
 
-print()  # Add spacing
+relu = ReLU()
+
+# Test basic functionality
+input_tensor = Tensor([[-2, -1, 0, 1, 2]])
+output = relu(input_tensor)
+expected = np.array([[0, 0, 0, 1, 2]])
+assert np.array_equal(output.data, expected), f"ReLU failed: expected {expected}, got {output.data}"
+
+# Test with matrix
+matrix_input = Tensor([[-1, 2], [3, -4]])
+matrix_output = relu(matrix_input)
+expected_matrix = np.array([[0, 2], [3, 0]])
+assert np.array_equal(matrix_output.data, expected_matrix), f"ReLU matrix failed: expected {expected_matrix}, got {matrix_output.data}"
+
+# Test shape preservation
+assert output.shape == input_tensor.shape, f"ReLU should preserve shape: input {input_tensor.shape}, output {output.shape}"
+
+print("✅ ReLU tests passed!")
+print(f"✅ ReLU({input_tensor.data.flatten()}) = {output.data.flatten()}")
+
+# %% nbgrader={"grade": true, "grade_id": "test-sigmoid", "locked": true, "points": 20, "schema_version": 3, "solution": false, "task": false}
+# Test Sigmoid activation
+print("Testing Sigmoid activation...")
+
+sigmoid = Sigmoid()
+
+# Test basic functionality
+input_tensor = Tensor([[0]])
+output = sigmoid(input_tensor)
+expected_value = 0.5
+assert abs(output.data.item() - expected_value) < 1e-6, f"Sigmoid(0) should be 0.5, got {output.data.item()}"
+
+# Test range bounds (allowing for floating-point precision at extremes)
+large_input = Tensor([[100]])
+large_output = sigmoid(large_input)
+assert 0 < large_output.data.item() <= 1, f"Sigmoid output should be in (0,1], got {large_output.data.item()}"
+
+small_input = Tensor([[-100]])
+small_output = sigmoid(small_input)
+assert 0 <= small_output.data.item() < 1, f"Sigmoid output should be in [0,1), got {small_output.data.item()}"
+
+# Test with multiple values
+multi_input = Tensor([[-2, 0, 2]])
+multi_output = sigmoid(multi_input)
+assert multi_output.shape == multi_input.shape, "Sigmoid should preserve shape"
+assert np.all((multi_output.data > 0) & (multi_output.data < 1)), "All sigmoid outputs should be in (0,1)"
+
+print("✅ Sigmoid tests passed!")
+print(f"✅ Sigmoid({multi_input.data.flatten()}) = {multi_output.data.flatten()}")
+
+# %% nbgrader={"grade": true, "grade_id": "test-tanh", "locked": true, "points": 20, "schema_version": 3, "solution": false, "task": false}
+# Test Tanh activation
+print("Testing Tanh activation...")
+
+tanh = Tanh()
+
+# Test basic functionality
+input_tensor = Tensor([[0]])
+output = tanh(input_tensor)
+expected_value = 0.0
+assert abs(output.data.item() - expected_value) < 1e-6, f"Tanh(0) should be 0.0, got {output.data.item()}"
+
+# Test range bounds (allowing for floating-point precision at extremes)
+large_input = Tensor([[100]])
+large_output = tanh(large_input)
+assert -1 <= large_output.data.item() <= 1, f"Tanh output should be in [-1,1], got {large_output.data.item()}"
+
+small_input = Tensor([[-100]])
+small_output = tanh(small_input)
+assert -1 <= small_output.data.item() <= 1, f"Tanh output should be in [-1,1], got {small_output.data.item()}"
+
+# Test symmetry: tanh(-x) = -tanh(x)
+test_input = Tensor([[2]])
+pos_output = tanh(test_input)
+neg_input = Tensor([[-2]])
+neg_output = tanh(neg_input)
+assert abs(pos_output.data.item() + neg_output.data.item()) < 1e-6, "Tanh should be symmetric: tanh(-x) = -tanh(x)"
+
+print("✅ Tanh tests passed!")
+print(f"✅ Tanh(±2) = ±{abs(pos_output.data.item()):.3f}")
+
+# %% nbgrader={"grade": true, "grade_id": "test-softmax", "locked": true, "points": 20, "schema_version": 3, "solution": false, "task": false}
+# Test Softmax activation
+print("Testing Softmax activation...")
+
+softmax = Softmax()
+
+# Test basic functionality
+input_tensor = Tensor([[1, 2, 3]])
+output = softmax(input_tensor)
+
+# Check that outputs sum to 1
+sum_output = np.sum(output.data)
+assert abs(sum_output - 1.0) < 1e-6, f"Softmax outputs should sum to 1, got {sum_output}"
+
+# Check that all outputs are positive
+assert np.all(output.data > 0), "All softmax outputs should be positive"
+
+# Check that larger inputs give larger outputs
+assert output.data[0, 2] > output.data[0, 1] > output.data[0, 0], "Softmax should preserve order"
+
+# Test with matrix (multiple rows)
+matrix_input = Tensor([[1, 2], [3, 4]])
+matrix_output = softmax(matrix_input)
+row_sums = np.sum(matrix_output.data, axis=1)
+assert np.allclose(row_sums, 1.0), f"Each row should sum to 1, got {row_sums}"
+
+print("✅ Softmax tests passed!")
+print(f"✅ Softmax({input_tensor.data.flatten()}) = {output.data.flatten()}")
+print(f"✅ Sum = {np.sum(output.data):.6f}")
+
+# %% nbgrader={"grade": true, "grade_id": "test-activation-integration", "locked": true, "points": 20, "schema_version": 3, "solution": false, "task": false}
+# Test activation function integration
+print("Testing activation function integration...")
+
+# Create test data
+test_data = Tensor([[-2, -1, 0, 1, 2]])
+
+# Test all activations
+relu = ReLU()
+sigmoid = Sigmoid()
+tanh = Tanh()
+softmax = Softmax()
+
+# Apply all activations
+relu_out = relu(test_data)
+sigmoid_out = sigmoid(test_data)
+tanh_out = tanh(test_data)
+softmax_out = softmax(test_data)
+
+# Check shapes are preserved
+assert relu_out.shape == test_data.shape, "ReLU should preserve shape"
+assert sigmoid_out.shape == test_data.shape, "Sigmoid should preserve shape"
+assert tanh_out.shape == test_data.shape, "Tanh should preserve shape"
+assert softmax_out.shape == test_data.shape, "Softmax should preserve shape"
+
+# Check ranges (allowing for floating-point precision at extremes)
+assert np.all(relu_out.data >= 0), "ReLU outputs should be non-negative"
+assert np.all((sigmoid_out.data >= 0) & (sigmoid_out.data <= 1)), "Sigmoid outputs should be in [0,1]"
+assert np.all((tanh_out.data >= -1) & (tanh_out.data <= 1)), "Tanh outputs should be in [-1,1]"
+assert np.all(softmax_out.data > 0), "Softmax outputs should be positive"
+
+# Test chaining (composition)
+chained = relu(sigmoid(test_data))
+assert chained.shape == test_data.shape, "Chained activations should preserve shape"
+
+print("✅ Activation integration tests passed!")
+print(f"✅ All activation functions work correctly")
+print(f"✅ Input:   {test_data.data.flatten()}")
+print(f"✅ ReLU:    {relu_out.data.flatten()}")
+print(f"✅ Sigmoid: {sigmoid_out.data.flatten()}")
+print(f"✅ Tanh:    {tanh_out.data.flatten()}")
+print(f"✅ Softmax: {softmax_out.data.flatten()}")
 
 # %% [markdown]
 """
-## 🎨 Comprehensive Activation Function Comparison
+## 🎯 Module Summary
 
-Now that we've implemented all four activation functions, let's compare them side by side to understand their differences and use cases.
-"""
+Congratulations! You've successfully implemented the core activation functions for TinyTorch:
 
-# %%
-# Comprehensive comparison of all activation functions
-print("🎨 Comprehensive Activation Function Comparison")
-print("=" * 60)
+### What You've Accomplished
+✅ **ReLU**: The workhorse activation for hidden layers  
+✅ **Sigmoid**: Smooth probabilistic outputs for binary classification  
+✅ **Tanh**: Zero-centered activation for better training dynamics  
+✅ **Softmax**: Probability distributions for multi-class classification  
+✅ **Integration**: All functions work together and preserve tensor shapes  
 
-try:
-    # Create all activation functions
-    activations = {
-        'ReLU': ReLU(),
-        'Sigmoid': Sigmoid(),
-        'Tanh': Tanh(),
-        'Softmax': Softmax()
-    }
-    
-    # Test with sample data
-    test_data = Tensor([[-2, -1, 0, 1, 2]])
-    
-    print("📊 Activation Function Outputs:")
-    print(f"Input: {test_data.data.flatten()}")
-    print("-" * 40)
-    
-    for name, activation in activations.items():
-        try:
-            result = activation(test_data)
-            print(f"{name:8}: {result.data.flatten()}")
-        except Exception as e:
-            print(f"{name:8}: Error - {e}")
-    
-    print("\n📈 Key Properties Summary:")
-    print("-" * 40)
-    print("ReLU     : Range [0, ∞), sparse, fast")
-    print("Sigmoid  : Range (0, 1), smooth, probability-like")
-    print("Tanh     : Range (-1, 1), zero-centered, symmetric")
-    print("Softmax  : Probability distribution, sums to 1")
-    
-    print("\n🎯 When to Use Each:")
-    print("-" * 40)
-    print("ReLU     : Hidden layers, CNNs, most deep networks")
-    print("Sigmoid  : Binary classification, gates, probabilities")
-    print("Tanh     : RNNs, when you need zero-centered output")
-    print("Softmax  : Multi-class classification, attention")
-    
-    # Show comprehensive visualization if available
-    if _should_show_plots():
-        print("\n🎨 Generating comprehensive comparison plot...")
-        try:
-            import matplotlib.pyplot as plt
-            
-            fig, axes = plt.subplots(2, 2, figsize=(12, 10))
-            fig.suptitle('Activation Function Comparison', fontsize=16)
-            
-            x_vals = np.linspace(-5, 5, 100)
-            
-            # Plot each activation function
-            for i, (name, activation) in enumerate(list(activations.items())[:3]):  # Skip Softmax for now
-                row, col = i // 2, i % 2
-                ax = axes[row, col]
-                
-                y_vals = []
-                for x in x_vals:
-                    try:
-                        input_tensor = Tensor([[x]])
-                        output = activation(input_tensor)
-                        y_vals.append(output.data.item())
-                    except:
-                        y_vals.append(0)
-                
-                ax.plot(x_vals, y_vals, 'b-', linewidth=2)
-                ax.set_title(f'{name} Activation')
-                ax.grid(True, alpha=0.3)
-                ax.set_xlabel('Input (x)')
-                ax.set_ylabel(f'{name}(x)')
-            
-            # Special handling for Softmax
-            ax = axes[1, 1]
-            sample_inputs = np.array([[1, 2, 3], [0, 0, 0], [-1, 0, 1]])
-            softmax_results = []
-            
-            for inp in sample_inputs:
-                result = softmax(Tensor([inp]))
-                softmax_results.append(result.data.flatten())
-            
-            x_pos = np.arange(len(sample_inputs))
-            width = 0.25
-            
-            for i in range(3):  # 3 classes
-                values = [result[i] for result in softmax_results]
-                ax.bar(x_pos + i * width, values, width, label=f'Class {i+1}')
-            
-            ax.set_title('Softmax Activation')
-            ax.set_xlabel('Input Examples')
-            ax.set_ylabel('Probability')
-            ax.set_xticks(x_pos + width)
-            ax.set_xticklabels(['[1,2,3]', '[0,0,0]', '[-1,0,1]'])
-            ax.legend()
-            
-            plt.tight_layout()
-            plt.show()
-            
-        except ImportError:
-            print("   📊 Matplotlib not available - skipping comprehensive plot")
-        except Exception as e:
-            print(f"   ⚠️  Comprehensive plot error: {e}")
-    
-except Exception as e:
-    print(f"❌ Error in comprehensive comparison: {e}")
+### Key Concepts You've Learned
+- **Nonlinearity** is essential for neural networks to learn complex patterns
+- **ReLU** is simple, fast, and effective for most hidden layers
+- **Sigmoid** squashes outputs to (0,1) for probabilistic interpretation
+- **Tanh** is zero-centered and often better than sigmoid for hidden layers
+- **Softmax** converts logits to probability distributions
+- **Numerical stability** is crucial for functions with exponentials
 
-print("\n" + "=" * 60)
-print("🎉 Congratulations! You've implemented all four activation functions!")
-print("You now understand the building blocks that make neural networks intelligent.")
-print("=" * 60) 
+### Next Steps
+1. **Export your code**: `tito package nbdev --export 02_activations`
+2. **Test your implementation**: `tito module test 02_activations`
+3. **Use your activations**: 
+   ```python
+   from tinytorch.core.activations import ReLU, Sigmoid, Tanh, Softmax
+   from tinytorch.core.tensor import Tensor
+   
+   relu = ReLU()
+   x = Tensor([[-1, 0, 1, 2]])
+   y = relu(x)  # Your activation in action!
+   ```
+4. **Move to Module 3**: Start building neural network layers!
+
+**Ready for the next challenge?** Let's combine tensors and activations to build the fundamental building blocks of neural networks!
+""" 

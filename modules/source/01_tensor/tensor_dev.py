@@ -19,41 +19,48 @@ Welcome to the Tensor module! This is where TinyTorch really begins. You'll impl
 - Implement a complete Tensor class with arithmetic operations
 - Handle shape management, data types, and memory layout
 - Build the foundation for neural networks and automatic differentiation
+- Master the NBGrader workflow with comprehensive testing
 
+## Build → Use → Understand
+1. **Build**: Create the Tensor class with core operations
+2. **Use**: Perform tensor arithmetic and transformations
+3. **Understand**: How tensors form the foundation of ML systems
 """
+
+# %% nbgrader={"grade": false, "grade_id": "tensor-imports", "locked": false, "schema_version": 3, "solution": false, "task": false}
+#| default_exp core.tensor
+
+#| export
+import numpy as np
+import sys
+from typing import Union, List, Tuple, Optional, Any
+
+# %% nbgrader={"grade": false, "grade_id": "tensor-setup", "locked": false, "schema_version": 3, "solution": false, "task": false}
+print("🔥 TinyTorch Tensor Module")
+print(f"NumPy version: {np.__version__}")
+print(f"Python version: {sys.version_info.major}.{sys.version_info.minor}")
+print("Ready to build tensors!")
 
 # %% [markdown]
 """
 ## 📦 Where This Code Lives in the Final Package
 
-**Learning Side:** You work in `assignments/source/01_tensor/tensor_dev.py`  
+**Learning Side:** You work in `modules/source/01_tensor/tensor_dev.py`  
 **Building Side:** Code exports to `tinytorch.core.tensor`
 
 ```python
 # Final package structure:
-from tinytorch.core.tensor import Tensor
-from tinytorch.core.layers import Dense, Conv2D
+from tinytorch.core.tensor import Tensor  # The foundation of everything!
 from tinytorch.core.activations import ReLU, Sigmoid, Tanh
+from tinytorch.core.layers import Dense, Conv2D
 ```
 
 **Why this matters:**
 - **Learning:** Focused modules for deep understanding
-- **Production:** Proper organization like PyTorch's `torch.tensor`
-- **Consistency:** Core data structure lives in `core.tensor`
+- **Production:** Proper organization like PyTorch's `torch.Tensor`
+- **Consistency:** All tensor operations live together in `core.tensor`
+- **Foundation:** Every other module depends on Tensor
 """
-
-# %%
-#| default_exp core.tensor
-
-# Setup and imports
-import numpy as np
-import sys
-from typing import Union, List, Tuple, Optional, Any
-
-print("🔥 TinyTorch Tensor Module")
-print(f"NumPy version: {np.__version__}")
-print(f"Python version: {sys.version_info.major}.{sys.version_info.minor}")
-print("Ready to build tensors!")
 
 # %% [markdown]
 """
@@ -87,20 +94,62 @@ We will use NumPy internally, but our Tensor class adds:
 - **Type safety** and error checking
 - **Integration** with the rest of TinyTorch
 
-### Visual Intuition
-```
-Scalar (0D):    5.0
-Vector (1D):    [1, 2, 3, 4]
-Matrix (2D):    [[1, 2, 3],
-                 [4, 5, 6]]
-3D Tensor:      [[[1, 2], [3, 4]],
-                 [[5, 6], [7, 8]]]
-```
-
 Let's start building!
 """
 
-# %%
+# %% [markdown]
+"""
+## 🧠 The Mathematical Foundation
+
+### Linear Algebra Refresher
+Tensors are generalizations of scalars, vectors, and matrices:
+
+```
+Scalar (0D): 5
+Vector (1D): [1, 2, 3]
+Matrix (2D): [[1, 2], [3, 4]]
+Tensor (3D): [[[1, 2], [3, 4]], [[5, 6], [7, 8]]]
+```
+
+### Why This Matters for Neural Networks
+- **Forward Pass**: Matrix multiplication between layers
+- **Batch Processing**: Multiple samples processed simultaneously
+- **Convolutions**: 3D operations on image data
+- **Gradients**: Derivatives computed across all dimensions
+
+### Connection to Real ML Systems
+Every major ML framework uses tensors:
+- **PyTorch**: `torch.Tensor`
+- **TensorFlow**: `tf.Tensor`
+- **JAX**: `jax.numpy.ndarray`
+- **TinyTorch**: `tinytorch.core.tensor.Tensor` (what we're building!)
+
+### Performance Considerations
+- **Memory Layout**: Contiguous arrays for cache efficiency
+- **Vectorization**: SIMD operations for speed
+- **Broadcasting**: Efficient operations on different shapes
+- **Type Consistency**: Avoiding unnecessary conversions
+"""
+
+# %% [markdown]
+"""
+## Step 2: The Tensor Class Foundation
+
+### Core Concept
+Our Tensor class wraps NumPy arrays with ML-specific functionality. It needs to:
+- Handle different input types (scalars, lists, numpy arrays)
+- Provide consistent shape and type information
+- Support arithmetic operations
+- Maintain compatibility with the rest of TinyTorch
+
+### Design Principles
+- **Simplicity**: Easy to create and use
+- **Consistency**: Predictable behavior across operations
+- **Performance**: Efficient NumPy backend
+- **Extensibility**: Ready for future features (gradients, GPU)
+"""
+
+# %% nbgrader={"grade": false, "grade_id": "tensor-class", "locked": false, "schema_version": 3, "solution": true, "task": false}
 #| export
 class Tensor:
     """
@@ -108,24 +157,6 @@ class Tensor:
     
     The fundamental data structure for all TinyTorch operations.
     Wraps NumPy arrays with ML-specific functionality.
-    
-    TODO: Implement the core Tensor class with data handling and properties.
-    
-    APPROACH:
-    1. Store the input data as a NumPy array internally
-    2. Handle different input types (scalars, lists, numpy arrays)
-    3. Implement properties to access shape, size, and data type
-    4. Create a clear string representation
-    
-    EXAMPLE:
-    Input: Tensor([1, 2, 3])
-    Expected: Tensor with shape (3,), size 3, dtype int32
-    
-    HINTS:
-    - Use NumPy's np.array() to convert inputs
-    - Handle dtype parameter for type conversion
-    - Store the array in a private attribute like self._data
-    - Properties should return information about the stored array
     """
     
     def __init__(self, data: Union[int, float, List, np.ndarray], dtype: Optional[str] = None):
@@ -149,8 +180,47 @@ class Tensor:
         Tensor(5) → stores np.array(5)
         Tensor([1, 2, 3]) → stores np.array([1, 2, 3])
         Tensor(np.array([1, 2, 3])) → stores the array directly
+        
+        HINTS:
+        - Use isinstance() to check data types
+        - Use np.array() for conversion
+        - Handle dtype parameter for type conversion
+        - Store the array in self._data
         """
-        raise NotImplementedError("Student implementation required")
+        ### BEGIN SOLUTION
+        # Convert input to numpy array
+        if isinstance(data, (int, float, np.number)):
+            # Handle Python and NumPy scalars
+            if dtype is None:
+                # Auto-detect type: int for integers, float32 for floats
+                if isinstance(data, int) or (isinstance(data, np.number) and np.issubdtype(type(data), np.integer)):
+                    dtype = 'int32'
+                else:
+                    dtype = 'float32'
+            self._data = np.array(data, dtype=dtype)
+        elif isinstance(data, list):
+            # Let NumPy auto-detect type, then convert if needed
+            temp_array = np.array(data)
+            if dtype is None:
+                # Use NumPy's auto-detected type, but prefer float32 for floats
+                if temp_array.dtype == np.float64:
+                    dtype = 'float32'
+                else:
+                    dtype = str(temp_array.dtype)
+            self._data = np.array(data, dtype=dtype)
+        elif isinstance(data, np.ndarray):
+            # Already a numpy array
+            if dtype is None:
+                # Keep existing dtype, but prefer float32 for float64
+                if data.dtype == np.float64:
+                    dtype = 'float32'
+                else:
+                    dtype = str(data.dtype)
+            self._data = data.astype(dtype) if dtype != data.dtype else data.copy()
+        else:
+            # Try to convert unknown types
+            self._data = np.array(data, dtype=dtype)
+        ### END SOLUTION
     
     @property
     def data(self) -> np.ndarray:
@@ -161,7 +231,9 @@ class Tensor:
         
         HINT: Return self._data (the array you stored in __init__)
         """
-        raise NotImplementedError("Student implementation required")
+        ### BEGIN SOLUTION
+        return self._data
+        ### END SOLUTION
     
     @property
     def shape(self) -> Tuple[int, ...]:
@@ -173,7 +245,9 @@ class Tensor:
         HINT: Use .shape attribute of the numpy array
         EXAMPLE: Tensor([1, 2, 3]).shape should return (3,)
         """
-        raise NotImplementedError("Student implementation required")
+        ### BEGIN SOLUTION
+        return self._data.shape
+        ### END SOLUTION
     
     @property
     def size(self) -> int:
@@ -185,7 +259,9 @@ class Tensor:
         HINT: Use .size attribute of the numpy array
         EXAMPLE: Tensor([1, 2, 3]).size should return 3
         """
-        raise NotImplementedError("Student implementation required")
+        ### BEGIN SOLUTION
+        return self._data.size
+        ### END SOLUTION
     
     @property
     def dtype(self) -> np.dtype:
@@ -197,7 +273,9 @@ class Tensor:
         HINT: Use .dtype attribute of the numpy array
         EXAMPLE: Tensor([1, 2, 3]).dtype should return dtype('int32')
         """
-        raise NotImplementedError("Student implementation required")
+        ### BEGIN SOLUTION
+        return self._data.dtype
+        ### END SOLUTION
     
     def __repr__(self) -> str:
         """
@@ -212,680 +290,342 @@ class Tensor:
         
         EXAMPLE:
         Tensor([1, 2, 3]) → "Tensor([1, 2, 3], shape=(3,), dtype=int32)"
-        """
-        raise NotImplementedError("Student implementation required")
-
-# %%
-#| hide
-#| export
-class Tensor:
-    """
-    TinyTorch Tensor: N-dimensional array with ML operations.
-    
-    The fundamental data structure for all TinyTorch operations.
-    Wraps NumPy arrays with ML-specific functionality.
-    """
-    
-    def __init__(self, data: Union[int, float, List, np.ndarray], dtype: Optional[str] = None):
-        """
-        Create a new tensor from data.
         
-        Args:
-            data: Input data (scalar, list, or numpy array)
-            dtype: Data type ('float32', 'int32', etc.). Defaults to auto-detect.
+        HINTS:
+        - Use .tolist() to convert numpy array to list
+        - Include shape and dtype information
+        - Keep format consistent and readable
         """
-        # Convert input to numpy array
-        if isinstance(data, (int, float, np.number)):
-            # Handle Python and NumPy scalars
-            if dtype is None:
-                # Auto-detect type: int for integers, float32 for floats
-                if isinstance(data, int) or (isinstance(data, np.number) and np.issubdtype(type(data), np.integer)):
-                    dtype = 'int32'
-                else:
-                    dtype = 'float32'
-            self._data = np.array(data, dtype=dtype)
-        elif isinstance(data, list):
-            # Let NumPy auto-detect type, then convert if needed
-            temp_array = np.array(data)
-            if dtype is None:
-                # Keep NumPy's auto-detected type, but prefer common ML types
-                if np.issubdtype(temp_array.dtype, np.integer):
-                    dtype = 'int32'
-                elif np.issubdtype(temp_array.dtype, np.floating):
-                    dtype = 'float32'
-                else:
-                    dtype = temp_array.dtype
-            self._data = temp_array.astype(dtype)
-        elif isinstance(data, np.ndarray):
-            self._data = data.astype(dtype or data.dtype)
-        else:
-            raise TypeError(f"Cannot create tensor from {type(data)}")
-    
-    @property
-    def data(self) -> np.ndarray:
-        """Access underlying numpy array."""
-        return self._data
-    
-    @property
-    def shape(self) -> Tuple[int, ...]:
-        """Get tensor shape."""
-        return self._data.shape
-    
-    @property
-    def size(self) -> int:
-        """Get total number of elements."""
-        return self._data.size
-    
-    @property
-    def dtype(self) -> np.dtype:
-        """Get data type as numpy dtype."""
-        return self._data.dtype
-    
-    def __repr__(self) -> str:
-        """String representation."""
+        ### BEGIN SOLUTION
         return f"Tensor({self._data.tolist()}, shape={self.shape}, dtype={self.dtype})"
+        ### END SOLUTION
     
     def add(self, other: 'Tensor') -> 'Tensor':
         """
-        Add another tensor to this tensor.
+        Add two tensors element-wise.
         
-        TODO: Implement tensor addition as a method.
+        TODO: Implement tensor addition.
         
         APPROACH:
-        1. Use the add_tensors function you already implemented
-        2. Or implement the addition directly using self._data + other._data
-        3. Return a new Tensor with the result
+        1. Add the numpy arrays using +
+        2. Return a new Tensor with the result
+        3. Handle broadcasting automatically
         
         EXAMPLE:
-        Tensor([1, 2, 3]).add(Tensor([4, 5, 6])) → Tensor([5, 7, 9])
+        Tensor([1, 2]) + Tensor([3, 4]) → Tensor([4, 6])
         
         HINTS:
-        - You can reuse add_tensors(self, other)
-        - Or implement directly: Tensor(self._data + other._data)
+        - Use self._data + other._data
+        - Return Tensor(result)
+        - NumPy handles broadcasting automatically
         """
-        raise NotImplementedError("Student implementation required")
-    
+        ### BEGIN SOLUTION
+        result = self._data + other._data
+        return Tensor(result)
+        ### END SOLUTION
+
     def multiply(self, other: 'Tensor') -> 'Tensor':
         """
-        Multiply this tensor by another tensor.
+        Multiply two tensors element-wise.
         
-        TODO: Implement tensor multiplication as a method.
+        TODO: Implement tensor multiplication.
         
         APPROACH:
-        1. Use the multiply_tensors function you already implemented
-        2. Or implement the multiplication directly using self._data * other._data
-        3. Return a new Tensor with the result
+        1. Multiply the numpy arrays using *
+        2. Return a new Tensor with the result
+        3. Handle broadcasting automatically
         
         EXAMPLE:
-        Tensor([1, 2, 3]).multiply(Tensor([4, 5, 6])) → Tensor([4, 10, 18])
+        Tensor([1, 2]) * Tensor([3, 4]) → Tensor([3, 8])
         
         HINTS:
-        - You can reuse multiply_tensors(self, other)
-        - Or implement directly: Tensor(self._data * other._data)
+        - Use self._data * other._data
+        - Return Tensor(result)
+        - This is element-wise, not matrix multiplication
         """
-        raise NotImplementedError("Student implementation required")
-    
-    # Arithmetic operators for natural syntax (a + b, a * b, etc.)
+        ### BEGIN SOLUTION
+        result = self._data * other._data
+        return Tensor(result)
+        ### END SOLUTION
+
     def __add__(self, other: Union['Tensor', int, float]) -> 'Tensor':
-        """Addition: tensor + other"""
+        """
+        Addition operator: tensor + other
+        
+        TODO: Implement + operator for tensors.
+        
+        APPROACH:
+        1. If other is a Tensor, use tensor addition
+        2. If other is a scalar, convert to Tensor first
+        3. Return the result
+        
+        EXAMPLE:
+        Tensor([1, 2]) + Tensor([3, 4]) → Tensor([4, 6])
+        Tensor([1, 2]) + 5 → Tensor([6, 7])
+        """
+        ### BEGIN SOLUTION
         if isinstance(other, Tensor):
-            return Tensor(self._data + other._data)
-        else:  # scalar
-            return Tensor(self._data + other)
-    
-    def __radd__(self, other: Union[int, float]) -> 'Tensor':
-        """Reverse addition: scalar + tensor"""
-        return Tensor(other + self._data)
-    
-    def __sub__(self, other: Union['Tensor', int, float]) -> 'Tensor':
-        """Subtraction: tensor - other"""
-        if isinstance(other, Tensor):
-            return Tensor(self._data - other._data)
-        else:  # scalar
-            return Tensor(self._data - other)
-    
-    def __rsub__(self, other: Union[int, float]) -> 'Tensor':
-        """Reverse subtraction: scalar - tensor"""
-        return Tensor(other - self._data)
-    
+            return self.add(other)
+        else:
+            return self.add(Tensor(other))
+        ### END SOLUTION
+
     def __mul__(self, other: Union['Tensor', int, float]) -> 'Tensor':
-        """Multiplication: tensor * other"""
+        """
+        Multiplication operator: tensor * other
+        
+        TODO: Implement * operator for tensors.
+        
+        APPROACH:
+        1. If other is a Tensor, use tensor multiplication
+        2. If other is a scalar, convert to Tensor first
+        3. Return the result
+        
+        EXAMPLE:
+        Tensor([1, 2]) * Tensor([3, 4]) → Tensor([3, 8])
+        Tensor([1, 2]) * 3 → Tensor([3, 6])
+        """
+        ### BEGIN SOLUTION
         if isinstance(other, Tensor):
-            return Tensor(self._data * other._data)
-        else:  # scalar
-            return Tensor(self._data * other)
-    
-    def __rmul__(self, other: Union[int, float]) -> 'Tensor':
-        """Reverse multiplication: scalar * tensor"""
-        return Tensor(other * self._data)
-    
+            return self.multiply(other)
+        else:
+            return self.multiply(Tensor(other))
+        ### END SOLUTION
+
+    def __sub__(self, other: Union['Tensor', int, float]) -> 'Tensor':
+        """
+        Subtraction operator: tensor - other
+        
+        TODO: Implement - operator for tensors.
+        
+        APPROACH:
+        1. Convert other to Tensor if needed
+        2. Subtract using numpy arrays
+        3. Return new Tensor with result
+        
+        EXAMPLE:
+        Tensor([5, 6]) - Tensor([1, 2]) → Tensor([4, 4])
+        Tensor([5, 6]) - 1 → Tensor([4, 5])
+        """
+        ### BEGIN SOLUTION
+        if isinstance(other, Tensor):
+            result = self._data - other._data
+        else:
+            result = self._data - other
+        return Tensor(result)
+        ### END SOLUTION
+
     def __truediv__(self, other: Union['Tensor', int, float]) -> 'Tensor':
-        """Division: tensor / other"""
+        """
+        Division operator: tensor / other
+        
+        TODO: Implement / operator for tensors.
+        
+        APPROACH:
+        1. Convert other to Tensor if needed
+        2. Divide using numpy arrays
+        3. Return new Tensor with result
+        
+        EXAMPLE:
+        Tensor([6, 8]) / Tensor([2, 4]) → Tensor([3, 2])
+        Tensor([6, 8]) / 2 → Tensor([3, 4])
+        """
+        ### BEGIN SOLUTION
         if isinstance(other, Tensor):
-            return Tensor(self._data / other._data)
-        else:  # scalar
-            return Tensor(self._data / other)
-    
-    def __rtruediv__(self, other: Union[int, float]) -> 'Tensor':
-        """Reverse division: scalar / tensor"""
-        return Tensor(other / self._data)
+            result = self._data / other._data
+        else:
+            result = self._data / other
+        return Tensor(result)
+        ### END SOLUTION
 
 # %% [markdown]
 """
-### 🧪 Test Your Tensor Class
-
-Once you implement the Tensor class above, run this cell to test it:
-"""
-
-# %%
-# Test basic tensor creation
-print("Testing Tensor creation...")
-
-try:
-    # Test scalar
-    t1 = Tensor(5)
-    print(f"✅ Scalar: {t1} (shape: {t1.shape}, size: {t1.size})")
-    
-    # Test vector
-    t2 = Tensor([1, 2, 3, 4])
-    print(f"✅ Vector: {t2} (shape: {t2.shape}, size: {t2.size})")
-    
-    # Test matrix
-    t3 = Tensor([[1, 2], [3, 4]])
-    print(f"✅ Matrix: {t3} (shape: {t3.shape}, size: {t3.size})")
-    
-    # Test numpy array
-    t4 = Tensor(np.array([1.0, 2.0, 3.0]))
-    print(f"✅ Numpy: {t4} (shape: {t4.shape}, size: {t4.size})")
-    
-    # Test dtype
-    t5 = Tensor([1, 2, 3], dtype='float32')
-    print(f"✅ Dtype: {t5} (dtype: {t5.dtype})")
-    
-    print("\n🎉 All basic tests passed! Your Tensor class is working!")
-    
-except Exception as e:
-    print(f"❌ Error: {e}")
-    print("Make sure to implement all the required methods!")
-
-# %% [markdown]
-"""
-## Step 2: Tensor Arithmetic Operations
-
-Now let's add the ability to perform mathematical operations on tensors. This is where tensors become powerful for ML!
+## Step 3: Tensor Arithmetic Operations
 
 ### Why Arithmetic Matters
-- **Neural networks** perform millions of arithmetic operations
-- **Gradients** require addition, multiplication, and other operations
-- **Batch processing** needs element-wise operations
-- **GPU acceleration** works with parallel arithmetic
+Tensor arithmetic is the foundation of all neural network operations:
+- **Forward pass**: Matrix multiplications and additions
+- **Activation functions**: Element-wise operations
+- **Loss computation**: Differences and squares
+- **Gradient computation**: Chain rule applications
 
-### Types of Operations
-1. **Element-wise**: Add, subtract, multiply, divide
-2. **Broadcasting**: Operations between different shapes
-3. **Matrix operations**: Matrix multiplication (later)
-4. **Reduction**: Sum, mean, max, min (later)
-
-Let's start with the basics!
+### Operations We'll Implement
+- **Addition**: Element-wise addition of tensors
+- **Multiplication**: Element-wise multiplication
+- **Python operators**: `+`, `-`, `*`, `/` for natural syntax
+- **Broadcasting**: Handle different shapes automatically
 """
-
-# %%
-#| export
-def add_tensors(a: Tensor, b: Tensor) -> Tensor:
-    """
-    Add two tensors element-wise.
-    
-    TODO: Implement element-wise addition of two tensors.
-    
-    APPROACH:
-    1. Extract the numpy arrays from both tensors
-    2. Use NumPy's + operator for element-wise addition
-    3. Return a new Tensor with the result
-    
-    EXAMPLE:
-    add_tensors(Tensor([1, 2, 3]), Tensor([4, 5, 6])) 
-    → Tensor([5, 7, 9])
-    
-    HINTS:
-    - Use a.data and b.data to get the numpy arrays
-    - NumPy handles broadcasting automatically
-    - Return Tensor(result) to wrap the result
-    """
-    raise NotImplementedError("Student implementation required")
-
-# %%
-#| hide
-#| export
-def add_tensors(a: Tensor, b: Tensor) -> Tensor:
-    """Add two tensors element-wise."""
-    return Tensor(a.data + b.data)
-
-# %%
-#| export
-def multiply_tensors(a: Tensor, b: Tensor) -> Tensor:
-    """
-    Multiply two tensors element-wise.
-    
-    TODO: Implement element-wise multiplication of two tensors.
-    
-    APPROACH:
-    1. Extract the numpy arrays from both tensors
-    2. Use NumPy's * operator for element-wise multiplication
-    3. Return a new Tensor with the result
-    
-    EXAMPLE:
-    multiply_tensors(Tensor([1, 2, 3]), Tensor([4, 5, 6])) 
-    → Tensor([4, 10, 18])
-    
-    HINTS:
-    - Use a.data and b.data to get the numpy arrays
-    - NumPy handles broadcasting automatically
-    - Return Tensor(result) to wrap the result
-    """
-    raise NotImplementedError("Student implementation required")
-
-# %%
-#| hide
-#| export
-def multiply_tensors(a: Tensor, b: Tensor) -> Tensor:
-    """Multiply two tensors element-wise."""
-    return Tensor(a.data * b.data)
 
 # %% [markdown]
 """
-### 🧪 Test Your Arithmetic Operations
+## Step 3: Tensor Arithmetic Methods
+
+The arithmetic methods are now part of the Tensor class above. Let's test them!
 """
 
-# %%
-# Test arithmetic operations
+# %% [markdown]
+"""
+## Step 4: Python Operator Overloading
+
+### Why Operator Overloading?
+Python's magic methods allow us to use natural syntax:
+- `a + b` instead of `a.add(b)`
+- `a * b` instead of `a.multiply(b)`
+- `a - b` for subtraction
+- `a / b` for division
+
+This makes tensor operations feel natural and readable.
+"""
+
+# %% [markdown]
+"""
+## Step 4: Operator Overloading
+
+The operator methods (__add__, __mul__, __sub__, __truediv__) are now part of the Tensor class above. This enables natural syntax like `a + b` and `a * b`.
+"""
+
+# %% [markdown]
+"""
+### 🧪 Test Your Tensor Implementation
+
+Once you implement the Tensor class above, run these cells to test your implementation:
+"""
+
+# %% nbgrader={"grade": true, "grade_id": "test-tensor-creation", "locked": true, "points": 25, "schema_version": 3, "solution": false, "task": false}
+# Test tensor creation and properties
+print("Testing tensor creation...")
+
+# Test scalar creation
+scalar = Tensor(5.0)
+assert scalar.shape == (), f"Scalar shape should be (), got {scalar.shape}"
+assert scalar.size == 1, f"Scalar size should be 1, got {scalar.size}"
+assert scalar.data.item() == 5.0, f"Scalar value should be 5.0, got {scalar.data.item()}"
+
+# Test vector creation
+vector = Tensor([1, 2, 3])
+assert vector.shape == (3,), f"Vector shape should be (3,), got {vector.shape}"
+assert vector.size == 3, f"Vector size should be 3, got {vector.size}"
+assert np.array_equal(vector.data, np.array([1, 2, 3])), "Vector data mismatch"
+
+# Test matrix creation
+matrix = Tensor([[1, 2], [3, 4]])
+assert matrix.shape == (2, 2), f"Matrix shape should be (2, 2), got {matrix.shape}"
+assert matrix.size == 4, f"Matrix size should be 4, got {matrix.size}"
+assert np.array_equal(matrix.data, np.array([[1, 2], [3, 4]])), "Matrix data mismatch"
+
+# Test dtype handling
+float_tensor = Tensor([1.0, 2.0, 3.0])
+assert float_tensor.dtype == np.float32, f"Float tensor dtype should be float32, got {float_tensor.dtype}"
+
+int_tensor = Tensor([1, 2, 3])
+# Note: NumPy may default to int64 on some systems, so we check for integer types
+assert int_tensor.dtype in [np.int32, np.int64], f"Int tensor dtype should be int32 or int64, got {int_tensor.dtype}"
+
+print("✅ Tensor creation tests passed!")
+print(f"✅ Scalar: {scalar}")
+print(f"✅ Vector: {vector}")
+print(f"✅ Matrix: {matrix}")
+
+# %% nbgrader={"grade": true, "grade_id": "test-tensor-arithmetic", "locked": true, "points": 25, "schema_version": 3, "solution": false, "task": false}
+# Test tensor arithmetic operations
 print("Testing tensor arithmetic...")
 
-try:
-    # Test addition
-    a = Tensor([1, 2, 3])
-    b = Tensor([4, 5, 6])
-    c = add_tensors(a, b)
-    print(f"✅ Addition: {a} + {b} = {c}")
-    
-    # Test multiplication
-    d = multiply_tensors(a, b)
-    print(f"✅ Multiplication: {a} * {b} = {d}")
-    
-    # Test broadcasting (scalar + tensor)
-    scalar = Tensor(10)
-    e = add_tensors(scalar, a)
-    print(f"✅ Broadcasting: {scalar} + {a} = {e}")
-    
-    print("\n🎉 All arithmetic tests passed!")
-    
-except Exception as e:
-    print(f"❌ Error: {e}")
-    print("Make sure to implement add_tensors and multiply_tensors!")
+# Test addition
+a = Tensor([1, 2, 3])
+b = Tensor([4, 5, 6])
+c = a + b
+expected = np.array([5, 7, 9])
+assert np.array_equal(c.data, expected), f"Addition failed: expected {expected}, got {c.data}"
 
-# %% [markdown]
-"""
-## Step 3: Tensor Methods (Object-Oriented Approach)
+# Test multiplication
+d = a * b
+expected = np.array([4, 10, 18])
+assert np.array_equal(d.data, expected), f"Multiplication failed: expected {expected}, got {d.data}"
 
-Now let's add methods to the Tensor class itself. This makes the API more intuitive and similar to PyTorch.
+# Test subtraction
+e = b - a
+expected = np.array([3, 3, 3])
+assert np.array_equal(e.data, expected), f"Subtraction failed: expected {expected}, got {e.data}"
 
-### Why Methods Matter
-- **Cleaner API**: `tensor.add(other)` instead of `add_tensors(tensor, other)`
-- **Method chaining**: `tensor.add(other).multiply(scalar)`
-- **Consistency**: Similar to PyTorch's tensor methods
-- **Object-oriented**: Encapsulates operations with data
-"""
+# Test division
+f = b / a
+expected = np.array([4.0, 2.5, 2.0])
+assert np.allclose(f.data, expected), f"Division failed: expected {expected}, got {f.data}"
 
-# %%
-#| export
-class Tensor:
-    """
-    TinyTorch Tensor: N-dimensional array with ML operations.
-    
-    The fundamental data structure for all TinyTorch operations.
-    Wraps NumPy arrays with ML-specific functionality.
-    """
-    
-    def __init__(self, data: Union[int, float, List, np.ndarray], dtype: Optional[str] = None):
-        """
-        Create a new tensor from data.
-        
-        Args:
-            data: Input data (scalar, list, or numpy array)
-            dtype: Data type ('float32', 'int32', etc.). Defaults to auto-detect.
-        """
-        # Convert input to numpy array
-        if isinstance(data, (int, float, np.number)):
-            # Handle Python and NumPy scalars
-            if dtype is None:
-                # Auto-detect type: int for integers, float32 for floats
-                if isinstance(data, int) or (isinstance(data, np.number) and np.issubdtype(type(data), np.integer)):
-                    dtype = 'int32'
-                else:
-                    dtype = 'float32'
-            self._data = np.array(data, dtype=dtype)
-        elif isinstance(data, list):
-            # Let NumPy auto-detect type, then convert if needed
-            temp_array = np.array(data)
-            if dtype is None:
-                # Keep NumPy's auto-detected type, but prefer common ML types
-                if np.issubdtype(temp_array.dtype, np.integer):
-                    dtype = 'int32'
-                elif np.issubdtype(temp_array.dtype, np.floating):
-                    dtype = 'float32'
-                else:
-                    dtype = temp_array.dtype
-            self._data = temp_array.astype(dtype)
-        elif isinstance(data, np.ndarray):
-            self._data = data.astype(dtype or data.dtype)
-        else:
-            raise TypeError(f"Cannot create tensor from {type(data)}")
-    
-    @property
-    def data(self) -> np.ndarray:
-        """Access underlying numpy array."""
-        return self._data
-    
-    @property
-    def shape(self) -> Tuple[int, ...]:
-        """Get tensor shape."""
-        return self._data.shape
-    
-    @property
-    def size(self) -> int:
-        """Get total number of elements."""
-        return self._data.size
-    
-    @property
-    def dtype(self) -> np.dtype:
-        """Get data type as numpy dtype."""
-        return self._data.dtype
-    
-    def __repr__(self) -> str:
-        """String representation."""
-        return f"Tensor({self._data.tolist()}, shape={self.shape}, dtype={self.dtype})"
-    
-    def add(self, other: 'Tensor') -> 'Tensor':
-        """
-        Add another tensor to this tensor.
-        
-        TODO: Implement tensor addition as a method.
-        
-        APPROACH:
-        1. Use the add_tensors function you already implemented
-        2. Or implement the addition directly using self._data + other._data
-        3. Return a new Tensor with the result
-        
-        EXAMPLE:
-        Tensor([1, 2, 3]).add(Tensor([4, 5, 6])) → Tensor([5, 7, 9])
-        
-        HINTS:
-        - You can reuse add_tensors(self, other)
-        - Or implement directly: Tensor(self._data + other._data)
-        """
-        raise NotImplementedError("Student implementation required")
-    
-    def multiply(self, other: 'Tensor') -> 'Tensor':
-        """
-        Multiply this tensor by another tensor.
-        
-        TODO: Implement tensor multiplication as a method.
-        
-        APPROACH:
-        1. Use the multiply_tensors function you already implemented
-        2. Or implement the multiplication directly using self._data * other._data
-        3. Return a new Tensor with the result
-        
-        EXAMPLE:
-        Tensor([1, 2, 3]).multiply(Tensor([4, 5, 6])) → Tensor([4, 10, 18])
-        
-        HINTS:
-        - You can reuse multiply_tensors(self, other)
-        - Or implement directly: Tensor(self._data * other._data)
-        """
-        raise NotImplementedError("Student implementation required")
-    
-    # Arithmetic operators for natural syntax (a + b, a * b, etc.)
-    def __add__(self, other: Union['Tensor', int, float]) -> 'Tensor':
-        """Addition: tensor + other"""
-        if isinstance(other, Tensor):
-            return Tensor(self._data + other._data)
-        else:  # scalar
-            return Tensor(self._data + other)
-    
-    def __radd__(self, other: Union[int, float]) -> 'Tensor':
-        """Reverse addition: scalar + tensor"""
-        return Tensor(other + self._data)
-    
-    def __sub__(self, other: Union['Tensor', int, float]) -> 'Tensor':
-        """Subtraction: tensor - other"""
-        if isinstance(other, Tensor):
-            return Tensor(self._data - other._data)
-        else:  # scalar
-            return Tensor(self._data - other)
-    
-    def __rsub__(self, other: Union[int, float]) -> 'Tensor':
-        """Reverse subtraction: scalar - tensor"""
-        return Tensor(other - self._data)
-    
-    def __mul__(self, other: Union['Tensor', int, float]) -> 'Tensor':
-        """Multiplication: tensor * other"""
-        if isinstance(other, Tensor):
-            return Tensor(self._data * other._data)
-        else:  # scalar
-            return Tensor(self._data * other)
-    
-    def __rmul__(self, other: Union[int, float]) -> 'Tensor':
-        """Reverse multiplication: scalar * tensor"""
-        return Tensor(other * self._data)
-    
-    def __truediv__(self, other: Union['Tensor', int, float]) -> 'Tensor':
-        """Division: tensor / other"""
-        if isinstance(other, Tensor):
-            return Tensor(self._data / other._data)
-        else:  # scalar
-            return Tensor(self._data / other)
-    
-    def __rtruediv__(self, other: Union[int, float]) -> 'Tensor':
-        """Reverse division: scalar / tensor"""
-        return Tensor(other / self._data)
+# Test scalar operations
+g = a + 10
+expected = np.array([11, 12, 13])
+assert np.array_equal(g.data, expected), f"Scalar addition failed: expected {expected}, got {g.data}"
 
-# %%
-#| hide
-#| export
-class Tensor:
-    """
-    TinyTorch Tensor: N-dimensional array with ML operations.
-    
-    The fundamental data structure for all TinyTorch operations.
-    Wraps NumPy arrays with ML-specific functionality.
-    """
-    
-    def __init__(self, data: Union[int, float, List, np.ndarray], dtype: Optional[str] = None):
-        """
-        Create a new tensor from data.
-        
-        Args:
-            data: Input data (scalar, list, or numpy array)
-            dtype: Data type ('float32', 'int32', etc.). Defaults to auto-detect.
-        """
-        # Convert input to numpy array
-        if isinstance(data, (int, float, np.number)):
-            # Handle Python and NumPy scalars
-            if dtype is None:
-                # Auto-detect type: int for integers, float32 for floats
-                if isinstance(data, int) or (isinstance(data, np.number) and np.issubdtype(type(data), np.integer)):
-                    dtype = 'int32'
-                else:
-                    dtype = 'float32'
-            self._data = np.array(data, dtype=dtype)
-        elif isinstance(data, list):
-            # Let NumPy auto-detect type, then convert if needed
-            temp_array = np.array(data)
-            if dtype is None:
-                # Keep NumPy's auto-detected type, but prefer common ML types
-                if np.issubdtype(temp_array.dtype, np.integer):
-                    dtype = 'int32'
-                elif np.issubdtype(temp_array.dtype, np.floating):
-                    dtype = 'float32'
-                else:
-                    dtype = temp_array.dtype
-            self._data = temp_array.astype(dtype)
-        elif isinstance(data, np.ndarray):
-            self._data = data.astype(dtype or data.dtype)
-        else:
-            raise TypeError(f"Cannot create tensor from {type(data)}")
-    
-    @property
-    def data(self) -> np.ndarray:
-        """Access underlying numpy array."""
-        return self._data
-    
-    @property
-    def shape(self) -> Tuple[int, ...]:
-        """Get tensor shape."""
-        return self._data.shape
-    
-    @property
-    def size(self) -> int:
-        """Get total number of elements."""
-        return self._data.size
-    
-    @property
-    def dtype(self) -> np.dtype:
-        """Get data type as numpy dtype."""
-        return self._data.dtype
-    
-    def __repr__(self) -> str:
-        """String representation."""
-        return f"Tensor({self._data.tolist()}, shape={self.shape}, dtype={self.dtype})"
-    
-    def add(self, other: 'Tensor') -> 'Tensor':
-        """Add another tensor to this tensor."""
-        return Tensor(self._data + other._data)
-    
-    def multiply(self, other: 'Tensor') -> 'Tensor':
-        """Multiply this tensor by another tensor."""
-        return Tensor(self._data * other._data)
-    
-    # Arithmetic operators for natural syntax (a + b, a * b, etc.)
-    def __add__(self, other: Union['Tensor', int, float]) -> 'Tensor':
-        """Addition: tensor + other"""
-        if isinstance(other, Tensor):
-            return Tensor(self._data + other._data)
-        else:  # scalar
-            return Tensor(self._data + other)
-    
-    def __radd__(self, other: Union[int, float]) -> 'Tensor':
-        """Reverse addition: scalar + tensor"""
-        return Tensor(other + self._data)
-    
-    def __sub__(self, other: Union['Tensor', int, float]) -> 'Tensor':
-        """Subtraction: tensor - other"""
-        if isinstance(other, Tensor):
-            return Tensor(self._data - other._data)
-        else:  # scalar
-            return Tensor(self._data - other)
-    
-    def __rsub__(self, other: Union[int, float]) -> 'Tensor':
-        """Reverse subtraction: scalar - tensor"""
-        return Tensor(other - self._data)
-    
-    def __mul__(self, other: Union['Tensor', int, float]) -> 'Tensor':
-        """Multiplication: tensor * other"""
-        if isinstance(other, Tensor):
-            return Tensor(self._data * other._data)
-        else:  # scalar
-            return Tensor(self._data * other)
-    
-    def __rmul__(self, other: Union[int, float]) -> 'Tensor':
-        """Reverse multiplication: scalar * tensor"""
-        return Tensor(other * self._data)
-    
-    def __truediv__(self, other: Union['Tensor', int, float]) -> 'Tensor':
-        """Division: tensor / other"""
-        if isinstance(other, Tensor):
-            return Tensor(self._data / other._data)
-        else:  # scalar
-            return Tensor(self._data / other)
-    
-    def __rtruediv__(self, other: Union[int, float]) -> 'Tensor':
-        """Reverse division: scalar / tensor"""
-        return Tensor(other / self._data)
+h = a * 2
+expected = np.array([2, 4, 6])
+assert np.array_equal(h.data, expected), f"Scalar multiplication failed: expected {expected}, got {h.data}"
 
-# %% [markdown]
-"""
-### 🧪 Test Your Tensor Methods
-"""
+print("✅ Tensor arithmetic tests passed!")
+print(f"✅ Addition: {a} + {b} = {c}")
+print(f"✅ Multiplication: {a} * {b} = {d}")
+print(f"✅ Subtraction: {b} - {a} = {e}")
+print(f"✅ Division: {b} / {a} = {f}")
 
-# %%
-# Test tensor methods
-print("Testing tensor methods...")
+# %% nbgrader={"grade": true, "grade_id": "test-tensor-broadcasting", "locked": true, "points": 25, "schema_version": 3, "solution": false, "task": false}
+# Test tensor broadcasting
+print("Testing tensor broadcasting...")
 
-try:
-    # Test method-based operations
-    a = Tensor([1, 2, 3])
-    b = Tensor([4, 5, 6])
-    
-    c = a.add(b)
-    print(f"✅ Method addition: {a}.add({b}) = {c}")
-    
-    d = a.multiply(b)
-    print(f"✅ Method multiplication: {a}.multiply({b}) = {d}")
-    
-    # Test method chaining
-    e = a.add(b).multiply(Tensor(2))
-    print(f"✅ Method chaining: {a}.add({b}).multiply(2) = {e}")
-    
-    print("\n🎉 All method tests passed!")
-    
-except Exception as e:
-    print(f"❌ Error: {e}")
-    print("Make sure to implement the add and multiply methods!")
+# Test scalar broadcasting
+matrix = Tensor([[1, 2], [3, 4]])
+scalar = Tensor(10)
+result = matrix + scalar
+expected = np.array([[11, 12], [13, 14]])
+assert np.array_equal(result.data, expected), f"Scalar broadcasting failed: expected {expected}, got {result.data}"
+
+# Test vector broadcasting
+vector = Tensor([1, 2])
+result = matrix + vector
+expected = np.array([[2, 4], [4, 6]])
+assert np.array_equal(result.data, expected), f"Vector broadcasting failed: expected {expected}, got {result.data}"
+
+# Test different shapes
+a = Tensor([[1], [2], [3]])  # (3, 1)
+b = Tensor([10, 20])         # (2,)
+result = a + b
+expected = np.array([[11, 21], [12, 22], [13, 23]])
+assert np.array_equal(result.data, expected), f"Shape broadcasting failed: expected {expected}, got {result.data}"
+
+print("✅ Tensor broadcasting tests passed!")
+print(f"✅ Matrix + Scalar: {matrix} + {scalar} = {result}")
+print(f"✅ Broadcasting works correctly!")
 
 # %% [markdown]
 """
 ## 🎯 Module Summary
 
-Congratulations! You've built the foundation of TinyTorch:
+Congratulations! You've successfully implemented the core Tensor class for TinyTorch:
 
 ### What You've Accomplished
-✅ **Tensor Creation**: Handle scalars, lists, and numpy arrays  
-✅ **Properties**: Access shape, size, and data type  
-✅ **Arithmetic**: Element-wise addition and multiplication  
-✅ **Methods**: Object-oriented API for operations  
-✅ **Testing**: Immediate feedback on your implementation  
+✅ **Tensor Creation**: Handle scalars, vectors, matrices, and higher-dimensional arrays  
+✅ **Data Types**: Proper dtype handling with auto-detection and conversion  
+✅ **Properties**: Shape, size, dtype, and data access  
+✅ **Arithmetic**: Addition, multiplication, subtraction, division  
+✅ **Operators**: Natural Python syntax with `+`, `-`, `*`, `/`  
+✅ **Broadcasting**: Automatic shape compatibility like NumPy  
 
 ### Key Concepts You've Learned
-- **Tensors** are N-dimensional arrays with ML operations
-- **NumPy integration** provides efficient computation
-- **Element-wise operations** work on corresponding elements
-- **Broadcasting** automatically handles different shapes
-- **Object-oriented design** makes APIs intuitive
+- **Tensors** are the fundamental data structure for ML systems
+- **NumPy backend** provides efficient computation with ML-friendly API
+- **Operator overloading** makes tensor operations feel natural
+- **Broadcasting** enables flexible operations between different shapes
+- **Type safety** ensures consistent behavior across operations
 
-### What's Next
-In the next modules, you'll build on this foundation:
-- **Layers**: Transform tensors with weights and biases
-- **Activations**: Add nonlinearity to your networks
-- **Networks**: Compose layers into complete models
-- **Training**: Learn parameters with gradients and optimization
+### Next Steps
+1. **Export your code**: `tito package nbdev --export 01_tensor`
+2. **Test your implementation**: `tito module test 01_tensor`
+3. **Use your tensors**: 
+   ```python
+   from tinytorch.core.tensor import Tensor
+   t = Tensor([1, 2, 3])
+   print(t + 5)  # Your tensor in action!
+   ```
+4. **Move to Module 2**: Start building activation functions!
 
-### Real-World Connection
-Your Tensor class is now ready to:
-- Store neural network weights and biases
-- Process batches of data efficiently
-- Handle different data types (images, text, audio)
-- Integrate with the rest of the TinyTorch ecosystem
-
-**Ready for the next challenge?** Let's move on to building layers that can transform your tensors!
-"""
-
-# %%
-# Final verification
-print("\n" + "="*50)
-print("🎉 TENSOR MODULE COMPLETE!")
-print("="*50)
-print("✅ Tensor creation and properties")
-print("✅ Arithmetic operations")
-print("✅ Method-based API")
-print("✅ Comprehensive testing")
-print("\n🚀 Ready to build layers in the next module!") 
+**Ready for the next challenge?** Let's add the mathematical functions that make neural networks powerful!
+""" 
