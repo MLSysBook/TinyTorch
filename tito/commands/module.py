@@ -86,6 +86,7 @@ class ModuleCommand(BaseCommand):
                 "[dim]  tito module test tensor[/dim]\n"
                 "[dim]  tito module export --all[/dim]\n"
                 "[dim]  tito module export tensor[/dim]\n"
+                "[dim]  tito module clean --all[/dim]\n"
                 "[dim]  tito module clean tensor[/dim]",
                 title="Module Command Group",
                 border_style="bright_cyan"
