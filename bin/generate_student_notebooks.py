@@ -90,12 +90,18 @@ class NotebookGenerator:
         
         in_solution = False
         in_hidden_tests = False
+        placeholder_added = False
         
         for line in source_lines:
             if self.markers['nbgrader_solution_begin'] in line:
                 in_solution = True
+                placeholder_added = False
                 if self.use_nbgrader:
                     new_lines.append(line)  # Keep marker for nbgrader
+                    # Add placeholder immediately after BEGIN SOLUTION
+                    new_lines.append("    # YOUR CODE HERE\n")
+                    new_lines.append("    raise NotImplementedError()\n")
+                    placeholder_added = True
                 continue
             elif self.markers['nbgrader_solution_end'] in line:
                 in_solution = False
@@ -113,13 +119,8 @@ class NotebookGenerator:
                     new_lines.append(line)  # Keep marker for nbgrader
                 continue
             elif in_solution:
-                # Replace solution with placeholder
-                if not self.use_nbgrader:
-                    continue  # Skip solution lines for regular students
-                else:
-                    new_lines.append("    # YOUR CODE HERE\n")
-                    new_lines.append("    raise NotImplementedError()\n")
-                    in_solution = False  # Only add placeholder once
+                # Skip solution lines (placeholder already added)
+                continue
             elif in_hidden_tests:
                 # Keep hidden tests for nbgrader, remove for regular students
                 if self.use_nbgrader:
