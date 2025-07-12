@@ -146,8 +146,14 @@ Examples:
             if parsed_args.command and not self.config.no_color:
                 print_banner()
             
-            # Validate environment for most commands
-            if parsed_args.command not in [None, 'version', 'help']:
+            # Validate environment for most commands (skip for doctor)
+            skip_validation = (
+                parsed_args.command in [None, 'version', 'help'] or
+                (parsed_args.command == 'system' and 
+                 hasattr(parsed_args, 'system_command') and 
+                 parsed_args.system_command == 'doctor')
+            )
+            if not skip_validation:
                 if not self.validate_environment():
                     return 1
             
