@@ -27,11 +27,20 @@
 ### **🛠️ For Developers**
 **[📚 Documentation](docs/)** - Complete documentation including pedagogy and development guides
 
-### **🎯 NBGrader Integration**
-**Instructor Workflow**: Create solutions → Generate student versions → Release → Collect → Grade
-- `tito nbgrader generate XX` - Create student assignments from instructor solutions
-- `tito nbgrader status` - Check assignment status
-- Full NBGrader integration for classroom management
+### **🎯 Python-First Development + NBGrader**
+**Philosophy**: Raw Python files → Jupyter notebooks on demand → NBGrader compliance
+- **Core Development**: Work in `modules/XX/XX_dev.py` (Python files)
+- **Package Building**: `nbdev` exports to `tinytorch` package  
+- **Assignment Generation**: `jupytext` + `NBGrader` create student versions
+- **Auto-Grading**: `pytest` integration for automated testing
+
+**Instructor Workflow**: 
+```bash
+code modules/XX/XX_dev.py        # Edit Python source
+tito module export XX            # Build package (nbdev)
+tito nbgrader generate XX        # Create assignment (Python→Jupyter→NBGrader)
+tito nbgrader release XX         # Deploy to students
+```
 
 ## 🎯 **What Students Build**
 

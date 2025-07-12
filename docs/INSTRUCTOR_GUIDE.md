@@ -72,12 +72,19 @@ python -c "from tinytorch.core.activations import ReLU; print(ReLU()([-1, 0, 1])
 - **01_tensor**: Tensor arithmetic (when remaining tests pass)
 - **Future modules**: Autograd, training, optimization
 
-## 🛠️ **Instructor Workflow** (Solution → Student Version)
+## 🛠️ **Instructor Workflow** (Python-First Development)
 
-### **Step 1: Create/Edit Solution**
+### **🐍 Python-First Philosophy**
+- **Always work in raw Python files** (`modules/XX/XX_dev.py`)
+- **Generate Jupyter notebooks on demand** using Jupytext
+- **NBGrader compliance** through automated cell metadata
+- **nbdev for package building** and exports
+
+### **Step 1: Create/Edit Solution (Python File)**
 ```bash
 cd modules/00_setup
-jupyter lab setup_dev.py         # Edit instructor solution
+# Edit the raw Python file (source of truth)
+code setup_dev.py                # or vim/nano/your editor
 ```
 
 ### **Step 2: Test Solution**
@@ -85,20 +92,42 @@ jupyter lab setup_dev.py         # Edit instructor solution
 python -m pytest modules/00_setup/tests/ -v  # Verify solution works
 ```
 
-### **Step 3: Generate Student Version**
+### **Step 3: Export to Package (nbdev)**
 ```bash
-tito nbgrader generate 00_setup   # Create student assignment
+python bin/tito module export 00_setup  # Export to tinytorch package
 ```
 
-### **Step 4: Release to Students**
+### **Step 4: Generate Student Assignment (NBGrader)**
+```bash
+tito nbgrader generate 00_setup   # Python → Jupyter → NBGrader
+```
+
+### **Step 5: Release to Students**
 ```bash
 tito nbgrader release 00_setup    # Deploy to student environment
 ```
 
-### **Step 5: Collect & Grade**
+### **Step 6: Collect & Grade**
 ```bash
 tito nbgrader collect 00_setup    # Collect submissions
-tito nbgrader autograde 00_setup  # Auto-grade with tests
+tito nbgrader autograde 00_setup  # Auto-grade with pytest
+```
+
+### **🔄 Complete Workflow Diagram**
+```
+modules/XX/XX_dev.py    (Source of Truth)
+        ↓
+    [nbdev export]      (Package Building)
+        ↓
+  tinytorch/core/       (Production Package)
+        ↓
+  [jupytext convert]    (On Demand)
+        ↓
+    XX_dev.ipynb        (Instructor Notebook)
+        ↓
+  [NBGrader process]    (Student Generation)
+        ↓
+assignments/source/XX/  (Student Assignments)
 ```
 
 ## 🛠️ **Student Workflow** (5 Simple Steps)
