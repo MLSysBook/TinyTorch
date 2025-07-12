@@ -20,9 +20,9 @@ tito system info         # Check your system
 tito system doctor       # Verify everything works
 ```
 
-### **2. Start Your First Module**
+### **2. Start Your First Assignment**
 ```bash
-cd modules/00_setup
+cd assignments/source/00_setup
 jupyter lab setup_dev.py
 ```
 
@@ -54,9 +54,9 @@ Track your journey through TinyTorch:
 
 This is your rhythm for every module:
 
-### **Step 1: Open Module**
+### **Step 1: Open Assignment**
 ```bash
-cd modules/00_setup
+cd assignments/source/00_setup
 jupyter lab setup_dev.py
 ```
 
@@ -284,7 +284,7 @@ tito module status                   # See all module progress
 ### **Your First Session**
 1. **Open terminal**: `cd TinyTorch`
 2. **Check system**: `tito system doctor`
-3. **Start module**: `cd modules/00_setup && jupyter lab setup_dev.py`
+3. **Start assignment**: `cd assignments/source/00_setup && jupyter lab setup_dev.py`
 4. **Follow instructions**: Complete the TODO sections
 5. **Test your work**: `python -m pytest tests/ -v`
 

@@ -51,7 +51,7 @@ This module teaches you the mathematical foundations that make deep learning pos
 1. **Open the development file**:
    ```bash
    python bin/tito.py jupyter
-   # Then open modules/activations/activations_dev.py
+   # Then open assignments/source/02_activations/activations_dev.py
    ```
 
 2. **Implement the functions**:

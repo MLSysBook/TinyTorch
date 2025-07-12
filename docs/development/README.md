@@ -4,23 +4,13 @@
 
 *Note: AI assistants use `.cursor/rules/` for coding patterns. This documentation focuses on methodology, workflow, and educational design for human developers.*
 
-## 🎯 **Quick Start** (New Human Developers)
+## 🎯 **Current Architecture**
 
-1. **Read First**: [Module Development Guide](module-development-guide.md) - Complete methodology and philosophy
-2. **Follow**: [Module Creation Checklist](module-creation-checklist.md) - Step-by-step process
-3. **Reference**: [Quick Reference](quick-module-reference.md) - Commands and common patterns
+TinyTorch uses a **clean separation of concerns** architecture:
 
-## 📖 **Documentation Purpose**
-
-### **Human Development Guides** (This Directory)
-- **Why**: Educational methodology, design philosophy, workflow
-- **How**: Step-by-step processes, quality standards, best practices
-- **Context**: Real-world connections, systems thinking, pedagogical goals
-
-### **AI Coding Rules** (`.cursor/rules/`)
-- **What**: Specific coding patterns, implementation examples, anti-patterns
-- **Enforcement**: Automatic guidance during development
-- **Technical**: Code structure, testing patterns, NBDev directives
+- **NBGrader**: Assignment creation and student workflow only
+- **nbdev**: Package export and building only
+- **Clear workflow**: NBGrader generates assignments → students complete them → module export builds package
 
 ## 🔑 **Core Development Philosophy**
 
@@ -44,43 +34,48 @@
 
 ## 🛠️ **Development Workflow**
 
-### **Create New Module**
+### **Create New Assignment**
 ```bash
 # 1. Create structure
-mkdir modules/{module}
-mkdir modules/{module}/tests
+mkdir assignments/source/{module}
+mkdir assignments/source/{module}/tests
 
-# 2. Write complete implementation
-# Follow: module-development-guide.md
+# 2. Write complete implementation with NBGrader solution delimiters
+# assignments/source/{module}/{module}_dev.py
 
-# 3. Test and validate  
-# Follow: module-creation-checklist.md
+# 3. Test and validate
+cd assignments/source/{module}
+pytest tests/ -v
 ```
 
-### **Quality Assurance**
-All modules must:
-- ✅ Use real data, not synthetic/mock data
-- ✅ Include progress feedback for long operations
-- ✅ Provide visual confirmation of working code
-- ✅ Test with realistic data scales
-- ✅ Follow "Build → Use → Understand" progression
-- ✅ Include comprehensive TODO guidance
-- ✅ Separate development richness from clean exports
+### **Student Workflow**
+```bash
+# 1. NBGrader: Generate assignments from source
+tito nbgrader generate {module}
+
+# 2. Students: Complete assignments
+# Work in assignments/source/{module}/{module}.ipynb
+
+# 3. nbdev: Export completed work to package
+tito module export {module}
+
+# 4. Test package integration
+tito module test {module}
+```
 
 ## 📋 **Documentation Structure**
 
-### **Core Development Process**
-- **[Module Development Guide](module-development-guide.md)** - Complete methodology and best practices
-- **[Module Creation Checklist](module-creation-checklist.md)** - Comprehensive step-by-step process
-- **[Quick Reference](quick-module-reference.md)** - Commands, markers, and common patterns
+### **Core Guides**
+- **[Testing Guidelines](testing-guidelines.md)** - Testing standards and practices
+- **[Template Files](module-template_files/)** - Complete file templates
 
-### **Templates and Examples**
-- **[Module Template](module-template.md)** - Reusable template snippets
-- **[Module Template Files](module-template_files/)** - Complete file templates
+### **Educational Philosophy**
+- **[Pedagogy Directory](../pedagogy/)** - Learning theory and course design
+- **[Vision](../pedagogy/vision.md)** - Overall educational philosophy
 
 ## 🎓 **Educational Design Principles**
 
-### **For Module Developers**
+### **For Assignment Developers**
 1. **Start with real data** - Choose production datasets first
 2. **Design for immediate gratification** - Students see results quickly
 3. **Build intuition before abstraction** - Concrete examples first
@@ -113,12 +108,12 @@ All modules must:
 ## 🎯 **Success Metrics**
 
 **Human developers should be able to:**
-- Understand the educational philosophy behind module design
-- Create modules that follow TinyTorch principles
+- Understand the educational philosophy behind assignment design
+- Create assignments that follow TinyTorch principles
 - Design learning experiences that build real-world skills
 - Balance educational goals with production quality
 
-**Modules should achieve:**
+**Assignments should achieve:**
 - High student engagement and completion rates
 - Real-world relevance and production quality
 - Smooth progression through the curriculum
@@ -126,4 +121,4 @@ All modules must:
 
 ---
 
-**Remember**: We're teaching ML systems engineering, not just algorithms. Every module should reflect real-world practices while maintaining educational excellence. 
+**Remember**: We're teaching ML systems engineering, not just algorithms. Every assignment should reflect real-world practices while maintaining educational excellence. 
