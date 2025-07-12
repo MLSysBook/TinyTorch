@@ -13,7 +13,7 @@ from .sync import SyncCommand
 from .reset import ResetCommand
 from .jupyter import JupyterCommand
 from .nbdev import NbdevCommand
-from .modules import ModulesCommand
+from .status import StatusCommand
 
 __all__ = [
     'BaseCommand',
@@ -25,5 +25,5 @@ __all__ = [
     'ResetCommand',
     'JupyterCommand',
     'NbdevCommand',
-    'ModulesCommand',
+    'StatusCommand',
 ] 
