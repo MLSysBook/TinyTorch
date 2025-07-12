@@ -2,307 +2,400 @@
 
 ## Overview
 
-This document analyzes the current testing architecture and proposes a unified approach that eliminates redundancy while maximizing educational value and development efficiency.
+This document defines the four-tier testing architecture for TinyTorch, ensuring comprehensive validation while maintaining educational clarity and avoiding dependency cascades.
 
-## Current Testing Structure (Analysis)
+## Four-Tier Testing Architecture
 
-### What We Have Now
+### 1. Unit Tests (In Notebooks)
+**Goal**: Immediate feedback on individual functions during development
 
-1. **Inline Tests** (in `*_dev.py` files)
-   - NBGrader cells with immediate feedback
-   - Test individual functions after implementation
-   - Labeled as "unit tests" but really immediate feedback
-   - Visual feedback with emojis and progress tracking
+**Location**: Embedded in `*_dev.py` files as NBGrader cells  
+**Dependencies**: None (or minimal, well-controlled)  
+**Scope**: Individual functions and methods  
+**Purpose**: Catch basic implementation errors immediately  
 
-2. **Module Tests** (in `tests/test_*.py` files)
-   - Comprehensive pytest suites
-   - Test entire module functionality
-   - Professional test structure with classes and fixtures
-   - Edge cases and error handling
-
-3. **Integration Tests** (planned)
-   - Cross-module workflows
-   - End-to-end pipelines
-
-4. **System Tests** (planned)
-   - Performance and scalability
-   - Production scenarios
-
-### Problems with Current Approach
-
-1. **Redundancy**: Testing the same functions twice with different approaches
-2. **Complexity**: Students need to understand two testing paradigms
-3. **Maintenance**: Changes require updating tests in multiple places
-4. **Artificial Distinction**: "Unit vs Module" tests are testing the same code
-5. **Scattered Feedback**: Tests are in different files with different formats
-
-## Proposed Unified Testing Architecture
-
-### Core Principle: Progressive Testing Within Notebooks
-
-Instead of separate test files, integrate comprehensive testing directly into the educational notebooks using a **"Build → Test → Build → Test"** rhythm.
-
-### Four-Stage Testing Pipeline
-
-```
-📚 Notebook Tests (Progressive)    →    🔗 Integration Tests    →    🚀 System Tests
-   ↓                                        ↓                         ↓
-Individual functions                   Cross-module workflows      Production scenarios
-Immediate feedback                     End-to-end pipelines       Performance & scale
-Educational context                    Real ML workflows          Robustness testing
-```
-
-### Stage 1: Progressive Notebook Testing
-
-**Replace both inline tests and module tests with comprehensive notebook testing:**
-
+**Example**:
 ```python
-# %% [markdown]
+# %% nbgrader={"grade": true, "grade_id": "test-relu-basic", "locked": true, "points": 5}
+# Quick validation of ReLU function
+def test_relu_basic():
+    # Test with simple inputs
+    result = relu([-1, 0, 1, 2])
+    expected = [0, 0, 1, 2]
+    assert result == expected, f"Expected {expected}, got {result}"
+    print("✅ ReLU function works!")
+
+test_relu_basic()
+```
+
+**Characteristics**:
+- **Fast**: Execute in seconds
+- **Simple**: Easy to understand and debug
+- **Focused**: Test one function at a time
+- **Visual**: Clear pass/fail feedback with emojis
+- **Educational**: Explain what's being tested
+
+### 2. Module Tests (Separate Files with Mocks)
+**Goal**: Comprehensive validation of module functionality using simple, visible mocks
+
+**Location**: `tests/test_{module}.py` files  
+**Dependencies**: Simple, visible mock objects (no cross-module dependencies)  
+**Scope**: Complete module functionality  
+**Purpose**: Verify module works correctly with well-defined interfaces  
+
+**Example**:
+```python
+# tests/test_layers.py
 """
-### 🧪 Comprehensive Test: Tensor Creation
+Comprehensive Layers Module Tests
 
-This tests all tensor creation scenarios with real data and edge cases.
+Tests Dense layer functionality using simple mock objects.
+No dependencies on other TinyTorch modules.
 """
 
-# %% nbgrader={"grade": true, "grade_id": "test-tensor-creation", "locked": true, "points": 20, "schema_version": 3, "solution": false, "task": false}
-import pytest
-import numpy as np
+class SimpleTensor:
+    """
+    Simple mock of what Dense layer expects from Tensor.
+    
+    Your Dense layer should work with any object that has:
+    - .data (numpy array): The actual numerical data
+    - .shape (tuple): Dimensions of the data
+    
+    This mock shows exactly what interface your layer needs.
+    """
+    def __init__(self, data):
+        self.data = np.array(data)
+        self.shape = self.data.shape
+    
+    def __repr__(self):
+        return f"SimpleTensor(shape={self.shape})"
 
-class TestTensorCreation:
-    """Comprehensive tensor creation tests."""
+class TestDenseLayer:
+    """Comprehensive tests for Dense layer implementation."""
     
-    def test_scalar_creation(self):
-        """Test scalar tensor creation."""
-        # Basic scalar
-        scalar = Tensor(5.0)
-        assert scalar.shape == ()
-        assert scalar.size == 1
-        assert scalar.data.item() == 5.0
+    def test_initialization(self):
+        """Test Dense layer creation and weight initialization."""
+        layer = Dense(input_size=3, output_size=2)
         
-        # Different types
-        int_scalar = Tensor(42)
-        assert int_scalar.dtype in [np.int32, np.int64]
-        
-        float_scalar = Tensor(3.14)
-        assert float_scalar.dtype == np.float32
+        # Check weights and bias are created
+        assert hasattr(layer, 'weights'), "Dense layer should have weights"
+        assert hasattr(layer, 'bias'), "Dense layer should have bias"
+        assert layer.weights.shape == (3, 2), f"Expected weights shape (3, 2), got {layer.weights.shape}"
+        assert layer.bias.shape == (2,), f"Expected bias shape (2,), got {layer.bias.shape}"
     
-    def test_vector_creation(self):
-        """Test vector tensor creation."""
-        # From list
-        vector = Tensor([1, 2, 3, 4, 5])
-        assert vector.shape == (5,)
-        assert vector.size == 5
-        assert np.array_equal(vector.data, np.array([1, 2, 3, 4, 5]))
+    def test_forward_pass(self):
+        """Test Dense layer forward pass with mock tensor."""
+        layer = Dense(input_size=3, output_size=2)
         
-        # From numpy array
-        np_array = np.array([10, 20, 30])
-        vector_from_np = Tensor(np_array)
-        assert np.array_equal(vector_from_np.data, np_array)
-    
-    def test_matrix_creation(self):
-        """Test matrix tensor creation."""
-        matrix = Tensor([[1, 2], [3, 4]])
-        assert matrix.shape == (2, 2)
-        assert matrix.size == 4
-        expected = np.array([[1, 2], [3, 4]])
-        assert np.array_equal(matrix.data, expected)
-    
-    def test_dtype_handling(self):
-        """Test data type handling."""
-        # Explicit dtype
-        float_tensor = Tensor([1, 2, 3], dtype='float32')
-        assert float_tensor.dtype == np.float32
+        # Create mock input
+        input_tensor = SimpleTensor([[1.0, 2.0, 3.0]])  # Batch size 1, 3 features
         
-        # Auto dtype detection
-        int_tensor = Tensor([1, 2, 3])
-        assert int_tensor.dtype in [np.int32, np.int64]
+        # Forward pass
+        output = layer(input_tensor)
+        
+        # Verify output
+        assert hasattr(output, 'data'), "Layer should return tensor-like object with .data"
+        assert hasattr(output, 'shape'), "Layer should return tensor-like object with .shape"
+        assert output.shape == (1, 2), f"Expected output shape (1, 2), got {output.shape}"
+        
+        # Verify computation (y = Wx + b)
+        expected = np.dot(input_tensor.data, layer.weights) + layer.bias
+        np.testing.assert_array_almost_equal(output.data, expected)
+    
+    def test_batch_processing(self):
+        """Test Dense layer with batch of inputs."""
+        layer = Dense(input_size=2, output_size=3)
+        
+        # Batch of 4 samples, 2 features each
+        batch_input = SimpleTensor([[1.0, 2.0], [3.0, 4.0], [5.0, 6.0], [7.0, 8.0]])
+        
+        output = layer(batch_input)
+        
+        assert output.shape == (4, 3), f"Expected batch output shape (4, 3), got {output.shape}"
     
     def test_edge_cases(self):
-        """Test edge cases and error conditions."""
-        # Empty tensor
-        empty = Tensor([])
-        assert empty.shape == (0,)
-        assert empty.size == 0
+        """Test Dense layer with edge cases."""
+        layer = Dense(input_size=1, output_size=1)
         
-        # Single element
-        single = Tensor([42])
-        assert single.shape == (1,)
-        assert single.size == 1
+        # Single feature, single output
+        single_input = SimpleTensor([[5.0]])
+        output = layer(single_input)
+        assert output.shape == (1, 1)
         
-        # Large tensor
-        large = Tensor(list(range(1000)))
-        assert large.shape == (1000,)
-        assert large.size == 1000
-
-# Run the tests with visual feedback
-def run_tensor_creation_tests():
-    """Run tensor creation tests with educational feedback."""
-    print("🔬 Running comprehensive tensor creation tests...")
-    
-    test_class = TestTensorCreation()
-    tests = [
-        ('Scalar Creation', test_class.test_scalar_creation),
-        ('Vector Creation', test_class.test_vector_creation),
-        ('Matrix Creation', test_class.test_matrix_creation),
-        ('Data Type Handling', test_class.test_dtype_handling),
-        ('Edge Cases', test_class.test_edge_cases)
-    ]
-    
-    passed = 0
-    total = len(tests)
-    
-    for test_name, test_func in tests:
-        try:
-            test_func()
-            print(f"✅ {test_name}: PASSED")
-            passed += 1
-        except Exception as e:
-            print(f"❌ {test_name}: FAILED - {e}")
-    
-    print(f"\n📊 Results: {passed}/{total} tests passed")
-    if passed == total:
-        print("🎉 All tensor creation tests passed!")
-        print("📈 Progress: Tensor Creation ✓")
-    else:
-        print("⚠️  Some tests failed - check your implementation")
-    
-    return passed == total
-
-# Execute tests
-run_tensor_creation_tests()
+        # Large batch
+        large_batch = SimpleTensor([[1.0]] * 100)  # 100 samples
+        output = layer(large_batch)
+        assert output.shape == (100, 1)
 ```
 
-### Benefits of Unified Approach
+**Characteristics**:
+- **Self-contained**: No dependencies on other TinyTorch modules
+- **Comprehensive**: Test all functionality, edge cases, error conditions
+- **Clear interfaces**: Mocks show exactly what the module expects
+- **Debuggable**: Students can easily understand and modify mocks
+- **Professional**: Use pytest structure and best practices
 
-1. **Single Source of Truth**: All tests in one place
-2. **Educational Context**: Tests explain what they're checking
-3. **Immediate Feedback**: Students see results instantly
-4. **Professional Structure**: Uses pytest patterns within notebooks
-5. **Comprehensive Coverage**: Covers functionality, edge cases, and errors
-6. **Visual Learning**: Clear pass/fail feedback with explanations
+### 3. Integration Tests (With Vetted Solutions)
+**Goal**: Verify new module composes correctly with other vetted modules
 
-### Stage 2: Integration Testing
+**Location**: `tests/integration/` directory  
+**Dependencies**: Instructor-provided working implementations of prerequisite modules  
+**Scope**: Cross-module workflows and realistic ML scenarios  
+**Purpose**: Ensure modules work together in real ML pipelines  
 
-**Test cross-module workflows in dedicated integration files:**
-
+**Example**:
 ```python
-# tests/integration/test_basic_ml_pipeline.py
-def test_tensor_to_activations_pipeline():
-    """Test tensor → activation function workflow."""
-    from tinytorch.core.tensor import Tensor
-    from tinytorch.core.activations import ReLU
+# tests/integration/test_layers_integration.py
+"""
+Integration Tests for Layers Module
+
+Tests how student's layer implementation works with vetted Tensor and Activation modules.
+Uses instructor-provided working implementations to avoid dependency cascades.
+"""
+
+from tinytorch.solutions.tensor import Tensor  # Instructor-provided working version
+from tinytorch.solutions.activations import ReLU  # Instructor-provided working version
+from student_layers import Dense  # Student's implementation
+
+class TestLayersIntegration:
+    """Test student's layers with working tensor and activation implementations."""
     
-    # Create tensor
-    x = Tensor([-1, 0, 1, 2])
+    def test_neural_network_forward_pass(self):
+        """Test complete neural network forward pass using student's Dense layer."""
+        # Create network components
+        layer1 = Dense(input_size=4, output_size=3)  # Student's implementation
+        activation = ReLU()  # Working implementation
+        layer2 = Dense(input_size=3, output_size=2)  # Student's implementation
+        
+        # Create input data
+        x = Tensor([[1.0, 2.0, 3.0, 4.0]])  # Working tensor
+        
+        # Forward pass through network
+        h1 = layer1(x)  # Student's layer with working tensor
+        h1_activated = activation(h1)  # Working activation
+        output = layer2(h1_activated)  # Student's layer
+        
+        # Verify complete pipeline works
+        assert output.shape == (1, 2), "Network should produce correct output shape"
+        assert isinstance(output, Tensor), "Network should produce Tensor output"
+        
+        print("✅ Student's Dense layers work in complete neural network!")
     
-    # Apply activation
-    relu = ReLU()
-    y = relu(x)
-    
-    # Verify pipeline
-    expected = Tensor([0, 0, 1, 2])
-    assert np.array_equal(y.data, expected.data)
+    def test_image_classification_pipeline(self):
+        """Test realistic image classification scenario."""
+        # Simulate flattened MNIST image (28x28 = 784 pixels)
+        image_data = Tensor([np.random.randn(1, 784)])
+        
+        # Create classification network
+        hidden_layer = Dense(784, 128)  # Student's implementation
+        relu = ReLU()  # Working activation
+        output_layer = Dense(128, 10)  # Student's implementation (10 classes)
+        
+        # Forward pass
+        hidden = hidden_layer(image_data)
+        activated = relu(hidden)
+        predictions = output_layer(activated)
+        
+        # Verify realistic ML workflow
+        assert predictions.shape == (1, 10), "Should output 10 class predictions"
+        
+        print("✅ Student's layers work for image classification!")
 ```
 
-### Stage 3: System Testing
+**Characteristics**:
+- **Realistic workflows**: Test actual ML scenarios students will encounter
+- **Vetted dependencies**: Use working implementations to isolate testing
+- **No cascade failures**: Student's module tested independently
+- **Production-like**: Mirror real-world ML development patterns
 
-**Test production scenarios in dedicated system files:**
+### 4. System Tests (Production Scenarios)
+**Goal**: Validate performance, scalability, and robustness in production-like scenarios
 
+**Location**: `tests/system/` directory  
+**Dependencies**: Complete working system  
+**Scope**: Performance, scalability, robustness, production workflows  
+**Purpose**: Ensure system works at scale and handles real-world conditions  
+
+**Example**:
 ```python
 # tests/system/test_performance.py
-def test_tensor_operations_performance():
-    """Test tensor operations with large data."""
-    import time
+"""
+System Performance Tests
+
+Tests TinyTorch performance with realistic datasets and workloads.
+Ensures system can handle production-scale scenarios.
+"""
+
+import time
+import psutil
+import numpy as np
+from tinytorch.core.tensor import Tensor
+from tinytorch.core.layers import Dense
+from tinytorch.core.networks import Sequential
+
+class TestSystemPerformance:
+    """Test system performance with realistic workloads."""
     
-    # Large tensor operations
-    large_tensor = Tensor(np.random.randn(10000, 1000))
+    def test_large_batch_processing(self):
+        """Test system with large batch sizes."""
+        # Create large network
+        network = Sequential([
+            Dense(1000, 500),
+            Dense(500, 250),
+            Dense(250, 10)
+        ])
+        
+        # Large batch (1000 samples)
+        large_batch = Tensor(np.random.randn(1000, 1000))
+        
+        # Time the forward pass
+        start_time = time.time()
+        output = network(large_batch)
+        duration = time.time() - start_time
+        
+        # Verify performance
+        assert duration < 5.0, f"Large batch processing took {duration:.2f}s, expected < 5s"
+        assert output.shape == (1000, 10), "Should handle large batches correctly"
+        
+        print(f"✅ Processed 1000 samples in {duration:.2f}s")
     
-    start = time.time()
-    result = large_tensor + large_tensor
-    duration = time.time() - start
+    def test_memory_usage(self):
+        """Test memory usage with realistic workloads."""
+        # Monitor memory before
+        process = psutil.Process()
+        memory_before = process.memory_info().rss / 1024 / 1024  # MB
+        
+        # Create and use multiple large tensors
+        tensors = []
+        for i in range(10):
+            tensor = Tensor(np.random.randn(1000, 1000))
+            tensors.append(tensor)
+        
+        # Monitor memory after
+        memory_after = process.memory_info().rss / 1024 / 1024  # MB
+        memory_used = memory_after - memory_before
+        
+        # Verify reasonable memory usage
+        assert memory_used < 500, f"Memory usage {memory_used:.1f}MB seems excessive"
+        
+        print(f"✅ Memory usage: {memory_used:.1f}MB for large tensor operations")
     
-    # Should complete within reasonable time
-    assert duration < 1.0, f"Operation took {duration:.2f}s, expected < 1.0s"
+    def test_cifar10_training_simulation(self):
+        """Test system with CIFAR-10 scale workload."""
+        # Simulate CIFAR-10 training batch
+        batch_size = 32
+        image_size = 32 * 32 * 3  # 3072 pixels
+        num_classes = 10
+        
+        # Create realistic CNN-like network
+        network = Sequential([
+            Dense(image_size, 512),
+            Dense(512, 256),
+            Dense(256, 128),
+            Dense(128, num_classes)
+        ])
+        
+        # Simulate training batches
+        total_time = 0
+        num_batches = 100
+        
+        for batch in range(num_batches):
+            # Create batch
+            images = Tensor(np.random.randn(batch_size, image_size))
+            
+            # Forward pass
+            start = time.time()
+            predictions = network(images)
+            batch_time = time.time() - start
+            total_time += batch_time
+            
+            # Verify batch processing
+            assert predictions.shape == (batch_size, num_classes)
+        
+        avg_batch_time = total_time / num_batches
+        
+        # Performance requirements
+        assert avg_batch_time < 0.1, f"Average batch time {avg_batch_time:.3f}s too slow"
+        
+        print(f"✅ Processed {num_batches} CIFAR-10 batches, avg time: {avg_batch_time:.3f}s")
 ```
 
-## Implementation Strategy
+**Characteristics**:
+- **Production scale**: Test with realistic dataset sizes and batch sizes
+- **Performance monitoring**: Measure time, memory, throughput
+- **Robustness testing**: Handle edge cases and stress conditions
+- **Real-world scenarios**: Mirror actual ML training and inference workloads
 
-### Phase 1: Consolidate Notebook Testing
-1. **Remove duplicate tests** - eliminate separate module test files
-2. **Enhance notebook tests** - make them comprehensive with pytest structure
-3. **Add visual feedback** - maintain educational value with progress tracking
-4. **Standardize format** - consistent test structure across all modules
+## Testing Workflow
 
-### Phase 2: Implement Integration Testing
-1. **Create integration test taxonomy** - basic ML, vision, data pipelines
-2. **Implement cross-module tests** - verify components work together
-3. **Test real workflows** - end-to-end ML scenarios
+### For Students
+1. **Develop with unit tests**: Get immediate feedback in notebooks
+2. **Validate with module tests**: Run comprehensive tests before moving on
+3. **Verify integration**: See how module works with broader system
+4. **Optional system tests**: Understand production requirements
 
-### Phase 3: Implement System Testing
-1. **Performance testing** - speed, memory, throughput
-2. **Scalability testing** - large datasets, batch processing
-3. **Robustness testing** - error handling, edge cases
+### For Instructors
+1. **Grade module tests**: Assess individual module functionality
+2. **Verify integration**: Ensure modules compose correctly
+3. **Monitor system performance**: Track overall system health
+4. **Provide solutions**: Maintain working implementations for integration tests
 
-## Module Testing Guidelines
+## Key Principles
 
-### Structure for Each Module
+### 1. **Dependency Isolation**
+- Unit tests: No dependencies
+- Module tests: Simple, visible mocks only
+- Integration tests: Vetted solutions for dependencies
+- System tests: Complete working system
 
-```python
-# %% [markdown]
-"""
-# Module X: Component Testing
+### 2. **Clear Interfaces**
+- Mocks document expected interfaces explicitly
+- Students can see exactly what their module needs to provide
+- Interface evolution is visible and documented
 
-This section contains comprehensive tests for all module functionality.
-Tests are organized by component and include:
-- ✅ Basic functionality
-- ✅ Edge cases
-- ✅ Error handling
-- ✅ Integration points
-"""
+### 3. **Educational Value**
+- Each test level serves a specific learning purpose
+- Tests explain what they're checking and why
+- Failures provide actionable feedback
 
-# %% [markdown]
-"""
-### 🧪 Component A Tests
-Tests for the first major component...
-"""
+### 4. **Professional Standards**
+- Use pytest structure and best practices
+- Include comprehensive edge case testing
+- Mirror real-world ML development patterns
 
-# %% nbgrader={"grade": true, "grade_id": "test-component-a", "locked": true, "points": 25, "schema_version": 3, "solution": false, "task": false}
-# Comprehensive Component A tests here...
+### 5. **Scalable Architecture**
+- No cascade failures from broken dependencies
+- Independent module development and grading
+- Realistic integration without penalty for past bugs
 
-# %% [markdown]
-"""
-### 🧪 Component B Tests
-Tests for the second major component...
-"""
+## Implementation Guidelines
 
-# %% nbgrader={"grade": true, "grade_id": "test-component-b", "locked": true, "points": 25, "schema_version": 3, "solution": false, "task": false}
-# Comprehensive Component B tests here...
+### Mock Design Principles
+1. **Minimal**: Only implement what the module actually needs
+2. **Visible**: Put mocks at the top of test files with clear documentation
+3. **Simple**: Easy to understand and modify
+4. **Evolving**: Update mocks as interfaces grow
 
-# %% [markdown]
-"""
-### 🧪 Integration Tests
-Tests for how components work together...
-"""
-
-# %% nbgrader={"grade": true, "grade_id": "test-integration", "locked": true, "points": 25, "schema_version": 3, "solution": false, "task": false}
-# Integration tests here...
+### Test Organization
+```
+tests/
+├── test_{module}.py          # Module tests with mocks
+├── integration/              # Cross-module integration tests
+│   ├── test_basic_ml.py      # Tensor → Layers → Networks
+│   ├── test_vision.py        # CNN pipelines
+│   └── test_data.py          # DataLoader → Networks
+└── system/                   # Production-scale tests
+    ├── test_performance.py   # Speed and memory
+    ├── test_scalability.py   # Large datasets
+    └── test_robustness.py    # Error handling
 ```
 
-### Test Execution
-
-Students run tests within notebooks:
-```python
-# All tests run automatically as cells execute
-# No separate commands needed
-# Immediate feedback and progress tracking
-```
-
-Instructors can also run centralized testing:
+### CLI Integration
 ```bash
-# Run all notebook tests
-tito test --all
+# Run unit tests (embedded in notebooks)
+tito test --unit --module tensor
 
-# Run specific module
+# Run module tests (with mocks)
 tito test --module tensor
 
 # Run integration tests
@@ -310,37 +403,29 @@ tito test --integration
 
 # Run system tests
 tito test --system
+
+# Run all tests
+tito test --all
 ```
 
-## Migration Plan
+## Benefits
 
-### Step 1: Audit Current Tests
-- [ ] Identify overlapping tests between inline and module tests
-- [ ] Catalog test coverage gaps
-- [ ] Document test dependencies
+### For Students
+- **Clear progression**: Unit → Module → Integration → System
+- **Immediate feedback**: Catch issues early
+- **No cascade failures**: Broken dependencies don't block progress
+- **Realistic experience**: See how modules work in complete systems
 
-### Step 2: Consolidate Testing
-- [ ] Merge inline and module tests into comprehensive notebook tests
-- [ ] Remove duplicate test files
-- [ ] Update CLI to support notebook testing
+### For Instructors
+- **Independent grading**: Assess modules separately
+- **Clear diagnostics**: Know exactly where issues are
+- **Flexible pacing**: Students can progress at different rates
+- **Quality assurance**: Comprehensive validation at every level
 
-### Step 3: Enhance Coverage
-- [ ] Add missing edge cases to notebook tests
-- [ ] Improve error handling tests
-- [ ] Add performance considerations
+### For the System
+- **Maintainable**: Clear separation of concerns
+- **Scalable**: Add new modules without breaking existing tests
+- **Professional**: Industry-standard testing practices
+- **Educational**: Every test serves a learning purpose
 
-### Step 4: Implement Integration/System Testing
-- [ ] Create integration test taxonomy
-- [ ] Implement cross-module tests
-- [ ] Add system performance tests
-
-## Conclusion
-
-The unified testing approach eliminates redundancy while providing better educational value and development efficiency. Students get comprehensive testing within their learning context, while instructors maintain professional testing standards for production validation.
-
-**Key Benefits:**
-- **Simplified**: One testing approach, not multiple
-- **Educational**: Tests explain what they're checking
-- **Comprehensive**: Full coverage within notebooks
-- **Professional**: Uses industry-standard pytest patterns
-- **Efficient**: No duplicate maintenance burden 
+This four-tier architecture ensures comprehensive testing while maintaining educational clarity and avoiding the dependency cascade problem that plagued our earlier approaches. 
