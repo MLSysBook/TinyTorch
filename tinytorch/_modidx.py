@@ -174,5 +174,7 @@ d = { 'settings': { 'branch': 'main',
                                                                                          'tinytorch/core/utils.py'),
                                       'tinytorch.core.utils.add_numbers': ( '00_setup/setup_dev.html#add_numbers',
                                                                             'tinytorch/core/utils.py'),
+                                      'tinytorch.core.utils.complex_calculation': ( '00_setup/setup_dev.html#complex_calculation',
+                                                                                    'tinytorch/core/utils.py'),
                                       'tinytorch.core.utils.hello_tinytorch': ( '00_setup/setup_dev.html#hello_tinytorch',
                                                                                 'tinytorch/core/utils.py')}}}
