@@ -17,6 +17,7 @@ from .reset import ResetCommand
 from .jupyter import JupyterCommand
 from .nbdev import NbdevCommand
 from .status import StatusCommand
+from .clean import CleanCommand
 
 # Command groups
 from .system import SystemCommand
@@ -35,6 +36,7 @@ __all__ = [
     'JupyterCommand',
     'NbdevCommand',
     'StatusCommand',
+    'CleanCommand',
     # Command groups
     'SystemCommand',
     'ModuleCommand',
