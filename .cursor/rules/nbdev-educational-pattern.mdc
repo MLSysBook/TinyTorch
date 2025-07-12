@@ -2,8 +2,6 @@
 
 # NBDev Educational Pattern for TinyTorch Modules
 
-When working with module development files (`*_dev.py`), follow this educational structure:
-
 ## File Format
 Use Jupytext percent format with NBDev directives:
 
@@ -20,15 +18,13 @@ Use Jupytext percent format with NBDev directives:
 
 # %% [markdown]
 """
-# Module X: Title - Brief Description
+# Module: {Title}
 
 ## Learning Objectives
 - ✅ Build {core_concept} from scratch
 - ✅ Use it with real data ({dataset_name})
 - ✅ Understand {key_insight}
 - ✅ Connect to production ML systems
-
-Educational introduction and learning goals...
 """
 
 # %%
@@ -51,25 +47,6 @@ class ComponentName:
     Component description.
     
     TODO: Student implementation instructions.
-    
-    APPROACH:
-    1. Concrete first step with specific guidance
-    2. Concrete second step with specific guidance
-    3. Concrete third step with specific guidance
-    
-    EXAMPLE:
-    Input: actual_data_example
-    Expected: concrete_expected_output
-    
-    HINTS:
-    - Helpful guidance without giving code
-    - Systems thinking consideration
-    - Real-world connection
-    
-    SYSTEMS THINKING:
-    - Performance consideration
-    - Scalability question
-    - User experience aspect
     """
     def method(self):
         raise NotImplementedError("Student implementation required")
@@ -91,23 +68,10 @@ class ComponentName:
 # %%
 # Test with real data
 try:
-    # Test student implementation
     result = ComponentName(real_data_example)
     print(f"✅ Success: {result}")
 except NotImplementedError:
     print("⚠️ Implement the class above first!")
-
-# Visual feedback (development only - not exported)
-def show_results(data):
-    """Show visual confirmation of working code."""
-    if not _should_show_plots():
-        return
-    plt.figure(figsize=(10, 6))
-    # Visualization code
-    plt.show()
-
-if _should_show_plots():
-    show_results(real_data)
 ```
 
 ## Key NBDev Directives
@@ -118,23 +82,22 @@ if _should_show_plots():
 - `# %% [markdown]` - Markdown cells for explanations
 - `# %%` - Code cells
 
-## Educational Structure
+## Educational Structure Requirements
 
-### 1. **Conceptual Foundation** (REQUIRED)
+### 1. Conceptual Foundation
 Each module must start with clear conceptual explanations:
 
 ```markdown
-## Step 1: What is [Concept]?
+## What is [Concept]?
 
 **Definition**: Clear, simple definition with examples
 **Why it matters**: Real-world motivation and ML context
 **How it works**: Intuitive explanation before math
-**Visual examples**: Concrete examples, diagrams, analogies
 **Connection**: How it builds on previous modules
 ```
 
-### 2. **Guided Implementation** (REQUIRED)
-Instead of just `raise NotImplementedError`, provide:
+### 2. Guided Implementation
+Provide comprehensive TODO guidance:
 
 ```python
 def method(self):
@@ -142,121 +105,83 @@ def method(self):
     TODO: Step-by-step implementation guide
     
     APPROACH:
-    1. First, think about what this method should return
-    2. Consider the data types and shapes involved
-    3. Start with a simple case, then generalize
+    1. First step with specific guidance
+    2. Second step with specific guidance
+    3. Third step with specific guidance
     
     EXAMPLE:
-    Input: actual_data_example  # Real data, not synthetic
-    Expected output: concrete_expected_output
+    Input: actual_data_example
+    Expected: concrete_expected_output
     
     HINTS:
-    - Use real data patterns, not synthetic examples
-    - Consider edge cases that occur in production
-    - Think about performance with large datasets
-    - Include progress feedback for long operations
-    
-    SYSTEMS THINKING:
-    - How does this scale with larger datasets?
-    - What happens when network/disk is slow?
-    - How do users know the operation is working?
+    - Helpful guidance without giving code
+    - Systems thinking consideration
+    - Real-world connection
     """
-    # Step 1: [specific guidance]
-    # Step 2: [specific guidance] 
-    # Step 3: [specific guidance]
     raise NotImplementedError("Student implementation required")
 ```
 
-### 3. **Real Data Usage** (REQUIRED)
-All modules must use production datasets:
+### 3. Development vs Export Separation
+- **Rich feedback in development**: Visual confirmation, progress bars
+- **Clean exports to package**: No matplotlib dependencies in exported code
+- **Use conditional display**: `if not _should_show_plots(): return`
+
+## Module Structure Template
 
 ```python
-# ✅ GOOD: Real data
-dataset = CIFAR10Dataset('data/cifar10/', train=True, download=True)
-image, label = dataset[0]
-assert image.shape == (3, 32, 32)  # Real image dimensions
+# ---
+# jupyter:
+#   jupytext:
+#     text_representation:
+#       extension: .py
+#       format_name: percent
+#       format_version: '1.3'
+#       jupytext_version: 1.17.1
+# ---
 
-# ❌ BAD: Mock/synthetic data
-dataset = MockDataset(size=100)  # Fake data
+# %% [markdown]
+"""
+# Module: {Title}
+
+## Learning Objectives
+- ✅ Build {core_concept} from scratch
+- ✅ Use it with real data ({dataset_name})
+- ✅ Understand {key_insight}
+- ✅ Connect to production ML systems
+"""
+
+# %%
+#| default_exp core.{module}
+import numpy as np
+import matplotlib.pyplot as plt
+from typing import Union, List, Optional
+
+# %%
+#| export
+class MainClass:
+    """Student-facing implementation with comprehensive TODO."""
+    def __init__(self, params):
+        # Comprehensive TODO guidance here
+        raise NotImplementedError("Student implementation required")
+
+# %%
+#| hide
+#| export
+class MainClass:
+    """Complete implementation (hidden from students)."""
+    def __init__(self, params):
+        # Actual working implementation
+        pass
 ```
-
-### 4. **Visual Feedback** (REQUIRED)
-Include visual confirmation (development only):
-
-```python
-def show_data_samples(dataset, num_samples=8):
-    """Show grid of actual data samples (development only)."""
-    # NOT exported to package - development feedback only
-    if not _should_show_plots():
-        return
-        
-    fig, axes = plt.subplots(2, 4, figsize=(12, 6))
-    for i in range(num_samples):
-        image, label = dataset[i]
-        # Show actual data with proper visualization
-        axes[i//4, i%4].imshow(image.transpose(1, 2, 0))
-        axes[i//4, i%4].set_title(f'Class: {label}')
-    plt.show()
-```
-
-### 5. **Progress Feedback** (REQUIRED)
-For long operations, include progress indicators:
-
-```python
-def _download_progress_hook(self, count, block_size, total_size):
-    """Progress callback for downloads."""
-    if total_size > 0:
-        percent = min(100, (count * block_size * 100) // total_size)
-        mb_downloaded = (count * block_size) / (1024 * 1024)
-        mb_total = total_size / (1024 * 1024)
-        
-        # Visual progress bar
-        bar_length = 50
-        filled_length = int(bar_length * percent // 100)
-        bar = '█' * filled_length + '░' * (bar_length - filled_length)
-        
-        print(f'\r📥 [{bar}] {percent}% ({mb_downloaded:.1f}/{mb_total:.1f} MB)', 
-              end='', flush=True)
-```
-
-### 6. **Testing and Feedback** (REQUIRED)
-Include immediate testing cells:
-- Simple test cases with expected outputs
-- Clear error messages for debugging
-- Progressive complexity (simple → complex)
-- Visual verification where possible
 
 ## Educational Principles
 
-1. **Build → Use → Understand → Repeat**: Each module should follow this cycle
-2. **Real Data, Real Systems**: Use production datasets, not synthetic data
-3. **Immediate Feedback**: Students should see results quickly
-4. **Visual Confirmation**: Students see their code working
-5. **Systems Thinking**: Consider performance, caching, user experience
-6. **Concrete Before Abstract**: Start with examples, then generalize
-7. **Scaffolded Learning**: Provide hints and guidance, not just empty functions
-8. **Standalone Modules**: Each module should be understandable independently
-9. **Real-world Context**: Connect to practical ML applications
+1. **Build → Use → Understand → Repeat**: Each module follows this cycle
+2. **Concrete Before Abstract**: Start with examples, then generalize
+3. **Scaffolded Learning**: Provide hints and guidance, not just empty functions
+4. **Standalone Modules**: Each module should be understandable independently
+5. **Real-world Context**: Connect to practical ML applications
 
 ## Naming Convention
 
-Module files should be named `{module_name}_dev.py` to indicate development notebooks, following the established pattern from [modules/setup/setup_dev.py](mdc:modules/setup/setup_dev.py) and [modules/tensor/tensor_dev.py](mdc:modules/tensor/tensor_dev.py).
-
-## Quality Standards
-
-All modules must:
-- ✅ Use real data, not synthetic/mock data
-- ✅ Include progress feedback for long operations
-- ✅ Provide visual confirmation of working code
-- ✅ Test with realistic data scales
-- ✅ Follow "Build → Use → Understand" progression
-- ✅ Include comprehensive TODO guidance with systems thinking
-- ✅ Separate development richness from clean exports
-
-## Naming Convention
-
-Module files should be named `{module_name}_dev.py` to indicate development notebooks, following the established pattern from [modules/setup/setup_dev.py](mdc:modules/setup/setup_dev.py) and [modules/tensor/tensor_dev.py](mdc:modules/tensor/tensor_dev.py).
-
-## Naming Convention
-
-Module files should be named `{module_name}_dev.py` to indicate development notebooks, following the established pattern from [modules/setup/setup_dev.py](mdc:modules/setup/setup_dev.py) and [modules/tensor/tensor_dev.py](mdc:modules/tensor/tensor_dev.py).
+Module files should be named `{module_name}_dev.py` to indicate development notebooks.
