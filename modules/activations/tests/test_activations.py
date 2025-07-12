@@ -1,29 +1,19 @@
 """
-Test suite for the TinyTorch Activations module.
-
-This test suite validates the mathematical correctness of activation functions:
-- ReLU: f(x) = max(0, x)
-- Sigmoid: f(x) = 1 / (1 + e^(-x))
-- Tanh: f(x) = tanh(x)
-
-Tests focus on:
-1. Mathematical correctness
-2. Numerical stability
-3. Edge cases
-4. Shape preservation
-5. Type consistency
+Test suite for the activations module.
+This tests the student implementations to ensure they work correctly.
 """
 
 import pytest
 import numpy as np
-import math
-from tinytorch.core.tensor import Tensor
-
-# Import the activation functions
 import sys
 import os
-sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
-from activations_dev import ReLU, Sigmoid, Tanh
+
+# Import from the main package (rock solid foundation)
+from tinytorch.core.tensor import Tensor
+
+# Import our implementations from the local module for testing
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
+from activations_dev import ReLU, Sigmoid, Tanh, Softmax
 
 
 class TestReLU:
