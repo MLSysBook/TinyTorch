@@ -30,13 +30,13 @@ class NbdevCommand(BaseCommand):
                            title="Notebook Tools", border_style="bright_cyan"))
         
         if args.export:
-            # Use the sync command logic
-            from .sync import SyncCommand
-            sync_cmd = SyncCommand(self.config)
-            sync_args = ArgumentParser()
-            sync_cmd.add_arguments(sync_args)
-            sync_args = sync_args.parse_args([])  # Empty args for sync
-            return sync_cmd.run(sync_args)
+            # Use the export command logic
+            from .export import ExportCommand
+            export_cmd = ExportCommand(self.config)
+            export_args = ArgumentParser()
+            export_cmd.add_arguments(export_args)
+            export_args = export_args.parse_args([])  # Empty args for export
+            return export_cmd.run(export_args)
         
         elif args.build_docs:
             console.print("📚 Building documentation from notebooks...")

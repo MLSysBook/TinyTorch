@@ -24,7 +24,7 @@ from .commands.notebooks import NotebooksCommand
 from .commands.info import InfoCommand
 from .commands.test import TestCommand
 from .commands.doctor import DoctorCommand
-from .commands.sync import SyncCommand
+from .commands.export import ExportCommand
 from .commands.reset import ResetCommand
 from .commands.jupyter import JupyterCommand
 from .commands.nbdev import NbdevCommand
@@ -74,7 +74,7 @@ Command Groups:
 Examples:
   tito system info              Show system information
   tito module status --metadata Module status with metadata
-  tito package sync             Export notebooks to package
+  tito package export           Export notebooks to package
             """
         )
         
@@ -169,7 +169,7 @@ Examples:
                     "[bold]Quick Start:[/bold]\n"
                     "  [dim]tito system info[/dim]              - Show system information\n"
                     "  [dim]tito module status --metadata[/dim] - Module status with metadata\n"
-                    "  [dim]tito package sync[/dim]             - Export notebooks to package\n\n"
+                    "  [dim]tito package export[/dim]           - Export notebooks to package\n\n"
                     "[bold]Get Help:[/bold]\n"
                     "  [dim]tito system[/dim]                   - Show system subcommands\n"
                     "  [dim]tito module[/dim]                   - Show module subcommands\n"
