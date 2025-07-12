@@ -1,5 +1,11 @@
 # 🔥 TinyTorch Activations Module
 
+## 📊 Module Info
+- **Difficulty**: ⭐⭐ Intermediate
+- **Time Estimate**: 3-4 hours
+- **Prerequisites**: Tensor module
+- **Next Steps**: Layers module
+
 Welcome to the **Activations** module! This is where you'll implement the mathematical functions that give neural networks their power to learn complex patterns.
 
 ## 🎯 Learning Objectives

@@ -1,5 +1,11 @@
 # 🔥 Module: DataLoader
 
+## 📊 Module Info
+- **Difficulty**: ⭐⭐⭐ Advanced
+- **Time Estimate**: 5-7 hours
+- **Prerequisites**: Tensor, Layers modules
+- **Next Steps**: Training, Networks modules
+
 Build the data pipeline foundation of TinyTorch! This module implements efficient data loading, preprocessing, and batching systems - the critical infrastructure that feeds neural networks during training.
 
 ## 🎯 Learning Objectives

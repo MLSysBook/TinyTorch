@@ -1,5 +1,11 @@
 # Setup Module
 
+## 📊 Module Info
+- **Difficulty**: ⭐ Beginner
+- **Time Estimate**: 1-2 hours
+- **Prerequisites**: Basic Python knowledge
+- **Next Steps**: Tensor module
+
 Welcome to TinyTorch! This is your first module in the Machine Learning Systems course.
 
 ## Overview
