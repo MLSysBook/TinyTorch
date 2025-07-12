@@ -61,14 +61,21 @@ class DoctorCommand(BaseCommand):
         env_table.add_row("Virtual Environment", venv_status, ".venv")
         
         # Dependencies
-        dependencies = ['numpy', 'matplotlib', 'pytest', 'yaml', 'black', 'rich']
-        for dep in dependencies:
+        dependencies = [
+            ('numpy', 'numpy'),
+            ('matplotlib', 'matplotlib'),  
+            ('pytest', 'pytest'),
+            ('yaml', 'yaml'),  # PyYAML package imports as yaml
+            ('black', 'black'),
+            ('rich', 'rich')
+        ]
+        for display_name, import_name in dependencies:
             try:
-                module = __import__(dep)
+                module = __import__(import_name)
                 version = getattr(module, '__version__', 'unknown')
-                env_table.add_row(dep.title(), "[green]✅ OK[/green]", f"v{version}")
+                env_table.add_row(display_name.title(), "[green]✅ OK[/green]", f"v{version}")
             except ImportError:
-                env_table.add_row(dep.title(), "[red]❌ Missing[/red]", "Not installed")
+                env_table.add_row(display_name.title(), "[red]❌ Missing[/red]", "Not installed")
         
         console.print(env_table)
         console.print()
