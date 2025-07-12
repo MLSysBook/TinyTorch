@@ -67,14 +67,10 @@ import numpy as np
 import math
 import sys
 from typing import Union, Optional, Callable
+
+# Import from the main package (rock solid foundation)
 from tinytorch.core.tensor import Tensor
-
-# Import activation functions from the activations module
 from tinytorch.core.activations import ReLU, Sigmoid, Tanh
-
-# Import our Tensor class
-# sys.path.append('../../')
-# from modules.tensor.tensor_dev import Tensor
 
 # print("🔥 TinyTorch Layers Module")
 # print(f"NumPy version: {np.__version__}")
