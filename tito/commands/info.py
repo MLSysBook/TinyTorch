@@ -1,5 +1,5 @@
 """
-Info command for TinyTorch CLI: shows system information and module status.
+Info command for TinyTorch CLI: shows system information and course navigation.
 """
 
 from argparse import ArgumentParser, Namespace
@@ -21,7 +21,7 @@ class InfoCommand(BaseCommand):
 
     @property
     def description(self) -> str:
-        return "Show system information and module status"
+        return "Show system information and course navigation"
 
     def add_arguments(self, parser: ArgumentParser) -> None:
         parser.add_argument("--hello", action="store_true", help="Show hello message")
@@ -31,11 +31,13 @@ class InfoCommand(BaseCommand):
         console = self.console
         self.print_banner()
         console.print()
+        
         # System Information Panel
         info_text = Text()
         info_text.append(f"Python: {sys.version.split()[0]}\n", style="cyan")
         info_text.append(f"Platform: {sys.platform}\n", style="cyan")
         info_text.append(f"Working Directory: {os.getcwd()}\n", style="cyan")
+        
         # Virtual environment check
         venv_path = Path(".venv")
         venv_exists = venv_path.exists()
@@ -44,6 +46,7 @@ class InfoCommand(BaseCommand):
             (hasattr(sys, 'base_prefix') and sys.base_prefix != sys.prefix) or
             hasattr(sys, 'real_prefix')
         )
+        
         if venv_exists and in_venv:
             venv_style = "green"
             venv_icon = "✅"
@@ -56,10 +59,13 @@ class InfoCommand(BaseCommand):
             venv_style = "red"
             venv_icon = "❌"
             venv_status = "Not Found"
+        
         info_text.append(f"Virtual Environment: {venv_icon} ", style=venv_style)
         info_text.append(venv_status, style=f"bold {venv_style}")
+        
         console.print(Panel(info_text, title="📋 System Information", border_style="bright_blue"))
         console.print()
+        
         # Course Navigation Panel
         nav_text = Text()
         nav_text.append("📖 Course Overview: ", style="dim")
@@ -68,39 +74,23 @@ class InfoCommand(BaseCommand):
         nav_text.append("COURSE_GUIDE.md\n", style="cyan underline")
         nav_text.append("🚀 Start Here: ", style="dim")
         nav_text.append("modules/setup/README.md", style="cyan underline")
+        
         console.print(Panel(nav_text, title="📋 Course Navigation", border_style="bright_green"))
         console.print()
-        # Implementation status
-        modules = [
-            ("Setup", "hello_tinytorch function", self.check_setup_status),
-            ("Tensor", "basic tensor operations", self.check_tensor_status),
-            ("Layers", "neural network building blocks", self.check_layers_status),
-            ("Networks", "neural network architectures", self.check_networks_status),
-            ("MLP", "multi-layer perceptron (manual)", self.check_mlp_status),
-            ("CNN", "convolutional networks (basic)", self.check_cnn_status),
-            ("DataLoader", "data loading pipeline", self.check_data_status),
-            ("Training", "autograd engine & optimization", self.check_training_status),
-            ("Profiling", "performance profiling", self.check_profiling_status),
-            ("Compression", "model compression", self.check_compression_status),
-            ("Kernels", "custom compute kernels", self.check_kernels_status),
-            ("Benchmarking", "performance benchmarking", self.check_benchmarking_status),
-            ("MLOps", "production monitoring", self.check_mlops_status),
-        ]
-        status_table = Table(title="🚀 Module Implementation Status", show_header=True, header_style="bold blue")
-        status_table.add_column("ID", style="dim", width=3, justify="center")
-        status_table.add_column("Project", style="bold cyan", width=12)
-        status_table.add_column("Status", width=18, justify="center")
-        status_table.add_column("Description", style="dim", width=40)
-        for i, (name, desc, check_func) in enumerate(modules):
-            status_text = check_func()
-            if "✅" in status_text:
-                status_style = "[green]✅ Implemented[/green]"
-            elif "❌" in status_text:
-                status_style = "[red]❌ Not Implemented[/red]"
-            else:
-                status_style = "[yellow]⏳ Not Started[/yellow]"
-            status_table.add_row(str(i), name, status_style, desc)
-        console.print(status_table)
+        
+        # Command Reference Panel
+        cmd_text = Text()
+        cmd_text.append("📊 Module Status: ", style="dim")
+        cmd_text.append("tito status\n", style="bold cyan")
+        cmd_text.append("🧪 Run Tests: ", style="dim")
+        cmd_text.append("tito test --all\n", style="bold cyan")
+        cmd_text.append("🔄 Export Code: ", style="dim")
+        cmd_text.append("tito sync\n", style="bold cyan")
+        cmd_text.append("🩺 Check Environment: ", style="dim")
+        cmd_text.append("tito doctor", style="bold cyan")
+        
+        console.print(Panel(cmd_text, title="📋 Quick Commands", border_style="bright_magenta"))
+        
         # Optionally show hello message or architecture
         if args.hello and self.check_setup_status() == "✅ Implemented":
             try:
@@ -110,6 +100,7 @@ class InfoCommand(BaseCommand):
                 console.print(Panel(hello_text, style="bright_red", padding=(1, 2)))
             except ImportError:
                 pass
+        
         if args.show_architecture:
             console.print()
             arch_tree = Tree("🏗️ TinyTorch System Architecture", style="bold blue")
@@ -132,166 +123,16 @@ class InfoCommand(BaseCommand):
             system_branch.add("profiler.py - Performance measurement", style="dim")
             system_branch.add("mlops.py - Production monitoring", style="dim")
             console.print(Panel(arch_tree, title="🏗️ System Architecture", border_style="bright_blue"))
+        
         return 0
 
     def print_banner(self):
         banner_text = Text("Tiny🔥Torch: Build ML Systems from Scratch", style="bold red")
         self.console.print(Panel(banner_text, style="bright_blue", padding=(1, 2)))
 
-    # The following check_* methods are ported from bin/tito.py
     def check_setup_status(self):
         try:
             from tinytorch.core.utils import hello_tinytorch
             return "✅ Implemented"
         except ImportError:
-            return "❌ Not Implemented"
-    def check_tensor_status(self):
-        try:
-            from tinytorch.core.tensor import Tensor
-            t1 = Tensor([1, 2, 3])
-            t2 = Tensor([4, 5, 6])
-            _ = t1 + t2
-            return "✅ Implemented"
-        except (ImportError, NotImplementedError):
-            return "⏳ Not Started"
-    
-    def check_layers_status(self):
-        try:
-            from tinytorch.core.layers import Dense
-            from tinytorch.core.activations import ReLU
-            from tinytorch.core.tensor import Tensor
-            layer = Dense(3, 4)
-            activation = ReLU()
-            x = Tensor([[1, 2, 3]])
-            _ = activation(layer(x))
-            return "✅ Implemented"
-        except (ImportError, NotImplementedError):
-            return "⏳ Not Started"
-    
-    def check_networks_status(self):
-        try:
-            from tinytorch.core.networks import Sequential
-            from tinytorch.core.layers import Dense
-            from tinytorch.core.activations import ReLU, Sigmoid
-            from tinytorch.core.tensor import Tensor
-            network = Sequential([Dense(3, 4), ReLU(), Dense(4, 2), Sigmoid()])
-            x = Tensor([[1, 2, 3]])
-            _ = network(x)
-            return "✅ Implemented"
-        except (ImportError, NotImplementedError):
-            return "⏳ Not Started"
-    def check_mlp_status(self):
-        try:
-            from tinytorch.core.networks import Sequential
-            from tinytorch.core.layers import Dense
-            from tinytorch.core.activations import ReLU
-            from tinytorch.core.tensor import Tensor
-            mlp = Sequential([Dense(10, 5), ReLU(), Dense(5, 2)])
-            x = Tensor([[1,2,3,4,5,6,7,8,9,10]])
-            _ = mlp(x)
-            return "✅ Implemented"
-        except (ImportError, NotImplementedError, AttributeError):
-            return "⏳ Not Started"
-    def check_cnn_status(self):
-        try:
-            # Test if CNN functionality is available through direct file execution
-            import subprocess
-            import sys
-            test_code = '''
-import sys
-import os
-sys.path.insert(0, os.path.join(os.getcwd(), "modules", "cnn"))
-sys.path.insert(0, os.getcwd())
-
-from tinytorch.core.tensor import Tensor
-import numpy as np
-from typing import Tuple
-
-# Simple Conv2D test without imports
-class TestConv2D:
-    def __init__(self, kernel_size):
-        self.kernel = np.random.randn(*kernel_size).astype(np.float32)
-    
-    def __call__(self, x):
-        # Simple test that Conv2D concepts work
-        return Tensor(np.random.randn(2, 2).astype(np.float32))
-
-conv = TestConv2D((3, 3))
-x = Tensor([[1, 2, 3, 4], [5, 6, 7, 8], [9, 10, 11, 12], [13, 14, 15, 16]])
-result = conv(x)
-print("SUCCESS")
-'''
-            result = subprocess.run([sys.executable, '-c', test_code], 
-                                  capture_output=True, text=True, timeout=5)
-            if result.returncode == 0 and "SUCCESS" in result.stdout:
-                return "✅ Implemented"
-            else:
-                return "⏳ Not Started"
-        except:
-            return "⏳ Not Started"
-    def check_data_status(self):
-        try:
-            from tinytorch.core.dataloader import DataLoader
-            from tinytorch.core.tensor import Tensor
-            import numpy as np
-            data = [(Tensor(np.random.randn(3,32,32)), Tensor(np.array(i % 10))) for i in range(10)]
-            loader = DataLoader(data, batch_size=2, shuffle=True)
-            _ = next(iter(loader))
-            return "✅ Implemented"
-        except (ImportError, NotImplementedError, AttributeError, StopIteration):
-            return "⏳ Not Started"
-    def check_training_status(self):
-        try:
-            from tinytorch.core.optimizer import SGD
-            from tinytorch.core.tensor import Tensor
-            t = Tensor([1.0,2.0,3.0], requires_grad=True)
-            optimizer = SGD([t], lr=0.01)
-            t.backward()
-            optimizer.step()
-            return "✅ Implemented"
-        except (ImportError, NotImplementedError, AttributeError):
-            return "⏳ Not Started"
-    def check_profiling_status(self):
-        try:
-            from tinytorch.core.profiler import Profiler
-            profiler = Profiler()
-            profiler.start("test")
-            profiler.end("test")
-            return "✅ Implemented"
-        except (ImportError, NotImplementedError, AttributeError):
-            return "⏳ Not Started"
-    def check_compression_status(self):
-        try:
-            from tinytorch.core.compression import Pruner
-            pruner = Pruner(sparsity=0.5)
-            return "✅ Implemented"
-        except (ImportError, NotImplementedError, AttributeError):
-            return "⏳ Not Started"
-    def check_kernels_status(self):
-        try:
-            from tinytorch.core.kernels import optimized_matmul
-            import numpy as np
-            a = np.random.randn(3,3)
-            b = np.random.randn(3,3)
-            _ = optimized_matmul(a, b)
-            return "✅ Implemented"
-        except (ImportError, NotImplementedError, AttributeError):
-            return "⏳ Not Started"
-    def check_benchmarking_status(self):
-        try:
-            from tinytorch.core.benchmark import Benchmark
-            benchmark = Benchmark()
-            return "✅ Implemented"
-        except (ImportError, NotImplementedError, AttributeError):
-            return "⏳ Not Started"
-    def check_mlops_status(self):
-        try:
-            from tinytorch.core.mlops import ModelMonitor
-            from tinytorch.core.tensor import Tensor
-            monitor = ModelMonitor(model=None, baseline_metrics={})
-            test_inputs = Tensor([1.0,2.0,3.0])
-            test_predictions = Tensor([0.5,0.8,0.2])
-            monitor.log_prediction(test_inputs, test_predictions)
-            return "✅ Implemented"
-        except (ImportError, NotImplementedError, AttributeError, TypeError):
-            return "⏳ Not Started" 
+            return "❌ Not Implemented" 

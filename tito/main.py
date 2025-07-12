@@ -27,7 +27,7 @@ from .commands.sync import SyncCommand
 from .commands.reset import ResetCommand
 from .commands.jupyter import JupyterCommand
 from .commands.nbdev import NbdevCommand
-from .commands.modules import ModulesCommand
+from .commands.status import StatusCommand
 
 # Configure logging
 logging.basicConfig(
@@ -57,7 +57,7 @@ class TinyTorchCLI:
             'reset': ResetCommand,
             'jupyter': JupyterCommand,
             'nbdev': NbdevCommand,
-            'modules': ModulesCommand,
+            'status': StatusCommand,
         }
     
     def create_parser(self) -> argparse.ArgumentParser:
