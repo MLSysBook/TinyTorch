@@ -237,9 +237,11 @@ def matmul_naive(A: np.ndarray, B: np.ndarray) -> np.ndarray:
 
 # %% [markdown]
 """
-### 🧪 Quick Test: Matrix Multiplication
+### 🧪 Unit Test: Matrix Multiplication
 
 Let's test your matrix multiplication implementation right away! This is the foundation of neural networks.
+
+**This is a unit test** - it tests one specific function (matmul_naive) in isolation.
 """
 
 # %% nbgrader={"grade": true, "grade_id": "test-matmul-immediate", "locked": true, "points": 10, "schema_version": 3, "solution": false, "task": false}
@@ -434,9 +436,11 @@ class Dense:
 
 # %% [markdown]
 """
-### 🧪 Quick Test: Dense Layer
+### 🧪 Unit Test: Dense Layer
 
 Let's test your Dense layer implementation! This is the fundamental building block of neural networks.
+
+**This is a unit test** - it tests one specific class (Dense layer) in isolation.
 """
 
 # %% nbgrader={"grade": true, "grade_id": "test-dense-immediate", "locked": true, "points": 10, "schema_version": 3, "solution": false, "task": false}
@@ -618,6 +622,503 @@ assert h3.shape == (1, 1), f"Dense2 output should be (1, 1), got {h3.shape}"
 assert np.all(h2.data >= 0), "ReLU should produce non-negative values"
 
 print("✅ Layer composition tests passed!")
+
+# %% [markdown]
+"""
+## 🧪 Comprehensive Testing: Matrix Multiplication and Dense Layers
+
+Let's thoroughly test your implementations to make sure they work correctly in all scenarios.
+This comprehensive testing ensures your layers are robust and ready for real neural networks.
+"""
+
+# %% nbgrader={"grade": true, "grade_id": "test-layers-comprehensive", "locked": true, "points": 30, "schema_version": 3, "solution": false, "task": false}
+def test_layers_comprehensive():
+    """Comprehensive test of matrix multiplication and Dense layers."""
+    print("🔬 Testing matrix multiplication and Dense layers comprehensively...")
+    
+    tests_passed = 0
+    total_tests = 10
+    
+    # Test 1: Matrix Multiplication Basic Cases
+    try:
+        # Test 2x2 matrices
+        A = np.array([[1, 2], [3, 4]], dtype=np.float32)
+        B = np.array([[5, 6], [7, 8]], dtype=np.float32)
+        result = matmul_naive(A, B)
+        expected = np.array([[19, 22], [43, 50]], dtype=np.float32)
+        
+        assert np.allclose(result, expected), f"2x2 multiplication failed: expected {expected}, got {result}"
+        
+        # Compare with NumPy
+        numpy_result = A @ B
+        assert np.allclose(result, numpy_result), f"Doesn't match NumPy: expected {numpy_result}, got {result}"
+        
+        print(f"✅ Matrix multiplication 2x2: {A.shape} × {B.shape} = {result.shape}")
+        tests_passed += 1
+    except Exception as e:
+        print(f"❌ Matrix multiplication basic failed: {e}")
+    
+    # Test 2: Matrix Multiplication Different Shapes
+    try:
+        # Test 1x3 × 3x1 = 1x1
+        A1 = np.array([[1, 2, 3]], dtype=np.float32)
+        B1 = np.array([[4], [5], [6]], dtype=np.float32)
+        result1 = matmul_naive(A1, B1)
+        expected1 = np.array([[32]], dtype=np.float32)  # 1*4 + 2*5 + 3*6 = 32
+        assert np.allclose(result1, expected1), f"1x3 × 3x1 failed: expected {expected1}, got {result1}"
+        
+        # Test 3x2 × 2x4 = 3x4
+        A2 = np.array([[1, 2], [3, 4], [5, 6]], dtype=np.float32)
+        B2 = np.array([[1, 2, 3, 4], [5, 6, 7, 8]], dtype=np.float32)
+        result2 = matmul_naive(A2, B2)
+        expected2 = A2 @ B2
+        assert np.allclose(result2, expected2), f"3x2 × 2x4 failed: expected {expected2}, got {result2}"
+        
+        print(f"✅ Matrix multiplication shapes: (1,3)×(3,1), (3,2)×(2,4)")
+        tests_passed += 1
+    except Exception as e:
+        print(f"❌ Matrix multiplication shapes failed: {e}")
+    
+    # Test 3: Matrix Multiplication Edge Cases
+    try:
+        # Test with zeros
+        A_zero = np.zeros((2, 3), dtype=np.float32)
+        B_zero = np.zeros((3, 2), dtype=np.float32)
+        result_zero = matmul_naive(A_zero, B_zero)
+        expected_zero = np.zeros((2, 2), dtype=np.float32)
+        assert np.allclose(result_zero, expected_zero), "Zero matrix multiplication failed"
+        
+        # Test with identity
+        A_id = np.array([[1, 2]], dtype=np.float32)
+        B_id = np.array([[1, 0], [0, 1]], dtype=np.float32)
+        result_id = matmul_naive(A_id, B_id)
+        expected_id = np.array([[1, 2]], dtype=np.float32)
+        assert np.allclose(result_id, expected_id), "Identity matrix multiplication failed"
+        
+        # Test with negative values
+        A_neg = np.array([[-1, 2]], dtype=np.float32)
+        B_neg = np.array([[3], [-4]], dtype=np.float32)
+        result_neg = matmul_naive(A_neg, B_neg)
+        expected_neg = np.array([[-11]], dtype=np.float32)  # -1*3 + 2*(-4) = -11
+        assert np.allclose(result_neg, expected_neg), "Negative matrix multiplication failed"
+        
+        print("✅ Matrix multiplication edge cases: zeros, identity, negatives")
+        tests_passed += 1
+    except Exception as e:
+        print(f"❌ Matrix multiplication edge cases failed: {e}")
+    
+    # Test 4: Dense Layer Initialization
+    try:
+        # Test with bias
+        layer_bias = Dense(input_size=3, output_size=2, use_bias=True)
+        assert layer_bias.weights.shape == (3, 2), f"Weights shape should be (3, 2), got {layer_bias.weights.shape}"
+        assert layer_bias.bias is not None, "Bias should not be None when use_bias=True"
+        assert layer_bias.bias.shape == (2,), f"Bias shape should be (2,), got {layer_bias.bias.shape}"
+        
+        # Check weight initialization (should not be all zeros)
+        assert not np.allclose(layer_bias.weights, 0), "Weights should not be all zeros"
+        assert np.allclose(layer_bias.bias, 0), "Bias should be initialized to zeros"
+        
+        # Test without bias
+        layer_no_bias = Dense(input_size=4, output_size=3, use_bias=False)
+        assert layer_no_bias.weights.shape == (4, 3), f"No-bias weights shape should be (4, 3), got {layer_no_bias.weights.shape}"
+        assert layer_no_bias.bias is None, "Bias should be None when use_bias=False"
+        
+        print("✅ Dense layer initialization: weights, bias, shapes")
+        tests_passed += 1
+    except Exception as e:
+        print(f"❌ Dense layer initialization failed: {e}")
+    
+    # Test 5: Dense Layer Forward Pass
+    try:
+        layer = Dense(input_size=3, output_size=2, use_bias=True)
+        
+        # Test single sample
+        x_single = Tensor([[1, 2, 3]])  # shape: (1, 3)
+        y_single = layer(x_single)
+        assert y_single.shape == (1, 2), f"Single sample output should be (1, 2), got {y_single.shape}"
+        
+        # Test batch of samples
+        x_batch = Tensor([[1, 2, 3], [4, 5, 6], [7, 8, 9]])  # shape: (3, 3)
+        y_batch = layer(x_batch)
+        assert y_batch.shape == (3, 2), f"Batch output should be (3, 2), got {y_batch.shape}"
+        
+        # Verify computation manually for single sample
+        expected_single = np.dot(x_single.data, layer.weights) + layer.bias
+        assert np.allclose(y_single.data, expected_single), "Single sample computation incorrect"
+        
+        print("✅ Dense layer forward pass: single sample, batch processing")
+        tests_passed += 1
+    except Exception as e:
+        print(f"❌ Dense layer forward pass failed: {e}")
+    
+    # Test 6: Dense Layer Without Bias
+    try:
+        layer_no_bias = Dense(input_size=2, output_size=3, use_bias=False)
+        x = Tensor([[1, 2]])
+        y = layer_no_bias(x)
+        
+        assert y.shape == (1, 3), f"No-bias output should be (1, 3), got {y.shape}"
+        
+        # Verify computation (should be just matrix multiplication)
+        expected = np.dot(x.data, layer_no_bias.weights)
+        assert np.allclose(y.data, expected), "No-bias computation incorrect"
+        
+        print("✅ Dense layer without bias: correct computation")
+        tests_passed += 1
+    except Exception as e:
+        print(f"❌ Dense layer without bias failed: {e}")
+    
+    # Test 7: Dense Layer with Naive Matrix Multiplication
+    try:
+        layer_naive = Dense(input_size=2, output_size=2, use_naive_matmul=True)
+        layer_optimized = Dense(input_size=2, output_size=2, use_naive_matmul=False)
+        
+        # Set same weights for comparison
+        layer_optimized.weights = layer_naive.weights.copy()
+        layer_optimized.bias = layer_naive.bias.copy() if layer_naive.bias is not None else None
+        
+        x = Tensor([[1, 2]])
+        y_naive = layer_naive(x)
+        y_optimized = layer_optimized(x)
+        
+        # Both should give same results
+        assert np.allclose(y_naive.data, y_optimized.data), "Naive and optimized should give same results"
+        
+        print("✅ Dense layer naive vs optimized: consistent results")
+        tests_passed += 1
+    except Exception as e:
+        print(f"❌ Dense layer naive matmul failed: {e}")
+    
+    # Test 8: Layer Composition
+    try:
+        # Create a simple network: Dense → ReLU → Dense
+        dense1 = Dense(input_size=3, output_size=4)
+        relu = ReLU()
+        dense2 = Dense(input_size=4, output_size=2)
+        
+        x = Tensor([[1, -2, 3]])
+        
+        # Forward pass
+        h1 = dense1(x)
+        h2 = relu(h1)
+        h3 = dense2(h2)
+        
+        # Check shapes
+        assert h1.shape == (1, 4), f"Dense1 output should be (1, 4), got {h1.shape}"
+        assert h2.shape == (1, 4), f"ReLU output should be (1, 4), got {h2.shape}"
+        assert h3.shape == (1, 2), f"Dense2 output should be (1, 2), got {h3.shape}"
+        
+        # Check ReLU effect
+        assert np.all(h2.data >= 0), "ReLU should produce non-negative values"
+        
+        print("✅ Layer composition: Dense → ReLU → Dense pipeline")
+        tests_passed += 1
+    except Exception as e:
+        print(f"❌ Layer composition failed: {e}")
+    
+    # Test 9: Different Layer Sizes
+    try:
+        # Test various layer sizes
+        test_configs = [
+            (1, 1),    # Minimal
+            (10, 5),   # Medium
+            (100, 50), # Large
+            (784, 128) # MNIST-like
+        ]
+        
+        for input_size, output_size in test_configs:
+            layer = Dense(input_size=input_size, output_size=output_size)
+            
+            # Test with single sample
+            x = Tensor(np.random.randn(1, input_size))
+            y = layer(x)
+            
+            assert y.shape == (1, output_size), f"Size ({input_size}, {output_size}) failed: got {y.shape}"
+            assert layer.weights.shape == (input_size, output_size), f"Weights shape wrong for ({input_size}, {output_size})"
+        
+        print("✅ Different layer sizes: (1,1), (10,5), (100,50), (784,128)")
+        tests_passed += 1
+    except Exception as e:
+        print(f"❌ Different layer sizes failed: {e}")
+    
+    # Test 10: Real Neural Network Scenario
+    try:
+        # Simulate MNIST-like scenario: 784 → 128 → 64 → 10
+        input_layer = Dense(input_size=784, output_size=128)
+        hidden_layer = Dense(input_size=128, output_size=64)
+        output_layer = Dense(input_size=64, output_size=10)
+        
+        relu1 = ReLU()
+        relu2 = ReLU()
+        softmax = Softmax()
+        
+        # Simulate flattened MNIST image
+        x = Tensor(np.random.randn(32, 784))  # Batch of 32 images
+        
+        # Forward pass through network
+        h1 = input_layer(x)
+        h1_activated = relu1(h1)
+        h2 = hidden_layer(h1_activated)
+        h2_activated = relu2(h2)
+        logits = output_layer(h2_activated)
+        probabilities = softmax(logits)
+        
+        # Check final output
+        assert probabilities.shape == (32, 10), f"Final output should be (32, 10), got {probabilities.shape}"
+        
+        # Check that probabilities sum to 1 for each sample
+        row_sums = np.sum(probabilities.data, axis=1)
+        assert np.allclose(row_sums, 1.0), "Each sample should have probabilities summing to 1"
+        
+        # Check that all intermediate shapes are correct
+        assert h1.shape == (32, 128), f"Hidden 1 shape should be (32, 128), got {h1.shape}"
+        assert h2.shape == (32, 64), f"Hidden 2 shape should be (32, 64), got {h2.shape}"
+        assert logits.shape == (32, 10), f"Logits shape should be (32, 10), got {logits.shape}"
+        
+        print("✅ Real neural network scenario: MNIST-like 784→128→64→10 classification")
+        tests_passed += 1
+    except Exception as e:
+        print(f"❌ Real neural network scenario failed: {e}")
+    
+    # Results summary
+    print(f"\n📊 Layers Module Results: {tests_passed}/{total_tests} tests passed")
+    
+    if tests_passed == total_tests:
+        print("🎉 All layers tests passed! Your implementations support:")
+        print("  • Matrix multiplication: naive implementation from scratch")
+        print("  • Dense layers: linear transformations with learnable parameters")
+        print("  • Weight initialization: proper random initialization")
+        print("  • Bias handling: optional bias terms")
+        print("  • Batch processing: multiple samples at once")
+        print("  • Layer composition: building complete neural networks")
+        print("  • Real ML scenarios: MNIST-like classification networks")
+        print("📈 Progress: All Layer Functionality ✓")
+        return True
+    else:
+        print("⚠️  Some layers tests failed. Common issues:")
+        print("  • Check matrix multiplication implementation (triple nested loops)")
+        print("  • Verify Dense layer forward pass (y = Wx + b)")
+        print("  • Ensure proper weight initialization (not all zeros)")
+        print("  • Check shape handling for different input/output sizes")
+        print("  • Verify bias handling when use_bias=False")
+        return False
+
+# Run the comprehensive test
+success = test_layers_comprehensive()
+
+# %% [markdown]
+"""
+### 🧪 Integration Test: Layers in Complete Neural Networks
+
+Let's test how your layers work in realistic neural network architectures.
+"""
+
+# %% nbgrader={"grade": true, "grade_id": "test-layers-integration", "locked": true, "points": 20, "schema_version": 3, "solution": false, "task": false}
+def test_layers_integration():
+    """Integration test with complete neural network architectures."""
+    print("🔬 Testing layers in complete neural network architectures...")
+    
+    try:
+        print("🧠 Building and testing different network architectures...")
+        
+        # Architecture 1: Simple Binary Classifier
+        print("\n📊 Architecture 1: Binary Classification Network")
+        binary_net = [
+            Dense(input_size=4, output_size=8),
+            ReLU(),
+            Dense(input_size=8, output_size=4),
+            ReLU(),
+            Dense(input_size=4, output_size=1),
+            Sigmoid()
+        ]
+        
+        # Test with batch of samples
+        x_binary = Tensor(np.random.randn(10, 4))  # 10 samples, 4 features
+        
+        # Forward pass through network
+        current = x_binary
+        for i, layer in enumerate(binary_net):
+            current = layer(current)
+            print(f"  Layer {i}: {current.shape}")
+        
+        # Verify final output is valid probabilities
+        assert current.shape == (10, 1), f"Binary classifier output should be (10, 1), got {current.shape}"
+        assert np.all((current.data >= 0) & (current.data <= 1)), "Binary probabilities should be in [0,1]"
+        
+        print("✅ Binary classification network: 4→8→4→1 with ReLU/Sigmoid")
+        
+        # Architecture 2: Multi-class Classifier
+        print("\n📊 Architecture 2: Multi-class Classification Network")
+        multiclass_net = [
+            Dense(input_size=784, output_size=256),
+            ReLU(),
+            Dense(input_size=256, output_size=128),
+            ReLU(),
+            Dense(input_size=128, output_size=10),
+            Softmax()
+        ]
+        
+        # Simulate MNIST-like input
+        x_mnist = Tensor(np.random.randn(5, 784))  # 5 images, 784 pixels
+        
+        current = x_mnist
+        for i, layer in enumerate(multiclass_net):
+            current = layer(current)
+            print(f"  Layer {i}: {current.shape}")
+        
+        # Verify final output is valid probability distribution
+        assert current.shape == (5, 10), f"Multi-class output should be (5, 10), got {current.shape}"
+        row_sums = np.sum(current.data, axis=1)
+        assert np.allclose(row_sums, 1.0), "Each sample should have probabilities summing to 1"
+        
+        print("✅ Multi-class classification network: 784→256→128→10 with Softmax")
+        
+        # Architecture 3: Deep Network
+        print("\n📊 Architecture 3: Deep Network (5 layers)")
+        deep_net = [
+            Dense(input_size=100, output_size=80),
+            ReLU(),
+            Dense(input_size=80, output_size=60),
+            ReLU(),
+            Dense(input_size=60, output_size=40),
+            ReLU(),
+            Dense(input_size=40, output_size=20),
+            ReLU(),
+            Dense(input_size=20, output_size=3),
+            Softmax()
+        ]
+        
+        x_deep = Tensor(np.random.randn(8, 100))  # 8 samples, 100 features
+        
+        current = x_deep
+        for i, layer in enumerate(deep_net):
+            current = layer(current)
+            if i % 2 == 0:  # Print every other layer to save space
+                print(f"  Layer {i}: {current.shape}")
+        
+        assert current.shape == (8, 3), f"Deep network output should be (8, 3), got {current.shape}"
+        
+        print("✅ Deep network: 100→80→60→40→20→3 with multiple ReLU layers")
+        
+        # Test 4: Network with Different Activation Functions
+        print("\n📊 Architecture 4: Mixed Activation Functions")
+        mixed_net = [
+            Dense(input_size=6, output_size=4),
+            Tanh(),  # Zero-centered activation
+            Dense(input_size=4, output_size=3),
+            ReLU(),  # Sparse activation
+            Dense(input_size=3, output_size=2),
+            Sigmoid()  # Bounded activation
+        ]
+        
+        x_mixed = Tensor(np.random.randn(3, 6))
+        
+        current = x_mixed
+        for i, layer in enumerate(mixed_net):
+            current = layer(current)
+            print(f"  Layer {i}: {current.shape}, range: [{np.min(current.data):.3f}, {np.max(current.data):.3f}]")
+        
+        assert current.shape == (3, 2), f"Mixed network output should be (3, 2), got {current.shape}"
+        
+        print("✅ Mixed activations network: Tanh→ReLU→Sigmoid combinations")
+        
+        # Test 5: Parameter Counting
+        print("\n📊 Parameter Analysis")
+        
+        def count_parameters(layer):
+            """Count trainable parameters in a Dense layer."""
+            if isinstance(layer, Dense):
+                weight_params = layer.weights.size
+                bias_params = layer.bias.size if layer.bias is not None else 0
+                return weight_params + bias_params
+            return 0
+        
+        # Count parameters in binary classifier
+        total_params = sum(count_parameters(layer) for layer in binary_net)
+        print(f"Binary classifier parameters: {total_params}")
+        
+        # Manual verification for first layer: 4*8 + 8 = 40
+        first_dense = binary_net[0]
+        expected_first = 4 * 8 + 8  # weights + bias
+        actual_first = count_parameters(first_dense)
+        assert actual_first == expected_first, f"First layer params: expected {expected_first}, got {actual_first}"
+        
+        print("✅ Parameter counting: weight and bias parameters calculated correctly")
+        
+        # Test 6: Gradient Flow Preparation
+        print("\n📊 Gradient Flow Preparation")
+        
+        # Test that network can handle different input types
+        test_inputs = [
+            Tensor(np.zeros((1, 4))),      # All zeros
+            Tensor(np.ones((1, 4))),       # All ones
+            Tensor(np.random.randn(1, 4)), # Random
+            Tensor(np.random.randn(1, 4) * 10)  # Large values
+        ]
+        
+        for i, test_input in enumerate(test_inputs):
+            current = test_input
+            for layer in binary_net:
+                current = layer(current)
+            
+            # Check for numerical stability
+            assert not np.any(np.isnan(current.data)), f"Input {i} produced NaN"
+            assert not np.any(np.isinf(current.data)), f"Input {i} produced Inf"
+        
+        print("✅ Numerical stability: networks handle various input ranges")
+        
+        print("\n🎉 Integration test passed! Your layers work correctly in:")
+        print("  • Binary classification networks")
+        print("  • Multi-class classification networks") 
+        print("  • Deep networks with multiple hidden layers")
+        print("  • Networks with mixed activation functions")
+        print("  • Parameter counting and analysis")
+        print("  • Numerical stability across input ranges")
+        print("📈 Progress: Layers ready for complete neural networks!")
+        
+        return True
+        
+    except Exception as e:
+        print(f"❌ Integration test failed: {e}")
+        print("\n💡 This suggests an issue with:")
+        print("  • Layer composition and chaining")
+        print("  • Shape compatibility between layers")
+        print("  • Activation function integration")
+        print("  • Numerical stability in deep networks")
+        print("  • Check your Dense layer and matrix multiplication")
+        return False
+
+# Run the integration test
+success = test_layers_integration() and success
+
+# Print final summary
+print(f"\n{'='*60}")
+print("🎯 LAYERS MODULE TESTING COMPLETE")
+print(f"{'='*60}")
+
+if success:
+    print("🎉 CONGRATULATIONS! All layers tests passed!")
+    print("\n✅ Your layers module successfully implements:")
+    print("  • Matrix multiplication: naive implementation from scratch")
+    print("  • Dense layers: y = Wx + b linear transformations")
+    print("  • Weight initialization: proper random weight setup")
+    print("  • Bias handling: optional bias terms")
+    print("  • Batch processing: efficient multi-sample computation")
+    print("  • Layer composition: building complete neural networks")
+    print("  • Integration: works with all activation functions")
+    print("  • Real ML scenarios: MNIST-like classification networks")
+    print("\n🚀 You're ready to build complete neural network architectures!")
+    print("📈 Final Progress: Layers Module ✓ COMPLETE")
+else:
+    print("⚠️  Some tests failed. Please review the error messages above.")
+    print("\n🔧 To fix issues:")
+    print("  1. Check your matrix multiplication implementation")
+    print("  2. Verify Dense layer forward pass computation")
+    print("  3. Ensure proper weight and bias initialization")
+    print("  4. Test shape compatibility between layers")
+    print("  5. Verify integration with activation functions")
+    print("\n💪 Keep building! These layers are the foundation of all neural networks.")
 
 # %% [markdown]
 """
