@@ -21,7 +21,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
 from layers_dev import Dense, Tensor
 
 # Import activation functions from the activations module
-sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(__file__)), '..', 'activations'))
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(__file__)), '..', '02_activations'))
 from activations_dev import ReLU, Sigmoid, Tanh
 
 def safe_numpy(tensor):

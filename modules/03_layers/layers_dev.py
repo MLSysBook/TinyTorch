@@ -36,7 +36,7 @@ This module builds on the **activations** module:
 """
 ## 📦 Where This Code Lives in the Final Package
 
-**Learning Side:** You work in `modules/layers/layers_dev.py`  
+**Learning Side:** You work in `modules/03_layers/layers_dev.py`  
 **Building Side:** Code exports to `tinytorch.core.layers`
 
 ```python

@@ -20,7 +20,7 @@ from tinytorch.core.activations import ReLU, Sigmoid, Tanh
 
 # Import the networks module
 try:
-    from modules.networks.networks_dev import (
+    from modules.04_networks.networks_dev import (
         Sequential, 
         create_mlp, 
         create_classification_network,
@@ -32,7 +32,7 @@ try:
     )
 except ImportError:
     # Fallback for when module isn't exported yet
-    sys.path.append(str(project_root / "modules" / "networks"))
+    sys.path.append(str(project_root / "modules" / "04_networks"))
     from networks_dev import (
         Sequential, 
         create_mlp, 
