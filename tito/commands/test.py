@@ -22,7 +22,7 @@ class TestCommand(BaseCommand):
         return "Run module tests"
 
     def add_arguments(self, parser: ArgumentParser) -> None:
-        parser.add_argument("--module", help="Module to test")
+        parser.add_argument("module", nargs="?", help="Module to test (optional)")
         parser.add_argument("--all", action="store_true", help="Run all module tests")
 
     def validate_args(self, args: Namespace) -> None:
@@ -159,8 +159,8 @@ class TestCommand(BaseCommand):
                 
                 console.print(Panel(f"[red]❌ Please specify a module to test[/red]\n\n"
                                   f"Available modules: {', '.join(sorted(available_modules))}\n\n"
-                                  f"[dim]Example: tito test --module tensor[/dim]\n"
-                                  f"[dim]For all modules: tito test --all[/dim]", 
+                                  f"[dim]Example: tito module test tensor[/dim]\n"
+                                  f"[dim]For all modules: tito module test --all[/dim]", 
                                   title="Module Required", border_style="red"))
             else:
                 console.print(Panel("[red]❌ No modules directory found[/red]", 

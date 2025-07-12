@@ -169,12 +169,14 @@ class TestSpecializedNetworks:
             hidden_sizes=[32, 16]
         )
         
-        assert len(classifier.layers) == 7  # 2 Dense + 2 ReLU + 1 Dense + 1 Sigmoid
+        assert len(classifier.layers) == 6  # Dense(100→32) + ReLU + Dense(32→16) + ReLU + Dense(16→5) + Softmax
         
         # Check output layer
         dense_layers = [layer for layer in classifier.layers if isinstance(layer, Dense)]
         assert dense_layers[-1].output_size == 5
-        assert isinstance(classifier.layers[-1], Sigmoid)
+        # Should use Softmax for multi-class classification
+        from tinytorch.core.activations import Softmax
+        assert isinstance(classifier.layers[-1], Softmax)
     
     def test_create_classification_network_default(self):
         """Test classification network with default hidden sizes."""
@@ -194,7 +196,7 @@ class TestSpecializedNetworks:
             hidden_sizes=[8, 4]
         )
         
-        assert len(regressor.layers) == 7  # 2 Dense + 2 ReLU + 1 Dense + 1 Tanh
+        assert len(regressor.layers) == 6  # Dense(13→8) + ReLU + Dense(8→4) + ReLU + Dense(4→1) + Tanh
         
         # Check output layer
         dense_layers = [layer for layer in regressor.layers if isinstance(layer, Dense)]
