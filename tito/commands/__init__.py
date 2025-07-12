@@ -12,7 +12,7 @@ from .notebooks import NotebooksCommand
 from .info import InfoCommand
 from .test import TestCommand
 from .doctor import DoctorCommand
-from .sync import SyncCommand
+from .export import ExportCommand
 from .reset import ResetCommand
 from .jupyter import JupyterCommand
 from .nbdev import NbdevCommand
@@ -31,7 +31,7 @@ __all__ = [
     'InfoCommand',
     'TestCommand',
     'DoctorCommand',
-    'SyncCommand',
+    'ExportCommand',
     'ResetCommand',
     'JupyterCommand',
     'NbdevCommand',
