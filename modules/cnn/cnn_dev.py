@@ -50,12 +50,14 @@ from tinytorch.core.tensor import Tensor
 # %%
 #| default_exp core.cnn
 
-# Setup and imports
+# %%
+#| export
 import numpy as np
 from typing import List, Tuple, Optional
-import matplotlib.pyplot as plt
+from .tensor import Tensor
 
-from tinytorch.core.tensor import Tensor
+# Setup and imports (for development)
+import matplotlib.pyplot as plt
 from tinytorch.core.layers import Dense
 from tinytorch.core.activations import ReLU
 
