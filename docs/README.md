@@ -1,93 +1,108 @@
 # 📚 TinyTorch Documentation
 
-Welcome to the TinyTorch documentation! This directory contains guides organized by audience and purpose.
+**Complete documentation for the TinyTorch ML Systems course.**
 
-## 🎯 **Find Your Documentation**
+## 🎯 **Quick Navigation**
 
-### 🎓 **Students** (Taking the ML Systems Course)
-**Start here if you're learning ML systems:**
+### **For Students** 👨‍🎓
+- **[Project Guide](students/project-guide.md)** - Complete course navigation and progress tracking
+- **Start Here**: [`modules/setup/README.md`](../modules/setup/README.md) - First module setup
 
-- **[Project Guide](students/project-guide.md)** - Track your progress through all 12 modules
-- **[Quickstart](../quickstart.md)** - Get up and running quickly
-- **[Main README](../README.md)** - Project overview and introduction
+### **For Developers** 👨‍💻
+- **[Development Guide](development/module-development-guide.md)** - Complete methodology and best practices
+- **[Quick Reference](development/quick-module-reference.md)** - Commands and essential patterns
+- **[Creation Checklist](development/module-creation-checklist.md)** - Step-by-step module creation
 
-### 👨‍🏫 **Instructors** (Teaching or Designing the Course)
-**Understanding the educational philosophy:**
+### **For Instructors** 👨‍🏫
+- **[Pedagogical Principles](pedagogy/pedagogical-principles.md)** - Educational philosophy and learning theory
+- **[Testing Architecture](pedagogy/testing-architecture.md)** - Assessment and verification strategy
 
-- **[Pedagogical Principles](pedagogy/pedagogical-principles.md)** - The "Build → Use → Understand" framework
-- **[Vision](pedagogy/vision.md)** - High-level course philosophy and learning approach
-- **[Testing Architecture](pedagogy/testing-architecture.md)** - Dual testing system for education
+## 📁 **Documentation Structure**
 
-### 🔧 **Human Developers** (Building New Modules)
-**Creating or contributing to TinyTorch modules:**
+### **Development** (`development/`)
+**For module developers and contributors**
+- `module-development-guide.md` - Complete development methodology
+- `quick-module-reference.md` - Fast reference for commands and patterns
+- `module-creation-checklist.md` - Comprehensive step-by-step process
+- `module-template.md` - Reusable template snippets
 
-- **[Development Guide](development/README.md)** - Start here for complete development methodology
-- **[Module Development Guide](development/module-development-guide.md)** - Educational design and best practices
-- **[Module Creation Checklist](development/module-creation-checklist.md)** - Step-by-step process
-- **[Quick Reference](development/quick-module-reference.md)** - Commands and common patterns
+### **Students** (`students/`)
+**For course participants**
+- `project-guide.md` - Course navigation and module progression
 
-### 🤖 **AI Assistants** (Development Support)
-**Coding patterns and quality enforcement:**
+### **Pedagogy** (`pedagogy/`)
+**For instructors and educational design**
+- `pedagogical-principles.md` - Educational philosophy and learning theory
+- `testing-architecture.md` - Assessment strategy and testing patterns
+- `vision.md` - Course vision and goals
 
-- **`.cursor/rules/`** - Specific implementation patterns, code examples, and anti-patterns
-- **Automatic guidance** during development through cursor rules
+## 🚀 **Quick Commands Reference**
 
-## 📊 **Documentation Architecture**
-
-### **Clear Audience Separation**
-```
-docs/
-├── students/           # 🎓 Course participants
-│   └── project-guide.md    # Module progression and workflow
-├── pedagogy/          # 👨‍🏫 Instructors and course designers  
-│   ├── pedagogical-principles.md  # Educational theory
-│   ├── vision.md              # Course philosophy
-│   └── testing-architecture.md   # Assessment strategy
-├── development/       # 🔧 Human module developers
-│   ├── README.md              # Development methodology
-│   ├── module-development-guide.md  # Complete guide
-│   ├── module-creation-checklist.md # Step-by-step process
-│   └── quick-module-reference.md   # Commands and patterns
-└── README.md          # 📍 This file - navigation hub
-
-.cursor/rules/         # 🤖 AI assistants (not in docs/)
-├── module-development-best-practices.mdc  # Coding patterns
-├── testing-patterns.mdc                   # Test requirements
-└── nbdev-educational-pattern.mdc          # NBDev structure
+### **System Commands**
+```bash
+tito system info              # System information and course navigation
+tito system doctor            # Environment diagnosis
+tito system jupyter           # Start Jupyter Lab
 ```
 
-### **No Duplication by Design**
-- **Students**: Course navigation and module progression
-- **Instructors**: Educational philosophy and theory
-- **Human Developers**: Methodology, workflow, and educational design
-- **AI Assistants**: Specific coding patterns and implementation examples
+### **Module Development**
+```bash
+tito module status            # Check all module status
+tito module test --module X   # Test specific module
+tito module notebooks --module X  # Convert Python to notebook
+```
 
-## 🚀 **Quick Navigation**
+### **Package Management**
+```bash
+tito package sync            # Export notebooks to package
+tito package sync --module X # Export specific module
+tito package reset           # Reset package to clean state
+```
 
-| I am a... | I want to... | Go to... |
-|-----------|--------------|----------|
-| **Student** | Start the course | [Project Guide](students/project-guide.md) |
-| **Student** | Get unstuck on setup | [Quickstart](../quickstart.md) |
-| **Instructor** | Understand the pedagogy | [Pedagogical Principles](pedagogy/pedagogical-principles.md) |
-| **Instructor** | Design a new course | [Vision](pedagogy/vision.md) |
-| **Developer** | Build a new module | [Development Guide](development/README.md) |
-| **Developer** | Need quick help | [Quick Reference](development/quick-module-reference.md) |
-| **Contributor** | Understand the philosophy | [Pedagogical Principles](pedagogy/pedagogical-principles.md) |
+## 🎓 **Educational Philosophy**
 
-## 🔑 **Core Principles** (Across All Documentation)
+TinyTorch follows a **"Build → Use → Understand → Repeat"** methodology where students:
 
-### **Educational Excellence**
-- **"Build → Use → Understand → Repeat"** - Every module follows this cycle
-- **Real-world relevance** - Connect to production ML engineering
-- **Immediate feedback** - Students see their code working
-- **Progressive complexity** - Build understanding step by step
+1. **Build** - Implement core ML components from scratch
+2. **Use** - Apply their implementations to real problems
+3. **Understand** - Reflect on design decisions and trade-offs
+4. **Repeat** - Apply learnings to increasingly complex systems
 
-### **Real Data, Real Systems**
-- Use production datasets (CIFAR-10, ImageNet), not synthetic data
-- Include progress feedback for downloads and long operations  
-- Test with realistic scales and performance constraints
-- Think about caching, user experience, and systems concerns
+### **Key Principles**
+- **Real Data, Real Systems** - Use production datasets and realistic constraints
+- **Progressive Complexity** - Build understanding step by step
+- **Systems Thinking** - Connect to production ML engineering practices
+- **Immediate Feedback** - Students see their code working quickly
+
+## 🛠️ **Development Workflow**
+
+### **For New Modules**
+1. **Plan** - Choose real datasets, define learning objectives
+2. **Implement** - Write complete working version first
+3. **Structure** - Add educational content and TODO guidance
+4. **Test** - Comprehensive testing with real data
+5. **Export** - Convert to notebooks and export to package
+
+### **For Students**
+1. **Setup** - Complete environment setup in `modules/setup/`
+2. **Develop** - Work in `modules/{name}/{name}_dev.py` files
+3. **Export** - Use `tito package sync` to build package
+4. **Test** - Use `tito module test` to verify implementation
+5. **Progress** - Use `tito module status` to track completion
+
+## 📊 **Course Structure**
+
+TinyTorch is organized into progressive modules:
+
+- **Setup** - Development environment and workflow
+- **Tensor** - Core data structures and operations
+- **Layers** - Neural network building blocks
+- **Networks** - Complete model architectures
+- **Training** - Optimization and learning algorithms
+- **Advanced** - Production systems and MLOps
+
+Each module builds on previous ones, creating a complete ML systems engineering curriculum.
 
 ---
 
-*All documentation follows the TinyTorch principle: **Build → Use → Understand → Repeat*** 
+**💡 Pro Tip**: Start with the [Project Guide](students/project-guide.md) if you're a student, or the [Development Guide](development/module-development-guide.md) if you're creating modules. 
