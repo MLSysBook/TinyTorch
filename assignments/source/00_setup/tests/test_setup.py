@@ -4,13 +4,11 @@ This tests the student implementations to ensure they work correctly.
 """
 
 import pytest
-import numpy as np
 import sys
-import os
 from pathlib import Path
 
-# Import from the main package (rock solid foundation)
-from tinytorch.core.utils import hello_tinytorch, add_numbers, SystemInfo, DeveloperProfile
+# Import from the main package
+from tinytorch.core.utils import hello_tinytorch, add_numbers, SystemInfo, DeveloperProfile, complex_calculation
 
 
 class TestSetupFunctions:
@@ -26,9 +24,38 @@ class TestSetupFunctions:
         hello_tinytorch()
         captured = capsys.readouterr()
         
-        # Should print the branding text (flexible matching for unicode)
-        assert "TinyTorch" in captured.out or "Tiny🔥Torch" in captured.out
+        # Should print the branding text
+        assert "TinyTorch" in captured.out
         assert "Build ML Systems from Scratch!" in captured.out
+    
+    def test_complex_calculation_basic(self):
+        """Test multi-step calculation with multiple solution blocks."""
+        # Test the example from the assignment: complex_calculation(3, 4)
+        # Step 1: a_plus_2 = 3+2 = 5, b_plus_2 = 4+2 = 6
+        # Step 2: everything_summed = 5+6 = 11
+        # Step 3: everything_summed_times_10 = 11*10 = 110
+        result = complex_calculation(3, 4)
+        expected = 110
+        assert result == expected, f"Expected {expected}, got {result}"
+    
+    def test_complex_calculation_different_inputs(self):
+        """Test multi-step calculation with different inputs."""
+        # Test with different numbers
+        result = complex_calculation(1, 2)
+        # Step 1: 1+2=3, 2+2=4
+        # Step 2: 3+4=7
+        # Step 3: 7*10=70
+        expected = 70
+        assert result == expected, f"Expected {expected}, got {result}"
+    
+    def test_complex_calculation_negative(self):
+        """Test multi-step calculation with negative numbers."""
+        result = complex_calculation(-1, -2)
+        # Step 1: -1+2=1, -2+2=0
+        # Step 2: 1+0=1
+        # Step 3: 1*10=10
+        expected = 10
+        assert result == expected, f"Expected {expected}, got {result}"
     
     def test_add_numbers_basic(self):
         """Test basic addition functionality."""
@@ -62,11 +89,9 @@ class TestSystemInfo:
         """Test SystemInfo properties."""
         info = SystemInfo()
         
-        # Check python_version is a version tuple
-        assert hasattr(info.python_version, 'major')
-        assert hasattr(info.python_version, 'minor')
-        assert isinstance(info.python_version.major, int)
-        assert isinstance(info.python_version.minor, int)
+        # Check python_version is a string
+        assert isinstance(info.python_version, str)
+        assert len(info.python_version) > 0
         
         # Check platform is a string
         assert isinstance(info.platform, str)
@@ -83,8 +108,7 @@ class TestSystemInfo:
         
         assert isinstance(str_repr, str)
         assert "Python" in str_repr
-        assert str(info.python_version.major) in str_repr
-        assert str(info.python_version.minor) in str_repr
+        assert info.python_version in str_repr
         assert info.platform in str_repr
         assert info.machine in str_repr
     
@@ -108,100 +132,58 @@ class TestDeveloperProfile:
         profile = DeveloperProfile()
         
         # Check default values
-        assert profile.name == "Vijay Janapa Reddi"
-        assert profile.affiliation == "Harvard University"
-        assert profile.email == "vj@eecs.harvard.edu"
-        assert profile.github_username == "profvjreddi"
-        assert profile.ascii_art is not None  # Should have default flame
+        assert profile.name == "Student"
+        assert profile.email == "student@example.com"
+        assert profile.affiliation == "TinyTorch Community"
+        assert profile.specialization == "ML Systems"
     
     def test_developer_profile_creation_custom(self):
         """Test DeveloperProfile with custom values."""
-        custom_art = """
-        Custom ASCII Art
-        ****************
-        """
         profile = DeveloperProfile(
             name="Test Student",
-            affiliation="Test University",
             email="test@example.com",
-            github_username="teststudent",
-            ascii_art=custom_art
+            affiliation="Test University",
+            specialization="Deep Learning"
         )
         
         assert profile.name == "Test Student"
-        assert profile.affiliation == "Test University"
         assert profile.email == "test@example.com"
-        assert profile.github_username == "teststudent"
-        assert profile.ascii_art == custom_art
+        assert profile.affiliation == "Test University"
+        assert profile.specialization == "Deep Learning"
     
     def test_developer_profile_str(self):
         """Test DeveloperProfile string representation."""
-        profile = DeveloperProfile()
+        profile = DeveloperProfile("Alice", "alice@example.com")
         str_repr = str(profile)
         
         assert isinstance(str_repr, str)
-        assert "👨‍💻" in str_repr
-        assert "Vijay Janapa Reddi" in str_repr
-        assert "Harvard University" in str_repr
-        assert "@profvjreddi" in str_repr
+        assert "Alice" in str_repr
+        assert "alice@example.com" in str_repr
     
     def test_developer_profile_signature(self):
         """Test DeveloperProfile signature method."""
-        profile = DeveloperProfile()
+        profile = DeveloperProfile("Bob", "bob@example.com", "Test University", "Neural Networks")
         signature = profile.get_signature()
         
         assert isinstance(signature, str)
-        assert "Built by" in signature
-        assert "Vijay Janapa Reddi" in signature
-        assert "@profvjreddi" in signature
+        assert "Bob" in signature
+        assert "Test University" in signature
+        assert "Neural Networks" in signature
     
-    def test_developer_profile_ascii_art(self):
-        """Test DeveloperProfile ASCII art functionality."""
-        # Test default ASCII art
-        profile = DeveloperProfile()
-        ascii_art = profile.get_ascii_art()
+    def test_developer_profile_info(self):
+        """Test DeveloperProfile get_profile_info method."""
+        profile = DeveloperProfile("Charlie", "charlie@example.com", "AI Lab", "Computer Vision")
+        info = profile.get_profile_info()
         
-        assert isinstance(ascii_art, str)
-        assert "Tiny🔥Torch" in ascii_art
-        assert "Build ML Systems from Scratch!" in ascii_art
-        assert len(ascii_art) > 100  # Should be substantial ASCII art
-        
-        # Test custom ASCII art
-        custom_art = "My Custom Art!"
-        custom_profile = DeveloperProfile(ascii_art=custom_art)
-        assert custom_profile.get_ascii_art() == custom_art
-    
-    def test_developer_profile_full_profile(self):
-        """Test DeveloperProfile full profile display."""
-        profile = DeveloperProfile()
-        full_profile = profile.get_full_profile()
-        
-        assert isinstance(full_profile, str)
-        assert "Tiny🔥Torch" in full_profile
-        assert "Build ML Systems from Scratch!" in full_profile
-        assert "👨‍💻 Developer: Vijay Janapa Reddi" in full_profile
-        assert "🏛️  Affiliation: Harvard University" in full_profile
-        assert "📧 Email: vj@eecs.harvard.edu" in full_profile
-        assert "🐙 GitHub: @profvjreddi" in full_profile
-        assert "🔥 Ready to build ML systems from scratch!" in full_profile
+        assert isinstance(info, dict)
+        assert info['name'] == "Charlie"
+        assert info['email'] == "charlie@example.com"
+        assert info['affiliation'] == "AI Lab"
+        assert info['specialization'] == "Computer Vision"
 
 
 class TestFileOperations:
     """Test file-related operations."""
-    
-    def test_ascii_art_file_exists(self):
-        """Test that the ASCII art file exists."""
-        art_file = Path(__file__).parent.parent / "tinytorch_flame.txt"
-        assert art_file.exists(), "ASCII art file should exist"
-        assert art_file.is_file(), "ASCII art should be a file"
-    
-    def test_ascii_art_file_has_content(self):
-        """Test that the ASCII art file has content."""
-        art_file = Path(__file__).parent.parent / "tinytorch_flame.txt"
-        content = art_file.read_text()
-        
-        assert len(content) > 0, "ASCII art file should not be empty"
-        assert len(content.splitlines()) > 10, "ASCII art should have multiple lines"
     
     def test_hello_tinytorch_handles_missing_file(self, monkeypatch, capsys):
         """Test that hello_tinytorch handles missing ASCII art file gracefully."""
@@ -216,7 +198,7 @@ class TestFileOperations:
         captured = capsys.readouterr()
         
         # Should still print the branding text
-        assert "🔥 TinyTorch 🔥" in captured.out
+        assert "TinyTorch" in captured.out
         assert "Build ML Systems from Scratch!" in captured.out
 
 
@@ -228,6 +210,7 @@ class TestModuleIntegration:
         # Test functions
         hello_tinytorch()  # Should not raise
         sum_result = add_numbers(5, 10)
+        calc_result = complex_calculation(1, 1)
         
         # Test classes
         info = SystemInfo()
@@ -235,15 +218,16 @@ class TestModuleIntegration:
         
         # All should work without errors
         assert sum_result == 15
+        assert calc_result == 60  # (1+2) + (1+2) = 6, 6*10 = 60
         assert str(info)  # Should not be empty
         assert str(profile)  # Should not be empty
         assert profile.get_signature()  # Should not be empty
-        assert profile.get_ascii_art()  # Should not be empty
     
     def test_no_import_errors(self):
         """Test that imports work correctly."""
         # If we got here, imports worked
         assert callable(hello_tinytorch)
         assert callable(add_numbers)
+        assert callable(complex_calculation)
         assert callable(SystemInfo)
         assert callable(DeveloperProfile) 
