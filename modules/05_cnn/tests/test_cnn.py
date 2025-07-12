@@ -1,6 +1,18 @@
 import numpy as np
 import pytest
-from modules.cnn.cnn_dev import conv2d_naive, Conv2D
+import sys
+from pathlib import Path
+
+# Add the CNN module to the path
+sys.path.append(str(Path(__file__).parent.parent))
+
+try:
+    # Import from the exported package
+    from tinytorch.core.cnn import conv2d_naive, Conv2D
+except ImportError:
+    # Fallback for when module isn't exported yet
+    from cnn_dev import conv2d_naive, Conv2D
+
 from tinytorch.core.tensor import Tensor
 
 def test_conv2d_naive_small():

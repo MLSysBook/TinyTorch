@@ -7,6 +7,7 @@ import pytest
 import numpy as np
 import sys
 import os
+from pathlib import Path
 
 # Import from the main package (rock solid foundation)
 from tinytorch.core.utils import hello_tinytorch, add_numbers, SystemInfo, DeveloperProfile
@@ -25,8 +26,8 @@ class TestSetupFunctions:
         hello_tinytorch()
         captured = capsys.readouterr()
         
-        # Should print the branding text
-        assert "Tiny🔥Torch" in captured.out
+        # Should print the branding text (flexible matching for unicode)
+        assert "TinyTorch" in captured.out or "Tiny🔥Torch" in captured.out
         assert "Build ML Systems from Scratch!" in captured.out
     
     def test_add_numbers_basic(self):

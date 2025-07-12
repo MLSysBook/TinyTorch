@@ -455,6 +455,31 @@ class DeveloperProfile:
         
         #| exercise_end
 
+    def get_full_profile(self):
+        """
+        Get complete profile with ASCII art.
+        
+        Return full profile display including ASCII art and all details.
+        """
+        #| exercise_start
+        #| hint: Format with ASCII art, then developer details with emojis
+        #| solution_test: Should return complete profile with ASCII art and details
+        #| difficulty: medium
+        #| points: 10
+        
+        ### BEGIN SOLUTION
+        return f"""{self.ascii_art}
+        
+👨‍💻 Developer: {self.name}
+🏛️  Affiliation: {self.affiliation}
+📧 Email: {self.email}
+🐙 GitHub: @{self.github_username}
+🔥 Ready to build ML systems from scratch!
+"""
+        ### END SOLUTION
+        
+        #| exercise_end
+
 # %% [markdown]
 """
 ## Hidden Tests: DeveloperProfile Class (35 Points)
