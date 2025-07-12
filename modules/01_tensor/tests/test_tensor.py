@@ -1,24 +1,15 @@
 """
-Tests for TinyTorch Tensor module.
-
-Tests the core tensor functionality including creation, arithmetic operations,
-utility methods, and edge cases.
-
-These tests work with the current implementation and provide stretch goals
-for students to implement additional methods.
+Test suite for the tensor module.
+This tests the student implementations to ensure they work correctly.
 """
 
-import sys
-import os
 import pytest
 import numpy as np
+import sys
+import os
 
-# Add the parent directory to path to import tensor_dev
-sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
-
-# Import from the module's development file
-# Note: This imports the instructor version with full implementation
-from tensor_dev import Tensor
+# Import from the main package (rock solid foundation)
+from tinytorch.core.tensor import Tensor
 
 def safe_numpy(tensor):
     """Get numpy array from tensor, using .numpy() if available, otherwise .data"""

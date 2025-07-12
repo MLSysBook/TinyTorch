@@ -10,10 +10,7 @@ import os
 
 # Import from the main package (rock solid foundation)
 from tinytorch.core.tensor import Tensor
-
-# Import our implementations from the local module for testing
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
-from activations_dev import ReLU, Sigmoid, Tanh, Softmax
+from tinytorch.core.activations import ReLU, Sigmoid, Tanh, Softmax
 
 
 class TestReLU:
