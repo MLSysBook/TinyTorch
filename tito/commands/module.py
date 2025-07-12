@@ -9,6 +9,7 @@ from .base import BaseCommand
 from .status import StatusCommand
 from .test import TestCommand
 from .notebooks import NotebooksCommand
+from .clean import CleanCommand
 
 class ModuleCommand(BaseCommand):
     @property
@@ -49,6 +50,14 @@ class ModuleCommand(BaseCommand):
         )
         notebooks_cmd = NotebooksCommand(self.config)
         notebooks_cmd.add_arguments(notebooks_parser)
+        
+        # Clean subcommand
+        clean_parser = subparsers.add_parser(
+            'clean',
+            help='Clean up module directories (notebooks, cache, etc.)'
+        )
+        clean_cmd = CleanCommand(self.config)
+        clean_cmd.add_arguments(clean_parser)
 
     def run(self, args: Namespace) -> int:
         console = self.console
@@ -59,11 +68,13 @@ class ModuleCommand(BaseCommand):
                 "Available subcommands:\n"
                 "  • [bold]status[/bold]     - Check status of all modules\n"
                 "  • [bold]test[/bold]       - Run module tests\n"
-                "  • [bold]notebooks[/bold]  - Build notebooks from Python files\n\n"
+                "  • [bold]notebooks[/bold]  - Build notebooks from Python files\n"
+                "  • [bold]clean[/bold]      - Clean up module directories\n\n"
                 "[dim]Examples:[/dim]\n"
                 "[dim]  tito module status --metadata[/dim]\n"
                 "[dim]  tito module test --all[/dim]\n"
-                "[dim]  tito module notebooks --module tensor[/dim]",
+                "[dim]  tito module notebooks --module tensor[/dim]\n"
+                "[dim]  tito module clean --module tensor[/dim]",
                 title="Module Command Group",
                 border_style="bright_cyan"
             ))
@@ -78,6 +89,9 @@ class ModuleCommand(BaseCommand):
             return cmd.execute(args)
         elif args.module_command == 'notebooks':
             cmd = NotebooksCommand(self.config)
+            return cmd.execute(args)
+        elif args.module_command == 'clean':
+            cmd = CleanCommand(self.config)
             return cmd.execute(args)
         else:
             console.print(Panel(
