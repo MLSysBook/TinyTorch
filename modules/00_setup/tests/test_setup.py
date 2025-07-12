@@ -1,18 +1,15 @@
-#!/usr/bin/env python3
 """
-Tests for the setup module using pytest.
+Test suite for the setup module.
+This tests the student implementations to ensure they work correctly.
 """
 
 import pytest
+import numpy as np
 import sys
 import os
-from pathlib import Path
-from io import StringIO
 
-# Add the parent directory to the path so we can import setup_dev
-sys.path.insert(0, str(Path(__file__).parent.parent))
-
-from setup_dev import hello_tinytorch, add_numbers, SystemInfo, DeveloperProfile
+# Import from the main package (rock solid foundation)
+from tinytorch.core.utils import hello_tinytorch, add_numbers, SystemInfo, DeveloperProfile
 
 
 class TestSetupFunctions:

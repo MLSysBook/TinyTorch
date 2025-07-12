@@ -1,28 +1,17 @@
 """
-Tests for TinyTorch Layers module.
-
-Tests the core layer functionality including Dense layers, activation functions,
-and layer composition.
-
-These tests work with the current implementation and provide stretch goals
-for students to implement additional features.
+Test suite for the layers module.
+This tests the student implementations to ensure they work correctly.
 """
 
-import sys
-import os
 import pytest
 import numpy as np
+import sys
+import os
 
-# Add the parent directory to path to import layers_dev
-sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
-
-# Import from the module's development file
-# Note: This imports the instructor version with full implementation
-from layers_dev import Dense, Tensor
-
-# Import activation functions from the activations module
-sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(__file__)), '..', '02_activations'))
-from activations_dev import ReLU, Sigmoid, Tanh
+# Import from the main package (rock solid foundation)
+from tinytorch.core.tensor import Tensor
+from tinytorch.core.layers import Dense
+from tinytorch.core.activations import ReLU, Sigmoid, Tanh
 
 def safe_numpy(tensor):
     """Get numpy array from tensor, using .numpy() if available, otherwise .data"""

@@ -1,29 +1,20 @@
 """
-Tests for TinyTorch DataLoader module.
-
-Tests follow the "Build → Use → Understand" pattern:
-1. Build Dataset → Test with local test data
-2. Build DataLoader → Test batching test data  
-3. Build Normalizer → Test normalizing test data
-4. Build Pipeline → Test complete test pipeline
-
-These tests work with small local test data for fast, reliable testing.
+Test suite for the dataloader module.
+This tests the student implementations to ensure they work correctly.
 """
 
-import sys
-import os
 import pytest
 import numpy as np
+import sys
+import os
 import tempfile
 import shutil
-import pickle
 from pathlib import Path
+from unittest.mock import patch, MagicMock
 
-# Add the parent directory to path to import dataloader_dev
-sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
-
-# Import from the module's development file
-from dataloader_dev import Dataset, DataLoader, CIFAR10Dataset, Normalizer, create_data_pipeline, Tensor
+# Import from the main package (rock solid foundation)
+from tinytorch.core.tensor import Tensor
+from tinytorch.core.dataloader import Dataset, DataLoader, CIFAR10Dataset, Normalizer, create_data_pipeline
 
 def safe_numpy(tensor):
     """Get numpy array from tensor, using .data attribute"""
