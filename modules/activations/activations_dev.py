@@ -181,6 +181,53 @@ class ReLU:
 
 # %% [markdown]
 """
+### 🧪 Test Your ReLU Implementation
+
+Let's test your ReLU implementation right away to make sure it's working correctly:
+"""
+
+# %%
+# Test ReLU implementation
+print("Testing ReLU Implementation:")
+print("=" * 40)
+
+try:
+    relu = ReLU()
+    
+    # Test 1: Basic functionality
+    test_input = Tensor([[-3, -1, 0, 1, 3]])
+    output = relu(test_input)
+    expected = [0, 0, 0, 1, 3]
+    
+    print(f"✅ Input: {test_input.data.flatten()}")
+    print(f"✅ Output: {output.data.flatten()}")
+    print(f"✅ Expected: {expected}")
+    
+    # Check if implementation is correct
+    if np.allclose(output.data.flatten(), expected):
+        print("🎉 ReLU implementation is CORRECT!")
+    else:
+        print("❌ ReLU implementation needs fixing")
+        print("   Make sure negative values become 0, positive values stay unchanged")
+    
+    # Test 2: Edge cases
+    edge_cases = Tensor([[0.0, -0.0, 1e-10, -1e-10]])
+    edge_output = relu(edge_cases)
+    print(f"✅ Edge cases: {edge_cases.data.flatten()}")
+    print(f"✅ Edge output: {edge_output.data.flatten()}")
+    
+    print("✅ ReLU tests complete!")
+    
+except NotImplementedError:
+    print("⚠️  ReLU not implemented yet - complete the forward method above!")
+except Exception as e:
+    print(f"❌ Error in ReLU: {e}")
+    print("   Check your implementation in the forward method")
+
+print()  # Add spacing
+
+# %% [markdown]
+"""
 ## Step 3: Sigmoid Activation Function
 
 **Sigmoid** is the classic activation function that squashes values to the range (0, 1).
@@ -246,6 +293,63 @@ class Sigmoid:
     def __call__(self, x: Tensor) -> Tensor:
         """Allow calling the activation like a function: sigmoid(x)"""
         return self.forward(x)
+
+# %% [markdown]
+"""
+### 🧪 Test Your Sigmoid Implementation
+
+Let's test your Sigmoid implementation to ensure it's working correctly:
+"""
+
+# %%
+# Test Sigmoid implementation
+print("Testing Sigmoid Implementation:")
+print("=" * 40)
+
+try:
+    sigmoid = Sigmoid()
+    
+    # Test 1: Basic functionality
+    test_input = Tensor([[-2, -1, 0, 1, 2]])
+    output = sigmoid(test_input)
+    
+    print(f"✅ Input: {test_input.data.flatten()}")
+    print(f"✅ Output: {output.data.flatten()}")
+    
+    # Check properties
+    all_positive = np.all(output.data > 0)
+    all_less_than_one = np.all(output.data < 1)
+    zero_maps_to_half = abs(sigmoid(Tensor([0])).data[0] - 0.5) < 1e-6
+    
+    print(f"✅ All outputs positive: {all_positive}")
+    print(f"✅ All outputs < 1: {all_less_than_one}")
+    print(f"✅ Sigmoid(0) ≈ 0.5: {zero_maps_to_half}")
+    
+    if all_positive and all_less_than_one and zero_maps_to_half:
+        print("🎉 Sigmoid implementation is CORRECT!")
+    else:
+        print("❌ Sigmoid implementation needs fixing")
+        print("   Make sure: 0 < output < 1 and sigmoid(0) = 0.5")
+    
+    # Test 2: Numerical stability
+    extreme_values = Tensor([[-1000, 1000]])
+    extreme_output = sigmoid(extreme_values)
+    print(f"✅ Extreme values: {extreme_values.data.flatten()}")
+    print(f"✅ Extreme output: {extreme_output.data.flatten()}")
+    
+    # Should not have NaN or inf
+    no_nan_inf = not (np.isnan(extreme_output.data).any() or np.isinf(extreme_output.data).any())
+    print(f"✅ No NaN/Inf: {no_nan_inf}")
+    
+    print("✅ Sigmoid tests complete!")
+    
+except NotImplementedError:
+    print("⚠️  Sigmoid not implemented yet - complete the forward method above!")
+except Exception as e:
+    print(f"❌ Error in Sigmoid: {e}")
+    print("   Check your implementation in the forward method")
+
+print()  # Add spacing
 
 # %% [markdown]
 """
@@ -317,6 +421,65 @@ class Tanh:
 
 # %% [markdown]
 """
+### 🧪 Test Your Tanh Implementation
+
+Let's test your Tanh implementation to ensure it's working correctly:
+"""
+
+# %%
+# Test Tanh implementation
+print("Testing Tanh Implementation:")
+print("=" * 40)
+
+try:
+    tanh = Tanh()
+    
+    # Test 1: Basic functionality
+    test_input = Tensor([[-2, -1, 0, 1, 2]])
+    output = tanh(test_input)
+    
+    print(f"✅ Input: {test_input.data.flatten()}")
+    print(f"✅ Output: {output.data.flatten()}")
+    
+    # Check properties
+    in_range = np.all(np.abs(output.data) < 1)
+    zero_maps_to_zero = abs(tanh(Tensor([0])).data[0]) < 1e-6
+    symmetric = np.allclose(tanh(Tensor([1])).data, -tanh(Tensor([-1])).data)
+    
+    print(f"✅ All outputs in (-1, 1): {in_range}")
+    print(f"✅ Tanh(0) ≈ 0: {zero_maps_to_zero}")
+    print(f"✅ Symmetric (tanh(-x) = -tanh(x)): {symmetric}")
+    
+    if in_range and zero_maps_to_zero and symmetric:
+        print("🎉 Tanh implementation is CORRECT!")
+    else:
+        print("❌ Tanh implementation needs fixing")
+        print("   Make sure: -1 < output < 1, tanh(0) = 0, and tanh(-x) = -tanh(x)")
+    
+    # Test 2: Compare with expected values
+    expected_values = {
+        0: 0.0,
+        1: 0.7616,  # approximately
+        -1: -0.7616,  # approximately
+    }
+    
+    for input_val, expected in expected_values.items():
+        actual = tanh(Tensor([input_val])).data[0]
+        close = abs(actual - expected) < 0.001
+        print(f"✅ Tanh({input_val}) ≈ {expected}: {close} (got {actual:.4f})")
+    
+    print("✅ Tanh tests complete!")
+    
+except NotImplementedError:
+    print("⚠️  Tanh not implemented yet - complete the forward method above!")
+except Exception as e:
+    print(f"❌ Error in Tanh: {e}")
+    print("   Check your implementation in the forward method")
+
+print()  # Add spacing
+
+# %% [markdown]
+"""
 ## Step 5: Softmax Activation Function
 
 **Softmax** converts logits into probability distributions - essential for multi-class classification.
@@ -384,6 +547,74 @@ class Softmax:
     def __call__(self, x: Tensor) -> Tensor:
         """Allow calling the activation like a function: softmax(x)"""
         return self.forward(x)
+
+# %% [markdown]
+"""
+### 🧪 Test Your Softmax Implementation
+
+Let's test your Softmax implementation to ensure it's working correctly:
+"""
+
+# %%
+# Test Softmax implementation
+print("Testing Softmax Implementation:")
+print("=" * 40)
+
+try:
+    softmax = Softmax()
+    
+    # Test 1: Basic functionality
+    test_input = Tensor([[2, 1, 0]])
+    output = softmax(test_input)
+    
+    print(f"✅ Input: {test_input.data.flatten()}")
+    print(f"✅ Output: {output.data.flatten()}")
+    
+    # Check properties
+    all_positive = np.all(output.data > 0)
+    sums_to_one = abs(np.sum(output.data) - 1.0) < 1e-6
+    largest_input_largest_output = np.argmax(test_input.data) == np.argmax(output.data)
+    
+    print(f"✅ All outputs positive: {all_positive}")
+    print(f"✅ Sum equals 1.0: {sums_to_one} (sum = {np.sum(output.data):.6f})")
+    print(f"✅ Largest input → largest output: {largest_input_largest_output}")
+    
+    if all_positive and sums_to_one and largest_input_largest_output:
+        print("🎉 Softmax implementation is CORRECT!")
+    else:
+        print("❌ Softmax implementation needs fixing")
+        print("   Make sure: all outputs > 0, sum = 1.0, and largest input gets largest probability")
+    
+    # Test 2: Numerical stability
+    extreme_input = Tensor([[1000, 999, 998]])
+    extreme_output = softmax(extreme_input)
+    print(f"✅ Extreme input: {extreme_input.data.flatten()}")
+    print(f"✅ Extreme output: {extreme_output.data.flatten()}")
+    
+    # Should not have NaN or inf
+    no_nan_inf = not (np.isnan(extreme_output.data).any() or np.isinf(extreme_output.data).any())
+    extreme_sums_to_one = abs(np.sum(extreme_output.data) - 1.0) < 1e-6
+    
+    print(f"✅ No NaN/Inf: {no_nan_inf}")
+    print(f"✅ Extreme case sums to 1: {extreme_sums_to_one}")
+    
+    # Test 3: Equal inputs should give equal probabilities
+    equal_input = Tensor([[1, 1, 1]])
+    equal_output = softmax(equal_input)
+    expected_prob = 1.0 / 3.0
+    all_equal = np.allclose(equal_output.data, expected_prob)
+    print(f"✅ Equal inputs → equal probabilities: {all_equal}")
+    print(f"   Expected: {expected_prob:.3f}, Got: {equal_output.data.flatten()}")
+    
+    print("✅ Softmax tests complete!")
+    
+except NotImplementedError:
+    print("⚠️  Softmax not implemented yet - complete the forward method above!")
+except Exception as e:
+    print(f"❌ Error in Softmax: {e}")
+    print("   Check your implementation in the forward method")
+
+print()  # Add spacing
 
 # %% [markdown]
 """
