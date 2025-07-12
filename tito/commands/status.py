@@ -58,8 +58,8 @@ class StatusCommand(BaseCommand):
         status_table.add_column("README", width=12, justify="center")
         
         if args.metadata:
-            status_table.add_column("Difficulty", width=12, justify="center")
-            status_table.add_column("Time Est.", width=12, justify="center")
+            status_table.add_column("Export", width=15, justify="center")
+            status_table.add_column("Components", width=15, justify="center")
         
         # Check each module
         modules_status = []
@@ -80,8 +80,9 @@ class StatusCommand(BaseCommand):
             # Add metadata columns if requested
             if args.metadata:
                 metadata = status.get('metadata', {})
-                row.append(metadata.get('difficulty', 'unknown'))
-                row.append(metadata.get('estimated_time', 'unknown'))
+                row.append(metadata.get('exports_to', 'unknown'))
+                components = metadata.get('components', [])
+                row.append(f"{len(components)} items" if components else 'none')
             
             status_table.add_row(*row)
         
@@ -188,23 +189,15 @@ class StatusCommand(BaseCommand):
         if metadata.get('description'):
             console.print(f"📝 {metadata['description']}")
         
-        # Status and difficulty
+        # Status and export info
         status_info = []
         if metadata.get('status'):
             status_info.append(f"Status: {self._format_status(metadata['status'])} {metadata['status']}")
-        if metadata.get('difficulty'):
-            status_info.append(f"Difficulty: {metadata['difficulty']}")
-        if metadata.get('estimated_time'):
-            status_info.append(f"Time: {metadata['estimated_time']}")
+        if metadata.get('exports_to'):
+            status_info.append(f"Exports to: {metadata['exports_to']}")
         
         if status_info:
             console.print(" | ".join(status_info))
-        
-        # Learning objectives
-        if metadata.get('learning_objectives'):
-            console.print("\n🎯 Learning Objectives:")
-            for objective in metadata['learning_objectives']:
-                console.print(f"  • {objective}")
         
         # Dependencies
         if metadata.get('dependencies'):
@@ -219,13 +212,15 @@ class StatusCommand(BaseCommand):
         if metadata.get('components'):
             console.print("\n🧩 Components:")
             for component in metadata['components']:
-                status_emoji = self._format_status(component.get('status', 'unknown'))
-                console.print(f"  {status_emoji} {component['name']} ({component.get('type', 'unknown')})")
+                console.print(f"  • {component}")
         
-        # Key concepts
-        if metadata.get('key_concepts'):
-            console.print(f"\n💡 Key Concepts: {', '.join(metadata['key_concepts'])}")
-        
-        # Next steps
-        if metadata.get('next_modules'):
-            console.print(f"\n➡️  Next: {', '.join(metadata['next_modules'])}") 
+        # Files
+        if metadata.get('files'):
+            files = metadata['files']
+            console.print("\n📁 Files:")
+            if files.get('dev_file'):
+                console.print(f"  • Dev: {files['dev_file']}")
+            if files.get('test_file'):
+                console.print(f"  • Test: {files['test_file']}")
+            if files.get('readme'):
+                console.print(f"  • README: {files['readme']}") 

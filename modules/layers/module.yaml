@@ -1,97 +1,28 @@
 # TinyTorch Module Metadata
-# This file contains structured information about the module for CLI tools and documentation
+# Essential system information for CLI tools and build systems
 
-# Basic Information
 name: "layers"
 title: "Layers"
-description: "Build the fundamental transformations that compose into neural networks - Dense layers and activation functions"
+description: "Neural network layers (Linear, activation layers)"
+status: "complete"  # complete, in_progress, not_started
 version: "1.0.0"
-author: "TinyTorch Team"
-last_updated: "2024-12-19"
-
-# Module Status
-status: "complete"  # complete, in_progress, not_started, deprecated
-implementation_status: "stable"  # stable, beta, alpha, experimental
-
-# Learning Information
-learning_objectives:
-  - "Understand layers as functions that transform tensors: y = f(x)"
-  - "Implement Dense layers with linear transformations: y = Wx + b"
-  - "Add activation functions for nonlinearity (ReLU, Sigmoid, Tanh)"
-  - "See how neural networks are just function composition"
-  - "Build intuition for neural network architecture before diving into training"
-
-key_concepts:
-  - "Linear transformations"
-  - "Weight matrices and biases"
-  - "Function composition"
-  - "Layer abstraction"
-  - "Neural network building blocks"
 
 # Dependencies
 dependencies:
   prerequisites: ["setup", "tensor", "activations"]
-  builds_on: ["tensor", "activations"]
   enables: ["networks", "training"]
 
-# Educational Metadata
-difficulty: "intermediate"  # beginner, intermediate, advanced
-estimated_time: "3-4 hours"
-pedagogical_pattern: "Build → Use → Understand"
-
-# Implementation Details
-components:
-  - name: "Dense"
-    type: "class"
-    description: "Linear transformation layer: y = Wx + b"
-    status: "complete"
-  
-  - name: "Layer"
-    type: "base_class"
-    description: "Abstract base class for all layers"
-    status: "complete"
-
-# Package Export Information
+# Package Export
 exports_to: "tinytorch.core.layers"
-export_directive: "core.layers"
-
-# Testing Information
-test_coverage: "comprehensive"  # comprehensive, partial, minimal, none
-test_count: 15
-test_categories:
-  - "Dense layer construction"
-  - "Forward pass computation"
-  - "Shape transformations"
-  - "Weight initialization"
-  - "Bias handling"
-  - "Composition with activations"
 
 # File Structure
-required_files:
-  - "layers_dev.py"
-  - "layers_dev.ipynb"
-  - "tests/test_layers.py"
-  - "README.md"
+files:
+  dev_file: "layers_dev.py"
+  test_file: "tests/test_layers.py"
+  readme: "README.md"
 
-# Systems Focus
-systems_concepts:
-  - "Modular design"
-  - "Object-oriented programming"
-  - "Function composition"
-  - "Memory management"
-  - "Numerical stability"
-
-# Real-world Applications
-applications:
-  - "Multi-layer perceptrons"
-  - "Deep neural networks"
-  - "Feature extraction"
-  - "Representation learning"
-
-# Next Steps
-next_modules: ["networks", "training"]
-completion_criteria:
-  - "All tests pass"
-  - "Can build 2-layer neural network"
-  - "Understand layer composition"
-  - "Ready for network architectures" 
+# Components
+components:
+  - "Linear"
+  - "Activation"
+  - "Sequential" 
