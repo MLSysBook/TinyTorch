@@ -52,30 +52,38 @@ from tinytorch.core.tensor import Tensor
 - **Consistency:** All layers (Dense, Conv2D) live together in `core.layers`
 """
 
-# %%
+# %% nbgrader={"grade": false, "grade_id": "layers-setup", "locked": false, "schema_version": 3, "solution": false, "task": false}
 #| default_exp core.layers
 
 # Setup and imports
 import numpy as np
 import sys
+import os
 from typing import Union, Optional, Callable
 import math
 
-# %%
+# %% nbgrader={"grade": false, "grade_id": "layers-imports", "locked": false, "schema_version": 3, "solution": false, "task": false}
 #| export
 import numpy as np
 import math
 import sys
 from typing import Union, Optional, Callable
 
-# Import from the main package (rock solid foundation)
-from tinytorch.core.tensor import Tensor
-from tinytorch.core.activations import ReLU, Sigmoid, Tanh
+# Import from the main package - try package first, then local modules
+try:
+    from tinytorch.core.tensor import Tensor
+    from tinytorch.core.activations import ReLU, Sigmoid, Tanh
+except ImportError:
+    # For development, import from local modules
+    sys.path.append(os.path.join(os.path.dirname(__file__), '..', '01_tensor'))
+    sys.path.append(os.path.join(os.path.dirname(__file__), '..', '02_activations'))
+    from tensor_dev import Tensor
+    from activations_dev import ReLU, Sigmoid, Tanh
 
-# print("🔥 TinyTorch Layers Module")
-# print(f"NumPy version: {np.__version__}")
-# print(f"Python version: {sys.version_info.major}.{sys.version_info.minor}")
-# print("Ready to build neural network layers!")
+print("🔥 TinyTorch Layers Module")
+print(f"NumPy version: {np.__version__}")
+print(f"Python version: {sys.version_info.major}.{sys.version_info.minor}")
+print("Ready to build neural network layers!")
 
 # %% [markdown]
 """
@@ -155,7 +163,7 @@ C = A @ B = [[1*5 + 2*7,  1*6 + 2*8],
 Let's implement this step by step!
 """
 
-# %%
+# %% nbgrader={"grade": false, "grade_id": "matmul-naive", "locked": false, "schema_version": 3, "solution": true, "task": false}
 #| export
 def matmul_naive(A: np.ndarray, B: np.ndarray) -> np.ndarray:
     """
@@ -196,7 +204,26 @@ def matmul_naive(A: np.ndarray, B: np.ndarray) -> np.ndarray:
     - Use three nested for loops: for i in range(m): for j in range(p): for k in range(n):
     - Accumulate the sum: C[i,j] += A[i,k] * B[k,j]
     """
-    raise NotImplementedError("Student implementation required")
+    ### BEGIN SOLUTION
+    # Get matrix dimensions
+    m, n = A.shape
+    n2, p = B.shape
+    
+    # Check compatibility
+    if n != n2:
+        raise ValueError(f"Incompatible matrix dimensions: A is {m}x{n}, B is {n2}x{p}")
+    
+    # Initialize result matrix
+    C = np.zeros((m, p))
+    
+    # Triple nested loop for matrix multiplication
+    for i in range(m):
+        for j in range(p):
+            for k in range(n):
+                C[i, j] += A[i, k] * B[k, j]
+    
+    return C
+    ### END SOLUTION
 
 # %%
 #| hide

@@ -53,22 +53,32 @@ from tinytorch.core.tensor import Tensor
 - **Consistency:** All network architectures live together in `core.networks`
 """
 
-# %%
+# %% nbgrader={"grade": false, "grade_id": "networks-setup", "locked": false, "schema_version": 3, "solution": false, "task": false}
 #| default_exp core.networks
 
 # Setup and imports
 import numpy as np
 import sys
+import os
 from typing import List, Union, Optional, Callable
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 from matplotlib.patches import FancyBboxPatch, ConnectionPatch
 import seaborn as sns
 
-# Import all the building blocks we need
-from tinytorch.core.tensor import Tensor
-from tinytorch.core.layers import Dense
-from tinytorch.core.activations import ReLU, Sigmoid, Tanh, Softmax
+# Import all the building blocks we need - try package first, then local modules
+try:
+    from tinytorch.core.tensor import Tensor
+    from tinytorch.core.layers import Dense
+    from tinytorch.core.activations import ReLU, Sigmoid, Tanh, Softmax
+except ImportError:
+    # For development, import from local modules
+    sys.path.append(os.path.join(os.path.dirname(__file__), '..', '01_tensor'))
+    sys.path.append(os.path.join(os.path.dirname(__file__), '..', '02_activations'))
+    sys.path.append(os.path.join(os.path.dirname(__file__), '..', '03_layers'))
+    from tensor_dev import Tensor
+    from activations_dev import ReLU, Sigmoid, Tanh, Softmax
+    from layers_dev import Dense
 
 print("🔥 TinyTorch Networks Module")
 print(f"NumPy version: {np.__version__}")
@@ -145,7 +155,7 @@ Each layer transforms the data, and the final output is the composition of all t
 Let's start by building the most fundamental network: **Sequential**.
 """
 
-# %%
+# %% nbgrader={"grade": false, "grade_id": "sequential-class", "locked": false, "schema_version": 3, "solution": true, "task": false}
 #| export
 class Sequential:
     """
@@ -198,7 +208,9 @@ class Sequential:
         Sequential([Dense(3,4), ReLU(), Dense(4,2)])
         creates a 3-layer network: Dense → ReLU → Dense
         """
-        raise NotImplementedError("Student implementation required")
+        ### BEGIN SOLUTION
+        self.layers = layers
+        ### END SOLUTION
     
     def forward(self, x: Tensor) -> Tensor:
         """
@@ -231,7 +243,12 @@ class Sequential:
         - The output of one layer becomes input to the next
         - Return the final result
         """
-        raise NotImplementedError("Student implementation required")
+        ### BEGIN SOLUTION
+        # Apply each layer in sequence
+        for layer in self.layers:
+            x = layer(x)
+        return x
+        ### END SOLUTION
     
     def __call__(self, x: Tensor) -> Tensor:
         """Make network callable: network(x) same as network.forward(x)"""
