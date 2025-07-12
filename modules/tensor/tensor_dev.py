@@ -284,6 +284,91 @@ class Tensor:
     def __repr__(self) -> str:
         """String representation."""
         return f"Tensor({self._data.tolist()}, shape={self.shape}, dtype={self.dtype})"
+    
+    def add(self, other: 'Tensor') -> 'Tensor':
+        """
+        Add another tensor to this tensor.
+        
+        TODO: Implement tensor addition as a method.
+        
+        APPROACH:
+        1. Use the add_tensors function you already implemented
+        2. Or implement the addition directly using self._data + other._data
+        3. Return a new Tensor with the result
+        
+        EXAMPLE:
+        Tensor([1, 2, 3]).add(Tensor([4, 5, 6])) → Tensor([5, 7, 9])
+        
+        HINTS:
+        - You can reuse add_tensors(self, other)
+        - Or implement directly: Tensor(self._data + other._data)
+        """
+        raise NotImplementedError("Student implementation required")
+    
+    def multiply(self, other: 'Tensor') -> 'Tensor':
+        """
+        Multiply this tensor by another tensor.
+        
+        TODO: Implement tensor multiplication as a method.
+        
+        APPROACH:
+        1. Use the multiply_tensors function you already implemented
+        2. Or implement the multiplication directly using self._data * other._data
+        3. Return a new Tensor with the result
+        
+        EXAMPLE:
+        Tensor([1, 2, 3]).multiply(Tensor([4, 5, 6])) → Tensor([4, 10, 18])
+        
+        HINTS:
+        - You can reuse multiply_tensors(self, other)
+        - Or implement directly: Tensor(self._data * other._data)
+        """
+        raise NotImplementedError("Student implementation required")
+    
+    # Arithmetic operators for natural syntax (a + b, a * b, etc.)
+    def __add__(self, other: Union['Tensor', int, float]) -> 'Tensor':
+        """Addition: tensor + other"""
+        if isinstance(other, Tensor):
+            return Tensor(self._data + other._data)
+        else:  # scalar
+            return Tensor(self._data + other)
+    
+    def __radd__(self, other: Union[int, float]) -> 'Tensor':
+        """Reverse addition: scalar + tensor"""
+        return Tensor(other + self._data)
+    
+    def __sub__(self, other: Union['Tensor', int, float]) -> 'Tensor':
+        """Subtraction: tensor - other"""
+        if isinstance(other, Tensor):
+            return Tensor(self._data - other._data)
+        else:  # scalar
+            return Tensor(self._data - other)
+    
+    def __rsub__(self, other: Union[int, float]) -> 'Tensor':
+        """Reverse subtraction: scalar - tensor"""
+        return Tensor(other - self._data)
+    
+    def __mul__(self, other: Union['Tensor', int, float]) -> 'Tensor':
+        """Multiplication: tensor * other"""
+        if isinstance(other, Tensor):
+            return Tensor(self._data * other._data)
+        else:  # scalar
+            return Tensor(self._data * other)
+    
+    def __rmul__(self, other: Union[int, float]) -> 'Tensor':
+        """Reverse multiplication: scalar * tensor"""
+        return Tensor(other * self._data)
+    
+    def __truediv__(self, other: Union['Tensor', int, float]) -> 'Tensor':
+        """Division: tensor / other"""
+        if isinstance(other, Tensor):
+            return Tensor(self._data / other._data)
+        else:  # scalar
+            return Tensor(self._data / other)
+    
+    def __rtruediv__(self, other: Union[int, float]) -> 'Tensor':
+        """Reverse division: scalar / tensor"""
+        return Tensor(other / self._data)
 
 # %% [markdown]
 """
@@ -558,6 +643,51 @@ class Tensor:
         - Or implement directly: Tensor(self._data * other._data)
         """
         raise NotImplementedError("Student implementation required")
+    
+    # Arithmetic operators for natural syntax (a + b, a * b, etc.)
+    def __add__(self, other: Union['Tensor', int, float]) -> 'Tensor':
+        """Addition: tensor + other"""
+        if isinstance(other, Tensor):
+            return Tensor(self._data + other._data)
+        else:  # scalar
+            return Tensor(self._data + other)
+    
+    def __radd__(self, other: Union[int, float]) -> 'Tensor':
+        """Reverse addition: scalar + tensor"""
+        return Tensor(other + self._data)
+    
+    def __sub__(self, other: Union['Tensor', int, float]) -> 'Tensor':
+        """Subtraction: tensor - other"""
+        if isinstance(other, Tensor):
+            return Tensor(self._data - other._data)
+        else:  # scalar
+            return Tensor(self._data - other)
+    
+    def __rsub__(self, other: Union[int, float]) -> 'Tensor':
+        """Reverse subtraction: scalar - tensor"""
+        return Tensor(other - self._data)
+    
+    def __mul__(self, other: Union['Tensor', int, float]) -> 'Tensor':
+        """Multiplication: tensor * other"""
+        if isinstance(other, Tensor):
+            return Tensor(self._data * other._data)
+        else:  # scalar
+            return Tensor(self._data * other)
+    
+    def __rmul__(self, other: Union[int, float]) -> 'Tensor':
+        """Reverse multiplication: scalar * tensor"""
+        return Tensor(other * self._data)
+    
+    def __truediv__(self, other: Union['Tensor', int, float]) -> 'Tensor':
+        """Division: tensor / other"""
+        if isinstance(other, Tensor):
+            return Tensor(self._data / other._data)
+        else:  # scalar
+            return Tensor(self._data / other)
+    
+    def __rtruediv__(self, other: Union[int, float]) -> 'Tensor':
+        """Reverse division: scalar / tensor"""
+        return Tensor(other / self._data)
 
 # %%
 #| hide
@@ -636,6 +766,51 @@ class Tensor:
     def multiply(self, other: 'Tensor') -> 'Tensor':
         """Multiply this tensor by another tensor."""
         return Tensor(self._data * other._data)
+    
+    # Arithmetic operators for natural syntax (a + b, a * b, etc.)
+    def __add__(self, other: Union['Tensor', int, float]) -> 'Tensor':
+        """Addition: tensor + other"""
+        if isinstance(other, Tensor):
+            return Tensor(self._data + other._data)
+        else:  # scalar
+            return Tensor(self._data + other)
+    
+    def __radd__(self, other: Union[int, float]) -> 'Tensor':
+        """Reverse addition: scalar + tensor"""
+        return Tensor(other + self._data)
+    
+    def __sub__(self, other: Union['Tensor', int, float]) -> 'Tensor':
+        """Subtraction: tensor - other"""
+        if isinstance(other, Tensor):
+            return Tensor(self._data - other._data)
+        else:  # scalar
+            return Tensor(self._data - other)
+    
+    def __rsub__(self, other: Union[int, float]) -> 'Tensor':
+        """Reverse subtraction: scalar - tensor"""
+        return Tensor(other - self._data)
+    
+    def __mul__(self, other: Union['Tensor', int, float]) -> 'Tensor':
+        """Multiplication: tensor * other"""
+        if isinstance(other, Tensor):
+            return Tensor(self._data * other._data)
+        else:  # scalar
+            return Tensor(self._data * other)
+    
+    def __rmul__(self, other: Union[int, float]) -> 'Tensor':
+        """Reverse multiplication: scalar * tensor"""
+        return Tensor(other * self._data)
+    
+    def __truediv__(self, other: Union['Tensor', int, float]) -> 'Tensor':
+        """Division: tensor / other"""
+        if isinstance(other, Tensor):
+            return Tensor(self._data / other._data)
+        else:  # scalar
+            return Tensor(self._data / other)
+    
+    def __rtruediv__(self, other: Union[int, float]) -> 'Tensor':
+        """Reverse division: scalar / tensor"""
+        return Tensor(other / self._data)
 
 # %% [markdown]
 """
