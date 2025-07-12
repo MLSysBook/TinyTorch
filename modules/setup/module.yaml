@@ -2,25 +2,10 @@
 # Essential system information for CLI tools and build systems
 
 name: "setup"
-title: "Setup"
-description: "Development environment setup and project configuration"
+title: "Setup & Environment"
+description: "Development environment setup and basic TinyTorch functionality"
 
-# Dependencies
+# Dependencies - Used by CLI for module ordering and prerequisites
 dependencies:
   prerequisites: []
-  enables: ["tensor", "activations", "layers"]
-
-# Package Export
-exports_to: "tinytorch.core.utils"
-
-# File Structure
-files:
-  dev_file: "setup_dev.py"
-  test_file: "tests/test_setup.py"
-  readme: "README.md"
-
-# Components
-components:
-  - "hello_tinytorch"
-  - "environment_check"
-  - "project_structure" 
+  enables: ["tensor", "activations", "layers"] 

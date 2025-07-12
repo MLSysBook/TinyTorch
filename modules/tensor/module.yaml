@@ -5,22 +5,7 @@ name: "tensor"
 title: "Tensor"
 description: "Core tensor data structure and operations"
 
-# Dependencies
+# Dependencies - Used by CLI for module ordering and prerequisites
 dependencies:
   prerequisites: ["setup"]
-  enables: ["activations", "layers", "autograd"]
-
-# Package Export
-exports_to: "tinytorch.core.tensor"
-
-# File Structure
-files:
-  dev_file: "tensor_dev.py"
-  test_file: "tests/test_tensor.py"
-  readme: "README.md"
-
-# Components
-components:
-  - "Tensor"
-  - "tensor_operations"
-  - "shape_manipulation" 
+  enables: ["activations", "layers", "autograd"] 

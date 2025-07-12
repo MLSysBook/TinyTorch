@@ -2,25 +2,10 @@
 # Essential system information for CLI tools and build systems
 
 name: "activations"
-title: "Activations"
-description: "Activation functions (ReLU, Sigmoid, Tanh, etc.)"
+title: "Activation Functions"
+description: "Neural network activation functions (ReLU, Sigmoid, Tanh)"
 
-# Dependencies
+# Dependencies - Used by CLI for module ordering and prerequisites
 dependencies:
-  prerequisites: ["setup", "tensor"]
-  enables: ["layers", "networks"]
-
-# Package Export
-exports_to: "tinytorch.core.activations"
-
-# File Structure
-files:
-  dev_file: "activations_dev.py"
-  test_file: "tests/test_activations.py"
-  readme: "README.md"
-
-# Components
-components:
-  - "ReLU"
-  - "Sigmoid"
-  - "Tanh" 
+  prerequisites: ["tensor"]
+  enables: ["layers", "networks"] 
