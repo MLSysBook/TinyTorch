@@ -53,20 +53,10 @@ class TinyTorchCLI:
         self.config = CLIConfig.from_project_root()
         self.console = get_console()
         self.commands: Dict[str, Type[BaseCommand]] = {
-            # New hierarchical command groups
+            # Hierarchical command groups only
             'system': SystemCommand,
             'module': ModuleCommand,
             'package': PackageCommand,
-            # Legacy flat commands (for backward compatibility)
-            'notebooks': NotebooksCommand,
-            'info': InfoCommand,
-            'test': TestCommand,
-            'doctor': DoctorCommand,
-            'sync': SyncCommand,
-            'reset': ResetCommand,
-            'jupyter': JupyterCommand,
-            'nbdev': NbdevCommand,
-            'status': StatusCommand,
         }
     
     def create_parser(self) -> argparse.ArgumentParser:
@@ -85,9 +75,6 @@ Examples:
   tito system info              Show system information
   tito module status --metadata Module status with metadata
   tito package sync             Export notebooks to package
-  
-Legacy commands (deprecated, use grouped commands above):
-  tito info, tito status, tito test, tito sync, etc.
             """
         )
         
