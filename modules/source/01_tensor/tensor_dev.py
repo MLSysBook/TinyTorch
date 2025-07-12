@@ -221,7 +221,7 @@ class Tensor:
             # Try to convert unknown types
             self._data = np.array(data, dtype=dtype)
         ### END SOLUTION
-    
+
     @property
     def data(self) -> np.ndarray:
         """
@@ -437,6 +437,201 @@ class Tensor:
             result = self._data / other
         return Tensor(result)
         ### END SOLUTION
+
+# %% [markdown]
+"""
+### 🧪 Quick Test: Tensor Creation
+
+Let's test your tensor creation implementation right away! This gives you immediate feedback on whether your `__init__` method works correctly.
+"""
+
+# %% nbgrader={"grade": true, "grade_id": "test-tensor-creation-immediate", "locked": true, "points": 10, "schema_version": 3, "solution": false, "task": false}
+# Test tensor creation immediately after implementation
+print("🔬 Testing tensor creation...")
+
+# Test scalar
+try:
+    scalar = Tensor(5.0)
+    print(f"✅ Scalar creation: {scalar}")
+    assert hasattr(scalar, '_data'), "Tensor should have _data attribute"
+    assert scalar._data.shape == (), f"Scalar should have shape (), got {scalar._data.shape}"
+except Exception as e:
+    print(f"❌ Scalar creation failed: {e}")
+    raise
+
+# Test list
+try:
+    vector = Tensor([1, 2, 3])
+    print(f"✅ Vector creation: {vector}")
+    assert vector._data.shape == (3,), f"Vector should have shape (3,), got {vector._data.shape}"
+except Exception as e:
+    print(f"❌ Vector creation failed: {e}")
+    raise
+
+# Test matrix
+try:
+    matrix = Tensor([[1, 2], [3, 4]])
+    print(f"✅ Matrix creation: {matrix}")
+    assert matrix._data.shape == (2, 2), f"Matrix should have shape (2, 2), got {matrix._data.shape}"
+except Exception as e:
+    print(f"❌ Matrix creation failed: {e}")
+    raise
+
+print("🎉 Tensor creation works! You can create scalars, vectors, and matrices.")
+print("📈 Progress: Tensor creation ✓")
+
+# %% [markdown]
+"""
+### 🧪 Quick Test: Tensor Properties
+
+Now let's test the tensor properties (shape, size, dtype, data access) to make sure they work correctly.
+"""
+
+# %% nbgrader={"grade": true, "grade_id": "test-tensor-properties-immediate", "locked": true, "points": 10, "schema_version": 3, "solution": false, "task": false}
+# Test tensor properties immediately after implementation
+print("🔬 Testing tensor properties...")
+
+# Test properties on different tensor types
+scalar = Tensor(5.0)
+vector = Tensor([1, 2, 3])
+matrix = Tensor([[1, 2], [3, 4]])
+
+# Test shape property
+try:
+    assert scalar.shape == (), f"Scalar shape should be (), got {scalar.shape}"
+    assert vector.shape == (3,), f"Vector shape should be (3,), got {vector.shape}"
+    assert matrix.shape == (2, 2), f"Matrix shape should be (2, 2), got {matrix.shape}"
+    print("✅ Shape property works correctly")
+except Exception as e:
+    print(f"❌ Shape property failed: {e}")
+    raise
+
+# Test size property
+try:
+    assert scalar.size == 1, f"Scalar size should be 1, got {scalar.size}"
+    assert vector.size == 3, f"Vector size should be 3, got {vector.size}"
+    assert matrix.size == 4, f"Matrix size should be 4, got {matrix.size}"
+    print("✅ Size property works correctly")
+except Exception as e:
+    print(f"❌ Size property failed: {e}")
+    raise
+
+# Test data access
+try:
+    assert scalar.data.item() == 5.0, f"Scalar data should be 5.0, got {scalar.data.item()}"
+    assert np.array_equal(vector.data, np.array([1, 2, 3])), "Vector data mismatch"
+    assert np.array_equal(matrix.data, np.array([[1, 2], [3, 4]])), "Matrix data mismatch"
+    print("✅ Data access works correctly")
+except Exception as e:
+    print(f"❌ Data access failed: {e}")
+    raise
+
+print("🎉 Tensor properties work! You can access shape, size, and data.")
+print("📈 Progress: Tensor creation ✓, Properties ✓")
+
+# %% [markdown]
+"""
+### 🧪 Quick Test: Basic Arithmetic
+
+Let's test the basic arithmetic methods (add, multiply) before moving to operator overloading.
+"""
+
+# %% nbgrader={"grade": true, "grade_id": "test-basic-arithmetic-immediate", "locked": true, "points": 10, "schema_version": 3, "solution": false, "task": false}
+# Test basic arithmetic methods immediately after implementation
+print("🔬 Testing basic arithmetic methods...")
+
+# Test addition method
+try:
+    a = Tensor([1, 2, 3])
+    b = Tensor([4, 5, 6])
+    c = a.add(b)
+    expected = np.array([5, 7, 9])
+    assert np.array_equal(c.data, expected), f"Addition method failed: expected {expected}, got {c.data}"
+    print(f"✅ Addition method: {a.data} + {b.data} = {c.data}")
+except Exception as e:
+    print(f"❌ Addition method failed: {e}")
+    raise
+
+# Test multiplication method
+try:
+    d = a.multiply(b)
+    expected = np.array([4, 10, 18])
+    assert np.array_equal(d.data, expected), f"Multiplication method failed: expected {expected}, got {d.data}"
+    print(f"✅ Multiplication method: {a.data} * {b.data} = {d.data}")
+except Exception as e:
+    print(f"❌ Multiplication method failed: {e}")
+    raise
+
+print("🎉 Basic arithmetic methods work! You can add and multiply tensors.")
+print("📈 Progress: Tensor creation ✓, Properties ✓, Basic arithmetic ✓")
+
+# %% [markdown]
+"""
+### 🧪 Quick Test: Operator Overloading
+
+Finally, let's test the Python operators (+, -, *, /) to make sure they work with natural syntax.
+"""
+
+# %% nbgrader={"grade": true, "grade_id": "test-operators-immediate", "locked": true, "points": 10, "schema_version": 3, "solution": false, "task": false}
+# Test operator overloading immediately after implementation
+print("🔬 Testing operator overloading...")
+
+a = Tensor([1, 2, 3])
+b = Tensor([4, 5, 6])
+
+# Test addition operator
+try:
+    c = a + b
+    expected = np.array([5, 7, 9])
+    assert np.array_equal(c.data, expected), f"+ operator failed: expected {expected}, got {c.data}"
+    print(f"✅ + operator: {a.data} + {b.data} = {c.data}")
+except Exception as e:
+    print(f"❌ + operator failed: {e}")
+    raise
+
+# Test multiplication operator
+try:
+    d = a * b
+    expected = np.array([4, 10, 18])
+    assert np.array_equal(d.data, expected), f"* operator failed: expected {expected}, got {d.data}"
+    print(f"✅ * operator: {a.data} * {b.data} = {d.data}")
+except Exception as e:
+    print(f"❌ * operator failed: {e}")
+    raise
+
+# Test subtraction operator
+try:
+    e = b - a
+    expected = np.array([3, 3, 3])
+    assert np.array_equal(e.data, expected), f"- operator failed: expected {expected}, got {e.data}"
+    print(f"✅ - operator: {b.data} - {a.data} = {e.data}")
+except Exception as e:
+    print(f"❌ - operator failed: {e}")
+    raise
+
+# Test division operator
+try:
+    f = b / a
+    expected = np.array([4.0, 2.5, 2.0])
+    assert np.allclose(f.data, expected), f"/ operator failed: expected {expected}, got {f.data}"
+    print(f"✅ / operator: {b.data} / {a.data} = {f.data}")
+except Exception as e:
+    print(f"❌ / operator failed: {e}")
+    raise
+
+# Test scalar operations
+try:
+    g = a + 10
+    expected = np.array([11, 12, 13])
+    assert np.array_equal(g.data, expected), f"Scalar + failed: expected {expected}, got {g.data}"
+    print(f"✅ Scalar operations: {a.data} + 10 = {g.data}")
+except Exception as e:
+    print(f"❌ Scalar operations failed: {e}")
+    raise
+
+print("🎉 All operators work! You can use +, -, *, / with natural Python syntax.")
+print("📈 Progress: Tensor creation ✓, Properties ✓, Basic arithmetic ✓, Operators ✓")
+print("🚀 Ready for the comprehensive tests!")
 
 # %% [markdown]
 """

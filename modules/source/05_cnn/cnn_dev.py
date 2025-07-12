@@ -240,6 +240,74 @@ def conv2d_naive(input: np.ndarray, kernel: np.ndarray) -> np.ndarray:
 
 # %% [markdown]
 """
+### 🧪 Quick Test: Convolution Operation
+
+Let's test your convolution implementation right away! This is the core operation that powers computer vision.
+"""
+
+# %% nbgrader={"grade": true, "grade_id": "test-conv2d-naive-immediate", "locked": true, "points": 10, "schema_version": 3, "solution": false, "task": false}
+# Test conv2d_naive function immediately after implementation
+print("🔬 Testing convolution operation...")
+
+# Test simple 3x3 input with 2x2 kernel
+try:
+    input_array = np.array([[1, 2, 3], [4, 5, 6], [7, 8, 9]], dtype=np.float32)
+    kernel_array = np.array([[1, 0], [0, 1]], dtype=np.float32)  # Identity-like kernel
+    
+    result = conv2d_naive(input_array, kernel_array)
+    expected = np.array([[6, 8], [12, 14]], dtype=np.float32)  # 1+5, 2+6, 4+8, 5+9
+    
+    print(f"Input:\n{input_array}")
+    print(f"Kernel:\n{kernel_array}")
+    print(f"Result:\n{result}")
+    print(f"Expected:\n{expected}")
+    
+    assert np.allclose(result, expected), f"Convolution failed: expected {expected}, got {result}"
+    print("✅ Simple convolution test passed")
+    
+except Exception as e:
+    print(f"❌ Simple convolution test failed: {e}")
+    raise
+
+# Test edge detection kernel
+try:
+    input_array = np.array([[1, 1, 1], [1, 1, 1], [1, 1, 1]], dtype=np.float32)
+    edge_kernel = np.array([[-1, -1], [-1, 3]], dtype=np.float32)  # Edge detection
+    
+    result = conv2d_naive(input_array, edge_kernel)
+    expected = np.array([[0, 0], [0, 0]], dtype=np.float32)  # Uniform region = no edges
+    
+    assert np.allclose(result, expected), f"Edge detection failed: expected {expected}, got {result}"
+    print("✅ Edge detection test passed")
+    
+except Exception as e:
+    print(f"❌ Edge detection test failed: {e}")
+    raise
+
+# Test output shape
+try:
+    input_5x5 = np.random.randn(5, 5).astype(np.float32)
+    kernel_3x3 = np.random.randn(3, 3).astype(np.float32)
+    
+    result = conv2d_naive(input_5x5, kernel_3x3)
+    expected_shape = (3, 3)  # 5-3+1 = 3
+    
+    assert result.shape == expected_shape, f"Output shape wrong: expected {expected_shape}, got {result.shape}"
+    print("✅ Output shape test passed")
+    
+except Exception as e:
+    print(f"❌ Output shape test failed: {e}")
+    raise
+
+# Show the convolution process
+print("🎯 Convolution behavior:")
+print("   Slides kernel across input")
+print("   Computes dot product at each position")
+print("   Output size = Input size - Kernel size + 1")
+print("📈 Progress: Convolution operation ✓")
+
+# %% [markdown]
+"""
 ## Step 2: Building the Conv2D Layer
 
 ### What is a Conv2D Layer?
@@ -347,6 +415,65 @@ class Conv2D:
 
 # %% [markdown]
 """
+### 🧪 Quick Test: Conv2D Layer
+
+Let's test your Conv2D layer implementation! This is a learnable convolutional layer that can be trained.
+"""
+
+# %% nbgrader={"grade": true, "grade_id": "test-conv2d-layer-immediate", "locked": true, "points": 10, "schema_version": 3, "solution": false, "task": false}
+# Test Conv2D layer immediately after implementation
+print("🔬 Testing Conv2D layer...")
+
+# Create a Conv2D layer
+try:
+    layer = Conv2D(kernel_size=(2, 2))
+    print(f"Conv2D layer created with kernel size: {layer.kernel_size}")
+    print(f"Kernel shape: {layer.kernel.shape}")
+    
+    # Test that kernel is initialized properly
+    assert layer.kernel.shape == (2, 2), f"Kernel shape should be (2, 2), got {layer.kernel.shape}"
+    assert not np.allclose(layer.kernel, 0), "Kernel should not be all zeros"
+    print("✅ Conv2D layer initialization successful")
+    
+    # Test with sample input
+    x = Tensor([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
+    print(f"Input shape: {x.shape}")
+    
+    y = layer(x)
+    print(f"Output shape: {y.shape}")
+    print(f"Output: {y}")
+    
+    # Verify shapes
+    assert y.shape == (2, 2), f"Output shape should be (2, 2), got {y.shape}"
+    assert isinstance(y, Tensor), "Output should be a Tensor"
+    print("✅ Conv2D layer forward pass successful")
+    
+except Exception as e:
+    print(f"❌ Conv2D layer test failed: {e}")
+    raise
+
+# Test different kernel sizes
+try:
+    layer_3x3 = Conv2D(kernel_size=(3, 3))
+    x_5x5 = Tensor([[1, 2, 3, 4, 5], [6, 7, 8, 9, 10], [11, 12, 13, 14, 15], [16, 17, 18, 19, 20], [21, 22, 23, 24, 25]])
+    y_3x3 = layer_3x3(x_5x5)
+    
+    assert y_3x3.shape == (3, 3), f"3x3 kernel output should be (3, 3), got {y_3x3.shape}"
+    print("✅ Different kernel sizes work correctly")
+    
+except Exception as e:
+    print(f"❌ Different kernel sizes test failed: {e}")
+    raise
+
+# Show the layer behavior
+print("🎯 Conv2D layer behavior:")
+print("   Learnable kernel weights")
+print("   Applies convolution to detect patterns")
+print("   Can be trained end-to-end")
+print("📈 Progress: Convolution operation ✓, Conv2D layer ✓")
+
+# %% [markdown]
+"""
 ## Step 3: Flattening for Dense Layers
 
 ### What is Flattening?
@@ -404,6 +531,72 @@ def flatten(x: Tensor) -> Tensor:
     result = flattened[None, :]  # Add batch dimension
     return Tensor(result)
     ### END SOLUTION
+
+# %% [markdown]
+"""
+### 🧪 Quick Test: Flatten Function
+
+Let's test your flatten function! This connects convolutional layers to dense layers.
+"""
+
+# %% nbgrader={"grade": true, "grade_id": "test-flatten-immediate", "locked": true, "points": 10, "schema_version": 3, "solution": false, "task": false}
+# Test flatten function immediately after implementation
+print("🔬 Testing flatten function...")
+
+# Test case 1: 2x2 tensor
+try:
+    x = Tensor([[1, 2], [3, 4]])
+    flattened = flatten(x)
+    
+    print(f"Input: {x}")
+    print(f"Flattened: {flattened}")
+    print(f"Flattened shape: {flattened.shape}")
+    
+    # Verify shape and content
+    assert flattened.shape == (1, 4), f"Flattened shape should be (1, 4), got {flattened.shape}"
+    expected_data = np.array([[1, 2, 3, 4]])
+    assert np.array_equal(flattened.data, expected_data), f"Flattened data should be {expected_data}, got {flattened.data}"
+    print("✅ 2x2 flatten test passed")
+    
+except Exception as e:
+    print(f"❌ 2x2 flatten test failed: {e}")
+    raise
+
+# Test case 2: 3x3 tensor
+try:
+    x2 = Tensor([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
+    flattened2 = flatten(x2)
+    
+    assert flattened2.shape == (1, 9), f"Flattened shape should be (1, 9), got {flattened2.shape}"
+    expected_data2 = np.array([[1, 2, 3, 4, 5, 6, 7, 8, 9]])
+    assert np.array_equal(flattened2.data, expected_data2), f"Flattened data should be {expected_data2}, got {flattened2.data}"
+    print("✅ 3x3 flatten test passed")
+    
+except Exception as e:
+    print(f"❌ 3x3 flatten test failed: {e}")
+    raise
+
+# Test case 3: Different shapes
+try:
+    x3 = Tensor([[1, 2, 3, 4], [5, 6, 7, 8]])  # 2x4
+    flattened3 = flatten(x3)
+    
+    assert flattened3.shape == (1, 8), f"Flattened shape should be (1, 8), got {flattened3.shape}"
+    expected_data3 = np.array([[1, 2, 3, 4, 5, 6, 7, 8]])
+    assert np.array_equal(flattened3.data, expected_data3), f"Flattened data should be {expected_data3}, got {flattened3.data}"
+    print("✅ Different shapes flatten test passed")
+    
+except Exception as e:
+    print(f"❌ Different shapes flatten test failed: {e}")
+    raise
+
+# Show the flattening behavior
+print("🎯 Flatten behavior:")
+print("   Converts 2D tensor to 1D")
+print("   Preserves batch dimension")
+print("   Enables connection to Dense layers")
+print("📈 Progress: Convolution operation ✓, Conv2D layer ✓, Flatten ✓")
+print("🚀 CNN pipeline ready!")
 
 # %% [markdown]
 """
