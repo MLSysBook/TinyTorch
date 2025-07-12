@@ -47,19 +47,37 @@ from tinytorch.core.tensor import Tensor
 - **Consistency:** All layers (Dense, Conv2D) live together in `core.layers`
 """
 
-# %%
+# %% nbgrader={"grade": false, "grade_id": "cnn-setup", "locked": false, "schema_version": 3, "solution": false, "task": false}
 #| default_exp core.cnn
 
-# %%
+# %% nbgrader={"grade": false, "grade_id": "cnn-imports", "locked": false, "schema_version": 3, "solution": false, "task": false}
 #| export
 import numpy as np
+import os
+import sys
 from typing import List, Tuple, Optional
-from tinytorch.core.tensor import Tensor
+
+# Import from the main package - try package first, then local modules
+try:
+    from tinytorch.core.tensor import Tensor
+    from tinytorch.core.layers import Dense
+    from tinytorch.core.activations import ReLU
+except ImportError:
+    # For development, import from local modules
+    sys.path.append(os.path.join(os.path.dirname(__file__), '..', '01_tensor'))
+    sys.path.append(os.path.join(os.path.dirname(__file__), '..', '02_activations'))
+    sys.path.append(os.path.join(os.path.dirname(__file__), '..', '03_layers'))
+    from tensor_dev import Tensor
+    from activations_dev import ReLU
+    from layers_dev import Dense
 
 # Setup and imports (for development)
 import matplotlib.pyplot as plt
-from tinytorch.core.layers import Dense
-from tinytorch.core.activations import ReLU
+
+print("🔥 TinyTorch CNN Module")
+print(f"NumPy version: {np.__version__}")
+print(f"Python version: {sys.version_info.major}.{sys.version_info.minor}")
+print("Ready to build convolutional neural networks!")
 
 # %% [markdown]
 """
@@ -106,7 +124,7 @@ O[i,j] = sum(I[i+di, j+dj] * K[di, dj] for di in range(kH), dj in range(kW))
 Let's implement this step by step!
 """
 
-# %%
+# %% nbgrader={"grade": false, "grade_id": "conv2d-naive", "locked": false, "schema_version": 3, "solution": true, "task": false}
 #| export
 def conv2d_naive(input: np.ndarray, kernel: np.ndarray) -> np.ndarray:
     """
@@ -147,7 +165,26 @@ def conv2d_naive(input: np.ndarray, kernel: np.ndarray) -> np.ndarray:
     - Use four nested loops: for i in range(out_H): for j in range(out_W): for di in range(kH): for dj in range(kW):
     - Accumulate the sum: output[i,j] += input[i+di, j+dj] * kernel[di, dj]
     """
-    raise NotImplementedError("Student implementation required")
+    ### BEGIN SOLUTION
+    # Get input and kernel dimensions
+    H, W = input.shape
+    kH, kW = kernel.shape
+    
+    # Calculate output dimensions
+    out_H, out_W = H - kH + 1, W - kW + 1
+    
+    # Initialize output array
+    output = np.zeros((out_H, out_W), dtype=input.dtype)
+    
+    # Sliding window convolution with four nested loops
+    for i in range(out_H):
+        for j in range(out_W):
+            for di in range(kH):
+                for dj in range(kW):
+                    output[i, j] += input[i + di, j + dj] * kernel[di, dj]
+    
+    return output
+    ### END SOLUTION
 
 # %%
 #| hide
