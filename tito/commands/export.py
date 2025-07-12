@@ -113,6 +113,45 @@ class ExportCommand(BaseCommand):
         
         console.print(Panel(exports_text, title="Export Summary", border_style="bright_green"))
 
+    def _convert_py_to_notebook(self, module_path: Path) -> bool:
+        """Convert .py dev file to .ipynb using Jupytext."""
+        module_name = module_path.name
+        short_name = module_name[3:] if module_name.startswith(tuple(f"{i:02d}_" for i in range(100))) else module_name
+        
+        dev_file = module_path / f"{short_name}_dev.py"
+        if not dev_file.exists():
+            return False
+        
+        notebook_file = module_path / f"{short_name}_dev.ipynb"
+        
+        # Check if notebook is newer than .py file
+        if notebook_file.exists():
+            py_mtime = dev_file.stat().st_mtime
+            nb_mtime = notebook_file.stat().st_mtime
+            if nb_mtime > py_mtime:
+                return True  # Notebook is up to date
+        
+        try:
+            result = subprocess.run([
+                "jupytext", "--to", "ipynb", str(dev_file)
+            ], capture_output=True, text=True, cwd=module_path)
+            
+            return result.returncode == 0
+        except FileNotFoundError:
+            return False
+    
+    def _convert_all_modules(self) -> list:
+        """Convert all modules' .py files to .ipynb files."""
+        modules = self._discover_modules()
+        converted = []
+        
+        for module_name in modules:
+            module_path = Path(f"modules/source/{module_name}")
+            if self._convert_py_to_notebook(module_path):
+                converted.append(module_name)
+        
+        return converted
+
     def run(self, args: Namespace) -> int:
         console = self.console
         
@@ -136,17 +175,35 @@ class ExportCommand(BaseCommand):
                 return 1
             
             console.print(Panel(f"🔄 Exporting Module: {args.module}", 
-                               title="nbdev Export", border_style="bright_cyan"))
+                               title="Complete Export Workflow", border_style="bright_cyan"))
+            
+            # Step 1: Convert .py to .ipynb
+            console.print(f"📝 Converting {args.module} Python file to notebook...")
+            if not self._convert_py_to_notebook(module_path):
+                console.print(Panel("[red]❌ Failed to convert .py file to notebook. Is jupytext installed?[/red]", 
+                                  title="Conversion Error", border_style="red"))
+                return 1
+            
             console.print(f"🔄 Exporting {args.module} notebook to tinytorch package...")
             
-            # Use nbdev_export with --path for specific module
+            # Step 2: Use nbdev_export with --path for specific module
             cmd = ["nbdev_export", "--path", str(module_path)]
         elif hasattr(args, 'all') and args.all:
-            console.print(Panel("🔄 Exporting All Notebooks to Package", 
-                               title="nbdev Export", border_style="bright_cyan"))
+            console.print(Panel("🔄 Exporting All Modules to Package", 
+                               title="Complete Export Workflow", border_style="bright_cyan"))
+            
+            # Step 1: Convert all .py files to .ipynb
+            console.print("📝 Converting all Python files to notebooks...")
+            converted = self._convert_all_modules()
+            if not converted:
+                console.print(Panel("[red]❌ No modules converted. Check if jupytext is installed and .py files exist.[/red]", 
+                                  title="Conversion Error", border_style="red"))
+                return 1
+            
+            console.print(f"✅ Converted {len(converted)} modules: {', '.join(converted)}")
             console.print("🔄 Exporting all notebook code to tinytorch package...")
             
-            # Use nbdev_export for all modules  
+            # Step 2: Use nbdev_export for all modules  
             cmd = ["nbdev_export"]
         else:
             console.print(Panel("[red]❌ Must specify either a module name or --all[/red]", 
