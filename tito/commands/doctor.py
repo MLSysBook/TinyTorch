@@ -83,7 +83,7 @@ class DoctorCommand(BaseCommand):
             ('tinytorch/', 'Package directory'),
             ('tinytorch/core/', 'Core module directory'),
             ('modules/', 'Module directory'),
-            ('bin/tito.py', 'CLI script'),
+            ('bin/tito', 'CLI script'),
             ('requirements.txt', 'Dependencies file')
         ]
         
