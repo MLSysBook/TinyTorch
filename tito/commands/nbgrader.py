@@ -218,13 +218,13 @@ class NBGraderCommand(BaseCommand):
 
     def _get_module_directories(self) -> List[Path]:
         """Get all module directories with proper hierarchy support."""
-        modules_dir = Path("modules")
-        if not modules_dir.exists():
+        source_dir = Path("assignments/source")
+        if not source_dir.exists():
             return []
         
         # Get all numbered module directories
         module_dirs = []
-        for item in modules_dir.iterdir():
+        for item in source_dir.iterdir():
             if item.is_dir() and not item.name.startswith("."):
                 module_dirs.append(item)
         
@@ -240,20 +240,20 @@ class NBGraderCommand(BaseCommand):
     def _resolve_module_name(self, module_input: str) -> Optional[str]:
         """Resolve module name from various input formats."""
         # If it's already a directory name, use it
-        if Path(f"modules/{module_input}").exists():
+        if Path(f"assignments/source/{module_input}").exists():
             return module_input
         
         # Try to find by number prefix
         if module_input.isdigit():
             prefix = module_input.zfill(2)
-            modules_dir = Path("modules")
-            for item in modules_dir.iterdir():
+            source_dir = Path("assignments/source")
+            for item in source_dir.iterdir():
                 if item.is_dir() and item.name.startswith(prefix):
                     return item.name
         
         # Try to find by name suffix
-        modules_dir = Path("modules")
-        for item in modules_dir.iterdir():
+        source_dir = Path("assignments/source")
+        for item in source_dir.iterdir():
             if item.is_dir() and item.name.endswith(f"_{module_input}"):
                 return item.name
         
@@ -375,7 +375,7 @@ class NBGraderCommand(BaseCommand):
         console.print(f"📝 Generating assignment for module: {module_name}")
         
         # Find the module development file
-        module_dir = Path("modules") / module_name
+        module_dir = Path("assignments/source") / module_name
         
         # Extract the short name from the module directory name
         # e.g., "00_setup" -> "setup", "01_tensor" -> "tensor"

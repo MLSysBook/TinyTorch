@@ -1,0 +1,26 @@
+# TinyTorch Module Metadata
+# Essential system information for CLI tools and build systems
+
+name: "autograd"
+title: "Autograd"
+description: "Automatic differentiation engine for gradient computation"
+
+# Dependencies
+dependencies:
+  prerequisites: ["setup", "tensor", "activations"]
+  enables: ["training", "optimization"]
+
+# Package Export
+exports_to: "tinytorch.core.autograd"
+
+# File Structure
+files:
+  dev_file: "autograd_dev.py"
+  test_file: "tests/test_autograd.py"
+  readme: "README.md"
+
+# Components
+components:
+  - "Variable"
+  - "backward"
+  - "gradient_computation" 

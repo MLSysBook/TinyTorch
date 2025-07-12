@@ -31,7 +31,14 @@ class ExportCommand(BaseCommand):
         Read the actual export target from the dev file's #| default_exp directive.
         This is the source of truth, not the YAML file.
         """
-        dev_file = module_path / f"{module_path.name}_dev.py"
+        # Extract the short name from the full module name
+        module_name = module_path.name
+        if module_name.startswith(tuple(f"{i:02d}_" for i in range(100))):
+            short_name = module_name[3:]  # Remove "00_" prefix
+        else:
+            short_name = module_name
+        
+        dev_file = module_path / f"{short_name}_dev.py"
         if not dev_file.exists():
             return "unknown"
         
@@ -55,21 +62,24 @@ class ExportCommand(BaseCommand):
         
         if module_name:
             # Single module export
-            module_path = Path(f"modules/{module_name}")
+            module_path = Path(f"assignments/source/{module_name}")
             export_target = self._get_export_target(module_path)
             if export_target != "unknown":
                 target_file = export_target.replace('.', '/') + '.py'
                 exports_text.append(f"  🔄 {module_name} → tinytorch/{target_file}\n", style="green")
-                exports_text.append(f"     Source: modules/{module_name}/{module_name}_dev.py\n", style="dim")
+                
+                # Extract the short name for display
+                short_name = module_name[3:] if module_name.startswith(tuple(f"{i:02d}_" for i in range(100))) else module_name
+                exports_text.append(f"     Source: assignments/source/{module_name}/{short_name}_dev.py\n", style="dim")
                 exports_text.append(f"     Target: tinytorch/{target_file}\n", style="dim")
             else:
                 exports_text.append(f"  ❓ {module_name} → export target not found\n", style="yellow")
         else:
             # All modules export
-            modules_dir = Path("modules")
-            if modules_dir.exists():
+            source_dir = Path("assignments/source")
+            if source_dir.exists():
                 exclude_dirs = {'.quarto', '__pycache__', '.git', '.pytest_cache'}
-                for module_dir in modules_dir.iterdir():
+                for module_dir in source_dir.iterdir():
                     if module_dir.is_dir() and module_dir.name not in exclude_dirs:
                         export_target = self._get_export_target(module_dir)
                         if export_target != "unknown":
@@ -96,7 +106,7 @@ class ExportCommand(BaseCommand):
         
         # Determine what to export
         if hasattr(args, 'module') and args.module:
-            module_path = f"modules/{args.module}"
+            module_path = f"assignments/source/{args.module}"
             if not Path(module_path).exists():
                 console.print(Panel(f"[red]❌ Module '{args.module}' not found at {module_path}[/red]", 
                                   title="Module Not Found", border_style="red"))
