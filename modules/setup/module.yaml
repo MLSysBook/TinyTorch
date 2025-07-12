@@ -3,7 +3,7 @@
 
 # Basic Information
 name: "setup"
-title: "Setup - TinyTorch Development Workflow"
+title: "Setup"
 description: "Learn the complete TinyTorch development workflow while introducing fundamental programming concepts"
 version: "1.0.0"
 author: "TinyTorch Team"

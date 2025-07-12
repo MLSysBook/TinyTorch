@@ -3,7 +3,7 @@
 
 # Basic Information
 name: "layers"
-title: "Layers - Neural Network Building Blocks"
+title: "Layers"
 description: "Build the fundamental transformations that compose into neural networks - Dense layers and activation functions"
 version: "1.0.0"
 author: "TinyTorch Team"
