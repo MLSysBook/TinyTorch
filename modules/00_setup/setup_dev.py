@@ -63,7 +63,7 @@ This separation allows us to:
 Let's write a simple "Hello World" function with the `#| export` directive:
 """
 
-# %%
+# %% nbgrader={"grade": false, "grade_id": "hello-function", "locked": false, "schema_version": 3, "solution": true, "task": false}
 #| export
 def hello_tinytorch():
     """
@@ -71,57 +71,44 @@ def hello_tinytorch():
     
     TODO: Implement this function to display TinyTorch ASCII art and welcome message.
     Load the flame art from tinytorch_flame.txt file with graceful fallback.
+    
+    HINTS:
+    1. Try to load ASCII art from 'tinytorch_flame.txt' in current directory
+    2. If file exists, read and print the content
+    3. Add "Tiny🔥Torch" and "Build ML Systems from Scratch!" messages
+    4. If file doesn't exist, just print the emoji version
+    5. Handle any exceptions gracefully
+    
+    EXAMPLE OUTPUT:
+    [ASCII art from file]
+    Tiny🔥Torch
+    Build ML Systems from Scratch!
     """
-    raise NotImplementedError("Student implementation required")
+    # YOUR CODE HERE
+    raise NotImplementedError()
 
+# %% nbgrader={"grade": false, "grade_id": "add-function", "locked": false, "schema_version": 3, "solution": true, "task": false}
+#| export
 def add_numbers(a, b):
     """
     Add two numbers together.
     
     TODO: Implement addition of two numbers.
     This is the foundation of all mathematical operations in ML.
-    """
-    raise NotImplementedError("Student implementation required")
-
-# %%
-#| hide
-#| export
-def hello_tinytorch():
-    """Display the TinyTorch ASCII art and welcome message."""
-    try:
-        # Get the directory containing this file
-        current_dir = Path(__file__).parent
-        art_file = current_dir / "tinytorch_flame.txt"
+    
+    Args:
+        a: First number (int or float)
+        b: Second number (int or float)
         
-        if art_file.exists():
-            with open(art_file, 'r') as f:
-                ascii_art = f.read()
-            print(ascii_art)
-            print("Tiny🔥Torch")
-            print("Build ML Systems from Scratch!")
-        else:
-            print("🔥 TinyTorch 🔥")
-            print("Build ML Systems from Scratch!")
-    except NameError:
-        # Handle case when running in notebook where __file__ is not defined
-        try:
-            art_file = Path(os.getcwd()) / "tinytorch_flame.txt"
-            if art_file.exists():
-                with open(art_file, 'r') as f:
-                    ascii_art = f.read()
-                print(ascii_art)
-                print("Tiny🔥Torch")
-                print("Build ML Systems from Scratch!")
-            else:
-                print("🔥 TinyTorch 🔥")
-                print("Build ML Systems from Scratch!")
-        except:
-            print("🔥 TinyTorch 🔥")
-            print("Build ML Systems from Scratch!")
-
-def add_numbers(a, b):
-    """Add two numbers together."""
-    return a + b
+    Returns:
+        Sum of a and b
+        
+    EXAMPLE:
+    add_numbers(2, 3) should return 5
+    add_numbers(1.5, 2.5) should return 4.0
+    """
+    # YOUR CODE HERE
+    raise NotImplementedError()
 
 # %% [markdown]
 """
@@ -130,17 +117,24 @@ def add_numbers(a, b):
 Once you implement the functions above, run this cell to test them:
 """
 
-# %%
-# Test the functions in the notebook (will fail until implemented)
+# %% nbgrader={"grade": true, "grade_id": "test-hello-function", "locked": true, "points": 3, "schema_version": 3, "solution": false, "task": false}
+# Test hello_tinytorch function
+print("Testing hello_tinytorch():")
 try:
-    print("Testing hello_tinytorch():")
     hello_tinytorch()
-    print()
-    print("Testing add_numbers():")
-    print(f"2 + 3 = {add_numbers(2, 3)}")
-except NotImplementedError as e:
-    print(f"⚠️  {e}")
-    print("Implement the functions above first!")
+    print("✅ hello_tinytorch() executed successfully!")
+except NotImplementedError:
+    print("❌ hello_tinytorch() not implemented yet")
+    raise
+
+# %% nbgrader={"grade": true, "grade_id": "test-add-function", "locked": true, "points": 2, "schema_version": 3, "solution": false, "task": false}
+# Test add_numbers function
+print("Testing add_numbers():")
+assert add_numbers(2, 3) == 5, "add_numbers(2, 3) should return 5"
+assert add_numbers(0, 0) == 0, "add_numbers(0, 0) should return 0"
+assert add_numbers(-1, 1) == 0, "add_numbers(-1, 1) should return 0"
+assert abs(add_numbers(1.5, 2.5) - 4.0) < 1e-10, "add_numbers(1.5, 2.5) should return 4.0"
+print("✅ All addition tests passed!")
 
 # %% [markdown]
 """
@@ -149,13 +143,24 @@ except NotImplementedError as e:
 Let's create a simple class that will help us understand system information. This is still basic, but shows how to structure classes in TinyTorch.
 """
 
-# %%
+# %% nbgrader={"grade": false, "grade_id": "systeminfo-class", "locked": false, "schema_version": 3, "solution": true, "task": false}
 #| export
 class SystemInfo:
     """
     Simple system information class.
     
     TODO: Implement this class to collect and display system information.
+    
+    REQUIREMENTS:
+    1. __init__: Collect Python version, platform, and machine information
+    2. __str__: Return formatted system info string
+    3. is_compatible: Check if Python version >= 3.8
+    
+    HINTS:
+    - Use sys.version_info for Python version
+    - Use platform.system() for platform name  
+    - Use platform.machine() for machine architecture
+    - Store these as instance attributes in __init__
     """
     
     def __init__(self):
@@ -163,42 +168,31 @@ class SystemInfo:
         Initialize system information collection.
         
         TODO: Collect Python version, platform, and machine information.
+        Store as instance attributes: self.python_version, self.platform, self.machine
         """
-        raise NotImplementedError("Student implementation required")
+        # YOUR CODE HERE
+        raise NotImplementedError()
     
     def __str__(self):
         """
         Return human-readable system information.
         
         TODO: Format system info as a readable string.
+        FORMAT: "Python X.Y on Platform (Architecture)"
+        EXAMPLE: "Python 3.9 on Darwin (arm64)"
         """
-        raise NotImplementedError("Student implementation required")
+        # YOUR CODE HERE
+        raise NotImplementedError()
     
     def is_compatible(self):
         """
         Check if system meets minimum requirements.
         
-        TODO: Check if Python version is >= 3.8
+        TODO: Check if Python version >= 3.8
+        Return True if compatible, False otherwise
         """
-        raise NotImplementedError("Student implementation required")
-
-# %%
-#| hide
-#| export
-class SystemInfo:
-    """Simple system information class."""
-    
-    def __init__(self):
-        self.python_version = sys.version_info
-        self.platform = platform.system()
-        self.machine = platform.machine()
-    
-    def __str__(self):
-        return f"Python {self.python_version.major}.{self.python_version.minor} on {self.platform} ({self.machine})"
-    
-    def is_compatible(self):
-        """Check if system meets minimum requirements."""
-        return self.python_version >= (3, 8)
+        # YOUR CODE HERE
+        raise NotImplementedError()
 
 # %% [markdown]
 """
@@ -207,329 +201,104 @@ class SystemInfo:
 Once you implement the SystemInfo class above, run this cell to test it:
 """
 
-# %%
-# Test the SystemInfo class (will fail until implemented)
-try:
-    print("Testing SystemInfo class:")
-    info = SystemInfo()
-    print(f"System: {info}")
-    print(f"Compatible: {info.is_compatible()}")
-except NotImplementedError as e:
-    print(f"⚠️  {e}")
-    print("Implement the SystemInfo class above first!")
+# %% nbgrader={"grade": true, "grade_id": "test-systeminfo-creation", "locked": true, "points": 2, "schema_version": 3, "solution": false, "task": false}
+# Test SystemInfo creation
+print("Testing SystemInfo creation...")
+info = SystemInfo()
+assert hasattr(info, 'python_version'), "SystemInfo should have python_version attribute"
+assert hasattr(info, 'platform'), "SystemInfo should have platform attribute"
+assert hasattr(info, 'machine'), "SystemInfo should have machine attribute"
+print("✅ SystemInfo creation test passed!")
+
+# %% nbgrader={"grade": true, "grade_id": "test-systeminfo-str", "locked": true, "points": 2, "schema_version": 3, "solution": false, "task": false}
+# Test SystemInfo string representation
+print("Testing SystemInfo string representation...")
+info = SystemInfo()
+info_str = str(info)
+assert isinstance(info_str, str), "SystemInfo.__str__() should return a string"
+assert len(info_str) > 0, "SystemInfo string should not be empty"
+assert 'Python' in info_str, "SystemInfo string should contain 'Python'"
+print(f"✅ SystemInfo string: {info_str}")
+
+# %% nbgrader={"grade": true, "grade_id": "test-systeminfo-compatibility", "locked": true, "points": 1, "schema_version": 3, "solution": false, "task": false}
+# Test SystemInfo compatibility check
+print("Testing SystemInfo compatibility...")
+info = SystemInfo()
+compatible = info.is_compatible()
+assert isinstance(compatible, bool), "is_compatible() should return a boolean"
+# Since we're running this test, Python should be >= 3.8
+assert compatible == True, "Current Python version should be compatible (>= 3.8)"
+print("✅ SystemInfo compatibility test passed!")
 
 # %% [markdown]
 """
-## Step 3: Developer Personalization
+## Step 3: Developer Profile (Optional Challenge)
 
-Let's make TinyTorch yours! Create a developer profile that will identify you throughout your ML systems journey.
+For students who want an extra challenge, implement a DeveloperProfile class:
 """
 
-# %%
+# %% nbgrader={"grade": false, "grade_id": "developer-profile", "locked": false, "schema_version": 3, "solution": true, "task": false}
 #| export
 class DeveloperProfile:
     """
     Developer profile for personalizing TinyTorch experience.
     
-    TODO: Implement this class to store and display developer information.
-    Default to course instructor but allow students to personalize.
+    TODO: OPTIONAL CHALLENGE - Implement this class for extra credit!
+    
+    REQUIREMENTS:
+    1. Store developer information (name, email, etc.)
+    2. Load ASCII art from file with fallback
+    3. Generate formatted profile display
+    4. Create professional signature
+    
+    This is an advanced exercise - only attempt after completing the required parts!
     """
     
-    @staticmethod
-    def _load_default_flame():
-        """
-        Load the default TinyTorch flame ASCII art from file.
-        
-        TODO: Implement file loading for tinytorch_flame.txt with fallback.
-        """
-        raise NotImplementedError("Student implementation required")
-    
-    def __init__(self, name="Vijay Janapa Reddi", affiliation="Harvard University", 
-                 email="vj@eecs.harvard.edu", github_username="profvjreddi", ascii_art=None):
+    def __init__(self, name="Student", email="student@example.com"):
         """
         Initialize developer profile.
         
-        TODO: Store developer information with sensible defaults.
-        Students should be able to customize this with their own info and ASCII art.
+        TODO: Store developer information with defaults.
+        Feel free to customize with your own info!
         """
-        raise NotImplementedError("Student implementation required")
-    
-    def __str__(self):
-        """
-        Return formatted developer information.
-        
-        TODO: Format developer info as a professional signature with optional ASCII art.
-        """
-        raise NotImplementedError("Student implementation required")
+        # YOUR CODE HERE (OPTIONAL)
+        self.name = name
+        self.email = email
     
     def get_signature(self):
         """
         Get a short signature for code headers.
         
-        TODO: Return a concise signature like "Built by Name (@github)"
+        TODO: Return a signature like "Built by Name (email)"
         """
-        raise NotImplementedError("Student implementation required")
-    
-    def get_ascii_art(self):
-        """
-        Get ASCII art for the profile.
-        
-        TODO: Return custom ASCII art or default flame loaded from file.
-        """
-        raise NotImplementedError("Student implementation required")
-
-# %%
-#| hide
-#| export
-class DeveloperProfile:
-    """Developer profile for personalizing TinyTorch experience."""
-    
-    @staticmethod
-    def _load_default_flame():
-        """Load the default TinyTorch flame ASCII art from file."""
-        try:
-            # Try to load from the same directory as this module
-            try:
-                # Try to get the directory of the current file
-                current_dir = os.path.dirname(__file__)
-            except NameError:
-                # If __file__ is not defined (e.g., in notebook), use current directory
-                current_dir = os.getcwd()
-            
-            flame_path = os.path.join(current_dir, 'tinytorch_flame.txt')
-            
-            with open(flame_path, 'r', encoding='utf-8') as f:
-                flame_art = f.read()
-            
-            # Add the Tiny🔥Torch text below the flame
-            return f"""{flame_art}
-                    
-                    Tiny🔥Torch
-            Build ML Systems from Scratch!
-            """
-        except (FileNotFoundError, IOError):
-            # Fallback to simple flame if file not found
-            return """
-    🔥 TinyTorch Developer 🔥
-         .  .  .  .  .  .
-        .    .  .  .  .   .
-       .  .    .  .  .  .  .
-      .  .  .    .  .  .  .  .
-     .  .  .  .    .  .  .  .  .
-    .  .  .  .  .    .  .  .  .  .
-   .  .  .  .  .  .    .  .  .  .  .
-  .  .  .  .  .  .  .    .  .  .  .  .
- .  .  .  .  .  .  .  .    .  .  .  .  .
-.  .  .  .  .  .  .  .  .    .  .  .  .  .
- \\  \\  \\  \\  \\  \\  \\  \\  \\  /  /  /  /  /  /
-  \\  \\  \\  \\  \\  \\  \\  \\  /  /  /  /  /  /
-   \\  \\  \\  \\  \\  \\  \\  /  /  /  /  /  /
-    \\  \\  \\  \\  \\  \\  /  /  /  /  /  /
-     \\  \\  \\  \\  \\  /  /  /  /  /  /
-      \\  \\  \\  \\  /  /  /  /  /  /
-       \\  \\  \\  /  /  /  /  /  /
-        \\  \\  /  /  /  /  /  /
-         \\  /  /  /  /  /  /
-          \\/  /  /  /  /  /
-           \\/  /  /  /  /
-            \\/  /  /  /
-             \\/  /  /
-              \\/  /
-               \\/
-                    
-                    Tiny🔥Torch
-            Build ML Systems from Scratch!
-            """
-    
-    def __init__(self, name="Vijay Janapa Reddi", affiliation="Harvard University", 
-                 email="vj@eecs.harvard.edu", github_username="profvjreddi", ascii_art=None):
-        self.name = name
-        self.affiliation = affiliation
-        self.email = email
-        self.github_username = github_username
-        self.ascii_art = ascii_art or self._load_default_flame()
-    
-    def __str__(self):
-        return f"👨‍💻 {self.name} | {self.affiliation} | @{self.github_username}"
-    
-    def get_signature(self):
-        """Get a short signature for code headers."""
-        return f"Built by {self.name} (@{self.github_username})"
-    
-    def get_ascii_art(self):
-        """Get ASCII art for the profile."""
-        return self.ascii_art
-    
-    def get_full_profile(self):
-        """Get complete profile with ASCII art."""
-        return f"""{self.ascii_art}
-        
-👨‍💻 Developer: {self.name}
-🏛️  Affiliation: {self.affiliation}
-📧 Email: {self.email}
-🐙 GitHub: @{self.github_username}
-🔥 Ready to build ML systems from scratch!
-"""
+        # YOUR CODE HERE (OPTIONAL)
+        return f"Built by {self.name} ({self.email})"
 
 # %% [markdown]
 """
-### 🧪 Test Your Developer Profile
+## 🎯 Module Summary
 
-Customize your developer profile! Replace the default information with your own:
-"""
+Congratulations! You've completed the TinyTorch setup module:
 
-# %%
-# Test the DeveloperProfile class
-try:
-    print("Testing DeveloperProfile (with defaults):")
-    # Default profile (instructor)
-    default_profile = DeveloperProfile()
-    print(f"Profile: {default_profile}")
-    print(f"Signature: {default_profile.get_signature()}")
-    print()
-    
-    print("🎨 ASCII Art Preview:")
-    print(default_profile.get_ascii_art())
-    print()
-    
-    print("🔥 Full Profile Display:")
-    print(default_profile.get_full_profile())
-    print()
-    
-    # TODO: Students should customize this with their own information!
-    print("🎯 YOUR TURN: Create your own profile!")
-    print("Uncomment and modify the lines below:")
-    print("# my_profile = DeveloperProfile(")
-    print("#     name='Your Name',")
-    print("#     affiliation='Your University/Company',")
-    print("#     email='your.email@example.com',")
-    print("#     github_username='yourgithub',")
-    print("#     ascii_art='''")
-    print("#     Your Custom ASCII Art Here!")
-    print("#     Maybe your initials, a logo, or something fun!")
-    print("#     '''")
-    print("# )")
-    print("# print(f'My Profile: {my_profile}')")
-    print("# print(f'My Signature: {my_profile.get_signature()}')")
-    print("# print(my_profile.get_full_profile())")
-    
-except NotImplementedError as e:
-    print(f"⚠️  {e}")
-    print("Implement the DeveloperProfile class above first!")
+### What You've Accomplished
+✅ **Environment Setup**: Learned the development workflow  
+✅ **First Function**: Implemented hello_tinytorch() with file handling  
+✅ **Math Operations**: Built add_numbers() for ML foundations  
+✅ **Object-Oriented Programming**: Created SystemInfo class with properties  
+✅ **Testing**: Verified your implementations with automated tests  
+✅ **Package Export**: Used nbdev to build the tinytorch package  
 
-# %% [markdown]
-"""
-### 🎨 Personalization Challenge
-
-**For Students**: Make TinyTorch truly yours by:
-
-1. **Update your profile** in the cell above with your real information
-2. **Create custom ASCII art** - your initials, a simple logo, or something that represents you
-3. **Customize the flame file** - edit `tinytorch_flame.txt` to create your own default art
-4. **Add your signature** to code you write throughout the course
-5. **Show off your full profile** with the `get_full_profile()` method
-
-This isn't just about customization - it's about taking ownership of your learning journey in ML systems!
-
-**ASCII Art Customization Options:**
-
-**Option 1: Custom ASCII Art Parameter**
-```python
-my_profile = DeveloperProfile(
-    name="Your Name",
-    ascii_art='''
-    Your Custom ASCII Art Here!
-    Maybe your initials, a logo, or something fun!
-    '''
-)
-```
-
-**Option 2: Edit the Default Flame File**
-- Edit `tinytorch_flame.txt` in this directory
-- Replace with your own ASCII art design
-- All students using defaults will see your custom art!
-
-**ASCII Art Ideas:**
-- Your initials in block letters
-- A simple logo or symbol that represents you
-- Your university mascot in ASCII
-- A coding-themed design
-- Something that motivates you!
-
-**Pro Tip**: The `tinytorch_flame.txt` file contains the beautiful default flame art. You can:
-- Edit it directly for a personalized default
-- Create your own `.txt` file and modify the code to load it
-- Use online ASCII art generators for inspiration
-"""
-
-# %% [markdown]
-"""
-## Step 4: Try the Export Process
-
-Now let's export our code! In your terminal, run:
-
-```bash
-python bin/tito.py sync --module setup
-```
-
-This will export the code marked with `#| export` to `tinytorch/core/utils.py`.
-
-**What happens during export:**
-1. nbdev scans this notebook for `#| export` cells
-2. Extracts the Python code  
-3. Writes it to `tinytorch/core/utils.py` (because of `#| default_exp core.utils`)
-4. Handles imports and dependencies automatically
-
-**🔍 Verification**: After export, check `tinytorch/core/utils.py` - you'll see your functions there with auto-generated headers pointing back to this notebook!
-
-**Note**: The export process will use the instructor solutions (from `#|hide` cells) so the package will have working implementations even if you haven't completed the exercises yet.
-"""
-
-# %% [markdown]
-"""
-## Step 5: Run Tests
-
-After exporting, run the tests:
-
-```bash
-python bin/tito.py test --module setup
-```
-
-This will run all tests for the setup module and verify your implementation works correctly.
-
-## Step 6: Check Your Progress
-
-See your overall progress:
-
-```bash
-python bin/tito.py info
-```
-
-This shows which modules are complete and which are pending.
-"""
-
-# %% [markdown]
-"""
-## 🎉 Congratulations!
-
-You've learned the TinyTorch development workflow:
-
-1. ✅ Write code in notebooks with `#| export`
-2. ✅ Export with `tito sync --module setup`  
-3. ✅ Test with `tito test --module setup`
-4. ✅ Check progress with `tito info`
-
-**This is the rhythm you'll use for every module in TinyTorch.**
+### Key Concepts You've Learned
+- **nbdev workflow**: From notebook to production package
+- **File handling**: Reading ASCII art with graceful fallbacks
+- **System information**: Collecting platform and version data
+- **Object-oriented design**: Classes, properties, and methods
+- **Error handling**: Using try/except and fallback strategies
 
 ### Next Steps
+1. **Export your code**: Run `python bin/tito.py sync --module setup`
+2. **Run tests**: Use `python bin/tito.py test --module setup`
+3. **Check your work**: Import your functions with `from tinytorch.core.utils import hello_tinytorch`
 
-Ready for the real work? Head to **Module 1: Tensor** where you'll build the core data structures that power everything else in TinyTorch.
-
-**Development Tips:**
-- Always test your code in the notebook first
-- Export frequently to catch issues early  
-- Read error messages carefully - they're designed to help
-- When stuck, check if your code exports cleanly first
-
-Happy building! 🔥
+**Ready for the next challenge?** Let's move on to building tensors!
 """
