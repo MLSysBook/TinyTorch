@@ -237,6 +237,57 @@ def matmul_naive(A: np.ndarray, B: np.ndarray) -> np.ndarray:
 
 # %% [markdown]
 """
+### 🧪 Quick Test: Matrix Multiplication
+
+Let's test your matrix multiplication implementation right away! This is the foundation of neural networks.
+"""
+
+# %% nbgrader={"grade": true, "grade_id": "test-matmul-immediate", "locked": true, "points": 10, "schema_version": 3, "solution": false, "task": false}
+# Test matrix multiplication immediately after implementation
+print("🔬 Testing matrix multiplication...")
+
+# Test simple 2x2 case
+try:
+    A = np.array([[1, 2], [3, 4]], dtype=np.float32)
+    B = np.array([[5, 6], [7, 8]], dtype=np.float32)
+    
+    result = matmul_naive(A, B)
+    expected = np.array([[19, 22], [43, 50]], dtype=np.float32)
+    
+    assert np.allclose(result, expected), f"Matrix multiplication failed: expected {expected}, got {result}"
+    print(f"✅ Simple 2x2 test: {A.tolist()} @ {B.tolist()} = {result.tolist()}")
+    
+    # Compare with NumPy
+    numpy_result = A @ B
+    assert np.allclose(result, numpy_result), f"Doesn't match NumPy: got {result}, expected {numpy_result}"
+    print("✅ Matches NumPy's result")
+    
+except Exception as e:
+    print(f"❌ Matrix multiplication test failed: {e}")
+    raise
+
+# Test different shapes
+try:
+    A2 = np.array([[1, 2, 3]], dtype=np.float32)  # 1x3
+    B2 = np.array([[4], [5], [6]], dtype=np.float32)  # 3x1
+    result2 = matmul_naive(A2, B2)
+    expected2 = np.array([[32]], dtype=np.float32)  # 1*4 + 2*5 + 3*6 = 32
+    
+    assert np.allclose(result2, expected2), f"Different shapes failed: got {result2}, expected {expected2}"
+    print(f"✅ Different shapes test: {A2.tolist()} @ {B2.tolist()} = {result2.tolist()}")
+    
+except Exception as e:
+    print(f"❌ Different shapes test failed: {e}")
+    raise
+
+# Show the algorithm in action
+print("🎯 Matrix multiplication algorithm:")
+print("   C[i,j] = Σ(A[i,k] * B[k,j]) for all k")
+print("   Triple nested loops compute each element")
+print("📈 Progress: Matrix multiplication ✓")
+
+# %% [markdown]
+"""
 ## Step 2: Building the Dense Layer
 
 Now let's build the **Dense layer**, the most fundamental building block of neural networks. A Dense layer performs a linear transformation: `y = Wx + b`
@@ -380,6 +431,85 @@ class Dense:
     def __call__(self, x: Tensor) -> Tensor:
         """Make layer callable: layer(x) same as layer.forward(x)"""
         return self.forward(x)
+
+# %% [markdown]
+"""
+### 🧪 Quick Test: Dense Layer
+
+Let's test your Dense layer implementation! This is the fundamental building block of neural networks.
+"""
+
+# %% nbgrader={"grade": true, "grade_id": "test-dense-immediate", "locked": true, "points": 10, "schema_version": 3, "solution": false, "task": false}
+# Test Dense layer immediately after implementation
+print("🔬 Testing Dense layer...")
+
+# Test basic Dense layer
+try:
+    layer = Dense(input_size=3, output_size=2, use_bias=True)
+    x = Tensor([[1, 2, 3]])  # batch_size=1, input_size=3
+    
+    print(f"Input shape: {x.shape}")
+    print(f"Layer weights shape: {layer.weights.shape}")
+    if layer.bias is not None:
+        print(f"Layer bias shape: {layer.bias.shape}")
+    
+    y = layer(x)
+    print(f"Output shape: {y.shape}")
+    print(f"Output: {y}")
+    
+    # Test shape compatibility
+    assert y.shape == (1, 2), f"Output shape should be (1, 2), got {y.shape}"
+    print("✅ Dense layer produces correct output shape")
+    
+    # Test weights initialization
+    assert layer.weights.shape == (3, 2), f"Weights shape should be (3, 2), got {layer.weights.shape}"
+    if layer.bias is not None:
+        assert layer.bias.shape == (2,), f"Bias shape should be (2,), got {layer.bias.shape}"
+    print("✅ Dense layer has correct weight and bias shapes")
+    
+    # Test that weights are not all zeros (proper initialization)
+    assert not np.allclose(layer.weights, 0), "Weights should not be all zeros"
+    if layer.bias is not None:
+        assert np.allclose(layer.bias, 0), "Bias should be initialized to zeros"
+    print("✅ Dense layer has proper weight initialization")
+    
+except Exception as e:
+    print(f"❌ Dense layer test failed: {e}")
+    raise
+
+# Test without bias
+try:
+    layer_no_bias = Dense(input_size=2, output_size=1, use_bias=False)
+    x2 = Tensor([[1, 2]])
+    y2 = layer_no_bias(x2)
+    
+    assert y2.shape == (1, 1), f"No bias output shape should be (1, 1), got {y2.shape}"
+    assert layer_no_bias.bias is None, "Bias should be None when use_bias=False"
+    print("✅ Dense layer works without bias")
+    
+except Exception as e:
+    print(f"❌ Dense layer no-bias test failed: {e}")
+    raise
+
+# Test naive matrix multiplication
+try:
+    layer_naive = Dense(input_size=2, output_size=2, use_naive_matmul=True)
+    x3 = Tensor([[1, 2]])
+    y3 = layer_naive(x3)
+    
+    assert y3.shape == (1, 2), f"Naive matmul output shape should be (1, 2), got {y3.shape}"
+    print("✅ Dense layer works with naive matrix multiplication")
+    
+except Exception as e:
+    print(f"❌ Dense layer naive matmul test failed: {e}")
+    raise
+
+# Show the linear transformation in action
+print("🎯 Dense layer behavior:")
+print("   y = Wx + b (linear transformation)")
+print("   W: learnable weight matrix")
+print("   b: learnable bias vector")
+print("📈 Progress: Matrix multiplication ✓, Dense layer ✓")
 
 # %% [markdown]
 """

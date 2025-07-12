@@ -258,6 +258,61 @@ class Sequential:
 
 # %% [markdown]
 """
+### 🧪 Quick Test: Sequential Network
+
+Let's test your Sequential network implementation! This is the foundation of all neural network architectures.
+"""
+
+# %% nbgrader={"grade": true, "grade_id": "test-sequential-immediate", "locked": true, "points": 10, "schema_version": 3, "solution": false, "task": false}
+# Test Sequential network immediately after implementation
+print("🔬 Testing Sequential network...")
+
+# Create a simple 2-layer network: 3 → 4 → 2
+try:
+    network = Sequential([
+        Dense(input_size=3, output_size=4),
+        ReLU(),
+        Dense(input_size=4, output_size=2),
+        Sigmoid()
+    ])
+    
+    print(f"Network created with {len(network.layers)} layers")
+    print("✅ Sequential network creation successful")
+    
+    # Test with sample data
+    x = Tensor([[1.0, 2.0, 3.0]])
+    print(f"Input: {x}")
+    
+    # Forward pass
+    y = network(x)
+    print(f"Output: {y}")
+    print(f"Output shape: {y.shape}")
+    
+    # Verify the network works
+    assert y.shape == (1, 2), f"Expected shape (1, 2), got {y.shape}"
+    print("✅ Sequential network produces correct output shape")
+    
+    # Test that sigmoid output is in valid range
+    assert np.all(y.data >= 0) and np.all(y.data <= 1), "Sigmoid output should be between 0 and 1"
+    print("✅ Sequential network output is in valid range")
+    
+    # Test that layers are stored correctly
+    assert len(network.layers) == 4, f"Expected 4 layers, got {len(network.layers)}"
+    print("✅ Sequential network stores layers correctly")
+    
+except Exception as e:
+    print(f"❌ Sequential network test failed: {e}")
+    raise
+
+# Show the network architecture
+print("🎯 Sequential network behavior:")
+print("   Applies layers in sequence: f(g(h(x)))")
+print("   Input flows through each layer in order")
+print("   Output of layer i becomes input of layer i+1")
+print("📈 Progress: Sequential network ✓")
+
+# %% [markdown]
+"""
 ## Step 2: Building Multi-Layer Perceptrons (MLPs)
 
 ### What is an MLP?
@@ -344,6 +399,76 @@ def create_mlp(input_size: int, hidden_sizes: List[int], output_size: int,
     
     return Sequential(layers)
     ### END SOLUTION
+
+# %% [markdown]
+"""
+### 🧪 Quick Test: MLP Creation
+
+Let's test your MLP creation function! This builds complete neural networks with a single function call.
+"""
+
+# %% nbgrader={"grade": true, "grade_id": "test-mlp-immediate", "locked": true, "points": 10, "schema_version": 3, "solution": false, "task": false}
+# Test MLP creation immediately after implementation
+print("🔬 Testing MLP creation...")
+
+# Create a simple MLP: 3 → 4 → 2 → 1
+try:
+    mlp = create_mlp(input_size=3, hidden_sizes=[4, 2], output_size=1)
+    
+    print(f"MLP created with {len(mlp.layers)} layers")
+    print("✅ MLP creation successful")
+    
+    # Test the structure - should have 6 layers: Dense, ReLU, Dense, ReLU, Dense, Sigmoid
+    expected_layers = 6  # 3 Dense + 2 ReLU + 1 Sigmoid
+    assert len(mlp.layers) == expected_layers, f"Expected {expected_layers} layers, got {len(mlp.layers)}"
+    print("✅ MLP has correct number of layers")
+    
+    # Test with sample data
+    x = Tensor([[1.0, 2.0, 3.0]])
+    y = mlp(x)
+    print(f"MLP input: {x}")
+    print(f"MLP output: {y}")
+    print(f"MLP output shape: {y.shape}")
+    
+    # Verify the output
+    assert y.shape == (1, 1), f"Expected shape (1, 1), got {y.shape}"
+    print("✅ MLP produces correct output shape")
+    
+    # Test that sigmoid output is in valid range
+    assert np.all(y.data >= 0) and np.all(y.data <= 1), "Sigmoid output should be between 0 and 1"
+    print("✅ MLP output is in valid range")
+    
+except Exception as e:
+    print(f"❌ MLP creation test failed: {e}")
+    raise
+
+# Test different architectures
+try:
+    # Test shallow network
+    shallow_net = create_mlp(input_size=3, hidden_sizes=[4], output_size=1)
+    assert len(shallow_net.layers) == 4, f"Shallow network should have 4 layers, got {len(shallow_net.layers)}"
+    
+    # Test deep network  
+    deep_net = create_mlp(input_size=3, hidden_sizes=[4, 4, 4], output_size=1)
+    assert len(deep_net.layers) == 8, f"Deep network should have 8 layers, got {len(deep_net.layers)}"
+    
+    # Test wide network
+    wide_net = create_mlp(input_size=3, hidden_sizes=[10], output_size=1)
+    assert len(wide_net.layers) == 4, f"Wide network should have 4 layers, got {len(wide_net.layers)}"
+    
+    print("✅ Different MLP architectures work correctly")
+    
+except Exception as e:
+    print(f"❌ MLP architecture test failed: {e}")
+    raise
+
+# Show the MLP pattern
+print("🎯 MLP creation pattern:")
+print("   Input → Dense → Activation → Dense → Activation → ... → Dense → Output_Activation")
+print("   Automatically creates the complete architecture")
+print("   Handles any number of hidden layers")
+print("📈 Progress: Sequential network ✓, MLP creation ✓")
+print("🚀 Complete neural networks ready!")
 
 # %% [markdown]
 """

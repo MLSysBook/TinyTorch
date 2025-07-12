@@ -276,6 +276,74 @@ class Dataset:
 
 # %% [markdown]
 """
+### 🧪 Quick Test: Dataset Base Class
+
+Let's understand the Dataset interface! While we can't test the abstract class directly, we'll create a simple test dataset.
+"""
+
+# %% nbgrader={"grade": true, "grade_id": "test-dataset-interface-immediate", "locked": true, "points": 5, "schema_version": 3, "solution": false, "task": false}
+# Test Dataset interface with a simple implementation
+print("🔬 Testing Dataset interface...")
+
+# Create a minimal test dataset
+class TestDataset(Dataset):
+    def __init__(self, size=5):
+        self.size = size
+    
+    def __getitem__(self, index):
+        # Simple test data: features are [index, index*2], label is index % 2
+        data = Tensor([index, index * 2])
+        label = Tensor([index % 2])
+        return data, label
+    
+    def __len__(self):
+        return self.size
+    
+    def get_num_classes(self):
+        return 2
+
+# Test the interface
+try:
+    test_dataset = TestDataset(size=5)
+    print(f"Dataset created with size: {len(test_dataset)}")
+    
+    # Test __getitem__
+    data, label = test_dataset[0]
+    print(f"Sample 0: data={data}, label={label}")
+    assert isinstance(data, Tensor), "Data should be a Tensor"
+    assert isinstance(label, Tensor), "Label should be a Tensor"
+    print("✅ Dataset __getitem__ works correctly")
+    
+    # Test __len__
+    assert len(test_dataset) == 5, f"Dataset length should be 5, got {len(test_dataset)}"
+    print("✅ Dataset __len__ works correctly")
+    
+    # Test get_num_classes
+    assert test_dataset.get_num_classes() == 2, f"Should have 2 classes, got {test_dataset.get_num_classes()}"
+    print("✅ Dataset get_num_classes works correctly")
+    
+    # Test multiple samples
+    for i in range(3):
+        data, label = test_dataset[i]
+        expected_data = [i, i * 2]
+        expected_label = [i % 2]
+        assert np.array_equal(data.data, expected_data), f"Data mismatch at index {i}"
+        assert np.array_equal(label.data, expected_label), f"Label mismatch at index {i}"
+    print("✅ Dataset produces correct data for multiple samples")
+    
+except Exception as e:
+    print(f"❌ Dataset interface test failed: {e}")
+    raise
+
+# Show the dataset pattern
+print("🎯 Dataset interface pattern:")
+print("   __getitem__: Returns (data, label) tuple")
+print("   __len__: Returns dataset size")
+print("   get_num_classes: Returns number of classes")
+print("📈 Progress: Dataset interface ✓")
+
+# %% [markdown]
+"""
 ## Step 2: Building the DataLoader
 
 ### What is a DataLoader?
@@ -426,6 +494,106 @@ class DataLoader:
         dataset_size = len(self.dataset)
         return (dataset_size + self.batch_size - 1) // self.batch_size
         ### END SOLUTION
+
+# %% [markdown]
+"""
+### 🧪 Quick Test: DataLoader
+
+Let's test your DataLoader implementation! This is the heart of efficient data loading for neural networks.
+"""
+
+# %% nbgrader={"grade": true, "grade_id": "test-dataloader-immediate", "locked": true, "points": 10, "schema_version": 3, "solution": false, "task": false}
+# Test DataLoader immediately after implementation
+print("🔬 Testing DataLoader...")
+
+# Use the test dataset from before
+class TestDataset(Dataset):
+    def __init__(self, size=10):
+        self.size = size
+    
+    def __getitem__(self, index):
+        data = Tensor([index, index * 2])
+        label = Tensor([index % 3])  # 3 classes
+        return data, label
+    
+    def __len__(self):
+        return self.size
+    
+    def get_num_classes(self):
+        return 3
+
+# Test basic DataLoader functionality
+try:
+    dataset = TestDataset(size=10)
+    dataloader = DataLoader(dataset, batch_size=3, shuffle=False)
+    
+    print(f"DataLoader created: batch_size={dataloader.batch_size}, shuffle={dataloader.shuffle}")
+    print(f"Number of batches: {len(dataloader)}")
+    
+    # Test __len__
+    expected_batches = (10 + 3 - 1) // 3  # Ceiling division: 4 batches
+    assert len(dataloader) == expected_batches, f"Should have {expected_batches} batches, got {len(dataloader)}"
+    print("✅ DataLoader __len__ works correctly")
+    
+    # Test iteration
+    batch_count = 0
+    total_samples = 0
+    
+    for batch_data, batch_labels in dataloader:
+        batch_count += 1
+        batch_size = batch_data.shape[0]
+        total_samples += batch_size
+        
+        print(f"Batch {batch_count}: data shape {batch_data.shape}, labels shape {batch_labels.shape}")
+        
+        # Verify batch dimensions
+        assert len(batch_data.shape) == 2, f"Batch data should be 2D, got {batch_data.shape}"
+        assert len(batch_labels.shape) == 2, f"Batch labels should be 2D, got {batch_labels.shape}"
+        assert batch_data.shape[1] == 2, f"Each sample should have 2 features, got {batch_data.shape[1]}"
+        assert batch_labels.shape[1] == 1, f"Each label should have 1 element, got {batch_labels.shape[1]}"
+        
+    assert batch_count == expected_batches, f"Should iterate {expected_batches} times, got {batch_count}"
+    assert total_samples == 10, f"Should process 10 total samples, got {total_samples}"
+    print("✅ DataLoader iteration works correctly")
+    
+except Exception as e:
+    print(f"❌ DataLoader test failed: {e}")
+    raise
+
+# Test shuffling
+try:
+    dataloader_shuffle = DataLoader(dataset, batch_size=5, shuffle=True)
+    dataloader_no_shuffle = DataLoader(dataset, batch_size=5, shuffle=False)
+    
+    # Get first batch from each
+    batch1_shuffle = next(iter(dataloader_shuffle))
+    batch1_no_shuffle = next(iter(dataloader_no_shuffle))
+    
+    print("✅ DataLoader shuffling parameter works")
+    
+except Exception as e:
+    print(f"❌ DataLoader shuffling test failed: {e}")
+    raise
+
+# Test different batch sizes
+try:
+    small_loader = DataLoader(dataset, batch_size=2, shuffle=False)
+    large_loader = DataLoader(dataset, batch_size=8, shuffle=False)
+    
+    assert len(small_loader) == 5, f"Small loader should have 5 batches, got {len(small_loader)}"
+    assert len(large_loader) == 2, f"Large loader should have 2 batches, got {len(large_loader)}"
+    print("✅ DataLoader handles different batch sizes correctly")
+    
+except Exception as e:
+    print(f"❌ DataLoader batch size test failed: {e}")
+    raise
+
+# Show the DataLoader behavior
+print("🎯 DataLoader behavior:")
+print("   Batches data for efficient processing")
+print("   Handles shuffling and iteration")
+print("   Provides clean interface for training loops")
+print("📈 Progress: Dataset interface ✓, DataLoader ✓")
 
 # %% [markdown]
 """
