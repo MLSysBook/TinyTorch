@@ -22,6 +22,8 @@ class NbdevCommand(BaseCommand):
         parser.add_argument("--build-docs", action="store_true", help="Build documentation from notebooks")
         parser.add_argument("--test", action="store_true", help="Run notebook tests")
         parser.add_argument("--clean", action="store_true", help="Clean notebook outputs")
+        parser.add_argument("--all", action="store_true", help="Export all modules (use with --export)")
+        parser.add_argument("module", nargs="?", help="Export specific module (use with --export)")
 
     def run(self, args: Namespace) -> int:
         console = self.console
@@ -35,7 +37,15 @@ class NbdevCommand(BaseCommand):
             export_cmd = ExportCommand(self.config)
             export_args = ArgumentParser()
             export_cmd.add_arguments(export_args)
-            export_args = export_args.parse_args([])  # Empty args for export
+            
+            # Build the arguments for export command
+            export_arg_list = []
+            if args.all:
+                export_arg_list.append("--all")
+            elif args.module:
+                export_arg_list.append(args.module)
+            
+            export_args = export_args.parse_args(export_arg_list)
             return export_cmd.run(export_args)
         
         elif args.build_docs:

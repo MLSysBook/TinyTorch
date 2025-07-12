@@ -20,7 +20,7 @@ class CLIConfig:
     
     # Environment settings
     python_min_version: tuple = (3, 8)
-    required_packages: list = None
+    required_packages: list = None  # type: ignore
     
     # CLI settings
     verbose: bool = False
@@ -47,7 +47,7 @@ class CLIConfig:
         
         return cls(
             project_root=project_root,
-            assignments_dir=project_root / 'assignments' / 'source',
+            assignments_dir=project_root / 'modules' / 'source',
             tinytorch_dir=project_root / 'tinytorch',
             bin_dir=project_root / 'bin'
         )
