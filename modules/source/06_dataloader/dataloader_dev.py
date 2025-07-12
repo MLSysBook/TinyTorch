@@ -52,7 +52,7 @@ from tinytorch.core.networks import Sequential
 - **Consistency:** All data loading utilities live together in `core.data`
 """
 
-# %%
+# %% nbgrader={"grade": false, "grade_id": "dataloader-setup", "locked": false, "schema_version": 3, "solution": false, "task": false}
 #| default_exp core.dataloader
 
 # Setup and imports
@@ -66,8 +66,13 @@ import matplotlib.pyplot as plt
 import urllib.request
 import tarfile
 
-# Import our building blocks
-from tinytorch.core.tensor import Tensor
+# Import our building blocks - try package first, then local modules
+try:
+    from tinytorch.core.tensor import Tensor
+except ImportError:
+    # For development, import from local modules
+    sys.path.append(os.path.join(os.path.dirname(__file__), '..', '01_tensor'))
+    from tensor_dev import Tensor
 
 print("🔥 TinyTorch Data Module")
 print(f"NumPy version: {np.__version__}")
@@ -138,7 +143,7 @@ Model: Process batch efficiently
 Let's start by building the most fundamental component: **Dataset**.
 """
 
-# %%
+# %% nbgrader={"grade": false, "grade_id": "dataset-class", "locked": false, "schema_version": 3, "solution": true, "task": false}
 #| export
 class Dataset:
     """
@@ -185,7 +190,10 @@ class Dataset:
         EXAMPLE:
         dataset[0] should return (Tensor(image_data), Tensor(label))
         """
-        raise NotImplementedError("Student implementation required")
+        ### BEGIN SOLUTION
+        # This is an abstract method - subclasses must implement it
+        raise NotImplementedError("Subclasses must implement __getitem__")
+        ### END SOLUTION
     
     def __len__(self) -> int:
         """
