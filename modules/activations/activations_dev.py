@@ -32,10 +32,12 @@ Every neural network you've heard of - from image recognition to language models
 #| export
 import math
 import numpy as np
+import matplotlib.pyplot as plt
+import os
 import sys
 from typing import Union, List
 
-# Import our Tensor class
+# Import our Tensor class from the main package (rock solid foundation)
 from tinytorch.core.tensor import Tensor
 
 # %%
@@ -43,7 +45,6 @@ from tinytorch.core.tensor import Tensor
 #| export
 def _should_show_plots():
     """Check if we should show plots (disable during testing)"""
-    import os
     # Check multiple conditions that indicate we're in test mode
     is_pytest = (
         'pytest' in sys.modules or
@@ -65,7 +66,6 @@ def visualize_activation_function(activation_fn, name: str, x_range: tuple = (-5
         return
         
     try:
-        import matplotlib.pyplot as plt
         
         # Generate input values
         x_vals = np.linspace(x_range[0], x_range[1], num_points)
