@@ -172,8 +172,8 @@ def test_with_real_data():
 
 ### Step 5: Convert and Export
 ```bash
-# Convert to notebook
-python bin/tito.py notebooks --module {module}
+# Convert to notebook (using Jupytext)
+tito module notebooks --module {module}
 
 # Export to package
 python bin/tito.py sync --module {module}

@@ -1,55 +1,43 @@
-# 🚀 TinyTorch Module Development - Quick Reference
+# 🚀 Quick Module Reference
 
-## 🧠 Choose Your Learning Pattern First
+**Fast reference for module development - commands, patterns, and essential workflows.**
 
-**Before writing any code, decide which engagement pattern fits your module:**
+## 🔥 **Essential Commands**
 
-### **🤔 Build → Use → Reflect** (Design & Systems Thinking)
-- **Best for**: Early modules, foundational concepts, design decisions
-- **Focus**: "Why did we make this choice? What are the trade-offs?"
-- **Activities**: Design comparisons, trade-off analysis, systems implications
-- **Examples**: Setup, Tensor, Layers, Data
-
-### **🔍 Build → Use → Analyze** (Technical Depth)
-- **Best for**: Middle modules, performance-critical components
-- **Focus**: "How does this actually work? Where are the bottlenecks?"
-- **Activities**: Profiling, debugging, measurement, technical investigation
-- **Examples**: Training, Autograd, Profiling, Benchmarking
-
-### **⚡ Build → Use → Optimize** (Systems Iteration)
-- **Best for**: Advanced modules, production-focused components
-- **Focus**: "How can we make this better? How does it scale?"
-- **Activities**: Performance improvement, scaling, iteration, optimization
-- **Examples**: MLOps, Kernels, Compression, Distributed
-
-### **Decision Questions**
-1. **What type of learning is most important?** (Conceptual/Technical/Optimization)
-2. **Where does this fit in progression?** (Early/Middle/Advanced)
-3. **What skills do students need most?** (Design thinking/Debugging/Performance)
-
-### **Document Your Choice**
-```markdown
-## 🎯 Learning Pattern: Build → Use → [Pattern]
-
-**Pattern Choice**: [Reflect/Analyze/Optimize]
-**Rationale**: [Why this pattern fits the learning objectives]
-**Key Activities**:
-- [Specific activity 1]
-- [Specific activity 2]
-- [Specific activity 3]
+### **System Commands**
+```bash
+tito system info              # System information and course navigation
+tito system doctor            # Environment diagnosis
+tito system jupyter           # Start Jupyter Lab
 ```
 
----
+### **Module Commands**
+```bash
+tito module status            # Check all module status
+tito module status --details  # Detailed file structure
+tito module test --module X   # Test specific module
+tito module test --all        # Test all modules
+tito module notebooks --module X  # Convert Python to notebook (Jupytext)
+```
 
-## 📋 Development Checklist
+### **Package Commands**
+```bash
+tito package sync            # Export all notebooks to package
+tito package sync --module X # Export specific module
+tito package reset           # Reset package to clean state
+tito package nbdev --export  # Run nbdev export
+```
 
-### 1. Plan Module
-- [ ] **Choose engagement pattern** (Reflect/Analyze/Optimize)
-- [ ] Define learning objectives (what students will implement)
-- [ ] Choose difficulty levels (🟢 easy → 🟡 medium → 🔴 hard)
+## 🎯 **Development Workflow**
+
+### **1. Module Planning**
+- [ ] Choose real dataset (CIFAR-10, ImageNet, etc.)
+- [ ] Define learning objectives and progression
+- [ ] Identify production ML connections
+- [ ] Plan visual feedback and progress indicators
 - [ ] Decide what to provide vs. what students implement
 
-### 2. Write Complete Implementation
+### **2. Write Complete Implementation**
 Create `modules/{module}/{module}_dev.py`:
 ```python
 # %% [markdown]
@@ -62,129 +50,190 @@ Create `modules/{module}/{module}_dev.py`:
 # Learning objectives and overview
 
 # %%
-#| keep_imports
+#| default_exp core.{module}
+
 import numpy as np
 
 # %%
+#| export
 class YourClass:
-    #| exercise_start
-    #| difficulty: easy
-    #| hint: Clear guidance without giving away code
-    #| solution_test: How students verify their work
-    def method_to_implement(self):
-        """Full signature and docstring."""
-        # Complete working implementation
+    """
+    {Description of the class}
+    
+    TODO: {What students need to implement}
+    
+    APPROACH:
+    1. {Step 1 with specific guidance}
+    2. {Step 2 with specific guidance}
+    3. {Step 3 with specific guidance}
+    
+    EXAMPLE:
+    Input: {concrete_example}
+    Expected: {expected_output}
+    
+    HINTS:
+    - {Helpful hint about approach}
+    - {Systems thinking hint}
+    - {Real-world connection}
+    """
+    def __init__(self, params):
+        raise NotImplementedError("Student implementation required")
+
+# %%
+#| hide
+#| export
+class YourClass:
+    """Complete implementation (hidden from students)."""
+    def __init__(self, params):
+        # Actual working implementation
         pass
-    #| exercise_end
 ```
 
-### 3. Design Pattern-Specific Activities
+### **3. Design Pattern-Specific Activities**
 - **Reflect**: Add reflection questions and trade-off analysis
 - **Analyze**: Include profiling tools and debugging exercises
 - **Optimize**: Create performance challenges and iteration tasks
 
-### 4. Convert and Generate
+### **4. Convert and Generate**
 ```bash
-# Convert Python to notebook
-python bin/tito.py notebooks --module {module}
+# Convert Python to notebook (using Jupytext)
+tito module notebooks --module {module}
 
 # Generate student version
 python3 bin/generate_student_notebooks.py --module {module}
 ```
 
-### 5. Test and Verify
+### **5. Test and Verify**
 ```bash
 # Test both versions work
 jupyter lab modules/{module}/{module}_dev.ipynb
 jupyter lab modules/{module}/{module}_dev_student.ipynb
 
 # Test integration
-python bin/tito.py sync --module {module}
-python bin/tito.py test --module {module}
+tito package sync --module {module}
+tito module test --module {module}
 ```
 
-## 🏷️ Essential Markers
+## 🏷️ **Essential NBDev Directives**
 
-| Marker | Purpose | Example |
-|--------|---------|---------|
-| `#| exercise_start/end` | Mark student implementation | Method body |
-| `#| difficulty: easy\|medium\|hard` | Visual indicator | 🟢🟡🔴 |
-| `#| hint:` | Guide student thinking | Multiple allowed |
-| `#| solution_test:` | Verification guidance | Expected behavior |
-| `#| keep_imports` | Preserve imports | Setup code |
-| `#| keep_complete` | Keep full implementation | Utilities |
-| `#| remove_cell` | Remove from student version | Instructor notes |
+| Directive | Purpose | Example |
+|-----------|---------|---------|
+| `#| default_exp core.{module}` | Set export destination | Top of file |
+| `#| export` | Export to package | Classes/functions |
+| `#| hide` | Hide from students | Instructor solutions |
+| `#| hide #| export` | Export but hide | Complete implementations |
 
-## 🎨 Difficulty Guidelines
-
-- **🟢 Easy (5-10 min)**: Constructor, properties, basic operations
-- **🟡 Medium (10-20 min)**: Conditional logic, shape manipulation  
-- **🔴 Hard (20+ min)**: Complex algorithms, multiple concepts
-
-## 🎯 Pattern-Specific Activities
-
-### **Reflection Activities**
-- Design comparison questions
-- Trade-off analysis exercises
-- "What if we had different constraints?" scenarios
-- Connection to production systems
-
-### **Analysis Activities**
-- Profiling memory usage and performance
-- Debugging exercises with real issues
-- Measurement and interpretation tasks
-- Technical investigation challenges
-
-### **Optimization Activities**
-- Performance improvement challenges
-- Scaling exercises with larger datasets
-- Iteration on system design
-- Benchmarking and comparison tasks
-
-## ✅ Quality Check
-
-**Before release:**
-- [ ] **Pattern choice documented** with clear rationale
-- [ ] **Pattern-specific activities** included and tested
-- [ ] Complete version works and passes tests
-- [ ] Student version preserves signatures and docstrings
-- [ ] Hints are helpful but not prescriptive
-- [ ] Tests provide clear verification guidance
-- [ ] Exports correctly to tinytorch package
-
-## 🔄 File Structure
+## 📁 **Module Structure**
 
 ```
 modules/{module}/
-├── {module}_dev.py              # 🔧 Write this first (with pattern choice)
-├── {module}_dev.ipynb           # 📓 Generated 
-├── {module}_dev_student.ipynb   # 🎓 Auto-generated
-├── test_{module}.py             # 🧪 Test suite
-└── README.md                    # 📖 Module guide (include pattern)
+├── {module}_dev.py          # Main development file (Jupytext format)
+├── {module}_dev.ipynb       # Jupyter notebook (auto-generated)
+├── module.yaml              # Simple metadata (name, title, description, etc.)
+├── tests/
+│   └── test_{module}.py     # Comprehensive pytest tests
+└── README.md                # Module overview and usage
 ```
 
-## 💡 Pro Tips
+## ⚡ **Common Patterns**
 
-1. **Choose pattern first** - Everything else flows from this decision
-2. **Write complete implementation first** - Get it working before adding markers
-3. **Design pattern-specific activities** - Make them engaging and educational
-4. **Test the student path** - Follow your own hints to verify they work
-5. **Be generous with hints** - Better too helpful than too cryptic
-6. **Document your pattern choice** - Help future developers understand your reasoning
-
-## 🛠️ Common Commands
-
-```bash
-# Create new module
-mkdir modules/{module}
-cp modules/example/example_dev.py modules/{module}/{module}_dev.py
-
-# Full workflow
-python bin/tito.py notebooks --module {module}
-python bin/generate_student_notebooks.py --module {module}
-
-# Test everything
-python bin/tito.py test --module {module}
+### **Real Data Loading**
+```python
+# ✅ Good: Real data with progress feedback
+def load_cifar10():
+    """Load CIFAR-10 with progress bar."""
+    from tqdm import tqdm
+    # Show download progress
+    # Cache for performance
+    # Handle errors gracefully
 ```
 
-*See [Module Development Guide](module-development-guide.md) for complete details and [Pedagogical Principles](../pedagogy/pedagogical-principles.md) for the full framework.* 
+### **Visual Feedback (Development Only)**
+```python
+# Development visualization (not exported)
+def _show_results(data):
+    """Show visual confirmation (development only)."""
+    if not _in_development():
+        return
+    plt.figure(figsize=(10, 6))
+    # Rich visualization
+    plt.show()
+```
+
+### **Student Implementation Guidance**
+```python
+def method_to_implement(self):
+    """
+    TODO: Implement this method
+    
+    APPROACH:
+    1. Parse input data and validate shapes
+    2. Apply the core algorithm step by step
+    3. Return results in expected format
+    
+    EXAMPLE:
+    Input: tensor([1, 2, 3])
+    Expected: tensor([2, 4, 6])
+    
+    HINTS:
+    - Start with the simple case first
+    - Think about edge cases (empty input, wrong shapes)
+    - Use vectorized operations for performance
+    """
+    raise NotImplementedError("Student implementation required")
+```
+
+## 🧪 **Testing Patterns**
+
+### **Test with Real Data**
+```python
+def test_with_real_data():
+    """Test with actual production data."""
+    # Load real dataset
+    data = load_real_cifar10_sample()
+    
+    # Test with realistic parameters
+    model = YourClass(realistic_params)
+    result = model.process(data)
+    
+    # Verify real properties
+    assert result.shape == expected_shape
+    assert result.dtype == expected_dtype
+```
+
+### **Performance Testing**
+```python
+def test_performance():
+    """Ensure reasonable performance."""
+    import time
+    
+    large_data = create_realistic_large_dataset()
+    start = time.time()
+    result = process(large_data)
+    elapsed = time.time() - start
+    
+    # Should complete in reasonable time
+    assert elapsed < 5.0  # 5 seconds max
+```
+
+## 🎯 **Quality Checklist**
+
+### **Before Release**
+- [ ] Uses real data throughout (no synthetic/mock data)
+- [ ] Includes progress feedback for long operations
+- [ ] Provides visual confirmation of working code
+- [ ] Tests with realistic data scales
+- [ ] Follows "Build → Use → [Pattern]" progression
+- [ ] Comprehensive TODO guidance with examples
+- [ ] Clean separation: rich development, clean exports
+
+### **Integration Testing**
+- [ ] Module exports correctly to `tinytorch.core.{module}`
+- [ ] No circular import issues
+- [ ] Compatible with existing modules
+- [ ] Works with TinyTorch CLI tools
+- [ ] Consistent with established patterns
+
+---
+
+**💡 Pro Tip**: Start with real data and production concerns first. Educational structure and TODO guidance come after you have working, realistic code. 

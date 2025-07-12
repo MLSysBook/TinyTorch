@@ -10,10 +10,10 @@ Track your progress through the course:
 
 - [ ] **Module 0: Setup** - Environment & CLI setup  
 - [ ] **Module 1: Tensor** - Core tensor operations
-- [ ] **Module 2: MLP** - Multi-layer perceptron  
-- [ ] **Module 3: CNN** - Convolutional networks
+- [ ] **Module 2: Layers** - Neural network layers
+- [ ] **Module 3: Networks** - Complete model architectures
 - [ ] **Module 4: Autograd** - Automatic differentiation
-- [ ] **Module 5: Data** - Data loading pipeline
+- [ ] **Module 5: DataLoader** - Data loading pipeline
 - [ ] **Module 6: Training** - Training loop & optimization
 - [ ] **Module 7: Config** - Configuration system
 - [ ] **Module 8: Profiling** - Performance profiling
@@ -26,24 +26,24 @@ Track your progress through the course:
 
 ### First Time Setup
 1. **Clone the repository**
-2. **Go to**: [`modules/setup/README.md`](modules/setup/README.md)
+2. **Go to**: [`modules/setup/README.md`](../../modules/setup/README.md)
 3. **Follow all setup instructions**
-4. **Verify with**: `python modules/setup/check_setup.py`
+4. **Verify with**: `tito system doctor`
 
 ### Daily Workflow
 ```bash
 cd TinyTorch
 source .venv/bin/activate  # Always activate first!
-python bin/tito.py info            # Check system status
+tito system info            # Check system status
 ```
 
 ## 📋 Module Development Workflow
 
 Each module follows this pattern:
 1. **Read overview**: `modules/[name]/README.md`
-2. **Work in notebook**: `modules/[name]/[name]_dev.ipynb`
-3. **Export code**: `python bin/tito.py sync`
-4. **Run tests**: `python bin/tito.py test --module [name]`
+2. **Work in Python file**: `modules/[name]/[name]_dev.py`
+3. **Export code**: `tito package sync`
+4. **Run tests**: `tito module test --module [name]`
 5. **Move to next module when tests pass**
 
 ## 📚 Module Details
@@ -51,7 +51,7 @@ Each module follows this pattern:
 ### 🔧 Module 0: Setup
 **Goal**: Get your development environment ready
 **Time**: 30 minutes
-**Location**: [`modules/setup/`](modules/setup/)
+**Location**: [`modules/setup/`](../../modules/setup/)
 
 **Key Tasks**:
 - [ ] Create virtual environment
@@ -62,8 +62,8 @@ Each module follows this pattern:
 
 **Verification**:
 ```bash
-python modules/setup/check_setup.py  # Should show all ✅
-python bin/tito.py test --module setup
+tito system doctor           # Should show all ✅
+tito module test --module setup
 ```
 
 ---
@@ -71,10 +71,10 @@ python bin/tito.py test --module setup
 ### 🔢 Module 1: Tensor
 **Goal**: Build the core tensor system
 **Prerequisites**: Module 0 complete
-**Location**: [`modules/tensor/`](modules/tensor/)
+**Location**: [`modules/tensor/`](../../modules/tensor/)
 
 **Key Tasks**:
-- [ ] Implement `Tensor` class in notebook
+- [ ] Implement `Tensor` class
 - [ ] Basic operations (add, mul, reshape)
 - [ ] Memory management
 - [ ] Shape validation
@@ -82,37 +82,40 @@ python bin/tito.py test --module setup
 
 **Verification**:
 ```bash
-python bin/tito.py test --module tensor
+tito module test --module tensor
 ```
 
 ---
 
-### 🧠 Module 2: MLP
-**Goal**: Build multi-layer perceptron
+### 🧠 Module 2: Layers
+**Goal**: Build neural network layers
 **Prerequisites**: Module 1 complete
-**Location**: [`modules/mlp/`](modules/mlp/)
+**Location**: [`modules/layers/`](../../modules/layers/)
 
 **Key Tasks**:
 - [ ] Implement `Linear` layer
 - [ ] Activation functions (ReLU, Sigmoid)
-- [ ] Forward pass
-- [ ] Basic backward pass
-- [ ] Train on MNIST
+- [ ] Forward pass implementation
+- [ ] Parameter management
+- [ ] Layer composition
 
-**Target**: >95% accuracy on MNIST
+**Verification**:
+```bash
+tito module test --module layers
+```
 
 ---
 
-### 🖼️ Module 3: CNN
-**Goal**: Build convolutional neural networks
+### 🖼️ Module 3: Networks
+**Goal**: Build complete neural networks
 **Prerequisites**: Module 2 complete
-**Location**: [`modules/cnn/`](modules/cnn/)
+**Location**: [`modules/networks/`](../../modules/networks/)
 
 **Key Tasks**:
-- [ ] Implement `Conv2d` layer
-- [ ] `MaxPool2d` layer
-- [ ] Padding and stride support
-- [ ] Train CNN on CIFAR-10
+- [ ] Implement `Sequential` container
+- [ ] CNN architectures
+- [ ] Model saving/loading
+- [ ] Train on CIFAR-10
 
 **Target**: >80% accuracy on CIFAR-10
 
@@ -121,7 +124,7 @@ python bin/tito.py test --module tensor
 ### ⚡ Module 4: Autograd
 **Goal**: Automatic differentiation engine
 **Prerequisites**: Module 3 complete
-**Location**: [`modules/autograd/`](modules/autograd/)
+**Location**: [`modules/autograd/`](../../modules/autograd/)
 
 **Key Tasks**:
 - [ ] Computational graph construction
@@ -136,7 +139,7 @@ python bin/tito.py test --module tensor
 ### 📊 Module 5: DataLoader
 **Goal**: Efficient data loading
 **Prerequisites**: Module 4 complete
-**Location**: [`modules/dataloader/`](modules/dataloader/)
+**Location**: [`modules/dataloader/`](../../modules/dataloader/)
 
 **Key Tasks**:
 - [ ] Custom `DataLoader` implementation
@@ -149,7 +152,7 @@ python bin/tito.py test --module tensor
 ### 🎯 Module 6: Training
 **Goal**: Complete training system
 **Prerequisites**: Module 5 complete
-**Location**: [`modules/training/`](modules/training/)
+**Location**: [`modules/training/`](../../modules/training/)
 
 **Key Tasks**:
 - [ ] Training loop implementation
@@ -163,7 +166,7 @@ python bin/tito.py test --module tensor
 ### ⚙️ Module 7: Config
 **Goal**: Configuration management
 **Prerequisites**: Module 6 complete
-**Location**: [`modules/config/`](modules/config/)
+**Location**: [`modules/config/`](../../modules/config/)
 
 **Key Tasks**:
 - [ ] YAML configuration system
@@ -176,7 +179,7 @@ python bin/tito.py test --module tensor
 ### 📊 Module 8: Profiling
 **Goal**: Performance measurement
 **Prerequisites**: Module 7 complete
-**Location**: [`modules/profiling/`](modules/profiling/)
+**Location**: [`modules/profiling/`](../../modules/profiling/)
 
 **Key Tasks**:
 - [ ] Memory profiler
@@ -189,7 +192,7 @@ python bin/tito.py test --module tensor
 ### 🗜️ Module 9: Compression
 **Goal**: Model compression techniques
 **Prerequisites**: Module 8 complete
-**Location**: [`modules/compression/`](modules/compression/)
+**Location**: [`modules/compression/`](../../modules/compression/)
 
 **Key Tasks**:
 - [ ] Pruning implementation
@@ -199,78 +202,87 @@ python bin/tito.py test --module tensor
 
 ---
 
-### 🔥 Module 10: Kernels
+### ⚡ Module 10: Kernels
 **Goal**: Custom compute kernels
 **Prerequisites**: Module 9 complete
-**Location**: [`modules/kernels/`](modules/kernels/)
+**Location**: [`modules/kernels/`](../../modules/kernels/)
 
 **Key Tasks**:
-- [ ] Optimized matrix multiplication
-- [ ] Vectorized operations
-- [ ] CPU optimization
+- [ ] CUDA kernel implementation
+- [ ] Performance optimization
+- [ ] Memory coalescing
+- [ ] Kernel benchmarking
 
 ---
 
 ### 📈 Module 11: Benchmarking
-**Goal**: Performance benchmarking system
+**Goal**: Performance benchmarking
 **Prerequisites**: Module 10 complete
-**Location**: [`modules/benchmarking/`](modules/benchmarking/)
+**Location**: [`modules/benchmarking/`](../../modules/benchmarking/)
 
 **Key Tasks**:
-- [ ] Benchmark suite implementation
-- [ ] Performance regression testing
-- [ ] Comparative analysis
-- [ ] Automated reporting
+- [ ] Benchmarking framework
+- [ ] Performance comparisons
+- [ ] Scaling analysis
+- [ ] Optimization recommendations
 
 ---
 
 ### 🚀 Module 12: MLOps
-**Goal**: Production monitoring and deployment
+**Goal**: Production monitoring
 **Prerequisites**: Module 11 complete
-**Location**: [`modules/mlops/`](modules/mlops/)
+**Location**: [`modules/mlops/`](../../modules/mlops/)
 
 **Key Tasks**:
 - [ ] Model monitoring
+- [ ] Performance tracking
+- [ ] Alert systems
 - [ ] Production deployment
-- [ ] A/B testing framework
-- [ ] Performance dashboards
 
-## 🧪 Testing Strategy
+## 🛠️ Essential Commands
 
-### Module-Level Testing
+### **System Commands**
 ```bash
-# Test specific module
-python bin/tito.py test --module tensor
-
-# Test all modules
-python bin/tito.py test
-
-# Check overall status
-python bin/tito.py info
+tito system info              # System information and course navigation
+tito system doctor            # Environment diagnosis
+tito system jupyter           # Start Jupyter Lab
 ```
 
-### Integration Testing
-Each module integrates into the main `tinytorch` package through nbdev:
-- Notebooks automatically export to `tinytorch/core/`
-- Integration tests verify cross-module compatibility
-- Final package assembly validates the complete system
+### **Module Development**
+```bash
+tito module status            # Check all module status
+tito module test --module X   # Test specific module
+tito module test --all        # Test all modules
+tito module notebooks --module X  # Convert Python to notebook
+```
 
-## 🏆 Completion Criteria
+### **Package Management**
+```bash
+tito package sync            # Export all notebooks to package
+tito package sync --module X # Export specific module
+tito package reset           # Reset package to clean state
+```
 
-A module is complete when:
-- [ ] All notebook cells run without errors
-- [ ] `tito sync` exports code successfully
-- [ ] `tito test --module [name]` passes all tests
-- [ ] Integration with previous modules works
-- [ ] Ready to proceed to next module
+## 🎯 **Success Criteria**
 
-## 🎓 Learning Philosophy
+Each module is complete when:
+- [ ] **All tests pass**: `tito module test --module [name]`
+- [ ] **Code exports**: `tito package sync --module [name]`
+- [ ] **Understanding verified**: Can explain key concepts and trade-offs
+- [ ] **Ready for next**: Prerequisites met for following modules
 
-This course teaches **systems thinking** by building one cohesive ML system rather than isolated components. Each module contributes essential functionality that later modules depend upon, creating a complete, production-ready machine learning framework.
+## 🆘 **Getting Help**
 
-## 💡 Need Help?
+### **Troubleshooting**
+- **Environment Issues**: `tito system doctor`
+- **Module Status**: `tito module status --details`
+- **Integration Issues**: Check `tito system info`
 
-- **Quick Start**: See [`modules/setup/QUICKSTART.md`](modules/setup/QUICKSTART.md)
-- **Development Workflow**: Each module's README.md
-- **CLI Reference**: `python bin/tito.py --help`
-- **Integration Issues**: Check `python bin/tito.py info` 
+### **Resources**
+- **Course Overview**: [Main README](../../README.md)
+- **Development Guide**: [Module Development](../development/module-development-guide.md)
+- **Quick Reference**: [Commands and Patterns](../development/quick-module-reference.md)
+
+---
+
+**💡 Pro Tip**: Use `tito module status` regularly to track your progress and see which modules are ready to work on next! 
