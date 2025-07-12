@@ -25,6 +25,7 @@ class ExportCommand(BaseCommand):
         group = parser.add_mutually_exclusive_group(required=False)
         group.add_argument("module", nargs="?", help="Export specific module (e.g., setup, tensor)")
         group.add_argument("--all", action="store_true", help="Export all modules")
+        parser.add_argument("--from-release", action="store_true", help="Export from release directory (student version) instead of source")
 
     def _get_export_target(self, module_path: Path) -> str:
         """
@@ -55,14 +56,27 @@ class ExportCommand(BaseCommand):
         
         return "unknown"
 
-    def _show_export_details(self, console, module_name: str = None):
+    def _discover_modules(self) -> list:
+        """Discover available modules from modules/source directory."""
+        source_dir = Path("modules/source")
+        modules = []
+        
+        if source_dir.exists():
+            exclude_dirs = {'.quarto', '__pycache__', '.git', '.pytest_cache'}
+            for module_dir in source_dir.iterdir():
+                if module_dir.is_dir() and module_dir.name not in exclude_dirs:
+                    modules.append(module_dir.name)
+        
+        return sorted(modules)
+
+    def _show_export_details(self, console, module_name: str | None = None):
         """Show detailed export information including where each module exports to."""
         exports_text = Text()
         exports_text.append("📦 Export Details:\n", style="bold cyan")
         
         if module_name:
             # Single module export
-            module_path = Path(f"assignments/source/{module_name}")
+            module_path = Path(f"modules/source/{module_name}")
             export_target = self._get_export_target(module_path)
             if export_target != "unknown":
                 target_file = export_target.replace('.', '/') + '.py'
@@ -70,21 +84,19 @@ class ExportCommand(BaseCommand):
                 
                 # Extract the short name for display
                 short_name = module_name[3:] if module_name.startswith(tuple(f"{i:02d}_" for i in range(100))) else module_name
-                exports_text.append(f"     Source: assignments/source/{module_name}/{short_name}_dev.py\n", style="dim")
+                exports_text.append(f"     Source: modules/source/{module_name}/{short_name}_dev.py\n", style="dim")
                 exports_text.append(f"     Target: tinytorch/{target_file}\n", style="dim")
             else:
                 exports_text.append(f"  ❓ {module_name} → export target not found\n", style="yellow")
         else:
             # All modules export
-            source_dir = Path("assignments/source")
-            if source_dir.exists():
-                exclude_dirs = {'.quarto', '__pycache__', '.git', '.pytest_cache'}
-                for module_dir in source_dir.iterdir():
-                    if module_dir.is_dir() and module_dir.name not in exclude_dirs:
-                        export_target = self._get_export_target(module_dir)
-                        if export_target != "unknown":
-                            target_file = export_target.replace('.', '/') + '.py'
-                            exports_text.append(f"  🔄 {module_dir.name} → tinytorch/{target_file}\n", style="green")
+            modules = self._discover_modules()
+            for module_name in modules:
+                module_path = Path(f"modules/source/{module_name}")
+                export_target = self._get_export_target(module_path)
+                if export_target != "unknown":
+                    target_file = export_target.replace('.', '/') + '.py'
+                    exports_text.append(f"  🔄 {module_name} → tinytorch/{target_file}\n", style="green")
         
         # Show what was actually created
         exports_text.append("\n📁 Generated Files:\n", style="bold cyan")
@@ -96,8 +108,8 @@ class ExportCommand(BaseCommand):
                     exports_text.append(f"  ✅ tinytorch/{rel_path}\n", style="green")
         
         exports_text.append("\n💡 Next steps:\n", style="bold yellow")
-        exports_text.append("  • Run: tito module test --all\n", style="white")
-        exports_text.append("  • Or: tito module test <module_name>\n", style="white")
+        exports_text.append("  • Run: tito test --all\n", style="white")
+        exports_text.append("  • Or: tito test <module_name>\n", style="white")
         
         console.print(Panel(exports_text, title="Export Summary", border_style="bright_green"))
 
@@ -106,10 +118,21 @@ class ExportCommand(BaseCommand):
         
         # Determine what to export
         if hasattr(args, 'module') and args.module:
-            module_path = f"assignments/source/{args.module}"
-            if not Path(module_path).exists():
-                console.print(Panel(f"[red]❌ Module '{args.module}' not found at {module_path}[/red]", 
+            # Validate module exists
+            module_path = Path(f"modules/source/{args.module}")
+            if not module_path.exists():
+                console.print(Panel(f"[red]❌ Module '{args.module}' not found in modules/source/[/red]", 
                                   title="Module Not Found", border_style="red"))
+                
+                # Show available modules
+                available_modules = self._discover_modules()
+                if available_modules:
+                    help_text = Text()
+                    help_text.append("Available modules:\n", style="bold yellow")
+                    for module in available_modules:
+                        help_text.append(f"  • {module}\n", style="white")
+                    console.print(Panel(help_text, title="Available Modules", border_style="yellow"))
+                
                 return 1
             
             console.print(Panel(f"🔄 Exporting Module: {args.module}", 
@@ -117,7 +140,7 @@ class ExportCommand(BaseCommand):
             console.print(f"🔄 Exporting {args.module} notebook to tinytorch package...")
             
             # Use nbdev_export with --path for specific module
-            cmd = ["nbdev_export", "--path", module_path]
+            cmd = ["nbdev_export", "--path", str(module_path)]
         elif hasattr(args, 'all') and args.all:
             console.print(Panel("🔄 Exporting All Notebooks to Package", 
                                title="nbdev Export", border_style="bright_cyan"))
@@ -138,7 +161,8 @@ class ExportCommand(BaseCommand):
                                   title="Export Success", border_style="green"))
                 
                 # Show detailed export information
-                self._show_export_details(console, args.module if hasattr(args, 'module') else None)
+                module_name = args.module if hasattr(args, 'module') and args.module else None
+                self._show_export_details(console, module_name)
                 
             else:
                 error_msg = result.stderr.strip() if result.stderr else "Unknown error"

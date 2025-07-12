@@ -25,13 +25,14 @@ Welcome to TinyTorch! This setup module configures your personal TinyTorch insta
 # %% nbgrader={"grade": false, "grade_id": "setup-imports", "locked": false, "schema_version": 3, "solution": false, "task": false}
 #| default_exp core.setup
 
-# Setup and imports
+#| export
 import sys
 import platform
 import psutil
 import os
 from typing import Dict, Any
 
+# %% nbgrader={"grade": false, "grade_id": "setup-imports", "locked": false, "schema_version": 3, "solution": false, "task": false}
 print("🔥 TinyTorch Setup Module")
 print(f"Python version: {sys.version_info.major}.{sys.version_info.minor}")
 print(f"Platform: {platform.system()}")
