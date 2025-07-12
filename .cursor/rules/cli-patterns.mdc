@@ -1,3 +1,6 @@
+---
+alwaysApply: false
+---
 # CLI Development Patterns for TinyTorch
 
 ## Command Architecture
