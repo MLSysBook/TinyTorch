@@ -4,6 +4,7 @@ Status command for TinyTorch CLI: checks status of all modules in modules/ direc
 
 import subprocess
 import sys
+import yaml
 from argparse import ArgumentParser, Namespace
 from pathlib import Path
 from rich.panel import Panel
@@ -23,6 +24,7 @@ class StatusCommand(BaseCommand):
 
     def add_arguments(self, parser: ArgumentParser) -> None:
         parser.add_argument("--details", action="store_true", help="Show detailed file structure")
+        parser.add_argument("--metadata", action="store_true", help="Show module metadata information")
 
     def run(self, args: Namespace) -> int:
         console = self.console
@@ -50,9 +52,14 @@ class StatusCommand(BaseCommand):
         # Create status table
         status_table = Table(title="Module Status Overview", show_header=True, header_style="bold blue")
         status_table.add_column("Module", style="bold cyan", width=15)
+        status_table.add_column("Status", width=12, justify="center")
         status_table.add_column("Dev File", width=12, justify="center")
         status_table.add_column("Tests", width=12, justify="center")
         status_table.add_column("README", width=12, justify="center")
+        
+        if args.metadata:
+            status_table.add_column("Difficulty", width=12, justify="center")
+            status_table.add_column("Time Est.", width=12, justify="center")
         
         # Check each module
         modules_status = []
@@ -64,10 +71,17 @@ class StatusCommand(BaseCommand):
             # Add to table
             row = [
                 module_name,
+                self._format_status(status.get('metadata', {}).get('status', 'unknown')),
                 "✅" if status['dev_file'] else "❌",
                 "✅" if status['tests'] else "❌", 
                 "✅" if status['readme'] else "❌"
             ]
+            
+            # Add metadata columns if requested
+            if args.metadata:
+                metadata = status.get('metadata', {})
+                row.append(metadata.get('difficulty', 'unknown'))
+                row.append(metadata.get('estimated_time', 'unknown'))
             
             status_table.add_row(*row)
         
@@ -90,6 +104,16 @@ class StatusCommand(BaseCommand):
             for module_name, status in modules_status:
                 self._print_module_details(module_name, status)
         
+        # Metadata view
+        if args.metadata:
+            console.print("\n" + "="*60)
+            console.print("📊 Module Metadata")
+            console.print("="*60)
+            
+            for module_name, status in modules_status:
+                if status.get('metadata'):
+                    self._print_module_metadata(module_name, status['metadata'])
+        
         return 0
     
     def _check_module_status(self, module_dir: Path) -> dict:
@@ -101,12 +125,23 @@ class StatusCommand(BaseCommand):
         tests_dir = module_dir / "tests"
         test_file = tests_dir / f"test_{module_name}.py"
         readme_file = module_dir / "README.md"
+        metadata_file = module_dir / "module.yaml"
         
         status = {
             'dev_file': dev_file.exists(),
             'tests': test_file.exists(),
             'readme': readme_file.exists(),
+            'metadata_file': metadata_file.exists(),
         }
+        
+        # Load metadata if available
+        if metadata_file.exists():
+            try:
+                with open(metadata_file, 'r') as f:
+                    metadata = yaml.safe_load(f)
+                    status['metadata'] = metadata
+            except Exception as e:
+                status['metadata'] = {'error': str(e)}
         
         return status
     
@@ -127,4 +162,70 @@ class StatusCommand(BaseCommand):
         files_table.add_row("tests/test_*.py", "✅ Found" if status['tests'] else "❌ Missing")
         files_table.add_row("README.md", "✅ Found" if status['readme'] else "❌ Missing")
         
-        console.print(files_table) 
+        console.print(files_table)
+    
+    def _format_status(self, status: str) -> str:
+        """Format module status with appropriate emoji and color."""
+        status_map = {
+            'complete': '✅',
+            'in_progress': '🚧',
+            'not_started': '❌',
+            'deprecated': '⚠️',
+            'unknown': '❓'
+        }
+        return status_map.get(status, '❓')
+    
+    def _print_module_metadata(self, module_name: str, metadata: dict) -> None:
+        """Print detailed metadata information about a module."""
+        console = self.console
+        
+        # Module header
+        title = metadata.get('title', module_name.title())
+        console.print(f"\n📦 {title}", style="bold cyan")
+        console.print("-" * (len(title) + 4))
+        
+        # Basic info
+        if metadata.get('description'):
+            console.print(f"📝 {metadata['description']}")
+        
+        # Status and difficulty
+        status_info = []
+        if metadata.get('status'):
+            status_info.append(f"Status: {self._format_status(metadata['status'])} {metadata['status']}")
+        if metadata.get('difficulty'):
+            status_info.append(f"Difficulty: {metadata['difficulty']}")
+        if metadata.get('estimated_time'):
+            status_info.append(f"Time: {metadata['estimated_time']}")
+        
+        if status_info:
+            console.print(" | ".join(status_info))
+        
+        # Learning objectives
+        if metadata.get('learning_objectives'):
+            console.print("\n🎯 Learning Objectives:")
+            for objective in metadata['learning_objectives']:
+                console.print(f"  • {objective}")
+        
+        # Dependencies
+        if metadata.get('dependencies'):
+            deps = metadata['dependencies']
+            console.print("\n🔗 Dependencies:")
+            if deps.get('prerequisites'):
+                console.print(f"  Prerequisites: {', '.join(deps['prerequisites'])}")
+            if deps.get('enables'):
+                console.print(f"  Enables: {', '.join(deps['enables'])}")
+        
+        # Components
+        if metadata.get('components'):
+            console.print("\n🧩 Components:")
+            for component in metadata['components']:
+                status_emoji = self._format_status(component.get('status', 'unknown'))
+                console.print(f"  {status_emoji} {component['name']} ({component.get('type', 'unknown')})")
+        
+        # Key concepts
+        if metadata.get('key_concepts'):
+            console.print(f"\n💡 Key Concepts: {', '.join(metadata['key_concepts'])}")
+        
+        # Next steps
+        if metadata.get('next_modules'):
+            console.print(f"\n➡️  Next: {', '.join(metadata['next_modules'])}") 
