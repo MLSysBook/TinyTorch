@@ -85,7 +85,7 @@ class InfoCommand(BaseCommand):
         cmd_text.append("🧪 Run Tests: ", style="dim")
         cmd_text.append("tito module test --all\n", style="bold cyan")
         cmd_text.append("🔄 Export Code: ", style="dim")
-        cmd_text.append("tito package export\n", style="bold cyan")
+        cmd_text.append("tito module export --all\n", style="bold cyan")
         cmd_text.append("🩺 Check Environment: ", style="dim")
         cmd_text.append("tito system doctor", style="bold cyan")
         

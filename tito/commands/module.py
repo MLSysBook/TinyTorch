@@ -10,6 +10,7 @@ from .status import StatusCommand
 from .test import TestCommand
 from .notebooks import NotebooksCommand
 from .clean import CleanCommand
+from .export import ExportCommand
 
 class ModuleCommand(BaseCommand):
     @property
@@ -58,6 +59,14 @@ class ModuleCommand(BaseCommand):
         )
         clean_cmd = CleanCommand(self.config)
         clean_cmd.add_arguments(clean_parser)
+        
+        # Export subcommand
+        export_parser = subparsers.add_parser(
+            'export',
+            help='Export module code to Python package'
+        )
+        export_cmd = ExportCommand(self.config)
+        export_cmd.add_arguments(export_parser)
 
     def run(self, args: Namespace) -> int:
         console = self.console
@@ -69,11 +78,13 @@ class ModuleCommand(BaseCommand):
                 "  • [bold]status[/bold]     - Check status of all modules\n"
                 "  • [bold]test[/bold]       - Run module tests\n"
                 "  • [bold]notebooks[/bold]  - Build notebooks from Python files\n"
-                "  • [bold]clean[/bold]      - Clean up module directories\n\n"
+                "  • [bold]clean[/bold]      - Clean up module directories\n"
+                "  • [bold]export[/bold]     - Export module code to Python package\n\n"
                 "[dim]Examples:[/dim]\n"
                 "[dim]  tito module status --metadata[/dim]\n"
                 "[dim]  tito module test --all[/dim]\n"
-                "[dim]  tito module notebooks --module tensor[/dim]\n"
+                "[dim]  tito module export --all[/dim]\n"
+                "[dim]  tito module export --module tensor[/dim]\n"
                 "[dim]  tito module clean --module tensor[/dim]",
                 title="Module Command Group",
                 border_style="bright_cyan"
@@ -92,6 +103,9 @@ class ModuleCommand(BaseCommand):
             return cmd.execute(args)
         elif args.module_command == 'clean':
             cmd = CleanCommand(self.config)
+            return cmd.execute(args)
+        elif args.module_command == 'export':
+            cmd = ExportCommand(self.config)
             return cmd.execute(args)
         else:
             console.print(Panel(

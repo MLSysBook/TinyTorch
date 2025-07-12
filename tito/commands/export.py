@@ -22,7 +22,9 @@ class ExportCommand(BaseCommand):
         return "Export notebook code to Python package"
 
     def add_arguments(self, parser: ArgumentParser) -> None:
-        parser.add_argument("--module", help="Export specific module (e.g., setup, tensor)")
+        group = parser.add_mutually_exclusive_group(required=True)
+        group.add_argument("--module", help="Export specific module (e.g., setup, tensor)")
+        group.add_argument("--all", action="store_true", help="Export all modules")
 
     def _get_export_target(self, module_path: Path) -> str:
         """
@@ -106,13 +108,17 @@ class ExportCommand(BaseCommand):
             
             # Use nbdev_export with --path for specific module
             cmd = ["nbdev_export", "--path", module_path]
-        else:
+        elif hasattr(args, 'all') and args.all:
             console.print(Panel("🔄 Exporting All Notebooks to Package", 
                                title="nbdev Export", border_style="bright_cyan"))
             console.print("🔄 Exporting all notebook code to tinytorch package...")
             
             # Use nbdev_export for all modules  
             cmd = ["nbdev_export"]
+        else:
+            console.print(Panel("[red]❌ Must specify either --module <name> or --all[/red]", 
+                              title="Missing Arguments", border_style="red"))
+            return 1
         
         try:
             result = subprocess.run(cmd, capture_output=True, text=True, cwd=Path.cwd())
