@@ -27,6 +27,12 @@
 ### **🛠️ For Developers**
 **[📚 Documentation](docs/)** - Complete documentation including pedagogy and development guides
 
+### **🎯 NBGrader Integration**
+**Instructor Workflow**: Create solutions → Generate student versions → Release → Collect → Grade
+- `tito nbgrader generate XX` - Create student assignments from instructor solutions
+- `tito nbgrader status` - Check assignment status
+- Full NBGrader integration for classroom management
+
 ## 🎯 **What Students Build**
 
 By completing TinyTorch, students implement a complete ML framework:
