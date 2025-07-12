@@ -113,7 +113,8 @@ hello_tinytorch()  # Should print welcome message without crashing
 ```
 """
 
-# %% nbgrader={"grade": false, "grade_id": "hello_function", "locked": false, "schema_version": 3, "solution": true, "task": false}
+# %% 
+# nbgrader: grade, solution
 #| export
 def hello_tinytorch():
     """
@@ -124,14 +125,7 @@ def hello_tinytorch():
     2. If the file doesn't exist, display a simple text banner
     3. Print "TinyTorch" and "Build ML Systems from Scratch!"
     4. Handle any exceptions gracefully
-    
-    Hints:
-    - Use Path('filename').exists() to check if file exists
-    - Use try/except to handle file reading errors
-    - Use .strip() to remove extra whitespace
-    - Always print the tagline regardless of file status
     """
-    ### BEGIN SOLUTION
     try:
         # Try to read the ASCII art file
         flame_file = Path('tinytorch_flame.txt')
@@ -145,7 +139,36 @@ def hello_tinytorch():
     
     # Always print the tagline
     print("Build ML Systems from Scratch!")
-    ### END SOLUTION
+
+# %% 
+# nbgrader: tests
+# Test hello_tinytorch function
+def test_hello_tinytorch():
+    """Test that hello_tinytorch runs without crashing."""
+    import io
+    import sys
+    
+    # Capture output
+    old_stdout = sys.stdout
+    sys.stdout = captured_output = io.StringIO()
+    
+    try:
+        hello_tinytorch()
+        output = captured_output.getvalue()
+        
+        # Should have some output
+        assert len(output.strip()) > 0, "Function should produce output"
+        
+        # Should contain the tagline
+        assert "Build ML Systems from Scratch!" in output, "Should contain tagline"
+        
+        # Should contain either ASCII art or simple banner
+        assert "TinyTorch" in output or len(output.split('\n')) > 2, "Should contain banner"
+        
+    finally:
+        sys.stdout = old_stdout
+
+test_hello_tinytorch()  # Run the test
 
 # %% [markdown]
 """
@@ -161,7 +184,7 @@ def hello_tinytorch():
 
 ### 💡 Approach & Hints
 This problem demonstrates **multiple solution blocks** within one function:
-- Each step has its own `### BEGIN SOLUTION` / `### END SOLUTION` block
+- Each step has its own solution block
 - Complete each step before moving to the next
 - Use descriptive variable names as suggested in comments
 - Follow the math carefully: `(a+2) + (b+2) = a+b+4`, then `×10`
@@ -197,544 +220,516 @@ print(f"Result: {result}")  # Should print: Result: 110
 **Note**: This demonstrates how NBGrader can guide you through complex functions step-by-step!
 """
 
-# %% nbgrader={"grade": false, "grade_id": "multi_step_function", "locked": false, "schema_version": 3, "solution": true, "task": false}
+# %% 
+# nbgrader: grade, solution
 #| export
 def complex_calculation(a, b):
     """
     Perform a multi-step calculation with guided implementation.
     
+    This function demonstrates multiple solution blocks:
+    1. Add 2 to both input variables
+    2. Sum the modified variables
+    3. Multiply by 10
+    
     Args:
-        a: First number
-        b: Second number
+        a (int): First number
+        b (int): Second number
         
     Returns:
-        Result of multi-step calculation
-        
-    This function demonstrates multiple solution blocks within one function.
-    Complete each step in order using the suggested variable names.
+        int: Result of (a+2) + (b+2), then multiplied by 10
     """
-    # Step 1: Add 2 to each input variable
-    # Create variables: a_plus_2 and b_plus_2
-    # Hint: Simple addition - a_plus_2 = a + ?
-    ### BEGIN SOLUTION
+    # Step 1: Add 2 to each variable
     a_plus_2 = a + 2
     b_plus_2 = b + 2
-    ### END SOLUTION
     
-    # Step 2: Sum everything
-    # Create variable: everything_summed
-    # Hint: Add the two variables from Step 1
-    ### BEGIN SOLUTION
+    # Step 2: Sum the modified variables
     everything_summed = a_plus_2 + b_plus_2
-    ### END SOLUTION
     
-    # Step 3: Multiply your previous result by 10
-    # Create variable: everything_summed_times_10
-    # Hint: You can use * operator (np.multiply is overkill and will make people hate you 😄)
-    ### BEGIN SOLUTION
+    # Step 3: Multiply by 10
     everything_summed_times_10 = everything_summed * 10
-    ### END SOLUTION
     
     return everything_summed_times_10
+
+# %% 
+# nbgrader: tests
+# Test complex_calculation function
+assert complex_calculation(3, 4) == 110, "complex_calculation(3, 4) should equal 110"
+assert complex_calculation(1, 2) == 70, "complex_calculation(1, 2) should equal 70"
+assert complex_calculation(0, 0) == 40, "complex_calculation(0, 0) should equal 40"
+assert complex_calculation(-1, 1) == 40, "complex_calculation(-1, 1) should equal 40"
+print("✅ complex_calculation tests passed!")
 
 # %% [markdown]
 """
 ## Problem 3: Basic Math Function (5 points) ➕
 
-**Goal**: Create a simple addition function to verify our basic workflow.
+**Goal**: Create a simple function that adds two numbers.
 
 ### 📝 Requirements
-- Accept two parameters (a and b)
+- Take two parameters: `a` and `b`
 - Return their sum
-- Handle both integers and floats
-- Keep it simple - this is a workflow verification!
+- Handle any numeric types (int, float)
 
 ### 💡 Approach & Hints
-- This is intentionally simple - focus on getting the workflow right
-- Use the `+` operator (works for int, float, and even some other types)
-- No error checking needed - assume valid inputs
-- One line of code inside the function is enough!
+1. **Simple addition** - just use the `+` operator
+2. **No type conversion needed** - Python handles int + float automatically
+3. **One line implementation** - this is straightforward!
 
 ### 🎯 Expected Behavior
 ```python
-add_numbers(3, 4)      # Returns: 7
-add_numbers(2.5, 1.5)  # Returns: 4.0
-add_numbers(-1, 1)     # Returns: 0
-add_numbers(0, 0)      # Returns: 0
-```
-
-### 🧪 Quick Test
-```python
-result = add_numbers(2.5, 1.5)
-print(f"2.5 + 1.5 = {result}")  # Should print: 2.5 + 1.5 = 4.0
+add_numbers(2, 3)    # Returns: 5
+add_numbers(1.5, 2.5)  # Returns: 4.0
+add_numbers(-1, 1)   # Returns: 0
 ```
 
 ### 🚨 Common Pitfalls
-- ❌ Overthinking it - this is meant to be simple!
-- ❌ Adding unnecessary error checking
-- ❌ Using complex math when simple + works fine
+- ❌ Overthinking it - this is really simple!
+- ❌ Forgetting to return the result
+- ❌ Trying to do type conversion (not needed)
+
+### 🧪 Quick Test
+```python
+result = add_numbers(5, 7)
+print(f"5 + 7 = {result}")  # Should print: 5 + 7 = 12
+```
 """
 
-# %% nbgrader={"grade": false, "grade_id": "add_function", "locked": false, "schema_version": 3, "solution": true, "task": false}
+# %% 
+# nbgrader: grade, solution
 #| export
 def add_numbers(a, b):
     """
     Add two numbers together.
     
     Args:
-        a: First number (int or float)
-        b: Second number (int or float)
+        a (int or float): First number
+        b (int or float): Second number
         
     Returns:
-        Sum of a and b
-        
-    Hint: This is intentionally simple - just use the + operator!
+        int or float: Sum of a and b
     """
-    ### BEGIN SOLUTION
     return a + b
-    ### END SOLUTION
+
+# %% 
+# nbgrader: tests
+# Test add_numbers function
+assert add_numbers(2, 3) == 5, "add_numbers(2, 3) should equal 5"
+assert add_numbers(1.5, 2.5) == 4.0, "add_numbers(1.5, 2.5) should equal 4.0"
+assert add_numbers(-1, 1) == 0, "add_numbers(-1, 1) should equal 0"
+assert add_numbers(0, 0) == 0, "add_numbers(0, 0) should equal 0"
+print("✅ add_numbers tests passed!")
 
 # %% [markdown]
 """
-## Problem 4: System Information Class (20 points) 🖥️
+## Problem 4: System Info Class (20 points) 🖥️
 
-**Goal**: Create a class that collects and displays system information for debugging and compatibility.
+**Goal**: Create a class that gathers and displays system information.
 
 ### 📝 Requirements
-- **`__init__`**: Collect Python version, platform, and machine architecture
-- **`__str__`**: Return formatted system info as "Python X.Y.Z on Platform (Architecture)"
-- **`is_compatible()`**: Check if Python version >= 3.8
-- Store information as instance variables (self.*)
+- Create a class called `SystemInfo`
+- `__init__()`: Store system information (Python version, platform, timestamp)
+- `__str__()`: Return a formatted string with all system info
+- `is_compatible()`: Return True if Python version >= 3.8
 
 ### 💡 Approach & Hints
-
-#### For `__init__`:
-- Use `sys.version_info` to get Python version as tuple
-- Convert to string: `f"{major}.{minor}.{micro}"`
-- Use `platform.system()` for OS name (Darwin, Windows, Linux)
-- Use `platform.machine()` for architecture (arm64, x86_64, etc.)
-
-#### For `__str__`:
-- Return exact format: `"Python {version} on {platform} ({machine})"`
-- Use f-strings for clean formatting
-- Example: `"Python 3.9.7 on Darwin (arm64)"`
-
-#### For `is_compatible()`:
-- Compare `sys.version_info[:2]` with `(3, 8)`
-- Use `>=` operator on tuples
-- Return boolean (True/False)
+1. **Use sys.version** - gets Python version string
+2. **Use platform.system()** - gets OS name (Windows, Darwin, Linux)
+3. **Use datetime.now()** - gets current timestamp
+4. **Parse version string** - extract major.minor version for compatibility check
+5. **String formatting** - use f-strings for clean output
 
 ### 🎯 Expected Behavior
 ```python
 info = SystemInfo()
-print(info)  # "Python 3.9.7 on Darwin (arm64)"
-print(info.is_compatible())  # True (if Python >= 3.8)
+print(info)
+# Output:
+# TinyTorch System Info
+# Python Version: 3.9.7
+# Platform: Darwin
+# Timestamp: 2024-01-15 10:30:45.123456
 
-# Access individual properties
-print(info.python_version)  # "3.9.7"
-print(info.platform)        # "Darwin"  
-print(info.machine)         # "arm64"
+print(info.is_compatible())  # True (if Python >= 3.8)
 ```
+
+### 🚨 Common Pitfalls
+- ❌ Not storing data in __init__ (computing it in __str__ instead)
+- ❌ Version parsing errors (handling edge cases in version string)
+- ❌ Incorrect string formatting (missing newlines or proper spacing)
+- ❌ Not using instance variables (self.variable_name)
 
 ### 🧪 Quick Test
 ```python
 info = SystemInfo()
-print(f"System: {info}")
-print(f"Compatible: {info.is_compatible()}")
+print(f"Compatible: {info.is_compatible()}")  # Should print: Compatible: True
+print(info)  # Should print formatted system info
 ```
-
-### 🚨 Common Pitfalls
-- ❌ Not storing as instance variables (using local variables instead)
-- ❌ Wrong string formatting in `__str__`
-- ❌ Using `sys.version` (string) instead of `sys.version_info` (tuple)
-- ❌ Hardcoding version check instead of using `sys.version_info`
 """
 
-# %% nbgrader={"grade": false, "grade_id": "systeminfo_class", "locked": false, "schema_version": 3, "solution": true, "task": false}
-#| export
+# %% 
+# nbgrader: grade, solution
+#| export  
 class SystemInfo:
     """
-    A class for collecting and displaying system information.
+    A class for gathering and displaying system information.
     
-    This class helps with debugging and compatibility checking.
+    This class collects Python version, platform, and timestamp information
+    when instantiated and provides methods to display and check compatibility.
     """
     
     def __init__(self):
-        """
-        Initialize the SystemInfo object.
-        Collect Python version, platform, and machine information.
-        
-        Hints:
-        - Use sys.version_info to get version tuple
-        - Convert version to string: f"{major}.{minor}.{micro}"
-        - Use platform.system() and platform.machine()
-        - Store as self.attribute_name
-        """
-        ### BEGIN SOLUTION
-        # Get Python version info
-        version_info = sys.version_info
-        self.python_version = f"{version_info.major}.{version_info.minor}.{version_info.micro}"
-        
-        # Get platform information
+        """Initialize system info by collecting current system data."""
+        self.python_version = sys.version.split()[0]  # Get clean version string
         self.platform = platform.system()
-        
-        # Get machine architecture
-        self.machine = platform.machine()
-        ### END SOLUTION
+        self.timestamp = datetime.now()
     
     def __str__(self):
-        """
-        Return a formatted string representation of system information.
-        Format: "Python X.Y.Z on Platform (Architecture)"
-        
-        Hints:
-        - Use f-string formatting
-        - Exact format: "Python {version} on {platform} ({machine})"
-        - Example: "Python 3.9.7 on Darwin (arm64)"
-        """
-        ### BEGIN SOLUTION
-        return f"Python {self.python_version} on {self.platform} ({self.machine})"
-        ### END SOLUTION
+        """Return formatted system information string."""
+        return f"""TinyTorch System Info
+Python Version: {self.python_version}
+Platform: {self.platform}
+Timestamp: {self.timestamp}"""
     
     def is_compatible(self):
-        """
-        Check if the Python version is compatible (>= 3.8).
-        Returns True if compatible, False otherwise.
-        
-        Hints:
-        - Use sys.version_info[:2] to get (major, minor) tuple
-        - Compare with (3, 8) using >= operator
-        - Tuple comparison works element by element
-        """
-        ### BEGIN SOLUTION
-        return sys.version_info[:2] >= (3, 8)
-        ### END SOLUTION
+        """Check if Python version is compatible (>= 3.8)."""
+        try:
+            version_parts = self.python_version.split('.')
+            major = int(version_parts[0])
+            minor = int(version_parts[1])
+            return major > 3 or (major == 3 and minor >= 8)
+        except (ValueError, IndexError):
+            return False
+
+# %% 
+# nbgrader: tests
+# Test SystemInfo class
+info = SystemInfo()
+
+# Test that attributes exist
+assert hasattr(info, 'python_version'), "SystemInfo should have python_version attribute"
+assert hasattr(info, 'platform'), "SystemInfo should have platform attribute"
+assert hasattr(info, 'timestamp'), "SystemInfo should have timestamp attribute"
+
+# Test string representation
+info_str = str(info)
+assert "TinyTorch System Info" in info_str, "String should contain title"
+assert "Python Version:" in info_str, "String should contain Python version"
+assert "Platform:" in info_str, "String should contain platform"
+assert "Timestamp:" in info_str, "String should contain timestamp"
+
+# Test compatibility check
+compatibility = info.is_compatible()
+assert isinstance(compatibility, bool), "is_compatible should return boolean"
+
+print("✅ SystemInfo tests passed!")
 
 # %% [markdown]
 """
 ## Problem 5: Developer Profile Class (30 points) 👨‍💻
 
-**Goal**: Create a class to manage developer profiles with multiple methods and data handling.
+**Goal**: Create an advanced class representing a developer profile with multiple methods.
 
 ### 📝 Requirements
-- **`__init__`**: Store developer information (name, email, affiliation, specialization)
-- **`__str__`**: Return basic representation as "Name (email)"
-- **`get_signature()`**: Return formatted signature with name, affiliation, and specialization
-- **`get_profile_info()`**: Return all info as a dictionary
+- Create a class called `DeveloperProfile`
+- `__init__()`: Accept name, email, affiliation, specialization (with defaults)
+- `__str__()`: Return a formatted profile card
+- `get_signature()`: Return a signature line with name and specialization
+- `get_profile_info()`: Return a dictionary with all profile information
 
 ### 💡 Approach & Hints
-
-#### For `__init__`:
-- Use default parameters as shown in the function signature
-- Store all parameters as instance variables: `self.name = name`, etc.
-- Default values make the class easy to use: `DeveloperProfile()` works!
-
-#### For `__str__`:
-- Simple format: `"Name (email)"`
-- Use f-string: `f"{self.name} ({self.email})"`
-- Example: `"Alice (alice@example.com)"`
-
-#### For `get_signature()`:
-- Multi-line string with `\\n` separators
-- Format: `"Name\\nAffiliation\\nSpecialization: specialization"`
-- Example:
-  ```
-  Alice
-  University
-  Specialization: Neural Networks
-  ```
-
-#### For `get_profile_info()`:
-- Return dictionary with all four attributes
-- Keys: 'name', 'email', 'affiliation', 'specialization'
-- Values: the corresponding instance variable values
+1. **Default parameters** - use defaults in __init__ method signature
+2. **Instance variables** - store all parameters as self.variable_name
+3. **String formatting** - create a nice "business card" format
+4. **Dictionary creation** - return all instance variables as key-value pairs
+5. **Method chaining** - each method should work independently
 
 ### 🎯 Expected Behavior
 ```python
-# Using defaults
-profile = DeveloperProfile()
-print(profile)  # "Student (student@example.com)"
-
-# Custom values
-dev = DeveloperProfile("Alice", "alice@example.com", "University", "Neural Networks")
-print(dev)  # "Alice (alice@example.com)"
+dev = DeveloperProfile("Alice", "alice@example.com", "MIT", "Deep Learning")
+print(dev)
+# Output:
+# ═══════════════════════════════════════
+# 🚀 DEVELOPER PROFILE
+# ═══════════════════════════════════════
+# Name: Alice
+# Email: alice@example.com
+# Affiliation: MIT
+# Specialization: Deep Learning
+# ═══════════════════════════════════════
 
 print(dev.get_signature())
-# Alice
-# University  
-# Specialization: Neural Networks
+# Output: Alice - Deep Learning Specialist
 
-print(dev.get_profile_info())
-# {'name': 'Alice', 'email': 'alice@example.com', 'affiliation': 'University', 'specialization': 'Neural Networks'}
-```
-
-### 🧪 Quick Test
-```python
-profile = DeveloperProfile("Test", "test@example.com")
-print(f"Profile: {profile}")
-print(f"Signature:\\n{profile.get_signature()}")
-print(f"Info: {profile.get_profile_info()}")
+profile_dict = dev.get_profile_info()
+print(profile_dict['name'])  # Output: Alice
 ```
 
 ### 🚨 Common Pitfalls
-- ❌ Not using `self.` when storing or accessing instance variables
-- ❌ Wrong dictionary keys in `get_profile_info()` 
-- ❌ Incorrect string formatting in `get_signature()`
-- ❌ Forgetting to return values from methods
-- ❌ Not using the default parameters properly
+- ❌ Not using default parameters correctly
+- ❌ Missing the decorative formatting (borders, emoji)
+- ❌ Incorrect dictionary key names
+- ❌ Not storing all parameters as instance variables
+- ❌ String formatting issues (missing newlines, spacing)
+
+### 🧪 Quick Test
+```python
+dev = DeveloperProfile()  # Should work with defaults
+print(dev.get_signature())  # Should print default signature
+```
 """
 
-# %% nbgrader={"grade": false, "grade_id": "developer_profile_class", "locked": false, "schema_version": 3, "solution": true, "task": false}
+# %% 
+# nbgrader: grade, solution
 #| export
 class DeveloperProfile:
     """
-    A class representing a developer profile.
+    A class representing a developer profile with personal and professional information.
     
-    This class manages developer information and provides
-    multiple ways to display and access the data.
+    This class stores developer information and provides methods to display
+    and access the profile data in various formats.
     """
     
-    def __init__(self, name="Student", email="student@example.com", affiliation="TinyTorch Community", specialization="ML Systems"):
+    def __init__(self, name="Student", email="student@example.com", 
+                 affiliation="TinyTorch Community", specialization="ML Systems"):
         """
         Initialize a developer profile.
         
         Args:
-            name: Developer's name
-            email: Developer's email
-            affiliation: Developer's affiliation or organization
-            specialization: Developer's area of specialization
-            
-        Hints:
-        - Store each parameter as an instance variable
-        - Use self.attribute_name = parameter_name
-        - Default values are already provided
+            name (str): Developer's name
+            email (str): Developer's email address
+            affiliation (str): Developer's organization or school
+            specialization (str): Developer's area of expertise
         """
-        ### BEGIN SOLUTION
         self.name = name
         self.email = email
         self.affiliation = affiliation
         self.specialization = specialization
-        ### END SOLUTION
     
     def __str__(self):
-        """
-        Return a basic string representation of the developer.
-        Format: "Name (email)"
-        
-        Hints:
-        - Use f-string formatting
-        - Format: f"{self.name} ({self.email})"
-        - Example: "Alice (alice@example.com)"
-        """
-        ### BEGIN SOLUTION
-        return f"{self.name} ({self.email})"
-        ### END SOLUTION
+        """Return a formatted developer profile card."""
+        return f"""═══════════════════════════════════════
+🚀 DEVELOPER PROFILE
+═══════════════════════════════════════
+Name: {self.name}
+Email: {self.email}
+Affiliation: {self.affiliation}
+Specialization: {self.specialization}
+═══════════════════════════════════════"""
     
     def get_signature(self):
-        """
-        Return a formatted signature for the developer.
-        Should include name, affiliation, and specialization.
-        
-        Hints:
-        - Multi-line string with `\\n` separators
-        - Format: "Name\\nAffiliation\\nSpecialization: specialization"
-        - Use f-strings for clean formatting
-        """
-        ### BEGIN SOLUTION
-        return f"{self.name}\n{self.affiliation}\nSpecialization: {self.specialization}"
-        ### END SOLUTION
+        """Return a signature line with name and specialization."""
+        return f"{self.name} - {self.specialization} Specialist"
     
     def get_profile_info(self):
-        """
-        Return comprehensive profile information as a dictionary.
-        
-        Hints:
-        - Return dict with keys: 'name', 'email', 'affiliation', 'specialization'
-        - Values should be the corresponding self.attribute values
-        - Use exact key names as shown above
-        """
-        ### BEGIN SOLUTION
+        """Return profile information as a dictionary."""
         return {
             'name': self.name,
             'email': self.email,
             'affiliation': self.affiliation,
             'specialization': self.specialization
         }
-        ### END SOLUTION
+
+# %% 
+# nbgrader: tests
+# Test DeveloperProfile class
+dev = DeveloperProfile("Alice", "alice@example.com", "MIT", "Deep Learning")
+
+# Test attributes
+assert dev.name == "Alice", "Name should be stored correctly"
+assert dev.email == "alice@example.com", "Email should be stored correctly"
+assert dev.affiliation == "MIT", "Affiliation should be stored correctly"
+assert dev.specialization == "Deep Learning", "Specialization should be stored correctly"
+
+# Test string representation
+dev_str = str(dev)
+assert "DEVELOPER PROFILE" in dev_str, "String should contain title"
+assert "Alice" in dev_str, "String should contain name"
+assert "alice@example.com" in dev_str, "String should contain email"
+assert "MIT" in dev_str, "String should contain affiliation"
+assert "Deep Learning" in dev_str, "String should contain specialization"
+
+# Test signature
+signature = dev.get_signature()
+assert "Alice - Deep Learning Specialist" == signature, "Signature should be formatted correctly"
+
+# Test profile info dictionary
+profile_info = dev.get_profile_info()
+assert isinstance(profile_info, dict), "get_profile_info should return dict"
+assert profile_info['name'] == "Alice", "Profile info should contain correct name"
+assert profile_info['email'] == "alice@example.com", "Profile info should contain correct email"
+assert profile_info['affiliation'] == "MIT", "Profile info should contain correct affiliation"
+assert profile_info['specialization'] == "Deep Learning", "Profile info should contain correct specialization"
+
+# Test default initialization
+default_dev = DeveloperProfile()
+assert default_dev.name == "Student", "Default name should be 'Student'"
+assert default_dev.email == "student@example.com", "Default email should be correct"
+
+print("✅ DeveloperProfile tests passed!")
 
 # %% [markdown]
 """
-## Testing Your Implementation 🧪
+## Problem 6: Integration Test (25 points) 🔧
 
-Once you've implemented all the functions above, run the cells below to test your work!
-
-### 🔄 TinyTorch Workflow Reminder
-1. **Implement** the functions above ✅
-2. **Export** to package: `tito module export 00_setup`
-3. **Test** your work: `pytest tests/ -v`
-4. **Use** your code: `from tinytorch.core.utils import hello_tinytorch`
-
-### 🚨 Before You Continue
-Make sure you can run this without errors:
-```python
-# Quick test all functions
-hello_tinytorch()
-print(complex_calculation(3, 4))  # Should be 110
-print(add_numbers(2.5, 1.5))      # Should be 4.0
-print(SystemInfo())               # Should show your system info
-print(DeveloperProfile())         # Should show default profile
-```
-"""
-
-# %% [markdown]
-"""
-## Problem 6: Integration Test (25 points) 🔗
-
-**Goal**: Test that all your components work together correctly and demonstrate the complete workflow.
+**Goal**: Create a comprehensive test function that verifies all previous functions work together.
 
 ### 📝 Requirements
-- Test all functions and classes work correctly
-- Test the multi-step function with multiple solution blocks
-- Verify system compatibility 
-- Display a complete developer profile
-- Show successful framework initialization
-- Return `True` if all tests pass
+- Create a function called `test_integration()`
+- Test all previously implemented functions
+- Use proper assertions with descriptive error messages
+- Handle any exceptions gracefully
+- Return a success message if all tests pass
 
 ### 💡 Approach & Hints
-- Use the functions you just implemented
-- Include print statements for clear output
-- Test with specific values to verify correctness
-- Use assertions to check expected results
-- Catch and handle any exceptions gracefully
+1. **Test each function systematically** - call each function with known inputs
+2. **Use assert statements** - verify expected outputs
+3. **Descriptive error messages** - help debug what went wrong
+4. **Exception handling** - catch and report any unexpected errors
+5. **Comprehensive coverage** - test both normal and edge cases
 
-### 🎯 Expected Output
-Your integration test should produce output like:
-```
-🧪 Testing hello_tinytorch()...
-[ASCII art or TinyTorch banner]
-Build ML Systems from Scratch!
-✅ Welcome function works!
-
-🧪 Testing complex_calculation() with multiple solution blocks...
-✅ Multi-step calculation: complex_calculation(3, 4) = 110
-✅ Multiple solution blocks working correctly!
-
-... [more tests] ...
-
-🎉 All components working together!
-✅ Ready for module export and package building!
-```
-
-### 🧪 Quick Test Structure
+### 🎯 Expected Behavior
 ```python
-def test_integration():
-    print("🧪 Testing...")
-    
-    # Test each function
-    # Use assertions to verify correctness
-    # Print success messages
-    
-    print("🎉 All tests passed!")
-    return True
+test_integration()
+# Output:
+# ✅ Testing hello_tinytorch... passed
+# ✅ Testing complex_calculation... passed
+# ✅ Testing add_numbers... passed
+# ✅ Testing SystemInfo... passed
+# ✅ Testing DeveloperProfile... passed
+# 🎉 All integration tests passed! TinyTorch setup is complete.
 ```
 
 ### 🚨 Common Pitfalls
-- ❌ Not testing all functions
-- ❌ Not checking return values with assertions
-- ❌ Not handling potential exceptions
-- ❌ Forgetting to return True at the end
+- ❌ Not testing all functions thoroughly
+- ❌ Missing error handling for unexpected exceptions
+- ❌ Unclear error messages (hard to debug failures)
+- ❌ Not returning a success indicator
+- ❌ Testing only happy path (not edge cases)
+
+### 🧪 Quick Test
+```python
+result = test_integration()
+print(result)  # Should print success message
+```
 """
 
-# %% nbgrader={"grade": true, "grade_id": "integration_test", "locked": false, "points": 25, "schema_version": 3, "solution": true, "task": false}
+# %% 
+# nbgrader: grade, solution
+#| export
 def test_integration():
     """
-    Integration test to verify all components work together.
-    This function tests the complete TinyTorch setup workflow.
+    Comprehensive integration test for all TinyTorch setup functions.
+    
+    This function tests all implemented functions to ensure they work
+    correctly together and individually.
     
     Returns:
-        bool: True if all tests pass
+        str: Success message if all tests pass
         
-    Hints:
-    - Test each function you implemented
-    - Use assertions to verify expected results
-    - Include informative print statements
-    - Handle any exceptions gracefully
-    - Return True if everything works
+    Raises:
+        AssertionError: If any test fails
+        Exception: If any unexpected error occurs
     """
-    ### BEGIN SOLUTION
-    # Test 1: Welcome function
-    print("🧪 Testing hello_tinytorch()...")
-    hello_tinytorch()
-    print("✅ Welcome function works!\n")
-    
-    # Test 2: Multi-step calculation (demonstrates multiple solution blocks)
-    print("🧪 Testing complex_calculation() with multiple solution blocks...")
-    result = complex_calculation(3, 4)
-    expected = 110  # (3+2) + (4+2) = 11, 11*10 = 110
-    assert result == expected, f"Expected {expected}, got {result}"
-    print(f"✅ Multi-step calculation: complex_calculation(3, 4) = {result}")
-    print("✅ Multiple solution blocks working correctly!\n")
-    
-    # Test 3: Simple math function
-    print("🧪 Testing add_numbers()...")
-    result = add_numbers(2.5, 1.5)
-    assert result == 4.0, f"Expected 4.0, got {result}"
-    print(f"✅ Math function: add_numbers(2.5, 1.5) = {result}\n")
-    
-    # Test 4: System information
-    print("🧪 Testing SystemInfo class...")
-    sys_info = SystemInfo()
-    print(f"✅ System info: {sys_info}")
-    print(f"✅ Python compatible: {sys_info.is_compatible()}\n")
-    
-    # Test 5: Developer profile
-    print("🧪 Testing DeveloperProfile class...")
-    dev = DeveloperProfile("TinyTorch Student", "student@tinytorch.edu", "TinyTorch University", "ML Systems")
-    print(f"✅ Developer: {dev}")
-    print(f"✅ Profile info: {dev.get_profile_info()}\n")
-    
-    # Test 6: Complete workflow
-    print("🎉 All components working together!")
-    print("✅ Ready for module export and package building!")
-    return True
-    ### END SOLUTION
+    try:
+        # Test hello_tinytorch
+        print("✅ Testing hello_tinytorch... ", end="")
+        import io
+        import sys
+        old_stdout = sys.stdout
+        sys.stdout = io.StringIO()
+        hello_tinytorch()
+        output = sys.stdout.getvalue()
+        sys.stdout = old_stdout
+        assert len(output.strip()) > 0, "hello_tinytorch should produce output"
+        assert "Build ML Systems from Scratch!" in output, "hello_tinytorch should contain tagline"
+        print("passed")
+        
+        # Test complex_calculation
+        print("✅ Testing complex_calculation... ", end="")
+        result = complex_calculation(3, 4)
+        assert result == 110, f"complex_calculation(3, 4) should return 110, got {result}"
+        result = complex_calculation(0, 0)
+        assert result == 40, f"complex_calculation(0, 0) should return 40, got {result}"
+        print("passed")
+        
+        # Test add_numbers
+        print("✅ Testing add_numbers... ", end="")
+        result = add_numbers(5, 7)
+        assert result == 12, f"add_numbers(5, 7) should return 12, got {result}"
+        result = add_numbers(1.5, 2.5)
+        assert result == 4.0, f"add_numbers(1.5, 2.5) should return 4.0, got {result}"
+        print("passed")
+        
+        # Test SystemInfo
+        print("✅ Testing SystemInfo... ", end="")
+        info = SystemInfo()
+        assert hasattr(info, 'python_version'), "SystemInfo should have python_version attribute"
+        assert hasattr(info, 'platform'), "SystemInfo should have platform attribute"
+        assert hasattr(info, 'timestamp'), "SystemInfo should have timestamp attribute"
+        info_str = str(info)
+        assert "TinyTorch System Info" in info_str, "SystemInfo string should contain title"
+        assert isinstance(info.is_compatible(), bool), "is_compatible should return boolean"
+        print("passed")
+        
+        # Test DeveloperProfile
+        print("✅ Testing DeveloperProfile... ", end="")
+        dev = DeveloperProfile("Test User", "test@example.com", "Test Org", "Testing")
+        assert dev.name == "Test User", "DeveloperProfile should store name correctly"
+        assert dev.email == "test@example.com", "DeveloperProfile should store email correctly"
+        dev_str = str(dev)
+        assert "DEVELOPER PROFILE" in dev_str, "DeveloperProfile string should contain title"
+        signature = dev.get_signature()
+        assert "Test User - Testing Specialist" == signature, "Signature should be formatted correctly"
+        profile_info = dev.get_profile_info()
+        assert isinstance(profile_info, dict), "get_profile_info should return dict"
+        assert profile_info['name'] == "Test User", "Profile info should contain correct name"
+        print("passed")
+        
+        # All tests passed
+        success_msg = "🎉 All integration tests passed! TinyTorch setup is complete."
+        print(success_msg)
+        return success_msg
+        
+    except Exception as e:
+        error_msg = f"❌ Integration test failed: {str(e)}"
+        print(error_msg)
+        raise
+
+# %% 
+# nbgrader: tests
+# Test integration function
+try:
+    result = test_integration()
+    assert "All integration tests passed" in result, "Integration test should return success message"
+    print("✅ Integration test verification passed!")
+except Exception as e:
+    print(f"❌ Integration test verification failed: {e}")
+    raise
 
 # %% [markdown]
 """
-## Next Steps 🚀
+## 🎉 Assignment Complete!
 
-Congratulations! You've completed your first TinyTorch assignment! 
+Congratulations! You've successfully completed the TinyTorch setup assignment. 
 
-### 🎯 What You've Accomplished
-- ✅ Set up your TinyTorch development environment
-- ✅ Implemented 5 core utility functions
-- ✅ Learned the complete development workflow
-- ✅ Practiced error handling and defensive programming
-- ✅ Mastered NBGrader solution blocks and guided implementation
-- ✅ Created your first real TinyTorch components!
+### What You've Accomplished:
+✅ **File I/O & Error Handling** - Created robust file reading with graceful fallbacks  
+✅ **Multi-Step Implementation** - Learned NBGrader's guided solution approach  
+✅ **Basic Functions** - Implemented fundamental mathematical operations  
+✅ **Object-Oriented Programming** - Built classes with multiple methods  
+✅ **System Integration** - Created comprehensive testing workflows  
+✅ **Real-World Skills** - Practiced debugging, testing, and validation  
 
-### 🔄 Complete the Workflow
-1. **Export** your code to the TinyTorch package:
-   ```bash
-   tito module export 00_setup
-   ```
+### Next Steps:
+1. **Export your code**: `tito module export 00_setup`
+2. **Run the tests**: `pytest tests/ -v`
+3. **Use your functions**: `from tinytorch.core.utils import hello_tinytorch`
 
-2. **Run tests** to verify everything works:
-   ```bash
-   pytest tests/ -v
-   ```
+### Key Takeaways:
+- **Error handling is crucial** - Always plan for things to go wrong
+- **Testing saves time** - Comprehensive tests catch bugs early
+- **Documentation matters** - Clear docstrings help future you
+- **Incremental development** - Build and test one piece at a time
 
-3. **Try using** your functions:
-   ```python
-   from tinytorch.core.utils import hello_tinytorch, add_numbers
-   hello_tinytorch()
-   print(add_numbers(5, 3))
-   ```
-
-4. **Move on** to the next assignment: `01_tensor`
-
-### 🎉 You're Ready!
-You've just created the foundation utilities for TinyTorch. These functions will be used throughout the framework. Great job! 
-
-Welcome to the world of building ML systems from scratch! 🔥
+**Welcome to the TinyTorch journey! 🚀**
 """ 
