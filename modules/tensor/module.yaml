@@ -1,107 +1,28 @@
 # TinyTorch Module Metadata
-# This file contains structured information about the module for CLI tools and documentation
+# Essential system information for CLI tools and build systems
 
-# Basic Information
 name: "tensor"
 title: "Tensor"
-description: "Implement the fundamental data structure that powers all ML systems - N-dimensional arrays with ML-specific operations"
+description: "Core tensor data structure and operations"
+status: "complete"  # complete, in_progress, not_started
 version: "1.0.0"
-author: "TinyTorch Team"
-last_updated: "2024-12-19"
-
-# Module Status
-status: "complete"  # complete, in_progress, not_started, deprecated
-implementation_status: "stable"  # stable, beta, alpha, experimental
-
-# Learning Information
-learning_objectives:
-  - "Understand tensors as N-dimensional arrays with ML-specific operations"
-  - "Implement a complete Tensor class with arithmetic operations"
-  - "Handle shape management, data types, and memory layout"
-  - "Build the foundation for neural networks and automatic differentiation"
-
-key_concepts:
-  - "N-dimensional arrays"
-  - "Shape management"
-  - "Element-wise operations"
-  - "Broadcasting"
-  - "Memory layout"
-  - "Data types"
 
 # Dependencies
 dependencies:
   prerequisites: ["setup"]
-  builds_on: ["setup"]
-  enables: ["activations", "layers", "networks", "autograd"]
+  enables: ["activations", "layers", "autograd"]
 
-# Educational Metadata
-difficulty: "intermediate"  # beginner, intermediate, advanced
-estimated_time: "4-6 hours"
-pedagogical_pattern: "Build → Use → Understand"
-
-# Implementation Details
-components:
-  - name: "Tensor"
-    type: "class"
-    description: "Core tensor class with shape, data, and operations"
-    status: "complete"
-  
-  - name: "arithmetic_operations"
-    type: "methods"
-    description: "Addition, subtraction, multiplication, division"
-    status: "complete"
-  
-  - name: "shape_operations"
-    type: "methods"
-    description: "Reshape, transpose, squeeze, unsqueeze"
-    status: "complete"
-  
-  - name: "reduction_operations"
-    type: "methods"
-    description: "Sum, mean, max, min along dimensions"
-    status: "complete"
-
-# Package Export Information
+# Package Export
 exports_to: "tinytorch.core.tensor"
-export_directive: "core.tensor"
-
-# Testing Information
-test_coverage: "comprehensive"  # comprehensive, partial, minimal, none
-test_count: 25
-test_categories:
-  - "Construction and properties"
-  - "Arithmetic operations"
-  - "Shape management"
-  - "Reduction operations"
-  - "Error handling"
-  - "Edge cases"
 
 # File Structure
-required_files:
-  - "tensor_dev.py"
-  - "tensor_dev.ipynb"
-  - "tests/test_tensor.py"
-  - "README.md"
+files:
+  dev_file: "tensor_dev.py"
+  test_file: "tests/test_tensor.py"
+  readme: "README.md"
 
-# Systems Focus
-systems_concepts:
-  - "Memory management"
-  - "Data layout optimization"
-  - "Numerical stability"
-  - "Broadcasting semantics"
-  - "Type safety"
-
-# Real-world Applications
-applications:
-  - "Neural network computations"
-  - "Scientific computing"
-  - "Computer vision"
-  - "Natural language processing"
-
-# Next Steps
-next_modules: ["activations", "layers"]
-completion_criteria:
-  - "All tests pass"
-  - "Can perform basic tensor operations"
-  - "Understand tensor shapes and broadcasting"
-  - "Ready for neural network layers" 
+# Components
+components:
+  - "Tensor"
+  - "tensor_operations"
+  - "shape_manipulation" 

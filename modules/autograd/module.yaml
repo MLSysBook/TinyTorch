@@ -1,114 +1,28 @@
 # TinyTorch Module Metadata
-# This file contains structured information about the module for CLI tools and documentation
+# Essential system information for CLI tools and build systems
 
-# Basic Information
 name: "autograd"
 title: "Autograd"
-description: "Implement automatic differentiation for neural network training - the engine that makes backpropagation possible"
-version: "0.1.0"
-author: "TinyTorch Team"
-last_updated: "2024-12-19"
-
-# Module Status
-status: "not_started"  # complete, in_progress, not_started, deprecated
-implementation_status: "planned"  # stable, beta, alpha, experimental, planned
-
-# Learning Information
-learning_objectives:
-  - "Understand automatic differentiation and computational graphs"
-  - "Implement forward and backward passes for gradient computation"
-  - "Build the foundation for neural network training"
-  - "Master the chain rule in computational form"
-  - "Connect mathematical derivatives to software implementation"
-
-key_concepts:
-  - "Computational graphs"
-  - "Forward mode differentiation"
-  - "Reverse mode differentiation (backpropagation)"
-  - "Chain rule"
-  - "Gradient computation"
-  - "Memory management for gradients"
+description: "Automatic differentiation for gradient computation"
+status: "not_started"  # complete, in_progress, not_started
+version: "1.0.0"
 
 # Dependencies
 dependencies:
-  prerequisites: ["setup", "tensor", "activations", "layers"]
-  builds_on: ["tensor", "activations", "layers"]
+  prerequisites: ["setup", "tensor"]
   enables: ["training", "optimizers"]
 
-# Educational Metadata
-difficulty: "advanced"  # beginner, intermediate, advanced
-estimated_time: "8-12 hours"
-pedagogical_pattern: "Build → Use → Analyze"
-
-# Implementation Details
-components:
-  - name: "Variable"
-    type: "class"
-    description: "Tensor with gradient tracking capabilities"
-    status: "not_started"
-  
-  - name: "Function"
-    type: "class"
-    description: "Base class for differentiable operations"
-    status: "not_started"
-  
-  - name: "backward_engine"
-    type: "function"
-    description: "Automatic gradient computation engine"
-    status: "not_started"
-  
-  - name: "computational_graph"
-    type: "system"
-    description: "Graph structure for tracking operations"
-    status: "not_started"
-
-# Package Export Information
+# Package Export
 exports_to: "tinytorch.core.autograd"
-export_directive: "core.autograd"
-
-# Testing Information
-test_coverage: "planned"  # comprehensive, partial, minimal, none, planned
-test_count: 0
-test_categories:
-  - "Gradient computation"
-  - "Chain rule verification"
-  - "Computational graph construction"
-  - "Memory management"
-  - "Numerical gradient checking"
 
 # File Structure
-required_files:
-  - "autograd_dev.py"
-  - "autograd_dev.ipynb"
-  - "tests/test_autograd.py"
-  - "README.md"
+files:
+  dev_file: "autograd_dev.py"
+  test_file: "tests/test_autograd.py"
+  readme: "README.md"
 
-# Systems Focus
-systems_concepts:
-  - "Memory management for gradients"
-  - "Computational graph optimization"
-  - "Numerical stability"
-  - "Performance optimization"
-  - "Memory leaks prevention"
-
-# Real-world Applications
-applications:
-  - "Neural network training"
-  - "Optimization algorithms"
-  - "Scientific computing"
-  - "Parameter estimation"
-
-# Next Steps
-next_modules: ["training", "optimizers"]
-completion_criteria:
-  - "All tests pass"
-  - "Can compute gradients for basic operations"
-  - "Understand computational graphs"
-  - "Ready for training module"
-
-# Implementation Notes
-implementation_notes:
-  - "Start with simple scalar operations"
-  - "Build up to tensor operations"
-  - "Focus on correctness before optimization"
-  - "Include extensive numerical gradient checking" 
+# Components
+components:
+  - "Variable"
+  - "backward"
+  - "grad_fn" 
