@@ -49,14 +49,7 @@ class TestCommand(BaseCommand):
             exclude_dirs = {'.quarto', '__pycache__', '.git', '.pytest_cache'}
             for module_dir in source_dir.iterdir():
                 if module_dir.is_dir() and module_dir.name not in exclude_dirs:
-                    # Extract the short name from the module directory name
-                    module_name = module_dir.name
-                    if module_name.startswith(tuple(f"{i:02d}_" for i in range(100))):
-                        short_name = module_name[3:]  # Remove "00_" prefix
-                    else:
-                        short_name = module_name
-                    
-                    test_file = module_dir / "tests" / f"test_{short_name}.py"
+                    test_file = module_dir / "tests" / f"test_{module_dir.name}.py"
                     if test_file.exists():
                         existing_tests.append(module_dir.name)
             
@@ -81,13 +74,7 @@ class TestCommand(BaseCommand):
                 for module in existing_tests:
                     progress.update(task, description=f"Testing {module}...")
                     
-                    # Extract the short name from the module directory name
-                    if module.startswith(tuple(f"{i:02d}_" for i in range(100))):
-                        short_name = module[3:]  # Remove "00_" prefix
-                    else:
-                        short_name = module
-                    
-                    test_file = f"assignments/source/{module}/tests/test_{short_name}.py"
+                    test_file = f"assignments/source/{module}/tests/test_{module}.py"
                     try:
                         result = subprocess.run([sys.executable, "-m", "pytest", test_file, "-v"], 
                                               capture_output=True, text=True, timeout=300)
@@ -118,14 +105,7 @@ class TestCommand(BaseCommand):
         
         elif args.module:
             # Run specific module tests with detailed output
-            # Extract the short name from the module directory name
-            module_name = args.module
-            if module_name.startswith(tuple(f"{i:02d}_" for i in range(100))):
-                short_name = module_name[3:]  # Remove "00_" prefix
-            else:
-                short_name = module_name
-            
-            test_file = f"assignments/source/{args.module}/tests/test_{short_name}.py"
+            test_file = f"assignments/source/{args.module}/tests/test_{args.module}.py"
             
             console.print(Panel(f"🧪 Running tests for module: [bold cyan]{args.module}[/bold cyan]", 
                               title="Single Module Test", border_style="bright_cyan"))
