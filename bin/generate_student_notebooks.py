@@ -18,17 +18,25 @@ from typing import Dict, List, Tuple, Any
 import sys
 
 class NotebookGenerator:
-    """Transforms complete notebooks into student exercise versions."""
+    """Transforms complete notebooks into student exercise versions with nbgrader support."""
     
-    def __init__(self):
+    def __init__(self, use_nbgrader=False):
+        self.use_nbgrader = use_nbgrader
         self.markers = {
+            # TinyTorch markers (existing)
             'exercise_start': '#| exercise_start',
             'exercise_end': '#| exercise_end', 
             'hint': '#| hint:',
             'solution_test': '#| solution_test:',
-            'difficulty': '#| difficulty:',  # easy, medium, hard
+            'difficulty': '#| difficulty:',
             'keep_imports': '#| keep_imports',
-            'remove_cell': '#| remove_cell'
+            'remove_cell': '#| remove_cell',
+            
+            # nbgrader markers (new)
+            'nbgrader_solution_begin': '### BEGIN SOLUTION',
+            'nbgrader_solution_end': '### END SOLUTION',
+            'nbgrader_hidden_tests_begin': '### BEGIN HIDDEN TESTS',
+            'nbgrader_hidden_tests_end': '### END HIDDEN TESTS'
         }
     
     def process_notebook(self, notebook_path: Path) -> Dict[str, Any]:
@@ -49,7 +57,7 @@ class NotebookGenerator:
         return notebook
     
     def _process_cell(self, cell: Dict[str, Any]) -> Dict[str, Any]:
-        """Process a single notebook cell."""
+        """Process a single notebook cell with both TinyTorch and nbgrader support."""
         if cell['cell_type'] != 'code':
             return cell  # Keep markdown cells as-is
         
@@ -61,7 +69,11 @@ class NotebookGenerator:
         if any(self.markers['remove_cell'] in line for line in source_lines):
             return None  # Remove this cell
         
-        # Check for exercise markers
+        # Process nbgrader solution blocks
+        if any(self.markers['nbgrader_solution_begin'] in line for line in source_lines):
+            return self._transform_nbgrader_cell(cell)
+        
+        # Check for TinyTorch exercise markers
         if any(self.markers['exercise_start'] in line for line in source_lines):
             return self._transform_exercise_cell(cell)
         
@@ -71,6 +83,56 @@ class NotebookGenerator:
         
         return cell
     
+    def _transform_nbgrader_cell(self, cell: Dict[str, Any]) -> Dict[str, Any]:
+        """Transform nbgrader solution blocks for student version."""
+        source_lines = cell['source']
+        new_lines = []
+        
+        in_solution = False
+        in_hidden_tests = False
+        
+        for line in source_lines:
+            if self.markers['nbgrader_solution_begin'] in line:
+                in_solution = True
+                if self.use_nbgrader:
+                    new_lines.append(line)  # Keep marker for nbgrader
+                continue
+            elif self.markers['nbgrader_solution_end'] in line:
+                in_solution = False
+                if self.use_nbgrader:
+                    new_lines.append(line)  # Keep marker for nbgrader
+                continue
+            elif self.markers['nbgrader_hidden_tests_begin'] in line:
+                in_hidden_tests = True
+                if self.use_nbgrader:
+                    new_lines.append(line)  # Keep marker for nbgrader
+                continue
+            elif self.markers['nbgrader_hidden_tests_end'] in line:
+                in_hidden_tests = False
+                if self.use_nbgrader:
+                    new_lines.append(line)  # Keep marker for nbgrader
+                continue
+            elif in_solution:
+                # Replace solution with placeholder
+                if not self.use_nbgrader:
+                    continue  # Skip solution lines for regular students
+                else:
+                    new_lines.append("    # YOUR CODE HERE\n")
+                    new_lines.append("    raise NotImplementedError()\n")
+                    in_solution = False  # Only add placeholder once
+            elif in_hidden_tests:
+                # Keep hidden tests for nbgrader, remove for regular students
+                if self.use_nbgrader:
+                    new_lines.append(line)
+                # Skip for regular students
+                continue
+            else:
+                # Keep non-solution lines
+                new_lines.append(line)
+        
+        cell['source'] = new_lines
+        return cell
+
     def _transform_exercise_cell(self, cell: Dict[str, Any]) -> Dict[str, Any]:
         """Transform a cell with exercise markers into student version."""
         source_lines = cell['source']
@@ -120,7 +182,7 @@ class NotebookGenerator:
         
         cell['source'] = new_lines
         return cell
-    
+
     def _is_function_signature_or_docstring(self, line: str) -> bool:
         """Check if line is part of function signature or docstring."""
         stripped = line.strip()
@@ -195,7 +257,12 @@ class NotebookGenerator:
         
         lines.append("    \n")
         lines.append("    # Your implementation here\n")
-        lines.append("    pass\n")
+        
+        if self.use_nbgrader:
+            lines.append("    # YOUR CODE HERE\n")
+            lines.append("    raise NotImplementedError()\n")
+        else:
+            lines.append("    pass\n")
         
         return lines
     
@@ -227,13 +294,14 @@ def main():
     parser.add_argument('--module', type=str, help='Generate for specific module')
     parser.add_argument('--all', action='store_true', help='Generate for all modules')
     parser.add_argument('--output-suffix', default='_student', help='Suffix for student notebooks')
+    parser.add_argument('--nbgrader', action='store_true', help='Generate nbgrader-compatible notebooks')
     
     args = parser.parse_args()
     
     if not args.module and not args.all:
         parser.error("Must specify either --module or --all")
     
-    generator = NotebookGenerator()
+    generator = NotebookGenerator(use_nbgrader=args.nbgrader)
     modules_dir = Path("modules")
     
     if args.module:
@@ -250,11 +318,14 @@ def main():
             continue
         
         # Generate student version
-        student_notebook = generator.process_notebook(dev_notebook)
-        student_path = module_dir / f"{module}_dev{args.output_suffix}.ipynb"
-        generator.save_student_notebook(student_notebook, student_path)
-    
-    print("🎉 Student notebook generation complete!")
+        notebook = generator.process_notebook(dev_notebook)
+        
+        if args.nbgrader:
+            output_path = module_dir / f"{module}_assignment.ipynb"
+            generator.save_student_notebook(notebook, output_path)
+        else:
+            output_path = module_dir / f"{module}{args.output_suffix}.ipynb"
+            generator.save_student_notebook(notebook, output_path)
 
 if __name__ == "__main__":
     main() 
