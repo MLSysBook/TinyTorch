@@ -23,7 +23,7 @@ class CleanCommand(BaseCommand):
         parser.add_argument("module", nargs="?", help="Clean specific module only")
         parser.add_argument("--notebooks", action="store_true", help="Remove generated notebook files")
         parser.add_argument("--cache", action="store_true", help="Remove Python cache files")
-        parser.add_argument("--all", action="store_true", help="Remove notebooks and cache (default)")
+        parser.add_argument("--all", action="store_true", help="Clean all modules")
         parser.add_argument("--force", action="store_true", help="Skip confirmation prompt")
 
     def run(self, args: Namespace) -> int:
@@ -38,9 +38,9 @@ class CleanCommand(BaseCommand):
                               title="Error", border_style="red"))
             return 1
         
-        # Determine what to clean
-        clean_notebooks = args.notebooks or args.all or (not args.notebooks and not args.cache)
-        clean_cache = args.cache or args.all or (not args.notebooks and not args.cache)
+        # Determine what to clean (file types)
+        clean_notebooks = args.notebooks or (not args.notebooks and not args.cache)
+        clean_cache = args.cache or (not args.notebooks and not args.cache)
         
         # Determine which modules to clean
         if args.module:
@@ -50,11 +50,19 @@ class CleanCommand(BaseCommand):
                                   title="Module Not Found", border_style="red"))
                 return 1
             module_dirs = [module_path]
-        else:
+        elif args.all:
             # Find all module directories (exclude special directories)
             exclude_dirs = {'.quarto', '__pycache__', '.git', '.pytest_cache', 'sidebar.yml', 'nbdev.yml'}
             module_dirs = [d for d in modules_dir.iterdir() 
                           if d.is_dir() and d.name not in exclude_dirs]
+        else:
+            # No module specified and no --all flag
+            console.print(Panel("[red]❌ Please specify a module name or use --all to clean all modules[/red]\n\n"
+                              "[dim]Examples:[/dim]\n"
+                              "[dim]  tito module clean tensor     - Clean specific module[/dim]\n"
+                              "[dim]  tito module clean --all      - Clean all modules[/dim]", 
+                              title="Module Required", border_style="red"))
+            return 1
         
         if not module_dirs:
             console.print(Panel("[yellow]⚠️  No modules found to clean[/yellow]", 
