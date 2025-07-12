@@ -4,8 +4,6 @@
 name: "layers"
 title: "Layers"
 description: "Neural network layers (Linear, activation layers)"
-status: "complete"  # complete, in_progress, not_started
-version: "1.0.0"
 
 # Dependencies
 dependencies:

@@ -4,8 +4,6 @@
 name: "setup"
 title: "Setup"
 description: "Development environment setup and project configuration"
-status: "complete"  # complete, in_progress, not_started
-version: "1.0.0"
 
 # Dependencies
 dependencies:
