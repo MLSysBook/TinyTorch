@@ -22,7 +22,7 @@ Welcome to TinyTorch! This setup module configures your personal TinyTorch insta
 - Understand solution blocks, hidden tests, and automated grading
 """
 
-# %%
+# %% nbgrader={"grade": false, "grade_id": "setup-imports", "locked": false, "schema_version": 3, "solution": false, "task": false}
 #| default_exp core.setup
 
 # Setup and imports
