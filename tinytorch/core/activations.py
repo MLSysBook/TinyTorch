@@ -3,9 +3,6 @@
 # %% auto 0
 __all__ = ['ReLU', 'Sigmoid', 'Tanh']
 
-from tinytorch.core.tensor import Tensor
-import numpy as np
-
 # %% ../../modules/activations/activations_dev.ipynb 5
 class ReLU:
     """
