@@ -1,0 +1,110 @@
+# TinyTorch Module Metadata
+# This file contains structured information about the module for CLI tools and documentation
+
+# Basic Information
+name: "setup"
+title: "Setup - TinyTorch Development Workflow"
+description: "Learn the complete TinyTorch development workflow while introducing fundamental programming concepts"
+version: "1.0.0"
+author: "TinyTorch Team"
+last_updated: "2024-12-19"
+
+# Module Status
+status: "complete"  # complete, in_progress, not_started, deprecated
+implementation_status: "stable"  # stable, beta, alpha, experimental
+
+# Learning Information
+learning_objectives:
+  - "Understand the nbdev notebook-to-Python workflow"
+  - "Write your first TinyTorch code with #| export directives"
+  - "Implement system information collection and developer profiles"
+  - "Run tests and use the CLI tools"
+  - "Get comfortable with the development rhythm"
+
+key_concepts:
+  - "NBDev workflow"
+  - "Export directives"
+  - "Module → Package mapping"
+  - "Teaching vs. Building"
+  - "Student implementation"
+
+# Dependencies
+dependencies:
+  prerequisites: []  # No prerequisites for setup module
+  builds_on: []      # No previous modules required
+  enables: ["tensor", "activations", "layers"]  # Modules that depend on this
+
+# Educational Metadata
+difficulty: "beginner"  # beginner, intermediate, advanced
+estimated_time: "2-3 hours"
+pedagogical_pattern: "Build → Use → Understand"
+
+# Implementation Details
+components:
+  - name: "hello_tinytorch"
+    type: "function"
+    description: "Display ASCII art and welcome message"
+    status: "complete"
+  
+  - name: "add_numbers"
+    type: "function"
+    description: "Basic arithmetic (foundation of ML operations)"
+    status: "complete"
+  
+  - name: "SystemInfo"
+    type: "class"
+    description: "Collect and display Python version, platform, and machine info"
+    status: "complete"
+  
+  - name: "DeveloperProfile"
+    type: "class"
+    description: "Personalized developer information and signatures"
+    status: "complete"
+
+# Package Export Information
+exports_to: "tinytorch.core.utils"
+export_directive: "core.utils"
+
+# Testing Information
+test_coverage: "comprehensive"  # comprehensive, partial, minimal, none
+test_count: 20
+test_categories:
+  - "Function execution"
+  - "Output validation"
+  - "Arithmetic operations"
+  - "System information"
+  - "Developer profiles"
+  - "ASCII art handling"
+  - "Error recovery"
+  - "Integration testing"
+
+# File Structure
+required_files:
+  - "setup_dev.py"
+  - "setup_dev.ipynb"
+  - "tests/test_setup.py"
+  - "README.md"
+  - "tinytorch_flame.txt"
+
+# Systems Focus
+systems_concepts:
+  - "File I/O operations"
+  - "Platform detection"
+  - "Error handling"
+  - "Code organization"
+  - "Testing patterns"
+
+# Real-world Applications
+applications:
+  - "Development environment setup"
+  - "System compatibility checking"
+  - "Professional code attribution"
+  - "ASCII art customization"
+
+# Next Steps
+next_modules: ["tensor"]
+completion_criteria:
+  - "All tests pass"
+  - "Can create custom developer profile"
+  - "Understand nbdev workflow"
+  - "Ready for tensor module" 
