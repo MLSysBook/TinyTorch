@@ -384,9 +384,9 @@ class NBGraderCommand(BaseCommand):
         else:
             short_name = module_name
         
-        # Look for enhanced version first, then regular
+        # Look for regular version first, then enhanced as fallback
         dev_file = None
-        for suffix in ["_enhanced", ""]:
+        for suffix in ["", "_enhanced"]:
             potential_file = module_dir / f"{short_name}_dev{suffix}.py"
             if potential_file.exists():
                 dev_file = potential_file
