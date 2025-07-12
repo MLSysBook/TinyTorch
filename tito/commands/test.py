@@ -1,5 +1,5 @@
 """
-Test command for TinyTorch CLI: runs individual module tests with detailed output.
+Test command for TinyTorch CLI: runs module tests using pytest.
 """
 
 import subprocess
@@ -8,6 +8,7 @@ from argparse import ArgumentParser, Namespace
 from pathlib import Path
 from rich.panel import Panel
 from rich.text import Text
+from rich.progress import Progress, SpinnerColumn, TextColumn, BarColumn
 
 from .base import BaseCommand
 
@@ -18,11 +19,11 @@ class TestCommand(BaseCommand):
 
     @property
     def description(self) -> str:
-        return "Run individual module tests with detailed output"
+        return "Run module tests"
 
     def add_arguments(self, parser: ArgumentParser) -> None:
         parser.add_argument("--module", help="Module to test")
-        parser.add_argument("--all", action="store_true", help="Run all module tests (redirects to 'tito modules --test')")
+        parser.add_argument("--all", action="store_true", help="Run all module tests")
 
     def validate_args(self, args: Namespace) -> None:
         """Validate test command arguments."""
@@ -33,21 +34,74 @@ class TestCommand(BaseCommand):
         console = self.console
         
         if args.all:
-            # Redirect to modules command for better overview
-            console.print(Panel(
-                "[yellow]💡 For testing all modules, use:[/yellow]\n\n"
-                "[bold cyan]tito modules --test[/bold cyan]\n\n"
-                "[dim]This provides a better overview of all module status and test results.[/dim]",
-                title="Recommendation", border_style="yellow"
-            ))
+            # Run all tests with progress bar
+            failed_modules = []
             
-            # Still run the tests, but suggest the better command
-            from .modules import ModulesCommand
-            modules_cmd = ModulesCommand(self.config)
-            modules_args = ArgumentParser()
-            modules_cmd.add_arguments(modules_args)
-            modules_args = modules_args.parse_args(['--test'])
-            return modules_cmd.run(modules_args)
+            # Find all modules with tests
+            modules_dir = Path("modules")
+            if not modules_dir.exists():
+                console.print(Panel("[red]❌ modules/ directory not found[/red]", 
+                                  title="Error", border_style="red"))
+                return 1
+            
+            # Find existing test files
+            existing_tests = []
+            exclude_dirs = {'.quarto', '__pycache__', '.git', '.pytest_cache'}
+            for module_dir in modules_dir.iterdir():
+                if module_dir.is_dir() and module_dir.name not in exclude_dirs:
+                    test_file = module_dir / "tests" / f"test_{module_dir.name}.py"
+                    if test_file.exists():
+                        existing_tests.append(module_dir.name)
+            
+            if not existing_tests:
+                console.print(Panel("[yellow]⚠️  No test files found in modules/[/yellow]", 
+                                  title="No Tests", border_style="yellow"))
+                return 0
+            
+            console.print(Panel(f"🧪 Running tests for {len(existing_tests)} modules", 
+                              title="Test Suite", border_style="bright_cyan"))
+            
+            with Progress(
+                SpinnerColumn(),
+                TextColumn("[progress.description]{task.description}"),
+                BarColumn(),
+                TextColumn("[progress.percentage]{task.percentage:>3.0f}%"),
+                console=console
+            ) as progress:
+                
+                task = progress.add_task("Running tests...", total=len(existing_tests))
+                
+                for module in existing_tests:
+                    progress.update(task, description=f"Testing {module}...")
+                    
+                    test_file = f"modules/{module}/tests/test_{module}.py"
+                    try:
+                        result = subprocess.run([sys.executable, "-m", "pytest", test_file, "-v"], 
+                                              capture_output=True, text=True, timeout=300)
+                        
+                        if result.returncode != 0:
+                            failed_modules.append(module)
+                            console.print(f"[red]❌ {module} tests failed[/red]")
+                        else:
+                            console.print(f"[green]✅ {module} tests passed[/green]")
+                    except subprocess.TimeoutExpired:
+                        failed_modules.append(module)
+                        console.print(f"[red]❌ {module} tests timed out (5 minutes)[/red]")
+                    except Exception as e:
+                        failed_modules.append(module)
+                        console.print(f"[red]❌ {module} tests failed with error: {e}[/red]")
+                    
+                    progress.advance(task)
+            
+            # Results summary
+            if failed_modules:
+                console.print(Panel(f"[red]❌ Failed modules: {', '.join(failed_modules)}[/red]", 
+                                  title="Test Results", border_style="red"))
+                return 1
+            else:
+                console.print(Panel("[green]✅ All tests passed![/green]", 
+                                  title="Test Results", border_style="green"))
+                return 0
         
         elif args.module:
             # Run specific module tests with detailed output
@@ -106,7 +160,7 @@ class TestCommand(BaseCommand):
                 console.print(Panel(f"[red]❌ Please specify a module to test[/red]\n\n"
                                   f"Available modules: {', '.join(sorted(available_modules))}\n\n"
                                   f"[dim]Example: tito test --module tensor[/dim]\n"
-                                  f"[dim]For all modules: tito modules --test[/dim]", 
+                                  f"[dim]For all modules: tito test --all[/dim]", 
                                   title="Module Required", border_style="red"))
             else:
                 console.print(Panel("[red]❌ No modules directory found[/red]", 
