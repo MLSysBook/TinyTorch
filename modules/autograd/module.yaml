@@ -3,14 +3,12 @@
 
 name: "autograd"
 title: "Autograd"
-description: "Automatic differentiation for gradient computation"
-status: "not_started"  # complete, in_progress, not_started
-version: "1.0.0"
+description: "Automatic differentiation engine for gradient computation"
 
 # Dependencies
 dependencies:
-  prerequisites: ["setup", "tensor"]
-  enables: ["training", "optimizers"]
+  prerequisites: ["setup", "tensor", "activations"]
+  enables: ["training", "optimization"]
 
 # Package Export
 exports_to: "tinytorch.core.autograd"
@@ -25,4 +23,4 @@ files:
 components:
   - "Variable"
   - "backward"
-  - "grad_fn" 
+  - "gradient_computation" 

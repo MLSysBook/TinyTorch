@@ -3,9 +3,7 @@
 
 name: "activations"
 title: "Activations"
-description: "Neural network activation functions (ReLU, Sigmoid, Tanh)"
-status: "complete"  # complete, in_progress, not_started
-version: "1.0.0"
+description: "Activation functions (ReLU, Sigmoid, Tanh, etc.)"
 
 # Dependencies
 dependencies:
@@ -24,5 +22,5 @@ files:
 # Components
 components:
   - "ReLU"
-  - "Sigmoid" 
+  - "Sigmoid"
   - "Tanh" 

@@ -71,7 +71,7 @@ class StatusCommand(BaseCommand):
             # Add to table
             row = [
                 module_name,
-                self._format_status(status.get('metadata', {}).get('status', 'unknown')),
+                self._format_status(status['dynamic_status']),
                 "✅" if status['dev_file'] else "❌",
                 "✅" if status['tests'] else "❌", 
                 "✅" if status['readme'] else "❌"
@@ -135,6 +135,9 @@ class StatusCommand(BaseCommand):
             'metadata_file': metadata_file.exists(),
         }
         
+        # Determine dynamic status based on test results
+        status['dynamic_status'] = self._determine_dynamic_status(module_name, status)
+        
         # Load metadata if available
         if metadata_file.exists():
             try:
@@ -145,6 +148,36 @@ class StatusCommand(BaseCommand):
                 status['metadata'] = {'error': str(e)}
         
         return status
+    
+    def _determine_dynamic_status(self, module_name: str, file_status: dict) -> str:
+        """Determine module status based on files and test results."""
+        # If no dev file, module is not started
+        if not file_status['dev_file']:
+            return 'not_started'
+        
+        # If no tests, module is in progress
+        if not file_status['tests']:
+            return 'in_progress'
+        
+        # If tests exist, run them to determine status
+        test_file = f"modules/{module_name}/tests/test_{module_name}.py"
+        try:
+            # Run pytest quietly to check if tests pass
+            result = subprocess.run(
+                ["python", "-m", "pytest", test_file, "-q", "--tb=no"],
+                capture_output=True,
+                text=True,
+                timeout=30
+            )
+            
+            if result.returncode == 0:
+                return 'complete'  # Tests pass
+            else:
+                return 'in_progress'  # Tests exist but fail
+                
+        except (subprocess.TimeoutExpired, FileNotFoundError):
+            # If pytest fails or times out, assume in progress
+            return 'in_progress'
     
     def _print_module_details(self, module_name: str, status: dict) -> None:
         """Print detailed information about a module."""
@@ -189,15 +222,9 @@ class StatusCommand(BaseCommand):
         if metadata.get('description'):
             console.print(f"📝 {metadata['description']}")
         
-        # Status and export info
-        status_info = []
-        if metadata.get('status'):
-            status_info.append(f"Status: {self._format_status(metadata['status'])} {metadata['status']}")
+        # Export info (no longer showing static status)
         if metadata.get('exports_to'):
-            status_info.append(f"Exports to: {metadata['exports_to']}")
-        
-        if status_info:
-            console.print(" | ".join(status_info))
+            console.print(f"📦 Exports to: {metadata['exports_to']}")
         
         # Dependencies
         if metadata.get('dependencies'):

@@ -4,8 +4,6 @@
 name: "tensor"
 title: "Tensor"
 description: "Core tensor data structure and operations"
-status: "complete"  # complete, in_progress, not_started
-version: "1.0.0"
 
 # Dependencies
 dependencies:
