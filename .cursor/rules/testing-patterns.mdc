@@ -1,59 +1,26 @@
----
-description: "Testing patterns for TinyTorch, including framework requirements, core principles, file structure, naming convention, and test patterns."
----
 
 # Testing Patterns for TinyTorch
 
-## Testing Framework Requirement
+## Core Requirements
 
-**ALWAYS USE PYTEST** - TinyTorch uses pytest as the standard testing framework for all tests. Never use manual testing, unittest, or custom test runners. All test files must be compatible with pytest.
+**ALWAYS USE PYTEST** - TinyTorch uses pytest as the standard testing framework for all tests. Never use manual testing, unittest, or custom test runners.
 
-## Core Testing Principles
-
-### Real Data, Real Systems
-- **Use production datasets**: Tests should use actual datasets (CIFAR-10, ImageNet), not mock/synthetic data
-- **Test realistic scales**: Use actual dataset sizes and performance constraints
-- **Progressive validation**: Test each component with real inputs as you build
-- **Performance awareness**: Test with realistic data sizes and timing
-
-### Educational Testing
-- **Test both paths**: Student TODO stubs and complete implementations
-- **Immediate feedback**: Students get clear success/failure messages
-- **Visual debugging**: Include functions to visualize test results
-- **Real-world validation**: Connect tests to production ML scenarios
+**ALWAYS USE REAL DATA** - Tests must use actual datasets (CIFAR-10, ImageNet), not mock/synthetic data.
 
 ## Test File Structure
 
 ### Module Tests (`modules/{module}/tests/test_{module}.py`)
-- Test the educational module implementations
-- Validate both student TODOs and hidden solutions
-- Should work with both incomplete and complete implementations
-- Import from the parent module's development file
-- **Must use pytest** with proper test classes and assertions
-- **Must use real data**, not mocks or synthetic data
+- Test educational module implementations
+- Validate both student TODOs and complete implementations
+- Import from parent module's development file
+- Use pytest classes and assertions
 
-### Package Tests (`tinytorch/tests/`)  
-- Test the exported package functionality
+### Package Tests (`tinytorch/tests/`)
+- Test exported package functionality
 - Integration tests across components
 - Production-level validation
-- **Must use pytest** with comprehensive test coverage
-
-## Test Naming Convention
-
-```python
-# Module tests
-modules/setup/tests/test_setup.py
-modules/tensor/tests/test_tensor.py
-modules/dataloader/tests/test_dataloader.py
-
-# Package tests  
-tinytorch/tests/test_tensor.py
-tinytorch/tests/test_data.py
-```
 
 ## Test Structure Pattern (REQUIRED)
-
-**All tests must follow this pytest pattern:**
 
 ```python
 import pytest
@@ -91,9 +58,9 @@ class TestComponentName:
         pass
 ```
 
-## Real Data Testing Patterns
+## Real Data Testing Examples
 
-### ✅ GOOD: Use Actual Datasets
+### ✅ GOOD: Actual Datasets
 ```python
 def test_cifar10_dataset():
     """Test with actual CIFAR-10 data."""
@@ -102,17 +69,6 @@ def test_cifar10_dataset():
     image, label = dataset[0]
     assert image.shape == (3, 32, 32)  # Real image dimensions
     assert 0 <= label <= 9  # Real class labels
-
-def test_data_pipeline():
-    """Test complete pipeline with real data."""
-    pipeline = create_data_pipeline('data/cifar10/', batch_size=32)
-    
-    # Verify real data properties
-    batch_images, batch_labels = next(iter(pipeline))
-    assert batch_images.shape == (32, 3, 32, 32)  # Real batch dimensions
-    assert batch_labels.shape == (32,)  # Real label shape
-    assert batch_images.dtype == torch.float32  # Real data type
-    assert 0 <= batch_labels.min() <= batch_labels.max() <= 9  # Real classes
 ```
 
 ### ❌ BAD: Mock/Synthetic Data
@@ -121,41 +77,15 @@ def test_data_pipeline():
 def test_mock_dataset():
     dataset = MockDataset(size=100)  # Fake data
     assert len(dataset) == 100  # Meaningless test
-
-# DON'T DO THIS - Synthetic data
-def test_synthetic_data():
-    data = np.random.randn(100, 784)  # Fake data
-    # Tests with fake data don't validate real-world behavior
-```
-
-### Performance Testing with Real Data
-```python
-def test_data_loading_performance():
-    """Test with realistic performance constraints."""
-    start_time = time.time()
-    
-    # Test with real dataset size
-    dataset = CIFAR10Dataset('data/cifar10/', train=True)
-    dataloader = DataLoader(dataset, batch_size=128, num_workers=2)
-    
-    # Process multiple batches
-    for i, (images, labels) in enumerate(dataloader):
-        if i >= 10:  # Test first 10 batches
-            break
-    
-    elapsed = time.time() - start_time
-    # Reasonable performance expectations
-    assert elapsed < 30, f"Data loading too slow: {elapsed:.2f}s"
 ```
 
 ## pytest Features to Use
 
 - **Test classes** for organizing related tests
-- **pytest fixtures** for setup/teardown (e.g., `capsys`, `monkeypatch`)
+- **pytest fixtures** for setup/teardown
 - **Parametrized tests** for testing multiple inputs
 - **pytest.raises()** for exception testing
 - **assert statements** with descriptive messages
-- **Test discovery** - pytest automatically finds test files
 
 ## Running Tests
 
@@ -166,136 +96,21 @@ python bin/tito.py test --module tensor
 # Test all modules
 python bin/tito.py test --all
 
-# Run specific test file directly with pytest
+# Run specific test file directly
 python -m pytest modules/tensor/tests/test_tensor.py -v
-
-# Run from within module directory
-cd modules/tensor && python -m pytest tests/ -v
-
-# Run with coverage
-python -m pytest modules/tensor/tests/ --cov=tensor_dev -v
 ```
 
-## Test Categories
-
-1. **Real Data Tests**: Use production datasets for validation
-2. **Integration Tests**: Component interactions with real data
-3. **Performance Tests**: Realistic timing and memory constraints
-4. **Educational Tests**: Validate learning objectives with real examples
-5. **Package Tests**: End-to-end package validation
-
-## Key Testing Principles
+## Key Principles
 
 - **Always use pytest** - No exceptions, no manual testing
 - **Always use real data** - No mocks, no synthetic data
 - Tests should pass with both TODO stubs and complete implementations
 - Educational tests should guide student learning with real examples
 - Package tests ensure production readiness
-- All tests should be fast and isolated (cache real data)
 - Use descriptive test names that explain what's being tested
 - Import from module development files, not the package (for module tests)
-- Use pytest fixtures for common setup/teardown operations
 - Group related tests in test classes
-- Use parametrized tests for multiple similar test cases
-
-## Example Comprehensive Test Structure
-
-```python
-import pytest
-from pathlib import Path
-import sys
-import time
-
-# Add parent directory to path
-sys.path.insert(0, str(Path(__file__).parent.parent))
-
-from dataloader_dev import CIFAR10Dataset, DataLoader, create_data_pipeline
-
-class TestCIFAR10Dataset:
-    """Test CIFAR-10 dataset with real data."""
-    
-    def test_cifar10_download_and_load(self):
-        """Test downloading and loading real CIFAR-10 data."""
-        dataset = CIFAR10Dataset('data/cifar10/', train=True, download=True)
-        
-        # Test with actual CIFAR-10 properties
-        assert len(dataset) == 50000
-        
-        # Test first sample
-        image, label = dataset[0]
-        assert image.shape == (3, 32, 32)
-        assert isinstance(label, int)
-        assert 0 <= label <= 9
-    
-    def test_cifar10_test_split(self):
-        """Test CIFAR-10 test split."""
-        dataset = CIFAR10Dataset('data/cifar10/', train=False, download=True)
-        assert len(dataset) == 10000  # Actual test split size
-
-class TestDataLoader:
-    """Test DataLoader with real data."""
-    
-    def test_dataloader_batching(self):
-        """Test batching with real CIFAR-10 data."""
-        dataset = CIFAR10Dataset('data/cifar10/', train=True)
-        dataloader = DataLoader(dataset, batch_size=32, shuffle=True)
-        
-        batch_images, batch_labels = next(iter(dataloader))
-        assert batch_images.shape == (32, 3, 32, 32)
-        assert batch_labels.shape == (32,)
-    
-    def test_dataloader_performance(self):
-        """Test performance with realistic constraints."""
-        dataset = CIFAR10Dataset('data/cifar10/', train=True)
-        dataloader = DataLoader(dataset, batch_size=128, num_workers=2)
-        
-        start_time = time.time()
-        for i, (images, labels) in enumerate(dataloader):
-            if i >= 5:  # Test first 5 batches
-                break
-        elapsed = time.time() - start_time
-        
-        # Should be reasonably fast
-        assert elapsed < 10, f"DataLoader too slow: {elapsed:.2f}s"
-
-class TestDataPipeline:
-    """Test complete data pipeline with real data."""
-    
-    def test_complete_pipeline(self):
-        """Test end-to-end pipeline with real CIFAR-10."""
-        pipeline = create_data_pipeline('data/cifar10/', batch_size=32)
-        
-        # Test pipeline produces real data
-        batch_images, batch_labels = next(iter(pipeline))
-        assert batch_images.shape == (32, 3, 32, 32)
-        assert batch_labels.shape == (32,)
-        assert batch_images.dtype == torch.float32
-        assert 0 <= batch_labels.min() <= batch_labels.max() <= 9
-```
-
-## DO NOT USE
-
-- **Mock datasets or synthetic data** - Violates real data principle
-- Manual test runners (custom functions that execute tests)
-- unittest framework
-- Simple assert statements without pytest structure
-- Print-based testing
-- Custom test discovery mechanisms
-- Any testing approach that doesn't integrate with pytest
-- Fake data generators that don't reflect real-world characteristics
-
-## Integration with TinyTorch CLI
-
-The `tito.py` CLI tool expects pytest-compatible test files and uses pytest internally:
-
-```python
-# In bin/tito.py
-result = subprocess.run([sys.executable, "-m", "pytest", test_file, "-v"])
-```
-
-This ensures all tests run through pytest with consistent output and reporting, using real data throughout the testing process.
  
-```
 
 This ensures all tests run through pytest with consistent output and reporting, using real data throughout the testing process.
  
