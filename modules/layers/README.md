@@ -1,5 +1,11 @@
 # 🧱 Module 2: Layers - Neural Network Building Blocks
 
+## 📊 Module Info
+- **Difficulty**: ⭐⭐ Intermediate
+- **Time Estimate**: 4-5 hours
+- **Prerequisites**: Tensor, Activations modules
+- **Next Steps**: Networks module
+
 **Build the fundamental transformations that compose into neural networks**
 
 ## 🎯 Learning Objectives

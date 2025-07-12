@@ -1,5 +1,11 @@
 # 🧠 Module 3: Networks - Neural Network Architectures
 
+## 📊 Module Info
+- **Difficulty**: ⭐⭐⭐ Advanced
+- **Time Estimate**: 5-7 hours
+- **Prerequisites**: Tensor, Activations, Layers modules
+- **Next Steps**: Training, CNN modules
+
 **Compose layers into complete neural network architectures with powerful visualizations**
 
 ## 🎯 Learning Objectives
