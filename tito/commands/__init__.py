@@ -18,6 +18,7 @@ from .jupyter import JupyterCommand
 from .nbdev import NbdevCommand
 from .status import StatusCommand
 from .clean import CleanCommand
+from .nbgrader import NBGraderCommand
 
 # Command groups
 from .system import SystemCommand
@@ -37,6 +38,7 @@ __all__ = [
     'NbdevCommand',
     'StatusCommand',
     'CleanCommand',
+    'NBGraderCommand',
     # Command groups
     'SystemCommand',
     'ModuleCommand',

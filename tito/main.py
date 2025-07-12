@@ -32,6 +32,7 @@ from .commands.status import StatusCommand
 from .commands.system import SystemCommand
 from .commands.module import ModuleCommand
 from .commands.package import PackageCommand
+from .commands.nbgrader import NBGraderCommand
 
 # Configure logging
 logging.basicConfig(
@@ -57,6 +58,7 @@ class TinyTorchCLI:
             'system': SystemCommand,
             'module': ModuleCommand,
             'package': PackageCommand,
+            'nbgrader': NBGraderCommand,
         }
     
     def create_parser(self) -> argparse.ArgumentParser:
@@ -70,11 +72,13 @@ Command Groups:
   system      System environment and configuration commands
   module      Module development and management commands  
   package     Package management and nbdev integration commands
+  nbgrader    Assignment management and auto-grading commands
 
 Examples:
   tito system info              Show system information
   tito module status --metadata Module status with metadata
   tito package export           Export notebooks to package
+  tito nbgrader generate setup  Generate assignment from setup module
             """
         )
         
@@ -165,15 +169,18 @@ Examples:
                     "[bold]Command Groups:[/bold]\n"
                     "  [bold green]system[/bold green]   - System environment and configuration\n"
                     "  [bold green]module[/bold green]   - Module development and management\n"
-                    "  [bold green]package[/bold green]  - Package management and nbdev integration\n\n"
+                    "  [bold green]package[/bold green]  - Package management and nbdev integration\n"
+                    "  [bold green]nbgrader[/bold green] - Assignment management and auto-grading\n\n"
                     "[bold]Quick Start:[/bold]\n"
                     "  [dim]tito system info[/dim]              - Show system information\n"
                     "  [dim]tito module status --metadata[/dim] - Module status with metadata\n"
-                    "  [dim]tito package export[/dim]           - Export notebooks to package\n\n"
+                    "  [dim]tito package export[/dim]           - Export notebooks to package\n"
+                    "  [dim]tito nbgrader generate setup[/dim]  - Generate assignment from setup module\n\n"
                     "[bold]Get Help:[/bold]\n"
                     "  [dim]tito system[/dim]                   - Show system subcommands\n"
                     "  [dim]tito module[/dim]                   - Show module subcommands\n"
                     "  [dim]tito package[/dim]                  - Show package subcommands\n"
+                    "  [dim]tito nbgrader[/dim]                 - Show nbgrader subcommands\n"
                     "  [dim]tito --help[/dim]                   - Show full help",
                     title="TinyTorch CLI",
                     border_style="bright_blue"
