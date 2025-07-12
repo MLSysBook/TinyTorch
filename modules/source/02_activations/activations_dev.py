@@ -280,6 +280,50 @@ class ReLU:
 
 # %% [markdown]
 """
+### 🧪 Quick Test: ReLU Activation
+
+Let's test your ReLU implementation right away! This gives you immediate feedback on whether your activation function works correctly.
+"""
+
+# %% nbgrader={"grade": true, "grade_id": "test-relu-immediate", "locked": true, "points": 5, "schema_version": 3, "solution": false, "task": false}
+# Test ReLU activation immediately after implementation
+print("🔬 Testing ReLU activation...")
+
+# Create ReLU instance
+relu = ReLU()
+
+# Test with mixed positive/negative values
+try:
+    test_input = Tensor([[-2, -1, 0, 1, 2]])
+    result = relu(test_input)
+    expected = np.array([[0, 0, 0, 1, 2]])
+    
+    assert np.array_equal(result.data, expected), f"ReLU failed: expected {expected}, got {result.data}"
+    print(f"✅ ReLU test: input {test_input.data} → output {result.data}")
+    
+    # Test that negative values become zero
+    assert np.all(result.data >= 0), "ReLU should make all negative values zero"
+    print("✅ ReLU correctly zeros negative values")
+    
+    # Test that positive values remain unchanged
+    positive_input = Tensor([[1, 2, 3, 4, 5]])
+    positive_result = relu(positive_input)
+    assert np.array_equal(positive_result.data, positive_input.data), "ReLU should preserve positive values"
+    print("✅ ReLU preserves positive values")
+    
+except Exception as e:
+    print(f"❌ ReLU test failed: {e}")
+    raise
+
+# Show visual example
+print("🎯 ReLU behavior:")
+print("   Negative → 0 (blocked)")
+print("   Zero → 0 (blocked)")  
+print("   Positive → unchanged (passed through)")
+print("📈 Progress: ReLU ✓")
+
+# %% [markdown]
+"""
 ## Step 3: Sigmoid - The Smooth Squasher
 
 ### What is Sigmoid?
@@ -367,6 +411,55 @@ class Sigmoid:
 
 # %% [markdown]
 """
+### 🧪 Quick Test: Sigmoid Activation
+
+Let's test your Sigmoid implementation! This should squash all values to the range (0, 1).
+"""
+
+# %% nbgrader={"grade": true, "grade_id": "test-sigmoid-immediate", "locked": true, "points": 5, "schema_version": 3, "solution": false, "task": false}
+# Test Sigmoid activation immediately after implementation
+print("🔬 Testing Sigmoid activation...")
+
+# Create Sigmoid instance
+sigmoid = Sigmoid()
+
+# Test with various inputs
+try:
+    test_input = Tensor([[-2, -1, 0, 1, 2]])
+    result = sigmoid(test_input)
+    
+    # Check that all outputs are between 0 and 1
+    assert np.all(result.data > 0), "Sigmoid outputs should be > 0"
+    assert np.all(result.data < 1), "Sigmoid outputs should be < 1"
+    print(f"✅ Sigmoid test: input {test_input.data} → output {result.data}")
+    
+    # Test specific values
+    zero_input = Tensor([[0]])
+    zero_result = sigmoid(zero_input)
+    assert np.allclose(zero_result.data, 0.5, atol=1e-6), f"Sigmoid(0) should be 0.5, got {zero_result.data}"
+    print("✅ Sigmoid(0) = 0.5 (correct)")
+    
+    # Test that it's monotonic (larger inputs give larger outputs)
+    small_input = Tensor([[-1]])
+    large_input = Tensor([[1]])
+    small_result = sigmoid(small_input)
+    large_result = sigmoid(large_input)
+    assert small_result.data < large_result.data, "Sigmoid should be monotonic"
+    print("✅ Sigmoid is monotonic (increasing)")
+    
+except Exception as e:
+    print(f"❌ Sigmoid test failed: {e}")
+    raise
+
+# Show visual example
+print("🎯 Sigmoid behavior:")
+print("   Large negative → approaches 0")
+print("   Zero → 0.5")
+print("   Large positive → approaches 1")
+print("📈 Progress: ReLU ✓, Sigmoid ✓")
+
+# %% [markdown]
+"""
 ## Step 4: Tanh - The Zero-Centered Squasher
 
 ### What is Tanh?
@@ -436,6 +529,55 @@ class Tanh:
     def __call__(self, x: Tensor) -> Tensor:
         """Make the class callable: tanh(x) instead of tanh.forward(x)"""
         return self.forward(x)
+
+# %% [markdown]
+"""
+### 🧪 Quick Test: Tanh Activation
+
+Let's test your Tanh implementation! This should squash all values to the range (-1, 1) and be zero-centered.
+"""
+
+# %% nbgrader={"grade": true, "grade_id": "test-tanh-immediate", "locked": true, "points": 5, "schema_version": 3, "solution": false, "task": false}
+# Test Tanh activation immediately after implementation
+print("🔬 Testing Tanh activation...")
+
+# Create Tanh instance
+tanh = Tanh()
+
+# Test with various inputs
+try:
+    test_input = Tensor([[-2, -1, 0, 1, 2]])
+    result = tanh(test_input)
+    
+    # Check that all outputs are between -1 and 1
+    assert np.all(result.data > -1), "Tanh outputs should be > -1"
+    assert np.all(result.data < 1), "Tanh outputs should be < 1"
+    print(f"✅ Tanh test: input {test_input.data} → output {result.data}")
+    
+    # Test specific values
+    zero_input = Tensor([[0]])
+    zero_result = tanh(zero_input)
+    assert np.allclose(zero_result.data, 0.0, atol=1e-6), f"Tanh(0) should be 0.0, got {zero_result.data}"
+    print("✅ Tanh(0) = 0.0 (zero-centered)")
+    
+    # Test symmetry: tanh(-x) = -tanh(x)
+    pos_input = Tensor([[1]])
+    neg_input = Tensor([[-1]])
+    pos_result = tanh(pos_input)
+    neg_result = tanh(neg_input)
+    assert np.allclose(pos_result.data, -neg_result.data, atol=1e-6), "Tanh should be symmetric"
+    print("✅ Tanh is symmetric: tanh(-x) = -tanh(x)")
+    
+except Exception as e:
+    print(f"❌ Tanh test failed: {e}")
+    raise
+
+# Show visual example
+print("🎯 Tanh behavior:")
+print("   Large negative → approaches -1")
+print("   Zero → 0.0 (zero-centered)")
+print("   Large positive → approaches 1")
+print("📈 Progress: ReLU ✓, Sigmoid ✓, Tanh ✓")
 
 # %% [markdown]
 """
@@ -518,6 +660,60 @@ class Softmax:
     def __call__(self, x: Tensor) -> Tensor:
         """Make the class callable: softmax(x) instead of softmax.forward(x)"""
         return self.forward(x)
+
+# %% [markdown]
+"""
+### 🧪 Quick Test: Softmax Activation
+
+Let's test your Softmax implementation! This should convert any vector into a probability distribution that sums to 1.
+"""
+
+# %% nbgrader={"grade": true, "grade_id": "test-softmax-immediate", "locked": true, "points": 5, "schema_version": 3, "solution": false, "task": false}
+# Test Softmax activation immediately after implementation
+print("🔬 Testing Softmax activation...")
+
+# Create Softmax instance
+softmax = Softmax()
+
+# Test with various inputs
+try:
+    test_input = Tensor([[1, 2, 3]])
+    result = softmax(test_input)
+    
+    # Check that all outputs are non-negative
+    assert np.all(result.data >= 0), "Softmax outputs should be non-negative"
+    print(f"✅ Softmax test: input {test_input.data} → output {result.data}")
+    
+    # Check that outputs sum to 1
+    sum_result = np.sum(result.data)
+    assert np.allclose(sum_result, 1.0, atol=1e-6), f"Softmax should sum to 1, got {sum_result}"
+    print(f"✅ Softmax sums to 1: {sum_result:.6f}")
+    
+    # Test that larger inputs get higher probabilities
+    large_input = Tensor([[1, 2, 5]])  # 5 should get the highest probability
+    large_result = softmax(large_input)
+    max_idx = np.argmax(large_result.data)
+    assert max_idx == 2, f"Largest input should get highest probability, got max at index {max_idx}"
+    print("✅ Softmax gives highest probability to largest input")
+    
+    # Test numerical stability with large numbers
+    stable_input = Tensor([[1000, 1001, 1002]])
+    stable_result = softmax(stable_input)
+    assert not np.any(np.isnan(stable_result.data)), "Softmax should be numerically stable"
+    assert np.allclose(np.sum(stable_result.data), 1.0, atol=1e-6), "Softmax should still sum to 1 with large inputs"
+    print("✅ Softmax is numerically stable with large inputs")
+    
+except Exception as e:
+    print(f"❌ Softmax test failed: {e}")
+    raise
+
+# Show visual example
+print("🎯 Softmax behavior:")
+print("   Converts any vector → probability distribution")
+print("   All outputs ≥ 0, sum = 1")
+print("   Larger inputs → higher probabilities")
+print("📈 Progress: ReLU ✓, Sigmoid ✓, Tanh ✓, Softmax ✓")
+print("🚀 All activation functions ready!")
 
 # %% [markdown]
 """
