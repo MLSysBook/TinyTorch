@@ -81,13 +81,13 @@ class InfoCommand(BaseCommand):
         # Command Reference Panel
         cmd_text = Text()
         cmd_text.append("📊 Module Status: ", style="dim")
-        cmd_text.append("tito status\n", style="bold cyan")
+        cmd_text.append("tito module status\n", style="bold cyan")
         cmd_text.append("🧪 Run Tests: ", style="dim")
-        cmd_text.append("tito test --all\n", style="bold cyan")
+        cmd_text.append("tito module test --all\n", style="bold cyan")
         cmd_text.append("🔄 Export Code: ", style="dim")
-        cmd_text.append("tito sync\n", style="bold cyan")
+        cmd_text.append("tito package sync\n", style="bold cyan")
         cmd_text.append("🩺 Check Environment: ", style="dim")
-        cmd_text.append("tito doctor", style="bold cyan")
+        cmd_text.append("tito system doctor", style="bold cyan")
         
         console.print(Panel(cmd_text, title="📋 Quick Commands", border_style="bright_magenta"))
         
