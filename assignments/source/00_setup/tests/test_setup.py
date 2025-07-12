@@ -24,9 +24,15 @@ class TestSetupFunctions:
         hello_tinytorch()
         captured = capsys.readouterr()
         
-        # Should print the branding text
-        assert "TinyTorch" in captured.out
+        # Should print either ASCII art or simple banner, plus the tagline
+        # Check for the tagline which should always be present
         assert "Build ML Systems from Scratch!" in captured.out
+        
+        # Should print either "TinyTorch" (simple banner) or ASCII art
+        # If ASCII art file exists, it will show art; otherwise simple banner
+        assert ("TinyTorch" in captured.out or 
+                "Tiny🔥Torch" in captured.out or 
+                len(captured.out.splitlines()) > 5)  # ASCII art has many lines
     
     def test_complex_calculation_basic(self):
         """Test multi-step calculation with multiple solution blocks."""
