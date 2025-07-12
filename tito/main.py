@@ -18,6 +18,7 @@ from typing import Dict, Type
 from .core.config import CLIConfig
 from .core.console import get_console, print_banner, print_error
 from .core.exceptions import TinyTorchCLIError
+from rich.panel import Panel
 from .commands.base import BaseCommand
 from .commands.notebooks import NotebooksCommand
 from .commands.info import InfoCommand
@@ -28,6 +29,9 @@ from .commands.reset import ResetCommand
 from .commands.jupyter import JupyterCommand
 from .commands.nbdev import NbdevCommand
 from .commands.status import StatusCommand
+from .commands.system import SystemCommand
+from .commands.module import ModuleCommand
+from .commands.package import PackageCommand
 
 # Configure logging
 logging.basicConfig(
@@ -49,6 +53,11 @@ class TinyTorchCLI:
         self.config = CLIConfig.from_project_root()
         self.console = get_console()
         self.commands: Dict[str, Type[BaseCommand]] = {
+            # New hierarchical command groups
+            'system': SystemCommand,
+            'module': ModuleCommand,
+            'package': PackageCommand,
+            # Legacy flat commands (for backward compatibility)
             'notebooks': NotebooksCommand,
             'info': InfoCommand,
             'test': TestCommand,
@@ -65,7 +74,21 @@ class TinyTorchCLI:
         parser = argparse.ArgumentParser(
             prog="tito",
             description="TinyTorch CLI - Build ML systems from scratch",
-            formatter_class=argparse.RawDescriptionHelpFormatter
+            formatter_class=argparse.RawDescriptionHelpFormatter,
+            epilog="""
+Command Groups:
+  system      System environment and configuration commands
+  module      Module development and management commands  
+  package     Package management and nbdev integration commands
+
+Examples:
+  tito system info              Show system information
+  tito module status --metadata Module status with metadata
+  tito package sync             Export notebooks to package
+  
+Legacy commands (deprecated, use grouped commands above):
+  tito info, tito status, tito test, tito sync, etc.
+            """
         )
         
         # Global options
@@ -143,7 +166,25 @@ class TinyTorchCLI:
             
             # Handle no command
             if not parsed_args.command:
-                parser.print_help()
+                # Show enhanced help with command groups
+                self.console.print(Panel(
+                    "[bold cyan]TinyTorch CLI - Build ML Systems from Scratch[/bold cyan]\n\n"
+                    "[bold]Command Groups:[/bold]\n"
+                    "  [bold green]system[/bold green]   - System environment and configuration\n"
+                    "  [bold green]module[/bold green]   - Module development and management\n"
+                    "  [bold green]package[/bold green]  - Package management and nbdev integration\n\n"
+                    "[bold]Quick Start:[/bold]\n"
+                    "  [dim]tito system info[/dim]              - Show system information\n"
+                    "  [dim]tito module status --metadata[/dim] - Module status with metadata\n"
+                    "  [dim]tito package sync[/dim]             - Export notebooks to package\n\n"
+                    "[bold]Get Help:[/bold]\n"
+                    "  [dim]tito system[/dim]                   - Show system subcommands\n"
+                    "  [dim]tito module[/dim]                   - Show module subcommands\n"
+                    "  [dim]tito package[/dim]                  - Show package subcommands\n"
+                    "  [dim]tito --help[/dim]                   - Show full help",
+                    title="TinyTorch CLI",
+                    border_style="bright_blue"
+                ))
                 return 0
             
             # Execute command
