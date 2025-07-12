@@ -121,11 +121,11 @@ Each module follows this pattern:
 ### **Instructors**
 1. Read the [Instructor Guide](INSTRUCTOR_GUIDE.md)
 2. Verify your system: `tito system doctor`
-3. Test the first module: `cd modules/00_setup && jupyter lab setup_dev.py`
+3. Test the first assignment: `cd assignments/source/00_setup && jupyter lab setup_dev.py`
 
 ### **Students**
 1. Read the [Student Guide](STUDENT_GUIDE.md)
-2. Start with: `cd modules/00_setup && jupyter lab setup_dev.py`
+2. Start with: `cd assignments/source/00_setup && jupyter lab setup_dev.py`
 3. Follow the 5-step workflow for each module
 
 ### **Developers**

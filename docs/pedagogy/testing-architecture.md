@@ -118,7 +118,7 @@ python -m pytest tests/test_tensor.py -v
 When creating new modules, follow this pattern:
 
 ### 1. Core Implementation
-- Implement basic functionality in `modules/{module}/{module}_dev.py`
+- Implement basic functionality in `assignments/source/{module}/{module}_dev.py`
 - Add `#| export` directives for NBDev export
 - Include both student and instructor versions
 
