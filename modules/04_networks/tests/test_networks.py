@@ -20,7 +20,8 @@ from tinytorch.core.activations import ReLU, Sigmoid, Tanh
 
 # Import the networks module
 try:
-    from modules.04_networks.networks_dev import (
+    # Import from the exported package
+    from tinytorch.core.networks import (
         Sequential, 
         create_mlp, 
         create_classification_network,
