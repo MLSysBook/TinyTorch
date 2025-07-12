@@ -1,4 +1,5 @@
 
+
 # NBDev Educational Pattern for TinyTorch Modules
 
 When working with module development files (`*_dev.py`), follow this educational structure:
@@ -251,6 +252,10 @@ All modules must:
 - ✅ Follow "Build → Use → Understand" progression
 - ✅ Include comprehensive TODO guidance with systems thinking
 - ✅ Separate development richness from clean exports
+
+## Naming Convention
+
+Module files should be named `{module_name}_dev.py` to indicate development notebooks, following the established pattern from [modules/setup/setup_dev.py](mdc:modules/setup/setup_dev.py) and [modules/tensor/tensor_dev.py](mdc:modules/tensor/tensor_dev.py).
 
 ## Naming Convention
 

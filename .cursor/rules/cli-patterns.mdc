@@ -1,6 +1,9 @@
 ---
+description: CLI Development Patterns for TinyTorch
+globs:
 alwaysApply: false
 ---
+
 # CLI Development Patterns for TinyTorch
 
 ## Command Architecture
@@ -165,7 +168,7 @@ in_venv = (
 6. **Handle edge cases** - Missing files, invalid arguments, etc.
 7. **Provide progress feedback** - For long-running operations
 8. **Use consistent styling** - Colors, borders, and formatting
-description:
+
 globs:
 alwaysApply: false
 ---

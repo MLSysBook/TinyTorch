@@ -1,3 +1,7 @@
+---
+description: Git workflow guidelines for TinyTorch development.
+---
+
 # Git Workflow Guidelines for TinyTorch Development
 
 ## 🎯 **Philosophy: Incremental Commits for Easy Reverts**
@@ -144,6 +148,10 @@ git commit -m "Second part of changes"
 2. **Descriptive commit messages** that explain what changed
 3. **Test before committing** to avoid broken commits
 4. **Use feature branches** for larger changes
+5. **Commit frequently** to avoid losing work
+
+**Remember:** It's better to have many small commits than one large commit that's hard to revert or understand.
+
 5. **Commit frequently** to avoid losing work
 
 **Remember:** It's better to have many small commits than one large commit that's hard to revert or understand.

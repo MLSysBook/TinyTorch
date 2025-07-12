@@ -1,3 +1,8 @@
+---
+description: User preferences and development conventions for TinyTorch, including module naming patterns, commit frequency, testing standards, and NBDev integration workflow.
+alwaysApply: false
+---
+
 
 # User Preferences and Conventions
 

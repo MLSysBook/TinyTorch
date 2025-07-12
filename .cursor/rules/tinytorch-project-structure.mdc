@@ -1,3 +1,6 @@
+---
+description: A guide to the project structure of the TinyTorch ML framework.
+---
 
 # TinyTorch Project Structure Guide
 
@@ -47,6 +50,10 @@ modules/{module_name}/
 2. **Sync**: Run `python bin/tito.py sync --module {module}` 
 3. **Test**: Run `python bin/tito.py test --module {module}`
 4. **Build**: Code exports to `tinytorch/core/{component}.py`
+
+The `#| default_exp` directive controls where code exports to in the package.
+ 
+
 
 The `#| default_exp` directive controls where code exports to in the package.
  
