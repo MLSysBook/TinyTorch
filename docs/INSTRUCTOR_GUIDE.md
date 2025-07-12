@@ -75,21 +75,21 @@ python -c "from tinytorch.core.activations import ReLU; print(ReLU()([-1, 0, 1])
 ## 🛠️ **Instructor Workflow** (Python-First Development)
 
 ### **🐍 Python-First Philosophy**
-- **Always work in raw Python files** (`modules/XX/XX_dev.py`)
+- **Always work in raw Python files** (`assignments/source/XX/XX_dev.py`)
 - **Generate Jupyter notebooks on demand** using Jupytext
 - **NBGrader compliance** through automated cell metadata
 - **nbdev for package building** and exports
 
 ### **Step 1: Create/Edit Solution (Python File)**
 ```bash
-cd modules/00_setup
+cd assignments/source/00_setup
 # Edit the raw Python file (source of truth)
 code setup_dev.py                # or vim/nano/your editor
 ```
 
 ### **Step 2: Test Solution**
 ```bash
-python -m pytest modules/00_setup/tests/ -v  # Verify solution works
+python -m pytest assignments/source/00_setup/tests/ -v  # Verify solution works
 ```
 
 ### **Step 3: Export to Package (nbdev)**
@@ -115,7 +115,7 @@ tito nbgrader autograde 00_setup  # Auto-grade with pytest
 
 ### **🔄 Complete Workflow Diagram**
 ```
-modules/XX/XX_dev.py    (Source of Truth)
+assignments/source/XX/XX_dev.py    (Source of Truth)
         ↓
     [nbdev export]      (Package Building)
         ↓
@@ -132,9 +132,9 @@ assignments/source/XX/  (Student Assignments)
 
 ## 🛠️ **Student Workflow** (5 Simple Steps)
 
-### **Step 1: Open Module**
+### **Step 1: Open Assignment**
 ```bash
-cd modules/00_setup
+cd assignments/source/00_setup
 jupyter lab setup_dev.py
 ```
 
@@ -150,7 +150,7 @@ python bin/tito module export 00_setup
 
 ### **Step 4: Test Work**
 ```bash
-python -m pytest modules/00_setup/tests/ -v
+python -m pytest assignments/source/00_setup/tests/ -v
 ```
 
 ### **Step 5: Use Their Code**
@@ -314,7 +314,7 @@ tito module status            # Check all modules
 1. **Clone repository**: `git clone [repo_url]`
 2. **Test your setup**: `tito system doctor`
 3. **Review module 00**: `cat modules/00_setup/README.md`
-4. **Open in Jupyter**: `jupyter lab modules/00_setup/setup_dev.py`
+4. **Open in Jupyter**: `jupyter lab assignments/source/00_setup/setup_dev.py`
 
 ### **Your First Class**
 ```bash

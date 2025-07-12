@@ -1,71 +1,41 @@
-# Tiny🔥Torch: Build ML Systems from Scratch
+# 🔥 TinyTorch: Build ML Systems from Scratch
 
-> A hands-on ML Systems course where students implement every component from scratch
+**A complete Machine Learning Systems course where students build their own ML framework.**
 
-[![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
-[![License](https://img.shields.io/badge/license-Apache%202.0-green.svg)](LICENSE)
-[![nbdev](https://img.shields.io/badge/built%20with-nbdev-orange.svg)](https://nbdev.fast.ai/)
+## 🎯 What You'll Build
 
-> **Disclaimer**: TinyTorch is an educational framework developed independently and is not affiliated with or endorsed by Meta or the PyTorch project.
+- **Complete ML Framework**: Build your own PyTorch-style framework from scratch
+- **Real Applications**: Use your framework to classify CIFAR-10 images  
+- **Production Skills**: Learn ML systems engineering, not just algorithms
+- **Immediate Feedback**: See your code working at every step
 
-**Tiny🔥Torch** is a complete ML Systems course where students build their own machine learning framework from scratch. Rather than just learning *about* ML systems, students implement every component and then use their own implementation to solve real problems.
+## 🚀 Quick Start (2 minutes)
 
-## 🚀 **Quick Start - Choose Your Path**
-
-### **👨‍🏫 For Instructors**
-**[📖 Instructor Guide](docs/INSTRUCTOR_GUIDE.md)** - Complete teaching guide with verified modules, class structure, and commands
-- 6+ weeks of proven curriculum content
-- Verified module status and teaching sequence
-- Class session structure and troubleshooting guide
-
-### **👨‍🎓 For Students**
-**[🔥 Student Guide](docs/STUDENT_GUIDE.md)** - Complete learning path with clear workflow
-- Step-by-step progress tracker
-- 5-step daily workflow for each module
-- Getting help and study tips
-
-### **🛠️ For Developers**
-**[📚 Documentation](docs/)** - Complete documentation including pedagogy and development guides
-
-### **🎯 Python-First Development + NBGrader**
-**Philosophy**: Raw Python files → Jupyter notebooks on demand → NBGrader compliance
-- **Core Development**: Work in `modules/XX/XX_dev.py` (Python files)
-- **Package Building**: `nbdev` exports to `tinytorch` package  
-- **Assignment Generation**: `jupytext` + `NBGrader` create student versions
-- **Auto-Grading**: `pytest` integration for automated testing
-
-**Instructor Workflow**: 
+### **Students**
 ```bash
-code modules/XX/XX_dev.py        # Edit Python source
-tito module export XX            # Build package (nbdev)
-tito nbgrader generate XX        # Create assignment (Python→Jupyter→NBGrader)
-tito nbgrader release XX         # Deploy to students
+git clone https://github.com/your-org/tinytorch.git
+cd TinyTorch
+make install                                    # Install dependencies
+tito system doctor                              # Verify setup
+cd assignments/source/00_setup                  # Start with setup
+jupyter lab setup_dev.py                       # Open first assignment
 ```
 
-## 🎯 **What Students Build**
+### **Instructors**
+```bash
+# System check
+tito system info                                # Check course status
+tito system doctor                              # Verify environment  
 
-By completing TinyTorch, students implement a complete ML framework:
+# Assignment management
+tito nbgrader generate 00_setup                 # Create student assignments
+tito nbgrader release 00_setup                  # Release to students
+tito nbgrader autograde 00_setup                # Auto-grade submissions
+```
 
-- ✅ **Activation functions** (ReLU, Sigmoid, Tanh)
-- ✅ **Neural network layers** (Dense, Conv2D)
-- ✅ **Network architectures** (Sequential, MLP)
-- ✅ **Data loading** (CIFAR-10 pipeline)
-- ✅ **Development workflow** (export, test, use)
-- 🚧 **Tensor operations** (arithmetic, broadcasting)
-- 🚧 **Automatic differentiation** (backpropagation)
-- 🚧 **Training systems** (optimizers, loss functions)
+## 📚 Course Structure
 
-## 🎓 **Learning Philosophy: Build → Use → Understand → Repeat**
-
-Students experience the complete cycle:
-1. **Build**: Implement `ReLU()` function from scratch
-2. **Use**: Import `from tinytorch.core.activations import ReLU` with their own code
-3. **Understand**: See how it works in real neural networks
-4. **Repeat**: Each module builds on previous implementations
-
-## 📊 **Current Status** (Ready for Classroom Use)
-
-### **✅ Fully Working Modules** (6+ weeks of content)
+### **Core Assignments** (6+ weeks of proven content)
 - **00_setup** (20/20 tests) - Development workflow & CLI tools
 - **02_activations** (24/24 tests) - ReLU, Sigmoid, Tanh functions
 - **03_layers** (17/22 tests) - Dense layers & neural building blocks
@@ -73,103 +43,108 @@ Students experience the complete cycle:
 - **06_dataloader** (15/15 tests) - CIFAR-10 data loading
 - **05_cnn** (2/2 tests) - Convolution operations
 
-### **🚧 In Development**
+### **Advanced Features** (in development)
 - **01_tensor** (22/33 tests) - Tensor arithmetic
-- **07-13** - Advanced features (autograd, training, MLOps)
+- **07-13** - Autograd, optimizers, training, MLOps
 
-## 🚀 **Quick Commands**
+## 🛠️ Development Workflow
 
-### **System Status**
+### **NBGrader** (Assignment Creation & Testing)
 ```bash
-tito system info              # Check system and module status
-tito system doctor            # Verify environment setup
-tito module status            # View all module progress
+tito nbgrader generate 00_setup     # Create student assignments
+tito nbgrader release 00_setup      # Release to students
+tito nbgrader collect 00_setup      # Collect submissions
+tito nbgrader autograde 00_setup    # Auto-grade with pytest
 ```
 
-### **Student Workflow**
+### **nbdev** (Package Export & Building)
 ```bash
-cd modules/00_setup           # Navigate to first module
-jupyter lab setup_dev.py     # Open development notebook
-python -m pytest tests/ -v   # Run tests
-python bin/tito module export 00_setup  # Export to package
+tito module export 00_setup         # Export to tinytorch package
+tito module test 00_setup           # Test package integration
 ```
 
-### **Verify Implementation**
-```bash
-# Use student's own implementations
-python -c "from tinytorch.core.utils import hello_tinytorch; hello_tinytorch()"
-python -c "from tinytorch.core.activations import ReLU; print(ReLU()([-1, 0, 1]))"
+## 📈 Student Success Path
+
+### **Build → Use → Understand → Repeat**
+1. **Build**: Implement `ReLU()` function from scratch
+2. **Use**: `from tinytorch.core.activations import ReLU` - your own code!
+3. **Understand**: See how it works in real neural networks
+4. **Repeat**: Each assignment builds on previous work
+
+### **Example: First Assignment**
+```python
+# You implement this:
+def hello_tinytorch():
+    print("Welcome to TinyTorch!")
+
+# Then immediately use it:
+from tinytorch.core.utils import hello_tinytorch
+hello_tinytorch()  # Your code working!
 ```
 
-## 🌟 **Why Build from Scratch?**
+## 🎓 Educational Philosophy
 
-**Even in the age of AI-generated code, building systems from scratch remains educationally essential:**
+### **Real Data, Real Systems**
+- Work with CIFAR-10 (not toy datasets)
+- Production-style code organization
+- Performance and engineering considerations
+- Immediate visual feedback
 
-- **Understanding vs. Using**: AI shows *what* works, TinyTorch teaches *why* it works
-- **Systems Literacy**: Debugging real ML requires understanding abstractions like autograd and data loaders
-- **AI-Augmented Engineers**: The best engineers collaborate with AI tools, not rely on them blindly
-- **Intentional Design**: Systems thinking about memory, performance, and architecture can't be outsourced
+### **Build Everything from Scratch**
+- No black boxes or "magic" functions
+- Understanding through implementation
+- Connect every concept to production systems
+- See your code working immediately
 
-## 🏗️ **Repository Structure**
+## 📁 Repository Structure
 
 ```
 TinyTorch/
-├── README.md                 # This file - main entry point
-├── docs/
-│   ├── INSTRUCTOR_GUIDE.md   # Complete teaching guide
-│   ├── STUDENT_GUIDE.md      # Complete learning path
-│   └── [detailed docs]       # Pedagogy and development guides
-├── modules/
-│   ├── 00_setup/            # Development workflow
-│   ├── 01_tensor/           # Tensor operations
-│   ├── 02_activations/      # Activation functions
-│   ├── 03_layers/           # Neural network layers
-│   ├── 04_networks/         # Network architectures
-│   ├── 05_cnn/              # Convolution operations
-│   ├── 06_dataloader/       # Data loading pipeline
-│   └── 07-13/               # Advanced features
-├── tinytorch/               # The actual Python package
-├── bin/                     # CLI tools (tito)
-└── tests/                   # Integration tests
+├── assignments/source/XX/          # Assignment source files
+│   ├── XX_dev.py                   # Development assignment
+│   └── tests/                      # Assignment tests
+├── tinytorch/                      # Your built framework
+│   └── core/                       # Exported student code
+├── tito/                           # CLI tools
+└── docs/                           # Documentation
 ```
 
-## 📚 **Educational Approach**
+## 🔧 Technical Requirements
 
-### **Real Data, Real Systems**
-- Work with CIFAR-10 (10,000 real images)
-- Production-style code organization
-- Performance and engineering considerations
+- **Python 3.8+**
+- **Jupyter Lab** for development
+- **PyTorch** for comparison and final projects
+- **NBGrader** for assignment management
+- **nbdev** for package building
 
-### **Immediate Feedback**
-- Tests provide instant verification
-- Students see their code working quickly
-- Progress is visible and measurable
+## 🎯 Getting Started
 
-### **Progressive Complexity**
-- Start simple (activation functions)
-- Build complexity gradually (layers → networks → training)
-- Connect to real ML engineering practices
+### **Students**
+1. **System Check**: `tito system doctor`
+2. **First Assignment**: `cd assignments/source/00_setup && jupyter lab setup_dev.py`
+3. **Build & Test**: Follow the notebook, export when complete
+4. **Use Your Code**: `from tinytorch.core.utils import hello_tinytorch`
 
-## 🤝 **Contributing**
+### **Instructors** 
+1. **Course Status**: `tito system info`
+2. **Assignment Management**: `tito nbgrader generate 00_setup`
+3. **Student Release**: `tito nbgrader release 00_setup`
+4. **Auto-grading**: `tito nbgrader autograde 00_setup`
 
-We welcome contributions! See our [development documentation](docs/development/) for guidelines on creating new modules or improving existing ones.
+## 📊 Success Metrics
 
-## 📄 **License**
+**Students can currently:**
+- Build and test multi-layer perceptrons
+- Implement custom activation functions  
+- Load and process CIFAR-10 data
+- Create basic convolution operations
+- Export their code to a working package
 
-Apache License 2.0 - see the [LICENSE](LICENSE) file for details.
+**Verified workflows:**
+- ✅ **Student Journey**: receive assignment → implement → export → use
+- ✅ **Instructor Journey**: create → release → collect → grade
+- ✅ **Package Integration**: All core imports work correctly
 
 ---
 
-## 🎉 **Ready to Start?**
-
-### **Instructors**
-1. Read the [📖 Instructor Guide](docs/INSTRUCTOR_GUIDE.md)
-2. Test your setup: `tito system doctor`
-3. Start with: `cd modules/00_setup && jupyter lab setup_dev.py`
-
-### **Students**
-1. Read the [🔥 Student Guide](docs/STUDENT_GUIDE.md)
-2. Begin with: `cd modules/00_setup && jupyter lab setup_dev.py`
-3. Follow the 5-step workflow for each module
-
-**🚀 TinyTorch is ready for classroom use with 6+ weeks of proven curriculum content!**
+**🎉 TinyTorch is ready for classroom use with 6+ weeks of proven curriculum content!**

@@ -3,36 +3,34 @@
 # %% auto 0
 __all__ = ['hello_tinytorch', 'add_numbers', 'SystemInfo', 'DeveloperProfile']
 
-# %% ../../assignments/source/00_setup/setup_dev.ipynb 3
-def hello_tinytorch():
-    """
-    A simple hello world function for TinyTorch.
-    
-    TODO: Implement this function to display TinyTorch ASCII art and welcome message.
-    Load the flame art from tinytorch_flame.txt file with graceful fallback.
-    
-    HINTS:
-    1. Try to load ASCII art from 'tinytorch_flame.txt' in current directory
-    2. If file exists, read and print the content
-    3. Add "Tiny🔥Torch" and "Build ML Systems from Scratch!" messages
-    4. If file doesn't exist, just print the emoji version
-    5. Handle any exceptions gracefully
-    
-    EXAMPLE OUTPUT:
-    [ASCII art from file]
-    Tiny🔥Torch
-    Build ML Systems from Scratch!
-    """
-    # YOUR CODE HERE
-    raise NotImplementedError()
+# %% ../../assignments/source/00_setup/setup_dev.ipynb 2
+# Required imports for TinyTorch utilities
+import sys
+import platform
+from datetime import datetime
+import os
+from pathlib import Path
 
 # %% ../../assignments/source/00_setup/setup_dev.ipynb 4
+def hello_tinytorch():
+    """
+    Display a welcome message for TinyTorch.
+    
+    This function should:
+    1. Try to load ASCII art from 'tinytorch_flame.txt' if it exists
+    2. If the file doesn't exist, display a simple text banner
+    3. Print "TinyTorch" and "Build ML Systems from Scratch!"
+    4. Handle any exceptions gracefully
+    """
+    ### BEGIN SOLUTION
+    # YOUR CODE HERE
+    raise NotImplementedError()
+    ### END SOLUTION
+
+# %% ../../assignments/source/00_setup/setup_dev.ipynb 5
 def add_numbers(a, b):
     """
     Add two numbers together.
-    
-    TODO: Implement addition of two numbers.
-    This is the foundation of all mathematical operations in ML.
     
     Args:
         a: First number (int or float)
@@ -40,96 +38,94 @@ def add_numbers(a, b):
         
     Returns:
         Sum of a and b
-        
-    EXAMPLE:
-    add_numbers(2, 3) should return 5
-    add_numbers(1.5, 2.5) should return 4.0
     """
+    ### BEGIN SOLUTION
     # YOUR CODE HERE
     raise NotImplementedError()
+    ### END SOLUTION
 
-# %% ../../assignments/source/00_setup/setup_dev.ipynb 9
+# %% ../../assignments/source/00_setup/setup_dev.ipynb 6
 class SystemInfo:
     """
-    Simple system information class.
-    
-    TODO: Implement this class to collect and display system information.
-    
-    REQUIREMENTS:
-    1. __init__: Collect Python version, platform, and machine information
-    2. __str__: Return formatted system info string
-    3. is_compatible: Check if Python version >= 3.8
-    
-    HINTS:
-    - Use sys.version_info for Python version
-    - Use platform.system() for platform name  
-    - Use platform.machine() for machine architecture
-    - Store these as instance attributes in __init__
+    A class for collecting and displaying system information.
     """
     
     def __init__(self):
         """
-        Initialize system information collection.
-        
-        TODO: Collect Python version, platform, and machine information.
-        Store as instance attributes: self.python_version, self.platform, self.machine
+        Initialize the SystemInfo object.
+        Collect Python version, platform, and machine information.
         """
+        ### BEGIN SOLUTION
         # YOUR CODE HERE
         raise NotImplementedError()
+        ### END SOLUTION
     
     def __str__(self):
         """
-        Return human-readable system information.
-        
-        TODO: Format system info as a readable string.
-        FORMAT: "Python X.Y on Platform (Architecture)"
-        EXAMPLE: "Python 3.9 on Darwin (arm64)"
+        Return a formatted string representation of system information.
+        Format: "Python X.Y.Z on Platform (Architecture)"
         """
+        ### BEGIN SOLUTION
         # YOUR CODE HERE
         raise NotImplementedError()
+        ### END SOLUTION
     
     def is_compatible(self):
         """
-        Check if system meets minimum requirements.
-        
-        TODO: Check if Python version >= 3.8
-        Return True if compatible, False otherwise
+        Check if the Python version is compatible (>= 3.8).
+        Returns True if compatible, False otherwise.
         """
+        ### BEGIN SOLUTION
         # YOUR CODE HERE
         raise NotImplementedError()
+        ### END SOLUTION
 
-# %% ../../assignments/source/00_setup/setup_dev.ipynb 15
+# %% ../../assignments/source/00_setup/setup_dev.ipynb 7
 class DeveloperProfile:
     """
-    Developer profile for personalizing TinyTorch experience.
-    
-    TODO: OPTIONAL CHALLENGE - Implement this class for extra credit!
-    
-    REQUIREMENTS:
-    1. Store developer information (name, email, etc.)
-    2. Load ASCII art from file with fallback
-    3. Generate formatted profile display
-    4. Create professional signature
-    
-    This is an advanced exercise - only attempt after completing the required parts!
+    A class representing a developer profile.
     """
     
-    def __init__(self, name="Student", email="student@example.com"):
+    def __init__(self, name="Student", email="student@example.com", affiliation="TinyTorch Community", specialization="ML Systems"):
         """
-        Initialize developer profile.
+        Initialize a developer profile.
         
-        TODO: Store developer information with defaults.
-        Feel free to customize with your own info!
+        Args:
+            name: Developer's name
+            email: Developer's email
+            affiliation: Developer's affiliation or organization
+            specialization: Developer's area of specialization
         """
-        # YOUR CODE HERE (OPTIONAL)
-        self.name = name
-        self.email = email
+        ### BEGIN SOLUTION
+        # YOUR CODE HERE
+        raise NotImplementedError()
+        ### END SOLUTION
+    
+    def __str__(self):
+        """
+        Return a basic string representation of the developer.
+        Format: "Name (email)"
+        """
+        ### BEGIN SOLUTION
+        # YOUR CODE HERE
+        raise NotImplementedError()
+        ### END SOLUTION
     
     def get_signature(self):
         """
-        Get a short signature for code headers.
-        
-        TODO: Return a signature like "Built by Name (email)"
+        Return a formatted signature for the developer.
+        Should include name, affiliation, and specialization.
         """
-        # YOUR CODE HERE (OPTIONAL)
-        return f"Built by {self.name} ({self.email})"
+        ### BEGIN SOLUTION
+        # YOUR CODE HERE
+        raise NotImplementedError()
+        ### END SOLUTION
+    
+    def get_profile_info(self):
+        """
+        Return comprehensive profile information as a dictionary.
+        """
+        ### BEGIN SOLUTION
+        # YOUR CODE HERE
+        raise NotImplementedError()
+        ### END SOLUTION 
