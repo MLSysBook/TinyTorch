@@ -7,7 +7,7 @@ import argparse
 import sys
 from pathlib import Path
 
-def generate_metadata_template(module_name: str, status: str = "not_started") -> str:
+def generate_metadata_template(module_name: str) -> str:
     """Generate a simplified module metadata template."""
     
     template = f"""# TinyTorch Module Metadata
@@ -16,8 +16,6 @@ def generate_metadata_template(module_name: str, status: str = "not_started") ->
 name: "{module_name}"
 title: "{module_name.title()}"
 description: "Brief description of what this module does"
-status: "{status}"  # complete, in_progress, not_started
-version: "1.0.0"
 
 # Dependencies
 dependencies:
@@ -45,15 +43,12 @@ components:
 def main():
     parser = argparse.ArgumentParser(description="Generate module metadata template")
     parser.add_argument("module_name", help="Name of the module")
-    parser.add_argument("--status", default="not_started", 
-                       choices=["complete", "in_progress", "not_started"],
-                       help="Initial status of the module")
     parser.add_argument("--output", help="Output file path (default: modules/{module_name}/module.yaml)")
     
     args = parser.parse_args()
     
     # Generate template
-    template = generate_metadata_template(args.module_name, args.status)
+    template = generate_metadata_template(args.module_name)
     
     # Determine output path
     if args.output:
@@ -70,6 +65,7 @@ def main():
     
     print(f"✅ Generated metadata template: {output_path}")
     print(f"📝 Edit the file to customize the module information")
+    print(f"💡 Module status will be determined automatically by test results")
 
 if __name__ == "__main__":
     main() 
