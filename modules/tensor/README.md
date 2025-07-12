@@ -1,5 +1,11 @@
 # 🔥 Module: Tensor
 
+## 📊 Module Info
+- **Difficulty**: ⭐⭐ Intermediate
+- **Time Estimate**: 4-6 hours
+- **Prerequisites**: Setup module
+- **Next Steps**: Activations, Layers
+
 Build the foundation of TinyTorch! This module implements the core Tensor class - the fundamental data structure that powers all neural networks and machine learning operations.
 
 ## 🎯 Learning Objectives

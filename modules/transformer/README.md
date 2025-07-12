@@ -1,5 +1,11 @@
 # Transformer Module
 
+## 📊 Module Info
+- **Difficulty**: ⭐⭐⭐⭐ Expert
+- **Time Estimate**: 8-12 hours
+- **Prerequisites**: Tensor, Layers, Networks, Autograd, Training modules
+- **Next Steps**: Advanced NLP, Large Language Models
+
 **Status**: 🚧 Coming Soon
 
 ## Overview

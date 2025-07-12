@@ -1,5 +1,11 @@
 # 🧠 Module X: CNN - Convolutional Neural Networks
 
+## 📊 Module Info
+- **Difficulty**: ⭐⭐⭐ Advanced
+- **Time Estimate**: 6-8 hours
+- **Prerequisites**: Tensor, Activations, Layers, Networks modules
+- **Next Steps**: Training, Computer Vision modules
+
 **Implement the core building block of modern computer vision: the convolutional layer.**
 
 ## 🎯 Learning Objectives
