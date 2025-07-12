@@ -86,9 +86,9 @@ class ResetCommand(BaseCommand):
         if files_removed > 0:
             reset_text.append(f"\n✅ Reset complete! Removed {files_removed} generated files.\n", style="bold green")
             reset_text.append("\n💡 Next steps:\n", style="bold yellow")
-            reset_text.append("  • Run: tito package export           - Re-export notebooks\n", style="white")
-            reset_text.append("  • Run: tito package export --module setup  - Export specific module\n", style="white")
-            reset_text.append("  • Run: tito test --all           - Test everything\n", style="white")
+            reset_text.append("  • Run: tito module export --all           - Re-export modules\n", style="white")
+            reset_text.append("  • Run: tito module export --module setup  - Export specific module\n", style="white")
+            reset_text.append("  • Run: tito module test --all           - Test everything\n", style="white")
             
             console.print(Panel(reset_text, title="Reset Complete", border_style="green"))
         else:
