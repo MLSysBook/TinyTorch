@@ -54,7 +54,7 @@ tito/
 │   └── notebooks.py       # Notebooks command
 └── tools/                 # CLI tools
     ├── __init__.py
-    └── py_to_notebook.py  # Conversion tool
+    └── tito               # Main CLI script
 ```
 
 ## 🎯 Design Patterns Applied
