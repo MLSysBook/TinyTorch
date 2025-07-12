@@ -1,3 +1,4 @@
+
 # TinyTorch Module Development Best Practices
 
 ## Core Principles
@@ -263,6 +264,10 @@ def show_images(data):
 
 **Remember**: We're teaching ML systems engineering, not just algorithms. Every module should reflect real-world practices and challenges while maintaining the "Build → Use → Understand" educational cycle.
 description:
+globs:
+alwaysApply: false
+---
+
 globs:
 alwaysApply: false
 ---

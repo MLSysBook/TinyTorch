@@ -1,3 +1,6 @@
+---
+description: "Testing patterns for TinyTorch, including framework requirements, core principles, file structure, naming convention, and test patterns."
+---
 
 # Testing Patterns for TinyTorch
 
@@ -288,6 +291,10 @@ The `tito.py` CLI tool expects pytest-compatible test files and uses pytest inte
 ```python
 # In bin/tito.py
 result = subprocess.run([sys.executable, "-m", "pytest", test_file, "-v"])
+```
+
+This ensures all tests run through pytest with consistent output and reporting, using real data throughout the testing process.
+ 
 ```
 
 This ensures all tests run through pytest with consistent output and reporting, using real data throughout the testing process.
