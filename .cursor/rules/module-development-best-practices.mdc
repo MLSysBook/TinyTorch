@@ -1,5 +1,5 @@
 
-# TinyTorch Module Development Best Practices
+# TinyTorch Module Development & Testing Best Practices
 
 ## Core Principles
 
@@ -12,10 +12,17 @@
 
 ### Educational Excellence: Build → Use → Analyze/Test
 - **"Build → Use → Analyze"**: Follow this cycle religiously with specific third-stage verbs
-- **Test after each feature**: Unit tests immediately after implementation, not at the end
+- **Test after each feature**: Inline unit tests immediately after implementation, not at the end
 - **Progressive complexity**: Easy → Medium → Hard with clear difficulty indicators
 - **Comprehensive guidance**: TODO sections with approach, examples, hints, systems thinking
 - **Real-world connections**: Connect every concept to production ML engineering
+
+### Testing Architecture (ALWAYS USE PYTEST)
+- **ALWAYS USE PYTEST**: TinyTorch uses pytest as the standard testing framework for all tests
+- **ALWAYS USE REAL DATA**: Tests must use actual datasets (CIFAR-10, ImageNet), not mock/synthetic data
+- **Four-tier testing**: Inline → Module → Integration → System with proper separation
+- **Immediate feedback**: Inline tests provide confidence after each feature
+- **Isolation**: Module tests use stubbed dependencies to test logic in isolation
 
 ## Module Structure (Based on Our Best Modules)
 
@@ -25,17 +32,16 @@ modules/source/XX_module_name/
 ├── module_name_dev.py          # Main development file (Jupytext format)
 ├── module_name_dev.ipynb       # Generated notebook (auto-created)
 ├── tests/
-│   └── test_module_name.py     # Unit tests ONLY for this module
+│   └── test_module_name.py     # Module-level tests with stubbed dependencies
 ├── README.md                   # Module overview and usage
 └── module.yaml                 # Module metadata
 ```
 
-### Test Organization (Critical)
-- **Unit tests**: Inline in the notebook/Python code - immediate tests after each feature
-- **Module-level tests**: `modules/source/XX_module/tests/` - test module in isolation with stubbed/fake data
-- **Integration tests**: `tests/` (main directory) - real cross-module testing with actual dependencies
-- **Test after each feature**: Write inline unit tests immediately after implementing each component
-- **Module tests use fake data**: Module-level tests should stub out other modules with fake inputs/outputs
+### Testing File Structure
+- **Module tests**: `modules/source/XX_module/tests/test_module.py` - pytest with stubbed dependencies
+- **Integration tests**: `tests/integration/` - pytest with real cross-module testing
+- **System tests**: `tests/system/` - pytest with full end-to-end workflows
+- **Package tests**: `tinytorch/tests/` - pytest for exported package functionality
 
 ## Development Workflow: Test-Driven Feature Development
 
@@ -50,8 +56,8 @@ class ComponentName:
 # Step 2: Use the feature (immediate inline unit test)
 component = ComponentName()
 result = component.method()
-print(f"✅ Component working: {result}")
 assert result.shape == expected_shape  # Inline unit test
+print(f"✅ Component working: {result}")
 
 # Step 3: Analyze/Test the feature (more comprehensive inline testing)
 def test_component_method():
@@ -60,7 +66,7 @@ def test_component_method():
     result = component.method()
     assert result.shape == expected_shape
     assert np.allclose(result.data, expected_data)
-    print("✅ Component unit test passed")
+    print("✅ Component inline unit test passed")
 
 # Run the test immediately
 test_component_method()
@@ -85,7 +91,14 @@ Our best modules follow specific third-stage verbs:
 - **Questions**: "How can we make this faster?", "What about memory usage?"
 - **Focus**: Production-ready systems engineering
 
-## Testing Architecture (Corrected)
+## Testing Architecture (Comprehensive)
+
+### Test Organization (Critical)
+- **Inline unit tests**: In notebook/Python code - immediate tests after each feature
+- **Module-level tests**: `modules/source/XX_module/tests/` - pytest with stubbed dependencies
+- **Integration tests**: `tests/integration/` - pytest with real cross-module testing
+- **System tests**: `tests/system/` - pytest with full end-to-end workflows
+- **Package tests**: `tinytorch/tests/` - pytest for exported package functionality
 
 ### 1. Inline Unit Tests (Immediate After Each Feature)
 ```python
@@ -112,16 +125,22 @@ assert np.all(y.data >= 0), "ReLU output should be non-negative"
 print("✅ Sequential network unit test passed")
 ```
 
-### 2. Module-Level Tests (Isolated with Stubbed Data)
+### 2. Module-Level Tests (Isolated with Stubbed Data - PYTEST REQUIRED)
 ```python
 # modules/source/04_networks/tests/test_networks.py
 """
 Module-level tests for Networks module.
 Tests the module in isolation using stubbed/fake data from other modules.
+ALWAYS USE PYTEST - No exceptions, no manual testing.
 """
 
 import pytest
 import numpy as np
+import sys
+import os
+
+# Add parent directory to path for module imports
+sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
 
 # Create fake/stubbed versions of dependencies
 class FakeTensor:
@@ -139,7 +158,7 @@ class FakeLayer:
         # Return fake output with expected shape
         return FakeTensor(np.random.randn(*self.output_shape))
 
-# Import the actual module being tested
+# Import from the module's development file
 from networks_dev import Sequential
 
 class TestSequentialIsolated:
@@ -168,14 +187,20 @@ class TestSequentialIsolated:
         
         assert network.layers == layers
         assert len(network.layers) == 2
+        
+    def test_edge_cases(self):
+        """Test edge cases and error conditions."""
+        with pytest.raises(ValueError):
+            Sequential([])  # Empty network should raise error
 ```
 
-### 3. Integration Tests (Real Cross-Module Testing)
+### 3. Integration Tests (Real Cross-Module Testing - PYTEST + REAL DATA)
 ```python
 # tests/integration/test_ml_pipeline.py
 """
 Integration tests using real implementations from all modules.
 Tests how modules actually work together in realistic scenarios.
+ALWAYS USE REAL DATA - No mocks, no synthetic data.
 """
 
 import pytest
@@ -206,6 +231,103 @@ class TestRealMLPipeline:
         assert output.shape == (1, 2)
         assert isinstance(output, Tensor)
         assert np.all(output.data >= 0)  # ReLU ensures non-negative
+        
+    def test_cifar10_integration(self):
+        """Test with actual CIFAR-10 data."""
+        from tinytorch.core.dataloader import CIFAR10Dataset
+        
+        # Real dataset - no mocks allowed
+        dataset = CIFAR10Dataset('data/cifar10/', train=True, download=True)
+        assert len(dataset) == 50000  # Actual CIFAR-10 size
+        
+        image, label = dataset[0]
+        assert image.shape == (3, 32, 32)  # Real image dimensions
+        assert 0 <= label <= 9  # Real class labels
+        
+        # Test with real network
+        network = Sequential([
+            Dense(input_size=3072, output_size=128),  # Flattened 32x32x3
+            ReLU(),
+            Dense(input_size=128, output_size=10)
+        ])
+        
+        # Real forward pass with real data
+        flattened_image = image.reshape(1, -1)
+        output = network(flattened_image)
+        assert output.shape == (1, 10)
+```
+
+### 4. System Tests (Full End-to-End - PYTEST + REAL WORKFLOWS)
+```python
+# tests/system/test_complete_ml_system.py
+"""
+System tests for complete ML workflows.
+Tests entire pipelines from data loading to model training.
+ALWAYS USE REAL DATA and REAL WORKFLOWS.
+"""
+
+import pytest
+from tinytorch.core.dataloader import DataLoader, CIFAR10Dataset
+from tinytorch.core.networks import Sequential
+from tinytorch.core.layers import Dense
+from tinytorch.core.activations import ReLU
+from tinytorch.core.optimizers import SGD  # When available
+
+class TestCompleteMLSystem:
+    """Test complete ML system end-to-end."""
+    
+    def test_full_training_pipeline(self):
+        """Test complete training pipeline with real data."""
+        # Real data loading
+        dataset = CIFAR10Dataset('data/cifar10/', train=True, download=True)
+        dataloader = DataLoader(dataset, batch_size=32, shuffle=True)
+        
+        # Real network
+        network = Sequential([
+            Dense(input_size=3072, output_size=128),
+            ReLU(),
+            Dense(input_size=128, output_size=10)
+        ])
+        
+        # Test complete training step with real data
+        for batch_data, batch_labels in dataloader:
+            # Real forward pass
+            output = network(batch_data)
+            assert output.shape == (32, 10)
+            
+            # Real loss computation (when available)
+            # loss = criterion(output, batch_labels)
+            # assert loss.item() > 0
+            
+            break  # Test one batch for system validation
+```
+
+### pytest Features to Use (REQUIRED)
+
+- **Test classes** for organizing related tests
+- **pytest fixtures** for setup/teardown
+- **Parametrized tests** for testing multiple inputs
+- **pytest.raises()** for exception testing
+- **assert statements** with descriptive messages
+- **Real data only** - No mocks, no synthetic data
+
+### Running Tests (ALWAYS THROUGH PYTEST)
+
+```bash
+# Test specific module (recommended)
+python bin/tito.py test --module networks
+
+# Test all modules
+python bin/tito.py test --all
+
+# Run specific test file directly with pytest
+python -m pytest modules/source/04_networks/tests/test_networks.py -v
+
+# Run integration tests
+python -m pytest tests/integration/ -v
+
+# Run system tests
+python -m pytest tests/system/ -v
 ```
 
 ## Student Implementation Structure
@@ -423,6 +545,27 @@ def test_sequential_with_fake_layers():
     network = Sequential([FakeDense(), FakeReLU()])
 ```
 
+### ❌ Don't Use Mock/Synthetic Data in Integration/System Tests
+```python
+# BAD: Mock/synthetic data in integration tests
+class MockDataset:
+    def __init__(self, size):
+        self.data = np.random.randn(size, 784)  # Fake data
+        
+def test_mock_dataset():
+    dataset = MockDataset(size=100)  # Meaningless test
+    assert len(dataset) == 100
+    
+# GOOD: Real data in integration/system tests
+def test_cifar10_dataset():
+    """Test with actual CIFAR-10 data."""
+    dataset = CIFAR10Dataset('data/cifar10/', train=True, download=True)
+    assert len(dataset) == 50000  # Actual CIFAR-10 size
+    image, label = dataset[0]
+    assert image.shape == (3, 32, 32)  # Real image dimensions
+    assert 0 <= label <= 9  # Real class labels
+```
+
 ### ❌ Don't Mix Testing Levels
 ```python
 # BAD: Integration testing in module-level tests
@@ -442,38 +585,64 @@ def test_networks_with_real_dataloader():
     # Test real cross-module integration
 ```
 
-### ❌ Don't Use Mock Data
+### ❌ Don't Skip pytest or Use Manual Testing
 ```python
-# BAD: Synthetic/mock data
-class MockDataset:
-    def __init__(self, size):
-        self.data = np.random.randn(size, 784)  # Fake data
+# BAD: Manual testing or custom test runners
+def manual_test():
+    print("Testing component...")
+    component = Component()
+    if component.works():
+        print("PASS")
+    else:
+        print("FAIL")
         
-# GOOD: Real data
-class CIFAR10Dataset:
-    def __init__(self, root, train=True, download=True):
-        self._download_if_needed()  # Real CIFAR-10 data
+# BAD: Using unittest instead of pytest
+import unittest
+class TestComponent(unittest.TestCase):
+    def test_component(self):
+        self.assertTrue(component.works())
+        
+# GOOD: Always use pytest
+import pytest
+
+class TestComponent:
+    """Test component functionality."""
+    
+    def test_component_works(self):
+        """Test that component works correctly."""
+        component = Component()
+        assert component.works()
+        
+    def test_component_edge_cases(self):
+        """Test edge cases and error conditions."""
+        with pytest.raises(ValueError):
+            Component(invalid_input)
 ```
 
 ## Quality Standards
 
 ### Before Release Checklist
-- [ ] Uses real data, not synthetic/mock data
+- [ ] Uses real data, not synthetic/mock data (for integration/system tests)
+- [ ] ALWAYS uses pytest for all testing - no exceptions
 - [ ] Includes progress feedback for long operations
 - [ ] Visual feedback functions (development only, not exported)
 - [ ] Inline unit tests after each feature implementation
 - [ ] Module-level tests use stubbed/fake dependencies for isolation
-- [ ] Integration tests use real cross-module implementations
+- [ ] Integration tests use real cross-module implementations with real data
+- [ ] System tests use complete workflows with real datasets
 - [ ] Clear separation: inline → module → integration → system testing
 - [ ] Follows "Build → Use → Analyze/Test" progression
 - [ ] TODO guidance includes systems thinking
 - [ ] Clean separation between development and exports
+- [ ] All test files follow pytest structure and patterns
 
 ### Student Experience Requirements
 - [ ] Clear learning progression with immediate inline feedback
 - [ ] Inline unit tests provide confidence after each feature
 - [ ] Module tests demonstrate isolation and stubbing concepts
-- [ ] Integration tests show real-world module interactions
+- [ ] Integration tests show real-world module interactions with real data
+- [ ] System tests demonstrate complete ML workflows
+- [ ] pytest provides consistent testing experience across all levels
 - [ ] Real-world relevance and connections
 - [ ] Smooth transition to next modules
 - [ ] Test-driven development workflow
@@ -500,7 +669,7 @@ class CIFAR10Dataset:
 
 ---
 
-**Remember**: We're teaching ML systems engineering with proper testing architecture. Inline unit tests provide immediate feedback after each feature, module-level tests use stubbed dependencies for isolation, integration tests use real cross-module implementations, and system tests validate complete workflows. Follow the "Build → Use → Analyze/Test" cycle with proper testing separation.
+**Remember**: We're teaching ML systems engineering with comprehensive testing architecture. Inline unit tests provide immediate feedback, module-level tests use stubbed dependencies for isolation, integration tests use real cross-module implementations with real data, and system tests validate complete workflows. ALWAYS use pytest for all testing levels. Follow the "Build → Use → Analyze/Test" cycle with proper testing separation.
 
 ## Development Workflow Summary
 
@@ -510,8 +679,9 @@ class CIFAR10Dataset:
    ```bash
    cd modules/source/XX_module_name/
    # Work in module_name_dev.py (Jupytext format)
-   # Module tests go in tests/test_module_name.py (with stubs)
-   # Integration tests go in tests/integration/ (with real modules)
+   # Module tests go in tests/test_module_name.py (pytest with stubs)
+   # Integration tests go in tests/integration/ (pytest with real modules)
+   # System tests go in tests/system/ (pytest with real workflows)
    ```
 
 2. **Feature Development Phase** (Repeat for each component)
@@ -542,7 +712,7 @@ class CIFAR10Dataset:
 
 3. **Module Completion Phase**
    ```bash
-   # Run module-level tests (with stubbed dependencies)
+   # Run module-level tests (pytest with stubbed dependencies)
    python -m pytest modules/source/XX_module_name/tests/test_module_name.py -v
    
    # Export to package
@@ -551,10 +721,10 @@ class CIFAR10Dataset:
 
 4. **Integration Testing Phase**
    ```bash
-   # Run integration tests (with real cross-module dependencies)
+   # Run integration tests (pytest with real cross-module dependencies)
    python -m pytest tests/integration/ -v
    
-   # Run system tests (full end-to-end)
+   # Run system tests (pytest with full end-to-end workflows)
    python -m pytest tests/system/ -v
    ```
 
@@ -562,15 +732,25 @@ class CIFAR10Dataset:
 
 - **Morning**: Review previous day's inline tests, ensure all passing
 - **Feature work**: Build → Use → Inline Test for each component
-- **Module work**: Create stubbed module-level tests for isolation
-- **Integration work**: Test real cross-module interactions
-- **End of day**: Run all test levels, commit working features
+- **Module work**: Create pytest-based module tests with stubbed dependencies
+- **Integration work**: Create pytest-based integration tests with real modules and real data
+- **System work**: Create pytest-based system tests with complete workflows
+- **End of day**: Run all test levels with pytest, commit working features
 
 ### Quality Gates
 
 - **Feature Level**: Inline unit test must pass immediately
-- **Module Level**: Stubbed isolation tests must pass before export
-- **Integration Level**: Real cross-module tests must pass before merge
-- **System Level**: Full end-to-end tests must pass before release
+- **Module Level**: pytest tests with stubbed dependencies must pass before export
+- **Integration Level**: pytest tests with real cross-module dependencies must pass before merge
+- **System Level**: pytest tests with full end-to-end workflows must pass before release
 
-This workflow ensures students understand proper testing architecture while building confidence incrementally through immediate feedback.
+### Testing Principles Summary
+
+1. **ALWAYS use pytest** - No exceptions, no manual testing, no other frameworks
+2. **Real data for integration/system** - No mocks in integration or system tests
+3. **Stubbed dependencies for module tests** - Isolation through fake/stubbed components
+4. **Immediate inline feedback** - Test every feature as you build it
+5. **Four-tier architecture** - Inline → Module → Integration → System
+6. **Proper separation** - Each level has distinct purpose and data requirements
+
+This comprehensive workflow ensures students understand professional testing architecture while building confidence incrementally through immediate feedback and systematic validation at every level.
