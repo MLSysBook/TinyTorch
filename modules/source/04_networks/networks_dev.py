@@ -197,28 +197,31 @@ class Sequential:
     Applies layers in order: f(x) = layer_n(...layer_2(layer_1(x)))
     """
     
-    def __init__(self, layers: List):
+    def __init__(self, layers: Optional[List] = None):
         """
         Initialize Sequential network with layers.
         
         Args:
-            layers: List of layers to compose in order
+            layers: List of layers to compose in order (optional, defaults to empty list)
             
         TODO: Store the layers and implement forward pass
         
         APPROACH:
         1. Store the layers list as an instance variable
-        2. This creates the network architecture ready for forward pass
+        2. Initialize empty list if no layers provided
+        3. Prepare for forward pass implementation
         
         EXAMPLE:
         Sequential([Dense(3,4), ReLU(), Dense(4,2)])
         creates a 3-layer network: Dense → ReLU → Dense
         
         HINTS:
-        - Store layers in self.layers
-        - This is the foundation for all network architectures
+        - Use self.layers to store the layers
+        - Handle empty initialization case
         """
-        self.layers = layers
+        ### BEGIN SOLUTION
+        self.layers = layers if layers is not None else []
+        ### END SOLUTION
     
     def forward(self, x: Tensor) -> Tensor:
         """
@@ -259,8 +262,12 @@ class Sequential:
         ### END SOLUTION
     
     def __call__(self, x: Tensor) -> Tensor:
-        """Make network callable: network(x) same as network.forward(x)"""
+        """Make the network callable: sequential(x) instead of sequential.forward(x)"""
         return self.forward(x)
+    
+    def add(self, layer):
+        """Add a layer to the network."""
+        self.layers.append(layer)
 
 # %% [markdown]
 """
@@ -726,61 +733,37 @@ except Exception as e:
 
 print("📈 Final Progress: Complete network architectures ready for real ML applications!")
 
-# %% [markdown]
-"""
-## 🎯 Module Summary
+# %% nbgrader={"grade": false, "grade_id": "networks-compatibility", "locked": false, "schema_version": 3, "solution": false, "task": false}
+#| export
+def MLP(input_size: int, hidden_size: int, output_size: int, 
+        activation=ReLU, output_activation=Sigmoid) -> Sequential:
+    """
+    MLP function wrapper for test compatibility.
+    
+    This function provides compatibility with external tests that expect an MLP function
+    with singular hidden_size parameter instead of hidden_sizes list.
+    
+    Args:
+        input_size: Number of input features
+        hidden_size: Size of the single hidden layer
+        output_size: Number of output features
+        activation: Activation function for hidden layer (default: ReLU)
+        output_activation: Activation function for output layer (default: Sigmoid)
+        
+    Returns:
+        Sequential network with MLP architecture (input → hidden → output)
+    """
+    layers = []
+    
+    # Input to hidden layer
+    layers.append(Dense(input_size, hidden_size))
+    layers.append(activation())
+    
+    # Hidden to output layer
+    layers.append(Dense(hidden_size, output_size))
+    if output_activation is not None:
+        layers.append(output_activation())
+    
+    return Sequential(layers)
 
-Congratulations! You've successfully implemented complete neural network architectures:
-
-### What You've Accomplished
-✅ **Sequential Networks**: The fundamental architecture for composing layers  
-✅ **Function Composition**: Understanding how layers combine to create complex behaviors  
-✅ **MLP Creation**: Building Multi-Layer Perceptrons with flexible architectures  
-✅ **Architecture Patterns**: Creating shallow, deep, and wide networks  
-✅ **Forward Pass**: Complete inference through multi-layer networks  
-✅ **Real Applications**: Classification, regression, and deep learning patterns
-
-### Key Concepts You've Learned
-- **Networks are function composition**: Complex behavior from simple building blocks
-- **Sequential architecture**: The foundation of most neural networks
-- **MLP patterns**: Dense → Activation → Dense → Activation → Output
-- **Architecture design**: How depth and width affect network capability
-- **Forward pass**: How data flows through complete networks
-
-### Mathematical Foundations
-- **Function composition**: f(x) = f_n(...f_2(f_1(x)))
-- **Universal approximation**: MLPs can approximate any continuous function
-- **Hierarchical learning**: Early layers learn simple features, later layers learn complex patterns
-- **Nonlinearity**: Activation functions enable complex decision boundaries
-
-### Real-World Applications
-- **Classification**: Image recognition, spam detection, medical diagnosis
-- **Regression**: Price prediction, time series forecasting
-- **Feature learning**: Extracting meaningful representations from raw data
-- **Transfer learning**: Using pre-trained networks for new tasks
-
-### Architecture Insights
-- **Shallow networks**: Good for simple patterns, fast training
-- **Deep networks**: Better for complex patterns, hierarchical learning
-- **Wide networks**: More parallel processing, good for diverse features
-- **Activation choice**: ReLU for most cases, Tanh for centered data, Softmax for classification
-
-### Next Steps
-1. **Export your code**: Use NBDev to export to the `tinytorch` package
-2. **Test your implementation**: Run the complete test suite
-3. **Use your networks**: 
-   ```python
-   from tinytorch.core.networks import Sequential, create_mlp
-   from tinytorch.core.layers import Dense
-   from tinytorch.core.activations import ReLU
-   
-   # Create custom network
-   network = Sequential([Dense(10, 5), ReLU(), Dense(5, 1)])
-   
-   # Create MLP
-   mlp = create_mlp(10, [20, 10], 1)
-   ```
-4. **Build more complex architectures**: CNNs, RNNs, Transformers!
-
-**Ready for the next challenge?** Let's add convolutional layers for image processing and build CNNs!
-""" 
+# %% [markdown] 

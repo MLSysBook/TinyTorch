@@ -829,7 +829,7 @@ def test_activations_integration():
     print(f"✅ Ready for neural network integration!")
 
 # Run the integration test
-    test_activations_integration()
+test_activations_integration()
 
 # %% [markdown]
 """
