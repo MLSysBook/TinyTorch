@@ -753,22 +753,22 @@ try:
     dataset = SimpleDataset(size=20, num_features=5, num_classes=4)
     
     print(f"Dataset created: size={len(dataset)}, features={dataset.num_features}, classes={dataset.get_num_classes()}")
-    
-    # Test basic properties
+        
+        # Test basic properties
     assert len(dataset) == 20, f"Dataset length should be 20, got {len(dataset)}"
     assert dataset.get_num_classes() == 4, f"Should have 4 classes, got {dataset.get_num_classes()}"
     print("✅ SimpleDataset basic properties work correctly")
-    
+        
     # Test sample access
-    data, label = dataset[0]
-    assert isinstance(data, Tensor), "Data should be a Tensor"
-    assert isinstance(label, Tensor), "Label should be a Tensor"
+        data, label = dataset[0]
+        assert isinstance(data, Tensor), "Data should be a Tensor"
+        assert isinstance(label, Tensor), "Label should be a Tensor"
     assert data.shape == (5,), f"Data shape should be (5,), got {data.shape}"
     assert label.shape == (), f"Label shape should be (), got {label.shape}"
     print("✅ SimpleDataset sample access works correctly")
-    
+        
     # Test sample shape
-    sample_shape = dataset.get_sample_shape()
+        sample_shape = dataset.get_sample_shape()
     assert sample_shape == (5,), f"Sample shape should be (5,), got {sample_shape}"
     print("✅ SimpleDataset get_sample_shape works correctly")
     
@@ -787,7 +787,7 @@ try:
     assert np.array_equal(label1.data, label2.data), "Labels should be deterministic"
     print("✅ SimpleDataset data is deterministic")
     
-except Exception as e:
+    except Exception as e:
     print(f"❌ SimpleDataset test failed: {e}")
     raise
 
@@ -861,9 +861,9 @@ try:
         # Verify batch properties
         assert batch_data.shape[1] == 8, f"Features should be 8, got {batch_data.shape[1]}"
         assert len(batch_labels.shape) == 1, f"Labels should be 1D, got shape {batch_labels.shape}"
-        assert isinstance(batch_data, Tensor), "Batch data should be Tensor"
-        assert isinstance(batch_labels, Tensor), "Batch labels should be Tensor"
-    
+            assert isinstance(batch_data, Tensor), "Batch data should be Tensor"
+            assert isinstance(batch_labels, Tensor), "Batch labels should be Tensor"
+        
     assert epoch_samples == 100, f"Should process 100 samples, got {epoch_samples}"
     expected_batches = (100 + 16 - 1) // 16
     assert epoch_batches == expected_batches, f"Should have {expected_batches} batches, got {epoch_batches}"
@@ -943,11 +943,11 @@ try:
     dataset = SimpleDataset(size=60, num_features=6, num_classes=3)
     loader = DataLoader(dataset, batch_size=20, shuffle=True)
     
-    for epoch in range(3):
-        epoch_samples = 0
+        for epoch in range(3):
+            epoch_samples = 0
         for batch_data, batch_labels in loader:
-            epoch_samples += batch_data.shape[0]
-            
+                epoch_samples += batch_data.shape[0]
+                
             # Verify shapes remain consistent across epochs
             assert batch_data.shape[1] == 6, f"Features should be 6 in epoch {epoch}"
             assert len(batch_labels.shape) == 1, f"Labels should be 1D in epoch {epoch}"
@@ -963,7 +963,7 @@ try:
     print("  • Memory-efficient processing")
     print("  • Multi-epoch training scenarios")
     
-except Exception as e:
+    except Exception as e:
     print(f"❌ Integration test failed: {e}")
     raise
 
@@ -1038,7 +1038,7 @@ Congratulations! You've successfully implemented the core components of data loa
    for epoch in range(num_epochs):
        for batch_data, batch_labels in loader:
            # Train model
-           pass
+       pass
    ```
 4. **Explore advanced topics**: Data augmentation, distributed loading, streaming datasets!
 

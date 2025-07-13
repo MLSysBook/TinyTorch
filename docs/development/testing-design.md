@@ -283,7 +283,7 @@ class TestBasicMLPipeline:
 ### Test Organization
 ```
 modules/source/{module}/{module}_dev.py    # Implementation + comprehensive inline tests
-tests/test_{module}.py                     # Module tests with mocks (for grading)
+tests/test_{module}.py                     # Package tests for exported functionality
 tests/integration/                         # Cross-module tests with vetted solutions
 ```
 

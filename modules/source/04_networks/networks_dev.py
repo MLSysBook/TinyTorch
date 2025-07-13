@@ -524,19 +524,19 @@ wide = create_mlp(10, [50], 1)
 - **Efficiency:** Balance between performance and computation
 
 ### Different Activation Functions
-```python
+   ```python
 # ReLU networks (most common)
 relu_net = create_mlp(10, [20], 1, activation=ReLU)
-
+   
 # Tanh networks (centered around 0)
 tanh_net = create_mlp(10, [20], 1, activation=Tanh)
-
+   
 # Multi-class classification
 classifier = create_mlp(10, [20], 3, output_activation=Softmax)
-```
+   ```
 
 Let's test different architectures!
-"""
+""" 
 
 # %% [markdown]
 """
@@ -560,7 +560,7 @@ try:
     classifier = create_mlp(input_size=3, hidden_sizes=[4], output_size=3, output_activation=Softmax)
     
     # Test with sample data
-    x = Tensor([[1.0, 2.0, 3.0]])
+        x = Tensor([[1.0, 2.0, 3.0]])
     
     # Test ReLU network
     y_relu = relu_net(x)
@@ -575,9 +575,9 @@ try:
     # Test multi-class classifier
     y_multi = classifier(x)
     assert y_multi.shape == (1, 3), "Multi-class classifier should work"
-    
-    # Check softmax properties
-    assert abs(np.sum(y_multi.data) - 1.0) < 1e-6, "Softmax outputs should sum to 1"
+        
+        # Check softmax properties
+        assert abs(np.sum(y_multi.data) - 1.0) < 1e-6, "Softmax outputs should sum to 1"
     print("✅ Multi-class classifier with Softmax works correctly")
     
     # Test different architectures
@@ -595,7 +595,7 @@ try:
     
     print("✅ All network architectures work correctly")
     
-except Exception as e:
+    except Exception as e:
     print(f"❌ Architecture test failed: {e}")
     raise
 
@@ -643,18 +643,18 @@ try:
     iris_classifier = create_mlp(input_size=4, hidden_sizes=[8, 6], output_size=3, output_activation=Softmax)
     
     # Simulate iris features: [sepal_length, sepal_width, petal_length, petal_width]
-    iris_samples = Tensor([
+        iris_samples = Tensor([
         [5.1, 3.5, 1.4, 0.2],  # Setosa
         [7.0, 3.2, 4.7, 1.4],  # Versicolor
         [6.3, 3.3, 6.0, 2.5]   # Virginica
-    ])
-    
-    iris_predictions = iris_classifier(iris_samples)
+        ])
+        
+        iris_predictions = iris_classifier(iris_samples)
     assert iris_predictions.shape == (3, 3), "Iris classifier should output 3 classes for 3 samples"
-    
+        
     # Check softmax properties
-    row_sums = np.sum(iris_predictions.data, axis=1)
-    assert np.allclose(row_sums, 1.0), "Each prediction should sum to 1"
+        row_sums = np.sum(iris_predictions.data, axis=1)
+        assert np.allclose(row_sums, 1.0), "Each prediction should sum to 1"
     print("✅ Multi-class classification works correctly")
     
     # Test 2: Regression Task (Housing prices)
@@ -691,38 +691,38 @@ try:
     # Test 4: Network Composition
     print("\n4. Network Composition Test:")
     # Create a feature extractor and classifier separately
-    feature_extractor = Sequential([
+        feature_extractor = Sequential([
         Dense(input_size=10, output_size=5),
-        ReLU(),
+            ReLU(),
         Dense(input_size=5, output_size=3),
-        ReLU()
-    ])
-    
-    classifier_head = Sequential([
+            ReLU()
+        ])
+        
+        classifier_head = Sequential([
         Dense(input_size=3, output_size=2),
-        Softmax()
-    ])
-    
+            Softmax()
+        ])
+        
     # Test composition
     raw_data = Tensor(np.random.randn(5, 10))
-    features = feature_extractor(raw_data)
-    final_predictions = classifier_head(features)
+        features = feature_extractor(raw_data)
+        final_predictions = classifier_head(features)
     
     assert features.shape == (5, 3), "Feature extractor should output 3 features"
     assert final_predictions.shape == (5, 2), "Classifier should output 2 classes"
-    
-    row_sums = np.sum(final_predictions.data, axis=1)
+        
+        row_sums = np.sum(final_predictions.data, axis=1)
     assert np.allclose(row_sums, 1.0), "Composed network predictions should be valid"
     print("✅ Network composition works correctly")
-    
+        
     print("\n🎉 Integration test passed! Your networks work correctly for:")
-    print("  • Multi-class classification (Iris flowers)")
-    print("  • Regression tasks (housing prices)")
+        print("  • Multi-class classification (Iris flowers)")
+        print("  • Regression tasks (housing prices)")
     print("  • Deep learning architectures")
     print("  • Network composition and feature extraction")
-    
-except Exception as e:
-    print(f"❌ Integration test failed: {e}")
+        
+    except Exception as e:
+        print(f"❌ Integration test failed: {e}")
     raise
 
 print("📈 Final Progress: Complete network architectures ready for real ML applications!")

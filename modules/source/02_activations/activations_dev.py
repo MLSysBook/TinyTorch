@@ -230,11 +230,11 @@ Once you implement the ReLU forward method above, run this cell to test it:
 def test_relu_activation():
     """Test ReLU activation function"""
     print("Testing ReLU activation...")
-    
-    # Create ReLU instance
-    relu = ReLU()
-    
-    # Test with mixed positive/negative values
+
+# Create ReLU instance
+relu = ReLU()
+
+# Test with mixed positive/negative values
     test_input = Tensor([[-2, -1, 0, 1, 2]])
     result = relu(test_input)
     expected = np.array([[0, 0, 0, 1, 2]])
@@ -368,10 +368,10 @@ Once you implement the Sigmoid forward method above, run this cell to test it:
 def test_sigmoid_activation():
     """Test Sigmoid activation function"""
     print("Testing Sigmoid activation...")
-    
-    # Create Sigmoid instance
-    sigmoid = Sigmoid()
-    
+
+# Create Sigmoid instance
+sigmoid = Sigmoid()
+
     # Test with known values
     test_input = Tensor([[0]])
     result = sigmoid(test_input)
@@ -514,10 +514,10 @@ Once you implement the Tanh forward method above, run this cell to test it:
 def test_tanh_activation():
     """Test Tanh activation function"""
     print("Testing Tanh activation...")
-    
-    # Create Tanh instance
-    tanh = Tanh()
-    
+
+# Create Tanh instance
+tanh = Tanh()
+
     # Test with zero (should be 0)
     test_input = Tensor([[0]])
     result = tanh(test_input)
@@ -676,10 +676,10 @@ Once you implement the Softmax forward method above, run this cell to test it:
 def test_softmax_activation():
     """Test Softmax activation function"""
     print("Testing Softmax activation...")
-    
-    # Create Softmax instance
-    softmax = Softmax()
-    
+
+# Create Softmax instance
+softmax = Softmax()
+
     # Test with simple input
     test_input = Tensor([[1, 2, 3]])
     result = softmax(test_input)
@@ -718,8 +718,8 @@ def test_softmax_activation():
     
     large_sum = np.sum(large_result.data)
     assert abs(large_sum - 1.0) < 1e-6, "Large values should still sum to 1"
-    
-    # Test shape preservation
+
+# Test shape preservation
     assert batch_result.shape == batch_input.shape, "Softmax should preserve shape"
     
     print("✅ Softmax activation tests passed!")
@@ -751,9 +751,9 @@ def test_activations_integration():
     print("Testing activation functions integration...")
     
     # Create instances of all activation functions
-    relu = ReLU()
-    sigmoid = Sigmoid()
-    tanh = Tanh()
+        relu = ReLU()
+        sigmoid = Sigmoid()
+        tanh = Tanh()
     softmax = Softmax()
     
     # Test data: simulating neural network layer outputs
@@ -791,7 +791,7 @@ def test_activations_integration():
     # Test Softmax properties
     softmax_sum = np.sum(softmax_result.data)
     assert abs(softmax_sum - 1.0) < 1e-6, "Softmax outputs should sum to 1"
-    
+        
     # Test chaining activations (realistic neural network scenario)
     # Hidden layer with ReLU
     hidden_output = relu(test_data)
@@ -815,8 +815,8 @@ def test_activations_integration():
     ])
     
     batch_softmax = softmax(batch_data)
-    
-    # Each row should sum to 1
+        
+        # Each row should sum to 1
     for i in range(batch_data.shape[0]):
         row_sum = np.sum(batch_softmax.data[i])
         assert abs(row_sum - 1.0) < 1e-6, f"Batch row {i} should sum to 1"
