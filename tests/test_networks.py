@@ -21,7 +21,7 @@ import os
 # Add the module source directory to the path
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'modules', 'source', '04_networks'))
 
-from networks_dev import Sequential, MLP
+from networks_dev import Sequential, create_mlp as MLP
 
 
 class MockTensor:
