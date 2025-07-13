@@ -77,7 +77,7 @@ Run the comprehensive test suite using pytest:
 tito test --module setup
 
 # Or directly with pytest
-python -m pytest modules/setup/tests/test_setup.py -v
+python -m pytest tests/test_setup.py -v
 ```
 
 ### Test Coverage

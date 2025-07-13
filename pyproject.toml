@@ -84,7 +84,6 @@ addopts = [
 ]
 testpaths = [
     "tests",
-    "modules/*/tests",
 ]
 python_files = ["test_*.py"]
 python_classes = ["Test*"]

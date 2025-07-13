@@ -46,8 +46,8 @@ except ImportError:
     sys.path.append(os.path.join(os.path.dirname(__file__), '..', '01_tensor'))
     sys.path.append(os.path.join(os.path.dirname(__file__), '..', '02_activations'))
     try:
-        from tensor_dev import Tensor
-        from activations_dev import ReLU, Sigmoid, Tanh, Softmax
+    from tensor_dev import Tensor
+    from activations_dev import ReLU, Sigmoid, Tanh, Softmax
     except ImportError:
         # If the local modules are not available, use relative imports
         from ..tensor.tensor_dev import Tensor
@@ -188,7 +188,7 @@ def matmul_naive(A: np.ndarray, B: np.ndarray) -> np.ndarray:
     Naive matrix multiplication using explicit for-loops.
     
     This helps you understand what matrix multiplication really does!
-    
+        
     TODO: Implement matrix multiplication using three nested for-loops.
     
     STEP-BY-STEP IMPLEMENTATION:
@@ -259,8 +259,8 @@ Once you implement the `matmul_naive` function above, run this cell to test it:
 def test_matrix_multiplication():
     """Test matrix multiplication implementation"""
     print("Testing matrix multiplication...")
-    
-    # Test simple 2x2 case
+
+# Test simple 2x2 case
     A = np.array([[1, 2], [3, 4]], dtype=np.float32)
     B = np.array([[5, 6], [7, 8]], dtype=np.float32)
     
@@ -272,8 +272,8 @@ def test_matrix_multiplication():
     # Compare with NumPy
     numpy_result = A @ B
     assert np.allclose(result, numpy_result), f"Doesn't match NumPy: got {result}, expected {numpy_result}"
-    
-    # Test different shapes
+
+# Test different shapes
     A2 = np.array([[1, 2, 3]], dtype=np.float32)  # 1x3
     B2 = np.array([[4], [5], [6]], dtype=np.float32)  # 3x1
     result2 = matmul_naive(A2, B2)
@@ -423,7 +423,7 @@ class Dense:
         else:
             self.bias = None
         ### END SOLUTION
-
+    
     def forward(self, x: Tensor) -> Tensor:
         """
         Forward pass through the Dense layer.
@@ -472,7 +472,7 @@ class Dense:
         
         return Tensor(linear_output)
         ### END SOLUTION
-
+    
     def __call__(self, x: Tensor) -> Tensor:
         """Make the layer callable: layer(x) instead of layer.forward(x)"""
         return self.forward(x)
@@ -509,8 +509,8 @@ def test_dense_layer():
     batch_output = layer(batch_input)
     
     assert batch_output.shape == (2, 2), f"Batch output shape should be (2, 2), got {batch_output.shape}"
-    
-    # Test without bias
+
+# Test without bias
     no_bias_layer = Dense(input_size=3, output_size=2, use_bias=False)
     assert no_bias_layer.bias is None, "Layer without bias should have None bias"
     
@@ -538,7 +538,7 @@ def test_dense_layer():
     scaled_output = layer(scaled_input)
     
     # Due to bias, this won't be exactly 2*output, but the linear part should scale
-    print("✅ Dense layer tests passed!")
+print("✅ Dense layer tests passed!")
     print(f"✅ Correct weight and bias initialization")
     print(f"✅ Forward pass produces correct shapes")
     print(f"✅ Batch processing works correctly")
@@ -582,7 +582,7 @@ def test_layer_activation_integration():
     
     # Create layer and activation functions
     layer = Dense(input_size=4, output_size=3)
-    relu = ReLU()
+        relu = ReLU()
     sigmoid = Sigmoid()
     tanh = Tanh()
     softmax = Softmax()

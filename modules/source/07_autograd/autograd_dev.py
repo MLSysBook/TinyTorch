@@ -38,7 +38,7 @@ from collections import defaultdict
 
 # Import our existing components
 try:
-    from tinytorch.core.tensor import Tensor
+from tinytorch.core.tensor import Tensor
 except ImportError:
     # For development, import from local modules
     import os
@@ -123,7 +123,7 @@ Let's build the engine that powers modern AI!
 ### What is a Variable?
 A **Variable** wraps a Tensor and tracks:
 - **Data**: The actual values (forward pass)
-- **Gradient**: The computed gradients (backward pass)  
+- **Gradient**: The computed gradients (backward pass)
 - **Computation history**: How this Variable was created
 - **Backward function**: How to compute gradients
 
@@ -167,7 +167,7 @@ class Variable:
                  requires_grad: bool = True, grad_fn: Optional[Callable] = None):
         """
         Create a Variable with gradient tracking.
-        
+            
         TODO: Implement Variable initialization with gradient tracking.
         
         STEP-BY-STEP IMPLEMENTATION:
@@ -275,33 +275,33 @@ class Variable:
         if self.requires_grad:
             if self.grad is None:
                 self.grad = gradient
-            else:
+        else:
                 # Accumulate gradients
                 self.grad = Variable(self.grad.data.data + gradient.data.data)
         
-        if self.grad_fn is not None:
-            self.grad_fn(gradient)
+            if self.grad_fn is not None:
+                self.grad_fn(gradient)
         ### END SOLUTION
-
+    
     def zero_grad(self) -> None:
         """Reset gradients to zero."""
         self.grad = None
-
+    
     def __add__(self, other: Union['Variable', float, int]) -> 'Variable':
         """Addition operator: self + other"""
         return add(self, other)
-
+    
     def __mul__(self, other: Union['Variable', float, int]) -> 'Variable':
         """Multiplication operator: self * other"""
         return multiply(self, other)
-
+    
     def __sub__(self, other: Union['Variable', float, int]) -> 'Variable':
         """Subtraction operator: self - other"""
         return subtract(self, other)
-
+    
     def __truediv__(self, other: Union['Variable', float, int]) -> 'Variable':
         """Division operator: self / other"""
-        return divide(self, other)
+        return divide(self, other) 
 
 # %% [markdown]
 """
@@ -817,12 +817,12 @@ Let's see how autograd enables neural network training:
 4. **Parameter update**: Update weights using gradients
 
 ### Example: Simple Linear Regression
-```python
+   ```python
 # Model: y = wx + b
 w = Variable(0.5, requires_grad=True)
 b = Variable(0.1, requires_grad=True)
 
-# Forward pass
+    # Forward pass
 prediction = w * x + b
 
 # Loss: mean squared error
@@ -870,7 +870,7 @@ def test_neural_network_training():
             x = Variable(x_val, requires_grad=False)
             target = Variable(y_val, requires_grad=False)
             
-            # Forward pass
+    # Forward pass
             prediction = add(multiply(w, x), b)  # wx + b
             
             # Loss: squared error
