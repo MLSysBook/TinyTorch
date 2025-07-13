@@ -345,8 +345,9 @@ def test_variable_class():
     print(f"✅ Data access and properties working")
     print(f"✅ Gradient management working")
 
-# Run the test
-test_variable_class()
+# Run inline tests when module is executed directly
+if __name__ == "__main__":
+    test_variable_class()
 
 # %% [markdown]
 """
@@ -487,8 +488,9 @@ def test_add_operation():
     print(f"✅ Backward pass computing correct gradients")
     print(f"✅ Scalar addition working correctly")
 
-# Run the test
-test_add_operation()
+# Run inline tests when module is executed directly
+if __name__ == "__main__":
+    test_add_operation()
 
 # %% [markdown]
 """
@@ -620,8 +622,9 @@ def test_multiply_operation():
     print(f"✅ Backward pass implementing product rule correctly")
     print(f"✅ Scalar multiplication working correctly")
 
-# Run the test
-test_multiply_operation()
+# Run inline tests when module is executed directly
+if __name__ == "__main__":
+    test_multiply_operation()
 
 # %% nbgrader={"grade": false, "grade_id": "subtract-operation", "locked": false, "schema_version": 3, "solution": true, "task": false}
 #| export
@@ -717,8 +720,9 @@ def test_subtract_operation():
     print(f"✅ Backward pass implementing subtraction rule correctly")
     print(f"✅ Scalar subtraction working correctly")
 
-# Run the test
-test_subtract_operation()
+# Run inline tests when module is executed directly
+if __name__ == "__main__":
+    test_subtract_operation()
 
 # %% [markdown]
 """
@@ -801,8 +805,9 @@ def test_chain_rule():
     print(f"✅ Automatic gradient computation working correctly")
     print(f"✅ Chain rule implemented correctly")
 
-# Run the test
-test_chain_rule()
+# Run inline tests when module is executed directly
+if __name__ == "__main__":
+    test_chain_rule()
 
 # %% [markdown]
 """
@@ -916,8 +921,9 @@ def test_neural_network_training():
     print(f"✅ Autograd enables automatic training")
     print(f"✅ Ready for complex neural network architectures!")
 
-# Run the test
-test_neural_network_training()
+# Run inline tests when module is executed directly
+if __name__ == "__main__":
+    test_neural_network_training()
 
 # %% [markdown]
 """
