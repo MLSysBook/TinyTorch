@@ -21,10 +21,18 @@ Welcome to the Networks module! This is where we compose layers into complete ne
 - Visualize network architectures and understand their capabilities
 - Master forward pass inference through complete networks
 
-## Build → Use → Understand
+## Build → Use → Reflect
 1. **Build**: Sequential networks that compose layers into complete architectures
 2. **Use**: Create different network patterns and run inference
-3. **Understand**: How architecture design affects network behavior and capability
+3. **Reflect**: How architecture design affects network behavior and capability
+
+## What You'll Learn
+By the end of this module, you'll understand:
+- How simple layers combine to create complex behaviors
+- The fundamental Sequential architecture pattern
+- How to build MLPs with any number of layers
+- Different network architectures (shallow, deep, wide)
+- How neural networks approximate complex functions
 """
 
 # %% nbgrader={"grade": false, "grade_id": "networks-imports", "locked": false, "schema_version": 3, "solution": false, "task": false}
@@ -36,9 +44,6 @@ import sys
 import os
 from typing import List, Union, Optional, Callable
 import matplotlib.pyplot as plt
-import matplotlib.patches as patches
-from matplotlib.patches import FancyBboxPatch, ConnectionPatch
-import seaborn as sns
 
 # Import all the building blocks we need - try package first, then local modules
 try:
@@ -86,7 +91,7 @@ print("Ready to build neural network architectures!")
 
 ```python
 # Final package structure:
-from tinytorch.core.networks import Sequential, MLP  # Network architectures!
+from tinytorch.core.networks import Sequential, create_mlp  # Network architectures!
 from tinytorch.core.layers import Dense, Conv2D  # Building blocks
 from tinytorch.core.activations import ReLU, Sigmoid, Tanh  # Nonlinearity
 from tinytorch.core.tensor import Tensor  # Foundation
@@ -101,227 +106,85 @@ from tinytorch.core.tensor import Tensor  # Foundation
 
 # %% [markdown]
 """
-## 🧠 The Mathematical Foundation of Neural Networks
+## Step 1: Understanding Neural Networks as Function Composition
 
-### Function Composition at Scale
-Neural networks are fundamentally about **function composition**:
+### What is a Neural Network?
+A neural network is simply **function composition** - chaining simple functions together to create complex behaviors:
 
-$$f(x) = f_n(f_{n-1}(\ldots f_2(f_1(x)) \ldots))$$
+```
+f(x) = f_n(f_{n-1}(...f_2(f_1(x))))
+```
 
-Each layer is a function, and the network is the composition of all these functions.
+### Real-World Analogy: Assembly Line
+Think of an assembly line in a factory:
+- **Input:** Raw materials (data)
+- **Stations:** Each worker (layer) transforms the product
+- **Output:** Final product (predictions)
 
-### Why Function Composition is Powerful
-- **Modularity**: Each layer has a specific purpose
-- **Composability**: Simple functions combine to create complex behaviors
-- **Universal approximation**: Deep compositions can approximate any function
-- **Hierarchical learning**: Early layers learn simple features, later layers learn complex patterns
+### The Power of Composition
+```python
+# Simple functions
+def add_one(x): return x + 1
+def multiply_two(x): return x * 2
+def square(x): return x * x
 
-### The Architecture Design Space
-Different arrangements of layers create different capabilities:
-- **Depth**: More layers → more complex representations
-- **Width**: More neurons per layer → more capacity per layer
-- **Connections**: How layers connect affects information flow
-- **Activation functions**: Add nonlinearity for complex patterns
+# Composed function
+def complex_function(x):
+    return square(multiply_two(add_one(x)))
+    
+# This is what neural networks do!
+```
 
-### Connection to Real ML Systems
-Every framework uses sequential composition:
-- **PyTorch**: `torch.nn.Sequential([layer1, layer2, layer3])`
-- **TensorFlow**: `tf.keras.Sequential([layer1, layer2, layer3])`
-- **JAX**: `jax.nn.Sequential([layer1, layer2, layer3])`
-- **TinyTorch**: `tinytorch.core.networks.Sequential([layer1, layer2, layer3])` (what we're building!)
+### Why This Matters
+- **Universal Approximation:** MLPs can approximate any continuous function
+- **Hierarchical Learning:** Early layers learn simple features, later layers learn complex patterns
+- **Composability:** Mix and match layers to create custom architectures
+- **Scalability:** Add more layers or make them wider as needed
 
-### Performance and Design Considerations
-- **Forward pass efficiency**: Sequential computation through layers
-- **Memory management**: Intermediate activations storage
-- **Gradient flow**: How information flows backward (for training)
-- **Architecture search**: Finding optimal network structures
+### From Modules We've Built
+- **Tensors:** The data containers that flow through networks
+- **Activations:** The nonlinear transformations that enable complex behaviors
+- **Layers:** The building blocks that transform data
+
+Now let's build our first network architecture!
 """
 
 # %% [markdown]
 """
-## Step 1: What is a Network?
+## Step 2: Building the Sequential Network
 
-### Definition
-A **network** is a composition of layers that transforms input data into output predictions. Think of it as a pipeline of transformations:
+### What is Sequential?
+**Sequential** is the most fundamental network architecture - it applies layers in order:
 
 ```
-Input → Layer1 → Layer2 → Layer3 → Output
+Sequential([layer1, layer2, layer3]) 
+→ f(x) = layer3(layer2(layer1(x)))
 ```
 
-### The Mathematical Foundation: Function Composition Theory
+### Why Sequential Matters
+- **Foundation:** Every neural network library has this pattern
+- **Simplicity:** Easy to understand and implement
+- **Flexibility:** Can compose any layers in any order
+- **Building Block:** Foundation for more complex architectures
 
-#### **Function Composition in Mathematics**
-In mathematics, function composition combines simple functions to create complex ones:
-
-$$(f \circ g)(x) = f(g(x))$$
-
-Neural network composition:
-$$h(x) = f_n(f_{n-1}(\ldots f_2(f_1(x)) \ldots))$$
-
-#### **Why Composition is Powerful**
-1. **Modularity**: Each layer has a specific, well-defined purpose
-2. **Composability**: Simple functions combine to create arbitrarily complex behaviors
-3. **Hierarchical learning**: Early layers learn simple features, later layers learn complex patterns
-4. **Universal approximation**: Deep compositions can approximate any continuous function
-
-#### **The Emergence of Intelligence**
-Complex behavior emerges from simple layer composition:
-
+### The Sequential Pattern
 ```python
-# Example: Image classification
-raw_pixels → [Edge detectors] → [Shape detectors] → [Object detectors] → [Class predictor]
-     ↓              ↓                    ↓                    ↓                 ↓
-  [28x28]      [64 features]      [128 features]      [256 features]      [10 classes]
+# PyTorch style
+model = nn.Sequential(
+    nn.Linear(784, 128),
+    nn.ReLU(),
+    nn.Linear(128, 10)
+)
+
+# Our TinyTorch style
+model = Sequential([
+    Dense(784, 128),
+    ReLU(),
+    Dense(128, 10)
+])
 ```
 
-### Architectural Design Principles
-
-#### **1. Depth vs. Width Trade-offs**
-- **Deep networks**: More layers → more complex representations
-  - **Advantages**: Better feature hierarchies, parameter efficiency
-  - **Disadvantages**: Harder to train, gradient problems
-- **Wide networks**: More neurons per layer → more capacity per layer
-  - **Advantages**: Easier to train, parallel computation
-  - **Disadvantages**: More parameters, potential overfitting
-
-#### **2. Information Flow Patterns**
-```python
-# Sequential flow (what we're building):
-x → layer1 → layer2 → layer3 → output
-
-# Residual flow (advanced):
-x → layer1 → layer2 + x → layer3 → output
-
-# Attention flow (transformers):
-x → attention(x, x, x) → feedforward → output
-```
-
-#### **3. Activation Function Placement**
-```python
-# Standard pattern:
-linear_transformation → nonlinear_activation → next_layer
-
-# Why this works:
-# Linear + Linear = Linear (no increase in expressiveness)
-# Linear + Nonlinear + Linear = Nonlinear (exponential increase in expressiveness)
-```
-
-### Real-World Architecture Examples
-
-#### **Multi-Layer Perceptron (MLP)**
-```python
-# Classic feedforward network
-input → dense(512) → relu → dense(256) → relu → dense(10) → softmax
-```
-- **Use cases**: Tabular data, feature learning, classification
-- **Strengths**: Universal approximation, well-understood
-- **Weaknesses**: Doesn't exploit spatial/temporal structure
-
-#### **Convolutional Neural Network (CNN)**
-```python
-# Exploits spatial structure
-input → conv2d → relu → pool → conv2d → relu → pool → dense → softmax
-```
-- **Use cases**: Image processing, computer vision
-- **Strengths**: Translation invariance, parameter sharing
-- **Weaknesses**: Fixed receptive field, not great for sequences
-
-#### **Recurrent Neural Network (RNN)**
-```python
-# Processes sequences
-input_t → rnn_cell(hidden_{t-1}) → hidden_t → output_t
-```
-- **Use cases**: Natural language processing, time series
-- **Strengths**: Variable length sequences, memory
-- **Weaknesses**: Sequential computation, gradient problems
-
-#### **Transformer**
-```python
-# Attention-based processing
-input → attention → feedforward → attention → feedforward → output
-```
-- **Use cases**: Language models, machine translation
-- **Strengths**: Parallelizable, long-range dependencies
-- **Weaknesses**: Quadratic complexity, large memory requirements
-
-### The Network Design Process
-
-#### **1. Problem Analysis**
-- **Data type**: Images, text, tabular, time series?
-- **Task type**: Classification, regression, generation?
-- **Constraints**: Latency, memory, accuracy requirements?
-
-#### **2. Architecture Selection**
-- **Start simple**: Begin with basic MLP
-- **Add structure**: Incorporate domain-specific inductive biases
-- **Scale up**: Increase depth/width as needed
-
-#### **3. Component Design**
-- **Input layer**: Match data dimensions
-- **Hidden layers**: Gradual dimension reduction typical
-- **Output layer**: Match task requirements (classes, regression targets)
-- **Activation functions**: ReLU for hidden, task-specific for output
-
-#### **4. Optimization Considerations**
-- **Gradient flow**: Ensure gradients can flow through the network
-- **Computational efficiency**: Balance expressiveness with speed
-- **Memory usage**: Consider intermediate activation storage
-
-### Performance Characteristics
-
-#### **Forward Pass Complexity**
-For a network with L layers, each with n neurons:
-- **Time complexity**: O(L × n²) for dense layers
-- **Space complexity**: O(L × n) for activations
-- **Parallelization**: Each layer can be parallelized
-
-#### **Memory Management**
-```python
-# Memory usage during forward pass:
-input_memory = batch_size × input_size
-hidden_memory = batch_size × hidden_size × num_layers
-output_memory = batch_size × output_size
-total_memory = input_memory + hidden_memory + output_memory
-```
-
-#### **Computational Optimization**
-- **Batch processing**: Process multiple samples simultaneously
-- **Vectorization**: Use optimized matrix operations
-- **Hardware acceleration**: Leverage GPUs/TPUs for parallel computation
-
-### Connection to Previous Modules
-
-#### **From Module 1 (Tensor)**
-- **Data flow**: Tensors flow through the network
-- **Shape management**: Ensure compatible dimensions between layers
-
-#### **From Module 2 (Activations)**
-- **Nonlinearity**: Activation functions between layers enable complex learning
-- **Function choice**: Different activations for different purposes
-
-#### **From Module 3 (Layers)**
-- **Building blocks**: Layers are the fundamental components
-- **Composition**: Networks compose layers into complete architectures
-
-### Why Networks Matter: The Scaling Laws
-
-#### **Empirical Observations**
-- **More parameters**: Generally better performance (up to a point)
-- **More data**: Enables training of larger networks
-- **More compute**: Allows exploration of larger architectures
-
-#### **The Deep Learning Revolution**
-```python
-# Pre-2012: Shallow networks
-input → hidden(100) → output
-
-# Post-2012: Deep networks
-input → hidden(512) → hidden(512) → hidden(512) → ... → output
-```
-
-The key insight: **Depth enables hierarchical feature learning**
-
-Let's start building our Sequential network architecture!
+Let's implement this fundamental architecture!
 """
 
 # %% nbgrader={"grade": false, "grade_id": "sequential-class", "locked": false, "schema_version": 3, "solution": true, "task": false}
@@ -355,9 +218,7 @@ class Sequential:
         - Store layers in self.layers
         - This is the foundation for all network architectures
         """
-        ### BEGIN SOLUTION
         self.layers = layers
-        ### END SOLUTION
     
     def forward(self, x: Tensor) -> Tensor:
         """
@@ -390,12 +251,10 @@ class Sequential:
         - The output of one layer becomes input to the next
         - Return the final result
         """
-        ### BEGIN SOLUTION
         # Apply each layer in sequence
         for layer in self.layers:
             x = layer(x)
         return x
-        ### END SOLUTION
     
     def __call__(self, x: Tensor) -> Tensor:
         """Make network callable: network(x) same as network.forward(x)"""
@@ -447,6 +306,12 @@ try:
     assert len(network.layers) == 4, f"Expected 4 layers, got {len(network.layers)}"
     print("✅ Sequential network stores layers correctly")
     
+    # Test batch processing
+    x_batch = Tensor([[1.0, 2.0, 3.0], [4.0, 5.0, 6.0]])
+    y_batch = network(x_batch)
+    assert y_batch.shape == (2, 2), f"Expected batch shape (2, 2), got {y_batch.shape}"
+    print("✅ Sequential network handles batch processing")
+    
 except Exception as e:
     print(f"❌ Sequential network test failed: {e}")
     raise
@@ -460,7 +325,7 @@ print("📈 Progress: Sequential network ✓")
 
 # %% [markdown]
 """
-## Step 2: Building Multi-Layer Perceptrons (MLPs)
+## Step 3: Building Multi-Layer Perceptrons (MLPs)
 
 ### What is an MLP?
 A **Multi-Layer Perceptron** is the classic neural network architecture:
@@ -486,6 +351,9 @@ Dense(3→4) → ReLU → Dense(4→2) → ReLU → Dense(2→1) → Sigmoid
 - **Feature learning**: Learning representations from raw data
 - **Classification**: Spam detection, medical diagnosis
 - **Regression**: Price prediction, time series forecasting
+
+### The MLP Factory Pattern
+Instead of manually creating each layer, we'll build a function that creates MLPs automatically!
 """
 
 # %% nbgrader={"grade": false, "grade_id": "create-mlp", "locked": false, "schema_version": 3, "solution": true, "task": false}
@@ -530,7 +398,6 @@ def create_mlp(input_size: int, hidden_sizes: List[int], output_size: int,
     - Finally add Dense(last_hidden_size, output_size), then output_activation
     - Return Sequential(layers)
     """
-    ### BEGIN SOLUTION
     layers = []
     current_size = input_size
     
@@ -545,7 +412,6 @@ def create_mlp(input_size: int, hidden_sizes: List[int], output_size: int,
     layers.append(output_activation())
     
     return Sequential(layers)
-    ### END SOLUTION
 
 # %% [markdown]
 """
@@ -571,6 +437,12 @@ try:
     expected_layers = 6  # 3 Dense + 2 ReLU + 1 Sigmoid
     assert len(mlp.layers) == expected_layers, f"Expected {expected_layers} layers, got {len(mlp.layers)}"
     print("✅ MLP has correct number of layers")
+    
+    # Test layer types
+    layer_types = [type(layer).__name__ for layer in mlp.layers]
+    expected_pattern = ['Dense', 'ReLU', 'Dense', 'ReLU', 'Dense', 'Sigmoid']
+    assert layer_types == expected_pattern, f"Expected pattern {expected_pattern}, got {layer_types}"
+    print("✅ MLP follows correct layer pattern")
     
     # Test with sample data
     x = Tensor([[1.0, 2.0, 3.0]])
@@ -617,104 +489,241 @@ print("   Input → Dense → Activation → Dense → Activation → ... → De
 print("   Automatically creates the complete architecture")
 print("   Handles any number of hidden layers")
 print("📈 Progress: Sequential network ✓, MLP creation ✓")
-print("🚀 Complete neural networks ready!")
 
 # %% [markdown]
 """
-### 🧪 Test Your Network Implementations
+## Step 4: Understanding Network Architectures
 
-Once you implement the functions above, run these cells to test them:
+### Architecture Patterns
+Different network architectures solve different problems:
+
+#### **Shallow vs Deep Networks**
+```python
+# Shallow: 1 hidden layer
+shallow = create_mlp(10, [20], 1)
+
+# Deep: Many hidden layers
+deep = create_mlp(10, [20, 20, 20], 1)
+```
+
+#### **Narrow vs Wide Networks**
+```python
+# Narrow: Few neurons per layer
+narrow = create_mlp(10, [5, 5], 1)
+
+# Wide: Many neurons per layer
+wide = create_mlp(10, [50], 1)
+```
+
+### Why Architecture Matters
+- **Capacity:** More parameters can learn more complex patterns
+- **Depth:** Enables hierarchical feature learning
+- **Width:** Allows parallel processing of features
+- **Efficiency:** Balance between performance and computation
+
+### Different Activation Functions
+```python
+# ReLU networks (most common)
+relu_net = create_mlp(10, [20], 1, activation=ReLU)
+
+# Tanh networks (centered around 0)
+tanh_net = create_mlp(10, [20], 1, activation=Tanh)
+
+# Multi-class classification
+classifier = create_mlp(10, [20], 3, output_activation=Softmax)
+```
+
+Let's test different architectures!
 """
 
-# %% nbgrader={"grade": true, "grade_id": "test-sequential", "locked": true, "points": 25, "schema_version": 3, "solution": false, "task": false}
-# Test the Sequential network
-print("Testing Sequential network...")
+# %% [markdown]
+"""
+### 🧪 Unit Test: Architecture Variations
 
-# Create a simple 2-layer network: 3 → 4 → 2
-network = Sequential([
-    Dense(input_size=3, output_size=4),
-    ReLU(),
-    Dense(input_size=4, output_size=2),
-    Sigmoid()
-])
+Let's test different network architectures to understand their behavior.
 
-print(f"Network created with {len(network.layers)} layers")
+**This is a unit test** - it tests architectural variations in isolation.
+"""
 
-# Test with sample data
-x = Tensor([[1.0, 2.0, 3.0]])
-print(f"Input: {x}")
+# %% nbgrader={"grade": true, "grade_id": "test-architectures", "locked": true, "points": 10, "schema_version": 3, "solution": false, "task": false}
+# Test different architectures
+print("🔬 Unit Test: Network Architecture Variations...")
 
-# Forward pass
-y = network(x)
-print(f"Output: {y}")
-print(f"Output shape: {y.shape}")
+try:
+    # Test different activation functions
+    relu_net = create_mlp(input_size=3, hidden_sizes=[4], output_size=1, activation=ReLU)
+    tanh_net = create_mlp(input_size=3, hidden_sizes=[4], output_size=1, activation=Tanh)
+    
+    # Test different output activations
+    classifier = create_mlp(input_size=3, hidden_sizes=[4], output_size=3, output_activation=Softmax)
+    
+    # Test with sample data
+    x = Tensor([[1.0, 2.0, 3.0]])
+    
+    # Test ReLU network
+    y_relu = relu_net(x)
+    assert y_relu.shape == (1, 1), "ReLU network should work"
+    print("✅ ReLU network works correctly")
+    
+    # Test Tanh network
+    y_tanh = tanh_net(x)
+    assert y_tanh.shape == (1, 1), "Tanh network should work"
+    print("✅ Tanh network works correctly")
+    
+    # Test multi-class classifier
+    y_multi = classifier(x)
+    assert y_multi.shape == (1, 3), "Multi-class classifier should work"
+    
+    # Check softmax properties
+    assert abs(np.sum(y_multi.data) - 1.0) < 1e-6, "Softmax outputs should sum to 1"
+    print("✅ Multi-class classifier with Softmax works correctly")
+    
+    # Test different architectures
+    shallow = create_mlp(input_size=4, hidden_sizes=[5], output_size=1)
+    deep = create_mlp(input_size=4, hidden_sizes=[5, 5, 5], output_size=1)
+    wide = create_mlp(input_size=4, hidden_sizes=[20], output_size=1)
+    
+    x_test = Tensor([[1.0, 2.0, 3.0, 4.0]])
+    
+    # Test all architectures
+    for name, net in [("Shallow", shallow), ("Deep", deep), ("Wide", wide)]:
+        y = net(x_test)
+        assert y.shape == (1, 1), f"{name} network should produce correct shape"
+        print(f"✅ {name} network works correctly")
+    
+    print("✅ All network architectures work correctly")
+    
+except Exception as e:
+    print(f"❌ Architecture test failed: {e}")
+    raise
 
-# Verify the network works
-assert y.shape == (1, 2), f"Expected shape (1, 2), got {y.shape}"
-assert np.all(y.data >= 0) and np.all(y.data <= 1), "Sigmoid output should be between 0 and 1"
+print("🎯 Architecture insights:")
+print("   Different activations create different behaviors")
+print("   Softmax enables multi-class classification")
+print("   Architecture affects network capacity and learning")
+print("📈 Progress: Sequential ✓, MLP creation ✓, Architecture variations ✓")
 
-print("✅ Sequential network tests passed!")
+# %% [markdown]
+"""
+## Step 5: Integration Test - Complete Network Applications
 
-# %% nbgrader={"grade": true, "grade_id": "test-mlp", "locked": true, "points": 25, "schema_version": 3, "solution": false, "task": false}
-# Test MLP creation
-print("Testing MLP creation...")
+### Real-World Network Applications
+Let's test our networks on realistic scenarios:
 
-# Create a simple MLP: 3 → 4 → 2 → 1
-mlp = create_mlp(input_size=3, hidden_sizes=[4, 2], output_size=1)
+#### **Classification Problem**
+```python
+# 4 features → 2 classes (binary classification)
+classifier = create_mlp(4, [8, 4], 2, output_activation=Softmax)
+```
 
-print(f"MLP created with {len(mlp.layers)} layers")
+#### **Regression Problem**
+```python
+# 3 features → 1 continuous output
+regressor = create_mlp(3, [10, 5], 1, output_activation=lambda: Dense(0, 0))  # Linear output
+```
 
-# Test the structure
-expected_layers = [
-    Dense,  # 3 → 4
-    ReLU,   # activation
-    Dense,  # 4 → 2
-    ReLU,   # activation
-    Dense,  # 2 → 1
-    Sigmoid # output activation
-]
+#### **Deep Learning Pattern**
+```python
+# Complex feature learning
+deep_net = create_mlp(10, [64, 32, 16], 1)
+```
 
-assert len(mlp.layers) == 6, f"Expected 6 layers, got {len(mlp.layers)}"
+This integration test ensures our networks work for real ML applications!
+"""
 
-# Test with sample data
-x = Tensor([[1.0, 2.0, 3.0]])
-y = mlp(x)
-print(f"MLP output: {y}")
-print(f"MLP output shape: {y.shape}")
+# %% nbgrader={"grade": true, "grade_id": "test-integration", "locked": true, "points": 15, "schema_version": 3, "solution": false, "task": false}
+# Integration test - complete network applications
+print("🔬 Integration Test: Complete Network Applications...")
 
-# Verify the output
-assert y.shape == (1, 1), f"Expected shape (1, 1), got {y.shape}"
-assert np.all(y.data >= 0) and np.all(y.data <= 1), "Sigmoid output should be between 0 and 1"
+try:
+    # Test 1: Multi-class Classification (Iris-like dataset)
+    print("\n1. Multi-class Classification Test:")
+    iris_classifier = create_mlp(input_size=4, hidden_sizes=[8, 6], output_size=3, output_activation=Softmax)
+    
+    # Simulate iris features: [sepal_length, sepal_width, petal_length, petal_width]
+    iris_samples = Tensor([
+        [5.1, 3.5, 1.4, 0.2],  # Setosa
+        [7.0, 3.2, 4.7, 1.4],  # Versicolor
+        [6.3, 3.3, 6.0, 2.5]   # Virginica
+    ])
+    
+    iris_predictions = iris_classifier(iris_samples)
+    assert iris_predictions.shape == (3, 3), "Iris classifier should output 3 classes for 3 samples"
+    
+    # Check softmax properties
+    row_sums = np.sum(iris_predictions.data, axis=1)
+    assert np.allclose(row_sums, 1.0), "Each prediction should sum to 1"
+    print("✅ Multi-class classification works correctly")
+    
+    # Test 2: Regression Task (Housing prices)
+    print("\n2. Regression Task Test:")
+    # Create a regressor without final activation (linear output)
+    class Identity:
+        def __call__(self, x): return x
+    
+    housing_regressor = create_mlp(input_size=3, hidden_sizes=[10, 5], output_size=1, output_activation=Identity)
+    
+    # Simulate housing features: [size, bedrooms, location_score]
+    housing_samples = Tensor([
+        [2000, 3, 8.5],  # Large house, good location
+        [1200, 2, 6.0],  # Medium house, ok location
+        [800, 1, 4.0]    # Small house, poor location
+    ])
+    
+    housing_predictions = housing_regressor(housing_samples)
+    assert housing_predictions.shape == (3, 1), "Housing regressor should output 1 value per sample"
+    print("✅ Regression task works correctly")
+    
+    # Test 3: Deep Network Performance
+    print("\n3. Deep Network Test:")
+    deep_network = create_mlp(input_size=10, hidden_sizes=[20, 15, 10, 5], output_size=1)
+    
+    # Test with realistic batch size
+    batch_data = Tensor(np.random.randn(32, 10))  # 32 samples, 10 features
+    deep_predictions = deep_network(batch_data)
+    
+    assert deep_predictions.shape == (32, 1), "Deep network should handle batch processing"
+    assert not np.any(np.isnan(deep_predictions.data)), "Deep network should not produce NaN"
+    print("✅ Deep network handles batch processing correctly")
+    
+    # Test 4: Network Composition
+    print("\n4. Network Composition Test:")
+    # Create a feature extractor and classifier separately
+    feature_extractor = Sequential([
+        Dense(input_size=10, output_size=5),
+        ReLU(),
+        Dense(input_size=5, output_size=3),
+        ReLU()
+    ])
+    
+    classifier_head = Sequential([
+        Dense(input_size=3, output_size=2),
+        Softmax()
+    ])
+    
+    # Test composition
+    raw_data = Tensor(np.random.randn(5, 10))
+    features = feature_extractor(raw_data)
+    final_predictions = classifier_head(features)
+    
+    assert features.shape == (5, 3), "Feature extractor should output 3 features"
+    assert final_predictions.shape == (5, 2), "Classifier should output 2 classes"
+    
+    row_sums = np.sum(final_predictions.data, axis=1)
+    assert np.allclose(row_sums, 1.0), "Composed network predictions should be valid"
+    print("✅ Network composition works correctly")
+    
+    print("\n🎉 Integration test passed! Your networks work correctly for:")
+    print("  • Multi-class classification (Iris flowers)")
+    print("  • Regression tasks (housing prices)")
+    print("  • Deep learning architectures")
+    print("  • Network composition and feature extraction")
+    
+except Exception as e:
+    print(f"❌ Integration test failed: {e}")
+    raise
 
-print("✅ MLP creation tests passed!")
-
-# %% nbgrader={"grade": true, "grade_id": "test-network-comparison", "locked": true, "points": 25, "schema_version": 3, "solution": false, "task": false}
-# Test different network architectures
-print("Testing different network architectures...")
-
-# Create networks with different architectures
-shallow_net = create_mlp(input_size=3, hidden_sizes=[4], output_size=1)
-deep_net = create_mlp(input_size=3, hidden_sizes=[4, 4, 4], output_size=1)
-wide_net = create_mlp(input_size=3, hidden_sizes=[10], output_size=1)
-
-# Test input
-x = Tensor([[1.0, 2.0, 3.0]])
-
-# Test all networks
-shallow_out = shallow_net(x)
-deep_out = deep_net(x)
-wide_out = wide_net(x)
-
-print(f"Shallow network output: {shallow_out}")
-print(f"Deep network output: {deep_out}")
-print(f"Wide network output: {wide_out}")
-
-# Verify all outputs are valid
-for name, output in [("Shallow", shallow_out), ("Deep", deep_out), ("Wide", wide_out)]:
-    assert output.shape == (1, 1), f"{name} network output shape should be (1, 1), got {output.shape}"
-    assert np.all(output.data >= 0) and np.all(output.data <= 1), f"{name} network output should be between 0 and 1"
-
-print("✅ Network architecture comparison tests passed!")
+print("📈 Final Progress: Complete network architectures ready for real ML applications!")
 
 # %% [markdown]
 """
@@ -728,6 +737,7 @@ Congratulations! You've successfully implemented complete neural network archite
 ✅ **MLP Creation**: Building Multi-Layer Perceptrons with flexible architectures  
 ✅ **Architecture Patterns**: Creating shallow, deep, and wide networks  
 ✅ **Forward Pass**: Complete inference through multi-layer networks  
+✅ **Real Applications**: Classification, regression, and deep learning patterns
 
 ### Key Concepts You've Learned
 - **Networks are function composition**: Complex behavior from simple building blocks
@@ -748,9 +758,15 @@ Congratulations! You've successfully implemented complete neural network archite
 - **Feature learning**: Extracting meaningful representations from raw data
 - **Transfer learning**: Using pre-trained networks for new tasks
 
+### Architecture Insights
+- **Shallow networks**: Good for simple patterns, fast training
+- **Deep networks**: Better for complex patterns, hierarchical learning
+- **Wide networks**: More parallel processing, good for diverse features
+- **Activation choice**: ReLU for most cases, Tanh for centered data, Softmax for classification
+
 ### Next Steps
-1. **Export your code**: `tito package nbdev --export 04_networks`
-2. **Test your implementation**: `tito module test 04_networks`
+1. **Export your code**: Use NBDev to export to the `tinytorch` package
+2. **Test your implementation**: Run the complete test suite
 3. **Use your networks**: 
    ```python
    from tinytorch.core.networks import Sequential, create_mlp
@@ -763,656 +779,7 @@ Congratulations! You've successfully implemented complete neural network archite
    # Create MLP
    mlp = create_mlp(10, [20, 10], 1)
    ```
-4. **Move to Module 5**: Start building convolutional networks for images!
-
-**Ready for the next challenge?** Let's add convolutional layers for image processing and build CNNs!
-""" 
-
-# %% [markdown]
-"""
-## 🧪 Comprehensive Testing: Neural Network Architectures
-
-Let's thoroughly test your network implementations to ensure they work correctly in all scenarios.
-This comprehensive testing ensures your networks are robust and ready for real ML applications.
-"""
-
-# %% nbgrader={"grade": true, "grade_id": "test-networks-comprehensive", "locked": true, "points": 30, "schema_version": 3, "solution": false, "task": false}
-def test_networks_comprehensive():
-    """Comprehensive test of Sequential networks and MLP creation."""
-    print("🔬 Testing neural network architectures comprehensively...")
-    
-    tests_passed = 0
-    total_tests = 10
-    
-    # Test 1: Sequential Network Creation and Structure
-    try:
-        # Create a simple 2-layer network
-        network = Sequential([
-            Dense(input_size=3, output_size=4),
-            ReLU(),
-            Dense(input_size=4, output_size=2),
-            Sigmoid()
-        ])
-        
-        assert len(network.layers) == 4, f"Expected 4 layers, got {len(network.layers)}"
-        
-        # Test layer types
-        assert isinstance(network.layers[0], Dense), "First layer should be Dense"
-        assert isinstance(network.layers[1], ReLU), "Second layer should be ReLU"
-        assert isinstance(network.layers[2], Dense), "Third layer should be Dense"
-        assert isinstance(network.layers[3], Sigmoid), "Fourth layer should be Sigmoid"
-        
-        print("✅ Sequential network creation and structure")
-        tests_passed += 1
-    except Exception as e:
-        print(f"❌ Sequential network creation failed: {e}")
-    
-    # Test 2: Sequential Network Forward Pass
-    try:
-        network = Sequential([
-            Dense(input_size=3, output_size=4),
-            ReLU(),
-            Dense(input_size=4, output_size=2),
-            Sigmoid()
-        ])
-        
-        # Test single sample
-        x_single = Tensor([[1.0, 2.0, 3.0]])
-        y_single = network(x_single)
-        
-        assert y_single.shape == (1, 2), f"Single sample output should be (1, 2), got {y_single.shape}"
-        assert np.all((y_single.data >= 0) & (y_single.data <= 1)), "Sigmoid output should be in [0,1]"
-        
-        # Test batch processing
-        x_batch = Tensor([[1.0, 2.0, 3.0], [4.0, 5.0, 6.0], [7.0, 8.0, 9.0]])
-        y_batch = network(x_batch)
-        
-        assert y_batch.shape == (3, 2), f"Batch output should be (3, 2), got {y_batch.shape}"
-        assert np.all((y_batch.data >= 0) & (y_batch.data <= 1)), "All batch outputs should be in [0,1]"
-        
-        print("✅ Sequential network forward pass: single and batch")
-        tests_passed += 1
-    except Exception as e:
-        print(f"❌ Sequential network forward pass failed: {e}")
-    
-    # Test 3: MLP Creation Basic Functionality
-    try:
-        # Create simple MLP: 3 → 4 → 2 → 1
-        mlp = create_mlp(input_size=3, hidden_sizes=[4, 2], output_size=1)
-        
-        # Should have 6 layers: Dense, ReLU, Dense, ReLU, Dense, Sigmoid
-        expected_layers = 6
-        assert len(mlp.layers) == expected_layers, f"Expected {expected_layers} layers, got {len(mlp.layers)}"
-        
-        # Test layer pattern
-        layer_types = [type(layer).__name__ for layer in mlp.layers]
-        expected_pattern = ['Dense', 'ReLU', 'Dense', 'ReLU', 'Dense', 'Sigmoid']
-        assert layer_types == expected_pattern, f"Expected pattern {expected_pattern}, got {layer_types}"
-        
-        # Test forward pass
-        x = Tensor([[1.0, 2.0, 3.0]])
-        y = mlp(x)
-        
-        assert y.shape == (1, 1), f"MLP output should be (1, 1), got {y.shape}"
-        assert np.all((y.data >= 0) & (y.data <= 1)), "MLP output should be in [0,1]"
-        
-        print("✅ MLP creation basic functionality")
-        tests_passed += 1
-    except Exception as e:
-        print(f"❌ MLP creation basic failed: {e}")
-    
-    # Test 4: Different MLP Architectures
-    try:
-        # Test shallow network (1 hidden layer)
-        shallow_net = create_mlp(input_size=3, hidden_sizes=[4], output_size=1)
-        assert len(shallow_net.layers) == 4, f"Shallow network should have 4 layers, got {len(shallow_net.layers)}"
-        
-        # Test deep network (3 hidden layers)
-        deep_net = create_mlp(input_size=3, hidden_sizes=[4, 4, 4], output_size=1)
-        assert len(deep_net.layers) == 8, f"Deep network should have 8 layers, got {len(deep_net.layers)}"
-        
-        # Test wide network (1 large hidden layer)
-        wide_net = create_mlp(input_size=3, hidden_sizes=[20], output_size=1)
-        assert len(wide_net.layers) == 4, f"Wide network should have 4 layers, got {len(wide_net.layers)}"
-        
-        # Test very deep network
-        very_deep_net = create_mlp(input_size=3, hidden_sizes=[5, 5, 5, 5, 5], output_size=1)
-        assert len(very_deep_net.layers) == 12, f"Very deep network should have 12 layers, got {len(very_deep_net.layers)}"
-        
-        # Test all networks work
-        x = Tensor([[1.0, 2.0, 3.0]])
-        for name, net in [("Shallow", shallow_net), ("Deep", deep_net), ("Wide", wide_net), ("Very Deep", very_deep_net)]:
-            y = net(x)
-            assert y.shape == (1, 1), f"{name} network output shape should be (1, 1), got {y.shape}"
-            assert np.all((y.data >= 0) & (y.data <= 1)), f"{name} network output should be in [0,1]"
-        
-        print("✅ Different MLP architectures: shallow, deep, wide, very deep")
-        tests_passed += 1
-    except Exception as e:
-        print(f"❌ Different MLP architectures failed: {e}")
-    
-    # Test 5: MLP with Different Activation Functions
-    try:
-        # Test with Tanh activation
-        mlp_tanh = create_mlp(input_size=3, hidden_sizes=[4], output_size=1, activation=Tanh, output_activation=Sigmoid)
-        
-        # Check layer types
-        layer_types = [type(layer).__name__ for layer in mlp_tanh.layers]
-        expected_pattern = ['Dense', 'Tanh', 'Dense', 'Sigmoid']
-        assert layer_types == expected_pattern, f"Tanh MLP pattern should be {expected_pattern}, got {layer_types}"
-        
-        # Test forward pass
-        x = Tensor([[1.0, 2.0, 3.0]])
-        y = mlp_tanh(x)
-        assert y.shape == (1, 1), "Tanh MLP should work correctly"
-        
-        # Test with different output activation
-        mlp_tanh_out = create_mlp(input_size=3, hidden_sizes=[4], output_size=3, activation=ReLU, output_activation=Softmax)
-        y_multi = mlp_tanh_out(x)
-        assert y_multi.shape == (1, 3), "Multi-output MLP should work"
-        
-        # Check softmax properties
-        assert abs(np.sum(y_multi.data) - 1.0) < 1e-6, "Softmax outputs should sum to 1"
-        
-        print("✅ MLP with different activation functions: Tanh, Softmax")
-        tests_passed += 1
-    except Exception as e:
-        print(f"❌ MLP with different activations failed: {e}")
-    
-    # Test 6: Network Layer Composition
-    try:
-        # Test that network correctly chains layers
-        network = Sequential([
-            Dense(input_size=4, output_size=3),
-            ReLU(),
-            Dense(input_size=3, output_size=2),
-            Tanh(),
-            Dense(input_size=2, output_size=1),
-            Sigmoid()
-        ])
-        
-        x = Tensor([[1.0, -1.0, 2.0, -2.0]])
-        
-        # Manual forward pass to verify composition
-        h1 = network.layers[0](x)  # Dense
-        h2 = network.layers[1](h1)  # ReLU
-        h3 = network.layers[2](h2)  # Dense
-        h4 = network.layers[3](h3)  # Tanh
-        h5 = network.layers[4](h4)  # Dense
-        h6 = network.layers[5](h5)  # Sigmoid
-        
-        # Compare with network forward pass
-        y_network = network(x)
-        
-        assert np.allclose(h6.data, y_network.data), "Manual and network forward pass should match"
-        
-        # Check intermediate shapes
-        assert h1.shape == (1, 3), f"h1 shape should be (1, 3), got {h1.shape}"
-        assert h2.shape == (1, 3), f"h2 shape should be (1, 3), got {h2.shape}"
-        assert h3.shape == (1, 2), f"h3 shape should be (1, 2), got {h3.shape}"
-        assert h4.shape == (1, 2), f"h4 shape should be (1, 2), got {h4.shape}"
-        assert h5.shape == (1, 1), f"h5 shape should be (1, 1), got {h5.shape}"
-        assert h6.shape == (1, 1), f"h6 shape should be (1, 1), got {h6.shape}"
-        
-        # Check activation effects
-        assert np.all(h2.data >= 0), "ReLU should produce non-negative values"
-        assert np.all((h4.data >= -1) & (h4.data <= 1)), "Tanh should produce values in [-1,1]"
-        assert np.all((h6.data >= 0) & (h6.data <= 1)), "Sigmoid should produce values in [0,1]"
-        
-        print("✅ Network layer composition: correct chaining and shapes")
-        tests_passed += 1
-    except Exception as e:
-        print(f"❌ Network layer composition failed: {e}")
-    
-    # Test 7: Edge Cases and Robustness
-    try:
-        # Test with minimal network (1 layer)
-        minimal_net = Sequential([Dense(input_size=2, output_size=1)])
-        x_minimal = Tensor([[1.0, 2.0]])
-        y_minimal = minimal_net(x_minimal)
-        assert y_minimal.shape == (1, 1), "Minimal network should work"
-        
-        # Test with single neuron layers
-        single_neuron_net = create_mlp(input_size=1, hidden_sizes=[1], output_size=1)
-        x_single = Tensor([[5.0]])
-        y_single_neuron = single_neuron_net(x_single)
-        assert y_single_neuron.shape == (1, 1), "Single neuron network should work"
-        
-        # Test with large batch
-        large_net = create_mlp(input_size=10, hidden_sizes=[5], output_size=1)
-        x_large_batch = Tensor(np.random.randn(100, 10))
-        y_large_batch = large_net(x_large_batch)
-        assert y_large_batch.shape == (100, 1), "Large batch should work"
-        assert not np.any(np.isnan(y_large_batch.data)), "Should not produce NaN"
-        assert not np.any(np.isinf(y_large_batch.data)), "Should not produce Inf"
-        
-        print("✅ Edge cases: minimal networks, single neurons, large batches")
-        tests_passed += 1
-    except Exception as e:
-        print(f"❌ Edge cases failed: {e}")
-    
-    # Test 8: Multi-class Classification Networks
-    try:
-        # Create multi-class classifier
-        classifier = create_mlp(input_size=4, hidden_sizes=[8, 6], output_size=3, output_activation=Softmax)
-        
-        # Test with batch of samples
-        x_multi = Tensor(np.random.randn(5, 4))
-        y_multi = classifier(x_multi)
-        
-        assert y_multi.shape == (5, 3), f"Multi-class output should be (5, 3), got {y_multi.shape}"
-        
-        # Check softmax properties for each sample
-        row_sums = np.sum(y_multi.data, axis=1)
-        assert np.allclose(row_sums, 1.0), "Each sample should have probabilities summing to 1"
-        assert np.all(y_multi.data > 0), "All probabilities should be positive"
-        
-        # Test that argmax gives valid class predictions
-        predictions = np.argmax(y_multi.data, axis=1)
-        assert np.all((predictions >= 0) & (predictions < 3)), "Predictions should be valid class indices"
-        
-        print("✅ Multi-class classification: softmax probabilities, valid predictions")
-        tests_passed += 1
-    except Exception as e:
-        print(f"❌ Multi-class classification failed: {e}")
-    
-    # Test 9: Real ML Scenarios
-    try:
-        # Scenario 1: Binary classification (like spam detection)
-        spam_classifier = create_mlp(input_size=100, hidden_sizes=[50, 20], output_size=1, output_activation=Sigmoid)
-        
-        # Simulate email features
-        email_features = Tensor(np.random.randn(10, 100))
-        spam_probabilities = spam_classifier(email_features)
-        
-        assert spam_probabilities.shape == (10, 1), "Spam classifier should output probabilities for each email"
-        assert np.all((spam_probabilities.data >= 0) & (spam_probabilities.data <= 1)), "Should output valid probabilities"
-        
-        # Scenario 2: Image classification (like MNIST)
-        mnist_classifier = create_mlp(input_size=784, hidden_sizes=[256, 128], output_size=10, output_activation=Softmax)
-        
-        # Simulate flattened images
-        images = Tensor(np.random.randn(32, 784))  # Batch of 32 images
-        class_probabilities = mnist_classifier(images)
-        
-        assert class_probabilities.shape == (32, 10), "MNIST classifier should output 10 class probabilities"
-        
-        # Check softmax properties
-        batch_sums = np.sum(class_probabilities.data, axis=1)
-        assert np.allclose(batch_sums, 1.0), "Each image should have class probabilities summing to 1"
-        
-        # Scenario 3: Regression (like house price prediction)
-        price_predictor = Sequential([
-            Dense(input_size=8, output_size=16),
-            ReLU(),
-            Dense(input_size=16, output_size=8),
-            ReLU(),
-            Dense(input_size=8, output_size=1)  # No activation for regression
-        ])
-        
-        # Simulate house features
-        house_features = Tensor(np.random.randn(5, 8))
-        predicted_prices = price_predictor(house_features)
-        
-        assert predicted_prices.shape == (5, 1), "Price predictor should output one price per house"
-        
-        print("✅ Real ML scenarios: spam detection, image classification, price prediction")
-        tests_passed += 1
-    except Exception as e:
-        print(f"❌ Real ML scenarios failed: {e}")
-    
-    # Test 10: Network Comparison and Analysis
-    try:
-        # Create networks with same total parameters but different architectures
-        x_test = Tensor([[1.0, 2.0, 3.0, 4.0]])
-        
-        # Wide network: 4 → 20 → 1 (parameters: 4*20 + 20 + 20*1 + 1 = 121)
-        wide_network = create_mlp(input_size=4, hidden_sizes=[20], output_size=1)
-        
-        # Deep network: 4 → 10 → 10 → 1 (parameters: 4*10 + 10 + 10*10 + 10 + 10*1 + 1 = 171)
-        deep_network = create_mlp(input_size=4, hidden_sizes=[10, 10], output_size=1)
-        
-        # Test both networks
-        wide_output = wide_network(x_test)
-        deep_output = deep_network(x_test)
-        
-        assert wide_output.shape == (1, 1), "Wide network should produce correct output"
-        assert deep_output.shape == (1, 1), "Deep network should produce correct output"
-        
-        # Both should be valid but potentially different
-        assert np.all((wide_output.data >= 0) & (wide_output.data <= 1)), "Wide network output should be valid"
-        assert np.all((deep_output.data >= 0) & (deep_output.data <= 1)), "Deep network output should be valid"
-        
-        # Test network complexity
-        def count_parameters(network):
-            total = 0
-            for layer in network.layers:
-                if isinstance(layer, Dense):
-                    total += layer.weights.size
-                    if layer.bias is not None:
-                        total += layer.bias.size
-            return total
-        
-        wide_params = count_parameters(wide_network)
-        deep_params = count_parameters(deep_network)
-        
-        assert wide_params > 0, "Wide network should have parameters"
-        assert deep_params > 0, "Deep network should have parameters"
-        
-        print(f"✅ Network comparison: wide ({wide_params} params) vs deep ({deep_params} params)")
-        tests_passed += 1
-    except Exception as e:
-        print(f"❌ Network comparison failed: {e}")
-    
-    # Results summary
-    print(f"\n📊 Networks Module Results: {tests_passed}/{total_tests} tests passed")
-    
-    if tests_passed == total_tests:
-        print("🎉 All network tests passed! Your implementations support:")
-        print("  • Sequential networks: layer composition and chaining")
-        print("  • MLP creation: flexible multi-layer perceptron architectures")
-        print("  • Different architectures: shallow, deep, wide networks")
-        print("  • Multiple activation functions: ReLU, Tanh, Sigmoid, Softmax")
-        print("  • Multi-class classification: softmax probability distributions")
-        print("  • Real ML scenarios: spam detection, image classification, regression")
-        print("  • Network analysis: parameter counting and architecture comparison")
-        print("📈 Progress: All Network Functionality ✓")
-        return True
-    else:
-        print("⚠️  Some network tests failed. Common issues:")
-        print("  • Check Sequential class layer composition")
-        print("  • Verify create_mlp function layer creation pattern")
-        print("  • Ensure proper activation function integration")
-        print("  • Test forward pass through complete networks")
-        print("  • Verify shape handling across all layers")
-        return False
-
-# Run the comprehensive test
-success = test_networks_comprehensive()
-
-# %% [markdown]
-"""
-### 🧪 Integration Test: Complete Neural Network Applications
-
-Let's test your networks in realistic machine learning applications.
-"""
-
-# %% nbgrader={"grade": true, "grade_id": "test-networks-integration", "locked": true, "points": 20, "schema_version": 3, "solution": false, "task": false}
-def test_networks_integration():
-    """Integration test with complete neural network applications."""
-    print("🔬 Testing networks in complete ML applications...")
-    
-    try:
-        print("🧠 Building complete ML applications with neural networks...")
-        
-        # Application 1: Iris Classification
-        print("\n🌸 Application 1: Iris Classification (Multi-class)")
-        iris_classifier = create_mlp(
-            input_size=4,      # 4 flower measurements
-            hidden_sizes=[8, 6], # Hidden layers
-            output_size=3,     # 3 iris species
-            output_activation=Softmax
-        )
-        
-        # Simulate iris data
-        iris_samples = Tensor([
-            [5.1, 3.5, 1.4, 0.2],  # Setosa-like
-            [7.0, 3.2, 4.7, 1.4],  # Versicolor-like
-            [6.3, 3.3, 6.0, 2.5]   # Virginica-like
-        ])
-        
-        iris_predictions = iris_classifier(iris_samples)
-        
-        assert iris_predictions.shape == (3, 3), "Should predict 3 classes for 3 samples"
-        
-        # Check that predictions are valid probabilities
-        row_sums = np.sum(iris_predictions.data, axis=1)
-        assert np.allclose(row_sums, 1.0), "Each prediction should sum to 1"
-        
-        # Get predicted classes
-        predicted_classes = np.argmax(iris_predictions.data, axis=1)
-        print(f"  Predicted classes: {predicted_classes}")
-        print(f"  Confidence scores: {np.max(iris_predictions.data, axis=1)}")
-        
-        print("✅ Iris classification: valid multi-class predictions")
-        
-        # Application 2: Housing Price Prediction
-        print("\n🏠 Application 2: Housing Price Prediction (Regression)")
-        price_predictor = Sequential([
-            Dense(input_size=8, output_size=16),  # 8 house features
-            ReLU(),
-            Dense(input_size=16, output_size=8),
-            ReLU(),
-            Dense(input_size=8, output_size=1)    # 1 price output (no activation for regression)
-        ])
-        
-        # Simulate house features: [size, bedrooms, bathrooms, age, location_score, etc.]
-        house_data = Tensor([
-            [2000, 3, 2, 5, 8.5, 1, 0, 1],    # Large, new house
-            [1200, 2, 1, 20, 6.0, 0, 1, 0],   # Small, older house
-            [1800, 3, 2, 10, 7.5, 1, 0, 0]    # Medium house
-        ])
-        
-        predicted_prices = price_predictor(house_data)
-        
-        assert predicted_prices.shape == (3, 1), "Should predict 1 price for each house"
-        assert not np.any(np.isnan(predicted_prices.data)), "Prices should not be NaN"
-        
-        print(f"  Predicted prices: {predicted_prices.data.flatten()}")
-        print("✅ Housing price prediction: valid regression outputs")
-        
-        # Application 3: Sentiment Analysis
-        print("\n💭 Application 3: Sentiment Analysis (Binary Classification)")
-        sentiment_analyzer = create_mlp(
-            input_size=100,    # 100 text features (like TF-IDF)
-            hidden_sizes=[50, 25], # Deep network for text
-            output_size=1,     # Binary sentiment (positive/negative)
-            output_activation=Sigmoid
-        )
-        
-        # Simulate text features for different reviews
-        review_features = Tensor(np.random.randn(5, 100))  # 5 reviews
-        sentiment_scores = sentiment_analyzer(review_features)
-        
-        assert sentiment_scores.shape == (5, 1), "Should predict sentiment for each review"
-        assert np.all((sentiment_scores.data >= 0) & (sentiment_scores.data <= 1)), "Sentiment scores should be probabilities"
-        
-        # Convert to sentiment labels
-        sentiment_labels = (sentiment_scores.data > 0.5).astype(int)
-        print(f"  Sentiment predictions: {sentiment_labels.flatten()}")
-        print(f"  Confidence scores: {sentiment_scores.data.flatten()}")
-        
-        print("✅ Sentiment analysis: valid binary classification")
-        
-        # Application 4: MNIST-like Digit Recognition
-        print("\n🔢 Application 4: Digit Recognition (Image Classification)")
-        digit_classifier = create_mlp(
-            input_size=784,     # 28x28 flattened images
-            hidden_sizes=[256, 128, 64], # Deep network for images
-            output_size=10,     # 10 digits (0-9)
-            output_activation=Softmax
-        )
-        
-        # Simulate flattened digit images
-        digit_images = Tensor(np.random.randn(8, 784))  # 8 digit images
-        digit_predictions = digit_classifier(digit_images)
-        
-        assert digit_predictions.shape == (8, 10), "Should predict 10 classes for each image"
-        
-        # Check softmax properties
-        row_sums = np.sum(digit_predictions.data, axis=1)
-        assert np.allclose(row_sums, 1.0), "Each prediction should sum to 1"
-        
-        # Get predicted digits
-        predicted_digits = np.argmax(digit_predictions.data, axis=1)
-        confidence_scores = np.max(digit_predictions.data, axis=1)
-        
-        print(f"  Predicted digits: {predicted_digits}")
-        print(f"  Confidence scores: {confidence_scores}")
-        
-        print("✅ Digit recognition: valid multi-class image classification")
-        
-        # Application 5: Network Architecture Comparison
-        print("\n📊 Application 5: Architecture Comparison Study")
-        
-        # Create different architectures for same task
-        architectures = {
-            "Shallow": create_mlp(4, [16], 3, output_activation=Softmax),
-            "Medium": create_mlp(4, [12, 8], 3, output_activation=Softmax),
-            "Deep": create_mlp(4, [8, 8, 8], 3, output_activation=Softmax),
-            "Wide": create_mlp(4, [24], 3, output_activation=Softmax)
-        }
-        
-        # Test all architectures on same data
-        test_data = Tensor([[1.0, 2.0, 3.0, 4.0]])
-        
-        for name, network in architectures.items():
-            prediction = network(test_data)
-            assert prediction.shape == (1, 3), f"{name} network should output 3 classes"
-            assert abs(np.sum(prediction.data) - 1.0) < 1e-6, f"{name} network should output valid probabilities"
-            
-            # Count parameters
-            param_count = sum(layer.weights.size + (layer.bias.size if hasattr(layer, 'bias') and layer.bias is not None else 0) 
-                            for layer in network.layers if hasattr(layer, 'weights'))
-            
-            print(f"  {name} network: {param_count} parameters, prediction: {prediction.data.flatten()}")
-        
-        print("✅ Architecture comparison: all networks work with different complexities")
-        
-        # Application 6: Transfer Learning Simulation
-        print("\n🔄 Application 6: Transfer Learning Simulation")
-        
-        # Create "pre-trained" feature extractor
-        feature_extractor = Sequential([
-            Dense(input_size=100, output_size=50),
-            ReLU(),
-            Dense(input_size=50, output_size=25),
-            ReLU()
-        ])
-        
-        # Create task-specific classifier
-        classifier_head = Sequential([
-            Dense(input_size=25, output_size=10),
-            ReLU(),
-            Dense(input_size=10, output_size=2),
-            Softmax()
-        ])
-        
-        # Simulate transfer learning pipeline
-        raw_data = Tensor(np.random.randn(3, 100))
-        
-        # Extract features
-        features = feature_extractor(raw_data)
-        assert features.shape == (3, 25), "Feature extractor should output 25 features"
-        
-        # Classify using extracted features
-        final_predictions = classifier_head(features)
-        assert final_predictions.shape == (3, 2), "Classifier should output 2 classes"
-        
-        row_sums = np.sum(final_predictions.data, axis=1)
-        assert np.allclose(row_sums, 1.0), "Transfer learning predictions should be valid"
-        
-        print("✅ Transfer learning simulation: modular network composition")
-        
-        print("\n🎉 Integration test passed! Your networks work correctly in:")
-        print("  • Multi-class classification (Iris flowers)")
-        print("  • Regression tasks (housing prices)")
-        print("  • Binary classification (sentiment analysis)")
-        print("  • Image classification (digit recognition)")
-        print("  • Architecture comparison studies")
-        print("  • Transfer learning scenarios")
-        print("📈 Progress: Networks ready for real ML applications!")
-        
-        return True
-        
-    except Exception as e:
-        print(f"❌ Integration test failed: {e}")
-        print("\n💡 This suggests an issue with:")
-        print("  • Network architecture composition")
-        print("  • Forward pass through complete networks")
-        print("  • Shape compatibility between layers")
-        print("  • Activation function integration")
-        print("  • Check your Sequential and create_mlp implementations")
-        return False
-
-# Run the integration test
-success = test_networks_integration() and success
-
-# Print final summary
-print(f"\n{'='*60}")
-print("🎯 NETWORKS MODULE TESTING COMPLETE")
-print(f"{'='*60}")
-
-if success:
-    print("🎉 CONGRATULATIONS! All network tests passed!")
-    print("\n✅ Your networks module successfully implements:")
-    print("  • Sequential networks: flexible layer composition")
-    print("  • MLP creation: automated multi-layer perceptron building")
-    print("  • Architecture flexibility: shallow, deep, wide networks")
-    print("  • Multiple activations: ReLU, Tanh, Sigmoid, Softmax")
-    print("  • Real ML applications: classification, regression, image recognition")
-    print("  • Network analysis: parameter counting and architecture comparison")
-    print("  • Transfer learning: modular network composition")
-    print("\n🚀 You're ready to tackle any neural network architecture!")
-    print("📈 Final Progress: Networks Module ✓ COMPLETE")
-else:
-    print("⚠️  Some tests failed. Please review the error messages above.")
-    print("\n🔧 To fix issues:")
-    print("  1. Check your Sequential class implementation")
-    print("  2. Verify create_mlp function layer creation")
-    print("  3. Ensure proper forward pass through all layers")
-    print("  4. Test shape compatibility between layers")
-    print("  5. Verify activation function integration")
-    print("\n💪 Keep building! These networks are the foundation of modern AI.")
-
-# %% [markdown]
-"""
-## 🎯 Module Summary
-
-Congratulations! You've successfully implemented complete neural network architectures:
-
-### What You've Accomplished
-✅ **Sequential Networks**: The fundamental architecture for composing layers  
-✅ **Function Composition**: Understanding how layers combine to create complex behaviors  
-✅ **MLP Creation**: Building Multi-Layer Perceptrons with flexible architectures  
-✅ **Architecture Patterns**: Creating shallow, deep, and wide networks  
-✅ **Forward Pass**: Complete inference through multi-layer networks  
-
-### Key Concepts You've Learned
-- **Networks are function composition**: Complex behavior from simple building blocks
-- **Sequential architecture**: The foundation of most neural networks
-- **MLP patterns**: Dense → Activation → Dense → Activation → Output
-- **Architecture design**: How depth and width affect network capability
-- **Forward pass**: How data flows through complete networks
-
-### Mathematical Foundations
-- **Function composition**: f(x) = f_n(...f_2(f_1(x)))
-- **Universal approximation**: MLPs can approximate any continuous function
-- **Hierarchical learning**: Early layers learn simple features, later layers learn complex patterns
-- **Nonlinearity**: Activation functions enable complex decision boundaries
-
-### Real-World Applications
-- **Classification**: Image recognition, spam detection, medical diagnosis
-- **Regression**: Price prediction, time series forecasting
-- **Feature learning**: Extracting meaningful representations from raw data
-- **Transfer learning**: Using pre-trained networks for new tasks
-
-### Next Steps
-1. **Export your code**: `tito package nbdev --export 04_networks`
-2. **Test your implementation**: `tito module test 04_networks`
-3. **Use your networks**: 
-   ```python
-   from tinytorch.core.networks import Sequential, create_mlp
-   from tinytorch.core.layers import Dense
-   from tinytorch.core.activations import ReLU
-   
-   # Create custom network
-   network = Sequential([Dense(10, 5), ReLU(), Dense(5, 1)])
-   
-   # Create MLP
-   mlp = create_mlp(10, [20, 10], 1)
-   ```
-4. **Move to Module 5**: Start building convolutional networks for images!
+4. **Build more complex architectures**: CNNs, RNNs, Transformers!
 
 **Ready for the next challenge?** Let's add convolutional layers for image processing and build CNNs!
 """ 

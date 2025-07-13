@@ -21,10 +21,18 @@ Welcome to the DataLoader module! This is where you'll learn how to efficiently 
 - Master the Dataset and DataLoader pattern used in all ML frameworks
 - Learn systems thinking for data engineering and I/O optimization
 
-## Build → Use → Understand
+## Build → Use → Reflect
 1. **Build**: Create dataset classes and data loaders from scratch
 2. **Use**: Load real datasets and feed them to neural networks
-3. **Understand**: How data engineering affects system performance and scalability
+3. **Reflect**: How data engineering affects system performance and scalability
+
+## What You'll Learn
+By the end of this module, you'll understand:
+- The Dataset pattern for consistent data access
+- How DataLoaders enable efficient batch processing
+- Why batching and shuffling are crucial for ML
+- How to handle datasets larger than memory
+- The connection between data engineering and model performance
 """
 
 # %% nbgrader={"grade": false, "grade_id": "dataloader-imports", "locked": false, "schema_version": 3, "solution": false, "task": false}
@@ -95,58 +103,27 @@ from tinytorch.core.networks import Sequential  # Models to train
 
 # %% [markdown]
 """
-## 🧠 The Mathematical Foundation of Data Engineering
+## Step 1: Understanding Data Pipelines
+
+### What are Data Pipelines?
+**Data pipelines** are the systems that efficiently move data from storage to your model. They're the foundation of all machine learning systems.
 
 ### The Data Pipeline Equation
-Every machine learning system follows this fundamental equation:
-
 ```
-Model Performance = f(Data Quality × Data Quantity × Data Efficiency)
+Raw Data → Load → Transform → Batch → Model → Predictions
 ```
 
-### Why Data Engineering is Critical
-- **Data is the fuel**: Without proper data pipelines, nothing else works
-- **I/O bottlenecks**: Data loading is often the biggest performance bottleneck
-- **Memory management**: How you handle data affects everything else
-- **Production reality**: Data pipelines are critical in real ML systems
+### Why Data Pipelines Matter
+- **Performance**: Efficient loading prevents GPU starvation
+- **Scalability**: Handle datasets larger than memory
+- **Consistency**: Reproducible data processing
+- **Flexibility**: Easy to switch between datasets
 
-### The Three Pillars of Data Engineering
-1. **Abstraction**: Clean interfaces that hide complexity
-2. **Efficiency**: Minimize I/O and memory overhead
-3. **Scalability**: Handle datasets larger than memory
-
-### Connection to Real ML Systems
-Every framework uses the Dataset/DataLoader pattern:
-- **PyTorch**: `torch.utils.data.Dataset` and `torch.utils.data.DataLoader`
-- **TensorFlow**: `tf.data.Dataset` with efficient data pipelines
-- **JAX**: Custom data loading with `jax.numpy` integration
-- **TinyTorch**: `tinytorch.core.dataloader.Dataset` and `DataLoader` (what we're building!)
-
-### Performance Considerations
-- **Memory efficiency**: Handle datasets larger than RAM
-- **I/O optimization**: Read from disk efficiently with batching
-- **Caching strategies**: When to cache vs recompute
-- **Parallel processing**: Multi-threaded data loading
-"""
-
-# %% [markdown]
-"""
-## Step 1: Understanding Data Engineering
-
-### What is Data Engineering?
-**Data engineering** is the foundation of all machine learning systems. It involves loading, processing, and managing data efficiently so that models can learn from it.
-
-### The Fundamental Insight
-**Data engineering is about managing the flow of information through your system:**
-```
-Raw Data → Load → Preprocess → Batch → Feed to Model
-```
-
-### Real-World Examples
-- **Image datasets**: CIFAR-10, ImageNet, MNIST
-- **Text datasets**: Wikipedia, books, social media
-- **Tabular data**: CSV files, databases, spreadsheets
-- **Audio data**: Speech recordings, music files
+### Real-World Challenges
+- **Memory constraints**: Datasets often exceed available RAM
+- **I/O bottlenecks**: Disk access is much slower than computation
+- **Batch processing**: Neural networks need batched data for efficiency
+- **Shuffling**: Random order prevents overfitting
 
 ### Systems Thinking
 - **Memory efficiency**: Handle datasets larger than RAM
@@ -163,6 +140,38 @@ Model: Process batch efficiently
 ```
 
 Let's start by building the most fundamental component: **Dataset**.
+"""
+
+# %% [markdown]
+"""
+## Step 2: Building the Dataset Interface
+
+### What is a Dataset?
+A **Dataset** is an abstract interface that provides consistent access to data. It's the foundation of all data loading systems.
+
+### Why Abstract Interfaces Matter
+- **Consistency**: Same interface for all data types
+- **Flexibility**: Easy to switch between datasets
+- **Testability**: Easy to create test datasets
+- **Extensibility**: Easy to add new data sources
+
+### The Dataset Pattern
+```python
+class Dataset:
+    def __getitem__(self, index):  # Get single sample
+        return data, label
+    
+    def __len__(self):  # Get dataset size
+        return total_samples
+```
+
+### Real-World Usage
+- **Computer vision**: ImageNet, CIFAR-10, custom image datasets
+- **NLP**: Text datasets, tokenized sequences
+- **Audio**: Audio files, spectrograms
+- **Time series**: Sequential data with proper windowing
+
+Let's implement the Dataset interface!
 """
 
 # %% nbgrader={"grade": false, "grade_id": "dataset-class", "locked": false, "schema_version": 3, "solution": true, "task": false}
@@ -200,10 +209,8 @@ class Dataset:
         - Always return a tuple of (data, label) tensors
         - Data contains the input features, label contains the target
         """
-        ### BEGIN SOLUTION
         # This is an abstract method - subclasses must implement it
         raise NotImplementedError("Subclasses must implement __getitem__")
-        ### END SOLUTION
     
     def __len__(self) -> int:
         """
@@ -222,10 +229,8 @@ class Dataset:
         - This is an abstract method that subclasses must override
         - Return an integer representing the total number of samples
         """
-        ### BEGIN SOLUTION
         # This is an abstract method - subclasses must implement it
         raise NotImplementedError("Subclasses must implement __len__")
-        ### END SOLUTION
     
     def get_sample_shape(self) -> Tuple[int, ...]:
         """
@@ -246,11 +251,9 @@ class Dataset:
         - Extract data from the (data, label) tuple
         - Return data.shape
         """
-        ### BEGIN SOLUTION
         # Get the first sample to determine shape
         data, _ = self[0]
         return data.shape
-        ### END SOLUTION
     
     def get_num_classes(self) -> int:
         """
@@ -269,21 +272,21 @@ class Dataset:
         - This is an abstract method that subclasses must override
         - Return the number of unique classes/categories
         """
-        ### BEGIN SOLUTION
         # This is an abstract method - subclasses must implement it
         raise NotImplementedError("Subclasses must implement get_num_classes")
-        ### END SOLUTION
 
 # %% [markdown]
 """
-### 🧪 Quick Test: Dataset Base Class
+### 🧪 Unit Test: Dataset Interface
 
 Let's understand the Dataset interface! While we can't test the abstract class directly, we'll create a simple test dataset.
+
+**This is a unit test** - it tests the Dataset interface pattern in isolation.
 """
 
 # %% nbgrader={"grade": true, "grade_id": "test-dataset-interface-immediate", "locked": true, "points": 5, "schema_version": 3, "solution": false, "task": false}
 # Test Dataset interface with a simple implementation
-print("🔬 Testing Dataset interface...")
+print("🔬 Unit Test: Dataset Interface...")
 
 # Create a minimal test dataset
 class TestDataset(Dataset):
@@ -322,6 +325,11 @@ try:
     assert test_dataset.get_num_classes() == 2, f"Should have 2 classes, got {test_dataset.get_num_classes()}"
     print("✅ Dataset get_num_classes works correctly")
     
+    # Test get_sample_shape
+    sample_shape = test_dataset.get_sample_shape()
+    assert sample_shape == (2,), f"Sample shape should be (2,), got {sample_shape}"
+    print("✅ Dataset get_sample_shape works correctly")
+    
     # Test multiple samples
     for i in range(3):
         data, label = test_dataset[i]
@@ -340,11 +348,12 @@ print("🎯 Dataset interface pattern:")
 print("   __getitem__: Returns (data, label) tuple")
 print("   __len__: Returns dataset size")
 print("   get_num_classes: Returns number of classes")
+print("   get_sample_shape: Returns shape of data samples")
 print("📈 Progress: Dataset interface ✓")
 
 # %% [markdown]
 """
-## Step 2: Building the DataLoader
+## Step 3: Building the DataLoader
 
 ### What is a DataLoader?
 A **DataLoader** efficiently batches and iterates through datasets. It's the bridge between individual samples and the batched data that neural networks expect.
@@ -356,7 +365,7 @@ A **DataLoader** efficiently batches and iterates through datasets. It's the bri
 - **Iteration**: Provides clean interface for training loops
 
 ### The DataLoader Pattern
-```
+```python
 DataLoader(dataset, batch_size=32, shuffle=True)
 for batch_data, batch_labels in dataloader:
     # batch_data.shape: (32, ...)
@@ -410,11 +419,9 @@ class DataLoader:
         - Store all parameters as instance variables
         - These will be used in __iter__ for batching
         """
-        ### BEGIN SOLUTION
         self.dataset = dataset
         self.batch_size = batch_size
         self.shuffle = shuffle
-        ### END SOLUTION
     
     def __iter__(self) -> Iterator[Tuple[Tensor, Tensor]]:
         """
@@ -442,7 +449,6 @@ class DataLoader:
         - Loop in chunks of self.batch_size
         - Collect samples and stack with np.stack()
         """
-        ### BEGIN SOLUTION
         # Create indices for all samples
         indices = list(range(len(self.dataset)))
         
@@ -468,7 +474,6 @@ class DataLoader:
             batch_labels_array = np.stack(batch_labels, axis=0)
             
             yield Tensor(batch_data_array), Tensor(batch_labels_array)
-        ### END SOLUTION
     
     def __len__(self) -> int:
         """
@@ -489,22 +494,22 @@ class DataLoader:
         - Use ceiling division for exact batch count
         - Formula: (dataset_size + batch_size - 1) // batch_size
         """
-        ### BEGIN SOLUTION
         # Calculate number of batches using ceiling division
         dataset_size = len(self.dataset)
         return (dataset_size + self.batch_size - 1) // self.batch_size
-        ### END SOLUTION
 
 # %% [markdown]
 """
-### 🧪 Quick Test: DataLoader
+### 🧪 Unit Test: DataLoader
 
 Let's test your DataLoader implementation! This is the heart of efficient data loading for neural networks.
+
+**This is a unit test** - it tests the DataLoader class in isolation.
 """
 
 # %% nbgrader={"grade": true, "grade_id": "test-dataloader-immediate", "locked": true, "points": 10, "schema_version": 3, "solution": false, "task": false}
 # Test DataLoader immediately after implementation
-print("🔬 Testing DataLoader...")
+print("🔬 Unit Test: DataLoader...")
 
 # Use the test dataset from before
 class TestDataset(Dataset):
@@ -597,7 +602,7 @@ print("📈 Progress: Dataset interface ✓, DataLoader ✓")
 
 # %% [markdown]
 """
-## Step 3: Creating a Simple Dataset Example
+## Step 4: Creating a Simple Dataset Example
 
 ### Why We Need Concrete Examples
 Abstract classes are great for interfaces, but we need concrete implementations to understand how they work. Let's create a simple dataset for testing.
@@ -607,6 +612,13 @@ Abstract classes are great for interfaces, but we need concrete implementations 
 - **Configurable**: Adjustable size and properties
 - **Predictable**: Deterministic data for testing
 - **Educational**: Shows the Dataset pattern clearly
+
+### Real-World Connection
+This pattern is used for:
+- **CIFAR-10**: 32x32 RGB images with 10 classes
+- **ImageNet**: High-resolution images with 1000 classes
+- **MNIST**: 28x28 grayscale digits with 10 classes
+- **Custom datasets**: Your own data following this pattern
 """
 
 # %% nbgrader={"grade": false, "grade_id": "simple-dataset", "locked": false, "schema_version": 3, "solution": true, "task": false}
@@ -645,666 +657,311 @@ class SimpleDataset(Dataset):
         - Generate random data with np.random.randn()
         - Generate random labels with np.random.randint()
         """
-        ### BEGIN SOLUTION
         self.size = size
         self.num_features = num_features
         self.num_classes = num_classes
         
-        # Set seed for reproducible data
-        np.random.seed(42)
-        
-        # Generate synthetic data
+        # Generate synthetic data (deterministic for testing)
+        np.random.seed(42)  # For reproducible data
         self.data = np.random.randn(size, num_features).astype(np.float32)
         self.labels = np.random.randint(0, num_classes, size=size)
-        ### END SOLUTION
     
     def __getitem__(self, index: int) -> Tuple[Tensor, Tensor]:
         """
-        Get a single sample and label by index.
+        Get a sample by index.
         
         Args:
-            index: Index of the sample to retrieve
+            index: Index of the sample
             
         Returns:
             Tuple of (data, label) tensors
             
-        TODO: Return the sample and label at the given index.
+        TODO: Return the sample at the given index.
         
         APPROACH:
-        1. Get data at index from self.data
-        2. Get label at index from self.labels
-        3. Convert to tensors and return as tuple
+        1. Get data sample from self.data[index]
+        2. Get label from self.labels[index]
+        3. Convert both to Tensors and return as tuple
         
         EXAMPLE:
-        dataset[0] returns (Tensor([1.2, -0.5, 0.8, 0.1]), Tensor(2))
+        dataset[0] returns (Tensor(features), Tensor(label))
         
         HINTS:
-        - Use self.data[index] and self.labels[index]
-        - Convert to Tensor objects
-        - Return as tuple (data, label)
+        - Use self.data[index] for the data
+        - Use self.labels[index] for the label
+        - Convert to Tensors: Tensor(data), Tensor(label)
         """
-        ### BEGIN SOLUTION
-        data = Tensor(self.data[index])
-        label = Tensor(self.labels[index])
-        return data, label
-        ### END SOLUTION
+        data = self.data[index]
+        label = self.labels[index]
+        return Tensor(data), Tensor(label)
     
     def __len__(self) -> int:
         """
-        Get the total number of samples in the dataset.
+        Get the dataset size.
         
         TODO: Return the dataset size.
         
+        APPROACH:
+        1. Return self.size
+        
+        EXAMPLE:
+        len(dataset) returns 100 for dataset with 100 samples
+        
         HINTS:
-        - Return self.size
+        - Simply return self.size
         """
-        ### BEGIN SOLUTION
         return self.size
-        ### END SOLUTION
     
     def get_num_classes(self) -> int:
         """
-        Get the number of classes in the dataset.
+        Get the number of classes.
         
         TODO: Return the number of classes.
         
+        APPROACH:
+        1. Return self.num_classes
+        
+        EXAMPLE:
+        dataset.get_num_classes() returns 3 for 3-class dataset
+        
         HINTS:
-        - Return self.num_classes
+        - Simply return self.num_classes
         """
-        ### BEGIN SOLUTION
         return self.num_classes
-        ### END SOLUTION
 
 # %% [markdown]
 """
-## 🧪 Comprehensive DataLoader Testing Suite
+### 🧪 Unit Test: SimpleDataset
 
-Let's test all data loading components thoroughly with realistic ML data scenarios!
+Let's test your SimpleDataset implementation! This concrete example shows how the Dataset pattern works.
+
+**This is a unit test** - it tests the SimpleDataset class in isolation.
 """
 
-# %% nbgrader={"grade": false, "grade_id": "test-dataloader-comprehensive", "locked": false, "schema_version": 3, "solution": false, "task": false}
-def test_dataset_interface():
-    """Test 1: Dataset interface comprehensive testing"""
-    print("🔬 Testing Dataset Interface...")
-    
-    # Test 1.1: Abstract base class behavior
-    try:
-        # Test that we can't instantiate abstract Dataset
-        try:
-            base_dataset = Dataset()
-            base_dataset[0]  # Should raise NotImplementedError
-            assert False, "Should not be able to call abstract methods"
-        except NotImplementedError:
-            print("✅ Abstract Dataset correctly raises NotImplementedError")
-    except Exception as e:
-        print(f"❌ Abstract Dataset test failed: {e}")
-        return False
-    
-    # Test 1.2: SimpleDataset implementation
-    try:
-        dataset = SimpleDataset(size=50, num_features=4, num_classes=3)
-        
-        # Test basic properties
-        assert len(dataset) == 50, f"Dataset length should be 50, got {len(dataset)}"
-        assert dataset.get_num_classes() == 3, f"Should have 3 classes, got {dataset.get_num_classes()}"
-        
-        # Test sample retrieval
-        data, label = dataset[0]
-        assert isinstance(data, Tensor), "Data should be a Tensor"
-        assert isinstance(label, Tensor), "Label should be a Tensor"
-        assert data.shape == (4,), f"Data shape should be (4,), got {data.shape}"
-        
-        # Test sample shape method
-        sample_shape = dataset.get_sample_shape()
-        assert sample_shape == (4,), f"Sample shape should be (4,), got {sample_shape}"
-        
-        print("✅ SimpleDataset implementation test passed")
-    except Exception as e:
-        print(f"❌ SimpleDataset implementation failed: {e}")
-        return False
-    
-    # Test 1.3: Different dataset configurations
-    try:
-        # Small dataset
-        small_dataset = SimpleDataset(size=5, num_features=2, num_classes=2)
-        assert len(small_dataset) == 5, "Small dataset length wrong"
-        assert small_dataset.get_num_classes() == 2, "Small dataset classes wrong"
-        
-        # Large dataset
-        large_dataset = SimpleDataset(size=1000, num_features=10, num_classes=5)
-        assert len(large_dataset) == 1000, "Large dataset length wrong"
-        assert large_dataset.get_num_classes() == 5, "Large dataset classes wrong"
-        
-        # Test data consistency (seeded random)
-        data1, _ = small_dataset[0]
-        data2, _ = small_dataset[0]
-        assert np.allclose(data1.data, data2.data), "Dataset should be deterministic"
-        
-        print("✅ Different dataset configurations test passed")
-    except Exception as e:
-        print(f"❌ Different dataset configurations failed: {e}")
-        return False
-    
-    # Test 1.4: Edge cases and robustness
-    try:
-        # Test edge case: single sample
-        single_dataset = SimpleDataset(size=1, num_features=1, num_classes=1)
-        data, label = single_dataset[0]
-        assert data.shape == (1,), "Single sample data shape wrong"
-        assert isinstance(label.data, (int, np.integer)) or label.data.shape == (), "Single sample label wrong"
-        
-        # Test boundary indices
-        dataset = SimpleDataset(size=10, num_features=3, num_classes=2)
-        first_data, first_label = dataset[0]
-        last_data, last_label = dataset[9]
-        assert first_data.shape == (3,), "First sample shape wrong"
-        assert last_data.shape == (3,), "Last sample shape wrong"
-        
-        print("✅ Edge cases and robustness test passed")
-    except Exception as e:
-        print(f"❌ Edge cases and robustness failed: {e}")
-        return False
-    
-    print("🎯 Dataset interface: All tests passed!")
-    return True
+# %% nbgrader={"grade": true, "grade_id": "test-simple-dataset-immediate", "locked": true, "points": 10, "schema_version": 3, "solution": false, "task": false}
+# Test SimpleDataset immediately after implementation
+print("🔬 Unit Test: SimpleDataset...")
 
-def test_dataloader_functionality():
-    """Test 2: DataLoader functionality comprehensive testing"""
-    print("🔬 Testing DataLoader Functionality...")
+try:
+    # Create dataset
+    dataset = SimpleDataset(size=20, num_features=5, num_classes=4)
     
-    # Test 2.1: Basic DataLoader operations
-    try:
-        dataset = SimpleDataset(size=32, num_features=4, num_classes=2)
-        dataloader = DataLoader(dataset, batch_size=8, shuffle=False)
-        
-        # Test initialization
-        assert dataloader.batch_size == 8, f"Batch size should be 8, got {dataloader.batch_size}"
-        assert dataloader.shuffle == False, f"Shuffle should be False, got {dataloader.shuffle}"
-        
-        # Test length calculation
-        expected_batches = (32 + 8 - 1) // 8  # Ceiling division: 4 batches
-        assert len(dataloader) == expected_batches, f"Should have {expected_batches} batches, got {len(dataloader)}"
-        
-        print("✅ Basic DataLoader operations test passed")
-    except Exception as e:
-        print(f"❌ Basic DataLoader operations failed: {e}")
-        return False
+    print(f"Dataset created: size={len(dataset)}, features={dataset.num_features}, classes={dataset.get_num_classes()}")
     
-    # Test 2.2: Batch iteration and shapes
-    try:
-        dataset = SimpleDataset(size=25, num_features=3, num_classes=2)
-        dataloader = DataLoader(dataset, batch_size=10, shuffle=False)
-        
-        batch_count = 0
-        total_samples = 0
-        
-        for batch_data, batch_labels in dataloader:
-            batch_count += 1
-            batch_size = batch_data.shape[0]
-            total_samples += batch_size
-            
-            # Check batch shapes
-            assert len(batch_data.shape) == 2, f"Batch data should be 2D, got {batch_data.shape}"
-            assert batch_data.shape[1] == 3, f"Should have 3 features, got {batch_data.shape[1]}"
-            assert batch_labels.shape[0] == batch_size, f"Labels should match batch size"
-            
-            # Check data types
-            assert isinstance(batch_data, Tensor), "Batch data should be Tensor"
-            assert isinstance(batch_labels, Tensor), "Batch labels should be Tensor"
-        
-        # Verify complete iteration
-        assert total_samples == 25, f"Should process 25 samples, got {total_samples}"
-        assert batch_count == 3, f"Should have 3 batches, got {batch_count}"  # 25/10 = 3 batches
-        
-        print("✅ Batch iteration and shapes test passed")
-    except Exception as e:
-        print(f"❌ Batch iteration and shapes failed: {e}")
-        return False
+    # Test basic properties
+    assert len(dataset) == 20, f"Dataset length should be 20, got {len(dataset)}"
+    assert dataset.get_num_classes() == 4, f"Should have 4 classes, got {dataset.get_num_classes()}"
+    print("✅ SimpleDataset basic properties work correctly")
     
-    # Test 2.3: Different batch sizes
-    try:
-        dataset = SimpleDataset(size=100, num_features=5, num_classes=3)
-        
-        # Small batches
-        small_loader = DataLoader(dataset, batch_size=7, shuffle=False)
-        assert len(small_loader) == 15, f"Small loader should have 15 batches, got {len(small_loader)}"  # 100/7 = 15
-        
-        # Large batches
-        large_loader = DataLoader(dataset, batch_size=30, shuffle=False)
-        assert len(large_loader) == 4, f"Large loader should have 4 batches, got {len(large_loader)}"  # 100/30 = 4
-        
-        # Single sample batches
-        single_loader = DataLoader(dataset, batch_size=1, shuffle=False)
-        assert len(single_loader) == 100, f"Single loader should have 100 batches, got {len(single_loader)}"
-        
-        print("✅ Different batch sizes test passed")
-    except Exception as e:
-        print(f"❌ Different batch sizes failed: {e}")
-        return False
+    # Test sample access
+    data, label = dataset[0]
+    assert isinstance(data, Tensor), "Data should be a Tensor"
+    assert isinstance(label, Tensor), "Label should be a Tensor"
+    assert data.shape == (5,), f"Data shape should be (5,), got {data.shape}"
+    assert label.shape == (), f"Label shape should be (), got {label.shape}"
+    print("✅ SimpleDataset sample access works correctly")
     
-    # Test 2.4: Shuffling behavior
-    try:
-        dataset = SimpleDataset(size=20, num_features=2, num_classes=2)
-        
-        # Test with shuffling
-        loader_shuffle = DataLoader(dataset, batch_size=5, shuffle=True)
-        loader_no_shuffle = DataLoader(dataset, batch_size=5, shuffle=False)
-        
-        # Get multiple batches to test shuffling
-        shuffle_batches = list(loader_shuffle)
-        no_shuffle_batches = list(loader_no_shuffle)
-        
-        assert len(shuffle_batches) == len(no_shuffle_batches), "Should have same number of batches"
-        
-        # Test that all original samples are present (just reordered)
-        shuffle_all_data = np.concatenate([batch[0].data for batch in shuffle_batches])
-        no_shuffle_all_data = np.concatenate([batch[0].data for batch in no_shuffle_batches])
-        
-        assert shuffle_all_data.shape == no_shuffle_all_data.shape, "Should have same total data shape"
-        
-        print("✅ Shuffling behavior test passed")
-    except Exception as e:
-        print(f"❌ Shuffling behavior failed: {e}")
-        return False
+    # Test sample shape
+    sample_shape = dataset.get_sample_shape()
+    assert sample_shape == (5,), f"Sample shape should be (5,), got {sample_shape}"
+    print("✅ SimpleDataset get_sample_shape works correctly")
     
-    print("🎯 DataLoader functionality: All tests passed!")
-    return True
+    # Test multiple samples
+    for i in range(5):
+        data, label = dataset[i]
+        assert data.shape == (5,), f"Data shape should be (5,) for sample {i}, got {data.shape}"
+        assert 0 <= label.data < 4, f"Label should be in [0, 3] for sample {i}, got {label.data}"
+    print("✅ SimpleDataset multiple samples work correctly")
+    
+    # Test deterministic data (same seed should give same data)
+    dataset2 = SimpleDataset(size=20, num_features=5, num_classes=4)
+    data1, label1 = dataset[0]
+    data2, label2 = dataset2[0]
+    assert np.array_equal(data1.data, data2.data), "Data should be deterministic"
+    assert np.array_equal(label1.data, label2.data), "Labels should be deterministic"
+    print("✅ SimpleDataset data is deterministic")
+    
+except Exception as e:
+    print(f"❌ SimpleDataset test failed: {e}")
+    raise
 
-def test_data_pipeline_scenarios():
-    """Test 3: Real-world data pipeline scenarios"""
-    print("🔬 Testing Data Pipeline Scenarios...")
+# Show the SimpleDataset behavior
+print("🎯 SimpleDataset behavior:")
+print("   Generates synthetic data for testing")
+print("   Implements complete Dataset interface")
+print("   Provides deterministic data for reproducibility")
+print("📈 Progress: Dataset interface ✓, DataLoader ✓, SimpleDataset ✓")
+
+# %% [markdown]
+"""
+## Step 5: Integration Test - Complete Data Pipeline
+
+### Real-World Data Pipeline Applications
+Let's test our data loading components in realistic scenarios:
+
+#### **Training Pipeline**
+```python
+# The standard ML training pattern
+dataset = SimpleDataset(size=1000, num_features=10, num_classes=5)
+dataloader = DataLoader(dataset, batch_size=32, shuffle=True)
+
+for epoch in range(num_epochs):
+    for batch_data, batch_labels in dataloader:
+        # Train model on batch
+        pass
+```
+
+#### **Validation Pipeline**
+```python
+# Validation without shuffling
+val_loader = DataLoader(val_dataset, batch_size=64, shuffle=False)
+
+for batch_data, batch_labels in val_loader:
+    # Evaluate model on batch
+    pass
+```
+
+#### **Data Analysis Pipeline**
+```python
+# Systematic data exploration
+for batch_data, batch_labels in dataloader:
+    # Analyze batch statistics
+    pass
+```
+
+This integration test ensures our data loading components work together for real ML applications!
+"""
+
+# %% nbgrader={"grade": true, "grade_id": "test-integration", "locked": true, "points": 15, "schema_version": 3, "solution": false, "task": false}
+# Integration test - complete data pipeline applications
+print("🔬 Integration Test: Complete Data Pipeline...")
+
+try:
+    # Test 1: Training Data Pipeline
+    print("\n1. Training Data Pipeline Test:")
     
-    # Test 3.1: Image classification scenario
-    try:
-        # Simulate CIFAR-10 like dataset: 32x32 RGB images, 10 classes
-        image_dataset = SimpleDataset(size=1000, num_features=32*32*3, num_classes=10)
-        image_loader = DataLoader(image_dataset, batch_size=64, shuffle=True)
+    # Create training dataset
+    train_dataset = SimpleDataset(size=100, num_features=8, num_classes=5)
+    train_loader = DataLoader(train_dataset, batch_size=16, shuffle=True)
+    
+    # Simulate training epoch
+    epoch_samples = 0
+    epoch_batches = 0
+    
+    for batch_data, batch_labels in train_loader:
+        epoch_batches += 1
+        epoch_samples += batch_data.shape[0]
         
-        # Test one epoch of training
+        # Verify batch properties
+        assert batch_data.shape[1] == 8, f"Features should be 8, got {batch_data.shape[1]}"
+        assert len(batch_labels.shape) == 1, f"Labels should be 1D, got shape {batch_labels.shape}"
+        assert isinstance(batch_data, Tensor), "Batch data should be Tensor"
+        assert isinstance(batch_labels, Tensor), "Batch labels should be Tensor"
+    
+    assert epoch_samples == 100, f"Should process 100 samples, got {epoch_samples}"
+    expected_batches = (100 + 16 - 1) // 16
+    assert epoch_batches == expected_batches, f"Should have {expected_batches} batches, got {epoch_batches}"
+    print("✅ Training pipeline works correctly")
+    
+    # Test 2: Validation Data Pipeline
+    print("\n2. Validation Data Pipeline Test:")
+    
+    # Create validation dataset (no shuffling)
+    val_dataset = SimpleDataset(size=50, num_features=8, num_classes=5)
+    val_loader = DataLoader(val_dataset, batch_size=10, shuffle=False)
+    
+    # Simulate validation
+    val_samples = 0
+    val_batches = 0
+    
+    for batch_data, batch_labels in val_loader:
+        val_batches += 1
+        val_samples += batch_data.shape[0]
+        
+        # Verify consistent batch processing
+        assert batch_data.shape[1] == 8, "Validation features should match training"
+        assert len(batch_labels.shape) == 1, "Validation labels should be 1D"
+    
+    assert val_samples == 50, f"Should process 50 validation samples, got {val_samples}"
+    assert val_batches == 5, f"Should have 5 validation batches, got {val_batches}"
+    print("✅ Validation pipeline works correctly")
+    
+    # Test 3: Different Dataset Configurations
+    print("\n3. Dataset Configuration Test:")
+    
+    # Test different configurations
+    configs = [
+        (200, 4, 3),   # Medium dataset
+        (50, 12, 10),  # High-dimensional features
+        (1000, 2, 2),  # Large dataset, simple features
+    ]
+    
+    for size, features, classes in configs:
+        dataset = SimpleDataset(size=size, num_features=features, num_classes=classes)
+        loader = DataLoader(dataset, batch_size=32, shuffle=True)
+        
+        # Test one batch
+        batch_data, batch_labels = next(iter(loader))
+        
+        assert batch_data.shape[1] == features, f"Features mismatch for config {configs}"
+        assert len(dataset) == size, f"Size mismatch for config {configs}"
+        assert dataset.get_num_classes() == classes, f"Classes mismatch for config {configs}"
+    
+    print("✅ Different dataset configurations work correctly")
+    
+    # Test 4: Memory Efficiency Simulation
+    print("\n4. Memory Efficiency Test:")
+    
+    # Create larger dataset to test memory efficiency
+    large_dataset = SimpleDataset(size=500, num_features=20, num_classes=10)
+    large_loader = DataLoader(large_dataset, batch_size=50, shuffle=True)
+    
+    # Process all batches to ensure memory efficiency
+    processed_samples = 0
+    max_batch_size = 0
+    
+    for batch_data, batch_labels in large_loader:
+        processed_samples += batch_data.shape[0]
+        max_batch_size = max(max_batch_size, batch_data.shape[0])
+        
+        # Verify memory usage stays reasonable
+        assert batch_data.shape[0] <= 50, f"Batch size should not exceed 50, got {batch_data.shape[0]}"
+    
+    assert processed_samples == 500, f"Should process all 500 samples, got {processed_samples}"
+    print("✅ Memory efficiency works correctly")
+    
+    # Test 5: Multi-Epoch Training Simulation
+    print("\n5. Multi-Epoch Training Test:")
+    
+    # Simulate multiple epochs
+    dataset = SimpleDataset(size=60, num_features=6, num_classes=3)
+    loader = DataLoader(dataset, batch_size=20, shuffle=True)
+    
+    for epoch in range(3):
         epoch_samples = 0
-        for batch_data, batch_labels in image_loader:
+        for batch_data, batch_labels in loader:
             epoch_samples += batch_data.shape[0]
             
-            # Verify image batch properties
-            assert batch_data.shape[1] == 32*32*3, f"Should have 3072 features (32x32x3), got {batch_data.shape[1]}"
-            assert batch_data.shape[0] <= 64, f"Batch size should be <= 64, got {batch_data.shape[0]}"
-            
-            # Simulate forward pass
-            batch_size = batch_data.shape[0]
-            assert batch_labels.shape[0] == batch_size, "Labels should match batch size"
+            # Verify shapes remain consistent across epochs
+            assert batch_data.shape[1] == 6, f"Features should be 6 in epoch {epoch}"
+            assert len(batch_labels.shape) == 1, f"Labels should be 1D in epoch {epoch}"
         
-        assert epoch_samples == 1000, f"Should process 1000 samples, got {epoch_samples}"
-        print("✅ Image classification scenario test passed")
-    except Exception as e:
-        print(f"❌ Image classification scenario failed: {e}")
-        return False
+        assert epoch_samples == 60, f"Should process 60 samples in epoch {epoch}, got {epoch_samples}"
     
-    # Test 3.2: Text classification scenario
-    try:
-        # Simulate text classification: 512 token embeddings, 5 sentiment classes
-        text_dataset = SimpleDataset(size=500, num_features=512, num_classes=5)
-        text_loader = DataLoader(text_dataset, batch_size=32, shuffle=True)
-        
-        # Test batch processing
-        for batch_data, batch_labels in text_loader:
-            # Verify text batch properties
-            assert batch_data.shape[1] == 512, f"Should have 512 features, got {batch_data.shape[1]}"
-            
-            # Simulate text processing
-            batch_size = batch_data.shape[0]
-            assert batch_size <= 32, f"Batch size should be <= 32, got {batch_size}"
-            break  # Just test first batch
-        
-        print("✅ Text classification scenario test passed")
-    except Exception as e:
-        print(f"❌ Text classification scenario failed: {e}")
-        return False
+    print("✅ Multi-epoch training works correctly")
     
-    # Test 3.3: Tabular data scenario
-    try:
-        # Simulate tabular data: house prices with 20 features, 3 price ranges
-        tabular_dataset = SimpleDataset(size=200, num_features=20, num_classes=3)
-        tabular_loader = DataLoader(tabular_dataset, batch_size=16, shuffle=False)
-        
-        # Test systematic processing (no shuffling for tabular data)
-        batch_count = 0
-        for batch_data, batch_labels in tabular_loader:
-            batch_count += 1
-            
-            # Verify tabular batch properties
-            assert batch_data.shape[1] == 20, f"Should have 20 features, got {batch_data.shape[1]}"
-            
-            # Simulate tabular processing
-            batch_size = batch_data.shape[0]
-            assert batch_size <= 16, f"Batch size should be <= 16, got {batch_size}"
-        
-        expected_batches = (200 + 16 - 1) // 16  # 13 batches
-        assert batch_count == expected_batches, f"Should have {expected_batches} batches, got {batch_count}"
-        
-        print("✅ Tabular data scenario test passed")
-    except Exception as e:
-        print(f"❌ Tabular data scenario failed: {e}")
-        return False
+    print("\n🎉 Integration test passed! Your data pipeline works correctly for:")
+    print("  • Training with shuffled batches")
+    print("  • Validation with deterministic order")
+    print("  • Different dataset configurations")
+    print("  • Memory-efficient processing")
+    print("  • Multi-epoch training scenarios")
     
-    # Test 3.4: Small dataset scenario
-    try:
-        # Simulate small research dataset
-        small_dataset = SimpleDataset(size=50, num_features=10, num_classes=2)
-        small_loader = DataLoader(small_dataset, batch_size=8, shuffle=True)
-        
-        # Test multiple epochs
-        for epoch in range(3):
-            epoch_samples = 0
-            for batch_data, batch_labels in small_loader:
-                epoch_samples += batch_data.shape[0]
-                
-                # Verify small dataset properties
-                assert batch_data.shape[1] == 10, f"Should have 10 features, got {batch_data.shape[1]}"
-                
-            assert epoch_samples == 50, f"Epoch {epoch}: should process 50 samples, got {epoch_samples}"
-        
-        print("✅ Small dataset scenario test passed")
-    except Exception as e:
-        print(f"❌ Small dataset scenario failed: {e}")
-        return False
-    
-    print("🎯 Data pipeline scenarios: All tests passed!")
-    return True
+except Exception as e:
+    print(f"❌ Integration test failed: {e}")
+    raise
 
-def test_integration_with_ml_workflow():
-    """Test 4: Integration with ML workflow"""
-    print("🔬 Testing Integration with ML Workflow...")
-    
-    # Test 4.1: Training loop integration
-    try:
-        # Create dataset for training
-        train_dataset = SimpleDataset(size=100, num_features=8, num_classes=3)
-        train_loader = DataLoader(train_dataset, batch_size=20, shuffle=True)
-        
-        # Simulate training loop
-        for epoch in range(2):
-            epoch_loss = 0
-            batch_count = 0
-            
-            for batch_data, batch_labels in train_loader:
-                batch_count += 1
-                
-                # Simulate forward pass
-                batch_size = batch_data.shape[0]
-                assert batch_data.shape == (batch_size, 8), f"Batch data shape wrong: {batch_data.shape}"
-                assert batch_labels.shape[0] == batch_size, f"Batch labels shape wrong: {batch_labels.shape}"
-                
-                # Simulate loss computation
-                mock_loss = np.random.random()
-                epoch_loss += mock_loss
-                
-                # Verify we can iterate through all batches
-                assert batch_count <= 5, f"Too many batches: {batch_count}"  # 100/20 = 5
-            
-            assert batch_count == 5, f"Should have 5 batches per epoch, got {batch_count}"
-        
-        print("✅ Training loop integration test passed")
-    except Exception as e:
-        print(f"❌ Training loop integration failed: {e}")
-        return False
-    
-    # Test 4.2: Validation loop integration
-    try:
-        # Create dataset for validation
-        val_dataset = SimpleDataset(size=50, num_features=8, num_classes=3)
-        val_loader = DataLoader(val_dataset, batch_size=10, shuffle=False)  # No shuffle for validation
-        
-        # Simulate validation loop
-        total_correct = 0
-        total_samples = 0
-        
-        for batch_data, batch_labels in val_loader:
-            batch_size = batch_data.shape[0]
-            total_samples += batch_size
-            
-            # Simulate prediction
-            mock_predictions = np.random.randint(0, 3, size=batch_size)
-            mock_correct = np.random.randint(0, batch_size + 1)
-            total_correct += mock_correct
-            
-            # Verify batch properties
-            assert batch_data.shape[1] == 8, f"Features should be 8, got {batch_data.shape[1]}"
-            assert batch_labels.shape[0] == batch_size, f"Labels should match batch size"
-        
-        assert total_samples == 50, f"Should validate 50 samples, got {total_samples}"
-        
-        print("✅ Validation loop integration test passed")
-    except Exception as e:
-        print(f"❌ Validation loop integration failed: {e}")
-        return False
-    
-    # Test 4.3: Model inference integration
-    try:
-        # Create dataset for inference
-        test_dataset = SimpleDataset(size=30, num_features=5, num_classes=2)
-        test_loader = DataLoader(test_dataset, batch_size=5, shuffle=False)
-        
-        # Simulate inference
-        all_predictions = []
-        
-        for batch_data, batch_labels in test_loader:
-            batch_size = batch_data.shape[0]
-            
-            # Simulate model inference
-            mock_predictions = np.random.random((batch_size, 2))  # 2 classes
-            all_predictions.append(mock_predictions)
-            
-            # Verify inference batch properties
-            assert batch_data.shape[1] == 5, f"Features should be 5, got {batch_data.shape[1]}"
-            assert batch_size <= 5, f"Batch size should be <= 5, got {batch_size}"
-        
-        # Verify all predictions collected
-        total_predictions = np.concatenate(all_predictions, axis=0)
-        assert total_predictions.shape == (30, 2), f"Predictions shape should be (30, 2), got {total_predictions.shape}"
-        
-        print("✅ Model inference integration test passed")
-    except Exception as e:
-        print(f"❌ Model inference integration failed: {e}")
-        return False
-    
-    # Test 4.4: Cross-validation scenario
-    try:
-        # Create dataset for cross-validation
-        full_dataset = SimpleDataset(size=100, num_features=6, num_classes=4)
-        
-        # Simulate 5-fold cross-validation
-        fold_size = 20
-        
-        for fold in range(5):
-            # Create train/val split simulation
-            train_size = 80  # 4 folds for training
-            val_size = 20    # 1 fold for validation
-            
-            train_dataset = SimpleDataset(size=train_size, num_features=6, num_classes=4)
-            val_dataset = SimpleDataset(size=val_size, num_features=6, num_classes=4)
-            
-            train_loader = DataLoader(train_dataset, batch_size=16, shuffle=True)
-            val_loader = DataLoader(val_dataset, batch_size=16, shuffle=False)
-            
-            # Verify fold setup
-            assert len(train_dataset) == train_size, f"Train size wrong for fold {fold}"
-            assert len(val_dataset) == val_size, f"Val size wrong for fold {fold}"
-            
-            # Test one iteration of each
-            train_batch = next(iter(train_loader))
-            val_batch = next(iter(val_loader))
-            
-            assert train_batch[0].shape[1] == 6, f"Train features wrong for fold {fold}"
-            assert val_batch[0].shape[1] == 6, f"Val features wrong for fold {fold}"
-        
-        print("✅ Cross-validation scenario test passed")
-    except Exception as e:
-        print(f"❌ Cross-validation scenario failed: {e}")
-        return False
-    
-    print("🎯 ML workflow integration: All tests passed!")
-    return True
-
-# Run all comprehensive tests
-def run_comprehensive_dataloader_tests():
-    """Run all comprehensive DataLoader tests"""
-    print("🧪 Running Comprehensive DataLoader Test Suite...")
-    print("=" * 60)
-    
-    test_results = []
-    
-    # Run all test functions
-    test_results.append(test_dataset_interface())
-    test_results.append(test_dataloader_functionality())
-    test_results.append(test_data_pipeline_scenarios())
-    test_results.append(test_integration_with_ml_workflow())
-    
-    # Summary
-    print("=" * 60)
-    print("📊 Test Results Summary:")
-    print(f"✅ Dataset Interface: {'PASSED' if test_results[0] else 'FAILED'}")
-    print(f"✅ DataLoader Functionality: {'PASSED' if test_results[1] else 'FAILED'}")
-    print(f"✅ Data Pipeline Scenarios: {'PASSED' if test_results[2] else 'FAILED'}")
-    print(f"✅ ML Workflow Integration: {'PASSED' if test_results[3] else 'FAILED'}")
-    
-    all_passed = all(test_results)
-    print(f"\n🎯 Overall Result: {'ALL TESTS PASSED! 🎉' if all_passed else 'SOME TESTS FAILED ❌'}")
-    
-    if all_passed:
-        print("\n🚀 DataLoader Module Implementation Complete!")
-        print("   ✓ Dataset interface working correctly")
-        print("   ✓ DataLoader batching and iteration functional")
-        print("   ✓ Real-world data pipeline scenarios tested")
-        print("   ✓ ML workflow integration verified")
-        print("\n🎓 Ready for production ML data pipelines!")
-    
-    return all_passed
-
-# Run the comprehensive test suite
-if __name__ == "__main__":
-    run_comprehensive_dataloader_tests()
-
-# %% [markdown]
-"""
-### 🧪 Test Your Data Loading Implementations
-
-Once you implement the classes above, run these cells to test them:
-"""
-
-# %% nbgrader={"grade": true, "grade_id": "test-dataset", "locked": true, "points": 25, "schema_version": 3, "solution": false, "task": false}
-# Test Dataset abstract class
-print("Testing Dataset abstract class...")
-
-# Create a simple dataset
-dataset = SimpleDataset(size=10, num_features=3, num_classes=2)
-
-# Test basic functionality
-assert len(dataset) == 10, f"Dataset length should be 10, got {len(dataset)}"
-assert dataset.get_num_classes() == 2, f"Number of classes should be 2, got {dataset.get_num_classes()}"
-
-# Test sample retrieval
-data, label = dataset[0]
-assert isinstance(data, Tensor), "Data should be a Tensor"
-assert isinstance(label, Tensor), "Label should be a Tensor"
-assert data.shape == (3,), f"Data shape should be (3,), got {data.shape}"
-assert label.shape == (), f"Label shape should be (), got {label.shape}"
-
-# Test sample shape
-sample_shape = dataset.get_sample_shape()
-assert sample_shape == (3,), f"Sample shape should be (3,), got {sample_shape}"
-
-print("✅ Dataset tests passed!")
-
-# %% nbgrader={"grade": true, "grade_id": "test-dataloader", "locked": true, "points": 25, "schema_version": 3, "solution": false, "task": false}
-# Test DataLoader
-print("Testing DataLoader...")
-
-# Create dataset and dataloader
-dataset = SimpleDataset(size=50, num_features=4, num_classes=3)
-dataloader = DataLoader(dataset, batch_size=8, shuffle=True)
-
-# Test dataloader length
-expected_batches = (50 + 8 - 1) // 8  # Ceiling division
-assert len(dataloader) == expected_batches, f"DataLoader length should be {expected_batches}, got {len(dataloader)}"
-
-# Test batch iteration
-batch_count = 0
-total_samples = 0
-
-for batch_data, batch_labels in dataloader:
-    batch_count += 1
-    batch_size = batch_data.shape[0]
-    total_samples += batch_size
-    
-    # Check batch shapes
-    assert batch_data.shape[1] == 4, f"Batch data should have 4 features, got {batch_data.shape[1]}"
-    assert batch_labels.shape[0] == batch_size, f"Batch labels should match batch size, got {batch_labels.shape[0]}"
-    
-    # Check that we don't exceed expected batches
-    assert batch_count <= expected_batches, f"Too many batches: {batch_count} > {expected_batches}"
-
-# Verify we processed all samples
-assert total_samples == 50, f"Should process 50 samples total, got {total_samples}"
-assert batch_count == expected_batches, f"Should have {expected_batches} batches, got {batch_count}"
-
-print("✅ DataLoader tests passed!")
-
-# %% nbgrader={"grade": true, "grade_id": "test-dataloader-shuffle", "locked": true, "points": 25, "schema_version": 3, "solution": false, "task": false}
-# Test DataLoader shuffling
-print("Testing DataLoader shuffling...")
-
-# Create dataset
-dataset = SimpleDataset(size=20, num_features=2, num_classes=2)
-
-# Test with shuffling
-dataloader_shuffle = DataLoader(dataset, batch_size=5, shuffle=True)
-dataloader_no_shuffle = DataLoader(dataset, batch_size=5, shuffle=False)
-
-# Get first batch from each
-batch_shuffle = next(iter(dataloader_shuffle))
-batch_no_shuffle = next(iter(dataloader_no_shuffle))
-
-# With different random seeds, shuffled batches should be different
-# (This is probabilistic, but very likely to be true)
-shuffle_data = batch_shuffle[0].data
-no_shuffle_data = batch_no_shuffle[0].data
-
-# Check that shapes are correct
-assert shuffle_data.shape == (5, 2), f"Shuffled batch shape should be (5, 2), got {shuffle_data.shape}"
-assert no_shuffle_data.shape == (5, 2), f"No-shuffle batch shape should be (5, 2), got {no_shuffle_data.shape}"
-
-print("✅ DataLoader shuffling tests passed!")
-
-# %% nbgrader={"grade": true, "grade_id": "test-integration", "locked": true, "points": 25, "schema_version": 3, "solution": false, "task": false}
-# Test complete data pipeline integration
-print("Testing complete data pipeline integration...")
-
-# Create a larger dataset
-dataset = SimpleDataset(size=100, num_features=8, num_classes=5)
-dataloader = DataLoader(dataset, batch_size=16, shuffle=True)
-
-# Simulate training loop
-epoch_samples = 0
-epoch_batches = 0
-
-for batch_data, batch_labels in dataloader:
-    epoch_batches += 1
-    epoch_samples += batch_data.shape[0]
-    
-    # Verify batch properties
-    assert batch_data.shape[1] == 8, f"Features should be 8, got {batch_data.shape[1]}"
-    assert len(batch_labels.shape) == 1, f"Labels should be 1D, got shape {batch_labels.shape}"
-    
-    # Verify data types
-    assert isinstance(batch_data, Tensor), "Batch data should be Tensor"
-    assert isinstance(batch_labels, Tensor), "Batch labels should be Tensor"
-
-# Verify we processed all data
-assert epoch_samples == 100, f"Should process 100 samples, got {epoch_samples}"
-expected_batches = (100 + 16 - 1) // 16
-assert epoch_batches == expected_batches, f"Should have {expected_batches} batches, got {epoch_batches}"
-
-print("✅ Complete data pipeline integration tests passed!")
+print("📈 Final Progress: Complete data pipeline ready for production ML!")
 
 # %% [markdown]
 """
@@ -1345,24 +1002,39 @@ Congratulations! You've successfully implemented the core components of data loa
 - **JAX**: Custom data loading with efficient batching
 - **MLOps**: Data pipelines are critical for production ML systems
 
+### Performance Characteristics
+- **Memory efficiency**: O(batch_size) memory usage, not O(dataset_size)
+- **I/O optimization**: Load data on-demand, not all at once
+- **Batching efficiency**: Vectorized operations on GPU
+- **Shuffling overhead**: Minimal cost for significant training benefits
+
+### Data Engineering Best Practices
+- **Reproducibility**: Deterministic data generation and shuffling
+- **Scalability**: Handle datasets of any size
+- **Flexibility**: Easy to switch between different data sources
+- **Testability**: Simple interfaces for unit testing
+
 ### Next Steps
-1. **Export your code**: `tito package nbdev --export 06_dataloader`
-2. **Test your implementation**: `tito module test 06_dataloader`
-3. **Use your data loading**: 
+1. **Export your code**: Use NBDev to export to the `tinytorch` package
+2. **Test your implementation**: Run the complete test suite
+3. **Build data pipelines**: 
    ```python
-   from tinytorch.core.dataloader import Dataset, DataLoader, SimpleDataset
+   from tinytorch.core.dataloader import Dataset, DataLoader
+   from tinytorch.core.tensor import Tensor
    
-   # Create dataset and dataloader
-   dataset = SimpleDataset(size=1000, num_features=10, num_classes=3)
-   dataloader = DataLoader(dataset, batch_size=32, shuffle=True)
+   # Create dataset
+   dataset = SimpleDataset(size=1000, num_features=10, num_classes=5)
+   
+   # Create dataloader
+   loader = DataLoader(dataset, batch_size=32, shuffle=True)
    
    # Training loop
-   for batch_data, batch_labels in dataloader:
-       # Train your network on batch_data, batch_labels
-       pass
+   for epoch in range(num_epochs):
+       for batch_data, batch_labels in loader:
+           # Train model
+           pass
    ```
-4. **Build real datasets**: Extend Dataset for your specific data types
-5. **Optimize performance**: Add caching, parallel loading, and preprocessing
+4. **Explore advanced topics**: Data augmentation, distributed loading, streaming datasets!
 
-**Ready for the next challenge?** You now have all the core components to build complete machine learning systems: tensors, activations, layers, networks, and data loading. The next modules will focus on training (autograd, optimizers) and advanced topics!
+**Ready for the next challenge?** Let's build training loops and optimizers to complete the ML pipeline!
 """ 

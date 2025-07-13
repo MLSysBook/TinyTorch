@@ -21,10 +21,18 @@ Welcome to the CNN module! Here you'll implement the core building block of mode
 - Compose Conv2D with other layers to build complete convolutional networks
 - See how convolution enables parameter sharing and translation invariance
 
-## Build → Use → Understand
+## Build → Use → Reflect
 1. **Build**: Conv2D layer using sliding window convolution from scratch
 2. **Use**: Transform images and see feature maps emerge
-3. **Understand**: How CNNs learn hierarchical spatial patterns
+3. **Reflect**: How CNNs learn hierarchical spatial patterns
+
+## What You'll Learn
+By the end of this module, you'll understand:
+- How convolution works as a sliding window operation
+- Why convolution is perfect for spatial data like images
+- How to build learnable convolutional layers
+- The CNN pipeline: Conv2D → Activation → Flatten → Dense
+- How parameter sharing makes CNNs efficient
 """
 
 # %% nbgrader={"grade": false, "grade_id": "cnn-imports", "locked": false, "schema_version": 3, "solution": false, "task": false}
@@ -98,57 +106,16 @@ from tinytorch.core.tensor import Tensor  # Foundation
 
 # %% [markdown]
 """
-## 🧠 The Mathematical Foundation of Convolution
-
-### The Convolution Operation
-Convolution is a mathematical operation that combines two functions to produce a third function:
-
-```
-(f * g)(t) = ∫ f(τ)g(t - τ)dτ
-```
-
-In discrete 2D computer vision, this becomes:
-```
-(I * K)[i,j] = ΣΣ I[i+m, j+n] × K[m,n]
-```
-
-### Why Convolution is Perfect for Images
-- **Local connectivity**: Each output depends only on a small region of input
-- **Weight sharing**: Same filter applied everywhere (translation invariance)
-- **Spatial hierarchy**: Multiple layers build increasingly complex features
-- **Parameter efficiency**: Much fewer parameters than fully connected layers
-
-### The Three Core Principles
-1. **Sparse connectivity**: Each neuron connects to only a small region
-2. **Parameter sharing**: Same weights used across all spatial locations
-3. **Equivariant representation**: If input shifts, output shifts correspondingly
-
-### Connection to Real ML Systems
-Every vision framework uses convolution:
-- **PyTorch**: `torch.nn.Conv2d` with optimized CUDA kernels
-- **TensorFlow**: `tf.keras.layers.Conv2D` with cuDNN acceleration
-- **JAX**: `jax.lax.conv_general_dilated` with XLA compilation
-- **TinyTorch**: `tinytorch.core.cnn.Conv2D` (what we're building!)
-
-### Performance Considerations
-- **Memory layout**: Efficient data access patterns
-- **Vectorization**: SIMD operations for parallel computation
-- **Cache efficiency**: Spatial locality in memory access
-- **Optimization**: im2col, FFT-based convolution, Winograd algorithm
-"""
-
-# %% [markdown]
-"""
 ## Step 1: Understanding Convolution
 
 ### What is Convolution?
-A **convolutional layer** applies a small filter (kernel) across the input, producing a feature map. This operation captures local patterns and is the foundation of modern vision models.
+**Convolution** is a mathematical operation that slides a small filter (kernel) across an input, computing dot products at each position.
 
-### Why Convolution Matters in Computer Vision
-- **Local connectivity**: Each output value depends only on a small region of the input
-- **Weight sharing**: The same filter is applied everywhere (translation invariance)
+### Why Convolution is Perfect for Images
+- **Local patterns**: Images have local structure (edges, textures)
+- **Translation invariance**: Same pattern can appear anywhere
+- **Parameter sharing**: One filter detects the pattern everywhere
 - **Spatial hierarchy**: Multiple layers build increasingly complex features
-- **Parameter efficiency**: Much fewer parameters than fully connected layers
 
 ### The Fundamental Insight
 **Convolution is pattern matching!** The kernel learns to detect specific patterns:
@@ -157,7 +124,7 @@ A **convolutional layer** applies a small filter (kernel) across the input, prod
 - **Shape detectors**: Identify geometric forms
 - **Feature detectors**: Combine simple patterns into complex features
 
-### Real-World Examples
+### Real-World Applications
 - **Image processing**: Detect edges, blur, sharpen
 - **Computer vision**: Recognize objects, faces, text
 - **Medical imaging**: Detect tumors, analyze scans
@@ -204,7 +171,7 @@ def conv2d_naive(input: np.ndarray, kernel: np.ndarray) -> np.ndarray:
     
     EXAMPLE:
     Input: [[1, 2, 3],     Kernel: [[1, 0],
-            [4, 5, 6],               [0, -1]]
+            [4, 5, 6],              [0, -1]]
             [7, 8, 9]]
     
     Output[0,0] = 1*1 + 2*0 + 4*0 + 5*(-1) = 1 - 5 = -4
@@ -217,7 +184,6 @@ def conv2d_naive(input: np.ndarray, kernel: np.ndarray) -> np.ndarray:
     - Use four nested loops: for i in range(out_H): for j in range(out_W): for di in range(kH): for dj in range(kW):
     - Accumulate the sum: output[i,j] += input[i+di, j+dj] * kernel[di, dj]
     """
-    ### BEGIN SOLUTION
     # Get input and kernel dimensions
     H, W = input.shape
     kH, kW = kernel.shape
@@ -236,18 +202,19 @@ def conv2d_naive(input: np.ndarray, kernel: np.ndarray) -> np.ndarray:
                     output[i, j] += input[i + di, j + dj] * kernel[di, dj]
     
     return output
-    ### END SOLUTION
 
 # %% [markdown]
 """
-### 🧪 Quick Test: Convolution Operation
+### 🧪 Unit Test: Convolution Operation
 
 Let's test your convolution implementation right away! This is the core operation that powers computer vision.
+
+**This is a unit test** - it tests one specific function (conv2d_naive) in isolation.
 """
 
 # %% nbgrader={"grade": true, "grade_id": "test-conv2d-naive-immediate", "locked": true, "points": 10, "schema_version": 3, "solution": false, "task": false}
 # Test conv2d_naive function immediately after implementation
-print("🔬 Testing convolution operation...")
+print("🔬 Unit Test: Convolution Operation...")
 
 # Test simple 3x3 input with 2x2 kernel
 try:
@@ -367,14 +334,12 @@ class Conv2D:
         - Initialize kernel: np.random.randn(kH, kW) * 0.1 (small values)
         - Convert to float32 for consistency
         """
-        ### BEGIN SOLUTION
         # Store kernel size
         self.kernel_size = kernel_size
         kH, kW = kernel_size
         
         # Initialize random kernel with small values
         self.kernel = np.random.randn(kH, kW).astype(np.float32) * 0.1
-        ### END SOLUTION
     
     def forward(self, x: Tensor) -> Tensor:
         """
@@ -403,11 +368,9 @@ class Conv2D:
         - Use conv2d_naive(x.data, self.kernel)
         - Return Tensor(result) to wrap the result
         """
-        ### BEGIN SOLUTION
         # Apply convolution using naive implementation
         result = conv2d_naive(x.data, self.kernel)
         return Tensor(result)
-        ### END SOLUTION
     
     def __call__(self, x: Tensor) -> Tensor:
         """Make layer callable: layer(x) same as layer.forward(x)"""
@@ -415,14 +378,16 @@ class Conv2D:
 
 # %% [markdown]
 """
-### 🧪 Quick Test: Conv2D Layer
+### 🧪 Unit Test: Conv2D Layer
 
 Let's test your Conv2D layer implementation! This is a learnable convolutional layer that can be trained.
+
+**This is a unit test** - it tests one specific class (Conv2D) in isolation.
 """
 
 # %% nbgrader={"grade": true, "grade_id": "test-conv2d-layer-immediate", "locked": true, "points": 10, "schema_version": 3, "solution": false, "task": false}
 # Test Conv2D layer immediately after implementation
-print("🔬 Testing Conv2D layer...")
+print("🔬 Unit Test: Conv2D Layer...")
 
 # Create a Conv2D layer
 try:
@@ -525,23 +490,23 @@ def flatten(x: Tensor) -> Tensor:
     - Add batch dimension: result[None, :]
     - Return Tensor(result)
     """
-    ### BEGIN SOLUTION
     # Flatten the tensor and add batch dimension
     flattened = x.data.flatten()
     result = flattened[None, :]  # Add batch dimension
     return Tensor(result)
-    ### END SOLUTION
 
 # %% [markdown]
 """
-### 🧪 Quick Test: Flatten Function
+### 🧪 Unit Test: Flatten Function
 
 Let's test your flatten function! This connects convolutional layers to dense layers.
+
+**This is a unit test** - it tests one specific function (flatten) in isolation.
 """
 
 # %% nbgrader={"grade": true, "grade_id": "test-flatten-immediate", "locked": true, "points": 10, "schema_version": 3, "solution": false, "task": false}
 # Test flatten function immediately after implementation
-print("🔬 Testing flatten function...")
+print("🔬 Unit Test: Flatten Function...")
 
 # Test case 1: 2x2 tensor
 try:
@@ -596,524 +561,160 @@ print("   Converts 2D tensor to 1D")
 print("   Preserves batch dimension")
 print("   Enables connection to Dense layers")
 print("📈 Progress: Convolution operation ✓, Conv2D layer ✓, Flatten ✓")
-print("🚀 CNN pipeline ready!")
 
 # %% [markdown]
 """
-## 🧪 Comprehensive CNN Testing Suite
+## Step 4: Integration Test - Complete CNN Pipeline
 
-Let's test all CNN components thoroughly with realistic computer vision scenarios!
+### Real-World CNN Applications
+Let's test our CNN components in realistic scenarios:
+
+#### **Image Classification Pipeline**
+```python
+# The standard CNN pattern
+Conv2D → ReLU → Flatten → Dense → Output
+```
+
+#### **Multi-layer CNN**
+```python
+# Deeper pattern for complex features
+Conv2D → ReLU → Conv2D → ReLU → Flatten → Dense → Output
+```
+
+#### **Feature Extraction**
+```python
+# Extract spatial features then classify
+image → CNN features → dense classifier → predictions
+```
+
+This integration test ensures our CNN components work together for real computer vision applications!
 """
 
-# %% nbgrader={"grade": false, "grade_id": "test-cnn-comprehensive", "locked": false, "schema_version": 3, "solution": false, "task": false}
-def test_convolution_operations():
-    """Test 1: Comprehensive convolution operations testing"""
-    print("🔬 Testing Convolution Operations...")
+# %% nbgrader={"grade": true, "grade_id": "test-integration", "locked": true, "points": 15, "schema_version": 3, "solution": false, "task": false}
+# Integration test - complete CNN applications
+print("🔬 Integration Test: Complete CNN Applications...")
+
+try:
+    # Test 1: Simple CNN Pipeline
+    print("\n1. Simple CNN Pipeline Test:")
     
-    # Test 1.1: Basic convolution
-    try:
-        input_img = np.array([[1, 2, 3], [4, 5, 6], [7, 8, 9]], dtype=np.float32)
-        identity_kernel = np.array([[1, 0], [0, 1]], dtype=np.float32)
-        
-        result = conv2d_naive(input_img, identity_kernel)
-        expected = np.array([[6, 8], [12, 14]], dtype=np.float32)
-        
-        assert np.allclose(result, expected), f"Identity convolution failed: {result} vs {expected}"
-        print("✅ Basic convolution test passed")
-    except Exception as e:
-        print(f"❌ Basic convolution failed: {e}")
-        return False
+    # Create pipeline: Conv2D → ReLU → Flatten → Dense
+    conv = Conv2D(kernel_size=(2, 2))
+    relu = ReLU()
+    dense = Dense(input_size=4, output_size=3)
     
-    # Test 1.2: Edge detection kernel
-    try:
-        # Vertical edge detection
-        edge_input = np.array([[0, 0, 1, 1], [0, 0, 1, 1], [0, 0, 1, 1]], dtype=np.float32)
-        vertical_edge = np.array([[-1, 1], [-1, 1]], dtype=np.float32)
-        
-        result = conv2d_naive(edge_input, vertical_edge)
-        # Should detect the vertical edge at position (0,1) and (1,1)
-        assert result[0, 1] > 0 and result[1, 1] > 0, "Vertical edge not detected"
-        print("✅ Edge detection test passed")
-    except Exception as e:
-        print(f"❌ Edge detection failed: {e}")
-        return False
+    # Input image
+    image = Tensor([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
     
-    # Test 1.3: Blur kernel
-    try:
-        noise_input = np.array([[1, 0, 1], [0, 1, 0], [1, 0, 1]], dtype=np.float32)
-        blur_kernel = np.array([[0.25, 0.25], [0.25, 0.25]], dtype=np.float32)
-        
-        result = conv2d_naive(noise_input, blur_kernel)
-        # Blur should smooth out the noise
-        assert np.all(result >= 0) and np.all(result <= 1), "Blur kernel failed"
-        print("✅ Blur kernel test passed")
-    except Exception as e:
-        print(f"❌ Blur kernel failed: {e}")
-        return False
+    # Forward pass
+    features = conv(image)          # (3,3) → (2,2)
+    activated = relu(features)      # (2,2) → (2,2)
+    flattened = flatten(activated)  # (2,2) → (1,4)
+    output = dense(flattened)       # (1,4) → (1,3)
     
-    # Test 1.4: Different kernel sizes
-    try:
-        large_input = np.random.randn(10, 10).astype(np.float32)
-        
-        # Test 3x3 kernel
-        kernel_3x3 = np.random.randn(3, 3).astype(np.float32)
-        result_3x3 = conv2d_naive(large_input, kernel_3x3)
-        assert result_3x3.shape == (8, 8), f"3x3 kernel output shape wrong: {result_3x3.shape}"
-        
-        # Test 5x5 kernel
-        kernel_5x5 = np.random.randn(5, 5).astype(np.float32)
-        result_5x5 = conv2d_naive(large_input, kernel_5x5)
-        assert result_5x5.shape == (6, 6), f"5x5 kernel output shape wrong: {result_5x5.shape}"
-        
-        print("✅ Different kernel sizes test passed")
-    except Exception as e:
-        print(f"❌ Different kernel sizes failed: {e}")
-        return False
+    assert features.shape == (2, 2), f"Conv output shape wrong: {features.shape}"
+    assert activated.shape == (2, 2), f"ReLU output shape wrong: {activated.shape}"
+    assert flattened.shape == (1, 4), f"Flatten output shape wrong: {flattened.shape}"
+    assert output.shape == (1, 3), f"Dense output shape wrong: {output.shape}"
     
-    print("🎯 Convolution operations: All tests passed!")
-    return True
-
-def test_conv2d_layer():
-    """Test 2: Conv2D layer comprehensive testing"""
-    print("🔬 Testing Conv2D Layer...")
+    print("✅ Simple CNN pipeline works correctly")
     
-    # Test 2.1: Layer initialization
-    try:
-        layer_2x2 = Conv2D(kernel_size=(2, 2))
-        assert layer_2x2.kernel.shape == (2, 2), f"2x2 kernel shape wrong: {layer_2x2.kernel.shape}"
-        assert not np.allclose(layer_2x2.kernel, 0), "Kernel should not be all zeros"
-        
-        layer_3x3 = Conv2D(kernel_size=(3, 3))
-        assert layer_3x3.kernel.shape == (3, 3), f"3x3 kernel shape wrong: {layer_3x3.kernel.shape}"
-        
-        print("✅ Layer initialization test passed")
-    except Exception as e:
-        print(f"❌ Layer initialization failed: {e}")
-        return False
+    # Test 2: Multi-layer CNN
+    print("\n2. Multi-layer CNN Test:")
     
-    # Test 2.2: Forward pass with different inputs
-    try:
-        layer = Conv2D(kernel_size=(2, 2))
-        
-        # Small image
-        small_img = Tensor([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
-        output_small = layer(small_img)
-        assert output_small.shape == (2, 2), f"Small image output shape wrong: {output_small.shape}"
-        assert isinstance(output_small, Tensor), "Output should be Tensor"
-        
-        # Larger image
-        large_img = Tensor(np.random.randn(8, 8))
-        output_large = layer(large_img)
-        assert output_large.shape == (7, 7), f"Large image output shape wrong: {output_large.shape}"
-        
-        print("✅ Forward pass test passed")
-    except Exception as e:
-        print(f"❌ Forward pass failed: {e}")
-        return False
+    # Create deeper pipeline: Conv2D → ReLU → Conv2D → ReLU → Flatten → Dense
+    conv1 = Conv2D(kernel_size=(2, 2))
+    relu1 = ReLU()
+    conv2 = Conv2D(kernel_size=(2, 2))
+    relu2 = ReLU()
+    dense_multi = Dense(input_size=9, output_size=2)
     
-    # Test 2.3: Learnable parameters
-    try:
-        layer1 = Conv2D(kernel_size=(2, 2))
-        layer2 = Conv2D(kernel_size=(2, 2))
-        
-        # Different layers should have different random kernels
-        assert not np.allclose(layer1.kernel, layer2.kernel), "Different layers should have different kernels"
-        
-        # Test that kernels are reasonable size (not too large)
-        assert np.max(np.abs(layer1.kernel)) < 1.0, "Kernel values should be small for stable training"
-        
-        print("✅ Learnable parameters test passed")
-    except Exception as e:
-        print(f"❌ Learnable parameters failed: {e}")
-        return False
+    # Larger input for multi-layer processing
+    large_image = Tensor([[1, 2, 3, 4, 5], [6, 7, 8, 9, 10], [11, 12, 13, 14, 15], [16, 17, 18, 19, 20], [21, 22, 23, 24, 25]])
     
-    # Test 2.4: Real computer vision scenario - digit recognition
-    try:
-        # Simulate a simple 5x5 digit
-        digit_5x5 = Tensor([
-            [0, 1, 1, 1, 0],
-            [1, 0, 0, 0, 1],
-            [1, 0, 1, 0, 1],
-            [1, 0, 0, 0, 1],
-            [0, 1, 1, 1, 0]
-        ])
-        
-        # Edge detection layer
-        edge_layer = Conv2D(kernel_size=(3, 3))
-        edge_layer.kernel = np.array([[-1, -1, -1], [-1, 8, -1], [-1, -1, -1]], dtype=np.float32)
-        
-        edges = edge_layer(digit_5x5)
-        assert edges.shape == (3, 3), f"Edge detection output shape wrong: {edges.shape}"
-        
-        print("✅ Computer vision scenario test passed")
-    except Exception as e:
-        print(f"❌ Computer vision scenario failed: {e}")
-        return False
+    # Forward pass
+    h1 = conv1(large_image)  # (5,5) → (4,4)
+    h2 = relu1(h1)           # (4,4) → (4,4)
+    h3 = conv2(h2)           # (4,4) → (3,3)
+    h4 = relu2(h3)           # (3,3) → (3,3)
+    h5 = flatten(h4)         # (3,3) → (1,9)
+    output_multi = dense_multi(h5)  # (1,9) → (1,2)
     
-    print("🎯 Conv2D layer: All tests passed!")
-    return True
-
-def test_flatten_operations():
-    """Test 3: Flatten operations comprehensive testing"""
-    print("🔬 Testing Flatten Operations...")
+    assert h1.shape == (4, 4), f"Conv1 output wrong: {h1.shape}"
+    assert h3.shape == (3, 3), f"Conv2 output wrong: {h3.shape}"
+    assert h5.shape == (1, 9), f"Flatten output wrong: {h5.shape}"
+    assert output_multi.shape == (1, 2), f"Final output wrong: {output_multi.shape}"
     
-    # Test 3.1: Basic flattening
-    try:
-        # 2x2 tensor
-        x_2x2 = Tensor([[1, 2], [3, 4]])
-        flat_2x2 = flatten(x_2x2)
-        
-        assert flat_2x2.shape == (1, 4), f"2x2 flatten shape wrong: {flat_2x2.shape}"
-        expected = np.array([[1, 2, 3, 4]])
-        assert np.array_equal(flat_2x2.data, expected), f"2x2 flatten data wrong: {flat_2x2.data}"
-        
-        # 3x3 tensor
-        x_3x3 = Tensor([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
-        flat_3x3 = flatten(x_3x3)
-        
-        assert flat_3x3.shape == (1, 9), f"3x3 flatten shape wrong: {flat_3x3.shape}"
-        expected = np.array([[1, 2, 3, 4, 5, 6, 7, 8, 9]])
-        assert np.array_equal(flat_3x3.data, expected), f"3x3 flatten data wrong: {flat_3x3.data}"
-        
-        print("✅ Basic flattening test passed")
-    except Exception as e:
-        print(f"❌ Basic flattening failed: {e}")
-        return False
+    print("✅ Multi-layer CNN works correctly")
     
-    # Test 3.2: Different aspect ratios
-    try:
-        # Wide tensor
-        x_wide = Tensor([[1, 2, 3, 4, 5, 6]])  # 1x6
-        flat_wide = flatten(x_wide)
-        assert flat_wide.shape == (1, 6), f"Wide flatten shape wrong: {flat_wide.shape}"
-        
-        # Tall tensor
-        x_tall = Tensor([[1], [2], [3], [4], [5], [6]])  # 6x1
-        flat_tall = flatten(x_tall)
-        assert flat_tall.shape == (1, 6), f"Tall flatten shape wrong: {flat_tall.shape}"
-        
-        print("✅ Different aspect ratios test passed")
-    except Exception as e:
-        print(f"❌ Different aspect ratios failed: {e}")
-        return False
+    # Test 3: Image Classification Scenario
+    print("\n3. Image Classification Test:")
     
-    # Test 3.3: Preserve data order
-    try:
-        # Test that flattening preserves row-major order
-        x_ordered = Tensor([[1, 2, 3], [4, 5, 6]])  # 2x3
-        flat_ordered = flatten(x_ordered)
-        
-        expected_order = np.array([[1, 2, 3, 4, 5, 6]])
-        assert np.array_equal(flat_ordered.data, expected_order), "Flatten should preserve row-major order"
-        
-        print("✅ Data order preservation test passed")
-    except Exception as e:
-        print(f"❌ Data order preservation failed: {e}")
-        return False
+    # Simulate digit classification with 8x8 image
+    digit_image = Tensor([[1, 0, 0, 1, 1, 0, 0, 1],
+                         [0, 1, 0, 1, 1, 0, 1, 0],
+                         [0, 0, 1, 1, 1, 1, 0, 0],
+                         [1, 1, 1, 0, 0, 1, 1, 1],
+                         [1, 0, 0, 1, 1, 0, 0, 1],
+                         [0, 1, 1, 0, 0, 1, 1, 0],
+                         [0, 0, 1, 1, 1, 1, 0, 0],
+                         [1, 1, 0, 0, 0, 0, 1, 1]])
     
-    # Test 3.4: CNN to Dense connection scenario
-    try:
-        # Simulate CNN feature map -> Dense layer
-        feature_map = Tensor([[0.1, 0.2], [0.3, 0.4]])  # 2x2 feature map
-        flattened_features = flatten(feature_map)
-        
-        # Should be ready for Dense layer input
-        assert flattened_features.shape == (1, 4), "Feature map should flatten to (1, 4)"
-        assert isinstance(flattened_features, Tensor), "Should remain a Tensor"
-        
-        # Test with Dense layer
-        dense = Dense(input_size=4, output_size=2)
-        output = dense(flattened_features)
-        assert output.shape == (1, 2), f"Dense output shape wrong: {output.shape}"
-        
-        print("✅ CNN to Dense connection test passed")
-    except Exception as e:
-        print(f"❌ CNN to Dense connection failed: {e}")
-        return False
+    # CNN for digit classification
+    feature_extractor = Conv2D(kernel_size=(3, 3))  # (8,8) → (6,6)
+    activation = ReLU()
+    classifier = Dense(input_size=36, output_size=10)  # 10 digit classes
     
-    print("🎯 Flatten operations: All tests passed!")
-    return True
-
-def test_cnn_pipelines():
-    """Test 4: Complete CNN pipeline testing"""
-    print("🔬 Testing CNN Pipelines...")
+    # Forward pass
+    features = feature_extractor(digit_image)
+    activated_features = activation(features)
+    feature_vector = flatten(activated_features)
+    digit_scores = classifier(feature_vector)
     
-    # Test 4.1: Simple CNN pipeline
-    try:
-        # Create pipeline: Conv2D -> ReLU -> Flatten -> Dense
-        conv = Conv2D(kernel_size=(2, 2))
-        relu = ReLU()
-        dense = Dense(input_size=4, output_size=3)
-        
-        # Input image
-        image = Tensor([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
-        
-        # Forward pass
-        features = conv(image)          # (3,3) -> (2,2)
-        activated = relu(features)      # (2,2) -> (2,2)
-        flattened = flatten(activated)  # (2,2) -> (1,4)
-        output = dense(flattened)       # (1,4) -> (1,3)
-        
-        assert features.shape == (2, 2), f"Conv output shape wrong: {features.shape}"
-        assert activated.shape == (2, 2), f"ReLU output shape wrong: {activated.shape}"
-        assert flattened.shape == (1, 4), f"Flatten output shape wrong: {flattened.shape}"
-        assert output.shape == (1, 3), f"Dense output shape wrong: {output.shape}"
-        
-        print("✅ Simple CNN pipeline test passed")
-    except Exception as e:
-        print(f"❌ Simple CNN pipeline failed: {e}")
-        return False
+    assert features.shape == (6, 6), f"Feature extraction shape wrong: {features.shape}"
+    assert feature_vector.shape == (1, 36), f"Feature vector shape wrong: {feature_vector.shape}"
+    assert digit_scores.shape == (1, 10), f"Digit scores shape wrong: {digit_scores.shape}"
     
-    # Test 4.2: Multi-layer CNN
-    try:
-        # Create deeper pipeline: Conv2D -> ReLU -> Conv2D -> ReLU -> Flatten -> Dense
-        conv1 = Conv2D(kernel_size=(2, 2))
-        relu1 = ReLU()
-        conv2 = Conv2D(kernel_size=(2, 2))
-        relu2 = ReLU()
-        dense = Dense(input_size=1, output_size=2)
-        
-        # Larger input for multi-layer processing
-        large_image = Tensor(np.random.randn(5, 5))
-        
-        # Forward pass
-        h1 = conv1(large_image)  # (5,5) -> (4,4)
-        h2 = relu1(h1)           # (4,4) -> (4,4)
-        h3 = conv2(h2)           # (4,4) -> (3,3)
-        h4 = relu2(h3)           # (3,3) -> (3,3)
-        h5 = flatten(h4)         # (3,3) -> (1,9)
-        
-        # Adjust dense layer for correct input size
-        dense_adjusted = Dense(input_size=9, output_size=2)
-        output = dense_adjusted(h5)  # (1,9) -> (1,2)
-        
-        assert h1.shape == (4, 4), f"Conv1 output wrong: {h1.shape}"
-        assert h3.shape == (3, 3), f"Conv2 output wrong: {h3.shape}"
-        assert h5.shape == (1, 9), f"Flatten output wrong: {h5.shape}"
-        assert output.shape == (1, 2), f"Final output wrong: {output.shape}"
-        
-        print("✅ Multi-layer CNN test passed")
-    except Exception as e:
-        print(f"❌ Multi-layer CNN failed: {e}")
-        return False
+    print("✅ Image classification scenario works correctly")
     
-    # Test 4.3: Image classification scenario
-    try:
-        # Simulate MNIST-like 8x8 digit classification
-        digit_image = Tensor(np.random.randn(8, 8))
-        
-        # CNN for digit classification
-        feature_extractor = Conv2D(kernel_size=(3, 3))  # (8,8) -> (6,6)
-        activation = ReLU()
-        classifier_prep = flatten  # (6,6) -> (1,36)
-        classifier = Dense(input_size=36, output_size=10)  # 10 digit classes
-        
-        # Forward pass
-        features = feature_extractor(digit_image)
-        activated_features = activation(features)
-        feature_vector = classifier_prep(activated_features)
-        digit_scores = classifier(feature_vector)
-        
-        assert features.shape == (6, 6), f"Feature extraction shape wrong: {features.shape}"
-        assert feature_vector.shape == (1, 36), f"Feature vector shape wrong: {feature_vector.shape}"
-        assert digit_scores.shape == (1, 10), f"Digit scores shape wrong: {digit_scores.shape}"
-        
-        print("✅ Image classification scenario test passed")
-    except Exception as e:
-        print(f"❌ Image classification scenario failed: {e}")
-        return False
+    # Test 4: Feature Extraction and Composition
+    print("\n4. Feature Extraction Test:")
     
-    # Test 4.4: Real-world CNN architecture pattern
-    try:
-        # Simulate LeNet-like architecture pattern
-        input_img = Tensor(np.random.randn(32, 32))  # 32x32 input image
-        
-        # First conv block
-        conv1 = Conv2D(kernel_size=(5, 5))  # (32,32) -> (28,28)
-        relu1 = ReLU()
-        
-        # Second conv block
-        conv2 = Conv2D(kernel_size=(5, 5))  # (28,28) -> (24,24)
-        relu2 = ReLU()
-        
-        # Classifier
-        classifier = Dense(input_size=24*24, output_size=3)  # 3 classes
-        
-        # Forward pass
-        h1 = relu1(conv1(input_img))
-        h2 = relu2(conv2(h1))
-        h3 = flatten(h2)
-        output = classifier(h3)
-        
-        assert h1.shape == (28, 28), f"First conv block output wrong: {h1.shape}"
-        assert h2.shape == (24, 24), f"Second conv block output wrong: {h2.shape}"
-        assert h3.shape == (1, 576), f"Flattened features wrong: {h3.shape}"  # 24*24 = 576
-        assert output.shape == (1, 3), f"Classification output wrong: {output.shape}"
-        
-        print("✅ Real-world CNN architecture test passed")
-    except Exception as e:
-        print(f"❌ Real-world CNN architecture failed: {e}")
-        return False
+    # Create modular feature extractor
+    feature_conv = Conv2D(kernel_size=(2, 2))
+    feature_activation = ReLU()
     
-    print("🎯 CNN pipelines: All tests passed!")
-    return True
-
-# Run all comprehensive tests
-def run_comprehensive_cnn_tests():
-    """Run all comprehensive CNN tests"""
-    print("🧪 Running Comprehensive CNN Test Suite...")
-    print("=" * 50)
+    # Create classifier head
+    classifier_head = Dense(input_size=4, output_size=3)
     
-    test_results = []
+    # Test composition
+    test_image = Tensor([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
     
-    # Run all test functions
-    test_results.append(test_convolution_operations())
-    test_results.append(test_conv2d_layer())
-    test_results.append(test_flatten_operations())
-    test_results.append(test_cnn_pipelines())
+    # Extract features
+    extracted_features = feature_conv(test_image)
+    activated_features = feature_activation(extracted_features)
+    feature_representation = flatten(activated_features)
     
-    # Summary
-    print("=" * 50)
-    print("📊 Test Results Summary:")
-    print(f"✅ Convolution Operations: {'PASSED' if test_results[0] else 'FAILED'}")
-    print(f"✅ Conv2D Layer: {'PASSED' if test_results[1] else 'FAILED'}")
-    print(f"✅ Flatten Operations: {'PASSED' if test_results[2] else 'FAILED'}")
-    print(f"✅ CNN Pipelines: {'PASSED' if test_results[3] else 'FAILED'}")
+    # Classify
+    predictions = classifier_head(feature_representation)
     
-    all_passed = all(test_results)
-    print(f"\n🎯 Overall Result: {'ALL TESTS PASSED! 🎉' if all_passed else 'SOME TESTS FAILED ❌'}")
+    assert extracted_features.shape == (2, 2), f"Feature extraction wrong: {extracted_features.shape}"
+    assert feature_representation.shape == (1, 4), f"Feature representation wrong: {feature_representation.shape}"
+    assert predictions.shape == (1, 3), f"Predictions wrong: {predictions.shape}"
     
-    if all_passed:
-        print("\n🚀 CNN Module Implementation Complete!")
-        print("   ✓ Convolution operations working correctly")
-        print("   ✓ Conv2D layers ready for training")
-        print("   ✓ Flatten operations connecting conv to dense layers")
-        print("   ✓ Complete CNN pipelines functional")
-        print("\n🎓 Ready for real computer vision applications!")
+    print("✅ Feature extraction and composition works correctly")
     
-    return all_passed
+    print("\n🎉 Integration test passed! Your CNN components work correctly for:")
+    print("  • Simple CNN pipelines (Conv2D → ReLU → Flatten → Dense)")
+    print("  • Multi-layer CNNs (stacked convolutional layers)")
+    print("  • Image classification scenarios")
+    print("  • Feature extraction and modular composition")
+    
+except Exception as e:
+    print(f"❌ Integration test failed: {e}")
+    raise
 
-# Run the comprehensive test suite
-if __name__ == "__main__":
-    run_comprehensive_cnn_tests()
-
-# %% [markdown]
-"""
-### 🧪 Test Your CNN Implementations
-
-Once you implement the functions above, run these cells to test them:
-"""
-
-# %% nbgrader={"grade": true, "grade_id": "test-conv2d-naive", "locked": true, "points": 25, "schema_version": 3, "solution": false, "task": false}
-# Test conv2d_naive function
-print("Testing conv2d_naive function...")
-
-# Test case 1: Simple 3x3 input with 2x2 kernel
-input_array = np.array([[1, 2, 3], [4, 5, 6], [7, 8, 9]], dtype=np.float32)
-kernel_array = np.array([[1, 0], [0, -1]], dtype=np.float32)
-
-result = conv2d_naive(input_array, kernel_array)
-expected = np.array([[-4, -4], [-4, -4]], dtype=np.float32)
-
-print(f"Input:\n{input_array}")
-print(f"Kernel:\n{kernel_array}")
-print(f"Result:\n{result}")
-print(f"Expected:\n{expected}")
-
-assert np.allclose(result, expected), f"conv2d_naive failed: expected {expected}, got {result}"
-
-# Test case 2: Different kernel
-kernel2 = np.array([[1, 1], [1, 1]], dtype=np.float32)
-result2 = conv2d_naive(input_array, kernel2)
-expected2 = np.array([[12, 16], [24, 28]], dtype=np.float32)
-
-assert np.allclose(result2, expected2), f"conv2d_naive failed: expected {expected2}, got {result2}"
-
-print("✅ conv2d_naive tests passed!")
-
-# %% nbgrader={"grade": true, "grade_id": "test-conv2d-layer", "locked": true, "points": 25, "schema_version": 3, "solution": false, "task": false}
-# Test Conv2D layer
-print("Testing Conv2D layer...")
-
-# Create a Conv2D layer
-layer = Conv2D(kernel_size=(2, 2))
-print(f"Kernel size: {layer.kernel_size}")
-print(f"Kernel shape: {layer.kernel.shape}")
-
-# Test with sample input
-x = Tensor([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
-print(f"Input shape: {x.shape}")
-
-y = layer(x)
-print(f"Output shape: {y.shape}")
-print(f"Output: {y}")
-
-# Verify shapes
-assert y.shape == (2, 2), f"Output shape should be (2, 2), got {y.shape}"
-assert isinstance(y, Tensor), "Output should be a Tensor"
-
-print("✅ Conv2D layer tests passed!")
-
-# %% nbgrader={"grade": true, "grade_id": "test-flatten", "locked": true, "points": 25, "schema_version": 3, "solution": false, "task": false}
-# Test flatten function
-print("Testing flatten function...")
-
-# Test case 1: 2x2 tensor
-x = Tensor([[1, 2], [3, 4]])
-flattened = flatten(x)
-
-print(f"Input: {x}")
-print(f"Flattened: {flattened}")
-print(f"Flattened shape: {flattened.shape}")
-
-# Verify shape and content
-assert flattened.shape == (1, 4), f"Flattened shape should be (1, 4), got {flattened.shape}"
-expected_data = np.array([[1, 2, 3, 4]])
-assert np.array_equal(flattened.data, expected_data), f"Flattened data should be {expected_data}, got {flattened.data}"
-
-# Test case 2: 3x3 tensor
-x2 = Tensor([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
-flattened2 = flatten(x2)
-
-assert flattened2.shape == (1, 9), f"Flattened shape should be (1, 9), got {flattened2.shape}"
-expected_data2 = np.array([[1, 2, 3, 4, 5, 6, 7, 8, 9]])
-assert np.array_equal(flattened2.data, expected_data2), f"Flattened data should be {expected_data2}, got {flattened2.data}"
-
-print("✅ Flatten tests passed!")
-
-# %% nbgrader={"grade": true, "grade_id": "test-cnn-pipeline", "locked": true, "points": 25, "schema_version": 3, "solution": false, "task": false}
-# Test complete CNN pipeline
-print("Testing complete CNN pipeline...")
-
-# Create a simple CNN pipeline: Conv2D → ReLU → Flatten → Dense
-conv_layer = Conv2D(kernel_size=(2, 2))
-relu = ReLU()
-dense_layer = Dense(input_size=4, output_size=2)
-
-# Test input (3x3 image)
-x = Tensor([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
-print(f"Input shape: {x.shape}")
-
-# Forward pass through pipeline
-h1 = conv_layer(x)
-print(f"After Conv2D: {h1.shape}")
-
-h2 = relu(h1)
-print(f"After ReLU: {h2.shape}")
-
-h3 = flatten(h2)
-print(f"After Flatten: {h3.shape}")
-
-h4 = dense_layer(h3)
-print(f"After Dense: {h4.shape}")
-
-# Verify pipeline works
-assert h1.shape == (2, 2), f"Conv2D output should be (2, 2), got {h1.shape}"
-assert h2.shape == (2, 2), f"ReLU output should be (2, 2), got {h2.shape}"
-assert h3.shape == (1, 4), f"Flatten output should be (1, 4), got {h3.shape}"
-assert h4.shape == (1, 2), f"Dense output should be (1, 2), got {h4.shape}"
-
-print("✅ CNN pipeline tests passed!")
+print("📈 Final Progress: Complete CNN system ready for computer vision!")
 
 # %% [markdown]
 """
@@ -1122,52 +723,62 @@ print("✅ CNN pipeline tests passed!")
 Congratulations! You've successfully implemented the core components of convolutional neural networks:
 
 ### What You've Accomplished
-✅ **Convolution Operation**: Implemented conv2d_naive with sliding window from scratch  
-✅ **Conv2D Layer**: Built a learnable convolutional layer with random kernel initialization  
-✅ **Flattening**: Created the bridge between convolutional and dense layers  
-✅ **CNN Pipeline**: Composed Conv2D → ReLU → Flatten → Dense for complete networks  
-✅ **Spatial Pattern Detection**: Understanding how convolution detects local features  
+✅ **Convolution Operation**: Implemented the sliding window mechanism from scratch  
+✅ **Conv2D Layer**: Built learnable convolutional layers with random initialization  
+✅ **Flatten Function**: Created the bridge between convolutional and dense layers  
+✅ **CNN Pipelines**: Composed complete systems for image processing  
+✅ **Real Applications**: Tested on image classification and feature extraction
 
 ### Key Concepts You've Learned
-- **Convolution is pattern matching**: Kernels detect specific spatial patterns
-- **Parameter sharing**: Same kernel applied everywhere for translation invariance
-- **Local connectivity**: Each output depends only on a small input region
-- **Spatial hierarchy**: Multiple layers build increasingly complex features
-- **Dimension management**: Flattening connects spatial and vector representations
+- **Convolution as pattern matching**: Kernels detect specific features
+- **Sliding window mechanism**: How convolution processes spatial data
+- **Parameter sharing**: Same kernel applied across the entire image
+- **Spatial hierarchy**: Multiple layers build complex features
+- **CNN architecture**: Conv2D → Activation → Flatten → Dense pattern
 
 ### Mathematical Foundations
-- **Convolution operation**: (I * K)[i,j] = ΣΣ I[i+m, j+n] × K[m,n]
-- **Sliding window**: Kernel moves across input computing dot products
-- **Feature maps**: Convolution outputs that highlight detected patterns
-- **Translation invariance**: Same pattern detected regardless of position
+- **Convolution operation**: dot product of kernel and image patches
+- **Output size calculation**: (input_size - kernel_size + 1)
+- **Translation invariance**: Same pattern detected anywhere in input
+- **Feature maps**: Spatial representations of detected patterns
 
 ### Real-World Applications
-- **Computer vision**: Object recognition, face detection, medical imaging
-- **Image processing**: Edge detection, noise reduction, enhancement
-- **Autonomous systems**: Traffic sign recognition, obstacle detection
-- **Scientific imaging**: Satellite imagery, microscopy, astronomy
+- **Image classification**: Object recognition, medical imaging
+- **Computer vision**: Face detection, autonomous driving
+- **Pattern recognition**: Texture analysis, edge detection
+- **Feature extraction**: Transfer learning, representation learning
+
+### CNN Architecture Insights
+- **Kernel size**: 3×3 most common, balances locality and capacity
+- **Stacking layers**: Builds hierarchical feature representations
+- **Spatial reduction**: Each layer reduces spatial dimensions
+- **Channel progression**: Typically increase channels while reducing spatial size
+
+### Performance Characteristics
+- **Parameter efficiency**: Dramatic reduction vs. fully connected
+- **Translation invariance**: Robust to object location changes
+- **Computational efficiency**: Parallel processing of spatial regions
+- **Memory considerations**: Feature maps require storage during forward pass
 
 ### Next Steps
-1. **Export your code**: `tito package nbdev --export 05_cnn`
-2. **Test your implementation**: `tito module test 05_cnn`
-3. **Use your CNN components**: 
+1. **Export your code**: Use NBDev to export to the `tinytorch` package
+2. **Test your implementation**: Run the complete test suite
+3. **Build CNN architectures**: 
    ```python
-   from tinytorch.core.cnn import Conv2D, conv2d_naive, flatten
+   from tinytorch.core.cnn import Conv2D, flatten
    from tinytorch.core.layers import Dense
    from tinytorch.core.activations import ReLU
    
-   # Create CNN pipeline
-   conv = Conv2D((3, 3))
+   # Create CNN
+   conv = Conv2D(kernel_size=(3, 3))
    relu = ReLU()
-   dense = Dense(16, 10)
+   dense = Dense(input_size=36, output_size=10)
    
    # Process image
-   features = conv(image)
-   activated = relu(features)
-   flattened = flatten(activated)
-   output = dense(flattened)
+   features = relu(conv(image))
+   predictions = dense(flatten(features))
    ```
-4. **Move to Module 6**: Start building data loading and preprocessing pipelines!
+4. **Explore advanced CNNs**: Pooling, multiple channels, modern architectures!
 
-**Ready for the next challenge?** Let's build efficient data loading systems to feed our networks!
+**Ready for the next challenge?** Let's build data loaders to handle real datasets efficiently!
 """ 
