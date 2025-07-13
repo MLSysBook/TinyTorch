@@ -3,6 +3,12 @@
 # %% auto 0
 __all__ = ['personal_info', 'system_info']
 
+# Add missing imports
+import sys
+import platform
+import psutil
+from typing import Dict, Any
+
 # %% ../../modules/source/00_setup/setup_dev.ipynb 4
 def personal_info() -> Dict[str, str]:
     """
