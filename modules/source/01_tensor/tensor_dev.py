@@ -447,7 +447,136 @@ Let's test your tensor creation implementation right away! This gives you immedi
 **This is a unit test** - it tests one specific function (tensor creation) in isolation.
 """
 
+# %% nbgrader={"grade": true, "grade_id": "test-tensor-creation-immediate", "locked": true, "points": 5, "schema_version": 3, "solution": false, "task": false}
+# Test tensor creation immediately after implementation
+print("🔬 Unit Test: Tensor Creation...")
 
+# Test basic tensor creation
+try:
+    # Test scalar
+    scalar = Tensor(5.0)
+    assert hasattr(scalar, '_data'), "Tensor should have _data attribute"
+    assert scalar._data.shape == (), f"Scalar should have shape (), got {scalar._data.shape}"
+    print("✅ Scalar creation works")
+    
+    # Test vector
+    vector = Tensor([1, 2, 3])
+    assert vector._data.shape == (3,), f"Vector should have shape (3,), got {vector._data.shape}"
+    print("✅ Vector creation works")
+    
+    # Test matrix
+    matrix = Tensor([[1, 2], [3, 4]])
+    assert matrix._data.shape == (2, 2), f"Matrix should have shape (2, 2), got {matrix._data.shape}"
+    print("✅ Matrix creation works")
+    
+    print("📈 Progress: Tensor Creation ✓")
+    
+except Exception as e:
+    print(f"❌ Tensor creation test failed: {e}")
+    raise
+
+print("🎯 Tensor creation behavior:")
+print("   Converts data to NumPy arrays")
+print("   Preserves shape and data type")
+print("   Stores in _data attribute")
+
+# %% [markdown]
+"""
+### 🧪 Unit Test: Tensor Properties
+
+Now let's test that your tensor properties work correctly. This tests the @property methods you implemented.
+
+**This is a unit test** - it tests specific properties (shape, size, dtype, data) in isolation.
+"""
+
+# %% nbgrader={"grade": true, "grade_id": "test-tensor-properties-immediate", "locked": true, "points": 5, "schema_version": 3, "solution": false, "task": false}
+# Test tensor properties immediately after implementation
+print("🔬 Unit Test: Tensor Properties...")
+
+# Test properties with simple examples
+try:
+    # Test with a simple matrix
+    tensor = Tensor([[1, 2, 3], [4, 5, 6]])
+    
+    # Test shape property
+    assert tensor.shape == (2, 3), f"Shape should be (2, 3), got {tensor.shape}"
+    print("✅ Shape property works")
+    
+    # Test size property
+    assert tensor.size == 6, f"Size should be 6, got {tensor.size}"
+    print("✅ Size property works")
+    
+    # Test data property
+    assert np.array_equal(tensor.data, np.array([[1, 2, 3], [4, 5, 6]])), "Data property should return numpy array"
+    print("✅ Data property works")
+    
+    # Test dtype property
+    assert tensor.dtype in [np.int32, np.int64], f"Dtype should be int32 or int64, got {tensor.dtype}"
+    print("✅ Dtype property works")
+    
+    print("📈 Progress: Tensor Properties ✓")
+    
+except Exception as e:
+    print(f"❌ Tensor properties test failed: {e}")
+    raise
+
+print("🎯 Tensor properties behavior:")
+print("   shape: Returns tuple of dimensions")
+print("   size: Returns total number of elements")
+print("   data: Returns underlying NumPy array")
+print("   dtype: Returns NumPy data type")
+
+# %% [markdown]
+"""
+### 🧪 Unit Test: Tensor Arithmetic
+
+Let's test your tensor arithmetic operations. This tests the __add__, __mul__, __sub__, __truediv__ methods.
+
+**This is a unit test** - it tests specific arithmetic operations in isolation.
+"""
+
+# %% nbgrader={"grade": true, "grade_id": "test-tensor-arithmetic-immediate", "locked": true, "points": 5, "schema_version": 3, "solution": false, "task": false}
+# Test tensor arithmetic immediately after implementation
+print("🔬 Unit Test: Tensor Arithmetic...")
+
+# Test basic arithmetic with simple examples
+try:
+    # Test addition
+    a = Tensor([1, 2, 3])
+    b = Tensor([4, 5, 6])
+    result = a + b
+    expected = np.array([5, 7, 9])
+    assert np.array_equal(result.data, expected), f"Addition failed: expected {expected}, got {result.data}"
+    print("✅ Addition works")
+    
+    # Test scalar addition
+    result_scalar = a + 10
+    expected_scalar = np.array([11, 12, 13])
+    assert np.array_equal(result_scalar.data, expected_scalar), f"Scalar addition failed: expected {expected_scalar}, got {result_scalar.data}"
+    print("✅ Scalar addition works")
+    
+    # Test multiplication
+    result_mul = a * b
+    expected_mul = np.array([4, 10, 18])
+    assert np.array_equal(result_mul.data, expected_mul), f"Multiplication failed: expected {expected_mul}, got {result_mul.data}"
+    print("✅ Multiplication works")
+    
+    # Test scalar multiplication
+    result_scalar_mul = a * 2
+    expected_scalar_mul = np.array([2, 4, 6])
+    assert np.array_equal(result_scalar_mul.data, expected_scalar_mul), f"Scalar multiplication failed: expected {expected_scalar_mul}, got {result_scalar_mul.data}"
+    print("✅ Scalar multiplication works")
+    
+    print("📈 Progress: Tensor Arithmetic ✓")
+    
+except Exception as e:
+    print(f"❌ Tensor arithmetic test failed: {e}")
+    raise
+
+print("🎯 Tensor arithmetic behavior:")
+print("   Element-wise operations on tensors")
+print("   Broadcasting with scalars")
+print("   Returns new Tensor objects")
 
 # %% [markdown]
 """
