@@ -1,0 +1,286 @@
+{
+  "module_name": "00_setup",
+  "module_path": "modules/source/00_setup",
+  "analysis_date": "2025-07-13T09:20:37.636982",
+  "total_lines": 608,
+  "total_cells": 9,
+  "avg_cell_length": 53.44444444444444,
+  "scaffolding_quality": 3,
+  "complexity_distribution": {
+    "1": 1,
+    "2": 2,
+    "3": 6,
+    "4": 0,
+    "5": 0
+  },
+  "learning_progression_quality": 4,
+  "concepts_covered": [
+    "0",
+    "2. **Debugging**",
+    "Resource Planning",
+    "`sys.version_info` - Python Version",
+    "Bug reproduction",
+    "Collaboration",
+    "Professional",
+    "System Information",
+    "1. **System Awareness**",
+    "Debugging support",
+    "Why Each Layer Matters",
+    "Someone else can recreate your environment",
+    "Unique identification",
+    "Development tracking",
+    "System Customization",
+    "Descriptive system name",
+    "Model cards",
+    "Maintenance",
+    "Real-World Parallels",
+    "Platform",
+    "`psutil.cpu_count()` - CPU Cores",
+    "1. **Reliability**",
+    "Documentation",
+    "Verify package integration",
+    "Test personal information configuration",
+    "TensorFlow",
+    "Configuration Layers in Production ML",
+    "Test return type",
+    "Module 3 (Layers)",
+    "\ud83e\uddea Test Your Configuration Functions",
+    "Consistent behavior",
+    "Test email format",
+    "Test system information queries",
+    "Resource planning",
+    "PyTorch",
+    "Reliability",
+    "Summary"
+  ],
+  "todo_count": 2,
+  "hint_count": 2,
+  "test_count": 0,
+  "critical_issues": [
+    "4 cells are too long (>50 lines)"
+  ],
+  "overwhelm_points": [
+    "Cell 1: Too many concepts (5)",
+    "Cell 2: Long cell (46 lines)",
+    "Cell 2: Too many concepts (5)",
+    "Cell 3: Long cell (33 lines)",
+    "Cell 3: Too many concepts (5)",
+    "Cell 4: Long cell (42 lines)",
+    "Cell 4: Too many concepts (5)",
+    "Cell 5: Very long cell (77 lines)",
+    "Cell 5: Complex implementation without error handling guidance",
+    "Cell 6: Very long cell (123 lines)",
+    "Cell 6: Complex implementation without error handling guidance",
+    "Cell 7: Too many concepts (5)",
+    "Cell 8: Very long cell (56 lines)",
+    "Cell 8: Too many concepts (5)",
+    "Cell 9: Very long cell (67 lines)",
+    "Cell 9: Too many concepts (5)"
+  ],
+  "recommendations": [
+    "Split 7 long cells into smaller, focused cells",
+    "Add immediate feedback tests after implementations"
+  ],
+  "cell_analyses": [
+    {
+      "cell_type": "code",
+      "line_count": 9,
+      "char_count": 180,
+      "complexity_score": 1,
+      "educational_type": "demonstration",
+      "has_todo": false,
+      "has_hints": false,
+      "concepts_introduced": [],
+      "overwhelm_factors": [
+        "Too many concepts (5)"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "line_count": 46,
+      "char_count": 2400,
+      "complexity_score": 3,
+      "educational_type": "concept_introduction",
+      "has_todo": false,
+      "has_hints": false,
+      "concepts_introduced": [
+        "0",
+        "Collaboration",
+        "1. **System Awareness**",
+        "Debugging support",
+        "Maintenance"
+      ],
+      "overwhelm_factors": [
+        "Long cell (46 lines)",
+        "Too many concepts (5)"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "line_count": 33,
+      "char_count": 1530,
+      "complexity_score": 2,
+      "educational_type": "practical_connection",
+      "has_todo": false,
+      "has_hints": false,
+      "concepts_introduced": [
+        "PyTorch",
+        "Configuration Layers in Production ML",
+        "TensorFlow",
+        "Professional",
+        "Why Each Layer Matters"
+      ],
+      "overwhelm_factors": [
+        "Long cell (33 lines)",
+        "Too many concepts (5)"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "line_count": 42,
+      "char_count": 1816,
+      "complexity_score": 3,
+      "educational_type": "concept_introduction",
+      "has_todo": false,
+      "has_hints": false,
+      "concepts_introduced": [
+        "2. **Debugging**",
+        "Collaboration",
+        "System Information",
+        "Someone else can recreate your environment",
+        "Model cards"
+      ],
+      "overwhelm_factors": [
+        "Long cell (42 lines)",
+        "Too many concepts (5)"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "line_count": 77,
+      "char_count": 3670,
+      "complexity_score": 3,
+      "educational_type": "concept_introduction",
+      "has_todo": true,
+      "has_hints": true,
+      "concepts_introduced": [
+        "Unique identification",
+        "Development tracking",
+        "System Customization",
+        "Descriptive system name",
+        "Real-World Parallels"
+      ],
+      "overwhelm_factors": [
+        "Very long cell (77 lines)",
+        "Complex implementation without error handling guidance"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "line_count": 123,
+      "char_count": 5380,
+      "complexity_score": 3,
+      "educational_type": "concept_introduction",
+      "has_todo": true,
+      "has_hints": true,
+      "concepts_introduced": [
+        "Resource Planning",
+        "`sys.version_info` - Python Version",
+        "Bug reproduction",
+        "Platform",
+        "`psutil.cpu_count()` - CPU Cores"
+      ],
+      "overwhelm_factors": [
+        "Very long cell (123 lines)",
+        "Complex implementation without error handling guidance"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "line_count": 28,
+      "char_count": 1439,
+      "complexity_score": 2,
+      "educational_type": "explanation",
+      "has_todo": false,
+      "has_hints": false,
+      "concepts_introduced": [
+        "Collaboration",
+        "Consistent behavior",
+        "Reliability",
+        "1. **Reliability**",
+        "Documentation"
+      ],
+      "overwhelm_factors": [
+        "Too many concepts (5)"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "line_count": 56,
+      "char_count": 3113,
+      "complexity_score": 3,
+      "educational_type": "explanation",
+      "has_todo": false,
+      "has_hints": false,
+      "concepts_introduced": [
+        "Test personal information configuration",
+        "\ud83e\uddea Test Your Configuration Functions",
+        "Test email format",
+        "Test system information queries",
+        "Test return type"
+      ],
+      "overwhelm_factors": [
+        "Very long cell (56 lines)",
+        "Too many concepts (5)"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "line_count": 67,
+      "char_count": 3761,
+      "complexity_score": 3,
+      "educational_type": "concept_introduction",
+      "has_todo": false,
+      "has_hints": false,
+      "concepts_introduced": [
+        "Resource planning",
+        "Summary",
+        "Verify package integration",
+        "Collaboration",
+        "Module 3 (Layers)"
+      ],
+      "overwhelm_factors": [
+        "Very long cell (67 lines)",
+        "Too many concepts (5)"
+      ]
+    }
+  ],
+  "overall_grade": "C",
+  "category_grades": {
+    "Scaffolding": "C",
+    "Complexity": "A",
+    "Cell_Length": "D"
+  },
+  "vs_targets": {
+    "Length": "\u274c Too long (608 lines, target: 200-400)",
+    "Cell_Length": "\u274c Too long (53.4 avg, target: \u226430)",
+    "Complexity": "\u2705 Good (0.0% high-complexity)"
+  },
+  "vs_best_practices": [
+    "Cell 2: Too many concepts (5)",
+    "Cell 2: Too long (46 lines)",
+    "Cell 3: Too many concepts (5)",
+    "Cell 3: Too long (33 lines)",
+    "Cell 4: Too many concepts (5)",
+    "Cell 4: Too long (42 lines)",
+    "Cell 5: Too many concepts (5)",
+    "Cell 5: Too long (77 lines)",
+    "Cell 6: Too many concepts (5)",
+    "Cell 6: Too long (123 lines)",
+    "Cell 7: Too many concepts (5)",
+    "Cell 8: Too many concepts (5)",
+    "Cell 8: Too long (56 lines)",
+    "Cell 9: Too many concepts (5)",
+    "Cell 9: Too long (67 lines)"
+  ]
+}
