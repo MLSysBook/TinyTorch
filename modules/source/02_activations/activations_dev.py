@@ -305,25 +305,25 @@ This theorem guarantees that neural networks with nonlinear activations can lear
 ### The Four Fundamental Activation Functions
 
 #### **1. ReLU (Rectified Linear Unit)**
-- **Formula**: f(x) = max(0, x)
+- **Formula**: $f(x) = \max(0, x)$
 - **Use case**: Hidden layers in most networks
 - **Advantages**: Simple, fast, no vanishing gradients
 - **Disadvantages**: "Dead neurons" problem
 
 #### **2. Sigmoid**
-- **Formula**: f(x) = 1/(1 + e^(-x))
+- **Formula**: $f(x) = \frac{1}{1 + e^{-x}}$
 - **Use case**: Binary classification output
 - **Advantages**: Smooth, probabilistic interpretation
 - **Disadvantages**: Vanishing gradients, computationally expensive
 
 #### **3. Tanh (Hyperbolic Tangent)**
-- **Formula**: f(x) = (e^x - e^(-x))/(e^x + e^(-x))
+- **Formula**: $f(x) = \frac{e^x - e^{-x}}{e^x + e^{-x}}$
 - **Use case**: Hidden layers (better than sigmoid)
 - **Advantages**: Zero-centered, stronger gradients than sigmoid
 - **Disadvantages**: Still suffers from vanishing gradients
 
 #### **4. Softmax**
-- **Formula**: f(x_i) = e^(x_i) / Σ(e^(x_j))
+- **Formula**: $f(x_i) = \frac{e^{x_i}}{\sum_{j} e^{x_j}}$
 - **Use case**: Multi-class classification output
 - **Advantages**: Probabilistic, sums to 1
 - **Disadvantages**: Computationally expensive, can saturate
