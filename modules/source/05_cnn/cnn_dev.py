@@ -600,6 +600,405 @@ print("🚀 CNN pipeline ready!")
 
 # %% [markdown]
 """
+## 🧪 Comprehensive CNN Testing Suite
+
+Let's test all CNN components thoroughly with realistic computer vision scenarios!
+"""
+
+# %% nbgrader={"grade": false, "grade_id": "test-cnn-comprehensive", "locked": false, "schema_version": 3, "solution": false, "task": false}
+def test_convolution_operations():
+    """Test 1: Comprehensive convolution operations testing"""
+    print("🔬 Testing Convolution Operations...")
+    
+    # Test 1.1: Basic convolution
+    try:
+        input_img = np.array([[1, 2, 3], [4, 5, 6], [7, 8, 9]], dtype=np.float32)
+        identity_kernel = np.array([[1, 0], [0, 1]], dtype=np.float32)
+        
+        result = conv2d_naive(input_img, identity_kernel)
+        expected = np.array([[6, 8], [12, 14]], dtype=np.float32)
+        
+        assert np.allclose(result, expected), f"Identity convolution failed: {result} vs {expected}"
+        print("✅ Basic convolution test passed")
+    except Exception as e:
+        print(f"❌ Basic convolution failed: {e}")
+        return False
+    
+    # Test 1.2: Edge detection kernel
+    try:
+        # Vertical edge detection
+        edge_input = np.array([[0, 0, 1, 1], [0, 0, 1, 1], [0, 0, 1, 1]], dtype=np.float32)
+        vertical_edge = np.array([[-1, 1], [-1, 1]], dtype=np.float32)
+        
+        result = conv2d_naive(edge_input, vertical_edge)
+        # Should detect the vertical edge at position (0,1) and (1,1)
+        assert result[0, 1] > 0 and result[1, 1] > 0, "Vertical edge not detected"
+        print("✅ Edge detection test passed")
+    except Exception as e:
+        print(f"❌ Edge detection failed: {e}")
+        return False
+    
+    # Test 1.3: Blur kernel
+    try:
+        noise_input = np.array([[1, 0, 1], [0, 1, 0], [1, 0, 1]], dtype=np.float32)
+        blur_kernel = np.array([[0.25, 0.25], [0.25, 0.25]], dtype=np.float32)
+        
+        result = conv2d_naive(noise_input, blur_kernel)
+        # Blur should smooth out the noise
+        assert np.all(result >= 0) and np.all(result <= 1), "Blur kernel failed"
+        print("✅ Blur kernel test passed")
+    except Exception as e:
+        print(f"❌ Blur kernel failed: {e}")
+        return False
+    
+    # Test 1.4: Different kernel sizes
+    try:
+        large_input = np.random.randn(10, 10).astype(np.float32)
+        
+        # Test 3x3 kernel
+        kernel_3x3 = np.random.randn(3, 3).astype(np.float32)
+        result_3x3 = conv2d_naive(large_input, kernel_3x3)
+        assert result_3x3.shape == (8, 8), f"3x3 kernel output shape wrong: {result_3x3.shape}"
+        
+        # Test 5x5 kernel
+        kernel_5x5 = np.random.randn(5, 5).astype(np.float32)
+        result_5x5 = conv2d_naive(large_input, kernel_5x5)
+        assert result_5x5.shape == (6, 6), f"5x5 kernel output shape wrong: {result_5x5.shape}"
+        
+        print("✅ Different kernel sizes test passed")
+    except Exception as e:
+        print(f"❌ Different kernel sizes failed: {e}")
+        return False
+    
+    print("🎯 Convolution operations: All tests passed!")
+    return True
+
+def test_conv2d_layer():
+    """Test 2: Conv2D layer comprehensive testing"""
+    print("🔬 Testing Conv2D Layer...")
+    
+    # Test 2.1: Layer initialization
+    try:
+        layer_2x2 = Conv2D(kernel_size=(2, 2))
+        assert layer_2x2.kernel.shape == (2, 2), f"2x2 kernel shape wrong: {layer_2x2.kernel.shape}"
+        assert not np.allclose(layer_2x2.kernel, 0), "Kernel should not be all zeros"
+        
+        layer_3x3 = Conv2D(kernel_size=(3, 3))
+        assert layer_3x3.kernel.shape == (3, 3), f"3x3 kernel shape wrong: {layer_3x3.kernel.shape}"
+        
+        print("✅ Layer initialization test passed")
+    except Exception as e:
+        print(f"❌ Layer initialization failed: {e}")
+        return False
+    
+    # Test 2.2: Forward pass with different inputs
+    try:
+        layer = Conv2D(kernel_size=(2, 2))
+        
+        # Small image
+        small_img = Tensor([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
+        output_small = layer(small_img)
+        assert output_small.shape == (2, 2), f"Small image output shape wrong: {output_small.shape}"
+        assert isinstance(output_small, Tensor), "Output should be Tensor"
+        
+        # Larger image
+        large_img = Tensor(np.random.randn(8, 8))
+        output_large = layer(large_img)
+        assert output_large.shape == (7, 7), f"Large image output shape wrong: {output_large.shape}"
+        
+        print("✅ Forward pass test passed")
+    except Exception as e:
+        print(f"❌ Forward pass failed: {e}")
+        return False
+    
+    # Test 2.3: Learnable parameters
+    try:
+        layer1 = Conv2D(kernel_size=(2, 2))
+        layer2 = Conv2D(kernel_size=(2, 2))
+        
+        # Different layers should have different random kernels
+        assert not np.allclose(layer1.kernel, layer2.kernel), "Different layers should have different kernels"
+        
+        # Test that kernels are reasonable size (not too large)
+        assert np.max(np.abs(layer1.kernel)) < 1.0, "Kernel values should be small for stable training"
+        
+        print("✅ Learnable parameters test passed")
+    except Exception as e:
+        print(f"❌ Learnable parameters failed: {e}")
+        return False
+    
+    # Test 2.4: Real computer vision scenario - digit recognition
+    try:
+        # Simulate a simple 5x5 digit
+        digit_5x5 = Tensor([
+            [0, 1, 1, 1, 0],
+            [1, 0, 0, 0, 1],
+            [1, 0, 1, 0, 1],
+            [1, 0, 0, 0, 1],
+            [0, 1, 1, 1, 0]
+        ])
+        
+        # Edge detection layer
+        edge_layer = Conv2D(kernel_size=(3, 3))
+        edge_layer.kernel = np.array([[-1, -1, -1], [-1, 8, -1], [-1, -1, -1]], dtype=np.float32)
+        
+        edges = edge_layer(digit_5x5)
+        assert edges.shape == (3, 3), f"Edge detection output shape wrong: {edges.shape}"
+        
+        print("✅ Computer vision scenario test passed")
+    except Exception as e:
+        print(f"❌ Computer vision scenario failed: {e}")
+        return False
+    
+    print("🎯 Conv2D layer: All tests passed!")
+    return True
+
+def test_flatten_operations():
+    """Test 3: Flatten operations comprehensive testing"""
+    print("🔬 Testing Flatten Operations...")
+    
+    # Test 3.1: Basic flattening
+    try:
+        # 2x2 tensor
+        x_2x2 = Tensor([[1, 2], [3, 4]])
+        flat_2x2 = flatten(x_2x2)
+        
+        assert flat_2x2.shape == (1, 4), f"2x2 flatten shape wrong: {flat_2x2.shape}"
+        expected = np.array([[1, 2, 3, 4]])
+        assert np.array_equal(flat_2x2.data, expected), f"2x2 flatten data wrong: {flat_2x2.data}"
+        
+        # 3x3 tensor
+        x_3x3 = Tensor([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
+        flat_3x3 = flatten(x_3x3)
+        
+        assert flat_3x3.shape == (1, 9), f"3x3 flatten shape wrong: {flat_3x3.shape}"
+        expected = np.array([[1, 2, 3, 4, 5, 6, 7, 8, 9]])
+        assert np.array_equal(flat_3x3.data, expected), f"3x3 flatten data wrong: {flat_3x3.data}"
+        
+        print("✅ Basic flattening test passed")
+    except Exception as e:
+        print(f"❌ Basic flattening failed: {e}")
+        return False
+    
+    # Test 3.2: Different aspect ratios
+    try:
+        # Wide tensor
+        x_wide = Tensor([[1, 2, 3, 4, 5, 6]])  # 1x6
+        flat_wide = flatten(x_wide)
+        assert flat_wide.shape == (1, 6), f"Wide flatten shape wrong: {flat_wide.shape}"
+        
+        # Tall tensor
+        x_tall = Tensor([[1], [2], [3], [4], [5], [6]])  # 6x1
+        flat_tall = flatten(x_tall)
+        assert flat_tall.shape == (1, 6), f"Tall flatten shape wrong: {flat_tall.shape}"
+        
+        print("✅ Different aspect ratios test passed")
+    except Exception as e:
+        print(f"❌ Different aspect ratios failed: {e}")
+        return False
+    
+    # Test 3.3: Preserve data order
+    try:
+        # Test that flattening preserves row-major order
+        x_ordered = Tensor([[1, 2, 3], [4, 5, 6]])  # 2x3
+        flat_ordered = flatten(x_ordered)
+        
+        expected_order = np.array([[1, 2, 3, 4, 5, 6]])
+        assert np.array_equal(flat_ordered.data, expected_order), "Flatten should preserve row-major order"
+        
+        print("✅ Data order preservation test passed")
+    except Exception as e:
+        print(f"❌ Data order preservation failed: {e}")
+        return False
+    
+    # Test 3.4: CNN to Dense connection scenario
+    try:
+        # Simulate CNN feature map -> Dense layer
+        feature_map = Tensor([[0.1, 0.2], [0.3, 0.4]])  # 2x2 feature map
+        flattened_features = flatten(feature_map)
+        
+        # Should be ready for Dense layer input
+        assert flattened_features.shape == (1, 4), "Feature map should flatten to (1, 4)"
+        assert isinstance(flattened_features, Tensor), "Should remain a Tensor"
+        
+        # Test with Dense layer
+        dense = Dense(input_size=4, output_size=2)
+        output = dense(flattened_features)
+        assert output.shape == (1, 2), f"Dense output shape wrong: {output.shape}"
+        
+        print("✅ CNN to Dense connection test passed")
+    except Exception as e:
+        print(f"❌ CNN to Dense connection failed: {e}")
+        return False
+    
+    print("🎯 Flatten operations: All tests passed!")
+    return True
+
+def test_cnn_pipelines():
+    """Test 4: Complete CNN pipeline testing"""
+    print("🔬 Testing CNN Pipelines...")
+    
+    # Test 4.1: Simple CNN pipeline
+    try:
+        # Create pipeline: Conv2D -> ReLU -> Flatten -> Dense
+        conv = Conv2D(kernel_size=(2, 2))
+        relu = ReLU()
+        dense = Dense(input_size=4, output_size=3)
+        
+        # Input image
+        image = Tensor([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
+        
+        # Forward pass
+        features = conv(image)          # (3,3) -> (2,2)
+        activated = relu(features)      # (2,2) -> (2,2)
+        flattened = flatten(activated)  # (2,2) -> (1,4)
+        output = dense(flattened)       # (1,4) -> (1,3)
+        
+        assert features.shape == (2, 2), f"Conv output shape wrong: {features.shape}"
+        assert activated.shape == (2, 2), f"ReLU output shape wrong: {activated.shape}"
+        assert flattened.shape == (1, 4), f"Flatten output shape wrong: {flattened.shape}"
+        assert output.shape == (1, 3), f"Dense output shape wrong: {output.shape}"
+        
+        print("✅ Simple CNN pipeline test passed")
+    except Exception as e:
+        print(f"❌ Simple CNN pipeline failed: {e}")
+        return False
+    
+    # Test 4.2: Multi-layer CNN
+    try:
+        # Create deeper pipeline: Conv2D -> ReLU -> Conv2D -> ReLU -> Flatten -> Dense
+        conv1 = Conv2D(kernel_size=(2, 2))
+        relu1 = ReLU()
+        conv2 = Conv2D(kernel_size=(2, 2))
+        relu2 = ReLU()
+        dense = Dense(input_size=1, output_size=2)
+        
+        # Larger input for multi-layer processing
+        large_image = Tensor(np.random.randn(5, 5))
+        
+        # Forward pass
+        h1 = conv1(large_image)  # (5,5) -> (4,4)
+        h2 = relu1(h1)           # (4,4) -> (4,4)
+        h3 = conv2(h2)           # (4,4) -> (3,3)
+        h4 = relu2(h3)           # (3,3) -> (3,3)
+        h5 = flatten(h4)         # (3,3) -> (1,9)
+        
+        # Adjust dense layer for correct input size
+        dense_adjusted = Dense(input_size=9, output_size=2)
+        output = dense_adjusted(h5)  # (1,9) -> (1,2)
+        
+        assert h1.shape == (4, 4), f"Conv1 output wrong: {h1.shape}"
+        assert h3.shape == (3, 3), f"Conv2 output wrong: {h3.shape}"
+        assert h5.shape == (1, 9), f"Flatten output wrong: {h5.shape}"
+        assert output.shape == (1, 2), f"Final output wrong: {output.shape}"
+        
+        print("✅ Multi-layer CNN test passed")
+    except Exception as e:
+        print(f"❌ Multi-layer CNN failed: {e}")
+        return False
+    
+    # Test 4.3: Image classification scenario
+    try:
+        # Simulate MNIST-like 8x8 digit classification
+        digit_image = Tensor(np.random.randn(8, 8))
+        
+        # CNN for digit classification
+        feature_extractor = Conv2D(kernel_size=(3, 3))  # (8,8) -> (6,6)
+        activation = ReLU()
+        classifier_prep = flatten  # (6,6) -> (1,36)
+        classifier = Dense(input_size=36, output_size=10)  # 10 digit classes
+        
+        # Forward pass
+        features = feature_extractor(digit_image)
+        activated_features = activation(features)
+        feature_vector = classifier_prep(activated_features)
+        digit_scores = classifier(feature_vector)
+        
+        assert features.shape == (6, 6), f"Feature extraction shape wrong: {features.shape}"
+        assert feature_vector.shape == (1, 36), f"Feature vector shape wrong: {feature_vector.shape}"
+        assert digit_scores.shape == (1, 10), f"Digit scores shape wrong: {digit_scores.shape}"
+        
+        print("✅ Image classification scenario test passed")
+    except Exception as e:
+        print(f"❌ Image classification scenario failed: {e}")
+        return False
+    
+    # Test 4.4: Real-world CNN architecture pattern
+    try:
+        # Simulate LeNet-like architecture pattern
+        input_img = Tensor(np.random.randn(32, 32))  # 32x32 input image
+        
+        # First conv block
+        conv1 = Conv2D(kernel_size=(5, 5))  # (32,32) -> (28,28)
+        relu1 = ReLU()
+        
+        # Second conv block
+        conv2 = Conv2D(kernel_size=(5, 5))  # (28,28) -> (24,24)
+        relu2 = ReLU()
+        
+        # Classifier
+        classifier = Dense(input_size=24*24, output_size=3)  # 3 classes
+        
+        # Forward pass
+        h1 = relu1(conv1(input_img))
+        h2 = relu2(conv2(h1))
+        h3 = flatten(h2)
+        output = classifier(h3)
+        
+        assert h1.shape == (28, 28), f"First conv block output wrong: {h1.shape}"
+        assert h2.shape == (24, 24), f"Second conv block output wrong: {h2.shape}"
+        assert h3.shape == (1, 576), f"Flattened features wrong: {h3.shape}"  # 24*24 = 576
+        assert output.shape == (1, 3), f"Classification output wrong: {output.shape}"
+        
+        print("✅ Real-world CNN architecture test passed")
+    except Exception as e:
+        print(f"❌ Real-world CNN architecture failed: {e}")
+        return False
+    
+    print("🎯 CNN pipelines: All tests passed!")
+    return True
+
+# Run all comprehensive tests
+def run_comprehensive_cnn_tests():
+    """Run all comprehensive CNN tests"""
+    print("🧪 Running Comprehensive CNN Test Suite...")
+    print("=" * 50)
+    
+    test_results = []
+    
+    # Run all test functions
+    test_results.append(test_convolution_operations())
+    test_results.append(test_conv2d_layer())
+    test_results.append(test_flatten_operations())
+    test_results.append(test_cnn_pipelines())
+    
+    # Summary
+    print("=" * 50)
+    print("📊 Test Results Summary:")
+    print(f"✅ Convolution Operations: {'PASSED' if test_results[0] else 'FAILED'}")
+    print(f"✅ Conv2D Layer: {'PASSED' if test_results[1] else 'FAILED'}")
+    print(f"✅ Flatten Operations: {'PASSED' if test_results[2] else 'FAILED'}")
+    print(f"✅ CNN Pipelines: {'PASSED' if test_results[3] else 'FAILED'}")
+    
+    all_passed = all(test_results)
+    print(f"\n🎯 Overall Result: {'ALL TESTS PASSED! 🎉' if all_passed else 'SOME TESTS FAILED ❌'}")
+    
+    if all_passed:
+        print("\n🚀 CNN Module Implementation Complete!")
+        print("   ✓ Convolution operations working correctly")
+        print("   ✓ Conv2D layers ready for training")
+        print("   ✓ Flatten operations connecting conv to dense layers")
+        print("   ✓ Complete CNN pipelines functional")
+        print("\n🎓 Ready for real computer vision applications!")
+    
+    return all_passed
+
+# Run the comprehensive test suite
+if __name__ == "__main__":
+    run_comprehensive_cnn_tests()
+
+# %% [markdown]
+"""
 ### 🧪 Test Your CNN Implementations
 
 Once you implement the functions above, run these cells to test them:
