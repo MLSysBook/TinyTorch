@@ -1,0 +1,61 @@
+name: "optimizers"
+title: "Optimizers - Gradient-Based Parameter Updates"
+description: "Build intelligent optimization algorithms that enable effective neural network training"
+version: "1.0.0"
+author: "TinyTorch Team"
+
+# Learning objectives
+learning_objectives:
+  - "Understand gradient descent and how optimizers use gradients to update parameters"
+  - "Implement SGD with momentum for accelerated convergence"
+  - "Build Adam optimizer with adaptive learning rates for modern deep learning"
+  - "Master learning rate scheduling strategies for training stability"
+  - "See how optimizers enable complete neural network training workflows"
+
+# Prerequisites
+prerequisites:
+  - "01_tensor"
+  - "07_autograd"
+
+# Module metadata
+metadata:
+  difficulty: "expert"
+  time_estimate: "6-8 hours"
+  pedagogical_framework: "Build → Use → Analyze"
+  
+# Key concepts covered
+concepts:
+  - "Gradient descent theory"
+  - "SGD with momentum"
+  - "Adam optimizer"
+  - "Learning rate scheduling"
+  - "Training loop integration"
+  
+# Exports to tinytorch package
+exports:
+  - "SGD"
+  - "Adam"
+  - "StepLR"
+  - "gradient_descent_step"
+
+# Files in this module
+files:
+  main: "optimizers_dev.py"
+  readme: "README.md"
+  tests: "tests/test_optimizers.py"
+
+# Assessment configuration
+assessment:
+  total_points: 70
+  breakdown:
+    gradient_descent: 10
+    sgd_optimizer: 15
+    adam_optimizer: 20
+    scheduler: 10
+    training_integration: 15
+
+# Next steps
+next_modules:
+  - "09_training"
+  - "10_compression"
+  - "13_mlops" 
