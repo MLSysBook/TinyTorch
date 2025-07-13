@@ -184,6 +184,7 @@ def conv2d_naive(input: np.ndarray, kernel: np.ndarray) -> np.ndarray:
     - Use four nested loops: for i in range(out_H): for j in range(out_W): for di in range(kH): for dj in range(kW):
     - Accumulate the sum: output[i,j] += input[i+di, j+dj] * kernel[di, dj]
     """
+    ### BEGIN SOLUTION
     # Get input and kernel dimensions
     H, W = input.shape
     kH, kW = kernel.shape
@@ -202,6 +203,7 @@ def conv2d_naive(input: np.ndarray, kernel: np.ndarray) -> np.ndarray:
                     output[i, j] += input[i + di, j + dj] * kernel[di, dj]
     
     return output
+    ### END SOLUTION
 
 # %% [markdown]
 """
@@ -334,12 +336,14 @@ class Conv2D:
         - Initialize kernel: np.random.randn(kH, kW) * 0.1 (small values)
         - Convert to float32 for consistency
         """
+        ### BEGIN SOLUTION
         # Store kernel size
         self.kernel_size = kernel_size
         kH, kW = kernel_size
         
         # Initialize random kernel with small values
         self.kernel = np.random.randn(kH, kW).astype(np.float32) * 0.1
+        ### END SOLUTION
     
     def forward(self, x: Tensor) -> Tensor:
         """
@@ -368,9 +372,11 @@ class Conv2D:
         - Use conv2d_naive(x.data, self.kernel)
         - Return Tensor(result) to wrap the result
         """
+        ### BEGIN SOLUTION
         # Apply convolution using naive implementation
         result = conv2d_naive(x.data, self.kernel)
         return Tensor(result)
+        ### END SOLUTION
     
     def __call__(self, x: Tensor) -> Tensor:
         """Make layer callable: layer(x) same as layer.forward(x)"""
@@ -490,10 +496,12 @@ def flatten(x: Tensor) -> Tensor:
     - Add batch dimension: result[None, :]
     - Return Tensor(result)
     """
+    ### BEGIN SOLUTION
     # Flatten the tensor and add batch dimension
     flattened = x.data.flatten()
     result = flattened[None, :]  # Add batch dimension
     return Tensor(result)
+    ### END SOLUTION
 
 # %% [markdown]
 """

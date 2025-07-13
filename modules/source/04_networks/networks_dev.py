@@ -251,10 +251,12 @@ class Sequential:
         - The output of one layer becomes input to the next
         - Return the final result
         """
+        ### BEGIN SOLUTION
         # Apply each layer in sequence
         for layer in self.layers:
             x = layer(x)
         return x
+        ### END SOLUTION
     
     def __call__(self, x: Tensor) -> Tensor:
         """Make network callable: network(x) same as network.forward(x)"""
