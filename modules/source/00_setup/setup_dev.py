@@ -453,7 +453,7 @@ Once you implement both functions above, run this cell to test them:
 
 # %% nbgrader={"grade": true, "grade_id": "test-personal-info", "locked": true, "points": 25, "schema_version": 3, "solution": false, "task": false}
 # Test personal information configuration
-print("Testing personal information...")
+print("🔬 Unit Test: Personal Information...")
 
 # Test personal_info function
 personal = personal_info()
@@ -487,7 +487,7 @@ print(f"✅ System: {personal['system_name']}")
 
 # %% nbgrader={"grade": true, "grade_id": "test-system-info", "locked": true, "points": 25, "schema_version": 3, "solution": false, "task": false}
 # Test system information queries
-print("Testing system information...")
+print("🔬 Unit Test: System Information...")
 
 # Test system_info function
 sys_info = system_info()
