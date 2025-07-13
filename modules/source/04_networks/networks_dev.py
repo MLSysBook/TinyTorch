@@ -150,33 +150,185 @@ A **network** is a composition of layers that transforms input data into output 
 Input → Layer1 → Layer2 → Layer3 → Output
 ```
 
-### Why Networks Matter
-- **Function composition**: Complex behavior from simple building blocks
-- **Learnable parameters**: Each layer has weights that can be learned
-- **Architecture design**: Different layouts solve different problems
-- **Real-world applications**: Classification, regression, generation, etc.
+### The Mathematical Foundation: Function Composition Theory
 
-### The Fundamental Insight
-**Neural networks are just function composition!**
-- Each layer is a function: `f_i(x)`
-- The network is: `f(x) = f_n(...f_2(f_1(x)))`
-- Complex behavior emerges from simple building blocks
+#### **Function Composition in Mathematics**
+In mathematics, function composition combines simple functions to create complex ones:
 
-### Real-World Examples
-- **MLP (Multi-Layer Perceptron)**: Classic feedforward network
-- **CNN (Convolutional Neural Network)**: For image processing
-- **RNN (Recurrent Neural Network)**: For sequential data
-- **Transformer**: For attention-based processing
+```python
+# Mathematical composition: (f ∘ g)(x) = f(g(x))
+def compose(f, g):
+    return lambda x: f(g(x))
 
-### Visual Intuition
-```
-Input: [1, 2, 3] (3 features)
-Layer1: [1.4, 2.8] (linear transformation)
-Layer2: [1.4, 2.8] (nonlinearity)
-Layer3: [0.7] (final prediction)
+# Neural network composition: h(x) = f_n(f_{n-1}(...f_2(f_1(x))))
+def network(layers):
+    return lambda x: reduce(lambda acc, layer: layer(acc), layers, x)
 ```
 
-Let's start by building the most fundamental network: **Sequential**.
+#### **Why Composition is Powerful**
+1. **Modularity**: Each layer has a specific, well-defined purpose
+2. **Composability**: Simple functions combine to create arbitrarily complex behaviors
+3. **Hierarchical learning**: Early layers learn simple features, later layers learn complex patterns
+4. **Universal approximation**: Deep compositions can approximate any continuous function
+
+#### **The Emergence of Intelligence**
+Complex behavior emerges from simple layer composition:
+
+```python
+# Example: Image classification
+raw_pixels → [Edge detectors] → [Shape detectors] → [Object detectors] → [Class predictor]
+     ↓              ↓                    ↓                    ↓                 ↓
+  [28x28]      [64 features]      [128 features]      [256 features]      [10 classes]
+```
+
+### Architectural Design Principles
+
+#### **1. Depth vs. Width Trade-offs**
+- **Deep networks**: More layers → more complex representations
+  - **Advantages**: Better feature hierarchies, parameter efficiency
+  - **Disadvantages**: Harder to train, gradient problems
+- **Wide networks**: More neurons per layer → more capacity per layer
+  - **Advantages**: Easier to train, parallel computation
+  - **Disadvantages**: More parameters, potential overfitting
+
+#### **2. Information Flow Patterns**
+```python
+# Sequential flow (what we're building):
+x → layer1 → layer2 → layer3 → output
+
+# Residual flow (advanced):
+x → layer1 → layer2 + x → layer3 → output
+
+# Attention flow (transformers):
+x → attention(x, x, x) → feedforward → output
+```
+
+#### **3. Activation Function Placement**
+```python
+# Standard pattern:
+linear_transformation → nonlinear_activation → next_layer
+
+# Why this works:
+# Linear + Linear = Linear (no increase in expressiveness)
+# Linear + Nonlinear + Linear = Nonlinear (exponential increase in expressiveness)
+```
+
+### Real-World Architecture Examples
+
+#### **Multi-Layer Perceptron (MLP)**
+```python
+# Classic feedforward network
+input → dense(512) → relu → dense(256) → relu → dense(10) → softmax
+```
+- **Use cases**: Tabular data, feature learning, classification
+- **Strengths**: Universal approximation, well-understood
+- **Weaknesses**: Doesn't exploit spatial/temporal structure
+
+#### **Convolutional Neural Network (CNN)**
+```python
+# Exploits spatial structure
+input → conv2d → relu → pool → conv2d → relu → pool → dense → softmax
+```
+- **Use cases**: Image processing, computer vision
+- **Strengths**: Translation invariance, parameter sharing
+- **Weaknesses**: Fixed receptive field, not great for sequences
+
+#### **Recurrent Neural Network (RNN)**
+```python
+# Processes sequences
+input_t → rnn_cell(hidden_{t-1}) → hidden_t → output_t
+```
+- **Use cases**: Natural language processing, time series
+- **Strengths**: Variable length sequences, memory
+- **Weaknesses**: Sequential computation, gradient problems
+
+#### **Transformer**
+```python
+# Attention-based processing
+input → attention → feedforward → attention → feedforward → output
+```
+- **Use cases**: Language models, machine translation
+- **Strengths**: Parallelizable, long-range dependencies
+- **Weaknesses**: Quadratic complexity, large memory requirements
+
+### The Network Design Process
+
+#### **1. Problem Analysis**
+- **Data type**: Images, text, tabular, time series?
+- **Task type**: Classification, regression, generation?
+- **Constraints**: Latency, memory, accuracy requirements?
+
+#### **2. Architecture Selection**
+- **Start simple**: Begin with basic MLP
+- **Add structure**: Incorporate domain-specific inductive biases
+- **Scale up**: Increase depth/width as needed
+
+#### **3. Component Design**
+- **Input layer**: Match data dimensions
+- **Hidden layers**: Gradual dimension reduction typical
+- **Output layer**: Match task requirements (classes, regression targets)
+- **Activation functions**: ReLU for hidden, task-specific for output
+
+#### **4. Optimization Considerations**
+- **Gradient flow**: Ensure gradients can flow through the network
+- **Computational efficiency**: Balance expressiveness with speed
+- **Memory usage**: Consider intermediate activation storage
+
+### Performance Characteristics
+
+#### **Forward Pass Complexity**
+For a network with L layers, each with n neurons:
+- **Time complexity**: O(L × n²) for dense layers
+- **Space complexity**: O(L × n) for activations
+- **Parallelization**: Each layer can be parallelized
+
+#### **Memory Management**
+```python
+# Memory usage during forward pass:
+input_memory = batch_size × input_size
+hidden_memory = batch_size × hidden_size × num_layers
+output_memory = batch_size × output_size
+total_memory = input_memory + hidden_memory + output_memory
+```
+
+#### **Computational Optimization**
+- **Batch processing**: Process multiple samples simultaneously
+- **Vectorization**: Use optimized matrix operations
+- **Hardware acceleration**: Leverage GPUs/TPUs for parallel computation
+
+### Connection to Previous Modules
+
+#### **From Module 1 (Tensor)**
+- **Data flow**: Tensors flow through the network
+- **Shape management**: Ensure compatible dimensions between layers
+
+#### **From Module 2 (Activations)**
+- **Nonlinearity**: Activation functions between layers enable complex learning
+- **Function choice**: Different activations for different purposes
+
+#### **From Module 3 (Layers)**
+- **Building blocks**: Layers are the fundamental components
+- **Composition**: Networks compose layers into complete architectures
+
+### Why Networks Matter: The Scaling Laws
+
+#### **Empirical Observations**
+- **More parameters**: Generally better performance (up to a point)
+- **More data**: Enables training of larger networks
+- **More compute**: Allows exploration of larger architectures
+
+#### **The Deep Learning Revolution**
+```python
+# Pre-2012: Shallow networks
+input → hidden(100) → output
+
+# Post-2012: Deep networks
+input → hidden(512) → hidden(512) → hidden(512) → ... → output
+```
+
+The key insight: **Depth enables hierarchical feature learning**
+
+Let's start building our Sequential network architecture!
 """
 
 # %% nbgrader={"grade": false, "grade_id": "sequential-class", "locked": false, "schema_version": 3, "solution": true, "task": false}
