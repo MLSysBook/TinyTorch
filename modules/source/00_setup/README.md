@@ -74,7 +74,7 @@ Run the comprehensive test suite using pytest:
 
 ```bash
 # Using the TinyTorch CLI (recommended)
-python bin/tito.py test --module setup
+tito test --module setup
 
 # Or directly with pytest
 python -m pytest modules/setup/tests/test_setup.py -v
@@ -92,14 +92,28 @@ The test suite includes **20 comprehensive tests** covering:
 - ✅ **Error recovery** - Graceful handling of missing files
 - ✅ **Integration testing** - All components work together
 
+## Getting Started
+
+### Prerequisites
+
+1. **Activate the virtual environment**:
+   ```bash
+   source bin/activate-tinytorch.sh
+   ```
+
+2. **Test the setup module**:
+   ```bash
+   tito test --module setup
+   ```
+
 ## Development Workflow
 
 This module teaches the core TinyTorch development cycle:
 
 1. **Write code** in the notebook using `#| export` directives
-2. **Export code** with `python bin/tito.py sync --module setup`
-3. **Run tests** with `python bin/tito.py test --module setup`
-4. **Check progress** with `python bin/tito.py info`
+2. **Export code** with `tito sync --module setup`
+3. **Run tests** with `tito test --module setup`
+4. **Check progress** with `tito info`
 
 ## Key Concepts
 

@@ -35,9 +35,9 @@ modules/dataloader/
 ### Step 1: Complete Prerequisites
 Make sure you've completed the foundational modules:
 ```bash
-python bin/tito.py test --module setup    # Should pass
-python bin/tito.py test --module tensor   # Should pass
-python bin/tito.py test --module layers   # Should pass
+tito test --module setup    # Should pass
+tito test --module tensor   # Should pass
+tito test --module layers   # Should pass
 ```
 
 ### Step 2: Open the Data Development File
@@ -46,7 +46,7 @@ python bin/tito.py test --module layers   # Should pass
 cd modules/dataloader/
 
 # Convert to notebook if needed
-python bin/tito.py notebooks --module dataloader
+tito notebooks --module dataloader
 
 # Open the development notebook
 jupyter lab dataloader_dev.ipynb
@@ -63,10 +63,10 @@ The development file guides you through building:
 ### Step 4: Export and Test
 ```bash
 # Export your dataloader implementation
-python bin/tito.py sync --module dataloader
+tito sync --module dataloader
 
 # Test your implementation
-python bin/tito.py test --module dataloader
+tito test --module dataloader
 ```
 
 ## 📚 What You'll Implement
@@ -150,7 +150,7 @@ The tests follow the **"Build → Use → Understand"** pattern with real CIFAR-
 
 ```bash
 # Run all tests (downloads real CIFAR-10 data)
-python bin/tito.py test --module dataloader
+tito test --module dataloader
 
 # Run specific test categories
 python -m pytest tests/test_dataloader.py::TestDatasetInterface -v      # Test abstract interface
@@ -226,7 +226,7 @@ The development notebook includes **visual feedback** for learning and debugging
 
 Your data module is complete when:
 
-1. **All tests pass**: `python bin/tito.py test --module dataloader`
+1. **All tests pass**: `tito test --module dataloader`
 2. **Data classes import correctly**: `from tinytorch.core.dataloader import Dataset, DataLoader`
 3. **Dataset loading works**: Can create datasets and access samples
 4. **Batching works**: DataLoader produces correct batch shapes

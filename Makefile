@@ -36,22 +36,22 @@ install:
 # Export notebooks to Python package
 sync:
 	@echo "🔄 Exporting notebooks to Python package..."
-	python bin/tito.py sync
+	@source .venv/bin/activate && python3 bin/tito export --all
 
 # Run all tests
 test:
 	@echo "🧪 Running all tests..."
-	python bin/tito.py test --all
+	@source .venv/bin/activate && python3 bin/tito module test --all
 
 # Run setup module tests specifically
 test-setup:
 	@echo "🧪 Running setup module tests..."
-	python bin/tito.py test --module setup
+	@source .venv/bin/activate && python3 bin/tito module test --module setup
 
 # Clean notebook outputs and Python cache
 clean:
 	@echo "🧹 Cleaning notebook outputs and cache..."
-	python bin/tito.py nbdev --clean
+	@source .venv/bin/activate && python3 bin/tito module clean
 	find . -type d -name "__pycache__" -exec rm -rf {} + 2>/dev/null || true
 	find . -type f -name "*.pyc" -delete 2>/dev/null || true
 	@echo "✅ Cleanup complete!"
@@ -59,12 +59,12 @@ clean:
 # Build documentation
 docs:
 	@echo "📚 Building documentation..."
-	python bin/tito.py nbdev --build-docs
+	@source .venv/bin/activate && python3 bin/tito package build-docs
 
 # Start Jupyter Lab
 jupyter:
 	@echo "🚀 Starting Jupyter Lab..."
-	python bin/tito.py jupyter --lab
+	@source .venv/bin/activate && python3 bin/tito system jupyter --lab
 
 # Alias for jupyter
 lab: jupyter
@@ -72,12 +72,12 @@ lab: jupyter
 # Show system information
 info:
 	@echo "ℹ️ System information..."
-	python bin/tito.py info
+	@source .venv/bin/activate && python3 bin/tito system info
 
 # Run environment diagnosis
 doctor:
 	@echo "🔬 Running environment diagnosis..."
-	python bin/tito.py doctor
+	@source .venv/bin/activate && python3 bin/tito system doctor
 
 # Setup new environment (for first-time users)
 setup:

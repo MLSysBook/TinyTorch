@@ -75,11 +75,22 @@ print(layer.bias.grad)     # Bias gradients
 
 ## 🚀 Getting Started
 
+### Prerequisites
+
+1. **Activate the virtual environment**:
+   ```bash
+   source bin/activate-tinytorch.sh
+   ```
+
+2. **Start development environment**:
+   ```bash
+   tito jupyter
+   ```
+
 ### Development Workflow
 
 1. **Open the development file**:
    ```bash
-   python bin/tito.py jupyter
    # Then open modules/source/07_autograd/autograd_dev.py
    ```
 
@@ -91,7 +102,7 @@ print(layer.bias.grad)     # Bias gradients
 
 3. **Test your implementation**:
    ```bash
-   python bin/tito.py test --module 07_autograd
+   tito test --module 07_autograd
    ```
 
 ## 📊 Understanding Automatic Differentiation
@@ -137,7 +148,7 @@ df/dy = df/da * da/dy + df/db * db/dy = (-1)(1) + (5)(-1) = -6
 
 ### Unit Tests
 ```bash
-python bin/tito.py test --module 07_autograd
+tito test --module 07_autograd
 ```
 
 **Test Coverage**:
@@ -217,7 +228,7 @@ print(layer2.weights.grad)
 
 Your autograd module is complete when:
 
-1. **All tests pass**: `python bin/tito.py test --module 07_autograd`
+1. **All tests pass**: `tito test --module 07_autograd`
 2. **Variable imports correctly**: `from tinytorch.core.autograd import Variable`
 3. **Basic operations work**: Can create Variables and do arithmetic
 4. **Gradients compute correctly**: Backward pass produces correct gradients
