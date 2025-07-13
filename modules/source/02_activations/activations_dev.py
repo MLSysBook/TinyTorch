@@ -229,7 +229,7 @@ Once you implement the ReLU forward method above, run this cell to test it:
 # %% nbgrader={"grade": true, "grade_id": "test-relu-immediate", "locked": true, "points": 10, "schema_version": 3, "solution": false, "task": false}
 def test_relu_activation():
     """Test ReLU activation function"""
-    print("Testing ReLU activation...")
+    print("🔬 Unit Test: ReLU Activation...")
 
 # Create ReLU instance
 relu = ReLU()
@@ -367,7 +367,7 @@ Once you implement the Sigmoid forward method above, run this cell to test it:
 # %% nbgrader={"grade": true, "grade_id": "test-sigmoid-immediate", "locked": true, "points": 10, "schema_version": 3, "solution": false, "task": false}
 def test_sigmoid_activation():
     """Test Sigmoid activation function"""
-    print("Testing Sigmoid activation...")
+    print("🔬 Unit Test: Sigmoid Activation...")
 
 # Create Sigmoid instance
 sigmoid = Sigmoid()
@@ -513,7 +513,7 @@ Once you implement the Tanh forward method above, run this cell to test it:
 # %% nbgrader={"grade": true, "grade_id": "test-tanh-immediate", "locked": true, "points": 10, "schema_version": 3, "solution": false, "task": false}
 def test_tanh_activation():
     """Test Tanh activation function"""
-    print("Testing Tanh activation...")
+    print("🔬 Unit Test: Tanh Activation...")
 
 # Create Tanh instance
 tanh = Tanh()
@@ -675,7 +675,7 @@ Once you implement the Softmax forward method above, run this cell to test it:
 # %% nbgrader={"grade": true, "grade_id": "test-softmax-immediate", "locked": true, "points": 15, "schema_version": 3, "solution": false, "task": false}
 def test_softmax_activation():
     """Test Softmax activation function"""
-    print("Testing Softmax activation...")
+    print("🔬 Unit Test: Softmax Activation...")
 
 # Create Softmax instance
 softmax = Softmax()
@@ -748,7 +748,7 @@ Let's test how all activation functions work together in a realistic neural netw
 # %% nbgrader={"grade": true, "grade_id": "test-activations-integration", "locked": true, "points": 15, "schema_version": 3, "solution": false, "task": false}
 def test_activations_integration():
     """Test all activation functions working together"""
-    print("Testing activation functions integration...")
+    print("🔬 Unit Test: Activation Functions Integration...")
     
     # Create instances of all activation functions
         relu = ReLU()

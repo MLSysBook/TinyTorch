@@ -216,7 +216,7 @@ Let's test the basic gradient descent step:
 # %% nbgrader={"grade": true, "grade_id": "test-gradient-descent", "locked": true, "points": 10, "schema_version": 3, "solution": false, "task": false}
 def test_gradient_descent_step():
     """Test basic gradient descent parameter update"""
-    print("Testing gradient descent step...")
+    print("🔬 Unit Test: Gradient Descent Step...")
     
     # Test basic parameter update
     w = Variable(2.0, requires_grad=True)
@@ -448,7 +448,7 @@ Let's test the SGD optimizer:
 # %% nbgrader={"grade": true, "grade_id": "test-sgd", "locked": true, "points": 15, "schema_version": 3, "solution": false, "task": false}
 def test_sgd_optimizer():
     """Test SGD optimizer implementation"""
-    print("Testing SGD optimizer...")
+    print("🔬 Unit Test: SGD Optimizer...")
     
     # Create test parameters
     w1 = Variable(1.0, requires_grad=True)
@@ -712,7 +712,7 @@ Let's test the Adam optimizer:
 # %% nbgrader={"grade": true, "grade_id": "test-adam", "locked": true, "points": 20, "schema_version": 3, "solution": false, "task": false}
 def test_adam_optimizer():
     """Test Adam optimizer implementation"""
-    print("Testing Adam optimizer...")
+    print("🔬 Unit Test: Adam Optimizer...")
     
     # Create test parameters
     w1 = Variable(1.0, requires_grad=True)
@@ -924,7 +924,7 @@ Let's test the learning rate scheduler:
 # %% nbgrader={"grade": true, "grade_id": "test-scheduler", "locked": true, "points": 10, "schema_version": 3, "solution": false, "task": false}
 def test_step_scheduler():
     """Test step learning rate scheduler"""
-    print("Testing step learning rate scheduler...")
+    print("🔬 Unit Test: Step Learning Rate Scheduler...")
     
     # Create optimizer and scheduler
     w = Variable(1.0, requires_grad=True)
@@ -1129,7 +1129,7 @@ Let's test the complete training workflow:
 # %% nbgrader={"grade": true, "grade_id": "test-training-integration", "locked": true, "points": 15, "schema_version": 3, "solution": false, "task": false}
 def test_training_integration():
     """Test complete training integration"""
-    print("Testing complete training integration...")
+    print("🔬 Unit Test: Complete Training Integration...")
     
     # Run training example
     sgd_w, sgd_b, adam_w, adam_b = train_simple_model()
