@@ -1,16 +1,61 @@
 """
-Test command for TinyTorch CLI: runs module tests using pytest.
+Enhanced Test command for TinyTorch CLI: runs both inline and external tests.
 """
 
 import subprocess
 import sys
+import re
+import importlib.util
 from argparse import ArgumentParser, Namespace
 from pathlib import Path
+from typing import List, Dict, Tuple, Optional, Any
 from rich.panel import Panel
+from rich.table import Table
 from rich.text import Text
 from rich.progress import Progress, SpinnerColumn, TextColumn, BarColumn
+from rich.console import Console
 
 from .base import BaseCommand
+
+class TestResult:
+    """Container for test results."""
+    def __init__(self, name: str, success: bool, output: str = "", error: str = ""):
+        self.name = name
+        self.success = success
+        self.output = output
+        self.error = error
+
+class ModuleTestResult:
+    """Container for module test results."""
+    def __init__(self, module_name: str):
+        self.module_name = module_name
+        self.inline_tests: List[TestResult] = []
+        self.external_tests: List[TestResult] = []
+        self.compilation_success = True
+        self.compilation_error = ""
+        
+    @property
+    def all_tests_passed(self) -> bool:
+        """Check if all tests passed."""
+        if not self.compilation_success:
+            return False
+        
+        all_inline_passed = all(test.success for test in self.inline_tests)
+        all_external_passed = all(test.success for test in self.external_tests)
+        
+        return all_inline_passed and all_external_passed
+    
+    @property
+    def total_tests(self) -> int:
+        """Total number of tests."""
+        return len(self.inline_tests) + len(self.external_tests)
+    
+    @property
+    def passed_tests(self) -> int:
+        """Number of passed tests."""
+        passed_inline = sum(1 for test in self.inline_tests if test.success)
+        passed_external = sum(1 for test in self.external_tests if test.success)
+        return passed_inline + passed_external
 
 class TestCommand(BaseCommand):
     @property
@@ -19,180 +64,416 @@ class TestCommand(BaseCommand):
 
     @property
     def description(self) -> str:
-        return "Run module tests"
+        return "Run module tests (inline and external)"
 
     def add_arguments(self, parser: ArgumentParser) -> None:
         parser.add_argument("module", nargs="?", help="Module to test (optional)")
         parser.add_argument("--all", action="store_true", help="Run all module tests")
+        parser.add_argument("--inline-only", action="store_true", help="Run only inline tests")
+        parser.add_argument("--external-only", action="store_true", help="Run only external tests")
+        parser.add_argument("--detailed", action="store_true", help="Show detailed output for all tests")
+        parser.add_argument("--summary", action="store_true", help="Show summary report only")
 
     def validate_args(self, args: Namespace) -> None:
         """Validate test command arguments."""
-        # Allow running without arguments to show helpful error message
-        pass
+        if args.inline_only and args.external_only:
+            raise ValueError("Cannot use --inline-only and --external-only together")
 
     def run(self, args: Namespace) -> int:
         console = self.console
         
         if args.all:
-            # Run all tests with progress bar
-            failed_modules = []
+            return self._run_all_tests(args)
+        elif args.module:
+            return self._run_single_module_test(args)
+        else:
+            return self._show_available_modules()
+    
+    def _run_all_tests(self, args: Namespace) -> int:
+        """Run tests for all modules."""
+        console = self.console
+        
+        modules = self._discover_modules()
+        if not modules:
+            console.print(Panel("[yellow]⚠️  No modules found[/yellow]", 
+                              title="No Modules", border_style="yellow"))
+            return 0
+        
+        console.print(Panel(f"🧪 Running tests for {len(modules)} modules", 
+                          title="Test Suite", border_style="bright_cyan"))
+        
+        results = []
+        
+        with Progress(
+            SpinnerColumn(),
+            TextColumn("[progress.description]{task.description}"),
+            BarColumn(),
+            TextColumn("[progress.percentage]{task.percentage:>3.0f}%"),
+            console=console
+        ) as progress:
             
-            # Find all modules with tests
-            source_dir = Path("modules/source")
-            if not source_dir.exists():
-                console.print(Panel("[red]❌ modules/source/ directory not found[/red]", 
-                                  title="Error", border_style="red"))
-                return 1
+            task = progress.add_task("Running tests...", total=len(modules))
             
-            # Find existing test files
-            existing_tests = []
+            for module_name in modules:
+                progress.update(task, description=f"Testing {module_name}...")
+                
+                result = self._test_module(module_name, args)
+                results.append(result)
+                
+                # Show immediate feedback
+                if result.all_tests_passed:
+                    console.print(f"[green]✅ {module_name} - All tests passed ({result.passed_tests}/{result.total_tests})[/green]")
+                else:
+                    console.print(f"[red]❌ {module_name} - Tests failed ({result.passed_tests}/{result.total_tests})[/red]")
+                
+                progress.advance(task)
+        
+        # Generate report
+        if args.summary:
+            self._generate_summary_report(results)
+        elif args.detailed:
+            self._generate_detailed_report(results)
+        else:
+            self._generate_default_report(results)
+        
+        # Return success if all modules passed
+        failed_modules = [r for r in results if not r.all_tests_passed]
+        return 0 if not failed_modules else 1
+    
+    def _run_single_module_test(self, args: Namespace) -> int:
+        """Run tests for a single module with detailed output."""
+        console = self.console
+        
+        module_name = args.module
+        
+        console.print(Panel(f"🧪 Running tests for module: [bold cyan]{module_name}[/bold cyan]", 
+                          title="Single Module Test", border_style="bright_cyan"))
+        
+        result = self._test_module(module_name, args)
+        
+        # Always show detailed output for single module tests
+        self._show_detailed_module_result(result)
+        
+        return 0 if result.all_tests_passed else 1
+    
+    def _test_module(self, module_name: str, args: Namespace) -> ModuleTestResult:
+        """Test a single module comprehensively."""
+        result = ModuleTestResult(module_name)
+        
+        # Test compilation first
+        dev_file = self._get_dev_file_path(module_name)
+        if not dev_file.exists():
+            result.compilation_success = False
+            result.compilation_error = f"Module file not found: {dev_file}"
+            return result
+        
+        # Test Python compilation
+        try:
+            subprocess.run([sys.executable, "-m", "py_compile", str(dev_file)], 
+                          check=True, capture_output=True, text=True)
+        except subprocess.CalledProcessError as e:
+            result.compilation_success = False
+            result.compilation_error = f"Compilation error: {e.stderr}"
+            return result
+        
+        # Run inline tests if requested
+        if not args.external_only:
+            inline_tests = self._run_inline_tests(dev_file)
+            result.inline_tests = inline_tests
+        
+        # Run external tests if requested
+        if not args.inline_only:
+            external_tests = self._run_external_tests(module_name)
+            result.external_tests = external_tests
+        
+        return result
+    
+    def _run_inline_tests(self, dev_file: Path) -> List[TestResult]:
+        """Run inline tests within a _dev.py file."""
+        inline_tests = []
+        
+        # Find test functions in the file
+        test_functions = self._find_test_functions(dev_file)
+        
+        if not test_functions:
+            return inline_tests
+        
+        # Import the module and run test functions
+        try:
+            spec = importlib.util.spec_from_file_location("test_module", dev_file)
+            if spec is None or spec.loader is None:
+                return [TestResult("import_error", False, "", "Could not load module")]
+            
+            module = importlib.util.module_from_spec(spec)
+            
+            # Capture output during import and execution
+            import io
+            import contextlib
+            
+            with contextlib.redirect_stdout(io.StringIO()) as captured_output:
+                with contextlib.redirect_stderr(io.StringIO()) as captured_error:
+                    try:
+                        spec.loader.exec_module(module)
+                        
+                        # Run each test function
+                        for test_func_name in test_functions:
+                            if hasattr(module, test_func_name):
+                                test_func = getattr(module, test_func_name)
+                                try:
+                                    test_func()
+                                    inline_tests.append(TestResult(test_func_name, True, captured_output.getvalue()))
+                                except Exception as e:
+                                    inline_tests.append(TestResult(test_func_name, False, captured_output.getvalue(), str(e)))
+                            else:
+                                inline_tests.append(TestResult(test_func_name, False, "", f"Function {test_func_name} not found"))
+                    
+                    except Exception as e:
+                        inline_tests.append(TestResult("module_execution", False, captured_output.getvalue(), str(e)))
+        
+        except Exception as e:
+            inline_tests.append(TestResult("module_import", False, "", str(e)))
+        
+        return inline_tests
+    
+    def _run_external_tests(self, module_name: str) -> List[TestResult]:
+        """Run external pytest tests for a module."""
+        external_tests = []
+        
+        # Extract short name from module directory name
+        if module_name.startswith(tuple(f"{i:02d}_" for i in range(100))):
+            short_name = module_name[3:]  # Remove "00_" prefix
+        else:
+            short_name = module_name
+        
+        test_file = Path("tests") / f"test_{short_name}.py"
+        
+        if not test_file.exists():
+            return external_tests
+        
+        try:
+            result = subprocess.run(
+                [sys.executable, "-m", "pytest", str(test_file), "-v", "--tb=short"],
+                capture_output=True, text=True, timeout=300
+            )
+            
+            # Parse pytest output to extract individual test results
+            test_results = self._parse_pytest_output(result.stdout, result.stderr)
+            
+            # If parsing fails, create a single result for the whole file
+            if not test_results:
+                success = result.returncode == 0
+                external_tests.append(TestResult(
+                    f"external_tests_{short_name}",
+                    success,
+                    result.stdout,
+                    result.stderr
+                ))
+            else:
+                external_tests.extend(test_results)
+                
+        except subprocess.TimeoutExpired:
+            external_tests.append(TestResult("external_tests_timeout", False, "", "Tests timed out after 5 minutes"))
+        except Exception as e:
+            external_tests.append(TestResult("external_tests_error", False, "", str(e)))
+        
+        return external_tests
+    
+    def _find_test_functions(self, dev_file: Path) -> List[str]:
+        """Find test functions in a Python file."""
+        test_functions = []
+        
+        try:
+            with open(dev_file, 'r', encoding='utf-8') as f:
+                content = f.read()
+                
+                # Find function definitions that look like test functions
+                # Look for functions that start with test_ or contain "test" in their name
+                function_pattern = r'^def\s+(test_\w+|.*test\w*)\s*\('
+                matches = re.findall(function_pattern, content, re.MULTILINE)
+                test_functions.extend(matches)
+                
+        except Exception as e:
+            # If we can't read the file, return empty list
+            pass
+        
+        return test_functions
+    
+    def _parse_pytest_output(self, stdout: str, stderr: str) -> List[TestResult]:
+        """Parse pytest output to extract individual test results."""
+        test_results = []
+        
+        # Simple parsing - look for test function results
+        lines = stdout.split('\n')
+        for line in lines:
+            # Look for lines like "test_file.py::test_function PASSED"
+            if '::' in line and ('PASSED' in line or 'FAILED' in line):
+                parts = line.split('::')
+                if len(parts) >= 2:
+                    test_name = parts[1].split()[0]
+                    success = 'PASSED' in line
+                    test_results.append(TestResult(test_name, success, line))
+        
+        return test_results
+    
+    def _discover_modules(self) -> List[str]:
+        """Discover available modules."""
+        modules = []
+        source_dir = Path("modules/source")
+        
+        if source_dir.exists():
             exclude_dirs = {'.quarto', '__pycache__', '.git', '.pytest_cache'}
             for module_dir in source_dir.iterdir():
                 if module_dir.is_dir() and module_dir.name not in exclude_dirs:
-                    # Extract the short name from the module directory name
-                    module_name = module_dir.name
-                    if module_name.startswith(tuple(f"{i:02d}_" for i in range(100))):
-                        short_name = module_name[3:]  # Remove "00_" prefix
-                    else:
-                        short_name = module_name
-                    
-                    # Check for centralized test file
-                    centralized_test = Path("tests") / f"test_{short_name}.py"
-                    if centralized_test.exists():
-                        existing_tests.append(module_dir.name)
-            
-            if not existing_tests:
-                console.print(Panel("[yellow]⚠️  No test files found in tests/ directory[/yellow]", 
-                                  title="No Tests", border_style="yellow"))
-                return 0
-            
-            console.print(Panel(f"🧪 Running tests for {len(existing_tests)} modules", 
-                              title="Test Suite", border_style="bright_cyan"))
-            
-            with Progress(
-                SpinnerColumn(),
-                TextColumn("[progress.description]{task.description}"),
-                BarColumn(),
-                TextColumn("[progress.percentage]{task.percentage:>3.0f}%"),
-                console=console
-            ) as progress:
-                
-                task = progress.add_task("Running tests...", total=len(existing_tests))
-                
-                for module in existing_tests:
-                    progress.update(task, description=f"Testing {module}...")
-                    
-                    # Extract the short name from the module directory name
-                    if module.startswith(tuple(f"{i:02d}_" for i in range(100))):
-                        short_name = module[3:]  # Remove "00_" prefix
-                    else:
-                        short_name = module
-                    
-                    test_file = f"tests/test_{short_name}.py"
-                    try:
-                        result = subprocess.run([sys.executable, "-m", "pytest", test_file, "-v"], 
-                                              capture_output=True, text=True, timeout=300)
-                        
-                        if result.returncode != 0:
-                            failed_modules.append(module)
-                            console.print(f"[red]❌ {module} tests failed[/red]")
-                        else:
-                            console.print(f"[green]✅ {module} tests passed[/green]")
-                    except subprocess.TimeoutExpired:
-                        failed_modules.append(module)
-                        console.print(f"[red]❌ {module} tests timed out (5 minutes)[/red]")
-                    except Exception as e:
-                        failed_modules.append(module)
-                        console.print(f"[red]❌ {module} tests failed with error: {e}[/red]")
-                    
-                    progress.advance(task)
-            
-            # Results summary
-            if failed_modules:
-                console.print(Panel(f"[red]❌ Failed modules: {', '.join(failed_modules)}[/red]", 
-                                  title="Test Results", border_style="red"))
-                return 1
-            else:
-                console.print(Panel("[green]✅ All tests passed![/green]", 
-                                  title="Test Results", border_style="green"))
-                return 0
+                    # Check if dev file exists
+                    dev_file = self._get_dev_file_path(module_dir.name)
+                    if dev_file.exists():
+                        modules.append(module_dir.name)
         
-        elif args.module:
-            # Run specific module tests with detailed output
-            # Extract the short name from the module directory name
-            module_name = args.module
-            if module_name.startswith(tuple(f"{i:02d}_" for i in range(100))):
-                short_name = module_name[3:]  # Remove "00_" prefix
-            else:
-                short_name = module_name
-            
-            test_file = f"tests/test_{short_name}.py"
-            
-            console.print(Panel(f"🧪 Running tests for module: [bold cyan]{args.module}[/bold cyan]", 
-                              title="Single Module Test", border_style="bright_cyan"))
-            
-            if not Path(test_file).exists():
-                console.print(Panel(f"[yellow]⏳ Test file not found: {test_file}\n"
-                                  f"Module '{args.module}' may not be implemented yet.[/yellow]", 
-                                  title="Test Not Found", border_style="yellow"))
-                return 1
-            
-            console.print(f"Running: pytest {test_file} -v")
-            console.print()
-            
-            try:
-                result = subprocess.run([sys.executable, "-m", "pytest", test_file, "-v"], 
-                                      capture_output=True, text=True, timeout=300)
-                
-                # Print test output with syntax highlighting
-                if result.stdout:
-                    console.print("[dim]--- Test Output ---[/dim]")
-                    console.print(result.stdout)
-                if result.stderr:
-                    console.print("[dim]--- Error Output ---[/dim]")
-                    console.print(result.stderr)
-                
-                if result.returncode == 0:
-                    console.print(Panel("[green]✅ All tests passed for {}![/green]".format(args.module), 
-                                      title="Test Results", border_style="green"))
-                else:
-                    console.print(Panel("[red]❌ Some tests failed for {}[/red]".format(args.module), 
-                                      title="Test Results", border_style="red"))
-                
-                return result.returncode
-            except subprocess.TimeoutExpired:
-                console.print(Panel("[red]❌ Tests timed out after 5 minutes for {}[/red]".format(args.module), 
-                                  title="Test Results", border_style="red"))
-                return 1
-            except Exception as e:
-                console.print(Panel("[red]❌ Test execution failed: {}[/red]".format(str(e)), 
-                                  title="Test Results", border_style="red"))
-                return 1
-        
+        return sorted(modules)
+    
+    def _get_dev_file_path(self, module_name: str) -> Path:
+        """Get the path to a module's dev file."""
+        # Extract short name from module directory name
+        if module_name.startswith(tuple(f"{i:02d}_" for i in range(100))):
+            short_name = module_name[3:]  # Remove "00_" prefix
         else:
-            # List available modules
-            source_dir = Path("modules/source")
-            if source_dir.exists():
-                available_modules = []
-                for module_dir in source_dir.iterdir():
-                    if module_dir.is_dir():
-                        # Extract the short name from the module directory name
-                        module_name = module_dir.name
-                        if module_name.startswith(tuple(f"{i:02d}_" for i in range(100))):
-                            short_name = module_name[3:]  # Remove "00_" prefix
-                        else:
-                            short_name = module_name
-                        
-                        dev_file = module_dir / f"{short_name}_dev.py"
-                        if dev_file.exists():
-                            available_modules.append(module_dir.name)
+            short_name = module_name
+        
+        return Path("modules/source") / module_name / f"{short_name}_dev.py"
+    
+    def _generate_summary_report(self, results: List[ModuleTestResult]) -> None:
+        """Generate a summary report for all modules."""
+        console = self.console
+        
+        # Summary table
+        table = Table(title="Test Summary Report", show_header=True, header_style="bold blue")
+        table.add_column("Module", style="bold cyan", width=15)
+        table.add_column("Status", width=10, justify="center")
+        table.add_column("Inline Tests", width=12, justify="center")
+        table.add_column("External Tests", width=12, justify="center")
+        table.add_column("Total", width=10, justify="center")
+        
+        total_modules = len(results)
+        passed_modules = 0
+        total_tests = 0
+        total_passed = 0
+        
+        for result in results:
+            status = "✅ PASS" if result.all_tests_passed else "❌ FAIL"
+            if result.all_tests_passed:
+                passed_modules += 1
+            
+            inline_status = f"{len([t for t in result.inline_tests if t.success])}/{len(result.inline_tests)}"
+            external_status = f"{len([t for t in result.external_tests if t.success])}/{len(result.external_tests)}"
+            
+            total_tests += result.total_tests
+            total_passed += result.passed_tests
+            
+            table.add_row(
+                result.module_name,
+                status,
+                inline_status,
+                external_status,
+                f"{result.passed_tests}/{result.total_tests}"
+            )
+        
+        console.print(table)
+        
+        # Overall summary
+        console.print(f"\n📊 Overall Summary:")
+        console.print(f"   Modules: {passed_modules}/{total_modules} passed")
+        console.print(f"   Tests: {total_passed}/{total_tests} passed")
+        console.print(f"   Success Rate: {(total_passed/total_tests*100):.1f}%" if total_tests > 0 else "   No tests found")
+    
+    def _generate_detailed_report(self, results: List[ModuleTestResult]) -> None:
+        """Generate a detailed report for all modules."""
+        console = self.console
+        
+        console.print(Panel("📋 Detailed Test Report", title="Test Results", border_style="bright_cyan"))
+        
+        for result in results:
+            self._show_detailed_module_result(result)
+    
+    def _generate_default_report(self, results: List[ModuleTestResult]) -> None:
+        """Generate the default report (between summary and detailed)."""
+        console = self.console
+        
+        failed_modules = [r for r in results if not r.all_tests_passed]
+        
+        if failed_modules:
+            console.print(Panel(f"[red]❌ {len(failed_modules)} modules failed[/red]", 
+                              title="Failed Modules", border_style="red"))
+            
+            for result in failed_modules:
+                console.print(f"\n[red]❌ {result.module_name}[/red]:")
                 
-                console.print(Panel(f"[red]❌ Please specify a module to test[/red]\n\n"
-                                  f"Available modules: {', '.join(sorted(available_modules))}\n\n"
-                                  f"[dim]Example: tito module test tensor[/dim]\n"
-                                  f"[dim]For all modules: tito module test --all[/dim]", 
-                                  title="Module Required", border_style="red"))
-            else:
-                console.print(Panel("[red]❌ No modules/source directory found[/red]", 
-                                  title="Error", border_style="red"))
-            return 1 
+                if not result.compilation_success:
+                    console.print(f"   [red]Compilation Error: {result.compilation_error}[/red]")
+                
+                failed_inline = [t for t in result.inline_tests if not t.success]
+                failed_external = [t for t in result.external_tests if not t.success]
+                
+                if failed_inline:
+                    console.print(f"   [red]Failed inline tests: {', '.join(t.name for t in failed_inline)}[/red]")
+                
+                if failed_external:
+                    console.print(f"   [red]Failed external tests: {', '.join(t.name for t in failed_external)}[/red]")
+        else:
+            console.print(Panel("[green]✅ All modules passed![/green]", 
+                              title="Test Results", border_style="green"))
+    
+    def _show_detailed_module_result(self, result: ModuleTestResult) -> None:
+        """Show detailed results for a single module."""
+        console = self.console
+        
+        status_color = "green" if result.all_tests_passed else "red"
+        status_icon = "✅" if result.all_tests_passed else "❌"
+        
+        console.print(f"\n[{status_color}]{status_icon} {result.module_name}[/{status_color}]")
+        
+        if not result.compilation_success:
+            console.print(f"   [red]❌ Compilation failed: {result.compilation_error}[/red]")
+            return
+        
+        # Show inline test results
+        if result.inline_tests:
+            console.print("   📝 Inline Tests:")
+            for test in result.inline_tests:
+                icon = "✅" if test.success else "❌"
+                color = "green" if test.success else "red"
+                console.print(f"      [{color}]{icon} {test.name}[/{color}]")
+                if not test.success and test.error:
+                    console.print(f"         Error: {test.error}")
+        
+        # Show external test results
+        if result.external_tests:
+            console.print("   🧪 External Tests:")
+            for test in result.external_tests:
+                icon = "✅" if test.success else "❌"
+                color = "green" if test.success else "red"
+                console.print(f"      [{color}]{icon} {test.name}[/{color}]")
+                if not test.success and test.error:
+                    console.print(f"         Error: {test.error}")
+        
+        # Summary for this module
+        console.print(f"   📊 Summary: {result.passed_tests}/{result.total_tests} tests passed")
+    
+    def _show_available_modules(self) -> int:
+        """Show available modules when no arguments are provided."""
+        console = self.console
+        
+        modules = self._discover_modules()
+        
+        if modules:
+            console.print(Panel(f"[red]❌ Please specify a module to test[/red]\n\n"
+                              f"Available modules: {', '.join(modules)}\n\n"
+                              f"[dim]Examples:[/dim]\n"
+                              f"[dim]  tito module test tensor       - Test specific module[/dim]\n"
+                              f"[dim]  tito module test --all        - Test all modules[/dim]\n"
+                              f"[dim]  tito module test --all --summary - Summary report[/dim]", 
+                              title="Module Required", border_style="red"))
+        else:
+            console.print(Panel("[red]❌ No modules found in modules/source directory[/red]", 
+                              title="Error", border_style="red"))
+        
+        return 1 
