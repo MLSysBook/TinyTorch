@@ -52,9 +52,9 @@ class StatusCommand(BaseCommand):
         console = self.console
         
         # Scan modules directory
-        modules_dir = Path("modules")
+        modules_dir = Path("modules/source")
         if not modules_dir.exists():
-            console.print(Panel("[red]❌ modules/ directory not found[/red]", 
+            console.print(Panel("[red]❌ modules/source/ directory not found[/red]", 
                               title="Error", border_style="red"))
             return 1
         
@@ -150,14 +150,21 @@ class StatusCommand(BaseCommand):
         
         # Check for required files
         dev_file = module_dir / f"{module_name}_dev.py"
-        tests_dir = module_dir / "tests"
-        test_file = tests_dir / f"test_{module_name}.py"
         readme_file = module_dir / "README.md"
         metadata_file = module_dir / "module.yaml"
         
+        # Check for tests in main tests directory
+        # Extract short name from module directory name (e.g., "01_tensor" -> "tensor")
+        if module_name.startswith(tuple(f"{i:02d}_" for i in range(100))):
+            short_name = module_name[3:]  # Remove "00_" prefix
+        else:
+            short_name = module_name
+        
+        main_test_file = Path("tests") / f"test_{short_name}.py"
+        
         status = {
             'dev_file': dev_file.exists(),
-            'tests': test_file.exists(),
+            'tests': main_test_file.exists(),
             'readme': readme_file.exists(),
             'metadata_file': metadata_file.exists(),
         }
@@ -187,7 +194,13 @@ class StatusCommand(BaseCommand):
             return 'in_progress'
         
         # If tests exist, run them to determine status
-        test_file = f"modules/{module_name}/tests/test_{module_name}.py"
+        # Extract short name from module directory name (e.g., "01_tensor" -> "tensor")
+        if module_name.startswith(tuple(f"{i:02d}_" for i in range(100))):
+            short_name = module_name[3:]  # Remove "00_" prefix
+        else:
+            short_name = module_name
+        
+        test_file = f"tests/test_{short_name}.py"
         try:
             # Run pytest quietly to check if tests pass
             result = subprocess.run(
