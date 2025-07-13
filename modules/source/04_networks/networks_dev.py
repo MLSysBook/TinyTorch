@@ -267,7 +267,7 @@ Let's test your Sequential network implementation! This is the foundation of all
 
 # %% nbgrader={"grade": true, "grade_id": "test-sequential-immediate", "locked": true, "points": 10, "schema_version": 3, "solution": false, "task": false}
 # Test Sequential network immediately after implementation
-print("🔬 Testing Sequential network...")
+print("🔬 Unit Test: Sequential Network...")
 
 # Create a simple 2-layer network: 3 → 4 → 2
 try:
@@ -413,7 +413,7 @@ Let's test your MLP creation function! This builds complete neural networks with
 
 # %% nbgrader={"grade": true, "grade_id": "test-mlp-immediate", "locked": true, "points": 10, "schema_version": 3, "solution": false, "task": false}
 # Test MLP creation immediately after implementation
-print("🔬 Testing MLP creation...")
+print("🔬 Unit Test: MLP Creation...")
 
 # Create a simple MLP: 3 → 4 → 2 → 1
 try:

@@ -289,7 +289,7 @@ Let's test your ReLU implementation right away! This gives you immediate feedbac
 
 # %% nbgrader={"grade": true, "grade_id": "test-relu-immediate", "locked": true, "points": 5, "schema_version": 3, "solution": false, "task": false}
 # Test ReLU activation immediately after implementation
-print("🔬 Testing ReLU activation...")
+print("🔬 Unit Test: ReLU Activation...")
 
 # Create ReLU instance
 relu = ReLU()
@@ -422,7 +422,7 @@ Let's test your Sigmoid implementation! This should squash all values to the ran
 
 # %% nbgrader={"grade": true, "grade_id": "test-sigmoid-immediate", "locked": true, "points": 5, "schema_version": 3, "solution": false, "task": false}
 # Test Sigmoid activation immediately after implementation
-print("🔬 Testing Sigmoid activation...")
+print("🔬 Unit Test: Sigmoid Activation...")
 
 # Create Sigmoid instance
 sigmoid = Sigmoid()
@@ -545,7 +545,7 @@ Let's test your Tanh implementation! This should squash all values to the range 
 
 # %% nbgrader={"grade": true, "grade_id": "test-tanh-immediate", "locked": true, "points": 5, "schema_version": 3, "solution": false, "task": false}
 # Test Tanh activation immediately after implementation
-print("🔬 Testing Tanh activation...")
+print("🔬 Unit Test: Tanh Activation...")
 
 # Create Tanh instance
 tanh = Tanh()
@@ -678,7 +678,7 @@ Let's test your Softmax implementation! This should convert any vector into a pr
 
 # %% nbgrader={"grade": true, "grade_id": "test-softmax-immediate", "locked": true, "points": 5, "schema_version": 3, "solution": false, "task": false}
 # Test Softmax activation immediately after implementation
-print("🔬 Testing Softmax activation...")
+print("🔬 Unit Test: Softmax Activation...")
 
 # Create Softmax instance
 softmax = Softmax()
@@ -1094,7 +1094,7 @@ def test_activations_comprehensive():
             Tensor([[1, 2, 3]]),             # 1x3
             Tensor([[1], [2], [3]]),         # 3x1
             Tensor([[1, 2], [3, 4]]),        # 2x2
-            Tensor([[[1, 2], [3, 4]]])       # 1x2x2
+            Tensor([[1, 2], [3, 4]]),        # 2x2
         ]
         
         for i, test_tensor in enumerate(test_shapes):

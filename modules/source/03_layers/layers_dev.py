@@ -246,7 +246,7 @@ Let's test your matrix multiplication implementation right away! This is the fou
 
 # %% nbgrader={"grade": true, "grade_id": "test-matmul-immediate", "locked": true, "points": 10, "schema_version": 3, "solution": false, "task": false}
 # Test matrix multiplication immediately after implementation
-print("🔬 Testing matrix multiplication...")
+print("🔬 Unit Test: Matrix Multiplication...")
 
 # Test simple 2x2 case
 try:
@@ -445,7 +445,7 @@ Let's test your Dense layer implementation! This is the fundamental building blo
 
 # %% nbgrader={"grade": true, "grade_id": "test-dense-immediate", "locked": true, "points": 10, "schema_version": 3, "solution": false, "task": false}
 # Test Dense layer immediately after implementation
-print("🔬 Testing Dense layer...")
+print("🔬 Unit Test: Dense Layer...")
 
 # Test basic Dense layer
 try:
