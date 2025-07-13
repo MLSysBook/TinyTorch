@@ -1,7 +1,3 @@
----
-description: User preferences and development conventions for TinyTorch, including module naming patterns, commit frequency, testing standards, and NBDev integration workflow.
-alwaysApply: false
----
 
 
 # User Preferences and Conventions
@@ -13,6 +9,7 @@ alwaysApply: false
 - **README focus**: Keep main project README focused on overarching goals, not module details
 - **Component terminology**: Call code components 'modules' instead of 'parts'
 - **Testing framework**: Always use pytest for all tests - no manual testing or other frameworks
+- **Brand formatting**: In headers and titles, use "Tiny🔥Torch" (with flame emoji after "Tiny"), not "🔥TinyTorch". In regular text, "TinyTorch" is acceptable
 
 ## Educational Workflow
 
@@ -38,11 +35,8 @@ alwaysApply: false
 - **pytest only**: All tests must use pytest framework with proper test classes
 - **Comprehensive coverage**: Tests should cover functionality, edge cases, and integration
 - **Professional structure**: Use test classes, fixtures, and descriptive test names
-- **CLI integration**: Tests must be compatible with `python bin/tito.py test --module {name}`
-
-These preferences ensure consistency across the TinyTorch educational framework and smooth development workflow.
- 
-- **Package structure**: Code exports from `modules/` to `tinytorch/` package
+- **CLI integration**: Tests must be compatible with `tito module test --module {name}` (requires virtual environment activation)
+- **Environment setup**: Always activate virtual environment with `source bin/activate-tinytorch.sh` before running commands
 
 These preferences ensure consistency across the TinyTorch educational framework and smooth development workflow.
  
