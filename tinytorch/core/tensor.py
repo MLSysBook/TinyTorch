@@ -79,7 +79,7 @@ class Tensor:
             # Try to convert unknown types
             self._data = np.array(data, dtype=dtype)
         ### END SOLUTION
-    
+
     @property
     def data(self) -> np.ndarray:
         """
@@ -157,7 +157,7 @@ class Tensor:
         ### BEGIN SOLUTION
         return f"Tensor({self._data.tolist()}, shape={self.shape}, dtype={self.dtype})"
         ### END SOLUTION
-    
+
     def add(self, other: 'Tensor') -> 'Tensor':
         """
         Add two tensors element-wise.

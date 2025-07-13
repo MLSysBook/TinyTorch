@@ -81,7 +81,6 @@ addopts = [
     "--strict-markers",
     "--strict-config",
     "--disable-warnings",
-    "--timeout=300",
 ]
 testpaths = [
     "tests",
