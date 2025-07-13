@@ -209,8 +209,10 @@ class Dataset:
         - Always return a tuple of (data, label) tensors
         - Data contains the input features, label contains the target
         """
+        ### BEGIN SOLUTION
         # This is an abstract method - subclasses must implement it
         raise NotImplementedError("Subclasses must implement __getitem__")
+        ### END SOLUTION
     
     def __len__(self) -> int:
         """
@@ -229,8 +231,10 @@ class Dataset:
         - This is an abstract method that subclasses must override
         - Return an integer representing the total number of samples
         """
+        ### BEGIN SOLUTION
         # This is an abstract method - subclasses must implement it
         raise NotImplementedError("Subclasses must implement __len__")
+        ### END SOLUTION
     
     def get_sample_shape(self) -> Tuple[int, ...]:
         """
@@ -251,9 +255,11 @@ class Dataset:
         - Extract data from the (data, label) tuple
         - Return data.shape
         """
+        ### BEGIN SOLUTION
         # Get the first sample to determine shape
         data, _ = self[0]
         return data.shape
+        ### END SOLUTION
     
     def get_num_classes(self) -> int:
         """

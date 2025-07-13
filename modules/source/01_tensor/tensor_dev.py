@@ -317,7 +317,9 @@ print(t.dtype)  # int32 - data type
         - Users can access the numpy array directly via this property
         - This is how PyTorch's .data property works
         """
+        ### BEGIN SOLUTION
         return self._data
+        ### END SOLUTION
 
     @property
     def shape(self) -> Tuple[int, ...]:
@@ -346,7 +348,9 @@ print(t.dtype)  # int32 - data type
         - Shape is a tuple of integers
         - Essential for checking tensor compatibility
         """
+        ### BEGIN SOLUTION
         return self._data.shape
+        ### END SOLUTION
 
     @property
     def size(self) -> int:
@@ -375,7 +379,9 @@ print(t.dtype)  # int32 - data type
         - Size is the product of all dimensions
         - Important for memory calculations
         """
+        ### BEGIN SOLUTION
         return self._data.size
+        ### END SOLUTION
 
     @property
     def dtype(self) -> np.dtype:
@@ -405,7 +411,9 @@ print(t.dtype)  # int32 - data type
         - Important for precision and memory usage
         - Affects computation speed and accuracy
         """
+        ### BEGIN SOLUTION
         return self._data.dtype
+        ### END SOLUTION
 
     def __repr__(self) -> str:
         """
