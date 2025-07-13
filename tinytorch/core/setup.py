@@ -3,27 +3,32 @@
 # %% auto 0
 __all__ = ['personal_info', 'system_info']
 
-# Add missing imports
+# %% ../../modules/source/00_setup/setup_dev.ipynb 1
 import sys
 import platform
 import psutil
+import os
 from typing import Dict, Any
 
-# %% ../../modules/source/00_setup/setup_dev.ipynb 4
+# %% ../../modules/source/00_setup/setup_dev.ipynb 6
 def personal_info() -> Dict[str, str]:
     """
     Return personal information for this TinyTorch installation.
     
+    This function configures your personal TinyTorch installation with your identity.
+    It's the foundation of proper ML engineering practices - every system needs
+    to know who built it and how to contact them.
+    
     TODO: Implement personal information configuration.
     
-    STEP-BY-STEP:
+    STEP-BY-STEP IMPLEMENTATION:
     1. Create a dictionary with your personal details
-    2. Include: developer (your name), email, institution, system_name, version
+    2. Include all required keys: developer, email, institution, system_name, version
     3. Use your actual information (not placeholder text)
     4. Make system_name unique and descriptive
     5. Keep version as '1.0.0' for now
     
-    EXAMPLE:
+    EXAMPLE OUTPUT:
     {
         'developer': 'Vijay Janapa Reddi',
         'email': 'vj@eecs.harvard.edu', 
@@ -32,11 +37,18 @@ def personal_info() -> Dict[str, str]:
         'version': '1.0.0'
     }
     
-    HINTS:
+    IMPLEMENTATION HINTS:
     - Replace the example with your real information
     - Use a descriptive system_name (e.g., 'YourName-TinyTorch-Dev')
     - Keep email format valid (contains @ and domain)
     - Make sure all values are strings
+    - Consider how this info will be used in debugging and collaboration
+    
+    LEARNING CONNECTIONS:
+    - This is like the 'author' field in Git commits
+    - Similar to maintainer info in Docker images
+    - Parallels author info in Python packages
+    - Foundation for professional ML development
     """
     ### BEGIN SOLUTION
     return {
@@ -48,14 +60,18 @@ def personal_info() -> Dict[str, str]:
     }
     ### END SOLUTION
 
-# %% ../../modules/source/00_setup/setup_dev.ipynb 6
+# %% ../../modules/source/00_setup/setup_dev.ipynb 8
 def system_info() -> Dict[str, Any]:
     """
     Query and return system information for this TinyTorch installation.
     
+    This function gathers crucial hardware and software information that affects
+    ML performance, compatibility, and debugging. It's the foundation of 
+    hardware-aware ML systems.
+    
     TODO: Implement system information queries.
     
-    STEP-BY-STEP:
+    STEP-BY-STEP IMPLEMENTATION:
     1. Get Python version using sys.version_info
     2. Get platform using platform.system()
     3. Get architecture using platform.machine()
@@ -73,11 +89,23 @@ def system_info() -> Dict[str, Any]:
         'memory_gb': 16.0
     }
     
-    HINTS:
+    IMPLEMENTATION HINTS:
     - Use f-string formatting for Python version: f"{major}.{minor}.{micro}"
     - Memory conversion: bytes / (1024^3) = GB
     - Round memory to 1 decimal place for readability
     - Make sure data types are correct (strings for text, int for cpu_count, float for memory_gb)
+    
+    LEARNING CONNECTIONS:
+    - This is like `torch.cuda.is_available()` in PyTorch
+    - Similar to system info in MLflow experiment tracking
+    - Parallels hardware detection in TensorFlow
+    - Foundation for performance optimization in ML systems
+    
+    PERFORMANCE IMPLICATIONS:
+    - cpu_count affects parallel processing capabilities
+    - memory_gb determines maximum model and batch sizes
+    - platform affects file system and process management
+    - architecture influences numerical precision and optimization
     """
     ### BEGIN SOLUTION
     # Get Python version

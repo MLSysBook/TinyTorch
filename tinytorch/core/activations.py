@@ -82,7 +82,7 @@ def visualize_activation_on_data(activation_fn, name: str, data: Tensor):
     except Exception as e:
         print(f"   ⚠️  Data visualization error: {e}")
 
-# %% ../../modules/source/02_activations/activations_dev.ipynb 6
+# %% ../../modules/source/02_activations/activations_dev.ipynb 8
 class ReLU:
     """
     ReLU Activation Function: f(x) = max(0, x)
@@ -119,7 +119,7 @@ class ReLU:
         """Make the class callable: relu(x) instead of relu.forward(x)"""
         return self.forward(x)
 
-# %% ../../modules/source/02_activations/activations_dev.ipynb 8
+# %% ../../modules/source/02_activations/activations_dev.ipynb 12
 class Sigmoid:
     """
     Sigmoid Activation Function: f(x) = 1 / (1 + e^(-x))
@@ -159,7 +159,7 @@ class Sigmoid:
         """Make the class callable: sigmoid(x) instead of sigmoid.forward(x)"""
         return self.forward(x)
 
-# %% ../../modules/source/02_activations/activations_dev.ipynb 10
+# %% ../../modules/source/02_activations/activations_dev.ipynb 16
 class Tanh:
     """
     Tanh Activation Function: f(x) = tanh(x)
@@ -197,7 +197,7 @@ class Tanh:
         """Make the class callable: tanh(x) instead of tanh.forward(x)"""
         return self.forward(x)
 
-# %% ../../modules/source/02_activations/activations_dev.ipynb 12
+# %% ../../modules/source/02_activations/activations_dev.ipynb 20
 class Softmax:
     """
     Softmax Activation Function: f(x_i) = e^(x_i) / Σ(e^(x_j))
