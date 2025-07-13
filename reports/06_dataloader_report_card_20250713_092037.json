@@ -1,0 +1,376 @@
+{
+  "module_name": "06_dataloader",
+  "module_path": "modules/source/06_dataloader",
+  "analysis_date": "2025-07-13T09:20:37.746666",
+  "total_lines": 1368,
+  "total_cells": 12,
+  "avg_cell_length": 88.5,
+  "scaffolding_quality": 3,
+  "complexity_distribution": {
+    "1": 2,
+    "2": 1,
+    "3": 9,
+    "4": 0,
+    "5": 0
+  },
+  "learning_progression_quality": 4,
+  "concepts_covered": [
+    "Performance Considerations",
+    "Why DataLoaders Matter",
+    "Production reality",
+    "Returns",
+    "DataLoader",
+    "size",
+    "What is a DataLoader?",
+    "interface",
+    "Check that shapes are correct",
+    "Verify we processed all data",
+    "DataLoader pattern",
+    "Memory efficiency",
+    "What You've Accomplished",
+    "Visual Intuition",
+    "Create a minimal test dataset",
+    "Test sample retrieval",
+    "class",
+    "Integration:",
+    "Run the comprehensive test suite",
+    "Verify we processed all samples",
+    "Computer vision",
+    "Image datasets",
+    "Test with shuffling",
+    "Parallel processing",
+    "Data is the fuel",
+    "\ud83e\uddea Quick Test: DataLoader",
+    "Production:",
+    "EXAMPLE",
+    "__getitem__",
+    "6",
+    "\ud83e\uddea Quick Test: Dataset Base Class",
+    "Use",
+    "2",
+    "Test DataLoader immediately after implementation",
+    "Progress",
+    "Build",
+    "Learning Side:",
+    "Final package structure:",
+    "num_classes",
+    "__len__",
+    "scenarios",
+    "Why We Need Concrete Examples",
+    "Show the dataset pattern",
+    "integration",
+    "Build real datasets",
+    "Building Side:",
+    "Understand",
+    "Build \u2192 Use \u2192 Understand",
+    "Use the test dataset from before",
+    "Show the DataLoader behavior"
+  ],
+  "todo_count": 4,
+  "hint_count": 3,
+  "test_count": 1,
+  "critical_issues": [
+    "Module too long (1368 lines) - students will be overwhelmed",
+    "8 cells are too long (>50 lines)"
+  ],
+  "overwhelm_points": [
+    "Cell 1: Too many concepts (5)",
+    "Cell 2: Very long cell (53 lines)",
+    "Cell 3: Too many concepts (5)",
+    "Cell 4: Too many concepts (5)",
+    "Cell 5: Very long cell (113 lines)",
+    "Cell 5: Multiple functions in one cell (4)",
+    "Cell 5: Complex implementation without error handling guidance",
+    "Cell 6: Very long cell (53 lines)",
+    "Cell 6: Multiple functions in one cell (4)",
+    "Cell 7: Very long cell (121 lines)",
+    "Cell 7: Multiple functions in one cell (3)",
+    "Cell 7: Complex implementation without error handling guidance",
+    "Cell 8: Very long cell (75 lines)",
+    "Cell 8: Multiple functions in one cell (4)",
+    "Cell 9: Very long cell (93 lines)",
+    "Cell 9: Multiple functions in one cell (4)",
+    "Cell 9: Complex implementation without error handling guidance",
+    "Cell 10: Very long cell (363 lines)",
+    "Cell 10: Too many concepts (5)",
+    "Cell 10: Multiple functions in one cell (5)",
+    "Cell 11: Very long cell (89 lines)",
+    "Cell 11: Too many concepts (5)",
+    "Cell 12: Long cell (49 lines)",
+    "Cell 12: Too many concepts (5)"
+  ],
+  "recommendations": [
+    "Break module into smaller sections or multiple modules",
+    "Split 9 long cells into smaller, focused cells",
+    "Add immediate feedback tests after implementations"
+  ],
+  "cell_analyses": [
+    {
+      "cell_type": "code",
+      "line_count": 9,
+      "char_count": 180,
+      "complexity_score": 1,
+      "educational_type": "demonstration",
+      "has_todo": false,
+      "has_hints": false,
+      "concepts_introduced": [],
+      "overwhelm_factors": [
+        "Too many concepts (5)"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "line_count": 53,
+      "char_count": 2463,
+      "complexity_score": 3,
+      "educational_type": "explanation",
+      "has_todo": false,
+      "has_hints": false,
+      "concepts_introduced": [
+        "Use",
+        "6",
+        "Build",
+        "Understand",
+        "Build \u2192 Use \u2192 Understand"
+      ],
+      "overwhelm_factors": [
+        "Very long cell (53 lines)"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "line_count": 16,
+      "char_count": 762,
+      "complexity_score": 1,
+      "educational_type": "concept_introduction",
+      "has_todo": false,
+      "has_hints": false,
+      "concepts_introduced": [
+        "Final package structure:",
+        "Production:",
+        "Integration:",
+        "Building Side:",
+        "Learning Side:"
+      ],
+      "overwhelm_factors": [
+        "Too many concepts (5)"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "line_count": 28,
+      "char_count": 1425,
+      "complexity_score": 2,
+      "educational_type": "practical_connection",
+      "has_todo": false,
+      "has_hints": false,
+      "concepts_introduced": [
+        "Performance Considerations",
+        "Production reality",
+        "Memory efficiency",
+        "Parallel processing",
+        "Data is the fuel"
+      ],
+      "overwhelm_factors": [
+        "Too many concepts (5)"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "line_count": 113,
+      "char_count": 4973,
+      "complexity_score": 3,
+      "educational_type": "concept_introduction",
+      "has_todo": true,
+      "has_hints": true,
+      "concepts_introduced": [
+        "Returns",
+        "Memory efficiency",
+        "Visual Intuition",
+        "class",
+        "Image datasets"
+      ],
+      "overwhelm_factors": [
+        "Very long cell (113 lines)",
+        "Multiple functions in one cell (4)",
+        "Complex implementation without error handling guidance"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "line_count": 53,
+      "char_count": 2404,
+      "complexity_score": 3,
+      "educational_type": "explanation",
+      "has_todo": false,
+      "has_hints": false,
+      "concepts_introduced": [
+        "\ud83e\uddea Quick Test: Dataset Base Class",
+        "__len__",
+        "Show the dataset pattern",
+        "__getitem__",
+        "Create a minimal test dataset"
+      ],
+      "overwhelm_factors": [
+        "Very long cell (53 lines)",
+        "Multiple functions in one cell (4)"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "line_count": 121,
+      "char_count": 5258,
+      "complexity_score": 3,
+      "educational_type": "concept_introduction",
+      "has_todo": true,
+      "has_hints": true,
+      "concepts_introduced": [
+        "Why DataLoaders Matter",
+        "DataLoader",
+        "Returns",
+        "What is a DataLoader?",
+        "Memory efficiency"
+      ],
+      "overwhelm_factors": [
+        "Very long cell (121 lines)",
+        "Multiple functions in one cell (3)",
+        "Complex implementation without error handling guidance"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "line_count": 75,
+      "char_count": 3725,
+      "complexity_score": 3,
+      "educational_type": "explanation",
+      "has_todo": false,
+      "has_hints": false,
+      "concepts_introduced": [
+        "\ud83e\uddea Quick Test: DataLoader",
+        "Show the DataLoader behavior",
+        "Test DataLoader immediately after implementation",
+        "Progress",
+        "Use the test dataset from before"
+      ],
+      "overwhelm_factors": [
+        "Very long cell (75 lines)",
+        "Multiple functions in one cell (4)"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "line_count": 93,
+      "char_count": 3756,
+      "complexity_score": 3,
+      "educational_type": "concept_introduction",
+      "has_todo": true,
+      "has_hints": true,
+      "concepts_introduced": [
+        "EXAMPLE",
+        "num_classes",
+        "Returns",
+        "size",
+        "Why We Need Concrete Examples"
+      ],
+      "overwhelm_factors": [
+        "Very long cell (93 lines)",
+        "Multiple functions in one cell (4)",
+        "Complex implementation without error handling guidance"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "line_count": 363,
+      "char_count": 20128,
+      "complexity_score": 3,
+      "educational_type": "concept_reinforcement",
+      "has_todo": true,
+      "has_hints": false,
+      "concepts_introduced": [
+        "interface",
+        "scenarios",
+        "integration",
+        "2",
+        "Run the comprehensive test suite"
+      ],
+      "overwhelm_factors": [
+        "Very long cell (363 lines)",
+        "Too many concepts (5)",
+        "Multiple functions in one cell (5)"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "line_count": 89,
+      "char_count": 4928,
+      "complexity_score": 3,
+      "educational_type": "explanation",
+      "has_todo": false,
+      "has_hints": false,
+      "concepts_introduced": [
+        "Check that shapes are correct",
+        "Verify we processed all data",
+        "Test sample retrieval",
+        "Verify we processed all samples",
+        "Test with shuffling"
+      ],
+      "overwhelm_factors": [
+        "Very long cell (89 lines)",
+        "Too many concepts (5)"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "line_count": 49,
+      "char_count": 2900,
+      "complexity_score": 3,
+      "educational_type": "concept_introduction",
+      "has_todo": false,
+      "has_hints": false,
+      "concepts_introduced": [
+        "DataLoader pattern",
+        "Build real datasets",
+        "What You've Accomplished",
+        "Memory efficiency",
+        "Computer vision"
+      ],
+      "overwhelm_factors": [
+        "Long cell (49 lines)",
+        "Too many concepts (5)"
+      ]
+    }
+  ],
+  "overall_grade": "C",
+  "category_grades": {
+    "Scaffolding": "C",
+    "Complexity": "A",
+    "Cell_Length": "F"
+  },
+  "vs_targets": {
+    "Length": "\u274c Too long (1368 lines, target: 200-400)",
+    "Cell_Length": "\u274c Too long (88.5 avg, target: \u226430)",
+    "Complexity": "\u2705 Good (0.0% high-complexity)"
+  },
+  "vs_best_practices": [
+    "Cell 2: Too many concepts (5)",
+    "Cell 2: Too long (53 lines)",
+    "Cell 3: Too many concepts (5)",
+    "Cell 4: Too many concepts (5)",
+    "Cell 5: Too many concepts (5)",
+    "Cell 5: Too long (113 lines)",
+    "Cell 6: Too many concepts (5)",
+    "Cell 6: Too long (53 lines)",
+    "Cell 7: Too many concepts (5)",
+    "Cell 7: Too long (121 lines)",
+    "Cell 8: Too many concepts (5)",
+    "Cell 8: Too long (75 lines)",
+    "Cell 9: Too many concepts (5)",
+    "Cell 9: Too long (93 lines)",
+    "Cell 10: Too many concepts (5)",
+    "Cell 10: Too long (363 lines)",
+    "Cell 11: Too many concepts (5)",
+    "Cell 11: Too long (89 lines)",
+    "Cell 12: Too many concepts (5)",
+    "Cell 12: Too long (49 lines)"
+  ]
+}
