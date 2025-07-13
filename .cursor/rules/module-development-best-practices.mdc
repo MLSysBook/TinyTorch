@@ -10,14 +10,147 @@
 - **Real-world scale**: Use actual dataset sizes, not toy examples
 - **Systems thinking**: Consider performance, memory, caching, user experience
 
-### Educational Excellence
-- **"Build → Use → Understand → Repeat"**: Follow this cycle religiously
+### Educational Excellence: Build → Use → Analyze/Test
+- **"Build → Use → Analyze"**: Follow this cycle religiously with specific third-stage verbs
+- **Test after each feature**: Unit tests immediately after implementation, not at the end
 - **Progressive complexity**: Easy → Medium → Hard with clear difficulty indicators
 - **Comprehensive guidance**: TODO sections with approach, examples, hints, systems thinking
 - **Real-world connections**: Connect every concept to production ML engineering
 
+## Module Structure (Based on Our Best Modules)
+
+### Ideal Module Layout
+```
+modules/source/XX_module_name/
+├── module_name_dev.py          # Main development file (Jupytext format)
+├── module_name_dev.ipynb       # Generated notebook (auto-created)
+├── tests/
+│   └── test_module_name.py     # Unit tests ONLY for this module
+├── README.md                   # Module overview and usage
+└── module.yaml                 # Module metadata
+```
+
+### Test Organization (Critical)
+- **Module-level tests**: `modules/source/XX_module/tests/` - ONLY unit tests for this module
+- **Integration tests**: `tests/` (main directory) - Cross-module and system integration tests
+- **Test after each feature**: Write unit tests immediately after implementing each component
+- **No integration in module tests**: Module tests should NOT test interactions with other modules
+
+## Development Workflow: Test-Driven Feature Development
+
+### 1. Feature Implementation Cycle
+```python
+# Step 1: Build the feature
+class ComponentName:
+    def method(self):
+        # Implementation here
+        pass
+
+# Step 2: Use the feature (immediate inline test)
+component = ComponentName()
+result = component.method()
+print(f"✅ Component working: {result}")
+
+# Step 3: Analyze/Test the feature (unit test)
+def test_component_method():
+    """Unit test for the specific method just implemented."""
+    component = ComponentName()
+    result = component.method()
+    assert result.shape == expected_shape
+    assert np.allclose(result.data, expected_data)
+```
+
+### 2. Build → Use → Analyze Pattern
+
+Our best modules follow specific third-stage verbs:
+
+#### **Build → Use → Reflect** (Early modules: Setup, Tensor)
+- **Reflect**: Emphasizes metacognition and design trade-offs
+- **Questions**: "Why did we design it this way?", "What are the trade-offs?"
+- **Focus**: Systems thinking and architectural decisions
+
+#### **Build → Use → Analyze** (Middle modules: Activations, Layers, Networks)
+- **Analyze**: Technical depth with profiling, debugging, performance
+- **Questions**: "How does this perform?", "What patterns emerge?"
+- **Focus**: Technical understanding and optimization
+
+#### **Build → Use → Optimize** (Advanced modules: CNN, DataLoader, Autograd)
+- **Optimize**: Real systems iteration and improvement
+- **Questions**: "How can we make this faster?", "What about memory usage?"
+- **Focus**: Production-ready systems engineering
+
+## Testing Architecture (Based on Networks Module)
+
+### Module-Level Unit Tests Pattern
+```python
+# modules/source/04_networks/tests/test_networks.py
+"""
+Unit tests for the Networks module ONLY.
+Tests Sequential, create_mlp, and other network components in isolation.
+"""
+
+import pytest
+from tinytorch.core.networks import Sequential, create_mlp
+from tinytorch.core.layers import Dense
+from tinytorch.core.activations import ReLU, Sigmoid
+
+class TestSequential:
+    """Unit tests for Sequential network class."""
+    
+    def test_sequential_creation(self):
+        """Test Sequential network creation and structure."""
+        network = Sequential([
+            Dense(input_size=3, output_size=4),
+            ReLU(),
+            Dense(input_size=4, output_size=2),
+            Sigmoid()
+        ])
+        
+        assert len(network.layers) == 4
+        assert isinstance(network.layers[0], Dense)
+        assert isinstance(network.layers[1], ReLU)
+        
+    def test_sequential_forward_pass(self):
+        """Test Sequential network forward pass."""
+        network = Sequential([Dense(3, 2), ReLU()])
+        x = Tensor([[1.0, 2.0, 3.0]])
+        y = network(x)
+        
+        assert y.shape == (1, 2)
+        assert np.all(y.data >= 0)  # ReLU ensures non-negative
+```
+
+### Integration Tests Pattern
+```python
+# tests/test_integration.py (main directory)
+"""
+Integration tests for cross-module functionality.
+Tests how modules work together in complete ML workflows.
+"""
+
+def test_complete_ml_pipeline():
+    """Test complete ML pipeline: data → network → training."""
+    # This tests multiple modules working together
+    from tinytorch.core.dataloader import DataLoader, SimpleDataset
+    from tinytorch.core.networks import Sequential
+    from tinytorch.core.layers import Dense
+    from tinytorch.core.activations import ReLU
+    
+    # Create complete pipeline
+    dataset = SimpleDataset(size=100, num_features=10, num_classes=3)
+    dataloader = DataLoader(dataset, batch_size=16)
+    network = Sequential([Dense(10, 5), ReLU(), Dense(5, 3)])
+    
+    # Test integration
+    for batch_data, batch_labels in dataloader:
+        output = network(batch_data)
+        assert output.shape == (16, 3)
+        break
+```
+
 ## Student Implementation Structure
 
+### Comprehensive TODO Pattern (Based on DataLoader Module)
 ```python
 def student_method(self, params):
     """
@@ -25,12 +158,13 @@ def student_method(self, params):
     
     APPROACH:
     1. Concrete first step with specific guidance
-    2. Concrete second step with specific guidance
+    2. Concrete second step with specific guidance  
     3. Concrete third step with specific guidance
     
     EXAMPLE:
     Input: actual_data_example
     Expected: concrete_expected_output
+    Your code should: specific_behavior_description
     
     HINTS:
     - Helpful guidance without giving code
@@ -43,6 +177,82 @@ def student_method(self, params):
     - User experience aspect
     """
     raise NotImplementedError("Student implementation required")
+```
+
+### Immediate Testing Pattern (Based on CNN Module)
+```python
+# %% [markdown]
+"""
+### 🧪 Unit Test: Conv2D Layer
+
+Let's test your Conv2D implementation immediately after building it!
+**This is a unit test** - it tests one specific class in isolation.
+"""
+
+# %% nbgrader={"grade": true, "grade_id": "test-conv2d-immediate", "locked": true, "points": 10}
+# Test Conv2D layer immediately after implementation
+print("🔬 Unit Test: Conv2D Layer...")
+
+try:
+    conv = Conv2D(kernel_size=(3, 3))
+    x = Tensor(np.random.randn(1, 4, 4))
+    y = conv(x)
+    
+    assert y.shape == (1, 2, 2), f"Expected shape (1, 2, 2), got {y.shape}"
+    print("✅ Conv2D layer produces correct output shape")
+    
+    # Test that kernels are properly initialized
+    assert hasattr(conv, 'kernel'), "Conv2D should have kernel attribute"
+    assert conv.kernel.shape == (3, 3), f"Kernel shape should be (3, 3), got {conv.kernel.shape}"
+    print("✅ Conv2D layer kernel initialization correct")
+    
+except Exception as e:
+    print(f"❌ Conv2D layer test failed: {e}")
+    raise
+
+print("🎯 Conv2D layer behavior:")
+print("   Applies convolution operation to input")
+print("   Reduces spatial dimensions based on kernel size")
+print("   Maintains batch dimension")
+```
+
+## Comprehensive Testing Strategy
+
+### 1. Immediate Unit Tests (After Each Feature)
+- **When**: Immediately after implementing each component
+- **What**: Test the specific feature in isolation
+- **Where**: Inline in the development notebook
+- **Purpose**: Ensure feature works before moving to next
+
+### 2. Module Unit Tests (Module Completion)
+- **When**: After completing the entire module
+- **What**: Comprehensive tests for all module components
+- **Where**: `modules/source/XX_module/tests/test_module.py`
+- **Purpose**: Ensure module is ready for package export
+
+### 3. Integration Tests (Cross-Module)
+- **When**: After multiple modules are complete
+- **What**: Test how modules work together
+- **Where**: `tests/` (main directory)
+- **Purpose**: Ensure modules integrate properly in ML workflows
+
+### 4. Comprehensive Test Suites (Module-Level)
+```python
+# Based on our best modules' comprehensive testing
+def run_comprehensive_module_tests():
+    """Run all comprehensive module tests"""
+    print("🧪 Running Comprehensive Module Test Suite...")
+    
+    test_results = []
+    test_results.append(test_basic_functionality())
+    test_results.append(test_edge_cases())
+    test_results.append(test_performance())
+    test_results.append(test_real_world_scenarios())
+    
+    all_passed = all(test_results)
+    print(f"🎯 Overall Result: {'ALL TESTS PASSED! 🎉' if all_passed else 'SOME TESTS FAILED ❌'}")
+    
+    return all_passed
 ```
 
 ## Progress Feedback Pattern
@@ -82,7 +292,67 @@ def show_data_samples(dataset, num_samples=8):
     plt.show()
 ```
 
+## Best Module Examples
+
+### Networks Module (Our Gold Standard)
+- **Structure**: Clear Sequential class with layers composition
+- **Testing**: Immediate unit tests after each feature
+- **Comprehensive**: Full test suite covering all scenarios
+- **Educational**: Build → Use → Analyze pattern with technical depth
+- **Real-world**: Actual network architectures (MLP, classification, regression)
+
+### Layers Module (Excellent Foundation)
+- **Structure**: Dense layer with proper matrix multiplication
+- **Testing**: Unit tests for each operation (matmul, forward pass, initialization)
+- **Comprehensive**: Integration tests with activations and networks
+- **Educational**: Build → Use → Analyze with performance considerations
+- **Real-world**: Production-ready linear transformations
+
+### DataLoader Module (Systems Excellence)
+- **Structure**: Abstract Dataset interface with concrete implementations
+- **Testing**: Real data testing with CIFAR-10
+- **Comprehensive**: Complete pipeline testing
+- **Educational**: Build → Use → Optimize with systems thinking
+- **Real-world**: Production data loading patterns
+
 ## Key Anti-Patterns to Avoid
+
+### ❌ Don't Test Everything at the End
+```python
+# BAD: All tests at module end
+def implement_all_features():
+    # Implement feature 1
+    # Implement feature 2
+    # Implement feature 3
+    
+# Then test everything at once
+def test_everything():
+    # Test all features together
+    
+# GOOD: Test after each feature
+def implement_feature_1():
+    # Implementation
+    pass
+
+def test_feature_1():
+    # Immediate unit test
+    pass
+```
+
+### ❌ Don't Mix Integration and Unit Tests
+```python
+# BAD: Integration tests in module directory
+# modules/source/04_networks/tests/test_networks.py
+def test_networks_with_dataloader():
+    # Tests networks + dataloader integration
+    # This should be in tests/ main directory
+    
+# GOOD: Unit tests only in module directory
+# modules/source/04_networks/tests/test_networks.py
+def test_sequential_creation():
+    # Tests only Sequential class
+    pass
+```
 
 ### ❌ Don't Use Mock Data
 ```python
@@ -97,62 +367,115 @@ class CIFAR10Dataset:
         self._download_if_needed()  # Real CIFAR-10 data
 ```
 
-### ❌ Don't Skip Progress Feedback
-```python
-# BAD: Silent long operations
-def download_data():
-    urllib.request.urlretrieve(url, filename)  # No feedback
-    
-# GOOD: Progress feedback
-def download_data():
-    urllib.request.urlretrieve(url, filename, reporthook=self._progress_hook)
-```
-
-### ❌ Don't Export Visual Functions
-```python
-# BAD: Visual functions in package exports
-#| export
-def show_images(data):
-    plt.imshow(data)  # Creates matplotlib dependency in package
-    
-# GOOD: Development-only visual functions
-def show_images(data):
-    if not _should_show_plots():
-        return
-    plt.imshow(data)  # Not exported, development only
-```
-
 ## Quality Standards
 
 ### Before Release Checklist
 - [ ] Uses real data, not synthetic/mock data
 - [ ] Includes progress feedback for long operations
 - [ ] Visual feedback functions (development only, not exported)
+- [ ] Unit tests after each feature implementation
+- [ ] Comprehensive test suite at module completion
+- [ ] Clear separation: module tests vs integration tests
+- [ ] Follows "Build → Use → Analyze/Test" progression
 - [ ] TODO guidance includes systems thinking
 - [ ] Clean separation between development and exports
-- [ ] Follows "Build → Use → Understand → Repeat" progression
 
 ### Student Experience Requirements
-- [ ] Clear learning progression
-- [ ] Immediate feedback and validation
+- [ ] Clear learning progression with immediate feedback
+- [ ] Unit tests provide confidence after each feature
 - [ ] Real-world relevance and connections
-- [ ] Motivating and engaging content
 - [ ] Smooth transition to next modules
+- [ ] Test-driven development workflow
 
 ## Success Metrics
 
 **Students should be able to:**
+- Test their code immediately after each feature
+- Understand the difference between unit and integration tests
 - Explain what they built in simple terms
 - Modify code to solve related problems
 - Connect module concepts to real ML systems
-- Debug issues by understanding the system
+- Debug issues by understanding the test failures
 
 **Modules should achieve:**
 - High student engagement and completion rates
+- Clear testing patterns and immediate feedback
 - Smooth progression to next modules
 - Real-world relevance and production quality
-- Consistent patterns across the curriculum
+- Consistent test-driven development workflow
 
 ---
 
-**Remember**: We're teaching ML systems engineering, not just algorithms. Every module should reflect real-world practices and challenges while maintaining the "Build → Use → Understand" educational cycle.
+**Remember**: We're teaching ML systems engineering with test-driven development. Every feature should be tested immediately, every module should have comprehensive unit tests, and integration tests should be separate. Follow the "Build → Use → Analyze/Test" cycle religiously.
+
+## Development Workflow Summary
+
+### Complete Module Development Cycle
+
+1. **Setup Phase**
+   ```bash
+   cd modules/source/XX_module_name/
+   # Work in module_name_dev.py (Jupytext format)
+   # Tests go in tests/test_module_name.py
+   ```
+
+2. **Feature Development Phase** (Repeat for each component)
+   ```python
+   # Step 1: Build the feature
+   class NewComponent:
+       def method(self):
+           # Implementation
+           pass
+   
+   # Step 2: Use the feature (immediate test)
+   component = NewComponent()
+   result = component.method()
+   print(f"✅ {component.__class__.__name__} working: {result}")
+   
+   # Step 3: Analyze/Test the feature (unit test)
+   def test_new_component():
+       component = NewComponent()
+       result = component.method()
+       assert result.shape == expected_shape
+       assert np.allclose(result.data, expected_data)
+   
+   # Run the test immediately
+   test_new_component()
+   ```
+
+3. **Module Completion Phase**
+   ```bash
+   # Run comprehensive module tests
+   python -m pytest modules/source/XX_module_name/tests/test_module_name.py -v
+   
+   # Export to package
+   tito package nbdev --export XX_module_name
+   
+   # Test package integration
+   tito module test XX_module_name
+   ```
+
+4. **Integration Testing Phase**
+   ```bash
+   # Run integration tests (cross-module)
+   python -m pytest tests/integration/ -v
+   
+   # Run system tests
+   python -m pytest tests/system/ -v
+   ```
+
+### Daily Development Rhythm
+
+- **Morning**: Review previous day's tests, ensure all passing
+- **Feature work**: Build → Use → Test for each component
+- **End of day**: Run module tests, commit working features
+- **Module completion**: Comprehensive testing, integration verification
+
+### Quality Gates
+
+- **Feature Level**: Immediate unit test must pass
+- **Module Level**: All module tests must pass before export
+- **Integration Level**: Cross-module tests must pass before merge
+- **System Level**: Full system tests must pass before release
+
+This workflow ensures students build confidence incrementally while maintaining professional development standards.
