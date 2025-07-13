@@ -1,0 +1,395 @@
+{
+  "module_name": "04_networks",
+  "module_path": "modules/source/04_networks",
+  "analysis_date": "2025-07-13T09:20:37.714469",
+  "total_lines": 1425,
+  "total_cells": 13,
+  "avg_cell_length": 86.23076923076923,
+  "scaffolding_quality": 3,
+  "complexity_distribution": {
+    "1": 1,
+    "2": 1,
+    "3": 9,
+    "4": 1,
+    "5": 1
+  },
+  "learning_progression_quality": 4,
+  "concepts_covered": [
+    "Nonlinearity",
+    "Why Networks Matter: The Scaling Laws",
+    "Advantages",
+    "default",
+    "Verify the output",
+    "This is a unit test",
+    "Connections",
+    "Architecture search",
+    "Composability",
+    "**1. Problem Analysis**",
+    "Input layer",
+    "Returns",
+    "The Architecture Design Space",
+    "Multi-Layer Perceptron",
+    "Foundation",
+    "Forward pass",
+    "Sequential architecture",
+    "Create a simple 2-layer network: 3 \u2192 4 \u2192 2",
+    "What You've Accomplished",
+    "Integration:",
+    "layers",
+    "Use your networks",
+    "function composition",
+    "Versatile",
+    "Production:",
+    "Testing",
+    "7",
+    "Test all networks",
+    "Test different architectures",
+    "6",
+    "Show the MLP pattern",
+    "Use",
+    "Module 4: Networks - Neural Network Architectures",
+    "Create networks with different architectures",
+    "functions",
+    "9",
+    "2",
+    "Progress",
+    "Build",
+    "4",
+    "Learning Side:",
+    "\ud83e\uddea Unit Test: Sequential Network",
+    "Final package structure:",
+    "\ud83e\uddea Test Your Network Implementations",
+    "Show the network architecture",
+    "Run the integration test",
+    "3",
+    "Building Side:",
+    "Understand",
+    "Print final summary"
+  ],
+  "todo_count": 2,
+  "hint_count": 3,
+  "test_count": 1,
+  "critical_issues": [
+    "Module too long (1425 lines) - students will be overwhelmed",
+    "7 cells are too long (>50 lines)"
+  ],
+  "overwhelm_points": [
+    "Cell 1: Too many concepts (5)",
+    "Cell 2: Very long cell (58 lines)",
+    "Cell 3: Too many concepts (5)",
+    "Cell 4: Long cell (31 lines)",
+    "Cell 4: Too many concepts (5)",
+    "Cell 5: Very long cell (211 lines)",
+    "Cell 5: Multiple functions in one cell (5)",
+    "Cell 5: Complex implementation without error handling guidance",
+    "Cell 6: Long cell (43 lines)",
+    "Cell 6: Too many concepts (5)",
+    "Cell 7: Very long cell (72 lines)",
+    "Cell 7: Complex implementation without error handling guidance",
+    "Cell 8: Very long cell (54 lines)",
+    "Cell 8: Too many concepts (5)",
+    "Cell 9: Very long cell (72 lines)",
+    "Cell 9: Too many concepts (5)",
+    "Cell 10: Long cell (41 lines)",
+    "Cell 10: Too many concepts (5)",
+    "Cell 11: Very long cell (287 lines)",
+    "Cell 12: Very long cell (185 lines)",
+    "Cell 12: Math-heavy without scaffolding",
+    "Cell 13: Long cell (41 lines)",
+    "Cell 13: Too many concepts (5)"
+  ],
+  "recommendations": [
+    "Break module into smaller sections or multiple modules",
+    "Split 11 long cells into smaller, focused cells",
+    "Add immediate feedback tests after implementations"
+  ],
+  "cell_analyses": [
+    {
+      "cell_type": "code",
+      "line_count": 9,
+      "char_count": 180,
+      "complexity_score": 1,
+      "educational_type": "demonstration",
+      "has_todo": false,
+      "has_hints": false,
+      "concepts_introduced": [],
+      "overwhelm_factors": [
+        "Too many concepts (5)"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "line_count": 58,
+      "char_count": 2899,
+      "complexity_score": 3,
+      "educational_type": "example_illustration",
+      "has_todo": false,
+      "has_hints": false,
+      "concepts_introduced": [
+        "Use",
+        "Module 4: Networks - Neural Network Architectures",
+        "Build",
+        "4",
+        "Understand"
+      ],
+      "overwhelm_factors": [
+        "Very long cell (58 lines)"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "line_count": 17,
+      "char_count": 819,
+      "complexity_score": 2,
+      "educational_type": "concept_introduction",
+      "has_todo": false,
+      "has_hints": false,
+      "concepts_introduced": [
+        "Final package structure:",
+        "Production:",
+        "Integration:",
+        "Building Side:",
+        "Learning Side:"
+      ],
+      "overwhelm_factors": [
+        "Too many concepts (5)"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "line_count": 31,
+      "char_count": 1654,
+      "complexity_score": 3,
+      "educational_type": "explanation",
+      "has_todo": false,
+      "has_hints": false,
+      "concepts_introduced": [
+        "Connections",
+        "Architecture search",
+        "Composability",
+        "The Architecture Design Space",
+        "function composition"
+      ],
+      "overwhelm_factors": [
+        "Long cell (31 lines)",
+        "Too many concepts (5)"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "line_count": 211,
+      "char_count": 9091,
+      "complexity_score": 4,
+      "educational_type": "concept_introduction",
+      "has_todo": true,
+      "has_hints": true,
+      "concepts_introduced": [
+        "Nonlinearity",
+        "Why Networks Matter: The Scaling Laws",
+        "Advantages",
+        "**1. Problem Analysis**",
+        "Input layer"
+      ],
+      "overwhelm_factors": [
+        "Very long cell (211 lines)",
+        "Multiple functions in one cell (5)",
+        "Complex implementation without error handling guidance"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "line_count": 43,
+      "char_count": 1975,
+      "complexity_score": 3,
+      "educational_type": "explanation",
+      "has_todo": false,
+      "has_hints": false,
+      "concepts_introduced": [
+        "This is a unit test",
+        "Show the network architecture",
+        "Create a simple 2-layer network: 3 \u2192 4 \u2192 2",
+        "Progress",
+        "\ud83e\uddea Unit Test: Sequential Network"
+      ],
+      "overwhelm_factors": [
+        "Long cell (43 lines)",
+        "Too many concepts (5)"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "line_count": 72,
+      "char_count": 2984,
+      "complexity_score": 3,
+      "educational_type": "concept_introduction",
+      "has_todo": true,
+      "has_hints": true,
+      "concepts_introduced": [
+        "default",
+        "Returns",
+        "Multi-Layer Perceptron",
+        "Foundation",
+        "Versatile"
+      ],
+      "overwhelm_factors": [
+        "Very long cell (72 lines)",
+        "Complex implementation without error handling guidance"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "line_count": 54,
+      "char_count": 2785,
+      "complexity_score": 3,
+      "educational_type": "explanation",
+      "has_todo": false,
+      "has_hints": false,
+      "concepts_introduced": [
+        "Show the MLP pattern",
+        "This is a unit test",
+        "Progress",
+        "Test different architectures",
+        "layers"
+      ],
+      "overwhelm_factors": [
+        "Very long cell (54 lines)",
+        "Too many concepts (5)"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "line_count": 72,
+      "char_count": 3116,
+      "complexity_score": 3,
+      "educational_type": "explanation",
+      "has_todo": false,
+      "has_hints": false,
+      "concepts_introduced": [
+        "Verify the output",
+        "Forward pass",
+        "\ud83e\uddea Test Your Network Implementations",
+        "Create networks with different architectures",
+        "Test all networks"
+      ],
+      "overwhelm_factors": [
+        "Very long cell (72 lines)",
+        "Too many concepts (5)"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "line_count": 41,
+      "char_count": 2254,
+      "complexity_score": 3,
+      "educational_type": "concept_introduction",
+      "has_todo": false,
+      "has_hints": false,
+      "concepts_introduced": [
+        "Nonlinearity",
+        "Forward pass",
+        "Sequential architecture",
+        "What You've Accomplished",
+        "Use your networks"
+      ],
+      "overwhelm_factors": [
+        "Long cell (41 lines)",
+        "Too many concepts (5)"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "line_count": 287,
+      "char_count": 16733,
+      "complexity_score": 3,
+      "educational_type": "concept_reinforcement",
+      "has_todo": false,
+      "has_hints": false,
+      "concepts_introduced": [
+        "9",
+        "Testing",
+        "functions",
+        "7",
+        "2"
+      ],
+      "overwhelm_factors": [
+        "Very long cell (287 lines)"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "line_count": 185,
+      "char_count": 10640,
+      "complexity_score": 5,
+      "educational_type": "concept_reinforcement",
+      "has_todo": false,
+      "has_hints": true,
+      "concepts_introduced": [
+        "2",
+        "Run the integration test",
+        "Print final summary",
+        "3",
+        "6"
+      ],
+      "overwhelm_factors": [
+        "Very long cell (185 lines)",
+        "Math-heavy without scaffolding"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "line_count": 41,
+      "char_count": 2253,
+      "complexity_score": 3,
+      "educational_type": "concept_introduction",
+      "has_todo": false,
+      "has_hints": false,
+      "concepts_introduced": [
+        "Nonlinearity",
+        "Forward pass",
+        "Sequential architecture",
+        "What You've Accomplished",
+        "Use your networks"
+      ],
+      "overwhelm_factors": [
+        "Long cell (41 lines)",
+        "Too many concepts (5)"
+      ]
+    }
+  ],
+  "overall_grade": "C",
+  "category_grades": {
+    "Scaffolding": "C",
+    "Complexity": "B",
+    "Cell_Length": "F"
+  },
+  "vs_targets": {
+    "Length": "\u274c Too long (1425 lines, target: 200-400)",
+    "Cell_Length": "\u274c Too long (86.2 avg, target: \u226430)",
+    "Complexity": "\u2705 Good (15.4% high-complexity)"
+  },
+  "vs_best_practices": [
+    "Cell 2: Too many concepts (5)",
+    "Cell 2: Too long (58 lines)",
+    "Cell 3: Too many concepts (5)",
+    "Cell 4: Too many concepts (5)",
+    "Cell 4: Too long (31 lines)",
+    "Cell 5: Too many concepts (5)",
+    "Cell 5: Too long (211 lines)",
+    "Cell 6: Too many concepts (5)",
+    "Cell 6: Too long (43 lines)",
+    "Cell 7: Too many concepts (5)",
+    "Cell 7: Too long (72 lines)",
+    "Cell 8: Too many concepts (5)",
+    "Cell 8: Too long (54 lines)",
+    "Cell 9: Too many concepts (5)",
+    "Cell 9: Too long (72 lines)",
+    "Cell 10: Too many concepts (5)",
+    "Cell 10: Too long (41 lines)",
+    "Cell 11: Too many concepts (5)",
+    "Cell 11: Too long (287 lines)",
+    "Cell 12: Too many concepts (5)",
+    "Cell 12: Too long (185 lines)",
+    "Cell 13: Too many concepts (5)",
+    "Cell 13: Too long (41 lines)"
+  ]
+}
