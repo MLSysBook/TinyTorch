@@ -1,5 +1,5 @@
 #!/bin/bash
-# TinyTorch Environment Activation & Setup
+# Tiny🔥Torch Environment Activation & Setup
 
 # Check if virtual environment exists, create if not
 if [ ! -d ".venv" ]; then
@@ -16,15 +16,15 @@ if [ ! -d ".venv" ]; then
     echo "✅ Environment created!"
 fi
 
-echo "🔥 Activating TinyTorch environment..."
+echo "🔥 Activating Tiny🔥Torch environment..."
 source .venv/bin/activate
 
 # Create tito alias for convenience
-alias tito="python3 bin/tito.py"
+alias tito="python3 bin/tito"
 
 echo "✅ Ready to build ML systems!"
 echo "💡 Quick commands:"
-echo "   tito info      - Check system status"
-echo "   tito test      - Run tests" 
-echo "   tito doctor    - Diagnose issues"
-echo "   jupyter notebook  - Start Jupyter for interactive development"
+echo "   tito system info      - Check system status"
+echo "   tito module test      - Run tests" 
+echo "   tito system doctor    - Diagnose issues"
+echo "   tito system jupyter   - Start Jupyter for interactive development"

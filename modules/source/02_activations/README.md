@@ -46,11 +46,22 @@ This module teaches you the mathematical foundations that make deep learning pos
 
 ## 🚀 Getting Started
 
+### Prerequisites
+
+1. **Activate the virtual environment**:
+   ```bash
+   source bin/activate-tinytorch.sh
+   ```
+
+2. **Start development environment**:
+   ```bash
+   tito jupyter
+   ```
+
 ### Development Workflow
 
 1. **Open the development file**:
    ```bash
-   python bin/tito.py jupyter
    # Then open assignments/source/02_activations/activations_dev.py
    ```
 
@@ -66,12 +77,12 @@ This module teaches you the mathematical foundations that make deep learning pos
 
 4. **Test as you go**:
    ```bash
-   python bin/tito.py test --module activations
+   tito test --module activations
    ```
 
 5. **Export to package**:
    ```bash
-   python bin/tito.py sync
+   tito sync
    ```
 
 ### 📊 Visual Learning Features
@@ -127,19 +138,17 @@ def forward(self, x: Tensor) -> Tensor:
     return Tensor(np.tanh(x.data))
 ```
 
-## 🧪 Testing Your Implementation
+### Testing Your Implementation
 
-### Unit Tests
-```bash
-python bin/tito.py test --module activations
-```
+1. **Run the tests**:
+   ```bash
+   tito test --module activations
+   ```
 
-**Test Coverage**:
-- ✅ Mathematical correctness
-- ✅ Numerical stability
-- ✅ Shape preservation
-- ✅ Edge cases
-- ✅ Function properties
+2. **Export to package**:
+   ```bash
+   tito sync
+   ```
 
 ### Manual Testing
 ```python
@@ -201,7 +210,7 @@ output = relu(input_tensor)
 
 ### Issue 4: Import Errors
 **Problem**: Cannot import after implementation
-**Solution**: Run `python bin/tito.py sync` to export to package
+**Solution**: Run `tito sync` to export to package
 
 ## 📈 Performance Considerations
 
@@ -234,7 +243,7 @@ These functions are the mathematical foundation for everything that follows!
 ## 🎉 Success Criteria
 
 You've mastered this module when:
-- [ ] All tests pass (`python bin/tito.py test --module activations`)
+- [ ] All tests pass (`tito test --module activations`)
 - [ ] You understand why each function is useful
 - [ ] You can explain the mathematical properties
 - [ ] You can use activations in neural networks

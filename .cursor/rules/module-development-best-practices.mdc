@@ -314,11 +314,14 @@ class TestCompleteMLSystem:
 ### Running Tests (ALWAYS THROUGH PYTEST)
 
 ```bash
+# Activate environment first
+source bin/activate-tinytorch.sh
+
 # Test specific module (recommended)
-python bin/tito.py test --module networks
+tito test --module networks
 
 # Test all modules
-python bin/tito.py test --all
+tito test --all
 
 # Run specific test file directly with pytest
 python -m pytest modules/source/04_networks/tests/test_networks.py -v
