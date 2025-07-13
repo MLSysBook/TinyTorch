@@ -46,8 +46,8 @@ except ImportError:
     sys.path.append(os.path.join(os.path.dirname(__file__), '..', '01_tensor'))
     sys.path.append(os.path.join(os.path.dirname(__file__), '..', '02_activations'))
     try:
-    from tensor_dev import Tensor
-    from activations_dev import ReLU, Sigmoid, Tanh, Softmax
+        from tensor_dev import Tensor
+        from activations_dev import ReLU, Sigmoid, Tanh, Softmax
     except ImportError:
         # If the local modules are not available, use relative imports
         from ..tensor.tensor_dev import Tensor
@@ -538,7 +538,7 @@ def test_dense_layer():
     scaled_output = layer(scaled_input)
     
     # Due to bias, this won't be exactly 2*output, but the linear part should scale
-print("✅ Dense layer tests passed!")
+    print("✅ Dense layer tests passed!")
     print(f"✅ Correct weight and bias initialization")
     print(f"✅ Forward pass produces correct shapes")
     print(f"✅ Batch processing works correctly")
@@ -582,7 +582,7 @@ def test_layer_activation_integration():
     
     # Create layer and activation functions
     layer = Dense(input_size=4, output_size=3)
-        relu = ReLU()
+    relu = ReLU()
     sigmoid = Sigmoid()
     tanh = Tanh()
     softmax = Softmax()
