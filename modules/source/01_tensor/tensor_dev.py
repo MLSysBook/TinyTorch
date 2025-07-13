@@ -74,27 +74,141 @@ A **tensor** is an N-dimensional array with ML-specific operations. Think of it 
 - **Matrix** (2D): A 2D array - `[[1, 2], [3, 4]]`
 - **Higher dimensions**: 3D, 4D, etc. for images, video, batches
 
-### Why Tensors Matter in ML
-Tensors are the foundation of all machine learning because:
-- **Neural networks** process tensors (images, text, audio)
-- **Batch processing** requires multiple samples at once
-- **GPU acceleration** works efficiently with tensors
-- **Automatic differentiation** needs structured data
+### The Mathematical Foundation: From Scalars to Tensors
+Understanding tensors requires building from mathematical fundamentals:
 
-### Real-World Examples
-- **Image**: 3D tensor `(height, width, channels)` - `(224, 224, 3)` for RGB images
-- **Batch of images**: 4D tensor `(batch_size, height, width, channels)` - `(32, 224, 224, 3)`
-- **Text**: 2D tensor `(sequence_length, embedding_dim)` - `(100, 768)` for BERT embeddings
-- **Audio**: 2D tensor `(time_steps, features)` - `(16000, 1)` for 1 second of audio
+#### **Scalars (Rank 0)**
+- **Definition**: A single number with no direction
+- **Examples**: Temperature (25°C), mass (5.2 kg), probability (0.7)
+- **Operations**: Addition, multiplication, comparison
+- **ML Context**: Loss values, learning rates, regularization parameters
+
+#### **Vectors (Rank 1)**
+- **Definition**: An ordered list of numbers with direction and magnitude
+- **Examples**: Position [x, y, z], RGB color [255, 128, 0], word embedding [0.1, -0.5, 0.8]
+- **Operations**: Dot product, cross product, norm calculation
+- **ML Context**: Feature vectors, gradients, model parameters
+
+#### **Matrices (Rank 2)**
+- **Definition**: A 2D array organizing data in rows and columns
+- **Examples**: Image (height × width), weight matrix (input × output), covariance matrix
+- **Operations**: Matrix multiplication, transpose, inverse, eigendecomposition
+- **ML Context**: Linear layer weights, attention matrices, batch data
+
+#### **Higher-Order Tensors (Rank 3+)**
+- **Definition**: Multi-dimensional arrays extending matrices
+- **Examples**: 
+  - **3D**: Video frames (time × height × width), RGB images (height × width × channels)
+  - **4D**: Image batches (batch × height × width × channels)
+  - **5D**: Video batches (batch × time × height × width × channels)
+- **Operations**: Tensor products, contractions, decompositions
+- **ML Context**: Convolutional features, RNN states, transformer attention
+
+### Why Tensors Matter in ML: The Computational Foundation
+
+#### **1. Unified Data Representation**
+Tensors provide a consistent way to represent all ML data:
+```python
+# All of these are tensors with different shapes
+scalar_loss = Tensor(0.5)              # Shape: ()
+feature_vector = Tensor([1, 2, 3])      # Shape: (3,)
+weight_matrix = Tensor([[1, 2], [3, 4]]) # Shape: (2, 2)
+image_batch = Tensor(np.random.rand(32, 224, 224, 3)) # Shape: (32, 224, 224, 3)
+```
+
+#### **2. Efficient Batch Processing**
+ML systems process multiple samples simultaneously:
+```python
+# Instead of processing one image at a time:
+for image in images:
+    result = model(image)  # Slow: 1000 separate operations
+
+# Process entire batch at once:
+batch_result = model(image_batch)  # Fast: 1 vectorized operation
+```
+
+#### **3. Hardware Acceleration**
+Modern hardware (GPUs, TPUs) excels at tensor operations:
+- **Parallel processing**: Multiple operations simultaneously
+- **Vectorization**: SIMD (Single Instruction, Multiple Data) operations
+- **Memory optimization**: Contiguous memory layout for cache efficiency
+
+#### **4. Automatic Differentiation**
+Tensors enable gradient computation through computational graphs:
+```python
+# Each tensor operation creates a node in the computation graph
+x = Tensor([1, 2, 3])
+y = x * 2          # Node: multiplication
+z = y + 1          # Node: addition
+loss = z.sum()     # Node: summation
+# Gradients flow backward through this graph
+```
+
+### Real-World Examples: Tensors in Action
+
+#### **Computer Vision**
+- **Grayscale image**: 2D tensor `(height, width)` - `(28, 28)` for MNIST
+- **Color image**: 3D tensor `(height, width, channels)` - `(224, 224, 3)` for RGB
+- **Image batch**: 4D tensor `(batch, height, width, channels)` - `(32, 224, 224, 3)`
+- **Video**: 5D tensor `(batch, time, height, width, channels)`
+
+#### **Natural Language Processing**
+- **Word embedding**: 1D tensor `(embedding_dim,)` - `(300,)` for Word2Vec
+- **Sentence**: 2D tensor `(sequence_length, embedding_dim)` - `(50, 768)` for BERT
+- **Batch of sentences**: 3D tensor `(batch, sequence_length, embedding_dim)`
+
+#### **Audio Processing**
+- **Audio signal**: 1D tensor `(time_steps,)` - `(16000,)` for 1 second at 16kHz
+- **Spectrogram**: 2D tensor `(time_frames, frequency_bins)`
+- **Batch of audio**: 3D tensor `(batch, time_steps, features)`
+
+#### **Time Series**
+- **Single series**: 2D tensor `(time_steps, features)`
+- **Multiple series**: 3D tensor `(batch, time_steps, features)`
+- **Multivariate forecasting**: 4D tensor `(batch, time_steps, features, predictions)`
 
 ### Why Not Just Use NumPy?
-We will use NumPy internally, but our Tensor class adds:
-- **ML-specific operations** (later: gradients, GPU support)
-- **Consistent API** for neural networks
-- **Type safety** and error checking
-- **Integration** with the rest of TinyTorch
 
-Let's start building!
+While we use NumPy internally, our Tensor class adds ML-specific functionality:
+
+#### **1. ML-Specific Operations**
+- **Gradient tracking**: For automatic differentiation (coming in Module 7)
+- **GPU support**: For hardware acceleration (future extension)
+- **Broadcasting semantics**: ML-friendly dimension handling
+
+#### **2. Consistent API**
+- **Type safety**: Predictable behavior across operations
+- **Error checking**: Clear error messages for debugging
+- **Integration**: Seamless work with other TinyTorch components
+
+#### **3. Educational Value**
+- **Conceptual clarity**: Understand what tensors really are
+- **Implementation insight**: See how frameworks work internally
+- **Debugging skills**: Trace through tensor operations step by step
+
+#### **4. Extensibility**
+- **Future features**: Ready for gradients, GPU, distributed computing
+- **Customization**: Add domain-specific operations
+- **Optimization**: Profile and optimize specific use cases
+
+### Performance Considerations: Building Efficient Tensors
+
+#### **Memory Layout**
+- **Contiguous arrays**: Better cache locality and performance
+- **Data types**: `float32` vs `float64` trade-offs
+- **Memory sharing**: Avoid unnecessary copies
+
+#### **Vectorization**
+- **SIMD operations**: Single Instruction, Multiple Data
+- **Broadcasting**: Efficient operations on different shapes
+- **Batch operations**: Process multiple samples simultaneously
+
+#### **Numerical Stability**
+- **Precision**: Balancing speed and accuracy
+- **Overflow/underflow**: Handling extreme values
+- **Gradient flow**: Maintaining numerical stability for training
+
+Let's start building our tensor foundation!
 """
 
 # %% [markdown]
@@ -135,18 +249,79 @@ Every major ML framework uses tensors:
 """
 ## Step 2: The Tensor Class Foundation
 
-### Core Concept
-Our Tensor class wraps NumPy arrays with ML-specific functionality. It needs to:
-- Handle different input types (scalars, lists, numpy arrays)
-- Provide consistent shape and type information
-- Support arithmetic operations
-- Maintain compatibility with the rest of TinyTorch
+### Core Concept: Wrapping NumPy with ML Intelligence
+Our Tensor class wraps NumPy arrays with ML-specific functionality. This design pattern is used by all major ML frameworks:
 
-### Design Principles
-- **Simplicity**: Easy to create and use
-- **Consistency**: Predictable behavior across operations
-- **Performance**: Efficient NumPy backend
-- **Extensibility**: Ready for future features (gradients, GPU)
+- **PyTorch**: `torch.Tensor` wraps ATen (C++ tensor library)
+- **TensorFlow**: `tf.Tensor` wraps Eigen (C++ linear algebra library)
+- **JAX**: `jax.numpy.ndarray` wraps XLA (Google's linear algebra compiler)
+- **TinyTorch**: `Tensor` wraps NumPy (Python's numerical computing library)
+
+### Design Requirements Analysis
+
+#### **1. Input Flexibility**
+Our tensor must handle diverse input types:
+```python
+# Scalars (Python numbers)
+t1 = Tensor(5)           # int → numpy array
+t2 = Tensor(3.14)        # float → numpy array
+
+# Lists (Python sequences)
+t3 = Tensor([1, 2, 3])   # list → numpy array
+t4 = Tensor([[1, 2], [3, 4]])  # nested list → 2D array
+
+# NumPy arrays (existing arrays)
+t5 = Tensor(np.array([1, 2, 3]))  # array → tensor wrapper
+```
+
+#### **2. Type Management**
+ML systems need consistent, predictable types:
+- **Default behavior**: Auto-detect appropriate types
+- **Explicit control**: Allow manual type specification
+- **Performance optimization**: Prefer `float32` over `float64`
+- **Memory efficiency**: Use appropriate precision
+
+#### **3. Property Access**
+Essential tensor properties for ML operations:
+- **Shape**: Dimensions for compatibility checking
+- **Size**: Total elements for memory estimation
+- **Data type**: For numerical computation planning
+- **Data access**: For integration with other libraries
+
+#### **4. Arithmetic Operations**
+Support for mathematical operations:
+- **Element-wise**: Addition, multiplication, subtraction, division
+- **Broadcasting**: Operations on different shapes
+- **Type promotion**: Consistent result types
+- **Error handling**: Clear messages for incompatible operations
+
+### Implementation Strategy
+
+#### **Memory Management**
+- **Copy vs. Reference**: When to copy data vs. share memory
+- **Type conversion**: Efficient dtype changes
+- **Contiguous layout**: Ensure optimal memory access patterns
+
+#### **Error Handling**
+- **Input validation**: Check for valid input types
+- **Shape compatibility**: Verify operations are mathematically valid
+- **Informative messages**: Help users debug issues quickly
+
+#### **Performance Optimization**
+- **Lazy evaluation**: Defer expensive operations when possible
+- **Vectorization**: Use NumPy's optimized operations
+- **Memory reuse**: Minimize unnecessary allocations
+
+### Learning Objectives for Implementation
+
+By implementing this Tensor class, you'll learn:
+1. **Wrapper pattern**: How to extend existing libraries
+2. **Type system design**: Managing data types in numerical computing
+3. **API design**: Creating intuitive, consistent interfaces
+4. **Performance considerations**: Balancing flexibility and speed
+5. **Error handling**: Providing helpful feedback to users
+
+Let's implement our tensor foundation!
 """
 
 # %% nbgrader={"grade": false, "grade_id": "tensor-class", "locked": false, "schema_version": 3, "solution": true, "task": false}
@@ -300,6 +475,134 @@ class Tensor:
         return f"Tensor({self._data.tolist()}, shape={self.shape}, dtype={self.dtype})"
         ### END SOLUTION
     
+# %% [markdown]
+"""
+## Step 3: Tensor Arithmetic Operations
+
+### The Mathematical Foundation of Tensor Operations
+
+Tensor arithmetic is the cornerstone of neural network computation. Every forward pass, backward pass, and parameter update involves tensor operations. Understanding these operations deeply is crucial for ML systems engineering.
+
+#### **Element-wise Operations: The Building Blocks**
+Element-wise operations apply the same function to corresponding elements:
+
+```python
+# Addition: z[i] = x[i] + y[i]
+x = Tensor([1, 2, 3])
+y = Tensor([4, 5, 6])
+z = x + y  # Result: Tensor([5, 7, 9])
+
+# Multiplication: z[i] = x[i] * y[i]
+z = x * y  # Result: Tensor([4, 10, 18])
+```
+
+#### **Broadcasting: Efficient Operations on Different Shapes**
+Broadcasting allows operations between tensors of different shapes:
+
+```python
+# Scalar broadcasting
+x = Tensor([1, 2, 3])    # Shape: (3,)
+y = Tensor(10)           # Shape: ()
+z = x + y                # Result: Tensor([11, 12, 13])
+
+# Vector broadcasting
+x = Tensor([[1, 2], [3, 4]])  # Shape: (2, 2)
+y = Tensor([10, 20])          # Shape: (2,)
+z = x + y                     # Result: Tensor([[11, 22], [13, 24]])
+```
+
+#### **Broadcasting Rules (NumPy-compatible)**
+1. **Align shapes from the right**: Compare dimensions from right to left
+2. **Compatible dimensions**: Dimensions are compatible if they are equal or one is 1
+3. **Missing dimensions**: Treat missing dimensions as 1
+
+```python
+# Examples of compatible shapes:
+(3, 4) + (4,)     → (3, 4)  # Vector added to each row
+(3, 4) + (3, 1)   → (3, 4)  # Column vector added to each column
+(3, 4) + (1, 4)   → (3, 4)  # Row vector added to each row
+```
+
+#### **Type Promotion and Numerical Stability**
+When tensors of different types are combined:
+
+```python
+# Integer + Float → Float
+x = Tensor([1, 2, 3])      # int32
+y = Tensor([1.5, 2.5, 3.5]) # float32
+z = x + y                   # Result: float32
+
+# Precision preservation
+x = Tensor([1.0], dtype='float64')
+y = Tensor([2.0], dtype='float32')
+z = x + y  # Result: float64 (higher precision preserved)
+```
+
+### Performance Considerations
+
+#### **Vectorization Benefits**
+- **SIMD operations**: Single instruction processes multiple data points
+- **Cache efficiency**: Contiguous memory access patterns
+- **Parallel processing**: Multiple cores can work simultaneously
+
+#### **Memory Management**
+- **In-place operations**: Modify existing tensors to save memory
+- **Temporary allocation**: Minimize intermediate tensor creation
+- **Memory reuse**: Reuse buffers when possible
+
+#### **Numerical Stability**
+- **Overflow prevention**: Handle large numbers carefully
+- **Underflow handling**: Manage very small numbers
+- **Precision loss**: Minimize accumulation of floating-point errors
+
+### Real-World Applications
+
+#### **Neural Network Forward Pass**
+```python
+# Linear layer: y = Wx + b
+weights = Tensor([[0.1, 0.2], [0.3, 0.4]])  # Shape: (2, 2)
+inputs = Tensor([1.0, 2.0])                 # Shape: (2,)
+bias = Tensor([0.1, 0.2])                   # Shape: (2,)
+
+# Matrix multiplication (coming in Module 3)
+linear_output = weights @ inputs  # Shape: (2,)
+# Bias addition
+output = linear_output + bias     # Shape: (2,)
+```
+
+#### **Activation Functions**
+```python
+# ReLU activation: max(0, x)
+x = Tensor([-1, 0, 1, 2])
+relu_output = x * (x > 0)  # Element-wise: [0, 0, 1, 2]
+
+# Sigmoid activation: 1 / (1 + exp(-x))
+sigmoid_output = 1 / (1 + (-x).exp())
+```
+
+#### **Loss Computation**
+```python
+# Mean Squared Error: (1/n) * sum((y_pred - y_true)^2)
+y_pred = Tensor([0.8, 0.9, 0.7])
+y_true = Tensor([1.0, 1.0, 0.0])
+diff = y_pred - y_true           # Tensor([-0.2, -0.1, 0.7])
+squared = diff * diff            # Tensor([0.04, 0.01, 0.49])
+mse = squared.mean()             # Scalar: 0.18
+```
+
+### Implementation Strategy
+
+Our tensor arithmetic operations will:
+1. **Leverage NumPy**: Use optimized underlying operations
+2. **Maintain consistency**: Predictable behavior across operations
+3. **Handle edge cases**: Provide clear error messages
+4. **Support broadcasting**: Enable flexible tensor operations
+5. **Preserve types**: Maintain appropriate data types
+
+Let's implement these fundamental operations!
+"""
+
+# %%
     def add(self, other: 'Tensor') -> 'Tensor':
         """
         Add two tensors element-wise.
