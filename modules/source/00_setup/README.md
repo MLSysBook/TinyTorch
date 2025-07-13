@@ -146,7 +146,7 @@ my_profile = DeveloperProfile(
 ## What You'll Learn
 
 This comprehensive module introduces:
-- **NBDev educational patterns** - `#| export`, `#| hide` directives
+- **NBDev educational patterns** - `#| export` directives and NBGrader solution markers
 - **File I/O operations** - Loading ASCII art with error handling
 - **Object-oriented programming** - Classes, methods, and properties
 - **System programming** - Platform detection and compatibility

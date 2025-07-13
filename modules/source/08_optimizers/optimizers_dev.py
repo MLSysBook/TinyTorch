@@ -43,11 +43,49 @@ try:
     from tinytorch.core.tensor import Tensor
     from tinytorch.core.autograd import Variable
 except ImportError:
-    # For development, import from local modules
-    sys.path.append(os.path.join(os.path.dirname(__file__), '..', '01_tensor'))
-    from tensor_dev import Tensor
-    sys.path.append(os.path.join(os.path.dirname(__file__), '..', '07_autograd'))
-    from autograd_dev import Variable
+    # For development, try local imports
+    try:
+        import sys
+        import os
+        
+        # Add module directories to path
+        base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        tensor_dir = os.path.join(base_dir, '01_tensor')
+        autograd_dir = os.path.join(base_dir, '07_autograd')
+        
+        if tensor_dir not in sys.path:
+            sys.path.append(tensor_dir)
+        if autograd_dir not in sys.path:
+            sys.path.append(autograd_dir)
+        
+        from tensor_dev import Tensor
+        from autograd_dev import Variable
+    except ImportError:
+        # Create minimal fallback classes for testing
+        print("Warning: Using fallback classes for testing")
+        
+        class Tensor:
+            def __init__(self, data):
+                self.data = np.array(data)
+                self.shape = self.data.shape
+            
+            def __str__(self):
+                return f"Tensor({self.data})"
+        
+        class Variable:
+            def __init__(self, data, requires_grad=True):
+                if isinstance(data, (int, float)):
+                    self.data = Tensor([data])
+                else:
+                    self.data = Tensor(data)
+                self.requires_grad = requires_grad
+                self.grad = None
+            
+            def zero_grad(self):
+                self.grad = None
+            
+            def __str__(self):
+                return f"Variable({self.data.data})"
 
 # %% nbgrader={"grade": false, "grade_id": "optimizers-setup", "locked": false, "schema_version": 3, "solution": false, "task": false}
 print("🔥 TinyTorch Optimizers Module")

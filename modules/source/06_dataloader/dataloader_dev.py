@@ -944,14 +944,14 @@ try:
     
     for epoch in range(3):
         epoch_samples = 0
-    for batch_data, batch_labels in loader:
+        for batch_data, batch_labels in loader:
             epoch_samples += batch_data.shape[0]
             
-        # Verify shapes remain consistent across epochs
-        assert batch_data.shape[1] == 6, f"Features should be 6 in epoch {epoch}"
-        assert len(batch_labels.shape) == 1, f"Labels should be 1D in epoch {epoch}"
-    
-    assert epoch_samples == 60, f"Should process 60 samples in epoch {epoch}, got {epoch_samples}"
+            # Verify shapes remain consistent across epochs
+            assert batch_data.shape[1] == 6, f"Features should be 6 in epoch {epoch}"
+            assert len(batch_labels.shape) == 1, f"Labels should be 1D in epoch {epoch}"
+        
+        assert epoch_samples == 60, f"Should process 60 samples in epoch {epoch}, got {epoch_samples}"
     
     print("✅ Multi-epoch training works correctly")
     
@@ -962,7 +962,7 @@ try:
     print("  • Memory-efficient processing")
     print("  • Multi-epoch training scenarios")
     
-    except Exception as e:
+except Exception as e:
     print(f"❌ Integration test failed: {e}")
     raise
 
