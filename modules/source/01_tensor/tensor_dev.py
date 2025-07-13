@@ -1398,7 +1398,7 @@ Once you implement the Tensor class above, run these cells to test your implemen
 
 # %% nbgrader={"grade": true, "grade_id": "test-tensor-creation", "locked": true, "points": 25, "schema_version": 3, "solution": false, "task": false}
 # Test tensor creation and properties
-print("Testing tensor creation...")
+print("🔬 Unit Test: Tensor Creation...")
 
 # Test scalar creation
 scalar = Tensor(5.0)
@@ -1433,7 +1433,7 @@ print(f"✅ Matrix: {matrix}")
 
 # %% nbgrader={"grade": true, "grade_id": "test-tensor-arithmetic", "locked": true, "points": 25, "schema_version": 3, "solution": false, "task": false}
 # Test tensor arithmetic operations
-print("Testing tensor arithmetic...")
+print("🔬 Unit Test: Tensor Arithmetic...")
 
 # Test addition
 a = Tensor([1, 2, 3])
@@ -1474,7 +1474,7 @@ print(f"✅ Division: {b} / {a} = {f}")
 
 # %% nbgrader={"grade": true, "grade_id": "test-tensor-broadcasting", "locked": true, "points": 25, "schema_version": 3, "solution": false, "task": false}
 # Test tensor broadcasting
-print("Testing tensor broadcasting...")
+print("🔬 Unit Test: Tensor Broadcasting...")
 
 # Test scalar broadcasting
 matrix = Tensor([[1, 2], [3, 4]])
