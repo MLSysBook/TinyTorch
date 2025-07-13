@@ -99,10 +99,8 @@ from tinytorch.core.activations import ReLU, Sigmoid  # Nonlinearity
 ### Linear Algebra at the Heart of ML
 Neural networks are fundamentally about **linear transformations** followed by **nonlinear activations**:
 
-```
-Layer: y = Wx + b (linear transformation)
-Activation: z = σ(y) (nonlinear transformation)
-```
+$$\text{Layer: } y = Wx + b \text{ (linear transformation)}$$
+$$\text{Activation: } z = \sigma(y) \text{ (nonlinear transformation)}$$
 
 ### Matrix Multiplication: The Engine of Deep Learning
 Every forward pass in a neural network involves matrix multiplication:
@@ -138,11 +136,9 @@ Every framework optimizes matrix multiplication:
 ### What is Matrix Multiplication?
 Matrix multiplication is the **fundamental operation** that powers neural networks. When we multiply matrices A and B:
 
-```
-C = A @ B
-```
+$$C = A \times B$$
 
-Each element C[i,j] is the **dot product** of row i from A and column j from B.
+Each element $C_{i,j}$ is the **dot product** of row $i$ from A and column $j$ from B.
 
 ### The Mathematical Foundation: Linear Algebra in Neural Networks
 

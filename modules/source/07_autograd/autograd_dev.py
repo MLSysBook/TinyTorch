@@ -131,35 +131,35 @@ output = add_result * sub_result = 5
 #### **Backward Pass: Computing Gradients**
 Traverse the graph from outputs to inputs, computing gradients using the chain rule:
 
-```python
-# Backward pass for f(x, y) = (x + y) * (x - y)
-# Starting from output gradient = 1
-∂output/∂multiply = 1
-∂output/∂add = ∂output/∂multiply * ∂multiply/∂add = 1 * sub_result = 1
-∂output/∂sub = ∂output/∂multiply * ∂multiply/∂sub = 1 * add_result = 5
-∂output/∂x = ∂output/∂add * ∂add/∂x + ∂output/∂sub * ∂sub/∂x = 1 * 1 + 5 * 1 = 6
-∂output/∂y = ∂output/∂add * ∂add/∂y + ∂output/∂sub * ∂sub/∂y = 1 * 1 + 5 * (-1) = -4
+For $f(x, y) = (x + y) \cdot (x - y)$ with $x = 3, y = 2$:
+
+$$\frac{\partial \text{output}}{\partial \text{multiply}} = 1$$
+
+$$\frac{\partial \text{output}}{\partial \text{add}} = \frac{\partial \text{output}}{\partial \text{multiply}} \cdot \frac{\partial \text{multiply}}{\partial \text{add}} = 1 \cdot \text{sub\_result} = 1$$
+
+$$\frac{\partial \text{output}}{\partial \text{sub}} = \frac{\partial \text{output}}{\partial \text{multiply}} \cdot \frac{\partial \text{multiply}}{\partial \text{sub}} = 1 \cdot \text{add\_result} = 5$$
+
+$$\frac{\partial \text{output}}{\partial x} = \frac{\partial \text{output}}{\partial \text{add}} \cdot \frac{\partial \text{add}}{\partial x} + \frac{\partial \text{output}}{\partial \text{sub}} \cdot \frac{\partial \text{sub}}{\partial x} = 1 \cdot 1 + 5 \cdot 1 = 6$$
+
+$$\frac{\partial \text{output}}{\partial y} = \frac{\partial \text{output}}{\partial \text{add}} \cdot \frac{\partial \text{add}}{\partial y} + \frac{\partial \text{output}}{\partial \text{sub}} \cdot \frac{\partial \text{sub}}{\partial y} = 1 \cdot 1 + 5 \cdot (-1) = -4$$
 ```
 
 ### Mathematical Foundation: The Chain Rule
 
 #### **Single Variable Chain Rule**
-For composite functions: If z = f(g(x)), then:
-```
-dz/dx = (dz/df) * (df/dx)
-```
+For composite functions: If $z = f(g(x))$, then:
+
+$$\frac{dz}{dx} = \frac{dz}{df} \cdot \frac{df}{dx}$$
 
 #### **Multivariable Chain Rule**
-For functions of multiple variables: If z = f(x, y) where x = g(t) and y = h(t), then:
-```
-dz/dt = (∂z/∂x) * (dx/dt) + (∂z/∂y) * (dy/dt)
-```
+For functions of multiple variables: If $z = f(x, y)$ where $x = g(t)$ and $y = h(t)$, then:
+
+$$\frac{dz}{dt} = \frac{\partial z}{\partial x} \cdot \frac{dx}{dt} + \frac{\partial z}{\partial y} \cdot \frac{dy}{dt}$$
 
 #### **Chain Rule in Computational Graphs**
 For any path from input to output through intermediate nodes:
-```
-∂output/∂input = ∏(∂node_{i+1}/∂node_i) for all nodes in the path
-```
+
+$$\frac{\partial \text{output}}{\partial \text{input}} = \prod_{i} \frac{\partial \text{node}_{i+1}}{\partial \text{node}_i}$$
 
 ### Automatic Differentiation Modes
 
@@ -472,10 +472,10 @@ Every differentiable operation follows the same pattern:
 3. **Return Variable**: With the result and grad_fn
 
 ### Mathematical Rules
-- **Addition**: `d(x + y)/dx = 1, d(x + y)/dy = 1`
-- **Multiplication**: `d(x * y)/dx = y, d(x * y)/dy = x`
-- **Subtraction**: `d(x - y)/dx = 1, d(x - y)/dy = -1`
-- **Division**: `d(x / y)/dx = 1/y, d(x / y)/dy = -x/y²`
+- **Addition**: $\frac{d(x + y)}{dx} = 1$, $\frac{d(x + y)}{dy} = 1$
+- **Multiplication**: $\frac{d(x \cdot y)}{dx} = y$, $\frac{d(x \cdot y)}{dy} = x$
+- **Subtraction**: $\frac{d(x - y)}{dx} = 1$, $\frac{d(x - y)}{dy} = -1$
+- **Division**: $\frac{d(x / y)}{dx} = \frac{1}{y}$, $\frac{d(x / y)}{dy} = -\frac{x}{y^2}$
 
 ### Implementation Strategy
 Each operation creates a closure that captures the input variables and implements the gradient computation rule.
@@ -680,7 +680,7 @@ def divide(a: Union[Variable, float, int], b: Union[Variable, float, int]) -> Va
     4. Return Variable with result and grad_fn
     
     MATHEMATICAL RULE:
-    If z = x / y, then dz/dx = 1/y, dz/dy = -x/y²
+    If z = x / y, then dz/dx = \frac{1}{y}, dz/dy = -\frac{x}{y^2}
     
     EXAMPLE:
     x = Variable(6.0), y = Variable(2.0)
