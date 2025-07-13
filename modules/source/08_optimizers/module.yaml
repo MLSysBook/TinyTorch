@@ -42,7 +42,7 @@ exports:
 files:
   main: "optimizers_dev.py"
   readme: "README.md"
-  tests: "tests/test_optimizers.py"
+  # tests: inline in optimizers_dev.py
 
 # Assessment configuration
 assessment:
