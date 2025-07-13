@@ -1,0 +1,501 @@
+{
+  "module_name": "02_activations",
+  "module_path": "modules/source/02_activations",
+  "analysis_date": "2025-07-13T09:20:37.679664",
+  "total_lines": 1589,
+  "total_cells": 17,
+  "avg_cell_length": 73.11764705882354,
+  "scaffolding_quality": 3,
+  "complexity_distribution": {
+    "1": 2,
+    "2": 1,
+    "3": 10,
+    "4": 3,
+    "5": 1
+  },
+  "learning_progression_quality": 4,
+  "concepts_covered": [
+    "Test with multiple values",
+    "balanced scale",
+    "Advantages",
+    "What is Sigmoid?",
+    "Reality",
+    "This is a unit test",
+    "When to Use Sigmoid",
+    "Create ReLU instance",
+    "In Plain English:",
+    "What is ReLU?",
+    "Computational Efficiency",
+    "Use case",
+    "Feature Learning",
+    "Foundation",
+    "Deep networks",
+    "Sparsity",
+    "Monotonic",
+    "\ud83e\uddea Unit Test: Softmax Activation",
+    "Unbounded",
+    "Integration:",
+    "Fast",
+    "Alternative",
+    "Why Sigmoid is Useful",
+    "What is Tanh?",
+    "x",
+    "RNNs",
+    "Interpretable",
+    "Mathematical Definition:",
+    "TensorFlow",
+    "EXAMPLE",
+    "Production:",
+    "Show visual example",
+    "Test with mixed positive/negative values",
+    "\ud83e\uddea Unit Test: ReLU Activation",
+    "Create Sigmoid instance",
+    "Multi-class classification",
+    "\ud83e\udde0 The Mathematical Foundation of Nonlinearity",
+    "Create test data",
+    "Test Tanh activation",
+    "Tanh",
+    "Testing",
+    "7",
+    "\ud83e\uddea Unit Test: Sigmoid Activation",
+    "10",
+    "6",
+    "data",
+    "\ud83c\udfaf Module Summary",
+    "Use",
+    "Test Softmax activation",
+    "functions",
+    "Test with various inputs",
+    "2",
+    "Progress",
+    "Build",
+    "Learning Side:",
+    "Final package structure:",
+    "PyTorch",
+    "Check that all outputs are positive",
+    "Sigmoid",
+    "Nonlinearity",
+    "Create Tanh instance",
+    "Numerical stability",
+    "Run the integration test",
+    "Building Side:",
+    "Tanh (Hyperbolic Tangent)"
+  ],
+  "todo_count": 4,
+  "hint_count": 5,
+  "test_count": 1,
+  "critical_issues": [
+    "Module too long (1589 lines) - students will be overwhelmed",
+    "9 cells are too long (>50 lines)"
+  ],
+  "overwhelm_points": [
+    "Cell 1: Too many concepts (5)",
+    "Cell 2: Very long cell (86 lines)",
+    "Cell 2: Multiple functions in one cell (3)",
+    "Cell 3: Too many concepts (5)",
+    "Cell 4: Too many concepts (5)",
+    "Cell 5: Very long cell (155 lines)",
+    "Cell 5: High complexity without guidance",
+    "Cell 5: Too many concepts (5)",
+    "Cell 6: Very long cell (64 lines)",
+    "Cell 6: Complex implementation without error handling guidance",
+    "Cell 7: Long cell (34 lines)",
+    "Cell 7: Too many concepts (5)",
+    "Cell 8: Very long cell (69 lines)",
+    "Cell 8: Complex implementation without error handling guidance",
+    "Cell 9: Long cell (39 lines)",
+    "Cell 9: Too many concepts (5)",
+    "Cell 10: Very long cell (56 lines)",
+    "Cell 10: Complex implementation without error handling guidance",
+    "Cell 11: Long cell (39 lines)",
+    "Cell 11: Too many concepts (5)",
+    "Cell 12: Very long cell (64 lines)",
+    "Cell 12: Complex implementation without error handling guidance",
+    "Cell 13: Long cell (43 lines)",
+    "Cell 13: Too many concepts (5)",
+    "Cell 14: Very long cell (126 lines)",
+    "Cell 14: Too many concepts (5)",
+    "Cell 15: Very long cell (276 lines)",
+    "Cell 16: Very long cell (112 lines)",
+    "Cell 17: Too many concepts (5)"
+  ],
+  "recommendations": [
+    "Break module into smaller sections or multiple modules",
+    "Split 13 long cells into smaller, focused cells",
+    "Add immediate feedback tests after implementations"
+  ],
+  "cell_analyses": [
+    {
+      "cell_type": "code",
+      "line_count": 9,
+      "char_count": 180,
+      "complexity_score": 1,
+      "educational_type": "demonstration",
+      "has_todo": false,
+      "has_hints": false,
+      "concepts_introduced": [],
+      "overwhelm_factors": [
+        "Too many concepts (5)"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "line_count": 86,
+      "char_count": 3823,
+      "complexity_score": 3,
+      "educational_type": "example_illustration",
+      "has_todo": false,
+      "has_hints": false,
+      "concepts_introduced": [
+        "Use",
+        "functions",
+        "2",
+        "Build",
+        "data"
+      ],
+      "overwhelm_factors": [
+        "Very long cell (86 lines)",
+        "Multiple functions in one cell (3)"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "line_count": 16,
+      "char_count": 761,
+      "complexity_score": 1,
+      "educational_type": "concept_introduction",
+      "has_todo": false,
+      "has_hints": false,
+      "concepts_introduced": [
+        "Final package structure:",
+        "Production:",
+        "Integration:",
+        "Building Side:",
+        "Learning Side:"
+      ],
+      "overwhelm_factors": [
+        "Too many concepts (5)"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "line_count": 25,
+      "char_count": 1389,
+      "complexity_score": 3,
+      "educational_type": "explanation",
+      "has_todo": false,
+      "has_hints": false,
+      "concepts_introduced": [
+        "PyTorch",
+        "TensorFlow",
+        "\ud83e\udde0 The Mathematical Foundation of Nonlinearity",
+        "Computational Efficiency",
+        "Feature Learning"
+      ],
+      "overwhelm_factors": [
+        "Too many concepts (5)"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "line_count": 155,
+      "char_count": 7654,
+      "complexity_score": 4,
+      "educational_type": "concept_introduction",
+      "has_todo": false,
+      "has_hints": false,
+      "concepts_introduced": [
+        "Advantages",
+        "Reality",
+        "Use case",
+        "Foundation",
+        "Unbounded"
+      ],
+      "overwhelm_factors": [
+        "Very long cell (155 lines)",
+        "High complexity without guidance",
+        "Too many concepts (5)"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "line_count": 64,
+      "char_count": 2743,
+      "complexity_score": 4,
+      "educational_type": "concept_introduction",
+      "has_todo": true,
+      "has_hints": true,
+      "concepts_introduced": [
+        "In Plain English:",
+        "What is ReLU?",
+        "Deep networks",
+        "Sparsity",
+        "Fast"
+      ],
+      "overwhelm_factors": [
+        "Very long cell (64 lines)",
+        "Complex implementation without error handling guidance"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "line_count": 34,
+      "char_count": 1656,
+      "complexity_score": 3,
+      "educational_type": "example_illustration",
+      "has_todo": false,
+      "has_hints": false,
+      "concepts_introduced": [
+        "Show visual example",
+        "This is a unit test",
+        "Test with mixed positive/negative values",
+        "\ud83e\uddea Unit Test: ReLU Activation",
+        "Create ReLU instance"
+      ],
+      "overwhelm_factors": [
+        "Long cell (34 lines)",
+        "Too many concepts (5)"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "line_count": 69,
+      "char_count": 3009,
+      "complexity_score": 4,
+      "educational_type": "concept_introduction",
+      "has_todo": true,
+      "has_hints": true,
+      "concepts_introduced": [
+        "What is Sigmoid?",
+        "When to Use Sigmoid",
+        "Monotonic",
+        "Why Sigmoid is Useful",
+        "x"
+      ],
+      "overwhelm_factors": [
+        "Very long cell (69 lines)",
+        "Complex implementation without error handling guidance"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "line_count": 39,
+      "char_count": 1787,
+      "complexity_score": 3,
+      "educational_type": "example_illustration",
+      "has_todo": false,
+      "has_hints": false,
+      "concepts_introduced": [
+        "Show visual example",
+        "This is a unit test",
+        "Create Sigmoid instance",
+        "Test with various inputs",
+        "\ud83e\uddea Unit Test: Sigmoid Activation"
+      ],
+      "overwhelm_factors": [
+        "Long cell (39 lines)",
+        "Too many concepts (5)"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "line_count": 56,
+      "char_count": 2258,
+      "complexity_score": 3,
+      "educational_type": "concept_introduction",
+      "has_todo": true,
+      "has_hints": true,
+      "concepts_introduced": [
+        "balanced scale",
+        "Tanh (Hyperbolic Tangent)",
+        "What is Tanh?",
+        "x",
+        "RNNs"
+      ],
+      "overwhelm_factors": [
+        "Very long cell (56 lines)",
+        "Complex implementation without error handling guidance"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "line_count": 39,
+      "char_count": 1767,
+      "complexity_score": 3,
+      "educational_type": "example_illustration",
+      "has_todo": false,
+      "has_hints": false,
+      "concepts_introduced": [
+        "Show visual example",
+        "This is a unit test",
+        "Test with various inputs",
+        "Create Tanh instance",
+        "Progress"
+      ],
+      "overwhelm_factors": [
+        "Long cell (39 lines)",
+        "Too many concepts (5)"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "line_count": 64,
+      "char_count": 2729,
+      "complexity_score": 3,
+      "educational_type": "concept_introduction",
+      "has_todo": true,
+      "has_hints": true,
+      "concepts_introduced": [
+        "x",
+        "Interpretable",
+        "Mathematical Definition:",
+        "EXAMPLE",
+        "Multi-class classification"
+      ],
+      "overwhelm_factors": [
+        "Very long cell (64 lines)",
+        "Complex implementation without error handling guidance"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "line_count": 43,
+      "char_count": 2278,
+      "complexity_score": 3,
+      "educational_type": "example_illustration",
+      "has_todo": false,
+      "has_hints": false,
+      "concepts_introduced": [
+        "Show visual example",
+        "This is a unit test",
+        "\ud83e\uddea Unit Test: Softmax Activation",
+        "Test with various inputs",
+        "Progress"
+      ],
+      "overwhelm_factors": [
+        "Long cell (43 lines)",
+        "Too many concepts (5)"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "line_count": 126,
+      "char_count": 6515,
+      "complexity_score": 3,
+      "educational_type": "explanation",
+      "has_todo": false,
+      "has_hints": false,
+      "concepts_introduced": [
+        "Test with multiple values",
+        "Check that all outputs are positive",
+        "Test Tanh activation",
+        "Test Softmax activation",
+        "Create test data"
+      ],
+      "overwhelm_factors": [
+        "Very long cell (126 lines)",
+        "Too many concepts (5)"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "line_count": 276,
+      "char_count": 14436,
+      "complexity_score": 3,
+      "educational_type": "concept_reinforcement",
+      "has_todo": false,
+      "has_hints": false,
+      "concepts_introduced": [
+        "Tanh",
+        "Testing",
+        "7",
+        "10",
+        "6"
+      ],
+      "overwhelm_factors": [
+        "Very long cell (276 lines)"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "line_count": 112,
+      "char_count": 6520,
+      "complexity_score": 5,
+      "educational_type": "concept_reinforcement",
+      "has_todo": false,
+      "has_hints": true,
+      "concepts_introduced": [
+        "Sigmoid",
+        "Tanh",
+        "Alternative",
+        "2",
+        "Run the integration test"
+      ],
+      "overwhelm_factors": [
+        "Very long cell (112 lines)"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "line_count": 30,
+      "char_count": 1566,
+      "complexity_score": 2,
+      "educational_type": "concept_introduction",
+      "has_todo": false,
+      "has_hints": false,
+      "concepts_introduced": [
+        "Nonlinearity",
+        "\ud83c\udfaf Module Summary",
+        "Numerical stability",
+        "Sigmoid",
+        "Tanh"
+      ],
+      "overwhelm_factors": [
+        "Too many concepts (5)"
+      ]
+    }
+  ],
+  "overall_grade": "C",
+  "category_grades": {
+    "Scaffolding": "C",
+    "Complexity": "B",
+    "Cell_Length": "D"
+  },
+  "vs_targets": {
+    "Length": "\u274c Too long (1589 lines, target: 200-400)",
+    "Cell_Length": "\u274c Too long (73.1 avg, target: \u226430)",
+    "Complexity": "\u2705 Good (23.5% high-complexity)"
+  },
+  "vs_best_practices": [
+    "Cell 2: Too many concepts (5)",
+    "Cell 2: Too long (86 lines)",
+    "Cell 3: Too many concepts (5)",
+    "Cell 4: Too many concepts (5)",
+    "Cell 5: Too many concepts (5)",
+    "Cell 5: Too long (155 lines)",
+    "Cell 5: High complexity without guidance",
+    "Cell 6: Too many concepts (5)",
+    "Cell 6: Too long (64 lines)",
+    "Cell 7: Too many concepts (5)",
+    "Cell 7: Too long (34 lines)",
+    "Cell 8: Too many concepts (5)",
+    "Cell 8: Too long (69 lines)",
+    "Cell 9: Too many concepts (5)",
+    "Cell 9: Too long (39 lines)",
+    "Cell 10: Too many concepts (5)",
+    "Cell 10: Too long (56 lines)",
+    "Cell 11: Too many concepts (5)",
+    "Cell 11: Too long (39 lines)",
+    "Cell 12: Too many concepts (5)",
+    "Cell 12: Too long (64 lines)",
+    "Cell 13: Too many concepts (5)",
+    "Cell 13: Too long (43 lines)",
+    "Cell 14: Too many concepts (5)",
+    "Cell 14: Too long (126 lines)",
+    "Cell 15: Too many concepts (5)",
+    "Cell 15: Too long (276 lines)",
+    "Cell 16: Too many concepts (5)",
+    "Cell 16: Too long (112 lines)",
+    "Cell 17: Too many concepts (5)"
+  ]
+}

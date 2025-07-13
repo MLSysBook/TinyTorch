@@ -1,0 +1,375 @@
+{
+  "module_name": "03_layers",
+  "module_path": "modules/source/03_layers",
+  "analysis_date": "2025-07-13T09:20:37.695751",
+  "total_lines": 1290,
+  "total_cells": 12,
+  "avg_cell_length": 85,
+  "scaffolding_quality": 3,
+  "complexity_distribution": {
+    "1": 2,
+    "2": 1,
+    "3": 6,
+    "4": 2,
+    "5": 1
+  },
+  "learning_progression_quality": 4,
+  "concepts_covered": [
+    "Nonlinearity",
+    "Test case 3: Different shapes",
+    "Performance Considerations",
+    "Orthogonal",
+    "Rotation",
+    "This is a unit test",
+    "default",
+    "Each layer is a matrix multiplication:",
+    "Composability",
+    "Forward: y = W @ x + b",
+    "Cache locality",
+    "Returns",
+    "Show the linear transformation in action",
+    "Foundation",
+    "Test naive matrix multiplication",
+    "Create a simple network: Dense \u2192 ReLU \u2192 Dense",
+    "composition",
+    "nonlinear activations",
+    "Matrix multiplication",
+    "Integration:",
+    "What You've Accomplished",
+    "Step 2: Building the Dense Layer",
+    "Next Steps",
+    "\ud83e\uddea Test Your Implementations",
+    "Test matrix multiplication",
+    "TensorFlow",
+    "Numerical stability",
+    "Production:",
+    "Testing",
+    "Mathematical Foundations",
+    "7",
+    "Test simple 2x2 case",
+    "try",
+    "Use",
+    "Test without bias",
+    "network",
+    "9",
+    "2",
+    "Progress",
+    "Build",
+    "Learning Side:",
+    "Final package structure:",
+    "scenarios",
+    "Test basic Dense layer",
+    "Run the integration test",
+    "3",
+    "Building Side:",
+    "Understand",
+    "Build \u2192 Use \u2192 Understand",
+    "Test different shapes",
+    "Print final summary"
+  ],
+  "todo_count": 2,
+  "hint_count": 3,
+  "test_count": 1,
+  "critical_issues": [
+    "Module too long (1290 lines) - students will be overwhelmed",
+    "7 cells are too long (>50 lines)"
+  ],
+  "overwhelm_points": [
+    "Cell 1: Too many concepts (5)",
+    "Cell 2: Very long cell (52 lines)",
+    "Cell 3: Too many concepts (5)",
+    "Cell 4: Long cell (31 lines)",
+    "Cell 4: Too many concepts (5)",
+    "Cell 5: Very long cell (182 lines)",
+    "Cell 5: Complex implementation without error handling guidance",
+    "Cell 6: Long cell (39 lines)",
+    "Cell 6: Too many concepts (5)",
+    "Cell 7: Very long cell (116 lines)",
+    "Cell 7: Multiple functions in one cell (3)",
+    "Cell 7: Complex implementation without error handling guidance",
+    "Cell 8: Very long cell (62 lines)",
+    "Cell 8: Too many concepts (5)",
+    "Cell 9: Very long cell (80 lines)",
+    "Cell 9: High complexity without guidance",
+    "Cell 9: Too many concepts (5)",
+    "Cell 10: Very long cell (228 lines)",
+    "Cell 11: Very long cell (172 lines)",
+    "Cell 11: Math-heavy without scaffolding",
+    "Cell 12: Long cell (33 lines)",
+    "Cell 12: Too many concepts (5)"
+  ],
+  "recommendations": [
+    "Break module into smaller sections or multiple modules",
+    "Split 10 long cells into smaller, focused cells",
+    "Add immediate feedback tests after implementations"
+  ],
+  "cell_analyses": [
+    {
+      "cell_type": "code",
+      "line_count": 9,
+      "char_count": 180,
+      "complexity_score": 1,
+      "educational_type": "demonstration",
+      "has_todo": false,
+      "has_hints": false,
+      "concepts_introduced": [],
+      "overwhelm_factors": [
+        "Too many concepts (5)"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "line_count": 52,
+      "char_count": 2563,
+      "complexity_score": 3,
+      "educational_type": "concept_introduction",
+      "has_todo": false,
+      "has_hints": false,
+      "concepts_introduced": [
+        "Use",
+        "3",
+        "Build",
+        "Understand",
+        "Build \u2192 Use \u2192 Understand"
+      ],
+      "overwhelm_factors": [
+        "Very long cell (52 lines)"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "line_count": 16,
+      "char_count": 718,
+      "complexity_score": 1,
+      "educational_type": "concept_introduction",
+      "has_todo": false,
+      "has_hints": false,
+      "concepts_introduced": [
+        "Final package structure:",
+        "Production:",
+        "Integration:",
+        "Building Side:",
+        "Learning Side:"
+      ],
+      "overwhelm_factors": [
+        "Too many concepts (5)"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "line_count": 31,
+      "char_count": 1544,
+      "complexity_score": 2,
+      "educational_type": "explanation",
+      "has_todo": false,
+      "has_hints": false,
+      "concepts_introduced": [
+        "Performance Considerations",
+        "Composability",
+        "nonlinear activations",
+        "TensorFlow",
+        "Numerical stability"
+      ],
+      "overwhelm_factors": [
+        "Long cell (31 lines)",
+        "Too many concepts (5)"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "line_count": 182,
+      "char_count": 7712,
+      "complexity_score": 4,
+      "educational_type": "concept_introduction",
+      "has_todo": true,
+      "has_hints": true,
+      "concepts_introduced": [
+        "Orthogonal",
+        "Rotation",
+        "Each layer is a matrix multiplication:",
+        "Forward: y = W @ x + b",
+        "Cache locality"
+      ],
+      "overwhelm_factors": [
+        "Very long cell (182 lines)",
+        "Complex implementation without error handling guidance"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "line_count": 39,
+      "char_count": 2002,
+      "complexity_score": 3,
+      "educational_type": "explanation",
+      "has_todo": false,
+      "has_hints": false,
+      "concepts_introduced": [
+        "try",
+        "This is a unit test",
+        "Test simple 2x2 case",
+        "Progress",
+        "Test different shapes"
+      ],
+      "overwhelm_factors": [
+        "Long cell (39 lines)",
+        "Too many concepts (5)"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "line_count": 116,
+      "char_count": 5000,
+      "complexity_score": 3,
+      "educational_type": "concept_introduction",
+      "has_todo": true,
+      "has_hints": true,
+      "concepts_introduced": [
+        "Nonlinearity",
+        "default",
+        "Returns",
+        "Foundation",
+        "Step 2: Building the Dense Layer"
+      ],
+      "overwhelm_factors": [
+        "Very long cell (116 lines)",
+        "Multiple functions in one cell (3)",
+        "Complex implementation without error handling guidance"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "line_count": 62,
+      "char_count": 2943,
+      "complexity_score": 3,
+      "educational_type": "explanation",
+      "has_todo": false,
+      "has_hints": false,
+      "concepts_introduced": [
+        "Show the linear transformation in action",
+        "This is a unit test",
+        "Test without bias",
+        "Test basic Dense layer",
+        "Test naive matrix multiplication"
+      ],
+      "overwhelm_factors": [
+        "Very long cell (62 lines)",
+        "Too many concepts (5)"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "line_count": 80,
+      "char_count": 3633,
+      "complexity_score": 4,
+      "educational_type": "explanation",
+      "has_todo": false,
+      "has_hints": false,
+      "concepts_introduced": [
+        "Test case 3: Different shapes",
+        "Test naive matrix multiplication",
+        "Create a simple network: Dense \u2192 ReLU \u2192 Dense",
+        "\ud83e\uddea Test Your Implementations",
+        "Test matrix multiplication"
+      ],
+      "overwhelm_factors": [
+        "Very long cell (80 lines)",
+        "High complexity without guidance",
+        "Too many concepts (5)"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "line_count": 228,
+      "char_count": 12536,
+      "complexity_score": 3,
+      "educational_type": "concept_reinforcement",
+      "has_todo": false,
+      "has_hints": false,
+      "concepts_introduced": [
+        "9",
+        "Testing",
+        "scenarios",
+        "composition",
+        "7"
+      ],
+      "overwhelm_factors": [
+        "Very long cell (228 lines)"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "line_count": 172,
+      "char_count": 9096,
+      "complexity_score": 5,
+      "educational_type": "concept_reinforcement",
+      "has_todo": false,
+      "has_hints": true,
+      "concepts_introduced": [
+        "scenarios",
+        "network",
+        "2",
+        "Run the integration test",
+        "Print final summary"
+      ],
+      "overwhelm_factors": [
+        "Very long cell (172 lines)",
+        "Math-heavy without scaffolding"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "line_count": 33,
+      "char_count": 1682,
+      "complexity_score": 3,
+      "educational_type": "concept_introduction",
+      "has_todo": false,
+      "has_hints": false,
+      "concepts_introduced": [
+        "Composability",
+        "Matrix multiplication",
+        "What You've Accomplished",
+        "Next Steps",
+        "Mathematical Foundations"
+      ],
+      "overwhelm_factors": [
+        "Long cell (33 lines)",
+        "Too many concepts (5)"
+      ]
+    }
+  ],
+  "overall_grade": "C",
+  "category_grades": {
+    "Scaffolding": "C",
+    "Complexity": "B",
+    "Cell_Length": "F"
+  },
+  "vs_targets": {
+    "Length": "\u274c Too long (1290 lines, target: 200-400)",
+    "Cell_Length": "\u274c Too long (85.0 avg, target: \u226430)",
+    "Complexity": "\u2705 Good (25.0% high-complexity)"
+  },
+  "vs_best_practices": [
+    "Cell 2: Too many concepts (5)",
+    "Cell 2: Too long (52 lines)",
+    "Cell 3: Too many concepts (5)",
+    "Cell 4: Too many concepts (5)",
+    "Cell 4: Too long (31 lines)",
+    "Cell 5: Too many concepts (5)",
+    "Cell 5: Too long (182 lines)",
+    "Cell 6: Too many concepts (5)",
+    "Cell 6: Too long (39 lines)",
+    "Cell 7: Too many concepts (5)",
+    "Cell 7: Too long (116 lines)",
+    "Cell 8: Too many concepts (5)",
+    "Cell 8: Too long (62 lines)",
+    "Cell 9: Too many concepts (5)",
+    "Cell 9: Too long (80 lines)",
+    "Cell 9: High complexity without guidance",
+    "Cell 10: Too many concepts (5)",
+    "Cell 10: Too long (228 lines)",
+    "Cell 11: Too many concepts (5)",
+    "Cell 11: Too long (172 lines)",
+    "Cell 12: Too many concepts (5)",
+    "Cell 12: Too long (33 lines)"
+  ]
+}
