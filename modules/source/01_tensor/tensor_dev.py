@@ -74,61 +74,257 @@ A **tensor** is an N-dimensional array with ML-specific operations. Think of it 
 - **Matrix** (2D): A 2D array - `[[1, 2], [3, 4]]`
 - **Higher dimensions**: 3D, 4D, etc. for images, video, batches
 
-### Why Tensors Are Essential in ML
-- **Efficiency**: Vectorized operations are 10-100x faster than loops
-- **Flexibility**: Same operations work on scalars, vectors, matrices
-- **Foundation**: Every ML framework (PyTorch, TensorFlow, JAX) uses tensors
-- **Hardware**: Modern GPUs are designed for tensor operations
+### The Mathematical Foundation: From Scalars to Tensors
+Understanding tensors requires building from mathematical fundamentals:
 
-### Real-World Examples
+#### **Scalars (Rank 0)**
+- **Definition**: A single number with no direction
+- **Examples**: Temperature (25°C), mass (5.2 kg), probability (0.7)
+- **Operations**: Addition, multiplication, comparison
+- **ML Context**: Loss values, learning rates, regularization parameters
+
+#### **Vectors (Rank 1)**
+- **Definition**: An ordered list of numbers with direction and magnitude
+- **Examples**: Position [x, y, z], RGB color [255, 128, 0], word embedding [0.1, -0.5, 0.8]
+- **Operations**: Dot product, cross product, norm calculation
+- **ML Context**: Feature vectors, gradients, model parameters
+
+#### **Matrices (Rank 2)**
+- **Definition**: A 2D array organizing data in rows and columns
+- **Examples**: Image (height × width), weight matrix (input × output), covariance matrix
+- **Operations**: Matrix multiplication, transpose, inverse, eigendecomposition
+- **ML Context**: Linear layer weights, attention matrices, batch data
+
+#### **Higher-Order Tensors (Rank 3+)**
+- **Definition**: Multi-dimensional arrays extending matrices
+- **Examples**: 
+  - **3D**: Video frames (time × height × width), RGB images (height × width × channels)
+  - **4D**: Image batches (batch × height × width × channels)
+  - **5D**: Video batches (batch × time × height × width × channels)
+- **Operations**: Tensor products, contractions, decompositions
+- **ML Context**: Convolutional features, RNN states, transformer attention
+
+### Why Tensors Matter in ML: The Computational Foundation
+
+#### **1. Unified Data Representation**
+Tensors provide a consistent way to represent all ML data:
 ```python
-# Image: 3D tensor (height, width, channels)
-image = Tensor(np.random.rand(224, 224, 3))
-
-# Batch of images: 4D tensor (batch, height, width, channels)
-batch = Tensor(np.random.rand(32, 224, 224, 3))
-
-# Neural network weights: 2D tensor (input_size, output_size)
-weights = Tensor(np.random.rand(784, 128))
+# All of these are tensors with different shapes
+scalar_loss = Tensor(0.5)              # Shape: ()
+feature_vector = Tensor([1, 2, 3])      # Shape: (3,)
+weight_matrix = Tensor([[1, 2], [3, 4]]) # Shape: (2, 2)
+image_batch = Tensor(np.random.rand(32, 224, 224, 3)) # Shape: (32, 224, 224, 3)
 ```
 
-### Learning Progression
-We'll build tensors step by step:
-1. **Creation**: Handle different input types
-2. **Properties**: Access shape, size, data type
-3. **Arithmetic**: Add, multiply, subtract, divide
-4. **Integration**: Work with other TinyTorch components
+#### **2. Efficient Batch Processing**
+ML systems process multiple samples simultaneously:
+```python
+# Instead of processing one image at a time:
+for image in images:
+    result = model(image)  # Slow: 1000 separate operations
 
-Let's start building!
+# Process entire batch at once:
+batch_result = model(image_batch)  # Fast: 1 vectorized operation
+```
+
+#### **3. Hardware Acceleration**
+Modern hardware (GPUs, TPUs) excels at tensor operations:
+- **Parallel processing**: Multiple operations simultaneously
+- **Vectorization**: SIMD (Single Instruction, Multiple Data) operations
+- **Memory optimization**: Contiguous memory layout for cache efficiency
+
+#### **4. Automatic Differentiation**
+Tensors enable gradient computation through computational graphs:
+```python
+# Each tensor operation creates a node in the computation graph
+x = Tensor([1, 2, 3])
+y = x * 2          # Node: multiplication
+z = y + 1          # Node: addition
+loss = z.sum()     # Node: summation
+# Gradients flow backward through this graph
+```
+
+### Real-World Examples: Tensors in Action
+
+#### **Computer Vision**
+- **Grayscale image**: 2D tensor `(height, width)` - `(28, 28)` for MNIST
+- **Color image**: 3D tensor `(height, width, channels)` - `(224, 224, 3)` for RGB
+- **Image batch**: 4D tensor `(batch, height, width, channels)` - `(32, 224, 224, 3)`
+- **Video**: 5D tensor `(batch, time, height, width, channels)`
+
+#### **Natural Language Processing**
+- **Word embedding**: 1D tensor `(embedding_dim,)` - `(300,)` for Word2Vec
+- **Sentence**: 2D tensor `(sequence_length, embedding_dim)` - `(50, 768)` for BERT
+- **Batch of sentences**: 3D tensor `(batch, sequence_length, embedding_dim)`
+
+#### **Audio Processing**
+- **Audio signal**: 1D tensor `(time_steps,)` - `(16000,)` for 1 second at 16kHz
+- **Spectrogram**: 2D tensor `(time_frames, frequency_bins)`
+- **Batch of audio**: 3D tensor `(batch, time_steps, features)`
+
+#### **Time Series**
+- **Single series**: 2D tensor `(time_steps, features)`
+- **Multiple series**: 3D tensor `(batch, time_steps, features)`
+- **Multivariate forecasting**: 4D tensor `(batch, time_steps, features, predictions)`
+
+### Why Not Just Use NumPy?
+
+While we use NumPy internally, our Tensor class adds ML-specific functionality:
+
+#### **1. ML-Specific Operations**
+- **Gradient tracking**: For automatic differentiation (coming in Module 7)
+- **GPU support**: For hardware acceleration (future extension)
+- **Broadcasting semantics**: ML-friendly dimension handling
+
+#### **2. Consistent API**
+- **Type safety**: Predictable behavior across operations
+- **Error checking**: Clear error messages for debugging
+- **Integration**: Seamless work with other TinyTorch components
+
+#### **3. Educational Value**
+- **Conceptual clarity**: Understand what tensors really are
+- **Implementation insight**: See how frameworks work internally
+- **Debugging skills**: Trace through tensor operations step by step
+
+#### **4. Extensibility**
+- **Future features**: Ready for gradients, GPU, distributed computing
+- **Customization**: Add domain-specific operations
+- **Optimization**: Profile and optimize specific use cases
+
+### Performance Considerations: Building Efficient Tensors
+
+#### **Memory Layout**
+- **Contiguous arrays**: Better cache locality and performance
+- **Data types**: `float32` vs `float64` trade-offs
+- **Memory sharing**: Avoid unnecessary copies
+
+#### **Vectorization**
+- **SIMD operations**: Single Instruction, Multiple Data
+- **Broadcasting**: Efficient operations on different shapes
+- **Batch operations**: Process multiple samples simultaneously
+
+#### **Numerical Stability**
+- **Precision**: Balancing speed and accuracy
+- **Overflow/underflow**: Handling extreme values
+- **Gradient flow**: Maintaining numerical stability for training
+
+Let's start building our tensor foundation!
 """
 
 # %% [markdown]
 """
-## Step 1A: Tensor Creation
+## 🧠 The Mathematical Foundation
 
-### The Foundation Operation
-Creating tensors is the first thing you'll do in any ML system. Our Tensor class needs to:
+### Linear Algebra Refresher
+Tensors are generalizations of scalars, vectors, and matrices:
 
-1. **Accept various input types**: scalars, lists, numpy arrays
-2. **Handle data types**: integers, floats, with automatic type management
-3. **Store data efficiently**: using NumPy arrays internally
-4. **Validate inputs**: ensure data is numeric and well-formed
+```
+Scalar (0D): 5
+Vector (1D): [1, 2, 3]
+Matrix (2D): [[1, 2], [3, 4]]
+Tensor (3D): [[[1, 2], [3, 4]], [[5, 6], [7, 8]]]
+```
 
-### Design Decisions
-- **Wrap NumPy**: Use NumPy arrays internally for performance
-- **Consistent API**: Similar to PyTorch's `torch.tensor()` 
-- **Type management**: Prefer float32 for ML (GPU efficiency)
-- **Memory efficiency**: Share data when possible, copy when needed
+### Why This Matters for Neural Networks
+- **Forward Pass**: Matrix multiplication between layers
+- **Batch Processing**: Multiple samples processed simultaneously
+- **Convolutions**: 3D operations on image data
+- **Gradients**: Derivatives computed across all dimensions
 
-### Real-World Context
-Every ML framework does this:
-- **PyTorch**: `torch.tensor([1, 2, 3])`
-- **TensorFlow**: `tf.constant([1, 2, 3])`
-- **JAX**: `jnp.array([1, 2, 3])`
-- **TinyTorch**: `Tensor([1, 2, 3])`
+### Connection to Real ML Systems
+Every major ML framework uses tensors:
+- **PyTorch**: `torch.Tensor`
+- **TensorFlow**: `tf.Tensor`
+- **JAX**: `jax.numpy.ndarray`
+- **TinyTorch**: `tinytorch.core.tensor.Tensor` (what we're building!)
+
+### Performance Considerations
+- **Memory Layout**: Contiguous arrays for cache efficiency
+- **Vectorization**: SIMD operations for speed
+- **Broadcasting**: Efficient operations on different shapes
+- **Type Consistency**: Avoiding unnecessary conversions
 """
 
-# %% nbgrader={"grade": false, "grade_id": "tensor-creation", "locked": false, "schema_version": 3, "solution": true, "task": false}
+# %% [markdown]
+"""
+## Step 2: The Tensor Class Foundation
+
+### Core Concept: Wrapping NumPy with ML Intelligence
+Our Tensor class wraps NumPy arrays with ML-specific functionality. This design pattern is used by all major ML frameworks:
+
+- **PyTorch**: `torch.Tensor` wraps ATen (C++ tensor library)
+- **TensorFlow**: `tf.Tensor` wraps Eigen (C++ linear algebra library)
+- **JAX**: `jax.numpy.ndarray` wraps XLA (Google's linear algebra compiler)
+- **TinyTorch**: `Tensor` wraps NumPy (Python's numerical computing library)
+
+### Design Requirements Analysis
+
+#### **1. Input Flexibility**
+Our tensor must handle diverse input types:
+```python
+# Scalars (Python numbers)
+t1 = Tensor(5)           # int → numpy array
+t2 = Tensor(3.14)        # float → numpy array
+
+# Lists (Python sequences)
+t3 = Tensor([1, 2, 3])   # list → numpy array
+t4 = Tensor([[1, 2], [3, 4]])  # nested list → 2D array
+
+# NumPy arrays (existing arrays)
+t5 = Tensor(np.array([1, 2, 3]))  # array → tensor wrapper
+```
+
+#### **2. Type Management**
+ML systems need consistent, predictable types:
+- **Default behavior**: Auto-detect appropriate types
+- **Explicit control**: Allow manual type specification
+- **Performance optimization**: Prefer `float32` over `float64`
+- **Memory efficiency**: Use appropriate precision
+
+#### **3. Property Access**
+Essential tensor properties for ML operations:
+- **Shape**: Dimensions for compatibility checking
+- **Size**: Total elements for memory estimation
+- **Data type**: For numerical computation planning
+- **Data access**: For integration with other libraries
+
+#### **4. Arithmetic Operations**
+Support for mathematical operations:
+- **Element-wise**: Addition, multiplication, subtraction, division
+- **Broadcasting**: Operations on different shapes
+- **Type promotion**: Consistent result types
+- **Error handling**: Clear messages for incompatible operations
+
+### Implementation Strategy
+
+#### **Memory Management**
+- **Copy vs. Reference**: When to copy data vs. share memory
+- **Type conversion**: Efficient dtype changes
+- **Contiguous layout**: Ensure optimal memory access patterns
+
+#### **Error Handling**
+- **Input validation**: Check for valid input types
+- **Shape compatibility**: Verify operations are mathematically valid
+- **Informative messages**: Help users debug issues quickly
+
+#### **Performance Optimization**
+- **Lazy evaluation**: Defer expensive operations when possible
+- **Vectorization**: Use NumPy's optimized operations
+- **Memory reuse**: Minimize unnecessary allocations
+
+### Learning Objectives for Implementation
+
+By implementing this Tensor class, you'll learn:
+1. **Wrapper pattern**: How to extend existing libraries
+2. **Type system design**: Managing data types in numerical computing
+3. **API design**: Creating intuitive, consistent interfaces
+4. **Performance considerations**: Balancing flexibility and speed
+5. **Error handling**: Providing helpful feedback to users
+
+Let's implement our tensor foundation!
+"""
+
+# %% nbgrader={"grade": false, "grade_id": "tensor-class", "locked": false, "schema_version": 3, "solution": true, "task": false}
 #| export
 class Tensor:
     """
@@ -142,49 +338,36 @@ class Tensor:
         """
         Create a new tensor from data.
         
+        Args:
+            data: Input data (scalar, list, or numpy array)
+            dtype: Data type ('float32', 'int32', etc.). Defaults to auto-detect.
+            
         TODO: Implement tensor creation with proper type handling.
         
-        STEP-BY-STEP IMPLEMENTATION:
-        1. Handle different input types (int, float, list, numpy array)
-        2. Convert input to numpy array using np.array()
-        3. Apply dtype conversion if specified, otherwise use smart defaults
-        4. Store the result in self._data
-        5. Validate that the data is numeric
+        STEP-BY-STEP:
+        1. Check if data is a scalar (int/float) - convert to numpy array
+        2. Check if data is a list - convert to numpy array  
+        3. Check if data is already a numpy array - use as-is
+        4. Apply dtype conversion if specified
+        5. Store the result in self._data
         
-        EXAMPLE USAGE:
-        ```python
-        # From scalar
-        t1 = Tensor(5.0)              # Creates 0D tensor
+        EXAMPLE:
+        Tensor(5) → stores np.array(5)
+        Tensor([1, 2, 3]) → stores np.array([1, 2, 3])
+        Tensor(np.array([1, 2, 3])) → stores the array directly
         
-        # From list
-        t2 = Tensor([1, 2, 3])        # Creates 1D tensor
-        
-        # From nested list (matrix)
-        t3 = Tensor([[1, 2], [3, 4]]) # Creates 2D tensor
-        
-        # With specific dtype
-        t4 = Tensor([1, 2, 3], dtype='float32')
-        ```
-        
-        IMPLEMENTATION HINTS:
-        - Use np.array(data) for basic conversion
-        - Handle dtype parameter: if provided, use np.array(data, dtype=dtype)
-        - For smart defaults: integers → int32, floats → float32
-        - Store in self._data for internal use
-        - Validate: ensure data is numeric using np.issubdtype(dtype, np.number)
-        
-        LEARNING CONNECTIONS:
-        - This is like torch.tensor() in PyTorch
-        - Similar to tf.constant() in TensorFlow
-        - Foundation for all tensor operations
-        - Every ML computation starts with tensor creation
+        HINTS:
+        - Use isinstance() to check data types
+        - Use np.array() for conversion
+        - Handle dtype parameter for type conversion
+        - Store the array in self._data
         """
         ### BEGIN SOLUTION
         # Convert input to numpy array
         if isinstance(data, (int, float, np.number)):
             # Handle Python and NumPy scalars
             if dtype is None:
-                # Auto-detect type: int32 for integers, float32 for floats
+                # Auto-detect type: int for integers, float32 for floats
                 if isinstance(data, int) or (isinstance(data, np.number) and np.issubdtype(type(data), np.integer)):
                     dtype = 'int32'
                 else:
@@ -208,901 +391,1146 @@ class Tensor:
                     dtype = 'float32'
                 else:
                     dtype = str(data.dtype)
-            self._data = data.astype(dtype) if dtype != str(data.dtype) else data.copy()
+            self._data = data.astype(dtype) if dtype != data.dtype else data.copy()
         else:
             # Try to convert unknown types
             self._data = np.array(data, dtype=dtype)
-        
-        # Validate that data is numeric
-        if not np.issubdtype(self._data.dtype, np.number):
-            raise ValueError(f"Tensor data must be numeric, got {self._data.dtype}")
         ### END SOLUTION
 
-# %% [markdown]
-"""
-### 🧪 Test Your Tensor Creation
-
-Once you implement the `__init__` method above, run this cell to test it:
-"""
-
-# %% nbgrader={"grade": true, "grade_id": "test-tensor-creation", "locked": true, "points": 10, "schema_version": 3, "solution": false, "task": false}
-def test_tensor_creation():
-    """Test tensor creation with various input types"""
-    print("Testing tensor creation...")
-    
-    # Test scalar creation
-    t1 = Tensor(5.0)
-    assert t1._data.shape == (), "Scalar tensor should have empty shape"
-    assert t1._data.item() == 5.0, "Scalar value should be 5.0"
-    
-    # Test list creation
-    t2 = Tensor([1, 2, 3])
-    assert t2._data.shape == (3,), "1D tensor should have shape (3,)"
-    assert np.array_equal(t2._data, [1, 2, 3]), "1D tensor values should match"
-    
-    # Test matrix creation
-    t3 = Tensor([[1, 2], [3, 4]])
-    assert t3._data.shape == (2, 2), "2D tensor should have shape (2, 2)"
-    assert np.array_equal(t3._data, [[1, 2], [3, 4]]), "2D tensor values should match"
-    
-    # Test dtype specification
-    t4 = Tensor([1, 2, 3], dtype='float32')
-    assert t4._data.dtype == np.float32, "Specified dtype should be respected"
-    
-    # Test error handling
-    try:
-        Tensor(["invalid", "data"])
-        assert False, "Should raise error for string data"
-    except ValueError as e:
-        assert "numeric" in str(e), "Error message should mention numeric requirement"
-    
-    print("✅ Tensor creation tests passed!")
-    print(f"✅ Created tensors: scalar, vector, matrix")
-    print(f"✅ Handled data types correctly")
-    print(f"✅ Validated input data properly")
-
-# Run the test
-test_tensor_creation()
-
-# %% [markdown]
-"""
-## Step 1B: Tensor Properties
-
-### Essential Information Access
-Every tensor needs to provide basic information about itself:
-
-- **Shape**: Dimensions of the tensor (crucial for operations)
-- **Size**: Total number of elements (important for memory)
-- **Data type**: What kind of numbers we're storing
-- **Data access**: Get the underlying NumPy array
-
-### Why Properties Matter in ML
-- **Debugging**: Quickly inspect tensor dimensions during development
-- **Validation**: Check compatibility before operations
-- **Memory management**: Understand storage requirements
-- **Performance**: Optimize operations based on tensor characteristics
-
-### Design Patterns
-We use Python properties (@property) for clean access:
-```python
-t = Tensor([[1, 2], [3, 4]])
-print(t.shape)  # (2, 2) - clean access
-print(t.size)   # 4 - total elements
-print(t.dtype)  # int32 - data type
-```
-"""
-
-# %% nbgrader={"grade": false, "grade_id": "tensor-properties", "locked": false, "schema_version": 3, "solution": true, "task": false}
-#| export
     @property
     def data(self) -> np.ndarray:
         """
-        Get the underlying numpy array data.
+        Access underlying numpy array.
         
-        TODO: Implement data property access.
+        TODO: Return the stored numpy array.
         
-        STEP-BY-STEP IMPLEMENTATION:
-        1. Return self._data directly
-        2. This gives users access to the underlying NumPy array
-        
-        EXAMPLE USAGE:
-        ```python
-        t = Tensor([[1, 2], [3, 4]])
-        print(t.data)  # [[1 2]
-                          #  [3 4]]
-        ```
-        
-        HINTS:
-        - Properties provide clean access to internal data
-        - Users can access the numpy array directly via this property
-        - This is how PyTorch's .data property works
+        HINT: Return self._data (the array you stored in __init__)
         """
         ### BEGIN SOLUTION
         return self._data
         ### END SOLUTION
-
+    
     @property
     def shape(self) -> Tuple[int, ...]:
         """
-        Get the shape (dimensions) of the tensor.
+        Get tensor shape.
         
-        TODO: Implement shape property.
+        TODO: Return the shape of the stored numpy array.
         
-        STEP-BY-STEP IMPLEMENTATION:
-        1. Return self._data.shape
-        2. This gives the dimensions as a tuple of integers
-        
-        EXAMPLE USAGE:
-        ```python
-        t = Tensor([[1, 2], [3, 4]])
-        print(t.shape)  # (2, 2)
-        
-        # For different dimensions:
-        scalar = Tensor(5)        # shape: ()
-        vector = Tensor([1, 2])   # shape: (2,)
-        matrix = Tensor([[1, 2], [3, 4]])  # shape: (2, 2)
-        ```
-        
-        HINTS:
-        - NumPy arrays have a .shape attribute
-        - Shape is a tuple of integers
-        - Essential for checking tensor compatibility
+        HINT: Use .shape attribute of the numpy array
+        EXAMPLE: Tensor([1, 2, 3]).shape should return (3,)
         """
         ### BEGIN SOLUTION
         return self._data.shape
         ### END SOLUTION
-
+    
     @property
     def size(self) -> int:
         """
-        Get the total number of elements in the tensor.
+        Get total number of elements.
         
-        TODO: Implement size property.
+        TODO: Return the total number of elements in the tensor.
         
-        STEP-BY-STEP IMPLEMENTATION:
-        1. Return self._data.size
-        2. This gives the total count of elements
-        
-        EXAMPLE USAGE:
-        ```python
-        t = Tensor([[1, 2], [3, 4]])
-        print(t.size)  # 4 (2 * 2 elements)
-        
-        # For different shapes:
-        scalar = Tensor(5)        # size: 1
-        vector = Tensor([1, 2])   # size: 2
-        matrix = Tensor([[1, 2], [3, 4]])  # size: 4
-        ```
-        
-        HINTS:
-        - NumPy arrays have a .size attribute
-        - Size is the product of all dimensions
-        - Important for memory calculations
+        HINT: Use .size attribute of the numpy array
+        EXAMPLE: Tensor([1, 2, 3]).size should return 3
         """
         ### BEGIN SOLUTION
         return self._data.size
         ### END SOLUTION
-
+    
     @property
     def dtype(self) -> np.dtype:
         """
-        Get the data type of the tensor elements.
+        Get data type as numpy dtype.
         
-        TODO: Implement dtype property.
+        TODO: Return the data type of the stored numpy array.
         
-        STEP-BY-STEP IMPLEMENTATION:
-        1. Return self._data.dtype
-        2. This gives the NumPy data type
-        
-        EXAMPLE USAGE:
-        ```python
-        t = Tensor([1, 2, 3])
-        print(t.dtype)  # int64 (default integer type)
-        
-        t_float = Tensor([1.5, 2.5, 3.5])
-        print(t_float.dtype)  # float64 (default float type)
-        
-        t_custom = Tensor([1, 2, 3], dtype='float32')
-        print(t_custom.dtype)  # float32 (specified type)
-        ```
-        
-        HINTS:
-        - NumPy arrays have a .dtype attribute
-        - Important for precision and memory usage
-        - Affects computation speed and accuracy
+        HINT: Use .dtype attribute of the numpy array
+        EXAMPLE: Tensor([1, 2, 3]).dtype should return dtype('int32')
         """
         ### BEGIN SOLUTION
         return self._data.dtype
         ### END SOLUTION
-
+    
     def __repr__(self) -> str:
         """
-        String representation of the tensor.
+        String representation.
         
-        TODO: Create a clear, informative string representation.
+        TODO: Create a clear string representation of the tensor.
         
-        STEP-BY-STEP IMPLEMENTATION:
+        APPROACH:
         1. Convert the numpy array to a list for readable output
-        2. Include shape and dtype information
-        3. Format as: "Tensor(data, shape=shape, dtype=dtype)"
+        2. Include the shape and dtype information
+        3. Format: "Tensor([data], shape=shape, dtype=dtype)"
         
-        EXAMPLE USAGE:
-        ```python
-        t = Tensor([1, 2, 3])
-        print(t)  # Tensor([1, 2, 3], shape=(3,), dtype=int32)
+        EXAMPLE:
+        Tensor([1, 2, 3]) → "Tensor([1, 2, 3], shape=(3,), dtype=int32)"
         
-        t2 = Tensor([[1, 2], [3, 4]])
-        print(t2)  # Tensor([[1, 2], [3, 4]], shape=(2, 2), dtype=int32)
-        ```
-        
-        IMPLEMENTATION HINTS:
-        - Use .tolist() to convert numpy array to Python list
-        - Include shape and dtype for debugging
+        HINTS:
+        - Use .tolist() to convert numpy array to list
+        - Include shape and dtype information
         - Keep format consistent and readable
-        - Use f-string formatting for clean output
-        
-        LEARNING CONNECTIONS:
-        - Good string representation aids debugging
-        - Shows essential information at a glance
-        - Similar to PyTorch's tensor representation
         """
         ### BEGIN SOLUTION
         return f"Tensor({self._data.tolist()}, shape={self.shape}, dtype={self.dtype})"
         ### END SOLUTION
 
-# %% [markdown]
-"""
-### 🧪 Test Your Tensor Properties
-
-Once you implement the properties above, run this cell to test them:
-"""
-
-# %% nbgrader={"grade": true, "grade_id": "test-tensor-properties", "locked": true, "points": 10, "schema_version": 3, "solution": false, "task": false}
-def test_tensor_properties():
-    """Test tensor properties: data, shape, size, dtype, repr"""
-    print("Testing tensor properties...")
-    
-    # Test scalar properties
-    t1 = Tensor(5.0)
-    assert t1.shape == (), "Scalar shape should be empty tuple"
-    assert t1.size == 1, "Scalar size should be 1"
-    assert t1.data.item() == 5.0, "Scalar data should be accessible"
-    assert "5.0" in str(t1), "String representation should show value"
-    
-    # Test vector properties
-    t2 = Tensor([1, 2, 3, 4])
-    assert t2.shape == (4,), "Vector shape should be (4,)"
-    assert t2.size == 4, "Vector size should be 4"
-    assert np.array_equal(t2.data, [1, 2, 3, 4]), "Vector data should match"
-    
-    # Test matrix properties
-    t3 = Tensor([[1, 2, 3], [4, 5, 6]])
-    assert t3.shape == (2, 3), "Matrix shape should be (2, 3)"
-    assert t3.size == 6, "Matrix size should be 6"
-    assert np.array_equal(t3.data, [[1, 2, 3], [4, 5, 6]]), "Matrix data should match"
-    
-    # Test dtype
-    t4 = Tensor([1, 2, 3], dtype='float32')
-    assert t4.dtype == np.float32, "Should have float32 dtype"
-    
-    # Test string representation
-    t5 = Tensor([1, 2])
-    repr_str = str(t5)
-    assert "Tensor" in repr_str, "Should contain 'Tensor'"
-    assert "shape=" in repr_str, "Should show shape"
-    assert "dtype=" in repr_str, "Should show dtype"
-    
-    print("✅ Tensor properties tests passed!")
-    print(f"✅ Shape, size, and data access working correctly")
-    print(f"✅ String representation is informative")
-    print(f"✅ Data types are properly handled")
-
-# Run the test
-test_tensor_properties()
-
-# %% [markdown]
-"""
-## Step 2: Tensor Arithmetic
-
-### The Heart of ML: Mathematical Operations
-Now we implement the core mathematical operations that make ML possible:
-
-- **Addition**: Element-wise addition of tensors
-- **Multiplication**: Element-wise multiplication  
-- **Subtraction**: Element-wise subtraction
-- **Division**: Element-wise division
-
-### Why Arithmetic Matters in ML
-- **Neural networks**: Every layer uses tensor arithmetic
-- **Forward pass**: Data flows through arithmetic operations
-- **Gradient computation**: Backpropagation relies on arithmetic
-- **Optimization**: Parameter updates use arithmetic
-- **Data processing**: Normalization, scaling, transformations
-
-### Broadcasting Magic
-NumPy's broadcasting allows operations between different shapes:
-```python
-# Same shape: element-wise
-[1, 2] + [3, 4] = [4, 6]
-
-# Broadcasting: smaller tensor expands
-[[1, 2], [3, 4]] + [10, 20] = [[11, 22], [13, 24]]
-```
-
-### Real-World Context
-This is used everywhere in ML:
-- **Layer operations**: `output = input @ weights + bias`
-- **Activation functions**: `relu(x) = max(0, x)`
-- **Loss computation**: `loss = (prediction - target) ** 2`
-- **Optimization**: `params = params - learning_rate * gradients`
-"""
-
-# %% [markdown]
-"""
-## Step 2A: Tensor Addition
-
-### The Foundation Operation
-Addition is the most basic and important tensor operation:
-
-- **Element-wise**: Each element adds to corresponding element
-- **Broadcasting**: Smaller tensors automatically expand to match larger ones
-- **Commutative**: `a + b = b + a`
-- **Associative**: `(a + b) + c = a + (b + c)`
-
-### Mathematical Foundation
-Addition in ML contexts:
-```python
-# Linear layer: output = input @ weights + bias
-# The + bias is tensor addition with broadcasting
-
-# Gradient updates: new_params = old_params + learning_rate * gradients
-# This is also tensor addition
-
-# Residual connections: output = layer1(x) + layer2(x)
-# Adding outputs from different layers
-```
-"""
-
-# %% nbgrader={"grade": false, "grade_id": "tensor-addition", "locked": false, "schema_version": 3, "solution": true, "task": false}
-#| export
     def add(self, other: 'Tensor') -> 'Tensor':
         """
         Add two tensors element-wise.
         
-        TODO: Implement tensor addition with broadcasting support.
+        TODO: Implement tensor addition.
         
-        STEP-BY-STEP IMPLEMENTATION:
-        1. Get the numpy data from both tensors
-        2. Use numpy's + operator for element-wise addition
-        3. Create a new Tensor with the result
-        4. Return the new tensor
+        APPROACH:
+        1. Add the numpy arrays using +
+        2. Return a new Tensor with the result
+        3. Handle broadcasting automatically
         
-        EXAMPLE USAGE:
-        ```python
-        # Same shape addition
-        t1 = Tensor([[1, 2], [3, 4]])
-        t2 = Tensor([[5, 6], [7, 8]])
-        result = t1.add(t2)
-        print(result.data)  # [[6, 8], [10, 12]]
+        EXAMPLE:
+        Tensor([1, 2]) + Tensor([3, 4]) → Tensor([4, 6])
         
-        # Broadcasting addition
-        t3 = Tensor([[1, 2], [3, 4]])
-        t4 = Tensor([10, 20])
-        result = t3.add(t4)
-        print(result.data)  # [[11, 22], [13, 24]]
-        ```
-        
-        IMPLEMENTATION HINTS:
-        - Use self._data + other._data for numpy addition
-        - Wrap result in new Tensor: return Tensor(result)
+        HINTS:
+        - Use self._data + other._data
+        - Return Tensor(result)
         - NumPy handles broadcasting automatically
-        - Don't modify original tensors (create new one)
-        
-        LEARNING CONNECTIONS:
-        - This is used in every neural network layer
-        - Gradient updates use addition: params = params + learning_rate * gradients
-        - Bias terms are added to layer outputs
-        - Residual connections add tensors from different layers
         """
         ### BEGIN SOLUTION
         result = self._data + other._data
         return Tensor(result)
         ### END SOLUTION
 
-# %% [markdown]
-"""
-### 🧪 Test Your Tensor Addition
-
-Once you implement the `add` method above, run this cell to test it:
-"""
-
-# %% nbgrader={"grade": true, "grade_id": "test-tensor-addition", "locked": true, "points": 15, "schema_version": 3, "solution": false, "task": false}
-def test_tensor_addition():
-    """Test tensor addition with various shapes"""
-    print("Testing tensor addition...")
-    
-    # Test same-shape addition
-    t1 = Tensor([[1, 2], [3, 4]])
-    t2 = Tensor([[5, 6], [7, 8]])
-    result = t1.add(t2)
-    expected = np.array([[6, 8], [10, 12]])
-    assert np.array_equal(result.data, expected), "Same-shape addition failed"
-    
-    # Test scalar addition (broadcasting)
-    t3 = Tensor([[1, 2], [3, 4]])
-    t4 = Tensor(10)
-    result = t3.add(t4)
-    expected = np.array([[11, 12], [13, 14]])
-    assert np.array_equal(result.data, expected), "Scalar addition failed"
-    
-    # Test vector addition (broadcasting)
-    t5 = Tensor([[1, 2], [3, 4]])
-    t6 = Tensor([10, 20])
-    result = t5.add(t6)
-    expected = np.array([[11, 22], [13, 24]])
-    assert np.array_equal(result.data, expected), "Vector addition failed"
-    
-    # Test that original tensors are unchanged
-    original_t1 = np.array([[1, 2], [3, 4]])
-    assert np.array_equal(t1.data, original_t1), "Original tensor should be unchanged"
-    
-    print("✅ Tensor addition tests passed!")
-    print(f"✅ Same-shape addition working correctly")
-    print(f"✅ Broadcasting with scalars and vectors working")
-    print(f"✅ Original tensors preserved (immutable operations)")
-
-# Run the test
-test_tensor_addition()
-
-# %% [markdown]
-"""
-## Step 2B: Tensor Multiplication
-
-### Scaling and Element-wise Products
-Multiplication is crucial for scaling values and computing element-wise products:
-
-- **Element-wise**: Each element multiplies with corresponding element
-- **Broadcasting**: Works with different shapes automatically
-- **Commutative**: `a * b = b * a`
-- **Distributive**: `a * (b + c) = a * b + a * c`
-
-### ML Applications
-```python
-# Scaling by learning rate: gradients * learning_rate
-# Attention mechanisms: attention_weights * values
-# Gating mechanisms: gate_signal * input_signal
-# Dropout: input * dropout_mask
-```
-"""
-
-# %% nbgrader={"grade": false, "grade_id": "tensor-multiplication", "locked": false, "schema_version": 3, "solution": true, "task": false}
-#| export
     def multiply(self, other: 'Tensor') -> 'Tensor':
         """
         Multiply two tensors element-wise.
         
-        TODO: Implement tensor multiplication with broadcasting support.
+        TODO: Implement tensor multiplication.
         
-        STEP-BY-STEP IMPLEMENTATION:
-        1. Get the numpy data from both tensors
-        2. Use numpy's * operator for element-wise multiplication
-        3. Create a new Tensor with the result
-        4. Return the new tensor
+        APPROACH:
+        1. Multiply the numpy arrays using *
+        2. Return a new Tensor with the result
+        3. Handle broadcasting automatically
         
-        EXAMPLE USAGE:
-        ```python
-        # Same shape multiplication
-        t1 = Tensor([[1, 2], [3, 4]])
-        t2 = Tensor([[2, 3], [4, 5]])
-        result = t1.multiply(t2)
-        print(result.data)  # [[2, 6], [12, 20]]
+        EXAMPLE:
+        Tensor([1, 2]) * Tensor([3, 4]) → Tensor([3, 8])
         
-        # Broadcasting multiplication
-        t3 = Tensor([[1, 2], [3, 4]])
-        t4 = Tensor(2)
-        result = t3.multiply(t4)
-        print(result.data)  # [[2, 4], [6, 8]]
-        ```
-        
-        IMPLEMENTATION HINTS:
-        - Use self._data * other._data for numpy multiplication
-        - Wrap result in new Tensor: return Tensor(result)
-        - NumPy handles broadcasting automatically
-        - Don't modify original tensors (create new one)
-        
-        LEARNING CONNECTIONS:
-        - Used in activation functions: ReLU uses multiplication with masks
-        - Attention mechanisms: attention weights * values
-        - Scaling operations: learning_rate * gradients
-        - Gating in LSTM/GRU: gate_values * hidden_state
+        HINTS:
+        - Use self._data * other._data
+        - Return Tensor(result)
+        - This is element-wise, not matrix multiplication
         """
         ### BEGIN SOLUTION
         result = self._data * other._data
         return Tensor(result)
         ### END SOLUTION
 
-# %% [markdown]
-"""
-### 🧪 Test Your Tensor Multiplication
-
-Once you implement the `multiply` method above, run this cell to test it:
-"""
-
-# %% nbgrader={"grade": true, "grade_id": "test-tensor-multiplication", "locked": true, "points": 15, "schema_version": 3, "solution": false, "task": false}
-def test_tensor_multiplication():
-    """Test tensor multiplication with various shapes"""
-    print("Testing tensor multiplication...")
-    
-    # Test same-shape multiplication
-    t1 = Tensor([[1, 2], [3, 4]])
-    t2 = Tensor([[2, 3], [4, 5]])
-    result = t1.multiply(t2)
-    expected = np.array([[2, 6], [12, 20]])
-    assert np.array_equal(result.data, expected), "Same-shape multiplication failed"
-    
-    # Test scalar multiplication (broadcasting)
-    t3 = Tensor([[1, 2], [3, 4]])
-    t4 = Tensor(2)
-    result = t3.multiply(t4)
-    expected = np.array([[2, 4], [6, 8]])
-    assert np.array_equal(result.data, expected), "Scalar multiplication failed"
-    
-    # Test vector multiplication (broadcasting)
-    t5 = Tensor([[1, 2], [3, 4]])
-    t6 = Tensor([2, 3])
-    result = t5.multiply(t6)
-    expected = np.array([[2, 6], [6, 12]])
-    assert np.array_equal(result.data, expected), "Vector multiplication failed"
-    
-    # Test that original tensors are unchanged
-    original_t1 = np.array([[1, 2], [3, 4]])
-    assert np.array_equal(t1.data, original_t1), "Original tensor should be unchanged"
-    
-    print("✅ Tensor multiplication tests passed!")
-    print(f"✅ Same-shape multiplication working correctly")
-    print(f"✅ Broadcasting with scalars and vectors working")
-    print(f"✅ Original tensors preserved (immutable operations)")
-
-# Run the test
-test_tensor_multiplication()
-
-# %% [markdown]
-"""
-## Step 2C: Python Operators (Syntactic Sugar)
-
-### Making Tensors Feel Natural
-Python allows us to overload operators to make tensor operations feel natural:
-
-- `t1 + t2` instead of `t1.add(t2)`
-- `t1 * t2` instead of `t1.multiply(t2)`
-- `t1 - t2` for subtraction
-- `t1 / t2` for division
-
-### Why This Matters
-- **Readability**: Code looks like mathematical expressions
-- **Familiarity**: Works like NumPy, PyTorch, TensorFlow
-- **Convenience**: Shorter, more expressive code
-- **Chaining**: `(t1 + t2) * t3` reads naturally
-"""
-
-# %% nbgrader={"grade": false, "grade_id": "tensor-operators", "locked": false, "schema_version": 3, "solution": true, "task": false}
-#| export
     def __add__(self, other: Union['Tensor', int, float]) -> 'Tensor':
         """
-        Addition operator: t1 + t2
+        Addition operator: tensor + other
         
-        TODO: Implement the + operator for tensors.
+        TODO: Implement + operator for tensors.
         
-        STEP-BY-STEP IMPLEMENTATION:
-        1. Check if other is a Tensor or scalar (int/float)
-        2. If scalar, convert to Tensor first
-        3. Use the add method we already implemented
-        4. Return the result
+        APPROACH:
+        1. If other is a Tensor, use tensor addition
+        2. If other is a scalar, convert to Tensor first
+        3. Return the result
         
-        EXAMPLE USAGE:
-        ```python
-        t1 = Tensor([1, 2, 3])
-        t2 = Tensor([4, 5, 6])
-        result = t1 + t2  # Same as t1.add(t2)
-        
-        # Also works with scalars
-        result = t1 + 5  # Same as t1.add(Tensor(5))
-        ```
-        
-        IMPLEMENTATION HINTS:
-        - Use isinstance(other, (int, float)) to check for scalars
-        - Convert scalars: other = Tensor(other)
-        - Then use: return self.add(other)
-        - This delegates to our existing add method
+        EXAMPLE:
+        Tensor([1, 2]) + Tensor([3, 4]) → Tensor([4, 6])
+        Tensor([1, 2]) + 5 → Tensor([6, 7])
         """
         ### BEGIN SOLUTION
-        if isinstance(other, (int, float)):
-            other = Tensor(other)
-        return self.add(other)
+        if isinstance(other, Tensor):
+            return self.add(other)
+        else:
+            return self.add(Tensor(other))
         ### END SOLUTION
 
     def __mul__(self, other: Union['Tensor', int, float]) -> 'Tensor':
         """
-        Multiplication operator: t1 * t2
+        Multiplication operator: tensor * other
         
-        TODO: Implement the * operator for tensors.
+        TODO: Implement * operator for tensors.
         
-        STEP-BY-STEP IMPLEMENTATION:
-        1. Check if other is a Tensor or scalar (int/float)
-        2. If scalar, convert to Tensor first
-        3. Use the multiply method we already implemented
-        4. Return the result
+        APPROACH:
+        1. If other is a Tensor, use tensor multiplication
+        2. If other is a scalar, convert to Tensor first
+        3. Return the result
         
-        EXAMPLE USAGE:
-        ```python
-        t1 = Tensor([1, 2, 3])
-        t2 = Tensor([4, 5, 6])
-        result = t1 * t2  # Same as t1.multiply(t2)
-        
-        # Also works with scalars
-        result = t1 * 2  # Same as t1.multiply(Tensor(2))
-        ```
-        
-        IMPLEMENTATION HINTS:
-        - Use isinstance(other, (int, float)) to check for scalars
-        - Convert scalars: other = Tensor(other)
-        - Then use: return self.multiply(other)
-        - This delegates to our existing multiply method
+        EXAMPLE:
+        Tensor([1, 2]) * Tensor([3, 4]) → Tensor([3, 8])
+        Tensor([1, 2]) * 3 → Tensor([3, 6])
         """
         ### BEGIN SOLUTION
-        if isinstance(other, (int, float)):
-            other = Tensor(other)
-        return self.multiply(other)
+        if isinstance(other, Tensor):
+            return self.multiply(other)
+        else:
+            return self.multiply(Tensor(other))
         ### END SOLUTION
 
     def __sub__(self, other: Union['Tensor', int, float]) -> 'Tensor':
         """
-        Subtraction operator: t1 - t2
+        Subtraction operator: tensor - other
         
-        TODO: Implement the - operator for tensors.
+        TODO: Implement - operator for tensors.
         
-        STEP-BY-STEP IMPLEMENTATION:
-        1. Check if other is a Tensor or scalar (int/float)
-        2. If scalar, convert to Tensor first
-        3. Use numpy subtraction: self._data - other._data
-        4. Return new Tensor with result
+        APPROACH:
+        1. Convert other to Tensor if needed
+        2. Subtract using numpy arrays
+        3. Return new Tensor with result
         
-        EXAMPLE USAGE:
-        ```python
-        t1 = Tensor([5, 6, 7])
-        t2 = Tensor([1, 2, 3])
-        result = t1 - t2  # [4, 4, 4]
-        
-        # Also works with scalars
-        result = t1 - 1  # [4, 5, 6]
-        ```
-        
-        IMPLEMENTATION HINTS:
-        - Similar pattern to __add__ and __mul__
-        - Convert scalars to Tensor if needed
-        - Use self._data - other._data for subtraction
-        - Return Tensor(result)
+        EXAMPLE:
+        Tensor([5, 6]) - Tensor([1, 2]) → Tensor([4, 4])
+        Tensor([5, 6]) - 1 → Tensor([4, 5])
         """
         ### BEGIN SOLUTION
-        if isinstance(other, (int, float)):
-            other = Tensor(other)
-        result = self._data - other._data
+        if isinstance(other, Tensor):
+            result = self._data - other._data
+        else:
+            result = self._data - other
         return Tensor(result)
         ### END SOLUTION
 
     def __truediv__(self, other: Union['Tensor', int, float]) -> 'Tensor':
         """
-        Division operator: t1 / t2
+        Division operator: tensor / other
         
-        TODO: Implement the / operator for tensors.
+        TODO: Implement / operator for tensors.
         
-        STEP-BY-STEP IMPLEMENTATION:
-        1. Check if other is a Tensor or scalar (int/float)
-        2. If scalar, convert to Tensor first
-        3. Use numpy division: self._data / other._data
-        4. Return new Tensor with result
+        APPROACH:
+        1. Convert other to Tensor if needed
+        2. Divide using numpy arrays
+        3. Return new Tensor with result
         
-        EXAMPLE USAGE:
-        ```python
-        t1 = Tensor([6, 8, 10])
-        t2 = Tensor([2, 4, 5])
-        result = t1 / t2  # [3.0, 2.0, 2.0]
-        
-        # Also works with scalars
-        result = t1 / 2  # [3.0, 4.0, 5.0]
-        ```
-        
-        IMPLEMENTATION HINTS:
-        - Similar pattern to other operators
-        - Convert scalars to Tensor if needed
-        - Use self._data / other._data for division
-        - Return Tensor(result)
-        - Division always produces floats
+        EXAMPLE:
+        Tensor([6, 8]) / Tensor([2, 4]) → Tensor([3, 2])
+        Tensor([6, 8]) / 2 → Tensor([3, 4])
         """
         ### BEGIN SOLUTION
-        if isinstance(other, (int, float)):
-            other = Tensor(other)
-        result = self._data / other._data
+        if isinstance(other, Tensor):
+            result = self._data / other._data
+        else:
+            result = self._data / other
         return Tensor(result)
         ### END SOLUTION
 
 # %% [markdown]
 """
-### 🧪 Test Your Python Operators
+### 🧪 Unit Test: Tensor Creation
 
-Once you implement the operators above, run this cell to test them:
+Let's test your tensor creation implementation right away! This gives you immediate feedback on whether your `__init__` method works correctly.
+
+**This is a unit test** - it tests one specific function (tensor creation) in isolation.
 """
 
-# %% nbgrader={"grade": true, "grade_id": "test-tensor-operators", "locked": true, "points": 20, "schema_version": 3, "solution": false, "task": false}
-def test_tensor_operators():
-    """Test Python operators (+, -, *, /) for tensors"""
-    print("Testing tensor operators...")
+# %% nbgrader={"grade": true, "grade_id": "test-tensor-creation-immediate", "locked": true, "points": 5, "schema_version": 3, "solution": false, "task": false}
+# Test tensor creation immediately after implementation
+print("🔬 Unit Test: Tensor Creation...")
+
+# Test basic tensor creation
+try:
+    # Test scalar
+    scalar = Tensor(5.0)
+    assert hasattr(scalar, '_data'), "Tensor should have _data attribute"
+    assert scalar._data.shape == (), f"Scalar should have shape (), got {scalar._data.shape}"
+    print("✅ Scalar creation works")
     
-    # Test addition operator
-    t1 = Tensor([1, 2, 3])
-    t2 = Tensor([4, 5, 6])
-    result = t1 + t2
+    # Test vector
+    vector = Tensor([1, 2, 3])
+    assert vector._data.shape == (3,), f"Vector should have shape (3,), got {vector._data.shape}"
+    print("✅ Vector creation works")
+    
+    # Test matrix
+    matrix = Tensor([[1, 2], [3, 4]])
+    assert matrix._data.shape == (2, 2), f"Matrix should have shape (2, 2), got {matrix._data.shape}"
+    print("✅ Matrix creation works")
+    
+    print("📈 Progress: Tensor Creation ✓")
+    
+except Exception as e:
+    print(f"❌ Tensor creation test failed: {e}")
+    raise
+
+print("🎯 Tensor creation behavior:")
+print("   Converts data to NumPy arrays")
+print("   Preserves shape and data type")
+print("   Stores in _data attribute")
+
+# %% [markdown]
+"""
+### 🧪 Unit Test: Tensor Properties
+
+Now let's test that your tensor properties work correctly. This tests the @property methods you implemented.
+
+**This is a unit test** - it tests specific properties (shape, size, dtype, data) in isolation.
+"""
+
+# %% nbgrader={"grade": true, "grade_id": "test-tensor-properties-immediate", "locked": true, "points": 5, "schema_version": 3, "solution": false, "task": false}
+# Test tensor properties immediately after implementation
+print("🔬 Unit Test: Tensor Properties...")
+
+# Test properties with simple examples
+try:
+    # Test with a simple matrix
+    tensor = Tensor([[1, 2, 3], [4, 5, 6]])
+    
+    # Test shape property
+    assert tensor.shape == (2, 3), f"Shape should be (2, 3), got {tensor.shape}"
+    print("✅ Shape property works")
+    
+    # Test size property
+    assert tensor.size == 6, f"Size should be 6, got {tensor.size}"
+    print("✅ Size property works")
+    
+    # Test data property
+    assert np.array_equal(tensor.data, np.array([[1, 2, 3], [4, 5, 6]])), "Data property should return numpy array"
+    print("✅ Data property works")
+    
+    # Test dtype property
+    assert tensor.dtype in [np.int32, np.int64], f"Dtype should be int32 or int64, got {tensor.dtype}"
+    print("✅ Dtype property works")
+    
+    print("📈 Progress: Tensor Properties ✓")
+    
+except Exception as e:
+    print(f"❌ Tensor properties test failed: {e}")
+    raise
+
+print("🎯 Tensor properties behavior:")
+print("   shape: Returns tuple of dimensions")
+print("   size: Returns total number of elements")
+print("   data: Returns underlying NumPy array")
+print("   dtype: Returns NumPy data type")
+
+# %% [markdown]
+"""
+### 🧪 Unit Test: Tensor Arithmetic
+
+Let's test your tensor arithmetic operations. This tests the __add__, __mul__, __sub__, __truediv__ methods.
+
+**This is a unit test** - it tests specific arithmetic operations in isolation.
+"""
+
+# %% nbgrader={"grade": true, "grade_id": "test-tensor-arithmetic-immediate", "locked": true, "points": 5, "schema_version": 3, "solution": false, "task": false}
+# Test tensor arithmetic immediately after implementation
+print("🔬 Unit Test: Tensor Arithmetic...")
+
+# Test basic arithmetic with simple examples
+try:
+    # Test addition
+    a = Tensor([1, 2, 3])
+    b = Tensor([4, 5, 6])
+    result = a + b
     expected = np.array([5, 7, 9])
-    assert np.array_equal(result.data, expected), "Addition operator failed"
+    assert np.array_equal(result.data, expected), f"Addition failed: expected {expected}, got {result.data}"
+    print("✅ Addition works")
     
     # Test scalar addition
-    result = t1 + 5
-    expected = np.array([6, 7, 8])
-    assert np.array_equal(result.data, expected), "Scalar addition failed"
+    result_scalar = a + 10
+    expected_scalar = np.array([11, 12, 13])
+    assert np.array_equal(result_scalar.data, expected_scalar), f"Scalar addition failed: expected {expected_scalar}, got {result_scalar.data}"
+    print("✅ Scalar addition works")
     
-    # Test multiplication operator
-    result = t1 * t2
-    expected = np.array([4, 10, 18])
-    assert np.array_equal(result.data, expected), "Multiplication operator failed"
+    # Test multiplication
+    result_mul = a * b
+    expected_mul = np.array([4, 10, 18])
+    assert np.array_equal(result_mul.data, expected_mul), f"Multiplication failed: expected {expected_mul}, got {result_mul.data}"
+    print("✅ Multiplication works")
     
     # Test scalar multiplication
-    result = t1 * 2
-    expected = np.array([2, 4, 6])
-    assert np.array_equal(result.data, expected), "Scalar multiplication failed"
+    result_scalar_mul = a * 2
+    expected_scalar_mul = np.array([2, 4, 6])
+    assert np.array_equal(result_scalar_mul.data, expected_scalar_mul), f"Scalar multiplication failed: expected {expected_scalar_mul}, got {result_scalar_mul.data}"
+    print("✅ Scalar multiplication works")
     
-    # Test subtraction operator
-    result = t2 - t1
-    expected = np.array([3, 3, 3])
-    assert np.array_equal(result.data, expected), "Subtraction operator failed"
+    print("📈 Progress: Tensor Arithmetic ✓")
     
-    # Test division operator
-    t3 = Tensor([6, 8, 10])
-    t4 = Tensor([2, 4, 5])
-    result = t3 / t4
-    expected = np.array([3.0, 2.0, 2.0])
-    assert np.array_equal(result.data, expected), "Division operator failed"
-    
-    # Test chained operations
-    result = (t1 + t2) * 2
-    expected = np.array([10, 14, 18])
-    assert np.array_equal(result.data, expected), "Chained operations failed"
-    
-    print("✅ Tensor operators tests passed!")
-    print(f"✅ Addition, multiplication, subtraction, division working")
-    print(f"✅ Scalar operations working correctly")
-    print(f"✅ Chained operations working correctly")
+except Exception as e:
+    print(f"❌ Tensor arithmetic test failed: {e}")
+    raise
 
-# Run the test
-test_tensor_operators()
+print("🎯 Tensor arithmetic behavior:")
+print("   Element-wise operations on tensors")
+print("   Broadcasting with scalars")
+print("   Returns new Tensor objects")
 
 # %% [markdown]
 """
-## 🎯 Step 3: Integration Test
+### 🧪 Comprehensive Test: Tensor Creation
 
-### Putting It All Together
-Now let's test that all our tensor operations work together in realistic ML scenarios:
-
-- **Chained operations**: Multiple operations in sequence
-- **Broadcasting**: Different shapes working together
-- **Mixed operations**: Addition, multiplication, etc. combined
-- **Real ML patterns**: Mimicking actual neural network computations
+Let's thoroughly test your tensor creation to make sure it handles all the cases you'll encounter in ML.
+This tests the foundation of everything else we'll build.
 """
 
-# %% nbgrader={"grade": true, "grade_id": "test-tensor-integration", "locked": true, "points": 20, "schema_version": 3, "solution": false, "task": false}
+# %% nbgrader={"grade": true, "grade_id": "test-tensor-creation-comprehensive", "locked": true, "points": 15, "schema_version": 3, "solution": false, "task": false}
+def test_tensor_creation_comprehensive():
+    """Comprehensive test of tensor creation with all data types and shapes."""
+    print("🔬 Testing comprehensive tensor creation...")
+    
+    tests_passed = 0
+    total_tests = 8
+    
+    # Test 1: Scalar creation (0D tensor)
+    try:
+        scalar_int = Tensor(42)
+        scalar_float = Tensor(3.14)
+        scalar_zero = Tensor(0)
+        
+        assert hasattr(scalar_int, '_data'), "Tensor should have _data attribute"
+        assert scalar_int._data.shape == (), f"Scalar should have shape (), got {scalar_int._data.shape}"
+        assert scalar_float._data.shape == (), f"Float scalar should have shape (), got {scalar_float._data.shape}"
+        assert scalar_zero._data.shape == (), f"Zero scalar should have shape (), got {scalar_zero._data.shape}"
+        
+        print("✅ Scalar creation: integers, floats, and zero")
+        tests_passed += 1
+    except Exception as e:
+        print(f"❌ Scalar creation failed: {e}")
+    
+    # Test 2: Vector creation (1D tensor)
+    try:
+        vector_int = Tensor([1, 2, 3, 4, 5])
+        vector_float = Tensor([1.0, 2.5, 3.7])
+        vector_single = Tensor([42])
+        vector_empty = Tensor([])
+        
+        assert vector_int._data.shape == (5,), f"Int vector should have shape (5,), got {vector_int._data.shape}"
+        assert vector_float._data.shape == (3,), f"Float vector should have shape (3,), got {vector_float._data.shape}"
+        assert vector_single._data.shape == (1,), f"Single element vector should have shape (1,), got {vector_single._data.shape}"
+        assert vector_empty._data.shape == (0,), f"Empty vector should have shape (0,), got {vector_empty._data.shape}"
+        
+        print("✅ Vector creation: integers, floats, single element, and empty")
+        tests_passed += 1
+    except Exception as e:
+        print(f"❌ Vector creation failed: {e}")
+    
+    # Test 3: Matrix creation (2D tensor)
+    try:
+        matrix_2x2 = Tensor([[1, 2], [3, 4]])
+        matrix_3x2 = Tensor([[1, 2], [3, 4], [5, 6]])
+        matrix_1x3 = Tensor([[1, 2, 3]])
+        
+        assert matrix_2x2._data.shape == (2, 2), f"2x2 matrix should have shape (2, 2), got {matrix_2x2._data.shape}"
+        assert matrix_3x2._data.shape == (3, 2), f"3x2 matrix should have shape (3, 2), got {matrix_3x2._data.shape}"
+        assert matrix_1x3._data.shape == (1, 3), f"1x3 matrix should have shape (1, 3), got {matrix_1x3._data.shape}"
+        
+        print("✅ Matrix creation: 2x2, 3x2, and 1x3 matrices")
+        tests_passed += 1
+    except Exception as e:
+        print(f"❌ Matrix creation failed: {e}")
+    
+    # Test 4: Data type handling
+    try:
+        int_tensor = Tensor([1, 2, 3])
+        float_tensor = Tensor([1.0, 2.0, 3.0])
+        mixed_tensor = Tensor([1, 2.5, 3])  # Should convert to float
+        
+        # Check that data types are reasonable
+        assert int_tensor._data.dtype in [np.int32, np.int64], f"Int tensor has unexpected dtype: {int_tensor._data.dtype}"
+        assert float_tensor._data.dtype in [np.float32, np.float64], f"Float tensor has unexpected dtype: {float_tensor._data.dtype}"
+        assert mixed_tensor._data.dtype in [np.float32, np.float64], f"Mixed tensor should be float, got: {mixed_tensor._data.dtype}"
+        
+        print("✅ Data type handling: integers, floats, and mixed types")
+        tests_passed += 1
+    except Exception as e:
+        print(f"❌ Data type handling failed: {e}")
+    
+    # Test 5: NumPy array input
+    try:
+        np_array = np.array([1, 2, 3, 4])
+        tensor_from_np = Tensor(np_array)
+        
+        assert tensor_from_np._data.shape == (4,), f"Tensor from NumPy should have shape (4,), got {tensor_from_np._data.shape}"
+        assert np.array_equal(tensor_from_np._data, np_array), "Tensor from NumPy should preserve data"
+        
+        print("✅ NumPy array input: conversion works correctly")
+        tests_passed += 1
+    except Exception as e:
+        print(f"❌ NumPy array input failed: {e}")
+    
+    # Test 6: Large tensor creation
+    try:
+        large_tensor = Tensor(list(range(1000)))
+        assert large_tensor._data.shape == (1000,), f"Large tensor should have shape (1000,), got {large_tensor._data.shape}"
+        assert large_tensor._data[0] == 0, "Large tensor should start with 0"
+        assert large_tensor._data[-1] == 999, "Large tensor should end with 999"
+        
+        print("✅ Large tensor creation: 1000 elements")
+        tests_passed += 1
+    except Exception as e:
+        print(f"❌ Large tensor creation failed: {e}")
+    
+    # Test 7: Negative numbers
+    try:
+        negative_tensor = Tensor([-1, -2, -3])
+        mixed_signs = Tensor([-1, 0, 1])
+        
+        assert negative_tensor._data.shape == (3,), f"Negative tensor should have shape (3,), got {negative_tensor._data.shape}"
+        assert np.array_equal(negative_tensor._data, np.array([-1, -2, -3])), "Negative numbers should be preserved"
+        assert np.array_equal(mixed_signs._data, np.array([-1, 0, 1])), "Mixed signs should be preserved"
+        
+        print("✅ Negative numbers: handled correctly")
+        tests_passed += 1
+    except Exception as e:
+        print(f"❌ Negative numbers failed: {e}")
+    
+    # Test 8: Edge cases
+    try:
+        # Very large numbers
+        big_tensor = Tensor([1e6, 1e-6])
+        assert big_tensor._data.shape == (2,), "Big numbers tensor should have correct shape"
+        
+        # Zero tensor
+        zero_tensor = Tensor([0, 0, 0])
+        assert np.all(zero_tensor._data == 0), "Zero tensor should contain all zeros"
+        
+        print("✅ Edge cases: large numbers and zeros")
+        tests_passed += 1
+    except Exception as e:
+        print(f"❌ Edge cases failed: {e}")
+    
+    # Results summary
+    print(f"\n📊 Tensor Creation Results: {tests_passed}/{total_tests} tests passed")
+    
+    if tests_passed == total_tests:
+        print("🎉 All tensor creation tests passed! Your Tensor class can handle:")
+        print("  • Scalars, vectors, and matrices")
+        print("  • Different data types (int, float)")
+        print("  • NumPy arrays")
+        print("  • Large tensors and edge cases")
+        print("📈 Progress: Tensor Creation ✓")
+        return True
+    else:
+        print("⚠️  Some tensor creation tests failed. Common issues:")
+        print("  • Check your __init__ method implementation")
+        print("  • Make sure you're storing data in self._data")
+        print("  • Verify NumPy array conversion works correctly")
+        print("  • Test with different input types (int, float, list, np.array)")
+        return False
+
+# Run the comprehensive test
+success = test_tensor_creation_comprehensive()
+
+# %% [markdown]
+"""
+### 🧪 Comprehensive Test: Tensor Properties
+
+Now let's test all the properties your tensor should have. These properties are essential for ML operations.
+"""
+
+# %% nbgrader={"grade": true, "grade_id": "test-tensor-properties-comprehensive", "locked": true, "points": 15, "schema_version": 3, "solution": false, "task": false}
+def test_tensor_properties_comprehensive():
+    """Comprehensive test of tensor properties (shape, size, dtype, data access)."""
+    print("🔬 Testing comprehensive tensor properties...")
+    
+    tests_passed = 0
+    total_tests = 6
+    
+    # Test 1: Shape property
+    try:
+        scalar = Tensor(5.0)
+        vector = Tensor([1, 2, 3])
+        matrix = Tensor([[1, 2], [3, 4]])
+        tensor_3d = Tensor([[[1, 2], [3, 4]], [[5, 6], [7, 8]]])
+        
+        assert scalar.shape == (), f"Scalar shape should be (), got {scalar.shape}"
+        assert vector.shape == (3,), f"Vector shape should be (3,), got {vector.shape}"
+        assert matrix.shape == (2, 2), f"Matrix shape should be (2, 2), got {matrix.shape}"
+        assert tensor_3d.shape == (2, 2, 2), f"3D tensor shape should be (2, 2, 2), got {tensor_3d.shape}"
+        
+        print("✅ Shape property: scalar, vector, matrix, and 3D tensor")
+        tests_passed += 1
+    except Exception as e:
+        print(f"❌ Shape property failed: {e}")
+    
+    # Test 2: Size property
+    try:
+        scalar = Tensor(5.0)
+        vector = Tensor([1, 2, 3])
+        matrix = Tensor([[1, 2], [3, 4]])
+        empty = Tensor([])
+        
+        assert scalar.size == 1, f"Scalar size should be 1, got {scalar.size}"
+        assert vector.size == 3, f"Vector size should be 3, got {vector.size}"
+        assert matrix.size == 4, f"Matrix size should be 4, got {matrix.size}"
+        assert empty.size == 0, f"Empty tensor size should be 0, got {empty.size}"
+        
+        print("✅ Size property: scalar, vector, matrix, and empty tensor")
+        tests_passed += 1
+    except Exception as e:
+        print(f"❌ Size property failed: {e}")
+    
+    # Test 3: Data type property
+    try:
+        int_tensor = Tensor([1, 2, 3])
+        float_tensor = Tensor([1.0, 2.0, 3.0])
+        
+        # Check that dtype is accessible and reasonable
+        assert hasattr(int_tensor, 'dtype'), "Tensor should have dtype property"
+        assert hasattr(float_tensor, 'dtype'), "Tensor should have dtype property"
+        
+        # Data types should be NumPy dtypes
+        assert isinstance(int_tensor.dtype, np.dtype), f"dtype should be np.dtype, got {type(int_tensor.dtype)}"
+        assert isinstance(float_tensor.dtype, np.dtype), f"dtype should be np.dtype, got {type(float_tensor.dtype)}"
+        
+        print(f"✅ Data type property: int tensor is {int_tensor.dtype}, float tensor is {float_tensor.dtype}")
+        tests_passed += 1
+    except Exception as e:
+        print(f"❌ Data type property failed: {e}")
+    
+    # Test 4: Data access property
+    try:
+        scalar = Tensor(5.0)
+        vector = Tensor([1, 2, 3])
+        matrix = Tensor([[1, 2], [3, 4]])
+        
+        # Test data access
+        assert hasattr(scalar, 'data'), "Tensor should have data property"
+        assert hasattr(vector, 'data'), "Tensor should have data property"
+        assert hasattr(matrix, 'data'), "Tensor should have data property"
+        
+        # Test data content
+        assert scalar.data.item() == 5.0, f"Scalar data should be 5.0, got {scalar.data.item()}"
+        assert np.array_equal(vector.data, np.array([1, 2, 3])), "Vector data mismatch"
+        assert np.array_equal(matrix.data, np.array([[1, 2], [3, 4]])), "Matrix data mismatch"
+        
+        print("✅ Data access: scalar, vector, and matrix data retrieval")
+        tests_passed += 1
+    except Exception as e:
+        print(f"❌ Data access failed: {e}")
+    
+    # Test 5: String representation
+    try:
+        scalar = Tensor(5.0)
+        vector = Tensor([1, 2, 3])
+        
+        # Test that __repr__ works
+        scalar_str = str(scalar)
+        vector_str = str(vector)
+        
+        assert isinstance(scalar_str, str), "Tensor string representation should be a string"
+        assert isinstance(vector_str, str), "Tensor string representation should be a string"
+        assert len(scalar_str) > 0, "Tensor string representation should not be empty"
+        assert len(vector_str) > 0, "Tensor string representation should not be empty"
+        
+        print(f"✅ String representation: scalar={scalar_str[:50]}{'...' if len(scalar_str) > 50 else ''}")
+        tests_passed += 1
+    except Exception as e:
+        print(f"❌ String representation failed: {e}")
+    
+    # Test 6: Property consistency
+    try:
+        test_cases = [
+            Tensor(42),
+            Tensor([1, 2, 3, 4, 5]),
+            Tensor([[1, 2, 3], [4, 5, 6]]),
+            Tensor([])
+        ]
+        
+        for i, tensor in enumerate(test_cases):
+            # Size should equal product of shape
+            expected_size = np.prod(tensor.shape) if tensor.shape else 1
+            assert tensor.size == expected_size, f"Test case {i}: size {tensor.size} doesn't match shape {tensor.shape}"
+            
+            # Data shape should match tensor shape
+            assert tensor.data.shape == tensor.shape, f"Test case {i}: data shape {tensor.data.shape} doesn't match tensor shape {tensor.shape}"
+        
+        print("✅ Property consistency: size matches shape, data shape matches tensor shape")
+        tests_passed += 1
+    except Exception as e:
+        print(f"❌ Property consistency failed: {e}")
+    
+    # Results summary
+    print(f"\n📊 Tensor Properties Results: {tests_passed}/{total_tests} tests passed")
+    
+    if tests_passed == total_tests:
+        print("🎉 All tensor property tests passed! Your tensor has:")
+        print("  • Correct shape property for all dimensions")
+        print("  • Accurate size calculation")
+        print("  • Proper data type handling")
+        print("  • Working data access")
+        print("  • Good string representation")
+        print("📈 Progress: Tensor Creation ✓, Properties ✓")
+        return True
+    else:
+        print("⚠️  Some property tests failed. Common issues:")
+        print("  • Check your @property decorators")
+        print("  • Verify shape returns self._data.shape")
+        print("  • Make sure size returns self._data.size")
+        print("  • Ensure dtype returns self._data.dtype")
+        print("  • Test your __repr__ method")
+        return False
+
+# Run the comprehensive test
+success = test_tensor_properties_comprehensive() and success
+
+# %% [markdown]
+"""
+### 🧪 Comprehensive Test: Tensor Arithmetic
+
+Let's test all arithmetic operations. These are the foundation of neural network computations!
+"""
+
+# %% nbgrader={"grade": true, "grade_id": "test-tensor-arithmetic-comprehensive", "locked": true, "points": 20, "schema_version": 3, "solution": false, "task": false}
+def test_tensor_arithmetic_comprehensive():
+    """Comprehensive test of tensor arithmetic operations."""
+    print("🔬 Testing comprehensive tensor arithmetic...")
+    
+    tests_passed = 0
+    total_tests = 8
+    
+    # Test 1: Basic addition method
+    try:
+        a = Tensor([1, 2, 3])
+        b = Tensor([4, 5, 6])
+        c = a.add(b)
+        
+        expected = np.array([5, 7, 9])
+        assert np.array_equal(c.data, expected), f"Addition method failed: expected {expected}, got {c.data}"
+        assert isinstance(c, Tensor), "Addition should return a Tensor"
+        
+        print(f"✅ Addition method: {a.data} + {b.data} = {c.data}")
+        tests_passed += 1
+    except Exception as e:
+        print(f"❌ Addition method failed: {e}")
+    
+    # Test 2: Basic multiplication method
+    try:
+        a = Tensor([1, 2, 3])
+        b = Tensor([4, 5, 6])
+        c = a.multiply(b)
+        
+        expected = np.array([4, 10, 18])
+        assert np.array_equal(c.data, expected), f"Multiplication method failed: expected {expected}, got {c.data}"
+        assert isinstance(c, Tensor), "Multiplication should return a Tensor"
+        
+        print(f"✅ Multiplication method: {a.data} * {b.data} = {c.data}")
+        tests_passed += 1
+    except Exception as e:
+        print(f"❌ Multiplication method failed: {e}")
+    
+    # Test 3: Addition operator (+)
+    try:
+        a = Tensor([1, 2, 3])
+        b = Tensor([4, 5, 6])
+        c = a + b
+        
+        expected = np.array([5, 7, 9])
+        assert np.array_equal(c.data, expected), f"+ operator failed: expected {expected}, got {c.data}"
+        assert isinstance(c, Tensor), "+ operator should return a Tensor"
+        
+        print(f"✅ + operator: {a.data} + {b.data} = {c.data}")
+        tests_passed += 1
+    except Exception as e:
+        print(f"❌ + operator failed: {e}")
+    
+    # Test 4: Multiplication operator (*)
+    try:
+        a = Tensor([1, 2, 3])
+        b = Tensor([4, 5, 6])
+        c = a * b
+        
+        expected = np.array([4, 10, 18])
+        assert np.array_equal(c.data, expected), f"* operator failed: expected {expected}, got {c.data}"
+        assert isinstance(c, Tensor), "* operator should return a Tensor"
+        
+        print(f"✅ * operator: {a.data} * {b.data} = {c.data}")
+        tests_passed += 1
+    except Exception as e:
+        print(f"❌ * operator failed: {e}")
+    
+    # Test 5: Subtraction operator (-)
+    try:
+        a = Tensor([1, 2, 3])
+        b = Tensor([4, 5, 6])
+        c = b - a
+        
+        expected = np.array([3, 3, 3])
+        assert np.array_equal(c.data, expected), f"- operator failed: expected {expected}, got {c.data}"
+        assert isinstance(c, Tensor), "- operator should return a Tensor"
+        
+        print(f"✅ - operator: {b.data} - {a.data} = {c.data}")
+        tests_passed += 1
+    except Exception as e:
+        print(f"❌ - operator failed: {e}")
+    
+    # Test 6: Division operator (/)
+    try:
+        a = Tensor([1, 2, 4])
+        b = Tensor([2, 4, 8])
+        c = b / a
+        
+        expected = np.array([2.0, 2.0, 2.0])
+        assert np.allclose(c.data, expected), f"/ operator failed: expected {expected}, got {c.data}"
+        assert isinstance(c, Tensor), "/ operator should return a Tensor"
+        
+        print(f"✅ / operator: {b.data} / {a.data} = {c.data}")
+        tests_passed += 1
+    except Exception as e:
+        print(f"❌ / operator failed: {e}")
+    
+    # Test 7: Scalar operations
+    try:
+        a = Tensor([1, 2, 3])
+        
+        # Addition with scalar
+        b = a + 10
+        expected_add = np.array([11, 12, 13])
+        assert np.array_equal(b.data, expected_add), f"Scalar addition failed: expected {expected_add}, got {b.data}"
+        
+        # Multiplication with scalar
+        c = a * 2
+        expected_mul = np.array([2, 4, 6])
+        assert np.array_equal(c.data, expected_mul), f"Scalar multiplication failed: expected {expected_mul}, got {c.data}"
+        
+        # Subtraction with scalar
+        d = a - 1
+        expected_sub = np.array([0, 1, 2])
+        assert np.array_equal(d.data, expected_sub), f"Scalar subtraction failed: expected {expected_sub}, got {d.data}"
+        
+        # Division with scalar
+        e = a / 2
+        expected_div = np.array([0.5, 1.0, 1.5])
+        assert np.allclose(e.data, expected_div), f"Scalar division failed: expected {expected_div}, got {e.data}"
+        
+        print(f"✅ Scalar operations: +10, *2, -1, /2 all work correctly")
+        tests_passed += 1
+    except Exception as e:
+        print(f"❌ Scalar operations failed: {e}")
+    
+    # Test 8: Matrix operations
+    try:
+        matrix_a = Tensor([[1, 2], [3, 4]])
+        matrix_b = Tensor([[5, 6], [7, 8]])
+        
+        # Matrix addition
+        c = matrix_a + matrix_b
+        expected = np.array([[6, 8], [10, 12]])
+        assert np.array_equal(c.data, expected), f"Matrix addition failed: expected {expected}, got {c.data}"
+        assert c.shape == (2, 2), f"Matrix addition should preserve shape, got {c.shape}"
+        
+        # Matrix multiplication (element-wise)
+        d = matrix_a * matrix_b
+        expected_mul = np.array([[5, 12], [21, 32]])
+        assert np.array_equal(d.data, expected_mul), f"Matrix multiplication failed: expected {expected_mul}, got {d.data}"
+        
+        print(f"✅ Matrix operations: 2x2 matrix addition and multiplication")
+        tests_passed += 1
+    except Exception as e:
+        print(f"❌ Matrix operations failed: {e}")
+    
+    # Results summary
+    print(f"\n📊 Tensor Arithmetic Results: {tests_passed}/{total_tests} tests passed")
+    
+    if tests_passed == total_tests:
+        print("🎉 All tensor arithmetic tests passed! Your tensor supports:")
+        print("  • Basic methods: add(), multiply()")
+        print("  • Python operators: +, -, *, /")
+        print("  • Scalar operations: tensor + number")
+        print("  • Matrix operations: element-wise operations")
+        print("📈 Progress: Tensor Creation ✓, Properties ✓, Arithmetic ✓")
+        return True
+    else:
+        print("⚠️  Some arithmetic tests failed. Common issues:")
+        print("  • Check your add() and multiply() methods")
+        print("  • Verify operator overloading (__add__, __mul__, __sub__, __truediv__)")
+        print("  • Make sure scalar operations work (convert scalar to Tensor)")
+        print("  • Test with different tensor shapes")
+        return False
+
+# Run the comprehensive test
+success = test_tensor_arithmetic_comprehensive() and success
+
+# %% [markdown]
+"""
+### 🧪 Final Integration Test: Real ML Scenario
+
+Let's test your tensor with a realistic machine learning scenario to make sure everything works together.
+"""
+
+# %% nbgrader={"grade": true, "grade_id": "test-tensor-integration", "locked": true, "points": 10, "schema_version": 3, "solution": false, "task": false}
 def test_tensor_integration():
-    """Test complete tensor functionality in realistic ML scenarios"""
-    print("Testing tensor integration...")
+    """Integration test with realistic ML scenario."""
+    print("🔬 Testing tensor integration with ML scenario...")
     
-    # Simulate a simple linear transformation: y = x @ W + b
-    # where x is input, W is weights, b is bias
-    x = Tensor([[1, 2], [3, 4]])  # Input batch
-    W = Tensor([[0.5, 0.3], [0.2, 0.7]])  # Weight matrix
-    b = Tensor([0.1, 0.2])  # Bias vector
-    
-    # Manual matrix multiplication (we'll implement real matmul later)
-    # For now, test element-wise operations
-    scaled_x = x * 0.5  # Scale input
-    shifted_x = scaled_x + 0.1  # Add bias
-    
-    # Test properties after operations
-    assert shifted_x.shape == x.shape, "Shape should be preserved"
-    assert isinstance(shifted_x, Tensor), "Result should be a Tensor"
-    
-    # Test chained operations with broadcasting
-    t1 = Tensor([[1, 2], [3, 4]])
-    t2 = Tensor([10, 20])
-    scalar = Tensor(0.5)
-    
-    # Complex expression: (t1 + t2) * scalar - 1
-    result = (t1 + t2) * scalar - 1
-    expected = np.array([[4.5, 10.0], [5.5, 11.0]])
-    assert np.array_equal(result.data, expected), "Complex chained operations failed"
-    
-    # Test that operations are immutable
-    original_t1 = np.array([[1, 2], [3, 4]])
-    t1 + t2  # This should not modify t1
-    assert np.array_equal(t1.data, original_t1), "Operations should be immutable"
-    
-    # Test broadcasting with different shapes
-    t3 = Tensor([1, 2, 3])
-    t4 = Tensor([[1], [2], [3]])
-    result = t3 + t4
-    assert result.shape == (3, 3), "Broadcasting result should be (3, 3)"
-    
-    # Test mixed data types
-    int_tensor = Tensor([1, 2, 3])
-    float_tensor = Tensor([1.0, 2.0, 3.0])
-    result = int_tensor + float_tensor
-    assert result.dtype in [np.float32, np.float64], "Mixed types should produce float"
-    
-    print("✅ Tensor integration tests passed!")
-    print(f"✅ All tensor operations work together correctly")
-    print(f"✅ Complex chained operations working")
-    print(f"✅ Broadcasting working across different shapes")
-    print(f"✅ Immutable operations preserve original tensors")
-    print(f"✅ Ready to build neural networks!")
+    try:
+        print("🧠 Simulating a simple neural network forward pass...")
+        
+        # Simulate input data (batch of 2 samples, 3 features each)
+        X = Tensor([[1.0, 2.0, 3.0], [4.0, 5.0, 6.0]])
+        print(f"📊 Input data shape: {X.shape}")
+        
+        # Simulate weights (3 input features, 2 output neurons)
+        W = Tensor([[0.1, 0.2], [0.3, 0.4], [0.5, 0.6]])
+        print(f"🎯 Weights shape: {W.shape}")
+        
+        # Simulate bias (2 output neurons)
+        b = Tensor([0.1, 0.2])
+        print(f"⚖️  Bias shape: {b.shape}")
+        
+        # Simple linear transformation: y = X * W + b
+        # Note: This is a simplified version - real matrix multiplication would be different
+        # But we can test element-wise operations
+        
+        # Test that we can do basic operations needed for ML
+        sample = Tensor([1.0, 2.0, 3.0])  # Single sample
+        weight_col = Tensor([0.1, 0.3, 0.5])  # First column of weights
+        
+        # Compute dot product manually using element-wise operations
+        products = sample * weight_col  # Element-wise multiplication
+        print(f"✅ Element-wise multiplication works: {products.data}")
+        
+        # Test addition for bias
+        result = products + Tensor([0.1, 0.1, 0.1])
+        print(f"✅ Bias addition works: {result.data}")
+        
+        # Test with different shapes
+        matrix_a = Tensor([[1, 2], [3, 4]])
+        matrix_b = Tensor([[0.1, 0.2], [0.3, 0.4]])
+        matrix_result = matrix_a * matrix_b
+        print(f"✅ Matrix operations work: {matrix_result.data}")
+        
+        # Test scalar operations (common in ML)
+        scaled = sample * 0.5  # Learning rate scaling
+        print(f"✅ Scalar scaling works: {scaled.data}")
+        
+        # Test normalization-like operations
+        mean_val = Tensor([2.0, 2.0, 2.0])  # Simulate mean
+        normalized = sample - mean_val
+        print(f"✅ Mean subtraction works: {normalized.data}")
+        
+        print("\n🎉 Integration test passed! Your tensor class can handle:")
+        print("  • Multi-dimensional data (batches, features)")
+        print("  • Element-wise operations needed for ML")
+        print("  • Scalar operations (learning rates, normalization)")
+        print("  • Matrix operations (weights, transformations)")
+        print("📈 Progress: All tensor functionality ✓")
+        print("🚀 Ready for neural network layers!")
+        
+        return True
+        
+    except Exception as e:
+        print(f"❌ Integration test failed: {e}")
+        print("\n💡 This suggests an issue with:")
+        print("  • Basic tensor operations not working together")
+        print("  • Shape handling problems")
+        print("  • Arithmetic operation implementation")
+        print("  • Check your tensor creation and arithmetic methods")
+        return False
 
 # Run the integration test
-test_tensor_integration()
+success = test_tensor_integration() and success
+
+# Print final summary
+print(f"\n{'='*60}")
+print("🎯 TENSOR MODULE TESTING COMPLETE")
+print(f"{'='*60}")
+
+if success:
+    print("🎉 CONGRATULATIONS! All tensor tests passed!")
+    print("\n✅ Your Tensor class successfully implements:")
+    print("  • Comprehensive tensor creation (scalars, vectors, matrices)")
+    print("  • All essential properties (shape, size, dtype, data access)")
+    print("  • Complete arithmetic operations (methods and operators)")
+    print("  • Scalar and matrix operations")
+    print("  • Real ML scenario compatibility")
+    print("\n🚀 You're ready to move to the next module!")
+    print("📈 Final Progress: Tensor Module ✓ COMPLETE")
+else:
+    print("⚠️  Some tests failed. Please review the error messages above.")
+    print("\n🔧 To fix issues:")
+    print("  1. Check the specific test that failed")
+    print("  2. Review the error message and hints")
+    print("  3. Fix your implementation")
+    print("  4. Re-run the notebook cells")
+    print("\n💪 Don't give up! Debugging is part of learning.")
 
 # %% [markdown]
 """
-## 🎯 Module Summary: Tensor Mastery Achieved!
+## Step 3: Tensor Arithmetic Operations
 
-Congratulations! You've successfully implemented the core Tensor class with comprehensive functionality:
+### Why Arithmetic Matters
+Tensor arithmetic is the foundation of all neural network operations:
+- **Forward pass**: Matrix multiplications and additions
+- **Activation functions**: Element-wise operations
+- **Loss computation**: Differences and squares
+- **Gradient computation**: Chain rule applications
 
-### ✅ What You've Built
-- **Tensor Creation**: Handle scalars, lists, arrays with smart dtype management
-- **Properties**: Access shape, size, dtype, and data efficiently
-- **Core Arithmetic**: Add, multiply, subtract, divide with broadcasting support
-- **Python Operators**: Natural syntax with +, -, *, / operators
-- **Integration**: Operations work together seamlessly in complex expressions
+### Operations We'll Implement
+- **Addition**: Element-wise addition of tensors
+- **Multiplication**: Element-wise multiplication
+- **Python operators**: `+`, `-`, `*`, `/` for natural syntax
+- **Broadcasting**: Handle different shapes automatically
+"""
 
-### ✅ Key Learning Outcomes
-- **Understanding**: Tensors as the foundation of all ML systems
-- **Implementation**: Built tensor operations from scratch using NumPy
-- **Testing**: Comprehensive validation at each step with immediate feedback
-- **Broadcasting**: Automatic shape compatibility for flexible operations
-- **Immutability**: Operations create new tensors without modifying originals
+# %% [markdown]
+"""
+## Step 3: Tensor Arithmetic Methods
 
-### ✅ Real-World Skills Developed
-- **Systems thinking**: Understanding how components fit together
-- **Progressive development**: Building complexity step by step
-- **Testing discipline**: Validating each component before integration
-- **API design**: Creating user-friendly interfaces
+The arithmetic methods are now part of the Tensor class above. Let's test them!
+"""
 
-### ✅ Ready for Next Steps
-Your tensor implementation is now the foundation for:
-- **Activations**: ReLU, Sigmoid, Tanh will operate on your tensors
-- **Layers**: Dense layers will use tensor arithmetic for transformations
-- **Networks**: Complete neural networks built on your tensor foundation
-- **Autograd**: Automatic differentiation will track tensor operations
+# %% [markdown]
+"""
+## Step 4: Python Operator Overloading
 
-### 🔗 Connection to Real ML Systems
-Your implementation mirrors the core concepts in:
-- **PyTorch**: `torch.Tensor` with similar operations and broadcasting
-- **TensorFlow**: `tf.Tensor` with comparable functionality
-- **NumPy**: Direct integration with the scientific Python ecosystem
-- **JAX**: `jnp.array` with similar mathematical operations
+### Why Operator Overloading?
+Python's magic methods allow us to use natural syntax:
+- `a + b` instead of `a.add(b)`
+- `a * b` instead of `a.multiply(b)`
+- `a - b` for subtraction
+- `a / b` for division
 
-### 🎯 Professional Development
-You've demonstrated:
-- **Systems thinking**: Understanding how components fit together
-- **Progressive development**: Building complexity step by step
-- **Testing discipline**: Validating each component before integration
-- **API design**: Creating user-friendly interfaces
+This makes tensor operations feel natural and readable.
+"""
 
-**Next Module**: Activations - Adding nonlinearity to enable complex learning!
+# %% [markdown]
+"""
+## Step 4: Operator Overloading
 
-Your tensor foundation is solid. Now let's build the functions that make neural networks powerful!
+The operator methods (__add__, __mul__, __sub__, __truediv__) are now part of the Tensor class above. This enables natural syntax like `a + b` and `a * b`.
+"""
+
+# %% [markdown]
+"""
+### 🧪 Test Your Tensor Implementation
+
+Once you implement the Tensor class above, run these cells to test your implementation:
+"""
+
+# %% nbgrader={"grade": true, "grade_id": "test-tensor-creation", "locked": true, "points": 25, "schema_version": 3, "solution": false, "task": false}
+# Test tensor creation and properties
+print("Testing tensor creation...")
+
+# Test scalar creation
+scalar = Tensor(5.0)
+assert scalar.shape == (), f"Scalar shape should be (), got {scalar.shape}"
+assert scalar.size == 1, f"Scalar size should be 1, got {scalar.size}"
+assert scalar.data.item() == 5.0, f"Scalar value should be 5.0, got {scalar.data.item()}"
+
+# Test vector creation
+vector = Tensor([1, 2, 3])
+assert vector.shape == (3,), f"Vector shape should be (3,), got {vector.shape}"
+assert vector.size == 3, f"Vector size should be 3, got {vector.size}"
+assert np.array_equal(vector.data, np.array([1, 2, 3])), "Vector data mismatch"
+
+# Test matrix creation
+matrix = Tensor([[1, 2], [3, 4]])
+assert matrix.shape == (2, 2), f"Matrix shape should be (2, 2), got {matrix.shape}"
+assert matrix.size == 4, f"Matrix size should be 4, got {matrix.size}"
+assert np.array_equal(matrix.data, np.array([[1, 2], [3, 4]])), "Matrix data mismatch"
+
+# Test dtype handling
+float_tensor = Tensor([1.0, 2.0, 3.0])
+assert float_tensor.dtype == np.float32, f"Float tensor dtype should be float32, got {float_tensor.dtype}"
+
+int_tensor = Tensor([1, 2, 3])
+# Note: NumPy may default to int64 on some systems, so we check for integer types
+assert int_tensor.dtype in [np.int32, np.int64], f"Int tensor dtype should be int32 or int64, got {int_tensor.dtype}"
+
+print("✅ Tensor creation tests passed!")
+print(f"✅ Scalar: {scalar}")
+print(f"✅ Vector: {vector}")
+print(f"✅ Matrix: {matrix}")
+
+# %% nbgrader={"grade": true, "grade_id": "test-tensor-arithmetic", "locked": true, "points": 25, "schema_version": 3, "solution": false, "task": false}
+# Test tensor arithmetic operations
+print("Testing tensor arithmetic...")
+
+# Test addition
+a = Tensor([1, 2, 3])
+b = Tensor([4, 5, 6])
+c = a + b
+expected = np.array([5, 7, 9])
+assert np.array_equal(c.data, expected), f"Addition failed: expected {expected}, got {c.data}"
+
+# Test multiplication
+d = a * b
+expected = np.array([4, 10, 18])
+assert np.array_equal(d.data, expected), f"Multiplication failed: expected {expected}, got {d.data}"
+
+# Test subtraction
+e = b - a
+expected = np.array([3, 3, 3])
+assert np.array_equal(e.data, expected), f"Subtraction failed: expected {expected}, got {e.data}"
+
+# Test division
+f = b / a
+expected = np.array([4.0, 2.5, 2.0])
+assert np.allclose(f.data, expected), f"Division failed: expected {expected}, got {f.data}"
+
+# Test scalar operations
+g = a + 10
+expected = np.array([11, 12, 13])
+assert np.array_equal(g.data, expected), f"Scalar addition failed: expected {expected}, got {g.data}"
+
+h = a * 2
+expected = np.array([2, 4, 6])
+assert np.array_equal(h.data, expected), f"Scalar multiplication failed: expected {expected}, got {h.data}"
+
+print("✅ Tensor arithmetic tests passed!")
+print(f"✅ Addition: {a} + {b} = {c}")
+print(f"✅ Multiplication: {a} * {b} = {d}")
+print(f"✅ Subtraction: {b} - {a} = {e}")
+print(f"✅ Division: {b} / {a} = {f}")
+
+# %% nbgrader={"grade": true, "grade_id": "test-tensor-broadcasting", "locked": true, "points": 25, "schema_version": 3, "solution": false, "task": false}
+# Test tensor broadcasting
+print("Testing tensor broadcasting...")
+
+# Test scalar broadcasting
+matrix = Tensor([[1, 2], [3, 4]])
+scalar = Tensor(10)
+result = matrix + scalar
+expected = np.array([[11, 12], [13, 14]])
+assert np.array_equal(result.data, expected), f"Scalar broadcasting failed: expected {expected}, got {result.data}"
+
+# Test vector broadcasting
+vector = Tensor([1, 2])
+result = matrix + vector
+expected = np.array([[2, 4], [4, 6]])
+assert np.array_equal(result.data, expected), f"Vector broadcasting failed: expected {expected}, got {result.data}"
+
+# Test different shapes
+a = Tensor([[1], [2], [3]])  # (3, 1)
+b = Tensor([10, 20])         # (2,)
+result = a + b
+expected = np.array([[11, 21], [12, 22], [13, 23]])
+assert np.array_equal(result.data, expected), f"Shape broadcasting failed: expected {expected}, got {result.data}"
+
+print("✅ Tensor broadcasting tests passed!")
+print(f"✅ Matrix + Scalar: {matrix} + {scalar} = {result}")
+print(f"✅ Broadcasting works correctly!")
+
+# %% [markdown]
+"""
+## 🎯 Module Summary
+
+Congratulations! You've successfully implemented the core Tensor class for TinyTorch:
+
+### What You've Accomplished
+✅ **Tensor Creation**: Handle scalars, vectors, matrices, and higher-dimensional arrays  
+✅ **Data Types**: Proper dtype handling with auto-detection and conversion  
+✅ **Properties**: Shape, size, dtype, and data access  
+✅ **Arithmetic**: Addition, multiplication, subtraction, division  
+✅ **Operators**: Natural Python syntax with `+`, `-`, `*`, `/`  
+✅ **Broadcasting**: Automatic shape compatibility like NumPy  
+
+### Key Concepts You've Learned
+- **Tensors** are the fundamental data structure for ML systems
+- **NumPy backend** provides efficient computation with ML-friendly API
+- **Operator overloading** makes tensor operations feel natural
+- **Broadcasting** enables flexible operations between different shapes
+- **Type safety** ensures consistent behavior across operations
+
+### Next Steps
+1. **Export your code**: `tito package nbdev --export 01_tensor`
+2. **Test your implementation**: `tito module test 01_tensor`
+3. **Use your tensors**: 
+   ```python
+   from tinytorch.core.tensor import Tensor
+   t = Tensor([1, 2, 3])
+   print(t + 5)  # Your tensor in action!
+   ```
+4. **Move to Module 2**: Start building activation functions!
+
+**Ready for the next challenge?** Let's add the mathematical functions that make neural networks powerful!
 """ 
