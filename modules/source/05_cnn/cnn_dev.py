@@ -607,50 +607,50 @@ try:
     print("\n1. Simple CNN Pipeline Test:")
     
     # Create pipeline: Conv2D → ReLU → Flatten → Dense
-        conv = Conv2D(kernel_size=(2, 2))
-        relu = ReLU()
-        dense = Dense(input_size=4, output_size=3)
-        
-        # Input image
-        image = Tensor([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
-        
-        # Forward pass
+    conv = Conv2D(kernel_size=(2, 2))
+    relu = ReLU()
+    dense = Dense(input_size=4, output_size=3)
+    
+    # Input image
+    image = Tensor([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
+    
+    # Forward pass
     features = conv(image)          # (3,3) → (2,2)
     activated = relu(features)      # (2,2) → (2,2)
     flattened = flatten(activated)  # (2,2) → (1,4)
     output = dense(flattened)       # (1,4) → (1,3)
-        
-        assert features.shape == (2, 2), f"Conv output shape wrong: {features.shape}"
-        assert activated.shape == (2, 2), f"ReLU output shape wrong: {activated.shape}"
-        assert flattened.shape == (1, 4), f"Flatten output shape wrong: {flattened.shape}"
-        assert output.shape == (1, 3), f"Dense output shape wrong: {output.shape}"
-        
+    
+    assert features.shape == (2, 2), f"Conv output shape wrong: {features.shape}"
+    assert activated.shape == (2, 2), f"ReLU output shape wrong: {activated.shape}"
+    assert flattened.shape == (1, 4), f"Flatten output shape wrong: {flattened.shape}"
+    assert output.shape == (1, 3), f"Dense output shape wrong: {output.shape}"
+    
     print("✅ Simple CNN pipeline works correctly")
     
     # Test 2: Multi-layer CNN
     print("\n2. Multi-layer CNN Test:")
     
     # Create deeper pipeline: Conv2D → ReLU → Conv2D → ReLU → Flatten → Dense
-        conv1 = Conv2D(kernel_size=(2, 2))
-        relu1 = ReLU()
-        conv2 = Conv2D(kernel_size=(2, 2))
-        relu2 = ReLU()
+    conv1 = Conv2D(kernel_size=(2, 2))
+    relu1 = ReLU()
+    conv2 = Conv2D(kernel_size=(2, 2))
+    relu2 = ReLU()
     dense_multi = Dense(input_size=9, output_size=2)
-        
-        # Larger input for multi-layer processing
+    
+    # Larger input for multi-layer processing
     large_image = Tensor([[1, 2, 3, 4, 5], [6, 7, 8, 9, 10], [11, 12, 13, 14, 15], [16, 17, 18, 19, 20], [21, 22, 23, 24, 25]])
-        
-        # Forward pass
+    
+    # Forward pass
     h1 = conv1(large_image)  # (5,5) → (4,4)
     h2 = relu1(h1)           # (4,4) → (4,4)
     h3 = conv2(h2)           # (4,4) → (3,3)
     h4 = relu2(h3)           # (3,3) → (3,3)
     h5 = flatten(h4)         # (3,3) → (1,9)
     output_multi = dense_multi(h5)  # (1,9) → (1,2)
-        
-        assert h1.shape == (4, 4), f"Conv1 output wrong: {h1.shape}"
-        assert h3.shape == (3, 3), f"Conv2 output wrong: {h3.shape}"
-        assert h5.shape == (1, 9), f"Flatten output wrong: {h5.shape}"
+    
+    assert h1.shape == (4, 4), f"Conv1 output wrong: {h1.shape}"
+    assert h3.shape == (3, 3), f"Conv2 output wrong: {h3.shape}"
+    assert h5.shape == (1, 9), f"Flatten output wrong: {h5.shape}"
     assert output_multi.shape == (1, 2), f"Final output wrong: {output_multi.shape}"
     
     print("✅ Multi-layer CNN works correctly")
@@ -660,29 +660,29 @@ try:
     
     # Simulate digit classification with 8x8 image
     digit_image = Tensor([[1, 0, 0, 1, 1, 0, 0, 1],
-                         [0, 1, 0, 1, 1, 0, 1, 0],
-                         [0, 0, 1, 1, 1, 1, 0, 0],
-                         [1, 1, 1, 0, 0, 1, 1, 1],
-                         [1, 0, 0, 1, 1, 0, 0, 1],
-                         [0, 1, 1, 0, 0, 1, 1, 0],
-                         [0, 0, 1, 1, 1, 1, 0, 0],
-                         [1, 1, 0, 0, 0, 0, 1, 1]])
-        
-        # CNN for digit classification
+                     [0, 1, 0, 1, 1, 0, 1, 0],
+                     [0, 0, 1, 1, 1, 1, 0, 0],
+                     [1, 1, 1, 0, 0, 1, 1, 1],
+                     [1, 0, 0, 1, 1, 0, 0, 1],
+                     [0, 1, 1, 0, 0, 1, 1, 0],
+                     [0, 0, 1, 1, 1, 1, 0, 0],
+                     [1, 1, 0, 0, 0, 0, 1, 1]])
+    
+    # CNN for digit classification
     feature_extractor = Conv2D(kernel_size=(3, 3))  # (8,8) → (6,6)
-        activation = ReLU()
-        classifier = Dense(input_size=36, output_size=10)  # 10 digit classes
-        
-        # Forward pass
-        features = feature_extractor(digit_image)
-        activated_features = activation(features)
+    activation = ReLU()
+    classifier = Dense(input_size=36, output_size=10)  # 10 digit classes
+    
+    # Forward pass
+    features = feature_extractor(digit_image)
+    activated_features = activation(features)
     feature_vector = flatten(activated_features)
-        digit_scores = classifier(feature_vector)
-        
-        assert features.shape == (6, 6), f"Feature extraction shape wrong: {features.shape}"
-        assert feature_vector.shape == (1, 36), f"Feature vector shape wrong: {feature_vector.shape}"
-        assert digit_scores.shape == (1, 10), f"Digit scores shape wrong: {digit_scores.shape}"
-        
+    digit_scores = classifier(feature_vector)
+    
+    assert features.shape == (6, 6), f"Feature extraction shape wrong: {features.shape}"
+    assert feature_vector.shape == (1, 36), f"Feature vector shape wrong: {feature_vector.shape}"
+    assert digit_scores.shape == (1, 10), f"Digit scores shape wrong: {digit_scores.shape}"
+    
     print("✅ Image classification scenario works correctly")
     
     # Test 4: Feature Extraction and Composition

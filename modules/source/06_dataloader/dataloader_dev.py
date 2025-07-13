@@ -760,23 +760,23 @@ try:
     print("✅ SimpleDataset basic properties work correctly")
         
     # Test sample access
-        data, label = dataset[0]
-        assert isinstance(data, Tensor), "Data should be a Tensor"
-        assert isinstance(label, Tensor), "Label should be a Tensor"
+    data, label = dataset[0]
+    assert isinstance(data, Tensor), "Data should be a Tensor"
+    assert isinstance(label, Tensor), "Label should be a Tensor"
     assert data.shape == (5,), f"Data shape should be (5,), got {data.shape}"
     assert label.shape == (), f"Label shape should be (), got {label.shape}"
     print("✅ SimpleDataset sample access works correctly")
-        
+    
     # Test sample shape
-        sample_shape = dataset.get_sample_shape()
+    sample_shape = dataset.get_sample_shape()
     assert sample_shape == (5,), f"Sample shape should be (5,), got {sample_shape}"
     print("✅ SimpleDataset get_sample_shape works correctly")
     
     # Test multiple samples
     for i in range(5):
-        data, label = dataset[i]
-        assert data.shape == (5,), f"Data shape should be (5,) for sample {i}, got {data.shape}"
-        assert 0 <= label.data < 4, f"Label should be in [0, 3] for sample {i}, got {label.data}"
+            data, label = dataset[i]
+            assert data.shape == (5,), f"Data shape should be (5,) for sample {i}, got {data.shape}"
+            assert 0 <= label.data < 4, f"Label should be in [0, 3] for sample {i}, got {label.data}"
     print("✅ SimpleDataset multiple samples work correctly")
     
     # Test deterministic data (same seed should give same data)
@@ -786,10 +786,9 @@ try:
     assert np.array_equal(data1.data, data2.data), "Data should be deterministic"
     assert np.array_equal(label1.data, label2.data), "Labels should be deterministic"
     print("✅ SimpleDataset data is deterministic")
-    
-    except Exception as e:
+
+except Exception as e:
     print(f"❌ SimpleDataset test failed: {e}")
-    raise
 
 # Show the SimpleDataset behavior
 print("🎯 SimpleDataset behavior:")
@@ -861,9 +860,9 @@ try:
         # Verify batch properties
         assert batch_data.shape[1] == 8, f"Features should be 8, got {batch_data.shape[1]}"
         assert len(batch_labels.shape) == 1, f"Labels should be 1D, got shape {batch_labels.shape}"
-            assert isinstance(batch_data, Tensor), "Batch data should be Tensor"
-            assert isinstance(batch_labels, Tensor), "Batch labels should be Tensor"
-        
+        assert isinstance(batch_data, Tensor), "Batch data should be Tensor"
+        assert isinstance(batch_labels, Tensor), "Batch labels should be Tensor"
+    
     assert epoch_samples == 100, f"Should process 100 samples, got {epoch_samples}"
     expected_batches = (100 + 16 - 1) // 16
     assert epoch_batches == expected_batches, f"Should have {expected_batches} batches, got {epoch_batches}"
@@ -887,8 +886,8 @@ try:
         # Verify consistent batch processing
         assert batch_data.shape[1] == 8, "Validation features should match training"
         assert len(batch_labels.shape) == 1, "Validation labels should be 1D"
-    
-    assert val_samples == 50, f"Should process 50 validation samples, got {val_samples}"
+        
+        assert val_samples == 50, f"Should process 50 validation samples, got {val_samples}"
     assert val_batches == 5, f"Should have 5 validation batches, got {val_batches}"
     print("✅ Validation pipeline works correctly")
     
@@ -943,16 +942,16 @@ try:
     dataset = SimpleDataset(size=60, num_features=6, num_classes=3)
     loader = DataLoader(dataset, batch_size=20, shuffle=True)
     
-        for epoch in range(3):
-            epoch_samples = 0
-        for batch_data, batch_labels in loader:
-                epoch_samples += batch_data.shape[0]
-                
-            # Verify shapes remain consistent across epochs
-            assert batch_data.shape[1] == 6, f"Features should be 6 in epoch {epoch}"
-            assert len(batch_labels.shape) == 1, f"Labels should be 1D in epoch {epoch}"
-        
-        assert epoch_samples == 60, f"Should process 60 samples in epoch {epoch}, got {epoch_samples}"
+    for epoch in range(3):
+        epoch_samples = 0
+    for batch_data, batch_labels in loader:
+            epoch_samples += batch_data.shape[0]
+            
+        # Verify shapes remain consistent across epochs
+        assert batch_data.shape[1] == 6, f"Features should be 6 in epoch {epoch}"
+        assert len(batch_labels.shape) == 1, f"Labels should be 1D in epoch {epoch}"
+    
+    assert epoch_samples == 60, f"Should process 60 samples in epoch {epoch}, got {epoch_samples}"
     
     print("✅ Multi-epoch training works correctly")
     

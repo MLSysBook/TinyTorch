@@ -231,10 +231,10 @@ def test_relu_activation():
     """Test ReLU activation function"""
     print("🔬 Unit Test: ReLU Activation...")
 
-# Create ReLU instance
-relu = ReLU()
+    # Create ReLU instance
+    relu = ReLU()
 
-# Test with mixed positive/negative values
+    # Test with mixed positive/negative values
     test_input = Tensor([[-2, -1, 0, 1, 2]])
     result = relu(test_input)
     expected = np.array([[0, 0, 0, 1, 2]])
@@ -370,7 +370,7 @@ def test_sigmoid_activation():
     print("🔬 Unit Test: Sigmoid Activation...")
 
 # Create Sigmoid instance
-sigmoid = Sigmoid()
+    sigmoid = Sigmoid()
 
     # Test with known values
     test_input = Tensor([[0]])
@@ -516,7 +516,7 @@ def test_tanh_activation():
     print("🔬 Unit Test: Tanh Activation...")
 
 # Create Tanh instance
-tanh = Tanh()
+    tanh = Tanh()
 
     # Test with zero (should be 0)
     test_input = Tensor([[0]])
@@ -678,7 +678,7 @@ def test_softmax_activation():
     print("🔬 Unit Test: Softmax Activation...")
 
 # Create Softmax instance
-softmax = Softmax()
+    softmax = Softmax()
 
     # Test with simple input
     test_input = Tensor([[1, 2, 3]])
@@ -751,9 +751,9 @@ def test_activations_integration():
     print("🔬 Unit Test: Activation Functions Integration...")
     
     # Create instances of all activation functions
-        relu = ReLU()
-        sigmoid = Sigmoid()
-        tanh = Tanh()
+    relu = ReLU()
+    sigmoid = Sigmoid()
+    tanh = Tanh()
     softmax = Softmax()
     
     # Test data: simulating neural network layer outputs
@@ -791,7 +791,7 @@ def test_activations_integration():
     # Test Softmax properties
     softmax_sum = np.sum(softmax_result.data)
     assert abs(softmax_sum - 1.0) < 1e-6, "Softmax outputs should sum to 1"
-        
+    
     # Test chaining activations (realistic neural network scenario)
     # Hidden layer with ReLU
     hidden_output = relu(test_data)
@@ -809,14 +809,14 @@ def test_activations_integration():
     
     # Test with batch data (multiple samples)
     batch_data = Tensor([
-        [-2, -1, 0, 1, 2],
-        [1, 2, 3, 4, 5],
-        [-1, 0, 1, 2, 3]
+    [-2, -1, 0, 1, 2],
+    [1, 2, 3, 4, 5],
+    [-1, 0, 1, 2, 3]
     ])
     
     batch_softmax = softmax(batch_data)
-        
-        # Each row should sum to 1
+    
+    # Each row should sum to 1
     for i in range(batch_data.shape[0]):
         row_sum = np.sum(batch_softmax.data[i])
         assert abs(row_sum - 1.0) < 1e-6, f"Batch row {i} should sum to 1"
@@ -829,58 +829,58 @@ def test_activations_integration():
     print(f"✅ Ready for neural network integration!")
 
 # Run the integration test
-test_activations_integration()
+    test_activations_integration()
 
 # %% [markdown]
 """
 ## 🎯 Module Summary: Activation Functions Mastery!
 
-Congratulations! You've successfully implemented all four essential activation functions:
+    Congratulations! You've successfully implemented all four essential activation functions:
 
 ### ✅ What You've Built
-- **ReLU**: The foundation of modern deep learning with sparsity and efficiency
-- **Sigmoid**: Classic activation for binary classification and probability outputs
-- **Tanh**: Zero-centered activation with better gradient properties
-- **Softmax**: Probability distribution for multi-class classification
+    - **ReLU**: The foundation of modern deep learning with sparsity and efficiency
+    - **Sigmoid**: Classic activation for binary classification and probability outputs
+    - **Tanh**: Zero-centered activation with better gradient properties
+    - **Softmax**: Probability distribution for multi-class classification
 
 ### ✅ Key Learning Outcomes
-- **Understanding**: Why nonlinearity is essential for neural networks
-- **Implementation**: Built activation functions from scratch using NumPy
-- **Testing**: Progressive validation with immediate feedback after each function
-- **Integration**: Saw how activations work together in neural networks
-- **Real-world context**: Understanding where each activation is used
+    - **Understanding**: Why nonlinearity is essential for neural networks
+    - **Implementation**: Built activation functions from scratch using NumPy
+    - **Testing**: Progressive validation with immediate feedback after each function
+    - **Integration**: Saw how activations work together in neural networks
+    - **Real-world context**: Understanding where each activation is used
 
 ### ✅ Mathematical Mastery
-- **ReLU**: f(x) = max(0, x) - Simple but powerful
-- **Sigmoid**: f(x) = 1/(1 + e^(-x)) - Maps to (0,1)
-- **Tanh**: f(x) = tanh(x) - Zero-centered, maps to (-1,1)
-- **Softmax**: f(x_i) = e^(x_i)/Σ(e^(x_j)) - Probability distribution
+    - **ReLU**: f(x) = max(0, x) - Simple but powerful
+    - **Sigmoid**: f(x) = 1/(1 + e^(-x)) - Maps to (0,1)
+    - **Tanh**: f(x) = tanh(x) - Zero-centered, maps to (-1,1)
+    - **Softmax**: f(x_i) = e^(x_i)/Σ(e^(x_j)) - Probability distribution
 
 ### ✅ Professional Skills Developed
-- **Numerical stability**: Handling overflow and underflow
-- **API design**: Consistent interfaces across all functions
-- **Testing discipline**: Immediate validation after each implementation
-- **Integration thinking**: Understanding how components work together
+    - **Numerical stability**: Handling overflow and underflow
+    - **API design**: Consistent interfaces across all functions
+    - **Testing discipline**: Immediate validation after each implementation
+    - **Integration thinking**: Understanding how components work together
 
 ### ✅ Ready for Next Steps
-Your activation functions are now ready to power:
-- **Dense layers**: Linear transformations with nonlinear activations
-- **Convolutional layers**: Spatial feature extraction with ReLU
-- **Network architectures**: Complete neural networks with proper activations
-- **Training**: Gradient computation through activation functions
+    Your activation functions are now ready to power:
+    - **Dense layers**: Linear transformations with nonlinear activations
+    - **Convolutional layers**: Spatial feature extraction with ReLU
+    - **Network architectures**: Complete neural networks with proper activations
+    - **Training**: Gradient computation through activation functions
 
 ### 🔗 Connection to Real ML Systems
-Your implementations mirror production systems:
-- **PyTorch**: `torch.nn.ReLU()`, `torch.nn.Sigmoid()`, `torch.nn.Tanh()`, `torch.nn.Softmax()`
-- **TensorFlow**: `tf.nn.relu()`, `tf.nn.sigmoid()`, `tf.nn.tanh()`, `tf.nn.softmax()`
-- **Industry applications**: Every major deep learning model uses these functions
+    Your implementations mirror production systems:
+    - **PyTorch**: `torch.nn.ReLU()`, `torch.nn.Sigmoid()`, `torch.nn.Tanh()`, `torch.nn.Softmax()`
+    - **TensorFlow**: `tf.nn.relu()`, `tf.nn.sigmoid()`, `tf.nn.tanh()`, `tf.nn.softmax()`
+    - **Industry applications**: Every major deep learning model uses these functions
 
 ### 🎯 The Power of Nonlinearity
-You've unlocked the key to deep learning:
-- **Before**: Linear models limited to simple patterns
-- **After**: Nonlinear models can learn any pattern (universal approximation)
+    You've unlocked the key to deep learning:
+    - **Before**: Linear models limited to simple patterns
+    - **After**: Nonlinear models can learn any pattern (universal approximation)
 
-**Next Module**: Layers - Building blocks that combine your tensors and activations into powerful transformations!
+    **Next Module**: Layers - Building blocks that combine your tensors and activations into powerful transformations!
 
-Your activation functions are the key to neural network intelligence. Now let's build the layers that use them!
+    Your activation functions are the key to neural network intelligence. Now let's build the layers that use them!
 """ 
