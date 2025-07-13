@@ -38,7 +38,7 @@ from collections import defaultdict
 
 # Import our existing components
 try:
-from tinytorch.core.tensor import Tensor
+    from tinytorch.core.tensor import Tensor
 except ImportError:
     # For development, import from local modules
     import os
@@ -275,7 +275,7 @@ class Variable:
         if self.requires_grad:
             if self.grad is None:
                 self.grad = gradient
-        else:
+            else:
                 # Accumulate gradients
                 self.grad = Variable(self.grad.data.data + gradient.data.data)
         
@@ -313,7 +313,7 @@ Once you implement the Variable class above, run this cell to test it:
 # %% nbgrader={"grade": true, "grade_id": "test-variable-class", "locked": true, "points": 15, "schema_version": 3, "solution": false, "task": false}
 def test_variable_class():
     """Test Variable class implementation"""
-    print("Testing Variable class...")
+    print("🔬 Unit Test: Variable Class...")
     
     # Test Variable creation
     x = Variable(5.0, requires_grad=True)
@@ -454,7 +454,7 @@ Once you implement the add function above, run this cell to test it:
 # %% nbgrader={"grade": true, "grade_id": "test-add-operation", "locked": true, "points": 15, "schema_version": 3, "solution": false, "task": false}
 def test_add_operation():
     """Test addition operation with gradients"""
-    print("Testing addition operation...")
+    print("🔬 Unit Test: Addition Operation...")
     
     # Test basic addition
     x = Variable(2.0, requires_grad=True)
@@ -588,7 +588,7 @@ Once you implement the multiply function above, run this cell to test it:
 # %% nbgrader={"grade": true, "grade_id": "test-multiply-operation", "locked": true, "points": 15, "schema_version": 3, "solution": false, "task": false}
 def test_multiply_operation():
     """Test multiplication operation with gradients"""
-    print("Testing multiplication operation...")
+    print("🔬 Unit Test: Multiplication Operation...")
     
     # Test basic multiplication
     x = Variable(2.0, requires_grad=True)
@@ -685,7 +685,7 @@ def subtract(a: Union[Variable, float, int], b: Union[Variable, float, int]) -> 
 # %% nbgrader={"grade": false, "grade_id": "test-subtract-operation", "locked": false, "schema_version": 3, "solution": false, "task": false}
 def test_subtract_operation():
     """Test subtraction operation with gradients"""
-    print("Testing subtraction operation...")
+    print("🔬 Unit Test: Subtraction Operation...")
     
     # Test basic subtraction
     x = Variable(5.0, requires_grad=True)
@@ -751,7 +751,7 @@ Complex neural networks are just larger versions of this:
 # %% nbgrader={"grade": true, "grade_id": "test-chain-rule", "locked": true, "points": 20, "schema_version": 3, "solution": false, "task": false}
 def test_chain_rule():
     """Test chain rule with complex expressions"""
-    print("Testing chain rule with complex expressions...")
+    print("🔬 Unit Test: Chain Rule with Complex Expressions...")
     
     # Test: f(x, y) = (x + y) * (x - y) = x² - y²
     x = Variable(3.0, requires_grad=True)
@@ -846,7 +846,7 @@ b.data = b.data - learning_rate * b.grad.data
 # %% nbgrader={"grade": true, "grade_id": "test-neural-network-training", "locked": true, "points": 25, "schema_version": 3, "solution": false, "task": false}
 def test_neural_network_training():
     """Test autograd in neural network training scenario"""
-    print("Testing neural network training integration...")
+    print("🔬 Unit Test: Neural Network Training Integration...")
     
     # Simple linear regression: y = wx + b
     # Training data: y = 2x + 1 + noise

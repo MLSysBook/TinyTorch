@@ -258,7 +258,7 @@ Once you implement the `matmul_naive` function above, run this cell to test it:
 # %% nbgrader={"grade": true, "grade_id": "test-matmul-immediate", "locked": true, "points": 10, "schema_version": 3, "solution": false, "task": false}
 def test_matrix_multiplication():
     """Test matrix multiplication implementation"""
-    print("Testing matrix multiplication...")
+    print("🔬 Unit Test: Matrix Multiplication...")
 
 # Test simple 2x2 case
     A = np.array([[1, 2], [3, 4]], dtype=np.float32)
@@ -487,7 +487,7 @@ Once you implement the Dense layer above, run this cell to test it:
 # %% nbgrader={"grade": true, "grade_id": "test-dense-layer", "locked": true, "points": 15, "schema_version": 3, "solution": false, "task": false}
 def test_dense_layer():
     """Test Dense layer implementation"""
-    print("Testing Dense layer...")
+    print("🔬 Unit Test: Dense Layer...")
     
     # Test layer creation
     layer = Dense(input_size=3, output_size=2)
@@ -578,7 +578,7 @@ final_output = activation_function(linear_output)
 # %% nbgrader={"grade": true, "grade_id": "test-layer-activation-integration", "locked": true, "points": 15, "schema_version": 3, "solution": false, "task": false}
 def test_layer_activation_integration():
     """Test Dense layer integration with activation functions"""
-    print("Testing layer-activation integration...")
+    print("🔬 Unit Test: Layer-Activation Integration...")
     
     # Create layer and activation functions
     layer = Dense(input_size=4, output_size=3)
