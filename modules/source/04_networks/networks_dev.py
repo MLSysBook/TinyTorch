@@ -106,9 +106,7 @@ from tinytorch.core.tensor import Tensor  # Foundation
 ### Function Composition at Scale
 Neural networks are fundamentally about **function composition**:
 
-```
-f(x) = f_n(f_{n-1}(...f_2(f_1(x))))
-```
+$$f(x) = f_n(f_{n-1}(\ldots f_2(f_1(x)) \ldots))$$
 
 Each layer is a function, and the network is the composition of all these functions.
 
@@ -155,15 +153,10 @@ Input → Layer1 → Layer2 → Layer3 → Output
 #### **Function Composition in Mathematics**
 In mathematics, function composition combines simple functions to create complex ones:
 
-```python
-# Mathematical composition: (f ∘ g)(x) = f(g(x))
-def compose(f, g):
-    return lambda x: f(g(x))
+$$(f \circ g)(x) = f(g(x))$$
 
-# Neural network composition: h(x) = f_n(f_{n-1}(...f_2(f_1(x))))
-def network(layers):
-    return lambda x: reduce(lambda acc, layer: layer(acc), layers, x)
-```
+Neural network composition:
+$$h(x) = f_n(f_{n-1}(\ldots f_2(f_1(x)) \ldots))$$
 
 #### **Why Composition is Powerful**
 1. **Modularity**: Each layer has a specific, well-defined purpose
