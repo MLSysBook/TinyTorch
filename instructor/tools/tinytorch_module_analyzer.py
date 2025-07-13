@@ -80,7 +80,7 @@ class ModuleReportCard:
 class TinyTorchModuleAnalyzer:
     """Comprehensive analyzer for TinyTorch educational modules"""
     
-    def __init__(self, modules_dir: str = "modules/source"):
+    def __init__(self, modules_dir: str = "../../modules/source"):
         self.modules_dir = Path(modules_dir)
         self.target_metrics = {
             'ideal_lines': (200, 400),
@@ -913,7 +913,7 @@ def main():
     parser.add_argument("--compare", nargs="+", help="Compare multiple modules")
     parser.add_argument("--format", choices=["json", "html", "both"], default="both", help="Output format")
     parser.add_argument("--save", action="store_true", help="Save report cards to files")
-    parser.add_argument("--modules-dir", default="modules/source", help="Path to modules directory")
+    parser.add_argument("--modules-dir", default="../../modules/source", help="Path to modules directory")
     
     args = parser.parse_args()
     
