@@ -8,4 +8,20 @@ description: "Development environment setup and basic TinyTorch functionality"
 # Dependencies - Used by CLI for module ordering and prerequisites
 dependencies:
   prerequisites: []
-  enables: ["tensor", "activations", "layers"] 
+  enables: ["tensor", "activations", "layers"]
+
+# Package Export - What gets built into tinytorch package
+exports_to: "tinytorch.core.setup"
+
+# File Structure - What files exist in this module
+files:
+  dev_file: "setup_dev.py"
+  readme: "README.md"
+  tests: "inline"
+
+# Components - What's implemented in this module
+components:
+  - "personal_info"
+  - "system_info"
+  - "setup_health"
+  - "DeveloperProfile" 
