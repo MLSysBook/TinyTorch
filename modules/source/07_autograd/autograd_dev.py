@@ -311,7 +311,7 @@ Once you implement the Variable class above, run this cell to test it:
 """
 
 # %% nbgrader={"grade": true, "grade_id": "test-variable-class", "locked": true, "points": 15, "schema_version": 3, "solution": false, "task": false}
-def test_variable_class():
+def test_variable_class_comprehensive():
     """Test Variable class implementation"""
     print("🔬 Unit Test: Variable Class...")
     
@@ -347,7 +347,7 @@ def test_variable_class():
 
 # Run inline tests when module is executed directly
 if __name__ == "__main__":
-    test_variable_class()
+    test_variable_class_comprehensive()
 
 # %% [markdown]
 """
@@ -453,7 +453,7 @@ Once you implement the add function above, run this cell to test it:
 """
 
 # %% nbgrader={"grade": true, "grade_id": "test-add-operation", "locked": true, "points": 15, "schema_version": 3, "solution": false, "task": false}
-def test_add_operation():
+def test_add_operation_comprehensive():
     """Test addition operation with gradients"""
     print("🔬 Unit Test: Addition Operation...")
     
@@ -490,7 +490,7 @@ def test_add_operation():
 
 # Run inline tests when module is executed directly
 if __name__ == "__main__":
-    test_add_operation()
+    test_add_operation_comprehensive()
 
 # %% [markdown]
 """
@@ -588,7 +588,7 @@ Once you implement the multiply function above, run this cell to test it:
 """
 
 # %% nbgrader={"grade": true, "grade_id": "test-multiply-operation", "locked": true, "points": 15, "schema_version": 3, "solution": false, "task": false}
-def test_multiply_operation():
+def test_multiply_operation_comprehensive():
     """Test multiplication operation with gradients"""
     print("🔬 Unit Test: Multiplication Operation...")
     
@@ -624,7 +624,7 @@ def test_multiply_operation():
 
 # Run inline tests when module is executed directly
 if __name__ == "__main__":
-    test_multiply_operation()
+    test_multiply_operation_comprehensive()
 
 # %% nbgrader={"grade": false, "grade_id": "subtract-operation", "locked": false, "schema_version": 3, "solution": true, "task": false}
 #| export
@@ -686,7 +686,7 @@ def subtract(a: Union[Variable, float, int], b: Union[Variable, float, int]) -> 
     ### END SOLUTION
 
 # %% nbgrader={"grade": false, "grade_id": "test-subtract-operation", "locked": false, "schema_version": 3, "solution": false, "task": false}
-def test_subtract_operation():
+def test_subtract_operation_comprehensive():
     """Test subtraction operation with gradients"""
     print("🔬 Unit Test: Subtraction Operation...")
     
@@ -722,7 +722,7 @@ def test_subtract_operation():
 
 # Run inline tests when module is executed directly
 if __name__ == "__main__":
-    test_subtract_operation()
+    test_subtract_operation_comprehensive()
 
 # %% [markdown]
 """
@@ -753,7 +753,7 @@ Complex neural networks are just larger versions of this:
 """
 
 # %% nbgrader={"grade": true, "grade_id": "test-chain-rule", "locked": true, "points": 20, "schema_version": 3, "solution": false, "task": false}
-def test_chain_rule():
+def test_chain_rule_comprehensive():
     """Test chain rule with complex expressions"""
     print("🔬 Unit Test: Chain Rule with Complex Expressions...")
     
@@ -807,7 +807,7 @@ def test_chain_rule():
 
 # Run inline tests when module is executed directly
 if __name__ == "__main__":
-    test_chain_rule()
+    test_chain_rule_comprehensive()
 
 # %% [markdown]
 """
@@ -849,7 +849,7 @@ b.data = b.data - learning_rate * b.grad.data
 """
 
 # %% nbgrader={"grade": true, "grade_id": "test-neural-network-training", "locked": true, "points": 25, "schema_version": 3, "solution": false, "task": false}
-def test_neural_network_training():
+def test_neural_network_training_integration():
     """Test autograd in neural network training scenario"""
     print("🔬 Unit Test: Neural Network Training Integration...")
     
@@ -923,7 +923,10 @@ def test_neural_network_training():
 
 # Run inline tests when module is executed directly
 if __name__ == "__main__":
-    test_neural_network_training()
+    from tito.tools.testing import run_module_tests_auto
+    
+    # Automatically discover and run all tests in this module
+    run_module_tests_auto("Autograd")
 
 # %% [markdown]
 """

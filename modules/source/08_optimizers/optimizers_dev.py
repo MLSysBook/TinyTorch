@@ -258,7 +258,7 @@ Let's test your gradient descent implementation right away! This is the foundati
 """
 
 # %% nbgrader={"grade": true, "grade_id": "test-gradient-descent", "locked": true, "points": 10, "schema_version": 3, "solution": false, "task": false}
-def test_gradient_descent_step():
+def test_gradient_descent_step_comprehensive():
     """Test basic gradient descent parameter update"""
     print("🔬 Unit Test: Gradient Descent Step...")
     
@@ -314,7 +314,7 @@ def test_gradient_descent_step():
     print("📈 Progress: Gradient Descent Step ✓")
 
 # Run the test
-test_gradient_descent_step()
+    test_gradient_descent_step_comprehensive()
 
 # %% [markdown]
 """
@@ -511,7 +511,7 @@ Let's test your SGD optimizer implementation! This optimizer adds momentum to gr
 """
 
 # %% nbgrader={"grade": true, "grade_id": "test-sgd", "locked": true, "points": 15, "schema_version": 3, "solution": false, "task": false}
-def test_sgd_optimizer():
+def test_sgd_optimizer_comprehensive():
     """Test SGD optimizer implementation"""
     print("🔬 Unit Test: SGD Optimizer...")
     
@@ -599,7 +599,7 @@ def test_sgd_optimizer():
     print("📈 Progress: SGD Optimizer ✓")
 
 # Run the test
-test_sgd_optimizer()
+test_sgd_optimizer_comprehensive()
 
 # %% [markdown]
 """
@@ -817,7 +817,7 @@ Let's test your Adam optimizer implementation! This is a state-of-the-art adapti
 """
 
 # %% nbgrader={"grade": true, "grade_id": "test-adam", "locked": true, "points": 20, "schema_version": 3, "solution": false, "task": false}
-def test_adam_optimizer():
+def test_adam_optimizer_comprehensive():
     """Test Adam optimizer implementation"""
     print("🔬 Unit Test: Adam Optimizer...")
     
@@ -915,7 +915,7 @@ def test_adam_optimizer():
     print("📈 Progress: Adam Optimizer ✓")
 
 # Run the test
-test_adam_optimizer()
+test_adam_optimizer_comprehensive()
 
 # %% [markdown]
 """
@@ -1063,7 +1063,7 @@ Let's test your step learning rate scheduler implementation! This scheduler redu
 """
 
 # %% nbgrader={"grade": true, "grade_id": "test-step-scheduler", "locked": true, "points": 10, "schema_version": 3, "solution": false, "task": false}
-def test_step_scheduler():
+def test_step_scheduler_comprehensive():
     """Test StepLR scheduler implementation"""
     print("🔬 Unit Test: Step Learning Rate Scheduler...")
     
@@ -1152,7 +1152,7 @@ def test_step_scheduler():
     print("📈 Progress: Step Learning Rate Scheduler ✓")
 
 # Run the test
-test_step_scheduler()
+test_step_scheduler_comprehensive()
 
 # %% [markdown]
 """
@@ -1313,7 +1313,7 @@ Let's test your complete training integration! This demonstrates optimizers work
 """
 
 # %% nbgrader={"grade": true, "grade_id": "test-training-integration", "locked": true, "points": 25, "schema_version": 3, "solution": false, "task": false}
-def test_training_integration():
+def test_training_integration_comprehensive():
     """Test complete training integration with optimizers"""
     print("🔬 Unit Test: Complete Training Integration...")
     
@@ -1384,7 +1384,7 @@ def test_training_integration():
     print("📈 Progress: Complete Training Integration ✓")
 
 # Run the test
-test_training_integration()
+test_training_integration_comprehensive()
 
 # %% [markdown]
 """
@@ -1455,4 +1455,11 @@ Your optimizers are the foundation for:
 **Next Module**: Complete training systems that orchestrate your optimizers for real-world ML!
 
 You've built the intelligent algorithms that enable neural networks to learn. Now let's use them to train systems that can solve complex real-world problems!
-""" 
+"""
+
+# Run inline tests when module is executed directly
+if __name__ == "__main__":
+    from tito.tools.testing import run_module_tests_auto
+    
+    # Automatically discover and run all tests in this module
+    run_module_tests_auto("Optimizers") 
