@@ -8,7 +8,7 @@ description: "Core tensor data structure and operations"
 # Dependencies - Used by CLI for module ordering and prerequisites
 dependencies:
   prerequisites: ["setup"]
-  enables: ["activations", "layers", "autograd"]
+  enables: ["activations", "layers", "autograd"] 
 
 # Package Export - What gets built into tinytorch package
 exports_to: "tinytorch.core.tensor"

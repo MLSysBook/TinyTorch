@@ -1241,15 +1241,15 @@ success = test_tensor_arithmetic_comprehensive() and success
 
 # %% [markdown]
 """
-### 🧪 Final Integration Test: Real ML Scenario
+### 🧪 Comprehensive Test: Real ML Scenario
 
 Let's test your tensor with a realistic machine learning scenario to make sure everything works together.
 """
 
-# %% nbgrader={"grade": true, "grade_id": "test-tensor-integration", "locked": true, "points": 10, "schema_version": 3, "solution": false, "task": false}
-def test_tensor_integration():
-    """Integration test with realistic ML scenario."""
-    print("🔬 Testing tensor integration with ML scenario...")
+# %% nbgrader={"grade": true, "grade_id": "test-tensor-comprehensive", "locked": true, "points": 10, "schema_version": 3, "solution": false, "task": false}
+def test_tensor_comprehensive():
+    """Comprehensive test with realistic ML scenario."""
+    print("🔬 Testing tensor comprehensively with ML scenario...")
     
     try:
         print("🧠 Simulating a simple neural network forward pass...")
@@ -1297,7 +1297,7 @@ def test_tensor_integration():
         normalized = sample - mean_val
         print(f"✅ Mean subtraction works: {normalized.data}")
         
-        print("\n🎉 Integration test passed! Your tensor class can handle:")
+        print("\n🎉 Comprehensive test passed! Your tensor class can handle:")
         print("  • Multi-dimensional data (batches, features)")
         print("  • Element-wise operations needed for ML")
         print("  • Scalar operations (learning rates, normalization)")
@@ -1308,7 +1308,7 @@ def test_tensor_integration():
         return True
         
     except Exception as e:
-        print(f"❌ Integration test failed: {e}")
+        print(f"❌ Comprehensive test failed: {e}")
         print("\n💡 This suggests an issue with:")
         print("  • Basic tensor operations not working together")
         print("  • Shape handling problems")
@@ -1316,8 +1316,8 @@ def test_tensor_integration():
         print("  • Check your tensor creation and arithmetic methods")
         return False
 
-# Run the integration test
-success = test_tensor_integration() and success
+# Run the comprehensive test
+success = test_tensor_comprehensive() and success
 
 # Print final summary
 print(f"\n{'='*60}")

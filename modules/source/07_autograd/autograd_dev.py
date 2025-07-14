@@ -849,9 +849,9 @@ b.data = b.data - learning_rate * b.grad.data
 """
 
 # %% nbgrader={"grade": true, "grade_id": "test-neural-network-training", "locked": true, "points": 25, "schema_version": 3, "solution": false, "task": false}
-def test_neural_network_training_integration():
+def test_neural_network_training_comprehensive():
     """Test autograd in neural network training scenario"""
-    print("🔬 Unit Test: Neural Network Training Integration...")
+    print("🔬 Unit Test: Neural Network Training Comprehensive Test...")
     
     # Simple linear regression: y = wx + b
     # Training data: y = 2x + 1 + noise
@@ -915,7 +915,7 @@ def test_neural_network_training_integration():
     prediction_error = abs(test_prediction.data.data.item() - expected_output)
     assert prediction_error < 0.5, f"Prediction error should be small, got {prediction_error}"
     
-    print("✅ Neural network training integration tests passed!")
+    print("✅ Neural network training comprehensive tests passed!")
     print(f"✅ Parameters converged to correct values")
     print(f"✅ Model makes accurate predictions")
     print(f"✅ Autograd enables automatic training")

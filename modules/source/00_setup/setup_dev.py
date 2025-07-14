@@ -1321,8 +1321,8 @@ def test_development_setup_comprehensive():
     assert 'setup_score' in dev, "Dictionary should have 'setup_score' key"
     print("✅ Development setup function works")
 
-def test_system_report_integration():
-    """Test system report integration function."""
+def test_system_report_comprehensive():
+    """Test system report comprehensive function."""
     report = generate_system_report()
     assert isinstance(report, dict), "generate_system_report should return a dictionary"
     assert 'overall_health' in report, "Dictionary should have 'overall_health' key"

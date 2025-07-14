@@ -8,7 +8,7 @@ description: "Neural network activation functions (ReLU, Sigmoid, Tanh, Softmax)
 # Dependencies - Used by CLI for module ordering and prerequisites
 dependencies:
   prerequisites: ["tensor"]
-  enables: ["layers", "networks"]
+  enables: ["layers", "networks"] 
 
 # Package Export - What gets built into tinytorch package
 exports_to: "tinytorch.core.activations"
