@@ -1,0 +1,128 @@
+# TinyTorch Module Metadata
+# Essential system information for CLI tools and build systems
+
+name: "13_mlops"
+title: "MLOps - Production ML Systems"
+description: "Complete MLOps pipeline for production deployment, monitoring, and continuous learning"
+version: "1.0.0"
+author: "TinyTorch Team"
+
+# Dependencies - Used by CLI for module ordering and prerequisites
+dependencies:
+  prerequisites: [
+    "00_setup", "01_tensor", "02_activations", "03_layers", 
+    "04_networks", "05_cnn", "06_dataloader", "07_autograd", 
+    "08_optimizers", "09_training", "10_compression", "11_kernels",
+    "12_benchmarking"
+  ]
+  enables: []  # Final capstone module
+
+# Package Export - What gets built into tinytorch package
+exports_to: "tinytorch.core.mlops"
+
+# File Structure - What files exist in this module
+files:
+  dev_file: "mlops_dev.py"
+  test_file: "tests/test_mlops.py"
+  readme: "README.md"
+  deployment_dir: "deployments/"
+
+# Components - What's implemented in this module
+components:
+  # Model Management
+  - "ModelRegistry"
+  - "ModelVersioning"
+  - "ModelSerializer"
+  
+  # Deployment & Serving
+  - "ModelServer"
+  - "InferenceEndpoint"
+  - "BatchInference"
+  
+  # Monitoring & Observability
+  - "ModelMonitor"
+  - "PerformanceTracker"
+  - "DriftDetector"
+  
+  # Experimentation
+  - "ABTestManager"
+  - "ExperimentTracker"
+  - "ModelComparator"
+  
+  # Continuous Learning
+  - "ContinuousLearner"
+  - "AutoRetrainer"
+  - "DataPipeline"
+  
+  # MLOps Pipeline
+  - "MLOpsPipeline"
+  - "DeploymentManager"
+  - "ProductionValidator"
+
+# Learning Objectives - What students will achieve
+learning_objectives:
+  - "Build complete MLOps pipelines from model development to production"
+  - "Implement model versioning and registry systems for lifecycle management"
+  - "Create production-ready model serving and inference endpoints"
+  - "Design monitoring systems for model performance and data drift detection"
+  - "Apply A/B testing methodology for safe model deployment"
+  - "Implement continuous learning systems for model improvement"
+  - "Integrate all TinyTorch components into production-ready systems"
+
+# Educational Approach
+pedagogy:
+  framework: "Build → Use → Deploy"
+  difficulty: "Expert"
+  time_estimate: "10-12 hours"
+
+# Real-World Applications
+real_world_applications:
+  - "Production ML systems at scale"
+  - "Model lifecycle management"
+  - "Automated retraining pipelines"
+  - "Multi-model serving systems"
+  - "ML system monitoring and alerting"
+  - "Safe model deployment strategies"
+
+# Industry Connections
+industry_connections:
+  - "MLflow: Model lifecycle management"
+  - "Kubeflow: Kubernetes-based ML workflows"
+  - "TensorFlow Serving: Production model serving"
+  - "Amazon SageMaker: End-to-end ML platform"
+  - "Google AI Platform: Cloud ML services"
+  - "Azure ML: Microsoft's ML platform"
+
+# Integration Points - How this connects to other modules
+integration_points:
+  training_module: "Use trained models from Module 09"
+  compression_module: "Deploy compressed models from Module 10"
+  kernels_module: "Leverage optimized kernels from Module 11"
+  benchmarking_module: "Use benchmarking results from Module 12"
+  tensor_module: "Process data with tensor operations from Module 01"
+  all_modules: "Integrate complete TinyTorch ecosystem"
+
+# Assessment - How learning is verified
+assessment:
+  total_points: 100
+  breakdown:
+    model_management: 20
+    deployment_system: 25
+    monitoring_implementation: 20
+    experimentation_framework: 15
+    continuous_learning: 20
+
+# Estimated Time
+time_estimate: "10-12 hours"
+difficulty: "⭐⭐⭐⭐⭐ Expert"
+
+# Capstone Project
+capstone_project:
+  title: "Complete ML System Deployment"
+  description: "Build end-to-end ML system from data to production monitoring"
+  deliverables:
+    - "Trained and compressed model"
+    - "Production serving endpoint"
+    - "Monitoring dashboard"
+    - "A/B testing framework"
+    - "Continuous learning pipeline" 
