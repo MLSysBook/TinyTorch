@@ -921,12 +921,26 @@ def test_neural_network_training():
     print(f"✅ Autograd enables automatic training")
     print(f"✅ Ready for complex neural network architectures!")
 
-# Run inline tests when module is executed directly
+# %% [markdown]
+"""
+## 🧪 Module Testing
+
+Time to test your implementation! This section uses TinyTorch's standardized testing framework to ensure your implementation works correctly.
+
+**This testing section is locked** - it provides consistent feedback across all modules and cannot be modified.
+"""
+
+# %% nbgrader={"grade": false, "grade_id": "standardized-testing", "locked": true, "schema_version": 3, "solution": false, "task": false}
+# =============================================================================
+# STANDARDIZED MODULE TESTING - DO NOT MODIFY
+# This cell is locked to ensure consistent testing across all TinyTorch modules
+# =============================================================================
+
 if __name__ == "__main__":
     from tito.tools.testing import run_module_tests_auto
     
     # Automatically discover and run all tests in this module
-    run_module_tests_auto("Autograd")
+    success = run_module_tests_auto("Autograd")
 
 # %% [markdown]
 """
