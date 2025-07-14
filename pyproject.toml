@@ -73,8 +73,8 @@ disallow_untyped_defs = true
 
 [tool.pytest.ini_options]
 # Test timeouts and configuration
-timeout = 300  # 5 minutes timeout for all tests
-timeout_method = "thread"  # Use thread-based timeout
+# timeout = 300  # 5 minutes timeout for all tests (requires pytest-timeout)
+# timeout_method = "thread"  # Use thread-based timeout
 addopts = [
     "-v",
     "--tb=short",
