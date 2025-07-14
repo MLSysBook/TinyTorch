@@ -1,26 +1,26 @@
 # TinyTorch Module Metadata
 # Essential system information for CLI tools and build systems
 
-name: "layers"
-title: "Layers"
-description: "Neural network layers (Linear, activation layers)"
+name: "cnn"
+title: "CNN"
+description: "Convolutional Neural Network layers and operations"
 
 # Dependencies - Used by CLI for module ordering and prerequisites
 dependencies:
-  prerequisites: ["setup", "tensor", "activations"]
-  enables: ["networks", "training"]
+  prerequisites: ["setup", "tensor", "activations", "layers"]
+  enables: ["networks", "training", "computer_vision"]
 
 # Package Export - What gets built into tinytorch package
-exports_to: "tinytorch.core.layers"
+exports_to: "tinytorch.core.cnn"
 
 # File Structure - What files exist in this module
 files:
-  dev_file: "layers_dev.py"
-  test_file: "tests/test_layers.py"
+  dev_file: "cnn_dev.py"
   readme: "README.md"
+  tests: "inline"
 
 # Components - What's implemented in this module
 components:
-  - "Dense"
-  - "Linear"
-  - "matmul_naive" 
+  - "conv2d_naive"
+  - "Conv2D"
+  - "flatten" 

@@ -5,21 +5,21 @@ name: "autograd"
 title: "Autograd"
 description: "Automatic differentiation engine for gradient computation"
 
-# Dependencies
+# Dependencies - Used by CLI for module ordering and prerequisites
 dependencies:
   prerequisites: ["setup", "tensor", "activations"]
-  enables: ["training", "optimization"]
+  enables: ["optimizers", "training"]
 
-# Package Export
+# Package Export - What gets built into tinytorch package
 exports_to: "tinytorch.core.autograd"
 
-# File Structure
+# File Structure - What files exist in this module
 files:
   dev_file: "autograd_dev.py"
   test_file: "tests/test_autograd.py"
   readme: "README.md"
 
-# Components
+# Components - What's implemented in this module
 components:
   - "Variable"
   - "backward"
