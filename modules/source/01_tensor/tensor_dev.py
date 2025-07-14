@@ -762,7 +762,7 @@ This tests the foundation of everything else we'll build.
 """
 
 # %% nbgrader={"grade": true, "grade_id": "test-tensor-creation-comprehensive", "locked": true, "points": 15, "schema_version": 3, "solution": false, "task": false}
-def test_tensor_creation_comprehensive():
+def test_tensor_creation():
     """Comprehensive test of tensor creation with all data types and shapes."""
     print("🔬 Testing comprehensive tensor creation...")
     
@@ -907,7 +907,7 @@ def test_tensor_creation_comprehensive():
         return False
 
 # Run the comprehensive test
-success = test_tensor_creation_comprehensive()
+success = test_tensor_creation()
 
 # %% [markdown]
 """
@@ -917,7 +917,7 @@ Now let's test all the properties your tensor should have. These properties are 
 """
 
 # %% nbgrader={"grade": true, "grade_id": "test-tensor-properties-comprehensive", "locked": true, "points": 15, "schema_version": 3, "solution": false, "task": false}
-def test_tensor_properties_comprehensive():
+def test_tensor_properties():
     """Comprehensive test of tensor properties (shape, size, dtype, data access)."""
     print("🔬 Testing comprehensive tensor properties...")
     
@@ -1060,7 +1060,7 @@ def test_tensor_properties_comprehensive():
         return False
 
 # Run the comprehensive test
-success = test_tensor_properties_comprehensive() and success
+success = test_tensor_properties() and success
 
 # %% [markdown]
 """
@@ -1070,7 +1070,7 @@ Let's test all arithmetic operations. These are the foundation of neural network
 """
 
 # %% nbgrader={"grade": true, "grade_id": "test-tensor-arithmetic-comprehensive", "locked": true, "points": 20, "schema_version": 3, "solution": false, "task": false}
-def test_tensor_arithmetic_comprehensive():
+def test_tensor_arithmetic():
     """Comprehensive test of tensor arithmetic operations."""
     print("🔬 Testing comprehensive tensor arithmetic...")
     
@@ -1237,7 +1237,7 @@ def test_tensor_arithmetic_comprehensive():
         return False
 
 # Run the comprehensive test
-success = test_tensor_arithmetic_comprehensive() and success
+success = test_tensor_arithmetic() and success
 
 # %% [markdown]
 """
@@ -1247,7 +1247,7 @@ Let's test your tensor with a realistic machine learning scenario to make sure e
 """
 
 # %% nbgrader={"grade": true, "grade_id": "test-tensor-comprehensive", "locked": true, "points": 10, "schema_version": 3, "solution": false, "task": false}
-def test_tensor_comprehensive():
+def test_tensor():
     """Comprehensive test with realistic ML scenario."""
     print("🔬 Testing tensor comprehensively with ML scenario...")
     
@@ -1317,7 +1317,7 @@ def test_tensor_comprehensive():
         return False
 
 # Run the comprehensive test
-success = test_tensor_comprehensive() and success
+success = test_tensor() and success
 
 # Print final summary
 print(f"\n{'='*60}")

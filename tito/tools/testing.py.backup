@@ -106,8 +106,42 @@ class ModuleTestRunner:
         if not name.startswith('test_'):
             return False
         
-        # That's it! Any function starting with 'test_' is a valid test
-        return True
+        # Must match our expected patterns for comprehensive tests
+        valid_patterns = [
+            '_comprehensive',
+            '_integration', 
+            'relu_activation',
+            'sigmoid_activation',
+            'tanh_activation',
+            'softmax_activation',
+            'activations_integration',
+            # Compression module test patterns
+            'compression_metrics',
+            'magnitude_pruning',
+            'quantization',
+            'distillation',
+            'structured_pruning',
+            'comprehensive_comparison',
+            # Setup module test patterns
+            'personal_info',
+            'system_info',
+            'environment_validation',
+            'performance_benchmark',
+            'development_setup',
+            'system_report',
+            # Tensor module test patterns
+            'tensor_creation',
+            'tensor_properties',
+            'tensor_arithmetic',
+            'tensor'
+        ]
+        
+        # Check if the function name matches any of our patterns
+        for pattern in valid_patterns:
+            if pattern in name:
+                return True
+        
+        return False
     
     def _function_name_to_test_name(self, function_name: str) -> str:
         """

@@ -256,7 +256,7 @@ Once you implement the `matmul_naive` function above, run this cell to test it:
 """
 
 # %% nbgrader={"grade": true, "grade_id": "test-matmul-immediate", "locked": true, "points": 10, "schema_version": 3, "solution": false, "task": false}
-def test_matrix_multiplication_comprehensive():
+def test_matrix_multiplication():
     """Test matrix multiplication implementation"""
     print("🔬 Unit Test: Matrix Multiplication...")
 
@@ -305,7 +305,7 @@ def test_matrix_multiplication_comprehensive():
     print(f"✅ Proper error handling for incompatible shapes")
 
 # Run the test
-test_matrix_multiplication_comprehensive()
+test_matrix_multiplication()
 
 # %% [markdown]
 """
@@ -485,7 +485,7 @@ Once you implement the Dense layer above, run this cell to test it:
 """
 
 # %% nbgrader={"grade": true, "grade_id": "test-dense-layer", "locked": true, "points": 15, "schema_version": 3, "solution": false, "task": false}
-def test_dense_layer_comprehensive():
+def test_dense_layer():
     """Test Dense layer implementation"""
     print("🔬 Unit Test: Dense Layer...")
     
@@ -546,7 +546,7 @@ def test_dense_layer_comprehensive():
     print(f"✅ Naive matrix multiplication option works")
 
 # Run the test
-test_dense_layer_comprehensive()
+test_dense_layer()
 
 # %% [markdown]
 """
@@ -576,7 +576,7 @@ final_output = activation_function(linear_output)
 """
 
 # %% nbgrader={"grade": true, "grade_id": "test-layer-activation-comprehensive", "locked": true, "points": 15, "schema_version": 3, "solution": false, "task": false}
-def test_layer_activation_comprehensive():
+def test_layer_activation():
     """Test Dense layer comprehensive testing with activation functions"""
     print("🔬 Unit Test: Layer-Activation Comprehensive Test...")
     
@@ -651,7 +651,7 @@ def test_layer_activation_comprehensive():
     print(f"✅ All components ready for training!")
 
 # Run the test
-test_layer_activation_comprehensive()
+test_layer_activation()
 
 # %% [markdown]
 """
