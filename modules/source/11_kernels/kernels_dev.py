@@ -1236,53 +1236,8 @@ def test_compressed_kernels():
 # Run the test
 test_compressed_kernels()
 
-# %% [markdown]
-"""
-## 🎯 Module Summary: Hardware-Optimized ML Operations
-
-### What You've Built
-You've implemented a complete set of hardware-optimized ML kernels:
-
-1. **Custom Operations**: Specialized matrix multiplication beyond NumPy
-2. **Vectorized Operations**: SIMD-optimized ReLU and element-wise operations
-3. **Cache-Friendly Algorithms**: Blocked matrix multiplication for better memory access
-4. **Parallel Processing**: Multi-core CPU utilization for large operations
-5. **Performance Profiling**: Tools to measure and optimize kernel performance
-6. **Compressed Kernels**: Quantized operations for mobile deployment
-
-### Key Insights
-- **Specialization beats generalization**: Custom kernels outperform generic libraries
-- **Memory is the bottleneck**: Cache-friendly algorithms are crucial
-- **Parallelism is everywhere**: From SIMD to multi-core to GPU-style processing
-- **Measurement drives optimization**: Profile first, optimize second
-- **Compression enables deployment**: Quantized models run faster with less memory
-
-### Real-World Connections
-- **PyTorch**: Uses thousands of optimized kernels for speed
-- **TensorFlow**: XLA compiler generates specialized kernels
-- **Mobile ML**: Quantized kernels enable edge deployment
-- **Cloud computing**: Kernel optimization reduces server costs
-- **Research**: Custom kernels enable larger models and faster experimentation
-
-### Next Steps
-In real ML systems, you'd:
-1. **GPU kernels**: Implement CUDA/OpenCL versions
-2. **Auto-tuning**: Automatically find optimal parameters
-3. **Hardware specialization**: Optimize for specific processors
-4. **Kernel fusion**: Combine multiple operations into single kernels
-5. **Distributed computing**: Scale kernels across multiple machines
-
-### 🏆 Achievement Unlocked
-You've mastered the performance optimization techniques that power modern ML frameworks. You understand how to move beyond high-level libraries to extract maximum performance from hardware!
-
-**You've completed the TinyTorch Kernels module!** 🎉
-
-### Final Performance Test
-Let's run a comprehensive performance comparison of all the kernels we've built:
-"""
-
 # %% nbgrader={"grade": false, "grade_id": "final-performance-test", "locked": false, "schema_version": 3, "solution": false, "task": false}
-### 🧪 Final Performance Test: Comprehensive Kernel Comparison
+### 🧪 Unit Test: Comprehensive Kernel Performance Comparison
 
 def final_performance_test():
     """Comprehensive performance test of all implemented kernels."""
@@ -1368,4 +1323,67 @@ def final_performance_test():
     print("You now understand the performance optimizations that power modern AI frameworks.")
 
 # Run the final test
-final_performance_test() 
+final_performance_test()
+
+# %% [markdown]
+"""
+## 🧪 Module Testing
+
+Time to test your implementation! This section uses TinyTorch's standardized testing framework to ensure your implementation works correctly.
+
+**This testing section is locked** - it provides consistent feedback across all modules and cannot be modified.
+"""
+
+# %% nbgrader={"grade": false, "grade_id": "standardized-testing", "locked": true, "schema_version": 3, "solution": false, "task": false}
+# =============================================================================
+# STANDARDIZED MODULE TESTING - DO NOT MODIFY
+# This cell is locked to ensure consistent testing across all TinyTorch modules
+# =============================================================================
+
+if __name__ == "__main__":
+    from tito.tools.testing import run_module_tests_auto
+    
+    # Automatically discover and run all tests in this module
+    success = run_module_tests_auto("Kernels")
+
+# %% [markdown]
+"""
+## 🎯 Module Summary: Hardware-Optimized ML Operations
+
+### What You've Built
+You've implemented a complete set of hardware-optimized ML kernels:
+
+1. **Custom Operations**: Specialized matrix multiplication beyond NumPy
+2. **Vectorized Operations**: SIMD-optimized ReLU and element-wise operations
+3. **Cache-Friendly Algorithms**: Blocked matrix multiplication for better memory access
+4. **Parallel Processing**: Multi-core CPU utilization for large operations
+5. **Performance Profiling**: Tools to measure and optimize kernel performance
+6. **Compressed Kernels**: Quantized operations for mobile deployment
+
+### Key Insights
+- **Specialization beats generalization**: Custom kernels outperform generic libraries
+- **Memory is the bottleneck**: Cache-friendly algorithms are crucial
+- **Parallelism is everywhere**: From SIMD to multi-core to GPU-style processing
+- **Measurement drives optimization**: Profile first, optimize second
+- **Compression enables deployment**: Quantized models run faster with less memory
+
+### Real-World Connections
+- **PyTorch**: Uses thousands of optimized kernels for speed
+- **TensorFlow**: XLA compiler generates specialized kernels
+- **Mobile ML**: Quantized kernels enable edge deployment
+- **Cloud computing**: Kernel optimization reduces server costs
+- **Research**: Custom kernels enable larger models and faster experimentation
+
+### Next Steps
+In real ML systems, you'd:
+1. **GPU kernels**: Implement CUDA/OpenCL versions
+2. **Auto-tuning**: Automatically find optimal parameters
+3. **Hardware specialization**: Optimize for specific processors
+4. **Kernel fusion**: Combine multiple operations into single kernels
+5. **Distributed computing**: Scale kernels across multiple machines
+
+### 🏆 Achievement Unlocked
+You've mastered the performance optimization techniques that power modern ML frameworks. You understand how to move beyond high-level libraries to extract maximum performance from hardware!
+
+**You've completed the TinyTorch Kernels module!** 🎉
+"""
