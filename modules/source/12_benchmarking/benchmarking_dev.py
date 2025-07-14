@@ -250,7 +250,7 @@ class BenchmarkResult:
     latencies: List[float]  # All latency measurements in seconds
     throughput: float      # Samples per second
     accuracy: float        # Model accuracy (0-1)
-    metadata: Dict[str, Any] = None
+    metadata: Optional[Dict[str, Any]] = None
 
 #| export
 class BenchmarkScenarios:
@@ -1293,231 +1293,48 @@ Time to test your implementation! This section uses TinyTorch's standardized tes
 # =============================================================================
 
 if __name__ == "__main__":
-    try:
-        from tito.tools.testing import run_module_tests_auto
-        
-        # Automatically discover and run all tests in this module
-        success = run_module_tests_auto("Benchmarking")
-        
-        if success:
-            print("\n" + "="*50)
-            print("🎉 ALL BENCHMARKING TESTS PASSED!")
-            print("="*50)
-            print("\n📊 Your benchmarking framework is ready for:")
-            print("  • ML project evaluation")
-            print("  • Systematic model comparison")
-            print("  • Professional performance reporting")
-            print("  • Statistical validation of results")
-        else:
-            print("\n" + "="*50)
-            print("❌ Some tests failed - check implementation")
-            print("="*50)
-    except ImportError:
-        print("⚠️  TinyTorch testing framework not available")
-        print("   Running basic functionality tests instead...")
-        
-        # Run basic tests
-        try:
-            test_benchmark_scenarios()
-            test_statistical_validation()
-            test_tinytorch_perf()
-            test_performance_reporter()
-            test_comprehensive_benchmarking()
-            print("\n🎉 All basic tests passed!")
-        except Exception as e:
-            print(f"\n❌ Test failed: {e}")
+    from tito.tools.testing import run_module_tests_auto
+    
+    # Automatically discover and run all tests in this module
+    success = run_module_tests_auto("Benchmarking")
 
 # %% [markdown]
 """
-## 🎯 Module Summary: Professional ML Benchmarking Mastery!
+## 🎯 Module Summary: Systematic ML Performance Evaluation
 
-Congratulations! You've successfully implemented a comprehensive, MLPerf-inspired benchmarking framework for ML systems:
+### What You've Built
+You've implemented a comprehensive MLPerf-inspired benchmarking framework:
 
-### ✅ What You've Built
+1. **Benchmark Scenarios**: Single-stream (latency), server (throughput), and offline (batch processing)
+2. **Statistical Validation**: Confidence intervals, significance testing, and effect size calculation
+3. **MLPerf Architecture**: Four-component system with load generator, model, dataset, and evaluation
+4. **Professional Reporting**: Generate conference-quality performance reports with proper methodology
+5. **Model Comparison**: Systematic comparison framework with statistical validation
 
-#### **1. MLPerf-Inspired Architecture**
-- **Four-component system**: Load generator, model, dataset, evaluation
-- **Industry patterns**: Same architecture used by Google, Meta, OpenAI
-- **Professional methodology**: Systematic, reproducible evaluation
+### Key Insights
+- **Systematic evaluation beats intuition**: Proper benchmarking reveals true performance characteristics
+- **Statistics matter**: Single measurements are meaningless; confidence intervals provide real insights
+- **Scenarios capture reality**: Different use cases (mobile, server, batch) require different metrics
+- **Reproducibility is crucial**: Others must be able to verify your results
+- **Professional presentation**: Clear methodology and statistical validation build credibility
 
-#### **2. Comprehensive Benchmark Scenarios**
-- **Single-Stream**: Latency measurement for mobile/edge applications
-- **Server**: Throughput measurement for production web services
-- **Offline**: Batch processing efficiency for data center workloads
+### Real-World Connections
+- **MLPerf**: Uses identical four-component architecture and scenario patterns
+- **Production systems**: A/B testing frameworks follow these statistical principles
+- **Research papers**: Proper experimental methodology is required for publication
+- **ML engineering**: Systematic evaluation prevents costly production mistakes
+- **Open source**: Contributing benchmarks to libraries like PyTorch and TensorFlow
 
-#### **3. Statistical Validation Framework**
-- **Confidence intervals**: Ensuring results are statistically meaningful
-- **Significance testing**: Proving improvements are real, not random
-- **Effect size calculation**: Understanding magnitude of improvements
-- **Pitfall detection**: Avoiding common benchmarking mistakes
+### Next Steps
+In real ML systems, you'd:
+1. **GPU benchmarking**: Extend to CUDA/OpenCL performance measurement
+2. **Distributed evaluation**: Scale benchmarking across multiple machines
+3. **Continuous monitoring**: Integrate with CI/CD pipelines for regression detection
+4. **Domain-specific metrics**: Develop specialized benchmarks for your problem domain
+5. **Hardware optimization**: Evaluate performance across different architectures
 
-#### **4. Professional Reporting System**
-- **Capstone-ready reports**: Formatted for academic presentations
-- **Industry standards**: Following MLPerf reporting conventions
-- **Clear methodology**: Transparent and reproducible evaluation process
+### 🏆 Achievement Unlocked
+You've mastered systematic ML evaluation using industry-standard methodology. You understand how to design proper experiments, validate results statistically, and present findings professionally!
 
-### ✅ Key Learning Outcomes
-
-#### **Technical Mastery**
-- **Systematic evaluation**: How to design proper ML benchmarks
-- **Statistical rigor**: Ensuring results are meaningful and reproducible
-- **Performance measurement**: Understanding latency vs throughput trade-offs
-- **Industry practices**: Following MLPerf and production evaluation standards
-
-#### **Professional Skills**
-- **Experimental design**: Controlling variables and measuring outcomes
-- **Data presentation**: Creating clear, professional performance reports
-- **Critical thinking**: Identifying and avoiding evaluation pitfalls
-- **Communication**: Presenting technical results to diverse audiences
-
-### ✅ Mathematical & Statistical Foundations
-
-#### **Performance Metrics**
-- **Latency**: Response time for individual queries
-- **Throughput**: Samples processed per unit time
-- **Percentiles**: Understanding tail latency (90th, 95th, 99th)
-- **Confidence intervals**: Range of statistically likely values
-
-#### **Statistical Testing**
-- **Null hypothesis**: "No difference between models"
-- **T-tests**: Comparing means of two groups
-- **P-values**: Probability of observing differences by chance
-- **Effect size**: Magnitude of practical importance
-
-### ✅ Real-World Applications
-
-#### **Immediate Use Cases**
-- **Capstone projects**: Systematic evaluation of your final project
-- **TinyTorch validation**: Proving your optimizations actually work
-- **Academic presentations**: Professional results for course presentations
-- **Portfolio development**: Demonstrating rigorous evaluation skills
-
-#### **Career Applications**
-- **ML Engineering**: A/B testing frameworks in production
-- **Research**: Proper experimental methodology for papers
-- **Startup evaluation**: Making data-driven technology decisions
-- **Open source**: Contributing benchmarks to ML libraries
-
-### ✅ Connection to Production Systems
-
-#### **Industry Reality**
-Your benchmarking framework mirrors production practices:
-- **MLPerf**: Exact same architectural patterns
-- **Google TensorFlow**: Similar evaluation methodology
-- **Meta PyTorch**: Comparable statistical validation
-- **OpenAI**: Systematic model comparison processes
-
-#### **Production Deployment**
-- **Baseline establishment**: Know your current performance
-- **Optimization validation**: Prove improvements are real
-- **Regression detection**: Catch performance degradation
-- **Scaling decisions**: Understand resource requirements
-
-### ✅ Advanced Understanding
-
-#### **Benchmarking Principles**
-- **Reproducibility**: Others can verify your results
-- **Fairness**: Comparing approaches under identical conditions
-- **Validity**: Measuring what you actually care about
-- **Reliability**: Consistent results across multiple runs
-
-#### **Common Pitfalls Avoided**
-- **Cherry-picking**: Reporting only favorable results
-- **Insufficient samples**: Drawing conclusions from too little data
-- **Confounding variables**: Changing multiple things simultaneously
-- **Survivorship bias**: Ignoring failed experiments
-
-### ✅ Integration with TinyTorch Ecosystem
-
-#### **Module Connections**
-- **Training (09)**: Benchmarking training performance and convergence
-- **Compression (10)**: Evaluating size vs accuracy trade-offs
-- **Kernels (11)**: Validating optimization improvements
-- **MLOps (13)**: Establishing baselines for production monitoring
-
-#### **Package Integration**
-```python
-# Your benchmarking framework lives in the package
-from tinytorch.core.benchmarking import TinyTorchPerf
-from tinytorch.core.benchmarking import StatisticalValidator
-
-# Ready for immediate use
-benchmark = TinyTorchPerf()
-benchmark.set_model(your_model)
-results = benchmark.run_all_scenarios()
-```
-
-### 🎯 Capstone Success Preparation
-
-#### **What You Can Now Do**
-- **Systematic evaluation**: Design proper experiments for your capstone
-- **Statistical validation**: Prove your improvements are significant
-- **Professional reporting**: Generate conference-quality performance reports
-- **Baseline comparison**: Systematically compare against state-of-the-art
-
-#### **Presentation Skills**
-- **Executive summaries**: Clear, concise performance statements
-- **Technical details**: Proper methodology and statistical validation
-- **Visual results**: Professional charts and performance comparisons
-- **Recommendations**: Data-driven conclusions and future work
-
-### 🚀 Next Steps & Future Learning
-
-#### **Immediate Applications**
-1. **Apply to previous modules**: Benchmark your tensor operations, layer implementations
-2. **Compare approaches**: Systematically evaluate different optimization techniques
-3. **Validate improvements**: Prove that your kernels actually provide speedups
-4. **Prepare for capstone**: Design evaluation methodology for your final project
-
-#### **Advanced Extensions**
-- **Custom metrics**: Develop domain-specific performance measures
-- **Distributed benchmarking**: Scale evaluation across multiple machines
-- **Continuous evaluation**: Integrate with CI/CD pipelines
-- **Hardware-specific optimization**: Evaluate GPU vs CPU performance
-
-### 💡 Key Insights for ML Systems
-
-#### **Why Benchmarking Matters**
-- **Decision making**: Choose between alternatives based on data
-- **Performance optimization**: Focus effort where it has the most impact
-- **System reliability**: Catch regressions before they reach production
-- **Scientific rigor**: Ensure reproducible and meaningful results
-
-#### **The Evaluation Mindset**
-- **Measure everything**: You can't improve what you don't measure
-- **Question assumptions**: Validate that optimizations actually work
-- **Think statistically**: Single measurements are rarely meaningful
-- **Consider trade-offs**: Optimize for the metrics that matter most
-
-### 🔗 Connection to Module 13 (MLOps)
-
-**Perfect preparation for production systems:**
-- **Benchmarking** establishes baseline performance expectations
-- **MLOps** monitors whether production systems meet those expectations
-- **Statistical validation** techniques transfer directly to production monitoring
-- **Performance reporting** becomes production dashboards and alerts
-
-### 🎓 Professional Development Impact
-
-#### **Technical Skills**
-- **Systematic thinking**: Approach problems methodically
-- **Data-driven decisions**: Base conclusions on evidence
-- **Statistical literacy**: Understand and communicate uncertainty
-- **Experimental design**: Control variables and measure outcomes
-
-#### **Career Readiness**
-- **Interview preparation**: Can discuss systematic evaluation methodology
-- **Research capabilities**: Know how to design and execute proper experiments
-- **Industry standards**: Familiar with MLPerf and production practices
-- **Communication skills**: Can present technical results professionally
-
----
-
-### 🎉 **Achievement Unlocked: Professional ML Benchmarking**
-
-You've mastered the art and science of systematic ML evaluation. Your benchmarking framework represents **industry-grade capability** that will serve you throughout your ML career.
-
-**Next Module**: MLOps - Taking your systematically evaluated models into production with monitoring, deployment, and scaling!
-
-Your rigorous evaluation methodology becomes the foundation for production monitoring and system reliability.
-""" 
+**You've completed the TinyTorch Benchmarking module!** 🎉
+"""
