@@ -154,7 +154,7 @@ class Dense:
             self.bias = None
         ### END SOLUTION
     
-    def forward(self, x: Tensor) -> Tensor:
+    def forward(self, x):
         """
         Forward pass: y = Wx + b
         
@@ -194,9 +194,9 @@ class Dense:
         if self.use_bias:
             result += self.bias
         
-        return Tensor(result)
+        return type(x)(result)
         ### END SOLUTION
     
-    def __call__(self, x: Tensor) -> Tensor:
+    def __call__(self, x):
         """Make layer callable: layer(x) same as layer.forward(x)"""
         return self.forward(x)
