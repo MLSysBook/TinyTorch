@@ -183,9 +183,9 @@ Every major operation in deep learning uses matrix multiplication:
 
 # %% nbgrader={"grade": false, "grade_id": "matmul-naive", "locked": false, "schema_version": 3, "solution": true, "task": false}
 #| export
-def matmul_naive(A: np.ndarray, B: np.ndarray) -> np.ndarray:
+def matmul(A: np.ndarray, B: np.ndarray) -> np.ndarray:
     """
-    Naive matrix multiplication using explicit for-loops.
+    Matrix multiplication using explicit for-loops.
     
     This helps you understand what matrix multiplication really does!
         
@@ -224,8 +224,7 @@ def matmul_naive(A: np.ndarray, B: np.ndarray) -> np.ndarray:
     LEARNING CONNECTIONS:
     - This is what every neural network layer does internally
     - Understanding this helps debug shape mismatches
-    - Forms the basis for efficient GPU computations
-    - Essential for implementing custom layers
+    - Essential for understanding the foundation of neural networks
     """
     ### BEGIN SOLUTION
     # Get matrix dimensions
@@ -252,7 +251,7 @@ def matmul_naive(A: np.ndarray, B: np.ndarray) -> np.ndarray:
 """
 ### 🧪 Test Your Matrix Multiplication
 
-Once you implement the `matmul_naive` function above, run this cell to test it:
+Once you implement the `matmul` function above, run this cell to test it:
 """
 
 # %% nbgrader={"grade": true, "grade_id": "test-matmul-immediate", "locked": true, "points": 10, "schema_version": 3, "solution": false, "task": false}
@@ -264,7 +263,7 @@ def test_matrix_multiplication():
     A = np.array([[1, 2], [3, 4]], dtype=np.float32)
     B = np.array([[5, 6], [7, 8]], dtype=np.float32)
     
-    result = matmul_naive(A, B)
+    result = matmul(A, B)
     expected = np.array([[19, 22], [43, 50]], dtype=np.float32)
     
     assert np.allclose(result, expected), f"Matrix multiplication failed: expected {expected}, got {result}"
@@ -276,7 +275,7 @@ def test_matrix_multiplication():
 # Test different shapes
     A2 = np.array([[1, 2, 3]], dtype=np.float32)  # 1x3
     B2 = np.array([[4], [5], [6]], dtype=np.float32)  # 3x1
-    result2 = matmul_naive(A2, B2)
+    result2 = matmul(A2, B2)
     expected2 = np.array([[32]], dtype=np.float32)  # 1*4 + 2*5 + 3*6 = 32
     
     assert np.allclose(result2, expected2), f"1x3 @ 3x1 failed: expected {expected2}, got {result2}"
@@ -284,7 +283,7 @@ def test_matrix_multiplication():
     # Test 3x3 case
     A3 = np.array([[1, 2, 3], [4, 5, 6], [7, 8, 9]], dtype=np.float32)
     B3 = np.array([[1, 0, 0], [0, 1, 0], [0, 0, 1]], dtype=np.float32)  # Identity
-    result3 = matmul_naive(A3, B3)
+    result3 = matmul(A3, B3)
     
     assert np.allclose(result3, A3), "Multiplication by identity should preserve matrix"
     
@@ -293,7 +292,7 @@ def test_matrix_multiplication():
     B4 = np.array([[3], [4], [5]], dtype=np.float32)  # 3x1
     
     try:
-        matmul_naive(A4, B4)
+        matmul(A4, B4)
         assert False, "Should raise error for incompatible shapes"
     except ValueError as e:
         assert "Incompatible matrix dimensions" in str(e)
@@ -364,14 +363,14 @@ class Dense:
     This is the fundamental building block of neural networks.
     """
     
-    def __init__(self, input_size: int, output_size: int, use_bias: bool = True, use_naive_matmul: bool = False):
+    def __init__(self, input_size: int, output_size: int, use_bias: bool = True):
         """
         Initialize Dense layer with random weights and optional bias.
         
         TODO: Implement Dense layer initialization.
         
         STEP-BY-STEP IMPLEMENTATION:
-        1. Store the layer parameters (input_size, output_size, use_bias, use_naive_matmul)
+        1. Store the layer parameters (input_size, output_size, use_bias)
         2. Initialize weights with random values using proper scaling
         3. Initialize bias (if use_bias=True) with zeros
         4. Convert weights and bias to Tensor objects
@@ -388,26 +387,19 @@ class Dense:
         ```
         
         IMPLEMENTATION HINTS:
-        - Store parameters: self.input_size, self.output_size, self.use_bias, self.use_naive_matmul
+        - Store parameters: self.input_size, self.output_size, self.use_bias
         - Weight shape: (input_size, output_size)
         - Bias shape: (output_size,) if use_bias else None
         - Use Xavier initialization: scale = np.sqrt(2.0 / (input_size + output_size))
         - Initialize weights: np.random.randn(input_size, output_size) * scale
         - Initialize bias: np.zeros(output_size) if use_bias else None
         - Convert to Tensors: self.weights = Tensor(weight_data), self.bias = Tensor(bias_data)
-        
-        LEARNING CONNECTIONS:
-        - This is like torch.nn.Linear() in PyTorch
-        - Proper initialization prevents vanishing/exploding gradients
-        - Bias adds flexibility to the linear transformation
-        - Weight sharing across the layer enables parameter efficiency
         """
         ### BEGIN SOLUTION
         # Store layer parameters
         self.input_size = input_size
         self.output_size = output_size
         self.use_bias = use_bias
-        self.use_naive_matmul = use_naive_matmul
         
         # Xavier/Glorot initialization
         scale = np.sqrt(2.0 / (input_size + output_size))
@@ -435,10 +427,6 @@ class Dense:
         2. Add bias if present: result + self.bias
         3. Return the result as a Tensor
         
-        MATRIX MULTIPLICATION OPTIONS:
-        - If use_naive_matmul=True: Use our custom matmul_naive function
-        - If use_naive_matmul=False: Use NumPy's built-in @ operator
-        
         EXAMPLE USAGE:
         ```python
         layer = Dense(input_size=3, output_size=2)
@@ -447,8 +435,7 @@ class Dense:
         ```
         
         IMPLEMENTATION HINTS:
-        - Matrix multiplication: x.data @ self.weights.data (or use matmul_naive)
-        - For naive implementation: matmul_naive(x.data, self.weights.data)
+        - Matrix multiplication: matmul(x.data, self.weights.data)
         - Add bias: result + self.bias.data (broadcasting handles shape)
         - Return as Tensor: return Tensor(final_result)
         - Handle both cases: with and without bias
@@ -461,10 +448,7 @@ class Dense:
         """
         ### BEGIN SOLUTION
         # Perform matrix multiplication
-        if self.use_naive_matmul:
-            linear_output = matmul_naive(x.data, self.weights.data)
-        else:
-            linear_output = x.data @ self.weights.data
+        linear_output = matmul(x.data, self.weights.data)
         
         # Add bias if present
         if self.use_bias and self.bias is not None:
@@ -516,11 +500,6 @@ def test_dense_layer():
     
     no_bias_output = no_bias_layer(input_data)
     assert no_bias_output.shape == (1, 2), "No-bias layer should still produce correct shape"
-    
-    # Test with naive matrix multiplication
-    naive_layer = Dense(input_size=3, output_size=2, use_naive_matmul=True)
-    naive_output = naive_layer(input_data)
-    assert naive_output.shape == (1, 2), "Naive matmul should produce correct shape"
     
     # Test that different inputs produce different outputs
     input1 = Tensor([[1, 0, 0]])
