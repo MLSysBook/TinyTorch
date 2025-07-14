@@ -45,7 +45,7 @@ from pathlib import Path
 # Import our existing components
 try:
     from tinytorch.core.tensor import Tensor
-    from tinytorch.core.layers import matmul
+    from tinytorch.core.layers import matmul_naive as matmul
     from tinytorch.core.activations import ReLU, Sigmoid, Tanh
     from tinytorch.core.cnn import Conv2D
 except ImportError:
@@ -61,7 +61,7 @@ except ImportError:
     
     try:
         from tensor_dev import Tensor
-        from layers_dev import matmul
+        from layers_dev import matmul_naive as matmul
         from activations_dev import ReLU, Sigmoid, Tanh
         from cnn_dev import Conv2D
     except ImportError:
@@ -73,15 +73,19 @@ except ImportError:
             def __str__(self):
                 return f"Tensor({self.data})"
 
-# Import profiler utility (following PyTorch's torch.profiler pattern)
-try:
-    from tinytorch.profiler import SimpleProfiler
-except ImportError:
-    # Fallback for development environment
-    parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    if parent_dir not in sys.path:
-        sys.path.append(parent_dir)
-    from utils.profiler import SimpleProfiler
+# Simple timing utility for kernel performance measurement
+def time_kernel(func, *args, **kwargs):
+    """
+    Simple timing function for measuring kernel performance.
+    
+    Returns:
+        tuple: (result, time_in_microseconds)
+    """
+    start = time.perf_counter()
+    result = func(*args, **kwargs)
+    end = time.perf_counter()
+    microseconds = (end - start) * 1_000_000
+    return result, microseconds
 
 # %% nbgrader={"grade": false, "grade_id": "kernels-setup", "locked": false, "schema_version": 3, "solution": false, "task": false}
 print("🔥 TinyTorch Kernels Module")
@@ -255,17 +259,13 @@ def matmul_baseline(A: Tensor, B: Tensor) -> Tensor:
     - Shows proper software engineering practices
     """
     ### BEGIN SOLUTION
-    # Import the standard matmul function from TinyTorch package
-    # We use the package version for reliability and consistency
-    from tinytorch.core.layers import matmul
-    
-    # Extract numpy arrays from Tensors (matmul expects numpy arrays)
+    # Extract numpy arrays from Tensors
     A_data = A.data if hasattr(A, 'data') else A
     B_data = B.data if hasattr(B, 'data') else B
     
-    # Use TinyTorch's proven matrix multiplication implementation
+    # Use NumPy's matrix multiplication as our baseline
     # This is our baseline - reliable, tested, and consistent
-    result_data = matmul(A_data, B_data)
+    result_data = np.dot(A_data, B_data)
     
     # Wrap the result back in a Tensor for consistency
     result = Tensor(result_data)
@@ -927,65 +927,62 @@ test_parallel_processing()
 
 # %% [markdown]
 """
-## Step 5: Performance Profiling - Measuring and Optimizing
+## Step 5: Simple Performance Measurement - Timing Your Kernels
 
-### Why Performance Profiling Matters
+### Why Timing Matters
 > "Premature optimization is the root of all evil" - Donald Knuth
 
-But **informed optimization** based on measurement is essential for high-performance ML systems.
+But **measured optimization** based on simple timing is essential for understanding kernel performance.
 
-### What to Measure
-1. **Time**: Wall time, CPU time, execution time
-2. **Memory**: Peak usage, allocations, memory efficiency
-3. **Hardware**: CPU utilization, cache misses, bandwidth
-4. **Operations**: Function calls, array operations, bottlenecks
+### What We'll Measure
+1. **Execution time**: How long does each kernel take?
+2. **Relative performance**: Which implementation is faster?
+3. **Scale effects**: How does performance change with data size?
+4. **Optimization impact**: Did our changes actually help?
 
-### The Profiling Process
-1. **Measure baseline**: Profile current performance
-2. **Identify bottlenecks**: Find the slowest components
-3. **Optimize systematically**: Focus on the biggest bottlenecks
-4. **Verify improvements**: Measure again to confirm gains
-5. **Repeat**: Continue optimizing until satisfactory
+### The Simple Timing Process
+1. **Measure baseline**: Time the standard implementation
+2. **Time optimizations**: Measure your improved versions
+3. **Compare results**: See which is faster
+4. **Verify correctness**: Ensure optimized code produces correct results
 
-### Professional Profiling Tools
-- **Python**: `cProfile`, `line_profiler`, `memory_profiler`
-- **NumPy**: `numpy.profile`, array operation analysis
-- **PyTorch**: `torch.profiler`, autograd profiling
-- **System**: `htop`, `perf`, hardware counters
+### Our Simple Timing Tool
+We use `time.perf_counter()` for microsecond-precision timing:
+- **Precise**: Measures actual execution time
+- **Simple**: Easy to understand and use
+- **Realistic**: Shows kernel performance at the right scale
+- **Educational**: Immediate feedback on optimization impact
 
-### Real-World Impact
-- **Identify bottlenecks**: 80% of time spent in 20% of code
-- **Guide optimization**: Focus effort where it matters most
-- **Prevent regressions**: Catch performance degradation early
-- **Scale systems**: Understand resource requirements
+### Real-World Context
+- **Kernel operations**: Typically take 10-1000 microseconds
+- **Optimization impact**: Good kernels are 2-10x faster
+- **Professional tools**: Production systems use sophisticated profilers
+- **Foundation**: Simple timing teaches measurement principles
 """
 
 # %% nbgrader={"grade": false, "grade_id": "test-profiling", "locked": false, "schema_version": 3, "solution": false, "task": false}
-### 🧪 Unit Test: Performance Profiling
+### 🧪 Unit Test: Simple Kernel Timing
 
-def test_performance_profiling():
-    """Test performance profiling capabilities."""
-    print("🔬 Unit Test: Performance Profiling...")
+def test_simple_kernel_timing():
+    """Test simple kernel timing capabilities."""
+    print("🔬 Unit Test: Simple Kernel Timing...")
     
-    # Create profiler
-    profiler = SimpleProfiler()
-    
-    # Test profiling different matrix multiplication methods
+    # Test timing different matrix multiplication methods
     np.random.seed(42)
     A = Tensor(np.random.randn(100, 100))
     B = Tensor(np.random.randn(100, 100))
     
-    # Profile NumPy matmul
-    result_numpy, metrics_numpy = profiler.profile(lambda: Tensor(np.dot(A.data, B.data)))
-    print(f"🔍 NumPy matmul: {metrics_numpy.get('wall_time', 0):.4f}s")
+    # Time NumPy matmul
+    result_numpy, time_numpy = time_kernel(lambda: Tensor(np.dot(A.data, B.data)))
+    print(f"🔍 NumPy matmul: {time_numpy:.1f} μs")
     
-    # Profile baseline matmul  
-    result_baseline, metrics_baseline = profiler.profile(matmul_baseline, A, B)
-    print(f"🔍 Baseline matmul: {metrics_baseline.get('wall_time', 0):.4f}s")
+    # Time baseline matmul  
+    result_baseline, time_baseline = time_kernel(matmul_baseline, A, B)
+    print(f"🔍 Baseline matmul: {time_baseline:.1f} μs")
     
-    # Profile cache-friendly matmul
-    result_cache, metrics_cache = profiler.profile(cache_friendly_matmul, A, B, 16)
-    print(f"🔍 Cache-friendly matmul: {metrics_cache.get('wall_time', 0):.4f}s")
+    # Time cache-friendly matmul
+    result_cache, time_cache = time_kernel(cache_friendly_matmul, A, B, 16)
+    print(f"🔍 Cache-friendly matmul: {time_cache:.1f} μs")
     
     # Verify results are similar
     assert np.allclose(result_numpy.data, result_baseline.data, rtol=1e-10), \
@@ -995,24 +992,24 @@ def test_performance_profiling():
     
     print("✅ All matrix multiplication methods produce correct results")
     
-    # Test profiling parallel vs sequential ReLU
+    # Test timing parallel vs sequential ReLU
     x_large = Tensor(np.random.randn(10000))
     
-    result_seq, metrics_seq = profiler.profile(vectorized_relu, x_large)
-    result_par, metrics_par = profiler.profile(parallel_relu, x_large, 4)
+    result_seq, time_seq = time_kernel(vectorized_relu, x_large)
+    result_par, time_par = time_kernel(parallel_relu, x_large, 4)
     
-    print(f"🔍 Sequential ReLU: {metrics_seq.get('wall_time', 0):.4f}s")
-    print(f"🔍 Parallel ReLU: {metrics_par.get('wall_time', 0):.4f}s")
+    print(f"🔍 Sequential ReLU: {time_seq:.1f} μs")
+    print(f"🔍 Parallel ReLU: {time_par:.1f} μs")
     
     # Verify results are the same
     assert np.allclose(result_seq.data, result_par.data), \
         "Sequential and parallel ReLU results differ"
     
-    print("✅ Profiling works correctly")
-    print("📈 Progress: Performance Profiling ✓")
+    print("✅ Simple timing works correctly")
+    print("📈 Progress: Simple Kernel Timing ✓")
 
 # Run the test
-test_performance_profiling()
+test_simple_kernel_timing()
 
 # %% [markdown]
 """
@@ -1215,22 +1212,20 @@ def test_compressed_kernels():
         f"Regular: {y_regular.data}, Quantized: {y_quantized.data}"
     print("✅ Quantized ReLU works")
     
-    # Test that quantized operations are using integer arithmetic internally
-    # This is more of a conceptual test - in practice, you'd measure performance
+    # Test that quantized operations can be timed
+    # This shows the performance characteristics of quantized vs regular operations
     x_large = Tensor(np.random.randn(1000))
     
-    profiler = SimpleProfiler()
+    # Time regular ReLU
+    _, time_regular = time_kernel(vectorized_relu, x_large)
     
-    # Profile regular ReLU
-    _, metrics_regular = profiler.profile(vectorized_relu, x_large)
+    # Time quantized ReLU
+    _, time_quantized = time_kernel(quantized_relu, x_large, 1.0/127)
     
-    # Profile quantized ReLU
-    _, metrics_quantized = profiler.profile(quantized_relu, x_large, 1.0/127)
+    print(f"🔍 Regular ReLU: {time_regular:.1f} μs")
+    print(f"🔍 Quantized ReLU: {time_quantized:.1f} μs")
     
-    print(f"🔍 Regular ReLU: {metrics_regular.get('wall_time', 0):.4f}s")
-    print(f"🔍 Quantized ReLU: {metrics_quantized.get('wall_time', 0):.4f}s")
-    
-    print("✅ Quantized operations profiling works")
+    print("✅ Quantized operations timing works")
     print("📈 Progress: Compressed Model Kernels ✓")
 
 # Run the test
@@ -1250,8 +1245,6 @@ def final_performance_test():
     B = Tensor(np.random.randn(256, 256))
     x = Tensor(np.random.randn(10000))
     
-    profiler = SimpleProfiler()
-    
     print("\n📊 Matrix Multiplication Performance:")
     print("-" * 40)
     
@@ -1265,9 +1258,9 @@ def final_performance_test():
     
     results = {}
     for name, method in methods:
-        result, metrics = profiler.profile(method)
-        results[name] = (result, metrics)
-        print(f"{name:15}: {metrics.get('wall_time', 0):.4f}s")
+        result, time_us = time_kernel(method)
+        results[name] = (result, time_us)
+        print(f"{name:15}: {time_us:.1f} μs")
     
     print("\n📊 ReLU Activation Performance:")
     print("-" * 40)
@@ -1281,9 +1274,9 @@ def final_performance_test():
     
     relu_results = {}
     for name, method in relu_methods:
-        result, metrics = profiler.profile(method)
-        relu_results[name] = (result, metrics)
-        print(f"{name:15}: {metrics.get('wall_time', 0):.4f}s")
+        result, time_us = time_kernel(method)
+        relu_results[name] = (result, time_us)
+        print(f"{name:15}: {time_us:.1f} μs")
     
     print("\n✅ All kernels implemented successfully!")
     print("📈 Progress: Complete Kernels Module ✓")
