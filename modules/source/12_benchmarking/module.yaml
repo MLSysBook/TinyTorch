@@ -4,8 +4,6 @@
 name: "12_benchmarking"
 title: "Benchmarking - Systematic ML Performance Evaluation"
 description: "Industry-standard benchmarking methodology for ML systems, inspired by MLPerf patterns"
-version: "1.0.0"
-author: "TinyTorch Team"
 
 # Dependencies - Used by CLI for module ordering and prerequisites
 dependencies:
@@ -22,9 +20,8 @@ exports_to: "tinytorch.core.benchmarking"
 # File Structure - What files exist in this module
 files:
   dev_file: "benchmarking_dev.py"
-  test_file: "tests/test_benchmarking.py"
   readme: "README.md"
-  benchmark_dir: "benchmarks/"
+  tests: "inline"
 
 # Components - What's implemented in this module
 components:
@@ -32,31 +29,4 @@ components:
   - "BenchmarkScenarios"
   - "StatisticalValidator"
   - "ResultsAnalyzer"
-  - "PerformanceReporter"
-
-# Learning Objectives - What students will achieve
-learning_objectives:
-  - "Design systematic benchmarking experiments for ML systems"
-  - "Apply MLPerf-inspired patterns to evaluate model performance"
-  - "Implement statistical validation for benchmark results"
-  - "Create professional performance reports and comparisons"
-  - "Prepare for capstone project benchmarking requirements"
-
-# Pedagogical Framework
-pedagogical_framework: "Build → Use → Analyze"
-
-# Assessment - How learning is verified
-assessment:
-  total_points: 100
-  breakdown:
-    framework_usage: 30
-    scenario_implementation: 25
-    statistical_analysis: 25
-    capstone_preparation: 20
-
-# Estimated Time
-time_estimate: "6-8 hours"
-difficulty: "⭐⭐⭐⭐ Advanced"
-
-# Next Steps
-next_modules: ["13_mlops"] 
+  - "PerformanceReporter" 
