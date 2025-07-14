@@ -11,6 +11,7 @@ from pathlib import Path
 from rich.panel import Panel
 from rich.table import Table
 from rich.text import Text
+from typing import Union, Dict, Any, Optional
 
 from .base import BaseCommand
 
@@ -26,15 +27,22 @@ class StatusCommand(BaseCommand):
     def add_arguments(self, parser: ArgumentParser) -> None:
         parser.add_argument("--details", action="store_true", help="Show detailed file structure")
         parser.add_argument("--metadata", action="store_true", help="Show module metadata information")
+        parser.add_argument("--test-status", action="store_true", help="Include test execution status (slower)")
 
     def _get_export_target(self, module_path: Path) -> str:
         """
         Read the actual export target from the dev file's #| default_exp directive.
         Same logic as the export command.
         """
-        dev_file = module_path / f"{module_path.name}_dev.py"
+        # Extract short name from module directory name for dev file
+        module_name = module_path.name
+        if module_name.startswith(tuple(f"{i:02d}_" for i in range(100))):
+            short_name = module_name[3:]  # Remove "00_" prefix
+        else:
+            short_name = module_name
+        dev_file = module_path / f"{short_name}_dev.py"
         if not dev_file.exists():
-            return "unknown"
+            return "not_found"
         
         try:
             with open(dev_file, 'r', encoding='utf-8') as f:
@@ -43,10 +51,33 @@ class StatusCommand(BaseCommand):
                 match = re.search(r'#\|\s*default_exp\s+([^\n\r]+)', content)
                 if match:
                     return match.group(1).strip()
+                return "no_export"
         except Exception:
-            pass
-        
-        return "unknown"
+            return "read_error"
+
+    def _count_test_functions(self, dev_file: Path) -> int:
+        """Count the number of test functions in a dev file."""
+        try:
+            with open(dev_file, 'r', encoding='utf-8') as f:
+                content = f.read()
+                # Count lines that start with "def test_"
+                lines = content.split('\n')
+                test_functions = [line for line in lines if line.strip().startswith('def test_')]
+                return len(test_functions)
+        except Exception:
+            return 0
+
+    def _count_export_functions(self, dev_file: Path) -> int:
+        """Count the number of exported functions/classes in a dev file."""
+        try:
+            with open(dev_file, 'r', encoding='utf-8') as f:
+                content = f.read()
+                # Count lines that have #| export directive
+                lines = content.split('\n')
+                export_lines = [line for line in lines if line.strip().startswith('#| export')]
+                return len(export_lines)
+        except Exception:
+            return 0
 
     def run(self, args: Namespace) -> int:
         console = self.console
@@ -68,43 +99,44 @@ class StatusCommand(BaseCommand):
                               title="Warning", border_style="yellow"))
             return 0
         
-        console.print(Panel(f"📋 Found {len(module_dirs)} modules in modules/ directory", 
+        console.print(Panel(f"📋 Found {len(module_dirs)} modules in modules/source directory", 
                           title="Module Status Check", border_style="bright_cyan"))
         
         # Create status table
         status_table = Table(title="Module Status Overview", show_header=True, header_style="bold blue")
-        status_table.add_column("Module", style="bold cyan", width=15)
+        status_table.add_column("Module", style="bold cyan", width=17)
         status_table.add_column("Status", width=12, justify="center")
         status_table.add_column("Dev File", width=12, justify="center")
-        status_table.add_column("Tests", width=12, justify="center")
+        status_table.add_column("Inline Tests", width=12, justify="center")
+        status_table.add_column("External Tests", width=12, justify="center")
         status_table.add_column("README", width=12, justify="center")
         
         if args.metadata:
-            status_table.add_column("Export", width=15, justify="center")
+            status_table.add_column("Export Target", width=20, justify="center")
             status_table.add_column("Prerequisites", width=15, justify="center")
         
         # Check each module
         modules_status = []
         for module_dir in sorted(module_dirs):
             module_name = module_dir.name
-            status = self._check_module_status(module_dir)
+            status = self._check_module_status(module_dir, args.test_status)
             modules_status.append((module_name, status))
             
             # Add to table
             row = [
                 module_name,
-                self._format_status(status['dynamic_status']),
-                "✅" if status['dev_file'] else "❌",
-                "✅" if status['tests'] else "❌", 
+                self._format_status(status['overall_status']),
+                self._format_file_status(status['dev_file'], status.get('export_count', 0)),
+                self._format_inline_tests(status['inline_test_count']),
+                self._format_external_tests(status['external_tests'], status.get('external_test_status')),
                 "✅" if status['readme'] else "❌"
             ]
             
             # Add metadata columns if requested
             if args.metadata:
                 metadata = status.get('metadata', {})
-                # Get export target from dev file (source of truth)
-                export_target = self._get_export_target(module_dir)
-                row.append(export_target if export_target != "unknown" else 'unknown')
+                export_target = status.get('export_target', 'unknown')
+                row.append(export_target if export_target not in ['not_found', 'no_export', 'read_error'] else export_target)
                 
                 # Show prerequisites from dependencies
                 deps = metadata.get('dependencies', {})
@@ -115,13 +147,27 @@ class StatusCommand(BaseCommand):
         
         console.print(status_table)
         
-        # Summary
+        # Summary with better logic
         total_modules = len(modules_status)
-        complete_modules = sum(1 for _, status in modules_status 
-                             if status['dev_file'] and status['tests'] and status['readme'])
         
-        console.print(f"\n📊 Summary: {complete_modules}/{total_modules} modules complete")
-        console.print(f"💡 To run tests: [bold cyan]tito test --all[/bold cyan]")
+        # A module is "working" if it has a dev file with implementations
+        working_modules = sum(1 for _, status in modules_status 
+                            if status['dev_file'] and status.get('export_count', 0) > 0)
+        
+        # A module is "complete" if it has everything
+        complete_modules = sum(1 for _, status in modules_status 
+                             if status['dev_file'] and status['external_tests'] and status['readme'] and status.get('export_count', 0) > 0)
+        
+        console.print(f"\n📊 Summary:")
+        console.print(f"   🏗️  Working modules: {working_modules}/{total_modules} (have implementations)")
+        console.print(f"   ✅ Complete modules: {complete_modules}/{total_modules} (have implementations, tests, docs)")
+        
+        # Helpful commands
+        console.print(f"\n💡 Quick commands:")
+        console.print(f"   [bold cyan]tito module test --all[/bold cyan]           # Test all modules")
+        console.print(f"   [bold cyan]tito module test MODULE_NAME[/bold cyan]     # Test specific module")
+        console.print(f"   [bold cyan]pytest modules/source/*/  -k test_[/bold cyan]  # Run pytest on inline tests")
+        console.print(f"   [bold cyan]pytest tests/test_*.py[/bold cyan]           # Run external tests")
         
         # Detailed view
         if args.details:
@@ -144,12 +190,17 @@ class StatusCommand(BaseCommand):
         
         return 0
     
-    def _check_module_status(self, module_dir: Path) -> dict:
+    def _check_module_status(self, module_dir: Path, check_tests: bool = False) -> dict:
         """Check the status of a single module."""
         module_name = module_dir.name
         
         # Check for required files
-        dev_file = module_dir / f"{module_name}_dev.py"
+        # Extract short name from module directory name for dev file
+        if module_name.startswith(tuple(f"{i:02d}_" for i in range(100))):
+            short_name = module_name[3:]  # Remove "00_" prefix
+        else:
+            short_name = module_name
+        dev_file = module_dir / f"{short_name}_dev.py"
         readme_file = module_dir / "README.md"
         metadata_file = module_dir / "module.yaml"
         
@@ -164,13 +215,29 @@ class StatusCommand(BaseCommand):
         
         status = {
             'dev_file': dev_file.exists(),
-            'tests': main_test_file.exists(),
             'readme': readme_file.exists(),
             'metadata_file': metadata_file.exists(),
+            'external_tests': main_test_file.exists(),
+            'inline_test_count': 0,
+            'export_count': 0,
+            'export_target': 'not_found',
+            'external_test_status': None,
+            'overall_status': 'unknown',
+            'metadata': None
         }
         
-        # Determine dynamic status based on test results
-        status['dynamic_status'] = self._determine_dynamic_status(module_name, status)
+        # Count inline tests and exports if dev file exists
+        if dev_file.exists():
+            status['inline_test_count'] = self._count_test_functions(dev_file)
+            status['export_count'] = self._count_export_functions(dev_file)
+            status['export_target'] = self._get_export_target(module_dir)
+        
+        # Run external tests if requested (slower)
+        if check_tests and main_test_file.exists():
+            status['external_test_status'] = self._check_external_tests(main_test_file)
+        
+        # Determine overall status
+        status['overall_status'] = self._determine_overall_status(status)
         
         # Load metadata if available
         if metadata_file.exists():
@@ -183,41 +250,81 @@ class StatusCommand(BaseCommand):
         
         return status
     
-    def _determine_dynamic_status(self, module_name: str, file_status: dict) -> str:
-        """Determine module status based on files and test results."""
+    def _determine_overall_status(self, status: dict) -> str:
+        """Determine overall module status based on files and implementation."""
         # If no dev file, module is not started
-        if not file_status['dev_file']:
+        if not status['dev_file']:
             return 'not_started'
         
-        # If no tests, module is in progress
-        if not file_status['tests']:
-            return 'in_progress'
+        # If dev file exists but no implementations, module is empty
+        if status.get('export_count', 0) == 0:
+            return 'empty'
         
-        # If tests exist, run them to determine status
-        # Extract short name from module directory name (e.g., "01_tensor" -> "tensor")
-        if module_name.startswith(tuple(f"{i:02d}_" for i in range(100))):
-            short_name = module_name[3:]  # Remove "00_" prefix
-        else:
-            short_name = module_name
+        # If has implementations but no tests, module is in progress
+        if status.get('inline_test_count', 0) == 0 and not status.get('external_tests', False):
+            return 'no_tests'
         
-        test_file = f"tests/test_{short_name}.py"
+        # If has implementations and tests, module is working
+        if status.get('export_count', 0) > 0 and (status.get('inline_test_count', 0) > 0 or status.get('external_tests', False)):
+            return 'working'
+        
+        return 'unknown'
+    
+    def _check_external_tests(self, test_file: Path) -> str:
+        """Check if external tests pass (used only when --test-status is specified)."""
         try:
-            # Run pytest quietly to check if tests pass
             result = subprocess.run(
-                ["python", "-m", "pytest", test_file, "-q", "--tb=no"],
+                [sys.executable, "-m", "pytest", str(test_file), "-q", "--tb=no"],
                 capture_output=True,
                 text=True,
                 timeout=30
             )
             
             if result.returncode == 0:
-                return 'complete'  # Tests pass
+                return 'passing'
             else:
-                return 'in_progress'  # Tests exist but fail
+                return 'failing'
                 
         except (subprocess.TimeoutExpired, FileNotFoundError):
-            # If pytest fails or times out, assume in progress
-            return 'in_progress'
+            return 'error'
+    
+    def _format_status(self, status: str) -> str:
+        """Format overall module status with appropriate emoji and color."""
+        status_map = {
+            'working': '✅',        # Has implementations and tests
+            'no_tests': '🚧',       # Has implementations but no tests
+            'empty': '📝',          # Has dev file but no implementations
+            'not_started': '❌',    # No dev file
+            'unknown': '❓'
+        }
+        return status_map.get(status, '❓')
+    
+    def _format_file_status(self, exists: bool, export_count: int) -> str:
+        """Format dev file status showing if it has implementations."""
+        if not exists:
+            return "❌"
+        if export_count == 0:
+            return "📝"  # File exists but empty
+        return f"✅({export_count})"  # File exists with implementations
+    
+    def _format_inline_tests(self, test_count: int) -> str:
+        """Format inline test count."""
+        if test_count == 0:
+            return "❌"
+        return f"✅({test_count})"
+    
+    def _format_external_tests(self, exists: bool, test_status: Optional[str] = None) -> str:
+        """Format external test status."""
+        if not exists:
+            return "❌"
+        if test_status == 'passing':
+            return "✅"
+        elif test_status == 'failing':
+            return "🔴"
+        elif test_status == 'error':
+            return "⚠️"
+        else:
+            return "✅"  # Exists but not tested
     
     def _print_module_details(self, module_name: str, status: dict) -> None:
         """Print detailed information about a module."""
@@ -232,22 +339,24 @@ class StatusCommand(BaseCommand):
         files_table.add_column("File", style="dim")
         files_table.add_column("Status")
         
-        files_table.add_row(f"{module_name}_dev.py", "✅ Found" if status['dev_file'] else "❌ Missing")
-        files_table.add_row("tests/test_*.py", "✅ Found" if status['tests'] else "❌ Missing")
+        dev_status = "✅ Found" if status['dev_file'] else "❌ Missing"
+        if status['dev_file']:
+            dev_status += f" ({status.get('export_count', 0)} exports, {status.get('inline_test_count', 0)} inline tests)"
+        
+        files_table.add_row(f"{module_name}_dev.py", dev_status)
+        files_table.add_row("tests/test_*.py", "✅ Found" if status['external_tests'] else "❌ Missing")
         files_table.add_row("README.md", "✅ Found" if status['readme'] else "❌ Missing")
         
         console.print(files_table)
-    
-    def _format_status(self, status: str) -> str:
-        """Format module status with appropriate emoji and color."""
-        status_map = {
-            'complete': '✅',
-            'in_progress': '🚧',
-            'not_started': '❌',
-            'deprecated': '⚠️',
-            'unknown': '❓'
-        }
-        return status_map.get(status, '❓')
+        
+        # Pytest commands
+        if status['dev_file'] or status['external_tests']:
+            console.print("\n[dim]💡 Test commands:[/dim]")
+            if status['dev_file']:
+                console.print(f"[dim]   pytest modules/source/{module_name}/{module_name}_dev.py -k test_[/dim]")
+            if status['external_tests']:
+                short_name = module_name[3:] if module_name.startswith(tuple(f"{i:02d}_" for i in range(100))) else module_name
+                console.print(f"[dim]   pytest tests/test_{short_name}.py -v[/dim]")
     
     def _print_module_metadata(self, module_name: str, metadata: dict) -> None:
         """Print detailed metadata information about a module."""
@@ -263,9 +372,9 @@ class StatusCommand(BaseCommand):
             console.print(f"📝 {metadata['description']}")
         
         # Export info (read from dev file - source of truth)
-        module_path = Path(f"modules/{module_name}")
+        module_path = Path(f"modules/source/{module_name}")
         export_target = self._get_export_target(module_path)
-        if export_target != "unknown":
+        if export_target not in ['not_found', 'no_export', 'read_error']:
             console.print(f"📦 Exports to: {export_target}")
         
         # Dependencies
