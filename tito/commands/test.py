@@ -89,6 +89,26 @@ class TestCommand(BaseCommand):
         else:
             return self._show_available_modules()
     
+    def _show_sync_reminder(self) -> None:
+        """Show reminder to sync/export modules before testing."""
+        console = self.console
+        
+        reminder_text = Text()
+        reminder_text.append("💡 ", style="bright_yellow")
+        reminder_text.append("Before running tests, make sure to sync modules to package:\n", style="bright_yellow")
+        reminder_text.append("   • ", style="bright_cyan")
+        reminder_text.append("tito export", style="bright_cyan bold")
+        reminder_text.append(" - Export all modules to tinytorch package\n", style="bright_cyan")
+        reminder_text.append("   • ", style="bright_cyan")
+        reminder_text.append("tito nbdev build", style="bright_cyan bold")
+        reminder_text.append(" - Build package with latest changes", style="bright_cyan")
+        
+        console.print(Panel(reminder_text, 
+                          title="Sync Reminder", 
+                          border_style="yellow",
+                          padding=(0, 1)))
+        console.print()  # Add spacing
+
     def _run_all_tests(self, args: Namespace) -> int:
         """Run tests for all modules."""
         console = self.console
@@ -101,6 +121,9 @@ class TestCommand(BaseCommand):
         
         console.print(Panel(f"🧪 Running tests for {len(modules)} modules", 
                           title="Test Suite", border_style="bright_cyan"))
+        
+        # Show sync/export reminder before testing
+        self._show_sync_reminder()
         
         results = []
         
@@ -151,6 +174,9 @@ class TestCommand(BaseCommand):
         
         console.print(Panel(f"🧪 Running tests for module: [bold cyan]{module_name}[/bold cyan]", 
                           title="Single Module Test", border_style="bright_cyan"))
+        
+        # Show sync/export reminder before testing
+        self._show_sync_reminder()
         
         result = self._test_module(module_name, args)
         
