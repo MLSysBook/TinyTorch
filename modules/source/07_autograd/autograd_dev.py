@@ -311,7 +311,7 @@ Once you implement the Variable class above, run this cell to test it:
 """
 
 # %% nbgrader={"grade": true, "grade_id": "test-variable-class", "locked": true, "points": 15, "schema_version": 3, "solution": false, "task": false}
-def test_variable_class_comprehensive():
+def test_variable_class():
     """Test Variable class implementation"""
     print("🔬 Unit Test: Variable Class...")
     
@@ -347,7 +347,7 @@ def test_variable_class_comprehensive():
 
 # Run inline tests when module is executed directly
 if __name__ == "__main__":
-    test_variable_class_comprehensive()
+    test_variable_class()
 
 # %% [markdown]
 """
@@ -453,7 +453,7 @@ Once you implement the add function above, run this cell to test it:
 """
 
 # %% nbgrader={"grade": true, "grade_id": "test-add-operation", "locked": true, "points": 15, "schema_version": 3, "solution": false, "task": false}
-def test_add_operation_comprehensive():
+def test_add_operation():
     """Test addition operation with gradients"""
     print("🔬 Unit Test: Addition Operation...")
     
@@ -490,7 +490,7 @@ def test_add_operation_comprehensive():
 
 # Run inline tests when module is executed directly
 if __name__ == "__main__":
-    test_add_operation_comprehensive()
+    test_add_operation()
 
 # %% [markdown]
 """
@@ -588,7 +588,7 @@ Once you implement the multiply function above, run this cell to test it:
 """
 
 # %% nbgrader={"grade": true, "grade_id": "test-multiply-operation", "locked": true, "points": 15, "schema_version": 3, "solution": false, "task": false}
-def test_multiply_operation_comprehensive():
+def test_multiply_operation():
     """Test multiplication operation with gradients"""
     print("🔬 Unit Test: Multiplication Operation...")
     
@@ -624,7 +624,7 @@ def test_multiply_operation_comprehensive():
 
 # Run inline tests when module is executed directly
 if __name__ == "__main__":
-    test_multiply_operation_comprehensive()
+    test_multiply_operation()
 
 # %% nbgrader={"grade": false, "grade_id": "subtract-operation", "locked": false, "schema_version": 3, "solution": true, "task": false}
 #| export
@@ -686,7 +686,7 @@ def subtract(a: Union[Variable, float, int], b: Union[Variable, float, int]) -> 
     ### END SOLUTION
 
 # %% nbgrader={"grade": false, "grade_id": "test-subtract-operation", "locked": false, "schema_version": 3, "solution": false, "task": false}
-def test_subtract_operation_comprehensive():
+def test_subtract_operation():
     """Test subtraction operation with gradients"""
     print("🔬 Unit Test: Subtraction Operation...")
     
@@ -722,7 +722,7 @@ def test_subtract_operation_comprehensive():
 
 # Run inline tests when module is executed directly
 if __name__ == "__main__":
-    test_subtract_operation_comprehensive()
+    test_subtract_operation()
 
 # %% [markdown]
 """
@@ -753,7 +753,7 @@ Complex neural networks are just larger versions of this:
 """
 
 # %% nbgrader={"grade": true, "grade_id": "test-chain-rule", "locked": true, "points": 20, "schema_version": 3, "solution": false, "task": false}
-def test_chain_rule_comprehensive():
+def test_chain_rule():
     """Test chain rule with complex expressions"""
     print("🔬 Unit Test: Chain Rule with Complex Expressions...")
     
@@ -807,7 +807,7 @@ def test_chain_rule_comprehensive():
 
 # Run inline tests when module is executed directly
 if __name__ == "__main__":
-    test_chain_rule_comprehensive()
+    test_chain_rule()
 
 # %% [markdown]
 """
@@ -849,7 +849,7 @@ b.data = b.data - learning_rate * b.grad.data
 """
 
 # %% nbgrader={"grade": true, "grade_id": "test-neural-network-training", "locked": true, "points": 25, "schema_version": 3, "solution": false, "task": false}
-def test_neural_network_training_comprehensive():
+def test_neural_network_training():
     """Test autograd in neural network training scenario"""
     print("🔬 Unit Test: Neural Network Training Comprehensive Test...")
     

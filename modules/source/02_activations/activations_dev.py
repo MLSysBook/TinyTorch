@@ -752,7 +752,7 @@ Let's test how all activation functions work together in a realistic neural netw
 """
 
 # %% nbgrader={"grade": true, "grade_id": "test-activations-comprehensive", "locked": true, "points": 15, "schema_version": 3, "solution": false, "task": false}
-def test_activations_comprehensive():
+def test_activations():
     """Test all activation functions working together"""
     print("🔬 Unit Test: Activation Functions Comprehensive Test...")
     
@@ -835,7 +835,7 @@ def test_activations_comprehensive():
     print(f"✅ Ready for neural network integration!")
 
 # Run the comprehensive test
-test_activations_comprehensive()
+test_activations()
 
 # %% [markdown]
 """

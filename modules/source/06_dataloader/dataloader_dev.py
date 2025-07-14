@@ -1051,7 +1051,7 @@ Congratulations! You've successfully implemented the core components of data loa
 **Ready for the next challenge?** Let's build training loops and optimizers to complete the ML pipeline!
 """
 
-def test_dataset_interface_comprehensive():
+def test_dataset_interface():
     """Test Dataset abstract interface implementation comprehensively."""
     print("🔬 Unit Test: Dataset Interface...")
     
@@ -1068,7 +1068,7 @@ def test_dataset_interface_comprehensive():
     
     print("✅ Dataset interface works correctly")
 
-def test_dataloader_comprehensive():
+def test_dataloader():
     """Test DataLoader implementation comprehensively."""
     print("🔬 Unit Test: DataLoader...")
     
@@ -1087,7 +1087,7 @@ def test_dataloader_comprehensive():
     
     print("✅ DataLoader works correctly")
 
-def test_simple_dataset_comprehensive():
+def test_simple_dataset():
     """Test SimpleDataset implementation comprehensively."""
     print("🔬 Unit Test: SimpleDataset...")
     
@@ -1105,7 +1105,7 @@ def test_simple_dataset_comprehensive():
     
     print("✅ SimpleDataset works correctly")
 
-def test_dataloader_pipeline_comprehensive():
+def test_dataloader_pipeline():
     """Test complete data pipeline comprehensive testing."""
     print("🔬 Comprehensive Test: Data Pipeline...")
     
