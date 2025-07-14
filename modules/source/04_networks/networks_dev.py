@@ -735,13 +735,12 @@ print("📈 Final Progress: Complete network architectures ready for real ML app
 
 # %% nbgrader={"grade": false, "grade_id": "networks-compatibility", "locked": false, "schema_version": 3, "solution": false, "task": false}
 #| export
-def MLP(input_size: int, hidden_size: int, output_size: int, 
-        activation=ReLU, output_activation=Sigmoid) -> Sequential:
+class MLP:
     """
-    MLP function wrapper for test compatibility.
+    Multi-Layer Perceptron (MLP) class.
     
-    This function provides compatibility with external tests that expect an MLP function
-    with singular hidden_size parameter instead of hidden_sizes list.
+    A convenient wrapper around Sequential networks for standard MLP architectures.
+    Maintains parameter information and provides a clean interface.
     
     Args:
         input_size: Number of input features
@@ -749,22 +748,35 @@ def MLP(input_size: int, hidden_size: int, output_size: int,
         output_size: Number of output features
         activation: Activation function for hidden layer (default: ReLU)
         output_activation: Activation function for output layer (default: Sigmoid)
-        
-    Returns:
-        Sequential network with MLP architecture (input → hidden → output)
     """
-    layers = []
     
-    # Input to hidden layer
-    layers.append(Dense(input_size, hidden_size))
-    layers.append(activation())
+    def __init__(self, input_size: int, hidden_size: int, output_size: int, 
+                 activation=ReLU, output_activation=None):
+        self.input_size = input_size
+        self.hidden_size = hidden_size
+        self.output_size = output_size
+        
+        # Build the network layers
+        layers = []
+        
+        # Input to hidden layer
+        layers.append(Dense(input_size, hidden_size))
+        layers.append(activation())
+        
+        # Hidden to output layer
+        layers.append(Dense(hidden_size, output_size))
+        if output_activation is not None:
+            layers.append(output_activation())
+        
+        self.network = Sequential(layers)
     
-    # Hidden to output layer
-    layers.append(Dense(hidden_size, output_size))
-    if output_activation is not None:
-        layers.append(output_activation())
+    def forward(self, x):
+        """Forward pass through the MLP network."""
+        return self.network.forward(x)
     
-    return Sequential(layers)
+    def __call__(self, x):
+        """Make the MLP callable."""
+        return self.forward(x)
 
 # %% [markdown] 
 

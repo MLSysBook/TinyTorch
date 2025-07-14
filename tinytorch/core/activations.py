@@ -112,7 +112,7 @@ class ReLU:
         """
         ### BEGIN SOLUTION
         result = np.maximum(0, x.data)
-        return Tensor(result)
+        return type(x)(result)
         ### END SOLUTION
     
     def __call__(self, x: Tensor) -> Tensor:
@@ -152,7 +152,7 @@ class Sigmoid:
         # Clip for numerical stability
         clipped = np.clip(x.data, -500, 500)
         result = 1 / (1 + np.exp(-clipped))
-        return Tensor(result)
+        return type(x)(result)
         ### END SOLUTION
     
     def __call__(self, x: Tensor) -> Tensor:
@@ -190,7 +190,7 @@ class Tanh:
         """
         ### BEGIN SOLUTION
         result = np.tanh(x.data)
-        return Tensor(result)
+        return type(x)(result)
         ### END SOLUTION
     
     def __call__(self, x: Tensor) -> Tensor:
@@ -238,7 +238,7 @@ class Softmax:
         sum_exp = np.sum(exp_x, axis=-1, keepdims=True)
         result = exp_x / sum_exp
         
-        return Tensor(result)
+        return type(x)(result)
         ### END SOLUTION
     
     def __call__(self, x: Tensor) -> Tensor:
