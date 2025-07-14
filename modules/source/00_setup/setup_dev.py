@@ -1038,13 +1038,13 @@ def setup_development_environment() -> Dict[str, Any]:
         setup_status.get('python_installed', False)
     ])
     
-    setup_health = round((installed_tools / total_tools) * 100, 1)
+    setup_score = round((installed_tools / total_tools) * 100, 1)
     
     return {
         'setup_status': setup_status,
         'recommendations': recommendations,
-        'setup_health': setup_health,
-        'status': 'ready' if setup_health >= 75 else 'needs_configuration'
+        'setup_score': setup_score,
+        'status': 'ready' if setup_score >= 75 else 'needs_configuration'
     }
     ### END SOLUTION
 
@@ -1128,7 +1128,7 @@ def generate_system_report() -> Dict[str, Any]:
     health_components = [
         environment['health_score'],
         normalized_performance,
-        development['setup_health']
+        development['setup_score']
     ]
     
     overall_health = round(sum(health_components) / len(health_components), 1)
@@ -1227,22 +1227,22 @@ def test_development_setup():
     assert isinstance(setup_report, dict), "setup_development_environment should return a dictionary"
     
     # Test required keys
-    required_keys = ['setup_status', 'recommendations', 'setup_health', 'status']
+    required_keys = ['setup_status', 'recommendations', 'setup_score', 'status']
     for key in required_keys:
         assert key in setup_report, f"Report should have '{key}' key"
     
     # Test data types
     assert isinstance(setup_report['setup_status'], dict), "setup_status should be dict"
     assert isinstance(setup_report['recommendations'], list), "recommendations should be list"
-    assert isinstance(setup_report['setup_health'], (int, float)), "setup_health should be number"
+    assert isinstance(setup_report['setup_score'], (int, float)), "setup_score should be number"
     assert isinstance(setup_report['status'], str), "status should be string"
     
     # Test reasonable values
-    assert 0 <= setup_report['setup_health'] <= 100, "setup_health should be between 0 and 100"
+    assert 0 <= setup_report['setup_score'] <= 100, "setup_score should be between 0 and 100"
     assert setup_report['status'] in ['ready', 'needs_configuration'], "status should be valid"
     
     print("✅ Development setup tests passed!")
-    print(f"✅ Setup health: {setup_report['setup_health']}%")
+    print(f"✅ Setup score: {setup_report['setup_score']}%")
 
 # %%
 def test_system_report():
