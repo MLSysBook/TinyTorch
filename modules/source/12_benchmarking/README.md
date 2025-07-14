@@ -15,7 +15,7 @@ After completing this module, you will:
 - Apply MLPerf-inspired patterns to evaluate model performance
 - Implement statistical validation for benchmark results
 - Create professional performance reports and comparisons
-- Prepare for capstone project benchmarking requirements
+- Apply systematic evaluation to real ML projects
 
 ## 🔗 Connection to Previous Modules
 
@@ -60,9 +60,9 @@ Real ML engineers spend significant time on:
 - **Research validation**: Demonstrating improvements over baselines
 - **System design**: Choosing between architectural alternatives
 
-### **Capstone Preparation**
-This module directly prepares you for:
-- **Leaderboard competitions**: Systematic comparison against baselines
+### **Professional Applications**
+This module prepares you for:
+- **ML project evaluation**: Systematic comparison against baselines
 - **Performance presentations**: Professional reporting of results
 - **Statistical validation**: Proving your improvements are significant
 - **Research methodology**: Reproducible evaluation practices
@@ -121,7 +121,7 @@ report.save_as_html("my_capstone_results.html")
 ## 📈 Real-World Applications
 
 ### **Immediate Use Cases**
-- **Capstone projects**: Systematic evaluation of your final project
+- **ML projects**: Systematic evaluation of your model implementations
 - **Module integration**: Validate that your TinyTorch components work together
 - **Performance optimization**: Prove your kernels actually improve performance
 
