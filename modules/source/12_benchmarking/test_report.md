@@ -1,13 +1,13 @@
-# My Capstone Model Performance Report
+# My Project Model Performance Report
 
 ## Executive Summary
 
-This report presents comprehensive performance benchmarking results for My Capstone Model using MLPerf-inspired methodology. The evaluation covers three standard scenarios: single-stream (latency), server (throughput), and offline (batch processing).
+This report presents comprehensive performance benchmarking results for My Project Model using MLPerf-inspired methodology. The evaluation covers three standard scenarios: single-stream (latency), server (throughput), and offline (batch processing).
 
 ### Key Findings
-- **Single Stream**: 95.00 samples/sec, 9.86ms mean latency, 10.95ms 90th percentile
-- **Server**: 87.00 samples/sec, 11.71ms mean latency, 14.44ms 90th percentile
-- **Offline**: 120.00 samples/sec, 7.97ms mean latency, 7.93ms 90th percentile
+- **Single Stream**: 95.00 samples/sec, 9.86ms mean latency, 11.03ms 90th percentile
+- **Server**: 87.00 samples/sec, 12.24ms mean latency, 8.21ms 90th percentile
+- **Offline**: 120.00 samples/sec, 7.96ms mean latency, 9.21ms 90th percentile
 
 ## Methodology
 
@@ -29,32 +29,32 @@ This report presents comprehensive performance benchmarking results for My Capst
 
 - **Sample Count**: 100
 - **Mean Latency**: 9.86 ms
-- **Median Latency**: 9.67 ms
-- **90th Percentile**: 10.95 ms
-- **95th Percentile**: 10.01 ms
-- **Standard Deviation**: 2.10 ms
+- **Median Latency**: 9.86 ms
+- **90th Percentile**: 11.03 ms
+- **95th Percentile**: 7.18 ms
+- **Standard Deviation**: 2.08 ms
 - **Throughput**: 95.00 samples/second
 - **Accuracy**: 0.9420
 
 ### Server Scenario
 
 - **Sample Count**: 150
-- **Mean Latency**: 11.71 ms
-- **Median Latency**: 11.38 ms
-- **90th Percentile**: 14.44 ms
-- **95th Percentile**: 12.45 ms
-- **Standard Deviation**: 3.05 ms
+- **Mean Latency**: 12.24 ms
+- **Median Latency**: 12.17 ms
+- **90th Percentile**: 8.21 ms
+- **95th Percentile**: 16.39 ms
+- **Standard Deviation**: 3.00 ms
 - **Throughput**: 87.00 samples/second
 - **Accuracy**: 0.9380
 
 ### Offline Scenario
 
 - **Sample Count**: 50
-- **Mean Latency**: 7.97 ms
-- **Median Latency**: 7.95 ms
-- **90th Percentile**: 7.93 ms
-- **95th Percentile**: 8.06 ms
-- **Standard Deviation**: 1.00 ms
+- **Mean Latency**: 7.96 ms
+- **Median Latency**: 7.97 ms
+- **90th Percentile**: 9.21 ms
+- **95th Percentile**: 7.44 ms
+- **Standard Deviation**: 0.90 ms
 - **Throughput**: 120.00 samples/second
 - **Accuracy**: 0.9450
 

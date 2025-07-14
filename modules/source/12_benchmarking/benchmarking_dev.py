@@ -18,7 +18,7 @@ Welcome to the Benchmarking module! This is where we learn to systematically eva
 - Understand the four-component MLPerf benchmarking architecture
 - Implement different benchmark scenarios (latency, throughput, offline)
 - Apply statistical validation for meaningful results
-- Create professional performance reports for capstone projects
+- Create professional performance reports for ML projects
 - Learn to avoid common benchmarking pitfalls
 
 ## Build → Use → Analyze
@@ -110,7 +110,7 @@ from tinytorch.core.benchmarking import StatisticalValidator, PerformanceReporte
 **Why this matters:**
 - **Learning:** Deep understanding of systematic evaluation
 - **Production:** Professional benchmarking methodology
-- **Capstone:** Tools for validating your final project performance
+- **Projects:** Tools for validating your ML project performance
 - **Career:** Industry-standard skills for ML engineering roles
 """
 
@@ -990,10 +990,10 @@ test_tinytorch_perf()
 
 # %% [markdown]
 """
-## Step 5: Professional Reporting - Capstone-Ready Results
+## Step 5: Professional Reporting - Project-Ready Results
 
 ### Why Professional Reports Matter
-Your capstone projects need:
+Your ML projects need:
 - **Clear performance metrics** for presentations
 - **Statistical validation** for credibility
 - **Comparison baselines** for context
@@ -1004,7 +1004,7 @@ Your capstone projects need:
 #| export
 class PerformanceReporter:
     """
-    Generates professional performance reports suitable for capstone projects.
+    Generates professional performance reports for ML projects.
     
     TODO: Implement professional report generation.
     
@@ -1019,12 +1019,12 @@ class PerformanceReporter:
     def __init__(self):
         self.reports = []
     
-    def generate_capstone_report(self, benchmark_results: Dict[str, BenchmarkResult], 
+    def generate_project_report(self, benchmark_results: Dict[str, BenchmarkResult], 
                                model_name: str = "TinyTorch Model") -> str:
         """
-        Generate a capstone-ready performance report.
+        Generate a professional performance report for ML projects.
         
-        TODO: Implement capstone report generation.
+        TODO: Implement project report generation.
         
         STEP-BY-STEP:
         1. Create executive summary
@@ -1156,7 +1156,7 @@ def test_performance_reporter():
     
     # Test report generation
     reporter = PerformanceReporter()
-    report = reporter.generate_capstone_report(mock_results, "My Capstone Model")
+    report = reporter.generate_project_report(mock_results, "My Project Model")
     
     # Verify report content
     assert "Performance Report" in report
@@ -1237,7 +1237,7 @@ def test_comprehensive_benchmarking():
     
     # 2. Generate professional report
     reporter = PerformanceReporter()
-    report = reporter.generate_capstone_report(all_results, "TinyTorch CNN Model")
+    report = reporter.generate_project_report(all_results, "TinyTorch CNN Model")
     
     # 3. Validate results
     for scenario_name, result in all_results.items():
@@ -1304,7 +1304,7 @@ if __name__ == "__main__":
             print("🎉 ALL BENCHMARKING TESTS PASSED!")
             print("="*50)
             print("\n📊 Your benchmarking framework is ready for:")
-            print("  • Capstone project evaluation")
+            print("  • ML project evaluation")
             print("  • Systematic model comparison")
             print("  • Professional performance reporting")
             print("  • Statistical validation of results")
