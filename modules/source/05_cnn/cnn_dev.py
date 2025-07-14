@@ -768,36 +768,7 @@ def test_flatten_function_comprehensive():
     
     print("✅ Flatten function works correctly")
 
-def test_cnn_pipeline_integration():
-    """Test CNN pipeline integration with complete workflow."""
-    print("🔬 Integration Test: CNN Pipeline...")
-    
-    # Test complete CNN pipeline
-    input_image = Tensor(np.random.randn(8, 8))
-    
-    # Build CNN pipeline
-    conv = Conv2D(kernel_size=(3, 3))
-    conv_output = conv(input_image)
-    flattened = flatten(conv_output)
-    
-    # Test shapes
-    assert conv_output.shape == (6, 6), "Conv output should be correct"
-    assert flattened.shape == (1, 36), "Flatten output should be correct"
-    
-    # Test with activation and dense layers
-    from tinytorch.core.activations import ReLU
-    from tinytorch.core.layers import Dense
-    
-    relu = ReLU()
-    dense = Dense(input_size=36, output_size=10)
-    
-    activated = relu(conv_output)
-    final_flat = flatten(activated)
-    predictions = dense(final_flat)
-    
-    assert predictions.shape == (1, 10), "Final predictions should be correct shape"
-    
-    print("✅ CNN pipeline integration works correctly")
+# CNN pipeline integration test moved to tests/integration/test_cnn_pipeline.py
 
 # %% [markdown]
 """
