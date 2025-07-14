@@ -487,23 +487,36 @@ class BinaryCrossEntropyLoss:
         - Use np.log for logarithm computation
         """
         ### BEGIN SOLUTION
-        # Apply sigmoid to get probabilities
-        sigmoid_pred = 1.0 / (1.0 + np.exp(-y_pred.data))
+        # Use numerically stable implementation directly from logits
+        # This avoids computing sigmoid and log separately
+        logits = y_pred.data.flatten()
+        labels = y_true.data.flatten()
         
-        # Clip probabilities to avoid log(0)
-        epsilon = 1e-15
-        sigmoid_pred = np.clip(sigmoid_pred, epsilon, 1.0 - epsilon)
+        # Numerically stable binary cross-entropy from logits
+        # Uses the identity: log(1 + exp(x)) = max(x, 0) + log(1 + exp(-abs(x)))
+        def stable_bce_with_logits(logits, labels):
+            # For each sample: -[y*log(sigmoid(x)) + (1-y)*log(1-sigmoid(x))]
+            # Which equals: -[y*log_sigmoid(x) + (1-y)*log_sigmoid(-x)]
+            # Where log_sigmoid(x) = x - log(1 + exp(x)) = x - softplus(x)
+            
+            # Compute log(sigmoid(x)) = x - log(1 + exp(x))
+            # Use numerical stability: log(1 + exp(x)) = max(0, x) + log(1 + exp(-abs(x)))
+            def log_sigmoid(x):
+                return x - np.maximum(0, x) - np.log(1 + np.exp(-np.abs(x)))
+            
+            # Compute log(1 - sigmoid(x)) = -x - log(1 + exp(-x))
+            def log_one_minus_sigmoid(x):
+                return -x - np.maximum(0, -x) - np.log(1 + np.exp(-np.abs(x)))
+            
+            # Binary cross-entropy: -[y*log_sigmoid(x) + (1-y)*log_sigmoid(-x)]
+            loss = -(labels * log_sigmoid(logits) + (1 - labels) * log_one_minus_sigmoid(logits))
+            return loss
         
-        # Flatten if needed to ensure consistent shapes
-        y_true_flat = y_true.data.flatten()
-        sigmoid_pred_flat = sigmoid_pred.flatten()
-        
-        # Compute binary cross-entropy
-        loss = -(y_true_flat * np.log(sigmoid_pred_flat) + 
-                (1 - y_true_flat) * np.log(1 - sigmoid_pred_flat))
+        # Compute loss for each sample
+        losses = stable_bce_with_logits(logits, labels)
         
         # Take mean over batch
-        mean_loss = np.mean(loss)
+        mean_loss = np.mean(losses)
         
         return Tensor(mean_loss)
         ### END SOLUTION
@@ -1171,4 +1184,96 @@ def test_training_comprehensive():
     print("🎯 Training Pipeline: All comprehensive tests passed!")
 
 # Run the comprehensive test
-test_training_comprehensive() 
+test_training_comprehensive()
+
+# %% [markdown]
+"""
+## 🧪 Module Testing
+
+Time to test your implementation! This section uses TinyTorch's standardized testing framework to ensure your implementation works correctly.
+
+**This testing section is locked** - it provides consistent feedback across all modules and cannot be modified.
+"""
+
+# %% nbgrader={"grade": false, "grade_id": "standardized-testing", "locked": true, "schema_version": 3, "solution": false, "task": false}
+# =============================================================================
+# STANDARDIZED MODULE TESTING - DO NOT MODIFY
+# This cell is locked to ensure consistent testing across all TinyTorch modules
+# =============================================================================
+
+if __name__ == "__main__":
+    from tito.tools.testing import run_module_tests_auto
+    
+    # Automatically discover and run all tests in this module
+    success = run_module_tests_auto("Training")
+
+# %% [markdown]
+"""
+## 🎯 Module Summary: Neural Network Training Mastery!
+
+Congratulations! You've successfully implemented the complete training system that powers modern neural networks:
+
+### ✅ What You've Built
+- **Loss Functions**: MSE, CrossEntropy, BinaryCrossEntropy for different problem types
+- **Metrics System**: Accuracy with extensible framework for additional metrics
+- **Training Loop**: Complete Trainer class with epoch management and history tracking
+- **Integration**: All components work together in a unified training pipeline
+
+### ✅ Key Learning Outcomes
+- **Understanding**: How neural networks learn through loss optimization
+- **Implementation**: Built complete training system from scratch
+- **Mathematical mastery**: Loss functions, gradient computation, metric calculation
+- **Real-world application**: Comprehensive training pipeline for production use
+- **Systems thinking**: Modular design enabling flexible training configurations
+
+### ✅ Mathematical Foundations Mastered
+- **Loss Functions**: Quantifying prediction quality for different problem types
+- **Gradient Descent**: Iterative optimization through loss minimization
+- **Metrics**: Performance evaluation beyond loss (accuracy, precision, recall)
+- **Training Dynamics**: Epoch management, batch processing, validation monitoring
+
+### ✅ Professional Skills Developed
+- **Software Architecture**: Modular, extensible training system design
+- **API Design**: Clean interfaces for training configuration and monitoring
+- **Performance Monitoring**: Comprehensive metrics tracking and history logging
+- **Error Handling**: Robust training pipeline with proper error management
+
+### ✅ Ready for Advanced Applications
+Your training system now enables:
+- **Any Neural Network**: Train any architecture with any loss function
+- **Multiple Problem Types**: Classification, regression, and custom objectives
+- **Production Training**: Robust training loops with monitoring and checkpointing
+- **Research Applications**: Flexible framework for experimenting with new methods
+
+### 🔗 Connection to Real ML Systems
+Your implementation mirrors production frameworks:
+- **PyTorch**: `torch.nn` loss functions and training loops
+- **TensorFlow**: `tf.keras` training API and callbacks
+- **JAX**: `optax` optimizers and training utilities
+- **Industry Standard**: Core training concepts used in all major ML systems
+
+### 🎯 The Power of Systematic Training
+You've built the orchestration system that makes ML possible:
+- **Automation**: Handles complex training workflows automatically
+- **Flexibility**: Supports any model architecture and training configuration
+- **Monitoring**: Comprehensive tracking of training progress and performance
+- **Reliability**: Robust error handling and validation throughout training
+
+### 🧠 Machine Learning Engineering
+You now understand the engineering that makes AI systems work:
+- **Training Pipelines**: End-to-end automated training workflows
+- **Performance Monitoring**: Real-time feedback on model learning progress
+- **Hyperparameter Management**: Systematic approach to training configuration
+- **Production Readiness**: Scalable training systems for real-world deployment
+
+### 🚀 What's Next
+Your training system is the foundation for:
+- **Advanced Optimizers**: Adam, RMSprop, and specialized optimization methods
+- **Regularization**: Dropout, weight decay, and overfitting prevention
+- **Model Deployment**: Saving, loading, and serving trained models
+- **MLOps**: Production training pipelines, monitoring, and continuous learning
+
+**Next Module**: Advanced training techniques, regularization, and production deployment!
+
+You've built the training engine that powers modern AI. Now let's add the advanced features that make it production-ready and capable of learning complex patterns from real-world data!
+""" 
