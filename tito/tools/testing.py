@@ -114,7 +114,14 @@ class ModuleTestRunner:
             'sigmoid_activation',
             'tanh_activation',
             'softmax_activation',
-            'activations_integration'
+            'activations_integration',
+            # Compression module test patterns
+            'compression_metrics',
+            'magnitude_pruning',
+            'quantization',
+            'distillation',
+            'structured_pruning',
+            'comprehensive_comparison'
         ]
         
         # Check if the function name matches any of our patterns
