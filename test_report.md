@@ -5,9 +5,9 @@
 This report presents comprehensive performance benchmarking results for My Project Model using MLPerf-inspired methodology. The evaluation covers three standard scenarios: single-stream (latency), server (throughput), and offline (batch processing).
 
 ### Key Findings
-- **Single Stream**: 95.00 samples/sec, 9.86ms mean latency, 8.79ms 90th percentile
-- **Server**: 87.00 samples/sec, 11.82ms mean latency, 11.86ms 90th percentile
-- **Offline**: 120.00 samples/sec, 8.17ms mean latency, 7.28ms 90th percentile
+- **Single Stream**: 95.00 samples/sec, 10.05ms mean latency, 11.39ms 90th percentile
+- **Server**: 87.00 samples/sec, 11.89ms mean latency, 13.31ms 90th percentile
+- **Offline**: 120.00 samples/sec, 8.08ms mean latency, 6.57ms 90th percentile
 
 ## Methodology
 
@@ -28,33 +28,33 @@ This report presents comprehensive performance benchmarking results for My Proje
 ### Single Stream Scenario
 
 - **Sample Count**: 100
-- **Mean Latency**: 9.86 ms
-- **Median Latency**: 9.84 ms
-- **90th Percentile**: 8.79 ms
-- **95th Percentile**: 10.90 ms
-- **Standard Deviation**: 1.99 ms
+- **Mean Latency**: 10.05 ms
+- **Median Latency**: 10.37 ms
+- **90th Percentile**: 11.39 ms
+- **95th Percentile**: 9.59 ms
+- **Standard Deviation**: 1.94 ms
 - **Throughput**: 95.00 samples/second
 - **Accuracy**: 0.9420
 
 ### Server Scenario
 
 - **Sample Count**: 150
-- **Mean Latency**: 11.82 ms
-- **Median Latency**: 11.65 ms
-- **90th Percentile**: 11.86 ms
-- **95th Percentile**: 10.64 ms
-- **Standard Deviation**: 2.97 ms
+- **Mean Latency**: 11.89 ms
+- **Median Latency**: 12.01 ms
+- **90th Percentile**: 13.31 ms
+- **95th Percentile**: 12.92 ms
+- **Standard Deviation**: 3.23 ms
 - **Throughput**: 87.00 samples/second
 - **Accuracy**: 0.9380
 
 ### Offline Scenario
 
 - **Sample Count**: 50
-- **Mean Latency**: 8.17 ms
-- **Median Latency**: 8.26 ms
-- **90th Percentile**: 7.28 ms
-- **95th Percentile**: 9.00 ms
-- **Standard Deviation**: 0.95 ms
+- **Mean Latency**: 8.08 ms
+- **Median Latency**: 8.03 ms
+- **90th Percentile**: 6.57 ms
+- **95th Percentile**: 6.85 ms
+- **Standard Deviation**: 1.03 ms
 - **Throughput**: 120.00 samples/second
 - **Accuracy**: 0.9450
 
