@@ -425,6 +425,12 @@ class DataLoader:
         - Store all parameters as instance variables
         - These will be used in __iter__ for batching
         """
+        # Input validation
+        if dataset is None:
+            raise TypeError("Dataset cannot be None")
+        if not isinstance(batch_size, int) or batch_size <= 0:
+            raise ValueError(f"Batch size must be a positive integer, got {batch_size}")
+        
         self.dataset = dataset
         self.batch_size = batch_size
         self.shuffle = shuffle
