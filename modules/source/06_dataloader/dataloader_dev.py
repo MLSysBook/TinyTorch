@@ -887,7 +887,7 @@ try:
         assert batch_data.shape[1] == 8, "Validation features should match training"
         assert len(batch_labels.shape) == 1, "Validation labels should be 1D"
         
-        assert val_samples == 50, f"Should process 50 validation samples, got {val_samples}"
+    assert val_samples == 50, f"Should process 50 validation samples, got {val_samples}"
     assert val_batches == 5, f"Should have 5 validation batches, got {val_batches}"
     print("✅ Validation pipeline works correctly")
     
