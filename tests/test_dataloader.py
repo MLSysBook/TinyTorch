@@ -39,7 +39,7 @@ class MockTensor:
         elif isinstance(data, np.ndarray):
             self.data = data.astype(np.float32)
         else:
-            self.data = np.array([data], dtype=np.float32)
+            self.data = np.array(data, dtype=np.float32)
     
     @property
     def shape(self):
@@ -76,7 +76,7 @@ class MockDataset(Dataset):
     
     def __getitem__(self, index):
         """Get item by index."""
-        if index >= self.size:
+        if index < 0 or index >= self.size:
             raise IndexError(f"Index {index} out of range for dataset of size {self.size}")
         
         data = MockTensor(self.data[index])
