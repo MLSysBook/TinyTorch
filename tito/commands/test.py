@@ -624,20 +624,72 @@ class TestCommand(BaseCommand):
         # Show external test results
         if result.external_tests:
             console.print("   🧪 External Tests:")
+            failed_external_tests = []
             for test in result.external_tests:
                 icon = "✅" if test.success else "❌"
                 color = "green" if test.success else "red"
                 console.print(f"      [{color}]{icon} {test.name}[/{color}]")
                 
-                if not test.success and test.error and test.error.strip():
-                    # Show error details for failed external tests
-                    error_msg = test.error.strip()
-                    if len(error_msg) > 200:
-                        error_msg = error_msg[:200] + "..."
-                    console.print(f"         [dim red]Error: {error_msg}[/dim red]")
+                if not test.success:
+                    failed_external_tests.append(test)
+                    if test.error and test.error.strip():
+                        # Show error details for failed external tests
+                        error_msg = test.error.strip()
+                        if len(error_msg) > 200:
+                            error_msg = error_msg[:200] + "..."
+                        console.print(f"         [dim red]Error: {error_msg}[/dim red]")
+            
+            # Show debugging hint box for failed external tests
+            if failed_external_tests:
+                self._show_debug_hint_box(console, result.module_name, failed_external_tests)
         
         # Summary for this module
         console.print(f"   📊 Summary: {result.passed_tests}/{result.total_tests} tests passed")
+    
+    def _show_debug_hint_box(self, console: Console, module_name: str, failed_tests: List[TestResult]) -> None:
+        """Show a debugging hint box with pytest commands for failed tests."""
+        # Extract short name from module directory name
+        if module_name.startswith(tuple(f"{i:02d}_" for i in range(100))):
+            short_name = module_name[3:]  # Remove "00_" prefix
+        else:
+            short_name = module_name
+        
+        test_file = f"tests/test_{short_name}.py"
+        
+        # Build hint text
+        hint_text = Text()
+        hint_text.append("🔍 Debug these failing tests:\n\n", style="bold yellow")
+        
+        # Add general debugging commands
+        hint_text.append("• Run all tests with detailed output:\n", style="bright_yellow")
+        hint_text.append(f"  pytest {test_file} -v --tb=long\n\n", style="bright_cyan")
+        
+        hint_text.append("• Run with print statements visible:\n", style="bright_yellow")
+        hint_text.append(f"  pytest {test_file} -v -s\n\n", style="bright_cyan")
+        
+        # Add specific test commands if we have parsed test names
+        if len(failed_tests) <= 5:  # Only show specific commands for a few tests
+            hint_text.append("• Run specific failing tests:\n", style="bright_yellow")
+            for test in failed_tests[:5]:  # Limit to 5 tests
+                # Convert display name back to pytest format
+                # Handle format like "TemporaryFailures: Demo Failure One" -> "TestTemporaryFailures::test_demo_failure_one"
+                if ":" in test.name:
+                    class_part, method_part = test.name.split(":", 1)
+                    class_name = f"Test{class_part.strip().replace(' ', '')}"
+                    method_name = f"test_{method_part.strip().replace(' ', '_').lower()}"
+                    test_path = f"{class_name}::{method_name}"
+                else:
+                    # Fallback for other formats
+                    test_path = test.name.replace(" ", "_").replace(":", "").lower()
+                hint_text.append(f"  pytest {test_file}::{test_path} -v -s\n", style="bright_cyan")
+        
+        # Add extra debugging tips
+        hint_text.append("\n💡 Pro tips:\n", style="bold yellow")
+        hint_text.append("• Use --pdb to drop into debugger on failure\n", style="white")
+        hint_text.append("• Use -k 'test_name' to run tests by name pattern\n", style="white")
+        hint_text.append("• Use --tb=short for concise error messages\n", style="white")
+        
+        console.print(Panel(hint_text, title="🐛 Debug Failed Tests", border_style="yellow"))
     
     def _show_available_modules(self) -> int:
         """Show available modules when no arguments are provided."""
