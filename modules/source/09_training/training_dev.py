@@ -366,8 +366,15 @@ class CrossEntropyLoss:
         - Use np.log for logarithm computation
         """
         ### BEGIN SOLUTION
+        # Handle both 1D and 2D prediction arrays
+        if y_pred.data.ndim == 1:
+            # Reshape 1D to 2D for consistency (single sample)
+            y_pred_2d = y_pred.data.reshape(1, -1)
+        else:
+            y_pred_2d = y_pred.data
+            
         # Apply softmax to get probability distribution
-        exp_pred = np.exp(y_pred.data - np.max(y_pred.data, axis=1, keepdims=True))
+        exp_pred = np.exp(y_pred_2d - np.max(y_pred_2d, axis=1, keepdims=True))
         softmax_pred = exp_pred / np.sum(exp_pred, axis=1, keepdims=True)
         
         # Add small epsilon to avoid log(0)
