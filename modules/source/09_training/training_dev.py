@@ -277,7 +277,7 @@ Let's test our MSE loss implementation with known values.
 """
 
 # %% nbgrader={"grade": false, "grade_id": "test-mse-loss", "locked": false, "schema_version": 3, "solution": false, "task": false}
-def test_mse_loss_comprehensive():
+def test_mse_loss():
     """Test MSE loss with comprehensive examples."""
     print("🔬 Unit Test: MSE Loss...")
     
@@ -317,7 +317,7 @@ def test_mse_loss_comprehensive():
     print("🎯 MSE Loss: All tests passed!")
 
 # Run the test
-test_mse_loss_comprehensive() 
+test_mse_loss() 
 
 # %% nbgrader={"grade": false, "grade_id": "crossentropy-loss", "locked": false, "schema_version": 3, "solution": true, "task": false}
 #| export
@@ -407,7 +407,7 @@ Let's test our CrossEntropy loss implementation.
 """
 
 # %% nbgrader={"grade": false, "grade_id": "test-crossentropy-loss", "locked": false, "schema_version": 3, "solution": false, "task": false}
-def test_crossentropy_loss_comprehensive():
+def test_crossentropy_loss():
     """Test CrossEntropy loss with comprehensive examples."""
     print("🔬 Unit Test: CrossEntropy Loss...")
     
@@ -445,7 +445,7 @@ def test_crossentropy_loss_comprehensive():
     print("🎯 CrossEntropy Loss: All tests passed!")
 
 # Run the test
-test_crossentropy_loss_comprehensive()
+test_crossentropy_loss()
 
 # %% nbgrader={"grade": false, "grade_id": "binary-crossentropy-loss", "locked": false, "schema_version": 3, "solution": true, "task": false}
 #| export
@@ -540,7 +540,7 @@ Let's test our Binary CrossEntropy loss implementation.
 """
 
 # %% nbgrader={"grade": false, "grade_id": "test-binary-crossentropy-loss", "locked": false, "schema_version": 3, "solution": false, "task": false}
-def test_binary_crossentropy_loss_comprehensive():
+def test_binary_crossentropy_loss():
     """Test Binary CrossEntropy loss with comprehensive examples."""
     print("🔬 Unit Test: Binary CrossEntropy Loss...")
     
@@ -578,7 +578,7 @@ def test_binary_crossentropy_loss_comprehensive():
     print("🎯 Binary CrossEntropy Loss: All tests passed!")
 
 # Run the test
-test_binary_crossentropy_loss_comprehensive() 
+test_binary_crossentropy_loss() 
 
 # %% [markdown]
 """
@@ -709,7 +709,7 @@ Let's test our Accuracy metric implementation.
 """
 
 # %% nbgrader={"grade": false, "grade_id": "test-accuracy-metric", "locked": false, "schema_version": 3, "solution": false, "task": false}
-def test_accuracy_metric_comprehensive():
+def test_accuracy_metric():
     """Test Accuracy metric with comprehensive examples."""
     print("🔬 Unit Test: Accuracy Metric...")
     
@@ -747,7 +747,7 @@ def test_accuracy_metric_comprehensive():
     print("🎯 Accuracy Metric: All tests passed!")
 
 # Run the test
-test_accuracy_metric_comprehensive()
+test_accuracy_metric()
 
 # %% [markdown]
 """
@@ -1076,7 +1076,7 @@ Let's test our Trainer class with a simple example.
 """
 
 # %% nbgrader={"grade": false, "grade_id": "test-trainer", "locked": false, "schema_version": 3, "solution": false, "task": false}
-def test_trainer_comprehensive():
+def test_trainer():
     """Test Trainer class with comprehensive examples."""
     print("🔬 Unit Test: Trainer Class...")
     
@@ -1111,7 +1111,7 @@ def test_trainer_comprehensive():
     print("🎯 Trainer Class: All tests passed!")
 
 # Run the test
-test_trainer_comprehensive()
+test_trainer()
 
 # %% [markdown]
 """
@@ -1123,7 +1123,7 @@ Let's test the complete training pipeline with all components working together.
 """
 
 # %% nbgrader={"grade": true, "grade_id": "test-training-comprehensive", "locked": true, "points": 25, "schema_version": 3, "solution": false, "task": false}
-def test_training_comprehensive():
+def test_training():
     """Test complete training pipeline with all components."""
     print("🔬 Comprehensive Test: Complete Training Pipeline...")
     
@@ -1191,7 +1191,7 @@ def test_training_comprehensive():
     print("🎯 Training Pipeline: All comprehensive tests passed!")
 
 # Run the comprehensive test
-test_training_comprehensive()
+test_training()
 
 # %% [markdown]
 """

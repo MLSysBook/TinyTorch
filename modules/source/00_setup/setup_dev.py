@@ -1284,7 +1284,7 @@ def test_system_report():
 
 
 # %%
-def test_personal_info_comprehensive():
+def test_personal_info():
     """Test personal information function comprehensively."""
     personal = personal_info()
     assert isinstance(personal, dict), "personal_info should return a dictionary"
@@ -1292,7 +1292,7 @@ def test_personal_info_comprehensive():
     assert '@' in personal['email'], "Email should contain @ symbol"
     print("✅ Personal information function works")
 
-def test_system_info_comprehensive():
+def test_system_info():
     """Test system information function comprehensively."""
     system = system_info()
     assert isinstance(system, dict), "system_info should return a dictionary"
@@ -1300,28 +1300,28 @@ def test_system_info_comprehensive():
     assert system['memory_gb'] > 0, "Memory should be positive"
     print("✅ System information function works")
 
-def test_environment_validation_comprehensive():
+def test_environment_validation():
     """Test environment validation function comprehensively."""
     env = validate_environment()
     assert isinstance(env, dict), "validate_environment should return a dictionary"
     assert 'health_score' in env, "Dictionary should have 'health_score' key"
     print("✅ Environment validation function works")
 
-def test_performance_benchmark_comprehensive():
+def test_performance_benchmark():
     """Test performance benchmarking function comprehensively."""
     perf = benchmark_performance()
     assert isinstance(perf, dict), "benchmark_performance should return a dictionary"
     assert 'cpu_score' in perf, "Dictionary should have 'cpu_score' key"
     print("✅ Performance benchmarking function works")
 
-def test_development_setup_comprehensive():
+def test_development_setup():
     """Test development setup function comprehensively."""
     dev = setup_development_environment()
     assert isinstance(dev, dict), "setup_development_environment should return a dictionary"
     assert 'setup_score' in dev, "Dictionary should have 'setup_score' key"
     print("✅ Development setup function works")
 
-def test_system_report_comprehensive():
+def test_system_report():
     """Test system report comprehensive function."""
     report = generate_system_report()
     assert isinstance(report, dict), "generate_system_report should return a dictionary"

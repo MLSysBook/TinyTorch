@@ -780,7 +780,7 @@ class MLP:
 
 # %% [markdown] 
 
-def test_sequential_networks_comprehensive():
+def test_sequential_networks():
     """Test Sequential network implementation comprehensively."""
     print("🔬 Unit Test: Sequential Networks...")
     
@@ -801,7 +801,7 @@ def test_sequential_networks_comprehensive():
     
     print("✅ Sequential networks work correctly")
 
-def test_mlp_creation_comprehensive():
+def test_mlp_creation():
     """Test MLP creation function comprehensively."""
     print("🔬 Unit Test: MLP Creation...")
     
@@ -821,7 +821,7 @@ def test_mlp_creation_comprehensive():
     
     print("✅ MLP creation works correctly")
 
-def test_network_architectures_comprehensive():
+def test_network_architectures():
     """Test different network architectures comprehensively."""
     print("🔬 Unit Test: Network Architectures...")
     
@@ -846,7 +846,7 @@ def test_network_architectures_comprehensive():
     
     print("✅ Network architectures work correctly")
 
-def test_networks_comprehensive():
+def test_networks():
     """Test network comprehensive testing with real ML scenarios."""
     print("🔬 Comprehensive Test: Network Applications...")
     

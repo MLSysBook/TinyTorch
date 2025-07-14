@@ -725,7 +725,7 @@ except Exception as e:
 
 print("📈 Final Progress: Complete CNN system ready for computer vision!")
 
-def test_convolution_operation_comprehensive():
+def test_convolution_operation():
     """Test convolution operation implementation comprehensively."""
     print("🔬 Unit Test: Convolution Operation...")
     
@@ -740,7 +740,7 @@ def test_convolution_operation_comprehensive():
     
     print("✅ Convolution operation works correctly")
 
-def test_conv2d_layer_comprehensive():
+def test_conv2d_layer():
     """Test Conv2D layer implementation comprehensively."""
     print("🔬 Unit Test: Conv2D Layer...")
     
@@ -755,7 +755,7 @@ def test_conv2d_layer_comprehensive():
     
     print("✅ Conv2D layer works correctly")
 
-def test_flatten_function_comprehensive():
+def test_flatten_function():
     """Test flatten function implementation comprehensively."""
     print("🔬 Unit Test: Flatten Function...")
     
