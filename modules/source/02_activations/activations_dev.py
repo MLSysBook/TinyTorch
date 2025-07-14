@@ -178,7 +178,7 @@ class ReLU:
     Simple, fast, and effective for most applications.
     """
     
-    def forward(self, x: Tensor) -> Tensor:
+    def forward(self, x):
         """
         Apply ReLU activation: f(x) = max(0, x)
         
@@ -187,7 +187,7 @@ class ReLU:
         STEP-BY-STEP IMPLEMENTATION:
         1. For each element in the input tensor, apply max(0, element)
         2. Use NumPy's maximum function for efficient element-wise operation
-        3. Return a new Tensor with the results
+        3. Return a new tensor of the same type with the results
         4. Preserve the input tensor's shape
         
         EXAMPLE USAGE:
@@ -200,7 +200,7 @@ class ReLU:
         
         IMPLEMENTATION HINTS:
         - Use np.maximum(0, x.data) for element-wise max with 0
-        - Remember to return a new Tensor object: return Tensor(result)
+        - Return the same type as input: return type(x)(result)
         - The shape should remain the same as input
         - Don't modify the input tensor (immutable operations)
         
@@ -212,10 +212,10 @@ class ReLU:
         """
         ### BEGIN SOLUTION
         result = np.maximum(0, x.data)
-        return Tensor(result)
+        return type(x)(result)
         ### END SOLUTION
     
-    def __call__(self, x: Tensor) -> Tensor:
+    def __call__(self, x):
         """Make the class callable: relu(x) instead of relu.forward(x)"""
         return self.forward(x)
 
@@ -313,7 +313,7 @@ class Sigmoid:
     Useful for binary classification and probability outputs.
     """
     
-    def forward(self, x: Tensor) -> Tensor:
+    def forward(self, x):
         """
         Apply Sigmoid activation: f(x) = 1 / (1 + e^(-x))
         
@@ -350,10 +350,10 @@ class Sigmoid:
         # Clip to prevent overflow
         clipped_input = np.clip(-x.data, -500, 500)
         result = 1 / (1 + np.exp(clipped_input))
-        return Tensor(result)
+        return type(x)(result)
         ### END SOLUTION
     
-    def __call__(self, x: Tensor) -> Tensor:
+    def __call__(self, x):
         """Make the class callable: sigmoid(x) instead of sigmoid.forward(x)"""
         return self.forward(x)
 
@@ -496,7 +496,7 @@ class Tanh:
         ### BEGIN SOLUTION
         # Use NumPy's built-in tanh function
         result = np.tanh(x.data)
-        return Tensor(result)
+        return type(x)(result)
         ### END SOLUTION
     
     def __call__(self, x: Tensor) -> Tensor:
@@ -610,18 +610,19 @@ class Softmax:
     Essential for multi-class classification.
     """
     
-    def forward(self, x: Tensor) -> Tensor:
+    def forward(self, x):
         """
         Apply Softmax activation: f(x_i) = e^(x_i) / Σ(e^(x_j))
         
         TODO: Implement Softmax activation function.
         
         STEP-BY-STEP IMPLEMENTATION:
-        1. Subtract max value for numerical stability: x - max(x)
-        2. Compute exponentials: np.exp(x - max(x))
-        3. Compute sum of exponentials: np.sum(exp_values)
-        4. Divide each exponential by the sum: exp_values / sum
-        5. Return as new Tensor
+        1. Handle empty input case
+        2. Subtract max value for numerical stability: x - max(x)
+        3. Compute exponentials: np.exp(x - max(x))
+        4. Compute sum of exponentials: np.sum(exp_values)
+        5. Divide each exponential by the sum: exp_values / sum
+        6. Return as same tensor type as input
         
         EXAMPLE USAGE:
         ```python
@@ -633,11 +634,12 @@ class Softmax:
         ```
         
         IMPLEMENTATION HINTS:
+        - Handle empty case: if x.data.size == 0: return type(x)(x.data.copy())
         - Subtract max for numerical stability: x_shifted = x.data - np.max(x.data, axis=-1, keepdims=True)
         - Compute exponentials: exp_values = np.exp(x_shifted)
         - Sum along last axis: sum_exp = np.sum(exp_values, axis=-1, keepdims=True)
         - Divide: result = exp_values / sum_exp
-        - Return Tensor(result)
+        - Return same type as input: return type(x)(result)
         
         LEARNING CONNECTIONS:
         - This is like torch.nn.Softmax() in PyTorch
@@ -646,6 +648,10 @@ class Softmax:
         - Enables probability-based decision making
         """
         ### BEGIN SOLUTION
+        # Handle empty input
+        if x.data.size == 0:
+            return type(x)(x.data.copy())
+        
         # Subtract max for numerical stability
         x_shifted = x.data - np.max(x.data, axis=-1, keepdims=True)
         
@@ -658,10 +664,10 @@ class Softmax:
         # Divide to get probabilities
         result = exp_values / sum_exp
         
-        return Tensor(result)
+        return type(x)(result)
         ### END SOLUTION
     
-    def __call__(self, x: Tensor) -> Tensor:
+    def __call__(self, x):
         """Make the class callable: softmax(x) instead of softmax.forward(x)"""
         return self.forward(x)
 
