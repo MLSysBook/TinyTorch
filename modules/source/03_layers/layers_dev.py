@@ -424,7 +424,7 @@ class Dense:
             self.bias = None
         ### END SOLUTION
     
-    def forward(self, x: Tensor) -> Tensor:
+    def forward(self, x):
         """
         Forward pass through the Dense layer.
         
@@ -470,10 +470,10 @@ class Dense:
         if self.use_bias and self.bias is not None:
             linear_output = linear_output + self.bias.data
         
-        return Tensor(linear_output)
+        return type(x)(linear_output)
         ### END SOLUTION
     
-    def __call__(self, x: Tensor) -> Tensor:
+    def __call__(self, x):
         """Make the layer callable: layer(x) instead of layer.forward(x)"""
         return self.forward(x)
 
