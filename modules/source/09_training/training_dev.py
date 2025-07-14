@@ -1280,7 +1280,13 @@ Your training system is the foundation for:
 - **Model Deployment**: Saving, loading, and serving trained models
 - **MLOps**: Production training pipelines, monitoring, and continuous learning
 
-**Next Module**: Advanced training techniques, regularization, and production deployment!
+### 🚀 Next Steps
+1. **Export your code**: `tito export 09_training`
+2. **Test your implementation**: `tito test 09_training`  
+3. **Use your training system**: Train neural networks with confidence!
+4. **Move to Module 10**: Advanced training techniques and regularization!
+
+**Ready for Production Training?** Your training system is now ready to train neural networks for real-world applications!
 
 You've built the training engine that powers modern AI. Now let's add the advanced features that make it production-ready and capable of learning complex patterns from real-world data!
 """ 
