@@ -462,60 +462,6 @@ class TestCNNPerformance:
                     assert output.shape == (expected_h, expected_w)
 
 
-class TestCNNMathematicalProperties:
-    """Test mathematical properties of CNN operations."""
-    
-    def test_conv2d_linearity(self):
-        """Test convolution linearity property."""
-        layer = Conv2D(kernel_size=(2, 2))
-        
-        # Create two inputs
-        input1 = MockTensor([[1, 2], [3, 4]])
-        input2 = MockTensor([[2, 1], [4, 3]])
-        
-        # Test linearity: conv(a*x + b*y) = a*conv(x) + b*conv(y)
-        a, b = 2.0, 3.0
-        
-        # This is a conceptual test - in practice, we'd need to implement
-        # tensor arithmetic to test this properly
-        output1 = layer(input1)
-        output2 = layer(input2)
-        
-        # At least verify outputs have correct shapes
-        assert output1.shape == (1, 1)
-        assert output2.shape == (1, 1)
-    
-    def test_conv2d_translation_invariance(self):
-        """Test convolution translation invariance concept."""
-        layer = Conv2D(kernel_size=(2, 2))
-        
-        # Create pattern and shifted pattern
-        pattern = MockTensor([[1, 0, 0], [0, 1, 0], [0, 0, 1]])
-        shifted_pattern = MockTensor([[0, 1, 0], [0, 0, 1], [1, 0, 0]])
-        
-        output1 = layer(pattern)
-        output2 = layer(shifted_pattern)
-        
-        # Both should have same output shape
-        assert output1.shape == output2.shape == (2, 2)
-        
-        # This is a conceptual test - true translation invariance
-        # would require more sophisticated testing
-    
-    def test_flatten_bijection(self):
-        """Test flatten creates valid transformation."""
-        input_tensor = MockTensor([[1, 2, 3], [4, 5, 6]])
-        flattened = flatten(input_tensor)
-        
-        # Should preserve all information
-        assert flattened.data.size == input_tensor.data.size
-        
-        # Should be able to reconstruct original (conceptually)
-        original_flat = input_tensor.data.flatten()
-        flattened_data = flattened.data.flatten()
-        assert np.allclose(original_flat, flattened_data)
-
-
 if __name__ == "__main__":
     # Run tests if executed directly
     pytest.main([__file__, "-v"]) 

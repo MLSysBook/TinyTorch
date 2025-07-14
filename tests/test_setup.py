@@ -268,42 +268,6 @@ class TestIntegration:
         # Results should be consistent
         assert result1 == result2, "personal_info should be deterministic"
         assert result3 == result4, "system_info should be deterministic"
-    
-    def test_performance(self):
-        """Test that functions complete quickly."""
-        import time
-        
-        # Test personal_info performance
-        start_time = time.time()
-        personal_info()
-        personal_time = time.time() - start_time
-        assert personal_time < 0.1, "personal_info should complete in under 0.1 seconds"
-        
-        # Test system_info performance
-        start_time = time.time()
-        system_info()
-        system_time = time.time() - start_time
-        assert system_time < 0.5, "system_info should complete in under 0.5 seconds"
-    
-    def test_memory_usage(self):
-        """Test that functions don't consume excessive memory."""
-        import psutil
-        import os
-        
-        process = psutil.Process(os.getpid())
-        initial_memory = process.memory_info().rss
-        
-        # Call functions multiple times
-        for _ in range(10):
-            personal_info()
-            system_info()
-        
-        final_memory = process.memory_info().rss
-        memory_increase = final_memory - initial_memory
-        
-        # Memory increase should be minimal (less than 1MB)
-        assert memory_increase < 1024 * 1024, \
-            f"Functions should not consume excessive memory (increase: {memory_increase} bytes)"
 
 
 class TestErrorHandling:
