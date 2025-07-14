@@ -4,6 +4,16 @@ CLI Tools package.
 Contains utility tools used by the CLI commands.
 """
 
-# No tools currently - py_to_notebook removed in favor of Jupytext
+from .testing import (
+    ModuleTestRunner,
+    create_test_runner,
+    run_module_tests_auto,
+    run_module_tests
+)
 
-__all__ = [] 
+__all__ = [
+    'ModuleTestRunner',
+    'create_test_runner', 
+    'run_module_tests_auto',
+    'run_module_tests'
+] 

@@ -1520,6 +1520,49 @@ Congratulations! You've successfully implemented the core Tensor class for TinyT
 - **Operator overloading** makes tensor operations feel natural
 - **Broadcasting** enables flexible operations between different shapes
 - **Type safety** ensures consistent behavior across operations
+"""
+
+# %% [markdown]
+"""
+## 🧪 Module Testing
+
+Time to test your implementation! This section uses TinyTorch's standardized testing framework to ensure your implementation works correctly.
+
+**This testing section is locked** - it provides consistent feedback across all modules and cannot be modified.
+"""
+
+# %% nbgrader={"grade": false, "grade_id": "standardized-testing", "locked": true, "schema_version": 3, "solution": false, "task": false}
+# =============================================================================
+# STANDARDIZED MODULE TESTING - DO NOT MODIFY
+# This cell is locked to ensure consistent testing across all TinyTorch modules
+# =============================================================================
+
+if __name__ == "__main__":
+    from tito.tools.testing import run_module_tests_auto
+    
+    # Automatically discover and run all tests in this module
+    success = run_module_tests_auto("Tensor")
+
+# %% [markdown]
+"""
+## 🎯 Module Summary
+
+Congratulations! You've successfully implemented the core Tensor class for TinyTorch:
+
+### What You've Accomplished
+✅ **Tensor Creation**: Handle scalars, vectors, matrices, and higher-dimensional arrays  
+✅ **Data Types**: Proper dtype handling with auto-detection and conversion  
+✅ **Properties**: Shape, size, dtype, and data access  
+✅ **Arithmetic**: Addition, multiplication, subtraction, division  
+✅ **Operators**: Natural Python syntax with `+`, `-`, `*`, `/`  
+✅ **Broadcasting**: Automatic shape compatibility like NumPy  
+
+### Key Concepts You've Learned
+- **Tensors** are the fundamental data structure for ML systems
+- **NumPy backend** provides efficient computation with ML-friendly API
+- **Operator overloading** makes tensor operations feel natural
+- **Broadcasting** enables flexible operations between different shapes
+- **Type safety** ensures consistent behavior across operations
 
 ### Next Steps
 1. **Export your code**: `tito package nbdev --export 01_tensor`

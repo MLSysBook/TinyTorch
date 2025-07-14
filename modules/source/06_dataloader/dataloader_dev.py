@@ -1042,4 +1042,98 @@ Congratulations! You've successfully implemented the core components of data loa
 4. **Explore advanced topics**: Data augmentation, distributed loading, streaming datasets!
 
 **Ready for the next challenge?** Let's build training loops and optimizers to complete the ML pipeline!
-""" 
+"""
+
+def test_dataset_interface_comprehensive():
+    """Test Dataset abstract interface implementation comprehensively."""
+    print("🔬 Unit Test: Dataset Interface...")
+    
+    # Test TestDataset implementation
+    dataset = TestDataset(size=5)
+    
+    # Test basic interface
+    assert len(dataset) == 5, "Dataset should have correct length"
+    
+    # Test data access
+    sample, label = dataset[0]
+    assert isinstance(sample, Tensor), "Sample should be Tensor"
+    assert isinstance(label, Tensor), "Label should be Tensor"
+    
+    print("✅ Dataset interface works correctly")
+
+def test_dataloader_comprehensive():
+    """Test DataLoader implementation comprehensively."""
+    print("🔬 Unit Test: DataLoader...")
+    
+    # Test DataLoader with TestDataset
+    dataset = TestDataset(size=10)
+    loader = DataLoader(dataset, batch_size=3, shuffle=False)
+    
+    # Test iteration
+    batches = list(loader)
+    assert len(batches) >= 3, "Should have at least 3 batches"
+    
+    # Test batch shapes
+    batch_data, batch_labels = batches[0]
+    assert batch_data.shape[0] <= 3, "Batch size should be <= 3"
+    assert batch_labels.shape[0] <= 3, "Batch labels should match data"
+    
+    print("✅ DataLoader works correctly")
+
+def test_simple_dataset_comprehensive():
+    """Test SimpleDataset implementation comprehensively."""
+    print("🔬 Unit Test: SimpleDataset...")
+    
+    # Test SimpleDataset
+    dataset = SimpleDataset(size=100, num_features=4, num_classes=3)
+    
+    # Test properties
+    assert len(dataset) == 100, "Dataset should have correct size"
+    assert dataset.get_num_classes() == 3, "Should have correct number of classes"
+    
+    # Test data access
+    sample, label = dataset[0]
+    assert sample.shape == (4,), "Sample should have correct features"
+    assert 0 <= label.data < 3, "Label should be valid class"
+    
+    print("✅ SimpleDataset works correctly")
+
+def test_dataloader_pipeline_integration():
+    """Test complete data pipeline integration."""
+    print("🔬 Integration Test: Data Pipeline...")
+    
+    # Test complete pipeline
+    dataset = SimpleDataset(size=50, num_features=10, num_classes=5)
+    loader = DataLoader(dataset, batch_size=8, shuffle=True)
+    
+    total_samples = 0
+    for batch_data, batch_labels in loader:
+        assert isinstance(batch_data, Tensor), "Batch data should be Tensor"
+        assert isinstance(batch_labels, Tensor), "Batch labels should be Tensor"
+        assert batch_data.shape[1] == 10, "Features should be correct"
+        total_samples += batch_data.shape[0]
+    
+    assert total_samples == 50, "Should process all samples"
+    
+    print("✅ Data pipeline integration works correctly")
+
+# %% [markdown]
+"""
+## 🧪 Module Testing
+
+Time to test your implementation! This section uses TinyTorch's standardized testing framework to ensure your implementation works correctly.
+
+**This testing section is locked** - it provides consistent feedback across all modules and cannot be modified.
+"""
+
+# %% nbgrader={"grade": false, "grade_id": "standardized-testing", "locked": true, "schema_version": 3, "solution": false, "task": false}
+# =============================================================================
+# STANDARDIZED MODULE TESTING - DO NOT MODIFY
+# This cell is locked to ensure consistent testing across all TinyTorch modules
+# =============================================================================
+
+if __name__ == "__main__":
+    from tito.tools.testing import run_module_tests_auto
+    
+    # Automatically discover and run all tests in this module
+    success = run_module_tests_auto("DataLoader") 

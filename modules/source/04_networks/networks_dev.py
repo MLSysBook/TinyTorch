@@ -767,3 +767,140 @@ def MLP(input_size: int, hidden_size: int, output_size: int,
     return Sequential(layers)
 
 # %% [markdown] 
+
+def test_sequential_networks_comprehensive():
+    """Test Sequential network implementation comprehensively."""
+    print("🔬 Unit Test: Sequential Networks...")
+    
+    # Test basic Sequential network
+    net = Sequential([
+        Dense(input_size=3, output_size=4),
+        ReLU(),
+        Dense(input_size=4, output_size=2),
+        Sigmoid()
+    ])
+    
+    x = Tensor([[1.0, 2.0, 3.0]])
+    y = net(x)
+    
+    assert y.shape == (1, 2), "Sequential network should produce correct output shape"
+    assert np.all(y.data > 0), "Sigmoid output should be positive"
+    assert np.all(y.data < 1), "Sigmoid output should be less than 1"
+    
+    print("✅ Sequential networks work correctly")
+
+def test_mlp_creation_comprehensive():
+    """Test MLP creation function comprehensively."""
+    print("🔬 Unit Test: MLP Creation...")
+    
+    # Test different MLP architectures
+    shallow = create_mlp(input_size=4, hidden_sizes=[5], output_size=1)
+    deep = create_mlp(input_size=4, hidden_sizes=[8, 6, 4], output_size=2)
+    
+    x = Tensor([[1.0, 2.0, 3.0, 4.0]])
+    
+    # Test shallow network
+    y_shallow = shallow(x)
+    assert y_shallow.shape == (1, 1), "Shallow MLP should work"
+    
+    # Test deep network  
+    y_deep = deep(x)
+    assert y_deep.shape == (1, 2), "Deep MLP should work"
+    
+    print("✅ MLP creation works correctly")
+
+def test_network_architectures_comprehensive():
+    """Test different network architectures comprehensively."""
+    print("🔬 Unit Test: Network Architectures...")
+    
+    # Test different activation functions
+    relu_net = create_mlp(input_size=3, hidden_sizes=[4], output_size=1, activation=ReLU)
+    tanh_net = create_mlp(input_size=3, hidden_sizes=[4], output_size=1, activation=Tanh)
+    
+    # Test multi-class classifier
+    classifier = create_mlp(input_size=3, hidden_sizes=[4], output_size=3, output_activation=Softmax)
+    
+    x = Tensor([[1.0, 2.0, 3.0]])
+    
+    # Test all architectures
+    y_relu = relu_net(x)
+    y_tanh = tanh_net(x)
+    y_multi = classifier(x)
+    
+    assert y_relu.shape == (1, 1), "ReLU network should work"
+    assert y_tanh.shape == (1, 1), "Tanh network should work"
+    assert y_multi.shape == (1, 3), "Multi-class classifier should work"
+    assert abs(np.sum(y_multi.data) - 1.0) < 1e-6, "Softmax outputs should sum to 1"
+    
+    print("✅ Network architectures work correctly")
+
+def test_networks_integration():
+    """Test network integration with real ML scenarios."""
+    print("🔬 Integration Test: Network Applications...")
+    
+    # Test multi-class classification
+    iris_classifier = create_mlp(input_size=4, hidden_sizes=[8, 6], output_size=3, output_activation=Softmax)
+    iris_samples = Tensor([[5.1, 3.5, 1.4, 0.2], [7.0, 3.2, 4.7, 1.4], [6.3, 3.3, 6.0, 2.5]])
+    iris_predictions = iris_classifier(iris_samples)
+    
+    assert iris_predictions.shape == (3, 3), "Iris classifier should work"
+    row_sums = np.sum(iris_predictions.data, axis=1)
+    assert np.allclose(row_sums, 1.0), "Predictions should sum to 1"
+    
+    # Test deep network
+    deep_network = create_mlp(input_size=10, hidden_sizes=[20, 15, 10, 5], output_size=1)
+    batch_data = Tensor(np.random.randn(32, 10))
+    deep_predictions = deep_network(batch_data)
+    
+    assert deep_predictions.shape == (32, 1), "Deep network should handle batches"
+    assert not np.any(np.isnan(deep_predictions.data)), "No NaN values allowed"
+    
+    print("✅ Network integration works correctly")
+
+# %% [markdown]
+"""
+## 🧪 Module Testing
+
+Time to test your implementation! This section uses TinyTorch's standardized testing framework to ensure your implementation works correctly.
+
+**This testing section is locked** - it provides consistent feedback across all modules and cannot be modified.
+"""
+
+# %% nbgrader={"grade": false, "grade_id": "standardized-testing", "locked": true, "schema_version": 3, "solution": false, "task": false}
+# =============================================================================
+# STANDARDIZED MODULE TESTING - DO NOT MODIFY
+# This cell is locked to ensure consistent testing across all TinyTorch modules
+# =============================================================================
+
+if __name__ == "__main__":
+    from tito.tools.testing import run_module_tests_auto
+    
+    # Automatically discover and run all tests in this module
+    success = run_module_tests_auto("Networks")
+
+# %% [markdown]
+"""
+## 🎯 Module Summary: Neural Network Architectures Mastery!
+
+Congratulations! You've successfully implemented complete neural network architectures:
+
+### What You've Accomplished
+✅ **Sequential Networks**: Chained layers for complex transformations
+✅ **MLP Creation**: Multi-layer perceptrons with flexible architectures
+✅ **Network Architectures**: Different activation patterns and output types
+✅ **Integration**: Real-world applications like classification and regression
+
+### Key Concepts You've Learned
+- **Sequential Processing**: How layers chain together for complex functions
+- **MLP Design**: Multi-layer perceptrons as universal function approximators  
+- **Architecture Choices**: How depth, width, and activations affect learning
+- **Real Applications**: Classification, regression, and feature extraction
+
+### Next Steps
+1. **Export your code**: `tito package nbdev --export 04_networks`
+2. **Test your implementation**: `tito test 04_networks`
+3. **Build complete models**: Combine with training for full ML pipelines
+4. **Move to Module 5**: Add convolutional layers for image processing!
+
+**Ready for CNNs?** Your network foundations are now ready for specialized architectures!
+""" 

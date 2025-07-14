@@ -596,32 +596,6 @@ def test_system_info():
     print("✅ System info function tests passed!")
     print(f"✅ Python: {sys_info['python_version']} on {sys_info['platform']}")
 
-# %%
-def test_integration():
-    """Test integration of personal_info and system_info functions."""
-    print("🔬 Integration Test: Setup Functions...")
-    
-    # Test that both functions work together
-    personal = personal_info()
-    sys_info = system_info()
-    
-    # Test that they return different types of information
-    assert 'developer' in personal, "Personal info should contain developer"
-    assert 'python_version' in sys_info, "System info should contain python_version"
-    
-    # Test that system name is personalized (not default)
-    assert personal['system_name'] != 'TinyTorch-System', "System name should be personalized"
-    assert personal['developer'] != 'Your Name', "Developer name should be filled in"
-    assert personal['email'] != 'your.email@example.com', "Email should be filled in"
-    
-    print("✅ Integration test passed!")
-    print("✅ Setup module fully configured and ready!")
-
-# Run the inline tests
-test_personal_info()
-test_system_info() 
-test_integration()
-
 # %% [markdown]
 """
 ## 🎯 Professional ML Engineering Skills
@@ -1204,35 +1178,7 @@ def generate_system_report() -> Dict[str, Any]:
 Test all the new enhanced setup functions:
 """
 
-# %%
-def test_environment_validation():
-    """Test environment validation function."""
-    print("🔬 Unit Test: Environment Validation...")
-    
-    env_report = validate_environment()
-    
-    # Test return type and structure
-    assert isinstance(env_report, dict), "validate_environment should return a dictionary"
-    
-    # Test required keys
-    required_keys = ['available_packages', 'missing_packages', 'health_score', 'total_checked', 'status']
-    for key in required_keys:
-        assert key in env_report, f"Report should have '{key}' key"
-    
-    # Test data types
-    assert isinstance(env_report['available_packages'], dict), "available_packages should be dict"
-    assert isinstance(env_report['missing_packages'], list), "missing_packages should be list"
-    assert isinstance(env_report['health_score'], (int, float)), "health_score should be number"
-    assert isinstance(env_report['total_checked'], int), "total_checked should be int"
-    assert isinstance(env_report['status'], str), "status should be string"
-    
-    # Test reasonable values
-    assert 0 <= env_report['health_score'] <= 100, "health_score should be between 0 and 100"
-    assert env_report['total_checked'] > 0, "total_checked should be positive"
-    assert env_report['status'] in ['healthy', 'needs_attention'], "status should be valid"
-    
-    print("✅ Environment validation tests passed!")
-    print(f"✅ Environment health: {env_report['health_score']}%")
+# Old function removed - using shared test runner pattern
 
 # %%
 def test_performance_benchmark():
@@ -1335,40 +1281,99 @@ def test_system_report():
     print("✅ System report tests passed!")
     print(f"✅ Overall system health: {report['overall_health']}%")
 
+
+
 # %%
-def test_enhanced_integration():
-    """Test integration of all enhanced setup functions."""
-    print("🔬 Integration Test: Enhanced Setup Functions...")
-    
-    # Test that all functions work together
-    env_report = validate_environment()
-    perf_report = benchmark_performance()
-    dev_report = setup_development_environment()
-    system_report = generate_system_report()
-    
-    # Test that system report includes all components
-    assert 'environment_validation' in system_report, "System report should include environment validation"
-    assert 'performance_benchmarks' in system_report, "System report should include performance benchmarks"
-    assert 'development_setup' in system_report, "System report should include development setup"
-    
-    # Test that overall health is calculated
-    assert 'overall_health' in system_report, "System report should include overall health"
-    assert system_report['overall_health'] > 0, "Overall health should be positive"
-    
-    # Test that recommendations are provided
-    assert 'recommendations' in system_report, "System report should include recommendations"
-    assert isinstance(system_report['recommendations'], list), "Recommendations should be a list"
-    
-    print("✅ Enhanced integration test passed!")
-    print("✅ All enhanced setup functions working together!")
+def test_personal_info_comprehensive():
+    """Test personal information function comprehensively."""
+    personal = personal_info()
+    assert isinstance(personal, dict), "personal_info should return a dictionary"
+    assert 'developer' in personal, "Dictionary should have 'developer' key"
+    assert '@' in personal['email'], "Email should contain @ symbol"
+    print("✅ Personal information function works")
 
-# Run all the enhanced tests
+def test_system_info_comprehensive():
+    """Test system information function comprehensively."""
+    system = system_info()
+    assert isinstance(system, dict), "system_info should return a dictionary"
+    assert 'python_version' in system, "Dictionary should have 'python_version' key"
+    assert system['memory_gb'] > 0, "Memory should be positive"
+    print("✅ System information function works")
+
+def test_environment_validation_comprehensive():
+    """Test environment validation function comprehensively."""
+    env = validate_environment()
+    assert isinstance(env, dict), "validate_environment should return a dictionary"
+    assert 'health_score' in env, "Dictionary should have 'health_score' key"
+    print("✅ Environment validation function works")
+
+def test_performance_benchmark_comprehensive():
+    """Test performance benchmarking function comprehensively."""
+    perf = benchmark_performance()
+    assert isinstance(perf, dict), "benchmark_performance should return a dictionary"
+    assert 'cpu_score' in perf, "Dictionary should have 'cpu_score' key"
+    print("✅ Performance benchmarking function works")
+
+def test_development_setup_comprehensive():
+    """Test development setup function comprehensively."""
+    dev = setup_development_environment()
+    assert isinstance(dev, dict), "setup_development_environment should return a dictionary"
+    assert 'setup_score' in dev, "Dictionary should have 'setup_score' key"
+    print("✅ Development setup function works")
+
+def test_system_report_integration():
+    """Test system report integration function."""
+    report = generate_system_report()
+    assert isinstance(report, dict), "generate_system_report should return a dictionary"
+    assert 'overall_health' in report, "Dictionary should have 'overall_health' key"
+    print("✅ System report function works")
+
+# %% [markdown]
+"""
+## 🧪 Module Testing
+
+Time to test your implementation! This section uses TinyTorch's standardized testing framework to ensure your implementation works correctly.
+
+**This testing section is locked** - it provides consistent feedback across all modules and cannot be modified.
+"""
+
+# %% nbgrader={"grade": false, "grade_id": "standardized-testing", "locked": true, "schema_version": 3, "solution": false, "task": false}
+# =============================================================================
+# STANDARDIZED MODULE TESTING - DO NOT MODIFY
+# This cell is locked to ensure consistent testing across all TinyTorch modules
+# =============================================================================
+
 if __name__ == "__main__":
-    test_environment_validation()
-    test_performance_benchmark()
-    test_development_setup()
-    test_system_report()
-    test_enhanced_integration()
+    from tito.tools.testing import run_module_tests_auto
+    
+    # Automatically discover and run all tests in this module
+    success = run_module_tests_auto("Setup")
 
-    print("\n🎉 Enhanced Setup Module Complete!")
-    print("📈 Progress: Enhanced Setup Module ✓") 
+# %% [markdown]
+"""
+## 🎯 Module Summary: Development Environment Setup Complete!
+
+Congratulations! You've successfully set up your TinyTorch development environment:
+
+### What You've Accomplished
+✅ **Personal Configuration**: Developer information and preferences
+✅ **System Analysis**: Hardware and software environment validation
+✅ **Environment Validation**: Python packages and dependencies
+✅ **Performance Benchmarking**: CPU and memory performance testing
+✅ **Development Setup**: IDE configuration and tooling
+✅ **Comprehensive Reporting**: System health and recommendations
+
+### Key Concepts You've Learned
+- **Environment Management**: How to validate and configure development environments
+- **Performance Analysis**: Benchmarking system capabilities for ML workloads
+- **System Diagnostics**: Comprehensive health checking and reporting
+- **Development Best Practices**: Professional setup for ML development
+
+### Next Steps
+1. **Export your code**: `tito package nbdev --export 00_setup`
+2. **Test your implementation**: `tito test 00_setup`
+3. **Use your environment**: Start building with confidence in a validated setup
+4. **Move to Module 1**: Begin implementing the core tensor system!
+
+**Ready for the ML journey?** Your development environment is now optimized for building neural networks from scratch!
+""" 

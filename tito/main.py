@@ -13,7 +13,7 @@ import argparse
 import logging
 import sys
 from pathlib import Path
-from typing import Dict, Type
+from typing import Dict, Type, Optional, List
 
 from .core.config import CLIConfig
 from .core.console import get_console, print_banner, print_error
@@ -61,6 +61,7 @@ class TinyTorchCLI:
             'nbgrader': NBGraderCommand,
             # Convenience commands
             'export': ExportCommand,
+            'test': TestCommand,
         }
     
     def create_parser(self) -> argparse.ArgumentParser:
@@ -135,7 +136,7 @@ Examples:
         
         return True
     
-    def run(self, args: list = None) -> int:
+    def run(self, args: Optional[List[str]] = None) -> int:
         """Run the CLI application."""
         try:
             parser = self.create_parser()

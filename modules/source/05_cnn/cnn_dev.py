@@ -724,6 +724,102 @@ except Exception as e:
 
 print("📈 Final Progress: Complete CNN system ready for computer vision!")
 
+def test_convolution_operation_comprehensive():
+    """Test convolution operation implementation comprehensively."""
+    print("🔬 Unit Test: Convolution Operation...")
+    
+    # Test basic convolution
+    input_data = np.array([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
+    kernel = np.array([[1, 0], [0, 1]])
+    result = conv2d_naive(input_data, kernel)
+    
+    assert result.shape == (2, 2), "Convolution should produce correct output shape"
+    expected = np.array([[6, 8], [12, 14]])
+    assert np.array_equal(result, expected), "Convolution should produce correct values"
+    
+    print("✅ Convolution operation works correctly")
+
+def test_conv2d_layer_comprehensive():
+    """Test Conv2D layer implementation comprehensively."""
+    print("🔬 Unit Test: Conv2D Layer...")
+    
+    # Test Conv2D layer
+    conv = Conv2D(kernel_size=(3, 3))
+    input_tensor = Tensor(np.random.randn(6, 6))
+    output = conv(input_tensor)
+    
+    assert output.shape == (4, 4), "Conv2D should produce correct output shape"
+    assert hasattr(conv, 'kernel'), "Conv2D should have kernel attribute"
+    assert conv.kernel.shape == (3, 3), "Kernel should have correct shape"
+    
+    print("✅ Conv2D layer works correctly")
+
+def test_flatten_function_comprehensive():
+    """Test flatten function implementation comprehensively."""
+    print("🔬 Unit Test: Flatten Function...")
+    
+    # Test flatten function
+    input_2d = Tensor([[1, 2], [3, 4]])
+    flattened = flatten(input_2d)
+    
+    assert flattened.shape == (4,), "Flatten should produce 1D output"
+    expected = np.array([1, 2, 3, 4])
+    assert np.array_equal(flattened.data, expected), "Flatten should preserve values"
+    
+    print("✅ Flatten function works correctly")
+
+def test_cnn_pipeline_integration():
+    """Test CNN pipeline integration with complete workflow."""
+    print("🔬 Integration Test: CNN Pipeline...")
+    
+    # Test complete CNN pipeline
+    input_image = Tensor(np.random.randn(8, 8))
+    
+    # Build CNN pipeline
+    conv = Conv2D(kernel_size=(3, 3))
+    conv_output = conv(input_image)
+    flattened = flatten(conv_output)
+    
+    # Test shapes
+    assert conv_output.shape == (6, 6), "Conv output should be correct"
+    assert flattened.shape == (36,), "Flatten output should be correct"
+    
+    # Test with activation and dense layers
+    from tinytorch.core.activations import ReLU
+    from tinytorch.core.layers import Dense
+    
+    relu = ReLU()
+    dense = Dense(input_size=36, output_size=10)
+    
+    activated = relu(conv_output)
+    final_flat = flatten(activated)
+    predictions = dense(final_flat)
+    
+    assert predictions.shape == (10,), "Final predictions should be correct shape"
+    
+    print("✅ CNN pipeline integration works correctly")
+
+# %% [markdown]
+"""
+## 🧪 Module Testing
+
+Time to test your implementation! This section uses TinyTorch's standardized testing framework to ensure your implementation works correctly.
+
+**This testing section is locked** - it provides consistent feedback across all modules and cannot be modified.
+"""
+
+# %% nbgrader={"grade": false, "grade_id": "standardized-testing", "locked": true, "schema_version": 3, "solution": false, "task": false}
+# =============================================================================
+# STANDARDIZED MODULE TESTING - DO NOT MODIFY
+# This cell is locked to ensure consistent testing across all TinyTorch modules
+# =============================================================================
+
+if __name__ == "__main__":
+    from tito.tools.testing import run_module_tests_auto
+    
+    # Automatically discover and run all tests in this module
+    success = run_module_tests_auto("CNN")
+
 # %% [markdown]
 """
 ## 🎯 Module Summary
