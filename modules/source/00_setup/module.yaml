@@ -8,7 +8,7 @@ description: "Development environment setup and basic TinyTorch functionality"
 # Dependencies - Used by CLI for module ordering and prerequisites
 dependencies:
   prerequisites: []
-  enables: ["tensor", "activations", "layers"]
+  enables: ["tensor", "activations", "layers"] 
 
 # Package Export - What gets built into tinytorch package
 exports_to: "tinytorch.core.setup"
