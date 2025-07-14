@@ -1,0 +1,77 @@
+# TinyTorch Module Metadata
+# Essential system information for CLI tools and build systems
+
+name: "11_kernels"
+title: "Kernels - Hardware-Aware Optimization"
+description: "Custom operations, performance optimization, and hardware-aware computing for ML systems"
+version: "1.0.0"
+author: "TinyTorch Team"
+
+# Dependencies - Used by CLI for module ordering and prerequisites
+dependencies:
+  prerequisites: [
+    "00_setup", "01_tensor", "02_activations", "03_layers", 
+    "04_networks", "05_cnn", "06_dataloader", "07_autograd", 
+    "08_optimizers", "09_training", "10_compression"
+  ]
+  enables: ["12_benchmarking", "13_mlops"]
+
+# Package Export - What gets built into tinytorch package
+exports_to: "tinytorch.core.kernels"
+
+# File Structure - What files exist in this module
+files:
+  dev_file: "kernels_dev.py"
+  test_file: "tests/test_kernels.py"
+  readme: "README.md"
+  benchmark_dir: "benchmarks/"
+
+# Components - What's implemented in this module
+components:
+  # Custom Operations
+  - "matmul_custom"
+  - "relu_custom"
+  - "conv2d_custom"
+  
+  # Optimized Implementations
+  - "matmul_vectorized"
+  - "matmul_cache_optimized"
+  - "matmul_parallel"
+  
+  # Compressed Model Kernels
+  - "quantized_matmul"
+  - "sparse_matmul"
+  - "pruned_conv2d"
+  
+  # Performance Tools
+  - "KernelProfiler"
+  - "PerformanceBenchmark"
+  - "HardwareProfiler"
+
+# Learning Objectives - What students will achieve
+learning_objectives:
+  - "Implement custom ML operations beyond NumPy"
+  - "Apply SIMD vectorization and CPU optimization"
+  - "Optimize memory layout and cache efficiency"
+  - "Understand GPU-style parallel computing"
+  - "Build performance profiling tools"
+  - "Create hardware-optimized compressed model operations"
+
+# Educational Approach
+pedagogy:
+  framework: "Build → Use → Optimize"
+  difficulty: "Expert"
+  time_estimate: "8-10 hours"
+  
+# Integration Points - How this connects to other modules
+integration:
+  builds_on: "10_compression"  # Extends compression with hardware optimization
+  enables: "12_benchmarking"   # Provides optimized kernels for benchmarking
+  connects_to: "13_mlops"      # Hardware optimization for production deployment
+
+# Testing Strategy
+testing:
+  inline_tests: true
+  performance_tests: true
+  integration_tests: true
+  benchmark_tests: true 
