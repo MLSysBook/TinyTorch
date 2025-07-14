@@ -361,7 +361,7 @@ class CompressionMetrics:
         }
 
 # %% nbgrader={"grade": false, "grade_id": "test-compression-metrics", "locked": false, "schema_version": 3, "solution": false, "task": false}
-def test_compression_metrics_comprehensive():
+def test_compression_metrics():
     """
     ### 🧪 Unit Test: CompressionMetrics
     
@@ -398,7 +398,7 @@ def test_compression_metrics_comprehensive():
     print()
 
 # Run the test
-test_compression_metrics_comprehensive() 
+test_compression_metrics() 
 
 # %% [markdown]
 """
@@ -575,7 +575,7 @@ def calculate_sparsity(layer: Dense) -> float:
     ### END SOLUTION 
 
 # %% nbgrader={"grade": false, "grade_id": "test-pruning", "locked": false, "schema_version": 3, "solution": false, "task": false}
-def test_magnitude_pruning_comprehensive():
+def test_magnitude_pruning():
     """
     ### 🧪 Unit Test: Magnitude-Based Pruning
     
@@ -631,7 +631,7 @@ def test_magnitude_pruning_comprehensive():
     print()
 
 # Run the test
-test_magnitude_pruning_comprehensive() 
+test_magnitude_pruning() 
 
 # %% [markdown]
 """
@@ -769,7 +769,7 @@ def quantize_layer_weights(layer: Dense, bits: int = 8) -> Tuple[Dense, Dict[str
     ### END SOLUTION 
 
 # %% nbgrader={"grade": false, "grade_id": "test-quantization", "locked": false, "schema_version": 3, "solution": false, "task": false}
-def test_quantization_comprehensive():
+def test_quantization():
     """
     ### 🧪 Unit Test: Quantization
     
@@ -826,7 +826,7 @@ def test_quantization_comprehensive():
     print()
 
 # Run the test
-test_quantization_comprehensive() 
+test_quantization() 
 
 # %% [markdown]
 """
@@ -993,7 +993,7 @@ class DistillationLoss:
         return -np.mean(np.sum(labels * np.log(probs + 1e-10), axis=-1)) 
 
 # %% nbgrader={"grade": false, "grade_id": "test-distillation", "locked": false, "schema_version": 3, "solution": false, "task": false}
-def test_distillation_comprehensive():
+def test_distillation():
     """
     ### 🧪 Unit Test: Knowledge Distillation
     
@@ -1055,7 +1055,7 @@ def test_distillation_comprehensive():
     print()
 
 # Run the test
-test_distillation_comprehensive() 
+test_distillation() 
 
 # %% [markdown]
 """
@@ -1284,7 +1284,7 @@ def prune_layer_neurons(layer: Dense, keep_ratio: float = 0.7,
     ### END SOLUTION 
 
 # %% nbgrader={"grade": false, "grade_id": "test-structured-pruning", "locked": false, "schema_version": 3, "solution": false, "task": false}
-def test_structured_pruning_comprehensive():
+def test_structured_pruning():
     """
     ### 🧪 Unit Test: Structured Pruning
     
@@ -1345,7 +1345,7 @@ def test_structured_pruning_comprehensive():
     print()
 
 # Run the test
-test_structured_pruning_comprehensive() 
+test_structured_pruning() 
 
 # %% [markdown]
 """
