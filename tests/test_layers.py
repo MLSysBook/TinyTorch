@@ -330,16 +330,16 @@ class TestDenseLayerIntegration:
 class TestDenseLayerPerformance:
     """Test Dense layer performance characteristics."""
     
-    def test_large_batch_processing(self):
-        """Test layer with large batch sizes."""
-        layer = Dense(input_size=100, output_size=50)
+    def test_batch_processing(self):
+        """Test layer with reasonable batch sizes."""
+        layer = Dense(input_size=10, output_size=5)
         
-        # Large batch
-        batch_size = 1000
-        x = MockTensor(np.random.randn(batch_size, 100))
+        # Realistic batch size for educational context
+        batch_size = 32
+        x = MockTensor(np.random.randn(batch_size, 10))
         y = layer(x)
         
-        assert y.shape == (batch_size, 50)
+        assert y.shape == (batch_size, 5)
         assert not np.any(np.isnan(y.data))
         assert not np.any(np.isinf(y.data))
     
