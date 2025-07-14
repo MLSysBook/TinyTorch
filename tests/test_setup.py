@@ -247,13 +247,15 @@ class TestIntegration:
         
         # Test personal_info signature
         sig = inspect.signature(personal_info)
-        assert 'Dict[str, str]' in str(sig.return_annotation), \
-            "personal_info should return Dict[str, str]"
+        sig_str = str(sig.return_annotation)
+        assert 'Dict[str, str]' in sig_str or 'typing.Dict[str, str]' in sig_str, \
+            f"personal_info should return Dict[str, str], got {sig_str}"
         
         # Test system_info signature
         sig = inspect.signature(system_info)
-        assert 'Dict[str, Any]' in str(sig.return_annotation), \
-            "system_info should return Dict[str, Any]"
+        sig_str = str(sig.return_annotation)
+        assert 'Dict[str, Any]' in sig_str or 'typing.Dict[str, typing.Any]' in sig_str, \
+            f"system_info should return Dict[str, Any], got {sig_str}"
     
     def test_no_side_effects(self):
         """Test that functions don't have side effects."""
