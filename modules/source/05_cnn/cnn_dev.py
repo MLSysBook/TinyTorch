@@ -345,7 +345,7 @@ class Conv2D:
         self.kernel = np.random.randn(kH, kW).astype(np.float32) * 0.1
         ### END SOLUTION
     
-    def forward(self, x: Tensor) -> Tensor:
+    def forward(self, x):
         """
         Forward pass: apply convolution to input tensor.
         
@@ -375,10 +375,10 @@ class Conv2D:
         ### BEGIN SOLUTION
         # Apply convolution using naive implementation
         result = conv2d_naive(x.data, self.kernel)
-        return Tensor(result)
+        return type(x)(result)
         ### END SOLUTION
     
-    def __call__(self, x: Tensor) -> Tensor:
+    def __call__(self, x):
         """Make layer callable: layer(x) same as layer.forward(x)"""
         return self.forward(x)
 
@@ -469,7 +469,7 @@ Conv2D → ReLU → Conv2D → ReLU → Flatten → Dense → Output
 
 # %% nbgrader={"grade": false, "grade_id": "flatten-function", "locked": false, "schema_version": 3, "solution": true, "task": false}
 #| export
-def flatten(x: Tensor) -> Tensor:
+def flatten(x):
     """
     Flatten a 2D tensor to 1D (for connecting to Dense layers).
     
@@ -500,7 +500,7 @@ def flatten(x: Tensor) -> Tensor:
     # Flatten the tensor and add batch dimension
     flattened = x.data.flatten()
     result = flattened[None, :]  # Add batch dimension
-    return Tensor(result)
+    return type(x)(result)
     ### END SOLUTION
 
 # %% [markdown]
