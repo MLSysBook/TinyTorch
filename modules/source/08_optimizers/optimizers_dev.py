@@ -313,8 +313,7 @@ def test_gradient_descent_step_comprehensive():
     print("   Skips updates when gradient is None")
     print("📈 Progress: Gradient Descent Step ✓")
 
-# Run the test
-    test_gradient_descent_step_comprehensive()
+# Test function is called by auto-discovery system
 
 # %% [markdown]
 """
