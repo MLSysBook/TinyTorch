@@ -762,8 +762,8 @@ def test_flatten_function_comprehensive():
     input_2d = Tensor([[1, 2], [3, 4]])
     flattened = flatten(input_2d)
     
-    assert flattened.shape == (4,), "Flatten should produce 1D output"
-    expected = np.array([1, 2, 3, 4])
+    assert flattened.shape == (1, 4), "Flatten should produce output with batch dimension"
+    expected = np.array([[1, 2, 3, 4]])
     assert np.array_equal(flattened.data, expected), "Flatten should preserve values"
     
     print("✅ Flatten function works correctly")
@@ -782,7 +782,7 @@ def test_cnn_pipeline_integration():
     
     # Test shapes
     assert conv_output.shape == (6, 6), "Conv output should be correct"
-    assert flattened.shape == (36,), "Flatten output should be correct"
+    assert flattened.shape == (1, 36), "Flatten output should be correct"
     
     # Test with activation and dense layers
     from tinytorch.core.activations import ReLU
@@ -795,7 +795,7 @@ def test_cnn_pipeline_integration():
     final_flat = flatten(activated)
     predictions = dense(final_flat)
     
-    assert predictions.shape == (10,), "Final predictions should be correct shape"
+    assert predictions.shape == (1, 10), "Final predictions should be correct shape"
     
     print("✅ CNN pipeline integration works correctly")
 
