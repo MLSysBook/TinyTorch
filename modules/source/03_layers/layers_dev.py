@@ -256,7 +256,7 @@ Once you implement the `matmul_naive` function above, run this cell to test it:
 """
 
 # %% nbgrader={"grade": true, "grade_id": "test-matmul-immediate", "locked": true, "points": 10, "schema_version": 3, "solution": false, "task": false}
-def test_matrix_multiplication():
+def test_matrix_multiplication_comprehensive():
     """Test matrix multiplication implementation"""
     print("🔬 Unit Test: Matrix Multiplication...")
 
@@ -305,7 +305,7 @@ def test_matrix_multiplication():
     print(f"✅ Proper error handling for incompatible shapes")
 
 # Run the test
-test_matrix_multiplication()
+test_matrix_multiplication_comprehensive()
 
 # %% [markdown]
 """
@@ -485,7 +485,7 @@ Once you implement the Dense layer above, run this cell to test it:
 """
 
 # %% nbgrader={"grade": true, "grade_id": "test-dense-layer", "locked": true, "points": 15, "schema_version": 3, "solution": false, "task": false}
-def test_dense_layer():
+def test_dense_layer_comprehensive():
     """Test Dense layer implementation"""
     print("🔬 Unit Test: Dense Layer...")
     
@@ -546,7 +546,7 @@ def test_dense_layer():
     print(f"✅ Naive matrix multiplication option works")
 
 # Run the test
-test_dense_layer()
+test_dense_layer_comprehensive()
 
 # %% [markdown]
 """
@@ -652,6 +652,27 @@ def test_layer_activation_integration():
 
 # Run the test
 test_layer_activation_integration()
+
+# %% [markdown]
+"""
+## 🧪 Module Testing
+
+Time to test your implementation! This section uses TinyTorch's standardized testing framework to ensure your implementation works correctly.
+
+**This testing section is locked** - it provides consistent feedback across all modules and cannot be modified.
+"""
+
+# %% nbgrader={"grade": false, "grade_id": "standardized-testing", "locked": true, "schema_version": 3, "solution": false, "task": false}
+# =============================================================================
+# STANDARDIZED MODULE TESTING - DO NOT MODIFY
+# This cell is locked to ensure consistent testing across all TinyTorch modules
+# =============================================================================
+
+if __name__ == "__main__":
+    from tito.tools.testing import run_module_tests_auto
+    
+    # Automatically discover and run all tests in this module
+    success = run_module_tests_auto("Layers")
 
 # %% [markdown]
 """

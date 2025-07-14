@@ -189,49 +189,45 @@ class TestCommand(BaseCommand):
         return result
     
     def _run_inline_tests(self, dev_file: Path) -> List[TestResult]:
-        """Run inline tests within a _dev.py file."""
+        """Run inline tests using the module's standardized testing framework."""
         inline_tests = []
         
-        # Find test functions in the file
-        test_functions = self._find_test_functions(dev_file)
-        
-        if not test_functions:
-            return inline_tests
-        
-        # Import the module and run test functions
+        # Instead of finding individual test functions, run the module as a script
+        # This will trigger the if __name__ == "__main__" section with standardized testing
         try:
-            spec = importlib.util.spec_from_file_location("test_module", dev_file)
-            if spec is None or spec.loader is None:
-                return [TestResult("import_error", False, "", "Could not load module")]
+            result = subprocess.run(
+                [sys.executable, str(dev_file)],
+                capture_output=True,
+                text=True,
+                timeout=60  # 1 minute timeout
+            )
             
-            module = importlib.util.module_from_spec(spec)
+            output = result.stdout
+            error = result.stderr
             
-            # Capture output during import and execution
-            import io
-            import contextlib
+            # Check return code
+            if result.returncode != 0:
+                inline_tests.append(TestResult("script_execution", False, output, error))
+                return inline_tests
             
-            with contextlib.redirect_stdout(io.StringIO()) as captured_output:
-                with contextlib.redirect_stderr(io.StringIO()) as captured_error:
-                    try:
-                        spec.loader.exec_module(module)
-                        
-                        # Run each test function
-                        for test_func_name in test_functions:
-                            if hasattr(module, test_func_name):
-                                test_func = getattr(module, test_func_name)
-                                try:
-                                    test_func()
-                                    inline_tests.append(TestResult(test_func_name, True, captured_output.getvalue()))
-                                except Exception as e:
-                                    inline_tests.append(TestResult(test_func_name, False, captured_output.getvalue(), str(e)))
-                            else:
-                                inline_tests.append(TestResult(test_func_name, False, "", f"Function {test_func_name} not found"))
+            # Parse the output to determine success
+            # Check if testing was successful based on output patterns
+            if "🎉 All tests passed!" in output or "✅ All tests passed!" in output:
+                inline_tests.append(TestResult("standardized_testing", True, output))
+            elif "❌" in output or "FAILED" in output or error:
+                inline_tests.append(TestResult("standardized_testing", False, output, error))
+            elif "✅" in output and "Module Tests:" in output:
+                # Handle the case where tests pass but don't have the final success message
+                inline_tests.append(TestResult("standardized_testing", True, output))
+            else:
+                # If no clear success/failure indicator, consider it a failure
+                inline_tests.append(TestResult("standardized_testing", False, output, 
+                                             "No clear test result indicator found"))
                     
-                    except Exception as e:
-                        inline_tests.append(TestResult("module_execution", False, captured_output.getvalue(), str(e)))
-        
+        except subprocess.TimeoutExpired:
+            inline_tests.append(TestResult("timeout", False, "", "Test execution timed out"))
         except Exception as e:
-            inline_tests.append(TestResult("module_import", False, "", str(e)))
+            inline_tests.append(TestResult("subprocess_error", False, "", str(e)))
         
         return inline_tests
     
@@ -278,25 +274,7 @@ class TestCommand(BaseCommand):
         
         return external_tests
     
-    def _find_test_functions(self, dev_file: Path) -> List[str]:
-        """Find test functions in a Python file."""
-        test_functions = []
-        
-        try:
-            with open(dev_file, 'r', encoding='utf-8') as f:
-                content = f.read()
-                
-                # Find function definitions that look like test functions
-                # Look for functions that start with test_ or contain "test" in their name
-                function_pattern = r'^def\s+(test_\w+|.*test\w*)\s*\('
-                matches = re.findall(function_pattern, content, re.MULTILINE)
-                test_functions.extend(matches)
-                
-        except Exception as e:
-            # If we can't read the file, return empty list
-            pass
-        
-        return test_functions
+
     
     def _parse_pytest_output(self, stdout: str, stderr: str) -> List[TestResult]:
         """Parse pytest output to extract individual test results."""
