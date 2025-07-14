@@ -114,8 +114,11 @@ class TestCommand(BaseCommand):
             
             task = progress.add_task("Running tests...", total=len(modules))
             
-            for module_name in modules:
-                progress.update(task, description=f"Testing {module_name}...")
+            for i, module_name in enumerate(modules, 1):
+                progress.update(task, description=f"Testing {module_name}... ({i}/{len(modules)})")
+                
+                # Show which module we're starting
+                console.print(f"[cyan]🧪 Starting {module_name}...[/cyan]")
                 
                 result = self._test_module(module_name, args)
                 results.append(result)
@@ -159,6 +162,7 @@ class TestCommand(BaseCommand):
     def _test_module(self, module_name: str, args: Namespace) -> ModuleTestResult:
         """Test a single module comprehensively."""
         result = ModuleTestResult(module_name)
+        console = self.console
         
         # Test compilation first
         dev_file = self._get_dev_file_path(module_name)
@@ -168,6 +172,7 @@ class TestCommand(BaseCommand):
             return result
         
         # Test Python compilation
+        console.print(f"[dim]  • Checking compilation...[/dim]")
         try:
             subprocess.run([sys.executable, "-m", "py_compile", str(dev_file)], 
                           check=True, capture_output=True, text=True)
@@ -178,22 +183,23 @@ class TestCommand(BaseCommand):
         
         # Run inline tests if requested
         if not args.external_only:
+            console.print(f"[dim]  • Running inline tests...[/dim]")
             inline_tests = self._run_inline_tests(dev_file)
             result.inline_tests = inline_tests
         
         # Run external tests if requested
         if not args.inline_only:
+            console.print(f"[dim]  • Running external tests...[/dim]")
             external_tests = self._run_external_tests(module_name)
             result.external_tests = external_tests
         
+        console.print(f"[dim]  • Completed {module_name} testing ({result.passed_tests}/{result.total_tests} tests passed)[/dim]")
         return result
     
     def _run_inline_tests(self, dev_file: Path) -> List[TestResult]:
         """Run inline tests using the module's standardized testing framework."""
         inline_tests = []
         
-        # Instead of finding individual test functions, run the module as a script
-        # This will trigger the if __name__ == "__main__" section with standardized testing
         try:
             result = subprocess.run(
                 [sys.executable, str(dev_file)],
@@ -210,18 +216,97 @@ class TestCommand(BaseCommand):
                 inline_tests.append(TestResult("script_execution", False, output, error))
                 return inline_tests
             
-            # Parse the output to determine success
-            # Check if testing was successful based on output patterns
-            if "🎉 All tests passed!" in output or "✅ All tests passed!" in output:
-                inline_tests.append(TestResult("standardized_testing", True, output))
-            elif "❌" in output or "FAILED" in output or error:
-                inline_tests.append(TestResult("standardized_testing", False, output, error))
-            elif "✅" in output and "Module Tests:" in output:
-                # Handle the case where tests pass but don't have the final success message
-                inline_tests.append(TestResult("standardized_testing", True, output))
+            # Parse the auto-discovery output to extract individual test names
+            if "🧪 Running" in output and "Module Tests" in output:
+                # Parse the auto-discovery section
+                lines = output.split('\n')
+                test_results = []
+                
+                # Look for the test results section
+                in_results_section = False
+                seen_start_marker = False
+                
+                for line in lines:
+                    line = line.strip()
+                    
+                    # Start of results section
+                    if "🧪 Running" in line and "Module Tests" in line:
+                        in_results_section = True
+                        continue
+                    
+                    # Handle equals markers
+                    if in_results_section and line.startswith("=="):
+                        if not seen_start_marker:
+                            # This is the start marker, continue parsing
+                            seen_start_marker = True
+                            continue
+                        else:
+                            # This is the end marker, stop parsing
+                            break
+                    
+                    # Parse individual test results
+                    if in_results_section and seen_start_marker and (line.startswith("✅") or line.startswith("❌")):
+                        parts = line.split(":", 1)
+                        if len(parts) == 2:
+                            status_part = parts[0].strip()
+                            result_part = parts[1].strip()
+                            
+                            success = status_part.startswith("✅")
+                            
+                            # Extract test name and function name from status part (after the emoji)
+                            if status_part.startswith("✅"):
+                                full_name = status_part[2:].strip()  # Remove ✅ and space
+                            elif status_part.startswith("❌"):
+                                full_name = status_part[2:].strip()  # Remove ❌ and space
+                            else:
+                                full_name = status_part.strip()
+                            
+                            # Extract function name if present (format: "Test Name (function_name)")
+                            if "(" in full_name and ")" in full_name:
+                                readable_name = full_name.split("(")[0].strip()
+                                function_name = full_name.split("(")[1].split(")")[0].strip()
+                                display_name = f"{function_name}"
+                            else:
+                                display_name = full_name
+                            
+                            test_results.append(TestResult(display_name, success, line))
+                
+                # If we found individual test results, use them
+                if test_results:
+                    inline_tests = test_results
+                else:
+                    # Fallback: Check if tests overall passed or failed
+                    overall_success = "🎉 All tests passed!" in output or "✅ All tests passed!" in output
+                    if overall_success:
+                        inline_tests.append(TestResult("module_tests", True, output))
+                    else:
+                        # Look for specific error in output
+                        error_msg = ""
+                        for line in output.split('\n'):
+                            line = line.strip()
+                            if any(keyword in line.lower() for keyword in ['error:', 'failed:', 'exception:', 'traceback', 'warning:']):
+                                error_msg = line
+                                break
+                        
+                        inline_tests.append(TestResult("module_tests", False, output, error_msg))
             else:
-                # If no clear success/failure indicator, consider it a failure
-                inline_tests.append(TestResult("standardized_testing", False, output, 
+                # No auto-discovery output, check for overall success
+                if "🎉 All tests passed!" in output or "✅ All tests passed!" in output:
+                    inline_tests.append(TestResult("inline_tests", True, output))
+                elif "❌" in output or "FAILED" in output or error:
+                    # Extract meaningful error from output
+                    error_msg = ""
+                    for line in output.split('\n'):
+                        line = line.strip()
+                        if any(keyword in line.lower() for keyword in ['error:', 'failed:', 'exception:', 'traceback', 'warning:']):
+                            error_msg = line
+                            break
+                    
+                    inline_tests.append(TestResult("inline_tests", False, output, error_msg))
+                elif "✅" in output:
+                    inline_tests.append(TestResult("inline_tests", True, output))
+                else:
+                    inline_tests.append(TestResult("inline_tests", False, output, 
                                              "No clear test result indicator found"))
                     
         except subprocess.TimeoutExpired:
@@ -279,17 +364,94 @@ class TestCommand(BaseCommand):
     def _parse_pytest_output(self, stdout: str, stderr: str) -> List[TestResult]:
         """Parse pytest output to extract individual test results."""
         test_results = []
+        seen_tests = set()  # Avoid duplicate entries
         
-        # Simple parsing - look for test function results
+        # Look for verbose pytest output lines like:
+        # test_setup.py::TestPersonalInfo::test_name_validation PASSED
+        # test_setup.py::TestPersonalInfo::test_email_validation FAILED
         lines = stdout.split('\n')
+        
         for line in lines:
-            # Look for lines like "test_file.py::test_function PASSED"
+            line = line.strip()
+            
+            # Skip lines that are just status words without context
+            if line in ['PASSED', 'FAILED', 'SKIPPED', '::']:
+                continue
+            
+            # Look for test result lines
             if '::' in line and ('PASSED' in line or 'FAILED' in line):
-                parts = line.split('::')
-                if len(parts) >= 2:
-                    test_name = parts[1].split()[0]
-                    success = 'PASSED' in line
-                    test_results.append(TestResult(test_name, success, line))
+                try:
+                    # Split the line to extract components
+                    parts = line.split()
+                    if len(parts) >= 2:
+                        test_path = parts[0]  # e.g., "test_setup.py::TestPersonalInfo::test_name_validation"
+                        status = parts[1]     # e.g., "PASSED" or "FAILED"
+                        
+                        # Skip if this is not a proper test path (must contain :: and not just be "FAILED")
+                        if '::' not in test_path or test_path in ['PASSED', 'FAILED']:
+                            continue
+                            
+                        # Skip if we've already seen this test (avoid duplicates)
+                        if test_path in seen_tests:
+                            continue
+                        seen_tests.add(test_path)
+                        
+                        # Extract meaningful test name from path
+                        path_parts = test_path.split('::')
+                        if len(path_parts) >= 3:
+                            # Format: file::Class::method -> "Class: method"
+                            class_name = path_parts[1]
+                            method_name = path_parts[2]
+                            
+                            # Clean up names for better readability
+                            clean_class = class_name.replace('Test', '').replace('test_', '')
+                            clean_method = method_name.replace('test_', '').replace('_', ' ').title()
+                            
+                            test_name = f"{clean_class}: {clean_method}"
+                        elif len(path_parts) >= 2:
+                            # Format: file::method -> "method"
+                            method_name = path_parts[1]
+                            test_name = method_name.replace('test_', '').replace('_', ' ').title()
+                        else:
+                            # Fallback to just the method name
+                            test_name = path_parts[0]
+                        
+                        success = status == 'PASSED'
+                        
+                        # If failed, try to extract error details from subsequent lines or stderr
+                        error_msg = ""
+                        if not success:
+                            # Look for error details in stderr
+                            if stderr:
+                                stderr_lines = stderr.split('\n')
+                                for err_line in stderr_lines:
+                                    err_line = err_line.strip()
+                                    if any(keyword in err_line for keyword in ['FAILED', 'AssertionError', 'Error:', 'Exception']):
+                                        # Extract meaningful part of error
+                                        if '::' in err_line and test_path.split('::')[-1] in err_line:
+                                            error_msg = err_line
+                                            break
+                                        elif 'AssertionError' in err_line or 'Error:' in err_line:
+                                            error_msg = err_line
+                                            break
+                        
+                        test_results.append(TestResult(test_name, success, line, error_msg))
+                except (IndexError, ValueError):
+                    # If parsing fails, skip this line to avoid meaningless entries
+                    continue
+        
+        # If no individual test results found, look for summary
+        if not test_results:
+            # Look for pytest summary lines
+            for line in lines:
+                if 'failed' in line.lower() and 'passed' in line.lower():
+                    # Lines like "2 failed, 5 passed in 1.23s"
+                    test_results.append(TestResult("pytest_summary", False, line, stderr))
+                    break
+                elif 'passed' in line.lower() and ('test' in line.lower() or 'ok' in line.lower()):
+                    # Lines like "5 passed in 1.23s"
+                    test_results.append(TestResult("pytest_summary", True, line))
+                    break
         
         return test_results
     
@@ -420,8 +582,44 @@ class TestCommand(BaseCommand):
                 icon = "✅" if test.success else "❌"
                 color = "green" if test.success else "red"
                 console.print(f"      [{color}]{icon} {test.name}[/{color}]")
-                if not test.success and test.error:
-                    console.print(f"         Error: {test.error}")
+                
+                if not test.success:
+                    # Show meaningful error details
+                    error_to_show = ""
+                    
+                    if test.error and test.error.strip():
+                        # Use the error field if available
+                        error_to_show = test.error.strip()
+                    elif test.output:
+                        # Extract error from output
+                        output_lines = test.output.split('\n')
+                        for line in output_lines:
+                            line = line.strip()
+                            if any(keyword in line.lower() for keyword in ['error:', 'failed:', 'exception:', 'traceback']):
+                                error_to_show = line
+                                break
+                        
+                        # If no specific error found, look for warning messages
+                        if not error_to_show:
+                            for line in output_lines:
+                                line = line.strip()
+                                if 'warning:' in line.lower() or 'deprecated' in line.lower():
+                                    error_to_show = line
+                                    break
+                    
+                    # Show error details if found
+                    if error_to_show:
+                        # Don't truncate important error messages - show more context
+                        if len(error_to_show) > 400:
+                            error_to_show = error_to_show[:400] + "..."
+                        
+                        # Distinguish between warnings and actual errors
+                        if any(keyword in error_to_show.lower() for keyword in ['warning:', 'userwarning', 'deprecation']):
+                            console.print(f"         [dim yellow]Warning: {error_to_show}[/dim yellow]")
+                        else:
+                            console.print(f"         [dim red]Error: {error_to_show}[/dim red]")
+                    else:
+                        console.print(f"         [dim red]Error: Test failed (see module output for details)[/dim red]")
         
         # Show external test results
         if result.external_tests:
@@ -430,8 +628,13 @@ class TestCommand(BaseCommand):
                 icon = "✅" if test.success else "❌"
                 color = "green" if test.success else "red"
                 console.print(f"      [{color}]{icon} {test.name}[/{color}]")
-                if not test.success and test.error:
-                    console.print(f"         Error: {test.error}")
+                
+                if not test.success and test.error and test.error.strip():
+                    # Show error details for failed external tests
+                    error_msg = test.error.strip()
+                    if len(error_msg) > 200:
+                        error_msg = error_msg[:200] + "..."
+                    console.print(f"         [dim red]Error: {error_msg}[/dim red]")
         
         # Summary for this module
         console.print(f"   📊 Summary: {result.passed_tests}/{result.total_tests} tests passed")

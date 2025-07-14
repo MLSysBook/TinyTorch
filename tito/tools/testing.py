@@ -176,10 +176,13 @@ class ModuleTestRunner:
             success, output = self._run_single_test(test_name, test_function)
             self.results.append((test_name, success, output))
             
+            # Get the actual function name
+            function_name = test_function.__name__
+            
             if success:
-                print(f"✅ {test_name}: PASSED")
+                print(f"✅ {test_name} ({function_name}): PASSED")
             else:
-                print(f"❌ {test_name}: FAILED")
+                print(f"❌ {test_name} ({function_name}): FAILED")
                 if output:
                     print(f"   Error: {output}")
                 all_passed = False
