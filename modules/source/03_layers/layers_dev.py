@@ -575,10 +575,10 @@ final_output = activation_function(linear_output)
 - **Attention layers**: Dense + Softmax (for attention weights)
 """
 
-# %% nbgrader={"grade": true, "grade_id": "test-layer-activation-integration", "locked": true, "points": 15, "schema_version": 3, "solution": false, "task": false}
-def test_layer_activation_integration():
-    """Test Dense layer integration with activation functions"""
-    print("🔬 Unit Test: Layer-Activation Integration...")
+# %% nbgrader={"grade": true, "grade_id": "test-layer-activation-comprehensive", "locked": true, "points": 15, "schema_version": 3, "solution": false, "task": false}
+def test_layer_activation_comprehensive():
+    """Test Dense layer comprehensive testing with activation functions"""
+    print("🔬 Unit Test: Layer-Activation Comprehensive Test...")
     
     # Create layer and activation functions
     layer = Dense(input_size=4, output_size=3)
@@ -642,7 +642,7 @@ def test_layer_activation_integration():
     assert isinstance(layer1.weights, Tensor), "Weights should be Tensor"
     assert isinstance(layer1.bias, Tensor), "Bias should be Tensor"
     
-    print("✅ Layer-activation integration tests passed!")
+    print("✅ Layer-activation comprehensive tests passed!")
     print(f"✅ Dense + ReLU working correctly")
     print(f"✅ Dense + Softmax producing valid probabilities")
     print(f"✅ Dense + Sigmoid bounded correctly")
@@ -651,7 +651,7 @@ def test_layer_activation_integration():
     print(f"✅ All components ready for training!")
 
 # Run the test
-test_layer_activation_integration()
+test_layer_activation_comprehensive()
 
 # %% [markdown]
 """
@@ -703,7 +703,7 @@ Congratulations! You've successfully implemented the fundamental building blocks
 - **Algorithm implementation**: From mathematical definition to working code
 - **Performance considerations**: Naive vs optimized implementations
 - **API design**: Clean, consistent interfaces for layer creation and usage
-- **Testing methodology**: Unit tests, integration tests, and edge case handling
+- **Testing methodology**: Unit tests, comprehensive tests, and edge case handling
 
 ### ✅ Ready for Next Steps
 Your layers are now ready to power:

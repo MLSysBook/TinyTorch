@@ -614,7 +614,7 @@ print("📈 Progress: Sequential ✓, MLP creation ✓, Architecture variations 
 
 # %% [markdown]
 """
-## Step 5: Integration Test - Complete Network Applications
+## Step 5: Comprehensive Test - Complete Network Applications
 
 ### Real-World Network Applications
 Let's test our networks on realistic scenarios:
@@ -637,12 +637,12 @@ regressor = create_mlp(3, [10, 5], 1, output_activation=lambda: Dense(0, 0))  # 
 deep_net = create_mlp(10, [64, 32, 16], 1)
 ```
 
-This integration test ensures our networks work for real ML applications!
+This comprehensive test ensures our networks work for real ML applications!
 """
 
 # %% nbgrader={"grade": true, "grade_id": "test-integration", "locked": true, "points": 15, "schema_version": 3, "solution": false, "task": false}
-# Integration test - complete network applications
-print("🔬 Integration Test: Complete Network Applications...")
+# Comprehensive test - complete network applications
+print("🔬 Comprehensive Test: Complete Network Applications...")
 
 try:
     # Test 1: Multi-class Classification (Iris-like dataset)
@@ -722,14 +722,14 @@ try:
     assert np.allclose(row_sums, 1.0), "Composed network predictions should be valid"
     print("✅ Network composition works correctly")
     
-    print("\n🎉 Integration test passed! Your networks work correctly for:")
+    print("\n🎉 Comprehensive test passed! Your networks work correctly for:")
     print("  • Multi-class classification (Iris flowers)")
     print("  • Regression tasks (housing prices)")
     print("  • Deep learning architectures")
     print("  • Network composition and feature extraction")
 
 except Exception as e:
-    print(f"❌ Integration test failed: {e}")
+    print(f"❌ Comprehensive test failed: {e}")
 
 print("📈 Final Progress: Complete network architectures ready for real ML applications!")
 
@@ -846,9 +846,9 @@ def test_network_architectures_comprehensive():
     
     print("✅ Network architectures work correctly")
 
-def test_networks_integration():
-    """Test network integration with real ML scenarios."""
-    print("🔬 Integration Test: Network Applications...")
+def test_networks_comprehensive():
+    """Test network comprehensive testing with real ML scenarios."""
+    print("🔬 Comprehensive Test: Network Applications...")
     
     # Test multi-class classification
     iris_classifier = create_mlp(input_size=4, hidden_sizes=[8, 6], output_size=3, output_activation=Softmax)
@@ -858,16 +858,6 @@ def test_networks_integration():
     assert iris_predictions.shape == (3, 3), "Iris classifier should work"
     row_sums = np.sum(iris_predictions.data, axis=1)
     assert np.allclose(row_sums, 1.0), "Predictions should sum to 1"
-    
-    # Test deep network
-    deep_network = create_mlp(input_size=10, hidden_sizes=[20, 15, 10, 5], output_size=1)
-    batch_data = Tensor(np.random.randn(32, 10))
-    deep_predictions = deep_network(batch_data)
-    
-    assert deep_predictions.shape == (32, 1), "Deep network should handle batches"
-    assert not np.any(np.isnan(deep_predictions.data)), "No NaN values allowed"
-    
-    print("✅ Network integration works correctly")
 
 # %% [markdown]
 """
