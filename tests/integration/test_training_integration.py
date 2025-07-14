@@ -42,7 +42,7 @@ except ImportError:
     from activations_dev import ReLU, Sigmoid, Softmax
     from layers_dev import Dense
     from networks_dev import Sequential, create_mlp
-    from dataloader_dev import DataLoader
+    from dataloader_dev import DataLoader, SimpleDataset
     from autograd_dev import Variable
     from optimizers_dev import SGD, Adam
     from training_dev import (
@@ -245,24 +245,14 @@ class TestTrainingPipelineIntegration:
     
     def test_classification_pipeline(self):
         """Test complete classification training pipeline."""
-        # Create synthetic dataset
-        class SimpleDataset:
-            def __init__(self):
-                self.data = [
-                    (Tensor([1.0, 2.0]), Tensor([0])),
-                    (Tensor([3.0, 4.0]), Tensor([1])),
-                    (Tensor([5.0, 6.0]), Tensor([0])),
-                    (Tensor([7.0, 8.0]), Tensor([1]))
-                ]
-            
-            def __iter__(self):
-                return iter(self.data)
+        # Create synthetic dataset using the real SimpleDataset from dataloader
+        # SimpleDataset(size=100, num_features=4, num_classes=3) by default
         
         # Create real components
         model = Sequential([
-            Dense(2, 4),
+            Dense(4, 8),  # 4 features input (SimpleDataset default)
             ReLU(),
-            Dense(4, 2),
+            Dense(8, 3),  # 3 classes output (SimpleDataset default)
             Softmax()
         ])
         
@@ -275,7 +265,8 @@ class TestTrainingPipelineIntegration:
         
         # Test epoch training
         dataset = SimpleDataset()
-        train_metrics = trainer.train_epoch(dataset)
+        dataloader = DataLoader(dataset, batch_size=8, shuffle=True)
+        train_metrics = trainer.train_epoch(dataloader)
         
         # Verify integration
         assert 'loss' in train_metrics
@@ -285,23 +276,15 @@ class TestTrainingPipelineIntegration:
     
     def test_regression_pipeline(self):
         """Test complete regression training pipeline."""
-        # Create synthetic dataset
-        class RegressionDataset:
-            def __init__(self):
-                self.data = [
-                    (Tensor([1.0, 2.0]), Tensor([3.0])),
-                    (Tensor([2.0, 3.0]), Tensor([5.0])),
-                    (Tensor([3.0, 4.0]), Tensor([7.0]))
-                ]
-            
-            def __iter__(self):
-                return iter(self.data)
+        # Create synthetic dataset for regression
+        dataset = SimpleDataset(size=50, num_features=4, num_classes=1)  # 1 class for regression
+        dataloader = DataLoader(dataset, batch_size=8, shuffle=True)
         
         # Create real components
         model = Sequential([
-            Dense(2, 4),
+            Dense(4, 8),  # 4 features input
             ReLU(),
-            Dense(4, 1)  # Single output for regression
+            Dense(8, 1)  # Single output for regression
         ])
         
         optimizer = Adam([], learning_rate=0.001)
@@ -312,8 +295,7 @@ class TestTrainingPipelineIntegration:
         trainer = Trainer(model, optimizer, loss_fn, metrics)
         
         # Test epoch training
-        dataset = RegressionDataset()
-        train_metrics = trainer.train_epoch(dataset)
+        train_metrics = trainer.train_epoch(dataloader)
         
         # Verify integration
         assert 'loss' in train_metrics
@@ -322,22 +304,15 @@ class TestTrainingPipelineIntegration:
     
     def test_validation_integration(self):
         """Test validation works with real components."""
-        # Create synthetic dataset
-        class ValidationDataset:
-            def __init__(self):
-                self.data = [
-                    (Tensor([1.0, 2.0]), Tensor([0])),
-                    (Tensor([3.0, 4.0]), Tensor([1]))
-                ]
-            
-            def __iter__(self):
-                return iter(self.data)
+        # Create synthetic dataset for validation
+        dataset = SimpleDataset(size=30, num_features=4, num_classes=3)
+        dataloader = DataLoader(dataset, batch_size=8, shuffle=False)  # No shuffling for validation
         
         # Create real components
         model = Sequential([
-            Dense(2, 3),
+            Dense(4, 8),  # 4 features input
             ReLU(),
-            Dense(3, 2),
+            Dense(8, 3),  # 3 classes output
             Softmax()
         ])
         
@@ -349,8 +324,7 @@ class TestTrainingPipelineIntegration:
         trainer = Trainer(model, optimizer, loss_fn, metrics)
         
         # Test validation
-        dataset = ValidationDataset()
-        val_metrics = trainer.validate_epoch(dataset)
+        val_metrics = trainer.validate_epoch(dataloader)
         
         # Verify integration
         assert 'loss' in val_metrics
