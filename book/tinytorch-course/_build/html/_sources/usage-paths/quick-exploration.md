@@ -32,21 +32,21 @@ All running live in your browser!
 - Get familiar with the educational approach
 - See how components fit together
 
-**🚀 [Launch Setup Chapter](../chapters/00-setup.md)**
+**🚀 [Launch Setup Chapter](chapters/00-setup.ipynb)**
 
 ### **Then Try: Chapter 2 - Activations** 
 - Implement your first ML function (ReLU)
 - See immediate visual results
 - Understand why nonlinearity matters
 
-**🚀 [Launch Activations Chapter](../chapters/02-activations.md)**
+**🚀 [Launch Activations Chapter](chapters/02-activations.ipynb)**
 
 ### **Build Up: Chapter 3 - Layers**
 - Create the building blocks of neural networks
 - Combine your ReLU with matrix operations
 - See how simple math becomes powerful AI
 
-**🚀 [Launch Layers Chapter](../chapters/03-layers.md)**
+**🚀 [Launch Layers Chapter](chapters/03-layers.ipynb)**
 
 ---
 
@@ -57,7 +57,7 @@ All running live in your browser!
 - Your work is **not saved** when the session ends
 - Great for exploration, not for ongoing projects
 
-**For persistent work:** Ready to build your own TinyTorch? → **[Serious Development Path](serious-development.md)**
+**For persistent work:** Ready to build your own TinyTorch? → **[Serious Development Path](usage-paths/serious-development.md)**
 
 ---
 
@@ -77,9 +77,9 @@ After exploring 2-3 chapters, you'll have hands-on understanding of:
 
 **Satisfied with exploration?** You've gained valuable insight into ML systems!
 
-**Want to build more?** → **[Fork the repo and work locally](serious-development.md)**
+**Want to build more?** → **[Fork the repo and work locally](usage-paths/serious-development.md)**
 
-**Teaching a class?** → **[Classroom setup guide](classroom-use.md)**
+**Teaching a class?** → **[Classroom setup guide](usage-paths/classroom-use.md)**
 
 ---
 
