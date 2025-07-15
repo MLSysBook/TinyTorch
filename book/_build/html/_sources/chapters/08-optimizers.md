@@ -1,4 +1,4 @@
-# Module 8: Optimizers - Gradient-Based Parameter Updates
+# Optimizers - Gradient-Based Parameter Updates
 
 Welcome to the Optimizers module! This is where neural networks learn to improve through intelligent parameter updates.
 

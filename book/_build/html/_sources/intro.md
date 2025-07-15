@@ -168,9 +168,9 @@ model = Sequential([
 **Teaching a class?** → **[👨‍🏫 Classroom Use](usage-paths/classroom-use.md)** *(Complete course infrastructure)*
 ```
 
-### **Quick Taste: Try Chapter 0 Right Now**
+### **Quick Taste: Try Chapter 1 Right Now**
 
-Want to see what TinyTorch feels like? **[Launch the Setup chapter](chapters/00-setup.ipynb)** in Binder and implement your first TinyTorch function in 2 minutes!
+Want to see what TinyTorch feels like? **[Launch the Setup chapter](chapters/01-setup.md)** in Binder and implement your first TinyTorch function in 2 minutes!
 
 ---
 
@@ -178,13 +178,20 @@ Want to see what TinyTorch feels like? **[Launch the Setup chapter](chapters/00-
 
 **Most ML education teaches you to *use* frameworks.** TinyTorch teaches you to *understand* them.
 
-```
+```python
 Traditional ML Course:          TinyTorch Approach:
-├── import torch               ├── Build your own tensors
-├── model = nn.Linear(10, 1)   ├── Implement Linear layers  
-├── loss = nn.MSELoss()        ├── Create loss functions
-├── optimizer.step()           ├── Build optimizers
-└── "How does this work?" 🤷   └── "I built this!" 💪
+├── import torch               ├── class Tensor:
+├── model = nn.Linear(10, 1)   │     def __add__(self, other): ...
+├── loss = nn.MSELoss()        │     def backward(self): ...
+├── optimizer.step()           ├── class Linear:
+└── "How does this work?" 🤷   │     def forward(self, x):
+                               │       return x @ self.weight + self.bias
+                               ├── def mse_loss(pred, target):
+                               │     return ((pred - target) ** 2).mean()
+                               ├── class SGD:
+                               │     def step(self):
+                               │       param.data -= lr * param.grad
+                               └── "I implemented every line!" 💪
 ```
 
 **Result:** You become the person others come to when they need to understand "how PyTorch actually works under the hood."
