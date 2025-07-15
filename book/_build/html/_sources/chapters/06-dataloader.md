@@ -1,4 +1,4 @@
-# Module 6: DataLoader - Data Loading and Preprocessing
+# DataLoader - Data Loading and Preprocessing
 
 Welcome to the DataLoader module! This is where you'll learn how to efficiently load, process, and manage data for machine learning systems.
 

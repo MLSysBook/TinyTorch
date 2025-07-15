@@ -278,7 +278,7 @@ Total: 445 points
 
 ### **1. Review Course Materials**
 - Browse the [course overview](../intro.md)
-- Test the [setup module](../chapters/00-setup.ipynb) 
+- Test the [setup module](../chapters/01-setup.md) 
 - Check [expected student outcomes](../usage-paths/serious-development.md)
 
 ### **2. Setup Your Course**

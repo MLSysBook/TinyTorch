@@ -1,4 +1,4 @@
-# Module 11: Kernels - Hardware-Optimized ML Operations
+# Kernels - Hardware-Optimized ML Operations
 
 Welcome to the Kernels module! This is where we move beyond NumPy to understand how ML operations are optimized for modern hardware. You'll implement custom kernels that run faster than standard library functions.
 
