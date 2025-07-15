@@ -1,4 +1,4 @@
-# Module 0: Setup - TinyTorch System Configuration
+# Setup - TinyTorch System Configuration
 
 Welcome to TinyTorch! This setup module configures your personal TinyTorch installation and teaches you the NBGrader workflow.
 

@@ -1,4 +1,4 @@
-# Module 12: Benchmarking - Systematic ML Performance Evaluation
+# Benchmarking - Systematic ML Performance Evaluation
 
 Welcome to the Benchmarking module! This is where we learn to systematically evaluate ML systems using industry-standard methodology inspired by MLPerf.
 
