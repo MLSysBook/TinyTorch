@@ -240,6 +240,4 @@ tito export 00_setup && tito test 00_setup
 
 ---
 
-**🔥 Ready to build your own ML framework? Start with TinyTorch and understand every layer.**
-
-*Classroom-tested • Production-focused • Understanding-driven*
+**🔥 Ready to build your own ML framework? Start with TinyTorch and understand every layer. _Start Small. Go Deep._**
