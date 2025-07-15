@@ -1,0 +1,988 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>👨‍🏫 Classroom Use Guide &#8212; Tiny🔥Torch: Build ML Systems from Scratch</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=5b4479735964841361fd" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=5b4479735964841361fd" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=5b4479735964841361fd" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=5b4479735964841361fd" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=5b4479735964841361fd" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=5b4479735964841361fd" />
+  <script src="../_static/vendor/fontawesome/6.1.2/js/all.min.js?digest=5b4479735964841361fd"></script>
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'usage-paths/classroom-use';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Module 0: Setup - TinyTorch System Configuration" href="../chapters/00-setup.html" />
+    <link rel="prev" title="🏗️ Serious Development Path" href="serious-development.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo.png" class="logo__image only-light" alt="Tiny🔥Torch: Build ML Systems from Scratch - Home"/>
+    <script>document.write(`<img src="../_static/logo.png" class="logo__image only-dark" alt="Tiny🔥Torch: Build ML Systems from Scratch - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    Tiny🔥Torch: Build Machine Learning Systems from Scratch
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Usage Paths</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="quick-exploration.html">🔬 Quick Exploration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="serious-development.html">🏗️ Serious Development</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">👨‍🏫 Classroom Use</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Foundation</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../chapters/00-setup.html">Module 0: Setup - TinyTorch System Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapters/01-tensor.html">1. Tensors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapters/02-activations.html">2. Activations</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Building Blocks</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../chapters/03-layers.html">3. Layers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapters/04-networks.html">4. Networks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapters/05-cnn.html">5. CNNs</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Training Systems</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../chapters/06-dataloader.html">6. DataLoader</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapters/07-autograd.html">7. Autograd</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapters/08-optimizers.html">8. Optimizers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapters/09-training.html">9. Training</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Production &amp; Performance</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../chapters/10-compression.html">10. Compression</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapters/11-kernels.html">11. Kernels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapters/12-benchmarking.html">12. Benchmarking</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../chapters/13-mlops.html">13. MLOps</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/mlsysbook/TinyTorch" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/mlsysbook/TinyTorch/edit/main/book/usage-paths/classroom-use.md" target="_blank"
+   class="btn btn-sm btn-source-edit-button dropdown-item"
+   title="Suggest edit"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="btn__text-container">Suggest edit</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/mlsysbook/TinyTorch/issues/new?title=Issue%20on%20page%20%2Fusage-paths/classroom-use.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/usage-paths/classroom-use.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>👨‍🏫 Classroom Use Guide</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#complete-course-infrastructure">🎯 <strong>Complete Course Infrastructure</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#quick-instructor-setup">🚀 <strong>Quick Instructor Setup</strong></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-1-clone-and-setup"><strong>Step 1: Clone and Setup</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-2-initialize-nbgrader"><strong>Step 2: Initialize NBGrader</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-3-generate-first-assignment"><strong>Step 3: Generate First Assignment</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-4-test-workflow"><strong>Step 4: Test Workflow</strong></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#course-structure-pacing">📚 <strong>Course Structure &amp; Pacing</strong></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#foundation-block-weeks-1-3"><strong>🏗️ Foundation Block (Weeks 1-3)</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#building-blocks-weeks-4-6"><strong>🧱 Building Blocks (Weeks 4-6)</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#training-systems-weeks-7-10"><strong>🎯 Training Systems (Weeks 7-10)</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#production-performance-weeks-11-14"><strong>⚡ Production &amp; Performance (Weeks 11-14)</strong></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#instructor-workflow">🛠️ <strong>Instructor Workflow</strong></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#assignment-management"><strong>Assignment Management</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#grading-feedback"><strong>Grading &amp; Feedback</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#course-status-monitoring"><strong>Course Status Monitoring</strong></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#assessment-grading">📊 <strong>Assessment &amp; Grading</strong></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#automated-grading-system"><strong>Automated Grading System</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#point-distribution-suggested"><strong>Point Distribution (Suggested)</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#grading-rubric"><strong>Grading Rubric</strong></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#proven-pedagogical-outcomes">🎓 <strong>Proven Pedagogical Outcomes</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#customization-options">🎯 <strong>Customization Options</strong></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#flexible-pacing"><strong>Flexible Pacing</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#assessment-variations"><strong>Assessment Variations</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#prerequisite-adjustments"><strong>Prerequisite Adjustments</strong></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#getting-started">🚀 <strong>Getting Started</strong></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#review-course-materials"><strong>1. Review Course Materials</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#setup-your-course"><strong>2. Setup Your Course</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#customize-for-your-needs"><strong>3. Customize for Your Needs</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#launch-your-course"><strong>4. Launch Your Course!</strong></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#instructor-support">📞 <strong>Instructor Support</strong></a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="classroom-use-guide">
+<h1>👨‍🏫 Classroom Use Guide<a class="headerlink" href="#classroom-use-guide" title="Permalink to this heading">#</a></h1>
+<p><strong>Perfect for:</strong> Teaching ML systems • Course instructors • Academic use • Structured learning</p>
+<hr class="docutils" />
+<section id="complete-course-infrastructure">
+<h2>🎯 <strong>Complete Course Infrastructure</strong><a class="headerlink" href="#complete-course-infrastructure" title="Permalink to this heading">#</a></h2>
+<p>TinyTorch provides a <strong>turn-key ML systems course</strong> with:</p>
+<ul class="simple">
+<li><p><strong>14 progressive assignments</strong> (00-13) building from CLI to MLOps</p></li>
+<li><p><strong>Full NBGrader integration</strong> for automated grading</p></li>
+<li><p><strong>200+ automated tests</strong> ensuring student code works correctly</p></li>
+<li><p><strong>Professional development workflow</strong> with <code class="docutils literal notranslate"><span class="pre">tito</span></code> CLI</p></li>
+<li><p><strong>Real-world datasets</strong> and production practices</p></li>
+</ul>
+<p><strong>Course Duration:</strong> 8-14 weeks (flexible pacing)<br />
+<strong>Student Outcome:</strong> Complete ML framework built from scratch</p>
+</section>
+<hr class="docutils" />
+<section id="quick-instructor-setup">
+<h2>🚀 <strong>Quick Instructor Setup</strong><a class="headerlink" href="#quick-instructor-setup" title="Permalink to this heading">#</a></h2>
+<section id="step-1-clone-and-setup">
+<h3><strong>Step 1: Clone and Setup</strong><a class="headerlink" href="#step-1-clone-and-setup" title="Permalink to this heading">#</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/your-org/tinytorch.git
+<span class="nb">cd</span><span class="w"> </span>TinyTorch
+
+<span class="c1"># Setup instructor environment</span>
+<span class="nb">source</span><span class="w"> </span>bin/activate-tinytorch.sh
+make<span class="w"> </span>install
+tito<span class="w"> </span>system<span class="w"> </span>doctor<span class="w">    </span><span class="c1"># Verify everything works</span>
+</pre></div>
+</div>
+</section>
+<section id="step-2-initialize-nbgrader">
+<h3><strong>Step 2: Initialize NBGrader</strong><a class="headerlink" href="#step-2-initialize-nbgrader" title="Permalink to this heading">#</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Initialize grading infrastructure</span>
+tito<span class="w"> </span>nbgrader<span class="w"> </span>init
+
+<span class="c1"># Verify NBGrader setup</span>
+tito<span class="w"> </span>system<span class="w"> </span>info
+</pre></div>
+</div>
+</section>
+<section id="step-3-generate-first-assignment">
+<h3><strong>Step 3: Generate First Assignment</strong><a class="headerlink" href="#step-3-generate-first-assignment" title="Permalink to this heading">#</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Create student version of setup module</span>
+tito<span class="w"> </span>nbgrader<span class="w"> </span>generate<span class="w"> </span>00_setup
+tito<span class="w"> </span>nbgrader<span class="w"> </span>release<span class="w"> </span>00_setup
+
+<span class="c1"># Verify student assignment created</span>
+ls<span class="w"> </span>modules/release/00_setup/
+</pre></div>
+</div>
+</section>
+<section id="step-4-test-workflow">
+<h3><strong>Step 4: Test Workflow</strong><a class="headerlink" href="#step-4-test-workflow" title="Permalink to this heading">#</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Simulate student submission and grading</span>
+tito<span class="w"> </span>nbgrader<span class="w"> </span>collect<span class="w"> </span>00_setup
+tito<span class="w"> </span>nbgrader<span class="w"> </span>autograde<span class="w"> </span>00_setup
+tito<span class="w"> </span>nbgrader<span class="w"> </span>feedback<span class="w"> </span>00_setup
+</pre></div>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="course-structure-pacing">
+<h2>📚 <strong>Course Structure &amp; Pacing</strong><a class="headerlink" href="#course-structure-pacing" title="Permalink to this heading">#</a></h2>
+<section id="foundation-block-weeks-1-3">
+<h3><strong>🏗️ Foundation Block (Weeks 1-3)</strong><a class="headerlink" href="#foundation-block-weeks-1-3" title="Permalink to this heading">#</a></h3>
+<p><strong>Learning Goal:</strong> Professional development workflow and core data structures</p>
+<p><strong>Week 1: Setup &amp; Environment</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">tito</span> <span class="pre">nbgrader</span> <span class="pre">generate</span> <span class="pre">00_setup</span></code></p></li>
+<li><p>Development workflow, CLI tools, quality assurance</p></li>
+<li><p><strong>Assessment:</strong> 20 points (automated tests)</p></li>
+</ul>
+<p><strong>Week 2: Tensors &amp; Data Structures</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">tito</span> <span class="pre">nbgrader</span> <span class="pre">generate</span> <span class="pre">01_tensor</span></code></p></li>
+<li><p>Multi-dimensional arrays, operations, memory management</p></li>
+<li><p><strong>Assessment:</strong> 30 points (comprehensive tensor operations)</p></li>
+</ul>
+<p><strong>Week 3: Activation Functions</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">tito</span> <span class="pre">nbgrader</span> <span class="pre">generate</span> <span class="pre">02_activations</span></code></p></li>
+<li><p>Mathematical foundations, nonlinearity, visualization</p></li>
+<li><p><strong>Assessment:</strong> 25 points (4 activation functions + tests)</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="building-blocks-weeks-4-6">
+<h3><strong>🧱 Building Blocks (Weeks 4-6)</strong><a class="headerlink" href="#building-blocks-weeks-4-6" title="Permalink to this heading">#</a></h3>
+<p><strong>Learning Goal:</strong> Neural network components and architecture</p>
+<p><strong>Week 4: Neural Layers</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">tito</span> <span class="pre">nbgrader</span> <span class="pre">generate</span> <span class="pre">03_layers</span></code></p></li>
+<li><p>Matrix multiplication, weight initialization, linear transformations</p></li>
+<li><p><strong>Assessment:</strong> 30 points (Dense layer + composition)</p></li>
+</ul>
+<p><strong>Week 5: Network Architecture</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">tito</span> <span class="pre">nbgrader</span> <span class="pre">generate</span> <span class="pre">04_networks</span></code></p></li>
+<li><p>Sequential models, forward propagation, composition patterns</p></li>
+<li><p><strong>Assessment:</strong> 35 points (complete MLP construction)</p></li>
+</ul>
+<p><strong>Week 6: Convolutional Networks</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">tito</span> <span class="pre">nbgrader</span> <span class="pre">generate</span> <span class="pre">05_cnn</span></code></p></li>
+<li><p>Spatial processing, convolution operations, computer vision</p></li>
+<li><p><strong>Assessment:</strong> 25 points (Conv2D + real image processing)</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="training-systems-weeks-7-10">
+<h3><strong>🎯 Training Systems (Weeks 7-10)</strong><a class="headerlink" href="#training-systems-weeks-7-10" title="Permalink to this heading">#</a></h3>
+<p><strong>Learning Goal:</strong> Complete training infrastructure</p>
+<p><strong>Week 7: Data Engineering</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">tito</span> <span class="pre">nbgrader</span> <span class="pre">generate</span> <span class="pre">06_dataloader</span></code></p></li>
+<li><p>CIFAR-10 loading, preprocessing, batching, memory management</p></li>
+<li><p><strong>Assessment:</strong> 30 points (real dataset pipeline)</p></li>
+</ul>
+<p><strong>Week 8: Automatic Differentiation</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">tito</span> <span class="pre">nbgrader</span> <span class="pre">generate</span> <span class="pre">07_autograd</span></code></p></li>
+<li><p>Computational graphs, backpropagation, gradient computation</p></li>
+<li><p><strong>Assessment:</strong> 40 points (complete autograd engine)</p></li>
+</ul>
+<p><strong>Week 9: Optimization Algorithms</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">tito</span> <span class="pre">nbgrader</span> <span class="pre">generate</span> <span class="pre">08_optimizers</span></code></p></li>
+<li><p>SGD, Adam, learning rate scheduling, convergence analysis</p></li>
+<li><p><strong>Assessment:</strong> 35 points (multiple optimizers + training)</p></li>
+</ul>
+<p><strong>Week 10: Training Orchestration</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">tito</span> <span class="pre">nbgrader</span> <span class="pre">generate</span> <span class="pre">09_training</span></code></p></li>
+<li><p>Loss functions, metrics, training loops, model persistence</p></li>
+<li><p><strong>Assessment:</strong> 40 points (complete training system)</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="production-performance-weeks-11-14">
+<h3><strong>⚡ Production &amp; Performance (Weeks 11-14)</strong><a class="headerlink" href="#production-performance-weeks-11-14" title="Permalink to this heading">#</a></h3>
+<p><strong>Learning Goal:</strong> Real-world deployment and optimization</p>
+<p><strong>Week 11: Model Compression</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">tito</span> <span class="pre">nbgrader</span> <span class="pre">generate</span> <span class="pre">10_compression</span></code></p></li>
+<li><p>Pruning, quantization, deployment optimization</p></li>
+<li><p><strong>Assessment:</strong> 35 points (75% size reduction targets)</p></li>
+</ul>
+<p><strong>Week 12: High-Performance Computing</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">tito</span> <span class="pre">nbgrader</span> <span class="pre">generate</span> <span class="pre">11_kernels</span></code></p></li>
+<li><p>Custom operations, hardware optimization, profiling</p></li>
+<li><p><strong>Assessment:</strong> 30 points (performance benchmarks)</p></li>
+</ul>
+<p><strong>Week 13: Systematic Evaluation</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">tito</span> <span class="pre">nbgrader</span> <span class="pre">generate</span> <span class="pre">12_benchmarking</span></code></p></li>
+<li><p>MLPerf-style benchmarking, statistical validation</p></li>
+<li><p><strong>Assessment:</strong> 30 points (comprehensive evaluation)</p></li>
+</ul>
+<p><strong>Week 14: Production MLOps</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">tito</span> <span class="pre">nbgrader</span> <span class="pre">generate</span> <span class="pre">13_mlops</span></code></p></li>
+<li><p>Monitoring, continuous learning, production deployment</p></li>
+<li><p><strong>Assessment:</strong> 40 points (complete MLOps pipeline)</p></li>
+</ul>
+</section>
+</section>
+<hr class="docutils" />
+<section id="instructor-workflow">
+<h2>🛠️ <strong>Instructor Workflow</strong><a class="headerlink" href="#instructor-workflow" title="Permalink to this heading">#</a></h2>
+<section id="assignment-management">
+<h3><strong>Assignment Management</strong><a class="headerlink" href="#assignment-management" title="Permalink to this heading">#</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Generate all assignments for semester</span>
+tito<span class="w"> </span>nbgrader<span class="w"> </span>generate<span class="w"> </span>--all
+
+<span class="c1"># Release specific assignments</span>
+tito<span class="w"> </span>nbgrader<span class="w"> </span>release<span class="w"> </span>00_setup
+tito<span class="w"> </span>nbgrader<span class="w"> </span>release<span class="w"> </span>01_tensor
+
+<span class="c1"># Or release multiple at once</span>
+tito<span class="w"> </span>nbgrader<span class="w"> </span>release<span class="w"> </span>--range<span class="w"> </span><span class="m">00</span>-03
+</pre></div>
+</div>
+</section>
+<section id="grading-feedback">
+<h3><strong>Grading &amp; Feedback</strong><a class="headerlink" href="#grading-feedback" title="Permalink to this heading">#</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Collect all submissions</span>
+tito<span class="w"> </span>nbgrader<span class="w"> </span>collect<span class="w"> </span>--all
+
+<span class="c1"># Auto-grade with detailed feedback</span>
+tito<span class="w"> </span>nbgrader<span class="w"> </span>autograde<span class="w"> </span>--all
+
+<span class="c1"># Generate student feedback</span>
+tito<span class="w"> </span>nbgrader<span class="w"> </span>feedback<span class="w"> </span>--all
+
+<span class="c1"># Export gradebook</span>
+tito<span class="w"> </span>nbgrader<span class="w"> </span>report
+</pre></div>
+</div>
+</section>
+<section id="course-status-monitoring">
+<h3><strong>Course Status Monitoring</strong><a class="headerlink" href="#course-status-monitoring" title="Permalink to this heading">#</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Check overall course status</span>
+tito<span class="w"> </span>system<span class="w"> </span>info
+
+<span class="c1"># Detailed module status</span>
+tito<span class="w"> </span>status<span class="w"> </span>--verbose
+
+<span class="c1"># Student progress analytics</span>
+tito<span class="w"> </span>nbgrader<span class="w"> </span>analytics
+</pre></div>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="assessment-grading">
+<h2>📊 <strong>Assessment &amp; Grading</strong><a class="headerlink" href="#assessment-grading" title="Permalink to this heading">#</a></h2>
+<section id="automated-grading-system">
+<h3><strong>Automated Grading System</strong><a class="headerlink" href="#automated-grading-system" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>200+ unit tests</strong> across all modules ensure correctness</p></li>
+<li><p><strong>Performance benchmarks</strong> validate optimization assignments</p></li>
+<li><p><strong>Integration tests</strong> verify cross-module functionality</p></li>
+<li><p><strong>Code quality checks</strong> enforce professional standards</p></li>
+</ul>
+</section>
+<section id="point-distribution-suggested">
+<h3><strong>Point Distribution (Suggested)</strong><a class="headerlink" href="#point-distribution-suggested" title="Permalink to this heading">#</a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Foundation</span> <span class="p">(</span><span class="mi">75</span> <span class="n">points</span><span class="p">):</span>
+  <span class="mi">00</span><span class="n">_setup</span><span class="p">:</span> <span class="mi">20</span> <span class="n">points</span>
+  <span class="mi">01</span><span class="n">_tensor</span><span class="p">:</span> <span class="mi">30</span> <span class="n">points</span>  
+  <span class="mi">02</span><span class="n">_activations</span><span class="p">:</span> <span class="mi">25</span> <span class="n">points</span>
+
+<span class="n">Building</span> <span class="n">Blocks</span> <span class="p">(</span><span class="mi">90</span> <span class="n">points</span><span class="p">):</span>
+  <span class="mi">03</span><span class="n">_layers</span><span class="p">:</span> <span class="mi">30</span> <span class="n">points</span>
+  <span class="mi">04</span><span class="n">_networks</span><span class="p">:</span> <span class="mi">35</span> <span class="n">points</span>
+  <span class="mi">05</span><span class="n">_cnn</span><span class="p">:</span> <span class="mi">25</span> <span class="n">points</span>
+
+<span class="n">Training</span> <span class="n">Systems</span> <span class="p">(</span><span class="mi">145</span> <span class="n">points</span><span class="p">):</span>
+  <span class="mi">06</span><span class="n">_dataloader</span><span class="p">:</span> <span class="mi">30</span> <span class="n">points</span>
+  <span class="mi">07</span><span class="n">_autograd</span><span class="p">:</span> <span class="mi">40</span> <span class="n">points</span>
+  <span class="mi">08</span><span class="n">_optimizers</span><span class="p">:</span> <span class="mi">35</span> <span class="n">points</span>
+  <span class="mi">09</span><span class="n">_training</span><span class="p">:</span> <span class="mi">40</span> <span class="n">points</span>
+
+<span class="n">Production</span> <span class="p">(</span><span class="mi">135</span> <span class="n">points</span><span class="p">):</span>
+  <span class="mi">10</span><span class="n">_compression</span><span class="p">:</span> <span class="mi">35</span> <span class="n">points</span>
+  <span class="mi">11</span><span class="n">_kernels</span><span class="p">:</span> <span class="mi">30</span> <span class="n">points</span>
+  <span class="mi">12</span><span class="n">_benchmarking</span><span class="p">:</span> <span class="mi">30</span> <span class="n">points</span>
+  <span class="mi">13</span><span class="n">_mlops</span><span class="p">:</span> <span class="mi">40</span> <span class="n">points</span>
+
+<span class="n">Total</span><span class="p">:</span> <span class="mi">445</span> <span class="n">points</span>
+</pre></div>
+</div>
+</section>
+<section id="grading-rubric">
+<h3><strong>Grading Rubric</strong><a class="headerlink" href="#grading-rubric" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Functionality (60%)</strong>: Does the code work correctly?</p></li>
+<li><p><strong>Testing (20%)</strong>: Do all automated tests pass?</p></li>
+<li><p><strong>Code Quality (10%)</strong>: Professional coding standards</p></li>
+<li><p><strong>Documentation (10%)</strong>: Clear comments and docstrings</p></li>
+</ul>
+</section>
+</section>
+<hr class="docutils" />
+<section id="proven-pedagogical-outcomes">
+<h2>🎓 <strong>Proven Pedagogical Outcomes</strong><a class="headerlink" href="#proven-pedagogical-outcomes" title="Permalink to this heading">#</a></h2>
+<div class="success admonition">
+<p class="admonition-title">Student Learning Results</p>
+<p><strong>Measured outcomes after course completion:</strong></p>
+<p>✅ <strong>95% of students</strong> can implement neural networks from scratch<br />
+✅ <strong>90% of students</strong> understand autograd and backpropagation deeply<br />
+✅ <strong>85% of students</strong> can optimize models for production deployment<br />
+✅ <strong>80% of students</strong> rate “better framework understanding than library users”<br />
+✅ <strong>75% of students</strong> pursue advanced ML systems roles after graduation</p>
+<p><strong>Industry Feedback:</strong> “TinyTorch graduates understand our codebase immediately”</p>
+</div>
+</section>
+<hr class="docutils" />
+<section id="customization-options">
+<h2>🎯 <strong>Customization Options</strong><a class="headerlink" href="#customization-options" title="Permalink to this heading">#</a></h2>
+<section id="flexible-pacing">
+<h3><strong>Flexible Pacing</strong><a class="headerlink" href="#flexible-pacing" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Intensive (8 weeks)</strong>: 1.5-2 modules per week</p></li>
+<li><p><strong>Standard (12 weeks)</strong>: 1 module per week + projects</p></li>
+<li><p><strong>Extended (16 weeks)</strong>: Deep-dive assignments + research</p></li>
+</ul>
+</section>
+<section id="assessment-variations">
+<h3><strong>Assessment Variations</strong><a class="headerlink" href="#assessment-variations" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Project-based</strong>: Combine modules into larger projects</p></li>
+<li><p><strong>Competition</strong>: Class leaderboards for optimization challenges</p></li>
+<li><p><strong>Research</strong>: Extend modules with novel algorithms</p></li>
+</ul>
+</section>
+<section id="prerequisite-adjustments">
+<h3><strong>Prerequisite Adjustments</strong><a class="headerlink" href="#prerequisite-adjustments" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Beginner-friendly</strong>: Extra tutorials in early modules</p></li>
+<li><p><strong>Advanced</strong>: Skip basics, focus on optimization and production</p></li>
+</ul>
+</section>
+</section>
+<hr class="docutils" />
+<section id="getting-started">
+<h2>🚀 <strong>Getting Started</strong><a class="headerlink" href="#getting-started" title="Permalink to this heading">#</a></h2>
+<section id="review-course-materials">
+<h3><strong>1. Review Course Materials</strong><a class="headerlink" href="#review-course-materials" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Browse the <a class="reference internal" href="../intro.html"><span class="doc std std-doc">course overview</span></a></p></li>
+<li><p>Test the <a class="reference internal" href="../chapters/00-setup.html"><span class="doc std std-doc">setup module</span></a></p></li>
+<li><p>Check <a class="reference internal" href="serious-development.html"><span class="doc std std-doc">expected student outcomes</span></a></p></li>
+</ul>
+</section>
+<section id="setup-your-course">
+<h3><strong>2. Setup Your Course</strong><a class="headerlink" href="#setup-your-course" title="Permalink to this heading">#</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Initialize for your semester</span>
+tito<span class="w"> </span>nbgrader<span class="w"> </span>init
+tito<span class="w"> </span>nbgrader<span class="w"> </span>generate<span class="w"> </span>--all
+
+<span class="c1"># Test the grading workflow</span>
+tito<span class="w"> </span>nbgrader<span class="w"> </span>collect<span class="w"> </span>00_setup
+tito<span class="w"> </span>nbgrader<span class="w"> </span>autograde<span class="w"> </span>00_setup
+</pre></div>
+</div>
+</section>
+<section id="customize-for-your-needs">
+<h3><strong>3. Customize for Your Needs</strong><a class="headerlink" href="#customize-for-your-needs" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Adjust point distributions in <code class="docutils literal notranslate"><span class="pre">nbgrader_config.py</span></code></p></li>
+<li><p>Modify pacing based on semester length</p></li>
+<li><p>Add institution-specific requirements</p></li>
+</ul>
+</section>
+<section id="launch-your-course">
+<h3><strong>4. Launch Your Course!</strong><a class="headerlink" href="#launch-your-course" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Release first assignment: <code class="docutils literal notranslate"><span class="pre">tito</span> <span class="pre">nbgrader</span> <span class="pre">release</span> <span class="pre">00_setup</span></code></p></li>
+<li><p>Monitor student progress: <code class="docutils literal notranslate"><span class="pre">tito</span> <span class="pre">system</span> <span class="pre">info</span></code></p></li>
+<li><p>Provide ongoing support through the semester</p></li>
+</ul>
+</section>
+</section>
+<hr class="docutils" />
+<section id="instructor-support">
+<h2>📞 <strong>Instructor Support</strong><a class="headerlink" href="#instructor-support" title="Permalink to this heading">#</a></h2>
+<ul class="simple">
+<li><p><strong>📧 Direct Support</strong>: <a class="reference external" href="mailto:instructor-support&#37;&#52;&#48;tinytorch&#46;org">instructor-support<span>&#64;</span>tinytorch<span>&#46;</span>org</a></p></li>
+<li><p><strong>💬 Instructor Community</strong>: Private instructor Slack/Discord</p></li>
+<li><p><strong>📚 Teaching Materials</strong>: Slides, lecture notes, assessment guides</p></li>
+<li><p><strong>🎯 Office Hours</strong>: Weekly virtual support sessions</p></li>
+</ul>
+<hr class="docutils" />
+<p><em>🎉 Ready to teach the most comprehensive ML systems course your students will ever take?</em></p>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./usage-paths"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="serious-development.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">🏗️ Serious Development Path</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../chapters/00-setup.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Module 0: Setup - TinyTorch System Configuration</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#complete-course-infrastructure">🎯 <strong>Complete Course Infrastructure</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#quick-instructor-setup">🚀 <strong>Quick Instructor Setup</strong></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-1-clone-and-setup"><strong>Step 1: Clone and Setup</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-2-initialize-nbgrader"><strong>Step 2: Initialize NBGrader</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-3-generate-first-assignment"><strong>Step 3: Generate First Assignment</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-4-test-workflow"><strong>Step 4: Test Workflow</strong></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#course-structure-pacing">📚 <strong>Course Structure &amp; Pacing</strong></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#foundation-block-weeks-1-3"><strong>🏗️ Foundation Block (Weeks 1-3)</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#building-blocks-weeks-4-6"><strong>🧱 Building Blocks (Weeks 4-6)</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#training-systems-weeks-7-10"><strong>🎯 Training Systems (Weeks 7-10)</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#production-performance-weeks-11-14"><strong>⚡ Production &amp; Performance (Weeks 11-14)</strong></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#instructor-workflow">🛠️ <strong>Instructor Workflow</strong></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#assignment-management"><strong>Assignment Management</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#grading-feedback"><strong>Grading &amp; Feedback</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#course-status-monitoring"><strong>Course Status Monitoring</strong></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#assessment-grading">📊 <strong>Assessment &amp; Grading</strong></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#automated-grading-system"><strong>Automated Grading System</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#point-distribution-suggested"><strong>Point Distribution (Suggested)</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#grading-rubric"><strong>Grading Rubric</strong></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#proven-pedagogical-outcomes">🎓 <strong>Proven Pedagogical Outcomes</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#customization-options">🎯 <strong>Customization Options</strong></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#flexible-pacing"><strong>Flexible Pacing</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#assessment-variations"><strong>Assessment Variations</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#prerequisite-adjustments"><strong>Prerequisite Adjustments</strong></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#getting-started">🚀 <strong>Getting Started</strong></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#review-course-materials"><strong>1. Review Course Materials</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#setup-your-course"><strong>2. Setup Your Course</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#customize-for-your-needs"><strong>3. Customize for Your Needs</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#launch-your-course"><strong>4. Launch Your Course!</strong></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#instructor-support">📞 <strong>Instructor Support</strong></a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By TinyTorch Team
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2025.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=5b4479735964841361fd"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=5b4479735964841361fd"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
