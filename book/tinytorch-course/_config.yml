@@ -12,10 +12,10 @@ description: >-
   Learn by implementing your own PyTorch-style framework with hands-on coding,
   real datasets, and production-ready practices.
 
-# Execution settings for interactive notebooks
+# Execution settings for interactive notebooks  
 execute:
-  execute_notebooks: "auto"
-  allow_errors: false
+  execute_notebooks: "cache"
+  allow_errors: true
   timeout: 300
 
 # GitHub repository configuration for GitHub Pages

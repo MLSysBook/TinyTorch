@@ -18,7 +18,6 @@ parts:
 - caption: Foundation
   chapters:
   - file: chapters/00-setup.ipynb
-    title: "0. Development Environment"
   - file: chapters/01-tensor.ipynb  
     title: "1. Tensors"
   - file: chapters/02-activations.ipynb
