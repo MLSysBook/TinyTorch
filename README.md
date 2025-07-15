@@ -2,7 +2,9 @@
 
 **Build your own ML framework. Start small. Go deep.**
 
-A hands-on Machine Learning Systems course where students don't just learn ML; they *engineer* it. TinyTorch guides you from the fundamentals of tensors and layers all the way to complete MLOps systems using your own codebase.
+A hands-on Machine Learning Systems course where students don’t just learn ML — they build it. Tiny🔥Torch takes you from the fundamentals of tensors and layers to full MLOps systems, all using your own codebase.
+
+
 
 [![Jupyter Book](https://img.shields.io/badge/docs-Jupyter_Book-orange.svg)](https://mlsysbook.github.io/TinyTorch/)
 [![GitHub](https://img.shields.io/badge/github-mlsysbook/TinyTorch-blue.svg)](https://github.com/mlsysbook/TinyTorch)
