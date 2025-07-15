@@ -144,13 +144,11 @@ class ModuleConverter:
     def add_book_frontmatter(self, notebook: Dict[str, Any], module_name: str, title: str) -> Dict[str, Any]:
         """Add Jupyter Book frontmatter to the notebook."""
         
-        # Create title cell
-        title_cell = {
+        # Create interactive learning admonition
+        interactive_cell = {
             'cell_type': 'markdown',
             'metadata': {},
             'source': [
-                f'# {title}\n',
-                '\n',
                 '```{admonition} Interactive Learning\n',
                 ':class: tip\n',
                 '🚀 **Launch Binder**: Click the rocket icon above to run this chapter interactively!\n',
@@ -163,22 +161,22 @@ class ModuleConverter:
             ]
         }
         
-        # Insert at the beginning (after any existing title)
+        # Insert interactive cell after the first title cell
         cells = notebook.get('cells', [])
         
-        # Find if there's already a title cell
-        title_inserted = False
+        # Find the first title cell and add interactive cell after it
+        title_found = False
         for i, cell in enumerate(cells):
             if cell.get('cell_type') == 'markdown':
                 source = ''.join(cell.get('source', []))
                 if source.startswith('# '):
-                    # Replace existing title
-                    cells[i] = title_cell
-                    title_inserted = True
+                    # Insert interactive cell after the title
+                    cells.insert(i + 1, interactive_cell)
+                    title_found = True
                     break
         
-        if not title_inserted:
-            cells.insert(0, title_cell)
+        if not title_found:
+            cells.insert(0, interactive_cell)
         
         notebook['cells'] = cells
         return notebook
@@ -213,17 +211,17 @@ class ModuleConverter:
             if not notebook_path:
                 return False
             
-            # Remove solutions
-            student_notebook_path = self.remove_solutions(notebook_path)
+            # Keep solutions (no NBGrader processing)
+            # student_notebook_path = self.remove_solutions(notebook_path)  # Disabled - keep solutions
             
-            # Load the student notebook
-            with open(student_notebook_path, 'r') as f:
+            # Load the full notebook with solutions
+            with open(notebook_path, 'r') as f:
                 notebook = json.load(f)
             
             # Add book-specific enhancements
             module_info = self.module_mapping[module_name]
             notebook = self.add_binder_config(notebook, module_name)
-            notebook = self.add_book_frontmatter(notebook, module_name, module_info['title'])
+            # notebook = self.add_book_frontmatter(notebook, module_name, module_info['title'])  # Disabled for raw export
             
             # Save to chapters directory
             self.chapters_dir.mkdir(parents=True, exist_ok=True)
@@ -236,7 +234,6 @@ class ModuleConverter:
             
             # Clean up temporary files
             notebook_path.unlink(missing_ok=True)
-            student_notebook_path.unlink(missing_ok=True)
             
             return True
             
