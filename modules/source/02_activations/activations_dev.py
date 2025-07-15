@@ -10,7 +10,7 @@
 
 # %% [markdown]
 """
-# Module 2: Activations - Nonlinearity in Neural Networks
+# Activations - Nonlinearity in Neural Networks
 
 Welcome to the Activations module! This is where neural networks get their power through nonlinearity.
 

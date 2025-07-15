@@ -10,7 +10,7 @@
 
 # %% [markdown]
 """
-# Module 7: Autograd - Automatic Differentiation Engine
+# Autograd - Automatic Differentiation Engine
 
 Welcome to the Autograd module! This is where TinyTorch becomes truly powerful. You'll implement the automatic differentiation engine that makes neural network training possible.
 

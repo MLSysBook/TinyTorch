@@ -1,4 +1,4 @@
-# Module 10: Compression & Optimization - Making AI Models Efficient
+# Compression & Optimization - Making AI Models Efficient
 
 Welcome to the Compression module! This is where you'll learn to make neural networks smaller, faster, and more efficient for real-world deployment.
 

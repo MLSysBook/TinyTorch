@@ -10,7 +10,7 @@
 
 # %% [markdown]
 """
-# Module 9: Training - Complete Neural Network Training Pipeline
+# Training - Complete Neural Network Training Pipeline
 
 Welcome to the Training module! This is where we bring everything together to train neural networks on real data.
 
