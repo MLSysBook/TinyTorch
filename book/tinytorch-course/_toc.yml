@@ -1,0 +1,14 @@
+# TinyTorch: Build ML Systems from Scratch
+# Table of Contents Structure
+
+format: jb-book
+root: intro
+title: "TinyTorch Course"
+
+chapters:
+- file: chapters/00-setup
+  title: "Setup & Configuration"
+- file: chapters/01-tensor
+  title: "Tensors: Core Data Structure"
+- file: chapters/02-activations
+  title: "Activation Functions"
