@@ -1,0 +1,1525 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>CNNs &#8212; Tiny🔥Torch: Build ML Systems from Scratch</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=5b4479735964841361fd" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=5b4479735964841361fd" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=5b4479735964841361fd" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=5b4479735964841361fd" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=5b4479735964841361fd" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=5b4479735964841361fd" />
+  <script src="../_static/vendor/fontawesome/6.1.2/js/all.min.js?digest=5b4479735964841361fd"></script>
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'chapters/05-cnn';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="DataLoader" href="06-dataloader.html" />
+    <link rel="prev" title="Networks" href="04-networks.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo.png" class="logo__image only-light" alt="Tiny🔥Torch: Build ML Systems from Scratch - Home"/>
+    <script>document.write(`<img src="../_static/logo.png" class="logo__image only-dark" alt="Tiny🔥Torch: Build ML Systems from Scratch - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    Tiny🔥Torch: Build Machine Learning Systems from Scratch
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Usage Paths</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../usage-paths/quick-exploration.html">🔬 Quick Exploration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage-paths/serious-development.html">🏗️ Serious Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage-paths/classroom-use.html">👨‍🏫 Classroom Use</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Foundation</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="00-setup.html">0. Development Environment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01-tensor.html">1. Tensors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="02-activations.html">2. Activations</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Building Blocks</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="03-layers.html">3. Layers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="04-networks.html">4. Networks</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">5. CNNs</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Training Systems</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="06-dataloader.html">DataLoader</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="07-autograd.html">7. Autograd</a></li>
+<li class="toctree-l1"><a class="reference internal" href="08-optimizers.html">8. Optimizers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="09-training.html">9. Training</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Production &amp; Performance</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="10-compression.html">10. Compression</a></li>
+<li class="toctree-l1"><a class="reference internal" href="11-kernels.html">11. Kernels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="12-benchmarking.html">12. Benchmarking</a></li>
+<li class="toctree-l1"><a class="reference internal" href="13-mlops.html">13. MLOps</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/VJ/TinyTorch" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/VJ/TinyTorch/edit/main/book/tinytorch-course/chapters/05-cnn.ipynb" target="_blank"
+   class="btn btn-sm btn-source-edit-button dropdown-item"
+   title="Suggest edit"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="btn__text-container">Suggest edit</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/VJ/TinyTorch/issues/new?title=Issue%20on%20page%20%2Fchapters/05-cnn.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/chapters/05-cnn.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>CNNs</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#where-this-code-lives-in-the-final-package">📦 Where This Code Lives in the Final Package</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-1-understanding-convolution">Step 1: Understanding Convolution</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#what-is-convolution">What is Convolution?</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#why-convolution-is-perfect-for-images">Why Convolution is Perfect for Images</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-fundamental-insight">The Fundamental Insight</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#real-world-applications">Real-World Applications</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#visual-intuition">Visual Intuition</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unit-test-convolution-operation">🧪 Unit Test: Convolution Operation</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-2-building-the-conv2d-layer">Step 2: Building the Conv2D Layer</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#what-is-a-conv2d-layer">What is a Conv2D Layer?</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#why-conv2d-layers-matter">Why Conv2D Layers Matter</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Real-World Applications</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#design-decisions">Design Decisions</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unit-test-conv2d-layer">🧪 Unit Test: Conv2D Layer</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-3-flattening-for-dense-layers">Step 3: Flattening for Dense Layers</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#what-is-flattening">What is Flattening?</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#why-flattening-is-needed">Why Flattening is Needed</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-pattern">The Pattern</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#real-world-usage">Real-World Usage</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unit-test-flatten-function">🧪 Unit Test: Flatten Function</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-4-comprehensive-test-complete-cnn-pipeline">Step 4: Comprehensive Test - Complete CNN Pipeline</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#real-world-cnn-applications">Real-World CNN Applications</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#image-classification-pipeline"><strong>Image Classification Pipeline</strong></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#multi-layer-cnn"><strong>Multi-layer CNN</strong></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#feature-extraction"><strong>Feature Extraction</strong></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-testing">🧪 Module Testing</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-summary">🎯 Module Summary</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#what-you-ve-accomplished">What You’ve Accomplished</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#key-concepts-you-ve-learned">Key Concepts You’ve Learned</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#mathematical-foundations">Mathematical Foundations</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">Real-World Applications</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cnn-architecture-insights">CNN Architecture Insights</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#performance-characteristics">Performance Characteristics</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#next-steps">Next Steps</a></li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="cnns">
+<h1>CNNs<a class="headerlink" href="#cnns" title="Permalink to this heading">#</a></h1>
+<div class="tip admonition">
+<p class="admonition-title">Interactive Learning</p>
+<p>🚀 <strong>Launch Binder</strong>: Click the rocket icon above to run this chapter interactively!</p>
+<p>💾 <strong>Save Your Work</strong>: Download your completed notebook when done.</p>
+<p>🏗️ <strong>Build Locally</strong>: Ready for serious development? <a class="reference external" href="https://github.com/your-org/tinytorch">Fork the repo</a> and work locally with the full <code class="docutils literal notranslate"><span class="pre">tito</span></code> workflow.</p>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#| default_exp core.cnn</span>
+
+<span class="c1">#| export</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Optional</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+<span class="c1"># Import from the main package - try package first, then local modules</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">tinytorch.core.tensor</span> <span class="kn">import</span> <span class="n">Tensor</span>
+    <span class="kn">from</span> <span class="nn">tinytorch.core.layers</span> <span class="kn">import</span> <span class="n">Dense</span>
+    <span class="kn">from</span> <span class="nn">tinytorch.core.activations</span> <span class="kn">import</span> <span class="n">ReLU</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="c1"># For development, import from local modules</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">),</span> <span class="s1">&#39;..&#39;</span><span class="p">,</span> <span class="s1">&#39;01_tensor&#39;</span><span class="p">))</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">),</span> <span class="s1">&#39;..&#39;</span><span class="p">,</span> <span class="s1">&#39;02_activations&#39;</span><span class="p">))</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">),</span> <span class="s1">&#39;..&#39;</span><span class="p">,</span> <span class="s1">&#39;03_layers&#39;</span><span class="p">))</span>
+    <span class="kn">from</span> <span class="nn">tensor_dev</span> <span class="kn">import</span> <span class="n">Tensor</span>
+    <span class="kn">from</span> <span class="nn">activations_dev</span> <span class="kn">import</span> <span class="n">ReLU</span>
+    <span class="kn">from</span> <span class="nn">layers_dev</span> <span class="kn">import</span> <span class="n">Dense</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
+<span class="ne">ModuleNotFoundError</span><span class="g g-Whitespace">                       </span>Traceback (most recent call last)
+<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">line</span> <span class="mi">8</span>
+<span class="g g-Whitespace">      </span><span class="mi">6</span> <span class="kn">import</span> <span class="nn">sys</span>
+<span class="g g-Whitespace">      </span><span class="mi">7</span> <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Optional</span>
+<span class="ne">----&gt; </span><span class="mi">8</span> <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="g g-Whitespace">     </span><span class="mi">10</span> <span class="c1"># Import from the main package - try package first, then local modules</span>
+<span class="g g-Whitespace">     </span><span class="mi">11</span> <span class="k">try</span><span class="p">:</span>
+
+<span class="ne">ModuleNotFoundError</span>: No module named &#39;matplotlib&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#| hide</span>
+<span class="c1">#| export</span>
+<span class="k">def</span> <span class="nf">_should_show_plots</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Check if we should show plots (disable during testing)&quot;&quot;&quot;</span>
+    <span class="c1"># Check multiple conditions that indicate we&#39;re in test mode</span>
+    <span class="n">is_pytest</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s1">&#39;pytest&#39;</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">modules</span> <span class="ow">or</span>
+        <span class="s1">&#39;test&#39;</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span> <span class="ow">or</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;PYTEST_CURRENT_TEST&#39;</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">or</span>
+        <span class="nb">any</span><span class="p">(</span><span class="s1">&#39;test&#39;</span> <span class="ow">in</span> <span class="n">arg</span> <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span> <span class="ow">or</span>
+        <span class="nb">any</span><span class="p">(</span><span class="s1">&#39;pytest&#39;</span> <span class="ow">in</span> <span class="n">arg</span> <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span>
+    <span class="p">)</span>
+    
+    <span class="c1"># Show plots in development mode (when not in test mode)</span>
+    <span class="k">return</span> <span class="ow">not</span> <span class="n">is_pytest</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;🔥 TinyTorch CNN Module&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;NumPy version: </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">__version__</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Python version: </span><span class="si">{</span><span class="n">sys</span><span class="o">.</span><span class="n">version_info</span><span class="o">.</span><span class="n">major</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">sys</span><span class="o">.</span><span class="n">version_info</span><span class="o">.</span><span class="n">minor</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Ready to build convolutional neural networks!&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<section id="where-this-code-lives-in-the-final-package">
+<h2>📦 Where This Code Lives in the Final Package<a class="headerlink" href="#where-this-code-lives-in-the-final-package" title="Permalink to this heading">#</a></h2>
+<p><strong>Learning Side:</strong> You work in <code class="docutils literal notranslate"><span class="pre">modules/source/05_cnn/cnn_dev.py</span></code><br />
+<strong>Building Side:</strong> Code exports to <code class="docutils literal notranslate"><span class="pre">tinytorch.core.cnn</span></code></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Final package structure:</span>
+<span class="kn">from</span> <span class="nn">tinytorch.core.cnn</span> <span class="kn">import</span> <span class="n">Conv2D</span><span class="p">,</span> <span class="n">conv2d_naive</span><span class="p">,</span> <span class="n">flatten</span>  <span class="c1"># CNN operations!</span>
+<span class="kn">from</span> <span class="nn">tinytorch.core.layers</span> <span class="kn">import</span> <span class="n">Dense</span>  <span class="c1"># Fully connected layers</span>
+<span class="kn">from</span> <span class="nn">tinytorch.core.activations</span> <span class="kn">import</span> <span class="n">ReLU</span>  <span class="c1"># Nonlinearity</span>
+<span class="kn">from</span> <span class="nn">tinytorch.core.tensor</span> <span class="kn">import</span> <span class="n">Tensor</span>  <span class="c1"># Foundation</span>
+</pre></div>
+</div>
+<p><strong>Why this matters:</strong></p>
+<ul class="simple">
+<li><p><strong>Learning:</strong> Focused modules for deep understanding of convolution</p></li>
+<li><p><strong>Production:</strong> Proper organization like PyTorch’s <code class="docutils literal notranslate"><span class="pre">torch.nn.Conv2d</span></code></p></li>
+<li><p><strong>Consistency:</strong> All CNN operations live together in <code class="docutils literal notranslate"><span class="pre">core.cnn</span></code></p></li>
+<li><p><strong>Integration:</strong> Works seamlessly with other TinyTorch components</p></li>
+</ul>
+</section>
+<section id="step-1-understanding-convolution">
+<h2>Step 1: Understanding Convolution<a class="headerlink" href="#step-1-understanding-convolution" title="Permalink to this heading">#</a></h2>
+<section id="what-is-convolution">
+<h3>What is Convolution?<a class="headerlink" href="#what-is-convolution" title="Permalink to this heading">#</a></h3>
+<p><strong>Convolution</strong> is a mathematical operation that slides a small filter (kernel) across an input, computing dot products at each position.</p>
+</section>
+<section id="why-convolution-is-perfect-for-images">
+<h3>Why Convolution is Perfect for Images<a class="headerlink" href="#why-convolution-is-perfect-for-images" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Local patterns</strong>: Images have local structure (edges, textures)</p></li>
+<li><p><strong>Translation invariance</strong>: Same pattern can appear anywhere</p></li>
+<li><p><strong>Parameter sharing</strong>: One filter detects the pattern everywhere</p></li>
+<li><p><strong>Spatial hierarchy</strong>: Multiple layers build increasingly complex features</p></li>
+</ul>
+</section>
+<section id="the-fundamental-insight">
+<h3>The Fundamental Insight<a class="headerlink" href="#the-fundamental-insight" title="Permalink to this heading">#</a></h3>
+<p><strong>Convolution is pattern matching!</strong> The kernel learns to detect specific patterns:</p>
+<ul class="simple">
+<li><p><strong>Edge detectors</strong>: Find boundaries between objects</p></li>
+<li><p><strong>Texture detectors</strong>: Recognize surface patterns</p></li>
+<li><p><strong>Shape detectors</strong>: Identify geometric forms</p></li>
+<li><p><strong>Feature detectors</strong>: Combine simple patterns into complex features</p></li>
+</ul>
+</section>
+<section id="real-world-applications">
+<h3>Real-World Applications<a class="headerlink" href="#real-world-applications" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Image processing</strong>: Detect edges, blur, sharpen</p></li>
+<li><p><strong>Computer vision</strong>: Recognize objects, faces, text</p></li>
+<li><p><strong>Medical imaging</strong>: Detect tumors, analyze scans</p></li>
+<li><p><strong>Autonomous driving</strong>: Identify traffic signs, pedestrians</p></li>
+</ul>
+</section>
+<section id="visual-intuition">
+<h3>Visual Intuition<a class="headerlink" href="#visual-intuition" title="Permalink to this heading">#</a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Input</span> <span class="n">Image</span><span class="p">:</span>     <span class="n">Kernel</span><span class="p">:</span>        <span class="n">Output</span> <span class="n">Feature</span> <span class="n">Map</span><span class="p">:</span>
+<span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>       <span class="p">[</span><span class="mi">1</span><span class="p">,</span>  <span class="mi">0</span><span class="p">]</span>       <span class="p">[</span><span class="mi">1</span><span class="o">*</span><span class="mi">1</span><span class="o">+</span><span class="mi">2</span><span class="o">*</span><span class="mi">0</span><span class="o">+</span><span class="mi">4</span><span class="o">*</span><span class="mi">0</span><span class="o">+</span><span class="mi">5</span><span class="o">*</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="mi">2</span><span class="o">*</span><span class="mi">1</span><span class="o">+</span><span class="mi">3</span><span class="o">*</span><span class="mi">0</span><span class="o">+</span><span class="mi">5</span><span class="o">*</span><span class="mi">0</span><span class="o">+</span><span class="mi">6</span><span class="o">*</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)]</span>
+<span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">]</span>       <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span>       <span class="p">[</span><span class="mi">4</span><span class="o">*</span><span class="mi">1</span><span class="o">+</span><span class="mi">5</span><span class="o">*</span><span class="mi">0</span><span class="o">+</span><span class="mi">7</span><span class="o">*</span><span class="mi">0</span><span class="o">+</span><span class="mi">8</span><span class="o">*</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="mi">5</span><span class="o">*</span><span class="mi">1</span><span class="o">+</span><span class="mi">6</span><span class="o">*</span><span class="mi">0</span><span class="o">+</span><span class="mi">8</span><span class="o">*</span><span class="mi">0</span><span class="o">+</span><span class="mi">9</span><span class="o">*</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)]</span>
+<span class="p">[</span><span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">9</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>The kernel slides across the input, computing dot products at each position.</p>
+<p>Let’s implement this step by step!</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#| export</span>
+<span class="k">def</span> <span class="nf">conv2d_naive</span><span class="p">(</span><span class="nb">input</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">kernel</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Naive 2D convolution (single channel, no stride, no padding).</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        input: 2D input array (H, W)</span>
+<span class="sd">        kernel: 2D filter (kH, kW)</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        2D output array (H-kH+1, W-kW+1)</span>
+<span class="sd">        </span>
+<span class="sd">    TODO: Implement the sliding window convolution using for-loops.</span>
+<span class="sd">    </span>
+<span class="sd">    APPROACH:</span>
+<span class="sd">    1. Get input dimensions: H, W = input.shape</span>
+<span class="sd">    2. Get kernel dimensions: kH, kW = kernel.shape</span>
+<span class="sd">    3. Calculate output dimensions: out_H = H - kH + 1, out_W = W - kW + 1</span>
+<span class="sd">    4. Create output array: np.zeros((out_H, out_W))</span>
+<span class="sd">    5. Use nested loops to slide the kernel:</span>
+<span class="sd">       - i loop: output rows (0 to out_H-1)</span>
+<span class="sd">       - j loop: output columns (0 to out_W-1)</span>
+<span class="sd">       - di loop: kernel rows (0 to kH-1)</span>
+<span class="sd">       - dj loop: kernel columns (0 to kW-1)</span>
+<span class="sd">    6. For each (i,j), compute: output[i,j] += input[i+di, j+dj] * kernel[di, dj]</span>
+<span class="sd">    </span>
+<span class="sd">    EXAMPLE:</span>
+<span class="sd">    Input: [[1, 2, 3],     Kernel: [[1, 0],</span>
+<span class="sd">            [4, 5, 6],              [0, -1]]</span>
+<span class="sd">            [7, 8, 9]]</span>
+<span class="sd">    </span>
+<span class="sd">    Output[0,0] = 1*1 + 2*0 + 4*0 + 5*(-1) = 1 - 5 = -4</span>
+<span class="sd">    Output[0,1] = 2*1 + 3*0 + 5*0 + 6*(-1) = 2 - 6 = -4</span>
+<span class="sd">    Output[1,0] = 4*1 + 5*0 + 7*0 + 8*(-1) = 4 - 8 = -4</span>
+<span class="sd">    Output[1,1] = 5*1 + 6*0 + 8*0 + 9*(-1) = 5 - 9 = -4</span>
+<span class="sd">    </span>
+<span class="sd">    HINTS:</span>
+<span class="sd">    - Start with output = np.zeros((out_H, out_W))</span>
+<span class="sd">    - Use four nested loops: for i in range(out_H): for j in range(out_W): for di in range(kH): for dj in range(kW):</span>
+<span class="sd">    - Accumulate the sum: output[i,j] += input[i+di, j+dj] * kernel[di, dj]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1">### BEGIN SOLUTION</span>
+    <span class="c1"># YOUR CODE HERE</span>
+    <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
+    <span class="c1">### END SOLUTION</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="unit-test-convolution-operation">
+<h3>🧪 Unit Test: Convolution Operation<a class="headerlink" href="#unit-test-convolution-operation" title="Permalink to this heading">#</a></h3>
+<p>Let’s test your convolution implementation right away! This is the core operation that powers computer vision.</p>
+<p><strong>This is a unit test</strong> - it tests one specific function (conv2d_naive) in isolation.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Test conv2d_naive function immediately after implementation</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;🔬 Unit Test: Convolution Operation...&quot;</span><span class="p">)</span>
+
+<span class="c1"># Test simple 3x3 input with 2x2 kernel</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">input_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">],</span> <span class="p">[</span><span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">9</span><span class="p">]],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+    <span class="n">kernel_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>  <span class="c1"># Identity-like kernel</span>
+    
+    <span class="n">result</span> <span class="o">=</span> <span class="n">conv2d_naive</span><span class="p">(</span><span class="n">input_array</span><span class="p">,</span> <span class="n">kernel_array</span><span class="p">)</span>
+    <span class="n">expected</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">6</span><span class="p">,</span> <span class="mi">8</span><span class="p">],</span> <span class="p">[</span><span class="mi">12</span><span class="p">,</span> <span class="mi">14</span><span class="p">]],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>  <span class="c1"># 1+5, 2+6, 4+8, 5+9</span>
+    
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Input:</span><span class="se">\n</span><span class="si">{</span><span class="n">input_array</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Kernel:</span><span class="se">\n</span><span class="si">{</span><span class="n">kernel_array</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Result:</span><span class="se">\n</span><span class="si">{</span><span class="n">result</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Expected:</span><span class="se">\n</span><span class="si">{</span><span class="n">expected</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    
+    <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">expected</span><span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;Convolution failed: expected </span><span class="si">{</span><span class="n">expected</span><span class="si">}</span><span class="s2">, got </span><span class="si">{</span><span class="n">result</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;✅ Simple convolution test passed&quot;</span><span class="p">)</span>
+    
+<span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;❌ Simple convolution test failed: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">raise</span>
+
+<span class="c1"># Test edge detection kernel</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">input_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+    <span class="n">edge_kernel</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">]],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>  <span class="c1"># Edge detection</span>
+    
+    <span class="n">result</span> <span class="o">=</span> <span class="n">conv2d_naive</span><span class="p">(</span><span class="n">input_array</span><span class="p">,</span> <span class="n">edge_kernel</span><span class="p">)</span>
+    <span class="n">expected</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>  <span class="c1"># Uniform region = no edges</span>
+    
+    <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">expected</span><span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;Edge detection failed: expected </span><span class="si">{</span><span class="n">expected</span><span class="si">}</span><span class="s2">, got </span><span class="si">{</span><span class="n">result</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;✅ Edge detection test passed&quot;</span><span class="p">)</span>
+    
+<span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;❌ Edge detection test failed: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">raise</span>
+
+<span class="c1"># Test output shape</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">input_5x5</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+    <span class="n">kernel_3x3</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+    
+    <span class="n">result</span> <span class="o">=</span> <span class="n">conv2d_naive</span><span class="p">(</span><span class="n">input_5x5</span><span class="p">,</span> <span class="n">kernel_3x3</span><span class="p">)</span>
+    <span class="n">expected_shape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>  <span class="c1"># 5-3+1 = 3</span>
+    
+    <span class="k">assert</span> <span class="n">result</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="n">expected_shape</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Output shape wrong: expected </span><span class="si">{</span><span class="n">expected_shape</span><span class="si">}</span><span class="s2">, got </span><span class="si">{</span><span class="n">result</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;✅ Output shape test passed&quot;</span><span class="p">)</span>
+    
+<span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;❌ Output shape test failed: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">raise</span>
+
+<span class="c1"># Show the convolution process</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;🎯 Convolution behavior:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;   Slides kernel across input&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;   Computes dot product at each position&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;   Output size = Input size - Kernel size + 1&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;📈 Progress: Convolution operation ✓&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="step-2-building-the-conv2d-layer">
+<h2>Step 2: Building the Conv2D Layer<a class="headerlink" href="#step-2-building-the-conv2d-layer" title="Permalink to this heading">#</a></h2>
+<section id="what-is-a-conv2d-layer">
+<h3>What is a Conv2D Layer?<a class="headerlink" href="#what-is-a-conv2d-layer" title="Permalink to this heading">#</a></h3>
+<p>A <strong>Conv2D layer</strong> is a learnable convolutional layer that:</p>
+<ul class="simple">
+<li><p>Has learnable kernel weights (initialized randomly)</p></li>
+<li><p>Applies convolution to input tensors</p></li>
+<li><p>Integrates with the rest of the neural network</p></li>
+</ul>
+</section>
+<section id="why-conv2d-layers-matter">
+<h3>Why Conv2D Layers Matter<a class="headerlink" href="#why-conv2d-layers-matter" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Feature learning</strong>: Kernels learn to detect useful patterns</p></li>
+<li><p><strong>Composability</strong>: Can be stacked with other layers</p></li>
+<li><p><strong>Efficiency</strong>: Shared weights reduce parameters dramatically</p></li>
+<li><p><strong>Translation invariance</strong>: Same patterns detected anywhere in the image</p></li>
+</ul>
+</section>
+<section id="id1">
+<h3>Real-World Applications<a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Image classification</strong>: Recognize objects in photos</p></li>
+<li><p><strong>Object detection</strong>: Find and locate objects</p></li>
+<li><p><strong>Medical imaging</strong>: Detect anomalies in scans</p></li>
+<li><p><strong>Autonomous driving</strong>: Identify road features</p></li>
+</ul>
+</section>
+<section id="design-decisions">
+<h3>Design Decisions<a class="headerlink" href="#design-decisions" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Kernel size</strong>: Typically 3×3 or 5×5 for balance of locality and capacity</p></li>
+<li><p><strong>Initialization</strong>: Small random values to break symmetry</p></li>
+<li><p><strong>Integration</strong>: Works with Tensor class and other layers</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#| export</span>
+<span class="k">class</span> <span class="nc">Conv2D</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    2D Convolutional Layer (single channel, single filter, no stride/pad).</span>
+<span class="sd">    </span>
+<span class="sd">    A learnable convolutional layer that applies a kernel to detect spatial patterns.</span>
+<span class="sd">    Perfect for building the foundation of convolutional neural networks.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">kernel_size</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize Conv2D layer with random kernel.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            kernel_size: (kH, kW) - size of the convolution kernel</span>
+<span class="sd">            </span>
+<span class="sd">        TODO: Initialize a random kernel with small values.</span>
+<span class="sd">        </span>
+<span class="sd">        APPROACH:</span>
+<span class="sd">        1. Store kernel_size as instance variable</span>
+<span class="sd">        2. Initialize random kernel with small values</span>
+<span class="sd">        3. Use proper initialization for stable training</span>
+<span class="sd">        </span>
+<span class="sd">        EXAMPLE:</span>
+<span class="sd">        Conv2D((2, 2)) creates:</span>
+<span class="sd">        - kernel: shape (2, 2) with small random values</span>
+<span class="sd">        </span>
+<span class="sd">        HINTS:</span>
+<span class="sd">        - Store kernel_size as self.kernel_size</span>
+<span class="sd">        - Initialize kernel: np.random.randn(kH, kW) * 0.1 (small values)</span>
+<span class="sd">        - Convert to float32 for consistency</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1">### BEGIN SOLUTION</span>
+    <span class="c1"># YOUR CODE HERE</span>
+    <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
+        <span class="c1">### END SOLUTION</span>
+    
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Forward pass: apply convolution to input tensor.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            x: Input tensor (2D for simplicity)</span>
+<span class="sd">            </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            Output tensor after convolution</span>
+<span class="sd">            </span>
+<span class="sd">        TODO: Implement forward pass using conv2d_naive function.</span>
+<span class="sd">        </span>
+<span class="sd">        APPROACH:</span>
+<span class="sd">        1. Extract numpy array from input tensor</span>
+<span class="sd">        2. Apply conv2d_naive with stored kernel</span>
+<span class="sd">        3. Return result wrapped in Tensor</span>
+<span class="sd">        </span>
+<span class="sd">        EXAMPLE:</span>
+<span class="sd">        x = Tensor([[1, 2, 3], [4, 5, 6], [7, 8, 9]])  # shape (3, 3)</span>
+<span class="sd">        layer = Conv2D((2, 2))</span>
+<span class="sd">        y = layer(x)  # shape (2, 2)</span>
+<span class="sd">        </span>
+<span class="sd">        HINTS:</span>
+<span class="sd">        - Use x.data to get numpy array</span>
+<span class="sd">        - Use conv2d_naive(x.data, self.kernel)</span>
+<span class="sd">        - Return Tensor(result) to wrap the result</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1">### BEGIN SOLUTION</span>
+    <span class="c1"># YOUR CODE HERE</span>
+    <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
+        <span class="c1">### END SOLUTION</span>
+    
+    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Make layer callable: layer(x) same as layer.forward(x)&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="unit-test-conv2d-layer">
+<h3>🧪 Unit Test: Conv2D Layer<a class="headerlink" href="#unit-test-conv2d-layer" title="Permalink to this heading">#</a></h3>
+<p>Let’s test your Conv2D layer implementation! This is a learnable convolutional layer that can be trained.</p>
+<p><strong>This is a unit test</strong> - it tests one specific class (Conv2D) in isolation.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Test Conv2D layer immediately after implementation</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;🔬 Unit Test: Conv2D Layer...&quot;</span><span class="p">)</span>
+
+<span class="c1"># Create a Conv2D layer</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">layer</span> <span class="o">=</span> <span class="n">Conv2D</span><span class="p">(</span><span class="n">kernel_size</span><span class="o">=</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Conv2D layer created with kernel size: </span><span class="si">{</span><span class="n">layer</span><span class="o">.</span><span class="n">kernel_size</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Kernel shape: </span><span class="si">{</span><span class="n">layer</span><span class="o">.</span><span class="n">kernel</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Test that kernel is initialized properly</span>
+    <span class="k">assert</span> <span class="n">layer</span><span class="o">.</span><span class="n">kernel</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;Kernel shape should be (2, 2), got </span><span class="si">{</span><span class="n">layer</span><span class="o">.</span><span class="n">kernel</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="k">assert</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">layer</span><span class="o">.</span><span class="n">kernel</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="s2">&quot;Kernel should not be all zeros&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;✅ Conv2D layer initialization successful&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Test with sample input</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">Tensor</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">],</span> <span class="p">[</span><span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">9</span><span class="p">]])</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Input shape: </span><span class="si">{</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    
+    <span class="n">y</span> <span class="o">=</span> <span class="n">layer</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Output shape: </span><span class="si">{</span><span class="n">y</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Output: </span><span class="si">{</span><span class="n">y</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Verify shapes</span>
+    <span class="k">assert</span> <span class="n">y</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;Output shape should be (2, 2), got </span><span class="si">{</span><span class="n">y</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">Tensor</span><span class="p">),</span> <span class="s2">&quot;Output should be a Tensor&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;✅ Conv2D layer forward pass successful&quot;</span><span class="p">)</span>
+    
+<span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;❌ Conv2D layer test failed: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">raise</span>
+
+<span class="c1"># Test different kernel sizes</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">layer_3x3</span> <span class="o">=</span> <span class="n">Conv2D</span><span class="p">(</span><span class="n">kernel_size</span><span class="o">=</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+    <span class="n">x_5x5</span> <span class="o">=</span> <span class="n">Tensor</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">],</span> <span class="p">[</span><span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">10</span><span class="p">],</span> <span class="p">[</span><span class="mi">11</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">13</span><span class="p">,</span> <span class="mi">14</span><span class="p">,</span> <span class="mi">15</span><span class="p">],</span> <span class="p">[</span><span class="mi">16</span><span class="p">,</span> <span class="mi">17</span><span class="p">,</span> <span class="mi">18</span><span class="p">,</span> <span class="mi">19</span><span class="p">,</span> <span class="mi">20</span><span class="p">],</span> <span class="p">[</span><span class="mi">21</span><span class="p">,</span> <span class="mi">22</span><span class="p">,</span> <span class="mi">23</span><span class="p">,</span> <span class="mi">24</span><span class="p">,</span> <span class="mi">25</span><span class="p">]])</span>
+    <span class="n">y_3x3</span> <span class="o">=</span> <span class="n">layer_3x3</span><span class="p">(</span><span class="n">x_5x5</span><span class="p">)</span>
+    
+    <span class="k">assert</span> <span class="n">y_3x3</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;3x3 kernel output should be (3, 3), got </span><span class="si">{</span><span class="n">y_3x3</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;✅ Different kernel sizes work correctly&quot;</span><span class="p">)</span>
+    
+<span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;❌ Different kernel sizes test failed: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">raise</span>
+
+<span class="c1"># Show the layer behavior</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;🎯 Conv2D layer behavior:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;   Learnable kernel weights&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;   Applies convolution to detect patterns&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;   Can be trained end-to-end&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;📈 Progress: Convolution operation ✓, Conv2D layer ✓&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="step-3-flattening-for-dense-layers">
+<h2>Step 3: Flattening for Dense Layers<a class="headerlink" href="#step-3-flattening-for-dense-layers" title="Permalink to this heading">#</a></h2>
+<section id="what-is-flattening">
+<h3>What is Flattening?<a class="headerlink" href="#what-is-flattening" title="Permalink to this heading">#</a></h3>
+<p><strong>Flattening</strong> converts multi-dimensional tensors to 1D vectors, enabling connection between convolutional and dense layers.</p>
+</section>
+<section id="why-flattening-is-needed">
+<h3>Why Flattening is Needed<a class="headerlink" href="#why-flattening-is-needed" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Interface compatibility</strong>: Conv2D outputs 2D, Dense expects 1D</p></li>
+<li><p><strong>Network composition</strong>: Connect spatial features to classification</p></li>
+<li><p><strong>Standard practice</strong>: Almost all CNNs use this pattern</p></li>
+<li><p><strong>Dimension management</strong>: Preserve information while changing shape</p></li>
+</ul>
+</section>
+<section id="the-pattern">
+<h3>The Pattern<a class="headerlink" href="#the-pattern" title="Permalink to this heading">#</a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Conv2D → ReLU → Conv2D → ReLU → Flatten → Dense → Output
+</pre></div>
+</div>
+</section>
+<section id="real-world-usage">
+<h3>Real-World Usage<a class="headerlink" href="#real-world-usage" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Classification</strong>: Final layers need 1D input for class probabilities</p></li>
+<li><p><strong>Feature extraction</strong>: Convert spatial features to vector representations</p></li>
+<li><p><strong>Transfer learning</strong>: Extract features from pre-trained CNNs</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#| export</span>
+<span class="k">def</span> <span class="nf">flatten</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Flatten a 2D tensor to 1D (for connecting to Dense layers).</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        x: Input tensor to flatten</span>
+<span class="sd">        </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        Flattened tensor with batch dimension preserved</span>
+<span class="sd">        </span>
+<span class="sd">    TODO: Implement flattening operation.</span>
+<span class="sd">    </span>
+<span class="sd">    APPROACH:</span>
+<span class="sd">    1. Get the numpy array from the tensor</span>
+<span class="sd">    2. Use .flatten() to convert to 1D</span>
+<span class="sd">    3. Add batch dimension with [None, :]</span>
+<span class="sd">    4. Return Tensor wrapped around the result</span>
+<span class="sd">    </span>
+<span class="sd">    EXAMPLE:</span>
+<span class="sd">    Input: Tensor([[1, 2], [3, 4]])  # shape (2, 2)</span>
+<span class="sd">    Output: Tensor([[1, 2, 3, 4]])  # shape (1, 4)</span>
+<span class="sd">    </span>
+<span class="sd">    HINTS:</span>
+<span class="sd">    - Use x.data.flatten() to get 1D array</span>
+<span class="sd">    - Add batch dimension: result[None, :]</span>
+<span class="sd">    - Return Tensor(result)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1">### BEGIN SOLUTION</span>
+    <span class="c1"># YOUR CODE HERE</span>
+    <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
+    <span class="c1">### END SOLUTION</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="unit-test-flatten-function">
+<h3>🧪 Unit Test: Flatten Function<a class="headerlink" href="#unit-test-flatten-function" title="Permalink to this heading">#</a></h3>
+<p>Let’s test your flatten function! This connects convolutional layers to dense layers.</p>
+<p><strong>This is a unit test</strong> - it tests one specific function (flatten) in isolation.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Test flatten function immediately after implementation</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;🔬 Unit Test: Flatten Function...&quot;</span><span class="p">)</span>
+
+<span class="c1"># Test case 1: 2x2 tensor</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">Tensor</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">]])</span>
+    <span class="n">flattened</span> <span class="o">=</span> <span class="n">flatten</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Input: </span><span class="si">{</span><span class="n">x</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Flattened: </span><span class="si">{</span><span class="n">flattened</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Flattened shape: </span><span class="si">{</span><span class="n">flattened</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Verify shape and content</span>
+    <span class="k">assert</span> <span class="n">flattened</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;Flattened shape should be (1, 4), got </span><span class="si">{</span><span class="n">flattened</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="n">expected_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">]])</span>
+    <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">array_equal</span><span class="p">(</span><span class="n">flattened</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">expected_data</span><span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;Flattened data should be </span><span class="si">{</span><span class="n">expected_data</span><span class="si">}</span><span class="s2">, got </span><span class="si">{</span><span class="n">flattened</span><span class="o">.</span><span class="n">data</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;✅ 2x2 flatten test passed&quot;</span><span class="p">)</span>
+    
+<span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;❌ 2x2 flatten test failed: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">raise</span>
+
+<span class="c1"># Test case 2: 3x3 tensor</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">x2</span> <span class="o">=</span> <span class="n">Tensor</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">],</span> <span class="p">[</span><span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">9</span><span class="p">]])</span>
+    <span class="n">flattened2</span> <span class="o">=</span> <span class="n">flatten</span><span class="p">(</span><span class="n">x2</span><span class="p">)</span>
+    
+    <span class="k">assert</span> <span class="n">flattened2</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">9</span><span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;Flattened shape should be (1, 9), got </span><span class="si">{</span><span class="n">flattened2</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="n">expected_data2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">9</span><span class="p">]])</span>
+    <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">array_equal</span><span class="p">(</span><span class="n">flattened2</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">expected_data2</span><span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;Flattened data should be </span><span class="si">{</span><span class="n">expected_data2</span><span class="si">}</span><span class="s2">, got </span><span class="si">{</span><span class="n">flattened2</span><span class="o">.</span><span class="n">data</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;✅ 3x3 flatten test passed&quot;</span><span class="p">)</span>
+    
+<span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;❌ 3x3 flatten test failed: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">raise</span>
+
+<span class="c1"># Test case 3: Different shapes</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">x3</span> <span class="o">=</span> <span class="n">Tensor</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">]])</span>  <span class="c1"># 2x4</span>
+    <span class="n">flattened3</span> <span class="o">=</span> <span class="n">flatten</span><span class="p">(</span><span class="n">x3</span><span class="p">)</span>
+    
+    <span class="k">assert</span> <span class="n">flattened3</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">8</span><span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;Flattened shape should be (1, 8), got </span><span class="si">{</span><span class="n">flattened3</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="n">expected_data3</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">]])</span>
+    <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">array_equal</span><span class="p">(</span><span class="n">flattened3</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">expected_data3</span><span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;Flattened data should be </span><span class="si">{</span><span class="n">expected_data3</span><span class="si">}</span><span class="s2">, got </span><span class="si">{</span><span class="n">flattened3</span><span class="o">.</span><span class="n">data</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;✅ Different shapes flatten test passed&quot;</span><span class="p">)</span>
+    
+<span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;❌ Different shapes flatten test failed: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">raise</span>
+
+<span class="c1"># Show the flattening behavior</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;🎯 Flatten behavior:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;   Converts 2D tensor to 1D&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;   Preserves batch dimension&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;   Enables connection to Dense layers&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;📈 Progress: Convolution operation ✓, Conv2D layer ✓, Flatten ✓&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="step-4-comprehensive-test-complete-cnn-pipeline">
+<h2>Step 4: Comprehensive Test - Complete CNN Pipeline<a class="headerlink" href="#step-4-comprehensive-test-complete-cnn-pipeline" title="Permalink to this heading">#</a></h2>
+<section id="real-world-cnn-applications">
+<h3>Real-World CNN Applications<a class="headerlink" href="#real-world-cnn-applications" title="Permalink to this heading">#</a></h3>
+<p>Let’s test our CNN components in realistic scenarios:</p>
+<section id="image-classification-pipeline">
+<h4><strong>Image Classification Pipeline</strong><a class="headerlink" href="#image-classification-pipeline" title="Permalink to this heading">#</a></h4>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span># The standard CNN pattern
+Conv2D → ReLU → Flatten → Dense → Output
+</pre></div>
+</div>
+</section>
+<section id="multi-layer-cnn">
+<h4><strong>Multi-layer CNN</strong><a class="headerlink" href="#multi-layer-cnn" title="Permalink to this heading">#</a></h4>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span># Deeper pattern for complex features
+Conv2D → ReLU → Conv2D → ReLU → Flatten → Dense → Output
+</pre></div>
+</div>
+</section>
+<section id="feature-extraction">
+<h4><strong>Feature Extraction</strong><a class="headerlink" href="#feature-extraction" title="Permalink to this heading">#</a></h4>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span># Extract spatial features then classify
+image → CNN features → dense classifier → predictions
+</pre></div>
+</div>
+<p>This comprehensive test ensures our CNN components work together for real computer vision applications!</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Comprehensive test - complete CNN applications</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;🔬 Comprehensive Test: Complete CNN Applications...&quot;</span><span class="p">)</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="c1"># Test 1: Simple CNN Pipeline</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">1. Simple CNN Pipeline Test:&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Create pipeline: Conv2D → ReLU → Flatten → Dense</span>
+    <span class="n">conv</span> <span class="o">=</span> <span class="n">Conv2D</span><span class="p">(</span><span class="n">kernel_size</span><span class="o">=</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+    <span class="n">relu</span> <span class="o">=</span> <span class="n">ReLU</span><span class="p">()</span>
+    <span class="n">dense</span> <span class="o">=</span> <span class="n">Dense</span><span class="p">(</span><span class="n">input_size</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">output_size</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+    
+    <span class="c1"># Input image</span>
+    <span class="n">image</span> <span class="o">=</span> <span class="n">Tensor</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">],</span> <span class="p">[</span><span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">9</span><span class="p">]])</span>
+    
+    <span class="c1"># Forward pass</span>
+    <span class="n">features</span> <span class="o">=</span> <span class="n">conv</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>          <span class="c1"># (3,3) → (2,2)</span>
+    <span class="n">activated</span> <span class="o">=</span> <span class="n">relu</span><span class="p">(</span><span class="n">features</span><span class="p">)</span>      <span class="c1"># (2,2) → (2,2)</span>
+    <span class="n">flattened</span> <span class="o">=</span> <span class="n">flatten</span><span class="p">(</span><span class="n">activated</span><span class="p">)</span>  <span class="c1"># (2,2) → (1,4)</span>
+    <span class="n">output</span> <span class="o">=</span> <span class="n">dense</span><span class="p">(</span><span class="n">flattened</span><span class="p">)</span>       <span class="c1"># (1,4) → (1,3)</span>
+    
+    <span class="k">assert</span> <span class="n">features</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;Conv output shape wrong: </span><span class="si">{</span><span class="n">features</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="k">assert</span> <span class="n">activated</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;ReLU output shape wrong: </span><span class="si">{</span><span class="n">activated</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="k">assert</span> <span class="n">flattened</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;Flatten output shape wrong: </span><span class="si">{</span><span class="n">flattened</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="k">assert</span> <span class="n">output</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;Dense output shape wrong: </span><span class="si">{</span><span class="n">output</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span>
+    
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;✅ Simple CNN pipeline works correctly&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Test 2: Multi-layer CNN</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">2. Multi-layer CNN Test:&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Create deeper pipeline: Conv2D → ReLU → Conv2D → ReLU → Flatten → Dense</span>
+    <span class="n">conv1</span> <span class="o">=</span> <span class="n">Conv2D</span><span class="p">(</span><span class="n">kernel_size</span><span class="o">=</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+    <span class="n">relu1</span> <span class="o">=</span> <span class="n">ReLU</span><span class="p">()</span>
+    <span class="n">conv2</span> <span class="o">=</span> <span class="n">Conv2D</span><span class="p">(</span><span class="n">kernel_size</span><span class="o">=</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+    <span class="n">relu2</span> <span class="o">=</span> <span class="n">ReLU</span><span class="p">()</span>
+    <span class="n">dense_multi</span> <span class="o">=</span> <span class="n">Dense</span><span class="p">(</span><span class="n">input_size</span><span class="o">=</span><span class="mi">9</span><span class="p">,</span> <span class="n">output_size</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+    
+    <span class="c1"># Larger input for multi-layer processing</span>
+    <span class="n">large_image</span> <span class="o">=</span> <span class="n">Tensor</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">],</span> <span class="p">[</span><span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">10</span><span class="p">],</span> <span class="p">[</span><span class="mi">11</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">13</span><span class="p">,</span> <span class="mi">14</span><span class="p">,</span> <span class="mi">15</span><span class="p">],</span> <span class="p">[</span><span class="mi">16</span><span class="p">,</span> <span class="mi">17</span><span class="p">,</span> <span class="mi">18</span><span class="p">,</span> <span class="mi">19</span><span class="p">,</span> <span class="mi">20</span><span class="p">],</span> <span class="p">[</span><span class="mi">21</span><span class="p">,</span> <span class="mi">22</span><span class="p">,</span> <span class="mi">23</span><span class="p">,</span> <span class="mi">24</span><span class="p">,</span> <span class="mi">25</span><span class="p">]])</span>
+    
+    <span class="c1"># Forward pass</span>
+    <span class="n">h1</span> <span class="o">=</span> <span class="n">conv1</span><span class="p">(</span><span class="n">large_image</span><span class="p">)</span>  <span class="c1"># (5,5) → (4,4)</span>
+    <span class="n">h2</span> <span class="o">=</span> <span class="n">relu1</span><span class="p">(</span><span class="n">h1</span><span class="p">)</span>           <span class="c1"># (4,4) → (4,4)</span>
+    <span class="n">h3</span> <span class="o">=</span> <span class="n">conv2</span><span class="p">(</span><span class="n">h2</span><span class="p">)</span>           <span class="c1"># (4,4) → (3,3)</span>
+    <span class="n">h4</span> <span class="o">=</span> <span class="n">relu2</span><span class="p">(</span><span class="n">h3</span><span class="p">)</span>           <span class="c1"># (3,3) → (3,3)</span>
+    <span class="n">h5</span> <span class="o">=</span> <span class="n">flatten</span><span class="p">(</span><span class="n">h4</span><span class="p">)</span>         <span class="c1"># (3,3) → (1,9)</span>
+    <span class="n">output_multi</span> <span class="o">=</span> <span class="n">dense_multi</span><span class="p">(</span><span class="n">h5</span><span class="p">)</span>  <span class="c1"># (1,9) → (1,2)</span>
+    
+    <span class="k">assert</span> <span class="n">h1</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;Conv1 output wrong: </span><span class="si">{</span><span class="n">h1</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="k">assert</span> <span class="n">h3</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;Conv2 output wrong: </span><span class="si">{</span><span class="n">h3</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="k">assert</span> <span class="n">h5</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">9</span><span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;Flatten output wrong: </span><span class="si">{</span><span class="n">h5</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="k">assert</span> <span class="n">output_multi</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;Final output wrong: </span><span class="si">{</span><span class="n">output_multi</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span>
+    
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;✅ Multi-layer CNN works correctly&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Test 3: Image Classification Scenario</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">3. Image Classification Test:&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Simulate digit classification with 8x8 image</span>
+    <span class="n">digit_image</span> <span class="o">=</span> <span class="n">Tensor</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+                     <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+                     <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+                     <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+                     <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+                     <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+                     <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+                     <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]])</span>
+    
+    <span class="c1"># CNN for digit classification</span>
+    <span class="n">feature_extractor</span> <span class="o">=</span> <span class="n">Conv2D</span><span class="p">(</span><span class="n">kernel_size</span><span class="o">=</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>  <span class="c1"># (8,8) → (6,6)</span>
+    <span class="n">activation</span> <span class="o">=</span> <span class="n">ReLU</span><span class="p">()</span>
+    <span class="n">classifier</span> <span class="o">=</span> <span class="n">Dense</span><span class="p">(</span><span class="n">input_size</span><span class="o">=</span><span class="mi">36</span><span class="p">,</span> <span class="n">output_size</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>  <span class="c1"># 10 digit classes</span>
+    
+    <span class="c1"># Forward pass</span>
+    <span class="n">features</span> <span class="o">=</span> <span class="n">feature_extractor</span><span class="p">(</span><span class="n">digit_image</span><span class="p">)</span>
+    <span class="n">activated_features</span> <span class="o">=</span> <span class="n">activation</span><span class="p">(</span><span class="n">features</span><span class="p">)</span>
+    <span class="n">feature_vector</span> <span class="o">=</span> <span class="n">flatten</span><span class="p">(</span><span class="n">activated_features</span><span class="p">)</span>
+    <span class="n">digit_scores</span> <span class="o">=</span> <span class="n">classifier</span><span class="p">(</span><span class="n">feature_vector</span><span class="p">)</span>
+    
+    <span class="k">assert</span> <span class="n">features</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">6</span><span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;Feature extraction shape wrong: </span><span class="si">{</span><span class="n">features</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="k">assert</span> <span class="n">feature_vector</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">36</span><span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;Feature vector shape wrong: </span><span class="si">{</span><span class="n">feature_vector</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="k">assert</span> <span class="n">digit_scores</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;Digit scores shape wrong: </span><span class="si">{</span><span class="n">digit_scores</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span>
+    
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;✅ Image classification scenario works correctly&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Test 4: Feature Extraction and Composition</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">4. Feature Extraction Test:&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Create modular feature extractor</span>
+    <span class="n">feature_conv</span> <span class="o">=</span> <span class="n">Conv2D</span><span class="p">(</span><span class="n">kernel_size</span><span class="o">=</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+    <span class="n">feature_activation</span> <span class="o">=</span> <span class="n">ReLU</span><span class="p">()</span>
+    
+    <span class="c1"># Create classifier head</span>
+    <span class="n">classifier_head</span> <span class="o">=</span> <span class="n">Dense</span><span class="p">(</span><span class="n">input_size</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">output_size</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+    
+    <span class="c1"># Test composition</span>
+    <span class="n">test_image</span> <span class="o">=</span> <span class="n">Tensor</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">],</span> <span class="p">[</span><span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">9</span><span class="p">]])</span>
+    
+    <span class="c1"># Extract features</span>
+    <span class="n">extracted_features</span> <span class="o">=</span> <span class="n">feature_conv</span><span class="p">(</span><span class="n">test_image</span><span class="p">)</span>
+    <span class="n">activated_features</span> <span class="o">=</span> <span class="n">feature_activation</span><span class="p">(</span><span class="n">extracted_features</span><span class="p">)</span>
+    <span class="n">feature_representation</span> <span class="o">=</span> <span class="n">flatten</span><span class="p">(</span><span class="n">activated_features</span><span class="p">)</span>
+    
+    <span class="c1"># Classify</span>
+    <span class="n">predictions</span> <span class="o">=</span> <span class="n">classifier_head</span><span class="p">(</span><span class="n">feature_representation</span><span class="p">)</span>
+    
+    <span class="k">assert</span> <span class="n">extracted_features</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;Feature extraction wrong: </span><span class="si">{</span><span class="n">extracted_features</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="k">assert</span> <span class="n">feature_representation</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;Feature representation wrong: </span><span class="si">{</span><span class="n">feature_representation</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="k">assert</span> <span class="n">predictions</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;Predictions wrong: </span><span class="si">{</span><span class="n">predictions</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span>
+    
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;✅ Feature extraction and composition works correctly&quot;</span><span class="p">)</span>
+    
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">🎉 Comprehensive test passed! Your CNN components work correctly for:&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;  • Image classification pipelines&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;  • Multi-layer feature extraction&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;  • Spatial pattern recognition&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;  • End-to-end CNN workflows&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;📈 Progress: Complete CNN architecture ready for computer vision!&quot;</span><span class="p">)</span>
+    
+<span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;❌ Comprehensive test failed: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">raise</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;📈 Final Progress: Complete CNN system ready for computer vision!&quot;</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">test_convolution_operation</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Test convolution operation implementation comprehensively.&quot;&quot;&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;🔬 Unit Test: Convolution Operation...&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Test basic convolution</span>
+    <span class="n">input_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">],</span> <span class="p">[</span><span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">9</span><span class="p">]])</span>
+    <span class="n">kernel</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]])</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">conv2d_naive</span><span class="p">(</span><span class="n">input_data</span><span class="p">,</span> <span class="n">kernel</span><span class="p">)</span>
+    
+    <span class="k">assert</span> <span class="n">result</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="s2">&quot;Convolution should produce correct output shape&quot;</span>
+    <span class="n">expected</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">6</span><span class="p">,</span> <span class="mi">8</span><span class="p">],</span> <span class="p">[</span><span class="mi">12</span><span class="p">,</span> <span class="mi">14</span><span class="p">]])</span>
+    <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">array_equal</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">expected</span><span class="p">),</span> <span class="s2">&quot;Convolution should produce correct values&quot;</span>
+    
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;✅ Convolution operation works correctly&quot;</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">test_conv2d_layer</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Test Conv2D layer implementation comprehensively.&quot;&quot;&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;🔬 Unit Test: Conv2D Layer...&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Test Conv2D layer</span>
+    <span class="n">conv</span> <span class="o">=</span> <span class="n">Conv2D</span><span class="p">(</span><span class="n">kernel_size</span><span class="o">=</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+    <span class="n">input_tensor</span> <span class="o">=</span> <span class="n">Tensor</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+    <span class="n">output</span> <span class="o">=</span> <span class="n">conv</span><span class="p">(</span><span class="n">input_tensor</span><span class="p">)</span>
+    
+    <span class="k">assert</span> <span class="n">output</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="s2">&quot;Conv2D should produce correct output shape&quot;</span>
+    <span class="k">assert</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">conv</span><span class="p">,</span> <span class="s1">&#39;kernel&#39;</span><span class="p">),</span> <span class="s2">&quot;Conv2D should have kernel attribute&quot;</span>
+    <span class="k">assert</span> <span class="n">conv</span><span class="o">.</span><span class="n">kernel</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="s2">&quot;Kernel should have correct shape&quot;</span>
+    
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;✅ Conv2D layer works correctly&quot;</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">test_flatten_function</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Test flatten function implementation comprehensively.&quot;&quot;&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;🔬 Unit Test: Flatten Function...&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Test flatten function</span>
+    <span class="n">input_2d</span> <span class="o">=</span> <span class="n">Tensor</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">]])</span>
+    <span class="n">flattened</span> <span class="o">=</span> <span class="n">flatten</span><span class="p">(</span><span class="n">input_2d</span><span class="p">)</span>
+    
+    <span class="k">assert</span> <span class="n">flattened</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="s2">&quot;Flatten should produce output with batch dimension&quot;</span>
+    <span class="n">expected</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">]])</span>
+    <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">array_equal</span><span class="p">(</span><span class="n">flattened</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">expected</span><span class="p">),</span> <span class="s2">&quot;Flatten should preserve values&quot;</span>
+    
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;✅ Flatten function works correctly&quot;</span><span class="p">)</span>
+
+<span class="c1"># CNN pipeline integration test moved to tests/integration/test_cnn_pipeline.py</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+</section>
+<section id="module-testing">
+<h2>🧪 Module Testing<a class="headerlink" href="#module-testing" title="Permalink to this heading">#</a></h2>
+<p>Time to test your implementation! This section uses TinyTorch’s standardized testing framework to ensure your implementation works correctly.</p>
+<p><strong>This testing section is locked</strong> - it provides consistent feedback across all modules and cannot be modified.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># =============================================================================</span>
+<span class="c1"># STANDARDIZED MODULE TESTING - DO NOT MODIFY</span>
+<span class="c1"># This cell is locked to ensure consistent testing across all TinyTorch modules</span>
+<span class="c1"># =============================================================================</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">tito.tools.testing</span> <span class="kn">import</span> <span class="n">run_module_tests_auto</span>
+    
+    <span class="c1"># Automatically discover and run all tests in this module</span>
+    <span class="n">success</span> <span class="o">=</span> <span class="n">run_module_tests_auto</span><span class="p">(</span><span class="s2">&quot;CNN&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="module-summary">
+<h2>🎯 Module Summary<a class="headerlink" href="#module-summary" title="Permalink to this heading">#</a></h2>
+<p>Congratulations! You’ve successfully implemented the core components of convolutional neural networks:</p>
+<section id="what-you-ve-accomplished">
+<h3>What You’ve Accomplished<a class="headerlink" href="#what-you-ve-accomplished" title="Permalink to this heading">#</a></h3>
+<p>✅ <strong>Convolution Operation</strong>: Implemented the sliding window mechanism from scratch<br />
+✅ <strong>Conv2D Layer</strong>: Built learnable convolutional layers with random initialization<br />
+✅ <strong>Flatten Function</strong>: Created the bridge between convolutional and dense layers<br />
+✅ <strong>CNN Pipelines</strong>: Composed complete systems for image processing<br />
+✅ <strong>Real Applications</strong>: Tested on image classification and feature extraction</p>
+</section>
+<section id="key-concepts-you-ve-learned">
+<h3>Key Concepts You’ve Learned<a class="headerlink" href="#key-concepts-you-ve-learned" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Convolution as pattern matching</strong>: Kernels detect specific features</p></li>
+<li><p><strong>Sliding window mechanism</strong>: How convolution processes spatial data</p></li>
+<li><p><strong>Parameter sharing</strong>: Same kernel applied across the entire image</p></li>
+<li><p><strong>Spatial hierarchy</strong>: Multiple layers build complex features</p></li>
+<li><p><strong>CNN architecture</strong>: Conv2D → Activation → Flatten → Dense pattern</p></li>
+</ul>
+</section>
+<section id="mathematical-foundations">
+<h3>Mathematical Foundations<a class="headerlink" href="#mathematical-foundations" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Convolution operation</strong>: dot product of kernel and image patches</p></li>
+<li><p><strong>Output size calculation</strong>: (input_size - kernel_size + 1)</p></li>
+<li><p><strong>Translation invariance</strong>: Same pattern detected anywhere in input</p></li>
+<li><p><strong>Feature maps</strong>: Spatial representations of detected patterns</p></li>
+</ul>
+</section>
+<section id="id2">
+<h3>Real-World Applications<a class="headerlink" href="#id2" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Image classification</strong>: Object recognition, medical imaging</p></li>
+<li><p><strong>Computer vision</strong>: Face detection, autonomous driving</p></li>
+<li><p><strong>Pattern recognition</strong>: Texture analysis, edge detection</p></li>
+<li><p><strong>Feature extraction</strong>: Transfer learning, representation learning</p></li>
+</ul>
+</section>
+<section id="cnn-architecture-insights">
+<h3>CNN Architecture Insights<a class="headerlink" href="#cnn-architecture-insights" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Kernel size</strong>: 3×3 most common, balances locality and capacity</p></li>
+<li><p><strong>Stacking layers</strong>: Builds hierarchical feature representations</p></li>
+<li><p><strong>Spatial reduction</strong>: Each layer reduces spatial dimensions</p></li>
+<li><p><strong>Channel progression</strong>: Typically increase channels while reducing spatial size</p></li>
+</ul>
+</section>
+<section id="performance-characteristics">
+<h3>Performance Characteristics<a class="headerlink" href="#performance-characteristics" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Parameter efficiency</strong>: Dramatic reduction vs. fully connected</p></li>
+<li><p><strong>Translation invariance</strong>: Robust to object location changes</p></li>
+<li><p><strong>Computational efficiency</strong>: Parallel processing of spatial regions</p></li>
+<li><p><strong>Memory considerations</strong>: Feature maps require storage during forward pass</p></li>
+</ul>
+</section>
+<section id="next-steps">
+<h3>Next Steps<a class="headerlink" href="#next-steps" title="Permalink to this heading">#</a></h3>
+<ol class="arabic">
+<li><p><strong>Export your code</strong>: Use NBDev to export to the <code class="docutils literal notranslate"><span class="pre">tinytorch</span></code> package</p></li>
+<li><p><strong>Test your implementation</strong>: Run the complete test suite</p></li>
+<li><p><strong>Build CNN architectures</strong>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">tinytorch.core.cnn</span> <span class="kn">import</span> <span class="n">Conv2D</span><span class="p">,</span> <span class="n">flatten</span>
+<span class="kn">from</span> <span class="nn">tinytorch.core.layers</span> <span class="kn">import</span> <span class="n">Dense</span>
+<span class="kn">from</span> <span class="nn">tinytorch.core.activations</span> <span class="kn">import</span> <span class="n">ReLU</span>
+
+<span class="c1"># Create CNN</span>
+<span class="n">conv</span> <span class="o">=</span> <span class="n">Conv2D</span><span class="p">(</span><span class="n">kernel_size</span><span class="o">=</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+<span class="n">relu</span> <span class="o">=</span> <span class="n">ReLU</span><span class="p">()</span>
+<span class="n">dense</span> <span class="o">=</span> <span class="n">Dense</span><span class="p">(</span><span class="n">input_size</span><span class="o">=</span><span class="mi">36</span><span class="p">,</span> <span class="n">output_size</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+
+<span class="c1"># Process image</span>
+<span class="n">features</span> <span class="o">=</span> <span class="n">relu</span><span class="p">(</span><span class="n">conv</span><span class="p">(</span><span class="n">image</span><span class="p">))</span>
+<span class="n">predictions</span> <span class="o">=</span> <span class="n">dense</span><span class="p">(</span><span class="n">flatten</span><span class="p">(</span><span class="n">features</span><span class="p">))</span>
+</pre></div>
+</div>
+</li>
+<li><p><strong>Explore advanced CNNs</strong>: Pooling, multiple channels, modern architectures!</p></li>
+</ol>
+<p><strong>Ready for the next challenge?</strong> Let’s build data loaders to handle real datasets efficiently!</p>
+</section>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./chapters"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="04-networks.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Networks</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="06-dataloader.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">DataLoader</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#where-this-code-lives-in-the-final-package">📦 Where This Code Lives in the Final Package</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-1-understanding-convolution">Step 1: Understanding Convolution</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#what-is-convolution">What is Convolution?</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#why-convolution-is-perfect-for-images">Why Convolution is Perfect for Images</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-fundamental-insight">The Fundamental Insight</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#real-world-applications">Real-World Applications</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#visual-intuition">Visual Intuition</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unit-test-convolution-operation">🧪 Unit Test: Convolution Operation</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-2-building-the-conv2d-layer">Step 2: Building the Conv2D Layer</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#what-is-a-conv2d-layer">What is a Conv2D Layer?</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#why-conv2d-layers-matter">Why Conv2D Layers Matter</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Real-World Applications</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#design-decisions">Design Decisions</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unit-test-conv2d-layer">🧪 Unit Test: Conv2D Layer</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-3-flattening-for-dense-layers">Step 3: Flattening for Dense Layers</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#what-is-flattening">What is Flattening?</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#why-flattening-is-needed">Why Flattening is Needed</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-pattern">The Pattern</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#real-world-usage">Real-World Usage</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unit-test-flatten-function">🧪 Unit Test: Flatten Function</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-4-comprehensive-test-complete-cnn-pipeline">Step 4: Comprehensive Test - Complete CNN Pipeline</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#real-world-cnn-applications">Real-World CNN Applications</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#image-classification-pipeline"><strong>Image Classification Pipeline</strong></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#multi-layer-cnn"><strong>Multi-layer CNN</strong></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#feature-extraction"><strong>Feature Extraction</strong></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-testing">🧪 Module Testing</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-summary">🎯 Module Summary</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#what-you-ve-accomplished">What You’ve Accomplished</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#key-concepts-you-ve-learned">Key Concepts You’ve Learned</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#mathematical-foundations">Mathematical Foundations</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">Real-World Applications</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cnn-architecture-insights">CNN Architecture Insights</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#performance-characteristics">Performance Characteristics</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#next-steps">Next Steps</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By TinyTorch Team
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2025.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=5b4479735964841361fd"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=5b4479735964841361fd"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

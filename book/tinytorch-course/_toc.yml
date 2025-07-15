@@ -6,6 +6,15 @@ root: intro
 title: "TinyTorch Course"
 
 parts:
+- caption: Usage Paths
+  chapters:
+  - file: usage-paths/quick-exploration
+    title: "🔬 Quick Exploration"
+  - file: usage-paths/serious-development
+    title: "🏗️ Serious Development"
+  - file: usage-paths/classroom-use
+    title: "👨‍🏫 Classroom Use"
+
 - caption: Foundation
   chapters:
   - file: chapters/00-setup.ipynb
@@ -19,31 +28,31 @@ parts:
   chapters:
   - file: chapters/03-layers.ipynb
     title: "3. Layers"
-  - file: chapters/04-networks
+  - file: chapters/04-networks.ipynb
     title: "4. Networks"
-  - file: chapters/05-cnn
+  - file: chapters/05-cnn.ipynb
     title: "5. CNNs"
 
 - caption: Training Systems  
   chapters:
-  - file: chapters/06-dataloader
+  - file: chapters/06-dataloader.ipynb
     title: "6. DataLoader"
-  - file: chapters/07-autograd
+  - file: chapters/07-autograd.ipynb
     title: "7. Autograd"
-  - file: chapters/08-optimizers
+  - file: chapters/08-optimizers.ipynb
     title: "8. Optimizers"
-  - file: chapters/09-training
+  - file: chapters/09-training.ipynb
     title: "9. Training"
 
 - caption: Production & Performance
   chapters:
-  - file: chapters/10-compression
+  - file: chapters/10-compression.ipynb
     title: "10. Compression"
-  - file: chapters/11-kernels
+  - file: chapters/11-kernels.ipynb
     title: "11. Kernels"
-  - file: chapters/12-benchmarking
+  - file: chapters/12-benchmarking.ipynb
     title: "12. Benchmarking"
-  - file: chapters/13-mlops
+  - file: chapters/13-mlops.ipynb
     title: "13. MLOps"
 
 - caption: Appendices
