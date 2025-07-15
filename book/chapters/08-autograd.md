@@ -23,21 +23,21 @@ Choose your preferred way to engage with this module:
 ````{grid} 1 2 3 3
 
 ```{grid-item-card} 🚀 Launch Binder
-:link: https://mybinder.org/v2/gh/mlsysbook/TinyTorch/main?filepath=modules/source/07_autograd/autograd_dev.ipynb
+:link: https://mybinder.org/v2/gh/mlsysbook/TinyTorch/main?filepath=modules/source/08_autograd/autograd_dev.ipynb
 :class-header: bg-light
 
 Run this module interactively in your browser. No installation required!
 ```
 
 ```{grid-item-card} ⚡ Open in Colab  
-:link: https://colab.research.google.com/github/mlsysbook/TinyTorch/blob/main/modules/source/07_autograd/autograd_dev.ipynb
+:link: https://colab.research.google.com/github/mlsysbook/TinyTorch/blob/main/modules/source/08_autograd/autograd_dev.ipynb
 :class-header: bg-light
 
 Use Google Colab for GPU access and cloud compute power.
 ```
 
 ```{grid-item-card} 📖 View Source
-:link: https://github.com/mlsysbook/TinyTorch/blob/main/modules/source/07_autograd/autograd_dev.py
+:link: https://github.com/mlsysbook/TinyTorch/blob/main/modules/source/08_autograd/autograd_dev.py
 :class-header: bg-light
 
 Browse the Python source code and understand the implementation.
