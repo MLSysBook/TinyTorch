@@ -25,7 +25,7 @@ class ModuleConverter:
         # Use absolute paths relative to project root
         project_root = Path(__file__).parent.parent
         self.modules_dir = project_root / "modules/source"
-        self.book_dir = project_root / "book/tinytorch-course"
+        self.book_dir = project_root / "book"
         self.chapters_dir = self.book_dir / "chapters"
         
         # Module to chapter mapping
