@@ -1,0 +1,1815 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>Training &#8212; Tiny🔥Torch: Build ML Systems from Scratch</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=5b4479735964841361fd" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=5b4479735964841361fd" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=5b4479735964841361fd" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=5b4479735964841361fd" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=5b4479735964841361fd" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=5b4479735964841361fd" />
+  <script src="../_static/vendor/fontawesome/6.1.2/js/all.min.js?digest=5b4479735964841361fd"></script>
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'chapters/09-training';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Compression" href="10-compression.html" />
+    <link rel="prev" title="Optimizers" href="08-optimizers.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo.png" class="logo__image only-light" alt="Tiny🔥Torch: Build ML Systems from Scratch - Home"/>
+    <script>document.write(`<img src="../_static/logo.png" class="logo__image only-dark" alt="Tiny🔥Torch: Build ML Systems from Scratch - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    Tiny🔥Torch: Build Machine Learning Systems from Scratch
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Usage Paths</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../usage-paths/quick-exploration.html">🔬 Quick Exploration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage-paths/serious-development.html">🏗️ Serious Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage-paths/classroom-use.html">👨‍🏫 Classroom Use</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Foundation</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="00-setup.html">0. Development Environment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01-tensor.html">1. Tensors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="02-activations.html">2. Activations</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Building Blocks</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="03-layers.html">3. Layers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="04-networks.html">4. Networks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="05-cnn.html">5. CNNs</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Training Systems</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="06-dataloader.html">DataLoader</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="07-autograd.html">7. Autograd</a></li>
+<li class="toctree-l1"><a class="reference internal" href="08-optimizers.html">8. Optimizers</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">9. Training</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Production &amp; Performance</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="10-compression.html">10. Compression</a></li>
+<li class="toctree-l1"><a class="reference internal" href="11-kernels.html">11. Kernels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="12-benchmarking.html">12. Benchmarking</a></li>
+<li class="toctree-l1"><a class="reference internal" href="13-mlops.html">13. MLOps</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/VJ/TinyTorch" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/VJ/TinyTorch/edit/main/book/tinytorch-course/chapters/09-training.ipynb" target="_blank"
+   class="btn btn-sm btn-source-edit-button dropdown-item"
+   title="Suggest edit"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="btn__text-container">Suggest edit</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/VJ/TinyTorch/issues/new?title=Issue%20on%20page%20%2Fchapters/09-training.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/chapters/09-training.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Training</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-1-understanding-loss-functions">Step 1: Understanding Loss Functions</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#what-are-loss-functions">What are Loss Functions?</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-mathematical-foundation">The Mathematical Foundation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#why-loss-functions-matter">Why Loss Functions Matter</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#common-loss-functions">Common Loss Functions</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#mean-squared-error-mse-for-regression"><strong>Mean Squared Error (MSE)</strong> - For Regression</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#cross-entropy-loss-for-classification"><strong>Cross-Entropy Loss</strong> - For Classification</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#binary-cross-entropy-for-binary-classification"><strong>Binary Cross-Entropy</strong> - For Binary Classification</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unit-test-mse-loss">🧪 Unit Test: MSE Loss</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unit-test-crossentropy-loss">🧪 Unit Test: CrossEntropy Loss</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unit-test-binary-crossentropy-loss">🧪 Unit Test: Binary CrossEntropy Loss</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-2-understanding-metrics">Step 2: Understanding Metrics</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#what-are-metrics">What are Metrics?</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#key-metrics-for-classification">Key Metrics for Classification</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#accuracy"><strong>Accuracy</strong></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#precision"><strong>Precision</strong></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#recall-sensitivity"><strong>Recall (Sensitivity)</strong></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#key-metrics-for-regression">Key Metrics for Regression</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#mean-absolute-error-mae"><strong>Mean Absolute Error (MAE)</strong></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unit-test-accuracy-metric">🧪 Unit Test: Accuracy Metric</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-3-building-the-training-loop">Step 3: Building the Training Loop</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#what-is-a-training-loop">What is a Training Loop?</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-training-loop-architecture">The Training Loop Architecture</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#why-we-need-a-trainer-class">Why We Need a Trainer Class</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unit-test-training-loop">🧪 Unit Test: Training Loop</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unit-test-complete-training-comprehensive-test">🧪 Unit Test: Complete Training Comprehensive Test</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-testing">🧪 Module Testing</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-summary-neural-network-training-mastery">🎯 Module Summary: Neural Network Training Mastery!</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#what-you-ve-built">✅ What You’ve Built</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#key-learning-outcomes">✅ Key Learning Outcomes</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#mathematical-foundations-mastered">✅ Mathematical Foundations Mastered</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#professional-skills-developed">✅ Professional Skills Developed</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ready-for-advanced-applications">✅ Ready for Advanced Applications</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#connection-to-real-ml-systems">🔗 Connection to Real ML Systems</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-power-of-systematic-training">🎯 The Power of Systematic Training</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#machine-learning-engineering">🧠 Machine Learning Engineering</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#what-s-next">🚀 What’s Next</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#next-steps">🚀 Next Steps</a></li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="training">
+<h1>Training<a class="headerlink" href="#training" title="Permalink to this heading">#</a></h1>
+<div class="tip admonition">
+<p class="admonition-title">Interactive Learning</p>
+<p>🚀 <strong>Launch Binder</strong>: Click the rocket icon above to run this chapter interactively!</p>
+<p>💾 <strong>Save Your Work</strong>: Download your completed notebook when done.</p>
+<p>🏗️ <strong>Build Locally</strong>: Ready for serious development? <a class="reference external" href="https://github.com/your-org/tinytorch">Fork the repo</a> and work locally with the full <code class="docutils literal notranslate"><span class="pre">tito</span></code> workflow.</p>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#| default_exp core.training</span>
+
+<span class="c1">#| export</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">pickle</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Tuple</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">defaultdict</span>
+<span class="kn">import</span> <span class="nn">time</span>
+
+<span class="c1"># Helper function to set up import paths</span>
+<span class="k">def</span> <span class="nf">setup_import_paths</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Set up import paths for development modules.&quot;&quot;&quot;</span>
+    <span class="kn">import</span> <span class="nn">sys</span>
+    <span class="kn">import</span> <span class="nn">os</span>
+    
+    <span class="c1"># Add module directories to path</span>
+    <span class="n">base_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)))</span>
+    <span class="n">module_dirs</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="s1">&#39;01_tensor&#39;</span><span class="p">,</span> <span class="s1">&#39;02_activations&#39;</span><span class="p">,</span> <span class="s1">&#39;03_layers&#39;</span><span class="p">,</span> <span class="s1">&#39;04_networks&#39;</span><span class="p">,</span> 
+        <span class="s1">&#39;05_cnn&#39;</span><span class="p">,</span> <span class="s1">&#39;06_dataloader&#39;</span><span class="p">,</span> <span class="s1">&#39;07_autograd&#39;</span><span class="p">,</span> <span class="s1">&#39;08_optimizers&#39;</span>
+    <span class="p">]</span>
+    
+    <span class="k">for</span> <span class="n">module_dir</span> <span class="ow">in</span> <span class="n">module_dirs</span><span class="p">:</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">base_dir</span><span class="p">,</span> <span class="n">module_dir</span><span class="p">))</span>
+
+<span class="c1"># Set up paths</span>
+<span class="n">setup_import_paths</span><span class="p">()</span>
+
+<span class="c1"># Import all the building blocks we need</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">tinytorch.core.tensor</span> <span class="kn">import</span> <span class="n">Tensor</span>
+    <span class="kn">from</span> <span class="nn">tinytorch.core.activations</span> <span class="kn">import</span> <span class="n">ReLU</span><span class="p">,</span> <span class="n">Sigmoid</span><span class="p">,</span> <span class="n">Tanh</span><span class="p">,</span> <span class="n">Softmax</span>
+    <span class="kn">from</span> <span class="nn">tinytorch.core.layers</span> <span class="kn">import</span> <span class="n">Dense</span>
+    <span class="kn">from</span> <span class="nn">tinytorch.core.networks</span> <span class="kn">import</span> <span class="n">Sequential</span><span class="p">,</span> <span class="n">create_mlp</span>
+    <span class="kn">from</span> <span class="nn">tinytorch.core.cnn</span> <span class="kn">import</span> <span class="n">Conv2D</span><span class="p">,</span> <span class="n">flatten</span>
+    <span class="kn">from</span> <span class="nn">tinytorch.core.dataloader</span> <span class="kn">import</span> <span class="n">Dataset</span><span class="p">,</span> <span class="n">DataLoader</span>
+    <span class="kn">from</span> <span class="nn">tinytorch.core.autograd</span> <span class="kn">import</span> <span class="n">Variable</span>
+    <span class="kn">from</span> <span class="nn">tinytorch.core.optimizers</span> <span class="kn">import</span> <span class="n">SGD</span><span class="p">,</span> <span class="n">Adam</span><span class="p">,</span> <span class="n">StepLR</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="c1"># For development, create mock classes or import from local modules</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="kn">from</span> <span class="nn">tensor_dev</span> <span class="kn">import</span> <span class="n">Tensor</span>
+        <span class="kn">from</span> <span class="nn">activations_dev</span> <span class="kn">import</span> <span class="n">ReLU</span><span class="p">,</span> <span class="n">Sigmoid</span><span class="p">,</span> <span class="n">Tanh</span><span class="p">,</span> <span class="n">Softmax</span>
+        <span class="kn">from</span> <span class="nn">layers_dev</span> <span class="kn">import</span> <span class="n">Dense</span>
+        <span class="kn">from</span> <span class="nn">networks_dev</span> <span class="kn">import</span> <span class="n">Sequential</span><span class="p">,</span> <span class="n">create_mlp</span>
+        <span class="kn">from</span> <span class="nn">cnn_dev</span> <span class="kn">import</span> <span class="n">Conv2D</span><span class="p">,</span> <span class="n">flatten</span>
+        <span class="kn">from</span> <span class="nn">dataloader_dev</span> <span class="kn">import</span> <span class="n">Dataset</span><span class="p">,</span> <span class="n">DataLoader</span>
+        <span class="kn">from</span> <span class="nn">autograd_dev</span> <span class="kn">import</span> <span class="n">Variable</span>
+        <span class="kn">from</span> <span class="nn">optimizers_dev</span> <span class="kn">import</span> <span class="n">SGD</span><span class="p">,</span> <span class="n">Adam</span><span class="p">,</span> <span class="n">StepLR</span>
+    <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+        <span class="c1"># Create minimal mock classes for development</span>
+        <span class="k">class</span> <span class="nc">Tensor</span><span class="p">:</span>
+            <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+            <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+                <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Tensor(</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="si">}</span><span class="s2">)&quot;</span>
+        
+        <span class="k">class</span> <span class="nc">Variable</span><span class="p">:</span>
+            <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">requires_grad</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">Tensor</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">requires_grad</span> <span class="o">=</span> <span class="n">requires_grad</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">grad</span> <span class="o">=</span> <span class="kc">None</span>
+            
+            <span class="k">def</span> <span class="nf">zero_grad</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">grad</span> <span class="o">=</span> <span class="kc">None</span>
+            
+            <span class="k">def</span> <span class="nf">backward</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">requires_grad</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">grad</span> <span class="o">=</span> <span class="n">Variable</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">requires_grad</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            
+            <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+                <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Variable(</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="si">}</span><span class="s2">)&quot;</span>
+        
+        <span class="k">class</span> <span class="nc">SGD</span><span class="p">:</span>
+            <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parameters</span><span class="p">,</span> <span class="n">learning_rate</span><span class="o">=</span><span class="mf">0.01</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span> <span class="o">=</span> <span class="n">parameters</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">learning_rate</span> <span class="o">=</span> <span class="n">learning_rate</span>
+            
+            <span class="k">def</span> <span class="nf">zero_grad</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+                <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">param</span><span class="p">,</span> <span class="s1">&#39;zero_grad&#39;</span><span class="p">):</span>
+                        <span class="n">param</span><span class="o">.</span><span class="n">zero_grad</span><span class="p">()</span>
+            
+            <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+                <span class="k">pass</span>
+        
+        <span class="k">class</span> <span class="nc">Sequential</span><span class="p">:</span>
+            <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">layers</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">layers</span> <span class="o">=</span> <span class="n">layers</span> <span class="ow">or</span> <span class="p">[]</span>
+            
+            <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+                <span class="k">for</span> <span class="n">layer</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">layers</span><span class="p">:</span>
+                    <span class="n">x</span> <span class="o">=</span> <span class="n">layer</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+                <span class="k">return</span> <span class="n">x</span>
+        
+        <span class="k">class</span> <span class="nc">DataLoader</span><span class="p">:</span>
+            <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dataset</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">dataset</span> <span class="o">=</span> <span class="n">dataset</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">batch_size</span> <span class="o">=</span> <span class="n">batch_size</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">shuffle</span> <span class="o">=</span> <span class="n">shuffle</span>
+            
+            <span class="k">def</span> <span class="fm">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+                <span class="k">return</span> <span class="nb">iter</span><span class="p">([(</span><span class="n">Tensor</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]),</span> <span class="n">Tensor</span><span class="p">([</span><span class="mi">0</span><span class="p">]))])</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
+<span class="ne">NameError</span><span class="g g-Whitespace">                                 </span>Traceback (most recent call last)
+<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">line</span> <span class="mi">31</span>
+<span class="g g-Whitespace">     </span><span class="mi">28</span>         <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">base_dir</span><span class="p">,</span> <span class="n">module_dir</span><span class="p">))</span>
+<span class="g g-Whitespace">     </span><span class="mi">30</span> <span class="c1"># Set up paths</span>
+<span class="ne">---&gt; </span><span class="mi">31</span> <span class="n">setup_import_paths</span><span class="p">()</span>
+<span class="g g-Whitespace">     </span><span class="mi">33</span> <span class="c1"># Import all the building blocks we need</span>
+<span class="g g-Whitespace">     </span><span class="mi">34</span> <span class="k">try</span><span class="p">:</span>
+
+<span class="nn">Cell In[1], line 21,</span> in <span class="ni">setup_import_paths</span><span class="nt">()</span>
+<span class="g g-Whitespace">     </span><span class="mi">18</span> <span class="kn">import</span> <span class="nn">os</span>
+<span class="g g-Whitespace">     </span><span class="mi">20</span> <span class="c1"># Add module directories to path</span>
+<span class="ne">---&gt; </span><span class="mi">21</span> <span class="n">base_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)))</span>
+<span class="g g-Whitespace">     </span><span class="mi">22</span> <span class="n">module_dirs</span> <span class="o">=</span> <span class="p">[</span>
+<span class="g g-Whitespace">     </span><span class="mi">23</span>     <span class="s1">&#39;01_tensor&#39;</span><span class="p">,</span> <span class="s1">&#39;02_activations&#39;</span><span class="p">,</span> <span class="s1">&#39;03_layers&#39;</span><span class="p">,</span> <span class="s1">&#39;04_networks&#39;</span><span class="p">,</span> 
+<span class="g g-Whitespace">     </span><span class="mi">24</span>     <span class="s1">&#39;05_cnn&#39;</span><span class="p">,</span> <span class="s1">&#39;06_dataloader&#39;</span><span class="p">,</span> <span class="s1">&#39;07_autograd&#39;</span><span class="p">,</span> <span class="s1">&#39;08_optimizers&#39;</span>
+<span class="g g-Whitespace">     </span><span class="mi">25</span> <span class="p">]</span>
+<span class="g g-Whitespace">     </span><span class="mi">27</span> <span class="k">for</span> <span class="n">module_dir</span> <span class="ow">in</span> <span class="n">module_dirs</span><span class="p">:</span>
+
+<span class="ne">NameError</span>: name &#39;__file__&#39; is not defined
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#| hide</span>
+<span class="k">def</span> <span class="nf">_should_show_plots</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Check if we should show plots (disable during testing)&quot;&quot;&quot;</span>
+    <span class="c1"># Check multiple conditions that indicate we&#39;re in test mode</span>
+    <span class="n">is_pytest</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s1">&#39;pytest&#39;</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">modules</span> <span class="ow">or</span>
+        <span class="s1">&#39;test&#39;</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span> <span class="ow">or</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;PYTEST_CURRENT_TEST&#39;</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">or</span>
+        <span class="nb">any</span><span class="p">(</span><span class="s1">&#39;test&#39;</span> <span class="ow">in</span> <span class="n">arg</span> <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span> <span class="ow">or</span>
+        <span class="nb">any</span><span class="p">(</span><span class="s1">&#39;pytest&#39;</span> <span class="ow">in</span> <span class="n">arg</span> <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span>
+    <span class="p">)</span>
+    
+    <span class="c1"># Show plots in development mode (when not in test mode)</span>
+    <span class="k">return</span> <span class="ow">not</span> <span class="n">is_pytest</span>
+</pre></div>
+</div>
+</div>
+</div>
+<section id="step-1-understanding-loss-functions">
+<h2>Step 1: Understanding Loss Functions<a class="headerlink" href="#step-1-understanding-loss-functions" title="Permalink to this heading">#</a></h2>
+<section id="what-are-loss-functions">
+<h3>What are Loss Functions?<a class="headerlink" href="#what-are-loss-functions" title="Permalink to this heading">#</a></h3>
+<p>Loss functions measure how far our model’s predictions are from the true values. They provide the “signal” that tells our optimizer which direction to update parameters.</p>
+</section>
+<section id="the-mathematical-foundation">
+<h3>The Mathematical Foundation<a class="headerlink" href="#the-mathematical-foundation" title="Permalink to this heading">#</a></h3>
+<p>Training a neural network is an optimization problem:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">θ</span><span class="o">*</span> <span class="o">=</span> <span class="n">argmin_θ</span> <span class="n">L</span><span class="p">(</span><span class="n">f</span><span class="p">(</span><span class="n">x</span><span class="p">;</span> <span class="n">θ</span><span class="p">),</span> <span class="n">y</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Where:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">θ</span></code> = model parameters (weights and biases)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">f(x;</span> <span class="pre">θ)</span></code> = model predictions</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">y</span></code> = true labels</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">L</span></code> = loss function</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">θ*</span></code> = optimal parameters</p></li>
+</ul>
+</section>
+<section id="why-loss-functions-matter">
+<h3>Why Loss Functions Matter<a class="headerlink" href="#why-loss-functions-matter" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Optimization target</strong>: They define what “good” means for our model</p></li>
+<li><p><strong>Gradient source</strong>: Provide gradients for backpropagation</p></li>
+<li><p><strong>Task-specific</strong>: Different losses for different problems</p></li>
+<li><p><strong>Training dynamics</strong>: Shape how the model learns</p></li>
+</ul>
+</section>
+<section id="common-loss-functions">
+<h3>Common Loss Functions<a class="headerlink" href="#common-loss-functions" title="Permalink to this heading">#</a></h3>
+<section id="mean-squared-error-mse-for-regression">
+<h4><strong>Mean Squared Error (MSE)</strong> - For Regression<a class="headerlink" href="#mean-squared-error-mse-for-regression" title="Permalink to this heading">#</a></h4>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>MSE = (1/n) * Σ(y_pred - y_true)²
+</pre></div>
+</div>
+<ul class="simple">
+<li><p><strong>Use case</strong>: Regression problems</p></li>
+<li><p><strong>Properties</strong>: Penalizes large errors heavily</p></li>
+<li><p><strong>Gradient</strong>: 2 * (y_pred - y_true)</p></li>
+</ul>
+</section>
+<section id="cross-entropy-loss-for-classification">
+<h4><strong>Cross-Entropy Loss</strong> - For Classification<a class="headerlink" href="#cross-entropy-loss-for-classification" title="Permalink to this heading">#</a></h4>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">CrossEntropy</span> <span class="o">=</span> <span class="o">-</span><span class="n">Σ</span> <span class="n">y_true</span> <span class="o">*</span> <span class="n">log</span><span class="p">(</span><span class="n">y_pred</span><span class="p">)</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p><strong>Use case</strong>: Multi-class classification</p></li>
+<li><p><strong>Properties</strong>: Penalizes confident wrong predictions</p></li>
+<li><p><strong>Gradient</strong>: y_pred - y_true (with softmax)</p></li>
+</ul>
+</section>
+<section id="binary-cross-entropy-for-binary-classification">
+<h4><strong>Binary Cross-Entropy</strong> - For Binary Classification<a class="headerlink" href="#binary-cross-entropy-for-binary-classification" title="Permalink to this heading">#</a></h4>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">BCE</span> <span class="o">=</span> <span class="o">-</span><span class="n">y_true</span> <span class="o">*</span> <span class="n">log</span><span class="p">(</span><span class="n">y_pred</span><span class="p">)</span> <span class="o">-</span> <span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">y_true</span><span class="p">)</span> <span class="o">*</span> <span class="n">log</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">y_pred</span><span class="p">)</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p><strong>Use case</strong>: Binary classification</p></li>
+<li><p><strong>Properties</strong>: Symmetric around 0.5</p></li>
+<li><p><strong>Gradient</strong>: (y_pred - y_true) / (y_pred * (1-y_pred))</p></li>
+</ul>
+<p>Let’s implement these essential loss functions!</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#| export</span>
+<span class="k">class</span> <span class="nc">MeanSquaredError</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Mean Squared Error Loss for Regression</span>
+<span class="sd">    </span>
+<span class="sd">    Measures the average squared difference between predictions and targets.</span>
+<span class="sd">    MSE = (1/n) * Σ(y_pred - y_true)²</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize MSE loss function.&quot;&quot;&quot;</span>
+        <span class="k">pass</span>
+    
+    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">y_true</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute MSE loss between predictions and targets.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            y_pred: Model predictions (shape: [batch_size, ...])</span>
+<span class="sd">            y_true: True targets (shape: [batch_size, ...])</span>
+<span class="sd">            </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            Scalar loss value</span>
+<span class="sd">            </span>
+<span class="sd">        TODO: Implement Mean Squared Error loss computation.</span>
+<span class="sd">        </span>
+<span class="sd">        APPROACH:</span>
+<span class="sd">        1. Compute difference: diff = y_pred - y_true</span>
+<span class="sd">        2. Square the differences: squared_diff = diff²</span>
+<span class="sd">        3. Take mean over all elements: mean(squared_diff)</span>
+<span class="sd">        4. Return as scalar Tensor</span>
+<span class="sd">        </span>
+<span class="sd">        EXAMPLE:</span>
+<span class="sd">        y_pred = Tensor([[1.0, 2.0], [3.0, 4.0]])</span>
+<span class="sd">        y_true = Tensor([[1.5, 2.5], [2.5, 3.5]])</span>
+<span class="sd">        loss = mse_loss(y_pred, y_true)</span>
+<span class="sd">        # Should return: mean([(1.0-1.5)², (2.0-2.5)², (3.0-2.5)², (4.0-3.5)²])</span>
+<span class="sd">        #                = mean([0.25, 0.25, 0.25, 0.25]) = 0.25</span>
+<span class="sd">        </span>
+<span class="sd">        HINTS:</span>
+<span class="sd">        - Use tensor subtraction: y_pred - y_true</span>
+<span class="sd">        - Use element-wise multiplication for squaring: diff * diff</span>
+<span class="sd">        - Use np.mean() to get the average</span>
+<span class="sd">        - Return Tensor(scalar_value)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1">### BEGIN SOLUTION</span>
+    <span class="c1"># YOUR CODE HERE</span>
+    <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
+        <span class="c1">### END SOLUTION</span>
+    
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">y_true</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Alternative interface for forward pass.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__call__</span><span class="p">(</span><span class="n">y_pred</span><span class="p">,</span> <span class="n">y_true</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="unit-test-mse-loss">
+<h3>🧪 Unit Test: MSE Loss<a class="headerlink" href="#unit-test-mse-loss" title="Permalink to this heading">#</a></h3>
+<p>Let’s test our MSE loss implementation with known values.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">test_mse_loss</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Test MSE loss with comprehensive examples.&quot;&quot;&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;🔬 Unit Test: MSE Loss...&quot;</span><span class="p">)</span>
+    
+    <span class="n">mse</span> <span class="o">=</span> <span class="n">MeanSquaredError</span><span class="p">()</span>
+    
+    <span class="c1"># Test 1: Perfect predictions (loss should be 0)</span>
+    <span class="n">y_pred</span> <span class="o">=</span> <span class="n">Tensor</span><span class="p">([[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">3.0</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">]])</span>
+    <span class="n">y_true</span> <span class="o">=</span> <span class="n">Tensor</span><span class="p">([[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">3.0</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">]])</span>
+    <span class="n">loss</span> <span class="o">=</span> <span class="n">mse</span><span class="p">(</span><span class="n">y_pred</span><span class="p">,</span> <span class="n">y_true</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="nb">abs</span><span class="p">(</span><span class="n">loss</span><span class="o">.</span><span class="n">data</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e-6</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Perfect predictions should have loss ≈ 0, got </span><span class="si">{</span><span class="n">loss</span><span class="o">.</span><span class="n">data</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;✅ Perfect predictions test passed&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Test 2: Known loss computation</span>
+    <span class="n">y_pred</span> <span class="o">=</span> <span class="n">Tensor</span><span class="p">([[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">]])</span>
+    <span class="n">y_true</span> <span class="o">=</span> <span class="n">Tensor</span><span class="p">([[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">]])</span>
+    <span class="n">loss</span> <span class="o">=</span> <span class="n">mse</span><span class="p">(</span><span class="n">y_pred</span><span class="p">,</span> <span class="n">y_true</span><span class="p">)</span>
+    <span class="n">expected</span> <span class="o">=</span> <span class="mf">1.0</span>  <span class="c1"># [(1-0)² + (2-1)²] / 2 = [1 + 1] / 2 = 1.0</span>
+    <span class="k">assert</span> <span class="nb">abs</span><span class="p">(</span><span class="n">loss</span><span class="o">.</span><span class="n">data</span> <span class="o">-</span> <span class="n">expected</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e-6</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Expected loss </span><span class="si">{</span><span class="n">expected</span><span class="si">}</span><span class="s2">, got </span><span class="si">{</span><span class="n">loss</span><span class="o">.</span><span class="n">data</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;✅ Known loss computation test passed&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Test 3: Batch processing</span>
+    <span class="n">y_pred</span> <span class="o">=</span> <span class="n">Tensor</span><span class="p">([[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">3.0</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">]])</span>
+    <span class="n">y_true</span> <span class="o">=</span> <span class="n">Tensor</span><span class="p">([[</span><span class="mf">1.5</span><span class="p">,</span> <span class="mf">2.5</span><span class="p">],</span> <span class="p">[</span><span class="mf">2.5</span><span class="p">,</span> <span class="mf">3.5</span><span class="p">]])</span>
+    <span class="n">loss</span> <span class="o">=</span> <span class="n">mse</span><span class="p">(</span><span class="n">y_pred</span><span class="p">,</span> <span class="n">y_true</span><span class="p">)</span>
+    <span class="n">expected</span> <span class="o">=</span> <span class="mf">0.25</span>  <span class="c1"># All squared differences are 0.25</span>
+    <span class="k">assert</span> <span class="nb">abs</span><span class="p">(</span><span class="n">loss</span><span class="o">.</span><span class="n">data</span> <span class="o">-</span> <span class="n">expected</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e-6</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Expected batch loss </span><span class="si">{</span><span class="n">expected</span><span class="si">}</span><span class="s2">, got </span><span class="si">{</span><span class="n">loss</span><span class="o">.</span><span class="n">data</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;✅ Batch processing test passed&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Test 4: Single value</span>
+    <span class="n">y_pred</span> <span class="o">=</span> <span class="n">Tensor</span><span class="p">([</span><span class="mf">5.0</span><span class="p">])</span>
+    <span class="n">y_true</span> <span class="o">=</span> <span class="n">Tensor</span><span class="p">([</span><span class="mf">3.0</span><span class="p">])</span>
+    <span class="n">loss</span> <span class="o">=</span> <span class="n">mse</span><span class="p">(</span><span class="n">y_pred</span><span class="p">,</span> <span class="n">y_true</span><span class="p">)</span>
+    <span class="n">expected</span> <span class="o">=</span> <span class="mf">4.0</span>  <span class="c1"># (5-3)² = 4</span>
+    <span class="k">assert</span> <span class="nb">abs</span><span class="p">(</span><span class="n">loss</span><span class="o">.</span><span class="n">data</span> <span class="o">-</span> <span class="n">expected</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e-6</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Expected single value loss </span><span class="si">{</span><span class="n">expected</span><span class="si">}</span><span class="s2">, got </span><span class="si">{</span><span class="n">loss</span><span class="o">.</span><span class="n">data</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;✅ Single value test passed&quot;</span><span class="p">)</span>
+    
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;🎯 MSE Loss: All tests passed!&quot;</span><span class="p">)</span>
+
+<span class="c1"># Run the test</span>
+<span class="n">test_mse_loss</span><span class="p">()</span> 
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#| export</span>
+<span class="k">class</span> <span class="nc">CrossEntropyLoss</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Cross-Entropy Loss for Multi-Class Classification</span>
+<span class="sd">    </span>
+<span class="sd">    Measures the difference between predicted probability distribution and true labels.</span>
+<span class="sd">    CrossEntropy = -Σ y_true * log(y_pred)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize CrossEntropy loss function.&quot;&quot;&quot;</span>
+        <span class="k">pass</span>
+    
+    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">y_true</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute CrossEntropy loss between predictions and targets.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            y_pred: Model predictions (shape: [batch_size, num_classes])</span>
+<span class="sd">            y_true: True class indices (shape: [batch_size]) or one-hot (shape: [batch_size, num_classes])</span>
+<span class="sd">            </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            Scalar loss value</span>
+<span class="sd">            </span>
+<span class="sd">        TODO: Implement Cross-Entropy loss computation.</span>
+<span class="sd">        </span>
+<span class="sd">        APPROACH:</span>
+<span class="sd">        1. Handle both class indices and one-hot encoded labels</span>
+<span class="sd">        2. Apply softmax to predictions for probability distribution</span>
+<span class="sd">        3. Compute log probabilities: log(softmax(y_pred))</span>
+<span class="sd">        4. Calculate cross-entropy: -mean(y_true * log_probs)</span>
+<span class="sd">        5. Return scalar loss</span>
+<span class="sd">        </span>
+<span class="sd">        EXAMPLE:</span>
+<span class="sd">        y_pred = Tensor([[2.0, 1.0, 0.1], [0.5, 2.1, 0.9]])  # Raw logits</span>
+<span class="sd">        y_true = Tensor([0, 1])  # Class indices</span>
+<span class="sd">        loss = crossentropy_loss(y_pred, y_true)</span>
+<span class="sd">        # Should apply softmax then compute -log(prob_of_correct_class)</span>
+<span class="sd">        </span>
+<span class="sd">        HINTS:</span>
+<span class="sd">        - Use softmax: exp(x) / sum(exp(x)) for probability distribution</span>
+<span class="sd">        - Add small epsilon (1e-15) to avoid log(0)</span>
+<span class="sd">        - Handle both class indices and one-hot encoding</span>
+<span class="sd">        - Use np.log for logarithm computation</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1">### BEGIN SOLUTION</span>
+    <span class="c1"># YOUR CODE HERE</span>
+    <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
+        <span class="c1">### END SOLUTION</span>
+    
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">y_true</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Alternative interface for forward pass.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__call__</span><span class="p">(</span><span class="n">y_pred</span><span class="p">,</span> <span class="n">y_true</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="unit-test-crossentropy-loss">
+<h3>🧪 Unit Test: CrossEntropy Loss<a class="headerlink" href="#unit-test-crossentropy-loss" title="Permalink to this heading">#</a></h3>
+<p>Let’s test our CrossEntropy loss implementation.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">test_crossentropy_loss</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Test CrossEntropy loss with comprehensive examples.&quot;&quot;&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;🔬 Unit Test: CrossEntropy Loss...&quot;</span><span class="p">)</span>
+    
+    <span class="n">ce</span> <span class="o">=</span> <span class="n">CrossEntropyLoss</span><span class="p">()</span>
+    
+    <span class="c1"># Test 1: Perfect predictions</span>
+    <span class="n">y_pred</span> <span class="o">=</span> <span class="n">Tensor</span><span class="p">([[</span><span class="mf">10.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]])</span>  <span class="c1"># Very confident correct predictions</span>
+    <span class="n">y_true</span> <span class="o">=</span> <span class="n">Tensor</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>  <span class="c1"># Class indices</span>
+    <span class="n">loss</span> <span class="o">=</span> <span class="n">ce</span><span class="p">(</span><span class="n">y_pred</span><span class="p">,</span> <span class="n">y_true</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">loss</span><span class="o">.</span><span class="n">data</span> <span class="o">&lt;</span> <span class="mf">0.1</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Perfect predictions should have low loss, got </span><span class="si">{</span><span class="n">loss</span><span class="o">.</span><span class="n">data</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;✅ Perfect predictions test passed&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Test 2: Random predictions (should have higher loss)</span>
+    <span class="n">y_pred</span> <span class="o">=</span> <span class="n">Tensor</span><span class="p">([[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]])</span>  <span class="c1"># Uniform after softmax</span>
+    <span class="n">y_true</span> <span class="o">=</span> <span class="n">Tensor</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+    <span class="n">loss</span> <span class="o">=</span> <span class="n">ce</span><span class="p">(</span><span class="n">y_pred</span><span class="p">,</span> <span class="n">y_true</span><span class="p">)</span>
+    <span class="n">expected_random</span> <span class="o">=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mf">1.0</span><span class="o">/</span><span class="mf">3.0</span><span class="p">)</span>  <span class="c1"># log(1/num_classes) for uniform distribution</span>
+    <span class="k">assert</span> <span class="nb">abs</span><span class="p">(</span><span class="n">loss</span><span class="o">.</span><span class="n">data</span> <span class="o">-</span> <span class="n">expected_random</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">0.1</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Random predictions should have loss ≈ </span><span class="si">{</span><span class="n">expected_random</span><span class="si">}</span><span class="s2">, got </span><span class="si">{</span><span class="n">loss</span><span class="o">.</span><span class="n">data</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;✅ Random predictions test passed&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Test 3: Binary classification</span>
+    <span class="n">y_pred</span> <span class="o">=</span> <span class="n">Tensor</span><span class="p">([[</span><span class="mf">2.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">]])</span>
+    <span class="n">y_true</span> <span class="o">=</span> <span class="n">Tensor</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+    <span class="n">loss</span> <span class="o">=</span> <span class="n">ce</span><span class="p">(</span><span class="n">y_pred</span><span class="p">,</span> <span class="n">y_true</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="mf">0.0</span> <span class="o">&lt;</span> <span class="n">loss</span><span class="o">.</span><span class="n">data</span> <span class="o">&lt;</span> <span class="mf">2.0</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Binary classification loss should be reasonable, got </span><span class="si">{</span><span class="n">loss</span><span class="o">.</span><span class="n">data</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;✅ Binary classification test passed&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Test 4: One-hot encoded labels</span>
+    <span class="n">y_pred</span> <span class="o">=</span> <span class="n">Tensor</span><span class="p">([[</span><span class="mf">2.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">]])</span>
+    <span class="n">y_true</span> <span class="o">=</span> <span class="n">Tensor</span><span class="p">([[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]])</span>  <span class="c1"># One-hot encoded</span>
+    <span class="n">loss</span> <span class="o">=</span> <span class="n">ce</span><span class="p">(</span><span class="n">y_pred</span><span class="p">,</span> <span class="n">y_true</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="mf">0.0</span> <span class="o">&lt;</span> <span class="n">loss</span><span class="o">.</span><span class="n">data</span> <span class="o">&lt;</span> <span class="mf">2.0</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;One-hot encoded loss should be reasonable, got </span><span class="si">{</span><span class="n">loss</span><span class="o">.</span><span class="n">data</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;✅ One-hot encoded labels test passed&quot;</span><span class="p">)</span>
+    
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;🎯 CrossEntropy Loss: All tests passed!&quot;</span><span class="p">)</span>
+
+<span class="c1"># Run the test</span>
+<span class="n">test_crossentropy_loss</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#| export</span>
+<span class="k">class</span> <span class="nc">BinaryCrossEntropyLoss</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Binary Cross-Entropy Loss for Binary Classification</span>
+<span class="sd">    </span>
+<span class="sd">    Measures the difference between predicted probabilities and binary labels.</span>
+<span class="sd">    BCE = -y_true * log(y_pred) - (1-y_true) * log(1-y_pred)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize Binary CrossEntropy loss function.&quot;&quot;&quot;</span>
+        <span class="k">pass</span>
+    
+    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">y_true</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute Binary CrossEntropy loss between predictions and targets.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            y_pred: Model predictions (shape: [batch_size, 1] or [batch_size])</span>
+<span class="sd">            y_true: True binary labels (shape: [batch_size, 1] or [batch_size])</span>
+<span class="sd">            </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            Scalar loss value</span>
+<span class="sd">            </span>
+<span class="sd">        TODO: Implement Binary Cross-Entropy loss computation.</span>
+<span class="sd">        </span>
+<span class="sd">        APPROACH:</span>
+<span class="sd">        1. Apply sigmoid to predictions for probability values</span>
+<span class="sd">        2. Clip probabilities to avoid log(0) and log(1)</span>
+<span class="sd">        3. Compute: -y_true * log(y_pred) - (1-y_true) * log(1-y_pred)</span>
+<span class="sd">        4. Take mean over batch</span>
+<span class="sd">        5. Return scalar loss</span>
+<span class="sd">        </span>
+<span class="sd">        EXAMPLE:</span>
+<span class="sd">        y_pred = Tensor([[2.0], [0.0], [-1.0]])  # Raw logits</span>
+<span class="sd">        y_true = Tensor([[1.0], [1.0], [0.0]])   # Binary labels</span>
+<span class="sd">        loss = bce_loss(y_pred, y_true)</span>
+<span class="sd">        # Should apply sigmoid then compute binary cross-entropy</span>
+<span class="sd">        </span>
+<span class="sd">        HINTS:</span>
+<span class="sd">        - Use sigmoid: 1 / (1 + exp(-x))</span>
+<span class="sd">        - Clip probabilities: np.clip(probs, epsilon, 1-epsilon)</span>
+<span class="sd">        - Handle both [batch_size] and [batch_size, 1] shapes</span>
+<span class="sd">        - Use np.log for logarithm computation</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1">### BEGIN SOLUTION</span>
+    <span class="c1"># YOUR CODE HERE</span>
+    <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
+        <span class="c1">### END SOLUTION</span>
+    
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">y_true</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Alternative interface for forward pass.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__call__</span><span class="p">(</span><span class="n">y_pred</span><span class="p">,</span> <span class="n">y_true</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="unit-test-binary-crossentropy-loss">
+<h3>🧪 Unit Test: Binary CrossEntropy Loss<a class="headerlink" href="#unit-test-binary-crossentropy-loss" title="Permalink to this heading">#</a></h3>
+<p>Let’s test our Binary CrossEntropy loss implementation.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">test_binary_crossentropy_loss</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Test Binary CrossEntropy loss with comprehensive examples.&quot;&quot;&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;🔬 Unit Test: Binary CrossEntropy Loss...&quot;</span><span class="p">)</span>
+    
+    <span class="n">bce</span> <span class="o">=</span> <span class="n">BinaryCrossEntropyLoss</span><span class="p">()</span>
+    
+    <span class="c1"># Test 1: Perfect predictions</span>
+    <span class="n">y_pred</span> <span class="o">=</span> <span class="n">Tensor</span><span class="p">([[</span><span class="mf">10.0</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mf">10.0</span><span class="p">]])</span>  <span class="c1"># Very confident correct predictions</span>
+    <span class="n">y_true</span> <span class="o">=</span> <span class="n">Tensor</span><span class="p">([[</span><span class="mf">1.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">]])</span>
+    <span class="n">loss</span> <span class="o">=</span> <span class="n">bce</span><span class="p">(</span><span class="n">y_pred</span><span class="p">,</span> <span class="n">y_true</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">loss</span><span class="o">.</span><span class="n">data</span> <span class="o">&lt;</span> <span class="mf">0.1</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Perfect predictions should have low loss, got </span><span class="si">{</span><span class="n">loss</span><span class="o">.</span><span class="n">data</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;✅ Perfect predictions test passed&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Test 2: Random predictions (should have higher loss)</span>
+    <span class="n">y_pred</span> <span class="o">=</span> <span class="n">Tensor</span><span class="p">([[</span><span class="mf">0.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">]])</span>  <span class="c1"># 0.5 probability after sigmoid</span>
+    <span class="n">y_true</span> <span class="o">=</span> <span class="n">Tensor</span><span class="p">([[</span><span class="mf">1.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">]])</span>
+    <span class="n">loss</span> <span class="o">=</span> <span class="n">bce</span><span class="p">(</span><span class="n">y_pred</span><span class="p">,</span> <span class="n">y_true</span><span class="p">)</span>
+    <span class="n">expected_random</span> <span class="o">=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span>  <span class="c1"># log(0.5) for random guessing</span>
+    <span class="k">assert</span> <span class="nb">abs</span><span class="p">(</span><span class="n">loss</span><span class="o">.</span><span class="n">data</span> <span class="o">-</span> <span class="n">expected_random</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">0.1</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Random predictions should have loss ≈ </span><span class="si">{</span><span class="n">expected_random</span><span class="si">}</span><span class="s2">, got </span><span class="si">{</span><span class="n">loss</span><span class="o">.</span><span class="n">data</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;✅ Random predictions test passed&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Test 3: Batch processing</span>
+    <span class="n">y_pred</span> <span class="o">=</span> <span class="n">Tensor</span><span class="p">([[</span><span class="mf">1.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">2.0</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mf">1.0</span><span class="p">]])</span>
+    <span class="n">y_true</span> <span class="o">=</span> <span class="n">Tensor</span><span class="p">([[</span><span class="mf">1.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">]])</span>
+    <span class="n">loss</span> <span class="o">=</span> <span class="n">bce</span><span class="p">(</span><span class="n">y_pred</span><span class="p">,</span> <span class="n">y_true</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="mf">0.0</span> <span class="o">&lt;</span> <span class="n">loss</span><span class="o">.</span><span class="n">data</span> <span class="o">&lt;</span> <span class="mf">2.0</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Batch processing loss should be reasonable, got </span><span class="si">{</span><span class="n">loss</span><span class="o">.</span><span class="n">data</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;✅ Batch processing test passed&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Test 4: Edge cases</span>
+    <span class="n">y_pred</span> <span class="o">=</span> <span class="n">Tensor</span><span class="p">([[</span><span class="mf">100.0</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mf">100.0</span><span class="p">]])</span>  <span class="c1"># Extreme values</span>
+    <span class="n">y_true</span> <span class="o">=</span> <span class="n">Tensor</span><span class="p">([[</span><span class="mf">1.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">]])</span>
+    <span class="n">loss</span> <span class="o">=</span> <span class="n">bce</span><span class="p">(</span><span class="n">y_pred</span><span class="p">,</span> <span class="n">y_true</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">loss</span><span class="o">.</span><span class="n">data</span> <span class="o">&lt;</span> <span class="mf">0.1</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Extreme correct predictions should have low loss, got </span><span class="si">{</span><span class="n">loss</span><span class="o">.</span><span class="n">data</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;✅ Edge cases test passed&quot;</span><span class="p">)</span>
+    
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;🎯 Binary CrossEntropy Loss: All tests passed!&quot;</span><span class="p">)</span>
+
+<span class="c1"># Run the test</span>
+<span class="n">test_binary_crossentropy_loss</span><span class="p">()</span> 
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="step-2-understanding-metrics">
+<h2>Step 2: Understanding Metrics<a class="headerlink" href="#step-2-understanding-metrics" title="Permalink to this heading">#</a></h2>
+<section id="what-are-metrics">
+<h3>What are Metrics?<a class="headerlink" href="#what-are-metrics" title="Permalink to this heading">#</a></h3>
+<p>Metrics are measurements that help us understand how well our model is performing. Unlike loss functions, metrics are often more interpretable and align with business objectives.</p>
+</section>
+<section id="key-metrics-for-classification">
+<h3>Key Metrics for Classification<a class="headerlink" href="#key-metrics-for-classification" title="Permalink to this heading">#</a></h3>
+<section id="accuracy">
+<h4><strong>Accuracy</strong><a class="headerlink" href="#accuracy" title="Permalink to this heading">#</a></h4>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Accuracy</span> <span class="o">=</span> <span class="p">(</span><span class="n">Correct</span> <span class="n">Predictions</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">Total</span> <span class="n">Predictions</span><span class="p">)</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p><strong>Range</strong>: [0, 1]</p></li>
+<li><p><strong>Interpretation</strong>: Percentage of correct predictions</p></li>
+<li><p><strong>Good for</strong>: Balanced datasets</p></li>
+</ul>
+</section>
+<section id="precision">
+<h4><strong>Precision</strong><a class="headerlink" href="#precision" title="Permalink to this heading">#</a></h4>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Precision</span> <span class="o">=</span> <span class="kc">True</span> <span class="n">Positives</span> <span class="o">/</span> <span class="p">(</span><span class="kc">True</span> <span class="n">Positives</span> <span class="o">+</span> <span class="kc">False</span> <span class="n">Positives</span><span class="p">)</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p><strong>Range</strong>: [0, 1]</p></li>
+<li><p><strong>Interpretation</strong>: Of all positive predictions, how many were correct?</p></li>
+<li><p><strong>Good for</strong>: When false positives are costly</p></li>
+</ul>
+</section>
+<section id="recall-sensitivity">
+<h4><strong>Recall (Sensitivity)</strong><a class="headerlink" href="#recall-sensitivity" title="Permalink to this heading">#</a></h4>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Recall</span> <span class="o">=</span> <span class="kc">True</span> <span class="n">Positives</span> <span class="o">/</span> <span class="p">(</span><span class="kc">True</span> <span class="n">Positives</span> <span class="o">+</span> <span class="kc">False</span> <span class="n">Negatives</span><span class="p">)</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p><strong>Range</strong>: [0, 1]</p></li>
+<li><p><strong>Interpretation</strong>: Of all actual positives, how many did we find?</p></li>
+<li><p><strong>Good for</strong>: When false negatives are costly</p></li>
+</ul>
+</section>
+</section>
+<section id="key-metrics-for-regression">
+<h3>Key Metrics for Regression<a class="headerlink" href="#key-metrics-for-regression" title="Permalink to this heading">#</a></h3>
+<section id="mean-absolute-error-mae">
+<h4><strong>Mean Absolute Error (MAE)</strong><a class="headerlink" href="#mean-absolute-error-mae" title="Permalink to this heading">#</a></h4>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">MAE</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="n">n</span><span class="p">)</span> <span class="o">*</span> <span class="n">Σ</span><span class="o">|</span><span class="n">y_pred</span> <span class="o">-</span> <span class="n">y_true</span><span class="o">|</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p><strong>Range</strong>: [0, ∞)</p></li>
+<li><p><strong>Interpretation</strong>: Average absolute error</p></li>
+<li><p><strong>Good for</strong>: Robust to outliers</p></li>
+</ul>
+<p>Let’s implement these essential metrics!</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#| export</span>
+<span class="k">class</span> <span class="nc">Accuracy</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Accuracy Metric for Classification</span>
+<span class="sd">    </span>
+<span class="sd">    Computes the fraction of correct predictions.</span>
+<span class="sd">    Accuracy = (Correct Predictions) / (Total Predictions)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize Accuracy metric.&quot;&quot;&quot;</span>
+        <span class="k">pass</span>
+    
+    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">y_true</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute accuracy between predictions and targets.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            y_pred: Model predictions (shape: [batch_size, num_classes] or [batch_size])</span>
+<span class="sd">            y_true: True class labels (shape: [batch_size] or [batch_size])</span>
+<span class="sd">            </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            Accuracy as a float value between 0 and 1</span>
+<span class="sd">            </span>
+<span class="sd">        TODO: Implement accuracy computation.</span>
+<span class="sd">        </span>
+<span class="sd">        APPROACH:</span>
+<span class="sd">        1. Convert predictions to class indices (argmax for multi-class)</span>
+<span class="sd">        2. Convert true labels to class indices if needed</span>
+<span class="sd">        3. Count correct predictions</span>
+<span class="sd">        4. Divide by total predictions</span>
+<span class="sd">        5. Return as float</span>
+<span class="sd">        </span>
+<span class="sd">        EXAMPLE:</span>
+<span class="sd">        y_pred = Tensor([[0.9, 0.1], [0.2, 0.8], [0.6, 0.4]])  # Probabilities</span>
+<span class="sd">        y_true = Tensor([0, 1, 0])  # True classes</span>
+<span class="sd">        accuracy = accuracy_metric(y_pred, y_true)</span>
+<span class="sd">        # Should return: 2/3 = 0.667 (first and second predictions correct)</span>
+<span class="sd">        </span>
+<span class="sd">        HINTS:</span>
+<span class="sd">        - Use np.argmax(axis=1) for multi-class predictions</span>
+<span class="sd">        - Handle both probability and class index inputs</span>
+<span class="sd">        - Use np.mean() for averaging</span>
+<span class="sd">        - Return Python float, not Tensor</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1">### BEGIN SOLUTION</span>
+    <span class="c1"># YOUR CODE HERE</span>
+    <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
+        <span class="c1">### END SOLUTION</span>
+    
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">y_true</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Alternative interface for forward pass.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__call__</span><span class="p">(</span><span class="n">y_pred</span><span class="p">,</span> <span class="n">y_true</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="unit-test-accuracy-metric">
+<h3>🧪 Unit Test: Accuracy Metric<a class="headerlink" href="#unit-test-accuracy-metric" title="Permalink to this heading">#</a></h3>
+<p>Let’s test our Accuracy metric implementation.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">test_accuracy_metric</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Test Accuracy metric with comprehensive examples.&quot;&quot;&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;🔬 Unit Test: Accuracy Metric...&quot;</span><span class="p">)</span>
+    
+    <span class="n">accuracy</span> <span class="o">=</span> <span class="n">Accuracy</span><span class="p">()</span>
+    
+    <span class="c1"># Test 1: Perfect predictions</span>
+    <span class="n">y_pred</span> <span class="o">=</span> <span class="n">Tensor</span><span class="p">([[</span><span class="mf">0.9</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.8</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">]])</span>
+    <span class="n">y_true</span> <span class="o">=</span> <span class="n">Tensor</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+    <span class="n">acc</span> <span class="o">=</span> <span class="n">accuracy</span><span class="p">(</span><span class="n">y_pred</span><span class="p">,</span> <span class="n">y_true</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">acc</span> <span class="o">==</span> <span class="mf">1.0</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Perfect predictions should have accuracy 1.0, got </span><span class="si">{</span><span class="n">acc</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;✅ Perfect predictions test passed&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Test 2: Half correct</span>
+    <span class="n">y_pred</span> <span class="o">=</span> <span class="n">Tensor</span><span class="p">([[</span><span class="mf">0.9</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.9</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.8</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">]])</span>  <span class="c1"># All predict class 0</span>
+    <span class="n">y_true</span> <span class="o">=</span> <span class="n">Tensor</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>  <span class="c1"># Classes: 0, 1, 0</span>
+    <span class="n">acc</span> <span class="o">=</span> <span class="n">accuracy</span><span class="p">(</span><span class="n">y_pred</span><span class="p">,</span> <span class="n">y_true</span><span class="p">)</span>
+    <span class="n">expected</span> <span class="o">=</span> <span class="mf">2.0</span><span class="o">/</span><span class="mf">3.0</span>  <span class="c1"># 2 out of 3 correct</span>
+    <span class="k">assert</span> <span class="nb">abs</span><span class="p">(</span><span class="n">acc</span> <span class="o">-</span> <span class="n">expected</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e-6</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Half correct should have accuracy </span><span class="si">{</span><span class="n">expected</span><span class="si">}</span><span class="s2">, got </span><span class="si">{</span><span class="n">acc</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;✅ Half correct test passed&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Test 3: Binary classification</span>
+    <span class="n">y_pred</span> <span class="o">=</span> <span class="n">Tensor</span><span class="p">([[</span><span class="mf">0.8</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.3</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.9</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.1</span><span class="p">]])</span>  <span class="c1"># Predictions above/below 0.5</span>
+    <span class="n">y_true</span> <span class="o">=</span> <span class="n">Tensor</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+    <span class="n">acc</span> <span class="o">=</span> <span class="n">accuracy</span><span class="p">(</span><span class="n">y_pred</span><span class="p">,</span> <span class="n">y_true</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">acc</span> <span class="o">==</span> <span class="mf">1.0</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Binary classification should have accuracy 1.0, got </span><span class="si">{</span><span class="n">acc</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;✅ Binary classification test passed&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Test 4: Multi-class</span>
+    <span class="n">y_pred</span> <span class="o">=</span> <span class="n">Tensor</span><span class="p">([[</span><span class="mf">0.7</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">]])</span>
+    <span class="n">y_true</span> <span class="o">=</span> <span class="n">Tensor</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span>
+    <span class="n">acc</span> <span class="o">=</span> <span class="n">accuracy</span><span class="p">(</span><span class="n">y_pred</span><span class="p">,</span> <span class="n">y_true</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">acc</span> <span class="o">==</span> <span class="mf">1.0</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Multi-class should have accuracy 1.0, got </span><span class="si">{</span><span class="n">acc</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;✅ Multi-class test passed&quot;</span><span class="p">)</span>
+    
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;🎯 Accuracy Metric: All tests passed!&quot;</span><span class="p">)</span>
+
+<span class="c1"># Run the test</span>
+<span class="n">test_accuracy_metric</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="step-3-building-the-training-loop">
+<h2>Step 3: Building the Training Loop<a class="headerlink" href="#step-3-building-the-training-loop" title="Permalink to this heading">#</a></h2>
+<section id="what-is-a-training-loop">
+<h3>What is a Training Loop?<a class="headerlink" href="#what-is-a-training-loop" title="Permalink to this heading">#</a></h3>
+<p>A training loop is the orchestration logic that coordinates all components of neural network training:</p>
+<ol class="arabic simple">
+<li><p><strong>Forward Pass</strong>: Compute predictions</p></li>
+<li><p><strong>Loss Computation</strong>: Measure prediction quality</p></li>
+<li><p><strong>Backward Pass</strong>: Compute gradients</p></li>
+<li><p><strong>Parameter Update</strong>: Update model parameters</p></li>
+<li><p><strong>Evaluation</strong>: Compute metrics and validation performance</p></li>
+</ol>
+</section>
+<section id="the-training-loop-architecture">
+<h3>The Training Loop Architecture<a class="headerlink" href="#the-training-loop-architecture" title="Permalink to this heading">#</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">epoch</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_epochs</span><span class="p">):</span>
+    <span class="c1"># Training phase</span>
+    <span class="k">for</span> <span class="n">batch</span> <span class="ow">in</span> <span class="n">train_dataloader</span><span class="p">:</span>
+        <span class="n">optimizer</span><span class="o">.</span><span class="n">zero_grad</span><span class="p">()</span>
+        <span class="n">predictions</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">batch_x</span><span class="p">)</span>
+        <span class="n">loss</span> <span class="o">=</span> <span class="n">loss_function</span><span class="p">(</span><span class="n">predictions</span><span class="p">,</span> <span class="n">batch_y</span><span class="p">)</span>
+        <span class="n">loss</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
+        <span class="n">optimizer</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
+    
+    <span class="c1"># Validation phase</span>
+    <span class="k">for</span> <span class="n">batch</span> <span class="ow">in</span> <span class="n">val_dataloader</span><span class="p">:</span>
+        <span class="n">predictions</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">batch_x</span><span class="p">)</span>
+        <span class="n">val_loss</span> <span class="o">=</span> <span class="n">loss_function</span><span class="p">(</span><span class="n">predictions</span><span class="p">,</span> <span class="n">batch_y</span><span class="p">)</span>
+        <span class="n">accuracy</span> <span class="o">=</span> <span class="n">accuracy_metric</span><span class="p">(</span><span class="n">predictions</span><span class="p">,</span> <span class="n">batch_y</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="why-we-need-a-trainer-class">
+<h3>Why We Need a Trainer Class<a class="headerlink" href="#why-we-need-a-trainer-class" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Encapsulation</strong>: Keeps training logic organized</p></li>
+<li><p><strong>Reusability</strong>: Same trainer works with different models/datasets</p></li>
+<li><p><strong>Monitoring</strong>: Built-in logging and progress tracking</p></li>
+<li><p><strong>Flexibility</strong>: Easy to modify training behavior</p></li>
+</ul>
+<p>Let’s build our Trainer class!</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#| export</span>
+<span class="k">class</span> <span class="nc">Trainer</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Training Loop Orchestrator</span>
+<span class="sd">    </span>
+<span class="sd">    Coordinates model training with loss functions, optimizers, and metrics.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">optimizer</span><span class="p">,</span> <span class="n">loss_function</span><span class="p">,</span> <span class="n">metrics</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize trainer with model and training components.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            model: Neural network model to train</span>
+<span class="sd">            optimizer: Optimizer for parameter updates</span>
+<span class="sd">            loss_function: Loss function for training</span>
+<span class="sd">            metrics: List of metrics to track (optional)</span>
+<span class="sd">            </span>
+<span class="sd">        TODO: Initialize the trainer with all necessary components.</span>
+<span class="sd">        </span>
+<span class="sd">        APPROACH:</span>
+<span class="sd">        1. Store model, optimizer, loss function, and metrics</span>
+<span class="sd">        2. Initialize history tracking for losses and metrics</span>
+<span class="sd">        3. Set up training state (epoch, step counters)</span>
+<span class="sd">        4. Prepare for training and validation loops</span>
+<span class="sd">        </span>
+<span class="sd">        EXAMPLE:</span>
+<span class="sd">        model = Sequential([Dense(10, 5), ReLU(), Dense(5, 2)])</span>
+<span class="sd">        optimizer = Adam(model.parameters, learning_rate=0.001)</span>
+<span class="sd">        loss_fn = CrossEntropyLoss()</span>
+<span class="sd">        metrics = [Accuracy()]</span>
+<span class="sd">        trainer = Trainer(model, optimizer, loss_fn, metrics)</span>
+<span class="sd">        </span>
+<span class="sd">        HINTS:</span>
+<span class="sd">        - Store all components as instance variables</span>
+<span class="sd">        - Initialize empty history dictionaries</span>
+<span class="sd">        - Set metrics to empty list if None provided</span>
+<span class="sd">        - Initialize epoch and step counters to 0</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1">### BEGIN SOLUTION</span>
+    <span class="c1"># YOUR CODE HERE</span>
+    <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
+        <span class="c1">### END SOLUTION</span>
+    
+    <span class="k">def</span> <span class="nf">train_epoch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dataloader</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Train for one epoch on the given dataloader.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            dataloader: DataLoader containing training data</span>
+<span class="sd">            </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            Dictionary with epoch training metrics</span>
+<span class="sd">            </span>
+<span class="sd">        TODO: Implement single epoch training logic.</span>
+<span class="sd">        </span>
+<span class="sd">        APPROACH:</span>
+<span class="sd">        1. Initialize epoch metrics tracking</span>
+<span class="sd">        2. Iterate through batches in dataloader</span>
+<span class="sd">        3. For each batch:</span>
+<span class="sd">           - Zero gradients</span>
+<span class="sd">           - Forward pass</span>
+<span class="sd">           - Compute loss</span>
+<span class="sd">           - Backward pass</span>
+<span class="sd">           - Update parameters</span>
+<span class="sd">           - Track metrics</span>
+<span class="sd">        4. Return averaged metrics for the epoch</span>
+<span class="sd">        </span>
+<span class="sd">        HINTS:</span>
+<span class="sd">        - Use optimizer.zero_grad() before each batch</span>
+<span class="sd">        - Call loss.backward() for gradient computation</span>
+<span class="sd">        - Use optimizer.step() for parameter updates</span>
+<span class="sd">        - Track running averages for metrics</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1">### BEGIN SOLUTION</span>
+    <span class="c1"># YOUR CODE HERE</span>
+    <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
+        <span class="c1">### END SOLUTION</span>
+    
+    <span class="k">def</span> <span class="nf">validate_epoch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dataloader</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Validate for one epoch on the given dataloader.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            dataloader: DataLoader containing validation data</span>
+<span class="sd">            </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            Dictionary with epoch validation metrics</span>
+<span class="sd">            </span>
+<span class="sd">        TODO: Implement single epoch validation logic.</span>
+<span class="sd">        </span>
+<span class="sd">        APPROACH:</span>
+<span class="sd">        1. Initialize epoch metrics tracking</span>
+<span class="sd">        2. Iterate through batches in dataloader</span>
+<span class="sd">        3. For each batch:</span>
+<span class="sd">           - Forward pass (no gradient computation)</span>
+<span class="sd">           - Compute loss</span>
+<span class="sd">           - Track metrics</span>
+<span class="sd">        4. Return averaged metrics for the epoch</span>
+<span class="sd">        </span>
+<span class="sd">        HINTS:</span>
+<span class="sd">        - No gradient computation needed for validation</span>
+<span class="sd">        - No parameter updates during validation</span>
+<span class="sd">        - Similar to train_epoch but simpler</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1">### BEGIN SOLUTION</span>
+    <span class="c1"># YOUR CODE HERE</span>
+    <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
+        <span class="c1">### END SOLUTION</span>
+    
+    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">train_dataloader</span><span class="p">,</span> <span class="n">val_dataloader</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Train the model for specified number of epochs.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            train_dataloader: Training data</span>
+<span class="sd">            val_dataloader: Validation data (optional)</span>
+<span class="sd">            epochs: Number of training epochs</span>
+<span class="sd">            verbose: Whether to print training progress</span>
+<span class="sd">            </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            Training history dictionary</span>
+<span class="sd">            </span>
+<span class="sd">        TODO: Implement complete training loop.</span>
+<span class="sd">        </span>
+<span class="sd">        APPROACH:</span>
+<span class="sd">        1. Loop through epochs</span>
+<span class="sd">        2. For each epoch:</span>
+<span class="sd">           - Train on training data</span>
+<span class="sd">           - Validate on validation data (if provided)</span>
+<span class="sd">           - Update history</span>
+<span class="sd">           - Print progress (if verbose)</span>
+<span class="sd">        3. Return complete training history</span>
+<span class="sd">        </span>
+<span class="sd">        HINTS:</span>
+<span class="sd">        - Use train_epoch() and validate_epoch() methods</span>
+<span class="sd">        - Update self.history with results</span>
+<span class="sd">        - Print epoch summary if verbose=True</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1">### BEGIN SOLUTION</span>
+    <span class="c1"># YOUR CODE HERE</span>
+    <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
+        <span class="c1">### END SOLUTION</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="unit-test-training-loop">
+<h3>🧪 Unit Test: Training Loop<a class="headerlink" href="#unit-test-training-loop" title="Permalink to this heading">#</a></h3>
+<p>Let’s test our Trainer class with a simple example.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">test_trainer</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Test Trainer class with comprehensive examples.&quot;&quot;&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;🔬 Unit Test: Trainer Class...&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Create simple model and components</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">Sequential</span><span class="p">([</span><span class="n">Dense</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">ReLU</span><span class="p">(),</span> <span class="n">Dense</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">)])</span>  <span class="c1"># Simple model</span>
+    <span class="n">optimizer</span> <span class="o">=</span> <span class="n">SGD</span><span class="p">([],</span> <span class="n">learning_rate</span><span class="o">=</span><span class="mf">0.01</span><span class="p">)</span>  <span class="c1"># Empty parameters list for testing</span>
+    <span class="n">loss_fn</span> <span class="o">=</span> <span class="n">MeanSquaredError</span><span class="p">()</span>
+    <span class="n">metrics</span> <span class="o">=</span> <span class="p">[</span><span class="n">Accuracy</span><span class="p">()]</span>
+    
+    <span class="c1"># Create trainer</span>
+    <span class="n">trainer</span> <span class="o">=</span> <span class="n">Trainer</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">optimizer</span><span class="p">,</span> <span class="n">loss_fn</span><span class="p">,</span> <span class="n">metrics</span><span class="p">)</span>
+    
+    <span class="c1"># Test 1: Trainer initialization</span>
+    <span class="k">assert</span> <span class="n">trainer</span><span class="o">.</span><span class="n">model</span> <span class="ow">is</span> <span class="n">model</span><span class="p">,</span> <span class="s2">&quot;Model should be stored correctly&quot;</span>
+    <span class="k">assert</span> <span class="n">trainer</span><span class="o">.</span><span class="n">optimizer</span> <span class="ow">is</span> <span class="n">optimizer</span><span class="p">,</span> <span class="s2">&quot;Optimizer should be stored correctly&quot;</span>
+    <span class="k">assert</span> <span class="n">trainer</span><span class="o">.</span><span class="n">loss_function</span> <span class="ow">is</span> <span class="n">loss_fn</span><span class="p">,</span> <span class="s2">&quot;Loss function should be stored correctly&quot;</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">trainer</span><span class="o">.</span><span class="n">metrics</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;Metrics should be stored correctly&quot;</span>
+    <span class="k">assert</span> <span class="s1">&#39;train_loss&#39;</span> <span class="ow">in</span> <span class="n">trainer</span><span class="o">.</span><span class="n">history</span><span class="p">,</span> <span class="s2">&quot;Training history should be initialized&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;✅ Trainer initialization test passed&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Test 2: History structure</span>
+    <span class="k">assert</span> <span class="s1">&#39;epoch&#39;</span> <span class="ow">in</span> <span class="n">trainer</span><span class="o">.</span><span class="n">history</span><span class="p">,</span> <span class="s2">&quot;History should track epochs&quot;</span>
+    <span class="k">assert</span> <span class="s1">&#39;train_accuracy&#39;</span> <span class="ow">in</span> <span class="n">trainer</span><span class="o">.</span><span class="n">history</span><span class="p">,</span> <span class="s2">&quot;History should track training accuracy&quot;</span>
+    <span class="k">assert</span> <span class="s1">&#39;val_accuracy&#39;</span> <span class="ow">in</span> <span class="n">trainer</span><span class="o">.</span><span class="n">history</span><span class="p">,</span> <span class="s2">&quot;History should track validation accuracy&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;✅ History structure test passed&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Test 3: Training state</span>
+    <span class="k">assert</span> <span class="n">trainer</span><span class="o">.</span><span class="n">current_epoch</span> <span class="o">==</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;Current epoch should start at 0&quot;</span>
+    <span class="k">assert</span> <span class="n">trainer</span><span class="o">.</span><span class="n">current_step</span> <span class="o">==</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;Current step should start at 0&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;✅ Training state test passed&quot;</span><span class="p">)</span>
+    
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;🎯 Trainer Class: All tests passed!&quot;</span><span class="p">)</span>
+
+<span class="c1"># Run the test</span>
+<span class="n">test_trainer</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="unit-test-complete-training-comprehensive-test">
+<h3>🧪 Unit Test: Complete Training Comprehensive Test<a class="headerlink" href="#unit-test-complete-training-comprehensive-test" title="Permalink to this heading">#</a></h3>
+<p>Let’s test the complete training pipeline with all components working together.</p>
+<p><strong>This is a comprehensive test</strong> - it tests all training components working together in a realistic scenario.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">test_training</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Test complete training pipeline with all components.&quot;&quot;&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;🔬 Comprehensive Test: Complete Training Pipeline...&quot;</span><span class="p">)</span>
+    
+    <span class="k">try</span><span class="p">:</span>
+        <span class="c1"># Test 1: Loss functions work correctly</span>
+        <span class="n">mse</span> <span class="o">=</span> <span class="n">MeanSquaredError</span><span class="p">()</span>
+        <span class="n">ce</span> <span class="o">=</span> <span class="n">CrossEntropyLoss</span><span class="p">()</span>
+        <span class="n">bce</span> <span class="o">=</span> <span class="n">BinaryCrossEntropyLoss</span><span class="p">()</span>
+        
+        <span class="c1"># MSE test</span>
+        <span class="n">y_pred</span> <span class="o">=</span> <span class="n">Tensor</span><span class="p">([[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">]])</span>
+        <span class="n">y_true</span> <span class="o">=</span> <span class="n">Tensor</span><span class="p">([[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">]])</span>
+        <span class="n">loss</span> <span class="o">=</span> <span class="n">mse</span><span class="p">(</span><span class="n">y_pred</span><span class="p">,</span> <span class="n">y_true</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="nb">abs</span><span class="p">(</span><span class="n">loss</span><span class="o">.</span><span class="n">data</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e-6</span><span class="p">,</span> <span class="s2">&quot;MSE should work for perfect predictions&quot;</span>
+        
+        <span class="c1"># CrossEntropy test</span>
+        <span class="n">y_pred</span> <span class="o">=</span> <span class="n">Tensor</span><span class="p">([[</span><span class="mf">10.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">]])</span>
+        <span class="n">y_true</span> <span class="o">=</span> <span class="n">Tensor</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+        <span class="n">loss</span> <span class="o">=</span> <span class="n">ce</span><span class="p">(</span><span class="n">y_pred</span><span class="p">,</span> <span class="n">y_true</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="n">loss</span><span class="o">.</span><span class="n">data</span> <span class="o">&lt;</span> <span class="mf">1.0</span><span class="p">,</span> <span class="s2">&quot;CrossEntropy should work for good predictions&quot;</span>
+        
+        <span class="c1"># Binary CrossEntropy test</span>
+        <span class="n">y_pred</span> <span class="o">=</span> <span class="n">Tensor</span><span class="p">([[</span><span class="mf">10.0</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mf">10.0</span><span class="p">]])</span>
+        <span class="n">y_true</span> <span class="o">=</span> <span class="n">Tensor</span><span class="p">([[</span><span class="mf">1.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">]])</span>
+        <span class="n">loss</span> <span class="o">=</span> <span class="n">bce</span><span class="p">(</span><span class="n">y_pred</span><span class="p">,</span> <span class="n">y_true</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="n">loss</span><span class="o">.</span><span class="n">data</span> <span class="o">&lt;</span> <span class="mf">1.0</span><span class="p">,</span> <span class="s2">&quot;Binary CrossEntropy should work for good predictions&quot;</span>
+        
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;✅ Loss functions work correctly&quot;</span><span class="p">)</span>
+        
+        <span class="c1"># Test 2: Metrics work correctly</span>
+        <span class="n">accuracy</span> <span class="o">=</span> <span class="n">Accuracy</span><span class="p">()</span>
+        
+        <span class="n">y_pred</span> <span class="o">=</span> <span class="n">Tensor</span><span class="p">([[</span><span class="mf">0.9</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">]])</span>
+        <span class="n">y_true</span> <span class="o">=</span> <span class="n">Tensor</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+        <span class="n">acc</span> <span class="o">=</span> <span class="n">accuracy</span><span class="p">(</span><span class="n">y_pred</span><span class="p">,</span> <span class="n">y_true</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="n">acc</span> <span class="o">==</span> <span class="mf">1.0</span><span class="p">,</span> <span class="s2">&quot;Accuracy should work for perfect predictions&quot;</span>
+        
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;✅ Metrics work correctly&quot;</span><span class="p">)</span>
+        
+        <span class="c1"># Test 3: Trainer integrates all components</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">Sequential</span><span class="p">([])</span>  <span class="c1"># Empty model for testing</span>
+        <span class="n">optimizer</span> <span class="o">=</span> <span class="n">SGD</span><span class="p">([],</span> <span class="n">learning_rate</span><span class="o">=</span><span class="mf">0.01</span><span class="p">)</span>
+        <span class="n">loss_fn</span> <span class="o">=</span> <span class="n">MeanSquaredError</span><span class="p">()</span>
+        <span class="n">metrics</span> <span class="o">=</span> <span class="p">[</span><span class="n">Accuracy</span><span class="p">()]</span>
+        
+        <span class="n">trainer</span> <span class="o">=</span> <span class="n">Trainer</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">optimizer</span><span class="p">,</span> <span class="n">loss_fn</span><span class="p">,</span> <span class="n">metrics</span><span class="p">)</span>
+        
+        <span class="c1"># Check trainer setup</span>
+        <span class="k">assert</span> <span class="n">trainer</span><span class="o">.</span><span class="n">model</span> <span class="ow">is</span> <span class="n">model</span><span class="p">,</span> <span class="s2">&quot;Trainer should store model&quot;</span>
+        <span class="k">assert</span> <span class="n">trainer</span><span class="o">.</span><span class="n">optimizer</span> <span class="ow">is</span> <span class="n">optimizer</span><span class="p">,</span> <span class="s2">&quot;Trainer should store optimizer&quot;</span>
+        <span class="k">assert</span> <span class="n">trainer</span><span class="o">.</span><span class="n">loss_function</span> <span class="ow">is</span> <span class="n">loss_fn</span><span class="p">,</span> <span class="s2">&quot;Trainer should store loss function&quot;</span>
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">trainer</span><span class="o">.</span><span class="n">metrics</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;Trainer should store metrics&quot;</span>
+        
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;✅ Trainer integrates all components&quot;</span><span class="p">)</span>
+        
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;🎉 Complete training pipeline works correctly!&quot;</span><span class="p">)</span>
+        
+        <span class="c1"># Test 4: Integration works end-to-end</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;✅ End-to-end integration successful&quot;</span><span class="p">)</span>
+        
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;❌ Training pipeline test failed: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">raise</span>
+    
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;🎯 Training Pipeline: All comprehensive tests passed!&quot;</span><span class="p">)</span>
+
+<span class="c1"># Run the comprehensive test</span>
+<span class="n">test_training</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="module-testing">
+<h2>🧪 Module Testing<a class="headerlink" href="#module-testing" title="Permalink to this heading">#</a></h2>
+<p>Time to test your implementation! This section uses TinyTorch’s standardized testing framework to ensure your implementation works correctly.</p>
+<p><strong>This testing section is locked</strong> - it provides consistent feedback across all modules and cannot be modified.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># =============================================================================</span>
+<span class="c1"># STANDARDIZED MODULE TESTING - DO NOT MODIFY</span>
+<span class="c1"># This cell is locked to ensure consistent testing across all TinyTorch modules</span>
+<span class="c1"># =============================================================================</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">tito.tools.testing</span> <span class="kn">import</span> <span class="n">run_module_tests_auto</span>
+    
+    <span class="c1"># Automatically discover and run all tests in this module</span>
+    <span class="n">success</span> <span class="o">=</span> <span class="n">run_module_tests_auto</span><span class="p">(</span><span class="s2">&quot;Training&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="module-summary-neural-network-training-mastery">
+<h2>🎯 Module Summary: Neural Network Training Mastery!<a class="headerlink" href="#module-summary-neural-network-training-mastery" title="Permalink to this heading">#</a></h2>
+<p>Congratulations! You’ve successfully implemented the complete training system that powers modern neural networks:</p>
+<section id="what-you-ve-built">
+<h3>✅ What You’ve Built<a class="headerlink" href="#what-you-ve-built" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Loss Functions</strong>: MSE, CrossEntropy, BinaryCrossEntropy for different problem types</p></li>
+<li><p><strong>Metrics System</strong>: Accuracy with extensible framework for additional metrics</p></li>
+<li><p><strong>Training Loop</strong>: Complete Trainer class with epoch management and history tracking</p></li>
+<li><p><strong>Integration</strong>: All components work together in a unified training pipeline</p></li>
+</ul>
+</section>
+<section id="key-learning-outcomes">
+<h3>✅ Key Learning Outcomes<a class="headerlink" href="#key-learning-outcomes" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Understanding</strong>: How neural networks learn through loss optimization</p></li>
+<li><p><strong>Implementation</strong>: Built complete training system from scratch</p></li>
+<li><p><strong>Mathematical mastery</strong>: Loss functions, gradient computation, metric calculation</p></li>
+<li><p><strong>Real-world application</strong>: Comprehensive training pipeline for production use</p></li>
+<li><p><strong>Systems thinking</strong>: Modular design enabling flexible training configurations</p></li>
+</ul>
+</section>
+<section id="mathematical-foundations-mastered">
+<h3>✅ Mathematical Foundations Mastered<a class="headerlink" href="#mathematical-foundations-mastered" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Loss Functions</strong>: Quantifying prediction quality for different problem types</p></li>
+<li><p><strong>Gradient Descent</strong>: Iterative optimization through loss minimization</p></li>
+<li><p><strong>Metrics</strong>: Performance evaluation beyond loss (accuracy, precision, recall)</p></li>
+<li><p><strong>Training Dynamics</strong>: Epoch management, batch processing, validation monitoring</p></li>
+</ul>
+</section>
+<section id="professional-skills-developed">
+<h3>✅ Professional Skills Developed<a class="headerlink" href="#professional-skills-developed" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Software Architecture</strong>: Modular, extensible training system design</p></li>
+<li><p><strong>API Design</strong>: Clean interfaces for training configuration and monitoring</p></li>
+<li><p><strong>Performance Monitoring</strong>: Comprehensive metrics tracking and history logging</p></li>
+<li><p><strong>Error Handling</strong>: Robust training pipeline with proper error management</p></li>
+</ul>
+</section>
+<section id="ready-for-advanced-applications">
+<h3>✅ Ready for Advanced Applications<a class="headerlink" href="#ready-for-advanced-applications" title="Permalink to this heading">#</a></h3>
+<p>Your training system now enables:</p>
+<ul class="simple">
+<li><p><strong>Any Neural Network</strong>: Train any architecture with any loss function</p></li>
+<li><p><strong>Multiple Problem Types</strong>: Classification, regression, and custom objectives</p></li>
+<li><p><strong>Production Training</strong>: Robust training loops with monitoring and checkpointing</p></li>
+<li><p><strong>Research Applications</strong>: Flexible framework for experimenting with new methods</p></li>
+</ul>
+</section>
+<section id="connection-to-real-ml-systems">
+<h3>🔗 Connection to Real ML Systems<a class="headerlink" href="#connection-to-real-ml-systems" title="Permalink to this heading">#</a></h3>
+<p>Your implementation mirrors production frameworks:</p>
+<ul class="simple">
+<li><p><strong>PyTorch</strong>: <code class="docutils literal notranslate"><span class="pre">torch.nn</span></code> loss functions and training loops</p></li>
+<li><p><strong>TensorFlow</strong>: <code class="docutils literal notranslate"><span class="pre">tf.keras</span></code> training API and callbacks</p></li>
+<li><p><strong>JAX</strong>: <code class="docutils literal notranslate"><span class="pre">optax</span></code> optimizers and training utilities</p></li>
+<li><p><strong>Industry Standard</strong>: Core training concepts used in all major ML systems</p></li>
+</ul>
+</section>
+<section id="the-power-of-systematic-training">
+<h3>🎯 The Power of Systematic Training<a class="headerlink" href="#the-power-of-systematic-training" title="Permalink to this heading">#</a></h3>
+<p>You’ve built the orchestration system that makes ML possible:</p>
+<ul class="simple">
+<li><p><strong>Automation</strong>: Handles complex training workflows automatically</p></li>
+<li><p><strong>Flexibility</strong>: Supports any model architecture and training configuration</p></li>
+<li><p><strong>Monitoring</strong>: Comprehensive tracking of training progress and performance</p></li>
+<li><p><strong>Reliability</strong>: Robust error handling and validation throughout training</p></li>
+</ul>
+</section>
+<section id="machine-learning-engineering">
+<h3>🧠 Machine Learning Engineering<a class="headerlink" href="#machine-learning-engineering" title="Permalink to this heading">#</a></h3>
+<p>You now understand the engineering that makes AI systems work:</p>
+<ul class="simple">
+<li><p><strong>Training Pipelines</strong>: End-to-end automated training workflows</p></li>
+<li><p><strong>Performance Monitoring</strong>: Real-time feedback on model learning progress</p></li>
+<li><p><strong>Hyperparameter Management</strong>: Systematic approach to training configuration</p></li>
+<li><p><strong>Production Readiness</strong>: Scalable training systems for real-world deployment</p></li>
+</ul>
+</section>
+<section id="what-s-next">
+<h3>🚀 What’s Next<a class="headerlink" href="#what-s-next" title="Permalink to this heading">#</a></h3>
+<p>Your training system is the foundation for:</p>
+<ul class="simple">
+<li><p><strong>Advanced Optimizers</strong>: Adam, RMSprop, and specialized optimization methods</p></li>
+<li><p><strong>Regularization</strong>: Dropout, weight decay, and overfitting prevention</p></li>
+<li><p><strong>Model Deployment</strong>: Saving, loading, and serving trained models</p></li>
+<li><p><strong>MLOps</strong>: Production training pipelines, monitoring, and continuous learning</p></li>
+</ul>
+</section>
+<section id="next-steps">
+<h3>🚀 Next Steps<a class="headerlink" href="#next-steps" title="Permalink to this heading">#</a></h3>
+<ol class="arabic simple">
+<li><p><strong>Export your code</strong>: <code class="docutils literal notranslate"><span class="pre">tito</span> <span class="pre">export</span> <span class="pre">09_training</span></code></p></li>
+<li><p><strong>Test your implementation</strong>: <code class="docutils literal notranslate"><span class="pre">tito</span> <span class="pre">test</span> <span class="pre">09_training</span></code></p></li>
+<li><p><strong>Use your training system</strong>: Train neural networks with confidence!</p></li>
+<li><p><strong>Move to Module 10</strong>: Advanced training techniques and regularization!</p></li>
+</ol>
+<p><strong>Ready for Production Training?</strong> Your training system is now ready to train neural networks for real-world applications!</p>
+<p>You’ve built the training engine that powers modern AI. Now let’s add the advanced features that make it production-ready and capable of learning complex patterns from real-world data!</p>
+</section>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./chapters"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="08-optimizers.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Optimizers</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="10-compression.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Compression</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-1-understanding-loss-functions">Step 1: Understanding Loss Functions</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#what-are-loss-functions">What are Loss Functions?</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-mathematical-foundation">The Mathematical Foundation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#why-loss-functions-matter">Why Loss Functions Matter</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#common-loss-functions">Common Loss Functions</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#mean-squared-error-mse-for-regression"><strong>Mean Squared Error (MSE)</strong> - For Regression</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#cross-entropy-loss-for-classification"><strong>Cross-Entropy Loss</strong> - For Classification</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#binary-cross-entropy-for-binary-classification"><strong>Binary Cross-Entropy</strong> - For Binary Classification</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unit-test-mse-loss">🧪 Unit Test: MSE Loss</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unit-test-crossentropy-loss">🧪 Unit Test: CrossEntropy Loss</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unit-test-binary-crossentropy-loss">🧪 Unit Test: Binary CrossEntropy Loss</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-2-understanding-metrics">Step 2: Understanding Metrics</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#what-are-metrics">What are Metrics?</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#key-metrics-for-classification">Key Metrics for Classification</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#accuracy"><strong>Accuracy</strong></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#precision"><strong>Precision</strong></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#recall-sensitivity"><strong>Recall (Sensitivity)</strong></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#key-metrics-for-regression">Key Metrics for Regression</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#mean-absolute-error-mae"><strong>Mean Absolute Error (MAE)</strong></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unit-test-accuracy-metric">🧪 Unit Test: Accuracy Metric</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-3-building-the-training-loop">Step 3: Building the Training Loop</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#what-is-a-training-loop">What is a Training Loop?</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-training-loop-architecture">The Training Loop Architecture</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#why-we-need-a-trainer-class">Why We Need a Trainer Class</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unit-test-training-loop">🧪 Unit Test: Training Loop</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unit-test-complete-training-comprehensive-test">🧪 Unit Test: Complete Training Comprehensive Test</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-testing">🧪 Module Testing</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-summary-neural-network-training-mastery">🎯 Module Summary: Neural Network Training Mastery!</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#what-you-ve-built">✅ What You’ve Built</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#key-learning-outcomes">✅ Key Learning Outcomes</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#mathematical-foundations-mastered">✅ Mathematical Foundations Mastered</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#professional-skills-developed">✅ Professional Skills Developed</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ready-for-advanced-applications">✅ Ready for Advanced Applications</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#connection-to-real-ml-systems">🔗 Connection to Real ML Systems</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-power-of-systematic-training">🎯 The Power of Systematic Training</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#machine-learning-engineering">🧠 Machine Learning Engineering</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#what-s-next">🚀 What’s Next</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#next-steps">🚀 Next Steps</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By TinyTorch Team
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2025.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=5b4479735964841361fd"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=5b4479735964841361fd"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
