@@ -1,0 +1,50 @@
+# TinyTorch: Build ML Systems from Scratch
+# Interactive Jupyter Book Configuration
+
+title: "TinyTorch: Build ML Systems from Scratch"
+author: "TinyTorch Team"
+copyright: "2025"
+logo: logo.png
+
+# Book description and metadata
+description: >-
+  A comprehensive, hands-on course for building machine learning systems from scratch.
+  Learn tensors, neural networks, training pipelines, and production MLOps through 
+  progressive implementation.
+
+# Execution settings for interactive notebooks
+execute:
+  execute_notebooks: "auto"
+  allow_errors: false
+  timeout: 300
+
+# GitHub repository configuration for GitHub Pages
+repository:
+  url: https://github.com/VJ/TinyTorch
+  path_to_book: book/tinytorch-course
+  branch: main
+
+# HTML output configuration
+html:
+  use_issues_button: true
+  use_repository_button: true
+  use_edit_page_button: true
+  use_download_button: true
+  use_fullscreen_button: true
+  
+  # Binder integration for executable notebooks
+  launch_buttons:
+    binderhub_url: "https://mybinder.org"
+    colab_url: "https://colab.research.google.com"
+
+# LaTeX/PDF output
+latex:
+  latex_documents:
+    targetname: tinytorch-course.tex
+
+# Bibliography support
+bibtex_bibfiles:
+  - references.bib
+
+# Advanced options
+only_build_toc_files: true

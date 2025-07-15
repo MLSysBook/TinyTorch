@@ -1,0 +1,708 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>🔥 TinyTorch: Build ML Systems from Scratch &#8212; TinyTorch: Build ML Systems from Scratch</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=5b4479735964841361fd" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=5b4479735964841361fd" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=5b4479735964841361fd" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=5b4479735964841361fd" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" href="_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=5b4479735964841361fd" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=5b4479735964841361fd" />
+  <script src="_static/vendor/fontawesome/6.1.2/js/all.min.js?digest=5b4479735964841361fd"></script>
+
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/clipboard.min.js"></script>
+    <script src="_static/copybutton.js"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="_static/sphinx-thebe.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'intro';</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Setup &amp; Configuration" href="chapters/00-setup.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+
+<a class="navbar-brand logo" href="#">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="_static/logo.png" class="logo__image only-light" alt="TinyTorch: Build ML Systems from Scratch - Home"/>
+    <script>document.write(`<img src="_static/logo.png" class="logo__image only-dark" alt="TinyTorch: Build ML Systems from Scratch - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1 current active">
+                <a class="reference internal" href="#">
+                    🔥 TinyTorch: Build ML Systems from Scratch
+                </a>
+            </li>
+        </ul>
+        <ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="chapters/00-setup.html">Setup &amp; Configuration</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/VJ/TinyTorch" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/VJ/TinyTorch/edit/main/book/tinytorch-course/intro.md" target="_blank"
+   class="btn btn-sm btn-source-edit-button dropdown-item"
+   title="Suggest edit"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="btn__text-container">Suggest edit</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/VJ/TinyTorch/issues/new?title=Issue%20on%20page%20%2Fintro.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/intro.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>🔥 TinyTorch: Build ML Systems from Scratch</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-you-ll-build">🎯 What You’ll Build</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#interactive-learning-experience">🚀 Interactive Learning Experience</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#multiple-ways-to-learn">📚 <strong>Multiple Ways to Learn</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#progressive-implementation">🛠️ <strong>Progressive Implementation</strong></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-philosophy-build-use-understand">🎓 Learning Philosophy: “Build → Use → Understand”</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#course-structure">📖 Course Structure</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#foundation-chapters-0-2">🏗️ <strong>Foundation</strong> (Chapters 0-2)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#building-blocks-chapters-3-5">🧱 <strong>Building Blocks</strong> (Chapters 3-5)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#training-systems-chapters-6-9">🎯 <strong>Training Systems</strong> (Chapters 6-9)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#production-performance-chapters-10-13">⚡ <strong>Production &amp; Performance</strong> (Chapters 10-13)</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#getting-started">🚀 Getting Started</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#prerequisites">🎯 Prerequisites</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#how-to-use-this-book">🤝 How to Use This Book</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#interactive-features">💡 <strong>Interactive Features</strong></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-makes-this-course-unique">🌟 What Makes This Course Unique</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#getting-help">📞 Getting Help</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="tinytorch-build-ml-systems-from-scratch">
+<h1>🔥 TinyTorch: Build ML Systems from Scratch<a class="headerlink" href="#tinytorch-build-ml-systems-from-scratch" title="Permalink to this heading">#</a></h1>
+<p><strong>A comprehensive, hands-on course for building machine learning systems from the ground up</strong></p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This is an <strong>interactive course</strong> - you can run all code examples directly in your browser using Binder or download notebooks to run locally!</p>
+</div>
+<section id="what-you-ll-build">
+<h2>🎯 What You’ll Build<a class="headerlink" href="#what-you-ll-build" title="Permalink to this heading">#</a></h2>
+<p>By the end of this course, you’ll have implemented a complete ML framework from scratch, including:</p>
+<ul class="simple">
+<li><p><strong>Core tensor operations</strong> and automatic differentiation</p></li>
+<li><p><strong>Neural network layers</strong> and architectures</p></li>
+<li><p><strong>Training pipelines</strong> with optimizers and loss functions</p></li>
+<li><p><strong>Convolutional networks</strong> for computer vision</p></li>
+<li><p><strong>Production systems</strong> with compression and monitoring</p></li>
+</ul>
+</section>
+<section id="interactive-learning-experience">
+<h2>🚀 Interactive Learning Experience<a class="headerlink" href="#interactive-learning-experience" title="Permalink to this heading">#</a></h2>
+<section id="multiple-ways-to-learn">
+<h3>📚 <strong>Multiple Ways to Learn</strong><a class="headerlink" href="#multiple-ways-to-learn" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Read</strong>: Rich explanations with mathematical foundations</p></li>
+<li><p><strong>Code</strong>: Hands-on implementation in every chapter</p></li>
+<li><p><strong>Execute</strong>: Run code interactively with Binder/Colab</p></li>
+<li><p><strong>Download</strong>: Work locally with full Jupyter notebooks</p></li>
+</ul>
+</section>
+<section id="progressive-implementation">
+<h3>🛠️ <strong>Progressive Implementation</strong><a class="headerlink" href="#progressive-implementation" title="Permalink to this heading">#</a></h3>
+<p>Each module builds on the previous ones:</p>
+<p><strong>Foundation → Building Blocks → Training Systems → Production</strong></p>
+</section>
+</section>
+<section id="learning-philosophy-build-use-understand">
+<h2>🎓 Learning Philosophy: “Build → Use → Understand”<a class="headerlink" href="#learning-philosophy-build-use-understand" title="Permalink to this heading">#</a></h2>
+<p>Every chapter follows this proven pedagogical pattern:</p>
+<ol class="arabic simple">
+<li><p><strong>🏗️ Build</strong>: Implement core functionality from scratch</p></li>
+<li><p><strong>🎯 Use</strong>: Apply your implementation to real problems</p></li>
+<li><p><strong>🧠 Understand</strong>: Reflect on design decisions and trade-offs</p></li>
+</ol>
+<p>This approach ensures you gain both practical skills and deep conceptual understanding.</p>
+</section>
+<section id="course-structure">
+<h2>📖 Course Structure<a class="headerlink" href="#course-structure" title="Permalink to this heading">#</a></h2>
+<p>The course is organized into four main parts:</p>
+<section id="foundation-chapters-0-2">
+<h3>🏗️ <strong>Foundation</strong> (Chapters 0-2)<a class="headerlink" href="#foundation-chapters-0-2" title="Permalink to this heading">#</a></h3>
+<p>Essential building blocks for any ML system</p>
+<ul class="simple">
+<li><p>System setup and configuration</p></li>
+<li><p>Tensor data structures and operations</p></li>
+<li><p>Mathematical activation functions</p></li>
+</ul>
+</section>
+<section id="building-blocks-chapters-3-5">
+<h3>🧱 <strong>Building Blocks</strong> (Chapters 3-5)<a class="headerlink" href="#building-blocks-chapters-3-5" title="Permalink to this heading">#</a></h3>
+<p>Core neural network components</p>
+<ul class="simple">
+<li><p>Dense and convolutional layers</p></li>
+<li><p>Network architectures and composition</p></li>
+<li><p>Computer vision with CNNs</p></li>
+</ul>
+</section>
+<section id="training-systems-chapters-6-9">
+<h3>🎯 <strong>Training Systems</strong> (Chapters 6-9)<a class="headerlink" href="#training-systems-chapters-6-9" title="Permalink to this heading">#</a></h3>
+<p>Complete training pipelines</p>
+<ul class="simple">
+<li><p>Data loading and preprocessing</p></li>
+<li><p>Automatic differentiation engines</p></li>
+<li><p>Optimization algorithms and training loops</p></li>
+</ul>
+</section>
+<section id="production-performance-chapters-10-13">
+<h3>⚡ <strong>Production &amp; Performance</strong> (Chapters 10-13)<a class="headerlink" href="#production-performance-chapters-10-13" title="Permalink to this heading">#</a></h3>
+<p>Real-world deployment considerations</p>
+<ul class="simple">
+<li><p>Model compression and efficiency</p></li>
+<li><p>Custom kernels and acceleration</p></li>
+<li><p>Performance benchmarking and monitoring</p></li>
+</ul>
+</section>
+</section>
+<section id="getting-started">
+<h2>🚀 Getting Started<a class="headerlink" href="#getting-started" title="Permalink to this heading">#</a></h2>
+<p>Choose your preferred learning mode:</p>
+<p><strong>🌐 Browser (Binder)</strong>: Click rocket buttons to launch interactive notebooks</p>
+<p><strong>💻 Local Development</strong>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/VJ/TinyTorch
+<span class="nb">cd</span><span class="w"> </span>TinyTorch
+<span class="nb">source</span><span class="w"> </span>.venv/bin/activate
+jupyter<span class="w"> </span>lab<span class="w"> </span>book/tinytorch-course/
+</pre></div>
+</div>
+<p><strong>☁️ Cloud (Colab)</strong>: Click external link buttons to open in Google Colab</p>
+</section>
+<section id="prerequisites">
+<h2>🎯 Prerequisites<a class="headerlink" href="#prerequisites" title="Permalink to this heading">#</a></h2>
+<p><strong>Required:</strong></p>
+<ul class="simple">
+<li><p>Basic Python programming (functions, classes, NumPy basics)</p></li>
+<li><p>High school mathematics (algebra, basic calculus)</p></li>
+</ul>
+<p><strong>Helpful but not required:</strong></p>
+<ul class="simple">
+<li><p>Linear algebra (vectors, matrices)</p></li>
+<li><p>Previous ML experience with frameworks like PyTorch/TensorFlow</p></li>
+</ul>
+</section>
+<section id="how-to-use-this-book">
+<h2>🤝 How to Use This Book<a class="headerlink" href="#how-to-use-this-book" title="Permalink to this heading">#</a></h2>
+<p>Each chapter includes:</p>
+<ul class="simple">
+<li><p><strong>📖 Conceptual explanations</strong> with visual diagrams</p></li>
+<li><p><strong>💻 Code implementations</strong> with detailed comments</p></li>
+<li><p><strong>🧪 Interactive tests</strong> to verify your understanding</p></li>
+<li><p><strong>🎯 Real-world applications</strong> showing practical usage</p></li>
+<li><p><strong>🔍 Deep dives</strong> into design decisions and alternatives</p></li>
+</ul>
+<section id="interactive-features">
+<h3>💡 <strong>Interactive Features</strong><a class="headerlink" href="#interactive-features" title="Permalink to this heading">#</a></h3>
+<div class="tip admonition">
+<p class="admonition-title">Try This!</p>
+<p>Look for interactive code cells throughout the book. Click “Run” to execute them, or modify the code to experiment!</p>
+</div>
+<div class="warning admonition">
+<p class="admonition-title">Common Pitfalls</p>
+<p>Watch for these callouts that highlight common mistakes and how to avoid them.</p>
+</div>
+<div class="note admonition">
+<p class="admonition-title">Advanced Topics</p>
+<p>Optional deep dives for curious learners who want to go beyond the basics.</p>
+</div>
+</section>
+</section>
+<section id="what-makes-this-course-unique">
+<h2>🌟 What Makes This Course Unique<a class="headerlink" href="#what-makes-this-course-unique" title="Permalink to this heading">#</a></h2>
+<ul class="simple">
+<li><p><strong>🎯 Production-focused</strong>: Learn real-world engineering practices, not just algorithms</p></li>
+<li><p><strong>🔬 Implementation-driven</strong>: Build everything from scratch to understand how it really works</p></li>
+<li><p><strong>🚀 Interactive</strong>: Run code immediately without complex setup</p></li>
+<li><p><strong>📊 Visual</strong>: Rich diagrams and visualizations explain complex concepts</p></li>
+<li><p><strong>🔄 Iterative</strong>: Each module builds naturally on previous work</p></li>
+</ul>
+</section>
+<section id="getting-help">
+<h2>📞 Getting Help<a class="headerlink" href="#getting-help" title="Permalink to this heading">#</a></h2>
+<ul class="simple">
+<li><p><strong>💬 Discussions</strong>: Use GitHub Discussions for questions</p></li>
+<li><p><strong>🐛 Issues</strong>: Report bugs or suggest improvements</p></li>
+<li><p><strong>📧 Contact</strong>: Reach out to the TinyTorch team</p></li>
+</ul>
+<hr class="docutils" />
+<p><strong>Ready to build ML systems from scratch?</strong> Let’s start with the foundation!</p>
+</section>
+<div class="toctree-wrapper compound">
+</div>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer">
+                  
+<div class="prev-next-area">
+    <a class="right-next"
+       href="chapters/00-setup.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Setup &amp; Configuration</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-you-ll-build">🎯 What You’ll Build</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#interactive-learning-experience">🚀 Interactive Learning Experience</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#multiple-ways-to-learn">📚 <strong>Multiple Ways to Learn</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#progressive-implementation">🛠️ <strong>Progressive Implementation</strong></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-philosophy-build-use-understand">🎓 Learning Philosophy: “Build → Use → Understand”</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#course-structure">📖 Course Structure</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#foundation-chapters-0-2">🏗️ <strong>Foundation</strong> (Chapters 0-2)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#building-blocks-chapters-3-5">🧱 <strong>Building Blocks</strong> (Chapters 3-5)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#training-systems-chapters-6-9">🎯 <strong>Training Systems</strong> (Chapters 6-9)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#production-performance-chapters-10-13">⚡ <strong>Production &amp; Performance</strong> (Chapters 10-13)</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#getting-started">🚀 Getting Started</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#prerequisites">🎯 Prerequisites</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#how-to-use-this-book">🤝 How to Use This Book</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#interactive-features">💡 <strong>Interactive Features</strong></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-makes-this-course-unique">🌟 What Makes This Course Unique</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#getting-help">📞 Getting Help</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By TinyTorch Team
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2025.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=5b4479735964841361fd"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=5b4479735964841361fd"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
