@@ -1,39 +1,23 @@
 """
 Integration Tests - CNN and Networks
 
-Tests real integration between CNN layers (Conv2D) and Network architectures (Sequential).
-Uses actual TinyTorch components to verify convolutional layers work properly in networks.
+Tests real integration between CNN and Network modules.
+Uses actual TinyTorch components to verify they work together correctly.
 """
 
 import pytest
 import numpy as np
-import sys
-from pathlib import Path
+from test_utils import setup_integration_test
 
-# Add the project root to the path
-project_root = Path(__file__).parent.parent.parent
-sys.path.insert(0, str(project_root))
+# Ensure proper setup before importing
+setup_integration_test()
 
-# Import REAL TinyTorch components
-try:
-    from tinytorch.core.tensor import Tensor
-    from tinytorch.core.cnn import Conv2D, flatten
-    from tinytorch.core.activations import ReLU, Sigmoid, Tanh
-    from tinytorch.core.layers import Dense
-    from tinytorch.core.networks import Sequential
-except ImportError:
-    # Fallback for development
-    sys.path.append(str(project_root / "modules" / "source" / "01_tensor"))
-    sys.path.append(str(project_root / "modules" / "source" / "02_activations"))
-    sys.path.append(str(project_root / "modules" / "source" / "03_layers"))
-    sys.path.append(str(project_root / "modules" / "source" / "04_networks"))
-    sys.path.append(str(project_root / "modules" / "source" / "05_cnn"))
-    
-    from tensor_dev import Tensor
-    from activations_dev import ReLU, Sigmoid, Tanh
-    from layers_dev import Dense
-    from networks_dev import Sequential
-    from cnn_dev import Conv2D, flatten
+# Import ONLY from TinyTorch package
+from tinytorch.core.tensor import Tensor
+from tinytorch.core.activations import ReLU, Softmax, Sigmoid, Tanh
+from tinytorch.core.layers import Dense
+from tinytorch.core.networks import Sequential
+from tinytorch.core.cnn import Conv2D, flatten
 
 
 class TestCNNNetworkIntegration:

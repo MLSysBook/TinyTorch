@@ -1,7 +1,7 @@
 """
 Integration Tests - Layers and Networks
 
-Tests real integration between Dense layers and Network architectures.
+Tests real integration between Layer and Network modules.
 Uses actual TinyTorch components to verify they work together correctly.
 """
 
@@ -14,23 +14,11 @@ from pathlib import Path
 project_root = Path(__file__).parent.parent.parent
 sys.path.insert(0, str(project_root))
 
-# Import REAL TinyTorch components
-try:
-    from tinytorch.core.tensor import Tensor
-    from tinytorch.core.activations import ReLU, Sigmoid, Tanh
-    from tinytorch.core.layers import Dense
-    from tinytorch.core.networks import Sequential, MLP
-except ImportError:
-    # Fallback for development
-    sys.path.append(str(project_root / "modules" / "source" / "01_tensor"))
-    sys.path.append(str(project_root / "modules" / "source" / "02_activations"))
-    sys.path.append(str(project_root / "modules" / "source" / "03_layers"))
-    sys.path.append(str(project_root / "modules" / "source" / "04_networks"))
-    
-    from tensor_dev import Tensor
-    from activations_dev import ReLU, Sigmoid, Tanh
-    from layers_dev import Dense
-    from networks_dev import Sequential, MLP
+# Import ONLY from TinyTorch package
+from tinytorch.core.tensor import Tensor
+from tinytorch.core.activations import ReLU, Sigmoid, Softmax
+from tinytorch.core.layers import Dense
+from tinytorch.core.networks import Sequential, create_mlp
 
 
 class TestLayerNetworkIntegration:
@@ -75,7 +63,7 @@ class TestLayerNetworkIntegration:
     def test_mlp_with_real_components(self):
         """Test MLP network with real components."""
         # Create MLP with real components
-        mlp = MLP(input_size=5, hidden_size=10, output_size=3)
+        mlp = create_mlp(input_size=5, hidden_sizes=[10], output_size=3)
         
         # Test with real tensor
         x = Tensor([[1.0, 2.0, 3.0, 4.0, 5.0]])
@@ -84,8 +72,8 @@ class TestLayerNetworkIntegration:
         # Verify real integration
         assert isinstance(result, Tensor)
         assert result.shape == (1, 3)
-        assert hasattr(mlp, 'network')
-        assert isinstance(mlp.network, Sequential)
+        assert hasattr(mlp, 'layers')
+        assert isinstance(mlp, Sequential)
     
     def test_deep_network_integration(self):
         """Test deep network with multiple real layers."""
@@ -94,7 +82,7 @@ class TestLayerNetworkIntegration:
             Dense(input_size=6, output_size=12),
             ReLU(),
             Dense(input_size=12, output_size=8),
-            Tanh(),
+            Softmax(), # Changed from Tanh() to Softmax()
             Dense(input_size=8, output_size=4),
             ReLU(),
             Dense(input_size=4, output_size=2),
@@ -213,16 +201,15 @@ class TestMLClassificationPipeline:
     def test_multiclass_classifier_integration(self):
         """Test multi-class classification with real components."""
         # Create multi-class classifier (3 classes)
-        classifier = MLP(
+        classifier = create_mlp(
             input_size=6,
-            hidden_size=12,
+            hidden_sizes=[12],
             output_size=3,
             activation=ReLU,
-            output_activation=None  # Will add softmax manually
+            output_activation=Softmax  # Use Softmax instead of None
         )
         
         # Add softmax for multi-class
-        from tinytorch.core.activations import Softmax
         softmax = Softmax()
         
         # Test prediction

@@ -2,53 +2,24 @@
 Integration Tests - Training Module
 
 Tests real integration between training components and other TinyTorch modules.
-Uses actual TinyTorch components to verify they work together correctly.
+Uses actual TinyTorch components to verify training pipeline works correctly.
 """
 
 import pytest
 import numpy as np
-import sys
-from pathlib import Path
+from test_utils import setup_integration_test
 
-# Add the project root to the path
-project_root = Path(__file__).parent.parent.parent
-sys.path.insert(0, str(project_root))
+# Ensure proper setup before importing
+setup_integration_test()
 
-# Import REAL TinyTorch components
-try:
-    from tinytorch.core.tensor import Tensor
-    from tinytorch.core.activations import ReLU, Sigmoid, Softmax
-    from tinytorch.core.layers import Dense
-    from tinytorch.core.networks import Sequential, create_mlp
-    from tinytorch.core.dataloader import DataLoader
-    from tinytorch.core.autograd import Variable
-    from tinytorch.core.optimizers import SGD, Adam
-    from tinytorch.core.training import (
-        MeanSquaredError, CrossEntropyLoss, BinaryCrossEntropyLoss,
-        Accuracy, Trainer
-    )
-except ImportError:
-    # Fallback for development
-    sys.path.append(str(project_root / "modules" / "source" / "01_tensor"))
-    sys.path.append(str(project_root / "modules" / "source" / "02_activations"))
-    sys.path.append(str(project_root / "modules" / "source" / "03_layers"))
-    sys.path.append(str(project_root / "modules" / "source" / "04_networks"))
-    sys.path.append(str(project_root / "modules" / "source" / "06_dataloader"))
-    sys.path.append(str(project_root / "modules" / "source" / "07_autograd"))
-    sys.path.append(str(project_root / "modules" / "source" / "08_optimizers"))
-    sys.path.append(str(project_root / "modules" / "source" / "09_training"))
-    
-    from tensor_dev import Tensor
-    from activations_dev import ReLU, Sigmoid, Softmax
-    from layers_dev import Dense
-    from networks_dev import Sequential, create_mlp
-    from dataloader_dev import DataLoader, SimpleDataset
-    from autograd_dev import Variable
-    from optimizers_dev import SGD, Adam
-    from training_dev import (
-        MeanSquaredError, CrossEntropyLoss, BinaryCrossEntropyLoss,
-        Accuracy, Trainer
-    )
+# Import ONLY from TinyTorch package
+from tinytorch.core.tensor import Tensor
+from tinytorch.core.activations import ReLU, Sigmoid, Softmax
+from tinytorch.core.layers import Dense
+from tinytorch.core.networks import Sequential, create_mlp
+from tinytorch.core.dataloader import DataLoader, SimpleDataset
+from tinytorch.core.optimizers import SGD, Adam
+from tinytorch.core.training import MeanSquaredError, CrossEntropyLoss, BinaryCrossEntropyLoss, Accuracy, Trainer
 
 
 class TestLossIntegration:

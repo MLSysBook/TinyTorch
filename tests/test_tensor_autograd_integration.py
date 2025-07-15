@@ -1,19 +1,18 @@
 """
-Integration Tests: Tensor ↔ Autograd Operations
+Integration Tests - Tensor and Autograd
 
-Tests the integration between core Tensor data structures and Autograd system:
-- Variable wrapping of real tensors
-- Forward pass computation with real tensors
-- Backward pass gradient computation with real tensors
-- Gradient accumulation and computation graph construction
-- Error handling with real tensor inputs
-
-These tests verify that autograd operations work correctly with real TinyTorch tensors,
-not mocks or synthetic data.
+Tests real integration between Tensor and Autograd modules.
+Uses actual TinyTorch components to verify they work together correctly.
 """
 
 import pytest
 import numpy as np
+from test_utils import setup_integration_test
+
+# Ensure proper setup before importing
+setup_integration_test()
+
+# Import ONLY from TinyTorch package
 from tinytorch.core.tensor import Tensor
 from tinytorch.core.autograd import Variable, add, multiply, relu_with_grad, sigmoid_with_grad
 
