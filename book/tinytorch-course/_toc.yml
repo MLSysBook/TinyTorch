@@ -17,41 +17,41 @@ parts:
 
 - caption: Foundation
   chapters:
-  - file: chapters/00-setup.ipynb
-  - file: chapters/01-tensor.ipynb  
+  - file: chapters/00-setup.md
+  - file: chapters/01-tensor.md  
     title: "1. Tensors"
-  - file: chapters/02-activations.ipynb
+  - file: chapters/02-activations.md
     title: "2. Activations"
 
 - caption: Building Blocks
   chapters:
-  - file: chapters/03-layers.ipynb
+  - file: chapters/03-layers.md
     title: "3. Layers"
-  - file: chapters/04-networks.ipynb
+  - file: chapters/04-networks.md
     title: "4. Networks"
-  - file: chapters/05-cnn.ipynb
+  - file: chapters/05-cnn.md
     title: "5. CNNs"
 
 - caption: Training Systems  
   chapters:
-  - file: chapters/06-dataloader.ipynb
+  - file: chapters/06-dataloader.md
     title: "6. DataLoader"
-  - file: chapters/07-autograd.ipynb
+  - file: chapters/07-autograd.md
     title: "7. Autograd"
-  - file: chapters/08-optimizers.ipynb
+  - file: chapters/08-optimizers.md
     title: "8. Optimizers"
-  - file: chapters/09-training.ipynb
+  - file: chapters/09-training.md
     title: "9. Training"
 
 - caption: Production & Performance
   chapters:
-  - file: chapters/10-compression.ipynb
+  - file: chapters/10-compression.md
     title: "10. Compression"
-  - file: chapters/11-kernels.ipynb
+  - file: chapters/11-kernels.md
     title: "11. Kernels"
-  - file: chapters/12-benchmarking.ipynb
+  - file: chapters/12-benchmarking.md
     title: "12. Benchmarking"
-  - file: chapters/13-mlops.ipynb
+  - file: chapters/13-mlops.md
     title: "13. MLOps"
 
 - caption: Appendices
