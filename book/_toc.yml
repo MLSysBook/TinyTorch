@@ -18,6 +18,7 @@ parts:
 - caption: Foundation
   chapters:
   - file: chapters/00-setup.md
+    title: "0. Setup"
   - file: chapters/01-tensor.md  
     title: "1. Tensors"
   - file: chapters/02-activations.md
