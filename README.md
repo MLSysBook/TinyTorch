@@ -2,16 +2,22 @@
 
 **Build your own ML framework. Understand every layer.**
 
-A hands-on Machine Learning Systems course where students don’t just learn ML—they *engineer* it. TinyTorch guides you from the fundamentals of tensors and layers all the way to training real models on real data using your own codebase.
+A hands-on Machine Learning Systems course where students don't just learn ML—they *engineer* it. TinyTorch guides you from the fundamentals of tensors and layers all the way to complete MLOps systems using your own codebase.
+
+[![Jupyter Book](https://img.shields.io/badge/docs-Jupyter_Book-orange.svg)](https://mlsysbook.github.io/TinyTorch/)
+[![GitHub](https://img.shields.io/badge/github-mlsysbook/TinyTorch-blue.svg)](https://github.com/mlsysbook/TinyTorch)
+[![Python](https://img.shields.io/badge/python-3.8+-green.svg)](https://python.org)
+
+📚 **[Read the Interactive Course →](https://mlsysbook.github.io/TinyTorch/)**
 
 ---
 
 ## 🎯 What You'll Build
 
-* **A Complete ML Framework** — Your own PyTorch-style toolkit, from the ground up
-* **Real Applications** — Classify CIFAR-10 images using models you construct
-* **Engineering Skills** — Learn the full ML system stack, not just high-level APIs
-* **Immediate Feedback** — Build, test, and see your system evolve step by step
+* **Complete ML Framework** — Your own PyTorch-style toolkit, from tensors to MLOps
+* **Real Applications** — Train neural networks on real datasets using your code
+* **Production Skills** — Full ML system lifecycle: training, deployment, monitoring
+* **Deep Understanding** — Build every component, understand every decision
 
 ---
 
@@ -20,12 +26,12 @@ A hands-on Machine Learning Systems course where students don’t just learn ML�
 ### 🧑‍🎓 **Students**
 
 ```bash
-git clone https://github.com/your-org/tinytorch.git
+git clone https://github.com/mlsysbook/TinyTorch.git
 cd TinyTorch
-make install
+pip install -e .
 tito system doctor                         # Verify your setup
-cd assignments/source/00_setup
-jupyter lab setup_dev.py                   # Launch your first assignment
+cd modules/source/00_setup
+jupyter lab setup_dev.py                  # Launch your first module
 ```
 
 ### 👩‍🏫 **Instructors**
@@ -35,85 +41,135 @@ jupyter lab setup_dev.py                   # Launch your first assignment
 tito system info
 tito system doctor
 
-# Assignment workflow
-tito nbgrader generate 00_setup
-tito nbgrader release 00_setup
-tito nbgrader autograde 00_setup
+# Module workflow
+tito export 00_setup
+tito test 00_setup
+tito nbdev build                          # Update package
 ```
 
 ---
 
-## 📚 Course Structure
+## 📚 Complete Course: 14 Modules
 
-### **Core Assignments** (6+ weeks of ready-to-teach content)
+### **🏗️ Foundations** (Modules 00-04)
+* **00_setup**: Development environment and CLI tools
+* **01_tensor**: N-dimensional arrays and tensor operations  
+* **02_activations**: ReLU, Sigmoid, Tanh, Softmax functions
+* **03_layers**: Dense layers and matrix operations
+* **04_networks**: Sequential networks and MLPs
 
-* `00_setup`: Development workflow, CLI tools (20/20 tests)
-* `02_activations`: ReLU, Sigmoid, Tanh (24/24 tests)
-* `03_layers`: Dense layers and block design (17/22 tests)
-* `04_networks`: Sequential networks, MLPs (20/25 tests)
-* `06_dataloader`: CIFAR-10 loading and preprocessing (15/15 tests)
-* `05_cnn`: Basic convolutions (2/2 tests)
+### **🧠 Deep Learning** (Modules 05-08)
+* **05_cnn**: Convolutional neural networks and image processing
+* **06_dataloader**: Data loading, batching, and preprocessing
+* **07_autograd**: Automatic differentiation and backpropagation  
+* **08_optimizers**: SGD, Adam, and learning rate scheduling
 
-### **In Progress**
+### **⚡ Systems & Production** (Modules 09-13)
+* **09_training**: Training loops, metrics, and validation
+* **10_compression**: Model pruning, quantization, and distillation
+* **11_kernels**: Performance optimization and custom operations
+* **12_benchmarking**: Profiling, testing, and performance analysis
+* **13_mlops**: Monitoring, deployment, and production systems
 
-* `01_tensor`: Tensor arithmetic (22/33 tests)
-* `07-13`: Autograd, optimizers, training, and MLOps
+**Status**: All 14 modules complete with inline tests and educational content
 
 ---
 
-## 🛠️ Dev & Grading Workflow
+## 📖 Documentation
 
-### **NBGrader** (Assignment creation and evaluation)
+### **Interactive Jupyter Book**
+- **Live Site**: https://mlsysbook.github.io/TinyTorch/
+- **Auto-updated** from source code on every release
+- **Complete course content** with executable examples
+- **Real implementation details** with solution code
 
+### **Development Workflow**
+- **`dev` branch**: Active development and experiments  
+- **`main` branch**: Stable releases that trigger documentation deployment
+- **Inline testing**: Tests embedded directly in source modules
+- **Continuous integration**: Automatic building and deployment
+
+---
+
+## 🛠️ Development Workflow
+
+### **Module Development**
 ```bash
-tito nbgrader generate 00_setup
-tito nbgrader release 00_setup
-tito nbgrader collect 00_setup
-tito nbgrader autograde 00_setup
+# Work on dev branch
+git checkout dev
+
+# Edit source modules  
+cd modules/source/01_tensor
+jupyter lab tensor_dev.py
+
+# Export to package
+tito export 01_tensor
+
+# Test your implementation
+tito test 01_tensor
+
+# Build complete package
+tito nbdev build
 ```
 
-### **nbdev** (Export to package & integration testing)
-
+### **Release Process**
 ```bash
-tito module export 00_setup
-tito module test 00_setup
+# Ready for release
+git checkout main
+git merge dev
+git push origin main        # Triggers documentation deployment
 ```
 
 ---
 
-## 🧠 Student Journey: Build → Use → Understand → Repeat
+## 🧠 Pedagogical Framework: Build → Use → Reflect
 
-1. **Build** your own `ReLU()` function
-2. **Use** it from `tinytorch.core.activations`
-3. **Understand** how it works in a neural network
-4. **Repeat** and deepen your knowledge with each module
+### **Real Engineering, Real Understanding**
 
-#### 🧪 Example
+1. **Build** — Implement `ReLU()` activation function
+2. **Use** — Apply it via `tinytorch.core.activations.ReLU()`  
+3. **Reflect** — Understand its role in neural network design
+4. **Iterate** — Extend knowledge with each module
+
+### **Example Learning Cycle**
 
 ```python
-# You implement this:
-def hello_tinytorch():
-    print("Welcome to TinyTorch!")
+# Step 1: You implement this in tensor_dev.py
+class Tensor:
+    def __init__(self, data):
+        self.data = np.array(data)
+    
+    def __add__(self, other):
+        return Tensor(self.data + other.data)
 
-# Then use it in your framework:
-from tinytorch.core.utils import hello_tinytorch
-hello_tinytorch()
+# Step 2: Export and use in your framework
+from tinytorch.core.tensor import Tensor
+a = Tensor([1, 2, 3])
+b = Tensor([4, 5, 6])
+result = a + b  # Your implementation at work!
+
+# Step 3: Apply to real problems
+model = Sequential([Dense(784, 128), ReLU(), Dense(128, 10)])
 ```
 
 ---
 
 ## 🎓 Teaching Philosophy
 
-### **Build Everything, Understand Everything**
+### **No Black Boxes**
+* Build every component from scratch
+* Understand performance trade-offs  
+* See how engineering decisions impact ML outcomes
 
-* No hidden layers. No magic. Just real engineering.
-* You write the system. You test it. You run it.
+### **Production-Ready Thinking**
+* Use real datasets (CIFAR-10, MNIST)
+* Implement proper testing and benchmarking
+* Learn MLOps and system design principles
 
-### **Real Data, Real Thinking**
-
-* Use full datasets like CIFAR-10—not toy problems
-* Prioritize performance, modularity, and reusability
-* Understand where engineering meets AI
+### **Iterative Mastery**
+* Each module builds on previous work
+* Immediate feedback through inline testing
+* Progressive complexity with solid foundations
 
 ---
 
@@ -121,54 +177,69 @@ hello_tinytorch()
 
 ```
 TinyTorch/
-├── assignments/source/XX/        # Assignment notebooks + tests
-├── tinytorch/                    # Your growing ML framework
-│   └── core/                     # Student-exported code
-├── tito/                         # CLI & course management tools
-└── docs/                         # Docs and metadata
+├── modules/source/XX/               # 14 source modules with inline tests
+├── tinytorch/core/                  # Your exported ML framework
+├── tito/                           # CLI and course management tools
+├── book/                           # Jupyter Book source and config
+├── tests/                          # Integration tests
+└── docs/                           # Development guides and workflows
 ```
 
 ---
 
-## 🧪 Tech Stack & Requirements
+## 🧪 Tech Stack
 
-* **Python 3.8+**
-* **Jupyter Lab**
-* **PyTorch** (for benchmarking/comparison only)
-* **NBGrader** (for assignment flow)
-* **nbdev** (for modular packaging)
-
----
-
-## ✅ Getting Started
-
-### 🎓 **Students**
-
-1. `tito system doctor`
-2. `cd assignments/source/00_setup`
-3. `jupyter lab setup_dev.py`
-4. Build → Export → Import → Test
-
-### 👩‍🏫 **Instructors**
-
-1. `tito system info`
-2. `tito nbgrader generate/release`
-3. `tito nbgrader autograde`
+* **Python 3.8+** — Modern Python with type hints
+* **NumPy** — Numerical foundations  
+* **Jupyter Lab** — Interactive development
+* **Rich** — Beautiful CLI output
+* **NBDev** — Literate programming and packaging
+* **Jupyter Book** — Interactive documentation
+* **GitHub Actions** — Continuous integration and deployment
 
 ---
 
-## 📊 Verified Milestones
+## ✅ Verified Learning Outcomes
 
-✅ Build multi-layer perceptrons
-✅ Implement custom activations
-✅ Load & process CIFAR-10
-✅ Perform basic convolutions
-✅ Export reusable ML modules
+Students who complete TinyTorch can:
+
+✅ **Build complete neural networks** from tensors to training loops  
+✅ **Implement modern ML algorithms** (Adam, dropout, batch norm)  
+✅ **Optimize performance** with profiling and custom kernels  
+✅ **Deploy production systems** with monitoring and MLOps  
+✅ **Debug and test** ML systems with proper engineering practices  
+✅ **Understand trade-offs** between accuracy, speed, and resources  
 
 ---
 
-**🔥 Ready to dive in? TinyTorch is classroom-tested and built for deep learning—done right.**
+## 🏃‍♀️ Getting Started
+
+### **Option 1: Interactive Course**
+👉 **[Start Learning Now](https://mlsysbook.github.io/TinyTorch/)** — Complete course in your browser
+
+### **Option 2: Local Development**
+```bash
+git clone https://github.com/mlsysbook/TinyTorch.git
+cd TinyTorch
+pip install -e .
+tito system doctor
+cd modules/source/00_setup
+jupyter lab setup_dev.py
+```
+
+### **Option 3: Instructor Setup**
+```bash
+# Clone and verify system
+git clone https://github.com/mlsysbook/TinyTorch.git
+cd TinyTorch
+tito system info
+
+# Test module workflow
+tito export 00_setup && tito test 00_setup
+```
 
 ---
 
-Let me know if you want a separate `README.md` vs `index.md`, or to generate an **OG/social media preview blurb** too.
+**🔥 Ready to build your own ML framework? Start with TinyTorch and understand every layer.**
+
+*Classroom-tested • Production-focused • Understanding-driven*
