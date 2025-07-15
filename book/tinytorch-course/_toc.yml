@@ -5,10 +5,52 @@ format: jb-book
 root: intro
 title: "TinyTorch Course"
 
-chapters:
-- file: chapters/00-setup
-  title: "Setup & Configuration"
-- file: chapters/01-tensor
-  title: "Tensors: Core Data Structure"
-- file: chapters/02-activations
-  title: "Activation Functions"
+parts:
+- caption: Foundation
+  chapters:
+  - file: chapters/00-setup.ipynb
+    title: "0. Development Environment"
+  - file: chapters/01-tensor.ipynb  
+    title: "1. Tensors"
+  - file: chapters/02-activations.ipynb
+    title: "2. Activations"
+
+- caption: Building Blocks
+  chapters:
+  - file: chapters/03-layers.ipynb
+    title: "3. Layers"
+  - file: chapters/04-networks
+    title: "4. Networks"
+  - file: chapters/05-cnn
+    title: "5. CNNs"
+
+- caption: Training Systems  
+  chapters:
+  - file: chapters/06-dataloader
+    title: "6. DataLoader"
+  - file: chapters/07-autograd
+    title: "7. Autograd"
+  - file: chapters/08-optimizers
+    title: "8. Optimizers"
+  - file: chapters/09-training
+    title: "9. Training"
+
+- caption: Production & Performance
+  chapters:
+  - file: chapters/10-compression
+    title: "10. Compression"
+  - file: chapters/11-kernels
+    title: "11. Kernels"
+  - file: chapters/12-benchmarking
+    title: "12. Benchmarking"
+  - file: chapters/13-mlops
+    title: "13. MLOps"
+
+- caption: Appendices
+  chapters:
+  - file: appendices/installation
+    title: "Installation Guide"
+  - file: appendices/troubleshooting
+    title: "Troubleshooting"
+  - file: appendices/resources
+    title: "Additional Resources"

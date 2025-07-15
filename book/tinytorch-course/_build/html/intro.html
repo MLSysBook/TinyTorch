@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-    <title>🔥 TinyTorch: Build ML Systems from Scratch &#8212; TinyTorch: Build ML Systems from Scratch</title>
+    <title>🔥 TinyTorch: Build Machine Learning Systems from Scratch &#8212; TinyTorch: Build ML Systems from Scratch</title>
   
   
   
@@ -163,12 +163,19 @@ const thebe_selector_output = ".output, .cell_output"
         <ul class="nav bd-sidenav bd-sidenav__home-link">
             <li class="toctree-l1 current active">
                 <a class="reference internal" href="#">
-                    🔥 TinyTorch: Build ML Systems from Scratch
+                    🔥 TinyTorch: Build Machine Learning Systems from Scratch
                 </a>
             </li>
         </ul>
-        <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="chapters/00-setup.html">Setup &amp; Configuration</a></li>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Foundation</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="chapters/00-setup.html">0. Development Environment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapters/01-tensor.html">1. Tensors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapters/02-activations.html">2. Activations</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Building Blocks</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="chapters/03-layers.html">3. Layers</a></li>
 </ul>
 
     </div>
@@ -371,7 +378,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>🔥 TinyTorch: Build ML Systems from Scratch</h1>
+    <h1>🔥 TinyTorch: Build Machine Learning Systems from Scratch</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -382,27 +389,20 @@ document.write(`
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-you-ll-build">🎯 What You’ll Build</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#interactive-learning-experience">🚀 Interactive Learning Experience</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#multiple-ways-to-learn">📚 <strong>Multiple Ways to Learn</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#progressive-implementation">🛠️ <strong>Progressive Implementation</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#how-to-use-tinytorch">🚀 How to Use TinyTorch</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#option-1-quick-exploration-5-minutes">🔬 Option 1: Quick Exploration (5 minutes)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#option-2-build-your-own-tinytorch-serious-learners">🏗️ Option 2: Build Your Own TinyTorch (Serious Learners)</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-philosophy-build-use-understand">🎓 Learning Philosophy: “Build → Use → Understand”</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#course-structure">📖 Course Structure</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#foundation-chapters-0-2">🏗️ <strong>Foundation</strong> (Chapters 0-2)</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#building-blocks-chapters-3-5">🧱 <strong>Building Blocks</strong> (Chapters 3-5)</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#training-systems-chapters-6-9">🎯 <strong>Training Systems</strong> (Chapters 6-9)</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#production-performance-chapters-10-13">⚡ <strong>Production &amp; Performance</strong> (Chapters 10-13)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-students-build-proven-results">📊 What Students Build (Proven Results)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#your-learning-path">🛣️ Your Learning Path</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#phase-1-foundation-modules-0-2">Phase 1: Foundation (Modules 0-2)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#phase-2-building-blocks-modules-3-5">Phase 2: Building Blocks (Modules 3-5)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#phase-3-training-systems-modules-6-9">Phase 3: Training Systems (Modules 6-9)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#phase-4-production-modules-10-13">Phase 4: Production (Modules 10-13)</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#getting-started">🚀 Getting Started</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#prerequisites">🎯 Prerequisites</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#how-to-use-this-book">🤝 How to Use This Book</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#interactive-features">💡 <strong>Interactive Features</strong></a></li>
-</ul>
-</li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-makes-this-course-unique">🌟 What Makes This Course Unique</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#getting-help">📞 Getting Help</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#start-your-journey">🚀 Start Your Journey</a></li>
 </ul>
             </nav>
         </div>
@@ -414,163 +414,224 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article" role="main">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="tinytorch-build-ml-systems-from-scratch">
-<h1>🔥 TinyTorch: Build ML Systems from Scratch<a class="headerlink" href="#tinytorch-build-ml-systems-from-scratch" title="Permalink to this heading">#</a></h1>
-<p><strong>A comprehensive, hands-on course for building machine learning systems from the ground up</strong></p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>This is an <strong>interactive course</strong> - you can run all code examples directly in your browser using Binder or download notebooks to run locally!</p>
-</div>
+  <section class="tex2jax_ignore mathjax_ignore" id="tinytorch-build-machine-learning-systems-from-scratch">
+<h1>🔥 TinyTorch: Build Machine Learning Systems from Scratch<a class="headerlink" href="#tinytorch-build-machine-learning-systems-from-scratch" title="Permalink to this heading">#</a></h1>
+<p><strong>Learn ML by building your own PyTorch-style framework from the ground up.</strong></p>
+<hr class="docutils" />
 <section id="what-you-ll-build">
 <h2>🎯 What You’ll Build<a class="headerlink" href="#what-you-ll-build" title="Permalink to this heading">#</a></h2>
-<p>By the end of this course, you’ll have implemented a complete ML framework from scratch, including:</p>
+<p>By the end of this course, you’ll have built:</p>
 <ul class="simple">
-<li><p><strong>Core tensor operations</strong> and automatic differentiation</p></li>
-<li><p><strong>Neural network layers</strong> and architectures</p></li>
-<li><p><strong>Training pipelines</strong> with optimizers and loss functions</p></li>
-<li><p><strong>Convolutional networks</strong> for computer vision</p></li>
-<li><p><strong>Production systems</strong> with compression and monitoring</p></li>
+<li><p><strong>Your own ML framework</strong> with tensors, layers, networks, and optimizers</p></li>
+<li><p><strong>Real applications</strong> that classify CIFAR-10 images using your code</p></li>
+<li><p><strong>Production skills</strong> in ML systems engineering, not just algorithms</p></li>
+<li><p><strong>Deep understanding</strong> of how modern ML frameworks actually work</p></li>
 </ul>
 </section>
-<section id="interactive-learning-experience">
-<h2>🚀 Interactive Learning Experience<a class="headerlink" href="#interactive-learning-experience" title="Permalink to this heading">#</a></h2>
-<section id="multiple-ways-to-learn">
-<h3>📚 <strong>Multiple Ways to Learn</strong><a class="headerlink" href="#multiple-ways-to-learn" title="Permalink to this heading">#</a></h3>
+<hr class="docutils" />
+<section id="how-to-use-tinytorch">
+<h2>🚀 How to Use TinyTorch<a class="headerlink" href="#how-to-use-tinytorch" title="Permalink to this heading">#</a></h2>
+<section id="option-1-quick-exploration-5-minutes">
+<h3>🔬 Option 1: Quick Exploration (5 minutes)<a class="headerlink" href="#option-1-quick-exploration-5-minutes" title="Permalink to this heading">#</a></h3>
+<p><strong>Perfect for:</strong> “I want to see what this is about”</p>
+<div class="tip admonition">
+<p class="admonition-title">Try Immediately - No Setup Required</p>
+<p>Click the 🚀 <strong>Launch Binder</strong> button at the top of any chapter to:</p>
 <ul class="simple">
-<li><p><strong>Read</strong>: Rich explanations with mathematical foundations</p></li>
-<li><p><strong>Code</strong>: Hands-on implementation in every chapter</p></li>
-<li><p><strong>Execute</strong>: Run code interactively with Binder/Colab</p></li>
-<li><p><strong>Download</strong>: Work locally with full Jupyter notebooks</p></li>
+<li><p>Get immediate hands-on experience</p></li>
+<li><p>Implement real ML components (ReLU, tensors, neural networks)</p></li>
+<li><p>See your code working instantly in the browser</p></li>
+<li><p>No installation, no account needed</p></li>
 </ul>
-</section>
-<section id="progressive-implementation">
-<h3>🛠️ <strong>Progressive Implementation</strong><a class="headerlink" href="#progressive-implementation" title="Permalink to this heading">#</a></h3>
-<p>Each module builds on the previous ones:</p>
-<p><strong>Foundation → Building Blocks → Training Systems → Production</strong></p>
-</section>
-</section>
-<section id="learning-philosophy-build-use-understand">
-<h2>🎓 Learning Philosophy: “Build → Use → Understand”<a class="headerlink" href="#learning-philosophy-build-use-understand" title="Permalink to this heading">#</a></h2>
-<p>Every chapter follows this proven pedagogical pattern:</p>
+<p><strong>Note:</strong> Binder sessions are temporary (timeout after ~20 minutes idle). Great for exploration, but work isn’t saved permanently.</p>
+</div>
+<p><strong>What you’ll experience:</strong></p>
 <ol class="arabic simple">
-<li><p><strong>🏗️ Build</strong>: Implement core functionality from scratch</p></li>
-<li><p><strong>🎯 Use</strong>: Apply your implementation to real problems</p></li>
-<li><p><strong>🧠 Understand</strong>: Reflect on design decisions and trade-offs</p></li>
+<li><p>Click “Launch Binder” on any chapter</p></li>
+<li><p>Get a live Jupyter environment with incomplete code</p></li>
+<li><p>Fill in the blanks to implement ReLU, Tensor operations, etc.</p></li>
+<li><p>Run tests to see your implementations working</p></li>
+<li><p>Immediately understand how ML frameworks work under the hood</p></li>
 </ol>
-<p>This approach ensures you gain both practical skills and deep conceptual understanding.</p>
 </section>
-<section id="course-structure">
-<h2>📖 Course Structure<a class="headerlink" href="#course-structure" title="Permalink to this heading">#</a></h2>
-<p>The course is organized into four main parts:</p>
-<section id="foundation-chapters-0-2">
-<h3>🏗️ <strong>Foundation</strong> (Chapters 0-2)<a class="headerlink" href="#foundation-chapters-0-2" title="Permalink to this heading">#</a></h3>
-<p>Essential building blocks for any ML system</p>
-<ul class="simple">
-<li><p>System setup and configuration</p></li>
-<li><p>Tensor data structures and operations</p></li>
-<li><p>Mathematical activation functions</p></li>
-</ul>
-</section>
-<section id="building-blocks-chapters-3-5">
-<h3>🧱 <strong>Building Blocks</strong> (Chapters 3-5)<a class="headerlink" href="#building-blocks-chapters-3-5" title="Permalink to this heading">#</a></h3>
-<p>Core neural network components</p>
-<ul class="simple">
-<li><p>Dense and convolutional layers</p></li>
-<li><p>Network architectures and composition</p></li>
-<li><p>Computer vision with CNNs</p></li>
-</ul>
-</section>
-<section id="training-systems-chapters-6-9">
-<h3>🎯 <strong>Training Systems</strong> (Chapters 6-9)<a class="headerlink" href="#training-systems-chapters-6-9" title="Permalink to this heading">#</a></h3>
-<p>Complete training pipelines</p>
-<ul class="simple">
-<li><p>Data loading and preprocessing</p></li>
-<li><p>Automatic differentiation engines</p></li>
-<li><p>Optimization algorithms and training loops</p></li>
-</ul>
-</section>
-<section id="production-performance-chapters-10-13">
-<h3>⚡ <strong>Production &amp; Performance</strong> (Chapters 10-13)<a class="headerlink" href="#production-performance-chapters-10-13" title="Permalink to this heading">#</a></h3>
-<p>Real-world deployment considerations</p>
-<ul class="simple">
-<li><p>Model compression and efficiency</p></li>
-<li><p>Custom kernels and acceleration</p></li>
-<li><p>Performance benchmarking and monitoring</p></li>
-</ul>
-</section>
-</section>
-<section id="getting-started">
-<h2>🚀 Getting Started<a class="headerlink" href="#getting-started" title="Permalink to this heading">#</a></h2>
-<p>Choose your preferred learning mode:</p>
-<p><strong>🌐 Browser (Binder)</strong>: Click rocket buttons to launch interactive notebooks</p>
-<p><strong>💻 Local Development</strong>:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/VJ/TinyTorch
+<hr class="docutils" />
+<section id="option-2-build-your-own-tinytorch-serious-learners">
+<h3>🏗️ Option 2: Build Your Own TinyTorch (Serious Learners)<a class="headerlink" href="#option-2-build-your-own-tinytorch-serious-learners" title="Permalink to this heading">#</a></h3>
+<p><strong>Perfect for:</strong> “I want to build this myself” or “This is a class assignment”</p>
+<div class="important admonition">
+<p class="admonition-title">Full Development Environment</p>
+<p>For persistent work, multi-session projects, and building your complete ML framework:</p>
+<p><strong>Step 1: Get the Code</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/your-org/tinytorch.git
 <span class="nb">cd</span><span class="w"> </span>TinyTorch
-<span class="nb">source</span><span class="w"> </span>.venv/bin/activate
-jupyter<span class="w"> </span>lab<span class="w"> </span>book/tinytorch-course/
 </pre></div>
 </div>
-<p><strong>☁️ Cloud (Colab)</strong>: Click external link buttons to open in Google Colab</p>
-</section>
-<section id="prerequisites">
-<h2>🎯 Prerequisites<a class="headerlink" href="#prerequisites" title="Permalink to this heading">#</a></h2>
-<p><strong>Required:</strong></p>
-<ul class="simple">
-<li><p>Basic Python programming (functions, classes, NumPy basics)</p></li>
-<li><p>High school mathematics (algebra, basic calculus)</p></li>
-</ul>
-<p><strong>Helpful but not required:</strong></p>
-<ul class="simple">
-<li><p>Linear algebra (vectors, matrices)</p></li>
-<li><p>Previous ML experience with frameworks like PyTorch/TensorFlow</p></li>
-</ul>
-</section>
-<section id="how-to-use-this-book">
-<h2>🤝 How to Use This Book<a class="headerlink" href="#how-to-use-this-book" title="Permalink to this heading">#</a></h2>
-<p>Each chapter includes:</p>
-<ul class="simple">
-<li><p><strong>📖 Conceptual explanations</strong> with visual diagrams</p></li>
-<li><p><strong>💻 Code implementations</strong> with detailed comments</p></li>
-<li><p><strong>🧪 Interactive tests</strong> to verify your understanding</p></li>
-<li><p><strong>🎯 Real-world applications</strong> showing practical usage</p></li>
-<li><p><strong>🔍 Deep dives</strong> into design decisions and alternatives</p></li>
-</ul>
-<section id="interactive-features">
-<h3>💡 <strong>Interactive Features</strong><a class="headerlink" href="#interactive-features" title="Permalink to this heading">#</a></h3>
-<div class="tip admonition">
-<p class="admonition-title">Try This!</p>
-<p>Look for interactive code cells throughout the book. Click “Run” to execute them, or modify the code to experiment!</p>
 </div>
-<div class="warning admonition">
-<p class="admonition-title">Common Pitfalls</p>
-<p>Watch for these callouts that highlight common mistakes and how to avoid them.</p>
+<p><strong>Step 2: Setup Environment</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make<span class="w"> </span>install<span class="w">              </span><span class="c1"># Install dependencies</span>
+tito<span class="w"> </span>system<span class="w"> </span>doctor<span class="w">        </span><span class="c1"># Verify everything works</span>
+</pre></div>
 </div>
-<div class="note admonition">
-<p class="admonition-title">Advanced Topics</p>
-<p>Optional deep dives for curious learners who want to go beyond the basics.</p>
+<p><strong>Step 3: Start Building</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>modules/source/00_setup
+jupyter<span class="w"> </span>lab<span class="w"> </span>setup_dev.py<span class="w">  </span><span class="c1"># Open first assignment</span>
+</pre></div>
+</div>
+<p><strong>Step 4: Build → Test → Export → Use</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># After implementing code in the notebook:</span>
+tito<span class="w"> </span><span class="nb">export</span><span class="w">               </span><span class="c1"># Export your code to tinytorch package</span>
+tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>setup<span class="w">          </span><span class="c1"># Test your implementation</span>
+
+<span class="c1"># Now use your own code:</span>
+python<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;from tinytorch.core.setup import hello_tinytorch; hello_tinytorch()&quot;</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>
+**What you&#39;ll build:**
+- **Module 00-02**: Development workflow, tensors, activation functions  
+- **Module 03-05**: Neural layers, networks, convolutions
+- **Module 06-08**: Data loading, autograd, optimizers
+- **Module 09-13**: Training systems, compression, production MLOps
+
+---
+
+### 👨‍🏫 Option 3: Classroom Use (Instructors)
+**Perfect for:** Teaching ML systems in a structured course
+
+```{admonition} Complete Course Infrastructure
+:class: note
+TinyTorch includes full NBGrader integration for classroom management:
+
+**Assignment Creation:**
+```bash
+tito nbgrader generate 00_setup    # Create student assignments
+tito nbgrader release 00_setup     # Release to students
+</pre></div>
+</div>
+<p><strong>Grading &amp; Feedback:</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>tito<span class="w"> </span>nbgrader<span class="w"> </span>collect<span class="w"> </span>00_setup<span class="w">     </span><span class="c1"># Collect submissions</span>
+tito<span class="w"> </span>nbgrader<span class="w"> </span>autograde<span class="w"> </span>00_setup<span class="w">   </span><span class="c1"># Auto-grade with tests</span>
+tito<span class="w"> </span>nbgrader<span class="w"> </span>feedback<span class="w"> </span>00_setup<span class="w">    </span><span class="c1"># Generate feedback</span>
+</pre></div>
+</div>
+<p><strong>Course Status:</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>tito<span class="w"> </span>system<span class="w"> </span>info<span class="w">                   </span><span class="c1"># Check all module status</span>
+tito<span class="w"> </span>system<span class="w"> </span>doctor<span class="w">                 </span><span class="c1"># Verify environment</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>
+---
+
+## 🎓 Learning Philosophy: Build → Use → Understand
+
+### Example: How You&#39;ll Learn Activation Functions
+
+**🔧 Build:** Implement ReLU from scratch
+```python
+def relu(x):
+    # YOU implement this function
+    return ???  # What should this be?
+</pre></div>
+</div>
+<p><strong>🚀 Use:</strong> Immediately use your own code</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">tinytorch.core.activations</span> <span class="kn">import</span> <span class="n">ReLU</span>  <span class="c1"># YOUR implementation!</span>
+<span class="n">layer</span> <span class="o">=</span> <span class="n">ReLU</span><span class="p">()</span>
+<span class="n">output</span> <span class="o">=</span> <span class="n">layer</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">input_tensor</span><span class="p">)</span>  <span class="c1"># Your code working!</span>
+</pre></div>
+</div>
+<p><strong>💡 Understand:</strong> See it working in real networks</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Your ReLU is now part of a real neural network</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">Sequential</span><span class="p">([</span>
+    <span class="n">Dense</span><span class="p">(</span><span class="mi">784</span><span class="p">,</span> <span class="mi">128</span><span class="p">),</span>
+    <span class="n">ReLU</span><span class="p">(),</span>           <span class="c1"># &lt;-- Your implementation</span>
+    <span class="n">Dense</span><span class="p">(</span><span class="mi">128</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+<span class="p">])</span>
+</pre></div>
 </div>
 </section>
 </section>
-<section id="what-makes-this-course-unique">
-<h2>🌟 What Makes This Course Unique<a class="headerlink" href="#what-makes-this-course-unique" title="Permalink to this heading">#</a></h2>
-<ul class="simple">
-<li><p><strong>🎯 Production-focused</strong>: Learn real-world engineering practices, not just algorithms</p></li>
-<li><p><strong>🔬 Implementation-driven</strong>: Build everything from scratch to understand how it really works</p></li>
-<li><p><strong>🚀 Interactive</strong>: Run code immediately without complex setup</p></li>
-<li><p><strong>📊 Visual</strong>: Rich diagrams and visualizations explain complex concepts</p></li>
-<li><p><strong>🔄 Iterative</strong>: Each module builds naturally on previous work</p></li>
-</ul>
-</section>
-<section id="getting-help">
-<h2>📞 Getting Help<a class="headerlink" href="#getting-help" title="Permalink to this heading">#</a></h2>
-<ul class="simple">
-<li><p><strong>💬 Discussions</strong>: Use GitHub Discussions for questions</p></li>
-<li><p><strong>🐛 Issues</strong>: Report bugs or suggest improvements</p></li>
-<li><p><strong>📧 Contact</strong>: Reach out to the TinyTorch team</p></li>
-</ul>
 <hr class="docutils" />
-<p><strong>Ready to build ML systems from scratch?</strong> Let’s start with the foundation!</p>
+<section id="what-students-build-proven-results">
+<h2>📊 What Students Build (Proven Results)<a class="headerlink" href="#what-students-build-proven-results" title="Permalink to this heading">#</a></h2>
+<div class="success admonition">
+<p class="admonition-title">Real Student Outcomes</p>
+<p><strong>After 6 weeks, students can:</strong></p>
+<ul class="simple">
+<li><p>✅ Build multi-layer perceptrons from scratch</p></li>
+<li><p>✅ Implement custom activation functions (ReLU, Sigmoid, Tanh)</p></li>
+<li><p>✅ Load and process real datasets (CIFAR-10)</p></li>
+<li><p>✅ Create convolution operations</p></li>
+<li><p>✅ Export their code to a working Python package</p></li>
+<li><p>✅ Use their own ML framework for real image classification</p></li>
+</ul>
+<p><strong>Test Coverage:</strong> 100+ automated tests ensure student implementations work correctly</p>
+</div>
 </section>
+<hr class="docutils" />
+<section id="your-learning-path">
+<h2>🛣️ Your Learning Path<a class="headerlink" href="#your-learning-path" title="Permalink to this heading">#</a></h2>
+<section id="phase-1-foundation-modules-0-2">
+<h3>Phase 1: Foundation (Modules 0-2)<a class="headerlink" href="#phase-1-foundation-modules-0-2" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Setup &amp; CLI</strong>: Professional development workflow</p></li>
+<li><p><strong>Tensors</strong>: Multi-dimensional arrays and operations</p></li>
+<li><p><strong>Activations</strong>: ReLU, Sigmoid, Tanh functions</p></li>
+</ul>
+</section>
+<section id="phase-2-building-blocks-modules-3-5">
+<h3>Phase 2: Building Blocks (Modules 3-5)<a class="headerlink" href="#phase-2-building-blocks-modules-3-5" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Layers</strong>: Dense layers and neural building blocks</p></li>
+<li><p><strong>Networks</strong>: Sequential models and MLPs</p></li>
+<li><p><strong>CNNs</strong>: Convolutional operations</p></li>
+</ul>
+</section>
+<section id="phase-3-training-systems-modules-6-9">
+<h3>Phase 3: Training Systems (Modules 6-9)<a class="headerlink" href="#phase-3-training-systems-modules-6-9" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>DataLoader</strong>: Real dataset handling (CIFAR-10)</p></li>
+<li><p><strong>Autograd</strong>: Automatic differentiation</p></li>
+<li><p><strong>Optimizers</strong>: SGD, Adam, learning schedules</p></li>
+<li><p><strong>Training</strong>: Complete training loops</p></li>
+</ul>
+</section>
+<section id="phase-4-production-modules-10-13">
+<h3>Phase 4: Production (Modules 10-13)<a class="headerlink" href="#phase-4-production-modules-10-13" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Compression</strong>: Model optimization techniques</p></li>
+<li><p><strong>Kernels</strong>: High-performance operations</p></li>
+<li><p><strong>Benchmarking</strong>: Performance measurement</p></li>
+<li><p><strong>MLOps</strong>: Production deployment</p></li>
+</ul>
+</section>
+</section>
+<hr class="docutils" />
+<section id="start-your-journey">
+<h2>🚀 Start Your Journey<a class="headerlink" href="#start-your-journey" title="Permalink to this heading">#</a></h2>
+<div class="tip admonition">
+<p class="admonition-title">Choose Your Path</p>
+<p><strong>Just Exploring?</strong> → Click 🚀 <strong>Launch Binder</strong> on any chapter below</p>
+<p><strong>Ready to Build?</strong> → Follow the setup instructions above</p>
+<p><strong>Teaching a Class?</strong> → Check out the instructor documentation</p>
+</div>
+<p><strong>Next Steps:</strong></p>
+<ol class="arabic simple">
+<li><p><strong>Read the course overview</strong> in the chapters below</p></li>
+<li><p><strong>Try Chapter 1</strong> (Setup) to understand the development workflow</p></li>
+<li><p><strong>Experience Chapter 2</strong> (Tensors) to implement your first ML component</p></li>
+<li><p><strong>Build progressively</strong> through layers, networks, and complete systems</p></li>
+</ol>
+<hr class="docutils" />
+<p><em>Built with ❤️ for hands-on ML systems education. Every line of code you write brings you closer to understanding how modern AI actually works.</em></p>
+</section>
+<div class="toctree-wrapper compound">
+</div>
+<div class="toctree-wrapper compound">
+</div>
+<div class="toctree-wrapper compound">
+</div>
+<div class="toctree-wrapper compound">
+</div>
 <div class="toctree-wrapper compound">
 </div>
 </section>
@@ -630,27 +691,20 @@ jupyter<span class="w"> </span>lab<span class="w"> </span>book/tinytorch-course/
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-you-ll-build">🎯 What You’ll Build</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#interactive-learning-experience">🚀 Interactive Learning Experience</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#multiple-ways-to-learn">📚 <strong>Multiple Ways to Learn</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#progressive-implementation">🛠️ <strong>Progressive Implementation</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#how-to-use-tinytorch">🚀 How to Use TinyTorch</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#option-1-quick-exploration-5-minutes">🔬 Option 1: Quick Exploration (5 minutes)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#option-2-build-your-own-tinytorch-serious-learners">🏗️ Option 2: Build Your Own TinyTorch (Serious Learners)</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-philosophy-build-use-understand">🎓 Learning Philosophy: “Build → Use → Understand”</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#course-structure">📖 Course Structure</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#foundation-chapters-0-2">🏗️ <strong>Foundation</strong> (Chapters 0-2)</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#building-blocks-chapters-3-5">🧱 <strong>Building Blocks</strong> (Chapters 3-5)</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#training-systems-chapters-6-9">🎯 <strong>Training Systems</strong> (Chapters 6-9)</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#production-performance-chapters-10-13">⚡ <strong>Production &amp; Performance</strong> (Chapters 10-13)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-students-build-proven-results">📊 What Students Build (Proven Results)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#your-learning-path">🛣️ Your Learning Path</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#phase-1-foundation-modules-0-2">Phase 1: Foundation (Modules 0-2)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#phase-2-building-blocks-modules-3-5">Phase 2: Building Blocks (Modules 3-5)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#phase-3-training-systems-modules-6-9">Phase 3: Training Systems (Modules 6-9)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#phase-4-production-modules-10-13">Phase 4: Production (Modules 10-13)</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#getting-started">🚀 Getting Started</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#prerequisites">🎯 Prerequisites</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#how-to-use-this-book">🤝 How to Use This Book</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#interactive-features">💡 <strong>Interactive Features</strong></a></li>
-</ul>
-</li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-makes-this-course-unique">🌟 What Makes This Course Unique</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#getting-help">📞 Getting Help</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#start-your-journey">🚀 Start Your Journey</a></li>
 </ul>
   </nav></div>
 
