@@ -2,34 +2,24 @@
 Integration Tests - MLOps Module
 
 Tests real integration between MLOps pipeline and other TinyTorch modules.
-Uses actual TinyTorch components to verify production ML systems work correctly.
+Uses actual TinyTorch components to verify production monitoring works correctly.
 """
 
 import pytest
 import numpy as np
-import sys
-from pathlib import Path
+from test_utils import setup_integration_test
 
-# Add the project root to the path
-project_root = Path(__file__).parent.parent.parent
-sys.path.insert(0, str(project_root))
+# Ensure proper setup before importing
+setup_integration_test()
 
-# Import from development modules directly to ensure compatibility
-sys.path.append(str(project_root / "modules" / "source" / "01_tensor"))
-sys.path.append(str(project_root / "modules" / "source" / "02_activations"))
-sys.path.append(str(project_root / "modules" / "source" / "03_layers"))
-sys.path.append(str(project_root / "modules" / "source" / "04_networks"))
-sys.path.append(str(project_root / "modules" / "source" / "09_training"))
-sys.path.append(str(project_root / "modules" / "source" / "12_benchmarking"))
-sys.path.append(str(project_root / "modules" / "source" / "13_mlops"))
-
-from tensor_dev import Tensor
-from activations_dev import ReLU, Sigmoid, Softmax
-from layers_dev import Dense
-from networks_dev import Sequential
-from training_dev import Trainer, MeanSquaredError, CrossEntropyLoss, Accuracy
-from benchmarking_dev import TinyTorchPerf
-from mlops_dev import ModelMonitor, DriftDetector, RetrainingTrigger, MLOpsPipeline
+# Import ONLY from TinyTorch package
+from tinytorch.core.tensor import Tensor
+from tinytorch.core.layers import Dense
+from tinytorch.core.networks import Sequential
+from tinytorch.core.activations import ReLU, Softmax
+from tinytorch.core.mlops import (
+    ModelMonitor, DriftDetector, RetrainingTrigger, MLOpsPipeline
+)
 
 
 class TestMLOpsIntegration:

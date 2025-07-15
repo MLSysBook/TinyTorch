@@ -7,27 +7,18 @@ Uses actual TinyTorch components to verify systematic evaluation works correctly
 
 import pytest
 import numpy as np
-import sys
-from pathlib import Path
+from test_utils import setup_integration_test
 
-# Add the project root to the path
-project_root = Path(__file__).parent.parent.parent
-sys.path.insert(0, str(project_root))
+# Ensure proper setup before importing
+setup_integration_test()
 
-# Import from development modules directly to ensure compatibility
-sys.path.append(str(project_root / "modules" / "source" / "01_tensor"))
-sys.path.append(str(project_root / "modules" / "source" / "02_activations"))
-sys.path.append(str(project_root / "modules" / "source" / "03_layers"))
-sys.path.append(str(project_root / "modules" / "source" / "04_networks"))
-sys.path.append(str(project_root / "modules" / "source" / "11_kernels"))
-sys.path.append(str(project_root / "modules" / "source" / "12_benchmarking"))
-
-from tensor_dev import Tensor
-from activations_dev import ReLU, Sigmoid, Softmax
-from layers_dev import Dense
-from networks_dev import Sequential
-from kernels_dev import vectorized_relu
-from benchmarking_dev import BenchmarkScenarios, StatisticalValidator, TinyTorchPerf
+# Import ONLY from TinyTorch package
+from tinytorch.core.tensor import Tensor
+from tinytorch.core.activations import ReLU, Sigmoid, Softmax
+from tinytorch.core.layers import Dense
+from tinytorch.core.networks import Sequential
+from tinytorch.core.kernels import vectorized_relu
+from tinytorch.core.benchmarking import BenchmarkScenarios, StatisticalValidator, TinyTorchPerf
 
 
 class TestBenchmarkingIntegration:
