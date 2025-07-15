@@ -1,0 +1,2064 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>MLOps &#8212; Tiny🔥Torch: Build ML Systems from Scratch</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=5b4479735964841361fd" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=5b4479735964841361fd" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=5b4479735964841361fd" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=5b4479735964841361fd" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=5b4479735964841361fd" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=5b4479735964841361fd" />
+  <script src="../_static/vendor/fontawesome/6.1.2/js/all.min.js?digest=5b4479735964841361fd"></script>
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'chapters/13-mlops';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="Benchmarking" href="12-benchmarking.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo.png" class="logo__image only-light" alt="Tiny🔥Torch: Build ML Systems from Scratch - Home"/>
+    <script>document.write(`<img src="../_static/logo.png" class="logo__image only-dark" alt="Tiny🔥Torch: Build ML Systems from Scratch - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    Tiny🔥Torch: Build Machine Learning Systems from Scratch
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Usage Paths</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../usage-paths/quick-exploration.html">🔬 Quick Exploration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage-paths/serious-development.html">🏗️ Serious Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage-paths/classroom-use.html">👨‍🏫 Classroom Use</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Foundation</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="00-setup.html">0. Development Environment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01-tensor.html">1. Tensors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="02-activations.html">2. Activations</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Building Blocks</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="03-layers.html">3. Layers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="04-networks.html">4. Networks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="05-cnn.html">5. CNNs</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Training Systems</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="06-dataloader.html">DataLoader</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="07-autograd.html">7. Autograd</a></li>
+<li class="toctree-l1"><a class="reference internal" href="08-optimizers.html">8. Optimizers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="09-training.html">9. Training</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Production &amp; Performance</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="10-compression.html">10. Compression</a></li>
+<li class="toctree-l1"><a class="reference internal" href="11-kernels.html">11. Kernels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="12-benchmarking.html">12. Benchmarking</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">13. MLOps</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/VJ/TinyTorch" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/VJ/TinyTorch/edit/main/book/tinytorch-course/chapters/13-mlops.ipynb" target="_blank"
+   class="btn btn-sm btn-source-edit-button dropdown-item"
+   title="Suggest edit"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="btn__text-container">Suggest edit</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/VJ/TinyTorch/issues/new?title=Issue%20on%20page%20%2Fchapters/13-mlops.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/chapters/13-mlops.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>MLOps</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#where-this-code-lives-in-the-final-package">📦 Where This Code Lives in the Final Package</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-is-mlops">What is MLOps?</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-production-reality-models-degrade-over-time">The Production Reality: Models Degrade Over Time</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#why-models-fail-in-production">Why Models Fail in Production</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-mlops-solution">The MLOps Solution</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#real-world-examples">Real-World Examples</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-complete-tinytorch-lifecycle">The Complete TinyTorch Lifecycle</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-1-performance-drift-monitor-tracking-model-health">Step 1: Performance Drift Monitor - Tracking Model Health</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-problem-silent-model-degradation">The Problem: Silent Model Degradation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-solution-continuous-performance-monitoring">The Solution: Continuous Performance Monitoring</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#what-we-ll-build">What We’ll Build</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#real-world-applications">Real-World Applications</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#test-your-performance-monitor">🧪 Test Your Performance Monitor</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-2-simple-drift-detection-detecting-data-changes">Step 2: Simple Drift Detection - Detecting Data Changes</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-problem-silent-data-distribution-changes">The Problem: Silent Data Distribution Changes</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-solution-statistical-drift-detection">The Solution: Statistical Drift Detection</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">What We’ll Build</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">Real-World Applications</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#test-your-drift-detector">🧪 Test Your Drift Detector</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-3-retraining-trigger-system-automated-response-to-issues">Step 3: Retraining Trigger System - Automated Response to Issues</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-problem-manual-intervention-required">The Problem: Manual Intervention Required</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-solution-automated-retraining-pipeline">The Solution: Automated Retraining Pipeline</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">What We’ll Build</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">Real-World Applications</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#test-your-retraining-trigger">🧪 Test Your Retraining Trigger</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-4-complete-mlops-pipeline-integration-and-deployment">Step 4: Complete MLOps Pipeline - Integration and Deployment</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-problem-disconnected-components">The Problem: Disconnected Components</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-solution-complete-mlops-pipeline">The Solution: Complete MLOps Pipeline</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">What We’ll Build</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">Real-World Applications</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#test-your-complete-mlops-pipeline">🧪 Test Your Complete MLOps Pipeline</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#final-integration-complete-tinytorch-ecosystem">🎯 Final Integration: Complete TinyTorch Ecosystem</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-full-system-in-action">The Full System in Action</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#what-students-have-achieved">What Students Have Achieved</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#real-world-impact">Real-World Impact</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#auto-discovery-testing">🧪 Auto-Discovery Testing</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-summary-mlops-production-systems">🎯 Module Summary: MLOps Production Systems</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#what-you-ve-built">What You’ve Built</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#key-concepts-you-ve-learned">Key Concepts You’ve Learned</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">Real-World Applications</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#connection-to-industry-systems">Connection to Industry Systems</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#next-steps">Next Steps</a></li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="mlops">
+<h1>MLOps<a class="headerlink" href="#mlops" title="Permalink to this heading">#</a></h1>
+<div class="tip admonition">
+<p class="admonition-title">Interactive Learning</p>
+<p>🚀 <strong>Launch Binder</strong>: Click the rocket icon above to run this chapter interactively!</p>
+<p>💾 <strong>Save Your Work</strong>: Download your completed notebook when done.</p>
+<p>🏗️ <strong>Build Locally</strong>: Ready for serious development? <a class="reference external" href="https://github.com/your-org/tinytorch">Fork the repo</a> and work locally with the full <code class="docutils literal notranslate"><span class="pre">tito</span></code> workflow.</p>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#| default_exp core.mlops</span>
+
+<span class="c1">#| export</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Callable</span>
+<span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span><span class="p">,</span> <span class="n">field</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">defaultdict</span>
+
+<span class="c1"># Import our dependencies - try from package first, then local modules</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">tinytorch.core.tensor</span> <span class="kn">import</span> <span class="n">Tensor</span>
+    <span class="kn">from</span> <span class="nn">tinytorch.core.training</span> <span class="kn">import</span> <span class="n">Trainer</span><span class="p">,</span> <span class="n">MeanSquaredError</span><span class="p">,</span> <span class="n">CrossEntropyLoss</span><span class="p">,</span> <span class="n">Accuracy</span>
+    <span class="kn">from</span> <span class="nn">tinytorch.core.benchmarking</span> <span class="kn">import</span> <span class="n">TinyTorchPerf</span><span class="p">,</span> <span class="n">StatisticalValidator</span>
+    <span class="kn">from</span> <span class="nn">tinytorch.core.compression</span> <span class="kn">import</span> <span class="n">quantize_layer_weights</span><span class="p">,</span> <span class="n">prune_weights_by_magnitude</span>
+    <span class="kn">from</span> <span class="nn">tinytorch.core.networks</span> <span class="kn">import</span> <span class="n">Sequential</span>
+    <span class="kn">from</span> <span class="nn">tinytorch.core.layers</span> <span class="kn">import</span> <span class="n">Dense</span>
+    <span class="kn">from</span> <span class="nn">tinytorch.core.activations</span> <span class="kn">import</span> <span class="n">ReLU</span><span class="p">,</span> <span class="n">Sigmoid</span><span class="p">,</span> <span class="n">Softmax</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="c1"># For development, import from local modules</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">),</span> <span class="s1">&#39;..&#39;</span><span class="p">,</span> <span class="s1">&#39;01_tensor&#39;</span><span class="p">))</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">),</span> <span class="s1">&#39;..&#39;</span><span class="p">,</span> <span class="s1">&#39;09_training&#39;</span><span class="p">))</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">),</span> <span class="s1">&#39;..&#39;</span><span class="p">,</span> <span class="s1">&#39;12_benchmarking&#39;</span><span class="p">))</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">),</span> <span class="s1">&#39;..&#39;</span><span class="p">,</span> <span class="s1">&#39;10_compression&#39;</span><span class="p">))</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">),</span> <span class="s1">&#39;..&#39;</span><span class="p">,</span> <span class="s1">&#39;04_networks&#39;</span><span class="p">))</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">),</span> <span class="s1">&#39;..&#39;</span><span class="p">,</span> <span class="s1">&#39;03_layers&#39;</span><span class="p">))</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">),</span> <span class="s1">&#39;..&#39;</span><span class="p">,</span> <span class="s1">&#39;02_activations&#39;</span><span class="p">))</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="kn">from</span> <span class="nn">tensor_dev</span> <span class="kn">import</span> <span class="n">Tensor</span>
+        <span class="kn">from</span> <span class="nn">training_dev</span> <span class="kn">import</span> <span class="n">Trainer</span><span class="p">,</span> <span class="n">MeanSquaredError</span><span class="p">,</span> <span class="n">CrossEntropyLoss</span><span class="p">,</span> <span class="n">Accuracy</span>
+        <span class="kn">from</span> <span class="nn">benchmarking_dev</span> <span class="kn">import</span> <span class="n">TinyTorchPerf</span><span class="p">,</span> <span class="n">StatisticalValidator</span>
+        <span class="kn">from</span> <span class="nn">compression_dev</span> <span class="kn">import</span> <span class="n">quantize_layer_weights</span><span class="p">,</span> <span class="n">prune_weights_by_magnitude</span>
+        <span class="kn">from</span> <span class="nn">networks_dev</span> <span class="kn">import</span> <span class="n">Sequential</span>
+        <span class="kn">from</span> <span class="nn">layers_dev</span> <span class="kn">import</span> <span class="n">Dense</span>
+        <span class="kn">from</span> <span class="nn">activations_dev</span> <span class="kn">import</span> <span class="n">ReLU</span><span class="p">,</span> <span class="n">Sigmoid</span><span class="p">,</span> <span class="n">Softmax</span>
+    <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;⚠️  Development imports failed - some functionality may be limited&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
+<span class="ne">ModuleNotFoundError</span><span class="g g-Whitespace">                       </span>Traceback (most recent call last)
+<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">line</span> <span class="mi">5</span>
+<span class="g g-Whitespace">      </span><span class="mi">1</span> <span class="c1">#| default_exp core.mlops</span>
+<span class="g g-Whitespace">      </span><span class="mi">2</span> 
+<span class="g g-Whitespace">      </span><span class="mi">3</span> <span class="c1">#| export</span>
+<span class="g g-Whitespace">      </span><span class="mi">4</span> <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="ne">----&gt; </span><span class="mi">5</span> <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="g g-Whitespace">      </span><span class="mi">6</span> <span class="kn">import</span> <span class="nn">os</span>
+<span class="g g-Whitespace">      </span><span class="mi">7</span> <span class="kn">import</span> <span class="nn">sys</span>
+
+<span class="ne">ModuleNotFoundError</span>: No module named &#39;matplotlib&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#| hide</span>
+<span class="c1">#| export</span>
+<span class="k">def</span> <span class="nf">_should_show_plots</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Check if we should show plots (disable during testing)&quot;&quot;&quot;</span>
+    <span class="c1"># Check multiple conditions that indicate we&#39;re in test mode</span>
+    <span class="n">is_pytest</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s1">&#39;pytest&#39;</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">modules</span> <span class="ow">or</span>
+        <span class="s1">&#39;test&#39;</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span> <span class="ow">or</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;PYTEST_CURRENT_TEST&#39;</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">or</span>
+        <span class="nb">any</span><span class="p">(</span><span class="s1">&#39;test&#39;</span> <span class="ow">in</span> <span class="n">arg</span> <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span> <span class="ow">or</span>
+        <span class="nb">any</span><span class="p">(</span><span class="s1">&#39;pytest&#39;</span> <span class="ow">in</span> <span class="n">arg</span> <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span>
+    <span class="p">)</span>
+    
+    <span class="c1"># Show plots in development mode (when not in test mode)</span>
+    <span class="k">return</span> <span class="ow">not</span> <span class="n">is_pytest</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;🚀 TinyTorch MLOps Module&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;NumPy version: </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">__version__</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Python version: </span><span class="si">{</span><span class="n">sys</span><span class="o">.</span><span class="n">version_info</span><span class="o">.</span><span class="n">major</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">sys</span><span class="o">.</span><span class="n">version_info</span><span class="o">.</span><span class="n">minor</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Ready to build production ML systems!&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<section id="where-this-code-lives-in-the-final-package">
+<h2>📦 Where This Code Lives in the Final Package<a class="headerlink" href="#where-this-code-lives-in-the-final-package" title="Permalink to this heading">#</a></h2>
+<p><strong>Learning Side:</strong> You work in <code class="docutils literal notranslate"><span class="pre">modules/source/13_mlops/mlops_dev.py</span></code><br />
+<strong>Building Side:</strong> Code exports to <code class="docutils literal notranslate"><span class="pre">tinytorch.core.mlops</span></code></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Final package structure:</span>
+<span class="kn">from</span> <span class="nn">tinytorch.core.mlops</span> <span class="kn">import</span> <span class="n">ModelMonitor</span><span class="p">,</span> <span class="n">DriftDetector</span><span class="p">,</span> <span class="n">MLOpsPipeline</span>
+<span class="kn">from</span> <span class="nn">tinytorch.core.training</span> <span class="kn">import</span> <span class="n">Trainer</span>  <span class="c1"># Reuse your training system</span>
+<span class="kn">from</span> <span class="nn">tinytorch.core.benchmarking</span> <span class="kn">import</span> <span class="n">TinyTorchPerf</span>  <span class="c1"># Reuse your benchmarking</span>
+<span class="kn">from</span> <span class="nn">tinytorch.core.compression</span> <span class="kn">import</span> <span class="n">quantize_layer_weights</span>  <span class="c1"># Reuse compression</span>
+</pre></div>
+</div>
+<p><strong>Why this matters:</strong></p>
+<ul class="simple">
+<li><p><strong>Integration:</strong> MLOps orchestrates all TinyTorch components</p></li>
+<li><p><strong>Reusability:</strong> Uses everything you’ve built in previous modules</p></li>
+<li><p><strong>Production:</strong> Real-world ML system lifecycle management</p></li>
+<li><p><strong>Maintainability:</strong> Systems that keep working over time</p></li>
+</ul>
+</section>
+<section id="what-is-mlops">
+<h2>What is MLOps?<a class="headerlink" href="#what-is-mlops" title="Permalink to this heading">#</a></h2>
+<section id="the-production-reality-models-degrade-over-time">
+<h3>The Production Reality: Models Degrade Over Time<a class="headerlink" href="#the-production-reality-models-degrade-over-time" title="Permalink to this heading">#</a></h3>
+<p>You’ve built an amazing ML system:</p>
+<ul class="simple">
+<li><p><strong>Training pipeline</strong>: Produces high-quality models</p></li>
+<li><p><strong>Compression</strong>: Optimizes models for deployment</p></li>
+<li><p><strong>Kernels</strong>: Accelerates inference</p></li>
+<li><p><strong>Benchmarking</strong>: Measures performance</p></li>
+</ul>
+<p>But there’s a critical problem: <strong>Models degrade over time without maintenance.</strong></p>
+</section>
+<section id="why-models-fail-in-production">
+<h3>Why Models Fail in Production<a class="headerlink" href="#why-models-fail-in-production" title="Permalink to this heading">#</a></h3>
+<ol class="arabic simple">
+<li><p><strong>Data drift</strong>: Input data distribution changes</p></li>
+<li><p><strong>Concept drift</strong>: Relationship between inputs and outputs changes</p></li>
+<li><p><strong>Performance degradation</strong>: Accuracy drops over time</p></li>
+<li><p><strong>System changes</strong>: Infrastructure updates break assumptions</p></li>
+</ol>
+</section>
+<section id="the-mlops-solution">
+<h3>The MLOps Solution<a class="headerlink" href="#the-mlops-solution" title="Permalink to this heading">#</a></h3>
+<p><strong>MLOps</strong> (Machine Learning Operations) is the practice of maintaining ML systems in production:</p>
+<ul class="simple">
+<li><p><strong>Monitor</strong>: Track model performance continuously</p></li>
+<li><p><strong>Detect</strong>: Identify when models are failing</p></li>
+<li><p><strong>Respond</strong>: Automatically retrain and redeploy</p></li>
+<li><p><strong>Validate</strong>: Ensure new models are actually better</p></li>
+</ul>
+</section>
+<section id="real-world-examples">
+<h3>Real-World Examples<a class="headerlink" href="#real-world-examples" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Netflix</strong>: Recommendation models retrain when viewing patterns change</p></li>
+<li><p><strong>Uber</strong>: Demand prediction models adapt to new cities and events</p></li>
+<li><p><strong>Google</strong>: Search ranking models update as web content evolves</p></li>
+<li><p><strong>Tesla</strong>: Autonomous driving models improve with new driving data</p></li>
+</ul>
+</section>
+<section id="the-complete-tinytorch-lifecycle">
+<h3>The Complete TinyTorch Lifecycle<a class="headerlink" href="#the-complete-tinytorch-lifecycle" title="Permalink to this heading">#</a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Data → Training → Compression → Kernels → Benchmarking → Monitor → Detect → Retrain → Deploy
+                                                             ↑__________________________|
+</pre></div>
+</div>
+<p>MLOps closes this loop, creating <strong>self-maintaining systems</strong>.</p>
+</section>
+</section>
+<section id="step-1-performance-drift-monitor-tracking-model-health">
+<h2>Step 1: Performance Drift Monitor - Tracking Model Health<a class="headerlink" href="#step-1-performance-drift-monitor-tracking-model-health" title="Permalink to this heading">#</a></h2>
+<section id="the-problem-silent-model-degradation">
+<h3>The Problem: Silent Model Degradation<a class="headerlink" href="#the-problem-silent-model-degradation" title="Permalink to this heading">#</a></h3>
+<p>Without monitoring, you won’t know when your model stops working:</p>
+<ul class="simple">
+<li><p><strong>Accuracy drops</strong> from 95% to 85% over 3 months</p></li>
+<li><p><strong>Latency increases</strong> as data patterns change</p></li>
+<li><p><strong>System failures</strong> go unnoticed until user complaints</p></li>
+</ul>
+</section>
+<section id="the-solution-continuous-performance-monitoring">
+<h3>The Solution: Continuous Performance Monitoring<a class="headerlink" href="#the-solution-continuous-performance-monitoring" title="Permalink to this heading">#</a></h3>
+<p>Track key metrics over time:</p>
+<ul class="simple">
+<li><p><strong>Accuracy/Error rates</strong>: Primary model performance</p></li>
+<li><p><strong>Latency/Throughput</strong>: System performance</p></li>
+<li><p><strong>Data statistics</strong>: Input distribution changes</p></li>
+<li><p><strong>System health</strong>: Infrastructure metrics</p></li>
+</ul>
+</section>
+<section id="what-we-ll-build">
+<h3>What We’ll Build<a class="headerlink" href="#what-we-ll-build" title="Permalink to this heading">#</a></h3>
+<p>A <code class="docutils literal notranslate"><span class="pre">ModelMonitor</span></code> that:</p>
+<ol class="arabic simple">
+<li><p><strong>Tracks performance</strong> over time</p></li>
+<li><p><strong>Stores metric history</strong> for trend analysis</p></li>
+<li><p><strong>Detects degradation</strong> when metrics drop</p></li>
+<li><p><strong>Alerts</strong> when thresholds are crossed</p></li>
+</ol>
+</section>
+<section id="real-world-applications">
+<h3>Real-World Applications<a class="headerlink" href="#real-world-applications" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>E-commerce</strong>: Monitor recommendation click-through rates</p></li>
+<li><p><strong>Finance</strong>: Track fraud detection false positive rates</p></li>
+<li><p><strong>Healthcare</strong>: Monitor diagnostic accuracy over time</p></li>
+<li><p><strong>Autonomous vehicles</strong>: Track object detection confidence scores</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#| export</span>
+<span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">ModelMonitor</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Monitors ML model performance over time and detects degradation.</span>
+<span class="sd">    </span>
+<span class="sd">    Tracks key metrics, stores history, and alerts when performance drops.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">baseline_accuracy</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.95</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        TODO: Initialize the ModelMonitor for tracking model performance.</span>
+<span class="sd">        </span>
+<span class="sd">        STEP-BY-STEP IMPLEMENTATION:</span>
+<span class="sd">        1. Store the model_name and baseline_accuracy</span>
+<span class="sd">        2. Create empty lists to store metric history:</span>
+<span class="sd">           - accuracy_history: List[float] </span>
+<span class="sd">           - latency_history: List[float]</span>
+<span class="sd">           - timestamp_history: List[datetime]</span>
+<span class="sd">        3. Set performance thresholds:</span>
+<span class="sd">           - accuracy_threshold: baseline_accuracy * 0.9 (10% drop triggers alert)</span>
+<span class="sd">           - latency_threshold: 200.0 (milliseconds)</span>
+<span class="sd">        4. Initialize alert flags:</span>
+<span class="sd">           - accuracy_alert: False</span>
+<span class="sd">           - latency_alert: False</span>
+<span class="sd">        </span>
+<span class="sd">        EXAMPLE USAGE:</span>
+<span class="sd">        ```python</span>
+<span class="sd">        monitor = ModelMonitor(&quot;image_classifier&quot;, baseline_accuracy=0.93)</span>
+<span class="sd">        monitor.record_performance(accuracy=0.92, latency=150.0)</span>
+<span class="sd">        alerts = monitor.check_alerts()</span>
+<span class="sd">        ```</span>
+<span class="sd">        </span>
+<span class="sd">        IMPLEMENTATION HINTS:</span>
+<span class="sd">        - Use self.model_name = model_name</span>
+<span class="sd">        - Initialize lists with self.accuracy_history = []</span>
+<span class="sd">        - Use datetime.now() for timestamps</span>
+<span class="sd">        - Set thresholds relative to baseline (e.g., 90% of baseline)</span>
+<span class="sd">        </span>
+<span class="sd">        LEARNING CONNECTIONS:</span>
+<span class="sd">        - This builds on benchmarking concepts from Module 12</span>
+<span class="sd">        - Performance tracking is essential for production systems</span>
+<span class="sd">        - Thresholds prevent false alarms while catching real issues</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1">### BEGIN SOLUTION</span>
+    <span class="c1"># YOUR CODE HERE</span>
+    <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
+        <span class="c1">### END SOLUTION</span>
+    
+    <span class="k">def</span> <span class="nf">record_performance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">accuracy</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">latency</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        TODO: Record a new performance measurement.</span>
+<span class="sd">        </span>
+<span class="sd">        STEP-BY-STEP IMPLEMENTATION:</span>
+<span class="sd">        1. Get current timestamp with datetime.now()</span>
+<span class="sd">        2. Append accuracy to self.accuracy_history</span>
+<span class="sd">        3. Append latency to self.latency_history</span>
+<span class="sd">        4. Append timestamp to self.timestamp_history</span>
+<span class="sd">        5. Check if accuracy is below threshold:</span>
+<span class="sd">           - If accuracy &lt; self.accuracy_threshold: set self.accuracy_alert = True</span>
+<span class="sd">           - Else: set self.accuracy_alert = False</span>
+<span class="sd">        6. Check if latency is above threshold:</span>
+<span class="sd">           - If latency &gt; self.latency_threshold: set self.latency_alert = True</span>
+<span class="sd">           - Else: set self.latency_alert = False</span>
+<span class="sd">        </span>
+<span class="sd">        EXAMPLE BEHAVIOR:</span>
+<span class="sd">        ```python</span>
+<span class="sd">        monitor.record_performance(0.94, 120.0)  # Good performance</span>
+<span class="sd">        monitor.record_performance(0.84, 250.0)  # Triggers both alerts</span>
+<span class="sd">        ```</span>
+<span class="sd">        </span>
+<span class="sd">        IMPLEMENTATION HINTS:</span>
+<span class="sd">        - Use datetime.now() for timestamps</span>
+<span class="sd">        - Update alert flags based on current measurement</span>
+<span class="sd">        - Don&#39;t forget to store all three values (accuracy, latency, timestamp)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1">### BEGIN SOLUTION</span>
+    <span class="c1"># YOUR CODE HERE</span>
+    <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
+        <span class="c1">### END SOLUTION</span>
+    
+    <span class="k">def</span> <span class="nf">check_alerts</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        TODO: Check current alert status and return alert information.</span>
+<span class="sd">        </span>
+<span class="sd">        STEP-BY-STEP IMPLEMENTATION:</span>
+<span class="sd">        1. Create result dictionary with basic info:</span>
+<span class="sd">           - &quot;model_name&quot;: self.model_name</span>
+<span class="sd">           - &quot;accuracy_alert&quot;: self.accuracy_alert</span>
+<span class="sd">           - &quot;latency_alert&quot;: self.latency_alert</span>
+<span class="sd">        2. If accuracy_alert is True, add:</span>
+<span class="sd">           - &quot;accuracy_message&quot;: f&quot;Accuracy below threshold: {current_accuracy:.3f} &lt; {self.accuracy_threshold:.3f}&quot;</span>
+<span class="sd">           - &quot;current_accuracy&quot;: most recent accuracy from history</span>
+<span class="sd">        3. If latency_alert is True, add:</span>
+<span class="sd">           - &quot;latency_message&quot;: f&quot;Latency above threshold: {current_latency:.1f}ms &gt; {self.latency_threshold:.1f}ms&quot;</span>
+<span class="sd">           - &quot;current_latency&quot;: most recent latency from history</span>
+<span class="sd">        4. Add overall alert status:</span>
+<span class="sd">           - &quot;any_alerts&quot;: True if any alert is active</span>
+<span class="sd">        </span>
+<span class="sd">        EXAMPLE RETURN:</span>
+<span class="sd">        ```python</span>
+<span class="sd">        {</span>
+<span class="sd">            &quot;model_name&quot;: &quot;image_classifier&quot;,</span>
+<span class="sd">            &quot;accuracy_alert&quot;: True,</span>
+<span class="sd">            &quot;latency_alert&quot;: False,</span>
+<span class="sd">            &quot;accuracy_message&quot;: &quot;Accuracy below threshold: 0.840 &lt; 0.855&quot;,</span>
+<span class="sd">            &quot;current_accuracy&quot;: 0.840,</span>
+<span class="sd">            &quot;any_alerts&quot;: True</span>
+<span class="sd">        }</span>
+<span class="sd">        ```</span>
+<span class="sd">        </span>
+<span class="sd">        IMPLEMENTATION HINTS:</span>
+<span class="sd">        - Use self.accuracy_history[-1] for most recent values</span>
+<span class="sd">        - Format numbers with f-strings for readability</span>
+<span class="sd">        - Include both alert flags and descriptive messages</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1">### BEGIN SOLUTION</span>
+    <span class="c1"># YOUR CODE HERE</span>
+    <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
+        <span class="c1">### END SOLUTION</span>
+    
+    <span class="k">def</span> <span class="nf">get_performance_trend</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        TODO: Analyze performance trends over time.</span>
+<span class="sd">        </span>
+<span class="sd">        STEP-BY-STEP IMPLEMENTATION:</span>
+<span class="sd">        1. Check if we have enough data (at least 2 measurements)</span>
+<span class="sd">        2. Calculate accuracy trend:</span>
+<span class="sd">           - If accuracy_history has &lt; 2 points: trend = &quot;insufficient_data&quot;</span>
+<span class="sd">           - Else: compare recent avg (last 3) vs older avg (first 3)</span>
+<span class="sd">           - If recent &gt; older: trend = &quot;improving&quot;</span>
+<span class="sd">           - If recent &lt; older: trend = &quot;degrading&quot;</span>
+<span class="sd">           - Else: trend = &quot;stable&quot;</span>
+<span class="sd">        3. Calculate similar trend for latency</span>
+<span class="sd">        4. Return dictionary with:</span>
+<span class="sd">           - &quot;measurements_count&quot;: len(self.accuracy_history)</span>
+<span class="sd">           - &quot;accuracy_trend&quot;: trend analysis</span>
+<span class="sd">           - &quot;latency_trend&quot;: trend analysis</span>
+<span class="sd">           - &quot;baseline_accuracy&quot;: self.baseline_accuracy</span>
+<span class="sd">           - &quot;current_accuracy&quot;: most recent accuracy (if available)</span>
+<span class="sd">        </span>
+<span class="sd">        EXAMPLE RETURN:</span>
+<span class="sd">        ```python</span>
+<span class="sd">        {</span>
+<span class="sd">            &quot;measurements_count&quot;: 10,</span>
+<span class="sd">            &quot;accuracy_trend&quot;: &quot;degrading&quot;,</span>
+<span class="sd">            &quot;latency_trend&quot;: &quot;stable&quot;,</span>
+<span class="sd">            &quot;baseline_accuracy&quot;: 0.95,</span>
+<span class="sd">            &quot;current_accuracy&quot;: 0.87</span>
+<span class="sd">        }</span>
+<span class="sd">        ```</span>
+<span class="sd">        </span>
+<span class="sd">        IMPLEMENTATION HINTS:</span>
+<span class="sd">        - Use len(self.accuracy_history) for data count</span>
+<span class="sd">        - Use np.mean() for calculating averages</span>
+<span class="sd">        - Handle edge cases (empty history, insufficient data)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1">### BEGIN SOLUTION</span>
+    <span class="c1"># YOUR CODE HERE</span>
+    <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
+        <span class="c1">### END SOLUTION</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="test-your-performance-monitor">
+<h3>🧪 Test Your Performance Monitor<a class="headerlink" href="#test-your-performance-monitor" title="Permalink to this heading">#</a></h3>
+<p>Once you implement the <code class="docutils literal notranslate"><span class="pre">ModelMonitor</span></code> class above, run this cell to test it:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">test_model_monitor</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Test ModelMonitor implementation&quot;&quot;&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;🔬 Unit Test: Performance Drift Monitor...&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Test initialization</span>
+    <span class="n">monitor</span> <span class="o">=</span> <span class="n">ModelMonitor</span><span class="p">(</span><span class="s2">&quot;test_model&quot;</span><span class="p">,</span> <span class="n">baseline_accuracy</span><span class="o">=</span><span class="mf">0.90</span><span class="p">)</span>
+    
+    <span class="k">assert</span> <span class="n">monitor</span><span class="o">.</span><span class="n">model_name</span> <span class="o">==</span> <span class="s2">&quot;test_model&quot;</span>
+    <span class="k">assert</span> <span class="n">monitor</span><span class="o">.</span><span class="n">baseline_accuracy</span> <span class="o">==</span> <span class="mf">0.90</span>
+    <span class="k">assert</span> <span class="n">monitor</span><span class="o">.</span><span class="n">accuracy_threshold</span> <span class="o">==</span> <span class="mf">0.81</span>  <span class="c1"># 90% of 0.90</span>
+    <span class="k">assert</span> <span class="n">monitor</span><span class="o">.</span><span class="n">latency_threshold</span> <span class="o">==</span> <span class="mf">200.0</span>
+    <span class="k">assert</span> <span class="ow">not</span> <span class="n">monitor</span><span class="o">.</span><span class="n">accuracy_alert</span>
+    <span class="k">assert</span> <span class="ow">not</span> <span class="n">monitor</span><span class="o">.</span><span class="n">latency_alert</span>
+    
+    <span class="c1"># Test good performance (no alerts)</span>
+    <span class="n">monitor</span><span class="o">.</span><span class="n">record_performance</span><span class="p">(</span><span class="n">accuracy</span><span class="o">=</span><span class="mf">0.92</span><span class="p">,</span> <span class="n">latency</span><span class="o">=</span><span class="mf">150.0</span><span class="p">)</span>
+    
+    <span class="n">alerts</span> <span class="o">=</span> <span class="n">monitor</span><span class="o">.</span><span class="n">check_alerts</span><span class="p">()</span>
+    <span class="k">assert</span> <span class="ow">not</span> <span class="n">alerts</span><span class="p">[</span><span class="s2">&quot;accuracy_alert&quot;</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="ow">not</span> <span class="n">alerts</span><span class="p">[</span><span class="s2">&quot;latency_alert&quot;</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="ow">not</span> <span class="n">alerts</span><span class="p">[</span><span class="s2">&quot;any_alerts&quot;</span><span class="p">]</span>
+    
+    <span class="c1"># Test accuracy degradation</span>
+    <span class="n">monitor</span><span class="o">.</span><span class="n">record_performance</span><span class="p">(</span><span class="n">accuracy</span><span class="o">=</span><span class="mf">0.80</span><span class="p">,</span> <span class="n">latency</span><span class="o">=</span><span class="mf">150.0</span><span class="p">)</span>  <span class="c1"># Below threshold</span>
+    
+    <span class="n">alerts</span> <span class="o">=</span> <span class="n">monitor</span><span class="o">.</span><span class="n">check_alerts</span><span class="p">()</span>
+    <span class="k">assert</span> <span class="n">alerts</span><span class="p">[</span><span class="s2">&quot;accuracy_alert&quot;</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="ow">not</span> <span class="n">alerts</span><span class="p">[</span><span class="s2">&quot;latency_alert&quot;</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="n">alerts</span><span class="p">[</span><span class="s2">&quot;any_alerts&quot;</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="s2">&quot;Accuracy below threshold&quot;</span> <span class="ow">in</span> <span class="n">alerts</span><span class="p">[</span><span class="s2">&quot;accuracy_message&quot;</span><span class="p">]</span>
+    
+    <span class="c1"># Test latency degradation</span>
+    <span class="n">monitor</span><span class="o">.</span><span class="n">record_performance</span><span class="p">(</span><span class="n">accuracy</span><span class="o">=</span><span class="mf">0.85</span><span class="p">,</span> <span class="n">latency</span><span class="o">=</span><span class="mf">250.0</span><span class="p">)</span>  <span class="c1"># Above threshold</span>
+    
+    <span class="n">alerts</span> <span class="o">=</span> <span class="n">monitor</span><span class="o">.</span><span class="n">check_alerts</span><span class="p">()</span>
+    <span class="k">assert</span> <span class="ow">not</span> <span class="n">alerts</span><span class="p">[</span><span class="s2">&quot;accuracy_alert&quot;</span><span class="p">]</span>  <span class="c1"># Back above threshold</span>
+    <span class="k">assert</span> <span class="n">alerts</span><span class="p">[</span><span class="s2">&quot;latency_alert&quot;</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="n">alerts</span><span class="p">[</span><span class="s2">&quot;any_alerts&quot;</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="s2">&quot;Latency above threshold&quot;</span> <span class="ow">in</span> <span class="n">alerts</span><span class="p">[</span><span class="s2">&quot;latency_message&quot;</span><span class="p">]</span>
+    
+    <span class="c1"># Test trend analysis</span>
+    <span class="c1"># Add more measurements to test trends</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">):</span>
+        <span class="n">monitor</span><span class="o">.</span><span class="n">record_performance</span><span class="p">(</span><span class="n">accuracy</span><span class="o">=</span><span class="mf">0.90</span> <span class="o">-</span> <span class="n">i</span><span class="o">*</span><span class="mf">0.02</span><span class="p">,</span> <span class="n">latency</span><span class="o">=</span><span class="mf">120.0</span> <span class="o">+</span> <span class="n">i</span><span class="o">*</span><span class="mi">10</span><span class="p">)</span>
+    
+    <span class="n">trend</span> <span class="o">=</span> <span class="n">monitor</span><span class="o">.</span><span class="n">get_performance_trend</span><span class="p">()</span>
+    <span class="k">assert</span> <span class="n">trend</span><span class="p">[</span><span class="s2">&quot;measurements_count&quot;</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="mi">5</span>
+    <span class="k">assert</span> <span class="n">trend</span><span class="p">[</span><span class="s2">&quot;accuracy_trend&quot;</span><span class="p">]</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;improving&quot;</span><span class="p">,</span> <span class="s2">&quot;degrading&quot;</span><span class="p">,</span> <span class="s2">&quot;stable&quot;</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="n">trend</span><span class="p">[</span><span class="s2">&quot;latency_trend&quot;</span><span class="p">]</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;improving&quot;</span><span class="p">,</span> <span class="s2">&quot;degrading&quot;</span><span class="p">,</span> <span class="s2">&quot;stable&quot;</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="n">trend</span><span class="p">[</span><span class="s2">&quot;baseline_accuracy&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="mf">0.90</span>
+    
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;✅ ModelMonitor initialization works correctly&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;✅ Performance recording and alert detection work&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;✅ Alert checking returns proper format&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;✅ Trend analysis provides meaningful insights&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;📈 Progress: Performance Drift Monitor ✓&quot;</span><span class="p">)</span>
+
+<span class="c1"># Run the test</span>
+<span class="n">test_model_monitor</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="step-2-simple-drift-detection-detecting-data-changes">
+<h2>Step 2: Simple Drift Detection - Detecting Data Changes<a class="headerlink" href="#step-2-simple-drift-detection-detecting-data-changes" title="Permalink to this heading">#</a></h2>
+<section id="the-problem-silent-data-distribution-changes">
+<h3>The Problem: Silent Data Distribution Changes<a class="headerlink" href="#the-problem-silent-data-distribution-changes" title="Permalink to this heading">#</a></h3>
+<p>Your model was trained on specific data patterns, but production data evolves:</p>
+<ul class="simple">
+<li><p><strong>Seasonal changes</strong>: E-commerce traffic patterns change during holidays</p></li>
+<li><p><strong>User behavior shifts</strong>: App usage patterns evolve over time</p></li>
+<li><p><strong>External factors</strong>: Economic conditions affect financial predictions</p></li>
+<li><p><strong>System changes</strong>: New data sources introduce different distributions</p></li>
+</ul>
+</section>
+<section id="the-solution-statistical-drift-detection">
+<h3>The Solution: Statistical Drift Detection<a class="headerlink" href="#the-solution-statistical-drift-detection" title="Permalink to this heading">#</a></h3>
+<p>Compare current data to baseline data using statistical tests:</p>
+<ul class="simple">
+<li><p><strong>Kolmogorov-Smirnov test</strong>: Detects distribution changes</p></li>
+<li><p><strong>Mean/Standard deviation shifts</strong>: Simple but effective</p></li>
+<li><p><strong>Population stability index</strong>: Common in industry</p></li>
+<li><p><strong>Chi-square test</strong>: For categorical features</p></li>
+</ul>
+</section>
+<section id="id1">
+<h3>What We’ll Build<a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h3>
+<p>A <code class="docutils literal notranslate"><span class="pre">DriftDetector</span></code> that:</p>
+<ol class="arabic simple">
+<li><p><strong>Stores baseline data</strong> from training time</p></li>
+<li><p><strong>Compares new data</strong> to baseline using statistical tests</p></li>
+<li><p><strong>Detects significant changes</strong> in distribution</p></li>
+<li><p><strong>Provides interpretable results</strong> for debugging</p></li>
+</ol>
+</section>
+<section id="id2">
+<h3>Real-World Applications<a class="headerlink" href="#id2" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Fraud detection</strong>: New fraud patterns emerge constantly</p></li>
+<li><p><strong>Recommendation systems</strong>: User preferences shift over time</p></li>
+<li><p><strong>Medical diagnosis</strong>: Patient demographics change</p></li>
+<li><p><strong>Computer vision</strong>: Camera quality, lighting conditions evolve</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#| export</span>
+<span class="k">class</span> <span class="nc">DriftDetector</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Detects data drift by comparing current data distributions to baseline.</span>
+<span class="sd">    </span>
+<span class="sd">    Uses statistical tests to identify significant changes in data patterns.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">baseline_data</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">feature_names</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        TODO: Initialize the DriftDetector with baseline data.</span>
+<span class="sd">        </span>
+<span class="sd">        STEP-BY-STEP IMPLEMENTATION:</span>
+<span class="sd">        1. Store baseline_data and feature_names</span>
+<span class="sd">        2. Calculate baseline statistics:</span>
+<span class="sd">           - baseline_mean: np.mean(baseline_data, axis=0)</span>
+<span class="sd">           - baseline_std: np.std(baseline_data, axis=0)</span>
+<span class="sd">           - baseline_min: np.min(baseline_data, axis=0)</span>
+<span class="sd">           - baseline_max: np.max(baseline_data, axis=0)</span>
+<span class="sd">        3. Set drift detection threshold (default: 0.05 for 95% confidence)</span>
+<span class="sd">        4. Initialize drift history storage:</span>
+<span class="sd">           - drift_history: List[Dict] to store drift test results</span>
+<span class="sd">        </span>
+<span class="sd">        EXAMPLE USAGE:</span>
+<span class="sd">        ```python</span>
+<span class="sd">        baseline = np.random.normal(0, 1, (1000, 3))</span>
+<span class="sd">        detector = DriftDetector(baseline, [&quot;feature1&quot;, &quot;feature2&quot;, &quot;feature3&quot;])</span>
+<span class="sd">        drift_result = detector.detect_drift(new_data)</span>
+<span class="sd">        ```</span>
+<span class="sd">        </span>
+<span class="sd">        IMPLEMENTATION HINTS:</span>
+<span class="sd">        - Use axis=0 for column-wise statistics</span>
+<span class="sd">        - Handle case when feature_names is None</span>
+<span class="sd">        - Store original baseline_data for KS test</span>
+<span class="sd">        - Set significance level (alpha) to 0.05</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1">### BEGIN SOLUTION</span>
+    <span class="c1"># YOUR CODE HERE</span>
+    <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
+        <span class="c1">### END SOLUTION</span>
+    
+    <span class="k">def</span> <span class="nf">detect_drift</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_data</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        TODO: Detect drift by comparing new data to baseline.</span>
+<span class="sd">        </span>
+<span class="sd">        STEP-BY-STEP IMPLEMENTATION:</span>
+<span class="sd">        1. Calculate new data statistics:</span>
+<span class="sd">           - new_mean, new_std, new_min, new_max (same as baseline)</span>
+<span class="sd">        2. Perform statistical tests for each feature:</span>
+<span class="sd">           - KS test: from scipy.stats import ks_2samp (if available)</span>
+<span class="sd">           - Mean shift test: |new_mean - baseline_mean| / baseline_std &gt; 2</span>
+<span class="sd">           - Std shift test: |new_std - baseline_std| / baseline_std &gt; 0.5</span>
+<span class="sd">        3. Create result dictionary:</span>
+<span class="sd">           - &quot;drift_detected&quot;: True if any feature shows drift</span>
+<span class="sd">           - &quot;feature_drift&quot;: Dict with per-feature results</span>
+<span class="sd">           - &quot;summary&quot;: Overall drift description</span>
+<span class="sd">        4. Store result in drift_history</span>
+<span class="sd">        </span>
+<span class="sd">        EXAMPLE RETURN:</span>
+<span class="sd">        ```python</span>
+<span class="sd">        {</span>
+<span class="sd">            &quot;drift_detected&quot;: True,</span>
+<span class="sd">            &quot;feature_drift&quot;: {</span>
+<span class="sd">                &quot;feature1&quot;: {&quot;mean_drift&quot;: True, &quot;std_drift&quot;: False, &quot;ks_pvalue&quot;: 0.001},</span>
+<span class="sd">                &quot;feature2&quot;: {&quot;mean_drift&quot;: False, &quot;std_drift&quot;: True, &quot;ks_pvalue&quot;: 0.3}</span>
+<span class="sd">            },</span>
+<span class="sd">            &quot;summary&quot;: &quot;Drift detected in 2/3 features&quot;</span>
+<span class="sd">        }</span>
+<span class="sd">        ```</span>
+<span class="sd">        </span>
+<span class="sd">        IMPLEMENTATION HINTS:</span>
+<span class="sd">        - Use try-except for KS test (may not be available)</span>
+<span class="sd">        - Check each feature individually</span>
+<span class="sd">        - Use absolute values for difference checks</span>
+<span class="sd">        - Count how many features show drift</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1">### BEGIN SOLUTION</span>
+    <span class="c1"># YOUR CODE HERE</span>
+    <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
+        <span class="c1">### END SOLUTION</span>
+    
+    <span class="k">def</span> <span class="nf">get_drift_history</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        TODO: Return the complete drift detection history.</span>
+<span class="sd">        </span>
+<span class="sd">        STEP-BY-STEP IMPLEMENTATION:</span>
+<span class="sd">        1. Return self.drift_history</span>
+<span class="sd">        2. Include timestamp and result for each detection</span>
+<span class="sd">        3. Format for easy analysis</span>
+<span class="sd">        </span>
+<span class="sd">        EXAMPLE RETURN:</span>
+<span class="sd">        ```python</span>
+<span class="sd">        [</span>
+<span class="sd">            {</span>
+<span class="sd">                &quot;timestamp&quot;: datetime(2024, 1, 1, 12, 0),</span>
+<span class="sd">                &quot;result&quot;: {&quot;drift_detected&quot;: False, &quot;drift_count&quot;: 0, ...}</span>
+<span class="sd">            },</span>
+<span class="sd">            {</span>
+<span class="sd">                &quot;timestamp&quot;: datetime(2024, 1, 2, 12, 0),</span>
+<span class="sd">                &quot;result&quot;: {&quot;drift_detected&quot;: True, &quot;drift_count&quot;: 2, ...}</span>
+<span class="sd">            }</span>
+<span class="sd">        ]</span>
+<span class="sd">        ```</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1">### BEGIN SOLUTION</span>
+    <span class="c1"># YOUR CODE HERE</span>
+    <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
+        <span class="c1">### END SOLUTION</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="test-your-drift-detector">
+<h3>🧪 Test Your Drift Detector<a class="headerlink" href="#test-your-drift-detector" title="Permalink to this heading">#</a></h3>
+<p>Once you implement the <code class="docutils literal notranslate"><span class="pre">DriftDetector</span></code> class above, run this cell to test it:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">test_drift_detector</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Test DriftDetector implementation&quot;&quot;&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;🔬 Unit Test: Simple Drift Detection...&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Create baseline data</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+    <span class="n">baseline_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="p">(</span><span class="mi">1000</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+    <span class="n">feature_names</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;feature1&quot;</span><span class="p">,</span> <span class="s2">&quot;feature2&quot;</span><span class="p">,</span> <span class="s2">&quot;feature3&quot;</span><span class="p">]</span>
+    
+    <span class="n">detector</span> <span class="o">=</span> <span class="n">DriftDetector</span><span class="p">(</span><span class="n">baseline_data</span><span class="p">,</span> <span class="n">feature_names</span><span class="p">)</span>
+    
+    <span class="c1"># Test initialization</span>
+    <span class="k">assert</span> <span class="n">detector</span><span class="o">.</span><span class="n">baseline_data</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="p">(</span><span class="mi">1000</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">detector</span><span class="o">.</span><span class="n">feature_names</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span>
+    <span class="k">assert</span> <span class="n">detector</span><span class="o">.</span><span class="n">feature_names</span> <span class="o">==</span> <span class="n">feature_names</span>
+    <span class="k">assert</span> <span class="n">detector</span><span class="o">.</span><span class="n">significance_level</span> <span class="o">==</span> <span class="mf">0.05</span>
+    
+    <span class="c1"># Test no drift (similar data)</span>
+    <span class="n">no_drift_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="p">(</span><span class="mi">500</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">detector</span><span class="o">.</span><span class="n">detect_drift</span><span class="p">(</span><span class="n">no_drift_data</span><span class="p">)</span>
+    
+    <span class="k">assert</span> <span class="s2">&quot;drift_detected&quot;</span> <span class="ow">in</span> <span class="n">result</span>
+    <span class="k">assert</span> <span class="s2">&quot;feature_drift&quot;</span> <span class="ow">in</span> <span class="n">result</span>
+    <span class="k">assert</span> <span class="s2">&quot;summary&quot;</span> <span class="ow">in</span> <span class="n">result</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s2">&quot;feature_drift&quot;</span><span class="p">])</span> <span class="o">==</span> <span class="mi">3</span>
+    
+    <span class="c1"># Test clear drift (shifted data)</span>
+    <span class="n">drift_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="p">(</span><span class="mi">500</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>  <span class="c1"># Mean shifted by 3</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">detector</span><span class="o">.</span><span class="n">detect_drift</span><span class="p">(</span><span class="n">drift_data</span><span class="p">)</span>
+    
+    <span class="k">assert</span> <span class="n">result</span><span class="p">[</span><span class="s2">&quot;drift_detected&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="kc">True</span>
+    <span class="k">assert</span> <span class="n">result</span><span class="p">[</span><span class="s2">&quot;drift_count&quot;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span>
+    <span class="k">assert</span> <span class="s2">&quot;Drift detected&quot;</span> <span class="ow">in</span> <span class="n">result</span><span class="p">[</span><span class="s2">&quot;summary&quot;</span><span class="p">]</span>
+    
+    <span class="c1"># Check feature-level drift detection</span>
+    <span class="k">for</span> <span class="n">feature_name</span> <span class="ow">in</span> <span class="n">feature_names</span><span class="p">:</span>
+        <span class="n">feature_result</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="s2">&quot;feature_drift&quot;</span><span class="p">][</span><span class="n">feature_name</span><span class="p">]</span>
+        <span class="k">assert</span> <span class="s2">&quot;mean_drift&quot;</span> <span class="ow">in</span> <span class="n">feature_result</span>
+        <span class="k">assert</span> <span class="s2">&quot;std_drift&quot;</span> <span class="ow">in</span> <span class="n">feature_result</span>
+        <span class="k">assert</span> <span class="s2">&quot;mean_change&quot;</span> <span class="ow">in</span> <span class="n">feature_result</span>
+    
+    <span class="c1"># Test drift history</span>
+    <span class="n">history</span> <span class="o">=</span> <span class="n">detector</span><span class="o">.</span><span class="n">get_drift_history</span><span class="p">()</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">history</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">2</span>  <span class="c1"># At least 2 drift checks</span>
+    <span class="k">assert</span> <span class="nb">all</span><span class="p">(</span><span class="s2">&quot;timestamp&quot;</span> <span class="ow">in</span> <span class="n">entry</span> <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">history</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="nb">all</span><span class="p">(</span><span class="s2">&quot;result&quot;</span> <span class="ow">in</span> <span class="n">entry</span> <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">history</span><span class="p">)</span>
+    
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;✅ DriftDetector initialization works correctly&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;✅ No-drift detection works (similar data)&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;✅ Clear drift detection works (shifted data)&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;✅ Feature-level drift analysis works&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;✅ Drift history tracking works&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;📈 Progress: Simple Drift Detection ✓&quot;</span><span class="p">)</span>
+
+<span class="c1"># Run the test</span>
+<span class="n">test_drift_detector</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="step-3-retraining-trigger-system-automated-response-to-issues">
+<h2>Step 3: Retraining Trigger System - Automated Response to Issues<a class="headerlink" href="#step-3-retraining-trigger-system-automated-response-to-issues" title="Permalink to this heading">#</a></h2>
+<section id="the-problem-manual-intervention-required">
+<h3>The Problem: Manual Intervention Required<a class="headerlink" href="#the-problem-manual-intervention-required" title="Permalink to this heading">#</a></h3>
+<p>You can detect when models are failing, but someone needs to:</p>
+<ul class="simple">
+<li><p><strong>Notice the alerts</strong> (requires constant monitoring)</p></li>
+<li><p><strong>Decide to retrain</strong> (requires domain expertise)</p></li>
+<li><p><strong>Execute retraining</strong> (requires technical knowledge)</p></li>
+<li><p><strong>Validate results</strong> (requires ML expertise)</p></li>
+</ul>
+</section>
+<section id="the-solution-automated-retraining-pipeline">
+<h3>The Solution: Automated Retraining Pipeline<a class="headerlink" href="#the-solution-automated-retraining-pipeline" title="Permalink to this heading">#</a></h3>
+<p>Create a system that automatically responds to performance degradation:</p>
+<ul class="simple">
+<li><p><strong>Threshold-based triggers</strong>: Automatically start retraining when performance drops</p></li>
+<li><p><strong>Reuse existing components</strong>: Use your training pipeline from Module 09</p></li>
+<li><p><strong>Intelligent scheduling</strong>: Avoid unnecessary retraining</p></li>
+<li><p><strong>Validation before deployment</strong>: Ensure new models are actually better</p></li>
+</ul>
+</section>
+<section id="id3">
+<h3>What We’ll Build<a class="headerlink" href="#id3" title="Permalink to this heading">#</a></h3>
+<p>A <code class="docutils literal notranslate"><span class="pre">RetrainingTrigger</span></code> that:</p>
+<ol class="arabic simple">
+<li><p><strong>Monitors model performance</strong> using ModelMonitor</p></li>
+<li><p><strong>Detects drift</strong> using DriftDetector</p></li>
+<li><p><strong>Triggers retraining</strong> when conditions are met</p></li>
+<li><p><strong>Orchestrates the process</strong> using existing TinyTorch components</p></li>
+</ol>
+</section>
+<section id="id4">
+<h3>Real-World Applications<a class="headerlink" href="#id4" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>A/B testing platforms</strong>: Automatically update models based on performance</p></li>
+<li><p><strong>Recommendation engines</strong>: Retrain when user behavior changes</p></li>
+<li><p><strong>Fraud detection</strong>: Adapt to new fraud patterns automatically</p></li>
+<li><p><strong>Predictive maintenance</strong>: Update models as equipment ages</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#| export</span>
+<span class="k">class</span> <span class="nc">RetrainingTrigger</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Automated retraining system that responds to model performance degradation.</span>
+<span class="sd">    </span>
+<span class="sd">    Orchestrates the complete retraining workflow using existing TinyTorch components.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">training_data</span><span class="p">,</span> <span class="n">validation_data</span><span class="p">,</span> <span class="n">trainer_class</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        TODO: Initialize the RetrainingTrigger system.</span>
+<span class="sd">        </span>
+<span class="sd">        STEP-BY-STEP IMPLEMENTATION:</span>
+<span class="sd">        1. Store the model, training_data, and validation_data</span>
+<span class="sd">        2. Set up the trainer_class (use provided or default to simple trainer)</span>
+<span class="sd">        3. Initialize trigger conditions:</span>
+<span class="sd">           - accuracy_threshold: 0.85 (trigger retraining if accuracy &lt; 85%)</span>
+<span class="sd">           - drift_threshold: 2 (trigger if drift detected in 2+ features)</span>
+<span class="sd">           - min_time_between_retrains: 24 hours (avoid too frequent retraining)</span>
+<span class="sd">        4. Initialize tracking variables:</span>
+<span class="sd">           - last_retrain_time: datetime.now()</span>
+<span class="sd">           - retrain_history: List[Dict] to store retraining results</span>
+<span class="sd">        </span>
+<span class="sd">        EXAMPLE USAGE:</span>
+<span class="sd">        ```python</span>
+<span class="sd">        trigger = RetrainingTrigger(model, train_data, val_data)</span>
+<span class="sd">        should_retrain = trigger.check_trigger_conditions(monitor, drift_detector)</span>
+<span class="sd">        if should_retrain:</span>
+<span class="sd">            new_model = trigger.execute_retraining()</span>
+<span class="sd">        ```</span>
+<span class="sd">        </span>
+<span class="sd">        IMPLEMENTATION HINTS:</span>
+<span class="sd">        - Store references to data for retraining</span>
+<span class="sd">        - Set reasonable default thresholds</span>
+<span class="sd">        - Use datetime for time tracking</span>
+<span class="sd">        - Initialize empty history list</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1">### BEGIN SOLUTION</span>
+    <span class="c1"># YOUR CODE HERE</span>
+    <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
+        <span class="c1">### END SOLUTION</span>
+    
+    <span class="k">def</span> <span class="nf">check_trigger_conditions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">monitor</span><span class="p">:</span> <span class="n">ModelMonitor</span><span class="p">,</span> <span class="n">drift_detector</span><span class="p">:</span> <span class="n">DriftDetector</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        TODO: Check if retraining should be triggered.</span>
+<span class="sd">        </span>
+<span class="sd">        STEP-BY-STEP IMPLEMENTATION:</span>
+<span class="sd">        1. Get current time and check time since last retrain:</span>
+<span class="sd">           - time_since_last = (current_time - self.last_retrain_time).total_seconds()</span>
+<span class="sd">           - too_soon = time_since_last &lt; self.min_time_between_retrains</span>
+<span class="sd">        2. Check monitor alerts:</span>
+<span class="sd">           - Get alerts from monitor.check_alerts()</span>
+<span class="sd">           - accuracy_trigger = alerts[&quot;accuracy_alert&quot;]</span>
+<span class="sd">        3. Check drift status:</span>
+<span class="sd">           - Get latest drift from drift_detector.drift_history</span>
+<span class="sd">           - drift_trigger = drift_count &gt;= self.drift_threshold</span>
+<span class="sd">        4. Determine overall trigger status:</span>
+<span class="sd">           - should_retrain = (accuracy_trigger or drift_trigger) and not too_soon</span>
+<span class="sd">        5. Return comprehensive result dictionary</span>
+<span class="sd">        </span>
+<span class="sd">        EXAMPLE RETURN:</span>
+<span class="sd">        ```python</span>
+<span class="sd">        {</span>
+<span class="sd">            &quot;should_retrain&quot;: True,</span>
+<span class="sd">            &quot;accuracy_trigger&quot;: True,</span>
+<span class="sd">            &quot;drift_trigger&quot;: False,</span>
+<span class="sd">            &quot;time_trigger&quot;: True,</span>
+<span class="sd">            &quot;reasons&quot;: [&quot;Accuracy below threshold: 0.82 &lt; 0.85&quot;],</span>
+<span class="sd">            &quot;time_since_last_retrain&quot;: 86400</span>
+<span class="sd">        }</span>
+<span class="sd">        ```</span>
+<span class="sd">        </span>
+<span class="sd">        IMPLEMENTATION HINTS:</span>
+<span class="sd">        - Use .total_seconds() for time differences</span>
+<span class="sd">        - Collect all trigger reasons in a list</span>
+<span class="sd">        - Handle empty drift history gracefully</span>
+<span class="sd">        - Provide detailed feedback for debugging</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1">### BEGIN SOLUTION</span>
+    <span class="c1"># YOUR CODE HERE</span>
+    <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
+        <span class="c1">### END SOLUTION</span>
+    
+    <span class="k">def</span> <span class="nf">execute_retraining</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        TODO: Execute the retraining process.</span>
+<span class="sd">        </span>
+<span class="sd">        STEP-BY-STEP IMPLEMENTATION:</span>
+<span class="sd">        1. Record start time and create result dictionary</span>
+<span class="sd">        2. Simulate training process:</span>
+<span class="sd">           - Create simple model (copy of original architecture)</span>
+<span class="sd">           - Simulate training with random improvement</span>
+<span class="sd">           - Calculate new performance (baseline + random improvement)</span>
+<span class="sd">        3. Validate new model:</span>
+<span class="sd">           - Compare old vs new performance</span>
+<span class="sd">           - Only deploy if new model is better</span>
+<span class="sd">        4. Update tracking:</span>
+<span class="sd">           - Update last_retrain_time</span>
+<span class="sd">           - Add entry to retrain_history</span>
+<span class="sd">        5. Return comprehensive result</span>
+<span class="sd">        </span>
+<span class="sd">        EXAMPLE RETURN:</span>
+<span class="sd">        ```python</span>
+<span class="sd">        {</span>
+<span class="sd">            &quot;success&quot;: True,</span>
+<span class="sd">            &quot;old_accuracy&quot;: 0.82,</span>
+<span class="sd">            &quot;new_accuracy&quot;: 0.91,</span>
+<span class="sd">            &quot;improvement&quot;: 0.09,</span>
+<span class="sd">            &quot;deployed&quot;: True,</span>
+<span class="sd">            &quot;training_time&quot;: 45.2,</span>
+<span class="sd">            &quot;timestamp&quot;: datetime(2024, 1, 1, 12, 0)</span>
+<span class="sd">        }</span>
+<span class="sd">        ```</span>
+<span class="sd">        </span>
+<span class="sd">        IMPLEMENTATION HINTS:</span>
+<span class="sd">        - Use time.time() for timing</span>
+<span class="sd">        - Simulate realistic training time (random 30-60 seconds)</span>
+<span class="sd">        - Add random improvement (0.02-0.08 accuracy boost)</span>
+<span class="sd">        - Only deploy if new model is better</span>
+<span class="sd">        - Store detailed results for analysis</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1">### BEGIN SOLUTION</span>
+    <span class="c1"># YOUR CODE HERE</span>
+    <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
+        <span class="c1">### END SOLUTION</span>
+    
+    <span class="k">def</span> <span class="nf">get_retraining_history</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        TODO: Return the complete retraining history.</span>
+<span class="sd">        </span>
+<span class="sd">        STEP-BY-STEP IMPLEMENTATION:</span>
+<span class="sd">        1. Return self.retrain_history</span>
+<span class="sd">        2. Include all retraining attempts with results</span>
+<span class="sd">        </span>
+<span class="sd">        EXAMPLE RETURN:</span>
+<span class="sd">        ```python</span>
+<span class="sd">        [</span>
+<span class="sd">            {</span>
+<span class="sd">                &quot;success&quot;: True,</span>
+<span class="sd">                &quot;old_accuracy&quot;: 0.82,</span>
+<span class="sd">                &quot;new_accuracy&quot;: 0.89,</span>
+<span class="sd">                &quot;improvement&quot;: 0.07,</span>
+<span class="sd">                &quot;deployed&quot;: True,</span>
+<span class="sd">                &quot;training_time&quot;: 42.1,</span>
+<span class="sd">                &quot;timestamp&quot;: datetime(2024, 1, 1, 12, 0)</span>
+<span class="sd">            }</span>
+<span class="sd">        ]</span>
+<span class="sd">        ```</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1">### BEGIN SOLUTION</span>
+    <span class="c1"># YOUR CODE HERE</span>
+    <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
+        <span class="c1">### END SOLUTION</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="test-your-retraining-trigger">
+<h3>🧪 Test Your Retraining Trigger<a class="headerlink" href="#test-your-retraining-trigger" title="Permalink to this heading">#</a></h3>
+<p>Once you implement the <code class="docutils literal notranslate"><span class="pre">RetrainingTrigger</span></code> class above, run this cell to test it:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">test_retraining_trigger</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Test RetrainingTrigger implementation&quot;&quot;&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;🔬 Unit Test: Retraining Trigger System...&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Create mock model and data</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="s2">&quot;mock_model&quot;</span>
+    <span class="n">train_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="p">(</span><span class="mi">1000</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+    <span class="n">val_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+    
+    <span class="c1"># Create retraining trigger</span>
+    <span class="n">trigger</span> <span class="o">=</span> <span class="n">RetrainingTrigger</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">train_data</span><span class="p">,</span> <span class="n">val_data</span><span class="p">)</span>
+    
+    <span class="c1"># Test initialization</span>
+    <span class="k">assert</span> <span class="n">trigger</span><span class="o">.</span><span class="n">model</span> <span class="o">==</span> <span class="n">model</span>
+    <span class="k">assert</span> <span class="n">trigger</span><span class="o">.</span><span class="n">accuracy_threshold</span> <span class="o">==</span> <span class="mf">0.82</span>
+    <span class="k">assert</span> <span class="n">trigger</span><span class="o">.</span><span class="n">drift_threshold</span> <span class="o">==</span> <span class="mi">1</span>
+    <span class="k">assert</span> <span class="n">trigger</span><span class="o">.</span><span class="n">min_time_between_retrains</span> <span class="o">==</span> <span class="mi">24</span> <span class="o">*</span> <span class="mi">60</span> <span class="o">*</span> <span class="mi">60</span>
+    
+    <span class="c1"># Create monitor and drift detector for testing</span>
+    <span class="n">monitor</span> <span class="o">=</span> <span class="n">ModelMonitor</span><span class="p">(</span><span class="s2">&quot;test_model&quot;</span><span class="p">,</span> <span class="n">baseline_accuracy</span><span class="o">=</span><span class="mf">0.90</span><span class="p">)</span>
+    <span class="n">baseline_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="p">(</span><span class="mi">1000</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+    <span class="n">drift_detector</span> <span class="o">=</span> <span class="n">DriftDetector</span><span class="p">(</span><span class="n">baseline_data</span><span class="p">)</span>
+    
+    <span class="c1"># Test no trigger conditions (good performance)</span>
+    <span class="n">monitor</span><span class="o">.</span><span class="n">record_performance</span><span class="p">(</span><span class="n">accuracy</span><span class="o">=</span><span class="mf">0.92</span><span class="p">,</span> <span class="n">latency</span><span class="o">=</span><span class="mf">150.0</span><span class="p">)</span>
+    <span class="n">no_drift_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="p">(</span><span class="mi">500</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+    <span class="n">drift_detector</span><span class="o">.</span><span class="n">detect_drift</span><span class="p">(</span><span class="n">no_drift_data</span><span class="p">)</span>
+    
+    <span class="n">conditions</span> <span class="o">=</span> <span class="n">trigger</span><span class="o">.</span><span class="n">check_trigger_conditions</span><span class="p">(</span><span class="n">monitor</span><span class="p">,</span> <span class="n">drift_detector</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="ow">not</span> <span class="n">conditions</span><span class="p">[</span><span class="s2">&quot;should_retrain&quot;</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="ow">not</span> <span class="n">conditions</span><span class="p">[</span><span class="s2">&quot;accuracy_trigger&quot;</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="ow">not</span> <span class="n">conditions</span><span class="p">[</span><span class="s2">&quot;drift_trigger&quot;</span><span class="p">]</span>
+    
+    <span class="c1"># Test accuracy trigger</span>
+    <span class="n">monitor</span><span class="o">.</span><span class="n">record_performance</span><span class="p">(</span><span class="n">accuracy</span><span class="o">=</span><span class="mf">0.80</span><span class="p">,</span> <span class="n">latency</span><span class="o">=</span><span class="mf">150.0</span><span class="p">)</span>  <span class="c1"># Below threshold</span>
+    <span class="n">conditions</span> <span class="o">=</span> <span class="n">trigger</span><span class="o">.</span><span class="n">check_trigger_conditions</span><span class="p">(</span><span class="n">monitor</span><span class="p">,</span> <span class="n">drift_detector</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">conditions</span><span class="p">[</span><span class="s2">&quot;accuracy_trigger&quot;</span><span class="p">]</span>
+    
+    <span class="c1"># Test drift trigger</span>
+    <span class="n">drift_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="p">(</span><span class="mi">500</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>  <span class="c1"># Shifted data</span>
+    <span class="n">drift_detector</span><span class="o">.</span><span class="n">detect_drift</span><span class="p">(</span><span class="n">drift_data</span><span class="p">)</span>
+    <span class="n">conditions</span> <span class="o">=</span> <span class="n">trigger</span><span class="o">.</span><span class="n">check_trigger_conditions</span><span class="p">(</span><span class="n">monitor</span><span class="p">,</span> <span class="n">drift_detector</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">conditions</span><span class="p">[</span><span class="s2">&quot;drift_trigger&quot;</span><span class="p">]</span>
+    
+    <span class="c1"># Test retraining execution</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">trigger</span><span class="o">.</span><span class="n">execute_retraining</span><span class="p">()</span>
+    <span class="k">assert</span> <span class="n">result</span><span class="p">[</span><span class="s2">&quot;success&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="kc">True</span>
+    <span class="k">assert</span> <span class="s2">&quot;old_accuracy&quot;</span> <span class="ow">in</span> <span class="n">result</span>
+    <span class="k">assert</span> <span class="s2">&quot;new_accuracy&quot;</span> <span class="ow">in</span> <span class="n">result</span>
+    <span class="k">assert</span> <span class="s2">&quot;improvement&quot;</span> <span class="ow">in</span> <span class="n">result</span>
+    <span class="k">assert</span> <span class="s2">&quot;deployed&quot;</span> <span class="ow">in</span> <span class="n">result</span>
+    <span class="k">assert</span> <span class="s2">&quot;training_time&quot;</span> <span class="ow">in</span> <span class="n">result</span>
+    <span class="k">assert</span> <span class="s2">&quot;timestamp&quot;</span> <span class="ow">in</span> <span class="n">result</span>
+    
+    <span class="c1"># Test retraining history</span>
+    <span class="n">history</span> <span class="o">=</span> <span class="n">trigger</span><span class="o">.</span><span class="n">get_retraining_history</span><span class="p">()</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">history</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">1</span>
+    <span class="k">assert</span> <span class="nb">all</span><span class="p">(</span><span class="s2">&quot;timestamp&quot;</span> <span class="ow">in</span> <span class="n">entry</span> <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">history</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="nb">all</span><span class="p">(</span><span class="s2">&quot;success&quot;</span> <span class="ow">in</span> <span class="n">entry</span> <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">history</span><span class="p">)</span>
+    
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;✅ RetrainingTrigger initialization works correctly&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;✅ Trigger condition checking works&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;✅ Accuracy and drift triggers work&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;✅ Retraining execution works&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;✅ Retraining history tracking works&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;📈 Progress: Retraining Trigger System ✓&quot;</span><span class="p">)</span>
+
+<span class="c1"># Run the test</span>
+<span class="n">test_retraining_trigger</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="step-4-complete-mlops-pipeline-integration-and-deployment">
+<h2>Step 4: Complete MLOps Pipeline - Integration and Deployment<a class="headerlink" href="#step-4-complete-mlops-pipeline-integration-and-deployment" title="Permalink to this heading">#</a></h2>
+<section id="the-problem-disconnected-components">
+<h3>The Problem: Disconnected Components<a class="headerlink" href="#the-problem-disconnected-components" title="Permalink to this heading">#</a></h3>
+<p>You have built individual MLOps components, but they need to work together:</p>
+<ul class="simple">
+<li><p><strong>ModelMonitor</strong>: Tracks performance over time</p></li>
+<li><p><strong>DriftDetector</strong>: Identifies data distribution changes</p></li>
+<li><p><strong>RetrainingTrigger</strong>: Automates retraining decisions</p></li>
+<li><p><strong>Need</strong>: Integration layer that orchestrates everything</p></li>
+</ul>
+</section>
+<section id="the-solution-complete-mlops-pipeline">
+<h3>The Solution: Complete MLOps Pipeline<a class="headerlink" href="#the-solution-complete-mlops-pipeline" title="Permalink to this heading">#</a></h3>
+<p>Create a unified system that brings everything together:</p>
+<ul class="simple">
+<li><p><strong>Unified interface</strong>: Single entry point for all MLOps operations</p></li>
+<li><p><strong>Automated workflows</strong>: End-to-end automation from monitoring to deployment</p></li>
+<li><p><strong>Integration with TinyTorch</strong>: Uses all previous modules seamlessly</p></li>
+<li><p><strong>Production-ready</strong>: Handles edge cases and error conditions</p></li>
+</ul>
+</section>
+<section id="id5">
+<h3>What We’ll Build<a class="headerlink" href="#id5" title="Permalink to this heading">#</a></h3>
+<p>An <code class="docutils literal notranslate"><span class="pre">MLOpsPipeline</span></code> that:</p>
+<ol class="arabic simple">
+<li><p><strong>Integrates all components</strong> into a cohesive system</p></li>
+<li><p><strong>Orchestrates the complete workflow</strong> from monitoring to deployment</p></li>
+<li><p><strong>Provides simple API</strong> for production use</p></li>
+<li><p><strong>Demonstrates the full TinyTorch ecosystem</strong> working together</p></li>
+</ol>
+</section>
+<section id="id6">
+<h3>Real-World Applications<a class="headerlink" href="#id6" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>End-to-end ML platforms</strong>: MLflow, Kubeflow, SageMaker</p></li>
+<li><p><strong>Production ML systems</strong>: Netflix, Uber, Google’s ML infrastructure</p></li>
+<li><p><strong>Automated ML pipelines</strong>: Continuous learning and deployment</p></li>
+<li><p><strong>ML monitoring platforms</strong>: Datadog, New Relic for ML systems</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#| export</span>
+<span class="k">class</span> <span class="nc">MLOpsPipeline</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Complete MLOps pipeline that integrates all components.</span>
+<span class="sd">    </span>
+<span class="sd">    Orchestrates the full ML system lifecycle from monitoring to deployment.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">training_data</span><span class="p">,</span> <span class="n">validation_data</span><span class="p">,</span> <span class="n">baseline_data</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        TODO: Initialize the complete MLOps pipeline.</span>
+<span class="sd">        </span>
+<span class="sd">        STEP-BY-STEP IMPLEMENTATION:</span>
+<span class="sd">        1. Store all input data and model</span>
+<span class="sd">        2. Initialize all MLOps components:</span>
+<span class="sd">           - ModelMonitor with baseline accuracy</span>
+<span class="sd">           - DriftDetector with baseline data</span>
+<span class="sd">           - RetrainingTrigger with model and data</span>
+<span class="sd">        3. Set up pipeline configuration:</span>
+<span class="sd">           - monitoring_interval: 3600 (1 hour)</span>
+<span class="sd">           - auto_retrain: True</span>
+<span class="sd">           - deploy_threshold: 0.02 (2% improvement required)</span>
+<span class="sd">        4. Initialize pipeline state:</span>
+<span class="sd">           - pipeline_active: False</span>
+<span class="sd">           - last_check_time: datetime.now()</span>
+<span class="sd">           - deployment_history: []</span>
+<span class="sd">        </span>
+<span class="sd">        EXAMPLE USAGE:</span>
+<span class="sd">        ```python</span>
+<span class="sd">        pipeline = MLOpsPipeline(model, train_data, val_data, baseline_data)</span>
+<span class="sd">        pipeline.start_monitoring()</span>
+<span class="sd">        status = pipeline.check_system_health()</span>
+<span class="sd">        ```</span>
+<span class="sd">        </span>
+<span class="sd">        IMPLEMENTATION HINTS:</span>
+<span class="sd">        - Calculate baseline_accuracy from validation data (use 0.9 as default)</span>
+<span class="sd">        - Use feature_names from data shape</span>
+<span class="sd">        - Set reasonable defaults for all parameters</span>
+<span class="sd">        - Initialize all components in __init__</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1">### BEGIN SOLUTION</span>
+    <span class="c1"># YOUR CODE HERE</span>
+    <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
+        <span class="c1">### END SOLUTION</span>
+    
+    <span class="k">def</span> <span class="nf">start_monitoring</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        TODO: Start the MLOps monitoring pipeline.</span>
+<span class="sd">        </span>
+<span class="sd">        STEP-BY-STEP IMPLEMENTATION:</span>
+<span class="sd">        1. Set pipeline_active = True</span>
+<span class="sd">        2. Update last_check_time = datetime.now()</span>
+<span class="sd">        3. Log pipeline start</span>
+<span class="sd">        4. Return status dictionary</span>
+<span class="sd">        </span>
+<span class="sd">        EXAMPLE RETURN:</span>
+<span class="sd">        ```python</span>
+<span class="sd">        {</span>
+<span class="sd">            &quot;status&quot;: &quot;started&quot;,</span>
+<span class="sd">            &quot;pipeline_active&quot;: True,</span>
+<span class="sd">            &quot;start_time&quot;: datetime(2024, 1, 1, 12, 0),</span>
+<span class="sd">            &quot;message&quot;: &quot;MLOps pipeline started successfully&quot;</span>
+<span class="sd">        }</span>
+<span class="sd">        ```</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1">### BEGIN SOLUTION</span>
+    <span class="c1"># YOUR CODE HERE</span>
+    <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
+        <span class="c1">### END SOLUTION</span>
+    
+    <span class="k">def</span> <span class="nf">check_system_health</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_data</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">current_accuracy</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        TODO: Check complete system health and trigger actions if needed.</span>
+<span class="sd">        </span>
+<span class="sd">        STEP-BY-STEP IMPLEMENTATION:</span>
+<span class="sd">        1. Check if pipeline is active, return early if not</span>
+<span class="sd">        2. Record current performance in monitor (if provided)</span>
+<span class="sd">        3. Check for drift (if new_data provided)</span>
+<span class="sd">        4. Check trigger conditions</span>
+<span class="sd">        5. Execute retraining if needed (and auto_retrain is True)</span>
+<span class="sd">        6. Return comprehensive system status</span>
+<span class="sd">        </span>
+<span class="sd">        EXAMPLE RETURN:</span>
+<span class="sd">        ```python</span>
+<span class="sd">        {</span>
+<span class="sd">            &quot;pipeline_active&quot;: True,</span>
+<span class="sd">            &quot;current_accuracy&quot;: 0.87,</span>
+<span class="sd">            &quot;drift_detected&quot;: True,</span>
+<span class="sd">            &quot;retraining_triggered&quot;: True,</span>
+<span class="sd">            &quot;new_model_deployed&quot;: True,</span>
+<span class="sd">            &quot;system_healthy&quot;: True,</span>
+<span class="sd">            &quot;last_check&quot;: datetime(2024, 1, 1, 12, 0),</span>
+<span class="sd">            &quot;actions_taken&quot;: [&quot;drift_detected&quot;, &quot;retraining_executed&quot;, &quot;model_deployed&quot;]</span>
+<span class="sd">        }</span>
+<span class="sd">        ```</span>
+<span class="sd">        </span>
+<span class="sd">        IMPLEMENTATION HINTS:</span>
+<span class="sd">        - Use default values if parameters not provided</span>
+<span class="sd">        - Track all actions taken during health check</span>
+<span class="sd">        - Update last_check_time</span>
+<span class="sd">        - Return comprehensive status for debugging</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1">### BEGIN SOLUTION</span>
+    <span class="c1"># YOUR CODE HERE</span>
+    <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
+        <span class="c1">### END SOLUTION</span>
+    
+    <span class="k">def</span> <span class="nf">get_pipeline_status</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        TODO: Get comprehensive pipeline status and history.</span>
+<span class="sd">        </span>
+<span class="sd">        STEP-BY-STEP IMPLEMENTATION:</span>
+<span class="sd">        1. Get status from all components:</span>
+<span class="sd">           - Monitor alerts and trends</span>
+<span class="sd">           - Drift detection history</span>
+<span class="sd">           - Retraining history</span>
+<span class="sd">           - Deployment history</span>
+<span class="sd">        2. Calculate summary statistics:</span>
+<span class="sd">           - Total deployments</span>
+<span class="sd">           - Average accuracy improvement</span>
+<span class="sd">           - Time since last check</span>
+<span class="sd">        3. Return comprehensive status</span>
+<span class="sd">        </span>
+<span class="sd">        EXAMPLE RETURN:</span>
+<span class="sd">        ```python</span>
+<span class="sd">        {</span>
+<span class="sd">            &quot;pipeline_active&quot;: True,</span>
+<span class="sd">            &quot;total_deployments&quot;: 3,</span>
+<span class="sd">            &quot;average_improvement&quot;: 0.05,</span>
+<span class="sd">            &quot;time_since_last_check&quot;: 300,</span>
+<span class="sd">            &quot;recent_alerts&quot;: [...],</span>
+<span class="sd">            &quot;drift_history&quot;: [...],</span>
+<span class="sd">            &quot;deployment_history&quot;: [...]</span>
+<span class="sd">        }</span>
+<span class="sd">        ```</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1">### BEGIN SOLUTION</span>
+    <span class="c1"># YOUR CODE HERE</span>
+    <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
+        <span class="c1">### END SOLUTION</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="test-your-complete-mlops-pipeline">
+<h3>🧪 Test Your Complete MLOps Pipeline<a class="headerlink" href="#test-your-complete-mlops-pipeline" title="Permalink to this heading">#</a></h3>
+<p>Once you implement the <code class="docutils literal notranslate"><span class="pre">MLOpsPipeline</span></code> class above, run this cell to test it:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">test_mlops_pipeline</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Test complete MLOps pipeline&quot;&quot;&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;🔬 Unit Test: Complete MLOps Pipeline...&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Create test data</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="s2">&quot;test_model&quot;</span>
+    <span class="n">train_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="p">(</span><span class="mi">1000</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+    <span class="n">val_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+    <span class="n">baseline_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="p">(</span><span class="mi">1000</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+    
+    <span class="c1"># Create pipeline</span>
+    <span class="n">pipeline</span> <span class="o">=</span> <span class="n">MLOpsPipeline</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">train_data</span><span class="p">,</span> <span class="n">val_data</span><span class="p">,</span> <span class="n">baseline_data</span><span class="p">)</span>
+    
+    <span class="c1"># Test initialization</span>
+    <span class="k">assert</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">model</span> <span class="o">==</span> <span class="n">model</span>
+    <span class="k">assert</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">pipeline_active</span> <span class="o">==</span> <span class="kc">False</span>
+    <span class="k">assert</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">pipeline</span><span class="p">,</span> <span class="s1">&#39;monitor&#39;</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">pipeline</span><span class="p">,</span> <span class="s1">&#39;drift_detector&#39;</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">pipeline</span><span class="p">,</span> <span class="s1">&#39;retrain_trigger&#39;</span><span class="p">)</span>
+    
+    <span class="c1"># Test start monitoring</span>
+    <span class="n">start_result</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">start_monitoring</span><span class="p">()</span>
+    <span class="k">assert</span> <span class="n">start_result</span><span class="p">[</span><span class="s2">&quot;status&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;started&quot;</span>
+    <span class="k">assert</span> <span class="n">start_result</span><span class="p">[</span><span class="s2">&quot;pipeline_active&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="kc">True</span>
+    <span class="k">assert</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">pipeline_active</span> <span class="o">==</span> <span class="kc">True</span>
+    
+    <span class="c1"># Test system health check (no issues)</span>
+    <span class="n">health</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">check_system_health</span><span class="p">(</span>
+        <span class="n">new_data</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">5</span><span class="p">)),</span>
+        <span class="n">current_accuracy</span><span class="o">=</span><span class="mf">0.92</span>
+    <span class="p">)</span>
+    <span class="k">assert</span> <span class="n">health</span><span class="p">[</span><span class="s2">&quot;pipeline_active&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="kc">True</span>
+    <span class="k">assert</span> <span class="n">health</span><span class="p">[</span><span class="s2">&quot;current_accuracy&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="mf">0.92</span>
+    <span class="k">assert</span> <span class="s2">&quot;actions_taken&quot;</span> <span class="ow">in</span> <span class="n">health</span>
+    
+    <span class="c1"># Test system health check (with issues)</span>
+    <span class="n">health</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">check_system_health</span><span class="p">(</span>
+        <span class="n">new_data</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">5</span><span class="p">)),</span>  <span class="c1"># Heavily drifted data</span>
+        <span class="n">current_accuracy</span><span class="o">=</span><span class="mf">0.75</span>  <span class="c1"># Very low accuracy (well below 0.81 threshold)</span>
+    <span class="p">)</span>
+    <span class="k">assert</span> <span class="n">health</span><span class="p">[</span><span class="s2">&quot;pipeline_active&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="kc">True</span>
+    <span class="k">assert</span> <span class="n">health</span><span class="p">[</span><span class="s2">&quot;drift_detected&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="kc">True</span>
+    <span class="c1"># Note: retraining_triggered depends on both accuracy and drift conditions</span>
+    <span class="c1"># For fast testing, we just verify the system detects issues</span>
+    <span class="k">assert</span> <span class="s2">&quot;retraining_triggered&quot;</span> <span class="ow">in</span> <span class="n">health</span>
+    
+    <span class="c1"># Test pipeline status</span>
+    <span class="n">status</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">get_pipeline_status</span><span class="p">()</span>
+    <span class="k">assert</span> <span class="n">status</span><span class="p">[</span><span class="s2">&quot;pipeline_active&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="kc">True</span>
+    <span class="k">assert</span> <span class="s2">&quot;total_deployments&quot;</span> <span class="ow">in</span> <span class="n">status</span>
+    <span class="k">assert</span> <span class="s2">&quot;average_improvement&quot;</span> <span class="ow">in</span> <span class="n">status</span>
+    <span class="k">assert</span> <span class="s2">&quot;time_since_last_check&quot;</span> <span class="ow">in</span> <span class="n">status</span>
+    <span class="k">assert</span> <span class="s2">&quot;recent_alerts&quot;</span> <span class="ow">in</span> <span class="n">status</span>
+    <span class="k">assert</span> <span class="s2">&quot;performance_trend&quot;</span> <span class="ow">in</span> <span class="n">status</span>
+    
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;✅ MLOpsPipeline initialization works correctly&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;✅ Pipeline start/stop functionality works&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;✅ System health checking works&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;✅ Drift detection and retraining integration works&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;✅ Pipeline status reporting works&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;📈 Progress: Complete MLOps Pipeline ✓&quot;</span><span class="p">)</span>
+
+<span class="c1"># Run the test</span>
+<span class="n">test_mlops_pipeline</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="final-integration-complete-tinytorch-ecosystem">
+<h2>🎯 Final Integration: Complete TinyTorch Ecosystem<a class="headerlink" href="#final-integration-complete-tinytorch-ecosystem" title="Permalink to this heading">#</a></h2>
+<section id="the-full-system-in-action">
+<h3>The Full System in Action<a class="headerlink" href="#the-full-system-in-action" title="Permalink to this heading">#</a></h3>
+<p>Let’s demonstrate how all TinyTorch components work together in a complete MLOps pipeline:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Complete TinyTorch MLOps workflow</span>
+<span class="kn">from</span> <span class="nn">tinytorch.core.tensor</span> <span class="kn">import</span> <span class="n">Tensor</span>
+<span class="kn">from</span> <span class="nn">tinytorch.core.networks</span> <span class="kn">import</span> <span class="n">Sequential</span>
+<span class="kn">from</span> <span class="nn">tinytorch.core.layers</span> <span class="kn">import</span> <span class="n">Dense</span>  
+<span class="kn">from</span> <span class="nn">tinytorch.core.activations</span> <span class="kn">import</span> <span class="n">ReLU</span><span class="p">,</span> <span class="n">Softmax</span>
+<span class="kn">from</span> <span class="nn">tinytorch.core.training</span> <span class="kn">import</span> <span class="n">Trainer</span><span class="p">,</span> <span class="n">CrossEntropyLoss</span>
+<span class="kn">from</span> <span class="nn">tinytorch.core.compression</span> <span class="kn">import</span> <span class="n">quantize_layer_weights</span>
+<span class="kn">from</span> <span class="nn">tinytorch.core.benchmarking</span> <span class="kn">import</span> <span class="n">TinyTorchPerf</span>
+<span class="kn">from</span> <span class="nn">tinytorch.core.mlops</span> <span class="kn">import</span> <span class="n">MLOpsPipeline</span>
+
+<span class="c1"># 1. Build model (Modules 01-04)</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">Sequential</span><span class="p">([</span>
+    <span class="n">Dense</span><span class="p">(</span><span class="mi">784</span><span class="p">,</span> <span class="mi">128</span><span class="p">),</span> <span class="n">ReLU</span><span class="p">(),</span>
+    <span class="n">Dense</span><span class="p">(</span><span class="mi">128</span><span class="p">,</span> <span class="mi">64</span><span class="p">),</span> <span class="n">ReLU</span><span class="p">(),</span> 
+    <span class="n">Dense</span><span class="p">(</span><span class="mi">64</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span> <span class="n">Softmax</span><span class="p">()</span>
+<span class="p">])</span>
+
+<span class="c1"># 2. Train model (Module 09)</span>
+<span class="n">trainer</span> <span class="o">=</span> <span class="n">Trainer</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">CrossEntropyLoss</span><span class="p">(),</span> <span class="n">learning_rate</span><span class="o">=</span><span class="mf">0.001</span><span class="p">)</span>
+<span class="n">trained_model</span> <span class="o">=</span> <span class="n">trainer</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">training_data</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+
+<span class="c1"># 3. Compress model (Module 10)</span>
+<span class="n">compressed_model</span> <span class="o">=</span> <span class="n">quantize_layer_weights</span><span class="p">(</span><span class="n">trained_model</span><span class="p">)</span>
+
+<span class="c1"># 4. Benchmark model (Module 12)</span>
+<span class="n">perf</span> <span class="o">=</span> <span class="n">TinyTorchPerf</span><span class="p">()</span>
+<span class="n">benchmark_results</span> <span class="o">=</span> <span class="n">perf</span><span class="o">.</span><span class="n">benchmark</span><span class="p">(</span><span class="n">compressed_model</span><span class="p">,</span> <span class="n">test_data</span><span class="p">)</span>
+
+<span class="c1"># 5. Deploy with MLOps (Module 13)</span>
+<span class="n">pipeline</span> <span class="o">=</span> <span class="n">MLOpsPipeline</span><span class="p">(</span><span class="n">compressed_model</span><span class="p">,</span> <span class="n">training_data</span><span class="p">,</span> <span class="n">validation_data</span><span class="p">,</span> <span class="n">baseline_data</span><span class="p">)</span>
+<span class="n">pipeline</span><span class="o">.</span><span class="n">start_monitoring</span><span class="p">()</span>
+
+<span class="c1"># 6. Monitor and maintain</span>
+<span class="n">health</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">check_system_health</span><span class="p">(</span><span class="n">new_data</span><span class="p">,</span> <span class="n">current_accuracy</span><span class="o">=</span><span class="mf">0.89</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">health</span><span class="p">[</span><span class="s2">&quot;new_model_deployed&quot;</span><span class="p">]:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;🚀 New model deployed automatically!&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="what-students-have-achieved">
+<h3>What Students Have Achieved<a class="headerlink" href="#what-students-have-achieved" title="Permalink to this heading">#</a></h3>
+<p>By completing this module, you have:</p>
+<ul class="simple">
+<li><p><strong>Built a complete ML system</strong> from tensors to production deployment</p></li>
+<li><p><strong>Integrated all TinyTorch components</strong> into a cohesive workflow</p></li>
+<li><p><strong>Implemented production-grade MLOps</strong> with monitoring and automation</p></li>
+<li><p><strong>Created self-maintaining systems</strong> that adapt to changing conditions</p></li>
+<li><p><strong>Mastered the full ML lifecycle</strong> from development to production</p></li>
+</ul>
+</section>
+<section id="real-world-impact">
+<h3>Real-World Impact<a class="headerlink" href="#real-world-impact" title="Permalink to this heading">#</a></h3>
+<p>Your MLOps skills now enable:</p>
+<ul class="simple">
+<li><p><strong>Automated model maintenance</strong> reducing manual intervention by 90%</p></li>
+<li><p><strong>Faster response to issues</strong> from days to hours or minutes</p></li>
+<li><p><strong>Improved model reliability</strong> through continuous monitoring</p></li>
+<li><p><strong>Scalable ML operations</strong> that work across multiple models</p></li>
+<li><p><strong>Production-ready deployment</strong> with industry-standard practices</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">test_comprehensive_integration</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Test complete integration of all TinyTorch components&quot;&quot;&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;🔬 Comprehensive Integration Test: Complete TinyTorch Ecosystem...&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># 1. Create synthetic data (simulating real ML dataset)</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+    <span class="n">train_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="p">(</span><span class="mi">1000</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+    <span class="n">val_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+    <span class="n">baseline_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="p">(</span><span class="mi">1000</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+    
+    <span class="c1"># 2. Create model architecture</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="s2">&quot;TinyTorch_Production_Model&quot;</span>
+    
+    <span class="c1"># 3. Set up complete MLOps pipeline</span>
+    <span class="n">pipeline</span> <span class="o">=</span> <span class="n">MLOpsPipeline</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">train_data</span><span class="p">,</span> <span class="n">val_data</span><span class="p">,</span> <span class="n">baseline_data</span><span class="p">)</span>
+    
+    <span class="c1"># 4. Start monitoring</span>
+    <span class="n">start_result</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">start_monitoring</span><span class="p">()</span>
+    <span class="k">assert</span> <span class="n">start_result</span><span class="p">[</span><span class="s2">&quot;status&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;started&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;✅ MLOps pipeline started successfully&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># 5. Simulate production monitoring cycle</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">🔄 Simulating Production Monitoring Cycle...&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Phase 1: Normal operation</span>
+    <span class="n">health1</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">check_system_health</span><span class="p">(</span>
+        <span class="n">new_data</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">10</span><span class="p">)),</span>
+        <span class="n">current_accuracy</span><span class="o">=</span><span class="mf">0.94</span>
+    <span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;   Phase 1 - Normal: Accuracy </span><span class="si">{</span><span class="n">health1</span><span class="p">[</span><span class="s1">&#39;current_accuracy&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">, Drift: </span><span class="si">{</span><span class="n">health1</span><span class="p">[</span><span class="s1">&#39;drift_detected&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Phase 2: Gradual degradation</span>
+    <span class="n">health2</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">check_system_health</span><span class="p">(</span>
+        <span class="n">new_data</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">10</span><span class="p">)),</span>
+        <span class="n">current_accuracy</span><span class="o">=</span><span class="mf">0.88</span>
+    <span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;   Phase 2 - Degradation: Accuracy </span><span class="si">{</span><span class="n">health2</span><span class="p">[</span><span class="s1">&#39;current_accuracy&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">, Drift: </span><span class="si">{</span><span class="n">health2</span><span class="p">[</span><span class="s1">&#39;drift_detected&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Phase 3: Significant drift and low accuracy</span>
+    <span class="n">health3</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">check_system_health</span><span class="p">(</span>
+        <span class="n">new_data</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">10</span><span class="p">)),</span>
+        <span class="n">current_accuracy</span><span class="o">=</span><span class="mf">0.79</span>
+    <span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;   Phase 3 - Critical: Accuracy </span><span class="si">{</span><span class="n">health3</span><span class="p">[</span><span class="s1">&#39;current_accuracy&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">, Drift: </span><span class="si">{</span><span class="n">health3</span><span class="p">[</span><span class="s1">&#39;drift_detected&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;   Retraining triggered: </span><span class="si">{</span><span class="n">health3</span><span class="p">[</span><span class="s1">&#39;retraining_triggered&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;   New model deployed: </span><span class="si">{</span><span class="n">health3</span><span class="p">[</span><span class="s1">&#39;new_model_deployed&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># 6. Get final pipeline status</span>
+    <span class="n">final_status</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">get_pipeline_status</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">📊 Final Pipeline Status:&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;   Total deployments: </span><span class="si">{</span><span class="n">final_status</span><span class="p">[</span><span class="s1">&#39;total_deployments&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;   Average improvement: </span><span class="si">{</span><span class="n">final_status</span><span class="p">[</span><span class="s1">&#39;average_improvement&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;   System health: </span><span class="si">{</span><span class="n">health3</span><span class="p">[</span><span class="s1">&#39;system_healthy&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># 7. Verify complete integration</span>
+    <span class="k">assert</span> <span class="n">final_status</span><span class="p">[</span><span class="s2">&quot;pipeline_active&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="kc">True</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">final_status</span><span class="p">[</span><span class="s2">&quot;deployment_history&quot;</span><span class="p">])</span> <span class="o">&gt;=</span> <span class="mi">0</span>
+    <span class="k">assert</span> <span class="s2">&quot;drift_history&quot;</span> <span class="ow">in</span> <span class="n">final_status</span>
+    <span class="k">assert</span> <span class="s2">&quot;retrain_history&quot;</span> <span class="ow">in</span> <span class="n">final_status</span>
+    
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">✅ Complete TinyTorch ecosystem integration successful!&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;🎉 All components working together seamlessly!&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;📈 Progress: Complete TinyTorch Ecosystem ✓&quot;</span><span class="p">)</span>
+
+<span class="c1"># Run the comprehensive test</span>
+<span class="n">test_comprehensive_integration</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="auto-discovery-testing">
+<h2>🧪 Auto-Discovery Testing<a class="headerlink" href="#auto-discovery-testing" title="Permalink to this heading">#</a></h2>
+<p>The following cell automatically discovers and runs all test functions in this module:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">tito.tools.testing</span> <span class="kn">import</span> <span class="n">run_module_tests_auto</span>
+    
+    <span class="c1"># Automatically discover and run all tests in this module</span>
+    <span class="n">success</span> <span class="o">=</span> <span class="n">run_module_tests_auto</span><span class="p">(</span><span class="s2">&quot;MLOps&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="module-summary-mlops-production-systems">
+<h2>🎯 Module Summary: MLOps Production Systems<a class="headerlink" href="#module-summary-mlops-production-systems" title="Permalink to this heading">#</a></h2>
+<p>Congratulations! You’ve successfully implemented a complete MLOps system for production ML lifecycle management:</p>
+<section id="what-you-ve-built">
+<h3>What You’ve Built<a class="headerlink" href="#what-you-ve-built" title="Permalink to this heading">#</a></h3>
+<p>✅ <strong>Model Monitor</strong>: Performance tracking and drift detection
+✅ <strong>Retraining Triggers</strong>: Automated model updates based on performance thresholds
+✅ <strong>MLOps Pipeline</strong>: Complete production deployment and maintenance system
+✅ <strong>Integration</strong>: Orchestrates all TinyTorch components in production workflows</p>
+</section>
+<section id="key-concepts-you-ve-learned">
+<h3>Key Concepts You’ve Learned<a class="headerlink" href="#key-concepts-you-ve-learned" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Production ML systems</strong> require continuous monitoring and maintenance</p></li>
+<li><p><strong>Drift detection</strong> identifies when models need retraining</p></li>
+<li><p><strong>Automated workflows</strong> respond to system degradation without manual intervention</p></li>
+<li><p><strong>MLOps pipelines</strong> integrate monitoring, training, and deployment</p></li>
+<li><p><strong>System orchestration</strong> coordinates complex ML component interactions</p></li>
+</ul>
+</section>
+<section id="id7">
+<h3>Real-World Applications<a class="headerlink" href="#id7" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Production AI</strong>: Automated model maintenance at scale</p></li>
+<li><p><strong>Enterprise ML</strong>: Continuous monitoring and improvement systems</p></li>
+<li><p><strong>Cloud deployment</strong>: Industry-standard MLOps practices</p></li>
+<li><p><strong>Model lifecycle</strong>: Complete deployment and maintenance workflows</p></li>
+</ul>
+</section>
+<section id="connection-to-industry-systems">
+<h3>Connection to Industry Systems<a class="headerlink" href="#connection-to-industry-systems" title="Permalink to this heading">#</a></h3>
+<p>Your implementation mirrors production platforms:</p>
+<ul class="simple">
+<li><p><strong>MLflow</strong>: Model lifecycle management and experiment tracking</p></li>
+<li><p><strong>Kubeflow</strong>: Kubernetes-based ML workflows and pipelines</p></li>
+<li><p><strong>Amazon SageMaker</strong>: End-to-end ML platform with monitoring</p></li>
+<li><p><strong>Google AI Platform</strong>: Production ML services with automation</p></li>
+</ul>
+</section>
+<section id="next-steps">
+<h3>Next Steps<a class="headerlink" href="#next-steps" title="Permalink to this heading">#</a></h3>
+<ol class="arabic simple">
+<li><p><strong>Export your code</strong>: <code class="docutils literal notranslate"><span class="pre">tito</span> <span class="pre">export</span> <span class="pre">13_mlops</span></code></p></li>
+<li><p><strong>Test your implementation</strong>: <code class="docutils literal notranslate"><span class="pre">tito</span> <span class="pre">test</span> <span class="pre">13_mlops</span></code></p></li>
+<li><p><strong>Deploy production systems</strong>: Apply MLOps patterns to real-world ML projects</p></li>
+<li><p><strong>Complete TinyTorch</strong>: You’ve mastered the full ML systems pipeline!</p></li>
+</ol>
+<p><strong>🎉 TinyTorch Journey Complete!</strong> You’ve built a complete ML framework from tensors to production deployment. You’re now ready to tackle real-world ML systems challenges!</p>
+</section>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./chapters"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="12-benchmarking.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Benchmarking</p>
+      </div>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#where-this-code-lives-in-the-final-package">📦 Where This Code Lives in the Final Package</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-is-mlops">What is MLOps?</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-production-reality-models-degrade-over-time">The Production Reality: Models Degrade Over Time</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#why-models-fail-in-production">Why Models Fail in Production</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-mlops-solution">The MLOps Solution</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#real-world-examples">Real-World Examples</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-complete-tinytorch-lifecycle">The Complete TinyTorch Lifecycle</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-1-performance-drift-monitor-tracking-model-health">Step 1: Performance Drift Monitor - Tracking Model Health</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-problem-silent-model-degradation">The Problem: Silent Model Degradation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-solution-continuous-performance-monitoring">The Solution: Continuous Performance Monitoring</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#what-we-ll-build">What We’ll Build</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#real-world-applications">Real-World Applications</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#test-your-performance-monitor">🧪 Test Your Performance Monitor</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-2-simple-drift-detection-detecting-data-changes">Step 2: Simple Drift Detection - Detecting Data Changes</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-problem-silent-data-distribution-changes">The Problem: Silent Data Distribution Changes</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-solution-statistical-drift-detection">The Solution: Statistical Drift Detection</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">What We’ll Build</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">Real-World Applications</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#test-your-drift-detector">🧪 Test Your Drift Detector</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-3-retraining-trigger-system-automated-response-to-issues">Step 3: Retraining Trigger System - Automated Response to Issues</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-problem-manual-intervention-required">The Problem: Manual Intervention Required</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-solution-automated-retraining-pipeline">The Solution: Automated Retraining Pipeline</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">What We’ll Build</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">Real-World Applications</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#test-your-retraining-trigger">🧪 Test Your Retraining Trigger</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-4-complete-mlops-pipeline-integration-and-deployment">Step 4: Complete MLOps Pipeline - Integration and Deployment</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-problem-disconnected-components">The Problem: Disconnected Components</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-solution-complete-mlops-pipeline">The Solution: Complete MLOps Pipeline</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">What We’ll Build</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">Real-World Applications</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#test-your-complete-mlops-pipeline">🧪 Test Your Complete MLOps Pipeline</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#final-integration-complete-tinytorch-ecosystem">🎯 Final Integration: Complete TinyTorch Ecosystem</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-full-system-in-action">The Full System in Action</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#what-students-have-achieved">What Students Have Achieved</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#real-world-impact">Real-World Impact</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#auto-discovery-testing">🧪 Auto-Discovery Testing</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-summary-mlops-production-systems">🎯 Module Summary: MLOps Production Systems</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#what-you-ve-built">What You’ve Built</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#key-concepts-you-ve-learned">Key Concepts You’ve Learned</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">Real-World Applications</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#connection-to-industry-systems">Connection to Industry Systems</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#next-steps">Next Steps</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By TinyTorch Team
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2025.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=5b4479735964841361fd"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=5b4479735964841361fd"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

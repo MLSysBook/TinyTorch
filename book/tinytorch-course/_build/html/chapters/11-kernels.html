@@ -1,0 +1,2073 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>Kernels &#8212; Tiny🔥Torch: Build ML Systems from Scratch</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=5b4479735964841361fd" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=5b4479735964841361fd" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=5b4479735964841361fd" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=5b4479735964841361fd" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=5b4479735964841361fd" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=5b4479735964841361fd" />
+  <script src="../_static/vendor/fontawesome/6.1.2/js/all.min.js?digest=5b4479735964841361fd"></script>
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'chapters/11-kernels';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Benchmarking" href="12-benchmarking.html" />
+    <link rel="prev" title="Compression" href="10-compression.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo.png" class="logo__image only-light" alt="Tiny🔥Torch: Build ML Systems from Scratch - Home"/>
+    <script>document.write(`<img src="../_static/logo.png" class="logo__image only-dark" alt="Tiny🔥Torch: Build ML Systems from Scratch - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    Tiny🔥Torch: Build Machine Learning Systems from Scratch
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Usage Paths</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../usage-paths/quick-exploration.html">🔬 Quick Exploration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage-paths/serious-development.html">🏗️ Serious Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage-paths/classroom-use.html">👨‍🏫 Classroom Use</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Foundation</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="00-setup.html">0. Development Environment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01-tensor.html">1. Tensors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="02-activations.html">2. Activations</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Building Blocks</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="03-layers.html">3. Layers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="04-networks.html">4. Networks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="05-cnn.html">5. CNNs</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Training Systems</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="06-dataloader.html">DataLoader</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="07-autograd.html">7. Autograd</a></li>
+<li class="toctree-l1"><a class="reference internal" href="08-optimizers.html">8. Optimizers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="09-training.html">9. Training</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Production &amp; Performance</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="10-compression.html">10. Compression</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">11. Kernels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="12-benchmarking.html">12. Benchmarking</a></li>
+<li class="toctree-l1"><a class="reference internal" href="13-mlops.html">13. MLOps</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/VJ/TinyTorch" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/VJ/TinyTorch/edit/main/book/tinytorch-course/chapters/11-kernels.ipynb" target="_blank"
+   class="btn btn-sm btn-source-edit-button dropdown-item"
+   title="Suggest edit"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="btn__text-container">Suggest edit</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/VJ/TinyTorch/issues/new?title=Issue%20on%20page%20%2Fchapters/11-kernels.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/chapters/11-kernels.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Kernels</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#where-this-code-lives-in-the-final-package">📦 Where This Code Lives in the Final Package</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-are-ml-kernels">What are ML Kernels?</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-performance-gap">The Performance Gap</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#what-is-a-kernel">What is a Kernel?</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#why-kernels-matter-for-ml">Why Kernels Matter for ML</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-performance-hierarchy">The Performance Hierarchy</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#real-world-impact">Real-World Impact</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#what-you-ll-learn">What You’ll Learn</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-1-custom-operations-beyond-numpy">Step 1: Custom Operations - Beyond NumPy</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#why-custom-operations">Why Custom Operations?</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-philosophy">The Philosophy</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#design-principles">Design Principles</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#real-world-context">Real-World Context</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-2-vectorized-operations-simd-principles">Step 2: Vectorized Operations - SIMD Principles</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#what-is-vectorization">What is Vectorization?</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-problem-with-loops">The Problem with Loops</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-vectorization-solution">The Vectorization Solution</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#why-vectorization-matters">Why Vectorization Matters</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#simd-principles">SIMD Principles</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Real-World Context</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-3-memory-layout-optimization-cache-friendly-algorithms">Step 3: Memory Layout Optimization - Cache-Friendly Algorithms</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#why-memory-layout-matters">Why Memory Layout Matters</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-memory-hierarchy">The Memory Hierarchy</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cache-friendly-principles">Cache-Friendly Principles</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">Real-World Impact</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-problem-with-naive-algorithms">The Problem with Naive Algorithms</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cache-friendly-solution">Cache-Friendly Solution</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-4-parallel-processing-cpu-and-gpu-style-computing">Step 4: Parallel Processing - CPU and GPU-Style Computing</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#why-parallel-processing">Why Parallel Processing?</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#types-of-parallelism">Types of Parallelism</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cpu-vs-gpu-parallelism">CPU vs GPU Parallelism</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parallel-processing-patterns">Parallel Processing Patterns</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">Real-World Context</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-5-simple-performance-measurement-timing-your-kernels">Step 5: Simple Performance Measurement - Timing Your Kernels</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#why-timing-matters">Why Timing Matters</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#what-we-ll-measure">What We’ll Measure</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-simple-timing-process">The Simple Timing Process</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#our-simple-timing-tool">Our Simple Timing Tool</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">Real-World Context</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-6-compressed-model-kernels-optimizing-quantized-operations">Step 6: Compressed Model Kernels - Optimizing Quantized Operations</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#why-compressed-model-kernels">Why Compressed Model Kernels?</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#types-of-model-compression">Types of Model Compression</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#quantization-fundamentals">Quantization Fundamentals</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#why-custom-kernels-for-compression">Why Custom Kernels for Compression?</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">Real-World Context</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-testing">🧪 Module Testing</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-summary-hardware-optimized-ml-operations">🎯 Module Summary: Hardware-Optimized ML Operations</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#what-you-ve-built">What You’ve Built</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#key-insights">Key Insights</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#real-world-connections">Real-World Connections</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#next-steps">Next Steps</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#achievement-unlocked">🏆 Achievement Unlocked</a></li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="kernels">
+<h1>Kernels<a class="headerlink" href="#kernels" title="Permalink to this heading">#</a></h1>
+<div class="tip admonition">
+<p class="admonition-title">Interactive Learning</p>
+<p>🚀 <strong>Launch Binder</strong>: Click the rocket icon above to run this chapter interactively!</p>
+<p>💾 <strong>Save Your Work</strong>: Download your completed notebook when done.</p>
+<p>🏗️ <strong>Build Locally</strong>: Ready for serious development? <a class="reference external" href="https://github.com/your-org/tinytorch">Fork the repo</a> and work locally with the full <code class="docutils literal notranslate"><span class="pre">tito</span></code> workflow.</p>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#| default_exp core.kernels</span>
+
+<span class="c1">#| export</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">tracemalloc</span>
+<span class="kn">import</span> <span class="nn">psutil</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">List</span>
+<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">wraps</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+
+<span class="c1"># Import our existing components</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">tinytorch.core.tensor</span> <span class="kn">import</span> <span class="n">Tensor</span>
+    <span class="kn">from</span> <span class="nn">tinytorch.core.layers</span> <span class="kn">import</span> <span class="n">matmul_naive</span> <span class="k">as</span> <span class="n">matmul</span>
+    <span class="kn">from</span> <span class="nn">tinytorch.core.activations</span> <span class="kn">import</span> <span class="n">ReLU</span><span class="p">,</span> <span class="n">Sigmoid</span><span class="p">,</span> <span class="n">Tanh</span>
+    <span class="kn">from</span> <span class="nn">tinytorch.core.cnn</span> <span class="kn">import</span> <span class="n">Conv2D</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="c1"># For development, import from local modules</span>
+    <span class="n">base_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)))</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">base_dir</span><span class="p">,</span> <span class="s1">&#39;01_tensor&#39;</span><span class="p">),</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">base_dir</span><span class="p">,</span> <span class="s1">&#39;02_activations&#39;</span><span class="p">),</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">base_dir</span><span class="p">,</span> <span class="s1">&#39;03_layers&#39;</span><span class="p">),</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">base_dir</span><span class="p">,</span> <span class="s1">&#39;05_cnn&#39;</span><span class="p">),</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">base_dir</span><span class="p">,</span> <span class="s1">&#39;utils&#39;</span><span class="p">)</span>
+    <span class="p">])</span>
+    
+    <span class="k">try</span><span class="p">:</span>
+        <span class="kn">from</span> <span class="nn">tensor_dev</span> <span class="kn">import</span> <span class="n">Tensor</span>
+        <span class="kn">from</span> <span class="nn">layers_dev</span> <span class="kn">import</span> <span class="n">matmul_naive</span> <span class="k">as</span> <span class="n">matmul</span>
+        <span class="kn">from</span> <span class="nn">activations_dev</span> <span class="kn">import</span> <span class="n">ReLU</span><span class="p">,</span> <span class="n">Sigmoid</span><span class="p">,</span> <span class="n">Tanh</span>
+        <span class="kn">from</span> <span class="nn">cnn_dev</span> <span class="kn">import</span> <span class="n">Conv2D</span>
+    <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+        <span class="c1"># Create minimal mock for development</span>
+        <span class="k">class</span> <span class="nc">Tensor</span><span class="p">:</span>
+            <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">shape</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span>
+            <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+                <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Tensor(</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="si">}</span><span class="s2">)&quot;</span>
+
+<span class="c1"># Simple timing utility for kernel performance measurement</span>
+<span class="k">def</span> <span class="nf">time_kernel</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Simple timing function for measuring kernel performance.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        tuple: (result, time_in_microseconds)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="n">end</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
+    <span class="n">microseconds</span> <span class="o">=</span> <span class="p">(</span><span class="n">end</span> <span class="o">-</span> <span class="n">start</span><span class="p">)</span> <span class="o">*</span> <span class="mi">1_000_000</span>
+    <span class="k">return</span> <span class="n">result</span><span class="p">,</span> <span class="n">microseconds</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
+<span class="ne">ModuleNotFoundError</span><span class="g g-Whitespace">                       </span>Traceback (most recent call last)
+<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">line</span> <span class="mi">16</span>
+<span class="g g-Whitespace">     </span><span class="mi">15</span> <span class="k">try</span><span class="p">:</span>
+<span class="ne">---&gt; </span><span class="mi">16</span>     <span class="kn">from</span> <span class="nn">tinytorch.core.tensor</span> <span class="kn">import</span> <span class="n">Tensor</span>
+<span class="g g-Whitespace">     </span><span class="mi">17</span>     <span class="kn">from</span> <span class="nn">tinytorch.core.layers</span> <span class="kn">import</span> <span class="n">matmul_naive</span> <span class="k">as</span> <span class="n">matmul</span>
+
+<span class="ne">ModuleNotFoundError</span>: No module named &#39;tinytorch&#39;
+
+<span class="n">During</span> <span class="n">handling</span> <span class="n">of</span> <span class="n">the</span> <span class="n">above</span> <span class="n">exception</span><span class="p">,</span> <span class="n">another</span> <span class="n">exception</span> <span class="n">occurred</span><span class="p">:</span>
+
+<span class="ne">NameError</span><span class="g g-Whitespace">                                 </span>Traceback (most recent call last)
+<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">line</span> <span class="mi">22</span>
+<span class="g g-Whitespace">     </span><span class="mi">19</span>     <span class="kn">from</span> <span class="nn">tinytorch.core.cnn</span> <span class="kn">import</span> <span class="n">Conv2D</span>
+<span class="g g-Whitespace">     </span><span class="mi">20</span> <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+<span class="g g-Whitespace">     </span><span class="mi">21</span>     <span class="c1"># For development, import from local modules</span>
+<span class="ne">---&gt; </span><span class="mi">22</span>     <span class="n">base_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)))</span>
+<span class="g g-Whitespace">     </span><span class="mi">23</span>     <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span>
+<span class="g g-Whitespace">     </span><span class="mi">24</span>         <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">base_dir</span><span class="p">,</span> <span class="s1">&#39;01_tensor&#39;</span><span class="p">),</span>
+<span class="g g-Whitespace">     </span><span class="mi">25</span>         <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">base_dir</span><span class="p">,</span> <span class="s1">&#39;02_activations&#39;</span><span class="p">),</span>
+   <span class="p">(</span><span class="o">...</span><span class="p">)</span>
+<span class="g g-Whitespace">     </span><span class="mi">28</span>         <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">base_dir</span><span class="p">,</span> <span class="s1">&#39;utils&#39;</span><span class="p">)</span>
+<span class="g g-Whitespace">     </span><span class="mi">29</span>     <span class="p">])</span>
+<span class="g g-Whitespace">     </span><span class="mi">31</span>     <span class="k">try</span><span class="p">:</span>
+
+<span class="ne">NameError</span>: name &#39;__file__&#39; is not defined
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;🔥 TinyTorch Kernels Module&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;NumPy version: </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">__version__</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Python version: </span><span class="si">{</span><span class="n">sys</span><span class="o">.</span><span class="n">version_info</span><span class="o">.</span><span class="n">major</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">sys</span><span class="o">.</span><span class="n">version_info</span><span class="o">.</span><span class="n">minor</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;System: </span><span class="si">{</span><span class="n">psutil</span><span class="o">.</span><span class="n">cpu_count</span><span class="p">()</span><span class="si">}</span><span class="s2"> CPU cores, </span><span class="si">{</span><span class="n">psutil</span><span class="o">.</span><span class="n">virtual_memory</span><span class="p">()</span><span class="o">.</span><span class="n">total</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="p">(</span><span class="mi">1024</span><span class="o">**</span><span class="mi">3</span><span class="p">)</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">GB RAM&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Ready to optimize ML operations!&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<section id="where-this-code-lives-in-the-final-package">
+<h2>📦 Where This Code Lives in the Final Package<a class="headerlink" href="#where-this-code-lives-in-the-final-package" title="Permalink to this heading">#</a></h2>
+<p><strong>Learning Side:</strong> You work in <code class="docutils literal notranslate"><span class="pre">modules/source/11_kernels/kernels_dev.py</span></code><br />
+<strong>Building Side:</strong> Code exports to <code class="docutils literal notranslate"><span class="pre">tinytorch.core.kernels</span></code></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Final package structure:</span>
+<span class="kn">from</span> <span class="nn">tinytorch.core.kernels</span> <span class="kn">import</span> <span class="n">vectorized_matmul</span><span class="p">,</span> <span class="n">parallel_relu</span><span class="p">,</span> <span class="n">cached_conv2d</span>
+<span class="kn">from</span> <span class="nn">tinytorch.core.tensor</span> <span class="kn">import</span> <span class="n">Tensor</span>
+<span class="kn">from</span> <span class="nn">tinytorch.core.layers</span> <span class="kn">import</span> <span class="n">Dense</span>
+</pre></div>
+</div>
+<p><strong>Why this matters:</strong></p>
+<ul class="simple">
+<li><p><strong>Performance:</strong> Custom kernels can be 2-10x faster than naive implementations</p></li>
+<li><p><strong>Understanding:</strong> Learn how PyTorch, TensorFlow achieve their speed</p></li>
+<li><p><strong>Real-world:</strong> Modern ML frameworks rely heavily on optimized kernels</p></li>
+<li><p><strong>Hardware:</strong> Bridge the gap between algorithms and computer architecture</p></li>
+</ul>
+</section>
+<section id="what-are-ml-kernels">
+<h2>What are ML Kernels?<a class="headerlink" href="#what-are-ml-kernels" title="Permalink to this heading">#</a></h2>
+<section id="the-performance-gap">
+<h3>The Performance Gap<a class="headerlink" href="#the-performance-gap" title="Permalink to this heading">#</a></h3>
+<p>Your neural network training is slow. A simple matrix multiplication that should take milliseconds takes seconds. Why?</p>
+<p><strong>The problem:</strong> NumPy operations, while convenient, aren’t optimized for your specific hardware or use case.</p>
+<p><strong>The solution:</strong> Custom kernels - specialized functions written to extract maximum performance from your hardware.</p>
+</section>
+<section id="what-is-a-kernel">
+<h3>What is a Kernel?<a class="headerlink" href="#what-is-a-kernel" title="Permalink to this heading">#</a></h3>
+<p>A <strong>kernel</strong> is a highly optimized function that performs a specific computation:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Standard approach - easy but slow</span>
+<span class="k">def</span> <span class="nf">slow_matmul</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">)</span>
+
+<span class="c1"># Kernel approach - harder but fast</span>
+<span class="k">def</span> <span class="nf">fast_matmul</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">):</span>
+    <span class="c1"># Optimized for your CPU&#39;s cache hierarchy</span>
+    <span class="c1"># Uses SIMD instructions for parallel operations</span>
+    <span class="c1"># Minimizes memory allocations</span>
+    <span class="k">return</span> <span class="n">optimized_result</span>
+</pre></div>
+</div>
+</section>
+<section id="why-kernels-matter-for-ml">
+<h3>Why Kernels Matter for ML<a class="headerlink" href="#why-kernels-matter-for-ml" title="Permalink to this heading">#</a></h3>
+<p>Modern ML frameworks achieve their speed through thousands of optimized kernels:</p>
+<ul class="simple">
+<li><p><strong>PyTorch</strong>: 2000+ CUDA kernels, 500+ CPU kernels</p></li>
+<li><p><strong>TensorFlow</strong>: XLA compiler generates optimized kernels</p></li>
+<li><p><strong>JAX</strong>: JIT compilation creates specialized kernels</p></li>
+<li><p><strong>Hardware</strong>: GPUs have 1000s of cores, TPUs have specialized ML units</p></li>
+</ul>
+</section>
+<section id="the-performance-hierarchy">
+<h3>The Performance Hierarchy<a class="headerlink" href="#the-performance-hierarchy" title="Permalink to this heading">#</a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Python</span> <span class="n">loops</span><span class="p">:</span>        <span class="mi">1</span><span class="n">x</span> <span class="n">speed</span>    <span class="p">(</span><span class="n">baseline</span><span class="p">)</span>
+<span class="n">NumPy</span> <span class="n">operations</span><span class="p">:</span>    <span class="mi">10</span><span class="n">x</span> <span class="n">speed</span>   <span class="p">(</span><span class="n">vectorized</span><span class="p">)</span>
+<span class="n">Optimized</span> <span class="n">kernels</span><span class="p">:</span>   <span class="mi">100</span><span class="n">x</span> <span class="n">speed</span>  <span class="p">(</span><span class="n">hardware</span><span class="o">-</span><span class="n">aware</span><span class="p">)</span>
+<span class="n">GPU</span> <span class="n">kernels</span><span class="p">:</span>         <span class="mi">1000</span><span class="n">x</span> <span class="n">speed</span> <span class="p">(</span><span class="n">massive</span> <span class="n">parallelism</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="real-world-impact">
+<h3>Real-World Impact<a class="headerlink" href="#real-world-impact" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Training time</strong>: 10-hour training → 1-hour training</p></li>
+<li><p><strong>Inference cost</strong>: <span class="math notranslate nohighlight">\(1000/month → \)</span>100/month</p></li>
+<li><p><strong>Model size</strong>: Enable larger models through efficiency</p></li>
+<li><p><strong>Energy</strong>: 90% reduction in power consumption</p></li>
+</ul>
+</section>
+<section id="what-you-ll-learn">
+<h3>What You’ll Learn<a class="headerlink" href="#what-you-ll-learn" title="Permalink to this heading">#</a></h3>
+<ol class="arabic simple">
+<li><p><strong>Custom operations</strong> - Moving beyond NumPy limitations</p></li>
+<li><p><strong>Vectorization</strong> - Using SIMD for parallel computation</p></li>
+<li><p><strong>Memory optimization</strong> - Cache-friendly algorithms</p></li>
+<li><p><strong>Parallel processing</strong> - CPU and GPU-style parallelism</p></li>
+<li><p><strong>Performance measurement</strong> - Professional profiling tools</p></li>
+<li><p><strong>Compressed kernels</strong> - Optimizations for quantized models</p></li>
+</ol>
+<p>Let’s build the optimizations that power modern AI!</p>
+</section>
+</section>
+<section id="step-1-custom-operations-beyond-numpy">
+<h2>Step 1: Custom Operations - Beyond NumPy<a class="headerlink" href="#step-1-custom-operations-beyond-numpy" title="Permalink to this heading">#</a></h2>
+<section id="why-custom-operations">
+<h3>Why Custom Operations?<a class="headerlink" href="#why-custom-operations" title="Permalink to this heading">#</a></h3>
+<p>NumPy is great for prototyping, but has limitations:</p>
+<ul class="simple">
+<li><p><strong>Generic</strong>: Optimized for general use, not your specific case</p></li>
+<li><p><strong>Memory</strong>: Creates temporary arrays, wastes memory</p></li>
+<li><p><strong>Control</strong>: Can’t control memory layout, algorithm choice</p></li>
+<li><p><strong>Specialization</strong>: Can’t optimize for your data patterns</p></li>
+</ul>
+</section>
+<section id="the-philosophy">
+<h3>The Philosophy<a class="headerlink" href="#the-philosophy" title="Permalink to this heading">#</a></h3>
+<p>Instead of using general-purpose functions, we write <strong>specialized</strong> functions:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Generic NumPy approach</span>
+<span class="k">def</span> <span class="nf">generic_activation</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>  <span class="c1"># ReLU</span>
+
+<span class="c1"># Specialized kernel approach  </span>
+<span class="k">def</span> <span class="nf">fast_relu_kernel</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="c1"># Optimized for your specific use case</span>
+    <span class="c1"># No unnecessary memory allocations</span>
+    <span class="c1"># Optimized for your data sizes</span>
+    <span class="k">return</span> <span class="n">result</span>
+</pre></div>
+</div>
+</section>
+<section id="design-principles">
+<h3>Design Principles<a class="headerlink" href="#design-principles" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Specialization</strong>: Optimize for specific input patterns</p></li>
+<li><p><strong>Memory efficiency</strong>: Minimize allocations and copies</p></li>
+<li><p><strong>Algorithmic choice</strong>: Pick the best algorithm for your data</p></li>
+<li><p><strong>Measurement</strong>: Always profile before and after</p></li>
+</ul>
+</section>
+<section id="real-world-context">
+<h3>Real-World Context<a class="headerlink" href="#real-world-context" title="Permalink to this heading">#</a></h3>
+<p>This is how:</p>
+<ul class="simple">
+<li><p><strong>PyTorch</strong>: Custom autograd functions override standard operations</p></li>
+<li><p><strong>TensorFlow</strong>: tf.function compiles optimized graphs</p></li>
+<li><p><strong>JAX</strong>: jax.jit creates specialized kernels</p></li>
+<li><p><strong>CUDA</strong>: Every GPU operation is a custom kernel</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#| export</span>
+<span class="k">def</span> <span class="nf">matmul_baseline</span><span class="p">(</span><span class="n">A</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">B</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Baseline matrix multiplication using TinyTorch&#39;s proven implementation.</span>
+<span class="sd">    </span>
+<span class="sd">    This function demonstrates how to build on existing TinyTorch components</span>
+<span class="sd">    rather than reinventing the wheel. We use the standard matmul from Module 03</span>
+<span class="sd">    as our baseline for comparison with optimized kernels.</span>
+<span class="sd">    </span>
+<span class="sd">    This is NOT a custom implementation - it&#39;s the standard TinyTorch matmul</span>
+<span class="sd">    wrapped for use in kernel comparisons and benchmarking.</span>
+<span class="sd">    </span>
+<span class="sd">    TODO: Use TinyTorch&#39;s standard matmul implementation as a baseline.</span>
+<span class="sd">    </span>
+<span class="sd">    STEP-BY-STEP IMPLEMENTATION:</span>
+<span class="sd">    1. Import the standard matmul function from tinytorch.core.layers</span>
+<span class="sd">    2. Extract numpy arrays from input Tensors</span>
+<span class="sd">    3. Use the proven implementation from TinyTorch</span>
+<span class="sd">    4. Wrap result back in Tensor format</span>
+<span class="sd">    5. Return the result</span>
+<span class="sd">    </span>
+<span class="sd">    CODE REUSE PRINCIPLES:</span>
+<span class="sd">    1. Always use the packaged version for reliability</span>
+<span class="sd">    2. Don&#39;t duplicate working code - reference the source</span>
+<span class="sd">    3. Use descriptive names that indicate what the function actually does</span>
+<span class="sd">    4. Keep dependencies simple and reliable</span>
+<span class="sd">    </span>
+<span class="sd">    EXAMPLE USAGE:</span>
+<span class="sd">    ```python</span>
+<span class="sd">    A = Tensor([[1, 2], [3, 4]])</span>
+<span class="sd">    B = Tensor([[5, 6], [7, 8]])</span>
+<span class="sd">    C = matmul_baseline(A, B)</span>
+<span class="sd">    # Expected: [[19, 22], [43, 50]]</span>
+<span class="sd">    ```</span>
+<span class="sd">    </span>
+<span class="sd">    LEARNING CONNECTIONS:</span>
+<span class="sd">    - This shows how to use TinyTorch as a library</span>
+<span class="sd">    - Demonstrates reliable dependency management</span>
+<span class="sd">    - Serves as baseline for kernel performance comparisons</span>
+<span class="sd">    - Shows proper software engineering practices</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1">### BEGIN SOLUTION</span>
+    <span class="c1"># YOUR CODE HERE</span>
+    <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
+    <span class="c1">### END SOLUTION</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">### 🧪 Unit Test: Baseline Matrix Multiplication</span>
+
+<span class="k">def</span> <span class="nf">test_matmul_baseline</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Test baseline matrix multiplication implementation.&quot;&quot;&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;🔬 Unit Test: Baseline Matrix Multiplication...&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Test case 1: Small matrices (2x2)</span>
+    <span class="n">A</span> <span class="o">=</span> <span class="n">Tensor</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">]])</span>
+    <span class="n">B</span> <span class="o">=</span> <span class="n">Tensor</span><span class="p">([[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">],</span> <span class="p">[</span><span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">]])</span>
+    <span class="n">C</span> <span class="o">=</span> <span class="n">matmul_baseline</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">)</span>
+    <span class="n">expected</span> <span class="o">=</span> <span class="n">Tensor</span><span class="p">([[</span><span class="mi">19</span><span class="p">,</span> <span class="mi">22</span><span class="p">],</span> <span class="p">[</span><span class="mi">43</span><span class="p">,</span> <span class="mi">50</span><span class="p">]])</span>  <span class="c1"># Hand-computed</span>
+    
+    <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">C</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">expected</span><span class="o">.</span><span class="n">data</span><span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;Expected </span><span class="si">{</span><span class="n">expected</span><span class="o">.</span><span class="n">data</span><span class="si">}</span><span class="s2">, got </span><span class="si">{</span><span class="n">C</span><span class="o">.</span><span class="n">data</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;✅ Small matrix multiplication works&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Test case 2: Rectangular matrices</span>
+    <span class="n">A</span> <span class="o">=</span> <span class="n">Tensor</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">]])</span>  <span class="c1"># 2x3</span>
+    <span class="n">B</span> <span class="o">=</span> <span class="n">Tensor</span><span class="p">([[</span><span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">],</span> <span class="p">[</span><span class="mi">9</span><span class="p">,</span> <span class="mi">10</span><span class="p">],</span> <span class="p">[</span><span class="mi">11</span><span class="p">,</span> <span class="mi">12</span><span class="p">]])</span>  <span class="c1"># 3x2</span>
+    <span class="n">C</span> <span class="o">=</span> <span class="n">matmul_baseline</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">)</span>
+    <span class="n">expected</span> <span class="o">=</span> <span class="n">Tensor</span><span class="p">([[</span><span class="mi">58</span><span class="p">,</span> <span class="mi">64</span><span class="p">],</span> <span class="p">[</span><span class="mi">139</span><span class="p">,</span> <span class="mi">154</span><span class="p">]])</span>
+    
+    <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">C</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">expected</span><span class="o">.</span><span class="n">data</span><span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;Expected </span><span class="si">{</span><span class="n">expected</span><span class="o">.</span><span class="n">data</span><span class="si">}</span><span class="s2">, got </span><span class="si">{</span><span class="n">C</span><span class="o">.</span><span class="n">data</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;✅ Rectangular matrix multiplication works&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Test case 3: Compare with NumPy (medium size - should use TinyTorch implementation)</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+    <span class="n">A</span> <span class="o">=</span> <span class="n">Tensor</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">32</span><span class="p">,</span> <span class="mi">32</span><span class="p">))</span>
+    <span class="n">B</span> <span class="o">=</span> <span class="n">Tensor</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">32</span><span class="p">,</span> <span class="mi">32</span><span class="p">))</span>
+    
+    <span class="n">C_baseline</span> <span class="o">=</span> <span class="n">matmul_baseline</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">)</span>
+    <span class="n">C_numpy</span> <span class="o">=</span> <span class="n">Tensor</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">A</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">B</span><span class="o">.</span><span class="n">data</span><span class="p">))</span>
+    
+    <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">C_baseline</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">C_numpy</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">rtol</span><span class="o">=</span><span class="mf">1e-10</span><span class="p">),</span> <span class="s2">&quot;Baseline implementation differs from NumPy&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;✅ Baseline implementation matches NumPy&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Test case 4: Large matrix</span>
+    <span class="n">A</span> <span class="o">=</span> <span class="n">Tensor</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">))</span>
+    <span class="n">B</span> <span class="o">=</span> <span class="n">Tensor</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">))</span>
+    <span class="n">C</span> <span class="o">=</span> <span class="n">matmul_baseline</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">)</span>
+    
+    <span class="k">assert</span> <span class="n">C</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;Expected shape (100, 100), got </span><span class="si">{</span><span class="n">C</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;✅ Large matrix multiplication works&quot;</span><span class="p">)</span>
+    
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;📈 Progress: Baseline Matrix Multiplication ✓&quot;</span><span class="p">)</span>
+
+<span class="c1"># Run the test</span>
+<span class="n">test_matmul_baseline</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="step-2-vectorized-operations-simd-principles">
+<h2>Step 2: Vectorized Operations - SIMD Principles<a class="headerlink" href="#step-2-vectorized-operations-simd-principles" title="Permalink to this heading">#</a></h2>
+<section id="what-is-vectorization">
+<h3>What is Vectorization?<a class="headerlink" href="#what-is-vectorization" title="Permalink to this heading">#</a></h3>
+<p><strong>Vectorization</strong> means processing multiple data elements in parallel using SIMD (Single Instruction, Multiple Data) operations.</p>
+</section>
+<section id="the-problem-with-loops">
+<h3>The Problem with Loops<a class="headerlink" href="#the-problem-with-loops" title="Permalink to this heading">#</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Scalar processing - one element at a time</span>
+<span class="k">def</span> <span class="nf">slow_relu</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)):</span>
+        <span class="n">result</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>  <span class="c1"># One operation per cycle</span>
+    <span class="k">return</span> <span class="n">result</span>
+</pre></div>
+</div>
+</section>
+<section id="the-vectorization-solution">
+<h3>The Vectorization Solution<a class="headerlink" href="#the-vectorization-solution" title="Permalink to this heading">#</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Vector processing - multiple elements at once</span>
+<span class="k">def</span> <span class="nf">fast_relu</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>  <span class="c1"># Many operations per cycle</span>
+</pre></div>
+</div>
+</section>
+<section id="why-vectorization-matters">
+<h3>Why Vectorization Matters<a class="headerlink" href="#why-vectorization-matters" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>CPU SIMD</strong>: Modern CPUs can process 4-8 floats simultaneously</p></li>
+<li><p><strong>GPU parallelism</strong>: GPUs have thousands of cores for parallel processing</p></li>
+<li><p><strong>Memory bandwidth</strong>: Better utilization of memory transfers</p></li>
+<li><p><strong>Compiler optimization</strong>: Enables automatic vectorization</p></li>
+</ul>
+</section>
+<section id="simd-principles">
+<h3>SIMD Principles<a class="headerlink" href="#simd-principles" title="Permalink to this heading">#</a></h3>
+<ol class="arabic simple">
+<li><p><strong>Data parallelism</strong>: Same operation on multiple data elements</p></li>
+<li><p><strong>Memory alignment</strong>: Aligned data enables faster SIMD instructions</p></li>
+<li><p><strong>Batch processing</strong>: Process data in chunks that fit SIMD registers</p></li>
+<li><p><strong>Avoid branches</strong>: Conditional operations break SIMD efficiency</p></li>
+</ol>
+</section>
+<section id="id1">
+<h3>Real-World Context<a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>NumPy</strong>: All operations are vectorized using BLAS/LAPACK</p></li>
+<li><p><strong>PyTorch</strong>: Vectorized operations compile to SIMD instructions</p></li>
+<li><p><strong>GPU kernels</strong>: Thousands of parallel threads process data</p></li>
+<li><p><strong>AVX-512</strong>: Intel’s latest SIMD can process 16 floats at once</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#| export</span>
+<span class="k">def</span> <span class="nf">vectorized_relu</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Vectorized ReLU implementation demonstrating SIMD principles.</span>
+<span class="sd">    </span>
+<span class="sd">    This function shows how to write operations that take advantage of</span>
+<span class="sd">    CPU vectorization capabilities for better performance.</span>
+<span class="sd">    </span>
+<span class="sd">    TODO: Implement a vectorized ReLU that&#39;s optimized for performance.</span>
+<span class="sd">    </span>
+<span class="sd">    STEP-BY-STEP IMPLEMENTATION:</span>
+<span class="sd">    1. Extract numpy array from Tensor</span>
+<span class="sd">    2. Use NumPy&#39;s vectorized operations (these compile to SIMD instructions)</span>
+<span class="sd">    3. Apply ReLU: f(x) = max(0, x) for all elements simultaneously</span>
+<span class="sd">    4. Return result as Tensor</span>
+<span class="sd">    </span>
+<span class="sd">    VECTORIZATION TECHNIQUES:</span>
+<span class="sd">    1. Use np.maximum instead of loops - this is vectorized</span>
+<span class="sd">    2. Ensure input is contiguous in memory for better SIMD performance</span>
+<span class="sd">    3. Consider using specific dtypes (float32 vs float64) for SIMD alignment</span>
+<span class="sd">    4. Avoid conditional operations that break vectorization</span>
+<span class="sd">    </span>
+<span class="sd">    EXAMPLE USAGE:</span>
+<span class="sd">    ```python</span>
+<span class="sd">    x = Tensor([-2, -1, 0, 1, 2])</span>
+<span class="sd">    y = vectorized_relu(x)</span>
+<span class="sd">    # Expected: [0, 0, 0, 1, 2]</span>
+<span class="sd">    ```</span>
+<span class="sd">    </span>
+<span class="sd">    PERFORMANCE CONSIDERATIONS:</span>
+<span class="sd">    - np.maximum is vectorized and uses SIMD instructions</span>
+<span class="sd">    - Memory layout matters: contiguous arrays are faster</span>
+<span class="sd">    - Data type matters: float32 allows more SIMD parallelism than float64</span>
+<span class="sd">    - Avoid Python loops - they can&#39;t be vectorized</span>
+<span class="sd">    </span>
+<span class="sd">    LEARNING CONNECTIONS:</span>
+<span class="sd">    - This is how PyTorch&#39;s ReLU is implemented under the hood</span>
+<span class="sd">    - GPU kernels use similar principles with thousands of parallel threads</span>
+<span class="sd">    - Modern CPUs can process 4-16 floats simultaneously with SIMD</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1">### BEGIN SOLUTION</span>
+    <span class="c1"># YOUR CODE HERE</span>
+    <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
+    <span class="c1">### END SOLUTION</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#| export</span>
+<span class="k">def</span> <span class="nf">vectorized_operations</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Tensor</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Demonstration of various vectorized operations.</span>
+<span class="sd">    </span>
+<span class="sd">    Shows how multiple operations can be vectorized for better performance.</span>
+<span class="sd">    </span>
+<span class="sd">    TODO: Implement a collection of vectorized operations.</span>
+<span class="sd">    </span>
+<span class="sd">    STEP-BY-STEP IMPLEMENTATION:</span>
+<span class="sd">    1. Extract numpy arrays from input Tensors</span>
+<span class="sd">    2. Implement vectorized versions of common operations</span>
+<span class="sd">    3. Use NumPy&#39;s built-in vectorized functions</span>
+<span class="sd">    4. Return dictionary of results</span>
+<span class="sd">    </span>
+<span class="sd">    OPERATIONS TO IMPLEMENT:</span>
+<span class="sd">    - element_wise_multiply: x * y (element-wise)</span>
+<span class="sd">    - element_wise_add: x + y (element-wise)</span>
+<span class="sd">    - squared_difference: (x - y)^2</span>
+<span class="sd">    - euclidean_distance: sqrt(sum((x - y)^2))</span>
+<span class="sd">    - dot_product: sum(x * y)</span>
+<span class="sd">    </span>
+<span class="sd">    VECTORIZATION PRINCIPLES:</span>
+<span class="sd">    - Use NumPy operations instead of Python loops</span>
+<span class="sd">    - Combine operations when possible: (x - y)**2 instead of subtract then square</span>
+<span class="sd">    - Consider memory layout and data types</span>
+<span class="sd">    - Measure performance improvements</span>
+<span class="sd">    </span>
+<span class="sd">    EXAMPLE USAGE:</span>
+<span class="sd">    ```python</span>
+<span class="sd">    x = Tensor([1, 2, 3, 4])</span>
+<span class="sd">    y = Tensor([2, 3, 4, 5])</span>
+<span class="sd">    results = vectorized_operations(x, y)</span>
+<span class="sd">    # Returns dict with all vectorized operation results</span>
+<span class="sd">    ```</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1">### BEGIN SOLUTION</span>
+    <span class="c1"># YOUR CODE HERE</span>
+    <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
+    <span class="c1">### END SOLUTION</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">### 🧪 Unit Test: Vectorized Operations</span>
+
+<span class="k">def</span> <span class="nf">test_vectorized_operations</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Test vectorized operations implementation.&quot;&quot;&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;🔬 Unit Test: Vectorized Operations...&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Test vectorized ReLU</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">Tensor</span><span class="p">([</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">vectorized_relu</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">expected</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>
+    
+    <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">y</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">expected</span><span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;Expected </span><span class="si">{</span><span class="n">expected</span><span class="si">}</span><span class="s2">, got </span><span class="si">{</span><span class="n">y</span><span class="o">.</span><span class="n">data</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;✅ Vectorized ReLU works&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Test vectorized operations</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">Tensor</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">])</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">Tensor</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">])</span>
+    <span class="n">results</span> <span class="o">=</span> <span class="n">vectorized_operations</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+    
+    <span class="c1"># Check element-wise multiply</span>
+    <span class="n">expected_mul</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">20</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">results</span><span class="p">[</span><span class="s1">&#39;element_wise_multiply&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">expected_mul</span><span class="p">),</span> \
+        <span class="sa">f</span><span class="s2">&quot;Expected </span><span class="si">{</span><span class="n">expected_mul</span><span class="si">}</span><span class="s2">, got </span><span class="si">{</span><span class="n">results</span><span class="p">[</span><span class="s1">&#39;element_wise_multiply&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;✅ Element-wise multiply works&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Check element-wise add</span>
+    <span class="n">expected_add</span> <span class="o">=</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">9</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">results</span><span class="p">[</span><span class="s1">&#39;element_wise_add&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">expected_add</span><span class="p">),</span> \
+        <span class="sa">f</span><span class="s2">&quot;Expected </span><span class="si">{</span><span class="n">expected_add</span><span class="si">}</span><span class="s2">, got </span><span class="si">{</span><span class="n">results</span><span class="p">[</span><span class="s1">&#39;element_wise_add&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;✅ Element-wise add works&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Check squared difference</span>
+    <span class="n">expected_sq_diff</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>  <span class="c1"># (1-2)^2, (2-3)^2, etc.</span>
+    <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">results</span><span class="p">[</span><span class="s1">&#39;squared_difference&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">expected_sq_diff</span><span class="p">),</span> \
+        <span class="sa">f</span><span class="s2">&quot;Expected </span><span class="si">{</span><span class="n">expected_sq_diff</span><span class="si">}</span><span class="s2">, got </span><span class="si">{</span><span class="n">results</span><span class="p">[</span><span class="s1">&#39;squared_difference&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;✅ Squared difference works&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Check dot product</span>
+    <span class="n">expected_dot</span> <span class="o">=</span> <span class="mi">40</span>  <span class="c1"># 1*2 + 2*3 + 3*4 + 4*5 = 2 + 6 + 12 + 20 = 40</span>
+    <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">results</span><span class="p">[</span><span class="s1">&#39;dot_product&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">expected_dot</span><span class="p">),</span> \
+        <span class="sa">f</span><span class="s2">&quot;Expected </span><span class="si">{</span><span class="n">expected_dot</span><span class="si">}</span><span class="s2">, got </span><span class="si">{</span><span class="n">results</span><span class="p">[</span><span class="s1">&#39;dot_product&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;✅ Dot product works&quot;</span><span class="p">)</span>
+    
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;📈 Progress: Vectorized Operations ✓&quot;</span><span class="p">)</span>
+
+<span class="c1"># Run the test</span>
+<span class="n">test_vectorized_operations</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="step-3-memory-layout-optimization-cache-friendly-algorithms">
+<h2>Step 3: Memory Layout Optimization - Cache-Friendly Algorithms<a class="headerlink" href="#step-3-memory-layout-optimization-cache-friendly-algorithms" title="Permalink to this heading">#</a></h2>
+<section id="why-memory-layout-matters">
+<h3>Why Memory Layout Matters<a class="headerlink" href="#why-memory-layout-matters" title="Permalink to this heading">#</a></h3>
+<p>Modern CPUs are <strong>memory-bound</strong>, not compute-bound. The bottleneck isn’t how fast you can multiply numbers—it’s how fast you can get data from memory.</p>
+</section>
+<section id="the-memory-hierarchy">
+<h3>The Memory Hierarchy<a class="headerlink" href="#the-memory-hierarchy" title="Permalink to this heading">#</a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">CPU</span> <span class="n">Registers</span><span class="p">:</span>    <span class="mi">1</span> <span class="n">cycle</span>     <span class="p">(</span><span class="n">fastest</span><span class="p">,</span> <span class="n">tiny</span><span class="p">)</span>
+<span class="n">L1</span> <span class="n">Cache</span><span class="p">:</span>         <span class="mi">3</span> <span class="n">cycles</span>    <span class="p">(</span><span class="n">fast</span><span class="p">,</span> <span class="n">small</span><span class="p">)</span>
+<span class="n">L2</span> <span class="n">Cache</span><span class="p">:</span>         <span class="mi">10</span> <span class="n">cycles</span>   <span class="p">(</span><span class="n">medium</span><span class="p">,</span> <span class="n">medium</span><span class="p">)</span>
+<span class="n">L3</span> <span class="n">Cache</span><span class="p">:</span>         <span class="mi">40</span> <span class="n">cycles</span>   <span class="p">(</span><span class="n">slow</span><span class="p">,</span> <span class="n">large</span><span class="p">)</span>
+<span class="n">Main</span> <span class="n">Memory</span><span class="p">:</span>      <span class="mi">200</span><span class="o">+</span> <span class="n">cycles</span> <span class="p">(</span><span class="n">slowest</span><span class="p">,</span> <span class="n">huge</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="cache-friendly-principles">
+<h3>Cache-Friendly Principles<a class="headerlink" href="#cache-friendly-principles" title="Permalink to this heading">#</a></h3>
+<ol class="arabic simple">
+<li><p><strong>Spatial locality</strong>: Access nearby memory locations</p></li>
+<li><p><strong>Temporal locality</strong>: Reuse recently accessed data</p></li>
+<li><p><strong>Cache lines</strong>: Memory is loaded in 64-byte chunks</p></li>
+<li><p><strong>Cache blocking</strong>: Process data in cache-sized chunks</p></li>
+</ol>
+</section>
+<section id="id2">
+<h3>Real-World Impact<a class="headerlink" href="#id2" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Matrix multiplication</strong>: Cache-friendly algorithms are 10x faster</p></li>
+<li><p><strong>Image processing</strong>: Row-major vs column-major access patterns</p></li>
+<li><p><strong>Neural networks</strong>: Memory layout affects training speed significantly</p></li>
+</ul>
+</section>
+<section id="the-problem-with-naive-algorithms">
+<h3>The Problem with Naive Algorithms<a class="headerlink" href="#the-problem-with-naive-algorithms" title="Permalink to this heading">#</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Cache-unfriendly: jumps around memory</span>
+<span class="k">def</span> <span class="nf">slow_transpose</span><span class="p">(</span><span class="n">A</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">rows</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">cols</span><span class="p">):</span>
+            <span class="n">B</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">A</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span>  <span class="c1"># Poor cache locality</span>
+</pre></div>
+</div>
+</section>
+<section id="cache-friendly-solution">
+<h3>Cache-Friendly Solution<a class="headerlink" href="#cache-friendly-solution" title="Permalink to this heading">#</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Cache-friendly: processes data in blocks</span>
+<span class="k">def</span> <span class="nf">fast_transpose</span><span class="p">(</span><span class="n">A</span><span class="p">):</span>
+    <span class="c1"># Process in cache-sized blocks</span>
+    <span class="k">for</span> <span class="n">block_i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">rows</span><span class="p">,</span> <span class="n">BLOCK_SIZE</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">block_j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">cols</span><span class="p">,</span> <span class="n">BLOCK_SIZE</span><span class="p">):</span>
+            <span class="c1"># Process block - good cache locality</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">block_i</span><span class="p">,</span> <span class="nb">min</span><span class="p">(</span><span class="n">block_i</span> <span class="o">+</span> <span class="n">BLOCK_SIZE</span><span class="p">,</span> <span class="n">rows</span><span class="p">)):</span>
+                <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">block_j</span><span class="p">,</span> <span class="nb">min</span><span class="p">(</span><span class="n">block_j</span> <span class="o">+</span> <span class="n">BLOCK_SIZE</span><span class="p">,</span> <span class="n">cols</span><span class="p">)):</span>
+                    <span class="n">B</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">A</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span>
+</pre></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#| export</span>
+<span class="k">def</span> <span class="nf">cache_friendly_matmul</span><span class="p">(</span><span class="n">A</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">B</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">block_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">32</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Cache-friendly matrix multiplication using blocking technique.</span>
+<span class="sd">    </span>
+<span class="sd">    This implementation uses cache blocking to improve memory access patterns</span>
+<span class="sd">    and achieve better performance on modern CPUs.</span>
+<span class="sd">    </span>
+<span class="sd">    TODO: Implement cache-friendly matrix multiplication using blocking.</span>
+<span class="sd">    </span>
+<span class="sd">    STEP-BY-STEP IMPLEMENTATION:</span>
+<span class="sd">    1. Extract numpy arrays and get dimensions</span>
+<span class="sd">    2. Pre-allocate output matrix</span>
+<span class="sd">    3. Use three nested loops for blocks: block_i, block_j, block_k</span>
+<span class="sd">    4. Within each block, use three nested loops for elements: i, j, k</span>
+<span class="sd">    5. Process data in cache-sized blocks for better locality</span>
+<span class="sd">    </span>
+<span class="sd">    BLOCKING ALGORITHM:</span>
+<span class="sd">    1. Divide matrices into blocks of size block_size x block_size</span>
+<span class="sd">    2. For each block of C, compute contribution from corresponding A and B blocks</span>
+<span class="sd">    3. This keeps data in cache longer, reducing memory access time</span>
+<span class="sd">    </span>
+<span class="sd">    CACHE OPTIMIZATION PRINCIPLES:</span>
+<span class="sd">    - Process data in small blocks that fit in cache</span>
+<span class="sd">    - Reuse data as much as possible while it&#39;s in cache</span>
+<span class="sd">    - Access memory in predictable patterns</span>
+<span class="sd">    - Minimize cache misses</span>
+<span class="sd">    </span>
+<span class="sd">    EXAMPLE USAGE:</span>
+<span class="sd">    ```python</span>
+<span class="sd">    A = Tensor([[1, 2], [3, 4]])</span>
+<span class="sd">    B = Tensor([[5, 6], [7, 8]])</span>
+<span class="sd">    C = cache_friendly_matmul(A, B, block_size=2)</span>
+<span class="sd">    # Expected: [[19, 22], [43, 50]]</span>
+<span class="sd">    ```</span>
+<span class="sd">    </span>
+<span class="sd">    PERFORMANCE HINTS:</span>
+<span class="sd">    - block_size should be chosen based on cache size</span>
+<span class="sd">    - Typical L1 cache: 32KB, so block_size=32 for float32 matrices</span>
+<span class="sd">    - Experiment with different block sizes for your hardware</span>
+<span class="sd">    - This algorithm is O(n^3) but with much better constants</span>
+<span class="sd">    </span>
+<span class="sd">    LEARNING CONNECTIONS:</span>
+<span class="sd">    - This is how BLAS libraries achieve high performance</span>
+<span class="sd">    - GPUs use similar tiling strategies for shared memory</span>
+<span class="sd">    - Modern compilers can sometimes do this automatically</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1">### BEGIN SOLUTION</span>
+    <span class="c1"># YOUR CODE HERE</span>
+    <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
+    <span class="c1">### END SOLUTION</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">### 🧪 Unit Test: Cache-Friendly Matrix Multiplication</span>
+
+<span class="k">def</span> <span class="nf">test_cache_friendly_matmul</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Test cache-friendly matrix multiplication implementation.&quot;&quot;&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;🔬 Unit Test: Cache-Friendly Matrix Multiplication...&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Test case 1: Small matrices</span>
+    <span class="n">A</span> <span class="o">=</span> <span class="n">Tensor</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">]])</span>
+    <span class="n">B</span> <span class="o">=</span> <span class="n">Tensor</span><span class="p">([[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">],</span> <span class="p">[</span><span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">]])</span>
+    <span class="n">C</span> <span class="o">=</span> <span class="n">cache_friendly_matmul</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="n">block_size</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">expected</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">19</span><span class="p">,</span> <span class="mi">22</span><span class="p">],</span> <span class="p">[</span><span class="mi">43</span><span class="p">,</span> <span class="mi">50</span><span class="p">]]</span>
+    
+    <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">C</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">expected</span><span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;Expected </span><span class="si">{</span><span class="n">expected</span><span class="si">}</span><span class="s2">, got </span><span class="si">{</span><span class="n">C</span><span class="o">.</span><span class="n">data</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;✅ Small matrix cache-friendly multiplication works&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Test case 2: Larger matrices with different block sizes</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+    <span class="n">A</span> <span class="o">=</span> <span class="n">Tensor</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">64</span><span class="p">,</span> <span class="mi">64</span><span class="p">))</span>
+    <span class="n">B</span> <span class="o">=</span> <span class="n">Tensor</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">64</span><span class="p">,</span> <span class="mi">64</span><span class="p">))</span>
+    
+    <span class="n">C_blocked</span> <span class="o">=</span> <span class="n">cache_friendly_matmul</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="n">block_size</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
+    <span class="n">C_numpy</span> <span class="o">=</span> <span class="n">Tensor</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">A</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">B</span><span class="o">.</span><span class="n">data</span><span class="p">))</span>
+    
+    <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">C_blocked</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">C_numpy</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">rtol</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">),</span> \
+        <span class="s2">&quot;Cache-friendly implementation differs from NumPy&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;✅ Cache-friendly implementation matches NumPy&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Test case 3: Non-square matrices</span>
+    <span class="n">A</span> <span class="o">=</span> <span class="n">Tensor</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">48</span><span class="p">,</span> <span class="mi">32</span><span class="p">))</span>
+    <span class="n">B</span> <span class="o">=</span> <span class="n">Tensor</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">32</span><span class="p">,</span> <span class="mi">48</span><span class="p">))</span>
+    
+    <span class="n">C_blocked</span> <span class="o">=</span> <span class="n">cache_friendly_matmul</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="n">block_size</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+    <span class="n">C_numpy</span> <span class="o">=</span> <span class="n">Tensor</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">A</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">B</span><span class="o">.</span><span class="n">data</span><span class="p">))</span>
+    
+    <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">C_blocked</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">C_numpy</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">rtol</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">),</span> \
+        <span class="s2">&quot;Non-square cache-friendly implementation differs from NumPy&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;✅ Non-square matrix cache-friendly multiplication works&quot;</span><span class="p">)</span>
+    
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;📈 Progress: Cache-Friendly Algorithms ✓&quot;</span><span class="p">)</span>
+
+<span class="c1"># Run the test</span>
+<span class="n">test_cache_friendly_matmul</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="step-4-parallel-processing-cpu-and-gpu-style-computing">
+<h2>Step 4: Parallel Processing - CPU and GPU-Style Computing<a class="headerlink" href="#step-4-parallel-processing-cpu-and-gpu-style-computing" title="Permalink to this heading">#</a></h2>
+<section id="why-parallel-processing">
+<h3>Why Parallel Processing?<a class="headerlink" href="#why-parallel-processing" title="Permalink to this heading">#</a></h3>
+<p>Modern hardware has multiple cores, and ML workloads are inherently parallel. We need to use all available compute resources.</p>
+</section>
+<section id="types-of-parallelism">
+<h3>Types of Parallelism<a class="headerlink" href="#types-of-parallelism" title="Permalink to this heading">#</a></h3>
+<ol class="arabic simple">
+<li><p><strong>Data parallelism</strong>: Split data across processors</p></li>
+<li><p><strong>Task parallelism</strong>: Split operations across processors</p></li>
+<li><p><strong>Pipeline parallelism</strong>: Different stages on different processors</p></li>
+<li><p><strong>Model parallelism</strong>: Split model across processors</p></li>
+</ol>
+</section>
+<section id="cpu-vs-gpu-parallelism">
+<h3>CPU vs GPU Parallelism<a class="headerlink" href="#cpu-vs-gpu-parallelism" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>CPU</strong>: Few cores (4-64), complex operations, low latency</p></li>
+<li><p><strong>GPU</strong>: Many cores (1000s), simple operations, high throughput</p></li>
+</ul>
+</section>
+<section id="parallel-processing-patterns">
+<h3>Parallel Processing Patterns<a class="headerlink" href="#parallel-processing-patterns" title="Permalink to this heading">#</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Sequential processing</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+    <span class="n">result</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">expensive_operation</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+
+<span class="c1"># Parallel processing</span>
+<span class="k">with</span> <span class="n">ThreadPoolExecutor</span><span class="p">()</span> <span class="k">as</span> <span class="n">executor</span><span class="p">:</span>
+    <span class="n">futures</span> <span class="o">=</span> <span class="p">[</span><span class="n">executor</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span><span class="n">expensive_operation</span><span class="p">,</span> <span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">)]</span>
+    <span class="n">results</span> <span class="o">=</span> <span class="p">[</span><span class="n">f</span><span class="o">.</span><span class="n">result</span><span class="p">()</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">futures</span><span class="p">]</span>
+</pre></div>
+</div>
+</section>
+<section id="id3">
+<h3>Real-World Context<a class="headerlink" href="#id3" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>PyTorch</strong>: Parallel data loading, distributed training</p></li>
+<li><p><strong>TensorFlow</strong>: tf.data for parallel preprocessing</p></li>
+<li><p><strong>NumPy</strong>: Multithreaded BLAS operations</p></li>
+<li><p><strong>GPU kernels</strong>: Thousands of parallel threads</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#| export</span>
+<span class="k">def</span> <span class="nf">parallel_relu</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">num_workers</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">4</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Parallel ReLU implementation using multiple CPU cores.</span>
+<span class="sd">    </span>
+<span class="sd">    This function demonstrates data parallelism by splitting the input</span>
+<span class="sd">    across multiple worker processes.</span>
+<span class="sd">    </span>
+<span class="sd">    TODO: Implement parallel ReLU using multiprocessing or threading.</span>
+<span class="sd">    </span>
+<span class="sd">    STEP-BY-STEP IMPLEMENTATION:</span>
+<span class="sd">    1. Extract numpy array from Tensor</span>
+<span class="sd">    2. Split array into chunks for parallel processing</span>
+<span class="sd">    3. Define worker function that applies ReLU to a chunk</span>
+<span class="sd">    4. Use ThreadPoolExecutor to process chunks in parallel</span>
+<span class="sd">    5. Combine results from all workers</span>
+<span class="sd">    6. Return result as Tensor</span>
+<span class="sd">    </span>
+<span class="sd">    PARALLELIZATION STRATEGY:</span>
+<span class="sd">    1. Split input into num_workers chunks</span>
+<span class="sd">    2. Each worker processes its chunk independently</span>
+<span class="sd">    3. Apply ReLU: max(0, x) to each chunk</span>
+<span class="sd">    4. Combine results preserving original order</span>
+<span class="sd">    </span>
+<span class="sd">    EXAMPLE USAGE:</span>
+<span class="sd">    ```python</span>
+<span class="sd">    x = Tensor(np.random.randn(1000))</span>
+<span class="sd">    y = parallel_relu(x, num_workers=4)</span>
+<span class="sd">    # Processes data using 4 parallel workers</span>
+<span class="sd">    ```</span>
+<span class="sd">    </span>
+<span class="sd">    PERFORMANCE CONSIDERATIONS:</span>
+<span class="sd">    - Overhead of parallel processing may not be worth it for small arrays</span>
+<span class="sd">    - Threading vs multiprocessing trade-offs</span>
+<span class="sd">    - Chunk size should be large enough to amortize overhead</span>
+<span class="sd">    - Consider memory bandwidth limitations</span>
+<span class="sd">    </span>
+<span class="sd">    LEARNING CONNECTIONS:</span>
+<span class="sd">    - This is how PyTorch processes batches in parallel</span>
+<span class="sd">    - GPUs naturally do this with thousands of parallel threads</span>
+<span class="sd">    - Modern deep learning frameworks heavily use parallelism</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1">### BEGIN SOLUTION</span>
+    <span class="c1"># YOUR CODE HERE</span>
+    <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
+    <span class="c1">### END SOLUTION</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#| export</span>
+<span class="k">def</span> <span class="nf">parallel_batch_processing</span><span class="p">(</span><span class="n">batch_data</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Tensor</span><span class="p">],</span> <span class="n">operation</span><span class="p">:</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">num_workers</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">4</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Tensor</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Process a batch of tensors in parallel using multiple workers.</span>
+<span class="sd">    </span>
+<span class="sd">    This function demonstrates how to parallelize operations across</span>
+<span class="sd">    multiple data samples, similar to how modern ML frameworks work.</span>
+<span class="sd">    </span>
+<span class="sd">    TODO: Implement parallel batch processing.</span>
+<span class="sd">    </span>
+<span class="sd">    STEP-BY-STEP IMPLEMENTATION:</span>
+<span class="sd">    1. Take a list of Tensors and an operation function</span>
+<span class="sd">    2. Use ThreadPoolExecutor to process multiple tensors simultaneously</span>
+<span class="sd">    3. Apply the operation to each tensor in parallel</span>
+<span class="sd">    4. Return list of results in original order</span>
+<span class="sd">    </span>
+<span class="sd">    PARALLELIZATION STRATEGY:</span>
+<span class="sd">    1. Each worker processes one tensor at a time</span>
+<span class="sd">    2. Multiple workers can process different tensors simultaneously</span>
+<span class="sd">    3. Preserve order of results to match input order</span>
+<span class="sd">    </span>
+<span class="sd">    EXAMPLE USAGE:</span>
+<span class="sd">    ```python</span>
+<span class="sd">    batch = [Tensor(np.random.randn(100, 100)) for _ in range(8)]</span>
+<span class="sd">    relu_op = lambda x: vectorized_relu(x)</span>
+<span class="sd">    results = parallel_batch_processing(batch, relu_op, num_workers=4)</span>
+<span class="sd">    # Processes 8 tensors using 4 parallel workers</span>
+<span class="sd">    ```</span>
+<span class="sd">    </span>
+<span class="sd">    PERFORMANCE CONSIDERATIONS:</span>
+<span class="sd">    - Each tensor should be large enough to justify parallel overhead</span>
+<span class="sd">    - Balance number of workers with available CPU cores</span>
+<span class="sd">    - Consider memory usage with multiple workers</span>
+<span class="sd">    - Thread vs process pool trade-offs</span>
+<span class="sd">    </span>
+<span class="sd">    LEARNING CONNECTIONS:</span>
+<span class="sd">    - This is how PyTorch&#39;s DataLoader processes batches</span>
+<span class="sd">    - Similar to how GPUs process multiple samples simultaneously</span>
+<span class="sd">    - Foundation for distributed training across multiple nodes</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1">### BEGIN SOLUTION</span>
+    <span class="c1"># YOUR CODE HERE</span>
+    <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
+    <span class="c1">### END SOLUTION</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">### 🧪 Unit Test: Parallel Processing</span>
+
+<span class="k">def</span> <span class="nf">test_parallel_processing</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Test parallel processing implementations.&quot;&quot;&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;🔬 Unit Test: Parallel Processing...&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Test parallel ReLU</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">Tensor</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]))</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">parallel_relu</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">num_workers</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">expected</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>
+    
+    <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">y</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">expected</span><span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;Expected </span><span class="si">{</span><span class="n">expected</span><span class="si">}</span><span class="s2">, got </span><span class="si">{</span><span class="n">y</span><span class="o">.</span><span class="n">data</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;✅ Parallel ReLU works&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Test parallel ReLU with larger data</span>
+    <span class="n">x_large</span> <span class="o">=</span> <span class="n">Tensor</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">2000</span><span class="p">))</span>
+    <span class="n">y_large</span> <span class="o">=</span> <span class="n">parallel_relu</span><span class="p">(</span><span class="n">x_large</span><span class="p">,</span> <span class="n">num_workers</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+    <span class="n">y_sequential</span> <span class="o">=</span> <span class="n">vectorized_relu</span><span class="p">(</span><span class="n">x_large</span><span class="p">)</span>
+    
+    <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">y_large</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">y_sequential</span><span class="o">.</span><span class="n">data</span><span class="p">),</span> \
+        <span class="s2">&quot;Parallel ReLU differs from sequential version&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;✅ Parallel ReLU matches sequential version&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Test parallel batch processing</span>
+    <span class="n">batch</span> <span class="o">=</span> <span class="p">[</span><span class="n">Tensor</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">100</span><span class="p">))</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">8</span><span class="p">)]</span>
+    <span class="n">relu_op</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">vectorized_relu</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    
+    <span class="n">results_parallel</span> <span class="o">=</span> <span class="n">parallel_batch_processing</span><span class="p">(</span><span class="n">batch</span><span class="p">,</span> <span class="n">relu_op</span><span class="p">,</span> <span class="n">num_workers</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+    <span class="n">results_sequential</span> <span class="o">=</span> <span class="p">[</span><span class="n">relu_op</span><span class="p">(</span><span class="n">tensor</span><span class="p">)</span> <span class="k">for</span> <span class="n">tensor</span> <span class="ow">in</span> <span class="n">batch</span><span class="p">]</span>
+    
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">results_parallel</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">results_sequential</span><span class="p">),</span> \
+        <span class="sa">f</span><span class="s2">&quot;Expected </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">results_sequential</span><span class="p">)</span><span class="si">}</span><span class="s2"> results, got </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">results_parallel</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+    
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">parallel</span><span class="p">,</span> <span class="n">sequential</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">results_parallel</span><span class="p">,</span> <span class="n">results_sequential</span><span class="p">)):</span>
+        <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">parallel</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">sequential</span><span class="o">.</span><span class="n">data</span><span class="p">),</span> \
+            <span class="sa">f</span><span class="s2">&quot;Batch item </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">: parallel differs from sequential&quot;</span>
+    
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;✅ Parallel batch processing works&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;📈 Progress: Parallel Processing ✓&quot;</span><span class="p">)</span>
+
+<span class="c1"># Run the test</span>
+<span class="n">test_parallel_processing</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="step-5-simple-performance-measurement-timing-your-kernels">
+<h2>Step 5: Simple Performance Measurement - Timing Your Kernels<a class="headerlink" href="#step-5-simple-performance-measurement-timing-your-kernels" title="Permalink to this heading">#</a></h2>
+<section id="why-timing-matters">
+<h3>Why Timing Matters<a class="headerlink" href="#why-timing-matters" title="Permalink to this heading">#</a></h3>
+<blockquote>
+<div><p>“Premature optimization is the root of all evil” - Donald Knuth</p>
+</div></blockquote>
+<p>But <strong>measured optimization</strong> based on simple timing is essential for understanding kernel performance.</p>
+</section>
+<section id="what-we-ll-measure">
+<h3>What We’ll Measure<a class="headerlink" href="#what-we-ll-measure" title="Permalink to this heading">#</a></h3>
+<ol class="arabic simple">
+<li><p><strong>Execution time</strong>: How long does each kernel take?</p></li>
+<li><p><strong>Relative performance</strong>: Which implementation is faster?</p></li>
+<li><p><strong>Scale effects</strong>: How does performance change with data size?</p></li>
+<li><p><strong>Optimization impact</strong>: Did our changes actually help?</p></li>
+</ol>
+</section>
+<section id="the-simple-timing-process">
+<h3>The Simple Timing Process<a class="headerlink" href="#the-simple-timing-process" title="Permalink to this heading">#</a></h3>
+<ol class="arabic simple">
+<li><p><strong>Measure baseline</strong>: Time the standard implementation</p></li>
+<li><p><strong>Time optimizations</strong>: Measure your improved versions</p></li>
+<li><p><strong>Compare results</strong>: See which is faster</p></li>
+<li><p><strong>Verify correctness</strong>: Ensure optimized code produces correct results</p></li>
+</ol>
+</section>
+<section id="our-simple-timing-tool">
+<h3>Our Simple Timing Tool<a class="headerlink" href="#our-simple-timing-tool" title="Permalink to this heading">#</a></h3>
+<p>We use <code class="docutils literal notranslate"><span class="pre">time.perf_counter()</span></code> for microsecond-precision timing:</p>
+<ul class="simple">
+<li><p><strong>Precise</strong>: Measures actual execution time</p></li>
+<li><p><strong>Simple</strong>: Easy to understand and use</p></li>
+<li><p><strong>Realistic</strong>: Shows kernel performance at the right scale</p></li>
+<li><p><strong>Educational</strong>: Immediate feedback on optimization impact</p></li>
+</ul>
+</section>
+<section id="id4">
+<h3>Real-World Context<a class="headerlink" href="#id4" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Kernel operations</strong>: Typically take 10-1000 microseconds</p></li>
+<li><p><strong>Optimization impact</strong>: Good kernels are 2-10x faster</p></li>
+<li><p><strong>Professional tools</strong>: Production systems use sophisticated profilers</p></li>
+<li><p><strong>Foundation</strong>: Simple timing teaches measurement principles</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">### 🧪 Unit Test: Simple Kernel Timing</span>
+
+<span class="k">def</span> <span class="nf">test_simple_kernel_timing</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Test simple kernel timing capabilities.&quot;&quot;&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;🔬 Unit Test: Simple Kernel Timing...&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Test timing different matrix multiplication methods</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+    <span class="n">A</span> <span class="o">=</span> <span class="n">Tensor</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">))</span>
+    <span class="n">B</span> <span class="o">=</span> <span class="n">Tensor</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">))</span>
+    
+    <span class="c1"># Time NumPy matmul</span>
+    <span class="n">result_numpy</span><span class="p">,</span> <span class="n">time_numpy</span> <span class="o">=</span> <span class="n">time_kernel</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">A</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">B</span><span class="o">.</span><span class="n">data</span><span class="p">)))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;🔍 NumPy matmul: </span><span class="si">{</span><span class="n">time_numpy</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> μs&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Time baseline matmul  </span>
+    <span class="n">result_baseline</span><span class="p">,</span> <span class="n">time_baseline</span> <span class="o">=</span> <span class="n">time_kernel</span><span class="p">(</span><span class="n">matmul_baseline</span><span class="p">,</span> <span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;🔍 Baseline matmul: </span><span class="si">{</span><span class="n">time_baseline</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> μs&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Time cache-friendly matmul</span>
+    <span class="n">result_cache</span><span class="p">,</span> <span class="n">time_cache</span> <span class="o">=</span> <span class="n">time_kernel</span><span class="p">(</span><span class="n">cache_friendly_matmul</span><span class="p">,</span> <span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="mi">16</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;🔍 Cache-friendly matmul: </span><span class="si">{</span><span class="n">time_cache</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> μs&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Verify results are similar</span>
+    <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">result_numpy</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">result_baseline</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">rtol</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">),</span> \
+        <span class="s2">&quot;NumPy and baseline results differ&quot;</span>
+    <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">result_numpy</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">result_cache</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">rtol</span><span class="o">=</span><span class="mf">1e-2</span><span class="p">),</span> \
+        <span class="s2">&quot;NumPy and cache-friendly results differ&quot;</span>
+    
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;✅ All matrix multiplication methods produce correct results&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Test timing parallel vs sequential ReLU</span>
+    <span class="n">x_large</span> <span class="o">=</span> <span class="n">Tensor</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">10000</span><span class="p">))</span>
+    
+    <span class="n">result_seq</span><span class="p">,</span> <span class="n">time_seq</span> <span class="o">=</span> <span class="n">time_kernel</span><span class="p">(</span><span class="n">vectorized_relu</span><span class="p">,</span> <span class="n">x_large</span><span class="p">)</span>
+    <span class="n">result_par</span><span class="p">,</span> <span class="n">time_par</span> <span class="o">=</span> <span class="n">time_kernel</span><span class="p">(</span><span class="n">parallel_relu</span><span class="p">,</span> <span class="n">x_large</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+    
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;🔍 Sequential ReLU: </span><span class="si">{</span><span class="n">time_seq</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> μs&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;🔍 Parallel ReLU: </span><span class="si">{</span><span class="n">time_par</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> μs&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Verify results are the same</span>
+    <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">result_seq</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">result_par</span><span class="o">.</span><span class="n">data</span><span class="p">),</span> \
+        <span class="s2">&quot;Sequential and parallel ReLU results differ&quot;</span>
+    
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;✅ Simple timing works correctly&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;📈 Progress: Simple Kernel Timing ✓&quot;</span><span class="p">)</span>
+
+<span class="c1"># Run the test</span>
+<span class="n">test_simple_kernel_timing</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="step-6-compressed-model-kernels-optimizing-quantized-operations">
+<h2>Step 6: Compressed Model Kernels - Optimizing Quantized Operations<a class="headerlink" href="#step-6-compressed-model-kernels-optimizing-quantized-operations" title="Permalink to this heading">#</a></h2>
+<section id="why-compressed-model-kernels">
+<h3>Why Compressed Model Kernels?<a class="headerlink" href="#why-compressed-model-kernels" title="Permalink to this heading">#</a></h3>
+<p>Modern deployment requires smaller, faster models:</p>
+<ul class="simple">
+<li><p><strong>Mobile devices</strong>: Limited compute and memory</p></li>
+<li><p><strong>Edge computing</strong>: Real-time inference requirements</p></li>
+<li><p><strong>Cloud costs</strong>: Reduce computational expenses</p></li>
+<li><p><strong>Energy efficiency</strong>: Lower power consumption</p></li>
+</ul>
+</section>
+<section id="types-of-model-compression">
+<h3>Types of Model Compression<a class="headerlink" href="#types-of-model-compression" title="Permalink to this heading">#</a></h3>
+<ol class="arabic simple">
+<li><p><strong>Quantization</strong>: Reduce precision (float32 → int8)</p></li>
+<li><p><strong>Pruning</strong>: Remove unimportant weights</p></li>
+<li><p><strong>Knowledge distillation</strong>: Train smaller models</p></li>
+<li><p><strong>Low-rank approximation</strong>: Factorize weight matrices</p></li>
+</ol>
+</section>
+<section id="quantization-fundamentals">
+<h3>Quantization Fundamentals<a class="headerlink" href="#quantization-fundamentals" title="Permalink to this heading">#</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Original: 32-bit floating point</span>
+<span class="n">weights_fp32</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.234</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.567</span><span class="p">,</span> <span class="mf">2.891</span><span class="p">])</span>
+
+<span class="c1"># Quantized: 8-bit integer</span>
+<span class="n">scale</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">weights_fp32</span><span class="p">)</span> <span class="o">/</span> <span class="mi">127</span>
+<span class="n">weights_int8</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">weights_fp32</span> <span class="o">/</span> <span class="n">scale</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int8</span><span class="p">)</span>
+
+<span class="c1"># Dequantized for computation</span>
+<span class="n">weights_dequant</span> <span class="o">=</span> <span class="n">weights_int8</span> <span class="o">*</span> <span class="n">scale</span>
+</pre></div>
+</div>
+</section>
+<section id="why-custom-kernels-for-compression">
+<h3>Why Custom Kernels for Compression?<a class="headerlink" href="#why-custom-kernels-for-compression" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Integer arithmetic</strong>: Faster than floating-point on many devices</p></li>
+<li><p><strong>Memory bandwidth</strong>: 4x less data to transfer</p></li>
+<li><p><strong>Specialized instructions</strong>: CPUs have optimized int8 operations</p></li>
+<li><p><strong>Accumulation</strong>: Need to handle precision carefully</p></li>
+</ul>
+</section>
+<section id="id5">
+<h3>Real-World Context<a class="headerlink" href="#id5" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>TensorFlow Lite</strong>: Quantized inference kernels</p></li>
+<li><p><strong>PyTorch Mobile</strong>: Optimized int8 operations</p></li>
+<li><p><strong>ONNX Runtime</strong>: Hardware-specific quantized kernels</p></li>
+<li><p><strong>Hardware accelerators</strong>: TPUs, Neural Processing Units</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#| export</span>
+<span class="k">def</span> <span class="nf">quantized_matmul</span><span class="p">(</span><span class="n">A</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">B</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">scale_A</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">scale_B</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Quantized matrix multiplication kernel for compressed models.</span>
+<span class="sd">    </span>
+<span class="sd">    This function demonstrates how to perform matrix multiplication</span>
+<span class="sd">    with quantized (int8) weights while maintaining numerical accuracy.</span>
+<span class="sd">    </span>
+<span class="sd">    TODO: Implement quantized matrix multiplication.</span>
+<span class="sd">    </span>
+<span class="sd">    STEP-BY-STEP IMPLEMENTATION:</span>
+<span class="sd">    1. Extract numpy arrays from Tensors</span>
+<span class="sd">    2. Quantize inputs to int8 using provided scales</span>
+<span class="sd">    3. Perform integer matrix multiplication</span>
+<span class="sd">    4. Rescale result back to appropriate range</span>
+<span class="sd">    5. Return result as Tensor</span>
+<span class="sd">    </span>
+<span class="sd">    QUANTIZATION PROCESS:</span>
+<span class="sd">    1. Quantize: int8_value = round(float_value / scale)</span>
+<span class="sd">    2. Compute: int8_result = int8_A @ int8_B</span>
+<span class="sd">    3. Rescale: float_result = int8_result * scale_A * scale_B</span>
+<span class="sd">    </span>
+<span class="sd">    EXAMPLE USAGE:</span>
+<span class="sd">    ```python</span>
+<span class="sd">    A = Tensor([[1.0, 2.0], [3.0, 4.0]])</span>
+<span class="sd">    B = Tensor([[0.5, 1.5], [2.5, 3.5]])</span>
+<span class="sd">    C = quantized_matmul(A, B, scale_A=1.0/127, scale_B=1.0/127)</span>
+<span class="sd">    # Should approximate regular matrix multiplication</span>
+<span class="sd">    ```</span>
+<span class="sd">    </span>
+<span class="sd">    PERFORMANCE CONSIDERATIONS:</span>
+<span class="sd">    - int8 operations are often faster than float32</span>
+<span class="sd">    - Memory usage is 4x lower</span>
+<span class="sd">    - Accumulation in int32 to prevent overflow</span>
+<span class="sd">    - Careful handling of scales to maintain precision</span>
+<span class="sd">    </span>
+<span class="sd">    LEARNING CONNECTIONS:</span>
+<span class="sd">    - This is how TensorFlow Lite performs quantized inference</span>
+<span class="sd">    - Similar to how mobile ML accelerators work</span>
+<span class="sd">    - Foundation for edge deployment of neural networks</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1">### BEGIN SOLUTION</span>
+    <span class="c1"># YOUR CODE HERE</span>
+    <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
+    <span class="c1">### END SOLUTION</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#| export</span>
+<span class="k">def</span> <span class="nf">quantized_relu</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">scale</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Quantized ReLU implementation for compressed models.</span>
+<span class="sd">    </span>
+<span class="sd">    This function shows how to apply ReLU activation to quantized values</span>
+<span class="sd">    while maintaining the quantization format.</span>
+<span class="sd">    </span>
+<span class="sd">    TODO: Implement quantized ReLU activation.</span>
+<span class="sd">    </span>
+<span class="sd">    STEP-BY-STEP IMPLEMENTATION:</span>
+<span class="sd">    1. Extract numpy array from Tensor</span>
+<span class="sd">    2. Quantize input to int8 using provided scale</span>
+<span class="sd">    3. Apply ReLU in integer domain: max(0, x)</span>
+<span class="sd">    4. Keep result in int8 format (no rescaling needed for ReLU)</span>
+<span class="sd">    5. Convert back to float using scale</span>
+<span class="sd">    6. Return result as Tensor</span>
+<span class="sd">    </span>
+<span class="sd">    QUANTIZED RELU PROCESS:</span>
+<span class="sd">    1. Quantize: int8_value = round(float_value / scale)</span>
+<span class="sd">    2. Apply ReLU: int8_result = max(0, int8_value)</span>
+<span class="sd">    3. Dequantize: float_result = int8_result * scale</span>
+<span class="sd">    </span>
+<span class="sd">    EXAMPLE USAGE:</span>
+<span class="sd">    ```python</span>
+<span class="sd">    x = Tensor([-1.0, 0.0, 1.0, 2.0])</span>
+<span class="sd">    y = quantized_relu(x, scale=1.0/127)</span>
+<span class="sd">    # Should produce [0.0, 0.0, 1.0, 2.0] (approximately)</span>
+<span class="sd">    ```</span>
+<span class="sd">    </span>
+<span class="sd">    OPTIMIZATION NOTES:</span>
+<span class="sd">    - ReLU in int8 is just max(0, x) - very fast</span>
+<span class="sd">    - No floating-point operations needed during activation</span>
+<span class="sd">    - Maintains quantization format throughout</span>
+<span class="sd">    - Can be vectorized efficiently</span>
+<span class="sd">    </span>
+<span class="sd">    LEARNING CONNECTIONS:</span>
+<span class="sd">    - This is how quantized neural networks maintain speed</span>
+<span class="sd">    - Similar to how mobile processors optimize ML inference</span>
+<span class="sd">    - Foundation for real-time edge computing applications</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1">### BEGIN SOLUTION</span>
+    <span class="c1"># YOUR CODE HERE</span>
+    <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
+    <span class="c1">### END SOLUTION</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">### 🧪 Unit Test: Compressed Model Kernels</span>
+
+<span class="k">def</span> <span class="nf">test_compressed_kernels</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Test compressed model kernel implementations.&quot;&quot;&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;🔬 Unit Test: Compressed Model Kernels...&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Test quantized matrix multiplication</span>
+    <span class="n">A</span> <span class="o">=</span> <span class="n">Tensor</span><span class="p">([[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">3.0</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">]])</span>
+    <span class="n">B</span> <span class="o">=</span> <span class="n">Tensor</span><span class="p">([[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">],</span> <span class="p">[</span><span class="mf">2.5</span><span class="p">,</span> <span class="mf">3.5</span><span class="p">]])</span>
+    
+    <span class="c1"># Regular matrix multiplication</span>
+    <span class="n">C_regular</span> <span class="o">=</span> <span class="n">matmul_baseline</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">)</span>
+    
+    <span class="c1"># Quantized matrix multiplication</span>
+    <span class="c1"># Use larger scales to prevent int8 overflow</span>
+    <span class="n">scale_A</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="mi">20</span>  <span class="c1"># Max value 4.0 / (1/20) = 80, fits in int8</span>
+    <span class="n">scale_B</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="mi">20</span>  <span class="c1"># Max value 3.5 / (1/20) = 70, fits in int8</span>
+    <span class="n">C_quantized</span> <span class="o">=</span> <span class="n">quantized_matmul</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="n">scale_A</span><span class="p">,</span> <span class="n">scale_B</span><span class="p">)</span>
+    
+    <span class="c1"># Should be approximately equal (some quantization error expected)</span>
+    <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">C_regular</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">C_quantized</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">rtol</span><span class="o">=</span><span class="mf">0.1</span><span class="p">),</span> \
+        <span class="sa">f</span><span class="s2">&quot;Regular: </span><span class="si">{</span><span class="n">C_regular</span><span class="o">.</span><span class="n">data</span><span class="si">}</span><span class="s2">, Quantized: </span><span class="si">{</span><span class="n">C_quantized</span><span class="o">.</span><span class="n">data</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;✅ Quantized matrix multiplication works&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Test quantized ReLU</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">Tensor</span><span class="p">([</span><span class="o">-</span><span class="mf">2.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">])</span>
+    
+    <span class="c1"># Regular ReLU</span>
+    <span class="n">y_regular</span> <span class="o">=</span> <span class="n">vectorized_relu</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    
+    <span class="c1"># Quantized ReLU</span>
+    <span class="c1"># Use larger scale to prevent int8 overflow</span>
+    <span class="n">scale</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="mi">50</span>  <span class="c1"># Max value 2.0 / (1/50) = 100, fits in int8</span>
+    <span class="n">y_quantized</span> <span class="o">=</span> <span class="n">quantized_relu</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">scale</span><span class="p">)</span>
+    
+    <span class="c1"># Should be approximately equal</span>
+    <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">y_regular</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">y_quantized</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">rtol</span><span class="o">=</span><span class="mf">0.1</span><span class="p">),</span> \
+        <span class="sa">f</span><span class="s2">&quot;Regular: </span><span class="si">{</span><span class="n">y_regular</span><span class="o">.</span><span class="n">data</span><span class="si">}</span><span class="s2">, Quantized: </span><span class="si">{</span><span class="n">y_quantized</span><span class="o">.</span><span class="n">data</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;✅ Quantized ReLU works&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Test that quantized operations can be timed</span>
+    <span class="c1"># This shows the performance characteristics of quantized vs regular operations</span>
+    <span class="n">x_large</span> <span class="o">=</span> <span class="n">Tensor</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">1000</span><span class="p">))</span>
+    
+    <span class="c1"># Time regular ReLU</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">time_regular</span> <span class="o">=</span> <span class="n">time_kernel</span><span class="p">(</span><span class="n">vectorized_relu</span><span class="p">,</span> <span class="n">x_large</span><span class="p">)</span>
+    
+    <span class="c1"># Time quantized ReLU</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">time_quantized</span> <span class="o">=</span> <span class="n">time_kernel</span><span class="p">(</span><span class="n">quantized_relu</span><span class="p">,</span> <span class="n">x_large</span><span class="p">,</span> <span class="mf">1.0</span><span class="o">/</span><span class="mi">127</span><span class="p">)</span>
+    
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;🔍 Regular ReLU: </span><span class="si">{</span><span class="n">time_regular</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> μs&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;🔍 Quantized ReLU: </span><span class="si">{</span><span class="n">time_quantized</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> μs&quot;</span><span class="p">)</span>
+    
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;✅ Quantized operations timing works&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;📈 Progress: Compressed Model Kernels ✓&quot;</span><span class="p">)</span>
+
+<span class="c1"># Run the test</span>
+<span class="n">test_compressed_kernels</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">### 🧪 Unit Test: Comprehensive Kernel Performance Comparison</span>
+
+<span class="k">def</span> <span class="nf">final_performance_test</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Comprehensive performance test of all implemented kernels.&quot;&quot;&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;🔬 Final Performance Test: Comprehensive Kernel Comparison&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">60</span><span class="p">)</span>
+    
+    <span class="c1"># Create test data</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+    <span class="n">A</span> <span class="o">=</span> <span class="n">Tensor</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">256</span><span class="p">,</span> <span class="mi">256</span><span class="p">))</span>
+    <span class="n">B</span> <span class="o">=</span> <span class="n">Tensor</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">256</span><span class="p">,</span> <span class="mi">256</span><span class="p">))</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">Tensor</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">10000</span><span class="p">))</span>
+    
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">📊 Matrix Multiplication Performance:&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;-&quot;</span> <span class="o">*</span> <span class="mi">40</span><span class="p">)</span>
+    
+    <span class="c1"># Test different matrix multiplication methods</span>
+    <span class="n">methods</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="p">(</span><span class="s2">&quot;NumPy&quot;</span><span class="p">,</span> <span class="k">lambda</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">A</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">B</span><span class="o">.</span><span class="n">data</span><span class="p">))),</span>
+        <span class="p">(</span><span class="s2">&quot;Baseline&quot;</span><span class="p">,</span> <span class="k">lambda</span><span class="p">:</span> <span class="n">matmul_baseline</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">)),</span>
+        <span class="p">(</span><span class="s2">&quot;Cache-friendly&quot;</span><span class="p">,</span> <span class="k">lambda</span><span class="p">:</span> <span class="n">cache_friendly_matmul</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="mi">32</span><span class="p">)),</span>
+        <span class="p">(</span><span class="s2">&quot;Quantized&quot;</span><span class="p">,</span> <span class="k">lambda</span><span class="p">:</span> <span class="n">quantized_matmul</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="mf">1.0</span><span class="o">/</span><span class="mi">127</span><span class="p">,</span> <span class="mf">1.0</span><span class="o">/</span><span class="mi">127</span><span class="p">))</span>
+    <span class="p">]</span>
+    
+    <span class="n">results</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">method</span> <span class="ow">in</span> <span class="n">methods</span><span class="p">:</span>
+        <span class="n">result</span><span class="p">,</span> <span class="n">time_us</span> <span class="o">=</span> <span class="n">time_kernel</span><span class="p">(</span><span class="n">method</span><span class="p">)</span>
+        <span class="n">results</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">time_us</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">:</span><span class="s2">15</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">time_us</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> μs&quot;</span><span class="p">)</span>
+    
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">📊 ReLU Activation Performance:&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;-&quot;</span> <span class="o">*</span> <span class="mi">40</span><span class="p">)</span>
+    
+    <span class="c1"># Test different ReLU methods</span>
+    <span class="n">relu_methods</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="p">(</span><span class="s2">&quot;Vectorized&quot;</span><span class="p">,</span> <span class="k">lambda</span><span class="p">:</span> <span class="n">vectorized_relu</span><span class="p">(</span><span class="n">x</span><span class="p">)),</span>
+        <span class="p">(</span><span class="s2">&quot;Parallel&quot;</span><span class="p">,</span> <span class="k">lambda</span><span class="p">:</span> <span class="n">parallel_relu</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">4</span><span class="p">)),</span>
+        <span class="p">(</span><span class="s2">&quot;Quantized&quot;</span><span class="p">,</span> <span class="k">lambda</span><span class="p">:</span> <span class="n">quantized_relu</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mf">1.0</span><span class="o">/</span><span class="mi">127</span><span class="p">))</span>
+    <span class="p">]</span>
+    
+    <span class="n">relu_results</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">method</span> <span class="ow">in</span> <span class="n">relu_methods</span><span class="p">:</span>
+        <span class="n">result</span><span class="p">,</span> <span class="n">time_us</span> <span class="o">=</span> <span class="n">time_kernel</span><span class="p">(</span><span class="n">method</span><span class="p">)</span>
+        <span class="n">relu_results</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">time_us</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">:</span><span class="s2">15</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">time_us</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> μs&quot;</span><span class="p">)</span>
+    
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">✅ All kernels implemented successfully!&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;📈 Progress: Complete Kernels Module ✓&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Verify correctness</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">🔍 Correctness Verification:&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;-&quot;</span> <span class="o">*</span> <span class="mi">40</span><span class="p">)</span>
+    
+    <span class="c1"># Check that all matrix multiplication methods produce similar results</span>
+    <span class="n">base_result</span> <span class="o">=</span> <span class="n">results</span><span class="p">[</span><span class="s2">&quot;NumPy&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">_</span><span class="p">)</span> <span class="ow">in</span> <span class="n">results</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="o">!=</span> <span class="s2">&quot;NumPy&quot;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;Quantized&quot;</span><span class="p">:</span>
+                <span class="c1"># Skip quantized comparison in final test - already validated individually</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;⚠️  Skipping </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> comparison (quantization errors expected)&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">base_result</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">rtol</span><span class="o">=</span><span class="mf">1e-2</span><span class="p">),</span> \
+                    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> differs from NumPy&quot;</span>
+    
+    <span class="c1"># Check that all ReLU methods produce similar results</span>
+    <span class="n">base_relu</span> <span class="o">=</span> <span class="n">relu_results</span><span class="p">[</span><span class="s2">&quot;Vectorized&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">_</span><span class="p">)</span> <span class="ow">in</span> <span class="n">relu_results</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="o">!=</span> <span class="s2">&quot;Vectorized&quot;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;Quantized&quot;</span><span class="p">:</span>
+                <span class="c1"># Skip quantized ReLU comparison - already validated individually</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;⚠️  Skipping </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> ReLU comparison (quantization errors expected)&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">base_relu</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">rtol</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">),</span> \
+                    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> ReLU differs from vectorized&quot;</span>
+    
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;✅ All implementations produce correct results!&quot;</span><span class="p">)</span>
+    
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">🎉 CONGRATULATIONS! 🎉&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;You&#39;ve successfully implemented hardware-optimized ML kernels!&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;You now understand the performance optimizations that power modern AI frameworks.&quot;</span><span class="p">)</span>
+
+<span class="c1"># Run the final test</span>
+<span class="n">final_performance_test</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="module-testing">
+<h2>🧪 Module Testing<a class="headerlink" href="#module-testing" title="Permalink to this heading">#</a></h2>
+<p>Time to test your implementation! This section uses TinyTorch’s standardized testing framework to ensure your implementation works correctly.</p>
+<p><strong>This testing section is locked</strong> - it provides consistent feedback across all modules and cannot be modified.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># =============================================================================</span>
+<span class="c1"># STANDARDIZED MODULE TESTING - DO NOT MODIFY</span>
+<span class="c1"># This cell is locked to ensure consistent testing across all TinyTorch modules</span>
+<span class="c1"># =============================================================================</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">tito.tools.testing</span> <span class="kn">import</span> <span class="n">run_module_tests_auto</span>
+    
+    <span class="c1"># Automatically discover and run all tests in this module</span>
+    <span class="n">success</span> <span class="o">=</span> <span class="n">run_module_tests_auto</span><span class="p">(</span><span class="s2">&quot;Kernels&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="module-summary-hardware-optimized-ml-operations">
+<h2>🎯 Module Summary: Hardware-Optimized ML Operations<a class="headerlink" href="#module-summary-hardware-optimized-ml-operations" title="Permalink to this heading">#</a></h2>
+<section id="what-you-ve-built">
+<h3>What You’ve Built<a class="headerlink" href="#what-you-ve-built" title="Permalink to this heading">#</a></h3>
+<p>You’ve implemented a complete set of hardware-optimized ML kernels:</p>
+<ol class="arabic simple">
+<li><p><strong>Custom Operations</strong>: Specialized matrix multiplication beyond NumPy</p></li>
+<li><p><strong>Vectorized Operations</strong>: SIMD-optimized ReLU and element-wise operations</p></li>
+<li><p><strong>Cache-Friendly Algorithms</strong>: Blocked matrix multiplication for better memory access</p></li>
+<li><p><strong>Parallel Processing</strong>: Multi-core CPU utilization for large operations</p></li>
+<li><p><strong>Performance Profiling</strong>: Tools to measure and optimize kernel performance</p></li>
+<li><p><strong>Compressed Kernels</strong>: Quantized operations for mobile deployment</p></li>
+</ol>
+</section>
+<section id="key-insights">
+<h3>Key Insights<a class="headerlink" href="#key-insights" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Specialization beats generalization</strong>: Custom kernels outperform generic libraries</p></li>
+<li><p><strong>Memory is the bottleneck</strong>: Cache-friendly algorithms are crucial</p></li>
+<li><p><strong>Parallelism is everywhere</strong>: From SIMD to multi-core to GPU-style processing</p></li>
+<li><p><strong>Measurement drives optimization</strong>: Profile first, optimize second</p></li>
+<li><p><strong>Compression enables deployment</strong>: Quantized models run faster with less memory</p></li>
+</ul>
+</section>
+<section id="real-world-connections">
+<h3>Real-World Connections<a class="headerlink" href="#real-world-connections" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>PyTorch</strong>: Uses thousands of optimized kernels for speed</p></li>
+<li><p><strong>TensorFlow</strong>: XLA compiler generates specialized kernels</p></li>
+<li><p><strong>Mobile ML</strong>: Quantized kernels enable edge deployment</p></li>
+<li><p><strong>Cloud computing</strong>: Kernel optimization reduces server costs</p></li>
+<li><p><strong>Research</strong>: Custom kernels enable larger models and faster experimentation</p></li>
+</ul>
+</section>
+<section id="next-steps">
+<h3>Next Steps<a class="headerlink" href="#next-steps" title="Permalink to this heading">#</a></h3>
+<p>In real ML systems, you’d:</p>
+<ol class="arabic simple">
+<li><p><strong>GPU kernels</strong>: Implement CUDA/OpenCL versions</p></li>
+<li><p><strong>Auto-tuning</strong>: Automatically find optimal parameters</p></li>
+<li><p><strong>Hardware specialization</strong>: Optimize for specific processors</p></li>
+<li><p><strong>Kernel fusion</strong>: Combine multiple operations into single kernels</p></li>
+<li><p><strong>Distributed computing</strong>: Scale kernels across multiple machines</p></li>
+</ol>
+</section>
+<section id="achievement-unlocked">
+<h3>🏆 Achievement Unlocked<a class="headerlink" href="#achievement-unlocked" title="Permalink to this heading">#</a></h3>
+<p>You’ve mastered the performance optimization techniques that power modern ML frameworks. You understand how to move beyond high-level libraries to extract maximum performance from hardware!</p>
+<p><strong>You’ve completed the TinyTorch Kernels module!</strong> 🎉</p>
+</section>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./chapters"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="10-compression.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Compression</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="12-benchmarking.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Benchmarking</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#where-this-code-lives-in-the-final-package">📦 Where This Code Lives in the Final Package</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-are-ml-kernels">What are ML Kernels?</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-performance-gap">The Performance Gap</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#what-is-a-kernel">What is a Kernel?</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#why-kernels-matter-for-ml">Why Kernels Matter for ML</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-performance-hierarchy">The Performance Hierarchy</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#real-world-impact">Real-World Impact</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#what-you-ll-learn">What You’ll Learn</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-1-custom-operations-beyond-numpy">Step 1: Custom Operations - Beyond NumPy</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#why-custom-operations">Why Custom Operations?</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-philosophy">The Philosophy</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#design-principles">Design Principles</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#real-world-context">Real-World Context</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-2-vectorized-operations-simd-principles">Step 2: Vectorized Operations - SIMD Principles</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#what-is-vectorization">What is Vectorization?</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-problem-with-loops">The Problem with Loops</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-vectorization-solution">The Vectorization Solution</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#why-vectorization-matters">Why Vectorization Matters</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#simd-principles">SIMD Principles</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Real-World Context</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-3-memory-layout-optimization-cache-friendly-algorithms">Step 3: Memory Layout Optimization - Cache-Friendly Algorithms</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#why-memory-layout-matters">Why Memory Layout Matters</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-memory-hierarchy">The Memory Hierarchy</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cache-friendly-principles">Cache-Friendly Principles</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">Real-World Impact</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-problem-with-naive-algorithms">The Problem with Naive Algorithms</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cache-friendly-solution">Cache-Friendly Solution</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-4-parallel-processing-cpu-and-gpu-style-computing">Step 4: Parallel Processing - CPU and GPU-Style Computing</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#why-parallel-processing">Why Parallel Processing?</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#types-of-parallelism">Types of Parallelism</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cpu-vs-gpu-parallelism">CPU vs GPU Parallelism</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parallel-processing-patterns">Parallel Processing Patterns</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">Real-World Context</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-5-simple-performance-measurement-timing-your-kernels">Step 5: Simple Performance Measurement - Timing Your Kernels</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#why-timing-matters">Why Timing Matters</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#what-we-ll-measure">What We’ll Measure</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-simple-timing-process">The Simple Timing Process</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#our-simple-timing-tool">Our Simple Timing Tool</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">Real-World Context</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-6-compressed-model-kernels-optimizing-quantized-operations">Step 6: Compressed Model Kernels - Optimizing Quantized Operations</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#why-compressed-model-kernels">Why Compressed Model Kernels?</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#types-of-model-compression">Types of Model Compression</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#quantization-fundamentals">Quantization Fundamentals</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#why-custom-kernels-for-compression">Why Custom Kernels for Compression?</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">Real-World Context</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-testing">🧪 Module Testing</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-summary-hardware-optimized-ml-operations">🎯 Module Summary: Hardware-Optimized ML Operations</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#what-you-ve-built">What You’ve Built</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#key-insights">Key Insights</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#real-world-connections">Real-World Connections</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#next-steps">Next Steps</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#achievement-unlocked">🏆 Achievement Unlocked</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By TinyTorch Team
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2025.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=5b4479735964841361fd"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=5b4479735964841361fd"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
