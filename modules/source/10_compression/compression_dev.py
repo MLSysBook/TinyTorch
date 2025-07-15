@@ -10,7 +10,7 @@
 
 # %% [markdown]
 """
-# Module 10: Compression & Optimization - Making AI Models Efficient
+# Compression & Optimization - Making AI Models Efficient
 
 Welcome to the Compression module! This is where you'll learn to make neural networks smaller, faster, and more efficient for real-world deployment.
 
@@ -1804,21 +1804,21 @@ You've mastered the art and science of making neural networks efficient without 
 """
 ## 🚀 Next Steps: Advanced Optimization
 
-### Module 11: Kernels - Hardware-Aware Optimization
+### Kernels - Hardware-Aware Optimization
 Build on compression foundations with:
 - **Custom CUDA kernels**: GPU-optimized operations for compressed models
 - **SIMD optimization**: CPU vectorization for quantized operations
 - **Memory layout**: Optimize data structures for sparse and quantized weights
 - **Hardware profiling**: Measure actual performance improvements
 
-### Module 12: Benchmarking - Systematic Performance Measurement
+### Benchmarking - Systematic Performance Measurement
 Apply compression in production context:
 - **Latency measurement**: Quantify inference speedup from compression
 - **Accuracy evaluation**: Systematic testing of compression impact
 - **A/B testing**: Compare compressed vs uncompressed models in production
 - **Performance profiling**: Identify bottlenecks and optimization opportunities
 
-### Module 13: MLOps - Production Deployment
+### MLOps - Production Deployment
 Deploy compressed models at scale:
 - **Model versioning**: Manage compressed model variants
 - **Monitoring**: Track compressed model performance in production

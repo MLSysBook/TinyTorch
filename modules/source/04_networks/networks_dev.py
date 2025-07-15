@@ -10,7 +10,7 @@
 
 # %% [markdown]
 """
-# Module 4: Networks - Neural Network Architectures
+# Networks - Neural Network Architectures
 
 Welcome to the Networks module! This is where we compose layers into complete neural network architectures.
 

@@ -10,7 +10,7 @@
 
 # %% [markdown]
 """
-# Module 1: Tensor - Core Data Structure
+# Tensor - Core Data Structure
 
 Welcome to the Tensor module! This is where TinyTorch really begins. You'll implement the fundamental data structure that powers all ML systems.
 
