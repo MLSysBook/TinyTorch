@@ -3,13 +3,13 @@ name: Deploy TinyTorch Jupyter Book
 # Trigger the workflow on push to main branch or manual dispatch
 on:
   push:
-    branches: [ main ]
+    branches: [ dev ]
     paths:
       - 'book/**'
       - 'modules/source/**'
       - '.github/workflows/deploy-book.yml'
   pull_request:
-    branches: [ main ]
+    branches: [ dev ]
     paths:
       - 'book/**'
       - 'modules/source/**'
@@ -60,8 +60,8 @@ jobs:
         path: book/tinytorch-course/_build/html
 
   deploy:
-    # Only deploy on main branch pushes (not PRs)
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    # Only deploy on dev branch pushes (not PRs)
+    if: github.ref == 'refs/heads/dev' && github.event_name == 'push'
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
