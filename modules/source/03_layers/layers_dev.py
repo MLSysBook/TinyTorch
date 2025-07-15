@@ -10,7 +10,7 @@
 
 # %% [markdown]
 """
-# Module 3: Layers - Building Blocks of Neural Networks
+# Layers - Building Blocks of Neural Networks
 
 Welcome to the Layers module! This is where we build the fundamental components that stack together to form neural networks.
 
