@@ -1,21 +1,20 @@
 """
-Integration Tests: DataLoader ↔ Tensor Operations
+Integration Tests - DataLoader and Tensor
 
-Tests the integration between DataLoader data pipeline and Tensor data structures:
-- DataLoader producing real Tensor objects
-- Tensor compatibility with other TinyTorch components
-- Batch processing with real tensor data
-- Data pipeline integration with neural network components
-- Error handling with real data scenarios
-
-These tests verify that DataLoader produces real TinyTorch tensors that integrate
-seamlessly with other components, not mocks or synthetic data.
+Tests real integration between DataLoader and Tensor modules.
+Uses actual TinyTorch components to verify they work together correctly.
 """
 
 import pytest
 import numpy as np
+from test_utils import setup_integration_test
+
+# Ensure proper setup before importing
+setup_integration_test()
+
+# Import ONLY from TinyTorch package
 from tinytorch.core.tensor import Tensor
-from tinytorch.core.dataloader import Dataset, DataLoader, SimpleDataset
+from tinytorch.core.dataloader import DataLoader, Dataset, SimpleDataset
 from tinytorch.core.activations import ReLU
 from tinytorch.core.layers import Dense
 
