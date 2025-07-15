@@ -1,4 +1,4 @@
-# Module 13: MLOps - Production ML Systems
+# MLOps - Production ML Systems
 
 Welcome to the MLOps module! This is where we close the loop on the complete ML system lifecycle.
 

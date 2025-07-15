@@ -168,9 +168,9 @@ model = Sequential([
 **Teaching a class?** → **[👨‍🏫 Classroom Use](usage-paths/classroom-use.md)** *(Complete course infrastructure)*
 ```
 
-### **Quick Taste: Try Chapter 0 Right Now**
+### **Quick Taste: Try Chapter 1 Right Now**
 
-Want to see what TinyTorch feels like? **[Launch the Setup chapter](chapters/00-setup.ipynb)** in Binder and implement your first TinyTorch function in 2 minutes!
+Want to see what TinyTorch feels like? **[Launch the Setup chapter](chapters/01-setup.md)** in Binder and implement your first TinyTorch function in 2 minutes!
 
 ---
 

@@ -1,4 +1,4 @@
-# Module 5: CNN - Convolutional Neural Networks
+# CNN - Convolutional Neural Networks
 
 Welcome to the CNN module! Here you'll implement the core building block of modern computer vision: the convolutional layer.
 
