@@ -1,0 +1,1347 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>Layers &#8212; TinyTorch: Build ML Systems from Scratch</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=5b4479735964841361fd" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=5b4479735964841361fd" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=5b4479735964841361fd" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=5b4479735964841361fd" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=5b4479735964841361fd" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=5b4479735964841361fd" />
+  <script src="../_static/vendor/fontawesome/6.1.2/js/all.min.js?digest=5b4479735964841361fd"></script>
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'chapters/03-layers';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="Activation Functions" href="02-activations.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo.png" class="logo__image only-light" alt="TinyTorch: Build ML Systems from Scratch - Home"/>
+    <script>document.write(`<img src="../_static/logo.png" class="logo__image only-dark" alt="TinyTorch: Build ML Systems from Scratch - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    🔥 TinyTorch: Build Machine Learning Systems from Scratch
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Foundation</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="00-setup.html">0. Development Environment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01-tensor.html">1. Tensors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="02-activations.html">2. Activations</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Building Blocks</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">3. Layers</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/VJ/TinyTorch" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/VJ/TinyTorch/edit/main/book/tinytorch-course/chapters/03-layers.ipynb" target="_blank"
+   class="btn btn-sm btn-source-edit-button dropdown-item"
+   title="Suggest edit"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="btn__text-container">Suggest edit</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/VJ/TinyTorch/issues/new?title=Issue%20on%20page%20%2Fchapters/03-layers.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/chapters/03-layers.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Layers</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#where-this-code-lives-in-the-final-package">📦 Where This Code Lives in the Final Package</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-are-neural-network-layers">What Are Neural Network Layers?</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-building-block-pattern">The Building Block Pattern</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-universal-pattern">The Universal Pattern</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#why-this-works">Why This Works</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#mathematical-foundation">Mathematical Foundation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#what-we-ll-build">What We’ll Build</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-1-matrix-multiplication-the-engine-of-neural-networks">Step 1: Matrix Multiplication - The Engine of Neural Networks</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#what-is-matrix-multiplication">What is Matrix Multiplication?</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#why-it-s-essential">Why It’s Essential</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-mathematical-definition">The Mathematical Definition</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#visual-understanding">Visual Understanding</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#real-world-context">Real-World Context</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#test-your-matrix-multiplication">🧪 Test Your Matrix Multiplication</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-2-dense-layer-the-foundation-of-neural-networks">Step 2: Dense Layer - The Foundation of Neural Networks</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#what-is-a-dense-layer">What is a Dense Layer?</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#why-dense-layers-are-essential">Why Dense Layers Are Essential</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-mathematical-foundation">The Mathematical Foundation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#real-world-applications">Real-World Applications</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#design-decisions">Design Decisions</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#test-your-dense-layer">🧪 Test Your Dense Layer</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-3-layer-integration-with-activations">Step 3: Layer Integration with Activations</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#building-complete-neural-network-components">Building Complete Neural Network Components</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#why-this-combination-works">Why This Combination Works</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#real-world-layer-patterns">Real-World Layer Patterns</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-testing">🧪 Module Testing</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-summary-neural-network-layers-mastery">🎯 Module Summary: Neural Network Layers Mastery!</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#what-you-ve-built">✅ What You’ve Built</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#key-learning-outcomes">✅ Key Learning Outcomes</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#mathematical-mastery">✅ Mathematical Mastery</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#professional-skills-developed">✅ Professional Skills Developed</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ready-for-next-steps">✅ Ready for Next Steps</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#connection-to-real-ml-systems">🔗 Connection to Real ML Systems</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-power-of-linear-algebra">🎯 The Power of Linear Algebra</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#deep-learning-insights">🧠 Deep Learning Insights</a></li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="layers">
+<h1>Layers<a class="headerlink" href="#layers" title="Permalink to this heading">#</a></h1>
+<div class="tip admonition">
+<p class="admonition-title">Interactive Learning</p>
+<p>🚀 <strong>Launch Binder</strong>: Click the rocket icon above to run this chapter interactively!</p>
+<p>💾 <strong>Save Your Work</strong>: Download your completed notebook when done.</p>
+<p>🏗️ <strong>Build Locally</strong>: Ready for serious development? <a class="reference external" href="https://github.com/your-org/tinytorch">Fork the repo</a> and work locally with the full <code class="docutils literal notranslate"><span class="pre">tito</span></code> workflow.</p>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#| default_exp core.layers</span>
+
+<span class="c1">#| export</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Optional</span>
+
+<span class="c1"># Import our dependencies - try from package first, then local modules</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">tinytorch.core.tensor</span> <span class="kn">import</span> <span class="n">Tensor</span>
+    <span class="kn">from</span> <span class="nn">tinytorch.core.activations</span> <span class="kn">import</span> <span class="n">ReLU</span><span class="p">,</span> <span class="n">Sigmoid</span><span class="p">,</span> <span class="n">Tanh</span><span class="p">,</span> <span class="n">Softmax</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="c1"># For development, import from local modules</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">),</span> <span class="s1">&#39;..&#39;</span><span class="p">,</span> <span class="s1">&#39;01_tensor&#39;</span><span class="p">))</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">),</span> <span class="s1">&#39;..&#39;</span><span class="p">,</span> <span class="s1">&#39;02_activations&#39;</span><span class="p">))</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="kn">from</span> <span class="nn">tensor_dev</span> <span class="kn">import</span> <span class="n">Tensor</span>
+        <span class="kn">from</span> <span class="nn">activations_dev</span> <span class="kn">import</span> <span class="n">ReLU</span><span class="p">,</span> <span class="n">Sigmoid</span><span class="p">,</span> <span class="n">Tanh</span><span class="p">,</span> <span class="n">Softmax</span>
+    <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+        <span class="c1"># If the local modules are not available, use relative imports</span>
+        <span class="kn">from</span> <span class="nn">..tensor.tensor_dev</span> <span class="kn">import</span> <span class="n">Tensor</span>
+        <span class="kn">from</span> <span class="nn">..activations.activations_dev</span> <span class="kn">import</span> <span class="n">ReLU</span><span class="p">,</span> <span class="n">Sigmoid</span><span class="p">,</span> <span class="n">Tanh</span><span class="p">,</span> <span class="n">Softmax</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
+<span class="ne">ModuleNotFoundError</span><span class="g g-Whitespace">                       </span>Traceback (most recent call last)
+<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">line</span> <span class="mi">5</span>
+<span class="g g-Whitespace">      </span><span class="mi">1</span> <span class="c1">#| default_exp core.layers</span>
+<span class="g g-Whitespace">      </span><span class="mi">2</span> 
+<span class="g g-Whitespace">      </span><span class="mi">3</span> <span class="c1">#| export</span>
+<span class="g g-Whitespace">      </span><span class="mi">4</span> <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="ne">----&gt; </span><span class="mi">5</span> <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="g g-Whitespace">      </span><span class="mi">6</span> <span class="kn">import</span> <span class="nn">os</span>
+<span class="g g-Whitespace">      </span><span class="mi">7</span> <span class="kn">import</span> <span class="nn">sys</span>
+
+<span class="ne">ModuleNotFoundError</span>: No module named &#39;matplotlib&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#| hide</span>
+<span class="c1">#| export</span>
+<span class="k">def</span> <span class="nf">_should_show_plots</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Check if we should show plots (disable during testing)&quot;&quot;&quot;</span>
+    <span class="c1"># Check multiple conditions that indicate we&#39;re in test mode</span>
+    <span class="n">is_pytest</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s1">&#39;pytest&#39;</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">modules</span> <span class="ow">or</span>
+        <span class="s1">&#39;test&#39;</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span> <span class="ow">or</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;PYTEST_CURRENT_TEST&#39;</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">or</span>
+        <span class="nb">any</span><span class="p">(</span><span class="s1">&#39;test&#39;</span> <span class="ow">in</span> <span class="n">arg</span> <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span> <span class="ow">or</span>
+        <span class="nb">any</span><span class="p">(</span><span class="s1">&#39;pytest&#39;</span> <span class="ow">in</span> <span class="n">arg</span> <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span>
+    <span class="p">)</span>
+    
+    <span class="c1"># Show plots in development mode (when not in test mode)</span>
+    <span class="k">return</span> <span class="ow">not</span> <span class="n">is_pytest</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;🔥 TinyTorch Layers Module&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;NumPy version: </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">__version__</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Python version: </span><span class="si">{</span><span class="n">sys</span><span class="o">.</span><span class="n">version_info</span><span class="o">.</span><span class="n">major</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">sys</span><span class="o">.</span><span class="n">version_info</span><span class="o">.</span><span class="n">minor</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Ready to build neural network layers!&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<section id="where-this-code-lives-in-the-final-package">
+<h2>📦 Where This Code Lives in the Final Package<a class="headerlink" href="#where-this-code-lives-in-the-final-package" title="Permalink to this heading">#</a></h2>
+<p><strong>Learning Side:</strong> You work in <code class="docutils literal notranslate"><span class="pre">modules/source/03_layers/layers_dev.py</span></code><br />
+<strong>Building Side:</strong> Code exports to <code class="docutils literal notranslate"><span class="pre">tinytorch.core.layers</span></code></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Final package structure:</span>
+<span class="kn">from</span> <span class="nn">tinytorch.core.layers</span> <span class="kn">import</span> <span class="n">Dense</span><span class="p">,</span> <span class="n">Conv2D</span>  <span class="c1"># All layer types together!</span>
+<span class="kn">from</span> <span class="nn">tinytorch.core.tensor</span> <span class="kn">import</span> <span class="n">Tensor</span>  <span class="c1"># The foundation</span>
+<span class="kn">from</span> <span class="nn">tinytorch.core.activations</span> <span class="kn">import</span> <span class="n">ReLU</span><span class="p">,</span> <span class="n">Sigmoid</span>  <span class="c1"># Nonlinearity</span>
+</pre></div>
+</div>
+<p><strong>Why this matters:</strong></p>
+<ul class="simple">
+<li><p><strong>Learning:</strong> Focused modules for deep understanding</p></li>
+<li><p><strong>Production:</strong> Proper organization like PyTorch’s <code class="docutils literal notranslate"><span class="pre">torch.nn.Linear</span></code></p></li>
+<li><p><strong>Consistency:</strong> All layer types live together in <code class="docutils literal notranslate"><span class="pre">core.layers</span></code></p></li>
+<li><p><strong>Integration:</strong> Works seamlessly with tensors and activations</p></li>
+</ul>
+</section>
+<section id="what-are-neural-network-layers">
+<h2>What Are Neural Network Layers?<a class="headerlink" href="#what-are-neural-network-layers" title="Permalink to this heading">#</a></h2>
+<section id="the-building-block-pattern">
+<h3>The Building Block Pattern<a class="headerlink" href="#the-building-block-pattern" title="Permalink to this heading">#</a></h3>
+<p>Neural networks are built by stacking <strong>layers</strong> - each layer is a function that:</p>
+<ol class="arabic simple">
+<li><p><strong>Takes input</strong>: Tensor data from previous layer</p></li>
+<li><p><strong>Transforms</strong>: Applies mathematical operations (linear transformation + activation)</p></li>
+<li><p><strong>Produces output</strong>: New tensor data for next layer</p></li>
+</ol>
+</section>
+<section id="the-universal-pattern">
+<h3>The Universal Pattern<a class="headerlink" href="#the-universal-pattern" title="Permalink to this heading">#</a></h3>
+<p>Every layer follows this pattern:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">layer</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="c1"># 1. Linear transformation</span>
+    <span class="n">linear_output</span> <span class="o">=</span> <span class="n">x</span> <span class="o">@</span> <span class="n">weights</span> <span class="o">+</span> <span class="n">bias</span>
+    
+    <span class="c1"># 2. Nonlinear activation</span>
+    <span class="n">output</span> <span class="o">=</span> <span class="n">activation</span><span class="p">(</span><span class="n">linear_output</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">output</span>
+</pre></div>
+</div>
+</section>
+<section id="why-this-works">
+<h3>Why This Works<a class="headerlink" href="#why-this-works" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Linear part</strong>: Learns feature combinations</p></li>
+<li><p><strong>Nonlinear part</strong>: Enables complex patterns</p></li>
+<li><p><strong>Stacking</strong>: Multiple layers = more complex functions</p></li>
+</ul>
+</section>
+<section id="mathematical-foundation">
+<h3>Mathematical Foundation<a class="headerlink" href="#mathematical-foundation" title="Permalink to this heading">#</a></h3>
+<p>A neural network is function composition:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">f</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">=</span> <span class="n">layer_n</span><span class="p">(</span><span class="n">layer_</span><span class="p">{</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">}(</span><span class="o">...</span><span class="n">layer_2</span><span class="p">(</span><span class="n">layer_1</span><span class="p">(</span><span class="n">x</span><span class="p">))))</span>
+</pre></div>
+</div>
+<p>Each layer transforms the representation to be more useful for the final task.</p>
+</section>
+<section id="what-we-ll-build">
+<h3>What We’ll Build<a class="headerlink" href="#what-we-ll-build" title="Permalink to this heading">#</a></h3>
+<ol class="arabic simple">
+<li><p><strong>Matrix Multiplication</strong>: The core operation powering all layers</p></li>
+<li><p><strong>Dense Layer</strong>: The fundamental building block of neural networks</p></li>
+<li><p><strong>Integration</strong>: How layers work with activations and tensors</p></li>
+</ol>
+</section>
+</section>
+<section id="step-1-matrix-multiplication-the-engine-of-neural-networks">
+<h2>Step 1: Matrix Multiplication - The Engine of Neural Networks<a class="headerlink" href="#step-1-matrix-multiplication-the-engine-of-neural-networks" title="Permalink to this heading">#</a></h2>
+<section id="what-is-matrix-multiplication">
+<h3>What is Matrix Multiplication?<a class="headerlink" href="#what-is-matrix-multiplication" title="Permalink to this heading">#</a></h3>
+<p>Matrix multiplication is the core operation that powers all neural network layers:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">C</span> <span class="o">=</span> <span class="n">A</span> <span class="o">@</span> <span class="n">B</span>
+</pre></div>
+</div>
+<p>Where:</p>
+<ul class="simple">
+<li><p><strong>A</strong>: Input data (batch_size × input_features)</p></li>
+<li><p><strong>B</strong>: Weight matrix (input_features × output_features)</p></li>
+<li><p><strong>C</strong>: Output data (batch_size × output_features)</p></li>
+</ul>
+</section>
+<section id="why-it-s-essential">
+<h3>Why It’s Essential<a class="headerlink" href="#why-it-s-essential" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Feature combination</strong>: Each output combines all input features</p></li>
+<li><p><strong>Learned weights</strong>: B contains the learned parameters</p></li>
+<li><p><strong>Efficient computation</strong>: Vectorized operations are much faster</p></li>
+<li><p><strong>Parallel processing</strong>: GPUs are designed for matrix operations</p></li>
+</ul>
+</section>
+<section id="the-mathematical-definition">
+<h3>The Mathematical Definition<a class="headerlink" href="#the-mathematical-definition" title="Permalink to this heading">#</a></h3>
+<p>For matrices A (m×n) and B (n×p), the result C (m×p) is:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">C</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">Σ</span><span class="p">(</span><span class="n">k</span><span class="o">=</span><span class="mi">0</span> <span class="n">to</span> <span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="n">A</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">k</span><span class="p">]</span> <span class="o">*</span> <span class="n">B</span><span class="p">[</span><span class="n">k</span><span class="p">,</span><span class="n">j</span><span class="p">]</span>
+</pre></div>
+</div>
+</section>
+<section id="visual-understanding">
+<h3>Visual Understanding<a class="headerlink" href="#visual-understanding" title="Permalink to this heading">#</a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="mi">1</span> <span class="mi">2</span><span class="p">]</span> <span class="o">@</span> <span class="p">[</span><span class="mi">5</span> <span class="mi">6</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="o">*</span><span class="mi">5</span><span class="o">+</span><span class="mi">2</span><span class="o">*</span><span class="mi">7</span>  <span class="mi">1</span><span class="o">*</span><span class="mi">6</span><span class="o">+</span><span class="mi">2</span><span class="o">*</span><span class="mi">8</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">19</span> <span class="mi">22</span><span class="p">]</span>
+<span class="p">[</span><span class="mi">3</span> <span class="mi">4</span><span class="p">]</span>   <span class="p">[</span><span class="mi">7</span> <span class="mi">8</span><span class="p">]</span>   <span class="p">[</span><span class="mi">3</span><span class="o">*</span><span class="mi">5</span><span class="o">+</span><span class="mi">4</span><span class="o">*</span><span class="mi">7</span>  <span class="mi">3</span><span class="o">*</span><span class="mi">6</span><span class="o">+</span><span class="mi">4</span><span class="o">*</span><span class="mi">8</span><span class="p">]</span>   <span class="p">[</span><span class="mi">43</span> <span class="mi">50</span><span class="p">]</span>
+</pre></div>
+</div>
+</section>
+<section id="real-world-context">
+<h3>Real-World Context<a class="headerlink" href="#real-world-context" title="Permalink to this heading">#</a></h3>
+<p>Every major operation in deep learning uses matrix multiplication:</p>
+<ul class="simple">
+<li><p><strong>Dense layers</strong>: Linear transformations</p></li>
+<li><p><strong>Convolutional layers</strong>: Convolution as matrix multiplication</p></li>
+<li><p><strong>Attention mechanisms</strong>: Query-Key-Value computations</p></li>
+<li><p><strong>Embeddings</strong>: Lookup tables as matrix multiplication</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#| export</span>
+<span class="k">def</span> <span class="nf">matmul</span><span class="p">(</span><span class="n">A</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">B</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Matrix multiplication using explicit for-loops.</span>
+<span class="sd">    </span>
+<span class="sd">    This helps you understand what matrix multiplication really does!</span>
+<span class="sd">        </span>
+<span class="sd">    TODO: Implement matrix multiplication using three nested for-loops.</span>
+<span class="sd">    </span>
+<span class="sd">    STEP-BY-STEP IMPLEMENTATION:</span>
+<span class="sd">    1. Get the dimensions: m, n from A.shape and n2, p from B.shape</span>
+<span class="sd">    2. Check compatibility: n must equal n2</span>
+<span class="sd">    3. Create output matrix C of shape (m, p) filled with zeros</span>
+<span class="sd">    4. Use three nested loops:</span>
+<span class="sd">       - i loop: iterate through rows of A (0 to m-1)</span>
+<span class="sd">       - j loop: iterate through columns of B (0 to p-1)</span>
+<span class="sd">       - k loop: iterate through shared dimension (0 to n-1)</span>
+<span class="sd">    5. For each (i,j), accumulate: C[i,j] += A[i,k] * B[k,j]</span>
+<span class="sd">    </span>
+<span class="sd">    EXAMPLE WALKTHROUGH:</span>
+<span class="sd">    ```python</span>
+<span class="sd">    A = [[1, 2],     B = [[5, 6],</span>
+<span class="sd">         [3, 4]]          [7, 8]]</span>
+<span class="sd">    </span>
+<span class="sd">    C[0,0] = A[0,0]*B[0,0] + A[0,1]*B[1,0] = 1*5 + 2*7 = 19</span>
+<span class="sd">    C[0,1] = A[0,0]*B[0,1] + A[0,1]*B[1,1] = 1*6 + 2*8 = 22</span>
+<span class="sd">    C[1,0] = A[1,0]*B[0,0] + A[1,1]*B[1,0] = 3*5 + 4*7 = 43</span>
+<span class="sd">    C[1,1] = A[1,0]*B[0,1] + A[1,1]*B[1,1] = 3*6 + 4*8 = 50</span>
+<span class="sd">    </span>
+<span class="sd">    Result: [[19, 22], [43, 50]]</span>
+<span class="sd">    ```</span>
+<span class="sd">    </span>
+<span class="sd">    IMPLEMENTATION HINTS:</span>
+<span class="sd">    - Get dimensions: m, n = A.shape; n2, p = B.shape</span>
+<span class="sd">    - Check compatibility: if n != n2: raise ValueError</span>
+<span class="sd">    - Initialize result: C = np.zeros((m, p))</span>
+<span class="sd">    - Triple nested loop: for i in range(m): for j in range(p): for k in range(n):</span>
+<span class="sd">    - Accumulate sum: C[i,j] += A[i,k] * B[k,j]</span>
+<span class="sd">    </span>
+<span class="sd">    LEARNING CONNECTIONS:</span>
+<span class="sd">    - This is what every neural network layer does internally</span>
+<span class="sd">    - Understanding this helps debug shape mismatches</span>
+<span class="sd">    - Essential for understanding the foundation of neural networks</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1">### BEGIN SOLUTION</span>
+    <span class="c1"># YOUR CODE HERE</span>
+    <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
+    <span class="c1">### END SOLUTION</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="test-your-matrix-multiplication">
+<h3>🧪 Test Your Matrix Multiplication<a class="headerlink" href="#test-your-matrix-multiplication" title="Permalink to this heading">#</a></h3>
+<p>Once you implement the <code class="docutils literal notranslate"><span class="pre">matmul</span></code> function above, run this cell to test it:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">test_matrix_multiplication</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Test matrix multiplication implementation&quot;&quot;&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;🔬 Unit Test: Matrix Multiplication...&quot;</span><span class="p">)</span>
+
+<span class="c1"># Test simple 2x2 case</span>
+    <span class="n">A</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">]],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+    <span class="n">B</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">],</span> <span class="p">[</span><span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">]],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+    
+    <span class="n">result</span> <span class="o">=</span> <span class="n">matmul</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">)</span>
+    <span class="n">expected</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">19</span><span class="p">,</span> <span class="mi">22</span><span class="p">],</span> <span class="p">[</span><span class="mi">43</span><span class="p">,</span> <span class="mi">50</span><span class="p">]],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+    
+    <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">expected</span><span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;Matrix multiplication failed: expected </span><span class="si">{</span><span class="n">expected</span><span class="si">}</span><span class="s2">, got </span><span class="si">{</span><span class="n">result</span><span class="si">}</span><span class="s2">&quot;</span>
+    
+    <span class="c1"># Compare with NumPy</span>
+    <span class="n">numpy_result</span> <span class="o">=</span> <span class="n">A</span> <span class="o">@</span> <span class="n">B</span>
+    <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">numpy_result</span><span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;Doesn&#39;t match NumPy: got </span><span class="si">{</span><span class="n">result</span><span class="si">}</span><span class="s2">, expected </span><span class="si">{</span><span class="n">numpy_result</span><span class="si">}</span><span class="s2">&quot;</span>
+
+<span class="c1"># Test different shapes</span>
+    <span class="n">A2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>  <span class="c1"># 1x3</span>
+    <span class="n">B2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">4</span><span class="p">],</span> <span class="p">[</span><span class="mi">5</span><span class="p">],</span> <span class="p">[</span><span class="mi">6</span><span class="p">]],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>  <span class="c1"># 3x1</span>
+    <span class="n">result2</span> <span class="o">=</span> <span class="n">matmul</span><span class="p">(</span><span class="n">A2</span><span class="p">,</span> <span class="n">B2</span><span class="p">)</span>
+    <span class="n">expected2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">32</span><span class="p">]],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>  <span class="c1"># 1*4 + 2*5 + 3*6 = 32</span>
+    
+    <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">result2</span><span class="p">,</span> <span class="n">expected2</span><span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;1x3 @ 3x1 failed: expected </span><span class="si">{</span><span class="n">expected2</span><span class="si">}</span><span class="s2">, got </span><span class="si">{</span><span class="n">result2</span><span class="si">}</span><span class="s2">&quot;</span>
+    
+    <span class="c1"># Test 3x3 case</span>
+    <span class="n">A3</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">],</span> <span class="p">[</span><span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">9</span><span class="p">]],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+    <span class="n">B3</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>  <span class="c1"># Identity</span>
+    <span class="n">result3</span> <span class="o">=</span> <span class="n">matmul</span><span class="p">(</span><span class="n">A3</span><span class="p">,</span> <span class="n">B3</span><span class="p">)</span>
+    
+    <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">result3</span><span class="p">,</span> <span class="n">A3</span><span class="p">),</span> <span class="s2">&quot;Multiplication by identity should preserve matrix&quot;</span>
+    
+    <span class="c1"># Test incompatible shapes</span>
+    <span class="n">A4</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>  <span class="c1"># 1x2</span>
+    <span class="n">B4</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="mi">4</span><span class="p">],</span> <span class="p">[</span><span class="mi">5</span><span class="p">]],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>  <span class="c1"># 3x1</span>
+    
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">matmul</span><span class="p">(</span><span class="n">A4</span><span class="p">,</span> <span class="n">B4</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="kc">False</span><span class="p">,</span> <span class="s2">&quot;Should raise error for incompatible shapes&quot;</span>
+    <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">assert</span> <span class="s2">&quot;Incompatible matrix dimensions&quot;</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+    
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;✅ Matrix multiplication tests passed!&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;✅ 2x2 multiplication working correctly&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;✅ Matches NumPy&#39;s implementation&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;✅ Handles different shapes correctly&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;✅ Proper error handling for incompatible shapes&quot;</span><span class="p">)</span>
+
+<span class="c1"># Run the test</span>
+<span class="n">test_matrix_multiplication</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="step-2-dense-layer-the-foundation-of-neural-networks">
+<h2>Step 2: Dense Layer - The Foundation of Neural Networks<a class="headerlink" href="#step-2-dense-layer-the-foundation-of-neural-networks" title="Permalink to this heading">#</a></h2>
+<section id="what-is-a-dense-layer">
+<h3>What is a Dense Layer?<a class="headerlink" href="#what-is-a-dense-layer" title="Permalink to this heading">#</a></h3>
+<p>A <strong>Dense layer</strong> (also called Linear or Fully Connected layer) is the fundamental building block of neural networks:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">output</span> <span class="o">=</span> <span class="nb">input</span> <span class="o">@</span> <span class="n">weights</span> <span class="o">+</span> <span class="n">bias</span>
+</pre></div>
+</div>
+<p>Where:</p>
+<ul class="simple">
+<li><p><strong>input</strong>: Input data (batch_size × input_features)</p></li>
+<li><p><strong>weights</strong>: Learned parameters (input_features × output_features)</p></li>
+<li><p><strong>bias</strong>: Learned bias terms (output_features,)</p></li>
+<li><p><strong>output</strong>: Transformed data (batch_size × output_features)</p></li>
+</ul>
+</section>
+<section id="why-dense-layers-are-essential">
+<h3>Why Dense Layers Are Essential<a class="headerlink" href="#why-dense-layers-are-essential" title="Permalink to this heading">#</a></h3>
+<ol class="arabic simple">
+<li><p><strong>Feature transformation</strong>: Learn meaningful combinations of input features</p></li>
+<li><p><strong>Universal approximation</strong>: Stack enough layers to approximate any function</p></li>
+<li><p><strong>Learnable parameters</strong>: Weights and biases are optimized during training</p></li>
+<li><p><strong>Composability</strong>: Can be stacked to create complex architectures</p></li>
+</ol>
+</section>
+<section id="the-mathematical-foundation">
+<h3>The Mathematical Foundation<a class="headerlink" href="#the-mathematical-foundation" title="Permalink to this heading">#</a></h3>
+<p>For input x, weight matrix W, and bias b:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">y</span> <span class="o">=</span> <span class="n">xW</span> <span class="o">+</span> <span class="n">b</span>
+</pre></div>
+</div>
+<p>This is a linear transformation that:</p>
+<ul class="simple">
+<li><p><strong>Combines features</strong>: Each output is a weighted sum of all inputs</p></li>
+<li><p><strong>Learns relationships</strong>: Weights encode feature interactions</p></li>
+<li><p><strong>Adds flexibility</strong>: Bias allows shifting the output</p></li>
+</ul>
+</section>
+<section id="real-world-applications">
+<h3>Real-World Applications<a class="headerlink" href="#real-world-applications" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Classification</strong>: Transform features to class logits</p></li>
+<li><p><strong>Regression</strong>: Transform features to continuous outputs</p></li>
+<li><p><strong>Representation learning</strong>: Learn useful intermediate representations</p></li>
+<li><p><strong>Attention mechanisms</strong>: Compute queries, keys, and values</p></li>
+</ul>
+</section>
+<section id="design-decisions">
+<h3>Design Decisions<a class="headerlink" href="#design-decisions" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Weight initialization</strong>: Random initialization to break symmetry</p></li>
+<li><p><strong>Bias usage</strong>: Usually included for flexibility</p></li>
+<li><p><strong>Activation</strong>: Often followed by nonlinear activation</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#| export</span>
+<span class="k">class</span> <span class="nc">Dense</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Dense (Linear/Fully Connected) Layer</span>
+<span class="sd">    </span>
+<span class="sd">    Applies a linear transformation: y = xW + b</span>
+<span class="sd">    </span>
+<span class="sd">    This is the fundamental building block of neural networks.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">output_size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">use_bias</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize Dense layer with random weights and optional bias.</span>
+<span class="sd">        </span>
+<span class="sd">        TODO: Implement Dense layer initialization.</span>
+<span class="sd">        </span>
+<span class="sd">        STEP-BY-STEP IMPLEMENTATION:</span>
+<span class="sd">        1. Store the layer parameters (input_size, output_size, use_bias)</span>
+<span class="sd">        2. Initialize weights with random values using proper scaling</span>
+<span class="sd">        3. Initialize bias (if use_bias=True) with zeros</span>
+<span class="sd">        4. Convert weights and bias to Tensor objects</span>
+<span class="sd">        </span>
+<span class="sd">        WEIGHT INITIALIZATION STRATEGY:</span>
+<span class="sd">        - Use Xavier/Glorot initialization for better gradient flow</span>
+<span class="sd">        - Scale: sqrt(2 / (input_size + output_size))</span>
+<span class="sd">        - Random values: np.random.randn() * scale</span>
+<span class="sd">        </span>
+<span class="sd">        EXAMPLE USAGE:</span>
+<span class="sd">        ```python</span>
+<span class="sd">        layer = Dense(input_size=3, output_size=2)</span>
+<span class="sd">        # Creates weight matrix of shape (3, 2) and bias of shape (2,)</span>
+<span class="sd">        ```</span>
+<span class="sd">        </span>
+<span class="sd">        IMPLEMENTATION HINTS:</span>
+<span class="sd">        - Store parameters: self.input_size, self.output_size, self.use_bias</span>
+<span class="sd">        - Weight shape: (input_size, output_size)</span>
+<span class="sd">        - Bias shape: (output_size,) if use_bias else None</span>
+<span class="sd">        - Use Xavier initialization: scale = np.sqrt(2.0 / (input_size + output_size))</span>
+<span class="sd">        - Initialize weights: np.random.randn(input_size, output_size) * scale</span>
+<span class="sd">        - Initialize bias: np.zeros(output_size) if use_bias else None</span>
+<span class="sd">        - Convert to Tensors: self.weights = Tensor(weight_data), self.bias = Tensor(bias_data)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1">### BEGIN SOLUTION</span>
+    <span class="c1"># YOUR CODE HERE</span>
+    <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
+        <span class="c1">### END SOLUTION</span>
+    
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Forward pass through the Dense layer.</span>
+<span class="sd">        </span>
+<span class="sd">        TODO: Implement the forward pass: y = xW + b</span>
+<span class="sd">        </span>
+<span class="sd">        STEP-BY-STEP IMPLEMENTATION:</span>
+<span class="sd">        1. Perform matrix multiplication: x @ self.weights</span>
+<span class="sd">        2. Add bias if present: result + self.bias</span>
+<span class="sd">        3. Return the result as a Tensor</span>
+<span class="sd">        </span>
+<span class="sd">        EXAMPLE USAGE:</span>
+<span class="sd">        ```python</span>
+<span class="sd">        layer = Dense(input_size=3, output_size=2)</span>
+<span class="sd">        input_data = Tensor([[1, 2, 3]])  # Shape: (1, 3)</span>
+<span class="sd">        output = layer(input_data)        # Shape: (1, 2)</span>
+<span class="sd">        ```</span>
+<span class="sd">        </span>
+<span class="sd">        IMPLEMENTATION HINTS:</span>
+<span class="sd">        - Matrix multiplication: matmul(x.data, self.weights.data)</span>
+<span class="sd">        - Add bias: result + self.bias.data (broadcasting handles shape)</span>
+<span class="sd">        - Return as Tensor: return Tensor(final_result)</span>
+<span class="sd">        - Handle both cases: with and without bias</span>
+<span class="sd">        </span>
+<span class="sd">        LEARNING CONNECTIONS:</span>
+<span class="sd">        - This is the core operation in every neural network layer</span>
+<span class="sd">        - Matrix multiplication combines all input features</span>
+<span class="sd">        - Bias addition allows shifting the output distribution</span>
+<span class="sd">        - The result feeds into activation functions</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1">### BEGIN SOLUTION</span>
+    <span class="c1"># YOUR CODE HERE</span>
+    <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
+        <span class="c1">### END SOLUTION</span>
+    
+    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Make the layer callable: layer(x) instead of layer.forward(x)&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="test-your-dense-layer">
+<h3>🧪 Test Your Dense Layer<a class="headerlink" href="#test-your-dense-layer" title="Permalink to this heading">#</a></h3>
+<p>Once you implement the Dense layer above, run this cell to test it:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">test_dense_layer</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Test Dense layer implementation&quot;&quot;&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;🔬 Unit Test: Dense Layer...&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Test layer creation</span>
+    <span class="n">layer</span> <span class="o">=</span> <span class="n">Dense</span><span class="p">(</span><span class="n">input_size</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">output_size</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+    
+    <span class="c1"># Check weight and bias shapes</span>
+    <span class="k">assert</span> <span class="n">layer</span><span class="o">.</span><span class="n">weights</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;Weight shape should be (3, 2), got </span><span class="si">{</span><span class="n">layer</span><span class="o">.</span><span class="n">weights</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="k">assert</span> <span class="n">layer</span><span class="o">.</span><span class="n">bias</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;Bias should not be None when use_bias=True&quot;</span>
+    <span class="k">assert</span> <span class="n">layer</span><span class="o">.</span><span class="n">bias</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="p">(</span><span class="mi">2</span><span class="p">,),</span> <span class="sa">f</span><span class="s2">&quot;Bias shape should be (2,), got </span><span class="si">{</span><span class="n">layer</span><span class="o">.</span><span class="n">bias</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span>
+    
+    <span class="c1"># Test forward pass</span>
+    <span class="n">input_data</span> <span class="o">=</span> <span class="n">Tensor</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]])</span>  <span class="c1"># Shape: (1, 3)</span>
+    <span class="n">output</span> <span class="o">=</span> <span class="n">layer</span><span class="p">(</span><span class="n">input_data</span><span class="p">)</span>
+    
+    <span class="c1"># Check output shape</span>
+    <span class="k">assert</span> <span class="n">output</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;Output shape should be (1, 2), got </span><span class="si">{</span><span class="n">output</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span>
+    
+    <span class="c1"># Test batch processing</span>
+    <span class="n">batch_input</span> <span class="o">=</span> <span class="n">Tensor</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">]])</span>  <span class="c1"># Shape: (2, 3)</span>
+    <span class="n">batch_output</span> <span class="o">=</span> <span class="n">layer</span><span class="p">(</span><span class="n">batch_input</span><span class="p">)</span>
+    
+    <span class="k">assert</span> <span class="n">batch_output</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;Batch output shape should be (2, 2), got </span><span class="si">{</span><span class="n">batch_output</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span>
+
+<span class="c1"># Test without bias</span>
+    <span class="n">no_bias_layer</span> <span class="o">=</span> <span class="n">Dense</span><span class="p">(</span><span class="n">input_size</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">output_size</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">use_bias</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">no_bias_layer</span><span class="o">.</span><span class="n">bias</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;Layer without bias should have None bias&quot;</span>
+    
+    <span class="n">no_bias_output</span> <span class="o">=</span> <span class="n">no_bias_layer</span><span class="p">(</span><span class="n">input_data</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">no_bias_output</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="s2">&quot;No-bias layer should still produce correct shape&quot;</span>
+    
+    <span class="c1"># Test that different inputs produce different outputs</span>
+    <span class="n">input1</span> <span class="o">=</span> <span class="n">Tensor</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]])</span>
+    <span class="n">input2</span> <span class="o">=</span> <span class="n">Tensor</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]])</span>
+    
+    <span class="n">output1</span> <span class="o">=</span> <span class="n">layer</span><span class="p">(</span><span class="n">input1</span><span class="p">)</span>
+    <span class="n">output2</span> <span class="o">=</span> <span class="n">layer</span><span class="p">(</span><span class="n">input2</span><span class="p">)</span>
+    
+    <span class="c1"># Should not be equal (with high probability due to random initialization)</span>
+    <span class="k">assert</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">output1</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">output2</span><span class="o">.</span><span class="n">data</span><span class="p">),</span> <span class="s2">&quot;Different inputs should produce different outputs&quot;</span>
+    
+    <span class="c1"># Test linearity property: layer(a*x) = a*layer(x)</span>
+    <span class="n">scale</span> <span class="o">=</span> <span class="mf">2.0</span>
+    <span class="n">scaled_input</span> <span class="o">=</span> <span class="n">Tensor</span><span class="p">([[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">6</span><span class="p">]])</span>  <span class="c1"># 2 * [1, 2, 3]</span>
+    <span class="n">scaled_output</span> <span class="o">=</span> <span class="n">layer</span><span class="p">(</span><span class="n">scaled_input</span><span class="p">)</span>
+    
+    <span class="c1"># Due to bias, this won&#39;t be exactly 2*output, but the linear part should scale</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;✅ Dense layer tests passed!&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;✅ Correct weight and bias initialization&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;✅ Forward pass produces correct shapes&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;✅ Batch processing works correctly&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;✅ Bias and no-bias variants work&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;✅ Naive matrix multiplication option works&quot;</span><span class="p">)</span>
+
+<span class="c1"># Run the test</span>
+<span class="n">test_dense_layer</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="step-3-layer-integration-with-activations">
+<h2>Step 3: Layer Integration with Activations<a class="headerlink" href="#step-3-layer-integration-with-activations" title="Permalink to this heading">#</a></h2>
+<section id="building-complete-neural-network-components">
+<h3>Building Complete Neural Network Components<a class="headerlink" href="#building-complete-neural-network-components" title="Permalink to this heading">#</a></h3>
+<p>Now let’s see how Dense layers work with activation functions to create complete neural network components:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Complete neural network layer</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">input_data</span>
+<span class="n">linear_output</span> <span class="o">=</span> <span class="n">dense_layer</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="n">final_output</span> <span class="o">=</span> <span class="n">activation_function</span><span class="p">(</span><span class="n">linear_output</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="why-this-combination-works">
+<h3>Why This Combination Works<a class="headerlink" href="#why-this-combination-works" title="Permalink to this heading">#</a></h3>
+<ol class="arabic simple">
+<li><p><strong>Linear transformation</strong>: Dense layer learns feature combinations</p></li>
+<li><p><strong>Nonlinear activation</strong>: Enables complex pattern recognition</p></li>
+<li><p><strong>Stacking</strong>: Multiple layer+activation pairs create deep networks</p></li>
+<li><p><strong>Universal approximation</strong>: Can approximate any continuous function</p></li>
+</ol>
+</section>
+<section id="real-world-layer-patterns">
+<h3>Real-World Layer Patterns<a class="headerlink" href="#real-world-layer-patterns" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Hidden layers</strong>: Dense + ReLU (most common)</p></li>
+<li><p><strong>Output layers</strong>: Dense + Softmax (classification) or Dense + Sigmoid (binary)</p></li>
+<li><p><strong>Gated layers</strong>: Dense + Sigmoid (for gates in LSTM/GRU)</p></li>
+<li><p><strong>Attention layers</strong>: Dense + Softmax (for attention weights)</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">test_layer_activation</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Test Dense layer comprehensive testing with activation functions&quot;&quot;&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;🔬 Unit Test: Layer-Activation Comprehensive Test...&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Create layer and activation functions</span>
+    <span class="n">layer</span> <span class="o">=</span> <span class="n">Dense</span><span class="p">(</span><span class="n">input_size</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">output_size</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+    <span class="n">relu</span> <span class="o">=</span> <span class="n">ReLU</span><span class="p">()</span>
+    <span class="n">sigmoid</span> <span class="o">=</span> <span class="n">Sigmoid</span><span class="p">()</span>
+    <span class="n">tanh</span> <span class="o">=</span> <span class="n">Tanh</span><span class="p">()</span>
+    <span class="n">softmax</span> <span class="o">=</span> <span class="n">Softmax</span><span class="p">()</span>
+    
+    <span class="c1"># Test input</span>
+    <span class="n">input_data</span> <span class="o">=</span> <span class="n">Tensor</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">4</span><span class="p">],</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">]])</span>  <span class="c1"># Shape: (2, 4)</span>
+    
+    <span class="c1"># Test Dense + ReLU (common hidden layer pattern)</span>
+    <span class="n">linear_output</span> <span class="o">=</span> <span class="n">layer</span><span class="p">(</span><span class="n">input_data</span><span class="p">)</span>
+    <span class="n">relu_output</span> <span class="o">=</span> <span class="n">relu</span><span class="p">(</span><span class="n">linear_output</span><span class="p">)</span>
+    
+    <span class="k">assert</span> <span class="n">relu_output</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="s2">&quot;ReLU output should preserve shape&quot;</span>
+    <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">relu_output</span><span class="o">.</span><span class="n">data</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">),</span> <span class="s2">&quot;ReLU output should be non-negative&quot;</span>
+    
+    <span class="c1"># Test Dense + Softmax (classification output pattern)</span>
+    <span class="n">softmax_output</span> <span class="o">=</span> <span class="n">softmax</span><span class="p">(</span><span class="n">linear_output</span><span class="p">)</span>
+    
+    <span class="k">assert</span> <span class="n">softmax_output</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="s2">&quot;Softmax output should preserve shape&quot;</span>
+    
+    <span class="c1"># Each row should sum to 1 (probability distribution)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">):</span>
+        <span class="n">row_sum</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">softmax_output</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+        <span class="k">assert</span> <span class="nb">abs</span><span class="p">(</span><span class="n">row_sum</span> <span class="o">-</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e-6</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Row </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2"> should sum to 1, got </span><span class="si">{</span><span class="n">row_sum</span><span class="si">}</span><span class="s2">&quot;</span>
+    
+    <span class="c1"># Test Dense + Sigmoid (binary classification pattern)</span>
+    <span class="n">sigmoid_output</span> <span class="o">=</span> <span class="n">sigmoid</span><span class="p">(</span><span class="n">linear_output</span><span class="p">)</span>
+    
+    <span class="k">assert</span> <span class="n">sigmoid_output</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="s2">&quot;Sigmoid output should preserve shape&quot;</span>
+    <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">sigmoid_output</span><span class="o">.</span><span class="n">data</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">),</span> <span class="s2">&quot;Sigmoid output should be positive&quot;</span>
+    <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">sigmoid_output</span><span class="o">.</span><span class="n">data</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">),</span> <span class="s2">&quot;Sigmoid output should be less than 1&quot;</span>
+    
+    <span class="c1"># Test Dense + Tanh (hidden layer with centered outputs)</span>
+    <span class="n">tanh_output</span> <span class="o">=</span> <span class="n">tanh</span><span class="p">(</span><span class="n">linear_output</span><span class="p">)</span>
+    
+    <span class="k">assert</span> <span class="n">tanh_output</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="s2">&quot;Tanh output should preserve shape&quot;</span>
+    <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">tanh_output</span><span class="o">.</span><span class="n">data</span> <span class="o">&gt;</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="s2">&quot;Tanh output should be &gt; -1&quot;</span>
+    <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">tanh_output</span><span class="o">.</span><span class="n">data</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">),</span> <span class="s2">&quot;Tanh output should be &lt; 1&quot;</span>
+    
+    <span class="c1"># Test chained layers (simple 2-layer network)</span>
+    <span class="n">layer1</span> <span class="o">=</span> <span class="n">Dense</span><span class="p">(</span><span class="n">input_size</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">output_size</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+    <span class="n">layer2</span> <span class="o">=</span> <span class="n">Dense</span><span class="p">(</span><span class="n">input_size</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">output_size</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+    
+    <span class="c1"># Forward pass through 2-layer network</span>
+    <span class="n">hidden</span> <span class="o">=</span> <span class="n">relu</span><span class="p">(</span><span class="n">layer1</span><span class="p">(</span><span class="n">input_data</span><span class="p">))</span>
+    <span class="n">output</span> <span class="o">=</span> <span class="n">softmax</span><span class="p">(</span><span class="n">layer2</span><span class="p">(</span><span class="n">hidden</span><span class="p">))</span>
+    
+    <span class="k">assert</span> <span class="n">output</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="s2">&quot;2-layer network should produce correct output shape&quot;</span>
+    
+    <span class="c1"># Each output should be a valid probability distribution</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">):</span>
+        <span class="n">row_sum</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">output</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+        <span class="k">assert</span> <span class="nb">abs</span><span class="p">(</span><span class="n">row_sum</span> <span class="o">-</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e-6</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Network output row </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2"> should sum to 1&quot;</span>
+    
+    <span class="c1"># Test that layers are learning-ready (have parameters)</span>
+    <span class="k">assert</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">layer1</span><span class="p">,</span> <span class="s1">&#39;weights&#39;</span><span class="p">),</span> <span class="s2">&quot;Layer should have weights&quot;</span>
+    <span class="k">assert</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">layer1</span><span class="p">,</span> <span class="s1">&#39;bias&#39;</span><span class="p">),</span> <span class="s2">&quot;Layer should have bias&quot;</span>
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">layer1</span><span class="o">.</span><span class="n">weights</span><span class="p">,</span> <span class="n">Tensor</span><span class="p">),</span> <span class="s2">&quot;Weights should be Tensor&quot;</span>
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">layer1</span><span class="o">.</span><span class="n">bias</span><span class="p">,</span> <span class="n">Tensor</span><span class="p">),</span> <span class="s2">&quot;Bias should be Tensor&quot;</span>
+    
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;✅ Layer-activation comprehensive tests passed!&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;✅ Dense + ReLU working correctly&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;✅ Dense + Softmax producing valid probabilities&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;✅ Dense + Sigmoid bounded correctly&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;✅ Dense + Tanh centered correctly&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;✅ Multi-layer networks working&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;✅ All components ready for training!&quot;</span><span class="p">)</span>
+
+<span class="c1"># Run the test</span>
+<span class="n">test_layer_activation</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="module-testing">
+<h2>🧪 Module Testing<a class="headerlink" href="#module-testing" title="Permalink to this heading">#</a></h2>
+<p>Time to test your implementation! This section uses TinyTorch’s standardized testing framework to ensure your implementation works correctly.</p>
+<p><strong>This testing section is locked</strong> - it provides consistent feedback across all modules and cannot be modified.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># =============================================================================</span>
+<span class="c1"># STANDARDIZED MODULE TESTING - DO NOT MODIFY</span>
+<span class="c1"># This cell is locked to ensure consistent testing across all TinyTorch modules</span>
+<span class="c1"># =============================================================================</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">tito.tools.testing</span> <span class="kn">import</span> <span class="n">run_module_tests_auto</span>
+    
+    <span class="c1"># Automatically discover and run all tests in this module</span>
+    <span class="n">success</span> <span class="o">=</span> <span class="n">run_module_tests_auto</span><span class="p">(</span><span class="s2">&quot;Layers&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="module-summary-neural-network-layers-mastery">
+<h2>🎯 Module Summary: Neural Network Layers Mastery!<a class="headerlink" href="#module-summary-neural-network-layers-mastery" title="Permalink to this heading">#</a></h2>
+<p>Congratulations! You’ve successfully implemented the fundamental building blocks of neural networks:</p>
+<section id="what-you-ve-built">
+<h3>✅ What You’ve Built<a class="headerlink" href="#what-you-ve-built" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Matrix Multiplication</strong>: The core operation powering all neural network computations</p></li>
+<li><p><strong>Dense Layer</strong>: The fundamental building block with proper weight initialization</p></li>
+<li><p><strong>Integration</strong>: How layers work with activation functions to create complete neural components</p></li>
+<li><p><strong>Flexibility</strong>: Support for bias/no-bias and naive/optimized matrix multiplication</p></li>
+</ul>
+</section>
+<section id="key-learning-outcomes">
+<h3>✅ Key Learning Outcomes<a class="headerlink" href="#key-learning-outcomes" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Understanding</strong>: How linear transformations enable feature learning</p></li>
+<li><p><strong>Implementation</strong>: Built layers from scratch with proper initialization</p></li>
+<li><p><strong>Testing</strong>: Progressive validation with immediate feedback</p></li>
+<li><p><strong>Integration</strong>: Saw how layers compose with activations for complete functionality</p></li>
+<li><p><strong>Real-world skills</strong>: Understanding the mathematics behind neural networks</p></li>
+</ul>
+</section>
+<section id="mathematical-mastery">
+<h3>✅ Mathematical Mastery<a class="headerlink" href="#mathematical-mastery" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Matrix Multiplication</strong>: C[i,j] = Σ(A[i,k] * B[k,j]) - implemented with loops</p></li>
+<li><p><strong>Linear Transformation</strong>: y = xW + b - the heart of neural networks</p></li>
+<li><p><strong>Xavier Initialization</strong>: Proper weight scaling for stable gradients</p></li>
+<li><p><strong>Composition</strong>: How multiple layers create complex functions</p></li>
+</ul>
+</section>
+<section id="professional-skills-developed">
+<h3>✅ Professional Skills Developed<a class="headerlink" href="#professional-skills-developed" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Algorithm implementation</strong>: From mathematical definition to working code</p></li>
+<li><p><strong>Performance considerations</strong>: Naive vs optimized implementations</p></li>
+<li><p><strong>API design</strong>: Clean, consistent interfaces for layer creation and usage</p></li>
+<li><p><strong>Testing methodology</strong>: Unit tests, comprehensive tests, and edge case handling</p></li>
+</ul>
+</section>
+<section id="ready-for-next-steps">
+<h3>✅ Ready for Next Steps<a class="headerlink" href="#ready-for-next-steps" title="Permalink to this heading">#</a></h3>
+<p>Your layers are now ready to power:</p>
+<ul class="simple">
+<li><p><strong>Complete Networks</strong>: Stack multiple layers with activations</p></li>
+<li><p><strong>Training</strong>: Gradient computation and parameter updates</p></li>
+<li><p><strong>Specialized Architectures</strong>: CNNs, RNNs, Transformers all use these foundations</p></li>
+<li><p><strong>Real Applications</strong>: Image classification, NLP, game playing, etc.</p></li>
+</ul>
+</section>
+<section id="connection-to-real-ml-systems">
+<h3>🔗 Connection to Real ML Systems<a class="headerlink" href="#connection-to-real-ml-systems" title="Permalink to this heading">#</a></h3>
+<p>Your implementations mirror production frameworks:</p>
+<ul class="simple">
+<li><p><strong>PyTorch</strong>: <code class="docutils literal notranslate"><span class="pre">torch.nn.Linear()</span></code> - same mathematical operations</p></li>
+<li><p><strong>TensorFlow</strong>: <code class="docutils literal notranslate"><span class="pre">tf.keras.layers.Dense()</span></code> - identical functionality</p></li>
+<li><p><strong>Industry</strong>: Every major neural network uses these exact computations</p></li>
+</ul>
+</section>
+<section id="the-power-of-linear-algebra">
+<h3>🎯 The Power of Linear Algebra<a class="headerlink" href="#the-power-of-linear-algebra" title="Permalink to this heading">#</a></h3>
+<p>You’ve unlocked the mathematical foundation of AI:</p>
+<ul class="simple">
+<li><p><strong>Feature combination</strong>: Each layer learns how to combine input features</p></li>
+<li><p><strong>Representation learning</strong>: Layers automatically discover useful representations</p></li>
+<li><p><strong>Universal approximation</strong>: Stack enough layers to approximate any function</p></li>
+<li><p><strong>Scalability</strong>: Same operations work from small networks to massive language models</p></li>
+</ul>
+</section>
+<section id="deep-learning-insights">
+<h3>🧠 Deep Learning Insights<a class="headerlink" href="#deep-learning-insights" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Why deep networks work</strong>: Multiple layers = multiple levels of abstraction</p></li>
+<li><p><strong>Parameter efficiency</strong>: Shared weights enable learning with limited data</p></li>
+<li><p><strong>Gradient flow</strong>: Proper initialization enables training deep networks</p></li>
+<li><p><strong>Composability</strong>: Simple components combine to create complex intelligence</p></li>
+</ul>
+<p><strong>Next Module</strong>: Networks - Composing your layers into complete neural network architectures!</p>
+<p>Your layers are the building blocks. Now let’s assemble them into powerful neural networks that can learn to solve complex problems!</p>
+</section>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./chapters"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="02-activations.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Activation Functions</p>
+      </div>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#where-this-code-lives-in-the-final-package">📦 Where This Code Lives in the Final Package</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-are-neural-network-layers">What Are Neural Network Layers?</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-building-block-pattern">The Building Block Pattern</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-universal-pattern">The Universal Pattern</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#why-this-works">Why This Works</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#mathematical-foundation">Mathematical Foundation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#what-we-ll-build">What We’ll Build</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-1-matrix-multiplication-the-engine-of-neural-networks">Step 1: Matrix Multiplication - The Engine of Neural Networks</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#what-is-matrix-multiplication">What is Matrix Multiplication?</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#why-it-s-essential">Why It’s Essential</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-mathematical-definition">The Mathematical Definition</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#visual-understanding">Visual Understanding</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#real-world-context">Real-World Context</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#test-your-matrix-multiplication">🧪 Test Your Matrix Multiplication</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-2-dense-layer-the-foundation-of-neural-networks">Step 2: Dense Layer - The Foundation of Neural Networks</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#what-is-a-dense-layer">What is a Dense Layer?</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#why-dense-layers-are-essential">Why Dense Layers Are Essential</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-mathematical-foundation">The Mathematical Foundation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#real-world-applications">Real-World Applications</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#design-decisions">Design Decisions</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#test-your-dense-layer">🧪 Test Your Dense Layer</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-3-layer-integration-with-activations">Step 3: Layer Integration with Activations</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#building-complete-neural-network-components">Building Complete Neural Network Components</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#why-this-combination-works">Why This Combination Works</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#real-world-layer-patterns">Real-World Layer Patterns</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-testing">🧪 Module Testing</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-summary-neural-network-layers-mastery">🎯 Module Summary: Neural Network Layers Mastery!</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#what-you-ve-built">✅ What You’ve Built</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#key-learning-outcomes">✅ Key Learning Outcomes</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#mathematical-mastery">✅ Mathematical Mastery</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#professional-skills-developed">✅ Professional Skills Developed</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ready-for-next-steps">✅ Ready for Next Steps</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#connection-to-real-ml-systems">🔗 Connection to Real ML Systems</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-power-of-linear-algebra">🎯 The Power of Linear Algebra</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#deep-learning-insights">🧠 Deep Learning Insights</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By TinyTorch Team
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2025.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=5b4479735964841361fd"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=5b4479735964841361fd"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

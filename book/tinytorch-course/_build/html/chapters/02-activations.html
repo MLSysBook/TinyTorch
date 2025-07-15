@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-    <title>&lt;no title&gt; &#8212; TinyTorch: Build ML Systems from Scratch</title>
+    <title>Activation Functions &#8212; TinyTorch: Build ML Systems from Scratch</title>
   
   
   
@@ -65,7 +65,8 @@ const thebe_selector_output = ".output, .cell_output"
     <script>DOCUMENTATION_OPTIONS.pagename = 'chapters/02-activations';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="prev" title="&lt;no title&gt;" href="01-tensor.html" />
+    <link rel="next" title="Layers" href="03-layers.html" />
+    <link rel="prev" title="Tensors: Core Data Structure" href="01-tensor.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -163,12 +164,19 @@ const thebe_selector_output = ".output, .cell_output"
         <ul class="nav bd-sidenav bd-sidenav__home-link">
             <li class="toctree-l1">
                 <a class="reference internal" href="../intro.html">
-                    🔥 TinyTorch: Build ML Systems from Scratch
+                    🔥 TinyTorch: Build Machine Learning Systems from Scratch
                 </a>
             </li>
         </ul>
-        <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="00-setup.html">Setup &amp; Configuration</a></li>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Foundation</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="00-setup.html">0. Development Environment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01-tensor.html">1. Tensors</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">2. Activations</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Building Blocks</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="03-layers.html">3. Layers</a></li>
 </ul>
 
     </div>
@@ -371,7 +379,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1><no title></h1>
+    <h1>Activation Functions</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -380,9 +388,12 @@ document.write(`
                 <h2> Contents </h2>
             </div>
             <nav aria-label="Page">
-                <ul class="simple visible nav section-nav flex-column">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-you-ll-learn">🎯 What You’ll Learn</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#key-concept">⚡ Key Concept</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#chapter-status">📊 Chapter Status</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#coming-soon">🚀 Coming Soon</a></li>
 </ul>
-
             </nav>
         </div>
     </div>
@@ -393,7 +404,46 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article" role="main">
                   
-  
+  <section class="tex2jax_ignore mathjax_ignore" id="activation-functions">
+<h1>Activation Functions<a class="headerlink" href="#activation-functions" title="Permalink to this heading">#</a></h1>
+<p>Mathematical functions that give neural networks the power to learn complex patterns!</p>
+<section id="what-you-ll-learn">
+<h2>🎯 What You’ll Learn<a class="headerlink" href="#what-you-ll-learn" title="Permalink to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Understand why activation functions are essential for neural networks</p></li>
+<li><p>Implement ReLU, Sigmoid, and Tanh activation functions</p></li>
+<li><p>Explore the mathematical properties that make each function useful</p></li>
+<li><p>See how nonlinearity enables complex pattern learning</p></li>
+</ul>
+</section>
+<section id="key-concept">
+<h2>⚡ Key Concept<a class="headerlink" href="#key-concept" title="Permalink to this heading">#</a></h2>
+<p><strong>Without activation functions, neural networks are just linear transformations!</strong></p>
+<p><code class="docutils literal notranslate"><span class="pre">Linear</span> <span class="pre">→</span> <span class="pre">Linear</span> <span class="pre">→</span> <span class="pre">Linear</span> <span class="pre">=</span> <span class="pre">Still</span> <span class="pre">just</span> <span class="pre">Linear</span></code><br />
+<code class="docutils literal notranslate"><span class="pre">Linear</span> <span class="pre">→</span> <span class="pre">Activation</span> <span class="pre">→</span> <span class="pre">Linear</span> <span class="pre">=</span> <span class="pre">Can</span> <span class="pre">learn</span> <span class="pre">complex</span> <span class="pre">patterns!</span></code></p>
+</section>
+<section id="chapter-status">
+<h2>📊 Chapter Status<a class="headerlink" href="#chapter-status" title="Permalink to this heading">#</a></h2>
+<p>🚧 <strong>Under Development</strong> - Converting from <code class="docutils literal notranslate"><span class="pre">modules/source/02_activations/activations_dev.py</span></code></p>
+<p>This interactive chapter will include:</p>
+<ul class="simple">
+<li><p><strong>🔥 ReLU</strong>: <code class="docutils literal notranslate"><span class="pre">f(x)</span> <span class="pre">=</span> <span class="pre">max(0,</span> <span class="pre">x)</span></code> - Simple, sparse, unbounded</p></li>
+<li><p><strong>📈 Sigmoid</strong>: <code class="docutils literal notranslate"><span class="pre">f(x)</span> <span class="pre">=</span> <span class="pre">1</span> <span class="pre">/</span> <span class="pre">(1</span> <span class="pre">+</span> <span class="pre">e^(-x))</span></code> - Bounded, smooth, probabilistic</p></li>
+<li><p><strong>〰️ Tanh</strong>: <code class="docutils literal notranslate"><span class="pre">f(x)</span> <span class="pre">=</span> <span class="pre">tanh(x)</span></code> - Zero-centered, bounded, smooth</p></li>
+</ul>
+</section>
+<section id="coming-soon">
+<h2>🚀 Coming Soon<a class="headerlink" href="#coming-soon" title="Permalink to this heading">#</a></h2>
+<p>Full interactive notebook with:</p>
+<ul class="simple">
+<li><p>Mathematical derivations and visualizations</p></li>
+<li><p>Interactive code for experimenting with different functions</p></li>
+<li><p>Real examples showing how each activation affects learning</p></li>
+</ul>
+<p><em>Check back soon for the complete interactive experience!</em></p>
+</section>
+</section>
+
     <script type="text/x-thebe-config">
     {
         requestKernel: true,
@@ -430,8 +480,17 @@ document.write(`
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">&lt;no title&gt;</p>
+        <p class="prev-next-title">Tensors: Core Data Structure</p>
       </div>
+    </a>
+    <a class="right-next"
+       href="03-layers.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Layers</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
     </a>
 </div>
                 </footer>
@@ -447,9 +506,12 @@ document.write(`
     <i class="fa-solid fa-list"></i> Contents
   </div>
   <nav class="bd-toc-nav page-toc">
-    <ul class="simple visible nav section-nav flex-column">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-you-ll-learn">🎯 What You’ll Learn</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#key-concept">⚡ Key Concept</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#chapter-status">📊 Chapter Status</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#coming-soon">🚀 Coming Soon</a></li>
 </ul>
-
   </nav></div>
 
 </div></div>
