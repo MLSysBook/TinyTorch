@@ -2,52 +2,26 @@
 Integration Tests - Compression Module
 
 Tests real integration between compression techniques and other TinyTorch modules.
-Uses actual TinyTorch components to verify they work together correctly.
+Uses actual TinyTorch components to verify model compression works correctly.
 """
 
 import pytest
 import numpy as np
-import sys
-from pathlib import Path
+from test_utils import setup_integration_test
 
-# Add the project root to the path
-project_root = Path(__file__).parent.parent.parent
-sys.path.insert(0, str(project_root))
+# Ensure proper setup before importing
+setup_integration_test()
 
-# Import REAL TinyTorch components
-try:
-    from tinytorch.core.tensor import Tensor
-    from tinytorch.core.activations import ReLU, Sigmoid, Softmax
-    from tinytorch.core.layers import Dense
-    from tinytorch.core.networks import Sequential
-    from tinytorch.core.training import CrossEntropyLoss, Trainer
-    from tinytorch.core.optimizers import SGD
-    from tinytorch.core.compression import (
-        CompressionMetrics, prune_weights_by_magnitude, calculate_sparsity,
-        quantize_layer_weights, DistillationLoss, compute_neuron_importance,
-        prune_layer_neurons, compare_compression_techniques
-    )
-except ImportError:
-    # Fallback for development
-    sys.path.append(str(project_root / "modules" / "source" / "01_tensor"))
-    sys.path.append(str(project_root / "modules" / "source" / "02_activations"))
-    sys.path.append(str(project_root / "modules" / "source" / "03_layers"))
-    sys.path.append(str(project_root / "modules" / "source" / "04_networks"))
-    sys.path.append(str(project_root / "modules" / "source" / "08_optimizers"))
-    sys.path.append(str(project_root / "modules" / "source" / "09_training"))
-    sys.path.append(str(project_root / "modules" / "source" / "10_compression"))
-    
-    from tensor_dev import Tensor
-    from activations_dev import ReLU, Sigmoid, Softmax
-    from layers_dev import Dense
-    from networks_dev import Sequential
-    from training_dev import CrossEntropyLoss, Trainer
-    from optimizers_dev import SGD
-    from compression_dev import (
-        CompressionMetrics, prune_weights_by_magnitude, calculate_sparsity,
-        quantize_layer_weights, DistillationLoss, compute_neuron_importance,
-        prune_layer_neurons, compare_compression_techniques
-    )
+# Import ONLY from TinyTorch package
+from tinytorch.core.tensor import Tensor
+from tinytorch.core.layers import Dense
+from tinytorch.core.networks import Sequential
+from tinytorch.core.activations import ReLU, Softmax
+from tinytorch.core.compression import (
+    CompressionMetrics, prune_weights_by_magnitude, calculate_sparsity,
+    quantize_layer_weights, DistillationLoss, compute_neuron_importance,
+    prune_layer_neurons, compare_compression_techniques
+)
 
 
 class TestCompressionMetricsIntegration:

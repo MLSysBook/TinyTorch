@@ -7,24 +7,14 @@ Uses actual TinyTorch components to verify they work together correctly.
 
 import pytest
 import numpy as np
-import sys
-from pathlib import Path
+from test_utils import setup_integration_test
 
-# Add the project root to the path
-project_root = Path(__file__).parent.parent.parent
-sys.path.insert(0, str(project_root))
+# Ensure proper setup before importing
+setup_integration_test()
 
-# Import REAL TinyTorch components
-try:
-    from tinytorch.core.tensor import Tensor
-    from tinytorch.core.activations import ReLU, Sigmoid, Tanh, Softmax
-except ImportError:
-    # Fallback for development
-    sys.path.append(str(project_root / "modules" / "source" / "01_tensor"))
-    sys.path.append(str(project_root / "modules" / "source" / "02_activations"))
-    
-    from tensor_dev import Tensor
-    from activations_dev import ReLU, Sigmoid, Tanh, Softmax
+# Import ONLY from TinyTorch package
+from tinytorch.core.tensor import Tensor
+from tinytorch.core.activations import ReLU, Sigmoid, Tanh, Softmax
 
 
 class TestTensorActivationIntegration:
