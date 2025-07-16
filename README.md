@@ -14,7 +14,7 @@
 
 ## 🏗️ **The Big Picture: Why Build from Scratch?**
 
-**Most ML education teaches you to _use_ frameworks.** TinyTorch teaches you to _understand_ them.
+**Most ML education teaches you to _use_ frameworks.** TinyTorch teaches you to _build_ them.
 
 ```python
 Traditional ML Course:          TinyTorch Approach:

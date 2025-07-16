@@ -10,11 +10,6 @@ learning_objectives: []
 
 # Module: Optimizers
 
-```{div} breadcrumb
-Home → 09 Optimizers
-```
-
-
 ```{div} badges
 ⭐⭐⭐⭐ | ⏱️ 5-6 hours
 ```

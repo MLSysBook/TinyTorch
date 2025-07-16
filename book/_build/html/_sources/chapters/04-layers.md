@@ -10,11 +10,6 @@ learning_objectives: []
 
 # Module: Layers
 
-```{div} breadcrumb
-Home → 04 Layers
-```
-
-
 ```{div} badges
 ⭐⭐⭐ | ⏱️ 4-5 hours
 ```

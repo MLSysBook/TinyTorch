@@ -10,11 +10,6 @@ learning_objectives: []
 
 # Module: Autograd
 
-```{div} breadcrumb
-Home → 08 Autograd
-```
-
-
 ```{div} badges
 ⭐⭐⭐⭐ | ⏱️ 6-8 hours
 ```

@@ -10,11 +10,6 @@ learning_objectives: []
 
 # Module: Activations
 
-```{div} breadcrumb
-Home → 03 Activations
-```
-
-
 ```{div} badges
 ⭐⭐ | ⏱️ 3-4 hours
 ```
