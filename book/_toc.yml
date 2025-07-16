@@ -60,11 +60,4 @@ parts:
   - file: chapters/15-capstone
     title: "15. Capstone"
 
-- caption: Appendices
-  chapters:
-  - file: appendices/installation
-    title: "Installation Guide"
-  - file: appendices/troubleshooting
-    title: "Troubleshooting"
-  - file: appendices/resources
-    title: "Additional Resources"
+
