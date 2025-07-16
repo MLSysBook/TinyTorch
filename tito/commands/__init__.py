@@ -19,6 +19,7 @@ from .nbdev import NbdevCommand
 from .status import StatusCommand
 from .clean import CleanCommand
 from .nbgrader import NBGraderCommand
+from .book import BookCommand
 
 # Command groups
 from .system import SystemCommand
@@ -39,6 +40,7 @@ __all__ = [
     'StatusCommand',
     'CleanCommand',
     'NBGraderCommand',
+    'BookCommand',
     # Command groups
     'SystemCommand',
     'ModuleCommand',
