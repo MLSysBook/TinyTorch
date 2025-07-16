@@ -121,25 +121,6 @@ model = Sequential([
 
 ---
 
-## 📊 Expected Student Outcomes
-
-```{admonition} Real Results from Real Students
-:class: success
-**After completing TinyTorch, students consistently:**
-
-✅ **95% can implement neural networks from scratch** (vs. 20% before)  
-✅ **90% understand autograd and backpropagation deeply** (vs. 15% before)  
-✅ **85% can optimize models for production** (vs. 5% before)  
-✅ **80% rate "better framework understanding than PyTorch users"**  
-✅ **75% pursue advanced ML systems roles** (vs. 30% before)
-
-**Industry Feedback:** *"TinyTorch graduates understand our codebase immediately - they know what's happening under the PyTorch abstractions."*
-
-**Academic Validation:** Used successfully in ML systems courses at 15+ universities
-```
-
----
-
 ## 🌟 What Makes This Different
 
 ### **🔬 Engineering Principles**
