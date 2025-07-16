@@ -4,7 +4,7 @@
 
 ```{admonition} 🎯 What You'll Build
 :class: tip
-**A complete ML framework from scratch** — your own PyTorch-style toolkit that can:
+**A complete ML framework from scratch**: your own PyTorch-style toolkit that can:
 - ✅ Train neural networks on CIFAR-10 (real dataset!)
 - ✅ Implement automatic differentiation (the "magic" behind PyTorch)  
 - ✅ Deploy production systems with 75% model compression
@@ -17,9 +17,9 @@
 
 ## ⚖️ **Science vs Engineering: A Different Approach**
 
-Most ML education focuses on the **science** — algorithms, theory, mathematical foundations. You learn *what* neural networks do and *why* they work.
+Most ML education focuses on the **science**: algorithms, theory, mathematical foundations. You learn *what* neural networks do and *why* they work.
 
-TinyTorch focuses on the **engineering** — systems, implementation, production practices. You learn *how* to build them and *how* to make them work.
+TinyTorch focuses on the **engineering**: systems, implementation, production practices. You learn *how* to build working systems.
 
 **Both matter.** But there's a critical gap in engineering education that TinyTorch fills.
 
@@ -44,17 +44,17 @@ Traditional ML Course:          TinyTorch Approach:
 Go from "How does this work?" 🤷 to "I implemented every line!" 💪
 ```
 
-This isn't just about learning — it's about developing the deep systems thinking that distinguishes ML engineers from ML users.
+This isn't just about learning. It's about developing the deep systems thinking that distinguishes ML engineers from ML users.
 
 ---
 
 ## 🌟 **What Makes TinyTorch Different**
 
 ### **🔬 Build-First Philosophy**
-You don't just learn about tensors — you implement the `Tensor` class from scratch. You don't just use ReLU — you write the activation function yourself. Every component you build becomes part of your personal ML framework that actually works on real data.
+You don't just learn about tensors. You implement the `Tensor` class from scratch. You don't just use ReLU. You write the activation function yourself. Every component you build becomes part of your personal ML framework that actually works on real data.
 
 ### **🚀 Production-Ready Skills**
-From day one, you'll use professional development practices: the `tito` CLI for project management, automated testing for quality assurance, real datasets like CIFAR-10 for training, and MLOps patterns for deployment. This isn't toy code — it's the foundation for production ML systems.
+From day one, you'll use professional development practices: the `tito` CLI for project management, automated testing for quality assurance, real datasets like CIFAR-10 for training, and MLOps patterns for deployment. This isn't toy code. It's the foundation for production ML systems.
 
 ### **⚡ Instant Results**
 Your code works immediately. Implement a `ReLU` function in Module 3, and by Module 5 you're watching it power real neural networks. Visual progress indicators and comprehensive testing ensure you always know your implementations are correct.
@@ -94,7 +94,7 @@ model = Sequential([
 ])
 ```
 
-This pattern repeats for every component — tensors, layers, optimizers, even MLOps systems. You build it, use it immediately, then see how it fits into larger systems.
+This pattern repeats for every component: tensors, layers, optimizers, even MLOps systems. You build it, use it immediately, then see how it fits into larger systems.
 
 ---
 
@@ -105,9 +105,9 @@ This pattern repeats for every component — tensors, layers, optimizers, even M
 **Weeks 1-6: Core Infrastructure**
 - **Setup**: Professional development workflow with `tito` CLI and testing
 - **Tensors**: Multi-dimensional arrays with operations (like NumPy, but yours!)
-- **Activations**: ReLU, Sigmoid, Tanh — the mathematical functions that enable learning
+- **Activations**: ReLU, Sigmoid, Tanh. The mathematical functions that enable learning
 - **Layers**: Dense layers with matrix multiplication and weight management
-- **Networks**: Sequential architecture — chain layers into complete models
+- **Networks**: Sequential architecture. Chain layers into complete models
 ```
 
 ```{admonition} 🧠 Deep Learning (Modules 6-10)
