@@ -8,17 +8,11 @@ next_steps: []
 learning_objectives: []
 ---
 
-# Training
+# Module: Training
 ---
-**Course Navigation:** [Home](../intro.html) → [Module 10: 10 Training](#)
+**Course Navigation:** [Home](../intro.html) → [Training](#)
 
 ---
-
-
-<div class="admonition note">
-<p class="admonition-title">📊 Module Info</p>
-<p><strong>Difficulty:</strong> ⭐ ⭐⭐⭐⭐ | <strong>Time:</strong> 6-8 hours</p>
-</div>
 
 
 

@@ -8,17 +8,11 @@ next_steps: []
 learning_objectives: []
 ---
 
-# Layers
+# Module: Layers
 ---
-**Course Navigation:** [Home](../intro.html) → [Module 4: 04 Layers](#)
+**Course Navigation:** [Home](../intro.html) → [Layers](#)
 
 ---
-
-
-<div class="admonition note">
-<p class="admonition-title">📊 Module Info</p>
-<p><strong>Difficulty:</strong> ⭐ ⭐⭐⭐ | <strong>Time:</strong> 4-5 hours</p>
-</div>
 
 
 
