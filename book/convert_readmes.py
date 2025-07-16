@@ -83,15 +83,46 @@ def enhance_content_for_web(content: str, module_name: str, module_num: int) -> 
 
 """
     
-    # Add simple interactive links and navigation at the end
+    # Add interactive learning elements and navigation at the end
     interactive_elements = f"""
 ---
 
-## 🚀 Ready to Build?
+## 🚀 Interactive Learning
 
-**🚀 [Launch in Binder](https://mybinder.org/v2/gh/MLSysBook/TinyTorch/main?filepath=modules/source/{module_name}/{module_name.split('_', 1)[1]}_dev.ipynb)** *(Live Jupyter environment)*
+<div class="admonition tip">
+<p class="admonition-title">💡 Try It Yourself</p>
+<p>Ready to start building? Choose your preferred environment:</p>
+</div>
 
-**📓 [Open in Colab](https://colab.research.google.com/github/MLSysBook/TinyTorch/blob/main/modules/source/{module_name}/{module_name.split('_', 1)[1]}_dev.ipynb)** *(Google's cloud environment)*
+### 🔧 **Builder Environment**
+<div class="admonition note">
+<p class="admonition-title">🏗️ Quick Start</p>
+<p>Jump directly into the implementation with our guided builder:</p>
+</div>
+
+<a href="https://mybinder.org/v2/gh/MLSysBook/TinyTorch/main?filepath=modules/source/{module_name}/{module_name.split('_', 1)[1]}_dev.ipynb" target="_blank" class="btn btn-primary">
+    🚀 Launch Builder
+</a>
+
+### 📓 **Jupyter Notebook**
+<div class="admonition note">
+<p class="admonition-title">📚 Full Development</p>
+<p>Work with the complete development environment:</p>
+</div>
+
+<a href="https://mybinder.org/v2/gh/MLSysBook/TinyTorch/main?filepath=modules/source/{module_name}/{module_name.split('_', 1)[1]}_dev.ipynb" target="_blank" class="btn btn-success">
+    📓 Open Jupyter
+</a>
+
+### 🎯 **Google Colab**
+<div class="admonition note">
+<p class="admonition-title">☁️ Cloud Environment</p>
+<p>Use Google's cloud-based notebook environment:</p>
+</div>
+
+<a href="https://colab.research.google.com/github/MLSysBook/TinyTorch/blob/main/modules/source/{module_name}/{module_name.split('_', 1)[1]}_dev.ipynb" target="_blank" class="btn btn-info">
+    ☁️ Open in Colab
+</a>
 
 ---
 
