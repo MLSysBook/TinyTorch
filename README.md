@@ -143,18 +143,18 @@ Module 11: Model compression  →  Module 13: Benchmarking tools   →  Module 1
 - ✅ Deploying compressed models with 75% size reduction
 - ✅ Production monitoring with comprehensive metrics
 
-### **🚀 Capstone: Your Framework, Your Project**
+### **🚀 Capstone: Optimize Your Framework**
 
-After completing the 14 core modules, you have a **complete ML framework**. The final challenge: build something real using **only your TinyTorch implementation**.
+After completing the 14 core modules, you have a **complete ML framework**. The final challenge: make it better through systems engineering.
 
-**Choose Your Application:**
-- 🖼️ **Computer Vision**: Object detection, image segmentation, style transfer
-- 📝 **Natural Language**: Sentiment analysis, text generation, translation  
-- 🎵 **Audio/Speech**: Voice recognition, music generation, audio classification
-- 🧬 **Scientific ML**: Molecular modeling, climate prediction, medical imaging
-- 🎮 **Creative AI**: Game AI, generative art, interactive systems
+**Choose Your Focus:**
+- ⚡ **Performance Engineering**: GPU kernels, vectorization, memory-efficient operations
+- 🧠 **Algorithm Extensions**: Transformer layers, BatchNorm, Dropout, advanced optimizers  
+- 🔧 **Systems Optimization**: Multi-GPU training, distributed computing, memory profiling
+- 📊 **Benchmarking Analysis**: Compare your framework to PyTorch, identify bottlenecks
+- 🛠️ **Developer Tools**: Better debugging, visualization, error messages, testing
 
-**The Constraint:** No `import torch` allowed. Use your own tensors, your own layers, your own optimizers. This proves your framework works and demonstrates true mastery of ML systems engineering.
+**The Constraint:** No `import torch` allowed. Build on **your TinyTorch implementation**. This demonstrates true mastery of ML systems engineering and optimization.
 
 ---
 
