@@ -30,7 +30,7 @@ git clone https://github.com/mlsysbook/TinyTorch.git
 cd TinyTorch
 pip install -e .
 tito system doctor                         # Verify your setup
-cd modules/source/00_setup
+cd modules/source/01_setup
 jupyter lab setup_dev.py                  # Launch your first module
 ```
 
@@ -42,8 +42,8 @@ tito system info
 tito system doctor
 
 # Module workflow
-tito export 00_setup
-tito test 00_setup
+tito export 01_setup
+tito test 01_setup
 tito nbdev build                          # Update package
 ```
 
@@ -51,25 +51,25 @@ tito nbdev build                          # Update package
 
 ## 📚 Complete Course: 14 Modules
 
-### **🏗️ Foundations** (Modules 00-04)
-* **00_setup**: Development environment and CLI tools
-* **01_tensor**: N-dimensional arrays and tensor operations  
-* **02_activations**: ReLU, Sigmoid, Tanh, Softmax functions
-* **03_layers**: Dense layers and matrix operations
-* **04_networks**: Sequential networks and MLPs
+### **🏗️ Foundations** (Modules 01-05)
+* **01_setup**: Development environment and CLI tools
+* **02_tensor**: N-dimensional arrays and tensor operations  
+* **03_activations**: ReLU, Sigmoid, Tanh, Softmax functions
+* **04_layers**: Dense layers and matrix operations
+* **05_networks**: Sequential networks and MLPs
 
-### **🧠 Deep Learning** (Modules 05-08)
-* **05_cnn**: Convolutional neural networks and image processing
-* **06_dataloader**: Data loading, batching, and preprocessing
-* **07_autograd**: Automatic differentiation and backpropagation  
-* **08_optimizers**: SGD, Adam, and learning rate scheduling
+### **🧠 Deep Learning** (Modules 06-09)
+* **06_cnn**: Convolutional neural networks and image processing
+* **07_dataloader**: Data loading, batching, and preprocessing
+* **08_autograd**: Automatic differentiation and backpropagation  
+* **09_optimizers**: SGD, Adam, and learning rate scheduling
 
-### **⚡ Systems & Production** (Modules 09-13)
-* **09_training**: Training loops, metrics, and validation
-* **10_compression**: Model pruning, quantization, and distillation
-* **11_kernels**: Performance optimization and custom operations
-* **12_benchmarking**: Profiling, testing, and performance analysis
-* **13_mlops**: Monitoring, deployment, and production systems
+### **⚡ Systems & Production** (Modules 10-14)
+* **10_training**: Training loops, metrics, and validation
+* **11_compression**: Model pruning, quantization, and distillation
+* **12_kernels**: Performance optimization and custom operations
+* **13_benchmarking**: Profiling, testing, and performance analysis
+* **14_mlops**: Monitoring, deployment, and production systems
 
 **Status**: All 14 modules complete with inline tests and educational content
 
@@ -99,14 +99,14 @@ tito nbdev build                          # Update package
 git checkout dev
 
 # Edit source modules  
-cd modules/source/01_tensor
+cd modules/source/02_tensor
 jupyter lab tensor_dev.py
 
 # Export to package
-tito export 01_tensor
+tito export 02_tensor
 
 # Test your implementation
-tito test 01_tensor
+tito test 02_tensor
 
 # Build complete package
 tito nbdev build
@@ -223,7 +223,7 @@ git clone https://github.com/mlsysbook/TinyTorch.git
 cd TinyTorch
 pip install -e .
 tito system doctor
-cd modules/source/00_setup
+cd modules/source/01_setup
 jupyter lab setup_dev.py
 ```
 
@@ -235,7 +235,7 @@ cd TinyTorch
 tito system info
 
 # Test module workflow
-tito export 00_setup && tito test 00_setup
+tito export 01_setup && tito test 01_setup
 ```
 
 ---
