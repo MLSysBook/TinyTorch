@@ -25,43 +25,43 @@ class ModuleConverter:
         # Use absolute paths relative to project root
         project_root = Path(__file__).parent.parent
         self.modules_dir = project_root / "modules/source"
-        self.book_dir = project_root / "book/tinytorch-course"
+        self.book_dir = project_root / "book"
         self.chapters_dir = self.book_dir / "chapters"
         
         # Module to chapter mapping
         self.module_mapping = {
-            "00_setup": {"title": "Development Environment", "filename": "00-setup"},
-            "01_tensor": {"title": "Tensors", "filename": "01-tensor"},
-            "02_activations": {"title": "Activations", "filename": "02-activations"},
-            "03_layers": {"title": "Layers", "filename": "03-layers"},
-            "04_networks": {"title": "Networks", "filename": "04-networks"},
-            "05_cnn": {"title": "CNNs", "filename": "05-cnn"},
-            "06_dataloader": {"title": "DataLoader", "filename": "06-dataloader"},
-            "07_autograd": {"title": "Autograd", "filename": "07-autograd"},
-            "08_optimizers": {"title": "Optimizers", "filename": "08-optimizers"},
-            "09_training": {"title": "Training", "filename": "09-training"},
-            "10_compression": {"title": "Compression", "filename": "10-compression"},
-            "11_kernels": {"title": "Kernels", "filename": "11-kernels"},
-            "12_benchmarking": {"title": "Benchmarking", "filename": "12-benchmarking"},
-            "13_mlops": {"title": "MLOps", "filename": "13-mlops"},
+            "01_setup": {"title": "Development Environment", "filename": "01-setup"},
+            "02_tensor": {"title": "Tensors", "filename": "02-tensor"},
+            "03_activations": {"title": "Activations", "filename": "03-activations"},
+            "04_layers": {"title": "Layers", "filename": "04-layers"},
+            "05_networks": {"title": "Networks", "filename": "05-networks"},
+            "06_cnn": {"title": "CNNs", "filename": "06-cnn"},
+            "07_dataloader": {"title": "DataLoader", "filename": "07-dataloader"},
+            "08_autograd": {"title": "Autograd", "filename": "08-autograd"},
+            "09_optimizers": {"title": "Optimizers", "filename": "09-optimizers"},
+            "10_training": {"title": "Training", "filename": "10-training"},
+            "11_compression": {"title": "Compression", "filename": "11-compression"},
+            "12_kernels": {"title": "Kernels", "filename": "12-kernels"},
+            "13_benchmarking": {"title": "Benchmarking", "filename": "13-benchmarking"},
+            "14_mlops": {"title": "MLOps", "filename": "14-mlops"},
         }
         
         # Mapping from directory name to dev file name
         self.dev_file_mapping = {
-            "00_setup": "setup_dev.py",
-            "01_tensor": "tensor_dev.py", 
-            "02_activations": "activations_dev.py",
-            "03_layers": "layers_dev.py",
-            "04_networks": "networks_dev.py",
-            "05_cnn": "cnn_dev.py",
-            "06_dataloader": "dataloader_dev.py",
-            "07_autograd": "autograd_dev.py",
-            "08_optimizers": "optimizers_dev.py",
-            "09_training": "training_dev.py",
-            "10_compression": "compression_dev.py",
-            "11_kernels": "kernels_dev.py",
-            "12_benchmarking": "benchmarking_dev.py",
-            "13_mlops": "mlops_dev.py",
+            "01_setup": "setup_dev.py",
+            "02_tensor": "tensor_dev.py", 
+            "03_activations": "activations_dev.py",
+            "04_layers": "layers_dev.py",
+            "05_networks": "networks_dev.py",
+            "06_cnn": "cnn_dev.py",
+            "07_dataloader": "dataloader_dev.py",
+            "08_autograd": "autograd_dev.py",
+            "09_optimizers": "optimizers_dev.py",
+            "10_training": "training_dev.py",
+            "11_compression": "compression_dev.py",
+            "12_kernels": "kernels_dev.py",
+            "13_benchmarking": "benchmarking_dev.py",
+            "14_mlops": "mlops_dev.py",
         }
     
     def convert_to_notebook(self, dev_file: Path) -> Optional[Path]:
@@ -140,6 +140,151 @@ class ModuleConverter:
         })
         
         return notebook
+    
+    def extract_learning_goals(self, dev_file: Path) -> str:
+        """Extract learning goals from source file and format as admonition block."""
+        with open(dev_file, 'r') as f:
+            content = f.read()
+        
+        # Find the Learning Goals section
+        goals_start = content.find('## Learning Goals\n')
+        if goals_start == -1:
+            return ""
+        
+        # Find the end of the goals section (next ## heading)
+        goals_content_start = goals_start + len('## Learning Goals\n')
+        next_section = content.find('\n## ', goals_content_start)
+        
+        if next_section == -1:
+            # If no next section found, look for next markdown cell
+            next_section = content.find('\n# %%', goals_content_start)
+        
+        if next_section == -1:
+            goals_text = content[goals_content_start:].strip()
+        else:
+            goals_text = content[goals_content_start:next_section].strip()
+        
+        # Format as admonition block
+        admonition = ['```{admonition} 🎯 Learning Goals\n']
+        admonition.append(':class: tip\n')
+        for line in goals_text.split('\n'):
+            if line.strip():
+                admonition.append(f'{line}\n')
+        admonition.append('```\n\n')
+        
+        return ''.join(admonition)
+    
+    def extract_module_overview(self, dev_file: Path) -> str:
+        """Extract first markdown cell content for book overview."""
+        with open(dev_file, 'r') as f:
+            content = f.read()
+        
+        # Find first markdown cell
+        start = content.find('# %% [markdown]\n"""')
+        if start == -1:
+            return ""
+            
+        end = content.find('"""', start + 20)
+        if end == -1:
+            return ""
+        
+        # Extract and clean the content
+        overview = content[start + len('# %% [markdown]\n"""'):end].strip()
+        
+        # Replace Learning Goals section with admonition block
+        learning_goals = self.extract_learning_goals(dev_file)
+        if learning_goals and '## Learning Goals' in overview:
+            # Find and replace the Learning Goals section
+            goals_start = overview.find('## Learning Goals')
+            if goals_start != -1:
+                # Find end of goals section
+                next_section = overview.find('\n## ', goals_start + 1)
+                if next_section == -1:
+                    # Goals are at the end
+                    overview = overview[:goals_start] + learning_goals
+                else:
+                    # Replace goals section with admonition
+                    overview = (overview[:goals_start] + 
+                              learning_goals + 
+                              overview[next_section:])
+        
+        return overview
+    
+    def create_module_overview_page(self, module_name: str) -> bool:
+        """Create a module overview page for the book (hybrid approach)."""
+        if module_name not in self.module_mapping:
+            return False
+        
+        module_dir = self.modules_dir / module_name
+        dev_file_name = self.dev_file_mapping.get(module_name)
+        if not dev_file_name:
+            return False
+        
+        dev_file = module_dir / dev_file_name
+        if not dev_file.exists():
+            return False
+        
+        module_info = self.module_mapping[module_name]
+        
+        # Extract overview content
+        overview = self.extract_module_overview(dev_file)
+        
+        # Create interactive launch buttons
+        github_url = f"https://github.com/mlsysbook/TinyTorch/blob/main/modules/source/{module_name}/{dev_file_name}"
+        binder_url = f"https://mybinder.org/v2/gh/mlsysbook/TinyTorch/main?filepath=modules/source/{module_name}/{dev_file_name.replace('.py', '.ipynb')}"
+        colab_url = f"https://colab.research.google.com/github/mlsysbook/TinyTorch/blob/main/modules/source/{module_name}/{dev_file_name.replace('.py', '.ipynb')}"
+        
+        interactive_section = f"""
+## 🚀 Interactive Learning
+
+Choose your preferred way to engage with this module:
+
+````{{grid}} 1 2 3 3
+
+```{{grid-item-card}} 🚀 Launch Binder
+:link: {binder_url}
+:class-header: bg-light
+
+Run this module interactively in your browser. No installation required!
+```
+
+```{{grid-item-card}} ⚡ Open in Colab  
+:link: {colab_url}
+:class-header: bg-light
+
+Use Google Colab for GPU access and cloud compute power.
+```
+
+```{{grid-item-card}} 📖 View Source
+:link: {github_url}
+:class-header: bg-light
+
+Browse the Python source code and understand the implementation.
+```
+
+````
+
+```{{admonition}} 💾 Save Your Progress
+:class: tip
+**Binder sessions are temporary!** Download your completed notebook when done, or switch to local development for persistent work.
+
+Ready for serious development? → [🏗️ Local Setup Guide](../usage-paths/serious-development.md)
+```
+
+"""
+        
+        # Combine everything
+        page_content = overview + interactive_section
+        
+        # Save to chapters directory
+        self.chapters_dir.mkdir(parents=True, exist_ok=True)
+        output_file = self.chapters_dir / f"{module_info['filename']}.md"
+        
+        with open(output_file, 'w') as f:
+            f.write(page_content)
+        
+        print(f"✅ Created overview page: {output_file}")
+        return True
     
     def add_book_frontmatter(self, notebook: Dict[str, Any], module_name: str, title: str) -> Dict[str, Any]:
         """Add Jupyter Book frontmatter to the notebook."""
@@ -264,14 +409,36 @@ def main():
     import argparse
     
     parser = argparse.ArgumentParser(description="Convert TinyTorch modules to Jupyter Book")
-    parser.add_argument('--module', help='Convert specific module (e.g., 00_setup)')
+    parser.add_argument('--module', help='Convert specific module (e.g., 01_setup)')
     parser.add_argument('--all', action='store_true', help='Convert all modules')
+    parser.add_argument('--overview', action='store_true', help='Create overview pages instead of full notebooks')
+    parser.add_argument('--overview-module', help='Create overview page for specific module')
     
     args = parser.parse_args()
     
     converter = ModuleConverter()
     
-    if args.module:
+    if args.overview_module:
+        success = converter.create_module_overview_page(args.overview_module)
+        sys.exit(0 if success else 1)
+    elif args.overview:
+        # Create overview pages for all modules
+        print("🔄 Creating module overview pages for Jupyter Book...")
+        success_count = 0
+        total_count = 0
+        
+        for module_name in converter.module_mapping.keys():
+            total_count += 1
+            if converter.create_module_overview_page(module_name):
+                success_count += 1
+        
+        print(f"\n📊 Overview Creation Summary:")
+        print(f"   ✅ Success: {success_count}/{total_count} modules")
+        print(f"   📁 Output: {converter.chapters_dir}")
+        
+        success = success_count == total_count
+        sys.exit(0 if success else 1)
+    elif args.module:
         success = converter.convert_module(args.module)
         sys.exit(0 if success else 1)
     elif args.all:
