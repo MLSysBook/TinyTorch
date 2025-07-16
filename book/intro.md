@@ -2,11 +2,11 @@
 
 **Most ML education teaches you to _use_ frameworks. TinyTorch teaches you to _build_ them.**
 
-TinyTorch is an educational framework designed specifically for learning by building. Instead of using PyTorch or TensorFlow, you implement every component from scratch — tensors, autograd, optimizers, even MLOps monitoring. This hands-on approach develops the deep systems understanding that distinguishes ML engineers from ML users.
+TinyTorch is an educational framework designed specifically for learning by building. Instead of using PyTorch or TensorFlow, you implement every component from scratch: tensors, autograd, optimizers, even MLOps monitoring. This hands on approach develops the deep systems understanding that distinguishes ML engineers from ML users.
 
 ```{admonition} 🎯 What You'll Build
 :class: tip
-**A complete ML framework from scratch**: your own PyTorch-style toolkit that can:
+**A complete ML framework from scratch**: your own PyTorch style toolkit that can:
 - ✅ Train neural networks on CIFAR-10 (real dataset!)
 - ✅ Implement automatic differentiation (the "magic" behind PyTorch)  
 - ✅ Deploy production systems with 75% model compression
@@ -38,23 +38,11 @@ Traditional ML Course:          TinyTorch Approach:
 Go from "How does this work?" 🤷 to "I implemented every line!" 💪
 ```
 
-TinyTorch focuses on implementation and systems thinking. You learn *how* to build working systems with progressive scaffolding, production-ready practices, and comprehensive course infrastructure that bridges the gap between learning and building.
+TinyTorch focuses on implementation and systems thinking. You learn *how* to build working systems with progressive scaffolding, production ready practices, and comprehensive course infrastructure that bridges the gap between learning and building.
 
 ---
 
-## 🌟 **How This Works**
-
-**You don't just learn about tensors** — you implement the `Tensor` class from scratch. **You don't just use ReLU** — you write the activation function yourself. Every component becomes part of your personal ML framework that actually works on real data.
-
-**Professional practices from day one:** `tito` CLI for project management, automated testing for quality assurance, real datasets like CIFAR-10, and MLOps patterns for deployment. This isn't toy code — it's the foundation for production ML systems.
-
-**Your code works immediately.** Implement a `ReLU` function in Module 3, and by Module 5 you're watching it power real neural networks. Visual progress indicators and comprehensive testing ensure you always know your implementations are correct.
-
-**Progressive mastery:** Start simple with a `hello_world()` function, build systematically through tensors and layers, and end with production MLOps systems. Each module builds on previous work, creating a complete learning journey from foundations to advanced systems.
-
----
-
-## 🎓 **Learning Philosophy: Build → Use → Master**
+## 🎓 **Learning Philosophy: Build, Use, Master**
 
 Every component follows the same powerful learning cycle:
 
@@ -162,4 +150,4 @@ TinyTorch originated from CS249r: Tiny Machine Learning Systems at Harvard Unive
 
 **Complementary Learning**: For comprehensive ML systems knowledge, we recommend [**Machine Learning Systems**](https://mlsysbook.ai) by Prof. Vijay Janapa Reddi. While TinyTorch teaches you to **build** ML systems from scratch, that book provides the broader **systems context** and engineering principles for production AI.
 
-TinyTorch is designed as an educational framework with progressive scaffolding, production-ready practices, and comprehensive course infrastructure that bridges the gap between learning and building through systematic pedagogy — transforming students from framework users into framework builders through hands-on implementation experience.
+
