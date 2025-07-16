@@ -289,4 +289,4 @@ tito export 01_setup && tito test 01_setup
 
 ---
 
-**🔥 Ready to build your own ML framework? Start with TinyTorch and understand every layer. _Start Small. Go Deep._**
+**🔥 Ready to build your ML framework? Start with TinyTorch and understand every layer. _Start Small. Go Deep._**
