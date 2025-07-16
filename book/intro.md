@@ -31,6 +31,11 @@ TinyTorch is a minimalist educational framework designed for learning by doing. 
 
 _Everyone wants to be an astronaut._ 🧑‍🚀 _TinyTorch teaches you how to build the rocket ship._ 🚀
 
+```{admonition} 📖 Complementary Learning
+:class: note
+For comprehensive ML systems knowledge, we recommend [**Machine Learning Systems**](https://mlsysbook.ai) by [Prof. Vijay Janapa Reddi](https://profvjreddi.github.io/website/). While TinyTorch teaches you to **build** ML systems from scratch, that book provides the broader **systems context** and engineering principles for production AI.
+```
+
 ---
 
 ## 💡 **The Core Difference**
@@ -58,7 +63,7 @@ TinyTorch focuses on implementation and systems thinking. You learn *how* to bui
 
 ---
 
-## 🎓 **Learning Philosophy: Build, Use, Master**
+## 🎓 **Learning Philosophy: Build, Use, Reflect**
 
 Every component follows the same powerful learning cycle:
 
@@ -78,7 +83,7 @@ layer = ReLU()
 output = layer.forward(input_tensor)  # Your code working!
 ```
 
-**💡 Master:** See it working in real networks
+**💡 Reflect:** See it working in real networks
 ```python
 # Your ReLU is now part of a real neural network
 model = Sequential([
@@ -88,7 +93,7 @@ model = Sequential([
 ])
 ```
 
-This pattern repeats for every component: tensors, layers, optimizers, even MLOps systems. You build it, use it immediately, then see how it fits into larger systems.
+This pattern repeats for every component: tensors, layers, optimizers, even MLOps systems. You build it, use it immediately, then reflect on how it fits into larger systems.
 
 ---
 
@@ -124,7 +129,7 @@ Model optimization, high-performance operations, systematic evaluation, and prod
 
 ```{admonition} 🎓 Capstone Project
 :class: note
-**15. Framework Optimization**
+**15. Capstone Project**
 
 Choose your focus: performance engineering, algorithm extensions, systems optimization, framework analysis, or developer tools.
 ```
@@ -142,7 +147,7 @@ Choose your focus: performance engineering, algorithm extensions, systems optimi
 **Result:** A complete, working ML framework that you built from scratch, capable of training real neural networks on real datasets.
 ```
 
-### **🚀 Capstone: Optimize Your Framework**
+### **🎯 Capstone: Optimize Your Framework**
 
 After completing the 14 core modules, you have a **complete ML framework**. Now make it better through systems engineering:
 
@@ -157,7 +162,7 @@ After completing the 14 core modules, you have a **complete ML framework**. Now 
 
 ---
 
-## 🚀 **Choose Your Learning Path**
+## 🛤️ **Choose Your Learning Path**
 
 ```{admonition} Three Ways to Engage with TinyTorch
 :class: important
@@ -186,7 +191,7 @@ After completing the 14 core modules, you have a **complete ML framework**. Now 
 
 ---
 
-## 🚀 **Ready to Start?**
+## ⚡ **Ready to Start?**
 
 ### **Quick Taste: Try Module 1 Right Now**
 Want to see what TinyTorch feels like? **[Launch the Setup chapter](chapters/01-setup.md)** in Binder and implement your first TinyTorch function in 2 minutes!
@@ -195,8 +200,6 @@ Want to see what TinyTorch feels like? **[Launch the Setup chapter](chapters/01-
 
 ## 🙏 **Acknowledgments**
 
-TinyTorch originated from CS249r: Tiny Machine Learning Systems at Harvard University. We're inspired by projects like [tinygrad](https://github.com/geohot/tinygrad) and [micrograd](https://github.com/karpathy/micrograd) that demonstrate the power of minimal implementations.
-
-**Complementary Learning**: For comprehensive ML systems knowledge, we recommend [**Machine Learning Systems**](https://mlsysbook.ai) by [Prof. Vijay Janapa Reddi](https://profvjreddi.github.io/website/). While TinyTorch teaches you to **build** ML systems from scratch, that book provides the broader **systems context** and engineering principles for production AI.
+TinyTorch originated from CS249r: Tiny Machine Learning Systems at Harvard University. We're inspired by projects like [tinygrad](https://github.com/geohot/tinygrad), [micrograd](https://github.com/karpathy/micrograd), and [MiniTorch](https://minitorch.github.io/) that demonstrate the power of minimal implementations.
 
 
