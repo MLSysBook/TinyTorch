@@ -1,67 +1,72 @@
 
+
 <!DOCTYPE html>
 
 
-<html lang="en" data-content_root="../" >
+<html lang="en" data-content_root="" >
 
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-    <title>CNN - Convolutional Neural Networks &#8212; Tiny🔥Torch: Build your own Machine Learning framework from scratch</title>
+    <title>Module: CNN &#8212; Tiny🔥Torch: Build your own Machine Learning framework from scratch</title>
   
   
   
   <script data-cfasync="false">
     document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
-    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
   </script>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
-<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
-<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link href="../_static/styles/theme.css?digest=5b4479735964841361fd" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=5b4479735964841361fd" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=5b4479735964841361fd" rel="stylesheet" />
 
   
-  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
-  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+  <link href="../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=5b4479735964841361fd" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
 
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
-    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
-    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css?v=6644e6bb" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
-<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
-  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=5b4479735964841361fd" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=5b4479735964841361fd" />
+  <script src="../_static/vendor/fontawesome/6.1.2/js/all.min.js?digest=5b4479735964841361fd"></script>
 
-    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
-    <script src="../_static/doctools.js?v=9a2dae69"></script>
-    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
-    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
-    <script src="../_static/copybutton.js?v=f281be69"></script>
-    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
     <script>let toggleHintShow = 'Click to show';</script>
     <script>let toggleHintHide = 'Click to hide';</script>
     <script>let toggleOpenOnPrint = 'true';</script>
-    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script src="../_static/togglebutton.js"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
-    <script src="../_static/design-tabs.js?v=36754332"></script>
-    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
-    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
-    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
-    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script src="../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../_static/sphinx-thebe.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'chapters/06-cnn';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="DataLoader - Data Loading and Preprocessing" href="07-dataloader.html" />
-    <link rel="prev" title="Networks - Neural Network Architectures" href="05-networks.html" />
+    <link rel="next" title="Module: DataLoader" href="07-dataloader.html" />
+    <link rel="prev" title="Module: Networks" href="05-networks.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -71,23 +76,28 @@
 
   
   
-  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  <a class="skip-link" href="#main-content">Skip to main content</a>
   
   <div id="pst-scroll-pixel-helper"></div>
+
   
   <button type="button" class="btn rounded-pill" id="pst-back-to-top">
-    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
 
   
   <input type="checkbox"
           class="sidebar-toggle"
-          id="pst-primary-sidebar-checkbox"/>
-  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
   
   <input type="checkbox"
           class="sidebar-toggle"
-          id="pst-secondary-sidebar-checkbox"/>
-  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
   
   <div class="search-button__wrapper">
     <div class="search-button__overlay"></div>
@@ -109,20 +119,12 @@
   <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
 </form></div>
   </div>
-
-  <div class="pst-async-banner-revealer d-none">
-  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
-</div>
-
   
-    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
-    </header>
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+    </nav>
   
-
   <div class="bd-container">
     <div class="bd-container__inner bd-page-width">
-      
-      
       
       <div class="bd-sidebar-primary bd-sidebar">
         
@@ -138,8 +140,6 @@
     <div class="sidebar-primary-items__start sidebar-primary__section">
         <div class="sidebar-primary-item">
 
-  
-    
   
 
 <a class="navbar-brand logo" href="../intro.html">
@@ -158,18 +158,7 @@
   
   
 </a></div>
-        <div class="sidebar-primary-item">
-
- <script>
- document.write(`
-   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <i class="fa-solid fa-magnifying-glass"></i>
-    <span class="search-button__default-text">Search</span>
-    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
-   </button>
- `);
- </script></div>
-        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item navbar-nav active">
         
         <ul class="nav bd-sidenav bd-sidenav__home-link">
@@ -225,7 +214,7 @@
 
       </div>
       
-      <main id="main-content" class="bd-main" role="main">
+      <main id="main-content" class="bd-main">
         
         
 
@@ -234,14 +223,14 @@
           <div class="bd-content">
             <div class="bd-article-container">
               
-              <div class="bd-header-article d-print-none">
+              <div class="bd-header-article">
 <div class="header-article-items header-article__inner">
   
     <div class="header-article-items__start">
       
-        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
   <span class="fa-solid fa-bars"></span>
-</button></div>
+</label></div>
       
     </div>
   
@@ -383,10 +372,10 @@
 
 <script>
 document.write(`
-  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
-    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
-    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
   </button>
 `);
 </script>
@@ -394,14 +383,14 @@ document.write(`
 
 <script>
 document.write(`
-  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <i class="fa-solid fa-magnifying-glass fa-lg"></i>
   </button>
 `);
 </script>
-<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <span class="fa-solid fa-list"></span>
-</button>
+</label>
 </div></div>
       
     </div>
@@ -412,7 +401,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>CNN - Convolutional Neural Networks</h1>
+    <h1>Module: CNN</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -422,9 +411,36 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#build-use-reflect">Build → Use → Reflect</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-you-ll-learn">What You’ll Learn</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#interactive-learning">🚀 Interactive Learning</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-info">📊 Module Info</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-objectives">🎯 Learning Objectives</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#build-use-analyze">🧠 Build → Use → Analyze</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-you-ll-build">📚 What You’ll Build</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#core-convolution-implementation">Core Convolution Implementation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#complete-cnn-architecture">Complete CNN Architecture</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#convolution-operation-details">Convolution Operation Details</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cnn-building-blocks">CNN Building Blocks</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#getting-started">🚀 Getting Started</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#prerequisites">Prerequisites</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#development-workflow">Development Workflow</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#testing-your-implementation">🧪 Testing Your Implementation</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#comprehensive-test-suite">Comprehensive Test Suite</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#test-coverage-areas">Test Coverage Areas</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inline-testing-visualization">Inline Testing &amp; Visualization</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#manual-testing-examples">Manual Testing Examples</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#key-concepts">🎯 Key Concepts</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#real-world-applications">Real-World Applications</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#computer-vision-fundamentals">Computer Vision Fundamentals</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#convolution-mathematics">Convolution Mathematics</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cnn-architecture-patterns">CNN Architecture Patterns</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ready-to-build">🎉 Ready to Build?</a></li>
 </ul>
             </nav>
         </div>
@@ -434,42 +450,244 @@ document.write(`
               
                 
 <div id="searchbox"></div>
-                <article class="bd-article">
+                <article class="bd-article" role="main">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="cnn-convolutional-neural-networks">
-<h1>CNN - Convolutional Neural Networks<a class="headerlink" href="#cnn-convolutional-neural-networks" title="Link to this heading">#</a></h1>
-<p>Welcome to the CNN module! Here you’ll implement the core building block of modern computer vision: the convolutional layer.</p>
-<div class="tip admonition">
-<p class="admonition-title">🎯 Learning Goals</p>
-<ul class="simple">
-<li><p>Understand the convolution operation and its importance in computer vision</p></li>
-<li><p>Implement Conv2D with explicit for-loops to understand the sliding window mechanism</p></li>
-<li><p>Build convolutional layers that can detect spatial patterns in images</p></li>
-<li><p>Compose Conv2D with other layers to build complete convolutional networks</p></li>
-<li><p>See how convolution enables parameter sharing and translation invariance</p></li>
-</ul>
+  <section class="tex2jax_ignore mathjax_ignore" id="module-cnn">
+<h1>Module: CNN<a class="headerlink" href="#module-cnn" title="Permalink to this heading">#</a></h1>
+<div class="breadcrumb docutils">
+<p>Home → 06 Cnn</p>
 </div>
-<section id="build-use-reflect">
-<h2>Build → Use → Reflect<a class="headerlink" href="#build-use-reflect" title="Link to this heading">#</a></h2>
+<div class="badges docutils">
+<p>⭐⭐⭐⭐ | ⏱️ 6-8 hours</p>
+</div>
+<section id="module-info">
+<h2>📊 Module Info<a class="headerlink" href="#module-info" title="Permalink to this heading">#</a></h2>
+<ul class="simple">
+<li><p><strong>Difficulty</strong>: ⭐⭐⭐ Advanced</p></li>
+<li><p><strong>Time Estimate</strong>: 6-8 hours</p></li>
+<li><p><strong>Prerequisites</strong>: Tensor, Activations, Layers, Networks modules</p></li>
+<li><p><strong>Next Steps</strong>: Training, Computer Vision modules</p></li>
+</ul>
+<p>Implement the core building block of modern computer vision: the convolutional layer. This module teaches you how convolution transforms computer vision from hand-crafted features to learned hierarchical representations that power everything from image recognition to autonomous vehicles.</p>
+</section>
+<section id="learning-objectives">
+<h2>🎯 Learning Objectives<a class="headerlink" href="#learning-objectives" title="Permalink to this heading">#</a></h2>
+<p>By the end of this module, you will be able to:</p>
+<ul class="simple">
+<li><p><strong>Understand convolution fundamentals</strong>: Master the sliding window operation, local connectivity, and weight sharing principles</p></li>
+<li><p><strong>Implement Conv2D from scratch</strong>: Build convolutional layers using explicit loops to understand the core operation</p></li>
+<li><p><strong>Visualize feature learning</strong>: See how convolution builds feature maps and hierarchical representations</p></li>
+<li><p><strong>Design CNN architectures</strong>: Compose convolutional layers with pooling and dense layers into complete networks</p></li>
+<li><p><strong>Apply computer vision principles</strong>: Understand how CNNs revolutionized image processing and pattern recognition</p></li>
+</ul>
+</section>
+<section id="build-use-analyze">
+<h2>🧠 Build → Use → Analyze<a class="headerlink" href="#build-use-analyze" title="Permalink to this heading">#</a></h2>
+<p>This module follows TinyTorch’s <strong>Build → Use → Analyze</strong> framework:</p>
 <ol class="arabic simple">
-<li><p><strong>Build</strong>: Conv2D layer using sliding window convolution from scratch</p></li>
-<li><p><strong>Use</strong>: Transform images and see feature maps emerge</p></li>
-<li><p><strong>Reflect</strong>: How CNNs learn hierarchical spatial patterns</p></li>
+<li><p><strong>Build</strong>: Implement Conv2D from scratch using explicit for-loops to understand the core convolution operation</p></li>
+<li><p><strong>Use</strong>: Compose Conv2D with activation functions and other layers to build complete convolutional networks</p></li>
+<li><p><strong>Analyze</strong>: Visualize learned features, understand architectural choices, and compare CNN performance characteristics</p></li>
 </ol>
 </section>
-<section id="what-you-ll-learn">
-<h2>What You’ll Learn<a class="headerlink" href="#what-you-ll-learn" title="Link to this heading">#</a></h2>
-<p>By the end of this module, you’ll understand:</p>
+<section id="what-you-ll-build">
+<h2>📚 What You’ll Build<a class="headerlink" href="#what-you-ll-build" title="Permalink to this heading">#</a></h2>
+<section id="core-convolution-implementation">
+<h3>Core Convolution Implementation<a class="headerlink" href="#core-convolution-implementation" title="Permalink to this heading">#</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Conv2D layer: the heart of computer vision</span>
+<span class="n">conv_layer</span> <span class="o">=</span> <span class="n">Conv2D</span><span class="p">(</span><span class="n">in_channels</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">out_channels</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">input_image</span> <span class="o">=</span> <span class="n">Tensor</span><span class="p">([[[[</span><span class="o">...</span><span class="p">]]]])</span>  <span class="c1"># (batch, channels, height, width)</span>
+<span class="n">feature_maps</span> <span class="o">=</span> <span class="n">conv_layer</span><span class="p">(</span><span class="n">input_image</span><span class="p">)</span>  <span class="c1"># Learned features</span>
+
+<span class="c1"># Understanding the operation</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Input shape: </span><span class="si">{</span><span class="n">input_image</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>     <span class="c1"># (1, 3, 32, 32)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Output shape: </span><span class="si">{</span><span class="n">feature_maps</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>   <span class="c1"># (1, 16, 30, 30)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Learned </span><span class="si">{</span><span class="n">feature_maps</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2"> different feature detectors&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="complete-cnn-architecture">
+<h3>Complete CNN Architecture<a class="headerlink" href="#complete-cnn-architecture" title="Permalink to this heading">#</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Simple CNN for image classification</span>
+<span class="n">cnn</span> <span class="o">=</span> <span class="n">Sequential</span><span class="p">([</span>
+    <span class="n">Conv2D</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="mi">3</span><span class="p">),</span>    <span class="c1"># Feature extraction</span>
+    <span class="n">ReLU</span><span class="p">(),</span>                          <span class="c1"># Nonlinearity</span>
+    <span class="n">MaxPool2D</span><span class="p">(</span><span class="n">kernel_size</span><span class="o">=</span><span class="mi">2</span><span class="p">),</span>        <span class="c1"># Dimensionality reduction</span>
+    <span class="n">Conv2D</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="mi">3</span><span class="p">),</span>   <span class="c1"># Higher-level features</span>
+    <span class="n">ReLU</span><span class="p">(),</span>                          <span class="c1"># More nonlinearity</span>
+    <span class="n">Flatten</span><span class="p">(),</span>                       <span class="c1"># Prepare for dense layers</span>
+    <span class="n">Dense</span><span class="p">(</span><span class="mi">32</span> <span class="o">*</span> <span class="mi">13</span> <span class="o">*</span> <span class="mi">13</span><span class="p">,</span> <span class="mi">128</span><span class="p">),</span>        <span class="c1"># Feature integration</span>
+    <span class="n">ReLU</span><span class="p">(),</span>
+    <span class="n">Dense</span><span class="p">(</span><span class="mi">128</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>                  <span class="c1"># Classification head</span>
+    <span class="n">Sigmoid</span><span class="p">()</span>                        <span class="c1"># Probability outputs</span>
+<span class="p">])</span>
+
+<span class="c1"># End-to-end image classification</span>
+<span class="n">image_batch</span> <span class="o">=</span> <span class="n">Tensor</span><span class="p">([[[[</span><span class="o">...</span><span class="p">]]]])</span>  <span class="c1"># Batch of images</span>
+<span class="n">predictions</span> <span class="o">=</span> <span class="n">cnn</span><span class="p">(</span><span class="n">image_batch</span><span class="p">)</span>     <span class="c1"># Class probabilities</span>
+</pre></div>
+</div>
+</section>
+<section id="convolution-operation-details">
+<h3>Convolution Operation Details<a class="headerlink" href="#convolution-operation-details" title="Permalink to this heading">#</a></h3>
 <ul class="simple">
-<li><p>How convolution works as a sliding window operation</p></li>
-<li><p>Why convolution is perfect for spatial data like images</p></li>
-<li><p>How to build learnable convolutional layers</p></li>
-<li><p>The CNN pipeline: Conv2D → Activation → Flatten → Dense</p></li>
-<li><p>How parameter sharing makes CNNs efficient</p></li>
+<li><p><strong>Sliding Window</strong>: Filter moves across input to detect local patterns</p></li>
+<li><p><strong>Weight Sharing</strong>: Same filter applied everywhere for translation invariance</p></li>
+<li><p><strong>Local Connectivity</strong>: Each output depends only on local input region</p></li>
+<li><p><strong>Feature Maps</strong>: Multiple filters learn different feature detectors</p></li>
 </ul>
 </section>
-<section id="interactive-learning">
-<h2>🚀 Interactive Learning<a class="headerlink" href="#interactive-learning" title="Link to this heading">#</a></h2>
+<section id="cnn-building-blocks">
+<h3>CNN Building Blocks<a class="headerlink" href="#cnn-building-blocks" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Conv2D Layer</strong>: Core convolution operation with learnable filters</p></li>
+<li><p><strong>Pooling Layers</strong>: MaxPool and AvgPool for spatial downsampling</p></li>
+<li><p><strong>Flatten Layer</strong>: Converts 2D feature maps to 1D for dense layers</p></li>
+<li><p><strong>Complete Networks</strong>: Integration with existing Dense and activation layers</p></li>
+</ul>
+</section>
+</section>
+<section id="getting-started">
+<h2>🚀 Getting Started<a class="headerlink" href="#getting-started" title="Permalink to this heading">#</a></h2>
+<section id="prerequisites">
+<h3>Prerequisites<a class="headerlink" href="#prerequisites" title="Permalink to this heading">#</a></h3>
+<p>Ensure you have mastered the foundational network building blocks:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Activate TinyTorch environment</span>
+<span class="nb">source</span><span class="w"> </span>bin/activate-tinytorch.sh
+
+<span class="c1"># Verify all prerequisite modules</span>
+tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--module<span class="w"> </span>tensor
+tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--module<span class="w"> </span>activations
+tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--module<span class="w"> </span>layers
+tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--module<span class="w"> </span>networks
+</pre></div>
+</div>
+</section>
+<section id="development-workflow">
+<h3>Development Workflow<a class="headerlink" href="#development-workflow" title="Permalink to this heading">#</a></h3>
+<ol class="arabic simple">
+<li><p><strong>Open the development file</strong>: <code class="docutils literal notranslate"><span class="pre">modules/source/06_cnn/cnn_dev.py</span></code></p></li>
+<li><p><strong>Implement convolution operation</strong>: Start with explicit for-loop implementation for understanding</p></li>
+<li><p><strong>Build Conv2D layer class</strong>: Wrap convolution in reusable layer interface</p></li>
+<li><p><strong>Add pooling operations</strong>: Implement MaxPool and AvgPool for spatial reduction</p></li>
+<li><p><strong>Create complete CNNs</strong>: Compose layers into full computer vision architectures</p></li>
+<li><p><strong>Export and verify</strong>: <code class="docutils literal notranslate"><span class="pre">tito</span> <span class="pre">export</span> <span class="pre">--module</span> <span class="pre">cnn</span> <span class="pre">&amp;&amp;</span> <span class="pre">tito</span> <span class="pre">test</span> <span class="pre">--module</span> <span class="pre">cnn</span></code></p></li>
+</ol>
+</section>
+</section>
+<section id="testing-your-implementation">
+<h2>🧪 Testing Your Implementation<a class="headerlink" href="#testing-your-implementation" title="Permalink to this heading">#</a></h2>
+<section id="comprehensive-test-suite">
+<h3>Comprehensive Test Suite<a class="headerlink" href="#comprehensive-test-suite" title="Permalink to this heading">#</a></h3>
+<p>Run the full test suite to verify computer vision functionality:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># TinyTorch CLI (recommended)</span>
+tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--module<span class="w"> </span>cnn
+
+<span class="c1"># Direct pytest execution</span>
+python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> </span>tests/<span class="w"> </span>-k<span class="w"> </span>cnn<span class="w"> </span>-v
+</pre></div>
+</div>
+</section>
+<section id="test-coverage-areas">
+<h3>Test Coverage Areas<a class="headerlink" href="#test-coverage-areas" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p>✅ <strong>Convolution Operation</strong>: Verify sliding window operation and local connectivity</p></li>
+<li><p>✅ <strong>Filter Learning</strong>: Test weight initialization and parameter management</p></li>
+<li><p>✅ <strong>Shape Transformations</strong>: Ensure proper input/output shape handling</p></li>
+<li><p>✅ <strong>Pooling Operations</strong>: Verify spatial downsampling and feature preservation</p></li>
+<li><p>✅ <strong>CNN Integration</strong>: Test complete networks with real image-like data</p></li>
+</ul>
+</section>
+<section id="inline-testing-visualization">
+<h3>Inline Testing &amp; Visualization<a class="headerlink" href="#inline-testing-visualization" title="Permalink to this heading">#</a></h3>
+<p>The module includes comprehensive educational feedback and visual analysis:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span># Example inline test output
+🔬 Unit Test: Conv2D implementation...
+✅ Convolution sliding window works correctly
+✅ Weight sharing applied consistently
+✅ Output shapes match expected dimensions
+📈 Progress: Conv2D ✓
+
+# Visualization feedback
+📊 Visualizing convolution operation...
+📈 Showing filter sliding across input
+📊 Feature map generation: 3→16 channels
+</pre></div>
+</div>
+</section>
+<section id="manual-testing-examples">
+<h3>Manual Testing Examples<a class="headerlink" href="#manual-testing-examples" title="Permalink to this heading">#</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">tinytorch.core.tensor</span> <span class="kn">import</span> <span class="n">Tensor</span>
+<span class="kn">from</span> <span class="nn">cnn_dev</span> <span class="kn">import</span> <span class="n">Conv2D</span><span class="p">,</span> <span class="n">MaxPool2D</span><span class="p">,</span> <span class="n">Flatten</span>
+<span class="kn">from</span> <span class="nn">activations_dev</span> <span class="kn">import</span> <span class="n">ReLU</span>
+
+<span class="c1"># Test basic convolution</span>
+<span class="n">conv</span> <span class="o">=</span> <span class="n">Conv2D</span><span class="p">(</span><span class="n">in_channels</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">out_channels</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">input_img</span> <span class="o">=</span> <span class="n">Tensor</span><span class="p">([[[[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">],</span>
+                      <span class="p">[</span><span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">10</span><span class="p">],</span>
+                      <span class="p">[</span><span class="mi">11</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">13</span><span class="p">,</span> <span class="mi">14</span><span class="p">,</span> <span class="mi">15</span><span class="p">],</span>
+                      <span class="p">[</span><span class="mi">16</span><span class="p">,</span> <span class="mi">17</span><span class="p">,</span> <span class="mi">18</span><span class="p">,</span> <span class="mi">19</span><span class="p">,</span> <span class="mi">20</span><span class="p">],</span>
+                      <span class="p">[</span><span class="mi">21</span><span class="p">,</span> <span class="mi">22</span><span class="p">,</span> <span class="mi">23</span><span class="p">,</span> <span class="mi">24</span><span class="p">,</span> <span class="mi">25</span><span class="p">]]]])</span>
+<span class="n">feature_maps</span> <span class="o">=</span> <span class="n">conv</span><span class="p">(</span><span class="n">input_img</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Input: </span><span class="si">{</span><span class="n">input_img</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">, Features: </span><span class="si">{</span><span class="n">feature_maps</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># Test complete CNN pipeline</span>
+<span class="n">relu</span> <span class="o">=</span> <span class="n">ReLU</span><span class="p">()</span>
+<span class="n">pool</span> <span class="o">=</span> <span class="n">MaxPool2D</span><span class="p">(</span><span class="n">kernel_size</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">flatten</span> <span class="o">=</span> <span class="n">Flatten</span><span class="p">()</span>
+
+<span class="c1"># Forward pass through CNN layers</span>
+<span class="n">activated</span> <span class="o">=</span> <span class="n">relu</span><span class="p">(</span><span class="n">feature_maps</span><span class="p">)</span>
+<span class="n">pooled</span> <span class="o">=</span> <span class="n">pool</span><span class="p">(</span><span class="n">activated</span><span class="p">)</span>
+<span class="n">flattened</span> <span class="o">=</span> <span class="n">flatten</span><span class="p">(</span><span class="n">pooled</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Final shape: </span><span class="si">{</span><span class="n">flattened</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="key-concepts">
+<h2>🎯 Key Concepts<a class="headerlink" href="#key-concepts" title="Permalink to this heading">#</a></h2>
+<section id="real-world-applications">
+<h3>Real-World Applications<a class="headerlink" href="#real-world-applications" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Image Classification</strong>: CNNs power systems like ImageNet winners (AlexNet, ResNet, EfficientNet)</p></li>
+<li><p><strong>Object Detection</strong>: YOLO and R-CNN families use CNN backbones for feature extraction</p></li>
+<li><p><strong>Medical Imaging</strong>: CNNs analyze X-rays, MRIs, and CT scans for diagnostic assistance</p></li>
+<li><p><strong>Autonomous Vehicles</strong>: CNN-based perception systems process camera feeds for navigation</p></li>
+</ul>
+</section>
+<section id="computer-vision-fundamentals">
+<h3>Computer Vision Fundamentals<a class="headerlink" href="#computer-vision-fundamentals" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Translation Invariance</strong>: Convolution detects patterns regardless of position in image</p></li>
+<li><p><strong>Hierarchical Features</strong>: Early layers detect edges, later layers detect objects and concepts</p></li>
+<li><p><strong>Parameter Efficiency</strong>: Weight sharing dramatically reduces parameters compared to dense layers</p></li>
+<li><p><strong>Spatial Structure</strong>: CNNs preserve and leverage 2D spatial relationships in images</p></li>
+</ul>
+</section>
+<section id="convolution-mathematics">
+<h3>Convolution Mathematics<a class="headerlink" href="#convolution-mathematics" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Sliding Window Operation</strong>: Filter moves across input with stride and padding parameters</p></li>
+<li><p><strong>Cross-Correlation vs Convolution</strong>: Deep learning typically uses cross-correlation operation</p></li>
+<li><p><strong>Feature Map Computation</strong>: Output[i,j] = sum(input[i:i+k, j:j+k] * filter)</p></li>
+<li><p><strong>Receptive Field</strong>: Region of input that influences each output activation</p></li>
+</ul>
+</section>
+<section id="cnn-architecture-patterns">
+<h3>CNN Architecture Patterns<a class="headerlink" href="#cnn-architecture-patterns" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Feature Extraction</strong>: Convolution + ReLU + Pooling blocks extract hierarchical features</p></li>
+<li><p><strong>Classification Head</strong>: Flatten + Dense layers perform final classification</p></li>
+<li><p><strong>Progressive Filtering</strong>: Increasing filter count with decreasing spatial dimensions</p></li>
+<li><p><strong>Skip Connections</strong>: Advanced architectures add residual connections for deeper networks</p></li>
+</ul>
+</section>
+</section>
+<section id="ready-to-build">
+<h2>🎉 Ready to Build?<a class="headerlink" href="#ready-to-build" title="Permalink to this heading">#</a></h2>
+<p>You’re about to implement the technology that revolutionized computer vision! CNNs transformed image processing from hand-crafted features to learned representations, enabling everything from photo tagging to medical diagnosis to autonomous driving.</p>
+<p>Understanding convolution from the ground up—implementing the sliding window operation yourself—will give you deep insight into why CNNs work so well for visual tasks. Take your time with the core operation, visualize what’s happening, and enjoy building the foundation of modern computer vision!</p>
 <p>Choose your preferred way to engage with this module:</p>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
 <div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-3 sd-row-cols-lg-3 docutils">
@@ -480,16 +698,16 @@ document.write(`
 🚀 Launch Binder</div>
 <p class="sd-card-text">Run this module interactively in your browser. No installation required!</p>
 </div>
-<a class="sd-stretched-link sd-hide-link-text reference external" href="https://mybinder.org/v2/gh/mlsysbook/TinyTorch/main?filepath=modules/source/06_cnn/cnn_dev.ipynb"><span>https://mybinder.org/v2/gh/mlsysbook/TinyTorch/main?filepath=modules/source/06_cnn/cnn_dev.ipynb</span></a></div>
+<a class="sd-stretched-link reference external" href="https://mybinder.org/v2/gh/mlsysbook/TinyTorch/main?filepath=modules/source/06_cnn/cnn_dev.ipynb"></a></div>
 </div>
 <div class="sd-col sd-d-flex-row docutils">
 <div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm sd-card-hover docutils">
 <div class="sd-card-body docutils">
 <div class="sd-card-title sd-font-weight-bold docutils">
-⚡ Open in Colab</div>
+⚡ Open in Colab  </div>
 <p class="sd-card-text">Use Google Colab for GPU access and cloud compute power.</p>
 </div>
-<a class="sd-stretched-link sd-hide-link-text reference external" href="https://colab.research.google.com/github/mlsysbook/TinyTorch/blob/main/modules/source/06_cnn/cnn_dev.ipynb"><span>https://colab.research.google.com/github/mlsysbook/TinyTorch/blob/main/modules/source/06_cnn/cnn_dev.ipynb</span></a></div>
+<a class="sd-stretched-link reference external" href="https://colab.research.google.com/github/mlsysbook/TinyTorch/blob/main/modules/source/06_cnn/cnn_dev.ipynb"></a></div>
 </div>
 <div class="sd-col sd-d-flex-row docutils">
 <div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm sd-card-hover docutils">
@@ -498,14 +716,19 @@ document.write(`
 📖 View Source</div>
 <p class="sd-card-text">Browse the Python source code and understand the implementation.</p>
 </div>
-<a class="sd-stretched-link sd-hide-link-text reference external" href="https://github.com/mlsysbook/TinyTorch/blob/main/modules/source/06_cnn/cnn_dev.py"><span>https://github.com/mlsysbook/TinyTorch/blob/main/modules/source/06_cnn/cnn_dev.py</span></a></div>
+<a class="sd-stretched-link reference external" href="https://github.com/mlsysbook/TinyTorch/blob/main/modules/source/06_cnn/cnn_dev.py"></a></div>
 </div>
 </div>
 </div>
 <div class="tip admonition">
 <p class="admonition-title">💾 Save Your Progress</p>
 <p><strong>Binder sessions are temporary!</strong> Download your completed notebook when done, or switch to local development for persistent work.</p>
-<p>Ready for serious development? → <a class="reference internal" href="../usage-paths/serious-development.html"><span class="std std-doc">🏗️ Local Setup Guide</span></a></p>
+<p>Ready for serious development? → <a class="reference internal" href="../usage-paths/serious-development.html"><span class="doc std std-doc">🏗️ Local Setup Guide</span></a></p>
+</div>
+<hr class="docutils" />
+<div class="prev-next-area">
+<a class="left-prev" href="../chapters/05_networks.html" title="previous page">← Previous Module</a>
+<a class="right-next" href="../chapters/07_dataloader.html" title="next page">Next Module →</a>
 </div>
 </section>
 </section>
@@ -537,7 +760,7 @@ document.write(`
               
               
               
-                <footer class="prev-next-footer d-print-none">
+                <footer class="prev-next-footer">
                   
 <div class="prev-next-area">
     <a class="left-prev"
@@ -546,7 +769,7 @@ document.write(`
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Networks - Neural Network Architectures</p>
+        <p class="prev-next-title">Module: Networks</p>
       </div>
     </a>
     <a class="right-next"
@@ -554,7 +777,7 @@ document.write(`
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">DataLoader - Data Loading and Preprocessing</p>
+        <p class="prev-next-title">Module: DataLoader</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -567,16 +790,42 @@ document.write(`
               
                 <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
-
   <div class="sidebar-secondary-item">
   <div class="page-toc tocsection onthispage">
     <i class="fa-solid fa-list"></i> Contents
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#build-use-reflect">Build → Use → Reflect</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-you-ll-learn">What You’ll Learn</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#interactive-learning">🚀 Interactive Learning</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-info">📊 Module Info</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-objectives">🎯 Learning Objectives</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#build-use-analyze">🧠 Build → Use → Analyze</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-you-ll-build">📚 What You’ll Build</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#core-convolution-implementation">Core Convolution Implementation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#complete-cnn-architecture">Complete CNN Architecture</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#convolution-operation-details">Convolution Operation Details</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cnn-building-blocks">CNN Building Blocks</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#getting-started">🚀 Getting Started</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#prerequisites">Prerequisites</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#development-workflow">Development Workflow</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#testing-your-implementation">🧪 Testing Your Implementation</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#comprehensive-test-suite">Comprehensive Test Suite</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#test-coverage-areas">Test Coverage Areas</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inline-testing-visualization">Inline Testing &amp; Visualization</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#manual-testing-examples">Manual Testing Examples</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#key-concepts">🎯 Key Concepts</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#real-world-applications">Real-World Applications</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#computer-vision-fundamentals">Computer Vision Fundamentals</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#convolution-mathematics">Convolution Mathematics</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cnn-architecture-patterns">CNN Architecture Patterns</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ready-to-build">🎉 Ready to Build?</a></li>
 </ul>
   </nav></div>
 
@@ -601,7 +850,7 @@ By Prof. Vijay Janapa Reddi (Harvard University)
 
   <p class="copyright">
     
-      © Copyright 2023.
+      © Copyright 2022.
       <br/>
     
   </p>
@@ -625,8 +874,8 @@ By Prof. Vijay Janapa Reddi (Harvard University)
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
-<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+  <script src="../_static/scripts/bootstrap.js?digest=5b4479735964841361fd"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=5b4479735964841361fd"></script>
 
   <footer class="bd-footer">
   </footer>

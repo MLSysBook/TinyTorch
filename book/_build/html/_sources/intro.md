@@ -121,28 +121,9 @@ model = Sequential([
 
 ---
 
-## 📊 Expected Student Outcomes
-
-```{admonition} Real Results from Real Students
-:class: success
-**After completing TinyTorch, students consistently:**
-
-✅ **95% can implement neural networks from scratch** (vs. 20% before)  
-✅ **90% understand autograd and backpropagation deeply** (vs. 15% before)  
-✅ **85% can optimize models for production** (vs. 5% before)  
-✅ **80% rate "better framework understanding than PyTorch users"**  
-✅ **75% pursue advanced ML systems roles** (vs. 30% before)
-
-**Industry Feedback:** *"TinyTorch graduates understand our codebase immediately - they know what's happening under the PyTorch abstractions."*
-
-**Academic Validation:** Used successfully in ML systems courses at 15+ universities
-```
-
----
-
 ## 🌟 What Makes This Different
 
-### **🔬 Engineering Principles
+### **🔬 Engineering Principles**
 - **Production-style** code organization throughout every module
 - **Performance-focused** engineering and optimization practices
 - **Professional development** workflow with automated testing and CI
@@ -196,7 +177,7 @@ Traditional ML Course:          TinyTorch Approach:
                                │     def step(self):
                                └──     param.data -= lr * param.grad
 
-Transform your curiosity "How does this work?" 🤷 into confidence: "I built every part myself!" 💪
+Go from "How does this work?" 🤷 to "I implemented every line!" 💪
 ```
 
 **Result:** You become the person others come to when they need to understand "how PyTorch actually works under the hood." Every line of code you write brings you closer to understanding how modern AI works.

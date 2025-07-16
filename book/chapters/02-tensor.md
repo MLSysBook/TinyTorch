@@ -9,11 +9,15 @@ learning_objectives: ["Understand what tensors are and why they're essential for
 ---
 
 # Module: Tensor
----
-**Course Navigation:** [Home](../intro.html) → [Tensor](#)
 
----
+```{div} breadcrumb
+Home → 02 Tensor
+```
 
+
+```{div} badges
+⭐⭐ | ⏱️ 4-6 hours
+```
 
 
 ## 📊 Module Info

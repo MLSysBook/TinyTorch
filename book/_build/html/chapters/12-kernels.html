@@ -1,67 +1,72 @@
 
+
 <!DOCTYPE html>
 
 
-<html lang="en" data-content_root="../" >
+<html lang="en" data-content_root="" >
 
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-    <title>Kernels - Hardware-Optimized ML Operations &#8212; Tiny🔥Torch: Build your own Machine Learning framework from scratch</title>
+    <title>Module: Kernels &#8212; Tiny🔥Torch: Build your own Machine Learning framework from scratch</title>
   
   
   
   <script data-cfasync="false">
     document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
-    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
   </script>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
-<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
-<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link href="../_static/styles/theme.css?digest=5b4479735964841361fd" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=5b4479735964841361fd" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=5b4479735964841361fd" rel="stylesheet" />
 
   
-  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
-  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+  <link href="../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=5b4479735964841361fd" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
 
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
-    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
-    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css?v=6644e6bb" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
-<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
-  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=5b4479735964841361fd" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=5b4479735964841361fd" />
+  <script src="../_static/vendor/fontawesome/6.1.2/js/all.min.js?digest=5b4479735964841361fd"></script>
 
-    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
-    <script src="../_static/doctools.js?v=9a2dae69"></script>
-    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
-    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
-    <script src="../_static/copybutton.js?v=f281be69"></script>
-    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
     <script>let toggleHintShow = 'Click to show';</script>
     <script>let toggleHintHide = 'Click to hide';</script>
     <script>let toggleOpenOnPrint = 'true';</script>
-    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script src="../_static/togglebutton.js"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
-    <script src="../_static/design-tabs.js?v=36754332"></script>
-    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
-    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
-    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
-    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script src="../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../_static/sphinx-thebe.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'chapters/12-kernels';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Benchmarking - Systematic ML Performance Evaluation" href="13-benchmarking.html" />
-    <link rel="prev" title="Compression &amp; Optimization - Making AI Models Efficient" href="11-compression.html" />
+    <link rel="next" title="Module: Benchmarking" href="13-benchmarking.html" />
+    <link rel="prev" title="Module: Compression" href="11-compression.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -71,23 +76,28 @@
 
   
   
-  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  <a class="skip-link" href="#main-content">Skip to main content</a>
   
   <div id="pst-scroll-pixel-helper"></div>
+
   
   <button type="button" class="btn rounded-pill" id="pst-back-to-top">
-    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
 
   
   <input type="checkbox"
           class="sidebar-toggle"
-          id="pst-primary-sidebar-checkbox"/>
-  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
   
   <input type="checkbox"
           class="sidebar-toggle"
-          id="pst-secondary-sidebar-checkbox"/>
-  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
   
   <div class="search-button__wrapper">
     <div class="search-button__overlay"></div>
@@ -109,20 +119,12 @@
   <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
 </form></div>
   </div>
-
-  <div class="pst-async-banner-revealer d-none">
-  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
-</div>
-
   
-    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
-    </header>
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+    </nav>
   
-
   <div class="bd-container">
     <div class="bd-container__inner bd-page-width">
-      
-      
       
       <div class="bd-sidebar-primary bd-sidebar">
         
@@ -138,8 +140,6 @@
     <div class="sidebar-primary-items__start sidebar-primary__section">
         <div class="sidebar-primary-item">
 
-  
-    
   
 
 <a class="navbar-brand logo" href="../intro.html">
@@ -158,18 +158,7 @@
   
   
 </a></div>
-        <div class="sidebar-primary-item">
-
- <script>
- document.write(`
-   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <i class="fa-solid fa-magnifying-glass"></i>
-    <span class="search-button__default-text">Search</span>
-    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
-   </button>
- `);
- </script></div>
-        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item navbar-nav active">
         
         <ul class="nav bd-sidenav bd-sidenav__home-link">
@@ -225,7 +214,7 @@
 
       </div>
       
-      <main id="main-content" class="bd-main" role="main">
+      <main id="main-content" class="bd-main">
         
         
 
@@ -234,14 +223,14 @@
           <div class="bd-content">
             <div class="bd-article-container">
               
-              <div class="bd-header-article d-print-none">
+              <div class="bd-header-article">
 <div class="header-article-items header-article__inner">
   
     <div class="header-article-items__start">
       
-        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
   <span class="fa-solid fa-bars"></span>
-</button></div>
+</label></div>
       
     </div>
   
@@ -383,10 +372,10 @@
 
 <script>
 document.write(`
-  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
-    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
-    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
   </button>
 `);
 </script>
@@ -394,14 +383,14 @@ document.write(`
 
 <script>
 document.write(`
-  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <i class="fa-solid fa-magnifying-glass fa-lg"></i>
   </button>
 `);
 </script>
-<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <span class="fa-solid fa-list"></span>
-</button>
+</label>
 </div></div>
       
     </div>
@@ -412,7 +401,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Kernels - Hardware-Optimized ML Operations</h1>
+    <h1>Module: Kernels</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -422,8 +411,36 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#build-use-optimize">Build → Use → Optimize</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#interactive-learning">🚀 Interactive Learning</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-info">📊 Module Info</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-objectives">🎯 Learning Objectives</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#build-use-optimize">🧠 Build → Use → Optimize</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-you-ll-build">📚 What You’ll Build</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hardware-optimized-core-operations">Hardware-Optimized Core Operations</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#simd-vectorized-operations">SIMD Vectorized Operations</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#quantized-operation-optimization">Quantized Operation Optimization</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#performance-profiling-framework">Performance Profiling Framework</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#getting-started">🚀 Getting Started</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#prerequisites">Prerequisites</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#development-workflow">Development Workflow</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#testing-your-implementation">🧪 Testing Your Implementation</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#comprehensive-test-suite">Comprehensive Test Suite</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#test-coverage-areas">Test Coverage Areas</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inline-testing-performance-analysis">Inline Testing &amp; Performance Analysis</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#manual-testing-examples">Manual Testing Examples</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#key-concepts">🎯 Key Concepts</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#real-world-applications">Real-World Applications</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hardware-performance-fundamentals">Hardware Performance Fundamentals</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#optimization-techniques">Optimization Techniques</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#performance-engineering-methodology">Performance Engineering Methodology</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ready-to-build">🎉 Ready to Build?</a></li>
 </ul>
             </nav>
         </div>
@@ -433,32 +450,307 @@ document.write(`
               
                 
 <div id="searchbox"></div>
-                <article class="bd-article">
+                <article class="bd-article" role="main">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="kernels-hardware-optimized-ml-operations">
-<h1>Kernels - Hardware-Optimized ML Operations<a class="headerlink" href="#kernels-hardware-optimized-ml-operations" title="Link to this heading">#</a></h1>
-<p>Welcome to the Kernels module! This is where we move beyond NumPy to understand how ML operations are optimized for modern hardware. You’ll implement custom kernels that run faster than standard library functions.</p>
-<div class="tip admonition">
-<p class="admonition-title">🎯 Learning Goals</p>
-<ul class="simple">
-<li><p>Understand why custom kernels matter for ML performance</p></li>
-<li><p>Implement vectorized operations using SIMD principles</p></li>
-<li><p>Master memory-efficient algorithms for better cache utilization</p></li>
-<li><p>Build parallel processing patterns for CPU and GPU-style computing</p></li>
-<li><p>Create performance profiling tools to measure and optimize code</p></li>
-<li><p>Apply kernel optimizations to compressed model operations</p></li>
-</ul>
+  <section class="tex2jax_ignore mathjax_ignore" id="module-kernels">
+<h1>Module: Kernels<a class="headerlink" href="#module-kernels" title="Permalink to this heading">#</a></h1>
+<div class="breadcrumb docutils">
+<p>Home → 12 Kernels</p>
 </div>
+<div class="badges docutils">
+<p>⭐⭐⭐⭐⭐ | ⏱️ 5-6 hours</p>
+</div>
+<section id="module-info">
+<h2>📊 Module Info<a class="headerlink" href="#module-info" title="Permalink to this heading">#</a></h2>
+<ul class="simple">
+<li><p><strong>Difficulty</strong>: ⭐⭐⭐⭐⭐ Expert</p></li>
+<li><p><strong>Time Estimate</strong>: 8-10 hours</p></li>
+<li><p><strong>Prerequisites</strong>: All previous modules (01-11), especially Compression</p></li>
+<li><p><strong>Next Steps</strong>: Benchmarking, MLOps modules</p></li>
+</ul>
+<p>Bridge the gap between algorithmic optimization and hardware-level performance engineering. This module teaches the systems programming skills that make ML frameworks fast—moving beyond NumPy’s black box to understand how computation really works on modern hardware.</p>
+</section>
+<section id="learning-objectives">
+<h2>🎯 Learning Objectives<a class="headerlink" href="#learning-objectives" title="Permalink to this heading">#</a></h2>
+<p>By the end of this module, you will be able to:</p>
+<ul class="simple">
+<li><p><strong>Master hardware-aware programming</strong>: Understand CPU cache hierarchies, SIMD vectorization, and memory layout optimization</p></li>
+<li><p><strong>Implement custom ML operations</strong>: Build matrix multiplication, activations, and batch processing from scratch with performance awareness</p></li>
+<li><p><strong>Apply parallel computing principles</strong>: Use multi-core processing and GPU-style parallelism for ML workloads</p></li>
+<li><p><strong>Optimize compressed models</strong>: Create hardware-efficient operations for quantized and pruned neural networks</p></li>
+<li><p><strong>Build performance engineering workflows</strong>: Develop profiling, benchmarking, and optimization methodologies</p></li>
+</ul>
+</section>
 <section id="build-use-optimize">
-<h2>Build → Use → Optimize<a class="headerlink" href="#build-use-optimize" title="Link to this heading">#</a></h2>
+<h2>🧠 Build → Use → Optimize<a class="headerlink" href="#build-use-optimize" title="Permalink to this heading">#</a></h2>
+<p>This module follows TinyTorch’s <strong>Build → Use → Optimize</strong> framework:</p>
 <ol class="arabic simple">
-<li><p><strong>Build</strong>: Custom operations, vectorization, and memory optimization</p></li>
-<li><p><strong>Use</strong>: Apply optimized kernels to real ML workloads</p></li>
-<li><p><strong>Optimize</strong>: Profile, measure, and improve performance systematically</p></li>
+<li><p><strong>Build</strong>: Implement custom ML operations with hardware awareness, moving beyond NumPy to understand computational patterns</p></li>
+<li><p><strong>Use</strong>: Apply SIMD vectorization, cache optimization, and parallel processing to real ML workloads</p></li>
+<li><p><strong>Optimize</strong>: Profile performance systematically, integrate with compressed models, and achieve measurable speedups</p></li>
 </ol>
 </section>
-<section id="interactive-learning">
-<h2>🚀 Interactive Learning<a class="headerlink" href="#interactive-learning" title="Link to this heading">#</a></h2>
+<section id="what-you-ll-build">
+<h2>📚 What You’ll Build<a class="headerlink" href="#what-you-ll-build" title="Permalink to this heading">#</a></h2>
+<section id="hardware-optimized-core-operations">
+<h3>Hardware-Optimized Core Operations<a class="headerlink" href="#hardware-optimized-core-operations" title="Permalink to this heading">#</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Custom matrix multiplication with cache awareness</span>
+<span class="kn">import</span> <span class="nn">numba</span>
+<span class="kn">from</span> <span class="nn">multiprocessing</span> <span class="kn">import</span> <span class="n">Pool</span>
+
+<span class="c1"># Baseline implementation for understanding</span>
+<span class="k">def</span> <span class="nf">matmul_baseline</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Reference implementation showing the core computation&quot;&quot;&quot;</span>
+    <span class="n">rows_A</span><span class="p">,</span> <span class="n">cols_A</span> <span class="o">=</span> <span class="n">A</span><span class="o">.</span><span class="n">shape</span>
+    <span class="n">rows_B</span><span class="p">,</span> <span class="n">cols_B</span> <span class="o">=</span> <span class="n">B</span><span class="o">.</span><span class="n">shape</span>
+    <span class="n">C</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">rows_A</span><span class="p">,</span> <span class="n">cols_B</span><span class="p">))</span>
+    
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">rows_A</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">cols_B</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">cols_A</span><span class="p">):</span>
+                <span class="n">C</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">+=</span> <span class="n">A</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">k</span><span class="p">]</span> <span class="o">*</span> <span class="n">B</span><span class="p">[</span><span class="n">k</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">C</span>
+
+<span class="c1"># Cache-friendly optimized version</span>
+<span class="k">def</span> <span class="nf">cache_friendly_matmul</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Optimized for memory access patterns and cache efficiency&quot;&quot;&quot;</span>
+    <span class="c1"># Implementation with blocked matrix multiplication</span>
+    <span class="c1"># and memory-friendly access patterns</span>
+    <span class="k">pass</span>
+
+<span class="c1"># Performance comparison</span>
+<span class="n">baseline_time</span> <span class="o">=</span> <span class="n">profile_operation</span><span class="p">(</span><span class="n">matmul_baseline</span><span class="p">,</span> <span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">)</span>
+<span class="n">optimized_time</span> <span class="o">=</span> <span class="n">profile_operation</span><span class="p">(</span><span class="n">cache_friendly_matmul</span><span class="p">,</span> <span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">)</span>
+<span class="n">speedup</span> <span class="o">=</span> <span class="n">baseline_time</span> <span class="o">/</span> <span class="n">optimized_time</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Speedup: </span><span class="si">{</span><span class="n">speedup</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">x&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="simd-vectorized-operations">
+<h3>SIMD Vectorized Operations<a class="headerlink" href="#simd-vectorized-operations" title="Permalink to this heading">#</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Vectorized activation functions</span>
+<span class="nd">@numba</span><span class="o">.</span><span class="n">jit</span><span class="p">(</span><span class="n">nopython</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">vectorized_relu</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;SIMD-optimized ReLU using numba compilation&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+
+<span class="c1"># Parallel batch processing</span>
+<span class="k">def</span> <span class="nf">parallel_batch_processing</span><span class="p">(</span><span class="n">batch_data</span><span class="p">,</span> <span class="n">operation</span><span class="p">,</span> <span class="n">num_workers</span><span class="o">=</span><span class="mi">4</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Multi-core processing for batch operations&quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="n">Pool</span><span class="p">(</span><span class="n">num_workers</span><span class="p">)</span> <span class="k">as</span> <span class="n">pool</span><span class="p">:</span>
+        <span class="n">results</span> <span class="o">=</span> <span class="n">pool</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">operation</span><span class="p">,</span> <span class="n">batch_data</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">results</span><span class="p">)</span>
+
+<span class="c1"># Compare single-threaded vs parallel</span>
+<span class="n">single_time</span> <span class="o">=</span> <span class="n">profile_operation</span><span class="p">(</span><span class="n">sequential_relu</span><span class="p">,</span> <span class="n">large_batch</span><span class="p">)</span>
+<span class="n">parallel_time</span> <span class="o">=</span> <span class="n">profile_operation</span><span class="p">(</span><span class="n">parallel_relu</span><span class="p">,</span> <span class="n">large_batch</span><span class="p">)</span>
+<span class="n">efficiency</span> <span class="o">=</span> <span class="n">single_time</span> <span class="o">/</span> <span class="p">(</span><span class="n">parallel_time</span> <span class="o">*</span> <span class="n">num_cores</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Parallel efficiency: </span><span class="si">{</span><span class="n">efficiency</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="quantized-operation-optimization">
+<h3>Quantized Operation Optimization<a class="headerlink" href="#quantized-operation-optimization" title="Permalink to this heading">#</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Hardware-optimized quantized operations</span>
+<span class="k">def</span> <span class="nf">quantized_matmul</span><span class="p">(</span><span class="n">A_int8</span><span class="p">,</span> <span class="n">B_int8</span><span class="p">,</span> <span class="n">scale_A</span><span class="p">,</span> <span class="n">scale_B</span><span class="p">,</span> <span class="n">zero_point_A</span><span class="p">,</span> <span class="n">zero_point_B</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;INT8 matrix multiplication with proper scaling&quot;&quot;&quot;</span>
+    <span class="c1"># Use INT32 accumulator to prevent overflow</span>
+    <span class="n">C_int32</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">A_int8</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">),</span> <span class="n">B_int8</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">))</span>
+    
+    <span class="c1"># Apply scaling and zero-point corrections</span>
+    <span class="n">scale_C</span> <span class="o">=</span> <span class="n">scale_A</span> <span class="o">*</span> <span class="n">scale_B</span>
+    <span class="n">C_float</span> <span class="o">=</span> <span class="n">scale_C</span> <span class="o">*</span> <span class="p">(</span><span class="n">C_int32</span> <span class="o">-</span> <span class="n">zero_point_corrections</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">C_float</span>
+
+<span class="c1"># Measure memory and compute benefits</span>
+<span class="n">fp32_memory</span> <span class="o">=</span> <span class="n">measure_memory_usage</span><span class="p">(</span><span class="n">model_fp32</span><span class="p">)</span>
+<span class="n">int8_memory</span> <span class="o">=</span> <span class="n">measure_memory_usage</span><span class="p">(</span><span class="n">model_int8</span><span class="p">)</span>
+<span class="n">memory_reduction</span> <span class="o">=</span> <span class="n">fp32_memory</span> <span class="o">/</span> <span class="n">int8_memory</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Memory reduction: </span><span class="si">{</span><span class="n">memory_reduction</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">x&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="performance-profiling-framework">
+<h3>Performance Profiling Framework<a class="headerlink" href="#performance-profiling-framework" title="Permalink to this heading">#</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Comprehensive operation profiling</span>
+<span class="k">class</span> <span class="nc">PerformanceProfiler</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">results</span> <span class="o">=</span> <span class="p">{}</span>
+    
+    <span class="k">def</span> <span class="nf">profile_operation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">operation</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">num_runs</span><span class="o">=</span><span class="mi">100</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Statistical profiling with multiple runs&quot;&quot;&quot;</span>
+        <span class="n">times</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_runs</span><span class="p">):</span>
+            <span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">operation</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
+            <span class="n">end</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
+            <span class="n">times</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">end</span> <span class="o">-</span> <span class="n">start</span><span class="p">)</span>
+        
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s1">&#39;mean_time&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">times</span><span class="p">),</span>
+            <span class="s1">&#39;std_time&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">times</span><span class="p">),</span>
+            <span class="s1">&#39;min_time&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">times</span><span class="p">),</span>
+            <span class="s1">&#39;max_time&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">times</span><span class="p">)</span>
+        <span class="p">}</span>
+    
+    <span class="k">def</span> <span class="nf">compare_operations</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">baseline_op</span><span class="p">,</span> <span class="n">optimized_op</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Compare two implementations statistically&quot;&quot;&quot;</span>
+        <span class="n">baseline_stats</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">profile_operation</span><span class="p">(</span><span class="n">baseline_op</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span>
+        <span class="n">optimized_stats</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">profile_operation</span><span class="p">(</span><span class="n">optimized_op</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span>
+        
+        <span class="n">speedup</span> <span class="o">=</span> <span class="n">baseline_stats</span><span class="p">[</span><span class="s1">&#39;mean_time&#39;</span><span class="p">]</span> <span class="o">/</span> <span class="n">optimized_stats</span><span class="p">[</span><span class="s1">&#39;mean_time&#39;</span><span class="p">]</span>
+        <span class="n">significance</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">statistical_significance</span><span class="p">(</span><span class="n">baseline_stats</span><span class="p">,</span> <span class="n">optimized_stats</span><span class="p">)</span>
+        
+        <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;speedup&#39;</span><span class="p">:</span> <span class="n">speedup</span><span class="p">,</span> <span class="s1">&#39;significant&#39;</span><span class="p">:</span> <span class="n">significance</span><span class="p">}</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="getting-started">
+<h2>🚀 Getting Started<a class="headerlink" href="#getting-started" title="Permalink to this heading">#</a></h2>
+<section id="prerequisites">
+<h3>Prerequisites<a class="headerlink" href="#prerequisites" title="Permalink to this heading">#</a></h3>
+<p>Ensure you have mastered the optimization foundation:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Activate TinyTorch environment</span>
+<span class="nb">source</span><span class="w"> </span>bin/activate-tinytorch.sh
+
+<span class="c1"># Verify all prerequisite modules</span>
+tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--module<span class="w"> </span>compression<span class="w">  </span><span class="c1"># Essential for integration</span>
+tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--module<span class="w"> </span>training<span class="w">     </span><span class="c1"># Understanding of ML workflows</span>
+</pre></div>
+</div>
+</section>
+<section id="development-workflow">
+<h3>Development Workflow<a class="headerlink" href="#development-workflow" title="Permalink to this heading">#</a></h3>
+<ol class="arabic simple">
+<li><p><strong>Open the development file</strong>: <code class="docutils literal notranslate"><span class="pre">modules/source/12_kernels/kernels_dev.py</span></code></p></li>
+<li><p><strong>Implement baseline operations</strong>: Build reference implementations for understanding</p></li>
+<li><p><strong>Add hardware optimizations</strong>: Apply SIMD, cache optimization, and parallelization</p></li>
+<li><p><strong>Create quantized operations</strong>: Build INT8 and hardware-efficient variants</p></li>
+<li><p><strong>Build profiling tools</strong>: Develop systematic performance measurement</p></li>
+<li><p><strong>Export and verify</strong>: <code class="docutils literal notranslate"><span class="pre">tito</span> <span class="pre">export</span> <span class="pre">--module</span> <span class="pre">kernels</span> <span class="pre">&amp;&amp;</span> <span class="pre">tito</span> <span class="pre">test</span> <span class="pre">--module</span> <span class="pre">kernels</span></code></p></li>
+</ol>
+</section>
+</section>
+<section id="testing-your-implementation">
+<h2>🧪 Testing Your Implementation<a class="headerlink" href="#testing-your-implementation" title="Permalink to this heading">#</a></h2>
+<section id="comprehensive-test-suite">
+<h3>Comprehensive Test Suite<a class="headerlink" href="#comprehensive-test-suite" title="Permalink to this heading">#</a></h3>
+<p>Run the full test suite to verify performance optimization functionality:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># TinyTorch CLI (recommended)</span>
+tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--module<span class="w"> </span>kernels
+
+<span class="c1"># Direct pytest execution</span>
+python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> </span>tests/<span class="w"> </span>-k<span class="w"> </span>kernels<span class="w"> </span>-v
+</pre></div>
+</div>
+</section>
+<section id="test-coverage-areas">
+<h3>Test Coverage Areas<a class="headerlink" href="#test-coverage-areas" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p>✅ <strong>Operation Correctness</strong>: Verify optimized operations produce identical results to baselines</p></li>
+<li><p>✅ <strong>Performance Improvements</strong>: Measure and validate actual speedups from optimizations</p></li>
+<li><p>✅ <strong>Hardware Utilization</strong>: Test SIMD usage, cache efficiency, and parallel scaling</p></li>
+<li><p>✅ <strong>Quantization Integration</strong>: Verify INT8 operations maintain accuracy while improving performance</p></li>
+<li><p>✅ <strong>Profiling Accuracy</strong>: Ensure performance measurement tools provide reliable statistics</p></li>
+</ul>
+</section>
+<section id="inline-testing-performance-analysis">
+<h3>Inline Testing &amp; Performance Analysis<a class="headerlink" href="#inline-testing-performance-analysis" title="Permalink to this heading">#</a></h3>
+<p>The module includes comprehensive performance validation and optimization verification:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span># Example inline test output
+🔬 Unit Test: Cache-friendly matrix multiplication...
+✅ Correctness: Results match NumPy reference
+✅ Performance: 2.3x speedup over baseline
+✅ Memory efficiency: 40% reduction in cache misses
+📈 Progress: Optimized Matrix Operations ✓
+
+# SIMD vectorization testing
+🔬 Unit Test: Vectorized ReLU implementation...
+✅ SIMD utilization: 8-wide vectors detected
+✅ Throughput: 4.1x improvement over scalar code
+✅ Batch scaling: Linear performance with data size
+📈 Progress: Vectorized Operations ✓
+
+# Quantization optimization
+🔬 Unit Test: INT8 quantized operations...
+✅ Accuracy preservation: &lt;0.1% degradation
+✅ Memory reduction: 4x smaller model size
+✅ Compute speedup: 2.8x faster inference
+📈 Progress: Quantized Kernels ✓
+</pre></div>
+</div>
+</section>
+<section id="manual-testing-examples">
+<h3>Manual Testing Examples<a class="headerlink" href="#manual-testing-examples" title="Permalink to this heading">#</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">kernels_dev</span> <span class="kn">import</span> <span class="n">matmul_baseline</span><span class="p">,</span> <span class="n">cache_friendly_matmul</span><span class="p">,</span> <span class="n">PerformanceProfiler</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="c1"># Create test matrices</span>
+<span class="n">A</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span> <span class="mi">500</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+<span class="n">B</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">500</span><span class="p">,</span> <span class="mi">800</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+
+<span class="c1"># Compare implementations</span>
+<span class="n">profiler</span> <span class="o">=</span> <span class="n">PerformanceProfiler</span><span class="p">()</span>
+<span class="n">baseline_result</span> <span class="o">=</span> <span class="n">matmul_baseline</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">)</span>
+<span class="n">optimized_result</span> <span class="o">=</span> <span class="n">cache_friendly_matmul</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">)</span>
+
+<span class="c1"># Verify correctness</span>
+<span class="n">np</span><span class="o">.</span><span class="n">testing</span><span class="o">.</span><span class="n">assert_allclose</span><span class="p">(</span><span class="n">baseline_result</span><span class="p">,</span> <span class="n">optimized_result</span><span class="p">,</span> <span class="n">rtol</span><span class="o">=</span><span class="mf">1e-5</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;✅ Optimized implementation matches baseline&quot;</span><span class="p">)</span>
+
+<span class="c1"># Measure performance</span>
+<span class="n">comparison</span> <span class="o">=</span> <span class="n">profiler</span><span class="o">.</span><span class="n">compare_operations</span><span class="p">(</span><span class="n">matmul_baseline</span><span class="p">,</span> <span class="n">cache_friendly_matmul</span><span class="p">,</span> <span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Speedup: </span><span class="si">{</span><span class="n">comparison</span><span class="p">[</span><span class="s1">&#39;speedup&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">x&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Statistically significant: </span><span class="si">{</span><span class="n">comparison</span><span class="p">[</span><span class="s1">&#39;significant&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="key-concepts">
+<h2>🎯 Key Concepts<a class="headerlink" href="#key-concepts" title="Permalink to this heading">#</a></h2>
+<section id="real-world-applications">
+<h3>Real-World Applications<a class="headerlink" href="#real-world-applications" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>PyTorch/TensorFlow</strong>: Production ML frameworks use similar kernel optimization techniques</p></li>
+<li><p><strong>Intel MKL/OpenBLAS</strong>: Optimized math libraries employ cache-friendly algorithms and SIMD instructions</p></li>
+<li><p><strong>NVIDIA cuDNN</strong>: GPU libraries optimize memory access patterns and parallel computation</p></li>
+<li><p><strong>Google TPUs</strong>: Custom hardware accelerators use similar quantization and optimization principles</p></li>
+</ul>
+</section>
+<section id="hardware-performance-fundamentals">
+<h3>Hardware Performance Fundamentals<a class="headerlink" href="#hardware-performance-fundamentals" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>CPU Cache Hierarchy</strong>: L1/L2/L3 cache optimization through memory access pattern design</p></li>
+<li><p><strong>SIMD Vectorization</strong>: Single Instruction Multiple Data processing for parallel computation</p></li>
+<li><p><strong>Memory Layout</strong>: Row-major vs column-major access patterns and cache line utilization</p></li>
+<li><p><strong>Parallel Computing</strong>: Multi-core CPU utilization and GPU-style parallel programming patterns</p></li>
+</ul>
+</section>
+<section id="optimization-techniques">
+<h3>Optimization Techniques<a class="headerlink" href="#optimization-techniques" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Algorithmic Optimization</strong>: Choosing algorithms that match hardware characteristics</p></li>
+<li><p><strong>Memory Optimization</strong>: Cache-friendly data structures and access patterns</p></li>
+<li><p><strong>Vectorization</strong>: SIMD instruction utilization for parallel arithmetic operations</p></li>
+<li><p><strong>Quantization Integration</strong>: Hardware-efficient low-precision computation</p></li>
+</ul>
+</section>
+<section id="performance-engineering-methodology">
+<h3>Performance Engineering Methodology<a class="headerlink" href="#performance-engineering-methodology" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Profiling-Driven Optimization</strong>: Measure first, optimize second, validate third</p></li>
+<li><p><strong>Statistical Validation</strong>: Ensuring performance improvements are statistically significant</p></li>
+<li><p><strong>Bottleneck Analysis</strong>: Identifying and addressing the most impactful performance constraints</p></li>
+<li><p><strong>Hardware-Software Co-design</strong>: Understanding hardware capabilities and designing software accordingly</p></li>
+</ul>
+</section>
+</section>
+<section id="ready-to-build">
+<h2>🎉 Ready to Build?<a class="headerlink" href="#ready-to-build" title="Permalink to this heading">#</a></h2>
+<p>You’re about to learn the systems programming skills that make modern ML frameworks fast! This is where computer science meets practical engineering—understanding how algorithms interact with hardware to achieve real performance gains.</p>
+<p>From smartphone AI to data center training, all efficient ML systems depend on the optimization techniques you’re about to master. You’ll think like a performance engineer, understanding not just what to compute but how to compute it efficiently. Take your time, profile everything, and enjoy building systems that are both intelligent and fast!</p>
 <p>Choose your preferred way to engage with this module:</p>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
 <div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-3 sd-row-cols-lg-3 docutils">
@@ -469,16 +761,16 @@ document.write(`
 🚀 Launch Binder</div>
 <p class="sd-card-text">Run this module interactively in your browser. No installation required!</p>
 </div>
-<a class="sd-stretched-link sd-hide-link-text reference external" href="https://mybinder.org/v2/gh/mlsysbook/TinyTorch/main?filepath=modules/source/12_kernels/kernels_dev.ipynb"><span>https://mybinder.org/v2/gh/mlsysbook/TinyTorch/main?filepath=modules/source/12_kernels/kernels_dev.ipynb</span></a></div>
+<a class="sd-stretched-link reference external" href="https://mybinder.org/v2/gh/mlsysbook/TinyTorch/main?filepath=modules/source/12_kernels/kernels_dev.ipynb"></a></div>
 </div>
 <div class="sd-col sd-d-flex-row docutils">
 <div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm sd-card-hover docutils">
 <div class="sd-card-body docutils">
 <div class="sd-card-title sd-font-weight-bold docutils">
-⚡ Open in Colab</div>
+⚡ Open in Colab  </div>
 <p class="sd-card-text">Use Google Colab for GPU access and cloud compute power.</p>
 </div>
-<a class="sd-stretched-link sd-hide-link-text reference external" href="https://colab.research.google.com/github/mlsysbook/TinyTorch/blob/main/modules/source/12_kernels/kernels_dev.ipynb"><span>https://colab.research.google.com/github/mlsysbook/TinyTorch/blob/main/modules/source/12_kernels/kernels_dev.ipynb</span></a></div>
+<a class="sd-stretched-link reference external" href="https://colab.research.google.com/github/mlsysbook/TinyTorch/blob/main/modules/source/12_kernels/kernels_dev.ipynb"></a></div>
 </div>
 <div class="sd-col sd-d-flex-row docutils">
 <div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm sd-card-hover docutils">
@@ -487,14 +779,19 @@ document.write(`
 📖 View Source</div>
 <p class="sd-card-text">Browse the Python source code and understand the implementation.</p>
 </div>
-<a class="sd-stretched-link sd-hide-link-text reference external" href="https://github.com/mlsysbook/TinyTorch/blob/main/modules/source/12_kernels/kernels_dev.py"><span>https://github.com/mlsysbook/TinyTorch/blob/main/modules/source/12_kernels/kernels_dev.py</span></a></div>
+<a class="sd-stretched-link reference external" href="https://github.com/mlsysbook/TinyTorch/blob/main/modules/source/12_kernels/kernels_dev.py"></a></div>
 </div>
 </div>
 </div>
 <div class="tip admonition">
 <p class="admonition-title">💾 Save Your Progress</p>
 <p><strong>Binder sessions are temporary!</strong> Download your completed notebook when done, or switch to local development for persistent work.</p>
-<p>Ready for serious development? → <a class="reference internal" href="../usage-paths/serious-development.html"><span class="std std-doc">🏗️ Local Setup Guide</span></a></p>
+<p>Ready for serious development? → <a class="reference internal" href="../usage-paths/serious-development.html"><span class="doc std std-doc">🏗️ Local Setup Guide</span></a></p>
+</div>
+<hr class="docutils" />
+<div class="prev-next-area">
+<a class="left-prev" href="../chapters/11_compression.html" title="previous page">← Previous Module</a>
+<a class="right-next" href="../chapters/13_benchmarking.html" title="next page">Next Module →</a>
 </div>
 </section>
 </section>
@@ -526,7 +823,7 @@ document.write(`
               
               
               
-                <footer class="prev-next-footer d-print-none">
+                <footer class="prev-next-footer">
                   
 <div class="prev-next-area">
     <a class="left-prev"
@@ -535,7 +832,7 @@ document.write(`
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Compression &amp; Optimization - Making AI Models Efficient</p>
+        <p class="prev-next-title">Module: Compression</p>
       </div>
     </a>
     <a class="right-next"
@@ -543,7 +840,7 @@ document.write(`
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Benchmarking - Systematic ML Performance Evaluation</p>
+        <p class="prev-next-title">Module: Benchmarking</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -556,15 +853,42 @@ document.write(`
               
                 <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
-
   <div class="sidebar-secondary-item">
   <div class="page-toc tocsection onthispage">
     <i class="fa-solid fa-list"></i> Contents
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#build-use-optimize">Build → Use → Optimize</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#interactive-learning">🚀 Interactive Learning</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-info">📊 Module Info</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-objectives">🎯 Learning Objectives</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#build-use-optimize">🧠 Build → Use → Optimize</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-you-ll-build">📚 What You’ll Build</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hardware-optimized-core-operations">Hardware-Optimized Core Operations</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#simd-vectorized-operations">SIMD Vectorized Operations</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#quantized-operation-optimization">Quantized Operation Optimization</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#performance-profiling-framework">Performance Profiling Framework</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#getting-started">🚀 Getting Started</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#prerequisites">Prerequisites</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#development-workflow">Development Workflow</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#testing-your-implementation">🧪 Testing Your Implementation</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#comprehensive-test-suite">Comprehensive Test Suite</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#test-coverage-areas">Test Coverage Areas</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inline-testing-performance-analysis">Inline Testing &amp; Performance Analysis</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#manual-testing-examples">Manual Testing Examples</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#key-concepts">🎯 Key Concepts</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#real-world-applications">Real-World Applications</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hardware-performance-fundamentals">Hardware Performance Fundamentals</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#optimization-techniques">Optimization Techniques</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#performance-engineering-methodology">Performance Engineering Methodology</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ready-to-build">🎉 Ready to Build?</a></li>
 </ul>
   </nav></div>
 
@@ -589,7 +913,7 @@ By Prof. Vijay Janapa Reddi (Harvard University)
 
   <p class="copyright">
     
-      © Copyright 2023.
+      © Copyright 2022.
       <br/>
     
   </p>
@@ -613,8 +937,8 @@ By Prof. Vijay Janapa Reddi (Harvard University)
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
-<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+  <script src="../_static/scripts/bootstrap.js?digest=5b4479735964841361fd"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=5b4479735964841361fd"></script>
 
   <footer class="bd-footer">
   </footer>
