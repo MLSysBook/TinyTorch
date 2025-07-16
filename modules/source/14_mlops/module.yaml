@@ -24,6 +24,10 @@ files:
   readme: "README.md"
   tests: "inline"
 
+# Educational Metadata
+difficulty: "⭐⭐⭐⭐"
+time_estimate: "8-10 hours"
+
 # Components - What's implemented in this module
 components:
   - "ModelMonitor"

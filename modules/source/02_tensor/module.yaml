@@ -16,8 +16,12 @@ exports_to: "tinytorch.core.tensor"
 # File Structure - What files exist in this module
 files:
   dev_file: "tensor_dev.py"
-  test_file: "tests/test_tensor.py"
   readme: "README.md"
+  tests: "inline"
+
+# Educational Metadata
+difficulty: "⭐⭐"
+time_estimate: "4-6 hours"
 
 # Components - What's implemented in this module
 components:
