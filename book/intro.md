@@ -100,33 +100,32 @@ This pattern repeats for every component: tensors, layers, optimizers, even MLOp
 
 ## 📚 **Course Journey: 14 Modules**
 
-```{admonition} 🏗️ Foundation (Modules 1-5)
+```{admonition} 🏗️ Foundation
 :class: note
-**Weeks 1-6: Core Infrastructure**
-- **Setup**: Professional development workflow with `tito` CLI and testing
-- **Tensors**: Multi-dimensional arrays with operations (like NumPy, but yours!)
-- **Activations**: ReLU, Sigmoid, Tanh. The mathematical functions that enable learning
-- **Layers**: Dense layers with matrix multiplication and weight management
-- **Networks**: Sequential architecture. Chain layers into complete models
+**1. Setup** • **2. Tensors** • **3. Activations**
+
+Professional development workflow, multi-dimensional arrays, and the mathematical functions that enable learning.
 ```
 
-```{admonition} 🧠 Deep Learning (Modules 6-10)
+```{admonition} 🧱 Building Blocks
 :class: note
-**Weeks 7-12: Complete Training Systems**
-- **CNNs**: Convolutional operations for computer vision applications
-- **DataLoader**: CIFAR-10 loading, batching, and preprocessing pipelines
-- **Autograd**: Automatic differentiation engine (the "magic" behind PyTorch)
-- **Optimizers**: SGD with momentum, Adam with adaptive learning rates
-- **Training**: Loss functions, metrics, and complete training orchestration
+**4. Layers** • **5. Networks** • **6. CNNs**
+
+Dense layers, sequential architecture, and convolutional operations for computer vision.
 ```
 
-```{admonition} ⚡ Production (Modules 11-14)
+```{admonition} 🎯 Training Systems
 :class: note
-**Weeks 13-16: Real-World Deployment**
-- **Compression**: Model pruning and quantization for 75% size reduction
-- **Kernels**: High-performance custom operations and optimization
-- **Benchmarking**: Systematic evaluation and performance measurement
-- **MLOps**: Production monitoring, continuous learning, complete pipeline
+**7. DataLoader** • **8. Autograd** • **9. Optimizers** • **10. Training**
+
+CIFAR-10 loading, automatic differentiation, SGD/Adam optimizers, and complete training orchestration.
+```
+
+```{admonition} ⚡ Production & Performance
+:class: note
+**11. Compression** • **12. Kernels** • **13. Benchmarking** • **14. MLOps**
+
+Model optimization, high-performance operations, systematic evaluation, and production monitoring.
 ```
 
 ---
