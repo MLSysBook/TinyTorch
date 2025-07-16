@@ -11,11 +11,11 @@ Build the foundation of TinyTorch! This module implements the core Tensor class 
 ## 🎯 Learning Objectives
 
 By the end of this module, you will:
-- Understand what tensors are and why they're essential for ML
-- Implement a complete Tensor class with core operations
-- Handle tensor shapes, data types, and memory management
-- Implement element-wise operations and reductions
-- Have a solid foundation for building neural networks
+- **Understand what tensors are** and why they're essential for ML
+- **Implement a complete Tensor class** with core operations
+- **Handle tensor shapes, data types, and memory management** efficiently
+- **Implement element-wise operations and reductions** with proper broadcasting
+- **Have a solid foundation** for building neural networks
 
 ## 🧠 Build → Use → Understand
 
