@@ -99,7 +99,7 @@ tito nbdev build                          # Update package
 
 ---
 
-## 📚 Complete Course: 14 Modules
+## �� Complete Course: 15 Modules
 
 ### **🏗️ Foundations** (Modules 01-05)
 * **01_setup**: Development environment and CLI tools
@@ -121,7 +121,10 @@ tito nbdev build                          # Update package
 * **13_benchmarking**: Profiling, testing, and performance analysis
 * **14_mlops**: Monitoring, deployment, and production systems
 
-**Status**: All 14 modules complete with inline tests and educational content
+### **🎓 Capstone Project** (Module 15)
+* **15_capstone**: Framework optimization through systems engineering
+
+**Status**: All 15 modules complete with inline tests and educational content
 
 ---
 
