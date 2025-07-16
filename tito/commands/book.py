@@ -104,7 +104,7 @@ class BookCommand(BaseCommand):
         try:
             os.chdir("book")
             result = subprocess.run(
-                ["python3", "convert_modules.py", "--overview"],
+                ["python3", "convert_readmes.py"],
                 capture_output=True,
                 text=True
             )
@@ -112,17 +112,16 @@ class BookCommand(BaseCommand):
             if result.returncode == 0:
                 console.print("✅ Overview pages generated successfully")
                 # Show summary from the output
-                if "Success:" in result.stdout:
-                    for line in result.stdout.split('\n'):
-                        if "Success:" in line or "Output:" in line:
-                            console.print(f"   {line.strip()}")
+                for line in result.stdout.split('\n'):
+                    if "✅ Created" in line or "🎉 Converted" in line:
+                        console.print(f"   {line.strip()}")
                 return 0
             else:
                 console.print(f"[red]❌ Failed to generate overview pages: {result.stderr}[/red]")
                 return 1
                 
         except FileNotFoundError:
-            console.print("[red]❌ Python3 not found or convert_modules.py missing[/red]")
+            console.print("[red]❌ Python3 not found or convert_readmes.py missing[/red]")
             return 1
         except Exception as e:
             console.print(f"[red]❌ Error generating overview pages: {e}[/red]")
@@ -131,48 +130,35 @@ class BookCommand(BaseCommand):
             os.chdir("..")
 
     def _generate_all(self) -> int:
-        """Generate notebooks in book/chapters/ and update book references."""
+        """Convert READMEs to Jupyter Book chapters."""
         console = self.console
-        console.print("🔄 Generating notebooks for Jupyter Book...")
+        console.print("🔄 Converting module READMEs to Jupyter Book chapters...")
         
-        # Step 1: Generate notebooks in book/chapters/ (single source of truth for the book)
-        console.print("📝 Step 1: Generating notebooks in book/chapters/...")
+        # Step 1: Convert READMEs to chapters
+        console.print("📝 Step 1: Converting READMEs to chapters...")
         try:
             os.chdir("book")
             result = subprocess.run([
-                "python3", "convert_modules.py", "--all"
+                "python3", "convert_readmes.py"
             ], capture_output=True, text=True)
             
             if result.returncode == 0:
-                console.print("  ✅ All notebooks generated in book/chapters/")
+                console.print("  ✅ All READMEs converted to chapters")
+                # Show summary from the output
+                for line in result.stdout.split('\n'):
+                    if "✅ Created" in line or "🎉 Converted" in line:
+                        console.print(f"   {line.strip()}")
             else:
-                console.print(f"  ❌ Failed to generate notebooks: {result.stderr}")
+                console.print(f"  ❌ Failed to convert READMEs: {result.stderr}")
                 return 1
         except Exception as e:
-            console.print(f"[red]❌ Error generating notebooks: {e}[/red]")
+            console.print(f"[red]❌ Error converting READMEs: {e}[/red]")
             return 1
         finally:
             os.chdir("..")
         
-        # Step 2: Generate overview pages (if needed)
-        console.print("📚 Step 2: Generating overview pages...")
-        try:
-            os.chdir("book")
-            result = subprocess.run([
-                "python3", "convert_modules.py", "--overview"
-            ], capture_output=True, text=True)
-            
-            if result.returncode == 0:
-                console.print("✅ Overview pages generated in book/chapters/")
-                return 0
-            else:
-                console.print(f"[red]❌ Failed to generate overview pages: {result.stderr}[/red]")
-                return 1
-        except Exception as e:
-            console.print(f"[red]❌ Error generating overview pages: {e}[/red]")
-            return 1
-        finally:
-            os.chdir("..")
+        console.print("✅ Chapters generated successfully")
+        return 0
 
     def _build_book(self, args: Namespace) -> int:
         """Build the Jupyter Book locally."""
