@@ -10,11 +10,6 @@ learning_objectives: ["Understand what tensors are and why they're essential for
 
 # Module: Tensor
 
-```{div} breadcrumb
-Home → 02 Tensor
-```
-
-
 ```{div} badges
 ⭐⭐ | ⏱️ 4-6 hours
 ```
