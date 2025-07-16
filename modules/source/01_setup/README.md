@@ -8,11 +8,7 @@
 
 Welcome to TinyTorch! This is your first module in the Machine Learning Systems course.
 
-## Overview
-
-The setup module teaches you the complete TinyTorch development workflow while introducing fundamental programming concepts. You'll learn to write code with NBDev directives, implement classes and functions, and understand the module-to-package export system.
-
-## Learning Goals
+## 🎯 Learning Objectives
 
 - Understand the nbdev notebook-to-Python workflow
 - Write your first TinyTorch code with `#| export` directives
@@ -20,15 +16,11 @@ The setup module teaches you the complete TinyTorch development workflow while i
 - Run tests and use the CLI tools
 - Get comfortable with the development rhythm
 
-## Files
+## 🧠 Overview
 
-- `setup_dev.py` - Main development file (Jupytext format with full educational content)
-- `setup_dev.ipynb` - Jupyter notebook version (auto-generated and executed)
-- `tinytorch_flame.txt` - ASCII art file containing the TinyTorch flame design
-- `tests/test_setup.py` - Comprehensive pytest test suite
-- `README.md` - This file
+The setup module teaches you the complete TinyTorch development workflow while introducing fundamental programming concepts. You'll learn to write code with NBDev directives, implement classes and functions, and understand the module-to-package export system.
 
-## What You'll Implement
+## 📚 What You'll Build
 
 ### 1. Basic Functions
 - `hello_tinytorch()` - Display ASCII art and welcome message

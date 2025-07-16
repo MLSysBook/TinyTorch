@@ -16,16 +16,22 @@ learning_objectives: ['Understand model size and deployment constraints in real 
 
 
 
-## Overview
-This module teaches students to make neural networks smaller, faster, and more efficient for real-world deployment. Students implement four core compression techniques and learn to balance accuracy with efficiency.
+## 📊 Module Info
+- **Difficulty**: ⭐⭐⭐⭐⭐ Expert
+- **Time Estimate**: 8-10 hours
+- **Prerequisites**: Networks, Training modules
+- **Next Steps**: Kernels, MLOps modules
 
-## Learning Goals
+## 🎯 Learning Objectives
 - Understand model size and deployment constraints in real systems
 - Implement magnitude-based pruning to remove unimportant weights
 - Master quantization for 75% memory reduction (FP32 → INT8)
 - Build knowledge distillation for training compact models
 - Create structured pruning to optimize network architectures
 - Compare compression techniques and their trade-offs
+
+## 🧠 Overview
+This module teaches students to make neural networks smaller, faster, and more efficient for real-world deployment. Students implement four core compression techniques and learn to balance accuracy with efficiency.
 
 ## Educational Flow
 
