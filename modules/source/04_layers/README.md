@@ -1,4 +1,4 @@
-# 🧱 Module 2: Layers - Neural Network Building Blocks
+# 🔥 Module: Layers
 
 ## 📊 Module Info
 - **Difficulty**: ⭐⭐ Intermediate

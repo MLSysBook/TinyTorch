@@ -8,7 +8,7 @@ next_steps: []
 learning_objectives: []
 ---
 
-# 🧠 Module 3: Networks - Neural Network Architectures
+# Networks
 ---
 **Course Navigation:** [Home](../intro.html) → [Module 5: 05 Networks](#)
 

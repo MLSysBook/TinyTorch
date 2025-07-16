@@ -1,4 +1,4 @@
-# Module 10: Compression & Optimization
+# 🔥 Module: Compression
 
 ## Overview
 This module teaches students to make neural networks smaller, faster, and more efficient for real-world deployment. Students implement four core compression techniques and learn to balance accuracy with efficiency.

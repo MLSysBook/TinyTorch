@@ -1,4 +1,4 @@
-# 🧠 Module X: CNN - Convolutional Neural Networks
+# 🔥 Module: CNN
 
 ## 📊 Module Info
 - **Difficulty**: ⭐⭐⭐ Advanced

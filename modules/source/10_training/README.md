@@ -1,4 +1,4 @@
-# 🏋️ Module 9: Training - Complete Neural Network Training Pipeline
+# 🔥 Module: Training
 
 ## 📊 Module Info
 - **Difficulty**: ⭐⭐⭐⭐⭐ Expert

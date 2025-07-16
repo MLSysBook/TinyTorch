@@ -1,4 +1,4 @@
-# Setup Module
+# 🔥 Module: Setup
 
 ## 📊 Module Info
 - **Difficulty**: ⭐ Beginner
