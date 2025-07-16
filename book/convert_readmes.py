@@ -89,40 +89,39 @@ def enhance_content_for_web(content: str, module_name: str, module_num: int) -> 
 
 ## 🚀 Interactive Learning
 
-<div class="admonition tip">
-<p class="admonition-title">💡 Try It Yourself</p>
-<p>Ready to start building? Choose your preferred environment:</p>
-</div>
+Choose your preferred way to engage with this module:
 
-### 🔧 **Builder Environment**
-<div class="admonition note">
-<p class="admonition-title">🏗️ Quick Start</p>
-<p>Jump directly into the implementation with our guided builder:</p>
-</div>
+````{{grid}} 1 2 3 3
 
-<a href="https://mybinder.org/v2/gh/MLSysBook/TinyTorch/main?filepath=modules/source/{module_name}/{module_name.split('_', 1)[1]}_dev.ipynb" target="_blank" class="btn btn-primary">
-    🚀 Launch Builder
-</a>
+```{{grid-item-card}} 🚀 Launch Binder
+:link: https://mybinder.org/v2/gh/mlsysbook/TinyTorch/main?filepath=modules/source/{module_name}/{module_name.split('_', 1)[1]}_dev.ipynb
+:class-header: bg-light
 
-### 📓 **Jupyter Notebook**
-<div class="admonition note">
-<p class="admonition-title">📚 Full Development</p>
-<p>Work with the complete development environment:</p>
-</div>
+Run this module interactively in your browser. No installation required!
+```
 
-<a href="https://mybinder.org/v2/gh/MLSysBook/TinyTorch/main?filepath=modules/source/{module_name}/{module_name.split('_', 1)[1]}_dev.ipynb" target="_blank" class="btn btn-success">
-    📓 Open Jupyter
-</a>
+```{{grid-item-card}} ⚡ Open in Colab  
+:link: https://colab.research.google.com/github/mlsysbook/TinyTorch/blob/main/modules/source/{module_name}/{module_name.split('_', 1)[1]}_dev.ipynb
+:class-header: bg-light
 
-### 🎯 **Google Colab**
-<div class="admonition note">
-<p class="admonition-title">☁️ Cloud Environment</p>
-<p>Use Google's cloud-based notebook environment:</p>
-</div>
+Use Google Colab for GPU access and cloud compute power.
+```
 
-<a href="https://colab.research.google.com/github/MLSysBook/TinyTorch/blob/main/modules/source/{module_name}/{module_name.split('_', 1)[1]}_dev.ipynb" target="_blank" class="btn btn-info">
-    ☁️ Open in Colab
-</a>
+```{{grid-item-card}} 📖 View Source
+:link: https://github.com/mlsysbook/TinyTorch/blob/main/modules/source/{module_name}/{module_name.split('_', 1)[1]}_dev.py
+:class-header: bg-light
+
+Browse the Python source code and understand the implementation.
+```
+
+````
+
+```{{admonition}} 💾 Save Your Progress
+:class: tip
+**Binder sessions are temporary!** Download your completed notebook when done, or switch to local development for persistent work.
+
+Ready for serious development? → [🏗️ Local Setup Guide](../usage-paths/serious-development.md)
+```
 
 ---
 
