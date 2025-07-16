@@ -5,15 +5,19 @@ difficulty: "Intermediate"
 time_estimate: "2-4 hours"
 prerequisites: []
 next_steps: ['Module 11: Kernels - Hardware-aware optimization', 'Module 12: Benchmarking - Performance measurement', 'Module 13: MLOps - Production deployment']
-learning_objectives: ['Understand model size and deployment constraints in real systems', 'Implement magnitude-based pruning to remove unimportant weights', 'Master quantization for 75% memory reduction (FP32 → INT8)', 'Build knowledge distillation for training compact models', 'Create structured pruning to optimize network architectures', 'Compare compression techniques and their trade-offs']
+learning_objectives: []
 ---
 
 # Module: Compression
----
-**Course Navigation:** [Home](../intro.html) → [Compression](#)
 
----
+```{div} breadcrumb
+Home → 11 Compression
+```
 
+
+```{div} badges
+⭐⭐⭐⭐⭐ | ⏱️ 4-5 hours
+```
 
 
 ## 📊 Module Info
@@ -22,182 +26,251 @@ learning_objectives: ['Understand model size and deployment constraints in real 
 - **Prerequisites**: Networks, Training modules
 - **Next Steps**: Kernels, MLOps modules
 
+Build model compression systems that make neural networks smaller, faster, and more efficient for real-world deployment. This module teaches the optimization techniques that bridge the gap between research-quality models and production-ready AI systems.
+
 ## 🎯 Learning Objectives
-- Understand model size and deployment constraints in real systems
-- Implement magnitude-based pruning to remove unimportant weights
-- Master quantization for 75% memory reduction (FP32 → INT8)
-- Build knowledge distillation for training compact models
-- Create structured pruning to optimize network architectures
-- Compare compression techniques and their trade-offs
 
-## 🧠 Overview
-This module teaches students to make neural networks smaller, faster, and more efficient for real-world deployment. Students implement four core compression techniques and learn to balance accuracy with efficiency.
+By the end of this module, you will be able to:
 
-## Educational Flow
+- **Understand deployment constraints**: Analyze model size, memory usage, and computational requirements for real-world systems
+- **Implement pruning techniques**: Build magnitude-based and structured pruning to remove unimportant weights and neurons
+- **Master quantization methods**: Reduce memory usage by 75% through FP32 → INT8 precision reduction
+- **Apply knowledge distillation**: Train compact models using larger teacher models for better performance
+- **Design compression strategies**: Combine techniques optimally for different deployment scenarios and constraints
 
-### Step 1: Understanding Model Size
-- **Concept**: Parameter counting and memory footprint analysis
-- **Implementation**: `CompressionMetrics` class for model analysis
-- **Learning**: Foundation for compression decision-making
+## 🧠 Build → Use → Optimize
 
-### Step 2: Magnitude-Based Pruning
-- **Concept**: Remove weights with smallest absolute values
-- **Implementation**: `prune_weights_by_magnitude()` and sparsity calculation
-- **Learning**: Sparsity patterns and accuracy vs compression trade-offs
+This module follows TinyTorch's **Build → Use → Optimize** framework:
 
-### Step 3: Quantization Experiments
-- **Concept**: Reduce precision from FP32 to INT8 for memory efficiency
-- **Implementation**: `quantize_layer_weights()` with scale/offset mapping
-- **Learning**: Numerical precision impact on model performance
+1. **Build**: Implement pruning, quantization, knowledge distillation, and structured optimization from engineering principles
+2. **Use**: Apply compression techniques to real neural networks with accuracy vs efficiency analysis
+3. **Optimize**: Combine compression methods strategically for production deployment scenarios with specific constraints
 
-### Step 4: Knowledge Distillation
-- **Concept**: Large models teach small models through soft targets
-- **Implementation**: `DistillationLoss` with temperature scaling
-- **Learning**: Advanced training techniques for compact models
+## 📚 What You'll Build
 
-### Step 5: Structured Pruning
-- **Concept**: Remove entire neurons/channels, not just weights
-- **Implementation**: `prune_layer_neurons()` with importance scoring
-- **Learning**: Architecture optimization and cascade effects
+### Model Compression Analysis System
+```python
+# Comprehensive model analysis for compression planning
+metrics = CompressionMetrics()
 
-### Step 6: Comprehensive Comparison
-- **Concept**: Combine techniques for maximum efficiency
-- **Implementation**: Integrated compression pipeline
-- **Learning**: Systems thinking for production deployment
+# Analyze original model
+original_size = metrics.calculate_model_size(model)
+param_count = metrics.count_parameters(model)
+weight_dist = metrics.analyze_weight_distribution(model)
 
-## Key Components
-
-### CompressionMetrics
-- **Purpose**: Analyze model size and parameter distribution
-- **Methods**: `count_parameters()`, `calculate_model_size()`, `analyze_weight_distribution()`
-- **Usage**: Foundation for compression target selection
-
-### Pruning Functions
-- **Purpose**: Remove unimportant weights and neurons
-- **Methods**: `prune_weights_by_magnitude()`, `prune_model_by_magnitude()`, `calculate_sparsity()`
-- **Usage**: Reduce model size while maintaining performance
-
-### Quantization Functions
-- **Purpose**: Reduce memory usage through lower precision
-- **Methods**: `quantize_layer_weights()`, `dequantize_layer_weights()`
-- **Usage**: 75% memory reduction for mobile deployment
-
-### Knowledge Distillation
-- **Purpose**: Train compact models with teacher guidance
-- **Methods**: `DistillationLoss`, `train_with_distillation()`
-- **Usage**: Achieve better small model performance
-
-### Structured Pruning
-- **Purpose**: Remove entire neurons for actual speedup
-- **Methods**: `prune_layer_neurons()`, `compute_neuron_importance()`
-- **Usage**: Architecture optimization and hardware efficiency
-
-## Real-World Applications
-
-### Mobile AI Deployment
-- **Constraint**: Models must be < 10MB for smartphone apps
-- **Solution**: Combine pruning and quantization for 90% size reduction
-- **Examples**: Google Translate offline, mobile camera AI
-
-### Edge Computing
-- **Constraint**: Severe memory and compute limitations
-- **Solution**: Structured pruning for actual inference speedup
-- **Examples**: IoT sensors, smart cameras, voice assistants
-
-### Cost Optimization
-- **Constraint**: Expensive cloud inference at scale
-- **Solution**: Reduce model size for lower compute costs
-- **Examples**: Production recommendation systems, search engines
-
-### Battery Efficiency
-- **Constraint**: Wearable devices need long battery life
-- **Solution**: Quantization and pruning for energy savings
-- **Examples**: Smartwatches, fitness trackers, AR glasses
-
-## Industry Connections
-
-### MobileNet Architecture
-- **Concept**: Depthwise separable convolutions for efficiency
-- **Connection**: Structured optimization for mobile deployment
-- **Learning**: Architecture design affects compression potential
-
-### DistilBERT
-- **Concept**: 60% smaller than BERT with 97% performance
-- **Connection**: Knowledge distillation for language models
-- **Learning**: Teacher-student training for different domains
-
-### TinyML Movement
-- **Concept**: ML on microcontrollers (< 1MB models)
-- **Connection**: Extreme compression for embedded systems
-- **Learning**: Efficiency requirements for edge deployment
-
-### Neural Architecture Search
-- **Concept**: Automated model design for efficiency
-- **Connection**: Structured pruning as architecture optimization
-- **Learning**: Automated techniques for compression
-
-## Assessment Criteria
-
-### Technical Implementation (40%)
-- Correctly implement 4 compression techniques
-- Handle edge cases and error conditions
-- Provide comprehensive statistics and analysis
-
-### Understanding Trade-offs (30%)
-- Explain accuracy vs efficiency spectrum
-- Identify appropriate techniques for different constraints
-- Analyze compression effectiveness quantitatively
-
-### Real-World Application (30%)
-- Connect compression to deployment scenarios
-- Understand hardware and system constraints
-- Design compression strategies for specific use cases
-
-## Next Steps
-
-### Module 11: Kernels
-- **Connection**: Hardware-aware optimization builds on compression
-- **Skills**: GPU kernels, SIMD operations, memory optimization
-- **Application**: Implement efficient compressed model inference
-
-### Module 12: Benchmarking
-- **Connection**: Measure compression effectiveness systematically
-- **Skills**: Performance profiling, accuracy measurement, A/B testing
-- **Application**: Evaluate compression trade-offs in production
-
-### Module 13: MLOps
-- **Connection**: Deploy compressed models in production systems
-- **Skills**: Model versioning, monitoring, continuous optimization
-- **Application**: Production-ready compressed model deployment
-
-## File Structure
-```
-10_compression/
-├── compression_dev.py       # Main development notebook
-├── module.yaml              # Module configuration
-├── README.md               # This file
-└── tests/                  # Additional test files (if needed)
+print(f"Original model: {original_size:.2f} MB, {param_count:,} parameters")
+print(f"Weight distribution: mean={weight_dist['mean']:.4f}, std={weight_dist['std']:.4f}")
 ```
 
-## Getting Started
+### Pruning Systems for Model Sparsity
+```python
+# Magnitude-based pruning: remove smallest weights
+pruned_model = prune_model_by_magnitude(model, sparsity=0.5)  # Remove 50% of weights
+sparsity = calculate_sparsity(pruned_model)
+print(f"Achieved sparsity: {sparsity:.2%}")
 
-1. **Review Dependencies**: Ensure modules 01, 02, 04, 05, 10 are complete
-2. **Open Development File**: `compression_dev.py`
-3. **Follow Educational Flow**: Work through Steps 1-6 sequentially
-4. **Test Thoroughly**: Run all inline tests as you progress
-5. **Export to Package**: Use `tito export 10_compression` when complete
+# Structured pruning: remove entire neurons/channels
+optimized_model = prune_layer_neurons(model, layer_idx=0, neurons_to_remove=32)
+print(f"Removed 32 neurons from layer 0")
 
-## Key Takeaways
+# Sparsity analysis and performance impact
+original_acc = evaluate_model(model, test_loader)
+pruned_acc = evaluate_model(pruned_model, test_loader)
+print(f"Accuracy: {original_acc:.4f} → {pruned_acc:.4f} ({pruned_acc-original_acc:+.4f})")
+```
 
-Students completing this module will:
-- **Understand** the efficiency requirements of production AI systems
-- **Implement** four essential compression techniques from scratch
-- **Analyze** accuracy vs efficiency trade-offs quantitatively
-- **Apply** compression strategies to real neural networks
-- **Connect** compression to mobile, edge, and production deployment
-- **Prepare** for advanced optimization and production deployment modules
+### Quantization for Memory Efficiency
+```python
+# Quantize model weights from FP32 to INT8
+quantized_model = quantize_model_weights(model)
+compressed_size = metrics.calculate_model_size(quantized_model)
 
-This module bridges the gap between research-quality models and production-ready AI systems, teaching the essential skills for deploying AI in resource-constrained environments. 
+print(f"Size reduction: {original_size:.2f} MB → {compressed_size:.2f} MB")
+print(f"Compression ratio: {original_size/compressed_size:.1f}x smaller")
+
+# Test quantization impact on accuracy
+quantized_acc = evaluate_model(quantized_model, test_loader)
+print(f"Quantization accuracy impact: {quantized_acc-original_acc:+.4f}")
+```
+
+### Knowledge Distillation for Compact Models
+```python
+# Train small model using large teacher model
+teacher_model = load_pretrained_large_model()
+student_model = create_compact_model(compression_ratio=0.25)  # 4x smaller
+
+# Distillation training with temperature scaling
+distillation_loss = DistillationLoss(temperature=4.0, alpha=0.7)
+
+# Training loop with teacher guidance
+for batch_inputs, batch_labels in train_loader:
+    teacher_outputs = teacher_model(batch_inputs)
+    student_outputs = student_model(batch_inputs)
+    
+    # Combined loss: distillation + task loss
+    loss = distillation_loss(student_outputs, teacher_outputs, batch_labels)
+    loss.backward()
+    optimizer.step()
+
+print(f"Student model size: {metrics.calculate_model_size(student_model):.2f} MB")
+print(f"Student accuracy: {evaluate_model(student_model, test_loader):.4f}")
+```
+
+### Comprehensive Compression Pipeline
+```python
+# End-to-end compression with multiple techniques
+def compress_for_mobile_deployment(model, target_size_mb=5.0):
+    """Compress model for mobile deployment under 5MB constraint"""
+    
+    # Step 1: Structured pruning for architecture optimization
+    model = prune_redundant_neurons(model, importance_threshold=0.1)
+    
+    # Step 2: Magnitude-based pruning for sparsity
+    model = prune_model_by_magnitude(model, sparsity=0.6)
+    
+    # Step 3: Quantization for memory reduction
+    model = quantize_model_weights(model)
+    
+    # Step 4: Verify size constraint
+    final_size = CompressionMetrics().calculate_model_size(model)
+    print(f"Final compressed model: {final_size:.2f} MB")
+    
+    return model
+
+mobile_model = compress_for_mobile_deployment(trained_model)
+```
+
+## 🚀 Getting Started
+
+### Prerequisites
+Ensure you have mastered the training foundation:
+
+```bash
+# Activate TinyTorch environment
+source bin/activate-tinytorch.sh
+
+# Verify prerequisite modules
+tito test --module networks
+tito test --module training
+```
+
+### Development Workflow
+1. **Open the development file**: `modules/source/11_compression/compression_dev.py`
+2. **Implement compression metrics**: Build model analysis tools for size and parameter counting
+3. **Create pruning algorithms**: Implement magnitude-based and structured pruning techniques
+4. **Build quantization system**: Add FP32 → INT8 weight quantization with scale/offset mapping
+5. **Add knowledge distillation**: Implement teacher-student training for compact models
+6. **Export and verify**: `tito export --module compression && tito test --module compression`
+
+## 🧪 Testing Your Implementation
+
+### Comprehensive Test Suite
+Run the full test suite to verify compression system functionality:
+
+```bash
+# TinyTorch CLI (recommended)
+tito test --module compression
+
+# Direct pytest execution
+python -m pytest tests/ -k compression -v
+```
+
+### Test Coverage Areas
+- ✅ **Compression Metrics**: Verify accurate model size and parameter analysis
+- ✅ **Pruning Algorithms**: Test magnitude-based and structured pruning correctness
+- ✅ **Quantization System**: Ensure proper FP32 ↔ INT8 conversion and accuracy preservation
+- ✅ **Knowledge Distillation**: Verify teacher-student training and loss computation
+- ✅ **Integrated Compression**: Test combined techniques on real neural networks
+
+### Inline Testing & Compression Analysis
+The module includes comprehensive compression validation and performance analysis:
+```python
+# Example inline test output
+🔬 Unit Test: Model compression metrics...
+✅ Parameter counting accurate
+✅ Model size calculation correct
+✅ Weight distribution analysis working
+📈 Progress: Compression Analysis ✓
+
+# Pruning validation
+🔬 Unit Test: Magnitude-based pruning...
+✅ Smallest weights identified correctly
+✅ Sparsity calculation accurate
+✅ Model functionality preserved
+📈 Progress: Pruning Systems ✓
+
+# Quantization testing
+🔬 Unit Test: Weight quantization...
+✅ FP32 → INT8 conversion correct
+✅ Dequantization recovers values
+✅ 75% memory reduction achieved
+📈 Progress: Quantization ✓
+```
+
+### Manual Testing Examples
+```python
+from compression_dev import CompressionMetrics, prune_model_by_magnitude, quantize_model_weights
+from networks_dev import Sequential
+from layers_dev import Dense
+from activations_dev import ReLU
+
+# Create test model
+model = Sequential([
+    Dense(784, 128), ReLU(),
+    Dense(128, 64), ReLU(),
+    Dense(64, 10)
+])
+
+# Analyze original model
+metrics = CompressionMetrics()
+original_size = metrics.calculate_model_size(model)
+original_params = metrics.count_parameters(model)
+print(f"Original: {original_size:.2f} MB, {original_params:,} parameters")
+
+# Test pruning
+pruned_model = prune_model_by_magnitude(model, sparsity=0.5)
+pruned_size = metrics.calculate_model_size(pruned_model)
+print(f"After 50% pruning: {pruned_size:.2f} MB ({original_size/pruned_size:.1f}x smaller)")
+
+# Test quantization
+quantized_model = quantize_model_weights(model)
+quantized_size = metrics.calculate_model_size(quantized_model)
+print(f"After quantization: {quantized_size:.2f} MB ({original_size/quantized_size:.1f}x smaller)")
+```
+
+## 🎯 Key Concepts
+
+### Real-World Applications
+- **Mobile AI**: Smartphone apps require models under 10MB for fast download and inference
+- **Edge Computing**: IoT devices have severe memory constraints requiring aggressive compression
+- **Cloud Cost Optimization**: Reducing model size decreases inference costs at scale
+- **Autonomous Systems**: Real-time requirements demand efficient models for safety-critical applications
+
+### Compression Techniques
+- **Magnitude-based Pruning**: Remove weights with smallest absolute values to create sparse networks
+- **Structured Pruning**: Remove entire neurons/channels for actual hardware speedup benefits
+- **Quantization**: Reduce precision from FP32 to INT8 for 75% memory reduction
+- **Knowledge Distillation**: Transfer knowledge from large teacher to small student models
+
+### Production Deployment Considerations
+- **Hardware Constraints**: Different devices have different memory, compute, and energy limitations
+- **Accuracy vs Efficiency Trade-offs**: Balancing model performance with deployment requirements
+- **Inference Speed**: Compression techniques that actually improve runtime performance
+- **Model Serving**: Considerations for batch processing, latency, and throughput
+
+### Systems Engineering Patterns
+- **Compression Pipeline Design**: Sequential application of techniques for maximum benefit
+- **Performance Profiling**: Measuring actual improvements in memory, speed, and energy usage
+- **Quality Assurance**: Maintaining model accuracy while achieving compression targets
+- **Deployment Validation**: Testing compressed models in realistic production scenarios
+
+## 🎉 Ready to Build?
+
+You're about to master the optimization techniques that make AI practical for real-world deployment! From the smartphone in your pocket to autonomous vehicles, they all depend on compressed models that balance intelligence with efficiency.
+
+This module teaches you the systems engineering that separates research prototypes from production AI. You'll learn to think like a deployment engineer, balancing accuracy against constraints and building systems that work in the real world. Take your time, understand the trade-offs, and enjoy building AI that actually ships!
+
+ 
 
 
 Choose your preferred way to engage with this module:

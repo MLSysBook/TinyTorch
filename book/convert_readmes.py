@@ -66,18 +66,34 @@ learning_objectives: {objectives}
     return frontmatter
 
 def enhance_content_for_web(content: str, module_name: str, module_num: int) -> str:
-    """Enhance README content for web display."""
-    # Add navigation breadcrumbs
-    clean_name = module_name.split('_', 1)[1].title() if '_' in module_name else module_name.title()
-    breadcrumb = f"""---
-**Course Navigation:** [Home](../intro.html) → [{clean_name}](#)
-
----
-"""
+    """Enhance README content for web presentation."""
+    # Remove existing grid cards to prevent conflicts with new interactive elements
+    # Pattern to match grid sections (from ```{grid} to closing ```)
+    grid_pattern = r'```\{grid\}[^`]*?```'
+    content = re.sub(grid_pattern, '', content, flags=re.DOTALL)
     
-    # Let the README's own Module Info section handle formatting
-    # No need to add duplicate badges here
-    badges = ""
+    # Also remove individual grid-item-card patterns that might be floating
+    grid_item_pattern = r'\{grid-item-card\}[^`]*?```'
+    content = re.sub(grid_item_pattern, '', content, flags=re.DOTALL)
+    
+    # Clean up any remaining grid-related patterns
+    content = re.sub(r'\{grid-item-card\}[^\n]*\n', '', content)
+    content = re.sub(r':link:[^\n]*\n', '', content)
+    content = re.sub(r':class-[^:]*:[^\n]*\n', '', content)
+    
+    # Clean up multiple newlines that result from removals
+    content = re.sub(r'\n{3,}', '\n\n', content)
+    
+    # Create breadcrumb navigation
+    breadcrumb = f"\n```{{div}} breadcrumb\nHome → {module_name.replace('_', ' ').title()}\n```\n"
+    
+    # Add badges for difficulty and time
+    difficulty = get_difficulty_stars(module_name)
+    time_estimate = get_time_estimate(module_name)
+    badges = f"\n```{{div}} badges\n{difficulty} | ⏱️ {time_estimate}\n```\n"
+    
+    # Get previous and next module names for navigation
+    prev_module = f"{module_num-1:02d}_{get_prev_module_name(module_num)}" if module_num > 1 else None
     
     # Add interactive learning elements and navigation at the end
     interactive_elements = f"""
@@ -118,13 +134,11 @@ Ready for serious development? → [🏗️ Local Setup Guide](../usage-paths/se
 
 ---
 
-<div class="prev-next-area">
 """
     
-    # Build navigation links
-    nav_links = ""
-    if module_num > 1:
-        prev_module = f"{module_num-1:02d}_{get_prev_module_name(module_num)}"
+    # Add navigation links
+    nav_links = "<div class=\"prev-next-area\">\n"
+    if prev_module:
         nav_links += f'<a class="left-prev" href="../chapters/{prev_module}.html" title="previous page">← Previous Module</a>\n'
     
     if module_num < 14:  # Assuming 14 modules total
