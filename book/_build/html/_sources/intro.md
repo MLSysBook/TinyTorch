@@ -51,7 +51,7 @@ TinyTorch grew out of the CS249r: Tiny Machine Learning Systems course at Harvar
 
 ## 🎯 What You'll Build
 
-### **Progressive Complexity - Each Module Builds on Previous Work**
+### **Progressive Complexity - Each Module Builds on Prior Work**
 
 ```{admonition} 🏗️ Foundation (Modules 0-2)
 :class: note
@@ -121,7 +121,7 @@ model = Sequential([
 
 ---
 
-## 📊 Proven Student Outcomes
+## 📊 Expected Student Outcomes
 
 ```{admonition} Real Results from Real Students
 :class: success
@@ -142,11 +142,10 @@ model = Sequential([
 
 ## 🌟 What Makes This Different
 
-### **🔬 Real Data, Real Systems**
-- Work with **CIFAR-10** (not toy datasets)
-- **Production-style** code organization
-- **Performance considerations** and engineering practices
-- **Professional development** workflow with automated testing
+### **🔬 Engineering Principles
+- **Production-style** code organization throughout every module
+- **Performance-focused** engineering and optimization practices
+- **Professional development** workflow with automated testing and CI
 
 ### **🚀 Immediate Feedback**
 - Code works **immediately** after implementation
@@ -188,19 +187,16 @@ Traditional ML Course:          TinyTorch Approach:
 ├── import torch               ├── class Tensor:
 ├── model = nn.Linear(10, 1)   │     def __add__(self, other): ...
 ├── loss = nn.MSELoss()        │     def backward(self): ...
-├── optimizer.step()           ├── class Linear:
-└── "How does this work?" 🤷   │     def forward(self, x):
+└── optimizer.step()           ├── class Linear:
+                               │     def forward(self, x):
                                │       return x @ self.weight + self.bias
                                ├── def mse_loss(pred, target):
                                │     return ((pred - target) ** 2).mean()
                                ├── class SGD:
                                │     def step(self):
-                               │       param.data -= lr * param.grad
-                               └── "I implemented every line!" 💪
+                               └──     param.data -= lr * param.grad
+
+Transform your curiosity "How does this work?" 🤷 into confidence: "I built every part myself!" 💪
 ```
 
-**Result:** You become the person others come to when they need to understand "how PyTorch actually works under the hood."
-
----
-
-*Built with ❤️ for hands-on ML systems education. Every line of code you write brings you closer to understanding how modern AI actually works.*
+**Result:** You become the person others come to when they need to understand "how PyTorch actually works under the hood." Every line of code you write brings you closer to understanding how modern AI works.
