@@ -15,11 +15,13 @@
 
 ---
 
-## 🎯 **The Learning Opportunity**
+## ⚖️ **Science vs Engineering: A Different Approach**
 
-Most ML education focuses on using existing frameworks — import PyTorch, call `nn.Linear()`, run `optimizer.step()`. This approach gets you building models quickly, but leaves a gap: **how do these frameworks actually work under the hood?**
+Most ML education focuses on the **science** — algorithms, theory, mathematical foundations. You learn *what* neural networks do and *why* they work.
 
-TinyTorch fills that gap. Instead of treating frameworks as black boxes, you'll build every component yourself. The result? Deep understanding that makes you the person others come to with questions about "how PyTorch really works."
+TinyTorch focuses on the **engineering** — systems, implementation, production practices. You learn *how* to build them and *how* to make them work at scale.
+
+**Both matter.** But there's a critical gap in engineering education that TinyTorch fills.
 
 ---
 
