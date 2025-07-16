@@ -1,0 +1,35 @@
+# TinyTorch Module Metadata
+# Essential system information for CLI tools and build systems
+
+name: "capstone"
+title: "Capstone: Framework Optimization"
+description: "Optimize and extend your complete TinyTorch framework through systems engineering"
+
+# Dependencies - Used by CLI for module ordering and prerequisites
+dependencies:
+  prerequisites: [
+    "setup", "tensor", "activations", "layers", "networks", "cnn", 
+    "dataloader", "autograd", "optimizers", "training", "compression", 
+    "kernels", "benchmarking", "mlops"
+  ]
+  enables: []
+
+# Package Export - What gets built into tinytorch package
+exports_to: "tinytorch.capstone"
+
+# File Structure - What files exist in this module
+files:
+  dev_file: "capstone_guide.md"
+  readme: "README.md"
+  tests: "project_based"
+
+# Components - What's implemented in this module
+components:
+  - "PerformanceProfiler"
+  - "MemoryOptimizer"
+  - "BatchNormalization"
+  - "TransformerBlock"
+  - "MultiGPUTraining"
+  - "AdvancedOptimizer"
+  - "FrameworkBenchmark"
+  - "DeveloperTools" 
