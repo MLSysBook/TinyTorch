@@ -133,6 +133,35 @@ class BookCommand(BaseCommand):
         console = self.console
         console.print("🔄 Generating all content (notebooks + overview pages)...")
         
+        # Step 1: Generate notebooks in module directories for direct GitHub access
+        console.print("📝 Step 1a: Generating notebooks in module directories...")
+        try:
+            # Find all *_dev.py files and convert them to notebooks
+            import glob
+            dev_files = glob.glob("modules/source/*/*_dev.py")
+            
+            for dev_file in dev_files:
+                module_dir = os.path.dirname(dev_file)
+                dev_filename = os.path.basename(dev_file)
+                notebook_filename = dev_filename.replace('.py', '.ipynb')
+                notebook_path = os.path.join(module_dir, notebook_filename)
+                
+                # Use jupytext to convert
+                result = subprocess.run([
+                    "jupytext", "--to", "notebook", dev_file
+                ], capture_output=True, text=True)
+                
+                if result.returncode == 0:
+                    console.print(f"  ✅ {dev_filename} → {notebook_filename}")
+                else:
+                    console.print(f"  ❌ Failed to convert {dev_filename}: {result.stderr}")
+                    
+        except Exception as e:
+            console.print(f"[red]❌ Error generating module notebooks: {e}[/red]")
+            return 1
+        
+        # Step 2: Generate book chapters and overview pages
+        console.print("📚 Step 1b: Generating book chapters and overview pages...")
         try:
             os.chdir("book")
             result = subprocess.run(
@@ -161,9 +190,9 @@ class BookCommand(BaseCommand):
         """Build the Jupyter Book locally."""
         console = self.console
         
-        # First generate overview pages
-        console.print("📄 Step 1: Generating overview pages...")
-        if self._generate_overview() != 0:
+        # First generate all content (notebooks + overview pages)
+        console.print("📄 Step 1: Generating all content...")
+        if self._generate_all() != 0:
             return 1
         
         # Then build the book
