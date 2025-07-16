@@ -2,8 +2,6 @@
 
 **Most ML education teaches you to _use_ frameworks. TinyTorch teaches you to _build_ them.**
 
-TinyTorch is an educational framework designed specifically for learning by building. Instead of using PyTorch or TensorFlow, you implement every component from scratch: tensors, autograd, optimizers, even MLOps monitoring. This hands on approach develops the deep systems understanding that distinguishes ML engineers from ML users.
-
 ```{admonition} 🎯 What You'll Build
 :class: tip
 **A complete ML framework from scratch**: your own PyTorch style toolkit that can:
@@ -14,6 +12,8 @@ TinyTorch is an educational framework designed specifically for learning by buil
 
 **Result:** You become the expert others ask about "how PyTorch actually works."
 ```
+
+TinyTorch is an educational framework designed specifically for learning by building. Instead of using PyTorch or TensorFlow, you implement every component from scratch: tensors, autograd, optimizers, even MLOps monitoring. This hands on approach develops the deep systems understanding that distinguishes ML engineers from ML users.
 
 ---
 
