@@ -33,6 +33,7 @@ from .commands.system import SystemCommand
 from .commands.module import ModuleCommand
 from .commands.package import PackageCommand
 from .commands.nbgrader import NBGraderCommand
+from .commands.book import BookCommand
 
 # Configure logging
 logging.basicConfig(
@@ -62,6 +63,7 @@ class TinyTorchCLI:
             # Convenience commands
             'export': ExportCommand,
             'test': TestCommand,
+            'book': BookCommand,
         }
     
     def create_parser(self) -> argparse.ArgumentParser:
@@ -77,12 +79,19 @@ Command Groups:
   package     Package management and nbdev integration commands
   nbgrader    Assignment management and auto-grading commands
 
+Convenience Commands:
+  export      Export modules to package (quick shortcut)
+  test        Run tests (quick shortcut)
+  book        Build and manage Jupyter Book
+
 Examples:
   tito system info              Show system information
   tito module status --metadata Module status with metadata
   tito export 01_tensor         Export specific module to package
   tito export --all             Export all modules to package
   tito nbgrader generate setup  Generate assignment from setup module
+  tito book build               Build the Jupyter Book locally
+  tito book publish             Generate, commit, and publish to GitHub
             """
         )
         
@@ -175,17 +184,24 @@ Examples:
                     "  [bold green]module[/bold green]   - Module development and management\n"
                     "  [bold green]package[/bold green]  - Package management and nbdev integration\n"
                     "  [bold green]nbgrader[/bold green] - Assignment management and auto-grading\n\n"
+                    "[bold]Convenience Commands:[/bold]\n"
+                    "  [bold green]export[/bold green]   - Export modules to package\n"
+                    "  [bold green]test[/bold green]     - Run tests\n"
+                    "  [bold green]book[/bold green]     - Build and manage Jupyter Book\n\n"
                     "[bold]Quick Start:[/bold]\n"
                     "  [dim]tito system info[/dim]              - Show system information\n"
                     "  [dim]tito module status --metadata[/dim] - Module status with metadata\n"
                     "  [dim]tito export 01_tensor[/dim]         - Export specific module to package\n"
                     "  [dim]tito export --all[/dim]             - Export all modules to package\n"
-                    "  [dim]tito nbgrader generate setup[/dim]  - Generate assignment from setup module\n\n"
+                    "  [dim]tito nbgrader generate setup[/dim]  - Generate assignment from setup module\n"
+                    "  [dim]tito book build[/dim]               - Build the Jupyter Book locally\n"
+                    "  [dim]tito book publish[/dim]             - Generate, commit, and publish to GitHub\n\n"
                     "[bold]Get Help:[/bold]\n"
                     "  [dim]tito system[/dim]                   - Show system subcommands\n"
                     "  [dim]tito module[/dim]                   - Show module subcommands\n"
                     "  [dim]tito package[/dim]                  - Show package subcommands\n"
                     "  [dim]tito nbgrader[/dim]                 - Show nbgrader subcommands\n"
+                    "  [dim]tito book[/dim]                     - Show book subcommands\n"
                     "  [dim]tito --help[/dim]                   - Show full help",
                     title="TinyTorch CLI",
                     border_style="bright_blue"

@@ -1,6 +1,6 @@
-name: Deploy TinyTorch Jupyter Book
+name: Deploy TinyTorch Jupyter Book (Streamlined)
 
-# Trigger the workflow on push to main branch or manual dispatch
+# Trigger the workflow on push to main branch (publishing) or manual dispatch
 on:
   push:
     branches: [ main ]
@@ -8,16 +8,18 @@ on:
       - 'book/**'
       - 'modules/source/**'
       - '.github/workflows/deploy-book.yml'
+      - 'tito/**'  # Also trigger when tito CLI changes
   pull_request:
     branches: [ main ]
     paths:
       - 'book/**'
       - 'modules/source/**'
+      - 'tito/**'
   workflow_dispatch:
 
-# Set permissions for GitHub Pages deployment
+# Set permissions for GitHub Pages deployment and content modification
 permissions:
-  contents: read
+  contents: write
   pages: write
   id-token: write
 
@@ -32,6 +34,8 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Set up Python
       uses: actions/setup-python@v4
@@ -43,25 +47,22 @@ jobs:
       run: |
         pip install --upgrade pip
         pip install jupyter-book jupytext
-        pip install -r book/tinytorch-course/requirements.txt
+        pip install -r book/requirements.txt
+        pip install -e .  # Install tito CLI
         
-    - name: Convert modules to notebooks
+    - name: Generate content and build book
       run: |
-        python book/convert_modules.py --all
-        
-    - name: Build the book
-      run: |
-        cd book/tinytorch-course
-        jupyter-book build . --all
+        # Use tito to generate content and build book
+        tito book build
         
     - name: Upload book artifact
       uses: actions/upload-pages-artifact@v3
       with:
-        path: book/tinytorch-course/_build/html
+        path: book/_build/html
 
   deploy:
-    # Only deploy on dev branch pushes (not PRs)
-    if: github.ref == 'refs/heads/dev' && github.event_name == 'push'
+    # Only deploy on main branch pushes (not PRs)
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
