@@ -8,17 +8,11 @@ next_steps: []
 learning_objectives: []
 ---
 
-# Optimizers
+# Module: Optimizers
 ---
-**Course Navigation:** [Home](../intro.html) → [Module 9: 09 Optimizers](#)
+**Course Navigation:** [Home](../intro.html) → [Optimizers](#)
 
 ---
-
-
-<div class="admonition note">
-<p class="admonition-title">📊 Module Info</p>
-<p><strong>Difficulty:</strong> ⭐ ⭐⭐⭐⭐ | <strong>Time:</strong> 5-6 hours</p>
-</div>
 
 
 

@@ -8,17 +8,11 @@ next_steps: []
 learning_objectives: []
 ---
 
-# Networks
+# Module: Networks
 ---
-**Course Navigation:** [Home](../intro.html) → [Module 5: 05 Networks](#)
+**Course Navigation:** [Home](../intro.html) → [Networks](#)
 
 ---
-
-
-<div class="admonition note">
-<p class="admonition-title">📊 Module Info</p>
-<p><strong>Difficulty:</strong> ⭐ ⭐⭐⭐ | <strong>Time:</strong> 5-6 hours</p>
-</div>
 
 
 

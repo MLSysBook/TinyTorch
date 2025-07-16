@@ -8,17 +8,11 @@ next_steps: []
 learning_objectives: []
 ---
 
-# Kernels
+# Module: Kernels
 ---
-**Course Navigation:** [Home](../intro.html) → [Module 12: 12 Kernels](#)
+**Course Navigation:** [Home](../intro.html) → [Kernels](#)
 
 ---
-
-
-<div class="admonition note">
-<p class="admonition-title">📊 Module Info</p>
-<p><strong>Difficulty:</strong> ⭐ ⭐⭐⭐⭐⭐ | <strong>Time:</strong> 5-6 hours</p>
-</div>
 
 
 

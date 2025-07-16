@@ -8,17 +8,11 @@ next_steps: []
 learning_objectives: []
 ---
 
-# Benchmarking
+# Module: Benchmarking
 ---
-**Course Navigation:** [Home](../intro.html) → [Module 13: 13 Benchmarking](#)
+**Course Navigation:** [Home](../intro.html) → [Benchmarking](#)
 
 ---
-
-
-<div class="admonition note">
-<p class="admonition-title">📊 Module Info</p>
-<p><strong>Difficulty:</strong> ⭐ ⭐⭐⭐⭐⭐ | <strong>Time:</strong> 4-5 hours</p>
-</div>
 
 
 

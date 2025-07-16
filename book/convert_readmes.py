@@ -68,20 +68,16 @@ learning_objectives: {objectives}
 def enhance_content_for_web(content: str, module_name: str, module_num: int) -> str:
     """Enhance README content for web display."""
     # Add navigation breadcrumbs
+    clean_name = module_name.split('_', 1)[1].title() if '_' in module_name else module_name.title()
     breadcrumb = f"""---
-**Course Navigation:** [Home](../intro.html) → [Module {module_num}: {module_name.replace('_', ' ').title()}](#)
+**Course Navigation:** [Home](../intro.html) → [{clean_name}](#)
 
 ---
 """
     
-    # Add difficulty and time badges
-    badges = f"""
-<div class="admonition note">
-<p class="admonition-title">📊 Module Info</p>
-<p><strong>Difficulty:</strong> ⭐ {get_difficulty_stars(module_name)} | <strong>Time:</strong> {get_time_estimate(module_name)}</p>
-</div>
-
-"""
+    # Let the README's own Module Info section handle formatting
+    # No need to add duplicate badges here
+    badges = ""
     
     # Add interactive learning elements and navigation at the end
     interactive_elements = f"""
@@ -147,16 +143,11 @@ Ready for serious development? → [🏗️ Local Setup Guide](../usage-paths/se
     added_badges = False
     
     for i, line in enumerate(lines):
-        # Clean up the main heading - remove module numbers and keep only the name
+        # Keep the meaningful module headers but clean up the breadcrumb reference
         if line.startswith('# ') and not added_breadcrumb:
-            # Extract just the module name from patterns like "# 🔥 Module: CNN" or "# 🔥 Module 1: Setup"
-            if 'Module:' in line:
-                module_title = line.split('Module:')[-1].strip()
-                line = f"# {module_title}"
-            elif 'Module ' in line and ':' in line:
-                # Handle patterns like "# 🔥 Module 1: Setup"
-                module_title = line.split(':')[-1].strip()
-                line = f"# {module_title}"
+            # Keep "Module: CNN" format, just remove emoji for clean display
+            if '🔥 Module:' in line:
+                line = line.replace('🔥 ', '')  # Remove emoji, keep "Module: CNN"
         
         enhanced_lines.append(line)
         
