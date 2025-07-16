@@ -1,6 +1,6 @@
 # Tiny🔥Torch: Build your own Machine Learning framework from scratch. 
 
-**Most ML education teaches you to _use_ frameworks. TinyTorch teaches you to _understand_ them.**
+**Most ML education teaches you to _use_ frameworks. TinyTorch teaches you to _build_ them.**
 
 ```{admonition} 🎯 What You'll Build
 :class: tip
@@ -19,7 +19,7 @@
 
 Most ML education focuses on the **science** — algorithms, theory, mathematical foundations. You learn *what* neural networks do and *why* they work.
 
-TinyTorch focuses on the **engineering** — systems, implementation, production practices. You learn *how* to build them and *how* to make them work at scale.
+TinyTorch focuses on the **engineering** — systems, implementation, production practices. You learn *how* to build them and *how* to make them work.
 
 **Both matter.** But there's a critical gap in engineering education that TinyTorch fills.
 
