@@ -178,9 +178,6 @@ By the end of this module, you should be able to:
 
 **🎉 Ready to become a systematic ML evaluator? Let's build professional benchmarking skills!** 
 
----
-
-## 🚀 Interactive Learning
 
 Choose your preferred way to engage with this module:
 

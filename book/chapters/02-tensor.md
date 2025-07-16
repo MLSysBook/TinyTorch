@@ -229,9 +229,6 @@ The tensor module is where TinyTorch really begins. You're about to create the f
 
 Take your time, test thoroughly, and enjoy building something that really works! 🔥 
 
----
-
-## 🚀 Interactive Learning
 
 Choose your preferred way to engage with this module:
 

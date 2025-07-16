@@ -91,9 +91,6 @@ python -m pytest tests/test_cnn.py -v
 > **Convolution is a new, fundamental building block.**
 > By implementing it yourself, you’ll understand the magic behind modern vision models! 
 
----
-
-## 🚀 Interactive Learning
 
 Choose your preferred way to engage with this module:
 

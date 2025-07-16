@@ -169,9 +169,6 @@ This module bridges the gap between **algorithmic understanding** and **systems 
 
 By the end, you'll think like a **performance engineer**, not just a machine learning practitioner. 
 
----
-
-## 🚀 Interactive Learning
 
 Choose your preferred way to engage with this module:
 

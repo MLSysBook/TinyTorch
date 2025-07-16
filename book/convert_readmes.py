@@ -85,9 +85,6 @@ def enhance_content_for_web(content: str, module_name: str, module_num: int) -> 
     
     # Add interactive learning elements and navigation at the end
     interactive_elements = f"""
----
-
-## 🚀 Interactive Learning
 
 Choose your preferred way to engage with this module:
 

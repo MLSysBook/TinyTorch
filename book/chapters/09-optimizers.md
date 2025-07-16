@@ -228,9 +228,6 @@ After mastering optimizers, you'll be ready for:
 
 Your optimizers will be the engine that transforms gradients into intelligence! 
 
----
-
-## 🚀 Interactive Learning
 
 Choose your preferred way to engage with this module:
 

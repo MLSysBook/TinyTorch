@@ -182,9 +182,6 @@ Once you've completed this module and all tests pass, you're ready to move on to
 
 The skills you learn here - the development workflow, testing patterns, and code organization - will be used throughout every module in TinyTorch. 
 
----
-
-## 🚀 Interactive Learning
 
 Choose your preferred way to engage with this module:
 
