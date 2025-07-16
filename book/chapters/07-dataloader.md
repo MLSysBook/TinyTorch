@@ -8,17 +8,11 @@ next_steps: []
 learning_objectives: ['✅ Understand data engineering as the foundation of ML systems', '✅ Implement reusable dataset abstractions and interfaces', '✅ Build efficient data loaders with batching and shuffling', '✅ Create data preprocessing pipelines for normalization', '✅ Apply systems thinking to data I/O and memory management', '✅ Have a complete data pipeline ready for neural network training']
 ---
 
-# DataLoader
+# Module: DataLoader
 ---
-**Course Navigation:** [Home](../intro.html) → [Module 7: 07 Dataloader](#)
+**Course Navigation:** [Home](../intro.html) → [Dataloader](#)
 
 ---
-
-
-<div class="admonition note">
-<p class="admonition-title">📊 Module Info</p>
-<p><strong>Difficulty:</strong> ⭐ ⭐⭐⭐ | <strong>Time:</strong> 4-5 hours</p>
-</div>
 
 
 

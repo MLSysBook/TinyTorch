@@ -5,37 +5,35 @@ difficulty: "Intermediate"
 time_estimate: "2-4 hours"
 prerequisites: []
 next_steps: []
-learning_objectives: ['Understand the convolution operation (sliding window, local connectivity, weight sharing)', 'Implement Conv2D with explicit for-loops (single channel, single filter, no stride/pad)', 'Visualize how convolution builds feature maps', 'Compose Conv2D with other layers to build a simple ConvNet', '(Stretch) Explore stride, padding, pooling, and multi-channel input']
+learning_objectives: []
 ---
 
-# CNN
+# Module: CNN
 ---
-**Course Navigation:** [Home](../intro.html) → [Module 6: 06 Cnn](#)
+**Course Navigation:** [Home](../intro.html) → [Cnn](#)
 
 ---
 
 
-<div class="admonition note">
-<p class="admonition-title">📊 Module Info</p>
-<p><strong>Difficulty:</strong> ⭐ ⭐⭐⭐⭐ | <strong>Time:</strong> 6-8 hours</p>
-</div>
 
-
-
-## 📊 Module Info
+```{admonition} 📊 Module Info
+:class: note
 - **Difficulty**: ⭐⭐⭐ Advanced
 - **Time Estimate**: 6-8 hours
 - **Prerequisites**: Tensor, Activations, Layers, Networks modules
 - **Next Steps**: Training, Computer Vision modules
 
 **Implement the core building block of modern computer vision: the convolutional layer.**
+```
 
-## 🎯 Learning Objectives
+```{admonition} 🎯 Learning Objectives
+:class: tip
 - Understand the convolution operation (sliding window, local connectivity, weight sharing)
 - Implement Conv2D with explicit for-loops (single channel, single filter, no stride/pad)
 - Visualize how convolution builds feature maps
 - Compose Conv2D with other layers to build a simple ConvNet
 - (Stretch) Explore stride, padding, pooling, and multi-channel input
+```
 
 ## 🧠 Build → Use → Understand
 1. **Build**: Implement Conv2D from scratch (for-loop)

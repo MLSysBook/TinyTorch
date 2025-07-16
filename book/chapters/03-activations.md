@@ -8,17 +8,11 @@ next_steps: []
 learning_objectives: []
 ---
 
-# Activations
+# Module: Activations
 ---
-**Course Navigation:** [Home](../intro.html) → [Module 3: 03 Activations](#)
+**Course Navigation:** [Home](../intro.html) → [Activations](#)
 
 ---
-
-
-<div class="admonition note">
-<p class="admonition-title">📊 Module Info</p>
-<p><strong>Difficulty:</strong> ⭐ ⭐⭐ | <strong>Time:</strong> 3-4 hours</p>
-</div>
 
 
 

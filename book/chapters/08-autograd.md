@@ -8,17 +8,11 @@ next_steps: []
 learning_objectives: []
 ---
 
-# Autograd
+# Module: Autograd
 ---
-**Course Navigation:** [Home](../intro.html) → [Module 8: 08 Autograd](#)
+**Course Navigation:** [Home](../intro.html) → [Autograd](#)
 
 ---
-
-
-<div class="admonition note">
-<p class="admonition-title">📊 Module Info</p>
-<p><strong>Difficulty:</strong> ⭐ ⭐⭐⭐⭐ | <strong>Time:</strong> 6-8 hours</p>
-</div>
 
 
 
