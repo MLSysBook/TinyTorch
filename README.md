@@ -188,54 +188,37 @@ TinyTorch/
 
 ```mermaid
 flowchart TD
-    subgraph "🏗️ Foundation Layer"
-        A[01_setup<br/>Setup & Environment] --> B[02_tensor<br/>Core Tensor Operations]
-        B --> C[03_activations<br/>ReLU, Sigmoid, Tanh]
-        C --> D[04_layers<br/>Dense Layers]
-        D --> E[05_networks<br/>Sequential Networks]
-    end
+    A[01_setup<br/>Setup & Environment] --> B[02_tensor<br/>Core Tensor Operations]
+    B --> C[03_activations<br/>ReLU, Sigmoid, Tanh]
+    C --> D[04_layers<br/>Dense Layers]
+    D --> E[05_networks<br/>Sequential Networks]
     
-    subgraph "🧠 Deep Learning Layer"
-        E --> F[06_cnn<br/>Convolutional Networks]
-        E --> G[07_dataloader<br/>Data Loading & Batching]
-        B --> H[08_autograd<br/>Automatic Differentiation]
-        H --> I[09_optimizers<br/>SGD & Adam]
-    end
+    E --> F[06_cnn<br/>Convolutional Networks]
+    E --> G[07_dataloader<br/>Data Loading]
+    B --> H[08_autograd<br/>Automatic Differentiation]
+    H --> I[09_optimizers<br/>SGD & Adam]
     
-    subgraph "⚡ Training & Production Layer"
-        F --> J[10_training<br/>Training Loops]
-        G --> J
-        I --> J
-        J --> K[11_compression<br/>Model Optimization]
-        J --> L[12_kernels<br/>High-Performance Ops]
-        J --> M[13_benchmarking<br/>Performance Analysis]
-        J --> N[14_mlops<br/>Production Monitoring]
-    end
+    F --> J[10_training<br/>Training Loops]
+    G --> J
+    I --> J
     
-    subgraph "🎓 Mastery Layer"
-        K --> O[15_capstone<br/>Systems Engineering Project]
-        L --> O
-        M --> O
-        N --> O
-    end
+    J --> K[11_compression<br/>Model Optimization]
+    J --> L[12_kernels<br/>High-Performance Ops]
+    J --> M[13_benchmarking<br/>Performance Analysis]
+    J --> N[14_mlops<br/>Production Monitoring]
     
-    classDef foundationStyle fill:#e1f5fe,stroke:#01579b,stroke-width:2px
-    classDef deepLearningStyle fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
-    classDef productionStyle fill:#e8f5e8,stroke:#1b5e20,stroke-width:2px
-    classDef capstoneStyle fill:#fff3e0,stroke:#e65100,stroke-width:2px
-    
-    class A,B,C,D,E foundationStyle
-    class F,G,H,I deepLearningStyle
-    class J,K,L,M,N productionStyle
-    class O capstoneStyle
+    K --> O[15_capstone<br/>Systems Engineering]
+    L --> O
+    M --> O
+    N --> O
 ```
 
 ### **🎯 How It All Connects**
 
-**🏗️ Foundation Layer:** Build your core data structures and basic operations  
-**🧠 Deep Learning Layer:** Add intelligence with neural networks and automatic differentiation  
-**⚡ Training & Production Layer:** Scale to real applications with training loops and production systems  
-**🎓 Mastery Layer:** Optimize and extend your complete framework through systems engineering  
+**Foundation (01-05):** Build your core data structures and basic operations  
+**Deep Learning (06-09):** Add neural networks and automatic differentiation  
+**Production (10-14):** Scale to real applications with training and production systems  
+**Mastery (15):** Optimize and extend your complete framework
 
 **The Result:** A complete, working ML framework built entirely by you, capable of:
 - ✅ Training CNNs on CIFAR-10 with 90%+ accuracy
