@@ -1,4 +1,4 @@
-name: Deploy TinyTorch Jupyter Book
+name: Deploy TinyTorch Jupyter Book (Streamlined)
 
 # Trigger the workflow on push to main branch (publishing) or manual dispatch
 on:
@@ -8,11 +8,13 @@ on:
       - 'book/**'
       - 'modules/source/**'
       - '.github/workflows/deploy-book.yml'
+      - 'tito/**'  # Also trigger when tito CLI changes
   pull_request:
     branches: [ main ]
     paths:
       - 'book/**'
       - 'modules/source/**'
+      - 'tito/**'
   workflow_dispatch:
 
 # Set permissions for GitHub Pages deployment and content modification
@@ -46,29 +48,12 @@ jobs:
         pip install --upgrade pip
         pip install jupyter-book jupytext
         pip install -r book/requirements.txt
+        pip install -e .  # Install tito CLI
         
-    - name: Generate notebooks for Binder/Colab
+    - name: Generate content and build book
       run: |
-        python book/convert_modules.py --all
-        
-    - name: Commit generated notebooks
-      run: |
-        git config --local user.email "action@github.com"
-        git config --local user.name "GitHub Action"
-        git add modules/source/**/*.ipynb
-        if ! git diff --cached --quiet; then
-          git commit -m "Auto-generate notebooks for Binder/Colab access [skip ci]"
-          git push
-        fi
-        
-    - name: Generate overview pages for book
-      run: |
-        python book/convert_modules.py --overview
-        
-    - name: Build the book
-      run: |
-        cd book
-        jupyter-book build . --all
+        # Use tito to generate content and build book
+        tito book build
         
     - name: Upload book artifact
       uses: actions/upload-pages-artifact@v3
