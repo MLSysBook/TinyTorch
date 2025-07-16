@@ -66,13 +66,13 @@ output = tanh(Tensor([0, 1, -1]))         # [0, 0.76, -0.76]
 ### Prerequisites
 Ensure you have completed the tensor module and understand basic tensor operations:
 
-```bash
+   ```bash
 # Activate TinyTorch environment
-source bin/activate-tinytorch.sh
+   source bin/activate-tinytorch.sh
 
 # Verify tensor module is working
 tito test --module tensor
-```
+   ```
 
 ### Development Workflow
 1. **Open the development file**: `modules/source/03_activations/activations_dev.py`
@@ -86,9 +86,9 @@ tito test --module tensor
 ### Comprehensive Test Suite
 Run the full test suite to verify mathematical correctness:
 
-```bash
+   ```bash
 # TinyTorch CLI (recommended)
-tito test --module activations
+   tito test --module activations
 
 # Direct pytest execution
 python -m pytest tests/ -k activations -v
@@ -114,7 +114,7 @@ The module includes comprehensive educational feedback:
 # Visual feedback with plotting
 📊 Plotting ReLU behavior across range [-5, 5]...
 📈 Function visualization shows expected behavior
-```
+   ```
 
 ### Manual Testing Examples
 ```python
