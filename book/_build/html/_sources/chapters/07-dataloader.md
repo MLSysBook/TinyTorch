@@ -10,11 +10,6 @@ learning_objectives: []
 
 # Module: DataLoader
 
-```{div} breadcrumb
-Home → 07 Dataloader
-```
-
-
 ```{div} badges
 ⭐⭐⭐ | ⏱️ 4-5 hours
 ```

@@ -10,11 +10,6 @@ learning_objectives: []
 
 # Module: Kernels
 
-```{div} breadcrumb
-Home → 12 Kernels
-```
-
-
 ```{div} badges
 ⭐⭐⭐⭐⭐ | ⏱️ 5-6 hours
 ```

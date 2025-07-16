@@ -10,11 +10,6 @@ learning_objectives: []
 
 # Module: Networks
 
-```{div} breadcrumb
-Home → 05 Networks
-```
-
-
 ```{div} badges
 ⭐⭐⭐ | ⏱️ 5-6 hours
 ```

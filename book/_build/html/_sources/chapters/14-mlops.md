@@ -10,11 +10,6 @@ learning_objectives: []
 
 # Module: MLOps
 
-```{div} breadcrumb
-Home → 14 Mlops
-```
-
-
 ```{div} badges
 ⭐⭐⭐⭐⭐ | ⏱️ 6-8 hours
 ```

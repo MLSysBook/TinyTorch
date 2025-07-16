@@ -10,11 +10,6 @@ learning_objectives: []
 
 # Module: Setup
 
-```{div} breadcrumb
-Home → 01 Setup
-```
-
-
 ```{div} badges
 ⭐ | ⏱️ 1-2 hours
 ```
