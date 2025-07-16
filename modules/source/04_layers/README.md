@@ -6,207 +6,198 @@
 - **Prerequisites**: Tensor, Activations modules
 - **Next Steps**: Networks module
 
-**Build the fundamental transformations that compose into neural networks**
+Build the fundamental transformations that compose into neural networks. This module teaches you that layers are simply functions that transform tensors, and neural networks are just sophisticated function composition using these building blocks.
 
 ## 🎯 Learning Objectives
 
-After completing this module, you will:
-- Understand layers as functions that transform tensors: `y = f(x)`
-- Implement Dense layers with linear transformations: `y = Wx + b`
-- Add activation functions for nonlinearity (ReLU, Sigmoid, Tanh)
-- See how neural networks are just function composition
-- Build intuition for neural network architecture before diving into training
+By the end of this module, you will be able to:
 
-## 🧱 Build → Use → Understand
+- **Understand layers as mathematical functions**: Recognize that layers transform tensors through well-defined mathematical operations
+- **Implement Dense layers**: Build linear transformations using matrix multiplication and bias addition (`y = Wx + b`)
+- **Integrate activation functions**: Combine linear layers with nonlinear activations to enable complex pattern learning
+- **Compose simple building blocks**: Chain layers together to create complete neural network architectures
+- **Debug layer implementations**: Use shape analysis and mathematical properties to verify correct implementation
 
-This module follows the TinyTorch pedagogical framework:
+## 🧠 Build → Use → Reflect
 
-1. **Build**: Dense layers and activation functions from scratch
-2. **Use**: Transform tensors and see immediate results
-3. **Understand**: How neural networks transform information
+This module follows TinyTorch's **Build → Use → Reflect** framework:
+
+1. **Build**: Implement Dense layers and activation functions from mathematical foundations
+2. **Use**: Transform tensors through layer operations and see immediate results in various scenarios
+3. **Reflect**: Understand how simple layers compose into complex neural networks and why architecture matters
 
 ## 📚 What You'll Build
 
-### **Dense Layer**
+### Core Layer Implementation
 ```python
+# Dense layer: fundamental building block
 layer = Dense(input_size=3, output_size=2)
 x = Tensor([[1.0, 2.0, 3.0]])
-y = layer(x)  # Shape: (1, 2)
-```
+y = layer(x)  # Shape transformation: (1, 3) → (1, 2)
 
-### **Activation Functions**
-```python
+# With activation functions
 relu = ReLU()
-sigmoid = Sigmoid()
-tanh = Tanh()
+activated = relu(y)  # Apply nonlinearity
 
-x = Tensor([[-1.0, 0.0, 1.0]])
-y_relu = relu(x)      # [0.0, 0.0, 1.0]
-y_sigmoid = sigmoid(x)  # [0.27, 0.5, 0.73]
-y_tanh = tanh(x)      # [-0.76, 0.0, 0.76]
+# Chaining operations
+layer1 = Dense(784, 128)  # Image → hidden
+layer2 = Dense(128, 10)   # Hidden → classes
+activation = ReLU()
+
+# Forward pass composition
+x = Tensor([[1.0, 2.0, 3.0, ...]])  # Input data
+h1 = activation(layer1(x))           # First transformation
+output = layer2(h1)                  # Final prediction
 ```
 
-### **Neural Networks**
-```python
-# 3 → 4 → 2 network
-layer1 = Dense(input_size=3, output_size=4)
-activation1 = ReLU()
-layer2 = Dense(input_size=4, output_size=2)
-activation2 = Sigmoid()
+### Dense Layer Implementation
+- **Mathematical foundation**: Linear transformation `y = Wx + b`
+- **Weight initialization**: Xavier/Glorot uniform initialization for stable gradients
+- **Bias handling**: Optional bias terms for translation invariance
+- **Shape management**: Automatic handling of batch dimensions and matrix operations
 
-# Forward pass
-x = Tensor([[1.0, 2.0, 3.0]])
-h1 = layer1(x)
-h1_activated = activation1(h1)
-h2 = layer2(h1_activated)
-output = activation2(h2)
-```
+### Activation Layer Integration
+- **ReLU integration**: Most common activation for hidden layers
+- **Sigmoid integration**: Probability outputs for binary classification
+- **Tanh integration**: Zero-centered outputs for better optimization
+- **Composition patterns**: Standard ways to combine layers and activations
 
 ## 🚀 Getting Started
 
 ### Prerequisites
-- Complete Module 1: Tensor ✅
-- Understand basic linear algebra (matrix multiplication)
-- Familiar with Python classes and methods
+Ensure you have completed the foundational modules:
 
-### Quick Start
 ```bash
-# Navigate to the layers module
-cd modules/layers
+# Activate TinyTorch environment
+source bin/activate-tinytorch.sh
 
-# Work in the development notebook
-jupyter notebook layers_dev.ipynb
-
-# Or work in the Python file
-code layers_dev.py
+# Verify prerequisite modules
+tito test --module tensor
+tito test --module activations
 ```
 
-## 📖 Module Structure
-
-```
-modules/layers/
-├── layers_dev.py           # Main development file (work here!)
-├── layers_dev.ipynb        # Jupyter notebook version
-├── tests/
-│   └── test_layers.py      # Comprehensive tests
-├── README.md              # This file
-└── solutions/             # Reference implementations (if stuck)
-```
-
-## 🎓 Learning Path
-
-### Step 1: Dense Layer (Linear Transformation)
-- Understand `y = Wx + b`
-- Implement weight initialization
-- Handle matrix multiplication and bias addition
-- Test with single examples and batches
-
-### Step 2: Activation Functions
-- Implement ReLU: `max(0, x)`
-- Implement Sigmoid: `1 / (1 + e^(-x))`
-- Implement Tanh: `tanh(x)`
-- Understand why nonlinearity is crucial
-
-### Step 3: Layer Composition
-- Chain layers together
-- Build complete neural networks
-- See how simple layers create complex functions
-
-### Step 4: Real-World Application
-- Build an image classification network
-- Understand how architecture affects capability
+### Development Workflow
+1. **Open the development file**: `modules/source/04_layers/layers_dev.py`
+2. **Implement Dense layer class**: Start with `__init__` and `forward` methods
+3. **Test layer functionality**: Use inline tests for immediate feedback
+4. **Add activation integration**: Combine layers with activation functions
+5. **Build complete networks**: Chain multiple layers together
+6. **Export and verify**: `tito export --module layers && tito test --module layers`
 
 ## 🧪 Testing Your Implementation
 
-### Module-Level Tests
-```bash
-# Run comprehensive tests
-python -m pytest tests/test_layers.py -v
+### Comprehensive Test Suite
+Run the full test suite to verify mathematical correctness:
 
-# Quick test
-python -c "from layers_dev import Dense, ReLU; print('✅ Layers working!')"
+```bash
+# TinyTorch CLI (recommended)
+tito test --module layers
+
+# Direct pytest execution
+python -m pytest tests/ -k layers -v
 ```
 
-### Package-Level Tests
-```bash
-# Export to package
-python ../../bin/tito.py sync
+### Test Coverage Areas
+- ✅ **Layer Functionality**: Verify Dense layers perform correct linear transformations
+- ✅ **Weight Initialization**: Ensure proper weight initialization for training stability
+- ✅ **Shape Preservation**: Confirm layers handle batch dimensions correctly
+- ✅ **Activation Integration**: Test seamless combination with activation functions
+- ✅ **Network Composition**: Verify layers can be chained into complete networks
 
-# Test integration
-python ../../bin/tito.py test --module layers
+### Inline Testing & Development
+The module includes educational feedback during development:
+```python
+# Example inline test output
+🔬 Unit Test: Dense layer functionality...
+✅ Dense layer computes y = Wx + b correctly
+✅ Weight initialization within expected range
+✅ Output shape matches expected dimensions
+📈 Progress: Dense Layer ✓
+
+# Integration testing
+🔬 Unit Test: Layer composition...
+✅ Multiple layers chain correctly
+✅ Activations integrate seamlessly
+📈 Progress: Layer Composition ✓
+```
+
+### Manual Testing Examples
+```python
+from tinytorch.core.tensor import Tensor
+from layers_dev import Dense
+from activations_dev import ReLU
+
+# Test basic layer functionality
+layer = Dense(input_size=3, output_size=2)
+x = Tensor([[1.0, 2.0, 3.0]])
+y = layer(x)
+print(f"Input shape: {x.shape}, Output shape: {y.shape}")
+
+# Test layer composition
+layer1 = Dense(3, 4)
+layer2 = Dense(4, 2)
+relu = ReLU()
+
+# Forward pass
+h1 = relu(layer1(x))
+output = layer2(h1)
+print(f"Final output: {output.data}")
 ```
 
 ## 🎯 Key Concepts
 
-### **Layers as Functions**
-- Input: Tensor with some shape
-- Transformation: Mathematical operation
-- Output: Tensor with possibly different shape
+### Real-World Applications
+- **Computer Vision**: Dense layers process flattened image features in CNNs (like VGG, ResNet final layers)
+- **Natural Language Processing**: Dense layers transform word embeddings in transformers and RNNs
+- **Recommendation Systems**: Dense layers combine user and item features for preference prediction
+- **Scientific Computing**: Dense layers approximate complex functions in physics simulations and engineering
 
-### **Linear vs Nonlinear**
-- Dense layers: Linear transformations
-- Activation functions: Nonlinear transformations
-- Composition: Linear + Nonlinear = Complex functions
+### Mathematical Foundations
+- **Linear Transformation**: `y = Wx + b` where W is the weight matrix and b is the bias vector
+- **Matrix Multiplication**: Efficient batch processing through vectorized operations
+- **Weight Initialization**: Xavier/Glorot initialization prevents vanishing/exploding gradients
+- **Function Composition**: Networks as nested function calls: `f3(f2(f1(x)))`
 
-### **Neural Networks = Function Composition**
-```
-Input → Dense → ReLU → Dense → Sigmoid → Output
-```
+### Neural Network Building Blocks
+- **Modularity**: Layers as reusable components that can be combined in different ways
+- **Standardized Interface**: All layers follow the same input/output pattern for easy composition
+- **Shape Consistency**: Automatic handling of batch dimensions and shape transformations
+- **Nonlinearity**: Activation functions between layers enable learning of complex patterns
 
-### **Why This Matters**
-- **Modularity**: Build complex networks from simple parts
-- **Reusability**: Same layers work for different problems
-- **Understanding**: Know how each part contributes to the whole
+### Implementation Patterns
+- **Class-based Design**: Layers as objects with state (weights) and behavior (forward pass)
+- **Initialization Strategy**: Proper weight initialization for stable training dynamics
+- **Error Handling**: Graceful handling of shape mismatches and invalid inputs
+- **Testing Philosophy**: Comprehensive testing of mathematical properties and edge cases
 
-## 🔍 Common Issues
+## 🎉 Ready to Build?
 
-### **Import Errors**
-```python
-# Make sure you're in the right directory
-import sys
-sys.path.append('../../')
-from modules.tensor.tensor_dev import Tensor
-```
+You're about to build the fundamental building blocks that power every neural network! Dense layers might seem simple, but they're the workhorses of deep learning—from the final layers of image classifiers to the core components of language models.
 
-### **Shape Mismatches**
-```python
-# Check input/output sizes match
-layer1 = Dense(input_size=3, output_size=4)
-layer2 = Dense(input_size=4, output_size=2)  # 4 matches output of layer1
-```
+Understanding how these simple linear transformations compose into complex intelligence is one of the most beautiful insights in machine learning. Take your time, understand the mathematics, and enjoy building the foundation of artificial intelligence!
 
-### **Gradient Issues (Later)**
-```python
-# Use proper weight initialization
-limit = math.sqrt(6.0 / (input_size + output_size))
-weights = np.random.uniform(-limit, limit, (input_size, output_size))
-```
+```{grid} 3
+:gutter: 3
+:margin: 2
 
-## 🎉 Success Criteria
+{grid-item-card} 🚀 Launch Builder
+:link: https://mybinder.org/v2/gh/VJProductions/TinyTorch/main?filepath=modules/source/04_layers/layers_dev.py
+:class-title: text-center
+:class-body: text-center
 
-You've successfully completed this module when:
-- ✅ All tests pass (`pytest tests/test_layers.py`)
-- ✅ You can build a 2-layer neural network
-- ✅ You understand how layers transform tensors
-- ✅ You see the connection between layers and neural networks
-- ✅ Package export works (`tito test --module layers`)
+Interactive development environment
 
-## 🚀 What's Next
+{grid-item-card} 📓 Open in Colab  
+:link: https://colab.research.google.com/github/VJProductions/TinyTorch/blob/main/modules/source/04_layers/layers_dev.ipynb
+:class-title: text-center
+:class-body: text-center
 
-After completing this module, you're ready for:
-- **Module 3: Networks** - Compose layers into common architectures
-- **Module 4: Training** - Learn how networks improve through experience
-- **Module 5: Applications** - Use networks for real problems
+Google Colab notebook
 
-## 🤝 Getting Help
+{grid-item-card} 👀 View Source
+:link: https://github.com/VJProductions/TinyTorch/blob/main/modules/source/04_layers/layers_dev.py  
+:class-title: text-center
+:class-body: text-center
 
-- Check the tests for examples of expected behavior
-- Look at the solutions/ directory if you're stuck
-- Review the pedagogical principles in `docs/pedagogy/`
-- Remember: Build → Use → Understand!
-
----
-
-**Great job building the foundation of neural networks!** 🎉
-
-*This module implements the core insight: neural networks are just function composition of simple building blocks.* 
+Browse the code on GitHub
+``` 
