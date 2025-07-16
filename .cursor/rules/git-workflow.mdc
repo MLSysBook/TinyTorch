@@ -1,16 +1,71 @@
----
-description: Git workflow guidelines for TinyTorch development.
----
 
 # Git Workflow Guidelines for TinyTorch Development
 
-## 🎯 **Philosophy: Incremental Commits for Easy Reverts**
+## 🎯 **Core Principle: Dev-First Development**
 
-Make commits that are:
-- **Small enough** to revert safely
-- **Focused enough** to understand what changed
-- **Frequent enough** to avoid losing work
-- **Practical enough** for ad-hoc development
+**ALWAYS work in the `dev` branch.** Main branch is for stable releases only.
+
+```yaml
+git_workflow:
+  default_branch: dev
+  main_branch: stable releases only
+  feature_branches: recommended for all changes
+  commit_frequency: small and frequent
+```
+
+## 🌿 **Branch Strategy**
+
+### **Main Branch (`main`)**
+- **Release only**: Stable, tested code that's ready for public consumption
+- **No direct commits**: Always merge from `dev`
+- **Triggers deployment**: Pushes to main auto-deploy documentation
+
+### **Dev Branch (`dev`)**
+- **Default working branch**: Where all development happens
+- **Always checkout dev first**: `git checkout dev` before starting work
+- **Merge features here**: Test and validate before promoting to main
+
+### **Feature Branches (Recommended)**
+- **Create for any non-trivial change**: `git checkout -b feature/description`
+- **Short-lived**: Merge back to dev quickly
+- **Descriptive names**: `feature/visual-diagram`, `fix/faq-typos`, `docs/readme-update`
+
+## 🔄 **Daily Workflow**
+
+### **Starting Work**
+```bash
+# Always start from dev
+git checkout dev
+git pull origin dev
+
+# Create feature branch for your work
+git checkout -b feature/your-change-description
+```
+
+### **Making Changes**
+```bash
+# Make small, focused changes
+git add .
+git commit -m "TYPE: Brief description"
+
+# Push feature branch
+git push origin feature/your-change-description
+```
+
+### **Finishing Work**
+```bash
+# Merge to dev
+git checkout dev
+git merge feature/your-change-description
+
+# Push dev
+git push origin dev
+
+# When ready for release, merge dev to main
+git checkout main
+git merge dev
+git push origin main  # Triggers deployment
+```
 
 ## 📝 **Commit Message Format**
 
@@ -21,137 +76,35 @@ TYPE: Brief description
 - Another change if needed
 
 Examples:
-- RESTORE: Complete CLI functionality in new architecture
-- FIX: Missing imports in tensor module
-- FEAT: Add new test command to CLI
-- REFACTOR: Move CLI commands to class-based architecture
+- ADD: Visual waterfall diagram to README
+- FIX: FAQ dropdown formatting
+- REMOVE: Redundant FAQ section
+- UPDATE: Module dependencies in workflow
 ```
 
-## 🔄 **When to Commit**
+## 🚨 **Rules to Follow**
 
-### ✅ **Good Commit Moments:**
-- **Feature complete**: A command/functionality is fully working
-- **Bug fix**: A specific issue is resolved
-- **Refactor complete**: A chunk of refactoring is done and tested
-- **Test suite**: All tests pass after changes
-- **Documentation**: A section of docs is updated
-- **End of work session**: Before switching to different task
+1. **Never commit directly to main** - always go through dev
+2. **Create feature branches** for anything beyond tiny fixes
+3. **Start from dev branch** - `git checkout dev` first
+4. **Test before merging** - make sure it works
+5. **Small commits** - easy to revert if needed
 
-### ❌ **Avoid Committing:**
-- **Broken state**: Code that doesn't run
-- **Half-finished features**: Incomplete functionality
-- **Multiple unrelated changes**: Mixing different concerns
+## 🚀 **Quick Reference**
 
-## 🌿 **Branch Strategy for Ad-hoc Development**
-
-### **Main Branch (`main`)**
-- **Keep stable**: Only working, tested code
-- **Merge from feature branches**: When features are complete
-- **Quick fixes**: Small, safe fixes can go directly to main
-
-### **Feature Branches**
 ```bash
-# Create feature branch
-git checkout -b feature/cli-restore
+# Start any work session
+git checkout dev
+git pull origin dev
+git checkout -b feature/my-change
 
-# Work on feature
-# ... make changes ...
-
-# Test your changes
-tito test --all
-
-# Commit incrementally
-git add .
-git commit -m "FEAT: Add info command to new CLI"
-
-# Push feature branch
-git push origin feature/cli-restore
-
-# When complete, merge to main
-git checkout main
-git merge feature/cli-restore
+# End any work session  
+git checkout dev
+git merge feature/my-change
+git push origin dev
 ```
 
-## 🚀 **Common Workflows**
+**Remember:** Dev branch is your playground, main branch is the published product.
 
-### **Quick Fix Workflow**
-```bash
-# Make small fix
-git add .
-git commit -m "FIX: Add missing import in tensor module"
-git push
-```
-
-### **Feature Development Workflow**
-```bash
-# Start feature
-git checkout -b feature/new-command
-
-# Work incrementally
-git add .
-git commit -m "FEAT: Add command class structure"
-git commit -m "FEAT: Implement command logic"
-git commit -m "TEST: Add tests for new command"
-
-# Complete feature
-git push origin feature/new-command
-```
-
-## 🎯 **For This Project Specifically**
-
-### **CLI Development:**
-- Commit each command when it's working
-- Test commands before committing
-- Use descriptive commit messages mentioning the command
-
-### **Module Development:**
-- Commit when a module's tests pass
-- Commit when notebook exports work
-- Commit when documentation is updated
-
-### **Framework Development:**
-- Commit when core functionality works
-- Commit when tests pass
-- Commit when imports are fixed
-
-## 🚨 **When Things Go Wrong**
-
-### **Accidentally committed broken code:**
-```bash
-git revert HEAD
-# Fix the issue
-git add .
-git commit -m "FIX: Resolve the issue from previous commit"
-```
-
-### **Need to undo last commit but keep changes:**
-```bash
-git reset --soft HEAD~1
-# Make changes
-git add .
-git commit -m "Better commit message"
-```
-
-### **Need to split a large commit:**
-```bash
-git reset --soft HEAD~1
-git add <first-set-of-files>
-git commit -m "First part of changes"
-git add <remaining-files>
-git commit -m "Second part of changes"
-```
-
-## 📊 **Summary**
-
-**For ad-hoc development, focus on:**
-1. **Small, focused commits** that can be easily reverted
-2. **Descriptive commit messages** that explain what changed
-3. **Test before committing** to avoid broken commits
-4. **Use feature branches** for larger changes
-5. **Commit frequently** to avoid losing work
-
-**Remember:** It's better to have many small commits than one large commit that's hard to revert or understand.
-
-5. **Commit frequently** to avoid losing work
 
 **Remember:** It's better to have many small commits than one large commit that's hard to revert or understand.
