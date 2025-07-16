@@ -1,0 +1,65 @@
+# TinyTorch: Build ML Systems from Scratch
+# Table of Contents Structure
+
+format: jb-book
+root: intro
+title: "TinyTorch Course"
+
+parts:
+- caption: Usage Paths
+  chapters:
+  - file: usage-paths/quick-exploration
+    title: "🔬 Quick Exploration"
+  - file: usage-paths/serious-development
+    title: "🏗️ Serious Development"
+  - file: usage-paths/classroom-use
+    title: "👨‍🏫 Classroom Use"
+
+- caption: Foundation
+  chapters:
+  - file: chapters/01-setup.md
+    title: "1. Setup"
+  - file: chapters/02-tensor.md  
+    title: "2. Tensors"
+  - file: chapters/03-activations.md
+    title: "3. Activations"
+
+- caption: Building Blocks
+  chapters:
+  - file: chapters/04-layers.md
+    title: "4. Layers"
+  - file: chapters/05-networks.md
+    title: "5. Networks"
+  - file: chapters/06-cnn.md
+    title: "6. CNNs"
+
+- caption: Training Systems  
+  chapters:
+  - file: chapters/07-dataloader.md
+    title: "7. DataLoader"
+  - file: chapters/08-autograd.md
+    title: "8. Autograd"
+  - file: chapters/09-optimizers.md
+    title: "9. Optimizers"
+  - file: chapters/10-training.md
+    title: "10. Training"
+
+- caption: Production & Performance
+  chapters:
+  - file: chapters/11-compression.md
+    title: "11. Compression"
+  - file: chapters/12-kernels.md
+    title: "12. Kernels"
+  - file: chapters/13-benchmarking.md
+    title: "13. Benchmarking"
+  - file: chapters/14-mlops.md
+    title: "14. MLOps"
+
+- caption: Appendices
+  chapters:
+  - file: appendices/installation
+    title: "Installation Guide"
+  - file: appendices/troubleshooting
+    title: "Troubleshooting"
+  - file: appendices/resources
+    title: "Additional Resources"
