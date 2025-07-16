@@ -10,6 +10,8 @@ from rich.panel import Panel
 
 from .base import BaseCommand
 
+NOTEBOOKS_DIR = "modules/source"
+
 class BookCommand(BaseCommand):
     @property
     def name(self) -> str:
@@ -129,30 +131,45 @@ class BookCommand(BaseCommand):
             os.chdir("..")
 
     def _generate_all(self) -> int:
-        """Generate both notebooks and overview pages."""
+        """Generate notebooks in book/chapters/ and update book references."""
         console = self.console
-        console.print("🔄 Generating all content (notebooks + overview pages)...")
+        console.print("🔄 Generating notebooks for Jupyter Book...")
         
+        # Step 1: Generate notebooks in book/chapters/ (single source of truth for the book)
+        console.print("📝 Step 1: Generating notebooks in book/chapters/...")
         try:
             os.chdir("book")
-            result = subprocess.run(
-                ["python3", "convert_modules.py", "--all"],
-                capture_output=True,
-                text=True
-            )
+            result = subprocess.run([
+                "python3", "convert_modules.py", "--all"
+            ], capture_output=True, text=True)
             
             if result.returncode == 0:
-                console.print("✅ All content generated successfully")
+                console.print("  ✅ All notebooks generated in book/chapters/")
+            else:
+                console.print(f"  ❌ Failed to generate notebooks: {result.stderr}")
+                return 1
+        except Exception as e:
+            console.print(f"[red]❌ Error generating notebooks: {e}[/red]")
+            return 1
+        finally:
+            os.chdir("..")
+        
+        # Step 2: Generate overview pages (if needed)
+        console.print("📚 Step 2: Generating overview pages...")
+        try:
+            os.chdir("book")
+            result = subprocess.run([
+                "python3", "convert_modules.py", "--overview"
+            ], capture_output=True, text=True)
+            
+            if result.returncode == 0:
+                console.print("✅ Overview pages generated in book/chapters/")
                 return 0
             else:
-                console.print(f"[red]❌ Failed to generate content: {result.stderr}[/red]")
+                console.print(f"[red]❌ Failed to generate overview pages: {result.stderr}[/red]")
                 return 1
-                
-        except FileNotFoundError:
-            console.print("[red]❌ Python3 not found or convert_modules.py missing[/red]")
-            return 1
         except Exception as e:
-            console.print(f"[red]❌ Error generating content: {e}[/red]")
+            console.print(f"[red]❌ Error generating overview pages: {e}[/red]")
             return 1
         finally:
             os.chdir("..")
@@ -161,9 +178,9 @@ class BookCommand(BaseCommand):
         """Build the Jupyter Book locally."""
         console = self.console
         
-        # First generate overview pages
-        console.print("📄 Step 1: Generating overview pages...")
-        if self._generate_overview() != 0:
+        # First generate all content (notebooks + overview pages)
+        console.print("📄 Step 1: Generating all content...")
+        if self._generate_all() != 0:
             return 1
         
         # Then build the book

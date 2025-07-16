@@ -11,6 +11,7 @@ A professional command-line interface with proper architecture:
 
 import argparse
 import logging
+import os
 import sys
 from pathlib import Path
 from typing import Dict, Type, Optional, List
