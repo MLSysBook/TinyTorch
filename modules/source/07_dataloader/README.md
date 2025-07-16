@@ -51,10 +51,10 @@ for batch_images, batch_labels in train_loader:
 ```python
 # Flexible interface supporting multiple datasets
 class Dataset:
-    def __getitem__(self, index): 
+    def __getitem__(self, index):
         # Return (data, label) for any dataset type
         pass
-    def __len__(self): 
+    def __len__(self):
         # Enable len() and iteration
         pass
 

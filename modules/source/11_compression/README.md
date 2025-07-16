@@ -1,7 +1,7 @@
 # 🔥 Module: Compression
 
 ## 📊 Module Info
-- **Difficulty**: ⭐⭐⭐⭐⭐ Expert
+- **Difficulty**: ⭐⭐⭐⭐ Expert
 - **Time Estimate**: 8-10 hours
 - **Prerequisites**: Networks, Training modules
 - **Next Steps**: Kernels, MLOps modules

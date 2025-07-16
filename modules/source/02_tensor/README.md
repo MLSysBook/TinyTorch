@@ -75,7 +75,7 @@ jupyter notebook tensor_dev.ipynb
 
 ### Step-by-Step Implementation
 1. **Basic Tensor class** - Constructor and properties
-2. **Shape management** - Understanding tensor dimensions  
+2. **Shape management** - Understanding tensor dimensions
 3. **Arithmetic operations** - Addition, multiplication, etc.
 4. **Utility methods** - Reshape, transpose, sum, mean
 5. **Error handling** - Robust edge case management
@@ -95,7 +95,7 @@ print(f"Sum: {x.sum()}")    # Should be 10.0
 # Export your tensor implementation
 tito export
 
-# Test your implementation  
+# Test your implementation
 tito test --module tensor
 ```
 
