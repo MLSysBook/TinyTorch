@@ -90,7 +90,7 @@ Examples:
   tito export 01_tensor         Export specific module to package
   tito export --all             Export all modules to package
   tito nbgrader generate setup  Generate assignment from setup module
-  tito book serve               Build and serve book locally
+  tito book build               Build the Jupyter Book locally
   tito book publish             Generate, commit, and publish to GitHub
             """
         )
@@ -194,7 +194,7 @@ Examples:
                     "  [dim]tito export 01_tensor[/dim]         - Export specific module to package\n"
                     "  [dim]tito export --all[/dim]             - Export all modules to package\n"
                     "  [dim]tito nbgrader generate setup[/dim]  - Generate assignment from setup module\n"
-                    "  [dim]tito book serve[/dim]               - Build and serve book locally\n"
+                    "  [dim]tito book build[/dim]               - Build the Jupyter Book locally\n"
                     "  [dim]tito book publish[/dim]             - Generate, commit, and publish to GitHub\n\n"
                     "[bold]Get Help:[/bold]\n"
                     "  [dim]tito system[/dim]                   - Show system subcommands\n"

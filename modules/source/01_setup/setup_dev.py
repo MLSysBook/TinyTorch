@@ -650,7 +650,7 @@ This module connects to broader ML engineering practices:
 ### Next Steps in Your ML Systems Journey
 
 #### **Immediate Actions**
-1. **Export your code**: `tito module export 00_setup`
+1. **Export your code**: `tito module export 01_setup`
 2. **Test your installation**: 
    ```python
    from tinytorch.core.setup import personal_info, system_info

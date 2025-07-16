@@ -409,7 +409,7 @@ def main():
     import argparse
     
     parser = argparse.ArgumentParser(description="Convert TinyTorch modules to Jupyter Book")
-    parser.add_argument('--module', help='Convert specific module (e.g., 00_setup)')
+    parser.add_argument('--module', help='Convert specific module (e.g., 01_setup)')
     parser.add_argument('--all', action='store_true', help='Convert all modules')
     parser.add_argument('--overview', action='store_true', help='Create overview pages instead of full notebooks')
     parser.add_argument('--overview-module', help='Create overview page for specific module')
