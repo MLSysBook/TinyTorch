@@ -55,6 +55,11 @@ parts:
   - file: chapters/14-mlops
     title: "14. MLOps"
 
+- caption: Capstone Project
+  chapters:
+  - file: chapters/15-capstone
+    title: "15. Capstone"
+
 - caption: Appendices
   chapters:
   - file: appendices/installation
