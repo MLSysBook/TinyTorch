@@ -348,9 +348,6 @@ Students completing this module will:
 
 This module represents the culmination of your TinyTorch journey - from basic tensors to production-ready ML systems. You've gained the skills to build, optimize, and deploy ML systems that can handle real-world challenges and scale to production requirements. 
 
----
-
-## 🚀 Interactive Learning
 
 Choose your preferred way to engage with this module:
 
