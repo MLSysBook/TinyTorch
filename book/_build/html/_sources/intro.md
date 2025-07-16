@@ -1,10 +1,26 @@
+---
+html_meta:
+  "property=og:title": "Tiny🔥Torch: Build your own ML framework from scratch"
+  "property=og:description": "Learn ML systems by building them. Implement tensors, autograd, optimizers from scratch. Build the rocket ship, don't just be the astronaut."
+  "property=og:url": "https://mlsysbook.github.io/TinyTorch/"
+  "property=og:type": "website"
+  "property=og:image": "https://mlsysbook.github.io/TinyTorch/logo.png"
+  "property=og:site_name": "Tiny🔥Torch Course"
+  "name=twitter:card": "summary_large_image"
+  "name=twitter:title": "Tiny🔥Torch: Build your own ML framework"
+  "name=twitter:description": "Tiny🔥Torch is a minimalist framework for building machine learning systems from scratch—from tensors to systems."
+  "name=twitter:image": "https://mlsysbook.github.io/TinyTorch/logo.png"
+---
+
 # Tiny🔥Torch: Build your own Machine Learning framework from scratch. 
 
 **Most ML education teaches you to _use_ frameworks. TinyTorch teaches you to _build_ them.**
 
+TinyTorch is a minimalist educational framework designed for learning by doing. Instead of relying on PyTorch or TensorFlow, you implement everything from scratch—tensors, autograd, optimizers, even MLOps tooling. This hands-on approach builds the deep systems intuition that sets ML engineers apart from ML users.
+
 ```{admonition} 🎯 What You'll Build
 :class: tip
-**A complete ML framework from scratch** — your own PyTorch-style toolkit that can:
+**A complete ML framework from scratch**: your own PyTorch style toolkit that can:
 - ✅ Train neural networks on CIFAR-10 (real dataset!)
 - ✅ Implement automatic differentiation (the "magic" behind PyTorch)  
 - ✅ Deploy production systems with 75% model compression
@@ -13,19 +29,13 @@
 **Result:** You become the expert others ask about "how PyTorch actually works."
 ```
 
----
-
-## ⚖️ **Science vs Engineering: A Different Approach**
-
-Most ML education focuses on the **science** — algorithms, theory, mathematical foundations. You learn *what* neural networks do and *why* they work.
-
-TinyTorch focuses on the **engineering** — systems, implementation, production practices. You learn *how* to build them and *how* to make them work.
-
-**Both matter.** But there's a critical gap in engineering education that TinyTorch fills.
+_Everyone wants to be an astronaut._ 🧑‍🚀 _TinyTorch teaches you how to build the rocket ship._ 🚀
 
 ---
 
 ## 💡 **The Core Difference**
+
+Most ML courses focus on algorithms and theory. You learn *what* neural networks do and *why* they work, but you import everything:
 
 ```python
 Traditional ML Course:          TinyTorch Approach:
@@ -44,27 +54,11 @@ Traditional ML Course:          TinyTorch Approach:
 Go from "How does this work?" 🤷 to "I implemented every line!" 💪
 ```
 
-This isn't just about learning — it's about developing the deep systems thinking that distinguishes ML engineers from ML users.
+TinyTorch focuses on implementation and systems thinking. You learn *how* to build working systems with progressive scaffolding, production ready practices, and comprehensive course infrastructure that bridges the gap between learning and building.
 
 ---
 
-## 🌟 **What Makes TinyTorch Different**
-
-### **🔬 Build-First Philosophy**
-You don't just learn about tensors — you implement the `Tensor` class from scratch. You don't just use ReLU — you write the activation function yourself. Every component you build becomes part of your personal ML framework that actually works on real data.
-
-### **🚀 Production-Ready Skills**
-From day one, you'll use professional development practices: the `tito` CLI for project management, automated testing for quality assurance, real datasets like CIFAR-10 for training, and MLOps patterns for deployment. This isn't toy code — it's the foundation for production ML systems.
-
-### **⚡ Instant Results**
-Your code works immediately. Implement a `ReLU` function in Module 3, and by Module 5 you're watching it power real neural networks. Visual progress indicators and comprehensive testing ensure you always know your implementations are correct.
-
-### **🎯 Progressive Mastery**
-Start simple with a `hello_world()` function, build systematically through tensors and layers, and end with production MLOps systems. Each module builds on previous work, creating a complete learning journey from foundations to advanced systems.
-
----
-
-## 🎓 **Learning Philosophy: Build → Use → Master**
+## 🎓 **Learning Philosophy: Build, Use, Master**
 
 Every component follows the same powerful learning cycle:
 
@@ -94,40 +88,72 @@ model = Sequential([
 ])
 ```
 
-This pattern repeats for every component — tensors, layers, optimizers, even MLOps systems. You build it, use it immediately, then see how it fits into larger systems.
+This pattern repeats for every component: tensors, layers, optimizers, even MLOps systems. You build it, use it immediately, then see how it fits into larger systems.
 
 ---
 
-## 📚 **Course Journey: 14 Modules**
+## 📚 **Course Journey: 15 Modules**
 
-```{admonition} 🏗️ Foundation (Modules 1-5)
+```{admonition} 🏗️ Foundation
 :class: note
-**Weeks 1-6: Core Infrastructure**
-- **Setup**: Professional development workflow with `tito` CLI and testing
-- **Tensors**: Multi-dimensional arrays with operations (like NumPy, but yours!)
-- **Activations**: ReLU, Sigmoid, Tanh — the mathematical functions that enable learning
-- **Layers**: Dense layers with matrix multiplication and weight management
-- **Networks**: Sequential architecture — chain layers into complete models
+**1. Setup** • **2. Tensors** • **3. Activations**
+
+Understanding workflow, multi-dimensional arrays, and the mathematical functions that enable learning.
 ```
 
-```{admonition} 🧠 Deep Learning (Modules 6-10)
+```{admonition} 🧱 Building Blocks
 :class: note
-**Weeks 7-12: Complete Training Systems**
-- **CNNs**: Convolutional operations for computer vision applications
-- **DataLoader**: CIFAR-10 loading, batching, and preprocessing pipelines
-- **Autograd**: Automatic differentiation engine (the "magic" behind PyTorch)
-- **Optimizers**: SGD with momentum, Adam with adaptive learning rates
-- **Training**: Loss functions, metrics, and complete training orchestration
+**4. Layers** • **5. Networks** • **6. CNNs**
+
+Dense layers, sequential architecture, and convolutional operations for computer vision.
 ```
 
-```{admonition} ⚡ Production (Modules 11-14)
+```{admonition} 🎯 Training Systems
 :class: note
-**Weeks 13-16: Real-World Deployment**
-- **Compression**: Model pruning and quantization for 75% size reduction
-- **Kernels**: High-performance custom operations and optimization
-- **Benchmarking**: Systematic evaluation and performance measurement
-- **MLOps**: Production monitoring, continuous learning, complete pipeline
+**7. DataLoader** • **8. Autograd** • **9. Optimizers** • **10. Training**
+
+CIFAR-10 loading, automatic differentiation, SGD/Adam optimizers, and complete training orchestration.
 ```
+
+```{admonition} ⚡ Production & Performance
+:class: note
+**11. Compression** • **12. Kernels** • **13. Benchmarking** • **14. MLOps**
+
+Model optimization, high-performance operations, systematic evaluation, and production monitoring.
+```
+
+```{admonition} 🎓 Capstone Project
+:class: note
+**15. Framework Optimization**
+
+Choose your focus: performance engineering, algorithm extensions, systems optimization, framework analysis, or developer tools.
+```
+
+---
+
+## 🔗 **Complete System Integration**
+
+**This isn't 14 separate exercises.** Every component you build integrates into one fully functional ML framework:
+
+```{admonition} 🎯 How It All Connects
+:class: important
+**Module 2: Your Tensor class** → **Module 3: Powers your activation functions** → **Module 4: Enables your layers** → **Module 5: Forms your networks** → **Module 8: Drives your autograd system** → **Module 9: Optimizes with your SGD/Adam** → **Module 10: Trains on real CIFAR-10 data**
+
+**Result:** A complete, working ML framework that you built from scratch, capable of training real neural networks on real datasets.
+```
+
+### **🚀 Capstone: Optimize Your Framework**
+
+After completing the 14 core modules, you have a **complete ML framework**. Now make it better through systems engineering:
+
+**Choose Your Focus:**
+- ⚡ **Performance Optimization**: GPU kernels, vectorization, memory-efficient operations
+- 🧠 **Algorithm Extensions**: Transformer layers, BatchNorm, Dropout, advanced optimizers
+- 🔧 **Systems Engineering**: Multi-GPU training, distributed computing, memory profiling
+- 📊 **Benchmarking Deep Dive**: Compare your framework to PyTorch, identify bottlenecks
+- 🛠️ **Developer Experience**: Better debugging tools, visualization, error messages
+
+**The Challenge:** Use **only your TinyTorch implementation** as the base. No copying from PyTorch. This proves you understand the engineering trade-offs and can optimize real ML systems.
 
 ---
 
@@ -167,6 +193,10 @@ Want to see what TinyTorch feels like? **[Launch the Setup chapter](chapters/01-
 
 ---
 
-## 📚 **Academic Foundation**
+## 🙏 **Acknowledgments**
 
-TinyTorch grew out of CS249r: Tiny Machine Learning Systems at Harvard University. While the [Machine Learning Systems book](https://mlsysbook.ai) covers broad principles, TinyTorch gives you hands-on implementation experience.
+TinyTorch originated from CS249r: Tiny Machine Learning Systems at Harvard University. We're inspired by projects like [tinygrad](https://github.com/geohot/tinygrad) and [micrograd](https://github.com/karpathy/micrograd) that demonstrate the power of minimal implementations.
+
+**Complementary Learning**: For comprehensive ML systems knowledge, we recommend [**Machine Learning Systems**](https://mlsysbook.ai) by [Prof. Vijay Janapa Reddi](https://profvjreddi.github.io/website/). While TinyTorch teaches you to **build** ML systems from scratch, that book provides the broader **systems context** and engineering principles for production AI.
+
+
