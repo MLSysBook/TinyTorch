@@ -412,18 +412,8 @@ tito export 01_setup && tito test 01_setup
 
 ## ❓ **Frequently Asked Questions**
 
-### **🤔 "Isn't everything a Transformer now? Why learn old architectures?"**
-
-**Great question!** Transformers are indeed dominant, but they're built on the same foundations you'll implement:
-
-- **Attention is just matrix operations** - which you'll build from tensors
-- **LayerNorm uses your activations and layers** 
-- **Adam optimizer powers Transformer training** - you'll implement it
-- **Multi-head attention = your Linear layers + reshaping** 
-
-**The reality:** Understanding foundations makes you the engineer who can optimize Transformers, not just use them. Plus, CNNs still power computer vision, RNNs drive real-time systems, and new architectures emerge constantly.
-
-### **🚀 "Why not just use PyTorch/TensorFlow? This seems like reinventing the wheel."**
+<details>
+<summary><strong>🚀 "Why not just use PyTorch/TensorFlow? This seems like reinventing the wheel."</strong></summary>
 
 **You're right - for production, use PyTorch!** But consider:
 
@@ -432,8 +422,10 @@ tito export 01_setup && tito test 01_setup
 - **Could you optimize a custom operation?** You'll have built the primitives.
 
 **Think of it like this:** Pilots learn in small planes before flying 747s. You're learning the fundamentals that make you a better PyTorch engineer.
+</details>
 
-### **⚡ "How is this different from online tutorials that build neural networks?"**
+<details>
+<summary><strong>⚡ "How is this different from online tutorials that build neural networks?"</strong></summary>
 
 **Most tutorials build toys.** TinyTorch builds production-thinking systems:
 
@@ -448,8 +440,38 @@ Tutorial Approach:           TinyTorch Approach:
 ```
 
 **Result:** You learn systems thinking, not just algorithms.
+</details>
 
-### **🎓 "I'm already good at ML. Is this too basic for me?"**
+<details>
+<summary><strong>💡 "Can't I just read papers/books instead of implementing?"</strong></summary>
+
+**Reading vs. Building:**
+```
+Reading about neural networks:     Building neural networks:
+├── "I understand the theory"      ├── "Why are my gradients exploding?"
+├── "Backprop makes sense"         ├── "Oh, that's why we need gradient clipping"
+├── "Adam is better than SGD"      ├── "Now I see when each optimizer works"
+└── Theoretical knowledge          └── Deep intuitive understanding
+```
+
+**Implementation forces you to confront reality** - edge cases, numerical stability, memory management, performance trade-offs that papers gloss over.
+</details>
+
+<details>
+<summary><strong>🤔 "Isn't everything a Transformer now? Why learn old architectures?"</strong></summary>
+
+**Great question!** Transformers are indeed dominant, but they're built on the same foundations you'll implement:
+
+- **Attention is just matrix operations** - which you'll build from tensors
+- **LayerNorm uses your activations and layers** 
+- **Adam optimizer powers Transformer training** - you'll implement it
+- **Multi-head attention = your Linear layers + reshaping** 
+
+**The reality:** Understanding foundations makes you the engineer who can optimize Transformers, not just use them. Plus, CNNs still power computer vision, RNNs drive real-time systems, and new architectures emerge constantly.
+</details>
+
+<details>
+<summary><strong>🎓 "I'm already good at ML. Is this too basic for me?"</strong></summary>
 
 **Try the challenge test:**
 - Can you implement Adam optimizer from the paper? (Not just use `torch.optim.Adam`)
@@ -457,20 +479,10 @@ Tutorial Approach:           TinyTorch Approach:
 - Could you debug a 50% accuracy drop after model deployment?
 
 **Advanced engineers love TinyTorch** because it fills the "implementation gap" that most ML education skips.
+</details>
 
-### **⏰ "This looks time-consuming. What's the ROI?"**
-
-**Time investment:** ~40-60 hours for complete framework  
-**Career impact:** Become the "systems expert" on your team
-
-**Concrete ROI:**
-- **Debugging skills:** Fix issues others can't diagnose
-- **Optimization ability:** 10x model performance improvements
-- **Framework agnostic:** Easily switch PyTorch ↔ TensorFlow ↔ JAX
-- **Interview performance:** Stand out with deep implementation knowledge
-- **Career advancement:** ML Systems/Infrastructure roles pay $200k+ and require this expertise
-
-### **🧪 "Is this academic or practical?"**
+<details>
+<summary><strong>🧪 "Is this academic or practical?"</strong></summary>
 
 **Both!** TinyTorch bridges academic understanding with engineering reality:
 
@@ -483,31 +495,23 @@ Tutorial Approach:           TinyTorch Approach:
 - Production-style code organization and CLI tools
 - Performance considerations and optimization techniques
 - Real datasets, realistic scale, professional development workflow
+</details>
 
-### **🏭 "Will this help me in industry or just for learning?"**
+<details>
+<summary><strong>⏰ "How much time does this take?"</strong></summary>
 
-**Real industry applications:**
-- **Meta/Google/OpenAI engineers** debug frameworks daily - you'll have the skills
-- **Model optimization** requires understanding internals - you'll know them
-- **Custom operations** for new research - you'll be able to implement them
-- **Framework migrations** happen constantly - you'll be framework-agnostic
+**Time investment:** ~40-60 hours for complete framework
 
-**Testimonial pattern:** "I wish I had learned this before joining [company]. Understanding the internals made me 10x more effective."
+**You can work at your own pace:**
+- **Quick exploration:** 1-2 modules to understand the approach
+- **Focused learning:** Core modules (01-08) for solid foundations  
+- **Complete mastery:** All 15 modules for full framework expertise
 
-### **💡 "Can't I just read papers/books instead of implementing?"**
+Each module is self-contained, so you can stop and start as needed.
+</details>
 
-**Reading vs. Building:**
-```
-Reading about neural networks:     Building neural networks:
-├── "I understand the theory"      ├── "Why are my gradients exploding?"
-├── "Backprop makes sense"         ├── "Oh, that's why we need gradient clipping"
-├── "Adam is better than SGD"      ├── "Now I see when each optimizer works"
-└── Theoretical knowledge          └── Deep intuitive understanding
-```
-
-**Implementation forces you to confront reality** - edge cases, numerical stability, memory management, performance trade-offs that papers gloss over.
-
-### **🔄 "What if I get stuck or confused?"**
+<details>
+<summary><strong>🔄 "What if I get stuck or confused?"</strong></summary>
 
 **Built-in support system:**
 - **Progressive scaffolding:** Each step builds on the previous, with guided implementations
@@ -515,15 +519,16 @@ Reading about neural networks:     Building neural networks:
 - **Rich documentation:** Visual explanations, real-world context, debugging tips
 - **Professional error messages:** Helpful feedback when things go wrong
 - **Modular design:** Skip ahead or go back without breaking your progress
+</details>
 
-### **🚀 "After TinyTorch, what's next?"**
+<details>
+<summary><strong>🚀 "What can I build after completing TinyTorch?"</strong></summary>
 
 **Your framework becomes the foundation for:**
 - **Research projects:** Implement cutting-edge papers on solid foundations
 - **Specialized systems:** Computer vision, NLP, robotics applications
 - **Performance engineering:** GPU kernels, distributed training, quantization
-- **MLOps expertise:** Production deployment, monitoring, scaling systems
+- **Custom architectures:** New layer types, novel optimizers, experimental designs
 
-**Career paths:** ML Systems Engineer, Research Engineer, Framework Developer, AI Infrastructure Engineer
-
----
+**You'll have the implementation skills to turn any ML paper into working code.**
+</details>
