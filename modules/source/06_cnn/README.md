@@ -1,23 +1,19 @@
 # 🔥 Module: CNN
 
-```{admonition} 📊 Module Info
-:class: note
+## 📊 Module Info
 - **Difficulty**: ⭐⭐⭐ Advanced
 - **Time Estimate**: 6-8 hours
 - **Prerequisites**: Tensor, Activations, Layers, Networks modules
 - **Next Steps**: Training, Computer Vision modules
 
 **Implement the core building block of modern computer vision: the convolutional layer.**
-```
 
-```{admonition} 🎯 Learning Objectives
-:class: tip
+## 🎯 Learning Objectives
 - Understand the convolution operation (sliding window, local connectivity, weight sharing)
 - Implement Conv2D with explicit for-loops (single channel, single filter, no stride/pad)
 - Visualize how convolution builds feature maps
 - Compose Conv2D with other layers to build a simple ConvNet
 - (Stretch) Explore stride, padding, pooling, and multi-channel input
-```
 
 ## 🧠 Build → Use → Understand
 1. **Build**: Implement Conv2D from scratch (for-loop)
