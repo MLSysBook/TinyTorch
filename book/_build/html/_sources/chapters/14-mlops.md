@@ -1,8 +1,8 @@
 ---
 title: "MLOps - Production ML Systems"
 description: "Complete MLOps pipeline for production deployment, monitoring, and continuous learning"
-difficulty: "Intermediate"
-time_estimate: "2-4 hours"
+difficulty: "⭐⭐⭐⭐"
+time_estimate: "8-10 hours"
 prerequisites: []
 next_steps: []
 learning_objectives: []
@@ -11,13 +11,13 @@ learning_objectives: []
 # Module: MLOps
 
 ```{div} badges
-⭐⭐⭐⭐⭐ | ⏱️ 6-8 hours
+⭐⭐⭐⭐ | ⏱️ 8-10 hours
 ```
 
 
 ## 📊 Module Info
-- **Difficulty**: ⭐⭐⭐⭐⭐ Expert
-- **Time Estimate**: 10-12 hours
+- **Difficulty**: ⭐⭐⭐⭐ Expert
+- **Time Estimate**: 8-10 hours
 - **Prerequisites**: All previous modules (01-13) - Complete TinyTorch ecosystem
 - **Next Steps**: **🎓 Course completion** - Deploy your complete ML system!
 
