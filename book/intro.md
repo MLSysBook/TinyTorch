@@ -1,23 +1,36 @@
 # Tiny🔥Torch: Build your own Machine Learning framework from scratch. 
 
-**Learn ML by building your own PyTorch-style framework from the ground up. _Start small. Go deep._**
+**Most ML education teaches you to _use_ frameworks. TinyTorch teaches you to _understand_ them.**
 
-```{admonition} 🎯 What You'll Achieve
+```{admonition} 🎯 What You'll Build
 :class: tip
-By the end of this course, you'll have **built your own complete ML framework** that can:
-- ✅ Train neural networks on CIFAR-10 images (real dataset!)
+**A complete ML framework from scratch** — your own PyTorch-style toolkit that can:
+- ✅ Train neural networks on CIFAR-10 (real dataset!)
 - ✅ Implement automatic differentiation (the "magic" behind PyTorch)  
-- ✅ Optimize models for production deployment (75% size reduction)
-- ✅ Handle the complete ML pipeline from data loading to monitoring
+- ✅ Deploy production systems with 75% model compression
+- ✅ Handle complete ML pipeline from data to monitoring
 
-**Most importantly:** You'll understand how modern ML frameworks *actually* work under the hood.
+**Result:** You become the expert others ask about "how PyTorch actually works."
+```
+
+## 🚀 **Start Building Now**
+
+```{admonition} Choose Your Adventure
+:class: important
+
+### **🔬 [Quick Try (5 min)](usage-paths/quick-exploration.md)** 
+*Just want to see what this is?* → Click and code in your browser. No setup needed.
+
+### **🏗️ [Build for Real (8+ weeks)](usage-paths/serious-development.md)** 
+*Ready to build your own ML framework?* → Fork the repo and start your journey.
+
+### **👨‍🏫 [Teach This Course](usage-paths/classroom-use.md)** 
+*Want complete course infrastructure?* → Turn-key solution for educators.
 ```
 
 ---
 
-## 🏗️ **The Big Picture: Why Build from Scratch?**
-
-**Most ML education teaches you to _use_ frameworks.** TinyTorch teaches you to _understand_ them.
+## 💡 **The Core Difference**
 
 ```python
 Traditional ML Course:          TinyTorch Approach:
@@ -36,101 +49,49 @@ Traditional ML Course:          TinyTorch Approach:
 Go from "How does this work?" 🤷 to "I implemented every line!" 💪
 ```
 
-**Result:** You become the person others come to when they need to understand "how PyTorch actually works under the hood."
+---
+
+## 🌟 **Why TinyTorch Works**
+
+### **🔬 Build-First Learning**
+No black boxes. Implement every component from scratch. Use YOUR code in real neural networks.
+
+### **🚀 Production-Ready Skills**
+Professional workflow with `tito` CLI. Real datasets like CIFAR-10. MLOps patterns from day one.
+
+### **⚡ Instant Results**
+Code works immediately. Visual progress indicators. Watch your `ReLU` power real networks.
+
+### **🎯 Progressive Mastery**
+Start simple (`hello_world()`). Build systematically. End powerful (production MLOps).
 
 ---
 
-## 🌟 **What Makes TinyTorch Different**
+## 📚 **Course Journey: 14 Modules**
 
-### **🔬 Build-First Philosophy**
-- **No black boxes**: Implement every component from scratch
-- **Immediate ownership**: Use YOUR code in real neural networks
-- **Deep understanding**: Know exactly how each piece works
-
-### **🚀 Real Production Skills**
-- **Professional workflow**: Development with `tito` CLI, automated testing
-- **Real datasets**: Train on CIFAR-10, not toy data
-- **Production patterns**: MLOps, monitoring, optimization from day one
-
-### **🎯 Progressive Mastery** 
-- **Start simple**: Implement `hello_world()` function
-- **Build systematically**: Each module enables the next
-- **End powerful**: Deploy production ML systems with monitoring
-
-### **⚡ Instant Feedback**
-- **Code works immediately**: No waiting to see results
-- **Visual progress**: Success indicators and system integration
-- **"Aha moments"**: Watch your `ReLU` power real neural networks
-
----
-
-## 📚 Educational Foundation
-
-TinyTorch grew out of the CS249r: Tiny Machine Learning Systems course at Harvard University. While the [Machine Learning Systems book](https://mlsysbook.ai) covers the broad principles and practices of engineering ML systems, TinyTorch gives you hands-on experience building the systems yourself.
-
----
-
-## 🚀 Choose Your Learning Path
-
-```{admonition} Three Ways to Engage with TinyTorch
-:class: important
-
-### **🔬 [Quick Exploration](usage-paths/quick-exploration.md)** *(5 minutes)*
-*"I want to see what this is about"*
-- Click and run code immediately in your browser (Binder)
-- No installation or setup required
-- Implement ReLU, tensors, neural networks interactively
-- Perfect for getting a feel for the course
-
-### **🏗️ [Serious Development](usage-paths/serious-development.md)** *(8+ weeks)*
-*"I want to build this myself"*
-- Fork the repo and work locally with full development environment
-- Build complete ML framework from scratch with `tito` CLI
-- 14 progressive assignments from setup to production MLOps
-- Professional development workflow with automated testing
-
-### **👨‍🏫 [Classroom Use](usage-paths/classroom-use.md)** *(Instructors)*
-*"I want to teach this course"*
-- Complete course infrastructure with NBGrader integration
-- Automated grading for 200+ tests across all assignments
-- Flexible pacing (8-16 weeks) with proven pedagogical outcomes
-- Turn-key solution for ML systems education
-```
-
----
-
-## 🎯 What You'll Build
-
-### **Progressive Complexity - Each Module Builds on Prior Work**
-
-```{admonition} 🏗️ Foundation (Modules 0-2)
+```{admonition} 🏗️ Foundation (Modules 1-5)
 :class: note
-**Week 1-3: Core Infrastructure**
-- **Setup**: Professional development workflow with CLI tools
-- **Tensors**: Multi-dimensional arrays and operations (like NumPy, but yours!)
-- **Activations**: ReLU, Sigmoid, Tanh - the math that makes learning possible
-```
-
-```{admonition} 🧱 Building Blocks (Modules 3-5) 
-:class: note
-**Week 4-6: Neural Network Components**
-- **Layers**: Dense (linear) layers with matrix multiplication
+**Weeks 1-6: Core Infrastructure**
+- **Setup**: Professional development workflow  
+- **Tensors**: Multi-dimensional arrays (like NumPy, but yours!)
+- **Activations**: ReLU, Sigmoid, Tanh - the math that enables learning
+- **Layers**: Dense layers with matrix multiplication
 - **Networks**: Sequential architecture - chain layers into complete models
+```
+
+```{admonition} 🧠 Deep Learning (Modules 6-10)
+:class: note
+**Weeks 7-12: Complete Training Systems**
 - **CNNs**: Convolutional operations for computer vision
-```
-
-```{admonition} 🎯 Training Systems (Modules 6-9)
-:class: note
-**Week 7-10: Complete Training Pipeline**
 - **DataLoader**: CIFAR-10 loading, batching, preprocessing  
-- **Autograd**: Automatic differentiation engine (the "magic" of PyTorch)
+- **Autograd**: Automatic differentiation engine (PyTorch's "magic")
 - **Optimizers**: SGD, Adam, learning rate scheduling
-- **Training**: Loss functions, metrics, complete training orchestration
+- **Training**: Loss functions, metrics, complete orchestration
 ```
 
-```{admonition} ⚡ Production & Performance (Modules 10-13)
+```{admonition} ⚡ Production (Modules 11-14)
 :class: note
-**Week 11-14: Real-World Deployment**
+**Weeks 13-16: Real-World Deployment**
 - **Compression**: Model pruning and quantization (75% size reduction)
 - **Kernels**: High-performance custom operations
 - **Benchmarking**: Systematic evaluation and performance measurement
@@ -139,9 +100,9 @@ TinyTorch grew out of the CS249r: Tiny Machine Learning Systems course at Harvar
 
 ---
 
-## 🎓 Learning Philosophy: Build → Use → Understand
+## 🎓 **Learning Philosophy: Build → Use → Master**
 
-### **Example: How You'll Learn Activation Functions**
+### **Example: Activation Functions**
 
 **🔧 Build:** Implement ReLU from scratch
 ```python
@@ -157,7 +118,7 @@ layer = ReLU()
 output = layer.forward(input_tensor)  # Your code working!
 ```
 
-**💡 Understand:** See it working in real networks
+**💡 Master:** See it working in real networks
 ```python
 # Your ReLU is now part of a real neural network
 model = Sequential([
@@ -167,21 +128,17 @@ model = Sequential([
 ])
 ```
 
-**This pattern repeats for every component** - you build it, use it immediately, then see how it fits into larger systems.
+This pattern repeats for every component - you build it, use it immediately, then see how it fits into larger systems.
 
 ---
 
-## 🚀 Ready to Start?
+## 📚 **Academic Foundation**
 
-```{admonition} Choose Your Adventure
-:class: tip
-**Just exploring?** → **[🔬 Quick Exploration](usage-paths/quick-exploration.md)** *(Click and code in 30 seconds)*
+TinyTorch grew out of CS249r: Tiny Machine Learning Systems at Harvard University. While the [Machine Learning Systems book](https://mlsysbook.ai) covers broad principles, TinyTorch gives you hands-on implementation experience.
 
-**Ready to build?** → **[🏗️ Serious Development](usage-paths/serious-development.md)** *(Fork repo and build your ML framework)*
+---
 
-**Teaching a class?** → **[👨‍🏫 Classroom Use](usage-paths/classroom-use.md)** *(Complete course infrastructure)*
-```
+## 🚀 **Ready to Start?**
 
-### **Quick Taste: Try Chapter 1 Right Now**
-
+### **Quick Taste: Try Module 1 Right Now**
 Want to see what TinyTorch feels like? **[Launch the Setup chapter](chapters/01-setup.md)** in Binder and implement your first TinyTorch function in 2 minutes!
