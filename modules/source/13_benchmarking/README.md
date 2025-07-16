@@ -3,7 +3,7 @@
 ## 📊 Module Info
 - **Difficulty**: ⭐⭐⭐⭐ Advanced
 - **Time Estimate**: 6-8 hours
-- **Prerequisites**: All previous modules (00-11), especially Kernels
+- **Prerequisites**: All previous modules (01-12), especially Kernels
 - **Next Steps**: MLOps module (13)
 
 **Learn to systematically evaluate ML systems using industry-standard benchmarking methodology**

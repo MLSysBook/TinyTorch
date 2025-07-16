@@ -39,7 +39,7 @@ tito system doctor
 ### **Step 3: Start Building**
 ```bash
 # Open first assignment
-cd modules/source/00_setup
+cd modules/source/01_setup
 jupyter lab setup_dev.py
 ```
 
@@ -61,7 +61,7 @@ python -c "from tinytorch.core.setup import hello_tinytorch; hello_tinytorch()"
 ### **🏗️ Foundation (Weeks 1-2)**
 Build the core infrastructure:
 
-**Module 00: Setup & CLI**
+**Module 01: Setup & CLI**
 - Professional development workflow with `tito` CLI
 - Understanding package architecture and exports
 - Quality assurance with automated testing

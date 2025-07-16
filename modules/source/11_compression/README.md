@@ -159,7 +159,7 @@ This module teaches students to make neural networks smaller, faster, and more e
 
 ## Getting Started
 
-1. **Review Dependencies**: Ensure modules 00, 01, 03, 04, 09 are complete
+1. **Review Dependencies**: Ensure modules 01, 02, 04, 05, 10 are complete
 2. **Open Development File**: `compression_dev.py`
 3. **Follow Educational Flow**: Work through Steps 1-6 sequentially
 4. **Test Thoroughly**: Run all inline tests as you progress

@@ -3,7 +3,7 @@
 ## 📊 Module Info
 - **Difficulty**: ⭐⭐⭐⭐⭐ Expert
 - **Time Estimate**: 10-12 hours
-- **Prerequisites**: All previous modules (00-12) - Complete TinyTorch ecosystem
+- **Prerequisites**: All previous modules (01-13) - Complete TinyTorch ecosystem
 - **Next Steps**: **Final capstone module** - Deploy your complete ML system!
 
 **Build production-ready ML systems with deployment, monitoring, and continuous learning**
@@ -305,7 +305,7 @@ Your MLOps skills prepare you for:
 
 ## 🎯 Getting Started
 
-1. **Review Prerequisites**: Ensure all modules 00-12 are complete
+1. **Review Prerequisites**: Ensure all modules 01-13 are complete
 2. **Open Development File**: `mlops_dev.py`
 3. **Follow Educational Flow**: Work through Steps 1-6 sequentially
 4. **Build Capstone Project**: Complete end-to-end ML system

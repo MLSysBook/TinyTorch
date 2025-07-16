@@ -32,7 +32,7 @@
     <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
     <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css?v=6644e6bb" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
   
@@ -483,7 +483,7 @@ document.write(`
 <h2>🎯 <strong>Complete Course Infrastructure</strong><a class="headerlink" href="#complete-course-infrastructure" title="Link to this heading">#</a></h2>
 <p>TinyTorch provides a <strong>turn-key ML systems course</strong> with:</p>
 <ul class="simple">
-<li><p><strong>14 progressive assignments</strong> (00-13) building from CLI to MLOps</p></li>
+<li><p><strong>14 progressive assignments</strong> (01-14) building from CLI to MLOps</p></li>
 <li><p><strong>Full NBGrader integration</strong> for automated grading</p></li>
 <li><p><strong>200+ automated tests</strong> ensuring student code works correctly</p></li>
 <li><p><strong>Professional development workflow</strong> with <code class="docutils literal notranslate"><span class="pre">tito</span></code> CLI</p></li>
@@ -520,20 +520,20 @@ tito<span class="w"> </span>system<span class="w"> </span>info
 <section id="step-3-generate-first-assignment">
 <h3><strong>Step 3: Generate First Assignment</strong><a class="headerlink" href="#step-3-generate-first-assignment" title="Link to this heading">#</a></h3>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Create student version of setup module</span>
-tito<span class="w"> </span>nbgrader<span class="w"> </span>generate<span class="w"> </span>00_setup
-tito<span class="w"> </span>nbgrader<span class="w"> </span>release<span class="w"> </span>00_setup
+tito<span class="w"> </span>nbgrader<span class="w"> </span>generate<span class="w"> </span>01_setup
+tito<span class="w"> </span>nbgrader<span class="w"> </span>release<span class="w"> </span>01_setup
 
 <span class="c1"># Verify student assignment created</span>
-ls<span class="w"> </span>modules/release/00_setup/
+ls<span class="w"> </span>modules/release/01_setup/
 </pre></div>
 </div>
 </section>
 <section id="step-4-test-workflow">
 <h3><strong>Step 4: Test Workflow</strong><a class="headerlink" href="#step-4-test-workflow" title="Link to this heading">#</a></h3>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Simulate student submission and grading</span>
-tito<span class="w"> </span>nbgrader<span class="w"> </span>collect<span class="w"> </span>00_setup
-tito<span class="w"> </span>nbgrader<span class="w"> </span>autograde<span class="w"> </span>00_setup
-tito<span class="w"> </span>nbgrader<span class="w"> </span>feedback<span class="w"> </span>00_setup
+tito<span class="w"> </span>nbgrader<span class="w"> </span>collect<span class="w"> </span>01_setup
+tito<span class="w"> </span>nbgrader<span class="w"> </span>autograde<span class="w"> </span>01_setup
+tito<span class="w"> </span>nbgrader<span class="w"> </span>feedback<span class="w"> </span>01_setup
 </pre></div>
 </div>
 </section>
@@ -546,7 +546,7 @@ tito<span class="w"> </span>nbgrader<span class="w"> </span>feedback<span class=
 <p><strong>Learning Goal:</strong> Professional development workflow and core data structures</p>
 <p><strong>Week 1: Setup &amp; Environment</strong></p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">tito</span> <span class="pre">nbgrader</span> <span class="pre">generate</span> <span class="pre">00_setup</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">tito</span> <span class="pre">nbgrader</span> <span class="pre">generate</span> <span class="pre">01_setup</span></code></p></li>
 <li><p>Development workflow, CLI tools, quality assurance</p></li>
 <li><p><strong>Assessment:</strong> 20 points (automated tests)</p></li>
 </ul>
@@ -654,11 +654,11 @@ tito<span class="w"> </span>nbgrader<span class="w"> </span>feedback<span class=
 tito<span class="w"> </span>nbgrader<span class="w"> </span>generate<span class="w"> </span>--all
 
 <span class="c1"># Release specific assignments</span>
-tito<span class="w"> </span>nbgrader<span class="w"> </span>release<span class="w"> </span>00_setup
-tito<span class="w"> </span>nbgrader<span class="w"> </span>release<span class="w"> </span>01_tensor
+tito<span class="w"> </span>nbgrader<span class="w"> </span>release<span class="w"> </span>01_setup
+tito<span class="w"> </span>nbgrader<span class="w"> </span>release<span class="w"> </span>02_tensor
 
 <span class="c1"># Or release multiple at once</span>
-tito<span class="w"> </span>nbgrader<span class="w"> </span>release<span class="w"> </span>--range<span class="w"> </span><span class="m">00</span>-03
+tito<span class="w"> </span>nbgrader<span class="w"> </span>release<span class="w"> </span>--range<span class="w"> </span><span class="m">01</span>-04
 </pre></div>
 </div>
 </section>
@@ -707,12 +707,12 @@ tito<span class="w"> </span>nbgrader<span class="w"> </span>analytics
 <section id="point-distribution-suggested">
 <h3><strong>Point Distribution (Suggested)</strong><a class="headerlink" href="#point-distribution-suggested" title="Link to this heading">#</a></h3>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Foundation</span> <span class="p">(</span><span class="mi">75</span> <span class="n">points</span><span class="p">):</span>
-  <span class="mi">00</span><span class="n">_setup</span><span class="p">:</span> <span class="mi">20</span> <span class="n">points</span>
-  <span class="mi">01</span><span class="n">_tensor</span><span class="p">:</span> <span class="mi">30</span> <span class="n">points</span>  
-  <span class="mi">02</span><span class="n">_activations</span><span class="p">:</span> <span class="mi">25</span> <span class="n">points</span>
+  <span class="mi">01</span><span class="n">_setup</span><span class="p">:</span> <span class="mi">20</span> <span class="n">points</span>
+  <span class="mi">02</span><span class="n">_tensor</span><span class="p">:</span> <span class="mi">30</span> <span class="n">points</span>  
+  <span class="mi">03</span><span class="n">_activations</span><span class="p">:</span> <span class="mi">25</span> <span class="n">points</span>
 
 <span class="n">Building</span> <span class="n">Blocks</span> <span class="p">(</span><span class="mi">90</span> <span class="n">points</span><span class="p">):</span>
-  <span class="mi">03</span><span class="n">_layers</span><span class="p">:</span> <span class="mi">30</span> <span class="n">points</span>
+  <span class="mi">04</span><span class="n">_layers</span><span class="p">:</span> <span class="mi">30</span> <span class="n">points</span>
   <span class="mi">04</span><span class="n">_networks</span><span class="p">:</span> <span class="mi">35</span> <span class="n">points</span>
   <span class="mi">05</span><span class="n">_cnn</span><span class="p">:</span> <span class="mi">25</span> <span class="n">points</span>
 
@@ -801,8 +801,8 @@ tito<span class="w"> </span>nbgrader<span class="w"> </span>init
 tito<span class="w"> </span>nbgrader<span class="w"> </span>generate<span class="w"> </span>--all
 
 <span class="c1"># Test the grading workflow</span>
-tito<span class="w"> </span>nbgrader<span class="w"> </span>collect<span class="w"> </span>00_setup
-tito<span class="w"> </span>nbgrader<span class="w"> </span>autograde<span class="w"> </span>00_setup
+tito<span class="w"> </span>nbgrader<span class="w"> </span>collect<span class="w"> </span>01_setup
+tito<span class="w"> </span>nbgrader<span class="w"> </span>autograde<span class="w"> </span>01_setup
 </pre></div>
 </div>
 </section>
@@ -817,7 +817,7 @@ tito<span class="w"> </span>nbgrader<span class="w"> </span>autograde<span class
 <section id="launch-your-course">
 <h3><strong>4. Launch Your Course!</strong><a class="headerlink" href="#launch-your-course" title="Link to this heading">#</a></h3>
 <ul class="simple">
-<li><p>Release first assignment: <code class="docutils literal notranslate"><span class="pre">tito</span> <span class="pre">nbgrader</span> <span class="pre">release</span> <span class="pre">00_setup</span></code></p></li>
+<li><p>Release first assignment: <code class="docutils literal notranslate"><span class="pre">tito</span> <span class="pre">nbgrader</span> <span class="pre">release</span> <span class="pre">01_setup</span></code></p></li>
 <li><p>Monitor student progress: <code class="docutils literal notranslate"><span class="pre">tito</span> <span class="pre">system</span> <span class="pre">info</span></code></p></li>
 <li><p>Provide ongoing support through the semester</p></li>
 </ul>

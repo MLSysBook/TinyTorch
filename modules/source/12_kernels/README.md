@@ -3,7 +3,7 @@
 ## 📊 Module Info
 - **Difficulty**: ⭐⭐⭐⭐⭐ Expert
 - **Time Estimate**: 8-10 hours
-- **Prerequisites**: All previous modules (00-10), especially Compression
+- **Prerequisites**: All previous modules (01-11), especially Compression
 - **Next Steps**: Benchmarking, MLOps modules
 
 **Bridge the gap between algorithmic optimization and hardware-level performance engineering**
