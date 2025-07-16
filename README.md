@@ -99,7 +99,61 @@ tito nbdev build                          # Update package
 
 ---
 
-## �� Complete Course: 15 Modules
+## 📁 **Repository Structure**
+
+```
+TinyTorch/
+├── modules/source/           # 15 educational modules
+│   ├── 01_setup/            # Development environment setup
+│   │   ├── module.yaml      # Module metadata
+│   │   ├── README.md        # Learning objectives and guide
+│   │   └── setup_dev.py     # Implementation file
+│   ├── 02_tensor/           # N-dimensional arrays
+│   │   ├── module.yaml
+│   │   ├── README.md
+│   │   └── tensor_dev.py
+│   ├── 03_activations/      # Neural network activation functions
+│   ├── 04_layers/           # Dense layers and transformations
+│   ├── 05_networks/         # Sequential networks and MLPs
+│   ├── 06_cnn/              # Convolutional neural networks
+│   ├── 07_dataloader/       # Data loading and preprocessing
+│   ├── 08_autograd/         # Automatic differentiation
+│   ├── 09_optimizers/       # SGD, Adam, learning rate scheduling
+│   ├── 10_training/         # Training loops and validation
+│   ├── 11_compression/      # Model optimization and compression
+│   ├── 12_kernels/          # High-performance operations
+│   ├── 13_benchmarking/     # Performance analysis and profiling
+│   ├── 14_mlops/            # Production monitoring and deployment
+│   └── 15_capstone/         # Systems engineering capstone project
+├── tinytorch/               # Your built framework package
+│   ├── core/                # Core implementations (exported from modules)
+│   │   ├── tensor.py        # Generated from 02_tensor
+│   │   ├── activations.py   # Generated from 03_activations
+│   │   ├── layers.py        # Generated from 04_layers
+│   │   └── ...              # All your implementations
+│   └── utils/               # Shared utilities and tools
+├── book/                    # Interactive course website
+│   ├── _config.yml          # Jupyter Book configuration
+│   ├── intro.md             # Course introduction
+│   └── chapters/            # Generated from module READMEs
+├── tito/                    # CLI tool for development workflow
+│   ├── commands/            # Student and instructor commands
+│   └── tools/               # Testing and build automation
+└── tests/                   # Integration tests
+```
+
+**How It Works:**
+1. **Develop in `modules/source/`** - Each module has a `*_dev.py` file where you implement components
+2. **Export to `tinytorch/`** - Use `tito export` to build your implementations into a real Python package
+3. **Use your framework** - Import and use your own code: `from tinytorch.core.tensor import Tensor`
+4. **Test everything** - Run `tito test` to verify your implementations work correctly
+5. **Build iteratively** - Each module builds on previous ones, creating a complete ML framework
+
+---
+
+## 📚 Complete Course: 15 Modules
+
+**Difficulty Progression:** ⭐ Beginner → ⭐⭐ Intermediate → ⭐⭐⭐ Advanced → ⭐⭐⭐⭐ Expert → ⭐⭐⭐⭐⭐🥷 Capstone
 
 ### **🏗️ Foundations** (Modules 01-05)
 * **01_setup**: Development environment and CLI tools
@@ -122,7 +176,7 @@ tito nbdev build                          # Update package
 * **14_mlops**: Monitoring, deployment, and production systems
 
 ### **🎓 Capstone Project** (Module 15)
-* **15_capstone**: Framework optimization through systems engineering
+* **15_capstone**: Capstone project applying systems engineering skills
 
 **Status**: All 15 modules complete with inline tests and educational content
 
