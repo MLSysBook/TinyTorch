@@ -7,7 +7,7 @@
 ## 🎯 **Complete Course Infrastructure**
 
 TinyTorch provides a **turn-key ML systems course** with:
-- **14 progressive assignments** (00-13) building from CLI to MLOps
+- **14 progressive assignments** (01-14) building from CLI to MLOps
 - **Full NBGrader integration** for automated grading
 - **200+ automated tests** ensuring student code works correctly
 - **Professional development workflow** with `tito` CLI
@@ -43,19 +43,19 @@ tito system info
 ### **Step 3: Generate First Assignment**
 ```bash
 # Create student version of setup module
-tito nbgrader generate 00_setup
-tito nbgrader release 00_setup
+tito nbgrader generate 01_setup
+tito nbgrader release 01_setup
 
 # Verify student assignment created
-ls modules/release/00_setup/
+ls modules/release/01_setup/
 ```
 
 ### **Step 4: Test Workflow**
 ```bash
 # Simulate student submission and grading
-tito nbgrader collect 00_setup
-tito nbgrader autograde 00_setup
-tito nbgrader feedback 00_setup
+tito nbgrader collect 01_setup
+tito nbgrader autograde 01_setup
+tito nbgrader feedback 01_setup
 ```
 
 ---
@@ -66,7 +66,7 @@ tito nbgrader feedback 00_setup
 **Learning Goal:** Professional development workflow and core data structures
 
 **Week 1: Setup & Environment**
-- `tito nbgrader generate 00_setup` 
+- `tito nbgrader generate 01_setup` 
 - Development workflow, CLI tools, quality assurance
 - **Assessment:** 20 points (automated tests)
 
@@ -160,11 +160,11 @@ tito nbgrader feedback 00_setup
 tito nbgrader generate --all
 
 # Release specific assignments
-tito nbgrader release 00_setup
-tito nbgrader release 01_tensor
+tito nbgrader release 01_setup
+tito nbgrader release 02_tensor
 
 # Or release multiple at once
-tito nbgrader release --range 00-03
+tito nbgrader release --range 01-04
 ```
 
 ### **Grading & Feedback**
@@ -207,12 +207,12 @@ tito nbgrader analytics
 ### **Point Distribution (Suggested)**
 ```
 Foundation (75 points):
-  00_setup: 20 points
-  01_tensor: 30 points  
-  02_activations: 25 points
+  01_setup: 20 points
+  02_tensor: 30 points  
+  03_activations: 25 points
 
 Building Blocks (90 points):
-  03_layers: 30 points
+  04_layers: 30 points
   04_networks: 35 points
   05_cnn: 25 points
 
@@ -288,8 +288,8 @@ tito nbgrader init
 tito nbgrader generate --all
 
 # Test the grading workflow
-tito nbgrader collect 00_setup
-tito nbgrader autograde 00_setup
+tito nbgrader collect 01_setup
+tito nbgrader autograde 01_setup
 ```
 
 ### **3. Customize for Your Needs**
@@ -298,7 +298,7 @@ tito nbgrader autograde 00_setup
 - Add institution-specific requirements
 
 ### **4. Launch Your Course!**
-- Release first assignment: `tito nbgrader release 00_setup`
+- Release first assignment: `tito nbgrader release 01_setup`
 - Monitor student progress: `tito system info`
 - Provide ongoing support through the semester
 

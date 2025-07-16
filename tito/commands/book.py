@@ -29,48 +29,7 @@ class BookCommand(BaseCommand):
         # Build command
         build_parser = subparsers.add_parser(
             'build',
-            help='Build the Jupyter Book'
-        )
-        build_parser.add_argument(
-            '--skip-overview',
-            action='store_true',
-            help='Skip generating overview pages (build with existing pages)'
-        )
-        
-        # Overview command
-        overview_parser = subparsers.add_parser(
-            'overview',
-            help='Generate overview pages from modules'
-        )
-        
-        # Notebooks command
-        notebooks_parser = subparsers.add_parser(
-            'notebooks',
-            help='Generate notebooks for Binder/Colab access'
-        )
-        
-        # All command
-        all_parser = subparsers.add_parser(
-            'all',
-            help='Generate both notebooks and overview pages'
-        )
-        
-        # Clean command
-        clean_parser = subparsers.add_parser(
-            'clean',
-            help='Clean built book files'
-        )
-        
-        # Serve command
-        serve_parser = subparsers.add_parser(
-            'serve',
-            help='Build and serve book locally'
-        )
-        serve_parser.add_argument(
-            '--port',
-            type=int,
-            default=8000,
-            help='Port to serve on (default: 8000)'
+            help='Build the Jupyter Book locally'
         )
         
         # Publish command
@@ -89,6 +48,12 @@ class BookCommand(BaseCommand):
             type=str,
             default='main',
             help='Branch to push to (default: main)'
+        )
+        
+        # Clean command
+        clean_parser = subparsers.add_parser(
+            'clean',
+            help='Clean built book files'
         )
 
     def run(self, args: Namespace) -> int:
@@ -109,16 +74,11 @@ class BookCommand(BaseCommand):
                 "[bold cyan]📚 TinyTorch Book Management[/bold cyan]\n\n"
                 "[bold]Available Commands:[/bold]\n"
                 "  [bold green]build[/bold green]      - Build the complete Jupyter Book\n"
-                "  [bold green]overview[/bold green]   - Generate overview pages from modules\n"
-                "  [bold green]notebooks[/bold green] - Generate notebooks for Binder/Colab\n"
-                "  [bold green]all[/bold green]       - Generate both notebooks and overview pages\n"
-                "  [bold green]clean[/bold green]     - Clean built book files\n"
-                "  [bold green]serve[/bold green]     - Build and serve book locally\n"
-                "  [bold green]publish[/bold green]   - Generate content, commit, and publish to GitHub\n\n"
+                "  [bold green]publish[/bold green]   - Generate content, commit, and publish to GitHub\n"
+                "  [bold green]clean[/bold green]     - Clean built book files\n\n"
                 "[bold]Quick Start:[/bold]\n"
-                "  [dim]tito book serve[/dim]         - Build and serve locally\n"
                 "  [dim]tito book publish[/dim]       - Generate, commit, and publish to GitHub\n"
-                "  [dim]tito book all[/dim]           - Generate all content for deployment",
+                "  [dim]tito book clean[/dim]         - Clean built book files",
                 title="Book Commands",
                 border_style="bright_blue"
             ))
@@ -126,18 +86,10 @@ class BookCommand(BaseCommand):
         
         if args.book_command == 'build':
             return self._build_book(args)
-        elif args.book_command == 'overview':
-            return self._generate_overview()
-        elif args.book_command == 'notebooks':
-            return self._generate_notebooks()
-        elif args.book_command == 'all':
-            return self._generate_all()
-        elif args.book_command == 'clean':
-            return self._clean_book()
-        elif args.book_command == 'serve':
-            return self._serve_book(args)
         elif args.book_command == 'publish':
             return self._publish_book(args)
+        elif args.book_command == 'clean':
+            return self._clean_book()
         else:
             console.print(f"[red]Unknown book command: {args.book_command}[/red]")
             return 1
@@ -176,35 +128,6 @@ class BookCommand(BaseCommand):
         finally:
             os.chdir("..")
 
-    def _generate_notebooks(self) -> int:
-        """Generate notebooks for Binder/Colab access."""
-        console = self.console
-        console.print("📔 Generating notebooks for Binder/Colab...")
-        
-        try:
-            os.chdir("book")
-            result = subprocess.run(
-                ["python3", "convert_modules.py", "--notebooks"],
-                capture_output=True,
-                text=True
-            )
-            
-            if result.returncode == 0:
-                console.print("✅ Notebooks generated successfully")
-                return 0
-            else:
-                console.print(f"[red]❌ Failed to generate notebooks: {result.stderr}[/red]")
-                return 1
-                
-        except FileNotFoundError:
-            console.print("[red]❌ Python3 not found or convert_modules.py missing[/red]")
-            return 1
-        except Exception as e:
-            console.print(f"[red]❌ Error generating notebooks: {e}[/red]")
-            return 1
-        finally:
-            os.chdir("..")
-
     def _generate_all(self) -> int:
         """Generate both notebooks and overview pages."""
         console = self.console
@@ -235,16 +158,13 @@ class BookCommand(BaseCommand):
             os.chdir("..")
 
     def _build_book(self, args: Namespace) -> int:
-        """Build the Jupyter Book."""
+        """Build the Jupyter Book locally."""
         console = self.console
         
-        # First generate overview pages unless skipped
-        if not args.skip_overview:
-            console.print("📄 Step 1: Generating overview pages...")
-            if self._generate_overview() != 0:
-                return 1
-        else:
-            console.print("⏭️  Skipping overview page generation...")
+        # First generate overview pages
+        console.print("📄 Step 1: Generating overview pages...")
+        if self._generate_overview() != 0:
+            return 1
         
         # Then build the book
         console.print("📚 Step 2: Building Jupyter Book...")
@@ -312,52 +232,6 @@ class BookCommand(BaseCommand):
             return 1
         finally:
             os.chdir("..")
-
-    def _serve_book(self, args: Namespace) -> int:
-        """Build and serve the book locally."""
-        console = self.console
-        
-        # First build the book
-        console.print("📚 Building book for local serving...")
-        if self._build_book(args) != 0:
-            return 1
-        
-        # Then serve it
-        console.print(f"🌐 Starting local server on port {args.port}...")
-        
-        try:
-            import http.server
-            import socketserver
-            import webbrowser
-            from pathlib import Path
-            
-            os.chdir("book/_build/html")
-            
-            # Start server
-            handler = http.server.SimpleHTTPRequestHandler
-            with socketserver.TCPServer(("", args.port), handler) as httpd:
-                url = f"http://localhost:{args.port}"
-                console.print(f"🚀 Serving book at: {url}")
-                console.print("📱 Opening in browser...")
-                console.print("🛑 Press Ctrl+C to stop server")
-                
-                # Open in browser
-                webbrowser.open(url)
-                
-                try:
-                    httpd.serve_forever()
-                except KeyboardInterrupt:
-                    console.print("\n🛑 Server stopped")
-                    return 0
-                    
-        except Exception as e:
-            console.print(f"[red]❌ Error serving book: {e}[/red]")
-            return 1
-        finally:
-            # Go back to original directory
-            os.chdir("../../..")
-        
-        return 0 
 
     def _publish_book(self, args: Namespace) -> int:
         """Generate content, commit, and publish to GitHub."""

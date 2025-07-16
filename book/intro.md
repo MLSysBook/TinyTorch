@@ -1,4 +1,4 @@
-# Tiny🔥Torch: Build Machine Learning Systems from Scratch
+# Tiny🔥Torch: Build your own ML framework. Start small. Go deep.
 
 **Learn ML by building your own PyTorch-style framework from the ground up.**
 
@@ -12,6 +12,12 @@ By the end of this course, you'll have **built your own complete ML framework** 
 
 **Most importantly:** You'll understand how modern ML frameworks *actually* work under the hood.
 ```
+
+## 📚 Educational Foundation
+
+TinyTorch emerged from the educational principles in [Machine Learning Systems](https://mlsysbook.ai) - the comprehensive ML systems resource from Harvard University. While that book covers the theory and principles, TinyTorch gives you hands-on experience building the systems yourself.
+
+**Author**: Vijay Janapa Reddi, Harvard University
 
 ---
 
