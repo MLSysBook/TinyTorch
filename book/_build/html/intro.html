@@ -8,6 +8,16 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+<meta content="Tiny🔥Torch: Build your own ML framework from scratch" property="og:title" />
+<meta content="Learn ML systems by building them. Implement tensors, autograd, optimizers from scratch. Build the rocket ship, don't just be the astronaut." property="og:description" />
+<meta content="https://mlsysbook.github.io/TinyTorch/" property="og:url" />
+<meta content="website" property="og:type" />
+<meta content="https://mlsysbook.github.io/TinyTorch/logo.png" property="og:image" />
+<meta content="Tiny🔥Torch Course" property="og:site_name" />
+<meta content="summary_large_image" name="twitter:card" />
+<meta content="Tiny🔥Torch: Build your own ML framework" name="twitter:title" />
+<meta content="Tiny🔥Torch is a minimalist framework for building machine learning systems from scratch—from tensors to systems." name="twitter:description" />
+<meta content="https://mlsysbook.github.io/TinyTorch/logo.png" name="twitter:image" />
 
     <title>Tiny🔥Torch: Build your own Machine Learning framework from scratch. &#8212; Tiny🔥Torch: Build your own Machine Learning framework from scratch</title>
   
@@ -198,6 +208,10 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l1"><a class="reference internal" href="chapters/12-kernels.html">12. Kernels</a></li>
 <li class="toctree-l1"><a class="reference internal" href="chapters/13-benchmarking.html">13. Benchmarking</a></li>
 <li class="toctree-l1"><a class="reference internal" href="chapters/14-mlops.html">14. MLOps</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Capstone Project</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="chapters/15-capstone.html">15. Capstone</a></li>
 </ul>
 
     </div>
@@ -410,26 +424,22 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#science-vs-engineering-a-different-approach">⚖️ <strong>Science vs Engineering: A Different Approach</strong></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-core-difference">💡 <strong>The Core Difference</strong></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-makes-tinytorch-different">🌟 <strong>What Makes TinyTorch Different</strong></a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#build-first-philosophy"><strong>🔬 Build-First Philosophy</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#production-ready-skills"><strong>🚀 Production-Ready Skills</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#instant-results"><strong>⚡ Instant Results</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#progressive-mastery"><strong>🎯 Progressive Mastery</strong></a></li>
-</ul>
-</li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-philosophy-build-use-master">🎓 <strong>Learning Philosophy: Build → Use → Master</strong></a><ul class="nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-philosophy-build-use-master">🎓 <strong>Learning Philosophy: Build, Use, Master</strong></a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example-activation-functions"><strong>Example: Activation Functions</strong></a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#course-journey-14-modules">📚 <strong>Course Journey: 14 Modules</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#course-journey-15-modules">📚 <strong>Course Journey: 15 Modules</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#complete-system-integration">🔗 <strong>Complete System Integration</strong></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#capstone-optimize-your-framework"><strong>🚀 Capstone: Optimize Your Framework</strong></a></li>
+</ul>
+</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#choose-your-learning-path">🚀 <strong>Choose Your Learning Path</strong></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ready-to-start">🚀 <strong>Ready to Start?</strong></a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#quick-taste-try-module-1-right-now"><strong>Quick Taste: Try Module 1 Right Now</strong></a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#academic-foundation">📚 <strong>Academic Foundation</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#acknowledgments">🙏 <strong>Acknowledgments</strong></a></li>
 </ul>
             </nav>
         </div>
@@ -444,9 +454,10 @@ document.write(`
   <section class="tex2jax_ignore mathjax_ignore" id="tinytorch-build-your-own-machine-learning-framework-from-scratch">
 <h1>Tiny🔥Torch: Build your own Machine Learning framework from scratch.<a class="headerlink" href="#tinytorch-build-your-own-machine-learning-framework-from-scratch" title="Permalink to this heading">#</a></h1>
 <p><strong>Most ML education teaches you to <em>use</em> frameworks. TinyTorch teaches you to <em>build</em> them.</strong></p>
+<p>TinyTorch is a minimalist educational framework designed for learning by doing. Instead of relying on PyTorch or TensorFlow, you implement everything from scratch—tensors, autograd, optimizers, even MLOps tooling. This hands-on approach builds the deep systems intuition that sets ML engineers apart from ML users.</p>
 <div class="tip admonition">
 <p class="admonition-title">🎯 What You’ll Build</p>
-<p><strong>A complete ML framework from scratch</strong> — your own PyTorch-style toolkit that can:</p>
+<p><strong>A complete ML framework from scratch</strong>: your own PyTorch style toolkit that can:</p>
 <ul class="simple">
 <li><p>✅ Train neural networks on CIFAR-10 (real dataset!)</p></li>
 <li><p>✅ Implement automatic differentiation (the “magic” behind PyTorch)</p></li>
@@ -455,16 +466,11 @@ document.write(`
 </ul>
 <p><strong>Result:</strong> You become the expert others ask about “how PyTorch actually works.”</p>
 </div>
-<hr class="docutils" />
-<section id="science-vs-engineering-a-different-approach">
-<h2>⚖️ <strong>Science vs Engineering: A Different Approach</strong><a class="headerlink" href="#science-vs-engineering-a-different-approach" title="Permalink to this heading">#</a></h2>
-<p>Most ML education focuses on the <strong>science</strong> — algorithms, theory, mathematical foundations. You learn <em>what</em> neural networks do and <em>why</em> they work.</p>
-<p>TinyTorch focuses on the <strong>engineering</strong> — systems, implementation, production practices. You learn <em>how</em> to build them and <em>how</em> to make them work.</p>
-<p><strong>Both matter.</strong> But there’s a critical gap in engineering education that TinyTorch fills.</p>
-</section>
+<p><em>Everyone wants to be an astronaut.</em> 🧑‍🚀 <em>TinyTorch teaches you how to build the rocket ship.</em> 🚀</p>
 <hr class="docutils" />
 <section id="the-core-difference">
 <h2>💡 <strong>The Core Difference</strong><a class="headerlink" href="#the-core-difference" title="Permalink to this heading">#</a></h2>
+<p>Most ML courses focus on algorithms and theory. You learn <em>what</em> neural networks do and <em>why</em> they work, but you import everything:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span>Traditional ML Course:          TinyTorch Approach:
 ├── import torch               ├── class Tensor:
 ├── model = nn.Linear(10, 1)   │     def __add__(self, other): ...
@@ -481,31 +487,11 @@ document.write(`
 Go from &quot;How does this work?&quot; 🤷 to &quot;I implemented every line!&quot; 💪
 </pre></div>
 </div>
-<p>This isn’t just about learning — it’s about developing the deep systems thinking that distinguishes ML engineers from ML users.</p>
-</section>
-<hr class="docutils" />
-<section id="what-makes-tinytorch-different">
-<h2>🌟 <strong>What Makes TinyTorch Different</strong><a class="headerlink" href="#what-makes-tinytorch-different" title="Permalink to this heading">#</a></h2>
-<section id="build-first-philosophy">
-<h3><strong>🔬 Build-First Philosophy</strong><a class="headerlink" href="#build-first-philosophy" title="Permalink to this heading">#</a></h3>
-<p>You don’t just learn about tensors — you implement the <code class="docutils literal notranslate"><span class="pre">Tensor</span></code> class from scratch. You don’t just use ReLU — you write the activation function yourself. Every component you build becomes part of your personal ML framework that actually works on real data.</p>
-</section>
-<section id="production-ready-skills">
-<h3><strong>🚀 Production-Ready Skills</strong><a class="headerlink" href="#production-ready-skills" title="Permalink to this heading">#</a></h3>
-<p>From day one, you’ll use professional development practices: the <code class="docutils literal notranslate"><span class="pre">tito</span></code> CLI for project management, automated testing for quality assurance, real datasets like CIFAR-10 for training, and MLOps patterns for deployment. This isn’t toy code — it’s the foundation for production ML systems.</p>
-</section>
-<section id="instant-results">
-<h3><strong>⚡ Instant Results</strong><a class="headerlink" href="#instant-results" title="Permalink to this heading">#</a></h3>
-<p>Your code works immediately. Implement a <code class="docutils literal notranslate"><span class="pre">ReLU</span></code> function in Module 3, and by Module 5 you’re watching it power real neural networks. Visual progress indicators and comprehensive testing ensure you always know your implementations are correct.</p>
-</section>
-<section id="progressive-mastery">
-<h3><strong>🎯 Progressive Mastery</strong><a class="headerlink" href="#progressive-mastery" title="Permalink to this heading">#</a></h3>
-<p>Start simple with a <code class="docutils literal notranslate"><span class="pre">hello_world()</span></code> function, build systematically through tensors and layers, and end with production MLOps systems. Each module builds on previous work, creating a complete learning journey from foundations to advanced systems.</p>
-</section>
+<p>TinyTorch focuses on implementation and systems thinking. You learn <em>how</em> to build working systems with progressive scaffolding, production ready practices, and comprehensive course infrastructure that bridges the gap between learning and building.</p>
 </section>
 <hr class="docutils" />
 <section id="learning-philosophy-build-use-master">
-<h2>🎓 <strong>Learning Philosophy: Build → Use → Master</strong><a class="headerlink" href="#learning-philosophy-build-use-master" title="Permalink to this heading">#</a></h2>
+<h2>🎓 <strong>Learning Philosophy: Build, Use, Master</strong><a class="headerlink" href="#learning-philosophy-build-use-master" title="Permalink to this heading">#</a></h2>
 <p>Every component follows the same powerful learning cycle:</p>
 <section id="example-activation-functions">
 <h3><strong>Example: Activation Functions</strong><a class="headerlink" href="#example-activation-functions" title="Permalink to this heading">#</a></h3>
@@ -530,44 +516,60 @@ Go from &quot;How does this work?&quot; 🤷 to &quot;I implemented every line!&
 <span class="p">])</span>
 </pre></div>
 </div>
-<p>This pattern repeats for every component — tensors, layers, optimizers, even MLOps systems. You build it, use it immediately, then see how it fits into larger systems.</p>
+<p>This pattern repeats for every component: tensors, layers, optimizers, even MLOps systems. You build it, use it immediately, then see how it fits into larger systems.</p>
 </section>
 </section>
 <hr class="docutils" />
-<section id="course-journey-14-modules">
-<h2>📚 <strong>Course Journey: 14 Modules</strong><a class="headerlink" href="#course-journey-14-modules" title="Permalink to this heading">#</a></h2>
+<section id="course-journey-15-modules">
+<h2>📚 <strong>Course Journey: 15 Modules</strong><a class="headerlink" href="#course-journey-15-modules" title="Permalink to this heading">#</a></h2>
 <div class="note admonition">
-<p class="admonition-title">🏗️ Foundation (Modules 1-5)</p>
-<p><strong>Weeks 1-6: Core Infrastructure</strong></p>
-<ul class="simple">
-<li><p><strong>Setup</strong>: Professional development workflow with <code class="docutils literal notranslate"><span class="pre">tito</span></code> CLI and testing</p></li>
-<li><p><strong>Tensors</strong>: Multi-dimensional arrays with operations (like NumPy, but yours!)</p></li>
-<li><p><strong>Activations</strong>: ReLU, Sigmoid, Tanh — the mathematical functions that enable learning</p></li>
-<li><p><strong>Layers</strong>: Dense layers with matrix multiplication and weight management</p></li>
-<li><p><strong>Networks</strong>: Sequential architecture — chain layers into complete models</p></li>
-</ul>
+<p class="admonition-title">🏗️ Foundation</p>
+<p><strong>1. Setup</strong> • <strong>2. Tensors</strong> • <strong>3. Activations</strong></p>
+<p>Understanding workflow, multi-dimensional arrays, and the mathematical functions that enable learning.</p>
 </div>
 <div class="note admonition">
-<p class="admonition-title">🧠 Deep Learning (Modules 6-10)</p>
-<p><strong>Weeks 7-12: Complete Training Systems</strong></p>
-<ul class="simple">
-<li><p><strong>CNNs</strong>: Convolutional operations for computer vision applications</p></li>
-<li><p><strong>DataLoader</strong>: CIFAR-10 loading, batching, and preprocessing pipelines</p></li>
-<li><p><strong>Autograd</strong>: Automatic differentiation engine (the “magic” behind PyTorch)</p></li>
-<li><p><strong>Optimizers</strong>: SGD with momentum, Adam with adaptive learning rates</p></li>
-<li><p><strong>Training</strong>: Loss functions, metrics, and complete training orchestration</p></li>
-</ul>
+<p class="admonition-title">🧱 Building Blocks</p>
+<p><strong>4. Layers</strong> • <strong>5. Networks</strong> • <strong>6. CNNs</strong></p>
+<p>Dense layers, sequential architecture, and convolutional operations for computer vision.</p>
 </div>
 <div class="note admonition">
-<p class="admonition-title">⚡ Production (Modules 11-14)</p>
-<p><strong>Weeks 13-16: Real-World Deployment</strong></p>
-<ul class="simple">
-<li><p><strong>Compression</strong>: Model pruning and quantization for 75% size reduction</p></li>
-<li><p><strong>Kernels</strong>: High-performance custom operations and optimization</p></li>
-<li><p><strong>Benchmarking</strong>: Systematic evaluation and performance measurement</p></li>
-<li><p><strong>MLOps</strong>: Production monitoring, continuous learning, complete pipeline</p></li>
-</ul>
+<p class="admonition-title">🎯 Training Systems</p>
+<p><strong>7. DataLoader</strong> • <strong>8. Autograd</strong> • <strong>9. Optimizers</strong> • <strong>10. Training</strong></p>
+<p>CIFAR-10 loading, automatic differentiation, SGD/Adam optimizers, and complete training orchestration.</p>
 </div>
+<div class="note admonition">
+<p class="admonition-title">⚡ Production &amp; Performance</p>
+<p><strong>11. Compression</strong> • <strong>12. Kernels</strong> • <strong>13. Benchmarking</strong> • <strong>14. MLOps</strong></p>
+<p>Model optimization, high-performance operations, systematic evaluation, and production monitoring.</p>
+</div>
+<div class="note admonition">
+<p class="admonition-title">🎓 Capstone Project</p>
+<p><strong>15. Framework Optimization</strong></p>
+<p>Choose your focus: performance engineering, algorithm extensions, systems optimization, framework analysis, or developer tools.</p>
+</div>
+</section>
+<hr class="docutils" />
+<section id="complete-system-integration">
+<h2>🔗 <strong>Complete System Integration</strong><a class="headerlink" href="#complete-system-integration" title="Permalink to this heading">#</a></h2>
+<p><strong>This isn’t 14 separate exercises.</strong> Every component you build integrates into one fully functional ML framework:</p>
+<div class="important admonition">
+<p class="admonition-title">🎯 How It All Connects</p>
+<p><strong>Module 2: Your Tensor class</strong> → <strong>Module 3: Powers your activation functions</strong> → <strong>Module 4: Enables your layers</strong> → <strong>Module 5: Forms your networks</strong> → <strong>Module 8: Drives your autograd system</strong> → <strong>Module 9: Optimizes with your SGD/Adam</strong> → <strong>Module 10: Trains on real CIFAR-10 data</strong></p>
+<p><strong>Result:</strong> A complete, working ML framework that you built from scratch, capable of training real neural networks on real datasets.</p>
+</div>
+<section id="capstone-optimize-your-framework">
+<h3><strong>🚀 Capstone: Optimize Your Framework</strong><a class="headerlink" href="#capstone-optimize-your-framework" title="Permalink to this heading">#</a></h3>
+<p>After completing the 14 core modules, you have a <strong>complete ML framework</strong>. Now make it better through systems engineering:</p>
+<p><strong>Choose Your Focus:</strong></p>
+<ul class="simple">
+<li><p>⚡ <strong>Performance Optimization</strong>: GPU kernels, vectorization, memory-efficient operations</p></li>
+<li><p>🧠 <strong>Algorithm Extensions</strong>: Transformer layers, BatchNorm, Dropout, advanced optimizers</p></li>
+<li><p>🔧 <strong>Systems Engineering</strong>: Multi-GPU training, distributed computing, memory profiling</p></li>
+<li><p>📊 <strong>Benchmarking Deep Dive</strong>: Compare your framework to PyTorch, identify bottlenecks</p></li>
+<li><p>🛠️ <strong>Developer Experience</strong>: Better debugging tools, visualization, error messages</p></li>
+</ul>
+<p><strong>The Challenge:</strong> Use <strong>only your TinyTorch implementation</strong> as the base. No copying from PyTorch. This proves you understand the engineering trade-offs and can optimize real ML systems.</p>
+</section>
 </section>
 <hr class="docutils" />
 <section id="choose-your-learning-path">
@@ -609,10 +611,13 @@ Go from &quot;How does this work?&quot; 🤷 to &quot;I implemented every line!&
 </section>
 </section>
 <hr class="docutils" />
-<section id="academic-foundation">
-<h2>📚 <strong>Academic Foundation</strong><a class="headerlink" href="#academic-foundation" title="Permalink to this heading">#</a></h2>
-<p>TinyTorch grew out of CS249r: Tiny Machine Learning Systems at Harvard University. While the <a class="reference external" href="https://mlsysbook.ai">Machine Learning Systems book</a> covers broad principles, TinyTorch gives you hands-on implementation experience.</p>
+<section id="acknowledgments">
+<h2>🙏 <strong>Acknowledgments</strong><a class="headerlink" href="#acknowledgments" title="Permalink to this heading">#</a></h2>
+<p>TinyTorch originated from CS249r: Tiny Machine Learning Systems at Harvard University. We’re inspired by projects like <a class="reference external" href="https://github.com/geohot/tinygrad">tinygrad</a> and <a class="reference external" href="https://github.com/karpathy/micrograd">micrograd</a> that demonstrate the power of minimal implementations.</p>
+<p><strong>Complementary Learning</strong>: For comprehensive ML systems knowledge, we recommend <a class="reference external" href="https://mlsysbook.ai"><strong>Machine Learning Systems</strong></a> by <a class="reference external" href="https://profvjreddi.github.io/website/">Prof. Vijay Janapa Reddi</a>. While TinyTorch teaches you to <strong>build</strong> ML systems from scratch, that book provides the broader <strong>systems context</strong> and engineering principles for production AI.</p>
 </section>
+<div class="toctree-wrapper compound">
+</div>
 <div class="toctree-wrapper compound">
 </div>
 <div class="toctree-wrapper compound">
@@ -681,26 +686,22 @@ Go from &quot;How does this work?&quot; 🤷 to &quot;I implemented every line!&
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#science-vs-engineering-a-different-approach">⚖️ <strong>Science vs Engineering: A Different Approach</strong></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-core-difference">💡 <strong>The Core Difference</strong></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-makes-tinytorch-different">🌟 <strong>What Makes TinyTorch Different</strong></a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#build-first-philosophy"><strong>🔬 Build-First Philosophy</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#production-ready-skills"><strong>🚀 Production-Ready Skills</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#instant-results"><strong>⚡ Instant Results</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#progressive-mastery"><strong>🎯 Progressive Mastery</strong></a></li>
-</ul>
-</li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-philosophy-build-use-master">🎓 <strong>Learning Philosophy: Build → Use → Master</strong></a><ul class="nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-philosophy-build-use-master">🎓 <strong>Learning Philosophy: Build, Use, Master</strong></a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example-activation-functions"><strong>Example: Activation Functions</strong></a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#course-journey-14-modules">📚 <strong>Course Journey: 14 Modules</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#course-journey-15-modules">📚 <strong>Course Journey: 15 Modules</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#complete-system-integration">🔗 <strong>Complete System Integration</strong></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#capstone-optimize-your-framework"><strong>🚀 Capstone: Optimize Your Framework</strong></a></li>
+</ul>
+</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#choose-your-learning-path">🚀 <strong>Choose Your Learning Path</strong></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ready-to-start">🚀 <strong>Ready to Start?</strong></a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#quick-taste-try-module-1-right-now"><strong>Quick Taste: Try Module 1 Right Now</strong></a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#academic-foundation">📚 <strong>Academic Foundation</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#acknowledgments">🙏 <strong>Acknowledgments</strong></a></li>
 </ul>
   </nav></div>
 

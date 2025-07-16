@@ -1,4 +1,19 @@
+---
+title: "Capstone: Framework Optimization"
+description: "Optimize and extend your complete TinyTorch framework through systems engineering"
+difficulty: "Intermediate"
+time_estimate: "2-4 hours"
+prerequisites: []
+next_steps: []
+learning_objectives: []
+---
+
 # 🎓 Capstone: Framework Optimization
+
+```{div} badges
+⭐⭐⭐⭐⭐ | ⏱️ Capstone Project
+```
+
 
 ## 📊 Module Info
 - **Difficulty**: ⭐⭐⭐⭐⭐ Expert Systems Engineering
@@ -368,3 +383,44 @@ Choose your track, profile your current implementation, and start building. Reme
 Start by choosing your track and running the profiling example above. Your TinyTorch framework is waiting to be optimized!
 
 **🔥 Let's make TinyTorch even better. Start optimizing.** 
+
+
+Choose your preferred way to engage with this module:
+
+````{grid} 1 2 3 3
+
+```{grid-item-card} 🚀 Launch Binder
+:link: https://mybinder.org/v2/gh/mlsysbook/TinyTorch/main?filepath=modules/source/15_capstone/capstone_dev.ipynb
+:class-header: bg-light
+
+Run this module interactively in your browser. No installation required!
+```
+
+```{grid-item-card} ⚡ Open in Colab  
+:link: https://colab.research.google.com/github/mlsysbook/TinyTorch/blob/main/modules/source/15_capstone/capstone_dev.ipynb
+:class-header: bg-light
+
+Use Google Colab for GPU access and cloud compute power.
+```
+
+```{grid-item-card} 📖 View Source
+:link: https://github.com/mlsysbook/TinyTorch/blob/main/modules/source/15_capstone/capstone_dev.py
+:class-header: bg-light
+
+Browse the Python source code and understand the implementation.
+```
+
+````
+
+```{admonition} 💾 Save Your Progress
+:class: tip
+**Binder sessions are temporary!** Download your completed notebook when done, or switch to local development for persistent work.
+
+Ready for serious development? → [🏗️ Local Setup Guide](../usage-paths/serious-development.md)
+```
+
+---
+
+<div class="prev-next-area">
+<a class="left-prev" href="../chapters/14_mlops.html" title="previous page">← Previous Module</a>
+</div>

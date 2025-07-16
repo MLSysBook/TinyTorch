@@ -1,0 +1,1077 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>🎓 Capstone: Framework Optimization &#8212; Tiny🔥Torch: Build your own Machine Learning framework from scratch</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=5b4479735964841361fd" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=5b4479735964841361fd" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=5b4479735964841361fd" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=5b4479735964841361fd" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=5b4479735964841361fd" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=5b4479735964841361fd" />
+  <script src="../_static/vendor/fontawesome/6.1.2/js/all.min.js?digest=5b4479735964841361fd"></script>
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'chapters/15-capstone';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="Module: MLOps" href="14-mlops.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo.png" class="logo__image only-light" alt="Tiny🔥Torch: Build your own Machine Learning framework from scratch - Home"/>
+    <script>document.write(`<img src="../_static/logo.png" class="logo__image only-dark" alt="Tiny🔥Torch: Build your own Machine Learning framework from scratch - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    Tiny🔥Torch: Build your own Machine Learning framework from scratch.
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Usage Paths</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../usage-paths/quick-exploration.html">🔬 Quick Exploration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage-paths/serious-development.html">🏗️ Serious Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage-paths/classroom-use.html">👨‍🏫 Classroom Use</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Foundation</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="01-setup.html">1. Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="02-tensor.html">2. Tensors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="03-activations.html">3. Activations</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Building Blocks</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="04-layers.html">4. Layers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="05-networks.html">5. Networks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="06-cnn.html">6. CNNs</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Training Systems</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="07-dataloader.html">7. DataLoader</a></li>
+<li class="toctree-l1"><a class="reference internal" href="08-autograd.html">8. Autograd</a></li>
+<li class="toctree-l1"><a class="reference internal" href="09-optimizers.html">9. Optimizers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="10-training.html">10. Training</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Production &amp; Performance</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="11-compression.html">11. Compression</a></li>
+<li class="toctree-l1"><a class="reference internal" href="12-kernels.html">12. Kernels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="13-benchmarking.html">13. Benchmarking</a></li>
+<li class="toctree-l1"><a class="reference internal" href="14-mlops.html">14. MLOps</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Capstone Project</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">15. Capstone</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/mlsysbook/TinyTorch" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/mlsysbook/TinyTorch/edit/main/book/chapters/15-capstone.md" target="_blank"
+   class="btn btn-sm btn-source-edit-button dropdown-item"
+   title="Suggest edit"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="btn__text-container">Suggest edit</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/mlsysbook/TinyTorch/issues/new?title=Issue%20on%20page%20%2Fchapters/15-capstone.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/chapters/15-capstone.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>🎓 Capstone: Framework Optimization</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-info">📊 Module Info</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-objectives">🎯 Learning Objectives</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#build-optimize-master">🧠 Build → Optimize → Master</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#choose-your-optimization-track">🚀 <strong>Choose Your Optimization Track</strong></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#track-1-performance-engineering"><strong>⚡ Track 1: Performance Engineering</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#track-2-algorithm-extensions"><strong>🧠 Track 2: Algorithm Extensions</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#track-3-systems-optimization"><strong>🔧 Track 3: Systems Optimization</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#track-4-framework-analysis"><strong>📊 Track 4: Framework Analysis</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#track-5-developer-experience"><strong>🛠️ Track 5: Developer Experience</strong></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#project-structure-and-timeline">📋 <strong>Project Structure and Timeline</strong></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#phase-1-analysis-planning"><strong>Phase 1: Analysis &amp; Planning</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#phase-2-core-implementation"><strong>Phase 2: Core Implementation</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#phase-3-integration-optimization"><strong>Phase 3: Integration &amp; Optimization</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#phase-4-evaluation-presentation"><strong>Phase 4: Evaluation &amp; Presentation</strong></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#getting-started-example-walkthrough">🏗️ <strong>Getting Started: Example Walkthrough</strong></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-1-profile-your-current-framework"><strong>Step 1: Profile Your Current Framework</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-2-identify-bottlenecks"><strong>Step 2: Identify Bottlenecks</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-3-choose-your-target"><strong>Step 3: Choose Your Target</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-4-implement-and-test"><strong>Step 4: Implement and Test</strong></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#success-criteria">🎯 <strong>Success Criteria</strong></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#technical-mastery"><strong>Technical Mastery</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#framework-understanding"><strong>Framework Understanding</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#professional-development"><strong>Professional Development</strong></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#deliverables">🏆 <strong>Deliverables</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pro-tips-for-success">💡 <strong>Pro Tips for Success</strong></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#start-small-think-big"><strong>Start Small, Think Big</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#use-your-existing-framework"><strong>Use Your Existing Framework</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#document-engineering-decisions"><strong>Document Engineering Decisions</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#think-like-a-framework-engineer"><strong>Think Like a Framework Engineer</strong></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ready-to-optimize-your-framework">🚀 <strong>Ready to Optimize Your Framework?</strong></a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="capstone-framework-optimization">
+<h1>🎓 Capstone: Framework Optimization<a class="headerlink" href="#capstone-framework-optimization" title="Permalink to this heading">#</a></h1>
+<div class="badges docutils">
+<p>⭐⭐⭐⭐⭐ | ⏱️ Capstone Project</p>
+</div>
+<section id="module-info">
+<h2>📊 Module Info<a class="headerlink" href="#module-info" title="Permalink to this heading">#</a></h2>
+<ul class="simple">
+<li><p><strong>Difficulty</strong>: ⭐⭐⭐⭐⭐ Expert Systems Engineering</p></li>
+<li><p><strong>Time Estimate</strong>: Capstone Project (flexible scope and pacing)</p></li>
+<li><p><strong>Prerequisites</strong>: <strong>All 14 TinyTorch modules</strong> - Your complete ML framework</p></li>
+<li><p><strong>Outcome</strong>: <strong>Advanced framework engineering skills</strong> - Prove deep systems mastery</p></li>
+</ul>
+<p>Welcome to your TinyTorch capstone! You’ve built a complete ML framework from scratch. Now optimize it, extend it, and make it faster through systems engineering. This isn’t about building apps—it’s about becoming the engineer others ask: <em>“How do I make this framework better?”</em></p>
+</section>
+<section id="learning-objectives">
+<h2>🎯 Learning Objectives<a class="headerlink" href="#learning-objectives" title="Permalink to this heading">#</a></h2>
+<p>By the end of this capstone, you will be able to:</p>
+<ul class="simple">
+<li><p><strong>Optimize ML frameworks</strong>: Use profiling, benchmarking, and systems analysis to identify and fix performance bottlenecks</p></li>
+<li><p><strong>Extend framework capabilities</strong>: Add new algorithms, layers, and optimizers using consistent architectural patterns</p></li>
+<li><p><strong>Engineer for scale</strong>: Implement multi-GPU training, memory optimization, and parallel computing for real-world performance</p></li>
+<li><p><strong>Build developer tools</strong>: Create debugging utilities, visualization tools, and testing infrastructure that improve developer experience</p></li>
+<li><p><strong>Analyze trade-offs</strong>: Understand engineering decisions around memory vs speed, accuracy vs efficiency, and simplicity vs performance</p></li>
+</ul>
+</section>
+<section id="build-optimize-master">
+<h2>🧠 Build → Optimize → Master<a class="headerlink" href="#build-optimize-master" title="Permalink to this heading">#</a></h2>
+<p>This capstone follows TinyTorch’s <strong>Build → Optimize → Master</strong> framework:</p>
+<ol class="arabic simple">
+<li><p><strong>Build</strong>: You already built a complete ML framework (Modules 1-14)</p></li>
+<li><p><strong>Optimize</strong>: Choose a focus area and systematically improve your framework through systems engineering</p></li>
+<li><p><strong>Master</strong>: Prove deep understanding by making architectural improvements that demonstrate true framework mastery</p></li>
+</ol>
+</section>
+<hr class="docutils" />
+<section id="choose-your-optimization-track">
+<h2>🚀 <strong>Choose Your Optimization Track</strong><a class="headerlink" href="#choose-your-optimization-track" title="Permalink to this heading">#</a></h2>
+<p>Pick <strong>one primary focus area</strong> that aligns with your interests and career goals:</p>
+<section id="track-1-performance-engineering">
+<h3><strong>⚡ Track 1: Performance Engineering</strong><a class="headerlink" href="#track-1-performance-engineering" title="Permalink to this heading">#</a></h3>
+<p><strong>Goal</strong>: Make your TinyTorch framework faster and more memory-efficient</p>
+<p><strong>Example Project</strong>: <em>GPU-Accelerated Matrix Operations</em></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Current: CPU-only operations</span>
+<span class="k">def</span> <span class="nf">matmul_naive</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">)</span>  <span class="c1"># Single-threaded, slow</span>
+
+<span class="c1"># Your optimization: GPU kernels + vectorization</span>
+<span class="k">def</span> <span class="nf">matmul_optimized</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">):</span>
+    <span class="c1"># YOUR implementation using:</span>
+    <span class="c1"># - NumPy vectorization</span>
+    <span class="c1"># - Memory layout optimization  </span>
+    <span class="c1"># - Cache-efficient algorithms</span>
+    <span class="c1"># - Parallel computation</span>
+    <span class="k">pass</span>
+</pre></div>
+</div>
+<p><strong>Concrete Tasks:</strong></p>
+<ul class="simple">
+<li><p>Profile your current tensor operations and identify bottlenecks</p></li>
+<li><p>Implement vectorized operations that are 5-10x faster</p></li>
+<li><p>Optimize memory usage in training loops (reduce by 30%+)</p></li>
+<li><p>Add parallel processing for batch operations</p></li>
+<li><p>Benchmark against PyTorch and analyze performance gaps</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="track-2-algorithm-extensions">
+<h3><strong>🧠 Track 2: Algorithm Extensions</strong><a class="headerlink" href="#track-2-algorithm-extensions" title="Permalink to this heading">#</a></h3>
+<p><strong>Goal</strong>: Add modern ML algorithms to your framework</p>
+<p><strong>Example Project</strong>: <em>Transformer Attention Block</em></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Current: Basic layers (Dense, Conv2D)</span>
+<span class="kn">from</span> <span class="nn">tinytorch.core.layers</span> <span class="kn">import</span> <span class="n">Dense</span>
+
+<span class="c1"># Your extension: Modern attention mechanisms</span>
+<span class="k">class</span> <span class="nc">MultiHeadAttention</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">d_model</span><span class="p">,</span> <span class="n">num_heads</span><span class="p">):</span>
+        <span class="c1"># YOUR implementation using only TinyTorch components</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">query</span> <span class="o">=</span> <span class="n">Dense</span><span class="p">(</span><span class="n">d_model</span><span class="p">,</span> <span class="n">d_model</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">key</span> <span class="o">=</span> <span class="n">Dense</span><span class="p">(</span><span class="n">d_model</span><span class="p">,</span> <span class="n">d_model</span><span class="p">)</span>  
+        <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">Dense</span><span class="p">(</span><span class="n">d_model</span><span class="p">,</span> <span class="n">d_model</span><span class="p">)</span>
+        <span class="c1"># ... attention math using your autograd</span>
+    
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="c1"># YOUR attention implementation</span>
+        <span class="k">pass</span>
+</pre></div>
+</div>
+<p><strong>Concrete Tasks:</strong></p>
+<ul class="simple">
+<li><p>Implement BatchNormalization using your tensor and autograd systems</p></li>
+<li><p>Build Transformer attention blocks with your Dense layers</p></li>
+<li><p>Add advanced optimizers (AdamW, RMSprop) using your autograd</p></li>
+<li><p>Create Dropout and regularization techniques</p></li>
+<li><p>Extend your CNN module with modern architectures</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="track-3-systems-optimization">
+<h3><strong>🔧 Track 3: Systems Optimization</strong><a class="headerlink" href="#track-3-systems-optimization" title="Permalink to this heading">#</a></h3>
+<p><strong>Goal</strong>: Make your framework production-ready and scalable</p>
+<p><strong>Example Project</strong>: <em>Memory-Efficient Training Pipeline</em></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Current: Basic training loop</span>
+<span class="k">def</span> <span class="nf">train_epoch</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">dataloader</span><span class="p">,</span> <span class="n">optimizer</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">batch</span> <span class="ow">in</span> <span class="n">dataloader</span><span class="p">:</span>
+        <span class="n">loss</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">batch</span><span class="p">)</span>
+        <span class="n">loss</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
+        <span class="n">optimizer</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
+
+<span class="c1"># Your optimization: Production training system</span>
+<span class="k">class</span> <span class="nc">OptimizedTrainer</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">config</span><span class="p">):</span>
+        <span class="c1"># YOUR implementation with:</span>
+        <span class="c1"># - Memory profiling and optimization</span>
+        <span class="c1"># - Gradient accumulation</span>
+        <span class="c1"># - Mixed precision training</span>
+        <span class="c1"># - Checkpointing and resuming</span>
+        <span class="k">pass</span>
+</pre></div>
+</div>
+<p><strong>Concrete Tasks:</strong></p>
+<ul class="simple">
+<li><p>Implement gradient accumulation for large batch training</p></li>
+<li><p>Add memory profiling and leak detection</p></li>
+<li><p>Create model checkpointing and resuming systems</p></li>
+<li><p>Build distributed training across multiple processes</p></li>
+<li><p>Optimize data loading pipelines for better GPU utilization</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="track-4-framework-analysis">
+<h3><strong>📊 Track 4: Framework Analysis</strong><a class="headerlink" href="#track-4-framework-analysis" title="Permalink to this heading">#</a></h3>
+<p><strong>Goal</strong>: Build comprehensive benchmarking and comparison tools</p>
+<p><strong>Example Project</strong>: <em>TinyTorch vs PyTorch Benchmark Suite</em></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Your benchmarking framework</span>
+<span class="k">class</span> <span class="nc">FrameworkComparison</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># Compare TinyTorch vs PyTorch on:</span>
+        <span class="c1"># - Training speed and memory usage</span>
+        <span class="c1"># - Accuracy on standard datasets</span>
+        <span class="c1"># - Code complexity and maintainability</span>
+        <span class="k">pass</span>
+    
+    <span class="k">def</span> <span class="nf">benchmark_operation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">op_name</span><span class="p">,</span> <span class="n">input_shapes</span><span class="p">):</span>
+        <span class="c1"># Run identical operations in both frameworks</span>
+        <span class="n">tinytorch_time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">benchmark_tinytorch</span><span class="p">(</span><span class="n">op_name</span><span class="p">,</span> <span class="n">input_shapes</span><span class="p">)</span>
+        <span class="n">pytorch_time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">benchmark_pytorch</span><span class="p">(</span><span class="n">op_name</span><span class="p">,</span> <span class="n">input_shapes</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">analyze_performance_gap</span><span class="p">(</span><span class="n">tinytorch_time</span><span class="p">,</span> <span class="n">pytorch_time</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>Concrete Tasks:</strong></p>
+<ul class="simple">
+<li><p>Create automated benchmarks comparing TinyTorch to PyTorch</p></li>
+<li><p>Analyze where your framework is slower and why</p></li>
+<li><p>Build performance regression testing</p></li>
+<li><p>Profile memory usage patterns and identify optimization opportunities</p></li>
+<li><p>Create detailed performance reports with recommendations</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="track-5-developer-experience">
+<h3><strong>🛠️ Track 5: Developer Experience</strong><a class="headerlink" href="#track-5-developer-experience" title="Permalink to this heading">#</a></h3>
+<p><strong>Goal</strong>: Make your framework easier to debug, understand, and extend</p>
+<p><strong>Example Project</strong>: <em>TinyTorch Debugging and Visualization Suite</em></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Your developer tools</span>
+<span class="k">class</span> <span class="nc">TinyTorchDebugger</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">):</span>
+        <span class="c1"># YOUR implementation providing:</span>
+        <span class="c1"># - Gradient flow visualization</span>
+        <span class="c1"># - Layer activation inspection</span>
+        <span class="c1"># - Training dynamics plotting</span>
+        <span class="c1"># - Error diagnosis and suggestions</span>
+        <span class="k">pass</span>
+    
+    <span class="k">def</span> <span class="nf">visualize_gradients</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># Show gradient magnitudes across layers</span>
+        <span class="k">pass</span>
+    
+    <span class="k">def</span> <span class="nf">diagnose_training_issues</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># Detect vanishing/exploding gradients, learning rate problems</span>
+        <span class="k">pass</span>
+</pre></div>
+</div>
+<p><strong>Concrete Tasks:</strong></p>
+<ul class="simple">
+<li><p>Build gradient visualization tools for debugging</p></li>
+<li><p>Create layer activation inspection utilities</p></li>
+<li><p>Implement training dynamics plotting and analysis</p></li>
+<li><p>Add better error messages with suggestions for fixes</p></li>
+<li><p>Build automated testing tools for new components</p></li>
+</ul>
+</section>
+</section>
+<hr class="docutils" />
+<section id="project-structure-and-timeline">
+<h2>📋 <strong>Project Structure and Timeline</strong><a class="headerlink" href="#project-structure-and-timeline" title="Permalink to this heading">#</a></h2>
+<section id="phase-1-analysis-planning">
+<h3><strong>Phase 1: Analysis &amp; Planning</strong><a class="headerlink" href="#phase-1-analysis-planning" title="Permalink to this heading">#</a></h3>
+<ol class="arabic simple">
+<li><p><strong>Profile your current framework</strong>: Use Python’s <code class="docutils literal notranslate"><span class="pre">cProfile</span></code> and <code class="docutils literal notranslate"><span class="pre">memory_profiler</span></code> to identify bottlenecks</p></li>
+<li><p><strong>Define success metrics</strong>: What does “better” mean for your chosen track?</p></li>
+<li><p><strong>Set specific goals</strong>: “Reduce training time by 30%” or “Add BatchNorm with full autograd support”</p></li>
+<li><p><strong>Plan implementation</strong>: Break your project into 3-4 concrete milestones</p></li>
+</ol>
+</section>
+<section id="phase-2-core-implementation">
+<h3><strong>Phase 2: Core Implementation</strong><a class="headerlink" href="#phase-2-core-implementation" title="Permalink to this heading">#</a></h3>
+<ol class="arabic simple">
+<li><p><strong>Build incrementally</strong>: Start with the simplest version that works</p></li>
+<li><p><strong>Test constantly</strong>: Use your existing TinyTorch models to verify improvements</p></li>
+<li><p><strong>Benchmark early</strong>: Measure performance at each step</p></li>
+<li><p><strong>Document decisions</strong>: Keep notes on trade-offs and engineering choices</p></li>
+</ol>
+</section>
+<section id="phase-3-integration-optimization">
+<h3><strong>Phase 3: Integration &amp; Optimization</strong><a class="headerlink" href="#phase-3-integration-optimization" title="Permalink to this heading">#</a></h3>
+<ol class="arabic simple">
+<li><p><strong>Integrate with existing systems</strong>: Ensure your improvements work with all TinyTorch modules</p></li>
+<li><p><strong>Optimize performance</strong>: Polish and fine-tune your implementation</p></li>
+<li><p><strong>Create comprehensive tests</strong>: Verify your additions don’t break existing functionality</p></li>
+<li><p><strong>Write documentation</strong>: Explain your improvements and how others can use them</p></li>
+</ol>
+</section>
+<section id="phase-4-evaluation-presentation">
+<h3><strong>Phase 4: Evaluation &amp; Presentation</strong><a class="headerlink" href="#phase-4-evaluation-presentation" title="Permalink to this heading">#</a></h3>
+<ol class="arabic simple">
+<li><p><strong>Benchmark final results</strong>: Compare before/after performance</p></li>
+<li><p><strong>Analyze trade-offs</strong>: What did you sacrifice? What did you gain?</p></li>
+<li><p><strong>Create demonstration</strong>: Show your improvements working on real examples</p></li>
+<li><p><strong>Write project report</strong>: Document your engineering journey and lessons learned</p></li>
+</ol>
+</section>
+</section>
+<hr class="docutils" />
+<section id="getting-started-example-walkthrough">
+<h2>🏗️ <strong>Getting Started: Example Walkthrough</strong><a class="headerlink" href="#getting-started-example-walkthrough" title="Permalink to this heading">#</a></h2>
+<p>Let’s walk through starting a <strong>Performance Engineering</strong> project:</p>
+<section id="step-1-profile-your-current-framework">
+<h3><strong>Step 1: Profile Your Current Framework</strong><a class="headerlink" href="#step-1-profile-your-current-framework" title="Permalink to this heading">#</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">cProfile</span>
+<span class="kn">import</span> <span class="nn">pstats</span>
+<span class="kn">from</span> <span class="nn">memory_profiler</span> <span class="kn">import</span> <span class="n">profile</span>
+
+<span class="c1"># Profile your training loop</span>
+<span class="n">profiler</span> <span class="o">=</span> <span class="n">cProfile</span><span class="o">.</span><span class="n">Profile</span><span class="p">()</span>
+<span class="n">profiler</span><span class="o">.</span><span class="n">enable</span><span class="p">()</span>
+
+<span class="c1"># Run your CIFAR-10 training from Module 10</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">create_mlp</span><span class="p">([</span><span class="mi">3072</span><span class="p">,</span> <span class="mi">128</span><span class="p">,</span> <span class="mi">64</span><span class="p">,</span> <span class="mi">10</span><span class="p">])</span>
+<span class="n">train_model</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">cifar10_data</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="n">profiler</span><span class="o">.</span><span class="n">disable</span><span class="p">()</span>
+<span class="n">stats</span> <span class="o">=</span> <span class="n">pstats</span><span class="o">.</span><span class="n">Stats</span><span class="p">(</span><span class="n">profiler</span><span class="p">)</span>
+<span class="n">stats</span><span class="o">.</span><span class="n">sort_stats</span><span class="p">(</span><span class="s1">&#39;cumulative&#39;</span><span class="p">)</span>
+<span class="n">stats</span><span class="o">.</span><span class="n">print_stats</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span>  <span class="c1"># Top 20 slowest functions</span>
+</pre></div>
+</div>
+</section>
+<section id="step-2-identify-bottlenecks">
+<h3><strong>Step 2: Identify Bottlenecks</strong><a class="headerlink" href="#step-2-identify-bottlenecks" title="Permalink to this heading">#</a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Common</span> <span class="n">findings</span><span class="p">:</span>
+<span class="o">-</span> <span class="mi">60</span><span class="o">%</span> <span class="n">of</span> <span class="n">time</span> <span class="ow">in</span> <span class="n">tensor</span> <span class="n">operations</span> <span class="p">(</span><span class="n">matmul</span><span class="p">,</span> <span class="n">convolution</span><span class="p">)</span>
+<span class="o">-</span> <span class="mi">25</span><span class="o">%</span> <span class="n">of</span> <span class="n">time</span> <span class="ow">in</span> <span class="n">data</span> <span class="n">loading</span> <span class="ow">and</span> <span class="n">preprocessing</span>  
+<span class="o">-</span> <span class="mi">10</span><span class="o">%</span> <span class="n">of</span> <span class="n">time</span> <span class="ow">in</span> <span class="n">gradient</span> <span class="n">computation</span>
+<span class="o">-</span> <span class="mi">5</span><span class="o">%</span> <span class="n">of</span> <span class="n">time</span> <span class="ow">in</span> <span class="n">optimizer</span> <span class="n">updates</span>
+</pre></div>
+</div>
+</section>
+<section id="step-3-choose-your-target">
+<h3><strong>Step 3: Choose Your Target</strong><a class="headerlink" href="#step-3-choose-your-target" title="Permalink to this heading">#</a></h3>
+<p>Focus on the biggest bottleneck. If it’s tensor operations, implement:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Before: Naive implementation</span>
+<span class="k">def</span> <span class="nf">matmul_naive</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">):</span>
+    <span class="c1"># Your current implementation from Module 1</span>
+    <span class="k">pass</span>
+
+<span class="c1"># After: Optimized implementation  </span>
+<span class="k">def</span> <span class="nf">matmul_vectorized</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">):</span>
+    <span class="c1"># Use advanced NumPy, better algorithms</span>
+    <span class="c1"># Target: 5-10x speedup</span>
+    <span class="k">pass</span>
+</pre></div>
+</div>
+</section>
+<section id="step-4-implement-and-test">
+<h3><strong>Step 4: Implement and Test</strong><a class="headerlink" href="#step-4-implement-and-test" title="Permalink to this heading">#</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Benchmark your improvement</span>
+<span class="kn">import</span> <span class="nn">time</span>
+
+<span class="n">A</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)</span>
+<span class="n">B</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)</span>
+
+<span class="c1"># Test current implementation</span>
+<span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+<span class="n">result1</span> <span class="o">=</span> <span class="n">matmul_naive</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">)</span>
+<span class="n">naive_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start</span>
+
+<span class="c1"># Test optimized implementation</span>
+<span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+<span class="n">result2</span> <span class="o">=</span> <span class="n">matmul_vectorized</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">)</span>
+<span class="n">optimized_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start</span>
+
+<span class="n">speedup</span> <span class="o">=</span> <span class="n">naive_time</span> <span class="o">/</span> <span class="n">optimized_time</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Speedup: </span><span class="si">{</span><span class="n">speedup</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">x&quot;</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">result1</span><span class="p">,</span> <span class="n">result2</span><span class="p">)</span>  <span class="c1"># Verify correctness</span>
+</pre></div>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="success-criteria">
+<h2>🎯 <strong>Success Criteria</strong><a class="headerlink" href="#success-criteria" title="Permalink to this heading">#</a></h2>
+<p>Your capstone is successful when you can demonstrate:</p>
+<section id="technical-mastery">
+<h3><strong>Technical Mastery</strong><a class="headerlink" href="#technical-mastery" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Measurable improvement</strong>: 20%+ performance gain, new functionality, or better developer experience</p></li>
+<li><p><strong>Systems thinking</strong>: Your solution integrates cleanly with existing TinyTorch components</p></li>
+<li><p><strong>Engineering trade-offs</strong>: You understand and can explain what you optimized and what you sacrificed</p></li>
+</ul>
+</section>
+<section id="framework-understanding">
+<h3><strong>Framework Understanding</strong><a class="headerlink" href="#framework-understanding" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>No external dependencies</strong>: Your improvements use only TinyTorch components you built</p></li>
+<li><p><strong>Architectural consistency</strong>: Your additions follow TinyTorch patterns and design principles</p></li>
+<li><p><strong>Comprehensive testing</strong>: Your improvements don’t break existing functionality</p></li>
+</ul>
+</section>
+<section id="professional-development">
+<h3><strong>Professional Development</strong><a class="headerlink" href="#professional-development" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Project documentation</strong>: Clear explanation of problem, solution, and results</p></li>
+<li><p><strong>Performance analysis</strong>: Before/after benchmarks with engineering insights</p></li>
+<li><p><strong>Future roadmap</strong>: Identification of next optimization opportunities</p></li>
+</ul>
+</section>
+</section>
+<hr class="docutils" />
+<section id="deliverables">
+<h2>🏆 <strong>Deliverables</strong><a class="headerlink" href="#deliverables" title="Permalink to this heading">#</a></h2>
+<p>Submit your capstone as a complete project including:</p>
+<ol class="arabic simple">
+<li><p><strong>📊 Project Report</strong> (<code class="docutils literal notranslate"><span class="pre">capstone_report.md</span></code>)</p>
+<ul class="simple">
+<li><p>Problem analysis and motivation</p></li>
+<li><p>Technical approach and implementation details</p></li>
+<li><p>Performance results and benchmarks</p></li>
+<li><p>Engineering trade-offs and lessons learned</p></li>
+</ul>
+</li>
+<li><p><strong>💻 Implementation Code</strong> (<code class="docutils literal notranslate"><span class="pre">src/</span></code> directory)</p>
+<ul class="simple">
+<li><p>Your optimized/extended TinyTorch components</p></li>
+<li><p>Comprehensive tests demonstrating functionality</p></li>
+<li><p>Integration examples showing your improvements in action</p></li>
+</ul>
+</li>
+<li><p><strong>📈 Benchmark Results</strong> (<code class="docutils literal notranslate"><span class="pre">benchmarks/</span></code> directory)</p>
+<ul class="simple">
+<li><p>Before/after performance comparisons</p></li>
+<li><p>Memory usage analysis</p></li>
+<li><p>Comparison to PyTorch (where relevant)</p></li>
+</ul>
+</li>
+<li><p><strong>🎥 Demonstration</strong> (<code class="docutils literal notranslate"><span class="pre">demo.py</span></code>)</p>
+<ul class="simple">
+<li><p>Working example showing your improvements</p></li>
+<li><p>Side-by-side comparison with original TinyTorch</p></li>
+<li><p>Real use case demonstrating practical value</p></li>
+</ul>
+</li>
+</ol>
+</section>
+<hr class="docutils" />
+<section id="pro-tips-for-success">
+<h2>💡 <strong>Pro Tips for Success</strong><a class="headerlink" href="#pro-tips-for-success" title="Permalink to this heading">#</a></h2>
+<section id="start-small-think-big">
+<h3><strong>Start Small, Think Big</strong><a class="headerlink" href="#start-small-think-big" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Begin with the simplest version that works</p></li>
+<li><p>Measure early and often to guide optimization</p></li>
+<li><p>Don’t try to optimize everything—focus on the biggest impact</p></li>
+</ul>
+</section>
+<section id="use-your-existing-framework">
+<h3><strong>Use Your Existing Framework</strong><a class="headerlink" href="#use-your-existing-framework" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Test improvements using models from previous modules</p></li>
+<li><p>Verify compatibility with CIFAR-10 training from Module 10</p></li>
+<li><p>Use your benchmarking tools from Module 13</p></li>
+</ul>
+</section>
+<section id="document-engineering-decisions">
+<h3><strong>Document Engineering Decisions</strong><a class="headerlink" href="#document-engineering-decisions" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Keep notes on why you chose specific approaches</p></li>
+<li><p>Record trade-offs between memory, speed, and complexity</p></li>
+<li><p>Explain how your improvements fit TinyTorch’s design philosophy</p></li>
+</ul>
+</section>
+<section id="think-like-a-framework-engineer">
+<h3><strong>Think Like a Framework Engineer</strong><a class="headerlink" href="#think-like-a-framework-engineer" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p>How would other developers use your improvements?</p></li>
+<li><p>What APIs would make sense?</p></li>
+<li><p>How do your changes affect the learning experience?</p></li>
+</ul>
+</section>
+</section>
+<hr class="docutils" />
+<section id="ready-to-optimize-your-framework">
+<h2>🚀 <strong>Ready to Optimize Your Framework?</strong><a class="headerlink" href="#ready-to-optimize-your-framework" title="Permalink to this heading">#</a></h2>
+<p>Choose your track, profile your current implementation, and start building. Remember: you’re not just optimizing code—you’re proving that you understand ML systems engineering at the deepest level.</p>
+<p><strong>Your goal</strong>: Become the engineer others ask when they need to make their ML framework better.</p>
+<p>Start by choosing your track and running the profiling example above. Your TinyTorch framework is waiting to be optimized!</p>
+<p><strong>🔥 Let’s make TinyTorch even better. Start optimizing.</strong></p>
+<p>Choose your preferred way to engage with this module:</p>
+<div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
+<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-3 sd-row-cols-lg-3 docutils">
+<div class="sd-col sd-d-flex-row docutils">
+<div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm sd-card-hover docutils">
+<div class="sd-card-body docutils">
+<div class="sd-card-title sd-font-weight-bold docutils">
+🚀 Launch Binder</div>
+<p class="sd-card-text">Run this module interactively in your browser. No installation required!</p>
+</div>
+<a class="sd-stretched-link reference external" href="https://mybinder.org/v2/gh/mlsysbook/TinyTorch/main?filepath=modules/source/15_capstone/capstone_dev.ipynb"></a></div>
+</div>
+<div class="sd-col sd-d-flex-row docutils">
+<div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm sd-card-hover docutils">
+<div class="sd-card-body docutils">
+<div class="sd-card-title sd-font-weight-bold docutils">
+⚡ Open in Colab  </div>
+<p class="sd-card-text">Use Google Colab for GPU access and cloud compute power.</p>
+</div>
+<a class="sd-stretched-link reference external" href="https://colab.research.google.com/github/mlsysbook/TinyTorch/blob/main/modules/source/15_capstone/capstone_dev.ipynb"></a></div>
+</div>
+<div class="sd-col sd-d-flex-row docutils">
+<div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm sd-card-hover docutils">
+<div class="sd-card-body docutils">
+<div class="sd-card-title sd-font-weight-bold docutils">
+📖 View Source</div>
+<p class="sd-card-text">Browse the Python source code and understand the implementation.</p>
+</div>
+<a class="sd-stretched-link reference external" href="https://github.com/mlsysbook/TinyTorch/blob/main/modules/source/15_capstone/capstone_dev.py"></a></div>
+</div>
+</div>
+</div>
+<div class="tip admonition">
+<p class="admonition-title">💾 Save Your Progress</p>
+<p><strong>Binder sessions are temporary!</strong> Download your completed notebook when done, or switch to local development for persistent work.</p>
+<p>Ready for serious development? → <a class="reference internal" href="../usage-paths/serious-development.html"><span class="doc std std-doc">🏗️ Local Setup Guide</span></a></p>
+</div>
+<hr class="docutils" />
+<div class="prev-next-area">
+<a class="left-prev" href="../chapters/14_mlops.html" title="previous page">← Previous Module</a>
+</div>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./chapters"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="14-mlops.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Module: MLOps</p>
+      </div>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-info">📊 Module Info</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-objectives">🎯 Learning Objectives</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#build-optimize-master">🧠 Build → Optimize → Master</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#choose-your-optimization-track">🚀 <strong>Choose Your Optimization Track</strong></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#track-1-performance-engineering"><strong>⚡ Track 1: Performance Engineering</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#track-2-algorithm-extensions"><strong>🧠 Track 2: Algorithm Extensions</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#track-3-systems-optimization"><strong>🔧 Track 3: Systems Optimization</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#track-4-framework-analysis"><strong>📊 Track 4: Framework Analysis</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#track-5-developer-experience"><strong>🛠️ Track 5: Developer Experience</strong></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#project-structure-and-timeline">📋 <strong>Project Structure and Timeline</strong></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#phase-1-analysis-planning"><strong>Phase 1: Analysis &amp; Planning</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#phase-2-core-implementation"><strong>Phase 2: Core Implementation</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#phase-3-integration-optimization"><strong>Phase 3: Integration &amp; Optimization</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#phase-4-evaluation-presentation"><strong>Phase 4: Evaluation &amp; Presentation</strong></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#getting-started-example-walkthrough">🏗️ <strong>Getting Started: Example Walkthrough</strong></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-1-profile-your-current-framework"><strong>Step 1: Profile Your Current Framework</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-2-identify-bottlenecks"><strong>Step 2: Identify Bottlenecks</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-3-choose-your-target"><strong>Step 3: Choose Your Target</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-4-implement-and-test"><strong>Step 4: Implement and Test</strong></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#success-criteria">🎯 <strong>Success Criteria</strong></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#technical-mastery"><strong>Technical Mastery</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#framework-understanding"><strong>Framework Understanding</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#professional-development"><strong>Professional Development</strong></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#deliverables">🏆 <strong>Deliverables</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pro-tips-for-success">💡 <strong>Pro Tips for Success</strong></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#start-small-think-big"><strong>Start Small, Think Big</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#use-your-existing-framework"><strong>Use Your Existing Framework</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#document-engineering-decisions"><strong>Document Engineering Decisions</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#think-like-a-framework-engineer"><strong>Think Like a Framework Engineer</strong></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ready-to-optimize-your-framework">🚀 <strong>Ready to Optimize Your Framework?</strong></a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Prof. Vijay Janapa Reddi (Harvard University)
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2022.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=5b4479735964841361fd"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=5b4479735964841361fd"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

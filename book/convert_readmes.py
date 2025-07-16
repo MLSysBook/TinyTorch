@@ -187,7 +187,8 @@ def get_difficulty_stars(module_name: str) -> str:
         '11_compression': '⭐⭐⭐⭐⭐',
         '12_kernels': '⭐⭐⭐⭐⭐',
         '13_benchmarking': '⭐⭐⭐⭐⭐',
-        '14_mlops': '⭐⭐⭐⭐⭐'
+        '14_mlops': '⭐⭐⭐⭐⭐',
+        '15_capstone': '⭐⭐⭐⭐⭐'
     }
     return difficulty_map.get(module_name, '⭐⭐')
 
@@ -207,7 +208,8 @@ def get_time_estimate(module_name: str) -> str:
         '11_compression': '4-5 hours',
         '12_kernels': '5-6 hours',
         '13_benchmarking': '4-5 hours',
-        '14_mlops': '6-8 hours'
+        '14_mlops': '6-8 hours',
+        '15_capstone': 'Capstone Project'
     }
     return time_map.get(module_name, '3-4 hours')
 
