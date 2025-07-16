@@ -54,8 +54,11 @@ jobs:
         
     - name: Generate content and build book
       run: |
+        # Create and activate virtual environment for tito
+        python -m venv .venv
+        source .venv/bin/activate
+        pip install -e .  # Install tito CLI in virtual environment
         # Use tito to generate content and build book
-        # Note: tito is already installed globally in the previous step
         tito book build
         
     - name: Upload book artifact
