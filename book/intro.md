@@ -198,57 +198,6 @@ Want to see what TinyTorch feels like? **[Launch the Setup chapter](chapters/01-
 
 ---
 
-## ❓ **Common Questions**
-
-<details>
-<summary><strong>🧮 "Do I need to know advanced math to succeed?"</strong></summary>
-
-**You need high school math + willingness to learn.** We explain the math as we go:
-
-- **Linear algebra**: We explain matrix multiplication when we build Dense layers
-- **Calculus**: We cover derivatives when implementing backpropagation  
-- **Statistics**: We introduce concepts like gradients in context of optimization
-
-**Key insight:** You learn the math by implementing it, not the other way around. Most students find this more intuitive than traditional math courses.
-</details>
-
-<details>
-<summary><strong>✅ "How do I know if I'm implementing things correctly?"</strong></summary>
-
-**Built-in validation at every step:**
-- **200+ automated tests** that check your implementations
-- **Progressive testing**: Start simple, then add complexity
-- **Clear error messages**: "Your ReLU should return 0 for negative inputs"
-- **Expected outputs**: Know exactly what your code should produce
-
-**Example:** Your tensor multiplication either passes the test or gets specific feedback about what went wrong.
-</details>
-
-<details>
-<summary><strong>🔗 "Can I skip around or must I do modules in order?"</strong></summary>
-
-**Designed for flexibility with recommended paths:**
-- **Core foundation**: Modules 1-4 build on each other (do in order)
-- **Parallel tracks**: Modules 5-8 can be done in different sequences
-- **Advanced modules**: Pick what interests you most
-
-**Smart approach:** Do Setup → Tensor → Activations in order, then choose your adventure.
-</details>
-
-<details>
-<summary><strong>🚀 "Will this actually work with real data and real problems?"</strong></summary>
-
-**Yes - we use production datasets from day one:**
-- **CIFAR-10**: Train on 60,000 real images, not toy data
-- **Standard benchmarks**: Compare your results to published papers
-- **Real performance**: Your CNN will achieve 85%+ accuracy on image classification
-- **Production patterns**: CLI tools, testing, packaging like professional frameworks
-
-**This isn't a toy - it's a real framework that handles real problems.**
-</details>
-
----
-
 ## 🙏 **Acknowledgments**
 
 TinyTorch originated from CS249r: Tiny Machine Learning Systems at Harvard University. We're inspired by projects like [tinygrad](https://github.com/geohot/tinygrad), [micrograd](https://github.com/karpathy/micrograd), and [MiniTorch](https://minitorch.github.io/) that demonstrate the power of minimal implementations.
