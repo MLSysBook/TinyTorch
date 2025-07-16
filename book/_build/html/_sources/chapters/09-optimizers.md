@@ -1,8 +1,8 @@
 ---
 title: "Optimizers"
 description: "Gradient-based parameter optimization algorithms"
-difficulty: "Intermediate"
-time_estimate: "2-4 hours"
+difficulty: "⭐⭐⭐⭐"
+time_estimate: "6-8 hours"
 prerequisites: []
 next_steps: []
 learning_objectives: []
@@ -11,7 +11,7 @@ learning_objectives: []
 # Module: Optimizers
 
 ```{div} badges
-⭐⭐⭐⭐ | ⏱️ 5-6 hours
+⭐⭐⭐⭐ | ⏱️ 6-8 hours
 ```
 
 

@@ -1,8 +1,8 @@
 ---
 title: "Tensor"
 description: "Core tensor data structure and operations"
-difficulty: "Intermediate"
-time_estimate: "2-4 hours"
+difficulty: "⭐⭐"
+time_estimate: "4-6 hours"
 prerequisites: []
 next_steps: []
 learning_objectives: ["**Understand what tensors are** and why they're essential for ML", '**Implement a complete Tensor class** with core operations', '**Handle tensor shapes, data types, and memory management** efficiently', '**Implement element-wise operations and reductions** with proper broadcasting', '**Have a solid foundation** for building neural networks']
@@ -90,7 +90,7 @@ jupyter notebook tensor_dev.ipynb
 
 ### Step-by-Step Implementation
 1. **Basic Tensor class** - Constructor and properties
-2. **Shape management** - Understanding tensor dimensions  
+2. **Shape management** - Understanding tensor dimensions
 3. **Arithmetic operations** - Addition, multiplication, etc.
 4. **Utility methods** - Reshape, transpose, sum, mean
 5. **Error handling** - Robust edge case management
@@ -110,7 +110,7 @@ print(f"Sum: {x.sum()}")    # Should be 10.0
 # Export your tensor implementation
 tito export
 
-# Test your implementation  
+# Test your implementation
 tito test --module tensor
 ```
 
