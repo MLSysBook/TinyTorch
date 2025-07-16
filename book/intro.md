@@ -135,18 +135,18 @@ Model optimization, high-performance operations, systematic evaluation, and prod
 **Result:** A complete, working ML framework that you built from scratch, capable of training real neural networks on real datasets.
 ```
 
-### **🚀 Capstone: Build Something Real**
+### **🚀 Capstone: Optimize Your Framework**
 
-After completing the 14 core modules, you have a **complete ML framework**. Now use it to build something meaningful:
+After completing the 14 core modules, you have a **complete ML framework**. Now make it better through systems engineering:
 
-**Choose Your Project:**
-- 🖼️ **Computer Vision**: Object detection, image segmentation, or style transfer
-- 📝 **Natural Language**: Sentiment analysis, text generation, or translation  
-- 🎵 **Audio Processing**: Speech recognition, music generation, or audio classification
-- 🧬 **Scientific Computing**: Molecular modeling, climate prediction, or medical imaging
-- 🎮 **Creative AI**: Game AI, generative art, or interactive systems
+**Choose Your Focus:**
+- ⚡ **Performance Optimization**: GPU kernels, vectorization, memory-efficient operations
+- 🧠 **Algorithm Extensions**: Transformer layers, BatchNorm, Dropout, advanced optimizers
+- 🔧 **Systems Engineering**: Multi-GPU training, distributed computing, memory profiling
+- 📊 **Benchmarking Deep Dive**: Compare your framework to PyTorch, identify bottlenecks
+- 🛠️ **Developer Experience**: Better debugging tools, visualization, error messages
 
-**The Key:** Use **your own TinyTorch implementation** for everything. No PyTorch imports allowed. This proves your framework works and deepens your understanding of how ML systems integrate in practice.
+**The Challenge:** Use **only your TinyTorch implementation** as the base. No copying from PyTorch. This proves you understand the engineering trade-offs and can optimize real ML systems.
 
 ---
 
