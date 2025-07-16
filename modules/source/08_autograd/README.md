@@ -94,15 +94,15 @@ print(f"Complex gradient dy: {y.grad}")
 ### Prerequisites
 Ensure you understand the mathematical building blocks:
 
-```bash
+   ```bash
 # Activate TinyTorch environment
-source bin/activate-tinytorch.sh
+   source bin/activate-tinytorch.sh
 
 # Verify prerequisite modules
 tito test --module tensor
 tito test --module activations
 tito test --module layers
-```
+   ```
 
 ### Development Workflow
 1. **Open the development file**: `modules/source/08_autograd/autograd_dev.py`
