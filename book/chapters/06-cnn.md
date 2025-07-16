@@ -8,7 +8,7 @@ next_steps: []
 learning_objectives: ['Understand the convolution operation (sliding window, local connectivity, weight sharing)', 'Implement Conv2D with explicit for-loops (single channel, single filter, no stride/pad)', 'Visualize how convolution builds feature maps', 'Compose Conv2D with other layers to build a simple ConvNet', '(Stretch) Explore stride, padding, pooling, and multi-channel input']
 ---
 
-# 🧠 Module X: CNN - Convolutional Neural Networks
+# CNN
 ---
 **Course Navigation:** [Home](../intro.html) → [Module 6: 06 Cnn](#)
 

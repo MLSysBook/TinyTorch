@@ -8,7 +8,7 @@ next_steps: []
 learning_objectives: []
 ---
 
-# 📊 Module 12: Benchmarking - Systematic ML Performance Evaluation
+# Benchmarking
 ---
 **Course Navigation:** [Home](../intro.html) → [Module 13: 13 Benchmarking](#)
 

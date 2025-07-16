@@ -8,7 +8,7 @@ next_steps: []
 learning_objectives: []
 ---
 
-# 🚀 Module 11: Kernels - Hardware-Aware Optimization
+# Kernels
 ---
 **Course Navigation:** [Home](../intro.html) → [Module 12: 12 Kernels](#)
 

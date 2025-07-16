@@ -1,4 +1,4 @@
-# 🚀 Module 8: Optimizers - Gradient-Based Parameter Updates
+# 🔥 Module: Optimizers
 
 ## 📊 Module Info
 - **Difficulty**: ⭐⭐⭐⭐ Expert

@@ -8,7 +8,7 @@ next_steps: []
 learning_objectives: []
 ---
 
-# 🧠 Module 7: Autograd - Automatic Differentiation Engine
+# Autograd
 ---
 **Course Navigation:** [Home](../intro.html) → [Module 8: 08 Autograd](#)
 

@@ -8,7 +8,7 @@ next_steps: []
 learning_objectives: []
 ---
 
-# 🏋️ Module 9: Training - Complete Neural Network Training Pipeline
+# Training
 ---
 **Course Navigation:** [Home](../intro.html) → [Module 10: 10 Training](#)
 

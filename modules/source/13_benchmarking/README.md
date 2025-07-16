@@ -1,4 +1,4 @@
-# 📊 Module 12: Benchmarking - Systematic ML Performance Evaluation
+# 🔥 Module: Benchmarking
 
 ## 📊 Module Info
 - **Difficulty**: ⭐⭐⭐⭐ Advanced

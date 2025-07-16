@@ -1,4 +1,4 @@
-# 🚀 Module 13: MLOps - Production ML Systems
+# 🔥 Module: MLOps
 
 ## 📊 Module Info
 - **Difficulty**: ⭐⭐⭐⭐⭐ Expert

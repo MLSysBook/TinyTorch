@@ -8,7 +8,7 @@ next_steps: []
 learning_objectives: []
 ---
 
-# 🔥 TinyTorch Activations Module
+# Activations
 ---
 **Course Navigation:** [Home](../intro.html) → [Module 3: 03 Activations](#)
 

@@ -147,6 +147,17 @@ Ready for serious development? → [🏗️ Local Setup Guide](../usage-paths/se
     added_badges = False
     
     for i, line in enumerate(lines):
+        # Clean up the main heading - remove module numbers and keep only the name
+        if line.startswith('# ') and not added_breadcrumb:
+            # Extract just the module name from patterns like "# 🔥 Module: CNN" or "# 🔥 Module 1: Setup"
+            if 'Module:' in line:
+                module_title = line.split('Module:')[-1].strip()
+                line = f"# {module_title}"
+            elif 'Module ' in line and ':' in line:
+                # Handle patterns like "# 🔥 Module 1: Setup"
+                module_title = line.split(':')[-1].strip()
+                line = f"# {module_title}"
+        
         enhanced_lines.append(line)
         
         # Add breadcrumb after first heading

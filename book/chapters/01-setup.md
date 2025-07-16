@@ -8,7 +8,7 @@ next_steps: []
 learning_objectives: ['Understand the nbdev notebook-to-Python workflow', 'Write your first TinyTorch code with `#| export` directives', 'Implement system information collection and developer profiles', 'Run tests and use the CLI tools', 'Get comfortable with the development rhythm']
 ---
 
-# Setup Module
+# Setup
 ---
 **Course Navigation:** [Home](../intro.html) → [Module 1: 01 Setup](#)
 
