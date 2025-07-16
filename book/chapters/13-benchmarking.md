@@ -1,8 +1,8 @@
 ---
 title: "Benchmarking - Systematic ML Performance Evaluation"
 description: "Industry-standard benchmarking methodology for ML systems, inspired by MLPerf patterns"
-difficulty: "Intermediate"
-time_estimate: "2-4 hours"
+difficulty: "⭐⭐⭐⭐"
+time_estimate: "4-5 hours"
 prerequisites: []
 next_steps: []
 learning_objectives: []
@@ -11,7 +11,7 @@ learning_objectives: []
 # Module: Benchmarking
 
 ```{div} badges
-⭐⭐⭐⭐⭐ | ⏱️ 4-5 hours
+⭐⭐⭐⭐ | ⏱️ 4-5 hours
 ```
 
 

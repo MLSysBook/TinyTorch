@@ -1,8 +1,8 @@
 ---
 title: "Networks"
 description: "Neural network architectures and composition patterns"
-difficulty: "Intermediate"
-time_estimate: "2-4 hours"
+difficulty: "⭐⭐⭐"
+time_estimate: "5-6 hours"
 prerequisites: []
 next_steps: []
 learning_objectives: []

@@ -1,8 +1,8 @@
 ---
 title: "Kernels - Hardware-Aware Optimization"
 description: "Custom operations, performance optimization, and hardware-aware computing for ML systems"
-difficulty: "Intermediate"
-time_estimate: "2-4 hours"
+difficulty: "⭐⭐⭐⭐"
+time_estimate: "8-10 hours"
 prerequisites: []
 next_steps: []
 learning_objectives: []
@@ -11,12 +11,12 @@ learning_objectives: []
 # Module: Kernels
 
 ```{div} badges
-⭐⭐⭐⭐⭐ | ⏱️ 5-6 hours
+⭐⭐⭐⭐ | ⏱️ 8-10 hours
 ```
 
 
 ## 📊 Module Info
-- **Difficulty**: ⭐⭐⭐⭐⭐ Expert
+- **Difficulty**: ⭐⭐⭐⭐ Expert
 - **Time Estimate**: 8-10 hours
 - **Prerequisites**: All previous modules (01-11), especially Compression
 - **Next Steps**: Benchmarking, MLOps modules

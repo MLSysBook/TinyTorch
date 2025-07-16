@@ -1,8 +1,8 @@
 ---
 title: "Compression & Optimization"
 description: "Making AI models efficient for real-world deployment"
-difficulty: "Intermediate"
-time_estimate: "2-4 hours"
+difficulty: "⭐⭐⭐⭐"
+time_estimate: "8-10 hours"
 prerequisites: []
 next_steps: ['Module 11: Kernels - Hardware-aware optimization', 'Module 12: Benchmarking - Performance measurement', 'Module 13: MLOps - Production deployment']
 learning_objectives: []
@@ -11,12 +11,12 @@ learning_objectives: []
 # Module: Compression
 
 ```{div} badges
-⭐⭐⭐⭐⭐ | ⏱️ 4-5 hours
+⭐⭐⭐⭐ | ⏱️ 8-10 hours
 ```
 
 
 ## 📊 Module Info
-- **Difficulty**: ⭐⭐⭐⭐⭐ Expert
+- **Difficulty**: ⭐⭐⭐⭐ Expert
 - **Time Estimate**: 8-10 hours
 - **Prerequisites**: Networks, Training modules
 - **Next Steps**: Kernels, MLOps modules

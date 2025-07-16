@@ -1,8 +1,8 @@
 ---
 title: "DataLoader"
 description: "Dataset interfaces and data loading pipelines"
-difficulty: "Intermediate"
-time_estimate: "2-4 hours"
+difficulty: "⭐⭐⭐"
+time_estimate: "5-6 hours"
 prerequisites: []
 next_steps: []
 learning_objectives: []
@@ -11,7 +11,7 @@ learning_objectives: []
 # Module: DataLoader
 
 ```{div} badges
-⭐⭐⭐ | ⏱️ 4-5 hours
+⭐⭐⭐ | ⏱️ 5-6 hours
 ```
 
 
@@ -66,10 +66,10 @@ for batch_images, batch_labels in train_loader:
 ```python
 # Flexible interface supporting multiple datasets
 class Dataset:
-    def __getitem__(self, index): 
+    def __getitem__(self, index):
         # Return (data, label) for any dataset type
         pass
-    def __len__(self): 
+    def __len__(self):
         # Enable len() and iteration
         pass
 
