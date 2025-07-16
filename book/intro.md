@@ -13,10 +13,60 @@ By the end of this course, you'll have **built your own complete ML framework** 
 **Most importantly:** You'll understand how modern ML frameworks *actually* work under the hood.
 ```
 
+---
+
+## 🏗️ **The Big Picture: Why Build from Scratch?**
+
+**Most ML education teaches you to _use_ frameworks.** TinyTorch teaches you to _understand_ them.
+
+```python
+Traditional ML Course:          TinyTorch Approach:
+├── import torch               ├── class Tensor:
+├── model = nn.Linear(10, 1)   │     def __add__(self, other): ...
+├── loss = nn.MSELoss()        │     def backward(self): ...
+└── optimizer.step()           ├── class Linear:
+                               │     def forward(self, x):
+                               │       return x @ self.weight + self.bias
+                               ├── def mse_loss(pred, target):
+                               │     return ((pred - target) ** 2).mean()
+                               ├── class SGD:
+                               │     def step(self):
+                               └──     param.data -= lr * param.grad
+
+Go from "How does this work?" 🤷 to "I implemented every line!" 💪
+```
+
+**Result:** You become the person others come to when they need to understand "how PyTorch actually works under the hood."
+
+---
+
+## 🌟 **What Makes TinyTorch Different**
+
+### **🔬 Build-First Philosophy**
+- **No black boxes**: Implement every component from scratch
+- **Immediate ownership**: Use YOUR code in real neural networks
+- **Deep understanding**: Know exactly how each piece works
+
+### **🚀 Real Production Skills**
+- **Professional workflow**: Development with `tito` CLI, automated testing
+- **Real datasets**: Train on CIFAR-10, not toy data
+- **Production patterns**: MLOps, monitoring, optimization from day one
+
+### **🎯 Progressive Mastery** 
+- **Start simple**: Implement `hello_world()` function
+- **Build systematically**: Each module enables the next
+- **End powerful**: Deploy production ML systems with monitoring
+
+### **⚡ Instant Feedback**
+- **Code works immediately**: No waiting to see results
+- **Visual progress**: Success indicators and system integration
+- **"Aha moments"**: Watch your `ReLU` power real neural networks
+
+---
+
 ## 📚 Educational Foundation
 
 TinyTorch grew out of the CS249r: Tiny Machine Learning Systems course at Harvard University. While the [Machine Learning Systems book](https://mlsysbook.ai) covers the broad principles and practices of engineering ML systems, TinyTorch gives you hands-on experience building the systems yourself.
-
 
 ---
 
@@ -121,27 +171,6 @@ model = Sequential([
 
 ---
 
-## 🌟 What Makes This Different
-
-### **🔬 Engineering Principles**
-- **Production-style** code organization throughout every module
-- **Performance-focused** engineering and optimization practices
-- **Professional development** workflow with automated testing and CI
-
-### **🚀 Immediate Feedback**
-- Code works **immediately** after implementation
-- **Visual progress** indicators and success messages
-- **Comprehensive testing** ensures your implementations work
-- **"Aha moments"** when you see your code powering real neural networks
-
-### **🎯 Progressive Complexity**
-- Start simple: implement `hello_world()` function
-- Build systematically: each module enables the next
-- End powerful: deploy production ML systems with monitoring
-- **No gaps**: every step is carefully scaffolded
-
----
-
 ## 🚀 Ready to Start?
 
 ```{admonition} Choose Your Adventure
@@ -156,28 +185,3 @@ model = Sequential([
 ### **Quick Taste: Try Chapter 1 Right Now**
 
 Want to see what TinyTorch feels like? **[Launch the Setup chapter](chapters/01-setup.md)** in Binder and implement your first TinyTorch function in 2 minutes!
-
----
-
-## 🏗️ **Big Picture: Why Build from Scratch?**
-
-**Most ML education teaches you to *use* frameworks.** TinyTorch teaches you to *understand* them.
-
-```python
-Traditional ML Course:          TinyTorch Approach:
-├── import torch               ├── class Tensor:
-├── model = nn.Linear(10, 1)   │     def __add__(self, other): ...
-├── loss = nn.MSELoss()        │     def backward(self): ...
-└── optimizer.step()           ├── class Linear:
-                               │     def forward(self, x):
-                               │       return x @ self.weight + self.bias
-                               ├── def mse_loss(pred, target):
-                               │     return ((pred - target) ** 2).mean()
-                               ├── class SGD:
-                               │     def step(self):
-                               └──     param.data -= lr * param.grad
-
-Go from "How does this work?" 🤷 to "I implemented every line!" 💪
-```
-
-**Result:** You become the person others come to when they need to understand "how PyTorch actually works under the hood." Every line of code you write brings you closer to understanding how modern AI works.
