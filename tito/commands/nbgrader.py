@@ -57,7 +57,7 @@ class NBGraderCommand(BaseCommand):
         generate_parser.add_argument(
             'module',
             nargs='?',
-            help='Module to generate assignment for (e.g., setup, tensor, 00_setup)'
+            help='Module to generate assignment for (e.g., setup, tensor, 01_setup)'
         )
         generate_parser.add_argument(
             '--all',
@@ -66,7 +66,7 @@ class NBGraderCommand(BaseCommand):
         )
         generate_parser.add_argument(
             '--range',
-            help='Generate assignments for module range (e.g., 00-03, setup-tensor)'
+            help='Generate assignments for module range (e.g., 01-04, setup-tensor)'
         )
         
         # Release subcommand
@@ -181,7 +181,7 @@ class NBGraderCommand(BaseCommand):
                 "[dim]  tito nbgrader init[/dim]\n"
                 "[dim]  tito nbgrader generate setup[/dim]\n"
                 "[dim]  tito nbgrader generate --all[/dim]\n"
-                "[dim]  tito nbgrader generate --range 00-03[/dim]\n"
+                "[dim]  tito nbgrader generate --range 01-04[/dim]\n"
                 "[dim]  tito nbgrader release setup[/dim]\n"
                 "[dim]  tito nbgrader autograde --all[/dim]",
                 title="NBGrader Command Group",
