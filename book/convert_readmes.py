@@ -172,46 +172,18 @@ Ready for serious development? → [🏗️ Local Setup Guide](../usage-paths/se
     return '\n'.join(enhanced_lines)
 
 def get_difficulty_stars(module_name: str) -> str:
-    """Get difficulty stars based on module name."""
-    difficulty_map = {
-        '01_setup': '⭐',
-        '02_tensor': '⭐⭐',
-        '03_activations': '⭐⭐',
-        '04_layers': '⭐⭐⭐',
-        '05_networks': '⭐⭐⭐',
-        '06_cnn': '⭐⭐⭐⭐',
-        '07_dataloader': '⭐⭐⭐',
-        '08_autograd': '⭐⭐⭐⭐',
-        '09_optimizers': '⭐⭐⭐⭐',
-        '10_training': '⭐⭐⭐⭐',
-        '11_compression': '⭐⭐⭐⭐⭐',
-        '12_kernels': '⭐⭐⭐⭐⭐',
-        '13_benchmarking': '⭐⭐⭐⭐⭐',
-        '14_mlops': '⭐⭐⭐⭐⭐',
-        '15_capstone': '⭐⭐⭐⭐⭐'
-    }
-    return difficulty_map.get(module_name, '⭐⭐')
+    """Get difficulty stars from module.yaml file."""
+    # Map module number to module folder name  
+    module_path = Path(f'../modules/source/{module_name}')
+    module_info = get_module_info(module_path)
+    return module_info.get('difficulty', '⭐⭐')
 
 def get_time_estimate(module_name: str) -> str:
-    """Get time estimate based on module name."""
-    time_map = {
-        '01_setup': '1-2 hours',
-        '02_tensor': '4-6 hours',
-        '03_activations': '3-4 hours',
-        '04_layers': '4-5 hours',
-        '05_networks': '5-6 hours',
-        '06_cnn': '6-8 hours',
-        '07_dataloader': '4-5 hours',
-        '08_autograd': '6-8 hours',
-        '09_optimizers': '5-6 hours',
-        '10_training': '6-8 hours',
-        '11_compression': '4-5 hours',
-        '12_kernels': '5-6 hours',
-        '13_benchmarking': '4-5 hours',
-        '14_mlops': '6-8 hours',
-        '15_capstone': 'Capstone Project'
-    }
-    return time_map.get(module_name, '3-4 hours')
+    """Get time estimate from module.yaml file."""
+    # Map module number to module folder name
+    module_path = Path(f'../modules/source/{module_name}')
+    module_info = get_module_info(module_path)
+    return module_info.get('time_estimate', '3-4 hours')
 
 def get_prev_module_name(module_num: int) -> str:
     """Get previous module name."""

@@ -115,3 +115,13 @@ next_steps:
   - "Module 11: Kernels - Hardware-aware optimization"
   - "Module 12: Benchmarking - Performance measurement"
   - "Module 13: MLOps - Production deployment" 
+
+# File Structure - What files exist in this module
+files:
+  dev_file: "compression_dev.py"
+  readme: "README.md"
+  tests: "inline"
+
+# Educational Metadata
+difficulty: "⭐⭐⭐⭐"
+time_estimate: "8-10 hours" 

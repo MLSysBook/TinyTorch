@@ -2,7 +2,7 @@
 # Essential system information for CLI tools and build systems
 
 name: "capstone"
-title: "Capstone: Framework Optimization"
+title: "Capstone Project"
 description: "Optimize and extend your complete TinyTorch framework through systems engineering"
 
 # Dependencies - Used by CLI for module ordering and prerequisites
@@ -19,9 +19,13 @@ exports_to: "tinytorch.capstone"
 
 # File Structure - What files exist in this module
 files:
-  dev_file: "capstone_guide.md"
+  dev_file: "capstone_dev.py"
   readme: "README.md"
-  tests: "project_based"
+  tests: "inline"
+
+# Educational Metadata
+difficulty: "⭐⭐⭐⭐⭐ 🥷"
+time_estimate: "Capstone Project"
 
 # Components - What's implemented in this module
 components:

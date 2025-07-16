@@ -19,6 +19,10 @@ files:
   readme: "README.md"
   tests: "inline"
 
+# Educational Metadata
+difficulty: "⭐⭐⭐⭐"
+time_estimate: "6-8 hours"
+
 # Components - What's implemented in this module
 components:
   - "SGD"

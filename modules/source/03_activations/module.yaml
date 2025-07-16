@@ -16,8 +16,12 @@ exports_to: "tinytorch.core.activations"
 # File Structure - What files exist in this module
 files:
   dev_file: "activations_dev.py"
-  test_file: "tests/test_activations.py"
   readme: "README.md"
+  tests: "inline"
+
+# Educational Metadata
+difficulty: "⭐⭐"
+time_estimate: "3-4 hours"
 
 # Components - What's implemented in this module
 components:

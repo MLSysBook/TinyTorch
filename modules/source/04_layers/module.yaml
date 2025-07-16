@@ -16,8 +16,12 @@ exports_to: "tinytorch.core.layers"
 # File Structure - What files exist in this module
 files:
   dev_file: "layers_dev.py"
-  test_file: "tests/test_layers.py"
   readme: "README.md"
+  tests: "inline"
+
+# Educational Metadata
+difficulty: "⭐⭐"
+time_estimate: "4-5 hours"
 
 # Components - What's implemented in this module
 components:
