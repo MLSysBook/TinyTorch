@@ -61,11 +61,15 @@ class CLIConfig:
             issues.append(f"Python {'.'.join(map(str, self.python_min_version))}+ required, "
                          f"found {sys.version_info.major}.{sys.version_info.minor}")
         
-        # Check virtual environment
-        in_venv = (hasattr(sys, 'real_prefix') or 
-                   (hasattr(sys, 'base_prefix') and sys.base_prefix != sys.prefix))
-        if not in_venv:
-            issues.append("Virtual environment not activated. Run: source .venv/bin/activate")
+        # Check virtual environment (skip in CI environments)
+        # CI environments typically have CI=true or GITHUB_ACTIONS=true
+        is_ci = os.environ.get('CI', 'false').lower() == 'true' or os.environ.get('GITHUB_ACTIONS', 'false').lower() == 'true'
+        
+        if not is_ci:
+            in_venv = (hasattr(sys, 'real_prefix') or 
+                       (hasattr(sys, 'base_prefix') and sys.base_prefix != sys.prefix))
+            if not in_venv:
+                issues.append("Virtual environment not activated. Run: source .venv/bin/activate")
         
         # Check required directories
         if not self.assignments_dir.exists():
