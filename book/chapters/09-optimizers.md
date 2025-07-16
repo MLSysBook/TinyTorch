@@ -232,14 +232,9 @@ Your optimizers will be the engine that transforms gradients into intelligence!
 
 ## 🚀 Ready to Build?
 
-```{admonition} Choose Your Environment
-:class: tip
-**Quick Start:** [🚀 Launch Builder](https://mybinder.org/v2/gh/MLSysBook/TinyTorch/main?filepath=modules/source/09_optimizers/optimizers_dev.ipynb) *(Jump directly into implementation)*
+**🚀 [Launch in Binder](https://mybinder.org/v2/gh/MLSysBook/TinyTorch/main?filepath=modules/source/09_optimizers/optimizers_dev.ipynb)** *(Live Jupyter environment)*
 
-**Full Development:** [📓 Open Jupyter](https://mybinder.org/v2/gh/MLSysBook/TinyTorch/main?filepath=modules/source/09_optimizers/optimizers_dev.ipynb) *(Complete development environment)*
-
-**Cloud Environment:** [☁️ Open in Colab](https://colab.research.google.com/github/MLSysBook/TinyTorch/blob/main/modules/source/09_optimizers/optimizers_dev.ipynb) *(Google's notebook environment)*
-```
+**📓 [Open in Colab](https://colab.research.google.com/github/MLSysBook/TinyTorch/blob/main/modules/source/09_optimizers/optimizers_dev.ipynb)** *(Google's cloud environment)*
 
 ---
 

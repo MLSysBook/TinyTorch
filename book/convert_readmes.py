@@ -83,20 +83,15 @@ def enhance_content_for_web(content: str, module_name: str, module_num: int) -> 
 
 """
     
-    # Add interactive elements and navigation links at the end
+    # Add simple interactive links and navigation at the end
     interactive_elements = f"""
 ---
 
 ## 🚀 Ready to Build?
 
-```{{admonition}} Choose Your Environment
-:class: tip
-**Quick Start:** [🚀 Launch Builder](https://mybinder.org/v2/gh/MLSysBook/TinyTorch/main?filepath=modules/source/{module_name}/{module_name.split('_', 1)[1]}_dev.ipynb) *(Jump directly into implementation)*
+**🚀 [Launch in Binder](https://mybinder.org/v2/gh/MLSysBook/TinyTorch/main?filepath=modules/source/{module_name}/{module_name.split('_', 1)[1]}_dev.ipynb)** *(Live Jupyter environment)*
 
-**Full Development:** [📓 Open Jupyter](https://mybinder.org/v2/gh/MLSysBook/TinyTorch/main?filepath=modules/source/{module_name}/{module_name.split('_', 1)[1]}_dev.ipynb) *(Complete development environment)*
-
-**Cloud Environment:** [☁️ Open in Colab](https://colab.research.google.com/github/MLSysBook/TinyTorch/blob/main/modules/source/{module_name}/{module_name.split('_', 1)[1]}_dev.ipynb) *(Google's notebook environment)*
-```
+**📓 [Open in Colab](https://colab.research.google.com/github/MLSysBook/TinyTorch/blob/main/modules/source/{module_name}/{module_name.split('_', 1)[1]}_dev.ipynb)** *(Google's cloud environment)*
 
 ---
 
