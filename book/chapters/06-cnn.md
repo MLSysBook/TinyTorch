@@ -1,8 +1,8 @@
 ---
 title: "CNN"
 description: "Convolutional Neural Network layers and operations"
-difficulty: "Intermediate"
-time_estimate: "2-4 hours"
+difficulty: "⭐⭐⭐"
+time_estimate: "6-8 hours"
 prerequisites: []
 next_steps: []
 learning_objectives: []
@@ -11,7 +11,7 @@ learning_objectives: []
 # Module: CNN
 
 ```{div} badges
-⭐⭐⭐⭐ | ⏱️ 6-8 hours
+⭐⭐⭐ | ⏱️ 6-8 hours
 ```
 
 

@@ -1,51 +1,51 @@
 ---
-title: "Capstone: Framework Optimization"
+title: "Capstone Project"
 description: "Optimize and extend your complete TinyTorch framework through systems engineering"
-difficulty: "Intermediate"
-time_estimate: "2-4 hours"
+difficulty: "⭐⭐⭐⭐⭐ 🥷"
+time_estimate: "Capstone Project"
 prerequisites: []
 next_steps: []
 learning_objectives: []
 ---
 
-# 🎓 Capstone: Framework Optimization
+# 🎓 Capstone Project
 
 ```{div} badges
-⭐⭐⭐⭐⭐ | ⏱️ Capstone Project
+⭐⭐⭐⭐⭐ 🥷 | ⏱️ Capstone Project
 ```
 
 
 ## 📊 Module Info
-- **Difficulty**: ⭐⭐⭐⭐⭐ Expert Systems Engineering
+- **Difficulty**: ⭐⭐⭐⭐⭐ Expert Systems Engineering 🥷
 - **Time Estimate**: Capstone Project (flexible scope and pacing)
 - **Prerequisites**: **All 14 TinyTorch modules** - Your complete ML framework
 - **Outcome**: **Advanced framework engineering skills** - Prove deep systems mastery
 
-Welcome to your TinyTorch capstone! You've built a complete ML framework from scratch. Now optimize it, extend it, and make it faster through systems engineering. This isn't about building apps—it's about becoming the engineer others ask: *"How do I make this framework better?"*
+Welcome to your TinyTorch capstone! You've built a complete ML framework from scratch. Now make it faster, better, and more professional through systematic optimization. This isn't about building apps—it's about becoming the engineer others ask: *"How do I make this framework better?"*
 
 ## 🎯 Learning Objectives
 
 By the end of this capstone, you will be able to:
 
-- **Optimize ML frameworks**: Use profiling, benchmarking, and systems analysis to identify and fix performance bottlenecks
+- **Profile and optimize ML frameworks**: Use systematic analysis to identify and eliminate performance bottlenecks
 - **Extend framework capabilities**: Add new algorithms, layers, and optimizers using consistent architectural patterns
-- **Engineer for scale**: Implement multi-GPU training, memory optimization, and parallel computing for real-world performance
-- **Build developer tools**: Create debugging utilities, visualization tools, and testing infrastructure that improve developer experience
-- **Analyze trade-offs**: Understand engineering decisions around memory vs speed, accuracy vs efficiency, and simplicity vs performance
+- **Engineer production-ready systems**: Implement memory optimization, parallel computing, and developer tools for real-world use
+- **Make informed trade-offs**: Understand engineering decisions around memory vs speed, accuracy vs efficiency, and simplicity vs performance
+- **Demonstrate framework mastery**: Prove deep understanding through architectural improvements that showcase true systems expertise
 
-## 🧠 Build → Optimize → Master
+## �� Build → Optimize → Reflect
 
-This capstone follows TinyTorch's **Build → Optimize → Master** framework:
+This capstone follows TinyTorch's **Build → Optimize → Reflect** framework:
 
 1. **Build**: You already built a complete ML framework (Modules 1-14)
-2. **Optimize**: Choose a focus area and systematically improve your framework through systems engineering
+2. **Optimize**: Systematically improve your framework through performance engineering and capability extensions  
 3. **Master**: Prove deep understanding by making architectural improvements that demonstrate true framework mastery
 
 ---
 
-## 🚀 **Choose Your Optimization Track**
+## 🚀 **The Capstone Challenge**
 
-Pick **one primary focus area** that aligns with your interests and career goals:
+After completing the 14 core modules, you have a **complete ML framework**. Now optimize it, extend it, and make it faster through systems engineering:
 
 ### **⚡ Track 1: Performance Engineering**
 **Goal**: Make your TinyTorch framework faster and more memory-efficient

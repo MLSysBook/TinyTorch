@@ -1,8 +1,8 @@
 ---
 title: "Setup & Environment"
 description: "Development environment setup and basic TinyTorch functionality"
-difficulty: "Intermediate"
-time_estimate: "2-4 hours"
+difficulty: "⭐"
+time_estimate: "1-2 hours"
 prerequisites: []
 next_steps: []
 learning_objectives: []
@@ -33,9 +33,9 @@ By the end of this module, you will be able to:
 - **Write production-ready code**: Follow professional patterns for error handling, testing, and documentation
 - **Establish development rhythm**: Understand the build → test → iterate cycle that drives all TinyTorch modules
 
-## 🧠 Build → Use → Master
+## 🧠 Build → Use → Reflect
 
-This module follows TinyTorch's **Build → Use → Master** framework:
+This module follows TinyTorch's **Build → Use → Reflect** framework:
 
 1. **Build**: Implement core utilities (hello functions, system info, developer profiles)
 2. **Use**: Apply these components in real development workflows and testing scenarios  
@@ -74,9 +74,9 @@ print(profile.get_full_profile())
 ### Prerequisites
 Ensure you have completed the TinyTorch installation and environment setup:
 
-```bash
+   ```bash
 # Activate TinyTorch environment
-source bin/activate-tinytorch.sh
+   source bin/activate-tinytorch.sh
 
 # Verify installation
 tito doctor
@@ -94,9 +94,9 @@ tito doctor
 ### Comprehensive Test Suite
 Run the full test suite to verify your implementation:
 
-```bash
+   ```bash
 # TinyTorch CLI (recommended)
-tito test --module setup
+   tito test --module setup
 
 # Direct pytest execution
 python -m pytest tests/ -k setup -v
