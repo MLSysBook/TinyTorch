@@ -8,11 +8,56 @@
 [![Python](https://img.shields.io/badge/python-3.8+-green.svg)](https://python.org)
 [![Jupyter Book](https://img.shields.io/badge/docs-Jupyter_Book-orange.svg)](https://mlsysbook.github.io/TinyTorch/)
 
-A hands-on [Machine Learning Systems](https://mlsysbook.ai) course companion where students don’t just learn ML — they build it. 
-
-Tiny🔥Torch is the minimalist, code-first companion to any machine learning systems course. It embraces a “start small, go deep” philosophy—starting with tensors and layers, and guiding learners through each system component, all the way to a complete MLOps pipelines built from scratch in their own codebase—albeit within a deliberately small-scale educational framework.
-
 📚 **[Read the Interactive Course →](https://mlsysbook.github.io/TinyTorch/)**
+
+---
+
+## 🏗️ **The Big Picture: Why Build from Scratch?**
+
+**Most ML education teaches you to _use_ frameworks.** TinyTorch teaches you to _understand_ them.
+
+```python
+Traditional ML Course:          TinyTorch Approach:
+├── import torch               ├── class Tensor:
+├── model = nn.Linear(10, 1)   │     def __add__(self, other): ...
+├── loss = nn.MSELoss()        │     def backward(self): ...
+└── optimizer.step()           ├── class Linear:
+                               │     def forward(self, x):
+                               │       return x @ self.weight + self.bias
+                               ├── def mse_loss(pred, target):
+                               │     return ((pred - target) ** 2).mean()
+                               ├── class SGD:
+                               │     def step(self):
+                               └──     param.data -= lr * param.grad
+
+Go from "How does this work?" 🤷 to "I implemented every line!" 💪
+```
+
+**Result:** You become the person others come to when they need to understand "how PyTorch actually works under the hood."
+
+---
+
+## 🌟 **What Makes TinyTorch Different**
+
+### **🔬 Build-First Philosophy**
+- **No black boxes**: Implement every component from scratch
+- **Immediate ownership**: Use YOUR code in real neural networks
+- **Deep understanding**: Know exactly how each piece works
+
+### **🚀 Real Production Skills**
+- **Professional workflow**: Development with `tito` CLI, automated testing
+- **Real datasets**: Train on CIFAR-10, not toy data
+- **Production patterns**: MLOps, monitoring, optimization from day one
+
+### **🎯 Progressive Mastery** 
+- **Start simple**: Implement `hello_world()` function
+- **Build systematically**: Each module enables the next
+- **End powerful**: Deploy production ML systems with monitoring
+
+### **⚡ Instant Feedback**
+- **Code works immediately**: No waiting to see results
+- **Visual progress**: Success indicators and system integration
+- **"Aha moments"**: Watch your `ReLU` power real neural networks
 
 ---
 
@@ -79,6 +124,57 @@ tito nbdev build                          # Update package
 
 ---
 
+## 🧠 Pedagogical Framework: Build → Use → Reflect
+
+### **Example: How You'll Master Activation Functions**
+
+**🔧 Build:** Implement ReLU from scratch
+```python
+def relu(x):
+    # YOU implement this function
+    return ???  # What should this be?
+```
+
+**🚀 Use:** Immediately use your own code
+```python
+from tinytorch.core.activations import ReLU  # YOUR implementation!
+layer = ReLU()
+output = layer.forward(input_tensor)  # Your code working!
+```
+
+**💡 Reflect:** See it working in real networks
+```python
+# Your ReLU is now part of a real neural network
+model = Sequential([
+    Dense(784, 128),
+    ReLU(),           # <-- Your implementation
+    Dense(128, 10)
+])
+```
+
+**This pattern repeats for every component** — you build it, use it immediately, then see how it fits into larger systems.
+
+---
+
+## 🎓 Teaching Philosophy
+
+### **No Black Boxes**
+* Build every component from scratch
+* Understand performance trade-offs  
+* See how engineering decisions impact ML outcomes
+
+### **Production-Ready Thinking**
+* Use real datasets (CIFAR-10, MNIST)
+* Implement proper testing and benchmarking
+* Learn MLOps and system design principles
+
+### **Iterative Mastery**
+* Each module builds on previous work
+* Immediate feedback through inline testing
+* Progressive complexity with solid foundations
+
+---
+
 ## 📖 Documentation
 
 ### **Interactive Jupyter Book**
@@ -123,57 +219,6 @@ git checkout main
 git merge dev
 git push origin main        # Triggers documentation deployment
 ```
-
----
-
-## 🧠 Pedagogical Framework: Build → Use → Reflect
-
-### **Real Engineering, Real Understanding**
-
-1. **Build** — Implement `ReLU()` activation function
-2. **Use** — Apply it via `tinytorch.core.activations.ReLU()`  
-3. **Reflect** — Understand its role in neural network design
-4. **Iterate** — Extend knowledge with each module
-
-### **Example Learning Cycle**
-
-```python
-# Step 1: You implement this in tensor_dev.py
-class Tensor:
-    def __init__(self, data):
-        self.data = np.array(data)
-    
-    def __add__(self, other):
-        return Tensor(self.data + other.data)
-
-# Step 2: Export and use in your framework
-from tinytorch.core.tensor import Tensor
-a = Tensor([1, 2, 3])
-b = Tensor([4, 5, 6])
-result = a + b  # Your implementation at work!
-
-# Step 3: Apply to real problems
-model = Sequential([Dense(784, 128), ReLU(), Dense(128, 10)])
-```
-
----
-
-## 🎓 Teaching Philosophy
-
-### **No Black Boxes**
-* Build every component from scratch
-* Understand performance trade-offs  
-* See how engineering decisions impact ML outcomes
-
-### **Production-Ready Thinking**
-* Use real datasets (CIFAR-10, MNIST)
-* Implement proper testing and benchmarking
-* Learn MLOps and system design principles
-
-### **Iterative Mastery**
-* Each module builds on previous work
-* Immediate feedback through inline testing
-* Progressive complexity with solid foundations
 
 ---
 
