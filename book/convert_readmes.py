@@ -83,13 +83,54 @@ def enhance_content_for_web(content: str, module_name: str, module_num: int) -> 
 
 """
     
-    # Add navigation links at the end
-    nav_links = f"""
+    # Add interactive elements and navigation links at the end
+    interactive_elements = f"""
+---
+
+## 🚀 Interactive Learning
+
+<div class="admonition tip">
+<p class="admonition-title">💡 Try It Yourself</p>
+<p>Ready to start building? Choose your preferred environment:</p>
+</div>
+
+### 🔧 **Builder Environment**
+<div class="admonition note">
+<p class="admonition-title">🏗️ Quick Start</p>
+<p>Jump directly into the implementation with our guided builder:</p>
+</div>
+
+<a href="https://mybinder.org/v2/gh/MLSysBook/TinyTorch/main?filepath=modules/source/{module_name}/{module_name.split('_', 1)[1]}_dev.ipynb" target="_blank" class="btn btn-primary">
+    🚀 Launch Builder
+</a>
+
+### 📓 **Jupyter Notebook**
+<div class="admonition note">
+<p class="admonition-title">📚 Full Development</p>
+<p>Work with the complete development environment:</p>
+</div>
+
+<a href="https://mybinder.org/v2/gh/MLSysBook/TinyTorch/main?filepath=modules/source/{module_name}/{module_name.split('_', 1)[1]}_dev.ipynb" target="_blank" class="btn btn-success">
+    📓 Open Jupyter
+</a>
+
+### 🎯 **Google Colab**
+<div class="admonition note">
+<p class="admonition-title">☁️ Cloud Environment</p>
+<p>Use Google's cloud-based notebook environment:</p>
+</div>
+
+<a href="https://colab.research.google.com/github/MLSysBook/TinyTorch/blob/main/modules/source/{module_name}/{module_name.split('_', 1)[1]}_dev.ipynb" target="_blank" class="btn btn-info">
+    ☁️ Open in Colab
+</a>
+
 ---
 
 <div class="prev-next-area">
 """
     
+    # Build navigation links
+    nav_links = ""
     if module_num > 1:
         prev_module = f"{module_num-1:02d}_{get_prev_module_name(module_num)}"
         nav_links += f'<a class="left-prev" href="../chapters/{prev_module}.html" title="previous page">← Previous Module</a>\n'
@@ -99,6 +140,9 @@ def enhance_content_for_web(content: str, module_name: str, module_num: int) -> 
         nav_links += f'<a class="right-next" href="../chapters/{next_module}.html" title="next page">Next Module →</a>\n'
     
     nav_links += "</div>\n"
+    
+    # Combine interactive elements with navigation
+    nav_links = interactive_elements + nav_links
     
     # Insert breadcrumb and badges after the first heading
     lines = content.split('\n')

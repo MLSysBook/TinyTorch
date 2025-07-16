@@ -184,6 +184,45 @@ The skills you learn here - the development workflow, testing patterns, and code
 
 ---
 
+## 🚀 Interactive Learning
+
+<div class="admonition tip">
+<p class="admonition-title">💡 Try It Yourself</p>
+<p>Ready to start building? Choose your preferred environment:</p>
+</div>
+
+### 🔧 **Builder Environment**
+<div class="admonition note">
+<p class="admonition-title">🏗️ Quick Start</p>
+<p>Jump directly into the implementation with our guided builder:</p>
+</div>
+
+<a href="https://mybinder.org/v2/gh/MLSysBook/TinyTorch/main?filepath=modules/source/01_setup/setup_dev.ipynb" target="_blank" class="btn btn-primary">
+    🚀 Launch Builder
+</a>
+
+### 📓 **Jupyter Notebook**
+<div class="admonition note">
+<p class="admonition-title">📚 Full Development</p>
+<p>Work with the complete development environment:</p>
+</div>
+
+<a href="https://mybinder.org/v2/gh/MLSysBook/TinyTorch/main?filepath=modules/source/01_setup/setup_dev.ipynb" target="_blank" class="btn btn-success">
+    📓 Open Jupyter
+</a>
+
+### 🎯 **Google Colab**
+<div class="admonition note">
+<p class="admonition-title">☁️ Cloud Environment</p>
+<p>Use Google's cloud-based notebook environment:</p>
+</div>
+
+<a href="https://colab.research.google.com/github/MLSysBook/TinyTorch/blob/main/modules/source/01_setup/setup_dev.ipynb" target="_blank" class="btn btn-info">
+    ☁️ Open in Colab
+</a>
+
+---
+
 <div class="prev-next-area">
 <a class="right-next" href="../chapters/02_tensor.html" title="next page">Next Module →</a>
 </div>
