@@ -1,4 +1,4 @@
-# 🧠 Module 7: Autograd - Automatic Differentiation Engine
+# 🔥 Module: Autograd
 
 ## 📊 Module Info
 - **Difficulty**: ⭐⭐⭐⭐ Advanced

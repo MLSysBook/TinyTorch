@@ -1,4 +1,4 @@
-# 🔥 TinyTorch Activations Module
+# 🔥 Module: Activations
 
 ## 📊 Module Info
 - **Difficulty**: ⭐⭐ Intermediate

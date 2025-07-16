@@ -8,7 +8,7 @@ next_steps: []
 learning_objectives: []
 ---
 
-# 🚀 Module 8: Optimizers - Gradient-Based Parameter Updates
+# Optimizers
 ---
 **Course Navigation:** [Home](../intro.html) → [Module 9: 09 Optimizers](#)
 

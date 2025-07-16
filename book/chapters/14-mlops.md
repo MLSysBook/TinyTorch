@@ -8,7 +8,7 @@ next_steps: []
 learning_objectives: []
 ---
 
-# 🚀 Module 13: MLOps - Production ML Systems
+# MLOps
 ---
 **Course Navigation:** [Home](../intro.html) → [Module 14: 14 Mlops](#)
 
