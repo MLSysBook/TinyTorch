@@ -313,9 +313,6 @@ Automatic differentiation is the foundation of modern ML:
 
 This module transforms TinyTorch from a static computation library into a dynamic, trainable ML framework! 
 
----
-
-## 🚀 Interactive Learning
 
 Choose your preferred way to engage with this module:
 

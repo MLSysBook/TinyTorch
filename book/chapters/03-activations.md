@@ -273,9 +273,6 @@ You've mastered this module when:
 
 **Great work! You've built the mathematical foundation of neural networks!** 🎉 
 
----
-
-## 🚀 Interactive Learning
 
 Choose your preferred way to engage with this module:
 

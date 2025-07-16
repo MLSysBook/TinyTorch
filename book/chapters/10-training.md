@@ -301,9 +301,6 @@ history = trainer.fit(housing_loader, epochs=100)
 
 **Ready for the final stretch?** Your training module completes the core TinyTorch framework. Next up: compression, kernels, and MLOps! 🚀 
 
----
-
-## 🚀 Interactive Learning
 
 Choose your preferred way to engage with this module:
 

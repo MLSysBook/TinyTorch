@@ -233,9 +233,6 @@ After completing this module, you're ready for:
 
 *This module implements the core insight: neural networks are just function composition of simple building blocks.* 
 
----
-
-## 🚀 Interactive Learning
 
 Choose your preferred way to engage with this module:
 
