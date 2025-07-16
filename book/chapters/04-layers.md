@@ -8,7 +8,7 @@ next_steps: []
 learning_objectives: []
 ---
 
-# 🧱 Module 2: Layers - Neural Network Building Blocks
+# Layers
 ---
 **Course Navigation:** [Home](../intro.html) → [Module 4: 04 Layers](#)
 

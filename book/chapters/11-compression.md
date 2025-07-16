@@ -8,7 +8,7 @@ next_steps: ['Module 11: Kernels - Hardware-aware optimization', 'Module 12: Ben
 learning_objectives: ['Understand model size and deployment constraints in real systems', 'Implement magnitude-based pruning to remove unimportant weights', 'Master quantization for 75% memory reduction (FP32 → INT8)', 'Build knowledge distillation for training compact models', 'Create structured pruning to optimize network architectures', 'Compare compression techniques and their trade-offs']
 ---
 
-# Module 10: Compression & Optimization
+# Compression
 ---
 **Course Navigation:** [Home](../intro.html) → [Module 11: 11 Compression](#)
 

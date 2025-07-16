@@ -1,4 +1,4 @@
-# 🧠 Module 3: Networks - Neural Network Architectures
+# 🔥 Module: Networks
 
 ## 📊 Module Info
 - **Difficulty**: ⭐⭐⭐ Advanced

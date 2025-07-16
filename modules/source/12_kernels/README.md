@@ -1,4 +1,4 @@
-# 🚀 Module 11: Kernels - Hardware-Aware Optimization
+# 🔥 Module: Kernels
 
 ## 📊 Module Info
 - **Difficulty**: ⭐⭐⭐⭐⭐ Expert
