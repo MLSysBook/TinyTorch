@@ -6,309 +6,236 @@
 - **Prerequisites**: Tensor, Layers modules
 - **Next Steps**: Training, Networks modules
 
-Build the data pipeline foundation of TinyTorch! This module implements efficient data loading, preprocessing, and batching systems - the critical infrastructure that feeds neural networks during training.
+Build the data pipeline foundation of TinyTorch! This module implements efficient data loading, preprocessing, and batching systems—the critical infrastructure that feeds neural networks during training and powers real-world ML systems.
 
 ## 🎯 Learning Objectives
 
-By the end of this module, you will:
-- ✅ Understand data engineering as the foundation of ML systems
-- ✅ Implement reusable dataset abstractions and interfaces
-- ✅ Build efficient data loaders with batching and shuffling
-- ✅ Create data preprocessing pipelines for normalization
-- ✅ Apply systems thinking to data I/O and memory management
-- ✅ Have a complete data pipeline ready for neural network training
+By the end of this module, you will be able to:
 
-## 📋 Module Structure
+- **Design data pipeline architectures**: Understand data engineering as the foundation of scalable ML systems
+- **Implement reusable dataset abstractions**: Build flexible interfaces that support multiple data sources and formats
+- **Create efficient data loaders**: Develop batching, shuffling, and streaming systems for optimal training performance
+- **Build preprocessing pipelines**: Implement normalization, augmentation, and transformation systems
+- **Apply systems engineering principles**: Handle memory management, I/O optimization, and error recovery in data pipelines
 
-```
-modules/dataloader/
-├── README.md                 # 📖 This file - Module overview
-├── dataloader_dev.py         # 🔧 Main development file  
-├── dataloader_dev.ipynb      # 📓 Generated notebook (auto-created)
-├── tests/
-│   └── test_dataloader.py    # 🧪 Automated tests
-└── check_dataloader.py       # ✅ Manual verification (coming soon)
-```
+## 🧠 Build → Use → Optimize
 
-## 🚀 Getting Started
+This module follows TinyTorch's **Build → Use → Optimize** framework:
 
-### Step 1: Complete Prerequisites
-Make sure you've completed the foundational modules:
-```bash
-tito test --module setup    # Should pass
-tito test --module tensor   # Should pass
-tito test --module layers   # Should pass
-```
+1. **Build**: Implement dataset abstractions, data loaders, and preprocessing pipelines from engineering principles
+2. **Use**: Apply your data system to real CIFAR-10 dataset with complete train/test workflows
+3. **Optimize**: Analyze performance characteristics, memory usage, and system bottlenecks for production readiness
 
-### Step 2: Open the Data Development File
-```bash
-# Start from the dataloader module directory
-cd modules/dataloader/
+## 📚 What You'll Build
 
-# Convert to notebook if needed
-tito notebooks --module dataloader
-
-# Open the development notebook
-jupyter lab dataloader_dev.ipynb
-```
-
-### Step 3: Work Through the Implementation
-The development file guides you through building:
-1. **Dataset base class** - Abstract interface for all datasets
-2. **CIFAR-10 implementation** - Real dataset with binary file parsing
-3. **DataLoader** - Efficient batching and shuffling system
-4. **Normalizer** - Data preprocessing for stable training
-5. **Complete pipeline** - Integration of all components
-
-### Step 4: Export and Test
-```bash
-# Export your dataloader implementation
-tito sync --module dataloader
-
-# Test your implementation
-tito test --module dataloader
-```
-
-## 📚 What You'll Implement
-
-### Core Data Infrastructure
-You'll build a complete data loading system that supports:
-
-#### 1. Dataset Abstraction
+### Complete Data Pipeline System
 ```python
-# Abstract base class for all datasets
-class Dataset:
-    def __getitem__(self, index):
-        # Get single sample and label
-        pass
-    
-    def __len__(self):
-        # Get total number of samples
-        pass
-    
-    def get_num_classes(self):
-        # Get number of classes
-        pass
-
-# Concrete implementation
-dataset = CIFAR10Dataset("data/cifar10/", train=True)
-image, label = dataset[0]  # Get first sample
-```
-
-#### 2. Real Dataset Loading
-```python
-# CIFAR-10 dataset with download and parsing
-dataset = CIFAR10Dataset("data/cifar10/", train=True, download=True)
-print(f"Dataset size: {len(dataset)}")           # 50,000 training samples
-print(f"Sample shape: {dataset.get_sample_shape()}")  # (3, 32, 32)
-print(f"Classes: {dataset.get_num_classes()}")        # 10 classes
-```
-
-#### 3. Efficient Data Loading
-```python
-# DataLoader with batching and shuffling
-dataloader = DataLoader(dataset, batch_size=32, shuffle=True)
-for batch_images, batch_labels in dataloader:
-    print(f"Batch shape: {batch_images.shape}")  # (32, 3, 32, 32)
-    print(f"Labels shape: {batch_labels.shape}")  # (32,)
-    # Ready for neural network training!
-```
-
-#### 4. Data Preprocessing
-```python
-# Normalizer for stable training
-normalizer = Normalizer()
-normalizer.fit(training_data)  # Compute statistics
-normalized_data = normalizer.transform(test_data)  # Apply normalization
-```
-
-#### 5. Complete Pipeline
-```python
-# One-function pipeline creation
+# End-to-end data pipeline creation
 train_loader, test_loader, normalizer = create_data_pipeline(
     dataset_path="data/cifar10/",
     batch_size=32,
     normalize=True,
     shuffle=True
 )
+
+# Ready for neural network training
+for batch_images, batch_labels in train_loader:
+    # batch_images.shape: (32, 3, 32, 32) - normalized pixel values
+    # batch_labels.shape: (32,) - class indices
+    predictions = model(batch_images)
+    loss = compute_loss(predictions, batch_labels)
+    # Continue training loop...
 ```
 
-### Technical Requirements
-Your data system must:
-- Handle multiple dataset types through common interface
-- Efficiently load and parse binary data files
-- Support batching with configurable batch sizes
-- Implement shuffling for training randomization
-- Provide data normalization for stable training
-- Export to `tinytorch.core.dataloader`
+### Dataset Abstraction System
+```python
+# Flexible interface supporting multiple datasets
+class Dataset:
+    def __getitem__(self, index): 
+        # Return (data, label) for any dataset type
+        pass
+    def __len__(self): 
+        # Enable len() and iteration
+        pass
+
+# Concrete implementation with real data
+dataset = CIFAR10Dataset("data/cifar10/", train=True, download=True)
+print(f"Loaded {len(dataset)} real samples")  # 50,000 training images
+image, label = dataset[0]  # Access individual samples
+print(f"Sample shape: {image.shape}, Label: {label}")
+```
+
+### Efficient Data Loading System
+```python
+# High-performance batching with memory optimization
+dataloader = DataLoader(
+    dataset=dataset,
+    batch_size=32,          # Configurable batch size
+    shuffle=True,           # Training randomization
+    drop_last=False         # Handle incomplete batches
+)
+
+# Pythonic iteration interface
+for batch_idx, (batch_data, batch_labels) in enumerate(dataloader):
+    print(f"Batch {batch_idx}: {batch_data.shape}")
+    # Automatic batching handles all the complexity
+```
+
+### Data Preprocessing Pipeline
+```python
+# Production-ready normalization system
+normalizer = Normalizer()
+
+# Fit on training data (compute statistics once)
+normalizer.fit(training_images)
+print(f"Mean: {normalizer.mean}, Std: {normalizer.std}")
+
+# Apply to any dataset (training, validation, test)
+normalized_images = normalizer.transform(test_images)
+# Ensures consistent preprocessing across data splits
+```
+
+## 🚀 Getting Started
+
+### Prerequisites
+Ensure you have the foundational tensor operations:
+
+```bash
+# Activate TinyTorch environment
+source bin/activate-tinytorch.sh
+
+# Verify prerequisite modules
+tito test --module tensor
+tito test --module layers
+```
+
+### Development Workflow
+1. **Open the development file**: `modules/source/07_dataloader/dataloader_dev.py`
+2. **Implement Dataset abstraction**: Create the base interface for all data sources
+3. **Build CIFAR-10 dataset**: Implement real dataset loading with binary file parsing
+4. **Create DataLoader system**: Add batching, shuffling, and iteration functionality
+5. **Add preprocessing tools**: Implement normalizer and transformation pipeline
+6. **Export and verify**: `tito export --module dataloader && tito test --module dataloader`
 
 ## 🧪 Testing Your Implementation
 
-### Progressive Testing with Real Data
-
-The tests follow the **"Build → Use → Understand"** pattern with real CIFAR-10 data:
+### Comprehensive Test Suite
+Run the full test suite to verify data engineering functionality:
 
 ```bash
-# Run all tests (downloads real CIFAR-10 data)
+# TinyTorch CLI (recommended)
 tito test --module dataloader
 
-# Run specific test categories
-python -m pytest tests/test_dataloader.py::TestDatasetInterface -v      # Test abstract interface
-python -m pytest tests/test_dataloader.py::TestCIFAR10Dataset -v        # Test real data loading
-python -m pytest tests/test_dataloader.py::TestDataLoader -v            # Test batching real data
-python -m pytest tests/test_dataloader.py::TestNormalizer -v            # Test normalizing real data
-python -m pytest tests/test_dataloader.py::TestDataPipeline -v          # Test complete pipeline
+# Direct pytest execution
+python -m pytest tests/ -k dataloader -v
 ```
 
-### Real Data Testing Flow
+### Test Coverage Areas
+- ✅ **Dataset Interface**: Verify abstract base class and concrete implementations
+- ✅ **Real Data Loading**: Test with actual CIFAR-10 dataset (downloads ~170MB)
+- ✅ **Batching System**: Ensure correct batch shapes and memory efficiency
+- ✅ **Data Preprocessing**: Verify normalization statistics and transformations
+- ✅ **Pipeline Integration**: Test complete train/test workflow with real data
 
-Each test builds on the previous component using actual CIFAR-10 data:
-
-1. **Build Dataset** → **Test**: Download and load real CIFAR-10 images (50,000 training, 10,000 test)
-2. **Build DataLoader** → **Test**: Batch real images with proper shuffling and iteration
-3. **Build Normalizer** → **Test**: Normalize real pixel values (0-255 range → standardized)
-4. **Build Pipeline** → **Test**: Complete pipeline with real data flow and preprocessing
-
-### Why Real Data Testing Matters
-
-- **Real-world validation**: Tests work with actual data students will use in training
-- **Immediate feedback**: See your pipeline working with real images, not fake data
-- **Systems thinking**: Understand I/O, memory, and performance with real data distributions
-- **Debugging**: Catch issues that only appear with real data (file formats, edge cases)
-
-**Note**: First test run downloads ~170MB CIFAR-10 dataset with progress bar. Subsequent runs use cached data.
-
-### Interactive Testing with Visual Feedback
+### Inline Testing & Real Data Validation
+The module includes comprehensive feedback using real CIFAR-10 data:
 ```python
-# Test in the notebook or Python REPL
-from tinytorch.core.dataloader import Dataset, DataLoader, CIFAR10Dataset
+# Example inline test output
+🔬 Unit Test: CIFAR-10 dataset loading...
+📥 Downloading CIFAR-10 dataset (170MB)...
+✅ Successfully loaded 50,000 training samples
+✅ Sample shapes correct: (3, 32, 32)
+✅ Labels in valid range: [0, 9]
+📈 Progress: CIFAR-10 Dataset ✓
 
-# Create and test datasets with real data
+# DataLoader testing with real data
+🔬 Unit Test: DataLoader batching...
+✅ Batch shapes correct: (32, 3, 32, 32)
+✅ Shuffling produces different orders
+✅ Iteration covers all samples exactly once
+📈 Progress: DataLoader ✓
+```
+
+### Manual Testing Examples
+```python
+from tinytorch.core.tensor import Tensor
+from dataloader_dev import CIFAR10Dataset, DataLoader, Normalizer
+
+# Test dataset loading with real data
 dataset = CIFAR10Dataset("data/cifar10/", train=True, download=True)
-print(f"Loaded {len(dataset)} real CIFAR-10 samples")
+print(f"Dataset size: {len(dataset)}")
+print(f"Classes: {dataset.get_num_classes()}")
 
-# Test data loading
-dataloader = DataLoader(dataset, batch_size=16)
-for batch_data, batch_labels in dataloader:
-    print(f"Real batch shape: {batch_data.shape}")  # (16, 3, 32, 32)
-    print(f"Real labels: {batch_labels}")  # Actual CIFAR-10 classes
-    break
+# Test data loading pipeline
+dataloader = DataLoader(dataset, batch_size=16, shuffle=True)
+for batch_images, batch_labels in dataloader:
+    print(f"Batch shape: {batch_images.shape}")
+    print(f"Label range: {batch_labels.min()} to {batch_labels.max()}")
+    break  # Just test first batch
+
+# Test preprocessing pipeline
+normalizer = Normalizer()
+sample_batch, _ = next(iter(dataloader))
+normalizer.fit(sample_batch)
+normalized = normalizer.transform(sample_batch)
+print(f"Original range: [{sample_batch.min():.2f}, {sample_batch.max():.2f}]")
+print(f"Normalized range: [{normalized.min():.2f}, {normalized.max():.2f}]")
 ```
 
-### 🎨 Development Visual Feedback
+## 🎯 Key Concepts
 
-The development notebook (`dataloader_dev.py`) includes **visual feedback** for learning:
+### Real-World Applications
+- **Production ML Systems**: Companies like Netflix, Spotify use similar data pipelines for recommendation training
+- **Computer Vision**: ImageNet, COCO dataset loaders power research and production vision systems
+- **Natural Language Processing**: Text preprocessing pipelines enable language model training
+- **Autonomous Systems**: Real-time data streams from sensors require efficient pipeline architectures
 
-```python
-# 👁️ SEE your data - Available in development notebook only
-show_cifar10_samples(dataset, num_samples=8, title="My CIFAR-10 Data")
-```
+### Data Engineering Principles
+- **Interface Design**: Abstract Dataset class enables switching between data sources seamlessly
+- **Memory Efficiency**: Streaming data loading prevents memory overflow with large datasets
+- **I/O Optimization**: Batching reduces system calls and improves throughput
+- **Preprocessing Consistency**: Fit-transform pattern ensures identical preprocessing across data splits
 
-### 🎨 Visual Feedback Features (Development Only)
+### Systems Performance Considerations
+- **Batch Size Trade-offs**: Larger batches improve GPU utilization but increase memory usage
+- **Shuffling Strategy**: Random access patterns for training vs sequential for inference
+- **Caching and Storage**: Balance between memory usage and I/O performance
+- **Error Handling**: Robust handling of corrupted data, network failures, disk issues
 
-The development notebook includes **visual feedback** for learning and debugging:
-
-- **Download progress bar**: Visual progress indicator during CIFAR-10 download (~170MB)
-- **`show_cifar10_samples()`**: Display a grid of CIFAR-10 images with class labels
-- **Real image visualization**: See actual airplanes, cars, birds, cats, etc.
-- **Batch visualization**: View what your DataLoader is producing
-- **Pipeline visualization**: See the complete data flow in action
-
-**Why Visual Feedback Matters:**
-- **Build confidence**: See that your data pipeline is working correctly
-- **Debug issues**: Spot problems like incorrect normalization or corrupted images
-- **Understand data**: Build intuition about what your model will be learning from
-- **Immediate feedback**: Visual confirmation follows the "Build → Use → Understand" pattern
-
-**Note**: Visual feedback is available in the development notebook (`data_dev.py`) for learning purposes. The core package exports only the essential data loading components.
-
-## 🎯 Success Criteria
-
-Your data module is complete when:
-
-1. **All tests pass**: `tito test --module dataloader`
-2. **Data classes import correctly**: `from tinytorch.core.dataloader import Dataset, DataLoader`
-3. **Dataset loading works**: Can create datasets and access samples
-4. **Batching works**: DataLoader produces correct batch shapes
-5. **Preprocessing works**: Normalizer computes and applies statistics
-6. **Pipeline works**: Complete pipeline creates train/test loaders
-
-## 💡 Implementation Tips
-
-### Start with the Interface
-1. **Dataset base class** - Define the abstract interface
-2. **Simple test dataset** - Create mock data for testing
-3. **Basic DataLoader** - Implement batching without shuffling
-4. **Add shuffling** - Randomize sample order
-5. **Test frequently** - Verify each component works
-
-### Design Patterns
-```python
-class Dataset:
-    def __getitem__(self, index):
-        # Return (data, label) tuple
-        return data_tensor, label_tensor
-    
-    def __len__(self):
-        # Return total number of samples
-        return self.num_samples
-
-class DataLoader:
-    def __iter__(self):
-        # Yield batches of (batch_data, batch_labels)
-        for batch in self._create_batches():
-            yield batch_data, batch_labels
-```
-
-### Systems Thinking
-- **Memory management**: Don't load entire dataset into RAM
-- **I/O efficiency**: Batch file operations when possible
-- **Preprocessing**: Compute statistics once, apply many times
-- **Interface design**: Make components easily swappable
-
-### Common Challenges
-- **Binary file parsing** - CIFAR-10 uses custom format
-- **Batch size handling** - Last batch may be smaller
-- **Data type consistency** - Convert to consistent types
-- **Error handling** - Provide helpful debugging messages
-
-## 🔧 Advanced Features (Optional)
-
-If you finish early, try implementing:
-- **Data augmentation** - Random transformations for training
-- **Multi-worker loading** - Parallel data loading
-- **Caching** - Store processed data for faster access
-- **Different datasets** - MNIST, Fashion-MNIST, etc.
-
-## 🚀 Next Steps
-
-Once you complete the data module:
-
-1. **Move to Autograd**: `cd modules/autograd/`
-2. **Build automatic differentiation**: Enable gradient computation
-3. **Combine with data**: Train models on real datasets
-4. **Prepare for training**: Ready for the training module
-
-## 🔗 Why Data Engineering Matters
-
-Data engineering is the foundation of all ML systems:
-- **Training loops** need efficient data loading
-- **Model performance** depends on data quality
-- **Production systems** require scalable data pipelines
-- **Research** needs flexible data interfaces
-
-Your data implementation will power all TinyTorch training!
-
-## 📊 Real-World Connection
-
-The patterns you'll implement are used in:
-- **PyTorch DataLoader** - Same interface and concepts
-- **TensorFlow tf.data** - Similar pipeline architecture
-- **Production ML** - Scalable data processing systems
-- **Research** - Flexible experimentation frameworks
+### Production ML Pipeline Patterns
+- **ETL Design**: Extract (load files), Transform (preprocess), Load (batch) pattern
+- **Data Versioning**: Reproducible datasets with consistent preprocessing
+- **Pipeline Monitoring**: Track data quality, distribution shifts, processing times
+- **Scalability Planning**: Design for growing datasets and distributed processing
 
 ## 🎉 Ready to Build?
 
-The data module is where TinyTorch becomes a real ML system. You're about to create the infrastructure that will feed neural networks, enable training loops, and power production ML pipelines.
+You're about to build the data engineering foundation that powers every successful ML system! From startup prototypes to billion-dollar recommendation engines, they all depend on robust data pipelines like the one you're building.
 
-Focus on clean interfaces, efficient implementation, and systems thinking! 🔥 
+This module teaches you the systems thinking that separates hobby projects from production ML systems. You'll work with real data, handle real performance constraints, and build infrastructure that scales. Take your time, think about edge cases, and enjoy building the backbone of machine learning!
+
+```{grid} 3
+:gutter: 3
+:margin: 2
+
+{grid-item-card} 🚀 Launch Builder
+:link: https://mybinder.org/v2/gh/VJProductions/TinyTorch/main?filepath=modules/source/07_dataloader/dataloader_dev.py
+:class-title: text-center
+:class-body: text-center
+
+Interactive development environment
+
+{grid-item-card} 📓 Open in Colab  
+:link: https://colab.research.google.com/github/VJProductions/TinyTorch/blob/main/modules/source/07_dataloader/dataloader_dev.ipynb
+:class-title: text-center
+:class-body: text-center
+
+Google Colab notebook
+
+{grid-item-card} 👀 View Source
+:link: https://github.com/VJProductions/TinyTorch/blob/main/modules/source/07_dataloader/dataloader_dev.py  
+:class-title: text-center
+:class-body: text-center
+
+Browse the code on GitHub
+``` 

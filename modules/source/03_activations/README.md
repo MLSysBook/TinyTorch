@@ -6,156 +6,122 @@
 - **Prerequisites**: Tensor module
 - **Next Steps**: Layers module
 
-Welcome to the **Activations** module! This is where you'll implement the mathematical functions that give neural networks their power to learn complex patterns.
+Welcome to the **Activations** module! This is where you'll implement the mathematical functions that give neural networks their power to learn complex patterns. Without activation functions, neural networks would just be linear transformations—with them, you unlock the ability to learn any function.
 
 ## 🎯 Learning Objectives
 
-By the end of this module, you will:
-1. **Understand** why activation functions are essential for neural networks
-2. **Implement** the three most important activation functions: ReLU, Sigmoid, and Tanh
-3. **Test** your functions with various inputs to understand their behavior
-4. **Grasp** the mathematical properties that make each function useful
+By the end of this module, you will be able to:
 
-## 🧠 Why This Module Matters
+- **Understand the critical role** of activation functions in enabling neural networks to learn non-linear patterns
+- **Implement three core activation functions**: ReLU, Sigmoid, and Tanh with proper numerical stability
+- **Apply mathematical reasoning** to understand function properties, ranges, and appropriate use cases
+- **Debug and test** activation implementations using both automated tests and visual analysis
+- **Connect theory to practice** by understanding when and why to use each activation function
 
-**Without activation functions, neural networks are just linear transformations!**
+## 🧠 Build → Use → Analyze
 
-```
-Linear → Linear → Linear = Still just Linear
-Linear → Activation → Linear = Can learn complex patterns!
-```
+This module follows TinyTorch's **Build → Use → Analyze** framework:
 
-This module teaches you the mathematical foundations that make deep learning possible.
+1. **Build**: Implement ReLU, Sigmoid, and Tanh activation functions with numerical stability
+2. **Use**: Apply these functions in testing scenarios and visualize their mathematical behavior
+3. **Analyze**: Compare function properties, performance characteristics, and appropriate use cases through quantitative analysis
 
 ## 📚 What You'll Build
 
-### 1. **ReLU** (Rectified Linear Unit)
+### Core Activation Functions
+```python
+# ReLU: Simple but powerful
+relu = ReLU()
+output = relu(Tensor([-2, -1, 0, 1, 2]))  # [0, 0, 0, 1, 2]
+
+# Sigmoid: Probabilistic outputs
+sigmoid = Sigmoid()
+output = sigmoid(Tensor([0, 1, -1]))      # [0.5, 0.73, 0.27]
+
+# Tanh: Zero-centered activation
+tanh = Tanh()
+output = tanh(Tensor([0, 1, -1]))         # [0, 0.76, -0.76]
+```
+
+### ReLU (Rectified Linear Unit)
 - **Formula**: `f(x) = max(0, x)`
-- **Properties**: Simple, sparse, unbounded
-- **Use case**: Hidden layers (most common)
+- **Properties**: Simple, sparse, unbounded, most commonly used
+- **Implementation**: Element-wise maximum with zero
+- **Use Cases**: Hidden layers in most modern architectures
 
-### 2. **Sigmoid** 
+### Sigmoid Activation
 - **Formula**: `f(x) = 1 / (1 + e^(-x))`
-- **Properties**: Bounded to (0,1), smooth, probabilistic
-- **Use case**: Binary classification, gates
+- **Properties**: Bounded to (0,1), smooth, probabilistic interpretation
+- **Implementation**: Numerically stable version preventing overflow
+- **Use Cases**: Binary classification, attention mechanisms, gates
 
-### 3. **Tanh** (Hyperbolic Tangent)
+### Tanh (Hyperbolic Tangent)
 - **Formula**: `f(x) = tanh(x)`
-- **Properties**: Bounded to (-1,1), zero-centered, smooth
-- **Use case**: Hidden layers, RNNs
+- **Properties**: Bounded to (-1,1), zero-centered, symmetric
+- **Implementation**: Direct NumPy implementation with shape preservation
+- **Use Cases**: Hidden layers, RNNs, when zero-centered outputs are beneficial
 
 ## 🚀 Getting Started
 
 ### Prerequisites
+Ensure you have completed the tensor module and understand basic tensor operations:
 
-1. **Activate the virtual environment**:
-   ```bash
-   source bin/activate-tinytorch.sh
-   ```
+```bash
+# Activate TinyTorch environment
+source bin/activate-tinytorch.sh
 
-2. **Start development environment**:
-   ```bash
-   tito jupyter
-   ```
+# Verify tensor module is working
+tito test --module tensor
+```
 
 ### Development Workflow
+1. **Open the development file**: `modules/source/03_activations/activations_dev.py`
+2. **Implement functions progressively**: Start with ReLU, then Sigmoid (numerical stability), then Tanh
+3. **Test each implementation**: Use inline tests for immediate feedback
+4. **Visualize function behavior**: Leverage plotting sections for mathematical understanding
+5. **Export and verify**: `tito export --module activations && tito test --module activations`
 
-1. **Open the development file**:
-   ```bash
-   # Then open assignments/source/02_activations/activations_dev.py
-   ```
+## 🧪 Testing Your Implementation
 
-2. **Implement the functions**:
-   - Start with ReLU (simplest)
-   - Move to Sigmoid (numerical stability challenge)
-   - Finish with Tanh (symmetry properties)
+### Comprehensive Test Suite
+Run the full test suite to verify mathematical correctness:
 
-3. **Visualize your functions**:
-   - Each function has plotting sections
-   - See how your implementation transforms inputs
-   - Compare all functions side-by-side
+```bash
+# TinyTorch CLI (recommended)
+tito test --module activations
 
-4. **Test as you go**:
-   ```bash
-   tito test --module activations
-   ```
-
-5. **Export to package**:
-   ```bash
-   tito sync
-   ```
-
-### 📊 Visual Learning Features
-
-This module includes comprehensive plotting sections to help you understand:
-
-- **Individual Function Plots**: See each activation function's curve
-- **Implementation Comparison**: Your implementation vs ideal side-by-side
-- **Mathematical Explanations**: Visual breakdown of function properties
-- **Error Analysis**: Quantitative feedback on implementation accuracy
-- **Comprehensive Comparison**: All functions analyzed together
-
-**Enhanced Features**:
-- **4-Panel Plots**: Implementation vs ideal, mathematical definition, properties, error analysis
-- **Real-time Feedback**: Immediate accuracy scores with color-coded status
-- **Mathematical Insights**: Detailed explanations of function properties
-- **Numerical Stability Testing**: Verification with extreme values
-- **Property Verification**: Symmetry, monotonicity, and zero-centering tests
-
-**Why enhanced plots matter**: 
-- **Visual Debugging**: See exactly where your implementation differs
-- **Quantitative Feedback**: Get precise error measurements
-- **Mathematical Understanding**: Connect formulas to visual behavior
-- **Implementation Confidence**: Know immediately if your code is correct
-- **Learning Reinforcement**: Multiple visual perspectives of the same concept
-
-### Implementation Tips
-
-#### ReLU Implementation
-```python
-def forward(self, x: Tensor) -> Tensor:
-    return Tensor(np.maximum(0, x.data))
+# Direct pytest execution
+python -m pytest tests/ -k activations -v
 ```
 
-#### Sigmoid Implementation (Numerical Stability)
+### Test Coverage Areas
+- ✅ **Mathematical Correctness**: Verify function outputs match expected mathematical formulas
+- ✅ **Numerical Stability**: Test with extreme values and edge cases
+- ✅ **Shape Preservation**: Ensure input and output tensors have identical shapes
+- ✅ **Range Validation**: Confirm outputs fall within expected ranges
+- ✅ **Integration Testing**: Verify compatibility with tensor operations
+
+### Inline Testing & Visualization
+The module includes comprehensive educational feedback:
 ```python
-def forward(self, x: Tensor) -> Tensor:
-    # For x >= 0: sigmoid(x) = 1 / (1 + exp(-x))
-    # For x < 0: sigmoid(x) = exp(x) / (1 + exp(x))
-    x_data = x.data
-    result = np.zeros_like(x_data)
-    
-    positive_mask = x_data >= 0
-    result[positive_mask] = 1.0 / (1.0 + np.exp(-x_data[positive_mask]))
-    result[~positive_mask] = np.exp(x_data[~positive_mask]) / (1.0 + np.exp(x_data[~positive_mask]))
-    
-    return Tensor(result)
+# Example inline test output
+🔬 Unit Test: ReLU activation...
+✅ ReLU handles negative inputs correctly
+✅ ReLU preserves positive inputs
+✅ ReLU output range is [0, ∞)
+📈 Progress: ReLU ✓
+
+# Visual feedback with plotting
+📊 Plotting ReLU behavior across range [-5, 5]...
+📈 Function visualization shows expected behavior
 ```
 
-#### Tanh Implementation
+### Manual Testing Examples
 ```python
-def forward(self, x: Tensor) -> Tensor:
-    return Tensor(np.tanh(x.data))
-```
-
-### Testing Your Implementation
-
-1. **Run the tests**:
-   ```bash
-   tito test --module activations
-   ```
-
-2. **Export to package**:
-   ```bash
-   tito sync
-   ```
-
-### Manual Testing
-```python
-# Test all activations
 from tinytorch.core.tensor import Tensor
-from modules.activations.activations_dev import ReLU, Sigmoid, Tanh
+from activations_dev import ReLU, Sigmoid, Tanh
 
+# Test with various inputs
 x = Tensor([[-2.0, -1.0, 0.0, 1.0, 2.0]])
 
 relu = ReLU()
@@ -163,96 +129,64 @@ sigmoid = Sigmoid()
 tanh = Tanh()
 
 print("Input:", x.data)
-print("ReLU:", relu(x).data)
-print("Sigmoid:", sigmoid(x).data)
-print("Tanh:", tanh(x).data)
+print("ReLU:", relu(x).data)      # [0, 0, 0, 1, 2]
+print("Sigmoid:", sigmoid(x).data) # [0.12, 0.27, 0.5, 0.73, 0.88]
+print("Tanh:", tanh(x).data)      # [-0.96, -0.76, 0, 0.76, 0.96]
 ```
 
-## 📊 Understanding Function Properties
+## 🎯 Key Concepts
 
-### Range Comparison
-| Function | Input Range | Output Range | Zero Point |
-|----------|-------------|--------------|------------|
-| ReLU     | (-∞, ∞)     | [0, ∞)       | f(0) = 0   |
-| Sigmoid  | (-∞, ∞)     | (0, 1)       | f(0) = 0.5 |
-| Tanh     | (-∞, ∞)     | (-1, 1)      | f(0) = 0   |
+### Real-World Applications
+- **Computer Vision**: ReLU activations enable CNNs to learn hierarchical features (like those in ResNet, VGG)
+- **Natural Language Processing**: Sigmoid/Tanh functions power LSTM and GRU gates for memory control
+- **Recommendation Systems**: Sigmoid activations provide probability outputs for binary predictions
+- **Generative Models**: Different activations shape the output distributions in GANs and VAEs
 
-### Key Properties
-- **ReLU**: Sparse (zeros out negatives), unbounded, simple
-- **Sigmoid**: Probabilistic (0-1 range), smooth, saturating
-- **Tanh**: Zero-centered, symmetric, stronger gradients than sigmoid
+### Mathematical Properties Comparison
+| Function | Input Range | Output Range | Zero Point | Key Property |
+|----------|-------------|--------------|------------|--------------|
+| ReLU     | (-∞, ∞)     | [0, ∞)       | f(0) = 0   | Sparse, unbounded |
+| Sigmoid  | (-∞, ∞)     | (0, 1)       | f(0) = 0.5 | Probabilistic |
+| Tanh     | (-∞, ∞)     | (-1, 1)      | f(0) = 0   | Zero-centered |
 
-## 🔧 Integration with TinyTorch
+### Numerical Stability Considerations
+- **ReLU**: No stability issues (simple max operation)
+- **Sigmoid**: Requires careful implementation to prevent `exp()` overflow
+- **Tanh**: Generally stable, but NumPy implementation handles edge cases
 
-After implementation, your activations will be available as:
-
-```python
-from tinytorch.core.activations import ReLU, Sigmoid, Tanh
-
-# Use in neural networks
-relu = ReLU()
-output = relu(input_tensor)
-```
-
-## 🎯 Common Issues & Solutions
-
-### Issue 1: Sigmoid Overflow
-**Problem**: `exp()` overflow with large inputs
-**Solution**: Use numerically stable implementation (see code above)
-
-### Issue 2: Wrong Output Range
-**Problem**: Sigmoid/Tanh outputs outside expected range
-**Solution**: Check your mathematical implementation
-
-### Issue 3: Shape Mismatch
-**Problem**: Output shape differs from input shape
-**Solution**: Ensure element-wise operations preserve shape
-
-### Issue 4: Import Errors
-**Problem**: Cannot import after implementation
-**Solution**: Run `tito sync` to export to package
-
-## 📈 Performance Considerations
-
-- **ReLU**: Fastest (simple max operation)
-- **Sigmoid**: Moderate (exponential computation)
-- **Tanh**: Moderate (hyperbolic function)
-
-All implementations use NumPy for vectorized operations.
-
-## 🚀 What's Next
-
-After mastering activations, you'll use them in:
-1. **Layers Module**: Building neural network layers
-2. **Loss Functions**: Computing training objectives
-3. **Advanced Architectures**: CNNs, RNNs, and more
-
-These functions are the mathematical foundation for everything that follows!
-
-## 📚 Further Reading
-
-**Mathematical Background**:
-- [Activation Functions in Neural Networks](https://en.wikipedia.org/wiki/Activation_function)
-- [Deep Learning Book - Chapter 6](http://www.deeplearningbook.org/)
-
-**Advanced Topics**:
-- ReLU variants (Leaky ReLU, ELU, Swish)
-- Activation function choice and impact
-- Gradient flow and vanishing gradients
-
-## 🎉 Success Criteria
-
-You've mastered this module when:
-- [ ] All tests pass (`tito test --module activations`)
-- [ ] You understand why each function is useful
-- [ ] You can explain the mathematical properties
-- [ ] You can use activations in neural networks
-- [ ] You appreciate the importance of nonlinearity
-
-**Great work! You've built the mathematical foundation of neural networks!** 🎉 
+### Performance and Gradient Properties
+- **ReLU**: Fastest computation, sparse gradients, can cause "dying ReLU" problem
+- **Sigmoid**: Moderate computation, smooth gradients, susceptible to vanishing gradients
+- **Tanh**: Moderate computation, stronger gradients than sigmoid, zero-centered helps optimization
 
 ## 🎉 Ready to Build?
 
-The activations module is where neural networks come alive! You're about to implement the mathematical functions that give networks their power to learn complex patterns and make intelligent decisions.
+The activations module is where neural networks truly come alive! You're about to implement the mathematical functions that transform simple linear operations into powerful pattern recognition systems.
 
-Take your time, test thoroughly, and enjoy building something that really works! 🔥
+Every major breakthrough in deep learning—from image recognition to language models—relies on the functions you're about to build. Take your time, understand the mathematics, and enjoy creating the foundation of intelligent systems!
+
+```{grid} 3
+:gutter: 3
+:margin: 2
+
+{grid-item-card} 🚀 Launch Builder
+:link: https://mybinder.org/v2/gh/VJProductions/TinyTorch/main?filepath=modules/source/03_activations/activations_dev.py
+:class-title: text-center
+:class-body: text-center
+
+Interactive development environment
+
+{grid-item-card} 📓 Open in Colab  
+:link: https://colab.research.google.com/github/VJProductions/TinyTorch/blob/main/modules/source/03_activations/activations_dev.ipynb
+:class-title: text-center
+:class-body: text-center
+
+Google Colab notebook
+
+{grid-item-card} 👀 View Source
+:link: https://github.com/VJProductions/TinyTorch/blob/main/modules/source/03_activations/activations_dev.py  
+:class-title: text-center
+:class-body: text-center
+
+Browse the code on GitHub
+```
