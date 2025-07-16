@@ -1,3 +1,17 @@
+---
+html_meta:
+  "property=og:title": "Tiny🔥Torch: Build your own ML framework from scratch"
+  "property=og:description": "Learn ML systems by building them. Implement tensors, autograd, optimizers from scratch. Build the rocket ship, don't just be the astronaut."
+  "property=og:url": "https://mlsysbook.github.io/TinyTorch/"
+  "property=og:type": "website"
+  "property=og:image": "https://mlsysbook.github.io/TinyTorch/logo.png"
+  "property=og:site_name": "Tiny🔥Torch Course"
+  "name=twitter:card": "summary_large_image"
+  "name=twitter:title": "Tiny🔥Torch: Build your own ML framework"
+  "name=twitter:description": "Tiny🔥Torch is a minimalist framework for building machine learning systems from scratch—from tensors to systems."
+  "name=twitter:image": "https://mlsysbook.github.io/TinyTorch/logo.png"
+---
+
 # Tiny🔥Torch: Build your own Machine Learning framework from scratch. 
 
 **Most ML education teaches you to _use_ frameworks. TinyTorch teaches you to _build_ them.**
