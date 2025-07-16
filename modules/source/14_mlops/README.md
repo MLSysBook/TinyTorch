@@ -1,8 +1,8 @@
 # 🔥 Module: MLOps
 
 ## 📊 Module Info
-- **Difficulty**: ⭐⭐⭐⭐⭐ Expert
-- **Time Estimate**: 10-12 hours
+- **Difficulty**: ⭐⭐⭐⭐ Expert
+- **Time Estimate**: 8-10 hours
 - **Prerequisites**: All previous modules (01-13) - Complete TinyTorch ecosystem
 - **Next Steps**: **🎓 Course completion** - Deploy your complete ML system!
 

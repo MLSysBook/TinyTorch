@@ -1,7 +1,7 @@
 # 🔥 Module: Training
 
 ## 📊 Module Info
-- **Difficulty**: ⭐⭐⭐⭐⭐ Expert
+- **Difficulty**: ⭐⭐⭐⭐ Expert
 - **Time Estimate**: 8-10 hours
 - **Prerequisites**: Tensor, Activations, Layers, Networks, DataLoader, Autograd, Optimizers modules
 - **Next Steps**: Compression, Kernels, Benchmarking, MLOps modules
@@ -38,7 +38,7 @@ from tinytorch.core.metrics import Accuracy
 # Define complete model architecture
 model = Sequential([
     Dense(784, 128), ReLU(),
-    Dense(128, 64), ReLU(), 
+    Dense(128, 64), ReLU(),
     Dense(64, 10), Softmax()
 ])
 
