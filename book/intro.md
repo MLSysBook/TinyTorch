@@ -2,6 +2,8 @@
 
 **Most ML education teaches you to _use_ frameworks. TinyTorch teaches you to _build_ them.**
 
+TinyTorch is a minimalist educational framework designed for learning by doing. Instead of relying on PyTorch or TensorFlow, you implement everything from scratch—tensors, autograd, optimizers, even MLOps tooling. This hands-on approach builds the deep systems intuition that sets ML engineers apart from ML users.
+
 ```{admonition} 🎯 What You'll Build
 :class: tip
 **A complete ML framework from scratch**: your own PyTorch style toolkit that can:
@@ -13,7 +15,7 @@
 **Result:** You become the expert others ask about "how PyTorch actually works."
 ```
 
-TinyTorch is an educational framework designed specifically for learning by building. Instead of using PyTorch or TensorFlow, you implement every component from scratch: tensors, autograd, optimizers, even MLOps monitoring. This hands on approach develops the deep systems understanding that distinguishes ML engineers from ML users.
+_Everyone wants to be an astronaut._ 🧑‍🚀 _TinyTorch teaches you how to build the rocket ship._ 🚀
 
 ---
 
@@ -148,6 +150,6 @@ Want to see what TinyTorch feels like? **[Launch the Setup chapter](chapters/01-
 
 TinyTorch originated from CS249r: Tiny Machine Learning Systems at Harvard University. We're inspired by projects like [tinygrad](https://github.com/geohot/tinygrad) and [micrograd](https://github.com/karpathy/micrograd) that demonstrate the power of minimal implementations.
 
-**Complementary Learning**: For comprehensive ML systems knowledge, we recommend [**Machine Learning Systems**](https://mlsysbook.ai) by Prof. Vijay Janapa Reddi. While TinyTorch teaches you to **build** ML systems from scratch, that book provides the broader **systems context** and engineering principles for production AI.
+**Complementary Learning**: For comprehensive ML systems knowledge, we recommend [**Machine Learning Systems**](https://mlsysbook.ai) by [Prof. Vijay Janapa Reddi](https://profvjreddi.github.io/website/). While TinyTorch teaches you to **build** ML systems from scratch, that book provides the broader **systems context** and engineering principles for production AI.
 
 
