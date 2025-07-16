@@ -335,9 +335,6 @@ The data module is where TinyTorch becomes a real ML system. You're about to cre
 
 Focus on clean interfaces, efficient implementation, and systems thinking! 🔥 
 
----
-
-## 🚀 Interactive Learning
 
 Choose your preferred way to engage with this module:
 

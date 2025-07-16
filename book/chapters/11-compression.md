@@ -199,9 +199,6 @@ Students completing this module will:
 
 This module bridges the gap between research-quality models and production-ready AI systems, teaching the essential skills for deploying AI in resource-constrained environments. 
 
----
-
-## 🚀 Interactive Learning
 
 Choose your preferred way to engage with this module:
 

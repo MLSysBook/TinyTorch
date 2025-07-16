@@ -297,9 +297,6 @@ Input → Dense(784,128) → ReLU → Dense(128,64) → ReLU → Dense(64,10) �
 
 **Build powerful neural networks with beautiful visualizations!** 🚀 
 
----
-
-## 🚀 Interactive Learning
 
 Choose your preferred way to engage with this module:
 
