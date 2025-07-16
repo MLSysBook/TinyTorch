@@ -84,9 +84,6 @@ def enhance_content_for_web(content: str, module_name: str, module_num: int) -> 
     # Clean up multiple newlines that result from removals
     content = re.sub(r'\n{3,}', '\n\n', content)
     
-    # Create breadcrumb navigation
-    breadcrumb = f"\n```{{div}} breadcrumb\nHome → {module_name.replace('_', ' ').title()}\n```\n"
-    
     # Add badges for difficulty and time
     difficulty = get_difficulty_stars(module_name)
     time_estimate = get_time_estimate(module_name)
@@ -150,28 +147,22 @@ Ready for serious development? → [🏗️ Local Setup Guide](../usage-paths/se
     # Combine interactive elements with navigation
     nav_links = interactive_elements + nav_links
     
-    # Insert breadcrumb and badges after the first heading
+    # Insert badges after the first heading
     lines = content.split('\n')
     enhanced_lines = []
-    added_breadcrumb = False
     added_badges = False
     
     for i, line in enumerate(lines):
         # Keep the meaningful module headers but clean up the breadcrumb reference
-        if line.startswith('# ') and not added_breadcrumb:
+        if line.startswith('# ') and not added_badges:
             # Keep "Module: CNN" format, just remove emoji for clean display
             if '🔥 Module:' in line:
                 line = line.replace('🔥 ', '')  # Remove emoji, keep "Module: CNN"
         
         enhanced_lines.append(line)
         
-        # Add breadcrumb after first heading
-        if not added_breadcrumb and line.startswith('# '):
-            enhanced_lines.append(breadcrumb)
-            added_breadcrumb = True
-        
-        # Add badges after breadcrumb
-        if added_breadcrumb and not added_badges:
+        # Add badges after first heading
+        if not added_badges and line.startswith('# '):
             enhanced_lines.append(badges)
             added_badges = True
     

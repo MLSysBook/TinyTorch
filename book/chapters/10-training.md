@@ -10,11 +10,6 @@ learning_objectives: []
 
 # Module: Training
 
-```{div} breadcrumb
-Home → 10 Training
-```
-
-
 ```{div} badges
 ⭐⭐⭐⭐ | ⏱️ 6-8 hours
 ```

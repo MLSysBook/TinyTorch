@@ -10,11 +10,6 @@ learning_objectives: []
 
 # Module: Compression
 
-```{div} breadcrumb
-Home → 11 Compression
-```
-
-
 ```{div} badges
 ⭐⭐⭐⭐⭐ | ⏱️ 4-5 hours
 ```
