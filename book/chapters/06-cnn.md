@@ -10,11 +10,6 @@ learning_objectives: []
 
 # Module: CNN
 
-```{div} breadcrumb
-Home → 06 Cnn
-```
-
-
 ```{div} badges
 ⭐⭐⭐⭐ | ⏱️ 6-8 hours
 ```

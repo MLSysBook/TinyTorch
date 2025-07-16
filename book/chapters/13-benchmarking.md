@@ -10,11 +10,6 @@ learning_objectives: []
 
 # Module: Benchmarking
 
-```{div} breadcrumb
-Home → 13 Benchmarking
-```
-
-
 ```{div} badges
 ⭐⭐⭐⭐⭐ | ⏱️ 4-5 hours
 ```
