@@ -299,42 +299,16 @@ Input → Dense(784,128) → ReLU → Dense(128,64) → ReLU → Dense(64,10) �
 
 ---
 
-## 🚀 Interactive Learning
+## 🚀 Ready to Build?
 
-<div class="admonition tip">
-<p class="admonition-title">💡 Try It Yourself</p>
-<p>Ready to start building? Choose your preferred environment:</p>
-</div>
+```{admonition} Choose Your Environment
+:class: tip
+**Quick Start:** [🚀 Launch Builder](https://mybinder.org/v2/gh/MLSysBook/TinyTorch/main?filepath=modules/source/05_networks/networks_dev.ipynb) *(Jump directly into implementation)*
 
-### 🔧 **Builder Environment**
-<div class="admonition note">
-<p class="admonition-title">🏗️ Quick Start</p>
-<p>Jump directly into the implementation with our guided builder:</p>
-</div>
+**Full Development:** [📓 Open Jupyter](https://mybinder.org/v2/gh/MLSysBook/TinyTorch/main?filepath=modules/source/05_networks/networks_dev.ipynb) *(Complete development environment)*
 
-<a href="https://mybinder.org/v2/gh/MLSysBook/TinyTorch/main?filepath=modules/source/05_networks/networks_dev.ipynb" target="_blank" class="btn btn-primary">
-    🚀 Launch Builder
-</a>
-
-### 📓 **Jupyter Notebook**
-<div class="admonition note">
-<p class="admonition-title">📚 Full Development</p>
-<p>Work with the complete development environment:</p>
-</div>
-
-<a href="https://mybinder.org/v2/gh/MLSysBook/TinyTorch/main?filepath=modules/source/05_networks/networks_dev.ipynb" target="_blank" class="btn btn-success">
-    📓 Open Jupyter
-</a>
-
-### 🎯 **Google Colab**
-<div class="admonition note">
-<p class="admonition-title">☁️ Cloud Environment</p>
-<p>Use Google's cloud-based notebook environment:</p>
-</div>
-
-<a href="https://colab.research.google.com/github/MLSysBook/TinyTorch/blob/main/modules/source/05_networks/networks_dev.ipynb" target="_blank" class="btn btn-info">
-    ☁️ Open in Colab
-</a>
+**Cloud Environment:** [☁️ Open in Colab](https://colab.research.google.com/github/MLSysBook/TinyTorch/blob/main/modules/source/05_networks/networks_dev.ipynb) *(Google's notebook environment)*
+```
 
 ---
 
