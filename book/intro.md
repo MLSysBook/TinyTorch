@@ -198,6 +198,57 @@ Want to see what TinyTorch feels like? **[Launch the Setup chapter](chapters/01-
 
 ---
 
+## ❓ **Common Questions**
+
+<details>
+<summary><strong>⏰ "How much time should I plan for this course?"</strong></summary>
+
+**Time investment:** ~40-60 hours for complete framework
+
+**Flexible pacing options:**
+- **Quick exploration:** 1-2 modules to understand the approach
+- **Focused learning:** Core modules (01-08) for solid foundations  
+- **Complete mastery:** All 15 modules for full framework expertise
+
+Each module is self-contained, so you can stop and start as needed.
+</details>
+
+<details>
+<summary><strong>🤔 "I'm already experienced with ML. Will this be too basic?"</strong></summary>
+
+**Quick self-assessment:**
+- Can you implement Adam optimizer from the original paper?
+- Do you know why ReLU causes dying neurons and how to prevent it?
+- Could you debug a mysterious 50% accuracy drop after deployment?
+
+**Experienced engineers often find TinyTorch fills the "implementation gap"** that most ML education skips - the deep understanding of how frameworks actually work under the hood.
+</details>
+
+<details>
+<summary><strong>🔄 "What if I get stuck on a module?"</strong></summary>
+
+**Built-in support system:**
+- **Progressive scaffolding:** Each implementation broken into guided steps
+- **Comprehensive testing:** 200+ tests with educational error messages
+- **Rich documentation:** Visual explanations and debugging tips
+- **Modular design:** Skip ahead or go back without breaking progress
+
+**Philosophy:** You should feel challenged but never lost.
+</details>
+
+<details>
+<summary><strong>🚀 "How does this connect to modern architectures like Transformers?"</strong></summary>
+
+**Transformers use the same foundations you'll build:**
+- **Attention mechanism:** Matrix operations using your tensor implementations
+- **LayerNorm:** Built on your activation and layer components
+- **Training:** Powered by your Adam optimizer and autograd system
+
+**Understanding foundations makes you the engineer who can optimize and extend modern architectures,** not just use them through APIs.
+</details>
+
+---
+
 ## 🙏 **Acknowledgments**
 
 TinyTorch originated from CS249r: Tiny Machine Learning Systems at Harvard University. We're inspired by projects like [tinygrad](https://github.com/geohot/tinygrad), [micrograd](https://github.com/karpathy/micrograd), and [MiniTorch](https://minitorch.github.io/) that demonstrate the power of minimal implementations.
