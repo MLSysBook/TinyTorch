@@ -8,17 +8,11 @@ next_steps: []
 learning_objectives: ["✅ Understand what tensors are and why they're essential for ML", '✅ Implement a complete Tensor class with core operations', '✅ Handle tensor shapes, data types, and memory management', '✅ Implement element-wise operations and reductions', '✅ Have a solid foundation for building neural networks']
 ---
 
-# Tensor
+# Module: Tensor
 ---
-**Course Navigation:** [Home](../intro.html) → [Module 2: 02 Tensor](#)
+**Course Navigation:** [Home](../intro.html) → [Tensor](#)
 
 ---
-
-
-<div class="admonition note">
-<p class="admonition-title">📊 Module Info</p>
-<p><strong>Difficulty:</strong> ⭐ ⭐⭐ | <strong>Time:</strong> 4-6 hours</p>
-</div>
 
 
 

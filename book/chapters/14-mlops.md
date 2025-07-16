@@ -8,17 +8,11 @@ next_steps: []
 learning_objectives: []
 ---
 
-# MLOps
+# Module: MLOps
 ---
-**Course Navigation:** [Home](../intro.html) → [Module 14: 14 Mlops](#)
+**Course Navigation:** [Home](../intro.html) → [Mlops](#)
 
 ---
-
-
-<div class="admonition note">
-<p class="admonition-title">📊 Module Info</p>
-<p><strong>Difficulty:</strong> ⭐ ⭐⭐⭐⭐⭐ | <strong>Time:</strong> 6-8 hours</p>
-</div>
 
 
 
