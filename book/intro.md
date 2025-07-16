@@ -166,6 +166,10 @@ Want to see what TinyTorch feels like? **[Launch the Setup chapter](chapters/01-
 
 ---
 
-## 📚 **Academic Foundation**
+## 🙏 **Acknowledgments**
 
-TinyTorch grew out of CS249r: Tiny Machine Learning Systems at Harvard University. While the [Machine Learning Systems book](https://mlsysbook.ai) covers broad principles, TinyTorch gives you hands-on implementation experience.
+TinyTorch originated from CS249r: Tiny Machine Learning Systems at Harvard University. We're inspired by projects like [tinygrad](https://github.com/geohot/tinygrad) and [micrograd](https://github.com/karpathy/micrograd) that demonstrate the power of minimal implementations.
+
+**Our unique contribution**: TinyTorch is designed specifically as a **minimalistic educational framework** with progressive scaffolding, production-ready practices, and comprehensive course infrastructure. While other projects focus on research or production, TinyTorch bridges the gap between learning and building with systematic pedagogy.
+
+This approach transforms students from framework users into framework builders through hands-on implementation experience.
