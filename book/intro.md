@@ -124,6 +124,32 @@ Model optimization, high-performance operations, systematic evaluation, and prod
 
 ---
 
+## 🔗 **Complete System Integration**
+
+**This isn't 14 separate exercises.** Every component you build integrates into one fully functional ML framework:
+
+```{admonition} 🎯 How It All Connects
+:class: important
+**Module 2: Your Tensor class** → **Module 3: Powers your activation functions** → **Module 4: Enables your layers** → **Module 5: Forms your networks** → **Module 8: Drives your autograd system** → **Module 9: Optimizes with your SGD/Adam** → **Module 10: Trains on real CIFAR-10 data**
+
+**Result:** A complete, working ML framework that you built from scratch, capable of training real neural networks on real datasets.
+```
+
+### **🚀 Capstone: Build Something Real**
+
+After completing the 14 core modules, you have a **complete ML framework**. Now use it to build something meaningful:
+
+**Choose Your Project:**
+- 🖼️ **Computer Vision**: Object detection, image segmentation, or style transfer
+- 📝 **Natural Language**: Sentiment analysis, text generation, or translation  
+- 🎵 **Audio Processing**: Speech recognition, music generation, or audio classification
+- 🧬 **Scientific Computing**: Molecular modeling, climate prediction, or medical imaging
+- 🎮 **Creative AI**: Game AI, generative art, or interactive systems
+
+**The Key:** Use **your own TinyTorch implementation** for everything. No PyTorch imports allowed. This proves your framework works and deepens your understanding of how ML systems integrate in practice.
+
+---
+
 ## 🚀 **Choose Your Learning Path**
 
 ```{admonition} Three Ways to Engage with TinyTorch
