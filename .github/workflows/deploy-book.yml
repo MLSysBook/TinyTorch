@@ -1,6 +1,7 @@
-name: Deploy TinyTorch Jupyter Book (Streamlined)
+name: Deploy TinyTorch Jupyter Book (Streamlined with tito)
 
 # Trigger the workflow on push to main branch (publishing) or manual dispatch
+# This workflow uses tito CLI for consistent book generation and building
 on:
   push:
     branches: [ main ]
@@ -46,12 +47,18 @@ jobs:
     - name: Install dependencies
       run: |
         pip install --upgrade pip
-        pip install jupyter-book jupytext
+        pip install jupyter-book jupytext pytest
         pip install -r book/requirements.txt
+        pip install -r requirements.txt  # Install main project dependencies
         pip install -e .  # Install tito CLI
         
     - name: Generate content and build book
       run: |
+        # Create and activate virtual environment for tito
+        python -m venv .venv
+        source .venv/bin/activate
+        pip install -r requirements.txt  # Install all dependencies including rich
+        pip install -e .  # Install tito CLI in virtual environment
         # Use tito to generate content and build book
         tito book build
         
