@@ -1,67 +1,72 @@
 
+
 <!DOCTYPE html>
 
 
-<html lang="en" data-content_root="../" >
+<html lang="en" data-content_root="" >
 
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-    <title>DataLoader - Data Loading and Preprocessing &#8212; Tiny🔥Torch: Build your own Machine Learning framework from scratch</title>
+    <title>Module: DataLoader &#8212; Tiny🔥Torch: Build your own Machine Learning framework from scratch</title>
   
   
   
   <script data-cfasync="false">
     document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
-    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
   </script>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
-<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
-<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link href="../_static/styles/theme.css?digest=5b4479735964841361fd" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=5b4479735964841361fd" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=5b4479735964841361fd" rel="stylesheet" />
 
   
-  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
-  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+  <link href="../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=5b4479735964841361fd" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
 
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
-    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
-    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css?v=6644e6bb" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
-<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
-  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=5b4479735964841361fd" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=5b4479735964841361fd" />
+  <script src="../_static/vendor/fontawesome/6.1.2/js/all.min.js?digest=5b4479735964841361fd"></script>
 
-    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
-    <script src="../_static/doctools.js?v=9a2dae69"></script>
-    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
-    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
-    <script src="../_static/copybutton.js?v=f281be69"></script>
-    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
     <script>let toggleHintShow = 'Click to show';</script>
     <script>let toggleHintHide = 'Click to hide';</script>
     <script>let toggleOpenOnPrint = 'true';</script>
-    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script src="../_static/togglebutton.js"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
-    <script src="../_static/design-tabs.js?v=36754332"></script>
-    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
-    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
-    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
-    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script src="../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../_static/sphinx-thebe.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'chapters/07-dataloader';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Autograd - Automatic Differentiation Engine" href="08-autograd.html" />
-    <link rel="prev" title="CNN - Convolutional Neural Networks" href="06-cnn.html" />
+    <link rel="next" title="Module: Autograd" href="08-autograd.html" />
+    <link rel="prev" title="Module: CNN" href="06-cnn.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -71,23 +76,28 @@
 
   
   
-  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  <a class="skip-link" href="#main-content">Skip to main content</a>
   
   <div id="pst-scroll-pixel-helper"></div>
+
   
   <button type="button" class="btn rounded-pill" id="pst-back-to-top">
-    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
 
   
   <input type="checkbox"
           class="sidebar-toggle"
-          id="pst-primary-sidebar-checkbox"/>
-  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
   
   <input type="checkbox"
           class="sidebar-toggle"
-          id="pst-secondary-sidebar-checkbox"/>
-  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
   
   <div class="search-button__wrapper">
     <div class="search-button__overlay"></div>
@@ -109,20 +119,12 @@
   <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
 </form></div>
   </div>
-
-  <div class="pst-async-banner-revealer d-none">
-  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
-</div>
-
   
-    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
-    </header>
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+    </nav>
   
-
   <div class="bd-container">
     <div class="bd-container__inner bd-page-width">
-      
-      
       
       <div class="bd-sidebar-primary bd-sidebar">
         
@@ -138,8 +140,6 @@
     <div class="sidebar-primary-items__start sidebar-primary__section">
         <div class="sidebar-primary-item">
 
-  
-    
   
 
 <a class="navbar-brand logo" href="../intro.html">
@@ -158,18 +158,7 @@
   
   
 </a></div>
-        <div class="sidebar-primary-item">
-
- <script>
- document.write(`
-   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <i class="fa-solid fa-magnifying-glass"></i>
-    <span class="search-button__default-text">Search</span>
-    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
-   </button>
- `);
- </script></div>
-        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item navbar-nav active">
         
         <ul class="nav bd-sidenav bd-sidenav__home-link">
@@ -225,7 +214,7 @@
 
       </div>
       
-      <main id="main-content" class="bd-main" role="main">
+      <main id="main-content" class="bd-main">
         
         
 
@@ -234,14 +223,14 @@
           <div class="bd-content">
             <div class="bd-article-container">
               
-              <div class="bd-header-article d-print-none">
+              <div class="bd-header-article">
 <div class="header-article-items header-article__inner">
   
     <div class="header-article-items__start">
       
-        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
   <span class="fa-solid fa-bars"></span>
-</button></div>
+</label></div>
       
     </div>
   
@@ -383,10 +372,10 @@
 
 <script>
 document.write(`
-  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
-    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
-    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
   </button>
 `);
 </script>
@@ -394,14 +383,14 @@ document.write(`
 
 <script>
 document.write(`
-  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <i class="fa-solid fa-magnifying-glass fa-lg"></i>
   </button>
 `);
 </script>
-<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <span class="fa-solid fa-list"></span>
-</button>
+</label>
 </div></div>
       
     </div>
@@ -412,7 +401,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>DataLoader - Data Loading and Preprocessing</h1>
+    <h1>Module: DataLoader</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -422,9 +411,36 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#build-use-reflect">Build → Use → Reflect</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-you-ll-learn">What You’ll Learn</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#interactive-learning">🚀 Interactive Learning</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-info">📊 Module Info</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-objectives">🎯 Learning Objectives</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#build-use-optimize">🧠 Build → Use → Optimize</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-you-ll-build">📚 What You’ll Build</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#complete-data-pipeline-system">Complete Data Pipeline System</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dataset-abstraction-system">Dataset Abstraction System</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#efficient-data-loading-system">Efficient Data Loading System</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#data-preprocessing-pipeline">Data Preprocessing Pipeline</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#getting-started">🚀 Getting Started</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#prerequisites">Prerequisites</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#development-workflow">Development Workflow</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#testing-your-implementation">🧪 Testing Your Implementation</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#comprehensive-test-suite">Comprehensive Test Suite</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#test-coverage-areas">Test Coverage Areas</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inline-testing-real-data-validation">Inline Testing &amp; Real Data Validation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#manual-testing-examples">Manual Testing Examples</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#key-concepts">🎯 Key Concepts</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#real-world-applications">Real-World Applications</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#data-engineering-principles">Data Engineering Principles</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#systems-performance-considerations">Systems Performance Considerations</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#production-ml-pipeline-patterns">Production ML Pipeline Patterns</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ready-to-build">🎉 Ready to Build?</a></li>
 </ul>
             </nav>
         </div>
@@ -434,42 +450,260 @@ document.write(`
               
                 
 <div id="searchbox"></div>
-                <article class="bd-article">
+                <article class="bd-article" role="main">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="dataloader-data-loading-and-preprocessing">
-<h1>DataLoader - Data Loading and Preprocessing<a class="headerlink" href="#dataloader-data-loading-and-preprocessing" title="Link to this heading">#</a></h1>
-<p>Welcome to the DataLoader module! This is where you’ll learn how to efficiently load, process, and manage data for machine learning systems.</p>
-<div class="tip admonition">
-<p class="admonition-title">🎯 Learning Goals</p>
-<ul class="simple">
-<li><p>Understand data pipelines as the foundation of ML systems</p></li>
-<li><p>Implement efficient data loading with memory management and batching</p></li>
-<li><p>Build reusable dataset abstractions for different data types</p></li>
-<li><p>Master the Dataset and DataLoader pattern used in all ML frameworks</p></li>
-<li><p>Learn systems thinking for data engineering and I/O optimization</p></li>
-</ul>
+  <section class="tex2jax_ignore mathjax_ignore" id="module-dataloader">
+<h1>Module: DataLoader<a class="headerlink" href="#module-dataloader" title="Permalink to this heading">#</a></h1>
+<div class="breadcrumb docutils">
+<p>Home → 07 Dataloader</p>
 </div>
-<section id="build-use-reflect">
-<h2>Build → Use → Reflect<a class="headerlink" href="#build-use-reflect" title="Link to this heading">#</a></h2>
+<div class="badges docutils">
+<p>⭐⭐⭐ | ⏱️ 4-5 hours</p>
+</div>
+<section id="module-info">
+<h2>📊 Module Info<a class="headerlink" href="#module-info" title="Permalink to this heading">#</a></h2>
+<ul class="simple">
+<li><p><strong>Difficulty</strong>: ⭐⭐⭐ Advanced</p></li>
+<li><p><strong>Time Estimate</strong>: 5-7 hours</p></li>
+<li><p><strong>Prerequisites</strong>: Tensor, Layers modules</p></li>
+<li><p><strong>Next Steps</strong>: Training, Networks modules</p></li>
+</ul>
+<p>Build the data pipeline foundation of TinyTorch! This module implements efficient data loading, preprocessing, and batching systems—the critical infrastructure that feeds neural networks during training and powers real-world ML systems.</p>
+</section>
+<section id="learning-objectives">
+<h2>🎯 Learning Objectives<a class="headerlink" href="#learning-objectives" title="Permalink to this heading">#</a></h2>
+<p>By the end of this module, you will be able to:</p>
+<ul class="simple">
+<li><p><strong>Design data pipeline architectures</strong>: Understand data engineering as the foundation of scalable ML systems</p></li>
+<li><p><strong>Implement reusable dataset abstractions</strong>: Build flexible interfaces that support multiple data sources and formats</p></li>
+<li><p><strong>Create efficient data loaders</strong>: Develop batching, shuffling, and streaming systems for optimal training performance</p></li>
+<li><p><strong>Build preprocessing pipelines</strong>: Implement normalization, augmentation, and transformation systems</p></li>
+<li><p><strong>Apply systems engineering principles</strong>: Handle memory management, I/O optimization, and error recovery in data pipelines</p></li>
+</ul>
+</section>
+<section id="build-use-optimize">
+<h2>🧠 Build → Use → Optimize<a class="headerlink" href="#build-use-optimize" title="Permalink to this heading">#</a></h2>
+<p>This module follows TinyTorch’s <strong>Build → Use → Optimize</strong> framework:</p>
 <ol class="arabic simple">
-<li><p><strong>Build</strong>: Create dataset classes and data loaders from scratch</p></li>
-<li><p><strong>Use</strong>: Load real datasets and feed them to neural networks</p></li>
-<li><p><strong>Reflect</strong>: How data engineering affects system performance and scalability</p></li>
+<li><p><strong>Build</strong>: Implement dataset abstractions, data loaders, and preprocessing pipelines from engineering principles</p></li>
+<li><p><strong>Use</strong>: Apply your data system to real CIFAR-10 dataset with complete train/test workflows</p></li>
+<li><p><strong>Optimize</strong>: Analyze performance characteristics, memory usage, and system bottlenecks for production readiness</p></li>
 </ol>
 </section>
-<section id="what-you-ll-learn">
-<h2>What You’ll Learn<a class="headerlink" href="#what-you-ll-learn" title="Link to this heading">#</a></h2>
-<p>By the end of this module, you’ll understand:</p>
+<section id="what-you-ll-build">
+<h2>📚 What You’ll Build<a class="headerlink" href="#what-you-ll-build" title="Permalink to this heading">#</a></h2>
+<section id="complete-data-pipeline-system">
+<h3>Complete Data Pipeline System<a class="headerlink" href="#complete-data-pipeline-system" title="Permalink to this heading">#</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># End-to-end data pipeline creation</span>
+<span class="n">train_loader</span><span class="p">,</span> <span class="n">test_loader</span><span class="p">,</span> <span class="n">normalizer</span> <span class="o">=</span> <span class="n">create_data_pipeline</span><span class="p">(</span>
+    <span class="n">dataset_path</span><span class="o">=</span><span class="s2">&quot;data/cifar10/&quot;</span><span class="p">,</span>
+    <span class="n">batch_size</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span>
+    <span class="n">normalize</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">)</span>
+
+<span class="c1"># Ready for neural network training</span>
+<span class="k">for</span> <span class="n">batch_images</span><span class="p">,</span> <span class="n">batch_labels</span> <span class="ow">in</span> <span class="n">train_loader</span><span class="p">:</span>
+    <span class="c1"># batch_images.shape: (32, 3, 32, 32) - normalized pixel values</span>
+    <span class="c1"># batch_labels.shape: (32,) - class indices</span>
+    <span class="n">predictions</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">batch_images</span><span class="p">)</span>
+    <span class="n">loss</span> <span class="o">=</span> <span class="n">compute_loss</span><span class="p">(</span><span class="n">predictions</span><span class="p">,</span> <span class="n">batch_labels</span><span class="p">)</span>
+    <span class="c1"># Continue training loop...</span>
+</pre></div>
+</div>
+</section>
+<section id="dataset-abstraction-system">
+<h3>Dataset Abstraction System<a class="headerlink" href="#dataset-abstraction-system" title="Permalink to this heading">#</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Flexible interface supporting multiple datasets</span>
+<span class="k">class</span> <span class="nc">Dataset</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">):</span> 
+        <span class="c1"># Return (data, label) for any dataset type</span>
+        <span class="k">pass</span>
+    <span class="k">def</span> <span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> 
+        <span class="c1"># Enable len() and iteration</span>
+        <span class="k">pass</span>
+
+<span class="c1"># Concrete implementation with real data</span>
+<span class="n">dataset</span> <span class="o">=</span> <span class="n">CIFAR10Dataset</span><span class="p">(</span><span class="s2">&quot;data/cifar10/&quot;</span><span class="p">,</span> <span class="n">train</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">download</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Loaded </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">dataset</span><span class="p">)</span><span class="si">}</span><span class="s2"> real samples&quot;</span><span class="p">)</span>  <span class="c1"># 50,000 training images</span>
+<span class="n">image</span><span class="p">,</span> <span class="n">label</span> <span class="o">=</span> <span class="n">dataset</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>  <span class="c1"># Access individual samples</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Sample shape: </span><span class="si">{</span><span class="n">image</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">, Label: </span><span class="si">{</span><span class="n">label</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="efficient-data-loading-system">
+<h3>Efficient Data Loading System<a class="headerlink" href="#efficient-data-loading-system" title="Permalink to this heading">#</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># High-performance batching with memory optimization</span>
+<span class="n">dataloader</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">(</span>
+    <span class="n">dataset</span><span class="o">=</span><span class="n">dataset</span><span class="p">,</span>
+    <span class="n">batch_size</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span>          <span class="c1"># Configurable batch size</span>
+    <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>           <span class="c1"># Training randomization</span>
+    <span class="n">drop_last</span><span class="o">=</span><span class="kc">False</span>         <span class="c1"># Handle incomplete batches</span>
+<span class="p">)</span>
+
+<span class="c1"># Pythonic iteration interface</span>
+<span class="k">for</span> <span class="n">batch_idx</span><span class="p">,</span> <span class="p">(</span><span class="n">batch_data</span><span class="p">,</span> <span class="n">batch_labels</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">dataloader</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Batch </span><span class="si">{</span><span class="n">batch_idx</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">batch_data</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="c1"># Automatic batching handles all the complexity</span>
+</pre></div>
+</div>
+</section>
+<section id="data-preprocessing-pipeline">
+<h3>Data Preprocessing Pipeline<a class="headerlink" href="#data-preprocessing-pipeline" title="Permalink to this heading">#</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Production-ready normalization system</span>
+<span class="n">normalizer</span> <span class="o">=</span> <span class="n">Normalizer</span><span class="p">()</span>
+
+<span class="c1"># Fit on training data (compute statistics once)</span>
+<span class="n">normalizer</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">training_images</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Mean: </span><span class="si">{</span><span class="n">normalizer</span><span class="o">.</span><span class="n">mean</span><span class="si">}</span><span class="s2">, Std: </span><span class="si">{</span><span class="n">normalizer</span><span class="o">.</span><span class="n">std</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># Apply to any dataset (training, validation, test)</span>
+<span class="n">normalized_images</span> <span class="o">=</span> <span class="n">normalizer</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">test_images</span><span class="p">)</span>
+<span class="c1"># Ensures consistent preprocessing across data splits</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="getting-started">
+<h2>🚀 Getting Started<a class="headerlink" href="#getting-started" title="Permalink to this heading">#</a></h2>
+<section id="prerequisites">
+<h3>Prerequisites<a class="headerlink" href="#prerequisites" title="Permalink to this heading">#</a></h3>
+<p>Ensure you have the foundational tensor operations:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Activate TinyTorch environment</span>
+<span class="nb">source</span><span class="w"> </span>bin/activate-tinytorch.sh
+
+<span class="c1"># Verify prerequisite modules</span>
+tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--module<span class="w"> </span>tensor
+tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--module<span class="w"> </span>layers
+</pre></div>
+</div>
+</section>
+<section id="development-workflow">
+<h3>Development Workflow<a class="headerlink" href="#development-workflow" title="Permalink to this heading">#</a></h3>
+<ol class="arabic simple">
+<li><p><strong>Open the development file</strong>: <code class="docutils literal notranslate"><span class="pre">modules/source/07_dataloader/dataloader_dev.py</span></code></p></li>
+<li><p><strong>Implement Dataset abstraction</strong>: Create the base interface for all data sources</p></li>
+<li><p><strong>Build CIFAR-10 dataset</strong>: Implement real dataset loading with binary file parsing</p></li>
+<li><p><strong>Create DataLoader system</strong>: Add batching, shuffling, and iteration functionality</p></li>
+<li><p><strong>Add preprocessing tools</strong>: Implement normalizer and transformation pipeline</p></li>
+<li><p><strong>Export and verify</strong>: <code class="docutils literal notranslate"><span class="pre">tito</span> <span class="pre">export</span> <span class="pre">--module</span> <span class="pre">dataloader</span> <span class="pre">&amp;&amp;</span> <span class="pre">tito</span> <span class="pre">test</span> <span class="pre">--module</span> <span class="pre">dataloader</span></code></p></li>
+</ol>
+</section>
+</section>
+<section id="testing-your-implementation">
+<h2>🧪 Testing Your Implementation<a class="headerlink" href="#testing-your-implementation" title="Permalink to this heading">#</a></h2>
+<section id="comprehensive-test-suite">
+<h3>Comprehensive Test Suite<a class="headerlink" href="#comprehensive-test-suite" title="Permalink to this heading">#</a></h3>
+<p>Run the full test suite to verify data engineering functionality:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># TinyTorch CLI (recommended)</span>
+tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--module<span class="w"> </span>dataloader
+
+<span class="c1"># Direct pytest execution</span>
+python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> </span>tests/<span class="w"> </span>-k<span class="w"> </span>dataloader<span class="w"> </span>-v
+</pre></div>
+</div>
+</section>
+<section id="test-coverage-areas">
+<h3>Test Coverage Areas<a class="headerlink" href="#test-coverage-areas" title="Permalink to this heading">#</a></h3>
 <ul class="simple">
-<li><p>The Dataset pattern for consistent data access</p></li>
-<li><p>How DataLoaders enable efficient batch processing</p></li>
-<li><p>Why batching and shuffling are crucial for ML</p></li>
-<li><p>How to handle datasets larger than memory</p></li>
-<li><p>The connection between data engineering and model performance</p></li>
+<li><p>✅ <strong>Dataset Interface</strong>: Verify abstract base class and concrete implementations</p></li>
+<li><p>✅ <strong>Real Data Loading</strong>: Test with actual CIFAR-10 dataset (downloads ~170MB)</p></li>
+<li><p>✅ <strong>Batching System</strong>: Ensure correct batch shapes and memory efficiency</p></li>
+<li><p>✅ <strong>Data Preprocessing</strong>: Verify normalization statistics and transformations</p></li>
+<li><p>✅ <strong>Pipeline Integration</strong>: Test complete train/test workflow with real data</p></li>
 </ul>
 </section>
-<section id="interactive-learning">
-<h2>🚀 Interactive Learning<a class="headerlink" href="#interactive-learning" title="Link to this heading">#</a></h2>
+<section id="inline-testing-real-data-validation">
+<h3>Inline Testing &amp; Real Data Validation<a class="headerlink" href="#inline-testing-real-data-validation" title="Permalink to this heading">#</a></h3>
+<p>The module includes comprehensive feedback using real CIFAR-10 data:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span># Example inline test output
+🔬 Unit Test: CIFAR-10 dataset loading...
+📥 Downloading CIFAR-10 dataset (170MB)...
+✅ Successfully loaded 50,000 training samples
+✅ Sample shapes correct: (3, 32, 32)
+✅ Labels in valid range: [0, 9]
+📈 Progress: CIFAR-10 Dataset ✓
+
+# DataLoader testing with real data
+🔬 Unit Test: DataLoader batching...
+✅ Batch shapes correct: (32, 3, 32, 32)
+✅ Shuffling produces different orders
+✅ Iteration covers all samples exactly once
+📈 Progress: DataLoader ✓
+</pre></div>
+</div>
+</section>
+<section id="manual-testing-examples">
+<h3>Manual Testing Examples<a class="headerlink" href="#manual-testing-examples" title="Permalink to this heading">#</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">tinytorch.core.tensor</span> <span class="kn">import</span> <span class="n">Tensor</span>
+<span class="kn">from</span> <span class="nn">dataloader_dev</span> <span class="kn">import</span> <span class="n">CIFAR10Dataset</span><span class="p">,</span> <span class="n">DataLoader</span><span class="p">,</span> <span class="n">Normalizer</span>
+
+<span class="c1"># Test dataset loading with real data</span>
+<span class="n">dataset</span> <span class="o">=</span> <span class="n">CIFAR10Dataset</span><span class="p">(</span><span class="s2">&quot;data/cifar10/&quot;</span><span class="p">,</span> <span class="n">train</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">download</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Dataset size: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">dataset</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Classes: </span><span class="si">{</span><span class="n">dataset</span><span class="o">.</span><span class="n">get_num_classes</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># Test data loading pipeline</span>
+<span class="n">dataloader</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">(</span><span class="n">dataset</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">batch_images</span><span class="p">,</span> <span class="n">batch_labels</span> <span class="ow">in</span> <span class="n">dataloader</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Batch shape: </span><span class="si">{</span><span class="n">batch_images</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Label range: </span><span class="si">{</span><span class="n">batch_labels</span><span class="o">.</span><span class="n">min</span><span class="p">()</span><span class="si">}</span><span class="s2"> to </span><span class="si">{</span><span class="n">batch_labels</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">break</span>  <span class="c1"># Just test first batch</span>
+
+<span class="c1"># Test preprocessing pipeline</span>
+<span class="n">normalizer</span> <span class="o">=</span> <span class="n">Normalizer</span><span class="p">()</span>
+<span class="n">sample_batch</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="nb">iter</span><span class="p">(</span><span class="n">dataloader</span><span class="p">))</span>
+<span class="n">normalizer</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">sample_batch</span><span class="p">)</span>
+<span class="n">normalized</span> <span class="o">=</span> <span class="n">normalizer</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">sample_batch</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Original range: [</span><span class="si">{</span><span class="n">sample_batch</span><span class="o">.</span><span class="n">min</span><span class="p">()</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">sample_batch</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Normalized range: [</span><span class="si">{</span><span class="n">normalized</span><span class="o">.</span><span class="n">min</span><span class="p">()</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">normalized</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="key-concepts">
+<h2>🎯 Key Concepts<a class="headerlink" href="#key-concepts" title="Permalink to this heading">#</a></h2>
+<section id="real-world-applications">
+<h3>Real-World Applications<a class="headerlink" href="#real-world-applications" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Production ML Systems</strong>: Companies like Netflix, Spotify use similar data pipelines for recommendation training</p></li>
+<li><p><strong>Computer Vision</strong>: ImageNet, COCO dataset loaders power research and production vision systems</p></li>
+<li><p><strong>Natural Language Processing</strong>: Text preprocessing pipelines enable language model training</p></li>
+<li><p><strong>Autonomous Systems</strong>: Real-time data streams from sensors require efficient pipeline architectures</p></li>
+</ul>
+</section>
+<section id="data-engineering-principles">
+<h3>Data Engineering Principles<a class="headerlink" href="#data-engineering-principles" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Interface Design</strong>: Abstract Dataset class enables switching between data sources seamlessly</p></li>
+<li><p><strong>Memory Efficiency</strong>: Streaming data loading prevents memory overflow with large datasets</p></li>
+<li><p><strong>I/O Optimization</strong>: Batching reduces system calls and improves throughput</p></li>
+<li><p><strong>Preprocessing Consistency</strong>: Fit-transform pattern ensures identical preprocessing across data splits</p></li>
+</ul>
+</section>
+<section id="systems-performance-considerations">
+<h3>Systems Performance Considerations<a class="headerlink" href="#systems-performance-considerations" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Batch Size Trade-offs</strong>: Larger batches improve GPU utilization but increase memory usage</p></li>
+<li><p><strong>Shuffling Strategy</strong>: Random access patterns for training vs sequential for inference</p></li>
+<li><p><strong>Caching and Storage</strong>: Balance between memory usage and I/O performance</p></li>
+<li><p><strong>Error Handling</strong>: Robust handling of corrupted data, network failures, disk issues</p></li>
+</ul>
+</section>
+<section id="production-ml-pipeline-patterns">
+<h3>Production ML Pipeline Patterns<a class="headerlink" href="#production-ml-pipeline-patterns" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>ETL Design</strong>: Extract (load files), Transform (preprocess), Load (batch) pattern</p></li>
+<li><p><strong>Data Versioning</strong>: Reproducible datasets with consistent preprocessing</p></li>
+<li><p><strong>Pipeline Monitoring</strong>: Track data quality, distribution shifts, processing times</p></li>
+<li><p><strong>Scalability Planning</strong>: Design for growing datasets and distributed processing</p></li>
+</ul>
+</section>
+</section>
+<section id="ready-to-build">
+<h2>🎉 Ready to Build?<a class="headerlink" href="#ready-to-build" title="Permalink to this heading">#</a></h2>
+<p>You’re about to build the data engineering foundation that powers every successful ML system! From startup prototypes to billion-dollar recommendation engines, they all depend on robust data pipelines like the one you’re building.</p>
+<p>This module teaches you the systems thinking that separates hobby projects from production ML systems. You’ll work with real data, handle real performance constraints, and build infrastructure that scales. Take your time, think about edge cases, and enjoy building the backbone of machine learning!</p>
 <p>Choose your preferred way to engage with this module:</p>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
 <div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-3 sd-row-cols-lg-3 docutils">
@@ -480,16 +714,16 @@ document.write(`
 🚀 Launch Binder</div>
 <p class="sd-card-text">Run this module interactively in your browser. No installation required!</p>
 </div>
-<a class="sd-stretched-link sd-hide-link-text reference external" href="https://mybinder.org/v2/gh/mlsysbook/TinyTorch/main?filepath=modules/source/07_dataloader/dataloader_dev.ipynb"><span>https://mybinder.org/v2/gh/mlsysbook/TinyTorch/main?filepath=modules/source/07_dataloader/dataloader_dev.ipynb</span></a></div>
+<a class="sd-stretched-link reference external" href="https://mybinder.org/v2/gh/mlsysbook/TinyTorch/main?filepath=modules/source/07_dataloader/dataloader_dev.ipynb"></a></div>
 </div>
 <div class="sd-col sd-d-flex-row docutils">
 <div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm sd-card-hover docutils">
 <div class="sd-card-body docutils">
 <div class="sd-card-title sd-font-weight-bold docutils">
-⚡ Open in Colab</div>
+⚡ Open in Colab  </div>
 <p class="sd-card-text">Use Google Colab for GPU access and cloud compute power.</p>
 </div>
-<a class="sd-stretched-link sd-hide-link-text reference external" href="https://colab.research.google.com/github/mlsysbook/TinyTorch/blob/main/modules/source/07_dataloader/dataloader_dev.ipynb"><span>https://colab.research.google.com/github/mlsysbook/TinyTorch/blob/main/modules/source/07_dataloader/dataloader_dev.ipynb</span></a></div>
+<a class="sd-stretched-link reference external" href="https://colab.research.google.com/github/mlsysbook/TinyTorch/blob/main/modules/source/07_dataloader/dataloader_dev.ipynb"></a></div>
 </div>
 <div class="sd-col sd-d-flex-row docutils">
 <div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm sd-card-hover docutils">
@@ -498,14 +732,19 @@ document.write(`
 📖 View Source</div>
 <p class="sd-card-text">Browse the Python source code and understand the implementation.</p>
 </div>
-<a class="sd-stretched-link sd-hide-link-text reference external" href="https://github.com/mlsysbook/TinyTorch/blob/main/modules/source/07_dataloader/dataloader_dev.py"><span>https://github.com/mlsysbook/TinyTorch/blob/main/modules/source/07_dataloader/dataloader_dev.py</span></a></div>
+<a class="sd-stretched-link reference external" href="https://github.com/mlsysbook/TinyTorch/blob/main/modules/source/07_dataloader/dataloader_dev.py"></a></div>
 </div>
 </div>
 </div>
 <div class="tip admonition">
 <p class="admonition-title">💾 Save Your Progress</p>
 <p><strong>Binder sessions are temporary!</strong> Download your completed notebook when done, or switch to local development for persistent work.</p>
-<p>Ready for serious development? → <a class="reference internal" href="../usage-paths/serious-development.html"><span class="std std-doc">🏗️ Local Setup Guide</span></a></p>
+<p>Ready for serious development? → <a class="reference internal" href="../usage-paths/serious-development.html"><span class="doc std std-doc">🏗️ Local Setup Guide</span></a></p>
+</div>
+<hr class="docutils" />
+<div class="prev-next-area">
+<a class="left-prev" href="../chapters/06_cnn.html" title="previous page">← Previous Module</a>
+<a class="right-next" href="../chapters/08_autograd.html" title="next page">Next Module →</a>
 </div>
 </section>
 </section>
@@ -537,7 +776,7 @@ document.write(`
               
               
               
-                <footer class="prev-next-footer d-print-none">
+                <footer class="prev-next-footer">
                   
 <div class="prev-next-area">
     <a class="left-prev"
@@ -546,7 +785,7 @@ document.write(`
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">CNN - Convolutional Neural Networks</p>
+        <p class="prev-next-title">Module: CNN</p>
       </div>
     </a>
     <a class="right-next"
@@ -554,7 +793,7 @@ document.write(`
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Autograd - Automatic Differentiation Engine</p>
+        <p class="prev-next-title">Module: Autograd</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -567,16 +806,42 @@ document.write(`
               
                 <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
-
   <div class="sidebar-secondary-item">
   <div class="page-toc tocsection onthispage">
     <i class="fa-solid fa-list"></i> Contents
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#build-use-reflect">Build → Use → Reflect</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-you-ll-learn">What You’ll Learn</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#interactive-learning">🚀 Interactive Learning</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-info">📊 Module Info</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-objectives">🎯 Learning Objectives</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#build-use-optimize">🧠 Build → Use → Optimize</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-you-ll-build">📚 What You’ll Build</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#complete-data-pipeline-system">Complete Data Pipeline System</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dataset-abstraction-system">Dataset Abstraction System</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#efficient-data-loading-system">Efficient Data Loading System</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#data-preprocessing-pipeline">Data Preprocessing Pipeline</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#getting-started">🚀 Getting Started</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#prerequisites">Prerequisites</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#development-workflow">Development Workflow</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#testing-your-implementation">🧪 Testing Your Implementation</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#comprehensive-test-suite">Comprehensive Test Suite</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#test-coverage-areas">Test Coverage Areas</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inline-testing-real-data-validation">Inline Testing &amp; Real Data Validation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#manual-testing-examples">Manual Testing Examples</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#key-concepts">🎯 Key Concepts</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#real-world-applications">Real-World Applications</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#data-engineering-principles">Data Engineering Principles</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#systems-performance-considerations">Systems Performance Considerations</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#production-ml-pipeline-patterns">Production ML Pipeline Patterns</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ready-to-build">🎉 Ready to Build?</a></li>
 </ul>
   </nav></div>
 
@@ -601,7 +866,7 @@ By Prof. Vijay Janapa Reddi (Harvard University)
 
   <p class="copyright">
     
-      © Copyright 2023.
+      © Copyright 2022.
       <br/>
     
   </p>
@@ -625,8 +890,8 @@ By Prof. Vijay Janapa Reddi (Harvard University)
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
-<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+  <script src="../_static/scripts/bootstrap.js?digest=5b4479735964841361fd"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=5b4479735964841361fd"></script>
 
   <footer class="bd-footer">
   </footer>

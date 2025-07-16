@@ -9,287 +9,222 @@ learning_objectives: []
 ---
 
 # Module: Networks
----
-**Course Navigation:** [Home](../intro.html) → [Networks](#)
 
----
+```{div} breadcrumb
+Home → 05 Networks
+```
 
+
+```{div} badges
+⭐⭐⭐ | ⏱️ 5-6 hours
+```
 
 
 ## 📊 Module Info
 - **Difficulty**: ⭐⭐⭐ Advanced
 - **Time Estimate**: 5-7 hours
 - **Prerequisites**: Tensor, Activations, Layers modules
-- **Next Steps**: Training, CNN modules
+- **Next Steps**: CNN, Training modules
 
-**Compose layers into complete neural network architectures with powerful visualizations**
+Compose layers into complete neural network architectures with powerful visualizations. This module teaches you that neural networks are function composition at scale—taking simple building blocks and combining them into systems capable of learning complex patterns and making intelligent decisions.
 
 ## 🎯 Learning Objectives
 
-After completing this module, you will:
-- Understand networks as function composition: `f(x) = layer_n(...layer_2(layer_1(x)))`
-- Build common architectures (MLP, CNN) from layers
-- Visualize network structure and data flow
-- See how architecture affects capability
-- Master forward pass inference (no training yet!)
+By the end of this module, you will be able to:
 
-> **Note:**
-> **MLP (Multi-Layer Perceptron) is not a fundamental building block, but a use case of composing Dense layers and activations in sequence.**
-> In TinyTorch, you will learn to build MLPs by composing primitives, not as a separate module. This approach helps you see that all architectures (MLP, CNN, etc.) are just patterns of composition, not new primitives.
+- **Master function composition**: Understand how networks are built as `f(x) = layer_n(...layer_2(layer_1(x)))`
+- **Design neural architectures**: Build MLPs, classifiers, and regressors from compositional principles
+- **Visualize network behavior**: Use advanced plotting to understand data flow and architectural decisions
+- **Analyze architectural trade-offs**: Compare depth vs width, activation choices, and design patterns
+- **Apply networks to real tasks**: Create appropriate architectures for classification and regression problems
 
-## 🧠 Build → Use → Understand
+## 🧠 Build → Use → Optimize
 
-This module follows the TinyTorch pedagogical framework:
+This module follows TinyTorch's **Build → Use → Optimize** framework:
 
-1. **Build**: Compose layers into complete networks
-2. **Use**: Create different architectures and run inference
-3. **Understand**: How architecture design affects network behavior
+1. **Build**: Compose layers into complete network architectures using function composition principles
+2. **Use**: Apply networks to classification and regression tasks, visualizing behavior and data flow
+3. **Optimize**: Analyze architectural choices, compare design patterns, and understand performance trade-offs
 
 ## 📚 What You'll Build
 
-### **Sequential Network**
+### Sequential Network Architecture
 ```python
-# Basic network composition
+# Function composition in action
 network = Sequential([
-    Dense(784, 128),
-    ReLU(),
-    Dense(128, 64),
-    ReLU(),
-    Dense(64, 10),
-    Sigmoid()
+    Dense(784, 128),    # Input transformation
+    ReLU(),             # Nonlinearity
+    Dense(128, 64),     # Feature compression
+    ReLU(),             # More nonlinearity
+    Dense(64, 10),      # Classification head
+    Sigmoid()           # Probability outputs
 ])
 
-# Forward pass
-x = Tensor([[1.0, 2.0, 3.0, ...]])  # Input data
-output = network(x)  # Network prediction
+# Single forward pass processes entire batch
+x = Tensor([[...]])  # Input batch
+predictions = network(x)  # End-to-end inference
 ```
 
-### **MLP (Multi-Layer Perceptron)**
+### Specialized Network Builders
 ```python
-# Create MLP for classification
-mlp = create_mlp(
-    input_size=784,      # 28x28 image
-    hidden_sizes=[128, 64],  # Hidden layers
-    output_size=10,      # 10 classes
-    activation=ReLU,
-    output_activation=Sigmoid
-)
-```
-
-### **Specialized Networks**
-```python
-# Classification network
-classifier = create_classification_network(
-    input_size=100, num_classes=2
+# MLP for multi-class classification
+classifier = create_mlp(
+    input_size=784,           # Flattened 28x28 images
+    hidden_sizes=[256, 128],  # Two hidden layers
+    output_size=10,           # 10 digit classes
+    activation=ReLU,          # Hidden layer activation
+    output_activation=Sigmoid  # Probability outputs
 )
 
-# Regression network  
+# Regression network for continuous prediction
 regressor = create_regression_network(
-    input_size=13, output_size=1
+    input_size=13,       # Housing features
+    hidden_sizes=[64, 32], # Progressive compression
+    output_size=1        # Single price prediction
+)
+
+# Binary classification with appropriate architecture
+binary_classifier = create_classification_network(
+    input_size=100,
+    num_classes=2,
+    architecture='deep'  # Optimized for binary tasks
 )
 ```
 
-## 🎨 Visualization Features
+### Advanced Network Analysis
+```python
+# Comprehensive architecture visualization
+visualize_network_architecture(network)
+# Shows: layer types, connections, parameter counts, data flow
 
-This module includes powerful visualizations to help you understand:
+# Behavior analysis with real data
+analyze_network_behavior(network, sample_data)
+# Shows: activation patterns, layer statistics, transformation analysis
 
-### **Network Architecture Visualization**
-- **Layer-by-layer structure**: See how layers connect
-- **Color-coded layers**: Different colors for Dense, ReLU, Sigmoid, etc.
-- **Connection arrows**: Visualize data flow between layers
-- **Layer details**: Input/output sizes and parameters
-
-### **Data Flow Visualization**
-- **Shape transformations**: See how tensor shapes change through the network
-- **Activation patterns**: Visualize intermediate layer outputs
-- **Statistics tracking**: Mean, std, and distribution of activations
-- **Layer analysis**: Understand what each layer learns
-
-### **Network Comparison**
-- **Side-by-side analysis**: Compare different architectures
-- **Performance metrics**: Output distributions and statistics
-- **Architectural insights**: Layer type distributions and complexity
-
-### **Behavior Analysis**
-- **Input-output relationships**: How inputs map to outputs
-- **Activation patterns**: Layer-by-layer activation analysis
-- **Network depth**: Understanding the role of depth vs width
-- **Practical insights**: Real-world application considerations
+# Architectural comparison
+compare_networks([shallow_net, deep_net, wide_net])
+# Shows: performance characteristics, complexity trade-offs
+```
 
 ## 🚀 Getting Started
 
 ### Prerequisites
-- Complete Module 1: Tensor ✅
-- Complete Module 2: Layers ✅
-- Understand basic function composition
-- Familiar with matplotlib for visualizations
+Ensure you have mastered the foundational building blocks:
 
-### Quick Start
 ```bash
-# Navigate to the networks module
-cd modules/networks
+# Activate TinyTorch environment
+source bin/activate-tinytorch.sh
 
-# Work in the development notebook
-jupyter notebook networks_dev.ipynb
-
-# Or work in the Python file
-code networks_dev.py
+# Verify all prerequisite modules
+tito test --module tensor
+tito test --module activations
+tito test --module layers
 ```
 
-## 📖 Module Structure
-
-```
-modules/networks/
-├── networks_dev.py           # Main development file (work here!)
-├── networks_dev.ipynb        # Jupyter notebook version
-├── tests/
-│   └── test_networks.py      # Comprehensive tests
-├── README.md                # This file
-└── solutions/               # Reference implementations (if stuck)
-```
-
-## 🎓 Learning Path
-
-### Step 1: Sequential Network (Function Composition)
-- Understand `f(x) = layer_n(...layer_1(x))`
-- Implement basic network composition
-- Test with simple examples
-
-### Step 2: Network Visualization
-- Visualize network architectures
-- Understand data flow through networks
-- Compare different network designs
-
-### Step 3: Common Architectures
-- Build MLPs for different tasks
-- Create classification networks
-- Design regression networks
-
-### Step 4: Behavior Analysis
-- Analyze network behavior with different inputs
-- Understand architectural trade-offs
-- See how design affects capability
-
-### Step 5: Practical Applications
-- Build networks for real problems
-- Understand classification vs regression
-- See how architecture matches task
+### Development Workflow
+1. **Open the development file**: `modules/source/05_networks/networks_dev.py`
+2. **Implement Sequential class**: Build the composition framework for chaining layers
+3. **Create network builders**: Implement MLPs and specialized architectures
+4. **Add visualization tools**: Build plotting functions for network analysis
+5. **Test with real scenarios**: Apply networks to classification and regression tasks
+6. **Export and verify**: `tito export --module networks && tito test --module networks`
 
 ## 🧪 Testing Your Implementation
 
-### Module-Level Tests
-```bash
-# Run comprehensive tests
-python -m pytest tests/test_networks.py -v
+### Comprehensive Test Suite
+Run the full test suite to verify architectural correctness:
 
-# Quick test
-python -c "from networks_dev import Sequential; print('✅ Networks working!')"
+```bash
+# TinyTorch CLI (recommended)
+tito test --module networks
+
+# Direct pytest execution
+python -m pytest tests/ -k networks -v
 ```
 
-### Package-Level Tests
-```bash
-# Export to package
-python ../../bin/tito sync
+### Test Coverage Areas
+- ✅ **Sequential Composition**: Verify layers chain correctly with proper data flow
+- ✅ **Network Builders**: Test MLP and specialized network creation functions
+- ✅ **Shape Consistency**: Ensure networks handle various input shapes and batch sizes
+- ✅ **Visualization Functions**: Verify plotting and analysis tools work correctly
+- ✅ **Real-world Applications**: Test networks on classification and regression tasks
 
-# Test integration
-python ../../bin/tito test --module networks
+### Inline Testing & Visualization
+The module includes comprehensive educational feedback and visual analysis:
+```python
+# Example inline test output
+🔬 Unit Test: Sequential network composition...
+✅ Layers chain correctly with proper data flow
+✅ Forward pass produces expected output shapes
+✅ Network handles batch processing correctly
+📈 Progress: Sequential Networks ✓
+
+# Visualization feedback
+📊 Generating network architecture visualization...
+📈 Showing data flow through 3-layer MLP
+📊 Layer analysis: 784→128→64→10 parameter flow
+```
+
+### Manual Testing Examples
+```python
+from tinytorch.core.tensor import Tensor
+from networks_dev import Sequential, create_mlp
+from layers_dev import Dense
+from activations_dev import ReLU, Sigmoid
+
+# Test network composition
+network = Sequential([
+    Dense(10, 5),
+    ReLU(),
+    Dense(5, 2),
+    Sigmoid()
+])
+
+# Forward pass
+x = Tensor([[1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0]])
+output = network(x)
+print(f"Network output: {output.data}, Shape: {output.shape}")
+
+# Test MLP builder
+mlp = create_mlp(input_size=4, hidden_sizes=[8, 4], output_size=2)
+test_input = Tensor([[1.0, 2.0, 3.0, 4.0]])
+prediction = mlp(test_input)
+print(f"MLP prediction: {prediction.data}")
 ```
 
 ## 🎯 Key Concepts
 
-### **Function Composition**
-- Networks as `f(x) = g(h(x))`
-- Each layer is a function
-- Composition creates complex behavior
+### Real-World Applications
+- **Image Classification**: ResNet and VGG architectures use sequential composition of convolutional and dense layers
+- **Natural Language Processing**: Transformer architectures compose attention layers with feed-forward networks
+- **Recommendation Systems**: Deep collaborative filtering uses MLPs to learn user-item interactions
+- **Autonomous Systems**: Neural networks in self-driving cars compose perception, planning, and control layers
 
-### **Architecture Design**
-- **Depth**: Number of layers
-- **Width**: Number of neurons per layer
-- **Activation**: Nonlinearity choices
-- **Output**: Task-specific final layer
+### Function Composition Theory
+- **Mathematical Foundation**: Networks implement nested function composition `f_n(f_{n-1}(...f_1(x)))`
+- **Universal Approximation**: MLPs with sufficient width can approximate any continuous function
+- **Depth vs Width Trade-offs**: Deep networks learn hierarchical features, wide networks increase expressivity
+- **Architectural Inductive Biases**: Network structure encodes assumptions about the problem domain
 
-### **Visualization Benefits**
-- **Debugging**: See where things go wrong
-- **Understanding**: Visualize complex transformations
-- **Design**: Compare different architectures
-- **Intuition**: Build mental models of networks
+### Visualization and Analysis
+- **Architecture Visualization**: Understand network structure through visual representation
+- **Data Flow Analysis**: Track how information transforms through each layer
+- **Activation Pattern Analysis**: Visualize what each layer learns to represent
+- **Comparative Analysis**: Understand trade-offs between different architectural choices
 
-### **Practical Considerations**
-- **Input size**: Must match your data
-- **Output size**: Must match your task
-- **Hidden layers**: Balance complexity vs overfitting
-- **Activation functions**: Choose based on task
+### Design Patterns and Best Practices
+- **Progressive Dimensionality**: Common pattern of gradually reducing dimensions toward output
+- **Activation Placement**: Standard practice of activation after each linear transformation
+- **Output Layer Design**: Task-specific final layers (sigmoid for binary, softmax for multi-class)
+- **Network Depth Guidelines**: Balance between expressivity and training difficulty
 
-## 🔍 Common Issues
+## 🎉 Ready to Build?
 
-### **Import Errors**
-```python
-# Make sure you're in the right directory
-import sys
-sys.path.append('../../')
-from modules.layers.layers_dev import Dense
-from modules.activations.activations_dev import ReLU, Sigmoid
-```
+You're about to master the art of neural architecture design! This is where the magic happens—taking simple mathematical building blocks and composing them into systems capable of recognizing images, understanding language, and making intelligent decisions.
 
-### **Shape Mismatches**
-```python
-# Check layer sizes match
-layer1 = Dense(3, 4)    # 3 inputs, 4 outputs
-layer2 = Dense(4, 2)    # 4 inputs (matches layer1 output), 2 outputs
-```
+Every breakthrough in AI, from AlexNet to GPT, started with someone thoughtfully composing layers into powerful architectures. You're about to learn those same composition principles and build networks that can solve real problems!
 
-### **Visualization Issues**
-```python
-# Make sure matplotlib is installed
-pip install matplotlib seaborn
-
-# Check if plots are disabled during testing
-if _should_show_plots():
-    # Your visualization code
-    pass
-```
-
-## 🎉 Success Criteria
-
-You've successfully completed this module when:
-- ✅ All tests pass (`pytest tests/test_networks.py`)
-- ✅ You can build and visualize different network architectures
-- ✅ You understand how architecture affects network behavior
-- ✅ You can create networks for classification and regression tasks
-- ✅ Package export works (`tito test --module networks`)
-
-## 🚀 What's Next
-
-After completing this module, you're ready for:
-- **Module 4: Training** - Learn how networks learn from data
-- **Module 5: Data** - Work with real datasets
-- **Module 6: Applications** - Solve real-world problems
-
-## 🤝 Getting Help
-
-- Check the tests for examples of expected behavior
-- Look at the solutions/ directory if you're stuck
-- Review the pedagogical principles in `docs/pedagogy/`
-- Remember: Build → Use → Understand!
-
-## 🎨 Visualization Examples
-
-### Network Architecture
-```
-Input → Dense(784,128) → ReLU → Dense(128,64) → ReLU → Dense(64,10) → Sigmoid → Output
-```
-
-### Data Flow
-```
-(1,784) → (1,128) → (1,128) → (1,64) → (1,64) → (1,10) → (1,10)
-```
-
-### Layer Analysis
-- **Dense layers**: Linear transformations
-- **ReLU**: Introduces nonlinearity
-- **Sigmoid**: Outputs probabilities
-
-**Build powerful neural networks with beautiful visualizations!** 🚀 
+ 
 
 
 Choose your preferred way to engage with this module:
