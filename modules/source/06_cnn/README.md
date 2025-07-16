@@ -68,3 +68,9 @@ python -m pytest tests/test_cnn.py -v
 ## 💡 Key Insight
 > **Convolution is a new, fundamental building block.**
 > By implementing it yourself, you’ll understand the magic behind modern vision models! 
+
+## 🎉 Ready to Build?
+
+The CNN module brings computer vision to TinyTorch! You're about to implement the core operation that powers modern image recognition, from filters and feature maps to complete convolutional networks.
+
+Take your time, test thoroughly, and enjoy building something that really works! 🔥
