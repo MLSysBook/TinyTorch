@@ -54,13 +54,13 @@ While TinyTorch teaches you to build complete ML systems from scratch, these res
 
 ### **Minimal Frameworks**
 - **[Micrograd](https://github.com/karpathy/micrograd)** by Andrej Karpathy  
-  *Minimal autograd engine in 100 lines. **Micrograd teaches engine parts, TinyTorch teaches you to design the whole vehicle and drive it.***
+  *Minimal autograd engine in 100 lines. **Micrograd shows you the math, TinyTorch shows you the systems.***
 
 - **[Tinygrad](https://github.com/geohot/tinygrad)** by George Hotz  
-  *Performance-focused educational framework. **Tinygrad optimizes for speed, TinyTorch optimizes for learning systems thinking.***
+  *Performance-focused educational framework. **Tinygrad optimizes for speed, TinyTorch optimizes for learning.***
 
 - **[Neural Networks from Scratch](https://nnfs.io/)** by Harrison Kinsley  
-  *Math-heavy implementation approach. **NNFS teaches you the engine parts, TinyTorch teaches you to design the whole vehicle and drive it.***
+  *Math-heavy implementation approach. **NNFS focuses on algorithms, TinyTorch focuses on complete systems engineering.***
 
 ---
 
@@ -73,12 +73,9 @@ While TinyTorch teaches you to build complete ML systems from scratch, these res
 - **[PyTorch Documentation: Extending PyTorch](https://pytorch.org/docs/stable/notes/extending.html)**  
   *Custom operators and autograd functions - apply your TinyTorch knowledge*
 
-### **MLOps & Production**
+### **Development Tools**
 - **[Papers With Code](https://paperswithcode.com/)**  
   *Research papers with implementation code - apply your skills to reproduce results*
-
-- **[MLOps Community](https://mlops.community/)**  
-  *Production ML engineering discussions and best practices*
 
 - **[Weights & Biases](https://wandb.ai/)**  
   *Experiment tracking and model management - scale your TinyTorch training*
