@@ -824,8 +824,8 @@ print("✅ Complete integration tests")
 print("\nYou now understand the core mechanism powering modern AI! 🚀")
 print("Next: Learn how to build complete transformer models using this foundation.")
 
-def test_attention_mechanism_comprehensive():
-    """Test attention mechanism implementation comprehensively."""
+def test_attention_mechanism():
+    """Test attention mechanism implementation."""
     print("🔬 Unit Test: Attention Mechanism...")
     
     # Test basic attention
@@ -840,8 +840,8 @@ def test_attention_mechanism_comprehensive():
     
     print("✅ Attention mechanism works correctly")
 
-def test_self_attention_wrapper_comprehensive():
-    """Test self-attention wrapper implementation comprehensively."""
+def test_self_attention_wrapper():
+    """Test self-attention wrapper implementation."""
     print("🔬 Unit Test: Self-Attention Wrapper...")
     
     # Test self-attention
@@ -855,9 +855,9 @@ def test_self_attention_wrapper_comprehensive():
     
     print("✅ Self-attention wrapper works correctly")
 
-def test_attention_masking_comprehensive():
-    """Test attention masking implementation comprehensively."""
-    print("🔬 Unit Test: Attention Masking...")
+def test_masking_utilities():
+    """Test attention masking utilities."""
+    print("🔬 Unit Test: Masking Utilities...")
     
     # Test causal mask
     causal_mask = create_causal_mask(4)
@@ -871,7 +871,7 @@ def test_attention_masking_comprehensive():
     bidirectional_mask = create_bidirectional_mask(3)
     assert np.all(bidirectional_mask == 1), "Bidirectional mask should be all ones"
     
-    print("✅ Attention masking works correctly")
+    print("✅ Masking utilities work correctly")
 
 # %% [markdown]
 """
