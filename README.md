@@ -6,6 +6,7 @@
 ![Educational Project](https://img.shields.io/badge/purpose-educational-informational)
 [![GitHub](https://img.shields.io/badge/github-mlsysbook/TinyTorch-blue.svg)](https://github.com/MLSysBook/TinyTorch)
 [![Python](https://img.shields.io/badge/python-3.8+-green.svg)](https://python.org)
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/MLSysBook/TinyTorch/main)
 [![Jupyter Book](https://img.shields.io/badge/docs-Jupyter_Book-orange.svg)](https://mlsysbook.github.io/TinyTorch/)
 
 📚 **[Read the Interactive Course →](https://mlsysbook.github.io/TinyTorch/)**
