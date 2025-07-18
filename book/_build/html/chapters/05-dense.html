@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-    <title>Module: CNN &#8212; Tiny🔥Torch: Build your own Machine Learning framework from scratch</title>
+    <title>Module: Networks &#8212; Tiny🔥Torch</title>
   
   
   
@@ -62,11 +62,11 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../_static/sphinx-thebe.js"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'chapters/06-cnn';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'chapters/05-dense';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Module: DataLoader" href="07-dataloader.html" />
-    <link rel="prev" title="Module: Networks" href="05-networks.html" />
+    <link rel="next" title="Module: CNN" href="06-spatial.html" />
+    <link rel="prev" title="Module: Layers" href="04-layers.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -153,8 +153,8 @@ const thebe_selector_output = ".output, .cell_output"
       
     
     
-    <img src="../_static/logo.png" class="logo__image only-light" alt="Tiny🔥Torch: Build your own Machine Learning framework from scratch - Home"/>
-    <script>document.write(`<img src="../_static/logo.png" class="logo__image only-dark" alt="Tiny🔥Torch: Build your own Machine Learning framework from scratch - Home"/>`);</script>
+    <img src="../_static/logo.png" class="logo__image only-light" alt="Tiny🔥Torch - Home"/>
+    <script>document.write(`<img src="../_static/logo.png" class="logo__image only-dark" alt="Tiny🔥Torch - Home"/>`);</script>
   
   
 </a></div>
@@ -164,7 +164,7 @@ const thebe_selector_output = ".output, .cell_output"
         <ul class="nav bd-sidenav bd-sidenav__home-link">
             <li class="toctree-l1">
                 <a class="reference internal" href="../intro.html">
-                    Tiny🔥Torch: Build your own Machine Learning framework from scratch.
+                    Tiny🔥Torch
                 </a>
             </li>
         </ul>
@@ -183,26 +183,31 @@ const thebe_selector_output = ".output, .cell_output"
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Building Blocks</span></p>
 <ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="04-layers.html">4. Layers</a></li>
-<li class="toctree-l1"><a class="reference internal" href="05-networks.html">5. Networks</a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">6. CNNs</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">5. Dense</a></li>
+<li class="toctree-l1"><a class="reference internal" href="06-spatial.html">6. Spatial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="07-attention.html">7. Attention</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Training Systems</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="07-dataloader.html">7. DataLoader</a></li>
-<li class="toctree-l1"><a class="reference internal" href="08-autograd.html">8. Autograd</a></li>
-<li class="toctree-l1"><a class="reference internal" href="09-optimizers.html">9. Optimizers</a></li>
-<li class="toctree-l1"><a class="reference internal" href="10-training.html">10. Training</a></li>
+<li class="toctree-l1"><a class="reference internal" href="08-dataloader.html">8. DataLoader</a></li>
+<li class="toctree-l1"><a class="reference internal" href="09-autograd.html">9. Autograd</a></li>
+<li class="toctree-l1"><a class="reference internal" href="10-optimizers.html">10. Optimizers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="11-training.html">11. Training</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Production &amp; Performance</span></p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Inference &amp; Serving</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="11-compression.html">11. Compression</a></li>
-<li class="toctree-l1"><a class="reference internal" href="12-kernels.html">12. Kernels</a></li>
-<li class="toctree-l1"><a class="reference internal" href="13-benchmarking.html">13. Benchmarking</a></li>
-<li class="toctree-l1"><a class="reference internal" href="14-mlops.html">14. MLOps</a></li>
+<li class="toctree-l1"><a class="reference internal" href="12-compression.html">12. Compression</a></li>
+<li class="toctree-l1"><a class="reference internal" href="13-kernels.html">13. Kernels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="14-benchmarking.html">14. Benchmarking</a></li>
+<li class="toctree-l1"><a class="reference internal" href="15-mlops.html">15. MLOps</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Capstone Project</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="15-capstone.html">15. Capstone</a></li>
+<li class="toctree-l1"><a class="reference internal" href="16-capstone.html">16. Capstone</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Additional Resources</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../resources.html">📚 Learning Resources</a></li>
 </ul>
 
     </div>
@@ -274,7 +279,7 @@ const thebe_selector_output = ".output, .cell_output"
       
       
       
-      <li><a href="https://github.com/mlsysbook/TinyTorch/edit/main/book/chapters/06-cnn.md" target="_blank"
+      <li><a href="https://github.com/mlsysbook/TinyTorch/edit/main/book/chapters/05-dense.md" target="_blank"
    class="btn btn-sm btn-source-edit-button dropdown-item"
    title="Suggest edit"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -291,7 +296,7 @@ const thebe_selector_output = ".output, .cell_output"
       
       
       
-      <li><a href="https://github.com/mlsysbook/TinyTorch/issues/new?title=Issue%20on%20page%20%2Fchapters/06-cnn.html&body=Your%20issue%20content%20here." target="_blank"
+      <li><a href="https://github.com/mlsysbook/TinyTorch/issues/new?title=Issue%20on%20page%20%2Fchapters/05-dense.html&body=Your%20issue%20content%20here." target="_blank"
    class="btn btn-sm btn-source-issues-button dropdown-item"
    title="Open an issue"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -321,7 +326,7 @@ const thebe_selector_output = ".output, .cell_output"
       
       
       
-      <li><a href="../_sources/chapters/06-cnn.md" target="_blank"
+      <li><a href="../_sources/chapters/05-dense.md" target="_blank"
    class="btn btn-sm btn-download-source-button dropdown-item"
    title="Download source file"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -405,7 +410,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Module: CNN</h1>
+    <h1>Module: Networks</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -417,12 +422,11 @@ document.write(`
                 <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-info">📊 Module Info</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-objectives">🎯 Learning Objectives</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#build-use-analyze">🧠 Build → Use → Analyze</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#build-use-optimize">🧠 Build → Use → Optimize</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-you-ll-build">📚 What You’ll Build</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#core-convolution-implementation">Core Convolution Implementation</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#complete-cnn-architecture">Complete CNN Architecture</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#convolution-operation-details">Convolution Operation Details</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cnn-building-blocks">CNN Building Blocks</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sequential-network-architecture">Sequential Network Architecture</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#specialized-network-builders">Specialized Network Builders</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#advanced-network-analysis">Advanced Network Analysis</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#getting-started">🚀 Getting Started</a><ul class="nav section-nav flex-column">
@@ -439,9 +443,9 @@ document.write(`
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#key-concepts">🎯 Key Concepts</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#real-world-applications">Real-World Applications</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#computer-vision-fundamentals">Computer Vision Fundamentals</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#convolution-mathematics">Convolution Mathematics</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cnn-architecture-patterns">CNN Architecture Patterns</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#function-composition-theory">Function Composition Theory</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#visualization-and-analysis">Visualization and Analysis</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#design-patterns-and-best-practices">Design Patterns and Best Practices</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ready-to-build">🎉 Ready to Build?</a></li>
@@ -456,103 +460,110 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article" role="main">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="module-cnn">
-<h1>Module: CNN<a class="headerlink" href="#module-cnn" title="Permalink to this heading">#</a></h1>
+  <section class="tex2jax_ignore mathjax_ignore" id="module-networks">
+<h1>Module: Networks<a class="headerlink" href="#module-networks" title="Permalink to this heading">#</a></h1>
 <div class="badges docutils">
-<p>⭐⭐⭐ | ⏱️ 6-8 hours</p>
+<p>⭐⭐⭐ | ⏱️ 5-6 hours</p>
 </div>
 <section id="module-info">
 <h2>📊 Module Info<a class="headerlink" href="#module-info" title="Permalink to this heading">#</a></h2>
 <ul class="simple">
 <li><p><strong>Difficulty</strong>: ⭐⭐⭐ Advanced</p></li>
-<li><p><strong>Time Estimate</strong>: 6-8 hours</p></li>
-<li><p><strong>Prerequisites</strong>: Tensor, Activations, Layers, Networks modules</p></li>
-<li><p><strong>Next Steps</strong>: Training, Computer Vision modules</p></li>
+<li><p><strong>Time Estimate</strong>: 5-7 hours</p></li>
+<li><p><strong>Prerequisites</strong>: Tensor, Activations, Layers modules</p></li>
+<li><p><strong>Next Steps</strong>: CNN, Training modules</p></li>
 </ul>
-<p>Implement the core building block of modern computer vision: the convolutional layer. This module teaches you how convolution transforms computer vision from hand-crafted features to learned hierarchical representations that power everything from image recognition to autonomous vehicles.</p>
+<p>Compose layers into complete neural network architectures with powerful visualizations. This module teaches you that neural networks are function composition at scale—taking simple building blocks and combining them into systems capable of learning complex patterns and making intelligent decisions.</p>
 </section>
 <section id="learning-objectives">
 <h2>🎯 Learning Objectives<a class="headerlink" href="#learning-objectives" title="Permalink to this heading">#</a></h2>
 <p>By the end of this module, you will be able to:</p>
 <ul class="simple">
-<li><p><strong>Understand convolution fundamentals</strong>: Master the sliding window operation, local connectivity, and weight sharing principles</p></li>
-<li><p><strong>Implement Conv2D from scratch</strong>: Build convolutional layers using explicit loops to understand the core operation</p></li>
-<li><p><strong>Visualize feature learning</strong>: See how convolution builds feature maps and hierarchical representations</p></li>
-<li><p><strong>Design CNN architectures</strong>: Compose convolutional layers with pooling and dense layers into complete networks</p></li>
-<li><p><strong>Apply computer vision principles</strong>: Understand how CNNs revolutionized image processing and pattern recognition</p></li>
+<li><p><strong>Master function composition</strong>: Understand how networks are built as <code class="docutils literal notranslate"><span class="pre">f(x)</span> <span class="pre">=</span> <span class="pre">layer_n(...layer_2(layer_1(x)))</span></code></p></li>
+<li><p><strong>Design neural architectures</strong>: Build MLPs, classifiers, and regressors from compositional principles</p></li>
+<li><p><strong>Visualize network behavior</strong>: Use advanced plotting to understand data flow and architectural decisions</p></li>
+<li><p><strong>Analyze architectural trade-offs</strong>: Compare depth vs width, activation choices, and design patterns</p></li>
+<li><p><strong>Apply networks to real tasks</strong>: Create appropriate architectures for classification and regression problems</p></li>
 </ul>
 </section>
-<section id="build-use-analyze">
-<h2>🧠 Build → Use → Analyze<a class="headerlink" href="#build-use-analyze" title="Permalink to this heading">#</a></h2>
-<p>This module follows TinyTorch’s <strong>Build → Use → Analyze</strong> framework:</p>
+<section id="build-use-optimize">
+<h2>🧠 Build → Use → Optimize<a class="headerlink" href="#build-use-optimize" title="Permalink to this heading">#</a></h2>
+<p>This module follows TinyTorch’s <strong>Build → Use → Optimize</strong> framework:</p>
 <ol class="arabic simple">
-<li><p><strong>Build</strong>: Implement Conv2D from scratch using explicit for-loops to understand the core convolution operation</p></li>
-<li><p><strong>Use</strong>: Compose Conv2D with activation functions and other layers to build complete convolutional networks</p></li>
-<li><p><strong>Analyze</strong>: Visualize learned features, understand architectural choices, and compare CNN performance characteristics</p></li>
+<li><p><strong>Build</strong>: Compose layers into complete network architectures using function composition principles</p></li>
+<li><p><strong>Use</strong>: Apply networks to classification and regression tasks, visualizing behavior and data flow</p></li>
+<li><p><strong>Optimize</strong>: Analyze architectural choices, compare design patterns, and understand performance trade-offs</p></li>
 </ol>
 </section>
 <section id="what-you-ll-build">
 <h2>📚 What You’ll Build<a class="headerlink" href="#what-you-ll-build" title="Permalink to this heading">#</a></h2>
-<section id="core-convolution-implementation">
-<h3>Core Convolution Implementation<a class="headerlink" href="#core-convolution-implementation" title="Permalink to this heading">#</a></h3>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Conv2D layer: the heart of computer vision</span>
-<span class="n">conv_layer</span> <span class="o">=</span> <span class="n">Conv2D</span><span class="p">(</span><span class="n">in_channels</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">out_channels</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
-<span class="n">input_image</span> <span class="o">=</span> <span class="n">Tensor</span><span class="p">([[[[</span><span class="o">...</span><span class="p">]]]])</span>  <span class="c1"># (batch, channels, height, width)</span>
-<span class="n">feature_maps</span> <span class="o">=</span> <span class="n">conv_layer</span><span class="p">(</span><span class="n">input_image</span><span class="p">)</span>  <span class="c1"># Learned features</span>
-
-<span class="c1"># Understanding the operation</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Input shape: </span><span class="si">{</span><span class="n">input_image</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>     <span class="c1"># (1, 3, 32, 32)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Output shape: </span><span class="si">{</span><span class="n">feature_maps</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>   <span class="c1"># (1, 16, 30, 30)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Learned </span><span class="si">{</span><span class="n">feature_maps</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2"> different feature detectors&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-</section>
-<section id="complete-cnn-architecture">
-<h3>Complete CNN Architecture<a class="headerlink" href="#complete-cnn-architecture" title="Permalink to this heading">#</a></h3>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Simple CNN for image classification</span>
-<span class="n">cnn</span> <span class="o">=</span> <span class="n">Sequential</span><span class="p">([</span>
-    <span class="n">Conv2D</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="mi">3</span><span class="p">),</span>    <span class="c1"># Feature extraction</span>
-    <span class="n">ReLU</span><span class="p">(),</span>                          <span class="c1"># Nonlinearity</span>
-    <span class="n">MaxPool2D</span><span class="p">(</span><span class="n">kernel_size</span><span class="o">=</span><span class="mi">2</span><span class="p">),</span>        <span class="c1"># Dimensionality reduction</span>
-    <span class="n">Conv2D</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="mi">3</span><span class="p">),</span>   <span class="c1"># Higher-level features</span>
-    <span class="n">ReLU</span><span class="p">(),</span>                          <span class="c1"># More nonlinearity</span>
-    <span class="n">Flatten</span><span class="p">(),</span>                       <span class="c1"># Prepare for dense layers</span>
-    <span class="n">Dense</span><span class="p">(</span><span class="mi">32</span> <span class="o">*</span> <span class="mi">13</span> <span class="o">*</span> <span class="mi">13</span><span class="p">,</span> <span class="mi">128</span><span class="p">),</span>        <span class="c1"># Feature integration</span>
-    <span class="n">ReLU</span><span class="p">(),</span>
-    <span class="n">Dense</span><span class="p">(</span><span class="mi">128</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>                  <span class="c1"># Classification head</span>
-    <span class="n">Sigmoid</span><span class="p">()</span>                        <span class="c1"># Probability outputs</span>
+<section id="sequential-network-architecture">
+<h3>Sequential Network Architecture<a class="headerlink" href="#sequential-network-architecture" title="Permalink to this heading">#</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Function composition in action</span>
+<span class="n">network</span> <span class="o">=</span> <span class="n">Sequential</span><span class="p">([</span>
+    <span class="n">Dense</span><span class="p">(</span><span class="mi">784</span><span class="p">,</span> <span class="mi">128</span><span class="p">),</span>    <span class="c1"># Input transformation</span>
+    <span class="n">ReLU</span><span class="p">(),</span>             <span class="c1"># Nonlinearity</span>
+    <span class="n">Dense</span><span class="p">(</span><span class="mi">128</span><span class="p">,</span> <span class="mi">64</span><span class="p">),</span>     <span class="c1"># Feature compression</span>
+    <span class="n">ReLU</span><span class="p">(),</span>             <span class="c1"># More nonlinearity</span>
+    <span class="n">Dense</span><span class="p">(</span><span class="mi">64</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>      <span class="c1"># Classification head</span>
+    <span class="n">Sigmoid</span><span class="p">()</span>           <span class="c1"># Probability outputs</span>
 <span class="p">])</span>
 
-<span class="c1"># End-to-end image classification</span>
-<span class="n">image_batch</span> <span class="o">=</span> <span class="n">Tensor</span><span class="p">([[[[</span><span class="o">...</span><span class="p">]]]])</span>  <span class="c1"># Batch of images</span>
-<span class="n">predictions</span> <span class="o">=</span> <span class="n">cnn</span><span class="p">(</span><span class="n">image_batch</span><span class="p">)</span>     <span class="c1"># Class probabilities</span>
+<span class="c1"># Single forward pass processes entire batch</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">Tensor</span><span class="p">([[</span><span class="o">...</span><span class="p">]])</span>  <span class="c1"># Input batch</span>
+<span class="n">predictions</span> <span class="o">=</span> <span class="n">network</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>  <span class="c1"># End-to-end inference</span>
 </pre></div>
 </div>
 </section>
-<section id="convolution-operation-details">
-<h3>Convolution Operation Details<a class="headerlink" href="#convolution-operation-details" title="Permalink to this heading">#</a></h3>
-<ul class="simple">
-<li><p><strong>Sliding Window</strong>: Filter moves across input to detect local patterns</p></li>
-<li><p><strong>Weight Sharing</strong>: Same filter applied everywhere for translation invariance</p></li>
-<li><p><strong>Local Connectivity</strong>: Each output depends only on local input region</p></li>
-<li><p><strong>Feature Maps</strong>: Multiple filters learn different feature detectors</p></li>
-</ul>
+<section id="specialized-network-builders">
+<h3>Specialized Network Builders<a class="headerlink" href="#specialized-network-builders" title="Permalink to this heading">#</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># MLP for multi-class classification</span>
+<span class="n">classifier</span> <span class="o">=</span> <span class="n">create_mlp</span><span class="p">(</span>
+    <span class="n">input_size</span><span class="o">=</span><span class="mi">784</span><span class="p">,</span>           <span class="c1"># Flattened 28x28 images</span>
+    <span class="n">hidden_sizes</span><span class="o">=</span><span class="p">[</span><span class="mi">256</span><span class="p">,</span> <span class="mi">128</span><span class="p">],</span>  <span class="c1"># Two hidden layers</span>
+    <span class="n">output_size</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>           <span class="c1"># 10 digit classes</span>
+    <span class="n">activation</span><span class="o">=</span><span class="n">ReLU</span><span class="p">,</span>          <span class="c1"># Hidden layer activation</span>
+    <span class="n">output_activation</span><span class="o">=</span><span class="n">Sigmoid</span>  <span class="c1"># Probability outputs</span>
+<span class="p">)</span>
+
+<span class="c1"># Regression network for continuous prediction</span>
+<span class="n">regressor</span> <span class="o">=</span> <span class="n">create_regression_network</span><span class="p">(</span>
+    <span class="n">input_size</span><span class="o">=</span><span class="mi">13</span><span class="p">,</span>       <span class="c1"># Housing features</span>
+    <span class="n">hidden_sizes</span><span class="o">=</span><span class="p">[</span><span class="mi">64</span><span class="p">,</span> <span class="mi">32</span><span class="p">],</span> <span class="c1"># Progressive compression</span>
+    <span class="n">output_size</span><span class="o">=</span><span class="mi">1</span>        <span class="c1"># Single price prediction</span>
+<span class="p">)</span>
+
+<span class="c1"># Binary classification with appropriate architecture</span>
+<span class="n">binary_classifier</span> <span class="o">=</span> <span class="n">create_classification_network</span><span class="p">(</span>
+    <span class="n">input_size</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+    <span class="n">num_classes</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+    <span class="n">architecture</span><span class="o">=</span><span class="s1">&#39;deep&#39;</span>  <span class="c1"># Optimized for binary tasks</span>
+<span class="p">)</span>
+</pre></div>
+</div>
 </section>
-<section id="cnn-building-blocks">
-<h3>CNN Building Blocks<a class="headerlink" href="#cnn-building-blocks" title="Permalink to this heading">#</a></h3>
-<ul class="simple">
-<li><p><strong>Conv2D Layer</strong>: Core convolution operation with learnable filters</p></li>
-<li><p><strong>Pooling Layers</strong>: MaxPool and AvgPool for spatial downsampling</p></li>
-<li><p><strong>Flatten Layer</strong>: Converts 2D feature maps to 1D for dense layers</p></li>
-<li><p><strong>Complete Networks</strong>: Integration with existing Dense and activation layers</p></li>
-</ul>
+<section id="advanced-network-analysis">
+<h3>Advanced Network Analysis<a class="headerlink" href="#advanced-network-analysis" title="Permalink to this heading">#</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Comprehensive architecture visualization</span>
+<span class="n">visualize_network_architecture</span><span class="p">(</span><span class="n">network</span><span class="p">)</span>
+<span class="c1"># Shows: layer types, connections, parameter counts, data flow</span>
+
+<span class="c1"># Behavior analysis with real data</span>
+<span class="n">analyze_network_behavior</span><span class="p">(</span><span class="n">network</span><span class="p">,</span> <span class="n">sample_data</span><span class="p">)</span>
+<span class="c1"># Shows: activation patterns, layer statistics, transformation analysis</span>
+
+<span class="c1"># Architectural comparison</span>
+<span class="n">compare_networks</span><span class="p">([</span><span class="n">shallow_net</span><span class="p">,</span> <span class="n">deep_net</span><span class="p">,</span> <span class="n">wide_net</span><span class="p">])</span>
+<span class="c1"># Shows: performance characteristics, complexity trade-offs</span>
+</pre></div>
+</div>
 </section>
 </section>
 <section id="getting-started">
 <h2>🚀 Getting Started<a class="headerlink" href="#getting-started" title="Permalink to this heading">#</a></h2>
 <section id="prerequisites">
 <h3>Prerequisites<a class="headerlink" href="#prerequisites" title="Permalink to this heading">#</a></h3>
-<p>Ensure you have mastered the foundational network building blocks:</p>
+<p>Ensure you have mastered the foundational building blocks:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Activate TinyTorch environment</span>
 <span class="nb">source</span><span class="w"> </span>bin/activate-tinytorch.sh
 
@@ -560,19 +571,18 @@ document.write(`
 tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--module<span class="w"> </span>tensor
 tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--module<span class="w"> </span>activations
 tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--module<span class="w"> </span>layers
-tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--module<span class="w"> </span>networks
 </pre></div>
 </div>
 </section>
 <section id="development-workflow">
 <h3>Development Workflow<a class="headerlink" href="#development-workflow" title="Permalink to this heading">#</a></h3>
 <ol class="arabic simple">
-<li><p><strong>Open the development file</strong>: <code class="docutils literal notranslate"><span class="pre">modules/source/06_cnn/cnn_dev.py</span></code></p></li>
-<li><p><strong>Implement convolution operation</strong>: Start with explicit for-loop implementation for understanding</p></li>
-<li><p><strong>Build Conv2D layer class</strong>: Wrap convolution in reusable layer interface</p></li>
-<li><p><strong>Add pooling operations</strong>: Implement MaxPool and AvgPool for spatial reduction</p></li>
-<li><p><strong>Create complete CNNs</strong>: Compose layers into full computer vision architectures</p></li>
-<li><p><strong>Export and verify</strong>: <code class="docutils literal notranslate"><span class="pre">tito</span> <span class="pre">export</span> <span class="pre">--module</span> <span class="pre">cnn</span> <span class="pre">&amp;&amp;</span> <span class="pre">tito</span> <span class="pre">test</span> <span class="pre">--module</span> <span class="pre">cnn</span></code></p></li>
+<li><p><strong>Open the development file</strong>: <code class="docutils literal notranslate"><span class="pre">modules/source/05_networks/networks_dev.py</span></code></p></li>
+<li><p><strong>Implement Sequential class</strong>: Build the composition framework for chaining layers</p></li>
+<li><p><strong>Create network builders</strong>: Implement MLPs and specialized architectures</p></li>
+<li><p><strong>Add visualization tools</strong>: Build plotting functions for network analysis</p></li>
+<li><p><strong>Test with real scenarios</strong>: Apply networks to classification and regression tasks</p></li>
+<li><p><strong>Export and verify</strong>: <code class="docutils literal notranslate"><span class="pre">tito</span> <span class="pre">export</span> <span class="pre">--module</span> <span class="pre">networks</span> <span class="pre">&amp;&amp;</span> <span class="pre">tito</span> <span class="pre">test</span> <span class="pre">--module</span> <span class="pre">networks</span></code></p></li>
 </ol>
 </section>
 </section>
@@ -580,68 +590,67 @@ tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>
 <h2>🧪 Testing Your Implementation<a class="headerlink" href="#testing-your-implementation" title="Permalink to this heading">#</a></h2>
 <section id="comprehensive-test-suite">
 <h3>Comprehensive Test Suite<a class="headerlink" href="#comprehensive-test-suite" title="Permalink to this heading">#</a></h3>
-<p>Run the full test suite to verify computer vision functionality:</p>
+<p>Run the full test suite to verify architectural correctness:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># TinyTorch CLI (recommended)</span>
-tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--module<span class="w"> </span>cnn
+tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--module<span class="w"> </span>networks
 
 <span class="c1"># Direct pytest execution</span>
-python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> </span>tests/<span class="w"> </span>-k<span class="w"> </span>cnn<span class="w"> </span>-v
+python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> </span>tests/<span class="w"> </span>-k<span class="w"> </span>networks<span class="w"> </span>-v
 </pre></div>
 </div>
 </section>
 <section id="test-coverage-areas">
 <h3>Test Coverage Areas<a class="headerlink" href="#test-coverage-areas" title="Permalink to this heading">#</a></h3>
 <ul class="simple">
-<li><p>✅ <strong>Convolution Operation</strong>: Verify sliding window operation and local connectivity</p></li>
-<li><p>✅ <strong>Filter Learning</strong>: Test weight initialization and parameter management</p></li>
-<li><p>✅ <strong>Shape Transformations</strong>: Ensure proper input/output shape handling</p></li>
-<li><p>✅ <strong>Pooling Operations</strong>: Verify spatial downsampling and feature preservation</p></li>
-<li><p>✅ <strong>CNN Integration</strong>: Test complete networks with real image-like data</p></li>
+<li><p>✅ <strong>Sequential Composition</strong>: Verify layers chain correctly with proper data flow</p></li>
+<li><p>✅ <strong>Network Builders</strong>: Test MLP and specialized network creation functions</p></li>
+<li><p>✅ <strong>Shape Consistency</strong>: Ensure networks handle various input shapes and batch sizes</p></li>
+<li><p>✅ <strong>Visualization Functions</strong>: Verify plotting and analysis tools work correctly</p></li>
+<li><p>✅ <strong>Real-world Applications</strong>: Test networks on classification and regression tasks</p></li>
 </ul>
 </section>
 <section id="inline-testing-visualization">
 <h3>Inline Testing &amp; Visualization<a class="headerlink" href="#inline-testing-visualization" title="Permalink to this heading">#</a></h3>
 <p>The module includes comprehensive educational feedback and visual analysis:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span># Example inline test output
-🔬 Unit Test: Conv2D implementation...
-✅ Convolution sliding window works correctly
-✅ Weight sharing applied consistently
-✅ Output shapes match expected dimensions
-📈 Progress: Conv2D ✓
+🔬 Unit Test: Sequential network composition...
+✅ Layers chain correctly with proper data flow
+✅ Forward pass produces expected output shapes
+✅ Network handles batch processing correctly
+📈 Progress: Sequential Networks ✓
 
 # Visualization feedback
-📊 Visualizing convolution operation...
-📈 Showing filter sliding across input
-📊 Feature map generation: 3→16 channels
+📊 Generating network architecture visualization...
+📈 Showing data flow through 3-layer MLP
+📊 Layer analysis: 784→128→64→10 parameter flow
 </pre></div>
 </div>
 </section>
 <section id="manual-testing-examples">
 <h3>Manual Testing Examples<a class="headerlink" href="#manual-testing-examples" title="Permalink to this heading">#</a></h3>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">tinytorch.core.tensor</span> <span class="kn">import</span> <span class="n">Tensor</span>
-<span class="kn">from</span> <span class="nn">cnn_dev</span> <span class="kn">import</span> <span class="n">Conv2D</span><span class="p">,</span> <span class="n">MaxPool2D</span><span class="p">,</span> <span class="n">Flatten</span>
-<span class="kn">from</span> <span class="nn">activations_dev</span> <span class="kn">import</span> <span class="n">ReLU</span>
+<span class="kn">from</span> <span class="nn">networks_dev</span> <span class="kn">import</span> <span class="n">Sequential</span><span class="p">,</span> <span class="n">create_mlp</span>
+<span class="kn">from</span> <span class="nn">layers_dev</span> <span class="kn">import</span> <span class="n">Dense</span>
+<span class="kn">from</span> <span class="nn">activations_dev</span> <span class="kn">import</span> <span class="n">ReLU</span><span class="p">,</span> <span class="n">Sigmoid</span>
 
-<span class="c1"># Test basic convolution</span>
-<span class="n">conv</span> <span class="o">=</span> <span class="n">Conv2D</span><span class="p">(</span><span class="n">in_channels</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">out_channels</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
-<span class="n">input_img</span> <span class="o">=</span> <span class="n">Tensor</span><span class="p">([[[[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">],</span>
-                      <span class="p">[</span><span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">10</span><span class="p">],</span>
-                      <span class="p">[</span><span class="mi">11</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">13</span><span class="p">,</span> <span class="mi">14</span><span class="p">,</span> <span class="mi">15</span><span class="p">],</span>
-                      <span class="p">[</span><span class="mi">16</span><span class="p">,</span> <span class="mi">17</span><span class="p">,</span> <span class="mi">18</span><span class="p">,</span> <span class="mi">19</span><span class="p">,</span> <span class="mi">20</span><span class="p">],</span>
-                      <span class="p">[</span><span class="mi">21</span><span class="p">,</span> <span class="mi">22</span><span class="p">,</span> <span class="mi">23</span><span class="p">,</span> <span class="mi">24</span><span class="p">,</span> <span class="mi">25</span><span class="p">]]]])</span>
-<span class="n">feature_maps</span> <span class="o">=</span> <span class="n">conv</span><span class="p">(</span><span class="n">input_img</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Input: </span><span class="si">{</span><span class="n">input_img</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">, Features: </span><span class="si">{</span><span class="n">feature_maps</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="c1"># Test network composition</span>
+<span class="n">network</span> <span class="o">=</span> <span class="n">Sequential</span><span class="p">([</span>
+    <span class="n">Dense</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span>
+    <span class="n">ReLU</span><span class="p">(),</span>
+    <span class="n">Dense</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
+    <span class="n">Sigmoid</span><span class="p">()</span>
+<span class="p">])</span>
 
-<span class="c1"># Test complete CNN pipeline</span>
-<span class="n">relu</span> <span class="o">=</span> <span class="n">ReLU</span><span class="p">()</span>
-<span class="n">pool</span> <span class="o">=</span> <span class="n">MaxPool2D</span><span class="p">(</span><span class="n">kernel_size</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-<span class="n">flatten</span> <span class="o">=</span> <span class="n">Flatten</span><span class="p">()</span>
+<span class="c1"># Forward pass</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">Tensor</span><span class="p">([[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">,</span> <span class="mf">6.0</span><span class="p">,</span> <span class="mf">7.0</span><span class="p">,</span> <span class="mf">8.0</span><span class="p">,</span> <span class="mf">9.0</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">]])</span>
+<span class="n">output</span> <span class="o">=</span> <span class="n">network</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Network output: </span><span class="si">{</span><span class="n">output</span><span class="o">.</span><span class="n">data</span><span class="si">}</span><span class="s2">, Shape: </span><span class="si">{</span><span class="n">output</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
-<span class="c1"># Forward pass through CNN layers</span>
-<span class="n">activated</span> <span class="o">=</span> <span class="n">relu</span><span class="p">(</span><span class="n">feature_maps</span><span class="p">)</span>
-<span class="n">pooled</span> <span class="o">=</span> <span class="n">pool</span><span class="p">(</span><span class="n">activated</span><span class="p">)</span>
-<span class="n">flattened</span> <span class="o">=</span> <span class="n">flatten</span><span class="p">(</span><span class="n">pooled</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Final shape: </span><span class="si">{</span><span class="n">flattened</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="c1"># Test MLP builder</span>
+<span class="n">mlp</span> <span class="o">=</span> <span class="n">create_mlp</span><span class="p">(</span><span class="n">input_size</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">hidden_sizes</span><span class="o">=</span><span class="p">[</span><span class="mi">8</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span> <span class="n">output_size</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">test_input</span> <span class="o">=</span> <span class="n">Tensor</span><span class="p">([[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">]])</span>
+<span class="n">prediction</span> <span class="o">=</span> <span class="n">mlp</span><span class="p">(</span><span class="n">test_input</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;MLP prediction: </span><span class="si">{</span><span class="n">prediction</span><span class="o">.</span><span class="n">data</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </section>
@@ -651,44 +660,44 @@ python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> <
 <section id="real-world-applications">
 <h3>Real-World Applications<a class="headerlink" href="#real-world-applications" title="Permalink to this heading">#</a></h3>
 <ul class="simple">
-<li><p><strong>Image Classification</strong>: CNNs power systems like ImageNet winners (AlexNet, ResNet, EfficientNet)</p></li>
-<li><p><strong>Object Detection</strong>: YOLO and R-CNN families use CNN backbones for feature extraction</p></li>
-<li><p><strong>Medical Imaging</strong>: CNNs analyze X-rays, MRIs, and CT scans for diagnostic assistance</p></li>
-<li><p><strong>Autonomous Vehicles</strong>: CNN-based perception systems process camera feeds for navigation</p></li>
+<li><p><strong>Image Classification</strong>: ResNet and VGG architectures use sequential composition of convolutional and dense layers</p></li>
+<li><p><strong>Natural Language Processing</strong>: Transformer architectures compose attention layers with feed-forward networks</p></li>
+<li><p><strong>Recommendation Systems</strong>: Deep collaborative filtering uses MLPs to learn user-item interactions</p></li>
+<li><p><strong>Autonomous Systems</strong>: Neural networks in self-driving cars compose perception, planning, and control layers</p></li>
 </ul>
 </section>
-<section id="computer-vision-fundamentals">
-<h3>Computer Vision Fundamentals<a class="headerlink" href="#computer-vision-fundamentals" title="Permalink to this heading">#</a></h3>
+<section id="function-composition-theory">
+<h3>Function Composition Theory<a class="headerlink" href="#function-composition-theory" title="Permalink to this heading">#</a></h3>
 <ul class="simple">
-<li><p><strong>Translation Invariance</strong>: Convolution detects patterns regardless of position in image</p></li>
-<li><p><strong>Hierarchical Features</strong>: Early layers detect edges, later layers detect objects and concepts</p></li>
-<li><p><strong>Parameter Efficiency</strong>: Weight sharing dramatically reduces parameters compared to dense layers</p></li>
-<li><p><strong>Spatial Structure</strong>: CNNs preserve and leverage 2D spatial relationships in images</p></li>
+<li><p><strong>Mathematical Foundation</strong>: Networks implement nested function composition <code class="docutils literal notranslate"><span class="pre">f_n(f_{n-1}(...f_1(x)))</span></code></p></li>
+<li><p><strong>Universal Approximation</strong>: MLPs with sufficient width can approximate any continuous function</p></li>
+<li><p><strong>Depth vs Width Trade-offs</strong>: Deep networks learn hierarchical features, wide networks increase expressivity</p></li>
+<li><p><strong>Architectural Inductive Biases</strong>: Network structure encodes assumptions about the problem domain</p></li>
 </ul>
 </section>
-<section id="convolution-mathematics">
-<h3>Convolution Mathematics<a class="headerlink" href="#convolution-mathematics" title="Permalink to this heading">#</a></h3>
+<section id="visualization-and-analysis">
+<h3>Visualization and Analysis<a class="headerlink" href="#visualization-and-analysis" title="Permalink to this heading">#</a></h3>
 <ul class="simple">
-<li><p><strong>Sliding Window Operation</strong>: Filter moves across input with stride and padding parameters</p></li>
-<li><p><strong>Cross-Correlation vs Convolution</strong>: Deep learning typically uses cross-correlation operation</p></li>
-<li><p><strong>Feature Map Computation</strong>: Output[i,j] = sum(input[i:i+k, j:j+k] * filter)</p></li>
-<li><p><strong>Receptive Field</strong>: Region of input that influences each output activation</p></li>
+<li><p><strong>Architecture Visualization</strong>: Understand network structure through visual representation</p></li>
+<li><p><strong>Data Flow Analysis</strong>: Track how information transforms through each layer</p></li>
+<li><p><strong>Activation Pattern Analysis</strong>: Visualize what each layer learns to represent</p></li>
+<li><p><strong>Comparative Analysis</strong>: Understand trade-offs between different architectural choices</p></li>
 </ul>
 </section>
-<section id="cnn-architecture-patterns">
-<h3>CNN Architecture Patterns<a class="headerlink" href="#cnn-architecture-patterns" title="Permalink to this heading">#</a></h3>
+<section id="design-patterns-and-best-practices">
+<h3>Design Patterns and Best Practices<a class="headerlink" href="#design-patterns-and-best-practices" title="Permalink to this heading">#</a></h3>
 <ul class="simple">
-<li><p><strong>Feature Extraction</strong>: Convolution + ReLU + Pooling blocks extract hierarchical features</p></li>
-<li><p><strong>Classification Head</strong>: Flatten + Dense layers perform final classification</p></li>
-<li><p><strong>Progressive Filtering</strong>: Increasing filter count with decreasing spatial dimensions</p></li>
-<li><p><strong>Skip Connections</strong>: Advanced architectures add residual connections for deeper networks</p></li>
+<li><p><strong>Progressive Dimensionality</strong>: Common pattern of gradually reducing dimensions toward output</p></li>
+<li><p><strong>Activation Placement</strong>: Standard practice of activation after each linear transformation</p></li>
+<li><p><strong>Output Layer Design</strong>: Task-specific final layers (sigmoid for binary, softmax for multi-class)</p></li>
+<li><p><strong>Network Depth Guidelines</strong>: Balance between expressivity and training difficulty</p></li>
 </ul>
 </section>
 </section>
 <section id="ready-to-build">
 <h2>🎉 Ready to Build?<a class="headerlink" href="#ready-to-build" title="Permalink to this heading">#</a></h2>
-<p>You’re about to implement the technology that revolutionized computer vision! CNNs transformed image processing from hand-crafted features to learned representations, enabling everything from photo tagging to medical diagnosis to autonomous driving.</p>
-<p>Understanding convolution from the ground up—implementing the sliding window operation yourself—will give you deep insight into why CNNs work so well for visual tasks. Take your time with the core operation, visualize what’s happening, and enjoy building the foundation of modern computer vision!</p>
+<p>You’re about to master the art of neural architecture design! This is where the magic happens—taking simple mathematical building blocks and composing them into systems capable of recognizing images, understanding language, and making intelligent decisions.</p>
+<p>Every breakthrough in AI, from AlexNet to GPT, started with someone thoughtfully composing layers into powerful architectures. You’re about to learn those same composition principles and build networks that can solve real problems!</p>
 <p>Choose your preferred way to engage with this module:</p>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
 <div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-3 sd-row-cols-lg-3 docutils">
@@ -699,7 +708,7 @@ python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> <
 🚀 Launch Binder</div>
 <p class="sd-card-text">Run this module interactively in your browser. No installation required!</p>
 </div>
-<a class="sd-stretched-link reference external" href="https://mybinder.org/v2/gh/mlsysbook/TinyTorch/main?filepath=modules/source/06_cnn/cnn_dev.ipynb"></a></div>
+<a class="sd-stretched-link reference external" href="https://mybinder.org/v2/gh/mlsysbook/TinyTorch/main?filepath=modules/source/05_networks/networks_dev.ipynb"></a></div>
 </div>
 <div class="sd-col sd-d-flex-row docutils">
 <div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm sd-card-hover docutils">
@@ -708,7 +717,7 @@ python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> <
 ⚡ Open in Colab  </div>
 <p class="sd-card-text">Use Google Colab for GPU access and cloud compute power.</p>
 </div>
-<a class="sd-stretched-link reference external" href="https://colab.research.google.com/github/mlsysbook/TinyTorch/blob/main/modules/source/06_cnn/cnn_dev.ipynb"></a></div>
+<a class="sd-stretched-link reference external" href="https://colab.research.google.com/github/mlsysbook/TinyTorch/blob/main/modules/source/05_networks/networks_dev.ipynb"></a></div>
 </div>
 <div class="sd-col sd-d-flex-row docutils">
 <div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm sd-card-hover docutils">
@@ -717,7 +726,7 @@ python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> <
 📖 View Source</div>
 <p class="sd-card-text">Browse the Python source code and understand the implementation.</p>
 </div>
-<a class="sd-stretched-link reference external" href="https://github.com/mlsysbook/TinyTorch/blob/main/modules/source/06_cnn/cnn_dev.py"></a></div>
+<a class="sd-stretched-link reference external" href="https://github.com/mlsysbook/TinyTorch/blob/main/modules/source/05_networks/networks_dev.py"></a></div>
 </div>
 </div>
 </div>
@@ -728,8 +737,8 @@ python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> <
 </div>
 <hr class="docutils" />
 <div class="prev-next-area">
-<a class="left-prev" href="../chapters/05_networks.html" title="previous page">← Previous Module</a>
-<a class="right-next" href="../chapters/07_dataloader.html" title="next page">Next Module →</a>
+<a class="left-prev" href="../chapters/04_layers.html" title="previous page">← Previous Module</a>
+<a class="right-next" href="../chapters/06_cnn.html" title="next page">Next Module →</a>
 </div>
 </section>
 </section>
@@ -765,20 +774,20 @@ python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> <
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="05-networks.html"
+       href="04-layers.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Module: Networks</p>
+        <p class="prev-next-title">Module: Layers</p>
       </div>
     </a>
     <a class="right-next"
-       href="07-dataloader.html"
+       href="06-spatial.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Module: DataLoader</p>
+        <p class="prev-next-title">Module: CNN</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -799,12 +808,11 @@ python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> <
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-info">📊 Module Info</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-objectives">🎯 Learning Objectives</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#build-use-analyze">🧠 Build → Use → Analyze</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#build-use-optimize">🧠 Build → Use → Optimize</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-you-ll-build">📚 What You’ll Build</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#core-convolution-implementation">Core Convolution Implementation</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#complete-cnn-architecture">Complete CNN Architecture</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#convolution-operation-details">Convolution Operation Details</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cnn-building-blocks">CNN Building Blocks</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sequential-network-architecture">Sequential Network Architecture</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#specialized-network-builders">Specialized Network Builders</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#advanced-network-analysis">Advanced Network Analysis</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#getting-started">🚀 Getting Started</a><ul class="nav section-nav flex-column">
@@ -821,9 +829,9 @@ python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> <
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#key-concepts">🎯 Key Concepts</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#real-world-applications">Real-World Applications</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#computer-vision-fundamentals">Computer Vision Fundamentals</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#convolution-mathematics">Convolution Mathematics</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cnn-architecture-patterns">CNN Architecture Patterns</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#function-composition-theory">Function Composition Theory</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#visualization-and-analysis">Visualization and Analysis</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#design-patterns-and-best-practices">Design Patterns and Best Practices</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ready-to-build">🎉 Ready to Build?</a></li>

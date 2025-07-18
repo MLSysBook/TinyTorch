@@ -14,7 +14,7 @@ html_meta:
 
 # Tiny🔥Torch
 
-## Build your own ML framework. Start small. Go deep. 
+## Build your own Machine Learning framework from scratch. Start small. Go deep. 
 
 **Most ML education teaches you to _use_ frameworks. TinyTorch teaches you to _build_ them.**
 
