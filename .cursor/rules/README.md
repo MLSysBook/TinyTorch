@@ -25,6 +25,7 @@ This directory contains focused, actionable rules for TinyTorch development. Eac
 
 ### Testing
 - **[testing-patterns.mdc](testing-patterns.mdc)** (115 lines) - Testing standards with pytest and real data
+- **[integration-testing.md](integration-testing.md)** (238 lines) - Cross-module interface compatibility testing
 
 ## Key Design Principles
 
