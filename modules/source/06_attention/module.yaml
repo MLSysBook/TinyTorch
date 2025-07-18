@@ -1,0 +1,32 @@
+# TinyTorch Module Metadata
+# Essential system information for CLI tools and build systems
+
+name: "attention"
+title: "Attention"
+description: "Attention mechanisms and transformer architectures"
+
+# Dependencies - Used by CLI for module ordering and prerequisites
+dependencies:
+  prerequisites: ["setup", "tensor", "activations", "layers", "networks"]
+  enables: ["training", "cnn", "optimization", "transformers"]
+
+# Package Export - What gets built into tinytorch package
+exports_to: "tinytorch.core.attention"
+
+# File Structure - What files exist in this module
+files:
+  dev_file: "attention_dev.py"
+  readme: "README.md"
+  tests: "inline"
+
+# Educational Metadata
+difficulty: "⭐⭐⭐⭐"
+time_estimate: "6-8 hours"
+
+# Components - What's implemented in this module
+components:
+  - "scaled_dot_product_attention"
+  - "MultiHeadAttention"
+  - "PositionalEncoding"
+  - "TransformerBlock"
+  - "SelfAttention" 
