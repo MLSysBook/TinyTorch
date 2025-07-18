@@ -15,8 +15,11 @@ While TinyTorch teaches you to build ML systems from scratch, these resources pr
 - **[Machine Learning Systems](https://mlsysbook.ai)** by Prof. Vijay Janapa Reddi (Harvard)  
   *Comprehensive systems perspective on ML engineering and optimization*
 
-- **[CS 6.S965: TinyML and Efficient Deep Learning](https://hanlab.mit.edu/courses/2023-fall-65.2420/)** (MIT)  
+- **[CS 6.S965: TinyML and Efficient Deep Learning](https://hanlab.mit.edu/courses/2024-fall-65940)** (MIT)  
   *Edge computing, model compression, and efficient ML algorithms*
+
+- **[CS 249r: Tiny Machine Learning](https://sites.google.com/g.harvard.edu/tinyml/home)** (Harvard)  
+  *TinyML systems, edge AI, and resource-constrained machine learning*
 
 ### **Deep Learning Foundations**
 - **[CS 231n: Convolutional Neural Networks](http://cs231n.stanford.edu/)** (Stanford)  
@@ -27,7 +30,7 @@ While TinyTorch teaches you to build ML systems from scratch, these resources pr
 
 ---
 
-## 📖 **Essential Books**
+## 📖 **Recommended Books**
 
 ### **Systems & Engineering**
 - **"Designing Machine Learning Systems"** by Chip Huyen  
