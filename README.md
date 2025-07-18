@@ -443,21 +443,23 @@ Think of it like this: Pilots learn in small planes before flying 747s. You're l
 
 <br>
 
-> **Most tutorials build toys.** TinyTorch builds production-thinking systems:
+> **Most tutorials focus on isolated components** - a Colab here, a notebook there. TinyTorch builds a **fully integrated system**.
 
-**📊 Comparison Table:**
+**🏗️ Systems Engineering Analogy:**  
+Think of building a **compiler** or **operating system**. You don't just implement a lexer or a scheduler - you build how **every component works together**. Each piece must integrate seamlessly with the whole.
+
+**📊 Component vs. System Approach:**
 ```python
-Tutorial Approach:           TinyTorch Approach:
-├── Build a simple NN       ├── Build a complete framework
-├── Train on toy data       ├── Train on CIFAR-10 (real data)
-├── 100 lines of code       ├── Full package with CLI tools
-└── "Cool, it works!"       ├── Testing, profiling, optimization
-                            ├── MLOps monitoring and deployment
-                            └── Production-ready engineering
+Component Approach:          Systems Approach (TinyTorch):
+├── Build a neural network   ├── Build a complete ML framework
+├── Jupyter notebook demos   ├── Full Python package with CLI
+├── Isolated examples        ├── Integrated: tensors → layers → training
+└── "Here's how ReLU works"  ├── Production patterns: testing, profiling
+                            └── "Here's how EVERYTHING connects"
 ```
 
-**🎯 Key Outcome:**  
-You learn **systems thinking**, not just algorithms.
+**🎯 Key Insight:**  
+You learn **systems engineering**, not just individual algorithms. Like understanding how every part of a compiler interacts to turn code into executable programs.
 
 ---
 </details>
