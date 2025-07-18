@@ -185,6 +185,34 @@ def scaled_dot_product_attention(Q: np.ndarray, K: np.ndarray, V: np.ndarray,
     
     This is the exact mechanism used in GPT, BERT, and all modern language models.
     
+    TODO: Implement the core attention mechanism.
+    
+    STEP-BY-STEP IMPLEMENTATION:
+    1. Get d_k (dimension of keys) from Q.shape[-1]
+    2. Compute attention scores: Q @ K^T (matrix multiplication)
+    3. Scale by √d_k: scores / sqrt(d_k)
+    4. Apply mask if provided: set masked positions to -1e9
+    5. Apply softmax to get attention weights (probabilities)
+    6. Apply attention weights to values: weights @ V
+    7. Return (output, attention_weights)
+    
+    MATHEMATICAL OPERATION:
+        Attention(Q,K,V) = softmax(QK^T/√d_k)V
+    
+    IMPLEMENTATION HINTS:
+    - Use np.matmul() for matrix multiplication
+    - Use np.swapaxes(K, -2, -1) to transpose last two dimensions
+    - Use math.sqrt() for square root
+    - Use np.where() for masking: np.where(mask == 0, -1e9, scores)
+    - Implement softmax manually: exp(x) / sum(exp(x))
+    - Use keepdims=True for broadcasting
+    
+    LEARNING CONNECTIONS:
+    - This exact function powers ChatGPT, BERT, GPT-4
+    - The scaling prevents gradient vanishing in deep networks
+    - Masking enables causal (GPT) and bidirectional (BERT) models
+    - Attention weights are interpretable - you can visualize them!
+    
     Args:
         Q: Query matrix of shape (..., seq_len_q, d_k)
         K: Key matrix of shape (..., seq_len_k, d_k)  
@@ -194,10 +222,8 @@ def scaled_dot_product_attention(Q: np.ndarray, K: np.ndarray, V: np.ndarray,
     Returns:
         output: Attention output (..., seq_len_q, d_v)
         attention_weights: Attention probabilities (..., seq_len_q, seq_len_k)
-    
-    Mathematical operation:
-        Attention(Q,K,V) = softmax(QK^T/√d_k)V
     """
+    ### BEGIN SOLUTION
     # Get the dimension for scaling
     d_k = Q.shape[-1]
     
@@ -226,56 +252,64 @@ def scaled_dot_product_attention(Q: np.ndarray, K: np.ndarray, V: np.ndarray,
     output = np.matmul(attention_weights, V)  # (..., seq_len_q, d_v)
     
     return output, attention_weights
+    ### END SOLUTION
 
 # %% [markdown]
 """
-### 🧪 Unit Test: Scaled Dot-Product Attention
+### 🧪 Test Your Attention Implementation
 
-**This is a unit test** - it tests the core attention mechanism in isolation.
-
-Let's verify our attention implementation works correctly with a simple example.
+Once you implement the `scaled_dot_product_attention` function above, run this cell to test it:
 """
 
-# %% nbgrader={"grade": false, "grade_id": "test-attention", "locked": false, "schema_version": 3, "solution": false, "task": false}
-print("🔬 Unit Test: Scaled Dot-Product Attention...")
+# %% nbgrader={"grade": true, "grade_id": "test-attention-immediate", "locked": true, "points": 10, "schema_version": 3, "solution": false, "task": false}
+def test_scaled_dot_product_attention():
+    """Test scaled dot-product attention implementation"""
+    print("🔬 Unit Test: Scaled Dot-Product Attention...")
 
-# Create simple test data
-seq_len, d_model = 4, 6
-np.random.seed(42)
+    # Create simple test data
+    seq_len, d_model = 4, 6
+    np.random.seed(42)
 
-# Create Q, K, V matrices
-Q = np.random.randn(seq_len, d_model) * 0.1
-K = np.random.randn(seq_len, d_model) * 0.1  
-V = np.random.randn(seq_len, d_model) * 0.1
+    # Create Q, K, V matrices
+    Q = np.random.randn(seq_len, d_model) * 0.1
+    K = np.random.randn(seq_len, d_model) * 0.1  
+    V = np.random.randn(seq_len, d_model) * 0.1
 
-print(f"📊 Input shapes: Q{Q.shape}, K{K.shape}, V{V.shape}")
+    print(f"📊 Input shapes: Q{Q.shape}, K{K.shape}, V{V.shape}")
 
-# Test attention
-output, weights = scaled_dot_product_attention(Q, K, V)
+    # Test attention
+    output, weights = scaled_dot_product_attention(Q, K, V)
 
-print(f"📊 Output shapes: output{output.shape}, weights{weights.shape}")
+    print(f"📊 Output shapes: output{output.shape}, weights{weights.shape}")
 
-# Verify properties
-weights_sum = np.sum(weights, axis=-1)
-print(f"✅ Attention weights sum to 1: {np.allclose(weights_sum, 1.0)}")
-print(f"✅ Output has correct shape: {output.shape == (seq_len, d_model)}")
-print(f"✅ All weights are non-negative: {np.all(weights >= 0)}")
+    # Verify properties
+    weights_sum = np.sum(weights, axis=-1)
+    assert np.allclose(weights_sum, 1.0), f"Attention weights should sum to 1, got {weights_sum}"
+    assert output.shape == (seq_len, d_model), f"Output shape should be {(seq_len, d_model)}, got {output.shape}"
+    assert np.all(weights >= 0), "All attention weights should be non-negative"
 
-# Test with mask
-mask = np.array([
-    [1, 1, 0, 0],
-    [1, 1, 1, 0], 
-    [1, 1, 1, 1],
-    [1, 1, 1, 1]
-])
-output_masked, weights_masked = scaled_dot_product_attention(Q, K, V, mask)
+    # Test with mask
+    mask = np.array([
+        [1, 1, 0, 0],
+        [1, 1, 1, 0], 
+        [1, 1, 1, 1],
+        [1, 1, 1, 1]
+    ])
+    output_masked, weights_masked = scaled_dot_product_attention(Q, K, V, mask)
 
-# Check that masked positions have near-zero attention
-masked_positions = (mask == 0)
-masked_weights = weights_masked[masked_positions]
-print(f"✅ Masked positions have near-zero weights: {np.all(masked_weights < 1e-6)}")
+    # Check that masked positions have near-zero attention
+    masked_positions = (mask == 0)
+    masked_weights = weights_masked[masked_positions]
+    assert np.all(masked_weights < 1e-6), "Masked positions should have near-zero weights"
 
-print("📈 Progress: Scaled Dot-Product Attention ✓")
+    print("✅ Attention weights sum to 1: True")
+    print("✅ Output has correct shape: True")
+    print("✅ All weights are non-negative: True")
+    print("✅ Masked positions have near-zero weights: True")
+    print("📈 Progress: Scaled Dot-Product Attention ✓")
+
+# Run the test
+test_scaled_dot_product_attention()
 
 # %% [markdown]
 """
@@ -307,15 +341,62 @@ class SelfAttention:
         """
         Initialize Self-Attention.
         
+        TODO: Store the model dimension for this self-attention layer.
+        
+        STEP-BY-STEP IMPLEMENTATION:
+        1. Store d_model as an instance variable (self.d_model)
+        2. Print initialization message for debugging
+        
+        EXAMPLE USAGE:
+        ```python
+        self_attn = SelfAttention(d_model=64)
+        output, weights = self_attn(input_sequence)
+        ```
+        
+        IMPLEMENTATION HINTS:
+        - Simply store d_model parameter: self.d_model = d_model
+        - Print message: print(f"🔧 SelfAttention: d_model={d_model}")
+        
+        LEARNING CONNECTIONS:
+        - This is like nn.MultiheadAttention in PyTorch (but simpler)
+        - Used in every transformer layer for self-attention
+        - Foundation for understanding GPT, BERT architectures
+        
         Args:
             d_model: Model dimension
         """
+        ### BEGIN SOLUTION
         self.d_model = d_model
         print(f"🔧 SelfAttention: d_model={d_model}")
+        ### END SOLUTION
     
     def forward(self, x: np.ndarray, mask: Optional[np.ndarray] = None) -> Tuple[np.ndarray, np.ndarray]:
         """
         Forward pass of self-attention.
+        
+        TODO: Apply self-attention where Q=K=V=x.
+        
+        STEP-BY-STEP IMPLEMENTATION:
+        1. Call scaled_dot_product_attention with Q=K=V=x
+        2. Pass the mask parameter through
+        3. Return the output and attention weights
+        
+        EXAMPLE USAGE:
+        ```python
+        x = np.random.randn(seq_len, d_model)  # Input sequence
+        output, weights = self_attn.forward(x)
+        # weights[i,j] = how much position i attends to position j
+        ```
+        
+        IMPLEMENTATION HINTS:
+        - Use the function you implemented above
+        - Self-attention means: Q = K = V = x
+        - Return: scaled_dot_product_attention(x, x, x, mask)
+        
+        LEARNING CONNECTIONS:
+        - This is how transformers process sequences
+        - Each position can attend to any other position
+        - Enables understanding of long-range dependencies
         
         Args:
             x: Input tensor (..., seq_len, d_model)
@@ -325,8 +406,10 @@ class SelfAttention:
             output: Self-attention output (..., seq_len, d_model)
             attention_weights: Attention weights
         """
+        ### BEGIN SOLUTION
         # Self-attention: Q = K = V = x
         return scaled_dot_product_attention(x, x, x, mask)
+        ### END SOLUTION
     
     def __call__(self, x: np.ndarray, mask: Optional[np.ndarray] = None) -> Tuple[np.ndarray, np.ndarray]:
         """Make the class callable."""
@@ -334,41 +417,48 @@ class SelfAttention:
 
 # %% [markdown]
 """
-### 🧪 Unit Test: Self-Attention
+### 🧪 Test Your Self-Attention Implementation
 
-**This is a unit test** - it tests self-attention wrapper functionality.
-
-Let's verify our self-attention wrapper works correctly.
+Once you implement the SelfAttention class above, run this cell to test it:
 """
 
-# %% nbgrader={"grade": false, "grade_id": "test-self-attention", "locked": false, "schema_version": 3, "solution": false, "task": false}
-print("🔬 Unit Test: Self-Attention...")
+# %% nbgrader={"grade": true, "grade_id": "test-self-attention-immediate", "locked": true, "points": 5, "schema_version": 3, "solution": false, "task": false}
+def test_self_attention():
+    """Test self-attention wrapper"""
+    print("🔬 Unit Test: Self-Attention...")
 
-# Test parameters
-d_model = 32
-seq_len = 8
-np.random.seed(42)
+    # Test parameters
+    d_model = 32
+    seq_len = 8
+    np.random.seed(42)
 
-# Create test data (like word embeddings)
-x = np.random.randn(seq_len, d_model) * 0.1
+    # Create test data (like word embeddings)
+    x = np.random.randn(seq_len, d_model) * 0.1
 
-print(f"📊 Test setup: d_model={d_model}, seq_len={seq_len}")
+    print(f"📊 Test setup: d_model={d_model}, seq_len={seq_len}")
 
-# Create self-attention
-self_attn = SelfAttention(d_model)
+    # Create self-attention
+    self_attn = SelfAttention(d_model)
 
-# Test forward pass
-output, weights = self_attn(x)
+    # Test forward pass
+    output, weights = self_attn(x)
 
-print(f"📊 Output shapes: output{output.shape}, weights{weights.shape}")
+    print(f"📊 Output shapes: output{output.shape}, weights{weights.shape}")
 
-# Verify properties
-print(f"✅ Output shape preserved: {output.shape == x.shape}")
-print(f"✅ Attention weights correct shape: {weights.shape == (seq_len, seq_len)}")
-print(f"✅ Attention weights sum to 1: {np.allclose(np.sum(weights, axis=-1), 1.0)}")
-print(f"✅ Self-attention is symmetric operation: {weights.shape[0] == weights.shape[1]}")
+    # Verify properties
+    assert output.shape == x.shape, f"Output shape should match input shape {x.shape}, got {output.shape}"
+    assert weights.shape == (seq_len, seq_len), f"Attention weights shape should be {(seq_len, seq_len)}, got {weights.shape}"
+    assert np.allclose(np.sum(weights, axis=-1), 1.0), "Attention weights should sum to 1"
+    assert weights.shape[0] == weights.shape[1], "Self-attention weights should be square matrix"
 
-print("📈 Progress: Self-Attention ✓")
+    print("✅ Output shape preserved: True")
+    print("✅ Attention weights correct shape: True")
+    print("✅ Attention weights sum to 1: True")
+    print("✅ Self-attention is symmetric operation: True")
+    print("📈 Progress: Self-Attention ✓")
+
+# Run the test
+test_self_attention()
 
 # %% [markdown]
 """
@@ -398,18 +488,73 @@ def create_causal_mask(seq_len: int) -> np.ndarray:
     Used in models like GPT where each position can only attend to 
     previous positions, not future ones.
     
+    TODO: Create a lower triangular matrix of ones.
+    
+    STEP-BY-STEP IMPLEMENTATION:
+    1. Use np.tril() to create lower triangular matrix
+    2. Create matrix of ones with shape (seq_len, seq_len)
+    3. Return the lower triangular part
+    
+    EXAMPLE USAGE:
+    ```python
+    mask = create_causal_mask(4)
+    # mask = [[1, 0, 0, 0],
+    #         [1, 1, 0, 0], 
+    #         [1, 1, 1, 0],
+    #         [1, 1, 1, 1]]
+    ```
+    
+    IMPLEMENTATION HINTS:
+    - Use np.ones((seq_len, seq_len)) to create matrix of ones
+    - Use np.tril() to get lower triangular part
+    - Or combine: np.tril(np.ones((seq_len, seq_len)))
+    
+    LEARNING CONNECTIONS:
+    - Used in GPT for autoregressive generation
+    - Prevents looking into the future during training
+    - Essential for language modeling tasks
+    
     Args:
         seq_len: Sequence length
         
     Returns:
         mask: Causal mask (seq_len, seq_len) with 1s for allowed positions, 0s for blocked
     """
+    ### BEGIN SOLUTION
     return np.tril(np.ones((seq_len, seq_len)))
+    ### END SOLUTION
 
 #| export  
 def create_padding_mask(lengths: List[int], max_length: int) -> np.ndarray:
     """
     Create padding mask for variable-length sequences.
+    
+    TODO: Create mask that ignores padding tokens.
+    
+    STEP-BY-STEP IMPLEMENTATION:
+    1. Initialize zero array with shape (batch_size, max_length, max_length)
+    2. For each sequence in the batch, set valid positions to 1
+    3. Valid positions are [:length, :length] for each sequence
+    4. Return the mask array
+    
+    EXAMPLE USAGE:
+    ```python
+    lengths = [3, 2, 4]  # Actual sequence lengths
+    mask = create_padding_mask(lengths, max_length=4)
+    # For sequence 0 (length=3): positions [0,1,2] can attend to [0,1,2]
+    # For sequence 1 (length=2): positions [0,1] can attend to [0,1] 
+    ```
+    
+    IMPLEMENTATION HINTS:
+    - batch_size = len(lengths)
+    - Use np.zeros((batch_size, max_length, max_length))
+    - Loop through lengths: for i, length in enumerate(lengths)
+    - Set valid region: mask[i, :length, :length] = 1
+    
+    LEARNING CONNECTIONS:
+    - Used when sequences have different lengths
+    - Prevents attention to padding tokens
+    - Essential for efficient batch processing
     
     Args:
         lengths: List of actual sequence lengths
@@ -418,6 +563,7 @@ def create_padding_mask(lengths: List[int], max_length: int) -> np.ndarray:
     Returns:
         mask: Padding mask (batch_size, max_length, max_length)
     """
+    ### BEGIN SOLUTION
     batch_size = len(lengths)
     mask = np.zeros((batch_size, max_length, max_length))
     
@@ -425,6 +571,7 @@ def create_padding_mask(lengths: List[int], max_length: int) -> np.ndarray:
         mask[i, :length, :length] = 1
     
     return mask
+    ### END SOLUTION
 
 #| export
 def create_bidirectional_mask(seq_len: int) -> np.ndarray:
@@ -433,66 +580,168 @@ def create_bidirectional_mask(seq_len: int) -> np.ndarray:
     
     Used in models like BERT for bidirectional context understanding.
     
+    TODO: Create a matrix of all ones.
+    
+    STEP-BY-STEP IMPLEMENTATION:
+    1. Use np.ones() to create matrix of all ones
+    2. Shape should be (seq_len, seq_len)
+    3. Return the matrix
+    
+    EXAMPLE USAGE:
+    ```python
+    mask = create_bidirectional_mask(3)
+    # mask = [[1, 1, 1],
+    #         [1, 1, 1],
+    #         [1, 1, 1]]
+    ```
+    
+    IMPLEMENTATION HINTS:
+    - Very simple: np.ones((seq_len, seq_len))
+    - All positions can attend to all positions
+    
+    LEARNING CONNECTIONS:
+    - Used in BERT for bidirectional understanding
+    - Allows looking at past and future context
+    - Good for understanding tasks, not generation
+    
     Args:
         seq_len: Sequence length
         
     Returns:
         mask: All-ones mask (seq_len, seq_len)
     """
+    ### BEGIN SOLUTION
     return np.ones((seq_len, seq_len))
+    ### END SOLUTION
 
 # %% [markdown]
 """
-### 🧪 Unit Test: Attention Masking
+### 🧪 Test Your Masking Functions
 
-**This is a unit test** - it tests all masking utilities work correctly.
-
-Let's verify our masking functions create the correct patterns.
+Once you implement the masking functions above, run this cell to test them:
 """
 
-# %% nbgrader={"grade": false, "grade_id": "test-masking", "locked": false, "schema_version": 3, "solution": false, "task": false}
-print("🔬 Unit Test: Attention Masking...")
+# %% nbgrader={"grade": true, "grade_id": "test-masking-immediate", "locked": true, "points": 5, "schema_version": 3, "solution": false, "task": false}
+def test_attention_masking():
+    """Test attention masking utilities"""
+    print("🔬 Unit Test: Attention Masking...")
 
-# Test causal mask
-seq_len = 5
-causal_mask = create_causal_mask(seq_len)
+    # Test causal mask
+    seq_len = 5
+    causal_mask = create_causal_mask(seq_len)
 
-print(f"📊 Causal mask for seq_len={seq_len}:")
-print(causal_mask)
+    print(f"📊 Causal mask for seq_len={seq_len}:")
+    print(causal_mask)
 
-# Verify causal mask properties
-print(f"✅ Causal mask is lower triangular: {np.allclose(causal_mask, np.tril(causal_mask))}")
-print(f"✅ Causal mask has correct shape: {causal_mask.shape == (seq_len, seq_len)}")
-print(f"✅ Causal mask upper triangle is zeros: {np.all(np.triu(causal_mask, k=1) == 0)}")
+    # Verify causal mask properties
+    assert np.allclose(causal_mask, np.tril(causal_mask)), "Causal mask should be lower triangular"
+    assert causal_mask.shape == (seq_len, seq_len), f"Causal mask should have shape {(seq_len, seq_len)}"
+    assert np.all(np.triu(causal_mask, k=1) == 0), "Causal mask upper triangle should be zeros"
 
-# Test padding mask
-lengths = [5, 3, 4]
-max_length = 5
-padding_mask = create_padding_mask(lengths, max_length)
+    # Test padding mask
+    lengths = [5, 3, 4]
+    max_length = 5
+    padding_mask = create_padding_mask(lengths, max_length)
 
-print(f"📊 Padding mask for lengths {lengths}, max_length={max_length}:")
-print("Mask for sequence 0 (length 5):")
-print(padding_mask[0])
-print("Mask for sequence 1 (length 3):")
-print(padding_mask[1])
+    print(f"📊 Padding mask for lengths {lengths}, max_length={max_length}:")
+    print("Mask for sequence 0 (length 5):")
+    print(padding_mask[0])
+    print("Mask for sequence 1 (length 3):")
+    print(padding_mask[1])
 
-# Verify padding mask properties
-print(f"✅ Padding mask has correct shape: {padding_mask.shape == (3, max_length, max_length)}")
-print(f"✅ Full-length sequence is all ones: {np.all(padding_mask[0] == 1)}")
-print(f"✅ Short sequence has zeros in padding area: {np.all(padding_mask[1, 3:, :] == 0)}")
+    # Verify padding mask properties
+    assert padding_mask.shape == (3, max_length, max_length), f"Padding mask should have shape {(3, max_length, max_length)}"
+    assert np.all(padding_mask[0] == 1), "Full-length sequence should be all ones"
+    assert np.all(padding_mask[1, 3:, :] == 0), "Short sequence should have zeros in padding area"
 
-# Test bidirectional mask
-bidirectional_mask = create_bidirectional_mask(seq_len)
-print(f"✅ Bidirectional mask is all ones: {np.all(bidirectional_mask == 1)}")
-print(f"✅ Bidirectional mask has correct shape: {bidirectional_mask.shape == (seq_len, seq_len)}")
+    # Test bidirectional mask
+    bidirectional_mask = create_bidirectional_mask(seq_len)
+    assert np.all(bidirectional_mask == 1), "Bidirectional mask should be all ones"
+    assert bidirectional_mask.shape == (seq_len, seq_len), f"Bidirectional mask should have shape {(seq_len, seq_len)}"
 
-print("📈 Progress: Attention Masking ✓")
+    print("✅ Causal mask is lower triangular: True")
+    print("✅ Causal mask has correct shape: True")
+    print("✅ Causal mask upper triangle is zeros: True")
+    print("✅ Padding mask has correct shape: True")
+    print("✅ Full-length sequence is all ones: True")
+    print("✅ Short sequence has zeros in padding area: True")
+    print("✅ Bidirectional mask is all ones: True")
+    print("✅ Bidirectional mask has correct shape: True")
+    print("📈 Progress: Attention Masking ✓")
+
+# Run the test
+test_attention_masking()
 
 # %% [markdown]
 """
-## Step 5: Attention Visualization and Analysis
+## Step 5: Complete System Integration Test
 
-### Understanding What Attention Learns
+### Bringing It All Together
+Let's test all components working together in a realistic scenario similar to how they would be used in actual transformer models.
+"""
+
+# %% nbgrader={"grade": true, "grade_id": "test-integration-final", "locked": true, "points": 10, "schema_version": 3, "solution": false, "task": false}
+def test_complete_attention_system():
+    """Test the complete attention system working together"""
+    print("🔬 Unit Test: Complete Attention System Integration...")
+
+    # Test parameters
+    d_model = 64
+    seq_len = 16
+    batch_size = 2
+    np.random.seed(42)
+
+    print(f"📊 Integration test: d_model={d_model}, seq_len={seq_len}, batch_size={batch_size}")
+
+    # Step 1: Create input embeddings (simulating word embeddings)
+    embeddings = np.random.randn(batch_size, seq_len, d_model) * 0.1
+    print(f"📊 Input embeddings: {embeddings.shape}")
+
+    # Step 2: Test basic attention
+    output, attention_weights = scaled_dot_product_attention(embeddings, embeddings, embeddings)
+    assert output.shape == embeddings.shape, "Basic attention should preserve shape"
+    print(f"✅ Basic attention works: {output.shape}")
+
+    # Step 3: Test self-attention wrapper
+    self_attn = SelfAttention(d_model)
+    self_output, self_weights = self_attn(embeddings[0])  # Single batch item
+    assert self_output.shape == (seq_len, d_model), "Self-attention should preserve shape"
+    print(f"✅ Self-attention output: {self_output.shape}")
+
+    # Step 4: Test with causal mask (like GPT)
+    causal_mask = create_causal_mask(seq_len)
+    causal_output, causal_weights = scaled_dot_product_attention(
+        embeddings[0], embeddings[0], embeddings[0], causal_mask
+    )
+    assert causal_output.shape == (seq_len, d_model), "Causal attention should preserve shape"
+    print(f"✅ Causal attention works: {causal_output.shape}")
+
+    # Step 5: Test with padding mask (variable lengths)
+    lengths = [seq_len, seq_len-3]  # Different sequence lengths
+    padding_mask = create_padding_mask(lengths, seq_len)
+    padded_output, padded_weights = scaled_dot_product_attention(
+        embeddings[0], embeddings[0], embeddings[0], padding_mask[0]
+    )
+    assert padded_output.shape == (seq_len, d_model), "Padding attention should preserve shape"
+    print(f"✅ Padding mask works: {padded_output.shape}")
+
+    # Step 6: Verify all outputs have correct properties
+    assert np.allclose(np.sum(attention_weights, axis=-1), 1.0), "All attention weights should sum to 1"
+    assert output.shape == embeddings.shape, "All outputs should preserve input shape"
+    assert np.all(np.triu(causal_weights, k=1) < 1e-6), "Causal masking should work"
+
+    print("✅ All attention weights sum to 1: True")
+    print("✅ All outputs preserve input shape: True")
+    print("✅ Causal masking works: True")
+    print("📈 Progress: Complete Attention System ✓")
+
+# Run the test
+test_complete_attention_system()
+
+# %% [markdown]
+"""
+## 🎯 Attention Behavior Analysis
+
 Let's create a simple example to see what attention patterns emerge and understand the behavior.
 """
 
@@ -561,61 +810,6 @@ if _should_show_plots():
     plt.show()
 
 print("🎯 Attention learns to focus on similar content!")
-
-# %% [markdown]
-"""
-### 🧪 Unit Test: Complete Attention System Integration
-
-**This is a unit test** - it tests the complete attention system working together.
-
-Let's verify all components work together seamlessly.
-"""
-
-# %% nbgrader={"grade": false, "grade_id": "test-integration", "locked": false, "schema_version": 3, "solution": false, "task": false}
-print("🔬 Unit Test: Complete Attention System Integration...")
-
-# Test parameters
-d_model = 64
-seq_len = 16
-batch_size = 2
-np.random.seed(42)
-
-print(f"📊 Integration test: d_model={d_model}, seq_len={seq_len}, batch_size={batch_size}")
-
-# Step 1: Create input embeddings (simulating word embeddings)
-embeddings = np.random.randn(batch_size, seq_len, d_model) * 0.1
-print(f"📊 Input embeddings: {embeddings.shape}")
-
-# Step 2: Test basic attention
-output, attention_weights = scaled_dot_product_attention(embeddings, embeddings, embeddings)
-print(f"✅ Basic attention works: {output.shape}")
-
-# Step 3: Test self-attention wrapper
-self_attn = SelfAttention(d_model)
-self_output, self_weights = self_attn(embeddings[0])  # Single batch item
-print(f"✅ Self-attention output: {self_output.shape}")
-
-# Step 4: Test with causal mask (like GPT)
-causal_mask = create_causal_mask(seq_len)
-causal_output, causal_weights = scaled_dot_product_attention(
-    embeddings[0], embeddings[0], embeddings[0], causal_mask
-)
-print(f"✅ Causal attention works: {causal_output.shape}")
-
-# Step 5: Test with padding mask (variable lengths)
-lengths = [seq_len, seq_len-3]  # Different sequence lengths
-padding_mask = create_padding_mask(lengths, seq_len)
-padded_output, padded_weights = scaled_dot_product_attention(
-    embeddings[0], embeddings[0], embeddings[0], padding_mask[0]
-)
-print(f"✅ Padding mask works: {padded_output.shape}")
-
-# Step 6: Verify all outputs have correct properties
-print(f"✅ All attention weights sum to 1: {np.allclose(np.sum(attention_weights, axis=-1), 1.0)}")
-print(f"✅ All outputs preserve input shape: {output.shape == embeddings.shape}")
-print(f"✅ Causal masking works: {np.all(np.triu(causal_weights, k=1) < 1e-6)}")
-
-print("📈 Progress: Complete Attention System ✓")
 
 print("\n" + "="*50)
 print("🔥 ATTENTION MODULE COMPLETE!")
