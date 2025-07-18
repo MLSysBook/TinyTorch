@@ -15,7 +15,7 @@ exports_to: "tinytorch.core.dense"
 
 # File Structure - What files exist in this module
 files:
-  dev_file: "networks_dev.py"
+  dev_file: "dense_dev.py"
   readme: "README.md"
   tests: "inline"
 

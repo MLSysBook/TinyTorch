@@ -14,7 +14,7 @@ setup_integration_test()
 
 # Import ONLY from TinyTorch package
 from tinytorch.core.tensor import Tensor
-from tinytorch.core.autograd import Variable, add, multiply, relu_with_grad, sigmoid_with_grad
+from tinytorch.core.autograd import Variable, add, multiply
 
 
 class TestTensorAutogradIntegration:
