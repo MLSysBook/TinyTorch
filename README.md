@@ -427,14 +427,14 @@ tito export 01_setup && tito test 01_setup
 <br>
 
 > **You're right - for production, use PyTorch!** But consider:
-
-**🤔 Deep Understanding Questions:**
-- **Do you understand what `loss.backward()` actually does?** Most engineers don't.
-- **Can you debug when gradients vanish?** You'll know why and how to fix it.  
-- **Could you optimize a custom operation?** You'll have built the primitives.
-
-**💡 The Learning Analogy:**  
-Think of it like this: Pilots learn in small planes before flying 747s. You're learning the fundamentals that make you a **better PyTorch engineer**.
+>
+> **🤔 Deep Understanding Questions:**
+> - **Do you understand what `loss.backward()` actually does?** Most engineers don't.
+> - **Can you debug when gradients vanish?** You'll know why and how to fix it.  
+> - **Could you optimize a custom operation?** You'll have built the primitives.
+>
+> **💡 The Learning Analogy:**  
+> Think of it like this: Pilots learn in small planes before flying 747s. You're learning the fundamentals that make you a **better PyTorch engineer**.
 
 ---
 </details>
@@ -445,22 +445,22 @@ Think of it like this: Pilots learn in small planes before flying 747s. You're l
 <br>
 
 > **Most tutorials focus on isolated components** - a Colab here, a notebook there. TinyTorch builds a **fully integrated system**.
-
-**🏗️ Systems Engineering Analogy:**  
-Think of building a **compiler** or **operating system**. You don't just implement a lexer or a scheduler - you build how **every component works together**. Each piece must integrate seamlessly with the whole.
-
-**📊 Component vs. System Approach:**
-```python
-Component Approach:          Systems Approach (TinyTorch):
-├── Build a neural network   ├── Build a complete ML framework
-├── Jupyter notebook demos   ├── Full Python package with CLI
-├── Isolated examples        ├── Integrated: tensors → layers → training
-└── "Here's how ReLU works"  ├── Production patterns: testing, profiling
-                            └── "Here's how EVERYTHING connects"
-```
-
-**🎯 Key Insight:**  
-You learn **systems engineering**, not just individual algorithms. Like understanding how every part of a compiler interacts to turn code into executable programs.
+>
+> **🏗️ Systems Engineering Analogy:**  
+> Think of building a **compiler** or **operating system**. You don't just implement a lexer or a scheduler - you build how **every component works together**. Each piece must integrate seamlessly with the whole.
+>
+> **📊 Component vs. System Approach:**
+> ```python
+> Component Approach:          Systems Approach (TinyTorch):
+> ├── Build a neural network   ├── Build a complete ML framework
+> ├── Jupyter notebook demos   ├── Full Python package with CLI
+> ├── Isolated examples        ├── Integrated: tensors → layers → training
+> └── "Here's how ReLU works"  ├── Production patterns: testing, profiling
+>                             └── "Here's how EVERYTHING connects"
+> ```
+>
+> **🎯 Key Insight:**  
+> You learn **systems engineering**, not just individual algorithms. Like understanding how every part of a compiler interacts to turn code into executable programs.
 
 ---
 </details>
@@ -470,17 +470,17 @@ You learn **systems engineering**, not just individual algorithms. Like understa
 
 <br>
 
-**📚 Reading vs. 🔧 Building:**
-```
-Reading about neural networks:     Building neural networks:
-├── "I understand the theory"      ├── "Why are my gradients exploding?"
-├── "Backprop makes sense"         ├── "Oh, that's why we need gradient clipping"
-├── "Adam is better than SGD"      ├── "Now I see when each optimizer works"
-└── Theoretical knowledge          └── Deep intuitive understanding
-```
-
-**🌟 The Reality Check:**  
-Implementation **forces you to confront reality** - edge cases, numerical stability, memory management, performance trade-offs that papers gloss over.
+> **📚 Reading vs. 🔧 Building:**
+> ```
+> Reading about neural networks:     Building neural networks:
+> ├── "I understand the theory"      ├── "Why are my gradients exploding?"
+> ├── "Backprop makes sense"         ├── "Oh, that's why we need gradient clipping"
+> ├── "Adam is better than SGD"      ├── "Now I see when each optimizer works"
+> └── Theoretical knowledge          └── Deep intuitive understanding
+> ```
+>
+> **🌟 The Reality Check:**  
+> Implementation **forces you to confront reality** - edge cases, numerical stability, memory management, performance trade-offs that papers gloss over.
 
 ---
 </details>
@@ -491,15 +491,15 @@ Implementation **forces you to confront reality** - edge cases, numerical stabil
 <br>
 
 > **Great question!** Transformers are indeed dominant, but they're built on the same foundations you'll implement:
-
-**🏗️ Transformer Building Blocks You'll Build:**
-- **Attention is just matrix operations** - which you'll build from tensors
-- **LayerNorm uses your activations and layers** 
-- **Adam optimizer powers Transformer training** - you'll implement it
-- **Multi-head attention = your Linear layers + reshaping** 
-
-**🎯 The Strategic Reality:**  
-Understanding foundations makes you the engineer who can **optimize Transformers**, not just use them. Plus, CNNs still power computer vision, RNNs drive real-time systems, and new architectures emerge constantly.
+>
+> **🏗️ Transformer Building Blocks You'll Build:**
+> - **Attention is just matrix operations** - which you'll build from tensors
+> - **LayerNorm uses your activations and layers** 
+> - **Adam optimizer powers Transformer training** - you'll implement it
+> - **Multi-head attention = your Linear layers + reshaping** 
+>
+> **🎯 The Strategic Reality:**  
+> Understanding foundations makes you the engineer who can **optimize Transformers**, not just use them. Plus, CNNs still power computer vision, RNNs drive real-time systems, and new architectures emerge constantly.
 
 ---
 </details>
@@ -509,13 +509,13 @@ Understanding foundations makes you the engineer who can **optimize Transformers
 
 <br>
 
-**🧪 Challenge Test - Can You:**
-- **Implement Adam optimizer from the paper?** (Not just use `torch.optim.Adam`)
-- **Explain why ReLU causes dying neurons** and how to fix it?
-- **Debug a 50% accuracy drop** after model deployment?
-
-**💪 Why Advanced Engineers Love TinyTorch:**  
-It fills the **"implementation gap"** that most ML education skips. You'll go from understanding concepts to implementing production systems.
+> **🧪 Challenge Test - Can You:**
+> - **Implement Adam optimizer from the paper?** (Not just use `torch.optim.Adam`)
+> - **Explain why ReLU causes dying neurons** and how to fix it?
+> - **Debug a 50% accuracy drop** after model deployment?
+>
+> **💪 Why Advanced Engineers Love TinyTorch:**  
+> It fills the **"implementation gap"** that most ML education skips. You'll go from understanding concepts to implementing production systems.
 
 ---
 </details>
@@ -526,16 +526,16 @@ It fills the **"implementation gap"** that most ML education skips. You'll go fr
 <br>
 
 > **Both!** TinyTorch bridges academic understanding with engineering reality:
-
-**🎓 Academic Rigor:**
-- Mathematical foundations implemented correctly
-- Proper testing and validation methodologies
-- Research-quality implementations you can trust
-
-**⚙️ Engineering Practicality:**
-- Production-style code organization and CLI tools
-- Performance considerations and optimization techniques
-- Real datasets, realistic scale, professional development workflow
+>
+> **🎓 Academic Rigor:**
+> - Mathematical foundations implemented correctly
+> - Proper testing and validation methodologies
+> - Research-quality implementations you can trust
+>
+> **⚙️ Engineering Practicality:**
+> - Production-style code organization and CLI tools
+> - Performance considerations and optimization techniques
+> - Real datasets, realistic scale, professional development workflow
 
 ---
 </details>
@@ -545,15 +545,15 @@ It fills the **"implementation gap"** that most ML education skips. You'll go fr
 
 <br>
 
-**📊 Time Investment:** ~40-60 hours for complete framework
-
-**🎯 Flexible Learning Paths:**
-- **Quick exploration:** 1-2 modules to understand the approach
-- **Focused learning:** Core modules (01-10) for solid foundations  
-- **Complete mastery:** All 16 modules for full framework expertise
-
-**✨ Self-Paced Design:**  
-Each module is self-contained, so you can stop and start as needed.
+> **📊 Time Investment:** ~40-60 hours for complete framework
+>
+> **🎯 Flexible Learning Paths:**
+> - **Quick exploration:** 1-2 modules to understand the approach
+> - **Focused learning:** Core modules (01-10) for solid foundations  
+> - **Complete mastery:** All 16 modules for full framework expertise
+>
+> **✨ Self-Paced Design:**  
+> Each module is self-contained, so you can stop and start as needed.
 
 ---
 </details>
@@ -563,15 +563,15 @@ Each module is self-contained, so you can stop and start as needed.
 
 <br>
 
-**🛡️ Built-in Support System:**
-- **Progressive scaffolding:** Each step builds on the previous, with guided implementations
-- **Comprehensive testing:** 200+ tests ensure your code works correctly
-- **Rich documentation:** Visual explanations, real-world context, debugging tips
-- **Professional error messages:** Helpful feedback when things go wrong
-- **Modular design:** Skip ahead or go back without breaking your progress
-
-**💡 Learning Philosophy:**  
-The course is designed to **guide you through complexity**, not leave you struggling alone.
+> **🛡️ Built-in Support System:**
+> - **Progressive scaffolding:** Each step builds on the previous, with guided implementations
+> - **Comprehensive testing:** 200+ tests ensure your code works correctly
+> - **Rich documentation:** Visual explanations, real-world context, debugging tips
+> - **Professional error messages:** Helpful feedback when things go wrong
+> - **Modular design:** Skip ahead or go back without breaking your progress
+>
+> **💡 Learning Philosophy:**  
+> The course is designed to **guide you through complexity**, not leave you struggling alone.
 
 ---
 </details>
@@ -581,14 +581,14 @@ The course is designed to **guide you through complexity**, not leave you strugg
 
 <br>
 
-**🏗️ Your Framework Becomes the Foundation For:**
-- **Research projects:** Implement cutting-edge papers on solid foundations
-- **Specialized systems:** Computer vision, NLP, robotics applications
-- **Performance engineering:** GPU kernels, distributed training, quantization
-- **Custom architectures:** New layer types, novel optimizers, experimental designs
-
-**🎯 Ultimate Skill Unlock:**  
-You'll have the implementation skills to **turn any ML paper into working code**.
+> **🏗️ Your Framework Becomes the Foundation For:**
+> - **Research projects:** Implement cutting-edge papers on solid foundations
+> - **Specialized systems:** Computer vision, NLP, robotics applications
+> - **Performance engineering:** GPU kernels, distributed training, quantization
+> - **Custom architectures:** New layer types, novel optimizers, experimental designs
+>
+> **🎯 Ultimate Skill Unlock:**  
+> You'll have the implementation skills to **turn any ML paper into working code**.
 
 ---
 </details>
