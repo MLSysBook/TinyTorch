@@ -138,7 +138,9 @@ Ready for serious development? → [🏗️ Local Setup Guide](../usage-paths/se
     if prev_module:
         nav_links += f'<a class="left-prev" href="../chapters/{prev_module}.html" title="previous page">← Previous Module</a>\n'
     
-    if module_num < 14:  # Assuming 14 modules total
+    # Get total number of modules dynamically
+    module_names = get_module_names()
+    if module_num < len(module_names):
         next_module = f"{module_num+1:02d}_{get_next_module_name(module_num)}"
         nav_links += f'<a class="right-next" href="../chapters/{next_module}.html" title="next page">Next Module →</a>\n'
     
@@ -185,23 +187,45 @@ def get_time_estimate(module_name: str) -> str:
     module_info = get_module_info(module_path)
     return module_info.get('time_estimate', '3-4 hours')
 
+def get_module_names() -> List[str]:
+    """Get actual module names from module.yaml files."""
+    modules_dir = Path("../modules/source")
+    module_names = []
+    
+    # Get all module directories (sorted by number)
+    module_dirs = []
+    for item in modules_dir.iterdir():
+        if item.is_dir() and item.name != 'utils':
+            # Extract module number from directory name
+            match = re.match(r'(\d+)_(.+)', item.name)
+            if match:
+                module_num = int(match.group(1))
+                module_dirs.append((module_num, item))
+    
+    # Sort by module number
+    module_dirs.sort(key=lambda x: x[0])
+    
+    # Read module names from module.yaml files
+    for module_num, module_dir in module_dirs:
+        module_yaml_path = module_dir / "module.yaml"
+        if module_yaml_path.exists():
+            module_info = get_module_info(module_dir)
+            module_names.append(module_info.get('name', module_dir.name.split('_', 1)[1]))
+        else:
+            # Fallback to directory name
+            module_names.append(module_dir.name.split('_', 1)[1])
+    
+    return module_names
+
 def get_prev_module_name(module_num: int) -> str:
     """Get previous module name."""
-    module_names = [
-        'setup', 'tensor', 'activations', 'layers', 'networks', 'cnn',
-        'dataloader', 'autograd', 'optimizers', 'training', 'compression',
-        'kernels', 'benchmarking', 'mlops'
-    ]
-    return module_names[module_num - 2] if module_num > 1 else 'setup'
+    module_names = get_module_names()
+    return module_names[module_num - 2] if module_num > 1 and module_num - 2 < len(module_names) else 'setup'
 
 def get_next_module_name(module_num: int) -> str:
     """Get next module name."""
-    module_names = [
-        'setup', 'tensor', 'activations', 'layers', 'networks', 'cnn',
-        'dataloader', 'autograd', 'optimizers', 'training', 'compression',
-        'kernels', 'benchmarking', 'mlops'
-    ]
-    return module_names[module_num] if module_num < len(module_names) else 'mlops'
+    module_names = get_module_names()
+    return module_names[module_num] if module_num < len(module_names) else module_names[-1] if module_names else 'setup'
 
 def convert_readme_to_chapter(readme_path: Path, chapter_path: Path, module_num: int):
     """Convert a single README to a Jupyter Book chapter."""
