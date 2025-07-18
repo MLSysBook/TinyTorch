@@ -53,7 +53,7 @@ class TestTensorActivationInterface:
         
         for tensor in test_cases:
             result = softmax(tensor)
-            
+        
             # Verify interface compatibility
             assert isinstance(result, Tensor), "Softmax should return Tensor"
             assert result.shape == tensor.shape, "Softmax should preserve shape"
@@ -176,7 +176,7 @@ class TestActivationTensorSystemIntegration:
         for tensor in tensors:
             result = relu(tensor)
             results.append(result)
-        
+                
         # Verify all operations work
         for i, result in enumerate(results):
             assert isinstance(result, Tensor), f"Activation {i} should return Tensor"
