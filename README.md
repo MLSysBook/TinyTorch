@@ -104,7 +104,7 @@ tito nbdev build                          # Update package
 
 ```
 TinyTorch/
-├── modules/source/           # 15 educational modules
+├── modules/source/           # 16 educational modules
 │   ├── 01_setup/            # Development environment setup
 │   │   ├── module.yaml      # Module metadata
 │   │   ├── README.md        # Learning objectives and guide
@@ -115,22 +115,26 @@ TinyTorch/
 │   │   └── tensor_dev.py
 │   ├── 03_activations/      # Neural network activation functions
 │   ├── 04_layers/           # Dense layers and transformations
-│   ├── 05_networks/         # Sequential networks and MLPs
-│   ├── 06_cnn/              # Convolutional neural networks
-│   ├── 07_dataloader/       # Data loading and preprocessing
-│   ├── 08_autograd/         # Automatic differentiation
-│   ├── 09_optimizers/       # SGD, Adam, learning rate scheduling
-│   ├── 10_training/         # Training loops and validation
-│   ├── 11_compression/      # Model optimization and compression
-│   ├── 12_kernels/          # High-performance operations
-│   ├── 13_benchmarking/     # Performance analysis and profiling
-│   ├── 14_mlops/            # Production monitoring and deployment
-│   └── 15_capstone/         # Systems engineering capstone project
+│   ├── 05_dense/            # Sequential networks and MLPs
+│   ├── 06_spatial/          # Convolutional neural networks
+│   ├── 07_attention/        # Self-attention and transformer components
+│   ├── 08_dataloader/       # Data loading and preprocessing
+│   ├── 09_autograd/         # Automatic differentiation
+│   ├── 10_optimizers/       # SGD, Adam, learning rate scheduling
+│   ├── 11_training/         # Training loops and validation
+│   ├── 12_compression/      # Model optimization and compression
+│   ├── 13_kernels/          # High-performance operations
+│   ├── 14_benchmarking/     # Performance analysis and profiling
+│   ├── 15_mlops/            # Production monitoring and deployment
+│   └── 16_capstone/         # Systems engineering capstone project
 ├── tinytorch/               # Your built framework package
 │   ├── core/                # Core implementations (exported from modules)
 │   │   ├── tensor.py        # Generated from 02_tensor
 │   │   ├── activations.py   # Generated from 03_activations
 │   │   ├── layers.py        # Generated from 04_layers
+│   │   ├── dense.py         # Generated from 05_dense
+│   │   ├── spatial.py       # Generated from 06_spatial
+│   │   ├── attention.py     # Generated from 07_attention
 │   │   └── ...              # All your implementations
 │   └── utils/               # Shared utilities and tools
 ├── book/                    # Interactive course website
@@ -152,7 +156,7 @@ TinyTorch/
 
 ---
 
-## 📚 Complete Course: 15 Modules
+## 📚 Complete Course: 16 Modules
 
 **Difficulty Progression:** ⭐ Beginner → ⭐⭐ Intermediate → ⭐⭐⭐ Advanced → ⭐⭐⭐⭐ Expert → ⭐⭐⭐⭐⭐🥷 Capstone
 
@@ -161,65 +165,67 @@ TinyTorch/
 * **02_tensor**: N-dimensional arrays and tensor operations  
 * **03_activations**: ReLU, Sigmoid, Tanh, Softmax functions
 * **04_layers**: Dense layers and matrix operations
-* **05_networks**: Sequential networks and MLPs
+* **05_dense**: Sequential networks and MLPs
 
-### **🧠 Deep Learning** (Modules 06-09)
-* **06_cnn**: Convolutional neural networks and image processing
-* **07_dataloader**: Data loading, batching, and preprocessing
-* **08_autograd**: Automatic differentiation and backpropagation  
-* **09_optimizers**: SGD, Adam, and learning rate scheduling
+### **🧠 Deep Learning** (Modules 06-10)
+* **06_spatial**: Convolutional neural networks and image processing
+* **07_attention**: Self-attention and transformer components
+* **08_dataloader**: Data loading, batching, and preprocessing
+* **09_autograd**: Automatic differentiation and backpropagation  
+* **10_optimizers**: SGD, Adam, and learning rate scheduling
 
-### **⚡ Systems & Production** (Modules 10-14)
-* **10_training**: Training loops, metrics, and validation
-* **11_compression**: Model pruning, quantization, and distillation
-* **12_kernels**: Performance optimization and custom operations
-* **13_benchmarking**: Profiling, testing, and performance analysis
-* **14_mlops**: Monitoring, deployment, and production systems
+### **⚡ Systems & Production** (Modules 11-15)
+* **11_training**: Training loops, metrics, and validation
+* **12_compression**: Model pruning, quantization, and distillation
+* **13_kernels**: Performance optimization and custom operations
+* **14_benchmarking**: Profiling, testing, and performance analysis
+* **15_mlops**: Monitoring, deployment, and production systems
 
-### **🎓 Capstone Project** (Module 15)
-* **15_capstone**: Capstone project applying systems engineering skills
+### **🎓 Capstone Project** (Module 16)
+* **16_capstone**: Advanced framework engineering specialization tracks
 
-**Status**: All 15 modules complete with inline tests and educational content
+**Status**: All 16 modules complete with inline tests and educational content
 
 ---
 
 ## 🔗 **Complete System Integration**
 
-**This isn't 15 isolated assignments.** Every component you build integrates into one cohesive, fully functional ML framework:
+**This isn't 16 isolated assignments.** Every component you build integrates into one cohesive, fully functional ML framework:
 
 ```mermaid
 flowchart TD
     A[01_setup<br/>Setup & Environment] --> B[02_tensor<br/>Core Tensor Operations]
     B --> C[03_activations<br/>ReLU, Sigmoid, Tanh]
     C --> D[04_layers<br/>Dense Layers]
-    D --> E[05_networks<br/>Sequential Networks]
+    D --> E[05_dense<br/>Sequential Networks]
     
-    E --> F[06_cnn<br/>Convolutional Networks]
-    E --> G[07_dataloader<br/>Data Loading]
-    B --> H[08_autograd<br/>Automatic Differentiation]
-    H --> I[09_optimizers<br/>SGD & Adam]
+    E --> F[06_spatial<br/>Convolutional Networks]
+    E --> G[07_attention<br/>Self-Attention]
+    F --> H[08_dataloader<br/>Data Loading]
+    B --> I[09_autograd<br/>Automatic Differentiation]
+    I --> J[10_optimizers<br/>SGD & Adam]
     
-    F --> J[10_training<br/>Training Loops]
-    G --> J
-    I --> J
+    H --> K[11_training<br/>Training Loops]
+    G --> K
+    J --> K
     
-    J --> K[11_compression<br/>Model Optimization]
-    J --> L[12_kernels<br/>High-Performance Ops]
-    J --> M[13_benchmarking<br/>Performance Analysis]
-    J --> N[14_mlops<br/>Production Monitoring]
+    K --> L[12_compression<br/>Model Optimization]
+    K --> M[13_kernels<br/>High-Performance Ops]
+    K --> N[14_benchmarking<br/>Performance Analysis]
+    K --> O[15_mlops<br/>Production Monitoring]
     
-    K --> O[15_capstone<br/>Systems Engineering]
-    L --> O
-    M --> O
-    N --> O
+    L --> P[16_capstone<br/>Framework Engineering]
+    M --> P
+    N --> P
+    O --> P
 ```
 
 ### **🎯 How It All Connects**
 
 **Foundation (01-05):** Build your core data structures and basic operations  
-**Deep Learning (06-09):** Add neural networks and automatic differentiation  
-**Production (10-14):** Scale to real applications with training and production systems  
-**Mastery (15):** Optimize and extend your complete framework
+**Deep Learning (06-10):** Add neural networks and automatic differentiation  
+**Production (11-15):** Scale to real applications with training and production systems  
+**Mastery (16):** Optimize and extend your complete framework
 
 **The Result:** A complete, working ML framework built entirely by you, capable of:
 - ✅ Training CNNs on CIFAR-10 with 90%+ accuracy
@@ -229,7 +235,7 @@ flowchart TD
 
 ### **🚀 Capstone: Optimize Your Framework**
 
-After completing the 14 core modules, you have a **complete ML framework**. The final challenge: make it better through systems engineering.
+After completing the 15 core modules, you have a **complete ML framework**. The final challenge: make it better through systems engineering.
 
 **Choose Your Focus:**
 - ⚡ **Performance Engineering**: GPU kernels, vectorization, memory-efficient operations
@@ -344,7 +350,7 @@ git push origin main        # Triggers documentation deployment
 
 ```
 TinyTorch/
-├── modules/source/XX/               # 14 source modules with inline tests
+├── modules/source/XX/               # 16 source modules with inline tests
 ├── tinytorch/core/                  # Your exported ML framework
 ├── tito/                           # CLI and course management tools
 ├── book/                           # Jupyter Book source and config
@@ -506,8 +512,8 @@ Reading about neural networks:     Building neural networks:
 
 **You can work at your own pace:**
 - **Quick exploration:** 1-2 modules to understand the approach
-- **Focused learning:** Core modules (01-08) for solid foundations  
-- **Complete mastery:** All 15 modules for full framework expertise
+- **Focused learning:** Core modules (01-10) for solid foundations  
+- **Complete mastery:** All 16 modules for full framework expertise
 
 Each module is self-contained, so you can stop and start as needed.
 </details>
