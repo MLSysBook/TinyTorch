@@ -28,36 +28,43 @@ parts:
   chapters:
   - file: chapters/04-layers
     title: "4. Layers"
-  - file: chapters/05-networks
-    title: "5. Networks"
-  - file: chapters/06-cnn
-    title: "6. CNNs"
+  - file: chapters/05-dense
+    title: "5. Dense"
+  - file: chapters/06-spatial
+    title: "6. Spatial"
+  - file: chapters/07-attention
+    title: "7. Attention"
 
 - caption: Training Systems  
   chapters:
-  - file: chapters/07-dataloader
-    title: "7. DataLoader"
-  - file: chapters/08-autograd
-    title: "8. Autograd"
-  - file: chapters/09-optimizers
-    title: "9. Optimizers"
-  - file: chapters/10-training
-    title: "10. Training"
+  - file: chapters/08-dataloader
+    title: "8. DataLoader"
+  - file: chapters/09-autograd
+    title: "9. Autograd"
+  - file: chapters/10-optimizers
+    title: "10. Optimizers"
+  - file: chapters/11-training
+    title: "11. Training"
 
-- caption: Production & Performance
+- caption: Inference & Serving
   chapters:
-  - file: chapters/11-compression
-    title: "11. Compression"
-  - file: chapters/12-kernels
-    title: "12. Kernels"
-  - file: chapters/13-benchmarking
-    title: "13. Benchmarking"
-  - file: chapters/14-mlops
-    title: "14. MLOps"
+  - file: chapters/12-compression
+    title: "12. Compression"
+  - file: chapters/13-kernels
+    title: "13. Kernels"
+  - file: chapters/14-benchmarking
+    title: "14. Benchmarking"
+  - file: chapters/15-mlops
+    title: "15. MLOps"
 
 - caption: Capstone Project
   chapters:
-  - file: chapters/15-capstone
-    title: "15. Capstone"
+  - file: chapters/16-capstone
+    title: "16. Capstone"
+
+- caption: Additional Resources
+  chapters:
+  - file: resources
+    title: "📚 Learning Resources"
 
 
