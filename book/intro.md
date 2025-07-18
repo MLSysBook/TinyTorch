@@ -12,7 +12,9 @@ html_meta:
   "name=twitter:image": "https://mlsysbook.github.io/TinyTorch/logo.png"
 ---
 
-# Tiny🔥Torch: Build your own Machine Learning framework from scratch. 
+# Tiny🔥Torch
+
+## Build your own Machine Learning framework from scratch. 
 
 **Most ML education teaches you to _use_ frameworks. TinyTorch teaches you to _build_ them.**
 
@@ -29,11 +31,11 @@ TinyTorch is a minimalist educational framework designed for learning by doing. 
 **Result:** You become the expert others ask about "how PyTorch actually works."
 ```
 
-_Everyone wants to be an astronaut._ 🧑‍🚀 _TinyTorch teaches you how to build the rocket ship._ 🚀
+_Everyone wants to be an astronaut._ 🧑‍🚀 _TinyTorch teaches you how to build the AI rocket ship._ 🚀
 
 ```{admonition} 📖 Complementary Learning
 :class: note
-For comprehensive ML systems knowledge, we recommend [**Machine Learning Systems**](https://mlsysbook.ai) by [Prof. Vijay Janapa Reddi](https://profvjreddi.github.io/website/). While TinyTorch teaches you to **build** ML systems from scratch, that book provides the broader **systems context** and engineering principles for production AI.
+For comprehensive ML systems knowledge, we recommend [**Machine Learning Systems**](https://mlsysbook.ai) by [Prof. Vijay Janapa Reddi](https://profvjreddi.github.io/website/) (Harvard). While TinyTorch teaches you to **build** ML systems from scratch, that book provides the broader **systems context** and engineering principles for production AI.
 ```
 
 ---
