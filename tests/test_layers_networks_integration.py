@@ -120,15 +120,15 @@ class TestLayerNetworkDataFlow:
             layer = Dense(input_size=input_size, output_size=hidden_size)
             network = Sequential([
                 Dense(input_size=hidden_size, output_size=hidden_size),
-                ReLU(),
+            ReLU(),
                 Dense(input_size=hidden_size, output_size=output_size)
             ])
-            
+        
             # Test data flow
             x = Tensor(np.random.randn(batch_size, input_size))
             layer_out = layer(x)
             network_out = network(layer_out)
-            
+        
             # Verify shape flow
             assert layer_out.shape == (batch_size, hidden_size), f"Layer should output correct shape for config {shape_configs}"
             assert network_out.shape == (batch_size, output_size), f"Network should output correct shape for config {shape_configs}"
