@@ -499,8 +499,8 @@ def prune_weights_by_magnitude(layer: Dense, pruning_ratio: float = 0.5) -> Tupl
     mask = magnitudes > threshold
     pruned_weights = weights * mask
     
-    # Update layer weights
-    layer.weights.data = pruned_weights
+    # Update layer weights by creating a new Tensor
+    layer.weights = Tensor(pruned_weights)
     
     # Calculate pruning statistics
     total_weights = weights.size
@@ -606,7 +606,7 @@ def test_magnitude_pruning():
     
     # Test edge cases
     empty_layer = Dense(10, 10)
-    empty_layer.weights.data = np.zeros((10, 10))
+    empty_layer.weights = Tensor(np.zeros((10, 10)))
     sparsity_empty = calculate_sparsity(empty_layer)
     assert sparsity_empty == 1.0, f"Empty layer should have 1.0 sparsity, got {sparsity_empty}"
     
@@ -739,7 +739,7 @@ def quantize_layer_weights(layer: Dense, bits: int = 8) -> Tuple[Dense, Dict[str
     dequantized = quantized * scale + w_min
     
     # Update layer weights
-    layer.weights.data = dequantized.astype(np.float32)
+    layer.weights = Tensor(dequantized.astype(np.float32))
     
     # Calculate quantization statistics
     total_weights = weights.size
@@ -1251,12 +1251,12 @@ def prune_layer_neurons(layer: Dense, keep_ratio: float = 0.7,
     
     # Copy weights for selected neurons
     pruned_weights = weights[:, keep_indices]
-    pruned_layer.weights.data = np.ascontiguousarray(pruned_weights)
+    pruned_layer.weights = Tensor(np.ascontiguousarray(pruned_weights))
     
     # Copy bias for selected neurons
     if bias is not None:
         pruned_bias = bias[keep_indices]
-        pruned_layer.bias.data = np.ascontiguousarray(pruned_bias)
+        pruned_layer.bias = Tensor(np.ascontiguousarray(pruned_bias))
     
     # Calculate pruning statistics
     neurons_removed = original_neurons - keep_count
@@ -1481,9 +1481,9 @@ def compare_compression_techniques(original_model: Sequential) -> Dict[str, Dict
     # Technique 1: Magnitude-based pruning only
     model_pruning = Sequential([Dense(layer.input_size, layer.output_size) for layer in original_model.layers])
     for i, layer in enumerate(model_pruning.layers):
-        layer.weights.data = original_model.layers[i].weights.data.copy() if hasattr(original_model.layers[i].weights.data, 'copy') else np.array(original_model.layers[i].weights.data)
+        layer.weights = Tensor(original_model.layers[i].weights.data.copy() if hasattr(original_model.layers[i].weights.data, 'copy') else np.array(original_model.layers[i].weights.data))
         if hasattr(layer, 'bias') and original_model.layers[i].bias is not None:
-            layer.bias.data = original_model.layers[i].bias.data.copy() if hasattr(original_model.layers[i].bias.data, 'copy') else np.array(original_model.layers[i].bias.data)
+            layer.bias = Tensor(original_model.layers[i].bias.data.copy() if hasattr(original_model.layers[i].bias.data, 'copy') else np.array(original_model.layers[i].bias.data))
     
     # Apply magnitude pruning to each layer
     total_sparsity = 0
@@ -1508,9 +1508,9 @@ def compare_compression_techniques(original_model: Sequential) -> Dict[str, Dict
     # Technique 2: Quantization only
     model_quantization = Sequential([Dense(layer.input_size, layer.output_size) for layer in original_model.layers])
     for i, layer in enumerate(model_quantization.layers):
-        layer.weights.data = original_model.layers[i].weights.data.copy() if hasattr(original_model.layers[i].weights.data, 'copy') else np.array(original_model.layers[i].weights.data)
+        layer.weights = Tensor(original_model.layers[i].weights.data.copy() if hasattr(original_model.layers[i].weights.data, 'copy') else np.array(original_model.layers[i].weights.data))
         if hasattr(layer, 'bias') and original_model.layers[i].bias is not None:
-            layer.bias.data = original_model.layers[i].bias.data.copy() if hasattr(original_model.layers[i].bias.data, 'copy') else np.array(original_model.layers[i].bias.data)
+            layer.bias = Tensor(original_model.layers[i].bias.data.copy() if hasattr(original_model.layers[i].bias.data, 'copy') else np.array(original_model.layers[i].bias.data))
     
     # Apply quantization to each layer
     total_memory_reduction = 0
@@ -1534,9 +1534,9 @@ def compare_compression_techniques(original_model: Sequential) -> Dict[str, Dict
     # Technique 3: Structured pruning only
     model_structured = Sequential([Dense(layer.input_size, layer.output_size) for layer in original_model.layers])
     for i, layer in enumerate(model_structured.layers):
-        layer.weights.data = original_model.layers[i].weights.data.copy() if hasattr(original_model.layers[i].weights.data, 'copy') else np.array(original_model.layers[i].weights.data)
+        layer.weights = Tensor(original_model.layers[i].weights.data.copy() if hasattr(original_model.layers[i].weights.data, 'copy') else np.array(original_model.layers[i].weights.data))
         if hasattr(layer, 'bias') and original_model.layers[i].bias is not None:
-            layer.bias.data = original_model.layers[i].bias.data.copy() if hasattr(original_model.layers[i].bias.data, 'copy') else np.array(original_model.layers[i].bias.data)
+            layer.bias = Tensor(original_model.layers[i].bias.data.copy() if hasattr(original_model.layers[i].bias.data, 'copy') else np.array(original_model.layers[i].bias.data))
     
     # Apply structured pruning to each layer
     total_param_reduction = 0
@@ -1562,9 +1562,9 @@ def compare_compression_techniques(original_model: Sequential) -> Dict[str, Dict
     # Technique 4: Combined approach
     model_combined = Sequential([Dense(layer.input_size, layer.output_size) for layer in original_model.layers])
     for i, layer in enumerate(model_combined.layers):
-        layer.weights.data = original_model.layers[i].weights.data.copy() if hasattr(original_model.layers[i].weights.data, 'copy') else np.array(original_model.layers[i].weights.data)
+        layer.weights = Tensor(original_model.layers[i].weights.data.copy() if hasattr(original_model.layers[i].weights.data, 'copy') else np.array(original_model.layers[i].weights.data))
         if hasattr(layer, 'bias') and original_model.layers[i].bias is not None:
-            layer.bias.data = original_model.layers[i].bias.data.copy() if hasattr(original_model.layers[i].bias.data, 'copy') else np.array(original_model.layers[i].bias.data)
+            layer.bias = Tensor(original_model.layers[i].bias.data.copy() if hasattr(original_model.layers[i].bias.data, 'copy') else np.array(original_model.layers[i].bias.data))
     
     # Apply magnitude pruning + quantization + structured pruning
     for i, layer in enumerate(model_combined.layers):
