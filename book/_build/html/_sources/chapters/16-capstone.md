@@ -16,9 +16,9 @@ learning_objectives: []
 
 
 ## 📊 Module Info
-- **Difficulty**: ⭐⭐⭐⭐⭐ Expert Systems Engineering 🥷
+- **Difficulty**: ⭐⭐⭐⭐⭐ Expert 🥷
 - **Time Estimate**: Capstone Project (flexible scope and pacing)
-- **Prerequisites**: **All 14 TinyTorch modules** - Your complete ML framework
+- **Prerequisites**: **All TinyTorch modules** - Your complete ML framework
 - **Outcome**: **Advanced framework engineering skills** - Prove deep systems mastery
 
 Welcome to your TinyTorch capstone! You've built a complete ML framework from scratch. Now make it faster, better, and more professional through systematic optimization. This isn't about building apps—it's about becoming the engineer others ask: *"How do I make this framework better?"*
@@ -33,11 +33,11 @@ By the end of this capstone, you will be able to:
 - **Make informed trade-offs**: Understand engineering decisions around memory vs speed, accuracy vs efficiency, and simplicity vs performance
 - **Demonstrate framework mastery**: Prove deep understanding through architectural improvements that showcase true systems expertise
 
-## �� Build → Optimize → Reflect
+## 🛠️ Build → Optimize → Reflect
 
 This capstone follows TinyTorch's **Build → Optimize → Reflect** framework:
 
-1. **Build**: You already built a complete ML framework (Modules 1-14)
+1. **Build**: You already built a complete ML framework
 2. **Optimize**: Systematically improve your framework through performance engineering and capability extensions  
 3. **Master**: Prove deep understanding by making architectural improvements that demonstrate true framework mastery
 
@@ -350,7 +350,7 @@ Submit your capstone as a complete project including:
 
 ---
 
-## 💡 **Pro Tips for Success**
+## 💡 **Tips for Success**
 
 ### **Start Small, Think Big**
 - Begin with the simplest version that works
