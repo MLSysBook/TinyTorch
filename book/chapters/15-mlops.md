@@ -422,21 +422,21 @@ Choose your preferred way to engage with this module:
 ````{grid} 1 2 3 3
 
 ```{grid-item-card} 🚀 Launch Binder
-:link: https://mybinder.org/v2/gh/mlsysbook/TinyTorch/main?filepath=modules/source/14_mlops/mlops_dev.ipynb
+:link: https://mybinder.org/v2/gh/mlsysbook/TinyTorch/main?filepath=modules/source/15_mlops/mlops_dev.ipynb
 :class-header: bg-light
 
 Run this module interactively in your browser. No installation required!
 ```
 
 ```{grid-item-card} ⚡ Open in Colab  
-:link: https://colab.research.google.com/github/mlsysbook/TinyTorch/blob/main/modules/source/14_mlops/mlops_dev.ipynb
+:link: https://colab.research.google.com/github/mlsysbook/TinyTorch/blob/main/modules/source/15_mlops/mlops_dev.ipynb
 :class-header: bg-light
 
 Use Google Colab for GPU access and cloud compute power.
 ```
 
 ```{grid-item-card} 📖 View Source
-:link: https://github.com/mlsysbook/TinyTorch/blob/main/modules/source/14_mlops/mlops_dev.py
+:link: https://github.com/mlsysbook/TinyTorch/blob/main/modules/source/15_mlops/mlops_dev.py
 :class-header: bg-light
 
 Browse the Python source code and understand the implementation.
@@ -454,5 +454,6 @@ Ready for serious development? → [🏗️ Local Setup Guide](../usage-paths/se
 ---
 
 <div class="prev-next-area">
-<a class="left-prev" href="../chapters/13_benchmarking.html" title="previous page">← Previous Module</a>
+<a class="left-prev" href="../chapters/14_benchmarking.html" title="previous page">← Previous Module</a>
+<a class="right-next" href="../chapters/16_capstone.html" title="next page">Next Module →</a>
 </div>

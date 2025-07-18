@@ -1,6 +1,6 @@
 ---
-title: "CNN"
-description: "Convolutional Neural Network layers and operations"
+title: "Spatial Networks"
+description: "Convolutional networks for spatial pattern recognition and image processing"
 difficulty: "⭐⭐⭐"
 time_estimate: "6-8 hours"
 prerequisites: []
@@ -217,21 +217,21 @@ Choose your preferred way to engage with this module:
 ````{grid} 1 2 3 3
 
 ```{grid-item-card} 🚀 Launch Binder
-:link: https://mybinder.org/v2/gh/mlsysbook/TinyTorch/main?filepath=modules/source/06_cnn/cnn_dev.ipynb
+:link: https://mybinder.org/v2/gh/mlsysbook/TinyTorch/main?filepath=modules/source/06_spatial/spatial_dev.ipynb
 :class-header: bg-light
 
 Run this module interactively in your browser. No installation required!
 ```
 
 ```{grid-item-card} ⚡ Open in Colab  
-:link: https://colab.research.google.com/github/mlsysbook/TinyTorch/blob/main/modules/source/06_cnn/cnn_dev.ipynb
+:link: https://colab.research.google.com/github/mlsysbook/TinyTorch/blob/main/modules/source/06_spatial/spatial_dev.ipynb
 :class-header: bg-light
 
 Use Google Colab for GPU access and cloud compute power.
 ```
 
 ```{grid-item-card} 📖 View Source
-:link: https://github.com/mlsysbook/TinyTorch/blob/main/modules/source/06_cnn/cnn_dev.py
+:link: https://github.com/mlsysbook/TinyTorch/blob/main/modules/source/06_spatial/spatial_dev.py
 :class-header: bg-light
 
 Browse the Python source code and understand the implementation.
@@ -249,6 +249,6 @@ Ready for serious development? → [🏗️ Local Setup Guide](../usage-paths/se
 ---
 
 <div class="prev-next-area">
-<a class="left-prev" href="../chapters/05_networks.html" title="previous page">← Previous Module</a>
-<a class="right-next" href="../chapters/07_dataloader.html" title="next page">Next Module →</a>
+<a class="left-prev" href="../chapters/05_dense.html" title="previous page">← Previous Module</a>
+<a class="right-next" href="../chapters/07_attention.html" title="next page">Next Module →</a>
 </div>

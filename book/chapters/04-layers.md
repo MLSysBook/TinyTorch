@@ -232,5 +232,5 @@ Ready for serious development? → [🏗️ Local Setup Guide](../usage-paths/se
 
 <div class="prev-next-area">
 <a class="left-prev" href="../chapters/03_activations.html" title="previous page">← Previous Module</a>
-<a class="right-next" href="../chapters/05_networks.html" title="next page">Next Module →</a>
+<a class="right-next" href="../chapters/05_dense.html" title="next page">Next Module →</a>
 </div>
