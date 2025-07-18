@@ -7,6 +7,7 @@ import sys
 import re
 from argparse import ArgumentParser, Namespace
 from pathlib import Path
+from typing import Optional
 from rich.panel import Panel
 from rich.text import Text
 
@@ -69,7 +70,7 @@ class ExportCommand(BaseCommand):
         
         return sorted(modules)
 
-    def _show_export_details(self, console, module_name: str | None = None):
+    def _show_export_details(self, console, module_name: Optional[str] = None):
         """Show detailed export information including where each module exports to."""
         exports_text = Text()
         exports_text.append("📦 Export Details:\n", style="bold cyan")
