@@ -78,7 +78,8 @@ Go from "How does this work?" 🤷 to "I implemented every line!" 💪
 ```bash
 git clone https://github.com/mlsysbook/TinyTorch.git
 cd TinyTorch
-pip install -e .
+pip install -r requirements.txt           # Install all dependencies (numpy, jupyter, pytest, etc.)
+pip install -e .                          # Install TinyTorch package in editable mode
 tito system doctor                         # Verify your setup
 cd modules/source/01_setup
 jupyter lab setup_dev.py                  # Launch your first module
@@ -387,7 +388,8 @@ Students who complete TinyTorch can:
 ```bash
 git clone https://github.com/mlsysbook/TinyTorch.git
 cd TinyTorch
-pip install -e .
+pip install -r requirements.txt           # Install all dependencies (numpy, jupyter, pytest, etc.)
+pip install -e .                          # Install TinyTorch package in editable mode  
 tito system doctor
 cd modules/source/01_setup
 jupyter lab setup_dev.py
