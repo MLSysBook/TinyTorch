@@ -1,30 +1,30 @@
 # TinyTorch Module Metadata
 # Essential system information for CLI tools and build systems
 
-name: "dataloader"
-title: "DataLoader"
-description: "Dataset interfaces and data loading pipelines"
+name: "spatial"
+title: "Spatial Networks"
+description: "Convolutional networks for spatial pattern recognition and image processing"
 
 # Dependencies - Used by CLI for module ordering and prerequisites
 dependencies:
-  prerequisites: ["setup", "tensor"]
-  enables: ["training", "networks", "validation"]
+  prerequisites: ["setup", "tensor", "activations", "layers", "dense"]
+  enables: ["attention", "training", "computer_vision"]
 
 # Package Export - What gets built into tinytorch package
-exports_to: "tinytorch.core.dataloader"
+exports_to: "tinytorch.core.spatial"
 
 # File Structure - What files exist in this module
 files:
-  dev_file: "dataloader_dev.py"
+  dev_file: "cnn_dev.py"
   readme: "README.md"
   tests: "inline"
 
 # Educational Metadata
 difficulty: "⭐⭐⭐"
-time_estimate: "5-6 hours"
+time_estimate: "6-8 hours"
 
 # Components - What's implemented in this module
 components:
-  - "Dataset"
-  - "DataLoader"
-  - "SimpleDataset" 
+  - "conv2d_naive"
+  - "Conv2D"
+  - "flatten" 

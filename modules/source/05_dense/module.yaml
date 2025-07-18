@@ -1,17 +1,17 @@
 # TinyTorch Module Metadata
 # Essential system information for CLI tools and build systems
 
-name: "networks"
-title: "Networks"
-description: "Neural network architectures and composition patterns"
+name: "dense"
+title: "Dense Networks"
+description: "Multi-layer dense (fully connected) neural networks and MLPs"
 
 # Dependencies - Used by CLI for module ordering and prerequisites
 dependencies:
   prerequisites: ["setup", "tensor", "activations", "layers"]
-  enables: ["training", "cnn", "optimization"]
+  enables: ["spatial", "attention", "training"]
 
 # Package Export - What gets built into tinytorch package
-exports_to: "tinytorch.core.networks"
+exports_to: "tinytorch.core.dense"
 
 # File Structure - What files exist in this module
 files:

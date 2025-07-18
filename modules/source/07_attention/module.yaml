@@ -7,8 +7,8 @@ description: "Core attention mechanism and masking utilities"
 
 # Dependencies - Used by CLI for module ordering and prerequisites
 dependencies:
-  prerequisites: ["setup", "tensor"]
-  enables: ["training", "transformers", "nlp"]
+  prerequisites: ["setup", "tensor", "activations", "layers", "dense", "spatial"]
+  enables: ["training", "transformers", "nlp", "multimodal"]
 
 # Package Export - What gets built into tinytorch package
 exports_to: "tinytorch.core.attention"
