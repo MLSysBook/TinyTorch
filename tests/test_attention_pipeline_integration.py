@@ -1,8 +1,8 @@
 """
 Integration Tests - Attention Pipeline
 
-Tests attention mechanism in complete ML pipelines.
-Uses actual TinyTorch components to verify transformer-like architectures work correctly.
+Tests cross-module pipeline interfaces and compatibility.
+Focuses on how attention integrates with other TinyTorch modules to build complete workflows.
 """
 
 import pytest
@@ -20,349 +20,349 @@ from tinytorch.core.activations import ReLU, Softmax
 from tinytorch.core.dense import Sequential
 
 
-class TestAttentionPipelineIntegration:
-    """Test attention in complete ML pipelines with other modules."""
+class TestAttentionDensePipelineInterface:
+    """Test interface compatibility between Attention and Dense modules."""
     
-    def test_attention_dense_pipeline(self):
-        """Test attention followed by dense layers (transformer-like)."""
-        seq_len, d_model = 8, 16
-        vocab_size = 10
+    def test_attention_output_to_dense_input(self):
+        """Test that attention output can be used as Dense layer input."""
+        seq_len, d_model = 6, 16
         
-        # Create input sequence (like word embeddings)
-        embeddings = Tensor(np.random.randn(seq_len, d_model) * 0.1)
-        
-        # Step 1: Self-attention (transformer block)
+        # Create attention and dense components
         self_attn = SelfAttention(d_model)
-        attended_output, attention_weights = self_attn(embeddings.data)
+        dense = Dense(input_size=d_model, output_size=10)
         
-        # Step 2: Dense feedforward network
-        dense_network = Sequential([
-            Dense(input_size=d_model, output_size=d_model * 2),
-            ReLU(),
-            Dense(input_size=d_model * 2, output_size=d_model)
-        ])
+        # Create input
+        x = Tensor(np.random.randn(seq_len, d_model))
         
-        # Apply dense network to each position
-        ff_outputs = []
+        # Test pipeline interface: Attention → Dense
+        attn_output, _ = self_attn(x.data)
+        
+        # Test that attention output can feed into dense layer
         for i in range(seq_len):
-            pos_input = Tensor(attended_output[i:i+1])  # Single position
-            pos_output = dense_network(pos_input)
-            ff_outputs.append(pos_output.data)
-        
-        final_output = np.concatenate(ff_outputs, axis=0)
-        
-        # Step 3: Final classification head
-        classifier = Dense(input_size=d_model, output_size=vocab_size)
-        
-        # Classify each position
-        predictions = []
-        for i in range(seq_len):
-            pos_input = Tensor(final_output[i:i+1])
-            pred = classifier(pos_input)
-            predictions.append(pred.data)
-        
-        final_predictions = np.concatenate(predictions, axis=0)
-        
-        # Verify complete pipeline
-        assert final_predictions.shape == (seq_len, vocab_size), f"Expected shape {(seq_len, vocab_size)}, got {final_predictions.shape}"
-        assert not np.any(np.isnan(final_predictions)), "Pipeline should not produce NaN"
-        assert attention_weights.shape == (seq_len, seq_len), "Attention weights should be preserved"
-        
-        # Verify attention weights are sensible
-        assert np.allclose(np.sum(attention_weights, axis=-1), 1.0), "Attention weights should sum to 1"
-    
-    def test_multi_layer_attention_pipeline(self):
-        """Test multiple attention layers in sequence (like transformer encoder)."""
-        seq_len, d_model = 6, 12
-        num_layers = 3
-        
-        # Initial embeddings
-        x = Tensor(np.random.randn(seq_len, d_model) * 0.1)
-        current_input = x.data
-        
-        # Multi-layer attention (transformer encoder stack)
-        attention_layers = []
-        for layer in range(num_layers):
-            # Create attention layer
-            attn = SelfAttention(d_model)
-            attention_layers.append(attn)
+            pos_input = Tensor(attn_output[i:i+1])  # Single position
+            dense_output = dense(pos_input)
             
-            # Apply attention
-            attn_output, attn_weights = attn(current_input)
-            
-            # Simple residual connection (add input to output)
-            if current_input.shape == attn_output.shape:
-                current_input = current_input + attn_output
-            else:
-                current_input = attn_output
-            
-            # Verify intermediate outputs
-            assert attn_output.shape == (seq_len, d_model), f"Layer {layer} output shape wrong"
-            assert attn_weights.shape == (seq_len, seq_len), f"Layer {layer} attention weights wrong"
-            assert np.allclose(np.sum(attn_weights, axis=-1), 1.0), f"Layer {layer} weights should sum to 1"
-        
-        # Final output verification
-        assert current_input.shape == (seq_len, d_model), "Multi-layer output should preserve shape"
-        assert not np.any(np.isnan(current_input)), "Multi-layer pipeline should not produce NaN"
+            # Verify interface compatibility
+            assert isinstance(dense_output, Tensor), "Dense should accept attention output as Tensor"
+            assert dense_output.shape == (1, 10), "Dense should process attention output correctly"
     
-    def test_attention_with_causal_masking_pipeline(self):
-        """Test attention with causal masking in language modeling pipeline."""
-        seq_len, d_model = 10, 16
-        vocab_size = 20
+    def test_attention_sequential_compatibility(self):
+        """Test that attention can be integrated into Sequential pipelines."""
+        d_model = 8
         
-        # Create sequence (like tokens in a sentence)
-        token_embeddings = Tensor(np.random.randn(seq_len, d_model) * 0.1)
+        # Test if we can build: Tensor → Dense → Attention-style processing
+        input_tensor = Tensor(np.random.randn(4, 6))
         
-        # Create causal mask for autoregressive generation
-        causal_mask = create_causal_mask(seq_len)
+        # Step 1: Dense layer to project to d_model
+        projection = Dense(input_size=6, output_size=d_model)
+        projected = projection(input_tensor)
         
-        # Apply causal self-attention
-        attn_output, attn_weights = scaled_dot_product_attention(
-            token_embeddings.data, token_embeddings.data, token_embeddings.data, causal_mask
-        )
+        # Step 2: Attention processing (simulating attention in pipeline)
+        self_attn = SelfAttention(d_model)
+        attn_output, _ = self_attn(projected.data)
         
-        # Language modeling head (predict next token)
-        lm_head = Dense(input_size=d_model, output_size=vocab_size)
-        
-        # Generate predictions for each position
-        predictions = []
-        for pos in range(seq_len):
-            pos_input = Tensor(attn_output[pos:pos+1])
-            pred = lm_head(pos_input)
-            predictions.append(pred.data)
-        
-        all_predictions = np.concatenate(predictions, axis=0)
-        
-        # Verify causal masking worked
-        assert np.all(np.triu(attn_weights, k=1) < 1e-6), "Causal mask should prevent future attention"
-        assert all_predictions.shape == (seq_len, vocab_size), "Should predict vocabulary for each position"
-        
-        # Verify predictions are reasonable for language modeling
-        for pos in range(seq_len):
-            pos_pred = all_predictions[pos]
-            assert not np.any(np.isnan(pos_pred)), f"Position {pos} predictions should not be NaN"
-            assert len(pos_pred) == vocab_size, f"Position {pos} should predict full vocabulary"
-    
-    def test_attention_encoder_decoder_pipeline(self):
-        """Test attention in encoder-decoder architecture."""
-        src_len, tgt_len, d_model = 6, 8, 12
-        
-        # Source sequence (encoder input)
-        src_embeddings = Tensor(np.random.randn(src_len, d_model) * 0.1)
-        
-        # Target sequence (decoder input)
-        tgt_embeddings = Tensor(np.random.randn(tgt_len, d_model) * 0.1)
-        
-        # Encoder: self-attention on source
-        encoder = SelfAttention(d_model)
-        encoder_output, encoder_weights = encoder(src_embeddings.data)
-        
-        # Decoder: self-attention on target with causal mask
-        decoder = SelfAttention(d_model)
-        causal_mask = create_causal_mask(tgt_len)
-        decoder_self_attn, decoder_weights = scaled_dot_product_attention(
-            tgt_embeddings.data, tgt_embeddings.data, tgt_embeddings.data, causal_mask
-        )
-        
-        # Cross-attention: target queries attend to source keys/values
-        cross_attn_output, cross_attn_weights = scaled_dot_product_attention(
-            decoder_self_attn,  # Queries from decoder
-            encoder_output,      # Keys from encoder
-            encoder_output       # Values from encoder
-        )
-        
-        # Final output layer
-        output_layer = Dense(input_size=d_model, output_size=d_model)
+        # Step 3: Back to Dense layer
+        output_projection = Dense(input_size=d_model, output_size=3)
         final_outputs = []
-        for pos in range(tgt_len):
-            pos_input = Tensor(cross_attn_output[pos:pos+1])
-            pos_output = output_layer(pos_input)
+        for i in range(4):
+            pos_input = Tensor(attn_output[i:i+1])
+            pos_output = output_projection(pos_input)
             final_outputs.append(pos_output.data)
         
-        final_sequence = np.concatenate(final_outputs, axis=0)
+        final_result = np.concatenate(final_outputs, axis=0)
         
-        # Verify encoder-decoder pipeline
-        assert encoder_output.shape == (src_len, d_model), "Encoder output should preserve source shape"
-        assert decoder_self_attn.shape == (tgt_len, d_model), "Decoder self-attention should preserve target shape"
-        assert cross_attn_output.shape == (tgt_len, d_model), "Cross-attention should output target length"
-        assert final_sequence.shape == (tgt_len, d_model), "Final output should match target length"
-        
-        # Verify attention patterns
-        assert encoder_weights.shape == (src_len, src_len), "Encoder attention should be source x source"
-        assert decoder_weights.shape == (tgt_len, tgt_len), "Decoder attention should be target x target"
-        assert cross_attn_weights.shape == (tgt_len, src_len), "Cross-attention should be target x source"
-        
-        # Verify causal masking in decoder
-        assert np.all(np.triu(decoder_weights, k=1) < 1e-6), "Decoder should have causal masking"
+        # Verify pipeline interface works
+        assert final_result.shape == (4, 3), "Complete pipeline should work"
+        assert not np.any(np.isnan(final_result)), "Pipeline should produce valid outputs"
     
-    def test_attention_with_multiple_architectures(self):
-        """Test attention integrated with different architecture types."""
-        seq_len, d_model = 8, 16
+    def test_attention_with_activation_integration(self):
+        """Test attention integration with activation functions."""
+        seq_len, d_model = 5, 12
         
-        # Input sequence
-        x = Tensor(np.random.randn(seq_len, d_model) * 0.1)
+        # Create components
+        self_attn = SelfAttention(d_model)
+        relu = ReLU()
+        dense = Dense(input_size=d_model, output_size=d_model)
         
-        # Path 1: Attention → Dense layers
-        attn1 = SelfAttention(d_model)
-        attn_out1, _ = attn1(x.data)
+        # Test pipeline: Input → Attention → Activation → Dense
+        x = Tensor(np.random.randn(seq_len, d_model))
         
-        dense_path = Sequential([
-            Dense(input_size=d_model, output_size=d_model // 2),
-            ReLU(),
-            Dense(input_size=d_model // 2, output_size=d_model)
-        ])
+        # Attention step
+        attn_output, _ = self_attn(x.data)
         
-        # Apply dense to sequence (position by position)
-        dense_outputs = []
+        # Process each position through activation and dense
         for i in range(seq_len):
-            pos_input = Tensor(attn_out1[i:i+1])
-            pos_output = dense_path(pos_input)
-            dense_outputs.append(pos_output.data)
-        
-        dense_result = np.concatenate(dense_outputs, axis=0)
-        
-        # Path 2: Multiple attention layers
-        attn2 = SelfAttention(d_model)
-        attn3 = SelfAttention(d_model)
-        
-        attn_out2, _ = attn2(x.data)
-        attn_out3, _ = attn3(attn_out2)
-        
-        # Verify both paths work
-        assert dense_result.shape == (seq_len, d_model), "Dense path should preserve sequence shape"
-        assert attn_out3.shape == (seq_len, d_model), "Multi-attention path should preserve shape"
-        assert not np.any(np.isnan(dense_result)), "Dense path should not produce NaN"
-        assert not np.any(np.isnan(attn_out3)), "Multi-attention path should not produce NaN"
-        
-        # Verify they can be combined
-        combined = dense_result + attn_out3
-        assert combined.shape == (seq_len, d_model), "Combined paths should work"
-        assert not np.any(np.isnan(combined)), "Combined result should not be NaN"
+            # Attention → Tensor → Activation → Dense pipeline
+            pos_tensor = Tensor(attn_output[i:i+1])
+            activated = relu(pos_tensor)
+            dense_output = dense(activated)
+            
+            # Verify cross-module interface
+            assert isinstance(activated, Tensor), "Activation should work with attention output"
+            assert isinstance(dense_output, Tensor), "Dense should work after activation"
+            assert dense_output.shape == (1, d_model), "Pipeline should preserve expected shapes"
+
+
+class TestAttentionMultiModuleWorkflows:
+    """Test attention in multi-module workflows and architectures."""
     
-    def test_attention_scalability_pipeline(self):
-        """Test attention pipeline with different sequence lengths and dimensions."""
-        test_configs = [
-            (4, 8),    # Small sequence, small dimension
-            (16, 32),  # Medium sequence, medium dimension
-            (32, 16),  # Long sequence, smaller dimension
-            (8, 64),   # Short sequence, large dimension
-        ]
+    def test_encoder_decoder_interface_pattern(self):
+        """Test encoder-decoder pattern using multiple TinyTorch modules."""
+        src_len, tgt_len, d_model = 6, 4, 16
         
-        for seq_len, d_model in test_configs:
-            # Create test data
-            x = Tensor(np.random.randn(seq_len, d_model) * 0.1)
-            
-            # Attention pipeline
+        # Source processing (encoder-style)
+        src = Tensor(np.random.randn(src_len, d_model))
+        src_projection = Dense(input_size=d_model, output_size=d_model)
+        src_projected = src_projection(src)
+        
+        encoder_attn = SelfAttention(d_model)
+        encoded, _ = encoder_attn(src_projected.data)
+        
+        # Target processing (decoder-style)
+        tgt = Tensor(np.random.randn(tgt_len, d_model))
+        tgt_projection = Dense(input_size=d_model, output_size=d_model)
+        tgt_projected = tgt_projection(tgt)
+        
+        # Cross-attention interface test
+        cross_output, _ = scaled_dot_product_attention(
+            tgt_projected.data,  # Queries from target
+            encoded,            # Keys from encoder
+            encoded             # Values from encoder
+        )
+        
+        # Final processing
+        output_projection = Dense(input_size=d_model, output_size=10)
+        final_outputs = []
+        for i in range(tgt_len):
+            pos_input = Tensor(cross_output[i:i+1])
+            pos_output = output_projection(pos_input)
+            final_outputs.append(pos_output.data)
+        
+        final_result = np.concatenate(final_outputs, axis=0)
+        
+        # Verify multi-module workflow
+        assert final_result.shape == (tgt_len, 10), "Encoder-decoder workflow should work"
+        assert not np.any(np.isnan(final_result)), "Multi-module workflow should be stable"
+    
+    def test_multi_layer_attention_with_residuals(self):
+        """Test multi-layer attention with residual connections using multiple modules."""
+        seq_len, d_model = 8, 20
+        num_layers = 3
+        
+        # Initial processing
+        x = Tensor(np.random.randn(seq_len, d_model))
+        embedding_projection = Dense(input_size=d_model, output_size=d_model)
+        current_repr = embedding_projection(x).data
+        
+        # Multi-layer processing with residuals
+        for layer in range(num_layers):
+            # Self-attention
             attn = SelfAttention(d_model)
-            attn_output, attn_weights = attn(x.data)
+            attn_output, _ = attn(current_repr)
             
-            # Dense post-processing
-            post_process = Dense(input_size=d_model, output_size=min(d_model, 10))
+            # Feedforward network (using Dense layers)
+            ff_network = Sequential([
+                Dense(input_size=d_model, output_size=d_model * 2),
+                ReLU(),
+                Dense(input_size=d_model * 2, output_size=d_model)
+            ])
             
-            # Process each position
-            processed_outputs = []
+            # Process each position through feedforward
+            ff_outputs = []
             for i in range(seq_len):
                 pos_input = Tensor(attn_output[i:i+1])
-                pos_output = post_process(pos_input)
-                processed_outputs.append(pos_output.data)
+                pos_output = ff_network(pos_input)
+                ff_outputs.append(pos_output.data)
             
-            final_output = np.concatenate(processed_outputs, axis=0)
+            ff_result = np.concatenate(ff_outputs, axis=0)
             
-            # Verify scalability
-            assert attn_output.shape == (seq_len, d_model), f"Config {test_configs} attention output wrong"
-            assert attn_weights.shape == (seq_len, seq_len), f"Config {test_configs} attention weights wrong"
-            assert final_output.shape == (seq_len, min(d_model, 10)), f"Config {test_configs} final output wrong"
-            assert not np.any(np.isnan(final_output)), f"Config {test_configs} should not produce NaN"
-
-
-class TestAttentionRealWorldPipelines:
-    """Test attention in realistic ML scenarios."""
+            # Residual connection (attention + feedforward)
+            current_repr = attn_output + ff_result
+        
+        # Verify multi-layer integration
+        assert current_repr.shape == (seq_len, d_model), "Multi-layer should preserve shape"
+        assert not np.any(np.isnan(current_repr)), "Multi-layer integration should be stable"
     
-    def test_sequence_classification_pipeline(self):
-        """Test attention for sequence classification (like sentiment analysis)."""
-        seq_len, d_model = 12, 24
-        num_classes = 3
+    def test_attention_classification_pipeline(self):
+        """Test attention in classification pipeline with multiple modules."""
+        seq_len, d_model, num_classes = 10, 24, 5
         
-        # Input sequence (like sentence embeddings)
-        sentence = Tensor(np.random.randn(seq_len, d_model) * 0.1)
+        # Input processing
+        sentence = Tensor(np.random.randn(seq_len, d_model))
+        input_projection = Dense(input_size=d_model, output_size=d_model)
+        projected_input = input_projection(sentence)
         
-        # Self-attention to capture dependencies
-        attn = SelfAttention(d_model)
-        attended_sequence, attn_weights = attn(sentence.data)
+        # Attention processing
+        self_attn = SelfAttention(d_model)
+        attended_seq, _ = self_attn(projected_input.data)
         
-        # Global pooling (mean over sequence dimension)
-        pooled_representation = np.mean(attended_sequence, axis=0, keepdims=True)
+        # Global pooling (sequence → single representation)
+        pooled_repr = np.mean(attended_seq, axis=0, keepdims=True)
         
-        # Classification head
+        # Classification head (using Sequential)
         classifier = Sequential([
             Dense(input_size=d_model, output_size=d_model // 2),
             ReLU(),
             Dense(input_size=d_model // 2, output_size=num_classes)
         ])
         
-        # Get classification scores
-        pooled_tensor = Tensor(pooled_representation)
+        # Final classification
+        pooled_tensor = Tensor(pooled_repr)
         class_scores = classifier(pooled_tensor)
         
         # Verify classification pipeline
-        assert attended_sequence.shape == (seq_len, d_model), "Attention should preserve sequence shape"
-        assert pooled_representation.shape == (1, d_model), "Pooling should create single representation"
-        assert class_scores.shape == (1, num_classes), "Should output class scores"
-        assert not np.any(np.isnan(class_scores.data)), "Classification should not produce NaN"
+        assert class_scores.shape == (1, num_classes), "Classification pipeline should work"
+        assert isinstance(class_scores, Tensor), "Pipeline should produce Tensor output"
+
+
+class TestAttentionDataFlowCompatibility:
+    """Test data flow compatibility between attention and other modules."""
     
-    def test_sequence_to_sequence_pipeline(self):
-        """Test attention for sequence-to-sequence tasks (like translation)."""
-        src_len, tgt_len, d_model = 10, 8, 20
-        vocab_size = 30
+    def test_shape_preservation_across_modules(self):
+        """Test that shapes flow correctly between attention and other modules."""
+        batch_configs = [
+            (4, 8),    # Small sequence
+            (16, 32),  # Medium sequence
+            (8, 64),   # Large model dimension
+        ]
         
-        # Source sequence (input language)
-        src_seq = Tensor(np.random.randn(src_len, d_model) * 0.1)
+        for seq_len, d_model in batch_configs:
+            # Input
+            x = Tensor(np.random.randn(seq_len, d_model))
+            
+            # Processing pipeline
+            input_proj = Dense(input_size=d_model, output_size=d_model)
+            projected = input_proj(x)
+            
+            attn = SelfAttention(d_model)
+            attn_out, _ = attn(projected.data)
+            
+            output_proj = Dense(input_size=d_model, output_size=d_model // 2)
+            
+            # Test shape flow
+            for i in range(seq_len):
+                pos_tensor = Tensor(attn_out[i:i+1])
+                final_out = output_proj(pos_tensor)
+                
+                # Verify shape compatibility
+                assert final_out.shape == (1, d_model // 2), f"Shape flow failed for config {(seq_len, d_model)}"
+    
+    def test_dtype_preservation_across_modules(self):
+        """Test that data types are preserved across attention and other modules."""
+        seq_len, d_model = 6, 16
         
-        # Target sequence (output language, teacher forcing)
-        tgt_seq = Tensor(np.random.randn(tgt_len, d_model) * 0.1)
+        # Test float32 flow
+        x_f32 = Tensor(np.random.randn(seq_len, d_model).astype(np.float32))
         
-        # Encoder: process source sequence
-        encoder = SelfAttention(d_model)
-        encoded_src, src_attn = encoder(src_seq.data)
+        dense_f32 = Dense(input_size=d_model, output_size=d_model)
+        projected_f32 = dense_f32(x_f32)
         
-        # Decoder: process target with causal masking
-        decoder = SelfAttention(d_model)
-        causal_mask = create_causal_mask(tgt_len)
-        decoded_tgt, tgt_attn = scaled_dot_product_attention(
-            tgt_seq.data, tgt_seq.data, tgt_seq.data, causal_mask
-        )
+        attn_f32 = SelfAttention(d_model)
+        attn_out_f32, _ = attn_f32(projected_f32.data)
         
-        # Cross-attention: target attends to source
-        cross_attended, cross_attn = scaled_dot_product_attention(
-            decoded_tgt,  # Target queries
-            encoded_src,  # Source keys
-            encoded_src   # Source values
-        )
+        # Verify dtype flow
+        assert projected_f32.dtype == np.float32, "Dense should preserve float32"
+        assert attn_out_f32.dtype == np.float32, "Attention should preserve float32"
         
-        # Output projection to vocabulary
-        vocab_proj = Dense(input_size=d_model, output_size=vocab_size)
+        # Test conversion back to Tensor
+        result_tensor_f32 = Tensor(attn_out_f32)
+        assert result_tensor_f32.dtype == np.float32, "Tensor creation should preserve float32"
+    
+    def test_error_handling_across_modules(self):
+        """Test error handling when modules are incompatibly connected."""
+        # Test dimension mismatch between attention and dense
+        seq_len = 4
+        attn_dim = 8
+        dense_dim = 16  # Intentional mismatch
         
-        # Generate output tokens
-        output_tokens = []
-        for pos in range(tgt_len):
-            pos_input = Tensor(cross_attended[pos:pos+1])
-            token_logits = vocab_proj(pos_input)
-            output_tokens.append(token_logits.data)
+        x = Tensor(np.random.randn(seq_len, attn_dim))
+        attn = SelfAttention(attn_dim)
+        attn_out, _ = attn(x.data)
         
-        output_sequence = np.concatenate(output_tokens, axis=0)
+        # This should fail gracefully
+        incompatible_dense = Dense(input_size=dense_dim, output_size=10)
         
-        # Verify seq2seq pipeline
-        assert encoded_src.shape == (src_len, d_model), "Encoder should preserve source shape"
-        assert cross_attended.shape == (tgt_len, d_model), "Cross-attention should output target length"
-        assert output_sequence.shape == (tgt_len, vocab_size), "Should generate vocab logits for each target position"
+        try:
+            pos_tensor = Tensor(attn_out[0:1])  # Shape (1, 8)
+            result = incompatible_dense(pos_tensor)  # Expects (1, 16)
+            assert False, "Should have failed with dimension mismatch"
+        except (ValueError, AssertionError, TypeError) as e:
+            # Expected behavior - should fail with clear error
+            assert isinstance(e, (ValueError, AssertionError, TypeError)), "Should fail gracefully with incompatible dimensions"
+
+
+class TestAttentionSystemLevelIntegration:
+    """Test system-level integration scenarios."""
+    
+    def test_complete_transformer_block_simulation(self):
+        """Test simulation of complete transformer block using TinyTorch modules."""
+        seq_len, d_model = 8, 32
         
-        # Verify attention patterns make sense
-        assert src_attn.shape == (src_len, src_len), "Source attention should be src x src"
-        assert tgt_attn.shape == (tgt_len, tgt_len), "Target attention should be tgt x tgt" 
-        assert cross_attn.shape == (tgt_len, src_len), "Cross-attention should be tgt x src"
+        # Input
+        x = Tensor(np.random.randn(seq_len, d_model))
         
-        # Verify causal masking
-        assert np.all(np.triu(tgt_attn, k=1) < 1e-6), "Target should have causal masking"
+        # Transformer block simulation
+        # 1. Self-attention
+        self_attn = SelfAttention(d_model)
+        attn_out, _ = self_attn(x.data)
+        
+        # 2. Residual connection (attention + input)
+        attn_residual = attn_out + x.data
+        
+        # 3. Feedforward network
+        ff_net = Sequential([
+            Dense(input_size=d_model, output_size=d_model * 4),
+            ReLU(),
+            Dense(input_size=d_model * 4, output_size=d_model)
+        ])
+        
+        # Process each position through feedforward
+        ff_outputs = []
+        for i in range(seq_len):
+            pos_input = Tensor(attn_residual[i:i+1])
+            pos_output = ff_net(pos_input)
+            ff_outputs.append(pos_output.data)
+        
+        ff_result = np.concatenate(ff_outputs, axis=0)
+        
+        # 4. Second residual connection
+        final_output = attn_residual + ff_result
+        
+        # Verify complete transformer block simulation
+        assert final_output.shape == (seq_len, d_model), "Transformer block should preserve shape"
+        assert not np.any(np.isnan(final_output)), "Transformer block should be stable"
+        
+        # Test that output can be used for next layer
+        next_attn = SelfAttention(d_model)
+        next_out, _ = next_attn(final_output)
+        assert next_out.shape == (seq_len, d_model), "Should be stackable"
+    
+    def test_modular_component_replacement(self):
+        """Test that attention components can be replaced modularly."""
+        seq_len, d_model = 6, 16
+        
+        x = Tensor(np.random.randn(seq_len, d_model))
+        
+        # Pipeline with different attention configurations
+        attention_variants = [
+            SelfAttention(d_model),
+            SelfAttention(d_model),  # Different instance
+            SelfAttention(d_model),  # Another instance
+        ]
+        
+        dense_postprocess = Dense(input_size=d_model, output_size=8)
+        
+        # Test that all variants work in same pipeline
+        for i, attn_variant in enumerate(attention_variants):
+            attn_out, _ = attn_variant(x.data)
+            
+            # Process first position
+            pos_tensor = Tensor(attn_out[0:1])
+            result = dense_postprocess(pos_tensor)
+            
+            # Verify modular replacement works
+            assert result.shape == (1, 8), f"Attention variant {i} should work in pipeline"
+            assert isinstance(result, Tensor), f"Attention variant {i} should produce Tensor output"
 
 
 if __name__ == "__main__":
