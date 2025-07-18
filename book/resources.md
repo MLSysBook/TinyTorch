@@ -64,7 +64,7 @@ While TinyTorch teaches you to build complete ML systems from scratch, these res
 
 ---
 
-## 🏭 **Production Tools & Platforms**
+## 🏭 **Production Internals**
 
 ### **Framework Deep Dives**
 - **[PyTorch Internals](http://blog.ezyang.com/2019/05/pytorch-internals/)** by Edward Yang  
@@ -73,58 +73,6 @@ While TinyTorch teaches you to build complete ML systems from scratch, these res
 - **[PyTorch Documentation: Extending PyTorch](https://pytorch.org/docs/stable/notes/extending.html)**  
   *Custom operators and autograd functions - apply your TinyTorch knowledge*
 
-### **Development Tools**
-- **[Papers With Code](https://paperswithcode.com/)**  
-  *Research papers with implementation code - apply your skills to reproduce results*
-
-- **[Weights & Biases](https://wandb.ai/)**  
-  *Experiment tracking and model management - scale your TinyTorch training*
-
 ---
 
-## 🌐 **Learning Communities**
-
-### **Technical Discussion**
-- **[r/MachineLearning](https://www.reddit.com/r/MachineLearning/)**  
-  *Research discussions and paper releases*
-
-- **[The Gradient](https://thegradient.pub/)**  
-  *Deep technical articles on ML research and systems*
-
-- **[Distill.pub](https://distill.pub/)**  
-  *Interactive explanations of ML concepts with beautiful visualizations*
-
----
-
-## 🎯 **Next Steps After TinyTorch**
-
-### **Apply Your Skills**
-1. **Reproduce Research**: Use your TinyTorch foundation to implement papers from scratch
-2. **Contribute to Open Source**: PyTorch, TensorFlow, JAX - you now understand the internals
-3. **Build Production Systems**: Apply MLOps principles from your final modules
-4. **Optimize for Edge**: Use compression and kernel techniques for deployment
-
-### **Advanced Specializations**
-- **Distributed Training**: Scale your framework knowledge to multi-GPU systems
-- **Compiler Design**: Build domain-specific languages for ML (JAX, Triton style)
-- **Hardware Acceleration**: Custom kernels and specialized processors
-- **Systems Research**: Novel architectures and training techniques
-
----
-
-## 💡 **How to Use These Resources**
-
-```{admonition} 🎯 Strategic Learning Path
-:class: tip
-**Parallel Learning**: Use these alongside TinyTorch modules for broader context
-
-**Post-TinyTorch**: After completing the framework, dive into production systems
-
-**Compare & Contrast**: Study alternative implementations to understand design trade-offs
-```
-
-**Remember**: You now have the implementation foundation that most ML engineers lack. These resources help you apply that knowledge to broader systems and production environments.
-
----
-
-*Building ML systems from scratch gives you superpowers. These resources help you use them wisely.* 🚀 
+*Building ML systems from scratch gives you the implementation foundation most ML engineers lack. These resources help you apply that knowledge to broader systems and production environments.* 🚀 
