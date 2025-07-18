@@ -423,20 +423,29 @@ tito export 01_setup && tito test 01_setup
 <details>
 <summary><strong>🚀 "Why not just use PyTorch/TensorFlow? This seems like reinventing the wheel."</strong></summary>
 
-**You're right - for production, use PyTorch!** But consider:
+<br>
 
+> **You're right - for production, use PyTorch!** But consider:
+
+**🤔 Deep Understanding Questions:**
 - **Do you understand what `loss.backward()` actually does?** Most engineers don't.
-- **Can you debug when gradients vanish?** You'll know why and how to fix it.
+- **Can you debug when gradients vanish?** You'll know why and how to fix it.  
 - **Could you optimize a custom operation?** You'll have built the primitives.
 
-**Think of it like this:** Pilots learn in small planes before flying 747s. You're learning the fundamentals that make you a better PyTorch engineer.
+**💡 The Learning Analogy:**  
+Think of it like this: Pilots learn in small planes before flying 747s. You're learning the fundamentals that make you a **better PyTorch engineer**.
+
+---
 </details>
 
 <details>
 <summary><strong>⚡ "How is this different from online tutorials that build neural networks?"</strong></summary>
 
-**Most tutorials build toys.** TinyTorch builds production-thinking systems:
+<br>
 
+> **Most tutorials build toys.** TinyTorch builds production-thinking systems:
+
+**📊 Comparison Table:**
 ```python
 Tutorial Approach:           TinyTorch Approach:
 ├── Build a simple NN       ├── Build a complete framework
@@ -447,13 +456,18 @@ Tutorial Approach:           TinyTorch Approach:
                             └── Production-ready engineering
 ```
 
-**Result:** You learn systems thinking, not just algorithms.
+**🎯 Key Outcome:**  
+You learn **systems thinking**, not just algorithms.
+
+---
 </details>
 
 <details>
 <summary><strong>💡 "Can't I just read papers/books instead of implementing?"</strong></summary>
 
-**Reading vs. Building:**
+<br>
+
+**📚 Reading vs. 🔧 Building:**
 ```
 Reading about neural networks:     Building neural networks:
 ├── "I understand the theory"      ├── "Why are my gradients exploding?"
@@ -462,81 +476,116 @@ Reading about neural networks:     Building neural networks:
 └── Theoretical knowledge          └── Deep intuitive understanding
 ```
 
-**Implementation forces you to confront reality** - edge cases, numerical stability, memory management, performance trade-offs that papers gloss over.
+**🌟 The Reality Check:**  
+Implementation **forces you to confront reality** - edge cases, numerical stability, memory management, performance trade-offs that papers gloss over.
+
+---
 </details>
 
 <details>
 <summary><strong>🤔 "Isn't everything a Transformer now? Why learn old architectures?"</strong></summary>
 
-**Great question!** Transformers are indeed dominant, but they're built on the same foundations you'll implement:
+<br>
 
+> **Great question!** Transformers are indeed dominant, but they're built on the same foundations you'll implement:
+
+**🏗️ Transformer Building Blocks You'll Build:**
 - **Attention is just matrix operations** - which you'll build from tensors
 - **LayerNorm uses your activations and layers** 
 - **Adam optimizer powers Transformer training** - you'll implement it
 - **Multi-head attention = your Linear layers + reshaping** 
 
-**The reality:** Understanding foundations makes you the engineer who can optimize Transformers, not just use them. Plus, CNNs still power computer vision, RNNs drive real-time systems, and new architectures emerge constantly.
+**🎯 The Strategic Reality:**  
+Understanding foundations makes you the engineer who can **optimize Transformers**, not just use them. Plus, CNNs still power computer vision, RNNs drive real-time systems, and new architectures emerge constantly.
+
+---
 </details>
 
 <details>
 <summary><strong>🎓 "I'm already good at ML. Is this too basic for me?"</strong></summary>
 
-**Try the challenge test:**
-- Can you implement Adam optimizer from the paper? (Not just use `torch.optim.Adam`)
-- Do you know why ReLU causes dying neurons and how to fix it?
-- Could you debug a 50% accuracy drop after model deployment?
+<br>
 
-**Advanced engineers love TinyTorch** because it fills the "implementation gap" that most ML education skips.
+**🧪 Challenge Test - Can You:**
+- **Implement Adam optimizer from the paper?** (Not just use `torch.optim.Adam`)
+- **Explain why ReLU causes dying neurons** and how to fix it?
+- **Debug a 50% accuracy drop** after model deployment?
+
+**💪 Why Advanced Engineers Love TinyTorch:**  
+It fills the **"implementation gap"** that most ML education skips. You'll go from understanding concepts to implementing production systems.
+
+---
 </details>
 
 <details>
 <summary><strong>🧪 "Is this academic or practical?"</strong></summary>
 
-**Both!** TinyTorch bridges academic understanding with engineering reality:
+<br>
 
-**Academic rigor:**
+> **Both!** TinyTorch bridges academic understanding with engineering reality:
+
+**🎓 Academic Rigor:**
 - Mathematical foundations implemented correctly
 - Proper testing and validation methodologies
 - Research-quality implementations you can trust
 
-**Engineering practicality:**
+**⚙️ Engineering Practicality:**
 - Production-style code organization and CLI tools
 - Performance considerations and optimization techniques
 - Real datasets, realistic scale, professional development workflow
+
+---
 </details>
 
 <details>
 <summary><strong>⏰ "How much time does this take?"</strong></summary>
 
-**Time investment:** ~40-60 hours for complete framework
+<br>
 
-**You can work at your own pace:**
+**📊 Time Investment:** ~40-60 hours for complete framework
+
+**🎯 Flexible Learning Paths:**
 - **Quick exploration:** 1-2 modules to understand the approach
 - **Focused learning:** Core modules (01-10) for solid foundations  
 - **Complete mastery:** All 16 modules for full framework expertise
 
+**✨ Self-Paced Design:**  
 Each module is self-contained, so you can stop and start as needed.
+
+---
 </details>
 
 <details>
 <summary><strong>🔄 "What if I get stuck or confused?"</strong></summary>
 
-**Built-in support system:**
+<br>
+
+**🛡️ Built-in Support System:**
 - **Progressive scaffolding:** Each step builds on the previous, with guided implementations
 - **Comprehensive testing:** 200+ tests ensure your code works correctly
 - **Rich documentation:** Visual explanations, real-world context, debugging tips
 - **Professional error messages:** Helpful feedback when things go wrong
 - **Modular design:** Skip ahead or go back without breaking your progress
+
+**💡 Learning Philosophy:**  
+The course is designed to **guide you through complexity**, not leave you struggling alone.
+
+---
 </details>
 
 <details>
 <summary><strong>🚀 "What can I build after completing TinyTorch?"</strong></summary>
 
-**Your framework becomes the foundation for:**
+<br>
+
+**🏗️ Your Framework Becomes the Foundation For:**
 - **Research projects:** Implement cutting-edge papers on solid foundations
 - **Specialized systems:** Computer vision, NLP, robotics applications
 - **Performance engineering:** GPU kernels, distributed training, quantization
 - **Custom architectures:** New layer types, novel optimizers, experimental designs
 
-**You'll have the implementation skills to turn any ML paper into working code.**
+**🎯 Ultimate Skill Unlock:**  
+You'll have the implementation skills to **turn any ML paper into working code**.
+
+---
 </details>
