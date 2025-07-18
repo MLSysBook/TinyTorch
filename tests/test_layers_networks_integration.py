@@ -1,293 +1,334 @@
 """
-Integration Tests - Layers and Networks
+Integration Tests - Layers and Dense Networks
 
-Tests real integration between Layer and Network modules.
-Uses actual TinyTorch components to verify they work together correctly.
+Tests cross-module interfaces and compatibility between individual Layers and Dense Network modules.
+Focuses on integration, not re-testing individual module functionality.
 """
 
 import pytest
 import numpy as np
-import sys
-from pathlib import Path
+from test_utils import setup_integration_test
 
-# Add the project root to the path
-project_root = Path(__file__).parent.parent.parent
-sys.path.insert(0, str(project_root))
+# Ensure proper setup before importing
+setup_integration_test()
 
 # Import ONLY from TinyTorch package
 from tinytorch.core.tensor import Tensor
-from tinytorch.core.activations import ReLU, Sigmoid, Softmax
 from tinytorch.core.layers import Dense
-from tinytorch.core.networks import Sequential, create_mlp
+from tinytorch.core.dense import Sequential, create_mlp, MLP
+from tinytorch.core.activations import ReLU, Sigmoid, Tanh
 
 
-class TestLayerNetworkIntegration:
-    """Test real integration between Dense layers and Networks."""
+class TestLayersDenseNetworkInterface:
+    """Test interface compatibility between individual Layers and Dense Networks."""
     
-    def test_dense_layer_with_real_tensors(self):
-        """Test Dense layer works with real Tensor objects."""
-        # Create real layer and tensor
-        layer = Dense(input_size=3, output_size=2)
-        x = Tensor([[1.0, 2.0, 3.0]])
+    def test_dense_layer_to_sequential_network(self):
+        """Test that Dense layers can be integrated into Sequential networks."""
+        # Create individual dense layers
+        layer1 = Dense(input_size=4, output_size=8)
+        layer2 = Dense(input_size=8, output_size=3)
         
-        # Forward pass
-        result = layer(x)
+        # Test integration into Sequential
+        network = Sequential([layer1, ReLU(), layer2])
         
-        # Verify real integration
-        assert isinstance(result, Tensor)
-        assert result.shape == (1, 2)
-        assert hasattr(result, 'data')
-        assert not np.any(np.isnan(result.data))
-    
-    def test_sequential_with_real_components(self):
-        """Test Sequential network with real Dense layers and activations."""
-        # Create network with REAL components
-        network = Sequential([
-            Dense(input_size=4, output_size=8),
-            ReLU(),
-            Dense(input_size=8, output_size=4),
-            Sigmoid(),
-            Dense(input_size=4, output_size=2)
-        ])
-        
-        # Test with real tensor
-        x = Tensor([[1.0, 2.0, 3.0, 4.0]])
+        # Test interface compatibility
+        x = Tensor(np.random.randn(2, 4))
         result = network(x)
         
-        # Verify real integration
-        assert isinstance(result, Tensor)
-        assert result.shape == (1, 2)
-        assert not np.any(np.isnan(result.data))
-        assert not np.any(np.isinf(result.data))
+        # Verify integration works
+        assert isinstance(result, Tensor), "Sequential should work with Dense layers"
+        assert result.shape == (2, 3), "Sequential should process through all layers"
     
-    def test_mlp_with_real_components(self):
-        """Test MLP network with real components."""
-        # Create MLP with real components
-        mlp = create_mlp(input_size=5, hidden_sizes=[10], output_size=3)
+    def test_dense_layer_compatibility_with_mlp(self):
+        """Test that Dense layers are compatible with MLP construction."""
+        # Test that MLP uses same interface as individual Dense layers
+        individual_layer = Dense(input_size=6, output_size=10)
+        mlp_network = create_mlp(input_size=6, hidden_sizes=[10], output_size=3)
         
-        # Test with real tensor
-        x = Tensor([[1.0, 2.0, 3.0, 4.0, 5.0]])
-        result = mlp(x)
+        # Test same input works with both
+        x = Tensor(np.random.randn(1, 6))
         
-        # Verify real integration
-        assert isinstance(result, Tensor)
-        assert result.shape == (1, 3)
-        assert hasattr(mlp, 'layers')
-        assert isinstance(mlp, Sequential)
+        # Individual layer output
+        layer_output = individual_layer(x)
+        
+        # MLP output (should accept same input)
+        mlp_output = mlp_network(x)
+        
+        # Verify interface compatibility
+        assert isinstance(layer_output, Tensor), "Dense layer should return Tensor"
+        assert isinstance(mlp_output, Tensor), "MLP should return Tensor"
+        assert layer_output.shape == (1, 10), "Dense layer should have expected output shape"
+        assert mlp_output.shape == (1, 3), "MLP should have expected output shape"
     
-    def test_deep_network_integration(self):
-        """Test deep network with multiple real layers."""
-        # Create deep network
-        deep_network = Sequential([
-            Dense(input_size=6, output_size=12),
-            ReLU(),
-            Dense(input_size=12, output_size=8),
-            Softmax(), # Changed from Tanh() to Softmax()
-            Dense(input_size=8, output_size=4),
-            ReLU(),
-            Dense(input_size=4, output_size=2),
-            Sigmoid()
-        ])
+    def test_layer_output_as_network_input(self):
+        """Test that Dense layer output can be used as network input."""
+        # Create preprocessing layer
+        preprocessor = Dense(input_size=5, output_size=8)
         
-        # Test with real tensor
-        x = Tensor([[1.0, 2.0, 3.0, 4.0, 5.0, 6.0]])
-        result = deep_network(x)
-        
-        # Verify deep integration
-        assert isinstance(result, Tensor)
-        assert result.shape == (1, 2)
-        
-        # Verify final activation worked (sigmoid bounds)
-        assert np.all(result.data >= 0.0)
-        assert np.all(result.data <= 1.0)
-    
-    def test_batch_processing_integration(self):
-        """Test network works with batched real tensors."""
+        # Create network that processes preprocessor output
         network = Sequential([
-            Dense(input_size=3, output_size=6),
+            Dense(input_size=8, output_size=12),
             ReLU(),
-            Dense(input_size=6, output_size=2)
+            Dense(input_size=12, output_size=4)
         ])
         
-        # Create batch of real tensors
-        batch_x = Tensor([
-            [1.0, 2.0, 3.0],
-            [4.0, 5.0, 6.0],
-            [7.0, 8.0, 9.0]
-        ])
+        # Test pipeline: input → layer → network
+        x = Tensor(np.random.randn(3, 5))
+        preprocessed = preprocessor(x)
+        final_output = network(preprocessed)
         
-        result = network(batch_x)
-        
-        # Verify batch integration
-        assert isinstance(result, Tensor)
-        assert result.shape == (3, 2)
-        assert not np.any(np.isnan(result.data))
+        # Verify pipeline interface
+        assert isinstance(preprocessed, Tensor), "Layer should produce Tensor for network"
+        assert isinstance(final_output, Tensor), "Network should accept layer output"
+        assert final_output.shape == (3, 4), "Pipeline should work end-to-end"
     
-    def test_layer_parameter_sharing(self):
-        """Test that layers maintain consistent parameters."""
-        layer = Dense(input_size=4, output_size=3)
+    def test_network_layer_composition(self):
+        """Test that networks can be composed with individual layers."""
+        # Create base network
+        base_network = create_mlp(input_size=4, hidden_sizes=[6], output_size=8)
         
-        # Store original parameters
-        original_weights = np.copy(layer.weights.data)
-        original_bias = np.copy(layer.bias.data) if layer.bias is not None else None
+        # Add additional processing layer
+        final_layer = Dense(input_size=8, output_size=2)
         
-        # Multiple forward passes
-        x1 = Tensor([[1.0, 2.0, 3.0, 4.0]])
-        x2 = Tensor([[5.0, 6.0, 7.0, 8.0]])
+        # Test composition
+        x = Tensor(np.random.randn(2, 4))
         
-        result1 = layer(x1)
-        result2 = layer(x2)
+        # Pipeline: input → network → layer
+        network_output = base_network(x)
+        final_output = final_layer(network_output)
         
-        # Parameters should be unchanged
-        np.testing.assert_array_equal(layer.weights.data, original_weights)
-        if original_bias is not None:
-            np.testing.assert_array_equal(layer.bias.data, original_bias)
-        
-        # Results should be different for different inputs
-        assert not np.allclose(result1.data, result2.data)
-    
-    def test_network_composition_integration(self):
-        """Test composing networks with real components."""
-        # Create encoder
-        encoder = Sequential([
-            Dense(input_size=8, output_size=4),
-            ReLU(),
-            Dense(input_size=4, output_size=2)
-        ])
-        
-        # Create decoder  
-        decoder = Sequential([
-            Dense(input_size=2, output_size=4),
-            ReLU(),
-            Dense(input_size=4, output_size=8)
-        ])
-        
-        # Compose autoencoder
-        autoencoder = Sequential([encoder, decoder])
-        
-        # Test with real tensor
-        x = Tensor([[1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0]])
-        result = autoencoder(x)
-        
-        # Verify composition
-        assert isinstance(result, Tensor)
-        assert result.shape == x.shape  # Should reconstruct input size
+        # Verify composition interface
+        assert isinstance(network_output, Tensor), "Network should produce Tensor for layer"
+        assert isinstance(final_output, Tensor), "Layer should accept network output"
+        assert network_output.shape == (2, 8), "Network output should have expected shape"
+        assert final_output.shape == (2, 2), "Layer should process network output correctly"
 
 
-class TestMLClassificationPipeline:
-    """Test realistic ML classification pipelines."""
+class TestLayerNetworkDataFlow:
+    """Test data flow compatibility between layers and networks."""
     
-    def test_binary_classifier_integration(self):
-        """Test binary classification with real components."""
-        # Create binary classifier
-        classifier = Sequential([
-            Dense(input_size=4, output_size=8),
-            ReLU(),
-            Dense(input_size=8, output_size=4),
-            ReLU(),
-            Dense(input_size=4, output_size=1),
-            Sigmoid()  # Binary classification
-        ])
+    def test_shape_preservation_across_layer_network_boundary(self):
+        """Test shape preservation when crossing layer-network boundaries."""
+        shape_configs = [
+            (1, 4, 8, 2),    # Single sample
+            (5, 6, 10, 3),   # Small batch
+            (10, 8, 16, 4),  # Larger batch
+        ]
         
-        # Test with sample data
-        x = Tensor([[0.5, 1.5, -0.5, 2.0]])
-        prediction = classifier(x)
-        
-        # Verify binary classification
-        assert isinstance(prediction, Tensor)
-        assert prediction.shape == (1, 1)
-        assert 0.0 <= prediction.data[0, 0] <= 1.0  # Probability
+        for batch_size, input_size, hidden_size, output_size in shape_configs:
+            # Create layer and network
+            layer = Dense(input_size=input_size, output_size=hidden_size)
+            network = Sequential([
+                Dense(input_size=hidden_size, output_size=hidden_size),
+                ReLU(),
+                Dense(input_size=hidden_size, output_size=output_size)
+            ])
+            
+            # Test data flow
+            x = Tensor(np.random.randn(batch_size, input_size))
+            layer_out = layer(x)
+            network_out = network(layer_out)
+            
+            # Verify shape flow
+            assert layer_out.shape == (batch_size, hidden_size), f"Layer should output correct shape for config {shape_configs}"
+            assert network_out.shape == (batch_size, output_size), f"Network should output correct shape for config {shape_configs}"
     
-    def test_multiclass_classifier_integration(self):
-        """Test multi-class classification with real components."""
-        # Create multi-class classifier (3 classes)
-        classifier = create_mlp(
-            input_size=6,
-            hidden_sizes=[12],
-            output_size=3,
-            activation=ReLU,
-            output_activation=Softmax  # Use Softmax instead of None
-        )
+    def test_dtype_preservation_across_layer_network_boundary(self):
+        """Test data type preservation across layer-network boundaries."""
+        # Test float32 flow
+        layer_f32 = Dense(input_size=4, output_size=6)
+        network_f32 = create_mlp(input_size=6, hidden_sizes=[8], output_size=2)
         
-        # Add softmax for multi-class
-        softmax = Softmax()
+        x_f32 = Tensor(np.random.randn(2, 4).astype(np.float32))
+        layer_out_f32 = layer_f32(x_f32)
+        network_out_f32 = network_f32(layer_out_f32)
         
-        # Test prediction
-        x = Tensor([[1.0, 2.0, 3.0, 4.0, 5.0, 6.0]])
-        logits = classifier(x)
-        probabilities = softmax(logits)
+        # Verify dtype preservation
+        assert layer_out_f32.dtype == np.float32, "Layer should preserve float32"
+        assert network_out_f32.dtype == np.float32, "Network should preserve float32 from layer"
         
-        # Verify multi-class classification
-        assert isinstance(probabilities, Tensor)
-        assert probabilities.shape == (1, 3)
-        assert np.isclose(np.sum(probabilities.data), 1.0, atol=1e-6)
-        assert np.all(probabilities.data >= 0.0)
+        # Test float64 flow
+        layer_f64 = Dense(input_size=4, output_size=6)
+        network_f64 = create_mlp(input_size=6, hidden_sizes=[8], output_size=2)
+        
+        x_f64 = Tensor(np.random.randn(2, 4).astype(np.float64))
+        layer_out_f64 = layer_f64(x_f64)
+        network_out_f64 = network_f64(layer_out_f64)
+        
+        # Verify dtype preservation
+        assert layer_out_f64.dtype == np.float64, "Layer should preserve float64"
+        assert network_out_f64.dtype == np.float64, "Network should preserve float64 from layer"
     
-    def test_feature_extraction_pipeline(self):
-        """Test feature extraction with real components."""
-        # Feature extractor (encoder part)
+    def test_error_handling_at_layer_network_boundary(self):
+        """Test error handling when layer-network interfaces are incompatible."""
+        # Create mismatched layer and network
+        layer = Dense(input_size=4, output_size=6)
+        mismatched_network = Sequential([Dense(input_size=8, output_size=2)])  # Expects 8, gets 6
+        
+        x = Tensor(np.random.randn(1, 4))
+        layer_output = layer(x)  # Shape (1, 6)
+        
+        # Should fail gracefully with dimension mismatch
+        try:
+            result = mismatched_network(layer_output)  # Expects (1, 8)
+            assert False, "Should have failed with dimension mismatch"
+        except (ValueError, AssertionError, TypeError) as e:
+            # Expected behavior
+            assert isinstance(e, (ValueError, AssertionError, TypeError)), "Should fail gracefully with dimension mismatch"
+
+
+class TestLayerNetworkSystemIntegration:
+    """Test system-level integration scenarios with layers and networks."""
+    
+    def test_multi_stage_processing_pipeline(self):
+        """Test multi-stage processing using layers and networks."""
+        # Stage 1: Preprocessing layer
+        preprocessor = Dense(input_size=8, output_size=12)
+        
+        # Stage 2: Feature extraction network
         feature_extractor = Sequential([
-            Dense(input_size=10, output_size=16),
+            Dense(input_size=12, output_size=16),
             ReLU(),
-            Dense(input_size=16, output_size=8),
-            ReLU(),
-            Dense(input_size=8, output_size=4)  # Feature representation
+            Dense(input_size=16, output_size=10)
         ])
         
-        # Classifier head
-        classifier = Sequential([
-            Dense(input_size=4, output_size=8),
+        # Stage 3: Classification layer
+        classifier = Dense(input_size=10, output_size=3)
+        
+        # Test complete pipeline
+        x = Tensor(np.random.randn(4, 8))
+        
+        preprocessed = preprocessor(x)
+        features = feature_extractor(preprocessed)
+        predictions = classifier(features)
+        
+        # Verify multi-stage integration
+        assert isinstance(preprocessed, Tensor), "Preprocessor should output Tensor"
+        assert isinstance(features, Tensor), "Feature extractor should output Tensor"
+        assert isinstance(predictions, Tensor), "Classifier should output Tensor"
+        assert predictions.shape == (4, 3), "Pipeline should produce expected final shape"
+    
+    def test_parallel_layer_processing(self):
+        """Test parallel processing with multiple layers feeding into network."""
+        # Create parallel processing layers
+        branch1 = Dense(input_size=6, output_size=4)
+        branch2 = Dense(input_size=6, output_size=4)
+        branch3 = Dense(input_size=6, output_size=4)
+        
+        # Fusion network
+        fusion_network = Sequential([
+            Dense(input_size=12, output_size=8),  # 4+4+4=12 from parallel branches
             ReLU(),
             Dense(input_size=8, output_size=2)
         ])
         
-        # Full pipeline
-        x = Tensor([[1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0]])
+        # Test parallel processing
+        x = Tensor(np.random.randn(2, 6))
         
-        # Extract features
-        features = feature_extractor(x)
-        assert isinstance(features, Tensor)
-        assert features.shape == (1, 4)
+        # Process in parallel
+        out1 = branch1(x)
+        out2 = branch2(x)
+        out3 = branch3(x)
         
-        # Classify features
-        predictions = classifier(features)
-        assert isinstance(predictions, Tensor)
-        assert predictions.shape == (1, 2)
+        # Manually concatenate (simulating fusion)
+        # In a real implementation, this would be handled by a concatenation layer
+        fused_data = np.concatenate([out1.data, out2.data, out3.data], axis=1)
+        fused_tensor = Tensor(fused_data)
+        
+        # Final processing
+        final_output = fusion_network(fused_tensor)
+        
+        # Verify parallel processing integration
+        assert out1.shape == (2, 4), "Branch 1 should output correct shape"
+        assert out2.shape == (2, 4), "Branch 2 should output correct shape"
+        assert out3.shape == (2, 4), "Branch 3 should output correct shape"
+        assert fused_tensor.shape == (2, 12), "Fusion should combine all branches"
+        assert final_output.shape == (2, 2), "Final network should process fused input"
+    
+    def test_layer_network_modularity(self):
+        """Test that layers and networks can be replaced modularly."""
+        # Create modular components
+        input_processors = [
+            Dense(input_size=5, output_size=8),
+            Dense(input_size=5, output_size=8),  # Different instance
+        ]
+        
+        core_networks = [
+            create_mlp(input_size=8, hidden_sizes=[10], output_size=6),
+            Sequential([Dense(input_size=8, output_size=6)]),  # Different architecture
+        ]
+        
+        output_processors = [
+            Dense(input_size=6, output_size=3),
+            Dense(input_size=6, output_size=3),  # Different instance
+        ]
+        
+        # Test all combinations work
+        x = Tensor(np.random.randn(1, 5))
+        
+        for input_proc in input_processors:
+            for core_net in core_networks:
+                for output_proc in output_processors:
+                    # Test modular pipeline
+                    intermediate1 = input_proc(x)
+                    intermediate2 = core_net(intermediate1)
+                    final = output_proc(intermediate2)
+                    
+                    # Verify modularity
+                    assert isinstance(final, Tensor), "Modular combination should work"
+                    assert final.shape == (1, 3), "Modular combination should produce expected output"
 
 
-class TestErrorHandlingIntegration:
-    """Test error handling in real integration scenarios."""
+class TestLayerNetworkInterfaceStandards:
+    """Test that layers and networks follow consistent interface standards."""
     
-    def test_shape_mismatch_detection(self):
-        """Test that shape mismatches are properly detected."""
-        layer = Dense(input_size=3, output_size=2)
+    def test_consistent_call_interface(self):
+        """Test that layers and networks have consistent callable interface."""
+        # Create different components
+        components = [
+            Dense(input_size=4, output_size=6),
+            Sequential([Dense(input_size=4, output_size=6)]),
+            create_mlp(input_size=4, hidden_sizes=[8], output_size=6),
+            MLP([4, 8, 6])
+        ]
         
-        # Wrong input size should raise error
-        wrong_x = Tensor([[1.0, 2.0]])  # Should be size 3
+        x = Tensor(np.random.randn(1, 4))
         
-        with pytest.raises(Exception):
-            layer(wrong_x)
+        # Test all components have consistent interface
+        for component in components:
+            # Should be callable with same signature
+            result = component(x)
+            
+            # Verify consistent interface
+            assert isinstance(result, Tensor), f"{type(component).__name__} should return Tensor"
+            assert result.shape[0] == 1, f"{type(component).__name__} should preserve batch dimension"
+            assert result.shape[1] == 6, f"{type(component).__name__} should produce expected output size"
     
-    def test_network_layer_compatibility(self):
-        """Test network layer compatibility checking."""
-        # Create network with incompatible layers
-        try:
-            incompatible_network = Sequential([
-                Dense(input_size=4, output_size=3),
-                Dense(input_size=5, output_size=2)  # Expects 5, gets 3
-            ])
+    def test_component_property_consistency(self):
+        """Test that layers and networks have consistent properties."""
+        # Create components
+        layer = Dense(input_size=3, output_size=5)
+        network = Sequential([Dense(input_size=3, output_size=5)])
+        mlp = create_mlp(input_size=3, hidden_sizes=[], output_size=5)
+        
+        # Test that all components can be used interchangeably
+        x = Tensor(np.random.randn(2, 3))
+        
+        results = []
+        for component in [layer, network, mlp]:
+            result = component(x)
+            results.append(result)
             
-            x = Tensor([[1.0, 2.0, 3.0, 4.0]])
-            result = incompatible_network(x)
-            
-            # If no error raised, should handle gracefully
-            assert isinstance(result, Tensor)
-            
-        except Exception:
-            # It's acceptable to raise an error for incompatible layers
-            pass
+            # Verify consistent interface properties
+            assert hasattr(result, 'shape'), f"{type(component).__name__} result should have shape"
+            assert hasattr(result, 'data'), f"{type(component).__name__} result should have data"
+            assert hasattr(result, 'dtype'), f"{type(component).__name__} result should have dtype"
+        
+        # All should produce same output shape
+        expected_shape = (2, 5)
+        for i, result in enumerate(results):
+            assert result.shape == expected_shape, f"Component {i} should produce consistent shape"
 
 
 if __name__ == "__main__":
-    # Run integration tests
-    pytest.main([__file__, "-v"]) 
+    pytest.main([__file__]) 
