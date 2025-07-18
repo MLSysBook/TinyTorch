@@ -15,7 +15,7 @@ exports_to: "tinytorch.core.spatial"
 
 # File Structure - What files exist in this module
 files:
-  dev_file: "cnn_dev.py"
+  dev_file: "spatial_dev.py"
   readme: "README.md"
   tests: "inline"
 
