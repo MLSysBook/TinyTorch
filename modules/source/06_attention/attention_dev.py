@@ -823,3 +823,161 @@ print("✅ Attention visualization")
 print("✅ Complete integration tests")
 print("\nYou now understand the core mechanism powering modern AI! 🚀")
 print("Next: Learn how to build complete transformer models using this foundation.")
+
+def test_attention_mechanism_comprehensive():
+    """Test attention mechanism implementation comprehensively."""
+    print("🔬 Unit Test: Attention Mechanism...")
+    
+    # Test basic attention
+    Q = np.random.randn(4, 6) * 0.1
+    K = np.random.randn(4, 6) * 0.1  
+    V = np.random.randn(4, 6) * 0.1
+    output, weights = scaled_dot_product_attention(Q, K, V)
+    
+    assert output.shape == (4, 6), "Attention should produce correct output shape"
+    assert weights.shape == (4, 4), "Attention weights should be square matrix"
+    assert np.allclose(np.sum(weights, axis=-1), 1.0), "Attention weights should sum to 1"
+    
+    print("✅ Attention mechanism works correctly")
+
+def test_self_attention_wrapper_comprehensive():
+    """Test self-attention wrapper implementation comprehensively."""
+    print("🔬 Unit Test: Self-Attention Wrapper...")
+    
+    # Test self-attention
+    self_attn = SelfAttention(d_model=32)
+    x = np.random.randn(8, 32) * 0.1
+    output, weights = self_attn(x)
+    
+    assert output.shape == x.shape, "Self-attention should preserve input shape"
+    assert weights.shape == (8, 8), "Self-attention weights should be square"
+    assert np.allclose(np.sum(weights, axis=-1), 1.0), "Weights should sum to 1"
+    
+    print("✅ Self-attention wrapper works correctly")
+
+def test_attention_masking_comprehensive():
+    """Test attention masking implementation comprehensively."""
+    print("🔬 Unit Test: Attention Masking...")
+    
+    # Test causal mask
+    causal_mask = create_causal_mask(4)
+    assert np.allclose(causal_mask, np.tril(causal_mask)), "Causal mask should be lower triangular"
+    
+    # Test padding mask  
+    padding_mask = create_padding_mask([3, 2], 4)
+    assert padding_mask.shape == (2, 4, 4), "Padding mask should have correct shape"
+    
+    # Test bidirectional mask
+    bidirectional_mask = create_bidirectional_mask(3)
+    assert np.all(bidirectional_mask == 1), "Bidirectional mask should be all ones"
+    
+    print("✅ Attention masking works correctly")
+
+# %% [markdown]
+"""
+## 🧪 Module Testing
+
+Time to test your implementation! This section uses TinyTorch's standardized testing framework to ensure your implementation works correctly.
+
+**This testing section is locked** - it provides consistent feedback across all modules and cannot be modified.
+"""
+
+# %% nbgrader={"grade": false, "grade_id": "standardized-testing", "locked": true, "schema_version": 3, "solution": false, "task": false}
+# =============================================================================
+# STANDARDIZED MODULE TESTING - DO NOT MODIFY
+# This cell is locked to ensure consistent testing across all TinyTorch modules
+# =============================================================================
+
+if __name__ == "__main__":
+    from tito.tools.testing import run_module_tests_auto
+    
+    # Automatically discover and run all tests in this module
+    success = run_module_tests_auto("Attention")
+
+# %% [markdown]
+"""
+## 🎯 Module Summary
+
+Congratulations! You've successfully implemented the revolutionary attention mechanism that powers all modern AI systems:
+
+### What You've Accomplished
+✅ **Scaled Dot-Product Attention**: Implemented the mathematical core of all transformer models  
+✅ **Self-Attention Wrapper**: Built the mechanism that enables sequence understanding  
+✅ **Attention Masking**: Created causal, padding, and bidirectional attention patterns  
+✅ **Complete Integration**: Tested all components working together seamlessly  
+✅ **Real Applications**: Applied attention to sequence processing and pattern matching
+
+### Key Concepts You've Learned
+- **Attention as dynamic pattern matching**: Query-Key-Value projections enable adaptive focus
+- **Mathematical foundation**: Attention(Q,K,V) = softmax(QK^T/√d_k)V powers all modern AI
+- **Global connectivity**: Unlike convolution, attention connects all positions directly
+- **Interpretability**: Attention weights reveal what the model focuses on
+- **Masking mechanisms**: Control information flow for different model architectures
+
+### Mathematical Foundations
+- **Attention formula**: The exact operation used in ChatGPT, BERT, GPT-4
+- **Scaling factor**: √d_k prevents gradient vanishing in deep networks
+- **Softmax normalization**: Converts similarity scores to probability distributions
+- **Matrix operations**: Efficient parallel computation of all attention heads
+
+### Real-World Applications
+- **Language models**: ChatGPT, GPT-4, BERT use this exact mechanism
+- **Machine translation**: Google Translate's transformer architecture
+- **Computer vision**: Vision Transformers (ViTs) for image classification
+- **Multimodal AI**: DALL-E, CLIP combining text and image understanding
+
+### Attention vs. Convolution Insights
+- **Receptive field**: Attention is global from layer 1, convolution is local
+- **Computation**: Attention is O(n²), convolution is O(n) with kernel size
+- **Weights**: Attention weights are dynamic and input-dependent
+- **Best applications**: Attention excels at sequential/relational data
+
+### Architecture Design Patterns
+- **Self-attention**: Most common pattern where Q=K=V=input
+- **Causal masking**: Enables autoregressive generation (GPT-style models)
+- **Bidirectional**: Allows full context access (BERT-style models)
+- **Padding masks**: Handle variable-length sequences efficiently
+
+### Performance Characteristics
+- **Quadratic scaling**: Memory and computation grow with sequence length squared
+- **Parallelization**: All positions computed simultaneously (unlike RNNs)
+- **Memory efficiency**: Attention weights require careful management
+- **Gradient flow**: Direct connections enable training very deep networks
+
+### Transformer Building Blocks
+Your attention implementation is the foundation for:
+- **Multi-head attention**: Multiple attention heads in parallel
+- **Transformer blocks**: Attention + feedforward + residual connections
+- **Positional encoding**: Adding sequence position information
+- **Complete transformers**: Full encoder-decoder architectures
+
+### Next Steps
+1. **Export your code**: Use NBDev to export to the `tinytorch` package
+2. **Test your implementation**: Run the complete test suite
+3. **Build transformer architectures**: 
+   ```python
+   from tinytorch.core.attention import scaled_dot_product_attention, SelfAttention
+   from tinytorch.core.attention import create_causal_mask, create_padding_mask
+   
+   # Create self-attention
+   self_attn = SelfAttention(d_model=512)
+   
+   # Process sequence with causal masking (GPT-style)
+   mask = create_causal_mask(seq_len)
+   output, weights = self_attn(embeddings, mask)
+   
+   # Visualize attention patterns
+   plt.imshow(weights, cmap='Blues')
+   plt.title('Attention Patterns')
+   ```
+4. **Explore advanced transformers**: Multi-head attention, positional encoding, full transformer blocks!
+
+### The Revolutionary Impact
+You've implemented the mechanism that:
+- **Revolutionized NLP**: Enabled ChatGPT, GPT-4, BERT breakthrough performance
+- **Transformed computer vision**: Vision Transformers (ViTs) now compete with CNNs
+- **Powers modern AI**: Almost every state-of-the-art model uses attention
+- **Enables interpretability**: Attention weights show what AI models focus on
+
+**Ready for the next challenge?** Let's build complete transformer architectures using your attention foundation!
+"""
