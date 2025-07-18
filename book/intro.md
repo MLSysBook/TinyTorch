@@ -14,7 +14,7 @@ html_meta:
 
 # Tiny🔥Torch
 
-## Build your own Machine Learning framework from scratch. 
+## Build your own ML framework. Start small. Go deep. 
 
 **Most ML education teaches you to _use_ frameworks. TinyTorch teaches you to _build_ them.**
 
@@ -99,7 +99,7 @@ This pattern repeats for every component: tensors, layers, optimizers, even MLOp
 
 ---
 
-## 📚 **Course Journey: 15 Modules**
+## 📚 **Course Journey: 16 Modules**
 
 ```{admonition} 🏗️ Foundation
 :class: note
@@ -110,23 +110,23 @@ Understanding workflow, multi-dimensional arrays, and the mathematical functions
 
 ```{admonition} 🧱 Building Blocks
 :class: note
-**4. Layers** • **5. Networks** • **6. CNNs**
+**4. Layers** • **5. Dense** • **6. Spatial** • **7. Attention**
 
-Dense layers, sequential architecture, and convolutional operations for computer vision.
+Dense layers, sequential networks, convolutional operations, and self-attention mechanisms.
 ```
 
 ```{admonition} 🎯 Training Systems
 :class: note
-**7. DataLoader** • **8. Autograd** • **9. Optimizers** • **10. Training**
+**8. DataLoader** • **9. Autograd** • **10. Optimizers** • **11. Training**
 
 CIFAR-10 loading, automatic differentiation, SGD/Adam optimizers, and complete training orchestration.
 ```
 
-```{admonition} ⚡ Production & Performance
+```{admonition} 🚀 Inference & Serving
 :class: note
-**11. Compression** • **12. Kernels** • **13. Benchmarking** • **14. MLOps**
+**12. Compression** • **13. Kernels** • **14. Benchmarking** • **15. MLOps** • **16. Capstone**
 
-Model optimization, high-performance operations, systematic evaluation, and production monitoring.
+Model optimization, high-performance operations, systematic evaluation, production monitoring, and advanced framework engineering.
 ```
 
 ```{admonition} 🎓 Capstone Project
