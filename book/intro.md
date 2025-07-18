@@ -99,7 +99,7 @@ This pattern repeats for every component: tensors, layers, optimizers, even MLOp
 
 ---
 
-## 📚 **Course Journey: 16 Modules**
+## 📚 **Course Journey: 15 Modules**
 
 ```{admonition} 🏗️ Foundation
 :class: note
@@ -124,14 +124,13 @@ CIFAR-10 loading, automatic differentiation, SGD/Adam optimizers, and complete t
 
 ```{admonition} 🚀 Inference & Serving
 :class: note
-**12. Compression** • **13. Kernels** • **14. Benchmarking** • **15. MLOps** • **16. Capstone**
+**12. Compression** • **13. Kernels** • **14. Benchmarking** • **15. MLOps**
 
 Model optimization, high-performance operations, systematic evaluation, production monitoring, and advanced framework engineering.
 ```
 
 ```{admonition} 🎓 Capstone Project
 :class: note
-**15. Capstone Project**
 
 Choose your focus: performance engineering, algorithm extensions, systems optimization, framework analysis, or developer tools.
 ```
