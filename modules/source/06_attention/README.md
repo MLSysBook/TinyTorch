@@ -1,31 +1,30 @@
 # 🔥 Module: Attention
 
 ## 📊 Module Info
-- **Difficulty**: ⭐⭐⭐⭐ Advanced
-- **Time Estimate**: 6-8 hours
-- **Prerequisites**: Tensor, Activations, Layers, Networks modules
-- **Next Steps**: CNN, Autograd, Training modules
+- **Difficulty**: ⭐⭐⭐ Advanced
+- **Time Estimate**: 4-5 hours
+- **Prerequisites**: Tensor module
+- **Next Steps**: Training, Transformers modules
 
-Build attention mechanisms from scratch and understand the core technology powering modern AI systems like ChatGPT, BERT, and GPT-4. This module teaches you that attention is a powerful pattern-matching mechanism that allows models to dynamically focus on relevant parts of input sequences.
+Build the core attention mechanism that powers modern AI! This module implements the fundamental scaled dot-product attention that's used in ChatGPT, BERT, GPT-4, and virtually all state-of-the-art AI systems.
 
 ## 🎯 Learning Objectives
 
 By the end of this module, you will be able to:
 
-- **Master attention mechanisms**: Understand how Query, Key, Value projections enable dynamic focus
-- **Implement self-attention**: Build the core component that powers transformer architectures
-- **Create multi-head attention**: Combine multiple attention patterns for richer representations
-- **Add positional encoding**: Give transformers the ability to understand sequence order
-- **Build transformer blocks**: Compose attention with feed-forward networks and residual connections
-- **Compare attention patterns**: Understand when to use self-attention vs cross-attention
+- **Master the attention formula**: Understand and implement `Attention(Q,K,V) = softmax(QK^T/√d_k)V`
+- **Build self-attention**: Create the core component that enables global context understanding
+- **Control information flow**: Implement masking for causal, padding, and bidirectional attention
+- **Visualize attention patterns**: See what the model "pays attention to"
+- **Understand modern AI**: Grasp the mechanism that revolutionized natural language processing
 
-## 🧠 Build → Use → Reflect
+## 🧠 Build → Use → Understand
 
-This module follows TinyTorch's **Build → Use → Reflect** framework:
+This module follows TinyTorch's **Build → Use → Understand** framework:
 
-1. **Build**: Implement attention mechanisms and transformer components from mathematical foundations
-2. **Use**: Apply attention to sequence tasks and visualize what the model "pays attention to"
-3. **Reflect**: Compare attention's global perspective with CNN's local receptive fields
+1. **Build**: Implement the core attention mechanism and masking utilities from mathematical foundations
+2. **Use**: Apply attention to sequence tasks and visualize attention patterns
+3. **Understand**: How attention enables dynamic, global context modeling that powers modern AI
 
 ## 📚 What You'll Build
 
@@ -35,6 +34,8 @@ def scaled_dot_product_attention(Q, K, V, mask=None):
     """
     The fundamental attention operation:
     Attention(Q,K,V) = softmax(QK^T/√d_k)V
+    
+    This exact function powers ChatGPT, BERT, and all transformers.
     """
     d_k = Q.shape[-1]
     scores = Q @ K.transpose(-2, -1) / math.sqrt(d_k)
@@ -44,94 +45,96 @@ def scaled_dot_product_attention(Q, K, V, mask=None):
     return attention_weights @ V, attention_weights
 ```
 
-### Multi-Head Attention
+### Self-Attention Wrapper
 ```python
-class MultiHeadAttention:
+class SelfAttention:
     """
-    Multiple attention heads capture different types of relationships:
-    - Head 1: Syntactic relationships
-    - Head 2: Semantic relationships  
-    - Head 3: Long-range dependencies
+    Convenient wrapper for self-attention where Q=K=V.
+    The most common use case in transformer models.
     """
-    def __init__(self, d_model, num_heads):
-        self.num_heads = num_heads
-        self.d_k = d_model // num_heads
-        self.W_q = Dense(d_model, d_model)
-        self.W_k = Dense(d_model, d_model)
-        self.W_v = Dense(d_model, d_model)
-        self.W_o = Dense(d_model, d_model)
+    def __init__(self, d_model):
+        self.d_model = d_model
+    
+    def forward(self, x, mask=None):
+        # Self-attention: Q = K = V = x
+        return scaled_dot_product_attention(x, x, x, mask)
 ```
 
-### Transformer Block
+### Attention Masking
 ```python
-class TransformerBlock:
-    """
-    Complete transformer layer combining:
-    1. Multi-head self-attention
-    2. Residual connections
-    3. Layer normalization
-    4. Feed-forward network
-    """
-    def __init__(self, d_model, num_heads, d_ff):
-        self.attention = MultiHeadAttention(d_model, num_heads)
-        self.feed_forward = Sequential([
-            Dense(d_model, d_ff),
-            ReLU(),
-            Dense(d_ff, d_model)
-        ])
+# Causal masking (GPT-style: can't see future tokens)
+causal_mask = create_causal_mask(seq_len)
+
+# Padding masking (ignore padding tokens)
+padding_mask = create_padding_mask(lengths, max_length)
+
+# Bidirectional masking (BERT-style: can see all tokens)
+bidirectional_mask = create_bidirectional_mask(seq_len)
 ```
 
 ## 🔬 Key Concepts
 
-### Why Attention Matters
-- **Global context**: Unlike CNNs, attention can connect any two positions directly
-- **Dynamic weights**: Attention weights adapt based on input content, not fixed patterns
+### Why Attention Revolutionized AI
+- **Global connectivity**: Unlike CNNs, attention connects any two positions directly
+- **Dynamic weights**: Attention adapts to input content, not fixed like convolution kernels
+- **Parallel processing**: Unlike RNNs, all positions computed simultaneously
 - **Interpretability**: You can visualize what the model pays attention to
-- **Scalability**: Attention scales to very long sequences (with modifications)
+
+### The Attention Formula Explained
+```
+Attention(Q,K,V) = softmax(QK^T/√d_k)V
+
+Where:
+- Q (Query): "What am I looking for?"
+- K (Key): "What information is available?"  
+- V (Value): "What is the actual content?"
+- √d_k scaling: Prevents extreme softmax values
+```
 
 ### Attention vs Convolution
 | Aspect | Convolution | Attention |
 |--------|-------------|-----------|
 | **Receptive field** | Local, grows with depth | Global from layer 1 |
 | **Computation** | O(n) with kernel size | O(n²) with sequence length |
-| **Inductive bias** | Spatial locality | Sequence relationships |
-| **Best for** | Images, spatial data | Text, sequences |
+| **Weights** | Fixed learned kernels | Dynamic input-dependent |
+| **Best for** | Spatial data (images) | Sequential data (text) |
 
 ### Real-World Applications
-- **Language Models**: GPT, BERT, ChatGPT
-- **Machine Translation**: Google Translate 
-- **Vision Transformers**: Image classification without convolution
-- **Multimodal AI**: CLIP, DALL-E combining text and images
+- **Language Models**: GPT, BERT, ChatGPT use self-attention to understand context
+- **Machine Translation**: Google Translate uses attention to align source and target words
+- **Image Understanding**: Vision Transformers apply attention to image patches
+- **Multimodal AI**: CLIP, DALL-E use attention to connect text and images
 
 ## 🚀 From Attention to Modern AI
 
-This module bridges classical ML and modern AI:
+This module teaches the **core building block** of modern AI:
 
-**Classical (pre-2017)**: RNNs + CNNs + LSTMs
-**Modern (post-2017)**: Transformers + Attention + Self-Supervision
+**What you're building**: The fundamental attention mechanism  
+**What it enables**: Multi-head attention, positional encoding, transformer blocks  
+**What it powers**: ChatGPT, BERT, GPT-4, and contemporary AI systems
 
-Understanding attention mechanisms gives you the foundation to understand:
-- How ChatGPT generates text
-- How BERT understands language
+Understanding this module gives you the foundation to understand:
+- How ChatGPT generates coherent text
+- How BERT understands language bidirectionally
 - How Vision Transformers work without convolution
-- How DALL-E combines text and images
+- How modern AI achieves human-like language understanding
 
 ## 📈 Module Progression
 
 ```
-Tensors → Activations → Layers → Networks → **ATTENTION** → CNN → Training
-  ↑                                              ↑
-Foundation                              Modern AI Core
+Tensors → **ATTENTION** → Layers → Networks → CNNs → Training
+  ↑              ↑
+Foundation   Modern AI Core
 ```
 
-After completing this module, you'll understand the mechanism that powers the AI revolution, making you ready to work with state-of-the-art models and architectures.
+After completing this module, you'll understand the mechanism that sparked the AI revolution, making you ready to work with state-of-the-art models and architectures.
 
 ## 🎯 Success Criteria
 
 You'll know you've mastered this module when you can:
-- [ ] Explain why attention enables better long-range dependencies than RNNs
-- [ ] Implement multi-head attention from scratch
-- [ ] Visualize attention patterns and interpret what the model focuses on
-- [ ] Compare computational complexity of attention vs convolution
-- [ ] Build a complete transformer block with residual connections
-- [ ] Understand why transformers have revolutionized NLP and computer vision 
+- [ ] Implement scaled dot-product attention from scratch
+- [ ] Explain why the √d_k scaling prevents gradient problems
+- [ ] Create different types of attention masks for various use cases
+- [ ] Visualize and interpret attention weights
+- [ ] Understand why attention enabled the transformer revolution
+- [ ] Connect this foundation to modern AI systems like ChatGPT 
