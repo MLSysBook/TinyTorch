@@ -330,6 +330,9 @@ class CrossEntropyLoss:
         """Alternative interface for forward pass."""
         return self.__call__(y_pred, y_true)
 
+# Run the test
+test_unit_mse_loss()
+
 # %% [markdown]
 """
 ### 🧪 Unit Test: CrossEntropy Loss
@@ -463,6 +466,9 @@ class BinaryCrossEntropyLoss:
         """Alternative interface for forward pass."""
         return self.__call__(y_pred, y_true)
 
+# Run the test
+test_unit_crossentropy_loss()
+
 # %% [markdown]
 """
 ### 🧪 Unit Test: Binary CrossEntropy Loss
@@ -556,6 +562,9 @@ MAE = (1/n) * Σ|y_pred - y_true|
 
 Let's implement these essential metrics!
 """
+
+# Run the test
+test_unit_binary_crossentropy_loss()
 
 # %% nbgrader={"grade": false, "grade_id": "accuracy-metric", "locked": false, "schema_version": 3, "solution": true, "task": false}
 #| export
@@ -678,7 +687,7 @@ def test_unit_accuracy_metric():
     print("🎯 Accuracy Metric: All tests passed!")
 
 # Run the test
-test_accuracy_metric()
+test_unit_accuracy_metric()
 
 # %% [markdown]
 """
@@ -1042,7 +1051,7 @@ def test_unit_trainer():
     print("🎯 Trainer Class: All tests passed!")
 
 # Run the test
-test_trainer()
+test_unit_trainer()
 
 # %% [markdown]
 """
@@ -1122,7 +1131,7 @@ def test_module_training():
     print("🎯 Training Pipeline: All comprehensive tests passed!")
 
 # Run the comprehensive test
-test_training()
+test_module_training()
 
 # %% [markdown]
 """
