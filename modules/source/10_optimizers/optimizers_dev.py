@@ -185,7 +185,7 @@ Where:
 
 ### Visual Understanding
 ```
-Loss landscape: \__/
+Loss landscape: U-shaped curve
 Start here: ↑
 Gradient descent: ↓ → ↓ → ↓ → minimum
 ```
@@ -637,7 +637,7 @@ v̂_t = v_t / (1 - β₂ᵗ)                      # Bias correction
 
 ### Visual Understanding
 ```
-Parameter with large gradients: /\/\/\/\ → smooth updates
+Parameter with large gradients: zigzag pattern → smooth updates
 Parameter with small gradients: ______ → amplified updates
 ```
 
