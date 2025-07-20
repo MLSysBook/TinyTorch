@@ -186,8 +186,6 @@ class MeanSquaredError:
 
 # %% [markdown]
 """
-## 🔧 DEVELOPMENT
-
 ### 🧪 Unit Test: MSE Loss
 
 Let's test our MSE loss implementation with known values.
