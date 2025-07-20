@@ -73,24 +73,6 @@ except ImportError:
         # Fallback for missing modules
         print("⚠️  Some TinyTorch modules not available - using minimal implementations")
 
-# %% nbgrader={"grade": false, "grade_id": "benchmarking-setup", "locked": false, "schema_version": 3, "solution": false, "task": false}
-#| hide
-#| export
-def _should_show_plots():
-    """Check if we should show plots (disable during testing)"""
-    is_testing = (
-        'pytest' in sys.modules or
-        'test' in sys.argv or
-        os.environ.get('PYTEST_CURRENT_TEST') is not None or
-        any('test' in arg for arg in sys.argv) or
-        any('pytest' in arg for arg in sys.argv) or
-        'tito' in sys.argv or
-        any('tito' in arg for arg in sys.argv) or
-        os.environ.get('TITO_TESTING') is not None
-    )
-    
-    return not is_testing
-
 # %% nbgrader={"grade": false, "grade_id": "benchmarking-welcome", "locked": false, "schema_version": 3, "solution": false, "task": false}
 print("📊 TinyTorch Benchmarking Module")
 print(f"NumPy version: {np.__version__}")
@@ -1126,9 +1108,7 @@ This comprehensive benchmarking demonstrates {model_name}'s performance characte
 
 def plot_benchmark_results(benchmark_results: Dict[str, BenchmarkResult]):
     """Visualize benchmark results."""
-    if not _should_show_plots():
-        return
-        
+
     # Create visualizations
     fig, axes = plt.subplots(1, 3, figsize=(18, 5))
     
@@ -1244,13 +1224,6 @@ if __name__ == "__main__":
             accuracy=0.945
         )
     }
-
-    # Generate visualization (only in interactive mode)
-    if _should_show_plots():
-        plot_benchmark_results(demo_results)
-        print("📊 Benchmark visualization complete!")
-    else:
-        print("📊 Plots disabled during testing")
 
 # %% [markdown]
 """

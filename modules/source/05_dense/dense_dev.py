@@ -59,26 +59,6 @@ except ImportError:
     from activations_dev import ReLU, Sigmoid, Tanh, Softmax
     from layers_dev import Dense
 
-# %% nbgrader={"grade": false, "grade_id": "networks-setup", "locked": false, "schema_version": 3, "solution": false, "task": false}
-#| hide
-#| export
-def _should_show_plots():
-    """Check if we should show plots (disable during testing)"""
-    # Check multiple conditions that indicate we're in test mode
-    is_testing = (
-        'pytest' in sys.modules or
-        'test' in sys.argv or
-        os.environ.get('PYTEST_CURRENT_TEST') is not None or
-        any('test' in arg for arg in sys.argv) or
-        any('pytest' in arg for arg in sys.argv) or
-        'tito' in sys.argv or
-        any('tito' in arg for arg in sys.argv) or
-        os.environ.get('TITO_TESTING') is not None
-    )
-    
-    # Show plots in development mode (when not in test mode)
-    return not is_testing
-
 # %% nbgrader={"grade": false, "grade_id": "networks-welcome", "locked": false, "schema_version": 3, "solution": false, "task": false}
 print("🔥 TinyTorch Networks Module")
 print(f"NumPy version: {np.__version__}")
@@ -565,8 +545,6 @@ Let's test different network architectures to understand their behavior.
 # %% nbgrader={"grade": true, "grade_id": "test-architectures", "locked": true, "points": 10, "schema_version": 3, "solution": false, "task": false}
 def plot_network_architectures():
     """Visualize different network architectures."""
-    if not _should_show_plots():
-        return
         
     # Create different architectures
     relu_net = create_mlp(input_size=3, hidden_sizes=[4], output_size=1, activation=ReLU)
@@ -595,6 +573,8 @@ def plot_network_architectures():
     
     plt.tight_layout()
     plt.show()
+
+plot_network_architectures()
 
 def test_unit_network_architectures():
     """Unit test for different network architectures."""
@@ -661,16 +641,6 @@ print("📈 Progress: Sequential ✓, MLP creation ✓, Architecture variations 
 
 Let's visualize the different network architectures for educational purposes:
 """
-
-# %%
-# Demo visualization - only run in interactive mode, not during tests
-if __name__ == "__main__":
-    # Generate network architecture visualization (only in interactive mode)
-    if _should_show_plots():
-        plot_network_architectures()
-        print("📊 Network architecture visualization complete!")
-    else:
-        print("📊 Plots disabled during testing")
 
 # %% [markdown]
 """
