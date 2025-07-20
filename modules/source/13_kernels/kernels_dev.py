@@ -276,8 +276,8 @@ def matmul_baseline(A: Tensor, B: Tensor) -> Tensor:
 # %% nbgrader={"grade": false, "grade_id": "test-custom-matmul", "locked": false, "schema_version": 3, "solution": false, "task": false}
 ### 🧪 Unit Test: Baseline Matrix Multiplication
 
-def test_matmul_baseline():
-    """Test baseline matrix multiplication implementation."""
+def test_unit_matmul_baseline():
+    """Unit test for the baseline matrix multiplication implementation."""
     print("🔬 Unit Test: Baseline Matrix Multiplication...")
     
     # Test case 1: Small matrices (2x2)
@@ -481,8 +481,8 @@ def vectorized_operations(x: Tensor, y: Tensor) -> Dict[str, Tensor]:
 # %% nbgrader={"grade": false, "grade_id": "test-vectorized-operations", "locked": false, "schema_version": 3, "solution": false, "task": false}
 ### 🧪 Unit Test: Vectorized Operations
 
-def test_vectorized_operations():
-    """Test vectorized operations implementation."""
+def test_unit_vectorized_operations():
+    """Unit test for the vectorized operations implementation."""
     print("🔬 Unit Test: Vectorized Operations...")
     
     # Test vectorized ReLU
@@ -659,8 +659,8 @@ def cache_friendly_matmul(A: Tensor, B: Tensor, block_size: int = 32) -> Tensor:
 # %% nbgrader={"grade": false, "grade_id": "test-cache-friendly", "locked": false, "schema_version": 3, "solution": false, "task": false}
 ### 🧪 Unit Test: Cache-Friendly Matrix Multiplication
 
-def test_cache_friendly_matmul():
-    """Test cache-friendly matrix multiplication implementation."""
+def test_unit_cache_friendly_matmul():
+    """Unit test for the cache-friendly matrix multiplication implementation."""
     print("🔬 Unit Test: Cache-Friendly Matrix Multiplication...")
     
     # Test case 1: Small matrices
@@ -884,8 +884,8 @@ def parallel_batch_processing(batch_data: List[Tensor], operation: Callable, num
 # %% nbgrader={"grade": false, "grade_id": "test-parallel-processing", "locked": false, "schema_version": 3, "solution": false, "task": false}
 ### 🧪 Unit Test: Parallel Processing
 
-def test_parallel_processing():
-    """Test parallel processing implementations."""
+def test_unit_parallel_processing():
+    """Unit test for the parallel processing implementations."""
     print("🔬 Unit Test: Parallel Processing...")
     
     # Test parallel ReLU
@@ -963,8 +963,8 @@ We use `time.perf_counter()` for microsecond-precision timing:
 # %% nbgrader={"grade": false, "grade_id": "test-profiling", "locked": false, "schema_version": 3, "solution": false, "task": false}
 ### 🧪 Unit Test: Simple Kernel Timing
 
-def test_simple_kernel_timing():
-    """Test simple kernel timing capabilities."""
+def test_unit_simple_kernel_timing():
+    """Unit test for the simple kernel timing capabilities."""
     print("🔬 Unit Test: Simple Kernel Timing...")
     
     # Test timing different matrix multiplication methods
@@ -1176,8 +1176,8 @@ def quantized_relu(x: Tensor, scale: float = 1.0) -> Tensor:
 # %% nbgrader={"grade": false, "grade_id": "test-compressed-kernels", "locked": false, "schema_version": 3, "solution": false, "task": false}
 ### 🧪 Unit Test: Compressed Model Kernels
 
-def test_compressed_kernels():
-    """Test compressed model kernel implementations."""
+def test_unit_compressed_kernels():
+    """Unit test for the compressed model kernel implementations."""
     print("🔬 Unit Test: Compressed Model Kernels...")
     
     # Test quantized matrix multiplication
@@ -1333,9 +1333,82 @@ Time to test your implementation! This section uses TinyTorch's standardized tes
 # This cell is locked to ensure consistent testing across all TinyTorch modules
 # =============================================================================
 
-if __name__ == "__main__":
-    from tito.tools.testing import run_module_tests_auto
+"""
+## 🔬 Integration Test: Using Kernels in a Sequential Model
+"""
+
+# %%
+# Mock classes for Dense and ReLU to be used in the test
+class Dense:
+    def __init__(self, in_features, out_features):
+        self.weights = Tensor(np.random.randn(in_features, out_features))
+        self.bias = Tensor(np.random.randn(out_features))
+
+class ReLU:
+    def __call__(self, x: Tensor) -> Tensor:
+        return vectorized_relu(x)
+
+def test_module_kernel_sequential_model():
+    """
+    Integration test for using optimized kernels in a Sequential model.
     
+    Tests that optimized kernels can be integrated into a Sequential model
+    and produce correct results.
+    """
+    print("🔬 Running Integration Test: Kernels in Sequential Model...")
+
+    class BaselineModel:
+        def __init__(self):
+            self.dense = Dense(10, 5)
+            self.relu = ReLU()
+        
+        def __call__(self, x: Tensor) -> Tensor:
+            # Manually apply layers using baseline functions
+            x = matmul_baseline(x, self.dense.weights)
+            # Bias addition is simple, no special kernel needed
+            x = Tensor(x.data + self.dense.bias.data)
+            x = self.relu(x)
+            return x
+
+    class OptimizedModel:
+        def __init__(self, baseline_model):
+            self.dense = baseline_model.dense
+        
+        def __call__(self, x: Tensor) -> Tensor:
+            # Use optimized kernels
+            x = cache_friendly_matmul(x, self.dense.weights)
+            x = Tensor(x.data + self.dense.bias.data)
+            x = vectorized_relu(x)
+            return x
+    
+    # 1. Create baseline and optimized models
+    baseline_model = BaselineModel()
+    optimized_model = OptimizedModel(baseline_model)
+
+    # 2. Create some input data
+    input_data = Tensor(np.random.randn(1, 10))
+
+    # 3. Get outputs from both models
+    baseline_output = baseline_model(input_data)
+    optimized_output = optimized_model(input_data)
+
+    # 4. Check that the outputs are numerically close
+    assert np.allclose(baseline_output.data, optimized_output.data), "Optimized model output should match baseline"
+
+    print("✅ Integration Test Passed: Kernels correctly integrated into a model.")
+
+
+if __name__ == "__main__":
+    # Unit tests
+    test_matmul_baseline()
+    test_vectorized_operations()
+    test_cache_friendly_matmul()
+    test_parallel_processing()
+    test_simple_kernel_timing()
+    test_compressed_kernels()
+    final_performance_test()
+
+    from tito.tools.testing import run_module_tests_auto
     # Automatically discover and run all tests in this module
     success = run_module_tests_auto("Kernels")
 
