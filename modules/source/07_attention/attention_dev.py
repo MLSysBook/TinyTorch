@@ -843,6 +843,9 @@ def test_unit_attention_mechanism():
     
     print("✅ Attention mechanism works correctly")
 
+# Run the test
+test_unit_attention_mechanism()
+
 def test_unit_self_attention_wrapper():
     """Unit test for the self-attention wrapper implementation."""
     print("🔬 Unit Test: Self-Attention Wrapper...")
@@ -857,6 +860,9 @@ def test_unit_self_attention_wrapper():
     assert np.allclose(np.sum(weights.data, axis=-1), 1.0), "Weights should sum to 1"
     
     print("✅ Self-attention wrapper works correctly")
+
+# Run the test
+test_unit_self_attention_wrapper()
 
 def test_unit_masking_utilities():
     """Unit test for the attention masking utilities."""
@@ -875,6 +881,9 @@ def test_unit_masking_utilities():
     assert np.all(bidirectional_mask == 1), "Bidirectional mask should be all ones"
     
     print("✅ Masking utilities work correctly")
+
+# Run the test
+test_unit_masking_utilities()
 
 # %% [markdown]
 """
