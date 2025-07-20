@@ -106,6 +106,11 @@ from tinytorch.core.tensor import Tensor  # Foundation
 
 # %% [markdown]
 """
+## 🔧 DEVELOPMENT
+"""
+
+# %% [markdown]
+"""
 ## Step 1: Understanding Convolution
 
 ### What is Convolution?
@@ -818,6 +823,12 @@ def test_module_conv2d_tensor_compatibility():
     assert output_tensor.shape == expected_shape, f"Expected output shape {expected_shape}, but got {output_tensor.shape}"
     print("✅ Integration Test Passed: Conv2D layer correctly transformed image tensor.")
 
+# %% [markdown]
+"""
+## 🤖 AUTO TESTING
+"""
+
+# %%
 if __name__ == "__main__":
     test_module_conv2d_tensor_compatibility()
     from tito.tools.testing import run_module_tests_auto
@@ -827,7 +838,7 @@ if __name__ == "__main__":
 
 # %% [markdown]
 """
-## 🎯 Module Summary
+## 🎯 MODULE SUMMARY: Convolutional Networks
 
 Congratulations! You've successfully implemented the core components of convolutional neural networks:
 
