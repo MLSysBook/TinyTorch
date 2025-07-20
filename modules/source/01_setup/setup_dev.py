@@ -451,18 +451,9 @@ Now let's test your configuration functions!
 Once you implement both functions above, run this cell to test them:
 """
 
-# %% nbgrader={"grade": true, "grade_id": "test-personal-info", "locked": true, "points": 25, "schema_version": 3, "solution": false, "task": false}
-# Personal info tests are handled by test_unit_personal_info_basic() function below
 
-# %% nbgrader={"grade": true, "grade_id": "test-system-info", "locked": true, "points": 25, "schema_version": 3, "solution": false, "task": false}
-# System info tests are handled by test_unit_system_info_basic() function below
 
-# %% [markdown]
-"""
-### 🧪 Inline Test Functions
 
-These test functions provide immediate feedback when developing your solutions:
-"""
 
 # %%
 def test_unit_personal_info_basic():
