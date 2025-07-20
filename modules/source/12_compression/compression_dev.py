@@ -1817,18 +1817,8 @@ Time to test your implementation! This section uses TinyTorch's standardized tes
 # =============================================================================
 
 if __name__ == "__main__":
-    # Unit tests
-    test_compression_metrics()
-    test_magnitude_pruning()
-    test_quantization()
-    test_distillation()
-    test_structured_pruning()
-    test_comprehensive_comparison()
-    # Integration tests
-    test_compression_integration()
-    test_comprehensive_compression_integration()
-
     from tito.tools.testing import run_module_tests_auto
+    
     # Automatically discover and run all tests in this module
     success = run_module_tests_auto("Compression")
 
