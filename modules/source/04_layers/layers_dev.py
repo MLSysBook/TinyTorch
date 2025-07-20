@@ -237,8 +237,6 @@ def matmul(A: np.ndarray, B: np.ndarray) -> np.ndarray:
 
 # %% [markdown]
 """
-## 🔧 DEVELOPMENT
-
 ### 🧪 Test Your Matrix Multiplication
 
 Once you implement the `matmul` function above, run this cell to test it:
@@ -631,7 +629,7 @@ It ensures that the 'Layer' abstraction works correctly with the 'Tensor' class 
 """
 
 # %%
-def test_module_layer_tensor():
+def test_module_layer_tensor_integration():
     """
     Tests that a Tensor can be passed through a Layer subclass
     and that the output is of the correct type and shape.
@@ -658,7 +656,7 @@ def test_module_layer_tensor():
     print("✅ Integration Test Passed: Layer correctly processed Tensor.")
 
 # Run the integration test
-test_module_layer_tensor()
+test_module_layer_tensor_integration()
 
 # %% [markdown]
 """
