@@ -226,6 +226,11 @@ class ReLU:
 
 # %% [markdown]
 """
+## 🔧 DEVELOPMENT
+"""
+
+# %% [markdown]
+"""
 ### 🧪 Test Your ReLU Implementation
 
 Once you implement the ReLU forward method above, run this cell to test it:
