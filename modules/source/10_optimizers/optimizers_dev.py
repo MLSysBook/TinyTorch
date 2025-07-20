@@ -1388,6 +1388,71 @@ test_unit_training_integration()
 
 
 # %% [markdown]
+# %% [markdown]
+"""
+## 🧪 Module Testing
+
+Time to test your implementation! This section uses TinyTorch's standardized testing framework to ensure your implementation works correctly.
+
+**This testing section is locked** - it provides consistent feedback across all modules and cannot be modified.
+"""
+
+# %% nbgrader={"grade": false, "grade_id": "standardized-testing", "locked": true, "schema_version": 3, "solution": false, "task": false}
+# =============================================================================
+# STANDARDIZED MODULE TESTING - DO NOT MODIFY
+# This cell is locked to ensure consistent testing across all TinyTorch modules
+# =============================================================================
+
+# %% [markdown]
+"""
+## 🔬 Integration Test: Optimizer with Autograd Variables
+"""
+
+# %%
+def test_module_optimizer_autograd_compatibility():
+    """
+    Integration test for the optimizer and autograd Variable classes.
+    
+    Tests that an optimizer can correctly update the Tensors of Variables
+    that have gradients computed by the autograd engine.
+    """
+    print("🔬 Running Integration Test: Optimizer with Autograd Variables...")
+
+    # 1. Create a parameter that requires gradients
+    w = Variable(Tensor([3.0]), requires_grad=True)
+
+    # 2. Simulate a backward pass by manually setting a gradient
+    # The gradient must also be a Tensor, wrapped in a Variable
+    w.grad = Variable(Tensor([10.0]), requires_grad=False)
+
+    # 3. Create an SGD optimizer for this parameter
+    optimizer = SGD(parameters=[w], learning_rate=0.1)
+
+    # 4. Perform an optimization step
+    optimizer.step()
+
+    # 5. Assert that the parameter's data (Tensor) has been updated
+    # new_w = 3.0 - 0.1 * 10.0 = 2.0
+    assert isinstance(w.data, Tensor), "Parameter's data should remain a Tensor"
+    assert np.allclose(w.data.data, [2.0]), f"Expected w to be 2.0, but got {w.data.data}"
+
+    print("✅ Integration Test Passed: Optimizer correctly updated Variable's Tensor data.")
+
+if __name__ == "__main__":
+    # Unit tests
+    test_unit_gradient_descent_step()
+    test_unit_sgd_optimizer()
+    test_unit_adam_optimizer()
+    test_unit_step_scheduler()
+    test_unit_training_integration()
+    # Integration test
+    test_module_optimizer_autograd_compatibility()
+
+    from tito.tools.testing import run_module_tests_auto
+    # Automatically discover and run all tests in this module
+    success = run_module_tests_auto("Optimizers")
+
+# %% [markdown]
 """
 ## 🎯 Module Summary: Optimization Mastery!
 
@@ -1456,68 +1521,4 @@ Your optimizers are the foundation for:
 **Next Module**: Complete training systems that orchestrate your optimizers for real-world ML!
 
 You've built the intelligent algorithms that enable neural networks to learn. Now let's use them to train systems that can solve complex real-world problems!
-"""
-
-# %% [markdown]
-"""
-## 🧪 Module Testing
-
-Time to test your implementation! This section uses TinyTorch's standardized testing framework to ensure your implementation works correctly.
-
-**This testing section is locked** - it provides consistent feedback across all modules and cannot be modified.
-"""
-
-# %% nbgrader={"grade": false, "grade_id": "standardized-testing", "locked": true, "schema_version": 3, "solution": false, "task": false}
-# =============================================================================
-# STANDARDIZED MODULE TESTING - DO NOT MODIFY
-# This cell is locked to ensure consistent testing across all TinyTorch modules
-# =============================================================================
-
-# %% [markdown]
-"""
-## 🔬 Integration Test: Optimizer with Autograd Variables
-"""
-
-# %%
-def test_module_optimizer_autograd_compatibility():
-    """
-    Integration test for the optimizer and autograd Variable classes.
-    
-    Tests that an optimizer can correctly update the Tensors of Variables
-    that have gradients computed by the autograd engine.
-    """
-    print("🔬 Running Integration Test: Optimizer with Autograd Variables...")
-
-    # 1. Create a parameter that requires gradients
-    w = Variable(Tensor([3.0]), requires_grad=True)
-
-    # 2. Simulate a backward pass by manually setting a gradient
-    # The gradient must also be a Tensor, wrapped in a Variable
-    w.grad = Variable(Tensor([10.0]), requires_grad=False)
-
-    # 3. Create an SGD optimizer for this parameter
-    optimizer = SGD(parameters=[w], learning_rate=0.1)
-
-    # 4. Perform an optimization step
-    optimizer.step()
-
-    # 5. Assert that the parameter's data (Tensor) has been updated
-    # new_w = 3.0 - 0.1 * 10.0 = 2.0
-    assert isinstance(w.data, Tensor), "Parameter's data should remain a Tensor"
-    assert np.allclose(w.data.data, [2.0]), f"Expected w to be 2.0, but got {w.data.data}"
-
-    print("✅ Integration Test Passed: Optimizer correctly updated Variable's Tensor data.")
-
-if __name__ == "__main__":
-    # Unit tests
-    test_unit_gradient_descent_step()
-    test_unit_sgd_optimizer()
-    test_unit_adam_optimizer()
-    test_unit_step_scheduler()
-    test_unit_training_integration()
-    # Integration test
-    test_module_optimizer_autograd_compatibility()
-
-    from tito.tools.testing import run_module_tests_auto
-    # Automatically discover and run all tests in this module
-    success = run_module_tests_auto("Optimizers") 
+""" 
