@@ -255,7 +255,7 @@ Once you implement the `matmul` function above, run this cell to test it:
 """
 
 # %% nbgrader={"grade": true, "grade_id": "test-matmul-immediate", "locked": true, "points": 10, "schema_version": 3, "solution": false, "task": false}
-def test_matrix_multiplication():
+def test_unit_matrix_multiplication():
     """Test matrix multiplication implementation"""
     print("🔬 Unit Test: Matrix Multiplication...")
 
@@ -469,7 +469,7 @@ Once you implement the Dense layer above, run this cell to test it:
 """
 
 # %% nbgrader={"grade": true, "grade_id": "test-dense-layer", "locked": true, "points": 15, "schema_version": 3, "solution": false, "task": false}
-def test_dense_layer():
+def test_unit_dense_layer():
     """Test Dense layer implementation"""
     print("🔬 Unit Test: Dense Layer...")
     
@@ -555,7 +555,7 @@ final_output = activation_function(linear_output)
 """
 
 # %% nbgrader={"grade": true, "grade_id": "test-layer-activation-comprehensive", "locked": true, "points": 15, "schema_version": 3, "solution": false, "task": false}
-def test_layer_activation():
+def test_unit_layer_activation():
     """Test Dense layer comprehensive testing with activation functions"""
     print("🔬 Unit Test: Layer-Activation Comprehensive Test...")
     
@@ -631,6 +631,45 @@ def test_layer_activation():
 
 # Run the test
 test_layer_activation()
+
+# %% [markdown]
+"""
+## 🔬 Integration Test: Layers with Tensors
+
+This is our first cumulative integration test.
+It ensures that the 'Layer' abstraction works correctly with the 'Tensor' class from the previous module.
+"""
+
+# %%
+def test_layer_tensor_integration():
+    """
+    Tests that a Tensor can be passed through a Layer subclass
+    and that the output is of the correct type and shape.
+    """
+    print("🔬 Running Integration Test: Layer with Tensor...")
+
+    # 1. Define a simple Layer that doubles the input
+    class DoubleLayer(Dense): # Inherit from Dense to get __call__
+        def forward(self, x: Tensor) -> Tensor:
+            return x * 2
+
+    # 2. Create an instance of the layer
+    double_layer = DoubleLayer(input_size=1, output_size=1) # Dummy sizes
+
+    # 3. Create a Tensor from the previous module
+    input_tensor = Tensor([1, 2, 3])
+
+    # 4. Perform the forward pass
+    output_tensor = double_layer(input_tensor)
+
+    # 5. Assert correctness
+    assert isinstance(output_tensor, Tensor), "Output should be a Tensor"
+    assert np.array_equal(output_tensor.data, np.array([2, 4, 6])), "Output data is incorrect"
+    print("✅ Integration Test Passed: Layer correctly processed Tensor.")
+
+if __name__ == "__main__":
+    test_layer_tensor_integration()
+
 
 # %% [markdown]
 """

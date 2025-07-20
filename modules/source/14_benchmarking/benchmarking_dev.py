@@ -462,8 +462,8 @@ Let's test our benchmark scenarios with a simple mock model.
 """
 
 # %% nbgrader={"grade": false, "grade_id": "test-scenarios", "locked": false, "schema_version": 3, "solution": false, "task": false}
-def test_benchmark_scenarios():
-    """Test that our benchmark scenarios work correctly."""
+def test_unit_benchmark_scenarios():
+    """Unit test for the BenchmarkScenarios class."""
     print("🔬 Unit Test: Benchmark Scenarios...")
     
     # Create a simple mock model and dataset
@@ -692,8 +692,8 @@ Let's test our statistical validation with simulated data.
 """
 
 # %% nbgrader={"grade": false, "grade_id": "test-validation", "locked": false, "schema_version": 3, "solution": false, "task": false}
-def test_statistical_validation():
-    """Test statistical validation functionality."""
+def test_unit_statistical_validation():
+    """Unit test for the StatisticalValidator class."""
     print("🔬 Unit Test: Statistical Validation...")
     
     validator = StatisticalValidator(confidence_level=0.95)
@@ -936,8 +936,8 @@ Let's test our complete benchmarking framework.
 """
 
 # %% nbgrader={"grade": false, "grade_id": "test-framework", "locked": false, "schema_version": 3, "solution": false, "task": false}
-def test_tinytorch_perf():
-    """Test the complete TinyTorchPerf framework."""
+def test_unit_tinytorch_perf():
+    """Unit test for the TinyTorchPerf framework."""
     print("🔬 Unit Test: TinyTorchPerf Framework...")
     
     # Create test model and dataset
@@ -1120,6 +1120,39 @@ This comprehensive benchmarking demonstrates {model_name}'s performance characte
             f.write(report)
         print(f"📄 Report saved to {filename}")
 
+def plot_benchmark_results(benchmark_results: Dict[str, BenchmarkResult]):
+    """Visualize benchmark results."""
+    if not _should_show_plots():
+        return
+        
+    # Create visualizations
+    fig, axes = plt.subplots(1, 3, figsize=(18, 5))
+    
+    # Latency distribution for single-stream
+    if 'single_stream' in benchmark_results:
+        axes[0].hist(benchmark_results['single_stream'].latencies, bins=50, color='skyblue')
+        axes[0].set_title("Single-Stream Latency Distribution")
+        axes[0].set_xlabel("Latency (s)")
+        axes[0].set_ylabel("Frequency")
+    
+    # Server scenario latency
+    if 'server' in benchmark_results:
+        axes[1].plot(benchmark_results['server'].latencies, marker='o', linestyle='-', color='salmon')
+        axes[1].set_title("Server Scenario Latency Over Time")
+        axes[1].set_xlabel("Query Index")
+        axes[1].set_ylabel("Latency (s)")
+    
+    # Offline scenario throughput
+    if 'offline' in benchmark_results:
+        offline_result = benchmark_results['offline']
+        throughput = len(offline_result.latencies) / sum(offline_result.latencies)
+        axes[2].bar(['Throughput'], [throughput], color='lightgreen')
+        axes[2].set_title("Offline Scenario Throughput")
+        axes[2].set_ylabel("Samples per second")
+        
+    plt.tight_layout()
+    plt.show()
+
 # %% [markdown]
 """
 ### 🧪 Unit Test: Performance Reporter
@@ -1128,8 +1161,8 @@ Let's test our professional reporting system.
 """
 
 # %% nbgrader={"grade": false, "grade_id": "test-reporter", "locked": false, "schema_version": 3, "solution": false, "task": false}
-def test_performance_reporter():
-    """Test the performance reporter."""
+def test_unit_performance_reporter():
+    """Unit test for the PerformanceReporter class."""
     print("🔬 Unit Test: Performance Reporter...")
     
     # Create mock benchmark results
@@ -1174,6 +1207,10 @@ def test_performance_reporter():
     reporter.save_report(report, "test_report.md")
     print("✅ Report saving working")
     
+    # Test plotting
+    plot_benchmark_results(mock_results)
+    print("✅ Plotting working")
+    
     print("✅ Performance reporter tests passed!")
 
 # Run the test
@@ -1187,9 +1224,9 @@ Let's test everything together with a realistic TinyTorch model.
 """
 
 # %% nbgrader={"grade": false, "grade_id": "integration-test", "locked": false, "schema_version": 3, "solution": false, "task": false}
-def test_comprehensive_benchmarking():
-    """Test the complete benchmarking system with a realistic model."""
-    print("🔬 Comprehensive Integration Test...")
+def test_module_comprehensive_benchmarking():
+    """Comprehensive integration test for the entire benchmarking system."""
+    print("🔬 Integration Test: Comprehensive Benchmarking...")
     
     # Create a realistic TinyTorch model
     def create_simple_model():

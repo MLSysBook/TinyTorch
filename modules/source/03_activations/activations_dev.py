@@ -227,8 +227,8 @@ Once you implement the ReLU forward method above, run this cell to test it:
 """
 
 # %% nbgrader={"grade": true, "grade_id": "test-relu-immediate", "locked": true, "points": 10, "schema_version": 3, "solution": false, "task": false}
-def test_relu_activation():
-    """Test ReLU activation function"""
+def test_unit_relu_activation():
+    """Unit test for the ReLU activation function."""
     print("🔬 Unit Test: ReLU Activation...")
 
     # Create ReLU instance
@@ -265,7 +265,7 @@ def test_relu_activation():
     print(f"✅ Works with multi-dimensional tensors")
 
 # Run the test
-test_relu_activation()
+test_unit_relu_activation()
 
 # %% [markdown]
 """
@@ -365,8 +365,8 @@ Once you implement the Sigmoid forward method above, run this cell to test it:
 """
 
 # %% nbgrader={"grade": true, "grade_id": "test-sigmoid-immediate", "locked": true, "points": 10, "schema_version": 3, "solution": false, "task": false}
-def test_sigmoid_activation():
-    """Test Sigmoid activation function"""
+def test_unit_sigmoid_activation():
+    """Unit test for the Sigmoid activation function."""
     print("🔬 Unit Test: Sigmoid Activation...")
 
 # Create Sigmoid instance
@@ -412,7 +412,7 @@ def test_sigmoid_activation():
     print(f"✅ Shape preservation working")
 
 # Run the test
-test_sigmoid_activation()
+test_unit_sigmoid_activation()
 
 # %% [markdown]
 """
@@ -511,8 +511,8 @@ Once you implement the Tanh forward method above, run this cell to test it:
 """
 
 # %% nbgrader={"grade": true, "grade_id": "test-tanh-immediate", "locked": true, "points": 10, "schema_version": 3, "solution": false, "task": false}
-def test_tanh_activation():
-    """Test Tanh activation function"""
+def test_unit_tanh_activation():
+    """Unit test for the Tanh activation function."""
     print("🔬 Unit Test: Tanh Activation...")
 
 # Create Tanh instance
@@ -562,7 +562,7 @@ def test_tanh_activation():
     print(f"✅ Handles extreme values correctly")
 
 # Run the test
-test_tanh_activation()
+test_unit_tanh_activation()
 
 # %% [markdown]
 """
@@ -679,8 +679,8 @@ Once you implement the Softmax forward method above, run this cell to test it:
 """
 
 # %% nbgrader={"grade": true, "grade_id": "test-softmax-immediate", "locked": true, "points": 15, "schema_version": 3, "solution": false, "task": false}
-def test_softmax_activation():
-    """Test Softmax activation function"""
+def test_unit_softmax_activation():
+    """Unit test for the Softmax activation function."""
     print("🔬 Unit Test: Softmax Activation...")
 
 # Create Softmax instance
@@ -736,7 +736,7 @@ def test_softmax_activation():
     print(f"✅ Numerically stable with large values")
 
 # Run the test
-test_softmax_activation()
+test_unit_softmax_activation()
 
 # %% [markdown]
 """
@@ -752,8 +752,8 @@ Let's test how all activation functions work together in a realistic neural netw
 """
 
 # %% nbgrader={"grade": true, "grade_id": "test-activations-comprehensive", "locked": true, "points": 15, "schema_version": 3, "solution": false, "task": false}
-def test_activations():
-    """Test all activation functions working together"""
+def test_unit_activations_comprehensive():
+    """Comprehensive unit test for all activation functions working together."""
     print("🔬 Unit Test: Activation Functions Comprehensive Test...")
     
     # Create instances of all activation functions
@@ -835,7 +835,7 @@ def test_activations():
     print(f"✅ Ready for neural network integration!")
 
 # Run the comprehensive test
-test_activations()
+test_unit_activations_comprehensive()
 
 # %% [markdown]
 """
@@ -852,7 +852,60 @@ Time to test your implementation! This section uses TinyTorch's standardized tes
 # This cell is locked to ensure consistent testing across all TinyTorch modules
 # =============================================================================
 
+# %% [markdown]
+"""
+## 🔬 Integration Test: Activations with Tensors
+"""
+
+# %%
+def test_module_activations_tensor_compatibility():
+    """
+    Integration test for activation functions and the Tensor class.
+    
+    Tests that all activation functions correctly process Tensor objects.
+    """
+    print("🔬 Running Integration Test: Activations with Tensors...")
+
+    # 1. Create a base Tensor
+    input_data = np.array([-2., -1., 0., 1., 2.])
+    input_tensor = Tensor(input_data)
+
+    # 2. Test ReLU
+    relu = ReLU()
+    relu_output = relu(input_tensor)
+    assert isinstance(relu_output, Tensor), "ReLU output should be a Tensor"
+    assert np.allclose(relu_output.data, np.maximum(0, input_data)), "ReLU calculation is incorrect"
+    print("✅ ReLU integrates correctly with Tensor.")
+
+    # 3. Test Sigmoid
+    sigmoid = Sigmoid()
+    sigmoid_output = sigmoid(input_tensor)
+    expected_sigmoid = 1 / (1 + np.exp(-input_data))
+    assert isinstance(sigmoid_output, Tensor), "Sigmoid output should be a Tensor"
+    assert np.allclose(sigmoid_output.data, expected_sigmoid), "Sigmoid calculation is incorrect"
+    print("✅ Sigmoid integrates correctly with Tensor.")
+
+    # 4. Test Tanh
+    tanh = Tanh()
+    tanh_output = tanh(input_tensor)
+    assert isinstance(tanh_output, Tensor), "Tanh output should be a Tensor"
+    assert np.allclose(tanh_output.data, np.tanh(input_data)), "Tanh calculation is incorrect"
+    print("✅ Tanh integrates correctly with Tensor.")
+
+    # 5. Test Softmax
+    softmax = Softmax()
+    softmax_output = softmax(input_tensor)
+    exp_x = np.exp(input_data - np.max(input_data))
+    expected_softmax = exp_x / exp_x.sum(axis=0)
+    assert isinstance(softmax_output, Tensor), "Softmax output should be a Tensor"
+    assert np.allclose(softmax_output.data, expected_softmax), "Softmax calculation is incorrect"
+    assert abs(softmax_output.data.sum() - 1.0) < 1e-6, "Softmax output should sum to 1"
+    print("✅ Softmax integrates correctly with Tensor.")
+
+    print("✅ Integration Test Passed: All activation functions are compatible with Tensors.")
+
 if __name__ == "__main__":
+    test_module_activations_tensor_compatibility()
     from tito.tools.testing import run_module_tests_auto
     
     # Automatically discover and run all tests in this module

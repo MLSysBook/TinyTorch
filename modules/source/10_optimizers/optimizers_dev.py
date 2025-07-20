@@ -258,8 +258,8 @@ Let's test your gradient descent implementation right away! This is the foundati
 """
 
 # %% nbgrader={"grade": true, "grade_id": "test-gradient-descent", "locked": true, "points": 10, "schema_version": 3, "solution": false, "task": false}
-def test_gradient_descent_step():
-    """Test basic gradient descent parameter update"""
+def test_unit_gradient_descent_step():
+    """Unit test for the basic gradient descent parameter update."""
     print("🔬 Unit Test: Gradient Descent Step...")
     
     # Test basic parameter update
@@ -510,8 +510,8 @@ Let's test your SGD optimizer implementation! This optimizer adds momentum to gr
 """
 
 # %% nbgrader={"grade": true, "grade_id": "test-sgd", "locked": true, "points": 15, "schema_version": 3, "solution": false, "task": false}
-def test_sgd_optimizer():
-    """Test SGD optimizer implementation"""
+def test_unit_sgd_optimizer():
+    """Unit test for the SGD optimizer implementation."""
     print("🔬 Unit Test: SGD Optimizer...")
     
     # Create test parameters
@@ -598,7 +598,7 @@ def test_sgd_optimizer():
     print("📈 Progress: SGD Optimizer ✓")
 
 # Run the test
-test_sgd_optimizer()
+test_unit_sgd_optimizer()
 
 # %% [markdown]
 """
@@ -816,8 +816,8 @@ Let's test your Adam optimizer implementation! This is a state-of-the-art adapti
 """
 
 # %% nbgrader={"grade": true, "grade_id": "test-adam", "locked": true, "points": 20, "schema_version": 3, "solution": false, "task": false}
-def test_adam_optimizer():
-    """Test Adam optimizer implementation"""
+def test_unit_adam_optimizer():
+    """Unit test for the Adam optimizer implementation."""
     print("🔬 Unit Test: Adam Optimizer...")
     
     # Create test parameters
@@ -914,7 +914,7 @@ def test_adam_optimizer():
     print("📈 Progress: Adam Optimizer ✓")
 
 # Run the test
-test_adam_optimizer()
+test_unit_adam_optimizer()
 
 # %% [markdown]
 """
@@ -1062,8 +1062,8 @@ Let's test your step learning rate scheduler implementation! This scheduler redu
 """
 
 # %% nbgrader={"grade": true, "grade_id": "test-step-scheduler", "locked": true, "points": 10, "schema_version": 3, "solution": false, "task": false}
-def test_step_scheduler():
-    """Test StepLR scheduler implementation"""
+def test_unit_step_scheduler():
+    """Unit test for the StepLR scheduler implementation."""
     print("🔬 Unit Test: Step Learning Rate Scheduler...")
     
     # Create test parameters and optimizer
@@ -1151,7 +1151,7 @@ def test_step_scheduler():
     print("📈 Progress: Step Learning Rate Scheduler ✓")
 
 # Run the test
-test_step_scheduler()
+test_unit_step_scheduler()
 
 # %% [markdown]
 """
@@ -1312,8 +1312,8 @@ Let's test your complete training integration! This demonstrates optimizers work
 """
 
 # %% nbgrader={"grade": true, "grade_id": "test-training-integration", "locked": true, "points": 25, "schema_version": 3, "solution": false, "task": false}
-def test_training_integration():
-    """Test complete training integration with optimizers"""
+def test_unit_training_integration():
+    """Comprehensive unit test for complete training integration with optimizers."""
     print("🔬 Unit Test: Complete Training Integration...")
     
     # Test training with SGD and Adam
@@ -1383,7 +1383,7 @@ def test_training_integration():
     print("📈 Progress: Complete Training Integration ✓")
 
 # Run the test
-test_training_integration()
+test_unit_training_integration()
 
 # %% [markdown]
 """
@@ -1471,8 +1471,51 @@ Time to test your implementation! This section uses TinyTorch's standardized tes
 # This cell is locked to ensure consistent testing across all TinyTorch modules
 # =============================================================================
 
-if __name__ == "__main__":
-    from tito.tools.testing import run_module_tests_auto
+# %% [markdown]
+"""
+## 🔬 Integration Test: Optimizer with Autograd Variables
+"""
+
+# %%
+def test_module_optimizer_autograd_compatibility():
+    """
+    Integration test for the optimizer and autograd Variable classes.
     
+    Tests that an optimizer can correctly update the Tensors of Variables
+    that have gradients computed by the autograd engine.
+    """
+    print("🔬 Running Integration Test: Optimizer with Autograd Variables...")
+
+    # 1. Create a parameter that requires gradients
+    w = Variable(Tensor([3.0]), requires_grad=True)
+
+    # 2. Simulate a backward pass by manually setting a gradient
+    # The gradient must also be a Tensor, wrapped in a Variable
+    w.grad = Variable(Tensor([10.0]), requires_grad=False)
+
+    # 3. Create an SGD optimizer for this parameter
+    optimizer = SGD(parameters=[w], learning_rate=0.1)
+
+    # 4. Perform an optimization step
+    optimizer.step()
+
+    # 5. Assert that the parameter's data (Tensor) has been updated
+    # new_w = 3.0 - 0.1 * 10.0 = 2.0
+    assert isinstance(w.data, Tensor), "Parameter's data should remain a Tensor"
+    assert np.allclose(w.data.data, [2.0]), f"Expected w to be 2.0, but got {w.data.data}"
+
+    print("✅ Integration Test Passed: Optimizer correctly updated Variable's Tensor data.")
+
+if __name__ == "__main__":
+    # Unit tests
+    test_unit_gradient_descent_step()
+    test_unit_sgd_optimizer()
+    test_unit_adam_optimizer()
+    test_unit_step_scheduler()
+    test_unit_training_integration()
+    # Integration test
+    test_module_optimizer_autograd_compatibility()
+
+    from tito.tools.testing import run_module_tests_auto
     # Automatically discover and run all tests in this module
     success = run_module_tests_auto("Optimizers") 

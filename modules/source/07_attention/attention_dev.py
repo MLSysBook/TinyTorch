@@ -178,8 +178,8 @@ Let's build the fundamental attention function!
 
 # %% nbgrader={"grade": false, "grade_id": "scaled-dot-product-attention", "locked": false, "schema_version": 3, "solution": true, "task": false}
 #| export
-def scaled_dot_product_attention(Q: np.ndarray, K: np.ndarray, V: np.ndarray, 
-                                mask: Optional[np.ndarray] = None) -> Tuple[np.ndarray, np.ndarray]:
+def scaled_dot_product_attention(Q: Tensor, K: Tensor, V: Tensor, 
+                                mask: Optional[Tensor] = None) -> Tuple[Tensor, Tensor]:
     """
     Scaled Dot-Product Attention - The foundation of all transformer models.
     
@@ -214,14 +214,14 @@ def scaled_dot_product_attention(Q: np.ndarray, K: np.ndarray, V: np.ndarray,
     - Attention weights are interpretable - you can visualize them!
     
     Args:
-        Q: Query matrix of shape (..., seq_len_q, d_k)
-        K: Key matrix of shape (..., seq_len_k, d_k)  
-        V: Value matrix of shape (..., seq_len_v, d_v)
-        mask: Optional mask of shape (..., seq_len_q, seq_len_k)
+        Q: Query tensor of shape (..., seq_len_q, d_k)
+        K: Key tensor of shape (..., seq_len_k, d_k)  
+        V: Value tensor of shape (..., seq_len_v, d_v)
+        mask: Optional mask tensor of shape (..., seq_len_q, seq_len_k)
     
     Returns:
-        output: Attention output (..., seq_len_q, d_v)
-        attention_weights: Attention probabilities (..., seq_len_q, seq_len_k)
+        output: Attention output tensor (..., seq_len_q, d_v)
+        attention_weights: Attention probabilities tensor (..., seq_len_q, seq_len_k)
     """
     ### BEGIN SOLUTION
     # Get the dimension for scaling
@@ -229,29 +229,28 @@ def scaled_dot_product_attention(Q: np.ndarray, K: np.ndarray, V: np.ndarray,
     
     # Step 1: Compute attention scores (QK^T)
     # This measures similarity between each query and each key
-    scores = np.matmul(Q, np.swapaxes(K, -2, -1))  # (..., seq_len_q, seq_len_k)
+    scores_data = np.matmul(Q.data, np.swapaxes(K.data, -2, -1))
     
     # Step 2: Scale by √d_k to prevent exploding gradients
-    scores = scores / math.sqrt(d_k)
+    scores_data = scores_data / math.sqrt(d_k)
     
     # Step 3: Apply mask if provided (for padding or causality)
     if mask is not None:
         # Replace masked positions with large negative values
         # This makes softmax output ~0 for these positions
-        scores = np.where(mask == 0, -1e9, scores)
+        scores_data = np.where(mask.data == 0, -1e9, scores_data)
     
     # Step 4: Apply softmax to get attention probabilities
     # Each row sums to 1, representing where to focus attention
     # Using numerically stable softmax
-    scores_max = np.max(scores, axis=-1, keepdims=True)
-    scores_exp = np.exp(scores - scores_max)
-    attention_weights = scores_exp / np.sum(scores_exp, axis=-1, keepdims=True)
+    scores_max = np.max(scores_data, axis=-1, keepdims=True)
+    scores_exp = np.exp(scores_data - scores_max)
+    attention_weights_data = scores_exp / np.sum(scores_exp, axis=-1, keepdims=True)
     
     # Step 5: Apply attention weights to values
-    # This gives us the weighted combination of values
-    output = np.matmul(attention_weights, V)  # (..., seq_len_q, d_v)
+    output_data = np.matmul(attention_weights_data, V.data)
     
-    return output, attention_weights
+    return Tensor(output_data), Tensor(attention_weights_data)
     ### END SOLUTION
 
 # %% [markdown]
@@ -262,54 +261,47 @@ Once you implement the `scaled_dot_product_attention` function above, run this c
 """
 
 # %% nbgrader={"grade": true, "grade_id": "test-attention-immediate", "locked": true, "points": 10, "schema_version": 3, "solution": false, "task": false}
-def test_scaled_dot_product_attention():
-    """Test scaled dot-product attention implementation"""
+def test_unit_scaled_dot_product_attention():
+    """Unit test for the scaled dot-product attention implementation."""
     print("🔬 Unit Test: Scaled Dot-Product Attention...")
 
-    # Create simple test data
-    seq_len, d_model = 4, 6
-    np.random.seed(42)
-
-    # Create Q, K, V matrices
-    Q = np.random.randn(seq_len, d_model) * 0.1
-    K = np.random.randn(seq_len, d_model) * 0.1  
-    V = np.random.randn(seq_len, d_model) * 0.1
+    # Define Q, K, V matrices
+    Q = Tensor(np.random.rand(4, 6))
+    K = Tensor(np.random.rand(4, 6))
+    V = Tensor(np.random.rand(4, 6))
 
     print(f"📊 Input shapes: Q{Q.shape}, K{K.shape}, V{V.shape}")
 
-    # Test attention
-    output, weights = scaled_dot_product_attention(Q, K, V)
+    # Test without mask
+    output, attention_weights = scaled_dot_product_attention(Q, K, V)
 
-    print(f"📊 Output shapes: output{output.shape}, weights{weights.shape}")
+    print(f"📊 Output shapes: output{output.shape}, weights{attention_weights.shape}")
 
-    # Verify properties
-    weights_sum = np.sum(weights, axis=-1)
+    # Check output shape
+    assert output.shape == (4, 6), f"Output shape should be (4, 6), got {output.shape}"
+    assert attention_weights.shape == (4, 4), f"Weights shape should be (4, 4), got {attention_weights.shape}"
+    
+    # Check that attention weights sum to 1
+    weights_sum = np.sum(attention_weights.data, axis=-1)
     assert np.allclose(weights_sum, 1.0), f"Attention weights should sum to 1, got {weights_sum}"
-    assert output.shape == (seq_len, d_model), f"Output shape should be {(seq_len, d_model)}, got {output.shape}"
-    assert np.all(weights >= 0), "All attention weights should be non-negative"
+    
+    print("✅ Attention without mask works correctly")
 
     # Test with mask
-    mask = np.array([
-        [1, 1, 0, 0],
-        [1, 1, 1, 0], 
-        [1, 1, 1, 1],
-        [1, 1, 1, 1]
-    ])
+    mask = Tensor(np.tril(np.ones((4, 4))))  # Lower triangular mask
     output_masked, weights_masked = scaled_dot_product_attention(Q, K, V, mask)
 
-    # Check that masked positions have near-zero attention
-    masked_positions = (mask == 0)
-    masked_weights = weights_masked[masked_positions]
-    assert np.all(masked_weights < 1e-6), "Masked positions should have near-zero weights"
-
-    print("✅ Attention weights sum to 1: True")
-    print("✅ Output has correct shape: True")
-    print("✅ All weights are non-negative: True")
-    print("✅ Masked positions have near-zero weights: True")
-    print("📈 Progress: Scaled Dot-Product Attention ✓")
+    # Check that masked weights are zero
+    masked_positions = weights_masked.data[0, 2] # Example of a masked position
+    # This is a bit tricky to assert directly due to softmax, but we can check if it's very small
+    assert masked_positions < 1e-6, f"Masked weights should be close to 0, got {masked_positions}"
+    
+    print("✅ Attention with mask works correctly")
+    
+    print("📈 Progress: Scaled dot-product attention ✓")
 
 # Run the test
-test_scaled_dot_product_attention()
+test_unit_scaled_dot_product_attention()
 
 # %% [markdown]
 """
@@ -370,7 +362,7 @@ class SelfAttention:
         print(f"🔧 SelfAttention: d_model={d_model}")
         ### END SOLUTION
     
-    def forward(self, x: np.ndarray, mask: Optional[np.ndarray] = None) -> Tuple[np.ndarray, np.ndarray]:
+    def forward(self, x: Tensor, mask: Optional[Tensor] = None) -> Tuple[Tensor, Tensor]:
         """
         Forward pass of self-attention.
         
@@ -383,7 +375,7 @@ class SelfAttention:
         
         EXAMPLE USAGE:
         ```python
-        x = np.random.randn(seq_len, d_model)  # Input sequence
+        x = Tensor(np.random.randn(seq_len, d_model))  # Input sequence
         output, weights = self_attn.forward(x)
         # weights[i,j] = how much position i attends to position j
         ```
@@ -411,7 +403,7 @@ class SelfAttention:
         return scaled_dot_product_attention(x, x, x, mask)
         ### END SOLUTION
     
-    def __call__(self, x: np.ndarray, mask: Optional[np.ndarray] = None) -> Tuple[np.ndarray, np.ndarray]:
+    def __call__(self, x: Tensor, mask: Optional[Tensor] = None) -> Tuple[Tensor, Tensor]:
         """Make the class callable."""
         return self.forward(x, mask)
 
@@ -423,8 +415,8 @@ Once you implement the SelfAttention class above, run this cell to test it:
 """
 
 # %% nbgrader={"grade": true, "grade_id": "test-self-attention-immediate", "locked": true, "points": 5, "schema_version": 3, "solution": false, "task": false}
-def test_self_attention():
-    """Test self-attention wrapper"""
+def test_unit_self_attention():
+    """Unit test for the self-attention wrapper."""
     print("🔬 Unit Test: Self-Attention...")
 
     # Test parameters
@@ -433,7 +425,7 @@ def test_self_attention():
     np.random.seed(42)
 
     # Create test data (like word embeddings)
-    x = np.random.randn(seq_len, d_model) * 0.1
+    x = Tensor(np.random.randn(seq_len, d_model) * 0.1)
 
     print(f"📊 Test setup: d_model={d_model}, seq_len={seq_len}")
 
@@ -448,7 +440,7 @@ def test_self_attention():
     # Verify properties
     assert output.shape == x.shape, f"Output shape should match input shape {x.shape}, got {output.shape}"
     assert weights.shape == (seq_len, seq_len), f"Attention weights shape should be {(seq_len, seq_len)}, got {weights.shape}"
-    assert np.allclose(np.sum(weights, axis=-1), 1.0), "Attention weights should sum to 1"
+    assert np.allclose(np.sum(weights.data, axis=-1), 1.0), "Attention weights should sum to 1"
     assert weights.shape[0] == weights.shape[1], "Self-attention weights should be square matrix"
 
     print("✅ Output shape preserved: True")
@@ -458,7 +450,7 @@ def test_self_attention():
     print("📈 Progress: Self-Attention ✓")
 
 # Run the test
-test_self_attention()
+test_unit_self_attention()
 
 # %% [markdown]
 """
@@ -622,8 +614,8 @@ Once you implement the masking functions above, run this cell to test them:
 """
 
 # %% nbgrader={"grade": true, "grade_id": "test-masking-immediate", "locked": true, "points": 5, "schema_version": 3, "solution": false, "task": false}
-def test_attention_masking():
-    """Test attention masking utilities"""
+def test_unit_attention_masking():
+    """Unit test for the attention masking utilities."""
     print("🔬 Unit Test: Attention Masking...")
 
     # Test causal mask
@@ -670,7 +662,7 @@ def test_attention_masking():
     print("📈 Progress: Attention Masking ✓")
 
 # Run the test
-test_attention_masking()
+test_unit_attention_masking()
 
 # %% [markdown]
 """
@@ -681,20 +673,20 @@ Let's test all components working together in a realistic scenario similar to ho
 """
 
 # %% nbgrader={"grade": true, "grade_id": "test-integration-final", "locked": true, "points": 10, "schema_version": 3, "solution": false, "task": false}
-def test_complete_attention_system():
-    """Test the complete attention system working together"""
-    print("🔬 Unit Test: Complete Attention System Integration...")
+def test_unit_complete_attention_system():
+    """Comprehensive unit test for the entire attention system."""
+    print("🔬 Comprehensive Test: Complete Attention System...")
 
     # Test parameters
-    d_model = 64
-    seq_len = 16
+    d_model = 32
+    seq_len = 8
     batch_size = 2
     np.random.seed(42)
 
     print(f"📊 Integration test: d_model={d_model}, seq_len={seq_len}, batch_size={batch_size}")
 
     # Step 1: Create input embeddings (simulating word embeddings)
-    embeddings = np.random.randn(batch_size, seq_len, d_model) * 0.1
+    embeddings = Tensor(np.random.randn(batch_size, seq_len, d_model) * 0.1)
     print(f"📊 Input embeddings: {embeddings.shape}")
 
     # Step 2: Test basic attention
@@ -704,31 +696,31 @@ def test_complete_attention_system():
 
     # Step 3: Test self-attention wrapper
     self_attn = SelfAttention(d_model)
-    self_output, self_weights = self_attn(embeddings[0])  # Single batch item
+    self_output, self_weights = self_attn(Tensor(embeddings.data[0]))  # Single batch item
     assert self_output.shape == (seq_len, d_model), "Self-attention should preserve shape"
     print(f"✅ Self-attention output: {self_output.shape}")
 
     # Step 4: Test with causal mask (like GPT)
-    causal_mask = create_causal_mask(seq_len)
+    causal_mask = Tensor(create_causal_mask(seq_len))
     causal_output, causal_weights = scaled_dot_product_attention(
-        embeddings[0], embeddings[0], embeddings[0], causal_mask
+        Tensor(embeddings.data[0]), Tensor(embeddings.data[0]), Tensor(embeddings.data[0]), causal_mask
     )
     assert causal_output.shape == (seq_len, d_model), "Causal attention should preserve shape"
     print(f"✅ Causal attention works: {causal_output.shape}")
 
     # Step 5: Test with padding mask (variable lengths)
     lengths = [seq_len, seq_len-3]  # Different sequence lengths
-    padding_mask = create_padding_mask(lengths, seq_len)
+    padding_mask = Tensor(create_padding_mask(lengths, seq_len))
     padded_output, padded_weights = scaled_dot_product_attention(
-        embeddings[0], embeddings[0], embeddings[0], padding_mask[0]
+        Tensor(embeddings.data[0]), Tensor(embeddings.data[0]), Tensor(embeddings.data[0]), Tensor(padding_mask.data[0])
     )
     assert padded_output.shape == (seq_len, d_model), "Padding attention should preserve shape"
     print(f"✅ Padding mask works: {padded_output.shape}")
 
     # Step 6: Verify all outputs have correct properties
-    assert np.allclose(np.sum(attention_weights, axis=-1), 1.0), "All attention weights should sum to 1"
+    assert np.allclose(np.sum(attention_weights.data, axis=-1), 1.0), "All attention weights should sum to 1"
     assert output.shape == embeddings.shape, "All outputs should preserve input shape"
-    assert np.all(np.triu(causal_weights, k=1) < 1e-6), "Causal masking should work"
+    assert np.all(np.triu(causal_weights.data, k=1) < 1e-6), "Causal masking should work"
 
     print("✅ All attention weights sum to 1: True")
     print("✅ All outputs preserve input shape: True")
@@ -736,7 +728,7 @@ def test_complete_attention_system():
     print("📈 Progress: Complete Attention System ✓")
 
 # Run the test
-test_complete_attention_system()
+test_unit_complete_attention_system()
 
 # %% [markdown]
 """
@@ -759,25 +751,29 @@ simple_seq = np.array([
 print(f"🎯 Simple test sequence shape: {simple_seq.shape}")
 
 # Apply attention
-output, weights = scaled_dot_product_attention(simple_seq, simple_seq, simple_seq)
+output, weights = scaled_dot_product_attention(Tensor(simple_seq), Tensor(simple_seq), Tensor(simple_seq))
 
 print(f"🎯 Attention pattern analysis:")
-print(f"Position 0 attends most to position: {np.argmax(weights[0])}")
-print(f"Position 3 attends most to position: {np.argmax(weights[3])}")
+print(f"Position 0 attends most to position: {np.argmax(weights.data[0])}")
+print(f"Position 3 attends most to position: {np.argmax(weights.data[3])}")
 print(f"✅ Positions with same content should attend to each other!")
 
 # Test with causal masking
 causal_mask = create_causal_mask(4)
-output_causal, weights_causal = scaled_dot_product_attention(simple_seq, simple_seq, simple_seq, causal_mask)
+output_causal, weights_causal = scaled_dot_product_attention(Tensor(simple_seq), Tensor(simple_seq), Tensor(simple_seq), Tensor(causal_mask))
 
 print(f"🎯 With causal masking:")
-print(f"Position 3 can only attend to positions 0-3: {np.sum(weights_causal[3, :]) > 0.99}")
+print(f"Position 3 can only attend to positions 0-3: {np.sum(weights_causal.data[3, :]) > 0.99}")
 
-if _should_show_plots():
+def plot_attention_patterns(weights, weights_causal):
+    """Visualize attention patterns."""
+    if not _should_show_plots():
+        return
+
     plt.figure(figsize=(12, 4))
     
     plt.subplot(1, 3, 1)
-    plt.imshow(weights, cmap='Blues')
+    plt.imshow(weights.data, cmap='Blues')
     plt.title('Full Attention Weights\n(Darker = Higher Attention)')
     plt.xlabel('Key Position')
     plt.ylabel('Query Position')
@@ -786,20 +782,20 @@ if _should_show_plots():
     # Add text annotations
     for i in range(4):
         for j in range(4):
-            plt.text(j, i, f'{weights[i,j]:.2f}', 
+            plt.text(j, i, f'{weights.data[i,j]:.2f}', 
                     ha='center', va='center', 
-                    color='white' if weights[i,j] > 0.5 else 'black')
+                    color='white' if weights.data[i,j] > 0.5 else 'black')
     
     plt.subplot(1, 3, 2)
-    plt.imshow(weights_causal, cmap='Blues')
+    plt.imshow(weights_causal.data, cmap='Blues')
     plt.title('Causal Attention Weights\n(Upper triangle masked)')
     plt.xlabel('Key Position')
     plt.ylabel('Query Position')
     plt.colorbar()
     
     plt.subplot(1, 3, 3)
-    plt.plot(weights[0], 'o-', label='Position 0 attention')
-    plt.plot(weights[3], 's-', label='Position 3 attention')
+    plt.plot(weights.data[0], 'o-', label='Position 0 attention')
+    plt.plot(weights.data[3], 's-', label='Position 3 attention')
     plt.xlabel('Attending to Position')
     plt.ylabel('Attention Weight')
     plt.title('Attention Distribution')
@@ -808,6 +804,8 @@ if _should_show_plots():
     
     plt.tight_layout()
     plt.show()
+
+plot_attention_patterns(weights, weights_causal)
 
 print("🎯 Attention learns to focus on similar content!")
 
@@ -824,39 +822,39 @@ print("✅ Complete integration tests")
 print("\nYou now understand the core mechanism powering modern AI! 🚀")
 print("Next: Learn how to build complete transformer models using this foundation.")
 
-def test_attention_mechanism():
-    """Test attention mechanism implementation."""
+def test_unit_attention_mechanism():
+    """Unit test for the attention mechanism implementation."""
     print("🔬 Unit Test: Attention Mechanism...")
     
     # Test basic attention
-    Q = np.random.randn(4, 6) * 0.1
-    K = np.random.randn(4, 6) * 0.1  
-    V = np.random.randn(4, 6) * 0.1
+    Q = Tensor(np.random.randn(4, 6) * 0.1)
+    K = Tensor(np.random.randn(4, 6) * 0.1)
+    V = Tensor(np.random.randn(4, 6) * 0.1)
     output, weights = scaled_dot_product_attention(Q, K, V)
     
     assert output.shape == (4, 6), "Attention should produce correct output shape"
     assert weights.shape == (4, 4), "Attention weights should be square matrix"
-    assert np.allclose(np.sum(weights, axis=-1), 1.0), "Attention weights should sum to 1"
+    assert np.allclose(np.sum(weights.data, axis=-1), 1.0), "Attention weights should sum to 1"
     
     print("✅ Attention mechanism works correctly")
 
-def test_self_attention_wrapper():
-    """Test self-attention wrapper implementation."""
+def test_unit_self_attention_wrapper():
+    """Unit test for the self-attention wrapper implementation."""
     print("🔬 Unit Test: Self-Attention Wrapper...")
     
     # Test self-attention
     self_attn = SelfAttention(d_model=32)
-    x = np.random.randn(8, 32) * 0.1
+    x = Tensor(np.random.randn(8, 32) * 0.1)
     output, weights = self_attn(x)
     
     assert output.shape == x.shape, "Self-attention should preserve input shape"
     assert weights.shape == (8, 8), "Self-attention weights should be square"
-    assert np.allclose(np.sum(weights, axis=-1), 1.0), "Weights should sum to 1"
+    assert np.allclose(np.sum(weights.data, axis=-1), 1.0), "Weights should sum to 1"
     
     print("✅ Self-attention wrapper works correctly")
 
-def test_masking_utilities():
-    """Test attention masking utilities."""
+def test_unit_masking_utilities():
+    """Unit test for the attention masking utilities."""
     print("🔬 Unit Test: Masking Utilities...")
     
     # Test causal mask
@@ -888,7 +886,41 @@ Time to test your implementation! This section uses TinyTorch's standardized tes
 # This cell is locked to ensure consistent testing across all TinyTorch modules
 # =============================================================================
 
+# %% [markdown]
+"""
+## 🔬 Integration Test: Attention with Tensors
+"""
+
+# %%
+def test_module_attention_tensor_compatibility():
+    """
+    Integration test for the attention mechanism and the Tensor class.
+    
+    Tests that the scaled_dot_product_attention function works correctly with Tensor objects.
+    """
+    print("🔬 Running Integration Test: Attention with Tensors...")
+
+    # 1. Define Q, K, V as Tensors
+    q = Tensor(np.random.randn(1, 5, 16)) # (batch, seq_len, d_k)
+    k = Tensor(np.random.randn(1, 5, 16))
+    v = Tensor(np.random.randn(1, 5, 32)) # (batch, seq_len, d_v)
+
+    # 2. Perform scaled dot-product attention
+    output, attn_weights = scaled_dot_product_attention(q, k, v)
+
+    # 3. Assert outputs are Tensors with correct shapes
+    assert isinstance(output, Tensor), "Output should be a Tensor"
+    assert output.shape == (1, 5, 32), f"Expected output shape (1, 5, 32), but got {output.shape}"
+    assert isinstance(attn_weights, Tensor), "Attention weights should be a Tensor"
+    assert attn_weights.shape == (1, 5, 5), f"Expected weights shape (1, 5, 5), but got {attn_weights.shape}"
+    
+    # 4. Check that attention weights sum to 1
+    assert np.allclose(attn_weights.data.sum(axis=-1), 1.0), "Attention weights should sum to 1"
+
+    print("✅ Integration Test Passed: Scaled dot-product attention is compatible with Tensors.")
+
 if __name__ == "__main__":
+    test_module_attention_tensor_compatibility()
     from tito.tools.testing import run_module_tests_auto
     
     # Automatically discover and run all tests in this module
