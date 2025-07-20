@@ -310,8 +310,6 @@ class Variable:
 
 # %% [markdown]
 """
-## 🔧 DEVELOPMENT
-
 ### 🧪 Test Your Variable Class
 
 Once you implement the Variable class above, run this cell to test it:

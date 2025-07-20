@@ -578,7 +578,9 @@ plot_network_architectures()
 
 # %% [markdown]
 """
-## 🔧 DEVELOPMENT
+### 🧪 Unit Test: Network Architecture Variations
+
+This test validates different neural network architectures created with various activation functions. It ensures that networks with ReLU, Tanh, and Softmax activations work correctly, and tests both shallow and deep network configurations for comprehensive architecture validation.
 """
 
 # %%
