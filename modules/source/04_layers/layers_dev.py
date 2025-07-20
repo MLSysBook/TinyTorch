@@ -629,7 +629,7 @@ It ensures that the 'Layer' abstraction works correctly with the 'Tensor' class 
 """
 
 # %%
-def test_layer_tensor_integration():
+def test_integration_layer_tensor():
     """
     Tests that a Tensor can be passed through a Layer subclass
     and that the output is of the correct type and shape.
@@ -656,7 +656,7 @@ def test_layer_tensor_integration():
     print("✅ Integration Test Passed: Layer correctly processed Tensor.")
 
 # Run the integration test
-test_layer_tensor_integration()
+test_integration_layer_tensor()
 
 # %% [markdown]
 """
