@@ -87,6 +87,11 @@ def _should_show_plots():
 
 # %% [markdown]
 """
+## 🔧 DEVELOPMENT
+"""
+
+# %% [markdown]
+"""
 ## Step 1: Understanding Loss Functions
 
 ### What are Loss Functions?
@@ -1128,6 +1133,11 @@ Time to test your implementation! This section uses TinyTorch's standardized tes
 **This testing section is locked** - it provides consistent feedback across all modules and cannot be modified.
 """
 
+# %% [markdown]
+"""
+## 🤖 AUTO TESTING
+"""
+
 # %% nbgrader={"grade": false, "grade_id": "standardized-testing", "locked": true, "schema_version": 3, "solution": false, "task": false}
 # =============================================================================
 # STANDARDIZED MODULE TESTING - DO NOT MODIFY
@@ -1142,7 +1152,7 @@ if __name__ == "__main__":
 
 # %% [markdown]
 """
-## 🎯 Module Summary: Neural Network Training Mastery!
+## 🎯 MODULE SUMMARY: Neural Network Training
 
 Congratulations! You've successfully implemented the complete training system that powers modern neural networks:
 
