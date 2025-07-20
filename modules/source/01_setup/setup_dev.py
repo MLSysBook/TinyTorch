@@ -490,6 +490,9 @@ def test_unit_personal_info_basic():
     print("✅ Personal info function tests passed!")
     print(f"✅ TinyTorch configured for: {personal['developer']}")
 
+# Run the test
+test_unit_personal_info_basic()
+
 # %%
 def test_unit_system_info_basic():
     """Test system_info function implementation."""
@@ -524,6 +527,9 @@ def test_unit_system_info_basic():
     
     print("✅ System info function tests passed!")
     print(f"✅ Python: {sys_info['python_version']} on {sys_info['platform']}")
+
+# Run the test
+test_unit_system_info_basic()
 
 # %% [markdown]
 """
