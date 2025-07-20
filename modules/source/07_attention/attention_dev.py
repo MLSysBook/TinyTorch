@@ -104,6 +104,11 @@ from tinytorch.core.tensor import Tensor  # Foundation
 
 # %% [markdown]
 """
+## 🔧 DEVELOPMENT
+"""
+
+# %% [markdown]
+"""
 ## Step 1: Understanding Attention - The Revolutionary Mechanism
 
 ### What is Attention?
@@ -919,6 +924,12 @@ def test_module_attention_tensor_compatibility():
 
     print("✅ Integration Test Passed: Scaled dot-product attention is compatible with Tensors.")
 
+# %% [markdown]
+"""
+## 🤖 AUTO TESTING
+"""
+
+# %%
 if __name__ == "__main__":
     test_module_attention_tensor_compatibility()
     from tito.tools.testing import run_module_tests_auto
@@ -928,7 +939,7 @@ if __name__ == "__main__":
 
 # %% [markdown]
 """
-## 🎯 Module Summary
+## 🎯 MODULE SUMMARY: Attention Mechanisms
 
 Congratulations! You've successfully implemented the revolutionary attention mechanism that powers all modern AI systems:
 
