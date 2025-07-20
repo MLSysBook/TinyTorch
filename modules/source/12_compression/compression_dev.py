@@ -396,7 +396,7 @@ def test_unit_compression_metrics():
     print()
 
 # Run the test
-test_compression_metrics() 
+test_unit_compression_metrics() 
 
 # %% [markdown]
 """
@@ -622,7 +622,7 @@ def test_unit_magnitude_pruning():
     print()
 
 # Run the test
-test_magnitude_pruning() 
+test_unit_magnitude_pruning() 
 
 # %% [markdown]
 """
@@ -810,7 +810,7 @@ def test_unit_quantization():
     print()
 
 # Run the test
-test_quantization() 
+test_unit_quantization() 
 
 # %% [markdown]
 """
@@ -1032,7 +1032,7 @@ def test_unit_distillation():
     print()
 
 # Run the test
-test_distillation() 
+test_unit_distillation() 
 
 # %% [markdown]
 """
@@ -1315,7 +1315,7 @@ def test_unit_structured_pruning():
     print()
 
 # Run the test
-test_structured_pruning() 
+test_unit_structured_pruning() 
 
 # %% [markdown]
 """
@@ -1659,7 +1659,7 @@ def test_unit_comprehensive_comparison():
     print()
 
 # Run the test
-test_comprehensive_comparison()
+test_unit_comprehensive_comparison()
 
 # %%
 def test_compression_integration():
