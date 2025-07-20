@@ -576,6 +576,12 @@ def plot_network_architectures():
 
 plot_network_architectures()
 
+# %% [markdown]
+"""
+## 🔧 DEVELOPMENT
+"""
+
+# %%
 def test_unit_network_architectures():
     """Unit test for different network architectures."""
     # Test different architectures
