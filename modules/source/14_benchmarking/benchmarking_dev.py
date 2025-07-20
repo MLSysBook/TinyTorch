@@ -466,11 +466,6 @@ class BenchmarkScenarios:
 
 # %% [markdown]
 """
-## 🔧 DEVELOPMENT
-"""
-
-# %% [markdown]
-"""
 ### 🧪 Unit Test: Benchmark Scenarios
 
 Let's test our benchmark scenarios with a simple mock model.

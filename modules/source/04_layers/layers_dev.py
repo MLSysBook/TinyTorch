@@ -254,11 +254,6 @@ def matmul(A: np.ndarray, B: np.ndarray) -> np.ndarray:
 
 # %% [markdown]
 """
-## 🔧 DEVELOPMENT
-"""
-
-# %% [markdown]
-"""
 ### 🧪 Test Your Matrix Multiplication
 
 Once you implement the `matmul` function above, run this cell to test it:
