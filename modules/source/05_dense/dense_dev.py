@@ -65,16 +65,19 @@ except ImportError:
 def _should_show_plots():
     """Check if we should show plots (disable during testing)"""
     # Check multiple conditions that indicate we're in test mode
-    is_pytest = (
+    is_testing = (
         'pytest' in sys.modules or
         'test' in sys.argv or
         os.environ.get('PYTEST_CURRENT_TEST') is not None or
         any('test' in arg for arg in sys.argv) or
-        any('pytest' in arg for arg in sys.argv)
+        any('pytest' in arg for arg in sys.argv) or
+        'tito' in sys.argv or
+        any('tito' in arg for arg in sys.argv) or
+        os.environ.get('TITO_TESTING') is not None
     )
     
     # Show plots in development mode (when not in test mode)
-    return not is_pytest
+    return not is_testing
 
 # %% nbgrader={"grade": false, "grade_id": "networks-welcome", "locked": false, "schema_version": 3, "solution": false, "task": false}
 print("🔥 TinyTorch Networks Module")
@@ -641,9 +644,6 @@ try:
         print(f"✅ {name} network works correctly")
     
     print("✅ All network architectures work correctly")
-    
-    # Plot the architectures if not in test mode
-    plot_network_architectures()
         
 except Exception as e:
     print(f"❌ Architecture test failed: {e}")
@@ -654,6 +654,23 @@ print("   Different activations create different behaviors")
 print("   Softmax enables multi-class classification")
 print("   Architecture affects network capacity and learning")
 print("📈 Progress: Sequential ✓, MLP creation ✓, Architecture variations ✓")
+
+# %% [markdown]
+"""
+### 📊 Visualization Demo: Network Architectures
+
+Let's visualize the different network architectures for educational purposes:
+"""
+
+# %%
+# Demo visualization - only run in interactive mode, not during tests
+if __name__ == "__main__":
+    # Generate network architecture visualization (only in interactive mode)
+    if _should_show_plots():
+        plot_network_architectures()
+        print("📊 Network architecture visualization complete!")
+    else:
+        print("📊 Plots disabled during testing")
 
 # %% [markdown]
 """
