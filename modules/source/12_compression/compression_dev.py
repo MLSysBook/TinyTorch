@@ -361,18 +361,11 @@ class CompressionMetrics:
         }
 
 # %% nbgrader={"grade": false, "grade_id": "test-compression-metrics", "locked": false, "schema_version": 3, "solution": false, "task": false}
-def test_compression_metrics():
-    """
-    ### 🧪 Unit Test: CompressionMetrics
+def test_unit_compression_metrics():
+    """Unit test for the CompressionMetrics class."""
+    print("🔬 Unit Test: Compression Metrics...")
     
-    Test parameter counting and model size analysis functionality.
-    
-    **This is a unit test** - it tests model size analysis in isolation.
-    """
-    print("🔬 Unit Test: CompressionMetrics")
-    print("**This is a unit test** - it tests model size analysis in isolation.")
-    
-    # Create test model
+    # Create a simple model for testing
     layers = [
         Dense(784, 128),  # 784 * 128 + 128 = 100,480 params
         Dense(128, 64),   # 128 * 64 + 64 = 8,256 params
@@ -575,18 +568,11 @@ def calculate_sparsity(layer: Dense) -> float:
     ### END SOLUTION 
 
 # %% nbgrader={"grade": false, "grade_id": "test-pruning", "locked": false, "schema_version": 3, "solution": false, "task": false}
-def test_magnitude_pruning():
-    """
-    ### 🧪 Unit Test: Magnitude-Based Pruning
+def test_unit_magnitude_pruning():
+    """Unit test for the magnitude-based pruning functionality."""
+    print("🔬 Unit Test: Magnitude Pruning...")
     
-    Test weight pruning algorithms and sparsity calculation.
-    
-    **This is a unit test** - it tests weight pruning in isolation.
-    """
-    print("🔬 Unit Test: Magnitude-Based Pruning")
-    print("**This is a unit test** - it tests weight pruning in isolation.")
-    
-    # Create test layer
+    # Create a simple Dense layer
     layer = Dense(100, 50)
     
     # Test basic pruning
@@ -769,18 +755,11 @@ def quantize_layer_weights(layer: Dense, bits: int = 8) -> Tuple[Dense, Dict[str
     ### END SOLUTION 
 
 # %% nbgrader={"grade": false, "grade_id": "test-quantization", "locked": false, "schema_version": 3, "solution": false, "task": false}
-def test_quantization():
-    """
-    ### 🧪 Unit Test: Quantization
+def test_unit_quantization():
+    """Unit test for the weight quantization functionality."""
+    print("🔬 Unit Test: Weight Quantization...")
     
-    Test weight quantization and precision reduction functionality.
-    
-    **This is a unit test** - it tests quantization algorithms in isolation.
-    """
-    print("🔬 Unit Test: Quantization")
-    print("**This is a unit test** - it tests quantization algorithms in isolation.")
-    
-    # Create test layer
+    # Create a simple Dense layer
     layer = Dense(100, 50)
     original_weights = layer.weights.data.copy() if hasattr(layer.weights.data, 'copy') else np.array(layer.weights.data)
     
@@ -993,18 +972,11 @@ class DistillationLoss:
         return -np.mean(np.sum(labels * np.log(probs + 1e-10), axis=-1)) 
 
 # %% nbgrader={"grade": false, "grade_id": "test-distillation", "locked": false, "schema_version": 3, "solution": false, "task": false}
-def test_distillation():
-    """
-    ### 🧪 Unit Test: Knowledge Distillation
+def test_unit_distillation():
+    """Unit test for the DistillationLoss class."""
+    print("🔬 Unit Test: Knowledge Distillation...")
     
-    Test knowledge distillation loss function and teacher-student training.
-    
-    **This is a unit test** - it tests distillation algorithms in isolation.
-    """
-    print("🔬 Unit Test: Knowledge Distillation")
-    print("**This is a unit test** - it tests distillation algorithms in isolation.")
-    
-    # Create sample data
+    # Test parameters
     batch_size, num_classes = 32, 10
     student_logits = np.random.randn(batch_size, num_classes) * 0.5
     teacher_logits = np.random.randn(batch_size, num_classes) * 2.0  # Teacher is more confident
@@ -1284,18 +1256,11 @@ def prune_layer_neurons(layer: Dense, keep_ratio: float = 0.7,
     ### END SOLUTION 
 
 # %% nbgrader={"grade": false, "grade_id": "test-structured-pruning", "locked": false, "schema_version": 3, "solution": false, "task": false}
-def test_structured_pruning():
-    """
-    ### 🧪 Unit Test: Structured Pruning
+def test_unit_structured_pruning():
+    """Unit test for the structured pruning (neuron pruning) functionality."""
+    print("🔬 Unit Test: Structured Pruning...")
     
-    Test structured neuron pruning and parameter reduction.
-    
-    **This is a unit test** - it tests structured pruning in isolation.
-    """
-    print("🔬 Unit Test: Structured Pruning")
-    print("**This is a unit test** - it tests structured pruning in isolation.")
-    
-    # Create test layer
+    # Create a simple Dense layer
     layer = Dense(100, 50)
     
     # Test basic pruning
@@ -1621,18 +1586,11 @@ This module teaches the essential skills for deploying AI in resource-constraine
 """
 
 # %% nbgrader={"grade": false, "grade_id": "test-comprehensive-comparison", "locked": false, "schema_version": 3, "solution": false, "task": false}
-def test_comprehensive_comparison():
-    """
-    ### 🧪 Unit Test: Comprehensive Comparison
+def test_unit_comprehensive_comparison():
+    """Unit test for the comparison of different compression techniques."""
+    print("🔬 Unit Test: Comprehensive Comparison of Techniques...")
     
-    Test the integrated compression comparison framework.
-    
-    **This is a unit test** - it tests comprehensive comparison in isolation.
-    """
-    print("🔬 Unit Test: Comprehensive Comparison")
-    print("**This is a unit test** - it tests comprehensive comparison in isolation.")
-    
-    # Create test model
+    # Create a simple model
     model = Sequential([
         Dense(784, 128),
         Dense(128, 64),
@@ -1713,132 +1671,113 @@ Time to test your implementation! This section uses TinyTorch's standardized tes
 # This cell is locked to ensure consistent testing across all TinyTorch modules
 # =============================================================================
 
-if __name__ == "__main__":
-    from tito.tools.testing import run_module_tests_auto
+# %% [markdown]
+"""
+## 🔬 Integration Test: Pruning a Sequential Model
+"""
+
+# %%
+def test_compression_integration():
+    """Integration test for applying compression to a Sequential model."""
+    print("🔬 Running Integration Test: Compression on Sequential Model...")
+
+    # 1. Create a simple Sequential model
+    model = Sequential([
+        Dense(10, 20),
+        Dense(20, 5)
+    ])
     
+    # 2. Get the first Dense layer to be pruned
+    layer_to_prune = model.layers[0]
+    
+    # 3. Calculate initial sparsity
+    initial_sparsity = calculate_sparsity(layer_to_prune)
+    
+    # 4. Prune the layer's weights
+    pruned_layer, _ = prune_weights_by_magnitude(layer_to_prune, pruning_ratio=0.5)
+    
+    # 5. Replace the layer in the model
+    model.layers[0] = pruned_layer
+    
+    # 6. Calculate final sparsity
+    final_sparsity = calculate_sparsity(model.layers[0])
+    
+    print(f"Initial Sparsity: {initial_sparsity:.2f}, Final Sparsity: {final_sparsity:.2f}")
+    assert final_sparsity > initial_sparsity, "Sparsity should increase after pruning."
+    assert abs(final_sparsity - 0.5) < 0.01, "Sparsity should be close to the pruning ratio."
+
+    print("✅ Integration Test Passed: Pruning correctly modified a layer in a Sequential model.")
+
+if __name__ == "__main__":
+    # Unit tests
+    test_compression_metrics()
+    test_magnitude_pruning()
+    test_quantization()
+    test_distillation()
+    test_structured_pruning()
+    test_comprehensive_comparison()
+    # Integration test
+    test_compression_integration()
+
+    from tito.tools.testing import run_module_tests_auto
     # Automatically discover and run all tests in this module
     success = run_module_tests_auto("Compression")
 
 # %% [markdown]
 """
-## 📋 Module Summary
-
-### ✅ What We've Built
-This compression module provides a complete toolkit for making neural networks efficient:
-
-#### **1. CompressionMetrics** ✓
-- **Parameter counting**: Analyze model size and distribution
-- **Memory footprint**: Calculate storage requirements in different data types
-- **Foundation**: Baseline measurement for compression decisions
-
-#### **2. Magnitude-Based Pruning** ✓
-- **Weight removal**: Remove smallest weights based on magnitude
-- **Sparsity creation**: Create sparse matrices for memory efficiency
-- **Flexible thresholds**: Support different pruning intensities
-
-#### **3. Quantization** ✓
-- **Precision reduction**: Convert FP32 → INT8 for 75% memory savings
-- **Error tracking**: Monitor quantization impact on model accuracy
-- **Multiple bit-widths**: Support 16-bit, 8-bit, and other precisions
-
-#### **4. Knowledge Distillation** ✓
-- **Teacher-student training**: Large models guide small model learning
-- **Soft targets**: Rich probability distributions vs hard labels
-- **Temperature scaling**: Control knowledge transfer richness
-
-#### **5. Structured Pruning** ✓
-- **Neuron removal**: Remove entire neurons for actual hardware speedup
-- **Architecture modification**: Create smaller but dense networks
-- **Importance metrics**: Multiple methods for ranking neuron importance
-
-#### **6. Comprehensive Comparison** ✓
-- **Systematic evaluation**: Compare all techniques on same baseline
-- **Combined approaches**: Integrate multiple techniques for maximum compression
-- **Trade-off analysis**: Understand compression vs accuracy spectrum
-
-### 🎯 Real-World Applications
-Students can now optimize models for:
-- **Mobile AI**: < 10MB models for smartphone deployment
-- **Edge computing**: < 1MB models for IoT and embedded systems
-- **Production cloud**: Cost-optimized inference at scale
-- **Research**: Systematic compression comparison and analysis
-
-### 📊 Compression Achievements
-With the complete toolkit, students can achieve:
-- **4x+ memory reduction**: Through quantization (FP32 → INT8)
-- **1.3x+ speedup**: Through structured pruning (actual hardware benefit)
-- **5x+ combined compression**: Integrating multiple techniques
-- **Flexible trade-offs**: Balance accuracy, size, and speed as needed
-
-### 🔗 Next Steps
-
-This compression foundation prepares students for:
-- **Module 11 - GPU Kernels**: Hardware-accelerated compression operations
-- **Module 12 - Benchmarking**: Systematic performance evaluation and optimization
-- **Module 13 - MLOps**: Production deployment with compressed models
-
-### 🚀 Professional Applications
-Your compression toolkit enables:
-- **Production AI**: Deploy efficient models at scale
-- **Mobile Applications**: Real-time AI on smartphones and tablets
-- **Edge Computing**: AI in IoT devices and embedded systems
-- **Research**: Systematic compression analysis and method development
-
-### 🎯 The Future of Efficient AI
-You've built the foundation for efficient AI systems:
-- **Sustainable AI**: Reduced energy consumption and carbon footprint
-- **Accessible AI**: AI systems that run on consumer hardware
-- **Scalable Inference**: Cost-effective deployment at any scale
-- **Real-time Applications**: Fast, efficient AI for interactive systems
-
-### 🧠 Key Skills Developed
-- **Compression Theory**: Understanding memory, compute, and accuracy trade-offs
-- **Mathematical Implementation**: Quantization, pruning, and distillation algorithms
-- **Systems Engineering**: Benchmarking, comparison, and optimization frameworks
-- **Production Readiness**: Real-world deployment considerations and techniques
-
-You've mastered the art and science of making neural networks efficient without sacrificing capability. This is the foundation of modern AI deployment!
+## 🔬 Integration Test: Comprehensive Compression on a Sequential Model
 """
 
-# %% [markdown]
-"""
-## 🚀 Next Steps: Advanced Optimization
+# %%
+def test_comprehensive_compression_integration():
+    """
+    Integration test for applying multiple compression techniques to a Sequential model.
+    
+    Tests that multiple compression techniques can be applied to a Sequential model
+    and that metrics are tracked correctly.
+    """
+    print("🔬 Running Integration Test: Comprehensive Compression...")
 
-### Kernels - Hardware-Aware Optimization
-Build on compression foundations with:
-- **Custom CUDA kernels**: GPU-optimized operations for compressed models
-- **SIMD optimization**: CPU vectorization for quantized operations
-- **Memory layout**: Optimize data structures for sparse and quantized weights
-- **Hardware profiling**: Measure actual performance improvements
+    # 1. Create a model and metrics calculator
+    model = Sequential([
+        Dense(100, 50),
+        Dense(50, 20),
+        Dense(20, 10)
+    ])
+    metrics = CompressionMetrics()
 
-### Benchmarking - Systematic Performance Measurement
-Apply compression in production context:
-- **Latency measurement**: Quantify inference speedup from compression
-- **Accuracy evaluation**: Systematic testing of compression impact
-- **A/B testing**: Compare compressed vs uncompressed models in production
-- **Performance profiling**: Identify bottlenecks and optimization opportunities
+    # 2. Get baseline metrics
+    initial_params = metrics.count_parameters(model)['total_parameters']
+    initial_size_mb = metrics.calculate_model_size(model)['size_mb']
+    
+    # 3. Apply pruning to the first layer
+    layer_to_prune = model.layers[0]
+    model.layers[0], _ = prune_weights_by_magnitude(layer_to_prune, pruning_ratio=0.8)
 
-### MLOps - Production Deployment
-Deploy compressed models at scale:
-- **Model versioning**: Manage compressed model variants
-- **Monitoring**: Track compressed model performance in production
-- **Continuous optimization**: Automated compression pipeline
-- **Edge deployment**: Distribute compressed models to mobile and IoT devices
+    # 4. Verify sparsity increased and parameters are the same
+    sparsity_after_pruning = calculate_sparsity(model.layers[0])
+    params_after_pruning = metrics.count_parameters(model)['total_parameters']
+    
+    assert sparsity_after_pruning > 0.79, "Sparsity should be high after pruning."
+    assert params_after_pruning == initial_params, "Pruning shouldn't change param count."
+    print(f"✅ Pruning successful. Sparsity: {sparsity_after_pruning:.2f}")
 
-### 🔬 Research Directions
-Advanced compression techniques:
-- **Neural Architecture Search**: Automated compression-aware design
-- **Hardware-aware compression**: Optimize for specific deployment targets
-- **Dynamic compression**: Adaptive compression based on runtime conditions
-- **Federated compression**: Compress models for distributed learning
+    # 5. Apply quantization to all layers
+    for i, layer in enumerate(model.layers):
+        if isinstance(layer, Dense):
+            model.layers[i], _ = quantize_layer_weights(layer, bits=8)
+    
+    # 6. Verify model size is reduced
+    final_size_mb = metrics.calculate_model_size(model, dtype='int8')['size_mb']
+    
+    print(f"Initial size: {initial_size_mb:.4f} MB, Final size: {final_size_mb:.4f} MB")
+    assert final_size_mb < initial_size_mb / 1.5, "Quantization should significantly reduce model size."
 
-### 💼 Career Applications
-These compression skills are essential for:
-- **Mobile AI Engineer**: Optimize models for smartphones and tablets
-- **Edge AI Developer**: Deploy AI on IoT and embedded systems
-- **ML Infrastructure Engineer**: Build efficient inference systems
-- **Research Scientist**: Advance state-of-art compression techniques
+    print("✅ Integration Test Passed: Comprehensive compression successfully applied and verified.")
 
-The compression module provides the foundation for all advanced optimization and deployment scenarios!
-""" 
+if __name__ == "__main__":
+    test_comprehensive_compression_integration()
+    from tito.tools.testing import run_module_tests_auto
+    # Automatically discover and run all tests in this module
+    success = run_module_tests_auto("Compression")
 
