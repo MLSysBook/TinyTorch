@@ -511,7 +511,7 @@ def test_unit_model_monitor():
     print("📈 Progress: Performance Drift Monitor ✓")
 
 # Run the test
-test_model_monitor()
+test_unit_model_monitor()
 
 # %% [markdown]
 """
@@ -778,7 +778,7 @@ def test_unit_drift_detector():
     print("📈 Progress: Simple Drift Detection ✓")
 
 # Run the test
-test_drift_detector()
+test_unit_drift_detector()
 
 # %% [markdown]
 """
@@ -1126,7 +1126,7 @@ def test_unit_retraining_trigger():
     print("📈 Progress: Retraining Trigger System ✓")
 
 # Run the test
-test_retraining_trigger()
+test_unit_retraining_trigger()
 
 # %% [markdown]
 """
@@ -1484,7 +1484,7 @@ def test_unit_mlops_pipeline():
     print("📈 Progress: Complete MLOps Pipeline ✓")
 
 # Run the test
-test_mlops_pipeline()
+test_unit_mlops_pipeline()
 
 # %% [markdown]
 """
@@ -1615,7 +1615,7 @@ def test_module_comprehensive_mlops():
     print("📈 Progress: Complete TinyTorch Ecosystem ✓")
 
 # Run the comprehensive test
-test_comprehensive_integration()
+test_module_comprehensive_mlops()
 
 # %% [markdown]
 """
