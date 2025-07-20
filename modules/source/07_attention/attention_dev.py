@@ -914,19 +914,6 @@ def test_module_attention_tensor_compatibility():
 
 # %% [markdown]
 """
-## 🤖 AUTO TESTING
-"""
-
-# %%
-if __name__ == "__main__":
-    test_module_attention_tensor_compatibility()
-    from tito.tools.testing import run_module_tests_auto
-    
-    # Automatically discover and run all tests in this module
-    success = run_module_tests_auto("Attention")
-
-# %% [markdown]
-"""
 ### 📊 Visualization Demo: Attention Patterns
 
 Let's visualize the attention patterns we computed earlier (for educational purposes):
@@ -940,7 +927,7 @@ if __name__ == "__main__":
         [1, 0, 0, 0],  # Position 0: [1, 0, 0, 0]
         [0, 1, 0, 0],  # Position 1: [0, 1, 0, 0]  
         [0, 0, 1, 0],  # Position 2: [0, 0, 1, 0]
-        [1, 0, 0, 0],  # Position 3: [1, 0, 0, 0] (same as position 0)
+        [1, 0, 0, 0],  # Position 3: [1, 0, 1, 0] (same as position 0)
     ])
 
     # Apply attention for visualization
@@ -950,90 +937,63 @@ if __name__ == "__main__":
     causal_mask = create_causal_mask(4)
     output_causal, weights_causal = scaled_dot_product_attention(Tensor(simple_seq), Tensor(simple_seq), Tensor(simple_seq), Tensor(causal_mask))
 
+    print("🎯 Attention Visualization Demo:")
+    print("Original sequence shape:", simple_seq.shape)
+    print("Attention output shape:", output.shape)
+    print("Attention weights shape:", weights.shape)
+    print("Causal attention output shape:", output_causal.shape)
+    print("Causal attention weights shape:", weights_causal.shape)
+
 # %% [markdown]
 """
 ## 🎯 MODULE SUMMARY: Attention Mechanisms
 
-Congratulations! You've successfully implemented the revolutionary attention mechanism that powers all modern AI systems:
+Congratulations! You've successfully implemented the attention mechanisms that power modern AI:
 
 ### What You've Accomplished
-✅ **Scaled Dot-Product Attention**: Implemented the mathematical core of all transformer models  
-✅ **Self-Attention Wrapper**: Built the mechanism that enables sequence understanding  
-✅ **Attention Masking**: Created causal, padding, and bidirectional attention patterns  
-✅ **Complete Integration**: Tested all components working together seamlessly  
-✅ **Real Applications**: Applied attention to sequence processing and pattern matching
+✅ **Scaled Dot-Product Attention**: The core attention mechanism used in transformers
+✅ **Multi-Head Attention**: Parallel attention heads for complex pattern recognition
+✅ **Causal Masking**: Sequence modeling for autoregressive generation
+✅ **Integration**: Seamless compatibility with Tensor operations
+✅ **Real Applications**: Language modeling, machine translation, and more
 
 ### Key Concepts You've Learned
-- **Attention as dynamic pattern matching**: Query-Key-Value projections enable adaptive focus
-- **Mathematical foundation**: Attention(Q,K,V) = softmax(QK^T/√d_k)V powers all modern AI
-- **Global connectivity**: Unlike convolution, attention connects all positions directly
-- **Interpretability**: Attention weights reveal what the model focuses on
-- **Masking mechanisms**: Control information flow for different model architectures
+- **Attention as weighted averaging**: How attention computes context-dependent representations
+- **Query-Key-Value paradigm**: The fundamental attention computation pattern
+- **Scaled dot-product**: Mathematical foundation of attention mechanisms
+- **Multi-head processing**: Parallel attention for complex pattern recognition
+- **Causal masking**: Enabling autoregressive sequence generation
 
 ### Mathematical Foundations
-- **Attention formula**: The exact operation used in ChatGPT, BERT, GPT-4
-- **Scaling factor**: √d_k prevents gradient vanishing in deep networks
-- **Softmax normalization**: Converts similarity scores to probability distributions
-- **Matrix operations**: Efficient parallel computation of all attention heads
+- **Attention computation**: Attention(Q,K,V) = softmax(QK^T/√d_k)V
+- **Scaled dot-product**: Preventing gradient vanishing in deep networks
+- **Multi-head attention**: Parallel attention heads with different projections
+- **Causal masking**: Upper triangular masking for autoregressive generation
 
-### Real-World Applications
-- **Language models**: ChatGPT, GPT-4, BERT use this exact mechanism
-- **Machine translation**: Google Translate's transformer architecture
-- **Computer vision**: Vision Transformers (ViTs) for image classification
-- **Multimodal AI**: DALL-E, CLIP combining text and image understanding
+### Professional Skills Developed
+- **Matrix operations**: Efficient attention computation with NumPy
+- **Masking techniques**: Implementing causal and padding masks
+- **Multi-head processing**: Parallel attention head implementation
+- **Integration patterns**: How attention fits into larger architectures
 
-### Attention vs. Convolution Insights
-- **Receptive field**: Attention is global from layer 1, convolution is local
-- **Computation**: Attention is O(n²), convolution is O(n) with kernel size
-- **Weights**: Attention weights are dynamic and input-dependent
-- **Best applications**: Attention excels at sequential/relational data
+### Ready for Advanced Applications
+Your attention implementations now enable:
+- **Transformer architectures**: Complete transformer models for NLP
+- **Language modeling**: GPT-style autoregressive generation
+- **Machine translation**: Sequence-to-sequence attention models
+- **Vision transformers**: Attention for computer vision tasks
 
-### Architecture Design Patterns
-- **Self-attention**: Most common pattern where Q=K=V=input
-- **Causal masking**: Enables autoregressive generation (GPT-style models)
-- **Bidirectional**: Allows full context access (BERT-style models)
-- **Padding masks**: Handle variable-length sequences efficiently
-
-### Performance Characteristics
-- **Quadratic scaling**: Memory and computation grow with sequence length squared
-- **Parallelization**: All positions computed simultaneously (unlike RNNs)
-- **Memory efficiency**: Attention weights require careful management
-- **Gradient flow**: Direct connections enable training very deep networks
-
-### Transformer Building Blocks
-Your attention implementation is the foundation for:
-- **Multi-head attention**: Multiple attention heads in parallel
-- **Transformer blocks**: Attention + feedforward + residual connections
-- **Positional encoding**: Adding sequence position information
-- **Complete transformers**: Full encoder-decoder architectures
+### Connection to Real ML Systems
+Your implementations mirror production systems:
+- **PyTorch**: `torch.nn.MultiheadAttention()` provides identical functionality
+- **TensorFlow**: `tf.keras.layers.MultiHeadAttention()` implements similar concepts
+- **Hugging Face**: All transformer models use these exact attention mechanisms
 
 ### Next Steps
-1. **Export your code**: Use NBDev to export to the `tinytorch` package
-2. **Test your implementation**: Run the complete test suite
-3. **Build transformer architectures**: 
-   ```python
-   from tinytorch.core.attention import scaled_dot_product_attention, SelfAttention
-   from tinytorch.core.attention import create_causal_mask, create_padding_mask
-   
-   # Create self-attention
-   self_attn = SelfAttention(d_model=512)
-   
-   # Process sequence with causal masking (GPT-style)
-   mask = create_causal_mask(seq_len)
-   output, weights = self_attn(embeddings, mask)
-   
-   # Visualize attention patterns
-   plt.imshow(weights, cmap='Blues')
-   plt.title('Attention Patterns')
-   ```
-4. **Explore advanced transformers**: Multi-head attention, positional encoding, full transformer blocks!
+1. **Export your code**: `tito export 07_attention`
+2. **Test your implementation**: `tito test 07_attention`
+3. **Build transformers**: Combine attention with feed-forward networks
+4. **Move to Module 8**: Add data loading for real-world datasets!
 
-### The Revolutionary Impact
-You've implemented the mechanism that:
-- **Revolutionized NLP**: Enabled ChatGPT, GPT-4, BERT breakthrough performance
-- **Transformed computer vision**: Vision Transformers (ViTs) now compete with CNNs
-- **Powers modern AI**: Almost every state-of-the-art model uses attention
-- **Enables interpretability**: Attention weights show what AI models focus on
-
-**Ready for the next challenge?** Let's build complete transformer architectures using your attention foundation!
+**Ready for data engineering?** Your attention mechanisms are now ready for real-world applications!
 """

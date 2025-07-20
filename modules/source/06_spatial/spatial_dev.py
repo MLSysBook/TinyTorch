@@ -818,27 +818,6 @@ def test_module_conv2d_tensor_compatibility():
 
 # %% [markdown]
 """
-## 🤖 AUTO TESTING
-"""
-
-# %%
-# Run the integration test
-test_module_conv2d_tensor_compatibility()
-
-# %% [markdown]
-"""
-## 🤖 AUTO TESTING
-"""
-
-# %%
-if __name__ == "__main__":
-    from tito.tools.testing import run_module_tests_auto
-    
-    # Automatically discover and run all tests in this module
-    success = run_module_tests_auto("CNN")
-
-# %% [markdown]
-"""
 ## 🎯 MODULE SUMMARY: Convolutional Networks
 
 Congratulations! You've successfully implemented the core components of convolutional neural networks:
