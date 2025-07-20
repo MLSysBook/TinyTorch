@@ -836,6 +836,73 @@ if __name__ == "__main__":
     # Automatically discover and run all tests in this module
     success = run_module_tests_auto("Tensor")
 
+# %%
+def test_unit_tensor_creation():
+    """Comprehensive test of tensor creation with all data types and shapes."""
+    print("🔬 Testing comprehensive tensor creation...")
+    
+    # Test scalar creation
+    scalar_int = Tensor(42)
+    assert scalar_int.shape == ()
+    
+    # Test vector creation
+    vector_int = Tensor([1, 2, 3])
+    assert vector_int.shape == (3,)
+
+    # Test matrix creation
+    matrix_2x2 = Tensor([[1, 2], [3, 4]])
+    assert matrix_2x2.shape == (2, 2)
+    print("✅ Tensor creation tests passed!")
+
+# %%
+def test_unit_tensor_properties():
+    """Comprehensive test of tensor properties (shape, size, dtype, data access)."""
+    print("🔬 Testing comprehensive tensor properties...")
+
+    tensor = Tensor([[1, 2, 3], [4, 5, 6]])
+    
+    # Test shape property
+    assert tensor.shape == (2, 3)
+    
+    # Test size property
+    assert tensor.size == 6
+    
+    # Test data property
+    assert np.array_equal(tensor.data, np.array([[1, 2, 3], [4, 5, 6]]))
+    
+    # Test dtype property
+    assert tensor.dtype in [np.int32, np.int64]
+    print("✅ Tensor properties tests passed!")
+
+# %%
+def test_unit_tensor_arithmetic():
+    """Comprehensive test of tensor arithmetic operations."""
+    print("🔬 Testing comprehensive tensor arithmetic...")
+    
+    a = Tensor([1, 2, 3])
+    b = Tensor([4, 5, 6])
+    
+    # Test addition
+    c = a + b
+    expected = np.array([5, 7, 9])
+    assert np.array_equal(c.data, expected)
+    
+    # Test multiplication
+    d = a * b
+    expected = np.array([4, 10, 18])
+    assert np.array_equal(d.data, expected)
+
+    # Test subtraction
+    e = b - a
+    expected = np.array([3, 3, 3])
+    assert np.array_equal(e.data, expected)
+
+    # Test division
+    f = b / a
+    expected = np.array([4.0, 2.5, 2.0])
+    assert np.allclose(f.data, expected)
+    print("✅ Tensor arithmetic tests passed!")
+
 # %% [markdown]
 """
 ## 🎯 Module Summary: Tensor Foundation Mastery!
@@ -899,68 +966,4 @@ Your tensor implementation is the foundation for:
 **Next Module**: Activation functions - adding the nonlinearity that makes neural networks powerful!
 
 You've built the foundation of modern AI. Now let's add the mathematical functions that enable machines to learn complex patterns!
-"""
-
-def test_unit_tensor_creation():
-    """Comprehensive test of tensor creation with all data types and shapes."""
-    print("🔬 Testing comprehensive tensor creation...")
-    
-    # Test scalar creation
-    scalar_int = Tensor(42)
-    assert scalar_int.shape == ()
-    
-    # Test vector creation
-    vector_int = Tensor([1, 2, 3])
-    assert vector_int.shape == (3,)
-
-    # Test matrix creation
-    matrix_2x2 = Tensor([[1, 2], [3, 4]])
-    assert matrix_2x2.shape == (2, 2)
-    print("✅ Tensor creation tests passed!")
-
-def test_unit_tensor_properties():
-    """Comprehensive test of tensor properties (shape, size, dtype, data access)."""
-    print("🔬 Testing comprehensive tensor properties...")
-
-    tensor = Tensor([[1, 2, 3], [4, 5, 6]])
-    
-    # Test shape property
-    assert tensor.shape == (2, 3)
-    
-    # Test size property
-    assert tensor.size == 6
-    
-    # Test data property
-    assert np.array_equal(tensor.data, np.array([[1, 2, 3], [4, 5, 6]]))
-    
-    # Test dtype property
-    assert tensor.dtype in [np.int32, np.int64]
-    print("✅ Tensor properties tests passed!")
-
-def test_unit_tensor_arithmetic():
-    """Comprehensive test of tensor arithmetic operations."""
-    print("🔬 Testing comprehensive tensor arithmetic...")
-    
-    a = Tensor([1, 2, 3])
-    b = Tensor([4, 5, 6])
-    
-    # Test addition
-    c = a + b
-    expected = np.array([5, 7, 9])
-    assert np.array_equal(c.data, expected)
-    
-    # Test multiplication
-    d = a * b
-    expected = np.array([4, 10, 18])
-    assert np.array_equal(d.data, expected)
-
-    # Test subtraction
-    e = b - a
-    expected = np.array([3, 3, 3])
-    assert np.array_equal(e.data, expected)
-
-    # Test division
-    f = b / a
-    expected = np.array([4.0, 2.5, 2.0])
-    assert np.allclose(f.data, expected)
-    print("✅ Tensor arithmetic tests passed!") 
+""" 
