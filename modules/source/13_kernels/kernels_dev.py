@@ -1404,18 +1404,8 @@ Time to test your implementation! This section uses TinyTorch's standardized tes
 # =============================================================================
 
 if __name__ == "__main__":
-    # Unit tests
-    test_matmul_baseline()
-    test_vectorized_operations()
-    test_cache_friendly_matmul()
-    test_parallel_processing()
-    test_simple_kernel_timing()
-    test_compressed_kernels()
-    final_performance_test()
-    # Integration test
-    test_module_kernel_sequential_model()
-
     from tito.tools.testing import run_module_tests_auto
+    
     # Automatically discover and run all tests in this module
     success = run_module_tests_auto("Kernels")
 
