@@ -367,6 +367,11 @@ class CompressionMetrics:
 
 # %% [markdown]
 """
+## 🔧 DEVELOPMENT
+"""
+
+# %% [markdown]
+"""
 ### 🧪 Unit Test: Compression Metrics Analysis
 
 This test validates your `CompressionMetrics` class implementation, ensuring it accurately calculates model parameters, memory usage, and compression statistics for optimization analysis.
