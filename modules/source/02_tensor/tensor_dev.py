@@ -64,6 +64,11 @@ from tinytorch.core.layers import Dense, Conv2D
 
 # %% [markdown]
 """
+## 🔧 DEVELOPMENT
+"""
+
+# %% [markdown]
+"""
 ## Step 1: What is a Tensor?
 
 ### Definition
@@ -891,6 +896,11 @@ Time to test your implementation! This section uses TinyTorch's standardized tes
 **This testing section is locked** - it provides consistent feedback across all modules and cannot be modified.
 """
 
+# %% [markdown]
+"""
+## 🤖 AUTO TESTING
+"""
+
 # %% nbgrader={"grade": false, "grade_id": "standardized-testing", "locked": true, "schema_version": 3, "solution": false, "task": false}
 # =============================================================================
 # STANDARDIZED MODULE TESTING - DO NOT MODIFY
@@ -905,7 +915,7 @@ if __name__ == "__main__":
 
 # %% [markdown]
 """
-## 🎯 Module Summary: Tensor Foundation Mastery!
+## 🎯 MODULE SUMMARY: Tensor Foundation
 
 Congratulations! You've successfully implemented the fundamental data structure that powers all machine learning:
 
