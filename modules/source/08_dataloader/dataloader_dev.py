@@ -1051,6 +1051,67 @@ def test_unit_dataloader_pipeline():
     print("✅ Data pipeline integration works correctly")
 
 # %% [markdown]
+# %% [markdown]
+"""
+## 🧪 Module Testing
+
+Time to test your implementation! This section uses TinyTorch's standardized testing framework to ensure your implementation works correctly.
+
+**This testing section is locked** - it provides consistent feedback across all modules and cannot be modified.
+"""
+
+# %% nbgrader={"grade": false, "grade_id": "standardized-testing", "locked": true, "schema_version": 3, "solution": false, "task": false}
+# =============================================================================
+# STANDARDIZED MODULE TESTING - DO NOT MODIFY
+# This cell is locked to ensure consistent testing across all TinyTorch modules
+# =============================================================================
+
+# %% [markdown]
+"""
+## 🔬 Integration Test: DataLoader with Tensors
+"""
+
+# %%
+def test_module_dataloader_tensor_yield():
+    """
+    Integration test for the DataLoader and Tensor classes.
+    
+    Tests that the DataLoader correctly yields batches of Tensors.
+    """
+    print("🔬 Running Integration Test: DataLoader with Tensors...")
+
+    # 1. Create a simple dataset
+    dataset = SimpleDataset(size=50, num_features=8, num_classes=4)
+
+    # 2. Create a DataLoader
+    dataloader = DataLoader(dataset, batch_size=10, shuffle=False)
+
+    # 3. Get one batch from the dataloader
+    data_batch, labels_batch = next(iter(dataloader))
+
+    # 4. Assert the batch contents are correct
+    assert isinstance(data_batch, Tensor), "Data batch should be a Tensor"
+    assert data_batch.shape == (10, 8), f"Expected data shape (10, 8), but got {data_batch.shape}"
+    
+    assert isinstance(labels_batch, Tensor), "Labels batch should be a Tensor"
+    assert labels_batch.shape == (10,), f"Expected labels shape (10,), but got {labels_batch.shape}"
+
+    print("✅ Integration Test Passed: DataLoader correctly yields batches of Tensors.")
+
+if __name__ == "__main__":
+    # Unit tests
+    test_unit_dataset_interface()
+    test_unit_dataloader()
+    test_unit_simple_dataset()
+    test_unit_dataloader_pipeline()
+    # Integration test
+    test_module_dataloader_tensor_yield()
+    
+    from tito.tools.testing import run_module_tests_auto
+    # Automatically discover and run all tests in this module
+    success = run_module_tests_auto("DataLoader")
+
+# %% [markdown]
 """
 ## 🎯 Module Summary
 
@@ -1124,64 +1185,4 @@ Congratulations! You've successfully implemented the core components of data loa
 4. **Explore advanced topics**: Data augmentation, distributed loading, streaming datasets!
 
 **Ready for the next challenge?** Let's build training loops and optimizers to complete the ML pipeline!
-"""
-
-# %% [markdown]
-"""
-## 🧪 Module Testing
-
-Time to test your implementation! This section uses TinyTorch's standardized testing framework to ensure your implementation works correctly.
-
-**This testing section is locked** - it provides consistent feedback across all modules and cannot be modified.
-"""
-
-# %% nbgrader={"grade": false, "grade_id": "standardized-testing", "locked": true, "schema_version": 3, "solution": false, "task": false}
-# =============================================================================
-# STANDARDIZED MODULE TESTING - DO NOT MODIFY
-# This cell is locked to ensure consistent testing across all TinyTorch modules
-# =============================================================================
-
-# %% [markdown]
-"""
-## 🔬 Integration Test: DataLoader with Tensors
-"""
-
-# %%
-def test_module_dataloader_tensor_yield():
-    """
-    Integration test for the DataLoader and Tensor classes.
-    
-    Tests that the DataLoader correctly yields batches of Tensors.
-    """
-    print("🔬 Running Integration Test: DataLoader with Tensors...")
-
-    # 1. Create a simple dataset
-    dataset = SimpleDataset(size=50, num_features=8, num_classes=4)
-
-    # 2. Create a DataLoader
-    dataloader = DataLoader(dataset, batch_size=10, shuffle=False)
-
-    # 3. Get one batch from the dataloader
-    data_batch, labels_batch = next(iter(dataloader))
-
-    # 4. Assert the batch contents are correct
-    assert isinstance(data_batch, Tensor), "Data batch should be a Tensor"
-    assert data_batch.shape == (10, 8), f"Expected data shape (10, 8), but got {data_batch.shape}"
-    
-    assert isinstance(labels_batch, Tensor), "Labels batch should be a Tensor"
-    assert labels_batch.shape == (10,), f"Expected labels shape (10,), but got {labels_batch.shape}"
-
-    print("✅ Integration Test Passed: DataLoader correctly yields batches of Tensors.")
-
-if __name__ == "__main__":
-    # Unit tests
-    test_unit_dataset_interface()
-    test_unit_dataloader()
-    test_unit_simple_dataset()
-    test_unit_dataloader_pipeline()
-    # Integration test
-    test_module_dataloader_tensor_yield()
-    
-    from tito.tools.testing import run_module_tests_auto
-    # Automatically discover and run all tests in this module
-    success = run_module_tests_auto("DataLoader") 
+""" 
