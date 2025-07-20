@@ -555,6 +555,41 @@ Let's test different network architectures to understand their behavior.
 """
 
 # %% nbgrader={"grade": true, "grade_id": "test-architectures", "locked": true, "points": 10, "schema_version": 3, "solution": false, "task": false}
+def plot_network_architectures():
+    """Visualize different network architectures."""
+    if not _should_show_plots():
+        return
+        
+    # Create different architectures
+    relu_net = create_mlp(input_size=3, hidden_sizes=[4], output_size=1, activation=ReLU)
+    tanh_net = create_mlp(input_size=3, hidden_sizes=[4], output_size=1, activation=Tanh)
+    classifier = create_mlp(input_size=3, hidden_sizes=[4], output_size=3, output_activation=Softmax)
+
+    # Create input data
+    x = Tensor([[1.0, 2.0, 3.0]])
+    
+    # Get outputs
+    y_relu = relu_net(x)
+    y_tanh = tanh_net(x)
+    y_multi = classifier(x)
+
+    # Plot the results
+    fig, axs = plt.subplots(1, 3, figsize=(15, 4))
+    
+    axs[0].set_title("ReLU Network Output")
+    axs[0].bar(['Output'], [y_relu.data[0][0]], color='skyblue')
+    
+    axs[1].set_title("Tanh Network Output")
+    axs[1].bar(['Output'], [y_tanh.data[0][0]], color='salmon')
+    
+    axs[2].set_title("Softmax Classifier Output")
+    axs[2].bar([f"Class {i}" for i in range(3)], y_multi.data[0], color='lightgreen')
+    
+    plt.tight_layout()
+    plt.show()
+
+def test_unit_network_architectures():
+    """Unit test for different network architectures."""
 # Test different architectures
 print("🔬 Unit Test: Network Architecture Variations...")
 
@@ -602,6 +637,9 @@ try:
     
     print("✅ All network architectures work correctly")
     
+        # Plot the architectures if not in test mode
+        plot_network_architectures()
+        
 except Exception as e:
     print(f"❌ Architecture test failed: {e}")
     raise
@@ -780,8 +818,8 @@ class MLP:
 
 # %% [markdown] 
 
-def test_sequential_networks():
-    """Test Sequential network implementation comprehensively."""
+def test_unit_sequential_networks():
+    """Unit test for the Sequential network implementation."""
     print("🔬 Unit Test: Sequential Networks...")
     
     # Test basic Sequential network
@@ -801,8 +839,8 @@ def test_sequential_networks():
     
     print("✅ Sequential networks work correctly")
 
-def test_mlp_creation():
-    """Test MLP creation function comprehensively."""
+def test_unit_mlp_creation():
+    """Unit test for the MLP creation function."""
     print("🔬 Unit Test: MLP Creation...")
     
     # Test different MLP architectures
@@ -821,8 +859,8 @@ def test_mlp_creation():
     
     print("✅ MLP creation works correctly")
 
-def test_network_architectures():
-    """Test different network architectures comprehensively."""
+def test_unit_network_architectures():
+    """Unit test for different network architectures."""
     print("🔬 Unit Test: Network Architectures...")
     
     # Test different activation functions
@@ -846,8 +884,8 @@ def test_network_architectures():
     
     print("✅ Network architectures work correctly")
 
-def test_networks():
-    """Test network comprehensive testing with real ML scenarios."""
+def test_unit_network_applications():
+    """Comprehensive unit test for network applications in real ML scenarios."""
     print("🔬 Comprehensive Test: Network Applications...")
     
     # Test multi-class classification
@@ -874,7 +912,43 @@ Time to test your implementation! This section uses TinyTorch's standardized tes
 # This cell is locked to ensure consistent testing across all TinyTorch modules
 # =============================================================================
 
+# %% [markdown]
+"""
+## 🔬 Integration Test: End-to-End Network Forward Pass
+"""
+
+# %%
+def test_module_full_network_forward_pass():
+    """
+    Integration test for a complete forward pass through a multi-layer network.
+    
+    Tests a complete forward pass through a multi-layer network,
+    integrating Tensors, Dense layers, Activations, and the Sequential container.
+    """
+    print("🔬 Running Integration Test: Full Network Forward Pass...")
+
+    # 1. Define a simple 2-layer MLP
+    # Input (3) -> Dense(4) -> ReLU -> Dense(2) -> Output
+    model = Sequential([
+        Dense(3, 4),
+        ReLU(),
+        Dense(4, 2)
+    ])
+
+    # 2. Create a batch of input Tensors
+    # Batch of 5 samples, each with 3 features
+    input_tensor = Tensor(np.random.randn(5, 3))
+
+    # 3. Perform a forward pass through the entire network
+    output_tensor = model(input_tensor)
+
+    # 4. Assert the final output is correct
+    assert isinstance(output_tensor, Tensor), "Network output must be a Tensor"
+    assert output_tensor.shape == (5, 2), f"Expected output shape (5, 2), but got {output_tensor.shape}"
+    print("✅ Integration Test Passed: Full network forward pass is successful.")
+
 if __name__ == "__main__":
+    test_module_full_network_forward_pass()
     from tito.tools.testing import run_module_tests_auto
     
     # Automatically discover and run all tests in this module
