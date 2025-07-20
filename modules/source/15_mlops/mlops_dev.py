@@ -1469,6 +1469,111 @@ def test_unit_mlops_pipeline():
 # Run the test
 test_unit_mlops_pipeline()
 
+# %%
+def test_module_mlops_tinytorch_integration():
+    """
+    Integration test for MLOps pipeline with complete TinyTorch models.
+    
+    Tests that MLOps components properly integrate with TinyTorch models,
+    training workflows, and the complete ML system lifecycle.
+    """
+    print("🔬 Running Integration Test: MLOps-TinyTorch Integration...")
+    
+    # Test 1: MLOps with TinyTorch Sequential model
+    from datetime import datetime
+    import numpy as np
+    
+    # Create a realistic TinyTorch model (simulated)
+    class MockTinyTorchModel:
+        def __init__(self):
+            self.layers = ["Dense(10, 5)", "ReLU", "Dense(5, 3)"]
+            self.accuracy = 0.92
+        
+        def __call__(self, data):
+            # Simulate model inference
+            return {"prediction": np.random.rand(3), "confidence": 0.95}
+        
+        def train(self, data):
+            # Simulate training improvement
+            self.accuracy = min(0.98, self.accuracy + np.random.uniform(0.01, 0.05))
+            return {"loss": np.random.uniform(0.1, 0.5), "accuracy": self.accuracy}
+    
+    model = MockTinyTorchModel()
+    
+    # Test 2: Performance monitoring with model
+    monitor = ModelMonitor("tinytorch_classifier", baseline_accuracy=0.90)
+    
+    # Simulate model performance tracking
+    for i in range(5):
+        # Simulate inference latency and accuracy
+        accuracy = model.accuracy + np.random.normal(0, 0.02)
+        latency = np.random.uniform(50, 150)  # milliseconds
+        
+        monitor.record_performance(accuracy, latency)
+    
+    alerts = monitor.check_alerts()
+    assert "model_name" in alerts, "Monitor should track model name"
+    assert "accuracy_alert" in alerts, "Monitor should check accuracy alerts"
+    
+    # Test 3: Data drift detection with model inputs
+    baseline_features = np.random.normal(0, 1, (1000, 10))  # Model input features
+    drift_detector = DriftDetector(baseline_features, 
+                                 feature_names=[f"feature_{i}" for i in range(10)])
+    
+    # Simulate production data (slight drift)
+    production_data = np.random.normal(0.1, 1.1, (500, 10))
+    drift_result = drift_detector.detect_drift(production_data)
+    
+    assert "drift_detected" in drift_result, "Should detect data drift"
+    assert "feature_drift" in drift_result, "Should analyze per-feature drift"
+    
+    # Test 4: Complete MLOps pipeline with TinyTorch model
+    train_data = baseline_features
+    val_data = np.random.normal(0, 1, (200, 10))
+    
+    pipeline = MLOpsPipeline(model, train_data, val_data, baseline_features)
+    
+    # Start monitoring
+    start_result = pipeline.start_monitoring()
+    assert start_result["pipeline_active"] == True, "Pipeline should start successfully"
+    
+    # Test system health with model performance
+    health = pipeline.check_system_health(
+        new_data=production_data,
+        current_accuracy=0.88  # Below threshold to trigger retraining
+    )
+    
+    assert health["pipeline_active"] == True, "Pipeline should remain active"
+    assert "drift_detected" in health, "Should detect drift in pipeline"
+    assert "actions_taken" in health, "Should log actions taken"
+    
+    # Test 5: Integration with TinyTorch training workflow
+    retrain_trigger = RetrainingTrigger(model, train_data, val_data)
+    
+    # Check trigger conditions
+    trigger_conditions = retrain_trigger.check_trigger_conditions(monitor, drift_detector)
+    assert "should_retrain" in trigger_conditions, "Should evaluate retraining conditions"
+    assert "accuracy_trigger" in trigger_conditions, "Should check accuracy triggers"
+    assert "drift_trigger" in trigger_conditions, "Should check drift triggers"
+    
+    # Test retraining execution
+    if trigger_conditions["should_retrain"]:
+        retrain_result = retrain_trigger.execute_retraining()
+        assert retrain_result["success"] == True, "Retraining should succeed"
+        assert "new_accuracy" in retrain_result, "Should report new accuracy"
+        assert "training_time" in retrain_result, "Should report training time"
+    
+    # Test 6: End-to-end workflow verification
+    pipeline_status = pipeline.get_pipeline_status()
+    assert pipeline_status["pipeline_active"] == True, "Pipeline should remain active"
+    assert "performance_trend" in pipeline_status, "Should track performance trends"
+    assert "drift_history" in pipeline_status, "Should maintain drift history"
+    
+    print("✅ Integration Test Passed: MLOps-TinyTorch integration works correctly.")
+
+# Run the integration test
+test_module_mlops_tinytorch_integration()
+
 # %% [markdown]
 """
 ## 🎯 MODULE SUMMARY: MLOps and Production Systems
