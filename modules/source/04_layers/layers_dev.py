@@ -655,8 +655,8 @@ def test_layer_tensor_integration():
     assert np.array_equal(output_tensor.data, np.array([2, 4, 6])), "Output data is incorrect"
     print("✅ Integration Test Passed: Layer correctly processed Tensor.")
 
-if __name__ == "__main__":
-    test_layer_tensor_integration()
+# Run the integration test
+test_layer_tensor_integration()
 
 
 # %% [markdown]
