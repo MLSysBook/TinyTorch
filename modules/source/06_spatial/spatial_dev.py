@@ -822,8 +822,16 @@ def test_module_conv2d_tensor_compatibility():
 """
 
 # %%
+# Run the integration test
+test_module_conv2d_tensor_compatibility()
+
+# %% [markdown]
+"""
+## 🤖 AUTO TESTING
+"""
+
+# %%
 if __name__ == "__main__":
-    test_module_conv2d_tensor_compatibility()
     from tito.tools.testing import run_module_tests_auto
     
     # Automatically discover and run all tests in this module
