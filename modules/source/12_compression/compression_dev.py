@@ -365,6 +365,13 @@ class CompressionMetrics:
             'dtype': dtype
         }
 
+# %% [markdown]
+"""
+### 🧪 Unit Test: Compression Metrics Analysis
+
+This test validates your `CompressionMetrics` class implementation, ensuring it accurately calculates model parameters, memory usage, and compression statistics for optimization analysis.
+"""
+
 # %% nbgrader={"grade": false, "grade_id": "test-compression-metrics", "locked": false, "schema_version": 3, "solution": false, "task": false}
 def test_unit_compression_metrics():
     """Unit test for the CompressionMetrics class."""
@@ -572,6 +579,13 @@ def calculate_sparsity(layer: Dense) -> float:
     return zero_weights / total_weights if total_weights > 0 else 0.0
     ### END SOLUTION 
 
+# %% [markdown]
+"""
+### 🧪 Unit Test: Magnitude-Based Pruning
+
+This test validates your pruning implementation, ensuring it correctly identifies and removes the smallest weights while maintaining model functionality and calculating accurate sparsity metrics.
+"""
+
 # %% nbgrader={"grade": false, "grade_id": "test-pruning", "locked": false, "schema_version": 3, "solution": false, "task": false}
 def test_unit_magnitude_pruning():
     """Unit test for the magnitude-based pruning functionality."""
@@ -758,6 +772,13 @@ def quantize_layer_weights(layer: Dense, bits: int = 8) -> Tuple[Dense, Dict[str
     
     return layer, quantization_info
     ### END SOLUTION 
+
+# %% [markdown]
+"""
+### 🧪 Unit Test: Weight Quantization
+
+This test validates your quantization implementation, ensuring it correctly converts FP32 weights to INT8 representation while minimizing accuracy loss and achieving significant memory reduction.
+"""
 
 # %% nbgrader={"grade": false, "grade_id": "test-quantization", "locked": false, "schema_version": 3, "solution": false, "task": false}
 def test_unit_quantization():
@@ -975,6 +996,13 @@ class DistillationLoss:
         # Apply softmax and calculate cross-entropy
         probs = self._softmax(logits)
         return -np.mean(np.sum(labels * np.log(probs + 1e-10), axis=-1)) 
+
+# %% [markdown]
+"""
+### 🧪 Unit Test: Knowledge Distillation
+
+This test validates your knowledge distillation implementation, ensuring the student model learns effectively from teacher predictions while maintaining computational efficiency.
+"""
 
 # %% nbgrader={"grade": false, "grade_id": "test-distillation", "locked": false, "schema_version": 3, "solution": false, "task": false}
 def test_unit_distillation():
@@ -1259,6 +1287,13 @@ def prune_layer_neurons(layer: Dense, keep_ratio: float = 0.7,
     
     return pruned_layer, pruning_info
     ### END SOLUTION 
+
+# %% [markdown]
+"""
+### 🧪 Unit Test: Structured Pruning
+
+This test validates your structured pruning implementation, ensuring it correctly removes entire neurons or channels while maintaining model architecture integrity and computational efficiency.
+"""
 
 # %% nbgrader={"grade": false, "grade_id": "test-structured-pruning", "locked": false, "schema_version": 3, "solution": false, "task": false}
 def test_unit_structured_pruning():
@@ -1590,6 +1625,13 @@ Each compression technique includes comprehensive unit tests:
 This module teaches the essential skills for deploying AI in resource-constrained environments!
 """
 
+# %% [markdown]
+"""
+### 🧪 Unit Test: Comprehensive Compression Comparison
+
+This test validates the complete compression pipeline, comparing different techniques (pruning, quantization, distillation) to analyze their effectiveness and trade-offs in model optimization.
+"""
+
 # %% nbgrader={"grade": false, "grade_id": "test-comprehensive-comparison", "locked": false, "schema_version": 3, "solution": false, "task": false}
 def test_unit_comprehensive_comparison():
     """Unit test for the comparison of different compression techniques."""
@@ -1661,6 +1703,13 @@ def test_unit_comprehensive_comparison():
 # Run the test
 test_unit_comprehensive_comparison()
 
+# %% [markdown]
+"""
+### 🧪 Integration Test: Compression with Sequential Models
+
+This integration test validates that all compression techniques work seamlessly with TinyTorch's Sequential models, ensuring proper layer integration and end-to-end functionality.
+"""
+
 # %%
 def test_compression_integration():
     """Integration test for applying compression to a Sequential model."""
@@ -1692,6 +1741,13 @@ def test_compression_integration():
     assert abs(final_sparsity - 0.5) < 0.01, "Sparsity should be close to the pruning ratio."
 
     print("✅ Integration Test Passed: Pruning correctly modified a layer in a Sequential model.")
+
+# %% [markdown]
+"""
+### 🧪 Integration Test: Comprehensive Compression Pipeline
+
+This comprehensive integration test validates the complete compression workflow, applying multiple techniques in sequence and ensuring proper interaction between compression methods and model architectures.
+"""
 
 # %%
 def test_comprehensive_compression_integration():
