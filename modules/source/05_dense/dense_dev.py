@@ -776,6 +776,9 @@ except Exception as e:
 
 print("📈 Final Progress: Complete network architectures ready for real ML applications!")
 
+# Run the test
+test_unit_network_architectures()
+
 # %% nbgrader={"grade": false, "grade_id": "networks-compatibility", "locked": false, "schema_version": 3, "solution": false, "task": false}
 #| export
 class MLP:
@@ -844,6 +847,9 @@ def test_unit_sequential_networks():
     
     print("✅ Sequential networks work correctly")
 
+# Run the test
+test_unit_sequential_networks()
+
 def test_unit_mlp_creation():
     """Unit test for the MLP creation function."""
     print("🔬 Unit Test: MLP Creation...")
@@ -863,6 +869,9 @@ def test_unit_mlp_creation():
     assert y_deep.shape == (1, 2), "Deep MLP should work"
     
     print("✅ MLP creation works correctly")
+
+# Run the test
+test_unit_mlp_creation()
 
 def test_unit_network_architectures():
     """Unit test for different network architectures."""
@@ -889,6 +898,9 @@ def test_unit_network_architectures():
     
     print("✅ Network architectures work correctly")
 
+# Run the test
+test_unit_network_architectures()
+
 def test_unit_network_applications():
     """Comprehensive unit test for network applications in real ML scenarios."""
     print("🔬 Comprehensive Test: Network Applications...")
@@ -901,6 +913,9 @@ def test_unit_network_applications():
     assert iris_predictions.shape == (3, 3), "Iris classifier should work"
     row_sums = np.sum(iris_predictions.data, axis=1)
     assert np.allclose(row_sums, 1.0), "Predictions should sum to 1"
+
+# Run the test
+test_unit_network_applications()
 
 # %% [markdown]
 """
