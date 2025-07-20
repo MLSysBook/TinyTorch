@@ -838,6 +838,9 @@ def test_unit_tensor_creation():
     assert matrix_2x2.shape == (2, 2)
     print("✅ Tensor creation tests passed!")
 
+# Run the test
+test_unit_tensor_creation()
+
 # %%
 def test_unit_tensor_properties():
     """Comprehensive test of tensor properties (shape, size, dtype, data access)."""
@@ -857,6 +860,9 @@ def test_unit_tensor_properties():
     # Test dtype property
     assert tensor.dtype in [np.int32, np.int64]
     print("✅ Tensor properties tests passed!")
+
+# Run the test
+test_unit_tensor_properties()
 
 # %%
 def test_unit_tensor_arithmetic():
@@ -886,6 +892,9 @@ def test_unit_tensor_arithmetic():
     expected = np.array([4.0, 2.5, 2.0])
     assert np.allclose(f.data, expected)
     print("✅ Tensor arithmetic tests passed!")
+
+# Run the test
+test_unit_tensor_arithmetic()
 
 # %% [markdown]
 """
