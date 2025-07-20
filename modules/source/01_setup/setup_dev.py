@@ -451,9 +451,10 @@ Now let's test your configuration functions!
 Once you implement both functions above, run this cell to test them:
 """
 
-
-
-
+# %% [markdown]
+"""
+## 🔧 DEVELOPMENT
+"""
 
 # %%
 def test_unit_personal_info_basic():
@@ -532,6 +533,10 @@ Time to test your implementation! This section uses TinyTorch's standardized tes
 
 **This testing section is locked** - it provides consistent feedback across all modules and cannot be modified.
 """
+# %% [markdown]
+"""
+## 🤖 AUTO TESTING
+"""
 
 # %% nbgrader={"grade": false, "grade_id": "standardized-testing", "locked": true, "schema_version": 3, "solution": false, "task": false}
 # =============================================================================
@@ -547,7 +552,7 @@ if __name__ == "__main__":
 
 # %% [markdown]
 """
-## 🎯 Professional ML Engineering Skills
+## 🎯 MODULE SUMMARY: Setup Configuration
 
 You've successfully configured your TinyTorch installation and learned the foundations of ML systems engineering:
 
