@@ -162,6 +162,11 @@ Let's start configuring your TinyTorch system!
 
 # %% [markdown]
 """
+## 🔧 DEVELOPMENT
+"""
+
+# %% [markdown]
+"""
 ## Step 2: Personal Information Configuration
 
 ### The Concept: Identity in ML Systems
@@ -449,11 +454,6 @@ Now let's test your configuration functions!
 ### 🧪 Test Your Configuration Functions
 
 Once you implement both functions above, run this cell to test them:
-"""
-
-# %% [markdown]
-"""
-## 🔧 DEVELOPMENT
 """
 
 # %%
