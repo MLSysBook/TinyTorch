@@ -456,6 +456,13 @@ Now let's test your configuration functions!
 Once you implement both functions above, run this cell to test them:
 """
 
+# %% [markdown]
+"""
+### 🧪 Unit Test: Personal Information Configuration
+
+This test validates your `personal_info()` function implementation, ensuring it returns properly formatted developer information for system attribution and collaboration.
+"""
+
 # %%
 def test_unit_personal_info_basic():
     """Test personal_info function implementation."""
@@ -492,6 +499,13 @@ def test_unit_personal_info_basic():
 
 # Run the test
 test_unit_personal_info_basic()
+
+# %% [markdown]
+"""
+### 🧪 Unit Test: System Information Query
+
+This test validates your `system_info()` function implementation, ensuring it accurately detects and reports hardware and software specifications for performance optimization and debugging.
+"""
 
 # %%
 def test_unit_system_info_basic():
