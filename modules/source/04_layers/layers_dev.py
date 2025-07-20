@@ -658,7 +658,6 @@ def test_layer_tensor_integration():
 # Run the integration test
 test_layer_tensor_integration()
 
-
 # %% [markdown]
 """
 ## 🧪 Module Testing
