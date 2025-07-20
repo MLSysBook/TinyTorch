@@ -555,6 +555,11 @@ Let's test different architectures!
 
 # %% [markdown]
 """
+## 🔧 DEVELOPMENT
+"""
+
+# %% [markdown]
+"""
 ### 🧪 Unit Test: Architecture Variations
 
 Let's test different network architectures to understand their behavior.
