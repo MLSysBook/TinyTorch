@@ -743,6 +743,9 @@ def test_unit_convolution_operation():
     
     print("✅ Convolution operation works correctly")
 
+# Run the test
+test_unit_convolution_operation()
+
 def test_unit_conv2d_layer():
     """Unit test for the Conv2D layer implementation."""
     print("🔬 Unit Test: Conv2D Layer...")
@@ -758,6 +761,9 @@ def test_unit_conv2d_layer():
     
     print("✅ Conv2D layer works correctly")
 
+# Run the test
+test_unit_conv2d_layer()
+
 def test_unit_flatten_function():
     """Unit test for the flatten function implementation."""
     print("🔬 Unit Test: Flatten Function...")
@@ -771,6 +777,9 @@ def test_unit_flatten_function():
     assert np.array_equal(flattened.data, expected), "Flatten should preserve values"
     
     print("✅ Flatten function works correctly")
+
+# Run the test
+test_unit_flatten_function()
 
 # CNN pipeline integration test moved to tests/integration/test_cnn_pipeline.py
 
