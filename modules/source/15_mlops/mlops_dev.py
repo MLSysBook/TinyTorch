@@ -447,6 +447,11 @@ class ModelMonitor:
 
 # %% [markdown]
 """
+## 🔧 DEVELOPMENT
+"""
+
+# %% [markdown]
+"""
 ### 🧪 Test Your Performance Monitor
 
 Once you implement the `ModelMonitor` class above, run this cell to test it:
