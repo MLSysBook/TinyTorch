@@ -243,6 +243,8 @@ def scaled_dot_product_attention(Q: Tensor, K: Tensor, V: Tensor,
 
 # %% [markdown]
 """
+## 🔧 DEVELOPMENT
+
 ### 🧪 Test Your Attention Implementation
 
 Once you implement the `scaled_dot_product_attention` function above, run this cell to test it:
