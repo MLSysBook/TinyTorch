@@ -711,6 +711,13 @@ except Exception as e:
 
 print("📈 Final Progress: Complete CNN system ready for computer vision!")
 
+# %% [markdown]
+"""
+### 🧪 Unit Test: Convolution Operation Implementation
+
+This test validates the `conv2d_naive` function, ensuring it correctly performs 2D convolution operations with proper kernel sliding, dot product computation, and output shape calculation for spatial feature detection.
+"""
+
 # %%
 def test_unit_convolution_operation():
     """Unit test for the convolution operation implementation."""
@@ -730,6 +737,14 @@ def test_unit_convolution_operation():
 # Run the test
 test_unit_convolution_operation()
 
+# %% [markdown]
+"""
+### 🧪 Unit Test: Conv2D Layer Implementation
+
+This test validates the Conv2D layer class, ensuring proper kernel initialization, forward pass functionality, and integration with the tensor framework for convolutional neural network construction.
+"""
+
+# %%
 def test_unit_conv2d_layer():
     """Unit test for the Conv2D layer implementation."""
     print("🔬 Unit Test: Conv2D Layer...")
@@ -748,6 +763,14 @@ def test_unit_conv2d_layer():
 # Run the test
 test_unit_conv2d_layer()
 
+# %% [markdown]
+"""
+### 🧪 Unit Test: Flatten Function Implementation
+
+This test validates the flatten function, ensuring it correctly converts 2D spatial tensors to 1D vectors for connecting convolutional layers to dense layers in CNN architectures.
+"""
+
+# %%
 def test_unit_flatten_function():
     """Unit test for the flatten function implementation."""
     print("🔬 Unit Test: Flatten Function...")
