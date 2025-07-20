@@ -542,6 +542,13 @@ Let's test different network architectures to understand their behavior.
 **This is a unit test** - it tests architectural variations in isolation.
 """
 
+# %% [markdown] 
+"""
+### 📊 Visualization: Network Architecture Comparison
+
+This function creates and visualizes different neural network architectures to demonstrate how activation functions and layer configurations affect network behavior and output characteristics.
+"""
+
 # %% nbgrader={"grade": true, "grade_id": "test-architectures", "locked": true, "points": 10, "schema_version": 3, "solution": false, "task": false}
 def plot_network_architectures():
     """Visualize different network architectures."""
@@ -774,6 +781,13 @@ print("📈 Final Progress: Complete network architectures ready for real ML app
 # Run the test
 test_unit_network_architectures()
 
+# %% [markdown]
+"""
+### 🏗️ Class: MLP (Multi-Layer Perceptron)
+
+This class provides a convenient wrapper around Sequential networks specifically designed for standard MLP architectures. It maintains parameter information and provides a clean interface for creating and managing multi-layer perceptrons with consistent structure.
+"""
+
 # %% nbgrader={"grade": false, "grade_id": "networks-compatibility", "locked": false, "schema_version": 3, "solution": false, "task": false}
 #| export
 class MLP:
@@ -819,8 +833,14 @@ class MLP:
         """Make the MLP callable."""
         return self.forward(x)
 
-# %% [markdown] 
+# %% [markdown]
+"""
+### 🧪 Unit Test: Sequential Network Implementation
 
+This test validates the Sequential network class functionality, ensuring proper layer composition, forward pass execution, and network architecture validation for multi-layer neural networks.
+"""
+
+# %%
 def test_unit_sequential_networks():
     """Unit test for the Sequential network implementation."""
     print("🔬 Unit Test: Sequential Networks...")
@@ -845,6 +865,14 @@ def test_unit_sequential_networks():
 # Run the test
 test_unit_sequential_networks()
 
+# %% [markdown]
+"""
+### 🧪 Unit Test: MLP Creation Function
+
+This test validates the `create_mlp` function, ensuring it correctly constructs Multi-Layer Perceptrons with various architectures, activation functions, and layer configurations for different machine learning tasks.
+"""
+
+# %%
 def test_unit_mlp_creation():
     """Unit test for the MLP creation function."""
     print("🔬 Unit Test: MLP Creation...")
@@ -868,6 +896,14 @@ def test_unit_mlp_creation():
 # Run the test
 test_unit_mlp_creation()
 
+# %% [markdown]
+"""
+### 🧪 Unit Test: Network Applications in Real ML Scenarios
+
+This comprehensive test validates network performance on real machine learning tasks including classification and regression, ensuring the implementations work correctly with actual datasets and practical applications.
+"""
+
+# %%
 def test_unit_network_applications():
     """Comprehensive unit test for network applications in real ML scenarios."""
     print("🔬 Comprehensive Test: Network Applications...")
