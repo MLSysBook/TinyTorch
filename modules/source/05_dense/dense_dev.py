@@ -931,18 +931,6 @@ test_module_full_network_forward_pass()
 
 # %% [markdown]
 """
-## 🤖 AUTO TESTING
-"""
-
-# %%
-if __name__ == "__main__":
-    from tito.tools.testing import run_module_tests_auto
-    
-    # Automatically discover and run all tests in this module
-    success = run_module_tests_auto("Networks")
-
-# %% [markdown]
-"""
 ## 🎯 MODULE SUMMARY: Neural Network Architectures
 
 Congratulations! You've successfully implemented complete neural network architectures:
