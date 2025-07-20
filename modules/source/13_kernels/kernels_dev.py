@@ -1318,36 +1318,7 @@ def final_performance_test():
 # Run the final test
 final_performance_test()
 
-# %% [markdown]
-"""
-## 🧪 Module Testing
-
-Time to test your implementation! This section uses TinyTorch's standardized testing framework to ensure your implementation works correctly.
-
-**This testing section is locked** - it provides consistent feedback across all modules and cannot be modified.
-"""
-
-# %% nbgrader={"grade": false, "grade_id": "standardized-testing", "locked": true, "schema_version": 3, "solution": false, "task": false}
-# =============================================================================
-# STANDARDIZED MODULE TESTING - DO NOT MODIFY
-# This cell is locked to ensure consistent testing across all TinyTorch modules
-# =============================================================================
-
-"""
-## 🔬 Integration Test: Using Kernels in a Sequential Model
-"""
-
 # %%
-# Mock classes for Dense and ReLU to be used in the test
-class Dense:
-    def __init__(self, in_features, out_features):
-        self.weights = Tensor(np.random.randn(in_features, out_features))
-        self.bias = Tensor(np.random.randn(out_features))
-
-class ReLU:
-    def __call__(self, x: Tensor) -> Tensor:
-        return vectorized_relu(x)
-
 def test_module_kernel_sequential_model():
     """
     Integration test for using optimized kernels in a Sequential model.
@@ -1381,6 +1352,16 @@ def test_module_kernel_sequential_model():
             x = vectorized_relu(x)
             return x
     
+    # Mock classes for Dense and ReLU to be used in the test
+    class Dense:
+        def __init__(self, in_features, out_features):
+            self.weights = Tensor(np.random.randn(in_features, out_features))
+            self.bias = Tensor(np.random.randn(out_features))
+
+    class ReLU:
+        def __call__(self, x: Tensor) -> Tensor:
+            return vectorized_relu(x)
+    
     # 1. Create baseline and optimized models
     baseline_model = BaselineModel()
     optimized_model = OptimizedModel(baseline_model)
@@ -1397,6 +1378,20 @@ def test_module_kernel_sequential_model():
 
     print("✅ Integration Test Passed: Kernels correctly integrated into a model.")
 
+# %% [markdown]
+"""
+## 🧪 Module Testing
+
+Time to test your implementation! This section uses TinyTorch's standardized testing framework to ensure your implementation works correctly.
+
+**This testing section is locked** - it provides consistent feedback across all modules and cannot be modified.
+"""
+
+# %% nbgrader={"grade": false, "grade_id": "standardized-testing", "locked": true, "schema_version": 3, "solution": false, "task": false}
+# =============================================================================
+# STANDARDIZED MODULE TESTING - DO NOT MODIFY
+# This cell is locked to ensure consistent testing across all TinyTorch modules
+# =============================================================================
 
 if __name__ == "__main__":
     # Unit tests
@@ -1407,6 +1402,8 @@ if __name__ == "__main__":
     test_simple_kernel_timing()
     test_compressed_kernels()
     final_performance_test()
+    # Integration test
+    test_module_kernel_sequential_model()
 
     from tito.tools.testing import run_module_tests_auto
     # Automatically discover and run all tests in this module
