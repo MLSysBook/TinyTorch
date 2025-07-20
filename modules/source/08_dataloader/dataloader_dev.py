@@ -1085,12 +1085,6 @@ def test_module_dataloader_tensor_yield():
 
     print("✅ Integration Test Passed: DataLoader correctly yields batches of Tensors.")
 
-# %% [markdown]
-"""
-## 🤖 AUTO TESTING
-"""
-
-# %%
 # Run the integration test
 test_module_dataloader_tensor_yield()
 
