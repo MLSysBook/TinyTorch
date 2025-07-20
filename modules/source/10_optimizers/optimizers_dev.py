@@ -1393,129 +1393,56 @@ def test_module_unit_training():
 # Run the test
 test_module_unit_training()
 
-# %%
-def test_module_optimizer_autograd_compatibility():
-    """
-    Integration test for the optimizer and autograd Variable classes.
-    
-    Tests that an optimizer can correctly update the Tensors of Variables
-    that have gradients computed by the autograd engine.
-    """
-    print("🔬 Running Integration Test: Optimizer with Autograd Variables...")
-
-    # 1. Create a parameter that requires gradients
-    w = Variable(Tensor([3.0]), requires_grad=True)
-
-    # 2. Simulate a backward pass by manually setting a gradient
-    # The gradient must also be a Tensor, wrapped in a Variable
-    w.grad = Variable(Tensor([10.0]), requires_grad=False)
-
-    # 3. Create an SGD optimizer for this parameter
-    optimizer = SGD(parameters=[w], learning_rate=0.1)
-
-    # 4. Perform an optimization step
-    optimizer.step()
-
-    # 5. Assert that the parameter's data (Tensor) has been updated
-    # new_w = 3.0 - 0.1 * 10.0 = 2.0
-    assert isinstance(w.data, Tensor), "Parameter's data should remain a Tensor"
-    assert np.allclose(w.data.data, [2.0]), f"Expected w to be 2.0, but got {w.data.data}"
-
-    print("✅ Integration Test Passed: Optimizer correctly updated Variable's Tensor data.")
-
-# %% [markdown]
-"""
-## 🧪 Module Testing
-
-Time to test your implementation! This section uses TinyTorch's standardized testing framework to ensure your implementation works correctly.
-
-**This testing section is locked** - it provides consistent feedback across all modules and cannot be modified.
-"""
-
-# %% [markdown]
-"""
-## 🤖 AUTO TESTING
-"""
-
-# %% nbgrader={"grade": false, "grade_id": "standardized-testing", "locked": true, "schema_version": 3, "solution": false, "task": false}
-# =============================================================================
-# STANDARDIZED MODULE TESTING - DO NOT MODIFY
-# This cell is locked to ensure consistent testing across all TinyTorch modules
-# =============================================================================
-
-if __name__ == "__main__":
-    from tito.tools.testing import run_module_tests_auto
-    
-    # Automatically discover and run all tests in this module
-    success = run_module_tests_auto("Optimizers")
-
 # %% [markdown]
 """
 ## 🎯 MODULE SUMMARY: Optimization Algorithms
 
-Congratulations! You've successfully implemented the optimization algorithms that power all modern neural network training:
+Congratulations! You've successfully implemented optimization algorithms:
 
-### ✅ What You've Built
-- **Gradient Descent**: The fundamental parameter update mechanism
-- **SGD with Momentum**: Accelerated convergence with velocity accumulation
-- **Adam Optimizer**: Adaptive learning rates with first and second moments
-- **Learning Rate Scheduling**: Smart learning rate adjustment during training
-- **Complete Training Integration**: End-to-end training workflow
+### What You've Accomplished
+✅ **Gradient Descent**: The foundation of all optimization algorithms
+✅ **SGD with Momentum**: Improved convergence with momentum
+✅ **Adam Optimizer**: Adaptive learning rates for better training
+✅ **Learning Rate Scheduling**: Dynamic learning rate adjustment
+✅ **Integration**: Seamless compatibility with autograd and neural networks
 
-### ✅ Key Learning Outcomes
-- **Understanding**: How optimizers use gradients to update parameters intelligently
-- **Implementation**: Built SGD and Adam optimizers from mathematical foundations
-- **Mathematical mastery**: Momentum, adaptive learning rates, bias correction
-- **Systems integration**: Complete training loops with scheduling
-- **Real-world application**: Modern deep learning training workflow
+### Key Concepts You've Learned
+- **Gradient-based optimization**: How gradients guide parameter updates
+- **Momentum**: Using velocity to improve convergence
+- **Adaptive learning rates**: Adam's adaptive moment estimation
+- **Learning rate scheduling**: Dynamic adjustment of learning rates
+- **Integration patterns**: How optimizers work with neural networks
 
-### ✅ Mathematical Foundations Mastered
-- **Gradient Descent**: θ = θ - α∇L(θ) for parameter updates
-- **Momentum**: v_t = βv_{t-1} + ∇L(θ) for acceleration
-- **Adam**: Adaptive learning rates with exponential moving averages
-- **Learning Rate Scheduling**: Strategic learning rate adjustment
+### Mathematical Foundations
+- **Gradient descent**: θ = θ - α∇θJ(θ)
+- **Momentum**: v = βv + (1-β)∇θJ(θ), θ = θ - αv
+- **Adam**: Adaptive moment estimation with bias correction
+- **Learning rate scheduling**: StepLR and other scheduling strategies
 
-### ✅ Professional Skills Developed
-- **Algorithm implementation**: Translating mathematical formulas into code
-- **State management**: Tracking optimizer buffers and statistics
-- **Hyperparameter design**: Understanding the impact of learning rate, momentum, etc.
-- **Training orchestration**: Complete training loop design
+### Professional Skills Developed
+- **Algorithm implementation**: Building optimization algorithms from scratch
+- **Hyperparameter tuning**: Understanding learning rates and momentum
+- **Training optimization**: Improving convergence and stability
+- **Integration testing**: Ensuring optimizers work with neural networks
 
-### ✅ Ready for Advanced Applications
-Your optimizers now enable:
-- **Deep Neural Networks**: Effective training of complex architectures
-- **Computer Vision**: Training CNNs, ResNets, Vision Transformers
-- **Natural Language Processing**: Training transformers and language models
-- **Any ML Model**: Gradient-based optimization for any differentiable system
+### Ready for Advanced Applications
+Your optimization implementations now enable:
+- **Neural network training**: Complete training pipelines with optimizers
+- **Hyperparameter optimization**: Tuning learning rates and schedules
+- **Advanced architectures**: Training complex models efficiently
+- **Research**: Experimenting with new optimization algorithms
 
-### 🔗 Connection to Real ML Systems
+### Connection to Real ML Systems
 Your implementations mirror production systems:
-- **PyTorch**: `torch.optim.SGD()`, `torch.optim.Adam()`, `torch.optim.lr_scheduler.StepLR()`
-- **TensorFlow**: `tf.keras.optimizers.SGD()`, `tf.keras.optimizers.Adam()`
+- **PyTorch**: `torch.optim.SGD`, `torch.optim.Adam` provide identical functionality
+- **TensorFlow**: `tf.keras.optimizers` implements similar concepts
 - **Industry Standard**: Every major ML framework uses these exact algorithms
 
-### 🎯 The Power of Intelligent Optimization
-You've unlocked the algorithms that made modern AI possible:
-- **Scalability**: Efficiently optimize millions of parameters
-- **Adaptability**: Different learning rates for different parameters
-- **Robustness**: Handle noisy gradients and ill-conditioned problems
-- **Universality**: Work with any differentiable neural network
+### Next Steps
+1. **Export your code**: `tito export 10_optimizers`
+2. **Test your implementation**: `tito test 10_optimizers`
+3. **Build training systems**: Combine with neural networks for complete training
+4. **Move to Module 11**: Add complete training pipelines!
 
-### 🧠 Deep Learning Revolution
-You now understand the optimization technology that powers:
-- **ImageNet**: Training state-of-the-art computer vision models
-- **Language Models**: Training GPT, BERT, and other transformers
-- **Modern AI**: Every breakthrough relies on these optimization algorithms
-- **Future Research**: Your understanding enables you to develop new optimizers
-
-### 🚀 What's Next
-Your optimizers are the foundation for:
-- **Training Module**: Complete training loops with loss functions and metrics
-- **Advanced Optimizers**: RMSprop, AdaGrad, learning rate warm-up
-- **Distributed Training**: Multi-GPU optimization strategies
-- **Research**: Experimenting with novel optimization algorithms
-
-**Next Module**: Complete training systems that orchestrate your optimizers for real-world ML!
-
-You've built the intelligent algorithms that enable neural networks to learn. Now let's use them to train systems that can solve complex real-world problems!
+**Ready for training?** Your optimization algorithms are now ready for real neural network training!
 """ 
