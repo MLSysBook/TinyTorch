@@ -1711,7 +1711,7 @@ This integration test validates that all compression techniques work seamlessly 
 """
 
 # %%
-def test_integration_compression():
+def test_module_compression():
     """Integration test for applying compression to a Sequential model."""
     print("🔬 Running Integration Test: Compression on Sequential Model...")
 
@@ -1743,7 +1743,7 @@ def test_integration_compression():
     print("✅ Integration Test Passed: Pruning correctly modified a layer in a Sequential model.")
 
 # Run the test
-test_integration_compression()
+test_module_compression()
 
 # %% [markdown]
 """
@@ -1753,7 +1753,7 @@ This comprehensive integration test validates the complete compression workflow,
 """
 
 # %%
-def test_integration_compression():
+def test_module_compression():
     """
     Integration test for applying multiple compression techniques to a Sequential model.
     
@@ -1800,7 +1800,7 @@ def test_integration_compression():
     print("✅ Integration Test Passed: Comprehensive compression successfully applied and verified.")
 
 # Run the test
-test_integration_compression()
+test_module_compression()
 
 # %% [markdown]
 """
