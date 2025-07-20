@@ -578,62 +578,62 @@ plot_network_architectures()
 
 def test_unit_network_architectures():
     """Unit test for different network architectures."""
-# Test different architectures
-print("🔬 Unit Test: Network Architecture Variations...")
-
-try:
-    # Test different activation functions
-    relu_net = create_mlp(input_size=3, hidden_sizes=[4], output_size=1, activation=ReLU)
-    tanh_net = create_mlp(input_size=3, hidden_sizes=[4], output_size=1, activation=Tanh)
-    
-    # Test different output activations
-    classifier = create_mlp(input_size=3, hidden_sizes=[4], output_size=3, output_activation=Softmax)
-    
-    # Test with sample data
-    x = Tensor([[1.0, 2.0, 3.0]])
-    
-    # Test ReLU network
-    y_relu = relu_net(x)
-    assert y_relu.shape == (1, 1), "ReLU network should work"
-    print("✅ ReLU network works correctly")
-    
-    # Test Tanh network
-    y_tanh = tanh_net(x)
-    assert y_tanh.shape == (1, 1), "Tanh network should work"
-    print("✅ Tanh network works correctly")
-    
-    # Test multi-class classifier
-    y_multi = classifier(x)
-    assert y_multi.shape == (1, 3), "Multi-class classifier should work"
-    
-    # Check softmax properties
-    assert abs(np.sum(y_multi.data) - 1.0) < 1e-6, "Softmax outputs should sum to 1"
-    print("✅ Multi-class classifier with Softmax works correctly")
-    
     # Test different architectures
-    shallow = create_mlp(input_size=4, hidden_sizes=[5], output_size=1)
-    deep = create_mlp(input_size=4, hidden_sizes=[5, 5, 5], output_size=1)
-    wide = create_mlp(input_size=4, hidden_sizes=[20], output_size=1)
-    
-    x_test = Tensor([[1.0, 2.0, 3.0, 4.0]])
-    
-    # Test all architectures
-    for name, net in [("Shallow", shallow), ("Deep", deep), ("Wide", wide)]:
-        y = net(x_test)
-        assert y.shape == (1, 1), f"{name} network should produce correct shape"
-        print(f"✅ {name} network works correctly")
-    
-    print("✅ All network architectures work correctly")
-        
-except Exception as e:
-    print(f"❌ Architecture test failed: {e}")
-    raise
+    print("🔬 Unit Test: Network Architecture Variations...")
 
-print("🎯 Architecture insights:")
-print("   Different activations create different behaviors")
-print("   Softmax enables multi-class classification")
-print("   Architecture affects network capacity and learning")
-print("📈 Progress: Sequential ✓, MLP creation ✓, Architecture variations ✓")
+    try:
+        # Test different activation functions
+        relu_net = create_mlp(input_size=3, hidden_sizes=[4], output_size=1, activation=ReLU)
+        tanh_net = create_mlp(input_size=3, hidden_sizes=[4], output_size=1, activation=Tanh)
+        
+        # Test different output activations
+        classifier = create_mlp(input_size=3, hidden_sizes=[4], output_size=3, output_activation=Softmax)
+        
+        # Test with sample data
+        x = Tensor([[1.0, 2.0, 3.0]])
+        
+        # Test ReLU network
+        y_relu = relu_net(x)
+        assert y_relu.shape == (1, 1), "ReLU network should work"
+        print("✅ ReLU network works correctly")
+        
+        # Test Tanh network
+        y_tanh = tanh_net(x)
+        assert y_tanh.shape == (1, 1), "Tanh network should work"
+        print("✅ Tanh network works correctly")
+        
+        # Test multi-class classifier
+        y_multi = classifier(x)
+        assert y_multi.shape == (1, 3), "Multi-class classifier should work"
+        
+        # Check softmax properties
+        assert abs(np.sum(y_multi.data) - 1.0) < 1e-6, "Softmax outputs should sum to 1"
+        print("✅ Multi-class classifier with Softmax works correctly")
+        
+        # Test different architectures
+        shallow = create_mlp(input_size=4, hidden_sizes=[5], output_size=1)
+        deep = create_mlp(input_size=4, hidden_sizes=[5, 5, 5], output_size=1)
+        wide = create_mlp(input_size=4, hidden_sizes=[20], output_size=1)
+        
+        x_test = Tensor([[1.0, 2.0, 3.0, 4.0]])
+        
+        # Test all architectures
+        for name, net in [("Shallow", shallow), ("Deep", deep), ("Wide", wide)]:
+            y = net(x_test)
+            assert y.shape == (1, 1), f"{name} network should produce correct shape"
+            print(f"✅ {name} network works correctly")
+        
+        print("✅ All network architectures work correctly")
+            
+    except Exception as e:
+        print(f"❌ Architecture test failed: {e}")
+        raise
+
+    print("🎯 Architecture insights:")
+    print("   Different activations create different behaviors")
+    print("   Softmax enables multi-class classification")
+    print("   Architecture affects network capacity and learning")
+    print("📈 Progress: Sequential ✓, MLP creation ✓, Architecture variations ✓")
 
 # %% [markdown]
 """
@@ -729,14 +729,14 @@ try:
     print("\n4. Network Composition Test:")
     # Create a feature extractor and classifier separately
     feature_extractor = Sequential([
-    Dense(input_size=10, output_size=5),
+        Dense(input_size=10, output_size=5),
         ReLU(),
-    Dense(input_size=5, output_size=3),
+        Dense(input_size=5, output_size=3),
         ReLU()
     ])
     
     classifier_head = Sequential([
-    Dense(input_size=3, output_size=2),
+        Dense(input_size=3, output_size=2),
         Softmax()
     ])
     
@@ -860,34 +860,6 @@ def test_unit_mlp_creation():
 # Run the test
 test_unit_mlp_creation()
 
-def test_unit_network_architectures():
-    """Unit test for different network architectures."""
-    print("🔬 Unit Test: Network Architectures...")
-    
-    # Test different activation functions
-    relu_net = create_mlp(input_size=3, hidden_sizes=[4], output_size=1, activation=ReLU)
-    tanh_net = create_mlp(input_size=3, hidden_sizes=[4], output_size=1, activation=Tanh)
-    
-    # Test multi-class classifier
-    classifier = create_mlp(input_size=3, hidden_sizes=[4], output_size=3, output_activation=Softmax)
-    
-    x = Tensor([[1.0, 2.0, 3.0]])
-    
-    # Test all architectures
-    y_relu = relu_net(x)
-    y_tanh = tanh_net(x)
-    y_multi = classifier(x)
-    
-    assert y_relu.shape == (1, 1), "ReLU network should work"
-    assert y_tanh.shape == (1, 1), "Tanh network should work"
-    assert y_multi.shape == (1, 3), "Multi-class classifier should work"
-    assert abs(np.sum(y_multi.data) - 1.0) < 1e-6, "Softmax outputs should sum to 1"
-    
-    print("✅ Network architectures work correctly")
-
-# Run the test
-test_unit_network_architectures()
-
 def test_unit_network_applications():
     """Comprehensive unit test for network applications in real ML scenarios."""
     print("🔬 Comprehensive Test: Network Applications...")
@@ -954,6 +926,9 @@ def test_module_full_network_forward_pass():
     assert output_tensor.shape == (5, 2), f"Expected output shape (5, 2), but got {output_tensor.shape}"
     print("✅ Integration Test Passed: Full network forward pass is successful.")
 
+# Run the integration test
+test_module_full_network_forward_pass()
+
 # %% [markdown]
 """
 ## 🤖 AUTO TESTING
@@ -961,7 +936,6 @@ def test_module_full_network_forward_pass():
 
 # %%
 if __name__ == "__main__":
-    test_module_full_network_forward_pass()
     from tito.tools.testing import run_module_tests_auto
     
     # Automatically discover and run all tests in this module
