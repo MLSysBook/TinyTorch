@@ -103,6 +103,11 @@ from tinytorch.core.networks import Sequential  # Models to train
 
 # %% [markdown]
 """
+## 🔧 DEVELOPMENT
+"""
+
+# %% [markdown]
+"""
 ## Step 1: Understanding Data Pipelines
 
 ### What are Data Pipelines?
@@ -1098,6 +1103,12 @@ def test_module_dataloader_tensor_yield():
 
     print("✅ Integration Test Passed: DataLoader correctly yields batches of Tensors.")
 
+# %% [markdown]
+"""
+## 🤖 AUTO TESTING
+"""
+
+# %%
 if __name__ == "__main__":
     # Unit tests
     test_unit_dataset_interface()
@@ -1113,7 +1124,7 @@ if __name__ == "__main__":
 
 # %% [markdown]
 """
-## 🎯 Module Summary
+## 🎯 MODULE SUMMARY: Data Loading Systems
 
 Congratulations! You've successfully implemented the core components of data loading systems:
 
