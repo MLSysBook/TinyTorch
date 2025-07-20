@@ -689,6 +689,9 @@ class StatisticalValidator:
         ### END SOLUTION
         raise NotImplementedError("Student implementation required")
 
+# Run the test
+test_unit_benchmark_scenarios()
+
 # %% [markdown]
 """
 ### 🧪 Unit Test: Statistical Validation
@@ -734,7 +737,7 @@ def test_unit_statistical_validation():
     print("✅ Statistical validation tests passed!")
 
 # Run the test
-test_statistical_validation()
+test_unit_statistical_validation()
 
 # %% [markdown]
 """
@@ -1158,6 +1161,9 @@ def plot_benchmark_results(benchmark_results: Dict[str, BenchmarkResult]):
     plt.tight_layout()
     plt.show()
 
+# Run the test
+test_unit_tinytorch_perf()
+
 # %% [markdown]
 """
 ### 🧪 Unit Test: Performance Reporter
@@ -1219,7 +1225,7 @@ def test_unit_performance_reporter():
     print("✅ Performance reporter tests passed!")
 
 # Run the test
-test_performance_reporter()
+test_unit_performance_reporter()
 
 # %% [markdown]
 """
@@ -1317,7 +1323,7 @@ def test_module_comprehensive_benchmarking():
     print("🎉 Complete benchmarking system working!")
 
 # Run the comprehensive test
-test_comprehensive_benchmarking()
+test_module_comprehensive_benchmarking()
 
 # %% [markdown]
 """
