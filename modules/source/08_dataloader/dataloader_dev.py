@@ -1091,6 +1091,15 @@ def test_module_dataloader_tensor_yield():
 """
 
 # %%
+# Run the integration test
+test_module_dataloader_tensor_yield()
+
+# %% [markdown]
+"""
+## 🤖 AUTO TESTING
+"""
+
+# %%
 if __name__ == "__main__":
     from tito.tools.testing import run_module_tests_auto
     
