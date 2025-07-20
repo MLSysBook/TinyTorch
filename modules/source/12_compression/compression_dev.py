@@ -1711,7 +1711,7 @@ This integration test validates that all compression techniques work seamlessly 
 """
 
 # %%
-def test_compression_integration():
+def test_integration_compression():
     """Integration test for applying compression to a Sequential model."""
     print("🔬 Running Integration Test: Compression on Sequential Model...")
 
@@ -1742,6 +1742,9 @@ def test_compression_integration():
 
     print("✅ Integration Test Passed: Pruning correctly modified a layer in a Sequential model.")
 
+# Run the test
+test_integration_compression()
+
 # %% [markdown]
 """
 ### 🧪 Integration Test: Comprehensive Compression Pipeline
@@ -1750,7 +1753,7 @@ This comprehensive integration test validates the complete compression workflow,
 """
 
 # %%
-def test_comprehensive_compression_integration():
+def test_integration_compression():
     """
     Integration test for applying multiple compression techniques to a Sequential model.
     
@@ -1795,6 +1798,9 @@ def test_comprehensive_compression_integration():
     assert final_size_mb < initial_size_mb / 1.5, "Quantization should significantly reduce model size."
 
     print("✅ Integration Test Passed: Comprehensive compression successfully applied and verified.")
+
+# Run the test
+test_integration_compression()
 
 # %% [markdown]
 """
