@@ -255,6 +255,11 @@ def gradient_descent_step(parameter: Variable, learning_rate: float) -> None:
 
 # %% [markdown]
 """
+## 🔧 DEVELOPMENT
+"""
+
+# %% [markdown]
+"""
 ### 🧪 Unit Test: Gradient Descent Step
 
 Let's test your gradient descent implementation right away! This is the foundation of all optimization algorithms.
