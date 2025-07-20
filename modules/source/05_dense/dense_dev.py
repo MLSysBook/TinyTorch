@@ -106,6 +106,11 @@ from tinytorch.core.tensor import Tensor  # Foundation
 
 # %% [markdown]
 """
+## 🔧 DEVELOPMENT
+"""
+
+# %% [markdown]
+"""
 ## Step 1: Understanding Neural Networks as Function Composition
 
 ### What is a Neural Network?
@@ -637,8 +642,8 @@ try:
     
     print("✅ All network architectures work correctly")
     
-        # Plot the architectures if not in test mode
-        plot_network_architectures()
+    # Plot the architectures if not in test mode
+    plot_network_architectures()
         
 except Exception as e:
     print(f"❌ Architecture test failed: {e}")
@@ -947,6 +952,12 @@ def test_module_full_network_forward_pass():
     assert output_tensor.shape == (5, 2), f"Expected output shape (5, 2), but got {output_tensor.shape}"
     print("✅ Integration Test Passed: Full network forward pass is successful.")
 
+# %% [markdown]
+"""
+## 🤖 AUTO TESTING
+"""
+
+# %%
 if __name__ == "__main__":
     test_module_full_network_forward_pass()
     from tito.tools.testing import run_module_tests_auto
@@ -956,7 +967,7 @@ if __name__ == "__main__":
 
 # %% [markdown]
 """
-## 🎯 Module Summary: Neural Network Architectures Mastery!
+## 🎯 MODULE SUMMARY: Neural Network Architectures
 
 Congratulations! You've successfully implemented complete neural network architectures:
 
