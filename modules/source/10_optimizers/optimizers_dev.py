@@ -1444,16 +1444,8 @@ Time to test your implementation! This section uses TinyTorch's standardized tes
 # =============================================================================
 
 if __name__ == "__main__":
-    # Unit tests
-    test_unit_gradient_descent_step()
-    test_unit_sgd_optimizer()
-    test_unit_adam_optimizer()
-    test_unit_step_scheduler()
-    test_unit_training_integration()
-    # Integration test
-    test_module_optimizer_autograd_compatibility()
-
     from tito.tools.testing import run_module_tests_auto
+    
     # Automatically discover and run all tests in this module
     success = run_module_tests_auto("Optimizers")
 
