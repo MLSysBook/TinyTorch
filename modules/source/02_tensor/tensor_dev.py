@@ -822,6 +822,11 @@ Congratulations! You've successfully implemented the core Tensor class for TinyT
 
 # %% [markdown]
 """
+## 🔧 DEVELOPMENT
+"""
+
+# %% [markdown]
+"""
 ### 🧪 Unit Test: Tensor Creation
 
 This test validates your `Tensor` class constructor, ensuring it correctly handles scalars, vectors, matrices, and higher-dimensional arrays with proper shape detection.
