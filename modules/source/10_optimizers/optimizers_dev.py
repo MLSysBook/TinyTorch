@@ -318,6 +318,9 @@ def test_unit_gradient_descent_step():
     print("   Skips updates when gradient is None")
     print("📈 Progress: Gradient Descent Step ✓")
 
+# Run the test
+test_unit_gradient_descent_step()
+
 # Test function is called by auto-discovery system
 
 # %% [markdown]
