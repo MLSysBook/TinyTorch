@@ -325,7 +325,7 @@ def test_unit_matmul_baseline():
     print("📈 Progress: Baseline Matrix Multiplication ✓")
 
 # Run the test
-test_matmul_baseline()
+test_unit_matmul_baseline()
 
 # %% [markdown]
 """
@@ -530,7 +530,7 @@ def test_unit_vectorized_operations():
     print("📈 Progress: Vectorized Operations ✓")
 
 # Run the test
-test_vectorized_operations()
+test_unit_vectorized_operations()
 
 # %% [markdown]
 """
@@ -703,7 +703,7 @@ def test_unit_cache_friendly_matmul():
     print("📈 Progress: Cache-Friendly Algorithms ✓")
 
 # Run the test
-test_cache_friendly_matmul()
+test_unit_cache_friendly_matmul()
 
 # %% [markdown]
 """
@@ -928,7 +928,7 @@ def test_unit_parallel_processing():
     print("📈 Progress: Parallel Processing ✓")
 
 # Run the test
-test_parallel_processing()
+test_unit_parallel_processing()
 
 # %% [markdown]
 """
@@ -1014,7 +1014,7 @@ def test_unit_simple_kernel_timing():
     print("📈 Progress: Simple Kernel Timing ✓")
 
 # Run the test
-test_simple_kernel_timing()
+test_unit_simple_kernel_timing()
 
 # %% [markdown]
 """
@@ -1236,7 +1236,7 @@ def test_unit_compressed_kernels():
     print("📈 Progress: Compressed Model Kernels ✓")
 
 # Run the test
-test_compressed_kernels()
+test_unit_compressed_kernels()
 
 # %% nbgrader={"grade": false, "grade_id": "final-performance-test", "locked": false, "schema_version": 3, "solution": false, "task": false}
 ### 🧪 Unit Test: Comprehensive Kernel Performance Comparison
