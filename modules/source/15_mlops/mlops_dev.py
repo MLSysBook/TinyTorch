@@ -448,7 +448,7 @@ Once you implement the `ModelMonitor` class above, run this cell to test it:
 """
 
 # %% nbgrader={"grade": true, "grade_id": "test-model-monitor", "locked": true, "points": 20, "schema_version": 3, "solution": false, "task": false}
-def test_model_monitor():
+def test_unit_model_monitor():
     """Test ModelMonitor implementation"""
     print("🔬 Unit Test: Performance Drift Monitor...")
     
@@ -718,7 +718,7 @@ Once you implement the `DriftDetector` class above, run this cell to test it:
 """
 
 # %% nbgrader={"grade": true, "grade_id": "test-drift-detector", "locked": true, "points": 20, "schema_version": 3, "solution": false, "task": false}
-def test_drift_detector():
+def test_unit_drift_detector():
     """Test DriftDetector implementation"""
     print("🔬 Unit Test: Simple Drift Detection...")
     
@@ -1053,7 +1053,7 @@ Once you implement the `RetrainingTrigger` class above, run this cell to test it
 """
 
 # %% nbgrader={"grade": true, "grade_id": "test-retraining-trigger", "locked": true, "points": 25, "schema_version": 3, "solution": false, "task": false}
-def test_retraining_trigger():
+def test_unit_retraining_trigger():
     """Test RetrainingTrigger implementation"""
     print("🔬 Unit Test: Retraining Trigger System...")
     
@@ -1416,7 +1416,7 @@ Once you implement the `MLOpsPipeline` class above, run this cell to test it:
 """
 
 # %% nbgrader={"grade": true, "grade_id": "test-mlops-pipeline", "locked": true, "points": 35, "schema_version": 3, "solution": false, "task": false}
-def test_mlops_pipeline():
+def test_unit_mlops_pipeline():
     """Test complete MLOps pipeline"""
     print("🔬 Unit Test: Complete MLOps Pipeline...")
     
@@ -1545,9 +1545,9 @@ Your MLOps skills now enable:
 """
 
 # %% nbgrader={"grade": false, "grade_id": "comprehensive-integration-test", "locked": false, "schema_version": 3, "solution": false, "task": false}
-def test_comprehensive_integration():
+def test_module_comprehensive_mlops():
     """Test complete integration of all TinyTorch components"""
-    print("🔬 Comprehensive Integration Test: Complete TinyTorch Ecosystem...")
+    print("🔬 Integration Test: Complete TinyTorch Ecosystem...")
     
     # 1. Create synthetic data (simulating real ML dataset)
     np.random.seed(42)
