@@ -966,6 +966,10 @@ print("📈 Final Progress: Complete data pipeline ready for production ML!")
 # %% [markdown]
 """
 ## 🔧 DEVELOPMENT
+
+### 🧪 Unit Test: Dataset Interface Implementation
+
+This test validates the abstract Dataset interface, ensuring proper inheritance, method implementation, and interface compliance for creating custom datasets in the TinyTorch data loading pipeline.
 """
 
 # %%
@@ -986,6 +990,14 @@ def test_unit_dataset_interface():
     
     print("✅ Dataset interface works correctly")
 
+# %% [markdown]
+"""
+### 🧪 Unit Test: DataLoader Implementation
+
+This test validates the DataLoader class functionality, ensuring proper batch creation, iteration capability, and integration with datasets for efficient data loading in machine learning training pipelines.
+"""
+
+# %%
 def test_unit_dataloader():
     """Unit test for the DataLoader implementation."""
     print("🔬 Unit Test: DataLoader...")
@@ -1005,6 +1017,14 @@ def test_unit_dataloader():
     
     print("✅ DataLoader works correctly")
 
+# %% [markdown]
+"""
+### 🧪 Unit Test: Simple Dataset Implementation
+
+This test validates the SimpleDataset class, ensuring it can handle real-world data scenarios including proper data storage, indexing, and compatibility with the DataLoader for practical machine learning workflows.
+"""
+
+# %%
 def test_unit_simple_dataset():
     """Unit test for the SimpleDataset implementation."""
     print("🔬 Unit Test: SimpleDataset...")
@@ -1023,6 +1043,14 @@ def test_unit_simple_dataset():
     
     print("✅ SimpleDataset works correctly")
 
+# %% [markdown]
+"""
+### 🧪 Unit Test: Complete Data Pipeline Integration
+
+This comprehensive test validates the entire data pipeline from dataset creation through DataLoader batching, ensuring all components work together seamlessly for end-to-end machine learning data processing workflows.
+"""
+
+# %%
 def test_unit_dataloader_pipeline():
     """Comprehensive unit test for the complete data pipeline."""
     print("🔬 Comprehensive Test: Data Pipeline...")
