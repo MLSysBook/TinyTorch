@@ -825,6 +825,78 @@ def test_unit_activations_comprehensive():
 # Run the comprehensive test
 test_unit_activations_comprehensive()
 
+# %%
+def test_module_activation_tensor_integration():
+    """
+    Integration test for activation functions with Tensor operations.
+    
+    Tests that activation functions properly integrate with the Tensor class
+    and maintain compatibility for neural network operations.
+    """
+    print("🔬 Running Integration Test: Activation-Tensor Integration...")
+    
+    # Test 1: Activation functions preserve Tensor types
+    input_tensor = Tensor([-2.0, -1.0, 0.0, 1.0, 2.0])
+    
+    relu_fn = ReLU()
+    sigmoid_fn = Sigmoid()
+    tanh_fn = Tanh()
+    
+    relu_result = relu_fn(input_tensor)
+    sigmoid_result = sigmoid_fn(input_tensor) 
+    tanh_result = tanh_fn(input_tensor)
+    
+    assert isinstance(relu_result, Tensor), "ReLU should return Tensor"
+    assert isinstance(sigmoid_result, Tensor), "Sigmoid should return Tensor"
+    assert isinstance(tanh_result, Tensor), "Tanh should return Tensor"
+    
+    # Test 2: Activations work with matrix Tensors (neural network layers)
+    layer_output = Tensor([[1.0, -2.0, 3.0], 
+                          [-1.0, 2.0, -3.0]])  # Simulating dense layer output
+    
+    relu_fn = ReLU()
+    activated = relu_fn(layer_output)
+    expected = np.array([[1.0, 0.0, 3.0], 
+                        [0.0, 2.0, 0.0]])
+    
+    assert isinstance(activated, Tensor), "Matrix activation should return Tensor"
+    assert np.array_equal(activated.data, expected), "Matrix ReLU should work correctly"
+    
+    # Test 3: Softmax with classification scenario
+    logits = Tensor([[2.0, 1.0, 0.1],  # Batch of 2 samples
+                    [1.0, 3.0, 0.2]])   # Each with 3 classes
+    
+    softmax_fn = Softmax()
+    probabilities = softmax_fn(logits)
+    
+    assert isinstance(probabilities, Tensor), "Softmax should return Tensor"
+    assert probabilities.shape == logits.shape, "Softmax should preserve shape"
+    
+    # Each row should sum to 1 (probability distribution)
+    for i in range(logits.shape[0]):
+        row_sum = np.sum(probabilities.data[i])
+        assert abs(row_sum - 1.0) < 1e-6, f"Probability row {i} should sum to 1"
+    
+    # Test 4: Chaining tensor operations with activations
+    x = Tensor([1.0, 2.0, 3.0])
+    y = Tensor([4.0, 5.0, 6.0])
+    
+    # Simulate: dense layer output -> activation -> more operations
+    dense_sim = x * y  # Element-wise multiplication (simulating dense layer)
+    relu_fn = ReLU()
+    activated = relu_fn(dense_sim)  # Apply activation
+    final = activated + Tensor([1.0, 1.0, 1.0])  # More tensor operations
+    
+    expected_final = np.array([5.0, 11.0, 19.0])  # [4,10,18] -> relu -> +1 = [5,11,19]
+    
+    assert isinstance(final, Tensor), "Chained operations should maintain Tensor type"
+    assert np.array_equal(final.data, expected_final), "Chained operations should work correctly"
+    
+    print("✅ Integration Test Passed: Activation-Tensor integration works correctly.")
+
+# Run the integration test
+test_module_activation_tensor_integration()
+
 # %% [markdown]
 """
 ## 🎯 MODULE SUMMARY: Activation Functions
