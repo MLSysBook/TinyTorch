@@ -820,6 +820,13 @@ Congratulations! You've successfully implemented the core Tensor class for TinyT
 **Ready for the next challenge?** Let's add the mathematical functions that make neural networks powerful!
 """
 
+# %% [markdown]
+"""
+### 🧪 Unit Test: Tensor Creation
+
+This test validates your `Tensor` class constructor, ensuring it correctly handles scalars, vectors, matrices, and higher-dimensional arrays with proper shape detection.
+"""
+
 # %%
 def test_unit_tensor_creation():
     """Comprehensive test of tensor creation with all data types and shapes."""
@@ -840,6 +847,13 @@ def test_unit_tensor_creation():
 
 # Run the test
 test_unit_tensor_creation()
+
+# %% [markdown]
+"""
+### 🧪 Unit Test: Tensor Properties
+
+This test validates your tensor property methods (shape, size, dtype, data), ensuring they correctly reflect the tensor's dimensional structure and data characteristics.
+"""
 
 # %%
 def test_unit_tensor_properties():
@@ -863,6 +877,13 @@ def test_unit_tensor_properties():
 
 # Run the test
 test_unit_tensor_properties()
+
+# %% [markdown]
+"""
+### 🧪 Unit Test: Tensor Arithmetic Operations
+
+This test validates your tensor arithmetic implementation (addition, multiplication, subtraction, division) and operator overloading, ensuring mathematical operations work correctly with proper broadcasting.
+"""
 
 # %%
 def test_unit_tensor_arithmetic():
