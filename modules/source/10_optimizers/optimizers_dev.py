@@ -1320,7 +1320,7 @@ Let's test your complete training integration! This demonstrates optimizers work
 """
 
 # %% nbgrader={"grade": true, "grade_id": "test-training-integration", "locked": true, "points": 25, "schema_version": 3, "solution": false, "task": false}
-def test_integration_unit_training():
+def test_module_unit_training():
     """Comprehensive unit test for complete training integration with optimizers."""
     print("🔬 Unit Test: Complete Training Integration...")
     
@@ -1391,7 +1391,7 @@ def test_integration_unit_training():
     print("📈 Progress: Complete Training Integration ✓")
 
 # Run the test
-test_integration_unit_training()
+test_module_unit_training()
 
 # %%
 def test_module_optimizer_autograd_compatibility():
