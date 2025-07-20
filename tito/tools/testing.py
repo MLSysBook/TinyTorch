@@ -74,8 +74,22 @@ class ModuleTestRunner:
                 test_name = self._function_name_to_test_name(name)
                 discovered_tests.append((test_name, obj))
         
-        # Sort tests for consistent order
-        discovered_tests.sort(key=lambda x: x[0])
+        # Sort tests for logical sequence: unit tests first, then integration tests
+        def test_priority(test_tuple):
+            test_name, test_function = test_tuple
+            function_name = test_function.__name__
+            
+            # Unit tests (test_unit_*) have highest priority
+            if function_name.startswith('test_unit_'):
+                return 0
+            # Integration tests (test_module_*) have medium priority  
+            elif function_name.startswith('test_module_'):
+                return 1
+            # All other tests have lowest priority
+            else:
+                return 2
+        
+        discovered_tests.sort(key=test_priority)
         
         # Register discovered tests
         for test_name, test_function in discovered_tests:
