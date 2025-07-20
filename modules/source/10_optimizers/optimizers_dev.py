@@ -257,8 +257,6 @@ def gradient_descent_step(parameter: Variable, learning_rate: float) -> None:
 """
 ### 🧪 Unit Test: Gradient Descent Step
 
-## 🔧 DEVELOPMENT
-
 Let's test your gradient descent implementation right away! This is the foundation of all optimization algorithms.
 
 **This is a unit test** - it tests one specific function (gradient_descent_step) in isolation.
