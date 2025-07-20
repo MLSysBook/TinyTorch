@@ -1656,26 +1656,6 @@ def test_unit_comprehensive_comparison():
 # Run the test
 test_comprehensive_comparison()
 
-# %% [markdown]
-"""
-## 🧪 Module Testing
-
-Time to test your implementation! This section uses TinyTorch's standardized testing framework to ensure your implementation works correctly.
-
-**This testing section is locked** - it provides consistent feedback across all modules and cannot be modified.
-"""
-
-# %% nbgrader={"grade": false, "grade_id": "standardized-testing", "locked": true, "schema_version": 3, "solution": false, "task": false}
-# =============================================================================
-# STANDARDIZED MODULE TESTING - DO NOT MODIFY
-# This cell is locked to ensure consistent testing across all TinyTorch modules
-# =============================================================================
-
-# %% [markdown]
-"""
-## 🔬 Integration Test: Pruning a Sequential Model
-"""
-
 # %%
 def test_compression_integration():
     """Integration test for applying compression to a Sequential model."""
@@ -1707,26 +1687,6 @@ def test_compression_integration():
     assert abs(final_sparsity - 0.5) < 0.01, "Sparsity should be close to the pruning ratio."
 
     print("✅ Integration Test Passed: Pruning correctly modified a layer in a Sequential model.")
-
-if __name__ == "__main__":
-    # Unit tests
-    test_compression_metrics()
-    test_magnitude_pruning()
-    test_quantization()
-    test_distillation()
-    test_structured_pruning()
-    test_comprehensive_comparison()
-    # Integration test
-    test_compression_integration()
-
-    from tito.tools.testing import run_module_tests_auto
-    # Automatically discover and run all tests in this module
-    success = run_module_tests_auto("Compression")
-
-# %% [markdown]
-"""
-## 🔬 Integration Test: Comprehensive Compression on a Sequential Model
-"""
 
 # %%
 def test_comprehensive_compression_integration():
@@ -1775,8 +1735,33 @@ def test_comprehensive_compression_integration():
 
     print("✅ Integration Test Passed: Comprehensive compression successfully applied and verified.")
 
+# %% [markdown]
+"""
+## 🧪 Module Testing
+
+Time to test your implementation! This section uses TinyTorch's standardized testing framework to ensure your implementation works correctly.
+
+**This testing section is locked** - it provides consistent feedback across all modules and cannot be modified.
+"""
+
+# %% nbgrader={"grade": false, "grade_id": "standardized-testing", "locked": true, "schema_version": 3, "solution": false, "task": false}
+# =============================================================================
+# STANDARDIZED MODULE TESTING - DO NOT MODIFY
+# This cell is locked to ensure consistent testing across all TinyTorch modules
+# =============================================================================
+
 if __name__ == "__main__":
+    # Unit tests
+    test_compression_metrics()
+    test_magnitude_pruning()
+    test_quantization()
+    test_distillation()
+    test_structured_pruning()
+    test_comprehensive_comparison()
+    # Integration tests
+    test_compression_integration()
     test_comprehensive_compression_integration()
+
     from tito.tools.testing import run_module_tests_auto
     # Automatically discover and run all tests in this module
     success = run_module_tests_auto("Compression")
