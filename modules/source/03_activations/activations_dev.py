@@ -226,11 +226,6 @@ class ReLU:
 
 # %% [markdown]
 """
-## 🔧 DEVELOPMENT
-"""
-
-# %% [markdown]
-"""
 ### 🧪 Test Your ReLU Implementation
 
 Once you implement the ReLU forward method above, run this cell to test it:
@@ -855,12 +850,6 @@ Time to test your implementation! This section uses TinyTorch's standardized tes
 
 **This testing section is locked** - it provides consistent feedback across all modules and cannot be modified.
 """
-
-# %% nbgrader={"grade": false, "grade_id": "standardized-testing", "locked": true, "schema_version": 3, "solution": false, "task": false}
-# =============================================================================
-# STANDARDIZED MODULE TESTING - DO NOT MODIFY
-# This cell is locked to ensure consistent testing across all TinyTorch modules
-# =============================================================================
 
 # %% [markdown]
 """
