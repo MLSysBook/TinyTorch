@@ -451,6 +451,11 @@ Now let's test your configuration functions!
 
 # %% [markdown]
 """
+## 🔧 DEVELOPMENT
+"""
+
+# %% [markdown]
+"""
 ### 🧪 Test Your Configuration Functions
 
 Once you implement both functions above, run this cell to test them:
@@ -547,7 +552,7 @@ test_unit_system_info_basic()
 
 # %% [markdown]
 """
-## 🧪 Module Testing
+## 🔍 MODULE TESTING
 
 Time to test your implementation! This section uses TinyTorch's standardized testing framework to ensure your implementation works correctly.
 
