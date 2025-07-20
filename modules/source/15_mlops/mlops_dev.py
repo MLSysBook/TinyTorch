@@ -1614,12 +1614,19 @@ test_comprehensive_integration()
 
 # %% [markdown]
 """
-## 🧪 Auto-Discovery Testing
+## 🧪 Module Testing
 
-The following cell automatically discovers and runs all test functions in this module:
+Time to test your implementation! This section uses TinyTorch's standardized testing framework to ensure your implementation works correctly.
+
+**This testing section is locked** - it provides consistent feedback across all modules and cannot be modified.
 """
 
-# %% nbgrader={"grade": false, "grade_id": "auto-discovery-tests", "locked": false, "schema_version": 3, "solution": false, "task": false}
+# %% nbgrader={"grade": false, "grade_id": "standardized-testing", "locked": true, "schema_version": 3, "solution": false, "task": false}
+# =============================================================================
+# STANDARDIZED MODULE TESTING - DO NOT MODIFY
+# This cell is locked to ensure consistent testing across all TinyTorch modules
+# =============================================================================
+
 if __name__ == "__main__":
     from tito.tools.testing import run_module_tests_auto
     
