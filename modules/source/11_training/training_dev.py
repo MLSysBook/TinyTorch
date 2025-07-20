@@ -41,100 +41,33 @@ from typing import List, Dict, Any, Optional, Union, Callable, Tuple
 from collections import defaultdict
 import time
 
+# Add module directories to Python path
+import sys
+import os
+sys.path.append(os.path.abspath('modules/source/02_tensor'))
+sys.path.append(os.path.abspath('modules/source/03_activations'))
+sys.path.append(os.path.abspath('modules/source/04_layers'))
+sys.path.append(os.path.abspath('modules/source/05_dense'))
+sys.path.append(os.path.abspath('modules/source/06_spatial'))
+sys.path.append(os.path.abspath('modules/source/08_dataloader'))
+sys.path.append(os.path.abspath('modules/source/09_autograd'))
+sys.path.append(os.path.abspath('modules/source/10_optimizers'))
+
 # Helper function to set up import paths
-def setup_import_paths():
-    """Set up import paths for development modules."""
-    import sys
-    import os
-    
-    # Add module directories to path
-    base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    module_dirs = [
-        '01_tensor', '02_activations', '03_layers', '04_networks', 
-        '05_cnn', '06_dataloader', '07_autograd', '08_optimizers'
-    ]
-    
-    for module_dir in module_dirs:
-        sys.path.append(os.path.join(base_dir, module_dir))
+# No longer needed, will use direct relative imports
 
 # Set up paths
-setup_import_paths()
+# No longer needed
 
 # Import all the building blocks we need
-try:
-    from tinytorch.core.tensor import Tensor
-    from tinytorch.core.activations import ReLU, Sigmoid, Tanh, Softmax
-    from tinytorch.core.layers import Dense
-    from tinytorch.core.networks import Sequential, create_mlp
-    from tinytorch.core.cnn import Conv2D, flatten
-    from tinytorch.core.dataloader import Dataset, DataLoader
-    from tinytorch.core.autograd import Variable
-    from tinytorch.core.optimizers import SGD, Adam, StepLR
-except ImportError:
-    # For development, create mock classes or import from local modules
-    try:
-        from tensor_dev import Tensor
-        from activations_dev import ReLU, Sigmoid, Tanh, Softmax
-        from layers_dev import Dense
-        from networks_dev import Sequential, create_mlp
-        from cnn_dev import Conv2D, flatten
-        from dataloader_dev import Dataset, DataLoader
-        from autograd_dev import Variable
-        from optimizers_dev import SGD, Adam, StepLR
-    except ImportError:
-        # Create minimal mock classes for development
-        class Tensor:
-            def __init__(self, data):
-                self.data = np.array(data)
-            def __str__(self):
-                return f"Tensor({self.data})"
-        
-        class Variable:
-            def __init__(self, data, requires_grad=True):
-                self.data = Tensor(data)
-                self.requires_grad = requires_grad
-                self.grad = None
-            
-            def zero_grad(self):
-                self.grad = None
-            
-            def backward(self):
-                if self.requires_grad:
-                    self.grad = Variable(1.0, requires_grad=False)
-            
-            def __str__(self):
-                return f"Variable({self.data})"
-        
-        class SGD:
-            def __init__(self, parameters, learning_rate=0.01):
-                self.parameters = parameters
-                self.learning_rate = learning_rate
-            
-            def zero_grad(self):
-                for param in self.parameters:
-                    if hasattr(param, 'zero_grad'):
-                        param.zero_grad()
-            
-            def step(self):
-                pass
-        
-        class Sequential:
-            def __init__(self, layers=None):
-                self.layers = layers or []
-            
-            def __call__(self, x):
-                for layer in self.layers:
-                    x = layer(x)
-                return x
-        
-        class DataLoader:
-            def __init__(self, dataset, batch_size=32, shuffle=True):
-                self.dataset = dataset
-                self.batch_size = batch_size
-                self.shuffle = shuffle
-            
-            def __iter__(self):
-                return iter([(Tensor([1, 2, 3]), Tensor([0]))])
+from tensor_dev import Tensor
+from activations_dev import ReLU, Sigmoid, Tanh, Softmax
+from layers_dev import Dense
+from dense_dev import Sequential, create_mlp
+from spatial_dev import Conv2D, flatten
+from dataloader_dev import Dataset, DataLoader
+from autograd_dev import Variable
+from optimizers_dev import SGD, Adam, StepLR
 
 # %% nbgrader={"grade": false, "grade_id": "training-setup", "locked": false, "schema_version": 3, "solution": false, "task": false}
 #| hide
@@ -231,7 +164,7 @@ class MeanSquaredError:
         Returns:
             Scalar loss value
             
-        TODO: Implement Mean Squared Error loss computation.
+        TODO: Implement Mean SquaredError loss computation.
         
         APPROACH:
         1. Compute difference: diff = y_pred - y_true
@@ -248,21 +181,14 @@ class MeanSquaredError:
         
         HINTS:
         - Use tensor subtraction: y_pred - y_true
-        - Use element-wise multiplication for squaring: diff * diff
-        - Use np.mean() to get the average
-        - Return Tensor(scalar_value)
+        - Use tensor power: diff ** 2
+        - Use tensor mean: squared_diff.mean()
         """
         ### BEGIN SOLUTION
-        # Compute difference
         diff = y_pred - y_true
-        
-        # Square the differences
-        squared_diff = diff * diff
-        
-        # Take mean over all elements
-        mean_loss = np.mean(squared_diff.data)
-        
-        return Tensor(mean_loss)
+        squared_diff = diff * diff  # Using multiplication for square
+        loss = np.mean(squared_diff.data)
+        return Tensor(loss)
         ### END SOLUTION
     
     def forward(self, y_pred: Tensor, y_true: Tensor) -> Tensor:
@@ -277,7 +203,7 @@ Let's test our MSE loss implementation with known values.
 """
 
 # %% nbgrader={"grade": false, "grade_id": "test-mse-loss", "locked": false, "schema_version": 3, "solution": false, "task": false}
-def test_mse_loss():
+def test_unit_mse_loss():
     """Test MSE loss with comprehensive examples."""
     print("🔬 Unit Test: MSE Loss...")
     
@@ -407,7 +333,7 @@ Let's test our CrossEntropy loss implementation.
 """
 
 # %% nbgrader={"grade": false, "grade_id": "test-crossentropy-loss", "locked": false, "schema_version": 3, "solution": false, "task": false}
-def test_crossentropy_loss():
+def test_unit_crossentropy_loss():
     """Test CrossEntropy loss with comprehensive examples."""
     print("🔬 Unit Test: CrossEntropy Loss...")
     
@@ -540,7 +466,7 @@ Let's test our Binary CrossEntropy loss implementation.
 """
 
 # %% nbgrader={"grade": false, "grade_id": "test-binary-crossentropy-loss", "locked": false, "schema_version": 3, "solution": false, "task": false}
-def test_binary_crossentropy_loss():
+def test_unit_binary_crossentropy_loss():
     """Test Binary CrossEntropy loss with comprehensive examples."""
     print("🔬 Unit Test: Binary CrossEntropy Loss...")
     
@@ -709,7 +635,7 @@ Let's test our Accuracy metric implementation.
 """
 
 # %% nbgrader={"grade": false, "grade_id": "test-accuracy-metric", "locked": false, "schema_version": 3, "solution": false, "task": false}
-def test_accuracy_metric():
+def test_unit_accuracy_metric():
     """Test Accuracy metric with comprehensive examples."""
     print("🔬 Unit Test: Accuracy Metric...")
     
@@ -1076,7 +1002,7 @@ Let's test our Trainer class with a simple example.
 """
 
 # %% nbgrader={"grade": false, "grade_id": "test-trainer", "locked": false, "schema_version": 3, "solution": false, "task": false}
-def test_trainer():
+def test_unit_trainer():
     """Test Trainer class with comprehensive examples."""
     print("🔬 Unit Test: Trainer Class...")
     
@@ -1123,9 +1049,9 @@ Let's test the complete training pipeline with all components working together.
 """
 
 # %% nbgrader={"grade": true, "grade_id": "test-training-comprehensive", "locked": true, "points": 25, "schema_version": 3, "solution": false, "task": false}
-def test_training():
+def test_module_training():
     """Test complete training pipeline with all components."""
-    print("🔬 Comprehensive Test: Complete Training Pipeline...")
+    print("🔬 Integration Test: Complete Training Pipeline...")
     
     try:
         # Test 1: Loss functions work correctly

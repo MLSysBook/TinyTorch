@@ -347,36 +347,34 @@ class Conv2D:
     
     def forward(self, x):
         """
-        Forward pass: apply convolution to input tensor.
+        Forward pass through the Conv2D layer.
         
         Args:
-            x: Input tensor (2D for simplicity)
-            
+            x: Input tensor (batch_size, H, W)
         Returns:
             Output tensor after convolution
-            
-        TODO: Implement forward pass using conv2d_naive function.
-        
-        APPROACH:
-        1. Extract numpy array from input tensor
-        2. Apply conv2d_naive with stored kernel
-        3. Return result wrapped in Tensor
-        
-        EXAMPLE:
-        x = Tensor([[1, 2, 3], [4, 5, 6], [7, 8, 9]])  # shape (3, 3)
-        layer = Conv2D((2, 2))
-        y = layer(x)  # shape (2, 2)
-        
-        HINTS:
-        - Use x.data to get numpy array
-        - Use conv2d_naive(x.data, self.kernel)
-        - Return Tensor(result) to wrap the result
         """
-        ### BEGIN SOLUTION
-        # Apply convolution using naive implementation
-        result = conv2d_naive(x.data, self.kernel)
-        return type(x)(result)
-        ### END SOLUTION
+        # Handle batches by iterating through each item
+        if len(x.shape) == 3:
+            batch_size, H, W = x.shape
+            # Calculate output shape once
+            kH, kW = self.kernel.shape
+            out_H, out_W = H - kH + 1, W - kW + 1
+            
+            # Create an empty list to store results
+            results = []
+            # Iterate over each image in the batch
+            for i in range(batch_size):
+                # Apply naive convolution to each image
+                convolved = conv2d_naive(x.data[i], self.kernel)
+                results.append(convolved)
+            # Stack results into a single NumPy array
+            output_data = np.stack(results)
+
+        else: # Handle single image case
+            output_data = conv2d_naive(x.data, self.kernel)
+
+        return Tensor(output_data)
     
     def __call__(self, x):
         """Make layer callable: layer(x) same as layer.forward(x)"""
@@ -725,8 +723,8 @@ except Exception as e:
 
 print("📈 Final Progress: Complete CNN system ready for computer vision!")
 
-def test_convolution_operation():
-    """Test convolution operation implementation comprehensively."""
+def test_unit_convolution_operation():
+    """Unit test for the convolution operation implementation."""
     print("🔬 Unit Test: Convolution Operation...")
     
     # Test basic convolution
@@ -740,8 +738,8 @@ def test_convolution_operation():
     
     print("✅ Convolution operation works correctly")
 
-def test_conv2d_layer():
-    """Test Conv2D layer implementation comprehensively."""
+def test_unit_conv2d_layer():
+    """Unit test for the Conv2D layer implementation."""
     print("🔬 Unit Test: Conv2D Layer...")
     
     # Test Conv2D layer
@@ -755,8 +753,8 @@ def test_conv2d_layer():
     
     print("✅ Conv2D layer works correctly")
 
-def test_flatten_function():
-    """Test flatten function implementation comprehensively."""
+def test_unit_flatten_function():
+    """Unit test for the flatten function implementation."""
     print("🔬 Unit Test: Flatten Function...")
     
     # Test flatten function
@@ -786,7 +784,42 @@ Time to test your implementation! This section uses TinyTorch's standardized tes
 # This cell is locked to ensure consistent testing across all TinyTorch modules
 # =============================================================================
 
+# %% [markdown]
+"""
+## 🔬 Integration Test: Conv2D Layer with Tensors
+"""
+
+# %%
+def test_module_conv2d_tensor_compatibility():
+    """
+    Integration test for the Conv2D layer and the Tensor class.
+    
+    Tests that the Conv2D layer correctly processes a batch of image-like Tensors.
+    """
+    print("🔬 Running Integration Test: Conv2D with Tensors...")
+
+    # 1. Define a Conv2D layer
+    # Kernel of size 3x3
+    conv_layer = Conv2D((3, 3))
+
+    # 2. Create a batch of 5 grayscale images (10x10)
+    # Shape: (batch_size, height, width)
+    input_images = np.random.randn(5, 10, 10)
+    input_tensor = Tensor(input_images)
+
+    # 3. Perform a forward pass
+    output_tensor = conv_layer(input_tensor)
+
+    # 4. Assert the output shape is correct
+    # Output height = 10 - 3 + 1 = 8
+    # Output width = 10 - 3 + 1 = 8
+    expected_shape = (5, 8, 8)
+    assert isinstance(output_tensor, Tensor), "Conv2D output must be a Tensor"
+    assert output_tensor.shape == expected_shape, f"Expected output shape {expected_shape}, but got {output_tensor.shape}"
+    print("✅ Integration Test Passed: Conv2D layer correctly transformed image tensor.")
+
 if __name__ == "__main__":
+    test_module_conv2d_tensor_compatibility()
     from tito.tools.testing import run_module_tests_auto
     
     # Automatically discover and run all tests in this module
