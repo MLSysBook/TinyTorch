@@ -54,26 +54,6 @@ except ImportError:
     sys.path.append(os.path.join(os.path.dirname(__file__), '..', '02_tensor'))
     from tensor_dev import Tensor
 
-# %% nbgrader={"grade": false, "grade_id": "attention-setup", "locked": false, "schema_version": 3, "solution": false, "task": false}
-#| hide
-#| export
-def _should_show_plots():
-    """Check if we should show plots (disable during testing)"""
-    # Check multiple conditions that indicate we're in test mode
-    is_testing = (
-        'pytest' in sys.modules or
-        'test' in sys.argv or
-        os.environ.get('PYTEST_CURRENT_TEST') is not None or
-        any('test' in arg for arg in sys.argv) or
-        any('pytest' in arg for arg in sys.argv) or
-        'tito' in sys.argv or
-        any('tito' in arg for arg in sys.argv) or
-        os.environ.get('TITO_TESTING') is not None
-    )
-    
-    # Show plots in development mode (when not in test mode)
-    return not is_testing
-
 # %% nbgrader={"grade": false, "grade_id": "attention-welcome", "locked": false, "schema_version": 3, "solution": false, "task": false}
 print("🔥 TinyTorch Attention Module")
 print(f"NumPy version: {np.__version__}")
@@ -260,11 +240,6 @@ def scaled_dot_product_attention(Q: Tensor, K: Tensor, V: Tensor,
     
     return Tensor(output_data), Tensor(attention_weights_data)
     ### END SOLUTION
-
-# %% [markdown]
-"""
-## 🔧 DEVELOPMENT
-"""
 
 # %% [markdown]
 """
@@ -780,8 +755,6 @@ print(f"Position 3 can only attend to positions 0-3: {np.sum(weights_causal.data
 
 def plot_attention_patterns(weights, weights_causal):
     """Visualize attention patterns."""
-    if not _should_show_plots():
-        return
 
     plt.figure(figsize=(12, 4))
     
@@ -976,13 +949,6 @@ if __name__ == "__main__":
     # Test with causal masking for visualization
     causal_mask = create_causal_mask(4)
     output_causal, weights_causal = scaled_dot_product_attention(Tensor(simple_seq), Tensor(simple_seq), Tensor(simple_seq), Tensor(causal_mask))
-
-    # Generate attention pattern visualization (only in interactive mode)
-    if _should_show_plots():
-        plot_attention_patterns(weights, weights_causal)
-        print("📊 Attention pattern visualization complete!")
-    else:
-        print("📊 Plots disabled during testing")
 
 # %% [markdown]
 """

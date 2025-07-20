@@ -71,23 +71,6 @@ except ImportError:
     except ImportError:
         print("⚠️  Development imports failed - some functionality may be limited")
 
-# %% nbgrader={"grade": false, "grade_id": "mlops-setup", "locked": false, "schema_version": 3, "solution": false, "task": false}
-#| hide
-#| export
-def _should_show_plots():
-    """Check if we should show plots (disable during testing)"""
-    # Check multiple conditions that indicate we're in test mode
-    is_pytest = (
-        'pytest' in sys.modules or
-        'test' in sys.argv or
-        os.environ.get('PYTEST_CURRENT_TEST') is not None or
-        any('test' in arg for arg in sys.argv) or
-        any('pytest' in arg for arg in sys.argv)
-    )
-    
-    # Show plots in development mode (when not in test mode)
-    return not is_pytest
-
 # %% nbgrader={"grade": false, "grade_id": "mlops-welcome", "locked": false, "schema_version": 3, "solution": false, "task": false}
 print("🚀 TinyTorch MLOps Module")
 print(f"NumPy version: {np.__version__}")
