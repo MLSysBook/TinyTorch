@@ -279,10 +279,6 @@ def matmul_baseline(A: Tensor, B: Tensor) -> Tensor:
     ### END SOLUTION
 
 # %% [markdown]
-"""
-## 🔧 DEVELOPMENT
-"""
-
 # %% nbgrader={"grade": false, "grade_id": "test-custom-matmul", "locked": false, "schema_version": 3, "solution": false, "task": false}
 ### 🧪 Unit Test: Baseline Matrix Multiplication
 
