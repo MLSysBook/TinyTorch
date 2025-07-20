@@ -1385,29 +1385,6 @@ def test_unit_training_integration():
 # Run the test
 test_unit_training_integration()
 
-
-
-# %% [markdown]
-# %% [markdown]
-"""
-## 🧪 Module Testing
-
-Time to test your implementation! This section uses TinyTorch's standardized testing framework to ensure your implementation works correctly.
-
-**This testing section is locked** - it provides consistent feedback across all modules and cannot be modified.
-"""
-
-# %% nbgrader={"grade": false, "grade_id": "standardized-testing", "locked": true, "schema_version": 3, "solution": false, "task": false}
-# =============================================================================
-# STANDARDIZED MODULE TESTING - DO NOT MODIFY
-# This cell is locked to ensure consistent testing across all TinyTorch modules
-# =============================================================================
-
-# %% [markdown]
-"""
-## 🔬 Integration Test: Optimizer with Autograd Variables
-"""
-
 # %%
 def test_module_optimizer_autograd_compatibility():
     """
@@ -1437,6 +1414,21 @@ def test_module_optimizer_autograd_compatibility():
     assert np.allclose(w.data.data, [2.0]), f"Expected w to be 2.0, but got {w.data.data}"
 
     print("✅ Integration Test Passed: Optimizer correctly updated Variable's Tensor data.")
+
+# %% [markdown]
+"""
+## 🧪 Module Testing
+
+Time to test your implementation! This section uses TinyTorch's standardized testing framework to ensure your implementation works correctly.
+
+**This testing section is locked** - it provides consistent feedback across all modules and cannot be modified.
+"""
+
+# %% nbgrader={"grade": false, "grade_id": "standardized-testing", "locked": true, "schema_version": 3, "solution": false, "task": false}
+# =============================================================================
+# STANDARDIZED MODULE TESTING - DO NOT MODIFY
+# This cell is locked to ensure consistent testing across all TinyTorch modules
+# =============================================================================
 
 if __name__ == "__main__":
     # Unit tests
