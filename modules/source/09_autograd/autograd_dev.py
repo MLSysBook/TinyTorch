@@ -501,7 +501,7 @@ test_unit_add_operation()
 
 # Run inline tests when module is executed directly
 if __name__ == "__main__":
-    test_add_operation()
+    test_unit_add_operation()
 
 # %% [markdown]
 """

@@ -248,7 +248,7 @@ def test_unit_mse_loss():
     print("🎯 MSE Loss: All tests passed!")
 
 # Run the test
-test_mse_loss() 
+test_unit_mse_loss() 
 
 # %% nbgrader={"grade": false, "grade_id": "crossentropy-loss", "locked": false, "schema_version": 3, "solution": true, "task": false}
 #| export
@@ -379,7 +379,7 @@ def test_unit_crossentropy_loss():
     print("🎯 CrossEntropy Loss: All tests passed!")
 
 # Run the test
-test_crossentropy_loss()
+test_unit_crossentropy_loss()
 
 # %% nbgrader={"grade": false, "grade_id": "binary-crossentropy-loss", "locked": false, "schema_version": 3, "solution": true, "task": false}
 #| export
@@ -515,7 +515,7 @@ def test_unit_binary_crossentropy_loss():
     print("🎯 Binary CrossEntropy Loss: All tests passed!")
 
 # Run the test
-test_binary_crossentropy_loss() 
+test_unit_binary_crossentropy_loss() 
 
 # %% [markdown]
 """

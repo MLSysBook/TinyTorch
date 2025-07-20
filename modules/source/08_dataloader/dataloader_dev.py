@@ -1110,15 +1110,8 @@ def test_module_dataloader_tensor_yield():
 
 # %%
 if __name__ == "__main__":
-    # Unit tests
-    test_unit_dataset_interface()
-    test_unit_dataloader()
-    test_unit_simple_dataset()
-    test_unit_dataloader_pipeline()
-    # Integration test
-    test_module_dataloader_tensor_yield()
-    
     from tito.tools.testing import run_module_tests_auto
+    
     # Automatically discover and run all tests in this module
     success = run_module_tests_auto("DataLoader")
 
