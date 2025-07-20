@@ -309,7 +309,7 @@ def test_unit_matrix_multiplication():
     print(f"✅ Proper error handling for incompatible shapes")
 
 # Run the test
-test_matrix_multiplication()
+test_unit_matrix_multiplication()
 
 # %% [markdown]
 """
@@ -530,7 +530,7 @@ def test_unit_dense_layer():
     print(f"✅ Naive matrix multiplication option works")
 
 # Run the test
-test_dense_layer()
+test_unit_dense_layer()
 
 # %% [markdown]
 """
@@ -635,7 +635,7 @@ def test_unit_layer_activation():
     print(f"✅ All components ready for training!")
 
 # Run the test
-test_layer_activation()
+test_unit_layer_activation()
 
 # %% [markdown]
 """
