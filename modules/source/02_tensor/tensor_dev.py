@@ -917,6 +917,50 @@ def test_unit_tensor_arithmetic():
 # Run the test
 test_unit_tensor_arithmetic()
 
+# %%
+def test_module_tensor_numpy_integration():
+    """
+    Integration test for tensor operations with NumPy arrays.
+    
+    Tests that tensors properly integrate with NumPy operations and maintain
+    compatibility with the scientific Python ecosystem.
+    """
+    print("🔬 Running Integration Test: Tensor-NumPy Integration...")
+    
+    # Test 1: Tensor from NumPy array
+    numpy_array = np.array([[1, 2, 3], [4, 5, 6]])
+    tensor_from_numpy = Tensor(numpy_array)
+    
+    assert tensor_from_numpy.shape == (2, 3), "Tensor should preserve NumPy array shape"
+    assert np.array_equal(tensor_from_numpy.data, numpy_array), "Tensor should preserve NumPy array data"
+    
+    # Test 2: Tensor arithmetic with NumPy-compatible operations
+    a = Tensor([1.0, 2.0, 3.0])
+    b = Tensor([4.0, 5.0, 6.0])
+    
+    # Test operations that would be used in neural networks
+    dot_product_result = np.dot(a.data, b.data)  # Common in layers
+    assert np.isclose(dot_product_result, 32.0), "Dot product should work with tensor data"
+    
+    # Test 3: Broadcasting compatibility
+    matrix = Tensor([[1, 2], [3, 4]])
+    scalar = Tensor(10)
+    
+    result = matrix + scalar
+    expected = np.array([[11, 12], [13, 14]])
+    assert np.array_equal(result.data, expected), "Broadcasting should work like NumPy"
+    
+    # Test 4: Integration with scientific computing patterns
+    data = Tensor([1, 4, 9, 16, 25])
+    sqrt_result = Tensor(np.sqrt(data.data))  # Using NumPy functions on tensor data
+    expected_sqrt = np.array([1., 2., 3., 4., 5.])
+    assert np.allclose(sqrt_result.data, expected_sqrt), "Should integrate with NumPy functions"
+    
+    print("✅ Integration Test Passed: Tensor-NumPy integration works correctly.")
+
+# Run the integration test
+test_module_tensor_numpy_integration()
+
 # %% [markdown]
 """
 ## 🎯 MODULE SUMMARY: Tensor Foundation
