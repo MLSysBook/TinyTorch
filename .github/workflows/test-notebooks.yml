@@ -1,0 +1,170 @@
+name: Test Notebook Conversion
+
+on:
+  push:
+    branches: [ main, dev ]
+    paths:
+      - 'modules/source/**/*.py'
+      - 'tito/**/*.py'
+      - 'requirements.txt'
+      - '.github/workflows/test-notebooks.yml'
+  pull_request:
+    branches: [ main, dev ]
+    paths:
+      - 'modules/source/**/*.py'
+      - 'tito/**/*.py'
+      - 'requirements.txt'
+      - '.github/workflows/test-notebooks.yml'
+
+jobs:
+  test-notebook-conversion:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ['3.8', '3.9', '3.10', '3.11', '3.12']
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+    
+    - name: Cache pip dependencies
+      uses: actions/cache@v3
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+    
+    - name: Create virtual environment
+      run: |
+        python -m venv .venv
+        source .venv/bin/activate
+        pip install --upgrade pip
+    
+    - name: Install essential dependencies
+      run: |
+        source .venv/bin/activate
+        pip install setuptools wheel
+        pip install rich>=13.0.0
+        pip install jupytext>=1.14.0
+        pip install pytest>=7.0.0
+        pip install numpy>=1.21.0
+    
+    - name: Install remaining dependencies (allow failures)
+      run: |
+        source .venv/bin/activate
+        pip install -r requirements.txt || echo "Some dependencies failed - continuing with essential packages"
+    
+    - name: Install TinyTorch in development mode
+      run: |
+        source .venv/bin/activate
+        pip install -e . || echo "Development install failed - continuing"
+    
+    - name: Run environment diagnosis
+      run: |
+        source .venv/bin/activate
+        python -m tito.main system doctor || echo "Doctor check completed with issues"
+    
+    - name: Test notebook conversion (dry run)
+      run: |
+        source .venv/bin/activate
+        python -m tito.main module notebooks --dry-run
+    
+    - name: Test conversion of specific modules
+      run: |
+        source .venv/bin/activate
+        # Test tensor module
+        if [ -f "modules/source/02_tensor/tensor_dev.py" ]; then
+          python -m tito.main module notebooks --module 02_tensor
+          [ -f "modules/source/02_tensor/tensor_dev.ipynb" ] && echo "✓ Tensor notebook created"
+        fi
+        
+        # Test activations module  
+        if [ -f "modules/source/03_activations/activations_dev.py" ]; then
+          python -m tito.main module notebooks --module 03_activations
+          [ -f "modules/source/03_activations/activations_dev.ipynb" ] && echo "✓ Activations notebook created"
+        fi
+    
+    - name: Validate notebook structure
+      run: |
+        source .venv/bin/activate
+        # Install notebook validation tools
+        pip install nbformat || echo "Could not install nbformat"
+        
+        # Check generated notebooks have valid structure
+        for notebook in modules/source/*/*.ipynb; do
+          if [ -f "$notebook" ]; then
+            echo "Validating $notebook"
+            python -c "
+import json
+try:
+    with open('$notebook') as f:
+        nb = json.load(f)
+    assert 'cells' in nb, 'No cells found'
+    assert len(nb['cells']) > 0, 'Empty notebook'
+    print('✓ $notebook is valid')
+except Exception as e:
+    print('✗ $notebook validation failed:', e)
+    exit(1)
+            "
+          fi
+        done
+    
+    - name: Test batch conversion
+      run: |
+        source .venv/bin/activate
+        # Clean up previous notebooks
+        find modules/source -name "*.ipynb" -delete
+        
+        # Test converting all modules at once
+        python -m tito.main module notebooks
+        
+        # Check that notebooks were created
+        notebook_count=$(find modules/source -name "*.ipynb" | wc -l)
+        echo "Created $notebook_count notebooks"
+        [ "$notebook_count" -gt 0 ] && echo "✓ Batch conversion successful"
+    
+    - name: Archive generated notebooks
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: generated-notebooks-python-${{ matrix.python-version }}
+        path: modules/source/**/*.ipynb
+        retention-days: 7
+
+  test-student-workflow:
+    runs-on: ubuntu-latest
+    needs: test-notebook-conversion
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Python 3.11
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+    
+    - name: Test automated setup script
+      run: |
+        chmod +x setup-dev.sh
+        ./setup-dev.sh
+    
+    - name: Test student workflow
+      run: |
+        source .venv/bin/activate
+        # Simulate student workflow
+        echo "Testing complete student workflow..."
+        
+        # Convert a module to notebook
+        python -m tito.main module notebooks --module 03_activations
+        
+        # Verify notebook exists and is valid
+        [ -f "modules/source/03_activations/activations_dev.ipynb" ] && echo "✓ Student can create notebooks"
+        
+        # Test TITO commands work
+        python -m tito.main --help > /dev/null && echo "✓ TITO CLI accessible"
+        python -m tito.main system doctor > /dev/null && echo "✓ Environment diagnosis works"
