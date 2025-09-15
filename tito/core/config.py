@@ -17,6 +17,7 @@ class CLIConfig:
     assignments_dir: Path
     tinytorch_dir: Path
     bin_dir: Path
+    modules_dir: Path  # Alias for assignments_dir
     
     # Environment settings
     python_min_version: tuple = (3, 8)
@@ -45,9 +46,11 @@ class CLIConfig:
             else:
                 project_root = Path.cwd()
         
+        modules_path = project_root / 'modules' / 'source'
         return cls(
             project_root=project_root,
-            assignments_dir=project_root / 'modules' / 'source',
+            assignments_dir=modules_path,
+            modules_dir=modules_path,  # Same as assignments_dir
             tinytorch_dir=project_root / 'tinytorch',
             bin_dir=project_root / 'bin'
         )
