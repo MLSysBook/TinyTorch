@@ -74,12 +74,15 @@ After EVERY implementation:
 3. Use pattern: `test_unit_[function_name]()`
 4. Run test at cell bottom
 
-### The 5 C's Before Every Code Block
-1. **Context**: Why are we doing this?
-2. **Concept**: What is this technically?
-3. **Connection**: How does this relate to what they know?
-4. **Concrete**: Specific example with real values
-5. **Confidence**: What success looks like
+### The 5 C's as Optional Checkpoint
+The 5 C's can be used as a quick implementation checkpoint, but should NOT duplicate existing content:
+1. **Context**: Why are we doing this? (if not already covered)
+2. **Concept**: What is this technically? (if needs clarification)
+3. **Connection**: How does this relate to what they know? (if adds value)
+4. **Concrete**: Specific example with real values (if helpful)
+5. **Confidence**: What success looks like (if not obvious)
+
+**IMPORTANT**: If these topics are already covered in the module's educational sections, don't repeat them. The 5 C's is a tool, not a requirement.
 
 ## Responsibilities
 
