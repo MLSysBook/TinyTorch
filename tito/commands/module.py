@@ -11,6 +11,7 @@ from .test import TestCommand
 from .notebooks import NotebooksCommand
 from .clean import CleanCommand
 from .export import ExportCommand
+from .view import ViewCommand
 
 class ModuleCommand(BaseCommand):
     @property
@@ -67,6 +68,14 @@ class ModuleCommand(BaseCommand):
         )
         export_cmd = ExportCommand(self.config)
         export_cmd.add_arguments(export_parser)
+        
+        # View subcommand
+        view_parser = subparsers.add_parser(
+            'view',
+            help='Generate notebooks and open Jupyter Lab'
+        )
+        view_cmd = ViewCommand(self.config)
+        view_cmd.add_arguments(view_parser)
 
     def run(self, args: Namespace) -> int:
         console = self.console
@@ -79,7 +88,8 @@ class ModuleCommand(BaseCommand):
                 "  • [bold]test[/bold]       - Run module tests\n"
                 "  • [bold]notebooks[/bold]  - Build notebooks from Python files\n"
                 "  • [bold]clean[/bold]      - Clean up module directories\n"
-                "  • [bold]export[/bold]     - Export module code to Python package\n\n"
+                "  • [bold]export[/bold]     - Export module code to Python package\n"
+                "  • [bold]view[/bold]       - Generate notebooks and open Jupyter Lab\n\n"
                 "[dim]Examples:[/dim]\n"
                 "[dim]  tito module status --metadata[/dim]\n"
                 "[dim]  tito module test --all[/dim]\n"
@@ -87,7 +97,9 @@ class ModuleCommand(BaseCommand):
                 "[dim]  tito module export --all[/dim]\n"
                 "[dim]  tito module export tensor[/dim]\n"
                 "[dim]  tito module clean --all[/dim]\n"
-                "[dim]  tito module clean tensor[/dim]",
+                "[dim]  tito module clean tensor[/dim]\n"
+                "[dim]  tito module view 02_tensor[/dim]\n"
+                "[dim]  tito module view --force[/dim]",
                 title="Module Command Group",
                 border_style="bright_cyan"
             ))
@@ -108,6 +120,9 @@ class ModuleCommand(BaseCommand):
             return cmd.execute(args)
         elif args.module_command == 'export':
             cmd = ExportCommand(self.config)
+            return cmd.execute(args)
+        elif args.module_command == 'view':
+            cmd = ViewCommand(self.config)
             return cmd.execute(args)
         else:
             console.print(Panel(
