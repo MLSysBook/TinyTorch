@@ -10,6 +10,8 @@
 
 # %% [markdown]
 """
+
+""""""
 # Tensor - Core Data Structure
 
 Welcome to the Tensor module! This is where TinyTorch really begins. You'll implement the fundamental data structure that powers all ML systems.
@@ -43,9 +45,9 @@ print("Ready to build tensors!")
 
 # %% [markdown]
 """
-## 📦 Where This Code Lives in the Final Package
+## Where This Code Lives in the Final Package
 
-**Learning Side:** You work in `modules/source/01_tensor/tensor_dev.py`  
+**Learning Side:** You work in `modules/source/02_tensor/tensor_dev.py`  
 **Building Side:** Code exports to `tinytorch.core.tensor`
 
 ```python
@@ -60,43 +62,33 @@ from tinytorch.core.layers import Dense, Conv2D
 - **Production:** Proper organization like PyTorch's `torch.Tensor`
 - **Consistency:** All tensor operations live together in `core.tensor`
 - **Foundation:** Every other module depends on Tensor
+
 """
-
-
 # %% [markdown]
 """
-## Step 1: What is a Tensor?
+## Mathematical Foundation: From Scalars to Tensors
 
-### Definition
-A **tensor** is an N-dimensional array with ML-specific operations. Think of it as a container that can hold data in multiple dimensions:
-
-- **Scalar** (0D): A single number - `5.0`
-- **Vector** (1D): A list of numbers - `[1, 2, 3]`  
-- **Matrix** (2D): A 2D array - `[[1, 2], [3, 4]]`
-- **Higher dimensions**: 3D, 4D, etc. for images, video, batches
-
-### The Mathematical Foundation: From Scalars to Tensors
 Understanding tensors requires building from mathematical fundamentals:
 
-#### **Scalars (Rank 0)**
+### Scalars (Rank 0)
 - **Definition**: A single number with no direction
 - **Examples**: Temperature (25°C), mass (5.2 kg), probability (0.7)
 - **Operations**: Addition, multiplication, comparison
 - **ML Context**: Loss values, learning rates, regularization parameters
 
-#### **Vectors (Rank 1)**
+### Vectors (Rank 1)
 - **Definition**: An ordered list of numbers with direction and magnitude
 - **Examples**: Position [x, y, z], RGB color [255, 128, 0], word embedding [0.1, -0.5, 0.8]
 - **Operations**: Dot product, cross product, norm calculation
 - **ML Context**: Feature vectors, gradients, model parameters
 
-#### **Matrices (Rank 2)**
+### Matrices (Rank 2)
 - **Definition**: A 2D array organizing data in rows and columns
 - **Examples**: Image (height × width), weight matrix (input × output), covariance matrix
 - **Operations**: Matrix multiplication, transpose, inverse, eigendecomposition
 - **ML Context**: Linear layer weights, attention matrices, batch data
 
-#### **Higher-Order Tensors (Rank 3+)**
+### Higher-Order Tensors (Rank 3+)
 - **Definition**: Multi-dimensional arrays extending matrices
 - **Examples**: 
   - **3D**: Video frames (time × height × width), RGB images (height × width × channels)
@@ -105,9 +97,12 @@ Understanding tensors requires building from mathematical fundamentals:
 - **Operations**: Tensor products, contractions, decompositions
 - **ML Context**: Convolutional features, RNN states, transformer attention
 
-### Why Tensors Matter in ML: The Computational Foundation
+"""
+# %% [markdown]
+"""
+## Why Tensors Matter in ML: The Computational Foundation
 
-#### **1. Unified Data Representation**
+### Unified Data Representation
 Tensors provide a consistent way to represent all ML data:
 ```python
 # All of these are tensors with different shapes
@@ -117,7 +112,7 @@ weight_matrix = Tensor([[1, 2], [3, 4]]) # Shape: (2, 2)
 image_batch = Tensor(np.random.rand(32, 224, 224, 3)) # Shape: (32, 224, 224, 3)
 ```
 
-#### **2. Efficient Batch Processing**
+### Efficient Batch Processing
 ML systems process multiple samples simultaneously:
 ```python
 # Instead of processing one image at a time:
@@ -128,13 +123,13 @@ for image in images:
 batch_result = model(image_batch)  # Fast: 1 vectorized operation
 ```
 
-#### **3. Hardware Acceleration**
+### Hardware Acceleration
 Modern hardware (GPUs, TPUs) excels at tensor operations:
 - **Parallel processing**: Multiple operations simultaneously
 - **Vectorization**: SIMD (Single Instruction, Multiple Data) operations
 - **Memory optimization**: Contiguous memory layout for cache efficiency
 
-#### **4. Automatic Differentiation**
+### Automatic Differentiation
 Tensors enable gradient computation through computational graphs:
 ```python
 # Each tensor operation creates a node in the computation graph
@@ -145,224 +140,128 @@ loss = z.sum()     # Node: summation
 # Gradients flow backward through this graph
 ```
 
-### Real-World Examples: Tensors in Action
+"""
+# %% [markdown]
+"""
+## Real-World Examples: Tensors in Action
 
-#### **Computer Vision**
+### Computer Vision
 - **Grayscale image**: 2D tensor `(height, width)` - `(28, 28)` for MNIST
 - **Color image**: 3D tensor `(height, width, channels)` - `(224, 224, 3)` for RGB
 - **Image batch**: 4D tensor `(batch, height, width, channels)` - `(32, 224, 224, 3)`
 - **Video**: 5D tensor `(batch, time, height, width, channels)`
 
-#### **Natural Language Processing**
+### Natural Language Processing
 - **Word embedding**: 1D tensor `(embedding_dim,)` - `(300,)` for Word2Vec
 - **Sentence**: 2D tensor `(sequence_length, embedding_dim)` - `(50, 768)` for BERT
 - **Batch of sentences**: 3D tensor `(batch, sequence_length, embedding_dim)`
 
-#### **Audio Processing**
+### Audio Processing
 - **Audio signal**: 1D tensor `(time_steps,)` - `(16000,)` for 1 second at 16kHz
 - **Spectrogram**: 2D tensor `(time_frames, frequency_bins)`
 - **Batch of audio**: 3D tensor `(batch, time_steps, features)`
 
-#### **Time Series**
+### Time Series
 - **Single series**: 2D tensor `(time_steps, features)`
 - **Multiple series**: 3D tensor `(batch, time_steps, features)`
 - **Multivariate forecasting**: 4D tensor `(batch, time_steps, features, predictions)`
 
-### Why Not Just Use NumPy?
+"""
+# %% [markdown]
+"""
+## Why Not Just Use NumPy?
 
 While we use NumPy internally, our Tensor class adds ML-specific functionality:
 
-#### **1. ML-Specific Operations**
+### ML-Specific Operations
 - **Gradient tracking**: For automatic differentiation (coming in Module 7)
 - **GPU support**: For hardware acceleration (future extension)
 - **Broadcasting semantics**: ML-friendly dimension handling
 
-#### **2. Consistent API**
+### Consistent API
 - **Type safety**: Predictable behavior across operations
 - **Error checking**: Clear error messages for debugging
 - **Integration**: Seamless work with other TinyTorch components
 
-#### **3. Educational Value**
+### Educational Value
 - **Conceptual clarity**: Understand what tensors really are
 - **Implementation insight**: See how frameworks work internally
 - **Debugging skills**: Trace through tensor operations step by step
 
-#### **4. Extensibility**
+### Extensibility
 - **Future features**: Ready for gradients, GPU, distributed computing
 - **Customization**: Add domain-specific operations
 - **Optimization**: Profile and optimize specific use cases
 
-### Performance Considerations: Building Efficient Tensors
+"""
+# %% [markdown]
+"""
+## Performance Considerations: Building Efficient Tensors
 
-#### **Memory Layout**
+### Memory Layout
 - **Contiguous arrays**: Better cache locality and performance
 - **Data types**: `float32` vs `float64` trade-offs
 - **Memory sharing**: Avoid unnecessary copies
 
-#### **Vectorization**
+### Vectorization
 - **SIMD operations**: Single Instruction, Multiple Data
 - **Broadcasting**: Efficient operations on different shapes
 - **Batch operations**: Process multiple samples simultaneously
 
-#### **Numerical Stability**
+### Numerical Stability
 - **Precision**: Balancing speed and accuracy
 - **Overflow/underflow**: Handling extreme values
 - **Gradient flow**: Maintaining numerical stability for training
 
-Let's start building our tensor foundation!
 """
-
 # %% [markdown]
 """
-## 🧠 The Mathematical Foundation
+# CONCEPT
+Tensors are N-dimensional arrays that carry data through neural networks.
+Think NumPy arrays with ML superpowers - same math, more capabilities.
 
-### Linear Algebra Refresher
-Tensors are generalizations of scalars, vectors, and matrices:
-
-```
-Scalar (0D): 5
-Vector (1D): [1, 2, 3]
-Matrix (2D): [[1, 2], [3, 4]]
-Tensor (3D): [[[1, 2], [3, 4]], [[5, 6], [7, 8]]]
-```
-
-### Why This Matters for Neural Networks
-- **Forward Pass**: Matrix multiplication between layers
-- **Batch Processing**: Multiple samples processed simultaneously
-- **Convolutions**: 3D operations on image data
-- **Gradients**: Derivatives computed across all dimensions
-
-### Connection to Real ML Systems
-Every major ML framework uses tensors:
-- **PyTorch**: `torch.Tensor`
-- **TensorFlow**: `tf.Tensor`
-- **JAX**: `jax.numpy.ndarray`
-- **TinyTorch**: `tinytorch.core.tensor.Tensor` (what we're building!)
-
-### Performance Considerations
-- **Memory Layout**: Contiguous arrays for cache efficiency
-- **Vectorization**: SIMD operations for speed
-- **Broadcasting**: Efficient operations on different shapes
-- **Type Consistency**: Avoiding unnecessary conversions
 """
-
 # %% [markdown]
 """
-## Step 2: The Tensor Class Foundation
-
-### Core Concept: Wrapping NumPy with ML Intelligence
-Our Tensor class wraps NumPy arrays with ML-specific functionality. This design pattern is used by all major ML frameworks:
-
-- **PyTorch**: `torch.Tensor` wraps ATen (C++ tensor library)
-- **TensorFlow**: `tf.Tensor` wraps Eigen (C++ linear algebra library)
-- **JAX**: `jax.numpy.ndarray` wraps XLA (Google's linear algebra compiler)
-- **TinyTorch**: `Tensor` wraps NumPy (Python's numerical computing library)
-
-### Design Requirements Analysis
-
-#### **1. Input Flexibility**
-Our tensor must handle diverse input types:
+# CODE STRUCTURE
 ```python
-# Scalars (Python numbers)
-t1 = Tensor(5)           # int → numpy array
-t2 = Tensor(3.14)        # float → numpy array
-
-# Lists (Python sequences)
-t3 = Tensor([1, 2, 3])   # list → numpy array
-t4 = Tensor([[1, 2], [3, 4]])  # nested list → 2D array
-
-# NumPy arrays (existing arrays)
-t5 = Tensor(np.array([1, 2, 3]))  # array → tensor wrapper
-```
-
-#### **2. Type Management**
-ML systems need consistent, predictable types:
-- **Default behavior**: Auto-detect appropriate types
-- **Explicit control**: Allow manual type specification
-- **Performance optimization**: Prefer `float32` over `float64`
-- **Memory efficiency**: Use appropriate precision
-
-#### **3. Property Access**
-Essential tensor properties for ML operations:
-- **Shape**: Dimensions for compatibility checking
-- **Size**: Total elements for memory estimation
-- **Data type**: For numerical computation planning
-- **Data access**: For integration with other libraries
-
-#### **4. Arithmetic Operations**
-Support for mathematical operations:
-- **Element-wise**: Addition, multiplication, subtraction, division
-- **Broadcasting**: Operations on different shapes
-- **Type promotion**: Consistent result types
-- **Error handling**: Clear messages for incompatible operations
-
-### Implementation Strategy
-
-#### **Memory Management**
-- **Copy vs. Reference**: When to copy data vs. share memory
-- **Type conversion**: Efficient dtype changes
-- **Contiguous layout**: Ensure optimal memory access patterns
-
-#### **Error Handling**
-- **Input validation**: Check for valid input types
-- **Shape compatibility**: Verify operations are mathematically valid
-- **Informative messages**: Help users debug issues quickly
-
-#### **Performance Optimization**
-- **Lazy evaluation**: Defer expensive operations when possible
-- **Vectorization**: Use NumPy's optimized operations
-- **Memory reuse**: Minimize unnecessary allocations
-
-### Learning Objectives for Implementation
-
-By implementing this Tensor class, you'll learn:
-1. **Wrapper pattern**: How to extend existing libraries
-2. **Type system design**: Managing data types in numerical computing
-3. **API design**: Creating intuitive, consistent interfaces
-4. **Performance considerations**: Balancing flexibility and speed
-5. **Error handling**: Providing helpful feedback to users
-
-Let's implement our tensor foundation!
-"""
-
-# %% [markdown]
-"""
-### Before We Code: The 5 C's
-
-```python
-# CONCEPT: What is a Tensor?
-# Tensors are N-dimensional arrays that carry data through neural networks.
-# Think NumPy arrays with ML superpowers - same math, more capabilities.
-
-# CODE STRUCTURE: What We're Building
 class Tensor:
     def __init__(self, data):     # Create from any data type
     def __add__(self, other):     # Enable tensor + tensor
     def __mul__(self, other):     # Enable tensor * tensor
     # Properties: .shape, .size, .dtype, .data
-
-# CONNECTIONS: Real-World Equivalents  
-# torch.Tensor (PyTorch) - same concept, production optimized
-# tf.Tensor (TensorFlow) - distributed computing focus
-# np.ndarray (NumPy) - we wrap this with ML operations
-
-# CONSTRAINTS: Key Implementation Requirements
-# - Handle broadcasting (auto-shape matching for operations)
-# - Support multiple data types (float32, int32, etc.)
-# - Efficient memory usage (copy only when necessary)
-# - Natural math notation (tensor + tensor should just work)
-
-# CONTEXT: Why This Matters in ML Systems
-# Every ML operation flows through tensors:
-# - Neural networks: All computations operate on tensors
-# - Training: Gradients flow through tensor operations  
-# - Hardware: GPUs optimized for tensor math
-# - Production: Millions of tensor ops per second in real systems
 ```
 
-**You're building the universal language of machine learning.**
 """
+# %% [markdown]
+"""
+# CONNECTIONS
+- torch.Tensor (PyTorch) - same concept, production optimized
+- tf.Tensor (TensorFlow) - distributed computing focus
+- np.ndarray (NumPy) - we wrap this with ML operations
 
+"""
+# %% [markdown]
+"""
+# CONSTRAINTS
+- Handle broadcasting (auto-shape matching for operations)
+- Support multiple data types (float32, int32, etc.)
+- Efficient memory usage (copy only when necessary)
+- Natural math notation (tensor + tensor should just work)
+
+"""
+# %% [markdown]
+"""
+# CONTEXT
+Every ML operation flows through tensors:
+- Neural networks: All computations operate on tensors
+- Training: Gradients flow through tensor operations  
+- Hardware: GPUs optimized for tensor math
+- Production: Millions of tensor ops per second in real systems
+
+**You're building the universal language of machine learning.**
+
+"""
 # %% nbgrader={"grade": false, "grade_id": "tensor-class", "locked": false, "schema_version": 3, "solution": true, "task": false}
 #| export
 class Tensor:
@@ -656,7 +555,6 @@ class Tensor:
         """Computes the mean of the tensor's elements."""
         return Tensor(np.mean(self.data))
 
-    # --- Matmul ---
     def matmul(self, other: 'Tensor') -> 'Tensor':
         """
         Perform matrix multiplication between two tensors.
@@ -683,13 +581,16 @@ class Tensor:
 
 # %% [markdown]
 """
-### 🧪 Unit Test: Tensor Creation
+# Testing Your Implementation
 
-Let's test your tensor creation implementation right away! This gives you immediate feedback on whether your `__init__` method works correctly.
+Now let's test our tensor implementation with comprehensive tests that validate all functionality.
 
-**This is a unit test** - it tests one specific function (tensor creation) in isolation.
 """
+# %% [markdown]
+"""
+## Unit Test: Tensor Creation
 
+"""
 # %% nbgrader={"grade": true, "grade_id": "test_unit_tensor_creation_immediate", "locked": true, "points": 5, "schema_version": 3, "solution": false, "task": false}
 # Test tensor creation immediately after implementation
 print("🔬 Unit Test: Tensor Creation...")
@@ -725,13 +626,9 @@ print("   Stores in _data attribute")
 
 # %% [markdown]
 """
-### 🧪 Unit Test: Tensor Properties
+## Unit Test: Tensor Properties
 
-Now let's test that your tensor properties work correctly. This tests the @property methods you implemented.
-
-**This is a unit test** - it tests specific properties (shape, size, dtype, data) in isolation.
 """
-
 # %% nbgrader={"grade": true, "grade_id": "test_unit_tensor_properties_immediate", "locked": true, "points": 5, "schema_version": 3, "solution": false, "task": false}
 # Test tensor properties immediately after implementation
 print("🔬 Unit Test: Tensor Properties...")
@@ -771,13 +668,9 @@ print("   dtype: Returns NumPy data type")
 
 # %% [markdown]
 """
-### 🧪 Unit Test: Tensor Arithmetic
+## Unit Test: Tensor Arithmetic
 
-Let's test your tensor arithmetic operations. This tests the __add__, __mul__, __sub__, __truediv__ methods.
-
-**This is a unit test** - it tests specific arithmetic operations in isolation.
 """
-
 # %% nbgrader={"grade": true, "grade_id": "test_unit_tensor_arithmetic_immediate", "locked": true, "points": 5, "schema_version": 3, "solution": false, "task": false}
 # Test tensor arithmetic immediately after implementation
 print("🔬 Unit Test: Tensor Arithmetic...")
@@ -823,44 +716,9 @@ print("   Returns new Tensor objects")
 
 # %% [markdown]
 """
-Congratulations! You've successfully implemented the core Tensor class for TinyTorch:
+## Comprehensive Unit Tests
 
-### What You've Accomplished
-✅ **Tensor Creation**: Handle scalars, vectors, matrices, and higher-dimensional arrays  
-✅ **Data Types**: Proper dtype handling with auto-detection and conversion  
-✅ **Properties**: Shape, size, dtype, and data access  
-✅ **Arithmetic**: Addition, multiplication, subtraction, division  
-✅ **Operators**: Natural Python syntax with `+`, `-`, `*`, `/`  
-✅ **Broadcasting**: Automatic shape compatibility like NumPy  
-
-### Key Concepts You've Learned
-- **Tensors** are the fundamental data structure for ML systems
-- **NumPy backend** provides efficient computation with ML-friendly API
-- **Operator overloading** makes tensor operations feel natural
-- **Broadcasting** enables flexible operations between different shapes
-- **Type safety** ensures consistent behavior across operations
-
-### Next Steps
-1. **Export your code**: `tito package nbdev --export 01_tensor`
-2. **Test your implementation**: `tito module test 01_tensor`
-3. **Use your tensors**: 
-   ```python
-   from tinytorch.core.tensor import Tensor
-   t = Tensor([1, 2, 3])
-   print(t + 5)  # Your tensor in action!
-   ```
-4. **Move to Module 2**: Start building activation functions!
-
-**Ready for the next challenge?** Let's add the mathematical functions that make neural networks powerful!
 """
-
-# %% [markdown]
-"""
-### 🧪 Unit Test: Tensor Creation
-
-This test validates your `Tensor` class constructor, ensuring it correctly handles scalars, vectors, matrices, and higher-dimensional arrays with proper shape detection.
-"""
-
 # %% nbgrader={"grade": true, "grade_id": "test_unit_tensor_creation", "locked": true, "points": 5, "schema_version": 3, "solution": false, "task": false}
 def test_unit_tensor_creation():
     """Comprehensive test of tensor creation with all data types and shapes."""
@@ -881,13 +739,6 @@ def test_unit_tensor_creation():
 
 # Run the test
 test_unit_tensor_creation()
-
-# %% [markdown]
-"""
-### 🧪 Unit Test: Tensor Properties
-
-This test validates your tensor property methods (shape, size, dtype, data), ensuring they correctly reflect the tensor's dimensional structure and data characteristics.
-"""
 
 # %% nbgrader={"grade": true, "grade_id": "test_unit_tensor_properties", "locked": true, "points": 5, "schema_version": 3, "solution": false, "task": false}
 def test_unit_tensor_properties():
@@ -911,13 +762,6 @@ def test_unit_tensor_properties():
 
 # Run the test
 test_unit_tensor_properties()
-
-# %% [markdown]
-"""
-### 🧪 Unit Test: Tensor Arithmetic Operations
-
-This test validates your tensor arithmetic implementation (addition, multiplication, subtraction, division) and operator overloading, ensuring mathematical operations work correctly with proper broadcasting.
-"""
 
 # %% nbgrader={"grade": true, "grade_id": "test_unit_tensor_arithmetic", "locked": true, "points": 5, "schema_version": 3, "solution": false, "task": false}
 def test_unit_tensor_arithmetic():
@@ -997,58 +841,58 @@ test_module_tensor_numpy_integration()
 
 # %% [markdown]
 """
-## 🎯 MODULE SUMMARY: Tensor Foundation
+# MODULE SUMMARY: Tensor Foundation
 
 Congratulations! You've successfully implemented the fundamental data structure that powers all machine learning:
 
-### ✅ What You've Built
+## What You've Built
 - **Tensor Class**: N-dimensional array wrapper with professional interfaces
 - **Core Operations**: Creation, property access, and arithmetic operations
 - **Shape Management**: Automatic shape tracking and validation
 - **Data Types**: Proper NumPy integration and type handling
 - **Foundation**: The building block for all subsequent TinyTorch modules
 
-### ✅ Key Learning Outcomes
+## Key Learning Outcomes
 - **Understanding**: How tensors work as the foundation of machine learning
 - **Implementation**: Built tensor operations from scratch
 - **Professional patterns**: Clean APIs, proper error handling, comprehensive testing
 - **Real-world connection**: Understanding PyTorch/TensorFlow tensor foundations
 - **Systems thinking**: Building reliable, reusable components
 
-### ✅ Mathematical Foundations Mastered
+## Mathematical Foundations Mastered
 - **N-dimensional arrays**: Shape, size, and dimensionality concepts
 - **Element-wise operations**: Addition, subtraction, multiplication, division
 - **Broadcasting**: Understanding how operations work with different shapes
 - **Memory management**: Efficient data storage and access patterns
 
-### ✅ Professional Skills Developed
+## Professional Skills Developed
 - **API design**: Clean, intuitive interfaces for tensor operations
 - **Error handling**: Graceful handling of invalid operations and edge cases
 - **Testing methodology**: Comprehensive validation of tensor functionality
 - **Documentation**: Clear, educational documentation with examples
 
-### ✅ Ready for Advanced Applications
+## Ready for Advanced Applications
 Your tensor implementation now enables:
 - **Neural Networks**: Foundation for all layer implementations
 - **Automatic Differentiation**: Gradient computation through computational graphs
 - **Complex Models**: CNNs, RNNs, Transformers - all built on tensors
 - **Real Applications**: Training models on real datasets
 
-### 🔗 Connection to Real ML Systems
+## Connection to Real ML Systems
 Your implementation mirrors production systems:
 - **PyTorch**: `torch.Tensor` provides identical functionality
 - **TensorFlow**: `tf.Tensor` implements similar concepts
 - **NumPy**: `numpy.ndarray` serves as the foundation
 - **Industry Standard**: Every major ML framework uses these exact principles
 
-### 🎯 The Power of Tensors
+## The Power of Tensors
 You've built the fundamental data structure of modern AI:
 - **Universality**: Tensors represent all data: images, text, audio, video
 - **Efficiency**: Vectorized operations enable fast computation
 - **Scalability**: Handles everything from single numbers to massive matrices
 - **Flexibility**: Foundation for any mathematical operation
 
-### 🚀 What's Next
+## What's Next
 Your tensor implementation is the foundation for:
 - **Activations**: Nonlinear functions that enable complex learning
 - **Layers**: Linear transformations and neural network building blocks
@@ -1058,4 +902,4 @@ Your tensor implementation is the foundation for:
 **Next Module**: Activation functions - adding the nonlinearity that makes neural networks powerful!
 
 You've built the foundation of modern AI. Now let's add the mathematical functions that enable machines to learn complex patterns!
-""" 
+"""
