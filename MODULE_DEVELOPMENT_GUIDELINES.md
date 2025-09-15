@@ -63,6 +63,8 @@ except ImportError:
 - **Test cells**: `{"grade": true, "locked": true, "points": N, "solution": false, "task": false}`
 - **Documentation cells**: `{"grade": false, "locked": false, "solution": false, "task": false}`
 
+**IMPORTANT**: See `NBGRADER_INTEGRATION_GUIDE.md` for complete explanation of why we use NBGrader and what each metadata field means.
+
 ## Implementation Guidelines
 
 ### 1. Scaffolding Pattern (REQUIRED)
