@@ -325,6 +325,51 @@ By implementing this Tensor class, you'll learn:
 Let's implement our tensor foundation!
 """
 
+# %% [markdown]
+"""
+## 🧱 The 5 C's: Understanding Tensor Implementation
+
+### 1️⃣ CONCEPT: What is a Tensor?
+A **Tensor** is a generalized mathematical object that represents scalars (0D), vectors (1D), matrices (2D), and higher-dimensional arrays (3D+). In machine learning, tensors are the fundamental data structure that flows through neural networks, carrying both data and gradients.
+
+### 2️⃣ CODE STRUCTURE: What We're Building
+```python
+class Tensor:
+    def __init__(self, data):          # Create from data
+        self._data = np.array(data)    # Store as NumPy array
+    
+    @property
+    def data(self):                    # Access underlying data
+    
+    def __add__(self, other):          # Enable: tensor + tensor
+    def __mul__(self, other):          # Enable: tensor * tensor
+    # ... more operations
+```
+
+### 3️⃣ CONNECTIONS: Real-World Integration
+- **PyTorch equivalent**: `torch.Tensor` - same concept, optimized implementation
+- **TensorFlow equivalent**: `tf.Tensor` - distributed computing focus
+- **NumPy relationship**: We wrap `np.ndarray` with ML-specific operations
+- **Production usage**: Every neural network processes millions of tensors per second
+
+### 4️⃣ CONSTRAINTS: Implementation Requirements
+- **Data storage**: Must efficiently wrap NumPy arrays
+- **Type safety**: Handle different data types (float32, int32, etc.)
+- **Broadcasting**: Automatic shape handling for operations
+- **Memory efficiency**: Copy data only when necessary
+- **Operator support**: Enable natural mathematical notation (+, -, *, /)
+
+### 5️⃣ CONTEXT: Why This Matters in ML Systems
+Tensors are the **universal language** of machine learning:
+- **Neural networks**: All computations operate on tensors
+- **Automatic differentiation**: Gradients flow through tensor operations
+- **Hardware acceleration**: GPUs are optimized for tensor operations
+- **Distributed computing**: Tensors can be split across multiple devices
+- **Research foundation**: Every ML breakthrough builds on tensor mathematics
+
+**Understanding tensors deeply means understanding the foundation of all modern AI.**
+"""
+
 # %% nbgrader={"grade": false, "grade_id": "tensor-class", "locked": false, "schema_version": 3, "solution": true, "task": false}
 #| export
 class Tensor:
