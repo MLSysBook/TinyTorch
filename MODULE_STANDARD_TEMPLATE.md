@@ -390,6 +390,22 @@ Implementation → Test Explanation (Markdown) → Test Code → Next Implementa
 - Code implements it
 - Test validates it
 
+### CRITICAL: Markdown Cell Format
+**ALWAYS use triple quotes, NEVER comments:**
+```python
+# CORRECT:
+# %% [markdown]
+"""
+## Section Title
+Content here...
+"""
+
+# WRONG (breaks notebooks):
+# %% [markdown]
+# ## Section Title
+# Content here...
+```
+
 ### 3. Use Exact Part Numbers and Names
 ```
 Part 1: Concept
