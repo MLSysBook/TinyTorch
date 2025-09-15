@@ -207,42 +207,45 @@ Now let's implement your personal configuration!
 
 # %% [markdown]
 """
-## 🔧 The 5 C's: Personal Information Configuration
+### Before We Code: The 5 C's
 
-### 1. **CONCEPT**: Identity in ML Systems
-Your **personal information** identifies you as the developer and configures your TinyTorch installation. This isn't just administrative - it's foundational to professional ML development.
-
-### 2. **CODE STRUCTURE**: What We're Building
 ```python
-def personal_info() -> Dict[str, str]:
-    # Returns your developer identity configuration
-    return {
-        'developer': 'Your Name',
-        'email': 'your.email@domain.com',
-        'institution': 'Your Institution',
-        'system_name': 'YourName-TinyTorch-Dev',
-        'version': '1.0.0'
+# CONCEPT: What is Personal Information Configuration?
+# Developer identity configuration that identifies you as the creator and
+# configures your TinyTorch installation. Think Git commit attribution -
+# every professional system needs to know who built it.
+
+# CODE STRUCTURE: What We're Building  
+def personal_info() -> Dict[str, str]:     # Returns developer identity
+    return {                               # Dictionary with required fields
+        'developer': 'Your Name',         # Your actual name
+        'email': 'your@domain.com',       # Contact information
+        'institution': 'Your Place',      # Affiliation
+        'system_name': 'YourName-Dev',    # Unique system identifier
+        'version': '1.0.0'                # Configuration version
     }
+
+# CONNECTIONS: Real-World Equivalents
+# Git commits - author name and email in every commit
+# Docker images - maintainer information in container metadata
+# Python packages - author info in setup.py and pyproject.toml
+# Model cards - creator information for ML models
+
+# CONSTRAINTS: Key Implementation Requirements
+# - Use actual information (not placeholder text)
+# - Email must be valid format (contains @ and domain)
+# - System name should be unique and descriptive
+# - All values must be strings, version stays '1.0.0'
+
+# CONTEXT: Why This Matters in ML Systems
+# Professional ML development requires attribution:
+# - Model ownership: Who built this neural network?
+# - Collaboration: Others can contact you about issues
+# - Professional standards: Industry practice for all software
+# - System customization: Makes your TinyTorch installation unique
 ```
 
-### 3. **CONNECTIONS**: Real-World Applications
-- **Git commits**: Author name and email in every commit
-- **Docker images**: Maintainer information in container metadata
-- **Python packages**: Author info in `setup.py` and `pyproject.toml`
-- **Model cards**: Creator information for ML models
-
-### 4. **CONSTRAINTS**: Implementation Requirements
-- Use your actual information (not placeholder text)
-- Email must be valid format (contains @ and domain)
-- System name should be unique and descriptive
-- All values must be strings
-- Version should remain '1.0.0'
-
-### 5. **CONTEXT**: Why This Matters
-- **Attribution**: Who built this model?
-- **Collaboration**: Others can contact you about issues
-- **Professional standards**: Industry practice for software attribution
-- **System customization**: Makes your TinyTorch installation unique
+**You're establishing your identity in the ML systems world.**
 """
 
 # %% nbgrader={"grade": false, "grade_id": "personal-info", "locked": false, "schema_version": 3, "solution": true, "task": false}
@@ -421,42 +424,45 @@ Now let's implement system information queries!
 
 # %% [markdown]
 """
-## 🔧 The 5 C's: System Information Queries
+### Before We Code: The 5 C's
 
-### 1. **CONCEPT**: Hardware-Aware ML Systems
-**System information** provides details about your hardware and software environment. This is crucial for ML development because machine learning is fundamentally about computation, and computation depends on hardware.
-
-### 2. **CODE STRUCTURE**: What We're Building
 ```python
-def system_info() -> Dict[str, Any]:
-    # Queries hardware and software specs
-    return {
-        'python_version': '3.9.7',
-        'platform': 'Darwin',
-        'architecture': 'arm64', 
-        'cpu_count': 8,
-        'memory_gb': 16.0
+# CONCEPT: What is System Information?
+# Hardware and software environment detection for ML systems.
+# Think computer specifications for gaming - ML needs to know what
+# resources are available for optimal performance.
+
+# CODE STRUCTURE: What We're Building  
+def system_info() -> Dict[str, Any]:       # Queries system specs
+    return {                               # Hardware/software details
+        'python_version': '3.9.7',        # Python compatibility
+        'platform': 'Darwin',             # Operating system
+        'architecture': 'arm64',          # CPU architecture
+        'cpu_count': 8,                   # Parallel processing cores
+        'memory_gb': 16.0                 # Available RAM
     }
+
+# CONNECTIONS: Real-World Equivalents
+# torch.get_num_threads() (PyTorch) - uses CPU count for optimization
+# tf.config.list_physical_devices() (TensorFlow) - queries hardware
+# psutil.cpu_count() (System monitoring) - same underlying queries
+# MLflow system tracking - documents environment for reproducibility
+
+# CONSTRAINTS: Key Implementation Requirements
+# - Use actual system queries (not hardcoded values)
+# - Convert memory from bytes to GB for readability
+# - Round memory to 1 decimal place for clean output
+# - Return proper data types (strings, int, float)
+
+# CONTEXT: Why This Matters in ML Systems
+# Hardware awareness enables performance optimization:
+# - Training: More CPU cores = faster data processing
+# - Memory: Determines maximum model and batch sizes
+# - Debugging: System specs help troubleshoot performance issues
+# - Reproducibility: Document exact environment for experiment tracking
 ```
 
-### 3. **CONNECTIONS**: Real-World Applications
-- **PyTorch**: `torch.get_num_threads()` uses CPU count
-- **TensorFlow**: `tf.config.list_physical_devices()` queries hardware
-- **Scikit-learn**: `n_jobs=-1` uses all available cores
-- **MLflow**: Tracks system context with experiments
-
-### 4. **CONSTRAINTS**: Implementation Requirements
-- Use actual system queries (not hardcoded values)
-- Convert memory from bytes to GB for readability
-- Round memory to 1 decimal place
-- Return proper data types (strings, int, float)
-- Handle version formatting correctly
-
-### 5. **CONTEXT**: Why This Matters
-- **Performance**: CPU cores determine parallelization
-- **Memory**: Limits batch size and model size
-- **Debugging**: System specs help troubleshoot issues
-- **Reproducibility**: Document exact environment
+**You're building hardware-aware ML systems that adapt to their environment.**
 """
 
 # %% nbgrader={"grade": false, "grade_id": "system-info", "locked": false, "schema_version": 3, "solution": true, "task": false}
