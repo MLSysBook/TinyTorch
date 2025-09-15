@@ -61,7 +61,7 @@ import psutil
 import os
 from typing import Dict, Any
 
-# %% nbgrader={"grade": false, "grade_id": "setup-imports", "locked": false, "schema_version": 3, "solution": false, "task": false}
+# %% nbgrader={"grade": false, "grade_id": "setup-verification", "locked": false, "schema_version": 3, "solution": false, "task": false}
 print("🔥 TinyTorch Setup Module")
 print(f"Python version: {sys.version_info.major}.{sys.version_info.minor}")
 print(f"Platform: {platform.system()}")
@@ -160,10 +160,6 @@ Connects to broader ML engineering:
 Let's start configuring your TinyTorch system!
 """
 
-# %% [markdown]
-"""
-## 🔧 DEVELOPMENT
-"""
 
 # %% [markdown]
 """
@@ -209,6 +205,49 @@ Your **personal information** identifies you as the developer and configures you
 Now let's implement your personal configuration!
 """
 
+# %% [markdown]
+"""
+### Before We Code: The 5 C's
+
+```python
+# CONCEPT: What is Personal Information Configuration?
+# Developer identity configuration that identifies you as the creator and
+# configures your TinyTorch installation. Think Git commit attribution -
+# every professional system needs to know who built it.
+
+# CODE STRUCTURE: What We're Building  
+def personal_info() -> Dict[str, str]:     # Returns developer identity
+    return {                               # Dictionary with required fields
+        'developer': 'Your Name',         # Your actual name
+        'email': 'your@domain.com',       # Contact information
+        'institution': 'Your Place',      # Affiliation
+        'system_name': 'YourName-Dev',    # Unique system identifier
+        'version': '1.0.0'                # Configuration version
+    }
+
+# CONNECTIONS: Real-World Equivalents
+# Git commits - author name and email in every commit
+# Docker images - maintainer information in container metadata
+# Python packages - author info in setup.py and pyproject.toml
+# Model cards - creator information for ML models
+
+# CONSTRAINTS: Key Implementation Requirements
+# - Use actual information (not placeholder text)
+# - Email must be valid format (contains @ and domain)
+# - System name should be unique and descriptive
+# - All values must be strings, version stays '1.0.0'
+
+# CONTEXT: Why This Matters in ML Systems
+# Professional ML development requires attribution:
+# - Model ownership: Who built this neural network?
+# - Collaboration: Others can contact you about issues
+# - Professional standards: Industry practice for all software
+# - System customization: Makes your TinyTorch installation unique
+```
+
+**You're establishing your identity in the ML systems world.**
+"""
+
 # %% nbgrader={"grade": false, "grade_id": "personal-info", "locked": false, "schema_version": 3, "solution": true, "task": false}
 #| export
 def personal_info() -> Dict[str, str]:
@@ -230,10 +269,10 @@ def personal_info() -> Dict[str, str]:
     
     EXAMPLE OUTPUT:
     {
-        'developer': 'Vijay Janapa Reddi',
-        'email': 'vj@eecs.harvard.edu', 
-        'institution': 'Harvard University',
-        'system_name': 'VJ-TinyTorch-Dev',
+        'developer': 'Student Name',
+        'email': 'student@university.edu', 
+        'institution': 'University Name',
+        'system_name': 'StudentName-TinyTorch-Dev',
         'version': '1.0.0'
     }
     
@@ -252,13 +291,57 @@ def personal_info() -> Dict[str, str]:
     """
     ### BEGIN SOLUTION
     return {
-        'developer': 'Vijay Janapa Reddi',
-        'email': 'vj@eecs.harvard.edu',
-        'institution': 'Harvard University',
-        'system_name': 'VJ-TinyTorch-Dev',
+        'developer': 'Student Name',
+        'email': 'student@university.edu',
+        'institution': 'University Name',
+        'system_name': 'StudentName-TinyTorch-Dev',
         'version': '1.0.0'
     }
     ### END SOLUTION
+
+# %% [markdown]
+"""
+### 🧪 Unit Test: Personal Information Configuration
+
+This test validates your `personal_info()` function implementation, ensuring it returns properly formatted developer information for system attribution and collaboration.
+"""
+
+# %% nbgrader={"grade": true, "grade_id": "test-personal-info-immediate", "locked": true, "points": 5, "schema_version": 3, "solution": false, "task": false}
+def test_unit_personal_info_basic():
+    """Test personal_info function implementation."""
+    print("🔬 Unit Test: Personal Information...")
+    
+    # Test personal_info function
+    personal = personal_info()
+    
+    # Test return type
+    assert isinstance(personal, dict), "personal_info should return a dictionary"
+    
+    # Test required keys
+    required_keys = ['developer', 'email', 'institution', 'system_name', 'version']
+    for key in required_keys:
+        assert key in personal, f"Dictionary should have '{key}' key"
+    
+    # Test non-empty values
+    for key, value in personal.items():
+        assert isinstance(value, str), f"Value for '{key}' should be a string"
+        assert len(value) > 0, f"Value for '{key}' cannot be empty"
+    
+    # Test email format
+    assert '@' in personal['email'], "Email should contain @ symbol"
+    assert '.' in personal['email'], "Email should contain domain"
+    
+    # Test version format
+    assert personal['version'] == '1.0.0', "Version should be '1.0.0'"
+    
+    # Test system name (should be unique/personalized)
+    assert len(personal['system_name']) > 5, "System name should be descriptive"
+    
+    print("✅ Personal info function tests passed!")
+    print(f"✅ TinyTorch configured for: {personal['developer']}")
+
+# Run the test
+test_unit_personal_info_basic()
 
 # %% [markdown]
 """
@@ -339,6 +422,49 @@ memory_gb = round(memory_bytes / (1024**3), 1)
 Now let's implement system information queries!
 """
 
+# %% [markdown]
+"""
+### Before We Code: The 5 C's
+
+```python
+# CONCEPT: What is System Information?
+# Hardware and software environment detection for ML systems.
+# Think computer specifications for gaming - ML needs to know what
+# resources are available for optimal performance.
+
+# CODE STRUCTURE: What We're Building  
+def system_info() -> Dict[str, Any]:       # Queries system specs
+    return {                               # Hardware/software details
+        'python_version': '3.9.7',        # Python compatibility
+        'platform': 'Darwin',             # Operating system
+        'architecture': 'arm64',          # CPU architecture
+        'cpu_count': 8,                   # Parallel processing cores
+        'memory_gb': 16.0                 # Available RAM
+    }
+
+# CONNECTIONS: Real-World Equivalents
+# torch.get_num_threads() (PyTorch) - uses CPU count for optimization
+# tf.config.list_physical_devices() (TensorFlow) - queries hardware
+# psutil.cpu_count() (System monitoring) - same underlying queries
+# MLflow system tracking - documents environment for reproducibility
+
+# CONSTRAINTS: Key Implementation Requirements
+# - Use actual system queries (not hardcoded values)
+# - Convert memory from bytes to GB for readability
+# - Round memory to 1 decimal place for clean output
+# - Return proper data types (strings, int, float)
+
+# CONTEXT: Why This Matters in ML Systems
+# Hardware awareness enables performance optimization:
+# - Training: More CPU cores = faster data processing
+# - Memory: Determines maximum model and batch sizes
+# - Debugging: System specs help troubleshoot performance issues
+# - Reproducibility: Document exact environment for experiment tracking
+```
+
+**You're building hardware-aware ML systems that adapt to their environment.**
+"""
+
 # %% nbgrader={"grade": false, "grade_id": "system-info", "locked": false, "schema_version": 3, "solution": true, "task": false}
 #| export
 def system_info() -> Dict[str, Any]:
@@ -414,6 +540,51 @@ def system_info() -> Dict[str, Any]:
 
 # %% [markdown]
 """
+### 🧪 Unit Test: System Information Query
+
+This test validates your `system_info()` function implementation, ensuring it accurately detects and reports hardware and software specifications for performance optimization and debugging.
+"""
+
+# %% nbgrader={"grade": true, "grade_id": "test-system-info-immediate", "locked": true, "points": 5, "schema_version": 3, "solution": false, "task": false}
+def test_unit_system_info_basic():
+    """Test system_info function implementation."""
+    print("🔬 Unit Test: System Information...")
+    
+    # Test system_info function
+    sys_info = system_info()
+    
+    # Test return type
+    assert isinstance(sys_info, dict), "system_info should return a dictionary"
+    
+    # Test required keys
+    required_keys = ['python_version', 'platform', 'architecture', 'cpu_count', 'memory_gb']
+    for key in required_keys:
+        assert key in sys_info, f"Dictionary should have '{key}' key"
+    
+    # Test data types
+    assert isinstance(sys_info['python_version'], str), "python_version should be string"
+    assert isinstance(sys_info['platform'], str), "platform should be string"
+    assert isinstance(sys_info['architecture'], str), "architecture should be string"
+    assert isinstance(sys_info['cpu_count'], int), "cpu_count should be integer"
+    assert isinstance(sys_info['memory_gb'], (int, float)), "memory_gb should be number"
+    
+    # Test reasonable values
+    assert sys_info['cpu_count'] > 0, "CPU count should be positive"
+    assert sys_info['memory_gb'] > 0, "Memory should be positive"
+    assert len(sys_info['python_version']) > 0, "Python version should not be empty"
+    
+    # Test that values are actually queried (not hardcoded)
+    actual_version = f"{sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro}"
+    assert sys_info['python_version'] == actual_version, "Python version should match actual system"
+    
+    print("✅ System info function tests passed!")
+    print(f"✅ Python: {sys_info['python_version']} on {sys_info['platform']}")
+
+# Run the test
+test_unit_system_info_basic()
+
+# %% [markdown]
+"""
 ## 🧪 Testing Your Configuration Functions
 
 ### The Importance of Testing in ML Systems
@@ -451,99 +622,10 @@ Now let's test your configuration functions!
 
 # %% [markdown]
 """
-### 🧪 Test Your Configuration Functions
+### 🎯 Additional Comprehensive Tests
 
-Once you implement both functions above, run this cell to test them:
+These comprehensive tests validate that your configuration functions work together and integrate properly with the TinyTorch system.
 """
-
-# %% [markdown]
-"""
-### 🧪 Unit Test: Personal Information Configuration
-
-This test validates your `personal_info()` function implementation, ensuring it returns properly formatted developer information for system attribution and collaboration.
-"""
-
-# %%
-def test_unit_personal_info_basic():
-    """Test personal_info function implementation."""
-    print("🔬 Unit Test: Personal Information...")
-    
-    # Test personal_info function
-    personal = personal_info()
-    
-    # Test return type
-    assert isinstance(personal, dict), "personal_info should return a dictionary"
-    
-    # Test required keys
-    required_keys = ['developer', 'email', 'institution', 'system_name', 'version']
-    for key in required_keys:
-        assert key in personal, f"Dictionary should have '{key}' key"
-    
-    # Test non-empty values
-    for key, value in personal.items():
-        assert isinstance(value, str), f"Value for '{key}' should be a string"
-        assert len(value) > 0, f"Value for '{key}' cannot be empty"
-    
-    # Test email format
-    assert '@' in personal['email'], "Email should contain @ symbol"
-    assert '.' in personal['email'], "Email should contain domain"
-    
-    # Test version format
-    assert personal['version'] == '1.0.0', "Version should be '1.0.0'"
-    
-    # Test system name (should be unique/personalized)
-    assert len(personal['system_name']) > 5, "System name should be descriptive"
-    
-    print("✅ Personal info function tests passed!")
-    print(f"✅ TinyTorch configured for: {personal['developer']}")
-
-# Run the test
-test_unit_personal_info_basic()
-
-# %% [markdown]
-"""
-### 🧪 Unit Test: System Information Query
-
-This test validates your `system_info()` function implementation, ensuring it accurately detects and reports hardware and software specifications for performance optimization and debugging.
-"""
-
-# %%
-def test_unit_system_info_basic():
-    """Test system_info function implementation."""
-    print("🔬 Unit Test: System Information...")
-    
-    # Test system_info function
-    sys_info = system_info()
-    
-    # Test return type
-    assert isinstance(sys_info, dict), "system_info should return a dictionary"
-    
-    # Test required keys
-    required_keys = ['python_version', 'platform', 'architecture', 'cpu_count', 'memory_gb']
-    for key in required_keys:
-        assert key in sys_info, f"Dictionary should have '{key}' key"
-    
-    # Test data types
-    assert isinstance(sys_info['python_version'], str), "python_version should be string"
-    assert isinstance(sys_info['platform'], str), "platform should be string"
-    assert isinstance(sys_info['architecture'], str), "architecture should be string"
-    assert isinstance(sys_info['cpu_count'], int), "cpu_count should be integer"
-    assert isinstance(sys_info['memory_gb'], (int, float)), "memory_gb should be number"
-    
-    # Test reasonable values
-    assert sys_info['cpu_count'] > 0, "CPU count should be positive"
-    assert sys_info['memory_gb'] > 0, "Memory should be positive"
-    assert len(sys_info['python_version']) > 0, "Python version should not be empty"
-    
-    # Test that values are actually queried (not hardcoded)
-    actual_version = f"{sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro}"
-    assert sys_info['python_version'] == actual_version, "Python version should match actual system"
-    
-    print("✅ System info function tests passed!")
-    print(f"✅ Python: {sys_info['python_version']} on {sys_info['platform']}")
-
-# Run the test
-test_unit_system_info_basic()
 
 # %% [markdown]
 """
