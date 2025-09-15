@@ -62,10 +62,6 @@ from tinytorch.core.layers import Dense, Conv2D
 - **Foundation:** Every other module depends on Tensor
 """
 
-# %% [markdown]
-"""
-## 🔧 DEVELOPMENT
-"""
 
 # %% [markdown]
 """
@@ -656,7 +652,7 @@ Let's test your tensor creation implementation right away! This gives you immedi
 **This is a unit test** - it tests one specific function (tensor creation) in isolation.
 """
 
-# %% nbgrader={"grade": true, "grade_id": "test-tensor-creation-immediate", "locked": true, "points": 5, "schema_version": 3, "solution": false, "task": false}
+# %% nbgrader={"grade": true, "grade_id": "test_unit_tensor_creation_immediate", "locked": true, "points": 5, "schema_version": 3, "solution": false, "task": false}
 # Test tensor creation immediately after implementation
 print("🔬 Unit Test: Tensor Creation...")
 
@@ -698,7 +694,7 @@ Now let's test that your tensor properties work correctly. This tests the @prope
 **This is a unit test** - it tests specific properties (shape, size, dtype, data) in isolation.
 """
 
-# %% nbgrader={"grade": true, "grade_id": "test-tensor-properties-immediate", "locked": true, "points": 5, "schema_version": 3, "solution": false, "task": false}
+# %% nbgrader={"grade": true, "grade_id": "test_unit_tensor_properties_immediate", "locked": true, "points": 5, "schema_version": 3, "solution": false, "task": false}
 # Test tensor properties immediately after implementation
 print("🔬 Unit Test: Tensor Properties...")
 
@@ -744,7 +740,7 @@ Let's test your tensor arithmetic operations. This tests the __add__, __mul__, _
 **This is a unit test** - it tests specific arithmetic operations in isolation.
 """
 
-# %% nbgrader={"grade": true, "grade_id": "test-tensor-arithmetic-immediate", "locked": true, "points": 5, "schema_version": 3, "solution": false, "task": false}
+# %% nbgrader={"grade": true, "grade_id": "test_unit_tensor_arithmetic_immediate", "locked": true, "points": 5, "schema_version": 3, "solution": false, "task": false}
 # Test tensor arithmetic immediately after implementation
 print("🔬 Unit Test: Tensor Arithmetic...")
 
@@ -827,7 +823,7 @@ Congratulations! You've successfully implemented the core Tensor class for TinyT
 This test validates your `Tensor` class constructor, ensuring it correctly handles scalars, vectors, matrices, and higher-dimensional arrays with proper shape detection.
 """
 
-# %%
+# %% nbgrader={"grade": true, "grade_id": "test_unit_tensor_creation", "locked": true, "points": 5, "schema_version": 3, "solution": false, "task": false}
 def test_unit_tensor_creation():
     """Comprehensive test of tensor creation with all data types and shapes."""
     print("🔬 Testing comprehensive tensor creation...")
@@ -855,7 +851,7 @@ test_unit_tensor_creation()
 This test validates your tensor property methods (shape, size, dtype, data), ensuring they correctly reflect the tensor's dimensional structure and data characteristics.
 """
 
-# %%
+# %% nbgrader={"grade": true, "grade_id": "test_unit_tensor_properties", "locked": true, "points": 5, "schema_version": 3, "solution": false, "task": false}
 def test_unit_tensor_properties():
     """Comprehensive test of tensor properties (shape, size, dtype, data access)."""
     print("🔬 Testing comprehensive tensor properties...")
@@ -885,7 +881,7 @@ test_unit_tensor_properties()
 This test validates your tensor arithmetic implementation (addition, multiplication, subtraction, division) and operator overloading, ensuring mathematical operations work correctly with proper broadcasting.
 """
 
-# %%
+# %% nbgrader={"grade": true, "grade_id": "test_unit_tensor_arithmetic", "locked": true, "points": 5, "schema_version": 3, "solution": false, "task": false}
 def test_unit_tensor_arithmetic():
     """Comprehensive test of tensor arithmetic operations."""
     print("🔬 Testing comprehensive tensor arithmetic...")
@@ -917,7 +913,7 @@ def test_unit_tensor_arithmetic():
 # Run the test
 test_unit_tensor_arithmetic()
 
-# %%
+# %% nbgrader={"grade": true, "grade_id": "test_module_tensor_numpy_integration", "locked": true, "points": 10, "schema_version": 3, "solution": false, "task": false}
 def test_module_tensor_numpy_integration():
     """
     Integration test for tensor operations with NumPy arrays.
