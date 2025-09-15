@@ -327,35 +327,40 @@ Let's implement our tensor foundation!
 
 # %% [markdown]
 """
-### Building Your Tensor Implementation
+### Before We Code: The 5 C's
 
 ```python
-# CONCEPT: Tensors are N-dimensional arrays that carry data through neural networks
-# Think NumPy arrays with ML superpowers - same math, more ML-focused capabilities
+# CONCEPT: What is a Tensor?
+# Tensors are N-dimensional arrays that carry data through neural networks.
+# Think NumPy arrays with ML superpowers - same math, more capabilities.
 
+# CODE STRUCTURE: What We're Building
 class Tensor:
-    def __init__(self, data):
-        # CORE IMPLEMENTATION: Your tensor needs these fundamentals
-        # - Store N-dimensional data efficiently  
-        # - Support math operations: +, *, .sum(), .reshape()
-        # - Handle broadcasting (auto-shape matching)
-        # - Work with multiple data types (float32, int64, etc.)
-        pass
-    
-    def __add__(self, other):
-        # REAL-WORLD CONNECTION: This mirrors torch.Tensor.__add__()
-        # Every + operation in PyTorch goes through similar logic
-        pass
-    
-    def sum(self):
-        # WHY THIS MATTERS: Sum operations are everywhere in ML
-        # - Loss calculations (MSE, CrossEntropy)
-        # - Gradient accumulation  
-        # - Batch processing statistics
-        pass
+    def __init__(self, data):     # Create from any data type
+    def __add__(self, other):     # Enable tensor + tensor
+    def __mul__(self, other):     # Enable tensor * tensor
+    # Properties: .shape, .size, .dtype, .data
+
+# CONNECTIONS: Real-World Equivalents  
+# torch.Tensor (PyTorch) - same concept, production optimized
+# tf.Tensor (TensorFlow) - distributed computing focus
+# np.ndarray (NumPy) - we wrap this with ML operations
+
+# CONSTRAINTS: Key Implementation Requirements
+# - Handle broadcasting (auto-shape matching for operations)
+# - Support multiple data types (float32, int32, etc.)
+# - Efficient memory usage (copy only when necessary)
+# - Natural math notation (tensor + tensor should just work)
+
+# CONTEXT: Why This Matters in ML Systems
+# Every ML operation flows through tensors:
+# - Neural networks: All computations operate on tensors
+# - Training: Gradients flow through tensor operations  
+# - Hardware: GPUs optimized for tensor math
+# - Production: Millions of tensor ops per second in real systems
 ```
 
-*This is the same concept as `torch.Tensor` - you're building the foundation that powers production ML frameworks.*
+**You're building the universal language of machine learning.**
 """
 
 # %% nbgrader={"grade": false, "grade_id": "tensor-class", "locked": false, "schema_version": 3, "solution": true, "task": false}
