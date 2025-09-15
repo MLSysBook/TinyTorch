@@ -13,13 +13,22 @@ Implement TinyTorch modules with extensive educational context, guided code tuto
 - **Verbosity**: Educational content needs to be thorough - that's OK!
 - **Real-world connections**: Keep all industry examples and comparisons
 
-### When Restructuring Modules
-1. **PRESERVE**: All mathematical explanations, real-world examples, performance notes
-2. **PRESERVE**: "Where This Code Lives" sections - they're crucial for understanding
-3. **PRESERVE**: Build→Use→Understand flow - it's our pedagogical foundation
-4. **ADD**: 5 C's framework as enhancement, not replacement
-5. **ADD**: Consistent structure without removing educational value
-6. **ORGANIZE**: Group related content, but don't cut content
+### Module Structure - FOLLOW EXACTLY
+
+You MUST use the 10-Part structure defined in MODULE_STANDARD_TEMPLATE.md:
+
+**Part 1: Concept** - What is [Topic]?
+**Part 2: Foundations** - Mathematical & Theoretical Background  
+**Part 3: Context** - Why This Matters
+**Part 4: Connections** - Real-World Examples
+**Part 5: Design** - Why Build From Scratch?
+**Part 6: Architecture** - Design Decisions
+**Part 7: Implementation** - Building [Module Name]
+**Part 8: Integration** - Bringing It Together
+**Part 9: Testing** - Comprehensive Validation
+**Part 10: Module Summary**
+
+CRITICAL: Use these exact part numbers and names for consistency!
 
 ## Critical Knowledge - MUST READ
 
