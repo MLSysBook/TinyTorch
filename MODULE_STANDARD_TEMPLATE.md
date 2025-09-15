@@ -183,6 +183,9 @@ We'll implement this in steps:
 
 #### Key Concepts
 [Important ideas for this implementation]
+
+#### Real-World Connection
+[How this component is used in production ML systems - PyTorch, TensorFlow, etc.]
 """
 
 # %% nbgrader={"grade": false, "grade_id": "[component]-implementation", "locked": false, "schema_version": 3, "solution": true}
@@ -226,21 +229,46 @@ class ComponentName:
 """
 ### 🧪 Immediate Test: [Component Name]
 
-Let's verify your implementation works correctly:
+**What This Test Validates:**
+- [Specific functionality being tested]
+- [Mathematical/algorithmic correctness]
+- [Integration with other components if applicable]
+
+**Why This Matters:**
+- [Key concept students learn from this test]
+- [Connection to broader ML principles]
+- [Real-world application context]
+
+**Expected Behavior:**
+- Input: [example input description]
+- Output: [expected output description]
+- [Any edge cases or special behaviors]
 """
 
 # %% nbgrader={"grade": true, "grade_id": "test-[component]-immediate", "locked": true, "points": 5, "schema_version": 3}
-# Immediate test with educational feedback
 def test_immediate_component():
     """Test [component] immediately after implementation."""
     print("🔬 Testing [component]...")
     
-    # Test code
-    # assert statements
+    # Clear test implementation with educational comments
+    # Example:
+    # Create test input
+    test_input = ...
+    
+    # Execute the component
+    result = component.method(test_input)
+    
+    # Validate against expected behavior
+    expected = ...
+    assert result == expected, f"Expected {expected}, got {result}"
+    
+    # Test edge cases if relevant
     
     print("✅ [Component] works perfectly!")
-    print("🎯 Key insight: [What this test validates]")
+    print("🎯 Key insight: [What this validates about ML systems]")
+    print("🔗 Connection: [How this relates to PyTorch/TensorFlow/etc.]")
 
+# Run the test immediately
 test_immediate_component()
 
 # [REPEAT Part 7 pattern for each component]
@@ -260,24 +288,50 @@ test_immediate_component()
 """
 ## Part 9: Testing - Comprehensive Validation
 
+Now that all components are implemented and individually tested, let's run comprehensive tests to ensure everything works together perfectly.
+
 ### Test Categories
-1. **Unit Tests**: Individual components
-2. **Integration Tests**: Components working together
-3. **Edge Cases**: Boundary conditions
-4. **Performance Tests**: Efficiency validation
+1. **Integration Tests**: Components working together seamlessly
+2. **Edge Cases**: Boundary conditions and special inputs
+3. **Performance Tests**: Efficiency for real-world use
+4. **Compatibility Tests**: Matching PyTorch/TensorFlow behavior
 """
 
-# %% nbgrader={"grade": true, "grade_id": "test-comprehensive-1", "locked": true, "points": 10, "schema_version": 3}
-def test_comprehensive_component():
-    """Comprehensive test of all functionality."""
-    print("🔬 Running comprehensive tests...")
-    
-    # Multiple test cases
-    # Various assertions
-    
-    print("✅ All comprehensive tests passed!")
+# %% [markdown]
+"""
+### 🔬 Comprehensive Module Tests
 
-test_comprehensive_component()
+These tests validate that your complete implementation is production-ready:
+"""
+
+# %% nbgrader={"grade": true, "grade_id": "test-comprehensive-integration", "locked": true, "points": 15, "schema_version": 3}
+def test_comprehensive_integration():
+    """Test all components working together."""
+    print("🔬 Testing component integration...")
+    
+    # Test multiple components interacting
+    # Example workflow tests
+    # Real-world usage patterns
+    
+    print("✅ All components integrate perfectly!")
+    print("🎯 Your implementation matches production systems!")
+
+test_comprehensive_integration()
+
+# %% nbgrader={"grade": true, "grade_id": "test-comprehensive-edge-cases", "locked": true, "points": 10, "schema_version": 3}
+def test_comprehensive_edge_cases():
+    """Test edge cases and boundary conditions."""
+    print("🔬 Testing edge cases...")
+    
+    # Empty inputs
+    # Single elements
+    # Very large inputs
+    # Special values (zeros, negatives, etc.)
+    
+    print("✅ All edge cases handled correctly!")
+    print("🛡️ Your implementation is robust!")
+
+test_comprehensive_edge_cases()
 
 # %% [markdown]
 """
@@ -317,9 +371,18 @@ You've mastered [concept]! Next, we'll [what comes next].
 - Module header with Learning Goals and Build→Use→Understand
 - 📦 Where This Code Lives 
 - All 10 Parts in order
-- Immediate tests after EACH implementation
-- Comprehensive tests at the end
+- **IMMEDIATE TESTS AFTER EACH IMPLEMENTATION** (not at the end!)
+- Comprehensive tests ONLY at the end (Part 9)
 - Module summary
+
+### TESTING PATTERN - THIS IS MANDATORY:
+```
+Implementation → Test Explanation (Markdown) → Test Code → Next Implementation
+```
+- NEVER group all tests at the end
+- ALWAYS test immediately after implementing
+- Unit tests = immediate after implementation
+- Integration/comprehensive tests = Part 9 only
 
 ### 2. Maintain 1:1 Markdown to Code Ratio
 - EVERY code cell must have a preceding markdown cell
