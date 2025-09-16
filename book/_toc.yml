@@ -68,6 +68,8 @@ parts:
 
 - caption: Additional Resources
   chapters:
+  - file: vision
+    title: "🎯 TinyTorch Vision"
   - file: resources
     title: "📚 Learning Resources"
 
