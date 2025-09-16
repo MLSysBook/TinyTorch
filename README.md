@@ -60,11 +60,17 @@ Go from "How does this work?" 🤷 to "I implemented every line!" 💪
 - **Visual progress**: Success indicators and system integration
 - **"Aha moments"**: Watch your `ReLU` power real neural networks
 
+### **📊 NEW: Visual System Architecture**
+- **Interactive dependency graphs**: See how all 17 modules connect
+- **Learning roadmap visualization**: Optimal path through the system
+- **Architecture diagrams**: Complete framework overview
+- **Automated analysis**: Live system statistics and component mapping
+
 ---
 
 ## 🎯 What You'll Build
 
-* **One Complete ML Framework** — Not 14 separate exercises, but integrated components building into your own PyTorch-style toolkit
+* **One Complete ML Framework** — Not 17 separate exercises, but integrated components building into your own PyTorch-style toolkit
 * **Fully Functional System** — Every piece connects: your tensors power your layers, your autograd enables your optimizers, your framework trains real networks
 * **Real Applications** — Train neural networks on CIFAR-10 using 100% your own code, no PyTorch imports
 * **Production-Ready Skills** — Complete ML lifecycle: data loading, training, optimization, deployment, monitoring
@@ -74,7 +80,7 @@ Go from "How does this work?" 🤷 to "I implemented every line!" 💪
 
 ## 🚀 Quick Start (2 minutes)
 
-### 🧑‍🎓 **Students**
+### 📊 **First Time? Start with the System Overview**
 
 ```bash
 git clone https://github.com/mlsysbook/TinyTorch.git
@@ -82,8 +88,18 @@ cd TinyTorch
 pip install -r requirements.txt           # Install all dependencies (numpy, jupyter, pytest, etc.)
 pip install -e .                          # Install TinyTorch package in editable mode
 tito system doctor                         # Verify your setup
+
+# 🎯 NEW: Interactive System Architecture Overview
+cd modules/source/00_introduction
+jupyter lab introduction_dev.py           # Explore the complete TinyTorch system visually!
+```
+
+### 🧑‍🎓 **Ready to Build? Start Here**
+
+```bash
+# After exploring the system overview, start building:
 cd modules/source/01_setup
-jupyter lab setup_dev.py                  # Launch your first module
+jupyter lab setup_dev.py                  # Launch your first implementation module
 ```
 
 ### 👩‍🏫 **Instructors**
@@ -105,7 +121,11 @@ tito nbdev build                          # Update package
 
 ```
 TinyTorch/
-├── modules/source/           # 16 educational modules
+├── modules/source/           # 17 educational modules
+│   ├── 00_introduction/     # 🎯 NEW: Visual system overview & architecture
+│   │   ├── module.yaml      # Module metadata  
+│   │   ├── README.md        # Getting started guide
+│   │   └── introduction_dev.py  # Interactive visualizations & dependency analysis
 │   ├── 01_setup/            # Development environment setup
 │   │   ├── module.yaml      # Module metadata
 │   │   ├── README.md        # Learning objectives and guide
@@ -149,6 +169,7 @@ TinyTorch/
 ```
 
 **How It Works:**
+0. **🎯 Start with Overview** - Explore `00_introduction` for visual system architecture and dependencies
 1. **Develop in `modules/source/`** - Each module has a `*_dev.py` file where you implement components
 2. **Export to `tinytorch/`** - Use `tito export` to build your implementations into a real Python package
 3. **Use your framework** - Import and use your own code: `from tinytorch.core.tensor import Tensor`
@@ -157,9 +178,12 @@ TinyTorch/
 
 ---
 
-## 📚 Complete Course: 16 Modules
+## 📚 Complete Course: 17 Modules
 
-**Difficulty Progression:** ⭐ Beginner → ⭐⭐ Intermediate → ⭐⭐⭐ Advanced → ⭐⭐⭐⭐ Expert → ⭐⭐⭐⭐⭐🥷 Capstone
+**Difficulty Progression:** 📊 Overview → ⭐ Beginner → ⭐⭐ Intermediate → ⭐⭐⭐ Advanced → ⭐⭐⭐⭐ Expert → ⭐⭐⭐⭐⭐🥷 Capstone
+
+### **📊 System Overview** (Module 00)
+* **🎯 00_introduction**: Interactive system architecture, dependency visualization, and learning roadmap
 
 ### **🏗️ Foundations** (Modules 01-05)
 * **01_setup**: Development environment and CLI tools
@@ -185,17 +209,20 @@ TinyTorch/
 ### **🎓 Capstone Project** (Module 16)
 * **16_capstone**: Advanced framework engineering specialization tracks
 
-**Status**: All 16 modules complete with inline tests and educational content
+**Status**: All 17 modules complete with inline tests and educational content
 
 ---
 
 ## 🔗 **Complete System Integration**
 
-**This isn't 16 isolated assignments.** Every component you build integrates into one cohesive, fully functional ML framework:
+**This isn't 17 isolated assignments.** Every component you build integrates into one cohesive, fully functional ML framework:
+
+**🎯 NEW: Explore the full system architecture visually in Module 00 before diving into implementation!**
 
 ```mermaid
 flowchart TD
-    A[01_setup<br/>Setup & Environment] --> B[02_tensor<br/>Core Tensor Operations]
+    Z[00_introduction<br/>🎯 System Overview & Architecture] --> A[01_setup<br/>Setup & Environment] 
+    A --> B[02_tensor<br/>Core Tensor Operations]
     B --> C[03_activations<br/>ReLU, Sigmoid, Tanh]
     C --> D[04_layers<br/>Dense Layers]
     D --> E[05_dense<br/>Sequential Networks]

@@ -21,11 +21,12 @@ Use descriptive branch names that indicate the type of work:
 - **Experiments**: `experiment/new-testing-approach`
 
 ### 🔧 Development Workflow
-1. **Create branch** for each logical piece of work
-2. **Make focused commits** related to that branch only
-3. **Test your changes** before committing
-4. **Merge to dev** when feature is complete and tested
-5. **Delete feature branch** after successful merge
+1. **Activate virtual environment** - ALWAYS use `.venv` for consistent dependencies
+2. **Create branch** for each logical piece of work
+3. **Make focused commits** related to that branch only
+4. **Test your changes** before committing
+5. **Merge to dev** when feature is complete and tested
+6. **Delete feature branch** after successful merge
 
 ### ✅ Commit Standards
 - **One feature per branch** - don't mix unrelated changes
@@ -44,6 +45,7 @@ Use descriptive branch names that indicate the type of work:
 
 ### 📋 Merge Checklist
 Before merging any feature branch:
+- [ ] Virtual environment activated and dependencies installed
 - [ ] Code works correctly
 - [ ] Tests pass (if applicable)
 - [ ] Documentation updated (if needed)
@@ -52,6 +54,12 @@ Before merging any feature branch:
 
 ### 🔄 Example Workflow
 ```bash
+# 0. ALWAYS start with virtual environment
+python -m venv .venv
+source .venv/bin/activate  # On macOS/Linux
+# OR: .venv\Scripts\activate  # On Windows
+pip install -r requirements.txt
+
 # 1. Start new feature
 git checkout dev
 git pull origin dev
@@ -81,6 +89,53 @@ git push origin dev
 - **Allows experimentation** - try things without breaking main code
 - **Facilitates rollbacks** - easy to undo specific features if needed
 - **Professional practice** - industry standard for software development
+
+## 🐍 Virtual Environment Standards - MANDATORY
+
+### 🔐 **ALWAYS Use Virtual Environments**
+**NEVER work directly with system Python or globally installed packages.**
+
+```bash
+# Create virtual environment (one time setup)
+python -m venv .venv
+
+# Activate virtual environment (EVERY session)
+source .venv/bin/activate     # macOS/Linux
+# OR: .venv\Scripts\activate  # Windows
+
+# Install dependencies (after activation)
+pip install -r requirements.txt
+
+# Verify environment
+which python  # Should show .venv path
+pip list      # Should show only project dependencies
+```
+
+### 📋 Virtual Environment Checklist
+**Before ANY development work:**
+- [ ] Virtual environment activated (`source .venv/bin/activate`)
+- [ ] Dependencies installed (`pip install -r requirements.txt`)
+- [ ] Verification: `which python` shows `.venv/bin/python`
+- [ ] Verification: `tito system doctor` shows ✅ environment checks
+
+### 🚫 What NOT to Do
+- ❌ Use system Python for development
+- ❌ Install packages globally with `sudo pip install`
+- ❌ Work without activating `.venv`
+- ❌ Mix dependencies from different environments
+- ❌ Commit with virtual environment deactivated
+
+### 🔧 Environment Troubleshooting
+If you see dependency errors:
+1. **Deactivate and recreate**: `deactivate && rm -rf .venv && python -m venv .venv`
+2. **Reactivate**: `source .venv/bin/activate`
+3. **Reinstall**: `pip install -r requirements.txt`
+4. **Verify**: `tito system doctor`
+
+### 💡 Pro Tips
+- **Add to shell profile**: `alias activate='source .venv/bin/activate'`
+- **Check activation**: Your prompt should show `(.venv)` prefix
+- **Architecture issues**: Use `python -m pip install --force-reinstall` for numpy/architecture conflicts
 
 ## AI Agent Workflow Standards
 
@@ -161,7 +216,7 @@ workflow_coordinator.plan_update(module="tensor")
 - Education Architect planning next modules
 
 **Sequential Tasks (must happen in order):**
-- Implementation → Testing → Commit
+- Virtual Environment Setup → Implementation → Testing → Commit
 - Planning → Implementation → Documentation
 - Test Failure → Fix → Re-test → Proceed
 
