@@ -15,10 +15,12 @@ parts:
   - file: usage-paths/classroom-use
     title: "👨‍🏫 Classroom Use"
   - file: instructor-guide
-    title: "📚 Complete Instructor Guide"
+    title: "📚 Instructor Guide"
 
 - caption: Foundation
   chapters:
+  - file: chapters/00-introduction
+    title: "0. Introduction"
   - file: chapters/01-setup
     title: "1. Setup"
   - file: chapters/02-tensor
