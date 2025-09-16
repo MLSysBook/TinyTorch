@@ -110,4 +110,99 @@ Before any merge:
 
 ---
 
+## TinyTorch Module Development Standards
+
+### 📚 Module Structure Requirements
+All TinyTorch modules MUST follow the standardized 10-part structure + ML systems reflection:
+
+1. **Part 1: Concept** - What is [Topic]?
+2. **Part 2: Foundations** - Mathematical & Theoretical Background  
+3. **Part 3: Context** - Why This Matters
+4. **Part 4: Connections** - Real-World Examples
+5. **Part 5: Design** - Why Build From Scratch?
+6. **Part 6: Architecture** - Design Decisions
+7. **Part 7: Implementation** - Building [Module Name]
+8. **Part 8: Integration** - Bringing It Together
+9. **Part 9: Testing** - Comprehensive Validation
+10. **🤔 ML Systems Thinking: Reflection Questions**
+11. **Part 10: Module Summary**
+
+### 🧪 Testing Pattern - MANDATORY
+```
+Implementation → Test Explanation (Markdown) → Test Code → Next Implementation
+```
+
+**CRITICAL RULES:**
+- **EVERY test** must have a preceding markdown cell explaining what it tests and why
+- **IMMEDIATE testing** after each implementation (not grouped at end)
+- **Unit tests** = immediate after implementation
+- **Integration tests** = Part 9 only
+
+### 🤔 ML Systems Thinking Questions - REQUIRED
+**Documentation Publisher should create thoughtful reflection questions** that connect the module to broader ML systems concepts. Keep them engaging and thought-provoking, not homework-like.
+
+**Guidelines for Documentation Publisher:**
+- **Focus on reflection**, not detailed implementation
+- **Connect to real ML systems** (PyTorch, TensorFlow, industry)
+- **Ask "why" and "how does this connect"** rather than "implement this"
+- **Keep questions accessible** - should spark curiosity, not overwhelm
+- **3-4 categories, 3-4 questions each** (total ~12 questions max)
+
+**Question Categories:**
+1. **System Design** - How does this fit into larger systems?
+2. **Production ML** - How is this used in real ML workflows?
+3. **Framework Design** - Why do frameworks make certain choices?
+4. **Performance & Scale** - What happens when systems get large?
+
+**Tone: Curious and Exploratory, Not Demanding**
+
+✅ **Good**: "How might GPU memory management differ from your NumPy-based approach?"  
+❌ **Too Complex**: "Implement GPU memory pooling with CUDA memory management..."
+
+### 📝 Markdown Cell Format - CRITICAL
+```python
+# CORRECT:
+# %% [markdown]
+"""
+## Section Title
+Content here...
+"""
+
+# WRONG (breaks notebooks):
+# %% [markdown]
+# ## Section Title  
+# Content here...
+```
+
+### 🏗️ Agent Responsibilities for Modules
+
+**Education Architect:**
+- Learning objectives and pedagogical flow
+- Build→Use→Understand compliance
+- Educational strategy ONLY
+
+**Module Developer:**
+- Code implementation and NBGrader metadata
+- Technical scaffolding and patterns
+- Implementation ONLY
+
+**Quality Assurance:**  
+- Test coverage and functionality
+- Testing infrastructure
+- Testing ONLY
+
+**Documentation Publisher:**
+- Markdown prose and clarity
+- **Module-specific ML systems thinking questions** (analyze actual code, reference specific implementations, build cumulative knowledge)
+- Writing ONLY
+
+### ⚠️ Critical Requirements
+- All 10+ parts must be present
+- Every test needs markdown explanation
+- ML systems reflection is mandatory
+- Use exact section headers for consistency
+- Maintain immediate testing pattern
+
+---
+
 **Remember**: Professional software development always uses branches. This keeps the codebase stable, enables collaboration, and maintains a clean development history.
