@@ -588,8 +588,11 @@ Now let's test our tensor implementation with comprehensive tests that validate 
 """
 # %% [markdown]
 """
-## Unit Test: Tensor Creation
+### 🧪 Unit Test: Tensor Creation
 
+Let's test your tensor creation implementation right away! This gives you immediate feedback on whether your `__init__` method works correctly.
+
+**This is a unit test** - it tests one specific function (tensor creation) in isolation.
 """
 # %% nbgrader={"grade": true, "grade_id": "test_unit_tensor_creation_immediate", "locked": true, "points": 5, "schema_version": 3, "solution": false, "task": false}
 # Test tensor creation immediately after implementation
@@ -626,8 +629,11 @@ print("   Stores in _data attribute")
 
 # %% [markdown]
 """
-## Unit Test: Tensor Properties
+### 🧪 Unit Test: Tensor Properties
 
+Now let's test that your tensor properties work correctly. This tests the @property methods you implemented.
+
+**This is a unit test** - it tests specific properties (shape, size, dtype, data) in isolation.
 """
 # %% nbgrader={"grade": true, "grade_id": "test_unit_tensor_properties_immediate", "locked": true, "points": 5, "schema_version": 3, "solution": false, "task": false}
 # Test tensor properties immediately after implementation
@@ -668,8 +674,11 @@ print("   dtype: Returns NumPy data type")
 
 # %% [markdown]
 """
-## Unit Test: Tensor Arithmetic
+### 🧪 Unit Test: Tensor Arithmetic
 
+Let's test your tensor arithmetic operations. This tests the __add__, __mul__, __sub__, __truediv__ methods.
+
+**This is a unit test** - it tests specific arithmetic operations in isolation.
 """
 # %% nbgrader={"grade": true, "grade_id": "test_unit_tensor_arithmetic_immediate", "locked": true, "points": 5, "schema_version": 3, "solution": false, "task": false}
 # Test tensor arithmetic immediately after implementation
@@ -716,8 +725,11 @@ print("   Returns new Tensor objects")
 
 # %% [markdown]
 """
-## Comprehensive Unit Tests
+### 🔬 Comprehensive Tests
 
+Now let's run comprehensive tests that validate all tensor functionality together. These tests ensure your implementation is production-ready.
+
+**These are comprehensive tests** - they test multiple features and edge cases to ensure robustness.
 """
 # %% nbgrader={"grade": true, "grade_id": "test_unit_tensor_creation", "locked": true, "points": 5, "schema_version": 3, "solution": false, "task": false}
 def test_unit_tensor_creation():
@@ -739,6 +751,13 @@ def test_unit_tensor_creation():
 
 # Run the test
 test_unit_tensor_creation()
+
+# %% [markdown]
+"""
+### Unit Test: Tensor Properties
+
+This test validates your tensor property methods (shape, size, dtype, data), ensuring they correctly reflect the tensor's dimensional structure and data characteristics.
+"""
 
 # %% nbgrader={"grade": true, "grade_id": "test_unit_tensor_properties", "locked": true, "points": 5, "schema_version": 3, "solution": false, "task": false}
 def test_unit_tensor_properties():
@@ -762,6 +781,23 @@ def test_unit_tensor_properties():
 
 # Run the test
 test_unit_tensor_properties()
+
+# %% [markdown]
+"""
+### 🧪 Unit Test: Tensor Arithmetic Operations
+
+Now let's test all your arithmetic operations working together! This comprehensive test validates that addition, subtraction, multiplication, and division all work correctly with your tensor implementation.
+
+**What This Tests:**
+- Element-wise addition, subtraction, multiplication, division
+- Proper NumPy array handling in arithmetic
+- Result correctness across different operations
+
+**Why This Matters:**
+- Arithmetic operations are the foundation of all neural network computations
+- These operations must be fast and mathematically correct
+- Your implementation should match NumPy's behavior exactly
+"""
 
 # %% nbgrader={"grade": true, "grade_id": "test_unit_tensor_arithmetic", "locked": true, "points": 5, "schema_version": 3, "solution": false, "task": false}
 def test_unit_tensor_arithmetic():
@@ -794,6 +830,30 @@ def test_unit_tensor_arithmetic():
 
 # Run the test
 test_unit_tensor_arithmetic()
+
+# %% [markdown]
+"""
+### 🧪 Integration Test: Tensor-NumPy Integration
+
+This integration test validates that your tensor system works seamlessly with NumPy, the foundation of the scientific Python ecosystem.
+
+**What This Tests:**
+- Creating tensors from NumPy arrays
+- Converting tensors back to NumPy arrays  
+- Mixed operations between tensors and NumPy
+- Data type preservation and consistency
+
+**Why This Matters:**
+- Real ML systems must integrate with NumPy seamlessly
+- Data scientists expect tensors to work with existing NumPy code
+- Performance optimizations often involve NumPy operations
+- This compatibility is what makes PyTorch and TensorFlow so powerful
+
+**Real-World Connection:**
+- PyTorch tensors have `.numpy()` and `torch.from_numpy()` methods
+- TensorFlow has similar NumPy integration
+- This test ensures your tensors work in real data science workflows
+"""
 
 # %% nbgrader={"grade": true, "grade_id": "test_module_tensor_numpy_integration", "locked": true, "points": 10, "schema_version": 3, "solution": false, "task": false}
 def test_module_tensor_numpy_integration():
@@ -838,6 +898,43 @@ def test_module_tensor_numpy_integration():
 
 # Run the integration test
 test_module_tensor_numpy_integration()
+
+# %% [markdown]
+"""
+## 🤔 ML Systems Thinking: Reflection Questions
+
+Now that you've built a working tensor system, take a moment to reflect on how this simple foundation connects to the massive ML systems powering today's AI revolution:
+
+### System Design - How does this fit into larger systems?
+1. **The Universal Language**: You just built the fundamental data structure of modern AI. How does having one unified way to represent data (as tensors) enable frameworks like PyTorch to handle everything from image recognition to language models using the same operations?
+
+2. **Memory and Scale**: Your tensor creates a new result for every operation. When OpenAI trains GPT models with billions of parameters, why might memory management become a critical system design challenge? What trade-offs do you think they make?
+
+3. **Hardware Abstraction**: Your tensor works on CPU through NumPy. How does abstracting tensor operations allow the same neural network code to run on CPUs, GPUs, and specialized AI chips like TPUs without changing the model logic?
+
+### Production ML - How is this used in real ML workflows?
+4. **Batch Processing Power**: Real ML systems process thousands of images or sentences simultaneously in batches. How does your element-wise tensor math suddenly become a superpower when applied to batches? Why is this crucial for real-time applications?
+
+5. **Data Pipeline Integration**: Your tensor wraps NumPy arrays, making it compatible with the entire scientific Python ecosystem. How does this design choice affect a data scientist's ability to move from data exploration to model deployment?
+
+6. **Production Reliability**: In a live recommendation system serving millions of users, what happens when tensor operations encounter unexpected data shapes or types? How might this influence framework design priorities?
+
+### Framework Design - Why do frameworks make certain choices?
+7. **API Philosophy**: You chose property-style access (`tensor.shape`) like PyTorch, rather than function calls. How does this seemingly small design decision affect the developer experience when building complex neural architectures?
+
+8. **Broadcasting Magic**: PyTorch tensors can add a scalar to a matrix automatically, while your current implementation requires matching shapes. Why do you think frameworks invest heavily in broadcasting logic? What problems does it solve for researchers?
+
+9. **Type System Design**: Your tensor supports different data types (int32, float32). How do these choices ripple through an entire ML pipeline, from training speed to model accuracy to deployment costs?
+
+### Performance & Scale - What happens when systems get large?
+10. **Memory Explosion**: Every operation in your tensor creates new memory. Imagine a neural network with millions of operations during training. How might this connect to why modern frameworks offer both copying and in-place operations?
+
+11. **Computational Graphs**: Your operations happen immediately. Large language models track millions of tensor operations to compute gradients. How does the shift from immediate computation to deferred execution change system architecture?
+
+12. **Hardware Optimization**: Your simple `+` operation translates to highly optimized kernel code on GPUs. How does having a clean tensor abstraction enable frameworks to automatically optimize operations for different hardware without changing user code?
+
+**💡 Systems Insight**: The tensor abstraction you just built is one of computing's most elegant solutions—it provides a simple, mathematical interface that hides incredible complexity in optimization, hardware acceleration, and distributed computing. Every major AI breakthrough, from computer vision to large language models, flows through tensor operations just like the ones you implemented.
+"""
 
 # %% [markdown]
 """
