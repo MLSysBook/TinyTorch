@@ -341,6 +341,18 @@ class Tensor:
         
         TODO: Return the stored numpy array.
         
+        STEP-BY-STEP IMPLEMENTATION:
+        1. Access the internal _data attribute
+        2. Return the numpy array directly
+        3. This provides access to underlying data for NumPy operations
+        
+        LEARNING CONNECTIONS:
+        Real-world relevance:
+        - PyTorch: tensor.numpy() converts to NumPy for visualization/analysis
+        - TensorFlow: tensor.numpy() enables integration with scientific Python
+        - Production: Data scientists need to access raw arrays for debugging
+        - Performance: Direct access avoids copying for read-only operations
+        
         HINT: Return self._data (the array you stored in __init__)
         """
         ### BEGIN SOLUTION
@@ -353,6 +365,18 @@ class Tensor:
         Get tensor shape.
         
         TODO: Return the shape of the stored numpy array.
+        
+        STEP-BY-STEP IMPLEMENTATION:
+        1. Access the _data attribute (the NumPy array)
+        2. Get the shape property from the NumPy array
+        3. Return the shape tuple directly
+        
+        LEARNING CONNECTIONS:
+        Real-world relevance:
+        - Neural networks: Layer compatibility requires matching shapes
+        - Computer vision: Image shape (height, width, channels) determines architecture
+        - NLP: Sequence length and vocabulary size affect model design
+        - Debugging: Shape mismatches are the #1 cause of ML errors
         
         HINT: Use .shape attribute of the numpy array
         EXAMPLE: Tensor([1, 2, 3]).shape should return (3,)
@@ -368,6 +392,18 @@ class Tensor:
         
         TODO: Return the total number of elements in the tensor.
         
+        STEP-BY-STEP IMPLEMENTATION:
+        1. Access the _data attribute (the NumPy array)
+        2. Get the size property from the NumPy array
+        3. Return the total element count as an integer
+        
+        LEARNING CONNECTIONS:
+        Real-world relevance:
+        - Memory planning: Calculate RAM requirements for large tensors
+        - Model architecture: Determine parameter counts for layers
+        - Performance optimization: Size affects computation time
+        - Batch processing: Total elements determines vectorization efficiency
+        
         HINT: Use .size attribute of the numpy array
         EXAMPLE: Tensor([1, 2, 3]).size should return 3
         """
@@ -382,6 +418,18 @@ class Tensor:
         
         TODO: Return the data type of the stored numpy array.
         
+        STEP-BY-STEP IMPLEMENTATION:
+        1. Access the _data attribute (the NumPy array)
+        2. Get the dtype property from the NumPy array
+        3. Return the NumPy dtype object directly
+        
+        LEARNING CONNECTIONS:
+        Real-world relevance:
+        - Precision vs speed: float32 is faster, float64 more accurate
+        - Memory optimization: int8 uses 1/4 memory of int32
+        - GPU compatibility: Some operations only work with specific types
+        - Model deployment: Mobile/edge devices prefer smaller data types
+        
         HINT: Use .dtype attribute of the numpy array
         EXAMPLE: Tensor([1, 2, 3]).dtype should return dtype('int32')
         """
@@ -394,6 +442,19 @@ class Tensor:
         String representation.
         
         TODO: Create a clear string representation of the tensor.
+        
+        STEP-BY-STEP IMPLEMENTATION:
+        1. Convert the numpy array to a list using .tolist()
+        2. Get shape and dtype information from properties
+        3. Format as "Tensor([data], shape=shape, dtype=dtype)"
+        4. Return the formatted string
+        
+        LEARNING CONNECTIONS:
+        Real-world relevance:
+        - Debugging: Clear tensor representation speeds debugging
+        - Jupyter notebooks: Good __repr__ improves data exploration
+        - Logging: Production systems log tensor info for monitoring
+        - Education: Students understand tensors better with clear output
         
         APPROACH:
         1. Convert the numpy array to a list for readable output
@@ -417,6 +478,19 @@ class Tensor:
         Add two tensors element-wise.
         
         TODO: Implement tensor addition.
+        
+        STEP-BY-STEP IMPLEMENTATION:
+        1. Extract numpy arrays from both tensors
+        2. Use NumPy's + operator for element-wise addition
+        3. Create a new Tensor object with the result
+        4. Return the new tensor
+        
+        LEARNING CONNECTIONS:
+        Real-world relevance:
+        - Neural networks: Adding bias terms to linear layer outputs
+        - Residual connections: skip connections in ResNet architectures
+        - Gradient updates: Adding computed gradients to parameters
+        - Ensemble methods: Combining predictions from multiple models
         
         APPROACH:
         1. Add the numpy arrays using +
@@ -442,6 +516,19 @@ class Tensor:
         
         TODO: Implement tensor multiplication.
         
+        STEP-BY-STEP IMPLEMENTATION:
+        1. Extract numpy arrays from both tensors
+        2. Use NumPy's * operator for element-wise multiplication
+        3. Create a new Tensor object with the result
+        4. Return the new tensor
+        
+        LEARNING CONNECTIONS:
+        Real-world relevance:
+        - Activation functions: Element-wise operations like ReLU masking
+        - Attention mechanisms: Element-wise scaling in transformer models
+        - Feature scaling: Multiplying features by learned scaling factors
+        - Gating: Element-wise gating in LSTM and GRU cells
+        
         APPROACH:
         1. Multiply the numpy arrays using *
         2. Return a new Tensor with the result
@@ -466,6 +553,19 @@ class Tensor:
         
         TODO: Implement + operator for tensors.
         
+        STEP-BY-STEP IMPLEMENTATION:
+        1. Check if other is a Tensor object
+        2. If Tensor, call the add() method directly
+        3. If scalar, convert to Tensor then call add()
+        4. Return the result from add() method
+        
+        LEARNING CONNECTIONS:
+        Real-world relevance:
+        - Natural syntax: tensor + scalar enables intuitive code
+        - Broadcasting: Adding scalars to tensors is common in ML
+        - Operator overloading: Python's magic methods enable math-like syntax
+        - API design: Clean interfaces reduce cognitive load for researchers
+        
         APPROACH:
         1. If other is a Tensor, use tensor addition
         2. If other is a scalar, convert to Tensor first
@@ -487,6 +587,19 @@ class Tensor:
         Multiplication operator: tensor * other
         
         TODO: Implement * operator for tensors.
+        
+        STEP-BY-STEP IMPLEMENTATION:
+        1. Check if other is a Tensor object
+        2. If Tensor, call the multiply() method directly
+        3. If scalar, convert to Tensor then call multiply()
+        4. Return the result from multiply() method
+        
+        LEARNING CONNECTIONS:
+        Real-world relevance:
+        - Scaling features: tensor * learning_rate for gradient updates
+        - Masking: tensor * mask for attention mechanisms
+        - Regularization: tensor * dropout_mask during training
+        - Normalization: tensor * scale_factor in batch normalization
         
         APPROACH:
         1. If other is a Tensor, use tensor multiplication
@@ -510,6 +623,19 @@ class Tensor:
         
         TODO: Implement - operator for tensors.
         
+        STEP-BY-STEP IMPLEMENTATION:
+        1. Check if other is a Tensor object
+        2. If Tensor, subtract other._data from self._data
+        3. If scalar, subtract scalar directly from self._data
+        4. Create new Tensor with result and return
+        
+        LEARNING CONNECTIONS:
+        Real-world relevance:
+        - Gradient computation: parameter - learning_rate * gradient
+        - Residual connections: output - skip_connection in some architectures
+        - Error calculation: predicted - actual for loss computation
+        - Centering data: tensor - mean for zero-centered inputs
+        
         APPROACH:
         1. Convert other to Tensor if needed
         2. Subtract using numpy arrays
@@ -532,6 +658,19 @@ class Tensor:
         Division operator: tensor / other
         
         TODO: Implement / operator for tensors.
+        
+        STEP-BY-STEP IMPLEMENTATION:
+        1. Check if other is a Tensor object
+        2. If Tensor, divide self._data by other._data
+        3. If scalar, divide self._data by scalar directly
+        4. Create new Tensor with result and return
+        
+        LEARNING CONNECTIONS:
+        Real-world relevance:
+        - Normalization: tensor / std_deviation for standard scaling
+        - Learning rate decay: parameter / decay_factor over time
+        - Probability computation: counts / total_counts for frequencies
+        - Temperature scaling: logits / temperature in softmax functions
         
         APPROACH:
         1. Convert other to Tensor if needed
@@ -559,6 +698,19 @@ class Tensor:
         Perform matrix multiplication between two tensors.
         
         TODO: Implement matrix multiplication.
+        
+        STEP-BY-STEP IMPLEMENTATION:
+        1. Extract numpy arrays from both tensors
+        2. Use np.matmul() for proper matrix multiplication
+        3. Create new Tensor object with the result
+        4. Return the new tensor
+        
+        LEARNING CONNECTIONS:
+        Real-world relevance:
+        - Linear layers: input @ weight matrices in neural networks
+        - Transformer attention: Q @ K^T for attention scores
+        - CNN convolutions: Implemented as matrix multiplications
+        - Batch processing: Matrix ops enable parallel computation
         
         APPROACH:
         1. Use np.matmul() to perform matrix multiplication
