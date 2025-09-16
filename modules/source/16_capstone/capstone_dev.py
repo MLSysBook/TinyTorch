@@ -505,7 +505,9 @@ def test_production_system_profiler():
     
     print("\n✅ All production system profiler tests passed!")
 
-test_production_system_profiler()
+# Only run tests if executed directly
+if __name__ == "__main__":
+    test_production_system_profiler()
 
 # %% [markdown]
 """
@@ -645,7 +647,9 @@ def test_complete_ml_system():
     
     print("\n✅ Complete ML system test passed!")
 
-test_complete_ml_system()
+# Only run tests if executed directly
+if __name__ == "__main__":
+    test_complete_ml_system()
 
 # %% [markdown]
 """
@@ -770,7 +774,9 @@ def test_enterprise_deployment():
     
     print("\n✅ All deployment patterns tested successfully!")
 
-test_enterprise_deployment()
+# Only run tests if executed directly
+if __name__ == "__main__":
+    test_enterprise_deployment()
 
 # %% [markdown]
 """
@@ -810,9 +816,10 @@ def run_comprehensive_system_tests():
     
     return all_passed
 
-# Run comprehensive tests
-success = run_comprehensive_system_tests()
-assert success, "System tests must pass before deployment"
+# Run comprehensive tests only if executed directly
+if __name__ == "__main__":
+    success = run_comprehensive_system_tests()
+    assert success, "System tests must pass before deployment"
 
 # %% [markdown]
 """

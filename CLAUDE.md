@@ -84,33 +84,28 @@ git push origin dev
 
 ## AI Agent Workflow Standards
 
-### 🤖 When Working on Tasks
-1. **Always create a feature branch** before making any changes
-2. **Use descriptive branch names** that match the task
-3. **Keep changes focused** - one logical feature per branch
-4. **Test changes** before committing
-5. **Merge to dev** when work is complete
-6. **Clean up** by deleting merged feature branches
+### 🤖 Workflow Compliance
+**ALL AI agents MUST follow the Git Workflow Standards defined in `/Users/VJ/GitHub/TinyTorch/CLAUDE.md`.**
 
-### 📋 Agent Responsibilities
-- **NEVER** work directly on dev/main
-- **ALWAYS** create branches for any code changes
-- **ALWAYS** test functionality before committing
-- **ALWAYS** use descriptive commit messages
-- **ALWAYS** merge properly when work is complete
-- **NEVER** add Co-Authored-By tags unless user explicitly requests
-- **NEVER** add automated attribution to commits
-
-### 🔍 Quality Gates
-Before any merge:
-- Code functionality verified
-- No breaking changes introduced
-- Related documentation updated
-- Clean commit history maintained
+Read the complete Git Workflow Standards section in this file for all branching, commit, and merge requirements.
 
 ---
 
 ## TinyTorch Module Development Standards
+
+### 🎯 **CRITICAL: .py Files Only**
+**ALL TinyTorch development and modifications MUST be done in .py files ONLY.**
+
+- ✅ **ALWAYS edit**: `module_name_dev.py` files
+- ❌ **NEVER edit**: `.ipynb` notebook files
+- ✅ **Notebooks are generated**: from .py files using jupytext
+- ❌ **Direct notebook editing**: breaks the development workflow
+
+**Why .py files only:**
+- Version control friendly (clean diffs, no notebook metadata noise)
+- Consistent development environment across all contributors
+- Automated notebook generation ensures consistency
+- Professional development practices
 
 ### 📚 Module Structure Requirements
 All TinyTorch modules MUST follow the standardized structure:
