@@ -1,11 +1,14 @@
 """
 Status command for TinyTorch CLI: checks status of all modules in modules/ directory.
+
+Supports both basic status checking and comprehensive system analysis.
 """
 
 import subprocess
 import sys
 import yaml
 import re
+import time
 from argparse import ArgumentParser, Namespace
 from pathlib import Path
 from rich.panel import Panel
@@ -14,6 +17,7 @@ from rich.text import Text
 from typing import Union, Dict, Any, Optional
 
 from .base import BaseCommand
+from ..core.status_analyzer import TinyTorchStatusAnalyzer
 
 class StatusCommand(BaseCommand):
     @property
@@ -28,6 +32,7 @@ class StatusCommand(BaseCommand):
         parser.add_argument("--details", action="store_true", help="Show detailed file structure")
         parser.add_argument("--metadata", action="store_true", help="Show module metadata information")
         parser.add_argument("--test-status", action="store_true", help="Include test execution status (slower)")
+        parser.add_argument("--comprehensive", action="store_true", help="Run comprehensive system health dashboard (environment + compliance + testing)")
 
     def _get_export_target(self, module_path: Path) -> str:
         """
@@ -80,6 +85,43 @@ class StatusCommand(BaseCommand):
             return 0
 
     def run(self, args: Namespace) -> int:
+        console = self.console
+        
+        # Handle comprehensive analysis mode
+        if args.comprehensive:
+            return self._run_comprehensive_analysis()
+        
+        # Standard status check mode
+        return self._run_standard_status(args)
+    
+    def _run_comprehensive_analysis(self) -> int:
+        """Run comprehensive system health dashboard."""
+        console = self.console
+        start_time = time.time()
+        
+        console.print("🚀 Starting TinyTorch Comprehensive Status Check...", style="bold green")
+        
+        # Initialize analyzer
+        analyzer = TinyTorchStatusAnalyzer()
+        
+        # Run full analysis
+        result = analyzer.run_full_analysis()
+        
+        # Generate comprehensive report
+        analyzer.generate_comprehensive_report(console)
+        
+        # Summary
+        total_time = time.time() - start_time
+        console.print(f"\n⏱️ Comprehensive analysis completed in {total_time:.1f}s", style="dim")
+        
+        # Return appropriate exit code
+        if result['summary']['environment_healthy'] and result['summary']['working_modules'] >= result['summary']['total_modules'] * 0.8:
+            return 0  # Success
+        else:
+            return 1  # Issues found
+    
+    def _run_standard_status(self, args: Namespace) -> int:
+        """Run standard status check mode."""
         console = self.console
         
         # Scan modules directory
@@ -164,6 +206,7 @@ class StatusCommand(BaseCommand):
         
         # Helpful commands
         console.print(f"\n💡 Quick commands:")
+        console.print(f"   [bold cyan]tito status --comprehensive[/bold cyan]      # Full system health dashboard")
         console.print(f"   [bold cyan]tito module test --all[/bold cyan]           # Test all modules")
         console.print(f"   [bold cyan]tito module test MODULE_NAME[/bold cyan]     # Test specific module")
         console.print(f"   [bold cyan]pytest modules/source/*/  -k test_[/bold cyan]  # Run pytest on inline tests")
