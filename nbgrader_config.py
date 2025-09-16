@@ -20,10 +20,9 @@ c.ClearSolutions.code_stub = {
 # Text Stub for written responses
 c.ClearSolutions.text_stub = "YOUR ANSWER HERE"
 
+# Solution delimiters (corrected spelling)
 c.ClearSolutions.begin_solution_delimeter = "### BEGIN SOLUTION"
 c.ClearSolutions.end_solution_delimeter = "### END SOLUTION"
-c.ClearSolutions.begin_text_delimeter = "### BEGIN TEXT SOLUTION"
-c.ClearSolutions.end_text_delimeter = "### END TEXT SOLUTION"
 
 # Enforce Metadata (require proper cell metadata for grading)
 c.ClearSolutions.enforce_metadata = True
@@ -32,25 +31,17 @@ c.ClearSolutions.enforce_metadata = True
 c.Validate.ignore_checksums = False
 
 # Logging Configuration
-c.NbGrader.log_level = "INFO"
+c.Application.log_level = "INFO"
 
-# Assignment and Student Configuration
-c.AssignApp.generate_unique_ids = True  # Ensure uniqueness of cell IDs
-c.AssignApp.create_assignment = True
+# Database Configuration
+c.CourseDirectory.db_url = "sqlite:///gradebook.db"
 
-# Autograder Configuration
-c.AutogradeApp.update = True  # Update existing autograded notebooks
-c.AutogradeApp.create = True  # Create new entries if they don't exist
+# Preprocessor Configuration
+c.ClearSolutions.begin_solution_delimeter = "### BEGIN SOLUTION"
+c.ClearSolutions.end_solution_delimeter = "### END SOLUTION"
 
-# Feedback Configuration
-c.FeedbackApp.generate_feedback = True
-c.FeedbackApp.output_dir = "modules/feedback"
+# Cell timeout for execution (30 seconds per cell)
+c.ExecutePreprocessor.timeout = 30
 
-# Student IDs (optional: helps when testing locally or in custom workflows)
-c.Gradebook.db_url = "sqlite:///gradebook.db"
-
-# Hide hidden test cells in release notebooks
-c.ClearSolutions.remove_hidden_tests = True
-
-# Set default language for code cells (if mixed notebooks used)
-c.ClearSolutions.language = "python"
+# Don't allow infinite loops to hang the system
+c.ExecutePreprocessor.interrupt_on_timeout = True
