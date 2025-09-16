@@ -1,4 +1,4 @@
-#| default_exp introduction
+#| default_exp core.introduction
 
 # %% [markdown] nbgrader={"grade": false, "grade_id": "introduction-overview", "locked": false, "schema_version": 3, "solution": false, "task": false}
 """
@@ -164,9 +164,6 @@ class TinyTorchAnalyzer:
 # Initialize the analyzer
 analyzer = TinyTorchAnalyzer()
 
-print(f"📊 Loaded {len(analyzer.modules)} TinyTorch modules")
-print(f"🔗 Built dependency graph with {analyzer.dependency_graph.number_of_edges()} connections")
-
 # %% [markdown]
 """
 ### Test the Module Analysis System
@@ -295,8 +292,7 @@ def create_dependency_graph_visualization(figsize=(16, 12)):
     
     return fig
 
-# Create and display the dependency visualization
-dependency_fig = create_dependency_graph_visualization()
+# Create dependency visualization function (called in main block)
 
 # %% [markdown]
 """
@@ -428,8 +424,7 @@ def create_system_architecture_diagram(figsize=(18, 12)):
     
     return fig, module_positions
 
-# Create the system architecture diagram
-arch_fig, module_positions = create_system_architecture_diagram()
+# System architecture diagram function (called in main block)
 
 # %% [markdown]
 """
@@ -582,11 +577,7 @@ def create_learning_roadmap(figsize=(16, 10)):
     
     return fig, learning_path, cumulative_time
 
-# Create the learning roadmap
-roadmap_fig, learning_path, total_time = create_learning_roadmap()
-
-print(f"📚 Learning path contains {len(learning_path)} modules")
-print(f"⏱️  Total estimated time: {total_time:.1f} hours")
+# Learning roadmap function (called in main block)
 
 # %% [markdown]
 """
@@ -730,8 +721,7 @@ def create_component_analysis(figsize=(14, 10)):
     
     return fig
 
-# Create component analysis
-component_fig = create_component_analysis()
+# Component analysis function (called in main block)
 
 # %% [markdown]
 """
@@ -893,19 +883,7 @@ def get_learning_recommendations(current_module: str = None) -> Dict:
                            for prereq in analyzer.modules.get(name, ModuleInfo('','','',[],'',[],'','','')).prerequisites)]
     }
 
-# Test the export functions
-print("🧪 Testing export functions...")
-
-overview = get_tinytorch_overview()
-print(f"📊 System Overview: {overview['total_modules']} modules, {overview['total_components']} components")
-
-setup_info = get_module_info('setup')
-print(f"📋 Setup Module: {setup_info['title']} - {setup_info['difficulty']}")
-
-recommendations = get_learning_recommendations()
-print(f"📚 Learning Recommendations: Start with {recommendations['recommended_start']}")
-
-print("✅ Export functions working correctly!")
+# Export functions (tested in main block)
 
 # %% [markdown]
 """
@@ -1062,7 +1040,6 @@ def run_comprehensive_tests():
     print(f"   • {sum(len(m.components) for m in analyzer.modules.values())} total components")
     print(f"   • {sum(m.estimated_hours() for m in analyzer.modules.values()):.1f} total learning hours")
 
-# Run the comprehensive tests
 if __name__ == "__main__":
     # Run individual tests
     test_module_analyzer()
@@ -1073,6 +1050,34 @@ if __name__ == "__main__":
     
     # Run comprehensive test suite
     run_comprehensive_tests()
+    
+    # Create and display visualizations
+    dependency_fig = create_dependency_graph_visualization()
+    arch_fig, module_positions = create_system_architecture_diagram()
+    roadmap_fig, learning_path, total_time = create_learning_roadmap()
+    component_fig = create_component_analysis()
+    
+    print(f"📚 Learning path contains {len(learning_path)} modules")
+    print(f"⏱️  Total estimated time: {total_time:.1f} hours")
+    
+    # Test export functions
+    print("🧪 Testing export functions...")
+    overview = get_tinytorch_overview()
+    print(f"📊 System Overview: {overview['total_modules']} modules, {overview['total_components']} components")
+    
+    setup_info = get_module_info('setup')
+    print(f"📋 Setup Module: {setup_info['title']} - {setup_info['difficulty']}")
+    
+    recommendations = get_learning_recommendations()
+    print(f"📚 Learning Recommendations: Start with {recommendations['recommended_start']}")
+    print("✅ Export functions working correctly!")
+    
+    print(f"📊 Loaded {len(analyzer.modules)} TinyTorch modules")
+    print(f"🔗 Built dependency graph with {analyzer.dependency_graph.number_of_edges()} connections")
+    
+    print("All tests passed!")
+    print("🎯 TinyTorch Introduction Module Complete!")
+    print("📦 Exported functions ready for use by other modules")
 
 # %% [markdown]
 """
@@ -1125,6 +1130,3 @@ __all__ = [
     'create_learning_roadmap',
     'create_component_analysis'
 ]
-
-print("🎯 TinyTorch Introduction Module Complete!")
-print("📦 Exported functions ready for use by other modules")

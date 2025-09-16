@@ -31,7 +31,6 @@ Welcome to the Optimizers module! This is where neural networks learn to improve
 #| default_exp core.optimizers
 
 #| export
-import math
 import numpy as np
 import sys
 import os
@@ -318,8 +317,7 @@ def test_unit_gradient_descent_step():
     print("   Skips updates when gradient is None")
     print("📈 Progress: Gradient Descent Step ✓")
 
-# Run the test
-test_unit_gradient_descent_step()
+# Test function defined (called in main block)
 
 # Test function is called by auto-discovery system
 
@@ -605,8 +603,7 @@ def test_unit_sgd_optimizer():
     print("   Supports weight decay for regularization")
     print("📈 Progress: SGD Optimizer ✓")
 
-# Run the test
-test_unit_sgd_optimizer()
+# Test function defined (called in main block)
 
 # %% [markdown]
 """
@@ -921,8 +918,7 @@ def test_unit_adam_optimizer():
     print("   Combines benefits of momentum and RMSprop")
     print("📈 Progress: Adam Optimizer ✓")
 
-# Run the test
-test_unit_adam_optimizer()
+# Test function defined (called in main block)
 
 # %% [markdown]
 """
@@ -1158,8 +1154,7 @@ def test_unit_step_scheduler():
     print("   Works with any optimizer (SGD, Adam, etc.)")
     print("📈 Progress: Step Learning Rate Scheduler ✓")
 
-# Run the test
-test_unit_step_scheduler()
+# Test function defined (called in main block)
 
 # %% [markdown]
 """
@@ -1390,8 +1385,7 @@ def test_module_unit_training():
     print("   Ready for real neural network training")
     print("📈 Progress: Complete Training Integration ✓")
 
-# Run the test
-test_module_unit_training()
+# Test function defined (called in main block)
 
 # %% [markdown]
 """
@@ -2244,8 +2238,7 @@ def test_unit_convergence_profiler():
     print("   Enables data-driven optimizer selection")
     print("📈 Progress: ML Systems Optimizer Analysis ✓")
 
-# Run the test
-test_unit_convergence_profiler()
+# Test function defined (called in main block)
 
 # %% [markdown]
 """
@@ -2804,8 +2797,7 @@ def test_unit_advanced_optimizer_features():
     print("   Handles distributed training synchronization")
     print("📈 Progress: Advanced Production Optimizer Features ✓")
 
-# Run the test
-test_unit_advanced_optimizer_features()
+# Test function defined (called in main block)
 
 # %% [markdown]
 """
@@ -3018,8 +3010,7 @@ def test_comprehensive_ml_systems_integration():
     print("   🚀 Ready for real-world ML systems deployment!")
     print("📈 Progress: Comprehensive ML Systems Integration ✓")
 
-# Run the comprehensive test
-test_comprehensive_ml_systems_integration()
+# Test function defined (called in main block)
 
 # %% [markdown]
 """
@@ -3066,6 +3057,31 @@ test_comprehensive_ml_systems_integration()
 4. **Cross-Hardware Portability**: How do optimizer implementations need to change when moving between CPUs, GPUs, and specialized ML accelerators?
 
 These questions connect your optimizer implementations to the broader ecosystem of production ML systems, where optimization is just one piece of complex training and deployment pipelines.
+"""
+
+# %% [markdown]
+"""
+## 🤔 ML Systems Thinking Questions
+
+### System Design
+1. How do different optimizer state management strategies impact checkpointing and model serialization in distributed training systems?
+2. What are the trade-offs between maintaining optimizer state in memory versus persisting it to disk for long-running training jobs?
+3. How would you design an optimizer framework that supports both synchronous and asynchronous parameter updates across multiple workers?
+
+### Production ML
+1. How do optimizer choice and hyperparameters impact training stability and convergence in production environments with varying data distributions?
+2. What strategies would you use to handle optimizer state recovery and warm restarts when training jobs are interrupted in cloud environments?
+3. How would you implement adaptive learning rate scheduling that responds to real-time training metrics and business constraints?
+
+### Framework Design
+1. What design patterns enable efficient memory management for optimizers that maintain per-parameter state (like Adam's momentum buffers)?
+2. How would you implement optimizer composability that allows combining different optimization strategies for different parameter groups?
+3. What abstractions would you create to support both first-order and second-order optimization methods in a unified interface?
+
+### Performance & Scale
+1. How do different optimizer implementations scale with model size and parameter count in terms of memory usage and computational overhead?
+2. What are the communication bottlenecks when applying optimizers in distributed training, and how would you optimize gradient aggregation?
+3. How would you implement mixed-precision optimization that maintains numerical stability while maximizing training throughput?
 """
 
 # %% [markdown]
@@ -3134,3 +3150,17 @@ Your implementations mirror production systems:
 
 **Ready for production?** Your optimization algorithms and ML systems analysis tools are now ready for real-world deployment and performance optimization!
 """ 
+
+if __name__ == "__main__":
+    # Run all tests
+    test_unit_gradient_descent_step()
+    test_unit_sgd_optimizer()
+    test_unit_adam_optimizer()
+    test_unit_step_scheduler()
+    test_module_unit_training()
+    test_unit_convergence_profiler()
+    test_unit_advanced_optimizer_features()
+    test_comprehensive_ml_systems_integration()
+    
+    print("All tests passed!")
+    print("optimizers_dev module complete!")

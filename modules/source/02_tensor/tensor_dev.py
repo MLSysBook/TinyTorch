@@ -34,7 +34,7 @@ Welcome to the Tensor module! This is where TinyTorch really begins. You'll impl
 #| export
 import numpy as np
 import sys
-from typing import Union, List, Tuple, Optional, Any
+from typing import Union, Tuple, Optional, Any
 
 # %% nbgrader={"grade": false, "grade_id": "tensor-setup", "locked": false, "schema_version": 3, "solution": false, "task": false}
 print("🔥 TinyTorch Tensor Module")
@@ -271,7 +271,7 @@ class Tensor:
     Wraps NumPy arrays with ML-specific functionality.
     """
     
-    def __init__(self, data: Union[int, float, List, np.ndarray], dtype: Optional[str] = None):
+    def __init__(self, data: Any, dtype: Optional[str] = None):
         """
         Create a new tensor from data.
         
@@ -900,8 +900,7 @@ def test_unit_tensor_creation():
     assert matrix_2x2.shape == (2, 2)
     print("✅ Tensor creation tests passed!")
 
-# Run the test
-test_unit_tensor_creation()
+# Test function defined (called in main block)
 
 # %% [markdown]
 """
@@ -930,8 +929,7 @@ def test_unit_tensor_properties():
     assert tensor.dtype in [np.int32, np.int64]
     print("✅ Tensor properties tests passed!")
 
-# Run the test
-test_unit_tensor_properties()
+# Test function defined (called in main block)
 
 # %% [markdown]
 """
@@ -979,8 +977,7 @@ def test_unit_tensor_arithmetic():
     assert np.allclose(f.data, expected)
     print("✅ Tensor arithmetic tests passed!")
 
-# Run the test
-test_unit_tensor_arithmetic()
+# Test function defined (called in main block)
 
 # %% [markdown]
 """
@@ -1047,8 +1044,7 @@ def test_module_tensor_numpy_integration():
     
     print("✅ Integration Test Passed: Tensor-NumPy integration works correctly.")
 
-# Run the integration test
-test_module_tensor_numpy_integration()
+# Test function defined (called in main block)
 
 # %% [markdown]
 """
@@ -1151,3 +1147,13 @@ Your tensor implementation is the foundation for:
 
 You've built the foundation of modern AI. Now let's add the mathematical functions that enable machines to learn complex patterns!
 """
+
+if __name__ == "__main__":
+    # Run all tensor tests
+    test_unit_tensor_creation()
+    test_unit_tensor_properties()
+    test_unit_tensor_arithmetic()
+    test_module_tensor_numpy_integration()
+    
+    print("All tests passed!")
+    print("Tensor module complete!")
