@@ -1,67 +1,62 @@
 
-
 <!DOCTYPE html>
 
 
-<html lang="en" data-content_root="" >
+<html lang="en" data-content_root="../" >
 
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>🎯 Attention: The Transformer Revolution &#8212; Tiny🔥Torch</title>
+    <title>Module: Attention &#8212; Tiny🔥Torch</title>
   
   
   
   <script data-cfasync="false">
     document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
-    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
   </script>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="../_static/styles/theme.css?digest=5b4479735964841361fd" rel="stylesheet" />
-<link href="../_static/styles/bootstrap.css?digest=5b4479735964841361fd" rel="stylesheet" />
-<link href="../_static/styles/pydata-sphinx-theme.css?digest=5b4479735964841361fd" rel="stylesheet" />
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
 
   
-  <link href="../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=5b4479735964841361fd" rel="stylesheet" />
-  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
 
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
-    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css?v=6644e6bb" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=5b4479735964841361fd" />
-<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=5b4479735964841361fd" />
-  <script src="../_static/vendor/fontawesome/6.1.2/js/all.min.js?digest=5b4479735964841361fd"></script>
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-    <script src="../_static/jquery.js"></script>
-    <script src="../_static/underscore.js"></script>
-    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-    <script src="../_static/doctools.js"></script>
-    <script src="../_static/clipboard.min.js"></script>
-    <script src="../_static/copybutton.js"></script>
-    <script src="../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
     <script>let toggleHintShow = 'Click to show';</script>
     <script>let toggleHintHide = 'Click to hide';</script>
     <script>let toggleOpenOnPrint = 'true';</script>
-    <script src="../_static/togglebutton.js"></script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
-    <script src="../_static/design-tabs.js"></script>
-    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
-const thebe_selector = ".thebe,.cell"
-const thebe_selector_input = "pre"
-const thebe_selector_output = ".output, .cell_output"
-</script>
-    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <script src="../_static/design-tabs.js?v=36754332"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'chapters/07-attention';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -76,28 +71,23 @@ const thebe_selector_output = ".output, .cell_output"
 
   
   
-  <a class="skip-link" href="#main-content">Skip to main content</a>
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
   
   <div id="pst-scroll-pixel-helper"></div>
-
   
   <button type="button" class="btn rounded-pill" id="pst-back-to-top">
-    <i class="fa-solid fa-arrow-up"></i>
-    Back to top
-  </button>
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
 
   
   <input type="checkbox"
           class="sidebar-toggle"
-          name="__primary"
-          id="__primary"/>
-  <label class="overlay overlay-primary" for="__primary"></label>
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
   
   <input type="checkbox"
           class="sidebar-toggle"
-          name="__secondary"
-          id="__secondary"/>
-  <label class="overlay overlay-secondary" for="__secondary"></label>
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
   
   <div class="search-button__wrapper">
     <div class="search-button__overlay"></div>
@@ -119,12 +109,20 @@ const thebe_selector_output = ".output, .cell_output"
   <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
 </form></div>
   </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
   
-    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
-    </nav>
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
   
+
   <div class="bd-container">
     <div class="bd-container__inner bd-page-width">
+      
+      
       
       <div class="bd-sidebar-primary bd-sidebar">
         
@@ -140,6 +138,8 @@ const thebe_selector_output = ".output, .cell_output"
     <div class="sidebar-primary-items__start sidebar-primary__section">
         <div class="sidebar-primary-item">
 
+  
+    
   
 
 <a class="navbar-brand logo" href="../intro.html">
@@ -158,7 +158,18 @@ const thebe_selector_output = ".output, .cell_output"
   
   
 </a></div>
-        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item navbar-nav active">
         
         <ul class="nav bd-sidenav bd-sidenav__home-link">
@@ -173,40 +184,46 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l1"><a class="reference internal" href="../usage-paths/quick-exploration.html">🔬 Quick Exploration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../usage-paths/serious-development.html">🏗️ Serious Development</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../usage-paths/classroom-use.html">👨‍🏫 Classroom Use</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../instructor-guide.html">📚 Instructor Guide</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Course Orientation</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="00-introduction.html">Introduction</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Foundation</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="01-setup.html">1. Setup</a></li>
-<li class="toctree-l1"><a class="reference internal" href="02-tensor.html">2. Tensors</a></li>
-<li class="toctree-l1"><a class="reference internal" href="03-activations.html">3. Activations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01-setup.html">0. Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="02-tensor.html">1. Tensors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="03-activations.html">2. Activations</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Building Blocks</span></p>
 <ul class="current nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="04-layers.html">4. Layers</a></li>
-<li class="toctree-l1"><a class="reference internal" href="05-dense.html">5. Dense</a></li>
-<li class="toctree-l1"><a class="reference internal" href="06-spatial.html">6. Spatial</a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">7. Attention</a></li>
+<li class="toctree-l1"><a class="reference internal" href="04-layers.html">3. Layers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="05-dense.html">4. Dense</a></li>
+<li class="toctree-l1"><a class="reference internal" href="06-spatial.html">5. Spatial</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">6. Attention</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Training Systems</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="08-dataloader.html">8. DataLoader</a></li>
-<li class="toctree-l1"><a class="reference internal" href="09-autograd.html">9. Autograd</a></li>
-<li class="toctree-l1"><a class="reference internal" href="10-optimizers.html">10. Optimizers</a></li>
-<li class="toctree-l1"><a class="reference internal" href="11-training.html">11. Training</a></li>
+<li class="toctree-l1"><a class="reference internal" href="08-dataloader.html">7. DataLoader</a></li>
+<li class="toctree-l1"><a class="reference internal" href="09-autograd.html">8. Autograd</a></li>
+<li class="toctree-l1"><a class="reference internal" href="10-optimizers.html">9. Optimizers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="11-training.html">10. Training</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Inference &amp; Serving</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="12-compression.html">12. Compression</a></li>
-<li class="toctree-l1"><a class="reference internal" href="13-kernels.html">13. Kernels</a></li>
-<li class="toctree-l1"><a class="reference internal" href="14-benchmarking.html">14. Benchmarking</a></li>
-<li class="toctree-l1"><a class="reference internal" href="15-mlops.html">15. MLOps</a></li>
+<li class="toctree-l1"><a class="reference internal" href="12-compression.html">11. Compression</a></li>
+<li class="toctree-l1"><a class="reference internal" href="13-kernels.html">12. Kernels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="14-benchmarking.html">13. Benchmarking</a></li>
+<li class="toctree-l1"><a class="reference internal" href="15-mlops.html">14. MLOps</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Capstone Project</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="16-capstone.html">16. Capstone</a></li>
+<li class="toctree-l1"><a class="reference internal" href="16-capstone.html">15. Capstone</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Additional Resources</span></p>
 <ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../vision.html">🎯 TinyTorch Vision</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../resources.html">📚 Learning Resources</a></li>
 </ul>
 
@@ -223,7 +240,7 @@ const thebe_selector_output = ".output, .cell_output"
 
       </div>
       
-      <main id="main-content" class="bd-main">
+      <main id="main-content" class="bd-main" role="main">
         
         
 
@@ -232,14 +249,14 @@ const thebe_selector_output = ".output, .cell_output"
           <div class="bd-content">
             <div class="bd-article-container">
               
-              <div class="bd-header-article">
+              <div class="bd-header-article d-print-none">
 <div class="header-article-items header-article__inner">
   
     <div class="header-article-items__start">
       
-        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
   <span class="fa-solid fa-bars"></span>
-</label></div>
+</button></div>
       
     </div>
   
@@ -381,10 +398,10 @@ const thebe_selector_output = ".output, .cell_output"
 
 <script>
 document.write(`
-  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
-    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
-    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
   </button>
 `);
 </script>
@@ -392,14 +409,14 @@ document.write(`
 
 <script>
 document.write(`
-  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <i class="fa-solid fa-magnifying-glass fa-lg"></i>
   </button>
 `);
 </script>
-<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <span class="fa-solid fa-list"></span>
-</label>
+</button>
 </div></div>
       
     </div>
@@ -410,7 +427,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>🎯 Attention: The Transformer Revolution</h1>
+    <h1>Module: Attention</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -420,16 +437,25 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-objectives">🌟 <strong>Learning Objectives</strong></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#core-concepts">🎯 <strong>Core Concepts</strong></a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#self-attention-mechanism"><strong>Self-Attention Mechanism</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#multi-head-attention"><strong>Multi-Head Attention</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#real-applications"><strong>Real Applications</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-info">📊 Module Info</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-objectives">🎯 Learning Objectives</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#build-use-understand">🧠 Build → Use → Understand</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-you-ll-build">📚 What You’ll Build</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#scaled-dot-product-attention">Scaled Dot-Product Attention</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#self-attention-wrapper">Self-Attention Wrapper</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#attention-masking">Attention Masking</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#building-blocks">🧱 <strong>Building Blocks</strong></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#looking-ahead">🚀 <strong>Looking Ahead</strong></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-structure">📚 <strong>Module Structure</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#key-concepts">🔬 Key Concepts</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#why-attention-revolutionized-ai">Why Attention Revolutionized AI</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-attention-formula-explained">The Attention Formula Explained</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#attention-vs-convolution">Attention vs Convolution</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#real-world-applications">Real-World Applications</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#from-attention-to-modern-ai">🚀 From Attention to Modern AI</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-progression">📈 Module Progression</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#success-criteria">🎯 Success Criteria</a></li>
 </ul>
             </nav>
         </div>
@@ -439,89 +465,232 @@ document.write(`
               
                 
 <div id="searchbox"></div>
-                <article class="bd-article" role="main">
+                <article class="bd-article">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="attention-the-transformer-revolution">
-<h1>🎯 Attention: The Transformer Revolution<a class="headerlink" href="#attention-the-transformer-revolution" title="Permalink to this heading">#</a></h1>
-<p><strong>Self-attention mechanisms and the foundation of modern language models.</strong></p>
-<div class="tip admonition">
-<p class="admonition-title">🏗️ What You’ll Build</p>
-<p><strong>Self-attention from scratch</strong>: Scaled dot-product attention, multi-head attention, and the core mechanisms that power transformers.</p>
+  <section class="tex2jax_ignore mathjax_ignore" id="module-attention">
+<h1>Module: Attention<a class="headerlink" href="#module-attention" title="Link to this heading">#</a></h1>
+<div class="badges docutils">
+<p>⭐⭐⭐ | ⏱️ 4-5 hours</p>
 </div>
-<section id="learning-objectives">
-<h2>🌟 <strong>Learning Objectives</strong><a class="headerlink" href="#learning-objectives" title="Permalink to this heading">#</a></h2>
-<p>By the end of this module, you will:</p>
+<section id="module-info">
+<h2>📊 Module Info<a class="headerlink" href="#module-info" title="Link to this heading">#</a></h2>
 <ul class="simple">
-<li><p><strong>Understand attention fundamentally</strong>: Implement the scaled dot-product attention mechanism from the “Attention Is All You Need” paper</p></li>
-<li><p><strong>Build multi-head attention</strong>: Create parallel attention heads and understand how they capture different aspects of sequences</p></li>
-<li><p><strong>Master the math</strong>: Query, Key, Value projections and how attention weights are computed</p></li>
-<li><p><strong>See the bigger picture</strong>: How attention enables transformers to process sequences without recurrence</p></li>
+<li><p><strong>Difficulty</strong>: ⭐⭐⭐ Advanced</p></li>
+<li><p><strong>Time Estimate</strong>: 4-5 hours</p></li>
+<li><p><strong>Prerequisites</strong>: Tensor module</p></li>
+<li><p><strong>Next Steps</strong>: Training, Transformers modules</p></li>
+</ul>
+<p>Build the core attention mechanism that powers modern AI! This module implements the fundamental scaled dot-product attention that’s used in ChatGPT, BERT, GPT-4, and virtually all state-of-the-art AI systems.</p>
+</section>
+<section id="learning-objectives">
+<h2>🎯 Learning Objectives<a class="headerlink" href="#learning-objectives" title="Link to this heading">#</a></h2>
+<p>By the end of this module, you will be able to:</p>
+<ul class="simple">
+<li><p><strong>Master the attention formula</strong>: Understand and implement <code class="docutils literal notranslate"><span class="pre">Attention(Q,K,V)</span> <span class="pre">=</span> <span class="pre">softmax(QK^T/√d_k)V</span></code></p></li>
+<li><p><strong>Build self-attention</strong>: Create the core component that enables global context understanding</p></li>
+<li><p><strong>Control information flow</strong>: Implement masking for causal, padding, and bidirectional attention</p></li>
+<li><p><strong>Visualize attention patterns</strong>: See what the model “pays attention to”</p></li>
+<li><p><strong>Understand modern AI</strong>: Grasp the mechanism that revolutionized natural language processing</p></li>
 </ul>
 </section>
-<section id="core-concepts">
-<h2>🎯 <strong>Core Concepts</strong><a class="headerlink" href="#core-concepts" title="Permalink to this heading">#</a></h2>
-<section id="self-attention-mechanism">
-<h3><strong>Self-Attention Mechanism</strong><a class="headerlink" href="#self-attention-mechanism" title="Permalink to this heading">#</a></h3>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># The attention formula you&#39;ll implement</span>
-<span class="k">def</span> <span class="nf">attention</span><span class="p">(</span><span class="n">Q</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">V</span><span class="p">,</span> <span class="n">mask</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="n">scores</span> <span class="o">=</span> <span class="n">Q</span> <span class="o">@</span> <span class="n">K</span><span class="o">.</span><span class="n">T</span> <span class="o">/</span> <span class="n">sqrt</span><span class="p">(</span><span class="n">d_k</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">mask</span><span class="p">:</span> <span class="n">scores</span> <span class="o">=</span> <span class="n">mask_fill</span><span class="p">(</span><span class="n">scores</span><span class="p">,</span> <span class="n">mask</span><span class="p">,</span> <span class="o">-</span><span class="n">inf</span><span class="p">)</span>
-    <span class="n">weights</span> <span class="o">=</span> <span class="n">softmax</span><span class="p">(</span><span class="n">scores</span><span class="p">,</span> <span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">weights</span> <span class="o">@</span> <span class="n">V</span>
+<section id="build-use-understand">
+<h2>🧠 Build → Use → Understand<a class="headerlink" href="#build-use-understand" title="Link to this heading">#</a></h2>
+<p>This module follows TinyTorch’s <strong>Build → Use → Understand</strong> framework:</p>
+<ol class="arabic simple">
+<li><p><strong>Build</strong>: Implement the core attention mechanism and masking utilities from mathematical foundations</p></li>
+<li><p><strong>Use</strong>: Apply attention to sequence tasks and visualize attention patterns</p></li>
+<li><p><strong>Understand</strong>: How attention enables dynamic, global context modeling that powers modern AI</p></li>
+</ol>
+</section>
+<section id="what-you-ll-build">
+<h2>📚 What You’ll Build<a class="headerlink" href="#what-you-ll-build" title="Link to this heading">#</a></h2>
+<section id="scaled-dot-product-attention">
+<h3>Scaled Dot-Product Attention<a class="headerlink" href="#scaled-dot-product-attention" title="Link to this heading">#</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">scaled_dot_product_attention</span><span class="p">(</span><span class="n">Q</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">V</span><span class="p">,</span> <span class="n">mask</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The fundamental attention operation:</span>
+<span class="sd">    Attention(Q,K,V) = softmax(QK^T/√d_k)V</span>
+<span class="sd">    </span>
+<span class="sd">    This exact function powers ChatGPT, BERT, and all transformers.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">d_k</span> <span class="o">=</span> <span class="n">Q</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">scores</span> <span class="o">=</span> <span class="n">Q</span> <span class="o">@</span> <span class="n">K</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">d_k</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">mask</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">scores</span> <span class="o">=</span> <span class="n">scores</span><span class="o">.</span><span class="n">masked_fill</span><span class="p">(</span><span class="n">mask</span> <span class="o">==</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mf">1e9</span><span class="p">)</span>
+    <span class="n">attention_weights</span> <span class="o">=</span> <span class="n">softmax</span><span class="p">(</span><span class="n">scores</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">attention_weights</span> <span class="o">@</span> <span class="n">V</span><span class="p">,</span> <span class="n">attention_weights</span>
 </pre></div>
 </div>
 </section>
-<section id="multi-head-attention">
-<h3><strong>Multi-Head Attention</strong><a class="headerlink" href="#multi-head-attention" title="Permalink to this heading">#</a></h3>
-<ul class="simple">
-<li><p><strong>Parallel processing</strong>: Multiple attention heads capture different relationships</p></li>
-<li><p><strong>Learned projections</strong>: Query, Key, Value transformations for each head</p></li>
-<li><p><strong>Concatenation</strong>: Combining multiple perspectives into final output</p></li>
-</ul>
-</section>
-<section id="real-applications">
-<h3><strong>Real Applications</strong><a class="headerlink" href="#real-applications" title="Permalink to this heading">#</a></h3>
-<ul class="simple">
-<li><p><strong>Language models</strong>: GPT, BERT, and transformer architectures</p></li>
-<li><p><strong>Computer vision</strong>: Vision Transformers (ViTs) for image classification</p></li>
-<li><p><strong>Sequence modeling</strong>: Translation, summarization, and generation tasks</p></li>
-</ul>
-</section>
-</section>
-<section id="building-blocks">
-<h2>🧱 <strong>Building Blocks</strong><a class="headerlink" href="#building-blocks" title="Permalink to this heading">#</a></h2>
-<p>This module connects to your previous work:</p>
-<ul class="simple">
-<li><p><strong>Tensors</strong> (Module 2): Matrix operations for Q, K, V computations</p></li>
-<li><p><strong>Activations</strong> (Module 3): Softmax for attention weight normalization</p></li>
-<li><p><strong>Layers</strong> (Module 4): Linear projections for query, key, value transformations</p></li>
-<li><p><strong>Dense Networks</strong> (Module 5): Integration with feedforward components</p></li>
-</ul>
-</section>
-<section id="looking-ahead">
-<h2>🚀 <strong>Looking Ahead</strong><a class="headerlink" href="#looking-ahead" title="Permalink to this heading">#</a></h2>
-<p>Your attention implementation becomes crucial for:</p>
-<ul class="simple">
-<li><p><strong>Training Systems</strong> (Module 8-11): Training transformer models on sequence data</p></li>
-<li><p><strong>Advanced Architectures</strong>: Building complete transformer blocks</p></li>
-<li><p><strong>Production Systems</strong> (Module 12-16): Optimizing attention for inference</p></li>
-</ul>
-<hr class="docutils" />
-<div class="note admonition">
-<p class="admonition-title">💡 The Attention Revolution</p>
-<p>Attention didn’t just improve neural networks—it revolutionized them. By allowing models to directly access any part of a sequence, attention enabled the transformer architecture that powers ChatGPT, BERT, and modern AI systems.</p>
-<p>You’re not just implementing a technique; you’re building the foundation of modern AI.</p>
+<section id="self-attention-wrapper">
+<h3>Self-Attention Wrapper<a class="headerlink" href="#self-attention-wrapper" title="Link to this heading">#</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">SelfAttention</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Convenient wrapper for self-attention where Q=K=V.</span>
+<span class="sd">    The most common use case in transformer models.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">d_model</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">d_model</span> <span class="o">=</span> <span class="n">d_model</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">mask</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="c1"># Self-attention: Q = K = V = x</span>
+        <span class="k">return</span> <span class="n">scaled_dot_product_attention</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">mask</span><span class="p">)</span>
+</pre></div>
 </div>
 </section>
-<section id="module-structure">
-<h2>📚 <strong>Module Structure</strong><a class="headerlink" href="#module-structure" title="Permalink to this heading">#</a></h2>
+<section id="attention-masking">
+<h3>Attention Masking<a class="headerlink" href="#attention-masking" title="Link to this heading">#</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Causal masking (GPT-style: can&#39;t see future tokens)</span>
+<span class="n">causal_mask</span> <span class="o">=</span> <span class="n">create_causal_mask</span><span class="p">(</span><span class="n">seq_len</span><span class="p">)</span>
+
+<span class="c1"># Padding masking (ignore padding tokens)</span>
+<span class="n">padding_mask</span> <span class="o">=</span> <span class="n">create_padding_mask</span><span class="p">(</span><span class="n">lengths</span><span class="p">,</span> <span class="n">max_length</span><span class="p">)</span>
+
+<span class="c1"># Bidirectional masking (BERT-style: can see all tokens)</span>
+<span class="n">bidirectional_mask</span> <span class="o">=</span> <span class="n">create_bidirectional_mask</span><span class="p">(</span><span class="n">seq_len</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="key-concepts">
+<h2>🔬 Key Concepts<a class="headerlink" href="#key-concepts" title="Link to this heading">#</a></h2>
+<section id="why-attention-revolutionized-ai">
+<h3>Why Attention Revolutionized AI<a class="headerlink" href="#why-attention-revolutionized-ai" title="Link to this heading">#</a></h3>
 <ul class="simple">
-<li><p><strong>Self-Attention Basics</strong>: Scaled dot-product attention from scratch</p></li>
-<li><p><strong>Multi-Head Architecture</strong>: Parallel attention computation</p></li>
-<li><p><strong>Positional Understanding</strong>: How transformers handle sequence order</p></li>
-<li><p><strong>Real Applications</strong>: Using attention in classification and generation tasks</p></li>
+<li><p><strong>Global connectivity</strong>: Unlike CNNs, attention connects any two positions directly</p></li>
+<li><p><strong>Dynamic weights</strong>: Attention adapts to input content, not fixed like convolution kernels</p></li>
+<li><p><strong>Parallel processing</strong>: Unlike RNNs, all positions computed simultaneously</p></li>
+<li><p><strong>Interpretability</strong>: You can visualize what the model pays attention to</p></li>
 </ul>
-<p><strong>Ready to build the mechanism that changed AI forever?</strong> 🔥</p>
+</section>
+<section id="the-attention-formula-explained">
+<h3>The Attention Formula Explained<a class="headerlink" href="#the-attention-formula-explained" title="Link to this heading">#</a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Attention(Q,K,V) = softmax(QK^T/√d_k)V
+
+Where:
+- Q (Query): &quot;What am I looking for?&quot;
+- K (Key): &quot;What information is available?&quot;  
+- V (Value): &quot;What is the actual content?&quot;
+- √d_k scaling: Prevents extreme softmax values
+</pre></div>
+</div>
+</section>
+<section id="attention-vs-convolution">
+<h3>Attention vs Convolution<a class="headerlink" href="#attention-vs-convolution" title="Link to this heading">#</a></h3>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Aspect</p></th>
+<th class="head"><p>Convolution</p></th>
+<th class="head"><p>Attention</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>Receptive field</strong></p></td>
+<td><p>Local, grows with depth</p></td>
+<td><p>Global from layer 1</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Computation</strong></p></td>
+<td><p>O(n) with kernel size</p></td>
+<td><p>O(n²) with sequence length</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Weights</strong></p></td>
+<td><p>Fixed learned kernels</p></td>
+<td><p>Dynamic input-dependent</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Best for</strong></p></td>
+<td><p>Spatial data (images)</p></td>
+<td><p>Sequential data (text)</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="real-world-applications">
+<h3>Real-World Applications<a class="headerlink" href="#real-world-applications" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Language Models</strong>: GPT, BERT, ChatGPT use self-attention to understand context</p></li>
+<li><p><strong>Machine Translation</strong>: Google Translate uses attention to align source and target words</p></li>
+<li><p><strong>Image Understanding</strong>: Vision Transformers apply attention to image patches</p></li>
+<li><p><strong>Multimodal AI</strong>: CLIP, DALL-E use attention to connect text and images</p></li>
+</ul>
+</section>
+</section>
+<section id="from-attention-to-modern-ai">
+<h2>🚀 From Attention to Modern AI<a class="headerlink" href="#from-attention-to-modern-ai" title="Link to this heading">#</a></h2>
+<p>This module teaches the <strong>core building block</strong> of modern AI:</p>
+<p><strong>What you’re building</strong>: The fundamental attention mechanism<br />
+<strong>What it enables</strong>: Multi-head attention, positional encoding, transformer blocks<br />
+<strong>What it powers</strong>: ChatGPT, BERT, GPT-4, and contemporary AI systems</p>
+<p>Understanding this module gives you the foundation to understand:</p>
+<ul class="simple">
+<li><p>How ChatGPT generates coherent text</p></li>
+<li><p>How BERT understands language bidirectionally</p></li>
+<li><p>How Vision Transformers work without convolution</p></li>
+<li><p>How modern AI achieves human-like language understanding</p></li>
+</ul>
+</section>
+<section id="module-progression">
+<h2>📈 Module Progression<a class="headerlink" href="#module-progression" title="Link to this heading">#</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Tensors → **ATTENTION** → Layers → Networks → CNNs → Training
+  ↑              ↑
+Foundation   Modern AI Core
+</pre></div>
+</div>
+<p>After completing this module, you’ll understand the mechanism that sparked the AI revolution, making you ready to work with state-of-the-art models and architectures.</p>
+</section>
+<section id="success-criteria">
+<h2>🎯 Success Criteria<a class="headerlink" href="#success-criteria" title="Link to this heading">#</a></h2>
+<p>You’ll know you’ve mastered this module when you can:</p>
+<ul class="contains-task-list simple">
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> Implement scaled dot-product attention from scratch</p></li>
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> Explain why the √d_k scaling prevents gradient problems</p></li>
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> Create different types of attention masks for various use cases</p></li>
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> Visualize and interpret attention weights</p></li>
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> Understand why attention enabled the transformer revolution</p></li>
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> Connect this foundation to modern AI systems like ChatGPT</p></li>
+</ul>
+<p>Choose your preferred way to engage with this module:</p>
+<div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
+<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-3 sd-row-cols-lg-3 docutils">
+<div class="sd-col sd-d-flex-row docutils">
+<div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm sd-card-hover docutils">
+<div class="sd-card-body docutils">
+<div class="sd-card-title sd-font-weight-bold docutils">
+🚀 Launch Binder</div>
+<p class="sd-card-text">Run this module interactively in your browser. No installation required!</p>
+</div>
+<a class="sd-stretched-link sd-hide-link-text reference external" href="https://mybinder.org/v2/gh/mlsysbook/TinyTorch/main?filepath=modules/source/07_attention/attention_dev.ipynb"><span>https://mybinder.org/v2/gh/mlsysbook/TinyTorch/main?filepath=modules/source/07_attention/attention_dev.ipynb</span></a></div>
+</div>
+<div class="sd-col sd-d-flex-row docutils">
+<div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm sd-card-hover docutils">
+<div class="sd-card-body docutils">
+<div class="sd-card-title sd-font-weight-bold docutils">
+⚡ Open in Colab</div>
+<p class="sd-card-text">Use Google Colab for GPU access and cloud compute power.</p>
+</div>
+<a class="sd-stretched-link sd-hide-link-text reference external" href="https://colab.research.google.com/github/mlsysbook/TinyTorch/blob/main/modules/source/07_attention/attention_dev.ipynb"><span>https://colab.research.google.com/github/mlsysbook/TinyTorch/blob/main/modules/source/07_attention/attention_dev.ipynb</span></a></div>
+</div>
+<div class="sd-col sd-d-flex-row docutils">
+<div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm sd-card-hover docutils">
+<div class="sd-card-body docutils">
+<div class="sd-card-title sd-font-weight-bold docutils">
+📖 View Source</div>
+<p class="sd-card-text">Browse the Python source code and understand the implementation.</p>
+</div>
+<a class="sd-stretched-link sd-hide-link-text reference external" href="https://github.com/mlsysbook/TinyTorch/blob/main/modules/source/07_attention/attention_dev.py"><span>https://github.com/mlsysbook/TinyTorch/blob/main/modules/source/07_attention/attention_dev.py</span></a></div>
+</div>
+</div>
+</div>
+<div class="tip admonition">
+<p class="admonition-title">💾 Save Your Progress</p>
+<p><strong>Binder sessions are temporary!</strong> Download your completed notebook when done, or switch to local development for persistent work.</p>
+<p>Ready for serious development? → <a class="reference internal" href="../usage-paths/serious-development.html"><span class="std std-doc">🏗️ Local Setup Guide</span></a></p>
+</div>
+<hr class="docutils" />
+<div class="prev-next-area">
+<a class="left-prev" href="../chapters/06_spatial.html" title="previous page">← Previous Module</a>
+<a class="right-next" href="../chapters/08_dataloader.html" title="next page">Next Module →</a>
+</div>
 </section>
 </section>
 
@@ -552,7 +721,7 @@ document.write(`
               
               
               
-                <footer class="prev-next-footer">
+                <footer class="prev-next-footer d-print-none">
                   
 <div class="prev-next-area">
     <a class="left-prev"
@@ -582,22 +751,32 @@ document.write(`
               
                 <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
+
   <div class="sidebar-secondary-item">
   <div class="page-toc tocsection onthispage">
     <i class="fa-solid fa-list"></i> Contents
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-objectives">🌟 <strong>Learning Objectives</strong></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#core-concepts">🎯 <strong>Core Concepts</strong></a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#self-attention-mechanism"><strong>Self-Attention Mechanism</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#multi-head-attention"><strong>Multi-Head Attention</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#real-applications"><strong>Real Applications</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-info">📊 Module Info</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-objectives">🎯 Learning Objectives</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#build-use-understand">🧠 Build → Use → Understand</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-you-ll-build">📚 What You’ll Build</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#scaled-dot-product-attention">Scaled Dot-Product Attention</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#self-attention-wrapper">Self-Attention Wrapper</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#attention-masking">Attention Masking</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#building-blocks">🧱 <strong>Building Blocks</strong></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#looking-ahead">🚀 <strong>Looking Ahead</strong></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-structure">📚 <strong>Module Structure</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#key-concepts">🔬 Key Concepts</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#why-attention-revolutionized-ai">Why Attention Revolutionized AI</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-attention-formula-explained">The Attention Formula Explained</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#attention-vs-convolution">Attention vs Convolution</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#real-world-applications">Real-World Applications</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#from-attention-to-modern-ai">🚀 From Attention to Modern AI</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-progression">📈 Module Progression</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#success-criteria">🎯 Success Criteria</a></li>
 </ul>
   </nav></div>
 
@@ -646,8 +825,8 @@ By Prof. Vijay Janapa Reddi (Harvard University)
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="../_static/scripts/bootstrap.js?digest=5b4479735964841361fd"></script>
-<script src="../_static/scripts/pydata-sphinx-theme.js?digest=5b4479735964841361fd"></script>
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
 
   <footer class="bd-footer">
   </footer>

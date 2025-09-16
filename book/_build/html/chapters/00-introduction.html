@@ -1,0 +1,771 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Module: Introduction &#8212; Tiny🔥Torch</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css?v=6644e6bb" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=36754332"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'chapters/00-introduction';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Module: Setup" href="01-setup.html" />
+    <link rel="prev" title="👨‍🏫 Instructor Guide: NBGrader + TinyTorch" href="../instructor-guide.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo.png" class="logo__image only-light" alt="Tiny🔥Torch - Home"/>
+    <script>document.write(`<img src="../_static/logo.png" class="logo__image only-dark" alt="Tiny🔥Torch - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    Tiny🔥Torch
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Usage Paths</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../usage-paths/quick-exploration.html">🔬 Quick Exploration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage-paths/serious-development.html">🏗️ Serious Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage-paths/classroom-use.html">👨‍🏫 Classroom Use</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../instructor-guide.html">📚 Instructor Guide</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Course Orientation</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Introduction</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Foundation</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="01-setup.html">0. Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="02-tensor.html">1. Tensors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="03-activations.html">2. Activations</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Building Blocks</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="04-layers.html">3. Layers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="05-dense.html">4. Dense</a></li>
+<li class="toctree-l1"><a class="reference internal" href="06-spatial.html">5. Spatial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="07-attention.html">6. Attention</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Training Systems</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="08-dataloader.html">7. DataLoader</a></li>
+<li class="toctree-l1"><a class="reference internal" href="09-autograd.html">8. Autograd</a></li>
+<li class="toctree-l1"><a class="reference internal" href="10-optimizers.html">9. Optimizers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="11-training.html">10. Training</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Inference &amp; Serving</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="12-compression.html">11. Compression</a></li>
+<li class="toctree-l1"><a class="reference internal" href="13-kernels.html">12. Kernels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="14-benchmarking.html">13. Benchmarking</a></li>
+<li class="toctree-l1"><a class="reference internal" href="15-mlops.html">14. MLOps</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Capstone Project</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="16-capstone.html">15. Capstone</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Additional Resources</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../vision.html">🎯 TinyTorch Vision</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../resources.html">📚 Learning Resources</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/mlsysbook/TinyTorch" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/mlsysbook/TinyTorch/edit/main/book/chapters/00-introduction.md" target="_blank"
+   class="btn btn-sm btn-source-edit-button dropdown-item"
+   title="Suggest edit"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="btn__text-container">Suggest edit</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/mlsysbook/TinyTorch/issues/new?title=Issue%20on%20page%20%2Fchapters/00-introduction.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/chapters/00-introduction.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Module: Introduction</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-info">📊 Module Info</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-objectives">🎯 Learning Objectives</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#system-overview">🏗️ System Overview</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#module-categories">Module Categories</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#interactive-features">📊 Interactive Features</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dependency-graph-visualization">1. Dependency Graph Visualization</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#system-architecture-diagram">2. System Architecture Diagram</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-roadmap">3. Learning Roadmap</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#component-analysis">4. Component Analysis</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#quick-start">🚀 Quick Start</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-path-recommendations">📈 Learning Path Recommendations</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#for-instructors">🎓 For Instructors</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-resources">📚 Module Resources</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary">🎯 Summary</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="module-introduction">
+<h1>Module: Introduction<a class="headerlink" href="#module-introduction" title="Link to this heading">#</a></h1>
+<div class="badges docutils">
+<p>⭐ | ⏱️ 1-2 hours | 🏗️ System Overview</p>
+</div>
+<section id="module-info">
+<h2>📊 Module Info<a class="headerlink" href="#module-info" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><strong>Difficulty</strong>: ⭐ Beginner</p></li>
+<li><p><strong>Time Estimate</strong>: 1-2 hours</p></li>
+<li><p><strong>Prerequisites</strong>: None - this is your starting point!</p></li>
+<li><p><strong>Next Steps</strong>: Setup module</p></li>
+</ul>
+<p>Welcome to TinyTorch! This introduction module provides a comprehensive visual overview of the entire TinyTorch system, helping you understand how all 17 modules work together to create a complete machine learning framework.</p>
+</section>
+<section id="learning-objectives">
+<h2>🎯 Learning Objectives<a class="headerlink" href="#learning-objectives" title="Link to this heading">#</a></h2>
+<p>By the end of this module, you will be able to:</p>
+<ul class="simple">
+<li><p><strong>Navigate the TinyTorch ecosystem</strong>: Understand how all 17 modules interconnect</p></li>
+<li><p><strong>Visualize system architecture</strong>: See the complete framework structure with interactive diagrams</p></li>
+<li><p><strong>Plan your learning journey</strong>: Identify the optimal path through modules based on prerequisites</p></li>
+<li><p><strong>Understand component relationships</strong>: Know what each module builds and enables</p></li>
+</ul>
+</section>
+<section id="system-overview">
+<h2>🏗️ System Overview<a class="headerlink" href="#system-overview" title="Link to this heading">#</a></h2>
+<p>TinyTorch is a complete neural network framework built from scratch for deep learning education. The system consists of:</p>
+<section id="module-categories">
+<h3>Module Categories<a class="headerlink" href="#module-categories" title="Link to this heading">#</a></h3>
+<p><strong>Foundation (Modules 00-02)</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">00_introduction</span></code>: System overview and architecture visualization</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">01_setup</span></code>: Development environment and CLI workflow</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">02_tensor</span></code>: Multi-dimensional arrays and operations</p></li>
+</ul>
+<p><strong>Building Blocks (Modules 03-07)</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">03_activations</span></code>: Mathematical functions and nonlinearity</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">04_layers</span></code>: Neural network layer abstractions</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">05_dense</span></code>: Fully connected layers and matrix operations</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">06_spatial</span></code>: Convolutional operations and computer vision</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">07_attention</span></code>: Self-attention and transformer mechanisms</p></li>
+</ul>
+<p><strong>Training Systems (Modules 08-11)</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">08_dataloader</span></code>: Data pipeline and CIFAR-10 integration</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">09_autograd</span></code>: Automatic differentiation engine</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">10_optimizers</span></code>: SGD, Adam, and learning rate scheduling</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">11_training</span></code>: Training loops, loss functions, and metrics</p></li>
+</ul>
+<p><strong>Production &amp; Performance (Modules 12-16)</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">12_compression</span></code>: Model pruning and quantization</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">13_kernels</span></code>: Custom operations and hardware optimization</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">14_benchmarking</span></code>: MLPerf-style evaluation and profiling</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">15_mlops</span></code>: Production deployment and monitoring</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">16_capstone</span></code>: Final integration project</p></li>
+</ul>
+</section>
+</section>
+<section id="interactive-features">
+<h2>📊 Interactive Features<a class="headerlink" href="#interactive-features" title="Link to this heading">#</a></h2>
+<p>This module provides several interactive visualizations to help you understand the system:</p>
+<section id="dependency-graph-visualization">
+<h3>1. Dependency Graph Visualization<a class="headerlink" href="#dependency-graph-visualization" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Hierarchical Layout</strong>: See the module hierarchy from foundation to advanced</p></li>
+<li><p><strong>Circular Layout</strong>: Visualize all connections in a circular arrangement</p></li>
+<li><p><strong>Interactive Exploration</strong>: Click on modules to see their dependencies</p></li>
+</ul>
+</section>
+<section id="system-architecture-diagram">
+<h3>2. System Architecture Diagram<a class="headerlink" href="#system-architecture-diagram" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Layered View</strong>: Understand how components stack on each other</p></li>
+<li><p><strong>Component Relationships</strong>: See what each module exports and imports</p></li>
+<li><p><strong>Framework Structure</strong>: Visual representation of the complete system</p></li>
+</ul>
+</section>
+<section id="learning-roadmap">
+<h3>3. Learning Roadmap<a class="headerlink" href="#learning-roadmap" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Timeline View</strong>: See the recommended progression through modules</p></li>
+<li><p><strong>Time Estimates</strong>: Understand the commitment for each module</p></li>
+<li><p><strong>Difficulty Progression</strong>: Watch how complexity builds gradually</p></li>
+</ul>
+</section>
+<section id="component-analysis">
+<h3>4. Component Analysis<a class="headerlink" href="#component-analysis" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Statistical Overview</strong>: Total components, lines of code, complexity metrics</p></li>
+<li><p><strong>Module Comparisons</strong>: See relative size and complexity of modules</p></li>
+<li><p><strong>Dependency Analysis</strong>: Understand which modules are most central</p></li>
+</ul>
+</section>
+</section>
+<section id="quick-start">
+<h2>🚀 Quick Start<a class="headerlink" href="#quick-start" title="Link to this heading">#</a></h2>
+<p>To explore the TinyTorch system interactively:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">tinytorch.introduction</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_tinytorch_overview</span><span class="p">,</span> <span class="n">visualize_tinytorch_system</span>
+
+<span class="c1"># Get system overview</span>
+<span class="n">overview</span> <span class="o">=</span> <span class="n">get_tinytorch_overview</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Total modules: </span><span class="si">{</span><span class="n">overview</span><span class="p">[</span><span class="s1">&#39;total_modules&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Total components: </span><span class="si">{</span><span class="n">overview</span><span class="p">[</span><span class="s1">&#39;total_components&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Estimated hours: </span><span class="si">{</span><span class="n">overview</span><span class="p">[</span><span class="s1">&#39;total_hours&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># Create interactive visualizations</span>
+<span class="n">visualize_tinytorch_system</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+<section id="learning-path-recommendations">
+<h2>📈 Learning Path Recommendations<a class="headerlink" href="#learning-path-recommendations" title="Link to this heading">#</a></h2>
+<p>Based on the dependency analysis, here’s the recommended learning sequence:</p>
+<ol class="arabic simple">
+<li><p><strong>Start Here</strong>: Complete this introduction to understand the system</p></li>
+<li><p><strong>Foundation First</strong>: Move to <code class="docutils literal notranslate"><span class="pre">01_setup</span></code> for development environment</p></li>
+<li><p><strong>Core Concepts</strong>: Progress through <code class="docutils literal notranslate"><span class="pre">02_tensor</span></code> and <code class="docutils literal notranslate"><span class="pre">03_activations</span></code></p></li>
+<li><p><strong>Build Networks</strong>: Learn <code class="docutils literal notranslate"><span class="pre">04_layers</span></code>, <code class="docutils literal notranslate"><span class="pre">05_dense</span></code>, <code class="docutils literal notranslate"><span class="pre">06_spatial</span></code></p></li>
+<li><p><strong>Advanced Features</strong>: Explore <code class="docutils literal notranslate"><span class="pre">07_attention</span></code> for transformers</p></li>
+<li><p><strong>Training Pipeline</strong>: Master <code class="docutils literal notranslate"><span class="pre">08_dataloader</span></code>, <code class="docutils literal notranslate"><span class="pre">09_autograd</span></code>, <code class="docutils literal notranslate"><span class="pre">10_optimizers</span></code></p></li>
+<li><p><strong>Complete System</strong>: Integrate with <code class="docutils literal notranslate"><span class="pre">11_training</span></code></p></li>
+<li><p><strong>Production Ready</strong>: Optimize with <code class="docutils literal notranslate"><span class="pre">12_compression</span></code>, <code class="docutils literal notranslate"><span class="pre">13_kernels</span></code></p></li>
+<li><p><strong>Professional Skills</strong>: Add <code class="docutils literal notranslate"><span class="pre">14_benchmarking</span></code>, <code class="docutils literal notranslate"><span class="pre">15_mlops</span></code></p></li>
+<li><p><strong>Final Project</strong>: Complete <code class="docutils literal notranslate"><span class="pre">16_capstone</span></code> to integrate everything</p></li>
+</ol>
+</section>
+<section id="for-instructors">
+<h2>🎓 For Instructors<a class="headerlink" href="#for-instructors" title="Link to this heading">#</a></h2>
+<p>This module is particularly valuable for instructors as it:</p>
+<ul class="simple">
+<li><p>Provides a complete course overview to share with students</p></li>
+<li><p>Shows module dependencies for curriculum planning</p></li>
+<li><p>Offers visualizations for lectures and presentations</p></li>
+<li><p>Includes metadata for assignment generation</p></li>
+</ul>
+<p>See the <a class="reference internal" href="../instructor-guide.html"><span class="std std-doc">Instructor Guide</span></a> for details on using this module in courses.</p>
+</section>
+<section id="module-resources">
+<h2>📚 Module Resources<a class="headerlink" href="#module-resources" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><strong>Development Notebook</strong>: <code class="docutils literal notranslate"><span class="pre">modules/source/00_introduction/introduction_dev.py</span></code></p></li>
+<li><p><strong>Module Metadata</strong>: <code class="docutils literal notranslate"><span class="pre">modules/source/00_introduction/module.yaml</span></code></p></li>
+<li><p><strong>README</strong>: <code class="docutils literal notranslate"><span class="pre">modules/source/00_introduction/README.md</span></code></p></li>
+</ul>
+</section>
+<section id="summary">
+<h2>🎯 Summary<a class="headerlink" href="#summary" title="Link to this heading">#</a></h2>
+<p>The introduction module sets the stage for your TinyTorch journey by providing:</p>
+<ul class="simple">
+<li><p>Complete system overview and architecture</p></li>
+<li><p>Interactive dependency visualizations</p></li>
+<li><p>Optimal learning path recommendations</p></li>
+<li><p>Component relationship analysis</p></li>
+</ul>
+<p>You now have a comprehensive understanding of the TinyTorch system. Ready to start building? Head to the <a class="reference internal" href="01-setup.html"><span class="std std-doc">Setup module</span></a> to configure your development environment!</p>
+<hr class="docutils" />
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This module provides read-only visualizations and analysis. No coding is required - it’s designed to help you understand the system before diving into implementation.</p>
+</div>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./chapters"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../instructor-guide.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">👨‍🏫 Instructor Guide: NBGrader + TinyTorch</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="01-setup.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Module: Setup</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-info">📊 Module Info</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-objectives">🎯 Learning Objectives</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#system-overview">🏗️ System Overview</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#module-categories">Module Categories</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#interactive-features">📊 Interactive Features</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dependency-graph-visualization">1. Dependency Graph Visualization</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#system-architecture-diagram">2. System Architecture Diagram</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-roadmap">3. Learning Roadmap</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#component-analysis">4. Component Analysis</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#quick-start">🚀 Quick Start</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-path-recommendations">📈 Learning Path Recommendations</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#for-instructors">🎓 For Instructors</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-resources">📚 Module Resources</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary">🎯 Summary</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Prof. Vijay Janapa Reddi (Harvard University)
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2025.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

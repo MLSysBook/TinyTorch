@@ -1,13 +1,12 @@
 
-
 <!DOCTYPE html>
 
 
-<html lang="en" data-content_root="" >
+<html lang="en" data-content_root="../" >
 
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>Module: Tensor &#8212; Tiny🔥Torch</title>
   
@@ -15,53 +14,49 @@
   
   <script data-cfasync="false">
     document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
-    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
   </script>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="../_static/styles/theme.css?digest=5b4479735964841361fd" rel="stylesheet" />
-<link href="../_static/styles/bootstrap.css?digest=5b4479735964841361fd" rel="stylesheet" />
-<link href="../_static/styles/pydata-sphinx-theme.css?digest=5b4479735964841361fd" rel="stylesheet" />
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
 
   
-  <link href="../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=5b4479735964841361fd" rel="stylesheet" />
-  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
 
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
-    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css?v=6644e6bb" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=5b4479735964841361fd" />
-<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=5b4479735964841361fd" />
-  <script src="../_static/vendor/fontawesome/6.1.2/js/all.min.js?digest=5b4479735964841361fd"></script>
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-    <script src="../_static/jquery.js"></script>
-    <script src="../_static/underscore.js"></script>
-    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-    <script src="../_static/doctools.js"></script>
-    <script src="../_static/clipboard.min.js"></script>
-    <script src="../_static/copybutton.js"></script>
-    <script src="../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
     <script>let toggleHintShow = 'Click to show';</script>
     <script>let toggleHintHide = 'Click to hide';</script>
     <script>let toggleOpenOnPrint = 'true';</script>
-    <script src="../_static/togglebutton.js"></script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
-    <script src="../_static/design-tabs.js"></script>
-    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
-const thebe_selector = ".thebe,.cell"
-const thebe_selector_input = "pre"
-const thebe_selector_output = ".output, .cell_output"
-</script>
-    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <script src="../_static/design-tabs.js?v=36754332"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'chapters/02-tensor';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -76,28 +71,23 @@ const thebe_selector_output = ".output, .cell_output"
 
   
   
-  <a class="skip-link" href="#main-content">Skip to main content</a>
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
   
   <div id="pst-scroll-pixel-helper"></div>
-
   
   <button type="button" class="btn rounded-pill" id="pst-back-to-top">
-    <i class="fa-solid fa-arrow-up"></i>
-    Back to top
-  </button>
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
 
   
   <input type="checkbox"
           class="sidebar-toggle"
-          name="__primary"
-          id="__primary"/>
-  <label class="overlay overlay-primary" for="__primary"></label>
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
   
   <input type="checkbox"
           class="sidebar-toggle"
-          name="__secondary"
-          id="__secondary"/>
-  <label class="overlay overlay-secondary" for="__secondary"></label>
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
   
   <div class="search-button__wrapper">
     <div class="search-button__overlay"></div>
@@ -119,12 +109,20 @@ const thebe_selector_output = ".output, .cell_output"
   <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
 </form></div>
   </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
   
-    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
-    </nav>
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
   
+
   <div class="bd-container">
     <div class="bd-container__inner bd-page-width">
+      
+      
       
       <div class="bd-sidebar-primary bd-sidebar">
         
@@ -140,6 +138,8 @@ const thebe_selector_output = ".output, .cell_output"
     <div class="sidebar-primary-items__start sidebar-primary__section">
         <div class="sidebar-primary-item">
 
+  
+    
   
 
 <a class="navbar-brand logo" href="../intro.html">
@@ -158,7 +158,18 @@ const thebe_selector_output = ".output, .cell_output"
   
   
 </a></div>
-        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item navbar-nav active">
         
         <ul class="nav bd-sidenav bd-sidenav__home-link">
@@ -173,40 +184,46 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l1"><a class="reference internal" href="../usage-paths/quick-exploration.html">🔬 Quick Exploration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../usage-paths/serious-development.html">🏗️ Serious Development</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../usage-paths/classroom-use.html">👨‍🏫 Classroom Use</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../instructor-guide.html">📚 Instructor Guide</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Course Orientation</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="00-introduction.html">Introduction</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Foundation</span></p>
 <ul class="current nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="01-setup.html">1. Setup</a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">2. Tensors</a></li>
-<li class="toctree-l1"><a class="reference internal" href="03-activations.html">3. Activations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01-setup.html">0. Setup</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">1. Tensors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="03-activations.html">2. Activations</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Building Blocks</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="04-layers.html">4. Layers</a></li>
-<li class="toctree-l1"><a class="reference internal" href="05-dense.html">5. Dense</a></li>
-<li class="toctree-l1"><a class="reference internal" href="06-spatial.html">6. Spatial</a></li>
-<li class="toctree-l1"><a class="reference internal" href="07-attention.html">7. Attention</a></li>
+<li class="toctree-l1"><a class="reference internal" href="04-layers.html">3. Layers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="05-dense.html">4. Dense</a></li>
+<li class="toctree-l1"><a class="reference internal" href="06-spatial.html">5. Spatial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="07-attention.html">6. Attention</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Training Systems</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="08-dataloader.html">8. DataLoader</a></li>
-<li class="toctree-l1"><a class="reference internal" href="09-autograd.html">9. Autograd</a></li>
-<li class="toctree-l1"><a class="reference internal" href="10-optimizers.html">10. Optimizers</a></li>
-<li class="toctree-l1"><a class="reference internal" href="11-training.html">11. Training</a></li>
+<li class="toctree-l1"><a class="reference internal" href="08-dataloader.html">7. DataLoader</a></li>
+<li class="toctree-l1"><a class="reference internal" href="09-autograd.html">8. Autograd</a></li>
+<li class="toctree-l1"><a class="reference internal" href="10-optimizers.html">9. Optimizers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="11-training.html">10. Training</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Inference &amp; Serving</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="12-compression.html">12. Compression</a></li>
-<li class="toctree-l1"><a class="reference internal" href="13-kernels.html">13. Kernels</a></li>
-<li class="toctree-l1"><a class="reference internal" href="14-benchmarking.html">14. Benchmarking</a></li>
-<li class="toctree-l1"><a class="reference internal" href="15-mlops.html">15. MLOps</a></li>
+<li class="toctree-l1"><a class="reference internal" href="12-compression.html">11. Compression</a></li>
+<li class="toctree-l1"><a class="reference internal" href="13-kernels.html">12. Kernels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="14-benchmarking.html">13. Benchmarking</a></li>
+<li class="toctree-l1"><a class="reference internal" href="15-mlops.html">14. MLOps</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Capstone Project</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="16-capstone.html">16. Capstone</a></li>
+<li class="toctree-l1"><a class="reference internal" href="16-capstone.html">15. Capstone</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Additional Resources</span></p>
 <ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../vision.html">🎯 TinyTorch Vision</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../resources.html">📚 Learning Resources</a></li>
 </ul>
 
@@ -223,7 +240,7 @@ const thebe_selector_output = ".output, .cell_output"
 
       </div>
       
-      <main id="main-content" class="bd-main">
+      <main id="main-content" class="bd-main" role="main">
         
         
 
@@ -232,14 +249,14 @@ const thebe_selector_output = ".output, .cell_output"
           <div class="bd-content">
             <div class="bd-article-container">
               
-              <div class="bd-header-article">
+              <div class="bd-header-article d-print-none">
 <div class="header-article-items header-article__inner">
   
     <div class="header-article-items__start">
       
-        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
   <span class="fa-solid fa-bars"></span>
-</label></div>
+</button></div>
       
     </div>
   
@@ -381,10 +398,10 @@ const thebe_selector_output = ".output, .cell_output"
 
 <script>
 document.write(`
-  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
-    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
-    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
   </button>
 `);
 </script>
@@ -392,14 +409,14 @@ document.write(`
 
 <script>
 document.write(`
-  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <i class="fa-solid fa-magnifying-glass fa-lg"></i>
   </button>
 `);
 </script>
-<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <span class="fa-solid fa-list"></span>
-</label>
+</button>
 </div></div>
       
     </div>
@@ -457,15 +474,15 @@ document.write(`
               
                 
 <div id="searchbox"></div>
-                <article class="bd-article" role="main">
+                <article class="bd-article">
                   
   <section class="tex2jax_ignore mathjax_ignore" id="module-tensor">
-<h1>Module: Tensor<a class="headerlink" href="#module-tensor" title="Permalink to this heading">#</a></h1>
+<h1>Module: Tensor<a class="headerlink" href="#module-tensor" title="Link to this heading">#</a></h1>
 <div class="badges docutils">
 <p>⭐⭐ | ⏱️ 4-6 hours</p>
 </div>
 <section id="module-info">
-<h2>📊 Module Info<a class="headerlink" href="#module-info" title="Permalink to this heading">#</a></h2>
+<h2>📊 Module Info<a class="headerlink" href="#module-info" title="Link to this heading">#</a></h2>
 <ul class="simple">
 <li><p><strong>Difficulty</strong>: ⭐⭐ Intermediate</p></li>
 <li><p><strong>Time Estimate</strong>: 4-6 hours</p></li>
@@ -475,7 +492,7 @@ document.write(`
 <p>Build the foundation of TinyTorch! This module implements the core Tensor class - the fundamental data structure that powers all neural networks and machine learning operations.</p>
 </section>
 <section id="learning-objectives">
-<h2>🎯 Learning Objectives<a class="headerlink" href="#learning-objectives" title="Permalink to this heading">#</a></h2>
+<h2>🎯 Learning Objectives<a class="headerlink" href="#learning-objectives" title="Link to this heading">#</a></h2>
 <p>By the end of this module, you will:</p>
 <ul class="simple">
 <li><p><strong>Understand what tensors are</strong> and why they’re essential for ML</p></li>
@@ -486,7 +503,7 @@ document.write(`
 </ul>
 </section>
 <section id="build-use-understand">
-<h2>🧠 Build → Use → Understand<a class="headerlink" href="#build-use-understand" title="Permalink to this heading">#</a></h2>
+<h2>🧠 Build → Use → Understand<a class="headerlink" href="#build-use-understand" title="Link to this heading">#</a></h2>
 <ol class="arabic simple">
 <li><p><strong>Build</strong>: Complete Tensor class with arithmetic operations, shape management, and reductions</p></li>
 <li><p><strong>Use</strong>: Create tensors, perform operations, and validate with real data</p></li>
@@ -494,9 +511,9 @@ document.write(`
 </ol>
 </section>
 <section id="what-you-ll-build">
-<h2>📚 What You’ll Build<a class="headerlink" href="#what-you-ll-build" title="Permalink to this heading">#</a></h2>
+<h2>📚 What You’ll Build<a class="headerlink" href="#what-you-ll-build" title="Link to this heading">#</a></h2>
 <section id="core-tensor-class">
-<h3>Core Tensor Class<a class="headerlink" href="#core-tensor-class" title="Permalink to this heading">#</a></h3>
+<h3>Core Tensor Class<a class="headerlink" href="#core-tensor-class" title="Link to this heading">#</a></h3>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Creating tensors</span>
 <span class="n">x</span> <span class="o">=</span> <span class="n">Tensor</span><span class="p">([[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">3.0</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">]])</span>
 <span class="n">y</span> <span class="o">=</span> <span class="n">Tensor</span><span class="p">([[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">],</span> <span class="p">[</span><span class="mf">2.5</span><span class="p">,</span> <span class="mf">3.5</span><span class="p">]])</span>
@@ -522,7 +539,7 @@ document.write(`
 </div>
 </section>
 <section id="essential-operations">
-<h3>Essential Operations<a class="headerlink" href="#essential-operations" title="Permalink to this heading">#</a></h3>
+<h3>Essential Operations<a class="headerlink" href="#essential-operations" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p><strong>Arithmetic</strong>: Addition, subtraction, multiplication, division, powers</p></li>
 <li><p><strong>Shape management</strong>: Reshape, transpose, broadcasting rules</p></li>
@@ -532,15 +549,15 @@ document.write(`
 </section>
 </section>
 <section id="getting-started">
-<h2>🚀 Getting Started<a class="headerlink" href="#getting-started" title="Permalink to this heading">#</a></h2>
+<h2>🚀 Getting Started<a class="headerlink" href="#getting-started" title="Link to this heading">#</a></h2>
 <section id="prerequisites-check">
-<h3>Prerequisites Check<a class="headerlink" href="#prerequisites-check" title="Permalink to this heading">#</a></h3>
+<h3>Prerequisites Check<a class="headerlink" href="#prerequisites-check" title="Link to this heading">#</a></h3>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--module<span class="w"> </span>setup<span class="w">  </span><span class="c1"># Should pass ✅</span>
 </pre></div>
 </div>
 </section>
 <section id="development-workflow">
-<h3>Development Workflow<a class="headerlink" href="#development-workflow" title="Permalink to this heading">#</a></h3>
+<h3>Development Workflow<a class="headerlink" href="#development-workflow" title="Link to this heading">#</a></h3>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Navigate to tensor module</span>
 <span class="nb">cd</span><span class="w"> </span>modules/source/02_tensor
 
@@ -551,7 +568,7 @@ jupyter<span class="w"> </span>notebook<span class="w"> </span>tensor_dev.ipynb
 </div>
 </section>
 <section id="step-by-step-implementation">
-<h3>Step-by-Step Implementation<a class="headerlink" href="#step-by-step-implementation" title="Permalink to this heading">#</a></h3>
+<h3>Step-by-Step Implementation<a class="headerlink" href="#step-by-step-implementation" title="Link to this heading">#</a></h3>
 <ol class="arabic simple">
 <li><p><strong>Basic Tensor class</strong> - Constructor and properties</p></li>
 <li><p><strong>Shape management</strong> - Understanding tensor dimensions</p></li>
@@ -562,9 +579,9 @@ jupyter<span class="w"> </span>notebook<span class="w"> </span>tensor_dev.ipynb
 </section>
 </section>
 <section id="testing-your-implementation">
-<h2>🧪 Testing Your Implementation<a class="headerlink" href="#testing-your-implementation" title="Permalink to this heading">#</a></h2>
+<h2>🧪 Testing Your Implementation<a class="headerlink" href="#testing-your-implementation" title="Link to this heading">#</a></h2>
 <section id="inline-testing">
-<h3>Inline Testing<a class="headerlink" href="#inline-testing" title="Permalink to this heading">#</a></h3>
+<h3>Inline Testing<a class="headerlink" href="#inline-testing" title="Link to this heading">#</a></h3>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Test in the notebook or Python REPL</span>
 <span class="n">x</span> <span class="o">=</span> <span class="n">Tensor</span><span class="p">([[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">3.0</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">]])</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Shape: </span><span class="si">{</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>  <span class="c1"># Should be (2, 2)</span>
@@ -573,7 +590,7 @@ jupyter<span class="w"> </span>notebook<span class="w"> </span>tensor_dev.ipynb
 </div>
 </section>
 <section id="module-tests">
-<h3>Module Tests<a class="headerlink" href="#module-tests" title="Permalink to this heading">#</a></h3>
+<h3>Module Tests<a class="headerlink" href="#module-tests" title="Link to this heading">#</a></h3>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Export your tensor implementation</span>
 tito<span class="w"> </span><span class="nb">export</span>
 
@@ -583,9 +600,9 @@ tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>
 </div>
 </section>
 <section id="manual-verification">
-<h3>Manual Verification<a class="headerlink" href="#manual-verification" title="Permalink to this heading">#</a></h3>
+<h3>Manual Verification<a class="headerlink" href="#manual-verification" title="Link to this heading">#</a></h3>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Create and test tensors</span>
-<span class="kn">from</span> <span class="nn">tinytorch.core.tensor</span> <span class="kn">import</span> <span class="n">Tensor</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tinytorch.core.tensor</span><span class="w"> </span><span class="kn">import</span> <span class="n">Tensor</span>
 
 <span class="n">x</span> <span class="o">=</span> <span class="n">Tensor</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">])</span>
 <span class="n">y</span> <span class="o">=</span> <span class="n">Tensor</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">10</span><span class="p">])</span>
@@ -599,9 +616,9 @@ tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>
 </section>
 </section>
 <section id="key-concepts">
-<h2>🎯 Key Concepts<a class="headerlink" href="#key-concepts" title="Permalink to this heading">#</a></h2>
+<h2>🎯 Key Concepts<a class="headerlink" href="#key-concepts" title="Link to this heading">#</a></h2>
 <section id="tensors-as-universal-data-structures">
-<h3><strong>Tensors as Universal Data Structures</strong><a class="headerlink" href="#tensors-as-universal-data-structures" title="Permalink to this heading">#</a></h3>
+<h3><strong>Tensors as Universal Data Structures</strong><a class="headerlink" href="#tensors-as-universal-data-structures" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p><strong>Scalars</strong>: 0-dimensional tensors (single numbers)</p></li>
 <li><p><strong>Vectors</strong>: 1-dimensional tensors (arrays)</p></li>
@@ -610,7 +627,7 @@ tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>
 </ul>
 </section>
 <section id="why-tensors-matter-in-ml">
-<h3><strong>Why Tensors Matter in ML</strong><a class="headerlink" href="#why-tensors-matter-in-ml" title="Permalink to this heading">#</a></h3>
+<h3><strong>Why Tensors Matter in ML</strong><a class="headerlink" href="#why-tensors-matter-in-ml" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p><strong>Neural networks</strong>: All computations operate on tensors</p></li>
 <li><p><strong>GPU acceleration</strong>: operates on tensor primitives</p></li>
@@ -619,7 +636,7 @@ tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>
 </ul>
 </section>
 <section id="real-world-connections">
-<h3><strong>Real-World Connections</strong><a class="headerlink" href="#real-world-connections" title="Permalink to this heading">#</a></h3>
+<h3><strong>Real-World Connections</strong><a class="headerlink" href="#real-world-connections" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p><strong>PyTorch/TensorFlow</strong>: Your implementation mirrors production frameworks</p></li>
 <li><p><strong>NumPy</strong>: Foundation for scientific computing (we build similar abstractions)</p></li>
@@ -627,7 +644,7 @@ tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>
 </ul>
 </section>
 <section id="memory-and-performance">
-<h3><strong>Memory and Performance</strong><a class="headerlink" href="#memory-and-performance" title="Permalink to this heading">#</a></h3>
+<h3><strong>Memory and Performance</strong><a class="headerlink" href="#memory-and-performance" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p><strong>Data layout</strong>: How tensors store data efficiently</p></li>
 <li><p><strong>Broadcasting</strong>: Smart operations without data copying</p></li>
@@ -636,7 +653,7 @@ tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>
 </section>
 </section>
 <section id="ready-to-build">
-<h2>🎉 Ready to Build?<a class="headerlink" href="#ready-to-build" title="Permalink to this heading">#</a></h2>
+<h2>🎉 Ready to Build?<a class="headerlink" href="#ready-to-build" title="Link to this heading">#</a></h2>
 <p>The tensor module is where TinyTorch really begins. You’re about to create the fundamental building block that will power neural networks, training loops, and production ML systems.</p>
 <p>Take your time, test thoroughly, and enjoy building something that really works! 🔥</p>
 <p>Choose your preferred way to engage with this module:</p>
@@ -649,16 +666,16 @@ tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>
 🚀 Launch Binder</div>
 <p class="sd-card-text">Run this module interactively in your browser. No installation required!</p>
 </div>
-<a class="sd-stretched-link reference external" href="https://mybinder.org/v2/gh/mlsysbook/TinyTorch/main?filepath=modules/source/02_tensor/tensor_dev.ipynb"></a></div>
+<a class="sd-stretched-link sd-hide-link-text reference external" href="https://mybinder.org/v2/gh/mlsysbook/TinyTorch/main?filepath=modules/source/02_tensor/tensor_dev.ipynb"><span>https://mybinder.org/v2/gh/mlsysbook/TinyTorch/main?filepath=modules/source/02_tensor/tensor_dev.ipynb</span></a></div>
 </div>
 <div class="sd-col sd-d-flex-row docutils">
 <div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm sd-card-hover docutils">
 <div class="sd-card-body docutils">
 <div class="sd-card-title sd-font-weight-bold docutils">
-⚡ Open in Colab  </div>
+⚡ Open in Colab</div>
 <p class="sd-card-text">Use Google Colab for GPU access and cloud compute power.</p>
 </div>
-<a class="sd-stretched-link reference external" href="https://colab.research.google.com/github/mlsysbook/TinyTorch/blob/main/modules/source/02_tensor/tensor_dev.ipynb"></a></div>
+<a class="sd-stretched-link sd-hide-link-text reference external" href="https://colab.research.google.com/github/mlsysbook/TinyTorch/blob/main/modules/source/02_tensor/tensor_dev.ipynb"><span>https://colab.research.google.com/github/mlsysbook/TinyTorch/blob/main/modules/source/02_tensor/tensor_dev.ipynb</span></a></div>
 </div>
 <div class="sd-col sd-d-flex-row docutils">
 <div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm sd-card-hover docutils">
@@ -667,14 +684,14 @@ tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>
 📖 View Source</div>
 <p class="sd-card-text">Browse the Python source code and understand the implementation.</p>
 </div>
-<a class="sd-stretched-link reference external" href="https://github.com/mlsysbook/TinyTorch/blob/main/modules/source/02_tensor/tensor_dev.py"></a></div>
+<a class="sd-stretched-link sd-hide-link-text reference external" href="https://github.com/mlsysbook/TinyTorch/blob/main/modules/source/02_tensor/tensor_dev.py"><span>https://github.com/mlsysbook/TinyTorch/blob/main/modules/source/02_tensor/tensor_dev.py</span></a></div>
 </div>
 </div>
 </div>
 <div class="tip admonition">
 <p class="admonition-title">💾 Save Your Progress</p>
 <p><strong>Binder sessions are temporary!</strong> Download your completed notebook when done, or switch to local development for persistent work.</p>
-<p>Ready for serious development? → <a class="reference internal" href="../usage-paths/serious-development.html"><span class="doc std std-doc">🏗️ Local Setup Guide</span></a></p>
+<p>Ready for serious development? → <a class="reference internal" href="../usage-paths/serious-development.html"><span class="std std-doc">🏗️ Local Setup Guide</span></a></p>
 </div>
 <hr class="docutils" />
 <div class="prev-next-area">
@@ -711,7 +728,7 @@ tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>
               
               
               
-                <footer class="prev-next-footer">
+                <footer class="prev-next-footer d-print-none">
                   
 <div class="prev-next-area">
     <a class="left-prev"
@@ -740,6 +757,7 @@ tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>
             
               
                 <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
 
   <div class="sidebar-secondary-item">
   <div class="page-toc tocsection onthispage">
@@ -823,8 +841,8 @@ By Prof. Vijay Janapa Reddi (Harvard University)
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="../_static/scripts/bootstrap.js?digest=5b4479735964841361fd"></script>
-<script src="../_static/scripts/pydata-sphinx-theme.js?digest=5b4479735964841361fd"></script>
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
 
   <footer class="bd-footer">
   </footer>
