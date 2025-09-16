@@ -6,11 +6,11 @@ c = get_config()
 c.CourseDirectory.course_id = "tinytorch-ml-systems"
 
 # Directory Structure
-c.CourseDirectory.source_directory = "modules/source"
-c.CourseDirectory.release_directory = "modules/release"
-c.CourseDirectory.submitted_directory = "modules/submitted"
-c.CourseDirectory.autograded_directory = "modules/autograded"
-c.CourseDirectory.feedback_directory = "modules/feedback"
+c.CourseDirectory.source_directory = "assignments/source"
+c.CourseDirectory.release_directory = "assignments/release"
+c.CourseDirectory.submitted_directory = "assignments/submitted"
+c.CourseDirectory.autograded_directory = "assignments/autograded"
+c.CourseDirectory.feedback_directory = "assignments/feedback"
 
 # Solution Removal Configuration
 c.ClearSolutions.code_stub = {
