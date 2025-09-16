@@ -35,6 +35,7 @@ from .commands.module import ModuleCommand
 from .commands.package import PackageCommand
 from .commands.nbgrader import NBGraderCommand
 from .commands.book import BookCommand
+from .commands.milestone import MilestoneCommand
 
 # Configure logging
 logging.basicConfig(
@@ -61,6 +62,7 @@ class TinyTorchCLI:
             'module': ModuleCommand,
             'package': PackageCommand,
             'nbgrader': NBGraderCommand,
+            'milestone': MilestoneCommand,
             # Convenience commands
             'export': ExportCommand,
             'test': TestCommand,
@@ -79,6 +81,7 @@ Command Groups:
   module      Module development and management commands  
   package     Package management and nbdev integration commands
   nbgrader    Assignment management and auto-grading commands
+  milestone   Track ML systems engineering progress and capabilities
 
 Convenience Commands:
   export      Export modules to package (quick shortcut)
@@ -186,7 +189,8 @@ Examples:
                     "  [bold green]system[/bold green]   - System environment and configuration\n"
                     "  [bold green]module[/bold green]   - Module development and management\n"
                     "  [bold green]package[/bold green]  - Package management and nbdev integration\n"
-                    "  [bold green]nbgrader[/bold green] - Assignment management and auto-grading\n\n"
+                    "  [bold green]nbgrader[/bold green] - Assignment management and auto-grading\n"
+                    "  [bold green]milestone[/bold green] - Track ML systems engineering progress\n\n"
                     "[bold]Convenience Commands:[/bold]\n"
                     "  [bold green]export[/bold green]   - Export modules to package\n"
                     "  [bold green]test[/bold green]     - Run tests\n"
@@ -198,12 +202,15 @@ Examples:
                     "  [dim]tito export --all[/dim]             - Export all modules to package\n"
                     "  [dim]tito nbgrader generate setup[/dim]  - Generate assignment from setup module\n"
                     "  [dim]tito book build[/dim]               - Build the Jupyter Book locally\n"
-                    "  [dim]tito book publish[/dim]             - Generate, commit, and publish to GitHub\n\n"
+                    "  [dim]tito book publish[/dim]             - Generate, commit, and publish to GitHub\n"
+                    "  [dim]tito milestone status[/dim]         - Show current progress and capabilities\n"
+                    "  [dim]tito milestone timeline[/dim]       - Visual progress timeline\n\n"
                     "[bold]Get Help:[/bold]\n"
                     "  [dim]tito system[/dim]                   - Show system subcommands\n"
                     "  [dim]tito module[/dim]                   - Show module subcommands\n"
                     "  [dim]tito package[/dim]                  - Show package subcommands\n"
                     "  [dim]tito nbgrader[/dim]                 - Show nbgrader subcommands\n"
+                    "  [dim]tito milestone[/dim]                - Show milestone subcommands\n"
                     "  [dim]tito book[/dim]                     - Show book subcommands\n"
                     "  [dim]tito --help[/dim]                   - Show full help",
                     title="TinyTorch CLI",
