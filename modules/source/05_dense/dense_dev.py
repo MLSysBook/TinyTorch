@@ -206,6 +206,12 @@ class Sequential:
         HINTS:
         - Use self.layers to store the layers
         - Handle empty initialization case
+        
+        LEARNING CONNECTIONS:
+        - This is equivalent to torch.nn.Sequential in PyTorch
+        - Used in every neural network to chain layers together
+        - Foundation for models like VGG, ResNet, and transformers
+        - Enables modular network design and experimentation
         """
         ### BEGIN SOLUTION
         self.layers = layers if layers is not None else []
@@ -241,6 +247,12 @@ class Sequential:
         - Apply each layer: x = layer(x)
         - The output of one layer becomes input to the next
         - Return the final result
+        
+        LEARNING CONNECTIONS:
+        - This is the core of feedforward neural networks
+        - Powers inference in every deployed model
+        - Critical for real-time predictions in production
+        - Foundation for gradient flow in backpropagation
         """
         ### BEGIN SOLUTION
         # Apply each layer in sequence
@@ -394,6 +406,12 @@ def create_mlp(input_size: int, hidden_sizes: List[int], output_size: int,
     - For each hidden_size: add Dense(current_size, hidden_size), then activation
     - Finally add Dense(last_hidden_size, output_size), then output_activation
     - Return Sequential(layers)
+    
+    LEARNING CONNECTIONS:
+    - This pattern is used in every feedforward network implementation
+    - Foundation for architectures like autoencoders and GANs
+    - Enables rapid prototyping of neural architectures
+    - Similar to tf.keras.Sequential with Dense layers
     """
     layers = []
     current_size = input_size
@@ -1031,6 +1049,12 @@ class NetworkStabilityMonitor:
         - Check: np.any(np.isinf(tensor.data))
         - Check: np.any(np.abs(tensor.data) > self.warning_threshold)
         - Return dict with analysis
+        
+        LEARNING CONNECTIONS:
+        - Critical for debugging exploding/vanishing gradients
+        - Used in production monitoring systems at scale
+        - Foundation for automated model health checks
+        - Similar to TensorBoard's histogram monitoring
         """
         ### BEGIN SOLUTION
         data = tensor.data
@@ -1111,6 +1135,12 @@ class NetworkStabilityMonitor:
         - Simple loss: 0.5 * np.sum((output.data - target_output.data)**2)
         - Use small perturbations to estimate gradients
         - Vanishing: gradients < 1e-6, Exploding: gradients > 1e3
+        
+        LEARNING CONNECTIONS:
+        - Essential for training deep networks successfully
+        - Used in gradient clipping and batch normalization design
+        - Foundation for understanding network initialization strategies
+        - Similar to PyTorch's gradient debugging tools
         """
         ### BEGIN SOLUTION
         # Forward pass

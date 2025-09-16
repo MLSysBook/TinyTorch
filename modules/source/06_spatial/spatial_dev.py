@@ -145,7 +145,7 @@ def conv2d_naive(input: np.ndarray, kernel: np.ndarray) -> np.ndarray:
         
     TODO: Implement the sliding window convolution using for-loops.
     
-    APPROACH:
+    STEP-BY-STEP IMPLEMENTATION:
     1. Get input dimensions: H, W = input.shape
     2. Get kernel dimensions: kH, kW = kernel.shape
     3. Calculate output dimensions: out_H = H - kH + 1, out_W = W - kW + 1
@@ -156,6 +156,12 @@ def conv2d_naive(input: np.ndarray, kernel: np.ndarray) -> np.ndarray:
        - di loop: kernel rows (0 to kH-1)
        - dj loop: kernel columns (0 to kW-1)
     6. For each (i,j), compute: output[i,j] += input[i+di, j+dj] * kernel[di, dj]
+    
+    LEARNING CONNECTIONS:
+    - **Computer Vision Foundation**: Convolution is the core operation in CNNs and image processing
+    - **Feature Detection**: Different kernels detect edges, textures, and patterns in images
+    - **Spatial Hierarchies**: Convolution preserves spatial relationships while extracting features
+    - **Production CNNs**: Understanding the basic operation helps optimize GPU implementations
     
     EXAMPLE:
     Input: [[1, 2, 3],     Kernel: [[1, 0],
@@ -467,10 +473,16 @@ def flatten(x):
         
     TODO: Implement flattening operation.
     
-    APPROACH:
+    STEP-BY-STEP IMPLEMENTATION:
     1. Get the numpy array from the tensor
     2. Use .flatten() to convert to 1D
     3. Add batch dimension with [None, :]
+    
+    LEARNING CONNECTIONS:
+    - **CNN to MLP Transition**: Flattening connects convolutional and dense layers
+    - **Spatial to Vector**: Converts 2D feature maps to vectors for classification
+    - **Memory Layout**: Understanding how tensors are stored and reshaped in memory
+    - **Framework Design**: All major frameworks (PyTorch, TensorFlow) use similar patterns
     4. Return Tensor wrapped around the result
     
     EXAMPLE:
@@ -954,6 +966,18 @@ class ConvolutionProfiler:
         Profile convolution operations across different kernel sizes.
         
         TODO: Implement convolution operation profiling.
+        
+        STEP-BY-STEP IMPLEMENTATION:
+        1. Profile different kernel sizes and their computational costs
+        2. Measure memory usage patterns for spatial operations
+        3. Analyze cache efficiency and memory access patterns
+        4. Identify optimization opportunities for production systems
+        
+        LEARNING CONNECTIONS:
+        - **Performance Optimization**: Understanding computational costs of different kernel sizes
+        - **Memory Efficiency**: Cache-friendly access patterns improve performance significantly
+        - **Production Scaling**: Profiling guides hardware selection and deployment strategies
+        - **GPU Optimization**: Spatial operations are ideal for parallel processing
         
         APPROACH:
         1. Time convolution operations with different kernel sizes

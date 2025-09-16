@@ -249,7 +249,7 @@ class BenchmarkScenarios:
     
     TODO: Implement the three benchmark scenarios following MLPerf patterns.
     
-    UNDERSTANDING THE SCENARIOS:
+    STEP-BY-STEP IMPLEMENTATION:
     1. Single-Stream: Send queries one at a time, measure latency
     2. Server: Send queries following Poisson distribution, measure QPS
     3. Offline: Send all queries at once, measure total throughput
@@ -259,6 +259,12 @@ class BenchmarkScenarios:
     2. Collect latency measurements for each run
     3. Calculate appropriate metrics for each scenario
     4. Return BenchmarkResult with all measurements
+    
+    LEARNING CONNECTIONS:
+    - **MLPerf Standards**: Industry-standard benchmarking methodology used by Google, NVIDIA, etc.
+    - **Performance Scenarios**: Different deployment patterns require different measurement approaches
+    - **Production Validation**: Benchmarking validates model performance before deployment
+    - **Resource Planning**: Results guide infrastructure scaling and capacity planning
     
     EXAMPLE USAGE:
     scenarios = BenchmarkScenarios()
@@ -275,7 +281,7 @@ class BenchmarkScenarios:
         
         TODO: Implement single-stream benchmarking.
         
-        STEP-BY-STEP:
+        STEP-BY-STEP IMPLEMENTATION:
         1. Initialize empty list for latencies
         2. For each query (up to num_queries):
            a. Get next sample from dataset (cycle if needed)
@@ -287,6 +293,12 @@ class BenchmarkScenarios:
         3. Calculate throughput = num_queries / total_time
         4. Calculate accuracy if possible
         5. Return BenchmarkResult with SINGLE_STREAM scenario
+        
+        LEARNING CONNECTIONS:
+        - **Mobile/Edge Deployment**: Single-stream simulates user-facing applications
+        - **Tail Latency**: 90th/95th percentiles matter more than averages for user experience
+        - **Interactive Systems**: Chatbots, recommendation engines use single-stream patterns
+        - **SLA Validation**: Ensures models meet response time requirements
         
         HINTS:
         - Use time.perf_counter() for precise timing
@@ -337,7 +349,7 @@ class BenchmarkScenarios:
         
         TODO: Implement server benchmarking.
         
-        STEP-BY-STEP:
+        STEP-BY-STEP IMPLEMENTATION:
         1. Calculate inter-arrival time = 1.0 / target_qps
         2. Run for specified duration:
            a. Wait for next query arrival (Poisson distribution)
@@ -347,6 +359,12 @@ class BenchmarkScenarios:
            e. Record end time and latency
         3. Calculate actual QPS = total_queries / duration
         4. Return results
+        
+        LEARNING CONNECTIONS:
+        - **Web Services**: Server scenario simulates API endpoints handling concurrent requests
+        - **Load Testing**: Validates system behavior under realistic traffic patterns
+        - **Scalability Analysis**: Tests how well models handle increasing load
+        - **Production Deployment**: Critical for microservices and web-scale applications
         
         HINTS:
         - Use np.random.exponential(inter_arrival_time) for Poisson
@@ -400,7 +418,7 @@ class BenchmarkScenarios:
         
         TODO: Implement offline benchmarking.
         
-        STEP-BY-STEP:
+        STEP-BY-STEP IMPLEMENTATION:
         1. Group dataset into batches of batch_size
         2. For each batch:
            a. Record start time
@@ -409,6 +427,12 @@ class BenchmarkScenarios:
            d. Calculate batch latency
         3. Calculate total throughput = total_samples / total_time
         4. Return results
+        
+        LEARNING CONNECTIONS:
+        - **Batch Processing**: Offline scenario simulates data pipeline and ETL workloads
+        - **Throughput Optimization**: Maximizes processing efficiency for large datasets
+        - **Data Center Workloads**: Common in recommendation systems and analytics pipelines
+        - **Cost Optimization**: High throughput reduces compute costs per sample
         
         HINTS:
         - Process data in batches for efficiency
@@ -521,7 +545,7 @@ class StatisticalValidator:
     
     TODO: Implement statistical validation for benchmark results.
     
-    UNDERSTANDING STATISTICAL TESTING:
+    STEP-BY-STEP IMPLEMENTATION:
     1. Null hypothesis: No difference between models
     2. T-test: Compare means of two groups
     3. P-value: Probability of seeing this difference by chance
@@ -534,6 +558,12 @@ class StatisticalValidator:
     3. Calculate effect size (Cohen's d)
     4. Calculate confidence interval
     5. Provide clear recommendation
+    
+    LEARNING CONNECTIONS:
+    - **Scientific Rigor**: Ensures performance claims are statistically valid
+    - **A/B Testing**: Foundation for production model comparison and rollout decisions
+    - **Research Validation**: Required for academic papers and technical reports
+    - **Business Decisions**: Statistical significance guides investment in new models
     """
     
     def __init__(self, confidence_level: float = 0.95):
@@ -733,7 +763,7 @@ class TinyTorchPerf:
     
     TODO: Implement the complete benchmarking framework.
     
-    UNDERSTANDING THE FRAMEWORK:
+    STEP-BY-STEP IMPLEMENTATION:
     1. Combines all benchmark scenarios
     2. Integrates statistical validation
     3. Provides easy-to-use API
@@ -744,6 +774,12 @@ class TinyTorchPerf:
     2. Provide methods for each scenario
     3. Include statistical validation
     4. Generate comprehensive reports
+    
+    LEARNING CONNECTIONS:
+    - **MLPerf Integration**: Follows industry-standard benchmarking patterns
+    - **Production Deployment**: Validates models before production rollout
+    - **Performance Engineering**: Identifies bottlenecks and optimization opportunities
+    - **Framework Design**: Demonstrates how to build reusable ML tools
     """
     
     def __init__(self):
@@ -1376,13 +1412,19 @@ class ProductionBenchmarkingProfiler:
     
     TODO: Implement production-grade profiling capabilities.
     
-    UNDERSTANDING PRODUCTION PROFILING:
+    STEP-BY-STEP IMPLEMENTATION:
     1. End-to-end pipeline analysis (not just model inference)
     2. Resource utilization monitoring (CPU, memory, bandwidth)
     3. Statistical A/B testing frameworks
     4. Production monitoring and alerting integration
     5. Performance regression detection
     6. Load testing and capacity planning
+    
+    LEARNING CONNECTIONS:
+    - **Production ML Systems**: Real-world profiling for deployment optimization
+    - **Performance Engineering**: Systematic approach to identifying and fixing bottlenecks
+    - **A/B Testing**: Statistical frameworks for safe model rollouts
+    - **Cost Optimization**: Understanding resource usage for efficient cloud deployment
     """
     
     def __init__(self, enable_monitoring: bool = True):
