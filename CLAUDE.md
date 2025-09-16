@@ -313,6 +313,35 @@ Implementation → Test Explanation (Markdown) → Test Code → Next Implementa
 ✅ **Good**: "How might GPU memory management differ from your NumPy-based approach?"  
 ❌ **Too Complex**: "Implement GPU memory pooling with CUDA memory management..."
 
+### 🎯 ML Systems Content Integration - CURRENT STATUS
+
+**ML Systems rationale and content is ALREADY INTEGRATED** into the current TinyTorch structure:
+
+✅ **Memory Analysis**: Optimizer modules include memory profiling (Adam = 3× parameter memory)
+✅ **Performance Insights**: Production contexts in training, spatial, attention modules  
+✅ **System Trade-offs**: Memory vs speed analysis in multiple modules
+✅ **Production Context**: Real-world applications and deployment considerations
+✅ **Comprehensive Documentation**: System architecture guide with Mermaid diagrams
+✅ **NBGrader Integration**: Automated grading with instructor workflow
+✅ **Updated README**: Emphasizes system-level learning and ML engineering skills
+
+**Key ML Systems Concepts Covered:**
+- **Module 02 (Tensor)**: Memory layout and performance implications
+- **Module 06 (Spatial)**: Cache efficiency and memory access patterns  
+- **Module 07 (Attention)**: O(N²) scaling and memory bottlenecks
+- **Module 09 (Autograd)**: Graph memory management and checkpointing
+- **Module 10 (Optimizers)**: Memory profiling, Adam 3× memory usage, production patterns
+- **Module 11 (Training)**: Gradient accumulation and resource management
+- **Module 13 (Kernels)**: Hardware acceleration and vectorization
+- **Module 14 (Benchmarking)**: Performance analysis and bottleneck identification
+- **Module 15 (MLOps)**: Production deployment and monitoring
+
+**Documentation Resources:**
+- `book/instructor-guide.md` - Complete NBGrader workflow for instructors
+- `book/system-architecture.md` - Visual system architecture with Mermaid diagrams  
+- `NBGrader_Quick_Reference.md` - Essential commands for daily use
+- Module README files - Learning objectives emphasizing system concepts
+
 ### 📝 Markdown Cell Format - CRITICAL
 ```python
 # CORRECT:
