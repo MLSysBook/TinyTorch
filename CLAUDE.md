@@ -94,6 +94,7 @@ git push origin dev
 Workflow Coordinator (Team Lead)
     ├── Education Architect (Strategy)
     ├── Module Developer (Implementation)
+    ├── Package Manager (Integration)
     ├── Quality Assurance (Validation)
     └── Documentation Publisher (Communication)
 ```
@@ -111,22 +112,31 @@ Workflow Coordinator (Team Lead)
    - Write code following specifications
    - Add NBGrader metadata
    - Create test scaffolding
+   - Add proper export directives (#| default_exp)
    - **MUST call QA Agent when done**
 
 3. **Testing Phase** (Quality Assurance) - **MANDATORY**
    - Run comprehensive test suite
    - Verify all functionality
-   - Report results to Workflow Coordinator
+   - Report results to Package Manager
    - **Block progress if tests fail**
 
-4. **Documentation Phase** (Documentation Publisher)
+4. **Integration Phase** (Package Manager) - **MANDATORY**
+   - Validate module exports correctly
+   - Check integration with other modules
+   - Run integration tests
+   - Ensure complete package works
+   - **Block progress if integration fails**
+
+5. **Documentation Phase** (Documentation Publisher)
    - Add explanatory markdown
    - Create ML systems thinking questions
    - Ensure clarity and consistency
 
-5. **Review Phase** (Workflow Coordinator)
+6. **Review Phase** (Workflow Coordinator)
    - Verify all agents completed their tasks
    - Ensure QA tests passed
+   - Confirm package integration successful
    - Approve for commit
 
 ### 🎯 Agent Communication Protocol
@@ -159,9 +169,10 @@ workflow_coordinator.plan_update(module="tensor")
 
 1. **Module Developer**: Cannot mark task complete without QA approval
 2. **QA Agent**: Must test EVERY change, no exceptions
-3. **Workflow Coordinator**: Cannot proceed without all agent sign-offs
-4. **Documentation Publisher**: Must verify code works before documenting
-5. **Education Architect**: Must validate learning objectives are met
+3. **Package Manager**: Must validate integration, can block releases
+4. **Workflow Coordinator**: Cannot proceed without all agent sign-offs
+5. **Documentation Publisher**: Must verify code works before documenting
+6. **Education Architect**: Must validate learning objectives are met
 
 ### 📝 Agent Handoff Checklist
 
@@ -273,7 +284,18 @@ Content here...
 - Code implementation and NBGrader metadata
 - Technical scaffolding and patterns
 - Implementation ONLY
+- Add export directives (#| default_exp)
 - **MUST notify QA Agent after ANY module changes**
+
+**Package Manager:**
+- Module integration and export validation
+- Dependency resolution between modules
+- Integration testing after exports
+- **MANDATORY: Validate ALL module exports**
+- **MUST ensure modules work together**
+- **MUST run integration tests**
+- **MUST verify complete package builds**
+- **MUST block release if integration fails**
 
 **Quality Assurance:**  
 - Test coverage and functionality
@@ -282,7 +304,7 @@ Content here...
 - **MUST run tests before ANY commit**
 - **MUST verify module imports correctly**
 - **MUST ensure all test functions work**
-- **MUST report test results to Workflow Coordinator**
+- **MUST report test results to Package Manager**
 
 **Documentation Publisher:**
 - Markdown prose and clarity
