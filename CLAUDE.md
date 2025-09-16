@@ -113,19 +113,16 @@ Before any merge:
 ## TinyTorch Module Development Standards
 
 ### 📚 Module Structure Requirements
-All TinyTorch modules MUST follow the standardized 10-part structure + ML systems reflection:
+All TinyTorch modules MUST follow the standardized structure:
 
-1. **Part 1: Concept** - What is [Topic]?
-2. **Part 2: Foundations** - Mathematical & Theoretical Background  
-3. **Part 3: Context** - Why This Matters
-4. **Part 4: Connections** - Real-World Examples
-5. **Part 5: Design** - Why Build From Scratch?
-6. **Part 6: Architecture** - Design Decisions
-7. **Part 7: Implementation** - Building [Module Name]
-8. **Part 8: Integration** - Bringing It Together
-9. **Part 9: Testing** - Comprehensive Validation
-10. **🤔 ML Systems Thinking: Reflection Questions**
-11. **Part 10: Module Summary**
+1. **Module Introduction** - What we're building and why
+2. **Mathematical Background** - Theory and foundations
+3. **Implementation** - Building the components step by step
+4. **Testing** - Immediate tests after each implementation
+5. **Integration** - How components work together  
+6. **Comprehensive Testing** - Full validation
+7. **ML Systems Thinking** - Reflection questions
+8. **Module Summary** - What was accomplished
 
 ### 🧪 Testing Pattern - MANDATORY
 ```
@@ -197,11 +194,11 @@ Content here...
 - Writing ONLY
 
 ### ⚠️ Critical Requirements
-- All 10+ parts must be present
+- All module sections must be present
 - Every test needs markdown explanation
 - ML systems reflection is mandatory
-- Use exact section headers for consistency
-- Maintain immediate testing pattern
+- Maintain immediate testing pattern (test after each implementation)
+- Use clear, consistent section organization
 
 ---
 
