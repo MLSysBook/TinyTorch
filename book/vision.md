@@ -155,7 +155,7 @@ ML Systems Thinking sections in every module:
 - Connection to industry practices and framework design decisions
 
 **🎯 Complete Integration**
-- 17 modules that build ONE cohesive ML framework
+- 16 modules that build ONE cohesive ML framework
 - Each component integrates with others (not isolated exercises)
 - Professional package structure with CLI tools and testing
 
