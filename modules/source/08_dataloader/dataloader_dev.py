@@ -1121,6 +1121,414 @@ test_module_dataloader_tensor_yield()
 
 # %% [markdown]
 """
+## 📊 ML Systems: I/O Pipeline Optimization & Bottleneck Analysis
+
+Now that you have data loading systems, let's develop **I/O optimization skills**. This section teaches you to identify and fix data loading bottlenecks that can dramatically slow down training in production systems.
+
+### **Learning Outcome**: *"I can identify and fix I/O bottlenecks that limit training speed"*
+
+---
+
+## Data Pipeline Profiler (Medium Guided Implementation)
+
+As an ML systems engineer, you need to ensure data loading doesn't become the bottleneck. Training GPUs can process data much faster than traditional storage can provide it. Let's build tools to measure and optimize data pipeline performance.
+"""
+
+# %%
+import time
+import os
+import threading
+from concurrent.futures import ThreadPoolExecutor
+
+class DataPipelineProfiler:
+    """
+    I/O pipeline profiling toolkit for data loading systems.
+    
+    Helps ML engineers identify bottlenecks in data loading pipelines
+    and optimize throughput for high-performance training systems.
+    """
+    
+    def __init__(self):
+        self.profiling_history = []
+        self.bottleneck_threshold = 0.1  # seconds per batch
+        
+    def time_dataloader_iteration(self, dataloader, num_batches=10):
+        """
+        Time how long it takes to iterate through DataLoader batches.
+        
+        TODO: Implement DataLoader timing analysis.
+        
+        STEP-BY-STEP IMPLEMENTATION:
+        1. Record start time
+        2. Iterate through specified number of batches
+        3. Time each batch loading
+        4. Calculate statistics (total, average, min, max times)
+        5. Identify if data loading is a bottleneck
+        6. Return comprehensive timing analysis
+        
+        EXAMPLE:
+        profiler = DataPipelineProfiler()
+        timing = profiler.time_dataloader_iteration(my_dataloader, 20)
+        print(f"Avg batch time: {timing['avg_batch_time']:.3f}s")
+        print(f"Bottleneck: {timing['is_bottleneck']}")
+        
+        HINTS:
+        - Use enumerate(dataloader) to get batches
+        - Time each batch: start = time.time(), batch = next(iter), end = time.time()
+        - Break after num_batches to avoid processing entire dataset
+        - Calculate: total_time, avg_time, min_time, max_time
+        - Bottleneck if avg_time > self.bottleneck_threshold
+        """
+        ### BEGIN SOLUTION
+        batch_times = []
+        total_start = time.time()
+        
+        try:
+            dataloader_iter = iter(dataloader)
+            for i in range(num_batches):
+                batch_start = time.time()
+                try:
+                    batch = next(dataloader_iter)
+                    batch_end = time.time()
+                    batch_time = batch_end - batch_start
+                    batch_times.append(batch_time)
+                except StopIteration:
+                    print(f"   DataLoader exhausted after {i} batches")
+                    break
+        except Exception as e:
+            print(f"   Error during iteration: {e}")
+            return {'error': str(e)}
+        
+        total_end = time.time()
+        total_time = total_end - total_start
+        
+        if batch_times:
+            avg_batch_time = sum(batch_times) / len(batch_times)
+            min_batch_time = min(batch_times)
+            max_batch_time = max(batch_times)
+            
+            # Check if data loading is a bottleneck
+            is_bottleneck = avg_batch_time > self.bottleneck_threshold
+            
+            # Calculate throughput
+            batches_per_second = len(batch_times) / total_time if total_time > 0 else 0
+            
+            return {
+                'total_time': total_time,
+                'num_batches': len(batch_times),
+                'avg_batch_time': avg_batch_time,
+                'min_batch_time': min_batch_time,
+                'max_batch_time': max_batch_time,
+                'batches_per_second': batches_per_second,
+                'is_bottleneck': is_bottleneck,
+                'bottleneck_threshold': self.bottleneck_threshold
+            }
+        else:
+            return {'error': 'No batches processed'}
+        ### END SOLUTION
+    
+    def analyze_batch_size_scaling(self, dataset, batch_sizes=[16, 32, 64, 128]):
+        """
+        Analyze how batch size affects data loading performance.
+        
+        TODO: Implement batch size scaling analysis.
+        
+        STEP-BY-STEP IMPLEMENTATION:
+        1. For each batch size, create a DataLoader
+        2. Time the data loading for each configuration
+        3. Calculate throughput (samples/second) for each
+        4. Identify optimal batch size for I/O performance
+        5. Return scaling analysis with recommendations
+        
+        EXAMPLE:
+        profiler = DataPipelineProfiler()
+        analysis = profiler.analyze_batch_size_scaling(my_dataset, [16, 32, 64])
+        print(f"Optimal batch size: {analysis['optimal_batch_size']}")
+        
+        HINTS:
+        - Create DataLoader: DataLoader(dataset, batch_size=bs, shuffle=False)
+        - Time with self.time_dataloader_iteration()
+        - Calculate: samples_per_second = batch_size * batches_per_second
+        - Find batch size with highest samples/second
+        - Consider memory constraints vs throughput
+        """
+        ### BEGIN SOLUTION
+        scaling_results = []
+        
+        for batch_size in batch_sizes:
+            print(f"   Testing batch size {batch_size}...")
+            
+            # Create DataLoader with current batch size
+            dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=False)
+            
+            # Time the data loading
+            timing_result = self.time_dataloader_iteration(dataloader, num_batches=min(10, len(dataset)//batch_size))
+            
+            if 'error' not in timing_result:
+                # Calculate throughput metrics
+                samples_per_second = batch_size * timing_result['batches_per_second']
+                
+                result = {
+                    'batch_size': batch_size,
+                    'avg_batch_time': timing_result['avg_batch_time'],
+                    'batches_per_second': timing_result['batches_per_second'],
+                    'samples_per_second': samples_per_second,
+                    'is_bottleneck': timing_result['is_bottleneck']
+                }
+                scaling_results.append(result)
+        
+        # Find optimal batch size (highest throughput)
+        if scaling_results:
+            optimal = max(scaling_results, key=lambda x: x['samples_per_second'])
+            optimal_batch_size = optimal['batch_size']
+            
+            return {
+                'scaling_results': scaling_results,
+                'optimal_batch_size': optimal_batch_size,
+                'max_throughput': optimal['samples_per_second']
+            }
+        else:
+            return {'error': 'No valid results obtained'}
+        ### END SOLUTION
+    
+    def compare_io_strategies(self, dataset, strategies=['sequential', 'shuffled']):
+        """
+        Compare different I/O strategies for data loading performance.
+        
+        This function is PROVIDED to demonstrate I/O optimization analysis.
+        Students use it to understand different data loading patterns.
+        """
+        print("📊 I/O STRATEGY COMPARISON")
+        print("=" * 40)
+        
+        results = {}
+        batch_size = 32  # Standard batch size for comparison
+        
+        for strategy in strategies:
+            print(f"\n🔍 Testing {strategy.upper()} strategy...")
+            
+            if strategy == 'sequential':
+                dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=False)
+            elif strategy == 'shuffled':
+                dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=True)
+            else:
+                print(f"   Unknown strategy: {strategy}")
+                continue
+            
+            # Time the strategy
+            timing_result = self.time_dataloader_iteration(dataloader, num_batches=20)
+            
+            if 'error' not in timing_result:
+                results[strategy] = timing_result
+                print(f"   Avg batch time: {timing_result['avg_batch_time']:.3f}s")
+                print(f"   Throughput: {timing_result['batches_per_second']:.1f} batches/sec")
+                print(f"   Bottleneck: {'Yes' if timing_result['is_bottleneck'] else 'No'}")
+        
+        # Compare strategies
+        if len(results) >= 2:
+            fastest = min(results.items(), key=lambda x: x[1]['avg_batch_time'])
+            slowest = max(results.items(), key=lambda x: x[1]['avg_batch_time'])
+            
+            speedup = slowest[1]['avg_batch_time'] / fastest[1]['avg_batch_time']
+            
+            print(f"\n🎯 STRATEGY ANALYSIS:")
+            print(f"   Fastest: {fastest[0]} ({fastest[1]['avg_batch_time']:.3f}s)")
+            print(f"   Slowest: {slowest[0]} ({slowest[1]['avg_batch_time']:.3f}s)")
+            print(f"   Speedup: {speedup:.1f}x")
+        
+        return results
+    
+    def simulate_compute_vs_io_balance(self, dataloader, simulated_compute_time=0.05):
+        """
+        Simulate the balance between data loading and compute time.
+        
+        This function is PROVIDED to show I/O vs compute analysis.
+        Students use it to understand when I/O becomes a bottleneck.
+        """
+        print("⚖️  COMPUTE vs I/O BALANCE ANALYSIS")
+        print("=" * 45)
+        
+        print(f"Simulated compute time per batch: {simulated_compute_time:.3f}s")
+        print(f"(This represents GPU processing time)")
+        
+        # Time data loading
+        io_timing = self.time_dataloader_iteration(dataloader, num_batches=15)
+        
+        if 'error' in io_timing:
+            print(f"Error in timing: {io_timing['error']}")
+            return
+        
+        avg_io_time = io_timing['avg_batch_time']
+        
+        print(f"\n📊 TIMING ANALYSIS:")
+        print(f"   Data loading time: {avg_io_time:.3f}s per batch")
+        print(f"   Simulated compute: {simulated_compute_time:.3f}s per batch")
+        
+        # Determine bottleneck
+        if avg_io_time > simulated_compute_time:
+            bottleneck = "I/O"
+            utilization = simulated_compute_time / avg_io_time * 100
+            print(f"\n🚨 BOTTLENECK: {bottleneck}")
+            print(f"   GPU utilization: {utilization:.1f}%")
+            print(f"   GPU waiting for data: {avg_io_time - simulated_compute_time:.3f}s per batch")
+        else:
+            bottleneck = "Compute"
+            utilization = avg_io_time / simulated_compute_time * 100
+            print(f"\n✅ BOTTLENECK: {bottleneck}")
+            print(f"   I/O utilization: {utilization:.1f}%")
+            print(f"   I/O waiting for GPU: {simulated_compute_time - avg_io_time:.3f}s per batch")
+        
+        # Calculate training impact
+        total_cycle_time = max(avg_io_time, simulated_compute_time)
+        efficiency = min(avg_io_time, simulated_compute_time) / total_cycle_time * 100
+        
+        print(f"\n🎯 TRAINING IMPACT:")
+        print(f"   Pipeline efficiency: {efficiency:.1f}%")
+        print(f"   Total cycle time: {total_cycle_time:.3f}s")
+        
+        if bottleneck == "I/O":
+            print(f"   💡 Recommendation: Optimize data loading")
+            print(f"      - Increase batch size")
+            print(f"      - Use data prefetching")
+            print(f"      - Faster storage (SSD vs HDD)")
+        else:
+            print(f"   💡 Recommendation: I/O is well optimized")
+            print(f"      - Consider larger models or batch sizes")
+            print(f"      - Focus on compute optimization")
+        
+        return {
+            'io_time': avg_io_time,
+            'compute_time': simulated_compute_time,
+            'bottleneck': bottleneck,
+            'efficiency': efficiency,
+            'total_cycle_time': total_cycle_time
+        }
+
+# %% [markdown]
+"""
+### 🎯 Learning Activity 1: DataLoader Performance Profiling (Medium Guided Implementation)
+
+**Goal**: Learn to measure data loading performance and identify I/O bottlenecks that can slow down training.
+
+Complete the missing implementations in the `DataPipelineProfiler` class above, then use your profiler to analyze data loading performance.
+"""
+
+# %%
+# Initialize the data pipeline profiler
+profiler = DataPipelineProfiler()
+
+print("📊 DATA PIPELINE PERFORMANCE ANALYSIS")
+print("=" * 50)
+
+# Create test dataset and dataloader
+test_dataset = TensorDataset([
+    Tensor(np.random.randn(100)) for _ in range(1000)  # 1000 samples
+], [
+    Tensor([i % 10]) for i in range(1000)  # Labels
+])
+
+# Test 1: Basic DataLoader timing
+print("⏱️  Basic DataLoader Timing:")
+basic_dataloader = DataLoader(test_dataset, batch_size=32, shuffle=False)
+
+# Students use their implemented timing function
+timing_result = profiler.time_dataloader_iteration(basic_dataloader, num_batches=25)
+
+if 'error' not in timing_result:
+    print(f"   Average batch time: {timing_result['avg_batch_time']:.3f}s")
+    print(f"   Throughput: {timing_result['batches_per_second']:.1f} batches/sec")
+    print(f"   Bottleneck detected: {'Yes' if timing_result['is_bottleneck'] else 'No'}")
+    
+    # Calculate samples per second
+    samples_per_sec = 32 * timing_result['batches_per_second']
+    print(f"   Samples/second: {samples_per_sec:.1f}")
+else:
+    print(f"   Error: {timing_result['error']}")
+
+# Test 2: Batch size scaling analysis
+print(f"\n📈 Batch Size Scaling Analysis:")
+
+# Students use their implemented scaling analysis
+scaling_analysis = profiler.analyze_batch_size_scaling(test_dataset, [16, 32, 64, 128])
+
+if 'error' not in scaling_analysis:
+    print(f"   Optimal batch size: {scaling_analysis['optimal_batch_size']}")
+    print(f"   Max throughput: {scaling_analysis['max_throughput']:.1f} samples/sec")
+    
+    print(f"\n   📊 Detailed Results:")
+    for result in scaling_analysis['scaling_results']:
+        print(f"      Batch {result['batch_size']:3d}: {result['samples_per_second']:6.1f} samples/sec")
+else:
+    print(f"   Error: {scaling_analysis['error']}")
+
+print(f"\n💡 I/O PERFORMANCE INSIGHTS:")
+print(f"   - Larger batches often improve throughput (better amortization)")
+print(f"   - But memory constraints limit maximum batch size")
+print(f"   - Sweet spot balances throughput vs memory usage")
+print(f"   - Real systems: GPU memory determines practical limits")
+
+# %% [markdown]
+"""
+### 🎯 Learning Activity 2: Production I/O Optimization Analysis (Review & Understand)
+
+**Goal**: Understand how I/O performance affects real training systems and learn optimization strategies used in production.
+"""
+
+# %%
+# Compare different I/O strategies
+io_comparison = profiler.compare_io_strategies(test_dataset, ['sequential', 'shuffled'])
+
+# Simulate compute vs I/O balance with different scenarios
+print(f"\n⚖️  COMPUTE vs I/O SCENARIOS:")
+print(f"=" * 40)
+
+# Test different compute scenarios
+compute_scenarios = [
+    (0.01, "Fast GPU (V100/A100)"),
+    (0.05, "Medium GPU (RTX 3080)"),
+    (0.1, "CPU-only training"),
+    (0.2, "Complex model/large batch")
+]
+
+sample_dataloader = DataLoader(test_dataset, batch_size=64, shuffle=False)
+
+for compute_time, scenario_name in compute_scenarios:
+    print(f"\n🖥️  {scenario_name}:")
+    balance_analysis = profiler.simulate_compute_vs_io_balance(sample_dataloader, compute_time)
+
+print(f"\n🎯 PRODUCTION I/O OPTIMIZATION LESSONS:")
+print(f"=" * 50)
+
+print(f"\n1. 📊 I/O BOTTLENECK IDENTIFICATION:")
+print(f"   - Fast GPUs often bottlenecked by data loading")
+print(f"   - CPU training rarely I/O bottlenecked")
+print(f"   - Modern GPUs process data faster than storage provides it")
+
+print(f"\n2. 🚀 OPTIMIZATION STRATEGIES:")
+print(f"   - Data prefetching: Load next batch while GPU computes")
+print(f"   - Parallel workers: Multiple threads/processes for loading")
+print(f"   - Faster storage: NVMe SSD vs SATA vs network storage")
+print(f"   - Data caching: Keep frequently used data in memory")
+
+print(f"\n3. 🏗️ ARCHITECTURE DECISIONS:")
+print(f"   - Batch size: Larger batches amortize I/O overhead")
+print(f"   - Data format: Preprocessed vs on-the-fly transformation")
+print(f"   - Storage location: Local vs network vs cloud storage")
+
+print(f"\n4. 💰 COST IMPLICATIONS:")
+print(f"   - I/O bottlenecks waste expensive GPU time")
+print(f"   - GPU utilization directly affects training costs")
+print(f"   - Faster storage investment pays off in GPU efficiency")
+
+print(f"\n💡 SYSTEMS ENGINEERING INSIGHT:")
+print(f"I/O optimization is often the highest-impact performance improvement:")
+print(f"- GPUs are expensive → maximize their utilization")
+print(f"- Data loading is often the limiting factor")
+print(f"- 10% I/O improvement = 10% faster training = 10% cost reduction")
+print(f"- Modern ML systems spend significant effort on data pipeline optimization")
+
+# %% [markdown]
+"""
 ## 🎯 MODULE SUMMARY: Data Loading and Processing
 
 Congratulations! You've successfully implemented professional data loading systems:
