@@ -84,33 +84,135 @@ git push origin dev
 
 ## AI Agent Workflow Standards
 
-### 🤖 When Working on Tasks
-1. **Always create a feature branch** before making any changes
-2. **Use descriptive branch names** that match the task
-3. **Keep changes focused** - one logical feature per branch
-4. **Test changes** before committing
-5. **Merge to dev** when work is complete
-6. **Clean up** by deleting merged feature branches
+### 🤖 Agent Team Orchestration - Best Practices
 
-### 📋 Agent Responsibilities
-- **NEVER** work directly on dev/main
-- **ALWAYS** create branches for any code changes
-- **ALWAYS** test functionality before committing
-- **ALWAYS** use descriptive commit messages
-- **ALWAYS** merge properly when work is complete
-- **NEVER** add Co-Authored-By tags unless user explicitly requests
-- **NEVER** add automated attribution to commits
+**Managing multiple AI agents requires structured coordination. Here's how the TinyTorch agent team works together:**
 
-### 🔍 Quality Gates
-Before any merge:
-- Code functionality verified
-- No breaking changes introduced
-- Related documentation updated
-- Clean commit history maintained
+### 📊 Agent Team Structure
+
+```
+Workflow Coordinator (Team Lead)
+    ├── Education Architect (Strategy)
+    ├── Module Developer (Implementation)
+    ├── Package Manager (Integration)
+    ├── Quality Assurance (Validation)
+    └── Documentation Publisher (Communication)
+```
+
+### 🔄 Standard Agent Workflow Pattern
+
+**For EVERY module update, follow this sequence:**
+
+1. **Planning Phase** (Workflow Coordinator + Education Architect)
+   - Define learning objectives
+   - Plan module structure
+   - Set implementation goals
+
+2. **Implementation Phase** (Module Developer)
+   - Write code following specifications
+   - Add NBGrader metadata
+   - Create test scaffolding
+   - Add proper export directives (#| default_exp)
+   - **MUST call QA Agent when done**
+
+3. **Testing Phase** (Quality Assurance) - **MANDATORY**
+   - Run comprehensive test suite
+   - Verify all functionality
+   - Report results to Package Manager
+   - **Block progress if tests fail**
+
+4. **Integration Phase** (Package Manager) - **MANDATORY**
+   - Validate module exports correctly
+   - Check integration with other modules
+   - Run integration tests
+   - Ensure complete package works
+   - **Block progress if integration fails**
+
+5. **Documentation Phase** (Documentation Publisher)
+   - Add explanatory markdown
+   - Create ML systems thinking questions
+   - Ensure clarity and consistency
+
+6. **Review Phase** (Workflow Coordinator)
+   - Verify all agents completed their tasks
+   - Ensure QA tests passed
+   - Confirm package integration successful
+   - Approve for commit
+
+### 🎯 Agent Communication Protocol
+
+**Agents MUST communicate through structured handoffs:**
+
+```python
+# Example workflow for module update:
+workflow_coordinator.plan_update(module="tensor")
+    → education_architect.design_learning_path()
+    → module_developer.implement_code()
+    → qa_agent.run_tests()  # MANDATORY
+    → documentation_publisher.add_documentation()
+    → workflow_coordinator.review_and_approve()
+```
+
+### ⚡ Parallel vs Sequential Work
+
+**Parallel Tasks (can happen simultaneously):**
+- Multiple Module Developers working on different modules
+- Documentation Publisher preparing content while code is tested
+- Education Architect planning next modules
+
+**Sequential Tasks (must happen in order):**
+- Implementation → Testing → Commit
+- Planning → Implementation → Documentation
+- Test Failure → Fix → Re-test → Proceed
+
+### 🚨 Agent Accountability Rules
+
+1. **Module Developer**: Cannot mark task complete without QA approval
+2. **QA Agent**: Must test EVERY change, no exceptions
+3. **Package Manager**: Must validate integration, can block releases
+4. **Workflow Coordinator**: Cannot proceed without all agent sign-offs
+5. **Documentation Publisher**: Must verify code works before documenting
+6. **Education Architect**: Must validate learning objectives are met
+
+### 📝 Agent Handoff Checklist
+
+When passing work between agents, include:
+- [ ] What was completed
+- [ ] What needs to be done next
+- [ ] Any issues or blockers found
+- [ ] Test results (if applicable)
+- [ ] Recommendations for next agent
+
+### 🔧 Conflict Resolution
+
+If agents disagree or find conflicts:
+1. QA Agent has veto power on code quality
+2. Education Architect has final say on learning objectives
+3. Workflow Coordinator resolves all other disputes
+4. User has ultimate override authority
+
+### 🤖 Workflow Compliance
+**ALL AI agents MUST follow the Git Workflow Standards defined in `/Users/VJ/GitHub/TinyTorch/CLAUDE.md`.**
+
+Read the complete Git Workflow Standards section in this file for all branching, commit, and merge requirements.
 
 ---
 
 ## TinyTorch Module Development Standards
+
+### 🎯 **CRITICAL: .py Files Only**
+**ALL TinyTorch development and modifications MUST be done in .py files ONLY.**
+
+- ✅ **ALWAYS edit**: `module_name_dev.py` files
+- ❌ **NEVER edit**: `.ipynb` notebook files
+- ✅ **Notebooks are generated**: from .py files using jupytext
+- ❌ **Direct notebook editing**: breaks the development workflow
+
+**Why .py files only:**
+- Version control friendly (clean diffs, no notebook metadata noise)
+- Consistent development environment across all contributors
+- Automated notebook generation ensures consistency
+- Professional development practices
 
 ### 📚 Module Structure Requirements
 All TinyTorch modules MUST follow the standardized structure:
@@ -182,16 +284,85 @@ Content here...
 - Code implementation and NBGrader metadata
 - Technical scaffolding and patterns
 - Implementation ONLY
+- Add export directives (#| default_exp)
+- **MUST notify QA Agent after ANY module changes**
+
+**Package Manager:**
+- Module integration and export validation
+- Dependency resolution between modules
+- Integration testing after exports
+- **MANDATORY: Validate ALL module exports**
+- **MUST ensure modules work together**
+- **MUST run integration tests**
+- **MUST verify complete package builds**
+- **MUST block release if integration fails**
 
 **Quality Assurance:**  
 - Test coverage and functionality
 - Testing infrastructure
-- Testing ONLY
+- **MANDATORY: Test ALL modified modules after ANY changes**
+- **MUST run tests before ANY commit**
+- **MUST verify module imports correctly**
+- **MUST ensure all test functions work**
+- **MUST report test results to Package Manager**
 
 **Documentation Publisher:**
 - Markdown prose and clarity
 - **Module-specific ML systems thinking questions** (analyze actual code, reference specific implementations, build cumulative knowledge)
 - Writing ONLY
+
+**Workflow Coordinator:**
+- **MUST enforce QA testing after EVERY module update**
+- **CANNOT approve changes without QA test results**
+- **MUST block commits if tests fail**
+
+### 🧪 QA Testing Protocol - MANDATORY
+
+**EVERY module update MUST trigger the following QA process:**
+
+1. **Immediate Testing After Changes**
+   - QA Agent MUST be invoked after ANY module modification
+   - Module Developer CANNOT proceed without QA approval
+   - Workflow Coordinator MUST enforce this requirement
+
+2. **Comprehensive Test Suite**
+   ```python
+   # QA Agent must run these tests for EVERY modified module:
+   - Module imports without errors
+   - All classes can be instantiated
+   - All test functions execute successfully
+   - No syntax errors present
+   - Required profiler/classes exist
+   - Tests only run when module executed directly (not on import)
+   ```
+
+3. **Test Execution Requirements**
+   - Create isolated test environment with mocked dependencies
+   - Test both with mocks AND actual dependencies when available
+   - Verify module structure compliance
+   - Check for immediate test execution issues
+   - Validate all NBGrader metadata
+
+4. **Failure Protocol**
+   - If ANY test fails, QA Agent MUST:
+     * Block the commit
+     * Report specific failures to Module Developer
+     * Require fixes before proceeding
+     * Re-test after fixes applied
+
+5. **Success Protocol**
+   - Only after ALL tests pass, QA Agent:
+     * Approves the changes
+     * Reports success to Workflow Coordinator
+     * Allows commit to proceed
+
+6. **Test Results Documentation**
+   - QA Agent MUST provide detailed test report including:
+     * Module name and version
+     * Tests run and results
+     * Any warnings or issues found
+     * Performance metrics if applicable
+     * Recommendations for improvement
 
 ### ⚠️ Critical Requirements
 - All module sections must be present
@@ -199,7 +370,8 @@ Content here...
 - ML systems reflection is mandatory
 - Maintain immediate testing pattern (test after each implementation)
 - Use clear, consistent section organization
+- **QA testing is MANDATORY before ANY commit**
 
 ---
 
-**Remember**: Professional software development always uses branches. This keeps the codebase stable, enables collaboration, and maintains a clean development history.
+**Remember**: Professional software development always uses branches AND comprehensive testing. This keeps the codebase stable, enables collaboration, and maintains a clean development history.

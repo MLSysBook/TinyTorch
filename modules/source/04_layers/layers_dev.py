@@ -1595,6 +1595,406 @@ test_module_layer_tensor_integration()
 
 # %% [markdown]
 """
+## 🏗️ ML Systems: Architecture Analysis & Memory Scaling
+
+Now that you have working neural network layers, let's develop **architecture analysis skills**. This section teaches you to understand how layer composition affects memory usage, parameter counts, and computational complexity.
+
+### **Learning Outcome**: *"I understand how layers combine to create memory pressure and can analyze model architectures"*
+
+---
+
+## Layer Architecture Profiler (Medium Guided Implementation)
+
+As an ML systems engineer, you need to understand how different layer configurations affect system resources. Let's build tools to analyze layer architectures and scaling patterns.
+"""
+
+# %%
+import time
+import psutil
+import os
+
+class LayerArchitectureProfiler:
+    """
+    Architecture analysis toolkit for neural network layers.
+    
+    Helps ML engineers understand memory scaling, parameter counts,
+    and computational complexity of different layer configurations.
+    """
+    
+    def __init__(self):
+        self.process = psutil.Process(os.getpid())
+        self.analysis_cache = {}
+        
+    def analyze_layer_parameters(self, input_size, hidden_size, output_size):
+        """
+        Analyze parameter count and memory usage for a layer configuration.
+        
+        TODO: Implement parameter count analysis.
+        
+        STEP-BY-STEP IMPLEMENTATION:
+        1. Calculate weight matrix parameters: input_size * hidden_size
+        2. Calculate bias parameters: hidden_size  
+        3. Calculate total parameters: weights + bias
+        4. Calculate memory usage: parameters * 4 bytes (float32)
+        5. Return analysis dictionary with all metrics
+        
+        EXAMPLE:
+        profiler = LayerArchitectureProfiler()
+        analysis = profiler.analyze_layer_parameters(784, 128, 10)
+        print(f"Parameters: {analysis['total_parameters']:,}")
+        print(f"Memory: {analysis['memory_mb']:.2f} MB")
+        
+        HINTS:
+        - Weight matrix shape: (input_size, hidden_size)
+        - Bias vector shape: (hidden_size,)
+        - Float32 = 4 bytes per parameter
+        - Convert bytes to MB: bytes / (1024 * 1024)
+        """
+        ### BEGIN SOLUTION
+        # Calculate parameters
+        weight_params = input_size * hidden_size
+        bias_params = hidden_size
+        total_params = weight_params + bias_params
+        
+        # Calculate memory (assuming float32 = 4 bytes)
+        memory_bytes = total_params * 4
+        memory_mb = memory_bytes / (1024 * 1024)
+        
+        return {
+            'input_size': input_size,
+            'hidden_size': hidden_size,
+            'output_size': output_size,
+            'weight_parameters': weight_params,
+            'bias_parameters': bias_params,
+            'total_parameters': total_params,
+            'memory_bytes': memory_bytes,
+            'memory_mb': memory_mb
+        }
+        ### END SOLUTION
+    
+    def analyze_network_scaling(self, input_size, hidden_sizes, output_size):
+        """
+        Analyze how network depth affects parameter count and memory.
+        
+        TODO: Implement network scaling analysis.
+        
+        STEP-BY-STEP IMPLEMENTATION:
+        1. Initialize total parameters counter
+        2. For each layer in the network:
+           a. Calculate layer parameters using analyze_layer_parameters
+           b. Add to total count
+           c. Update input_size for next layer
+        3. Calculate total memory usage
+        4. Return comprehensive analysis
+        
+        EXAMPLE:
+        profiler = LayerArchitectureProfiler()
+        analysis = profiler.analyze_network_scaling(784, [512, 256, 128], 10)
+        print(f"Total parameters: {analysis['total_parameters']:,}")
+        print(f"Layers: {len(analysis['layer_details'])}")
+        
+        HINTS:
+        - Loop through hidden_sizes for each layer
+        - Track input_size changes: input → hidden[0] → hidden[1] → ... → output
+        - Sum all layer parameters
+        - Store per-layer details for analysis
+        """
+        ### BEGIN SOLUTION
+        total_parameters = 0
+        layer_details = []
+        current_input = input_size
+        
+        # Analyze each hidden layer
+        for i, hidden_size in enumerate(hidden_sizes):
+            layer_analysis = self.analyze_layer_parameters(current_input, hidden_size, 0)
+            layer_analysis['layer_name'] = f'Hidden_{i+1}'
+            layer_details.append(layer_analysis)
+            total_parameters += layer_analysis['total_parameters']
+            current_input = hidden_size
+        
+        # Analyze output layer
+        output_analysis = self.analyze_layer_parameters(current_input, output_size, 0)
+        output_analysis['layer_name'] = 'Output'
+        layer_details.append(output_analysis)
+        total_parameters += output_analysis['total_parameters']
+        
+        # Calculate total memory
+        total_memory_mb = total_parameters * 4 / (1024 * 1024)
+        
+        return {
+            'network_architecture': f"{input_size} → {' → '.join(map(str, hidden_sizes))} → {output_size}",
+            'total_parameters': total_parameters,
+            'total_memory_mb': total_memory_mb,
+            'num_layers': len(hidden_sizes) + 1,
+            'layer_details': layer_details
+        }
+        ### END SOLUTION
+    
+    def compare_architectures(self, input_size, architecture_configs, output_size=10):
+        """
+        Compare different network architectures for parameter efficiency.
+        
+        This function is PROVIDED to demonstrate architecture analysis.
+        Students use it to understand architecture trade-offs.
+        """
+        print(f"🏗️ ARCHITECTURE COMPARISON")
+        print(f"=" * 50)
+        print(f"Input size: {input_size}, Output size: {output_size}")
+        
+        results = {}
+        
+        for arch_name, hidden_sizes in architecture_configs.items():
+            analysis = self.analyze_network_scaling(input_size, hidden_sizes, output_size)
+            results[arch_name] = analysis
+            
+            print(f"\n📊 {arch_name}:")
+            print(f"   Architecture: {analysis['network_architecture']}")
+            print(f"   Parameters: {analysis['total_parameters']:,}")
+            print(f"   Memory: {analysis['total_memory_mb']:.2f} MB")
+            print(f"   Layers: {analysis['num_layers']}")
+        
+        # Find most/least parameter efficient
+        sorted_by_params = sorted(results.items(), key=lambda x: x[1]['total_parameters'])
+        most_efficient = sorted_by_params[0]
+        least_efficient = sorted_by_params[-1]
+        
+        print(f"\n🎯 EFFICIENCY ANALYSIS:")
+        print(f"   Most efficient: {most_efficient[0]} ({most_efficient[1]['total_parameters']:,} params)")
+        print(f"   Least efficient: {least_efficient[0]} ({least_efficient[1]['total_parameters']:,} params)")
+        
+        efficiency_ratio = least_efficient[1]['total_parameters'] / most_efficient[1]['total_parameters']
+        print(f"   Parameter difference: {efficiency_ratio:.1f}x")
+        
+        return results
+    
+    def analyze_depth_vs_width_tradeoffs(self, input_size=784, output_size=10):
+        """
+        Analyze the classic deep vs wide network trade-off.
+        
+        This function is PROVIDED to show systems thinking.
+        Students run it to understand architecture decisions.
+        """
+        print(f"🔍 DEPTH vs WIDTH ANALYSIS")
+        print(f"=" * 40)
+        
+        # Test different depth vs width configurations
+        configurations = {
+            'Shallow Wide': [1024],                    # 1 huge layer
+            'Medium Wide': [512, 512],                 # 2 medium layers  
+            'Medium Deep': [256, 256, 256],           # 3 smaller layers
+            'Deep Narrow': [128, 128, 128, 128],      # 4 narrow layers
+            'Very Deep': [64, 64, 64, 64, 64, 64]     # 6 very narrow layers
+        }
+        
+        results = {}
+        for config_name, hidden_sizes in configurations.items():
+            analysis = self.analyze_network_scaling(input_size, hidden_sizes, output_size)
+            results[config_name] = analysis
+            
+            # Calculate depth and width metrics
+            depth = len(hidden_sizes)
+            avg_width = sum(hidden_sizes) / len(hidden_sizes)
+            max_width = max(hidden_sizes)
+            
+            print(f"\n{config_name}:")
+            print(f"   Depth: {depth} layers")
+            print(f"   Avg width: {avg_width:.0f} neurons")
+            print(f"   Max width: {max_width} neurons")
+            print(f"   Parameters: {analysis['total_parameters']:,}")
+            print(f"   Memory: {analysis['total_memory_mb']:.2f} MB")
+        
+        print(f"\n💡 ARCHITECTURE INSIGHTS:")
+        print(f"   - Deeper networks: Better representation learning, harder to train")
+        print(f"   - Wider networks: More capacity per layer, more parameters")
+        print(f"   - Modern trend: Very deep (100+ layers) with skip connections")
+        print(f"   - Memory scales with total parameters regardless of arrangement")
+        
+        return results
+
+def analyze_famous_architectures():
+    """
+    Analyze parameter counts of famous neural network architectures.
+    
+    This function is PROVIDED to connect student work to real systems.
+    Shows how layer analysis applies to production models.
+    """
+    profiler = LayerArchitectureProfiler()
+    
+    print(f"🌟 FAMOUS ARCHITECTURE ANALYSIS")
+    print(f"=" * 50)
+    
+    # Simplified versions of famous architectures
+    famous_models = {
+        'LeNet-5 (1998)': {
+            'description': 'First successful CNN',
+            'approx_params': 60_000,
+            'era': 'Early deep learning'
+        },
+        'AlexNet (2012)': {
+            'description': 'ImageNet breakthrough',
+            'approx_params': 60_000_000,
+            'era': 'Deep learning revolution'
+        },
+        'VGG-16 (2014)': {
+            'description': 'Very deep networks',
+            'approx_params': 138_000_000,
+            'era': 'Going deeper'
+        },
+        'ResNet-50 (2015)': {
+            'description': 'Skip connections enable very deep nets',
+            'approx_params': 25_600_000,
+            'era': 'Architecture innovation'
+        },
+        'GPT-3 (2020)': {
+            'description': 'Large language model',
+            'approx_params': 175_000_000_000,
+            'era': 'Scale revolution'
+        },
+        'GPT-4 (2023)': {
+            'description': 'Estimated multimodal model',
+            'approx_params': 1_800_000_000_000,
+            'era': 'Massive scale'
+        }
+    }
+    
+    print(f"Model Evolution Over Time:")
+    for model_name, info in famous_models.items():
+        params = info['approx_params']
+        memory_gb = params * 4 / (1024**3)  # Rough memory estimate
+        
+        print(f"\n{model_name}:")
+        print(f"   Parameters: {params:,}")
+        print(f"   Est. Memory: {memory_gb:.1f} GB")
+        print(f"   Description: {info['description']}")
+        print(f"   Era: {info['era']}")
+    
+    # Show scaling progression
+    print(f"\n📈 SCALING PROGRESSION:")
+    params_1998 = famous_models['LeNet-5 (1998)']['approx_params']
+    params_2023 = famous_models['GPT-4 (2023)']['approx_params']
+    scaling_factor = params_2023 / params_1998
+    
+    print(f"   1998 → 2023: {scaling_factor:,.0f}x parameter increase")
+    print(f"   That's about {scaling_factor/1000000:.1f} million times larger!")
+    print(f"   Memory requirements grew from KB to TB")
+    
+    print(f"\n🎯 SYSTEMS IMPLICATIONS:")
+    print(f"   - Parameter count directly affects memory requirements")
+    print(f"   - Larger models need distributed training across multiple GPUs")
+    print(f"   - Model serving requires careful memory management")
+    print(f"   - Architecture efficiency becomes crucial at scale")
+    
+    return famous_models
+
+# %% [markdown]
+"""
+### 🎯 Learning Activity 1: Layer Architecture Analysis (Medium Guided Implementation)
+
+**Goal**: Learn to analyze neural network architectures and understand how layer configurations affect system resources.
+
+Complete the missing implementations in the `LayerArchitectureProfiler` class above, then use your profiler to understand architecture trade-offs.
+"""
+
+# %%
+# Initialize the layer architecture profiler
+profiler = LayerArchitectureProfiler()
+
+print("🏗️ LAYER ARCHITECTURE ANALYSIS")
+print("=" * 50)
+
+# Test 1: Single layer analysis
+print("📊 Single Layer Analysis:")
+layer_configs = [
+    (784, 128),    # MNIST → small hidden
+    (784, 512),    # MNIST → medium hidden  
+    (784, 2048),   # MNIST → large hidden
+    (3072, 1024),  # CIFAR-10 → hidden
+]
+
+for input_size, hidden_size in layer_configs:
+    analysis = profiler.analyze_layer_parameters(input_size, hidden_size, 10)
+    print(f"   {input_size} → {hidden_size}: {analysis['total_parameters']:,} params, {analysis['memory_mb']:.2f} MB")
+
+# Test 2: Network scaling analysis
+print(f"\n🔍 Network Scaling Analysis:")
+network_configs = [
+    ([128], "Small network"),
+    ([256, 128], "Medium network"),
+    ([512, 256, 128], "Large network"),
+    ([1024, 512, 256, 128], "Very large network")
+]
+
+for hidden_sizes, description in network_configs:
+    analysis = profiler.analyze_network_scaling(784, hidden_sizes, 10)
+    print(f"   {description}: {analysis['total_parameters']:,} params, {analysis['total_memory_mb']:.2f} MB")
+
+print(f"\n💡 SCALING INSIGHTS:")
+print(f"   - Adding layers multiplies parameter count")
+print(f"   - First layer often dominates parameter count (large input)")
+print(f"   - Memory scales linearly with parameter count")
+print(f"   - Architecture choice = resource planning decision")
+
+# %% [markdown]
+"""
+### 🎯 Learning Activity 2: Architecture Comparison & Analysis (Review & Understand)
+
+**Goal**: Compare different network architectures and understand the depth vs width trade-offs that affect production ML systems.
+"""
+
+# %%
+# Compare different architecture strategies
+input_size = 784  # MNIST flattened image
+output_size = 10  # 10 digit classes
+
+architecture_configs = {
+    'Baseline': [128],
+    'Wide Shallow': [512], 
+    'Narrow Deep': [64, 64, 64],
+    'Pyramid': [256, 128, 64],
+    'Inverted Pyramid': [64, 128, 256],
+    'Bottleneck': [512, 32, 512]
+}
+
+# Students use their implemented analysis tools
+comparison_results = profiler.compare_architectures(input_size, architecture_configs, output_size)
+
+# Analyze depth vs width trade-offs
+depth_width_results = profiler.analyze_depth_vs_width_tradeoffs(input_size, output_size)
+
+# Connect to famous architectures
+famous_analysis = analyze_famous_architectures()
+
+print(f"\n🎯 KEY LEARNINGS FOR ML SYSTEMS ENGINEERS:")
+print(f"=" * 55)
+
+print(f"\n1. 📊 PARAMETER SCALING:")
+print(f"   First layer dominates: input_size × hidden_size")
+print(f"   Layer composition multiplies parameter count")
+print(f"   Memory = parameters × 4 bytes (float32)")
+
+print(f"\n2. 🏗️ ARCHITECTURE STRATEGIES:")
+print(f"   Wide networks: More capacity, more parameters")
+print(f"   Deep networks: Better representations, harder training")
+print(f"   Bottlenecks: Compress then expand information")
+
+print(f"\n3. 🚀 PRODUCTION IMPLICATIONS:")
+print(f"   Parameter count = memory requirements")
+print(f"   Model serving: Load entire model into memory")
+print(f"   Training: Need 2-3x model size for gradients/optimizer")
+
+print(f"\n4. 💰 COST IMPLICATIONS:")
+print(f"   More parameters = larger cloud instances needed")
+print(f"   GPU memory limits determine maximum model size")
+print(f"   Distributed training costs scale with model size")
+
+print(f"\n💡 SYSTEMS ENGINEERING INSIGHT:")
+print(f"Every layer you add is a resource planning decision:")
+print(f"- More layers = more memory = higher cloud costs")
+print(f"- Architecture efficiency matters at production scale")
+print(f"- Understanding parameter scaling helps optimize deployments")
+
+# %% [markdown]
+"""
 ## 🎯 MODULE SUMMARY: Neural Network Layers - Foundation of All AI
 
 🎉 **CONGRATULATIONS!** You've just mastered the mathematical and computational foundation of ALL modern artificial intelligence!
