@@ -1,4 +1,6 @@
-# %% [markdown]
+#| default_exp introduction
+
+# %% [markdown] nbgrader={"grade": false, "grade_id": "introduction-overview", "locked": false, "schema_version": 3, "solution": false, "task": false}
 """
 # TinyTorch System Introduction & Architecture Overview
 
@@ -13,7 +15,7 @@ This introduction module provides:
 Let's explore the architecture of this comprehensive ML framework!
 """
 
-# %%
+# %% nbgrader={"grade": false, "grade_id": "introduction-imports", "locked": false, "schema_version": 3, "solution": false, "task": false}
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
@@ -39,6 +41,7 @@ This will power our interactive visualizations.
 """
 
 # %%
+#| export
 @dataclass
 class ModuleInfo:
     """Complete information about a TinyTorch module"""
@@ -69,6 +72,7 @@ class ModuleInfo:
             return float(numbers[0])
         return 4.0  # Default estimate
 
+#| export
 class TinyTorchAnalyzer:
     """Comprehensive analysis of TinyTorch module system"""
     
@@ -202,7 +206,7 @@ def test_module_analyzer():
         module = analyzer.modules[name]
         print(f"  • {module.title} ({module.difficulty}) - {len(module.components)} components")
 
-test_module_analyzer()
+# test_module_analyzer() # Test moved to main block
 
 # %% [markdown]
 """
@@ -212,6 +216,7 @@ Now let's create beautiful, interactive visualizations of the TinyTorch module d
 """
 
 # %%
+#| export  
 def create_dependency_graph_visualization(figsize=(16, 12)):
     """Create an interactive dependency graph visualization"""
     
@@ -324,7 +329,7 @@ def test_dependency_relationships():
     
     print("✅ Dependency relationship tests passed!")
 
-test_dependency_relationships()
+# test_dependency_relationships() # Test moved to main block
 
 # %% [markdown]
 """
@@ -334,6 +339,7 @@ Let's create a comprehensive system architecture diagram showing how all TinyTor
 """
 
 # %%
+#| export
 def create_system_architecture_diagram(figsize=(18, 12)):
     """Create a comprehensive TinyTorch system architecture diagram"""
     
@@ -457,7 +463,7 @@ def test_system_architecture():
     print(f"✅ Architecture diagram includes {len(module_positions)} modules")
     print(f"📊 Modules organized across {len(set(pos[1] for pos in module_positions.values()))} layers")
 
-test_system_architecture()
+# test_system_architecture() # Test moved to main block
 
 # %% [markdown]
 """
@@ -467,6 +473,7 @@ Create an interactive learning roadmap that shows the optimal path through TinyT
 """
 
 # %%
+#| export
 def create_learning_roadmap(figsize=(16, 10)):
     """Create an interactive learning roadmap visualization"""
     
@@ -632,7 +639,7 @@ def test_learning_roadmap():
     
     print(f"📊 Total learning time: {total_time:.1f} hours ({total_time/8:.1f} work days)")
 
-test_learning_roadmap()
+# test_learning_roadmap() # Test moved to main block
 
 # %% [markdown]
 """
@@ -642,6 +649,7 @@ Let's analyze the specific components within each module and how they relate to 
 """
 
 # %%
+#| export
 def create_component_analysis(figsize=(14, 10)):
     """Create visualization of components within modules and their relationships"""
     
@@ -769,7 +777,7 @@ def test_component_analysis():
     else:
         print("📊 No strong correlation between difficulty and component count")
 
-test_component_analysis()
+# test_component_analysis() # Test moved to main block
 
 # %% [markdown]
 """
@@ -779,6 +787,7 @@ Create functions that can be imported and used by other parts of TinyTorch.
 """
 
 # %%
+#| export
 def get_tinytorch_overview() -> Dict:
     """Get comprehensive overview of TinyTorch system for external use"""
     return {
@@ -795,6 +804,7 @@ def get_tinytorch_overview() -> Dict:
         }
     }
 
+#| export
 def visualize_tinytorch_system(save_plots: bool = False) -> Dict:
     """Generate all TinyTorch system visualizations"""
     
@@ -831,6 +841,7 @@ def visualize_tinytorch_system(save_plots: bool = False) -> Dict:
     
     return visualizations
 
+#| export
 def get_module_info(module_name: str) -> Dict:
     """Get detailed information about a specific module"""
     if module_name not in analyzer.modules:
@@ -851,6 +862,7 @@ def get_module_info(module_name: str) -> Dict:
         'exports_to': module.exports_to
     }
 
+#| export
 def get_learning_recommendations(current_module: str = None) -> Dict:
     """Get personalized learning recommendations"""
     path = analyzer.get_learning_path()
@@ -1051,7 +1063,16 @@ def run_comprehensive_tests():
     print(f"   • {sum(m.estimated_hours() for m in analyzer.modules.values()):.1f} total learning hours")
 
 # Run the comprehensive tests
-run_comprehensive_tests()
+if __name__ == "__main__":
+    # Run individual tests
+    test_module_analyzer()
+    test_dependency_relationships()
+    test_system_architecture()
+    test_learning_roadmap()
+    test_component_analysis()
+    
+    # Run comprehensive test suite
+    run_comprehensive_tests()
 
 # %% [markdown]
 """
