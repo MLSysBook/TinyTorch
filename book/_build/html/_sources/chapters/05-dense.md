@@ -1,6 +1,6 @@
 ---
-title: "Networks"
-description: "Neural network architectures and composition patterns"
+title: "Dense Networks"
+description: "Multi-layer dense (fully connected) neural networks and MLPs"
 difficulty: "⭐⭐⭐"
 time_estimate: "5-6 hours"
 prerequisites: []
@@ -227,21 +227,21 @@ Choose your preferred way to engage with this module:
 ````{grid} 1 2 3 3
 
 ```{grid-item-card} 🚀 Launch Binder
-:link: https://mybinder.org/v2/gh/mlsysbook/TinyTorch/main?filepath=modules/source/05_networks/networks_dev.ipynb
+:link: https://mybinder.org/v2/gh/mlsysbook/TinyTorch/main?filepath=modules/source/05_dense/dense_dev.ipynb
 :class-header: bg-light
 
 Run this module interactively in your browser. No installation required!
 ```
 
 ```{grid-item-card} ⚡ Open in Colab  
-:link: https://colab.research.google.com/github/mlsysbook/TinyTorch/blob/main/modules/source/05_networks/networks_dev.ipynb
+:link: https://colab.research.google.com/github/mlsysbook/TinyTorch/blob/main/modules/source/05_dense/dense_dev.ipynb
 :class-header: bg-light
 
 Use Google Colab for GPU access and cloud compute power.
 ```
 
 ```{grid-item-card} 📖 View Source
-:link: https://github.com/mlsysbook/TinyTorch/blob/main/modules/source/05_networks/networks_dev.py
+:link: https://github.com/mlsysbook/TinyTorch/blob/main/modules/source/05_dense/dense_dev.py
 :class-header: bg-light
 
 Browse the Python source code and understand the implementation.
@@ -260,5 +260,5 @@ Ready for serious development? → [🏗️ Local Setup Guide](../usage-paths/se
 
 <div class="prev-next-area">
 <a class="left-prev" href="../chapters/04_layers.html" title="previous page">← Previous Module</a>
-<a class="right-next" href="../chapters/06_cnn.html" title="next page">Next Module →</a>
+<a class="right-next" href="../chapters/06_spatial.html" title="next page">Next Module →</a>
 </div>

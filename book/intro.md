@@ -114,14 +114,14 @@ This pattern repeats for every component: tensors, layers, optimizers, even MLOp
 
 **🎯 Track Your Capabilities**
 
-TinyTorch uses a [milestone system](milestone-system.md) to track your progress through **ML systems engineering capabilities**:
+TinyTorch uses a [checkpoint system](checkpoint-system.md) to track your progress through **ML systems engineering capabilities**:
 - **Foundation** → Core ML primitives and setup
 - **Architecture** → Neural network building  
 - **Training** → Model training pipeline
 - **Inference** → Deployment and optimization
 - **Serving** → Complete system integration
 
-Use `tito milestone status` to see your progress anytime!
+Use `tito checkpoint status` to see your progress anytime!
 
 **🎯 Beyond Code: Systems Intuition**
 

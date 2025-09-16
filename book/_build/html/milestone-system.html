@@ -1,0 +1,884 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>🎯 TinyTorch Milestone System &#8212; Tiny🔥Torch</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css?v=6644e6bb" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="_static/copybutton.js?v=f281be69"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="_static/design-tabs.js?v=36754332"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'milestone-system';</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="📚 Additional Learning Resources" href="resources.html" />
+    <link rel="prev" title="🎯 The TinyTorch Vision" href="vision.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="_static/logo.png" class="logo__image only-light" alt="Tiny🔥Torch - Home"/>
+    <script>document.write(`<img src="_static/logo.png" class="logo__image only-dark" alt="Tiny🔥Torch - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="intro.html">
+                    Tiny🔥Torch
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Usage Paths</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="usage-paths/quick-exploration.html">🔬 Quick Exploration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage-paths/serious-development.html">🏗️ Serious Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage-paths/classroom-use.html">👨‍🏫 Classroom Use</a></li>
+<li class="toctree-l1"><a class="reference internal" href="instructor-guide.html">📚 Instructor Guide</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Course Orientation</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="chapters/00-introduction.html">Introduction</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Foundation</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="chapters/01-setup.html">0. Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapters/02-tensor.html">1. Tensors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapters/03-activations.html">2. Activations</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Building Blocks</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="chapters/04-layers.html">3. Layers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapters/05-dense.html">4. Dense</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapters/06-spatial.html">5. Spatial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapters/07-attention.html">6. Attention</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Training Systems</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="chapters/08-dataloader.html">7. DataLoader</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapters/09-autograd.html">8. Autograd</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapters/10-optimizers.html">9. Optimizers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapters/11-training.html">10. Training</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Inference &amp; Serving</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="chapters/12-compression.html">11. Compression</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapters/13-kernels.html">12. Kernels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapters/14-benchmarking.html">13. Benchmarking</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapters/15-mlops.html">14. MLOps</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Capstone Project</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="chapters/16-capstone.html">15. Capstone</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Additional Resources</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="vision.html">🎯 TinyTorch Vision</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">📊 Milestone System</a></li>
+<li class="toctree-l1"><a class="reference internal" href="resources.html">📚 Learning Resources</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/mlsysbook/TinyTorch" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/mlsysbook/TinyTorch/edit/main/book/milestone-system.md" target="_blank"
+   class="btn btn-sm btn-source-edit-button dropdown-item"
+   title="Suggest edit"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="btn__text-container">Suggest edit</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/mlsysbook/TinyTorch/issues/new?title=Issue%20on%20page%20%2Fmilestone-system.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/milestone-system.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>🎯 TinyTorch Milestone System</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#capability-driven-learning-journey">Capability-Driven Learning Journey</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-five-major-milestones">🚀 <strong>The Five Major Milestones</strong></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#foundation"><strong>🎯 Foundation</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#neural-architecture"><strong>🎯 Neural Architecture</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#training"><strong>🎯 Training</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inference-deployment"><strong>🎯 Inference Deployment</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#serving"><strong>🎯 Serving</strong></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tracking-your-progress">📊 <strong>Tracking Your Progress</strong></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#visual-timeline"><strong>Visual Timeline</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ticker-progress"><strong>Ticker Progress</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#capability-statements"><strong>Capability Statements</strong></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#using-the-milestone-system">🛠️ <strong>Using the Milestone System</strong></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cli-commands"><strong>CLI Commands</strong></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#check-your-progress"><strong>Check Your Progress</strong></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id1"><strong>Visual Timeline</strong></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#test-capabilities-coming-soon"><strong>Test Capabilities</strong> (Coming Soon)</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#integration-with-development"><strong>Integration with Development</strong></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-this-approach-works">🧠 <strong>Why This Approach Works</strong></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#systems-thinking-over-task-completion"><strong>Systems Thinking Over Task Completion</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#clear-learning-goals"><strong>Clear Learning Goals</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motivation-through-progress"><strong>Motivation Through Progress</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#real-world-relevance"><strong>Real-World Relevance</strong></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-outcomes-by-milestone">📈 <strong>Learning Outcomes by Milestone</strong></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#after-foundation"><strong>After Foundation</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#after-architecture"><strong>After Architecture</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#after-training"><strong>After Training</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#after-inference"><strong>After Inference</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#after-serving"><strong>After Serving</strong></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#your-journey-starts-here">🚀 <strong>Your Journey Starts Here</strong></a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="tinytorch-milestone-system">
+<h1>🎯 TinyTorch Milestone System<a class="headerlink" href="#tinytorch-milestone-system" title="Link to this heading">#</a></h1>
+<section id="capability-driven-learning-journey">
+<h2>Capability-Driven Learning Journey<a class="headerlink" href="#capability-driven-learning-journey" title="Link to this heading">#</a></h2>
+<p>TinyTorch transforms traditional module-based learning into a <strong>capability-driven progression system</strong>. Instead of simply completing assignments, you’re building real ML framework capabilities that unlock new powers for your system.</p>
+</section>
+<hr class="docutils" />
+<section id="the-five-major-milestones">
+<h2>🚀 <strong>The Five Major Milestones</strong><a class="headerlink" href="#the-five-major-milestones" title="Link to this heading">#</a></h2>
+<section id="foundation">
+<h3><strong>🎯 Foundation</strong><a class="headerlink" href="#foundation" title="Link to this heading">#</a></h3>
+<p><em>Core ML primitives and environment setup</em></p>
+<p><strong>Modules</strong>: Setup • Tensors • Activations<br />
+<strong>Capability Unlocked</strong>: “Can build mathematical operations and ML primitives”</p>
+<p><strong>What You Build:</strong></p>
+<ul class="simple">
+<li><p>Working development environment with all tools</p></li>
+<li><p>Multi-dimensional tensor operations (the foundation of all ML)</p></li>
+<li><p>Mathematical functions that enable neural network learning</p></li>
+<li><p>Core computational primitives that power everything else</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="neural-architecture">
+<h3><strong>🎯 Neural Architecture</strong><a class="headerlink" href="#neural-architecture" title="Link to this heading">#</a></h3>
+<p><em>Building complete neural network architectures</em></p>
+<p><strong>Modules</strong>: Layers • Dense • Spatial • Attention<br />
+<strong>Capability Unlocked</strong>: “Can design and construct any neural network architecture”</p>
+<p><strong>What You Build:</strong></p>
+<ul class="simple">
+<li><p>Fundamental layer abstractions for all neural networks</p></li>
+<li><p>Dense (fully-connected) networks for classification</p></li>
+<li><p>Convolutional layers for spatial pattern recognition</p></li>
+<li><p>Attention mechanisms for sequence and vision tasks</p></li>
+<li><p>Complete architectural building blocks</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="training">
+<h3><strong>🎯 Training</strong><a class="headerlink" href="#training" title="Link to this heading">#</a></h3>
+<p><em>Complete model training pipeline</em></p>
+<p><strong>Modules</strong>: DataLoader • Autograd • Optimizers • Training<br />
+<strong>Capability Unlocked</strong>: “Can train neural networks on real datasets”</p>
+<p><strong>What You Build:</strong></p>
+<ul class="simple">
+<li><p>CIFAR-10 data loading and preprocessing pipeline</p></li>
+<li><p>Automatic differentiation engine (the “magic” behind PyTorch)</p></li>
+<li><p>SGD and Adam optimizers with memory profiling</p></li>
+<li><p>Complete training orchestration system</p></li>
+<li><p>Real model training on real datasets</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="inference-deployment">
+<h3><strong>🎯 Inference Deployment</strong><a class="headerlink" href="#inference-deployment" title="Link to this heading">#</a></h3>
+<p><em>Optimized model deployment and serving</em></p>
+<p><strong>Modules</strong>: Compression • Kernels • Benchmarking • MLOps<br />
+<strong>Capability Unlocked</strong>: “Can deploy optimized models for production inference”</p>
+<p><strong>What You Build:</strong></p>
+<ul class="simple">
+<li><p>Model compression techniques (75% size reduction achievable)</p></li>
+<li><p>High-performance kernel optimizations</p></li>
+<li><p>Systematic performance benchmarking</p></li>
+<li><p>Production monitoring and deployment systems</p></li>
+<li><p>Real-world inference optimization</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="serving">
+<h3><strong>🎯 Serving</strong><a class="headerlink" href="#serving" title="Link to this heading">#</a></h3>
+<p><em>Complete ML system integration</em></p>
+<p><strong>Modules</strong>: Capstone Integration<br />
+<strong>Capability Unlocked</strong>: “Have built a complete, production-ready ML framework”</p>
+<p><strong>What You Build:</strong></p>
+<ul class="simple">
+<li><p>Integration of all previous capabilities</p></li>
+<li><p>Complete end-to-end ML system</p></li>
+<li><p>Your own PyTorch-style framework</p></li>
+<li><p>Production-ready ML infrastructure</p></li>
+</ul>
+</section>
+</section>
+<hr class="docutils" />
+<section id="tracking-your-progress">
+<h2>📊 <strong>Tracking Your Progress</strong><a class="headerlink" href="#tracking-your-progress" title="Link to this heading">#</a></h2>
+<section id="visual-timeline">
+<h3><strong>Visual Timeline</strong><a class="headerlink" href="#visual-timeline" title="Link to this heading">#</a></h3>
+<p>See your journey through the ML systems engineering pipeline:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Foundation → Architecture → Training → Inference → Serving
+</pre></div>
+</div>
+<p>Each milestone represents a major capability unlock in your ML framework.</p>
+</section>
+<section id="ticker-progress">
+<h3><strong>Ticker Progress</strong><a class="headerlink" href="#ticker-progress" title="Link to this heading">#</a></h3>
+<p>Within each milestone, track granular progress through individual modules:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>🎯 Neural Architecture ████████▓▓▓▓ 66%
+   ✅ Layers       ✅ Dense       🔄 Spatial      ⏳ Attention
+</pre></div>
+</div>
+</section>
+<section id="capability-statements">
+<h3><strong>Capability Statements</strong><a class="headerlink" href="#capability-statements" title="Link to this heading">#</a></h3>
+<p>Every milestone completion unlocks a concrete capability:</p>
+<ul class="simple">
+<li><p>✅ “I can build mathematical operations and ML primitives”</p></li>
+<li><p>✅ “I can design and construct any neural network architecture”</p></li>
+<li><p>🔄 “I can train neural networks on real datasets”</p></li>
+<li><p>⏳ “I can deploy optimized models for production inference”</p></li>
+<li><p>⏳ “I have built a complete, production-ready ML framework”</p></li>
+</ul>
+</section>
+</section>
+<hr class="docutils" />
+<section id="using-the-milestone-system">
+<h2>🛠️ <strong>Using the Milestone System</strong><a class="headerlink" href="#using-the-milestone-system" title="Link to this heading">#</a></h2>
+<section id="cli-commands">
+<h3><strong>CLI Commands</strong><a class="headerlink" href="#cli-commands" title="Link to this heading">#</a></h3>
+<section id="check-your-progress">
+<h4><strong>Check Your Progress</strong><a class="headerlink" href="#check-your-progress" title="Link to this heading">#</a></h4>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>tito<span class="w"> </span>milestone<span class="w"> </span>status<span class="w">           </span><span class="c1"># Current progress overview</span>
+tito<span class="w"> </span>milestone<span class="w"> </span>status<span class="w"> </span>--detailed<span class="w"> </span><span class="c1"># Module-level detail</span>
+</pre></div>
+</div>
+</section>
+<section id="id1">
+<h4><strong>Visual Timeline</strong><a class="headerlink" href="#id1" title="Link to this heading">#</a></h4>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>tito<span class="w"> </span>milestone<span class="w"> </span>timeline<span class="w">         </span><span class="c1"># Vertical tree view</span>
+tito<span class="w"> </span>milestone<span class="w"> </span>timeline<span class="w"> </span>--horizontal<span class="w"> </span><span class="c1"># Linear progress bar</span>
+</pre></div>
+</div>
+</section>
+<section id="test-capabilities-coming-soon">
+<h4><strong>Test Capabilities</strong> (Coming Soon)<a class="headerlink" href="#test-capabilities-coming-soon" title="Link to this heading">#</a></h4>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>tito<span class="w"> </span>milestone<span class="w"> </span><span class="nb">test</span><span class="w"> </span>foundation<span class="w">  </span><span class="c1"># Test foundation capabilities</span>
+tito<span class="w"> </span>milestone<span class="w"> </span>unlock<span class="w">          </span><span class="c1"># Attempt to unlock next milestone</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="integration-with-development">
+<h3><strong>Integration with Development</strong><a class="headerlink" href="#integration-with-development" title="Link to this heading">#</a></h3>
+<p>The milestone system connects directly to your actual development work:</p>
+<ul class="simple">
+<li><p><strong>Module completion</strong> automatically updates milestone progress</p></li>
+<li><p><strong>Integration tests</strong> validate that capabilities actually work</p></li>
+<li><p><strong>Package building</strong> ensures your framework grows with each milestone</p></li>
+</ul>
+</section>
+</section>
+<hr class="docutils" />
+<section id="why-this-approach-works">
+<h2>🧠 <strong>Why This Approach Works</strong><a class="headerlink" href="#why-this-approach-works" title="Link to this heading">#</a></h2>
+<section id="systems-thinking-over-task-completion">
+<h3><strong>Systems Thinking Over Task Completion</strong><a class="headerlink" href="#systems-thinking-over-task-completion" title="Link to this heading">#</a></h3>
+<p>Traditional approach: <em>“I finished Module 3”</em><br />
+Milestone approach: <em>“My framework can now build neural networks”</em></p>
+</section>
+<section id="clear-learning-goals">
+<h3><strong>Clear Learning Goals</strong><a class="headerlink" href="#clear-learning-goals" title="Link to this heading">#</a></h3>
+<p>Every module contributes to a <strong>concrete system capability</strong> rather than abstract completion.</p>
+</section>
+<section id="motivation-through-progress">
+<h3><strong>Motivation Through Progress</strong><a class="headerlink" href="#motivation-through-progress" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Visual feedback</strong> shows your growing ML framework</p></li>
+<li><p><strong>Capability unlocks</strong> feel like real achievements</p></li>
+<li><p><strong>Clear direction</strong> toward complete ML systems mastery</p></li>
+</ul>
+</section>
+<section id="real-world-relevance">
+<h3><strong>Real-World Relevance</strong><a class="headerlink" href="#real-world-relevance" title="Link to this heading">#</a></h3>
+<p>The milestone progression <strong>Foundation → Architecture → Training → Inference → Serving</strong> mirrors the actual ML engineering workflow in production systems.</p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="learning-outcomes-by-milestone">
+<h2>📈 <strong>Learning Outcomes by Milestone</strong><a class="headerlink" href="#learning-outcomes-by-milestone" title="Link to this heading">#</a></h2>
+<section id="after-foundation">
+<h3><strong>After Foundation</strong><a class="headerlink" href="#after-foundation" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Understand tensor operations and mathematical foundations</p></li>
+<li><p>Have working development environment</p></li>
+<li><p>Ready to build neural network components</p></li>
+</ul>
+</section>
+<section id="after-architecture">
+<h3><strong>After Architecture</strong><a class="headerlink" href="#after-architecture" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Can implement any neural network architecture</p></li>
+<li><p>Understand dense, convolutional, and attention mechanisms</p></li>
+<li><p>Ready to train complex models</p></li>
+</ul>
+</section>
+<section id="after-training">
+<h3><strong>After Training</strong><a class="headerlink" href="#after-training" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Can train models on real datasets like CIFAR-10</p></li>
+<li><p>Understand automatic differentiation and optimization</p></li>
+<li><p>Ready to deploy trained models</p></li>
+</ul>
+</section>
+<section id="after-inference">
+<h3><strong>After Inference</strong><a class="headerlink" href="#after-inference" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Can optimize models for production deployment</p></li>
+<li><p>Understand performance bottlenecks and solutions</p></li>
+<li><p>Ready to build complete ML systems</p></li>
+</ul>
+</section>
+<section id="after-serving">
+<h3><strong>After Serving</strong><a class="headerlink" href="#after-serving" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Have built a complete ML framework from scratch</p></li>
+<li><p>Understand every component of production ML systems</p></li>
+<li><p>Ready for ML engineering roles</p></li>
+</ul>
+</section>
+</section>
+<hr class="docutils" />
+<section id="your-journey-starts-here">
+<h2>🚀 <strong>Your Journey Starts Here</strong><a class="headerlink" href="#your-journey-starts-here" title="Link to this heading">#</a></h2>
+<p>The milestone system transforms TinyTorch from “16 separate exercises” into <strong>“building a complete ML framework.”</strong></p>
+<p>Each step builds real capabilities. Each milestone unlocks new powers. Each completion brings you closer to <strong>ML systems mastery</strong>.</p>
+<p><strong>Ready to begin?</strong> Start with:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>tito<span class="w"> </span>milestone<span class="w"> </span>status
+</pre></div>
+</div>
+<p>See where you are in your ML systems engineering journey!</p>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="vision.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">🎯 The TinyTorch Vision</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="resources.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">📚 Additional Learning Resources</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#capability-driven-learning-journey">Capability-Driven Learning Journey</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-five-major-milestones">🚀 <strong>The Five Major Milestones</strong></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#foundation"><strong>🎯 Foundation</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#neural-architecture"><strong>🎯 Neural Architecture</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#training"><strong>🎯 Training</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inference-deployment"><strong>🎯 Inference Deployment</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#serving"><strong>🎯 Serving</strong></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tracking-your-progress">📊 <strong>Tracking Your Progress</strong></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#visual-timeline"><strong>Visual Timeline</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ticker-progress"><strong>Ticker Progress</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#capability-statements"><strong>Capability Statements</strong></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#using-the-milestone-system">🛠️ <strong>Using the Milestone System</strong></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cli-commands"><strong>CLI Commands</strong></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#check-your-progress"><strong>Check Your Progress</strong></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id1"><strong>Visual Timeline</strong></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#test-capabilities-coming-soon"><strong>Test Capabilities</strong> (Coming Soon)</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#integration-with-development"><strong>Integration with Development</strong></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-this-approach-works">🧠 <strong>Why This Approach Works</strong></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#systems-thinking-over-task-completion"><strong>Systems Thinking Over Task Completion</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#clear-learning-goals"><strong>Clear Learning Goals</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motivation-through-progress"><strong>Motivation Through Progress</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#real-world-relevance"><strong>Real-World Relevance</strong></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-outcomes-by-milestone">📈 <strong>Learning Outcomes by Milestone</strong></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#after-foundation"><strong>After Foundation</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#after-architecture"><strong>After Architecture</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#after-training"><strong>After Training</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#after-inference"><strong>After Inference</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#after-serving"><strong>After Serving</strong></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#your-journey-starts-here">🚀 <strong>Your Journey Starts Here</strong></a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Prof. Vijay Janapa Reddi (Harvard University)
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2025.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

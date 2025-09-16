@@ -35,7 +35,7 @@ from .commands.module import ModuleCommand
 from .commands.package import PackageCommand
 from .commands.nbgrader import NBGraderCommand
 from .commands.book import BookCommand
-from .commands.milestone import MilestoneCommand
+from .commands.checkpoint import CheckpointCommand
 
 # Configure logging
 logging.basicConfig(
@@ -62,7 +62,7 @@ class TinyTorchCLI:
             'module': ModuleCommand,
             'package': PackageCommand,
             'nbgrader': NBGraderCommand,
-            'milestone': MilestoneCommand,
+            'checkpoint': CheckpointCommand,
             # Convenience commands
             'export': ExportCommand,
             'test': TestCommand,
@@ -81,7 +81,7 @@ Command Groups:
   module      Module development and management commands  
   package     Package management and nbdev integration commands
   nbgrader    Assignment management and auto-grading commands
-  milestone   Track ML systems engineering progress and capabilities
+  checkpoint  Track ML systems engineering progress through checkpoints
 
 Convenience Commands:
   export      Export modules to package (quick shortcut)
@@ -190,7 +190,7 @@ Examples:
                     "  [bold green]module[/bold green]   - Module development and management\n"
                     "  [bold green]package[/bold green]  - Package management and nbdev integration\n"
                     "  [bold green]nbgrader[/bold green] - Assignment management and auto-grading\n"
-                    "  [bold green]milestone[/bold green] - Track ML systems engineering progress\n\n"
+                    "  [bold green]checkpoint[/bold green] - Track ML systems engineering progress\n\n"
                     "[bold]Convenience Commands:[/bold]\n"
                     "  [bold green]export[/bold green]   - Export modules to package\n"
                     "  [bold green]test[/bold green]     - Run tests\n"
@@ -203,14 +203,14 @@ Examples:
                     "  [dim]tito nbgrader generate setup[/dim]  - Generate assignment from setup module\n"
                     "  [dim]tito book build[/dim]               - Build the Jupyter Book locally\n"
                     "  [dim]tito book publish[/dim]             - Generate, commit, and publish to GitHub\n"
-                    "  [dim]tito milestone status[/dim]         - Show current progress and capabilities\n"
-                    "  [dim]tito milestone timeline[/dim]       - Visual progress timeline\n\n"
+                    "  [dim]tito checkpoint status[/dim]        - Show current progress and capabilities\n"
+                    "  [dim]tito checkpoint timeline[/dim]      - Visual progress timeline\n\n"
                     "[bold]Get Help:[/bold]\n"
                     "  [dim]tito system[/dim]                   - Show system subcommands\n"
                     "  [dim]tito module[/dim]                   - Show module subcommands\n"
                     "  [dim]tito package[/dim]                  - Show package subcommands\n"
                     "  [dim]tito nbgrader[/dim]                 - Show nbgrader subcommands\n"
-                    "  [dim]tito milestone[/dim]                - Show milestone subcommands\n"
+                    "  [dim]tito checkpoint[/dim]               - Show checkpoint subcommands\n"
                     "  [dim]tito book[/dim]                     - Show book subcommands\n"
                     "  [dim]tito --help[/dim]                   - Show full help",
                     title="TinyTorch CLI",

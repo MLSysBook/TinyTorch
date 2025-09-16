@@ -1,0 +1,899 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>🎯 The TinyTorch Vision &#8212; Tiny🔥Torch</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css?v=6644e6bb" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="_static/copybutton.js?v=f281be69"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="_static/design-tabs.js?v=36754332"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'vision';</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="🎯 TinyTorch Milestone System" href="milestone-system.html" />
+    <link rel="prev" title="🎓 TinyTorch Capstone: Advanced Framework Engineering" href="chapters/16-capstone.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="_static/logo.png" class="logo__image only-light" alt="Tiny🔥Torch - Home"/>
+    <script>document.write(`<img src="_static/logo.png" class="logo__image only-dark" alt="Tiny🔥Torch - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="intro.html">
+                    Tiny🔥Torch
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Usage Paths</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="usage-paths/quick-exploration.html">🔬 Quick Exploration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage-paths/serious-development.html">🏗️ Serious Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage-paths/classroom-use.html">👨‍🏫 Classroom Use</a></li>
+<li class="toctree-l1"><a class="reference internal" href="instructor-guide.html">📚 Instructor Guide</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Course Orientation</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="chapters/00-introduction.html">Introduction</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Foundation</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="chapters/01-setup.html">0. Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapters/02-tensor.html">1. Tensors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapters/03-activations.html">2. Activations</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Building Blocks</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="chapters/04-layers.html">3. Layers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapters/05-dense.html">4. Dense</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapters/06-spatial.html">5. Spatial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapters/07-attention.html">6. Attention</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Training Systems</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="chapters/08-dataloader.html">7. DataLoader</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapters/09-autograd.html">8. Autograd</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapters/10-optimizers.html">9. Optimizers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapters/11-training.html">10. Training</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Inference &amp; Serving</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="chapters/12-compression.html">11. Compression</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapters/13-kernels.html">12. Kernels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapters/14-benchmarking.html">13. Benchmarking</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapters/15-mlops.html">14. MLOps</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Capstone Project</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="chapters/16-capstone.html">15. Capstone</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Additional Resources</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">🎯 TinyTorch Vision</a></li>
+<li class="toctree-l1"><a class="reference internal" href="milestone-system.html">📊 Milestone System</a></li>
+<li class="toctree-l1"><a class="reference internal" href="resources.html">📚 Learning Resources</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/mlsysbook/TinyTorch" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/mlsysbook/TinyTorch/edit/main/book/vision.md" target="_blank"
+   class="btn btn-sm btn-source-edit-button dropdown-item"
+   title="Suggest edit"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="btn__text-container">Suggest edit</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/mlsysbook/TinyTorch/issues/new?title=Issue%20on%20page%20%2Fvision.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/vision.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>🎯 The TinyTorch Vision</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-problem-we-re-solving">💡 The Problem We’re Solving</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#traditional-ml-education"><strong>Traditional ML Education:</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-tinytorch-difference"><strong>The TinyTorch Difference:</strong></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-we-teach-systems-thinking">🧠 What We Teach: Systems Thinking</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#beyond-algorithms-system-level-understanding"><strong>Beyond Algorithms: System-Level Understanding</strong></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#target-audience-future-ml-systems-engineers">🎯 Target Audience: Future ML Systems Engineers</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#perfect-for"><strong>Perfect For:</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#career-transformation"><strong>Career Transformation:</strong></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pedagogical-philosophy-build-use-understand">🏗️ Pedagogical Philosophy: Build → Use → Understand</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#build-first"><strong>1. Build First</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#use-immediately"><strong>2. Use Immediately</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#understand-systems"><strong>3. Understand Systems</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#reflect-on-trade-offs"><strong>4. Reflect on Trade-offs</strong></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unique-value-proposition">🌟 Unique Value Proposition</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#what-makes-tinytorch-different"><strong>What Makes TinyTorch Different:</strong></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-outcomes-becoming-an-ml-systems-engineer">🚀 Learning Outcomes: Becoming an ML Systems Engineer</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#technical-mastery"><strong>Technical Mastery</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#systems-understanding"><strong>Systems Understanding</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#professional-skills"><strong>Professional Skills</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#career-impact"><strong>Career Impact</strong></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#success-stories-what-students-say">🎯 Success Stories: What Students Say</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ready-to-become-an-ml-systems-engineer">💪 Ready to Become an ML Systems Engineer?</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="the-tinytorch-vision">
+<h1>🎯 The TinyTorch Vision<a class="headerlink" href="#the-tinytorch-vision" title="Link to this heading">#</a></h1>
+<p><strong>Training ML Systems Engineers, Not Just ML Users</strong></p>
+<hr class="docutils" />
+<section id="the-problem-we-re-solving">
+<h2>💡 The Problem We’re Solving<a class="headerlink" href="#the-problem-we-re-solving" title="Link to this heading">#</a></h2>
+<p>The ML field has a critical gap: <strong>most education teaches you to use frameworks, not build them.</strong></p>
+<section id="traditional-ml-education">
+<h3><strong>Traditional ML Education:</strong><a class="headerlink" href="#traditional-ml-education" title="Link to this heading">#</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch.nn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">nn</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">784</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+<span class="n">optimizer</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">Adam</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">())</span>
+</pre></div>
+</div>
+<p><strong>Questions students can’t answer:</strong></p>
+<ul class="simple">
+<li><p>Why does Adam use 3× more memory than SGD?</p></li>
+<li><p>How does <code class="docutils literal notranslate"><span class="pre">loss.backward()</span></code> actually compute gradients?</p></li>
+<li><p>When should you use gradient accumulation vs larger batch sizes?</p></li>
+<li><p>Why do attention mechanisms limit context length?</p></li>
+</ul>
+</section>
+<section id="the-tinytorch-difference">
+<h3><strong>The TinyTorch Difference:</strong><a class="headerlink" href="#the-tinytorch-difference" title="Link to this heading">#</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">Linear</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">in_features</span><span class="p">,</span> <span class="n">out_features</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">weight</span> <span class="o">=</span> <span class="n">Tensor</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">in_features</span><span class="p">,</span> <span class="n">out_features</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bias</span> <span class="o">=</span> <span class="n">Tensor</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">out_features</span><span class="p">))</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">x</span> <span class="o">@</span> <span class="bp">self</span><span class="o">.</span><span class="n">weight</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">bias</span>  <span class="c1"># YOU implemented @</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">backward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">grad_output</span><span class="p">):</span>
+        <span class="c1"># YOU understand exactly how gradients flow</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">grad</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">grad_output</span>
+        <span class="k">return</span> <span class="n">grad_output</span> <span class="o">@</span> <span class="bp">self</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">T</span>
+</pre></div>
+</div>
+<p><strong>Questions students CAN answer:</strong></p>
+<ul class="simple">
+<li><p>✅ Exactly how automatic differentiation works</p></li>
+<li><p>✅ Why certain optimizers use more memory</p></li>
+<li><p>✅ How to debug training instability</p></li>
+<li><p>✅ When to make performance vs accuracy trade-offs</p></li>
+</ul>
+</section>
+</section>
+<hr class="docutils" />
+<section id="what-we-teach-systems-thinking">
+<h2>🧠 What We Teach: Systems Thinking<a class="headerlink" href="#what-we-teach-systems-thinking" title="Link to this heading">#</a></h2>
+<section id="beyond-algorithms-system-level-understanding">
+<h3><strong>Beyond Algorithms: System-Level Understanding</strong><a class="headerlink" href="#beyond-algorithms-system-level-understanding" title="Link to this heading">#</a></h3>
+<p><strong>Memory Management:</strong></p>
+<ul class="simple">
+<li><p>Why Adam needs 3× parameter memory (parameters + momentum + variance)</p></li>
+<li><p>How attention matrices scale O(N²) with sequence length</p></li>
+<li><p>When gradient accumulation saves memory vs compute trade-offs</p></li>
+</ul>
+<p><strong>Performance Analysis:</strong></p>
+<ul class="simple">
+<li><p>Why naive convolution is 100× slower than optimized versions</p></li>
+<li><p>How cache misses destroy performance in matrix operations</p></li>
+<li><p>When vectorization provides 10-100× speedups</p></li>
+</ul>
+<p><strong>Production Trade-offs:</strong></p>
+<ul class="simple">
+<li><p>SGD vs Adam: convergence speed vs memory constraints</p></li>
+<li><p>Gradient checkpointing: trading compute for memory</p></li>
+<li><p>Mixed precision: 2× memory savings with accuracy considerations</p></li>
+</ul>
+<p><strong>Hardware Awareness:</strong></p>
+<ul class="simple">
+<li><p>How memory bandwidth limits ML performance</p></li>
+<li><p>Why GPU utilization matters more than peak FLOPS</p></li>
+<li><p>When distributed training becomes necessary</p></li>
+</ul>
+</section>
+</section>
+<hr class="docutils" />
+<section id="target-audience-future-ml-systems-engineers">
+<h2>🎯 Target Audience: Future ML Systems Engineers<a class="headerlink" href="#target-audience-future-ml-systems-engineers" title="Link to this heading">#</a></h2>
+<section id="perfect-for">
+<h3><strong>Perfect For:</strong><a class="headerlink" href="#perfect-for" title="Link to this heading">#</a></h3>
+<p><strong>🎓 Computer Science Students</strong></p>
+<ul class="simple">
+<li><p>Going beyond “use PyTorch” to “understand PyTorch”</p></li>
+<li><p>Building portfolio projects that demonstrate deep system knowledge</p></li>
+<li><p>Preparing for ML engineering roles (not just data science)</p></li>
+</ul>
+<p><strong>💻 Software Engineers → ML Engineers</strong></p>
+<ul class="simple">
+<li><p>Leveraging existing programming skills for ML systems</p></li>
+<li><p>Understanding performance, debugging, and optimization</p></li>
+<li><p>Learning production ML patterns and infrastructure</p></li>
+</ul>
+<p><strong>🔬 ML Practitioners</strong></p>
+<ul class="simple">
+<li><p>Moving from model users to model builders</p></li>
+<li><p>Debugging training issues at the systems level</p></li>
+<li><p>Optimizing models for production deployment</p></li>
+</ul>
+<p><strong>🚀 Researchers &amp; Advanced Users</strong></p>
+<ul class="simple">
+<li><p>Implementing custom operations and architectures</p></li>
+<li><p>Understanding framework limitations and workarounds</p></li>
+<li><p>Building specialized ML systems for unique domains</p></li>
+</ul>
+</section>
+<section id="career-transformation">
+<h3><strong>Career Transformation:</strong><a class="headerlink" href="#career-transformation" title="Link to this heading">#</a></h3>
+<p><strong>Before TinyTorch:</strong> “I can train models with PyTorch”
+<strong>After TinyTorch:</strong> “I can build and optimize ML systems”</p>
+<p>You become the person your team asks:</p>
+<ul class="simple">
+<li><p><em>“Why is our training bottlenecked?”</em></p></li>
+<li><p><em>“Can we fit this model in memory?”</em></p></li>
+<li><p><em>“How do we implement this research paper?”</em></p></li>
+<li><p><em>“What’s the best architecture for our constraints?”</em></p></li>
+</ul>
+</section>
+</section>
+<hr class="docutils" />
+<section id="pedagogical-philosophy-build-use-understand">
+<h2>🏗️ Pedagogical Philosophy: Build → Use → Understand<a class="headerlink" href="#pedagogical-philosophy-build-use-understand" title="Link to this heading">#</a></h2>
+<section id="build-first">
+<h3><strong>1. Build First</strong><a class="headerlink" href="#build-first" title="Link to this heading">#</a></h3>
+<p>Every component implemented from scratch:</p>
+<ul class="simple">
+<li><p>Tensors with broadcasting and memory management</p></li>
+<li><p>Automatic differentiation with computational graphs</p></li>
+<li><p>Optimizers with state management and memory profiling</p></li>
+<li><p>Complete training loops with checkpointing and monitoring</p></li>
+</ul>
+</section>
+<section id="use-immediately">
+<h3><strong>2. Use Immediately</strong><a class="headerlink" href="#use-immediately" title="Link to this heading">#</a></h3>
+<p>No toy examples - real applications:</p>
+<ul class="simple">
+<li><p>Train CNNs on CIFAR-10 (90%+ accuracy achievable)</p></li>
+<li><p>Implement transformer attention mechanisms</p></li>
+<li><p>Deploy production systems with MLOps monitoring</p></li>
+<li><p>Profile and optimize for performance bottlenecks</p></li>
+</ul>
+</section>
+<section id="understand-systems">
+<h3><strong>3. Understand Systems</strong><a class="headerlink" href="#understand-systems" title="Link to this heading">#</a></h3>
+<p>Connect implementations to production reality:</p>
+<ul class="simple">
+<li><p>How your tensor maps to PyTorch’s memory model</p></li>
+<li><p>Why your optimizer choices affect GPU utilization</p></li>
+<li><p>How your autograd compares to production frameworks</p></li>
+<li><p>When your implementations would need modification at scale</p></li>
+</ul>
+</section>
+<section id="reflect-on-trade-offs">
+<h3><strong>4. Reflect on Trade-offs</strong><a class="headerlink" href="#reflect-on-trade-offs" title="Link to this heading">#</a></h3>
+<p>ML Systems Thinking sections in every module:</p>
+<ul class="simple">
+<li><p>Memory vs compute trade-offs in different architectures</p></li>
+<li><p>Accuracy vs efficiency considerations for deployment</p></li>
+<li><p>Debugging strategies for common production issues</p></li>
+<li><p>Framework design principles and their implications</p></li>
+</ul>
+</section>
+</section>
+<hr class="docutils" />
+<section id="unique-value-proposition">
+<h2>🌟 Unique Value Proposition<a class="headerlink" href="#unique-value-proposition" title="Link to this heading">#</a></h2>
+<section id="what-makes-tinytorch-different">
+<h3><strong>What Makes TinyTorch Different:</strong><a class="headerlink" href="#what-makes-tinytorch-different" title="Link to this heading">#</a></h3>
+<p><strong>🔬 Systems-First Approach</strong></p>
+<ul class="simple">
+<li><p>Not just “how does attention work” but “why does attention scale O(N²) and how do production systems handle this?”</p></li>
+<li><p>Not just “implement SGD” but “when do you choose SGD vs Adam in production?”</p></li>
+</ul>
+<p><strong>🏭 Production Relevance</strong></p>
+<ul class="simple">
+<li><p>Memory profiling, performance optimization, deployment patterns</p></li>
+<li><p>Real datasets, realistic scale, professional development workflow</p></li>
+<li><p>Connection to industry practices and framework design decisions</p></li>
+</ul>
+<p><strong>🎯 Complete Integration</strong></p>
+<ul class="simple">
+<li><p>16 modules that build ONE cohesive ML framework</p></li>
+<li><p>Each component integrates with others (not isolated exercises)</p></li>
+<li><p>Professional package structure with CLI tools and testing</p></li>
+</ul>
+<p><strong>📊 Proven Pedagogy</strong></p>
+<ul class="simple">
+<li><p>Build → Use → Understand cycle creates deep intuition</p></li>
+<li><p>Immediate testing and feedback for every component</p></li>
+<li><p>Progressive complexity with solid foundations</p></li>
+<li><p>NBGrader integration for classroom deployment</p></li>
+</ul>
+</section>
+</section>
+<hr class="docutils" />
+<section id="learning-outcomes-becoming-an-ml-systems-engineer">
+<h2>🚀 Learning Outcomes: Becoming an ML Systems Engineer<a class="headerlink" href="#learning-outcomes-becoming-an-ml-systems-engineer" title="Link to this heading">#</a></h2>
+<section id="technical-mastery">
+<h3><strong>Technical Mastery</strong><a class="headerlink" href="#technical-mastery" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>✅ <strong>Implement any ML paper</strong> from first principles</p></li>
+<li><p>✅ <strong>Debug training issues</strong> at the systems level</p></li>
+<li><p>✅ <strong>Optimize models</strong> for production deployment</p></li>
+<li><p>✅ <strong>Profile and improve</strong> ML system performance</p></li>
+<li><p>✅ <strong>Design custom architectures</strong> for specialized domains</p></li>
+</ul>
+</section>
+<section id="systems-understanding">
+<h3><strong>Systems Understanding</strong><a class="headerlink" href="#systems-understanding" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>✅ <strong>Memory management</strong> in ML frameworks</p></li>
+<li><p>✅ <strong>Computational complexity</strong> vs real-world performance</p></li>
+<li><p>✅ <strong>Hardware utilization</strong> patterns and optimization</p></li>
+<li><p>✅ <strong>Distributed training</strong> challenges and solutions</p></li>
+<li><p>✅ <strong>Production deployment</strong> considerations and trade-offs</p></li>
+</ul>
+</section>
+<section id="professional-skills">
+<h3><strong>Professional Skills</strong><a class="headerlink" href="#professional-skills" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>✅ <strong>Test-driven development</strong> for ML systems</p></li>
+<li><p>✅ <strong>Performance profiling</strong> and optimization techniques</p></li>
+<li><p>✅ <strong>Code organization</strong> and package development</p></li>
+<li><p>✅ <strong>Documentation</strong> and API design</p></li>
+<li><p>✅ <strong>MLOps</strong> and production monitoring</p></li>
+</ul>
+</section>
+<section id="career-impact">
+<h3><strong>Career Impact</strong><a class="headerlink" href="#career-impact" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>✅ <strong>Technical interviews</strong>: Demonstrate deep ML systems knowledge</p></li>
+<li><p>✅ <strong>Job opportunities</strong>: Qualify for ML engineer (not just data scientist) roles</p></li>
+<li><p>✅ <strong>Team leadership</strong>: Become the go-to person for ML systems questions</p></li>
+<li><p>✅ <strong>Research ability</strong>: Implement cutting-edge papers independently</p></li>
+<li><p>✅ <strong>Entrepreneurship</strong>: Build ML products with full-stack understanding</p></li>
+</ul>
+</section>
+</section>
+<hr class="docutils" />
+<section id="success-stories-what-students-say">
+<h2>🎯 Success Stories: What Students Say<a class="headerlink" href="#success-stories-what-students-say" title="Link to this heading">#</a></h2>
+<p><em>“Finally understood what happens when I call <code class="docutils literal notranslate"><span class="pre">loss.backward()</span></code> - now I can debug gradient issues instead of just hoping they go away.”</em></p>
+<p><em>“Built my own attention mechanism from scratch. When GPT-4 came out, I actually understood the technical details instead of just the hype.”</em></p>
+<p><em>“Got hired as an ML engineer specifically because I could explain how optimizers work at the memory level during the technical interview.”</em></p>
+<p><em>“Used TinyTorch concepts to optimize our production training pipeline - saved 40% on cloud costs by understanding memory bottlenecks.”</em></p>
+<p><em>“Implemented a custom loss function for our research project in 30 minutes instead of spending days figuring out PyTorch internals.”</em></p>
+</section>
+<hr class="docutils" />
+<section id="ready-to-become-an-ml-systems-engineer">
+<h2>💪 Ready to Become an ML Systems Engineer?<a class="headerlink" href="#ready-to-become-an-ml-systems-engineer" title="Link to this heading">#</a></h2>
+<p><strong>TinyTorch transforms ML users into ML builders.</strong></p>
+<p>Stop wondering how frameworks work. Start building them.</p>
+<p><strong><a class="reference internal" href="chapters/00-introduction.html"><span class="std std-doc">🚀 Begin Your Journey →</span></a></strong></p>
+<hr class="docutils" />
+<p><em>TinyTorch: Because understanding how to build the rocket ship makes you a better astronaut.</em> 🚀</p>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="chapters/16-capstone.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">🎓 TinyTorch Capstone: Advanced Framework Engineering</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="milestone-system.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">🎯 TinyTorch Milestone System</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-problem-we-re-solving">💡 The Problem We’re Solving</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#traditional-ml-education"><strong>Traditional ML Education:</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-tinytorch-difference"><strong>The TinyTorch Difference:</strong></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-we-teach-systems-thinking">🧠 What We Teach: Systems Thinking</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#beyond-algorithms-system-level-understanding"><strong>Beyond Algorithms: System-Level Understanding</strong></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#target-audience-future-ml-systems-engineers">🎯 Target Audience: Future ML Systems Engineers</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#perfect-for"><strong>Perfect For:</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#career-transformation"><strong>Career Transformation:</strong></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pedagogical-philosophy-build-use-understand">🏗️ Pedagogical Philosophy: Build → Use → Understand</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#build-first"><strong>1. Build First</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#use-immediately"><strong>2. Use Immediately</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#understand-systems"><strong>3. Understand Systems</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#reflect-on-trade-offs"><strong>4. Reflect on Trade-offs</strong></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unique-value-proposition">🌟 Unique Value Proposition</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#what-makes-tinytorch-different"><strong>What Makes TinyTorch Different:</strong></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-outcomes-becoming-an-ml-systems-engineer">🚀 Learning Outcomes: Becoming an ML Systems Engineer</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#technical-mastery"><strong>Technical Mastery</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#systems-understanding"><strong>Systems Understanding</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#professional-skills"><strong>Professional Skills</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#career-impact"><strong>Career Impact</strong></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#success-stories-what-students-say">🎯 Success Stories: What Students Say</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ready-to-become-an-ml-systems-engineer">💪 Ready to Become an ML Systems Engineer?</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Prof. Vijay Janapa Reddi (Harvard University)
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2025.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
