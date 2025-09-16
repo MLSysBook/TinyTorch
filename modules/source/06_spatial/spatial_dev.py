@@ -43,7 +43,6 @@ import numpy as np
 import os
 import sys
 from typing import List, Tuple, Optional
-import matplotlib.pyplot as plt
 
 # Import from the main package - try package first, then local modules
 try:
@@ -128,7 +127,7 @@ Input Image:     Kernel:        Output Feature Map:
 
 The kernel slides across the input, computing dot products at each position.
 
-Let's implement this step by step!
+Let us implement this step by step!
 """
 
 # %% nbgrader={"grade": false, "grade_id": "conv2d-naive", "locked": false, "schema_version": 3, "solution": true, "task": false}
@@ -203,7 +202,7 @@ def conv2d_naive(input: np.ndarray, kernel: np.ndarray) -> np.ndarray:
 """
 ### 🧪 Unit Test: Convolution Operation
 
-Let's test your convolution implementation right away! This is the core operation that powers computer vision.
+Let us test your convolution implementation right away! This is the core operation that powers computer vision.
 
 **This is a unit test** - it tests one specific function (conv2d_naive) in isolation.
 """
@@ -378,7 +377,7 @@ class Conv2D:
 """
 ### 🧪 Unit Test: Conv2D Layer
 
-Let's test your Conv2D layer implementation! This is a learnable convolutional layer that can be trained.
+Let us test your Conv2D layer implementation! This is a learnable convolutional layer that can be trained.
 
 **This is a unit test** - it tests one specific class (Conv2D) in isolation.
 """
@@ -505,7 +504,7 @@ def flatten(x):
 """
 ### 🧪 Unit Test: Flatten Function
 
-Let's test your flatten function! This connects convolutional layers to dense layers.
+Let us test your flatten function! This connects convolutional layers to dense layers.
 
 **This is a unit test** - it tests one specific function (flatten) in isolation.
 """
@@ -573,7 +572,7 @@ print("📈 Progress: Convolution operation ✓, Conv2D layer ✓, Flatten ✓")
 ## Step 4: Comprehensive Test - Complete CNN Pipeline
 
 ### Real-World CNN Applications
-Let's test our CNN components in realistic scenarios:
+Let us test our CNN components in realistic scenarios:
 
 #### **Image Classification Pipeline**
 ```python
@@ -746,8 +745,7 @@ def test_unit_convolution_operation():
     
     print("✅ Convolution operation works correctly")
 
-# Run the test
-test_unit_convolution_operation()
+# Test function defined (called in main block)
 
 # %% [markdown]
 """
@@ -772,8 +770,7 @@ def test_unit_conv2d_layer():
     
     print("✅ Conv2D layer works correctly")
 
-# Run the test
-test_unit_conv2d_layer()
+# Test function defined (called in main block)
 
 # %% [markdown]
 """
@@ -797,8 +794,7 @@ def test_unit_flatten_function():
     
     print("✅ Flatten function works correctly")
 
-# Run the test
-test_unit_flatten_function()
+# Test function defined (called in main block)
 
 # CNN pipeline integration test moved to tests/integration/test_cnn_pipeline.py
 
@@ -855,16 +851,16 @@ def test_module_conv2d_tensor_compatibility():
 """
 ## 🎯 MODULE SUMMARY: Convolutional Networks
 
-Congratulations! You've successfully implemented the core components of convolutional neural networks:
+Congratulations! You have successfully implemented the core components of convolutional neural networks:
 
-### What You've Accomplished
+### What You have Accomplished
 ✅ **Convolution Operation**: Implemented the sliding window mechanism from scratch  
 ✅ **Conv2D Layer**: Built learnable convolutional layers with random initialization  
 ✅ **Flatten Function**: Created the bridge between convolutional and dense layers  
 ✅ **CNN Pipelines**: Composed complete systems for image processing  
 ✅ **Real Applications**: Tested on image classification and feature extraction
 
-### Key Concepts You've Learned
+### Key Concepts You have Learned
 - **Convolution as pattern matching**: Kernels detect specific features
 - **Sliding window mechanism**: How convolution processes spatial data
 - **Parameter sharing**: Same kernel applied across the entire image
@@ -915,7 +911,8 @@ Congratulations! You've successfully implemented the core components of convolut
    ```
 4. **Explore advanced CNNs**: Pooling, multiple channels, modern architectures!
 
-**Ready for the next challenge?** Let's build data loaders to handle real datasets efficiently!
+**Ready for the next challenge?** Let us build data loaders to handle real datasets efficiently!
+"""
 
 # %% [markdown]
 """
@@ -1215,7 +1212,7 @@ class ConvolutionProfiler:
 """
 ### 🧪 Test: Convolution Performance Profiling
 
-Let's test our convolution profiler with realistic computer vision scenarios.
+Let us test our convolution profiler with realistic computer vision scenarios.
 """
 
 # %% nbgrader={"grade": false, "grade_id": "test-convolution-profiler", "locked": false, "schema_version": 3, "solution": false, "task": false}
@@ -1270,8 +1267,7 @@ def test_convolution_profiler():
     
     print("🎯 Convolution Profiler: All tests passed!")
 
-# Run the test
-test_convolution_profiler()
+# Test function defined (called in main block)
 
 # %% [markdown]
 """
@@ -1280,7 +1276,7 @@ test_convolution_profiler()
 *Take a moment to reflect on these questions. Consider how your convolution implementation connects to the challenges of production computer vision systems.*
 
 ### 🏗️ Spatial Computation Design
-1. **Memory Access Patterns**: Your convolution slides a kernel across an image, accessing nearby pixels repeatedly. How do production systems optimize for spatial locality to maximize cache hit rates? What happens when images don't fit in cache?
+1. **Memory Access Patterns**: Your convolution slides a kernel across an image, accessing nearby pixels repeatedly. How do production systems optimize for spatial locality to maximize cache hit rates? What happens when images do not fit in cache?
 
 2. **Parallelization Strategy**: Your implementation processes one pixel at a time. How do modern GPUs parallelize convolution across thousands of cores? What are the trade-offs between data parallelism and model parallelism for large CNNs?
 
@@ -1308,7 +1304,17 @@ test_convolution_profiler()
 12. **Distributed Inference**: Large vision models may not fit on a single device. How do systems distribute convolution layers across multiple GPUs or devices while minimizing communication overhead?
 
 *These questions connect your spatial computation implementation to the real challenges of deploying computer vision at scale. Each represents engineering decisions that impact the performance, cost, and reliability of production AI systems.*
-"""
 
-**Ready for the next challenge?** Let's build data loaders to handle real datasets efficiently!
+**Ready for the next challenge?** Let us build data loaders to handle real datasets efficiently!
 """ 
+
+if __name__ == "__main__":
+    # Run all tests
+    test_unit_convolution_operation()
+    test_unit_conv2d_layer()
+    test_unit_flatten_function()
+    test_module_conv2d_tensor_compatibility()
+    test_convolution_profiler()
+    
+    print("All tests passed!")
+    print("spatial_dev module complete!")

@@ -34,16 +34,10 @@ Welcome to the Training module! This is where we bring everything together to tr
 import numpy as np
 import sys
 import os
-import pickle
-import json
-from pathlib import Path
-from typing import List, Dict, Any, Optional, Union, Callable, Tuple
 from collections import defaultdict
 import time
 
 # Add module directories to Python path
-import sys
-import os
 sys.path.append(os.path.abspath('modules/source/02_tensor'))
 sys.path.append(os.path.abspath('modules/source/03_activations'))
 sys.path.append(os.path.abspath('modules/source/04_layers'))
@@ -237,8 +231,7 @@ def test_unit_mse_loss():
     
     print("🎯 MSE Loss: All tests passed!")
 
-# Run the test
-test_unit_mse_loss() 
+# Test function defined (called in main block) 
 
 # %% nbgrader={"grade": false, "grade_id": "crossentropy-loss", "locked": false, "schema_version": 3, "solution": true, "task": false}
 #| export
@@ -326,8 +319,7 @@ class CrossEntropyLoss:
         """Alternative interface for forward pass."""
         return self.__call__(y_pred, y_true)
 
-# Run the test
-test_unit_mse_loss()
+# Test function defined (called in main block)
 
 # %% [markdown]
 """
@@ -374,8 +366,7 @@ def test_unit_crossentropy_loss():
     
     print("🎯 CrossEntropy Loss: All tests passed!")
 
-# Run the test
-test_unit_crossentropy_loss()
+# Test function defined (called in main block)
 
 # %% nbgrader={"grade": false, "grade_id": "binary-crossentropy-loss", "locked": false, "schema_version": 3, "solution": true, "task": false}
 #| export
@@ -468,8 +459,7 @@ class BinaryCrossEntropyLoss:
         """Alternative interface for forward pass."""
         return self.__call__(y_pred, y_true)
 
-# Run the test
-test_unit_crossentropy_loss()
+# Test function defined (called in main block)
 
 # %% [markdown]
 """
@@ -516,8 +506,7 @@ def test_unit_binary_crossentropy_loss():
     
     print("🎯 Binary CrossEntropy Loss: All tests passed!")
 
-# Run the test
-test_unit_binary_crossentropy_loss() 
+# Test function defined (called in main block) 
 
 # %% [markdown]
 """
@@ -565,8 +554,7 @@ MAE = (1/n) * Σ|y_pred - y_true|
 Let's implement these essential metrics!
 """
 
-# Run the test
-test_unit_binary_crossentropy_loss()
+# Test function defined (called in main block)
 
 # %% nbgrader={"grade": false, "grade_id": "accuracy-metric", "locked": false, "schema_version": 3, "solution": true, "task": false}
 #| export
@@ -694,8 +682,7 @@ def test_unit_accuracy_metric():
     
     print("🎯 Accuracy Metric: All tests passed!")
 
-# Run the test
-test_unit_accuracy_metric()
+# Test function defined (called in main block)
 
 # %% [markdown]
 """
@@ -1076,8 +1063,7 @@ def test_unit_trainer():
     
     print("🎯 Trainer Class: All tests passed!")
 
-# Run the test
-test_unit_trainer()
+# Test function defined (called in main block)
 
 # %% [markdown]
 """
@@ -1156,8 +1142,7 @@ def test_module_training():
     
     print("🎯 Training Pipeline: All comprehensive tests passed!")
 
-# Run the comprehensive test
-test_module_training()
+# Test function defined (called in main block)
 
 # %% [markdown]
 """
@@ -1431,8 +1416,7 @@ def test_training_pipeline_profiler():
     
     print("🎯 Training Pipeline Profiler: All tests passed!")
 
-# Run the test
-test_training_pipeline_profiler()
+# Test function defined (called in main block)
 
 # %% nbgrader={"grade": false, "grade_id": "production-training-optimizer", "locked": false, "schema_version": 3, "solution": true, "task": false}
 #| export
@@ -1657,8 +1641,7 @@ def test_production_training_optimizer():
     
     print("🎯 Production Training Optimizer: All tests passed!")
 
-# Run the test
-test_production_training_optimizer()
+# Test function defined (called in main block)
 
 # %% [markdown]
 """
@@ -1753,3 +1736,17 @@ Your implementations mirror production systems:
 
 **Ready for compression?** Your training pipelines are now ready for real-world deployment!
 """ 
+
+if __name__ == "__main__":
+    # Run all tests
+    test_unit_mse_loss()
+    test_unit_crossentropy_loss()
+    test_unit_binary_crossentropy_loss()
+    test_unit_accuracy_metric()
+    test_unit_trainer()
+    test_module_training()
+    test_training_pipeline_profiler()
+    test_production_training_optimizer()
+    
+    print("All tests passed!")
+    print("training_dev module complete!")

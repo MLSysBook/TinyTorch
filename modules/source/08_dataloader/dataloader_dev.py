@@ -42,12 +42,7 @@ By the end of this module, you'll understand:
 import numpy as np
 import sys
 import os
-import pickle
-import struct
-from typing import List, Tuple, Optional, Union, Iterator
-import matplotlib.pyplot as plt
-import urllib.request
-import tarfile
+from typing import Tuple, Optional, Iterator
 
 # Import our building blocks - try package first, then local modules
 try:
@@ -323,51 +318,7 @@ class TestDataset(Dataset):
     def get_num_classes(self):
         return 2
 
-# Test the interface
-try:
-    test_dataset = TestDataset(size=5)
-    print(f"Dataset created with size: {len(test_dataset)}")
-    
-    # Test __getitem__
-    data, label = test_dataset[0]
-    print(f"Sample 0: data={data}, label={label}")
-    assert isinstance(data, Tensor), "Data should be a Tensor"
-    assert isinstance(label, Tensor), "Label should be a Tensor"
-    print("✅ Dataset __getitem__ works correctly")
-    
-    # Test __len__
-    assert len(test_dataset) == 5, f"Dataset length should be 5, got {len(test_dataset)}"
-    print("✅ Dataset __len__ works correctly")
-    
-    # Test get_num_classes
-    assert test_dataset.get_num_classes() == 2, f"Should have 2 classes, got {test_dataset.get_num_classes()}"
-    print("✅ Dataset get_num_classes works correctly")
-    
-    # Test get_sample_shape
-    sample_shape = test_dataset.get_sample_shape()
-    assert sample_shape == (2,), f"Sample shape should be (2,), got {sample_shape}"
-    print("✅ Dataset get_sample_shape works correctly")
-    
-    # Test multiple samples
-    for i in range(3):
-        data, label = test_dataset[i]
-        expected_data = [i, i * 2]
-        expected_label = [i % 2]
-        assert np.array_equal(data.data, expected_data), f"Data mismatch at index {i}"
-        assert np.array_equal(label.data, expected_label), f"Label mismatch at index {i}"
-    print("✅ Dataset produces correct data for multiple samples")
-    
-except Exception as e:
-    print(f"❌ Dataset interface test failed: {e}")
-    raise
-
-# Show the dataset pattern
-print("🎯 Dataset interface pattern:")
-print("   __getitem__: Returns (data, label) tuple")
-print("   __len__: Returns dataset size")
-print("   get_num_classes: Returns number of classes")
-print("   get_sample_shape: Returns shape of data samples")
-print("📈 Progress: Dataset interface ✓")
+# Test the interface (moved to main block)
 
 # %% [markdown]
 """
@@ -1146,8 +1097,7 @@ def test_module_dataloader_tensor_yield():
 
     print("✅ Integration Test Passed: DataLoader correctly yields batches of Tensors.")
 
-# Run the integration test
-test_module_dataloader_tensor_yield()
+# Test function defined (called in main block)
 
 # %% [markdown]
 """
@@ -1459,19 +1409,21 @@ Complete the missing implementations in the `DataPipelineProfiler` class above, 
 # Initialize the data pipeline profiler
 profiler = DataPipelineProfiler()
 
-print("📊 DATA PIPELINE PERFORMANCE ANALYSIS")
-print("=" * 50)
+# Only run tests when module is executed directly
+if __name__ == '__main__':
+    print("📊 DATA PIPELINE PERFORMANCE ANALYSIS")
+    print("=" * 50)
 
-# Create test dataset and dataloader
-test_dataset = TensorDataset([
-    Tensor(np.random.randn(100)) for _ in range(1000)  # 1000 samples
-], [
-    Tensor([i % 10]) for i in range(1000)  # Labels
-])
+    # Create test dataset and dataloader
+    test_dataset = TensorDataset([
+        Tensor(np.random.randn(100)) for _ in range(1000)  # 1000 samples
+    ], [
+        Tensor([i % 10]) for i in range(1000)  # Labels
+    ])
 
-# Test 1: Basic DataLoader timing
-print("⏱️  Basic DataLoader Timing:")
-basic_dataloader = DataLoader(test_dataset, batch_size=32, shuffle=False)
+    # Test 1: Basic DataLoader timing
+    print("⏱️  Basic DataLoader Timing:")
+    basic_dataloader = DataLoader(test_dataset, batch_size=32, shuffle=False)
 
 # Students use their implemented timing function
 timing_result = profiler.time_dataloader_iteration(basic_dataloader, num_batches=25)
@@ -1571,6 +1523,31 @@ print(f"- Modern ML systems spend significant effort on data pipeline optimizati
 
 # %% [markdown]
 """
+## 🤔 ML Systems Thinking Questions
+
+### System Design
+1. How does TinyTorch's DataLoader design compare to PyTorch's DataLoader and TensorFlow's tf.data API in terms of flexibility and performance?
+2. What are the trade-offs between memory-mapped files, streaming data loading, and in-memory caching for large-scale ML datasets?
+3. How would you design a data loading system that efficiently handles both structured (tabular) and unstructured (images, text) data?
+
+### Production ML
+1. How would you implement fault-tolerant data loading that can handle network failures and corrupted files in production environments?
+2. What strategies would you use to ensure data consistency and prevent data leakage when loading from constantly updating production databases?
+3. How would you design a data pipeline that supports both batch inference and real-time prediction serving?
+
+### Framework Design
+1. What design patterns enable efficient data preprocessing that can be distributed across multiple worker processes without blocking training?
+2. How would you implement dynamic batching that adapts batch sizes based on available memory and model complexity?
+3. What abstractions would you create to support different data formats (images, audio, text) while maintaining a unified loading interface?
+
+### Performance & Scale
+1. How do different data loading strategies (synchronous vs asynchronous, single vs multi-threaded) impact training throughput on different hardware?
+2. What are the bottlenecks when loading data for distributed training across multiple machines, and how would you optimize data transfer?
+3. How would you implement data loading that scales efficiently from small datasets (MB) to massive datasets (TB) without code changes?
+"""
+
+# %% [markdown]
+"""
 ## 🎯 MODULE SUMMARY: Data Loading and Processing
 
 Congratulations! You've successfully implemented professional data loading systems:
@@ -1616,3 +1593,60 @@ Your implementations mirror production systems:
 
 **Ready for autograd?** Your data loading systems are now ready for real training!
 """ 
+
+if __name__ == "__main__":
+    # Test the dataset interface demonstration
+    try:
+        test_dataset = TestDataset(size=5)
+        print(f"Dataset created with size: {len(test_dataset)}")
+        
+        # Test __getitem__
+        data, label = test_dataset[0]
+        print(f"Sample 0: data={data}, label={label}")
+        assert isinstance(data, Tensor), "Data should be a Tensor"
+        assert isinstance(label, Tensor), "Label should be a Tensor"
+        print("✅ Dataset __getitem__ works correctly")
+        
+        # Test __len__
+        assert len(test_dataset) == 5, f"Dataset length should be 5, got {len(test_dataset)}"
+        print("✅ Dataset __len__ works correctly")
+        
+        # Test get_num_classes
+        assert test_dataset.get_num_classes() == 2, f"Should have 2 classes, got {test_dataset.get_num_classes()}"
+        print("✅ Dataset get_num_classes works correctly")
+        
+        # Test get_sample_shape
+        sample_shape = test_dataset.get_sample_shape()
+        assert sample_shape == (2,), f"Sample shape should be (2,), got {sample_shape}"
+        print("✅ Dataset get_sample_shape works correctly")
+        
+        # Test multiple samples
+        for i in range(3):
+            data, label = test_dataset[i]
+            expected_data = [i, i * 2]
+            expected_label = [i % 2]
+            assert np.array_equal(data.data, expected_data), f"Data mismatch at index {i}"
+            assert np.array_equal(label.data, expected_label), f"Label mismatch at index {i}"
+        print("✅ Dataset produces correct data for multiple samples")
+        
+        # Show the dataset pattern
+        print("🎯 Dataset interface pattern:")
+        print("   __getitem__: Returns (data, label) tuple")
+        print("   __len__: Returns dataset size")
+        print("   get_num_classes: Returns number of classes")
+        print("   get_sample_shape: Returns shape of data samples")
+        print("📈 Progress: Dataset interface ✓")
+        
+    except Exception as e:
+        print(f"❌ Dataset interface test failed: {e}")
+        raise
+    
+    # Run all tests
+    test_unit_dataset_interface()
+    test_unit_dataloader()
+    test_unit_simple_dataset()
+    test_unit_dataloader_pipeline()
+    test_module_dataloader_tensor_yield()
+    
+    print("All tests passed!")
+    print("dataloader_dev module complete!")

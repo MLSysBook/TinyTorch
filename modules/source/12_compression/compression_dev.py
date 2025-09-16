@@ -35,9 +35,7 @@ Welcome to the Compression module! This is where you'll learn to make neural net
 import numpy as np
 import sys
 import os
-import math
 from typing import List, Dict, Any, Optional, Union, Tuple
-from collections import defaultdict
 
 # Helper function to set up import paths
 def setup_import_paths():
@@ -402,8 +400,7 @@ def test_unit_compression_metrics():
     print("  - Foundation for compression analysis")
     print()
 
-# Run the test
-test_unit_compression_metrics() 
+# Test will be run in main block 
 
 # %% [markdown]
 """
@@ -635,8 +632,7 @@ def test_unit_magnitude_pruning():
     print("  - Scales to different pruning ratios")
     print()
 
-# Run the test
-test_unit_magnitude_pruning() 
+# Test will be run in main block 
 
 # %% [markdown]
 """
@@ -830,8 +826,7 @@ def test_unit_quantization():
     print("  - Supports different bit widths")
     print()
 
-# Run the test
-test_unit_quantization() 
+# Test will be run in main block 
 
 # %% [markdown]
 """
@@ -1059,8 +1054,7 @@ def test_unit_distillation():
     print("  - Numerically stable softmax implementation")
     print()
 
-# Run the test
-test_unit_distillation() 
+# Test will be run in main block 
 
 # %% [markdown]
 """
@@ -1349,8 +1343,7 @@ def test_unit_structured_pruning():
     print("  - Scales to different keep ratios")
     print()
 
-# Run the test
-test_unit_structured_pruning() 
+# Test will be run in main block 
 
 # %% [markdown]
 """
@@ -1989,8 +1982,7 @@ def test_unit_compression_systems_profiler():
     print("  - Analyzes accuracy vs compression tradeoffs")
     print()
 
-# Run the test
-test_unit_compression_systems_profiler()
+# Test will be run in main block
 
 # %% [markdown]
 """

@@ -36,11 +36,8 @@ import numpy as np
 import sys
 import os
 import time
-import tracemalloc
 import psutil
 from typing import Callable, Dict, Any, Optional, Tuple, List
-from functools import wraps
-from pathlib import Path
 
 # Import our existing components
 try:
@@ -325,9 +322,6 @@ def test_unit_matmul_baseline():
     
     print("📈 Progress: Baseline Matrix Multiplication ✓")
 
-# Run the test
-test_unit_matmul_baseline()
-
 # %% [markdown]
 """
 ## Step 2: Vectorized Operations - SIMD Principles
@@ -530,9 +524,6 @@ def test_unit_vectorized_operations():
     
     print("📈 Progress: Vectorized Operations ✓")
 
-# Run the test
-test_unit_vectorized_operations()
-
 # %% [markdown]
 """
 ## Step 3: Memory Layout Optimization - Cache-Friendly Algorithms
@@ -702,9 +693,6 @@ def test_unit_cache_friendly_matmul():
     print("✅ Non-square matrix cache-friendly multiplication works")
     
     print("📈 Progress: Cache-Friendly Algorithms ✓")
-
-# Run the test
-test_unit_cache_friendly_matmul()
 
 # %% [markdown]
 """
@@ -928,8 +916,7 @@ def test_unit_parallel_processing():
     print("✅ Parallel batch processing works")
     print("📈 Progress: Parallel Processing ✓")
 
-# Run the test
-test_unit_parallel_processing()
+# Test will be run in main block
 
 # %% [markdown]
 """
@@ -1014,8 +1001,7 @@ def test_unit_simple_kernel_timing():
     print("✅ Simple timing works correctly")
     print("📈 Progress: Simple Kernel Timing ✓")
 
-# Run the test
-test_unit_simple_kernel_timing()
+# Test will be run in main block
 
 # %% [markdown]
 """
@@ -1236,8 +1222,7 @@ def test_unit_compressed_kernels():
     print("✅ Quantized operations timing works")
     print("📈 Progress: Compressed Model Kernels ✓")
 
-# Run the test
-test_unit_compressed_kernels()
+# Test will be run in main block
 
 # %% nbgrader={"grade": false, "grade_id": "final-performance-test", "locked": false, "schema_version": 3, "solution": false, "task": false}
 ### 🧪 Unit Test: Comprehensive Kernel Performance Comparison
@@ -1323,6 +1308,12 @@ def final_performance_test():
 
 # Run the final test
 if __name__ == "__main__":
+    # Run individual kernel tests
+    test_unit_matmul_baseline()
+    test_unit_vectorized_operations()
+    test_unit_cache_friendly_matmul()
+    
+    # Run final performance test
     final_performance_test()
 
 # %% [markdown]

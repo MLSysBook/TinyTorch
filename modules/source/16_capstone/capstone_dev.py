@@ -1,3 +1,5 @@
+#| default_exp core.capstone
+
 # %% [markdown]
 """
 # Module 16: Capstone - Building Production ML Systems
@@ -49,13 +51,13 @@ This capstone module brings together everything you've learned to build a comple
 ### System-Level Optimization
 The complete ML system optimization problem involves multiple objectives:
 
-$$\min_{θ} \mathcal{L}_{total} = \mathcal{L}_{model} + λ_1\mathcal{L}_{latency} + λ_2\mathcal{L}_{memory} + λ_3\mathcal{L}_{cost}$$
+$$\\min_{θ} \\mathcal{L}_{total} = \\mathcal{L}_{model} + λ_1\\mathcal{L}_{latency} + λ_2\\mathcal{L}_{memory} + λ_3\\mathcal{L}_{cost}$$
 
 Where:
-- $\mathcal{L}_{model}$: Model accuracy loss
-- $\mathcal{L}_{latency}$: Inference latency penalty
-- $\mathcal{L}_{memory}$: Memory usage penalty
-- $\mathcal{L}_{cost}$: Computational cost penalty
+- $\\mathcal{L}_{model}$: Model accuracy loss
+- $\\mathcal{L}_{latency}$: Inference latency penalty
+- $\\mathcal{L}_{memory}$: Memory usage penalty
+- $\\mathcal{L}_{cost}$: Computational cost penalty
 
 ### End-to-End Performance Model
 System throughput is bounded by:
