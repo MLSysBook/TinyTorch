@@ -73,6 +73,8 @@ parts:
   chapters:
   - file: vision
     title: "🎯 TinyTorch Vision"
+  - file: milestone-system
+    title: "📊 Milestone System"
   - file: resources
     title: "📚 Learning Resources"
 
