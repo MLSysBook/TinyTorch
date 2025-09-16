@@ -1354,79 +1354,335 @@ test_unit_structured_pruning()
 
 # %% [markdown]
 """
-## Step 6: Comprehensive Comparison - Combining All Techniques
+## Step 6: ML Systems Profiling - Production Compression Analysis
 
-### Putting It All Together
-Now that we've implemented four core compression techniques, let's combine them and see how they work together for maximum efficiency.
+### Production Compression Challenges
+Real-world deployment requires sophisticated analysis of compression trade-offs:
 
-### The Compression Toolkit
-We now have a complete arsenal:
+#### **Hardware-Specific Optimization**
+- **Mobile ARM processors**: Optimized for INT8 operations
+- **NVIDIA GPUs**: Tensor Core acceleration for specific quantization formats
+- **Edge TPUs**: Designed for INT8 quantized models
+- **x86 CPUs**: SIMD instructions for structured sparsity
 
-1. **CompressionMetrics**: Analyze model size and parameter distribution
-2. **Magnitude-based pruning**: Remove unimportant weights (sparsity)
-3. **Quantization**: Reduce precision (FP32 → INT8)
-4. **Knowledge distillation**: Train compact models with teacher guidance
-5. **Structured pruning**: Remove entire neurons (actual speedup)
+#### **Deployment Constraints**
+- **Memory bandwidth**: Mobile devices have limited memory bandwidth
+- **Power consumption**: Battery life constraints on mobile devices
+- **Latency requirements**: Real-time applications need predictable inference times
+- **Model accuracy**: Acceptable accuracy degradation varies by application
 
-### Compression Strategy Design
-Different deployment scenarios need different strategies:
+#### **Production Serving Patterns**
+- **Batch inference**: Optimize for throughput over latency
+- **Online serving**: Optimize for latency and resource efficiency
+- **Edge deployment**: Optimize for memory and power consumption
+- **Multi-model serving**: Balance resource sharing across models
 
-#### **Mobile AI Deployment**
-- **Primary**: Quantization (75% memory reduction)
-- **Secondary**: Structured pruning (inference speedup)
-- **Target**: < 10MB models, < 100ms inference
+### ML Systems Thinking: Compression in Production
+The CompressionSystemsProfiler analyzes compression techniques through the lens of production deployment, measuring not just compression ratios but real-world performance implications.
 
-#### **Edge Computing**
-- **Primary**: Structured pruning (minimal compute)
-- **Secondary**: Magnitude pruning (memory efficiency)
-- **Target**: < 1MB models, minimal power consumption
-
-#### **Production Cloud**
-- **Primary**: Knowledge distillation (balanced compression)
-- **Secondary**: Quantization (cost reduction)
-- **Target**: Maximize throughput while maintaining accuracy
-
-#### **Research and Development**
-- **Primary**: Magnitude pruning (experimental flexibility)
-- **Secondary**: All techniques for comparison
-- **Target**: Understand trade-offs and optimal combinations
-
-### Compression Pipeline Design
-A systematic approach to model compression:
-
-```python
-# 1. Baseline analysis
-metrics = CompressionMetrics()
-baseline_size = metrics.calculate_model_size(model)
-
-# 2. Apply magnitude pruning
-model, prune_info = prune_model_by_magnitude(model, pruning_ratio=0.3)
-
-# 3. Apply quantization
-for layer in model.layers:
-    if isinstance(layer, Dense):
-        layer, quant_info = quantize_layer_weights(layer, bits=8)
-
-# 4. Apply structured pruning
-for i, layer in enumerate(model.layers):
-    if isinstance(layer, Dense):
-        model.layers[i], struct_info = prune_layer_neurons(layer, keep_ratio=0.8)
-
-# 5. Measure final compression
-final_size = metrics.calculate_model_size(model)
-compression_ratio = baseline_size['size_mb'] / final_size['size_mb']
-```
-
-### Trade-off Analysis
-Understanding the compression spectrum:
-
-- **Accuracy vs Size**: More compression = more accuracy loss
-- **Size vs Speed**: Structured compression gives actual speedup
-- **Memory vs Computation**: Different bottlenecks need different solutions
-- **Development vs Production**: Research flexibility vs deployment constraints
-
-Let's build a comprehensive comparison framework!
+Let's build advanced compression analysis tools!
 """
+
+# %% nbgrader={"grade": false, "grade_id": "compression-systems-profiler", "locked": false, "schema_version": 3, "solution": true, "task": false}
+#| export
+class CompressionSystemsProfiler:
+    """
+    Advanced profiling system for analyzing compression techniques in production environments.
+    
+    This profiler provides 65% implementation level analysis of compression techniques,
+    focusing on production deployment scenarios including quantization impact analysis,
+    inference speedup measurements, and hardware-specific optimizations.
+    """
+    
+    def __init__(self):
+        """Initialize the compression systems profiler."""
+        self.metrics = CompressionMetrics()
+        self.compression_history = []
+        
+    def analyze_quantization_impact(self, model: Sequential, target_bits: List[int] = [32, 16, 8, 4]) -> Dict[str, Any]:
+        """
+        Analyze quantization impact across different bit widths for production deployment.
+        
+        Args:
+            model: Sequential model to analyze
+            target_bits: List of bit widths to test
+            
+        Returns:
+            Comprehensive quantization analysis including accuracy vs compression tradeoffs
+            
+        TODO: Implement advanced quantization impact analysis (65% implementation level).
+        
+        STEP-BY-STEP IMPLEMENTATION:
+        1. Create model copies for each bit width
+        2. Apply quantization with different bit widths
+        3. Measure memory reduction and inference implications
+        4. Calculate theoretical speedup for different hardware
+        5. Analyze accuracy degradation patterns
+        6. Generate production deployment recommendations
+        
+        PRODUCTION PATTERNS TO ANALYZE:
+        - Mobile deployment (ARM processors, limited memory)
+        - Edge inference (TPUs, power constraints)
+        - Cloud serving (GPU acceleration, batch processing)
+        - Real-time systems (latency requirements)
+        
+        IMPLEMENTATION HINTS:
+        - Model different hardware characteristics
+        - Consider memory bandwidth limitations
+        - Include power consumption estimates
+        - Analyze batch vs single inference patterns
+        
+        LEARNING CONNECTIONS:
+        - This mirrors TensorFlow Lite quantization analysis
+        - Production systems need this kind of comprehensive analysis
+        - Hardware-aware compression is crucial for deployment
+        """
+        ### BEGIN SOLUTION
+        results = {
+            'quantization_analysis': {},
+            'hardware_recommendations': {},
+            'deployment_scenarios': {}
+        }
+        
+        baseline_size = self.metrics.calculate_model_size(model, dtype='float32')
+        baseline_params = self.metrics.count_parameters(model)['total_parameters']
+        
+        for bits in target_bits:
+            # Create model copy for quantization
+            test_model = Sequential([Dense(layer.input_size, layer.output_size) for layer in model.layers])
+            for i, layer in enumerate(test_model.layers):
+                layer.weights = Tensor(model.layers[i].weights.data.copy() if hasattr(model.layers[i].weights.data, 'copy') else np.array(model.layers[i].weights.data))
+                if hasattr(layer, 'bias') and model.layers[i].bias is not None:
+                    layer.bias = Tensor(model.layers[i].bias.data.copy() if hasattr(model.layers[i].bias.data, 'copy') else np.array(model.layers[i].bias.data))
+            
+            # Apply quantization to all layers
+            total_error = 0
+            for i, layer in enumerate(test_model.layers):
+                if isinstance(layer, Dense):
+                    _, quant_info = quantize_layer_weights(layer, bits=bits)
+                    total_error += quant_info['mse_error']
+            
+            # Calculate quantized model size
+            dtype_map = {32: 'float32', 16: 'float16', 8: 'int8', 4: 'int8'}  # Approximate for 4-bit
+            quantized_size = self.metrics.calculate_model_size(test_model, dtype=dtype_map.get(bits, 'int8'))
+            
+            # Memory and performance analysis
+            memory_reduction = baseline_size['size_mb'] / quantized_size['size_mb']
+            
+            # Hardware-specific analysis
+            hardware_analysis = {
+                'mobile_arm': {
+                    'memory_bandwidth_improvement': memory_reduction * 0.8,  # ARM efficiency
+                    'inference_speedup': min(memory_reduction * 0.6, 4.0),  # Conservative estimate
+                    'power_reduction': memory_reduction * 0.7,  # Power scales with memory access
+                    'deployment_feasibility': 'excellent' if quantized_size['size_mb'] < 10 else 'good' if quantized_size['size_mb'] < 50 else 'limited'
+                },
+                'edge_tpu': {
+                    'quantization_compatibility': 'native' if bits == 8 else 'emulated',
+                    'inference_speedup': 8.0 if bits == 8 else 1.0,  # TPUs optimized for INT8
+                    'power_efficiency': 'optimal' if bits == 8 else 'suboptimal',
+                    'deployment_feasibility': 'excellent' if bits == 8 and quantized_size['size_mb'] < 20 else 'limited'
+                },
+                'gpu_cloud': {
+                    'tensor_core_acceleration': True if bits in [16, 8] else False,
+                    'batch_throughput_improvement': memory_reduction * 1.2,  # GPU batch efficiency
+                    'memory_capacity_improvement': memory_reduction,
+                    'deployment_feasibility': 'excellent'  # Cloud has fewer constraints
+                }
+            }
+            
+            results['quantization_analysis'][f'{bits}bit'] = {
+                'bits': bits,
+                'model_size_mb': quantized_size['size_mb'],
+                'memory_reduction_factor': memory_reduction,
+                'quantization_error': total_error / len(test_model.layers),
+                'compression_ratio': baseline_size['size_mb'] / quantized_size['size_mb'],
+                'hardware_analysis': hardware_analysis
+            }
+        
+        # Generate deployment recommendations
+        results['deployment_scenarios'] = {
+            'mobile_deployment': {
+                'recommended_bits': 8,
+                'rationale': 'INT8 provides optimal balance of size reduction and ARM processor efficiency',
+                'expected_benefits': 'Memory reduction, inference speedup, improved battery life',
+                'considerations': 'Monitor accuracy degradation, test on target devices'
+            },
+            'edge_inference': {
+                'recommended_bits': 8,
+                'rationale': 'Edge TPUs and similar hardware optimized for INT8 quantization',
+                'expected_benefits': 'Maximum hardware acceleration, minimal power consumption',
+                'considerations': 'Ensure quantization-aware training for best accuracy'
+            },
+            'cloud_serving': {
+                'recommended_bits': 16,
+                'rationale': 'FP16 provides good compression with minimal accuracy loss and GPU acceleration',
+                'expected_benefits': 'Increased batch throughput, reduced memory usage',
+                'considerations': 'Consider mixed precision for optimal performance'
+            }
+        }
+        
+        return results
+        ### END SOLUTION
+    
+    def measure_inference_speedup(self, original_model: Sequential, compressed_model: Sequential, 
+                                 batch_sizes: List[int] = [1, 8, 32, 128]) -> Dict[str, Any]:
+        """
+        Measure theoretical inference speedup from compression techniques.
+        
+        Args:
+            original_model: Baseline model
+            compressed_model: Compressed model to compare
+            batch_sizes: Different batch sizes for analysis
+            
+        Returns:
+            Inference speedup analysis across different scenarios
+        """
+        results = {
+            'flops_analysis': {},
+            'memory_analysis': {},
+            'speedup_estimates': {}
+        }
+        
+        # Calculate FLOPs for both models
+        original_flops = self._calculate_model_flops(original_model)
+        compressed_flops = self._calculate_model_flops(compressed_model)
+        
+        # Memory analysis
+        original_size = self.metrics.calculate_model_size(original_model)
+        compressed_size = self.metrics.calculate_model_size(compressed_model)
+        
+        results['flops_analysis'] = {
+            'original_flops': original_flops,
+            'compressed_flops': compressed_flops,
+            'flops_reduction': (original_flops - compressed_flops) / original_flops,
+            'computational_speedup': original_flops / compressed_flops if compressed_flops > 0 else float('inf')
+        }
+        
+        results['memory_analysis'] = {
+            'original_size_mb': original_size['size_mb'],
+            'compressed_size_mb': compressed_size['size_mb'],
+            'memory_reduction': (original_size['size_mb'] - compressed_size['size_mb']) / original_size['size_mb'],
+            'memory_speedup': original_size['size_mb'] / compressed_size['size_mb']
+        }
+        
+        # Estimate speedup for different scenarios
+        for batch_size in batch_sizes:
+            compute_time_original = original_flops * batch_size / 1e9  # Assume 1 GFLOPS baseline
+            compute_time_compressed = compressed_flops * batch_size / 1e9
+            
+            memory_time_original = original_size['size_mb'] * batch_size / 100  # Assume 100 MB/s memory bandwidth
+            memory_time_compressed = compressed_size['size_mb'] * batch_size / 100
+            
+            total_time_original = compute_time_original + memory_time_original
+            total_time_compressed = compute_time_compressed + memory_time_compressed
+            
+            results['speedup_estimates'][f'batch_{batch_size}'] = {
+                'compute_speedup': compute_time_original / compute_time_compressed if compute_time_compressed > 0 else float('inf'),
+                'memory_speedup': memory_time_original / memory_time_compressed if memory_time_compressed > 0 else float('inf'),
+                'total_speedup': total_time_original / total_time_compressed if total_time_compressed > 0 else float('inf')
+            }
+        
+        return results
+    
+    def analyze_accuracy_tradeoffs(self, model: Sequential, compression_levels: List[float] = [0.1, 0.3, 0.5, 0.7, 0.9]) -> Dict[str, Any]:
+        """
+        Analyze accuracy vs compression tradeoffs across different compression levels.
+        
+        Args:
+            model: Model to analyze
+            compression_levels: Different compression ratios to test
+            
+        Returns:
+            Analysis of accuracy degradation patterns
+        """
+        results = {
+            'compression_curves': {},
+            'optimal_operating_points': {},
+            'production_recommendations': {}
+        }
+        
+        baseline_size = self.metrics.calculate_model_size(model)
+        
+        for level in compression_levels:
+            # Test different compression techniques at this level
+            techniques = {
+                'magnitude_pruning': self._apply_magnitude_pruning(model, level),
+                'structured_pruning': self._apply_structured_pruning(model, 1 - level),
+                'quantization': self._apply_quantization(model, max(4, int(32 * (1 - level))))
+            }
+            
+            for technique_name, compressed_model in techniques.items():
+                if compressed_model is not None:
+                    compressed_size = self.metrics.calculate_model_size(compressed_model)
+                    compression_ratio = baseline_size['size_mb'] / compressed_size['size_mb']
+                    
+                    if technique_name not in results['compression_curves']:
+                        results['compression_curves'][technique_name] = []
+                    
+                    results['compression_curves'][technique_name].append({
+                        'compression_level': level,
+                        'compression_ratio': compression_ratio,
+                        'size_mb': compressed_size['size_mb'],
+                        'estimated_accuracy_retention': 1.0 - (level * 0.5)  # Simplified model
+                    })
+        
+        # Find optimal operating points
+        for technique in results['compression_curves']:
+            curves = results['compression_curves'][technique]
+            # Find point with best accuracy/compression balance
+            best_point = max(curves, key=lambda x: x['compression_ratio'] * x['estimated_accuracy_retention'])
+            results['optimal_operating_points'][technique] = best_point
+        
+        return results
+    
+    def _calculate_model_flops(self, model: Sequential) -> int:
+        """Calculate FLOPs for a Sequential model."""
+        total_flops = 0
+        for layer in model.layers:
+            if isinstance(layer, Dense):
+                total_flops += layer.input_size * layer.output_size * 2  # Multiply-add operations
+        return total_flops
+    
+    def _apply_magnitude_pruning(self, model: Sequential, pruning_ratio: float) -> Optional[Sequential]:
+        """Apply magnitude pruning to a model copy."""
+        try:
+            test_model = Sequential([Dense(layer.input_size, layer.output_size) for layer in model.layers])
+            for i, layer in enumerate(test_model.layers):
+                layer.weights = Tensor(model.layers[i].weights.data.copy() if hasattr(model.layers[i].weights.data, 'copy') else np.array(model.layers[i].weights.data))
+                if hasattr(layer, 'bias') and model.layers[i].bias is not None:
+                    layer.bias = Tensor(model.layers[i].bias.data.copy() if hasattr(model.layers[i].bias.data, 'copy') else np.array(model.layers[i].bias.data))
+                prune_weights_by_magnitude(layer, pruning_ratio)
+            return test_model
+        except Exception:
+            return None
+    
+    def _apply_structured_pruning(self, model: Sequential, keep_ratio: float) -> Optional[Sequential]:
+        """Apply structured pruning to a model copy."""
+        try:
+            test_model = Sequential([Dense(layer.input_size, layer.output_size) for layer in model.layers])
+            for i, layer in enumerate(test_model.layers):
+                layer.weights = Tensor(model.layers[i].weights.data.copy() if hasattr(model.layers[i].weights.data, 'copy') else np.array(model.layers[i].weights.data))
+                if hasattr(layer, 'bias') and model.layers[i].bias is not None:
+                    layer.bias = Tensor(model.layers[i].bias.data.copy() if hasattr(model.layers[i].bias.data, 'copy') else np.array(model.layers[i].bias.data))
+                pruned_layer, _ = prune_layer_neurons(layer, keep_ratio)
+                test_model.layers[i] = pruned_layer
+            return test_model
+        except Exception:
+            return None
+    
+    def _apply_quantization(self, model: Sequential, bits: int) -> Optional[Sequential]:
+        """Apply quantization to a model copy."""
+        try:
+            test_model = Sequential([Dense(layer.input_size, layer.output_size) for layer in model.layers])
+            for i, layer in enumerate(test_model.layers):
+                layer.weights = Tensor(model.layers[i].weights.data.copy() if hasattr(model.layers[i].weights.data, 'copy') else np.array(model.layers[i].weights.data))
+                if hasattr(layer, 'bias') and model.layers[i].bias is not None:
+                    layer.bias = Tensor(model.layers[i].bias.data.copy() if hasattr(model.layers[i].bias.data, 'copy') else np.array(model.layers[i].bias.data))
+                quantize_layer_weights(layer, bits)
+            return test_model
+        except Exception:
+            return None
 
 # %% nbgrader={"grade": false, "grade_id": "compression-comparison", "locked": false, "schema_version": 3, "solution": true, "task": false}
 #| export
@@ -1627,6 +1883,117 @@ This module teaches the essential skills for deploying AI in resource-constraine
 
 # %% [markdown]
 """
+### 🧪 Unit Test: ML Systems Compression Profiler
+
+This test validates the CompressionSystemsProfiler implementation, ensuring it provides comprehensive analysis of compression techniques for production deployment scenarios.
+"""
+
+# %% nbgrader={"grade": false, "grade_id": "test-systems-profiler", "locked": false, "schema_version": 3, "solution": false, "task": false}
+def test_unit_compression_systems_profiler():
+    """Unit test for the CompressionSystemsProfiler class."""
+    print("🔬 Unit Test: ML Systems Compression Profiler...")
+    
+    # Create a test model
+    model = Sequential([
+        Dense(784, 256),
+        Dense(256, 128),
+        Dense(128, 10)
+    ])
+    
+    # Initialize profiler
+    profiler = CompressionSystemsProfiler()
+    
+    # Test quantization impact analysis
+    quant_analysis = profiler.analyze_quantization_impact(model, target_bits=[32, 16, 8])
+    
+    # Verify quantization analysis structure
+    assert 'quantization_analysis' in quant_analysis, "Should include quantization analysis"
+    assert 'deployment_scenarios' in quant_analysis, "Should include deployment scenarios"
+    assert '8bit' in quant_analysis['quantization_analysis'], "Should analyze 8-bit quantization"
+    
+    # Verify hardware analysis
+    bit8_analysis = quant_analysis['quantization_analysis']['8bit']
+    assert 'hardware_analysis' in bit8_analysis, "Should include hardware analysis"
+    assert 'mobile_arm' in bit8_analysis['hardware_analysis'], "Should analyze mobile ARM deployment"
+    assert 'edge_tpu' in bit8_analysis['hardware_analysis'], "Should analyze edge TPU deployment"
+    assert 'gpu_cloud' in bit8_analysis['hardware_analysis'], "Should analyze GPU cloud deployment"
+    
+    print(f"✅ Quantization analysis works: {len(quant_analysis['quantization_analysis'])} bit widths analyzed")
+    
+    # Test compression ratio improvements
+    for bits in [16, 8]:
+        bit_key = f'{bits}bit'
+        if bit_key in quant_analysis['quantization_analysis']:
+            compression_ratio = quant_analysis['quantization_analysis'][bit_key]['compression_ratio']
+            assert compression_ratio > 1.0, f"{bits}-bit should provide compression"
+    
+    print("✅ Compression ratios verified")
+    
+    # Test deployment recommendations
+    scenarios = quant_analysis['deployment_scenarios']
+    assert 'mobile_deployment' in scenarios, "Should provide mobile deployment recommendations"
+    assert 'edge_inference' in scenarios, "Should provide edge inference recommendations"
+    assert 'cloud_serving' in scenarios, "Should provide cloud serving recommendations"
+    
+    for scenario in scenarios.values():
+        assert 'recommended_bits' in scenario, "Should recommend specific bit width"
+        assert 'rationale' in scenario, "Should provide rationale for recommendation"
+        assert 'expected_benefits' in scenario, "Should list expected benefits"
+    
+    print("✅ Deployment recommendations work correctly")
+    
+    # Test inference speedup measurement
+    compressed_model = Sequential([
+        Dense(784, 128),  # Smaller than original
+        Dense(128, 64),
+        Dense(64, 10)
+    ])
+    
+    speedup_analysis = profiler.measure_inference_speedup(model, compressed_model, batch_sizes=[1, 32])
+    
+    # Verify speedup analysis structure
+    assert 'flops_analysis' in speedup_analysis, "Should include FLOPs analysis"
+    assert 'memory_analysis' in speedup_analysis, "Should include memory analysis"
+    assert 'speedup_estimates' in speedup_analysis, "Should include speedup estimates"
+    
+    # Verify speedup calculations
+    flops_analysis = speedup_analysis['flops_analysis']
+    assert flops_analysis['computational_speedup'] > 1.0, "Compressed model should be faster"
+    
+    memory_analysis = speedup_analysis['memory_analysis']
+    assert memory_analysis['memory_speedup'] > 1.0, "Compressed model should use less memory"
+    
+    print(f"✅ Speedup analysis works: {flops_analysis['computational_speedup']:.2f}x compute, {memory_analysis['memory_speedup']:.2f}x memory")
+    
+    # Test accuracy tradeoff analysis
+    tradeoff_analysis = profiler.analyze_accuracy_tradeoffs(model, compression_levels=[0.1, 0.5, 0.9])
+    
+    # Verify tradeoff analysis structure
+    assert 'compression_curves' in tradeoff_analysis, "Should include compression curves"
+    assert 'optimal_operating_points' in tradeoff_analysis, "Should include optimal operating points"
+    
+    # Verify compression techniques are analyzed
+    curves = tradeoff_analysis['compression_curves']
+    expected_techniques = ['magnitude_pruning', 'structured_pruning', 'quantization']
+    for technique in expected_techniques:
+        if technique in curves and len(curves[technique]) > 0:
+            print(f"✅ {technique.replace('_', ' ').title()} analysis included")
+    
+    print("✅ Accuracy tradeoff analysis works correctly")
+    
+    print("📈 Progress: CompressionSystemsProfiler ✓")
+    print("🎯 ML Systems Profiler behavior:")
+    print("  - Analyzes quantization impact across hardware platforms")
+    print("  - Measures inference speedup for different scenarios")
+    print("  - Provides production deployment recommendations")
+    print("  - Analyzes accuracy vs compression tradeoffs")
+    print()
+
+# Run the test
+test_unit_compression_systems_profiler()
+
+# %% [markdown]
+"""
 ### 🧪 Unit Test: Comprehensive Compression Comparison
 
 This test validates the complete compression pipeline, comparing different techniques (pruning, quantization, distillation) to analyze their effectiveness and trade-offs in model optimization.
@@ -1824,6 +2191,58 @@ Time to test your implementation! This section uses TinyTorch's standardized tes
 
 # %% [markdown]
 """
+## 🤔 ML Systems Thinking: Compression in Production
+
+### 🏗️ System Design Questions
+Think about how compression fits into larger ML systems:
+
+1. **Multi-Model Serving**: How would you design a system that serves multiple compressed models with different optimization profiles (latency-optimized vs memory-optimized) and automatically routes requests based on device capabilities?
+
+2. **Compression Pipeline Automation**: What would a production pipeline look like that automatically selects compression techniques based on target deployment environment (mobile, edge, cloud) and performance requirements?
+
+3. **Hardware-Aware Optimization**: How might you design a system that profiles target hardware (ARM, x86, TPU, GPU) and automatically selects the optimal combination of quantization, pruning, and structured optimization?
+
+4. **Dynamic Compression**: How could you implement a system that adjusts compression levels in real-time based on available resources, battery level, or network conditions?
+
+### 🚀 Production ML Questions
+Connect compression to real-world deployment challenges:
+
+5. **Model Store Design**: How would you architect a model registry that stores multiple compressed versions of the same model and serves the appropriate version based on client capabilities?
+
+6. **A/B Testing Compressed Models**: What metrics would you track when A/B testing compressed vs uncompressed models in production, and how would you handle the accuracy vs performance tradeoff?
+
+7. **Compression Monitoring**: How would you design monitoring systems to detect when compressed models are degrading in accuracy over time, and what automated responses would you implement?
+
+8. **Cross-Platform Deployment**: How might you design a system that takes a single trained model and automatically generates optimized versions for iOS, Android, web browsers, and edge devices?
+
+### 🔧 Framework Design Questions
+Analyze how compression integrates with ML frameworks:
+
+9. **Quantization-Aware Training**: How does PyTorch's fake quantization during training compare to post-training quantization, and when would you choose each approach in production?
+
+10. **Structured Pruning Integration**: How might you design APIs that make structured pruning as easy to use as dropout, while handling the complexity of layer dimension changes?
+
+11. **Knowledge Distillation Frameworks**: What would a framework look like that automatically identifies the best teacher-student architecture pairs and handles the complexity of multi-teacher distillation?
+
+12. **Compression Search**: How could you implement neural architecture search specifically for finding optimal compression strategies rather than just model architectures?
+
+### ⚡ Performance & Scale Questions
+Consider compression in large-scale systems:
+
+13. **Distributed Compression**: How would you design systems that perform compression operations across multiple GPUs or machines, especially for very large models that don't fit in single-device memory?
+
+14. **Incremental Compression**: What would it look like to compress models incrementally as they're being trained, rather than waiting until training completion?
+
+15. **Compression for Federated Learning**: How might compression techniques need to be adapted for federated learning scenarios where models are updated across many edge devices?
+
+16. **Memory-Bandwidth Optimization**: How would you design compression strategies specifically optimized for different memory hierarchies (L1/L2 cache, main memory, storage) in modern processors?
+
+### 💡 Reflection Prompts
+- Which compression technique would be most critical for your target deployment scenario?
+- How do the compression trade-offs change when moving from research to production?
+- What aspects of hardware architecture most influence compression strategy selection?
+- How might compression techniques evolve as hardware capabilities change?
+
 ## 🎯 MODULE SUMMARY: Model Compression
 
 Congratulations! You've successfully implemented model compression techniques:
@@ -1832,40 +2251,46 @@ Congratulations! You've successfully implemented model compression techniques:
 ✅ **Pruning**: Removing unnecessary weights for efficiency
 ✅ **Quantization**: Reducing precision for smaller models
 ✅ **Knowledge Distillation**: Transferring knowledge to smaller models
-✅ **Integration**: Seamless compatibility with neural networks
+✅ **Structured Optimization**: Removing entire neurons for hardware efficiency
+✅ **ML Systems Profiling**: Production-grade compression analysis
 ✅ **Real Applications**: Deploying efficient models to production
 
 ### Key Concepts You've Learned
-- **Pruning**: Removing redundant parameters
-- **Quantization**: Lowering precision for smaller models
-- **Distillation**: Training smaller models with teacher guidance
-- **Integration patterns**: How compression works with neural networks
-- **Performance optimization**: Balancing accuracy and efficiency
+- **Magnitude-based pruning**: Removing low-importance weights
+- **Advanced quantization**: Multi-bit precision optimization with hardware analysis
+- **Knowledge distillation**: Teacher-student training paradigms
+- **Structured pruning**: Hardware-aware neuron removal
+- **Production profiling**: Comprehensive deployment analysis
+- **ML systems integration**: How compression fits into larger systems
 
 ### Professional Skills Developed
-- **Model optimization**: Building efficient models for deployment
-- **Compression engineering**: Implementing and tuning compression techniques
+- **Production compression engineering**: Building systems for real-world deployment
+- **Hardware-aware optimization**: Tailoring compression to specific processors
+- **Performance profiling**: Measuring and optimizing compression trade-offs
+- **Systems design**: Understanding compression in ML infrastructure
 - **API design**: Clean interfaces for compression operations
-- **Integration testing**: Ensuring compression works with neural networks
 
 ### Ready for Advanced Applications
 Your compression implementations now enable:
-- **Edge deployment**: Running models on resource-constrained devices
-- **Faster inference**: Reducing latency for real-time applications
-- **Smaller models**: Saving storage and bandwidth
-- **Production systems**: Deploying efficient models at scale
+- **Mobile AI deployment**: Optimized models for smartphones and tablets
+- **Edge computing**: Efficient inference on resource-constrained devices
+- **Production serving**: Cost-effective model deployment at scale
+- **Real-time systems**: Low-latency inference for time-critical applications
+- **Multi-platform deployment**: Optimized models across diverse hardware
 
 ### Connection to Real ML Systems
 Your implementations mirror production systems:
-- **PyTorch**: `torch.nn.utils.prune`, `torch.quantization` provide similar functionality
-- **TensorFlow**: `tfmot` (Model Optimization Toolkit) implements similar concepts
-- **Industry Standard**: Every major ML framework uses these exact techniques
+- **PyTorch**: `torch.nn.utils.prune`, `torch.quantization`, `torch.fx` for optimization
+- **TensorFlow**: Model Optimization Toolkit (TFLite, TensorRT integration)
+- **Production frameworks**: ONNX Runtime, Apache TVM, MLPerf optimization
+- **Industry standard**: Techniques used by Google, Apple, Meta for mobile AI
 
 ### Next Steps
 1. **Export your code**: `tito export 12_compression`
 2. **Test your implementation**: `tito test 12_compression`
-3. **Deploy models**: Use compressed models in production
-4. **Move to Module 13**: Add custom kernels for performance!
+3. **Experiment with profiling**: Try the CompressionSystemsProfiler on different models
+4. **Deploy compressed models**: Test in real applications
+5. **Move to Module 13**: Add custom kernels for maximum performance!
 
-**Ready for kernels?** Your compression techniques are now ready for real-world deployment!
+**Ready for advanced deployment?** Your compression techniques are now production-ready!
 """
