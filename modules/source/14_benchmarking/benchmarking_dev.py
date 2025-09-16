@@ -35,11 +35,10 @@ import numpy as np
 import matplotlib.pyplot as plt
 import time
 import statistics
-import json
 import math
 from typing import Dict, List, Tuple, Optional, Any, Callable
-from dataclasses import dataclass
 from enum import Enum
+from dataclasses import dataclass
 import os
 import sys
 
@@ -1260,6 +1259,10 @@ if __name__ == "__main__":
             accuracy=0.945
         )
     }
+    
+    # Run comprehensive tests
+    test_module_comprehensive_benchmarking()
+    test_unit_production_profiler()
 
 # %% [markdown]
 """
@@ -1360,8 +1363,7 @@ def test_module_comprehensive_benchmarking():
     print("✅ Comprehensive integration test passed!")
     print("🎉 Complete benchmarking system working!")
 
-# Run the comprehensive test
-test_module_comprehensive_benchmarking()
+# Test moved to main block
 
 # %% [markdown]
 """
@@ -1861,8 +1863,7 @@ def test_unit_production_profiler():
     
     print("✅ Production profiler tests passed!")
 
-# Run the test
-test_unit_production_profiler()
+# Test moved to main block
 
 # %% [markdown]
 """

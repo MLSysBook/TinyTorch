@@ -113,7 +113,7 @@ print(x.grad)  # 2*3 + 2*4 = 14 (computed automatically!)
 - **JAX**: `jax.grad` for high-performance computing
 - **Deep Learning**: Made training complex models practical
 
-Let's build the engine that powers modern AI!
+Let us build the engine that powers modern AI!
 """
 
 # %% [markdown]
@@ -176,12 +176,12 @@ class Variable:
         TODO: Implement Variable initialization with gradient tracking.
         
         STEP-BY-STEP IMPLEMENTATION:
-        1. Convert data to Tensor if it's not already a Tensor
+        1. Convert data to Tensor if it is not already a Tensor
         2. Store the tensor data in self.data
         3. Set gradient tracking flag (requires_grad)
         4. Initialize gradient to None (will be computed during backward pass)
         5. Store the gradient function for backward pass
-        6. Track if this is a leaf node (no grad_fn means it's a leaf)
+        6. Track if this is a leaf node (no grad_fn means it is a leaf)
         
         EXAMPLE USAGE:
         ```python
@@ -350,12 +350,7 @@ def test_unit_variable_class():
     print(f"✅ Data access and properties working")
     print(f"✅ Gradient management working")
 
-# Run the test
-test_unit_variable_class()
-
-# Run inline tests when module is executed directly
-if __name__ == "__main__":
-    test_unit_variable_class()
+# Test will run in main block
 
 # %% [markdown]
 """
@@ -397,7 +392,7 @@ def add(a: Union[Variable, float, int], b: Union[Variable, float, int]) -> Varia
     TODO: Implement addition with automatic differentiation.
     
     STEP-BY-STEP IMPLEMENTATION:
-    1. Convert inputs to Variables if they're scalars
+    1. Convert inputs to Variables if they are scalars
     2. Compute forward pass: result = a.data + b.data
     3. Create gradient function that implements: ∂(a+b)/∂a = 1, ∂(a+b)/∂b = 1
     4. Return new Variable with result and gradient function
@@ -496,12 +491,7 @@ def test_unit_add_operation():
     print(f"✅ Backward pass computing correct gradients")
     print(f"✅ Scalar addition working correctly")
 
-# Run the test
-test_unit_add_operation()
-
-# Run inline tests when module is executed directly
-if __name__ == "__main__":
-    test_unit_add_operation()
+# Test will run in main block
 
 # %% [markdown]
 """
@@ -535,7 +525,7 @@ def multiply(a: Union[Variable, float, int], b: Union[Variable, float, int]) -> 
     TODO: Implement multiplication with automatic differentiation.
     
     STEP-BY-STEP IMPLEMENTATION:
-    1. Convert inputs to Variables if they're scalars
+    1. Convert inputs to Variables if they are scalars
     2. Compute forward pass: result = a.data * b.data
     3. Create gradient function implementing product rule: ∂(a*b)/∂a = b, ∂(a*b)/∂b = a
     4. Return new Variable with result and gradient function
@@ -633,12 +623,7 @@ def test_unit_multiply_operation():
     print(f"✅ Backward pass implementing product rule correctly")
     print(f"✅ Scalar multiplication working correctly")
 
-# Run the test
-test_unit_multiply_operation()
-
-# Run inline tests when module is executed directly
-if __name__ == "__main__":
-    test_unit_multiply_operation()
+# Test will run in main block
 
 # %% nbgrader={"grade": false, "grade_id": "subtract-operation", "locked": false, "schema_version": 3, "solution": true, "task": false}
 #| export
@@ -734,19 +719,14 @@ def test_unit_subtract_operation():
     print(f"✅ Backward pass implementing subtraction rule correctly")
     print(f"✅ Scalar subtraction working correctly")
 
-# Run the test
-test_unit_subtract_operation()
-
-# Run inline tests when module is executed directly
-if __name__ == "__main__":
-    test_unit_subtract_operation()
+# Test will run in main block
 
 # %% [markdown]
 """
 ## Step 4: Chain Rule in Complex Expressions
 
 ### Building Complex Computations
-Now let's test how multiple operations work together through the chain rule:
+Now let us test how multiple operations work together through the chain rule:
 
 ### Example: f(x, y) = (x + y) * (x - y)
 This creates a computational graph:
@@ -822,19 +802,14 @@ def test_unit_chain_rule():
     print(f"✅ Automatic gradient computation working correctly")
     print(f"✅ Chain rule implemented correctly")
 
-# Run the test
-test_unit_chain_rule()
-
-# Run inline tests when module is executed directly
-if __name__ == "__main__":
-    test_unit_chain_rule()
+# Test will run in main block
 
 # %% [markdown]
 """
 ## Step 5: Integration with Neural Network Training
 
 ### The Complete Training Loop
-Let's see how autograd enables neural network training:
+Let us see how autograd enables neural network training:
 
 1. **Forward pass**: Compute predictions
 2. **Loss computation**: Compare with targets
@@ -941,23 +916,22 @@ def test_module_neural_network_training():
     print(f"✅ Autograd enables automatic training")
     print(f"✅ Ready for complex neural network architectures!")
 
-# Run the test
-test_module_neural_network_training()
+# Test will run in main block
 
 # %% [markdown]
 """
 ## 🎯 MODULE SUMMARY: Automatic Differentiation
 
-Congratulations! You've successfully implemented automatic differentiation:
+Congratulations! You have successfully implemented automatic differentiation:
 
-### What You've Accomplished
+### What You have Accomplished
 ✅ **Computational Graphs**: Dynamic graph construction for gradient computation
 ✅ **Backpropagation**: Efficient gradient computation through reverse mode AD
 ✅ **Gradient Tracking**: Automatic gradient accumulation and management
 ✅ **Integration**: Seamless compatibility with Tensor operations
 ✅ **Real Applications**: Neural network training and optimization
 
-### Key Concepts You've Learned
+### Key Concepts You have Learned
 - **Computational graphs**: How operations are tracked for gradient computation
 - **Backpropagation**: Reverse mode automatic differentiation
 - **Gradient accumulation**: How gradients flow through complex operations
@@ -997,6 +971,7 @@ Your implementations mirror production systems:
 4. **Move to Module 10**: Add optimization algorithms!
 
 **Ready for optimizers?** Your autograd system is now ready for real training!
+"""
 
 # %% [markdown]
 """
@@ -1377,7 +1352,7 @@ class AutogradSystemsProfiler:
 """
 ### 🧪 Test: Autograd Systems Profiling
 
-Let's test our autograd systems profiler with realistic computational graph scenarios.
+Let us test our autograd systems profiler with realistic computational graph scenarios.
 """
 
 # %% nbgrader={"grade": false, "grade_id": "test-autograd-profiler", "locked": false, "schema_version": 3, "solution": false, "task": false}
@@ -1429,8 +1404,7 @@ def test_autograd_systems_profiler():
     
     print("🎯 Autograd Systems Profiler: All tests passed!")
 
-# Run the test
-test_autograd_systems_profiler()
+# Test will run in main block
 
 # %% [markdown]
 """
@@ -1443,7 +1417,7 @@ test_autograd_systems_profiler()
 
 2. **Graph Compilation**: Your dynamic graph is interpreted at runtime. How do graph compilation systems (TorchScript, XLA) optimize computational graphs ahead of time? What trade-offs exist between dynamic flexibility and static optimization?
 
-3. **Distributed Gradients**: Your autograd computes gradients on a single device. How do systems like PyTorch's DistributedDataParallel synchronize gradients across multiple GPUs? What communication strategies minimize training time?
+3. **Distributed Gradients**: Your autograd computes gradients on a single device. How do systems like PyTorch DistributedDataParallel synchronize gradients across multiple GPUs? What communication strategies minimize training time?
 
 ### 📊 Production Training Systems
 4. **Gradient Accumulation**: Your system computes gradients for each batch. How do production systems accumulate gradients across multiple microbatches to simulate larger effective batch sizes? What numerical stability considerations arise?
@@ -1467,7 +1441,28 @@ test_autograd_systems_profiler()
 12. **Gradient Clipping**: Large gradients can destabilize training. How do production systems implement gradient clipping efficiently within the autograd system? What are the trade-offs between different clipping strategies?
 
 *These questions connect your autograd implementation to the real challenges of training large-scale neural networks. Each represents engineering decisions that affect training speed, memory efficiency, and numerical stability of production ML systems.*
-"""
 
 **Ready for optimizers?** Your autograd system is now ready for real training!
-""" 
+"""
+
+# %% [markdown]
+"""
+## Main Execution Block
+
+All tests run when module is executed directly.
+"""
+
+# %%
+if __name__ == "__main__":
+    print("\n🧪 Running Autograd Module Tests...")
+    
+    # Run all unit tests
+    test_unit_variable_class()
+    test_unit_add_operation()
+    test_unit_multiply_operation()
+    test_unit_subtract_operation()
+    test_unit_chain_rule()
+    test_module_neural_network_training()
+    test_autograd_systems_profiler()
+    
+    print("\n✅ All Autograd Module Tests Completed!") 

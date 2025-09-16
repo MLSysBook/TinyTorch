@@ -42,10 +42,8 @@ Mastering layers means understanding the foundation of all modern AI.
 
 #| export
 import numpy as np
-import matplotlib.pyplot as plt
 import os
 import sys
-from typing import Union, List, Tuple, Optional
 
 # Import our dependencies - try from package first, then local modules
 try:
@@ -522,8 +520,7 @@ def test_unit_matrix_multiplication():
     print(f"✅ Handles different shapes correctly")
     print(f"✅ Proper error handling for incompatible shapes")
 
-# Run the test
-test_unit_matrix_multiplication()
+# Test function defined (called in main block)
 
 # %% [markdown]
 """
@@ -1146,8 +1143,7 @@ def test_unit_dense_layer():
     print(f"✅ Bias and no-bias variants work")
     print(f"✅ Naive matrix multiplication option works")
 
-# Run the test
-test_unit_dense_layer()
+# Test function defined (called in main block)
 
 # %% [markdown]
 """
@@ -1518,8 +1514,7 @@ def test_unit_layer_activation():
     print(f"✅ Multi-layer networks working")
     print(f"✅ All components ready for training!")
 
-# Run the test
-test_unit_layer_activation()
+# Test function defined (called in main block)
 
 # %% [markdown]
 """
@@ -1590,8 +1585,7 @@ def test_module_layer_tensor_integration():
     assert np.array_equal(output_tensor.data, np.array([2, 4, 6])), "Output data is incorrect"
     print("✅ Integration Test Passed: Layer correctly processed Tensor.")
 
-# Run the integration test
-test_module_layer_tensor_integration()
+# Test function defined (called in main block)
 
 # %% [markdown]
 """
@@ -1895,44 +1889,7 @@ def analyze_famous_architectures():
 Complete the missing implementations in the `LayerArchitectureProfiler` class above, then use your profiler to understand architecture trade-offs.
 """
 
-# %%
-# Initialize the layer architecture profiler
-profiler = LayerArchitectureProfiler()
-
-print("🏗️ LAYER ARCHITECTURE ANALYSIS")
-print("=" * 50)
-
-# Test 1: Single layer analysis
-print("📊 Single Layer Analysis:")
-layer_configs = [
-    (784, 128),    # MNIST → small hidden
-    (784, 512),    # MNIST → medium hidden  
-    (784, 2048),   # MNIST → large hidden
-    (3072, 1024),  # CIFAR-10 → hidden
-]
-
-for input_size, hidden_size in layer_configs:
-    analysis = profiler.analyze_layer_parameters(input_size, hidden_size, 10)
-    print(f"   {input_size} → {hidden_size}: {analysis['total_parameters']:,} params, {analysis['memory_mb']:.2f} MB")
-
-# Test 2: Network scaling analysis
-print(f"\n🔍 Network Scaling Analysis:")
-network_configs = [
-    ([128], "Small network"),
-    ([256, 128], "Medium network"),
-    ([512, 256, 128], "Large network"),
-    ([1024, 512, 256, 128], "Very large network")
-]
-
-for hidden_sizes, description in network_configs:
-    analysis = profiler.analyze_network_scaling(784, hidden_sizes, 10)
-    print(f"   {description}: {analysis['total_parameters']:,} params, {analysis['total_memory_mb']:.2f} MB")
-
-print(f"\n💡 SCALING INSIGHTS:")
-print(f"   - Adding layers multiplies parameter count")
-print(f"   - First layer often dominates parameter count (large input)")
-print(f"   - Memory scales linearly with parameter count")
-print(f"   - Architecture choice = resource planning decision")
+# Architecture profiler (initialized at module level)
 
 # %% [markdown]
 """
@@ -1941,57 +1898,32 @@ print(f"   - Architecture choice = resource planning decision")
 **Goal**: Compare different network architectures and understand the depth vs width trade-offs that affect production ML systems.
 """
 
-# %%
-# Compare different architecture strategies
-input_size = 784  # MNIST flattened image
-output_size = 10  # 10 digit classes
+# Architecture analysis functions (called in main block)
 
-architecture_configs = {
-    'Baseline': [128],
-    'Wide Shallow': [512], 
-    'Narrow Deep': [64, 64, 64],
-    'Pyramid': [256, 128, 64],
-    'Inverted Pyramid': [64, 128, 256],
-    'Bottleneck': [512, 32, 512]
-}
+# %% [markdown]
+"""
+## 🤔 ML Systems Thinking Questions
 
-# Students use their implemented analysis tools
-comparison_results = profiler.compare_architectures(input_size, architecture_configs, output_size)
+### System Design
+1. How do layer abstraction patterns in TinyTorch compare to those in PyTorch's nn.Module or TensorFlow's Keras layers?
+2. What are the trade-offs between stateful layers (storing weights internally) versus functional approaches (weights passed as parameters)?
+3. How would you design a layer system that supports both eager execution and graph compilation modes?
 
-# Analyze depth vs width trade-offs
-depth_width_results = profiler.analyze_depth_vs_width_tradeoffs(input_size, output_size)
+### Production ML
+1. How do weight initialization strategies impact model convergence and deployment reliability in production environments?
+2. What considerations arise when deploying dense layers across different hardware (CPU, GPU, TPU) in production systems?
+3. How would you implement layer-wise learning rate scheduling for large-scale distributed training?
 
-# Connect to famous architectures
-famous_analysis = analyze_famous_architectures()
+### Framework Design
+1. Why do modern ML frameworks separate layer definitions from weight storage, and how does this impact memory management?
+2. How would you design a layer system that supports both forward-mode and reverse-mode automatic differentiation?
+3. What design patterns enable efficient batching and broadcasting in neural network layers?
 
-print(f"\n🎯 KEY LEARNINGS FOR ML SYSTEMS ENGINEERS:")
-print(f"=" * 55)
-
-print(f"\n1. 📊 PARAMETER SCALING:")
-print(f"   First layer dominates: input_size × hidden_size")
-print(f"   Layer composition multiplies parameter count")
-print(f"   Memory = parameters × 4 bytes (float32)")
-
-print(f"\n2. 🏗️ ARCHITECTURE STRATEGIES:")
-print(f"   Wide networks: More capacity, more parameters")
-print(f"   Deep networks: Better representations, harder training")
-print(f"   Bottlenecks: Compress then expand information")
-
-print(f"\n3. 🚀 PRODUCTION IMPLICATIONS:")
-print(f"   Parameter count = memory requirements")
-print(f"   Model serving: Load entire model into memory")
-print(f"   Training: Need 2-3x model size for gradients/optimizer")
-
-print(f"\n4. 💰 COST IMPLICATIONS:")
-print(f"   More parameters = larger cloud instances needed")
-print(f"   GPU memory limits determine maximum model size")
-print(f"   Distributed training costs scale with model size")
-
-print(f"\n💡 SYSTEMS ENGINEERING INSIGHT:")
-print(f"Every layer you add is a resource planning decision:")
-print(f"- More layers = more memory = higher cloud costs")
-print(f"- Architecture efficiency matters at production scale")
-print(f"- Understanding parameter scaling helps optimize deployments")
+### Performance & Scale
+1. How do different dense layer implementations impact memory bandwidth utilization and cache efficiency?
+2. What are the computational trade-offs between wider layers versus deeper networks in terms of parallelization?
+3. How would you optimize matrix multiplication operations for different batch sizes and hardware architectures?
+"""
 
 # %% [markdown]
 """
@@ -2231,4 +2163,103 @@ With your deep understanding of layers, you can:
 *"Every expert was once a beginner. Every pro was once an amateur. Every icon was once an unknown." - Robin Sharma*
 
 **You've built the foundation. Now go build the future of AI!** 🚀
-""" 
+"""
+
+if __name__ == "__main__":
+    # Run all layer tests
+    test_unit_matrix_multiplication()
+    test_unit_dense_layer()
+    test_unit_layer_activation()
+    test_module_layer_tensor_integration()
+    
+    # Initialize the layer architecture profiler
+    profiler = LayerArchitectureProfiler()
+
+    print("🏗️ LAYER ARCHITECTURE ANALYSIS")
+    print("=" * 50)
+
+    # Test 1: Single layer analysis
+    print("📊 Single Layer Analysis:")
+    layer_configs = [
+        (784, 128),    # MNIST → small hidden
+        (784, 512),    # MNIST → medium hidden  
+        (784, 2048),   # MNIST → large hidden
+        (3072, 1024),  # CIFAR-10 → hidden
+    ]
+
+    for input_size, hidden_size in layer_configs:
+        analysis = profiler.analyze_layer_parameters(input_size, hidden_size, 10)
+        print(f"   {input_size} → {hidden_size}: {analysis['total_parameters']:,} params, {analysis['memory_mb']:.2f} MB")
+
+    # Test 2: Network scaling analysis
+    print(f"\n🔍 Network Scaling Analysis:")
+    network_configs = [
+        ([128], "Small network"),
+        ([256, 128], "Medium network"),
+        ([512, 256, 128], "Large network"),
+        ([1024, 512, 256, 128], "Very large network")
+    ]
+
+    for hidden_sizes, description in network_configs:
+        analysis = profiler.analyze_network_scaling(784, hidden_sizes, 10)
+        print(f"   {description}: {analysis['total_parameters']:,} params, {analysis['total_memory_mb']:.2f} MB")
+
+    print(f"\n💡 SCALING INSIGHTS:")
+    print(f"   - Adding layers multiplies parameter count")
+    print(f"   - First layer often dominates parameter count (large input)")
+    print(f"   - Memory scales linearly with parameter count")
+    print(f"   - Architecture choice = resource planning decision")
+    
+    # Compare different architecture strategies
+    input_size = 784  # MNIST flattened image
+    output_size = 10  # 10 digit classes
+
+    architecture_configs = {
+        'Baseline': [128],
+        'Wide Shallow': [512], 
+        'Narrow Deep': [64, 64, 64],
+        'Pyramid': [256, 128, 64],
+        'Inverted Pyramid': [64, 128, 256],
+        'Bottleneck': [512, 32, 512]
+    }
+
+    # Students use their implemented analysis tools
+    comparison_results = profiler.compare_architectures(input_size, architecture_configs, output_size)
+
+    # Analyze depth vs width trade-offs
+    depth_width_results = profiler.analyze_depth_vs_width_tradeoffs(input_size, output_size)
+
+    # Connect to famous architectures
+    famous_analysis = analyze_famous_architectures()
+
+    print(f"\n🎯 KEY LEARNINGS FOR ML SYSTEMS ENGINEERS:")
+    print(f"=" * 55)
+
+    print(f"\n1. 📊 PARAMETER SCALING:")
+    print(f"   First layer dominates: input_size × hidden_size")
+    print(f"   Layer composition multiplies parameter count")
+    print(f"   Memory = parameters × 4 bytes (float32)")
+
+    print(f"\n2. 🏗️ ARCHITECTURE STRATEGIES:")
+    print(f"   Wide networks: More capacity, more parameters")
+    print(f"   Deep networks: Better representations, harder training")
+    print(f"   Bottlenecks: Compress then expand information")
+
+    print(f"\n3. 🚀 PRODUCTION IMPLICATIONS:")
+    print(f"   Parameter count = memory requirements")
+    print(f"   Model serving: Load entire model into memory")
+    print(f"   Training: Need 2-3x model size for gradients/optimizer")
+
+    print(f"\n4. 💰 COST IMPLICATIONS:")
+    print(f"   More parameters = larger cloud instances needed")
+    print(f"   GPU memory limits determine maximum model size")
+    print(f"   Distributed training costs scale with model size")
+
+    print(f"\n💡 SYSTEMS ENGINEERING INSIGHT:")
+    print(f"Every layer you add is a resource planning decision:")
+    print(f"- More layers = more memory = higher cloud costs")
+    print(f"- Architecture efficiency matters at production scale")
+    print(f"- Understanding parameter scaling helps optimize deployments")
+    
+    print("All tests passed!")
+    print("Layers module complete!")

@@ -42,7 +42,7 @@ By the end of this module, you'll understand:
 import numpy as np
 import sys
 import os
-from typing import List, Union, Optional, Callable
+from typing import List, Optional
 import matplotlib.pyplot as plt
 
 # Import all the building blocks we need - try package first, then local modules
@@ -796,8 +796,7 @@ except Exception as e:
 
 print("📈 Final Progress: Complete network architectures ready for real ML applications!")
 
-# Run the test
-test_unit_network_architectures()
+# Test function defined (called in main block)
 
 # %% [markdown]
 """
@@ -880,8 +879,7 @@ def test_unit_sequential_networks():
     
     print("✅ Sequential networks work correctly")
 
-# Run the test
-test_unit_sequential_networks()
+# Test function defined (called in main block)
 
 # %% [markdown]
 """
@@ -911,8 +909,7 @@ def test_unit_mlp_creation():
     
     print("✅ MLP creation works correctly")
 
-# Run the test
-test_unit_mlp_creation()
+# Test function defined (called in main block)
 
 # %% [markdown]
 """
@@ -935,8 +932,7 @@ def test_unit_network_applications():
     row_sums = np.sum(iris_predictions.data, axis=1)
     assert np.allclose(row_sums, 1.0), "Predictions should sum to 1"
 
-# Run the test
-test_unit_network_applications()
+# Test function defined (called in main block)
 
 # %% [markdown]
 """
@@ -988,8 +984,7 @@ def test_module_full_network_forward_pass():
     assert output_tensor.shape == (5, 2), f"Expected output shape (5, 2), but got {output_tensor.shape}"
     print("✅ Integration Test Passed: Full network forward pass is successful.")
 
-# Run the integration test
-test_module_full_network_forward_pass()
+# Test function defined (called in main block)
 
 # %% [markdown]
 """
@@ -1472,6 +1467,31 @@ print(f"- Critical for unattended training jobs in production")
 
 # %% [markdown]
 """
+## 🤔 ML Systems Thinking Questions
+
+### System Design
+1. How do sequential network architectures in TinyTorch compare to PyTorch's Sequential container and TensorFlow's Functional API?
+2. What are the architectural trade-offs between sequential models versus dynamic graph approaches for different types of ML problems?
+3. How would you design a neural network framework that supports both static and dynamic computation graphs?
+
+### Production ML
+1. How do different network depths and widths impact inference latency and memory requirements in production deployment?
+2. What strategies would you use to optimize sequential networks for real-time inference on edge devices with limited resources?
+3. How would you implement model versioning and A/B testing for sequential network architectures in production?
+
+### Framework Design
+1. What design patterns enable efficient layer composition while maintaining gradient flow and memory management?
+2. How would you implement automatic mixed precision training for sequential networks to optimize both speed and numerical stability?
+3. What abstractions would you create to support both training and inference modes efficiently in a neural network framework?
+
+### Performance & Scale
+1. How do sequential networks scale with distributed training across multiple GPUs and nodes?
+2. What are the memory and computational bottlenecks when deploying very deep sequential networks, and how would you address them?
+3. How would you implement efficient batch processing and dynamic batching for sequential networks in production systems?
+"""
+
+# %% [markdown]
+"""
 ## 🎯 MODULE SUMMARY: Neural Network Architectures
 
 Congratulations! You've successfully implemented complete neural network architectures:
@@ -1496,3 +1516,14 @@ Congratulations! You've successfully implemented complete neural network archite
 
 **Ready for CNNs?** Your network foundations are now ready for specialized architectures!
 """ 
+
+if __name__ == "__main__":
+    # Run all tests
+    test_unit_network_architectures()
+    test_unit_sequential_networks()
+    test_unit_mlp_creation()
+    test_unit_network_applications()
+    test_module_full_network_forward_pass()
+    
+    print("All tests passed!")
+    print("dense_dev module complete!")

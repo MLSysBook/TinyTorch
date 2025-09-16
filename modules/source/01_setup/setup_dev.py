@@ -58,7 +58,6 @@ Let's build the foundation of your ML systems engineering skills!
 import sys
 import platform
 import psutil
-import os
 from typing import Dict, Any
 
 # %% nbgrader={"grade": false, "grade_id": "setup-verification", "locked": false, "schema_version": 3, "solution": false, "task": false}
@@ -348,8 +347,7 @@ def test_unit_personal_info_basic():
     print("✅ Personal info function tests passed!")
     print(f"✅ TinyTorch configured for: {personal['developer']}")
 
-# Run the test
-test_unit_personal_info_basic()
+# Test function defined (called in main block)
 
 # %% [markdown]
 """
@@ -599,8 +597,7 @@ def test_unit_system_info_basic():
     print("✅ System info function tests passed!")
     print(f"✅ Python: {sys_info['python_version']} on {sys_info['platform']}")
 
-# Run the test
-test_unit_system_info_basic()
+# Test function defined (called in main block)
 
 # %% [markdown]
 """
@@ -644,6 +641,31 @@ Now let's test your configuration functions!
 ### 🎯 Additional Comprehensive Tests
 
 These comprehensive tests validate that your configuration functions work together and integrate properly with the TinyTorch system.
+"""
+
+# %% [markdown]
+"""
+## 🤔 ML Systems Thinking Questions
+
+### System Design
+1. How might your personal configuration system scale to support team-based ML development where multiple developers share models and infrastructure?
+2. What additional system information would be crucial for deploying ML models across different cloud providers (AWS, GCP, Azure)?
+3. How do configuration management patterns in TinyTorch compare to industry tools like MLflow, Weights & Biases, or Neptune?
+
+### Production ML
+1. In a production ML environment, how would hardware detection help with automated resource allocation and model deployment strategies?
+2. How might system configuration differ between development environments, staging systems, and production inference servers?
+3. What role does environment reproducibility play in debugging ML model performance issues in production?
+
+### Framework Design
+1. How do major ML frameworks like PyTorch and TensorFlow handle system detection and configuration management internally?
+2. What are the trade-offs between static configuration files versus dynamic system detection for ML applications?
+3. How would you design a configuration system that adapts to different hardware capabilities (CPU-only vs GPU vs TPU)?
+
+### Performance & Scale
+1. How might CPU core count and memory constraints influence automatic hyperparameter selection and batch size optimization?
+2. What performance implications arise from different CPU architectures (x86 vs ARM) in ML training and inference workloads?
+3. How would you design a system that automatically configures parallel processing based on detected hardware capabilities?
 """
 
 # %% [markdown]
@@ -715,4 +737,12 @@ You've taken your first step in ML systems engineering! This module taught you:
 - **Foundation building**: Creating reusable, tested, documented code
 
 **Ready for the next challenge?** Let's build the foundation of ML systems with tensors!
-""" 
+"""
+
+if __name__ == "__main__":
+    # Run the unit tests
+    test_unit_personal_info_basic()
+    test_unit_system_info_basic()
+    
+    print("All tests passed!")
+    print("Setup module complete!")

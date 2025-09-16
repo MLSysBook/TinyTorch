@@ -32,7 +32,6 @@ Welcome to the MLOps module! This is where we close the loop on the complete ML 
 
 #| export
 import numpy as np
-import matplotlib.pyplot as plt
 import os
 import sys
 import time
@@ -2665,7 +2664,7 @@ if __name__ == "__main__":
 
 # %% [markdown]
 """
-## 🎯 COMPREHENSIVE ML SYSTEMS THINKING QUESTIONS
+## 🤔 ML Systems Thinking Questions
 
 Now that you've implemented a production-grade MLOps system, let's explore the deeper implications for enterprise ML systems:
 
@@ -3837,12 +3836,11 @@ def test_unit_production_mlops_profiler():
     print("✅ MLOps governance reporting works")
     print("📈 Progress: Production MLOps Profiler ✓")
 
-# Run the test
-test_unit_production_mlops_profiler()
+# Test moved to main block
 
 # %% [markdown]
 """
-## 🎯 COMPREHENSIVE ML SYSTEMS THINKING QUESTIONS
+## 🤔 ML Systems Thinking Questions
 
 Now that you've implemented a production-grade MLOps system, let's explore the deeper implications for enterprise ML systems:
 

@@ -95,7 +95,7 @@ from tinytorch.core.tensor import Tensor  # Foundation
 ## Step 1: Understanding Attention - The Revolutionary Mechanism
 
 ### What is Attention?
-**Attention** is a mechanism that allows models to dynamically focus on relevant parts of the input. It's like having a spotlight that can shine on different parts of a sequence based on what's most important for the current task.
+**Attention** is a mechanism that allows models to dynamically focus on relevant parts of the input. It is like having a spotlight that can shine on different parts of a sequence based on what's most important for the current task.
 
 ### The Fundamental Insight: Query, Key, Value
 Attention works through three projections:
@@ -106,7 +106,7 @@ Attention works through three projections:
 ### Real-World Analogy: Library Search
 Imagine searching in a library:
 ```
-Query: "machine learning books"     ← What you're looking for
+Query: "machine learning books"     ← What you are looking for
 Keys: ["AI", "ML", "physics", ...] ← Book category labels  
 Values: [book1, book2, book3, ...]  ← Actual book contents
 
@@ -135,11 +135,11 @@ Attention(Q,K,V) = softmax(QK^T/√d_k)V
 | Aspect | Convolution | Attention |
 |--------|-------------|-----------|
 | **Receptive field** | Local, grows with depth | Global from layer 1 |
-| **Computation** | O(n) with kernel size | O(n²) with sequence length |
+| **Computation** | O(n) with kernel size | O(n^2) with sequence length |
 | **Weights** | Fixed learned kernels | Dynamic input-dependent |
 | **Best for** | Spatial data (images) | Sequential data (text) |
 
-Let's implement this step by step!
+Let us implement this step by step!
 """
 
 # %% [markdown]
@@ -161,7 +161,7 @@ output = attention_weights @ V
 - **Stable training**: Keeps attention weights in a reasonable range
 - **Mathematical insight**: Compensates for variance growth with dimension
 
-Let's build the fundamental attention function!
+Let us build the fundamental attention function!
 """
 
 # %% nbgrader={"grade": false, "grade_id": "scaled-dot-product-attention", "locked": false, "schema_version": 3, "solution": true, "task": false}
@@ -281,15 +281,14 @@ def test_unit_scaled_dot_product_attention():
 
     # Check that masked weights are zero
     masked_positions = weights_masked.data[0, 2] # Example of a masked position
-    # This is a bit tricky to assert directly due to softmax, but we can check if it's very small
+    # This is a bit tricky to assert directly due to softmax, but we can check if it is very small
     assert masked_positions < 1e-6, f"Masked weights should be close to 0, got {masked_positions}"
     
     print("✅ Attention with mask works correctly")
     
     print("📈 Progress: Scaled dot-product attention ✓")
 
-# Run the test
-test_unit_scaled_dot_product_attention()
+# Test will run in main block
 
 # %% [markdown]
 """
@@ -304,7 +303,7 @@ test_unit_scaled_dot_product_attention()
 - **Parallel processing**: Unlike RNNs, all positions computed simultaneously
 - **Foundation of GPT**: How language models understand context
 
-Let's create a convenient wrapper for self-attention!
+Let us create a convenient wrapper for self-attention!
 """
 
 # %% nbgrader={"grade": false, "grade_id": "self-attention", "locked": false, "schema_version": 3, "solution": true, "task": false}
@@ -437,8 +436,7 @@ def test_unit_self_attention():
     print("✅ Self-attention is symmetric operation: True")
     print("📈 Progress: Self-Attention ✓")
 
-# Run the test
-test_unit_self_attention()
+# Test will run in main block
 
 # %% [markdown]
 """
@@ -453,10 +451,10 @@ Masking allows us to control which positions can attend to which other positions
 
 ### Types of Masks
 - **Causal (Lower Triangular)**: Position i can only attend to positions ≤ i
-- **Padding**: Mask out padding tokens so they don't affect attention
+- **Padding**: Mask out padding tokens so they do not affect attention
 - **Bidirectional**: All positions can attend to all positions (like BERT)
 
-Let's implement these essential masking utilities!
+Let us implement these essential masking utilities!
 """
 
 # %% nbgrader={"grade": false, "grade_id": "attention-masking", "locked": false, "schema_version": 3, "solution": true, "task": false}
@@ -649,15 +647,14 @@ def test_unit_attention_masking():
     print("✅ Bidirectional mask has correct shape: True")
     print("📈 Progress: Attention Masking ✓")
 
-# Run the test
-test_unit_attention_masking()
+# Test will run in main block
 
 # %% [markdown]
 """
 ## Step 5: Complete System Integration Test
 
 ### Bringing It All Together
-Let's test all components working together in a realistic scenario similar to how they would be used in actual transformer models.
+Let us test all components working together in a realistic scenario similar to how they would be used in actual transformer models.
 """
 
 # %% nbgrader={"grade": true, "grade_id": "test-integration-final", "locked": true, "points": 10, "schema_version": 3, "solution": false, "task": false}
@@ -715,14 +712,13 @@ def test_unit_complete_attention_system():
     print("✅ Causal masking works: True")
     print("📈 Progress: Complete Attention System ✓")
 
-# Run the test
-test_unit_complete_attention_system()
+# Test will run in main block
 
 # %% [markdown]
 """
 ## 🎯 Attention Behavior Analysis
 
-Let's create a simple example to see what attention patterns emerge and understand the behavior.
+Let us create a simple example to see what attention patterns emerge and understand the behavior.
 """
 
 # %% nbgrader={"grade": false, "grade_id": "attention-analysis", "locked": false, "schema_version": 3, "solution": false, "task": false}
@@ -822,8 +818,7 @@ def test_unit_attention_mechanism():
     
     print("✅ Attention mechanism works correctly")
 
-# Run the test
-test_unit_attention_mechanism()
+# Test will run in main block
 
 def test_unit_self_attention_wrapper():
     """Unit test for the self-attention wrapper implementation."""
@@ -840,8 +835,7 @@ def test_unit_self_attention_wrapper():
     
     print("✅ Self-attention wrapper works correctly")
 
-# Run the test
-test_unit_self_attention_wrapper()
+# Test will run in main block
 
 def test_unit_masking_utilities():
     """Unit test for the attention masking utilities."""
@@ -861,8 +855,7 @@ def test_unit_masking_utilities():
     
     print("✅ Masking utilities work correctly")
 
-# Run the test
-test_unit_masking_utilities()
+# Test will run in main block
 
 # %% [markdown]
 """
@@ -916,7 +909,7 @@ def test_module_attention_tensor_compatibility():
 """
 ### 📊 Visualization Demo: Attention Patterns
 
-Let's visualize the attention patterns we computed earlier (for educational purposes):
+Let us visualize the attention patterns we computed earlier (for educational purposes):
 """
 
 # %%
@@ -948,16 +941,16 @@ if __name__ == "__main__":
 """
 ## 🎯 MODULE SUMMARY: Attention Mechanisms
 
-Congratulations! You've successfully implemented the attention mechanisms that power modern AI:
+Congratulations! You have successfully implemented the attention mechanisms that power modern AI:
 
-### What You've Accomplished
+### What You have Accomplished
 ✅ **Scaled Dot-Product Attention**: The core attention mechanism used in transformers
 ✅ **Multi-Head Attention**: Parallel attention heads for complex pattern recognition
 ✅ **Causal Masking**: Sequence modeling for autoregressive generation
 ✅ **Integration**: Seamless compatibility with Tensor operations
 ✅ **Real Applications**: Language modeling, machine translation, and more
 
-### Key Concepts You've Learned
+### Key Concepts You have Learned
 - **Attention as weighted averaging**: How attention computes context-dependent representations
 - **Query-Key-Value paradigm**: The fundamental attention computation pattern
 - **Scaled dot-product**: Mathematical foundation of attention mechanisms
@@ -996,12 +989,13 @@ Your implementations mirror production systems:
 4. **Move to Module 8**: Add data loading for real-world datasets!
 
 **Ready for data engineering?** Your attention mechanisms are now ready for real-world applications!
+"""
 
 # %% [markdown]
 """
 ## Step 4: ML Systems Thinking - Attention Scaling & Efficiency
 
-### 🏗️ Attention Mechanisms at Scale
+### Attention Mechanisms at Scale
 
 Your attention implementation provides the foundation for understanding how production transformer systems scale attention mechanisms for massive language models and real-time inference.
 
@@ -1016,7 +1010,7 @@ class AttentionScalingAnalyzer:
 ```
 
 Real attention systems must handle:
-- **Quadratic scaling**: O(n²) attention complexity limits sequence length
+- **Quadratic scaling**: O(n^2) attention complexity limits sequence length
 - **Memory bandwidth**: Attention matrices require massive memory access
 - **Sparse patterns**: Most attention weights are near zero in practice
 - **KV-cache optimization**: Caching key-value pairs for efficient autoregressive generation
@@ -1062,7 +1056,7 @@ class AttentionEfficiencyProfiler:
         HINTS:
         - Create test tensors for different sequence lengths
         - Measure both computation time and memory usage
-        - Calculate theoretical FLOPs: seq_len² * d_model for attention
+        - Calculate theoretical FLOPs: seq_len^2 * d_model for attention
         - Compare empirical vs theoretical scaling
         - Focus on production-relevant sequence lengths
         """
@@ -1189,13 +1183,13 @@ class AttentionEfficiencyProfiler:
             # Identify bottlenecks
             if time_ratio > theoretical_quadratic * 1.2:
                 analysis['primary_bottleneck'] = 'computation'
-                analysis['bottleneck_reason'] = 'Time scaling worse than O(n²) - computational bottleneck'
+                analysis['bottleneck_reason'] = 'Time scaling worse than O(n^2) - computational bottleneck'
             elif attention_memory_ratio > seq_ratio * 1.5:
                 analysis['primary_bottleneck'] = 'memory'
                 analysis['bottleneck_reason'] = 'Attention matrix memory scaling limiting performance'
             else:
                 analysis['primary_bottleneck'] = 'balanced'
-                analysis['bottleneck_reason'] = 'Scaling follows expected O(n²) pattern'
+                analysis['bottleneck_reason'] = 'Scaling follows expected O(n^2) pattern'
         
         # Memory breakdown analysis
         total_memory_peak = max(memories)
@@ -1240,7 +1234,7 @@ class AttentionEfficiencyProfiler:
         if scaling_analysis and 'sequence_scaling' in scaling_analysis:
             time_vs_quad = scaling_analysis['sequence_scaling']['time_vs_quadratic_ratio']
             if time_vs_quad > 1.5:
-                recommendations.append("🐌 Computational scaling worse than O(n²)")
+                recommendations.append("🐌 Computational scaling worse than O(n^2)")
                 recommendations.append("🔧 Consider: Optimized GEMM operations, tensor cores")
         
         # Production deployment recommendations
@@ -1312,7 +1306,7 @@ class AttentionEfficiencyProfiler:
 """
 ### 🧪 Test: Attention Efficiency Profiling
 
-Let's test our attention efficiency profiler with realistic transformer scenarios.
+Let us test our attention efficiency profiler with realistic transformer scenarios.
 """
 
 # %% nbgrader={"grade": false, "grade_id": "test-attention-profiler", "locked": false, "schema_version": 3, "solution": false, "task": false}
@@ -1364,45 +1358,66 @@ def test_attention_efficiency_profiler():
     
     print("🎯 Attention Efficiency Profiler: All tests passed!")
 
-# Run the test
-test_attention_efficiency_profiler()
+# Test will run in main block
 
 # %% [markdown]
 """
-## 🤔 ML Systems Thinking Questions
+## ML Systems Thinking Questions
 
 *Take a moment to reflect on these questions. Consider how your attention implementation connects to the challenges of scaling transformer models to production.*
 
-### 🏗️ Attention Architecture & Scaling
-1. **Quadratic Complexity Challenge**: Your attention mechanism has O(n²) complexity with sequence length. How do production systems like GPT-4 handle sequences of 32k+ tokens? What architectural innovations address this fundamental limitation?
+### Attention Architecture & Scaling
+1. **Quadratic Complexity Challenge**: Your attention mechanism has O(n**2) complexity with sequence length. How do production systems like GPT-4 handle sequences of 32000+ tokens? What architectural innovations address this fundamental limitation?
 
 2. **Memory Wall Problem**: Your attention matrix grows quadratically with sequence length. When training large language models, how do systems manage the memory requirements of attention across multiple layers and multiple attention heads?
 
 3. **Parallelization Strategy**: Your implementation processes attention sequentially. How do modern GPUs parallelize attention computation across thousands of cores? What are the trade-offs between batch parallelism and sequence parallelism?
 
-### 📊 Production Transformer Systems
+### Production Transformer Systems
 4. **KV-Cache Optimization**: Your attention recomputes key-value pairs every time. In autoregressive generation (like ChatGPT), how do production systems cache key-value pairs to avoid redundant computation? What memory vs compute trade-offs does this create?
 
 5. **Dynamic Batching**: Your attention handles fixed sequence lengths. How do production inference servers batch requests with different sequence lengths efficiently? How does padding vs dynamic batching affect GPU utilization?
 
 6. **Attention Pattern Sparsity**: Most attention weights in practice are near zero. How do sparse attention patterns (sliding window, block-sparse) reduce computational complexity while maintaining model quality?
 
-### ⚡ Hardware-Aware Optimization
+### Hardware-Aware Optimization
 7. **Memory Bandwidth Bottleneck**: Attention is often memory-bound rather than compute-bound. How do optimizations like Flash Attention reorder operations to maximize memory bandwidth utilization on modern GPUs?
 
 8. **Mixed Precision Training**: Your implementation uses float32. How does mixed precision (fp16/bf16) training affect attention computation accuracy and memory usage? What numerical stability challenges arise?
 
 9. **Tensor Core Utilization**: Modern GPUs have specialized matrix multiplication units. How do production systems optimize attention matrix operations to maximize tensor core utilization and throughput?
 
-### 🔄 System Integration & Efficiency
+### System Integration & Efficiency
 10. **Multi-Head Load Balancing**: Different attention heads may have different computational loads. How do production systems balance work across multiple heads and multiple GPUs to minimize idle time?
 
-11. **Gradient Checkpointing Trade-offs**: Training large transformers requires trading memory for computation. How do systems decide which attention layers to checkpoint? What's the optimal trade-off between memory savings and recomputation overhead?
+11. **Gradient Checkpointing Trade-offs**: Training large transformers requires trading memory for computation. How do systems decide which attention layers to checkpoint? What is the optimal trade-off between memory savings and recomputation overhead?
 
 12. **Model Serving Latency**: Real-time applications require low-latency attention computation. How do production systems optimize the attention mechanism for single-token generation vs batch processing? What caching strategies minimize latency?
 
 *These questions connect your attention implementation to the real engineering challenges of deploying transformer models at scale. Each represents critical decisions that affect the performance, cost, and feasibility of production AI systems.*
-"""
 
 **Ready for data engineering?** Your attention mechanisms are now ready for real-world applications!
 """
+
+# %% [markdown]
+"""
+## Main Execution Block
+
+All tests run when module is executed directly.
+"""
+
+# %%
+if __name__ == "__main__":
+    print("\n🧪 Running Attention Module Tests...")
+    
+    # Run all unit tests
+    test_unit_scaled_dot_product_attention()
+    test_unit_self_attention()
+    test_unit_attention_masking()
+    test_unit_complete_attention_system()
+    test_unit_attention_mechanism()
+    test_unit_self_attention_wrapper()
+    test_unit_masking_utilities()
+    test_attention_efficiency_profiler()
+    
+    print("\n✅ All Attention Module Tests Completed!")

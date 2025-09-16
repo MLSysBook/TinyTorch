@@ -33,7 +33,6 @@ Welcome to the Activations module! This is where neural networks get their power
 #| export
 import math
 import numpy as np
-import matplotlib.pyplot as plt
 import os
 import sys
 from typing import Union, List
@@ -190,7 +189,7 @@ class ReLU:
         - Use np.maximum(0, x.data) for element-wise max with 0
         - Return the same type as input: return type(x)(result)
         - The shape should remain the same as input
-        - Don't modify the input tensor (immutable operations)
+        - Do not modify the input tensor (immutable operations)
         
         LEARNING CONNECTIONS:
         - This is like torch.nn.ReLU() in PyTorch
@@ -252,8 +251,7 @@ def test_unit_relu_activation():
     print(f"✅ Shape preservation working")
     print(f"✅ Works with multi-dimensional tensors")
 
-# Run the test
-test_unit_relu_activation()
+# Test function defined (called in main block)
 
 # %% [markdown]
 """
@@ -399,8 +397,7 @@ def test_unit_sigmoid_activation():
     print(f"✅ Handles extreme values without overflow")
     print(f"✅ Shape preservation working")
 
-# Run the test
-test_unit_sigmoid_activation()
+# Test function defined (called in main block)
 
 # %% [markdown]
 """
@@ -549,8 +546,7 @@ def test_unit_tanh_activation():
     print(f"✅ Zero-centered (tanh(0) = 0)")
     print(f"✅ Handles extreme values correctly")
 
-# Run the test
-test_unit_tanh_activation()
+# Test function defined (called in main block)
 
 # %% [markdown]
 """
@@ -723,15 +719,14 @@ def test_unit_softmax_activation():
     print(f"✅ Works with batch inputs")
     print(f"✅ Numerically stable with large values")
 
-# Run the test
-test_unit_softmax_activation()
+# Test function defined (called in main block)
 
 # %% [markdown]
 """
 ## 🎯 Comprehensive Test: All Activations Working Together
 
 ### Real-World Scenario
-Let's test how all activation functions work together in a realistic neural network scenario:
+Let us test how all activation functions work together in a realistic neural network scenario:
 
 - **Input processing**: Raw data transformation
 - **Hidden layers**: ReLU for internal processing
@@ -822,8 +817,7 @@ def test_unit_activations_comprehensive():
     print(f"✅ Batch processing works for all activations")
     print(f"✅ Ready for neural network integration!")
 
-# Run the comprehensive test
-test_unit_activations_comprehensive()
+# Test function defined (called in main block)
 
 # %%
 def test_module_activation_tensor_integration():
@@ -894,16 +888,15 @@ def test_module_activation_tensor_integration():
     
     print("✅ Integration Test Passed: Activation-Tensor integration works correctly.")
 
-# Run the integration test
-test_module_activation_tensor_integration()
+# Test function defined (called in main block)
 
 # %% [markdown]
 """
 ## 🎯 MODULE SUMMARY: Activation Functions
 
-    Congratulations! You've successfully implemented all four essential activation functions:
+    Congratulations! You have successfully implemented all four essential activation functions:
 
-### ✅ What You've Built
+### ✅ What You have Built
     - **ReLU**: The foundation of modern deep learning with sparsity and efficiency
     - **Sigmoid**: Classic activation for binary classification and probability outputs
     - **Tanh**: Zero-centered activation with better gradient properties
@@ -942,19 +935,20 @@ test_module_activation_tensor_integration()
     - **Industry applications**: Every major deep learning model uses these functions
 
 ### 🎯 The Power of Nonlinearity
-    You've unlocked the key to deep learning:
+    You have unlocked the key to deep learning:
     - **Before**: Linear models limited to simple patterns
     - **After**: Nonlinear models can learn any pattern (universal approximation)
 
     **Next Module**: Layers - Building blocks that combine your tensors and activations into powerful transformations!
 
-    Your activation functions are the key to neural network intelligence. Now let's build the layers that use them!
+    Your activation functions are the key to neural network intelligence. Now let us build the layers that use them!
+"""
 
 # %% [markdown]
 """
-## 🤔 ML Systems Thinking: Reflection Questions
+## ML Systems Thinking: Reflection Questions
 
-Now that you've built the nonlinear functions that enable neural network intelligence, reflect on how these simple mathematical operations power the AI revolution:
+Now that you have built the nonlinear functions that enable neural network intelligence, reflect on how these simple mathematical operations power the AI revolution.
 
 ### System Design - How does this fit into larger systems?
 1. **The Nonlinearity Bottleneck**: Your implementations show how ReLU, Sigmoid, Tanh, and Softmax each solve different problems. When OpenAI designs GPT architectures, how do they decide which activation goes where? What happens when you choose the wrong activation for a specific layer?
@@ -971,7 +965,7 @@ Now that you've built the nonlinear functions that enable neural network intelli
 6. **Gradient Behavior**: Your functions enable backpropagation (coming in Module 7). In production training of large language models, how do activation choices affect training stability and convergence speed? Why did ReLU revolutionize deep learning?
 
 ### Framework Design - Why do frameworks make certain choices?
-7. **API Consistency**: Your callable classes (`relu(x)`) mirror PyTorch's design. How does consistent activation APIs enable researchers to experiment rapidly with different nonlinearities? What would happen if each activation had a different interface?
+7. **API Consistency**: Your callable classes (`relu(x)`) mirror PyTorch design. How does consistent activation APIs enable researchers to experiment rapidly with different nonlinearities? What would happen if each activation had a different interface?
 
 8. **Automatic Differentiation**: Your forward-only implementations will connect to gradient computation. How do frameworks like PyTorch automatically track operations through activations to compute gradients? Why is this harder than it looks?
 
@@ -984,14 +978,14 @@ Now that you've built the nonlinear functions that enable neural network intelli
 
 12. **Dynamic Activations**: Your static functions are fixed at definition. How might learned activations (like Swish or GELU) that adapt during training change the computational requirements of large-scale systems?
 
-**💡 Systems Insight**: The activation functions you built are the "biological neurons" of artificial intelligence—each simple nonlinear transformation enables networks to learn complex patterns. Your ReLU implementation, despite being just `max(0, x)`, is literally computing in millions of deployed models right now, powering everything from photo recognition to language translation.
+**Systems Insight**: The activation functions you built are the "biological neurons" of artificial intelligence - each simple nonlinear transformation enables networks to learn complex patterns. Your ReLU implementation, despite being just `max(0, x)`, is literally computing in millions of deployed models right now, powering everything from photo recognition to language translation.
 """
 
 # %% [markdown]
 """
 ## ⚡ ML Systems: Performance Analysis & Optimization
 
-Now that you have working activation functions, let's develop **performance engineering skills**. This section teaches you to measure computational costs, understand scaling patterns, and think about production optimization.
+Now that you have working activation functions, let us develop **performance engineering skills**. This section teaches you to measure computational costs, understand scaling patterns, and think about production optimization.
 
 ### **Learning Outcome**: *"I understand performance trade-offs between different activation functions"*
 
@@ -999,7 +993,7 @@ Now that you have working activation functions, let's develop **performance engi
 
 ## Performance Profiling Tools (Light Implementation)
 
-As an ML systems engineer, you need to understand which activation functions are fast vs slow, and why. Let's build simple tools to measure and compare performance.
+As an ML systems engineer, you need to understand which activation functions are fast vs slow, and why. Let us build simple tools to measure and compare performance.
 """
 
 # %% nbgrader={"grade": false, "grade_id": "activation-profiler", "locked": false, "schema_version": 3, "solution": true, "task": false}
@@ -1141,7 +1135,7 @@ class ActivationProfiler:
             print(f"   Time increased {time_ratio:.1f}x")
             
             if abs(time_ratio - size_ratio**2) < abs(time_ratio - size_ratio):
-                print(f"   Pattern: O(n²) - linear in tensor size")
+                print(f"   Pattern: O(n^2) - linear in tensor size")
             else:
                 print(f"   Pattern: ~O(n) - very efficient scaling")
         
@@ -1206,7 +1200,7 @@ def benchmark_activation_suite():
 """
 ### 🧪 Test: Activation Performance Profiling
 
-Let's test our activation profiler with realistic performance analysis.
+Let us test our activation profiler with realistic performance analysis.
 """
 
 # %% nbgrader={"grade": false, "grade_id": "test-activation-profiler", "locked": false, "schema_version": 3, "solution": false, "task": false}
@@ -1260,8 +1254,7 @@ def test_activation_profiler():
     
     print("🎯 Activation Profiler: All tests passed!")
 
-# Run the test
-test_activation_profiler()
+# Test function defined (called in main block)
 
 # %% [markdown]
 """
@@ -1271,51 +1264,65 @@ test_activation_profiler()
 """
 
 # %% nbgrader={"grade": false, "grade_id": "activation-performance-analysis", "locked": false, "schema_version": 3, "solution": false, "task": false}
-# Initialize the activation profiler
-profiler = ActivationProfiler()
+# Activation profiler initialization moved to main block
 
-print("⚡ ACTIVATION PERFORMANCE ANALYSIS")
-print("=" * 50)
+if __name__ == "__main__":
+    # Initialize the activation profiler
+    profiler = ActivationProfiler()
+    
+    # Run all activation tests
+    test_unit_relu_activation()
+    test_unit_sigmoid_activation()
+    test_unit_tanh_activation()
+    test_unit_softmax_activation()
+    test_unit_activations_comprehensive()
+    test_module_activation_tensor_integration()
+    test_activation_profiler()
+    
+    print("⚡ ACTIVATION PERFORMANCE ANALYSIS")
+    print("=" * 50)
 
-# Create test data
-test_tensor = Tensor(np.random.randn(500, 500))  # Medium-sized tensor for testing
-print(f"Test tensor size: {test_tensor.shape}")
-print(f"Memory footprint: {test_tensor.data.nbytes/(1024*1024):.2f} MB")
+    # Create test data
+    test_tensor = Tensor(np.random.randn(500, 500))  # Medium-sized tensor for testing
+    print(f"Test tensor size: {test_tensor.shape}")
+    print(f"Memory footprint: {test_tensor.data.nbytes/(1024*1024):.2f} MB")
 
-# Test individual activation timing
-print(f"\n🎯 Individual Activation Timing:")
-activations_to_test = [
-    (ReLU(), "ReLU"),
-    (Sigmoid(), "Sigmoid"), 
-    (Tanh(), "Tanh"),
-    (Softmax(), "Softmax")
-]
+    # Test individual activation timing
+    print(f"\n🎯 Individual Activation Timing:")
+    activations_to_test = [
+        (ReLU(), "ReLU"),
+        (Sigmoid(), "Sigmoid"), 
+        (Tanh(), "Tanh"),
+        (Softmax(), "Softmax")
+    ]
 
-individual_results = {}
-for activation_fn, name in activations_to_test:
-    # Students implement this timing call
-    avg_time = profiler.time_activation(activation_fn, test_tensor, name, iterations=50)
-    individual_results[name] = avg_time
-    print(f"   {name:8}: {avg_time:.3f} ms average")
+    individual_results = {}
+    for activation_fn, name in activations_to_test:
+        # Students implement this timing call
+        avg_time = profiler.time_activation(activation_fn, test_tensor, name, iterations=50)
+        individual_results[name] = avg_time
+        print(f"   {name:8}: {avg_time:.3f} ms average")
 
-# Analyze the results  
-fastest = min(individual_results, key=individual_results.get)
-slowest = max(individual_results, key=individual_results.get)
-speed_ratio = individual_results[slowest] / individual_results[fastest]
+    # Analyze the results  
+    fastest = min(individual_results, key=individual_results.get)
+    slowest = max(individual_results, key=individual_results.get)
+    speed_ratio = individual_results[slowest] / individual_results[fastest]
 
-print(f"\n📊 PERFORMANCE INSIGHTS:")
-print(f"   Fastest: {fastest} ({individual_results[fastest]:.3f} ms)")
-print(f"   Slowest: {slowest} ({individual_results[slowest]:.3f} ms)")
-print(f"   Speed difference: {speed_ratio:.1f}x")
+    print(f"\n📊 PERFORMANCE INSIGHTS:")
+    print(f"   Fastest: {fastest} ({individual_results[fastest]:.3f} ms)")
+    print(f"   Slowest: {slowest} ({individual_results[slowest]:.3f} ms)")
+    print(f"   Speed difference: {speed_ratio:.1f}x")
 
-print(f"\n💡 WHY THE DIFFERENCE?")
-print(f"   - ReLU: Just max(0, x) - simple comparison")
-print(f"   - Sigmoid: Requires exponential calculation")
-print(f"   - Tanh: Also exponential, but often optimized")
-print(f"   - Softmax: Exponentials + division")
+    print(f"\n💡 WHY THE DIFFERENCE?")
+    print(f"   - ReLU: Just max(0, x) - simple comparison")
+    print(f"   - Sigmoid: Requires exponential calculation")
+    print(f"   - Tanh: Also exponential, but often optimized")
+    print(f"   - Softmax: Exponentials + division")
 
-print(f"\n🏭 PRODUCTION IMPLICATIONS:")
-print(f"   - ReLU dominates modern deep learning (speed + effectiveness)")
-print(f"   - Sigmoid/Tanh used where probability interpretation needed")
-print(f"   - Speed matters: 1000 layers × speed difference = major impact")
-""" 
+    print(f"\n🏭 PRODUCTION IMPLICATIONS:")
+    print(f"   - ReLU dominates modern deep learning (speed + effectiveness)")
+    print(f"   - Sigmoid/Tanh used where probability interpretation needed")
+    print(f"   - Speed matters: 1000 layers × speed difference = major impact")
+    
+    print("All tests passed!")
+    print("Activations module complete!") 
