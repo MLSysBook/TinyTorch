@@ -494,7 +494,8 @@ def test_unit_model_monitor():
     print("📈 Progress: Performance Drift Monitor ✓")
 
 # Run the test
-test_unit_model_monitor()
+if __name__ == "__main__":
+    test_unit_model_monitor()
 
 # %% [markdown]
 """
@@ -761,7 +762,8 @@ def test_unit_drift_detector():
     print("📈 Progress: Simple Drift Detection ✓")
 
 # Run the test
-test_unit_drift_detector()
+if __name__ == "__main__":
+    test_unit_drift_detector()
 
 # %% [markdown]
 """
@@ -1109,7 +1111,8 @@ def test_unit_retraining_trigger():
     print("📈 Progress: Retraining Trigger System ✓")
 
 # Run the test
-test_unit_retraining_trigger()
+if __name__ == "__main__":
+    test_unit_retraining_trigger()
 
 # %% [markdown]
 """
@@ -1467,7 +1470,8 @@ def test_unit_mlops_pipeline():
     print("📈 Progress: Complete MLOps Pipeline ✓")
 
 # Run the test
-test_unit_mlops_pipeline()
+if __name__ == "__main__":
+    test_unit_mlops_pipeline()
 
 # %%
 def test_module_mlops_tinytorch_integration():
@@ -1572,7 +1576,8 @@ def test_module_mlops_tinytorch_integration():
     print("✅ Integration Test Passed: MLOps-TinyTorch integration works correctly.")
 
 # Run the integration test
-test_module_mlops_tinytorch_integration()
+if __name__ == "__main__":
+    test_module_mlops_tinytorch_integration()
 
 # %% [markdown]
 """
@@ -2655,7 +2660,8 @@ def test_unit_production_mlops_profiler():
     print("📈 Progress: Production MLOps Profiler ✓")
 
 # Run the test
-test_unit_production_mlops_profiler()
+if __name__ == "__main__":
+    test_unit_production_mlops_profiler()
 
 # %% [markdown]
 """

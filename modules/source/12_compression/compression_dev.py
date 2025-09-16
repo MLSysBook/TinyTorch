@@ -2067,8 +2067,9 @@ def test_unit_comprehensive_comparison():
     print("  - Demonstrates combined technique effectiveness")
     print()
 
-# Run the test
-test_unit_comprehensive_comparison()
+# Run the test only if executed directly
+if __name__ == "__main__":
+    test_unit_comprehensive_comparison()
 
 # %% [markdown]
 """
@@ -2109,8 +2110,9 @@ def test_module_compression():
 
     print("✅ Integration Test Passed: Pruning correctly modified a layer in a Sequential model.")
 
-# Run the test
-test_module_compression()
+# Run the test only if executed directly
+if __name__ == "__main__":
+    test_module_compression()
 
 # %% [markdown]
 """
@@ -2166,8 +2168,9 @@ def test_module_compression():
 
     print("✅ Integration Test Passed: Comprehensive compression successfully applied and verified.")
 
-# Run the test
-test_module_compression()
+# Run the test only if executed directly
+if __name__ == "__main__":
+    test_module_compression()
 
 # %% [markdown]
 """

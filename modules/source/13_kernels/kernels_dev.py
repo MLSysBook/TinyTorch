@@ -1322,7 +1322,8 @@ def final_performance_test():
     print("You now understand the performance optimizations that power modern AI frameworks.")
 
 # Run the final test
-final_performance_test()
+if __name__ == "__main__":
+    final_performance_test()
 
 # %% [markdown]
 """
