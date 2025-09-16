@@ -158,3 +158,13 @@ datasets/
 tmp/
 temp/
 *.tmp 
+# Virtual environment
+.venv/
+
+# NBGrader database files
+gradebook.db*
+
+# NBGrader temporary files
+assignments/submitted/
+assignments/autograded/
+assignments/feedback/
