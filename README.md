@@ -80,7 +80,7 @@ Go from "How does this work?" 🤷 to "I implemented every line!" 💪
 
 ## 🚀 Quick Start (2 minutes)
 
-### 📊 **First Time? Start with the System Overview**
+### 📊 **Step 1: Setup & System Check**
 
 ```bash
 git clone https://github.com/mlsysbook/TinyTorch.git
@@ -88,18 +88,28 @@ cd TinyTorch
 pip install -r requirements.txt           # Install all dependencies (numpy, jupyter, pytest, etc.)
 pip install -e .                          # Install TinyTorch package in editable mode
 tito system doctor                         # Verify your setup
-
-# 🎯 NEW: Interactive System Architecture Overview
-cd modules/source/00_introduction
-jupyter lab introduction_dev.py           # Explore the complete TinyTorch system visually!
 ```
 
-### 🧑‍🎓 **Ready to Build? Start Here**
+### 🎯 **Step 2: Start with Module 0 - Introduction**
 
 ```bash
-# After exploring the system overview, start building:
-cd modules/source/01_setup
-jupyter lab setup_dev.py                  # Launch your first implementation module
+# Begin your TinyTorch journey with the system overview:
+cd modules/source/00_introduction
+jupyter lab introduction_dev.py           # Interactive visualizations of the entire system!
+
+# What you'll explore:
+# - Complete system architecture visualization
+# - Module dependency graphs
+# - Optimal learning path through 17 modules
+# - Component relationships and complexity analysis
+```
+
+### 🧑‍🎓 **Step 3: Continue to Module 1 - Setup**
+
+```bash
+# After understanding the system, start building:
+cd ../01_setup
+jupyter lab setup_dev.py                  # Your first implementation module
 ```
 
 ### 👩‍🏫 **Instructors**
@@ -168,8 +178,12 @@ TinyTorch/
 └── tests/                   # Integration tests
 ```
 
-**How It Works:**
-0. **🎯 Start with Overview** - Explore `00_introduction` for visual system architecture and dependencies
+**Module Progression (Start with Module 0!):**
+1. **🎯 Module 0: Introduction** - Begin here! Visual system overview and architecture exploration
+2. **Module 1: Setup** - Configure your development environment and workflow
+3. **Modules 2-16** - Build your ML framework progressively, each module adding new capabilities
+
+**Development Workflow:**
 1. **Develop in `modules/source/`** - Each module has a `*_dev.py` file where you implement components
 2. **Export to `tinytorch/`** - Use `tito export` to build your implementations into a real Python package
 3. **Use your framework** - Import and use your own code: `from tinytorch.core.tensor import Tensor`
@@ -178,12 +192,17 @@ TinyTorch/
 
 ---
 
-## 📚 Complete Course: 17 Modules
+## 📚 Complete Course: 17 Modules (Start with Module 0!)
 
-**Difficulty Progression:** 📊 Overview → ⭐ Beginner → ⭐⭐ Intermediate → ⭐⭐⭐ Advanced → ⭐⭐⭐⭐ Expert → ⭐⭐⭐⭐⭐🥷 Capstone
+**Module Progression:** Start with Module 0 (Introduction) → Progress through Modules 1-16 → Complete your ML framework!
 
-### **📊 System Overview** (Module 00)
+**Difficulty Levels:** 📊 Overview → ⭐ Beginner → ⭐⭐ Intermediate → ⭐⭐⭐ Advanced → ⭐⭐⭐⭐ Expert → ⭐⭐⭐⭐⭐🥷 Capstone
+
+### **📊 Module 0: System Overview (START HERE!)**
 * **🎯 00_introduction**: Interactive system architecture, dependency visualization, and learning roadmap
+  - Understand the complete TinyTorch system before building
+  - Explore module dependencies and optimal learning paths
+  - Visualize how all 17 modules work together
 
 ### **🏗️ Foundations** (Modules 01-05)
 * **01_setup**: Development environment and CLI tools
