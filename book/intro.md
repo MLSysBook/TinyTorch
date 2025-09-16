@@ -147,39 +147,39 @@ After TinyTorch, you'll be the person your team asks:
 
 ---
 
-## 📚 **Course Journey: 17 Modules**
+## 📚 **Course Journey: 16 Modules**
 
 ```{admonition} 🏗️ Foundation
 :class: note
-**0. Introduction** • **1. Setup** • **2. Tensors** • **3. Activations**
+**0. Setup** • **1. Tensors** • **2. Activations**
 
-System overview, development workflow, multi-dimensional arrays, and mathematical functions that enable learning.
+Development workflow, multi-dimensional arrays, and mathematical functions that enable learning.
 ```
 
 ```{admonition} 🧱 Building Blocks
 :class: note
-**4. Layers** • **5. Dense** • **6. Spatial** • **7. Attention**
+**3. Layers** • **4. Dense** • **5. Spatial** • **6. Attention**
 
 Dense layers, sequential networks, convolutional operations, and self-attention mechanisms with memory analysis.
 ```
 
 ```{admonition} 🎯 Training Systems
 :class: note
-**8. DataLoader** • **9. Autograd** • **10. Optimizers** • **11. Training**
+**7. DataLoader** • **8. Autograd** • **9. Optimizers** • **10. Training**
 
 CIFAR-10 loading, automatic differentiation with graph management, SGD/Adam with memory profiling, and complete training orchestration.
 ```
 
 ```{admonition} 🚀 Production Systems
 :class: note
-**12. Compression** • **13. Kernels** • **14. Benchmarking** • **15. MLOps**
+**11. Compression** • **12. Kernels** • **13. Benchmarking** • **14. MLOps**
 
 Model optimization, high-performance operations, systematic evaluation, and production monitoring with real deployment patterns.
 ```
 
 ```{admonition} 🎓 Capstone Project
 :class: note
-**16. Integration Engineering**
+**15. Integration Engineering**
 
 Choose your specialization: performance optimization, algorithm extensions, systems engineering, benchmarking analysis, or developer tools.
 ```
@@ -188,18 +188,18 @@ Choose your specialization: performance optimization, algorithm extensions, syst
 
 ## 🔗 **Complete System Integration**
 
-**This isn't 14 separate exercises.** Every component you build integrates into one fully functional ML framework:
+**This isn't 15 separate exercises.** Every component you build integrates into one fully functional ML framework:
 
 ```{admonition} 🎯 How It All Connects
 :class: important
-**Module 2: Your Tensor class** → **Module 3: Powers your activation functions** → **Module 4: Enables your layers** → **Module 5: Forms your networks** → **Module 8: Drives your autograd system** → **Module 9: Optimizes with your SGD/Adam** → **Module 10: Trains on real CIFAR-10 data**
+**Module 1: Your Tensor class** → **Module 2: Powers your activation functions** → **Module 3: Enables your layers** → **Module 4: Forms your networks** → **Module 7: Drives your autograd system** → **Module 8: Optimizes with your SGD/Adam** → **Module 9: Trains on real CIFAR-10 data**
 
 **Result:** A complete, working ML framework that you built from scratch, capable of training real neural networks on real datasets.
 ```
 
 ### **🎯 Capstone: Optimize Your Framework**
 
-After completing the 14 core modules, you have a **complete ML framework**. Now make it better through systems engineering:
+After completing the 15 core modules, you have a **complete ML framework**. Now make it better through systems engineering:
 
 **Choose Your Focus:**
 - ⚡ **Performance Optimization**: GPU kernels, vectorization, memory-efficient operations
@@ -228,7 +228,7 @@ After completing the 14 core modules, you have a **complete ML framework**. Now 
 *"I want to build this myself"*
 - Fork the repo and work locally with full development environment
 - Build complete ML framework from scratch with `tito` CLI
-- 14 progressive assignments from setup to production MLOps
+- 15 progressive assignments from setup to production MLOps
 - Professional development workflow with automated testing
 
 ### **👨‍🏫 [Classroom Use](usage-paths/classroom-use.md)** *(Instructors)*

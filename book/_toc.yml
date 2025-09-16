@@ -17,54 +17,57 @@ parts:
   - file: instructor-guide
     title: "📚 Instructor Guide"
 
-- caption: Foundation
+- caption: Course Orientation
   chapters:
   - file: chapters/00-introduction
-    title: "0. Introduction"
+    title: "Introduction"
+
+- caption: Foundation
+  chapters:
   - file: chapters/01-setup
-    title: "1. Setup"
+    title: "0. Setup"
   - file: chapters/02-tensor
-    title: "2. Tensors"
+    title: "1. Tensors"
   - file: chapters/03-activations
-    title: "3. Activations"
+    title: "2. Activations"
 
 - caption: Building Blocks
   chapters:
   - file: chapters/04-layers
-    title: "4. Layers"
+    title: "3. Layers"
   - file: chapters/05-dense
-    title: "5. Dense"
+    title: "4. Dense"
   - file: chapters/06-spatial
-    title: "6. Spatial"
+    title: "5. Spatial"
   - file: chapters/07-attention
-    title: "7. Attention"
+    title: "6. Attention"
 
 - caption: Training Systems  
   chapters:
   - file: chapters/08-dataloader
-    title: "8. DataLoader"
+    title: "7. DataLoader"
   - file: chapters/09-autograd
-    title: "9. Autograd"
+    title: "8. Autograd"
   - file: chapters/10-optimizers
-    title: "10. Optimizers"
+    title: "9. Optimizers"
   - file: chapters/11-training
-    title: "11. Training"
+    title: "10. Training"
 
 - caption: Inference & Serving
   chapters:
   - file: chapters/12-compression
-    title: "12. Compression"
+    title: "11. Compression"
   - file: chapters/13-kernels
-    title: "13. Kernels"
+    title: "12. Kernels"
   - file: chapters/14-benchmarking
-    title: "14. Benchmarking"
+    title: "13. Benchmarking"
   - file: chapters/15-mlops
-    title: "15. MLOps"
+    title: "14. MLOps"
 
 - caption: Capstone Project
   chapters:
   - file: chapters/16-capstone
-    title: "16. Capstone"
+    title: "15. Capstone"
 
 - caption: Additional Resources
   chapters:
