@@ -267,14 +267,22 @@ def personal_info() -> Dict[str, str]:
     4. Make system_name unique and descriptive
     5. Keep version as '1.0.0' for now
     
-    EXAMPLE OUTPUT:
-    {
-        'developer': 'Student Name',
-        'email': 'student@university.edu', 
-        'institution': 'University Name',
-        'system_name': 'StudentName-TinyTorch-Dev',
-        'version': '1.0.0'
-    }
+    EXAMPLE USAGE:
+    ```python
+    # Get your personal configuration
+    info = personal_info()
+    print(info['developer'])     # Expected: "Your Name" (not placeholder)
+    print(info['email'])         # Expected: "you@domain.com" (valid email)
+    print(info['system_name'])   # Expected: "YourName-Dev" (unique identifier)
+    print(info)                  # Expected: Complete dict with 5 fields
+    # Output: {
+    #     'developer': 'Your Name',
+    #     'email': 'you@domain.com',
+    #     'institution': 'Your Institution',
+    #     'system_name': 'YourName-TinyTorch-Dev',
+    #     'version': '1.0.0'
+    # }
+    ```
     
     IMPLEMENTATION HINTS:
     - Replace the example with your real information
@@ -486,14 +494,25 @@ def system_info() -> Dict[str, Any]:
     6. Convert memory from bytes to GB (divide by 1024^3)
     7. Return all information in a dictionary
     
-    EXAMPLE OUTPUT:
-    {
-        'python_version': '3.9.7',
-        'platform': 'Darwin', 
-        'architecture': 'arm64',
-        'cpu_count': 8,
-        'memory_gb': 16.0
-    }
+    EXAMPLE USAGE:
+    ```python
+    # Query system information
+    sys_info = system_info()
+    print(f"Python: {sys_info['python_version']}")  # Expected: "3.x.x"
+    print(f"Platform: {sys_info['platform']}")      # Expected: "Darwin"/"Linux"/"Windows"
+    print(f"CPUs: {sys_info['cpu_count']}")         # Expected: 4, 8, 16, etc.
+    print(f"Memory: {sys_info['memory_gb']} GB")    # Expected: 8.0, 16.0, 32.0, etc.
+    
+    # Full output example:
+    print(sys_info)
+    # Expected: {
+    #     'python_version': '3.9.7',
+    #     'platform': 'Darwin',
+    #     'architecture': 'arm64', 
+    #     'cpu_count': 8,
+    #     'memory_gb': 16.0
+    # }
+    ```
     
     IMPLEMENTATION HINTS:
     - Use f-string formatting for Python version: f"{major}.{minor}.{micro}"

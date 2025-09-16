@@ -155,7 +155,7 @@ class MeanSquaredError:
             
         TODO: Implement Mean SquaredError loss computation.
         
-        APPROACH:
+        STEP-BY-STEP IMPLEMENTATION:
         1. Compute difference: diff = y_pred - y_true
         2. Square the differences: squared_diff = diff²
         3. Take mean over all elements: mean(squared_diff)
@@ -167,6 +167,12 @@ class MeanSquaredError:
         loss = mse_loss(y_pred, y_true)
         # Should return: mean([(1.0-1.5)², (2.0-2.5)², (3.0-2.5)², (4.0-3.5)²])
         #                = mean([0.25, 0.25, 0.25, 0.25]) = 0.25
+        
+        LEARNING CONNECTIONS:
+        - **Regression Optimization**: MSE loss guides models toward accurate numerical predictions
+        - **Gradient Properties**: MSE provides smooth gradients proportional to prediction error
+        - **Outlier Sensitivity**: Squared errors heavily penalize large mistakes
+        - **Production Usage**: Common in recommendation systems, time series, and financial modeling
         
         HINTS:
         - Use tensor subtraction: y_pred - y_true
@@ -261,7 +267,7 @@ class CrossEntropyLoss:
             
         TODO: Implement Cross-Entropy loss computation.
         
-        APPROACH:
+        STEP-BY-STEP IMPLEMENTATION:
         1. Handle both class indices and one-hot encoded labels
         2. Apply softmax to predictions for probability distribution
         3. Compute log probabilities: log(softmax(y_pred))
@@ -273,6 +279,12 @@ class CrossEntropyLoss:
         y_true = Tensor([0, 1])  # Class indices
         loss = crossentropy_loss(y_pred, y_true)
         # Should apply softmax then compute -log(prob_of_correct_class)
+        
+        LEARNING CONNECTIONS:
+        - **Classification Foundation**: CrossEntropy is the standard loss for multi-class problems
+        - **Probability Interpretation**: Measures difference between predicted and true distributions
+        - **Information Theory**: Based on entropy and KL divergence concepts
+        - **Production Systems**: Used in image classification, NLP, and recommendation systems
         
         HINTS:
         - Use softmax: exp(x) / sum(exp(x)) for probability distribution
@@ -392,7 +404,7 @@ class BinaryCrossEntropyLoss:
             
         TODO: Implement Binary Cross-Entropy loss computation.
         
-        APPROACH:
+        STEP-BY-STEP IMPLEMENTATION:
         1. Apply sigmoid to predictions for probability values
         2. Clip probabilities to avoid log(0) and log(1)
         3. Compute: -y_true * log(y_pred) - (1-y_true) * log(1-y_pred)
@@ -404,6 +416,12 @@ class BinaryCrossEntropyLoss:
         y_true = Tensor([[1.0], [1.0], [0.0]])   # Binary labels
         loss = bce_loss(y_pred, y_true)
         # Should apply sigmoid then compute binary cross-entropy
+        
+        LEARNING CONNECTIONS:
+        - **Binary Classification**: Standard loss for yes/no, spam/ham, fraud detection
+        - **Sigmoid Output**: Maps any real number to probability range [0,1]
+        - **Medical Diagnosis**: Common in disease detection and medical screening
+        - **A/B Testing**: Used for conversion prediction and user behavior modeling
         
         HINTS:
         - Use sigmoid: 1 / (1 + exp(-x))
@@ -577,7 +595,7 @@ class Accuracy:
             
         TODO: Implement accuracy computation.
         
-        APPROACH:
+        STEP-BY-STEP IMPLEMENTATION:
         1. Convert predictions to class indices (argmax for multi-class)
         2. Convert true labels to class indices if needed
         3. Count correct predictions
@@ -589,6 +607,12 @@ class Accuracy:
         y_true = Tensor([0, 1, 0])  # True classes
         accuracy = accuracy_metric(y_pred, y_true)
         # Should return: 2/3 = 0.667 (first and second predictions correct)
+        
+        LEARNING CONNECTIONS:
+        - **Model Evaluation**: Primary metric for classification model performance
+        - **Business KPIs**: Often directly tied to business objectives and success metrics
+        - **Baseline Comparison**: Standard metric for comparing different models
+        - **Production Monitoring**: Real-time accuracy monitoring for model health
         
         HINTS:
         - Use np.argmax(axis=1) for multi-class predictions
@@ -789,7 +813,7 @@ class Trainer:
             
         TODO: Implement single epoch training logic.
         
-        APPROACH:
+        STEP-BY-STEP IMPLEMENTATION:
         1. Initialize epoch metrics tracking
         2. Iterate through batches in dataloader
         3. For each batch:
@@ -800,6 +824,12 @@ class Trainer:
            - Update parameters
            - Track metrics
         4. Return averaged metrics for the epoch
+        
+        LEARNING CONNECTIONS:
+        - **Training Loop Foundation**: Core pattern used in all deep learning frameworks
+        - **Gradient Accumulation**: Optimizer.zero_grad() prevents gradient accumulation bugs
+        - **Backpropagation**: loss.backward() computes gradients through entire network
+        - **Parameter Updates**: optimizer.step() applies computed gradients to model weights
         
         HINTS:
         - Use optimizer.zero_grad() before each batch
@@ -863,7 +893,7 @@ class Trainer:
             
         TODO: Implement single epoch validation logic.
         
-        APPROACH:
+        STEP-BY-STEP IMPLEMENTATION:
         1. Initialize epoch metrics tracking
         2. Iterate through batches in dataloader
         3. For each batch:
@@ -871,6 +901,12 @@ class Trainer:
            - Compute loss
            - Track metrics
         4. Return averaged metrics for the epoch
+        
+        LEARNING CONNECTIONS:
+        - **Model Evaluation**: Validation measures generalization to unseen data
+        - **Overfitting Detection**: Comparing train vs validation metrics reveals overfitting
+        - **Model Selection**: Validation metrics guide hyperparameter tuning and architecture choices
+        - **Early Stopping**: Validation loss plateaus indicate optimal training duration
         
         HINTS:
         - No gradient computation needed for validation
@@ -926,7 +962,7 @@ class Trainer:
             
         TODO: Implement complete training loop.
         
-        APPROACH:
+        STEP-BY-STEP IMPLEMENTATION:
         1. Loop through epochs
         2. For each epoch:
            - Train on training data
@@ -934,6 +970,12 @@ class Trainer:
            - Update history
            - Print progress (if verbose)
         3. Return complete training history
+        
+        LEARNING CONNECTIONS:
+        - **Epoch Management**: Organizing training into discrete passes through the dataset
+        - **Learning Curves**: History tracking enables visualization of training progress
+        - **Hyperparameter Tuning**: Training history guides learning rate and architecture decisions
+        - **Production Monitoring**: Training logs provide debugging and optimization insights
         
         HINTS:
         - Use train_epoch() and validate_epoch() methods
@@ -1170,7 +1212,7 @@ class TrainingPipelineProfiler:
         
         TODO: Implement comprehensive training step profiling.
         
-        APPROACH:
+        STEP-BY-STEP IMPLEMENTATION:
         1. Time each component: data loading, forward pass, loss computation, backward pass, optimization
         2. Monitor memory usage throughout the pipeline
         3. Calculate throughput metrics (samples/second, batches/second)
@@ -1180,6 +1222,12 @@ class TrainingPipelineProfiler:
         EXAMPLE:
         profiler = TrainingPipelineProfiler()
         step_metrics = profiler.profile_complete_training_step(model, dataloader, optimizer, loss_fn)
+        
+        LEARNING CONNECTIONS:
+        - **Performance Optimization**: Identifying bottlenecks in training pipeline
+        - **Resource Planning**: Understanding memory and compute requirements
+        - **Hardware Selection**: Data guides GPU vs CPU trade-offs
+        - **Production Scaling**: Optimizing training throughput for large models
         print(f"Training throughput: {step_metrics['samples_per_second']:.1f} samples/sec")
         
         HINTS:
@@ -1407,7 +1455,7 @@ class ProductionTrainingOptimizer:
         
         TODO: Implement batch size optimization for production throughput.
         
-        APPROACH:
+        STEP-BY-STEP IMPLEMENTATION:
         1. Test range of batch sizes from initial to maximum
         2. For each batch size, measure:
            - Training throughput (samples/second)
@@ -1421,6 +1469,12 @@ class ProductionTrainingOptimizer:
         optimizer = ProductionTrainingOptimizer()
         optimal_config = optimizer.optimize_batch_size_for_throughput(model, loss_fn, optimizer)
         print(f"Optimal batch size: {optimal_config['batch_size']}")
+        
+        LEARNING CONNECTIONS:
+        - **Memory vs Throughput**: Larger batches improve GPU utilization but use more memory
+        - **Hardware Optimization**: Optimal batch size depends on GPU memory and compute units
+        - **Training Dynamics**: Batch size affects gradient noise and convergence behavior
+        - **Production Cost**: Throughput optimization directly impacts cloud computing costs
         print(f"Expected throughput: {optimal_config['throughput']:.1f} samples/sec")
         
         HINTS:
