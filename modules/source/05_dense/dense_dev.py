@@ -975,6 +975,473 @@ test_module_full_network_forward_pass()
 
 # %% [markdown]
 """
+## 🔧 ML Systems: Network Stability & Error Handling
+
+Now that you have complete neural networks, let's develop **production robustness skills**. This section teaches you to identify and fix stability issues that can break training in production systems.
+
+### **Learning Outcome**: *"I understand why numerical stability matters in production and can detect/fix stability issues"*
+
+---
+
+## Network Stability Monitor (Medium Guided Implementation)
+
+As an ML systems engineer, you need to ensure networks remain stable during training. Let's build tools to detect numerical instability and understand gradient flow issues.
+"""
+
+# %%
+import time
+import numpy as np
+
+class NetworkStabilityMonitor:
+    """
+    Stability monitoring toolkit for neural networks.
+    
+    Helps ML engineers detect numerical instability, gradient problems,
+    and other issues that can break training in production systems.
+    """
+    
+    def __init__(self):
+        self.stability_history = []
+        self.warning_threshold = 1e6
+        self.error_threshold = 1e10
+        
+    def check_tensor_stability(self, tensor, tensor_name="tensor"):
+        """
+        Check if a tensor has numerical stability issues.
+        
+        TODO: Implement tensor stability checking.
+        
+        STEP-BY-STEP IMPLEMENTATION:
+        1. Check for NaN values using np.isnan()
+        2. Check for infinite values using np.isinf() 
+        3. Check for extremely large values (> 1e6)
+        4. Calculate value statistics (min, max, mean, std)
+        5. Return stability report with warnings
+        
+        EXAMPLE:
+        monitor = NetworkStabilityMonitor()
+        tensor = Tensor([1.0, 2.0, np.inf])
+        report = monitor.check_tensor_stability(tensor, "weights")
+        print(f"Stable: {report['is_stable']}")
+        print(f"Issues: {report['issues']}")
+        
+        HINTS:
+        - Use tensor.data to get numpy array
+        - Check: np.any(np.isnan(tensor.data))
+        - Check: np.any(np.isinf(tensor.data))
+        - Check: np.any(np.abs(tensor.data) > self.warning_threshold)
+        - Return dict with analysis
+        """
+        ### BEGIN SOLUTION
+        data = tensor.data
+        
+        # Check for numerical issues
+        has_nan = np.any(np.isnan(data))
+        has_inf = np.any(np.isinf(data))
+        has_large = np.any(np.abs(data) > self.warning_threshold)
+        has_extreme = np.any(np.abs(data) > self.error_threshold)
+        
+        # Calculate statistics (avoiding issues if all values are problematic)
+        finite_mask = np.isfinite(data)
+        if np.any(finite_mask):
+            finite_data = data[finite_mask]
+            stats = {
+                'min': np.min(finite_data),
+                'max': np.max(finite_data),
+                'mean': np.mean(finite_data),
+                'std': np.std(finite_data),
+                'finite_count': np.sum(finite_mask),
+                'total_count': data.size
+            }
+        else:
+            stats = {
+                'min': np.nan,
+                'max': np.nan,
+                'mean': np.nan,
+                'std': np.nan,
+                'finite_count': 0,
+                'total_count': data.size
+            }
+        
+        # Compile issues
+        issues = []
+        if has_nan:
+            issues.append("Contains NaN values")
+        if has_inf:
+            issues.append("Contains infinite values")
+        if has_extreme:
+            issues.append(f"Contains extremely large values (>{self.error_threshold:.0e})")
+        elif has_large:
+            issues.append(f"Contains large values (>{self.warning_threshold:.0e})")
+        
+        is_stable = len(issues) == 0
+        
+        return {
+            'tensor_name': tensor_name,
+            'is_stable': is_stable,
+            'issues': issues,
+            'has_nan': has_nan,
+            'has_inf': has_inf,
+            'has_large_values': has_large,
+            'statistics': stats
+        }
+        ### END SOLUTION
+    
+    def analyze_gradient_flow(self, network, input_tensor, target_output):
+        """
+        Analyze gradient flow through a network to detect vanishing/exploding gradients.
+        
+        TODO: Implement gradient flow analysis.
+        
+        STEP-BY-STEP IMPLEMENTATION:
+        1. Perform forward pass through network
+        2. Simulate simple loss calculation (MSE)
+        3. Estimate gradient magnitudes using finite differences
+        4. Check for vanishing gradients (very small)
+        5. Check for exploding gradients (very large)
+        6. Return gradient flow analysis
+        
+        EXAMPLE:
+        monitor = NetworkStabilityMonitor()
+        analysis = monitor.analyze_gradient_flow(network, input_data, target)
+        print(f"Gradient health: {analysis['gradient_status']}")
+        
+        HINTS:
+        - Forward pass: output = network(input_tensor)
+        - Simple loss: 0.5 * np.sum((output.data - target_output.data)**2)
+        - Use small perturbations to estimate gradients
+        - Vanishing: gradients < 1e-6, Exploding: gradients > 1e3
+        """
+        ### BEGIN SOLUTION
+        # Forward pass
+        output = network(input_tensor)
+        
+        # Calculate simple MSE loss
+        loss = 0.5 * np.sum((output.data - target_output.data)**2)
+        
+        # Estimate gradient magnitudes using finite differences
+        # This is a simplified approach - real backprop would be more accurate
+        epsilon = 1e-5
+        gradient_estimates = []
+        
+        # Check first layer weights (simplified analysis)
+        if hasattr(network, 'layers') and len(network.layers) > 0:
+            first_layer = network.layers[0]
+            if hasattr(first_layer, 'weights'):
+                # Perturb a small sample of weights to estimate gradients
+                original_weight = first_layer.weights.data[0, 0]
+                
+                # Forward pass with small perturbation
+                first_layer.weights.data[0, 0] = original_weight + epsilon
+                output_plus = network(input_tensor)
+                loss_plus = 0.5 * np.sum((output_plus.data - target_output.data)**2)
+                
+                # Estimate gradient
+                grad_estimate = (loss_plus - loss) / epsilon
+                gradient_estimates.append(abs(grad_estimate))
+                
+                # Restore original weight
+                first_layer.weights.data[0, 0] = original_weight
+        
+        # Analyze gradient magnitudes
+        if gradient_estimates:
+            avg_grad = np.mean(gradient_estimates)
+            max_grad = np.max(gradient_estimates)
+            
+            if avg_grad < 1e-8:
+                gradient_status = "Vanishing gradients detected"
+            elif max_grad > 1e3:
+                gradient_status = "Exploding gradients detected"
+            elif avg_grad < 1e-6:
+                gradient_status = "Potentially vanishing gradients"
+            elif max_grad > 100:
+                gradient_status = "Potentially exploding gradients"
+            else:
+                gradient_status = "Healthy gradient flow"
+        else:
+            gradient_status = "Unable to analyze gradients"
+        
+        return {
+            'loss': loss,
+            'gradient_estimates': gradient_estimates,
+            'avg_gradient': np.mean(gradient_estimates) if gradient_estimates else 0,
+            'max_gradient': np.max(gradient_estimates) if gradient_estimates else 0,
+            'gradient_status': gradient_status
+        }
+        ### END SOLUTION
+    
+    def comprehensive_stability_check(self, network, input_tensor, target_output):
+        """
+        Perform comprehensive stability analysis of a neural network.
+        
+        This function is PROVIDED to demonstrate complete stability monitoring.
+        Students use it to understand production stability requirements.
+        """
+        print("🔧 COMPREHENSIVE NETWORK STABILITY CHECK")
+        print("=" * 50)
+        
+        stability_report = {
+            'overall_status': 'STABLE',
+            'issues_found': [],
+            'recommendations': []
+        }
+        
+        # Check input stability
+        input_check = self.check_tensor_stability(input_tensor, "input")
+        if not input_check['is_stable']:
+            stability_report['overall_status'] = 'UNSTABLE'
+            stability_report['issues_found'].extend([f"Input: {issue}" for issue in input_check['issues']])
+            stability_report['recommendations'].append("Normalize or clip input data")
+        
+        print(f"📊 Input Check: {'✅ STABLE' if input_check['is_stable'] else '❌ UNSTABLE'}")
+        if input_check['issues']:
+            for issue in input_check['issues']:
+                print(f"   - {issue}")
+        
+        # Check each layer's weights and outputs
+        if hasattr(network, 'layers'):
+            for i, layer in enumerate(network.layers):
+                if hasattr(layer, 'weights'):
+                    weight_check = self.check_tensor_stability(layer.weights, f"layer_{i}_weights")
+                    if not weight_check['is_stable']:
+                        stability_report['overall_status'] = 'UNSTABLE'
+                        stability_report['issues_found'].extend([f"Layer {i}: {issue}" for issue in weight_check['issues']])
+                        stability_report['recommendations'].append(f"Re-initialize layer {i} weights")
+                    
+                    print(f"🔗 Layer {i} Weights: {'✅ STABLE' if weight_check['is_stable'] else '❌ UNSTABLE'}")
+                    if weight_check['issues']:
+                        for issue in weight_check['issues']:
+                            print(f"   - {issue}")
+        
+        # Check network output
+        try:
+            output = network(input_tensor)
+            output_check = self.check_tensor_stability(output, "network_output")
+            if not output_check['is_stable']:
+                stability_report['overall_status'] = 'UNSTABLE'
+                stability_report['issues_found'].extend([f"Output: {issue}" for issue in output_check['issues']])
+                stability_report['recommendations'].append("Check activation functions and weight initialization")
+            
+            print(f"📤 Output Check: {'✅ STABLE' if output_check['is_stable'] else '❌ UNSTABLE'}")
+            if output_check['issues']:
+                for issue in output_check['issues']:
+                    print(f"   - {issue}")
+        
+        except Exception as e:
+            stability_report['overall_status'] = 'CRITICAL'
+            stability_report['issues_found'].append(f"Network forward pass failed: {str(e)}")
+            stability_report['recommendations'].append("Check network architecture and input compatibility")
+            print(f"📤 Output Check: ❌ CRITICAL - Forward pass failed")
+        
+        # Gradient flow analysis
+        try:
+            gradient_analysis = self.analyze_gradient_flow(network, input_tensor, target_output)
+            print(f"🌊 Gradient Flow: {gradient_analysis['gradient_status']}")
+            
+            if "exploding" in gradient_analysis['gradient_status'].lower():
+                stability_report['overall_status'] = 'UNSTABLE'
+                stability_report['recommendations'].append("Use gradient clipping or reduce learning rate")
+            elif "vanishing" in gradient_analysis['gradient_status'].lower():
+                stability_report['overall_status'] = 'UNSTABLE'
+                stability_report['recommendations'].append("Use ReLU activations or residual connections")
+        
+        except Exception as e:
+            print(f"🌊 Gradient Flow: ❌ Analysis failed - {str(e)}")
+        
+        print(f"\n🎯 OVERALL STATUS: {stability_report['overall_status']}")
+        if stability_report['recommendations']:
+            print(f"\n💡 RECOMMENDATIONS:")
+            for rec in stability_report['recommendations']:
+                print(f"   - {rec}")
+        
+        return stability_report
+
+def create_unstable_network_demo():
+    """
+    Create networks with known stability issues for demonstration.
+    
+    This function is PROVIDED to show common stability problems.
+    Students use it to practice detecting and fixing issues.
+    """
+    print("⚠️  STABILITY ISSUES DEMONSTRATION")
+    print("=" * 50)
+    
+    # Create networks with different stability issues
+    demo_networks = {}
+    
+    # 1. Network with exploding weights
+    print("\n1. 🔥 Exploding Weights Network:")
+    exploding_net = Sequential([
+        Dense(10, 5),
+        ReLU(),
+        Dense(5, 2)
+    ])
+    # Manually set large weights to simulate training instability
+    exploding_net.layers[0].weights.data *= 100  # Very large weights
+    demo_networks['exploding'] = exploding_net
+    print("   Created network with artificially large weights")
+    
+    # 2. Network with NaN weights (simulate numerical overflow)
+    print("\n2. 💀 NaN Weights Network:")
+    nan_net = Sequential([
+        Dense(10, 5),
+        ReLU(),
+        Dense(5, 2)
+    ])
+    # Inject NaN values
+    nan_net.layers[0].weights.data[0, 0] = np.nan
+    demo_networks['nan'] = nan_net
+    print("   Created network with NaN values in weights")
+    
+    # 3. Healthy network for comparison
+    print("\n3. ✅ Healthy Network:")
+    healthy_net = Sequential([
+        Dense(10, 5),
+        ReLU(),
+        Dense(5, 2)
+    ])
+    demo_networks['healthy'] = healthy_net
+    print("   Created properly initialized network")
+    
+    return demo_networks
+
+# %% [markdown]
+"""
+### 🎯 Learning Activity 1: Stability Detection Practice (Medium Guided Implementation)
+
+**Goal**: Learn to detect numerical instability issues that can break neural network training in production.
+
+Complete the missing implementations in the `NetworkStabilityMonitor` class above, then use your monitor to detect stability issues.
+"""
+
+# %%
+# Initialize the network stability monitor
+monitor = NetworkStabilityMonitor()
+
+print("🔧 NETWORK STABILITY MONITORING")
+print("=" * 50)
+
+# Create test networks with different stability characteristics
+demo_networks = create_unstable_network_demo()
+
+# Create test data
+input_data = Tensor(np.random.randn(3, 10))  # Batch of 3 samples
+target_data = Tensor(np.random.randn(3, 2))  # Target outputs
+
+print(f"\n🔍 STABILITY ANALYSIS RESULTS:")
+print(f"=" * 40)
+
+# Test each network
+for network_name, network in demo_networks.items():
+    print(f"\n📊 Testing {network_name.upper()} Network:")
+    
+    # Students use their implemented stability checker
+    stability_report = monitor.comprehensive_stability_check(network, input_data, target_data)
+    
+    # Show what this means for production
+    if stability_report['overall_status'] == 'STABLE':
+        print(f"   🎯 Production Impact: Safe to deploy")
+    elif stability_report['overall_status'] == 'UNSTABLE':
+        print(f"   ⚠️  Production Impact: May cause training failures")
+    else:
+        print(f"   💀 Production Impact: Would crash in production")
+
+print(f"\n💡 STABILITY ENGINEERING INSIGHTS:")
+print(f"   - NaN values spread through entire network (one bad value ruins everything)")
+print(f"   - Large weights cause exponential growth through layers")
+print(f"   - Stability monitoring prevents silent training failures")
+print(f"   - Early detection saves compute resources and time")
+
+# %% [markdown]
+"""
+### 🎯 Learning Activity 2: Production Stability Patterns (Review & Understand)
+
+**Goal**: Understand common stability issues in production ML systems and learn industry best practices for preventing them.
+"""
+
+# %%
+print("🏭 PRODUCTION STABILITY PATTERNS")
+print("=" * 50)
+
+# Test different input scenarios that cause instability
+print("\n🔍 Input Data Stability Scenarios:")
+
+stability_scenarios = [
+    ("Normal Data", np.random.randn(5, 10)),
+    ("Large Values", np.random.randn(5, 10) * 1000),
+    ("Extreme Values", np.random.randn(5, 10) * 1e8),
+    ("Mixed with NaN", np.random.randn(5, 10)),
+    ("All Zeros", np.zeros((5, 10))),
+    ("All Ones", np.ones((5, 10)) * 1e6)
+]
+
+# Inject NaN in mixed scenario
+stability_scenarios[3] = ("Mixed with NaN", np.random.randn(5, 10))
+scenario_data = stability_scenarios[3][1].copy()
+scenario_data[0, 0] = np.nan
+stability_scenarios[3] = ("Mixed with NaN", scenario_data)
+
+# Test each scenario
+healthy_network = demo_networks['healthy']
+
+for scenario_name, test_data in stability_scenarios:
+    print(f"\n📊 {scenario_name}:")
+    
+    try:
+        input_tensor = Tensor(test_data)
+        input_check = monitor.check_tensor_stability(input_tensor, scenario_name)
+        
+        print(f"   Input Status: {'✅ STABLE' if input_check['is_stable'] else '❌ UNSTABLE'}")
+        if input_check['issues']:
+            print(f"   Issues: {', '.join(input_check['issues'])}")
+        
+        # Try network forward pass
+        try:
+            output = healthy_network(input_tensor)
+            output_check = monitor.check_tensor_stability(output, f"{scenario_name}_output")
+            print(f"   Output Status: {'✅ STABLE' if output_check['is_stable'] else '❌ UNSTABLE'}")
+            if output_check['issues']:
+                print(f"   Output Issues: {', '.join(output_check['issues'])}")
+        
+        except Exception as e:
+            print(f"   ❌ Forward pass failed: {str(e)}")
+    
+    except Exception as e:
+        print(f"   ❌ Could not create tensor: {str(e)}")
+
+print(f"\n🎯 PRODUCTION STABILITY LESSONS:")
+print(f"=" * 40)
+
+print(f"\n1. 🛡️ INPUT VALIDATION:")
+print(f"   - Always validate input data before processing")
+print(f"   - Clip extreme values to reasonable ranges")
+print(f"   - Check for NaN/inf values in data pipelines")
+
+print(f"\n2. 🔧 MONITORING STRATEGY:")
+print(f"   - Monitor weight magnitudes during training")
+print(f"   - Track gradient norms to detect vanishing/exploding")
+print(f"   - Log activation statistics to catch distribution shift")
+
+print(f"\n3. 🚨 EARLY WARNING SYSTEM:")
+print(f"   - Set thresholds for weight magnitudes")
+print(f"   - Alert when gradients become too large/small")
+print(f"   - Automatically stop training on stability issues")
+
+print(f"\n4. 🛠️ PREVENTIVE MEASURES:")
+print(f"   - Proper weight initialization (Xavier/He)")
+print(f"   - Gradient clipping for exploding gradients")
+print(f"   - Batch normalization for internal stability")
+print(f"   - Learning rate scheduling to prevent instability")
+
+print(f"\n💡 SYSTEMS ENGINEERING INSIGHT:")
+print(f"Stability monitoring is like production health checks:")
+print(f"- Prevent silent failures that waste compute resources")
+print(f"- Enable automatic recovery strategies (restart training)")
+print(f"- Provide debugging information for model developers")
+print(f"- Critical for unattended training jobs in production")
+
+# %% [markdown]
+"""
 ## 🎯 MODULE SUMMARY: Neural Network Architectures
 
 Congratulations! You've successfully implemented complete neural network architectures:

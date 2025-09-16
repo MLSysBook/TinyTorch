@@ -949,4 +949,373 @@ test_module_activation_tensor_integration()
     **Next Module**: Layers - Building blocks that combine your tensors and activations into powerful transformations!
 
     Your activation functions are the key to neural network intelligence. Now let's build the layers that use them!
+
+# %% [markdown]
+"""
+## 🤔 ML Systems Thinking: Reflection Questions
+
+Now that you've built the nonlinear functions that enable neural network intelligence, reflect on how these simple mathematical operations power the AI revolution:
+
+### System Design - How does this fit into larger systems?
+1. **The Nonlinearity Bottleneck**: Your implementations show how ReLU, Sigmoid, Tanh, and Softmax each solve different problems. When OpenAI designs GPT architectures, how do they decide which activation goes where? What happens when you choose the wrong activation for a specific layer?
+
+2. **Activation Memory**: Your ReLU creates sparse outputs (many zeros). How does this sparsity enable frameworks to optimize memory usage in massive models? Why might this be crucial when training models with billions of parameters?
+
+3. **Numerical Stability**: Your Softmax includes overflow protection with clipping. How do production systems handle numerical stability at scale? What happens when a single unstable activation cascades through a 100-layer network?
+
+### Production ML - How is this used in real ML workflows?
+4. **Hardware Acceleration**: Your simple element-wise operations translate to GPU kernels. How do cloud providers optimize activation function compute for millions of concurrent neural network inferences? Why might ReLU be preferred on certain hardware?
+
+5. **Model Serving Latency**: Your activation functions add computational overhead. When serving real-time recommendations or autonomous vehicle decisions, how do activation choices affect response times? Which activations are fastest and why?
+
+6. **Gradient Behavior**: Your functions enable backpropagation (coming in Module 7). In production training of large language models, how do activation choices affect training stability and convergence speed? Why did ReLU revolutionize deep learning?
+
+### Framework Design - Why do frameworks make certain choices?
+7. **API Consistency**: Your callable classes (`relu(x)`) mirror PyTorch's design. How does consistent activation APIs enable researchers to experiment rapidly with different nonlinearities? What would happen if each activation had a different interface?
+
+8. **Automatic Differentiation**: Your forward-only implementations will connect to gradient computation. How do frameworks like PyTorch automatically track operations through activations to compute gradients? Why is this harder than it looks?
+
+9. **Activation Fusion**: Your separate activation calls could be optimized. How do production frameworks combine linear layers with activations into single GPU operations for speed? What trade-offs does this optimization create?
+
+### Performance & Scale - What happens when systems get large?
+10. **Activation Bottlenecks**: Your functions process tensors sequentially. When training transformer models with billions of parameters, how do activation computations get parallelized across multiple GPUs? What new challenges emerge at scale?
+
+11. **Memory vs Computation**: Your implementations store all intermediate results. How do techniques like gradient checkpointing trade activation memory for recomputation time? When do these trade-offs become critical?
+
+12. **Dynamic Activations**: Your static functions are fixed at definition. How might learned activations (like Swish or GELU) that adapt during training change the computational requirements of large-scale systems?
+
+**💡 Systems Insight**: The activation functions you built are the "biological neurons" of artificial intelligence—each simple nonlinear transformation enables networks to learn complex patterns. Your ReLU implementation, despite being just `max(0, x)`, is literally computing in millions of deployed models right now, powering everything from photo recognition to language translation.
+"""
+
+# %% [markdown]
+"""
+## ⚡ ML Systems: Performance Analysis & Optimization
+
+Now that you have working activation functions, let's develop **performance engineering skills**. This section teaches you to measure computational costs, understand scaling patterns, and think about production optimization.
+
+### **Learning Outcome**: *"I understand performance trade-offs between different activation functions"*
+
+---
+
+## Performance Profiling Tools (Light Implementation)
+
+As an ML systems engineer, you need to understand which activation functions are fast vs slow, and why. Let's build simple tools to measure and compare performance.
+"""
+
+# %% nbgrader={"grade": false, "grade_id": "activation-profiler", "locked": false, "schema_version": 3, "solution": true, "task": false}
+#| export
+import time
+
+class ActivationProfiler:
+    """
+    Performance profiling toolkit for activation functions.
+    
+    Helps ML engineers understand computational costs and optimize
+    neural network performance for production deployment.
+    """
+    
+    def __init__(self):
+        self.results = {}
+        
+    def time_activation(self, activation_fn, tensor, activation_name, iterations=100):
+        """
+        Time how long an activation function takes to run.
+        
+        TODO: Implement activation timing.
+        
+        STEP-BY-STEP IMPLEMENTATION:
+        1. Record start time using time.time()
+        2. Run the activation function for specified iterations
+        3. Record end time
+        4. Calculate average time per iteration
+        5. Return the average time in milliseconds
+        
+        EXAMPLE:
+        profiler = ActivationProfiler()
+        relu = ReLU()
+        test_tensor = Tensor(np.random.randn(1000, 1000))
+        avg_time = profiler.time_activation(relu, test_tensor, "ReLU")
+        print(f"ReLU took {avg_time:.3f} ms on average")
+        
+        HINTS:
+        - Use time.time() for timing
+        - Run multiple iterations for better accuracy
+        - Calculate: (end_time - start_time) / iterations * 1000 for ms
+        - Return the average time per call in milliseconds
+        """
+        ### BEGIN SOLUTION
+        start_time = time.time()
+        
+        for _ in range(iterations):
+            result = activation_fn(tensor)
+        
+        end_time = time.time()
+        avg_time_ms = (end_time - start_time) / iterations * 1000
+        
+        return avg_time_ms
+        ### END SOLUTION
+    
+    def compare_activations(self, tensor_size=(1000, 1000), iterations=50):
+        """
+        Compare performance of all activation functions.
+        
+        This function is PROVIDED to show systems analysis.
+        Students run it to understand performance differences.
+        """
+        print(f"⚡ ACTIVATION PERFORMANCE COMPARISON")
+        print(f"=" * 50)
+        print(f"Tensor size: {tensor_size}, Iterations: {iterations}")
+        
+        # Create test tensor
+        test_tensor = Tensor(np.random.randn(*tensor_size))
+        tensor_mb = test_tensor.data.nbytes / (1024 * 1024)
+        print(f"Test tensor: {tensor_mb:.2f} MB")
+        
+        # Test all activation functions
+        activations = {
+            'ReLU': ReLU(),
+            'Sigmoid': Sigmoid(),
+            'Tanh': Tanh(),
+            'Softmax': Softmax()
+        }
+        
+        results = {}
+        for name, activation_fn in activations.items():
+            avg_time = self.time_activation(activation_fn, test_tensor, name, iterations)
+            results[name] = avg_time
+            print(f"   {name:8}: {avg_time:.3f} ms")
+        
+        # Calculate speed ratios relative to fastest
+        fastest_time = min(results.values())
+        fastest_name = min(results, key=results.get)
+        
+        print(f"\n📊 SPEED ANALYSIS:")
+        for name, time_ms in sorted(results.items(), key=lambda x: x[1]):
+            speed_ratio = time_ms / fastest_time
+            if name == fastest_name:
+                print(f"   {name:8}: {speed_ratio:.1f}x (fastest)")
+            else:
+                print(f"   {name:8}: {speed_ratio:.1f}x slower than {fastest_name}")
+        
+        return results
+    
+    def analyze_scaling(self, activation_fn, activation_name, sizes=[100, 500, 1000]):
+        """
+        Analyze how activation performance scales with tensor size.
+        
+        This function is PROVIDED to demonstrate scaling patterns.
+        Students use it to understand computational complexity.
+        """
+        print(f"\n🔍 SCALING ANALYSIS: {activation_name}")
+        print(f"=" * 40)
+        
+        scaling_results = []
+        
+        for size in sizes:
+            test_tensor = Tensor(np.random.randn(size, size))
+            avg_time = self.time_activation(activation_fn, test_tensor, activation_name, iterations=20)
+            
+            elements = size * size
+            time_per_element = avg_time / elements * 1e6  # microseconds per element
+            
+            result = {
+                'size': size,
+                'elements': elements,
+                'time_ms': avg_time,
+                'time_per_element_us': time_per_element
+            }
+            scaling_results.append(result)
+            
+            print(f"   {size}x{size}: {avg_time:.3f}ms ({time_per_element:.3f}μs/element)")
+        
+        # Analyze scaling pattern
+        if len(scaling_results) >= 2:
+            small = scaling_results[0]
+            large = scaling_results[-1]
+            
+            size_ratio = large['size'] / small['size']
+            time_ratio = large['time_ms'] / small['time_ms']
+            
+            print(f"\n📈 Scaling Pattern:")
+            print(f"   Size increased {size_ratio:.1f}x ({small['size']} → {large['size']})")
+            print(f"   Time increased {time_ratio:.1f}x")
+            
+            if abs(time_ratio - size_ratio**2) < abs(time_ratio - size_ratio):
+                print(f"   Pattern: O(n²) - linear in tensor size")
+            else:
+                print(f"   Pattern: ~O(n) - very efficient scaling")
+        
+        return scaling_results
+
+def benchmark_activation_suite():
+    """
+    Comprehensive benchmark of all activation functions.
+    
+    This function is PROVIDED to show complete systems analysis.
+    Students run it to understand production performance implications.
+    """
+    profiler = ActivationProfiler()
+    
+    print("🏆 COMPREHENSIVE ACTIVATION BENCHMARK")
+    print("=" * 60)
+    
+    # Test 1: Performance comparison
+    comparison_results = profiler.compare_activations(tensor_size=(800, 800), iterations=30)
+    
+    # Test 2: Scaling analysis for each activation
+    activations_to_test = [
+        (ReLU(), "ReLU"),
+        (Sigmoid(), "Sigmoid"),
+        (Tanh(), "Tanh")
+    ]
+    
+    for activation_fn, name in activations_to_test:
+        profiler.analyze_scaling(activation_fn, name, sizes=[200, 400, 600])
+    
+    # Test 3: Memory vs Performance trade-offs
+    print(f"\n💾 MEMORY vs PERFORMANCE ANALYSIS:")
+    print(f"=" * 40)
+    
+    test_tensor = Tensor(np.random.randn(500, 500))
+    original_memory = test_tensor.data.nbytes / (1024 * 1024)
+    
+    for name, activation_fn in [("ReLU", ReLU()), ("Sigmoid", Sigmoid())]:
+        start_time = time.time()
+        result = activation_fn(test_tensor)
+        end_time = time.time()
+        
+        result_memory = result.data.nbytes / (1024 * 1024)
+        time_ms = (end_time - start_time) * 1000
+        
+        print(f"   {name}:")
+        print(f"     Input: {original_memory:.2f} MB")
+        print(f"     Output: {result_memory:.2f} MB")
+        print(f"     Memory overhead: {result_memory - original_memory:.2f} MB")
+        print(f"     Time: {time_ms:.3f} ms")
+    
+    print(f"\n🎯 PRODUCTION INSIGHTS:")
+    print(f"   - ReLU is typically fastest (simple max operation)")
+    print(f"   - Sigmoid/Tanh slower due to exponential calculations")
+    print(f"   - All operations scale linearly with tensor size")
+    print(f"   - Memory usage doubles (input + output tensors)")
+    print(f"   - Choose activation based on accuracy vs speed trade-offs")
+    
+    return comparison_results
+
+# %% [markdown]
+"""
+### 🧪 Test: Activation Performance Profiling
+
+Let's test our activation profiler with realistic performance analysis.
+"""
+
+# %% nbgrader={"grade": false, "grade_id": "test-activation-profiler", "locked": false, "schema_version": 3, "solution": false, "task": false}
+def test_activation_profiler():
+    """Test activation profiler with comprehensive scenarios."""
+    print("🔬 Unit Test: Activation Performance Profiler...")
+    
+    profiler = ActivationProfiler()
+    
+    # Create test tensor
+    test_tensor = Tensor(np.random.randn(100, 100))
+    relu = ReLU()
+    
+    # Test timing functionality
+    avg_time = profiler.time_activation(relu, test_tensor, "ReLU", iterations=10)
+    
+    # Verify timing results
+    assert isinstance(avg_time, (int, float)), "Should return numeric time"
+    assert avg_time > 0, "Time should be positive"
+    assert avg_time < 1000, "Time should be reasonable (< 1000ms)"
+    
+    print("✅ Basic timing functionality test passed")
+    
+    # Test comparison functionality
+    comparison_results = profiler.compare_activations(tensor_size=(50, 50), iterations=5)
+    
+    # Verify comparison results
+    assert isinstance(comparison_results, dict), "Should return dictionary of results"
+    assert len(comparison_results) == 4, "Should test all 4 activation functions"
+    
+    expected_activations = ['ReLU', 'Sigmoid', 'Tanh', 'Softmax']
+    for activation in expected_activations:
+        assert activation in comparison_results, f"Should include {activation}"
+        assert comparison_results[activation] > 0, f"{activation} time should be positive"
+    
+    print("✅ Activation comparison test passed")
+    
+    # Test scaling analysis
+    scaling_results = profiler.analyze_scaling(relu, "ReLU", sizes=[50, 100])
+    
+    # Verify scaling results
+    assert isinstance(scaling_results, list), "Should return list of scaling results"
+    assert len(scaling_results) == 2, "Should test both sizes"
+    
+    for result in scaling_results:
+        assert 'size' in result, "Should include size"
+        assert 'time_ms' in result, "Should include timing"
+        assert result['time_ms'] > 0, "Time should be positive"
+    
+    print("✅ Scaling analysis test passed")
+    
+    print("🎯 Activation Profiler: All tests passed!")
+
+# Run the test
+test_activation_profiler()
+
+# %% [markdown]
+"""
+### 🎯 Learning Activity: Activation Performance Analysis
+
+**Goal**: Learn to measure activation function performance and understand which operations are fast vs slow in production ML systems.
+"""
+
+# %% nbgrader={"grade": false, "grade_id": "activation-performance-analysis", "locked": false, "schema_version": 3, "solution": false, "task": false}
+# Initialize the activation profiler
+profiler = ActivationProfiler()
+
+print("⚡ ACTIVATION PERFORMANCE ANALYSIS")
+print("=" * 50)
+
+# Create test data
+test_tensor = Tensor(np.random.randn(500, 500))  # Medium-sized tensor for testing
+print(f"Test tensor size: {test_tensor.shape}")
+print(f"Memory footprint: {test_tensor.data.nbytes/(1024*1024):.2f} MB")
+
+# Test individual activation timing
+print(f"\n🎯 Individual Activation Timing:")
+activations_to_test = [
+    (ReLU(), "ReLU"),
+    (Sigmoid(), "Sigmoid"), 
+    (Tanh(), "Tanh"),
+    (Softmax(), "Softmax")
+]
+
+individual_results = {}
+for activation_fn, name in activations_to_test:
+    # Students implement this timing call
+    avg_time = profiler.time_activation(activation_fn, test_tensor, name, iterations=50)
+    individual_results[name] = avg_time
+    print(f"   {name:8}: {avg_time:.3f} ms average")
+
+# Analyze the results  
+fastest = min(individual_results, key=individual_results.get)
+slowest = max(individual_results, key=individual_results.get)
+speed_ratio = individual_results[slowest] / individual_results[fastest]
+
+print(f"\n📊 PERFORMANCE INSIGHTS:")
+print(f"   Fastest: {fastest} ({individual_results[fastest]:.3f} ms)")
+print(f"   Slowest: {slowest} ({individual_results[slowest]:.3f} ms)")
+print(f"   Speed difference: {speed_ratio:.1f}x")
+
+print(f"\n💡 WHY THE DIFFERENCE?")
+print(f"   - ReLU: Just max(0, x) - simple comparison")
+print(f"   - Sigmoid: Requires exponential calculation")
+print(f"   - Tanh: Also exponential, but often optimized")
+print(f"   - Softmax: Exponentials + division")
+
+print(f"\n🏭 PRODUCTION IMPLICATIONS:")
+print(f"   - ReLU dominates modern deep learning (speed + effectiveness)")
+print(f"   - Sigmoid/Tanh used where probability interpretation needed")
+print(f"   - Speed matters: 1000 layers × speed difference = major impact")
 """ 
