@@ -18,7 +18,11 @@ html_meta:
 
 **Most ML education teaches you to _use_ frameworks. TinyTorch teaches you to _build_ them.**
 
-TinyTorch is a minimalist educational framework designed for learning by doing. Instead of relying on PyTorch or TensorFlow, you implement everything from scratch—tensors, autograd, optimizers, even MLOps tooling. This hands-on approach builds the deep systems intuition that sets ML engineers apart from ML users.
+TinyTorch is a minimalist educational framework designed for learning by doing. Instead of relying on PyTorch or TensorFlow, you implement everything from scratch—tensors, autograd, optimizers, even MLOps tooling.
+
+**🎯 Our Vision: Train ML Systems Engineers, Not Just ML Users**
+
+This hands-on approach builds the deep systems intuition that separates ML engineers from ML users. You'll understand not just *what* neural networks do, but *how* they work under the hood, *why* certain design choices matter in production, and *when* to make trade-offs between memory, speed, and accuracy.
 
 ```{admonition} 🎯 What You'll Build
 :class: tip
@@ -63,6 +67,17 @@ Go from "How does this work?" 🤷 to "I implemented every line!" 💪
 
 TinyTorch focuses on implementation and systems thinking. You learn *how* to build working systems with progressive scaffolding, production ready practices, and comprehensive course infrastructure that bridges the gap between learning and building.
 
+**🧠 What Makes This Different: Systems-First Thinking**
+
+Traditional ML courses teach algorithms. TinyTorch teaches **ML systems engineering**:
+- **Memory Management**: Why Adam uses 3× more memory than SGD and when that matters
+- **Performance Analysis**: How attention mechanisms scale O(N²) and limit context length  
+- **Production Trade-offs**: When to use gradient accumulation vs larger GPUs
+- **Hardware Awareness**: How cache misses make naive convolution 100× slower
+- **System Design**: How autograd graphs consume memory and enable gradient checkpointing
+
+**Result**: You become the engineer who designs ML systems, not just uses them.
+
 ---
 
 ## 🎓 **Learning Philosophy: Build, Use, Reflect**
@@ -97,42 +112,76 @@ model = Sequential([
 
 This pattern repeats for every component: tensors, layers, optimizers, even MLOps systems. You build it, use it immediately, then reflect on how it fits into larger systems.
 
+**🎯 Beyond Code: Systems Intuition**
+
+Each module includes **ML Systems Thinking** sections that connect your implementations to production reality:
+- *"How does your tensor implementation compare to PyTorch's memory management?"*
+- *"When would you choose SGD over Adam in production training?"* 
+- *"How do frameworks handle the quadratic memory scaling of attention?"*
+- *"What happens to your autograd implementation under distributed training?"*
+
+These aren't just academic questions - they're the system-level challenges that ML engineers solve every day.
+
 ---
 
-## 📚 **Course Journey: 15 Modules**
+## 👥 **Who This Is For**
+
+### **🎯 Perfect For:**
+- **CS students** who want to understand ML systems beyond high-level APIs
+- **Software engineers** transitioning to ML engineering roles
+- **ML practitioners** who want to optimize and debug production systems
+- **Researchers** who need to implement custom operations and architectures
+- **Anyone curious** about how PyTorch/TensorFlow actually work under the hood
+
+### **📚 Prerequisites:**
+- **Python programming** (comfortable with classes, functions, basic NumPy)
+- **Linear algebra basics** (matrix multiplication, gradients)
+- **Learning mindset** - we'll teach you everything else!
+
+### **🚀 Career Impact:**
+After TinyTorch, you'll be the person your team asks:
+- *"Why is our training so slow?"* (You'll know how to profile and optimize)
+- *"Can we fit this model in GPU memory?"* (You'll understand memory trade-offs)  
+- *"How should we implement this new paper?"* (You'll translate research to code)
+- *"What's the best optimizer for our use case?"* (You'll know the system implications)
+
+---
+
+## 📚 **Course Journey: 17 Modules**
 
 ```{admonition} 🏗️ Foundation
 :class: note
-**1. Setup** • **2. Tensors** • **3. Activations**
+**0. Introduction** • **1. Setup** • **2. Tensors** • **3. Activations**
 
-Understanding workflow, multi-dimensional arrays, and the mathematical functions that enable learning.
+System overview, development workflow, multi-dimensional arrays, and mathematical functions that enable learning.
 ```
 
 ```{admonition} 🧱 Building Blocks
 :class: note
 **4. Layers** • **5. Dense** • **6. Spatial** • **7. Attention**
 
-Dense layers, sequential networks, convolutional operations, and self-attention mechanisms.
+Dense layers, sequential networks, convolutional operations, and self-attention mechanisms with memory analysis.
 ```
 
 ```{admonition} 🎯 Training Systems
 :class: note
 **8. DataLoader** • **9. Autograd** • **10. Optimizers** • **11. Training**
 
-CIFAR-10 loading, automatic differentiation, SGD/Adam optimizers, and complete training orchestration.
+CIFAR-10 loading, automatic differentiation with graph management, SGD/Adam with memory profiling, and complete training orchestration.
 ```
 
-```{admonition} 🚀 Inference & Serving
+```{admonition} 🚀 Production Systems
 :class: note
 **12. Compression** • **13. Kernels** • **14. Benchmarking** • **15. MLOps**
 
-Model optimization, high-performance operations, systematic evaluation, production monitoring, and advanced framework engineering.
+Model optimization, high-performance operations, systematic evaluation, and production monitoring with real deployment patterns.
 ```
 
 ```{admonition} 🎓 Capstone Project
 :class: note
+**16. Integration Engineering**
 
-Choose your focus: performance engineering, algorithm extensions, systems optimization, framework analysis, or developer tools.
+Choose your specialization: performance optimization, algorithm extensions, systems engineering, benchmarking analysis, or developer tools.
 ```
 
 ---
