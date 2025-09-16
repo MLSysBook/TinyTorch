@@ -7,14 +7,24 @@
 ## 🎯 **Complete Course Infrastructure**
 
 TinyTorch provides a **turn-key ML systems course** with:
-- **14 progressive assignments** (01-14) building from CLI to MLOps
+- **17 progressive modules** (00-16) building from foundations to MLOps
 - **Full NBGrader integration** for automated grading
-- **200+ automated tests** ensuring student code works correctly
-- **Professional development workflow** with `tito` CLI
+- **Comprehensive tito CLI** for professional development workflow
 - **Real-world datasets** and production practices
+- **Complete instructor documentation** and setup guides
 
-**Course Duration:** 8-14 weeks (flexible pacing)  
+**Course Duration:** 14-16 weeks (flexible pacing)  
 **Student Outcome:** Complete ML framework built from scratch
+
+```{admonition} 📚 New: Complete Instructor Guide Available
+:class: tip
+**For detailed setup and usage instructions, see our comprehensive [Instructor Guide](../instructor-guide.md)** which covers:
+- Complete setup walkthrough (30 minutes)
+- Weekly assignment workflow 
+- NBGrader integration and grading
+- Student support and troubleshooting
+- End-to-end course management
+```
 
 ---
 
