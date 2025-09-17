@@ -43,6 +43,10 @@ import numpy as np
 import sys
 import os
 from typing import Tuple, Optional, Iterator
+import urllib.request
+import tarfile
+import pickle
+import time
 
 # Import our building blocks - try package first, then local modules
 try:
@@ -709,6 +713,91 @@ class SimpleDataset(Dataset):
         - Simply return self.num_classes
         """
         return self.num_classes
+
+# %% [markdown]
+"""
+## Step 4b: CIFAR-10 Dataset - Real Data for CNNs
+
+### Download and Load Real Computer Vision Data
+Let's implement loading CIFAR-10, the dataset we'll use to achieve our north star goal of 75% accuracy!
+"""
+
+# %% nbgrader={"grade": false, "grade_id": "cifar10", "locked": false, "schema_version": 3, "solution": true, "task": false}
+#| export
+def download_cifar10(root: str = "./data") -> str:
+    """
+    Download CIFAR-10 dataset.
+    
+    TODO: Download and extract CIFAR-10.
+    
+    HINTS:
+    - URL: https://www.cs.toronto.edu/~kriz/cifar-10-python.tar.gz
+    - Use urllib.request.urlretrieve()
+    - Extract with tarfile
+    """
+    ### BEGIN SOLUTION
+    os.makedirs(root, exist_ok=True)
+    dataset_dir = os.path.join(root, "cifar-10-batches-py")
+    
+    if os.path.exists(dataset_dir):
+        print(f"✅ CIFAR-10 found at {dataset_dir}")
+        return dataset_dir
+    
+    url = "https://www.cs.toronto.edu/~kriz/cifar-10-python.tar.gz"
+    tar_path = os.path.join(root, "cifar-10.tar.gz")
+    
+    print(f"📥 Downloading CIFAR-10 (~170MB)...")
+    urllib.request.urlretrieve(url, tar_path)
+    print("✅ Downloaded!")
+    
+    print("📦 Extracting...")
+    with tarfile.open(tar_path, 'r:gz') as tar:
+        tar.extractall(root)
+    print("✅ Ready!")
+    
+    return dataset_dir
+    ### END SOLUTION
+
+class CIFAR10Dataset(Dataset):
+    """CIFAR-10 dataset for CNN training."""
+    
+    def __init__(self, root="./data", train=True, download=False):
+        """Load CIFAR-10 data."""
+        ### BEGIN SOLUTION
+        if download:
+            dataset_dir = download_cifar10(root)
+        else:
+            dataset_dir = os.path.join(root, "cifar-10-batches-py")
+        
+        if train:
+            data_list = []
+            label_list = []
+            for i in range(1, 6):
+                with open(os.path.join(dataset_dir, f"data_batch_{i}"), 'rb') as f:
+                    batch = pickle.load(f, encoding='bytes')
+                    data_list.append(batch[b'data'])
+                    label_list.extend(batch[b'labels'])
+            self.data = np.concatenate(data_list)
+            self.labels = np.array(label_list)
+        else:
+            with open(os.path.join(dataset_dir, "test_batch"), 'rb') as f:
+                batch = pickle.load(f, encoding='bytes')
+                self.data = batch[b'data']
+                self.labels = np.array(batch[b'labels'])
+        
+        # Reshape to (N, 3, 32, 32) and normalize
+        self.data = self.data.reshape(-1, 3, 32, 32).astype(np.float32) / 255.0
+        print(f"✅ Loaded {len(self.data):,} images")
+        ### END SOLUTION
+    
+    def __getitem__(self, idx):
+        return Tensor(self.data[idx]), Tensor(self.labels[idx])
+    
+    def __len__(self):
+        return len(self.data)
+    
+    def get_num_classes(self):
+        return 10
 
 # %% [markdown]
 """
