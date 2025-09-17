@@ -456,8 +456,9 @@ All TinyTorch modules MUST follow the standardized structure with MANDATORY syst
 6. **Integration** - How components work together in larger systems
 7. **Production Context** - How do real ML systems handle this? (PyTorch, TensorFlow examples)
 8. **Comprehensive Testing** - Full validation including performance characteristics
-9. **ML Systems Thinking** - Systems-focused reflection questions  
-10. **Module Summary** - What was accomplished (emphasize systems understanding gained)
+9. **Main Execution Block** - `if __name__ == "__main__":` with all test execution
+10. **ML Systems Thinking** - Systems-focused reflection questions (AFTER main block)
+11. **Module Summary** - What was accomplished (ALWAYS LAST SECTION)
 
 ### 🔬 **New Principle: Every Module Teaches Systems Thinking Through Implementation**
 **MANDATORY**: Every module must demonstrate that understanding systems comes through building them, not just studying them.
@@ -763,6 +764,48 @@ tito module complete tensor --skip-test
 - Maintain immediate testing pattern (test after each implementation)
 - Use clear, consistent section organization
 - **QA testing is MANDATORY before ANY commit** (including systems validation)
+
+### 🚨 CRITICAL: Module Section Ordering - MANDATORY STRUCTURE
+**THE LAST THREE SECTIONS OF EVERY MODULE MUST BE IN THIS EXACT ORDER:**
+
+1. **`if __name__ == "__main__":` block** - Contains all test executions
+   - This is where all tests run when module is executed directly
+   - Consolidate ALL test execution here (no scattered if blocks throughout the module)
+   - Example: `if __name__ == "__main__": run_all_tests()`
+   
+2. **ML Systems Thinking Questions** - Interactive NBGrader questions
+   - Must come AFTER the main execution block
+   - Contains 3-4 interactive reflection questions
+   - Section header: `## 🤔 ML Systems Thinking: Interactive Questions`
+   
+3. **MODULE SUMMARY** - Always the ABSOLUTE LAST section
+   - Must be the final section before EOF
+   - Nothing should come after Module Summary
+   - Section header: `## 🎯 MODULE SUMMARY: [Module Name]`
+
+**❌ INCORRECT Example (WRONG):**
+```python
+## 🎯 MODULE SUMMARY: Neural Networks
+# Summary content here...
+
+if __name__ == "__main__":  # ❌ WRONG - comes after summary
+    run_tests()
+```
+
+**✅ CORRECT Example (like 01_setup):**
+```python
+if __name__ == "__main__":  # ✅ First of final three sections
+    run_all_tests()
+
+## 🤔 ML Systems Thinking: Interactive Questions  # ✅ Second 
+# Interactive NBGrader questions here...
+
+## 🎯 MODULE SUMMARY: Setup Configuration  # ✅ Always last
+# Summary content here...
+# [EOF]
+```
+
+**Modules with scattered `if __name__` blocks must be refactored to have a single consolidated block before ML Systems Thinking.**
 
 ---
 

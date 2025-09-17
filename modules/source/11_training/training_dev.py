@@ -1691,6 +1691,18 @@ def test_production_training_optimizer():
 
 # Test function defined (called in main block)
 
+if __name__ == "__main__":
+    # Run all training tests
+    test_unit_simple_training_loop()
+    test_unit_batch_training()
+    test_unit_multiple_epochs()
+    test_unit_training_with_validation()
+    test_module_training_pipeline_integration()
+    test_training_pipeline_profiler()
+    
+    print("All tests passed!")
+    print("Training module complete!")
+
 # %% [markdown]
 """
 ## 🤔 ML Systems Thinking Questions
@@ -1783,109 +1795,4 @@ Your implementations mirror production systems:
 4. **Move to Module 12**: Add model compression and optimization!
 
 **Ready for compression?** Your training pipelines are now ready for real-world deployment!
-""" 
-
-if __name__ == "__main__":
-    # Run all tests
-    test_unit_mse_loss()
-    test_unit_crossentropy_loss()
-    test_unit_binary_crossentropy_loss()
-    test_unit_accuracy_metric()
-    test_unit_trainer()
-    test_module_training()
-    test_training_pipeline_profiler()
-    test_production_training_optimizer()
-    
-    print("All tests passed!")
-    # Add evaluation tools for north star goal
-    print("training_dev module complete!")
-
-# %% [markdown]
 """
-## Evaluation Tools for Model Analysis
-
-### Essential tools for achieving our north star goal of 75% CIFAR-10 accuracy
-"""
-
-# %% nbgrader={"grade": false, "grade_id": "evaluation-tools", "locked": false, "schema_version": 3, "solution": true, "task": false}
-#| export
-def compute_confusion_matrix(model, dataloader, num_classes=10):
-    """
-    Compute confusion matrix for classification model.
-    
-    Returns matrix where element (i,j) is count of samples with true label i predicted as j.
-    """
-    ### BEGIN SOLUTION
-    confusion = np.zeros((num_classes, num_classes), dtype=int)
-    
-    for batch_x, batch_y in dataloader:
-        predictions = model(batch_x)
-        pred_labels = np.argmax(predictions.data, axis=1)
-        true_labels = batch_y.data.astype(int)
-        
-        for true, pred in zip(true_labels, pred_labels):
-            confusion[true, pred] += 1
-    
-    return confusion
-    ### END SOLUTION
-
-def evaluate_model(model, dataloader):
-    """
-    Evaluate model accuracy on dataset.
-    
-    Returns accuracy as percentage.
-    """
-    ### BEGIN SOLUTION
-    correct = 0
-    total = 0
-    
-    for batch_x, batch_y in dataloader:
-        predictions = model(batch_x)
-        pred_labels = np.argmax(predictions.data, axis=1)
-        true_labels = batch_y.data.astype(int)
-        
-        correct += np.sum(pred_labels == true_labels)
-        total += len(true_labels)
-    
-    accuracy = (correct / total) * 100
-    return accuracy
-    ### END SOLUTION
-
-def plot_training_history(history):
-    """
-    Plot training curves (simplified for terminal output).
-    
-    Shows training and validation loss progression.
-    """
-    ### BEGIN SOLUTION
-    if not history.get('epoch'):
-        print("No training history to plot")
-        return
-    
-    print("\n📊 Training Progress:")
-    print("-" * 50)
-    
-    # Simple ASCII plot for loss
-    train_loss = history['train_loss']
-    val_loss = history.get('val_loss', [])
-    
-    if train_loss:
-        min_loss = min(train_loss)
-        max_loss = max(train_loss)
-        
-        print(f"Train Loss: {train_loss[0]:.4f} → {train_loss[-1]:.4f}")
-        if val_loss:
-            print(f"Val Loss:   {val_loss[0]:.4f} → {val_loss[-1]:.4f}")
-        
-        # Show trend
-        if train_loss[-1] < train_loss[0]:
-            print("✅ Training loss decreased (model is learning!)")
-        else:
-            print("⚠️ Training loss increased (check learning rate)")
-        
-        if val_loss and len(val_loss) > 1:
-            if val_loss[-1] > val_loss[-2]:
-                print("⚠️ Validation loss increasing (possible overfitting)")
-    
-    print("-" * 50)
-    ### END SOLUTION

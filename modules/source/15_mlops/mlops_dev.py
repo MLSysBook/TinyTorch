@@ -492,9 +492,7 @@ def test_unit_model_monitor():
     print("✅ Trend analysis provides meaningful insights")
     print("📈 Progress: Performance Drift Monitor ✓")
 
-# Run the test
-if __name__ == "__main__":
-    test_unit_model_monitor()
+# Test will run in consolidated main block
 
 # %% [markdown]
 """
@@ -760,9 +758,7 @@ def test_unit_drift_detector():
     print("✅ Drift history tracking works")
     print("📈 Progress: Simple Drift Detection ✓")
 
-# Run the test
-if __name__ == "__main__":
-    test_unit_drift_detector()
+# Test will run in consolidated main block
 
 # %% [markdown]
 """
@@ -1110,8 +1106,7 @@ def test_unit_retraining_trigger():
     print("📈 Progress: Retraining Trigger System ✓")
 
 # Run the test
-if __name__ == "__main__":
-    test_unit_retraining_trigger()
+# Test will run in consolidated main block
 
 # %% [markdown]
 """
@@ -1469,8 +1464,7 @@ def test_unit_mlops_pipeline():
     print("📈 Progress: Complete MLOps Pipeline ✓")
 
 # Run the test
-if __name__ == "__main__":
-    test_unit_mlops_pipeline()
+# Test will run in consolidated main block
 
 # %%
 def test_module_mlops_tinytorch_integration():
@@ -1574,9 +1568,7 @@ def test_module_mlops_tinytorch_integration():
     
     print("✅ Integration Test Passed: MLOps-TinyTorch integration works correctly.")
 
-# Run the integration test
-if __name__ == "__main__":
-    test_module_mlops_tinytorch_integration()
+# Test will run in consolidated main block
 
 # %% [markdown]
 """
@@ -2658,9 +2650,24 @@ def test_unit_production_mlops_profiler():
     print("✅ MLOps governance reporting works")
     print("📈 Progress: Production MLOps Profiler ✓")
 
-# Run the test
+# Run all MLOps tests
 if __name__ == "__main__":
+    # Model validation tests
+    test_unit_model_validator()
+    
+    # Model serialization tests  
+    test_unit_model_serialization()
+    
+    # Basic MLOps component tests
+    test_unit_model_monitor()
+    test_unit_drift_detector() 
+    test_unit_retraining_trigger()
+    test_unit_mlops_pipeline()
+    test_module_mlops_tinytorch_integration()
     test_unit_production_mlops_profiler()
+    
+    print("All tests passed!")
+    print("MLOps module complete!")
 
 # %% [markdown]
 """
