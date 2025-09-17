@@ -1465,6 +1465,17 @@ print(f"- Enable automatic recovery strategies (restart training)")
 print(f"- Provide debugging information for model developers")
 print(f"- Critical for unattended training jobs in production")
 
+if __name__ == "__main__":
+    # Run all tests
+    test_unit_network_architectures()
+    test_unit_sequential_networks()
+    test_unit_mlp_creation()
+    test_unit_network_applications()
+    test_module_full_network_forward_pass()
+    
+    print("All tests passed!")
+    print("dense_dev module complete!")
+
 # %% [markdown]
 """
 ## 🤔 ML Systems Thinking: Interactive Questions
@@ -1625,15 +1636,4 @@ Congratulations! You've successfully implemented complete neural network archite
 4. **Move to Module 5**: Add convolutional layers for image processing!
 
 **Ready for CNNs?** Your network foundations are now ready for specialized architectures!
-""" 
-
-if __name__ == "__main__":
-    # Run all tests
-    test_unit_network_architectures()
-    test_unit_sequential_networks()
-    test_unit_mlp_creation()
-    test_unit_network_applications()
-    test_module_full_network_forward_pass()
-    
-    print("All tests passed!")
-    print("dense_dev module complete!")
+"""

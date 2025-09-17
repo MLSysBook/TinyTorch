@@ -2060,9 +2060,6 @@ def test_unit_comprehensive_comparison():
     print()
 
 # Run the test only if executed directly
-if __name__ == "__main__":
-    test_unit_comprehensive_comparison()
-
 # %% [markdown]
 """
 ### 🧪 Integration Test: Compression with Sequential Models
@@ -2101,10 +2098,6 @@ def test_module_compression():
     assert abs(final_sparsity - 0.5) < 0.01, "Sparsity should be close to the pruning ratio."
 
     print("✅ Integration Test Passed: Pruning correctly modified a layer in a Sequential model.")
-
-# Run the test only if executed directly
-if __name__ == "__main__":
-    test_module_compression()
 
 # %% [markdown]
 """
@@ -2160,10 +2153,6 @@ def test_module_compression():
 
     print("✅ Integration Test Passed: Comprehensive compression successfully applied and verified.")
 
-# Run the test only if executed directly
-if __name__ == "__main__":
-    test_module_compression()
-
 # %% [markdown]
 """
 ## 🧪 Module Testing
@@ -2183,6 +2172,19 @@ Time to test your implementation! This section uses TinyTorch's standardized tes
 # STANDARDIZED MODULE TESTING - DO NOT MODIFY
 # This cell is locked to ensure consistent testing across all TinyTorch modules
 # =============================================================================
+
+if __name__ == "__main__":
+    # Run all compression tests
+    test_unit_magnitude_pruning()
+    test_unit_structured_pruning() 
+    test_unit_weight_quantization()
+    test_unit_layer_quantization()
+    test_unit_knowledge_distillation()
+    test_unit_comprehensive_comparison()
+    test_module_compression()
+    
+    print("All tests passed!")
+    print("Compression module complete!")
 
 # %% [markdown]
 """

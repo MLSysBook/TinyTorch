@@ -1900,6 +1900,105 @@ Complete the missing implementations in the `LayerArchitectureProfiler` class ab
 
 # Architecture analysis functions (called in main block)
 
+if __name__ == "__main__":
+    # Run all layer tests
+    test_unit_matrix_multiplication()
+    test_unit_dense_layer()
+    test_unit_layer_activation()
+    test_module_layer_tensor_integration()
+    
+    # Initialize the layer architecture profiler
+    profiler = LayerArchitectureProfiler()
+
+    print("🏗️ LAYER ARCHITECTURE ANALYSIS")
+    print("=" * 50)
+
+    # Test 1: Single layer analysis
+    print("📊 Single Layer Analysis:")
+    layer_configs = [
+        (784, 128),    # MNIST → small hidden
+        (784, 512),    # MNIST → medium hidden  
+        (784, 2048),   # MNIST → large hidden
+        (3072, 1024),  # CIFAR-10 → hidden
+    ]
+
+    for input_size, hidden_size in layer_configs:
+        analysis = profiler.analyze_layer_parameters(input_size, hidden_size, 10)
+        print(f"   {input_size} → {hidden_size}: {analysis['total_parameters']:,} params, {analysis['memory_mb']:.2f} MB")
+
+    # Test 2: Network scaling analysis
+    print(f"\n🔍 Network Scaling Analysis:")
+    network_configs = [
+        ([128], "Small network"),
+        ([256, 128], "Medium network"),
+        ([512, 256, 128], "Large network"),
+        ([1024, 512, 256, 128], "Very large network")
+    ]
+
+    for hidden_sizes, description in network_configs:
+        analysis = profiler.analyze_network_scaling(784, hidden_sizes, 10)
+        print(f"   {description}: {analysis['total_parameters']:,} params, {analysis['total_memory_mb']:.2f} MB")
+
+    print(f"\n💡 SCALING INSIGHTS:")
+    print(f"   - Adding layers multiplies parameter count")
+    print(f"   - First layer often dominates parameter count (large input)")
+    print(f"   - Memory scales linearly with parameter count")
+    print(f"   - Architecture choice = resource planning decision")
+    
+    # Compare different architecture strategies
+    input_size = 784  # MNIST flattened image
+    output_size = 10  # 10 digit classes
+
+    architecture_configs = {
+        'Baseline': [128],
+        'Wide Shallow': [512], 
+        'Narrow Deep': [64, 64, 64],
+        'Pyramid': [256, 128, 64],
+        'Inverted Pyramid': [64, 128, 256],
+        'Bottleneck': [512, 32, 512]
+    }
+
+    # Students use their implemented analysis tools
+    comparison_results = profiler.compare_architectures(input_size, architecture_configs, output_size)
+
+    # Analyze depth vs width trade-offs
+    depth_width_results = profiler.analyze_depth_vs_width_tradeoffs(input_size, output_size)
+
+    # Connect to famous architectures
+    famous_analysis = analyze_famous_architectures()
+
+    print(f"\n🎯 KEY LEARNINGS FOR ML SYSTEMS ENGINEERS:")
+    print(f"=" * 55)
+
+    print(f"\n1. 📊 PARAMETER SCALING:")
+    print(f"   First layer dominates: input_size × hidden_size")
+    print(f"   Layer composition multiplies parameter count")
+    print(f"   Memory = parameters × 4 bytes (float32)")
+
+    print(f"\n2. 🏗️ ARCHITECTURE STRATEGIES:")
+    print(f"   Wide networks: More capacity, more parameters")
+    print(f"   Deep networks: Better representations, harder training")
+    print(f"   Bottlenecks: Compress then expand information")
+
+    print(f"\n3. 🚀 PRODUCTION IMPLICATIONS:")
+    print(f"   Parameter count = memory requirements")
+    print(f"   Model serving: Load entire model into memory")
+    print(f"   Training: Need 2-3x model size for gradients/optimizer")
+
+    print(f"\n4. 💰 COST IMPLICATIONS:")
+    print(f"   More parameters = larger cloud instances needed")
+    print(f"   GPU memory limits determine maximum model size")
+    print(f"   Distributed training costs scale with model size")
+
+    print(f"\n💡 SYSTEMS ENGINEERING INSIGHT:")
+    print(f"Every layer you add is a resource planning decision:")
+    print(f"- More layers = more memory = higher cloud costs")
+    print(f"- Architecture efficiency matters at production scale")
+    print(f"- Understanding parameter scaling helps optimize deployments")
+    
+    print("All tests passed!")
+    print("Layers module complete!")
+
 # %% [markdown]
 """
 ## 🤔 ML Systems Thinking: Interactive Questions

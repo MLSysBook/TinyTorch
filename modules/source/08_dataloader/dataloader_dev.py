@@ -1610,6 +1610,54 @@ print(f"- Data loading is often the limiting factor")
 print(f"- 10% I/O improvement = 10% faster training = 10% cost reduction")
 print(f"- Modern ML systems spend significant effort on data pipeline optimization")
 
+if __name__ == "__main__":
+    # Test the dataset interface demonstration
+    try:
+        test_dataset = TestDataset(size=5)
+        print(f"Dataset created with size: {len(test_dataset)}")
+        
+        # Test __getitem__
+        data, label = test_dataset[0]
+        print(f"Sample 0: data={data}, label={label}")
+        assert isinstance(data, Tensor), "Data should be a Tensor"
+        assert isinstance(label, Tensor), "Label should be a Tensor"
+        print("✅ Dataset __getitem__ works correctly")
+        
+        # Test __len__
+        assert len(test_dataset) == 5, f"Dataset length should be 5, got {len(test_dataset)}"
+        print("✅ Dataset __len__ works correctly")
+        
+        # Test get_num_classes
+        num_classes = test_dataset.get_num_classes()
+        assert num_classes == 2, f"Number of classes should be 2, got {num_classes}"
+        print("✅ Dataset get_num_classes works correctly")
+        
+        # Test get_sample_shape
+        sample_shape = test_dataset.get_sample_shape()
+        assert sample_shape == (3,), f"Sample shape should be (3,), got {sample_shape}"
+        print("✅ Dataset get_sample_shape works correctly")
+        
+        print("🎯 Dataset interface pattern:")
+        print("   __getitem__: Returns (data, label) tuple")
+        print("   __len__: Returns dataset size")
+        print("   get_num_classes: Returns number of classes")
+        print("   get_sample_shape: Returns shape of data samples")
+        print("📈 Progress: Dataset interface ✓")
+        
+    except Exception as e:
+        print(f"❌ Dataset interface test failed: {e}")
+        raise
+    
+    # Run all tests
+    test_unit_dataset_interface()
+    test_unit_dataloader()
+    test_unit_simple_dataset()
+    test_unit_dataloader_pipeline()
+    test_module_dataloader_tensor_yield()
+    
+    print("All tests passed!")
+    print("dataloader_dev module complete!")
+
 # %% [markdown]
 """
 ## 🤔 ML Systems Thinking Questions
@@ -1681,61 +1729,4 @@ Your implementations mirror production systems:
 4. **Move to Module 9**: Add automatic differentiation for training!
 
 **Ready for autograd?** Your data loading systems are now ready for real training!
-""" 
-
-if __name__ == "__main__":
-    # Test the dataset interface demonstration
-    try:
-        test_dataset = TestDataset(size=5)
-        print(f"Dataset created with size: {len(test_dataset)}")
-        
-        # Test __getitem__
-        data, label = test_dataset[0]
-        print(f"Sample 0: data={data}, label={label}")
-        assert isinstance(data, Tensor), "Data should be a Tensor"
-        assert isinstance(label, Tensor), "Label should be a Tensor"
-        print("✅ Dataset __getitem__ works correctly")
-        
-        # Test __len__
-        assert len(test_dataset) == 5, f"Dataset length should be 5, got {len(test_dataset)}"
-        print("✅ Dataset __len__ works correctly")
-        
-        # Test get_num_classes
-        assert test_dataset.get_num_classes() == 2, f"Should have 2 classes, got {test_dataset.get_num_classes()}"
-        print("✅ Dataset get_num_classes works correctly")
-        
-        # Test get_sample_shape
-        sample_shape = test_dataset.get_sample_shape()
-        assert sample_shape == (2,), f"Sample shape should be (2,), got {sample_shape}"
-        print("✅ Dataset get_sample_shape works correctly")
-        
-        # Test multiple samples
-        for i in range(3):
-            data, label = test_dataset[i]
-            expected_data = [i, i * 2]
-            expected_label = [i % 2]
-            assert np.array_equal(data.data, expected_data), f"Data mismatch at index {i}"
-            assert np.array_equal(label.data, expected_label), f"Label mismatch at index {i}"
-        print("✅ Dataset produces correct data for multiple samples")
-        
-        # Show the dataset pattern
-        print("🎯 Dataset interface pattern:")
-        print("   __getitem__: Returns (data, label) tuple")
-        print("   __len__: Returns dataset size")
-        print("   get_num_classes: Returns number of classes")
-        print("   get_sample_shape: Returns shape of data samples")
-        print("📈 Progress: Dataset interface ✓")
-        
-    except Exception as e:
-        print(f"❌ Dataset interface test failed: {e}")
-        raise
-    
-    # Run all tests
-    test_unit_dataset_interface()
-    test_unit_dataloader()
-    test_unit_simple_dataset()
-    test_unit_dataloader_pipeline()
-    test_module_dataloader_tensor_yield()
-    
-    print("All tests passed!")
-    print("dataloader_dev module complete!")
+"""

@@ -1046,6 +1046,16 @@ def test_module_tensor_numpy_integration():
 
 # Test function defined (called in main block)
 
+if __name__ == "__main__":
+    # Run all tensor tests
+    test_unit_tensor_creation()
+    test_unit_tensor_properties()
+    test_unit_tensor_arithmetic()
+    test_module_tensor_numpy_integration()
+    
+    print("All tests passed!")
+    print("Tensor module complete!")
+
 # %% [markdown]
 """
 ## 🤔 ML Systems Thinking: Interactive Questions
@@ -1245,13 +1255,3 @@ Your tensor implementation is the foundation for:
 
 You've built the foundation of modern AI. Now let's add the mathematical functions that enable machines to learn complex patterns!
 """
-
-if __name__ == "__main__":
-    # Run all tensor tests
-    test_unit_tensor_creation()
-    test_unit_tensor_properties()
-    test_unit_tensor_arithmetic()
-    test_module_tensor_numpy_integration()
-    
-    print("All tests passed!")
-    print("Tensor module complete!")
