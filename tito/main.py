@@ -36,6 +36,7 @@ from .commands.package import PackageCommand
 from .commands.nbgrader import NBGraderCommand
 from .commands.book import BookCommand
 from .commands.checkpoint import CheckpointCommand
+from .commands.grade import GradeCommand
 
 # Configure logging
 logging.basicConfig(
@@ -67,6 +68,7 @@ class TinyTorchCLI:
             'export': ExportCommand,
             'test': TestCommand,
             'book': BookCommand,
+            'grade': GradeCommand,
         }
     
     def create_parser(self) -> argparse.ArgumentParser:
@@ -87,6 +89,7 @@ Convenience Commands:
   export      Export modules to package (quick shortcut)
   test        Run tests (quick shortcut)
   book        Build and manage Jupyter Book
+  grade       Simplified grading interface (wraps NBGrader)
 
 Examples:
   tito system info              Show system information
