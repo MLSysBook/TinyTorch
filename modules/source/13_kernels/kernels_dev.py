@@ -2291,47 +2291,6 @@ Time to test your implementation! This section uses TinyTorch's standardized tes
 
 # %% [markdown]
 """
-## 🎯 MODULE SUMMARY: Custom Kernels
-
-Congratulations! You've successfully implemented custom kernel operations:
-
-### What You've Accomplished
-✅ **Custom Operations**: Implemented specialized kernels for performance
-✅ **Integration**: Seamless compatibility with neural networks
-✅ **Performance Optimization**: Faster computation for critical operations
-✅ **Real Applications**: Deploying optimized models to production
-
-### Key Concepts You've Learned
-- **Custom kernels**: Building specialized operations for efficiency
-- **Integration patterns**: How kernels work with neural networks
-- **Performance optimization**: Balancing speed and accuracy
-- **API design**: Clean interfaces for kernel operations
-
-### Professional Skills Developed
-- **Kernel engineering**: Building efficient operations for deployment
-- **Performance tuning**: Optimizing computation for speed
-- **Integration testing**: Ensuring kernels work with neural networks
-
-### Ready for Advanced Applications
-Your kernel implementations now enable:
-- **Edge deployment**: Running optimized models on resource-constrained devices
-- **Faster inference**: Reducing latency for real-time applications
-- **Production systems**: Deploying efficient models at scale
-
-### Connection to Real ML Systems
-Your implementations mirror production systems:
-- **PyTorch**: Custom CUDA kernels for performance
-- **TensorFlow**: XLA and custom ops for optimization
-- **Industry Standard**: Every major ML framework uses these exact techniques
-
-### Next Steps
-1. **Export your code**: `tito export 13_kernels`
-2. **Test your implementation**: `tito test 13_kernels`
-3. **Deploy models**: Use optimized kernels in production
-4. **Move to Module 14**: Add benchmarking for evaluation!
-
-**Ready for benchmarking?** Your custom kernels are now ready for real-world deployment!
-
 ## 🤔 ML Systems Thinking Questions
 
 ### GPU Architecture and Parallelism
@@ -2403,4 +2362,45 @@ Production ML systems need to handle hardware failures, software updates, and va
 
 **What monitoring and debugging tools exist for production GPU workloads?**
 When kernels behave unexpectedly in production, how do you diagnose issues? What metrics matter for kernel performance monitoring? How do you correlate kernel performance with higher-level model metrics like accuracy and throughput?
+
+## 🎯 MODULE SUMMARY: Custom Kernels
+
+Congratulations! You've successfully implemented custom kernel operations:
+
+### What You've Accomplished
+✅ **Custom Operations**: Implemented specialized kernels for performance
+✅ **Integration**: Seamless compatibility with neural networks
+✅ **Performance Optimization**: Faster computation for critical operations
+✅ **Real Applications**: Deploying optimized models to production
+
+### Key Concepts You've Learned
+- **Custom kernels**: Building specialized operations for efficiency
+- **Integration patterns**: How kernels work with neural networks
+- **Performance optimization**: Balancing speed and accuracy
+- **API design**: Clean interfaces for kernel operations
+
+### Professional Skills Developed
+- **Kernel engineering**: Building efficient operations for deployment
+- **Performance tuning**: Optimizing computation for speed
+- **Integration testing**: Ensuring kernels work with neural networks
+
+### Ready for Advanced Applications
+Your kernel implementations now enable:
+- **Edge deployment**: Running optimized models on resource-constrained devices
+- **Faster inference**: Reducing latency for real-time applications
+- **Production systems**: Deploying efficient models at scale
+
+### Connection to Real ML Systems
+Your implementations mirror production systems:
+- **PyTorch**: Custom CUDA kernels for performance
+- **TensorFlow**: XLA and custom ops for optimization
+- **Industry Standard**: Every major ML framework uses these exact techniques
+
+### Next Steps
+1. **Export your code**: `tito export 13_kernels`
+2. **Test your implementation**: `tito test 13_kernels`
+3. **Deploy models**: Use optimized kernels in production
+4. **Move to Module 14**: Add benchmarking for evaluation!
+
+**Ready for benchmarking?** Your custom kernels are now ready for real-world deployment!
 """

@@ -920,61 +920,6 @@ def test_module_neural_network_training():
 
 # %% [markdown]
 """
-## 🎯 MODULE SUMMARY: Automatic Differentiation
-
-Congratulations! You have successfully implemented automatic differentiation:
-
-### What You have Accomplished
-✅ **Computational Graphs**: Dynamic graph construction for gradient computation
-✅ **Backpropagation**: Efficient gradient computation through reverse mode AD
-✅ **Gradient Tracking**: Automatic gradient accumulation and management
-✅ **Integration**: Seamless compatibility with Tensor operations
-✅ **Real Applications**: Neural network training and optimization
-
-### Key Concepts You have Learned
-- **Computational graphs**: How operations are tracked for gradient computation
-- **Backpropagation**: Reverse mode automatic differentiation
-- **Gradient accumulation**: How gradients flow through complex operations
-- **Memory management**: Efficient handling of gradient storage
-- **Integration patterns**: How autograd works with neural networks
-
-### Mathematical Foundations
-- **Chain rule**: The mathematical foundation of backpropagation
-- **Computational graphs**: Representing operations as directed acyclic graphs
-- **Gradient flow**: How gradients propagate through complex functions
-- **Memory efficiency**: Optimizing gradient storage and computation
-
-### Professional Skills Developed
-- **Graph construction**: Building dynamic computational graphs
-- **Gradient computation**: Implementing efficient backpropagation
-- **Memory optimization**: Managing gradient storage efficiently
-- **Integration testing**: Ensuring autograd works with all operations
-
-### Ready for Advanced Applications
-Your autograd implementation now enables:
-- **Neural network training**: Complete training pipelines with gradients
-- **Optimization algorithms**: Gradient-based optimization methods
-- **Custom loss functions**: Implementing specialized loss functions
-- **Advanced architectures**: Training complex neural network models
-
-### Connection to Real ML Systems
-Your implementations mirror production systems:
-- **PyTorch**: `torch.autograd` provides identical functionality
-- **TensorFlow**: `tf.GradientTape` implements similar concepts
-- **JAX**: `jax.grad` uses similar automatic differentiation
-- **Industry Standard**: Every major ML framework uses these exact principles
-
-### Next Steps
-1. **Export your code**: `tito export 09_autograd`
-2. **Test your implementation**: `tito test 09_autograd`
-3. **Build training systems**: Combine with optimizers for complete training
-4. **Move to Module 10**: Add optimization algorithms!
-
-**Ready for optimizers?** Your autograd system is now ready for real training!
-"""
-
-# %% [markdown]
-"""
 ## Step 4: ML Systems Thinking - Computational Graph Optimization
 
 ### 🏗️ Autograd Systems at Production Scale
@@ -1408,39 +1353,190 @@ def test_autograd_systems_profiler():
 
 # %% [markdown]
 """
-## 🤔 ML Systems Thinking Questions
+## 🤔 ML Systems Thinking: Interactive Questions
 
-*Take a moment to reflect on these questions. Consider how your autograd implementation connects to the challenges of training massive neural networks at scale.*
+Now that you've built automatic differentiation capabilities that enable neural network training, let's connect this foundational work to broader ML systems challenges. These questions help you think critically about how computational graphs scale to production training environments.
 
-### 🏗️ Computational Graph Architecture
-1. **Memory vs Computation Trade-offs**: Your autograd stores intermediate values for gradient computation. How do production systems like PyTorch decide when to use gradient checkpointing to trade memory for recomputation? What factors determine the optimal checkpointing frequency?
+Take time to reflect thoughtfully on each question - your insights will help you understand how the automatic differentiation concepts you've implemented connect to real-world ML systems engineering.
+"""
 
-2. **Graph Compilation**: Your dynamic graph is interpreted at runtime. How do graph compilation systems (TorchScript, XLA) optimize computational graphs ahead of time? What trade-offs exist between dynamic flexibility and static optimization?
+# %% [markdown]
+"""
+### Question 1: Computational Graphs and Memory Management
 
-3. **Distributed Gradients**: Your autograd computes gradients on a single device. How do systems like PyTorch DistributedDataParallel synchronize gradients across multiple GPUs? What communication strategies minimize training time?
+**Context**: Your autograd implementation builds computational graphs and stores intermediate values for gradient computation. Production training systems must manage memory efficiently when training models with billions of parameters and complex computational graphs that can consume enormous amounts of memory.
 
-### 📊 Production Training Systems
-4. **Gradient Accumulation**: Your system computes gradients for each batch. How do production systems accumulate gradients across multiple microbatches to simulate larger effective batch sizes? What numerical stability considerations arise?
+**Reflection Question**: Design a memory-efficient automatic differentiation system for training large-scale neural networks that optimizes computational graph storage and gradient computation. How would you implement gradient checkpointing strategies, manage memory vs compute trade-offs, and optimize graph compilation for both dynamic flexibility and static optimization? Consider scenarios where you need to train models that exceed GPU memory capacity while maintaining numerical precision and training speed.
 
-5. **Mixed Precision Training**: Your autograd uses float32 throughout. How does automatic mixed precision (AMP) maintain gradient precision while reducing memory usage? What operations require float32 vs float16?
+Think about: gradient checkpointing strategies, memory vs compute trade-offs, graph optimization techniques, and distributed gradient computation.
 
-6. **Memory Optimization**: Large models may not fit with full gradient storage. How do techniques like ZeRO optimizer states and gradient compression reduce memory requirements during training?
+*Target length: 150-300 words*
+"""
 
-### ⚡ Performance Optimization
-7. **Kernel Fusion**: Your operations execute independently. How do production systems fuse backward pass operations to minimize memory bandwidth? What operations can be safely fused together?
+# %% nbgrader={"grade": true, "grade_id": "question-1-computational-graphs", "locked": false, "points": 10, "schema_version": 3, "solution": true, "task": false}
+"""
+YOUR REFLECTION ON COMPUTATIONAL GRAPHS AND MEMORY MANAGEMENT:
 
-8. **Sparse Gradients**: Many neural network gradients are sparse. How do systems optimize for sparse gradient computation and storage? When does sparsity provide significant benefits?
+TODO: Replace this text with your thoughtful response about memory-efficient automatic differentiation system design.
 
-9. **Asynchronous Execution**: Your backward pass is synchronous. How do production systems overlap computation and communication using asynchronous gradient computation? What challenges does this create?
+Consider addressing:
+- How would you implement gradient checkpointing to optimize memory usage in large models?
+- What strategies would you use to balance memory consumption with computational efficiency?
+- How would you design graph compilation that maintains flexibility while enabling optimization?
+- What role would distributed gradient computation play in your system design?
+- How would you handle memory constraints while preserving numerical precision?
 
-### 🔄 System Integration
-10. **Dynamic Shapes**: Your implementation assumes fixed tensor shapes. How do production autograd systems handle dynamic shapes efficiently? What optimizations become impossible with dynamic shapes?
+Write a technical analysis connecting your autograd implementations to real memory management challenges.
 
-11. **Memory Profiling**: Training large models requires careful memory management. How do systems profile and optimize memory usage throughout the computational graph? What tools help identify memory bottlenecks?
+GRADING RUBRIC (Instructor Use):
+- Demonstrates understanding of computational graph memory management (3 points)
+- Addresses gradient checkpointing and memory optimization strategies (3 points)
+- Shows practical knowledge of graph compilation and optimization techniques (2 points)
+- Demonstrates systems thinking about memory vs compute trade-offs (2 points)
+- Clear technical reasoning and practical considerations (bonus points for innovative approaches)
+"""
 
-12. **Gradient Clipping**: Large gradients can destabilize training. How do production systems implement gradient clipping efficiently within the autograd system? What are the trade-offs between different clipping strategies?
+### BEGIN SOLUTION
+# Student response area - instructor will replace this section during grading setup
+# This is a manually graded question requiring technical analysis of computational graph optimization
+# Students should demonstrate understanding of memory management and gradient computation efficiency
+### END SOLUTION
 
-*These questions connect your autograd implementation to the real challenges of training large-scale neural networks. Each represents engineering decisions that affect training speed, memory efficiency, and numerical stability of production ML systems.*
+# %% [markdown]
+"""
+### Question 2: Distributed Training and Gradient Synchronization
+
+**Context**: Your autograd computes gradients on a single device, but production training systems must coordinate gradient computation across multiple GPUs and nodes. Efficient gradient synchronization becomes critical for training performance and scalability.
+
+**Reflection Question**: Architect a distributed automatic differentiation system that efficiently coordinates gradient computation across multiple devices and maintains training efficiency at scale. How would you implement gradient synchronization strategies, handle communication optimization, and manage numerical stability across distributed training? Consider scenarios where you need to train transformer models across hundreds of GPUs while minimizing communication overhead and maintaining convergence guarantees.
+
+Think about: gradient synchronization strategies, communication optimization, distributed computation patterns, and scalability considerations.
+
+*Target length: 150-300 words*
+"""
+
+# %% nbgrader={"grade": true, "grade_id": "question-2-distributed-training", "locked": false, "points": 10, "schema_version": 3, "solution": true, "task": false}
+"""
+YOUR REFLECTION ON DISTRIBUTED TRAINING AND GRADIENT SYNCHRONIZATION:
+
+TODO: Replace this text with your thoughtful response about distributed automatic differentiation system design.
+
+Consider addressing:
+- How would you design gradient synchronization for efficient distributed training?
+- What strategies would you use to minimize communication overhead in multi-GPU training?
+- How would you implement gradient compression and optimization for distributed systems?
+- What role would asynchronous vs synchronous training play in your design?
+- How would you ensure numerical stability and convergence in distributed settings?
+
+Write an architectural analysis connecting your autograd implementation to real distributed training challenges.
+
+GRADING RUBRIC (Instructor Use):
+- Shows understanding of distributed training and gradient synchronization (3 points)
+- Designs practical approaches to communication optimization and scalability (3 points)
+- Addresses numerical stability and convergence in distributed settings (2 points)
+- Demonstrates systems thinking about distributed computation patterns (2 points)
+- Clear architectural reasoning with distributed systems insights (bonus points for comprehensive understanding)
+"""
+
+### BEGIN SOLUTION
+# Student response area - instructor will replace this section during grading setup
+# This is a manually graded question requiring understanding of distributed training systems
+# Students should demonstrate knowledge of gradient synchronization and communication optimization
+### END SOLUTION
+
+# %% [markdown]
+"""
+### Question 3: Advanced Training Optimizations and System Integration
+
+**Context**: Your autograd provides basic gradient computation, but production training systems must integrate with advanced optimization techniques like mixed precision training, gradient accumulation, and specialized hardware acceleration to achieve optimal performance.
+
+**Reflection Question**: Design an advanced automatic differentiation system that integrates with modern training optimizations and hardware acceleration capabilities. How would you implement automatic mixed precision support, gradient accumulation for large effective batch sizes, and integration with specialized hardware like TPUs? Consider scenarios where you need to optimize training for both research flexibility and production efficiency while maintaining numerical stability and debugging capabilities.
+
+Think about: mixed precision training, gradient accumulation strategies, hardware integration, and training optimization techniques.
+
+*Target length: 150-300 words*
+"""
+
+# %% nbgrader={"grade": true, "grade_id": "question-3-training-optimizations", "locked": false, "points": 10, "schema_version": 3, "solution": true, "task": false}
+"""
+YOUR REFLECTION ON ADVANCED TRAINING OPTIMIZATIONS:
+
+TODO: Replace this text with your thoughtful response about advanced automatic differentiation system design.
+
+Consider addressing:
+- How would you integrate automatic mixed precision training with gradient computation?
+- What strategies would you use for gradient accumulation and large batch simulation?
+- How would you design hardware integration for specialized accelerators like TPUs?
+- What role would advanced optimizations play while maintaining research flexibility?
+- How would you ensure numerical stability across different precision and hardware configurations?
+
+Write a design analysis connecting your autograd implementation to real training optimization challenges.
+
+GRADING RUBRIC (Instructor Use):
+- Understands advanced training optimizations and mixed precision challenges (3 points)
+- Designs practical approaches to gradient accumulation and hardware integration (3 points)
+- Addresses numerical stability and research vs production trade-offs (2 points)
+- Shows systems thinking about training optimization and system integration (2 points)
+- Clear design reasoning with training optimization insights (bonus points for deep understanding)
+"""
+
+### BEGIN SOLUTION
+# Student response area - instructor will replace this section during grading setup
+# This is a manually graded question requiring understanding of advanced training optimizations
+# Students should demonstrate knowledge of mixed precision, gradient accumulation, and hardware integration
+### END SOLUTION
+
+# %% [markdown]
+"""
+## 🎯 MODULE SUMMARY: Automatic Differentiation
+
+Congratulations! You have successfully implemented automatic differentiation:
+
+### What You have Accomplished
+✅ **Computational Graphs**: Dynamic graph construction for gradient computation
+✅ **Backpropagation**: Efficient gradient computation through reverse mode AD
+✅ **Gradient Tracking**: Automatic gradient accumulation and management
+✅ **Integration**: Seamless compatibility with Tensor operations
+✅ **Real Applications**: Neural network training and optimization
+
+### Key Concepts You have Learned
+- **Computational graphs**: How operations are tracked for gradient computation
+- **Backpropagation**: Reverse mode automatic differentiation
+- **Gradient accumulation**: How gradients flow through complex operations
+- **Memory management**: Efficient handling of gradient storage
+- **Integration patterns**: How autograd works with neural networks
+
+### Mathematical Foundations
+- **Chain rule**: The mathematical foundation of backpropagation
+- **Computational graphs**: Representing operations as directed acyclic graphs
+- **Gradient flow**: How gradients propagate through complex functions
+- **Memory efficiency**: Optimizing gradient storage and computation
+
+### Professional Skills Developed
+- **Graph construction**: Building dynamic computational graphs
+- **Gradient computation**: Implementing efficient backpropagation
+- **Memory optimization**: Managing gradient storage efficiently
+- **Integration testing**: Ensuring autograd works with all operations
+
+### Ready for Advanced Applications
+Your autograd implementation now enables:
+- **Neural network training**: Complete training pipelines with gradients
+- **Optimization algorithms**: Gradient-based optimization methods
+- **Custom loss functions**: Implementing specialized loss functions
+- **Advanced architectures**: Training complex neural network models
+
+### Connection to Real ML Systems
+Your implementations mirror production systems:
+- **PyTorch**: `torch.autograd` provides identical functionality
+- **TensorFlow**: `tf.GradientTape` implements similar concepts
+- **JAX**: `jax.grad` uses similar automatic differentiation
+- **Industry Standard**: Every major ML framework uses these exact principles
+
+### Next Steps
+1. **Export your code**: `tito export 09_autograd`
+2. **Test your implementation**: `tito test 09_autograd`
+3. **Build training systems**: Combine with optimizers for complete training
+4. **Move to Module 10**: Add optimization algorithms!
 
 **Ready for optimizers?** Your autograd system is now ready for real training!
 """

@@ -1,20 +1,20 @@
 ---
 html_meta:
   "property=og:title": "Tiny🔥Torch: Build your own ML framework from scratch"
-  "property=og:description": "Learn ML systems by building them. Implement tensors, autograd, optimizers from scratch. Build the rocket ship, don't just be the astronaut."
+  "property=og:description": "Learn ML systems by building them. From computer vision to language models. Build the rocket ship, don't just be the astronaut."
   "property=og:url": "https://mlsysbook.github.io/TinyTorch/"
   "property=og:type": "website"
   "property=og:image": "https://mlsysbook.github.io/TinyTorch/logo.png"
   "property=og:site_name": "Tiny🔥Torch Course"
   "name=twitter:card": "summary_large_image"
   "name=twitter:title": "Tiny🔥Torch: Build your own ML framework"
-  "name=twitter:description": "Tiny🔥Torch is a minimalist framework for building machine learning systems from scratch—from tensors to systems."
+  "name=twitter:description": "Tiny🔥Torch is a minimalist framework for building machine learning systems from scratch—from vision to language."
   "name=twitter:image": "https://mlsysbook.github.io/TinyTorch/logo.png"
 ---
 
 # Tiny🔥Torch
 
-## Build your own Machine Learning framework from scratch. Start small. Go deep. 
+## Build your own Machine Learning framework from scratch. From Computer Vision to Language Models. 
 
 **Most ML education teaches you to _use_ frameworks. TinyTorch teaches you to _build_ them.**
 
@@ -31,8 +31,9 @@ This hands-on approach builds the deep systems intuition that separates ML engin
 - ✅ Implement automatic differentiation (the "magic" behind PyTorch)  
 - ✅ Deploy production systems with 75% model compression
 - ✅ Handle complete ML pipeline from data to monitoring
+- 🔥 **Build GPT-style language models with 95% component reuse**
 
-**Result:** You become the expert others ask about "how PyTorch actually works."
+**Result:** You become the expert others ask about "how PyTorch actually works" and "why vision and language models share the same foundations."
 ```
 
 _Everyone wants to be an astronaut._ 🧑‍🚀 _TinyTorch teaches you how to build the AI rocket ship._ 🚀
@@ -158,7 +159,7 @@ After TinyTorch, you'll be the person your team asks:
 
 ---
 
-## 📚 **Course Journey: 16 Modules**
+## 📚 **Course Journey: 16 Modules - Vision to Language**
 
 ```{admonition} 🏗️ Foundation
 :class: note
@@ -188,38 +189,37 @@ CIFAR-10 loading, automatic differentiation with graph management, SGD/Adam with
 Model optimization, high-performance operations, systematic evaluation, and production monitoring with real deployment patterns.
 ```
 
-```{admonition} 🎓 Capstone Project
+```{admonition} 🔥 Language Models
 :class: note
-**15. Integration Engineering**
+**15. TinyGPT**
 
-Choose your specialization: performance optimization, algorithm extensions, systems engineering, benchmarking analysis, or developer tools.
+Extend your vision framework to language models: GPT-style transformers, character tokenization, autoregressive generation with 95% component reuse.
 ```
 
 ---
 
 ## 🔗 **Complete System Integration**
 
-**This isn't 15 separate exercises.** Every component you build integrates into one fully functional ML framework:
+**This isn't 16 separate exercises.** Every component you build integrates into one fully functional ML framework that powers both vision AND language:
 
 ```{admonition} 🎯 How It All Connects
 :class: important
-**Module 1: Your Tensor class** → **Module 2: Powers your activation functions** → **Module 3: Enables your layers** → **Module 4: Forms your networks** → **Module 7: Drives your autograd system** → **Module 8: Optimizes with your SGD/Adam** → **Module 9: Trains on real CIFAR-10 data**
+**Module 1: Your Tensor class** → **Module 2: Powers your activation functions** → **Module 3: Enables your layers** → **Module 4: Forms your networks** → **Module 7: Drives your autograd system** → **Module 8: Optimizes with your SGD/Adam** → **Module 9: Trains on real CIFAR-10 data** → **Module 16: Extends to TinyGPT language models**
 
-**Result:** A complete, working ML framework that you built from scratch, capable of training real neural networks on real datasets.
+**Result:** A complete, working ML framework that you built from scratch, capable of training neural networks on real datasets AND generating coherent text.
 ```
 
-### **🎯 Capstone: Optimize Your Framework**
+### **🔥 TinyGPT: Framework Generalization**
 
-After completing the 15 core modules, you have a **complete ML framework**. Now make it better through systems engineering:
+After completing the 15 core modules, you have a **complete computer vision framework**. Module 16 demonstrates the ultimate insight: the same foundations power language models!
 
-**Choose Your Focus:**
-- ⚡ **Performance Optimization**: GPU kernels, vectorization, memory-efficient operations
-- 🧠 **Algorithm Extensions**: Transformer layers, BatchNorm, Dropout, advanced optimizers
-- 🔧 **Systems Engineering**: Multi-GPU training, distributed computing, memory profiling
-- 📊 **Benchmarking Deep Dive**: Compare your framework to PyTorch, identify bottlenecks
-- 🛠️ **Developer Experience**: Better debugging tools, visualization, error messages
+**What You'll Discover:**
+- 🧩 **Component Reuse**: 95% of your vision framework works unchanged for language
+- 🔄 **Mathematical Unity**: Dense layers, activations, and optimizers are universal
+- ⚡ **Strategic Extensions**: Only attention mechanisms are truly language-specific
+- 🎯 **Framework Thinking**: Understand why successful ML frameworks support multiple modalities
 
-**The Challenge:** Use **only your TinyTorch implementation** as the base. No copying from PyTorch. This proves you understand the engineering trade-offs and can optimize real ML systems.
+**The Achievement:** Build a complete GPT-style language model using **only your TinyTorch implementation**. This proves you understand the unified mathematical foundations underlying all of modern AI.
 
 ---
 
@@ -239,7 +239,7 @@ After completing the 15 core modules, you have a **complete ML framework**. Now 
 *"I want to build this myself"*
 - Fork the repo and work locally with full development environment
 - Build complete ML framework from scratch with `tito` CLI
-- 15 progressive assignments from setup to production MLOps
+- 16 progressive assignments from setup to language models
 - Professional development workflow with automated testing
 
 ### **👨‍🏫 [Classroom Use](usage-paths/classroom-use.md)** *(Instructors)*

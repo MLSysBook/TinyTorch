@@ -1,6 +1,6 @@
 # 🎯 The TinyTorch Vision
 
-**Training ML Systems Engineers, Not Just ML Users**
+**Training ML Systems Engineers: From Computer Vision to Language Models**
 
 ---
 
@@ -154,9 +154,9 @@ ML Systems Thinking sections in every module:
 - Real datasets, realistic scale, professional development workflow
 - Connection to industry practices and framework design decisions
 
-**🎯 Complete Integration**
-- 16 modules that build ONE cohesive ML framework
-- Each component integrates with others (not isolated exercises)
+**🔥 Framework Generalization**
+- 16 modules that build ONE cohesive ML framework supporting vision AND language
+- 95% component reuse from computer vision to language models
 - Professional package structure with CLI tools and testing
 
 **📊 Proven Pedagogy**
@@ -175,6 +175,7 @@ ML Systems Thinking sections in every module:
 - ✅ **Optimize models** for production deployment
 - ✅ **Profile and improve** ML system performance
 - ✅ **Design custom architectures** for specialized domains
+- 🔥 **Understand framework generalization** across vision and language
 
 ### **Systems Understanding** 
 - ✅ **Memory management** in ML frameworks
@@ -203,11 +204,11 @@ ML Systems Thinking sections in every module:
 
 *"Finally understood what happens when I call `loss.backward()` - now I can debug gradient issues instead of just hoping they go away."*
 
-*"Built my own attention mechanism from scratch. When GPT-4 came out, I actually understood the technical details instead of just the hype."*
+*"Built my own attention mechanism from scratch, then extended my vision framework to language models with 95% component reuse. When GPT-4 came out, I actually understood both the technical details AND the framework unification."*
 
 *"Got hired as an ML engineer specifically because I could explain how optimizers work at the memory level during the technical interview."*
 
-*"Used TinyTorch concepts to optimize our production training pipeline - saved 40% on cloud costs by understanding memory bottlenecks."*
+*"Used TinyTorch concepts to optimize our production training pipeline for both vision and language models - saved 40% on cloud costs by understanding memory bottlenecks across modalities."*
 
 *"Implemented a custom loss function for our research project in 30 minutes instead of spending days figuring out PyTorch internals."*
 

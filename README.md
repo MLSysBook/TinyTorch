@@ -1,6 +1,6 @@
 # Tiny🔥Torch 
 
-**Build ML Systems From First Principles. Understand by implementing every component.**
+**Build ML Systems From First Principles. From Computer Vision to Language Models.**
 
 ![Work in Progress](https://img.shields.io/badge/status-work--in--progress-yellow)
 ![Educational Project](https://img.shields.io/badge/purpose-educational-informational)
@@ -49,16 +49,17 @@ Algorithm-focused Course:       Systems-focused Course (TinyTorch):
 - **Computational graphs**: Memory vs speed tradeoffs in autograd
 - **Production patterns**: Gradient checkpointing, mixed precision
 
-### **⚡ Phase 3: Production Engineering (Modules 11-16)**
+### **⚡ Phase 3: Production Engineering (Modules 11-15)**
 - **Training systems**: Distributed computing, fault tolerance
 - **Optimization techniques**: Quantization, pruning, distillation
 - **Hardware acceleration**: Custom kernels, GPU utilization
 - **MLOps pipelines**: Monitoring, deployment, A/B testing
 
-### **🚀 Phase 4: Advanced Specialization (TinyGPT)**
-- **Language model systems**: Transformer scaling challenges
-- **Memory efficiency**: KV-cache optimization, attention patterns
-- **Production deployment**: Inference serving, real-time constraints
+### **🚀 Phase 4: Language Models (Module 16 - TinyGPT)**
+- **Framework generalization**: Extend vision framework to language models
+- **Transformer architecture**: Multi-head attention, autoregressive generation
+- **Component reuse**: 95% framework reuse from vision to language
+- **ML Systems mastery**: Understand unified mathematical foundations
 
 ### **💡 Systems Thinking Through Implementation**
 **Every module teaches systems principles through building:**
@@ -94,7 +95,7 @@ Algorithm-focused Course:       Systems-focused Course (TinyTorch):
 * **Train CNNs on CIFAR-10** — Achieve 75%+ accuracy with your own code
 * **Deploy production models** — Complete MLOps pipeline with monitoring
 * **Handle large-scale data** — Efficient DataLoader with memory management
-* **Extend to language models** — Build TinyGPT using your framework foundation
+* **Build language models** — Complete TinyGPT with character-level generation
 
 ---
 
@@ -184,39 +185,39 @@ tito nbdev build                          # Update package
 
 ---
 
-## 🚀 **Your Learning Journey: TinyTorch → TinyGPT**
+## 🚀 **Your Learning Journey: Vision to Language**
 
-**TinyTorch teaches you ML systems. TinyGPT lets you apply that knowledge to language models.**
+**TinyTorch demonstrates that the same mathematical foundations power both computer vision AND language models.**
 
-### **Phase 1: Build ML Systems Foundation (TinyTorch)**
-Complete the 17-module TinyTorch course to understand:
+### **Phase 1: Build ML Systems Foundation (Modules 1-15)**
+Complete the core TinyTorch framework to understand:
 - Memory management and compute optimization
 - Training systems and production deployment  
 - Performance profiling and bottleneck identification
 - Hardware utilization and scaling patterns
 
-### **Phase 2: Apply to Language Models (TinyGPT)**
-Use your TinyTorch foundation to build:
-- **Character-level GPT**: Reuse 95% of your framework components
-- **Attention mechanisms**: Understand O(N²) memory scaling in practice
-- **Text generation**: Autoregressive sampling and inference optimization
-- **Production serving**: Real-time language model deployment
+### **Phase 2: Extend to Language Models (Module 16 - TinyGPT)**
+Discover framework generalization by building:
+- **Character-level GPT**: 95% component reuse from your vision framework
+- **Multi-head attention**: The key architectural difference for sequences
+- **Autoregressive generation**: Coherent text production with your training system
+- **Framework thinking**: Understand why successful ML frameworks support multiple modalities
 
-### **Why This Progression Works**
+### **The Power of Unified Foundations**
 ```python
-# TinyTorch gives you the systems foundation:
-from tinytorch.core.tensor import Tensor          # Memory-efficient operations
-from tinytorch.core.layers import Dense           # Matrix multiplication patterns  
-from tinytorch.core.training import Trainer      # Training loop infrastructure
-from tinytorch.core.optimizers import Adam       # Memory-aware optimization
+# Your TinyTorch foundation works unchanged:
+from tinytorch.core.tensor import Tensor          # Same tensors for vision + language
+from tinytorch.core.layers import Dense           # Same dense layers for both domains
+from tinytorch.core.training import Trainer       # Same training infrastructure
+from tinytorch.core.optimizers import Adam        # Same optimization algorithms
 
-# TinyGPT focuses on language-specific systems:
-from tinygpt.core.attention import MultiHeadAttention  # Sequence modeling
-from tinygpt.core.generation import AutoregressiveSampler  # Text generation
-from tinygpt.core.tokenization import CharTokenizer    # Text preprocessing
+# TinyGPT adds minimal language-specific components:
+from tinytorch.tinygpt import CharTokenizer       # Text preprocessing
+from tinytorch.tinygpt import MultiHeadAttention  # Sequence attention
+from tinytorch.tinygpt import TinyGPT            # Complete language model
 ```
 
-**Result**: You understand both general ML systems AND language model systems specifically.
+**Result**: You understand that vision and language models are variations of the same mathematical framework.
 
 ---
 
@@ -224,8 +225,8 @@ from tinygpt.core.tokenization import CharTokenizer    # Text preprocessing
 
 ```
 TinyTorch/
-├── modules/source/           # 17 educational modules
-│   ├── 00_introduction/     # 🎯 NEW: Visual system overview & architecture
+├── modules/source/           # 16 educational modules
+│   ├── 00_introduction/     # 🎯 Visual system overview & architecture
 │   │   ├── module.yaml      # Module metadata  
 │   │   ├── README.md        # Getting started guide
 │   │   └── introduction_dev.py  # Interactive visualizations & dependency analysis
@@ -250,7 +251,7 @@ TinyTorch/
 │   ├── 13_kernels/          # High-performance operations
 │   ├── 14_benchmarking/     # Performance analysis and profiling
 │   ├── 15_mlops/            # Production monitoring and deployment
-│   └── 16_capstone/         # Systems engineering capstone project
+│   └── 16_tinygpt/          # 🔥 NEW: Complete language model implementation
 ├── tinytorch/               # Your built framework package
 │   ├── core/                # Core implementations (exported from modules)
 │   │   ├── tensor.py        # Generated from 02_tensor
@@ -281,7 +282,8 @@ TinyTorch/
 **Module Progression (Start with Module 0!):**
 1. **🎯 Module 0: Introduction** - Begin here! Visual system overview and architecture exploration
 2. **Module 1: Setup** - Configure your development environment and workflow
-3. **Modules 2-16** - Build your ML framework progressively, each module adding new capabilities
+3. **Modules 2-15** - Build your computer vision ML framework progressively
+4. **🔥 Module 16: TinyGPT** - Extend your framework to language models!
 
 **Development Workflow:**
 1. **Develop in `modules/source/`** - Each module has a `*_dev.py` file where you implement components
@@ -297,11 +299,11 @@ TinyTorch/
 
 ---
 
-## 📚 Complete Course: 17 Modules (Start with Module 0!)
+## 📚 Complete Course: 16 Modules (Start with Module 0!)
 
-**Module Progression:** Start with Module 0 (Introduction) → Progress through Modules 1-16 → Complete your ML framework!
+**Module Progression:** Start with Module 0 (Introduction) → Progress through Modules 1-15 → Extend to language models with Module 16!
 
-**Difficulty Levels:** 📊 Overview → ⭐ Beginner → ⭐⭐ Intermediate → ⭐⭐⭐ Advanced → ⭐⭐⭐⭐ Expert → ⭐⭐⭐⭐⭐🥷 Capstone
+**Difficulty Levels:** 📊 Overview → ⭐ Beginner → ⭐⭐ Intermediate → ⭐⭐⭐ Advanced → ⭐⭐⭐⭐ Expert → 🔥 Language Models
 
 ### **📊 Module 0: System Overview (START HERE!)**
 * **🎯 00_introduction**: Interactive system architecture, dependency visualization, and learning roadmap
@@ -330,16 +332,16 @@ TinyTorch/
 * **14_benchmarking**: Profiling, testing, and performance analysis
 * **15_mlops**: Monitoring, deployment, and production systems
 
-### **🎓 Capstone Project** (Module 16)
-* **16_capstone**: Advanced framework engineering specialization tracks
+### **🔥 Language Models** (Module 16)
+* **16_tinygpt**: Complete GPT-style transformer with character-level generation
 
-**Status**: All 17 modules complete with inline tests and educational content
+**Status**: All 16 modules complete with inline tests and educational content
 
 ---
 
 ## 🔗 **Complete System Integration**
 
-**This isn't 17 isolated assignments.** Every component you build integrates into one cohesive, fully functional ML framework:
+**This isn't 16 isolated assignments.** Every component you build integrates into one cohesive, fully functional ML framework that powers both vision AND language:
 
 **🎯 NEW: Explore the full system architecture visually in Module 00 before diving into implementation!**
 
@@ -366,7 +368,7 @@ flowchart TD
     K --> N[14_benchmarking<br/>Performance Analysis]
     K --> O[15_mlops<br/>Production Monitoring]
     
-    L --> P[16_capstone<br/>Framework Engineering]
+    L --> P[16_tinygpt<br/>🔥 Language Models]
     M --> P
     N --> P
     O --> P
@@ -377,26 +379,26 @@ flowchart TD
 **Foundation (01-05):** Build your core data structures and basic operations  
 **Deep Learning (06-10):** Add neural networks and automatic differentiation  
 **Production (11-15):** Scale to real applications with training and production systems  
-**Mastery (16):** Optimize and extend your complete framework
+**Language Models (16):** Extend your vision framework to natural language processing
 
 **The Result:** A complete, working ML framework built entirely by you, capable of:
 - ✅ Training CNNs on CIFAR-10 with 90%+ accuracy
 - ✅ Implementing modern optimizers (Adam, learning rate scheduling)  
 - ✅ Deploying compressed models with 75% size reduction
 - ✅ Production monitoring with comprehensive metrics
+- 🔥 **Generating coherent text with TinyGPT language models**
 
-### **🚀 Capstone: Optimize Your Framework**
+### **🔥 TinyGPT: Framework Generalization**
 
-After completing the 15 core modules, you have a **complete ML framework**. The final challenge: make it better through systems engineering.
+After completing the 15 core modules, you have a **complete computer vision framework**. Module 16 demonstrates the ultimate ML systems insight: the same foundation powers language models!
 
-**Choose Your Focus:**
-- ⚡ **Performance Engineering**: GPU kernels, vectorization, memory-efficient operations
-- 🧠 **Algorithm Extensions**: Transformer layers, BatchNorm, Dropout, advanced optimizers  
-- 🔧 **Systems Optimization**: Multi-GPU training, distributed computing, memory profiling
-- 📊 **Benchmarking Analysis**: Compare your framework to PyTorch, identify bottlenecks
-- 🛠️ **Developer Tools**: Better debugging, visualization, error messages, testing
+**What You'll Discover:**
+- 🧠 **Component Reuse**: 95% of your vision framework works unchanged for language
+- 🔄 **Mathematical Unity**: Dense layers, activations, and optimizers are universal
+- ⚡ **Strategic Extensions**: Only attention mechanisms are truly language-specific
+- 🎯 **Framework Thinking**: Understand why successful ML frameworks support multiple modalities
 
-**The Constraint:** No `import torch` allowed. Build on **your TinyTorch implementation**. This demonstrates true mastery of ML systems engineering and optimization.
+**The Achievement:** Build a complete GPT-style language model using **your TinyTorch implementation**. This demonstrates true understanding of unified ML foundations.
 
 ---
 

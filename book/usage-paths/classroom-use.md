@@ -7,14 +7,14 @@
 ## 🎯 **Complete Course Infrastructure**
 
 TinyTorch provides a **turn-key ML systems course** with:
-- **17 progressive modules** (00-16) building from foundations to MLOps
+- **16 progressive modules** (00-15) building from foundations to language models
 - **Full NBGrader integration** for automated grading
 - **Comprehensive tito CLI** for professional development workflow
 - **Real-world datasets** and production practices
 - **Complete instructor documentation** and setup guides
 
 **Course Duration:** 14-16 weeks (flexible pacing)  
-**Student Outcome:** Complete ML framework built from scratch
+**Student Outcome:** Complete ML framework supporting vision AND language models
 
 ```{admonition} 📚 Complete Instructor Documentation
 :class: tip
@@ -32,10 +32,10 @@ TinyTorch provides a **turn-key ML systems course** with:
 ## 🎓 **Why Choose TinyTorch for Teaching?**
 
 ### **📊 Comprehensive Curriculum**
-- **17 modules** progressing from basics to production systems
+- **16 modules** progressing from basics to language models
 - **200+ automated tests** ensuring correctness
 - **Professional workflow** using industry-standard tools
-- **Real datasets** (CIFAR-10) for practical experience
+- **Real datasets** (CIFAR-10, text generation) for practical experience
 
 ### **🚀 Instructor-Friendly Features**
 - **NBGrader Integration**: Automated grading with `tito nbgrader`
@@ -71,12 +71,14 @@ TinyTorch provides a **turn-key ML systems course** with:
 - **10: Optimizers** - SGD, Adam, and scheduling
 - **11: Training** - Complete training loops
 
-### **Production (Modules 12-16)**
+### **Production (Modules 12-15)**
 - **12: Compression** - Model optimization
 - **13: Kernels** - Hardware acceleration
 - **14: Benchmarking** - Performance evaluation
 - **15: MLOps** - Production deployment
-- **16: Capstone** - Final integration project
+
+### **🔥 Language Models (Module 16)**
+- **16: TinyGPT** - Framework generalization to language models
 
 ---
 
