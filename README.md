@@ -47,7 +47,9 @@ Go from "How does this work?" 🤷 to "I implemented every line!" 💪
 
 ### **🚀 Real Production Skills**
 - **Professional workflow**: Development with `tito` CLI, automated testing
-- **Real datasets**: Train on CIFAR-10, not toy data
+- **Real datasets**: Download and train on CIFAR-10 with built-in support
+- **Model checkpointing**: Save best models during training
+- **Evaluation tools**: Confusion matrices, accuracy tracking, training curves
 - **Production patterns**: MLOps, monitoring, optimization from day one
 
 ### **🎯 Progressive Mastery** 
@@ -513,6 +515,94 @@ tito export 01_setup && tito test 01_setup
 ---
 
 **🔥 Ready to build your ML framework? Start with TinyTorch and understand every layer. _Start Small. Go Deep._**
+
+---
+
+## 🎯 **North Star Achievement: Train Real CNNs on CIFAR-10**
+
+### **Your Semester Goal: 75%+ Accuracy on CIFAR-10**
+
+**What You'll Build:** A complete neural network training pipeline using 100% your own code - no PyTorch, no TensorFlow, just TinyTorch!
+
+```python
+# This is what you'll be able to do by semester end:
+from tinytorch.core.tensor import Tensor
+from tinytorch.core.networks import Sequential
+from tinytorch.core.layers import Dense
+from tinytorch.core.spatial import Conv2D  
+from tinytorch.core.activations import ReLU
+from tinytorch.core.dataloader import CIFAR10Dataset, DataLoader
+from tinytorch.core.training import Trainer, CrossEntropyLoss, Accuracy
+from tinytorch.core.optimizers import Adam
+
+# Download real CIFAR-10 data (built-in support!)
+dataset = CIFAR10Dataset(download=True, flatten=False)
+train_loader = DataLoader(dataset.train_data, dataset.train_labels, batch_size=32)
+test_loader = DataLoader(dataset.test_data, dataset.test_labels, batch_size=32)
+
+# Build your CNN architecture
+model = Sequential([
+    Conv2D(3, 32, kernel_size=3),
+    ReLU(),
+    Conv2D(32, 64, kernel_size=3), 
+    ReLU(),
+    Dense(64 * 28 * 28, 128),
+    ReLU(),
+    Dense(128, 10)
+])
+
+# Train with automatic checkpointing
+trainer = Trainer(model, CrossEntropyLoss(), Adam(lr=0.001), [Accuracy()])
+history = trainer.fit(
+    train_loader,
+    val_dataloader=test_loader,
+    epochs=30,
+    save_best=True,                    # Automatically saves best model
+    checkpoint_path='best_model.pkl'
+)
+
+# Evaluate your trained model
+from tinytorch.core.training import evaluate_model, plot_training_history
+results = evaluate_model(model, test_loader)
+print(f"🎉 Test Accuracy: {results['accuracy']:.2%}")  # Target: 75%+
+plot_training_history(history)  # Visualize training curves
+```
+
+### **🚀 Real-World Capabilities You'll Implement**
+
+**Data Management:**
+- ✅ **CIFAR-10 Download**: Built-in `download_cifar10()` function
+- ✅ **Efficient Loading**: `CIFAR10Dataset` class with train/test splits
+- ✅ **Batch Processing**: DataLoader with shuffling and batching
+
+**Training Infrastructure:**
+- ✅ **Model Checkpointing**: Save best models during training
+- ✅ **Early Stopping**: Stop when validation loss stops improving
+- ✅ **Progress Tracking**: Real-time metrics and loss visualization
+
+**Evaluation Tools:**
+- ✅ **Confusion Matrices**: `compute_confusion_matrix()` for error analysis
+- ✅ **Performance Metrics**: Accuracy, precision, recall computation
+- ✅ **Visualization**: `plot_training_history()` for learning curves
+
+### **📈 Progressive Milestones**
+
+1. **Module 8 (DataLoader)**: Load and visualize CIFAR-10 images
+2. **Module 11 (Training)**: Train simple models with checkpointing
+3. **Module 6 (Spatial)**: Add CNN layers for image processing
+4. **Module 10 (Optimizers)**: Use Adam for faster convergence
+5. **Final Goal**: Achieve 75%+ accuracy on CIFAR-10 test set!
+
+### **🎓 What This Means For You**
+
+By achieving this north star goal, you will have:
+- **Built a complete ML framework** capable of training real neural networks
+- **Implemented industry-standard features** like checkpointing and evaluation
+- **Trained on real data** not toy examples - actual CIFAR-10 images
+- **Achieved meaningful accuracy** competitive with early PyTorch implementations
+- **Deep understanding** of every component because you built it all
+
+This isn't just an academic exercise - you're building production-capable ML infrastructure from scratch!
 
 ---
 
