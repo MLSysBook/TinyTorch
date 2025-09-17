@@ -1203,6 +1203,17 @@ def test_convolution_profiler():
 
 # Test function defined (called in main block)
 
+if __name__ == "__main__":
+    # Run all tests
+    test_unit_convolution_operation()
+    test_unit_conv2d_layer()
+    test_unit_flatten_function()
+    test_module_conv2d_tensor_compatibility()
+    test_convolution_profiler()
+    
+    print("All tests passed!")
+    print("spatial_dev module complete!")
+
 # %% [markdown]
 """
 ## 🤔 ML Systems Thinking: Interactive Questions
@@ -1404,14 +1415,3 @@ Congratulations! You have successfully implemented the core components of convol
 
 **Ready for the next challenge?** Let us build data loaders to handle real datasets efficiently!
 """
-
-if __name__ == "__main__":
-    # Run all tests
-    test_unit_convolution_operation()
-    test_unit_conv2d_layer()
-    test_unit_flatten_function()
-    test_module_conv2d_tensor_compatibility()
-    test_convolution_profiler()
-    
-    print("All tests passed!")
-    print("spatial_dev module complete!")

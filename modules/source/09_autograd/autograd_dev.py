@@ -1351,6 +1351,21 @@ def test_autograd_systems_profiler():
 
 # Test will run in main block
 
+if __name__ == "__main__":
+    print("\n🧪 Running Autograd Module Tests...")
+    
+    # Run all unit tests
+    test_unit_variable_class()
+    test_unit_add_operation()
+    test_unit_multiply_operation()
+    test_unit_subtract_operation()
+    test_unit_chain_rule()
+    test_module_neural_network_training()
+    test_autograd_systems_profiler()
+    
+    print("\n✅ All Autograd Module Tests Completed!") 
+    print("Autograd module complete!")
+
 # %% [markdown]
 """
 ## 🤔 ML Systems Thinking: Interactive Questions
@@ -1543,22 +1558,3 @@ Your implementations mirror production systems:
 
 # %% [markdown]
 """
-## Main Execution Block
-
-All tests run when module is executed directly.
-"""
-
-# %%
-if __name__ == "__main__":
-    print("\n🧪 Running Autograd Module Tests...")
-    
-    # Run all unit tests
-    test_unit_variable_class()
-    test_unit_add_operation()
-    test_unit_multiply_operation()
-    test_unit_subtract_operation()
-    test_unit_chain_rule()
-    test_module_neural_network_training()
-    test_autograd_systems_profiler()
-    
-    print("\n✅ All Autograd Module Tests Completed!") 
