@@ -6,6 +6,9 @@ Foundation → Architecture → Training → Inference → Serving
 """
 
 import argparse
+import subprocess
+import sys
+import importlib.util
 from pathlib import Path
 from typing import Dict, List, Tuple, Optional
 from rich.console import Console
@@ -16,6 +19,7 @@ from rich.tree import Tree
 from rich.text import Text
 from rich.layout import Layout
 from rich.columns import Columns
+from rich.status import Status
 
 from .base import BaseCommand
 from ..core.config import CLIConfig
@@ -25,37 +29,103 @@ from ..core.console import get_console, print_error, print_success
 class CheckpointSystem:
     """Core checkpoint tracking system."""
     
-    # Define the checkpoint structure
+    # Define the 16-checkpoint structure aligned with actual test files
     CHECKPOINTS = {
-        "foundation": {
-            "name": "Foundation",
-            "description": "Core ML primitives and environment setup",
-            "modules": ["01_setup", "02_tensor", "03_activations"],
-            "capability": "Can build mathematical operations and ML primitives"
+        "00": {
+            "name": "Environment",
+            "description": "Development environment setup and configuration",
+            "test_file": "checkpoint_00_environment.py",
+            "capability": "Can I configure my TinyTorch development environment?"
         },
-        "architecture": {
-            "name": "Neural Architecture",
-            "description": "Building complete neural network architectures", 
-            "modules": ["04_layers", "05_dense", "06_spatial", "07_attention"],
-            "capability": "Can design and construct any neural network architecture"
+        "01": {
+            "name": "Foundation", 
+            "description": "Basic tensor operations and ML building blocks",
+            "test_file": "checkpoint_01_foundation.py",
+            "capability": "Can I create and manipulate the building blocks of ML?"
         },
-        "training": {
+        "02": {
+            "name": "Intelligence",
+            "description": "Nonlinear activation functions", 
+            "test_file": "checkpoint_02_intelligence.py",
+            "capability": "Can I add nonlinearity - the key to neural network intelligence?"
+        },
+        "03": {
+            "name": "Components",
+            "description": "Fundamental neural network building blocks",
+            "test_file": "checkpoint_03_components.py", 
+            "capability": "Can I build the fundamental building blocks of neural networks?"
+        },
+        "04": {
+            "name": "Networks",
+            "description": "Complete multi-layer neural networks",
+            "test_file": "checkpoint_04_networks.py",
+            "capability": "Can I build complete multi-layer neural networks?"
+        },
+        "05": {
+            "name": "Learning",
+            "description": "Spatial data processing with convolutional operations", 
+            "test_file": "checkpoint_05_learning.py",
+            "capability": "Can I process spatial data like images with convolutional operations?"
+        },
+        "06": {
+            "name": "Attention",
+            "description": "Attention mechanisms for sequence understanding",
+            "test_file": "checkpoint_06_attention.py",
+            "capability": "Can I build attention mechanisms for sequence understanding?"
+        },
+        "07": {
+            "name": "Stability",
+            "description": "Training stabilization with normalization",
+            "test_file": "checkpoint_07_stability.py",
+            "capability": "Can I stabilize training with normalization techniques?"
+        },
+        "08": {
+            "name": "Differentiation",
+            "description": "Automatic gradient computation for learning",
+            "test_file": "checkpoint_08_differentiation.py",
+            "capability": "Can I automatically compute gradients for learning?"
+        },
+        "09": {
+            "name": "Optimization",
+            "description": "Sophisticated optimization algorithms",
+            "test_file": "checkpoint_09_optimization.py",
+            "capability": "Can I optimize neural networks with sophisticated algorithms?"
+        },
+        "10": {
             "name": "Training",
-            "description": "Complete model training pipeline",
-            "modules": ["08_dataloader", "09_autograd", "10_optimizers", "11_training"],
-            "capability": "Can train neural networks on real datasets"
+            "description": "Complete training loops for end-to-end learning",
+            "test_file": "checkpoint_10_training.py",
+            "capability": "Can I build complete training loops for end-to-end learning?"
         },
-        "inference": {
-            "name": "Inference Deployment",
-            "description": "Optimized model deployment and serving",
-            "modules": ["12_compression", "13_kernels", "14_benchmarking", "15_mlops"],
-            "capability": "Can deploy optimized models for production inference"
+        "11": {
+            "name": "Regularization",
+            "description": "Overfitting prevention and robust model building",
+            "test_file": "checkpoint_11_regularization.py",
+            "capability": "Can I prevent overfitting and build robust models?"
         },
-        "serving": {
-            "name": "Serving",
-            "description": "Complete ML system integration",
-            "modules": ["16_capstone"],
-            "capability": "Have built a complete, production-ready ML framework"
+        "12": {
+            "name": "Kernels",
+            "description": "High-performance computational kernels",
+            "test_file": "checkpoint_12_kernels.py",
+            "capability": "Can I implement high-performance computational kernels?"
+        },
+        "13": {
+            "name": "Benchmarking",
+            "description": "Performance analysis and bottleneck identification",
+            "test_file": "checkpoint_13_benchmarking.py",
+            "capability": "Can I analyze performance and identify bottlenecks in ML systems?"
+        },
+        "14": {
+            "name": "Deployment",
+            "description": "Production deployment and monitoring",
+            "test_file": "checkpoint_14_deployment.py", 
+            "capability": "Can I deploy and monitor ML systems in production?"
+        },
+        "15": {
+            "name": "Capstone",
+            "description": "Complete end-to-end ML systems from scratch",
+            "test_file": "checkpoint_15_capstone.py",
+            "capability": "Can I build complete end-to-end ML systems from scratch?"
         }
     }
     
@@ -64,89 +134,105 @@ class CheckpointSystem:
         self.config = config
         self.console = get_console()
         self.modules_dir = config.project_root / "modules" / "source"
+        self.checkpoints_dir = config.project_root / "tests" / "checkpoints"
     
-    def get_module_status(self, module_name: str) -> Dict[str, bool]:
-        """Get the completion status of a module."""
-        module_dir = self.modules_dir / module_name
+    def get_checkpoint_test_status(self, checkpoint_id: str) -> Dict[str, bool]:
+        """Get the status of a checkpoint test file."""
+        if checkpoint_id not in self.CHECKPOINTS:
+            return {"exists": False, "tested": False, "passed": False}
         
-        # Check if module directory exists
-        if not module_dir.exists():
-            return {"exists": False, "has_dev": False, "has_tests": False}
-        
-        # Check for dev file
-        dev_files = list(module_dir.glob("*_dev.py"))
-        has_dev = len(dev_files) > 0
-        
-        # Check for test files or test indicators
-        test_files = list(module_dir.glob("test_*.py")) + list(module_dir.glob("*_test.py"))
-        has_tests = len(test_files) > 0
+        test_file = self.CHECKPOINTS[checkpoint_id]["test_file"]
+        test_path = self.checkpoints_dir / test_file
         
         return {
-            "exists": True,
-            "has_dev": has_dev,
-            "has_tests": has_tests,
-            "complete": has_dev  # For now, consider complete if dev file exists
+            "exists": test_path.exists(),
+            "tested": False,  # Will be set when we run tests
+            "passed": False   # Will be set based on test results
         }
     
-    def get_checkpoint_progress(self, checkpoint_key: str) -> Dict:
-        """Get progress information for a checkpoint."""
-        checkpoint = self.CHECKPOINTS[checkpoint_key]
-        modules_status = []
-        completed_count = 0
-        
-        for module in checkpoint["modules"]:
-            status = self.get_module_status(module)
-            modules_status.append({
-                "name": module,
-                "status": status,
-                "complete": status.get("complete", False)
-            })
-            if status.get("complete", False):
-                completed_count += 1
-        
-        total_modules = len(checkpoint["modules"])
-        progress_percent = (completed_count / total_modules) * 100 if total_modules > 0 else 0
+    def get_checkpoint_status(self, checkpoint_id: str) -> Dict:
+        """Get status information for a checkpoint."""
+        checkpoint = self.CHECKPOINTS[checkpoint_id]
+        test_status = self.get_checkpoint_test_status(checkpoint_id)
         
         return {
             "checkpoint": checkpoint,
-            "modules": modules_status,
-            "completed": completed_count,
-            "total": total_modules,
-            "progress": progress_percent,
-            "is_complete": completed_count == total_modules,
-            "is_current": progress_percent > 0 and progress_percent < 100
+            "test_status": test_status,
+            "is_available": test_status["exists"],
+            "is_complete": test_status.get("passed", False),
+            "checkpoint_id": checkpoint_id
         }
     
     def get_overall_progress(self) -> Dict:
         """Get overall progress across all checkpoints."""
-        checkpoints_progress = {}
+        checkpoints_status = {}
         current_checkpoint = None
-        total_modules_complete = 0
-        total_modules = 0
+        total_complete = 0
+        total_checkpoints = len(self.CHECKPOINTS)
         
-        for key in self.CHECKPOINTS.keys():
-            progress = self.get_checkpoint_progress(key)
-            checkpoints_progress[key] = progress
-            total_modules_complete += progress["completed"]
-            total_modules += progress["total"]
+        for checkpoint_id in self.CHECKPOINTS.keys():
+            status = self.get_checkpoint_status(checkpoint_id)
+            checkpoints_status[checkpoint_id] = status
             
-            # Determine current checkpoint (first incomplete one with progress)
-            if current_checkpoint is None and progress["is_current"]:
-                current_checkpoint = key
-            elif current_checkpoint is None and progress["progress"] == 0:
-                current_checkpoint = key
-                break
+            if status["is_complete"]:
+                total_complete += 1
+            elif current_checkpoint is None and status["is_available"]:
+                # First available but incomplete checkpoint is current
+                current_checkpoint = checkpoint_id
+        
+        # If all are complete, set current to last checkpoint
+        if current_checkpoint is None and total_complete == total_checkpoints:
+            current_checkpoint = list(self.CHECKPOINTS.keys())[-1]
+        # If none are complete, start with first
+        elif current_checkpoint is None:
+            current_checkpoint = "00"
         
         # Calculate overall percentage
-        overall_percent = (total_modules_complete / total_modules * 100) if total_modules > 0 else 0
+        overall_percent = (total_complete / total_checkpoints * 100) if total_checkpoints > 0 else 0
         
         return {
-            "checkpoints": checkpoints_progress,
+            "checkpoints": checkpoints_status,
             "current": current_checkpoint,
             "overall_progress": overall_percent,
-            "total_modules_complete": total_modules_complete,
-            "total_modules": total_modules
+            "total_complete": total_complete,
+            "total_checkpoints": total_checkpoints
         }
+    
+    def run_checkpoint_test(self, checkpoint_id: str) -> Dict:
+        """Run a specific checkpoint test and return results."""
+        if checkpoint_id not in self.CHECKPOINTS:
+            return {"success": False, "error": f"Unknown checkpoint: {checkpoint_id}"}
+        
+        checkpoint = self.CHECKPOINTS[checkpoint_id]
+        test_file = checkpoint["test_file"]
+        test_path = self.checkpoints_dir / test_file
+        
+        if not test_path.exists():
+            return {"success": False, "error": f"Test file not found: {test_file}"}
+        
+        try:
+            # Run the test using subprocess to capture output
+            result = subprocess.run(
+                [sys.executable, str(test_path)],
+                capture_output=True,
+                text=True,
+                cwd=self.config.project_root,
+                timeout=30  # 30 second timeout
+            )
+            
+            return {
+                "success": result.returncode == 0,
+                "returncode": result.returncode,
+                "stdout": result.stdout,
+                "stderr": result.stderr,
+                "checkpoint_name": checkpoint["name"],
+                "capability": checkpoint["capability"]
+            }
+            
+        except subprocess.TimeoutExpired:
+            return {"success": False, "error": "Test timed out after 30 seconds"}
+        except Exception as e:
+            return {"success": False, "error": f"Test execution failed: {str(e)}"}
 
 
 class CheckpointCommand(BaseCommand):
@@ -191,9 +277,24 @@ class CheckpointCommand(BaseCommand):
             help='Test checkpoint capabilities'
         )
         test_parser.add_argument(
-            'checkpoint_name',
+            'checkpoint_id',
             nargs='?',
-            help='Specific checkpoint to test (current checkpoint if not specified)'
+            help='Checkpoint ID to test (00-15, current checkpoint if not specified)'
+        )
+        
+        # Run command (new)
+        run_parser = subparsers.add_parser(
+            'run',
+            help='Run specific checkpoint tests with progress tracking'
+        )
+        run_parser.add_argument(
+            'checkpoint_id',
+            help='Checkpoint ID to run (00-15)'
+        )
+        run_parser.add_argument(
+            '--verbose', '-v',
+            action='store_true',
+            help='Show detailed test output'
         )
         
         # Unlock command
@@ -215,6 +316,8 @@ class CheckpointCommand(BaseCommand):
             return self._show_timeline(checkpoint_system, args)
         elif args.checkpoint_command == 'test':
             return self._test_checkpoint(checkpoint_system, args)
+        elif args.checkpoint_command == 'run':
+            return self._run_checkpoint(checkpoint_system, args)
         elif args.checkpoint_command == 'unlock':
             return self._unlock_checkpoint(checkpoint_system, args)
         else:
@@ -226,21 +329,24 @@ class CheckpointCommand(BaseCommand):
         console = get_console()
         console.print(Panel(
             "[bold cyan]TinyTorch Checkpoint System[/bold cyan]\n\n"
-            "[bold]Track your progress through ML systems engineering:[/bold]\n"
-            "  🎯 Foundation      → Core ML primitives and setup\n"
-            "  🎯 Architecture    → Neural network building\n"
-            "  🎯 Training        → Model training pipeline\n"
-            "  🎯 Inference       → Deployment and optimization\n"
-            "  🎯 Serving         → Complete system integration\n\n"
+            "[bold]Track your progress through 16 capability checkpoints:[/bold]\n"
+            "  00: Environment    → Development setup\n"
+            "  01: Foundation     → Tensor operations\n"
+            "  02: Intelligence   → Activation functions\n"
+            "  03: Components     → Neural building blocks\n"
+            "  04: Networks       → Multi-layer networks\n"
+            "  05-15: Learning → Attention → Training → Deployment\n\n"
             "[bold]Available Commands:[/bold]\n"
             "  [green]status[/green]     - Show current progress and capabilities\n"
             "  [green]timeline[/green]   - Visual progress timeline\n"
             "  [green]test[/green]       - Test checkpoint capabilities\n"
+            "  [green]run[/green]        - Run specific checkpoint with progress\n"
             "  [green]unlock[/green]     - Attempt to unlock next checkpoint\n\n"
             "[bold]Examples:[/bold]\n"
             "  [dim]tito checkpoint status --detailed[/dim]\n"
             "  [dim]tito checkpoint timeline --horizontal[/dim]\n"
-            "  [dim]tito checkpoint test foundation[/dim]",
+            "  [dim]tito checkpoint test 01[/dim]\n"
+            "  [dim]tito checkpoint run 00 --verbose[/dim]",
             title="Checkpoint System",
             border_style="bright_blue"
         ))
@@ -259,58 +365,47 @@ class CheckpointCommand(BaseCommand):
         
         # Overall progress
         overall_percent = progress_data["overall_progress"]
-        console.print(f"\n[bold]Overall Progress:[/bold] {overall_percent:.0f}% ({progress_data['total_modules_complete']}/{progress_data['total_modules']} modules)")
+        console.print(f"\n[bold]Overall Progress:[/bold] {overall_percent:.0f}% ({progress_data['total_complete']}/{progress_data['total_checkpoints']} checkpoints)")
         
         # Current status summary
         current = progress_data["current"]
         if current:
-            current_progress = progress_data["checkpoints"][current]
-            current_name = current_progress["checkpoint"]["name"]
-            current_percent = current_progress["progress"]
+            current_status = progress_data["checkpoints"][current]
+            current_name = current_status["checkpoint"]["name"]
             
-            console.print(f"[bold]Current Checkpoint:[/bold] {current_name}")
-            console.print(f"[bold]Checkpoint Progress:[/bold] {current_percent:.0f}% complete")
+            console.print(f"[bold]Current Checkpoint:[/bold] {current:0>2} - {current_name}")
             
-            if current_progress["is_complete"]:
+            if current_status["is_complete"]:
                 console.print(f"[bold green]✅ {current_name} checkpoint achieved![/bold green]")
-                console.print(f"[dim]Capability unlocked: {current_progress['checkpoint']['capability']}[/dim]")
+                console.print(f"[dim]Capability unlocked: {current_status['checkpoint']['capability']}[/dim]")
             else:
-                next_modules = [m for m in current_progress["modules"] if not m["complete"]]
-                if next_modules:
-                    console.print(f"[bold]Next Module:[/bold] {next_modules[0]['name']}")
+                console.print(f"[bold yellow]🎯 Ready to test {current_name} capabilities[/bold yellow]")
+                console.print(f"[dim]Goal: {current_status['checkpoint']['capability']}[/dim]")
         
         console.print()
         
-        # Checkpoint progress
-        for key, checkpoint_data in progress_data["checkpoints"].items():
+        # Checkpoint progress  
+        for checkpoint_id, checkpoint_data in progress_data["checkpoints"].items():
             checkpoint = checkpoint_data["checkpoint"]
-            progress = checkpoint_data["progress"]
             
             # Checkpoint header
             if checkpoint_data["is_complete"]:
                 status_icon = "✅"
                 status_color = "green"
-            elif checkpoint_data["is_current"]:
-                status_icon = "🔄"
+            elif checkpoint_id == current:
+                status_icon = "🎯"
                 status_color = "yellow"
             else:
                 status_icon = "⏳"
                 status_color = "dim"
             
-            console.print(f"[bold]{status_icon} {checkpoint['name']}[/bold] [{status_color}]{progress:.0f}%[/{status_color}]")
+            console.print(f"[bold]{status_icon} {checkpoint_id:0>2}: {checkpoint['name']}[/bold] [{status_color}]{'COMPLETE' if checkpoint_data['is_complete'] else 'PENDING'}[/{status_color}]")
             
             if args.detailed:
-                # Show module-level progress
-                for module_info in checkpoint_data["modules"]:
-                    module_status = "✅" if module_info["complete"] else "⏳"
-                    module_name = module_info["name"].replace("_", " ").title()
-                    console.print(f"   {module_status} {module_name}")
-            else:
-                # Show ticker-style progress
-                tickers = ""
-                for module_info in checkpoint_data["modules"]:
-                    tickers += "✅ " if module_info["complete"] else "⏳ "
-                console.print(f"   {tickers.strip()}")
+                # Show test file and availability
+                test_status = checkpoint_data["test_status"]
+                test_available = "✅" if test_status["exists"] else "❌"
+                console.print(f"   {test_available} Test: {checkpoint['test_file']}")
             
             console.print(f"   [dim]{checkpoint['capability']}[/dim]\n")
         
@@ -325,108 +420,72 @@ class CheckpointCommand(BaseCommand):
         
         if args.horizontal:
             # Enhanced horizontal timeline with progress line
-            # First, show the overall progress bar
             overall_percent = progress_data["overall_progress"]
-            total_modules = progress_data["total_modules"]
-            complete_modules = progress_data["total_modules_complete"]
+            total_checkpoints = progress_data["total_checkpoints"]
+            complete_checkpoints = progress_data["total_complete"]
             
             # Create a visual progress bar
             filled = int(overall_percent / 2)  # 50 characters total width
             bar = "█" * filled + "░" * (50 - filled)
             console.print(f"[bold]Overall:[/bold] [{bar}] {overall_percent:.0f}%")
-            console.print(f"[dim]{complete_modules}/{total_modules} modules complete[/dim]\n")
+            console.print(f"[dim]{complete_checkpoints}/{total_checkpoints} checkpoints complete[/dim]\n")
             
-            # Show checkpoint progression with connecting lines
+            # Show checkpoint progression - group in rows of 8
             checkpoints_list = list(progress_data["checkpoints"].items())
             
-            # Build the checkpoint line
-            checkpoint_line = ""
-            progress_line = ""
-            
-            for i, (key, checkpoint_data) in enumerate(checkpoints_list):
-                checkpoint = checkpoint_data["checkpoint"]
+            for row_start in range(0, len(checkpoints_list), 8):
+                row_checkpoints = checkpoints_list[row_start:row_start + 8]
                 
-                # Checkpoint status
-                if checkpoint_data["is_complete"]:
-                    checkpoint_marker = f"[green]●[/green]"
-                    checkpoint_name = f"[green]{checkpoint['name']}[/green]"
-                elif checkpoint_data["is_current"]:
-                    checkpoint_marker = f"[yellow]◉[/yellow]"
-                    checkpoint_name = f"[yellow]{checkpoint['name']}[/yellow]"
-                else:
-                    checkpoint_marker = f"[dim]○[/dim]"
-                    checkpoint_name = f"[dim]{checkpoint['name']}[/dim]"
+                # Build the checkpoint line for this row
+                checkpoint_line = ""
+                names_line = ""
                 
-                # Add checkpoint
-                checkpoint_line += checkpoint_marker
-                
-                # Add connecting line (except for last checkpoint)
-                if i < len(checkpoints_list) - 1:
+                for i, (checkpoint_id, checkpoint_data) in enumerate(row_checkpoints):
+                    checkpoint = checkpoint_data["checkpoint"]
+                    
+                    # Checkpoint status
                     if checkpoint_data["is_complete"]:
-                        checkpoint_line += "[green]━━━━[/green]"
-                    elif checkpoint_data["is_current"]:
-                        # Partial line based on progress
-                        progress_chars = int(checkpoint_data["progress"] / 25)  # 4 chars max
-                        checkpoint_line += "[yellow]" + "━" * progress_chars + "[/yellow]"
-                        checkpoint_line += "[dim]" + "┅" * (4 - progress_chars) + "[/dim]"
+                        checkpoint_marker = f"[green]●[/green]"
+                        name_color = "green"
+                    elif checkpoint_id == progress_data["current"]:
+                        checkpoint_marker = f"[yellow]◉[/yellow]"
+                        name_color = "yellow"
                     else:
-                        checkpoint_line += "[dim]┅┅┅┅[/dim]"
-            
-            console.print(checkpoint_line)
-            
-            # Show checkpoint names below
-            names_line = ""
-            for i, (key, checkpoint_data) in enumerate(checkpoints_list):
-                checkpoint = checkpoint_data["checkpoint"]
+                        checkpoint_marker = f"[dim]○[/dim]"
+                        name_color = "dim"
+                    
+                    # Add checkpoint with ID
+                    checkpoint_line += f"{checkpoint_marker}{checkpoint_id}"
+                    names_line += f"[{name_color}]{checkpoint['name'][:9]:^9}[/{name_color}]"
+                    
+                    # Add spacing (except for last in row)
+                    if i < len(row_checkpoints) - 1:
+                        if checkpoint_data["is_complete"]:
+                            checkpoint_line += "[green]━━[/green]"
+                        else:
+                            checkpoint_line += "[dim]━━[/dim]"
+                        names_line += "  "
                 
-                if checkpoint_data["is_complete"]:
-                    name = f"[green]{checkpoint['name'][:8]:^8}[/green]"
-                elif checkpoint_data["is_current"]:
-                    name = f"[yellow]{checkpoint['name'][:8]:^8}[/yellow]"
-                else:
-                    name = f"[dim]{checkpoint['name'][:8]:^8}[/dim]"
-                
-                names_line += name + "  "
-            
-            console.print(names_line)
-            
-            # Show progress percentages
-            progress_line = ""
-            for key, checkpoint_data in checkpoints_list:
-                progress = checkpoint_data["progress"]
-                if checkpoint_data["is_complete"]:
-                    progress_text = f"[green]{progress:^6.0f}%[/green]"
-                elif checkpoint_data["is_current"]:
-                    progress_text = f"[yellow]{progress:^6.0f}%[/yellow]"
-                else:
-                    progress_text = f"[dim]{progress:^6.0f}%[/dim]"
-                progress_line += progress_text + "    "
-            
-            console.print(progress_line)
+                console.print(checkpoint_line)
+                console.print(names_line)
+                console.print()  # Empty line between rows
             
         else:
             # Vertical timeline (tree structure)
-            tree = Tree("ML Systems Engineering Journey")
+            tree = Tree("ML Systems Engineering Journey (16 Checkpoints)")
             
-            for key, checkpoint_data in progress_data["checkpoints"].items():
+            for checkpoint_id, checkpoint_data in progress_data["checkpoints"].items():
                 checkpoint = checkpoint_data["checkpoint"]
                 
                 if checkpoint_data["is_complete"]:
-                    checkpoint_text = f"[green]✅ {checkpoint['name']}[/green]"
-                elif checkpoint_data["is_current"]:
-                    checkpoint_text = f"[yellow]🔄 {checkpoint['name']} ({checkpoint_data['progress']:.0f}%)[/yellow]"
+                    checkpoint_text = f"[green]✅ {checkpoint_id}: {checkpoint['name']}[/green]"
+                elif checkpoint_id == progress_data["current"]:
+                    checkpoint_text = f"[yellow]🎯 {checkpoint_id}: {checkpoint['name']} (CURRENT)[/yellow]"
                 else:
-                    checkpoint_text = f"[dim]⏳ {checkpoint['name']}[/dim]"
+                    checkpoint_text = f"[dim]⏳ {checkpoint_id}: {checkpoint['name']}[/dim]"
                 
                 checkpoint_node = tree.add(checkpoint_text)
-                
-                # Add modules as sub-nodes
-                for module_info in checkpoint_data["modules"]:
-                    module_name = module_info["name"].replace("_", " ").title()
-                    if module_info["complete"]:
-                        checkpoint_node.add(f"[green]✅ {module_name}[/green]")
-                    else:
-                        checkpoint_node.add(f"[dim]⏳ {module_name}[/dim]")
+                checkpoint_node.add(f"[dim]{checkpoint['capability']}[/dim]")
             
             console.print(tree)
         
@@ -437,29 +496,139 @@ class CheckpointCommand(BaseCommand):
         """Test checkpoint capabilities."""
         console = get_console()
         
-        # For now, just show what would be tested
-        checkpoint_name = args.checkpoint_name
-        if not checkpoint_name:
+        # Determine which checkpoint to test
+        checkpoint_id = args.checkpoint_id
+        if not checkpoint_id:
             progress_data = checkpoint_system.get_overall_progress()
-            checkpoint_name = progress_data["current"]
+            checkpoint_id = progress_data["current"]
         
-        if checkpoint_name not in checkpoint_system.CHECKPOINTS:
-            print_error(f"Unknown checkpoint: {checkpoint_name}")
+        # Validate checkpoint ID
+        if checkpoint_id not in checkpoint_system.CHECKPOINTS:
+            print_error(f"Unknown checkpoint: {checkpoint_id}")
+            console.print(f"[dim]Available checkpoints: {', '.join(checkpoint_system.CHECKPOINTS.keys())}[/dim]")
             return 1
         
-        checkpoint = checkpoint_system.CHECKPOINTS[checkpoint_name]
-        console.print(f"\n[bold]Testing {checkpoint['name']} Capabilities[/bold]\n")
-        console.print(f"[dim]Would test: {checkpoint['capability']}[/dim]")
-        console.print(f"[dim]Modules involved: {', '.join(checkpoint['modules'])}[/dim]")
-        console.print("\n[yellow]Checkpoint testing not yet implemented[/yellow]")
+        checkpoint = checkpoint_system.CHECKPOINTS[checkpoint_id]
         
-        return 0
+        # Show what we're testing
+        console.print(f"\n[bold cyan]Testing Checkpoint {checkpoint_id}: {checkpoint['name']}[/bold cyan]")
+        console.print(f"[bold]Capability Question:[/bold] {checkpoint['capability']}\n")
+        
+        # Run the test
+        with console.status(f"[bold green]Running checkpoint {checkpoint_id} test...", spinner="dots") as status:
+            result = checkpoint_system.run_checkpoint_test(checkpoint_id)
+        
+        # Display results
+        if result["success"]:
+            console.print(f"[bold green]✅ Checkpoint {checkpoint_id} PASSED![/bold green]")
+            console.print(f"[green]Capability achieved: {checkpoint['capability']}[/green]\n")
+            
+            # Show brief output
+            if result.get("stdout") and "🎉" in result["stdout"]:
+                # Extract the completion message
+                lines = result["stdout"].split('\n')
+                for line in lines:
+                    if "🎉" in line or "📝" in line or "🎯" in line:
+                        console.print(f"[dim]{line}[/dim]")
+            
+            print_success(f"Checkpoint {checkpoint_id} test completed successfully!")
+            return 0
+        else:
+            console.print(f"[bold red]❌ Checkpoint {checkpoint_id} FAILED[/bold red]\n")
+            
+            # Show error details
+            if "error" in result:
+                console.print(f"[red]Error: {result['error']}[/red]")
+            elif result.get("stderr"):
+                console.print(f"[red]Error output:[/red]")
+                console.print(f"[dim]{result['stderr']}[/dim]")
+            elif result.get("stdout"):
+                console.print(f"[yellow]Test output:[/yellow]")
+                console.print(f"[dim]{result['stdout']}[/dim]")
+            
+            print_error(f"Checkpoint {checkpoint_id} test failed")
+            return 1
+    
+    def _run_checkpoint(self, checkpoint_system: CheckpointSystem, args: argparse.Namespace) -> int:
+        """Run specific checkpoint test with detailed progress tracking."""
+        console = get_console()
+        checkpoint_id = args.checkpoint_id
+        
+        # Validate checkpoint ID
+        if checkpoint_id not in checkpoint_system.CHECKPOINTS:
+            print_error(f"Unknown checkpoint: {checkpoint_id}")
+            console.print(f"[dim]Available checkpoints: {', '.join(checkpoint_system.CHECKPOINTS.keys())}[/dim]")
+            return 1
+        
+        checkpoint = checkpoint_system.CHECKPOINTS[checkpoint_id]
+        
+        # Show detailed information
+        console.print(Panel(
+            f"[bold cyan]Checkpoint {checkpoint_id}: {checkpoint['name']}[/bold cyan]\n\n"
+            f"[bold]Capability Question:[/bold]\n{checkpoint['capability']}\n\n"
+            f"[bold]Test File:[/bold] {checkpoint['test_file']}\n"
+            f"[bold]Description:[/bold] {checkpoint['description']}",
+            title=f"Running Checkpoint {checkpoint_id}",
+            border_style="bright_blue"
+        ))
+        
+        # Check if test file exists
+        test_path = checkpoint_system.checkpoints_dir / checkpoint["test_file"]
+        if not test_path.exists():
+            print_error(f"Test file not found: {checkpoint['test_file']}")
+            return 1
+        
+        console.print(f"\n[bold]Executing test...[/bold]")
+        
+        # Run the test with status feedback
+        with console.status(f"[bold green]Running checkpoint {checkpoint_id} test...", spinner="dots"):
+            result = checkpoint_system.run_checkpoint_test(checkpoint_id)
+        
+        console.print()
+        
+        # Display detailed results
+        if result["success"]:
+            console.print(Panel(
+                f"[bold green]✅ SUCCESS![/bold green]\n\n"
+                f"[green]Checkpoint {checkpoint_id} completed successfully![/green]\n"
+                f"[green]Capability achieved: {checkpoint['capability']}[/green]",
+                title="Test Results",
+                border_style="green"
+            ))
+            
+            # Show test output if verbose or if it contains key markers
+            if args.verbose or (result.get("stdout") and any(marker in result["stdout"] for marker in ["🎉", "✅", "📝", "🎯"])):
+                console.print(f"\n[bold]Test Output:[/bold]")
+                if result.get("stdout"):
+                    console.print(result["stdout"])
+            
+            return 0
+        else:
+            console.print(Panel(
+                f"[bold red]❌ FAILED[/bold red]\n\n"
+                f"[red]Checkpoint {checkpoint_id} test failed[/red]\n"
+                f"[yellow]This indicates the required capabilities are not yet implemented.[/yellow]",
+                title="Test Results",
+                border_style="red"
+            ))
+            
+            # Show error details
+            if "error" in result:
+                console.print(f"\n[bold red]Error:[/bold red] {result['error']}")
+            
+            if args.verbose or "error" in result:
+                if result.get("stdout"):
+                    console.print(f"\n[bold]Standard Output:[/bold]")
+                    console.print(result["stdout"])
+                if result.get("stderr"):
+                    console.print(f"\n[bold]Error Output:[/bold]")
+                    console.print(result["stderr"])
+            
+            return 1
     
     def _unlock_checkpoint(self, checkpoint_system: CheckpointSystem, args: argparse.Namespace) -> int:
         """Attempt to unlock next checkpoint."""
         console = get_console()
-        
-        # For now, just show what would be unlocked
         progress_data = checkpoint_system.get_overall_progress()
         current = progress_data["current"]
         
@@ -467,24 +636,27 @@ class CheckpointCommand(BaseCommand):
             console.print("[green]All checkpoints completed! 🎉[/green]")
             return 0
         
-        current_progress = progress_data["checkpoints"][current]
+        current_status = progress_data["checkpoints"][current]
         
-        if current_progress["is_complete"]:
-            console.print(f"[green]✅ {current_progress['checkpoint']['name']} checkpoint already complete![/green]")
+        if current_status["is_complete"]:
+            console.print(f"[green]✅ Checkpoint {current} ({current_status['checkpoint']['name']}) already complete![/green]")
             
             # Find next checkpoint
-            checkpoint_keys = list(checkpoint_system.CHECKPOINTS.keys())
-            current_index = checkpoint_keys.index(current)
-            if current_index < len(checkpoint_keys) - 1:
-                next_key = checkpoint_keys[current_index + 1]
-                next_checkpoint = checkpoint_system.CHECKPOINTS[next_key]
-                console.print(f"[bold]Next checkpoint:[/bold] {next_checkpoint['name']}")
-            else:
-                console.print("[bold]🎉 All checkpoints completed![/bold]")
+            checkpoint_ids = list(checkpoint_system.CHECKPOINTS.keys())
+            try:
+                current_index = checkpoint_ids.index(current)
+                if current_index < len(checkpoint_ids) - 1:
+                    next_id = checkpoint_ids[current_index + 1]
+                    next_checkpoint = checkpoint_system.CHECKPOINTS[next_id]
+                    console.print(f"[bold]Next checkpoint:[/bold] {next_id} - {next_checkpoint['name']}")
+                    console.print(f"[dim]Goal: {next_checkpoint['capability']}[/dim]")
+                else:
+                    console.print("[bold]🎉 All checkpoints completed![/bold]")
+            except ValueError:
+                console.print("[yellow]Cannot determine next checkpoint[/yellow]")
         else:
-            incomplete_modules = [m for m in current_progress["modules"] if not m["complete"]]
-            console.print(f"[yellow]Complete these modules to unlock {current_progress['checkpoint']['name']}:[/yellow]")
-            for module in incomplete_modules:
-                console.print(f"  ⏳ {module['name']}")
+            console.print(f"[yellow]Test checkpoint {current} to unlock your next capability:[/yellow]")
+            console.print(f"[bold]Goal:[/bold] {current_status['checkpoint']['capability']}")
+            console.print(f"[dim]Run: tito checkpoint run {current}[/dim]")
         
         return 0
