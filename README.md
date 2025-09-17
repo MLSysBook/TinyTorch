@@ -1,6 +1,6 @@
 # Tiny🔥Torch 
 
-**Build your own ML framework. Start small. Go deep.**
+**Build ML Systems From First Principles. Understand by implementing every component.**
 
 ![Work in Progress](https://img.shields.io/badge/status-work--in--progress-yellow)
 ![Educational Project](https://img.shields.io/badge/purpose-educational-informational)
@@ -13,76 +13,88 @@
 
 ---
 
-## 🏗️ **The Big Picture: Why Build from Scratch?**
+## 🔬 **Why Build Your Own ML Framework?**
 
-**Most ML education teaches you to _use_ frameworks.** TinyTorch teaches you to _build_ them.
+**Most ML courses teach you to use frameworks. TinyTorch teaches you to understand them through systems engineering.**
 
 ```python
-Traditional ML Course:          TinyTorch Approach:
-├── import torch               ├── class Tensor:
-├── model = nn.Linear(10, 1)   │     def __add__(self, other): ...
-├── loss = nn.MSELoss()        │     def backward(self): ...
-└── optimizer.step()           ├── class Linear:
-                               │     def forward(self, x):
-                               │       return x @ self.weight + self.bias
-                               ├── def mse_loss(pred, target):
-                               │     return ((pred - target) ** 2).mean()
-                               ├── class SGD:
-                               │     def step(self):
-                               └──     param.data -= lr * param.grad
-
-Go from "How does this work?" 🤷 to "I implemented every line!" 💪
+Algorithm-focused Course:       Systems-focused Course (TinyTorch):
+├── import torch               ├── Memory analysis: Adam = 3× parameters
+├── model.fit(X, y)           ├── Cache efficiency: Why convolution ordering matters
+├── accuracy = 0.95           ├── Gradient bottlenecks: O(N²) attention scaling  
+└── "It works!" 🎉           ├── Production patterns: Checkpointing, monitoring
+                               ├── Hardware implications: Vectorization, bandwidth
+                               └── "I understand the entire system!" 💡
 ```
 
-**Result:** You become the person others come to when they need to understand "how PyTorch actually works under the hood."
+**You become the ML engineer who can:**
+- Debug performance bottlenecks in production systems
+- Optimize memory usage for large-scale deployments  
+- Design custom operations for novel architectures
+- Understand exactly why certain ML engineering decisions were made
 
 ---
 
-## 🌟 **What Makes TinyTorch Different**
+## 🎯 **Your Learning Path: ML Systems Engineering**
 
-### **🔬 Build-First Philosophy**
-- **No black boxes**: Implement every component from scratch
-- **Immediate ownership**: Use YOUR code in real neural networks
-- **Deep understanding**: Know exactly how each piece works
+### **🔬 Phase 1: Core Systems (Modules 1-5)**
+- **Memory management**: How tensors use RAM, when copies happen
+- **Compute patterns**: Understanding operation complexity O(N²) vs O(N)
+- **Data structures**: Why certain tensor layouts enable vectorization
+- **Performance foundations**: Cache efficiency, memory bandwidth
 
-### **🚀 Real Production Skills**
-- **Professional workflow**: Development with `tito` CLI, automated testing
-- **Real datasets**: Download and train on CIFAR-10 with built-in support
-- **Model checkpointing**: Save best models during training
-- **Evaluation tools**: Confusion matrices, accuracy tracking, training curves
-- **Production patterns**: MLOps, monitoring, optimization from day one
+### **🧠 Phase 2: ML Systems Architecture (Modules 6-10)**
+- **Scaling analysis**: Why attention is O(N²) and how to handle it
+- **Memory profiling**: Adam optimizer uses 3× parameter memory - why?
+- **Computational graphs**: Memory vs speed tradeoffs in autograd
+- **Production patterns**: Gradient checkpointing, mixed precision
 
-### **🎯 Progressive Mastery** 
-- **Start simple**: Implement `hello_world()` function
-- **Build systematically**: Each module enables the next
-- **End powerful**: Deploy production ML systems with monitoring
+### **⚡ Phase 3: Production Engineering (Modules 11-16)**
+- **Training systems**: Distributed computing, fault tolerance
+- **Optimization techniques**: Quantization, pruning, distillation
+- **Hardware acceleration**: Custom kernels, GPU utilization
+- **MLOps pipelines**: Monitoring, deployment, A/B testing
 
-### **⚡ Instant Feedback**
-- **Code works immediately**: No waiting to see results
-- **Visual progress**: Success indicators and system integration
-- **"Aha moments"**: Watch your `ReLU` power real neural networks
+### **🚀 Phase 4: Advanced Specialization (TinyGPT)**
+- **Language model systems**: Transformer scaling challenges
+- **Memory efficiency**: KV-cache optimization, attention patterns
+- **Production deployment**: Inference serving, real-time constraints
 
-### **🎯 NEW: Checkpoint Achievement System**
-- **16 capability checkpoints**: Track progress through capability questions like "Can I build neural networks?"
-- **Rich CLI progress tracking**: Beautiful visualizations with `tito checkpoint status` and `tito checkpoint timeline`
-- **Automatic validation**: `tito module complete` exports and tests your implementations immediately
-- **Achievement celebrations**: 🎉 Visual feedback when you unlock new ML capabilities
+### **💡 Systems Thinking Through Implementation**
+**Every module teaches systems principles through building:**
 
-### **📊 NEW: Visual System Architecture**
-- **Interactive dependency graphs**: See how all 17 modules connect
-- **Learning roadmap visualization**: Optimal path through the system
-- **Architecture diagrams**: Complete framework overview
-- **Automated analysis**: Live system statistics and component mapping
+- **Module 2 (Tensors)**: Learn memory layout by implementing array operations
+- **Module 6 (Spatial)**: Understand cache performance through convolution
+- **Module 7 (Attention)**: Experience O(N²) scaling by building attention
+- **Module 9 (Autograd)**: See memory/compute tradeoffs in gradient computation
+- **Module 10 (Optimizers)**: Profile memory usage patterns in Adam vs SGD
+- **Module 13 (Kernels)**: Optimize operations for hardware characteristics
+
+**Result**: You don't just know ML algorithms - you understand ML _systems_.
 
 ---
 
-## 🎯 What You'll Build
+## 🏗️ What You'll Build
 
-* **One Complete ML Framework** — Not 17 separate exercises, but integrated components building into your own PyTorch-style toolkit
-* **Fully Functional System** — Every piece connects: your tensors power your layers, your autograd enables your optimizers, your framework trains real networks
-* **Real Applications** — Train neural networks on CIFAR-10 using 100% your own code, no PyTorch imports
-* **Production-Ready Skills** — Complete ML lifecycle: data loading, training, optimization, deployment, monitoring
-* **Deep Systems Understanding** — Know exactly how every component works and integrates because you built it all
+**A Complete ML Systems Framework** — Understanding through implementation:
+
+### **🔧 Core Systems Engineering**
+* **Memory-efficient tensor operations** with performance profiling
+* **Computational graph system** with automatic differentiation
+* **Training infrastructure** with checkpointing and fault tolerance
+* **Production monitoring** with performance bottleneck identification
+
+### **📊 Performance Analysis & Optimization**  
+* **Memory profiling tools**: Understand exactly where your RAM goes
+* **Compute optimization**: Custom kernels, vectorization patterns
+* **Scaling analysis**: When operations become bottlenecks
+* **Hardware utilization**: Cache-friendly algorithms and memory patterns
+
+### **🚀 Real-World ML Systems**
+* **Train CNNs on CIFAR-10** — Achieve 75%+ accuracy with your own code
+* **Deploy production models** — Complete MLOps pipeline with monitoring
+* **Handle large-scale data** — Efficient DataLoader with memory management
+* **Extend to language models** — Build TinyGPT using your framework foundation
 
 ---
 
@@ -154,6 +166,57 @@ tito export 01_setup
 tito test 01_setup
 tito nbdev build                          # Update package
 ```
+
+---
+
+## 🔗 **Connection to ML Systems Research**
+
+**Optional Enhancement**: TinyTorch concepts align with the Machine Learning Systems book:
+
+- **Chapter 5 (Data Engineering)**: Your DataLoader implementation (Module 8)
+- **Chapter 6 (Feature Engineering)**: Tensor operations and preprocessing (Module 2)
+- **Chapter 7 (Model Development)**: Layer architectures you build (Modules 4-7)
+- **Chapter 8 (Model Training)**: Training loops and optimization (Modules 10-11)
+- **Chapter 9 (Model Deployment)**: MLOps and production systems (Module 15)
+- **Chapter 11 (Continual Learning)**: Advanced techniques (Module 12)
+
+**TinyTorch provides the implementation foundation for understanding these concepts deeply.**
+
+---
+
+## 🚀 **Your Learning Journey: TinyTorch → TinyGPT**
+
+**TinyTorch teaches you ML systems. TinyGPT lets you apply that knowledge to language models.**
+
+### **Phase 1: Build ML Systems Foundation (TinyTorch)**
+Complete the 17-module TinyTorch course to understand:
+- Memory management and compute optimization
+- Training systems and production deployment  
+- Performance profiling and bottleneck identification
+- Hardware utilization and scaling patterns
+
+### **Phase 2: Apply to Language Models (TinyGPT)**
+Use your TinyTorch foundation to build:
+- **Character-level GPT**: Reuse 95% of your framework components
+- **Attention mechanisms**: Understand O(N²) memory scaling in practice
+- **Text generation**: Autoregressive sampling and inference optimization
+- **Production serving**: Real-time language model deployment
+
+### **Why This Progression Works**
+```python
+# TinyTorch gives you the systems foundation:
+from tinytorch.core.tensor import Tensor          # Memory-efficient operations
+from tinytorch.core.layers import Dense           # Matrix multiplication patterns  
+from tinytorch.core.training import Trainer      # Training loop infrastructure
+from tinytorch.core.optimizers import Adam       # Memory-aware optimization
+
+# TinyGPT focuses on language-specific systems:
+from tinygpt.core.attention import MultiHeadAttention  # Sequence modeling
+from tinygpt.core.generation import AutoregressiveSampler  # Text generation
+from tinygpt.core.tokenization import CharTokenizer    # Text preprocessing
+```
+
+**Result**: You understand both general ML systems AND language model systems specifically.
 
 ---
 
@@ -337,54 +400,60 @@ After completing the 15 core modules, you have a **complete ML framework**. The 
 
 ---
 
-## 🧠 Pedagogical Framework: Build → Use → Reflect
+## 🧠 ML Systems Learning Framework: Implement → Profile → Optimize
 
-### **Example: How You'll Master Activation Functions**
+### **Example: Understanding Memory in Adam Optimizer**
 
-**🔧 Build:** Implement ReLU from scratch
+**🔧 Implement:** Build Adam optimizer from paper
 ```python
-def relu(x):
-    # YOU implement this function
-    return ???  # What should this be?
+class Adam:
+    def __init__(self, lr=0.001):
+        self.m = {}  # First moment estimates
+        self.v = {}  # Second moment estimates
+        # Why do we need TWO additional arrays per parameter?
 ```
 
-**🚀 Use:** Immediately use your own code
+**📊 Profile:** Measure actual memory usage
 ```python
-from tinytorch.core.activations import ReLU  # YOUR implementation!
-layer = ReLU()
-output = layer.forward(input_tensor)  # Your code working!
+from tinytorch.core.profiling import MemoryProfiler
+profiler = MemoryProfiler()
+with profiler.measure('adam_step'):
+    optimizer.step()
+print(f"Memory: {profiler.peak_memory_mb} MB")  # 3× your model size!
 ```
 
-**💡 Reflect:** See it working in real networks
+**⚡ Optimize:** Understand the systems implications
 ```python
-# Your ReLU is now part of a real neural network
-model = Sequential([
-    Dense(784, 128),
-    ReLU(),           # <-- Your implementation
-    Dense(128, 10)
-])
+# Why does Adam use 3× memory?
+# Parameters: W (model weights)
+# + First moments: m (momentum)
+# + Second moments: v (adaptive learning rates)
+# = 3× parameter memory for Adam vs 1× for SGD
+
+# When does this become a production bottleneck?
+# How do systems like PyTorch handle this in practice?
 ```
 
-**This pattern repeats for every component** — you build it, use it immediately, then see how it fits into larger systems.
+**This pattern teaches both algorithms AND systems engineering** — you understand not just "how" but "why" and "what are the tradeoffs."
 
 ---
 
-## 🎓 Teaching Philosophy
+## 🎓 ML Systems Philosophy
 
-### **No Black Boxes**
-* Build every component from scratch
-* Understand performance trade-offs  
-* See how engineering decisions impact ML outcomes
+### **Systems Understanding Through Implementation**
+* **Memory consciousness**: Every operation has memory implications you'll measure
+* **Performance awareness**: Understand computational complexity through profiling
+* **Production reality**: Real bottlenecks, real datasets, real scale challenges
 
-### **Production-Ready Thinking**
-* Use real datasets (CIFAR-10, MNIST)
-* Implement proper testing and benchmarking
-* Learn MLOps and system design principles
+### **Engineering-First Mindset**
+* **Measure everything**: Performance profiling built into every module
+* **Optimize systematically**: Understand trade-offs before making decisions
+* **Scale considerations**: How do algorithms behave as data/models grow?
 
-### **Iterative Mastery**
-* Each module builds on previous work
-* Immediate feedback through inline testing
-* Progressive complexity with solid foundations
+### **Bridge Theory and Practice**
+* **Academic rigor**: Implement algorithms correctly from papers
+* **Engineering pragmatism**: Understand why certain design choices were made
+* **Production readiness**: Build systems that work at scale, not just in notebooks
 
 ---
 
