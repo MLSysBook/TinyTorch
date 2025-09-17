@@ -73,17 +73,17 @@ TinyTorch transforms traditional module-based learning into a **capability-drive
 
 ---
 
-### **🎯 Serving**
-*Complete ML system integration*
+### **🔥 Language Models**
+*Framework generalization across modalities*
 
-**Modules**: Capstone Integration  
-**Capability Unlocked**: "Have built a complete, production-ready ML framework"
+**Modules**: TinyGPT  
+**Capability Unlocked**: "Can build unified frameworks that support both vision and language"
 
 **What You Build:**
-- Integration of all previous capabilities
-- Complete end-to-end ML system
-- Your own PyTorch-style framework
-- Production-ready ML infrastructure
+- GPT-style transformer using your framework components
+- Character-level tokenization and text generation
+- 95% component reuse from vision to language
+- Understanding of universal ML foundations
 
 ---
 
@@ -93,10 +93,10 @@ TinyTorch transforms traditional module-based learning into a **capability-drive
 See your journey through the ML systems engineering pipeline:
 
 ```
-Foundation → Architecture → Training → Inference → Serving
+Foundation → Architecture → Training → Inference → Language Models
 ```
 
-Each checkpoint represents a major learning milestone and capability unlock in your ML framework.
+Each checkpoint represents a major learning milestone and capability unlock in your unified vision+language framework.
 
 ### **Rich Progress Tracking**
 Within each checkpoint, track granular progress through individual modules with enhanced Rich CLI visualizations:
@@ -114,7 +114,7 @@ Every checkpoint completion unlocks a concrete capability:
 - ✅ "I can design and construct any neural network architecture"  
 - 🔄 "I can train neural networks on real datasets"
 - ⏳ "I can deploy optimized models for production inference"
-- ⏳ "I have built a complete, production-ready ML framework"
+- 🔥 "I can build unified frameworks supporting vision and language"
 
 ---
 
@@ -176,7 +176,7 @@ The checkpoint system connects directly to your actual development work:
 13_kernels    → checkpoint_12_kernels       # High-performance ops
 14_benchmarking → checkpoint_13_benchmarking # Performance analysis
 15_mlops      → checkpoint_14_deployment    # Production deployment
-16_capstone   → checkpoint_15_capstone      # Complete integration
+16_tinygpt    → checkpoint_15_capstone      # Language model extension
 ```
 
 #### **Real Capability Validation**
@@ -203,7 +203,7 @@ tests/checkpoints/
 ├── checkpoint_01_foundation.py    # "Can I create ML building blocks?"
 ├── checkpoint_02_intelligence.py  # "Can I add nonlinearity?"
 ├── ...
-└── checkpoint_15_capstone.py      # "Can I build complete ML systems?"
+└── checkpoint_15_capstone.py      # "Can I build complete end-to-end ML systems?"
 ```
 
 ### **Rich CLI Integration**
@@ -245,7 +245,7 @@ Every module contributes to a **concrete system capability** rather than abstrac
 - **Visual timeline** similar to academic transcripts tracking completed coursework
 
 ### **Real-World Relevance**
-The checkpoint progression **Foundation → Architecture → Training → Inference → Serving** mirrors both academic learning progression and the actual ML engineering workflow in production systems.
+The checkpoint progression **Foundation → Architecture → Training → Inference → Language Models** mirrors both academic learning progression and the evolution from specialized to unified ML frameworks.
 
 ---
 
@@ -271,10 +271,10 @@ The checkpoint progression **Foundation → Architecture → Training → Infere
 - Understand performance bottlenecks and solutions
 - Ready to build complete ML systems
 
-### **After Serving**
-- Have built a complete ML framework from scratch
-- Understand every component of production ML systems
-- Ready for ML engineering roles
+### **After Language Models**
+- Have extended your vision framework to language models
+- Understand the unified mathematical foundations of modern AI
+- Ready for advanced ML engineering roles across all modalities
 
 ---
 

@@ -292,8 +292,8 @@ class ModuleCommand(BaseCommand):
             "12_compression": "11",    # Compression → Regularization checkpoint
             "13_kernels": "12",        # Kernels → Kernels checkpoint
             "14_benchmarking": "13",   # Benchmarking → Benchmarking checkpoint
-            "15_mlops": "14",          # MLOps → Deployment checkpoint
-            "16_capstone": "15",       # Capstone → Capstone checkpoint
+            "15_mlops": "14",          # MLOPs → Deployment checkpoint
+            "16_tinygpt": "15",        # TinyGPT → Capstone checkpoint
         }
         
         if module_name not in module_to_checkpoint:
@@ -430,7 +430,7 @@ class ModuleCommand(BaseCommand):
                     12: ("13_kernels", "High-performance kernels - optimized computation"),
                     13: ("14_benchmarking", "Performance analysis - bottleneck identification"),
                     14: ("15_mlops", "MLOps - production deployment"),
-                    15: ("16_capstone", "Capstone project - complete ML systems"),
+                    15: ("16_tinygpt", "TinyGPT - Language models and transformers"),
                 }
                 
                 if next_num in next_modules:

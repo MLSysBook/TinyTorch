@@ -44,6 +44,7 @@ class PackageManagerIntegration:
             "13_kernels": "test_integration_13_kernels",
             "14_benchmarking": "test_integration_14_benchmarking",
             "15_mlops": "test_integration_15_mlops",
+            "16_tinygpt": "test_integration_16_tinygpt",
         }
     
     def run_module_integration_test(self, module_name: str) -> Dict:

@@ -19,6 +19,7 @@ Click the **🚀 Launch Binder** button on any chapter to get:
 - **Tensor operations** that power neural networks  
 - **Dense layers** that transform data
 - **Complete neural networks** for image classification
+- **🔥 Language models** built from the same foundations
 
 All running live in your browser!
 ```
@@ -69,7 +70,8 @@ After exploring 2-3 chapters, you'll have hands-on understanding of:
 ✅ **Why activation functions are crucial**  
 ✅ **How matrix multiplication powers neural networks**  
 ✅ **The relationship between layers, networks, and learning**  
-✅ **Real implementation vs. high-level APIs**
+✅ **Real implementation vs. high-level APIs**  
+🔥 **Why vision and language models share the same foundations**
 
 ---
 

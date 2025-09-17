@@ -32,7 +32,7 @@ class ExportCommand(BaseCommand):
         "13_kernels": "12",        # Kernels → Kernels checkpoint
         "14_benchmarking": "13",   # Benchmarking → Benchmarking checkpoint
         "15_mlops": "14",          # MLOps → Deployment checkpoint
-        "16_capstone": "15",       # Capstone → Capstone checkpoint
+        "16_tinygpt": "15",        # TinyGPT → Capstone checkpoint
     }
 
     @property

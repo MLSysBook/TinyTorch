@@ -1048,40 +1048,138 @@ def test_module_tensor_numpy_integration():
 
 # %% [markdown]
 """
-## 🤔 ML Systems Thinking: Reflection Questions
+## 🤔 ML Systems Thinking: Interactive Questions
 
-Now that you've built a working tensor system, take a moment to reflect on how this simple foundation connects to the massive ML systems powering today's AI revolution:
+Now that you've built a working tensor system, let's connect this foundational work to broader ML systems challenges. These questions help you think critically about how tensor operations scale to production ML environments.
 
-### System Design - How does this fit into larger systems?
-1. **The Universal Language**: You just built the fundamental data structure of modern AI. How does having one unified way to represent data (as tensors) enable frameworks like PyTorch to handle everything from image recognition to language models using the same operations?
-
-2. **Memory and Scale**: Your tensor creates a new result for every operation. When OpenAI trains GPT models with billions of parameters, why might memory management become a critical system design challenge? What trade-offs do you think they make?
-
-3. **Hardware Abstraction**: Your tensor works on CPU through NumPy. How does abstracting tensor operations allow the same neural network code to run on CPUs, GPUs, and specialized AI chips like TPUs without changing the model logic?
-
-### Production ML - How is this used in real ML workflows?
-4. **Batch Processing Power**: Real ML systems process thousands of images or sentences simultaneously in batches. How does your element-wise tensor math suddenly become a superpower when applied to batches? Why is this crucial for real-time applications?
-
-5. **Data Pipeline Integration**: Your tensor wraps NumPy arrays, making it compatible with the entire scientific Python ecosystem. How does this design choice affect a data scientist's ability to move from data exploration to model deployment?
-
-6. **Production Reliability**: In a live recommendation system serving millions of users, what happens when tensor operations encounter unexpected data shapes or types? How might this influence framework design priorities?
-
-### Framework Design - Why do frameworks make certain choices?
-7. **API Philosophy**: You chose property-style access (`tensor.shape`) like PyTorch, rather than function calls. How does this seemingly small design decision affect the developer experience when building complex neural architectures?
-
-8. **Broadcasting Magic**: PyTorch tensors can add a scalar to a matrix automatically, while your current implementation requires matching shapes. Why do you think frameworks invest heavily in broadcasting logic? What problems does it solve for researchers?
-
-9. **Type System Design**: Your tensor supports different data types (int32, float32). How do these choices ripple through an entire ML pipeline, from training speed to model accuracy to deployment costs?
-
-### Performance & Scale - What happens when systems get large?
-10. **Memory Explosion**: Every operation in your tensor creates new memory. Imagine a neural network with millions of operations during training. How might this connect to why modern frameworks offer both copying and in-place operations?
-
-11. **Computational Graphs**: Your operations happen immediately. Large language models track millions of tensor operations to compute gradients. How does the shift from immediate computation to deferred execution change system architecture?
-
-12. **Hardware Optimization**: Your simple `+` operation translates to highly optimized kernel code on GPUs. How does having a clean tensor abstraction enable frameworks to automatically optimize operations for different hardware without changing user code?
-
-**💡 Systems Insight**: The tensor abstraction you just built is one of computing's most elegant solutions—it provides a simple, mathematical interface that hides incredible complexity in optimization, hardware acceleration, and distributed computing. Every major AI breakthrough, from computer vision to large language models, flows through tensor operations just like the ones you implemented.
+Take time to reflect thoughtfully on each question - your insights will help you understand how the tensor concepts you've implemented connect to real-world ML systems engineering.
 """
+
+# %% [markdown]
+"""
+### Question 1: Memory Layout and Cache Efficiency
+
+**Context**: Your tensor implementation wraps NumPy arrays and creates new tensors for each operation. In production ML systems, tensor operations happen millions of times per second, making memory layout and cache efficiency critical for performance.
+
+**Reflection Question**: Design a memory-efficient tensor system for training large neural networks (billions of parameters). How would you balance memory layout optimization with cache efficiency? Consider scenarios where you need to process massive image batches (1000+ images) while maintaining memory locality for CPU cache optimization. What trade-offs would you make between memory copying and in-place operations?
+
+Think about: contiguous memory layout, cache line utilization, memory fragmentation, and the difference between row-major vs column-major storage in different computational contexts.
+
+*Target length: 150-300 words*
+"""
+
+# %% nbgrader={"grade": true, "grade_id": "question-1-memory-layout", "locked": false, "points": 10, "schema_version": 3, "solution": true, "task": false}
+"""
+YOUR REFLECTION ON MEMORY LAYOUT AND CACHE EFFICIENCY:
+
+TODO: Replace this text with your thoughtful response about memory-efficient tensor system design.
+
+Consider addressing:
+- How would you optimize memory layout for large batch processing?
+- What strategies would you use to minimize cache misses during tensor operations?
+- How would you handle the trade-off between memory copying and in-place operations?
+- What role does contiguous memory layout play in computational efficiency?
+- How would different storage patterns (row-major vs column-major) affect performance?
+
+Write a practical design connecting your tensor implementation to real memory optimization challenges.
+
+GRADING RUBRIC (Instructor Use):
+- Demonstrates understanding of memory layout impact on performance (3 points)
+- Addresses cache efficiency and locality concerns appropriately (3 points)
+- Shows practical knowledge of memory optimization strategies (2 points)
+- Demonstrates systems thinking about large-scale tensor operations (2 points)
+- Clear technical reasoning and practical considerations (bonus points for innovative approaches)
+"""
+
+### BEGIN SOLUTION
+# Student response area - instructor will replace this section during grading setup
+# This is a manually graded question requiring technical analysis of memory optimization
+# Students should demonstrate understanding of cache efficiency and memory layout optimization
+### END SOLUTION
+
+# %% [markdown]
+"""
+### Question 2: Hardware Abstraction and Multi-Platform Deployment
+
+**Context**: Your tensor class currently operates on CPU through NumPy. Production ML systems must run efficiently across diverse hardware: development laptops (CPU), training clusters (GPU), mobile devices (ARM processors), and edge devices (specialized AI chips).
+
+**Reflection Question**: Architect a hardware-abstraction layer for your tensor system that enables the same tensor operations to run optimally across CPU, GPU, and specialized AI accelerators. How would you handle the complexity of different memory models, precision requirements, and computational paradigms while maintaining a simple user interface? Consider the challenges of automatic device placement and memory management across heterogeneous hardware.
+
+Think about: device-specific optimizations, memory transfer costs, precision trade-offs, and automatic kernel selection for different hardware architectures.
+
+*Target length: 150-300 words*
+"""
+
+# %% nbgrader={"grade": true, "grade_id": "question-2-hardware-abstraction", "locked": false, "points": 10, "schema_version": 3, "solution": true, "task": false}
+"""
+YOUR REFLECTION ON HARDWARE ABSTRACTION AND MULTI-PLATFORM DEPLOYMENT:
+
+TODO: Replace this text with your thoughtful response about hardware abstraction design.
+
+Consider addressing:
+- How would you design an abstraction layer that works across CPU, GPU, and AI accelerators?
+- What strategies would you use for automatic device placement and memory management?
+- How would you handle different precision requirements across hardware platforms?
+- What role would kernel selection and optimization play in your design?
+- How would you minimize memory transfer costs between different compute devices?
+
+Write an architectural analysis connecting your tensor foundation to real hardware deployment challenges.
+
+GRADING RUBRIC (Instructor Use):
+- Shows understanding of multi-platform hardware challenges (3 points)
+- Designs practical abstraction layer for device management (3 points)
+- Addresses precision and optimization considerations (2 points)
+- Demonstrates systems thinking about hardware-software interfaces (2 points)
+- Clear architectural reasoning with practical insights (bonus points for comprehensive understanding)
+"""
+
+### BEGIN SOLUTION
+# Student response area - instructor will replace this section during grading setup
+# This is a manually graded question requiring understanding of hardware abstraction challenges
+# Students should demonstrate knowledge of multi-platform deployment and device optimization
+### END SOLUTION
+
+# %% [markdown]
+"""
+### Question 3: Computational Graph Integration and Automatic Differentiation
+
+**Context**: Your tensor performs operations immediately (eager execution). Modern deep learning frameworks build computational graphs to track operations for automatic differentiation, enabling gradient-based optimization that powers neural network training.
+
+**Reflection Question**: Extend your tensor design to support computational graph construction for automatic differentiation. How would you modify your tensor operations to build a graph of dependencies while maintaining performance for both training (graph construction) and inference (optimized execution)? Consider the challenge of supporting both eager execution for debugging and graph mode for production deployment.
+
+Think about: operation tracking, gradient flow, memory management for large graphs, and the trade-offs between flexibility and performance in different execution modes.
+
+*Target length: 150-300 words*
+"""
+
+# %% nbgrader={"grade": true, "grade_id": "question-3-computational-graphs", "locked": false, "points": 10, "schema_version": 3, "solution": true, "task": false}
+"""
+YOUR REFLECTION ON COMPUTATIONAL GRAPH INTEGRATION:
+
+TODO: Replace this text with your thoughtful response about computational graph design.
+
+Consider addressing:
+- How would you modify your tensor class to support computational graph construction?
+- What strategies would you use to balance eager execution with graph-based optimization?
+- How would you handle gradient flow and automatic differentiation in your design?
+- What memory management challenges arise with large computational graphs?
+- How would you support both debugging-friendly and production-optimized execution modes?
+
+Write a design analysis connecting your tensor operations to automatic differentiation and training systems.
+
+GRADING RUBRIC (Instructor Use):
+- Understands computational graph concepts and gradient tracking (3 points)
+- Designs practical approach to eager vs graph execution modes (3 points)
+- Addresses memory management and performance considerations (2 points)
+- Shows systems thinking about training vs inference requirements (2 points)
+- Clear design reasoning with automatic differentiation insights (bonus points for deep understanding)
+"""
+
+### BEGIN SOLUTION
+# Student response area - instructor will replace this section during grading setup
+# This is a manually graded question requiring understanding of computational graphs and automatic differentiation
+# Students should demonstrate knowledge of how tensor operations enable gradient computation
+### END SOLUTION
 
 # %% [markdown]
 """

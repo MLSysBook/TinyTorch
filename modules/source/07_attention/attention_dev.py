@@ -939,60 +939,6 @@ if __name__ == "__main__":
 
 # %% [markdown]
 """
-## 🎯 MODULE SUMMARY: Attention Mechanisms
-
-Congratulations! You have successfully implemented the attention mechanisms that power modern AI:
-
-### What You have Accomplished
-✅ **Scaled Dot-Product Attention**: The core attention mechanism used in transformers
-✅ **Multi-Head Attention**: Parallel attention heads for complex pattern recognition
-✅ **Causal Masking**: Sequence modeling for autoregressive generation
-✅ **Integration**: Seamless compatibility with Tensor operations
-✅ **Real Applications**: Language modeling, machine translation, and more
-
-### Key Concepts You have Learned
-- **Attention as weighted averaging**: How attention computes context-dependent representations
-- **Query-Key-Value paradigm**: The fundamental attention computation pattern
-- **Scaled dot-product**: Mathematical foundation of attention mechanisms
-- **Multi-head processing**: Parallel attention for complex pattern recognition
-- **Causal masking**: Enabling autoregressive sequence generation
-
-### Mathematical Foundations
-- **Attention computation**: Attention(Q,K,V) = softmax(QK^T/√d_k)V
-- **Scaled dot-product**: Preventing gradient vanishing in deep networks
-- **Multi-head attention**: Parallel attention heads with different projections
-- **Causal masking**: Upper triangular masking for autoregressive generation
-
-### Professional Skills Developed
-- **Matrix operations**: Efficient attention computation with NumPy
-- **Masking techniques**: Implementing causal and padding masks
-- **Multi-head processing**: Parallel attention head implementation
-- **Integration patterns**: How attention fits into larger architectures
-
-### Ready for Advanced Applications
-Your attention implementations now enable:
-- **Transformer architectures**: Complete transformer models for NLP
-- **Language modeling**: GPT-style autoregressive generation
-- **Machine translation**: Sequence-to-sequence attention models
-- **Vision transformers**: Attention for computer vision tasks
-
-### Connection to Real ML Systems
-Your implementations mirror production systems:
-- **PyTorch**: `torch.nn.MultiheadAttention()` provides identical functionality
-- **TensorFlow**: `tf.keras.layers.MultiHeadAttention()` implements similar concepts
-- **Hugging Face**: All transformer models use these exact attention mechanisms
-
-### Next Steps
-1. **Export your code**: `tito export 07_attention`
-2. **Test your implementation**: `tito test 07_attention`
-3. **Build transformers**: Combine attention with feed-forward networks
-4. **Move to Module 8**: Add data loading for real-world datasets!
-
-**Ready for data engineering?** Your attention mechanisms are now ready for real-world applications!
-"""
-
-# %% [markdown]
-"""
 ## Step 4: ML Systems Thinking - Attention Scaling & Efficiency
 
 ### Attention Mechanisms at Scale
@@ -1362,39 +1308,189 @@ def test_attention_efficiency_profiler():
 
 # %% [markdown]
 """
-## ML Systems Thinking Questions
+## 🤔 ML Systems Thinking: Interactive Questions
 
-*Take a moment to reflect on these questions. Consider how your attention implementation connects to the challenges of scaling transformer models to production.*
+Now that you've built attention mechanisms that power modern transformer architectures, let's connect this foundational work to broader ML systems challenges. These questions help you think critically about how attention mechanisms scale to production environments.
 
-### Attention Architecture & Scaling
-1. **Quadratic Complexity Challenge**: Your attention mechanism has O(n**2) complexity with sequence length. How do production systems like GPT-4 handle sequences of 32000+ tokens? What architectural innovations address this fundamental limitation?
+Take time to reflect thoughtfully on each question - your insights will help you understand how the attention concepts you've implemented connect to real-world ML systems engineering.
+"""
 
-2. **Memory Wall Problem**: Your attention matrix grows quadratically with sequence length. When training large language models, how do systems manage the memory requirements of attention across multiple layers and multiple attention heads?
+# %% [markdown]
+"""
+### Question 1: O(n²) Scaling and Memory Management
 
-3. **Parallelization Strategy**: Your implementation processes attention sequentially. How do modern GPUs parallelize attention computation across thousands of cores? What are the trade-offs between batch parallelism and sequence parallelism?
+**Context**: Your attention implementation has quadratic complexity with sequence length, creating significant memory and computational challenges for long sequences. Production systems like GPT-4 must handle sequences of 32K+ tokens while maintaining efficiency and memory constraints.
 
-### Production Transformer Systems
-4. **KV-Cache Optimization**: Your attention recomputes key-value pairs every time. In autoregressive generation (like ChatGPT), how do production systems cache key-value pairs to avoid redundant computation? What memory vs compute trade-offs does this create?
+**Reflection Question**: Design a scalable attention system that addresses the quadratic complexity challenge for production transformer models. How would you implement memory-efficient attention mechanisms, manage KV-cache optimization for autoregressive generation, and utilize sparse attention patterns to reduce computational complexity? Consider scenarios where you need to process book-length documents or maintain long conversation histories while staying within GPU memory limits.
 
-5. **Dynamic Batching**: Your attention handles fixed sequence lengths. How do production inference servers batch requests with different sequence lengths efficiently? How does padding vs dynamic batching affect GPU utilization?
+Think about: memory optimization techniques, KV-cache strategies, sparse attention patterns, and sequence chunking approaches.
 
-6. **Attention Pattern Sparsity**: Most attention weights in practice are near zero. How do sparse attention patterns (sliding window, block-sparse) reduce computational complexity while maintaining model quality?
+*Target length: 150-300 words*
+"""
 
-### Hardware-Aware Optimization
-7. **Memory Bandwidth Bottleneck**: Attention is often memory-bound rather than compute-bound. How do optimizations like Flash Attention reorder operations to maximize memory bandwidth utilization on modern GPUs?
+# %% nbgrader={"grade": true, "grade_id": "question-1-attention-scaling", "locked": false, "points": 10, "schema_version": 3, "solution": true, "task": false}
+"""
+YOUR REFLECTION ON O(n²) SCALING AND MEMORY MANAGEMENT:
 
-8. **Mixed Precision Training**: Your implementation uses float32. How does mixed precision (fp16/bf16) training affect attention computation accuracy and memory usage? What numerical stability challenges arise?
+TODO: Replace this text with your thoughtful response about scalable attention system design.
 
-9. **Tensor Core Utilization**: Modern GPUs have specialized matrix multiplication units. How do production systems optimize attention matrix operations to maximize tensor core utilization and throughput?
+Consider addressing:
+- How would you address the quadratic memory complexity of attention for long sequences?
+- What strategies would you use to implement memory-efficient attention mechanisms?
+- How would you design KV-cache optimization for autoregressive text generation?
+- What role would sparse attention patterns play in reducing computational complexity?
+- How would you handle sequence length limitations while maintaining model performance?
 
-### System Integration & Efficiency
-10. **Multi-Head Load Balancing**: Different attention heads may have different computational loads. How do production systems balance work across multiple heads and multiple GPUs to minimize idle time?
+Write a technical analysis connecting your attention implementations to real scaling challenges.
 
-11. **Gradient Checkpointing Trade-offs**: Training large transformers requires trading memory for computation. How do systems decide which attention layers to checkpoint? What is the optimal trade-off between memory savings and recomputation overhead?
+GRADING RUBRIC (Instructor Use):
+- Demonstrates understanding of attention scaling and memory challenges (3 points)
+- Addresses practical approaches to memory optimization and KV-caching (3 points)
+- Shows knowledge of sparse attention and complexity reduction techniques (2 points)
+- Demonstrates systems thinking about sequence processing constraints (2 points)
+- Clear technical reasoning and practical considerations (bonus points for innovative approaches)
+"""
 
-12. **Model Serving Latency**: Real-time applications require low-latency attention computation. How do production systems optimize the attention mechanism for single-token generation vs batch processing? What caching strategies minimize latency?
+### BEGIN SOLUTION
+# Student response area - instructor will replace this section during grading setup
+# This is a manually graded question requiring technical analysis of attention scaling
+# Students should demonstrate understanding of memory optimization and complexity reduction
+### END SOLUTION
 
-*These questions connect your attention implementation to the real engineering challenges of deploying transformer models at scale. Each represents critical decisions that affect the performance, cost, and feasibility of production AI systems.*
+# %% [markdown]
+"""
+### Question 2: Hardware Optimization and Parallel Computation
+
+**Context**: Your attention mechanism processes computations sequentially, but production transformer systems must leverage parallel computation across thousands of GPU cores. Different optimization techniques like Flash Attention and tensor core utilization become critical for performance.
+
+**Reflection Question**: Architect a hardware-optimized attention system that maximizes parallel computation efficiency and memory bandwidth utilization. How would you implement attention algorithms that leverage GPU tensor cores, optimize memory access patterns for better bandwidth utilization, and design parallel computation strategies for multi-head attention? Consider scenarios where you need to optimize attention for both training large models and serving real-time inference with strict latency requirements.
+
+Think about: parallel algorithm design, memory bandwidth optimization, tensor core utilization, and hardware-specific optimization strategies.
+
+*Target length: 150-300 words*
+"""
+
+# %% nbgrader={"grade": true, "grade_id": "question-2-hardware-optimization", "locked": false, "points": 10, "schema_version": 3, "solution": true, "task": false}
+"""
+YOUR REFLECTION ON HARDWARE OPTIMIZATION AND PARALLEL COMPUTATION:
+
+TODO: Replace this text with your thoughtful response about hardware-optimized attention system design.
+
+Consider addressing:
+- How would you design attention algorithms that maximize GPU parallel computation?
+- What strategies would you use to optimize memory bandwidth utilization in attention?
+- How would you leverage tensor cores and specialized hardware for attention computation?
+- What role would algorithm reordering and fusion play in your optimization approach?
+- How would you balance optimization for training vs inference workloads?
+
+Write an architectural analysis connecting your attention mechanisms to real hardware optimization challenges.
+
+GRADING RUBRIC (Instructor Use):
+- Shows understanding of parallel computation and hardware optimization (3 points)
+- Designs practical approaches to GPU acceleration and tensor core utilization (3 points)
+- Addresses memory bandwidth and algorithm optimization strategies (2 points)
+- Demonstrates systems thinking about hardware-software co-optimization (2 points)
+- Clear architectural reasoning with hardware insights (bonus points for comprehensive understanding)
+"""
+
+### BEGIN SOLUTION
+# Student response area - instructor will replace this section during grading setup
+# This is a manually graded question requiring understanding of hardware optimization for attention
+# Students should demonstrate knowledge of parallel computation and GPU acceleration techniques
+### END SOLUTION
+
+# %% [markdown]
+"""
+### Question 3: Production Deployment and System Integration
+
+**Context**: Your attention implementation works for individual forward passes, but production transformer systems must handle dynamic batching, variable sequence lengths, and integration with broader ML serving infrastructure. Real-time applications require careful optimization of attention computation patterns.
+
+**Reflection Question**: Design a production attention serving system that handles dynamic workloads and integrates with ML infrastructure requirements. How would you implement dynamic batching for variable sequence lengths, optimize attention computation for both single-token generation and batch processing, and integrate attention mechanisms with model serving platforms? Consider scenarios where you need to serve ChatGPT-style conversational AI, real-time document processing, or multi-modal applications with varying computational requirements.
+
+Think about: dynamic batching strategies, serving optimization, latency vs throughput trade-offs, and system integration patterns.
+
+*Target length: 150-300 words*
+"""
+
+# %% nbgrader={"grade": true, "grade_id": "question-3-production-deployment", "locked": false, "points": 10, "schema_version": 3, "solution": true, "task": false}
+"""
+YOUR REFLECTION ON PRODUCTION DEPLOYMENT AND SYSTEM INTEGRATION:
+
+TODO: Replace this text with your thoughtful response about production attention serving system design.
+
+Consider addressing:
+- How would you design attention systems that handle dynamic batching and variable sequence lengths?
+- What strategies would you use to optimize attention for different serving scenarios?
+- How would you balance latency and throughput requirements in production attention systems?
+- What role would integration with ML serving infrastructure play in your design?
+- How would you ensure scalability and reliability for high-volume attention workloads?
+
+Write a systems analysis connecting your attention mechanisms to real production deployment challenges.
+
+GRADING RUBRIC (Instructor Use):
+- Understands production serving and dynamic batching challenges (3 points)
+- Designs practical approaches to attention optimization and serving (3 points)
+- Addresses latency, throughput, and integration considerations (2 points)
+- Shows systems thinking about production ML infrastructure (2 points)
+- Clear systems reasoning with deployment insights (bonus points for deep understanding)
+"""
+
+### BEGIN SOLUTION
+# Student response area - instructor will replace this section during grading setup
+# This is a manually graded question requiring understanding of production attention deployment
+# Students should demonstrate knowledge of serving optimization and system integration
+### END SOLUTION
+
+# %% [markdown]
+"""
+## 🎯 MODULE SUMMARY: Attention Mechanisms
+
+Congratulations! You have successfully implemented the attention mechanisms that power modern AI:
+
+### What You have Accomplished
+✅ **Scaled Dot-Product Attention**: The core attention mechanism used in transformers
+✅ **Multi-Head Attention**: Parallel attention heads for complex pattern recognition
+✅ **Causal Masking**: Sequence modeling for autoregressive generation
+✅ **Integration**: Seamless compatibility with Tensor operations
+✅ **Real Applications**: Language modeling, machine translation, and more
+
+### Key Concepts You have Learned
+- **Attention as weighted averaging**: How attention computes context-dependent representations
+- **Query-Key-Value paradigm**: The fundamental attention computation pattern
+- **Scaled dot-product**: Mathematical foundation of attention mechanisms
+- **Multi-head processing**: Parallel attention for complex pattern recognition
+- **Causal masking**: Enabling autoregressive sequence generation
+
+### Mathematical Foundations
+- **Attention computation**: Attention(Q,K,V) = softmax(QK^T/√d_k)V
+- **Scaled dot-product**: Preventing gradient vanishing in deep networks
+- **Multi-head attention**: Parallel attention heads with different projections
+- **Causal masking**: Upper triangular masking for autoregressive generation
+
+### Professional Skills Developed
+- **Matrix operations**: Efficient attention computation with NumPy
+- **Masking techniques**: Implementing causal and padding masks
+- **Multi-head processing**: Parallel attention head implementation
+- **Integration patterns**: How attention fits into larger architectures
+
+### Ready for Advanced Applications
+Your attention implementations now enable:
+- **Transformer architectures**: Complete transformer models for NLP
+- **Language modeling**: GPT-style autoregressive generation
+- **Machine translation**: Sequence-to-sequence attention models
+- **Vision transformers**: Attention for computer vision tasks
+
+### Connection to Real ML Systems
+Your implementations mirror production systems:
+- **PyTorch**: `torch.nn.MultiheadAttention()` provides identical functionality
+- **TensorFlow**: `tf.keras.layers.MultiHeadAttention()` implements similar concepts
+- **Hugging Face**: All transformer models use these exact attention mechanisms
+
+### Next Steps
+1. **Export your code**: `tito export 07_attention`
+2. **Test your implementation**: `tito test 07_attention`
+3. **Build transformers**: Combine attention with feed-forward networks
+4. **Move to Module 8**: Add data loading for real-world datasets!
 
 **Ready for data engineering?** Your attention mechanisms are now ready for real-world applications!
 """

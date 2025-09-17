@@ -597,6 +597,13 @@ def test_unit_system_info_basic():
     print("✅ System info function tests passed!")
     print(f"✅ Python: {sys_info['python_version']} on {sys_info['platform']}")
 
+# %% [markdown]
+"""
+### 🎯 Additional Comprehensive Tests
+
+These comprehensive tests validate that your configuration functions work together and integrate properly with the TinyTorch system.
+"""
+
 # Test function defined (called in main block)
 
 # %% [markdown]
@@ -636,37 +643,149 @@ We'll use comprehensive testing that checks:
 Now let's test your configuration functions!
 """
 
+if __name__ == "__main__":
+    # Run the unit tests
+    test_unit_personal_info_basic()
+    test_unit_system_info_basic()
+    
+    print("All tests passed!")
+    print("Setup module complete!")
+
+
 # %% [markdown]
 """
-### 🎯 Additional Comprehensive Tests
+## 🤔 ML Systems Thinking: Interactive Questions
 
-These comprehensive tests validate that your configuration functions work together and integrate properly with the TinyTorch system.
+Now that you've built configuration management for your TinyTorch system, let's connect this foundational work to broader ML systems challenges. These questions help you think critically about how basic setup principles scale to production ML environments.
+
+Take time to reflect thoughtfully on each question - your insights will help you understand how the configuration concepts you've implemented connect to real-world ML systems engineering.
 """
 
 # %% [markdown]
 """
-## 🤔 ML Systems Thinking Questions
+### Question 1: Team Development Configuration
 
-### System Design
-1. How might your personal configuration system scale to support team-based ML development where multiple developers share models and infrastructure?
-2. What additional system information would be crucial for deploying ML models across different cloud providers (AWS, GCP, Azure)?
-3. How do configuration management patterns in TinyTorch compare to industry tools like MLflow, Weights & Biases, or Neptune?
+**Context**: You've implemented personal configuration for individual TinyTorch development. In real ML teams, multiple developers, data scientists, and engineers collaborate on shared models and infrastructure.
 
-### Production ML
-1. In a production ML environment, how would hardware detection help with automated resource allocation and model deployment strategies?
-2. How might system configuration differ between development environments, staging systems, and production inference servers?
-3. What role does environment reproducibility play in debugging ML model performance issues in production?
+**Reflection Question**: How would you design a configuration system that balances individual developer identity with team coordination needs in a production ML environment? Consider scenarios where teams share GPU clusters, model registries, and deployment pipelines while maintaining individual accountability and debugging capabilities.
 
-### Framework Design
-1. How do major ML frameworks like PyTorch and TensorFlow handle system detection and configuration management internally?
-2. What are the trade-offs between static configuration files versus dynamic system detection for ML applications?
-3. How would you design a configuration system that adapts to different hardware capabilities (CPU-only vs GPU vs TPU)?
+Think about: individual vs shared resources, conflict resolution, attribution tracking, and environment standardization.
 
-### Performance & Scale
-1. How might CPU core count and memory constraints influence automatic hyperparameter selection and batch size optimization?
-2. What performance implications arise from different CPU architectures (x86 vs ARM) in ML training and inference workloads?
-3. How would you design a system that automatically configures parallel processing based on detected hardware capabilities?
+*Target length: 150-300 words*
 """
+
+# %% nbgrader={"grade": true, "grade_id": "question-1-team-config", "locked": false, "points": 10, "schema_version": 3, "solution": true, "task": false}
+"""
+YOUR REFLECTION ON TEAM DEVELOPMENT CONFIGURATION:
+
+TODO: Replace this text with your thoughtful response about designing configuration systems for team-based ML development.
+
+Consider addressing:
+- How would you maintain individual identity while enabling team coordination?
+- What information would be shared vs. personal in a team configuration system?
+- How would you handle resource conflicts when multiple developers need GPU access?
+- What role would configuration play in debugging issues across team environments?
+- How might team configuration differ from individual configuration?
+
+Write a thoughtful analysis connecting your setup module experience to real team challenges.
+
+GRADING RUBRIC (Instructor Use):
+- Demonstrates understanding of individual vs team configuration needs (3 points)
+- Addresses resource sharing and conflict resolution challenges (3 points)  
+- Connects setup module concepts to real team scenarios (2 points)
+- Shows systems thinking about scalability and coordination (2 points)
+- Clear writing and practical insights (bonus points for exceptional responses)
+"""
+
+### BEGIN SOLUTION
+# Student response area - instructor will replace this section during grading setup
+# This is a manually graded question requiring thoughtful analysis of team configuration challenges
+# Students should demonstrate understanding of balancing individual accountability with team coordination
+### END SOLUTION
+
+# %% [markdown]
+"""
+### Question 2: Hardware-Aware System Design
+
+**Context**: Your system_info() function detects CPU cores, memory, and architecture. In production ML systems, this hardware awareness becomes critical for performance optimization and automated resource allocation.
+
+**Reflection Question**: Design a hardware-aware configuration system that automatically adapts ML training strategies based on detected resources. How would your system handle the transition from development (8GB laptop) to training (64GB GPU server) to inference (edge device with 2GB)? What configuration decisions would be automated vs. manual?
+
+Think about: automatic batch size scaling, parallelization strategies, memory management, and deployment target optimization.
+
+*Target length: 150-300 words*
+"""
+
+# %% nbgrader={"grade": true, "grade_id": "question-2-hardware-aware", "locked": false, "points": 10, "schema_version": 3, "solution": true, "task": false}
+"""
+YOUR REFLECTION ON HARDWARE-AWARE SYSTEM DESIGN:
+
+TODO: Replace this text with your thoughtful response about hardware-aware configuration systems.
+
+Consider addressing:
+- How would your system automatically adapt training parameters based on detected hardware?
+- What would you do differently for development vs. training vs. inference environments?
+- How would you handle memory constraints and batch size optimization automatically?
+- What configuration decisions should be automated vs. left to manual tuning?
+- How would your system gracefully handle resource limitations?
+
+Write a practical design connecting your system_info() implementation to real performance challenges.
+
+GRADING RUBRIC (Instructor Use):
+- Shows understanding of hardware constraints impact on ML performance (3 points)
+- Designs practical automated adaptation strategies (3 points)
+- Addresses different deployment environments appropriately (2 points)
+- Demonstrates systems thinking about resource optimization (2 points)
+- Clear design reasoning and practical considerations (bonus points for innovative approaches)
+"""
+
+### BEGIN SOLUTION
+# Student response area - instructor will replace this section during grading setup  
+# This is a manually graded question requiring design thinking about hardware-aware systems
+# Students should demonstrate understanding of automatic adaptation based on hardware detection
+### END SOLUTION
+
+# %% [markdown]
+"""
+### Question 3: Configuration in Production ML Pipelines
+
+**Context**: Your configuration functions provide system information and personal attribution. In production ML pipelines, configuration becomes part of model lineage, experiment tracking, and compliance requirements.
+
+**Reflection Question**: How would configuration management integrate with modern ML operations (MLOps) tools for model deployment and monitoring? Consider a scenario where your model needs to be deployed across multiple environments with different compliance requirements, monitoring needs, and performance targets. What configuration information becomes part of the model artifact vs. environment-specific?
+
+Think about: model lineage tracking, compliance auditing, A/B testing configuration, and production monitoring requirements.
+
+*Target length: 150-300 words*
+"""
+
+# %% nbgrader={"grade": true, "grade_id": "question-3-production-config", "locked": false, "points": 10, "schema_version": 3, "solution": true, "task": false}
+"""
+YOUR REFLECTION ON PRODUCTION ML PIPELINE CONFIGURATION:
+
+TODO: Replace this text with your thoughtful response about configuration in production ML systems.
+
+Consider addressing:
+- How would configuration information become part of model lineage and audit trails?
+- What configuration would be bundled with the model vs. environment-specific?
+- How would your configuration system support A/B testing and deployment strategies?
+- What role would configuration play in monitoring and debugging production issues?
+- How would compliance requirements (data governance, model validation) affect configuration design?
+
+Write an analysis connecting your setup module concepts to MLOps and production deployment challenges.
+
+GRADING RUBRIC (Instructor Use):
+- Understands configuration role in model lineage and compliance (3 points)
+- Addresses model artifact vs. environment configuration separation (3 points)
+- Shows awareness of MLOps integration challenges (2 points)
+- Demonstrates production systems thinking (2 points)
+- Clear analysis with practical MLOps insights (bonus points for deep understanding)
+"""
+
+### BEGIN SOLUTION
+# Student response area - instructor will replace this section during grading setup
+# This is a manually graded question requiring understanding of production ML configuration challenges  
+# Students should demonstrate understanding of configuration in MLOps and production deployment contexts
+### END SOLUTION
 
 # %% [markdown]
 """
@@ -738,11 +857,3 @@ You've taken your first step in ML systems engineering! This module taught you:
 
 **Ready for the next challenge?** Let's build the foundation of ML systems with tensors!
 """
-
-if __name__ == "__main__":
-    # Run the unit tests
-    test_unit_personal_info_basic()
-    test_unit_system_info_basic()
-    
-    print("All tests passed!")
-    print("Setup module complete!")
