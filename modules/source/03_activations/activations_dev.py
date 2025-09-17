@@ -892,97 +892,6 @@ def test_module_activation_tensor_integration():
 
 # %% [markdown]
 """
-## 🎯 MODULE SUMMARY: Activation Functions
-
-    Congratulations! You have successfully implemented all four essential activation functions:
-
-### ✅ What You have Built
-    - **ReLU**: The foundation of modern deep learning with sparsity and efficiency
-    - **Sigmoid**: Classic activation for binary classification and probability outputs
-    - **Tanh**: Zero-centered activation with better gradient properties
-    - **Softmax**: Probability distribution for multi-class classification
-
-### ✅ Key Learning Outcomes
-    - **Understanding**: Why nonlinearity is essential for neural networks
-    - **Implementation**: Built activation functions from scratch using NumPy
-    - **Testing**: Progressive validation with immediate feedback after each function
-    - **Integration**: Saw how activations work together in neural networks
-    - **Real-world context**: Understanding where each activation is used
-
-### ✅ Mathematical Mastery
-    - **ReLU**: f(x) = max(0, x) - Simple but powerful
-    - **Sigmoid**: f(x) = 1/(1 + e^(-x)) - Maps to (0,1)
-    - **Tanh**: f(x) = tanh(x) - Zero-centered, maps to (-1,1)
-    - **Softmax**: f(x_i) = e^(x_i)/Σ(e^(x_j)) - Probability distribution
-
-### ✅ Professional Skills Developed
-    - **Numerical stability**: Handling overflow and underflow
-    - **API design**: Consistent interfaces across all functions
-    - **Testing discipline**: Immediate validation after each implementation
-    - **Integration thinking**: Understanding how components work together
-
-### ✅ Ready for Next Steps
-    Your activation functions are now ready to power:
-    - **Dense layers**: Linear transformations with nonlinear activations
-    - **Convolutional layers**: Spatial feature extraction with ReLU
-    - **Network architectures**: Complete neural networks with proper activations
-    - **Training**: Gradient computation through activation functions
-
-### 🔗 Connection to Real ML Systems
-    Your implementations mirror production systems:
-    - **PyTorch**: `torch.nn.ReLU()`, `torch.nn.Sigmoid()`, `torch.nn.Tanh()`, `torch.nn.Softmax()`
-    - **TensorFlow**: `tf.nn.relu()`, `tf.nn.sigmoid()`, `tf.nn.tanh()`, `tf.nn.softmax()`
-    - **Industry applications**: Every major deep learning model uses these functions
-
-### 🎯 The Power of Nonlinearity
-    You have unlocked the key to deep learning:
-    - **Before**: Linear models limited to simple patterns
-    - **After**: Nonlinear models can learn any pattern (universal approximation)
-
-    **Next Module**: Layers - Building blocks that combine your tensors and activations into powerful transformations!
-
-    Your activation functions are the key to neural network intelligence. Now let us build the layers that use them!
-"""
-
-# %% [markdown]
-"""
-## ML Systems Thinking: Reflection Questions
-
-Now that you have built the nonlinear functions that enable neural network intelligence, reflect on how these simple mathematical operations power the AI revolution.
-
-### System Design - How does this fit into larger systems?
-1. **The Nonlinearity Bottleneck**: Your implementations show how ReLU, Sigmoid, Tanh, and Softmax each solve different problems. When OpenAI designs GPT architectures, how do they decide which activation goes where? What happens when you choose the wrong activation for a specific layer?
-
-2. **Activation Memory**: Your ReLU creates sparse outputs (many zeros). How does this sparsity enable frameworks to optimize memory usage in massive models? Why might this be crucial when training models with billions of parameters?
-
-3. **Numerical Stability**: Your Softmax includes overflow protection with clipping. How do production systems handle numerical stability at scale? What happens when a single unstable activation cascades through a 100-layer network?
-
-### Production ML - How is this used in real ML workflows?
-4. **Hardware Acceleration**: Your simple element-wise operations translate to GPU kernels. How do cloud providers optimize activation function compute for millions of concurrent neural network inferences? Why might ReLU be preferred on certain hardware?
-
-5. **Model Serving Latency**: Your activation functions add computational overhead. When serving real-time recommendations or autonomous vehicle decisions, how do activation choices affect response times? Which activations are fastest and why?
-
-6. **Gradient Behavior**: Your functions enable backpropagation (coming in Module 7). In production training of large language models, how do activation choices affect training stability and convergence speed? Why did ReLU revolutionize deep learning?
-
-### Framework Design - Why do frameworks make certain choices?
-7. **API Consistency**: Your callable classes (`relu(x)`) mirror PyTorch design. How does consistent activation APIs enable researchers to experiment rapidly with different nonlinearities? What would happen if each activation had a different interface?
-
-8. **Automatic Differentiation**: Your forward-only implementations will connect to gradient computation. How do frameworks like PyTorch automatically track operations through activations to compute gradients? Why is this harder than it looks?
-
-9. **Activation Fusion**: Your separate activation calls could be optimized. How do production frameworks combine linear layers with activations into single GPU operations for speed? What trade-offs does this optimization create?
-
-### Performance & Scale - What happens when systems get large?
-10. **Activation Bottlenecks**: Your functions process tensors sequentially. When training transformer models with billions of parameters, how do activation computations get parallelized across multiple GPUs? What new challenges emerge at scale?
-
-11. **Memory vs Computation**: Your implementations store all intermediate results. How do techniques like gradient checkpointing trade activation memory for recomputation time? When do these trade-offs become critical?
-
-12. **Dynamic Activations**: Your static functions are fixed at definition. How might learned activations (like Swish or GELU) that adapt during training change the computational requirements of large-scale systems?
-
-**Systems Insight**: The activation functions you built are the "biological neurons" of artificial intelligence - each simple nonlinear transformation enables networks to learn complex patterns. Your ReLU implementation, despite being just `max(0, x)`, is literally computing in millions of deployed models right now, powering everything from photo recognition to language translation.
-"""
-
-# %% [markdown]
-"""
 ## ⚡ ML Systems: Performance Analysis & Optimization
 
 Now that you have working activation functions, let us develop **performance engineering skills**. This section teaches you to measure computational costs, understand scaling patterns, and think about production optimization.
@@ -1325,4 +1234,193 @@ if __name__ == "__main__":
     print(f"   - Speed matters: 1000 layers × speed difference = major impact")
     
     print("All tests passed!")
-    print("Activations module complete!") 
+    print("Activations module complete!")
+
+# %% [markdown]
+"""
+## 🤔 ML Systems Thinking: Interactive Questions
+
+Now that you've built the nonlinear functions that enable neural network intelligence, let's connect this foundational work to broader ML systems challenges. These questions help you think critically about how activation functions scale to production ML environments.
+
+Take time to reflect thoughtfully on each question - your insights will help you understand how the activation concepts you've implemented connect to real-world ML systems engineering.
+"""
+
+# %% [markdown]
+"""
+### Question 1: Computational Efficiency and Numerical Stability
+
+**Context**: Your activation implementations handle basic operations like ReLU's max(0, x) and Softmax's exponential computations. In production ML systems, these operations run billions of times during training and inference, making computational efficiency and numerical stability critical for system reliability.
+
+**Reflection Question**: Design a production-grade activation function system that balances computational efficiency with numerical stability. How would you optimize ReLU for sparse computation, implement numerically stable Softmax for large vocabulary language models, and handle precision requirements across different hardware platforms? Consider scenarios where numerical instability in activation functions could cascade through deep networks and cause training failures.
+
+Think about: vectorization strategies, overflow/underflow protection, sparse computation optimization, and precision trade-offs between speed and accuracy.
+
+*Target length: 150-300 words*
+"""
+
+# %% nbgrader={"grade": true, "grade_id": "question-1-computational-efficiency", "locked": false, "points": 10, "schema_version": 3, "solution": true, "task": false}
+"""
+YOUR REFLECTION ON COMPUTATIONAL EFFICIENCY AND NUMERICAL STABILITY:
+
+TODO: Replace this text with your thoughtful response about production-grade activation function design.
+
+Consider addressing:
+- How would you optimize activation functions for both efficiency and numerical stability?
+- What strategies would you use to handle large-scale sparse computation in ReLU?
+- How would you implement numerically stable Softmax for large vocabulary models?
+- What precision trade-offs would you make across different hardware platforms?
+- How would you prevent numerical instability from cascading through deep networks?
+
+Write a technical analysis connecting your activation implementations to real production optimization challenges.
+
+GRADING RUBRIC (Instructor Use):
+- Demonstrates understanding of efficiency vs stability trade-offs (3 points)
+- Addresses numerical stability concerns in large-scale systems (3 points)
+- Shows practical knowledge of optimization strategies (2 points)
+- Demonstrates systems thinking about activation function design (2 points)
+- Clear technical reasoning and practical considerations (bonus points for innovative approaches)
+"""
+
+### BEGIN SOLUTION
+# Student response area - instructor will replace this section during grading setup
+# This is a manually graded question requiring technical analysis of activation optimization
+# Students should demonstrate understanding of efficiency and numerical stability in production systems
+### END SOLUTION
+
+# %% [markdown]
+"""
+### Question 2: Hardware Optimization and Parallelization
+
+**Context**: Your activation functions perform element-wise operations that are ideal for parallel computation. Production ML systems deploy these functions across diverse hardware: CPUs, GPUs, TPUs, and edge devices, each with different computational characteristics and optimization opportunities.
+
+**Reflection Question**: Architect a hardware-aware activation function system that automatically optimizes for different compute platforms. How would you leverage ReLU's sparsity for GPU memory optimization, implement vectorized operations for CPU SIMD instructions, and design activation kernels for specialized AI accelerators? Consider the challenges of maintaining consistent numerical behavior across platforms while maximizing hardware-specific performance.
+
+Think about: SIMD vectorization, GPU kernel fusion, sparse computation patterns, and platform-specific optimization techniques.
+
+*Target length: 150-300 words*
+"""
+
+# %% nbgrader={"grade": true, "grade_id": "question-2-hardware-optimization", "locked": false, "points": 10, "schema_version": 3, "solution": true, "task": false}
+"""
+YOUR REFLECTION ON HARDWARE OPTIMIZATION AND PARALLELIZATION:
+
+TODO: Replace this text with your thoughtful response about hardware-aware activation function design.
+
+Consider addressing:
+- How would you design activation functions that optimize for different hardware platforms?
+- What strategies would you use to leverage GPU parallelism for activation computations?
+- How would you implement SIMD vectorization for CPU-based activation functions?
+- What role would kernel fusion play in optimizing activation performance?
+- How would you maintain numerical consistency across different hardware platforms?
+
+Write an architectural analysis connecting your activation implementations to real hardware optimization challenges.
+
+GRADING RUBRIC (Instructor Use):
+- Shows understanding of hardware-specific optimization strategies (3 points)
+- Designs practical approaches to parallel activation computation (3 points)
+- Addresses platform consistency and performance trade-offs (2 points)
+- Demonstrates systems thinking about hardware-software optimization (2 points)
+- Clear architectural reasoning with hardware insights (bonus points for comprehensive understanding)
+"""
+
+### BEGIN SOLUTION
+# Student response area - instructor will replace this section during grading setup
+# This is a manually graded question requiring understanding of hardware optimization challenges
+# Students should demonstrate knowledge of parallel computation and platform-specific optimization
+### END SOLUTION
+
+# %% [markdown]
+"""
+### Question 3: Integration with Training Systems and Gradient Flow
+
+**Context**: Your activation functions will integrate with automatic differentiation systems for training neural networks. The choice and implementation of activation functions significantly impacts gradient flow, training stability, and convergence speed in large-scale ML training systems.
+
+**Reflection Question**: Design an activation function integration system for large-scale neural network training that optimizes gradient flow and training stability. How would you implement activation functions that support efficient gradient computation, handle the vanishing gradient problem in deep networks, and integrate with distributed training systems? Consider the challenges of maintaining training stability when activation choices affect gradient magnitude and direction across hundreds of layers.
+
+Think about: gradient flow characteristics, backpropagation efficiency, training stability, and distributed training considerations.
+
+*Target length: 150-300 words*
+"""
+
+# %% nbgrader={"grade": true, "grade_id": "question-3-training-integration", "locked": false, "points": 10, "schema_version": 3, "solution": true, "task": false}
+"""
+YOUR REFLECTION ON INTEGRATION WITH TRAINING SYSTEMS:
+
+TODO: Replace this text with your thoughtful response about activation function integration with training systems.
+
+Consider addressing:
+- How would you design activation functions to optimize gradient flow in deep networks?
+- What strategies would you use to handle vanishing/exploding gradient problems?
+- How would you integrate activation functions with automatic differentiation systems?
+- What role would activation choices play in distributed training stability?
+- How would you balance activation complexity with training efficiency?
+
+Write a design analysis connecting your activation functions to automatic differentiation and training optimization.
+
+GRADING RUBRIC (Instructor Use):
+- Understands activation function impact on gradient flow and training (3 points)
+- Designs practical approaches to training integration and stability (3 points)
+- Addresses distributed training and efficiency considerations (2 points)
+- Shows systems thinking about training system architecture (2 points)
+- Clear design reasoning with training optimization insights (bonus points for deep understanding)
+"""
+
+### BEGIN SOLUTION
+# Student response area - instructor will replace this section during grading setup
+# This is a manually graded question requiring understanding of training system integration
+# Students should demonstrate knowledge of gradient flow and training optimization challenges
+### END SOLUTION
+
+# %% [markdown]
+"""
+## 🎯 MODULE SUMMARY: Activation Functions
+
+    Congratulations! You have successfully implemented all four essential activation functions:
+
+### ✅ What You have Built
+    - **ReLU**: The foundation of modern deep learning with sparsity and efficiency
+    - **Sigmoid**: Classic activation for binary classification and probability outputs
+    - **Tanh**: Zero-centered activation with better gradient properties
+    - **Softmax**: Probability distribution for multi-class classification
+
+### ✅ Key Learning Outcomes
+    - **Understanding**: Why nonlinearity is essential for neural networks
+    - **Implementation**: Built activation functions from scratch using NumPy
+    - **Testing**: Progressive validation with immediate feedback after each function
+    - **Integration**: Saw how activations work together in neural networks
+    - **Real-world context**: Understanding where each activation is used
+
+### ✅ Mathematical Mastery
+    - **ReLU**: f(x) = max(0, x) - Simple but powerful
+    - **Sigmoid**: f(x) = 1/(1 + e^(-x)) - Maps to (0,1)
+    - **Tanh**: f(x) = tanh(x) - Zero-centered, maps to (-1,1)
+    - **Softmax**: f(x_i) = e^(x_i)/Σ(e^(x_j)) - Probability distribution
+
+### ✅ Professional Skills Developed
+    - **Numerical stability**: Handling overflow and underflow
+    - **API design**: Consistent interfaces across all functions
+    - **Testing discipline**: Immediate validation after each implementation
+    - **Integration thinking**: Understanding how components work together
+
+### ✅ Ready for Next Steps
+    Your activation functions are now ready to power:
+    - **Dense layers**: Linear transformations with nonlinear activations
+    - **Convolutional layers**: Spatial feature extraction with ReLU
+    - **Network architectures**: Complete neural networks with proper activations
+    - **Training**: Gradient computation through activation functions
+
+### 🔗 Connection to Real ML Systems
+    Your implementations mirror production systems:
+    - **PyTorch**: `torch.nn.ReLU()`, `torch.nn.Sigmoid()`, `torch.nn.Tanh()`, `torch.nn.Softmax()`
+    - **TensorFlow**: `tf.nn.relu()`, `tf.nn.sigmoid()`, `tf.nn.tanh()`, `tf.nn.softmax()`
+    - **Industry applications**: Every major deep learning model uses these functions
+
+### 🎯 The Power of Nonlinearity
+    You have unlocked the key to deep learning:
+    - **Before**: Linear models limited to simple patterns
+    - **After**: Nonlinear models can learn any pattern (universal approximation)
+
+    **Next Module**: Layers - Building blocks that combine your tensors and activations into powerful transformations!
+
+    Your activation functions are the key to neural network intelligence. Now let us build the layers that use them!
+""" 

@@ -1271,42 +1271,138 @@ def test_convolution_profiler():
 
 # %% [markdown]
 """
-## 🤔 ML Systems Thinking Questions
+## 🤔 ML Systems Thinking: Interactive Questions
 
-*Take a moment to reflect on these questions. Consider how your convolution implementation connects to the challenges of production computer vision systems.*
+Now that you've built convolution operations and spatial processing capabilities, let's connect this foundational work to broader ML systems challenges. These questions help you think critically about how spatial computation patterns scale to production computer vision environments.
 
-### 🏗️ Spatial Computation Design
-1. **Memory Access Patterns**: Your convolution slides a kernel across an image, accessing nearby pixels repeatedly. How do production systems optimize for spatial locality to maximize cache hit rates? What happens when images do not fit in cache?
+Take time to reflect thoughtfully on each question - your insights will help you understand how the spatial processing concepts you've implemented connect to real-world ML systems engineering.
+"""
 
-2. **Parallelization Strategy**: Your implementation processes one pixel at a time. How do modern GPUs parallelize convolution across thousands of cores? What are the trade-offs between data parallelism and model parallelism for large CNNs?
+# %% [markdown]
+"""
+### Question 1: Convolution Optimization and Memory Access Patterns
 
-3. **Memory vs Computation Trade-offs**: Your conv operation stores all intermediate feature maps. How do techniques like gradient checkpointing trade memory for recomputation in training large vision models?
+**Context**: Your convolution implementation processes images by sliding kernels across spatial dimensions, accessing nearby pixels repeatedly. Production computer vision systems must optimize these memory access patterns for cache efficiency, especially when processing high-resolution images that exceed cache capacity.
 
-### 📊 Production Computer Vision
-4. **Real-time Processing**: Your convolution works on single images. When processing video streams or real-time camera feeds, how do systems batch and pipeline operations for maximum throughput?
+**Reflection Question**: Design an optimized convolution system for production computer vision that maximizes cache efficiency and memory bandwidth utilization. How would you implement spatial data layout optimization for different image sizes, optimize kernel access patterns for cache locality, and handle memory hierarchies from L1 cache to main memory? Consider scenarios where you need to process 4K video streams in real-time while maintaining memory efficiency.
 
-5. **Model Serving Optimization**: Different kernel sizes have different computational costs. How do production systems choose optimal architectures for different hardware (mobile vs datacenter) and latency requirements?
+Think about: spatial data layouts (NCHW vs NHWC), cache-blocking strategies, memory prefetching, and bandwidth optimization techniques.
 
-6. **Dynamic Batching**: Your implementation handles one image at a time. How do cloud vision APIs batch images from multiple users to maximize GPU utilization while maintaining acceptable latency?
+*Target length: 150-300 words*
+"""
 
-### ⚡ Hardware and Optimization
-7. **Specialized Hardware**: Your NumPy implementation runs on CPU. How do specialized AI chips (TPUs, Tensor Cores) optimize convolution operations differently than general-purpose processors?
+# %% nbgrader={"grade": true, "grade_id": "question-1-convolution-optimization", "locked": false, "points": 10, "schema_version": 3, "solution": true, "task": false}
+"""
+YOUR REFLECTION ON CONVOLUTION OPTIMIZATION AND MEMORY ACCESS PATTERNS:
 
-8. **Memory Bandwidth Bottlenecks**: Large images require substantial memory bandwidth. How do production systems optimize data layout (NCHW vs NHWC) and memory access patterns for different hardware architectures?
+TODO: Replace this text with your thoughtful response about optimized convolution system design.
 
-9. **Quantization Impact**: Your convolution uses float32 arithmetic. How does quantization to int8 or int16 affect both accuracy and performance in production vision systems?
+Consider addressing:
+- How would you optimize spatial data layouts for different image processing scenarios?
+- What strategies would you use to maximize cache locality in convolution operations?
+- How would you handle memory bandwidth bottlenecks in high-resolution image processing?
+- What role would cache-blocking and prefetching play in your optimization approach?
+- How would you adapt memory access patterns for different hardware architectures?
 
-### 🔄 System Architecture
-10. **Multi-scale Processing**: Computer vision often processes images at multiple resolutions. How do production systems architect pipelines to handle pyramid processing efficiently?
+Write a technical analysis connecting your convolution implementations to real memory optimization challenges.
 
-11. **Model Compilation**: Your Python implementation has interpretation overhead. How do production systems compile CNN models to optimized code for different target hardware?
+GRADING RUBRIC (Instructor Use):
+- Demonstrates understanding of spatial memory access optimization (3 points)
+- Addresses cache efficiency and bandwidth utilization strategies (3 points)
+- Shows practical knowledge of data layout and access pattern optimization (2 points)
+- Demonstrates systems thinking about memory hierarchy optimization (2 points)
+- Clear technical reasoning and practical considerations (bonus points for innovative approaches)
+"""
 
-12. **Distributed Inference**: Large vision models may not fit on a single device. How do systems distribute convolution layers across multiple GPUs or devices while minimizing communication overhead?
+### BEGIN SOLUTION
+# Student response area - instructor will replace this section during grading setup
+# This is a manually graded question requiring technical analysis of convolution optimization
+# Students should demonstrate understanding of spatial memory access patterns and cache optimization
+### END SOLUTION
 
-*These questions connect your spatial computation implementation to the real challenges of deploying computer vision at scale. Each represents engineering decisions that impact the performance, cost, and reliability of production AI systems.*
+# %% [markdown]
+"""
+### Question 2: GPU Parallelization and Hardware Acceleration
 
-**Ready for the next challenge?** Let us build data loaders to handle real datasets efficiently!
-""" 
+**Context**: Your convolution processes pixels sequentially, but production computer vision systems leverage thousands of GPU cores for parallel computation. Different hardware platforms (GPUs, TPUs, mobile processors) have distinct optimization opportunities and constraints for spatial operations.
+
+**Reflection Question**: Architect a hardware-aware convolution system that optimally utilizes parallel computing resources across different platforms. How would you implement data parallelism strategies for GPU convolution kernels, optimize for specialized AI accelerators like TPUs, and adapt convolution algorithms for mobile and edge devices with limited resources? Consider scenarios where the same model needs efficient deployment across cloud GPUs, mobile phones, and embedded vision systems.
+
+Think about: parallel algorithm design, hardware-specific optimization, work distribution strategies, and cross-platform efficiency considerations.
+
+*Target length: 150-300 words*
+"""
+
+# %% nbgrader={"grade": true, "grade_id": "question-2-gpu-parallelization", "locked": false, "points": 10, "schema_version": 3, "solution": true, "task": false}
+"""
+YOUR REFLECTION ON GPU PARALLELIZATION AND HARDWARE ACCELERATION:
+
+TODO: Replace this text with your thoughtful response about hardware-aware convolution system design.
+
+Consider addressing:
+- How would you design parallel convolution algorithms for different hardware platforms?
+- What strategies would you use to optimize convolution for GPU, TPU, and mobile processors?
+- How would you implement work distribution and load balancing for parallel convolution?
+- What role would hardware-specific optimizations play in your design?
+- How would you maintain efficiency across diverse deployment platforms?
+
+Write an architectural analysis connecting your spatial processing to real hardware acceleration challenges.
+
+GRADING RUBRIC (Instructor Use):
+- Shows understanding of parallel computing and hardware acceleration (3 points)
+- Designs practical approaches to multi-platform convolution optimization (3 points)
+- Addresses work distribution and platform-specific optimization (2 points)
+- Demonstrates systems thinking about hardware-software co-optimization (2 points)
+- Clear architectural reasoning with hardware insights (bonus points for comprehensive understanding)
+"""
+
+### BEGIN SOLUTION
+# Student response area - instructor will replace this section during grading setup
+# This is a manually graded question requiring understanding of parallel computing and hardware optimization
+# Students should demonstrate knowledge of GPU acceleration and multi-platform optimization
+### END SOLUTION
+
+# %% [markdown]
+"""
+### Question 3: Production Computer Vision Pipeline Integration
+
+**Context**: Your convolution operates on individual images, but production computer vision systems must handle continuous streams of images, video processing, and real-time inference with strict latency requirements. Integration with broader ML pipelines becomes critical for system performance.
+
+**Reflection Question**: Design a production computer vision pipeline that integrates convolution operations with real-time processing requirements and system-wide optimization. How would you implement batching strategies for video streams, optimize pipeline throughput while maintaining low latency, and integrate convolution with preprocessing and postprocessing stages? Consider scenarios where you need to process security camera feeds, autonomous vehicle vision, or real-time medical imaging with reliability and performance guarantees.
+
+Think about: pipeline optimization, batching strategies, latency vs throughput trade-offs, and system integration patterns.
+
+*Target length: 150-300 words*
+"""
+
+# %% nbgrader={"grade": true, "grade_id": "question-3-production-pipeline", "locked": false, "points": 10, "schema_version": 3, "solution": true, "task": false}
+"""
+YOUR REFLECTION ON PRODUCTION COMPUTER VISION PIPELINE INTEGRATION:
+
+TODO: Replace this text with your thoughtful response about production vision pipeline design.
+
+Consider addressing:
+- How would you design computer vision pipelines that integrate convolution with real-time processing?
+- What strategies would you use to optimize batching and throughput for video streams?
+- How would you balance latency requirements with computational efficiency?
+- What role would pipeline integration and optimization play in your system?
+- How would you ensure reliability and performance guarantees for critical applications?
+
+Write a systems analysis connecting your convolution operations to real production pipeline challenges.
+
+GRADING RUBRIC (Instructor Use):
+- Understands production computer vision pipeline requirements (3 points)
+- Designs practical approaches to real-time processing and batching (3 points)
+- Addresses latency vs throughput optimization challenges (2 points)
+- Shows systems thinking about integration and reliability (2 points)
+- Clear systems reasoning with production deployment insights (bonus points for deep understanding)
+"""
+
+### BEGIN SOLUTION
+# Student response area - instructor will replace this section during grading setup
+# This is a manually graded question requiring understanding of production computer vision pipelines
+# Students should demonstrate knowledge of real-time processing and system integration
+### END SOLUTION 
 
 if __name__ == "__main__":
     # Run all tests

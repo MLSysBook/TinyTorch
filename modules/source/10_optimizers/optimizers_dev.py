@@ -3061,28 +3061,138 @@ These questions connect your optimizer implementations to the broader ecosystem 
 
 # %% [markdown]
 """
-## 🤔 ML Systems Thinking Questions
+## 🤔 ML Systems Thinking: Interactive Questions
 
-### System Design
-1. How do different optimizer state management strategies impact checkpointing and model serialization in distributed training systems?
-2. What are the trade-offs between maintaining optimizer state in memory versus persisting it to disk for long-running training jobs?
-3. How would you design an optimizer framework that supports both synchronous and asynchronous parameter updates across multiple workers?
+Now that you've built optimization algorithms that drive neural network training, let's connect this foundational work to broader ML systems challenges. These questions help you think critically about how optimization strategies scale to production training environments.
 
-### Production ML
-1. How do optimizer choice and hyperparameters impact training stability and convergence in production environments with varying data distributions?
-2. What strategies would you use to handle optimizer state recovery and warm restarts when training jobs are interrupted in cloud environments?
-3. How would you implement adaptive learning rate scheduling that responds to real-time training metrics and business constraints?
-
-### Framework Design
-1. What design patterns enable efficient memory management for optimizers that maintain per-parameter state (like Adam's momentum buffers)?
-2. How would you implement optimizer composability that allows combining different optimization strategies for different parameter groups?
-3. What abstractions would you create to support both first-order and second-order optimization methods in a unified interface?
-
-### Performance & Scale
-1. How do different optimizer implementations scale with model size and parameter count in terms of memory usage and computational overhead?
-2. What are the communication bottlenecks when applying optimizers in distributed training, and how would you optimize gradient aggregation?
-3. How would you implement mixed-precision optimization that maintains numerical stability while maximizing training throughput?
+Take time to reflect thoughtfully on each question - your insights will help you understand how the optimization concepts you've implemented connect to real-world ML systems engineering.
 """
+
+# %% [markdown]
+"""
+### Question 1: Memory Overhead and Optimizer State Management
+
+**Context**: Your Adam optimizer maintains momentum and variance buffers for each parameter, creating 3× memory overhead compared to SGD. Production training systems with billions of parameters must carefully manage optimizer state memory while maintaining training efficiency and fault tolerance.
+
+**Reflection Question**: Design an optimizer state management system for large-scale neural network training that optimizes memory usage while supporting distributed training and fault recovery. How would you implement memory-efficient optimizer state storage, handle state partitioning across devices, and manage optimizer checkpointing for training resumption? Consider scenarios where optimizer state memory exceeds model parameter memory and requires specialized optimization strategies.
+
+Think about: memory optimization techniques, distributed state management, checkpointing strategies, and fault tolerance considerations.
+
+*Target length: 150-300 words*
+"""
+
+# %% nbgrader={"grade": true, "grade_id": "question-1-optimizer-memory", "locked": false, "points": 10, "schema_version": 3, "solution": true, "task": false}
+"""
+YOUR REFLECTION ON MEMORY OVERHEAD AND OPTIMIZER STATE MANAGEMENT:
+
+TODO: Replace this text with your thoughtful response about optimizer state management system design.
+
+Consider addressing:
+- How would you optimize memory usage for optimizers that maintain extensive per-parameter state?
+- What strategies would you use for distributed optimizer state management across multiple devices?
+- How would you implement efficient checkpointing and state recovery for long-running training jobs?
+- What role would state compression and quantization play in your optimization approach?
+- How would you balance memory efficiency with optimization algorithm effectiveness?
+
+Write a technical analysis connecting your optimizer implementations to real memory management challenges.
+
+GRADING RUBRIC (Instructor Use):
+- Demonstrates understanding of optimizer memory overhead and state management (3 points)
+- Addresses distributed state management and partitioning strategies (3 points)
+- Shows practical knowledge of checkpointing and fault tolerance techniques (2 points)
+- Demonstrates systems thinking about memory vs optimization trade-offs (2 points)
+- Clear technical reasoning and practical considerations (bonus points for innovative approaches)
+"""
+
+### BEGIN SOLUTION
+# Student response area - instructor will replace this section during grading setup
+# This is a manually graded question requiring technical analysis of optimizer state management
+# Students should demonstrate understanding of memory optimization and distributed state handling
+### END SOLUTION
+
+# %% [markdown]
+"""
+### Question 2: Distributed Optimization and Learning Rate Scheduling
+
+**Context**: Your optimizers work on single devices with fixed learning rate schedules. Production distributed training systems must coordinate optimization across multiple workers while adapting learning rates based on real-time training dynamics and system constraints.
+
+**Reflection Question**: Architect a distributed optimization system that coordinates parameter updates across multiple workers while implementing adaptive learning rate scheduling responsive to training progress and system constraints. How would you handle gradient aggregation strategies, implement learning rate scaling for different batch sizes, and design adaptive scheduling that responds to convergence patterns? Consider scenarios where training must adapt to varying computational resources and time constraints in cloud environments.
+
+Think about: distributed optimization strategies, adaptive learning rate techniques, gradient aggregation methods, and system-aware scheduling.
+
+*Target length: 150-300 words*
+"""
+
+# %% nbgrader={"grade": true, "grade_id": "question-2-distributed-optimization", "locked": false, "points": 10, "schema_version": 3, "solution": true, "task": false}
+"""
+YOUR REFLECTION ON DISTRIBUTED OPTIMIZATION AND LEARNING RATE SCHEDULING:
+
+TODO: Replace this text with your thoughtful response about distributed optimization system design.
+
+Consider addressing:
+- How would you coordinate parameter updates across multiple workers in distributed training?
+- What strategies would you use for gradient aggregation and synchronization?
+- How would you implement adaptive learning rate scheduling that responds to training dynamics?
+- What role would system constraints and resource availability play in your optimization design?
+- How would you handle learning rate scaling and batch size considerations in distributed settings?
+
+Write an architectural analysis connecting your optimizer implementations to real distributed training challenges.
+
+GRADING RUBRIC (Instructor Use):
+- Shows understanding of distributed optimization and coordination challenges (3 points)
+- Designs practical approaches to gradient aggregation and learning rate adaptation (3 points)
+- Addresses system constraints and resource-aware optimization (2 points)
+- Demonstrates systems thinking about distributed training coordination (2 points)
+- Clear architectural reasoning with distributed systems insights (bonus points for comprehensive understanding)
+"""
+
+### BEGIN SOLUTION
+# Student response area - instructor will replace this section during grading setup
+# This is a manually graded question requiring understanding of distributed optimization systems
+# Students should demonstrate knowledge of gradient aggregation and adaptive scheduling
+### END SOLUTION
+
+# %% [markdown]
+"""
+### Question 3: Production Integration and Optimization Monitoring
+
+**Context**: Your optimizer implementations provide basic parameter updates, but production ML systems require comprehensive optimization monitoring, hyperparameter tuning, and integration with MLOps pipelines for continuous training and model improvement.
+
+**Reflection Question**: Design a production optimization system that integrates with MLOps pipelines and provides comprehensive optimization monitoring and automated hyperparameter tuning. How would you implement real-time optimization metrics collection, automated optimizer selection based on model characteristics, and integration with experiment tracking and model deployment systems? Consider scenarios where optimization strategies must adapt to changing data distributions and business requirements in production environments.
+
+Think about: optimization monitoring systems, automated hyperparameter tuning, MLOps integration, and adaptive optimization strategies.
+
+*Target length: 150-300 words*
+"""
+
+# %% nbgrader={"grade": true, "grade_id": "question-3-production-integration", "locked": false, "points": 10, "schema_version": 3, "solution": true, "task": false}
+"""
+YOUR REFLECTION ON PRODUCTION INTEGRATION AND OPTIMIZATION MONITORING:
+
+TODO: Replace this text with your thoughtful response about production optimization system design.
+
+Consider addressing:
+- How would you design optimization monitoring and metrics collection for production training?
+- What strategies would you use for automated optimizer selection and hyperparameter tuning?
+- How would you integrate optimization systems with MLOps pipelines and experiment tracking?
+- What role would adaptive optimization play in responding to changing data and requirements?
+- How would you ensure optimization system reliability and performance in production environments?
+
+Write a systems analysis connecting your optimizer implementations to real production integration challenges.
+
+GRADING RUBRIC (Instructor Use):
+- Understands production optimization monitoring and MLOps integration (3 points)
+- Designs practical approaches to automated tuning and optimization selection (3 points)
+- Addresses adaptive optimization and production reliability considerations (2 points)
+- Shows systems thinking about optimization system integration and monitoring (2 points)
+- Clear systems reasoning with production deployment insights (bonus points for deep understanding)
+"""
+
+### BEGIN SOLUTION
+# Student response area - instructor will replace this section during grading setup
+# This is a manually graded question requiring understanding of production optimization systems
+# Students should demonstrate knowledge of MLOps integration and optimization monitoring
+### END SOLUTION
 
 # %% [markdown]
 """

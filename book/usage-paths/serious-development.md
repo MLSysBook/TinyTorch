@@ -11,8 +11,9 @@ A complete ML framework from scratch, including:
 - **Neural network components** (layers, activations, optimizers)
 - **Training systems** that work on real datasets (CIFAR-10)
 - **Production features** (compression, monitoring, benchmarking)
+- **🔥 Language models** that extend your vision framework to TinyGPT
 
-**End result:** A working ML framework you built and understand completely.
+**End result:** A working ML framework that powers both computer vision AND language models.
 
 ---
 
@@ -146,6 +147,12 @@ Real-world deployment:
 - Continuous learning and model updates
 - Complete production pipeline
 
+**Module 16: TinyGPT 🔥**
+- Extend vision framework to language models
+- GPT-style transformers with 95% component reuse
+- Autoregressive text generation
+- Framework generalization mastery
+
 ---
 
 ## 🛠️ **Development Workflow**
@@ -190,6 +197,7 @@ Every module includes comprehensive testing:
 ✅ Optimize models with pruning and quantization  
 ✅ Deploy production ML systems with monitoring  
 ✅ Understand framework internals better than most ML engineers  
+🔥 **Extend their vision framework to language models with 95% reuse**  
 
 **Test Coverage:** 200+ tests across all modules ensure student implementations work
 ```
@@ -233,4 +241,4 @@ Every component follows this pattern:
 
 ---
 
-*🎉 Ready to build your own ML framework? Your PyTorch-understanding self is 8 weeks away!* 
+*🎉 Ready to build your own ML framework? Your unified vision+language framework is 8 weeks away!* 

@@ -1902,28 +1902,138 @@ Complete the missing implementations in the `LayerArchitectureProfiler` class ab
 
 # %% [markdown]
 """
-## 🤔 ML Systems Thinking Questions
+## 🤔 ML Systems Thinking: Interactive Questions
 
-### System Design
-1. How do layer abstraction patterns in TinyTorch compare to those in PyTorch's nn.Module or TensorFlow's Keras layers?
-2. What are the trade-offs between stateful layers (storing weights internally) versus functional approaches (weights passed as parameters)?
-3. How would you design a layer system that supports both eager execution and graph compilation modes?
+Now that you've built the fundamental building blocks of neural networks, let's connect this foundational work to broader ML systems challenges. These questions help you think critically about how layer abstractions scale to production ML environments.
 
-### Production ML
-1. How do weight initialization strategies impact model convergence and deployment reliability in production environments?
-2. What considerations arise when deploying dense layers across different hardware (CPU, GPU, TPU) in production systems?
-3. How would you implement layer-wise learning rate scheduling for large-scale distributed training?
-
-### Framework Design
-1. Why do modern ML frameworks separate layer definitions from weight storage, and how does this impact memory management?
-2. How would you design a layer system that supports both forward-mode and reverse-mode automatic differentiation?
-3. What design patterns enable efficient batching and broadcasting in neural network layers?
-
-### Performance & Scale
-1. How do different dense layer implementations impact memory bandwidth utilization and cache efficiency?
-2. What are the computational trade-offs between wider layers versus deeper networks in terms of parallelization?
-3. How would you optimize matrix multiplication operations for different batch sizes and hardware architectures?
+Take time to reflect thoughtfully on each question - your insights will help you understand how the layer concepts you've implemented connect to real-world ML systems engineering.
 """
+
+# %% [markdown]
+"""
+### Question 1: Parameter Management and Memory Optimization
+
+**Context**: Your Dense layer implementation stores weights and biases as Tensor objects with specific initialization strategies. In production ML systems with billions of parameters, efficient parameter management becomes critical for memory usage, training speed, and model deployment.
+
+**Reflection Question**: Design a parameter management system for large-scale neural networks that optimizes memory usage and supports efficient distributed training. How would you handle parameter initialization strategies for networks with hundreds of layers, implement parameter sharing across layers, and manage memory-efficient storage for billion-parameter models? Consider scenarios where memory constraints force trade-offs between model capacity and computational efficiency.
+
+Think about: parameter quantization, memory pooling, distributed parameter storage, and initialization strategies that maintain numerical stability across very deep networks.
+
+*Target length: 150-300 words*
+"""
+
+# %% nbgrader={"grade": true, "grade_id": "question-1-parameter-management", "locked": false, "points": 10, "schema_version": 3, "solution": true, "task": false}
+"""
+YOUR REFLECTION ON PARAMETER MANAGEMENT AND MEMORY OPTIMIZATION:
+
+TODO: Replace this text with your thoughtful response about parameter management system design.
+
+Consider addressing:
+- How would you optimize parameter storage and memory usage for billion-parameter models?
+- What strategies would you use for parameter initialization in very deep networks?
+- How would you implement parameter sharing and distributed storage efficiently?
+- What role would quantization play in your parameter management system?
+- How would you balance memory constraints with model capacity requirements?
+
+Write a technical analysis connecting your layer implementations to real parameter management challenges.
+
+GRADING RUBRIC (Instructor Use):
+- Demonstrates understanding of large-scale parameter management challenges (3 points)
+- Addresses memory optimization and distributed storage strategies (3 points)
+- Shows practical knowledge of initialization and quantization techniques (2 points)
+- Demonstrates systems thinking about memory vs capacity trade-offs (2 points)
+- Clear technical reasoning and practical considerations (bonus points for innovative approaches)
+"""
+
+### BEGIN SOLUTION
+# Student response area - instructor will replace this section during grading setup
+# This is a manually graded question requiring technical analysis of parameter management
+# Students should demonstrate understanding of memory optimization and distributed parameter storage
+### END SOLUTION
+
+# %% [markdown]
+"""
+### Question 2: Abstraction Design and Framework Integration
+
+**Context**: Your layer implementation provides a clean abstraction that separates computation from parameter storage. Production ML frameworks must balance abstraction simplicity with performance optimization, automatic differentiation support, and hardware acceleration capabilities.
+
+**Reflection Question**: Architect a layer abstraction system that enables both research flexibility and production optimization. How would you design layer interfaces that support automatic differentiation, enable fusion with other operations for performance, and maintain compatibility across different execution backends (CPU, GPU, TPU)? Consider the challenge of providing high-level abstractions while allowing low-level optimization for specific hardware platforms.
+
+Think about: API design principles, automatic differentiation integration, operation fusion opportunities, and backend abstraction strategies.
+
+*Target length: 150-300 words*
+"""
+
+# %% nbgrader={"grade": true, "grade_id": "question-2-abstraction-design", "locked": false, "points": 10, "schema_version": 3, "solution": true, "task": false}
+"""
+YOUR REFLECTION ON ABSTRACTION DESIGN AND FRAMEWORK INTEGRATION:
+
+TODO: Replace this text with your thoughtful response about layer abstraction system design.
+
+Consider addressing:
+- How would you design layer abstractions that balance simplicity with optimization potential?
+- What strategies would you use to integrate layers with automatic differentiation systems?
+- How would you enable operation fusion while maintaining clean abstractions?
+- What role would backend abstraction play in supporting multiple hardware platforms?
+- How would you maintain API compatibility while enabling hardware-specific optimizations?
+
+Write an architectural analysis connecting your layer abstractions to real framework design challenges.
+
+GRADING RUBRIC (Instructor Use):
+- Shows understanding of abstraction design principles for ML systems (3 points)
+- Designs practical approaches to automatic differentiation integration (3 points)
+- Addresses performance optimization and hardware abstraction (2 points)
+- Demonstrates systems thinking about framework architecture (2 points)
+- Clear architectural reasoning with framework insights (bonus points for comprehensive understanding)
+"""
+
+### BEGIN SOLUTION
+# Student response area - instructor will replace this section during grading setup
+# This is a manually graded question requiring understanding of framework abstraction design
+# Students should demonstrate knowledge of balancing simplicity with optimization potential
+### END SOLUTION
+
+# %% [markdown]
+"""
+### Question 3: Initialization Strategies and Training Stability
+
+**Context**: Your Dense layer uses Xavier/Glorot initialization to maintain proper signal propagation through networks. In production training of very deep networks (hundreds of layers), initialization strategies become critical for training stability, convergence speed, and final model performance.
+
+**Reflection Question**: Design an advanced initialization system for training ultra-deep neural networks that ensures stable gradient flow and optimal convergence. How would you adapt initialization strategies for different layer types, handle initialization in networks with skip connections and attention mechanisms, and implement dynamic initialization that adapts during training? Consider scenarios where poor initialization causes training failures in expensive large-scale experiments.
+
+Think about: layer-specific initialization, residual connection handling, attention mechanism initialization, and adaptive initialization techniques.
+
+*Target length: 150-300 words*
+"""
+
+# %% nbgrader={"grade": true, "grade_id": "question-3-initialization-strategies", "locked": false, "points": 10, "schema_version": 3, "solution": true, "task": false}
+"""
+YOUR REFLECTION ON INITIALIZATION STRATEGIES AND TRAINING STABILITY:
+
+TODO: Replace this text with your thoughtful response about advanced initialization system design.
+
+Consider addressing:
+- How would you design initialization strategies for different types of layers and architectures?
+- What approaches would you use to ensure stable gradient flow in ultra-deep networks?
+- How would you handle initialization for complex architectures with skip connections and attention?
+- What role would adaptive initialization play in improving training stability?
+- How would you prevent initialization-related training failures in large-scale experiments?
+
+Write a design analysis connecting your initialization implementations to real training stability challenges.
+
+GRADING RUBRIC (Instructor Use):
+- Understands initialization impact on training stability and gradient flow (3 points)
+- Designs practical approaches to layer-specific and adaptive initialization (3 points)
+- Addresses complex architecture initialization challenges (2 points)
+- Shows systems thinking about training optimization and stability (2 points)
+- Clear design reasoning with initialization optimization insights (bonus points for deep understanding)
+"""
+
+### BEGIN SOLUTION
+# Student response area - instructor will replace this section during grading setup
+# This is a manually graded question requiring understanding of initialization strategies and training stability
+# Students should demonstrate knowledge of gradient flow and initialization optimization challenges
+### END SOLUTION
 
 # %% [markdown]
 """

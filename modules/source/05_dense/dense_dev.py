@@ -1467,28 +1467,138 @@ print(f"- Critical for unattended training jobs in production")
 
 # %% [markdown]
 """
-## 🤔 ML Systems Thinking Questions
+## 🤔 ML Systems Thinking: Interactive Questions
 
-### System Design
-1. How do sequential network architectures in TinyTorch compare to PyTorch's Sequential container and TensorFlow's Functional API?
-2. What are the architectural trade-offs between sequential models versus dynamic graph approaches for different types of ML problems?
-3. How would you design a neural network framework that supports both static and dynamic computation graphs?
+Now that you've built complete neural network architectures, let's connect this foundational work to broader ML systems challenges. These questions help you think critically about how network composition patterns scale to production ML environments.
 
-### Production ML
-1. How do different network depths and widths impact inference latency and memory requirements in production deployment?
-2. What strategies would you use to optimize sequential networks for real-time inference on edge devices with limited resources?
-3. How would you implement model versioning and A/B testing for sequential network architectures in production?
-
-### Framework Design
-1. What design patterns enable efficient layer composition while maintaining gradient flow and memory management?
-2. How would you implement automatic mixed precision training for sequential networks to optimize both speed and numerical stability?
-3. What abstractions would you create to support both training and inference modes efficiently in a neural network framework?
-
-### Performance & Scale
-1. How do sequential networks scale with distributed training across multiple GPUs and nodes?
-2. What are the memory and computational bottlenecks when deploying very deep sequential networks, and how would you address them?
-3. How would you implement efficient batch processing and dynamic batching for sequential networks in production systems?
+Take time to reflect thoughtfully on each question - your insights will help you understand how the network concepts you've implemented connect to real-world ML systems engineering.
 """
+
+# %% [markdown]
+"""
+### Question 1: Composition Patterns and Architectural Design
+
+**Context**: Your sequential network implementation enables flexible composition of layers into complex architectures. Production ML systems must support diverse architectural patterns: from simple MLPs to complex models with branching, skip connections, and dynamic computation graphs.
+
+**Reflection Question**: Design a network composition system that supports both sequential and complex architectural patterns for production ML systems. How would you extend your sequential approach to handle branching networks, residual connections, and dynamic routing? Consider scenarios where model architectures need to adapt during training or inference based on input characteristics or computational constraints.
+
+Think about: architectural flexibility, dynamic graph construction, branching and merging patterns, and computational graph optimization opportunities.
+
+*Target length: 150-300 words*
+"""
+
+# %% nbgrader={"grade": true, "grade_id": "question-1-composition-patterns", "locked": false, "points": 10, "schema_version": 3, "solution": true, "task": false}
+"""
+YOUR REFLECTION ON COMPOSITION PATTERNS AND ARCHITECTURAL DESIGN:
+
+TODO: Replace this text with your thoughtful response about network composition system design.
+
+Consider addressing:
+- How would you extend sequential composition to support complex architectural patterns?
+- What strategies would you use to handle branching, merging, and skip connections?
+- How would you implement dynamic network architectures that adapt during execution?
+- What role would computational graph optimization play in your design?
+- How would you balance architectural flexibility with performance optimization?
+
+Write an architectural analysis connecting your sequential networks to real composition pattern challenges.
+
+GRADING RUBRIC (Instructor Use):
+- Demonstrates understanding of advanced architectural composition patterns (3 points)
+- Addresses dynamic and complex network structure challenges (3 points)
+- Shows practical knowledge of graph optimization techniques (2 points)
+- Demonstrates systems thinking about architectural flexibility vs performance (2 points)
+- Clear architectural reasoning and practical considerations (bonus points for innovative approaches)
+"""
+
+### BEGIN SOLUTION
+# Student response area - instructor will replace this section during grading setup
+# This is a manually graded question requiring architectural analysis of network composition
+# Students should demonstrate understanding of complex architectural patterns and optimization
+### END SOLUTION
+
+# %% [markdown]
+"""
+### Question 2: Modularity and Distributed Training
+
+**Context**: Your network architecture separates layer composition from individual layer implementation. Production ML systems must scale these architectures across distributed training environments while maintaining modularity and enabling efficient model parallelism.
+
+**Reflection Question**: Architect a modular network system that enables efficient distributed training across multiple devices and nodes. How would you design network decomposition strategies that balance computation across devices, implement communication-efficient model parallelism, and maintain modularity for different deployment scenarios? Consider challenges where network parts need to run on different hardware with varying computational capabilities.
+
+Think about: model parallelism strategies, communication optimization, device placement algorithms, and modular deployment patterns.
+
+*Target length: 150-300 words*
+"""
+
+# %% nbgrader={"grade": true, "grade_id": "question-2-modularity-distributed", "locked": false, "points": 10, "schema_version": 3, "solution": true, "task": false}
+"""
+YOUR REFLECTION ON MODULARITY AND DISTRIBUTED TRAINING:
+
+TODO: Replace this text with your thoughtful response about modular distributed training system design.
+
+Consider addressing:
+- How would you design network decomposition for efficient distributed training?
+- What strategies would you use to balance computation and communication across devices?
+- How would you implement model parallelism while maintaining modularity?
+- What role would device placement optimization play in your system?
+- How would you handle heterogeneous hardware in distributed training scenarios?
+
+Write a systems analysis connecting your modular networks to real distributed training challenges.
+
+GRADING RUBRIC (Instructor Use):
+- Shows understanding of distributed training and model parallelism challenges (3 points)
+- Designs practical approaches to modular distributed architectures (3 points)
+- Addresses communication optimization and device placement (2 points)
+- Demonstrates systems thinking about scalability and modularity trade-offs (2 points)
+- Clear systems reasoning with distributed computing insights (bonus points for comprehensive understanding)
+"""
+
+### BEGIN SOLUTION
+# Student response area - instructor will replace this section during grading setup
+# This is a manually graded question requiring understanding of distributed training architecture
+# Students should demonstrate knowledge of model parallelism and communication optimization
+### END SOLUTION
+
+# %% [markdown]
+"""
+### Question 3: Architecture Design and Performance Optimization
+
+**Context**: Your network implementations provide a foundation for various ML applications from classification to regression. Production ML systems must optimize network architectures for specific deployment constraints: inference latency, memory usage, energy consumption, and accuracy requirements.
+
+**Reflection Question**: Design an architecture optimization system that automatically configures network structures for specific deployment targets and performance constraints. How would you implement neural architecture search for production environments, balance architecture complexity with inference requirements, and optimize networks for edge deployment with strict resource constraints? Consider scenarios where the same model needs to perform well across mobile devices, cloud servers, and embedded systems.
+
+Think about: neural architecture search, performance profiling, resource-constrained optimization, and multi-target deployment strategies.
+
+*Target length: 150-300 words*
+"""
+
+# %% nbgrader={"grade": true, "grade_id": "question-3-architecture-optimization", "locked": false, "points": 10, "schema_version": 3, "solution": true, "task": false}
+"""
+YOUR REFLECTION ON ARCHITECTURE DESIGN AND PERFORMANCE OPTIMIZATION:
+
+TODO: Replace this text with your thoughtful response about architecture optimization system design.
+
+Consider addressing:
+- How would you implement automated architecture optimization for different deployment targets?
+- What strategies would you use to balance architecture complexity with performance constraints?
+- How would you optimize networks for resource-constrained edge deployment?
+- What role would neural architecture search play in your optimization system?
+- How would you handle multi-target deployment with varying resource constraints?
+
+Write an optimization analysis connecting your network architectures to real deployment optimization challenges.
+
+GRADING RUBRIC (Instructor Use):
+- Understands architecture optimization and deployment constraint challenges (3 points)
+- Designs practical approaches to automated architecture optimization (3 points)
+- Addresses resource constraints and multi-target deployment (2 points)
+- Shows systems thinking about performance vs complexity trade-offs (2 points)
+- Clear optimization reasoning with deployment insights (bonus points for deep understanding)
+"""
+
+### BEGIN SOLUTION
+# Student response area - instructor will replace this section during grading setup
+# This is a manually graded question requiring understanding of architecture optimization and deployment
+# Students should demonstrate knowledge of neural architecture search and resource optimization
+### END SOLUTION
 
 # %% [markdown]
 """
