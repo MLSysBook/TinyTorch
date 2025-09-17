@@ -7,7 +7,7 @@ __all__ = ['Sequential', 'create_mlp', 'MLP']
 import numpy as np
 import sys
 import os
-from typing import List, Union, Optional, Callable
+from typing import List, Optional
 import matplotlib.pyplot as plt
 
 # Import all the building blocks we need - try package first, then local modules
@@ -23,21 +23,6 @@ except ImportError:
     from tensor_dev import Tensor
     from activations_dev import ReLU, Sigmoid, Tanh, Softmax
     from layers_dev import Dense
-
-# %% ../../modules/source/05_dense/dense_dev.ipynb 2
-def _should_show_plots():
-    """Check if we should show plots (disable during testing)"""
-    # Check multiple conditions that indicate we're in test mode
-    is_pytest = (
-        'pytest' in sys.modules or
-        'test' in sys.argv or
-        os.environ.get('PYTEST_CURRENT_TEST') is not None or
-        any('test' in arg for arg in sys.argv) or
-        any('pytest' in arg for arg in sys.argv)
-    )
-    
-    # Show plots in development mode (when not in test mode)
-    return not is_pytest
 
 # %% ../../modules/source/05_dense/dense_dev.ipynb 7
 class Sequential:
@@ -69,6 +54,12 @@ class Sequential:
         HINTS:
         - Use self.layers to store the layers
         - Handle empty initialization case
+        
+        LEARNING CONNECTIONS:
+        - This is equivalent to torch.nn.Sequential in PyTorch
+        - Used in every neural network to chain layers together
+        - Foundation for models like VGG, ResNet, and transformers
+        - Enables modular network design and experimentation
         """
         ### BEGIN SOLUTION
         self.layers = layers if layers is not None else []
@@ -104,6 +95,12 @@ class Sequential:
         - Apply each layer: x = layer(x)
         - The output of one layer becomes input to the next
         - Return the final result
+        
+        LEARNING CONNECTIONS:
+        - This is the core of feedforward neural networks
+        - Powers inference in every deployed model
+        - Critical for real-time predictions in production
+        - Foundation for gradient flow in backpropagation
         """
         ### BEGIN SOLUTION
         # Apply each layer in sequence
@@ -160,6 +157,12 @@ def create_mlp(input_size: int, hidden_sizes: List[int], output_size: int,
     - For each hidden_size: add Dense(current_size, hidden_size), then activation
     - Finally add Dense(last_hidden_size, output_size), then output_activation
     - Return Sequential(layers)
+    
+    LEARNING CONNECTIONS:
+    - This pattern is used in every feedforward network implementation
+    - Foundation for architectures like autoencoders and GANs
+    - Enables rapid prototyping of neural architectures
+    - Similar to tf.keras.Sequential with Dense layers
     """
     layers = []
     current_size = input_size
@@ -176,7 +179,7 @@ def create_mlp(input_size: int, hidden_sizes: List[int], output_size: int,
     
     return Sequential(layers)
 
-# %% ../../modules/source/05_dense/dense_dev.ipynb 19
+# %% ../../modules/source/05_dense/dense_dev.ipynb 24
 class MLP:
     """
     Multi-Layer Perceptron (MLP) class.

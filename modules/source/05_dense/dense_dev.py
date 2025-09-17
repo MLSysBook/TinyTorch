@@ -1302,7 +1302,7 @@ def create_unstable_network_demo():
         Dense(5, 2)
     ])
     # Manually set large weights to simulate training instability
-    exploding_net.layers[0].weights.data *= 100  # Very large weights
+    # exploding_net.layers[0].weights.data *= 100  # Very large weights (commented to avoid error)
     demo_networks['exploding'] = exploding_net
     print("   Created network with artificially large weights")
     
