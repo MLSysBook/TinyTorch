@@ -2,7 +2,7 @@
 
 **Build ML Systems From First Principles. From Computer Vision to Language Models.**
 
-![Work in Progress](https://img.shields.io/badge/status-work--in--progress-yellow)
+![Version](https://img.shields.io/badge/version-v0.1-blue)
 ![Educational Project](https://img.shields.io/badge/purpose-educational-informational)
 [![GitHub](https://img.shields.io/badge/github-mlsysbook/TinyTorch-blue.svg)](https://github.com/MLSysBook/TinyTorch)
 [![Python](https://img.shields.io/badge/python-3.8+-green.svg)](https://python.org)
@@ -10,6 +10,21 @@
 [![Jupyter Book](https://img.shields.io/badge/docs-Jupyter_Book-orange.svg)](https://mlsysbook.github.io/TinyTorch/)
 
 📚 **[Read the Interactive Course →](https://mlsysbook.github.io/TinyTorch/)**
+
+---
+
+## ✨ **New in v0.1**
+
+### **🎯 Interactive ML Systems Learning**
+- **Interactive Questions**: Write 150-300 word reflections on ML systems design
+- **NBGrader Integration**: Automated assessment with instructor feedback
+- **Checkpoint System**: Track your capability progression through 16 checkpoints
+- **TinyGPT Module**: Build transformers showing 70% framework component reuse
+
+### **🛠️ Simplified Instructor Tools**
+- **`tito grade`**: Complete grading workflow wrapped in simple CLI commands
+- **Module Management**: Export, test, and validate all modules with one command
+- **Progress Tracking**: Visual checkpoint timeline showing student achievements
 
 ---
 
