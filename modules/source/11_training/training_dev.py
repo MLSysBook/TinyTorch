@@ -36,6 +36,7 @@ import sys
 import os
 from collections import defaultdict
 import time
+import pickle
 
 # Add module directories to Python path
 sys.path.append(os.path.abspath('modules/source/02_tensor'))
@@ -934,7 +935,7 @@ class Trainer:
         return epoch_metrics
         ### END SOLUTION
     
-    def fit(self, train_dataloader, val_dataloader=None, epochs=10, verbose=True):
+    def fit(self, train_dataloader, val_dataloader=None, epochs=10, verbose=True, save_best=False, checkpoint_path="best_model.pkl"):
         """
         Train the model for specified number of epochs.
         
@@ -971,6 +972,7 @@ class Trainer:
         """
         ### BEGIN SOLUTION
         print(f"Starting training for {epochs} epochs...")
+        best_val_loss = float('inf')
         
         for epoch in range(epochs):
             self.current_epoch = epoch
@@ -997,6 +999,14 @@ class Trainer:
                 if val_dataloader is not None:
                     self.history[f'val_{metric_name}'].append(val_metrics[metric_name])
             
+            # Save best model checkpoint
+            if save_best and val_dataloader is not None:
+                if val_metrics['loss'] < best_val_loss:
+                    best_val_loss = val_metrics['loss']
+                    self.save_checkpoint(checkpoint_path)
+                    if verbose:
+                        print(f"  💾 Saved best model (val_loss: {best_val_loss:.4f})")
+            
             # Print progress
             if verbose:
                 train_loss = train_metrics['loss']
@@ -1020,6 +1030,44 @@ class Trainer:
         print("Training completed!")
         return self.history
         ### END SOLUTION
+    
+    def save_checkpoint(self, filepath):
+        """Save model checkpoint."""
+        checkpoint = {
+            'epoch': self.current_epoch,
+            'model_state': self._get_model_state(),
+            'history': self.history
+        }
+        
+        with open(filepath, 'wb') as f:
+            pickle.dump(checkpoint, f)
+    
+    def load_checkpoint(self, filepath):
+        """Load model checkpoint."""
+        with open(filepath, 'rb') as f:
+            checkpoint = pickle.load(f)
+        
+        self.current_epoch = checkpoint['epoch']
+        self.history = checkpoint['history']
+        self._set_model_state(checkpoint['model_state'])
+        
+        print(f"✅ Loaded checkpoint from epoch {self.current_epoch}")
+    
+    def _get_model_state(self):
+        """Extract model parameters."""
+        state = {}
+        for i, layer in enumerate(self.model.layers):
+            if hasattr(layer, 'weight'):
+                state[f'layer_{i}_weight'] = layer.weight.data.copy()
+                state[f'layer_{i}_bias'] = layer.bias.data.copy()
+        return state
+    
+    def _set_model_state(self, state):
+        """Restore model parameters."""
+        for i, layer in enumerate(self.model.layers):
+            if hasattr(layer, 'weight'):
+                layer.weight.data = state[f'layer_{i}_weight']
+                layer.bias.data = state[f'layer_{i}_bias']
 
 # %% [markdown]
 """
@@ -1749,4 +1797,95 @@ if __name__ == "__main__":
     test_production_training_optimizer()
     
     print("All tests passed!")
+    # Add evaluation tools for north star goal
     print("training_dev module complete!")
+
+# %% [markdown]
+"""
+## Evaluation Tools for Model Analysis
+
+### Essential tools for achieving our north star goal of 75% CIFAR-10 accuracy
+"""
+
+# %% nbgrader={"grade": false, "grade_id": "evaluation-tools", "locked": false, "schema_version": 3, "solution": true, "task": false}
+#| export
+def compute_confusion_matrix(model, dataloader, num_classes=10):
+    """
+    Compute confusion matrix for classification model.
+    
+    Returns matrix where element (i,j) is count of samples with true label i predicted as j.
+    """
+    ### BEGIN SOLUTION
+    confusion = np.zeros((num_classes, num_classes), dtype=int)
+    
+    for batch_x, batch_y in dataloader:
+        predictions = model(batch_x)
+        pred_labels = np.argmax(predictions.data, axis=1)
+        true_labels = batch_y.data.astype(int)
+        
+        for true, pred in zip(true_labels, pred_labels):
+            confusion[true, pred] += 1
+    
+    return confusion
+    ### END SOLUTION
+
+def evaluate_model(model, dataloader):
+    """
+    Evaluate model accuracy on dataset.
+    
+    Returns accuracy as percentage.
+    """
+    ### BEGIN SOLUTION
+    correct = 0
+    total = 0
+    
+    for batch_x, batch_y in dataloader:
+        predictions = model(batch_x)
+        pred_labels = np.argmax(predictions.data, axis=1)
+        true_labels = batch_y.data.astype(int)
+        
+        correct += np.sum(pred_labels == true_labels)
+        total += len(true_labels)
+    
+    accuracy = (correct / total) * 100
+    return accuracy
+    ### END SOLUTION
+
+def plot_training_history(history):
+    """
+    Plot training curves (simplified for terminal output).
+    
+    Shows training and validation loss progression.
+    """
+    ### BEGIN SOLUTION
+    if not history.get('epoch'):
+        print("No training history to plot")
+        return
+    
+    print("\n📊 Training Progress:")
+    print("-" * 50)
+    
+    # Simple ASCII plot for loss
+    train_loss = history['train_loss']
+    val_loss = history.get('val_loss', [])
+    
+    if train_loss:
+        min_loss = min(train_loss)
+        max_loss = max(train_loss)
+        
+        print(f"Train Loss: {train_loss[0]:.4f} → {train_loss[-1]:.4f}")
+        if val_loss:
+            print(f"Val Loss:   {val_loss[0]:.4f} → {val_loss[-1]:.4f}")
+        
+        # Show trend
+        if train_loss[-1] < train_loss[0]:
+            print("✅ Training loss decreased (model is learning!)")
+        else:
+            print("⚠️ Training loss increased (check learning rate)")
+        
+        if val_loss and len(val_loss) > 1:
+            if val_loss[-1] > val_loss[-2]:
+                print("⚠️ Validation loss increasing (possible overfitting)")
+    
+    print("-" * 50)
+    ### END SOLUTION
