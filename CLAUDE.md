@@ -352,6 +352,17 @@ Read the complete Git Workflow Standards section in this file for all branching,
 
 ## TinyTorch Module Development Standards
 
+### 🔬 **CRITICAL: ML Systems Course - Not Just ML Algorithms**
+**TinyTorch is an ML SYSTEMS course where you understand systems by building them. Every module MUST emphasize systems engineering principles, not just algorithms.**
+
+**MANDATORY Systems Analysis in Every Module:**
+- **Memory complexity**: How much RAM does this operation use? When are copies made?
+- **Computational complexity**: O(N), O(N²), O(N³) - measure and explain performance
+- **Cache efficiency**: How do memory access patterns affect performance?
+- **Scaling bottlenecks**: What breaks first when data/models get large?
+- **Production implications**: How is this used in real ML systems like PyTorch?
+- **Hardware considerations**: CPU vs GPU, vectorization, bandwidth limits
+
 ### 🎯 **CRITICAL: .py Files Only**
 **ALL TinyTorch development and modifications MUST be done in .py files ONLY.**
 
@@ -366,17 +377,22 @@ Read the complete Git Workflow Standards section in this file for all branching,
 - Automated notebook generation ensures consistency
 - Professional development practices
 
-### 📚 Module Structure Requirements
-All TinyTorch modules MUST follow the standardized structure:
+### 📚 Module Structure Requirements - ML SYSTEMS FOCUS
+All TinyTorch modules MUST follow the standardized structure with MANDATORY systems analysis:
 
-1. **Module Introduction** - What we're building and why
-2. **Mathematical Background** - Theory and foundations
-3. **Implementation** - Building the components step by step
-4. **Testing** - Immediate tests after each implementation
-5. **Integration** - How components work together  
-6. **Comprehensive Testing** - Full validation
-7. **ML Systems Thinking** - Reflection questions
-8. **Module Summary** - What was accomplished
+1. **Module Introduction** - What we're building and why (systems context)
+2. **Mathematical Background** - Theory and computational complexity
+3. **Implementation** - Building components with memory/performance analysis
+4. **Systems Analysis** - **MANDATORY**: Memory profiling, complexity analysis, scaling behavior
+5. **Testing** - Immediate tests after each implementation (including performance tests)
+6. **Integration** - How components work together in larger systems
+7. **Production Context** - How do real ML systems handle this? (PyTorch, TensorFlow examples)
+8. **Comprehensive Testing** - Full validation including performance characteristics
+9. **ML Systems Thinking** - Systems-focused reflection questions  
+10. **Module Summary** - What was accomplished (emphasize systems understanding gained)
+
+### 🔬 **New Principle: Every Module Teaches Systems Thinking Through Implementation**
+**MANDATORY**: Every module must demonstrate that understanding systems comes through building them, not just studying them.
 
 ### 🧪 Testing Pattern - MANDATORY
 ```
@@ -389,26 +405,43 @@ Implementation → Test Explanation (Markdown) → Test Code → Next Implementa
 - **Unit tests** = immediate after implementation
 - **Integration tests** = Part 9 only
 
+### 🔬 ML Systems Analysis - MANDATORY IN EVERY MODULE
+**Every module MUST include comprehensive systems analysis, not just algorithmic implementation.**
+
+**REQUIRED Systems Insights Sections:**
+1. **Memory Analysis**: Explicit memory profiling, copying behavior, space complexity
+2. **Performance Characteristics**: Computational complexity, benchmarking, bottleneck identification  
+3. **Scaling Behavior**: How does performance degrade with larger inputs/models?
+4. **Production Context**: How do real systems (PyTorch, TensorFlow) handle this?
+5. **Hardware Implications**: Cache behavior, vectorization opportunities, bandwidth limits
+
+**Example Required Analysis:**
+```python
+# MANDATORY: Include memory profiling like this in every module
+def profile_memory_usage():
+    \"\"\"Analyze memory consumption patterns.\"\"\"
+    import tracemalloc
+    tracemalloc.start()
+    
+    # Your operation here
+    result = adam_optimizer.step()
+    
+    current, peak = tracemalloc.get_traced_memory()
+    print(f"Current: {current / 1024 / 1024:.2f} MB")
+    print(f"Peak: {peak / 1024 / 1024:.2f} MB") 
+    # Why is Adam using 3× parameter memory?
+```
+
 ### 🤔 ML Systems Thinking Questions - REQUIRED
-**Documentation Publisher should create thoughtful reflection questions** that connect the module to broader ML systems concepts. Keep them engaging and thought-provoking, not homework-like.
+**Documentation Publisher must create systems-focused reflection questions that analyze the actual implementations.**
 
-**Guidelines for Documentation Publisher:**
-- **Focus on reflection**, not detailed implementation
-- **Connect to real ML systems** (PyTorch, TensorFlow, industry)
-- **Ask "why" and "how does this connect"** rather than "implement this"
-- **Keep questions accessible** - should spark curiosity, not overwhelm
-- **3-4 categories, 3-4 questions each** (total ~12 questions max)
+**MANDATORY Question Categories:**
+1. **Memory & Performance**: "Why does this operation use O(N²) memory? When does this become problematic?"
+2. **Systems Architecture**: "How would you optimize this for distributed training across 8 GPUs?"
+3. **Production Engineering**: "What happens when this operation fails in production? How do you debug it?"
+4. **Scaling Analysis**: "At what model size does this become the bottleneck? How do you know?"
 
-**Question Categories:**
-1. **System Design** - How does this fit into larger systems?
-2. **Production ML** - How is this used in real ML workflows?
-3. **Framework Design** - Why do frameworks make certain choices?
-4. **Performance & Scale** - What happens when systems get large?
-
-**Tone: Curious and Exploratory, Not Demanding**
-
-✅ **Good**: "How might GPU memory management differ from your NumPy-based approach?"  
-❌ **Too Complex**: "Implement GPU memory pooling with CUDA memory management..."
+**Questions MUST reference the actual code students implemented, not abstract concepts.**
 
 ### 🎯 ML Systems Content Integration - CURRENT STATUS
 
@@ -493,17 +526,21 @@ Content here...
 ### 🏗️ Agent Responsibilities for Modules
 
 **Education Architect:**
-- Learning objectives and pedagogical flow
-- Build→Use→Understand compliance
-- Educational strategy ONLY
+- Learning objectives focused on ML SYSTEMS understanding
+- Ensure Build→Profile→Optimize workflow compliance  
+- Educational strategy emphasizing systems engineering
+- **MUST ensure every module teaches systems thinking through implementation**
 
 **Module Developer:**
-- Code implementation and NBGrader metadata
-- Technical scaffolding and patterns
-- Implementation ONLY
+- Code implementation with MANDATORY ML systems analysis
+- **Memory profiling and complexity analysis** in every module
+- **Performance benchmarking** and bottleneck identification
+- **Production context** and real-world scaling implications
+- NBGrader metadata and technical scaffolding
 - Add export directives (#| default_exp)
 - **Checkpoint system implementation**: Build checkpoint test files and CLI integration
 - **Module completion workflow**: Implement `tito module complete` with export and testing
+- **MUST include systems insights**: memory usage, computational complexity, scaling behavior
 - **MUST notify QA Agent after ANY module changes**
 
 **Package Manager:**
@@ -519,8 +556,11 @@ Content here...
 - **MUST block release if integration fails**
 
 **Quality Assurance:**  
-- Test coverage and functionality
-- Testing infrastructure
+- Test coverage and functionality WITH performance characteristics
+- **MUST test performance and memory usage**, not just correctness
+- **Memory leak detection**: Ensure operations don't unexpectedly consume memory
+- **Performance regression testing**: Verify optimizations don't break over time
+- **Scaling behavior validation**: Test how operations perform with large inputs
 - **Checkpoint test validation**: Test all 16 checkpoint implementations thoroughly
 - **CLI integration testing**: Verify all `tito checkpoint` commands work correctly
 - **Module completion workflow testing**: Validate `tito module complete` end-to-end
@@ -528,22 +568,29 @@ Content here...
 - **MUST run tests before ANY commit**
 - **MUST verify module imports correctly**
 - **MUST ensure all test functions work**
+- **MUST validate systems analysis is present and accurate**
 - **MUST report test results to Package Manager**
 
 **Documentation Publisher:**
-- Markdown prose and clarity
-- **Module-specific ML systems thinking questions** (analyze actual code, reference specific implementations, build cumulative knowledge)
+- Markdown prose emphasizing SYSTEMS UNDERSTANDING
+- **MANDATORY: ML systems analysis sections** in every module
+- **Module-specific ML systems thinking questions** (analyze actual implementations, memory usage, scaling)
+- **Performance implications documentation**: Explain computational complexity and memory usage
+- **Production context**: How do real systems handle these operations?
 - **Checkpoint system documentation**: Update documentation to reflect new capabilities
-- **Agent workflow documentation**: Document successful agent coordination patterns
+- **Agent workflow documentation**: Document successful agent coordination patterns  
 - **CLI usage documentation**: Document new commands and workflows for users
-- Writing ONLY
+- **MUST connect every implementation to broader systems principles**
 
 **Workflow Coordinator:**
+- **ML Systems focus enforcement**: Ensure all modules teach systems principles through implementation  
 - **Checkpoint system orchestration**: Coordinate complex multi-agent implementations like checkpoint system
 - **Agent workflow enforcement**: Ensure proper agent handoffs and communication protocols
+- **Systems analysis validation**: Verify every module includes memory/performance/scaling analysis
 - **MUST enforce QA testing after EVERY module update**
 - **CANNOT approve changes without QA test results**
 - **MUST block commits if tests fail**
+- **MUST ensure modules teach systems thinking, not just algorithms**
 
 ### 🧪 QA Testing Protocol - MANDATORY
 
@@ -592,7 +639,7 @@ tito module complete tensor --skip-test
    - Module Developer CANNOT proceed without QA approval
    - Workflow Coordinator MUST enforce this requirement
 
-2. **Comprehensive Test Suite**
+2. **Comprehensive Test Suite - INCLUDING SYSTEMS VALIDATION**
    ```python
    # QA Agent must run these tests for EVERY modified module:
    - Module imports without errors
@@ -601,6 +648,13 @@ tito module complete tensor --skip-test
    - No syntax errors present
    - Required profiler/classes exist
    - Tests only run when module executed directly (not on import)
+   
+   # NEW MANDATORY SYSTEMS TESTS:
+   - Memory profiling sections are present and functional
+   - Performance benchmarking code executes and measures complexity
+   - Scaling behavior analysis is included and accurate
+   - Production context sections reference real systems (PyTorch/TensorFlow)
+   - Systems thinking questions analyze actual implemented code
    ```
 
 3. **Test Execution Requirements**
@@ -632,13 +686,16 @@ tito module complete tensor --skip-test
      * Recommendations for improvement
 
 ### ⚠️ Critical Requirements
-- All module sections must be present
-- Every test needs markdown explanation
-- ML systems reflection is mandatory
+- **ML SYSTEMS FOCUS is MANDATORY** - every module must teach systems engineering through implementation
+- All module sections must be present including MANDATORY systems analysis
+- Every test needs markdown explanation AND performance characteristics
+- ML systems reflection is mandatory with questions analyzing actual implemented code
+- **Memory profiling and complexity analysis** required in every module
+- **Production context** sections must reference real systems (PyTorch, TensorFlow)
 - Maintain immediate testing pattern (test after each implementation)
 - Use clear, consistent section organization
-- **QA testing is MANDATORY before ANY commit**
+- **QA testing is MANDATORY before ANY commit** (including systems validation)
 
 ---
 
-**Remember**: Professional software development always uses branches AND comprehensive testing. This keeps the codebase stable, enables collaboration, and maintains a clean development history.
+**Remember**: TinyTorch is an ML SYSTEMS course, not just an ML algorithms course. Students learn systems engineering principles through building complete implementations. Professional software development always uses branches AND comprehensive testing. This keeps the codebase stable, enables collaboration, and maintains a clean development history.
