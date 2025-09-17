@@ -4,6 +4,8 @@ Module command group for TinyTorch CLI: development workflow and module manageme
 
 from argparse import ArgumentParser, Namespace
 from rich.panel import Panel
+import sys
+import importlib.util
 
 from .base import BaseCommand
 from .status import StatusCommand
@@ -177,9 +179,10 @@ class ModuleCommand(BaseCommand):
             f"[bold]Module:[/bold] {normalized_name}\n"
             f"[bold]Steps:[/bold]\n"
             f"  1. Export module to package\n"
-            f"  2. Run integration checkpoint test\n"
-            f"  3. Show progress and next steps\n\n"
-            f"[dim]This integrates your module into the complete TinyTorch package[/dim]",
+            f"  2. Run Package Manager integration test\n"
+            f"  3. Run capability checkpoint test\n"
+            f"  4. Show progress and next steps\n\n"
+            f"[dim]Two-tier validation: Integration → Capability[/dim]",
             title="Module Complete",
             border_style="bright_cyan"
         ))
@@ -197,14 +200,32 @@ class ModuleCommand(BaseCommand):
             ))
             return export_result
         
-        # Step 2: Run checkpoint test (unless skipped)
+        # Step 2: Run Package Manager integration test
+        console.print(f"\n[bold]Step 2: Running Package Manager integration test...[/bold]")
+        integration_result = self._run_integration_test(normalized_name)
+        
+        if not integration_result["success"]:
+            console.print(Panel(
+                f"[red]❌ Integration test failed for {normalized_name}[/red]\n\n"
+                f"[yellow]Module exported but integration issues detected:[/yellow]\n"
+                f"{integration_result.get('error', 'Unknown integration error')}\n\n"
+                f"[cyan]This means the module may not work properly with the package.[/cyan]",
+                title="Integration Test Failed",
+                border_style="yellow"
+            ))
+            return 1
+        
+        # Show integration success
+        console.print(f"[green]✅ Module {normalized_name} integrated into package successfully![/green]")
+        
+        # Step 3: Run checkpoint test (unless skipped)
         if not args.skip_test:
-            console.print(f"\n[bold]Step 2: Testing capabilities...[/bold]")
+            console.print(f"\n[bold]Step 3: Testing capabilities...[/bold]")
             checkpoint_result = self._run_checkpoint_for_module(normalized_name)
-            self._show_completion_results(checkpoint_result, normalized_name)
+            self._show_completion_results(checkpoint_result, normalized_name, integration_result)
         else:
-            console.print(f"\n[bold yellow]Step 2: Checkpoint test skipped[/bold yellow]")
-            console.print(f"[dim]Module exported successfully. Run checkpoint test manually if needed.[/dim]")
+            console.print(f"\n[bold yellow]Step 3: Checkpoint test skipped[/bold yellow]")
+            console.print(f"[dim]Module integrated successfully. Run checkpoint test manually if needed.[/dim]")
         
         return 0
 
@@ -291,7 +312,41 @@ class ModuleCommand(BaseCommand):
         
         return result
 
-    def _show_completion_results(self, result: dict, module_name: str) -> None:
+    def _run_integration_test(self, module_name: str) -> dict:
+        """Run Package Manager integration test for a module."""
+        try:
+            # Import the Package Manager integration system
+            integration_module_path = Path("tests/integration/package_manager_integration.py")
+            
+            if not integration_module_path.exists():
+                return {
+                    "success": False,
+                    "error": "Package Manager integration system not found"
+                }
+            
+            # Load the integration module
+            spec = importlib.util.spec_from_file_location(
+                "package_manager_integration", 
+                integration_module_path
+            )
+            integration_module = importlib.util.module_from_spec(spec)
+            sys.modules["package_manager_integration"] = integration_module
+            spec.loader.exec_module(integration_module)
+            
+            # Run the integration test
+            manager = integration_module.PackageManagerIntegration()
+            result = manager.run_module_integration_test(module_name)
+            
+            return result
+            
+        except Exception as e:
+            return {
+                "success": False,
+                "error": f"Failed to run integration test: {e}",
+                "module_name": module_name
+            }
+
+    def _show_completion_results(self, result: dict, module_name: str, integration_result: dict = None) -> None:
         """Show results of module completion workflow."""
         console = self.console
         
@@ -305,13 +360,15 @@ class ModuleCommand(BaseCommand):
             checkpoint_name = result.get("checkpoint_name", "Unknown")
             capability = result.get("capability", "")
             
+            # Show both integration and capability success
             console.print(Panel(
                 f"[bold green]🎉 Module Complete![/bold green]\n\n"
-                f"[green]✅ {checkpoint_name} checkpoint achieved![/green]\n"
-                f"[green]Capability unlocked: {capability}[/green]\n\n"
-                f"[bold cyan]🚀 System Integration Success[/bold cyan]\n"
-                f"Module {module_name} is now fully integrated into the\n"
-                f"TinyTorch package and all capabilities are working!",
+                f"[green]✅ Package Integration: Module exported and integrated[/green]\n"
+                f"[green]✅ Capability Test: {checkpoint_name} checkpoint achieved![/green]\n"
+                f"[green]🚀 Capability unlocked: {capability}[/green]\n\n"
+                f"[bold cyan]🔄 Two-Tier Validation Success[/bold cyan]\n"
+                f"Module {module_name} passed both integration and capability tests!\n"
+                f"Your module is fully functional in the TinyTorch ecosystem.",
                 title=f"🏆 {module_name} Achievement",
                 border_style="green"
             ))
@@ -320,18 +377,18 @@ class ModuleCommand(BaseCommand):
             self._show_progress_and_next_steps(module_name)
         else:
             console.print(Panel(
-                f"[bold yellow]⚠️  Export Complete, Test Incomplete[/bold yellow]\n\n"
-                f"[yellow]Module {module_name} was exported successfully,[/yellow]\n"
-                f"[yellow]but the checkpoint test failed.[/yellow]\n\n"
+                f"[bold yellow]⚠️  Integration Complete, Capability Test Failed[/bold yellow]\n\n"
+                f"[green]✅ Package Integration: Module exported and integrated[/green]\n"
+                f"[yellow]❌ Capability Test: {result.get('checkpoint_name', 'Checkpoint')} test failed[/yellow]\n\n"
                 f"[bold]This usually indicates:[/bold]\n"
-                f"• Some functionality is still missing\n"
-                f"• Implementation needs refinement\n"
-                f"• Module requirements not fully met\n\n"
+                f"• Basic integration works, but some advanced functionality is missing\n"
+                f"• Implementation needs refinement for full capability\n"
+                f"• Module requirements partially met\n\n"
                 f"[cyan]💡 Next steps:[/cyan]\n"
-                f"• Review module implementation\n"
+                f"• Review module implementation for missing features\n"
                 f"• Test individual components\n"
                 f"• Try: tito module complete {module_name}",
-                title="Integration Test Failed",
+                title="Capability Test Failed",
                 border_style="yellow"
             ))
 
