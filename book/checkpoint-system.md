@@ -124,8 +124,8 @@ Every checkpoint completion unlocks a concrete capability:
 
 #### **Check Your Progress**
 ```bash
-tito checkpoint status           # Current progress overview
-tito checkpoint status --detailed # Module-level detail
+tito checkpoint status           # Current progress overview with capability statements
+tito checkpoint status --detailed # Module-level detail with test file status
 ```
 
 #### **Rich Visual Timeline**
@@ -134,17 +134,98 @@ tito checkpoint timeline         # Vertical tree view with connecting lines
 tito checkpoint timeline --horizontal # Linear progress bar with Rich styling
 ```
 
-#### **Test Capabilities** (Coming Soon)
+#### **Test Capabilities**
 ```bash
-tito checkpoint test foundation  # Test foundation capabilities
-tito checkpoint unlock          # Attempt to unlock next checkpoint
+tito checkpoint test 01          # Test specific checkpoint (01-15)
+tito checkpoint test             # Test current checkpoint
+tito checkpoint run 00 --verbose # Run checkpoint with detailed output
+tito checkpoint unlock          # Show next checkpoint to unlock
 ```
+
+#### **Module Completion Workflow** 
+```bash
+tito module complete 02_tensor   # Complete module with export and checkpoint testing
+tito module complete tensor      # Works with short names too
+tito module complete 02_tensor --skip-test # Skip checkpoint test if needed
+```
+
+**What `tito module complete` does:**
+1. **Exports module** to the `tinytorch` package
+2. **Maps to checkpoint** (e.g., 02_tensor → checkpoint_01_foundation)
+3. **Runs capability test** with Rich progress tracking
+4. **Shows achievement** celebration and next steps
 
 ### **Integration with Development**
 The checkpoint system connects directly to your actual development work:
-- **Module completion** automatically updates checkpoint progress
-- **Integration tests** validate that capabilities actually work
-- **Package building** ensures your framework grows with each checkpoint
+
+#### **Automatic Module-to-Checkpoint Mapping**
+```bash
+# Each module maps to a specific checkpoint:
+01_setup      → checkpoint_00_environment   # Environment setup
+02_tensor     → checkpoint_01_foundation    # Tensor operations
+03_activations → checkpoint_02_intelligence # Activation functions
+04_layers     → checkpoint_03_components    # Neural building blocks
+05_dense      → checkpoint_04_networks      # Multi-layer networks
+06_spatial    → checkpoint_05_learning      # Spatial processing
+07_attention  → checkpoint_06_attention     # Attention mechanisms
+08_dataloader → checkpoint_07_stability     # Data preparation
+09_autograd   → checkpoint_08_differentiation # Gradient computation
+10_optimizers → checkpoint_09_optimization  # Optimization algorithms
+11_training   → checkpoint_10_training      # Training loops
+12_compression → checkpoint_11_regularization # Model compression
+13_kernels    → checkpoint_12_kernels       # High-performance ops
+14_benchmarking → checkpoint_13_benchmarking # Performance analysis
+15_mlops      → checkpoint_14_deployment    # Production deployment
+16_capstone   → checkpoint_15_capstone      # Complete integration
+```
+
+#### **Real Capability Validation**
+- **Not just code completion**: Tests verify actual functionality works
+- **Import testing**: Ensures modules export correctly to package
+- **Functionality testing**: Validates capabilities like tensor operations, neural layers
+- **Integration testing**: Confirms components work together
+
+#### **Rich Visual Feedback**
+- **Achievement celebrations**: 🎉 when checkpoints are completed
+- **Progress visualization**: Rich CLI progress bars and timelines
+- **Next step guidance**: Suggests the next module to work on
+- **Capability statements**: Clear "I can..." statements for each achievement
+
+---
+
+## 🏗️ **Implementation Architecture**
+
+### **16 Individual Test Files**
+Each checkpoint is implemented as a standalone Python test file in `tests/checkpoints/`:
+```
+tests/checkpoints/
+├── checkpoint_00_environment.py   # "Can I configure my environment?"
+├── checkpoint_01_foundation.py    # "Can I create ML building blocks?"
+├── checkpoint_02_intelligence.py  # "Can I add nonlinearity?"
+├── ...
+└── checkpoint_15_capstone.py      # "Can I build complete ML systems?"
+```
+
+### **Rich CLI Integration**
+The `tito checkpoint` command system provides:
+- **Visual progress tracking** with progress bars and timelines
+- **Capability testing** with immediate feedback
+- **Achievement celebrations** with next step guidance
+- **Detailed status reporting** with module-level information
+
+### **Automated Module Completion**
+The `tito module complete` workflow:
+1. **Exports module** using existing `tito export` functionality
+2. **Maps module to checkpoint** using predefined mapping table
+3. **Runs capability test** with Rich progress visualization
+4. **Shows results** with achievement celebration or guidance
+
+### **Agent Team Implementation**
+This system was successfully implemented by coordinated AI agents:
+- **Module Developer**: Built checkpoint tests and CLI integration
+- **QA Agent**: Tested all 16 checkpoints and CLI functionality
+- **Package Manager**: Validated integration with package system
+- **Documentation Publisher**: Created this documentation and usage guides
 
 ---
 

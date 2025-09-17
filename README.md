@@ -60,6 +60,12 @@ Go from "How does this work?" 🤷 to "I implemented every line!" 💪
 - **Visual progress**: Success indicators and system integration
 - **"Aha moments"**: Watch your `ReLU` power real neural networks
 
+### **🎯 NEW: Checkpoint Achievement System**
+- **16 capability checkpoints**: Track progress through capability questions like "Can I build neural networks?"
+- **Rich CLI progress tracking**: Beautiful visualizations with `tito checkpoint status` and `tito checkpoint timeline`
+- **Automatic validation**: `tito module complete` exports and tests your implementations immediately
+- **Achievement celebrations**: 🎉 Visual feedback when you unlock new ML capabilities
+
 ### **📊 NEW: Visual System Architecture**
 - **Interactive dependency graphs**: See how all 17 modules connect
 - **Learning roadmap visualization**: Optimal path through the system
@@ -110,6 +116,23 @@ jupyter lab introduction_dev.py           # Interactive visualizations of the en
 # After understanding the system, start building:
 cd ../01_setup
 jupyter lab setup_dev.py                  # Your first implementation module
+
+# Complete the module with automatic testing:
+tito module complete 01_setup             # Exports to package AND tests capabilities
+```
+
+### 🎯 **Step 4: Track Your Progress with Checkpoints**
+
+```bash
+# See your capability progression:
+tito checkpoint status                     # Current progress overview
+tito checkpoint timeline --horizontal      # Visual progress timeline
+tito checkpoint test 00                    # Test environment checkpoint
+
+# What you'll see:
+# ✅ 00: Environment - "Can I configure my TinyTorch development environment?"
+# 🎯 01: Foundation - "Can I create and manipulate the building blocks of ML?"
+# ⏳ 02: Intelligence - "Can I add nonlinearity - the key to neural network intelligence?"
 ```
 
 ### 👩‍🏫 **Instructors**
@@ -119,7 +142,12 @@ jupyter lab setup_dev.py                  # Your first implementation module
 tito system info
 tito system doctor
 
-# Module workflow
+# Module workflow with checkpoint integration
+tito module complete 01_setup            # Export + test capability
+tito checkpoint status --detailed        # Student progress overview
+tito checkpoint test 01                   # Validate specific checkpoint
+
+# Traditional workflow (still available)
 tito export 01_setup
 tito test 01_setup
 tito nbdev build                          # Update package
@@ -174,8 +202,15 @@ TinyTorch/
 │   └── chapters/            # Generated from module READMEs
 ├── tito/                    # CLI tool for development workflow
 │   ├── commands/            # Student and instructor commands
+│   │   ├── checkpoint.py    # 🎯 NEW: Checkpoint system with Rich progress tracking
+│   │   └── module.py        # 🎯 NEW: Enhanced with tito module complete workflow
 │   └── tools/               # Testing and build automation
 └── tests/                   # Integration tests
+    ├── checkpoints/         # 🎯 NEW: 16 capability checkpoint tests
+    │   ├── checkpoint_00_environment.py
+    │   ├── checkpoint_01_foundation.py
+    │   └── ...              # Through checkpoint_15_capstone.py
+    └── test_checkpoint_integration.py  # 🎯 NEW: Integration testing suite
 ```
 
 **Module Progression (Start with Module 0!):**
@@ -185,10 +220,15 @@ TinyTorch/
 
 **Development Workflow:**
 1. **Develop in `modules/source/`** - Each module has a `*_dev.py` file where you implement components
-2. **Export to `tinytorch/`** - Use `tito export` to build your implementations into a real Python package
-3. **Use your framework** - Import and use your own code: `from tinytorch.core.tensor import Tensor`
-4. **Test everything** - Run `tito test` to verify your implementations work correctly
-5. **Build iteratively** - Each module builds on previous ones, creating a complete ML framework
+2. **Complete module** - Use `tito module complete` to export AND test capabilities automatically
+3. **Track progress** - Use `tito checkpoint status` to see your ML capabilities unlocked
+4. **Use your framework** - Import and use your own code: `from tinytorch.core.tensor import Tensor`
+5. **Celebrate achievements** - Get immediate feedback when you unlock new ML capabilities
+
+**Alternative Workflow:**
+1. **Traditional export** - Use `tito export` to build implementations into Python package
+2. **Manual testing** - Run `tito test` to verify implementations work correctly
+3. **Manual checkpoint testing** - Use `tito checkpoint test` for capability validation
 
 ---
 
@@ -373,14 +413,18 @@ git checkout dev
 cd modules/source/02_tensor
 jupyter lab tensor_dev.py
 
-# Export to package
-tito export 02_tensor
+# Complete module with export and capability testing
+tito module complete 02_tensor          # Exports + tests checkpoint_01_foundation
 
-# Test your implementation
-tito test 02_tensor
+# Check your progress
+tito checkpoint status                  # See capabilities unlocked
+tito checkpoint timeline --horizontal   # Visual progress timeline
 
-# Build complete package
-tito nbdev build
+# Alternative: Traditional workflow
+tito export 02_tensor                   # Export to package
+tito test 02_tensor                     # Test implementation
+tito checkpoint test 01                 # Test specific checkpoint
+tito nbdev build                        # Build complete package
 ```
 
 ### **Release Process**
@@ -443,9 +487,11 @@ git clone https://github.com/mlsysbook/TinyTorch.git
 cd TinyTorch
 pip install -r requirements.txt           # Install all dependencies (numpy, jupyter, pytest, etc.)
 pip install -e .                          # Install TinyTorch package in editable mode  
-tito system doctor
+tito system doctor                         # Verify setup
+tito checkpoint status                     # See your capability progression
 cd modules/source/01_setup
-jupyter lab setup_dev.py
+jupyter lab setup_dev.py                  # Start building
+tito module complete 01_setup             # Complete with automatic testing
 ```
 
 ### **Option 3: Instructor Setup**
@@ -454,8 +500,13 @@ jupyter lab setup_dev.py
 git clone https://github.com/mlsysbook/TinyTorch.git
 cd TinyTorch
 tito system info
+tito checkpoint status --detailed         # Student progress overview
 
-# Test module workflow
+# Test module workflow with checkpoints
+tito module complete 01_setup             # Export + test capabilities
+tito checkpoint test 00                    # Test environment checkpoint
+
+# Traditional workflow (still available)
 tito export 01_setup && tito test 01_setup
 ```
 
