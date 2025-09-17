@@ -847,72 +847,6 @@ def test_module_conv2d_tensor_compatibility():
     assert output_tensor.shape == expected_shape, f"Expected output shape {expected_shape}, but got {output_tensor.shape}"
     print("✅ Integration Test Passed: Conv2D layer correctly transformed image tensor.")
 
-# %% [markdown]
-"""
-## 🎯 MODULE SUMMARY: Convolutional Networks
-
-Congratulations! You have successfully implemented the core components of convolutional neural networks:
-
-### What You have Accomplished
-✅ **Convolution Operation**: Implemented the sliding window mechanism from scratch  
-✅ **Conv2D Layer**: Built learnable convolutional layers with random initialization  
-✅ **Flatten Function**: Created the bridge between convolutional and dense layers  
-✅ **CNN Pipelines**: Composed complete systems for image processing  
-✅ **Real Applications**: Tested on image classification and feature extraction
-
-### Key Concepts You have Learned
-- **Convolution as pattern matching**: Kernels detect specific features
-- **Sliding window mechanism**: How convolution processes spatial data
-- **Parameter sharing**: Same kernel applied across the entire image
-- **Spatial hierarchy**: Multiple layers build complex features
-- **CNN architecture**: Conv2D → Activation → Flatten → Dense pattern
-
-### Mathematical Foundations
-- **Convolution operation**: dot product of kernel and image patches
-- **Output size calculation**: (input_size - kernel_size + 1)
-- **Translation invariance**: Same pattern detected anywhere in input
-- **Feature maps**: Spatial representations of detected patterns
-
-### Real-World Applications
-- **Image classification**: Object recognition, medical imaging
-- **Computer vision**: Face detection, autonomous driving
-- **Pattern recognition**: Texture analysis, edge detection
-- **Feature extraction**: Transfer learning, representation learning
-
-### CNN Architecture Insights
-- **Kernel size**: 3×3 most common, balances locality and capacity
-- **Stacking layers**: Builds hierarchical feature representations
-- **Spatial reduction**: Each layer reduces spatial dimensions
-- **Channel progression**: Typically increase channels while reducing spatial size
-
-### Performance Characteristics
-- **Parameter efficiency**: Dramatic reduction vs. fully connected
-- **Translation invariance**: Robust to object location changes
-- **Computational efficiency**: Parallel processing of spatial regions
-- **Memory considerations**: Feature maps require storage during forward pass
-
-### Next Steps
-1. **Export your code**: Use NBDev to export to the `tinytorch` package
-2. **Test your implementation**: Run the complete test suite
-3. **Build CNN architectures**: 
-   ```python
-   from tinytorch.core.cnn import Conv2D, flatten
-   from tinytorch.core.layers import Dense
-   from tinytorch.core.activations import ReLU
-   
-   # Create CNN
-   conv = Conv2D(kernel_size=(3, 3))
-   relu = ReLU()
-   dense = Dense(input_size=36, output_size=10)
-   
-   # Process image
-   features = relu(conv(image))
-   predictions = dense(flatten(features))
-   ```
-4. **Explore advanced CNNs**: Pooling, multiple channels, modern architectures!
-
-**Ready for the next challenge?** Let us build data loaders to handle real datasets efficiently!
-"""
 
 # %% [markdown]
 """
@@ -1402,7 +1336,74 @@ GRADING RUBRIC (Instructor Use):
 # Student response area - instructor will replace this section during grading setup
 # This is a manually graded question requiring understanding of production computer vision pipelines
 # Students should demonstrate knowledge of real-time processing and system integration
-### END SOLUTION 
+### END SOLUTION
+
+# %% [markdown]
+"""
+## 🎯 MODULE SUMMARY: Convolutional Networks
+
+Congratulations! You have successfully implemented the core components of convolutional neural networks:
+
+### What You have Accomplished
+✅ **Convolution Operation**: Implemented the sliding window mechanism from scratch  
+✅ **Conv2D Layer**: Built learnable convolutional layers with random initialization  
+✅ **Flatten Function**: Created the bridge between convolutional and dense layers  
+✅ **CNN Pipelines**: Composed complete systems for image processing  
+✅ **Real Applications**: Tested on image classification and feature extraction
+
+### Key Concepts You have Learned
+- **Convolution as pattern matching**: Kernels detect specific features
+- **Sliding window mechanism**: How convolution processes spatial data
+- **Parameter sharing**: Same kernel applied across the entire image
+- **Spatial hierarchy**: Multiple layers build complex features
+- **CNN architecture**: Conv2D → Activation → Flatten → Dense pattern
+
+### Mathematical Foundations
+- **Convolution operation**: dot product of kernel and image patches
+- **Output size calculation**: (input_size - kernel_size + 1)
+- **Translation invariance**: Same pattern detected anywhere in input
+- **Feature maps**: Spatial representations of detected patterns
+
+### Real-World Applications
+- **Image classification**: Object recognition, medical imaging
+- **Computer vision**: Face detection, autonomous driving
+- **Pattern recognition**: Texture analysis, edge detection
+- **Feature extraction**: Transfer learning, representation learning
+
+### CNN Architecture Insights
+- **Kernel size**: 3×3 most common, balances locality and capacity
+- **Stacking layers**: Builds hierarchical feature representations
+- **Spatial reduction**: Each layer reduces spatial dimensions
+- **Channel progression**: Typically increase channels while reducing spatial size
+
+### Performance Characteristics
+- **Parameter efficiency**: Dramatic reduction vs. fully connected
+- **Translation invariance**: Robust to object location changes
+- **Computational efficiency**: Parallel processing of spatial regions
+- **Memory considerations**: Feature maps require storage during forward pass
+
+### Next Steps
+1. **Export your code**: Use NBDev to export to the `tinytorch` package
+2. **Test your implementation**: Run the complete test suite
+3. **Build CNN architectures**: 
+   ```python
+   from tinytorch.core.cnn import Conv2D, flatten
+   from tinytorch.core.layers import Dense
+   from tinytorch.core.activations import ReLU
+   
+   # Create CNN
+   conv = Conv2D(kernel_size=(3, 3))
+   relu = ReLU()
+   dense = Dense(input_size=36, output_size=10)
+   
+   # Process image
+   features = relu(conv(image))
+   predictions = dense(flatten(features))
+   ```
+4. **Explore advanced CNNs**: Pooling, multiple channels, modern architectures!
+
+**Ready for the next challenge?** Let us build data loaders to handle real datasets efficiently!
+"""
 
 if __name__ == "__main__":
     # Run all tests
