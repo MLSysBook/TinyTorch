@@ -95,6 +95,39 @@ normalized_images = normalizer.transform(test_images)
 # Ensures consistent preprocessing across data splits
 ```
 
+## 🎯 NEW: CIFAR-10 Support for North Star Goal
+
+### Built-in CIFAR-10 Download and Loading
+This module now includes complete CIFAR-10 support to achieve our semester goal of 75% accuracy:
+
+```python
+from tinytorch.core.dataloader import CIFAR10Dataset, download_cifar10
+
+# Download CIFAR-10 automatically (one-time, ~170MB)
+dataset_path = download_cifar10()  # Downloads to ./data/cifar-10-batches-py
+
+# Load training and test data
+dataset = CIFAR10Dataset(download=True, flatten=False)
+print(f"✅ Loaded {len(dataset.train_data)} training samples")
+print(f"✅ Loaded {len(dataset.test_data)} test samples")
+
+# Create DataLoaders for training
+from tinytorch.core.dataloader import DataLoader
+train_loader = DataLoader(dataset.train_data, dataset.train_labels, batch_size=32, shuffle=True)
+test_loader = DataLoader(dataset.test_data, dataset.test_labels, batch_size=32, shuffle=False)
+
+# Ready for CNN training!
+for batch_images, batch_labels in train_loader:
+    print(f"Batch shape: {batch_images.shape}")  # (32, 3, 32, 32) for CNNs
+    break
+```
+
+### What's New in This Module
+- ✅ **`download_cifar10()`**: Automatically downloads and extracts CIFAR-10 dataset
+- ✅ **`CIFAR10Dataset`**: Complete dataset class with train/test splits
+- ✅ **Real Data Support**: Work with actual 32x32 RGB images, not toy data
+- ✅ **Production Features**: Shuffling, batching, normalization for real training
+
 ## 🚀 Getting Started
 
 ### Prerequisites
