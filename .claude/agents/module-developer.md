@@ -124,13 +124,8 @@ def method_name(self, params):
     HINTS:  # <- OUTSIDE solution block!
     - Use np.function() for [specific reason why]
     - Remember to handle [edge case] because [why it matters]
-    - Consider memory: [what to think about for efficiency]
     - Check shape compatibility to avoid [common error]
-    
-    PERFORMANCE NOTE:  # <- OUTSIDE solution block!
-    - Time complexity: O(?) - think about [what drives complexity]
-    - Space complexity: O(?) - consider [what uses memory]
-    - Bottleneck: [Common performance issue to avoid]
+    - Performance tip: [only if relevant - e.g., "avoid creating copies"]
     """
     ### BEGIN SOLUTION
     # Complete implementation with comments explaining key decisions
