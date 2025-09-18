@@ -1,12 +1,12 @@
-# 🔬 Quick Exploration Path
+# Quick Exploration Path
 
 **Perfect for:** "I want to see what this is about" • "Can I try this without installing anything?"
 
 ---
 
-## 🚀 Launch Immediately (0 Setup Required)
+## Launch Immediately (0 Setup Required)
 
-Click the **🚀 Launch Binder** button on any chapter to get:
+Click the **Launch Binder** button on any chapter to get:
 - Live Jupyter environment in your browser
 - Pre-configured TinyTorch development setup  
 - Ability to run and modify all code immediately
@@ -19,38 +19,39 @@ Click the **🚀 Launch Binder** button on any chapter to get:
 - **Tensor operations** that power neural networks  
 - **Dense layers** that transform data
 - **Complete neural networks** for image classification
+- **🔥 Language models** built from the same foundations
 
 All running live in your browser!
 ```
 
 ---
 
-## 📚 Recommended Exploration Path
+## Recommended Exploration Path
 
 ### **Start Here: Chapter 1 - Setup**
 - Understand the TinyTorch development workflow
 - Get familiar with the educational approach
 - See how components fit together
 
-**🚀 [Launch Setup Chapter](../chapters/01-setup.md)**
+**[Launch Setup Chapter](../chapters/01-setup.md)**
 
 ### **Then Try: Chapter 3 - Activations** 
 - Implement your first ML function (ReLU)
 - See immediate visual results
 - Understand why nonlinearity matters
 
-**🚀 [Launch Activations Chapter](../chapters/03-activations.md)**
+**[Launch Activations Chapter](../chapters/03-activations.md)**
 
 ### **Build Up: Chapter 4 - Layers**
 - Create the building blocks of neural networks
 - Combine your ReLU with matrix operations
 - See how simple math becomes powerful AI
 
-**🚀 [Launch Layers Chapter](../chapters/04-layers.md)**
+**[Launch Layers Chapter](../chapters/04-layers.md)**
 
 ---
 
-## ⚠️ **Important Limitations**
+## Important Limitations
 
 **Sessions are temporary:**
 - Binder sessions timeout after ~20 minutes of inactivity
@@ -61,19 +62,20 @@ All running live in your browser!
 
 ---
 
-## 🎯 **What You'll Understand**
+## What You'll Understand
 
 After exploring 2-3 chapters, you'll have hands-on understanding of:
 
-✅ **How ML frameworks work under the hood**  
-✅ **Why activation functions are crucial**  
-✅ **How matrix multiplication powers neural networks**  
-✅ **The relationship between layers, networks, and learning**  
-✅ **Real implementation vs. high-level APIs**
+- **How ML frameworks work under the hood**  
+- **Why activation functions are crucial**  
+- **How matrix multiplication powers neural networks**  
+- **The relationship between layers, networks, and learning**  
+- **Real implementation vs. high-level APIs**  
+- **Why vision and language models share the same foundations**
 
 ---
 
-## 🔄 **Next Steps**
+## Next Steps
 
 **Satisfied with exploration?** You've gained valuable insight into ML systems!
 
@@ -83,4 +85,4 @@ After exploring 2-3 chapters, you'll have hands-on understanding of:
 
 ---
 
-*🎉 No commitment required - just click and explore!* 
+*No commitment required - just click and explore!* 

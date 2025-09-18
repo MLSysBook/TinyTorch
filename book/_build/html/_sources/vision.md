@@ -1,10 +1,10 @@
-# 🎯 The TinyTorch Vision
+# The TinyTorch Vision
 
-**Training ML Systems Engineers, Not Just ML Users**
+**Training ML Systems Engineers: From Computer Vision to Language Models**
 
 ---
 
-## 💡 The Problem We're Solving
+## The Problem We're Solving
 
 The ML field has a critical gap: **most education teaches you to use frameworks, not build them.**
 
@@ -39,14 +39,14 @@ class Linear:
 ```
 
 **Questions students CAN answer:**
-- ✅ Exactly how automatic differentiation works
-- ✅ Why certain optimizers use more memory
-- ✅ How to debug training instability
-- ✅ When to make performance vs accuracy trade-offs
+- Exactly how automatic differentiation works
+- Why certain optimizers use more memory
+- How to debug training instability
+- When to make performance vs accuracy trade-offs
 
 ---
 
-## 🧠 What We Teach: Systems Thinking
+## What We Teach: Systems Thinking
 
 ### **Beyond Algorithms: System-Level Understanding**
 
@@ -72,26 +72,26 @@ class Linear:
 
 ---
 
-## 🎯 Target Audience: Future ML Systems Engineers
+## Target Audience: Future ML Systems Engineers
 
 ### **Perfect For:**
 
-**🎓 Computer Science Students**
+**Computer Science Students**
 - Going beyond "use PyTorch" to "understand PyTorch"
 - Building portfolio projects that demonstrate deep system knowledge
 - Preparing for ML engineering roles (not just data science)
 
-**💻 Software Engineers → ML Engineers**
+**Software Engineers → ML Engineers**
 - Leveraging existing programming skills for ML systems
 - Understanding performance, debugging, and optimization
 - Learning production ML patterns and infrastructure
 
-**🔬 ML Practitioners**
+**ML Practitioners**
 - Moving from model users to model builders
 - Debugging training issues at the systems level  
 - Optimizing models for production deployment
 
-**🚀 Researchers & Advanced Users**
+**Researchers & Advanced Users**
 - Implementing custom operations and architectures
 - Understanding framework limitations and workarounds
 - Building specialized ML systems for unique domains
@@ -109,7 +109,7 @@ You become the person your team asks:
 
 ---
 
-## 🏗️ Pedagogical Philosophy: Build → Use → Understand
+## Pedagogical Philosophy: Build → Use → Understand
 
 ### **1. Build First**
 Every component implemented from scratch:
@@ -141,25 +141,25 @@ ML Systems Thinking sections in every module:
 
 ---
 
-## 🌟 Unique Value Proposition
+## Unique Value Proposition
 
 ### **What Makes TinyTorch Different:**
 
-**🔬 Systems-First Approach**
+**Systems-First Approach**
 - Not just "how does attention work" but "why does attention scale O(N²) and how do production systems handle this?"
 - Not just "implement SGD" but "when do you choose SGD vs Adam in production?"
 
-**🏭 Production Relevance**
+**Production Relevance**
 - Memory profiling, performance optimization, deployment patterns
 - Real datasets, realistic scale, professional development workflow
 - Connection to industry practices and framework design decisions
 
-**🎯 Complete Integration**
-- 16 modules that build ONE cohesive ML framework
-- Each component integrates with others (not isolated exercises)
+**Framework Generalization**
+- 16 modules that build ONE cohesive ML framework supporting vision AND language
+- 95% component reuse from computer vision to language models
 - Professional package structure with CLI tools and testing
 
-**📊 Proven Pedagogy**
+**Proven Pedagogy**
 - Build → Use → Understand cycle creates deep intuition
 - Immediate testing and feedback for every component
 - Progressive complexity with solid foundations
@@ -167,60 +167,61 @@ ML Systems Thinking sections in every module:
 
 ---
 
-## 🚀 Learning Outcomes: Becoming an ML Systems Engineer
+## Learning Outcomes: Becoming an ML Systems Engineer
 
 ### **Technical Mastery**
-- ✅ **Implement any ML paper** from first principles
-- ✅ **Debug training issues** at the systems level
-- ✅ **Optimize models** for production deployment
-- ✅ **Profile and improve** ML system performance
-- ✅ **Design custom architectures** for specialized domains
+- **Implement any ML paper** from first principles
+- **Debug training issues** at the systems level
+- **Optimize models** for production deployment
+- **Profile and improve** ML system performance
+- **Design custom architectures** for specialized domains
+- **Understand framework generalization** across vision and language
 
 ### **Systems Understanding** 
-- ✅ **Memory management** in ML frameworks
-- ✅ **Computational complexity** vs real-world performance
-- ✅ **Hardware utilization** patterns and optimization
-- ✅ **Distributed training** challenges and solutions
-- ✅ **Production deployment** considerations and trade-offs
+- **Memory management** in ML frameworks
+- **Computational complexity** vs real-world performance
+- **Hardware utilization** patterns and optimization
+- **Distributed training** challenges and solutions
+- **Production deployment** considerations and trade-offs
 
 ### **Professional Skills**
-- ✅ **Test-driven development** for ML systems
-- ✅ **Performance profiling** and optimization techniques
-- ✅ **Code organization** and package development
-- ✅ **Documentation** and API design
-- ✅ **MLOps** and production monitoring
+- **Test-driven development** for ML systems
+- **Performance profiling** and optimization techniques
+- **Code organization** and package development
+- **Documentation** and API design
+- **MLOps** and production monitoring
 
 ### **Career Impact**
-- ✅ **Technical interviews**: Demonstrate deep ML systems knowledge
-- ✅ **Job opportunities**: Qualify for ML engineer (not just data scientist) roles
-- ✅ **Team leadership**: Become the go-to person for ML systems questions
-- ✅ **Research ability**: Implement cutting-edge papers independently
-- ✅ **Entrepreneurship**: Build ML products with full-stack understanding
+- **Technical interviews**: Demonstrate deep ML systems knowledge
+- **Job opportunities**: Qualify for ML engineer (not just data scientist) roles
+- **Team leadership**: Become the go-to person for ML systems questions
+- **Research ability**: Implement cutting-edge papers independently
+- **Entrepreneurship**: Build ML products with full-stack understanding
 
 ---
 
-## 🎯 Success Stories: What Students Say
+## Success Stories: What Students Say
 
 *"Finally understood what happens when I call `loss.backward()` - now I can debug gradient issues instead of just hoping they go away."*
 
-*"Built my own attention mechanism from scratch. When GPT-4 came out, I actually understood the technical details instead of just the hype."*
+*"Built my own attention mechanism from scratch, then extended my vision framework to language models with 95% component reuse. When GPT-4 came out, I actually understood both the technical details AND the framework unification."*
 
 *"Got hired as an ML engineer specifically because I could explain how optimizers work at the memory level during the technical interview."*
 
-*"Used TinyTorch concepts to optimize our production training pipeline - saved 40% on cloud costs by understanding memory bottlenecks."*
+*"Used TinyTorch concepts to optimize our production training pipeline for both vision and language models - saved 40% on cloud costs by understanding memory bottlenecks across modalities."*
 
 *"Implemented a custom loss function for our research project in 30 minutes instead of spending days figuring out PyTorch internals."*
 
 ---
 
-## 💪 Ready to Become an ML Systems Engineer?
+## Ready to Become an ML Systems Engineer?
 
 **TinyTorch transforms ML users into ML builders.**
 
 Stop wondering how frameworks work. Start building them.
 
-**[🚀 Begin Your Journey →](chapters/00-introduction.md)**
+**[Begin Your Journey →](chapters/00-introduction.md)**
 
 ---
 
-*TinyTorch: Because understanding how to build the rocket ship makes you a better astronaut.* 🚀
+*TinyTorch: Because understanding how to build ML systems makes you a more effective ML engineer.*
