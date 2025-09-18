@@ -34,6 +34,23 @@ def demo_attention():
         ))
         console.print()
         
+        # What this demo shows
+        console.print(Panel(
+            "[bold yellow]What This Demo Shows:[/bold yellow]\n\n"
+            "Attention mechanisms solved the fundamental problem of sequence processing - how to let\n"
+            "any part of a sequence directly access information from any other part. You'll discover:\n\n"
+            "• Why RNNs failed on long sequences - the information bottleneck problem\n"
+            "• How attention enables direct connections between all sequence positions\n"
+            "• The elegant math behind attention: Query, Key, Value operations\n"
+            "• Why multi-head attention gives different types of understanding\n"
+            "• How Transformers stack attention layers to build deep understanding\n\n"
+            "[bold cyan]Key Insight:[/bold cyan] Attention is about letting the model decide what to focus on,\n"
+            "instead of forcing it through fixed computation patterns. This flexibility is why it works!",
+            title="📚 Understanding This Demo",
+            style="blue"
+        ))
+        console.print()
+        
         # Demo 1: The Attention Problem
         console.print(Panel(
             "From fixed-size bottlenecks to dynamic focus...",
@@ -73,6 +90,11 @@ def demo_attention():
             comparison_table.add_row(rnn, attn)
         
         console.print(comparison_table)
+        console.print()
+        
+        console.print("[dim]💡 [bold]Key Difference:[/bold] RNNs process sequentially, attention processes in parallel:[/dim]")
+        console.print("[dim]   • RNN: Must go through h3 to connect 'cat' and 'mat' (loses information)[/dim]")
+        console.print("[dim]   • Attention: 'cat' and 'mat' can directly interact (preserves all information)[/dim]")
         console.print()
         
         # Problems and solutions
@@ -127,6 +149,12 @@ def demo_attention():
             print(f"  'sat' → '{word}': {score:.3f}")
         print()
         
+        console.print("[dim]💡 [bold]Understanding Scores:[/bold] Higher scores = stronger relationships:[/dim]")
+        console.print("[dim]   • Dot product measures similarity between embeddings[/dim]")
+        console.print("[dim]   • Similar vectors have high dot products[/dim]")
+        console.print("[dim]   • These raw scores will be normalized with softmax[/dim]")
+        console.print()
+        
         # Softmax to get attention weights
         exp_scores = np.exp(scores)
         attention_weights = exp_scores / np.sum(exp_scores)
@@ -136,6 +164,12 @@ def demo_attention():
             print(f"  'sat' → '{word}': {weight:.3f} ({weight*100:.1f}%)")
         print(f"Total: {np.sum(attention_weights):.3f}")
         print()
+        
+        console.print("[dim]💡 [bold]Weights Interpretation:[/bold] Softmax creates a probability distribution:[/dim]")
+        console.print("[dim]   • All weights sum to 1.0 (100%)[/dim]")
+        console.print("[dim]   • Higher weights = more attention/importance[/dim]")
+        console.print("[dim]   • The model learns what to pay attention to![/dim]")
+        console.print()
         
         # Compute attended output
         attended_output = np.sum(keys * attention_weights.reshape(-1, 1), axis=0)
@@ -173,6 +207,13 @@ def demo_attention():
         print("💡 Key insight: Different heads learn different types of relationships!")
         print()
         
+        console.print("[dim]💡 [bold]Multi-Head Benefits:[/bold] Like having multiple experts:[/dim]")
+        console.print("[dim]   • One head might focus on grammar (subject-verb)[/dim]")
+        console.print("[dim]   • Another on semantics (cat-mat are both objects)[/dim]")
+        console.print("[dim]   • Another on position (nearby words)[/dim]")
+        console.print("[dim]   • Combined: Rich, multi-faceted understanding![/dim]")
+        console.print()
+        
         # Demo 4: Self-Attention in Practice
         print("🎭 Demo 4: Self-Attention - Words Talking to Each Other")
         print("Every word attends to every other word...")
@@ -201,6 +242,12 @@ def demo_attention():
         print("  • 'sat' focuses mainly on itself (0.6) - the action")
         print("  • 'mat' balances between all words")
         print()
+        
+        console.print("[dim]💡 [bold]Self-Attention Patterns:[/bold] Different words have different focus patterns:[/dim]")
+        console.print("[dim]   • Content words (nouns/verbs) often have high self-attention[/dim]")
+        console.print("[dim]   • Function words distribute attention more broadly[/dim]")
+        console.print("[dim]   • These patterns emerge automatically during training![/dim]")
+        console.print()
         
         # Demo 5: Scaled Dot-Product Attention
         console.print(Panel(
@@ -256,6 +303,13 @@ Where:
         
         print()
         
+        console.print("[dim]💡 [bold]The Magic Formula:[/bold] Why this simple equation changed AI:[/dim]")
+        console.print("[dim]   • Q⋅Kᵀ: Measures relevance between positions[/dim]")
+        console.print("[dim]   • √dₖ scaling: Prevents gradient problems in deep networks[/dim]")
+        console.print("[dim]   • Softmax: Creates sharp, interpretable attention patterns[/dim]")
+        console.print("[dim]   • ×V: Retrieves weighted information from relevant positions[/dim]")
+        console.print()
+        
         # Demo 6: Transformer Architecture Preview
         console.print(Panel(
             "How attention enables modern language models...",
@@ -308,6 +362,12 @@ Where:
         console.print(why_table)
         console.print()
         
+        console.print("[dim]💡 [bold]Architecture Power:[/bold] Each component has a critical role:[/dim]")
+        console.print("[dim]   • Residual connections: Allow 100+ layer deep networks[/dim]")
+        console.print("[dim]   • Layer norm: Stabilizes training of very deep models[/dim]")
+        console.print("[dim]   • Feed-forward: Adds computation power beyond attention[/dim]")
+        console.print()
+        
         # Demo 7: Real-World Applications
         print("🌍 Demo 7: Real-World Impact")
         print("Where attention mechanisms changed everything...")
@@ -351,6 +411,12 @@ Where:
             print(f"  n={n}: Attention={attn_ops:,} ops, Feed-forward={ff_ops:,} ops")
         
         print()
+        
+        console.print("[dim]💡 [bold]Scaling Challenge:[/bold] Why context windows are limited:[/dim]")
+        console.print("[dim]   • Attention is O(n²) - quadratic in sequence length[/dim]")
+        console.print("[dim]   • This is why GPT models have token limits (4k, 8k, 32k, etc.)[/dim]")
+        console.print("[dim]   • Active research: Efficient attention for longer sequences[/dim]")
+        console.print()
         
         # Success summary
         console.print(Panel.fit(

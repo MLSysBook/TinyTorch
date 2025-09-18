@@ -30,6 +30,22 @@ def demo_activations():
         ))
         console.print()
         
+        # What this demo shows
+        console.print(Panel(
+            "[bold yellow]What This Demo Shows:[/bold yellow]\n\n"
+            "Activation functions are the 'secret sauce' that gives neural networks their power.\n"
+            "Without them, even deep networks would only learn linear patterns. You'll discover:\n\n"
+            "• Why linear transformations fail on the famous XOR problem\n"
+            "• How ReLU creates sparse, learnable features from data\n"
+            "• How Softmax converts raw scores into probabilities for classification\n"
+            "• The complete forward pass through a neural network\n\n"
+            "[bold cyan]Key Insight:[/bold cyan] Nonlinearity allows networks to learn complex decision boundaries\n"
+            "that can separate any data pattern, not just straight lines!",
+            title="📚 Understanding This Demo",
+            style="blue"
+        ))
+        console.print()
+        
         # Demo 1: Function shapes visualization
         console.print(Panel(
             "Comparing linear vs nonlinear transformations...",
@@ -66,6 +82,11 @@ def demo_activations():
         activation_table.add_row("Sigmoid(x)", sigmoid_str, "Squashes to (0,1) → probability-like outputs")
         
         console.print(activation_table)
+        console.print()
+        
+        console.print("[dim]💡 [bold]How to Interpret:[/bold] Each activation function shapes data differently:[/dim]")
+        console.print("[dim]   • ReLU: Keeps positive values, zeros out negatives (creates sparsity)[/dim]")
+        console.print("[dim]   • Sigmoid: Squashes any input to (0,1) range (good for probabilities)[/dim]")
         console.print()
         
         # Demo 2: The XOR Problem Setup

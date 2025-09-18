@@ -31,6 +31,23 @@ def demo_vision():
         ))
         console.print()
         
+        # What this demo shows
+        console.print(Panel(
+            "[bold yellow]What This Demo Shows:[/bold yellow]\n\n"
+            "Convolutional neural networks (CNNs) revolutionized computer vision by learning to detect\n"
+            "visual patterns hierarchically. You'll understand:\n\n"
+            "• How digital images are just 2D arrays of numbers (tensors)\n"
+            "• How convolution operations scan images to detect local patterns\n"
+            "• Why edge detection is fundamental - edges define object boundaries\n"
+            "• How multiple filters create different 'views' of the same image\n"
+            "• Why CNNs build hierarchical features: edges → textures → shapes → objects\n\n"
+            "[bold cyan]Key Insight:[/bold cyan] CNNs automatically learn which patterns matter for your task.\n"
+            "Early layers detect simple edges, deeper layers combine them into complex features!",
+            title="📚 Understanding This Demo",
+            style="blue"
+        ))
+        console.print()
+        
         # Demo 1: The Image Processing Foundation
         print("🖼️ Demo 1: Digital Images as Tensors")
         print("Understanding how computers see...")
@@ -53,6 +70,12 @@ def demo_vision():
         print(f"Image tensor shape: {image.data.shape}")
         print(f"Pixel values: {np.unique(image.data)} (0=black, 1=white)")
         print()
+        
+        console.print("[dim]💡 [bold]How to Read This:[/bold] Each symbol represents a pixel value:[/dim]")
+        console.print("[dim]   • █ = 1 (white/bright pixel), · = 0 (black/dark pixel)[/dim]")
+        console.print("[dim]   • This diamond pattern is what the computer 'sees' as numbers[/dim]")
+        console.print("[dim]   • Real images have values 0-255, but the principle is the same[/dim]")
+        console.print()
         
         # Demo 2: Edge Detection - Computer Vision's Foundation
         print("🔍 Demo 2: Edge Detection - How Computers Find Shapes")
@@ -91,6 +114,13 @@ def demo_vision():
             print("  " + " ".join(f"{val:2.0f}" for val in row))
         print()
         
+        console.print("[dim]💡 [bold]Interpreting Edge Detection:[/bold] The numbers show edge strength:[/dim]")
+        console.print("[dim]   • Positive values = bright-to-dark transitions[/dim]")
+        console.print("[dim]   • Negative values = dark-to-bright transitions[/dim]")
+        console.print("[dim]   • Zero = no edge (uniform area)[/dim]")
+        console.print("[dim]   • Larger absolute values = stronger edges[/dim]")
+        console.print()
+        
         # Combine edges
         edge_magnitude = tt.Tensor(np.sqrt(edge_x**2 + edge_y**2))
         print("Combined edge magnitude:")
@@ -127,6 +157,12 @@ def demo_vision():
             print("  " + " ".join(f"{val:2.0f}" for val in row))
         print()
         
+        console.print("[dim]💡 [bold]Understanding Feature Detection:[/bold] Each filter learns to detect specific patterns:[/dim]")
+        console.print("[dim]   • High positive values = strong match to the pattern[/dim]")
+        console.print("[dim]   • Near zero = pattern not present[/dim]")
+        console.print("[dim]   • In real CNNs, hundreds of filters learn different features automatically[/dim]")
+        console.print()
+        
         # Demo 4: Multi-layer Feature Extraction
         print("🏗️ Demo 4: Deep Feature Extraction")
         print("Building feature hierarchy like real CNNs...")
@@ -146,6 +182,13 @@ def demo_vision():
         print("CNN Architecture:")
         print("  Input(5×5) → Conv2D(3×3) → ReLU → Flatten → Dense(9→5) → ReLU → Dense(5→1) → Sigmoid")
         print()
+        
+        console.print("[dim]💡 [bold]Architecture Flow:[/bold] Data transforms through the network:[/dim]")
+        console.print("[dim]   • Conv2D: Extracts spatial features (edges, corners)[/dim]")
+        console.print("[dim]   • ReLU: Adds nonlinearity for complex patterns[/dim]")
+        console.print("[dim]   • Flatten: Converts 2D features to 1D for classification[/dim]")
+        console.print("[dim]   • Dense layers: Combine features for final decision[/dim]")
+        console.print()
         
         # Set known good weights for demonstration
         cnn.layers[0].kernel = corner_kernel.data  # Use corner detector
@@ -182,6 +225,12 @@ def demo_vision():
         print("  Dense weights: 2,304×512 = 1.18M params × 4 bytes = 4.7 MB")
         print("  Total: ~5 MB parameters + activations")
         print()
+        
+        console.print("[dim]💡 [bold]Scaling Insights:[/bold] Notice how parameters grow:[/dim]")
+        console.print("[dim]   • Conv layers: Few parameters but powerful feature extraction[/dim]")
+        console.print("[dim]   • Dense layers: Most parameters are here (fully connected)[/dim]")
+        console.print("[dim]   • This is why modern CNNs minimize dense layers![/dim]")
+        console.print()
         
         # Demo 6: Feature Visualization
         print("👁️ Demo 6: What CNNs Actually Learn")
@@ -228,6 +277,12 @@ def demo_vision():
             print(f"  {stage}: {description}")
         
         print()
+        
+        console.print("[dim]💡 [bold]Learning Process:[/bold] CNNs discover features automatically:[/dim]")
+        console.print("[dim]   • No need to hand-design edge detectors[/dim]")
+        console.print("[dim]   • The network learns what patterns matter for your task[/dim]")
+        console.print("[dim]   • Different tasks learn different features from same architecture![/dim]")
+        console.print()
         
         print("🏆 TinyTorch Computer Vision Demo Complete!")
         print("🎯 Achievements:")
