@@ -3,15 +3,13 @@
 # %% auto 0
 __all__ = ['setup_import_paths', 'CompressionMetrics', 'prune_weights_by_magnitude', 'calculate_sparsity',
            'quantize_layer_weights', 'DistillationLoss', 'compute_neuron_importance', 'prune_layer_neurons',
-           'compare_compression_techniques']
+           'CompressionSystemsProfiler', 'compare_compression_techniques']
 
 # %% ../../modules/source/12_compression/compression_dev.ipynb 1
 import numpy as np
 import sys
 import os
-import math
 from typing import List, Dict, Any, Optional, Union, Tuple
-from collections import defaultdict
 
 # Helper function to set up import paths
 def setup_import_paths():
@@ -79,7 +77,7 @@ except ImportError:
                 self.optimizer = optimizer
                 self.loss_function = loss_function
 
-# %% ../../modules/source/12_compression/compression_dev.ipynb 6
+# %% ../../modules/source/12_compression/compression_dev.ipynb 7
 class CompressionMetrics:
     """
     Utilities for measuring model size, sparsity, and compression efficiency.
@@ -211,7 +209,7 @@ class CompressionMetrics:
             'dtype': dtype
         }
 
-# %% ../../modules/source/12_compression/compression_dev.ipynb 9
+# %% ../../modules/source/12_compression/compression_dev.ipynb 11
 def prune_weights_by_magnitude(layer: Dense, pruning_ratio: float = 0.5) -> Tuple[Dense, Dict[str, Any]]:
     """
     Prune weights in a Dense layer by magnitude.
@@ -269,8 +267,8 @@ def prune_weights_by_magnitude(layer: Dense, pruning_ratio: float = 0.5) -> Tupl
     mask = magnitudes > threshold
     pruned_weights = weights * mask
     
-    # Update layer weights
-    layer.weights.data = pruned_weights
+    # Update layer weights by creating a new Tensor
+    layer.weights = Tensor(pruned_weights)
     
     # Calculate pruning statistics
     total_weights = weights.size
@@ -291,7 +289,7 @@ def prune_weights_by_magnitude(layer: Dense, pruning_ratio: float = 0.5) -> Tupl
     return layer, pruning_info
     ### END SOLUTION
 
-# %% ../../modules/source/12_compression/compression_dev.ipynb 10
+# %% ../../modules/source/12_compression/compression_dev.ipynb 12
 def calculate_sparsity(layer: Dense) -> float:
     """
     Calculate sparsity (fraction of zero weights) in a Dense layer.
@@ -343,7 +341,7 @@ def calculate_sparsity(layer: Dense) -> float:
     return zero_weights / total_weights if total_weights > 0 else 0.0
     ### END SOLUTION 
 
-# %% ../../modules/source/12_compression/compression_dev.ipynb 13
+# %% ../../modules/source/12_compression/compression_dev.ipynb 16
 def quantize_layer_weights(layer: Dense, bits: int = 8) -> Tuple[Dense, Dict[str, Any]]:
     """
     Quantize layer weights to reduce precision.
@@ -406,7 +404,7 @@ def quantize_layer_weights(layer: Dense, bits: int = 8) -> Tuple[Dense, Dict[str
     dequantized = quantized * scale + w_min
     
     # Update layer weights
-    layer.weights.data = dequantized.astype(np.float32)
+    layer.weights = Tensor(dequantized.astype(np.float32))
     
     # Calculate quantization statistics
     total_weights = weights.size
@@ -435,7 +433,7 @@ def quantize_layer_weights(layer: Dense, bits: int = 8) -> Tuple[Dense, Dict[str
     return layer, quantization_info
     ### END SOLUTION 
 
-# %% ../../modules/source/12_compression/compression_dev.ipynb 16
+# %% ../../modules/source/12_compression/compression_dev.ipynb 20
 class DistillationLoss:
     """
     Combined loss function for knowledge distillation.
@@ -544,7 +542,7 @@ class DistillationLoss:
         probs = self._softmax(logits)
         return -np.mean(np.sum(labels * np.log(probs + 1e-10), axis=-1)) 
 
-# %% ../../modules/source/12_compression/compression_dev.ipynb 19
+# %% ../../modules/source/12_compression/compression_dev.ipynb 24
 def compute_neuron_importance(layer: Dense, method: str = 'weight_magnitude') -> np.ndarray:
     """
     Compute importance scores for each neuron in a Dense layer.
@@ -604,7 +602,7 @@ def compute_neuron_importance(layer: Dense, method: str = 'weight_magnitude') ->
     return importance
     ### END SOLUTION
 
-# %% ../../modules/source/12_compression/compression_dev.ipynb 20
+# %% ../../modules/source/12_compression/compression_dev.ipynb 25
 def prune_layer_neurons(layer: Dense, keep_ratio: float = 0.7, 
                        importance_method: str = 'weight_magnitude') -> Tuple[Dense, Dict[str, Any]]:
     """
@@ -674,12 +672,12 @@ def prune_layer_neurons(layer: Dense, keep_ratio: float = 0.7,
     
     # Copy weights for selected neurons
     pruned_weights = weights[:, keep_indices]
-    pruned_layer.weights.data = np.ascontiguousarray(pruned_weights)
+    pruned_layer.weights = Tensor(np.ascontiguousarray(pruned_weights))
     
     # Copy bias for selected neurons
     if bias is not None:
         pruned_bias = bias[keep_indices]
-        pruned_layer.bias.data = np.ascontiguousarray(pruned_bias)
+        pruned_layer.bias = Tensor(np.ascontiguousarray(pruned_bias))
     
     # Calculate pruning statistics
     neurons_removed = original_neurons - keep_count
@@ -706,7 +704,307 @@ def prune_layer_neurons(layer: Dense, keep_ratio: float = 0.7,
     return pruned_layer, pruning_info
     ### END SOLUTION 
 
-# %% ../../modules/source/12_compression/compression_dev.ipynb 23
+# %% ../../modules/source/12_compression/compression_dev.ipynb 29
+class CompressionSystemsProfiler:
+    """
+    Advanced profiling system for analyzing compression techniques in production environments.
+    
+    This profiler provides 65% implementation level analysis of compression techniques,
+    focusing on production deployment scenarios including quantization impact analysis,
+    inference speedup measurements, and hardware-specific optimizations.
+    """
+    
+    def __init__(self):
+        """Initialize the compression systems profiler."""
+        self.metrics = CompressionMetrics()
+        self.compression_history = []
+        
+    def analyze_quantization_impact(self, model: Sequential, target_bits: List[int] = [32, 16, 8, 4]) -> Dict[str, Any]:
+        """
+        Analyze quantization impact across different bit widths for production deployment.
+        
+        Args:
+            model: Sequential model to analyze
+            target_bits: List of bit widths to test
+            
+        Returns:
+            Comprehensive quantization analysis including accuracy vs compression tradeoffs
+            
+        TODO: Implement advanced quantization impact analysis (65% implementation level).
+        
+        STEP-BY-STEP IMPLEMENTATION:
+        1. Create model copies for each bit width
+        2. Apply quantization with different bit widths
+        3. Measure memory reduction and inference implications
+        4. Calculate theoretical speedup for different hardware
+        5. Analyze accuracy degradation patterns
+        6. Generate production deployment recommendations
+        
+        PRODUCTION PATTERNS TO ANALYZE:
+        - Mobile deployment (ARM processors, limited memory)
+        - Edge inference (TPUs, power constraints)
+        - Cloud serving (GPU acceleration, batch processing)
+        - Real-time systems (latency requirements)
+        
+        IMPLEMENTATION HINTS:
+        - Model different hardware characteristics
+        - Consider memory bandwidth limitations
+        - Include power consumption estimates
+        - Analyze batch vs single inference patterns
+        
+        LEARNING CONNECTIONS:
+        - This mirrors TensorFlow Lite quantization analysis
+        - Production systems need this kind of comprehensive analysis
+        - Hardware-aware compression is crucial for deployment
+        """
+        ### BEGIN SOLUTION
+        results = {
+            'quantization_analysis': {},
+            'hardware_recommendations': {},
+            'deployment_scenarios': {}
+        }
+        
+        baseline_size = self.metrics.calculate_model_size(model, dtype='float32')
+        baseline_params = self.metrics.count_parameters(model)['total_parameters']
+        
+        for bits in target_bits:
+            # Create model copy for quantization
+            test_model = Sequential([Dense(layer.input_size, layer.output_size) for layer in model.layers])
+            for i, layer in enumerate(test_model.layers):
+                layer.weights = Tensor(model.layers[i].weights.data.copy() if hasattr(model.layers[i].weights.data, 'copy') else np.array(model.layers[i].weights.data))
+                if hasattr(layer, 'bias') and model.layers[i].bias is not None:
+                    layer.bias = Tensor(model.layers[i].bias.data.copy() if hasattr(model.layers[i].bias.data, 'copy') else np.array(model.layers[i].bias.data))
+            
+            # Apply quantization to all layers
+            total_error = 0
+            for i, layer in enumerate(test_model.layers):
+                if isinstance(layer, Dense):
+                    _, quant_info = quantize_layer_weights(layer, bits=bits)
+                    total_error += quant_info['mse_error']
+            
+            # Calculate quantized model size
+            dtype_map = {32: 'float32', 16: 'float16', 8: 'int8', 4: 'int8'}  # Approximate for 4-bit
+            quantized_size = self.metrics.calculate_model_size(test_model, dtype=dtype_map.get(bits, 'int8'))
+            
+            # Memory and performance analysis
+            memory_reduction = baseline_size['size_mb'] / quantized_size['size_mb']
+            
+            # Hardware-specific analysis
+            hardware_analysis = {
+                'mobile_arm': {
+                    'memory_bandwidth_improvement': memory_reduction * 0.8,  # ARM efficiency
+                    'inference_speedup': min(memory_reduction * 0.6, 4.0),  # Conservative estimate
+                    'power_reduction': memory_reduction * 0.7,  # Power scales with memory access
+                    'deployment_feasibility': 'excellent' if quantized_size['size_mb'] < 10 else 'good' if quantized_size['size_mb'] < 50 else 'limited'
+                },
+                'edge_tpu': {
+                    'quantization_compatibility': 'native' if bits == 8 else 'emulated',
+                    'inference_speedup': 8.0 if bits == 8 else 1.0,  # TPUs optimized for INT8
+                    'power_efficiency': 'optimal' if bits == 8 else 'suboptimal',
+                    'deployment_feasibility': 'excellent' if bits == 8 and quantized_size['size_mb'] < 20 else 'limited'
+                },
+                'gpu_cloud': {
+                    'tensor_core_acceleration': True if bits in [16, 8] else False,
+                    'batch_throughput_improvement': memory_reduction * 1.2,  # GPU batch efficiency
+                    'memory_capacity_improvement': memory_reduction,
+                    'deployment_feasibility': 'excellent'  # Cloud has fewer constraints
+                }
+            }
+            
+            results['quantization_analysis'][f'{bits}bit'] = {
+                'bits': bits,
+                'model_size_mb': quantized_size['size_mb'],
+                'memory_reduction_factor': memory_reduction,
+                'quantization_error': total_error / len(test_model.layers),
+                'compression_ratio': baseline_size['size_mb'] / quantized_size['size_mb'],
+                'hardware_analysis': hardware_analysis
+            }
+        
+        # Generate deployment recommendations
+        results['deployment_scenarios'] = {
+            'mobile_deployment': {
+                'recommended_bits': 8,
+                'rationale': 'INT8 provides optimal balance of size reduction and ARM processor efficiency',
+                'expected_benefits': 'Memory reduction, inference speedup, improved battery life',
+                'considerations': 'Monitor accuracy degradation, test on target devices'
+            },
+            'edge_inference': {
+                'recommended_bits': 8,
+                'rationale': 'Edge TPUs and similar hardware optimized for INT8 quantization',
+                'expected_benefits': 'Maximum hardware acceleration, minimal power consumption',
+                'considerations': 'Ensure quantization-aware training for best accuracy'
+            },
+            'cloud_serving': {
+                'recommended_bits': 16,
+                'rationale': 'FP16 provides good compression with minimal accuracy loss and GPU acceleration',
+                'expected_benefits': 'Increased batch throughput, reduced memory usage',
+                'considerations': 'Consider mixed precision for optimal performance'
+            }
+        }
+        
+        return results
+        ### END SOLUTION
+    
+    def measure_inference_speedup(self, original_model: Sequential, compressed_model: Sequential, 
+                                 batch_sizes: List[int] = [1, 8, 32, 128]) -> Dict[str, Any]:
+        """
+        Measure theoretical inference speedup from compression techniques.
+        
+        Args:
+            original_model: Baseline model
+            compressed_model: Compressed model to compare
+            batch_sizes: Different batch sizes for analysis
+            
+        Returns:
+            Inference speedup analysis across different scenarios
+        """
+        results = {
+            'flops_analysis': {},
+            'memory_analysis': {},
+            'speedup_estimates': {}
+        }
+        
+        # Calculate FLOPs for both models
+        original_flops = self._calculate_model_flops(original_model)
+        compressed_flops = self._calculate_model_flops(compressed_model)
+        
+        # Memory analysis
+        original_size = self.metrics.calculate_model_size(original_model)
+        compressed_size = self.metrics.calculate_model_size(compressed_model)
+        
+        results['flops_analysis'] = {
+            'original_flops': original_flops,
+            'compressed_flops': compressed_flops,
+            'flops_reduction': (original_flops - compressed_flops) / original_flops,
+            'computational_speedup': original_flops / compressed_flops if compressed_flops > 0 else float('inf')
+        }
+        
+        results['memory_analysis'] = {
+            'original_size_mb': original_size['size_mb'],
+            'compressed_size_mb': compressed_size['size_mb'],
+            'memory_reduction': (original_size['size_mb'] - compressed_size['size_mb']) / original_size['size_mb'],
+            'memory_speedup': original_size['size_mb'] / compressed_size['size_mb']
+        }
+        
+        # Estimate speedup for different scenarios
+        for batch_size in batch_sizes:
+            compute_time_original = original_flops * batch_size / 1e9  # Assume 1 GFLOPS baseline
+            compute_time_compressed = compressed_flops * batch_size / 1e9
+            
+            memory_time_original = original_size['size_mb'] * batch_size / 100  # Assume 100 MB/s memory bandwidth
+            memory_time_compressed = compressed_size['size_mb'] * batch_size / 100
+            
+            total_time_original = compute_time_original + memory_time_original
+            total_time_compressed = compute_time_compressed + memory_time_compressed
+            
+            results['speedup_estimates'][f'batch_{batch_size}'] = {
+                'compute_speedup': compute_time_original / compute_time_compressed if compute_time_compressed > 0 else float('inf'),
+                'memory_speedup': memory_time_original / memory_time_compressed if memory_time_compressed > 0 else float('inf'),
+                'total_speedup': total_time_original / total_time_compressed if total_time_compressed > 0 else float('inf')
+            }
+        
+        return results
+    
+    def analyze_accuracy_tradeoffs(self, model: Sequential, compression_levels: List[float] = [0.1, 0.3, 0.5, 0.7, 0.9]) -> Dict[str, Any]:
+        """
+        Analyze accuracy vs compression tradeoffs across different compression levels.
+        
+        Args:
+            model: Model to analyze
+            compression_levels: Different compression ratios to test
+            
+        Returns:
+            Analysis of accuracy degradation patterns
+        """
+        results = {
+            'compression_curves': {},
+            'optimal_operating_points': {},
+            'production_recommendations': {}
+        }
+        
+        baseline_size = self.metrics.calculate_model_size(model)
+        
+        for level in compression_levels:
+            # Test different compression techniques at this level
+            techniques = {
+                'magnitude_pruning': self._apply_magnitude_pruning(model, level),
+                'structured_pruning': self._apply_structured_pruning(model, 1 - level),
+                'quantization': self._apply_quantization(model, max(4, int(32 * (1 - level))))
+            }
+            
+            for technique_name, compressed_model in techniques.items():
+                if compressed_model is not None:
+                    compressed_size = self.metrics.calculate_model_size(compressed_model)
+                    compression_ratio = baseline_size['size_mb'] / compressed_size['size_mb']
+                    
+                    if technique_name not in results['compression_curves']:
+                        results['compression_curves'][technique_name] = []
+                    
+                    results['compression_curves'][technique_name].append({
+                        'compression_level': level,
+                        'compression_ratio': compression_ratio,
+                        'size_mb': compressed_size['size_mb'],
+                        'estimated_accuracy_retention': 1.0 - (level * 0.5)  # Simplified model
+                    })
+        
+        # Find optimal operating points
+        for technique in results['compression_curves']:
+            curves = results['compression_curves'][technique]
+            # Find point with best accuracy/compression balance
+            best_point = max(curves, key=lambda x: x['compression_ratio'] * x['estimated_accuracy_retention'])
+            results['optimal_operating_points'][technique] = best_point
+        
+        return results
+    
+    def _calculate_model_flops(self, model: Sequential) -> int:
+        """Calculate FLOPs for a Sequential model."""
+        total_flops = 0
+        for layer in model.layers:
+            if isinstance(layer, Dense):
+                total_flops += layer.input_size * layer.output_size * 2  # Multiply-add operations
+        return total_flops
+    
+    def _apply_magnitude_pruning(self, model: Sequential, pruning_ratio: float) -> Optional[Sequential]:
+        """Apply magnitude pruning to a model copy."""
+        try:
+            test_model = Sequential([Dense(layer.input_size, layer.output_size) for layer in model.layers])
+            for i, layer in enumerate(test_model.layers):
+                layer.weights = Tensor(model.layers[i].weights.data.copy() if hasattr(model.layers[i].weights.data, 'copy') else np.array(model.layers[i].weights.data))
+                if hasattr(layer, 'bias') and model.layers[i].bias is not None:
+                    layer.bias = Tensor(model.layers[i].bias.data.copy() if hasattr(model.layers[i].bias.data, 'copy') else np.array(model.layers[i].bias.data))
+                prune_weights_by_magnitude(layer, pruning_ratio)
+            return test_model
+        except Exception:
+            return None
+    
+    def _apply_structured_pruning(self, model: Sequential, keep_ratio: float) -> Optional[Sequential]:
+        """Apply structured pruning to a model copy."""
+        try:
+            test_model = Sequential([Dense(layer.input_size, layer.output_size) for layer in model.layers])
+            for i, layer in enumerate(test_model.layers):
+                layer.weights = Tensor(model.layers[i].weights.data.copy() if hasattr(model.layers[i].weights.data, 'copy') else np.array(model.layers[i].weights.data))
+                if hasattr(layer, 'bias') and model.layers[i].bias is not None:
+                    layer.bias = Tensor(model.layers[i].bias.data.copy() if hasattr(model.layers[i].bias.data, 'copy') else np.array(model.layers[i].bias.data))
+                pruned_layer, _ = prune_layer_neurons(layer, keep_ratio)
+                test_model.layers[i] = pruned_layer
+            return test_model
+        except Exception:
+            return None
+    
+    def _apply_quantization(self, model: Sequential, bits: int) -> Optional[Sequential]:
+        """Apply quantization to a model copy."""
+        try:
+            test_model = Sequential([Dense(layer.input_size, layer.output_size) for layer in model.layers])
+            for i, layer in enumerate(test_model.layers):
+                layer.weights = Tensor(model.layers[i].weights.data.copy() if hasattr(model.layers[i].weights.data, 'copy') else np.array(model.layers[i].weights.data))
+                if hasattr(layer, 'bias') and model.layers[i].bias is not None:
+                    layer.bias = Tensor(model.layers[i].bias.data.copy() if hasattr(model.layers[i].bias.data, 'copy') else np.array(model.layers[i].bias.data))
+                quantize_layer_weights(layer, bits)
+            return test_model
+        except Exception:
+            return None
+
+# %% ../../modules/source/12_compression/compression_dev.ipynb 30
 def compare_compression_techniques(original_model: Sequential) -> Dict[str, Dict[str, Any]]:
     """
     Compare all compression techniques on the same model.
@@ -763,9 +1061,9 @@ def compare_compression_techniques(original_model: Sequential) -> Dict[str, Dict
     # Technique 1: Magnitude-based pruning only
     model_pruning = Sequential([Dense(layer.input_size, layer.output_size) for layer in original_model.layers])
     for i, layer in enumerate(model_pruning.layers):
-        layer.weights.data = original_model.layers[i].weights.data.copy() if hasattr(original_model.layers[i].weights.data, 'copy') else np.array(original_model.layers[i].weights.data)
+        layer.weights = Tensor(original_model.layers[i].weights.data.copy() if hasattr(original_model.layers[i].weights.data, 'copy') else np.array(original_model.layers[i].weights.data))
         if hasattr(layer, 'bias') and original_model.layers[i].bias is not None:
-            layer.bias.data = original_model.layers[i].bias.data.copy() if hasattr(original_model.layers[i].bias.data, 'copy') else np.array(original_model.layers[i].bias.data)
+            layer.bias = Tensor(original_model.layers[i].bias.data.copy() if hasattr(original_model.layers[i].bias.data, 'copy') else np.array(original_model.layers[i].bias.data))
     
     # Apply magnitude pruning to each layer
     total_sparsity = 0
@@ -790,9 +1088,9 @@ def compare_compression_techniques(original_model: Sequential) -> Dict[str, Dict
     # Technique 2: Quantization only
     model_quantization = Sequential([Dense(layer.input_size, layer.output_size) for layer in original_model.layers])
     for i, layer in enumerate(model_quantization.layers):
-        layer.weights.data = original_model.layers[i].weights.data.copy() if hasattr(original_model.layers[i].weights.data, 'copy') else np.array(original_model.layers[i].weights.data)
+        layer.weights = Tensor(original_model.layers[i].weights.data.copy() if hasattr(original_model.layers[i].weights.data, 'copy') else np.array(original_model.layers[i].weights.data))
         if hasattr(layer, 'bias') and original_model.layers[i].bias is not None:
-            layer.bias.data = original_model.layers[i].bias.data.copy() if hasattr(original_model.layers[i].bias.data, 'copy') else np.array(original_model.layers[i].bias.data)
+            layer.bias = Tensor(original_model.layers[i].bias.data.copy() if hasattr(original_model.layers[i].bias.data, 'copy') else np.array(original_model.layers[i].bias.data))
     
     # Apply quantization to each layer
     total_memory_reduction = 0
@@ -816,9 +1114,9 @@ def compare_compression_techniques(original_model: Sequential) -> Dict[str, Dict
     # Technique 3: Structured pruning only
     model_structured = Sequential([Dense(layer.input_size, layer.output_size) for layer in original_model.layers])
     for i, layer in enumerate(model_structured.layers):
-        layer.weights.data = original_model.layers[i].weights.data.copy() if hasattr(original_model.layers[i].weights.data, 'copy') else np.array(original_model.layers[i].weights.data)
+        layer.weights = Tensor(original_model.layers[i].weights.data.copy() if hasattr(original_model.layers[i].weights.data, 'copy') else np.array(original_model.layers[i].weights.data))
         if hasattr(layer, 'bias') and original_model.layers[i].bias is not None:
-            layer.bias.data = original_model.layers[i].bias.data.copy() if hasattr(original_model.layers[i].bias.data, 'copy') else np.array(original_model.layers[i].bias.data)
+            layer.bias = Tensor(original_model.layers[i].bias.data.copy() if hasattr(original_model.layers[i].bias.data, 'copy') else np.array(original_model.layers[i].bias.data))
     
     # Apply structured pruning to each layer
     total_param_reduction = 0
@@ -844,9 +1142,9 @@ def compare_compression_techniques(original_model: Sequential) -> Dict[str, Dict
     # Technique 4: Combined approach
     model_combined = Sequential([Dense(layer.input_size, layer.output_size) for layer in original_model.layers])
     for i, layer in enumerate(model_combined.layers):
-        layer.weights.data = original_model.layers[i].weights.data.copy() if hasattr(original_model.layers[i].weights.data, 'copy') else np.array(original_model.layers[i].weights.data)
+        layer.weights = Tensor(original_model.layers[i].weights.data.copy() if hasattr(original_model.layers[i].weights.data, 'copy') else np.array(original_model.layers[i].weights.data))
         if hasattr(layer, 'bias') and original_model.layers[i].bias is not None:
-            layer.bias.data = original_model.layers[i].bias.data.copy() if hasattr(original_model.layers[i].bias.data, 'copy') else np.array(original_model.layers[i].bias.data)
+            layer.bias = Tensor(original_model.layers[i].bias.data.copy() if hasattr(original_model.layers[i].bias.data, 'copy') else np.array(original_model.layers[i].bias.data))
     
     # Apply magnitude pruning + quantization + structured pruning
     for i, layer in enumerate(model_combined.layers):
