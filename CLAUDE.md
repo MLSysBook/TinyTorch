@@ -8,6 +8,7 @@
 - ✅ Always work on feature branches (never `dev`/`main` directly)
 - ✅ Always test before committing
 - 🚨 **NEVER add Co-Authored-By or automated attribution to commits**
+- 🚨 **NEVER add "Generated with Claude Code" to commits**
 - 🚨 **Only project owner adds Co-Authored-By when explicitly needed**
 
 **These policies ensure clean history, professional development practices, and project integrity.**
@@ -90,6 +91,7 @@ Use descriptive branch names that indicate the type of work:
 **NEVER add Co-Authored-By or any automated attribution to commits.**
 
 - **Co-Authored-By**: Only added by project owner when explicitly needed
+- **Generated with Claude Code**: FORBIDDEN - do not add this line to commits
 - **Automated attribution**: Forbidden - keep commits clean and professional
 - **Commit ownership**: All commits should reflect actual authorship, not tool usage
 - **History integrity**: Clean commit history is essential for project maintenance
