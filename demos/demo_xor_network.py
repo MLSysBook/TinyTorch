@@ -6,9 +6,16 @@ Shows multi-layer network solving the famous XOR problem that single layers can'
 
 import sys
 import numpy as np
+from rich.console import Console
+from rich.panel import Panel
+from rich.table import Table
+from rich.text import Text
+from rich.syntax import Syntax
 
 def demo_xor_network():
     """Demo multi-layer network solving XOR - the classic AI milestone"""
+    
+    console = Console()
     
     try:
         # Import TinyTorch modules
@@ -17,30 +24,53 @@ def demo_xor_network():
         import tinytorch.core.layers as layers
         import tinytorch.core.dense as dense
         
-        print("⚡ TinyTorch XOR Network Demo")
-        print("=" * 50)
-        print("Solving the XOR problem - multi-layer breakthrough!")
-        print()
+        # Main header
+        console.print(Panel.fit(
+            "⚡ TinyTorch XOR Network Demo\nSolving the XOR problem - multi-layer breakthrough!",
+            style="bold cyan",
+            border_style="bright_blue"
+        ))
+        console.print()
         
         # Demo 1: The XOR problem setup
-        print("🧩 Demo 1: The Impossible XOR Problem")
-        print("Why single neurons fail and multi-layer networks succeed...")
-        print()
+        console.print(Panel(
+            "Why single neurons fail and multi-layer networks succeed...",
+            title="🧩 Demo 1: The Impossible XOR Problem",
+            style="green"
+        ))
         
         # XOR truth table
         X = tt.Tensor([[0, 0], [0, 1], [1, 0], [1, 1]])  # Inputs
         y = tt.Tensor([[0], [1], [1], [0]])              # XOR outputs
         
-        print("XOR Truth Table:")
+        # Create XOR truth table
+        xor_table = Table(show_header=True, header_style="bold magenta")
+        xor_table.add_column("X1", style="cyan", justify="center")
+        xor_table.add_column("X2", style="cyan", justify="center")
+        xor_table.add_column("XOR Output", style="yellow", justify="center")
+        
         for i in range(4):
             x1, x2 = X.data[i]
             target = y.data[i, 0]
-            print(f"  {int(x1)} XOR {int(x2)} = {int(target)}")
-        print()
+            xor_table.add_row(str(int(x1)), str(int(x2)), str(int(target)))
         
-        print("❌ Problem: No single line can separate XOR classes!")
-        print("✅ Solution: Multi-layer network creates complex decision boundaries")
-        print()
+        console.print(xor_table)
+        
+        # Problem and solution panels
+        problem_panel = Panel(
+            "❌ Problem: No single line can separate XOR classes!",
+            title="Single Layer Limitation",
+            style="red"
+        )
+        solution_panel = Panel(
+            "✅ Solution: Multi-layer network creates complex decision boundaries",
+            title="Multi-Layer Power",
+            style="green"
+        )
+        
+        from rich.columns import Columns
+        console.print(Columns([problem_panel, solution_panel]))
+        console.print()
         
         # Demo 2: Building a 2-layer network manually
         print("🏗️ Demo 2: Building 2-Layer Network from Scratch")
@@ -203,25 +233,36 @@ def demo_xor_network():
         
         print()
         
-        print("🏆 TinyTorch XOR Network Demo Complete!")
-        print("🎯 Achievements:")
-        print("  • Proved single layers cannot solve XOR")
-        print("  • Built 2-layer network solving XOR manually")
-        print("  • Used TinyTorch Dense layers for clean implementation")
-        print("  • Explained why hidden layers create separable features")
-        print("  • Built complete Sequential model")
-        print("  • Simulated the training process")
-        print()
-        print("🔥 Next: Computer vision with spatial operations!")
+        # Success summary
+        console.print(Panel.fit(
+            "🎯 Achievements:\n"
+            "• Proved single layers cannot solve XOR\n"
+            "• Built 2-layer network solving XOR manually\n"
+            "• Used TinyTorch Dense layers for clean implementation\n"
+            "• Explained why hidden layers create separable features\n"
+            "• Built complete Sequential model\n"
+            "• Simulated the training process\n\n"
+            "🔥 Next: Computer vision with spatial operations!",
+            title="🏆 TinyTorch XOR Network Demo Complete!",
+            style="bold green",
+            border_style="bright_green"
+        ))
         
         return True
         
     except ImportError as e:
-        print(f"❌ Could not import TinyTorch modules: {e}")
-        print("💡 Make sure to run: tito export 05_dense")
+        console.print(Panel(
+            f"Could not import TinyTorch modules: {e}\n\n💡 Make sure to run: tito export 05_dense",
+            title="❌ Import Error",
+            style="bold red"
+        ))
         return False
     except Exception as e:
-        print(f"❌ Demo failed: {e}")
+        console.print(Panel(
+            f"Demo failed: {e}",
+            title="❌ Error",
+            style="bold red"
+        ))
         import traceback
         traceback.print_exc()
         return False

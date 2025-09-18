@@ -6,34 +6,49 @@ Demonstrates tensor operations solving real linear algebra problems
 
 import sys
 import numpy as np
+from rich.console import Console
+from rich.panel import Panel
+from rich.table import Table
+from rich.text import Text
 
 def demo_tensor_math():
     """Demo tensor operations with practical linear algebra"""
     
+    console = Console()
+    
     try:
         # Import TinyTorch tensor module
         import tinytorch.core.tensor as tt
-        print("🧮 TinyTorch Tensor Math Demo")
-        print("=" * 40)
-        print("Solving real linear algebra with tensors!")
-        print()
+        
+        # Main header
+        console.print(Panel.fit(
+            "🧮 TinyTorch Tensor Math Demo\nSolving real linear algebra with tensors!",
+            style="bold cyan",
+            border_style="bright_blue"
+        ))
+        console.print()
         
         # Demo 1: Solve system of linear equations
-        print("📐 Demo 1: Solving Linear System")
-        print("System: 2x + 3y = 13")
-        print("        1x + 1y = 5")
-        print()
+        console.print(Panel(
+            "System: 2x + 3y = 13\n        1x + 1y = 5",
+            title="📐 Demo 1: Solving Linear System",
+            style="green"
+        ))
         
         # Coefficient matrix A and result vector b
         A = tt.Tensor([[2, 3], [1, 1]])
         b = tt.Tensor([[13], [5]])
         
-        print(f"Matrix A:\n{A.data}")
-        print(f"Vector b:\n{b.data}")
-        print()
+        # Create table for matrices
+        matrix_table = Table(show_header=True, header_style="bold magenta")
+        matrix_table.add_column("Matrix A", style="cyan")
+        matrix_table.add_column("Vector b", style="yellow")
+        matrix_table.add_row(str(A.data), str(b.data))
+        console.print(matrix_table)
+        console.print()
         
         # Solve using matrix operations (simplified inverse)
-        print("🔍 Solving A @ x = b...")
+        console.print("🔍 [bold yellow]Solving A @ x = b...[/bold yellow]")
         
         # Manual 2x2 inverse for demo
         det = A.data[0,0] * A.data[1,1] - A.data[0,1] * A.data[1,0]
@@ -44,77 +59,124 @@ def demo_tensor_math():
         # Solve: x = A_inv @ b
         x = tt.Tensor(A_inv.data @ b.data)
         
-        print(f"Solution: x = {x.data[0,0]:.1f}, y = {x.data[1,0]:.1f}")
+        # Solution panel
+        solution_text = f"x = {x.data[0,0]:.1f}, y = {x.data[1,0]:.1f}"
+        console.print(Panel(solution_text, title="✨ Solution", style="bold green"))
         
         # Verify solution
         verification = tt.Tensor(A.data @ x.data)
-        print(f"Verification: A @ x = {verification.data.flatten()}")
-        print(f"Original b = {b.data.flatten()}")
-        print("✅ Solution verified!" if np.allclose(verification.data, b.data) else "❌ Solution incorrect")
-        print()
+        verify_table = Table(show_header=True, header_style="bold magenta")
+        verify_table.add_column("Verification: A @ x", style="cyan")
+        verify_table.add_column("Original b", style="yellow") 
+        verify_table.add_column("Status", style="green")
+        status = "✅ Verified!" if np.allclose(verification.data, b.data) else "❌ Incorrect"
+        verify_table.add_row(str(verification.data.flatten()), str(b.data.flatten()), status)
+        console.print(verify_table)
+        console.print()
         
         # Demo 2: Matrix transformation (rotation)
-        print("🌀 Demo 2: 2D Rotation Matrix")
+        console.print(Panel(
+            "Rotating point (1, 0) by 45°...",
+            title="🌀 Demo 2: 2D Rotation Matrix",
+            style="blue"
+        ))
+        
         angle = np.pi / 4  # 45 degrees
         cos_a, sin_a = np.cos(angle), np.sin(angle)
         
         rotation_matrix = tt.Tensor([[cos_a, -sin_a], [sin_a, cos_a]])
         original_point = tt.Tensor([[1], [0]])  # Point (1, 0)
         
-        print(f"Rotating point (1, 0) by 45°...")
-        print(f"Rotation matrix:\n{rotation_matrix.data}")
+        # Rotation table
+        rotation_table = Table(show_header=True, header_style="bold magenta")
+        rotation_table.add_column("Rotation Matrix", style="cyan")
+        rotation_table.add_column("Original Point", style="yellow")
+        rotation_table.add_row(str(rotation_matrix.data), str(original_point.data))
+        console.print(rotation_table)
         
         rotated_point = tt.Tensor(rotation_matrix.data @ original_point.data)
-        print(f"Rotated point: ({rotated_point.data[0,0]:.3f}, {rotated_point.data[1,0]:.3f})")
-        print(f"Expected: (0.707, 0.707)")
-        print()
+        
+        # Results table
+        result_table = Table(show_header=True, header_style="bold magenta")
+        result_table.add_column("Rotated Point", style="green")
+        result_table.add_column("Expected", style="yellow")
+        result_table.add_row(
+            f"({rotated_point.data[0,0]:.3f}, {rotated_point.data[1,0]:.3f})",
+            "(0.707, 0.707)"
+        )
+        console.print(result_table)
+        console.print()
         
         # Demo 3: Batch matrix operations
-        print("⚡ Demo 3: Batch Processing")
-        print("Processing multiple vectors simultaneously...")
+        console.print(Panel(
+            "Processing multiple vectors simultaneously...",
+            title="⚡ Demo 3: Batch Processing",
+            style="yellow"
+        ))
         
         # Multiple 2D points
         points = tt.Tensor([[1, 0, -1], [0, 1, 0]])  # 3 points: (1,0), (0,1), (-1,0)
-        print(f"Original points:\n{points.data}")
+        
+        batch_table = Table(show_header=True, header_style="bold magenta")
+        batch_table.add_column("Original Points", style="cyan")
+        batch_table.add_column("Rotated Points", style="green")
         
         rotated_points = tt.Tensor(rotation_matrix.data @ points.data)
-        print(f"All points rotated by 45°:\n{rotated_points.data}")
-        print()
+        batch_table.add_row(str(points.data), str(rotated_points.data))
+        console.print(batch_table)
+        console.print()
         
         # Demo 4: Neural network weights preview
-        print("🧠 Demo 4: Neural Network Preview")
-        print("This is how tensors will power neural networks...")
+        console.print(Panel(
+            "This is how tensors will power neural networks...",
+            title="🧠 Demo 4: Neural Network Preview",
+            style="magenta"
+        ))
         
         # Simulate a simple linear layer: y = W @ x + b
         weights = tt.Tensor([[0.5, -0.3, 0.8], [0.2, 0.9, -0.1]])  # 2 neurons, 3 inputs
         bias = tt.Tensor([[0.1], [0.05]])
         input_data = tt.Tensor([[1.0], [0.5], [-0.2]])  # 3D input
         
-        print(f"Weights (2×3):\n{weights.data}")
-        print(f"Input (3×1):\n{input_data.data.flatten()}")
+        nn_table = Table(show_header=True, header_style="bold magenta")
+        nn_table.add_column("Weights (2×3)", style="cyan")
+        nn_table.add_column("Input (3×1)", style="yellow")
+        nn_table.add_column("Output (2×1)", style="green")
         
         output = tt.Tensor(weights.data @ input_data.data + bias.data)
-        print(f"Output (2×1): {output.data.flatten()}")
-        print("🔮 Soon we'll add activations to make this a real neuron!")
-        print()
+        nn_table.add_row(
+            str(weights.data), 
+            str(input_data.data.flatten()),
+            str(output.data.flatten())
+        )
+        console.print(nn_table)
         
-        print("🏆 TinyTorch Tensor Math Demo Complete!")
-        print("🎯 Achievements:")
-        print("  • Solved linear systems with matrix operations")
-        print("  • Performed geometric transformations")
-        print("  • Processed multiple data points in parallel")
-        print("  • Previewed neural network computations")
-        print()
-        print("🔥 Next: Add activations for real neural networks!")
+        console.print("\n🔮 [italic]Soon we'll add activations to make this a real neuron![/italic]")
+        console.print()
+        
+        # Success panel
+        console.print(Panel.fit(
+            "🎯 Achievements:\n• Solved linear systems with matrix operations\n• Performed geometric transformations\n• Processed multiple data points in parallel\n• Previewed neural network computations\n\n🔥 Next: Add activations for real neural networks!",
+            title="🏆 TinyTorch Tensor Math Demo Complete!",
+            style="bold green",
+            border_style="bright_green"
+        ))
         
         return True
         
     except ImportError as e:
-        print(f"❌ Could not import TinyTorch tensor module: {e}")
-        print("💡 Make sure to run: tito export 02_tensor")
+        console.print(Panel(
+            f"Could not import TinyTorch tensor module: {e}\n\n💡 Make sure to run: tito export 02_tensor",
+            title="❌ Import Error",
+            style="bold red"
+        ))
         return False
     except Exception as e:
-        print(f"❌ Demo failed: {e}")
+        console.print(Panel(
+            f"Demo failed: {e}",
+            title="❌ Error",
+            style="bold red"
+        ))
         import traceback
         traceback.print_exc()
         return False

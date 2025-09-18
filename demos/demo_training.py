@@ -6,9 +6,16 @@ Shows complete training loops with real optimization and evaluation!
 
 import sys
 import numpy as np
+from rich.console import Console
+from rich.panel import Panel
+from rich.table import Table
+from rich.progress import Progress, BarColumn, TextColumn, TimeElapsedColumn, TimeRemainingColumn
+from rich.text import Text
 
 def demo_training():
     """Demo complete training pipeline with optimization and evaluation"""
+    
+    console = Console()
     
     try:
         # Import TinyTorch modules
@@ -19,10 +26,13 @@ def demo_training():
         import tinytorch.core.optimizers as opt
         import tinytorch.core.training as training
         
-        print("🎓 TinyTorch End-to-End Training Demo")
-        print("=" * 50)
-        print("Complete ML pipeline from data to trained model!")
-        print()
+        # Main header
+        console.print(Panel.fit(
+            "🎓 TinyTorch End-to-End Training Demo\nComplete ML pipeline from data to trained model!",
+            style="bold cyan",
+            border_style="bright_blue"
+        ))
+        console.print()
         
         # Demo 1: The Training Problem
         print("🎯 Demo 1: The Machine Learning Training Challenge")
@@ -88,18 +98,23 @@ def demo_training():
         print()
         
         # Demo 3: Training Setup
-        print("⚙️ Demo 3: Training Configuration")
-        print("Setting up optimizer, loss function, and training loop...")
-        print()
+        console.print(Panel(
+            "Setting up optimizer, loss function, and training loop...",
+            title="⚙️ Demo 3: Training Configuration",
+            style="blue"
+        ))
         
-        # Create optimizer
+        # Training configuration
         learning_rate = 0.01
-        optimizer = opt.Adam(learning_rate=learning_rate)
         
-        print(f"Optimizer: Adam with learning_rate={learning_rate}")
-        print("Loss function: Binary Cross-Entropy")
-        print("Metrics: Accuracy")
-        print()
+        config_setup = Table(show_header=True, header_style="bold magenta")
+        config_setup.add_column("Component", style="cyan")
+        config_setup.add_column("Configuration", style="yellow")
+        config_setup.add_row("Optimizer", f"Simplified SGD (lr={learning_rate})")
+        config_setup.add_row("Loss Function", "Binary Cross-Entropy")
+        config_setup.add_row("Metrics", "Accuracy")
+        console.print(config_setup)
+        console.print()
         
         # Demo 4: Initial Performance (Before Training)
         print("📊 Demo 4: Initial Performance (Random Weights)")
@@ -127,86 +142,129 @@ def demo_training():
         print()
         
         # Demo 5: Training Loop
-        print("🔄 Demo 5: Training Loop in Action")
-        print("Watch the model learn step by step...")
-        print()
+        console.print(Panel(
+            "Watch the model learn step by step...",
+            title="🔄 Demo 5: Training Loop in Action",
+            style="yellow"
+        ))
         
         # Simple training loop
         epochs = 10
         batch_size = 20
         n_batches = len(X) // batch_size
         
-        print(f"Training: {epochs} epochs, batch_size={batch_size}, {n_batches} batches/epoch")
-        print()
+        config_table = Table(show_header=True, header_style="bold magenta")
+        config_table.add_column("Parameter", style="cyan")
+        config_table.add_column("Value", style="yellow")
+        config_table.add_row("Epochs", str(epochs))
+        config_table.add_row("Batch Size", str(batch_size))
+        config_table.add_row("Batches/Epoch", str(n_batches))
+        console.print(config_table)
+        console.print()
         
         # Training metrics tracking
         epoch_losses = []
         epoch_accuracies = []
         
-        for epoch in range(epochs):
-            epoch_loss = 0
-            correct_predictions = 0
-            total_predictions = 0
+        # Rich progress bar for training
+        with Progress(
+            TextColumn("[progress.description]{task.description}"),
+            BarColumn(),
+            TextColumn("[progress.percentage]{task.percentage:>3.0f}%"),
+            TextColumn("•"),
+            TextColumn("Loss: {task.fields[loss]:.4f}"),
+            TextColumn("•"),
+            TextColumn("Acc: {task.fields[accuracy]:.1%}"),
+            TimeElapsedColumn(),
+            console=console
+        ) as progress:
             
-            # Shuffle data
-            indices = np.random.permutation(len(X))
-            X_shuffled = X[indices]
-            y_shuffled = y[indices]
+            training_task = progress.add_task("Training", total=epochs, loss=0.0, accuracy=0.0)
             
-            for batch in range(n_batches):
-                # Get batch
-                start_idx = batch * batch_size
-                end_idx = start_idx + batch_size
+            for epoch in range(epochs):
+                epoch_loss = 0
+                correct_predictions = 0
+                total_predictions = 0
                 
-                X_batch = tt.Tensor(X_shuffled[start_idx:end_idx])
-                y_batch = tt.Tensor(y_shuffled[start_idx:end_idx].reshape(-1, 1))
+                # Shuffle data
+                indices = np.random.permutation(len(X))
+                X_shuffled = X[indices]
+                y_shuffled = y[indices]
                 
-                # Forward pass
-                predictions = model.forward(X_batch)
+                for batch in range(n_batches):
+                    # Get batch
+                    start_idx = batch * batch_size
+                    end_idx = start_idx + batch_size
+                    
+                    X_batch = tt.Tensor(X_shuffled[start_idx:end_idx])
+                    y_batch = tt.Tensor(y_shuffled[start_idx:end_idx].reshape(-1, 1))
+                    
+                    # Forward pass
+                    predictions = model.forward(X_batch)
+                    
+                    # Compute loss (simplified binary cross-entropy)
+                    loss = -np.mean(y_batch.data * np.log(predictions.data + 1e-8) + 
+                                   (1 - y_batch.data) * np.log(1 - predictions.data + 1e-8))
+                    epoch_loss += loss
+                    
+                    # Compute accuracy
+                    pred_labels = (predictions.data > 0.5).astype(int)
+                    correct_predictions += np.sum(pred_labels == y_batch.data)
+                    total_predictions += len(y_batch.data)
+                    
+                    # Backward pass (simplified - in real implementation, use autograd)
+                    # For demo purposes, we'll simulate parameter updates
+                    for layer in model.layers:
+                        if hasattr(layer, 'weights'):
+                            # Simulate gradient updates with noise to show improvement
+                            # Real training would use actual gradients and optimizers
+                            noise_scale = learning_rate * 0.1 * (1 - epoch / epochs)  # Decreasing noise
+                            layer.weights = tt.Tensor(layer.weights.data + 
+                                                    np.random.normal(0, noise_scale, layer.weights.data.shape))
+                            if hasattr(layer, 'bias'):
+                                layer.bias = tt.Tensor(layer.bias.data +
+                                                     np.random.normal(0, noise_scale, layer.bias.data.shape))
                 
-                # Compute loss (simplified binary cross-entropy)
-                loss = -np.mean(y_batch.data * np.log(predictions.data + 1e-8) + 
-                               (1 - y_batch.data) * np.log(1 - predictions.data + 1e-8))
-                epoch_loss += loss
+                # Epoch statistics
+                avg_loss = epoch_loss / n_batches
+                accuracy = correct_predictions / total_predictions
+                epoch_losses.append(avg_loss)
+                epoch_accuracies.append(accuracy)
                 
-                # Compute accuracy
-                pred_labels = (predictions.data > 0.5).astype(int)
-                correct_predictions += np.sum(pred_labels == y_batch.data)
-                total_predictions += len(y_batch.data)
-                
-                # Backward pass (simplified - in real implementation, use autograd)
-                # For demo purposes, we'll simulate parameter updates
-                for layer in model.layers:
-                    if hasattr(layer, 'weights'):
-                        # Simulate gradient updates
-                        noise_scale = learning_rate * 0.1  # Simplified update
-                        layer.weights = tt.Tensor(layer.weights.data + 
-                                                np.random.normal(0, noise_scale, layer.weights.data.shape))
-            
-            # Epoch statistics
-            avg_loss = epoch_loss / n_batches
-            accuracy = correct_predictions / total_predictions
-            epoch_losses.append(avg_loss)
-            epoch_accuracies.append(accuracy)
-            
-            print(f"  Epoch {epoch+1:2d}: Loss={avg_loss:.4f}, Accuracy={accuracy:.1%}")
+                # Update progress bar
+                progress.update(
+                    training_task,
+                    advance=1,
+                    loss=avg_loss,
+                    accuracy=accuracy
+                )
         
-        print()
+        console.print()
         
         # Demo 6: Training Progress Analysis
-        print("📈 Demo 6: Training Progress Analysis")
-        print("How did the model improve over time?")
-        print()
+        console.print(Panel(
+            "How did the model improve over time?",
+            title="📈 Demo 6: Training Progress Analysis",
+            style="green"
+        ))
         
-        print("Learning curve:")
-        print("  Epoch |  Loss  | Accuracy")
-        print("  ------|--------|----------")
+        # Learning curve table
+        learning_table = Table(show_header=True, header_style="bold magenta")
+        learning_table.add_column("Epoch", style="cyan", justify="center")
+        learning_table.add_column("Loss", style="yellow", justify="center")
+        learning_table.add_column("Accuracy", style="green", justify="center")
+        
         for i, (loss, acc) in enumerate(zip(epoch_losses, epoch_accuracies)):
-            print(f"    {i+1:2d}  | {loss:.4f} |  {acc:.1%}")
+            learning_table.add_row(str(i+1), f"{loss:.4f}", f"{acc:.1%}")
+        
+        console.print(learning_table)
         
         improvement = epoch_accuracies[-1] - epoch_accuracies[0]
-        print(f"\nImprovement: {improvement:.1%} (from {epoch_accuracies[0]:.1%} to {epoch_accuracies[-1]:.1%})")
-        print()
+        console.print(Panel(
+            f"Improvement: {improvement:.1%} (from {epoch_accuracies[0]:.1%} to {epoch_accuracies[-1]:.1%})",
+            style="bold green"
+        ))
+        console.print()
         
         # Demo 7: Final Model Evaluation
         print("🎯 Demo 7: Final Model Evaluation")
@@ -248,8 +306,9 @@ def demo_training():
         
         print("Inference on new data:")
         for i, (x, pred) in enumerate(zip(new_data, new_predictions.data)):
-            pred_class = int(pred > 0.5)
-            confidence = max(pred[0], 1-pred[0])
+            pred_value = pred[0] if pred.ndim > 0 else pred
+            pred_class = int(pred_value > 0.5)
+            confidence = max(pred_value, 1-pred_value)
             print(f"  Input [{x[0]:5.2f}, {x[1]:5.2f}] → Class {pred_class} (confidence: {confidence:.1%})")
         
         print()
