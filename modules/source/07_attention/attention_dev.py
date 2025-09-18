@@ -789,7 +789,7 @@ def plot_attention_patterns(weights, weights_causal):
     plt.grid(True)
     
     plt.tight_layout()
-    plt.show()
+    # plt.show()  # Disabled for automated testing
 
 print("🎯 Attention learns to focus on similar content!")
 
