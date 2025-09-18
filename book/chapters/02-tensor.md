@@ -130,24 +130,24 @@ print("✅ Basic operations working!")
 
 ## 🎯 Key Concepts
 
-### **Tensors as Universal Data Structures**
+### Tensors as Universal Data Structures
 - **Scalars**: 0-dimensional tensors (single numbers)
 - **Vectors**: 1-dimensional tensors (arrays) 
 - **Matrices**: 2-dimensional tensors (common in ML)
 - **Higher dimensions**: Images (3D), video (4D), etc.
 
-### **Why Tensors Matter in ML**
+### Why Tensors Matter in ML
 - **Neural networks**: All computations operate on tensors
 - **GPU acceleration**: operates on tensor primitives
 - **Broadcasting**: Efficient operations across different shapes
 - **Vectorization**: Process entire datasets simultaneously
 
-### **Real-World Connections**
+### Real-World Connections
 - **PyTorch/TensorFlow**: Your implementation mirrors production frameworks
 - **NumPy**: Foundation for scientific computing (we build similar abstractions)
 - **Production systems**: Understanding tensors is essential for ML engineering
 
-### **Memory and Performance**
+### Memory and Performance
 - **Data layout**: How tensors store data efficiently
 - **Broadcasting**: Smart operations without data copying
 - **View vs Copy**: Understanding memory management

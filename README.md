@@ -321,7 +321,7 @@ TinyTorch/
 │   ├── 13_kernels/          # High-performance operations
 │   ├── 14_benchmarking/     # Performance analysis and profiling
 │   ├── 15_mlops/            # Production monitoring and deployment
-│   └── 16_tinygpt/          # 🔥 NEW: Complete language model implementation
+│   └── 16_tinygpt/          # 🔥 Complete language model implementation
 ├── tinytorch/               # Your built framework package
 │   ├── core/                # Core implementations (exported from modules)
 │   │   ├── tensor.py        # Generated from 02_tensor
@@ -338,15 +338,15 @@ TinyTorch/
 │   └── chapters/            # Generated from module READMEs
 ├── tito/                    # CLI tool for development workflow
 │   ├── commands/            # Student and instructor commands
-│   │   ├── checkpoint.py    # 🎯 NEW: Checkpoint system with Rich progress tracking
-│   │   └── module.py        # 🎯 NEW: Enhanced with tito module complete workflow
+│   │   ├── checkpoint.py    # 🎯 Checkpoint system with Rich progress tracking
+│   │   └── module.py        # Enhanced with tito module complete workflow
 │   └── tools/               # Testing and build automation
 └── tests/                   # Integration tests
-    ├── checkpoints/         # 🎯 NEW: 16 capability checkpoint tests
+    ├── checkpoints/         # 🎯 16 capability checkpoint tests
     │   ├── checkpoint_00_environment.py
     │   ├── checkpoint_01_foundation.py
     │   └── ...              # Through checkpoint_15_capstone.py
-    └── test_checkpoint_integration.py  # 🎯 NEW: Integration testing suite
+    └── test_checkpoint_integration.py  # Integration testing suite
 ```
 
 **Module Progression (Start with Module 0!):**
@@ -413,7 +413,7 @@ TinyTorch/
 
 **This isn't 16 isolated assignments.** Every component you build integrates into one cohesive, fully functional ML framework that powers both vision AND language:
 
-**🎯 NEW: Explore the full system architecture visually in Module 00 before diving into implementation!**
+**🎯 Explore the full system architecture visually in Module 00 before diving into implementation!**
 
 ```mermaid
 flowchart TD
