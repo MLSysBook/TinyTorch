@@ -1567,6 +1567,3 @@ Your implementations mirror production systems:
 
 **Ready for optimizers?** Your autograd system is now ready for real training!
 """
-
-# %% [markdown]
-"""
