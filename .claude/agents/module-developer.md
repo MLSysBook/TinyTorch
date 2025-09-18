@@ -94,28 +94,55 @@ By the end of this module, you'll understand:
 ```python
 def method_name(self, params):
     """
-    [Clear description]
+    [Clear description of what this method does and why it matters]
+    
+    Args:
+        param1: [Type] - [Description of parameter]
+        param2: [Type] - [Description of parameter]
+    
+    Returns:
+        [Type]: [Description of return value]
     
     TODO: Implement [specific task].  # <- OUTSIDE solution block!
     
     APPROACH:  # <- OUTSIDE solution block!
-    1. [Step with reason]
-    2. [Step with reason]
+    1. [Step] because [WHY this step is needed]
+    2. [Step] because [WHY this step is needed]
+    3. [Step] because [WHY this step is needed]
     
     EXAMPLE:  # <- OUTSIDE solution block!
     ```python
-    result = method([1, 2, 3])
-    # Expected: [4, 5, 6]
+    # Input
+    tensor = Tensor([[1, 2], [3, 4]])
+    result = tensor.method(axis=0)
+    
+    # Expected Output
+    # result.data = [4, 6]
+    # result.shape = (2,)
     ```
     
     HINTS:  # <- OUTSIDE solution block!
-    - Use np.function() for...
-    - Remember to handle edge case...
+    - Use np.function() for [specific reason why]
+    - Remember to handle [edge case] because [why it matters]
+    - Consider memory: [what to think about for efficiency]
+    - Check shape compatibility to avoid [common error]
+    
+    PERFORMANCE NOTE:  # <- OUTSIDE solution block!
+    - Time complexity: O(?) - think about [what drives complexity]
+    - Space complexity: O(?) - consider [what uses memory]
+    - Bottleneck: [Common performance issue to avoid]
     """
     ### BEGIN SOLUTION
-    # Complete implementation here
+    # Complete implementation with comments explaining key decisions
     # This gets removed for students
-    actual_code = implementation()
+    
+    # Validate inputs (always good practice)
+    if not valid_condition:
+        raise ValueError("Helpful error message")
+    
+    # Core algorithm with explanation
+    actual_code = implementation()  # Why this approach
+    
     return actual_code
     ### END SOLUTION
 ```
