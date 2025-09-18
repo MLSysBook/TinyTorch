@@ -1,5 +1,19 @@
 # Claude Code Instructions for TinyTorch
 
+## ⚡ **MANDATORY: Read Git Policies First**
+**Before any development work, you MUST read and follow the Git Workflow Standards section below.**
+
+**CRITICAL POLICIES - NO EXCEPTIONS:**
+- ✅ Always use virtual environment (`.venv`)
+- ✅ Always work on feature branches (never `dev`/`main` directly)
+- ✅ Always test before committing
+- 🚨 **NEVER add Co-Authored-By or automated attribution to commits**
+- 🚨 **Only project owner adds Co-Authored-By when explicitly needed**
+
+**These policies ensure clean history, professional development practices, and project integrity.**
+
+---
+
 ## 🎯 Primary Mission: Pedagogical Excellence
 
 ### Your Role as Educational Design Partner
@@ -66,13 +80,21 @@ Use descriptive branch names that indicate the type of work:
 5. **Merge to dev** when feature is complete and tested
 6. **Delete feature branch** after successful merge
 
-### ✅ Commit Standards
+### ✅ Commit Standards - MANDATORY POLICIES
 - **One feature per branch** - don't mix unrelated changes
 - **Test before committing** - ensure functionality works
 - **Descriptive commit messages** that explain the "why"
 - **Clean history** - squash if needed before merging
-- **NO Co-Authored-By** unless explicitly requested by user
-- **NO automated attribution** - keep commits clean and focused
+
+### 🚨 **CRITICAL: Commit Authorship Policy - READ EVERY TIME**
+**NEVER add Co-Authored-By or any automated attribution to commits.**
+
+- **Co-Authored-By**: Only added by project owner when explicitly needed
+- **Automated attribution**: Forbidden - keep commits clean and professional
+- **Commit ownership**: All commits should reflect actual authorship, not tool usage
+- **History integrity**: Clean commit history is essential for project maintenance
+
+**This policy MUST be followed for every single commit. No exceptions.**
 
 ### 🚫 What NOT to Do
 - ❌ Work directly on `dev` or `main`
