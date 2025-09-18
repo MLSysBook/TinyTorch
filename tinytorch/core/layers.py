@@ -5,211 +5,165 @@ __all__ = ['matmul', 'Dense']
 
 # %% ../../modules/source/04_layers/layers_dev.ipynb 1
 import numpy as np
-import matplotlib.pyplot as plt
-import os
 import sys
-from typing import Union, List, Tuple, Optional
+import os
+from typing import Union, Tuple, Optional, Any
 
-# Import our dependencies - try from package first, then local modules
+# Import our building blocks - try package first, then local modules
 try:
     from tinytorch.core.tensor import Tensor
-    from tinytorch.core.activations import ReLU, Sigmoid, Tanh, Softmax
 except ImportError:
     # For development, import from local modules
-    sys.path.append(os.path.join(os.path.dirname(__file__), '..', '01_tensor'))
-    sys.path.append(os.path.join(os.path.dirname(__file__), '..', '02_activations'))
-    try:
-        from tensor_dev import Tensor
-        from activations_dev import ReLU, Sigmoid, Tanh, Softmax
-    except ImportError:
-        # If the local modules are not available, use relative imports
-        from ..tensor.tensor_dev import Tensor
-        from ..activations.activations_dev import ReLU, Sigmoid, Tanh, Softmax
+    sys.path.append(os.path.join(os.path.dirname(__file__), '..', '02_tensor'))
+    from tensor_dev import Tensor
 
-# %% ../../modules/source/04_layers/layers_dev.ipynb 2
-def _should_show_plots():
-    """Check if we should show plots (disable during testing)"""
-    # Check multiple conditions that indicate we're in test mode
-    is_pytest = (
-        'pytest' in sys.modules or
-        'test' in sys.argv or
-        os.environ.get('PYTEST_CURRENT_TEST') is not None or
-        any('test' in arg for arg in sys.argv) or
-        any('pytest' in arg for arg in sys.argv)
-    )
-    
-    # Show plots in development mode (when not in test mode)
-    return not is_pytest
-
-# %% ../../modules/source/04_layers/layers_dev.ipynb 7
-def matmul(A: np.ndarray, B: np.ndarray) -> np.ndarray:
+# %% ../../modules/source/04_layers/layers_dev.ipynb 5
+def matmul(a: Tensor, b: Tensor) -> Tensor:
     """
-    Matrix multiplication using explicit for-loops.
+    Matrix multiplication for tensors.
     
-    This helps you understand what matrix multiplication really does!
-        
-    TODO: Implement matrix multiplication using three nested for-loops.
+    Args:
+        a: Left tensor (shape: ..., m, k)
+        b: Right tensor (shape: ..., k, n)
+    
+    Returns:
+        Result tensor (shape: ..., m, n)
+    
+    TODO: Implement matrix multiplication using numpy's @ operator.
     
     STEP-BY-STEP IMPLEMENTATION:
-    1. Get the dimensions: m, n from A.shape and n2, p from B.shape
-    2. Check compatibility: n must equal n2
-    3. Create output matrix C of shape (m, p) filled with zeros
-    4. Use three nested loops:
-       - i loop: iterate through rows of A (0 to m-1)
-       - j loop: iterate through columns of B (0 to p-1)
-       - k loop: iterate through shared dimension (0 to n-1)
-    5. For each (i,j), accumulate: C[i,j] += A[i,k] * B[k,j]
+    1. Extract numpy arrays from both tensors using .data
+    2. Perform matrix multiplication: result_data = a_data @ b_data
+    3. Wrap result in a new Tensor and return
     
-    EXAMPLE WALKTHROUGH:
+    LEARNING CONNECTIONS:
+    - This is the core operation in Dense layers: output = input @ weights
+    - PyTorch uses optimized BLAS libraries for this operation
+    - GPU implementations parallelize this across thousands of cores
+    - Understanding this operation is key to neural network performance
+    
+    EXAMPLE:
     ```python
-    A = [[1, 2],     B = [[5, 6],
-         [3, 4]]          [7, 8]]
-    
-    C[0,0] = A[0,0]*B[0,0] + A[0,1]*B[1,0] = 1*5 + 2*7 = 19
-    C[0,1] = A[0,0]*B[0,1] + A[0,1]*B[1,1] = 1*6 + 2*8 = 22
-    C[1,0] = A[1,0]*B[0,0] + A[1,1]*B[1,0] = 3*5 + 4*7 = 43
-    C[1,1] = A[1,0]*B[0,1] + A[1,1]*B[1,1] = 3*6 + 4*8 = 50
-    
-    Result: [[19, 22], [43, 50]]
+    a = Tensor([[1, 2], [3, 4]])  # shape (2, 2)
+    b = Tensor([[5, 6], [7, 8]])  # shape (2, 2)
+    result = matmul(a, b)
+    # result.data = [[19, 22], [43, 50]]
     ```
     
     IMPLEMENTATION HINTS:
-    - Get dimensions: m, n = A.shape; n2, p = B.shape
-    - Check compatibility: if n != n2: raise ValueError
-    - Initialize result: C = np.zeros((m, p))
-    - Triple nested loop: for i in range(m): for j in range(p): for k in range(n):
-    - Accumulate sum: C[i,j] += A[i,k] * B[k,j]
-    
-    LEARNING CONNECTIONS:
-    - This is what every neural network layer does internally
-    - Understanding this helps debug shape mismatches
-    - Essential for understanding the foundation of neural networks
+    - Use the @ operator for clean matrix multiplication
+    - Ensure you return a Tensor, not a numpy array
+    - The operation should work for any compatible matrix shapes
     """
     ### BEGIN SOLUTION
-    # Get matrix dimensions
-    m, n = A.shape
-    n2, p = B.shape
+    # Extract numpy data from tensors
+    a_data = a.data
+    b_data = b.data
     
-    # Check compatibility
-    if n != n2:
-        raise ValueError(f"Incompatible matrix dimensions: A is {m}x{n}, B is {n2}x{p}")
+    # Perform matrix multiplication
+    result_data = a_data @ b_data
     
-    # Initialize result matrix
-    C = np.zeros((m, p))
-    
-    # Triple nested loop for matrix multiplication
-    for i in range(m):
-        for j in range(p):
-            for k in range(n):
-                C[i, j] += A[i, k] * B[k, j]
-    
-    return C
+    # Wrap result in a Tensor
+    return Tensor(result_data)
     ### END SOLUTION
 
-# %% ../../modules/source/04_layers/layers_dev.ipynb 11
+# %% ../../modules/source/04_layers/layers_dev.ipynb 9
 class Dense:
     """
-    Dense (Linear/Fully Connected) Layer
+    Dense (Fully Connected) Layer implementation.
     
-    Applies a linear transformation: y = xW + b
+    Applies the transformation: output = input @ weights + bias
     
-    This is the fundamental building block of neural networks.
+    This is equivalent to PyTorch's nn.Linear layer.
     """
     
     def __init__(self, input_size: int, output_size: int, use_bias: bool = True):
         """
         Initialize Dense layer with random weights and optional bias.
         
+        Args:
+            input_size: Number of input features
+            output_size: Number of output features  
+            use_bias: Whether to include bias term
+        
         TODO: Implement Dense layer initialization.
         
         STEP-BY-STEP IMPLEMENTATION:
-        1. Store the layer parameters (input_size, output_size, use_bias)
-        2. Initialize weights with random values using proper scaling
-        3. Initialize bias (if use_bias=True) with zeros
-        4. Convert weights and bias to Tensor objects
+        1. Store input_size and output_size as instance variables
+        2. Initialize weights as Tensor with shape (input_size, output_size)
+        3. Use small random values: np.random.randn(...) * 0.1
+        4. Initialize bias as Tensor with shape (output_size,) if use_bias is True
+        5. Set bias to None if use_bias is False
         
-        WEIGHT INITIALIZATION STRATEGY:
-        - Use Xavier/Glorot initialization for better gradient flow
-        - Scale: sqrt(2 / (input_size + output_size))
-        - Random values: np.random.randn() * scale
-        
-        EXAMPLE USAGE:
-        ```python
-        layer = Dense(input_size=3, output_size=2)
-        # Creates weight matrix of shape (3, 2) and bias of shape (2,)
-        ```
+        LEARNING CONNECTIONS:
+        - Small random initialization prevents symmetry breaking
+        - Weight shape (input_size, output_size) enables matrix multiplication
+        - Bias allows shifting the output (like y-intercept in linear regression)
+        - PyTorch uses more sophisticated initialization (Xavier, Kaiming)
         
         IMPLEMENTATION HINTS:
-        - Store parameters: self.input_size, self.output_size, self.use_bias
-        - Weight shape: (input_size, output_size)
-        - Bias shape: (output_size,) if use_bias else None
-        - Use Xavier initialization: scale = np.sqrt(2.0 / (input_size + output_size))
-        - Initialize weights: np.random.randn(input_size, output_size) * scale
-        - Initialize bias: np.zeros(output_size) if use_bias else None
-        - Convert to Tensors: self.weights = Tensor(weight_data), self.bias = Tensor(bias_data)
+        - Use np.random.randn() for Gaussian random numbers
+        - Scale by 0.1 to keep initial values small
+        - Remember to wrap numpy arrays in Tensor()
+        - Store use_bias flag for forward pass logic
         """
         ### BEGIN SOLUTION
-        # Store layer parameters
         self.input_size = input_size
         self.output_size = output_size
         self.use_bias = use_bias
         
-        # Xavier/Glorot initialization
-        scale = np.sqrt(2.0 / (input_size + output_size))
-        
-        # Initialize weights with random values
-        weight_data = np.random.randn(input_size, output_size) * scale
+        # Initialize weights with small random values
+        # Shape: (input_size, output_size) for matrix multiplication
+        weight_data = np.random.randn(input_size, output_size) * 0.1
         self.weights = Tensor(weight_data)
         
-        # Initialize bias
+        # Initialize bias if requested
         if use_bias:
-            bias_data = np.zeros(output_size)
+            bias_data = np.random.randn(output_size) * 0.1
             self.bias = Tensor(bias_data)
         else:
             self.bias = None
         ### END SOLUTION
     
-    def forward(self, x):
+    def forward(self, x: Tensor) -> Tensor:
         """
         Forward pass through the Dense layer.
         
-        TODO: Implement the forward pass: y = xW + b
+        Args:
+            x: Input tensor (shape: ..., input_size)
+        
+        Returns:
+            Output tensor (shape: ..., output_size)
+        
+        TODO: Implement forward pass: output = input @ weights + bias
         
         STEP-BY-STEP IMPLEMENTATION:
-        1. Perform matrix multiplication: x @ self.weights
-        2. Add bias if present: result + self.bias
-        3. Return the result as a Tensor
-        
-        EXAMPLE USAGE:
-        ```python
-        layer = Dense(input_size=3, output_size=2)
-        input_data = Tensor([[1, 2, 3]])  # Shape: (1, 3)
-        output = layer(input_data)        # Shape: (1, 2)
-        ```
-        
-        IMPLEMENTATION HINTS:
-        - Matrix multiplication: matmul(x.data, self.weights.data)
-        - Add bias: result + self.bias.data (broadcasting handles shape)
-        - Return as Tensor: return Tensor(final_result)
-        - Handle both cases: with and without bias
+        1. Perform matrix multiplication: output = matmul(x, self.weights)
+        2. If bias exists, add it: output = output + bias
+        3. Return the result
         
         LEARNING CONNECTIONS:
-        - This is the core operation in every neural network layer
-        - Matrix multiplication combines all input features
-        - Bias addition allows shifting the output distribution
-        - The result feeds into activation functions
+        - This is the core neural network transformation
+        - Matrix multiplication scales input features to output features
+        - Bias provides offset (like y-intercept in linear equations)
+        - Broadcasting handles different batch sizes automatically
+        
+        IMPLEMENTATION HINTS:
+        - Use the matmul function you implemented above
+        - Check if self.bias is not None before adding
+        - Tensor addition should work automatically via broadcasting
         """
         ### BEGIN SOLUTION
-        # Perform matrix multiplication
-        linear_output = matmul(x.data, self.weights.data)
+        # Matrix multiplication: input @ weights
+        output = matmul(x, self.weights)
         
-        # Add bias if present
-        if self.use_bias and self.bias is not None:
-            linear_output = linear_output + self.bias.data
+        # Add bias if it exists
+        if self.bias is not None:
+            output = output + self.bias
         
-        return type(x)(linear_output)
+        return output
         ### END SOLUTION
     
-    def __call__(self, x):
+    def __call__(self, x: Tensor) -> Tensor:
         """Make the layer callable: layer(x) instead of layer.forward(x)"""
         return self.forward(x)
