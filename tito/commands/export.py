@@ -252,8 +252,83 @@ class ExportCommand(BaseCommand):
         
         console.print(Panel(exports_text, title="Export Summary", border_style="bright_green"))
 
+    def _validate_notebook_integrity(self, notebook_path: Path) -> Dict:
+        """Validate notebook integrity and structure."""
+        import json
+        
+        try:
+            with open(notebook_path, 'r', encoding='utf-8') as f:
+                notebook_data = json.load(f)
+            
+            # Basic structure checks
+            issues = []
+            warnings = []
+            
+            # Check required fields
+            if 'cells' not in notebook_data:
+                issues.append("Missing 'cells' field")
+            elif not isinstance(notebook_data['cells'], list):
+                issues.append("'cells' field is not a list")
+            
+            if 'metadata' not in notebook_data:
+                warnings.append("Missing metadata field")
+            
+            if 'nbformat' not in notebook_data:
+                warnings.append("Missing nbformat field")
+            
+            # Check cells for common issues
+            cell_count = 0
+            code_cells = 0
+            markdown_cells = 0
+            
+            if 'cells' in notebook_data:
+                for i, cell in enumerate(notebook_data['cells']):
+                    cell_count += 1
+                    
+                    if 'cell_type' not in cell:
+                        issues.append(f"Cell {i}: missing cell_type")
+                        continue
+                    
+                    cell_type = cell['cell_type']
+                    if cell_type == 'code':
+                        code_cells += 1
+                        if 'source' not in cell:
+                            warnings.append(f"Code cell {i}: missing source")
+                    elif cell_type == 'markdown':
+                        markdown_cells += 1
+                        if 'source' not in cell:
+                            warnings.append(f"Markdown cell {i}: missing source")
+                    else:
+                        warnings.append(f"Cell {i}: unusual cell type '{cell_type}'")
+            
+            return {
+                "valid": len(issues) == 0,
+                "issues": issues,
+                "warnings": warnings,
+                "stats": {
+                    "total_cells": cell_count,
+                    "code_cells": code_cells,
+                    "markdown_cells": markdown_cells
+                }
+            }
+            
+        except json.JSONDecodeError as e:
+            return {
+                "valid": False,
+                "issues": [f"Invalid JSON: {str(e)}"],
+                "warnings": [],
+                "stats": {}
+            }
+        except Exception as e:
+            return {
+                "valid": False,
+                "issues": [f"Validation error: {str(e)}"],
+                "warnings": [],
+                "stats": {}
+            }
+
     def _convert_py_to_notebook(self, module_path: Path) -> bool:
-        """Convert .py dev file to .ipynb using Jupytext."""
+        """Convert .py dev file to .ipynb using Jupytext with integrity checking."""
         module_name = module_path.name
         short_name = module_name[3:] if module_name.startswith(tuple(f"{i:02d}_" for i in range(100))) else module_name
         
@@ -268,14 +343,51 @@ class ExportCommand(BaseCommand):
             py_mtime = dev_file.stat().st_mtime
             nb_mtime = notebook_file.stat().st_mtime
             if nb_mtime > py_mtime:
-                return True  # Notebook is up to date
+                # Still validate existing notebook
+                validation = self._validate_notebook_integrity(notebook_file)
+                if not validation["valid"]:
+                    self.console.print(f"[yellow]⚠️  Existing notebook has integrity issues: {', '.join(validation['issues'])}[/yellow]")
+                    self.console.print("[yellow]Regenerating notebook...[/yellow]")
+                else:
+                    return True  # Notebook is up to date and valid
         
         try:
-            result = subprocess.run([
-                "jupytext", "--to", "ipynb", str(dev_file)
-            ], capture_output=True, text=True, cwd=module_path)
+            # Try to find jupytext in virtual environment first
+            jupytext_path = "jupytext"
             
-            return result.returncode == 0
+            # Get the project root directory (where .venv should be)
+            project_root = Path(__file__).parent.parent.parent
+            venv_jupytext = project_root / ".venv" / "bin" / "jupytext"
+            
+            if venv_jupytext.exists():
+                jupytext_path = str(venv_jupytext)
+            
+            result = subprocess.run([
+                jupytext_path, "--to", "ipynb", str(dev_file)
+            ], capture_output=True, text=True, cwd=project_root)
+            
+            if result.returncode == 0:
+                # Validate the generated notebook
+                validation = self._validate_notebook_integrity(notebook_file)
+                if not validation["valid"]:
+                    self.console.print(f"[red]❌ Generated notebook has integrity issues:[/red]")
+                    for issue in validation["issues"]:
+                        self.console.print(f"[red]  • {issue}[/red]")
+                    return False
+                
+                if validation["warnings"]:
+                    self.console.print("[yellow]⚠️  Notebook warnings:[/yellow]")
+                    for warning in validation["warnings"]:
+                        self.console.print(f"[yellow]  • {warning}[/yellow]")
+                
+                # Show notebook stats
+                stats = validation["stats"]
+                self.console.print(f"[dim]📊 Notebook: {stats.get('total_cells', 0)} cells "
+                                 f"({stats.get('code_cells', 0)} code, {stats.get('markdown_cells', 0)} markdown)[/dim]")
+                
+                return True
+            
+            return False
         except FileNotFoundError:
             return False
     
