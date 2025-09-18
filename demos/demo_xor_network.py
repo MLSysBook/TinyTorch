@@ -32,6 +32,22 @@ def demo_xor_network():
         ))
         console.print()
         
+        # What this demo shows
+        console.print(Panel(
+            "[bold yellow]What This Demo Shows:[/bold yellow]\n\n"
+            "The XOR problem is the classic example that proved we need multi-layer networks.\n"
+            "A single neuron cannot solve XOR, but two layers can! You'll understand:\n\n"
+            "• Why XOR is 'not linearly separable' (no single line works)\n"
+            "• How hidden layers create intermediate features that ARE separable\n"
+            "• The power of depth in neural networks - each layer transforms the problem\n"
+            "• How modern deep learning builds on this multi-layer principle\n\n"
+            "[bold cyan]Key Insight:[/bold cyan] Hidden layers transform the input space into a new representation\n"
+            "where previously impossible problems become solvable!",
+            title="📚 Understanding This Demo",
+            style="blue"
+        ))
+        console.print()
+        
         # Demo 1: The XOR problem setup
         console.print(Panel(
             "Why single neurons fail and multi-layer networks succeed...",

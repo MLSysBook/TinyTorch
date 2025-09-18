@@ -28,6 +28,22 @@ def demo_tensor_math():
         ))
         console.print()
         
+        # What this demo shows
+        console.print(Panel(
+            "[bold yellow]What This Demo Shows:[/bold yellow]\n\n"
+            "Tensors are the foundation of all neural networks - they're just multi-dimensional arrays\n"
+            "that can represent scalars, vectors, matrices, and higher dimensions. You'll see:\n\n"
+            "• Solving systems of linear equations (finding x in Ax = b)\n"
+            "• Geometric transformations with rotation matrices\n"
+            "• Batch processing - operating on multiple data points simultaneously\n"
+            "• How neural network weights are just matrices doing transformations\n\n"
+            "[bold cyan]Key Insight:[/bold cyan] Every neural network operation is matrix multiplication at its core.\n"
+            "Understanding tensors means understanding how neural networks compute!",
+            title="📚 Understanding This Demo",
+            style="blue"
+        ))
+        console.print()
+        
         # Demo 1: Solve system of linear equations
         console.print(Panel(
             "System: 2x + 3y = 13\n        1x + 1y = 5",
@@ -72,6 +88,10 @@ def demo_tensor_math():
         status = "✅ Verified!" if np.allclose(verification.data, b.data) else "❌ Incorrect"
         verify_table.add_row(str(verification.data.flatten()), str(b.data.flatten()), status)
         console.print(verify_table)
+        console.print()
+        
+        console.print("[dim]💡 [bold]What Just Happened:[/bold] We solved for x=2, y=3 using matrix operations![/dim]")
+        console.print("[dim]   This is exactly how neural networks solve for optimal weights during training.[/dim]")
         console.print()
         
         # Demo 2: Matrix transformation (rotation)
