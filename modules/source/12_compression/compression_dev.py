@@ -2186,11 +2186,12 @@ Time to test your implementation! This section uses TinyTorch's standardized tes
 
 if __name__ == "__main__":
     # Run all compression tests
+    test_unit_compression_metrics()
     test_unit_magnitude_pruning()
     test_unit_structured_pruning() 
-    test_unit_weight_quantization()
-    test_unit_layer_quantization()
-    test_unit_knowledge_distillation()
+    test_unit_quantization()
+    test_unit_distillation()
+    test_unit_compression_systems_profiler()
     test_unit_comprehensive_comparison()
     test_module_compression()
     

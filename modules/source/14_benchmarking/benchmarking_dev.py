@@ -1272,9 +1272,7 @@ if __name__ == "__main__":
         )
     }
     
-    # Run comprehensive tests
-    test_module_comprehensive_benchmarking()
-    test_unit_production_profiler()
+    # Demo visualization completed
 
 # %% [markdown]
 """
@@ -1923,6 +1921,19 @@ Reflect on how benchmarking connects to real-world ML systems:
 
 *These questions connect your benchmarking implementation to the broader challenges of production ML systems. Consider how the patterns you've learned apply to real-world scenarios at scale.*
 """
+
+# %%
+if __name__ == "__main__":
+    # Run all tests
+    test_unit_benchmark_scenarios()
+    test_unit_statistical_validation()
+    test_unit_tinytorch_perf()
+    test_unit_performance_reporter()
+    test_module_comprehensive_benchmarking()
+    test_unit_production_profiler()
+    
+    print("All tests passed!")
+    print("Benchmarking module complete!")
 
 # %% [markdown]
 """

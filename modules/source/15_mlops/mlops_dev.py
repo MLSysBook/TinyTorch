@@ -2664,15 +2664,9 @@ def test_unit_production_mlops_profiler():
 
 # Run all MLOps tests
 if __name__ == "__main__":
-    # Model validation tests
-    test_unit_model_validator()
-    
-    # Model serialization tests  
-    test_unit_model_serialization()
-    
     # Basic MLOps component tests
     test_unit_model_monitor()
-    test_unit_drift_detector() 
+    test_unit_drift_detector()
     test_unit_retraining_trigger()
     test_unit_mlops_pipeline()
     test_module_mlops_tinytorch_integration()

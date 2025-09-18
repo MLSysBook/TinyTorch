@@ -43,13 +43,13 @@ from dataclasses import dataclass
 import json
 
 # Import TinyTorch components - the foundation we've built
-from tinytorch.tensor import Tensor
-from tinytorch.layers import Dense
-from tinytorch.activations import ReLU, Softmax
-from tinytorch.optimizers import Adam, SGD
-from tinytorch.losses import CrossEntropyLoss
-from tinytorch.training import Trainer
-from tinytorch.autograd import no_grad
+from tinytorch.core.tensor import Tensor
+from tinytorch.core.layers import Dense
+from tinytorch.core.activations import ReLU, Softmax
+from tinytorch.core.optimizers import Adam, SGD
+from tinytorch.core.training import CrossEntropyLoss
+from tinytorch.core.training import Trainer
+# from tinytorch.core.autograd import no_grad  # Not implemented yet
 
 # %% [markdown]
 """
@@ -1006,7 +1006,7 @@ class LanguageModelTrainer:
         self.tokenizer = tokenizer
         
         # Default components (reusing TinyTorch!)
-        self.optimizer = optimizer or Adam(lr=0.001)
+        self.optimizer = optimizer or Adam([], learning_rate=0.001)  # Empty params list for now
         self.loss_fn = loss_fn or LanguageModelLoss()
         self.metrics = metrics or [LanguageModelAccuracy()]
         
