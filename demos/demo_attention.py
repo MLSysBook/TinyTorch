@@ -6,9 +6,17 @@ Shows how attention transforms sequence processing and enables modern AI!
 
 import sys
 import numpy as np
+from rich.console import Console
+from rich.panel import Panel
+from rich.table import Table
+from rich.syntax import Syntax
+from rich.text import Text
+from rich.columns import Columns
 
 def demo_attention():
     """Demo attention mechanisms for sequence understanding and modern AI"""
+    
+    console = Console()
     
     try:
         # Import TinyTorch modules
@@ -18,39 +26,70 @@ def demo_attention():
         import tinytorch.core.dense as dense
         import tinytorch.core.attention as attention
         
-        print("🎯 TinyTorch Attention Mechanisms Demo")
-        print("=" * 50)
-        print("The breakthrough that enabled ChatGPT and modern AI!")
-        print()
+        # Main header
+        console.print(Panel.fit(
+            "🎯 TinyTorch Attention Mechanisms Demo\nThe breakthrough that enabled ChatGPT and modern AI!",
+            style="bold cyan",
+            border_style="bright_blue"
+        ))
+        console.print()
         
         # Demo 1: The Attention Problem
-        print("🧠 Demo 1: Why Attention Revolutionized AI")
-        print("From fixed-size bottlenecks to dynamic focus...")
-        print()
+        console.print(Panel(
+            "From fixed-size bottlenecks to dynamic focus...",
+            title="🧠 Demo 1: Why Attention Revolutionized AI",
+            style="green"
+        ))
         
         # Simulate a sequence processing problem
         sequence = ["The", "cat", "sat", "on", "the", "mat"]
-        print(f"Input sequence: {' '.join(sequence)}")
-        print()
+        console.print(f"[bold cyan]Input sequence:[/bold cyan] {' '.join(sequence)}")
+        console.print()
         
-        print("Traditional RNN approach:")
-        print("  [The] → h1")
-        print("  [cat] + h1 → h2")
-        print("  [sat] + h2 → h3")
-        print("  [on] + h3 → h4")
-        print("  [the] + h4 → h5")
-        print("  [mat] + h5 → h6 (final hidden state)")
-        print()
-        print("❌ Problem: h6 must encode ALL previous information!")
-        print("❌ Result: Information loss, especially for long sequences")
-        print()
+        # Create comparison table
+        comparison_table = Table(show_header=True, header_style="bold magenta")
+        comparison_table.add_column("Traditional RNN", style="red")
+        comparison_table.add_column("Attention Mechanism", style="green")
         
-        print("Attention approach:")
-        print("  Process ALL positions: [The, cat, sat, on, the, mat]")
-        print("  For each output: Look at ALL inputs with learned weights")
-        print("  ✅ Solution: Direct access to any previous information!")
-        print("  ✅ Result: No information bottleneck!")
-        print()
+        rnn_steps = [
+            "[The] → h1",
+            "[cat] + h1 → h2", 
+            "[sat] + h2 → h3",
+            "[on] + h3 → h4",
+            "[the] + h4 → h5",
+            "[mat] + h5 → h6 (final)"
+        ]
+        
+        attention_steps = [
+            "Process ALL positions simultaneously:",
+            "[The, cat, sat, on, the, mat]",
+            "",
+            "For each output:",
+            "Look at ALL inputs with learned weights",
+            "Direct access to any information!"
+        ]
+        
+        for rnn, attn in zip(rnn_steps, attention_steps):
+            comparison_table.add_row(rnn, attn)
+        
+        console.print(comparison_table)
+        console.print()
+        
+        # Problems and solutions
+        problems_panel = Panel(
+            "❌ Problem: h6 must encode ALL previous information!\n❌ Result: Information loss, especially for long sequences",
+            title="Traditional RNN Issues",
+            style="red"
+        )
+        
+        solutions_panel = Panel(
+            "✅ Solution: Direct access to any previous information!\n✅ Result: No information bottleneck!",
+            title="Attention Solution",
+            style="green"
+        )
+        
+        console.print(Columns([problems_panel, solutions_panel]))
+        console.print()
         
         # Demo 2: Basic Attention Mechanism
         print("🔍 Demo 2: Basic Attention Computation")
@@ -164,9 +203,26 @@ def demo_attention():
         print()
         
         # Demo 5: Scaled Dot-Product Attention
-        print("⚖️ Demo 5: Scaled Dot-Product Attention - The Core Formula")
-        print("Attention(Q,K,V) = softmax(QK^T/√d_k)V")
-        print()
+        console.print(Panel(
+            "The mathematical foundation of modern AI",
+            title="⚖️ Demo 5: Scaled Dot-Product Attention - The Core Formula",
+            style="blue"
+        ))
+        
+        # Display the attention formula with syntax highlighting
+        formula_code = """
+# The Attention Formula that Changed Everything
+Attention(Q, K, V) = softmax(Q @ K^T / √d_k) @ V
+
+Where:
+  Q = Queries (what we're looking for)
+  K = Keys    (what's available to match against)  
+  V = Values  (what we actually retrieve)
+  d_k = key dimension (for scaling)
+"""
+        
+        console.print(Syntax(formula_code, "python", theme="monokai", line_numbers=False))
+        console.print()
         
         # Create Q, K, V matrices
         d_k = 4  # key dimension
@@ -201,31 +257,56 @@ def demo_attention():
         print()
         
         # Demo 6: Transformer Architecture Preview
-        print("🏗️ Demo 6: Transformer Architecture - The Full Picture")
-        print("How attention enables modern language models...")
-        print()
+        console.print(Panel(
+            "How attention enables modern language models...",
+            title="🏗️ Demo 6: Transformer Architecture - The Full Picture",
+            style="magenta"
+        ))
         
-        print("Transformer block architecture:")
-        print("  Input Embeddings")
-        print("  ↓")
-        print("  Multi-Head Self-Attention")
-        print("  ↓ (residual connection)")
-        print("  Layer Normalization")
-        print("  ↓")
-        print("  Feed-Forward Network")
-        print("  ↓ (residual connection)")
-        print("  Layer Normalization")
-        print("  ↓")
-        print("  Output")
-        print()
+        # Transformer architecture diagram
+        transformer_arch = """
+┌─────────────────────┐
+│   Input Embeddings  │
+└─────────────────────┘
+           ↓
+┌─────────────────────┐
+│ Multi-Head Self-    │
+│    Attention        │
+└─────────────────────┘
+           ↓ + (residual)
+┌─────────────────────┐
+│ Layer Normalization │
+└─────────────────────┘
+           ↓
+┌─────────────────────┐
+│ Feed-Forward        │
+│    Network          │
+└─────────────────────┘
+           ↓ + (residual)
+┌─────────────────────┐
+│ Layer Normalization │
+└─────────────────────┘
+           ↓
+┌─────────────────────┐
+│      Output         │
+└─────────────────────┘
+"""
         
-        print("Why this works so well:")
-        print("  • Self-attention: Captures long-range dependencies")
-        print("  • Multi-head: Multiple types of relationships")
-        print("  • Residual connections: Stable training")
-        print("  • Layer norm: Normalized activations")
-        print("  • Feed-forward: Non-linear transformations")
-        print()
+        console.print(Panel(transformer_arch, title="Transformer Block", style="cyan"))
+        
+        # Why it works table
+        why_table = Table(show_header=True, header_style="bold magenta")
+        why_table.add_column("Component", style="cyan")
+        why_table.add_column("Purpose", style="yellow")
+        
+        why_table.add_row("Self-attention", "Captures long-range dependencies")
+        why_table.add_row("Multi-head", "Multiple types of relationships")
+        why_table.add_row("Residual connections", "Stable training")
+        why_table.add_row("Layer normalization", "Normalized activations")
+        why_table.add_row("Feed-forward", "Non-linear transformations")
+        
+        console.print(why_table)
+        console.print()
         
         # Demo 7: Real-World Applications
         print("🌍 Demo 7: Real-World Impact")
@@ -271,27 +352,38 @@ def demo_attention():
         
         print()
         
-        print("🏆 TinyTorch Attention Demo Complete!")
-        print("🎯 Achievements:")
-        print("  • Understood the attention revolution and why it matters")
-        print("  • Computed attention weights and attended outputs")
-        print("  • Explored multi-head attention for different perspectives")
-        print("  • Analyzed self-attention matrices")
-        print("  • Implemented scaled dot-product attention formula")
-        print("  • Previewed complete Transformer architecture")
-        print("  • Connected to real-world AI applications")
-        print("  • Analyzed computational scaling properties")
-        print()
-        print("🔥 Next: End-to-end training pipelines!")
+        # Success summary
+        console.print(Panel.fit(
+            "🎯 Achievements:\n"
+            "• Understood the attention revolution and why it matters\n"
+            "• Computed attention weights and attended outputs\n"
+            "• Explored multi-head attention for different perspectives\n"
+            "• Analyzed self-attention matrices\n"
+            "• Implemented scaled dot-product attention formula\n"
+            "• Previewed complete Transformer architecture\n"
+            "• Connected to real-world AI applications\n"
+            "• Analyzed computational scaling properties\n\n"
+            "🔥 Next: End-to-end training pipelines!",
+            title="🏆 TinyTorch Attention Demo Complete!",
+            style="bold green",
+            border_style="bright_green"
+        ))
         
         return True
         
     except ImportError as e:
-        print(f"❌ Could not import TinyTorch modules: {e}")
-        print("💡 Make sure to run: tito export 07_attention")
+        console.print(Panel(
+            f"Could not import TinyTorch modules: {e}\n\n💡 Make sure to run: tito export 07_attention",
+            title="❌ Import Error",
+            style="bold red"
+        ))
         return False
     except Exception as e:
-        print(f"❌ Demo failed: {e}")
+        console.print(Panel(
+            f"Demo failed: {e}",
+            title="❌ Error",
+            style="bold red"
+        ))
         import traceback
         traceback.print_exc()
         return False

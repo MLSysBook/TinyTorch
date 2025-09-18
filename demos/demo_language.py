@@ -6,9 +6,14 @@ Shows text generation and the complete TinyGPT model working end-to-end!
 
 import sys
 import numpy as np
+from rich.console import Console
+from rich.panel import Panel
+from rich.table import Table
 
 def demo_language():
     """Demo language generation with TinyGPT - the culmination of TinyTorch"""
+    
+    console = Console()
     
     try:
         # Import TinyTorch modules
@@ -19,10 +24,13 @@ def demo_language():
         import tinytorch.core.attention as attention
         import tinytorch.tinygpt as tinygpt
         
-        print("🤖 TinyTorch Language Generation Demo")
-        print("=" * 50)
-        print("The ultimate AI capability: generating human language!")
-        print()
+        # Main header
+        console.print(Panel.fit(
+            "🤖 TinyTorch Language Generation Demo\nThe ultimate AI capability: generating human language!",
+            style="bold cyan",
+            border_style="bright_blue"
+        ))
+        console.print()
         
         # Demo 1: The Language Modeling Challenge
         print("📚 Demo 1: Understanding Language Generation")
@@ -338,14 +346,36 @@ def demo_language():
         print()
         print("🎉 Congratulations! You've mastered ML Systems Engineering!")
         
+        # Success summary
+        console.print(Panel.fit(
+            "🎯 Achievements:\n"
+            "• Built complete language model from scratch\n"
+            "• Implemented character-level tokenization\n"
+            "• Demonstrated autoregressive text generation\n"
+            "• Showed transformer architecture in action\n"
+            "• Generated human-like text with TinyGPT\n"
+            "• Completed the full TinyTorch journey!\n\n"
+            "🔥 You've mastered ML systems from tensors to transformers!",
+            title="🏆 TinyTorch Language Generation Demo Complete!",
+            style="bold green",
+            border_style="bright_green"
+        ))
+        
         return True
         
     except ImportError as e:
-        print(f"❌ Could not import TinyTorch modules: {e}")
-        print("💡 Make sure to run: tito export 16_tinygpt")
+        console.print(Panel(
+            f"Could not import TinyTorch modules: {e}\n\n💡 Make sure to run: tito export 16_tinygpt",
+            title="❌ Import Error",
+            style="bold red"
+        ))
         return False
     except Exception as e:
-        print(f"❌ Demo failed: {e}")
+        console.print(Panel(
+            f"Demo failed: {e}",
+            title="❌ Error",
+            style="bold red"
+        ))
         import traceback
         traceback.print_exc()
         return False
