@@ -10,29 +10,33 @@
 
 # %% [markdown]
 """
-# Attention - The Foundation of Modern AI
+# Attention - Sequence Understanding and Dynamic Focus Mechanisms
 
-Welcome to the Attention module! This is where you'll implement the revolutionary mechanism that powers ChatGPT, BERT, GPT-4, and virtually all state-of-the-art AI systems.
+Welcome to the Attention module! You'll implement the mechanism that revolutionized AI by enabling neural networks to dynamically focus on relevant information, powering transformers and modern language models.
 
 ## Learning Goals
-- Understand attention as dynamic pattern matching with Query, Key, Value projections
-- Implement scaled dot-product attention from mathematical foundations
-- Master the attention formula that powers all transformer models
-- Create masking utilities for different attention patterns
-- Build the foundation for understanding modern AI architectures
+- Systems understanding: How attention mechanisms solve the sequence modeling bottleneck through O(n²) parallel computation vs O(n) sequential processing
+- Core implementation skill: Build scaled dot-product attention with Query, Key, Value projections and proper masking strategies
+- Pattern recognition: Understand how attention enables global context modeling and why it replaced RNNs in most sequence tasks
+- Framework connection: See how your implementation matches the attention mechanisms in PyTorch's nn.MultiheadAttention
+- Performance insight: Learn why attention's O(n²) memory complexity becomes the bottleneck for long sequences and drives architectural innovations
 
-## Build → Use → Understand
-1. **Build**: Implement the core attention mechanism from scratch using mathematical principles
-2. **Use**: Apply attention to sequence tasks and visualize attention patterns
-3. **Understand**: How attention revolutionized AI by enabling global context modeling
+## Build → Use → Reflect
+1. **Build**: Complete attention mechanism with QKV projections, scaling, masking, and softmax normalization
+2. **Use**: Apply attention to real sequence data and visualize attention patterns to understand what the model focuses on
+3. **Reflect**: Why does attention's parallel computation enable better performance despite higher memory complexity?
 
-## What You'll Learn
+## What You'll Achieve
 By the end of this module, you'll understand:
-- How attention enables dynamic focus on relevant input parts
-- The mathematical foundation behind all transformer models
-- Why attention is more powerful than fixed convolution kernels
-- How masking enables different attention patterns (causal, padding)
-- The building block that powers ChatGPT, BERT, and modern AI
+- Deep technical understanding of how attention mechanisms enable dynamic information flow in neural networks
+- Practical capability to implement the core building block of transformer architectures
+- Systems insight into why attention's parallel computation model revolutionized sequence processing
+- Performance consideration of the O(n²) memory scaling that limits transformer context length
+- Connection to production ML systems and how modern frameworks optimize attention computation
+
+## Systems Reality Check
+💡 **Production Context**: PyTorch's MultiheadAttention uses optimized CUDA kernels and can apply techniques like Flash Attention to reduce memory usage from O(n²) to O(n)
+⚡ **Performance Note**: Attention computation is memory-bound, not compute-bound - the bottleneck is moving data, not matrix multiplication, which drives modern attention optimizations
 """
 
 # %% nbgrader={"grade": false, "grade_id": "attention-imports", "locked": false, "schema_version": 3, "solution": false, "task": false}

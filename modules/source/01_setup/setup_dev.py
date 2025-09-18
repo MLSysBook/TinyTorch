@@ -10,43 +10,33 @@
 
 # %% [markdown]
 """
-# Setup - TinyTorch System Configuration
+# Setup - TinyTorch Development Environment Configuration
 
-Welcome to TinyTorch! This setup module configures your personal TinyTorch installation and teaches you the NBGrader workflow.
+Welcome to the Setup module! You'll configure your development environment and master the foundation of professional ML systems development.
 
 ## Learning Goals
-- Configure your personal TinyTorch installation with custom information
-- Learn to query system information using Python modules
-- Master the NBGrader workflow: implement → test → export
-- Create functions that become part of your tinytorch package
-- Understand solution blocks, hidden tests, and automated grading
+- Systems understanding: How environment configuration affects ML system reproducibility and performance
+- Core implementation skill: Build system configuration and introspection capabilities
+- Pattern recognition: Understand how professional ML teams manage development environments
+- Framework connection: See how PyTorch handles environment detection and hardware optimization
+- Performance insight: Learn why proper environment setup is critical for ML system performance
 
-## The Big Picture: Why Configuration Matters in ML Systems
-Configuration is the foundation of any production ML system. In this module, you'll learn:
+## Build → Use → Reflect
+1. **Build**: System configuration and environment detection functions
+2. **Use**: Configure your personal TinyTorch installation with environment-aware settings
+3. **Reflect**: Why do ML systems fail when environments differ between development and production?
 
-### 1. **System Awareness**
-Real ML systems need to understand their environment:
-- **Hardware constraints**: Memory, CPU cores, GPU availability
-- **Software dependencies**: Python version, library compatibility
-- **Platform differences**: Linux servers, macOS development, Windows deployment
+## What You'll Achieve
+By the end of this module, you'll understand:
+- Deep technical understanding of how ML systems detect and adapt to their runtime environment
+- Practical capability to build robust configuration systems that work across different platforms
+- Systems insight into why environment reproducibility is critical for ML system reliability
+- Performance consideration of how hardware detection enables automatic optimization choices
+- Connection to production ML systems and how frameworks like PyTorch handle cross-platform deployment
 
-### 2. **Reproducibility**
-Configuration enables reproducible ML:
-- **Environment documentation**: Exactly what system was used
-- **Dependency management**: Precise versions and requirements
-- **Debugging support**: System info helps troubleshoot issues
-
-### 3. **Professional Development**
-Proper configuration shows engineering maturity:
-- **Attribution**: Your work is properly credited
-- **Collaboration**: Others can understand and extend your setup
-- **Maintenance**: Systems can be updated and maintained
-
-### 4. **ML Systems Context**
-This connects to broader ML engineering:
-- **Model deployment**: Different environments need different configs
-- **Monitoring**: System metrics help track performance
-- **Scaling**: Understanding hardware helps optimize training
+## Systems Reality Check
+💡 **Production Context**: PyTorch automatically detects CUDA availability and optimizes operations based on hardware - your configuration system enables similar adaptability
+⚡ **Performance Note**: Environment detection happens once at startup, but configuration choices affect every operation - design for minimal runtime overhead
 
 Let's build the foundation of your ML systems engineering skills!
 """

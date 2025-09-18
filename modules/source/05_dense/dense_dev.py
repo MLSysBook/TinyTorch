@@ -10,29 +10,33 @@
 
 # %% [markdown]
 """
-# Networks - Neural Network Architectures
+# Networks - Complete Multi-Layer Neural Network Architectures
 
-Welcome to the Networks module! This is where we compose layers into complete neural network architectures.
+Welcome to the Networks module! You'll compose individual layers into complete neural network architectures that can solve real-world problems.
 
 ## Learning Goals
-- Understand networks as function composition: `f(x) = layer_n(...layer_2(layer_1(x)))`
-- Build the Sequential network architecture for composing layers
-- Create common network patterns like MLPs (Multi-Layer Perceptrons)
-- Visualize network architectures and understand their capabilities
-- Master forward pass inference through complete networks
+- Systems understanding: How function composition creates complex behaviors from simple layer operations
+- Core implementation skill: Build Sequential networks and Multi-Layer Perceptrons (MLPs) with flexible architectures
+- Pattern recognition: Understand how network depth, width, and activation patterns affect learning capability
+- Framework connection: See how your Sequential implementation mirrors PyTorch's nn.Sequential design pattern
+- Performance insight: Learn why network architecture choices dramatically affect training time and memory usage
 
 ## Build → Use → Reflect
-1. **Build**: Sequential networks that compose layers into complete architectures
-2. **Use**: Create different network patterns and run inference
-3. **Reflect**: How architecture design affects network behavior and capability
+1. **Build**: Sequential network container that composes layers into complete architectures
+2. **Use**: Create MLPs with different depth/width configurations and test on real classification problems
+3. **Reflect**: Why do deeper networks learn more complex functions, but also become harder to train?
 
-## What You'll Learn
+## What You'll Achieve
 By the end of this module, you'll understand:
-- How simple layers combine to create complex behaviors
-- The fundamental Sequential architecture pattern
-- How to build MLPs with any number of layers
-- Different network architectures (shallow, deep, wide)
-- How neural networks approximate complex functions
+- Deep technical understanding of how layer composition enables universal function approximation
+- Practical capability to design and implement neural network architectures for different problem types
+- Systems insight into why network architecture is often more important than algorithm choice for ML performance
+- Performance consideration of how network size affects training speed, memory usage, and convergence behavior
+- Connection to production ML systems and how architectural innovations drive ML breakthroughs
+
+## Systems Reality Check
+💡 **Production Context**: PyTorch's nn.Sequential is used throughout production systems because it provides a clean abstraction for complex architectures while maintaining automatic differentiation
+⚡ **Performance Note**: Network depth affects memory linearly but can affect training time exponentially due to gradient flow problems - architecture design is a systems engineering problem
 """
 
 # %% nbgrader={"grade": false, "grade_id": "networks-imports", "locked": false, "schema_version": 3, "solution": false, "task": false}
