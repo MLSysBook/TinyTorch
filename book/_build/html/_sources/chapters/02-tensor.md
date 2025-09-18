@@ -196,6 +196,6 @@ Ready for serious development? → [🏗️ Local Setup Guide](../usage-paths/se
 ---
 
 <div class="prev-next-area">
-<a class="left-prev" href="../chapters/01_setup.html" title="previous page">← Previous Module</a>
-<a class="right-next" href="../chapters/03_activations.html" title="next page">Next Module →</a>
+<a class="left-prev" href="../chapters/01_introduction.html" title="previous page">← Previous Module</a>
+<a class="right-next" href="../chapters/03_tensor.html" title="next page">Next Module →</a>
 </div>

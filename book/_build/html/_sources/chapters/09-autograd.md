@@ -263,6 +263,6 @@ Ready for serious development? → [🏗️ Local Setup Guide](../usage-paths/se
 ---
 
 <div class="prev-next-area">
-<a class="left-prev" href="../chapters/08_dataloader.html" title="previous page">← Previous Module</a>
-<a class="right-next" href="../chapters/10_optimizers.html" title="next page">Next Module →</a>
+<a class="left-prev" href="../chapters/08_attention.html" title="previous page">← Previous Module</a>
+<a class="right-next" href="../chapters/10_autograd.html" title="next page">Next Module →</a>
 </div>

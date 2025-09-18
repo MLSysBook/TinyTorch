@@ -9,13 +9,13 @@ parts:
 - caption: Usage Paths
   chapters:
   - file: usage-paths/quick-exploration
-    title: "🔬 Quick Exploration"
+    title: "Quick Exploration"
   - file: usage-paths/serious-development
-    title: "🏗️ Serious Development"
+    title: "Serious Development"
   - file: usage-paths/classroom-use
-    title: "👨‍🏫 Classroom Use"
+    title: "Classroom Use"
   - file: instructor-guide
-    title: "📚 Instructor Guide"
+    title: "Instructor Guide"
 
 - caption: Course Orientation
   chapters:
@@ -67,15 +67,15 @@ parts:
 - caption: Language Models
   chapters:
   - file: chapters/16-tinygpt
-    title: "15. TinyGPT 🔥"
+    title: "15. TinyGPT"
 
 - caption: Additional Resources
   chapters:
   - file: vision
-    title: "🎯 TinyTorch Vision"
+    title: "TinyTorch Vision"
   - file: checkpoint-system
-    title: "📊 Checkpoint System"
+    title: "Checkpoint System"
   - file: resources
-    title: "📚 Learning Resources"
+    title: "Learning Resources"
 
 

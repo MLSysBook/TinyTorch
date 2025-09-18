@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Module: Training &#8212; Tiny🔥Torch</title>
+    <title>Module: Training &#8212; TinyTorch</title>
   
   
   
@@ -35,6 +35,7 @@
     <link rel="stylesheet" type="text/css" href="../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css?v=6644e6bb" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=4e794802" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
@@ -52,7 +53,7 @@
     <script>let toggleOpenOnPrint = 'true';</script>
     <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
-    <script src="../_static/design-tabs.js?v=36754332"></script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
     <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
@@ -153,8 +154,8 @@
       
     
     
-    <img src="../_static/logo.png" class="logo__image only-light" alt="Tiny🔥Torch - Home"/>
-    <script>document.write(`<img src="../_static/logo.png" class="logo__image only-dark" alt="Tiny🔥Torch - Home"/>`);</script>
+    <img src="../_static/logo.png" class="logo__image only-light" alt="TinyTorch - Home"/>
+    <script>document.write(`<img src="../_static/logo.png" class="logo__image only-dark" alt="TinyTorch - Home"/>`);</script>
   
   
 </a></div>
@@ -175,16 +176,16 @@
         <ul class="nav bd-sidenav bd-sidenav__home-link">
             <li class="toctree-l1">
                 <a class="reference internal" href="../intro.html">
-                    Tiny🔥Torch
+                    TinyTorch: Build Machine Learning Systems from Scratch
                 </a>
             </li>
         </ul>
         <p aria-level="2" class="caption" role="heading"><span class="caption-text">Usage Paths</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../usage-paths/quick-exploration.html">🔬 Quick Exploration</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../usage-paths/serious-development.html">🏗️ Serious Development</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../usage-paths/classroom-use.html">👨‍🏫 Classroom Use</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../instructor-guide.html">📚 Instructor Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage-paths/quick-exploration.html">Quick Exploration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage-paths/serious-development.html">Serious Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage-paths/classroom-use.html">Classroom Use</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../instructor-guide.html">Instructor Guide</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Course Orientation</span></p>
 <ul class="nav bd-sidenav">
@@ -217,14 +218,15 @@
 <li class="toctree-l1"><a class="reference internal" href="14-benchmarking.html">13. Benchmarking</a></li>
 <li class="toctree-l1"><a class="reference internal" href="15-mlops.html">14. MLOps</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Capstone Project</span></p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Language Models</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="16-capstone.html">15. Capstone</a></li>
+<li class="toctree-l1"><a class="reference internal" href="16-tinygpt.html">15. TinyGPT</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Additional Resources</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../vision.html">🎯 TinyTorch Vision</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../resources.html">📚 Learning Resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../vision.html">TinyTorch Vision</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../checkpoint-system.html">Checkpoint System</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../resources.html">Learning Resources</a></li>
 </ul>
 
     </div>
@@ -440,6 +442,11 @@ document.write(`
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-info">📊 Module Info</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-objectives">🎯 Learning Objectives</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#build-use-optimize">🧠 Build → Use → Optimize</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#new-model-checkpointing-evaluation-tools">🎯 NEW: Model Checkpointing &amp; Evaluation Tools</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#complete-training-with-checkpointing">Complete Training with Checkpointing</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#what-s-new-in-this-module">What’s New in This Module</a></li>
+</ul>
+</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-you-ll-build">📚 What You’ll Build</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#complete-training-pipeline">Complete Training Pipeline</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#loss-function-library">Loss Function Library</a></li>
@@ -512,6 +519,51 @@ document.write(`
 <li><p><strong>Use</strong>: Train end-to-end neural networks on real datasets with full pipeline automation</p></li>
 <li><p><strong>Optimize</strong>: Analyze training dynamics, debug convergence issues, and optimize training performance for production</p></li>
 </ol>
+</section>
+<section id="new-model-checkpointing-evaluation-tools">
+<h2>🎯 NEW: Model Checkpointing &amp; Evaluation Tools<a class="headerlink" href="#new-model-checkpointing-evaluation-tools" title="Link to this heading">#</a></h2>
+<section id="complete-training-with-checkpointing">
+<h3>Complete Training with Checkpointing<a class="headerlink" href="#complete-training-with-checkpointing" title="Link to this heading">#</a></h3>
+<p>This module now includes production features for our north star goal:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">tinytorch.core.training</span><span class="w"> </span><span class="kn">import</span> <span class="n">Trainer</span><span class="p">,</span> <span class="n">CrossEntropyLoss</span><span class="p">,</span> <span class="n">Accuracy</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tinytorch.core.training</span><span class="w"> </span><span class="kn">import</span> <span class="n">evaluate_model</span><span class="p">,</span> <span class="n">plot_training_history</span>
+
+<span class="c1"># Train with automatic model checkpointing</span>
+<span class="n">trainer</span> <span class="o">=</span> <span class="n">Trainer</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">CrossEntropyLoss</span><span class="p">(),</span> <span class="n">Adam</span><span class="p">(</span><span class="n">lr</span><span class="o">=</span><span class="mf">0.001</span><span class="p">),</span> <span class="p">[</span><span class="n">Accuracy</span><span class="p">()])</span>
+<span class="n">history</span> <span class="o">=</span> <span class="n">trainer</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span>
+    <span class="n">train_loader</span><span class="p">,</span>
+    <span class="n">val_dataloader</span><span class="o">=</span><span class="n">test_loader</span><span class="p">,</span>
+    <span class="n">epochs</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span>
+    <span class="n">save_best</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>                    <span class="c1"># ✅ NEW: Saves best model automatically</span>
+    <span class="n">checkpoint_path</span><span class="o">=</span><span class="s1">&#39;best_model.pkl&#39;</span><span class="p">,</span>  <span class="c1"># ✅ NEW: Checkpoint location</span>
+    <span class="n">early_stopping_patience</span><span class="o">=</span><span class="mi">5</span>          <span class="c1"># ✅ NEW: Stop if no improvement</span>
+<span class="p">)</span>
+
+<span class="c1"># Load best model after training</span>
+<span class="n">trainer</span><span class="o">.</span><span class="n">load_checkpoint</span><span class="p">(</span><span class="s1">&#39;best_model.pkl&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;✅ Restored best model from epoch </span><span class="si">{</span><span class="n">trainer</span><span class="o">.</span><span class="n">current_epoch</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># Evaluate with comprehensive metrics</span>
+<span class="n">results</span> <span class="o">=</span> <span class="n">evaluate_model</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">test_loader</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Test Accuracy: </span><span class="si">{</span><span class="n">results</span><span class="p">[</span><span class="s1">&#39;accuracy&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.2%</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Confusion Matrix:</span><span class="se">\n</span><span class="si">{</span><span class="n">results</span><span class="p">[</span><span class="s1">&#39;confusion_matrix&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># Visualize training progress</span>
+<span class="n">plot_training_history</span><span class="p">(</span><span class="n">history</span><span class="p">)</span>  <span class="c1"># Shows loss and accuracy curves</span>
+</pre></div>
+</div>
+</section>
+<section id="what-s-new-in-this-module">
+<h3>What’s New in This Module<a class="headerlink" href="#what-s-new-in-this-module" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>✅ <strong><code class="docutils literal notranslate"><span class="pre">save_checkpoint()</span></code>/<code class="docutils literal notranslate"><span class="pre">load_checkpoint()</span></code></strong>: Save and restore model state during training</p></li>
+<li><p>✅ <strong><code class="docutils literal notranslate"><span class="pre">save_best=True</span></code></strong>: Automatically saves model with best validation performance</p></li>
+<li><p>✅ <strong><code class="docutils literal notranslate"><span class="pre">early_stopping_patience</span></code></strong>: Stop training when validation loss stops improving</p></li>
+<li><p>✅ <strong><code class="docutils literal notranslate"><span class="pre">evaluate_model()</span></code></strong>: Comprehensive model evaluation with confusion matrix</p></li>
+<li><p>✅ <strong><code class="docutils literal notranslate"><span class="pre">plot_training_history()</span></code></strong>: Visualize training and validation curves</p></li>
+<li><p>✅ <strong><code class="docutils literal notranslate"><span class="pre">compute_confusion_matrix()</span></code></strong>: Analyze classification errors by class</p></li>
+</ul>
+</section>
 </section>
 <section id="what-you-ll-build">
 <h2>📚 What You’ll Build<a class="headerlink" href="#what-you-ll-build" title="Link to this heading">#</a></h2>
@@ -812,8 +864,8 @@ python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> <
 </div>
 <hr class="docutils" />
 <div class="prev-next-area">
-<a class="left-prev" href="../chapters/10_optimizers.html" title="previous page">← Previous Module</a>
-<a class="right-next" href="../chapters/12_compression.html" title="next page">Next Module →</a>
+<a class="left-prev" href="../chapters/10_autograd.html" title="previous page">← Previous Module</a>
+<a class="right-next" href="../chapters/12_training.html" title="next page">Next Module →</a>
 </div>
 </section>
 </section>
@@ -885,6 +937,11 @@ python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> <
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-info">📊 Module Info</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-objectives">🎯 Learning Objectives</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#build-use-optimize">🧠 Build → Use → Optimize</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#new-model-checkpointing-evaluation-tools">🎯 NEW: Model Checkpointing &amp; Evaluation Tools</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#complete-training-with-checkpointing">Complete Training with Checkpointing</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#what-s-new-in-this-module">What’s New in This Module</a></li>
+</ul>
+</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-you-ll-build">📚 What You’ll Build</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#complete-training-pipeline">Complete Training Pipeline</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#loss-function-library">Loss Function Library</a></li>

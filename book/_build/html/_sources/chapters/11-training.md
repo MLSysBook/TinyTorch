@@ -41,6 +41,47 @@ This module follows TinyTorch's **Build → Use → Optimize** framework:
 2. **Use**: Train end-to-end neural networks on real datasets with full pipeline automation
 3. **Optimize**: Analyze training dynamics, debug convergence issues, and optimize training performance for production
 
+## 🎯 NEW: Model Checkpointing & Evaluation Tools
+
+### Complete Training with Checkpointing
+This module now includes production features for our north star goal:
+
+```python
+from tinytorch.core.training import Trainer, CrossEntropyLoss, Accuracy
+from tinytorch.core.training import evaluate_model, plot_training_history
+
+# Train with automatic model checkpointing
+trainer = Trainer(model, CrossEntropyLoss(), Adam(lr=0.001), [Accuracy()])
+history = trainer.fit(
+    train_loader,
+    val_dataloader=test_loader,
+    epochs=30,
+    save_best=True,                    # ✅ NEW: Saves best model automatically
+    checkpoint_path='best_model.pkl',  # ✅ NEW: Checkpoint location
+    early_stopping_patience=5          # ✅ NEW: Stop if no improvement
+)
+
+# Load best model after training
+trainer.load_checkpoint('best_model.pkl')
+print(f"✅ Restored best model from epoch {trainer.current_epoch}")
+
+# Evaluate with comprehensive metrics
+results = evaluate_model(model, test_loader)
+print(f"Test Accuracy: {results['accuracy']:.2%}")
+print(f"Confusion Matrix:\n{results['confusion_matrix']}")
+
+# Visualize training progress
+plot_training_history(history)  # Shows loss and accuracy curves
+```
+
+### What's New in This Module
+- ✅ **`save_checkpoint()`/`load_checkpoint()`**: Save and restore model state during training
+- ✅ **`save_best=True`**: Automatically saves model with best validation performance
+- ✅ **`early_stopping_patience`**: Stop training when validation loss stops improving
+- ✅ **`evaluate_model()`**: Comprehensive model evaluation with confusion matrix
+- ✅ **`plot_training_history()`**: Visualize training and validation curves
+- ✅ **`compute_confusion_matrix()`**: Analyze classification errors by class
+
 ## 📚 What You'll Build
 
 ### Complete Training Pipeline
@@ -315,6 +356,6 @@ Ready for serious development? → [🏗️ Local Setup Guide](../usage-paths/se
 ---
 
 <div class="prev-next-area">
-<a class="left-prev" href="../chapters/10_optimizers.html" title="previous page">← Previous Module</a>
-<a class="right-next" href="../chapters/12_compression.html" title="next page">Next Module →</a>
+<a class="left-prev" href="../chapters/10_autograd.html" title="previous page">← Previous Module</a>
+<a class="right-next" href="../chapters/12_training.html" title="next page">Next Module →</a>
 </div>
