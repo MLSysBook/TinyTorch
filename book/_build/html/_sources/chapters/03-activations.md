@@ -220,6 +220,6 @@ Ready for serious development? → [🏗️ Local Setup Guide](../usage-paths/se
 ---
 
 <div class="prev-next-area">
-<a class="left-prev" href="../chapters/02_tensor.html" title="previous page">← Previous Module</a>
-<a class="right-next" href="../chapters/04_layers.html" title="next page">Next Module →</a>
+<a class="left-prev" href="../chapters/02_setup.html" title="previous page">← Previous Module</a>
+<a class="right-next" href="../chapters/04_activations.html" title="next page">Next Module →</a>
 </div>

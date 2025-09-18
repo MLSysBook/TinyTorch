@@ -1,22 +1,22 @@
-# 👨‍🏫 Classroom Use Overview
+# Classroom Use Overview
 
 **Perfect for:** Teaching ML systems • Course instructors • Academic use • Structured learning
 
 ---
 
-## 🎯 **Complete Course Infrastructure**
+## Complete Course Infrastructure
 
 TinyTorch provides a **turn-key ML systems course** with:
-- **17 progressive modules** (00-16) building from foundations to MLOps
+- **16 progressive modules** (00-15) building from foundations to language models
 - **Full NBGrader integration** for automated grading
 - **Comprehensive tito CLI** for professional development workflow
 - **Real-world datasets** and production practices
 - **Complete instructor documentation** and setup guides
 
 **Course Duration:** 14-16 weeks (flexible pacing)  
-**Student Outcome:** Complete ML framework built from scratch
+**Student Outcome:** Complete ML framework supporting vision AND language models
 
-```{admonition} 📚 Complete Instructor Documentation
+```{admonition} Complete Instructor Documentation
 :class: tip
 **See our comprehensive [Instructor Guide](../instructor-guide.md)** for:
 - Complete setup walkthrough (30 minutes)
@@ -29,21 +29,21 @@ TinyTorch provides a **turn-key ML systems course** with:
 
 ---
 
-## 🎓 **Why Choose TinyTorch for Teaching?**
+## Why Choose TinyTorch for Teaching?
 
-### **📊 Comprehensive Curriculum**
-- **17 modules** progressing from basics to production systems
+### **Comprehensive Curriculum**
+- **16 modules** progressing from basics to language models
 - **200+ automated tests** ensuring correctness
 - **Professional workflow** using industry-standard tools
-- **Real datasets** (CIFAR-10) for practical experience
+- **Real datasets** (CIFAR-10, text generation) for practical experience
 
-### **🚀 Instructor-Friendly Features**
+### **Instructor-Friendly Features**
 - **NBGrader Integration**: Automated grading with `tito nbgrader`
 - **Module Status Dashboard**: Track student progress at a glance
 - **Assignment Generation**: One command to create student notebooks
 - **Flexible Pacing**: Modules can be combined or extended
 
-### **💡 Pedagogical Excellence**
+### **Pedagogical Excellence**
 - **Learn by Building**: Students create their own PyTorch
 - **Immediate Testing**: Every implementation validated instantly
 - **Production Practices**: Git, CLI tools, documentation
@@ -51,7 +51,7 @@ TinyTorch provides a **turn-key ML systems course** with:
 
 ---
 
-## 📚 **Course Module Overview**
+## Course Module Overview
 
 ### **Foundation (Modules 00-02)**
 - **00: Introduction** - System overview and architecture
@@ -71,16 +71,18 @@ TinyTorch provides a **turn-key ML systems course** with:
 - **10: Optimizers** - SGD, Adam, and scheduling
 - **11: Training** - Complete training loops
 
-### **Production (Modules 12-16)**
+### **Production (Modules 12-15)**
 - **12: Compression** - Model optimization
 - **13: Kernels** - Hardware acceleration
 - **14: Benchmarking** - Performance evaluation
 - **15: MLOps** - Production deployment
-- **16: Capstone** - Final integration project
+
+### **Language Models (Module 16)**
+- **16: TinyGPT** - Framework generalization to language models
 
 ---
 
-## 🎯 **Proven Learning Outcomes**
+## Proven Learning Outcomes
 
 ### **Student Success Metrics**
 - ✅ **95%** can implement neural networks from scratch
@@ -99,7 +101,7 @@ TinyTorch provides a **turn-key ML systems course** with:
 
 ---
 
-## 🚀 **Getting Started as an Instructor**
+## Getting Started as an Instructor
 
 ### **Quick Start (3 Steps)**
 
@@ -146,7 +148,7 @@ TinyTorch provides a **turn-key ML systems course** with:
 
 ---
 
-## 🛠️ **Instructor Resources**
+## Instructor Resources
 
 ### **Documentation**
 - [Complete Instructor Guide](../instructor-guide.md) - Detailed setup and workflow

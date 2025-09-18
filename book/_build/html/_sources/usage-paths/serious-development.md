@@ -1,22 +1,23 @@
-# 🏗️ Serious Development Path
+# Serious Development Path
 
 **Perfect for:** "I want to build this myself" • "This is my class assignment" • "I want to understand ML frameworks deeply"
 
 ---
 
-## 🎯 **What You'll Build**
+## What You'll Build
 
 A complete ML framework from scratch, including:
 - **Your own tensor library** with operations and autograd
 - **Neural network components** (layers, activations, optimizers)
 - **Training systems** that work on real datasets (CIFAR-10)
 - **Production features** (compression, monitoring, benchmarking)
+- **Language models** that extend your vision framework to TinyGPT
 
-**End result:** A working ML framework you built and understand completely.
+**End result:** A working ML framework that powers both computer vision AND language models.
 
 ---
 
-## 🚀 **Quick Start (5 minutes)**
+## Quick Start (5 minutes)
 
 ### **Step 1: Get the Code**
 ```bash
@@ -56,9 +57,9 @@ python -c "from tinytorch.core.setup import hello_tinytorch; hello_tinytorch()"
 
 ---
 
-## 🎓 **Learning Path (Progressive Complexity)**
+## Learning Path (Progressive Complexity)
 
-### **🏗️ Foundation (Weeks 1-2)**
+### **Foundation (Weeks 1-2)**
 Build the core infrastructure:
 
 **Module 01: Setup & CLI**
@@ -98,7 +99,7 @@ Create neural network components:
 
 ---
 
-### **🎯 Training Systems (Weeks 5-6)**
+### **Training Systems (Weeks 5-6)**
 Complete training infrastructure:
 
 **Module 06: DataLoader**
@@ -123,7 +124,7 @@ Complete training infrastructure:
 
 ---
 
-### **⚡ Production & Performance (Weeks 7-8)**
+### **Production & Performance (Weeks 7-8)**
 Real-world deployment:
 
 **Module 10: Compression**
@@ -146,9 +147,15 @@ Real-world deployment:
 - Continuous learning and model updates
 - Complete production pipeline
 
+**Module 16: TinyGPT 🔥**
+- Extend vision framework to language models
+- GPT-style transformers with 95% component reuse
+- Autoregressive text generation
+- Framework generalization mastery
+
 ---
 
-## 🛠️ **Development Workflow**
+## Development Workflow
 
 ### **The `tito` CLI System**
 TinyTorch includes a complete CLI for professional development:
@@ -178,7 +185,7 @@ Every module includes comprehensive testing:
 
 ---
 
-## 📊 **Proven Student Outcomes**
+## Proven Student Outcomes
 
 ```{admonition} Real Results
 :class: success
@@ -190,13 +197,14 @@ Every module includes comprehensive testing:
 ✅ Optimize models with pruning and quantization  
 ✅ Deploy production ML systems with monitoring  
 ✅ Understand framework internals better than most ML engineers  
+🔥 **Extend their vision framework to language models with 95% reuse**  
 
 **Test Coverage:** 200+ tests across all modules ensure student implementations work
 ```
 
 ---
 
-## 🎯 **Why This Approach Works**
+## Why This Approach Works
 
 ### **Build → Use → Understand**
 Every component follows this pattern:
@@ -219,7 +227,7 @@ Every component follows this pattern:
 
 ---
 
-## 🚀 **Ready to Start?**
+## Ready to Start?
 
 ### **Choose Your Module**
 **New to ML frameworks?** → Start with [Setup](../chapters/01-setup.md)
@@ -233,4 +241,4 @@ Every component follows this pattern:
 
 ---
 
-*🎉 Ready to build your own ML framework? Your PyTorch-understanding self is 8 weeks away!* 
+*🎉 Ready to build your own ML framework? Your unified vision+language framework is 8 weeks away!* 
