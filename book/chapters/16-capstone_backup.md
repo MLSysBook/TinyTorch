@@ -30,11 +30,11 @@ After 14 modules, you've built a complete ML framework from scratch. Now it's ti
 
 ---
 
-## 🔥 **What You've Already Built**
+## 🔥 What You've Already Built
 
 Before choosing your capstone track, let's celebrate what you've accomplished:
 
-### 🏗️ **Complete ML Framework** (Modules 1-14)
+### 🏗️ Complete ML Framework (Modules 1-14)
 ```python
 # This is YOUR implementation working together:
 from tinytorch.core.tensor import Tensor
@@ -65,7 +65,7 @@ dataloader = DataLoader(CIFAR10Dataset(), batch_size=64)
 trainer.train(dataloader, epochs=10)
 ```
 
-### 🎯 **Production-Ready Capabilities**
+### 🎯 Production-Ready Capabilities
 - ✅ **Tensor operations** with broadcasting and efficient computation
 - ✅ **Automatic differentiation** with full backpropagation support  
 - ✅ **Modern architectures** including CNNs and attention mechanisms
@@ -78,11 +78,11 @@ trainer.train(dataloader, epochs=10)
 
 ---
 
-## 🚀 **The Capstone Challenge: Choose Your Specialization**
+## 🚀 The Capstone Challenge: Choose Your Specialization
 
 Now that you have a complete framework, choose your path to mastery. Each track focuses on different aspects of production ML engineering:
 
-### **⚡ Track 1: Performance Ninja** 
+### ⚡ Track 1: Performance Ninja 
 **Mission**: Make TinyTorch competitive with PyTorch in speed and memory efficiency
 
 **Perfect for**: Students who love optimization, performance engineering, and making things fast
@@ -117,7 +117,7 @@ def attention_optimized(Q, K, V):
 
 ---
 
-### **🧠 Track 2: Algorithm Architect**
+### 🧠 Track 2: Algorithm Architect
 **Mission**: Extend TinyTorch with cutting-edge ML algorithms and architectures
 
 **Perfect for**: Students who love ML research, implementing papers, and algorithmic innovation
@@ -165,7 +165,7 @@ class TransformerBlock:
 
 ---
 
-### **🔧 Track 3: Systems Engineer**
+### 🔧 Track 3: Systems Engineer
 **Mission**: Build production-grade infrastructure and developer tooling
 
 **Perfect for**: Students interested in MLOps, distributed systems, and production ML
@@ -209,7 +209,7 @@ class ProductionTrainer:
 
 ---
 
-### **📊 Track 4: Benchmarking Scientist** 
+### 📊 Track 4: Benchmarking Scientist 
 **Mission**: Build comprehensive analysis tools and compare frameworks scientifically
 
 **Perfect for**: Students who love data analysis, scientific methodology, and systematic evaluation
@@ -254,7 +254,7 @@ class FrameworkComparison:
 
 ---
 
-### **🛠️ Track 5: Developer Experience Master**
+### 🛠️ Track 5: Developer Experience Master
 **Mission**: Build tools that make TinyTorch easier to debug, understand, and extend
 
 **Perfect for**: Students interested in tooling, visualization, and making complex systems accessible
@@ -298,9 +298,9 @@ class TinyTorchDebugger:
 
 ---
 
-## 📋 **Project Phases: Your Engineering Journey**
+## 📋 Project Phases: Your Engineering Journey
 
-### **Phase 1: Analysis & Planning** (Week 1)
+### Phase 1: Analysis & Planning (Week 1)
 **Understand your starting point and define success**
 
 ```python
@@ -332,7 +332,7 @@ profiler.disable()
 - [ ] **Success metrics**: Specific, measurable goals (e.g., "10x faster matrix multiplication")
 - [ ] **Implementation plan**: Break project into 3-4 concrete milestones
 
-### **Phase 2: Core Implementation** (Weeks 2-3)
+### Phase 2: Core Implementation (Weeks 2-3)
 **Build your optimization/extension incrementally**
 
 **Development Strategy:**
@@ -347,7 +347,7 @@ profiler.disable()
 - [ ] **Integration testing**: Verify compatibility with existing code
 - [ ] **Documentation updates**: Keep track of design decisions
 
-### **Phase 3: Optimization & Polish** (Week 4)
+### Phase 3: Optimization & Polish (Week 4)
 **Refine your implementation and maximize impact**
 
 **Focus Areas:**
@@ -356,7 +356,7 @@ profiler.disable()
 - **API design**: Ensure your improvements are easy to use
 - **Testing coverage**: Comprehensive tests for all new functionality
 
-### **Phase 4: Evaluation & Presentation** (Week 5+)
+### Phase 4: Evaluation & Presentation (Week 5+)
 **Demonstrate impact and reflect on engineering trade-offs**
 
 **Final Deliverables:**
@@ -367,23 +367,23 @@ profiler.disable()
 
 ---
 
-## 🎯 **Success Criteria: Proving Mastery**
+## 🎯 Success Criteria: Proving Mastery
 
 Your capstone demonstrates mastery when you achieve:
 
-### **🔬 Technical Excellence**
+### 🔬 Technical Excellence
 - [ ] **Measurable improvement**: 20%+ performance gain, significant new functionality, or major UX improvement
 - [ ] **Systems integration**: Your changes work seamlessly with all existing TinyTorch modules
 - [ ] **Production quality**: Error handling, edge cases, comprehensive testing
 - [ ] **Performance analysis**: You understand *why* your changes work and their trade-offs
 
-### **🏗️ Framework Understanding**
+### 🏗️ Framework Understanding
 - [ ] **Architectural consistency**: Your additions follow TinyTorch design patterns
 - [ ] **No external dependencies**: Use only TinyTorch components you built (proves deep understanding)
 - [ ] **Backward compatibility**: Existing code still works after your improvements
 - [ ] **Future extensibility**: Your changes enable further optimization opportunities
 
-### **💼 Professional Development**
+### 💼 Professional Development
 - [ ] **Clear documentation**: Other students can understand and use your improvements
 - [ ] **Engineering insights**: You can explain trade-offs and alternative approaches
 - [ ] **Systematic evaluation**: Scientific methodology in measuring improvements
@@ -391,11 +391,11 @@ Your capstone demonstrates mastery when you achieve:
 
 ---
 
-## 🏆 **Capstone Deliverables**
+## 🏆 Capstone Deliverables
 
 Submit your completed capstone as a professional portfolio:
 
-### **1. 📊 Technical Report** (`capstone_report.md`)
+### 1. 📊 Technical Report (`capstone_report.md`)
 **Structure:**
 ```markdown
 # [Your Track]: [Project Title]
@@ -424,7 +424,7 @@ Submit your completed capstone as a professional portfolio:
 - How your work fits into broader ML systems
 ```
 
-### **2. 💻 Implementation Code** (`src/` directory)
+### 2. 💻 Implementation Code (`src/` directory)
 ```
 src/
 ├── optimizations/          # Your improved components
@@ -443,13 +443,13 @@ src/
     └── integration_examples.py
 ```
 
-### **3. 📈 Performance Analysis** (`benchmarks/` directory)
+### 3. 📈 Performance Analysis (`benchmarks/` directory)
 - **Before/after comparisons**: Quantify your improvements
 - **Memory profiling**: Allocation patterns and optimization impact
 - **Scalability analysis**: How improvements perform with larger models
 - **Framework comparison**: Your TinyTorch vs PyTorch (where relevant)
 
-### **4. 🎥 Live Demonstration** (`demo.py`)
+### 4. 🎥 Live Demonstration (`demo.py`)
 **Requirements:**
 - Show your improvements working on real TinyTorch models
 - Side-by-side comparison with original implementation
@@ -458,9 +458,9 @@ src/
 
 ---
 
-## 💡 **Pro Tips for Capstone Success**
+## 💡 Pro Tips for Capstone Success
 
-### **🎯 Start With Impact**
+### 🎯 Start With Impact
 ```python
 # Instead of optimizing everything...
 def optimize_everything():
@@ -472,13 +472,13 @@ def profile_and_optimize():
     return optimize_specific_operation(bottleneck)  # 10x speedup
 ```
 
-### **🧪 Measure Everything**
+### 🧪 Measure Everything
 - **Baseline early**: Know your starting point precisely
 - **Benchmark often**: Track progress with each change
 - **Compare fairly**: Use identical test conditions
 - **Document trade-offs**: Speed vs memory vs complexity
 
-### **🔗 Use Your Existing Framework**
+### 🔗 Use Your Existing Framework
 ```python
 # Test improvements with models you built in previous modules
 cifar_model = load_your_module_10_model()  # Real CNN from Module 6
@@ -486,7 +486,7 @@ test_your_optimization(cifar_model)        # Does it still work?
 measure_improvement(cifar_model)           # How much faster/better?
 ```
 
-### **📚 Think Like a Framework Maintainer**
+### 📚 Think Like a Framework Maintainer
 - **API design**: How would other students use your improvements?
 - **Documentation**: Can someone else understand and extend your work?
 - **Testing**: What could break? How do you prevent it?
@@ -494,15 +494,15 @@ measure_improvement(cifar_model)           # How much faster/better?
 
 ---
 
-## 🚀 **Getting Started: Your First Steps**
+## 🚀 Getting Started: Your First Steps
 
-### **1. Choose Your Track** 
+### 1. Choose Your Track 
 Review the 5 tracks above and pick the one that excites you most. Consider:
 - What aspect of ML systems interests you most?
 - What would you want to optimize in a real job?
 - What matches your career goals?
 
-### **2. Run Initial Profiling**
+### 2. Run Initial Profiling
 ```bash
 # Profile your current TinyTorch framework
 cd modules/source/16_capstone/
@@ -515,7 +515,7 @@ python profile_baseline.py
 # - Optimization opportunities ranked by impact
 ```
 
-### **3. Set Specific Goals**
+### 3. Set Specific Goals
 Based on profiling results, choose concrete, measurable targets:
 - **Performance**: "5x faster matrix multiplication" 
 - **Algorithm**: "Complete Vision Transformer implementation"
@@ -523,7 +523,7 @@ Based on profiling results, choose concrete, measurable targets:
 - **Analysis**: "Scientific comparison with 95% confidence intervals"
 - **Developer UX**: "Visual debugger reducing debug time by 50%"
 
-### **4. Start Building**
+### 4. Start Building
 ```python
 # Begin with the simplest version that demonstrates your concept
 def minimal_viable_optimization():
@@ -535,7 +535,7 @@ def minimal_viable_optimization():
 
 ---
 
-## 🎓 **Your Capstone Journey Starts Now**
+## 🎓 Your Capstone Journey Starts Now
 
 You've built a complete ML framework from scratch. You understand tensors, autograd, optimization, and production systems at the deepest level. 
 
@@ -545,7 +545,7 @@ Choose your track, set ambitious but achievable goals, and start optimizing. Rem
 
 **Your goal**: Become the engineer others turn to when they need to make ML systems better.
 
-### **Ready to start?**
+### Ready to start?
 
 1. **Choose your track** from the 5 options above
 2. **Run the profiling script** to understand your baseline

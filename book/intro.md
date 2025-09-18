@@ -83,7 +83,7 @@ Traditional ML courses teach algorithms. TinyTorch teaches **ML systems engineer
 
 Every component follows the same powerful learning cycle:
 
-### **Example: Activation Functions**
+### Example: Activation Functions
 
 **Build:** Implement ReLU from scratch
 ```python
@@ -136,19 +136,19 @@ These aren't just academic questions - they're the system-level challenges that 
 
 ## 👥 Who This Is For
 
-### **🎯 Perfect For:**
+### 🎯 Perfect For:
 - **CS students** who want to understand ML systems beyond high-level APIs
 - **Software engineers** transitioning to ML engineering roles
 - **ML practitioners** who want to optimize and debug production systems
 - **Researchers** who need to implement custom operations and architectures
 - **Anyone curious** about how PyTorch/TensorFlow actually work under the hood
 
-### **📚 Prerequisites:**
+### 📚 Prerequisites:
 - **Python programming** (comfortable with classes, functions, basic NumPy)
 - **Linear algebra basics** (matrix multiplication, gradients)
 - **Learning mindset** - we'll teach you everything else!
 
-### **🚀 Career Impact:**
+### 🚀 Career Impact:
 After TinyTorch, you'll be the person your team asks:
 - *"Why is this training so slow?"* (You'll know how to profile and optimize)
 - *"Can we fit this model in GPU memory?"* (You'll understand memory trade-offs)  
@@ -195,7 +195,7 @@ Demonstrate framework universality: GPT-style transformers, character tokenizati
 
 ---
 
-## 🔗 **Complete System Integration**
+## 🔗 Complete System Integration
 
 **This isn't 16 separate exercises.** Every component you build integrates into one fully functional ML framework with universal foundations:
 
@@ -239,7 +239,7 @@ flowchart TD
 **Result:** Every component you build converges into TinyGPT - proving your framework is complete and production-ready.
 ```
 
-### **🔥 TinyGPT: The Complete Framework in Action**
+### 🔥 TinyGPT: The Complete Framework in Action
 
 After building all the components, TinyGPT is your **capstone demonstration** - showing how everything clicks together into a working system.
 
@@ -258,21 +258,21 @@ After building all the components, TinyGPT is your **capstone demonstration** - 
 ```{admonition} Three Ways to Engage with TinyTorch
 :class: important
 
-### **[Quick Exploration](usage-paths/quick-exploration.md)** *(5 minutes)*
+### [Quick Exploration](usage-paths/quick-exploration.md) *(5 minutes)*
 *"I want to see what this is about"*
 - Click and run code immediately in your browser (Binder)
 - No installation or setup required
 - Implement ReLU, tensors, neural networks interactively
 - Perfect for getting a feel for the course
 
-### **[Serious Development](usage-paths/serious-development.md)** *(8+ weeks)*
+### [Serious Development](usage-paths/serious-development.md) *(8+ weeks)*
 *"I want to build this myself"*
 - Fork the repo and work locally with full development environment
 - Build complete ML framework from scratch with `tito` CLI
 - 16 progressive assignments from setup to language models
 - Professional development workflow with automated testing
 
-### **[Classroom Use](usage-paths/classroom-use.md)** *(Instructors)*
+### [Classroom Use](usage-paths/classroom-use.md) *(Instructors)*
 *"I want to teach this course"*
 - Complete course infrastructure with NBGrader integration
 - Automated grading for comprehensive testing
@@ -284,7 +284,7 @@ After building all the components, TinyGPT is your **capstone demonstration** - 
 
 ## Ready to Start?
 
-### **Quick Taste: Try Module 1 Right Now**
+### Quick Taste: Try Module 1 Right Now
 Want to see what TinyTorch feels like? **[Launch the Setup chapter](chapters/01-setup.md)** in Binder and implement your first TinyTorch function in 2 minutes!
 
 ---
