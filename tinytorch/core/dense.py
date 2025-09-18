@@ -17,9 +17,9 @@ try:
     from tinytorch.core.activations import ReLU, Sigmoid, Tanh, Softmax
 except ImportError:
     # For development, import from local modules
-    sys.path.append(os.path.join(os.path.dirname(__file__), '..', '01_tensor'))
-    sys.path.append(os.path.join(os.path.dirname(__file__), '..', '02_activations'))
-    sys.path.append(os.path.join(os.path.dirname(__file__), '..', '03_layers'))
+    sys.path.append(os.path.join(os.path.dirname(__file__), '..', '02_tensor'))
+    sys.path.append(os.path.join(os.path.dirname(__file__), '..', '03_activations'))
+    sys.path.append(os.path.join(os.path.dirname(__file__), '..', '04_layers'))
     from tensor_dev import Tensor
     from activations_dev import ReLU, Sigmoid, Tanh, Softmax
     from layers_dev import Dense

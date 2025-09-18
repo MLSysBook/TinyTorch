@@ -6,7 +6,6 @@ __all__ = ['ReLU', 'Sigmoid', 'Tanh', 'Softmax', 'ActivationProfiler', 'benchmar
 # %% ../../modules/source/03_activations/activations_dev.ipynb 1
 import math
 import numpy as np
-import matplotlib.pyplot as plt
 import os
 import sys
 from typing import Union, List
@@ -52,7 +51,7 @@ class ReLU:
         - Use np.maximum(0, x.data) for element-wise max with 0
         - Return the same type as input: return type(x)(result)
         - The shape should remain the same as input
-        - Don't modify the input tensor (immutable operations)
+        - Do not modify the input tensor (immutable operations)
         
         LEARNING CONNECTIONS:
         - This is like torch.nn.ReLU() in PyTorch
@@ -69,7 +68,7 @@ class ReLU:
         """Make the class callable: relu(x) instead of relu.forward(x)"""
         return self.forward(x)
 
-# %% ../../modules/source/03_activations/activations_dev.ipynb 12
+# %% ../../modules/source/03_activations/activations_dev.ipynb 11
 class Sigmoid:
     """
     Sigmoid Activation Function: f(x) = 1 / (1 + e^(-x))
@@ -122,7 +121,7 @@ class Sigmoid:
         """Make the class callable: sigmoid(x) instead of sigmoid.forward(x)"""
         return self.forward(x)
 
-# %% ../../modules/source/03_activations/activations_dev.ipynb 16
+# %% ../../modules/source/03_activations/activations_dev.ipynb 15
 class Tanh:
     """
     Tanh Activation Function: f(x) = (e^x - e^(-x)) / (e^x + e^(-x))
@@ -174,7 +173,7 @@ class Tanh:
         """Make the class callable: tanh(x) instead of tanh.forward(x)"""
         return self.forward(x)
 
-# %% ../../modules/source/03_activations/activations_dev.ipynb 20
+# %% ../../modules/source/03_activations/activations_dev.ipynb 19
 class Softmax:
     """
     Softmax Activation Function: f(x_i) = e^(x_i) / Σ(e^(x_j))
@@ -244,7 +243,7 @@ class Softmax:
         """Make the class callable: softmax(x) instead of softmax.forward(x)"""
         return self.forward(x)
 
-# %% ../../modules/source/03_activations/activations_dev.ipynb 29
+# %% ../../modules/source/03_activations/activations_dev.ipynb 26
 import time
 
 class ActivationProfiler:
@@ -382,7 +381,7 @@ class ActivationProfiler:
             print(f"   Time increased {time_ratio:.1f}x")
             
             if abs(time_ratio - size_ratio**2) < abs(time_ratio - size_ratio):
-                print(f"   Pattern: O(n²) - linear in tensor size")
+                print(f"   Pattern: O(n^2) - linear in tensor size")
             else:
                 print(f"   Pattern: ~O(n) - very efficient scaling")
         

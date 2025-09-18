@@ -2,18 +2,15 @@
 
 # %% auto 0
 __all__ = ['time_kernel', 'matmul_baseline', 'vectorized_relu', 'vectorized_operations', 'cache_friendly_matmul', 'parallel_relu',
-           'parallel_batch_processing', 'quantized_matmul', 'quantized_relu']
+           'parallel_batch_processing', 'quantized_matmul', 'quantized_relu', 'KernelOptimizationProfiler']
 
 # %% ../../modules/source/13_kernels/kernels_dev.ipynb 1
 import numpy as np
 import sys
 import os
 import time
-import tracemalloc
 import psutil
 from typing import Callable, Dict, Any, Optional, Tuple, List
-from functools import wraps
-from pathlib import Path
 
 # Import our existing components
 try:
@@ -60,7 +57,7 @@ def time_kernel(func, *args, **kwargs):
     microseconds = (end - start) * 1_000_000
     return result, microseconds
 
-# %% ../../modules/source/13_kernels/kernels_dev.ipynb 6
+# %% ../../modules/source/13_kernels/kernels_dev.ipynb 7
 def matmul_baseline(A: Tensor, B: Tensor) -> Tensor:
     """
     Baseline matrix multiplication using TinyTorch's proven implementation.
@@ -116,7 +113,7 @@ def matmul_baseline(A: Tensor, B: Tensor) -> Tensor:
     return result
     ### END SOLUTION
 
-# %% ../../modules/source/13_kernels/kernels_dev.ipynb 9
+# %% ../../modules/source/13_kernels/kernels_dev.ipynb 11
 def vectorized_relu(x: Tensor) -> Tensor:
     """
     Vectorized ReLU implementation demonstrating SIMD principles.
@@ -171,7 +168,7 @@ def vectorized_relu(x: Tensor) -> Tensor:
     return Tensor(result)
     ### END SOLUTION
 
-# %% ../../modules/source/13_kernels/kernels_dev.ipynb 10
+# %% ../../modules/source/13_kernels/kernels_dev.ipynb 12
 def vectorized_operations(x: Tensor, y: Tensor) -> Dict[str, Tensor]:
     """
     Demonstration of various vectorized operations.
@@ -227,7 +224,7 @@ def vectorized_operations(x: Tensor, y: Tensor) -> Dict[str, Tensor]:
     return results
     ### END SOLUTION
 
-# %% ../../modules/source/13_kernels/kernels_dev.ipynb 13
+# %% ../../modules/source/13_kernels/kernels_dev.ipynb 15
 def cache_friendly_matmul(A: Tensor, B: Tensor, block_size: int = 32) -> Tensor:
     """
     Cache-friendly matrix multiplication using blocking technique.
@@ -305,7 +302,7 @@ def cache_friendly_matmul(A: Tensor, B: Tensor, block_size: int = 32) -> Tensor:
     return Tensor(C)
     ### END SOLUTION
 
-# %% ../../modules/source/13_kernels/kernels_dev.ipynb 16
+# %% ../../modules/source/13_kernels/kernels_dev.ipynb 18
 def parallel_relu(x: Tensor, num_workers: int = 4) -> Tensor:
     """
     Parallel ReLU implementation using multiple CPU cores.
@@ -387,7 +384,7 @@ def parallel_relu(x: Tensor, num_workers: int = 4) -> Tensor:
     return Tensor(result)
     ### END SOLUTION
 
-# %% ../../modules/source/13_kernels/kernels_dev.ipynb 17
+# %% ../../modules/source/13_kernels/kernels_dev.ipynb 19
 def parallel_batch_processing(batch_data: List[Tensor], operation: Callable, num_workers: int = 4) -> List[Tensor]:
     """
     Process a batch of tensors in parallel using multiple workers.
@@ -448,7 +445,7 @@ def parallel_batch_processing(batch_data: List[Tensor], operation: Callable, num
     return results
     ### END SOLUTION
 
-# %% ../../modules/source/13_kernels/kernels_dev.ipynb 22
+# %% ../../modules/source/13_kernels/kernels_dev.ipynb 24
 def quantized_matmul(A: Tensor, B: Tensor, scale_A: float = 1.0, scale_B: float = 1.0) -> Tensor:
     """
     Quantized matrix multiplication kernel for compressed models.
@@ -508,7 +505,7 @@ def quantized_matmul(A: Tensor, B: Tensor, scale_A: float = 1.0, scale_B: float 
     return Tensor(C_float)
     ### END SOLUTION
 
-# %% ../../modules/source/13_kernels/kernels_dev.ipynb 23
+# %% ../../modules/source/13_kernels/kernels_dev.ipynb 25
 def quantized_relu(x: Tensor, scale: float = 1.0) -> Tensor:
     """
     Quantized ReLU implementation for compressed models.
@@ -564,3 +561,693 @@ def quantized_relu(x: Tensor, scale: float = 1.0) -> Tensor:
     
     return Tensor(x_relu_float)
     ### END SOLUTION
+
+# %% ../../modules/source/13_kernels/kernels_dev.ipynb 29
+class KernelOptimizationProfiler:
+    """
+    Production-grade kernel optimization profiler for ML systems.
+    
+    This class provides comprehensive analysis tools for optimizing ML kernels
+    across different hardware architectures, focusing on GPU optimization patterns
+    and production deployment scenarios.
+    
+    Key Features:
+    - CUDA kernel performance analysis
+    - Memory coalescing pattern detection
+    - Warp divergence analysis
+    - Shared memory optimization
+    - Tensor core utilization metrics
+    - Kernel fusion opportunities
+    - Multi-GPU scaling analysis
+    """
+    
+    def __init__(self, hardware_config: Optional[Dict[str, Any]] = None):
+        """
+        Initialize the kernel optimization profiler.
+        
+        Args:
+            hardware_config: Dictionary containing hardware specifications
+        """
+        self.hardware_config = hardware_config or self._detect_hardware()
+        self.profile_results = {}
+        self.optimization_recommendations = []
+        
+    def _detect_hardware(self) -> Dict[str, Any]:
+        """Detect current hardware configuration."""
+        return {
+            'cpu_cores': psutil.cpu_count(),
+            'memory_gb': psutil.virtual_memory().total // (1024**3),
+            'cache_sizes': {
+                'l1': 32768,  # Typical L1 cache size in bytes
+                'l2': 262144,  # Typical L2 cache size in bytes  
+                'l3': 8388608  # Typical L3 cache size in bytes
+            },
+            'gpu_available': False,  # Would check for CUDA/OpenCL in real implementation
+            'gpu_memory_gb': 0,
+            'tensor_cores': False,
+            'warp_size': 32  # NVIDIA GPU warp size
+        }
+    
+    def analyze_cuda_kernel_performance(self, kernel_func: Callable, input_data: Tensor, 
+                                      iterations: int = 100) -> Dict[str, Any]:
+        """
+        Analyze CUDA kernel performance characteristics.
+        
+        In a real implementation, this would interface with CUDA profiling tools
+        to measure actual GPU kernel performance metrics.
+        """
+        # Simulate CUDA kernel analysis
+        total_time = 0
+        memory_bandwidth = 0
+        compute_utilization = 0
+        
+        for _ in range(iterations):
+            result, execution_time = time_kernel(kernel_func, input_data)
+            total_time += execution_time
+            
+            # Simulate GPU metrics calculation
+            data_size = input_data.data.nbytes
+            memory_bandwidth += (data_size * 2) / (execution_time / 1_000_000)  # Read + Write
+            compute_utilization += np.random.uniform(0.3, 0.9)  # Simulated utilization
+        
+        avg_time = total_time / iterations
+        avg_bandwidth = memory_bandwidth / iterations
+        avg_utilization = compute_utilization / iterations
+        
+        analysis = {
+            'avg_execution_time_us': avg_time,
+            'memory_bandwidth_gb_s': avg_bandwidth / (1024**3),
+            'compute_utilization': avg_utilization,
+            'theoretical_peak_bandwidth': 900,  # GB/s for high-end GPU
+            'bandwidth_efficiency': min(100, (avg_bandwidth / (1024**3)) / 900 * 100),
+            'bottleneck_analysis': self._identify_bottlenecks(avg_bandwidth / (1024**3), avg_utilization)
+        }
+        
+        self.profile_results['cuda_analysis'] = analysis
+        return analysis
+    
+    def analyze_memory_coalescing(self, access_pattern: str, data_shape: Tuple[int, ...]) -> Dict[str, Any]:
+        """
+        Analyze memory access patterns for GPU coalescing efficiency.
+        
+        Memory coalescing is critical for GPU performance - threads in a warp
+        should access contiguous memory locations.
+        """
+        coalescing_efficiency = 1.0
+        
+        if access_pattern == 'row_major':
+            # Good coalescing for row-major access
+            coalescing_efficiency = 0.95
+        elif access_pattern == 'column_major':
+            # Poor coalescing for column-major access
+            coalescing_efficiency = 0.3
+        elif access_pattern == 'strided':
+            # Moderate coalescing for strided access
+            stride = data_shape[1] if len(data_shape) > 1 else 1
+            coalescing_efficiency = max(0.1, 1.0 / stride)
+        elif access_pattern == 'random':
+            # Very poor coalescing for random access
+            coalescing_efficiency = 0.1
+        
+        analysis = {
+            'access_pattern': access_pattern,
+            'data_shape': data_shape,
+            'coalescing_efficiency': coalescing_efficiency,
+            'memory_transactions': self._calculate_memory_transactions(data_shape, coalescing_efficiency),
+            'optimization_potential': 1.0 - coalescing_efficiency
+        }
+        
+        self.profile_results['memory_coalescing'] = analysis
+        return analysis
+    
+    def analyze_warp_divergence(self, conditional_operations: int, total_operations: int) -> Dict[str, Any]:
+        """
+        Analyze warp divergence patterns in kernel execution.
+        
+        Warp divergence occurs when threads in a warp take different execution paths,
+        reducing parallelism efficiency.
+        """
+        divergence_ratio = conditional_operations / total_operations
+        efficiency_loss = divergence_ratio * 0.5  # Simplified model
+        
+        analysis = {
+            'conditional_operations': conditional_operations,
+            'total_operations': total_operations,
+            'divergence_ratio': divergence_ratio,
+            'efficiency_loss': efficiency_loss,
+            'warp_efficiency': 1.0 - efficiency_loss,
+            'optimization_suggestions': self._generate_divergence_optimizations(divergence_ratio)
+        }
+        
+        self.profile_results['warp_divergence'] = analysis
+        return analysis
+    
+    def analyze_shared_memory_usage(self, kernel_data_size: int, reuse_factor: float) -> Dict[str, Any]:
+        """
+        Analyze shared memory optimization opportunities.
+        
+        Shared memory is fast on-chip memory that can dramatically improve
+        performance when used effectively for data reuse.
+        """
+        shared_memory_size = 48 * 1024  # 48KB typical shared memory per SM
+        bank_conflicts = self._estimate_bank_conflicts(kernel_data_size)
+        
+        analysis = {
+            'data_size_bytes': kernel_data_size,
+            'shared_memory_available': shared_memory_size,
+            'utilization_ratio': min(1.0, kernel_data_size / shared_memory_size),
+            'reuse_factor': reuse_factor,
+            'bank_conflicts': bank_conflicts,
+            'performance_gain': min(10.0, reuse_factor * (1.0 - bank_conflicts)),
+            'optimization_opportunities': self._identify_shared_memory_optimizations(kernel_data_size, reuse_factor)
+        }
+        
+        self.profile_results['shared_memory'] = analysis
+        return analysis
+    
+    def analyze_tensor_core_utilization(self, operation_type: str, data_types: List[str]) -> Dict[str, Any]:
+        """
+        Analyze tensor core utilization for mixed-precision operations.
+        
+        Tensor cores provide massive acceleration for mixed-precision matrix operations
+        when data shapes and types are optimized correctly.
+        """
+        tensor_core_compatible = (
+            operation_type in ['matmul', 'conv2d'] and
+            any(dtype in ['float16', 'bfloat16', 'int8'] for dtype in data_types)
+        )
+        
+        if tensor_core_compatible:
+            theoretical_speedup = 4.0  # Typical tensor core speedup
+            actual_utilization = 0.7   # Realistic utilization
+        else:
+            theoretical_speedup = 1.0
+            actual_utilization = 0.0
+        
+        analysis = {
+            'operation_type': operation_type,
+            'data_types': data_types,
+            'tensor_core_compatible': tensor_core_compatible,
+            'theoretical_speedup': theoretical_speedup,
+            'actual_utilization': actual_utilization,
+            'performance_gain': theoretical_speedup * actual_utilization,
+            'optimization_requirements': self._get_tensor_core_requirements()
+        }
+        
+        self.profile_results['tensor_core'] = analysis
+        return analysis
+    
+    def analyze_kernel_fusion_opportunities(self, operation_sequence: List[str]) -> Dict[str, Any]:
+        """
+        Analyze opportunities for kernel fusion to reduce memory overhead.
+        
+        Kernel fusion combines multiple operations into a single kernel,
+        reducing memory bandwidth requirements and improving performance.
+        """
+        fusable_patterns = [
+            ['matmul', 'relu'],
+            ['conv2d', 'batchnorm', 'relu'],
+            ['add', 'relu'],
+            ['mul', 'add']
+        ]
+        
+        fusion_opportunities = []
+        memory_savings = 0
+        
+        for pattern in fusable_patterns:
+            if self._sequence_contains_pattern(operation_sequence, pattern):
+                fusion_opportunities.append(pattern)
+                memory_savings += len(pattern) - 1  # Save intermediate results
+        
+        analysis = {
+            'operation_sequence': operation_sequence,
+            'fusion_opportunities': fusion_opportunities,
+            'memory_savings_factor': memory_savings,
+            'performance_improvement': min(2.0, 1 + memory_savings * 0.3),
+            'implementation_complexity': len(fusion_opportunities) * 2
+        }
+        
+        self.profile_results['kernel_fusion'] = analysis
+        return analysis
+    
+    def analyze_multi_gpu_scaling(self, data_size: int, num_gpus: int) -> Dict[str, Any]:
+        """
+        Analyze multi-GPU scaling patterns and communication overhead.
+        
+        Multi-GPU deployments require careful optimization of data distribution
+        and communication patterns to achieve good scaling efficiency.
+        """
+        communication_overhead = self._calculate_communication_overhead(data_size, num_gpus)
+        compute_scaling = min(num_gpus, data_size / 1000)  # Simplified scaling model
+        
+        analysis = {
+            'data_size': data_size,
+            'num_gpus': num_gpus,
+            'communication_overhead': communication_overhead,
+            'compute_scaling': compute_scaling,
+            'scaling_efficiency': compute_scaling / num_gpus,
+            'bottleneck_type': 'communication' if communication_overhead > 0.3 else 'compute',
+            'optimization_strategies': self._get_multi_gpu_optimizations(communication_overhead)
+        }
+        
+        self.profile_results['multi_gpu'] = analysis
+        return analysis
+    
+    def generate_optimization_report(self) -> str:
+        """Generate comprehensive optimization report with recommendations."""
+        report = ["🚀 Kernel Optimization Analysis Report", "=" * 50, ""]
+        
+        for analysis_type, results in self.profile_results.items():
+            report.append(f"📊 {analysis_type.replace('_', ' ').title()} Analysis:")
+            report.append("-" * 30)
+            
+            for key, value in results.items():
+                if isinstance(value, float):
+                    report.append(f"  {key}: {value:.3f}")
+                elif isinstance(value, list):
+                    report.append(f"  {key}: {', '.join(map(str, value))}")
+                else:
+                    report.append(f"  {key}: {value}")
+            report.append("")
+        
+        # Add optimization recommendations
+        report.append("🎯 Optimization Recommendations:")
+        report.append("-" * 30)
+        for rec in self.optimization_recommendations:
+            report.append(f"  • {rec}")
+        
+        return "\n".join(report)
+    
+    # Helper methods
+    def _identify_bottlenecks(self, bandwidth_gb_s: float, utilization: float) -> str:
+        """Identify performance bottlenecks."""
+        if bandwidth_gb_s < 100:
+            return "Memory bandwidth limited"
+        elif utilization < 0.5:
+            return "Compute utilization limited"
+        else:
+            return "Well balanced"
+    
+    def _calculate_memory_transactions(self, shape: Tuple[int, ...], efficiency: float) -> int:
+        """Calculate memory transaction count."""
+        total_elements = np.prod(shape)
+        return int(total_elements / (32 * efficiency))  # 32 threads per warp
+    
+    def _generate_divergence_optimizations(self, divergence_ratio: float) -> List[str]:
+        """Generate warp divergence optimization suggestions."""
+        suggestions = []
+        if divergence_ratio > 0.3:
+            suggestions.append("Reduce conditional operations in inner loops")
+            suggestions.append("Use predicated execution instead of branching")
+        if divergence_ratio > 0.5:
+            suggestions.append("Restructure algorithm to minimize thread divergence")
+        return suggestions
+    
+    def _estimate_bank_conflicts(self, data_size: int) -> float:
+        """Estimate shared memory bank conflicts."""
+        # Simplified model - assumes some degree of bank conflicts
+        return min(0.5, data_size / (32 * 4))  # 32 banks, 4 bytes per bank
+    
+    def _identify_shared_memory_optimizations(self, size: int, reuse: float) -> List[str]:
+        """Identify shared memory optimization opportunities."""
+        optimizations = []
+        if reuse > 2.0:
+            optimizations.append("High reuse factor - shared memory beneficial")
+        if size < 16384:  # 16KB
+            optimizations.append("Data fits in shared memory - implement tiling")
+        return optimizations
+    
+    def _get_tensor_core_requirements(self) -> List[str]:
+        """Get tensor core optimization requirements."""
+        return [
+            "Use mixed precision (float16/bfloat16)",
+            "Ensure matrix dimensions are multiples of 8",
+            "Use proper memory layout (NHWC for convolutions)"
+        ]
+    
+    def _sequence_contains_pattern(self, sequence: List[str], pattern: List[str]) -> bool:
+        """Check if operation sequence contains fusable pattern."""
+        for i in range(len(sequence) - len(pattern) + 1):
+            if sequence[i:i+len(pattern)] == pattern:
+                return True
+        return False
+    
+    def _calculate_communication_overhead(self, data_size: int, num_gpus: int) -> float:
+        """Calculate multi-GPU communication overhead."""
+        # Simplified model based on data size and GPU count
+        return min(0.8, (data_size / 1000) / num_gpus + 0.1)
+    
+    def _get_multi_gpu_optimizations(self, overhead: float) -> List[str]:
+        """Get multi-GPU optimization strategies."""
+        strategies = []
+        if overhead > 0.3:
+            strategies.append("Implement gradient compression")
+            strategies.append("Use asynchronous communication")
+        if overhead > 0.5:
+            strategies.append("Increase batch size to amortize communication")
+        return strategies
+
+# %% ../../modules/source/13_kernels/kernels_dev.ipynb 32
+class KernelOptimizationProfiler:
+    """
+    Production-grade kernel optimization profiler for ML systems.
+    
+    This class provides comprehensive analysis tools for optimizing ML kernels
+    across different hardware architectures, focusing on GPU optimization patterns
+    and production deployment scenarios.
+    
+    Key Features:
+    - CUDA kernel performance analysis
+    - Memory coalescing pattern detection
+    - Warp divergence analysis
+    - Shared memory optimization
+    - Tensor core utilization metrics
+    - Kernel fusion opportunities
+    - Multi-GPU scaling analysis
+    """
+    
+    def __init__(self, hardware_config: Optional[Dict[str, Any]] = None):
+        """
+        Initialize the kernel optimization profiler.
+        
+        Args:
+            hardware_config: Dictionary containing hardware specifications
+        """
+        self.hardware_config = hardware_config or self._detect_hardware()
+        self.profile_results = {}
+        self.optimization_recommendations = []
+        
+    def _detect_hardware(self) -> Dict[str, Any]:
+        """Detect current hardware configuration."""
+        return {
+            'cpu_cores': psutil.cpu_count(),
+            'memory_gb': psutil.virtual_memory().total // (1024**3),
+            'cache_sizes': {
+                'l1': 32768,  # Typical L1 cache size in bytes
+                'l2': 262144,  # Typical L2 cache size in bytes  
+                'l3': 8388608  # Typical L3 cache size in bytes
+            },
+            'gpu_available': False,  # Would check for CUDA/OpenCL in real implementation
+            'gpu_memory_gb': 0,
+            'tensor_cores': False,
+            'warp_size': 32  # NVIDIA GPU warp size
+        }
+    
+    def analyze_cuda_kernel_performance(self, kernel_func: Callable, input_data: Tensor, 
+                                      iterations: int = 100) -> Dict[str, Any]:
+        """
+        Analyze CUDA kernel performance characteristics.
+        
+        In a real implementation, this would interface with CUDA profiling tools
+        to measure actual GPU kernel performance metrics.
+        """
+        # Simulate CUDA kernel analysis
+        total_time = 0
+        memory_bandwidth = 0
+        compute_utilization = 0
+        
+        for _ in range(iterations):
+            result, execution_time = time_kernel(kernel_func, input_data)
+            total_time += execution_time
+            
+            # Simulate GPU metrics calculation
+            data_size = input_data.data.nbytes
+            memory_bandwidth += (data_size * 2) / (execution_time / 1_000_000)  # Read + Write
+            compute_utilization += np.random.uniform(0.3, 0.9)  # Simulated utilization
+        
+        avg_time = total_time / iterations
+        avg_bandwidth = memory_bandwidth / iterations
+        avg_utilization = compute_utilization / iterations
+        
+        analysis = {
+            'avg_execution_time_us': avg_time,
+            'memory_bandwidth_gb_s': avg_bandwidth / (1024**3),
+            'compute_utilization': avg_utilization,
+            'theoretical_peak_bandwidth': 900,  # GB/s for high-end GPU
+            'bandwidth_efficiency': min(100, (avg_bandwidth / (1024**3)) / 900 * 100),
+            'bottleneck_analysis': self._identify_bottlenecks(avg_bandwidth / (1024**3), avg_utilization)
+        }
+        
+        self.profile_results['cuda_analysis'] = analysis
+        return analysis
+    
+    def analyze_memory_coalescing(self, access_pattern: str, data_shape: Tuple[int, ...]) -> Dict[str, Any]:
+        """
+        Analyze memory access patterns for GPU coalescing efficiency.
+        
+        Memory coalescing is critical for GPU performance - threads in a warp
+        should access contiguous memory locations.
+        """
+        coalescing_efficiency = 1.0
+        
+        if access_pattern == 'row_major':
+            # Good coalescing for row-major access
+            coalescing_efficiency = 0.95
+        elif access_pattern == 'column_major':
+            # Poor coalescing for column-major access
+            coalescing_efficiency = 0.3
+        elif access_pattern == 'strided':
+            # Moderate coalescing for strided access
+            stride = data_shape[1] if len(data_shape) > 1 else 1
+            coalescing_efficiency = max(0.1, 1.0 / stride)
+        elif access_pattern == 'random':
+            # Very poor coalescing for random access
+            coalescing_efficiency = 0.1
+        
+        analysis = {
+            'access_pattern': access_pattern,
+            'data_shape': data_shape,
+            'coalescing_efficiency': coalescing_efficiency,
+            'memory_transactions': self._calculate_memory_transactions(data_shape, coalescing_efficiency),
+            'optimization_potential': 1.0 - coalescing_efficiency
+        }
+        
+        self.profile_results['memory_coalescing'] = analysis
+        return analysis
+    
+    def analyze_warp_divergence(self, conditional_operations: int, total_operations: int) -> Dict[str, Any]:
+        """
+        Analyze warp divergence patterns in kernel execution.
+        
+        Warp divergence occurs when threads in a warp take different execution paths,
+        reducing parallelism efficiency.
+        """
+        divergence_ratio = conditional_operations / total_operations
+        efficiency_loss = divergence_ratio * 0.5  # Simplified model
+        
+        analysis = {
+            'conditional_operations': conditional_operations,
+            'total_operations': total_operations,
+            'divergence_ratio': divergence_ratio,
+            'efficiency_loss': efficiency_loss,
+            'warp_efficiency': 1.0 - efficiency_loss,
+            'optimization_suggestions': self._generate_divergence_optimizations(divergence_ratio)
+        }
+        
+        self.profile_results['warp_divergence'] = analysis
+        return analysis
+    
+    def analyze_shared_memory_usage(self, kernel_data_size: int, reuse_factor: float) -> Dict[str, Any]:
+        """
+        Analyze shared memory optimization opportunities.
+        
+        Shared memory is fast on-chip memory that can dramatically improve
+        performance when used effectively for data reuse.
+        """
+        shared_memory_size = 48 * 1024  # 48KB typical shared memory per SM
+        bank_conflicts = self._estimate_bank_conflicts(kernel_data_size)
+        
+        analysis = {
+            'data_size_bytes': kernel_data_size,
+            'shared_memory_available': shared_memory_size,
+            'utilization_ratio': min(1.0, kernel_data_size / shared_memory_size),
+            'reuse_factor': reuse_factor,
+            'bank_conflicts': bank_conflicts,
+            'performance_gain': min(10.0, reuse_factor * (1.0 - bank_conflicts)),
+            'optimization_opportunities': self._identify_shared_memory_optimizations(kernel_data_size, reuse_factor)
+        }
+        
+        self.profile_results['shared_memory'] = analysis
+        return analysis
+    
+    def analyze_tensor_core_utilization(self, operation_type: str, data_types: List[str]) -> Dict[str, Any]:
+        """
+        Analyze tensor core utilization for mixed-precision operations.
+        
+        Tensor cores provide massive acceleration for mixed-precision matrix operations
+        when data shapes and types are optimized correctly.
+        """
+        tensor_core_compatible = (
+            operation_type in ['matmul', 'conv2d'] and
+            any(dtype in ['float16', 'bfloat16', 'int8'] for dtype in data_types)
+        )
+        
+        if tensor_core_compatible:
+            theoretical_speedup = 4.0  # Typical tensor core speedup
+            actual_utilization = 0.7   # Realistic utilization
+        else:
+            theoretical_speedup = 1.0
+            actual_utilization = 0.0
+        
+        analysis = {
+            'operation_type': operation_type,
+            'data_types': data_types,
+            'tensor_core_compatible': tensor_core_compatible,
+            'theoretical_speedup': theoretical_speedup,
+            'actual_utilization': actual_utilization,
+            'performance_gain': theoretical_speedup * actual_utilization,
+            'optimization_requirements': self._get_tensor_core_requirements()
+        }
+        
+        self.profile_results['tensor_core'] = analysis
+        return analysis
+    
+    def analyze_kernel_fusion_opportunities(self, operation_sequence: List[str]) -> Dict[str, Any]:
+        """
+        Analyze opportunities for kernel fusion to reduce memory overhead.
+        
+        Kernel fusion combines multiple operations into a single kernel,
+        reducing memory bandwidth requirements and improving performance.
+        """
+        fusable_patterns = [
+            ['matmul', 'relu'],
+            ['conv2d', 'batchnorm', 'relu'],
+            ['add', 'relu'],
+            ['mul', 'add']
+        ]
+        
+        fusion_opportunities = []
+        memory_savings = 0
+        
+        for pattern in fusable_patterns:
+            if self._sequence_contains_pattern(operation_sequence, pattern):
+                fusion_opportunities.append(pattern)
+                memory_savings += len(pattern) - 1  # Save intermediate results
+        
+        analysis = {
+            'operation_sequence': operation_sequence,
+            'fusion_opportunities': fusion_opportunities,
+            'memory_savings_factor': memory_savings,
+            'performance_improvement': min(2.0, 1 + memory_savings * 0.3),
+            'implementation_complexity': len(fusion_opportunities) * 2
+        }
+        
+        self.profile_results['kernel_fusion'] = analysis
+        return analysis
+    
+    def analyze_multi_gpu_scaling(self, data_size: int, num_gpus: int) -> Dict[str, Any]:
+        """
+        Analyze multi-GPU scaling patterns and communication overhead.
+        
+        Multi-GPU deployments require careful optimization of data distribution
+        and communication patterns to achieve good scaling efficiency.
+        """
+        communication_overhead = self._calculate_communication_overhead(data_size, num_gpus)
+        compute_scaling = min(num_gpus, data_size / 1000)  # Simplified scaling model
+        
+        analysis = {
+            'data_size': data_size,
+            'num_gpus': num_gpus,
+            'communication_overhead': communication_overhead,
+            'compute_scaling': compute_scaling,
+            'scaling_efficiency': compute_scaling / num_gpus,
+            'bottleneck_type': 'communication' if communication_overhead > 0.3 else 'compute',
+            'optimization_strategies': self._get_multi_gpu_optimizations(communication_overhead)
+        }
+        
+        self.profile_results['multi_gpu'] = analysis
+        return analysis
+    
+    def generate_optimization_report(self) -> str:
+        """Generate comprehensive optimization report with recommendations."""
+        report = ["🚀 Kernel Optimization Analysis Report", "=" * 50, ""]
+        
+        for analysis_type, results in self.profile_results.items():
+            report.append(f"📊 {analysis_type.replace('_', ' ').title()} Analysis:")
+            report.append("-" * 30)
+            
+            for key, value in results.items():
+                if isinstance(value, float):
+                    report.append(f"  {key}: {value:.3f}")
+                elif isinstance(value, list):
+                    report.append(f"  {key}: {', '.join(map(str, value))}")
+                else:
+                    report.append(f"  {key}: {value}")
+            report.append("")
+        
+        # Add optimization recommendations
+        report.append("🎯 Optimization Recommendations:")
+        report.append("-" * 30)
+        for rec in self.optimization_recommendations:
+            report.append(f"  • {rec}")
+        
+        return "\n".join(report)
+    
+    # Helper methods
+    def _identify_bottlenecks(self, bandwidth_gb_s: float, utilization: float) -> str:
+        """Identify performance bottlenecks."""
+        if bandwidth_gb_s < 100:
+            return "Memory bandwidth limited"
+        elif utilization < 0.5:
+            return "Compute utilization limited"
+        else:
+            return "Well balanced"
+    
+    def _calculate_memory_transactions(self, shape: Tuple[int, ...], efficiency: float) -> int:
+        """Calculate memory transaction count."""
+        total_elements = np.prod(shape)
+        return int(total_elements / (32 * efficiency))  # 32 threads per warp
+    
+    def _generate_divergence_optimizations(self, divergence_ratio: float) -> List[str]:
+        """Generate warp divergence optimization suggestions."""
+        suggestions = []
+        if divergence_ratio > 0.3:
+            suggestions.append("Reduce conditional operations in inner loops")
+            suggestions.append("Use predicated execution instead of branching")
+        if divergence_ratio > 0.5:
+            suggestions.append("Restructure algorithm to minimize thread divergence")
+        return suggestions
+    
+    def _estimate_bank_conflicts(self, data_size: int) -> float:
+        """Estimate shared memory bank conflicts."""
+        # Simplified model - assumes some degree of bank conflicts
+        return min(0.5, data_size / (32 * 4))  # 32 banks, 4 bytes per bank
+    
+    def _identify_shared_memory_optimizations(self, size: int, reuse: float) -> List[str]:
+        """Identify shared memory optimization opportunities."""
+        optimizations = []
+        if reuse > 2.0:
+            optimizations.append("High reuse factor - shared memory beneficial")
+        if size < 16384:  # 16KB
+            optimizations.append("Data fits in shared memory - implement tiling")
+        return optimizations
+    
+    def _get_tensor_core_requirements(self) -> List[str]:
+        """Get tensor core optimization requirements."""
+        return [
+            "Use mixed precision (float16/bfloat16)",
+            "Ensure matrix dimensions are multiples of 8",
+            "Use proper memory layout (NHWC for convolutions)"
+        ]
+    
+    def _sequence_contains_pattern(self, sequence: List[str], pattern: List[str]) -> bool:
+        """Check if operation sequence contains fusable pattern."""
+        for i in range(len(sequence) - len(pattern) + 1):
+            if sequence[i:i+len(pattern)] == pattern:
+                return True
+        return False
+    
+    def _calculate_communication_overhead(self, data_size: int, num_gpus: int) -> float:
+        """Calculate multi-GPU communication overhead."""
+        # Simplified model based on data size and GPU count
+        return min(0.8, (data_size / 1000) / num_gpus + 0.1)
+    
+    def _get_multi_gpu_optimizations(self, overhead: float) -> List[str]:
+        """Get multi-GPU optimization strategies."""
+        strategies = []
+        if overhead > 0.3:
+            strategies.append("Implement gradient compression")
+            strategies.append("Use asynchronous communication")
+        if overhead > 0.5:
+            strategies.append("Increase batch size to amortize communication")
+        return strategies

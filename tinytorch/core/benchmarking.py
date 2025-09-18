@@ -2,18 +2,17 @@
 
 # %% auto 0
 __all__ = ['BenchmarkScenario', 'BenchmarkResult', 'BenchmarkScenarios', 'StatisticalValidation', 'StatisticalValidator',
-           'TinyTorchPerf', 'PerformanceReporter']
+           'TinyTorchPerf', 'PerformanceReporter', 'plot_benchmark_results', 'ProductionBenchmarkingProfiler']
 
 # %% ../../modules/source/14_benchmarking/benchmarking_dev.ipynb 1
 import numpy as np
 import matplotlib.pyplot as plt
 import time
 import statistics
-import json
 import math
 from typing import Dict, List, Tuple, Optional, Any, Callable
-from dataclasses import dataclass
 from enum import Enum
+from dataclasses import dataclass
 import os
 import sys
 
@@ -47,19 +46,6 @@ except ImportError:
         # Fallback for missing modules
         print("⚠️  Some TinyTorch modules not available - using minimal implementations")
 
-# %% ../../modules/source/14_benchmarking/benchmarking_dev.ipynb 2
-def _should_show_plots():
-    """Check if we should show plots (disable during testing)"""
-    is_pytest = (
-        'pytest' in sys.modules or
-        'test' in sys.argv or
-        os.environ.get('PYTEST_CURRENT_TEST') is not None or
-        any('test' in arg for arg in sys.argv) or
-        any('pytest' in arg for arg in sys.argv)
-    )
-    
-    return not is_pytest
-
 # %% ../../modules/source/14_benchmarking/benchmarking_dev.ipynb 8
 class BenchmarkScenario(Enum):
     """Standard benchmark scenarios from MLPerf"""
@@ -83,7 +69,7 @@ class BenchmarkScenarios:
     
     TODO: Implement the three benchmark scenarios following MLPerf patterns.
     
-    UNDERSTANDING THE SCENARIOS:
+    STEP-BY-STEP IMPLEMENTATION:
     1. Single-Stream: Send queries one at a time, measure latency
     2. Server: Send queries following Poisson distribution, measure QPS
     3. Offline: Send all queries at once, measure total throughput
@@ -93,6 +79,12 @@ class BenchmarkScenarios:
     2. Collect latency measurements for each run
     3. Calculate appropriate metrics for each scenario
     4. Return BenchmarkResult with all measurements
+    
+    LEARNING CONNECTIONS:
+    - **MLPerf Standards**: Industry-standard benchmarking methodology used by Google, NVIDIA, etc.
+    - **Performance Scenarios**: Different deployment patterns require different measurement approaches
+    - **Production Validation**: Benchmarking validates model performance before deployment
+    - **Resource Planning**: Results guide infrastructure scaling and capacity planning
     
     EXAMPLE USAGE:
     scenarios = BenchmarkScenarios()
@@ -109,7 +101,7 @@ class BenchmarkScenarios:
         
         TODO: Implement single-stream benchmarking.
         
-        STEP-BY-STEP:
+        STEP-BY-STEP IMPLEMENTATION:
         1. Initialize empty list for latencies
         2. For each query (up to num_queries):
            a. Get next sample from dataset (cycle if needed)
@@ -121,6 +113,12 @@ class BenchmarkScenarios:
         3. Calculate throughput = num_queries / total_time
         4. Calculate accuracy if possible
         5. Return BenchmarkResult with SINGLE_STREAM scenario
+        
+        LEARNING CONNECTIONS:
+        - **Mobile/Edge Deployment**: Single-stream simulates user-facing applications
+        - **Tail Latency**: 90th/95th percentiles matter more than averages for user experience
+        - **Interactive Systems**: Chatbots, recommendation engines use single-stream patterns
+        - **SLA Validation**: Ensures models meet response time requirements
         
         HINTS:
         - Use time.perf_counter() for precise timing
@@ -171,7 +169,7 @@ class BenchmarkScenarios:
         
         TODO: Implement server benchmarking.
         
-        STEP-BY-STEP:
+        STEP-BY-STEP IMPLEMENTATION:
         1. Calculate inter-arrival time = 1.0 / target_qps
         2. Run for specified duration:
            a. Wait for next query arrival (Poisson distribution)
@@ -181,6 +179,12 @@ class BenchmarkScenarios:
            e. Record end time and latency
         3. Calculate actual QPS = total_queries / duration
         4. Return results
+        
+        LEARNING CONNECTIONS:
+        - **Web Services**: Server scenario simulates API endpoints handling concurrent requests
+        - **Load Testing**: Validates system behavior under realistic traffic patterns
+        - **Scalability Analysis**: Tests how well models handle increasing load
+        - **Production Deployment**: Critical for microservices and web-scale applications
         
         HINTS:
         - Use np.random.exponential(inter_arrival_time) for Poisson
@@ -197,7 +201,9 @@ class BenchmarkScenarios:
         while (current_time - start_time) < duration:
             # Wait for next query (Poisson distribution)
             wait_time = np.random.exponential(inter_arrival_time)
-            time.sleep(min(wait_time, 0.001))  # Small sleep to simulate waiting
+            # Use minimal delay for fast testing
+            if wait_time > 0.0001:  # Only sleep for very long waits
+                time.sleep(min(wait_time, 0.0001))
             
             # Get sample
             sample = dataset[query_count % len(dataset)]
@@ -232,7 +238,7 @@ class BenchmarkScenarios:
         
         TODO: Implement offline benchmarking.
         
-        STEP-BY-STEP:
+        STEP-BY-STEP IMPLEMENTATION:
         1. Group dataset into batches of batch_size
         2. For each batch:
            a. Record start time
@@ -241,6 +247,12 @@ class BenchmarkScenarios:
            d. Calculate batch latency
         3. Calculate total throughput = total_samples / total_time
         4. Return results
+        
+        LEARNING CONNECTIONS:
+        - **Batch Processing**: Offline scenario simulates data pipeline and ETL workloads
+        - **Throughput Optimization**: Maximizes processing efficiency for large datasets
+        - **Data Center Workloads**: Common in recommendation systems and analytics pipelines
+        - **Cost Optimization**: High throughput reduces compute costs per sample
         
         HINTS:
         - Process data in batches for efficiency
@@ -295,7 +307,7 @@ class StatisticalValidator:
     
     TODO: Implement statistical validation for benchmark results.
     
-    UNDERSTANDING STATISTICAL TESTING:
+    STEP-BY-STEP IMPLEMENTATION:
     1. Null hypothesis: No difference between models
     2. T-test: Compare means of two groups
     3. P-value: Probability of seeing this difference by chance
@@ -308,6 +320,12 @@ class StatisticalValidator:
     3. Calculate effect size (Cohen's d)
     4. Calculate confidence interval
     5. Provide clear recommendation
+    
+    LEARNING CONNECTIONS:
+    - **Scientific Rigor**: Ensures performance claims are statistically valid
+    - **A/B Testing**: Foundation for production model comparison and rollout decisions
+    - **Research Validation**: Required for academic papers and technical reports
+    - **Business Decisions**: Statistical significance guides investment in new models
     """
     
     def __init__(self, confidence_level: float = 0.95):
@@ -454,7 +472,7 @@ class TinyTorchPerf:
     
     TODO: Implement the complete benchmarking framework.
     
-    UNDERSTANDING THE FRAMEWORK:
+    STEP-BY-STEP IMPLEMENTATION:
     1. Combines all benchmark scenarios
     2. Integrates statistical validation
     3. Provides easy-to-use API
@@ -465,6 +483,12 @@ class TinyTorchPerf:
     2. Provide methods for each scenario
     3. Include statistical validation
     4. Generate comprehensive reports
+    
+    LEARNING CONNECTIONS:
+    - **MLPerf Integration**: Follows industry-standard benchmarking patterns
+    - **Production Deployment**: Validates models before production rollout
+    - **Performance Engineering**: Identifies bottlenecks and optimization opportunities
+    - **Framework Design**: Demonstrates how to build reusable ML tools
     """
     
     def __init__(self):
@@ -563,10 +587,10 @@ class TinyTorchPerf:
         """
         ### BEGIN SOLUTION
         if quick_test:
-            # Quick test with smaller parameters
-            single_result = self.run_single_stream(num_queries=100)
-            server_result = self.run_server(target_qps=5.0, duration=10.0)
-            offline_result = self.run_offline(batch_size=16)
+            # Quick test with very small parameters for fast testing
+            single_result = self.run_single_stream(num_queries=5)
+            server_result = self.run_server(target_qps=20.0, duration=0.2)
+            offline_result = self.run_offline(batch_size=3)
         else:
             # Full benchmarking
             single_result = self.run_single_stream(num_queries=1000)
@@ -753,3 +777,415 @@ This comprehensive benchmarking demonstrates {model_name}'s performance characte
         with open(filename, 'w') as f:
             f.write(report)
         print(f"📄 Report saved to {filename}")
+
+def plot_benchmark_results(benchmark_results: Dict[str, BenchmarkResult]):
+    """Visualize benchmark results."""
+
+    # Create visualizations
+    fig, axes = plt.subplots(1, 3, figsize=(18, 5))
+    
+    # Latency distribution for single-stream
+    if 'single_stream' in benchmark_results:
+        axes[0].hist(benchmark_results['single_stream'].latencies, bins=50, color='skyblue')
+        axes[0].set_title("Single-Stream Latency Distribution")
+        axes[0].set_xlabel("Latency (s)")
+        axes[0].set_ylabel("Frequency")
+    
+    # Server scenario latency
+    if 'server' in benchmark_results:
+        axes[1].plot(benchmark_results['server'].latencies, marker='o', linestyle='-', color='salmon')
+        axes[1].set_title("Server Scenario Latency Over Time")
+        axes[1].set_xlabel("Query Index")
+        axes[1].set_ylabel("Latency (s)")
+    
+    # Offline scenario throughput
+    if 'offline' in benchmark_results:
+        offline_result = benchmark_results['offline']
+        throughput = len(offline_result.latencies) / sum(offline_result.latencies)
+        axes[2].bar(['Throughput'], [throughput], color='lightgreen')
+        axes[2].set_title("Offline Scenario Throughput")
+        axes[2].set_ylabel("Samples per second")
+        
+    plt.tight_layout()
+    plt.show()
+
+# %% ../../modules/source/14_benchmarking/benchmarking_dev.ipynb 29
+class ProductionBenchmarkingProfiler:
+    """
+    Advanced production-grade benchmarking profiler for ML systems.
+    
+    This class implements comprehensive performance analysis patterns used in
+    production ML systems, including end-to-end latency analysis, resource
+    monitoring, A/B testing frameworks, and production monitoring integration.
+    
+    TODO: Implement production-grade profiling capabilities.
+    
+    STEP-BY-STEP IMPLEMENTATION:
+    1. End-to-end pipeline analysis (not just model inference)
+    2. Resource utilization monitoring (CPU, memory, bandwidth)
+    3. Statistical A/B testing frameworks
+    4. Production monitoring and alerting integration
+    5. Performance regression detection
+    6. Load testing and capacity planning
+    
+    LEARNING CONNECTIONS:
+    - **Production ML Systems**: Real-world profiling for deployment optimization
+    - **Performance Engineering**: Systematic approach to identifying and fixing bottlenecks
+    - **A/B Testing**: Statistical frameworks for safe model rollouts
+    - **Cost Optimization**: Understanding resource usage for efficient cloud deployment
+    """
+    
+    def __init__(self, enable_monitoring: bool = True):
+        self.enable_monitoring = enable_monitoring
+        self.baseline_metrics = {}
+        self.production_metrics = []
+        self.ab_test_results = {}
+        self.resource_usage = []
+        
+    def profile_end_to_end_pipeline(self, model: Callable, dataset: List, 
+                                   preprocessing_fn: Optional[Callable] = None,
+                                   postprocessing_fn: Optional[Callable] = None) -> Dict[str, float]:
+        """
+        Profile the complete ML pipeline including preprocessing and postprocessing.
+        
+        TODO: Implement end-to-end pipeline profiling.
+        
+        IMPLEMENTATION STEPS:
+        1. Profile data loading and preprocessing time
+        2. Profile model inference time
+        3. Profile postprocessing and output formatting time
+        4. Measure total memory usage throughout pipeline
+        5. Calculate end-to-end latency distribution
+        6. Identify bottlenecks in the pipeline
+        
+        HINTS:
+        - Use context managers for timing different stages
+        - Track memory usage with sys.getsizeof or psutil
+        - Measure both CPU and wall-clock time
+        - Consider batch vs single-sample processing differences
+        """
+        ### BEGIN SOLUTION
+        import time
+        import sys
+        
+        pipeline_metrics = {
+            'preprocessing_time': [],
+            'inference_time': [],
+            'postprocessing_time': [],
+            'memory_usage': [],
+            'end_to_end_latency': []
+        }
+        
+        for sample in dataset[:100]:  # Profile first 100 samples
+            start_time = time.perf_counter()
+            
+            # Preprocessing stage
+            preprocess_start = time.perf_counter()
+            if preprocessing_fn:
+                processed_sample = preprocessing_fn(sample)
+            else:
+                processed_sample = sample
+            preprocess_end = time.perf_counter()
+            pipeline_metrics['preprocessing_time'].append(preprocess_end - preprocess_start)
+            
+            # Inference stage
+            inference_start = time.perf_counter()
+            model_output = model(processed_sample)
+            inference_end = time.perf_counter()
+            pipeline_metrics['inference_time'].append(inference_end - inference_start)
+            
+            # Postprocessing stage
+            postprocess_start = time.perf_counter()
+            if postprocessing_fn:
+                final_output = postprocessing_fn(model_output)
+            else:
+                final_output = model_output
+            postprocess_end = time.perf_counter()
+            pipeline_metrics['postprocessing_time'].append(postprocess_end - postprocess_start)
+            
+            end_time = time.perf_counter()
+            pipeline_metrics['end_to_end_latency'].append(end_time - start_time)
+            
+            # Memory usage estimation
+            memory_usage = sys.getsizeof(processed_sample) + sys.getsizeof(model_output) + sys.getsizeof(final_output)
+            pipeline_metrics['memory_usage'].append(memory_usage)
+        
+        # Calculate summary statistics
+        summary_metrics = {}
+        for metric_name, values in pipeline_metrics.items():
+            summary_metrics[f'{metric_name}_mean'] = statistics.mean(values)
+            summary_metrics[f'{metric_name}_p95'] = values[int(0.95 * len(values))] if values else 0
+            summary_metrics[f'{metric_name}_max'] = max(values) if values else 0
+        
+        return summary_metrics
+        ### END SOLUTION
+        raise NotImplementedError("Student implementation required")
+    
+    def monitor_resource_utilization(self, duration: float = 60.0) -> Dict[str, List[float]]:
+        """
+        Monitor system resource utilization during model execution.
+        
+        TODO: Implement resource monitoring.
+        
+        IMPLEMENTATION STEPS:
+        1. Sample CPU usage over time
+        2. Track memory consumption patterns
+        3. Monitor bandwidth utilization (if applicable)
+        4. Record resource usage spikes and patterns
+        5. Correlate resource usage with performance
+        
+        STUDENT IMPLEMENTATION CHALLENGE (75% level):
+        You need to implement the resource monitoring logic.
+        Consider how you would track CPU, memory, and other resources
+        during model execution in a production environment.
+        """
+        ### BEGIN SOLUTION
+        import time
+        import os
+        
+        resource_metrics = {
+            'cpu_usage': [],
+            'memory_usage': [],
+            'timestamp': []
+        }
+        
+        start_time = time.perf_counter()
+        
+        while (time.perf_counter() - start_time) < duration:
+            current_time = time.perf_counter() - start_time
+            
+            # Simple CPU usage estimation (in real production, use psutil)
+            # This is a placeholder implementation
+            cpu_usage = 50 + 30 * np.random.rand()  # Simulated CPU usage
+            
+            # Memory usage estimation
+            memory_usage = 1024 + 512 * np.random.rand()  # Simulated memory in MB
+            
+            resource_metrics['cpu_usage'].append(cpu_usage)
+            resource_metrics['memory_usage'].append(memory_usage)
+            resource_metrics['timestamp'].append(current_time)
+            
+            time.sleep(0.1)  # Sample every 100ms
+        
+        return resource_metrics
+        ### END SOLUTION
+        raise NotImplementedError("Student implementation required")
+    
+    def setup_ab_testing_framework(self, model_a: Callable, model_b: Callable, 
+                                   traffic_split: float = 0.5) -> Dict[str, Any]:
+        """
+        Set up A/B testing framework for comparing model versions in production.
+        
+        TODO: Implement A/B testing framework.
+        
+        IMPLEMENTATION STEPS:
+        1. Implement traffic splitting logic
+        2. Track metrics for both model versions
+        3. Implement statistical significance testing
+        4. Monitor for performance regressions
+        5. Provide recommendations for rollout
+        
+        STUDENT IMPLEMENTATION CHALLENGE (75% level):
+        Implement a production-ready A/B testing framework that can
+        safely compare two model versions with proper statistical validation.
+        """
+        ### BEGIN SOLUTION
+        ab_test_config = {
+            'model_a': model_a,
+            'model_b': model_b,
+            'traffic_split': traffic_split,
+            'metrics_a': {'latencies': [], 'accuracies': [], 'errors': 0},
+            'metrics_b': {'latencies': [], 'accuracies': [], 'errors': 0},
+            'total_requests': 0,
+            'requests_a': 0,
+            'requests_b': 0
+        }
+        
+        return ab_test_config
+        ### END SOLUTION
+        raise NotImplementedError("Student implementation required")
+    
+    def run_ab_test(self, ab_config: Dict[str, Any], dataset: List, 
+                   num_samples: int = 1000) -> Dict[str, Any]:
+        """
+        Execute A/B test with statistical validation.
+        
+        TODO: Implement A/B test execution.
+        
+        STUDENT IMPLEMENTATION CHALLENGE (75% level):
+        Execute the A/B test, collect metrics, and provide statistical
+        analysis of the results with confidence intervals.
+        """
+        ### BEGIN SOLUTION
+        import time
+        
+        model_a = ab_config['model_a']
+        model_b = ab_config['model_b']
+        traffic_split = ab_config['traffic_split']
+        
+        for i in range(num_samples):
+            sample = dataset[i % len(dataset)]
+            
+            # Route traffic based on split
+            if np.random.rand() < traffic_split:
+                # Route to model A
+                start_time = time.perf_counter()
+                try:
+                    result = model_a(sample)
+                    latency = time.perf_counter() - start_time
+                    ab_config['metrics_a']['latencies'].append(latency)
+                    ab_config['requests_a'] += 1
+                except Exception:
+                    ab_config['metrics_a']['errors'] += 1
+            else:
+                # Route to model B
+                start_time = time.perf_counter()
+                try:
+                    result = model_b(sample)
+                    latency = time.perf_counter() - start_time
+                    ab_config['metrics_b']['latencies'].append(latency)
+                    ab_config['requests_b'] += 1
+                except Exception:
+                    ab_config['metrics_b']['errors'] += 1
+            
+            ab_config['total_requests'] += 1
+        
+        # Calculate test results
+        latencies_a = ab_config['metrics_a']['latencies']
+        latencies_b = ab_config['metrics_b']['latencies']
+        
+        if latencies_a and latencies_b:
+            # Statistical comparison
+            validator = StatisticalValidator()
+            statistical_result = validator.validate_comparison(latencies_a, latencies_b)
+            
+            results = {
+                'model_a_performance': {
+                    'mean_latency': statistics.mean(latencies_a),
+                    'p95_latency': latencies_a[int(0.95 * len(latencies_a))],
+                    'error_rate': ab_config['metrics_a']['errors'] / ab_config['requests_a'] if ab_config['requests_a'] > 0 else 0
+                },
+                'model_b_performance': {
+                    'mean_latency': statistics.mean(latencies_b),
+                    'p95_latency': latencies_b[int(0.95 * len(latencies_b))],
+                    'error_rate': ab_config['metrics_b']['errors'] / ab_config['requests_b'] if ab_config['requests_b'] > 0 else 0
+                },
+                'statistical_analysis': statistical_result,
+                'recommendation': self._generate_ab_recommendation(statistical_result)
+            }
+        else:
+            results = {'error': 'Insufficient data for comparison'}
+        
+        return results
+        ### END SOLUTION
+        raise NotImplementedError("Student implementation required")
+    
+    def _generate_ab_recommendation(self, statistical_result: StatisticalValidation) -> str:
+        """
+        Generate production rollout recommendation based on A/B test results.
+        
+        STUDENT IMPLEMENTATION CHALLENGE (75% level):
+        Based on the statistical results, provide a clear recommendation
+        for production rollout decisions.
+        """
+        ### BEGIN SOLUTION
+        if not statistical_result.is_significant:
+            return "No significant difference detected. Consider longer test duration or larger sample size."
+        
+        if statistical_result.effect_size < 0:
+            return "Model B shows worse performance. Do not proceed with rollout."
+        elif statistical_result.effect_size > 0.2:
+            return "Model B shows significant improvement. Proceed with gradual rollout."
+        else:
+            return "Model B shows marginal improvement. Consider business impact before rollout."
+        ### END SOLUTION
+        raise NotImplementedError("Student implementation required")
+    
+    def detect_performance_regression(self, current_metrics: Dict[str, float], 
+                                    baseline_metrics: Dict[str, float],
+                                    threshold: float = 0.1) -> Dict[str, Any]:
+        """
+        Detect performance regressions compared to baseline.
+        
+        TODO: Implement regression detection.
+        
+        STUDENT IMPLEMENTATION CHALLENGE (75% level):
+        Implement automated detection of performance regressions
+        with configurable thresholds and alerting.
+        """
+        ### BEGIN SOLUTION
+        regressions = []
+        improvements = []
+        
+        for metric_name, current_value in current_metrics.items():
+            if metric_name in baseline_metrics:
+                baseline_value = baseline_metrics[metric_name]
+                if baseline_value > 0:  # Avoid division by zero
+                    change_percent = (current_value - baseline_value) / baseline_value
+                    
+                    if change_percent > threshold:
+                        regressions.append({
+                            'metric': metric_name,
+                            'baseline': baseline_value,
+                            'current': current_value,
+                            'change_percent': change_percent * 100
+                        })
+                    elif change_percent < -threshold:
+                        improvements.append({
+                            'metric': metric_name,
+                            'baseline': baseline_value,
+                            'current': current_value,
+                            'change_percent': abs(change_percent) * 100
+                        })
+        
+        return {
+            'regressions': regressions,
+            'improvements': improvements,
+            'alert_level': 'HIGH' if regressions else 'LOW',
+            'recommendation': 'Review deployment' if regressions else 'Performance stable'
+        }
+        ### END SOLUTION
+        raise NotImplementedError("Student implementation required")
+    
+    def generate_capacity_planning_report(self, current_load: Dict[str, float],
+                                        projected_growth: float = 1.5) -> str:
+        """
+        Generate capacity planning report for scaling production systems.
+        
+        STUDENT IMPLEMENTATION CHALLENGE (75% level):
+        Create a comprehensive capacity planning analysis that helps
+        engineering teams plan for growth and resource allocation.
+        """
+        ### BEGIN SOLUTION
+        report = f"""# Capacity Planning Report
+
+## Current System Load
+- **Average CPU Usage**: {current_load.get('cpu_usage', 0):.1f}%
+- **Memory Usage**: {current_load.get('memory_usage', 0):.1f} MB
+- **Request Rate**: {current_load.get('request_rate', 0):.1f} req/sec
+- **Average Latency**: {current_load.get('latency', 0):.2f} ms
+
+## Projected Requirements (Growth Factor: {projected_growth}x)
+- **Projected CPU Usage**: {current_load.get('cpu_usage', 0) * projected_growth:.1f}%
+- **Projected Memory**: {current_load.get('memory_usage', 0) * projected_growth:.1f} MB
+- **Projected Request Rate**: {current_load.get('request_rate', 0) * projected_growth:.1f} req/sec
+
+## Scaling Recommendations
+"""
+        
+        cpu_projected = current_load.get('cpu_usage', 0) * projected_growth
+        memory_projected = current_load.get('memory_usage', 0) * projected_growth
+        
+        if cpu_projected > 80:
+            report += "- **CPU Scaling**: Consider adding more compute instances\n"
+        if memory_projected > 8000:  # 8GB threshold
+            report += "- **Memory Scaling**: Consider upgrading to higher memory instances\n"
+        
+        report += "\n## Infrastructure Recommendations\n"
+        report += "- Monitor performance metrics continuously\n"
+        report += "- Set up auto-scaling policies\n"
+        report += "- Plan for peak load scenarios\n"
+        
+        return report
+        ### END SOLUTION
+        raise NotImplementedError("Student implementation required")
