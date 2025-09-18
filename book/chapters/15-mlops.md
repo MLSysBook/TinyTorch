@@ -454,6 +454,6 @@ Ready for serious development? → [🏗️ Local Setup Guide](../usage-paths/se
 ---
 
 <div class="prev-next-area">
-<a class="left-prev" href="../chapters/14_benchmarking.html" title="previous page">← Previous Module</a>
-<a class="right-next" href="../chapters/16_capstone.html" title="next page">Next Module →</a>
+<a class="left-prev" href="../chapters/14_kernels.html" title="previous page">← Previous Module</a>
+<a class="right-next" href="../chapters/16_mlops.html" title="next page">Next Module →</a>
 </div>

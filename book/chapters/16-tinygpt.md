@@ -1,305 +1,94 @@
 ---
 title: "TinyGPT - Language Models"
-description: "Extend your vision framework to language models with GPT-style transformers"
-difficulty: "🔥"
+description: "Build GPT-style transformer models for language understanding using TinyTorch"
+difficulty: "⭐⭐⭐⭐⭐"
 time_estimate: "4-6 hours"
 prerequisites: []
 next_steps: []
 learning_objectives: []
 ---
 
-# 🔥 Module 16: TinyGPT - From Vision to Language
+# Module 16: TinyGPT - Language Models
 
 ```{div} badges
-🔥 Language Models | ⏱️ 4-6 hours
+⭐⭐⭐⭐⭐ | ⏱️ 4-6 hours
 ```
 
-**🎯 The Ultimate Framework Test: Does your vision framework work for language models?**
 
----
+**From Vision to Language: Building GPT-style transformers with TinyTorch**
 
-## 📊 Module Overview
-
-- **Difficulty**: 🔥 Framework Generalization 
-- **Time Estimate**: 4-6 hours for complete understanding
-- **Prerequisites**: **Modules 1-15** - Your complete computer vision framework
-- **Outcome**: **Complete GPT-style language model** using 95% TinyTorch components
-
-After 15 modules, you've built a complete computer vision framework from scratch. Now comes the ultimate test: **Can the same mathematical foundations power language models?**
-
-**Spoiler**: They absolutely can, and you'll prove it by building TinyGPT!
-
----
-
-## 🔬 **The Framework Generalization Discovery**
-
-### 💡 **What You'll Learn**
-
-This module demonstrates the most important insight in modern ML:
-
-> **The same mathematical foundations that power computer vision also power natural language processing.**
-
-### 🧩 **Component Reuse Analysis**
-
-```python
-# What works unchanged from your vision framework:
-from tinytorch.core.tensor import Tensor          # ✅ Same tensors
-from tinytorch.core.layers import Dense           # ✅ Same dense layers  
-from tinytorch.core.activations import ReLU, Softmax  # ✅ Same activations
-from tinytorch.core.optimizers import Adam        # ✅ Same optimizers
-from tinytorch.core.training import Trainer       # ✅ Same training loops
-from tinytorch.core.losses import CrossEntropyLoss    # ✅ Same loss functions
-
-# What's new for language (minimal extensions):
-from tinytorch.tinygpt import CharTokenizer       # 🆕 Text preprocessing
-from tinytorch.tinygpt import MultiHeadAttention  # 🆕 Sequence attention
-from tinytorch.tinygpt import TinyGPT            # 🆕 Complete language model
-```
-
-**Result**: ~95% component reuse! This isn't just educational - it's how real ML frameworks work.
-
----
-
-## 🏗️ **What You'll Build: Complete TinyGPT**
-
-### **Architecture Overview**
-```
-Text Input → CharTokenizer → Embeddings → Multi-Head Attention → Transformer Blocks → Text Generation
-```
-
-### **Key Components**
-
-#### **🔤 Character-Level Tokenization**
-```python
-tokenizer = CharTokenizer()
-text = "Hello, TinyTorch!"
-tokens = tokenizer.encode(text)  # [8, 5, 12, 12, 15, ...]
-decoded = tokenizer.decode(tokens)  # "Hello, TinyTorch!"
-```
-
-#### **🧠 Multi-Head Attention**
-```python
-# The key innovation for sequence modeling
-attention = MultiHeadAttention(d_model=128, num_heads=8)
-attended = attention(sequence)  # Focus on relevant parts of input
-```
-
-#### **🔄 Transformer Blocks**
-```python
-# Stack of attention + feedforward (using your Dense layers!)
-transformer_block = TransformerBlock(
-    attention=MultiHeadAttention(d_model=128, num_heads=8),
-    feedforward=Sequential([  # Your existing components!
-        Dense(128, 512),
-        ReLU(),
-        Dense(512, 128)
-    ])
-)
-```
-
-#### **📝 Autoregressive Generation**
-```python
-# Generate text one character at a time
-model = TinyGPT(vocab_size=100, d_model=128, num_layers=6)
-generated_text = model.generate("Once upon a time", max_length=100)
-```
-
----
-
-## 🎯 **Learning Objectives**
+## Learning Objectives
 
 By the end of this module, you will:
 
-### **1. 🧩 Framework Thinking**
-- **Understand component reusability** across vision and language domains
-- **Identify universal vs domain-specific** ML operations
-- **Design extensible frameworks** that support multiple modalities
+1. **Build GPT-style transformer models** using TinyTorch Dense layers and attention mechanisms
+2. **Understand character-level tokenization** and its role in language model training
+3. **Implement multi-head attention** that enables models to focus on different parts of sequences
+4. **Create complete transformer blocks** with layer normalization and residual connections
+5. **Train autoregressive language models** that generate coherent text sequences
+6. **Apply ML Systems thinking** to understand framework reusability across vision and language
 
-### **2. 🔤 Language Model Fundamentals**
-- **Implement character-level tokenization** for text preprocessing
-- **Build multi-head attention mechanisms** for sequence understanding
-- **Create autoregressive generation** for coherent text production
+## What Makes This Special
 
-### **3. 🏗️ Architecture Design**
-- **Construct transformer blocks** using existing TinyTorch components
-- **Implement positional encoding** for sequence order understanding
-- **Design training loops** for language model optimization
+This module demonstrates the **power of TinyTorch's foundation** by extending it from vision to language models:
 
-### **4. 📊 Systems Understanding**
-- **Compare vision vs language** computational patterns
-- **Understand attention complexity** (O(N²) scaling implications)
-- **Optimize memory usage** for sequence processing
+- **~70% component reuse**: Dense layers, optimizers, training loops, loss functions
+- **Strategic additions**: Only what's essential for language - attention, tokenization, generation
+- **Educational clarity**: See how the same mathematical foundations power both domains
+- **Framework thinking**: Understand why successful ML frameworks support multiple modalities
 
----
+## Components Implemented
 
-## 🚀 **Key Insights You'll Discover**
+### Core Language Processing
+- **CharTokenizer**: Character-level tokenization with vocabulary management
+- **PositionalEncoding**: Sinusoidal position embeddings for sequence order
 
-### **💡 Mathematical Unity**
-```python
-# Same operations, different data:
-# Vision: Dense(image_features, hidden_dim)
-# Language: Dense(token_embeddings, hidden_dim)
+### Attention Mechanisms  
+- **MultiHeadAttention**: Parallel attention heads for capturing different relationships
+- **SelfAttention**: Simplified attention for easier understanding
+- **CausalMasking**: Preventing attention to future tokens in autoregressive models
 
-# Vision: conv(images) → attention(feature_maps)  
-# Language: embed(tokens) → attention(sequence)
-```
+### Transformer Architecture
+- **LayerNorm**: Normalization for stable transformer training
+- **TransformerBlock**: Complete transformer layer with attention + feedforward
+- **TinyGPT**: Full GPT-style model with embedding, positional encoding, and generation
 
-### **🔄 Component Reuse**
-- **Dense layers**: Work identically for image features and token embeddings
-- **Optimizers**: Adam optimizes vision and language models the same way
-- **Training loops**: Identical backpropagation and parameter updates
-- **Loss functions**: CrossEntropy works for both image classes and next-token prediction
+### Training Infrastructure
+- **LanguageModelLoss**: Cross-entropy loss with proper target shifting
+- **LanguageModelTrainer**: Training loops optimized for text sequences
+- **TextGeneration**: Autoregressive sampling for coherent text generation
 
-### **⚡ Strategic Extensions**
-- **Attention**: The key architectural difference for sequence modeling
-- **Positional encoding**: Sequence order (unlike spatial images)
-- **Autoregressive sampling**: Text generation pattern
+## Key Insights
 
----
+1. **Framework Reusability**: TinyTorch's Dense layers work seamlessly for language models
+2. **Attention Innovation**: The key difference between vision and language is attention mechanisms
+3. **Sequence Modeling**: Language requires understanding order and context across long sequences
+4. **Autoregressive Generation**: Language models predict one token at a time, building coherently
 
-## 📈 **Progressive Implementation**
+## Educational Philosophy
 
-### **Part 1: Foundation Analysis**
-- Analyze your existing TinyTorch components
-- Understand what transfers to language models
-- Plan minimal extensions needed
+This module shows that **vision and language models share the same foundation**:
+- Matrix multiplications (Dense layers) 
+- Nonlinear activations
+- Gradient-based optimization
+- Batch processing and training loops
 
-### **Part 2: Character-Level Processing**
-- Implement CharTokenizer for text preprocessing
-- Build vocabulary management system
-- Test with sample text encoding/decoding
+The magic happens in the **architectural patterns** we add on top!
 
-### **Part 3: Attention Mechanisms**
-- Implement scaled dot-product attention
-- Build multi-head attention for parallel processing
-- Add causal masking for autoregressive models
+## Prerequisites
 
-### **Part 4: Transformer Architecture**
-- Combine attention with your Dense layers
-- Add positional encoding for sequence order
-- Build complete transformer blocks
+- Modules 1-11 (especially Tensor, Dense, Attention, Training)
+- Understanding of sequence modeling concepts
+- Familiarity with autoregressive generation
 
-### **Part 5: Language Model Training**
-- Implement text sequence data loading
-- Train TinyGPT on character-level data
-- Test text generation capabilities
+## Time Estimate
 
-### **Part 6: Framework Integration**
-- Ensure seamless integration with TinyTorch
-- Test component compatibility
-- Measure framework reuse percentage
+4-6 hours for complete understanding and implementation
 
 ---
 
-## 🎓 **What This Proves**
+*"Language is the most powerful tool humans have created. Now let's teach machines to wield it." - The TinyTorch Philosophy*
 
-Completing TinyGPT demonstrates:
-
-### **🏗️ Framework Engineering Mastery**
-- You understand the **mathematical foundations** underlying all of ML
-- You can **extend frameworks systematically** to new domains
-- You grasp **universal vs domain-specific** design patterns
-
-### **🧠 Deep Learning Understanding**
-- You see the **connections between** vision and language models
-- You understand **attention as a fundamental operation**
-- You grasp **sequence modeling principles**
-
-### **💼 Professional ML Engineering**
-- You can **implement cutting-edge architectures** from scratch
-- You understand **framework design principles** used by PyTorch/TensorFlow
-- You can **optimize across multiple modalities**
-
----
-
-## 🎯 **Real-World Applications**
-
-Your TinyGPT implementation enables:
-
-### **📝 Text Generation**
-```python
-model = TinyGPT.load("trained_model.pkl")
-story = model.generate("In a world where AI", max_length=200)
-```
-
-### **🤖 Chatbot Foundations**
-```python
-# Simple Q&A system
-response = model.generate(f"Question: {user_input}\nAnswer:", max_length=50)
-```
-
-### **📚 Educational Tools**
-```python
-# Character-level language modeling for education
-model.train_on_text("Shakespeare corpus", epochs=10)
-generated_shakespeare = model.generate("To be or not to be", max_length=100)
-```
-
----
-
-## 🔬 **ML Systems Thinking Questions**
-
-### **🏗️ Framework Design**
-1. **Why do successful ML frameworks support multiple modalities?** How does component reuse accelerate development?
-2. **What makes an operation "universal" vs "domain-specific"?** Where do you draw the line?
-3. **How do framework designers balance generality vs optimization?** What are the trade-offs?
-
-### **🧠 Architecture Patterns**
-1. **Why is attention so effective for sequences?** What makes it different from convolution for images?
-2. **How do transformers handle variable-length sequences?** What are the computational implications?
-3. **What role does inductive bias play** in vision (locality) vs language (sequentiality) models?
-
-### **⚡ Performance & Scale**
-1. **How does O(N²) attention scaling affect real language models?** What optimizations are used in practice?
-2. **Why are language models often larger than vision models?** What drives the parameter count differences?
-3. **How do production systems handle autoregressive generation efficiently?** What are the bottlenecks?
-
-### **🔄 Transfer Learning**
-1. **What would it take to fine-tune your TinyGPT?** How would you adapt it to specific tasks?
-2. **How do pre-trained language models change the development cycle?** Compare to training from scratch.
-3. **What's the relationship between model size and emergent capabilities?** When do language models become "useful"?
-
----
-
-## 🎉 **Module Completion**
-
-When you finish this module, you will have:
-
-✅ **Built a complete GPT-style language model** using your TinyTorch framework  
-✅ **Demonstrated 95% component reuse** from vision to language  
-✅ **Implemented multi-head attention** for sequence understanding  
-✅ **Created autoregressive text generation** capabilities  
-✅ **Proven framework generalization** across modalities  
-✅ **Understood universal ML foundations** that power all domains  
-
-**🏆 Achievement Unlocked**: You now understand the mathematical unity underlying modern AI!
-
----
-
-## 🚀 **Beyond TinyGPT: What's Next?**
-
-Your unified vision + language framework opens doors to:
-
-### **🔬 Research Extensions**
-- **Vision-Language Models**: Combine both modalities (CLIP-style)
-- **Multi-Modal Transformers**: Process images and text jointly
-- **Unified Architectures**: Single model for multiple tasks
-
-### **🏭 Production Applications**
-- **Content Generation**: Text, code, creative writing
-- **Conversational AI**: Chatbots and virtual assistants  
-- **Multi-Modal Systems**: Image captioning, visual Q&A
-
-### **🎓 Advanced Studies**
-- **Scaling Laws**: How performance changes with model size
-- **Efficiency Techniques**: Quantization, pruning for language models
-- **Emergent Capabilities**: What happens as models get larger
-
----
-
-**🔥 Ready to prove that your vision framework can power language models? Let's build TinyGPT!**
-
----
 
 Choose your preferred way to engage with this module:
 
@@ -338,5 +127,6 @@ Ready for serious development? → [🏗️ Local Setup Guide](../usage-paths/se
 ---
 
 <div class="prev-next-area">
-<a class="left-prev" href="../chapters/15-mlops.html" title="previous page">← Previous Module</a>
+<a class="left-prev" href="../chapters/15_benchmarking.html" title="previous page">← Previous Module</a>
+<a class="right-next" href="../chapters/17_capstone_backup.html" title="next page">Next Module →</a>
 </div>
