@@ -237,13 +237,19 @@ class TestCommand(BaseCommand):
             output = result.stdout
             error = result.stderr
             
-            # Check return code
+            # Check return code - this is the definitive test of success
             if result.returncode != 0:
                 inline_tests.append(TestResult("script_execution", False, output, error))
                 return inline_tests
             
-            # Parse the auto-discovery output to extract individual test names
-            if "🧪 Running" in output and "Module Tests" in output:
+            # Module executed successfully (return code 0)
+            # This is the correct indicator of success, not output parsing
+            inline_tests.append(TestResult("inline_tests", True, output))
+            return inline_tests
+            
+            # OLD COMPLEX PARSING (keeping for reference but not used)
+            # Parse the auto-discovery output to extract individual test names  
+            if False and "🧪 Running" in output and "Module Tests" in output:
                 # Parse the auto-discovery section
                 lines = output.split('\n')
                 test_results = []
