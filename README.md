@@ -1,4 +1,4 @@
-# Tiny🔥Torch 
+# TinyTorch 🔥
 
 **Build ML Systems From First Principles. From Computer Vision to Language Models.**
 
@@ -8,25 +8,37 @@
 [![Python](https://img.shields.io/badge/python-3.8+-green.svg)](https://python.org)
 [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/MLSysBook/TinyTorch/main)
 [![Jupyter Book](https://img.shields.io/badge/docs-Jupyter_Book-orange.svg)](https://mlsysbook.github.io/TinyTorch/)
+[![Harvard](https://img.shields.io/badge/institution-Harvard_University-crimson.svg)](https://harvard.edu)
 
-📚 **[Read the Interactive Course →](https://mlsysbook.github.io/TinyTorch/)**
+📚 **[Interactive Course Website →](https://mlsysbook.github.io/TinyTorch/)** | 🎓 **[Instructor Resources →](https://mlsysbook.github.io/TinyTorch/instructor-guide.html)**
 
 ---
 
 ## ✨ **New in v0.1**
 
+### **🎓 Professional Academic Design**
+- **Clean Typography**: Inter font family optimized for extended reading sessions
+- **Academic Styling**: Professional appearance matching top university courses
+- **Enhanced Readability**: Improved spacing, contrast, and visual hierarchy
+- **Responsive Design**: Beautiful on all devices from mobile to desktop
+
 ### **🎯 Interactive ML Systems Learning**
 - **Interactive Questions**: Write 150-300 word reflections on ML systems design
 - **NBGrader Integration**: Automated assessment with instructor feedback
 - **Checkpoint System**: Track your capability progression through 16 checkpoints
-- **TinyGPT Module**: Build transformers showing 70% framework component reuse
+- **TinyGPT Module**: Build transformers showing 95% framework component reuse
 
 ### **🛠️ Simplified Instructor Tools**
 - **`tito grade`**: Complete grading workflow wrapped in simple CLI commands
 - **Module Management**: Export, test, and validate all modules with one command
 - **Progress Tracking**: Visual checkpoint timeline showing student achievements
+- **Jupyter Book**: Professional course website with automatic chapter generation
 
 ---
+
+## 🎓 **A Harvard University Course**
+
+Created by [Prof. Vijay Janapa Reddi](https://vijay.seas.harvard.edu) at Harvard University, TinyTorch provides Ivy League-quality education in ML systems engineering. This course represents the culmination of years of teaching experience and research in machine learning systems.
 
 ## 🔬 **Why Build Your Own ML Framework?**
 
@@ -119,11 +131,21 @@ Algorithm-focused Course:       Systems-focused Course (TinyTorch):
 ### 📊 **Step 1: Setup & System Check**
 
 ```bash
+# Clone the repository
 git clone https://github.com/mlsysbook/TinyTorch.git
 cd TinyTorch
-pip install -r requirements.txt           # Install all dependencies (numpy, jupyter, pytest, etc.)
-pip install -e .                          # Install TinyTorch package in editable mode
-tito system doctor                         # Verify your setup
+
+# Create virtual environment (recommended)
+python -m venv .venv
+source .venv/bin/activate              # On macOS/Linux
+# OR: .venv\Scripts\activate          # On Windows
+
+# Install dependencies and TinyTorch
+pip install -r requirements.txt        # Install all dependencies
+pip install -e .                       # Install TinyTorch in editable mode
+
+# Verify your setup
+tito system doctor                      # Comprehensive system check
 ```
 
 ### 🎯 **Step 2: Start with Module 0 - Introduction**
@@ -165,22 +187,34 @@ tito checkpoint test 00                    # Test environment checkpoint
 # ⏳ 02: Intelligence - "Can I add nonlinearity - the key to neural network intelligence?"
 ```
 
-### 👩‍🏫 **Instructors**
+### 📚 **Step 5: Access the Interactive Course Website**
 
 ```bash
-# System check
-tito system info
-tito system doctor
+# Build and view the Jupyter Book website locally
+tito book build                           # Generate the course website
+tito book serve                           # Launch local server (http://localhost:8000)
 
-# Module workflow with checkpoint integration
-tito module complete 01_setup            # Export + test capability
-tito checkpoint status --detailed        # Student progress overview
-tito checkpoint test 01                   # Validate specific checkpoint
+# Or access online:
+# https://mlsysbook.github.io/TinyTorch/
+```
 
-# Traditional workflow (still available)
-tito export 01_setup
-tito test 01_setup
-tito nbdev build                          # Update package
+### 👩‍🏫 **For Instructors**
+
+```bash
+# Grading workflow with NBGrader
+tito grade setup                          # Configure NBGrader
+tito grade assign 02_tensor               # Create student version
+tito grade collect                        # Collect submissions
+tito grade autograde 02_tensor            # Automatic grading
+tito grade feedback 02_tensor             # Generate feedback
+
+# Module management
+tito module complete 01_setup             # Export + test capability
+tito checkpoint status --detailed         # Student progress overview
+
+# Book management
+tito book build                           # Build course website
+tito book deploy                          # Deploy to GitHub Pages
 ```
 
 ---
@@ -197,6 +231,27 @@ tito nbdev build                          # Update package
 - **Chapter 11 (Continual Learning)**: Advanced techniques (Module 12)
 
 **TinyTorch provides the implementation foundation for understanding these concepts deeply.**
+
+---
+
+## 📋 **Prerequisites & Learning Resources**
+
+### **Required Knowledge**
+- **Python Programming**: Intermediate level (classes, functions, NumPy basics)
+- **Linear Algebra**: Matrices, vectors, basic operations
+- **Calculus**: Derivatives and chain rule (for backpropagation)
+- **Basic ML Concepts**: What neural networks are (implementation not required)
+
+### **Recommended Resources**
+- 📖 **[Machine Learning Systems Book](https://mlsysbook.ai)** - Comprehensive ML systems context
+- 🎥 **Course Videos** - Coming soon on the course website
+- 💬 **Community Discord** - Join discussions with other learners
+- 📝 **[NBGrader Documentation](https://nbgrader.readthedocs.io)** - For instructors using autograding
+
+### **Time Commitment**
+- **Complete Course**: 60-80 hours (full implementation + exercises)
+- **Quick Exploration**: 10-15 hours (understand core concepts)
+- **Module Pace**: 3-5 hours per module average
 
 ---
 
@@ -865,3 +920,45 @@ This isn't just an academic exercise - you're building production-capable ML inf
 
 ---
 </details>
+
+---
+
+## 🤝 **Contributing & Support**
+
+### **Getting Help**
+- 📚 **Course Website**: [mlsysbook.github.io/TinyTorch](https://mlsysbook.github.io/TinyTorch/)
+- 💬 **Issues**: [GitHub Issues](https://github.com/mlsysbook/TinyTorch/issues)
+- 📧 **Contact**: Course instructors through the website
+
+### **Contributing**
+We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for:
+- Code style guidelines
+- Testing requirements
+- Documentation standards
+- Pull request process
+
+### **Citation**
+If you use TinyTorch in your research or teaching, please cite:
+```bibtex
+@software{tinytorch2024,
+  title = {TinyTorch: Build ML Systems From First Principles},
+  author = {Reddi, Vijay Janapa},
+  year = {2024},
+  institution = {Harvard University},
+  url = {https://github.com/mlsysbook/TinyTorch}
+}
+```
+
+### **License**
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+### **Acknowledgments**
+- Harvard University for supporting this educational initiative
+- Students who provided feedback and helped improve the course
+- The ML systems community for inspiration and guidance
+
+---
+
+**Built with ❤️ at Harvard University**
+
+_Start Small. Go Deep. Build ML Systems._
