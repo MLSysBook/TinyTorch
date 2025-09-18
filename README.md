@@ -417,19 +417,24 @@ TinyTorch/
 
 ```mermaid
 flowchart TD
-    Z[00_introduction<br/>🎯 System Overview & Architecture] --> A[01_setup<br/>Setup & Environment] 
+    Z[00_introduction<br/>🎯 System Overview] --> A[01_setup<br/>Setup & Environment] 
     A --> B[02_tensor<br/>Core Tensor Operations]
     B --> C[03_activations<br/>ReLU, Sigmoid, Tanh]
+    B --> I[09_autograd<br/>Automatic Differentiation]
+    
     C --> D[04_layers<br/>Dense Layers]
     D --> E[05_dense<br/>Sequential Networks]
     
     E --> F[06_spatial<br/>Convolutional Networks]
     E --> G[07_attention<br/>Self-Attention]
-    F --> H[08_dataloader<br/>Data Loading]
-    B --> I[09_autograd<br/>Automatic Differentiation]
+    
+    B --> H[08_dataloader<br/>Data Loading]
+    
     I --> J[10_optimizers<br/>SGD & Adam]
     
     H --> K[11_training<br/>Training Loops]
+    E --> K
+    F --> K
     G --> K
     J --> K
     
@@ -439,9 +444,9 @@ flowchart TD
     K --> O[15_mlops<br/>Production Monitoring]
     
     L --> P[16_tinygpt<br/>🔥 Language Models]
-    M --> P
-    N --> P
-    O --> P
+    G --> P
+    J --> P
+    K --> P
 ```
 
 ### **🎯 How It All Connects**
