@@ -6,9 +6,14 @@ Shows convolutional networks processing images like edge detection and pattern r
 
 import sys
 import numpy as np
+from rich.console import Console
+from rich.panel import Panel
+from rich.table import Table
 
 def demo_vision():
     """Demo computer vision with convolutional operations and pattern recognition"""
+    
+    console = Console()
     
     try:
         # Import TinyTorch modules
@@ -18,10 +23,13 @@ def demo_vision():
         import tinytorch.core.dense as dense
         import tinytorch.core.spatial as spatial
         
-        print("👁️ TinyTorch Computer Vision Demo")
-        print("=" * 50)
-        print("From raw pixels to intelligent pattern recognition!")
-        print()
+        # Main header
+        console.print(Panel.fit(
+            "👁️ TinyTorch Computer Vision Demo\nFrom raw pixels to intelligent pattern recognition!",
+            style="bold cyan",
+            border_style="bright_blue"
+        ))
+        console.print()
         
         # Demo 1: The Image Processing Foundation
         print("🖼️ Demo 1: Digital Images as Tensors")
@@ -233,14 +241,36 @@ def demo_vision():
         print()
         print("🔥 Next: Attention mechanisms for sequence understanding!")
         
+        # Success summary
+        console.print(Panel.fit(
+            "🎯 Achievements:\n"
+            "• Understood images as tensors and pixel arrays\n"
+            "• Implemented edge detection with convolution filters\n"
+            "• Built complete CNN architecture from scratch\n"
+            "• Processed real image data with spatial operations\n"
+            "• Connected local features to global understanding\n"
+            "• Demonstrated the computer vision revolution\n\n"
+            "🔥 Next: Attention mechanisms and transformers!",
+            title="🏆 TinyTorch Computer Vision Demo Complete!",
+            style="bold green",
+            border_style="bright_green"
+        ))
+        
         return True
         
     except ImportError as e:
-        print(f"❌ Could not import TinyTorch modules: {e}")
-        print("💡 Make sure to run: tito export 06_spatial")
+        console.print(Panel(
+            f"Could not import TinyTorch modules: {e}\n\n💡 Make sure to run: tito export 06_spatial",
+            title="❌ Import Error",
+            style="bold red"
+        ))
         return False
     except Exception as e:
-        print(f"❌ Demo failed: {e}")
+        console.print(Panel(
+            f"Demo failed: {e}",
+            title="❌ Error",
+            style="bold red"
+        ))
         import traceback
         traceback.print_exc()
         return False
