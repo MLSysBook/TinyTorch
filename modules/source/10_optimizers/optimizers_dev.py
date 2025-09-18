@@ -3075,11 +3075,13 @@ if __name__ == "__main__":
     print("🧪 Running comprehensive optimizer tests...")
     
     # Run all tests
-    test_unit_sgd_implementation()
-    test_unit_sgd_with_momentum()
+    test_unit_sgd_optimizer()
     test_unit_adam_optimizer()
-    test_module_optimizer_neural_network_training()
-    test_memory_profiler()
+    test_unit_step_scheduler()
+    test_module_unit_training()
+    test_unit_convergence_profiler()
+    test_unit_advanced_optimizer_features()
+    test_comprehensive_ml_systems_integration()
     
     print("All tests passed!")
     print("Optimizers module complete!")
