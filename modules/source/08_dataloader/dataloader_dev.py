@@ -515,6 +515,9 @@ class TestDataset(Dataset):
     
     def get_num_classes(self):
         return 3
+    
+    def get_sample_shape(self):
+        return (2,)
 
 # Test basic DataLoader functionality
 try:
@@ -1502,57 +1505,54 @@ Complete the missing implementations in the `DataPipelineProfiler` class above, 
 # Initialize the data pipeline profiler
 profiler = DataPipelineProfiler()
 
-# Only run tests when module is executed directly
+# Guard to prevent execution when imported
 if __name__ == '__main__':
+    # Only run tests when module is executed directly
     print("📊 DATA PIPELINE PERFORMANCE ANALYSIS")
     print("=" * 50)
 
-    # Create test dataset and dataloader
-    test_dataset = TensorDataset([
-        Tensor(np.random.randn(100)) for _ in range(1000)  # 1000 samples
-    ], [
-        Tensor([i % 10]) for i in range(1000)  # Labels
-    ])
+    # Create test dataset and dataloader  
+    test_dataset = TestDataset(size=1000)
 
     # Test 1: Basic DataLoader timing
     print("⏱️  Basic DataLoader Timing:")
     basic_dataloader = DataLoader(test_dataset, batch_size=32, shuffle=False)
 
-# Students use their implemented timing function
-timing_result = profiler.time_dataloader_iteration(basic_dataloader, num_batches=25)
+    # Students use their implemented timing function
+    timing_result = profiler.time_dataloader_iteration(basic_dataloader, num_batches=25)
 
-if 'error' not in timing_result:
-    print(f"   Average batch time: {timing_result['avg_batch_time']:.3f}s")
-    print(f"   Throughput: {timing_result['batches_per_second']:.1f} batches/sec")
-    print(f"   Bottleneck detected: {'Yes' if timing_result['is_bottleneck'] else 'No'}")
+    if 'error' not in timing_result:
+        print(f"   Average batch time: {timing_result['avg_batch_time']:.3f}s")
+        print(f"   Throughput: {timing_result['batches_per_second']:.1f} batches/sec")
+        print(f"   Bottleneck detected: {'Yes' if timing_result['is_bottleneck'] else 'No'}")
+        
+        # Calculate samples per second
+        samples_per_sec = 32 * timing_result['batches_per_second']
+        print(f"   Samples/second: {samples_per_sec:.1f}")
+    else:
+        print(f"   Error: {timing_result['error']}")
+
+    # Test 2: Batch size scaling analysis
+    print(f"\n📈 Batch Size Scaling Analysis:")
+
+    # Students use their implemented scaling analysis
+    scaling_analysis = profiler.analyze_batch_size_scaling(test_dataset, [16, 32, 64, 128])
+
+    if 'error' not in scaling_analysis:
+        print(f"   Optimal batch size: {scaling_analysis['optimal_batch_size']}")
+        print(f"   Max throughput: {scaling_analysis['max_throughput']:.1f} samples/sec")
     
-    # Calculate samples per second
-    samples_per_sec = 32 * timing_result['batches_per_second']
-    print(f"   Samples/second: {samples_per_sec:.1f}")
-else:
-    print(f"   Error: {timing_result['error']}")
+        print(f"\n   📊 Detailed Results:")
+        for result in scaling_analysis['scaling_results']:
+            print(f"      Batch {result['batch_size']:3d}: {result['samples_per_second']:6.1f} samples/sec")
+    else:
+        print(f"   Error: {scaling_analysis['error']}")
 
-# Test 2: Batch size scaling analysis
-print(f"\n📈 Batch Size Scaling Analysis:")
-
-# Students use their implemented scaling analysis
-scaling_analysis = profiler.analyze_batch_size_scaling(test_dataset, [16, 32, 64, 128])
-
-if 'error' not in scaling_analysis:
-    print(f"   Optimal batch size: {scaling_analysis['optimal_batch_size']}")
-    print(f"   Max throughput: {scaling_analysis['max_throughput']:.1f} samples/sec")
-    
-    print(f"\n   📊 Detailed Results:")
-    for result in scaling_analysis['scaling_results']:
-        print(f"      Batch {result['batch_size']:3d}: {result['samples_per_second']:6.1f} samples/sec")
-else:
-    print(f"   Error: {scaling_analysis['error']}")
-
-print(f"\n💡 I/O PERFORMANCE INSIGHTS:")
-print(f"   - Larger batches often improve throughput (better amortization)")
-print(f"   - But memory constraints limit maximum batch size")
-print(f"   - Sweet spot balances throughput vs memory usage")
-print(f"   - Real systems: GPU memory determines practical limits")
+    print(f"\n💡 I/O PERFORMANCE INSIGHTS:")
+    print(f"   - Larger batches often improve throughput (better amortization)")
+    print(f"   - But memory constraints limit maximum batch size")
+    print(f"   - Sweet spot balances throughput vs memory usage")
+    print(f"   - Real systems: GPU memory determines practical limits")
 
 # %% [markdown]
 """
@@ -1562,57 +1562,58 @@ print(f"   - Real systems: GPU memory determines practical limits")
 """
 
 # %%
-# Compare different I/O strategies
-io_comparison = profiler.compare_io_strategies(test_dataset, ['sequential', 'shuffled'])
+# Compare different I/O strategies (only when run directly)
+if __name__ == '__main__':
+    io_comparison = profiler.compare_io_strategies(test_dataset, ['sequential', 'shuffled'])
 
-# Simulate compute vs I/O balance with different scenarios
-print(f"\n⚖️  COMPUTE vs I/O SCENARIOS:")
-print(f"=" * 40)
+    # Simulate compute vs I/O balance with different scenarios
+    print(f"\n⚖️  COMPUTE vs I/O SCENARIOS:")
+    print(f"=" * 40)
 
-# Test different compute scenarios
-compute_scenarios = [
-    (0.01, "Fast GPU (V100/A100)"),
-    (0.05, "Medium GPU (RTX 3080)"),
-    (0.1, "CPU-only training"),
-    (0.2, "Complex model/large batch")
-]
+    # Test different compute scenarios
+    compute_scenarios = [
+        (0.01, "Fast GPU (V100/A100)"),
+        (0.05, "Medium GPU (RTX 3080)"),
+        (0.1, "CPU-only training"),
+        (0.2, "Complex model/large batch")
+    ]
 
-sample_dataloader = DataLoader(test_dataset, batch_size=64, shuffle=False)
+    sample_dataloader = DataLoader(test_dataset, batch_size=64, shuffle=False)
 
-for compute_time, scenario_name in compute_scenarios:
-    print(f"\n🖥️  {scenario_name}:")
-    balance_analysis = profiler.simulate_compute_vs_io_balance(sample_dataloader, compute_time)
+    for compute_time, scenario_name in compute_scenarios:
+        print(f"\n🖥️  {scenario_name}:")
+        balance_analysis = profiler.simulate_compute_vs_io_balance(sample_dataloader, compute_time)
 
-print(f"\n🎯 PRODUCTION I/O OPTIMIZATION LESSONS:")
-print(f"=" * 50)
+    print(f"\n🎯 PRODUCTION I/O OPTIMIZATION LESSONS:")
+    print(f"=" * 50)
 
-print(f"\n1. 📊 I/O BOTTLENECK IDENTIFICATION:")
-print(f"   - Fast GPUs often bottlenecked by data loading")
-print(f"   - CPU training rarely I/O bottlenecked")
-print(f"   - Modern GPUs process data faster than storage provides it")
+    print(f"\n1. 📊 I/O BOTTLENECK IDENTIFICATION:")
+    print(f"   - Fast GPUs often bottlenecked by data loading")
+    print(f"   - CPU training rarely I/O bottlenecked")
+    print(f"   - Modern GPUs process data faster than storage provides it")
 
-print(f"\n2. 🚀 OPTIMIZATION STRATEGIES:")
-print(f"   - Data prefetching: Load next batch while GPU computes")
-print(f"   - Parallel workers: Multiple threads/processes for loading")
-print(f"   - Faster storage: NVMe SSD vs SATA vs network storage")
-print(f"   - Data caching: Keep frequently used data in memory")
+    print(f"\n2. 🚀 OPTIMIZATION STRATEGIES:")
+    print(f"   - Data prefetching: Load next batch while GPU computes")
+    print(f"   - Parallel workers: Multiple threads/processes for loading")
+    print(f"   - Faster storage: NVMe SSD vs SATA vs network storage")
+    print(f"   - Data caching: Keep frequently used data in memory")
 
-print(f"\n3. 🏗️ ARCHITECTURE DECISIONS:")
-print(f"   - Batch size: Larger batches amortize I/O overhead")
-print(f"   - Data format: Preprocessed vs on-the-fly transformation")
-print(f"   - Storage location: Local vs network vs cloud storage")
+    print(f"\n3. 🏗️ ARCHITECTURE DECISIONS:")
+    print(f"   - Batch size: Larger batches amortize I/O overhead")
+    print(f"   - Data format: Preprocessed vs on-the-fly transformation")
+    print(f"   - Storage location: Local vs network vs cloud storage")
 
-print(f"\n4. 💰 COST IMPLICATIONS:")
-print(f"   - I/O bottlenecks waste expensive GPU time")
-print(f"   - GPU utilization directly affects training costs")
-print(f"   - Faster storage investment pays off in GPU efficiency")
+    print(f"\n4. 💰 COST IMPLICATIONS:")
+    print(f"   - I/O bottlenecks waste expensive GPU time")
+    print(f"   - GPU utilization directly affects training costs")
+    print(f"   - Faster storage investment pays off in GPU efficiency")
 
-print(f"\n💡 SYSTEMS ENGINEERING INSIGHT:")
-print(f"I/O optimization is often the highest-impact performance improvement:")
-print(f"- GPUs are expensive → maximize their utilization")
-print(f"- Data loading is often the limiting factor")
-print(f"- 10% I/O improvement = 10% faster training = 10% cost reduction")
-print(f"- Modern ML systems spend significant effort on data pipeline optimization")
+    print(f"\n💡 SYSTEMS ENGINEERING INSIGHT:")
+    print(f"I/O optimization is often the highest-impact performance improvement:")
+    print(f"- GPUs are expensive → maximize their utilization")
+    print(f"- Data loading is often the limiting factor")
+    print(f"- 10% I/O improvement = 10% faster training = 10% cost reduction")
+    print(f"- Modern ML systems spend significant effort on data pipeline optimization")
 
 if __name__ == "__main__":
     # Test the dataset interface demonstration
@@ -1633,12 +1634,12 @@ if __name__ == "__main__":
         
         # Test get_num_classes
         num_classes = test_dataset.get_num_classes()
-        assert num_classes == 2, f"Number of classes should be 2, got {num_classes}"
+        assert num_classes == 3, f"Number of classes should be 3, got {num_classes}"
         print("✅ Dataset get_num_classes works correctly")
         
         # Test get_sample_shape
         sample_shape = test_dataset.get_sample_shape()
-        assert sample_shape == (3,), f"Sample shape should be (3,), got {sample_shape}"
+        assert sample_shape == (2,), f"Sample shape should be (2,), got {sample_shape}"
         print("✅ Dataset get_sample_shape works correctly")
         
         print("🎯 Dataset interface pattern:")
