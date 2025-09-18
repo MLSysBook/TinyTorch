@@ -10,29 +10,34 @@
 
 # %% [markdown]
 """
-# Layers - Building Blocks of Neural Networks
+# Layers - Neural Network Building Blocks and Composition Patterns
 
-Welcome to the Layers module! This is where we build the fundamental components that stack together to form neural networks. Every neural network you've ever heard of - from simple perceptrons to massive transformers like GPT - is built by stacking these basic building blocks.
+Welcome to the Layers module! You'll build the fundamental components that stack together to form any neural network architecture, from simple perceptrons to transformers.
 
 ## Learning Goals
-- **Deep Mathematical Understanding**: Grasp how matrix multiplication powers all neural networks
-- **Implementation Mastery**: Build matrix multiplication and Dense layers from scratch
-- **Visual Intuition**: See how data flows and transforms through layers
-- **Production Connection**: Understand how this connects to PyTorch, TensorFlow, and industry ML
-- **Architecture Foundation**: Learn to compose layers into complex networks
-- **Parameter Strategies**: Master weight initialization and shape management
+- Systems understanding: How layer composition creates complex function approximators and why stacking enables deep learning
+- Core implementation skill: Build matrix multiplication and Dense layers with proper parameter management
+- Pattern recognition: Understand how different layer types solve different computational problems
+- Framework connection: See how your layer implementations mirror PyTorch's nn.Module design patterns
+- Performance insight: Learn why layer computation order and memory layout determine training speed
 
-## Build → Use → Understand
-1. **Build**: Matrix multiplication and Dense layers with complete understanding
-2. **Use**: Create and test layers with real data and visual examples
-3. **Understand**: How linear transformations enable universal function approximation
+## Build → Use → Reflect
+1. **Build**: Matrix multiplication primitives and Dense layers with parameter initialization strategies
+2. **Use**: Compose layers into multi-layer networks and observe how data transforms through the stack
+3. **Reflect**: Why does layer depth enable more complex functions, and when does it hurt performance?
 
-## Why This Module Is Critical
-Layers are the **universal building blocks** of machine learning:
-- **Computer Vision**: CNNs stack convolutional layers
-- **Natural Language**: Transformers stack attention layers
-- **Reinforcement Learning**: Policy networks stack dense layers
-- **Generative AI**: All generative models use layer composition
+## What You'll Achieve
+By the end of this module, you'll understand:
+- Deep technical understanding of how matrix operations enable neural networks to learn arbitrary functions
+- Practical capability to build and compose layers into complex architectures
+- Systems insight into why layer composition is the fundamental pattern for scalable ML systems
+- Performance consideration of how layer size and depth affect memory usage and computational cost
+- Connection to production ML systems and how frameworks optimize layer execution for different hardware
+
+## Systems Reality Check
+💡 **Production Context**: PyTorch's nn.Linear uses optimized BLAS operations and can automatically choose between different matrix multiplication algorithms based on tensor sizes
+⚡ **Performance Note**: Matrix multiplication is O(n³) but highly parallelizable - modern deep learning success comes from hardware designed specifically for this operation
+"""
 
 Mastering layers means understanding the foundation of all modern AI.
 """

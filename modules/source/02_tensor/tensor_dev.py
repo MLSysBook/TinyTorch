@@ -10,22 +10,33 @@
 
 # %% [markdown]
 """
+# Tensor - Core Data Structure and Memory Management
 
-# Tensor - Core Data Structure
-
-Welcome to the Tensor module! This is where TinyTorch really begins. You'll implement the fundamental data structure that powers all ML systems.
+Welcome to the Tensor module! You'll implement the fundamental data structure that powers all neural networks and understand why memory layout determines performance.
 
 ## Learning Goals
-- Understand tensors as N-dimensional arrays with ML-specific operations
-- Implement a complete Tensor class with arithmetic operations
-- Handle shape management, data types, and memory layout
-- Build the foundation for neural networks and automatic differentiation
-- Master the NBGrader workflow with comprehensive testing
+- Systems understanding: How tensor memory layout affects cache performance and computational efficiency
+- Core implementation skill: Build a complete Tensor class with shape management and arithmetic operations
+- Pattern recognition: Understand how tensors abstract N-dimensional data for ML algorithms
+- Framework connection: See how your implementation mirrors PyTorch's tensor design and memory model
+- Performance insight: Learn why contiguous memory layout and vectorized operations are critical for ML performance
 
-## Build → Use → Understand
-1. **Build**: Create the Tensor class with core operations
-2. **Use**: Perform tensor arithmetic and transformations
-3. **Understand**: How tensors form the foundation of ML systems
+## Build → Use → Reflect
+1. **Build**: Complete Tensor class with shape management, broadcasting, and vectorized operations
+2. **Use**: Perform tensor arithmetic and transformations on real multi-dimensional data
+3. **Reflect**: Why does tensor memory layout become the performance bottleneck in large neural networks?
+
+## What You'll Achieve
+By the end of this module, you'll understand:
+- Deep technical understanding of how N-dimensional arrays are stored and manipulated in memory
+- Practical capability to build efficient tensor operations that form the foundation of neural networks
+- Systems insight into why memory access patterns determine whether ML operations run fast or slow
+- Performance consideration of when tensor operations trigger expensive memory copies vs efficient in-place updates
+- Connection to production ML systems and how PyTorch optimizes tensor storage for GPU acceleration
+
+## Systems Reality Check
+💡 **Production Context**: PyTorch tensors automatically choose optimal memory layouts and can seamlessly move between CPU and GPU - your implementation reveals these design decisions
+⚡ **Performance Note**: Non-contiguous tensors can be 10-100x slower than contiguous ones - memory layout is often more important than algorithm choice in ML systems
 """
 
 # %% nbgrader={"grade": false, "grade_id": "tensor-imports", "locked": false, "schema_version": 3, "solution": false, "task": false}

@@ -10,21 +10,33 @@
 
 # %% [markdown]
 """
-# Training - Complete Neural Network Training Pipeline
+# Training - Complete End-to-End ML Training Infrastructure
 
-Welcome to the Training module! This is where we bring everything together to train neural networks on real data.
+Welcome to the Training module! You'll build the complete training infrastructure that orchestrates data loading, forward passes, loss computation, backpropagation, and optimization into a unified system.
 
 ## Learning Goals
-- Understand loss functions and how they measure model performance
-- Implement essential loss functions: MSE, CrossEntropy, and BinaryCrossEntropy
-- Build evaluation metrics for classification and regression
-- Create a complete training loop that orchestrates the entire process
-- Master checkpointing and model persistence for real-world deployment
+- Systems understanding: How training loops coordinate all ML system components and why training orchestration determines system reliability
+- Core implementation skill: Build loss functions, evaluation metrics, and complete training loops with checkpointing and monitoring
+- Pattern recognition: Understand how different loss functions affect learning dynamics and model behavior
+- Framework connection: See how your training loop mirrors PyTorch's training patterns and state management
+- Performance insight: Learn why training loop design affects convergence speed, memory usage, and debugging capability
 
-## Build → Use → Optimize
-1. **Build**: Loss functions, metrics, and training orchestration
-2. **Use**: Train complete models on real datasets
-3. **Optimize**: Analyze training dynamics and improve performance
+## Build → Use → Reflect
+1. **Build**: Complete training infrastructure with loss functions, metrics, checkpointing, and progress monitoring
+2. **Use**: Train real neural networks on CIFAR-10 and achieve meaningful accuracy on complex visual tasks
+3. **Reflect**: Why does training loop design often determine the success or failure of ML projects?
+
+## What You'll Achieve
+By the end of this module, you'll understand:
+- Deep technical understanding of how training loops orchestrate complex ML systems into reliable, monitorable processes
+- Practical capability to build production-ready training infrastructure with proper error handling and state management
+- Systems insight into why training stability and reproducibility are critical for reliable ML systems
+- Performance consideration of how training loop efficiency affects iteration speed and resource utilization
+- Connection to production ML systems and how modern MLOps platforms build on these training patterns
+
+## Systems Reality Check
+💡 **Production Context**: Modern ML training platforms like PyTorch Lightning and Hugging Face Transformers build sophisticated abstractions on top of basic training loops to handle distributed training, mixed precision, and fault tolerance
+⚡ **Performance Note**: Training loop efficiency often matters more than model efficiency for development speed - good training infrastructure accelerates the entire ML development cycle
 """
 
 # %% nbgrader={"grade": false, "grade_id": "training-imports", "locked": false, "schema_version": 3, "solution": false, "task": false}

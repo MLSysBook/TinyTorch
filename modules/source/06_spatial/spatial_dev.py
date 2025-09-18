@@ -10,29 +10,33 @@
 
 # %% [markdown]
 """
-# CNN - Convolutional Neural Networks
+# Spatial - Convolutional Networks and Spatial Pattern Recognition
 
-Welcome to the CNN module! Here you'll implement the core building block of modern computer vision: the convolutional layer.
+Welcome to the Spatial module! You'll implement convolutional operations that enable neural networks to understand spatial relationships in images and other grid-structured data.
 
 ## Learning Goals
-- Understand the convolution operation and its importance in computer vision
-- Implement Conv2D with explicit for-loops to understand the sliding window mechanism
-- Build convolutional layers that can detect spatial patterns in images
-- Compose Conv2D with other layers to build complete convolutional networks
-- See how convolution enables parameter sharing and translation invariance
+- Systems understanding: How convolution operations achieve spatial pattern recognition through parameter sharing and translation invariance
+- Core implementation skill: Build Conv2D layers using explicit sliding window operations to understand the computational mechanics
+- Pattern recognition: Understand how convolutional layers detect hierarchical features from edges to complex objects
+- Framework connection: See how your implementation reveals the design decisions in PyTorch's nn.Conv2d optimizations
+- Performance insight: Learn why convolution is computationally expensive but highly parallelizable, driving modern GPU architecture
 
 ## Build → Use → Reflect
-1. **Build**: Conv2D layer using sliding window convolution from scratch
-2. **Use**: Transform images and see feature maps emerge
-3. **Reflect**: How CNNs learn hierarchical spatial patterns
+1. **Build**: Conv2D layer with sliding window convolution, understanding every memory access and computation
+2. **Use**: Transform real image data and visualize how feature maps capture spatial patterns
+3. **Reflect**: Why does convolution enable parameter sharing, and how does this affect model capacity vs efficiency?
 
-## What You'll Learn
+## What You'll Achieve
 By the end of this module, you'll understand:
-- How convolution works as a sliding window operation
-- Why convolution is perfect for spatial data like images
-- How to build learnable convolutional layers
-- The CNN pipeline: Conv2D → Activation → Flatten → Dense
-- How parameter sharing makes CNNs efficient
+- Deep technical understanding of how sliding window operations enable spatial pattern detection
+- Practical capability to implement convolutional layers that form the backbone of computer vision systems
+- Systems insight into why convolution is the dominant operation for spatial data and how it affects memory access patterns
+- Performance consideration of how kernel size, stride, and padding choices affect computational cost and memory usage
+- Connection to production ML systems and how frameworks optimize convolution for different hardware architectures
+
+## Systems Reality Check
+💡 **Production Context**: PyTorch's Conv2d uses highly optimized implementations like cuDNN that can be 100x faster than naive implementations through algorithm choice and memory layout optimization
+⚡ **Performance Note**: Convolution is O(H×W×C×K²) per output pixel - modern CNNs perform billions of these operations, making optimization critical for real-time applications
 """
 
 # %% nbgrader={"grade": false, "grade_id": "cnn-imports", "locked": false, "schema_version": 3, "solution": false, "task": false}

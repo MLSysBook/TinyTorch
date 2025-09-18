@@ -10,21 +10,33 @@
 
 # %% [markdown]
 """
-# Activations - Nonlinearity in Neural Networks
+# Activations - Nonlinearity and Neural Network Intelligence
 
-Welcome to the Activations module! This is where neural networks get their power through nonlinearity.
+Welcome to the Activations module! You'll implement the functions that give neural networks their power to learn complex patterns through nonlinearity.
 
 ## Learning Goals
-- Understand why activation functions are essential for neural networks
-- Implement the four most important activation functions: ReLU, Sigmoid, Tanh, and Softmax
-- Visualize how activations transform data and enable complex learning
-- See how activations work with layers to build powerful networks
-- Master the NBGrader workflow with comprehensive testing
+- Systems understanding: Why linear operations alone cannot solve complex problems and how nonlinearity enables universal approximation
+- Core implementation skill: Build the four essential activation functions that power modern neural networks
+- Pattern recognition: Understand how different activations affect gradient flow and learning dynamics
+- Framework connection: See how your implementations match PyTorch's optimized activation functions
+- Performance insight: Learn why activation choice affects both forward pass speed and gradient computation efficiency
 
-## Build → Use → Understand
-1. **Build**: Activation functions that add nonlinearity
-2. **Use**: Transform tensors and see immediate results
-3. **Understand**: How nonlinearity enables complex pattern learning
+## Build → Use → Reflect
+1. **Build**: ReLU, Sigmoid, Tanh, and Softmax activation functions with proper numerical stability
+2. **Use**: Transform real tensor data and observe how different activations affect output distributions
+3. **Reflect**: Why does activation function choice determine whether deep networks can train successfully?
+
+## What You'll Achieve
+By the end of this module, you'll understand:
+- Deep technical understanding of how nonlinear functions enable neural networks to approximate any continuous function
+- Practical capability to implement numerically stable activation functions that avoid overflow and underflow
+- Systems insight into why activation choice affects gradient flow and determines trainable network depth
+- Performance consideration of how activation complexity affects forward and backward pass computational cost
+- Connection to production ML systems and why modern frameworks provide dozens of activation variants
+
+## Systems Reality Check
+💡 **Production Context**: PyTorch implements activations as both functions and modules, with CUDA kernels for GPU acceleration - your implementation reveals the mathematical foundations
+⚡ **Performance Note**: ReLU is popular partly because it's computationally cheap (just max(0,x)), while Softmax requires expensive exponentials - activation choice affects training speed
 """
 
 # %% nbgrader={"grade": false, "grade_id": "activations-imports", "locked": false, "schema_version": 3, "solution": false, "task": false}

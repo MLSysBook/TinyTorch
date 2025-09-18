@@ -10,21 +10,33 @@
 
 # %% [markdown]
 """
-# Optimizers - Gradient-Based Parameter Updates
+# Optimizers - Gradient-Based Parameter Updates and Training Dynamics
 
-Welcome to the Optimizers module! This is where neural networks learn to improve through intelligent parameter updates.
+Welcome to the Optimizers module! You'll implement the algorithms that use gradients to update neural network parameters, determining how effectively networks learn from data.
 
 ## Learning Goals
-- Understand gradient descent and how optimizers use gradients to update parameters
-- Implement SGD with momentum for accelerated convergence
-- Build Adam optimizer with adaptive learning rates
-- Master learning rate scheduling strategies
-- See how optimizers enable effective neural network training
+- Systems understanding: How different optimization algorithms affect convergence speed, memory usage, and training stability
+- Core implementation skill: Build SGD with momentum and Adam optimizer, understanding their mathematical foundations and implementation trade-offs
+- Pattern recognition: Understand how adaptive learning rates and momentum help navigate complex loss landscapes
+- Framework connection: See how your optimizer implementations match PyTorch's optim module design and state management
+- Performance insight: Learn why optimizer choice affects training speed and why Adam uses 3x more memory than SGD
 
-## Build → Use → Analyze
-1. **Build**: Core optimization algorithms (SGD, Adam)
-2. **Use**: Apply optimizers to train neural networks
-3. **Analyze**: Compare optimizer behavior and convergence patterns
+## Build → Use → Reflect
+1. **Build**: Complete SGD and Adam optimizers with proper state management and learning rate scheduling
+2. **Use**: Train neural networks with different optimizers and compare convergence behavior on real datasets
+3. **Reflect**: Why do some optimizers work better for certain problems, and how does memory usage scale with model size?
+
+## What You'll Achieve
+By the end of this module, you'll understand:
+- Deep technical understanding of how optimization algorithms navigate high-dimensional loss landscapes to find good solutions
+- Practical capability to implement and tune optimizers that determine training success or failure
+- Systems insight into why optimizer choice often matters more than architecture choice for training success
+- Performance consideration of how optimizer memory requirements and computational overhead affect scalable training
+- Connection to production ML systems and why new optimizers continue to be an active area of research
+
+## Systems Reality Check
+💡 **Production Context**: PyTorch's Adam implementation includes numerically stable variants and can automatically scale learning rates based on gradient norms to prevent training instability
+⚡ **Performance Note**: Adam stores running averages for every parameter, using 3x the memory of SGD - this memory overhead becomes critical when training large models near GPU memory limits
 """
 
 # %% nbgrader={"grade": false, "grade_id": "optimizers-imports", "locked": false, "schema_version": 3, "solution": false, "task": false}

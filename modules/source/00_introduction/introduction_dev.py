@@ -2,17 +2,33 @@
 
 # %% [markdown] nbgrader={"grade": false, "grade_id": "introduction-overview", "locked": false, "schema_version": 3, "solution": false, "task": false}
 """
-# TinyTorch System Introduction & Architecture Overview
+# Introduction - TinyTorch System Architecture & Learning Journey
 
-Welcome to **TinyTorch** - a complete neural network framework built from scratch for deep learning education and understanding.
+Welcome to the Introduction module! You'll explore the complete TinyTorch architecture and understand how building an ML framework teaches systems engineering.
 
-This introduction module provides:
-- **Visual system architecture** - Complete framework overview
-- **Interactive dependency graphs** - How all 16 modules connect
-- **Learning roadmap** - Guided path through the system
-- **Component analysis** - What each module implements
+## Learning Goals
+- Systems understanding: How 17 modules connect to form a complete ML framework
+- Core implementation skill: Navigate complex software architecture and dependencies
+- Pattern recognition: Identify how modular design enables scalable ML systems
+- Framework connection: See how TinyTorch mirrors PyTorch/TensorFlow architecture
+- Performance insight: Understand why modularity affects system performance and memory usage
 
-Let's explore the architecture of this comprehensive ML framework!
+## Build → Use → Reflect
+1. **Build**: Interactive architecture visualizations and dependency analysis tools
+2. **Use**: Explore module relationships and trace data flow through the entire system
+3. **Reflect**: How does modular architecture impact development speed vs runtime performance?
+
+## What You'll Achieve
+By the end of this module, you'll understand:
+- Deep technical understanding of ML framework architecture and component relationships
+- Practical capability to navigate and extend complex ML systems
+- Systems insight into how modular design trades development flexibility for runtime overhead
+- Performance consideration of module dependencies and circular import prevention
+- Connection to production ML systems and how PyTorch organizes its codebase
+
+## Systems Reality Check
+💡 **Production Context**: PyTorch uses similar modular architecture - torch.nn depends on torch.autograd, which depends on torch._C for performance-critical operations
+⚡ **Performance Note**: Module boundaries introduce function call overhead, but enable parallel development and testing - understand this engineering trade-off
 """
 
 # %% nbgrader={"grade": false, "grade_id": "introduction-imports", "locked": false, "schema_version": 3, "solution": false, "task": false}

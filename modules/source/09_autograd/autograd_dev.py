@@ -10,21 +10,33 @@
 
 # %% [markdown]
 """
-# Autograd - Automatic Differentiation Engine
+# Autograd - Automatic Differentiation and Computational Graph Engine
 
-Welcome to the Autograd module! This is where TinyTorch becomes truly powerful. You'll implement the automatic differentiation engine that makes neural network training possible.
+Welcome to the Autograd module! You'll implement the automatic differentiation engine that makes neural network training possible by automatically computing gradients through complex computational graphs.
 
 ## Learning Goals
-- Understand how automatic differentiation works through computational graphs
-- Implement the Variable class that tracks gradients and operations
-- Build backward propagation for gradient computation
-- Create the foundation for neural network training
-- Master the mathematical concepts behind backpropagation
+- Systems understanding: How computational graphs enable automatic differentiation and why this approach scales to arbitrary network architectures
+- Core implementation skill: Build the Variable class with gradient tracking and implement backward propagation through dynamic computation graphs
+- Pattern recognition: Understand how chain rule application through computational graphs generalizes to any differentiable function
+- Framework connection: See how your implementation mirrors PyTorch's autograd engine and tensor gradient tracking
+- Performance insight: Learn why computational graph memory management and gradient accumulation strategies determine training scalability
 
-## Build → Use → Analyze
-1. **Build**: Create the Variable class and gradient computation system
-2. **Use**: Perform automatic differentiation on complex expressions
-3. **Analyze**: Understand how gradients flow through computational graphs
+## Build → Use → Reflect
+1. **Build**: Complete automatic differentiation system with Variable class, gradient tracking, and backward propagation
+2. **Use**: Apply autograd to complex mathematical expressions and neural network operations
+3. **Reflect**: Why does automatic differentiation enable ML at scale, and how does graph memory management affect training?
+
+## What You'll Achieve
+By the end of this module, you'll understand:
+- Deep technical understanding of how computational graphs enable automatic gradient computation for arbitrary functions
+- Practical capability to build the gradient computation engine that powers all modern neural network training
+- Systems insight into why automatic differentiation was the breakthrough that enabled deep learning at scale
+- Performance consideration of how computational graph size and memory management affect training efficiency
+- Connection to production ML systems and how frameworks optimize gradient computation and memory usage
+
+## Systems Reality Check
+💡 **Production Context**: PyTorch's autograd can handle graphs with millions of nodes and uses sophisticated memory optimization like gradient checkpointing to train models larger than GPU memory
+⚡ **Performance Note**: Gradient computation often requires storing forward activations, leading to memory usage that scales with network depth - this drives innovations like gradient checkpointing
 """
 
 # %% nbgrader={"grade": false, "grade_id": "autograd-imports", "locked": false, "schema_version": 3, "solution": false, "task": false}
