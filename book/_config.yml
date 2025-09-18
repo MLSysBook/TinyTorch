@@ -50,5 +50,25 @@ latex:
 bibtex_bibfiles:
   - references.bib
 
+# Sphinx extensions for enhanced functionality  
+sphinx:
+  extra_extensions:
+    - sphinxcontrib.mermaid
+  config:
+    mermaid_version: "10.6.1"
+
+# Parse configuration for MyST Markdown
+parse:
+  myst_enable_extensions:
+    - "colon_fence"
+    - "deflist" 
+    - "html_admonition"
+    - "html_image"
+    - "linkify"
+    - "replacements"
+    - "smartquotes"
+    - "substitution"
+    - "tasklist"
+
 # Advanced options
 only_build_toc_files: true
