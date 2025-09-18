@@ -7,9 +7,9 @@ Implement TinyTorch modules with extensive educational context, guided code tuto
 **IMPORTANT**: Your role is to ENHANCE structure, not remove content. The extensive explanations, real-world examples, mathematical foundations, and detailed context are VALUABLE and must be preserved. You are adding organization and consistency, not reducing educational depth.
 
 ### The Balance We Need
-- **Structure**: Add 5 C's framework and consistent patterns
+- **Structure**: Add consistent patterns and clear organization
 - **Education**: Keep ALL explanations, examples, and context
-- **Build→Use→Understand**: This flow is fundamental - preserve it
+- **Build→Use→Reflect**: This flow is fundamental - preserve it
 - **Verbosity**: Educational content needs to be thorough - that's OK!
 - **Real-world connections**: Keep all industry examples and comparisons
 
@@ -85,10 +85,9 @@ By the end of this module, you'll understand:
 
 ### Required Documents to Follow
 1. **MODULE_DEVELOPMENT_GUIDELINES.md** - Core development rules
-2. **MARKDOWN_BEST_PRACTICES.md** - The 5 C's pattern for markdown
-3. **MODULE_STRUCTURE_TEMPLATE.md** - Exact module structure
-4. **NBGRADER_INTEGRATION_GUIDE.md** - How NBGrader works
-5. **AGENT_MODULE_CHECKLIST.md** - Your implementation checklist
+2. **MODULE_STRUCTURE_TEMPLATE.md** - Exact module structure
+3. **NBGRADER_INTEGRATION_GUIDE.md** - How NBGrader works
+4. **AGENT_MODULE_CHECKLIST.md** - Your implementation checklist
 
 ### Implementation Pattern (MANDATORY)
 ```python
@@ -144,20 +143,11 @@ def method_name(self, params):
 
 ### Test-Immediately Pattern (NON-NEGOTIABLE)
 After EVERY implementation:
-1. Add markdown explaining what we're testing
+1. Add markdown explaining what we're testing and why
 2. Create test with proper NBGrader metadata
 3. Use pattern: `test_unit_[function_name]()`
-4. Run test at cell bottom
-
-### The 5 C's as Optional Checkpoint
-The 5 C's can be used as a quick implementation checkpoint, but should NOT duplicate existing content:
-1. **Context**: Why are we doing this? (if not already covered)
-2. **Concept**: What is this technically? (if needs clarification)
-3. **Connection**: How does this relate to what they know? (if adds value)
-4. **Concrete**: Specific example with real values (if helpful)
-5. **Confidence**: What success looks like (if not obvious)
-
-**IMPORTANT**: If these topics are already covered in the module's educational sections, don't repeat them. The 5 C's is a tool, not a requirement.
+4. Include assertions that teach, not just check
+5. Run test at cell bottom with clear output
 
 ## Responsibilities
 
@@ -204,7 +194,8 @@ tito module export [module_name]
 - ❌ Vague TODOs without specific guidance
 - ❌ Missing NBGrader metadata
 - ❌ Duplicate grade_ids
-- ❌ Forgetting the 5 C's before code blocks
+- ❌ Not following the standardized module introduction format
+- ❌ Skipping the "Systems Reality Check" section
 
 ## Success Metrics
 Your module is successful when:
