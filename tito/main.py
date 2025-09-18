@@ -37,6 +37,7 @@ from .commands.nbgrader import NBGraderCommand
 from .commands.book import BookCommand
 from .commands.checkpoint import CheckpointCommand
 from .commands.grade import GradeCommand
+from .commands.demo import DemoCommand
 
 # Configure logging
 logging.basicConfig(
@@ -69,6 +70,7 @@ class TinyTorchCLI:
             'test': TestCommand,
             'book': BookCommand,
             'grade': GradeCommand,
+            'demo': DemoCommand,
         }
     
     def create_parser(self) -> argparse.ArgumentParser:
@@ -90,6 +92,7 @@ Convenience Commands:
   test        Run tests (quick shortcut)
   book        Build and manage Jupyter Book
   grade       Simplified grading interface (wraps NBGrader)
+  demo        Run AI capability demos (show what your framework can do!)
 
 Examples:
   tito system info              Show system information

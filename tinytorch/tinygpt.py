@@ -3,7 +3,7 @@
 # %% auto 0
 __all__ = ['CrossEntropyLoss', 'Trainer', 'no_grad', 'CharTokenizer', 'MultiHeadAttention', 'create_causal_mask', 'LayerNorm',
            'TransformerBlock', 'PositionalEncoding', 'TinyGPT', 'LanguageModelLoss', 'LanguageModelAccuracy',
-           'LanguageModelTrainer']
+           'LanguageModelTrainer', 'shakespeare_demo', 'live_demo']
 
 # %% ../modules/source/16_tinygpt/tinygpt_dev.ipynb 6
 import numpy as np
@@ -641,7 +641,7 @@ class LanguageModelTrainer:
         self.tokenizer = tokenizer
         
         # Default components (reusing TinyTorch!)
-        self.optimizer = optimizer or Adam(lr=0.001)
+        self.optimizer = optimizer or Adam([], learning_rate=0.001)  # Empty params list for now
         self.loss_fn = loss_fn or LanguageModelLoss()
         self.metrics = metrics or [LanguageModelAccuracy()]
         
@@ -835,3 +835,245 @@ class LanguageModelTrainer:
             fallback_tokens = prompt_tokens + [np.random.randint(0, self.tokenizer.get_vocab_size()) 
                                              for _ in range(min(10, max_length - len(prompt_tokens)))]
             return self.tokenizer.decode(fallback_tokens)
+
+# %% ../modules/source/16_tinygpt/tinygpt_dev.ipynb 27
+def shakespeare_demo():
+    """Complete Shakespeare demo showing TinyGPT in action"""
+    print("🎭 TinyGPT Shakespeare Demo")
+    print("=" * 60)
+    print("Training a character-level GPT on Shakespeare using TinyTorch!")
+    print()
+    
+    # Extended Shakespeare text for better training
+    shakespeare_text = """To be, or not to be, that is the question:
+Whether 'tis nobler in the mind to suffer
+The slings and arrows of outrageous fortune,
+Or to take arms against a sea of troubles
+And by opposing end them. To die—to sleep,
+No more; and by a sleep to say we end
+The heart-ache and the thousand natural shocks
+That flesh is heir to: 'tis a consummation
+Devoutly to be wish'd. To die, to sleep;
+To sleep, perchance to dream—ay, there's the rub:
+For in that sleep of death what dreams may come,
+When we have shuffled off this mortal coil,
+Must give us pause—there's the respect
+That makes calamity of so long life.
+
+Shall I compare thee to a summer's day?
+Thou art more lovely and more temperate:
+Rough winds do shake the darling buds of May,
+And summer's lease hath all too short a date:
+Sometime too hot the eye of heaven shines,
+And often is his gold complexion dimmed;
+And every fair from fair sometime declines,
+By chance, or nature's changing course, untrimmed;
+But thy eternal summer shall not fade,
+Nor lose possession of that fair thou ow'st,
+Nor shall death brag thou wander'st in his shade,
+When in eternal lines to time thou grow'st:
+So long as men can breathe or eyes can see,
+So long lives this, and this gives life to thee."""
+    
+    print(f"📚 Shakespeare text: {len(shakespeare_text):,} characters")
+    print(f"   Words: {len(shakespeare_text.split()):,}")
+    print(f"   Lines: {len(shakespeare_text.split(chr(10)))}")
+    print()
+    
+    # Create and fit tokenizer
+    print("🔤 Creating character tokenizer...")
+    tokenizer = CharTokenizer(vocab_size=80)
+    tokenizer.fit(shakespeare_text)
+    vocab_size = tokenizer.get_vocab_size()
+    print(f"   Final vocabulary size: {vocab_size}")
+    print()
+    
+    # Create TinyGPT model
+    print("🤖 Creating TinyGPT model...")
+    model = TinyGPT(
+        vocab_size=vocab_size,
+        d_model=128,        # Model dimension
+        num_heads=8,        # Attention heads
+        num_layers=4,       # Transformer layers
+        d_ff=512,          # Feedforward dimension
+        max_length=256,     # Max sequence length
+        dropout=0.1
+    )
+    print()
+    
+    # Create trainer
+    print("🎓 Setting up trainer...")
+    trainer = LanguageModelTrainer(model, tokenizer)
+    print()
+    
+    # Generate text BEFORE training
+    print("📝 Text generation BEFORE training (should be random):")
+    pre_prompts = ["To be", "Shall I", "The"]
+    for prompt in pre_prompts:
+        generated = trainer.generate_text(prompt, max_length=30, temperature=1.0)
+        print(f"   '{prompt}' → '{generated[:50]}...'")
+    print()
+    
+    # Train the model
+    print("🚀 Training TinyGPT on Shakespeare...")
+    start_time = time.time()
+    
+    history = trainer.fit(
+        text=shakespeare_text,
+        epochs=5,
+        seq_length=32,
+        batch_size=4,
+        val_split=0.2,
+        verbose=True
+    )
+    
+    training_time = time.time() - start_time
+    print(f"\n⏱️ Training completed in {training_time:.1f} seconds")
+    print()
+    
+    # Analyze training results
+    print("📈 Training Analysis:")
+    final_train_loss = history['train_loss'][-1]
+    final_val_loss = history['val_loss'][-1]
+    final_train_acc = history['train_accuracy'][-1]
+    final_val_acc = history['val_accuracy'][-1]
+    
+    print(f"   Final train loss: {final_train_loss:.4f}")
+    print(f"   Final val loss:   {final_val_loss:.4f}")
+    print(f"   Final train acc:  {final_train_acc:.3f}")
+    print(f"   Final val acc:    {final_val_acc:.3f}")
+    
+    if final_train_loss < final_val_loss * 0.8:
+        print("   ⚠️ Possible overfitting detected")
+    else:
+        print("   ✅ Training looks healthy")
+    print()
+    
+    # Generate text AFTER training
+    print("📝 Text generation AFTER training:")
+    post_prompts = ["To be", "Shall I", "The", "And", "But"]
+    
+    for prompt in post_prompts:
+        for temp in [0.3, 0.7, 1.0]:
+            generated = trainer.generate_text(prompt, max_length=40, temperature=temp)
+            print(f"   '{prompt}' (T={temp}) → '{generated}'")
+        print()
+    
+    # Shakespeare completion test
+    print("🎯 Shakespeare Completion Test:")
+    completions = [
+        "To be, or not to",
+        "Shall I compare thee",
+        "The slings and arrows",
+        "When in eternal lines"
+    ]
+    
+    for completion_prompt in completions:
+        generated = trainer.generate_text(completion_prompt, max_length=35, temperature=0.5)
+        print(f"   '{completion_prompt}' → '{generated}'")
+    print()
+    
+    # Performance analysis
+    print("⚡ Performance Analysis:")
+    total_params = model.count_parameters()
+    tokens_processed = len(tokenizer.encode(shakespeare_text)) * history['train_loss'].__len__()
+    
+    print(f"   Model parameters: {total_params:,}")
+    print(f"   Training time: {training_time:.1f}s")
+    print(f"   Tokens processed: {tokens_processed:,}")
+    print(f"   Memory estimate: ~{total_params * 4 / 1024 / 1024:.1f} MB")
+    print()
+    
+    return trainer, model, tokenizer
+
+# Only run demo if executed directly
+if __name__ == "__main__":
+    demo_results = shakespeare_demo()
+
+# %% ../modules/source/16_tinygpt/tinygpt_dev.ipynb 37
+def live_demo():
+    """
+    Live TinyGPT demonstration with typewriter effect.
+    Shows real-time text generation character by character.
+    """
+    import time
+    
+    def typewriter_effect(text, delay=0.05):
+        """Print text with typewriter effect"""
+        for char in text:
+            print(char, end='', flush=True)
+            time.sleep(delay)
+        print()
+    
+    print("🤖 TinyGPT Live Demo")
+    print("=" * 40)
+    print("Watch TinyGPT learn and generate text!")
+    print()
+    
+    # Shakespeare training text
+    text = """To be, or not to be, that is the question:
+Whether 'tis nobler in the mind to suffer
+The slings and arrows of outrageous fortune,
+Or to take arms against a sea of troubles
+And by opposing end them. To die—to sleep,
+No more; and by a sleep to say we end
+The heart-ache and the thousand natural shocks
+That flesh is heir to: 'tis a consummation
+Devoutly to be wish'd."""
+    
+    print(f"📚 Training text: {len(text)} characters")
+    
+    # Setup
+    typewriter_effect("🔤 Creating tokenizer...")
+    tokenizer = CharTokenizer(vocab_size=80)
+    tokenizer.fit(text)
+    vocab_size = tokenizer.get_vocab_size()
+    print(f"   ✅ Vocabulary: {vocab_size} characters")
+    
+    typewriter_effect("🧠 Building TinyGPT...")
+    model = TinyGPT(
+        vocab_size=vocab_size,
+        d_model=64,
+        num_heads=4,
+        num_layers=2,
+        d_ff=256,
+        max_length=100,
+        dropout=0.1
+    )
+    print(f"   ✅ Model: {model.count_parameters():,} parameters")
+    
+    typewriter_effect("🎓 Training neural network...")
+    trainer = LanguageModelTrainer(model, tokenizer)
+    
+    # Pre-training generation
+    print("\n📝 BEFORE training:")
+    prompt = "To be"
+    print(f"🎯 '{prompt}' → ", end='', flush=True)
+    pre_gen = trainer.generate_text(prompt, max_length=20, temperature=1.0)
+    typewriter_effect(pre_gen[len(prompt):], delay=0.08)
+    
+    # Train
+    print("\n🚀 Training...")
+    trainer.fit(text=text, epochs=2, seq_length=16, batch_size=2, verbose=False)
+    
+    # Post-training generation
+    print("\n📝 AFTER training:")
+    for temp in [0.5, 0.8]:
+        print(f"🎯 '{prompt}' (T={temp}) → ", end='', flush=True)
+        post_gen = trainer.generate_text(prompt, max_length=25, temperature=temp)
+        typewriter_effect(post_gen[len(prompt):], delay=0.1)
+    
+    print("\n✨ Demo complete! TinyGPT generated text character by character.")
+    print("🔥 Built entirely from scratch with TinyTorch components!")
+
+# Only run tests if executed directly
+if __name__ == "__main__":
+    print("🎭 TinyGPT Module Complete!")
+    print()
+    print("Available demos:")
+    print("• shakespeare_demo() - Full training and generation demo")
+    print("• live_demo() - Live typing effect demonstration")
+    print("• run_comprehensive_tests() - Complete test suite")
+    print()
+    print("Running live demo...")
+    live_demo()
