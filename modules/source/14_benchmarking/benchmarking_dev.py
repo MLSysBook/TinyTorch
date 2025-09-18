@@ -10,21 +10,33 @@
 
 # %% [markdown]
 """
-# Benchmarking - Systematic ML Performance Evaluation
+# Benchmarking - Systematic Performance Analysis and Bottleneck Identification
 
-Welcome to the Benchmarking module! This is where we learn to systematically evaluate ML systems using industry-standard methodology inspired by MLPerf.
+Welcome to the Benchmarking module! You'll build professional benchmarking tools that identify performance bottlenecks and enable data-driven optimization decisions in ML systems.
 
 ## Learning Goals
-- Understand the four-component MLPerf benchmarking architecture
-- Implement different benchmark scenarios (latency, throughput, offline)
-- Apply statistical validation for meaningful results
-- Create professional performance reports for ML projects
-- Learn to avoid common benchmarking pitfalls
+- Systems understanding: How systematic performance measurement reveals bottlenecks and guides optimization priorities in complex ML systems
+- Core implementation skill: Build comprehensive benchmarking frameworks with statistical validation and professional reporting
+- Pattern recognition: Understand how different workload patterns (latency vs throughput) require different measurement strategies
+- Framework connection: See how your benchmarking approach mirrors industry standards like MLPerf and production monitoring systems
+- Performance insight: Learn why measurement methodology often matters more than absolute numbers for optimization decisions
 
-## Build → Use → Analyze
-1. **Build**: Benchmarking framework with proper statistical validation
-2. **Use**: Apply systematic evaluation to your TinyTorch models
-3. **Analyze**: Generate professional reports with statistical confidence
+## Build → Use → Reflect
+1. **Build**: Complete benchmarking suite with MLPerf-inspired scenarios, statistical validation, and professional reporting
+2. **Use**: Apply systematic evaluation to TinyTorch models and identify performance bottlenecks across the entire system
+3. **Reflect**: Why do measurement artifacts often mislead optimization efforts, and how does proper benchmarking guide development?
+
+## What You'll Achieve
+By the end of this module, you'll understand:
+- Deep technical understanding of how to design benchmarks that reveal actionable insights about system performance
+- Practical capability to build measurement infrastructure that guides optimization decisions and tracks system improvements
+- Systems insight into why benchmarking methodology determines the reliability and usefulness of performance data
+- Performance consideration of how measurement overhead and statistical variance affect benchmark validity
+- Connection to production ML systems and how companies use systematic benchmarking to optimize deployment and hardware decisions
+
+## Systems Reality Check
+💡 **Production Context**: Companies like Google and Facebook run continuous benchmarking across thousands of models to guide infrastructure investments and optimization priorities
+⚡ **Performance Note**: Poor benchmarking methodology can lead to optimizing the wrong bottlenecks - measurement artifacts often overwhelm real performance differences
 """
 
 # %% nbgrader={"grade": false, "grade_id": "benchmarking-imports", "locked": false, "schema_version": 3, "solution": false, "task": false}

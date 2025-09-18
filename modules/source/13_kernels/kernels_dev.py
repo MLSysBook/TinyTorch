@@ -10,22 +10,33 @@
 
 # %% [markdown]
 """
-# Kernels - Hardware-Optimized ML Operations
+# Kernels - High-Performance Computing and Hardware Optimization
 
-Welcome to the Kernels module! This is where we move beyond NumPy to understand how ML operations are optimized for modern hardware. You'll implement custom kernels that run faster than standard library functions.
+Welcome to the Kernels module! You'll implement high-performance computational kernels that understand how modern hardware works, moving beyond generic libraries to achieve optimal performance.
 
 ## Learning Goals
-- Understand why custom kernels matter for ML performance
-- Implement vectorized operations using SIMD principles
-- Master memory-efficient algorithms for better cache utilization
-- Build parallel processing patterns for CPU and GPU-style computing
-- Create performance profiling tools to measure and optimize code
-- Apply kernel optimizations to compressed model operations
+- Systems understanding: How CPU cache hierarchies, SIMD instructions, and memory bandwidth determine ML operation performance
+- Core implementation skill: Build vectorized operations and memory-efficient algorithms that outperform standard library implementations
+- Pattern recognition: Understand how algorithmic choices interact with hardware characteristics to determine real-world performance
+- Framework connection: See how your optimizations relate to the low-level kernels used in PyTorch, cuDNN, and BLAS libraries
+- Performance insight: Learn why kernel optimization often provides larger speedups than algorithmic improvements
 
-## Build → Use → Optimize
-1. **Build**: Custom operations, vectorization, and memory optimization
-2. **Use**: Apply optimized kernels to real ML workloads
-3. **Optimize**: Profile, measure, and improve performance systematically
+## Build → Use → Reflect
+1. **Build**: Custom vectorized operations, cache-friendly algorithms, and parallel computation patterns
+2. **Use**: Apply optimized kernels to real ML workloads and measure performance improvements
+3. **Reflect**: Why do hardware characteristics often matter more than algorithm choice for ML performance?
+
+## What You'll Achieve
+By the end of this module, you'll understand:
+- Deep technical understanding of how modern hardware executes ML operations and why optimization requires hardware awareness
+- Practical capability to write high-performance code that achieves near-optimal hardware utilization
+- Systems insight into why kernel optimization is critical for production ML systems and how it affects system design
+- Performance consideration of how memory access patterns, vectorization, and parallelization strategies affect computational efficiency
+- Connection to production ML systems and how frameworks achieve performance through hardware-optimized kernel libraries
+
+## Systems Reality Check
+💡 **Production Context**: PyTorch's performance comes from libraries like MKL-DNN and cuDNN that implement thousands of hand-optimized kernels for different hardware configurations
+⚡ **Performance Note**: Well-optimized kernels can be 10-100x faster than naive implementations - kernel optimization is often the difference between research code and production systems
 """
 
 # %% nbgrader={"grade": false, "grade_id": "kernels-imports", "locked": false, "schema_version": 3, "solution": false, "task": false}

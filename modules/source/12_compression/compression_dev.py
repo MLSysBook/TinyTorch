@@ -10,22 +10,33 @@
 
 # %% [markdown]
 """
-# Compression & Optimization - Making AI Models Efficient
+# Compression - Model Optimization and Efficient Deployment Strategies
 
-Welcome to the Compression module! This is where you'll learn to make neural networks smaller, faster, and more efficient for real-world deployment.
+Welcome to the Compression module! You'll implement techniques that make neural networks smaller, faster, and more efficient for deployment in resource-constrained environments.
 
 ## Learning Goals
-- Understand how model size affects deployment and why compression matters
-- Implement magnitude-based pruning to remove unimportant weights
-- Master quantization to reduce memory usage by 75%
-- Build knowledge distillation for training compact models
-- Create structured pruning to optimize network architectures
-- Compare compression techniques and their trade-offs
+- Systems understanding: How model size and computational requirements affect deployment costs, latency, and energy consumption in production systems
+- Core implementation skill: Build pruning, quantization, and knowledge distillation techniques that reduce model footprint while preserving performance
+- Pattern recognition: Understand the accuracy vs efficiency trade-offs that drive deployment decisions in real ML systems
+- Framework connection: See how your compression implementations relate to PyTorch's optimization tools and mobile deployment strategies
+- Performance insight: Learn why compression techniques can improve both inference speed and training efficiency
 
-## Build → Use → Optimize
-1. **Build**: Four compression techniques from scratch
-2. **Use**: Apply compression to real neural networks
-3. **Optimize**: Combine techniques for maximum efficiency gains
+## Build → Use → Reflect
+1. **Build**: Complete compression toolkit with magnitude pruning, quantization, and knowledge distillation
+2. **Use**: Apply compression to trained neural networks and measure the accuracy vs efficiency trade-offs
+3. **Reflect**: Why do modern ML systems require compression, and how do compression choices affect system design?
+
+## What You'll Achieve
+By the end of this module, you'll understand:
+- Deep technical understanding of how compression techniques reduce computational and memory requirements without destroying learned representations
+- Practical capability to optimize neural networks for deployment in mobile devices, edge systems, and cost-sensitive environments
+- Systems insight into why compression is essential for practical ML deployment and how it affects system architecture decisions
+- Performance consideration of how different compression techniques affect inference speed, memory usage, and accuracy
+- Connection to production ML systems and how compression enables ML deployment at scale
+
+## Systems Reality Check
+💡 **Production Context**: Modern mobile AI relies heavily on compression - techniques like quantization can reduce model size by 4x while maintaining accuracy, enabling on-device inference
+⚡ **Performance Note**: Compression often speeds up inference by reducing memory bandwidth requirements, even when computational complexity remains the same - memory is often the bottleneck
 """
 
 # %% nbgrader={"grade": false, "grade_id": "compression-imports", "locked": false, "schema_version": 3, "solution": false, "task": false}

@@ -2,18 +2,33 @@
 
 # %% [markdown]
 """
-# Module 16: TinyGPT - From Vision to Language
+# TinyGPT - Complete Transformer Architecture and Generative AI Capstone
 
-## Learning Objectives
-By the end of this module, you will:
-1. Build GPT-style transformer models using TinyTorch components
-2. Understand character-level tokenization for language models
-3. Implement multi-head attention mechanisms that enable sequence understanding
-4. Create complete transformer blocks with layer normalization and residual connections
-5. Train autoregressive language models that generate coherent text
-6. Apply ML Systems thinking to understand framework reusability across modalities
+Welcome to the TinyGPT module! You'll build a complete transformer language model from your TinyTorch components, demonstrating how the same ML systems infrastructure enables both computer vision and natural language processing.
 
-Welcome to the culmination of TinyTorch - where we discover that **vision and language models share the same mathematical foundation!**
+## Learning Goals
+- Systems understanding: How transformer architectures unify different AI modalities and why attention mechanisms scale across problem domains
+- Core implementation skill: Build complete GPT-style models with multi-head attention, positional encoding, and autoregressive generation
+- Pattern recognition: Understand how the same mathematical primitives (attention, normalization, optimization) enable both vision and language AI
+- Framework connection: See how your transformer implementation reveals the design principles behind modern LLMs like GPT and BERT
+- Performance insight: Learn why transformer scaling laws drive modern AI development and hardware design
+
+## Build → Use → Reflect
+1. **Build**: Complete transformer architecture with multi-head attention, positional encoding, and autoregressive training
+2. **Use**: Train TinyGPT on text data and generate coherent language using your fully self-built ML framework
+3. **Reflect**: How do the same mathematical foundations enable both computer vision and language understanding?
+
+## What You'll Achieve
+By the end of this module, you'll understand:
+- Deep technical understanding of how transformer architectures enable general-purpose AI across different modalities
+- Practical capability to build and train complete language models using your own ML framework implementation
+- Systems insight into how framework design enables rapid experimentation and model development across different domains
+- Performance consideration of how attention's O(n²) scaling drives modern architectural innovations and hardware requirements
+- Connection to production ML systems and how transformer architectures became the foundation of modern AI
+
+## Systems Reality Check
+💡 **Production Context**: Modern LLMs like GPT-4 use the same transformer architecture you're building, scaled to billions of parameters with sophisticated distributed training
+⚡ **Performance Note**: Your TinyGPT demonstrates that the same mathematical operations power both computer vision and language AI - unified frameworks enable rapid innovation across domains
 """
 
 # %%
