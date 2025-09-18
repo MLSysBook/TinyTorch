@@ -34,6 +34,22 @@ def demo_training():
         ))
         console.print()
         
+        # What this demo shows
+        console.print(Panel(
+            "[bold yellow]What This Demo Shows:[/bold yellow]\n\n"
+            "This is where everything comes together - a complete training pipeline that takes\n"
+            "random weights and produces a working classifier. You'll witness:\n\n"
+            "• Data preparation and batching for efficient training\n"
+            "• The training loop: forward pass → loss calculation → backpropagation\n"
+            "• Real-time learning progress with loss and accuracy metrics\n"
+            "• Model evaluation and deployment considerations\n\n"
+            "[bold cyan]Key Insight:[/bold cyan] Training is an optimization process - we iteratively adjust weights\n"
+            "to minimize prediction errors. Watch the loss decrease and accuracy increase!",
+            title="📚 Understanding This Demo",
+            style="blue"
+        ))
+        console.print()
+        
         # Demo 1: The Training Problem
         print("🎯 Demo 1: The Machine Learning Training Challenge")
         print("From random weights to intelligent behavior...")

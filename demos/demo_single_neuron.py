@@ -31,9 +31,26 @@ def demo_single_neuron():
         ))
         console.print()
         
+        # What this demo shows
+        console.print(Panel(
+            "[bold yellow]What This Demo Shows:[/bold yellow]\n\n"
+            "We're going to watch a single neuron (the basic unit of neural networks) learn to solve\n"
+            "the AND gate problem through gradient descent. You'll see:\n\n"
+            "• How random weights produce wrong answers initially\n"
+            "• How the neuron adjusts its weights based on errors\n"
+            "• The formation of a decision boundary that separates 0s from 1s\n"
+            "• Why some problems (AND) are learnable while others (XOR) need multiple layers\n\n"
+            "[bold cyan]Key Insight:[/bold cyan] A neuron is just a weighted sum followed by an activation function.\n"
+            "Learning means finding the right weights!",
+            title="📚 Understanding This Demo",
+            style="blue"
+        ))
+        console.print()
+        
         # Demo 1: The AND gate problem
         console.print(Panel(
-            "Teaching a neuron digital logic...",
+            "The AND gate outputs 1 only when BOTH inputs are 1.\n"
+            "This is a 'linearly separable' problem - a single line can divide the outputs.",
             title="⚡ Demo 1: The AND Gate Learning Problem",
             style="green"
         ))
@@ -54,6 +71,10 @@ def demo_single_neuron():
             and_table.add_row(str(int(x1)), str(int(x2)), str(int(target)))
         
         console.print(and_table)
+        console.print()
+        
+        console.print("[dim]💡 [bold]How to Read This:[/bold] The AND gate is like a logical 'both must be true' operator.[/dim]")
+        console.print("[dim]   Notice only the last row (1 AND 1) outputs 1. Our neuron needs to learn this pattern![/dim]")
         console.print()
         
         # Demo 2: Manual neuron implementation
@@ -159,6 +180,12 @@ def demo_single_neuron():
                 bias.data[0, 0] -= learning_rate * total_grad / 4
         
         console.print(training_table)
+        console.print()
+        
+        console.print("[dim]💡 [bold]What's Happening:[/bold] Watch the error decrease as the neuron learns![/dim]")
+        console.print("[dim]   • Error measures how wrong our predictions are (lower is better)[/dim]")
+        console.print("[dim]   • Weights are adjusting to reduce this error through gradient descent[/dim]")
+        console.print("[dim]   • The bias shifts the decision boundary position[/dim]")
         console.print()
         
         # Final predictions

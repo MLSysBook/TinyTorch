@@ -32,6 +32,23 @@ def demo_language():
         ))
         console.print()
         
+        # What this demo shows
+        console.print(Panel(
+            "[bold yellow]What This Demo Shows:[/bold yellow]\n\n"
+            "Language generation is the culmination of everything you've learned - combining all the\n"
+            "components into a system that can understand and generate human language. You'll discover:\n\n"
+            "• How text is tokenized into discrete units the model can process\n"
+            "• Why embeddings convert discrete words into continuous vector spaces\n"
+            "• How autoregressive generation produces text one token at a time\n"
+            "• The complete TinyGPT architecture - your own language AI\n"
+            "• How scaling from TinyGPT to GPT-4 unlocks emergent capabilities\n\n"
+            "[bold cyan]Key Insight:[/bold cyan] Language modeling is just predicting the next word - but when done\n"
+            "at scale with transformers, this simple task creates intelligent behavior!",
+            title="📚 Understanding This Demo",
+            style="blue"
+        ))
+        console.print()
+        
         # Demo 1: The Language Modeling Challenge
         print("📚 Demo 1: Understanding Language Generation")
         print("From discrete tokens to continuous predictions...")
@@ -61,6 +78,12 @@ def demo_language():
         print("  Challenge: Capture grammar, semantics, and context!")
         print()
         
+        console.print("[dim]💡 [bold]Core Concept:[/bold] Language modeling = next word prediction:[/dim]")
+        console.print("[dim]   • Each word depends on all previous words (context)[/dim]")
+        console.print("[dim]   • The model outputs probabilities for all possible next words[/dim]")
+        console.print("[dim]   • Training teaches which words are likely to follow others[/dim]")
+        console.print()
+        
         # Demo 2: Token Embeddings
         print("🔤 Demo 2: Token Embeddings - Words as Vectors")
         print("Converting discrete tokens to continuous representations...")
@@ -85,6 +108,12 @@ def demo_language():
         print("Key insight: Similar words should have similar embeddings!")
         print("(This is learned during training)")
         print()
+        
+        console.print("[dim]💡 [bold]Embedding Space:[/bold] Words become points in high-dimensional space:[/dim]")
+        console.print("[dim]   • 'cat' and 'dog' should be nearby (both animals)[/dim]")
+        console.print("[dim]   • 'ran' and 'walked' should be nearby (both movement verbs)[/dim]")
+        console.print("[dim]   • Vector arithmetic works: king - man + woman ≈ queen[/dim]")
+        console.print()
         
         # Demo 3: Sequence Processing
         print("📝 Demo 3: Sequence Processing with Attention")
@@ -119,6 +148,13 @@ def demo_language():
         print("  • 'cat' refers back to 'the' (the cat)")
         print("  • 'sat' focuses on 'cat' (what the cat did)")
         print()
+        
+        console.print("[dim]💡 [bold]Attention in Language:[/bold] Words 'look back' at relevant context:[/dim]")
+        console.print("[dim]   • Verbs attend to their subjects[/dim]")
+        console.print("[dim]   • Pronouns attend to their antecedents[/dim]")
+        console.print("[dim]   • Adjectives attend to their nouns[/dim]")
+        console.print("[dim]   These patterns emerge automatically during training![/dim]")
+        console.print()
         
         # Demo 4: TinyGPT Architecture
         print("🧠 Demo 4: TinyGPT Architecture")
@@ -198,6 +234,13 @@ def demo_language():
         print(f"Generated text: '{final_text}'")
         print()
         
+        console.print("[dim]💡 [bold]Generation Strategy:[/bold] Different sampling methods produce different text:[/dim]")
+        console.print("[dim]   • Greedy: Always pick highest probability (deterministic, repetitive)[/dim]")
+        console.print("[dim]   • Temperature sampling: Adjust probability sharpness (creativity control)[/dim]")
+        console.print("[dim]   • Top-k: Sample from top k most likely tokens (balanced)[/dim]")
+        console.print("[dim]   • Nucleus (top-p): Sample from smallest set with cumulative p (adaptive)[/dim]")
+        console.print()
+        
         # Demo 6: Autoregressive Generation
         print("🔄 Demo 6: Autoregressive Generation")
         print("Why we generate one token at a time...")
@@ -221,6 +264,12 @@ def demo_language():
         print("  • Models natural language structure")
         print("  • Enables controllable generation")
         print()
+        
+        console.print("[dim]💡 [bold]Mathematical Foundation:[/bold] Chain rule of probability:[/dim]")
+        console.print("[dim]   • Decomposes joint probability into conditional probabilities[/dim]")
+        console.print("[dim]   • Each token depends on entire history[/dim]")
+        console.print("[dim]   • This is why transformers need attention - to see all history![/dim]")
+        console.print()
         
         # Demo 7: Training vs Inference
         print("🎓 Demo 7: Training vs Inference")
@@ -261,6 +310,13 @@ def demo_language():
             print(f"  {name}: {vocab} vocab, {dims}, {layers} → {capability}")
         
         print()
+        
+        console.print("[dim]💡 [bold]Scaling Laws:[/bold] Bigger models are qualitatively different:[/dim]")
+        console.print("[dim]   • 10× parameters ≈ predictable performance gain[/dim]")
+        console.print("[dim]   • Emergent abilities appear at scale thresholds[/dim]")
+        console.print("[dim]   • In-context learning emerges around 1B parameters[/dim]")
+        console.print("[dim]   • Reasoning emerges around 100B parameters[/dim]")
+        console.print()
         print("Emergent capabilities with scale:")
         print("  • Few-shot learning (learn from examples)")
         print("  • Chain-of-thought reasoning")
@@ -332,6 +388,13 @@ def demo_language():
         print("You understand AI not just conceptually, but through building it yourself.")
         print("This knowledge will serve you in any AI/ML career path.")
         print()
+        
+        console.print("[dim]💡 [bold]Your Achievement:[/bold] You've built every component of modern AI:[/dim]")
+        console.print("[dim]   • You understand the math (tensors, gradients, optimization)[/dim]")
+        console.print("[dim]   • You understand the engineering (memory, compute, scaling)[/dim]")
+        console.print("[dim]   • You understand the systems (training, deployment, monitoring)[/dim]")
+        console.print("[dim]   • Most importantly: You built it all yourself![/dim]")
+        console.print()
         
         print("🏆 TinyTorch Language Generation Demo Complete!")
         print("🎯 Final Achievements:")
