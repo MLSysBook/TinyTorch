@@ -12,35 +12,33 @@ html_meta:
   "name=twitter:image": "https://mlsysbook.github.io/TinyTorch/logo.png"
 ---
 
-# TinyTorch: Build Machine Learning Systems from Scratch
-
-## A comprehensive educational framework for understanding ML systems engineering
+# TinyTorch: Build Your Own ML Framework from First Principles
 
 **Most ML education teaches you to _use_ frameworks. TinyTorch teaches you to _build_ them.**
 
-TinyTorch is a minimalist educational framework designed for learning by doing. Instead of relying on PyTorch or TensorFlow, you implement everything from scratch—tensors, autograd, optimizers, even MLOps tooling.
+Tiny🔥Torch is a minimalist framework for building machine learning systems from scratch—from tensors to systems. Instead of relying on PyTorch or TensorFlow, you implement everything yourself—tensors, autograd, optimizers, even MLOps tooling.
 
-**Our Vision: Train ML Systems Engineers, Not Just ML Users**
+**The Vision: Train ML Systems Engineers, Not Just ML Users**
 
 This hands-on approach builds the deep systems intuition that separates ML engineers from ML users. You'll understand not just *what* neural networks do, but *how* they work under the hood, *why* certain design choices matter in production, and *when* to make trade-offs between memory, speed, and accuracy.
 
 ```{admonition} What You'll Build
 :class: tip
-**A complete ML framework from scratch**: your own PyTorch-style toolkit that can:
+**A complete ML framework from scratch**: your own production-ready toolkit that can:
 - Train neural networks on CIFAR-10 (real dataset)
-- Implement automatic differentiation (the "magic" behind PyTorch)  
+- Implement automatic differentiation from first principles
 - Deploy production systems with 75% model compression
 - Handle complete ML pipeline from data to monitoring
 - **Build GPT-style language models with 95% component reuse**
 
-**Result:** You become the expert others ask about "how PyTorch actually works" and "why vision and language models share the same foundations."
+**Result:** You become the expert others ask about "how ML frameworks actually work" and "why neural architectures share universal foundations."
 ```
 
 _Understanding how to build ML systems makes you a more effective ML engineer._
 
-```{admonition} Complementary Learning
+```{admonition} The Perfect Learning Combination
 :class: note
-For comprehensive ML systems knowledge, we recommend [**Machine Learning Systems**](https://mlsysbook.ai) by [Prof. Vijay Janapa Reddi](https://profvjreddi.github.io/website/) (Harvard). While TinyTorch teaches you to **build** ML systems from scratch, that book provides the broader **systems context** and engineering principles for production AI.
+TinyTorch was designed as the hands-on lab companion to [**Machine Learning Systems**](https://mlsysbook.ai) by [Prof. Vijay Janapa Reddi](https://vijay.seas.harvard.edu) (Harvard). The book teaches you ML systems **theory and principles** - TinyTorch lets you **implement and experience** those concepts firsthand. Together, they provide complete ML systems mastery.
 ```
 
 ---
@@ -136,7 +134,7 @@ These aren't just academic questions - they're the system-level challenges that 
 
 ---
 
-## 👥 **Who This Is For**
+## 👥 Who This Is For
 
 ### **🎯 Perfect For:**
 - **CS students** who want to understand ML systems beyond high-level APIs
@@ -152,14 +150,13 @@ These aren't just academic questions - they're the system-level challenges that 
 
 ### **🚀 Career Impact:**
 After TinyTorch, you'll be the person your team asks:
-- *"Why is our training so slow?"* (You'll know how to profile and optimize)
+- *"Why is this training so slow?"* (You'll know how to profile and optimize)
 - *"Can we fit this model in GPU memory?"* (You'll understand memory trade-offs)  
-- *"How should we implement this new paper?"* (You'll translate research to code)
-- *"What's the best optimizer for our use case?"* (You'll know the system implications)
+- *"What's the best optimizer for this problem?"* (You'll know the system implications)
 
 ---
 
-## 📚 **Course Journey: 16 Modules - Vision to Language**
+## 📚 Course Journey: 16 Modules - Foundation to Framework
 
 ```{admonition} Foundation
 :class: note
@@ -189,37 +186,70 @@ CIFAR-10 loading, automatic differentiation with graph management, SGD/Adam with
 Model optimization, high-performance operations, systematic evaluation, and production monitoring with real deployment patterns.
 ```
 
-```{admonition} Language Models
+```{admonition} Framework Generalization
 :class: note
 **15. TinyGPT**
 
-Extend your vision framework to language models: GPT-style transformers, character tokenization, autoregressive generation with 95% component reuse.
+Demonstrate framework universality: GPT-style transformers, character tokenization, autoregressive generation with 95% component reuse from your ML systems foundation.
 ```
 
 ---
 
 ## 🔗 **Complete System Integration**
 
-**This isn't 16 separate exercises.** Every component you build integrates into one fully functional ML framework that powers both vision AND language:
+**This isn't 16 separate exercises.** Every component you build integrates into one fully functional ML framework with universal foundations:
 
 ```{admonition} 🎯 How It All Connects
 :class: important
-**Module 1: Your Tensor class** → **Module 2: Powers your activation functions** → **Module 3: Enables your layers** → **Module 4: Forms your networks** → **Module 7: Drives your autograd system** → **Module 8: Optimizes with your SGD/Adam** → **Module 9: Trains on real CIFAR-10 data** → **Module 16: Extends to TinyGPT language models**
 
-**Result:** A complete, working ML framework that you built from scratch, capable of training neural networks on real datasets AND generating coherent text.
+```{mermaid}
+flowchart TD
+    Z[00_introduction<br/>🎯 System Overview] --> A[01_setup<br/>Setup & Environment] 
+    A --> B[02_tensor<br/>Core Tensor Operations]
+    B --> C[03_activations<br/>ReLU, Sigmoid, Tanh]
+    B --> I[09_autograd<br/>Automatic Differentiation]
+    
+    C --> D[04_layers<br/>Dense Layers]
+    D --> E[05_dense<br/>Sequential Networks]
+    
+    E --> F[06_spatial<br/>Convolutional Networks]
+    E --> G[07_attention<br/>Self-Attention]
+    
+    B --> H[08_dataloader<br/>Data Loading]
+    
+    I --> J[10_optimizers<br/>SGD & Adam]
+    
+    H --> K[11_training<br/>Training Loops]
+    E --> K
+    F --> K
+    G --> K
+    J --> K
+    
+    K --> L[12_compression<br/>Model Optimization]
+    K --> M[13_kernels<br/>High-Performance Ops]
+    K --> N[14_benchmarking<br/>Performance Analysis]
+    K --> O[15_mlops<br/>Production Monitoring]
+    
+    L --> P[16_tinygpt<br/>🔥 Language Models]
+    G --> P
+    J --> P
+    K --> P
 ```
 
-### **🔥 TinyGPT: Framework Generalization**
+**Result:** Every component you build converges into TinyGPT - proving your framework is complete and production-ready.
+```
 
-After completing the 15 core modules, you have a **complete computer vision framework**. Module 16 demonstrates the ultimate insight: the same foundations power language models!
+### **🔥 TinyGPT: The Complete Framework in Action**
 
-**What You'll Discover:**
-- 🧩 **Component Reuse**: 95% of your vision framework works unchanged for language
-- 🔄 **Mathematical Unity**: Dense layers, activations, and optimizers are universal
-- ⚡ **Strategic Extensions**: Only attention mechanisms are truly language-specific
-- 🎯 **Framework Thinking**: Understand why successful ML frameworks support multiple modalities
+After building all the components, TinyGPT is your **capstone demonstration** - showing how everything clicks together into a working system.
 
-**The Achievement:** Build a complete GPT-style language model using **only your TinyTorch implementation**. This proves you understand the unified mathematical foundations underlying all of modern AI.
+**What TinyGPT Proves:**
+- 🧩 **Component Integration**: Your tensors, layers, autograd, and optimizers work together seamlessly  
+- 🔄 **Universal Foundations**: The same mathematical primitives power any neural architecture
+- ⚡ **Framework Completeness**: You built a production-ready ML framework from scratch
+- 🎯 **Systems Mastery**: You understand how every piece fits together under the hood
+
+**The Achievement:** Build a complete GPT-style language model using **only components you implemented**. This proves your framework is real, complete, and ready for any ML task.
 
 ---
 
