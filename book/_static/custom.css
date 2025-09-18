@@ -1,0 +1,51 @@
+/* TinyTorch Custom Styles */
+
+/* Logo styling */
+.navbar-brand img {
+    width: auto;
+}
+
+/* Clean, minimal styling */
+.bd-main {
+    background-color: white;
+}
+
+.bd-content {
+    background-color: white;
+}
+
+/* Subtle styling for code blocks */
+.highlight {
+    border-radius: 4px;
+    margin: 1em 0;
+}
+
+/* Clean sidebar styling */
+.bd-sidebar {
+    background-color: #f8f9fa;
+}
+
+/* Header styling */
+.bd-header {
+    background-color: #FBFCFC;
+    border-bottom: 1px solid #e9ecef;
+}
+
+/* Footer styling */
+.bd-footer {
+    background-color: #f8f9fa;
+    border-top: 1px solid #e9ecef;
+    margin-top: 2rem;
+}
+
+/* Make content more readable */
+.bd-article {
+    font-size: 16px;
+    line-height: 1.6;
+}
+
+/* Style the TinyTorch branding */
+.navbar-brand {
+    font-weight: bold;
+    color: #dc3545 !important;
+}

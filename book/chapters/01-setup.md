@@ -190,5 +190,5 @@ Ready for serious development? → [🏗️ Local Setup Guide](../usage-paths/se
 ---
 
 <div class="prev-next-area">
-<a class="right-next" href="../chapters/02_tensor.html" title="next page">Next Module →</a>
+<a class="right-next" href="../chapters/02_setup.html" title="next page">Next Module →</a>
 </div>

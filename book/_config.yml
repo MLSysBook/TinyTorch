@@ -32,6 +32,10 @@ html:
   use_download_button: true
   use_fullscreen_button: true
   
+  # Custom styling
+  extra_css:
+    - _static/custom.css
+  
   # Binder integration for executable notebooks
   launch_buttons:
     binderhub_url: "https://mybinder.org"

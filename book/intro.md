@@ -12,7 +12,7 @@ html_meta:
   "name=twitter:image": "https://mlsysbook.github.io/TinyTorch/logo.png"
 ---
 
-# Tiny🔥Torch
+# Welcome
 
 ## Build your own Machine Learning framework from scratch. From Computer Vision to Language Models. 
 

@@ -316,6 +316,6 @@ Ready for serious development? → [🏗️ Local Setup Guide](../usage-paths/se
 ---
 
 <div class="prev-next-area">
-<a class="left-prev" href="../chapters/12_compression.html" title="previous page">← Previous Module</a>
-<a class="right-next" href="../chapters/14_benchmarking.html" title="next page">Next Module →</a>
+<a class="left-prev" href="../chapters/12_training.html" title="previous page">← Previous Module</a>
+<a class="right-next" href="../chapters/14_kernels.html" title="next page">Next Module →</a>
 </div>

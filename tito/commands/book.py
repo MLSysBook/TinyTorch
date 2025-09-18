@@ -57,6 +57,23 @@ class BookCommand(BaseCommand):
             'clean',
             help='Clean built book files'
         )
+        
+        # Serve command
+        serve_parser = subparsers.add_parser(
+            'serve',
+            help='Build and serve the Jupyter Book locally'
+        )
+        serve_parser.add_argument(
+            '--port',
+            type=int,
+            default=8001,
+            help='Port to serve on (default: 8001)'
+        )
+        serve_parser.add_argument(
+            '--no-build',
+            action='store_true',
+            help='Skip building and serve existing files'
+        )
 
     def run(self, args: Namespace) -> int:
         console = self.console
@@ -76,6 +93,7 @@ class BookCommand(BaseCommand):
                 "[bold cyan]📚 TinyTorch Book Management[/bold cyan]\n\n"
                 "[bold]Available Commands:[/bold]\n"
                 "  [bold green]build[/bold green]      - Build the complete Jupyter Book\n"
+                "  [bold green]serve[/bold green]      - Build and serve the Jupyter Book locally\n"
                 "  [bold green]publish[/bold green]   - Generate content, commit, and publish to GitHub\n"
                 "  [bold green]clean[/bold green]     - Clean built book files\n\n"
                 "[bold]Quick Start:[/bold]\n"
@@ -88,6 +106,8 @@ class BookCommand(BaseCommand):
         
         if args.book_command == 'build':
             return self._build_book(args)
+        elif args.book_command == 'serve':
+            return self._serve_book(args)
         elif args.book_command == 'publish':
             return self._publish_book(args)
         elif args.book_command == 'clean':
@@ -206,6 +226,45 @@ class BookCommand(BaseCommand):
             return 1
         finally:
             os.chdir("..")
+
+    def _serve_book(self, args: Namespace) -> int:
+        """Build and serve the Jupyter Book locally."""
+        console = self.console
+        
+        # Build the book first unless --no-build is specified
+        if not args.no_build:
+            console.print("📚 Step 1: Building the book...")
+            if self._build_book(args) != 0:
+                return 1
+            console.print()
+        
+        # Start the HTTP server
+        console.print("🌐 Step 2: Starting development server...")
+        console.print(f"📖 Open your browser to: [bold blue]http://localhost:{args.port}[/bold blue]")
+        console.print("🛑 Press [bold]Ctrl+C[/bold] to stop the server")
+        console.print()
+        
+        book_dir = Path("book/_build/html")
+        if not book_dir.exists():
+            console.print("[red]❌ Built book not found. Run with --no-build=False to build first.[/red]")
+            return 1
+        
+        try:
+            # Use Python's built-in HTTP server
+            subprocess.run([
+                "python3", "-m", "http.server", str(args.port),
+                "--directory", str(book_dir)
+            ])
+        except KeyboardInterrupt:
+            console.print("\n🛑 Development server stopped")
+        except FileNotFoundError:
+            console.print("[red]❌ Python3 not found in PATH[/red]")
+            return 1
+        except Exception as e:
+            console.print(f"[red]❌ Error starting server: {e}[/red]")
+            return 1
+        
+        return 0
 
     def _clean_book(self) -> int:
         """Clean built book files."""
