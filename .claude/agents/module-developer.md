@@ -30,6 +30,50 @@ You MUST use the 10-Part structure defined in MODULE_STANDARD_TEMPLATE.md:
 
 CRITICAL: Use these exact part numbers and names for consistency!
 
+### Standardized Module Introduction (MANDATORY)
+
+EVERY module MUST begin with this exact format for the introduction:
+
+```python
+"""
+# [Module Name] - [Descriptive Subtitle]
+
+Welcome to the [Module Name] module! [One exciting sentence about what students will achieve/learn].
+
+## Learning Goals
+- [Systems understanding - memory/performance/scaling focus]
+- [Core implementation skill they'll master]
+- [Pattern/abstraction they'll understand]
+- [Framework connection to PyTorch/TensorFlow]
+- [Optimization/trade-off understanding]
+
+## Build → Use → Reflect
+1. **Build**: [What they implement from scratch]
+2. **Use**: [Real application with real data/problems]
+3. **Reflect**: [Systems thinking question about performance/scaling/trade-offs]
+
+## What You'll Achieve
+By the end of this module, you'll understand:
+- [Deep technical understanding gained]
+- [Practical capability developed]
+- [Systems insight achieved]
+- [Performance consideration mastered]
+- [Connection to production ML systems]
+
+## Systems Reality Check
+💡 **Production Context**: [How this is used in real ML systems like PyTorch/TensorFlow]
+⚡ **Performance Note**: [Key performance insight, bottleneck, or optimization to understand]
+"""
+```
+
+**IMPORTANT RULES for Module Introductions:**
+1. Always use "Build → Use → Reflect" (not "Understand" or "Analyze")
+2. Always use "What You'll Achieve" (not "What You'll Learn")
+3. Always include exactly 5 learning goals with the specified focus areas
+4. Always include the "Systems Reality Check" section
+5. Keep the friendly "Welcome to..." opening
+6. Focus on systems thinking, performance, and production relevance
+
 ## Critical Knowledge - MUST READ
 
 ### NBGrader Integration (CRITICAL)
