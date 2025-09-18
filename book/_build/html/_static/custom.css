@@ -45,8 +45,8 @@ h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-family-sans);
     color: var(--color-text-primary);
     font-weight: 600;
-    margin-top: 2em;
-    margin-bottom: 0.8em;
+    margin-top: 1.5em;
+    margin-bottom: 0.5em;
     line-height: 1.3;
     letter-spacing: -0.025em;
 }
@@ -148,25 +148,25 @@ pre code {
 /* Enhanced content readability */
 .bd-article {
     font-size: 17px;
-    line-height: 1.8;
+    line-height: 1.6;
     color: var(--color-text-secondary);
     max-width: 800px;
     font-weight: 400;
 }
 
 .bd-article p {
-    margin-bottom: 1.3em;
+    margin-bottom: 1em;
 }
 
 .bd-article li {
-    margin-bottom: 0.5em;
-    line-height: 1.7;
+    margin-bottom: 0.3em;
+    line-height: 1.6;
 }
 
 .bd-article blockquote {
     border-left: 4px solid #e2e8f0;
-    margin: 1.5em 0;
-    padding: 1em 1.5em;
+    margin: 1.2em 0;
+    padding: 0.8em 1.2em;
     background-color: #f8fafc;
     font-style: italic;
     color: #4a5568;
@@ -322,11 +322,11 @@ td {
 /* Better spacing for lists in articles */
 .bd-article ul, .bd-article ol {
     padding-left: 1.5rem;
-    margin: 1.2em 0;
+    margin: 1em 0;
 }
 
 .bd-article ul li, .bd-article ol li {
-    margin-bottom: 0.6em;
+    margin-bottom: 0.4em;
 }
 
 /* Improved strong/bold text */
