@@ -1291,6 +1291,7 @@ Let's bring everything together in a complete Shakespeare demo that shows TinyGP
 """
 
 # %%
+#| export
 def shakespeare_demo():
     """Complete Shakespeare demo showing TinyGPT in action"""
     print("🎭 TinyGPT Shakespeare Demo")
@@ -1685,8 +1686,91 @@ You now understand:
 *"The best way to understand how frameworks work is to build one yourself. The best way to extend frameworks is to understand their mathematical foundations."* - The TinyTorch Philosophy
 """
 
+# %%
+#| export
+def live_demo():
+    """
+    Live TinyGPT demonstration with typewriter effect.
+    Shows real-time text generation character by character.
+    """
+    import time
+    
+    def typewriter_effect(text, delay=0.05):
+        """Print text with typewriter effect"""
+        for char in text:
+            print(char, end='', flush=True)
+            time.sleep(delay)
+        print()
+    
+    print("🤖 TinyGPT Live Demo")
+    print("=" * 40)
+    print("Watch TinyGPT learn and generate text!")
+    print()
+    
+    # Shakespeare training text
+    text = """To be, or not to be, that is the question:
+Whether 'tis nobler in the mind to suffer
+The slings and arrows of outrageous fortune,
+Or to take arms against a sea of troubles
+And by opposing end them. To die—to sleep,
+No more; and by a sleep to say we end
+The heart-ache and the thousand natural shocks
+That flesh is heir to: 'tis a consummation
+Devoutly to be wish'd."""
+    
+    print(f"📚 Training text: {len(text)} characters")
+    
+    # Setup
+    typewriter_effect("🔤 Creating tokenizer...")
+    tokenizer = CharTokenizer(vocab_size=80)
+    tokenizer.fit(text)
+    vocab_size = tokenizer.get_vocab_size()
+    print(f"   ✅ Vocabulary: {vocab_size} characters")
+    
+    typewriter_effect("🧠 Building TinyGPT...")
+    model = TinyGPT(
+        vocab_size=vocab_size,
+        d_model=64,
+        num_heads=4,
+        num_layers=2,
+        d_ff=256,
+        max_length=100,
+        dropout=0.1
+    )
+    print(f"   ✅ Model: {model.count_parameters():,} parameters")
+    
+    typewriter_effect("🎓 Training neural network...")
+    trainer = LanguageModelTrainer(model, tokenizer)
+    
+    # Pre-training generation
+    print("\n📝 BEFORE training:")
+    prompt = "To be"
+    print(f"🎯 '{prompt}' → ", end='', flush=True)
+    pre_gen = trainer.generate_text(prompt, max_length=20, temperature=1.0)
+    typewriter_effect(pre_gen[len(prompt):], delay=0.08)
+    
+    # Train
+    print("\n🚀 Training...")
+    trainer.fit(text=text, epochs=2, seq_length=16, batch_size=2, verbose=False)
+    
+    # Post-training generation
+    print("\n📝 AFTER training:")
+    for temp in [0.5, 0.8]:
+        print(f"🎯 '{prompt}' (T={temp}) → ", end='', flush=True)
+        post_gen = trainer.generate_text(prompt, max_length=25, temperature=temp)
+        typewriter_effect(post_gen[len(prompt):], delay=0.1)
+    
+    print("\n✨ Demo complete! TinyGPT generated text character by character.")
+    print("🔥 Built entirely from scratch with TinyTorch components!")
+
 # Only run tests if executed directly
 if __name__ == "__main__":
     print("🎭 TinyGPT Module Complete!")
-    print("Run the full Shakespeare demo to see everything in action!")
-    print("To run: python tinygpt_dev.py")
+    print()
+    print("Available demos:")
+    print("• shakespeare_demo() - Full training and generation demo")
+    print("• live_demo() - Live typing effect demonstration")
+    print("• run_comprehensive_tests() - Complete test suite")
+    print()
+    print("Running live demo...")
+    live_demo()
