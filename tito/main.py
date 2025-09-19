@@ -17,7 +17,7 @@ from pathlib import Path
 from typing import Dict, Type, Optional, List
 
 from .core.config import CLIConfig
-from .core.console import get_console, print_banner, print_error
+from .core.console import get_console, print_banner, print_error, print_ascii_logo
 from .core.exceptions import TinyTorchCLIError
 from rich.panel import Panel
 from .commands.base import BaseCommand
@@ -38,6 +38,7 @@ from .commands.book import BookCommand
 from .commands.checkpoint import CheckpointCommand
 from .commands.grade import GradeCommand
 from .commands.demo import DemoCommand
+from .commands.logo import LogoCommand
 
 # Configure logging
 logging.basicConfig(
@@ -71,6 +72,7 @@ class TinyTorchCLI:
             'book': BookCommand,
             'grade': GradeCommand,
             'demo': DemoCommand,
+            'logo': LogoCommand,
         }
     
     def create_parser(self) -> argparse.ArgumentParser:
@@ -93,15 +95,16 @@ Convenience Commands:
   book        Build and manage Jupyter Book
   grade       Simplified grading interface (wraps NBGrader)
   demo        Run AI capability demos (show what your framework can do!)
+  logo        Display the beautiful TinyTorch ASCII art logo
 
 Examples:
   tito system info              Show system information
   tito module status --metadata Module status with metadata
+  tito module view 01_setup     Start coding in Jupyter Lab
   tito export 01_tensor         Export specific module to package
-  tito export --all             Export all modules to package
-  tito nbgrader generate setup  Generate assignment from setup module
+  tito checkpoint timeline      Visual progress timeline
+  tito logo --animate           Show animated ASCII logo
   tito book build               Build the Jupyter Book locally
-  tito book publish             Generate, commit, and publish to GitHub
             """
         )
         
@@ -188,39 +191,35 @@ Examples:
             
             # Handle no command
             if not parsed_args.command:
+                # Show ASCII logo first
+                print_ascii_logo()
+                
                 # Show enhanced help with command groups
                 self.console.print(Panel(
-                    "[bold cyan]TinyTorch CLI - Build ML Systems from Scratch[/bold cyan]\n\n"
                     "[bold]Command Groups:[/bold]\n"
-                    "  [bold green]system[/bold green]   - System environment and configuration\n"
-                    "  [bold green]module[/bold green]   - Module development and management\n"
-                    "  [bold green]package[/bold green]  - Package management and nbdev integration\n"
-                    "  [bold green]nbgrader[/bold green] - Assignment management and auto-grading\n"
-                    "  [bold green]checkpoint[/bold green] - Track ML systems engineering progress\n\n"
+                    "  [bold green]system[/bold green]      - System environment and configuration\n"
+                    "  [bold green]module[/bold green]      - Module development and management\n"
+                    "  [bold green]package[/bold green]     - Package management and nbdev integration\n"
+                    "  [bold green]nbgrader[/bold green]    - Assignment management and auto-grading\n"
+                    "  [bold green]checkpoint[/bold green]  - Track ML systems engineering progress\n\n"
                     "[bold]Convenience Commands:[/bold]\n"
-                    "  [bold green]export[/bold green]   - Export modules to package\n"
-                    "  [bold green]test[/bold green]     - Run tests\n"
-                    "  [bold green]book[/bold green]     - Build and manage Jupyter Book\n\n"
+                    "  [bold green]export[/bold green]      - Export modules to package\n"
+                    "  [bold green]test[/bold green]        - Run tests\n"
+                    "  [bold green]book[/bold green]        - Build and manage Jupyter Book\n"
+                    "  [bold green]logo[/bold green]        - Display the ASCII art logo\n\n"
                     "[bold]Quick Start:[/bold]\n"
                     "  [dim]tito system info[/dim]              - Show system information\n"
                     "  [dim]tito module status --metadata[/dim] - Module status with metadata\n"
-                    "  [dim]tito export 01_tensor[/dim]         - Export specific module to package\n"
-                    "  [dim]tito export --all[/dim]             - Export all modules to package\n"
-                    "  [dim]tito nbgrader generate setup[/dim]  - Generate assignment from setup module\n"
-                    "  [dim]tito book build[/dim]               - Build the Jupyter Book locally\n"
-                    "  [dim]tito book publish[/dim]             - Generate, commit, and publish to GitHub\n"
-                    "  [dim]tito checkpoint status[/dim]        - Show current progress and capabilities\n"
-                    "  [dim]tito checkpoint timeline[/dim]      - Visual progress timeline\n\n"
+                    "  [dim]tito module view 01_setup[/dim]     - Start coding in Jupyter Lab\n"
+                    "  [dim]tito checkpoint timeline[/dim]      - Visual progress timeline\n"
+                    "  [dim]tito logo --animate[/dim]           - Show animated logo\n\n"
                     "[bold]Get Help:[/bold]\n"
                     "  [dim]tito system[/dim]                   - Show system subcommands\n"
                     "  [dim]tito module[/dim]                   - Show module subcommands\n"
                     "  [dim]tito package[/dim]                  - Show package subcommands\n"
-                    "  [dim]tito nbgrader[/dim]                 - Show nbgrader subcommands\n"
-                    "  [dim]tito checkpoint[/dim]               - Show checkpoint subcommands\n"
-                    "  [dim]tito book[/dim]                     - Show book subcommands\n"
                     "  [dim]tito --help[/dim]                   - Show full help",
-                    title="TinyTorch CLI",
-                    border_style="bright_blue"
+                    title="Welcome to TinyTorch!",
+                    border_style="bright_green"
                 ))
                 return 0
             
