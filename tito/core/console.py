@@ -8,6 +8,7 @@ from rich.text import Text
 from rich.table import Table
 from rich.tree import Tree
 from rich.progress import Progress, SpinnerColumn, BarColumn, TextColumn
+from rich.align import Align
 from typing import Optional
 import sys
 
@@ -26,6 +27,61 @@ def print_banner():
     console = get_console()
     banner_text = Text("Tiny🔥Torch: Build ML Systems from Scratch", style="bold red")
     console.print(Panel(banner_text, style="bright_blue", padding=(1, 2)))
+
+def print_ascii_logo():
+    """Print the beautiful ASCII art TinyTorch logo matching the real design."""
+    console = get_console()
+    
+    # Create styled logo text with proper Rich formatting
+    logo_text = Text()
+    
+    # ASCII Art Logo lines
+    logo_lines = [
+        "       🔥🔥                                                    ",
+        "      ╱──╲       ",
+        "     ╱ ● ╲      ████████╗ ██████╗ ██████╗  ██████╗██╗  ██╗",
+        "    ╱ ╱ ╲ ╲     ╚══██╔══╝██╔═══██╗██╔══██╗██╔════╝██║  ██║",
+        "   │ ●───● │       ██║   ██║   ██║██████╔╝██║     ███████║",
+        "   │ │ ● │ │       ██║   ██║   ██║██╔══██╗██║     ██╔══██║",
+        "   │ ●─┬─● │       ██║   ╚██████╔╝██║  ██║╚██████╗██║  ██║",
+        "    ╲ ╲●╱ ╱        ╚═╝    ╚═════╝ ╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝",
+        "     ╲───╱                                                       ",
+        "       ╲─╱         "
+    ]
+    
+    # Add the first line
+    logo_text.append(logo_lines[0] + "\n")
+    
+    # Add the second line with styled "tiny"
+    logo_text.append(logo_lines[1])
+    logo_text.append("tiny", style="dim")
+    logo_text.append("                                          \n")
+    
+    # Add the main ASCII art lines
+    for line in logo_lines[2:9]:
+        logo_text.append(line + "\n")
+    
+    # Add the tagline with proper styling
+    logo_text.append(logo_lines[9])
+    logo_text.append("🔥 Learn ML Systems by Building Them", style="orange1")
+    
+    # Add tagline
+    tagline = Text()
+    tagline.append("\nBuild Complete Neural Networks from First Principles", style="dim cyan")
+    
+    # Combine logo and tagline
+    full_content = Text()
+    full_content.append(logo_text)
+    full_content.append(tagline)
+    
+    # Display centered with rich styling
+    console.print()
+    console.print(Panel(
+        Align.center(full_content),
+        border_style="bright_blue",
+        padding=(1, 2)
+    ))
+    console.print()
 
 def print_error(message: str, title: str = "Error"):
     """Print an error message with consistent formatting."""
