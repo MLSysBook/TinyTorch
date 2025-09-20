@@ -22,57 +22,96 @@ def get_console() -> Console:
         _console = Console(stderr=False)
     return _console
 
-def print_banner():
-    """Print the TinyTorch banner using Rich."""
+def print_banner(compact: bool = False):
+    """Print the TinyTorch banner using Rich with clean block text style."""
     console = get_console()
-    banner_text = Text("Tiny🔥Torch: Build ML Systems from Scratch", style="bold red")
+    if compact:
+        print_compact_banner()
+    else:
+        # Create banner text that matches the clean block text theme
+        banner_text = Text()
+        banner_text.append("tiny", style="dim cyan")
+        banner_text.append("🔥", style="red")
+        banner_text.append("TORCH", style="bold orange1")
+        banner_text.append(": Build ML Systems from Scratch", style="dim")
+        console.print(Panel(banner_text, style="bright_blue", padding=(1, 2)))
+
+def print_compact_banner():
+    """Print a compact TinyTorch banner with 'tiny' above TORCH."""
+    console = get_console()
+    # Create compact banner text
+    banner_text = Text()
+    banner_text.append("tiny", style="dim cyan")
+    banner_text.append("\n🔥", style="red")
+    banner_text.append("TORCH", style="bold orange1")
+    banner_text.append(": Build ML Systems from Scratch", style="dim")
     console.print(Panel(banner_text, style="bright_blue", padding=(1, 2)))
 
-def print_ascii_logo():
-    """Print the beautiful ASCII art TinyTorch logo matching the real design."""
+def print_ascii_logo(compact: bool = False):
+    """Print the clean, minimal ASCII art TinyTorch logo."""
     console = get_console()
+    
+    if compact:
+        print_compact_ascii_logo()
+        return
     
     # Create styled logo text with proper Rich formatting
     logo_text = Text()
     
-    # ASCII Art Logo lines
+    # ============================================
+    # TINYTORCH LOGO - EDIT HERE!
+    # ============================================
+    # To edit: Change the ASCII characters in logo_lines
+    # Add/remove spaces at the beginning of each line to adjust positioning
+    
     logo_lines = [
-        "       🔥🔥                                                    ",
-        "      ╱──╲       ",
-        "     ╱ ● ╲      ████████╗ ██████╗ ██████╗  ██████╗██╗  ██╗",
-        "    ╱ ╱ ╲ ╲     ╚══██╔══╝██╔═══██╗██╔══██╗██╔════╝██║  ██║",
-        "   │ ●───● │       ██║   ██║   ██║██████╔╝██║     ███████║",
-        "   │ │ ● │ │       ██║   ██║   ██║██╔══██╗██║     ██╔══██║",
-        "   │ ●─┬─● │       ██║   ╚██████╔╝██║  ██║╚██████╗██║  ██║",
-        "    ╲ ╲●╱ ╱        ╚═╝    ╚═════╝ ╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝",
-        "     ╲───╱                                                       ",
-        "       ╲─╱         "
+        # Flames above each TORCH letter 
+        "      🔥🔥🔥🔥",
+        "      ████████╗ ██████╗ ██████╗  ██████╗██╗  ██╗",  # TORCH line 1
+        "      ╚t═██╔══╝██╔═══██╗██╔══██╗██╔════╝██║  ██║",  # TORCH line 2
+        "       i ██║   ██║   ██║██████╔╝██║     ███████║",  # TORCH line 3
+        "       n ██║   ██║   ██║██╔══██╗██║     ██╔══██║",  # TORCH line 4
+        "       y ██║   ╚██████╔╝██║  ██║╚██████╗██║  ██║",  # TORCH line 5
+        "         ╚═╝    ╚═════╝ ╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝"   # TORCH line 6
     ]
     
-    # Add the first line
-    logo_text.append(logo_lines[0] + "\n")
+    # ============================================
+    # COLOR CONFIGURATION - EDIT COLORS HERE!
+    # ============================================
+    # Available colors: black, red, green, yellow, blue, magenta, cyan, white
+    # Prefix with 'bright_' for brighter versions (e.g., 'bright_red')
+    # Add 'bold' for bold text (e.g., 'bold red' or 'bold bright_black')
     
-    # Add the second line with styled "tiny"
-    logo_text.append(logo_lines[1])
-    logo_text.append("tiny", style="dim")
-    logo_text.append("                                          \n")
+    FLAME_COLOR = "yellow"              # Color for 🔥 emoji
+    TINY_COLOR = "bold yellow"          # Color for "tiny" text (warmer, more visible)
+    TORCH_COLOR = "bold white"          # Color for "TORCH" text (better contrast)
+    TAGLINE_COLOR = "orange1"          # Color for tagline
     
-    # Add the main ASCII art lines
-    for line in logo_lines[2:9]:
-        logo_text.append(line + "\n")
-    
-    # Add the tagline with proper styling
-    logo_text.append(logo_lines[9])
-    logo_text.append("🔥 Learn ML Systems by Building Them", style="orange1")
+    # Process and apply colors to each line
+    for i, line in enumerate(logo_lines):
+        if i == 0:  # Flame line
+            logo_text.append(line, style=FLAME_COLOR)
+        elif i == 4:  # Line with tiny + TORCH
+            # Find where "tiny" ends and TORCH begins (look for ██)
+            if "██║" in line:
+                torch_start = line.find("██║")
+                tiny_part = line[:torch_start]
+                torch_part = line[torch_start:]
+                logo_text.append(tiny_part, style=TINY_COLOR)
+                logo_text.append(torch_part, style=TORCH_COLOR)
+            else:
+                logo_text.append(line, style=TORCH_COLOR)
+        else:  # Pure TORCH lines
+            logo_text.append(line, style=TORCH_COLOR)
+        logo_text.append("\n")
     
     # Add tagline
-    tagline = Text()
-    tagline.append("\nBuild Complete Neural Networks from First Principles", style="dim cyan")
-    
+    logo_text.append("\n🔥 Don't import the future. Build it from tensors up.", style="orange1")
+    logo_text.append("\n")
+        
     # Combine logo and tagline
     full_content = Text()
     full_content.append(logo_text)
-    full_content.append(tagline)
     
     # Display centered with rich styling
     console.print()
@@ -82,6 +121,11 @@ def print_ascii_logo():
         padding=(1, 2)
     ))
     console.print()
+
+def print_compact_ascii_logo():
+    """Print the compact ASCII art TinyTorch logo - same as main logo now."""
+    # Just use the main logo since it's already compact and clean
+    print_ascii_logo(compact=False)
 
 def print_error(message: str, title: str = "Error"):
     """Print an error message with consistent formatting."""

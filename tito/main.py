@@ -95,7 +95,6 @@ Convenience Commands:
   book        Build and manage Jupyter Book
   grade       Simplified grading interface (wraps NBGrader)
   demo        Run AI capability demos (show what your framework can do!)
-  logo        Display the beautiful TinyTorch ASCII art logo
 
 Examples:
   tito system info              Show system information
@@ -103,7 +102,6 @@ Examples:
   tito module view 01_setup     Start coding in Jupyter Lab
   tito export 01_tensor         Export specific module to package
   tito checkpoint timeline      Visual progress timeline
-  tito logo --animate           Show animated ASCII logo
   tito book build               Build the Jupyter Book locally
             """
         )
@@ -174,8 +172,8 @@ Examples:
             if hasattr(parsed_args, 'no_color') and parsed_args.no_color:
                 self.config.no_color = True
             
-            # Show banner for interactive commands
-            if parsed_args.command and not self.config.no_color:
+            # Show banner for interactive commands (except logo which has its own display)
+            if parsed_args.command and not self.config.no_color and parsed_args.command != 'logo':
                 print_banner()
             
             # Validate environment for most commands (skip for doctor)
@@ -206,13 +204,12 @@ Examples:
                     "  [bold green]export[/bold green]      - Export modules to package\n"
                     "  [bold green]test[/bold green]        - Run tests\n"
                     "  [bold green]book[/bold green]        - Build and manage Jupyter Book\n"
-                    "  [bold green]logo[/bold green]        - Display the ASCII art logo\n\n"
+                    "  [bold green]logo[/bold green]        - Learn about TinyTorch philosophy\n"
                     "[bold]Quick Start:[/bold]\n"
                     "  [dim]tito system info[/dim]              - Show system information\n"
                     "  [dim]tito module status --metadata[/dim] - Module status with metadata\n"
                     "  [dim]tito module view 01_setup[/dim]     - Start coding in Jupyter Lab\n"
                     "  [dim]tito checkpoint timeline[/dim]      - Visual progress timeline\n"
-                    "  [dim]tito logo --animate[/dim]           - Show animated logo\n\n"
                     "[bold]Get Help:[/bold]\n"
                     "  [dim]tito system[/dim]                   - Show system subcommands\n"
                     "  [dim]tito module[/dim]                   - Show module subcommands\n"
