@@ -144,8 +144,21 @@ class Sigmoid:
         - Historically important for early neural networks
         """
         ### BEGIN SOLUTION
+        # Handle both Variable (x.data) and Tensor (x._data) inputs
+        if hasattr(x, 'data'):
+            # x is a Variable, get the tensor data
+            if hasattr(x.data, '_data'):
+                # x.data is a Tensor
+                data = x.data._data
+            else:
+                # x.data is already numpy array
+                data = x.data
+        else:
+            # x is a Tensor
+            data = x._data
+        
         # Clip to prevent overflow
-        clipped_input = np.clip(-x.data, -500, 500)
+        clipped_input = np.clip(-data, -500, 500)
         result = 1 / (1 + np.exp(clipped_input))
         return type(x)(result)
         ### END SOLUTION

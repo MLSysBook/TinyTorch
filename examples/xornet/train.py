@@ -23,20 +23,20 @@ from tinytorch.core.training import MeanSquaredError as MSELoss
 
 def create_dataset():
     """Create the XOR dataset."""
-    # XOR truth table
-    X = Tensor([
+    # XOR truth table as numpy arrays (matches working pattern)
+    X = np.array([
         [0, 0],
         [0, 1],
         [1, 0],
         [1, 1]
-    ])
+    ], dtype=np.float32)
     
-    y = Tensor([
+    y = np.array([
         [0],  # 0 XOR 0 = 0
         [1],  # 0 XOR 1 = 1
         [1],  # 1 XOR 0 = 1
         [0]   # 1 XOR 1 = 0
-    ])
+    ], dtype=np.float32)
     
     return X, y
 
@@ -52,6 +52,13 @@ class XORNetwork:
         self.output = Dense(4, 1)
         self.relu = ReLU()
         self.sigmoid = Sigmoid()
+        
+        # Initialize with better values (He initialization)
+        for layer in [self.hidden, self.output]:
+            fan_in = layer.weights.shape[0]
+            std = np.sqrt(2.0 / fan_in)
+            layer.weights._data = np.random.randn(*layer.weights.shape).astype(np.float32) * std
+            layer.bias._data = np.zeros(layer.bias.shape, dtype=np.float32)
         
         # Convert parameters to Variables for training
         self.hidden.weights = Variable(self.hidden.weights, requires_grad=True)
@@ -78,8 +85,10 @@ class XORNetwork:
                 self.output.weights, self.output.bias]
 
 
-def train(model, X, y, epochs=1000, lr=0.5):
+def train(model, X, y, epochs=1000, lr=0.1):
     """Train the model using gradient descent."""
+    from tinytorch.core.autograd import Variable
+    
     optimizer = SGD(model.parameters(), learning_rate=lr)
     loss_fn = MSELoss()
     
@@ -87,16 +96,34 @@ def train(model, X, y, epochs=1000, lr=0.5):
     print("-" * 40)
     
     for epoch in range(epochs):
-        # Forward pass
-        predictions = model.forward(X)
+        # Forward pass (exact pattern from working test)
+        x_var = Variable(Tensor(X), requires_grad=True)
+        h = model.hidden(x_var)
+        h = model.relu(h)
+        predictions = model.output(h)
+        predictions = model.sigmoid(predictions)
         
         # Compute loss
-        loss = loss_fn(predictions, y)
+        y_var = Variable(Tensor(y), requires_grad=False)
+        loss = loss_fn(predictions, y_var)
         
         # Backward pass (if autograd is available)
         if hasattr(loss, 'backward'):
             optimizer.zero_grad()
             loss.backward()
+            
+            # Fix bias gradients if needed (from working test)
+            for layer in [model.hidden, model.output]:
+                if layer.bias.grad is not None:
+                    if hasattr(layer.bias.grad.data, 'data'):
+                        grad = layer.bias.grad.data.data
+                    else:
+                        grad = layer.bias.grad.data
+                    
+                    if len(grad.shape) == 2:
+                        # Sum over batch dimension
+                        layer.bias.grad = Variable(Tensor(np.sum(grad, axis=0)))
+            
             optimizer.step()
         else:
             # Manual weight update for demonstration
@@ -107,7 +134,10 @@ def train(model, X, y, epochs=1000, lr=0.5):
         if epoch % 100 == 0:
             accuracy = evaluate(model, X, y)
             # Handle both Variable and Tensor loss types
-            loss_val = loss.data.data if hasattr(loss.data, 'data') else float(loss.data)
+            if hasattr(loss.data, 'data'):
+                loss_val = float(loss.data.data)
+            else:
+                loss_val = float(loss.data._data)
             print(f"Epoch {epoch:4d} | Loss: {loss_val:.4f} | Accuracy: {accuracy:.1%}")
     
     return model
@@ -115,17 +145,26 @@ def train(model, X, y, epochs=1000, lr=0.5):
 
 def evaluate(model, X, y):
     """Evaluate model accuracy."""
-    predictions = model.forward(X)
+    from tinytorch.core.autograd import Variable
+    
+    # Use the same forward pattern
+    x_var = Variable(Tensor(X), requires_grad=False)
+    h = model.hidden(x_var)
+    h = model.relu(h)
+    predictions = model.output(h)
+    predictions = model.sigmoid(predictions)
+    
     # Handle Variable data extraction
-    pred_data = predictions.data.data if hasattr(predictions.data, 'data') else predictions.data
-    y_data = y.data.data if hasattr(y.data, 'data') else y.data
+    pred_data = predictions.data._data
     
     predicted_classes = (pred_data > 0.5).astype(int)
-    correct = np.sum(predicted_classes == y_data)
+    correct = np.sum(predicted_classes == y)
     return correct / y.shape[0]
 
 
 def main():
+    from tinytorch.core.autograd import Variable
+    
     print("=" * 50)
     print("🧠 XOR Network with TinyTorch")
     print("=" * 50)
@@ -138,31 +177,29 @@ def main():
     model = XORNetwork()
     
     # Train model
-    model = train(model, X, y, epochs=500)
+    model = train(model, X, y, epochs=200)
     
     # Final evaluation
     print("\n" + "=" * 50)
     print("📊 Final Results:")
     print("-" * 40)
     
-    predictions = model.forward(X)
+    # Final predictions using same pattern
+    x_var = Variable(Tensor(X), requires_grad=False)
+    h = model.hidden(x_var)
+    h = model.relu(h)
+    predictions = model.output(h)
+    predictions = model.sigmoid(predictions)
     
     print("Input  | Target | Prediction | Correct")
     print("-" * 40)
-    # Handle Variable data extraction for printing
-    X_data = X.data.data if hasattr(X.data, 'data') else X.data
-    y_data = y.data.data if hasattr(y.data, 'data') else y.data
-    pred_data = predictions.data.data if hasattr(predictions.data, 'data') else predictions.data
+    
+    pred_data = predictions.data._data
     
     for i in range(X.shape[0]):
-        # Convert to numpy for indexing
-        X_np = np.array(X_data)
-        y_np = np.array(y_data)
-        pred_np = np.array(pred_data)
-        
-        x_input = X_np[i]
-        target = y_np[i, 0]
-        pred = pred_np[i, 0]
+        x_input = X[i]
+        target = y[i, 0]
+        pred = pred_data[i, 0]
         correct = "✅" if abs(pred - target) < 0.5 else "❌"
         print(f"{x_input} |   {target}    |   {pred:.3f}    |  {correct}")
     
