@@ -1,4 +1,4 @@
-# TinyTorch CIFAR-10 Classification Examples
+# CIFAR-10 🎯
 
 This directory demonstrates TinyTorch's capability to train real neural networks on real datasets with impressive results. Students can achieve **57.2% test accuracy** on CIFAR-10 using their own autograd implementation - performance that **exceeds typical ML course benchmarks** and approaches research-level results for MLPs!
 
@@ -31,7 +31,7 @@ This directory demonstrates TinyTorch's capability to train real neural networks
 
 ### Run the Main Example (57.2% accuracy)
 ```bash
-cd examples/cifar10_classifier
+cd examples/cifar10
 python train_cifar10_mlp.py
 ```
 

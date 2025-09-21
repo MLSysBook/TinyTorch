@@ -1,4 +1,4 @@
-# XOR Network Example
+# XORnet 🔥
 
 The classic XOR problem that launched the deep learning revolution!
 
