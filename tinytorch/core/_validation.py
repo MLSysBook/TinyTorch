@@ -94,7 +94,13 @@ def validate_variable_tensor_compatibility():
         
         try:
             loss = loss_fn(pred, true)
-            loss_value = float(loss.data)
+            # Handle Variable/Tensor data access properly
+            if hasattr(loss.data, 'data'):
+                loss_value = float(loss.data.data)
+            elif hasattr(loss.data, '_data'):
+                loss_value = float(loss.data._data)
+            else:
+                loss_value = float(loss.data)
             if not isinstance(loss_value, (int, float)) or np.isnan(loss_value):
                 raise TinyTorchValidationError("Loss function doesn't return valid scalar")
         except Exception as e:
