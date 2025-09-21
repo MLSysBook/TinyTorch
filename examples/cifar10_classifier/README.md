@@ -1,6 +1,21 @@
-# CIFAR-10 CNN Classification
+# CIFAR-10 Image Recognition Examples
 
-Train a real Convolutional Neural Network on real-world images with YOUR TinyTorch!
+Train neural networks to classify real RGB images from CIFAR-10!
+
+## Examples in this Directory
+
+### 🧪 `test_quick.py` - Pipeline Verification 
+Quick test to verify CIFAR-10 → MLP pipeline works without training.
+Tests data loading, model architecture, and forward pass.
+
+### 🎯 `train_mlp.py` - Milestone 1: "Machines Can See"
+Multi-Layer Perceptron training on CIFAR-10 for **Milestone 1**.
+- **Target**: 45%+ accuracy (proves framework works on real data)
+- **Architecture**: 3072 → 512 → 256 → 10 (MLP)
+- **Learning**: Real data complexity, scaling challenges
+
+### 🏆 `train.py` - Milestone 2: "I Can Train Real AI"
+Convolutional Neural Network training on CIFAR-10 for **Milestone 2**.
 
 ## What This Demonstrates
 

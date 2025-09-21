@@ -14,12 +14,15 @@ This demonstrates:
 
 import numpy as np
 import tinytorch as tt
-from tinytorch.core import Tensor
+from tinytorch.core.tensor import Tensor
 from tinytorch.core.layers import Dense
 from tinytorch.core.activations import ReLU, Softmax
-from tinytorch.data import DataLoader, MNISTDataset
+from tinytorch.core.dataloader import DataLoader
 from tinytorch.core.optimizers import Adam
 from tinytorch.core.training import CrossEntropyLoss
+
+# TODO: Need to implement MNISTDataset
+# from tinytorch.datasets import MNISTDataset
 
 
 class MNISTClassifier:
