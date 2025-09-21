@@ -23,10 +23,19 @@ This directory contains the 3 epic achievement milestones that transform student
 
 ```
 milestones/
-├── milestones.yml                    # Configuration and requirements
-├── milestone_01_machines_can_see.py  # MLP + MNIST test
-├── milestone_02_train_real_ai.py     # CNN + CIFAR-10 test  
-├── milestone_03_built_gpt.py         # TinyGPT + function generation test
+├── milestones.yml                    # Main configuration and requirements
+├── foundation/                       # Foundation Era (LeNet 1989)
+│   ├── milestone.yml                 # Era-specific configuration
+│   ├── test_lenet_milestone.py       # MLP + MNIST test
+│   └── demo_lenet_milestone.py       # Interactive demo
+├── revolution/                       # Revolution Era (AlexNet 2012)
+│   ├── milestone.yml                 # Era-specific configuration
+│   ├── test_alexnet_milestone.py     # CNN + CIFAR-10 test
+│   └── demo_alexnet_milestone.py     # Interactive demo
+├── generation/                       # Generation Era (ChatGPT 2022)
+│   ├── milestone.yml                 # Era-specific configuration
+│   ├── test_chatgpt_milestone.py     # TinyGPT + function generation test
+│   └── demo_chatgpt_milestone.py     # Interactive demo
 └── README.md                         # This file
 ```
 
