@@ -825,14 +825,17 @@ tito module complete tensor --skip-test
 - Use clear, consistent section organization
 - **QA testing is MANDATORY before ANY commit** (including systems validation)
 
-### 🚨 **CRITICAL RULE: NEVER MODIFY CORE FILES DIRECTLY**
-**ABSOLUTELY FORBIDDEN: Direct modification of `/tinytorch/core/` files**
+### 🚨 **CRITICAL RULE: ANYTHING IN `tinytorch/` = UPDATE THE SOURCE IN `modules/`**
+**GOLDEN RULE: If you see changes needed in `tinytorch/` directory, make them in `modules/` instead**
 
-**MANDATORY WORKFLOW FOR ALL CODE CHANGES:**
-1. ✅ **ALWAYS edit**: `modules/source/XX_modulename/modulename_dev.py` files
-2. ✅ **ALWAYS export**: Use `tito module complete XX_modulename` or `nbdev_export`
-3. ❌ **NEVER edit**: Files in `/tinytorch/core/` directory directly
-4. ❌ **NEVER commit**: Core files with manual modifications
+**MANDATORY WORKFLOW - NO EXCEPTIONS:**
+1. ✅ **ANY change in `tinytorch/`** → Find corresponding file in `modules/source/XX_modulename/modulename_dev.py`
+2. ✅ **ALWAYS edit**: `modules/source/` files ONLY
+3. ✅ **ALWAYS export**: Use `tito module complete XX_modulename` to sync changes
+4. ❌ **NEVER edit**: ANY file in `tinytorch/` directory directly
+5. ❌ **NEVER commit**: Manual changes to `tinytorch/` files
+
+**SIMPLE TEST: If the file path contains `tinytorch/`, DON'T EDIT IT DIRECTLY**
 
 **WHY THIS RULE EXISTS:**
 - Core files are **AUTO-GENERATED** from source modules
