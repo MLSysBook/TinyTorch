@@ -34,21 +34,21 @@ from pathlib import Path
 # Example mapping - shows what TinyTorch can do after each module
 EXAMPLES = {
     "01_setup": None,  # Just environment setup
-    "02_tensor": "tensor_operations",
-    "03_activations": "activation_functions", 
-    "04_layers": "layer_composition",
-    "05_dense": "xor_network",  # 🏆 Classic XOR problem
-    "06_spatial": "mnist_recognition",  # 🏆 MNIST CNN
-    "07_attention": "attention_visualization",
-    "08_dataloader": "data_loading",
-    "09_autograd": "automatic_differentiation",
-    "10_optimizers": "optimization_comparison",
-    "11_training": "cifar10_classifier",  # 🏆 Full CNN training
-    "12_compression": "model_compression",
-    "13_kernels": "performance_kernels",
-    "14_benchmarking": "performance_profiling",
-    "15_mlops": "production_deployment",
-    "16_tinygpt": "text_generation"  # 🏆 Transformer text generation
+    "02_tensor": None,  # Foundation only
+    "03_activations": None,  # Building blocks only
+    "04_layers": None,  # Components only
+    "05_dense": "xornet",  # 🔥 XORnet - Neural network fundamentals
+    "06_spatial": None,  # CNN components (no working example yet)
+    "07_attention": None,  # Attention building blocks
+    "08_dataloader": None,  # Data loading components
+    "09_autograd": None,  # XORnet already shows autograd
+    "10_optimizers": None,  # Optimization components
+    "11_training": "cifar10",  # 🎯 CIFAR-10 - Real computer vision
+    "12_compression": None,  # Advanced optimization
+    "13_kernels": None,  # Performance optimization
+    "14_benchmarking": None,  # Performance analysis
+    "15_mlops": None,  # Production deployment concepts
+    "16_tinygpt": None  # Complete GPT implementation (Module 16)
 }
 
 class ModuleCommand(BaseCommand):
