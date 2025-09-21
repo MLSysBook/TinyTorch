@@ -27,6 +27,7 @@ from .clean import CleanCommand
 from .export import ExportCommand
 from .view import ViewCommand
 from .checkpoint import CheckpointSystem
+from .milestone import MilestoneSystem
 from ..core.console import print_ascii_logo
 from pathlib import Path
 
@@ -250,7 +251,12 @@ class ModuleCommand(BaseCommand):
         if not args.skip_test:
             console.print(f"\n[bold]Step 3: Testing capabilities...[/bold]")
             checkpoint_result = self._run_checkpoint_for_module(normalized_name)
-            self._show_completion_results(checkpoint_result, normalized_name, integration_result)
+            
+            # Step 4: Check for milestone unlock (NEW!)
+            console.print(f"\n[bold]Step 4: Checking for milestone unlocks...[/bold]")
+            milestone_result = self._check_milestone_unlock(normalized_name)
+            
+            self._show_completion_results(checkpoint_result, normalized_name, integration_result, milestone_result)
         else:
             console.print(f"\n[bold yellow]Step 3: Checkpoint test skipped[/bold yellow]")
             console.print(f"[dim]Module integrated successfully. Run checkpoint test manually if needed.[/dim]")
@@ -374,7 +380,12 @@ class ModuleCommand(BaseCommand):
                 "module_name": module_name
             }
 
-    def _show_completion_results(self, result: dict, module_name: str, integration_result: dict = None) -> None:
+    def _check_milestone_unlock(self, module_name: str) -> dict:
+        """Check if completing this module unlocks a milestone."""
+        milestone_system = MilestoneSystem(self.config)
+        return milestone_system.check_milestone_unlock(module_name)
+
+    def _show_completion_results(self, result: dict, module_name: str, integration_result: dict = None, milestone_result: dict = None) -> None:
         """Show results of module completion workflow."""
         console = self.console
         
@@ -389,8 +400,12 @@ class ModuleCommand(BaseCommand):
             # Record successful completion first
             self._record_module_completion(module_name)
             
-            # Show celebration first
-            self._show_capability_unlock_celebration(module_name, result)
+            # Check for EPIC MILESTONE UNLOCK first!
+            if milestone_result and milestone_result.get("milestone_unlocked"):
+                self._show_epic_milestone_celebration(milestone_result)
+            else:
+                # Show regular capability celebration
+                self._show_capability_unlock_celebration(module_name, result)
             
             # Check for capability showcase
             self._check_and_run_capability_showcase(module_name)
@@ -399,21 +414,36 @@ class ModuleCommand(BaseCommand):
             checkpoint_name = result.get("checkpoint_name", "Unknown")
             capability = result.get("capability", "")
             
-            # Show both integration and capability success
-            console.print(Panel(
-                f"[bold green]🎉 Module Complete![/bold green]\n\n"
-                f"[green]✅ Package Integration: Module exported and integrated[/green]\n"
-                f"[green]✅ Capability Test: {checkpoint_name} checkpoint achieved![/green]\n"
-                f"[green]🚀 Capability unlocked: {capability}[/green]\n\n"
-                f"[bold cyan]🔄 Two-Tier Validation Success[/bold cyan]\n"
-                f"Module {module_name} passed both integration and capability tests!\n"
-                f"Your module is fully functional in the TinyTorch ecosystem.",
-                title=f"🏆 {module_name} Achievement",
-                border_style="green"
-            ))
+            # Show completion status (enhanced for milestones)
+            if milestone_result and milestone_result.get("milestone_unlocked"):
+                milestone_data = milestone_result["milestone_data"]
+                console.print(Panel(
+                    f"[bold green]🎉 EPIC MILESTONE UNLOCKED![/bold green]\n\n"
+                    f"[green]✅ Package Integration: Module exported and integrated[/green]\n"
+                    f"[green]✅ Capability Test: {checkpoint_name} checkpoint achieved![/green]\n"
+                    f"[yellow]🎯 MILESTONE {milestone_result['milestone_id']}: {milestone_data['title']}![/yellow]\n\n"
+                    f"[bold magenta]🚀 New Capability: {milestone_data['capability']}[/bold magenta]\n"
+                    f"[cyan]Real-world impact: {milestone_data['real_world_impact']}[/cyan]\n\n"
+                    f"[bold cyan]🔓 You've unlocked a major ML engineering capability![/bold cyan]",
+                    title=f"🌟 MILESTONE {milestone_result['milestone_id']} ACHIEVED",
+                    border_style="bright_magenta"
+                ))
+            else:
+                # Standard completion message
+                console.print(Panel(
+                    f"[bold green]🎉 Module Complete![/bold green]\n\n"
+                    f"[green]✅ Package Integration: Module exported and integrated[/green]\n"
+                    f"[green]✅ Capability Test: {checkpoint_name} checkpoint achieved![/green]\n"
+                    f"[green]🚀 Capability unlocked: {capability}[/green]\n\n"
+                    f"[bold cyan]🔄 Two-Tier Validation Success[/bold cyan]\n"
+                    f"Module {module_name} passed both integration and capability tests!\n"
+                    f"Your module is fully functional in the TinyTorch ecosystem.",
+                    title=f"🏆 {module_name} Achievement",
+                    border_style="green"
+                ))
             
-            # Show progress and next steps
-            self._enhanced_show_progress_and_next_steps(module_name)
+            # Show progress and next steps (enhanced for milestones)
+            self._enhanced_show_progress_and_next_steps(module_name, milestone_result)
         else:
             console.print(Panel(
                 f"[bold yellow]⚠️  Integration Complete, Capability Test Failed[/bold yellow]\n\n"
@@ -683,6 +713,123 @@ class ModuleCommand(BaseCommand):
         
         # Brief pause for celebration
         time.sleep(1.5)
+    
+    def _show_epic_milestone_celebration(self, milestone_result: dict) -> None:
+        """Show epic celebration for milestone unlock achievement."""
+        console = self.console
+        milestone_data = milestone_result["milestone_data"]
+        milestone_id = milestone_result["milestone_id"]
+        
+        # Clear screen effect
+        console.print("\n" * 2)
+        
+        # Epic milestone unlock sequence
+        console.print(Align.center(Text("⚡ EPIC MILESTONE UNLOCKED! ⚡", style="bold blink bright_magenta")))
+        console.print("\n")
+        
+        # Show the TinyTorch logo for special milestones
+        if milestone_id in ["3", "5"]:  # Training and Language Generation
+            print_ascii_logo()
+        
+        # Create milestone-specific celebration art
+        celebration_art = self._get_milestone_celebration_art(milestone_id)
+        
+        # Epic celebration panel
+        console.print(Panel(
+            f"{celebration_art}\n\n"
+            f"[bold bright_yellow]🎉 MILESTONE {milestone_id} ACHIEVED! 🎉[/bold bright_yellow]\n\n"
+            f"[bold white]{milestone_data['emoji']} {milestone_data['title']} {milestone_data['emoji']}[/bold white]\n\n"
+            f"[bold cyan]✨ NEW CAPABILITY UNLOCKED: ✨[/bold cyan]\n"
+            f"[bold magenta]{milestone_data['capability']}[/bold magenta]\n\n"
+            f"[green]🌟 Real-World Impact:[/green]\n"
+            f"[yellow]{milestone_data['real_world_impact']}[/yellow]\n\n"
+            f"[bold cyan]🚀 You're becoming an ML Systems Engineer! 🚀[/bold cyan]",
+            title=f"🏆 MILESTONE {milestone_id}: {milestone_data['name'].upper()}",
+            border_style="bright_magenta",
+            box=box.ROUNDED
+        ))
+        
+        # Extended celebration pause
+        time.sleep(3)
+        
+        # Milestone-specific encouragement
+        encouragement = self._get_milestone_encouragement(milestone_id)
+        console.print(Panel(
+            encouragement,
+            title="🌟 Your Journey Continues",
+            border_style="bright_cyan"
+        ))
+        
+        time.sleep(2)
+    
+    def _get_milestone_celebration_art(self, milestone_id: str) -> str:
+        """Get ASCII art for milestone celebrations."""
+        if milestone_id == "1":
+            return """
+                    🧠 NEURAL NETWORKS UNLOCKED! 🧠
+                    ╔══════════════════════════════╗
+                    ║     ⚡ BASIC INFERENCE ⚡     ║
+                    ║    Your first AI breakthrough   ║
+                    ╚══════════════════════════════╝
+            """
+        elif milestone_id == "2":
+            return """
+                    👁️ COMPUTER VISION UNLOCKED! 👁️
+                    ╔══════════════════════════════╗
+                    ║      🖼️ MACHINES CAN SEE 🖼️     ║
+                    ║   Image recognition mastery     ║
+                    ╚══════════════════════════════╝
+            """
+        elif milestone_id == "3":
+            return """
+                🎓 FULL TRAINING PIPELINE UNLOCKED! 🎓
+                ╔════════════════════════════════════╗
+                ║     🏭 PRODUCTION TRAINING 🏭      ║
+                ║   End-to-end ML system mastery    ║
+                ║      🚀 Industry-ready skills      ║
+                ╚════════════════════════════════════╝
+            """
+        elif milestone_id == "4":
+            return """
+                ⚡ ADVANCED VISION SYSTEMS UNLOCKED! ⚡
+                ╔═══════════════════════════════════════╗
+                ║      💎 PRODUCTION VISION 💎          ║
+                ║    High-performance optimization      ║
+                ║       🏢 Tech company level           ║
+                ╚═══════════════════════════════════════╝
+            """
+        elif milestone_id == "5":
+            return """
+            🤖 LANGUAGE GENERATION UNLOCKED! 🤖
+            ╔═══════════════════════════════════════════╗
+            ║           👑 BUILD THE FUTURE 👑          ║
+            ║      Transformer architecture mastery     ║
+            ║         🌟 ChatGPT-level systems         ║
+            ║           🚀 AI PIONEER STATUS 🚀         ║
+            ╚═══════════════════════════════════════════╝
+            """
+        else:
+            return """
+                    ✨ MILESTONE ACHIEVED ✨
+                       🏆 CAPABILITY 🏆
+                         🌟 UNLOCKED 🌟
+            """
+    
+    def _get_milestone_encouragement(self, milestone_id: str) -> str:
+        """Get milestone-specific encouragement message."""
+        encouragements = {
+            "1": "[bold green]Amazing start![/bold green] You've built your first working neural networks.\n[cyan]You can now solve classification problems and understand gradient flow.\n[yellow]Next up: Teaching machines to see with computer vision![/yellow]",
+            
+            "2": "[bold green]Incredible breakthrough![/bold green] Machines can now see through your code.\n[cyan]You've mastered convolutional networks and image processing.\n[yellow]Next up: Building complete training pipelines![/yellow]",
+            
+            "3": "[bold green]Outstanding achievement![/bold green] You can now train production ML models.\n[cyan]You've built end-to-end systems that rivals industry standards.\n[yellow]Next up: Optimizing for real-world performance![/yellow]",
+            
+            "4": "[bold green]Exceptional mastery![/bold green] You build production-ready vision systems.\n[cyan]Your skills now match those of tech company engineers.\n[yellow]Next up: The ultimate challenge - language generation![/yellow]",
+            
+            "5": "[bold green]🎉 LEGENDARY STATUS ACHIEVED! 🎉[/bold green]\n[cyan]You can build the future of AI - transformer language models!\n[magenta]You are now a true ML Systems Engineer![/magenta]\n[yellow]Share your achievement and inspire others![/yellow]"
+        }
+        
+        return encouragements.get(milestone_id, "[green]Great job on achieving this milestone![/green]")
     
     def _check_and_run_capability_showcase(self, module_name: str) -> None:
         """Check if showcase exists and prompt user to run it."""
@@ -1017,7 +1164,7 @@ class ModuleCommand(BaseCommand):
         except IOError:
             pass  # Fail silently if we can't save
     
-    def _enhanced_show_progress_and_next_steps(self, completed_module: str) -> None:
+    def _enhanced_show_progress_and_next_steps(self, completed_module: str, milestone_result: dict = None) -> None:
         """Show enhanced progress visualization and suggest next steps."""
         console = self.console
         
