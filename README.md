@@ -153,11 +153,11 @@ python tests/run_all_modules.py
 
 ## 🤝 Contributing
 
-We welcome contributions! Please check the docs/ directory for development guidelines.
+We welcome contributions! See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 
 ## 📄 License
 
-This project is open source and available under standard academic use terms.
+MIT License - see [LICENSE](LICENSE) for details.
 
 ## 🙏 Acknowledgments
 
