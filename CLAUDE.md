@@ -825,6 +825,49 @@ tito module complete tensor --skip-test
 - Use clear, consistent section organization
 - **QA testing is MANDATORY before ANY commit** (including systems validation)
 
+### 🚨 **CRITICAL RULE: NEVER MODIFY CORE FILES DIRECTLY**
+**ABSOLUTELY FORBIDDEN: Direct modification of `/tinytorch/core/` files**
+
+**MANDATORY WORKFLOW FOR ALL CODE CHANGES:**
+1. ✅ **ALWAYS edit**: `modules/source/XX_modulename/modulename_dev.py` files
+2. ✅ **ALWAYS export**: Use `tito module complete XX_modulename` or `nbdev_export`
+3. ❌ **NEVER edit**: Files in `/tinytorch/core/` directory directly
+4. ❌ **NEVER commit**: Core files with manual modifications
+
+**WHY THIS RULE EXISTS:**
+- Core files are **AUTO-GENERATED** from source modules
+- Direct core edits create dangerous **SOURCE/COMPILED MISMATCH**
+- Next export will **OVERWRITE** manual core changes
+- Creates **INCONSISTENT BEHAVIOR** between development and production
+- Makes **DEBUGGING IMPOSSIBLE** when source ≠ compiled code
+
+**VIOLATION CONSEQUENCES:**
+- Manual core changes will be **LOST** on next export
+- Source code and compiled code become **INCONSISTENT**
+- **IMPOSSIBLE TO REPRODUCE** bugs in different environments
+- **BREAKS THE DEVELOPMENT WORKFLOW** completely
+
+**CORRECT WORKFLOW EXAMPLE:**
+```bash
+# ✅ CORRECT: Edit source file
+vim modules/source/10_optimizers/optimizers_dev.py
+
+# ✅ CORRECT: Export to regenerate core
+tito module complete 10_optimizers
+
+# ❌ WRONG: Never edit core directly
+vim tinytorch/core/optimizers.py  # FORBIDDEN!
+```
+
+**EMERGENCY EXCEPTION PROTOCOL:**
+If core files MUST be modified temporarily for testing:
+1. **Document the manual change** with clear comments
+2. **Immediately update source** to match the manual change
+3. **Export immediately** to sync source and core
+4. **Never commit** manual core changes to git
+
+**This rule is NON-NEGOTIABLE for maintaining code integrity.**
+
 ### 🚨 CRITICAL: Module Section Ordering - MANDATORY STRUCTURE
 **THE LAST THREE SECTIONS OF EVERY MODULE MUST BE IN THIS EXACT ORDER:**
 
