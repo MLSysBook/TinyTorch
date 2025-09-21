@@ -31,19 +31,24 @@ from .milestone import MilestoneSystem
 from ..core.console import print_ascii_logo
 from pathlib import Path
 
-# Capability showcase mapping
-CAPABILITY_SHOWCASES = {
-    "02_tensor": "01_tensor_operations.py",
-    "03_activations": "02_neural_intelligence.py",
-    "05_dense": "03_forward_inference.py",
-    "06_spatial": "04_image_processing.py",
-    "07_attention": "05_attention_visualization.py",
-    "09_dataloader": "06_data_pipeline.py",
-    "11_training": "07_full_training.py",
-    "12_compression": "08_model_compression.py",
-    "14_benchmarking": "09_performance_profiling.py",
-    "15_mlops": "10_production_systems.py",
-    "16_tinygpt": "11_tinygpt_mastery.py"
+# Example mapping - shows what TinyTorch can do after each module
+EXAMPLES = {
+    "01_setup": None,  # Just environment setup
+    "02_tensor": "tensor_operations",
+    "03_activations": "activation_functions", 
+    "04_layers": "layer_composition",
+    "05_dense": "xor_network",  # 🏆 Classic XOR problem
+    "06_spatial": "mnist_recognition",  # 🏆 MNIST CNN
+    "07_attention": "attention_visualization",
+    "08_dataloader": "data_loading",
+    "09_autograd": "automatic_differentiation",
+    "10_optimizers": "optimization_comparison",
+    "11_training": "cifar10_classifier",  # 🏆 Full CNN training
+    "12_compression": "model_compression",
+    "13_kernels": "performance_kernels",
+    "14_benchmarking": "performance_profiling",
+    "15_mlops": "production_deployment",
+    "16_tinygpt": "text_generation"  # 🏆 Transformer text generation
 }
 
 class ModuleCommand(BaseCommand):
@@ -832,18 +837,29 @@ class ModuleCommand(BaseCommand):
         return encouragements.get(milestone_id, "[green]Great job on achieving this milestone![/green]")
     
     def _check_and_run_capability_showcase(self, module_name: str) -> None:
-        """Check if showcase exists and prompt user to run it."""
-        showcase_file = CAPABILITY_SHOWCASES.get(module_name)
-        if not showcase_file:
+        """Check if example exists and prompt user to run it."""
+        example_dir = EXAMPLES.get(module_name)
+        if not example_dir:
             return
         
-        showcase_path = Path("capabilities") / showcase_file
-        if not showcase_path.exists():
+        example_path = Path("examples") / example_dir
+        if not example_path.exists():
             return
         
-        # Prompt user to run showcase
+        # Look for the main example file
+        main_files = ["train.py", "demo.py", "main.py", "run.py"]
+        example_file = None
+        for filename in main_files:
+            if (example_path / filename).exists():
+                example_file = example_path / filename
+                break
+        
+        if not example_file:
+            return
+        
+        # Prompt user to run example
         if self._prompt_for_showcase(module_name):
-            self._run_capability_showcase(module_name, showcase_file)
+            self._run_capability_showcase(module_name, example_file)
     
     def _prompt_for_showcase(self, module_name: str) -> bool:
         """Prompt user to run showcase with countdown."""
@@ -902,10 +918,10 @@ class ModuleCommand(BaseCommand):
             console.print("[green]Running showcase![/green]")
             return True
     
-    def _run_capability_showcase(self, module_name: str, showcase_file: str) -> None:
-        """Run the capability showcase for a module."""
+    def _run_capability_showcase(self, module_name: str, achievement_file: Path) -> None:
+        """Run the achievement demonstration for a module."""
         console = self.console
-        showcase_path = Path("capabilities") / showcase_file
+        showcase_path = achievement_file  # Already a full Path object
         
         console.print("\n[bold cyan]🚀 Launching Capability Showcase...[/bold cyan]")
         console.print(f"[yellow]See what you've built in action![/yellow]\n")

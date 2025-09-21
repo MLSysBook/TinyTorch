@@ -41,11 +41,47 @@ class MilestoneSystem:
         self.MILESTONES = self._load_milestones_config()
     
     def _load_milestones_config(self) -> dict:
-        """Load milestone configuration from YAML file."""
+        """Load milestone configuration from YAML files (main and era-specific)."""
         config_path = Path("milestones") / "milestones.yml"
+        milestones = {}
         
-        if not config_path.exists():
-            # Fallback to minimal config if file doesn't exist
+        # Try to load main milestones.yml first
+        if config_path.exists():
+            try:
+                with open(config_path, 'r') as f:
+                    config = yaml.safe_load(f)
+                    
+                # Convert to expected format
+                for milestone_id, milestone_data in config['milestones'].items():
+                    milestone_data['id'] = str(milestone_id)
+                    milestones[str(milestone_id)] = milestone_data
+                    
+            except Exception as e:
+                self.console.print(f"[yellow]Warning: Could not load main milestone config: {e}[/yellow]")
+        
+        # Also try to load era-specific configurations
+        era_paths = [
+            Path("milestones") / "foundation" / "milestone.yml",
+            Path("milestones") / "revolution" / "milestone.yml", 
+            Path("milestones") / "generation" / "milestone.yml"
+        ]
+        
+        for era_path in era_paths:
+            if era_path.exists():
+                try:
+                    with open(era_path, 'r') as f:
+                        era_config = yaml.safe_load(f)
+                        
+                    if 'milestone' in era_config:
+                        milestone_data = era_config['milestone']
+                        milestone_id = milestone_data['id']
+                        milestones[str(milestone_id)] = milestone_data
+                        
+                except Exception as e:
+                    self.console.print(f"[yellow]Warning: Could not load era config {era_path}: {e}[/yellow]")
+        
+        # If no milestones loaded, return fallback
+        if not milestones:
             return {
                 "1": {
                     "id": "1",
@@ -61,35 +97,7 @@ class MilestoneSystem:
                 }
             }
         
-        try:
-            with open(config_path, 'r') as f:
-                config = yaml.safe_load(f)
-                
-            # Convert to expected format
-            milestones = {}
-            for milestone_id, milestone_data in config['milestones'].items():
-                milestone_data['id'] = str(milestone_id)
-                milestones[str(milestone_id)] = milestone_data
-            
-            return milestones
-            
-        except Exception as e:
-            self.console.print(f"[yellow]Warning: Could not load milestone config: {e}[/yellow]")
-            # Return fallback config
-            return {
-                "1": {
-                    "id": "1", 
-                    "name": "Machines Can See",
-                    "title": "I taught a computer to recognize digits!",
-                    "trigger_module": "05_dense",
-                    "required_checkpoints": ["00", "01", "02", "03", "04"],
-                    "victory_condition": "85%+ MNIST accuracy with MLP",
-                    "capability": "I can create neural networks that recognize images!",
-                    "real_world_impact": "Foundation for any computer vision system",
-                    "emoji": "👁️",
-                    "test_file": "milestone_01_machines_can_see.py"
-                }
-            }
+        return milestones
     
     def get_milestone_status(self) -> dict:
         """Get current milestone progress status."""

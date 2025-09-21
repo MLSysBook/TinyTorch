@@ -24,7 +24,7 @@ milestones:
     real_world_impact: "Foundation for any computer vision system"
     dataset: "MNIST"
     model_type: "Multi-Layer Perceptron (MLP)"
-    test_file: "milestone_01_machines_can_see.py"
+    test_file: "foundation/milestone.py"
     demo_description: "Watch YOUR dense layers and activations learn to recognize handwritten digits"
     
   2:
@@ -56,7 +56,7 @@ milestones:
     real_world_impact: "Build vision systems like those used in autonomous vehicles"
     dataset: "CIFAR-10"
     model_type: "Convolutional Neural Network (CNN)"
-    test_file: "milestone_02_train_real_ai.py"
+    test_file: "revolution/milestone.py"
     demo_description: "Watch YOUR complete training pipeline learn to recognize real-world objects"
     
   3:
@@ -92,7 +92,7 @@ milestones:
     real_world_impact: "Foundation technology behind GitHub Copilot and ChatGPT"
     dataset: "Python function dataset"
     model_type: "Transformer (TinyGPT)"
-    test_file: "milestone_03_built_gpt.py"
+    test_file: "generation/milestone.py"
     demo_description: "Watch YOUR transformer generate Python functions from natural language"
 
 # Milestone progression path
