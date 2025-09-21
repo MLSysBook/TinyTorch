@@ -67,14 +67,14 @@ sys.path.append(os.path.abspath('modules/source/10_optimizers'))
 # No longer needed
 
 # Import all the building blocks we need
-from tensor_dev import Tensor
-from activations_dev import ReLU, Sigmoid, Tanh, Softmax
-from layers_dev import Dense
-from dense_dev import Sequential, create_mlp
-from spatial_dev import Conv2D, flatten
-from dataloader_dev import Dataset, DataLoader
-from autograd_dev import Variable  # FOR AUTOGRAD INTEGRATION
-from optimizers_dev import SGD, Adam, StepLR
+from tinytorch.core.tensor import Tensor
+from tinytorch.core.activations import ReLU, Sigmoid, Tanh, Softmax
+from tinytorch.core.layers import Dense
+from tinytorch.core.dense import Sequential, create_mlp
+from tinytorch.core.spatial import Conv2D, flatten
+from tinytorch.core.dataloader import Dataset, DataLoader
+from tinytorch.core.autograd import Variable  # FOR AUTOGRAD INTEGRATION
+from tinytorch.core.optimizers import SGD, Adam, StepLR
 
 # 🔥 AUTOGRAD INTEGRATION: Loss functions now return Variables that support .backward()
 # This enables automatic gradient computation for neural network training!

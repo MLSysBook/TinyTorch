@@ -56,15 +56,57 @@ def matmul(a: Tensor, b: Tensor) -> Tensor:
     - The operation should work for any compatible matrix shapes
     """
     ### BEGIN SOLUTION
-    # Extract numpy data from tensors
-    a_data = a.data
-    b_data = b.data
+    # Check if we're dealing with Variables (autograd) or plain Tensors
+    a_is_variable = hasattr(a, 'requires_grad') and hasattr(a, 'grad_fn')
+    b_is_variable = hasattr(b, 'requires_grad') and hasattr(b, 'grad_fn')
+    
+    # Extract numpy data appropriately
+    if a_is_variable:
+        a_data = a.data.data  # Variable.data is a Tensor, so .data.data gets numpy array
+    else:
+        a_data = a.data  # Tensor.data is numpy array directly
+    
+    if b_is_variable:
+        b_data = b.data.data
+    else:
+        b_data = b.data
     
     # Perform matrix multiplication
     result_data = a_data @ b_data
     
-    # Wrap result in a Tensor
-    return Tensor(result_data)
+    # If any input is a Variable, return Variable with gradient tracking
+    if a_is_variable or b_is_variable:
+        # Import Variable locally to avoid circular imports
+        if 'Variable' not in globals():
+            try:
+                from tinytorch.core.autograd import Variable
+            except ImportError:
+                from autograd_dev import Variable
+        
+        # Create gradient function for matrix multiplication
+        def grad_fn(grad_output):
+            # Matrix multiplication backward pass:
+            # If C = A @ B, then:
+            # dA = grad_output @ B^T
+            # dB = A^T @ grad_output
+            
+            if a_is_variable and a.requires_grad:
+                # Gradient w.r.t. A: grad_output @ B^T
+                grad_a_data = grad_output.data.data @ b_data.T
+                a.backward(Variable(grad_a_data))
+            
+            if b_is_variable and b.requires_grad:
+                # Gradient w.r.t. B: A^T @ grad_output  
+                grad_b_data = a_data.T @ grad_output.data.data
+                b.backward(Variable(grad_b_data))
+        
+        # Determine if result should require gradients
+        requires_grad = (a_is_variable and a.requires_grad) or (b_is_variable and b.requires_grad)
+        
+        return Variable(result_data, requires_grad=requires_grad, grad_fn=grad_fn)
+    else:
+        # Both inputs are Tensors, return Tensor (backward compatible)
+        return Tensor(result_data)
     ### END SOLUTION
 
 # %% ../../modules/source/04_layers/layers_dev.ipynb 9
