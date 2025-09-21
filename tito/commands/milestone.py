@@ -20,6 +20,7 @@ import sys
 import json
 import time
 import subprocess
+import yaml
 from datetime import datetime
 from pathlib import Path
 
@@ -36,74 +37,59 @@ class MilestoneSystem:
         self.config = config
         self.console = get_console()
         
-        # Define the 5 Epic Milestones
-        self.MILESTONES = {
-            "1": {
-                "id": "1",
-                "name": "Basic Inference",
-                "title": "Neural Networks Work!",
-                "trigger_module": "05_dense",
-                "required_checkpoints": ["00", "01", "02", "03", "04"],
-                "victory_condition": "Build multi-layer networks that solve XOR problem",
-                "capability": "I can create working neural networks!",
-                "real_world_impact": "Foundation of any AI system",
-                "emoji": "🥉",
-                "celebration_level": "milestone",
-                "demo_file": "01_basic_inference_demo.py"
-            },
-            "2": {
-                "id": "2", 
-                "name": "Computer Vision",
-                "title": "Machines Can See!",
-                "trigger_module": "06_spatial",
-                "required_checkpoints": ["05"],
-                "victory_condition": "Achieve 95%+ accuracy on MNIST with CNN",
-                "capability": "I can teach machines to see!",
-                "real_world_impact": "Image recognition like autonomous vehicles",
-                "emoji": "🥈",
-                "celebration_level": "major",
-                "demo_file": "02_computer_vision_demo.py"
-            },
-            "3": {
-                "id": "3",
-                "name": "Full Training", 
-                "title": "Production Training!",
-                "trigger_module": "11_training",
-                "required_checkpoints": ["06", "07", "08", "09", "10"],
-                "victory_condition": "Train CNN from scratch to convergence on CIFAR-10",
-                "capability": "I can train production ML models!",
-                "real_world_impact": "Train models like those used in industry",
-                "emoji": "🏆",
-                "celebration_level": "major",
-                "demo_file": "03_full_training_demo.py"
-            },
-            "4": {
-                "id": "4",
-                "name": "Advanced Vision",
-                "title": "Production Vision!",
-                "trigger_module": "13_kernels", 
-                "required_checkpoints": ["11", "12"],
-                "victory_condition": "Achieve 75%+ accuracy on CIFAR-10 with optimized kernels",
-                "capability": "I build production-ready vision systems!",
-                "real_world_impact": "Computer vision systems used in tech companies",
-                "emoji": "💎",
-                "celebration_level": "epic",
-                "demo_file": "04_advanced_vision_demo.py"
-            },
-            "5": {
-                "id": "5",
-                "name": "Language Generation",
-                "title": "Build the Future!",
-                "trigger_module": "16_tinygpt",
-                "required_checkpoints": ["13", "14", "15"],
-                "victory_condition": "Generate coherent text and Python code with TinyGPT",
-                "capability": "I can build the future of AI!",
-                "real_world_impact": "Build systems like ChatGPT and GitHub Copilot",
-                "emoji": "👑",
-                "celebration_level": "north_star",
-                "demo_file": "05_language_generation_demo.py"
+        # Load milestones from configuration file
+        self.MILESTONES = self._load_milestones_config()
+    
+    def _load_milestones_config(self) -> dict:
+        """Load milestone configuration from YAML file."""
+        config_path = Path("milestones") / "milestones.yml"
+        
+        if not config_path.exists():
+            # Fallback to minimal config if file doesn't exist
+            return {
+                "1": {
+                    "id": "1",
+                    "name": "Machines Can See",
+                    "title": "I taught a computer to recognize digits!",
+                    "trigger_module": "05_dense",
+                    "required_checkpoints": ["00", "01", "02", "03", "04"],
+                    "victory_condition": "85%+ MNIST accuracy with MLP",
+                    "capability": "I can create neural networks that recognize images!",
+                    "real_world_impact": "Foundation for any computer vision system",
+                    "emoji": "👁️",
+                    "test_file": "milestone_01_machines_can_see.py"
+                }
             }
-        }
+        
+        try:
+            with open(config_path, 'r') as f:
+                config = yaml.safe_load(f)
+                
+            # Convert to expected format
+            milestones = {}
+            for milestone_id, milestone_data in config['milestones'].items():
+                milestone_data['id'] = str(milestone_id)
+                milestones[str(milestone_id)] = milestone_data
+            
+            return milestones
+            
+        except Exception as e:
+            self.console.print(f"[yellow]Warning: Could not load milestone config: {e}[/yellow]")
+            # Return fallback config
+            return {
+                "1": {
+                    "id": "1", 
+                    "name": "Machines Can See",
+                    "title": "I taught a computer to recognize digits!",
+                    "trigger_module": "05_dense",
+                    "required_checkpoints": ["00", "01", "02", "03", "04"],
+                    "victory_condition": "85%+ MNIST accuracy with MLP",
+                    "capability": "I can create neural networks that recognize images!",
+                    "real_world_impact": "Foundation for any computer vision system",
+                    "emoji": "👁️",
+                    "test_file": "milestone_01_machines_can_see.py"
+                }
+            }
     
     def get_milestone_status(self) -> dict:
         """Get current milestone progress status."""
@@ -394,9 +380,10 @@ class MilestoneCommand(BaseCommand):
         status = milestone_system.get_milestone_status()
         
         # Show header with overall progress
+        total_milestones = len(milestone_system.MILESTONES)
         console.print(Panel(
             f"[bold cyan]🎮 TinyTorch Milestone Progress[/bold cyan]\n\n"
-            f"[bold]Capabilities Unlocked:[/bold] {status['total_unlocked']}/5 milestones\n"
+            f"[bold]Capabilities Unlocked:[/bold] {status['total_unlocked']}/{total_milestones} milestones\n"
             f"[bold]Overall Progress:[/bold] {status['overall_progress']:.0f}%\n\n"
             f"[dim]Transform from student to ML Systems Engineer![/dim]",
             title="🚀 Your Epic Journey",
@@ -404,7 +391,7 @@ class MilestoneCommand(BaseCommand):
         ))
         
         # Show milestone status
-        for milestone_id in ["1", "2", "3", "4", "5"]:
+        for milestone_id in sorted(milestone_system.MILESTONES.keys()):
             milestone = status["milestones"][milestone_id]
             self._show_milestone_status(milestone, args.detailed)
         
@@ -490,31 +477,32 @@ class MilestoneCommand(BaseCommand):
         status = milestone_system.get_milestone_status()
         
         if args.horizontal:
-            self._show_horizontal_timeline(status)
+            self._show_horizontal_timeline(status, milestone_system)
         else:
-            self._show_tree_timeline(status)
+            self._show_tree_timeline(status, milestone_system)
         
         return 0
     
-    def _show_horizontal_timeline(self, status: dict) -> None:
+    def _show_horizontal_timeline(self, status: dict, milestone_system: MilestoneSystem) -> None:
         """Show horizontal progress bar timeline."""
         console = self.console
         
+        total_milestones = len(milestone_system.MILESTONES)
         console.print(Panel(
             f"[bold cyan]🎮 Milestone Timeline[/bold cyan]\n\n"
-            f"[bold]Progress:[/bold] {status['total_unlocked']}/5 milestones unlocked",
+            f"[bold]Progress:[/bold] {status['total_unlocked']}/{total_milestones} milestones unlocked",
             title="Your Epic Journey",
             border_style="bright_blue"
         ))
         
         # Create progress bar
         progress_width = 50
-        unlocked_width = int((status["total_unlocked"] / 5) * progress_width)
+        total_milestones = len(milestone_system.MILESTONES)
+        unlocked_width = int((status["total_unlocked"] / total_milestones) * progress_width)
         
         # Create milestone markers
         timeline = []
-        for i in range(5):
-            milestone_id = str(i + 1)
+        for milestone_id in sorted(milestone_system.MILESTONES.keys()):
             milestone = status["milestones"][milestone_id]
             
             if milestone["is_unlocked"]:
@@ -535,7 +523,7 @@ class MilestoneCommand(BaseCommand):
         console.print(f"\n[green]{filled}[/green][dim]{empty}[/dim]")
         console.print(f"[dim]{status['overall_progress']:.0f}% complete[/dim]\n")
     
-    def _show_tree_timeline(self, status: dict) -> None:
+    def _show_tree_timeline(self, status: dict, milestone_system: MilestoneSystem) -> None:
         """Show tree-style milestone timeline."""
         console = self.console
         
@@ -549,7 +537,7 @@ class MilestoneCommand(BaseCommand):
         # Create tree structure
         tree = Tree("🚀 [bold]TinyTorch Mastery Journey[/bold]")
         
-        for milestone_id in ["1", "2", "3", "4", "5"]:
+        for milestone_id in sorted(milestone_system.MILESTONES.keys()):
             milestone = status["milestones"][milestone_id]
             
             if milestone["is_unlocked"]:
