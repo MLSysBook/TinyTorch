@@ -449,11 +449,50 @@ def add(a: Union[Variable, float, int], b: Union[Variable, float, int]) -> Varia
     
     # Backward function
     def grad_fn(grad_output):
-        # Addition distributes gradients equally
+        # Addition distributes gradients equally, but must handle broadcasting
         if a.requires_grad:
-            a.backward(grad_output)
+            # Get gradient data
+            if hasattr(grad_output.data, 'data'):
+                grad_data = grad_output.data.data
+            else:
+                grad_data = grad_output.data
+            
+            # Check if we need to sum over broadcasted dimensions
+            a_shape = a.data.shape if hasattr(a.data, 'shape') else ()
+            if grad_data.shape != a_shape:
+                # Sum over the broadcasted dimensions
+                # For bias: (batch_size, features) -> (features,)
+                if len(grad_data.shape) == 2 and len(a_shape) == 1:
+                    grad_for_a = Variable(Tensor(np.sum(grad_data, axis=0)))
+                else:
+                    # Handle other broadcasting cases
+                    grad_for_a = grad_output
+            else:
+                grad_for_a = grad_output
+            
+            a.backward(grad_for_a)
+            
         if b.requires_grad:
-            b.backward(grad_output)
+            # Get gradient data
+            if hasattr(grad_output.data, 'data'):
+                grad_data = grad_output.data.data
+            else:
+                grad_data = grad_output.data
+            
+            # Check if we need to sum over broadcasted dimensions
+            b_shape = b.data.shape if hasattr(b.data, 'shape') else ()
+            if grad_data.shape != b_shape:
+                # Sum over the broadcasted dimensions
+                # For bias: (batch_size, features) -> (features,)
+                if len(grad_data.shape) == 2 and len(b_shape) == 1:
+                    grad_for_b = Variable(Tensor(np.sum(grad_data, axis=0)))
+                else:
+                    # Handle other broadcasting cases
+                    grad_for_b = grad_output
+            else:
+                grad_for_b = grad_output
+            
+            b.backward(grad_for_b)
     
     # Return new Variable with gradient function
     requires_grad = a.requires_grad or b.requires_grad
