@@ -65,14 +65,14 @@ def print_ascii_logo(compact: bool = False):
     # Add/remove spaces at the beginning of each line to adjust positioning
     
     logo_lines = [
-        # Flames above each TORCH letter 
-        "      🔥🔥🔥🔥",
-        "      ████████╗ ██████╗ ██████╗  ██████╗██╗  ██╗",  # TORCH line 1
-        "      ╚t═██╔══╝██╔═══██╗██╔══██╗██╔════╝██║  ██║",  # TORCH line 2
-        "       i ██║   ██║   ██║██████╔╝██║     ███████║",  # TORCH line 3
-        "       n ██║   ██║   ██║██╔══██╗██║     ██╔══██║",  # TORCH line 4
-        "       y ██║   ╚██████╔╝██║  ██║╚██████╗██║  ██║",  # TORCH line 5
-        "         ╚═╝    ╚═════╝ ╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝"   # TORCH line 6
+        # Flames above TORCH letters
+        "         🔥                                  🔥",             # Flames above T-O-R-C-H
+        "      ████████╗ ██████╗ ██████╗  ██████╗██╗  ██╗",           # TORCH line 1
+        "      ╚t═██╔══╝██╔═══██╗██╔══██╗██╔════╝██║  ██║",           # TORCH line 2
+        "       i ██║   ██║   ██║██████╔╝██║     ███████║",           # TORCH line 3
+        "       n ██║   ██║   ██║██╔══██╗██║     ██╔══██║",           # TORCH line 4
+        "       y ██║   ╚██████╔╝██║  ██║╚██████╗██║  ██║",           # TORCH line 5
+        "         ╚═╝    ╚═════╝ ╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝"            # TORCH line 6
     ]
     
     # ============================================
@@ -83,7 +83,7 @@ def print_ascii_logo(compact: bool = False):
     # Add 'bold' for bold text (e.g., 'bold red' or 'bold bright_black')
     
     FLAME_COLOR = "yellow"              # Color for 🔥 emoji
-    TINY_COLOR = "bold yellow"          # Color for "tiny" text (warmer, more visible)
+    TINY_COLOR = "bold orange1"         # Color for "tiny" text (flame effect!)
     TORCH_COLOR = "bold white"          # Color for "TORCH" text (better contrast)
     TAGLINE_COLOR = "orange1"          # Color for tagline
     
@@ -91,16 +91,13 @@ def print_ascii_logo(compact: bool = False):
     for i, line in enumerate(logo_lines):
         if i == 0:  # Flame line
             logo_text.append(line, style=FLAME_COLOR)
-        elif i == 4:  # Line with tiny + TORCH
-            # Find where "tiny" ends and TORCH begins (look for ██)
-            if "██║" in line:
-                torch_start = line.find("██║")
-                tiny_part = line[:torch_start]
-                torch_part = line[torch_start:]
-                logo_text.append(tiny_part, style=TINY_COLOR)
-                logo_text.append(torch_part, style=TORCH_COLOR)
-            else:
-                logo_text.append(line, style=TORCH_COLOR)
+        elif i >= 1 and i <= 5:  # Lines with tiny letters (t,i,n,y) + TORCH
+            # Color individual tiny letters within the line
+            for char in line:
+                if char in 'tiny':
+                    logo_text.append(char, style=TINY_COLOR)
+                else:
+                    logo_text.append(char, style=TORCH_COLOR)
         else:  # Pure TORCH lines
             logo_text.append(line, style=TORCH_COLOR)
         logo_text.append("\n")
