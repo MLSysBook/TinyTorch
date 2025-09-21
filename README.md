@@ -130,30 +130,34 @@ All demos and modules are thoroughly tested:
 # Test all demos
 python test_all_demos.py
 
-# Validate implementations
+# Validate implementations  
 python validate_demos.py
 
 # Run checkpoint tests
 tito checkpoint test 01
+
+# Run all module tests
+python tests/run_all_modules.py
 ```
 
-✅ **100% test coverage** across 8 interactive demos  
-✅ **48 validation checks** ensuring correctness  
-✅ **16 capability checkpoints** tracking progress  
+✅ **9 interactive demos** covering all major concepts  
+✅ **16 capability checkpoints** tracking learning progress  
+✅ **Comprehensive test suite** with module and integration tests  
 
 ## 📖 Documentation
 
 - **[Course Website](https://mlsysbook.github.io/TinyTorch/)** - Complete interactive course
-- **[Instructor Guide](docs/INSTRUCTOR_GUIDE.md)** - Teaching resources
-- **[API Reference](https://mlsysbook.github.io/TinyTorch/api)** - Framework documentation
+- **[Instructor Guide](docs/INSTRUCTOR_GUIDE.md)** - Teaching resources  
+- **[Student Quickstart](docs/STUDENT_QUICKSTART.md)** - Getting started guide
+- **[CIFAR-10 Training Guide](docs/cifar10-training-guide.md)** - Detailed training walkthrough
 
 ## 🤝 Contributing
 
-We welcome contributions! See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+We welcome contributions! Please check the docs/ directory for development guidelines.
 
 ## 📄 License
 
-MIT License - see [LICENSE](LICENSE) for details.
+This project is open source and available under standard academic use terms.
 
 ## 🙏 Acknowledgments
 
