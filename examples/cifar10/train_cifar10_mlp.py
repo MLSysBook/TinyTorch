@@ -18,6 +18,7 @@ Architecture: 3072 → 1024 → 512 → 256 → 128 → 10 (3.8M parameters)
 
 import sys
 import os
+import time
 sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 
 import numpy as np
@@ -200,22 +201,42 @@ def main():
     
     # Load CIFAR-10 dataset
     print("\n📚 Loading CIFAR-10 dataset...")
+    print("Creating train dataset...")
     train_dataset = CIFAR10Dataset(train=True, root='data')
-    test_dataset = CIFAR10Dataset(train=False, root='data')
+    print(f"✅ Train dataset created with {len(train_dataset)} samples")
     
+    print("Creating test dataset...")
+    test_dataset = CIFAR10Dataset(train=False, root='data')
+    print(f"✅ Test dataset created with {len(test_dataset)} samples")
+    
+    print("Creating DataLoaders...")
     train_loader = DataLoader(train_dataset, batch_size=64, shuffle=True)
+    print("✅ Train DataLoader created")
     test_loader = DataLoader(test_dataset, batch_size=64, shuffle=False)
+    print("✅ Test DataLoader created")
     
     print(f"✅ Loaded {len(train_dataset):,} train samples")
     print(f"✅ Loaded {len(test_dataset):,} test samples")
     
     # Create optimized model
     print(f"\n🏗️ Creating optimized model...")
+    print("Initializing CIFAR10_MLP...")
     model = CIFAR10_MLP()
+    print("✅ Model created successfully")
     
     # Setup training
+    print("Setting up training components...")
+    print("Creating CrossEntropyLoss...")
     loss_fn = CrossEntropyLoss()
-    optimizer = Adam(model.parameters(), learning_rate=0.0003)
+    print("✅ Loss function created")
+    
+    print("Getting model parameters...")
+    params = model.parameters()
+    print(f"✅ Got {len(params)} parameters")
+    
+    print("Creating Adam optimizer...")
+    optimizer = Adam(params, learning_rate=0.0003)
+    print("✅ Optimizer created")
     
     print(f"\n⚙️ Training configuration:")
     print(f"   Optimizer: Adam (LR: {optimizer.learning_rate})")
@@ -231,25 +252,53 @@ def main():
     num_epochs = 25
     best_test_accuracy = 0
     
+    print(f"Starting training for {num_epochs} epochs...")
+    
     for epoch in range(num_epochs):
+        print(f"\n🔄 Starting Epoch {epoch+1}/{num_epochs}")
+        epoch_start_time = time.time()
         # Training phase
         train_losses = []
         train_correct = 0
         train_total = 0
         
         batches_per_epoch = 500  # Use more data for better performance
+        print(f"Processing {batches_per_epoch} batches...")
         
+        batch_count = 0
         for batch_idx, (images, labels) in enumerate(train_loader):
             if batch_idx >= batches_per_epoch:
                 break
             
+            if batch_idx == 0:
+                print(f"📦 First batch - images shape: {images.shape}, labels shape: {labels.shape}")
+            elif batch_idx % 50 == 0:
+                print(f"📦 Batch {batch_idx}/{batches_per_epoch}")
+            
+            batch_count += 1
+            
             # Preprocess with augmentation
+            if batch_idx == 0:
+                print("🔄 Preprocessing first batch...")
             x = Variable(preprocess_images(images, training=True), requires_grad=False)
             y_true = Variable(labels, requires_grad=False)
             
+            if batch_idx == 0:
+                print(f"✅ Preprocessed - x shape: {x.data.shape}, y_true shape: {y_true.data.shape}")
+            
             # Forward pass
+            if batch_idx == 0:
+                print("🔄 Forward pass...")
             logits = model.forward(x)
+            
+            if batch_idx == 0:
+                print(f"✅ Forward pass done - logits shape: {logits.data.shape}")
+                print("🔄 Computing loss...")
+            
             loss = loss_fn(logits, y_true)
+            
+            if batch_idx == 0:
+                print("✅ Loss computed")
             
             # Track training metrics
             loss_val = float(loss.data.data) if hasattr(loss.data, 'data') else float(loss.data._data)
