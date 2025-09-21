@@ -39,6 +39,7 @@ from .commands.checkpoint import CheckpointCommand
 from .commands.grade import GradeCommand
 from .commands.demo import DemoCommand
 from .commands.logo import LogoCommand
+from .commands.milestone import MilestoneCommand
 
 # Configure logging
 logging.basicConfig(
@@ -66,6 +67,7 @@ class TinyTorchCLI:
             'package': PackageCommand,
             'nbgrader': NBGraderCommand,
             'checkpoint': CheckpointCommand,
+            'milestone': MilestoneCommand,
             # Convenience commands
             'export': ExportCommand,
             'test': TestCommand,
@@ -88,6 +90,7 @@ Command Groups:
   package     Package management and nbdev integration commands
   nbgrader    Assignment management and auto-grading commands
   checkpoint  Track ML systems engineering progress through checkpoints
+  milestone   Epic capability achievements and ML systems mastery
 
 Convenience Commands:
   export      Export modules to package (quick shortcut)
@@ -199,7 +202,8 @@ Examples:
                     "  [bold green]module[/bold green]      - Module development and management\n"
                     "  [bold green]package[/bold green]     - Package management and nbdev integration\n"
                     "  [bold green]nbgrader[/bold green]    - Assignment management and auto-grading\n"
-                    "  [bold green]checkpoint[/bold green]  - Track ML systems engineering progress\n\n"
+                    "  [bold green]checkpoint[/bold green]  - Track ML systems engineering progress\n"
+                    "  [bold magenta]milestone[/bold magenta]   - Epic capability achievements and ML mastery\n\n"
                     "[bold]Convenience Commands:[/bold]\n"
                     "  [bold green]export[/bold green]      - Export modules to package\n"
                     "  [bold green]test[/bold green]        - Run tests\n"
@@ -210,6 +214,7 @@ Examples:
                     "  [dim]tito module status --metadata[/dim] - Module status with metadata\n"
                     "  [dim]tito module view 01_setup[/dim]     - Start coding in Jupyter Lab\n"
                     "  [dim]tito checkpoint timeline[/dim]      - Visual progress timeline\n"
+                    "  [dim]tito milestone status[/dim]         - See your epic achievement progress\n"
                     "[bold]Get Help:[/bold]\n"
                     "  [dim]tito system[/dim]                   - Show system subcommands\n"
                     "  [dim]tito module[/dim]                   - Show module subcommands\n"
