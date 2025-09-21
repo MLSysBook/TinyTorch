@@ -91,8 +91,16 @@ class MeanSquaredError:
         ### BEGIN SOLUTION
         diff = y_pred - y_true
         squared_diff = diff * diff  # Using multiplication for square
-        loss = np.mean(squared_diff.data)
-        return Tensor(loss)
+        
+        # Handle Variable/Tensor compatibility
+        if hasattr(squared_diff, 'data') and hasattr(squared_diff.data, 'data'):
+            # squared_diff is a Variable
+            loss_data = np.mean(squared_diff.data.data)
+        else:
+            # squared_diff is a Tensor
+            loss_data = np.mean(squared_diff.data)
+        
+        return Tensor(loss_data)
         ### END SOLUTION
     
     def forward(self, y_pred: Tensor, y_true: Tensor) -> Tensor:

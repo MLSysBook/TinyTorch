@@ -9,6 +9,7 @@ from .base import BaseCommand
 from .info import InfoCommand
 from .doctor import DoctorCommand
 from .jupyter import JupyterCommand
+from .protect import ProtectCommand
 
 class SystemCommand(BaseCommand):
     @property
@@ -49,6 +50,14 @@ class SystemCommand(BaseCommand):
         )
         jupyter_cmd = JupyterCommand(self.config)
         jupyter_cmd.add_arguments(jupyter_parser)
+        
+        # Protect subcommand
+        protect_parser = subparsers.add_parser(
+            'protect',
+            help='🛡️ Student protection system to prevent core file edits'
+        )
+        protect_cmd = ProtectCommand(self.config)
+        protect_cmd.add_arguments(protect_parser)
 
     def run(self, args: Namespace) -> int:
         console = self.console
@@ -59,7 +68,8 @@ class SystemCommand(BaseCommand):
                 "Available subcommands:\n"
                 "  • [bold]info[/bold]    - Show system information and course navigation\n"
                 "  • [bold]doctor[/bold]  - Run environment diagnosis\n"
-                "  • [bold]jupyter[/bold] - Start Jupyter notebook server\n\n"
+                "  • [bold]jupyter[/bold] - Start Jupyter notebook server\n"
+                "  • [bold]protect[/bold] - 🛡️ Student protection system management\n\n"
                 "[dim]Example: tito system info[/dim]",
                 title="System Command Group",
                 border_style="bright_cyan"
@@ -75,6 +85,9 @@ class SystemCommand(BaseCommand):
             return cmd.execute(args)
         elif args.system_command == 'jupyter':
             cmd = JupyterCommand(self.config)
+            return cmd.execute(args)
+        elif args.system_command == 'protect':
+            cmd = ProtectCommand(self.config)
             return cmd.execute(args)
         else:
             console.print(Panel(

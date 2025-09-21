@@ -60,8 +60,41 @@ class ReLU:
         - Creates sparse representations (many zeros)
         """
         ### BEGIN SOLUTION
-        result = np.maximum(0, x.data)
-        return type(x)(result)
+        # Check if input is a Variable (autograd-enabled)
+        if hasattr(x, 'requires_grad') and hasattr(x, 'grad_fn'):
+            # Input is a Variable - preserve autograd capabilities
+            
+            # Forward pass: ReLU activation
+            input_data = x.data.data if hasattr(x.data, 'data') else x.data
+            output_data = np.maximum(0, input_data)
+            
+            # Create gradient function for backward pass
+            def relu_grad_fn(grad_output):
+                if x.requires_grad:
+                    # ReLU gradient: 1 where input > 0, 0 elsewhere
+                    relu_mask = (input_data > 0).astype(np.float32)
+                    grad_input_data = grad_output.data.data * relu_mask
+                    # Import Variable locally to avoid circular imports
+                    try:
+                        from tinytorch.core.autograd import Variable
+                    except ImportError:
+                        from autograd_dev import Variable
+                    grad_input = Variable(grad_input_data)
+                    x.backward(grad_input)
+            
+            # Return Variable with gradient function
+            requires_grad = x.requires_grad
+            # Import Variable locally to avoid circular imports
+            try:
+                from tinytorch.core.autograd import Variable
+            except ImportError:
+                from autograd_dev import Variable
+            result = Variable(output_data, requires_grad=requires_grad, grad_fn=relu_grad_fn if requires_grad else None)
+            return result
+        else:
+            # Input is a Tensor - use original implementation
+            result = np.maximum(0, x.data)
+            return type(x)(result)
         ### END SOLUTION
     
     def __call__(self, x):
@@ -220,23 +253,75 @@ class Softmax:
         - Enables probability-based decision making
         """
         ### BEGIN SOLUTION
-        # Handle empty input
-        if x.data.size == 0:
-            return type(x)(x.data.copy())
-        
-        # Subtract max for numerical stability
-        x_shifted = x.data - np.max(x.data, axis=-1, keepdims=True)
-        
-        # Compute exponentials
-        exp_values = np.exp(x_shifted)
-        
-        # Sum along last axis
-        sum_exp = np.sum(exp_values, axis=-1, keepdims=True)
-        
-        # Divide to get probabilities
-        result = exp_values / sum_exp
-        
-        return type(x)(result)
+        # Check if input is a Variable (autograd-enabled)
+        if hasattr(x, 'requires_grad') and hasattr(x, 'grad_fn'):
+            # Input is a Variable - preserve autograd capabilities
+            
+            # Forward pass: Softmax activation
+            input_data = x.data.data if hasattr(x.data, 'data') else x.data
+            
+            # Handle empty input
+            if input_data.size == 0:
+                # Import Variable locally to avoid circular imports
+                try:
+                    from tinytorch.core.autograd import Variable
+                except ImportError:
+                    from autograd_dev import Variable
+                return Variable(input_data.copy(), requires_grad=x.requires_grad)
+            
+            # Subtract max for numerical stability
+            x_shifted = input_data - np.max(input_data, axis=-1, keepdims=True)
+            
+            # Compute exponentials
+            exp_values = np.exp(x_shifted)
+            
+            # Sum along last axis
+            sum_exp = np.sum(exp_values, axis=-1, keepdims=True)
+            
+            # Divide to get probabilities
+            output_data = exp_values / sum_exp
+            
+            # Create gradient function for backward pass
+            def softmax_grad_fn(grad_output):
+                if x.requires_grad:
+                    # Softmax gradient: softmax(x) * (grad_output - (softmax(x) * grad_output).sum())
+                    grad_input_data = output_data * (grad_output.data.data - np.sum(output_data * grad_output.data.data, axis=-1, keepdims=True))
+                    # Import Variable locally to avoid circular imports
+                    try:
+                        from tinytorch.core.autograd import Variable
+                    except ImportError:
+                        from autograd_dev import Variable
+                    grad_input = Variable(grad_input_data)
+                    x.backward(grad_input)
+            
+            # Return Variable with gradient function
+            requires_grad = x.requires_grad
+            # Import Variable locally to avoid circular imports
+            try:
+                from tinytorch.core.autograd import Variable
+            except ImportError:
+                from autograd_dev import Variable
+            result = Variable(output_data, requires_grad=requires_grad, grad_fn=softmax_grad_fn if requires_grad else None)
+            return result
+        else:
+            # Input is a Tensor - use original implementation
+            # Handle empty input
+            if x.data.size == 0:
+                return type(x)(x.data.copy())
+            
+            # Subtract max for numerical stability
+            x_shifted = x.data - np.max(x.data, axis=-1, keepdims=True)
+            
+            # Compute exponentials
+            exp_values = np.exp(x_shifted)
+            
+            # Sum along last axis
+            sum_exp = np.sum(exp_values, axis=-1, keepdims=True)
+            
+            # Divide to get probabilities
+            result = exp_values / sum_exp
+            
+            return type(x)(result)
         ### END SOLUTION
     
     def __call__(self, x):

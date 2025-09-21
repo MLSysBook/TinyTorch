@@ -832,8 +832,22 @@ tito module complete tensor --skip-test
 1. ✅ **ANY change in `tinytorch/`** → Find corresponding file in `modules/source/XX_modulename/modulename_dev.py`
 2. ✅ **ALWAYS edit**: `modules/source/` files ONLY
 3. ✅ **ALWAYS export**: Use `tito module complete XX_modulename` to sync changes
-4. ❌ **NEVER edit**: ANY file in `tinytorch/` directory directly
-5. ❌ **NEVER commit**: Manual changes to `tinytorch/` files
+4. ✅ **ALWAYS use `tito`**: Never use `nbdev_export` directly - use `tito` commands only
+5. ❌ **NEVER edit**: ANY file in `tinytorch/` directory directly
+6. ❌ **NEVER commit**: Manual changes to `tinytorch/` files
+
+**CRITICAL: Always Use `tito` Commands**
+- ✅ **Correct**: `tito module complete 11_training`
+- ✅ **Correct**: `tito module export 11_training`  
+- ❌ **Wrong**: `nbdev_export` (bypasses student/staff workflow)
+- ❌ **Wrong**: Manual exports (inconsistent with user experience)
+
+**Why `tito` Only:**
+- **Consistent workflow**: Students and staff use `tito` commands
+- **Proper validation**: `tito` includes testing and checkpoints
+- **Auto-generated warnings**: `tito` adds protection headers automatically
+- **Error handling**: `tito` provides helpful error messages
+- **Progress tracking**: `tito` shows visual progress and next steps
 
 **SIMPLE TEST: If the file path contains `tinytorch/`, DON'T EDIT IT DIRECTLY**
 
