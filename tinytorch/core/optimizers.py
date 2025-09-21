@@ -223,10 +223,9 @@ class SGD:
                 )
                 
                 # Update parameter
-                # TEMPORARY FIX: Preserve original parameter shape - modify numpy array in-place  
-                # TODO: This fix needs to be applied to source file and properly exported
-                update = self.learning_rate * self.momentum_buffers[param_id]
-                param.data._data[:] = param.data.data - update
+                param.data = Tensor(
+                    param.data.data - self.learning_rate * self.momentum_buffers[param_id]
+                )
         
         self.step_count += 1
         ### END SOLUTION
@@ -387,10 +386,10 @@ class Adam:
                 )
                 
                 # Update parameter with adaptive learning rate
-                # TEMPORARY FIX: Preserve original parameter shape - modify numpy array in-place
-                # TODO: This fix needs to be applied to source file and properly exported
-                update = self.learning_rate * first_moment_corrected / (np.sqrt(second_moment_corrected) + self.epsilon)
-                param.data._data[:] = param.data.data - update
+                param.data = Tensor(
+                    param.data.data - self.learning_rate * first_moment_corrected / 
+                    (np.sqrt(second_moment_corrected) + self.epsilon)
+                )
         ### END SOLUTION
     
     def zero_grad(self) -> None:

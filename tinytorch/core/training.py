@@ -29,14 +29,14 @@ sys.path.append(os.path.abspath('modules/source/10_optimizers'))
 # No longer needed
 
 # Import all the building blocks we need
-from tinytorch.core.tensor import Tensor
-from tinytorch.core.activations import ReLU, Sigmoid, Tanh, Softmax
-from tinytorch.core.layers import Dense
-from tinytorch.core.dense import Sequential, create_mlp
-from tinytorch.core.spatial import Conv2D, flatten
-from tinytorch.core.dataloader import Dataset, DataLoader
-from tinytorch.core.autograd import Variable
-from tinytorch.core.optimizers import SGD, Adam, StepLR
+from tensor_dev import Tensor
+from activations_dev import ReLU, Sigmoid, Tanh, Softmax
+from layers_dev import Dense
+from dense_dev import Sequential, create_mlp
+from spatial_dev import Conv2D, flatten
+from dataloader_dev import Dataset, DataLoader
+from autograd_dev import Variable
+from optimizers_dev import SGD, Adam, StepLR
 
 # %% ../../modules/source/11_training/training_dev.ipynb 4
 class MeanSquaredError:
@@ -51,86 +51,51 @@ class MeanSquaredError:
         """Initialize MSE loss function."""
         pass
     
-    def __call__(self, y_pred, y_true):
+    def __call__(self, y_pred: Tensor, y_true: Tensor) -> Tensor:
         """
         Compute MSE loss between predictions and targets.
         
         Args:
-            y_pred: Model predictions (Tensor or Variable, shape: [batch_size, ...])
-            y_true: True targets (Tensor or Variable, shape: [batch_size, ...])
+            y_pred: Model predictions (shape: [batch_size, ...])
+            y_true: True targets (shape: [batch_size, ...])
             
         Returns:
-            Variable with scalar loss value that supports .backward()
+            Scalar loss value
             
-        Implementation: MSE loss computation with autograd support.
+        TODO: Implement Mean SquaredError loss computation.
         
         STEP-BY-STEP IMPLEMENTATION:
-        1. Convert inputs to Variables if needed for autograd support
-        2. Compute difference using Variable arithmetic: diff = y_pred - y_true
-        3. Square the differences: squared_diff = diff * diff
-        4. Take mean over all elements using Variable operations
-        5. Return as Variable that supports .backward() for gradient computation
+        1. Compute difference: diff = y_pred - y_true
+        2. Square the differences: squared_diff = diff²
+        3. Take mean over all elements: mean(squared_diff)
+        4. Return as scalar Tensor
         
         EXAMPLE:
-        y_pred = Variable([[1.0, 2.0], [3.0, 4.0]], requires_grad=True)
-        y_true = Variable([[1.5, 2.5], [2.5, 3.5]], requires_grad=False)
+        y_pred = Tensor([[1.0, 2.0], [3.0, 4.0]])
+        y_true = Tensor([[1.5, 2.5], [2.5, 3.5]])
         loss = mse_loss(y_pred, y_true)
-        loss.backward()  # Computes gradients for y_pred
+        # Should return: mean([(1.0-1.5)², (2.0-2.5)², (3.0-2.5)², (4.0-3.5)²])
+        #                = mean([0.25, 0.25, 0.25, 0.25]) = 0.25
         
         LEARNING CONNECTIONS:
-        - **Autograd Integration**: Loss functions must participate in computational graph for backpropagation
-        - **Gradient Flow**: MSE provides smooth gradients that flow backward through the network
-        - **Variable Operations**: Using Variables keeps computation in the autograd system
-        - **Training Pipeline**: Loss.backward() triggers gradient computation for entire network
+        - **Regression Optimization**: MSE loss guides models toward accurate numerical predictions
+        - **Gradient Properties**: MSE provides smooth gradients proportional to prediction error
+        - **Outlier Sensitivity**: Squared errors heavily penalize large mistakes
+        - **Production Usage**: Common in recommendation systems, time series, and financial modeling
+        
+        HINTS:
+        - Use tensor subtraction: y_pred - y_true
+        - Use tensor power: diff ** 2
+        - Use tensor mean: squared_diff.mean()
         """
         ### BEGIN SOLUTION
-        # Convert to Variables if needed to support autograd
-        if not isinstance(y_pred, Variable):
-            if hasattr(y_pred, 'data'):
-                y_pred = Variable(y_pred.data, requires_grad=True)
-            else:
-                y_pred = Variable(y_pred, requires_grad=True)
-        
-        if not isinstance(y_true, Variable):
-            if hasattr(y_true, 'data'):
-                y_true = Variable(y_true.data, requires_grad=False)  # Targets don't need gradients
-            else:
-                y_true = Variable(y_true, requires_grad=False)
-        
-        # Compute MSE using Variable operations to maintain autograd graph
-        diff = y_pred - y_true  # Variable subtraction
-        squared_diff = diff * diff  # Variable multiplication
-        
-        # Mean operation that preserves gradients
-        # Create a simple mean operation for Variables
-        if hasattr(squared_diff.data, 'data'):
-            mean_data = np.mean(squared_diff.data.data)
-        else:
-            mean_data = np.mean(squared_diff.data)
-        
-        # Create loss Variable with gradient function for MSE
-        def mse_grad_fn(grad_output):
-            # MSE gradient: 2 * (y_pred - y_true) / n
-            if y_pred.requires_grad:
-                if hasattr(y_pred.data, 'data'):
-                    batch_size = np.prod(y_pred.data.data.shape)
-                    grad_data = 2.0 * (y_pred.data.data - y_true.data.data) / batch_size
-                else:
-                    batch_size = np.prod(y_pred.data.shape)
-                    grad_data = 2.0 * (y_pred.data - y_true.data) / batch_size
-                
-                if hasattr(grad_output.data, 'data'):
-                    final_grad = grad_data * grad_output.data.data
-                else:
-                    final_grad = grad_data * grad_output.data
-                
-                y_pred.backward(Variable(final_grad))
-        
-        loss = Variable(mean_data, requires_grad=y_pred.requires_grad, grad_fn=mse_grad_fn)
-        return loss
+        diff = y_pred - y_true
+        squared_diff = diff * diff  # Using multiplication for square
+        loss = np.mean(squared_diff.data)
+        return Tensor(loss)
         ### END SOLUTION
     
-    def forward(self, y_pred, y_true):
+    def forward(self, y_pred: Tensor, y_true: Tensor) -> Tensor:
         """Alternative interface for forward pass."""
         return self.__call__(y_pred, y_true)
 
@@ -512,21 +477,14 @@ class Trainer:
             # Compute loss
             loss = self.loss_function(predictions, batch_y)
             
-            # Backward pass - now that loss functions support autograd!
-            if hasattr(loss, 'backward'):
-                loss.backward()
+            # Backward pass (simplified - in real implementation would use autograd)
+            # loss.backward()
             
             # Update parameters
             self.optimizer.step()
             
             # Track metrics
-            if hasattr(loss, 'data'):
-                if hasattr(loss.data, 'data'):
-                    epoch_metrics['loss'] += loss.data.data  # Variable with Tensor data
-                else:
-                    epoch_metrics['loss'] += loss.data  # Variable with numpy data
-            else:
-                epoch_metrics['loss'] += loss  # Direct value
+            epoch_metrics['loss'] += loss.data
             
             for metric in self.metrics:
                 metric_name = metric.__class__.__name__.lower()
@@ -593,13 +551,7 @@ class Trainer:
             loss = self.loss_function(predictions, batch_y)
             
             # Track metrics
-            if hasattr(loss, 'data'):
-                if hasattr(loss.data, 'data'):
-                    epoch_metrics['loss'] += loss.data.data  # Variable with Tensor data
-                else:
-                    epoch_metrics['loss'] += loss.data  # Variable with numpy data
-            else:
-                epoch_metrics['loss'] += loss  # Direct value
+            epoch_metrics['loss'] += loss.data
             
             for metric in self.metrics:
                 metric_name = metric.__class__.__name__.lower()

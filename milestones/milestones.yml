@@ -4,7 +4,7 @@
 milestones:
   1:
     name: "Machines Can See"
-    title: "I taught a computer to recognize digits!"
+    title: "I taught a computer to recognize real images!"
     emoji: "👁️"
     trigger_module: "05_dense"
     required_modules:
@@ -19,13 +19,13 @@ milestones:
       - "02"  # Intelligence
       - "03"  # Components
       - "04"  # Networks
-    victory_condition: "85%+ MNIST accuracy with MLP"
-    capability: "I can create neural networks that recognize images!"
+    victory_condition: "45%+ CIFAR-10 accuracy with MLP"
+    capability: "I can create neural networks that recognize real RGB images!"
     real_world_impact: "Foundation for any computer vision system"
-    dataset: "MNIST"
+    dataset: "CIFAR-10"
     model_type: "Multi-Layer Perceptron (MLP)"
     test_file: "foundation/milestone.py"
-    demo_description: "Watch YOUR dense layers and activations learn to recognize handwritten digits"
+    demo_description: "Watch YOUR dense layers and activations learn to recognize real-world RGB images"
     
   2:
     name: "I Can Train Real AI"
@@ -112,7 +112,7 @@ progression:
 # Module exercise tracking
 module_exercise_mapping:
   milestone_1:
-    description: "YOUR 5 core modules recognize handwritten digits"
+    description: "YOUR 5 core modules recognize real RGB images"
     modules_used:
       - module: "02_tensor"
         role: "Core mathematical operations"

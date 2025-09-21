@@ -8,6 +8,7 @@ import numpy as np
 import sys
 import os
 from typing import List, Optional
+import matplotlib.pyplot as plt
 
 # Import all the building blocks we need - try package first, then local modules
 try:
