@@ -795,10 +795,9 @@ class Adam:
                 )
                 
                 # Update parameter with adaptive learning rate
-                param.data = Tensor(
-                    param.data.data - self.learning_rate * first_moment_corrected / 
-                    (np.sqrt(second_moment_corrected) + self.epsilon)
-                )
+                # CRITICAL: Preserve original parameter shape - don't create new Tensor
+                update = self.learning_rate * first_moment_corrected / (np.sqrt(second_moment_corrected) + self.epsilon)
+                param.data.data = param.data.data - update
         ### END SOLUTION
     
     def zero_grad(self) -> None:
