@@ -25,13 +25,13 @@ This hands-on approach builds the deep systems intuition that separates ML engin
 ```{admonition} What You'll Build
 :class: tip
 **A complete ML framework from scratch**: your own production-ready toolkit that can:
-- **Train neural networks to 57.2% accuracy on CIFAR-10** (exceeds course benchmarks!)
+- **Train neural networks to 55%+ accuracy on CIFAR-10** (solid, reliable performance!)
 - Implement automatic differentiation from first principles
 - Build complete training loops with real datasets
 - Handle full ML pipeline from data loading to evaluation
 - **Master XOR problem with 100% accuracy** using your own autograd
 
-**Result:** You become the expert others ask about "how ML frameworks actually work" and "why autograd enables all modern deep learning."
+**Result:** You become the expert others ask about "how ML frameworks actually work" and "why autograd enables all modern deep learning." All 16 modules pass comprehensive tests with 100% health status.
 ```
 
 _Understanding how to build ML systems makes you a more effective ML engineer._
@@ -244,12 +244,12 @@ flowchart TD
 After building all the components, TinyGPT is your **capstone demonstration** - showing how everything clicks together into a working system.
 
 **What TinyGPT Proves:**
-- 🧩 **Component Integration**: Your tensors, layers, autograd, and optimizers work together seamlessly  
-- 🔄 **Universal Foundations**: The same mathematical primitives power any neural architecture
-- ⚡ **Framework Completeness**: You built a production-ready ML framework from scratch
-- 🎯 **Systems Mastery**: You understand how every piece fits together under the hood
+- **Component Integration**: Your tensors, layers, autograd, and optimizers work together seamlessly  
+- **Universal Foundations**: The same mathematical primitives power any neural architecture
+- **Framework Completeness**: You built a production-ready ML framework from scratch
+- **Systems Mastery**: You understand how every piece fits together under the hood
 
-**The Achievement:** Build a complete GPT-style language model using **only components you implemented**. This proves your framework is real, complete, and ready for any ML task.
+**The Achievement:** Build a complete GPT-style language model using only components you implemented. This proves your framework is real, complete, and ready for any ML task.
 
 ---
 

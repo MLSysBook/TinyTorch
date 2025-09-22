@@ -206,10 +206,6 @@ window.addEventListener("load", () => mermaid.run());
 <li class="toctree-l1"><a class="reference internal" href="usage-paths/classroom-use.html">Classroom Use</a></li>
 <li class="toctree-l1"><a class="reference internal" href="instructor-guide.html">Instructor Guide</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Course Orientation</span></p>
-<ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="chapters/00-introduction.html">Introduction</a></li>
-</ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Foundation</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="chapters/01-setup.html">0. Setup</a></li>
@@ -244,7 +240,9 @@ window.addEventListener("load", () => mermaid.run());
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Additional Resources</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="vision.html">TinyTorch Vision</a></li>
+<li class="toctree-l1"><a class="reference internal" href="kiss-principle.html">KISS Principle</a></li>
 <li class="toctree-l1"><a class="reference internal" href="checkpoint-system.html">Checkpoint System</a></li>
+<li class="toctree-l1"><a class="reference internal" href="testing-framework.html">Testing Framework</a></li>
 <li class="toctree-l1"><a class="reference internal" href="resources.html">Learning Resources</a></li>
 </ul>
 
@@ -460,19 +458,19 @@ document.write(`
                 <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-core-difference">The Core Difference</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-philosophy-build-use-reflect">Learning Philosophy: Build, Use, Reflect</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example-activation-functions"><strong>Example: Activation Functions</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example-activation-functions">Example: Activation Functions</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#who-this-is-for">👥 Who This Is For</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#perfect-for"><strong>🎯 Perfect For:</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#prerequisites"><strong>📚 Prerequisites:</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#career-impact"><strong>🚀 Career Impact:</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#perfect-for">🎯 Perfect For:</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#prerequisites">📚 Prerequisites:</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#career-impact">🚀 Career Impact:</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#course-journey-16-modules-foundation-to-framework">📚 Course Journey: 16 Modules - Foundation to Framework</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#complete-system-integration">🔗 <strong>Complete System Integration</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#complete-system-integration">🔗 Complete System Integration</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ready-to-start">Ready to Start?</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#quick-taste-try-module-1-right-now"><strong>Quick Taste: Try Module 1 Right Now</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#quick-taste-try-module-1-right-now">Quick Taste: Try Module 1 Right Now</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#acknowledgments">Acknowledgments</a></li>
@@ -497,13 +495,13 @@ document.write(`
 <p class="admonition-title">What You’ll Build</p>
 <p><strong>A complete ML framework from scratch</strong>: your own production-ready toolkit that can:</p>
 <ul class="simple">
-<li><p>Train neural networks on CIFAR-10 (real dataset)</p></li>
+<li><p><strong>Train neural networks to 55%+ accuracy on CIFAR-10</strong> (solid, reliable performance!)</p></li>
 <li><p>Implement automatic differentiation from first principles</p></li>
-<li><p>Deploy production systems with 75% model compression</p></li>
-<li><p>Handle complete ML pipeline from data to monitoring</p></li>
-<li><p><strong>Build GPT-style language models with 95% component reuse</strong></p></li>
+<li><p>Build complete training loops with real datasets</p></li>
+<li><p>Handle full ML pipeline from data loading to evaluation</p></li>
+<li><p><strong>Master XOR problem with 100% accuracy</strong> using your own autograd</p></li>
 </ul>
-<p><strong>Result:</strong> You become the expert others ask about “how ML frameworks actually work” and “why neural architectures share universal foundations.”</p>
+<p><strong>Result:</strong> You become the expert others ask about “how ML frameworks actually work” and “why autograd enables all modern deep learning.” All 16 modules pass comprehensive tests with 100% health status.</p>
 </div>
 <p><em>Understanding how to build ML systems makes you a more effective ML engineer.</em></p>
 <div class="note admonition">
@@ -547,7 +545,7 @@ document.write(`
 <h2>Learning Philosophy: Build, Use, Reflect<a class="headerlink" href="#learning-philosophy-build-use-reflect" title="Link to this heading">#</a></h2>
 <p>Every component follows the same powerful learning cycle:</p>
 <section id="example-activation-functions">
-<h3><strong>Example: Activation Functions</strong><a class="headerlink" href="#example-activation-functions" title="Link to this heading">#</a></h3>
+<h3>Example: Activation Functions<a class="headerlink" href="#example-activation-functions" title="Link to this heading">#</a></h3>
 <p><strong>Build:</strong> Implement ReLU from scratch</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">relu</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
     <span class="c1"># YOU implement this function</span>
@@ -595,7 +593,7 @@ document.write(`
 <section id="who-this-is-for">
 <h2>👥 Who This Is For<a class="headerlink" href="#who-this-is-for" title="Link to this heading">#</a></h2>
 <section id="perfect-for">
-<h3><strong>🎯 Perfect For:</strong><a class="headerlink" href="#perfect-for" title="Link to this heading">#</a></h3>
+<h3>🎯 Perfect For:<a class="headerlink" href="#perfect-for" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p><strong>CS students</strong> who want to understand ML systems beyond high-level APIs</p></li>
 <li><p><strong>Software engineers</strong> transitioning to ML engineering roles</p></li>
@@ -605,7 +603,7 @@ document.write(`
 </ul>
 </section>
 <section id="prerequisites">
-<h3><strong>📚 Prerequisites:</strong><a class="headerlink" href="#prerequisites" title="Link to this heading">#</a></h3>
+<h3>📚 Prerequisites:<a class="headerlink" href="#prerequisites" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p><strong>Python programming</strong> (comfortable with classes, functions, basic NumPy)</p></li>
 <li><p><strong>Linear algebra basics</strong> (matrix multiplication, gradients)</p></li>
@@ -613,7 +611,7 @@ document.write(`
 </ul>
 </section>
 <section id="career-impact">
-<h3><strong>🚀 Career Impact:</strong><a class="headerlink" href="#career-impact" title="Link to this heading">#</a></h3>
+<h3>🚀 Career Impact:<a class="headerlink" href="#career-impact" title="Link to this heading">#</a></h3>
 <p>After TinyTorch, you’ll be the person your team asks:</p>
 <ul class="simple">
 <li><p><em>“Why is this training so slow?”</em> (You’ll know how to profile and optimize)</p></li>
@@ -653,7 +651,7 @@ document.write(`
 </section>
 <hr class="docutils" />
 <section id="complete-system-integration">
-<h2>🔗 <strong>Complete System Integration</strong><a class="headerlink" href="#complete-system-integration" title="Link to this heading">#</a></h2>
+<h2>🔗 Complete System Integration<a class="headerlink" href="#complete-system-integration" title="Link to this heading">#</a></h2>
 <p><strong>This isn’t 16 separate exercises.</strong> Every component you build integrates into one fully functional ML framework with universal foundations:</p>
 <div class="important admonition">
 <p class="admonition-title">🎯 How It All Connects</p>
@@ -692,17 +690,17 @@ document.write(`
     </pre></div>
 <p><strong>Result:</strong> Every component you build converges into TinyGPT - proving your framework is complete and production-ready.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>
-### **🔥 TinyGPT: The Complete Framework in Action**
+### 🔥 TinyGPT: The Complete Framework in Action
 
 After building all the components, TinyGPT is your **capstone demonstration** - showing how everything clicks together into a working system.
 
 **What TinyGPT Proves:**
-- 🧩 **Component Integration**: Your tensors, layers, autograd, and optimizers work together seamlessly  
-- 🔄 **Universal Foundations**: The same mathematical primitives power any neural architecture
-- ⚡ **Framework Completeness**: You built a production-ready ML framework from scratch
-- 🎯 **Systems Mastery**: You understand how every piece fits together under the hood
+- **Component Integration**: Your tensors, layers, autograd, and optimizers work together seamlessly  
+- **Universal Foundations**: The same mathematical primitives power any neural architecture
+- **Framework Completeness**: You built a production-ready ML framework from scratch
+- **Systems Mastery**: You understand how every piece fits together under the hood
 
-**The Achievement:** Build a complete GPT-style language model using **only components you implemented**. This proves your framework is real, complete, and ready for any ML task.
+**The Achievement:** Build a complete GPT-style language model using only components you implemented. This proves your framework is real, complete, and ready for any ML task.
 
 ---
 
@@ -711,21 +709,21 @@ After building all the components, TinyGPT is your **capstone demonstration** - 
 ```{admonition} Three Ways to Engage with TinyTorch
 :class: important
 
-### **[Quick Exploration](usage-paths/quick-exploration.md)** *(5 minutes)*
+### [Quick Exploration](usage-paths/quick-exploration.md) *(5 minutes)*
 *&quot;I want to see what this is about&quot;*
 - Click and run code immediately in your browser (Binder)
 - No installation or setup required
 - Implement ReLU, tensors, neural networks interactively
 - Perfect for getting a feel for the course
 
-### **[Serious Development](usage-paths/serious-development.md)** *(8+ weeks)*
+### [Serious Development](usage-paths/serious-development.md) *(8+ weeks)*
 *&quot;I want to build this myself&quot;*
 - Fork the repo and work locally with full development environment
 - Build complete ML framework from scratch with `tito` CLI
 - 16 progressive assignments from setup to language models
 - Professional development workflow with automated testing
 
-### **[Classroom Use](usage-paths/classroom-use.md)** *(Instructors)*
+### [Classroom Use](usage-paths/classroom-use.md) *(Instructors)*
 *&quot;I want to teach this course&quot;*
 - Complete course infrastructure with NBGrader integration
 - Automated grading for comprehensive testing
@@ -738,7 +736,7 @@ After building all the components, TinyGPT is your **capstone demonstration** - 
 <section id="ready-to-start">
 <h2>Ready to Start?<a class="headerlink" href="#ready-to-start" title="Link to this heading">#</a></h2>
 <section id="quick-taste-try-module-1-right-now">
-<h3><strong>Quick Taste: Try Module 1 Right Now</strong><a class="headerlink" href="#quick-taste-try-module-1-right-now" title="Link to this heading">#</a></h3>
+<h3>Quick Taste: Try Module 1 Right Now<a class="headerlink" href="#quick-taste-try-module-1-right-now" title="Link to this heading">#</a></h3>
 <p>Want to see what TinyTorch feels like? <strong><a class="reference internal" href="chapters/01-setup.html"><span class="std std-doc">Launch the Setup chapter</span></a></strong> in Binder and implement your first TinyTorch function in 2 minutes!</p>
 </section>
 </section>
@@ -822,19 +820,19 @@ After building all the components, TinyGPT is your **capstone demonstration** - 
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-core-difference">The Core Difference</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-philosophy-build-use-reflect">Learning Philosophy: Build, Use, Reflect</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example-activation-functions"><strong>Example: Activation Functions</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example-activation-functions">Example: Activation Functions</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#who-this-is-for">👥 Who This Is For</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#perfect-for"><strong>🎯 Perfect For:</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#prerequisites"><strong>📚 Prerequisites:</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#career-impact"><strong>🚀 Career Impact:</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#perfect-for">🎯 Perfect For:</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#prerequisites">📚 Prerequisites:</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#career-impact">🚀 Career Impact:</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#course-journey-16-modules-foundation-to-framework">📚 Course Journey: 16 Modules - Foundation to Framework</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#complete-system-integration">🔗 <strong>Complete System Integration</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#complete-system-integration">🔗 Complete System Integration</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ready-to-start">Ready to Start?</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#quick-taste-try-module-1-right-now"><strong>Quick Taste: Try Module 1 Right Now</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#quick-taste-try-module-1-right-now">Quick Taste: Try Module 1 Right Now</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#acknowledgments">Acknowledgments</a></li>

@@ -8,7 +8,7 @@
 
 The ML field has a critical gap: **most education teaches you to use frameworks, not build them.**
 
-### **Traditional ML Education:**
+### Traditional ML Education:
 ```python
 import torch
 import torch.nn as nn
@@ -22,7 +22,7 @@ optimizer = torch.optim.Adam(model.parameters())
 - When should you use gradient accumulation vs larger batch sizes?
 - Why do attention mechanisms limit context length?
 
-### **The TinyTorch Difference:**
+### The TinyTorch Difference:
 ```python
 class Linear:
     def __init__(self, in_features, out_features):
@@ -48,7 +48,7 @@ class Linear:
 
 ## What We Teach: Systems Thinking
 
-### **Beyond Algorithms: System-Level Understanding**
+### Beyond Algorithms: System-Level Understanding
 
 **Memory Management:**
 - Why Adam needs 3× parameter memory (parameters + momentum + variance)
@@ -74,7 +74,7 @@ class Linear:
 
 ## Target Audience: Future ML Systems Engineers
 
-### **Perfect For:**
+### Perfect For:
 
 **Computer Science Students**
 - Going beyond "use PyTorch" to "understand PyTorch"
@@ -96,7 +96,7 @@ class Linear:
 - Understanding framework limitations and workarounds
 - Building specialized ML systems for unique domains
 
-### **Career Transformation:**
+### Career Transformation:
 
 **Before TinyTorch:** "I can train models with PyTorch"
 **After TinyTorch:** "I can build and optimize ML systems"
@@ -111,28 +111,28 @@ You become the person your team asks:
 
 ## Pedagogical Philosophy: Build → Use → Understand
 
-### **1. Build First**
+### 1. Build First
 Every component implemented from scratch:
 - Tensors with broadcasting and memory management
 - Automatic differentiation with computational graphs
 - Optimizers with state management and memory profiling
 - Complete training loops with checkpointing and monitoring
 
-### **2. Use Immediately**
+### 2. Use Immediately
 No toy examples - real applications:
 - Train CNNs on CIFAR-10 (90%+ accuracy achievable)
 - Implement transformer attention mechanisms
 - Deploy production systems with MLOps monitoring
 - Profile and optimize for performance bottlenecks
 
-### **3. Understand Systems**
+### 3. Understand Systems
 Connect implementations to production reality:
 - How your tensor maps to PyTorch's memory model
 - Why your optimizer choices affect GPU utilization
 - How your autograd compares to production frameworks
 - When your implementations would need modification at scale
 
-### **4. Reflect on Trade-offs**
+### 4. Reflect on Trade-offs
 ML Systems Thinking sections in every module:
 - Memory vs compute trade-offs in different architectures
 - Accuracy vs efficiency considerations for deployment  
@@ -143,7 +143,7 @@ ML Systems Thinking sections in every module:
 
 ## Unique Value Proposition
 
-### **What Makes TinyTorch Different:**
+### What Makes TinyTorch Different:
 
 **Systems-First Approach**
 - Not just "how does attention work" but "why does attention scale O(N²) and how do production systems handle this?"
@@ -169,7 +169,7 @@ ML Systems Thinking sections in every module:
 
 ## Learning Outcomes: Becoming an ML Systems Engineer
 
-### **Technical Mastery**
+### Technical Mastery
 - **Implement any ML paper** from first principles
 - **Debug training issues** at the systems level
 - **Optimize models** for production deployment
@@ -177,21 +177,21 @@ ML Systems Thinking sections in every module:
 - **Design custom architectures** for specialized domains
 - **Understand framework generalization** across vision and language
 
-### **Systems Understanding** 
+### Systems Understanding 
 - **Memory management** in ML frameworks
 - **Computational complexity** vs real-world performance
 - **Hardware utilization** patterns and optimization
 - **Distributed training** challenges and solutions
 - **Production deployment** considerations and trade-offs
 
-### **Professional Skills**
+### Professional Skills
 - **Test-driven development** for ML systems
 - **Performance profiling** and optimization techniques
 - **Code organization** and package development
 - **Documentation** and API design
 - **MLOps** and production monitoring
 
-### **Career Impact**
+### Career Impact
 - **Technical interviews**: Demonstrate deep ML systems knowledge
 - **Job opportunities**: Qualify for ML engineer (not just data scientist) roles
 - **Team leadership**: Become the go-to person for ML systems questions

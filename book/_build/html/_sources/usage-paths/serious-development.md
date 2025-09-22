@@ -19,13 +19,13 @@ A complete ML framework from scratch, including:
 
 ## Quick Start (5 minutes)
 
-### **Step 1: Get the Code**
+### Step 1: Get the Code
 ```bash
 git clone https://github.com/your-org/tinytorch.git
 cd TinyTorch
 ```
 
-### **Step 2: Setup Environment**
+### Step 2: Setup Environment
 ```bash
 # Activate virtual environment  
 source bin/activate-tinytorch.sh
@@ -37,14 +37,14 @@ make install
 tito system doctor
 ```
 
-### **Step 3: Start Building**
+### Step 3: Start Building
 ```bash
 # Open first assignment
 cd modules/source/01_setup
 jupyter lab setup_dev.py
 ```
 
-### **Step 4: Build → Test → Export → Use**
+### Step 4: Build → Test → Export → Use
 ```bash
 # After implementing code in the notebook:
 tito export               # Export your code to tinytorch package
@@ -59,7 +59,7 @@ python -c "from tinytorch.core.setup import hello_tinytorch; hello_tinytorch()"
 
 ## Learning Path (Progressive Complexity)
 
-### **Foundation (Weeks 1-2)**
+### Foundation (Weeks 1-2)
 Build the core infrastructure:
 
 **Module 01: Setup & CLI**
@@ -79,7 +79,7 @@ Build the core infrastructure:
 
 ---
 
-### **🧱 Building Blocks (Weeks 3-4)**
+### 🧱 Building Blocks (Weeks 3-4)
 Create neural network components:
 
 **Module 03: Layers**
@@ -99,7 +99,7 @@ Create neural network components:
 
 ---
 
-### **Training Systems (Weeks 5-6)**
+### Training Systems (Weeks 5-6)
 Complete training infrastructure:
 
 **Module 06: DataLoader**
@@ -124,7 +124,7 @@ Complete training infrastructure:
 
 ---
 
-### **Production & Performance (Weeks 7-8)**
+### Production & Performance (Weeks 7-8)
 Real-world deployment:
 
 **Module 10: Compression**
@@ -157,7 +157,7 @@ Real-world deployment:
 
 ## Development Workflow
 
-### **The `tito` CLI System**
+### The `tito` CLI System
 TinyTorch includes a complete CLI for professional development:
 
 ```bash
@@ -176,7 +176,7 @@ tito nbgrader release setup     # Release to students
 tito nbgrader autograde setup   # Auto-grade submissions
 ```
 
-### **Quality Assurance**
+### Quality Assurance
 Every module includes comprehensive testing:
 - **100+ automated tests** ensure correctness
 - **Inline tests** provide immediate feedback
@@ -206,20 +206,20 @@ Every module includes comprehensive testing:
 
 ## Why This Approach Works
 
-### **Build → Use → Understand**
+### Build → Use → Understand
 Every component follows this pattern:
 
 1. **🔧 Build**: Implement `ReLU()` from scratch
 2. **🚀 Use**: `from tinytorch.core.activations import ReLU` - your code!
 3. **💡 Understand**: See how it enables complex pattern learning
 
-### **Real Data, Real Systems**
+### Real Data, Real Systems
 - Work with CIFAR-10 (not toy datasets)
 - Production-style code organization  
 - Performance and engineering considerations
 - Professional development practices
 
-### **Immediate Feedback**
+### Immediate Feedback
 - Code works immediately after implementation
 - Visual progress indicators and success messages
 - Comprehensive error handling and guidance
@@ -229,12 +229,12 @@ Every component follows this pattern:
 
 ## Ready to Start?
 
-### **Choose Your Module**
+### Choose Your Module
 **New to ML frameworks?** → Start with [Setup](../chapters/01-setup.md)
 **Have ML experience?** → Jump to [Tensors](../chapters/02-tensor.md)
 **Want to see the vision?** → Try [Activations](../chapters/03-activations.md)
 
-### **Get Help**
+### Get Help
 - **💬 Discussions**: GitHub Discussions for questions
 - **🐛 Issues**: Report bugs or suggest improvements  
 - **📧 Support**: Direct contact with TinyTorch team

@@ -28,21 +28,21 @@ All running live in your browser!
 
 ## Recommended Exploration Path
 
-### **Start Here: Chapter 1 - Setup**
+### Start Here: Chapter 1 - Setup
 - Understand the TinyTorch development workflow
 - Get familiar with the educational approach
 - See how components fit together
 
 **[Launch Setup Chapter](../chapters/01-setup.md)**
 
-### **Then Try: Chapter 3 - Activations** 
+### Then Try: Chapter 3 - Activations 
 - Implement your first ML function (ReLU)
 - See immediate visual results
 - Understand why nonlinearity matters
 
 **[Launch Activations Chapter](../chapters/03-activations.md)**
 
-### **Build Up: Chapter 4 - Layers**
+### Build Up: Chapter 4 - Layers
 - Create the building blocks of neural networks
 - Combine your ReLU with matrix operations
 - See how simple math becomes powerful AI

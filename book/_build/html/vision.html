@@ -61,7 +61,7 @@
     <script>DOCUMENTATION_OPTIONS.pagename = 'vision';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="🎯 TinyTorch Checkpoint System" href="checkpoint-system.html" />
+    <link rel="next" title="KISS Principle in TinyTorch" href="kiss-principle.html" />
     <link rel="prev" title="Module 16: TinyGPT - Language Models" href="chapters/16-tinygpt.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -187,10 +187,6 @@
 <li class="toctree-l1"><a class="reference internal" href="usage-paths/classroom-use.html">Classroom Use</a></li>
 <li class="toctree-l1"><a class="reference internal" href="instructor-guide.html">Instructor Guide</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Course Orientation</span></p>
-<ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="chapters/00-introduction.html">Introduction</a></li>
-</ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Foundation</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="chapters/01-setup.html">0. Setup</a></li>
@@ -225,7 +221,9 @@
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Additional Resources</span></p>
 <ul class="current nav bd-sidenav">
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">TinyTorch Vision</a></li>
+<li class="toctree-l1"><a class="reference internal" href="kiss-principle.html">KISS Principle</a></li>
 <li class="toctree-l1"><a class="reference internal" href="checkpoint-system.html">Checkpoint System</a></li>
+<li class="toctree-l1"><a class="reference internal" href="testing-framework.html">Testing Framework</a></li>
 <li class="toctree-l1"><a class="reference internal" href="resources.html">Learning Resources</a></li>
 </ul>
 
@@ -440,35 +438,35 @@ document.write(`
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-problem-were-solving">The Problem We’re Solving</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#traditional-ml-education"><strong>Traditional ML Education:</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-tinytorch-difference"><strong>The TinyTorch Difference:</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#traditional-ml-education">Traditional ML Education:</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-tinytorch-difference">The TinyTorch Difference:</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-we-teach-systems-thinking">What We Teach: Systems Thinking</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#beyond-algorithms-system-level-understanding"><strong>Beyond Algorithms: System-Level Understanding</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#beyond-algorithms-system-level-understanding">Beyond Algorithms: System-Level Understanding</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#target-audience-future-ml-systems-engineers">Target Audience: Future ML Systems Engineers</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#perfect-for"><strong>Perfect For:</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#career-transformation"><strong>Career Transformation:</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#perfect-for">Perfect For:</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#career-transformation">Career Transformation:</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pedagogical-philosophy-build-use-understand">Pedagogical Philosophy: Build → Use → Understand</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#build-first"><strong>1. Build First</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#use-immediately"><strong>2. Use Immediately</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#understand-systems"><strong>3. Understand Systems</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#reflect-on-trade-offs"><strong>4. Reflect on Trade-offs</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#build-first">1. Build First</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#use-immediately">2. Use Immediately</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#understand-systems">3. Understand Systems</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#reflect-on-trade-offs">4. Reflect on Trade-offs</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unique-value-proposition">Unique Value Proposition</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#what-makes-tinytorch-different"><strong>What Makes TinyTorch Different:</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#what-makes-tinytorch-different">What Makes TinyTorch Different:</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-outcomes-becoming-an-ml-systems-engineer">Learning Outcomes: Becoming an ML Systems Engineer</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#technical-mastery"><strong>Technical Mastery</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#systems-understanding"><strong>Systems Understanding</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#professional-skills"><strong>Professional Skills</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#career-impact"><strong>Career Impact</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#technical-mastery">Technical Mastery</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#systems-understanding">Systems Understanding</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#professional-skills">Professional Skills</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#career-impact">Career Impact</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#success-stories-what-students-say">Success Stories: What Students Say</a></li>
@@ -492,7 +490,7 @@ document.write(`
 <h2>The Problem We’re Solving<a class="headerlink" href="#the-problem-were-solving" title="Link to this heading">#</a></h2>
 <p>The ML field has a critical gap: <strong>most education teaches you to use frameworks, not build them.</strong></p>
 <section id="traditional-ml-education">
-<h3><strong>Traditional ML Education:</strong><a class="headerlink" href="#traditional-ml-education" title="Link to this heading">#</a></h3>
+<h3>Traditional ML Education:<a class="headerlink" href="#traditional-ml-education" title="Link to this heading">#</a></h3>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">torch.nn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">nn</span>
 <span class="n">model</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">784</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
@@ -508,7 +506,7 @@ document.write(`
 </ul>
 </section>
 <section id="the-tinytorch-difference">
-<h3><strong>The TinyTorch Difference:</strong><a class="headerlink" href="#the-tinytorch-difference" title="Link to this heading">#</a></h3>
+<h3>The TinyTorch Difference:<a class="headerlink" href="#the-tinytorch-difference" title="Link to this heading">#</a></h3>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">Linear</span><span class="p">:</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">in_features</span><span class="p">,</span> <span class="n">out_features</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">weight</span> <span class="o">=</span> <span class="n">Tensor</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">in_features</span><span class="p">,</span> <span class="n">out_features</span><span class="p">))</span>
@@ -536,7 +534,7 @@ document.write(`
 <section id="what-we-teach-systems-thinking">
 <h2>What We Teach: Systems Thinking<a class="headerlink" href="#what-we-teach-systems-thinking" title="Link to this heading">#</a></h2>
 <section id="beyond-algorithms-system-level-understanding">
-<h3><strong>Beyond Algorithms: System-Level Understanding</strong><a class="headerlink" href="#beyond-algorithms-system-level-understanding" title="Link to this heading">#</a></h3>
+<h3>Beyond Algorithms: System-Level Understanding<a class="headerlink" href="#beyond-algorithms-system-level-understanding" title="Link to this heading">#</a></h3>
 <p><strong>Memory Management:</strong></p>
 <ul class="simple">
 <li><p>Why Adam needs 3× parameter memory (parameters + momentum + variance)</p></li>
@@ -567,7 +565,7 @@ document.write(`
 <section id="target-audience-future-ml-systems-engineers">
 <h2>Target Audience: Future ML Systems Engineers<a class="headerlink" href="#target-audience-future-ml-systems-engineers" title="Link to this heading">#</a></h2>
 <section id="perfect-for">
-<h3><strong>Perfect For:</strong><a class="headerlink" href="#perfect-for" title="Link to this heading">#</a></h3>
+<h3>Perfect For:<a class="headerlink" href="#perfect-for" title="Link to this heading">#</a></h3>
 <p><strong>Computer Science Students</strong></p>
 <ul class="simple">
 <li><p>Going beyond “use PyTorch” to “understand PyTorch”</p></li>
@@ -594,7 +592,7 @@ document.write(`
 </ul>
 </section>
 <section id="career-transformation">
-<h3><strong>Career Transformation:</strong><a class="headerlink" href="#career-transformation" title="Link to this heading">#</a></h3>
+<h3>Career Transformation:<a class="headerlink" href="#career-transformation" title="Link to this heading">#</a></h3>
 <p><strong>Before TinyTorch:</strong> “I can train models with PyTorch”
 <strong>After TinyTorch:</strong> “I can build and optimize ML systems”</p>
 <p>You become the person your team asks:</p>
@@ -610,7 +608,7 @@ document.write(`
 <section id="pedagogical-philosophy-build-use-understand">
 <h2>Pedagogical Philosophy: Build → Use → Understand<a class="headerlink" href="#pedagogical-philosophy-build-use-understand" title="Link to this heading">#</a></h2>
 <section id="build-first">
-<h3><strong>1. Build First</strong><a class="headerlink" href="#build-first" title="Link to this heading">#</a></h3>
+<h3>1. Build First<a class="headerlink" href="#build-first" title="Link to this heading">#</a></h3>
 <p>Every component implemented from scratch:</p>
 <ul class="simple">
 <li><p>Tensors with broadcasting and memory management</p></li>
@@ -620,7 +618,7 @@ document.write(`
 </ul>
 </section>
 <section id="use-immediately">
-<h3><strong>2. Use Immediately</strong><a class="headerlink" href="#use-immediately" title="Link to this heading">#</a></h3>
+<h3>2. Use Immediately<a class="headerlink" href="#use-immediately" title="Link to this heading">#</a></h3>
 <p>No toy examples - real applications:</p>
 <ul class="simple">
 <li><p>Train CNNs on CIFAR-10 (90%+ accuracy achievable)</p></li>
@@ -630,7 +628,7 @@ document.write(`
 </ul>
 </section>
 <section id="understand-systems">
-<h3><strong>3. Understand Systems</strong><a class="headerlink" href="#understand-systems" title="Link to this heading">#</a></h3>
+<h3>3. Understand Systems<a class="headerlink" href="#understand-systems" title="Link to this heading">#</a></h3>
 <p>Connect implementations to production reality:</p>
 <ul class="simple">
 <li><p>How your tensor maps to PyTorch’s memory model</p></li>
@@ -640,7 +638,7 @@ document.write(`
 </ul>
 </section>
 <section id="reflect-on-trade-offs">
-<h3><strong>4. Reflect on Trade-offs</strong><a class="headerlink" href="#reflect-on-trade-offs" title="Link to this heading">#</a></h3>
+<h3>4. Reflect on Trade-offs<a class="headerlink" href="#reflect-on-trade-offs" title="Link to this heading">#</a></h3>
 <p>ML Systems Thinking sections in every module:</p>
 <ul class="simple">
 <li><p>Memory vs compute trade-offs in different architectures</p></li>
@@ -654,7 +652,7 @@ document.write(`
 <section id="unique-value-proposition">
 <h2>Unique Value Proposition<a class="headerlink" href="#unique-value-proposition" title="Link to this heading">#</a></h2>
 <section id="what-makes-tinytorch-different">
-<h3><strong>What Makes TinyTorch Different:</strong><a class="headerlink" href="#what-makes-tinytorch-different" title="Link to this heading">#</a></h3>
+<h3>What Makes TinyTorch Different:<a class="headerlink" href="#what-makes-tinytorch-different" title="Link to this heading">#</a></h3>
 <p><strong>Systems-First Approach</strong></p>
 <ul class="simple">
 <li><p>Not just “how does attention work” but “why does attention scale O(N²) and how do production systems handle this?”</p></li>
@@ -685,7 +683,7 @@ document.write(`
 <section id="learning-outcomes-becoming-an-ml-systems-engineer">
 <h2>Learning Outcomes: Becoming an ML Systems Engineer<a class="headerlink" href="#learning-outcomes-becoming-an-ml-systems-engineer" title="Link to this heading">#</a></h2>
 <section id="technical-mastery">
-<h3><strong>Technical Mastery</strong><a class="headerlink" href="#technical-mastery" title="Link to this heading">#</a></h3>
+<h3>Technical Mastery<a class="headerlink" href="#technical-mastery" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p><strong>Implement any ML paper</strong> from first principles</p></li>
 <li><p><strong>Debug training issues</strong> at the systems level</p></li>
@@ -696,7 +694,7 @@ document.write(`
 </ul>
 </section>
 <section id="systems-understanding">
-<h3><strong>Systems Understanding</strong><a class="headerlink" href="#systems-understanding" title="Link to this heading">#</a></h3>
+<h3>Systems Understanding<a class="headerlink" href="#systems-understanding" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p><strong>Memory management</strong> in ML frameworks</p></li>
 <li><p><strong>Computational complexity</strong> vs real-world performance</p></li>
@@ -706,7 +704,7 @@ document.write(`
 </ul>
 </section>
 <section id="professional-skills">
-<h3><strong>Professional Skills</strong><a class="headerlink" href="#professional-skills" title="Link to this heading">#</a></h3>
+<h3>Professional Skills<a class="headerlink" href="#professional-skills" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p><strong>Test-driven development</strong> for ML systems</p></li>
 <li><p><strong>Performance profiling</strong> and optimization techniques</p></li>
@@ -716,7 +714,7 @@ document.write(`
 </ul>
 </section>
 <section id="career-impact">
-<h3><strong>Career Impact</strong><a class="headerlink" href="#career-impact" title="Link to this heading">#</a></h3>
+<h3>Career Impact<a class="headerlink" href="#career-impact" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p><strong>Technical interviews</strong>: Demonstrate deep ML systems knowledge</p></li>
 <li><p><strong>Job opportunities</strong>: Qualify for ML engineer (not just data scientist) roles</p></li>
@@ -740,7 +738,7 @@ document.write(`
 <h2>Ready to Become an ML Systems Engineer?<a class="headerlink" href="#ready-to-become-an-ml-systems-engineer" title="Link to this heading">#</a></h2>
 <p><strong>TinyTorch transforms ML users into ML builders.</strong></p>
 <p>Stop wondering how frameworks work. Start building them.</p>
-<p><strong><a class="reference internal" href="chapters/00-introduction.html"><span class="std std-doc">Begin Your Journey →</span></a></strong></p>
+<p><strong><a class="reference internal" href="#chapters/00-introduction.md"><span class="xref myst">Begin Your Journey →</span></a></strong></p>
 <hr class="docutils" />
 <p><em>TinyTorch: Because understanding how to build ML systems makes you a more effective ML engineer.</em></p>
 </section>
@@ -786,11 +784,11 @@ document.write(`
       </div>
     </a>
     <a class="right-next"
-       href="checkpoint-system.html"
+       href="kiss-principle.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">🎯 TinyTorch Checkpoint System</p>
+        <p class="prev-next-title">KISS Principle in TinyTorch</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -811,35 +809,35 @@ document.write(`
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-problem-were-solving">The Problem We’re Solving</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#traditional-ml-education"><strong>Traditional ML Education:</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-tinytorch-difference"><strong>The TinyTorch Difference:</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#traditional-ml-education">Traditional ML Education:</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-tinytorch-difference">The TinyTorch Difference:</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-we-teach-systems-thinking">What We Teach: Systems Thinking</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#beyond-algorithms-system-level-understanding"><strong>Beyond Algorithms: System-Level Understanding</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#beyond-algorithms-system-level-understanding">Beyond Algorithms: System-Level Understanding</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#target-audience-future-ml-systems-engineers">Target Audience: Future ML Systems Engineers</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#perfect-for"><strong>Perfect For:</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#career-transformation"><strong>Career Transformation:</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#perfect-for">Perfect For:</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#career-transformation">Career Transformation:</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pedagogical-philosophy-build-use-understand">Pedagogical Philosophy: Build → Use → Understand</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#build-first"><strong>1. Build First</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#use-immediately"><strong>2. Use Immediately</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#understand-systems"><strong>3. Understand Systems</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#reflect-on-trade-offs"><strong>4. Reflect on Trade-offs</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#build-first">1. Build First</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#use-immediately">2. Use Immediately</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#understand-systems">3. Understand Systems</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#reflect-on-trade-offs">4. Reflect on Trade-offs</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unique-value-proposition">Unique Value Proposition</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#what-makes-tinytorch-different"><strong>What Makes TinyTorch Different:</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#what-makes-tinytorch-different">What Makes TinyTorch Different:</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-outcomes-becoming-an-ml-systems-engineer">Learning Outcomes: Becoming an ML Systems Engineer</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#technical-mastery"><strong>Technical Mastery</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#systems-understanding"><strong>Systems Understanding</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#professional-skills"><strong>Professional Skills</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#career-impact"><strong>Career Impact</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#technical-mastery">Technical Mastery</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#systems-understanding">Systems Understanding</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#professional-skills">Professional Skills</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#career-impact">Career Impact</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#success-stories-what-students-say">Success Stories: What Students Say</a></li>

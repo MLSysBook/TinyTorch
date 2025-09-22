@@ -187,10 +187,6 @@
 <li class="toctree-l1"><a class="reference internal" href="classroom-use.html">Classroom Use</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../instructor-guide.html">Instructor Guide</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Course Orientation</span></p>
-<ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../chapters/00-introduction.html">Introduction</a></li>
-</ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Foundation</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../chapters/01-setup.html">0. Setup</a></li>
@@ -225,7 +221,9 @@
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Additional Resources</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../vision.html">TinyTorch Vision</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../kiss-principle.html">KISS Principle</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../checkpoint-system.html">Checkpoint System</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../testing-framework.html">Testing Framework</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../resources.html">Learning Resources</a></li>
 </ul>
 
@@ -441,9 +439,9 @@ document.write(`
                 <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#launch-immediately-0-setup-required">Launch Immediately (0 Setup Required)</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#recommended-exploration-path">Recommended Exploration Path</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#start-here-chapter-1-setup"><strong>Start Here: Chapter 1 - Setup</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#then-try-chapter-3-activations"><strong>Then Try: Chapter 3 - Activations</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#build-up-chapter-4-layers"><strong>Build Up: Chapter 4 - Layers</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#start-here-chapter-1-setup">Start Here: Chapter 1 - Setup</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#then-try-chapter-3-activations">Then Try: Chapter 3 - Activations</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#build-up-chapter-4-layers">Build Up: Chapter 4 - Layers</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#important-limitations">Important Limitations</a></li>
@@ -490,7 +488,7 @@ document.write(`
 <section id="recommended-exploration-path">
 <h2>Recommended Exploration Path<a class="headerlink" href="#recommended-exploration-path" title="Link to this heading">#</a></h2>
 <section id="start-here-chapter-1-setup">
-<h3><strong>Start Here: Chapter 1 - Setup</strong><a class="headerlink" href="#start-here-chapter-1-setup" title="Link to this heading">#</a></h3>
+<h3>Start Here: Chapter 1 - Setup<a class="headerlink" href="#start-here-chapter-1-setup" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p>Understand the TinyTorch development workflow</p></li>
 <li><p>Get familiar with the educational approach</p></li>
@@ -499,7 +497,7 @@ document.write(`
 <p><strong><a class="reference internal" href="../chapters/01-setup.html"><span class="std std-doc">Launch Setup Chapter</span></a></strong></p>
 </section>
 <section id="then-try-chapter-3-activations">
-<h3><strong>Then Try: Chapter 3 - Activations</strong><a class="headerlink" href="#then-try-chapter-3-activations" title="Link to this heading">#</a></h3>
+<h3>Then Try: Chapter 3 - Activations<a class="headerlink" href="#then-try-chapter-3-activations" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p>Implement your first ML function (ReLU)</p></li>
 <li><p>See immediate visual results</p></li>
@@ -508,7 +506,7 @@ document.write(`
 <p><strong><a class="reference internal" href="../chapters/03-activations.html"><span class="std std-doc">Launch Activations Chapter</span></a></strong></p>
 </section>
 <section id="build-up-chapter-4-layers">
-<h3><strong>Build Up: Chapter 4 - Layers</strong><a class="headerlink" href="#build-up-chapter-4-layers" title="Link to this heading">#</a></h3>
+<h3>Build Up: Chapter 4 - Layers<a class="headerlink" href="#build-up-chapter-4-layers" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p>Create the building blocks of neural networks</p></li>
 <li><p>Combine your ReLU with matrix operations</p></li>
@@ -618,9 +616,9 @@ document.write(`
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#launch-immediately-0-setup-required">Launch Immediately (0 Setup Required)</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#recommended-exploration-path">Recommended Exploration Path</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#start-here-chapter-1-setup"><strong>Start Here: Chapter 1 - Setup</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#then-try-chapter-3-activations"><strong>Then Try: Chapter 3 - Activations</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#build-up-chapter-4-layers"><strong>Build Up: Chapter 4 - Layers</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#start-here-chapter-1-setup">Start Here: Chapter 1 - Setup</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#then-try-chapter-3-activations">Then Try: Chapter 3 - Activations</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#build-up-chapter-4-layers">Build Up: Chapter 4 - Layers</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#important-limitations">Important Limitations</a></li>

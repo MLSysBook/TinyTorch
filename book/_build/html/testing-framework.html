@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>📚 Additional Learning Resources &#8212; TinyTorch</title>
+    <title>Testing Framework &#8212; TinyTorch</title>
   
   
   
@@ -58,10 +58,11 @@
     <script async="async" src="_static/sphinx-thebe.js?v=c100c467"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'resources';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'testing-framework';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="prev" title="Testing Framework" href="testing-framework.html" />
+    <link rel="next" title="📚 Additional Learning Resources" href="resources.html" />
+    <link rel="prev" title="🎯 TinyTorch Checkpoint System" href="checkpoint-system.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -222,8 +223,8 @@
 <li class="toctree-l1"><a class="reference internal" href="vision.html">TinyTorch Vision</a></li>
 <li class="toctree-l1"><a class="reference internal" href="kiss-principle.html">KISS Principle</a></li>
 <li class="toctree-l1"><a class="reference internal" href="checkpoint-system.html">Checkpoint System</a></li>
-<li class="toctree-l1"><a class="reference internal" href="testing-framework.html">Testing Framework</a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">Learning Resources</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Testing Framework</a></li>
+<li class="toctree-l1"><a class="reference internal" href="resources.html">Learning Resources</a></li>
 </ul>
 
     </div>
@@ -295,7 +296,7 @@
       
       
       
-      <li><a href="https://github.com/mlsysbook/TinyTorch/edit/main/book/resources.md" target="_blank"
+      <li><a href="https://github.com/mlsysbook/TinyTorch/edit/main/book/testing-framework.md" target="_blank"
    class="btn btn-sm btn-source-edit-button dropdown-item"
    title="Suggest edit"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -312,7 +313,7 @@
       
       
       
-      <li><a href="https://github.com/mlsysbook/TinyTorch/issues/new?title=Issue%20on%20page%20%2Fresources.html&body=Your%20issue%20content%20here." target="_blank"
+      <li><a href="https://github.com/mlsysbook/TinyTorch/issues/new?title=Issue%20on%20page%20%2Ftesting-framework.html&body=Your%20issue%20content%20here." target="_blank"
    class="btn btn-sm btn-source-issues-button dropdown-item"
    title="Open an issue"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -342,7 +343,7 @@
       
       
       
-      <li><a href="_sources/resources.md" target="_blank"
+      <li><a href="_sources/testing-framework.md" target="_blank"
    class="btn btn-sm btn-download-source-button dropdown-item"
    title="Download source file"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -426,7 +427,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>📚 Additional Learning Resources</h1>
+    <h1>Testing Framework</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -436,22 +437,35 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#academic-courses">🎓 Academic Courses</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#machine-learning-systems">Machine Learning Systems</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#deep-learning-foundations">Deep Learning Foundations</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#comprehensive-testing-with-tinytorch">Comprehensive Testing with TinyTorch</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#quick-start-run-all-tests">Quick Start: Run All Tests</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#testing-levels">Testing Levels</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#module-level-testing">1. Module-Level Testing</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#integration-testing">2. Integration Testing</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#checkpoint-testing">3. Checkpoint Testing</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example-validation">4. Example Validation</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#recommended-books">📖 Recommended Books</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#systems-engineering">Systems &amp; Engineering</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#implementation-theory">Implementation &amp; Theory</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#test-architecture">Test Architecture</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#progressive-testing-pattern">Progressive Testing Pattern</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#test-files-organization">Test Files Organization</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#alternative-implementations">🛠️ Alternative Implementations</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minimal-frameworks">Minimal Frameworks</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#test-results-interpretation">Test Results Interpretation</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#health-status">Health Status</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#module-status-indicators">Module Status Indicators</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#production-internals">🏭 Production Internals</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#framework-deep-dives">Framework Deep Dives</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#best-practices">Best Practices</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#during-development">During Development</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#before-commits">Before Commits</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#troubleshooting-failed-tests">Troubleshooting Failed Tests</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#testing-philosophy">Testing Philosophy</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#kiss-principle-in-testing">KISS Principle in Testing</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#systems-thinking">Systems Thinking</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#educational-value">Educational Value</a></li>
 </ul>
 </li>
 </ul>
@@ -465,87 +479,167 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="additional-learning-resources">
-<h1>📚 Additional Learning Resources<a class="headerlink" href="#additional-learning-resources" title="Link to this heading">#</a></h1>
-<p><strong>Complement your TinyTorch journey with these carefully selected resources.</strong></p>
-<p>While TinyTorch teaches you to build complete ML systems from scratch, these resources provide broader context, alternative perspectives, and production tools.</p>
-<hr class="docutils" />
-<section id="academic-courses">
-<h2>🎓 Academic Courses<a class="headerlink" href="#academic-courses" title="Link to this heading">#</a></h2>
-<section id="machine-learning-systems">
-<h3>Machine Learning Systems<a class="headerlink" href="#machine-learning-systems" title="Link to this heading">#</a></h3>
+  <section id="testing-framework">
+<h1>Testing Framework<a class="headerlink" href="#testing-framework" title="Link to this heading">#</a></h1>
+<section id="comprehensive-testing-with-tinytorch">
+<h2>Comprehensive Testing with TinyTorch<a class="headerlink" href="#comprehensive-testing-with-tinytorch" title="Link to this heading">#</a></h2>
+<p>TinyTorch includes a robust testing framework that ensures all modules work correctly and integrate seamlessly. The testing system provides multiple levels of validation from individual module testing to full system integration.</p>
+</section>
+<section id="quick-start-run-all-tests">
+<h2>Quick Start: Run All Tests<a class="headerlink" href="#quick-start-run-all-tests" title="Link to this heading">#</a></h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Run comprehensive test suite (recommended)</span>
+tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--comprehensive
+
+<span class="c1"># Output shows module tests, integration tests, and example validation</span>
+<span class="c1"># ✅ Overall TinyTorch Health: 100.0%</span>
+</pre></div>
+</div>
+</section>
+<section id="testing-levels">
+<h2>Testing Levels<a class="headerlink" href="#testing-levels" title="Link to this heading">#</a></h2>
+<section id="module-level-testing">
+<h3>1. Module-Level Testing<a class="headerlink" href="#module-level-testing" title="Link to this heading">#</a></h3>
+<p>Test individual components in isolation:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Test specific modules</span>
+tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--module<span class="w"> </span>tensor
+tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--module<span class="w"> </span>training
+tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--module<span class="w"> </span>autograd
+
+<span class="c1"># All modules have dedicated test suites</span>
+python<span class="w"> </span>tests/run_all_modules.py
+</pre></div>
+</div>
+</section>
+<section id="integration-testing">
+<h3>2. Integration Testing<a class="headerlink" href="#integration-testing" title="Link to this heading">#</a></h3>
+<p>Verify modules work together correctly:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Run integration tests</span>
+python<span class="w"> </span>tests/integration/run_integration_tests.py
+
+<span class="c1"># Test module dependencies</span>
+python<span class="w"> </span>tests/integration/test_module_dependencies.py
+</pre></div>
+</div>
+</section>
+<section id="checkpoint-testing">
+<h3>3. Checkpoint Testing<a class="headerlink" href="#checkpoint-testing" title="Link to this heading">#</a></h3>
+<p>Validate learning progression capabilities:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Test specific capabilities</span>
+tito<span class="w"> </span>checkpoint<span class="w"> </span><span class="nb">test</span><span class="w"> </span><span class="m">01</span><span class="w">  </span><span class="c1"># Foundation capabilities</span>
+tito<span class="w"> </span>checkpoint<span class="w"> </span><span class="nb">test</span><span class="w"> </span><span class="m">10</span><span class="w">  </span><span class="c1"># Training capabilities</span>
+
+<span class="c1"># Run all checkpoint tests</span>
+<span class="k">for</span><span class="w"> </span>i<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="o">{</span><span class="m">00</span>..15<span class="o">}</span><span class="p">;</span><span class="w"> </span><span class="k">do</span><span class="w"> </span>tito<span class="w"> </span>checkpoint<span class="w"> </span><span class="nb">test</span><span class="w"> </span><span class="nv">$i</span><span class="p">;</span><span class="w"> </span><span class="k">done</span>
+</pre></div>
+</div>
+</section>
+<section id="example-validation">
+<h3>4. Example Validation<a class="headerlink" href="#example-validation" title="Link to this heading">#</a></h3>
+<p>Ensure real-world examples work:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Example tests are included in comprehensive testing</span>
+<span class="c1"># Validates XOR training and CIFAR-10 baseline performance</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="test-architecture">
+<h2>Test Architecture<a class="headerlink" href="#test-architecture" title="Link to this heading">#</a></h2>
+<section id="progressive-testing-pattern">
+<h3>Progressive Testing Pattern<a class="headerlink" href="#progressive-testing-pattern" title="Link to this heading">#</a></h3>
+<p>Every module follows the same testing pattern:</p>
 <ul class="simple">
-<li><p><strong><a class="reference external" href="https://stanford-cs329s.github.io/">CS 329S: Machine Learning Systems Design</a></strong> (Stanford)<br />
-<em>Production ML systems, infrastructure, and deployment at scale</em></p></li>
-<li><p><strong><a class="reference external" href="https://hanlab.mit.edu/courses/2024-fall-65940">CS 6.S965: TinyML and Efficient Deep Learning</a></strong> (MIT)<br />
-<em>Edge computing, model compression, and efficient ML algorithms</em></p></li>
-<li><p><strong><a class="reference external" href="https://sites.google.com/g.harvard.edu/tinyml/home">CS 249r: Tiny Machine Learning</a></strong> (Harvard)<br />
-<em>TinyML systems, edge AI, and resource-constrained machine learning</em></p></li>
+<li><p><strong>Core functionality tests</strong>: Basic operations work correctly</p></li>
+<li><p><strong>Integration tests</strong>: Module exports and imports properly</p></li>
+<li><p><strong>Progressive tests</strong>: Dependencies on previous modules work</p></li>
+<li><p><strong>Capability tests</strong>: Real-world usage scenarios pass</p></li>
 </ul>
 </section>
-<section id="deep-learning-foundations">
-<h3>Deep Learning Foundations<a class="headerlink" href="#deep-learning-foundations" title="Link to this heading">#</a></h3>
+<section id="test-files-organization">
+<h3>Test Files Organization<a class="headerlink" href="#test-files-organization" title="Link to this heading">#</a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>tests/
+├── checkpoints/           # Capability validation tests
+├── integration/           # Cross-module integration tests
+├── module_XX/            # Individual module test suites
+└── run_all_modules.py    # Master test runner
+</pre></div>
+</div>
+</section>
+</section>
+<section id="test-results-interpretation">
+<h2>Test Results Interpretation<a class="headerlink" href="#test-results-interpretation" title="Link to this heading">#</a></h2>
+<section id="health-status">
+<h3>Health Status<a class="headerlink" href="#health-status" title="Link to this heading">#</a></h3>
 <ul class="simple">
-<li><p><strong><a class="reference external" href="http://cs231n.stanford.edu/">CS 231n: Convolutional Neural Networks</a></strong> (Stanford)<br />
-<em>Computer vision and CNN architectures - complements TinyTorch spatial modules</em></p></li>
-<li><p><strong><a class="reference external" href="http://web.stanford.edu/class/cs224n/">CS 224n: Natural Language Processing</a></strong> (Stanford)<br />
-<em>NLP and transformers - perfect follow-up to TinyTorch attention module</em></p></li>
+<li><p><strong>100.0%</strong>: All tests passing, framework fully functional</p></li>
+<li><p><strong>95%+</strong>: Minor issues, core functionality intact</p></li>
+<li><p><strong>90%+</strong>: Some failing tests, investigate specific modules</p></li>
+<li><p><strong>&lt;90%</strong>: Significant issues, check recent changes</p></li>
+</ul>
+</section>
+<section id="module-status-indicators">
+<h3>Module Status Indicators<a class="headerlink" href="#module-status-indicators" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>✅ <strong>Passing</strong>: Module works correctly</p></li>
+<li><p>⚠️ <strong>Warning</strong>: Minor issues detected</p></li>
+<li><p>❌ <strong>Failing</strong>: Module has errors requiring fixes</p></li>
 </ul>
 </section>
 </section>
-<hr class="docutils" />
-<section id="recommended-books">
-<h2>📖 Recommended Books<a class="headerlink" href="#recommended-books" title="Link to this heading">#</a></h2>
-<section id="systems-engineering">
-<h3>Systems &amp; Engineering<a class="headerlink" href="#systems-engineering" title="Link to this heading">#</a></h3>
+<section id="best-practices">
+<h2>Best Practices<a class="headerlink" href="#best-practices" title="Link to this heading">#</a></h2>
+<section id="during-development">
+<h3>During Development<a class="headerlink" href="#during-development" title="Link to this heading">#</a></h3>
+<ol class="arabic simple">
+<li><p><strong>Test early and often</strong>: Run <code class="docutils literal notranslate"><span class="pre">tito</span> <span class="pre">test</span> <span class="pre">--module</span> <span class="pre">X</span></code> after each change</p></li>
+<li><p><strong>Use progressive testing</strong>: Ensure dependencies work before building on them</p></li>
+<li><p><strong>Validate with examples</strong>: Real usage should work, not just unit tests</p></li>
+</ol>
+</section>
+<section id="before-commits">
+<h3>Before Commits<a class="headerlink" href="#before-commits" title="Link to this heading">#</a></h3>
+<ol class="arabic simple">
+<li><p><strong>Run comprehensive tests</strong>: <code class="docutils literal notranslate"><span class="pre">tito</span> <span class="pre">test</span> <span class="pre">--comprehensive</span></code></p></li>
+<li><p><strong>Check all modules pass</strong>: Verify 100% health status</p></li>
+<li><p><strong>Test checkpoint progression</strong>: Ensure learning path works</p></li>
+</ol>
+</section>
+<section id="troubleshooting-failed-tests">
+<h3>Troubleshooting Failed Tests<a class="headerlink" href="#troubleshooting-failed-tests" title="Link to this heading">#</a></h3>
+<ol class="arabic simple">
+<li><p><strong>Check specific module</strong>: <code class="docutils literal notranslate"><span class="pre">tito</span> <span class="pre">test</span> <span class="pre">--module</span> <span class="pre">failing_module</span></code></p></li>
+<li><p><strong>Review integration</strong>: Look for dependency issues</p></li>
+<li><p><strong>Validate exports</strong>: Ensure <code class="docutils literal notranslate"><span class="pre">tito</span> <span class="pre">module</span> <span class="pre">complete</span></code> works</p></li>
+<li><p><strong>Check environment</strong>: Run <code class="docutils literal notranslate"><span class="pre">tito</span> <span class="pre">system</span> <span class="pre">doctor</span></code></p></li>
+</ol>
+</section>
+</section>
+<section id="testing-philosophy">
+<h2>Testing Philosophy<a class="headerlink" href="#testing-philosophy" title="Link to this heading">#</a></h2>
+<p>The TinyTorch testing framework embodies our core principles:</p>
+<section id="kiss-principle-in-testing">
+<h3>KISS Principle in Testing<a class="headerlink" href="#kiss-principle-in-testing" title="Link to this heading">#</a></h3>
 <ul class="simple">
-<li><p><strong><a class="reference external" href="https://mlsysbook.ai">Machine Learning Systems</a></strong> by Prof. Vijay Janapa Reddi (Harvard)<br />
-<em>Comprehensive systems perspective on ML engineering and optimization - the perfect companion to TinyTorch</em></p></li>
-<li><p><strong><a class="reference external" href="https://www.oreilly.com/library/view/designing-machine-learning/9781098107956/">Designing Machine Learning Systems</a></strong> by Chip Huyen<br />
-<em>Production ML engineering, data pipelines, and system design</em></p></li>
-<li><p><strong><a class="reference external" href="https://www.mlebook.com/wiki/doku.php">Machine Learning Engineering</a></strong> by Andriy Burkov<br />
-<em>End-to-end ML project lifecycle and best practices</em></p></li>
+<li><p><strong>Simple test patterns</strong>: Every module follows the same structure</p></li>
+<li><p><strong>Clear feedback</strong>: Tests provide specific, actionable error messages</p></li>
+<li><p><strong>Minimal complexity</strong>: Tests focus on essential functionality</p></li>
 </ul>
 </section>
-<section id="implementation-theory">
-<h3>Implementation &amp; Theory<a class="headerlink" href="#implementation-theory" title="Link to this heading">#</a></h3>
+<section id="systems-thinking">
+<h3>Systems Thinking<a class="headerlink" href="#systems-thinking" title="Link to this heading">#</a></h3>
 <ul class="simple">
-<li><p><strong><a class="reference external" href="https://www.deeplearningbook.org/">Deep Learning</a></strong> by Ian Goodfellow, Yoshua Bengio, Aaron Courville<br />
-<em>Mathematical foundations - the theory behind what you implement in TinyTorch</em></p></li>
-<li><p><strong><a class="reference external" href="https://www.oreilly.com/library/view/hands-on-machine-learning/9781098125967/">Hands-On Machine Learning</a></strong> by Aurélien Géron<br />
-<em>Practical implementations using established frameworks</em></p></li>
+<li><p><strong>Integration focus</strong>: Tests verify components work together</p></li>
+<li><p><strong>Real-world validation</strong>: Examples demonstrate practical usage</p></li>
+<li><p><strong>Performance awareness</strong>: Tests include basic performance checks</p></li>
 </ul>
 </section>
-</section>
-<hr class="docutils" />
-<section id="alternative-implementations">
-<h2>🛠️ Alternative Implementations<a class="headerlink" href="#alternative-implementations" title="Link to this heading">#</a></h2>
-<p><strong>Different approaches to building ML systems from scratch - see how others tackle the same challenge:</strong></p>
-<section id="minimal-frameworks">
-<h3>Minimal Frameworks<a class="headerlink" href="#minimal-frameworks" title="Link to this heading">#</a></h3>
+<section id="educational-value">
+<h3>Educational Value<a class="headerlink" href="#educational-value" title="Link to this heading">#</a></h3>
 <ul class="simple">
-<li><p><strong><a class="reference external" href="https://github.com/karpathy/micrograd">Micrograd</a></strong> by Andrej Karpathy<br />
-<em>Minimal autograd engine in 100 lines. <strong>Micrograd shows you the math, TinyTorch shows you the systems.</strong></em></p></li>
-<li><p><strong><a class="reference external" href="https://github.com/geohot/tinygrad">Tinygrad</a></strong> by George Hotz<br />
-<em>Performance-focused educational framework. <strong>Tinygrad optimizes for speed, TinyTorch optimizes for learning.</strong></em></p></li>
-<li><p><strong><a class="reference external" href="https://nnfs.io/">Neural Networks from Scratch</a></strong> by Harrison Kinsley<br />
-<em>Math-heavy implementation approach. <strong>NNFS focuses on algorithms, TinyTorch focuses on systems engineering.</strong></em></p></li>
+<li><p><strong>Learning verification</strong>: Tests confirm understanding, not just implementation</p></li>
+<li><p><strong>Progressive validation</strong>: Capabilities build on each other systematically</p></li>
+<li><p><strong>Immediate feedback</strong>: Students know instantly if their code works</p></li>
 </ul>
-</section>
-</section>
-<hr class="docutils" />
-<section id="production-internals">
-<h2>🏭 Production Internals<a class="headerlink" href="#production-internals" title="Link to this heading">#</a></h2>
-<section id="framework-deep-dives">
-<h3>Framework Deep Dives<a class="headerlink" href="#framework-deep-dives" title="Link to this heading">#</a></h3>
-<ul class="simple">
-<li><p><strong><a class="reference external" href="http://blog.ezyang.com/2019/05/pytorch-internals/">PyTorch Internals</a></strong> by Edward Yang<br />
-<em>How PyTorch actually works under the hood - a great read as see what you built in TinyTorch corresponds to the real PyTorch</em></p></li>
-<li><p><strong><a class="reference external" href="https://pytorch.org/docs/stable/notes/extending.html">PyTorch Documentation: Extending PyTorch</a></strong><br />
-<em>Custom operators and autograd functions - apply your TinyTorch knowledge</em></p></li>
-</ul>
-<hr class="docutils" />
-<p><em>Building ML systems from scratch gives you the implementation foundation most ML engineers lack. These resources help you apply that knowledge to broader systems and production environments.</em> 🚀</p>
+<p>This testing framework ensures that your TinyTorch implementation is not just educational, but production-ready and reliable.</p>
 </section>
 </section>
 </section>
@@ -581,13 +675,22 @@ document.write(`
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="testing-framework.html"
+       href="checkpoint-system.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Testing Framework</p>
+        <p class="prev-next-title">🎯 TinyTorch Checkpoint System</p>
       </div>
+    </a>
+    <a class="right-next"
+       href="resources.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">📚 Additional Learning Resources</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
     </a>
 </div>
                 </footer>
@@ -605,22 +708,35 @@ document.write(`
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#academic-courses">🎓 Academic Courses</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#machine-learning-systems">Machine Learning Systems</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#deep-learning-foundations">Deep Learning Foundations</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#comprehensive-testing-with-tinytorch">Comprehensive Testing with TinyTorch</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#quick-start-run-all-tests">Quick Start: Run All Tests</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#testing-levels">Testing Levels</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#module-level-testing">1. Module-Level Testing</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#integration-testing">2. Integration Testing</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#checkpoint-testing">3. Checkpoint Testing</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example-validation">4. Example Validation</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#recommended-books">📖 Recommended Books</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#systems-engineering">Systems &amp; Engineering</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#implementation-theory">Implementation &amp; Theory</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#test-architecture">Test Architecture</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#progressive-testing-pattern">Progressive Testing Pattern</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#test-files-organization">Test Files Organization</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#alternative-implementations">🛠️ Alternative Implementations</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minimal-frameworks">Minimal Frameworks</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#test-results-interpretation">Test Results Interpretation</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#health-status">Health Status</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#module-status-indicators">Module Status Indicators</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#production-internals">🏭 Production Internals</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#framework-deep-dives">Framework Deep Dives</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#best-practices">Best Practices</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#during-development">During Development</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#before-commits">Before Commits</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#troubleshooting-failed-tests">Troubleshooting Failed Tests</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#testing-philosophy">Testing Philosophy</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#kiss-principle-in-testing">KISS Principle in Testing</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#systems-thinking">Systems Thinking</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#educational-value">Educational Value</a></li>
 </ul>
 </li>
 </ul>
