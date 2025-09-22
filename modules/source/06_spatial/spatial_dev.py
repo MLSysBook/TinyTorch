@@ -440,20 +440,590 @@ print("📈 Progress: Convolution operation ✓, Conv2D layer ✓")
 
 # %% [markdown]
 """
-## Step 3: Flattening for Dense Layers
+## Step 3: Multi-Channel Conv2D - From Grayscale to RGB
+
+### What are Multi-Channel Convolutions?
+**Multi-channel convolutions** process images with multiple channels (like RGB) and produce multiple output feature maps using multiple filters.
+
+### Why Multi-Channel Convolutions Matter
+- **RGB Images**: Real images have 3 channels (Red, Green, Blue)
+- **Feature Maps**: Each filter learns different patterns
+- **Depth Processing**: Handle both input channels and output filters
+- **Production Reality**: CNNs always use multi-channel convolutions
+
+### Mathematical Foundation
+For input shape `(batch, in_channels, height, width)` and filters `(out_channels, in_channels, kernel_h, kernel_w)`:
+
+```
+Input: (batch, 3, 32, 32)        # RGB CIFAR-10 images  
+Filters: (32, 3, 3, 3)           # 32 filters, each 3x3x3
+Output: (batch, 32, 30, 30)      # 32 feature maps, each 30x30
+```
+
+Each output feature map is computed by:
+1. **Channel mixing**: Each filter processes ALL input channels
+2. **Spatial convolution**: Applied across height and width  
+3. **Summation**: Sum across input channels for each output pixel
+
+### Systems Insight: Parameter Scaling
+- **Single channel**: 1 filter = K×K parameters
+- **Multi-channel**: 1 filter = in_channels × K×K parameters  
+- **Multiple filters**: out_channels × in_channels × K×K total parameters
+- **Memory impact**: Parameters grow linearly with channels
+
+Example: 32 filters of size 3×3 on RGB input = 32 × 3 × 3 × 3 = 864 parameters
+"""
+
+# %% nbgrader={"grade": false, "grade_id": "multi-channel-conv2d", "locked": false, "schema_version": 3, "solution": true, "task": false}
+#| export
+class MultiChannelConv2D:
+    """
+    Multi-channel 2D Convolutional Layer supporting RGB images and multiple filters.
+    
+    Processes inputs with multiple channels (like RGB) and outputs multiple feature maps.
+    This is the realistic convolution used in production computer vision systems.
+    """
+    
+    def __init__(self, in_channels: int, out_channels: int, kernel_size: Tuple[int, int], bias: bool = True):
+        """
+        Initialize multi-channel Conv2D layer.
+        
+        Args:
+            in_channels: Number of input channels (e.g., 3 for RGB)
+            out_channels: Number of output feature maps (number of filters)
+            kernel_size: (kH, kW) size of each filter
+            bias: Whether to include bias terms
+            
+        TODO: Initialize weights and bias for multi-channel convolution.
+        
+        APPROACH:
+        1. Store layer parameters (in_channels, out_channels, kernel_size, bias)
+        2. Initialize weight tensor: shape (out_channels, in_channels, kH, kW)
+        3. Use He initialization: std = sqrt(2 / (in_channels * kH * kW))
+        4. Initialize bias if enabled: shape (out_channels,)
+        
+        LEARNING CONNECTIONS:
+        - **Production CNNs**: This matches PyTorch's nn.Conv2d parameter structure
+        - **Memory Scaling**: Parameters = out_channels × in_channels × kH × kW  
+        - **He Initialization**: Maintains activation variance through deep networks
+        - **Feature Learning**: Each filter learns different patterns across all input channels
+        
+        EXAMPLE:
+        # For CIFAR-10 RGB images (3 channels) → 32 feature maps
+        conv = MultiChannelConv2D(in_channels=3, out_channels=32, kernel_size=(3, 3))
+        # Creates weights: shape (32, 3, 3, 3) = 864 parameters
+        
+        HINTS:
+        - Weight shape: (out_channels, in_channels, kernel_height, kernel_width)
+        - He initialization: np.random.randn(...) * np.sqrt(2.0 / (in_channels * kH * kW))
+        - Bias shape: (out_channels,) initialized to small values
+        """
+        ### BEGIN SOLUTION
+        self.in_channels = in_channels
+        self.out_channels = out_channels
+        self.kernel_size = kernel_size
+        self.use_bias = bias
+        
+        kH, kW = kernel_size
+        
+        # He initialization for weights
+        # Shape: (out_channels, in_channels, kernel_height, kernel_width)
+        fan_in = in_channels * kH * kW
+        std = np.sqrt(2.0 / fan_in)
+        self.weights = np.random.randn(out_channels, in_channels, kH, kW).astype(np.float32) * std
+        
+        # Initialize bias
+        if bias:
+            self.bias = np.zeros(out_channels, dtype=np.float32)
+        else:
+            self.bias = None
+        ### END SOLUTION
+    
+    def forward(self, x):
+        """
+        Forward pass through multi-channel Conv2D layer.
+        
+        Args:
+            x: Input tensor with shape (batch_size, in_channels, H, W) or (in_channels, H, W)
+        Returns:
+            Output tensor with shape (batch_size, out_channels, out_H, out_W) or (out_channels, out_H, out_W)
+        """
+        # Handle different input shapes
+        if len(x.shape) == 3:  # Single image: (in_channels, H, W)
+            input_data = x.data[None, ...]  # Add batch dimension
+            single_image = True
+        else:  # Batch: (batch_size, in_channels, H, W)
+            input_data = x.data
+            single_image = False
+        
+        batch_size, in_channels, H, W = input_data.shape
+        kH, kW = self.kernel_size
+        
+        # Validate input channels
+        assert in_channels == self.in_channels, f"Expected {self.in_channels} input channels, got {in_channels}"
+        
+        # Calculate output dimensions
+        out_H = H - kH + 1
+        out_W = W - kW + 1
+        
+        # Initialize output
+        output = np.zeros((batch_size, self.out_channels, out_H, out_W), dtype=np.float32)
+        
+        # Perform convolution for each batch item and output channel
+        for b in range(batch_size):
+            for out_c in range(self.out_channels):
+                # Get the filter for this output channel
+                filter_weights = self.weights[out_c]  # Shape: (in_channels, kH, kW)
+                
+                # Convolve across all input channels
+                for in_c in range(in_channels):
+                    input_channel = input_data[b, in_c]  # Shape: (H, W)
+                    filter_channel = filter_weights[in_c]  # Shape: (kH, kW)
+                    
+                    # Perform 2D convolution for this channel
+                    for i in range(out_H):
+                        for j in range(out_W):
+                            # Extract patch and compute dot product
+                            patch = input_channel[i:i+kH, j:j+kW]
+                            output[b, out_c, i, j] += np.sum(patch * filter_channel)
+                
+                # Add bias if enabled
+                if self.use_bias:
+                    output[b, out_c] += self.bias[out_c]
+        
+        # Remove batch dimension if input was single image
+        if single_image:
+            output = output[0]
+        
+        return Tensor(output)
+    
+    def __call__(self, x):
+        """Make layer callable: layer(x) same as layer.forward(x)"""
+        return self.forward(x)
+
+# %% [markdown]
+"""
+### 🧪 Unit Test: Multi-Channel Conv2D Layer
+
+Let us test your multi-channel Conv2D implementation! This handles RGB images and multiple filters like production CNNs.
+
+**This is a unit test** - it tests the MultiChannelConv2D class in isolation.
+"""
+
+# %% nbgrader={"grade": true, "grade_id": "test-multi-channel-conv2d-immediate", "locked": true, "points": 15, "schema_version": 3, "solution": false, "task": false}
+# Test multi-channel Conv2D layer immediately after implementation
+print("🔬 Unit Test: Multi-Channel Conv2D Layer...")
+
+# Test 1: RGB to feature maps (CIFAR-10 scenario)
+try:
+    # Create layer: 3 RGB channels → 8 feature maps
+    conv_rgb = MultiChannelConv2D(in_channels=3, out_channels=8, kernel_size=(3, 3))
+    
+    print(f"Multi-channel Conv2D created:")
+    print(f"  Input channels: {conv_rgb.in_channels}")
+    print(f"  Output channels: {conv_rgb.out_channels}")
+    print(f"  Kernel size: {conv_rgb.kernel_size}")
+    print(f"  Weight shape: {conv_rgb.weights.shape}")
+    
+    # Verify weight initialization
+    assert conv_rgb.weights.shape == (8, 3, 3, 3), f"Weight shape should be (8, 3, 3, 3), got {conv_rgb.weights.shape}"
+    assert not np.allclose(conv_rgb.weights, 0), "Weights should not be all zeros"
+    assert conv_rgb.bias.shape == (8,), f"Bias shape should be (8,), got {conv_rgb.bias.shape}"
+    print("✅ Multi-channel layer initialization successful")
+    
+    # Test with RGB image (simulated CIFAR-10 patch)
+    rgb_image = Tensor(np.random.randn(3, 8, 8))  # 3 channels, 8x8 image
+    print(f"RGB input shape: {rgb_image.shape}")
+    
+    feature_maps = conv_rgb(rgb_image)
+    print(f"Feature maps shape: {feature_maps.shape}")
+    
+    # Verify output shape
+    expected_shape = (8, 6, 6)  # 8 channels, 8-3+1=6 spatial dims
+    assert feature_maps.shape == expected_shape, f"Output shape should be {expected_shape}, got {feature_maps.shape}"
+    assert isinstance(feature_maps, Tensor), "Output should be a Tensor"
+    print("✅ RGB convolution test passed")
+    
+except Exception as e:
+    print(f"❌ RGB convolution test failed: {e}")
+    raise
+
+# Test 2: Batch processing
+try:
+    # Test with batch of RGB images
+    batch_rgb = Tensor(np.random.randn(4, 3, 10, 10))  # 4 images, 3 channels, 10x10
+    batch_output = conv_rgb(batch_rgb)
+    
+    expected_batch_shape = (4, 8, 8, 8)  # 4 images, 8 channels, 10-3+1=8 spatial
+    assert batch_output.shape == expected_batch_shape, f"Batch output shape should be {expected_batch_shape}, got {batch_output.shape}"
+    print("✅ Batch processing test passed")
+    
+except Exception as e:
+    print(f"❌ Batch processing test failed: {e}")
+    raise
+
+# Test 3: Different channel configurations
+try:
+    # Test 1→16 channels (grayscale to features)
+    conv_grayscale = MultiChannelConv2D(in_channels=1, out_channels=16, kernel_size=(5, 5))
+    gray_image = Tensor(np.random.randn(1, 12, 12))  # 1 channel, 12x12
+    gray_features = conv_grayscale(gray_image)
+    
+    expected_gray_shape = (16, 8, 8)  # 16 channels, 12-5+1=8 spatial
+    assert gray_features.shape == expected_gray_shape, f"Grayscale output should be {expected_gray_shape}, got {gray_features.shape}"
+    print("✅ Grayscale convolution test passed")
+    
+    # Test 32→64 channels (feature maps to more feature maps)
+    conv_deep = MultiChannelConv2D(in_channels=32, out_channels=64, kernel_size=(3, 3))
+    deep_features = Tensor(np.random.randn(32, 6, 6))  # 32 channels, 6x6
+    deeper_features = conv_deep(deep_features)
+    
+    expected_deep_shape = (64, 4, 4)  # 64 channels, 6-3+1=4 spatial
+    assert deeper_features.shape == expected_deep_shape, f"Deep features should be {expected_deep_shape}, got {deeper_features.shape}"
+    print("✅ Deep feature convolution test passed")
+    
+except Exception as e:
+    print(f"❌ Different channel configurations test failed: {e}")
+    raise
+
+# Test 4: Parameter counting
+try:
+    # Verify parameter count scaling
+    params_3_to_8 = conv_rgb.weights.size + (conv_rgb.bias.size if conv_rgb.use_bias else 0)
+    expected_params = (8 * 3 * 3 * 3) + 8  # weights + bias
+    assert params_3_to_8 == expected_params, f"Parameter count should be {expected_params}, got {params_3_to_8}"
+    
+    print(f"Parameter scaling verification:")
+    print(f"  3→8 channels, 3x3 kernel: {params_3_to_8} parameters")
+    print(f"  Breakdown: {8*3*3*3} weights + {8} bias = {expected_params}")
+    print("✅ Parameter counting test passed")
+    
+except Exception as e:
+    print(f"❌ Parameter counting test failed: {e}")
+    raise
+
+# Show multi-channel behavior
+print("🎯 Multi-channel Conv2D behavior:")
+print("   Processes multiple input channels (RGB, feature maps)")
+print("   Produces multiple output feature maps")
+print("   Each filter mixes information across ALL input channels")
+print("   Parameter count = out_channels × in_channels × kernel_h × kernel_w")
+print("📈 Progress: Single-channel ✓, Multi-channel ✓")
+
+# %% [markdown]
+"""
+### 🔧 Memory Analysis: Multi-Channel Parameter Scaling
+
+Let us analyze how memory requirements scale with channels and understand the trade-offs.
+"""
+
+# %% nbgrader={"grade": false, "grade_id": "multi-channel-memory-analysis", "locked": false, "schema_version": 3, "solution": false, "task": false}
+def analyze_conv_memory_scaling():
+    """Analyze memory requirements for different channel configurations."""
+    print("🔍 MULTI-CHANNEL MEMORY SCALING ANALYSIS")
+    print("=" * 50)
+    
+    configurations = [
+        (1, 16, (3, 3)),    # Grayscale → features  
+        (3, 32, (3, 3)),    # RGB → features
+        (32, 64, (3, 3)),   # Features → more features
+        (64, 128, (3, 3)),  # Deep features
+        (3, 32, (5, 5)),    # RGB with larger kernel
+        (3, 32, (7, 7)),    # RGB with very large kernel
+    ]
+    
+    for in_c, out_c, (kh, kw) in configurations:
+        # Calculate parameters
+        weight_params = out_c * in_c * kh * kw
+        bias_params = out_c
+        total_params = weight_params + bias_params
+        
+        # Calculate memory (assuming float32 = 4 bytes)
+        memory_mb = total_params * 4 / (1024 * 1024)
+        
+        # Example activation memory for 32x32 input
+        input_mb = (in_c * 32 * 32 * 4) / (1024 * 1024)
+        output_mb = (out_c * (32-kh+1) * (32-kw+1) * 4) / (1024 * 1024)
+        
+        print(f"  {in_c:3d}→{out_c:3d} channels, {kh}x{kw} kernel:")
+        print(f"    Parameters: {total_params:,} ({memory_mb:.3f} MB)")
+        print(f"    Activations: {input_mb:.3f} MB input + {output_mb:.3f} MB output")
+        print(f"    Total memory: {memory_mb + input_mb + output_mb:.3f} MB")
+    
+    print("\n💡 Key Memory Insights:")
+    print("  • Parameters scale as: out_channels × in_channels × kernel_size²")
+    print("  • Larger kernels dramatically increase memory (5x5 = 2.8x vs 3x3)")
+    print("  • Channel depth matters more than spatial size for parameters")
+    print("  • Activation memory depends on spatial dimensions")
+    
+    return configurations
+
+# Run memory analysis
+try:
+    analyze_conv_memory_scaling()
+    print("✅ Memory scaling analysis completed")
+except Exception as e:
+    print(f"⚠️ Memory analysis had issues: {e}")
+
+# %% [markdown]
+"""
+## Step 4: MaxPool2D - Spatial Downsampling
+
+### What is MaxPooling?
+**MaxPooling** reduces spatial dimensions by taking the maximum value in each local region, providing translation invariance and computational efficiency.
+
+### Why MaxPooling Matters
+- **Dimensionality reduction**: Reduces feature map size without losing important information
+- **Translation invariance**: Small shifts don't change the output
+- **Computational efficiency**: Fewer parameters to process in subsequent layers
+- **Overfitting reduction**: Acts as a form of regularization
+
+### Real-World Usage
+- **After convolution**: Conv2D → ReLU → MaxPool2D is a common pattern
+- **Progressive downsampling**: Each pool layer reduces spatial dimensions
+- **Feature concentration**: Keeps most important activations
+"""
+
+# %% nbgrader={"grade": false, "grade_id": "maxpool2d-class", "locked": false, "schema_version": 3, "solution": true, "task": false}
+#| export
+class MaxPool2D:
+    """
+    2D Max Pooling layer for spatial downsampling.
+    
+    Reduces spatial dimensions by taking maximum values in local windows,
+    providing translation invariance and computational efficiency.
+    """
+    
+    def __init__(self, pool_size: Tuple[int, int] = (2, 2), stride: Optional[Tuple[int, int]] = None):
+        """
+        Initialize MaxPool2D layer.
+        
+        Args:
+            pool_size: (pH, pW) size of pooling window
+            stride: (sH, sW) stride for pooling. If None, uses pool_size
+            
+        TODO: Initialize pooling parameters.
+        
+        APPROACH:
+        1. Store pool_size as instance variable
+        2. Set stride (default to pool_size if not provided)
+        3. No learnable parameters (pooling has no weights)
+        
+        LEARNING CONNECTIONS:
+        - **Spatial downsampling**: Reduces feature map resolution efficiently
+        - **Translation invariance**: Small shifts in input don't change output
+        - **Computational efficiency**: Reduces data for subsequent layers
+        - **No parameters**: Unlike convolution, pooling has no learnable weights
+        
+        EXAMPLE:
+        MaxPool2D(pool_size=(2, 2)) creates:
+        - 2x2 pooling windows
+        - Stride of (2, 2) - non-overlapping windows
+        - No learnable parameters
+        
+        HINTS:
+        - Store pool_size as self.pool_size
+        - Set stride: self.stride = stride if stride else pool_size
+        """
+        ### BEGIN SOLUTION
+        self.pool_size = pool_size
+        self.stride = stride if stride is not None else pool_size
+        ### END SOLUTION
+    
+    def forward(self, x):
+        """
+        Forward pass through MaxPool2D layer.
+        
+        Args:
+            x: Input tensor with shape (..., H, W) or (..., C, H, W)
+        Returns:
+            Pooled tensor with reduced spatial dimensions
+        """
+        input_data = x.data
+        original_shape = input_data.shape
+        
+        # Handle different input shapes
+        if len(original_shape) == 2:  # (H, W)
+            input_data = input_data[None, None, ...]  # Add batch and channel dims
+            added_dims = 2
+        elif len(original_shape) == 3:  # (C, H, W) or (B, H, W)
+            input_data = input_data[None, ...]  # Add one dimension
+            added_dims = 1
+        else:  # (B, C, H, W) or similar
+            added_dims = 0
+        
+        # Now input_data has at least 4 dimensions
+        while len(input_data.shape) < 4:
+            input_data = input_data[None, ...]
+            added_dims += 1
+            
+        batch_size, channels, H, W = input_data.shape
+        pH, pW = self.pool_size
+        sH, sW = self.stride
+        
+        # Calculate output dimensions
+        out_H = (H - pH) // sH + 1
+        out_W = (W - pW) // sW + 1
+        
+        # Initialize output
+        output = np.zeros((batch_size, channels, out_H, out_W), dtype=input_data.dtype)
+        
+        # Perform max pooling
+        for b in range(batch_size):
+            for c in range(channels):
+                for i in range(out_H):
+                    for j in range(out_W):
+                        # Define pooling window
+                        h_start = i * sH
+                        h_end = h_start + pH
+                        w_start = j * sW
+                        w_end = w_start + pW
+                        
+                        # Extract window and take maximum
+                        window = input_data[b, c, h_start:h_end, w_start:w_end]
+                        output[b, c, i, j] = np.max(window)
+        
+        # Remove added dimensions to match input shape structure
+        for _ in range(added_dims):
+            output = output[0]
+        
+        return Tensor(output)
+    
+    def __call__(self, x):
+        """Make layer callable: layer(x) same as layer.forward(x)"""
+        return self.forward(x)
+
+# %% [markdown]
+"""
+### 🧪 Unit Test: MaxPool2D Layer
+
+Let us test your MaxPool2D implementation! This provides spatial downsampling for efficient computation.
+
+**This is a unit test** - it tests the MaxPool2D class in isolation.
+"""
+
+# %% nbgrader={"grade": true, "grade_id": "test-maxpool2d-immediate", "locked": true, "points": 10, "schema_version": 3, "solution": false, "task": false}
+# Test MaxPool2D layer immediately after implementation
+print("🔬 Unit Test: MaxPool2D Layer...")
+
+# Test 1: Basic 2x2 pooling
+try:
+    pool = MaxPool2D(pool_size=(2, 2))
+    
+    # Test with simple 4x4 input
+    test_input = Tensor([[1, 2, 3, 4],
+                        [5, 6, 7, 8], 
+                        [9, 10, 11, 12],
+                        [13, 14, 15, 16]])
+    
+    print(f"Input shape: {test_input.shape}")
+    print(f"Input:\n{test_input.data}")
+    
+    pooled = pool(test_input)
+    print(f"Pooled shape: {pooled.shape}")
+    print(f"Pooled:\n{pooled.data}")
+    
+    # Verify shape
+    expected_shape = (2, 2)  # 4x4 → 2x2 with 2x2 pooling
+    assert pooled.shape == expected_shape, f"Pooled shape should be {expected_shape}, got {pooled.shape}"
+    
+    # Verify values (each 2x2 window's maximum)
+    expected_values = np.array([[6, 8], [14, 16]])  # Max of each 2x2 window
+    assert np.array_equal(pooled.data, expected_values), f"Expected {expected_values}, got {pooled.data}"
+    
+    print("✅ Basic 2x2 pooling test passed")
+    
+except Exception as e:
+    print(f"❌ Basic pooling test failed: {e}")
+    raise
+
+# Test 2: Multi-channel pooling
+try:
+    # Test with multi-channel input (like after convolution)
+    multi_channel_input = Tensor([[[1, 2, 3, 4],     # Channel 0
+                                  [5, 6, 7, 8],
+                                  [9, 10, 11, 12],
+                                  [13, 14, 15, 16]],
+                                 [[16, 15, 14, 13],   # Channel 1
+                                  [12, 11, 10, 9],
+                                  [8, 7, 6, 5],
+                                  [4, 3, 2, 1]]])
+    
+    pooled_multi = pool(multi_channel_input)
+    print(f"Multi-channel input shape: {multi_channel_input.shape}")
+    print(f"Multi-channel pooled shape: {pooled_multi.shape}")
+    
+    expected_multi_shape = (2, 2, 2)  # 2 channels, 2x2 spatial
+    assert pooled_multi.shape == expected_multi_shape, f"Multi-channel shape should be {expected_multi_shape}, got {pooled_multi.shape}"
+    
+    print("✅ Multi-channel pooling test passed")
+    
+except Exception as e:
+    print(f"❌ Multi-channel pooling test failed: {e}")
+    raise
+
+# Test 3: Different pool sizes
+try:
+    # Test 3x3 pooling
+    pool_3x3 = MaxPool2D(pool_size=(3, 3))
+    input_6x6 = Tensor(np.arange(36).reshape(6, 6))  # 6x6 input
+    
+    pooled_3x3 = pool_3x3(input_6x6)
+    expected_3x3_shape = (2, 2)  # 6x6 → 2x2 with 3x3 pooling, stride 3
+    assert pooled_3x3.shape == expected_3x3_shape, f"3x3 pooling shape should be {expected_3x3_shape}, got {pooled_3x3.shape}"
+    
+    print("✅ Different pool sizes test passed")
+    
+except Exception as e:
+    print(f"❌ Different pool sizes test failed: {e}")
+    raise
+
+# Test 4: Integration with convolution
+try:
+    # Test Conv2D → MaxPool2D pipeline
+    conv = MultiChannelConv2D(in_channels=1, out_channels=4, kernel_size=(3, 3))
+    pool_after_conv = MaxPool2D(pool_size=(2, 2))
+    
+    # Input image
+    input_image = Tensor(np.random.randn(1, 8, 8))  # 1 channel, 8x8
+    
+    # Forward pass: Conv → Pool
+    conv_output = conv(input_image)     # (1,8,8) → (4,6,6)
+    pool_output = pool_after_conv(conv_output)  # (4,6,6) → (4,3,3)
+    
+    assert conv_output.shape == (4, 6, 6), f"Conv output should be (4,6,6), got {conv_output.shape}"
+    assert pool_output.shape == (4, 3, 3), f"Pool output should be (4,3,3), got {pool_output.shape}"
+    
+    print("✅ Conv → Pool integration test passed")
+    
+except Exception as e:
+    print(f"❌ Conv → Pool integration test failed: {e}")
+    raise
+
+# Show pooling behavior
+print("🎯 MaxPool2D behavior:")
+print("   Reduces spatial dimensions by taking maximum in each window")
+print("   Provides translation invariance")
+print("   No learnable parameters")
+print("   Common pattern: Conv2D → ReLU → MaxPool2D")
+print("📈 Progress: Single-channel ✓, Multi-channel ✓, Pooling ✓")
+
+# %% [markdown]
+"""
+## Step 5: Flattening for Dense Layers
 
 ### What is Flattening?
 **Flattening** converts multi-dimensional tensors to 1D vectors, enabling connection between convolutional and dense layers.
 
 ### Why Flattening is Needed
-- **Interface compatibility**: Conv2D outputs 2D, Dense expects 1D
+- **Interface compatibility**: Conv2D outputs 2D/3D, Dense expects 1D
 - **Network composition**: Connect spatial features to classification
 - **Standard practice**: Almost all CNNs use this pattern
 - **Dimension management**: Preserve information while changing shape
 
 ### The Pattern
 ```
-Conv2D → ReLU → Conv2D → ReLU → Flatten → Dense → Output
+Conv2D → ReLU → MaxPool2D → Flatten → Dense → Output
 ```
 
 ### Real-World Usage
@@ -466,7 +1036,7 @@ Conv2D → ReLU → Conv2D → ReLU → Flatten → Dense → Output
 #| export
 def flatten(x):
     """
-    Flatten a 2D tensor to 1D (for connecting to Dense layers).
+    Flatten spatial dimensions while preserving batch dimension.
     
     Args:
         x: Input tensor to flatten
@@ -474,33 +1044,53 @@ def flatten(x):
     Returns:
         Flattened tensor with batch dimension preserved
         
-    TODO: Implement flattening operation.
+    TODO: Implement flattening operation that handles different input shapes.
     
     STEP-BY-STEP IMPLEMENTATION:
-    1. Get the numpy array from the tensor
-    2. Use .flatten() to convert to 1D
-    3. Add batch dimension with [None, :]
+    1. Determine if input has batch dimension
+    2. Flatten spatial dimensions while preserving batch structure
+    3. Return properly shaped tensor
     
     LEARNING CONNECTIONS:
     - **CNN to MLP Transition**: Flattening connects convolutional and dense layers
-    - **Spatial to Vector**: Converts 2D feature maps to vectors for classification
+    - **Batch Processing**: Handles both single images and batches correctly
     - **Memory Layout**: Understanding how tensors are stored and reshaped in memory
     - **Framework Design**: All major frameworks (PyTorch, TensorFlow) use similar patterns
-    4. Return Tensor wrapped around the result
     
-    EXAMPLE:
-    Input: Tensor([[1, 2], [3, 4]])  # shape (2, 2)
-    Output: Tensor([[1, 2, 3, 4]])  # shape (1, 4)
+    EXAMPLES:
+    Single image: (C, H, W) → (1, C*H*W)
+    Batch: (B, C, H, W) → (B, C*H*W)
+    2D: (H, W) → (1, H*W)
     
     HINTS:
-    - Use x.data.flatten() to get 1D array
-    - Add batch dimension: result[None, :]
-    - Return Tensor(result)
+    - Check input shape to determine batch vs single image
+    - Use reshape to flatten spatial dimensions
+    - Preserve batch dimension for proper Dense layer input
     """
     ### BEGIN SOLUTION
-    # Flatten the tensor and add batch dimension
-    flattened = x.data.flatten()
-    result = flattened[None, :]  # Add batch dimension
+    input_shape = x.shape
+    
+    if len(input_shape) == 2:  # (H, W) - single 2D image
+        flattened = x.data.flatten()
+        result = flattened[None, :]  # Add batch dimension
+    elif len(input_shape) == 3:  # (C, H, W) - single multi-channel image
+        # Flatten spatial and channel dimensions, add batch dimension
+        flattened = x.data.flatten()
+        result = flattened[None, :]  # Shape: (1, C*H*W)
+    elif len(input_shape) == 4:  # (B, C, H, W) - batch of multi-channel images
+        # Flatten spatial and channel dimensions for each batch item
+        batch_size = input_shape[0]
+        feature_size = np.prod(input_shape[1:])  # C*H*W
+        result = x.data.reshape(batch_size, feature_size)
+    else:
+        # Fallback: flatten all but first dimension (assumed to be batch)
+        batch_size = input_shape[0] if len(input_shape) > 1 else 1
+        feature_size = np.prod(input_shape[1:]) if len(input_shape) > 1 else input_shape[0]
+        if len(input_shape) == 1:
+            result = x.data[None, :]  # Add batch dimension
+        else:
+            result = x.data.reshape(batch_size, feature_size)
+    
     return type(x)(result)
     ### END SOLUTION
 
@@ -573,158 +1163,171 @@ print("📈 Progress: Convolution operation ✓, Conv2D layer ✓, Flatten ✓")
 
 # %% [markdown]
 """
-## Step 4: Comprehensive Test - Complete CNN Pipeline
+## Step 6: Comprehensive Test - Multi-Channel CNN Pipeline
 
 ### Real-World CNN Applications
-Let us test our CNN components in realistic scenarios:
+Let us test our complete CNN system with realistic multi-channel scenarios:
 
-#### **Image Classification Pipeline**
+#### **CIFAR-10 Style CNN**
 ```python
-# The standard CNN pattern
-Conv2D → ReLU → Flatten → Dense → Output
+# RGB images to classification
+RGB Input → Multi-Channel Conv2D → ReLU → MaxPool2D → Flatten → Dense → Output
 ```
 
-#### **Multi-layer CNN**
+#### **Deep Multi-Channel CNN**
 ```python
-# Deeper pattern for complex features
-Conv2D → ReLU → Conv2D → ReLU → Flatten → Dense → Output
+# Progressive feature extraction
+RGB → Conv2D(3→32) → ReLU → Pool → Conv2D(32→64) → ReLU → Pool → Flatten → Dense
 ```
 
-#### **Feature Extraction**
+#### **Production CNN Pattern**
 ```python
-# Extract spatial features then classify
-image → CNN features → dense classifier → predictions
+# Full computer vision pipeline
+RGB images → Feature extraction layers → Spatial downsampling → Classification head
 ```
 
-This comprehensive test ensures our CNN components work together for real computer vision applications!
+This comprehensive test ensures our multi-channel CNN components work together for real computer vision applications like CIFAR-10!
 """
 
-# %% nbgrader={"grade": true, "grade_id": "test-comprehensive", "locked": true, "points": 15, "schema_version": 3, "solution": false, "task": false}
-# Comprehensive test - complete CNN applications
-print("🔬 Comprehensive Test: Complete CNN Applications...")
+# %% nbgrader={"grade": true, "grade_id": "test-comprehensive-multichannel", "locked": true, "points": 20, "schema_version": 3, "solution": false, "task": false}
+# Comprehensive test - complete multi-channel CNN applications
+print("🔬 Comprehensive Test: Multi-Channel CNN Applications...")
 
 try:
-    # Test 1: Simple CNN Pipeline
-    print("\n1. Simple CNN Pipeline Test:")
+    # Test 1: CIFAR-10 Style RGB CNN Pipeline
+    print("\n1. CIFAR-10 Style RGB CNN Pipeline:")
     
-    # Create pipeline: Conv2D → ReLU → Flatten → Dense
-    conv = Conv2D(kernel_size=(2, 2))
+    # Create pipeline: RGB → Conv2D(3→16) → ReLU → MaxPool2D → Flatten → Dense
+    rgb_conv = MultiChannelConv2D(in_channels=3, out_channels=16, kernel_size=(3, 3))
     relu = ReLU()
-    dense = Dense(input_size=4, output_size=3)
+    pool = MaxPool2D(pool_size=(2, 2))
+    dense = Dense(input_size=16 * 3 * 3, output_size=10)  # 16 channels, 3x3 spatial = 144 features
     
-    # Input image
-    image = Tensor([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
+    # Simulated CIFAR-10 image (3 channels, 8x8 for testing)
+    rgb_image = Tensor(np.random.randn(3, 8, 8))  # RGB 8x8 image
+    print(f"RGB input shape: {rgb_image.shape}")
     
-    # Forward pass
-    features = conv(image)          # (3,3) → (2,2)
-    activated = relu(features)      # (2,2) → (2,2)
-    flattened = flatten(activated)  # (2,2) → (1,4)
-    output = dense(flattened)       # (1,4) → (1,3)
+    # Forward pass through complete pipeline
+    conv_features = rgb_conv(rgb_image)    # (3,8,8) → (16,6,6)
+    activated = relu(conv_features)        # (16,6,6) → (16,6,6)
+    pooled = pool(activated)              # (16,6,6) → (16,3,3)
+    flattened = flatten(pooled)           # (16,3,3) → (1,144)
+    predictions = dense(flattened)        # (1,144) → (1,10)
     
-    assert features.shape == (2, 2), f"Conv output shape wrong: {features.shape}"
-    assert activated.shape == (2, 2), f"ReLU output shape wrong: {activated.shape}"
-    assert flattened.shape == (1, 4), f"Flatten output shape wrong: {flattened.shape}"
-    assert output.shape == (1, 3), f"Dense output shape wrong: {output.shape}"
+    assert conv_features.shape == (16, 6, 6), f"Conv features wrong: {conv_features.shape}"
+    assert activated.shape == (16, 6, 6), f"Activated features wrong: {activated.shape}"
+    assert pooled.shape == (16, 3, 3), f"Pooled features wrong: {pooled.shape}"
+    assert flattened.shape == (1, 144), f"Flattened features wrong: {flattened.shape}"
+    assert predictions.shape == (1, 10), f"Predictions wrong: {predictions.shape}"
     
-    print("✅ Simple CNN pipeline works correctly")
+    print("✅ CIFAR-10 style RGB pipeline works correctly")
     
-    # Test 2: Multi-layer CNN
-    print("\n2. Multi-layer CNN Test:")
+    # Test 2: Deep Multi-Channel CNN
+    print("\n2. Deep Multi-Channel CNN:")
     
-    # Create deeper pipeline: Conv2D → ReLU → Conv2D → ReLU → Flatten → Dense
-    conv1 = Conv2D(kernel_size=(2, 2))
+    # Create deeper pipeline: RGB → Conv1(3→32) → ReLU → Pool → Conv2(32→64) → ReLU → Pool → Dense
+    conv1_deep = MultiChannelConv2D(in_channels=3, out_channels=32, kernel_size=(3, 3))
     relu1 = ReLU()
-    conv2 = Conv2D(kernel_size=(2, 2))
+    pool1 = MaxPool2D(pool_size=(2, 2))
+    conv2_deep = MultiChannelConv2D(in_channels=32, out_channels=64, kernel_size=(3, 3))
     relu2 = ReLU()
-    dense_multi = Dense(input_size=9, output_size=2)
+    pool2 = MaxPool2D(pool_size=(2, 2))
+    classifier_deep = Dense(input_size=64 * 1 * 1, output_size=5)  # 64 channels, 1x1 spatial
     
-    # Larger input for multi-layer processing
-    large_image = Tensor([[1, 2, 3, 4, 5], [6, 7, 8, 9, 10], [11, 12, 13, 14, 15], [16, 17, 18, 19, 20], [21, 22, 23, 24, 25]])
+    # Larger RGB input for deep processing
+    large_rgb = Tensor(np.random.randn(3, 12, 12))  # RGB 12x12 image
+    print(f"Large RGB input shape: {large_rgb.shape}")
     
-    # Forward pass
-    h1 = conv1(large_image)  # (5,5) → (4,4)
-    h2 = relu1(h1)           # (4,4) → (4,4)
-    h3 = conv2(h2)           # (4,4) → (3,3)
-    h4 = relu2(h3)           # (3,3) → (3,3)
-    h5 = flatten(h4)         # (3,3) → (1,9)
-    output_multi = dense_multi(h5)  # (1,9) → (1,2)
+    # Forward pass through deep network
+    h1 = conv1_deep(large_rgb)  # (3,12,12) → (32,10,10)
+    h2 = relu1(h1)              # (32,10,10) → (32,10,10)
+    h3 = pool1(h2)              # (32,10,10) → (32,5,5)
+    h4 = conv2_deep(h3)         # (32,5,5) → (64,3,3)
+    h5 = relu2(h4)              # (64,3,3) → (64,3,3)
+    h6 = pool2(h5)              # (64,3,3) → (64,1,1)
+    h7 = flatten(h6)            # (64,1,1) → (1,64)
+    output_deep = classifier_deep(h7)  # (1,64) → (1,5)
     
-    assert h1.shape == (4, 4), f"Conv1 output wrong: {h1.shape}"
-    assert h3.shape == (3, 3), f"Conv2 output wrong: {h3.shape}"
-    assert h5.shape == (1, 9), f"Flatten output wrong: {h5.shape}"
-    assert output_multi.shape == (1, 2), f"Final output wrong: {output_multi.shape}"
+    assert h1.shape == (32, 10, 10), f"Conv1 output wrong: {h1.shape}"
+    assert h3.shape == (32, 5, 5), f"Pool1 output wrong: {h3.shape}"
+    assert h4.shape == (64, 3, 3), f"Conv2 output wrong: {h4.shape}"
+    assert h6.shape == (64, 1, 1), f"Pool2 output wrong: {h6.shape}"
+    assert h7.shape == (1, 64), f"Final flatten wrong: {h7.shape}"
+    assert output_deep.shape == (1, 5), f"Final prediction wrong: {output_deep.shape}"
     
-    print("✅ Multi-layer CNN works correctly")
+    print("✅ Deep multi-channel CNN works correctly")
     
-    # Test 3: Image Classification Scenario
-    print("\n3. Image Classification Test:")
+    # Test 3: Batch Processing with Multi-Channel
+    print("\n3. Batch Processing Test:")
     
-    # Simulate digit classification with 8x8 image
-    digit_image = Tensor([[1, 0, 0, 1, 1, 0, 0, 1],
-                     [0, 1, 0, 1, 1, 0, 1, 0],
-                     [0, 0, 1, 1, 1, 1, 0, 0],
-                     [1, 1, 1, 0, 0, 1, 1, 1],
-                     [1, 0, 0, 1, 1, 0, 0, 1],
-                     [0, 1, 1, 0, 0, 1, 1, 0],
-                     [0, 0, 1, 1, 1, 1, 0, 0],
-                     [1, 1, 0, 0, 0, 0, 1, 1]])
+    # Test batch of RGB images
+    batch_conv = MultiChannelConv2D(in_channels=3, out_channels=8, kernel_size=(3, 3))
+    batch_pool = MaxPool2D(pool_size=(2, 2))
     
-    # CNN for digit classification
-    feature_extractor = Conv2D(kernel_size=(3, 3))  # (8,8) → (6,6)
-    activation = ReLU()
-    classifier = Dense(input_size=36, output_size=10)  # 10 digit classes
+    # Batch of 4 RGB images
+    rgb_batch = Tensor(np.random.randn(4, 3, 6, 6))  # 4 images, 3 channels, 6x6
+    print(f"Batch RGB input shape: {rgb_batch.shape}")
     
-    # Forward pass
-    features = feature_extractor(digit_image)
-    activated_features = activation(features)
-    feature_vector = flatten(activated_features)
-    digit_scores = classifier(feature_vector)
+    # Forward pass to determine correct feature size
+    batch_conv_out = batch_conv(rgb_batch)    # (4,3,6,6) → (4,8,4,4)
+    batch_pool_out = batch_pool(batch_conv_out)  # (4,8,4,4) → (4,8,2,2)
+    batch_flat = flatten(batch_pool_out)      # (4,8,2,2) → (4,32)
     
-    assert features.shape == (6, 6), f"Feature extraction shape wrong: {features.shape}"
-    assert feature_vector.shape == (1, 36), f"Feature vector shape wrong: {feature_vector.shape}"
-    assert digit_scores.shape == (1, 10), f"Digit scores shape wrong: {digit_scores.shape}"
+    # Create classifier with correct input size
+    feature_size = batch_flat.shape[1]  # 32 features
+    batch_classifier = Dense(input_size=feature_size, output_size=3)
+    batch_pred = batch_classifier(batch_flat) # (4,32) → (4,3)
     
-    print("✅ Image classification scenario works correctly")
+    assert batch_conv_out.shape == (4, 8, 4, 4), f"Batch conv wrong: {batch_conv_out.shape}"
+    assert batch_pool_out.shape == (4, 8, 2, 2), f"Batch pool wrong: {batch_pool_out.shape}"
+    assert batch_flat.shape == (4, 32), f"Batch flatten wrong: {batch_flat.shape}"
+    assert batch_pred.shape == (4, 3), f"Batch prediction wrong: {batch_pred.shape}"
     
-    # Test 4: Feature Extraction and Composition
-    print("\n4. Feature Extraction Test:")
+    print("✅ Batch processing with multi-channel works correctly")
     
-    # Create modular feature extractor
-    feature_conv = Conv2D(kernel_size=(2, 2))
-    feature_activation = ReLU()
+    # Test 4: Backward Compatibility with Single Channel
+    print("\n4. Backward Compatibility Test:")
     
-    # Create classifier head
-    classifier_head = Dense(input_size=4, output_size=3)
+    # Test that MultiChannelConv2D works for single-channel (grayscale)
+    gray_conv = MultiChannelConv2D(in_channels=1, out_channels=8, kernel_size=(3, 3))
+    gray_image = Tensor(np.random.randn(1, 6, 6))  # 1 channel, 6x6
+    gray_features = gray_conv(gray_image)
     
-    # Test composition
-    test_image = Tensor([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
+    assert gray_features.shape == (8, 4, 4), f"Grayscale features wrong: {gray_features.shape}"
+    print("✅ Single-channel compatibility works correctly")
     
-    # Extract features
-    extracted_features = feature_conv(test_image)
-    activated_features = feature_activation(extracted_features)
-    feature_representation = flatten(activated_features)
+    # Test 5: Memory and Parameter Analysis
+    print("\n5. Memory and Parameter Analysis:")
     
-    # Classify
-    predictions = classifier_head(feature_representation)
+    # Analyze different configurations
+    configs = [
+        (MultiChannelConv2D(1, 8, (3, 3)), "1→8 channels"),
+        (MultiChannelConv2D(3, 16, (3, 3)), "3→16 channels (RGB)"),
+        (MultiChannelConv2D(16, 32, (3, 3)), "16→32 channels"),
+        (MultiChannelConv2D(32, 64, (3, 3)), "32→64 channels"),
+    ]
     
-    assert extracted_features.shape == (2, 2), f"Feature extraction wrong: {extracted_features.shape}"
-    assert feature_representation.shape == (1, 4), f"Feature representation wrong: {feature_representation.shape}"
-    assert predictions.shape == (1, 3), f"Predictions wrong: {predictions.shape}"
+    for conv_layer, desc in configs:
+        params = conv_layer.weights.size + (conv_layer.bias.size if conv_layer.use_bias else 0)
+        memory_mb = params * 4 / (1024 * 1024)  # float32 = 4 bytes
+        print(f"  {desc}: {params:,} parameters ({memory_mb:.3f} MB)")
     
-    print("✅ Feature extraction and composition works correctly")
+    print("✅ Memory analysis completed")
     
-    print("\n🎉 Comprehensive test passed! Your CNN components work correctly for:")
-    print("  • Image classification pipelines")
-    print("  • Multi-layer feature extraction")
-    print("  • Spatial pattern recognition")
-    print("  • End-to-end CNN workflows")
-    print("📈 Progress: Complete CNN architecture ready for computer vision!")
+    print("\n🎉 Comprehensive multi-channel test passed! Your CNN system supports:")
+    print("  • RGB image processing (CIFAR-10 ready)")
+    print("  • Deep multi-channel architectures")
+    print("  • Batch processing with multiple channels")
+    print("  • Backward compatibility with single-channel")
+    print("  • Production-ready parameter scaling")
+    print("  • Complete Conv → Pool → Dense pipelines")
+    print("📈 Progress: Production-ready multi-channel CNN system!")
     
 except Exception as e:
-    print(f"❌ Comprehensive test failed: {e}")
+    print(f"❌ Comprehensive multi-channel test failed: {e}")
     raise
 
-print("📈 Final Progress: Complete CNN system ready for computer vision!")
+print("📈 Final Progress: Production-ready multi-channel CNN system for real computer vision!")
 
 # %% [markdown]
 """
@@ -1207,16 +1810,48 @@ def test_convolution_profiler():
 
 # Test function defined (called in main block)
 
+def test_unit_multichannel_conv2d():
+    """Unit test for the multi-channel Conv2D implementation."""
+    print("🔬 Unit Test: Multi-Channel Conv2D...")
+    
+    # Test multi-channel convolution
+    conv = MultiChannelConv2D(in_channels=3, out_channels=8, kernel_size=(3, 3))
+    input_rgb = Tensor(np.random.randn(3, 6, 6))
+    output = conv(input_rgb)
+    
+    assert output.shape == (8, 4, 4), "Multi-channel Conv2D should produce correct output shape"
+    assert hasattr(conv, 'weights'), "Multi-channel Conv2D should have weights attribute"
+    assert conv.weights.shape == (8, 3, 3, 3), "Weights should have correct multi-channel shape"
+    
+    print("✅ Multi-channel Conv2D works correctly")
+
+def test_unit_maxpool2d():
+    """Unit test for the MaxPool2D implementation."""
+    print("🔬 Unit Test: MaxPool2D...")
+    
+    # Test MaxPool2D
+    pool = MaxPool2D(pool_size=(2, 2))
+    input_4x4 = Tensor(np.arange(16).reshape(4, 4))
+    pooled = pool(input_4x4)
+    
+    assert pooled.shape == (2, 2), "MaxPool2D should produce correct output shape"
+    expected = np.array([[5, 7], [13, 15]])  # Max of each 2x2 window
+    assert np.array_equal(pooled.data, expected), "MaxPool2D should compute correct max values"
+    
+    print("✅ MaxPool2D works correctly")
+
 if __name__ == "__main__":
     # Run all tests
     test_unit_convolution_operation()
     test_unit_conv2d_layer()
+    test_unit_multichannel_conv2d()
+    test_unit_maxpool2d()
     test_unit_flatten_function()
     test_module_conv2d_tensor_compatibility()
     test_convolution_profiler()
     
     print("All tests passed!")
-    print("spatial_dev module complete!")
+    print("spatial_dev module complete with multi-channel support!")
 
 # %% [markdown]
 """
@@ -1355,67 +1990,86 @@ GRADING RUBRIC (Instructor Use):
 
 # %% [markdown]
 """
-## 🎯 MODULE SUMMARY: Convolutional Networks
+## 🎯 MODULE SUMMARY: Multi-Channel Convolutional Networks
 
-Congratulations! You have successfully implemented the core components of convolutional neural networks:
+Congratulations! You have successfully implemented a complete multi-channel CNN system ready for real computer vision applications:
 
 ### What You have Accomplished
 ✅ **Convolution Operation**: Implemented the sliding window mechanism from scratch  
-✅ **Conv2D Layer**: Built learnable convolutional layers with random initialization  
+✅ **Single-Channel Conv2D**: Built learnable convolutional layers with random initialization  
+✅ **Multi-Channel Conv2D**: Added support for RGB images and multiple output feature maps  
+✅ **MaxPool2D**: Implemented spatial downsampling for computational efficiency  
 ✅ **Flatten Function**: Created the bridge between convolutional and dense layers  
-✅ **CNN Pipelines**: Composed complete systems for image processing  
-✅ **Real Applications**: Tested on image classification and feature extraction
+✅ **Complete CNN Pipelines**: Built CIFAR-10 ready architectures with proper parameter scaling  
+✅ **Memory Analysis**: Profiled parameter scaling and computational complexity
+✅ **Production Patterns**: Tested batch processing and deep multi-channel architectures
 
 ### Key Concepts You have Learned
-- **Convolution as pattern matching**: Kernels detect specific features
-- **Sliding window mechanism**: How convolution processes spatial data
-- **Parameter sharing**: Same kernel applied across the entire image
-- **Spatial hierarchy**: Multiple layers build complex features
-- **CNN architecture**: Conv2D → Activation → Flatten → Dense pattern
+- **Multi-channel convolution**: How RGB images are processed through multiple filters
+- **Parameter scaling**: How memory requirements grow with channels and kernel sizes
+- **Spatial downsampling**: MaxPooling for translation invariance and efficiency  
+- **Feature hierarchy**: Progressive extraction from RGB → edges → objects → concepts
+- **Production architectures**: Conv → ReLU → Pool → Conv → ReLU → Pool → Dense patterns
+- **He initialization**: Proper weight initialization for stable multi-layer training
 
 ### Mathematical Foundations
-- **Convolution operation**: dot product of kernel and image patches
-- **Output size calculation**: (input_size - kernel_size + 1)
-- **Translation invariance**: Same pattern detected anywhere in input
-- **Feature maps**: Spatial representations of detected patterns
+- **Multi-channel convolution**: Each filter processes ALL input channels, summing results
+- **Parameter calculation**: out_channels × in_channels × kernel_h × kernel_w + bias_terms
+- **Spatial size reduction**: Convolution and pooling progressively reduce spatial dimensions
+- **Channel expansion**: Typical pattern increases channels while reducing spatial size
+- **Memory complexity**: O(batch × channels × height × width) for activations
+
+### Systems Engineering Insights
+- **Memory scaling**: Parameters grow quadratically with channels, linearly with filters
+- **Computational intensity**: CIFAR-10 CNN requires millions of multiply-accumulate operations
+- **Cache efficiency**: Spatial locality in convolution enables hardware optimization
+- **Parallelization**: Each filter and spatial position can be computed independently
+- **Production trade-offs**: More channels = better accuracy but higher memory/compute cost
 
 ### Real-World Applications
-- **Image classification**: Object recognition, medical imaging
-- **Computer vision**: Face detection, autonomous driving
-- **Pattern recognition**: Texture analysis, edge detection
-- **Feature extraction**: Transfer learning, representation learning
+- **CIFAR-10 classification**: Your CNN can handle 32×32 RGB images → 10 classes
+- **Image recognition**: Object detection, medical imaging, autonomous driving
+- **Transfer learning**: Pre-trained features for downstream tasks
+- **Computer vision**: Face recognition, document analysis, quality inspection
 
-### CNN Architecture Insights
-- **Kernel size**: 3×3 most common, balances locality and capacity
-- **Stacking layers**: Builds hierarchical feature representations
-- **Spatial reduction**: Each layer reduces spatial dimensions
-- **Channel progression**: Typically increase channels while reducing spatial size
+### CNN Architecture Patterns
+- **Basic CNN**: RGB → Conv(3→32) → ReLU → Pool → Conv(32→64) → ReLU → Pool → Dense
+- **Parameter efficiency**: 32×3×3×3 = 864 parameters vs 32×32×32 = 32,768 for dense layer
+- **Spatial hierarchy**: Early layers detect edges, later layers detect objects
+- **Translation invariance**: Same features detected regardless of position in image
 
 ### Performance Characteristics
-- **Parameter efficiency**: Dramatic reduction vs. fully connected
-- **Translation invariance**: Robust to object location changes
-- **Computational efficiency**: Parallel processing of spatial regions
-- **Memory considerations**: Feature maps require storage during forward pass
+- **Memory efficiency**: Shared parameters across spatial locations
+- **Computational complexity**: O(batch × out_channels × in_channels × kernel_size² × output_spatial)
+- **Hardware acceleration**: Highly parallelizable operations ideal for GPUs
+- **Scaling behavior**: Memory grows with channels, computation grows with spatial size
+
+### Production-Ready Features
+```python
+from tinytorch.core.spatial import MultiChannelConv2D, MaxPool2D, flatten
+from tinytorch.core.layers import Dense
+from tinytorch.core.activations import ReLU
+
+# CIFAR-10 CNN architecture
+conv1 = MultiChannelConv2D(in_channels=3, out_channels=32, kernel_size=(3, 3))
+pool1 = MaxPool2D(pool_size=(2, 2))
+conv2 = MultiChannelConv2D(in_channels=32, out_channels=64, kernel_size=(3, 3))
+pool2 = MaxPool2D(pool_size=(2, 2))
+classifier = Dense(input_size=64*6*6, output_size=10)
+
+# Process RGB image
+rgb_image = Tensor(np.random.randn(3, 32, 32))  # CIFAR-10 format
+features1 = pool1(ReLU()(conv1(rgb_image)))     # (3,32,32) → (32,15,15)
+features2 = pool2(ReLU()(conv2(features1)))     # (32,15,15) → (64,6,6)
+predictions = classifier(flatten(features2))    # (64,6,6) → (1,10)
+```
 
 ### Next Steps
-1. **Export your code**: Use NBDev to export to the `tinytorch` package
-2. **Test your implementation**: Run the complete test suite
-3. **Build CNN architectures**: 
-   ```python
-   from tinytorch.core.cnn import Conv2D, flatten
-   from tinytorch.core.layers import Dense
-   from tinytorch.core.activations import ReLU
-   
-   # Create CNN
-   conv = Conv2D(kernel_size=(3, 3))
-   relu = ReLU()
-   dense = Dense(input_size=36, output_size=10)
-   
-   # Process image
-   features = relu(conv(image))
-   predictions = dense(flatten(features))
-   ```
-4. **Explore advanced CNNs**: Pooling, multiple channels, modern architectures!
+1. **Export to package**: Use `tito module complete 06_spatial` to export your implementation
+2. **Test with real data**: Load CIFAR-10 dataset and train your CNN
+3. **Experiment with architectures**: Try different channel numbers and kernel sizes
+4. **Optimize performance**: Profile memory usage and computational bottlenecks
+5. **Build deeper networks**: Add more layers and advanced techniques
 
-**Ready for the next challenge?** Let us build data loaders to handle real datasets efficiently!
+**Ready for the next challenge?** Let us add attention mechanisms to understand sequence relationships!
 """
