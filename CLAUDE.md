@@ -15,6 +15,29 @@
 
 ---
 
+## 💡 **CORE PRINCIPLE: Keep It Simple, Stupid (KISS)**
+
+**Simplicity is a fundamental principle of TinyTorch. Always prefer simple, clear solutions over complex ones.**
+
+**KISS Guidelines:**
+- **One file, one purpose** - Don't create multiple versions doing the same thing
+- **Clear over clever** - Code should be readable by students learning ML
+- **Minimal dependencies** - Avoid unnecessary libraries or complex UI
+- **Direct implementation** - Show the core concepts without abstraction layers
+- **Honest performance** - Report what actually works, not theoretical possibilities
+
+**Examples:**
+- ✅ `random_baseline.py` and `train.py` - two files, clear story
+- ❌ Multiple optimization scripts with unverified claims
+- ✅ Simple console output showing progress
+- ❌ Complex dashboards with ASCII plots that don't add educational value
+- ✅ "Achieves 55% accuracy" (verified)
+- ❌ "Can achieve 60-70% with optimization" (unverified)
+
+**When in doubt, choose the simpler option. If students can't understand it, we've failed.**
+
+---
+
 ## 🚨 **CRITICAL: Think First, Don't Just Agree**
 
 **YOU MUST CRITICALLY EVALUATE EVERY SUGGESTION - DO NOT DEFAULT TO AGREEMENT**
