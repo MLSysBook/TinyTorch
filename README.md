@@ -38,32 +38,54 @@ jupyter lab setup_dev.py
 tito checkpoint status
 ```
 
-## 📚 Course Structure
+## 📚 Three-Part Learning Journey
 
-### **16 Progressive Modules**
+### **17 Progressive Modules** - Complete Any Part for Industry-Ready Skills!
+
+#### **Part I: Foundations** (Modules 1-5)
+**"I can build neural networks from scratch!"**
 
 | Module | Topic | What You Build |
 |--------|-------|----------------|
-| **Foundations** | | |
 | 01 | Setup | Development environment |
 | 02 | Tensors | N-dimensional arrays |
 | 03 | Activations | ReLU, Sigmoid, Softmax |
 | 04 | Layers | Dense layers |
-| 05 | Networks | Sequential models |
-| **Deep Learning** | | |
-| 06 | Spatial | CNNs for vision |
-| 07 | Attention | Transformers |
-| 08 | DataLoader | Efficient data pipelines |
+| 05 | Networks | Multi-layer networks |
+
+**✅ Capstone**: XORNet - Solve non-linear problems
+
+---
+
+#### **Part II: Computer Vision** (Modules 6-11)
+**"I can build CNNs that classify real images!"**
+
+| Module | Topic | What You Build |
+|--------|-------|----------------|
+| 06 | Spatial | Conv2D, Pooling |
+| 07 | DataLoader | Efficient data pipelines |
+| 08 | Normalization | BatchNorm, LayerNorm |
 | 09 | Autograd | Automatic differentiation |
 | 10 | Optimizers | SGD, Adam |
-| **Production** | | |
 | 11 | Training | Complete training loops |
-| 12 | Compression | Model optimization |
-| 13 | Kernels | Performance optimization |
-| 14 | Benchmarking | Profiling tools |
-| 15 | MLOps | Production deployment |
-| **Language Models** | | |
-| 16 | TinyGPT | Complete GPT implementation |
+
+**✅ Capstone**: CIFAR-10 CNN - 55%+ accuracy on real images
+
+---
+
+#### **Part III: Language Models** (Modules 12-17)
+**"I can build transformers that generate text!"**
+
+| Module | Topic | What You Build |
+|--------|-------|----------------|
+| 12 | Embeddings | Token embeddings, positional encoding |
+| 13 | Attention | Multi-head attention |
+| 14 | Transformers | Transformer blocks |
+| 15 | Generation | Autoregressive decoding |
+| 16 | Regularization | Dropout, robustness |
+| 17 | Systems | Production deployment |
+
+**✅ Capstone**: TinyGPT - Generate text with transformers
 
 ## 🎓 Learning Philosophy
 
