@@ -73,8 +73,12 @@ parts:
   chapters:
   - file: vision
     title: "TinyTorch Vision"
+  - file: kiss-principle
+    title: "KISS Principle"
   - file: checkpoint-system
     title: "Checkpoint System"
+  - file: testing-framework
+    title: "Testing Framework"
   - file: resources
     title: "Learning Resources"
 

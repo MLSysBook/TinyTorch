@@ -73,6 +73,8 @@ class TestCommand(BaseCommand):
         parser.add_argument("--external-only", action="store_true", help="Run only external tests")
         parser.add_argument("--detailed", action="store_true", help="Show detailed output for all tests")
         parser.add_argument("--summary", action="store_true", help="Show summary report only")
+        parser.add_argument("--comprehensive", action="store_true", help="Run comprehensive test suite (modules + integration + examples)")
+        parser.add_argument("--student", action="store_true", help="Student-friendly comprehensive testing (same as --comprehensive)")
 
     def validate_args(self, args: Namespace) -> None:
         """Validate test command arguments."""
@@ -82,7 +84,9 @@ class TestCommand(BaseCommand):
     def run(self, args: Namespace) -> int:
         console = self.console
         
-        if args.all:
+        if args.comprehensive or args.student:
+            return self._run_comprehensive_tests(args)
+        elif args.all:
             return self._run_all_tests(args)
         elif args.module:
             return self._run_single_module_test(args)
@@ -108,6 +112,35 @@ class TestCommand(BaseCommand):
                           border_style="yellow",
                           padding=(0, 1)))
         console.print()  # Add spacing
+
+    def _run_comprehensive_tests(self, args: Namespace) -> int:
+        """Run comprehensive test suite (modules + integration + examples)."""
+        console = self.console
+        
+        console.print(Panel.fit(
+            "🎓 [bold blue]Student-Friendly Comprehensive Testing[/bold blue]\n"
+            "[dim]This runs ALL tests to show your complete progress![/dim]",
+            border_style="blue"
+        ))
+        
+        try:
+            # Run the comprehensive test runner script
+            test_runner_path = Path("tests/run_all_modules.py")
+            
+            if not test_runner_path.exists():
+                console.print("❌ [red]Comprehensive test runner not found![/red]")
+                console.print(f"Expected: {test_runner_path}")
+                return 1
+            
+            result = subprocess.run([
+                sys.executable, str(test_runner_path)
+            ], cwd=Path.cwd())
+            
+            return result.returncode
+            
+        except Exception as e:
+            console.print(f"❌ [red]Error running comprehensive tests: {e}[/red]")
+            return 1
 
     def _run_all_tests(self, args: Namespace) -> int:
         """Run tests for all modules."""

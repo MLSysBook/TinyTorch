@@ -38,7 +38,7 @@ Input Layer (2) → Hidden Layer (8) → Output Layer (1)
 
 ```bash
 cd examples/xornet/
-python train_with_dashboard.py
+python train_xor_network.py
 ```
 
 **Expected Output:**

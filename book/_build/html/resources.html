@@ -61,7 +61,7 @@
     <script>DOCUMENTATION_OPTIONS.pagename = 'resources';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="prev" title="🎯 TinyTorch Checkpoint System" href="checkpoint-system.html" />
+    <link rel="prev" title="Testing Framework" href="testing-framework.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -186,10 +186,6 @@
 <li class="toctree-l1"><a class="reference internal" href="usage-paths/classroom-use.html">Classroom Use</a></li>
 <li class="toctree-l1"><a class="reference internal" href="instructor-guide.html">Instructor Guide</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Course Orientation</span></p>
-<ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="chapters/00-introduction.html">Introduction</a></li>
-</ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Foundation</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="chapters/01-setup.html">0. Setup</a></li>
@@ -224,7 +220,9 @@
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Additional Resources</span></p>
 <ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="vision.html">TinyTorch Vision</a></li>
+<li class="toctree-l1"><a class="reference internal" href="kiss-principle.html">KISS Principle</a></li>
 <li class="toctree-l1"><a class="reference internal" href="checkpoint-system.html">Checkpoint System</a></li>
+<li class="toctree-l1"><a class="reference internal" href="testing-framework.html">Testing Framework</a></li>
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Learning Resources</a></li>
 </ul>
 
@@ -438,22 +436,22 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#academic-courses">🎓 <strong>Academic Courses</strong></a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#machine-learning-systems"><strong>Machine Learning Systems</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#deep-learning-foundations"><strong>Deep Learning Foundations</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#academic-courses">🎓 Academic Courses</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#machine-learning-systems">Machine Learning Systems</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#deep-learning-foundations">Deep Learning Foundations</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#recommended-books">📖 <strong>Recommended Books</strong></a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#systems-engineering"><strong>Systems &amp; Engineering</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#implementation-theory"><strong>Implementation &amp; Theory</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#recommended-books">📖 Recommended Books</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#systems-engineering">Systems &amp; Engineering</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#implementation-theory">Implementation &amp; Theory</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#alternative-implementations">🛠️ <strong>Alternative Implementations</strong></a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minimal-frameworks"><strong>Minimal Frameworks</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#alternative-implementations">🛠️ Alternative Implementations</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minimal-frameworks">Minimal Frameworks</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#production-internals">🏭 <strong>Production Internals</strong></a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#framework-deep-dives"><strong>Framework Deep Dives</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#production-internals">🏭 Production Internals</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#framework-deep-dives">Framework Deep Dives</a></li>
 </ul>
 </li>
 </ul>
@@ -473,9 +471,9 @@ document.write(`
 <p>While TinyTorch teaches you to build complete ML systems from scratch, these resources provide broader context, alternative perspectives, and production tools.</p>
 <hr class="docutils" />
 <section id="academic-courses">
-<h2>🎓 <strong>Academic Courses</strong><a class="headerlink" href="#academic-courses" title="Link to this heading">#</a></h2>
+<h2>🎓 Academic Courses<a class="headerlink" href="#academic-courses" title="Link to this heading">#</a></h2>
 <section id="machine-learning-systems">
-<h3><strong>Machine Learning Systems</strong><a class="headerlink" href="#machine-learning-systems" title="Link to this heading">#</a></h3>
+<h3>Machine Learning Systems<a class="headerlink" href="#machine-learning-systems" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p><strong><a class="reference external" href="https://stanford-cs329s.github.io/">CS 329S: Machine Learning Systems Design</a></strong> (Stanford)<br />
 <em>Production ML systems, infrastructure, and deployment at scale</em></p></li>
@@ -486,7 +484,7 @@ document.write(`
 </ul>
 </section>
 <section id="deep-learning-foundations">
-<h3><strong>Deep Learning Foundations</strong><a class="headerlink" href="#deep-learning-foundations" title="Link to this heading">#</a></h3>
+<h3>Deep Learning Foundations<a class="headerlink" href="#deep-learning-foundations" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p><strong><a class="reference external" href="http://cs231n.stanford.edu/">CS 231n: Convolutional Neural Networks</a></strong> (Stanford)<br />
 <em>Computer vision and CNN architectures - complements TinyTorch spatial modules</em></p></li>
@@ -497,9 +495,9 @@ document.write(`
 </section>
 <hr class="docutils" />
 <section id="recommended-books">
-<h2>📖 <strong>Recommended Books</strong><a class="headerlink" href="#recommended-books" title="Link to this heading">#</a></h2>
+<h2>📖 Recommended Books<a class="headerlink" href="#recommended-books" title="Link to this heading">#</a></h2>
 <section id="systems-engineering">
-<h3><strong>Systems &amp; Engineering</strong><a class="headerlink" href="#systems-engineering" title="Link to this heading">#</a></h3>
+<h3>Systems &amp; Engineering<a class="headerlink" href="#systems-engineering" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p><strong><a class="reference external" href="https://mlsysbook.ai">Machine Learning Systems</a></strong> by Prof. Vijay Janapa Reddi (Harvard)<br />
 <em>Comprehensive systems perspective on ML engineering and optimization - the perfect companion to TinyTorch</em></p></li>
@@ -510,7 +508,7 @@ document.write(`
 </ul>
 </section>
 <section id="implementation-theory">
-<h3><strong>Implementation &amp; Theory</strong><a class="headerlink" href="#implementation-theory" title="Link to this heading">#</a></h3>
+<h3>Implementation &amp; Theory<a class="headerlink" href="#implementation-theory" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p><strong><a class="reference external" href="https://www.deeplearningbook.org/">Deep Learning</a></strong> by Ian Goodfellow, Yoshua Bengio, Aaron Courville<br />
 <em>Mathematical foundations - the theory behind what you implement in TinyTorch</em></p></li>
@@ -521,10 +519,10 @@ document.write(`
 </section>
 <hr class="docutils" />
 <section id="alternative-implementations">
-<h2>🛠️ <strong>Alternative Implementations</strong><a class="headerlink" href="#alternative-implementations" title="Link to this heading">#</a></h2>
+<h2>🛠️ Alternative Implementations<a class="headerlink" href="#alternative-implementations" title="Link to this heading">#</a></h2>
 <p><strong>Different approaches to building ML systems from scratch - see how others tackle the same challenge:</strong></p>
 <section id="minimal-frameworks">
-<h3><strong>Minimal Frameworks</strong><a class="headerlink" href="#minimal-frameworks" title="Link to this heading">#</a></h3>
+<h3>Minimal Frameworks<a class="headerlink" href="#minimal-frameworks" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p><strong><a class="reference external" href="https://github.com/karpathy/micrograd">Micrograd</a></strong> by Andrej Karpathy<br />
 <em>Minimal autograd engine in 100 lines. <strong>Micrograd shows you the math, TinyTorch shows you the systems.</strong></em></p></li>
@@ -537,9 +535,9 @@ document.write(`
 </section>
 <hr class="docutils" />
 <section id="production-internals">
-<h2>🏭 <strong>Production Internals</strong><a class="headerlink" href="#production-internals" title="Link to this heading">#</a></h2>
+<h2>🏭 Production Internals<a class="headerlink" href="#production-internals" title="Link to this heading">#</a></h2>
 <section id="framework-deep-dives">
-<h3><strong>Framework Deep Dives</strong><a class="headerlink" href="#framework-deep-dives" title="Link to this heading">#</a></h3>
+<h3>Framework Deep Dives<a class="headerlink" href="#framework-deep-dives" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p><strong><a class="reference external" href="http://blog.ezyang.com/2019/05/pytorch-internals/">PyTorch Internals</a></strong> by Edward Yang<br />
 <em>How PyTorch actually works under the hood - a great read as see what you built in TinyTorch corresponds to the real PyTorch</em></p></li>
@@ -583,12 +581,12 @@ document.write(`
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="checkpoint-system.html"
+       href="testing-framework.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">🎯 TinyTorch Checkpoint System</p>
+        <p class="prev-next-title">Testing Framework</p>
       </div>
     </a>
 </div>
@@ -607,22 +605,22 @@ document.write(`
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#academic-courses">🎓 <strong>Academic Courses</strong></a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#machine-learning-systems"><strong>Machine Learning Systems</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#deep-learning-foundations"><strong>Deep Learning Foundations</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#academic-courses">🎓 Academic Courses</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#machine-learning-systems">Machine Learning Systems</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#deep-learning-foundations">Deep Learning Foundations</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#recommended-books">📖 <strong>Recommended Books</strong></a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#systems-engineering"><strong>Systems &amp; Engineering</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#implementation-theory"><strong>Implementation &amp; Theory</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#recommended-books">📖 Recommended Books</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#systems-engineering">Systems &amp; Engineering</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#implementation-theory">Implementation &amp; Theory</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#alternative-implementations">🛠️ <strong>Alternative Implementations</strong></a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minimal-frameworks"><strong>Minimal Frameworks</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#alternative-implementations">🛠️ Alternative Implementations</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minimal-frameworks">Minimal Frameworks</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#production-internals">🏭 <strong>Production Internals</strong></a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#framework-deep-dives"><strong>Framework Deep Dives</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#production-internals">🏭 Production Internals</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#framework-deep-dives">Framework Deep Dives</a></li>
 </ul>
 </li>
 </ul>

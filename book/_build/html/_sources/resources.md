@@ -6,9 +6,9 @@ While TinyTorch teaches you to build complete ML systems from scratch, these res
 
 ---
 
-## 🎓 **Academic Courses**
+## 🎓 Academic Courses
 
-### **Machine Learning Systems**
+### Machine Learning Systems
 - **[CS 329S: Machine Learning Systems Design](https://stanford-cs329s.github.io/)** (Stanford)  
   *Production ML systems, infrastructure, and deployment at scale*
 
@@ -18,7 +18,7 @@ While TinyTorch teaches you to build complete ML systems from scratch, these res
 - **[CS 249r: Tiny Machine Learning](https://sites.google.com/g.harvard.edu/tinyml/home)** (Harvard)  
   *TinyML systems, edge AI, and resource-constrained machine learning*
 
-### **Deep Learning Foundations**
+### Deep Learning Foundations
 - **[CS 231n: Convolutional Neural Networks](http://cs231n.stanford.edu/)** (Stanford)  
   *Computer vision and CNN architectures - complements TinyTorch spatial modules*
 
@@ -27,9 +27,9 @@ While TinyTorch teaches you to build complete ML systems from scratch, these res
 
 ---
 
-## 📖 **Recommended Books**
+## 📖 Recommended Books
 
-### **Systems & Engineering**
+### Systems & Engineering
 - **[Machine Learning Systems](https://mlsysbook.ai)** by Prof. Vijay Janapa Reddi (Harvard)  
   *Comprehensive systems perspective on ML engineering and optimization - the perfect companion to TinyTorch*
 
@@ -39,7 +39,7 @@ While TinyTorch teaches you to build complete ML systems from scratch, these res
 - **[Machine Learning Engineering](https://www.mlebook.com/wiki/doku.php)** by Andriy Burkov  
   *End-to-end ML project lifecycle and best practices*
 
-### **Implementation & Theory**
+### Implementation & Theory
 - **[Deep Learning](https://www.deeplearningbook.org/)** by Ian Goodfellow, Yoshua Bengio, Aaron Courville  
   *Mathematical foundations - the theory behind what you implement in TinyTorch*
 
@@ -48,11 +48,11 @@ While TinyTorch teaches you to build complete ML systems from scratch, these res
 
 ---
 
-## 🛠️ **Alternative Implementations**
+## 🛠️ Alternative Implementations
 
 **Different approaches to building ML systems from scratch - see how others tackle the same challenge:**
 
-### **Minimal Frameworks**
+### Minimal Frameworks
 - **[Micrograd](https://github.com/karpathy/micrograd)** by Andrej Karpathy  
   *Minimal autograd engine in 100 lines. **Micrograd shows you the math, TinyTorch shows you the systems.***
 
@@ -64,9 +64,9 @@ While TinyTorch teaches you to build complete ML systems from scratch, these res
 
 ---
 
-## 🏭 **Production Internals**
+## 🏭 Production Internals
 
-### **Framework Deep Dives**
+### Framework Deep Dives
 - **[PyTorch Internals](http://blog.ezyang.com/2019/05/pytorch-internals/)** by Edward Yang  
   *How PyTorch actually works under the hood - a great read as see what you built in TinyTorch corresponds to the real PyTorch*
 

@@ -12,7 +12,7 @@ A Harvard University course that teaches ML systems engineering by building a co
 ## 🎯 What You'll Build
 
 A **complete ML framework** capable of:
-- Training neural networks on CIFAR-10 to 57%+ accuracy (exceeds course benchmarks!)
+- Training neural networks on CIFAR-10 to 55%+ accuracy (reliably achievable!)
 - Building GPT-style language models  
 - Implementing modern optimizers (Adam, learning rate scheduling)
 - Production deployment with monitoring and MLOps
@@ -116,33 +116,34 @@ python train.py
 ### **After Module 11** → `examples/cifar10/` 🎯  
 ```bash
 cd examples/cifar10
-python train_cifar10_mlp.py
-# 🏆 57.2% accuracy on real images!
+python train.py
+# 🏆 55%+ accuracy on real images!
 ```
 
-**These aren't toy demos** - they're real ML applications achieving competitive results with YOUR framework built from scratch!
+**These aren't toy demos** - they're real ML applications achieving solid results with YOUR framework built from scratch following KISS principles!
 
 ## 🧪 Testing & Validation
 
 All demos and modules are thoroughly tested:
 
 ```bash
-# Test all demos
-python test_all_demos.py
-
-# Validate implementations  
-python validate_demos.py
+# Run comprehensive test suite (recommended)
+tito test --comprehensive
 
 # Run checkpoint tests
 tito checkpoint test 01
+
+# Test specific modules
+tito test --module tensor
 
 # Run all module tests
 python tests/run_all_modules.py
 ```
 
-✅ **9 interactive demos** covering all major concepts  
+✅ **16 modules passing all tests** with 100% health status  
 ✅ **16 capability checkpoints** tracking learning progress  
-✅ **Comprehensive test suite** with module and integration tests  
+✅ **Comprehensive testing framework** with module and integration tests  
+✅ **KISS principle design** for clear, maintainable code  
 
 ## 📖 Documentation
 

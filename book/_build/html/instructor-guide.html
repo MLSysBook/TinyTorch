@@ -61,7 +61,7 @@
     <script>DOCUMENTATION_OPTIONS.pagename = 'instructor-guide';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="TinyTorch System Introduction &amp; Architecture" href="chapters/00-introduction.html" />
+    <link rel="next" title="Module: Setup" href="chapters/01-setup.html" />
     <link rel="prev" title="Classroom Use Overview" href="usage-paths/classroom-use.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -187,10 +187,6 @@
 <li class="toctree-l1"><a class="reference internal" href="usage-paths/classroom-use.html">Classroom Use</a></li>
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Instructor Guide</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Course Orientation</span></p>
-<ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="chapters/00-introduction.html">Introduction</a></li>
-</ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Foundation</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="chapters/01-setup.html">0. Setup</a></li>
@@ -225,7 +221,9 @@
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Additional Resources</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="vision.html">TinyTorch Vision</a></li>
+<li class="toctree-l1"><a class="reference internal" href="kiss-principle.html">KISS Principle</a></li>
 <li class="toctree-l1"><a class="reference internal" href="checkpoint-system.html">Checkpoint System</a></li>
+<li class="toctree-l1"><a class="reference internal" href="testing-framework.html">Testing Framework</a></li>
 <li class="toctree-l1"><a class="reference internal" href="resources.html">Learning Resources</a></li>
 </ul>
 
@@ -439,57 +437,57 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-complete-instructor-journey">🎯 <strong>The Complete Instructor Journey</strong></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#prerequisites">📋 <strong>Prerequisites</strong></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phase-1-initial-setup-one-time">🚀 <strong>Phase 1: Initial Setup (One-Time)</strong></a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-1-clone-and-setup-repository"><strong>Step 1: Clone and Setup Repository</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-2-verify-installation"><strong>Step 2: Verify Installation</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-3-initialize-nbgrader-environment"><strong>Step 3: Initialize NBGrader Environment</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-4-verify-complete-setup"><strong>Step 4: Verify Complete Setup</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-complete-instructor-journey">🎯 The Complete Instructor Journey</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#prerequisites">📋 Prerequisites</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phase-1-initial-setup-one-time">🚀 Phase 1: Initial Setup (One-Time)</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-1-clone-and-setup-repository">Step 1: Clone and Setup Repository</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-2-verify-installation">Step 2: Verify Installation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-3-initialize-nbgrader-environment">Step 3: Initialize NBGrader Environment</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-4-verify-complete-setup">Step 4: Verify Complete Setup</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phase-2-course-preparation">🎓 <strong>Phase 2: Course Preparation</strong></a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#understanding-the-tinytorch-module-structure"><strong>Understanding the TinyTorch Module Structure</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#course-planning-recommendations"><strong>Course Planning Recommendations</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phase-2-course-preparation">🎓 Phase 2: Course Preparation</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#understanding-the-tinytorch-module-structure">Understanding the TinyTorch Module Structure</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#course-planning-recommendations">Course Planning Recommendations</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phase-3-assignment-management">📝 <strong>Phase 3: Assignment Management</strong></a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#creating-student-assignments"><strong>Creating Student Assignments</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#releasing-assignments-to-students"><strong>Releasing Assignments to Students</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#monitoring-assignment-status"><strong>Monitoring Assignment Status</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phase-3-assignment-management">📝 Phase 3: Assignment Management</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#creating-student-assignments">Creating Student Assignments</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#releasing-assignments-to-students">Releasing Assignments to Students</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#monitoring-assignment-status">Monitoring Assignment Status</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phase-4-grading-workflow">📊 <strong>Phase 4: Grading Workflow</strong></a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#collecting-student-submissions"><strong>Collecting Student Submissions</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#auto-grading-process"><strong>Auto-Grading Process</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#generating-student-feedback"><strong>Generating Student Feedback</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#exporting-grades"><strong>Exporting Grades</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phase-4-grading-workflow">📊 Phase 4: Grading Workflow</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#collecting-student-submissions">Collecting Student Submissions</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#auto-grading-process">Auto-Grading Process</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#generating-student-feedback">Generating Student Feedback</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#exporting-grades">Exporting Grades</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phase-5-common-workflows">🔧 <strong>Phase 5: Common Workflows</strong></a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#weekly-assignment-routine"><strong>Weekly Assignment Routine</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#mid-semester-status-check"><strong>Mid-Semester Status Check</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#end-of-semester-workflow"><strong>End-of-Semester Workflow</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phase-5-common-workflows">🔧 Phase 5: Common Workflows</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#weekly-assignment-routine">Weekly Assignment Routine</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#mid-semester-status-check">Mid-Semester Status Check</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#end-of-semester-workflow">End-of-Semester Workflow</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phase-6-troubleshooting-tips">🛠️ <strong>Phase 6: Troubleshooting &amp; Tips</strong></a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#common-issues"><strong>Common Issues</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#best-practices"><strong>Best Practices</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#advanced-configuration"><strong>Advanced Configuration</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phase-6-troubleshooting-tips">🛠️ Phase 6: Troubleshooting &amp; Tips</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#common-issues">Common Issues</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#best-practices">Best Practices</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#advanced-configuration">Advanced Configuration</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phase-7-student-guidance">📚 <strong>Phase 7: Student Guidance</strong></a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#what-to-tell-your-students"><strong>What to Tell Your Students</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phase-7-student-guidance">📚 Phase 7: Student Guidance</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#what-to-tell-your-students">What to Tell Your Students</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#quick-reference-commands">🎯 <strong>Quick Reference Commands</strong></a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#essential-daily-commands"><strong>Essential Daily Commands</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#batch-operations"><strong>Batch Operations</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#system-maintenance"><strong>System Maintenance</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#quick-reference-commands">🎯 Quick Reference Commands</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#essential-daily-commands">Essential Daily Commands</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#batch-operations">Batch Operations</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#system-maintenance">System Maintenance</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#getting-help">📞 <strong>Getting Help</strong></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#success-metrics">🎉 <strong>Success Metrics</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#getting-help">📞 Getting Help</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#success-metrics">🎉 Success Metrics</a></li>
 </ul>
             </nav>
         </div>
@@ -506,12 +504,12 @@ document.write(`
 <p><strong>Complete workflow for instructors and TAs using TinyTorch with automated grading</strong></p>
 <hr class="docutils" />
 <section id="the-complete-instructor-journey">
-<h2>🎯 <strong>The Complete Instructor Journey</strong><a class="headerlink" href="#the-complete-instructor-journey" title="Link to this heading">#</a></h2>
+<h2>🎯 The Complete Instructor Journey<a class="headerlink" href="#the-complete-instructor-journey" title="Link to this heading">#</a></h2>
 <p>This guide walks you through everything you need to know to successfully run a TinyTorch course with automated grading, from initial setup to semester completion.</p>
 </section>
 <hr class="docutils" />
 <section id="prerequisites">
-<h2>📋 <strong>Prerequisites</strong><a class="headerlink" href="#prerequisites" title="Link to this heading">#</a></h2>
+<h2>📋 Prerequisites<a class="headerlink" href="#prerequisites" title="Link to this heading">#</a></h2>
 <p>Before you begin, ensure you have:</p>
 <ul class="simple">
 <li><p><strong>Python 3.8+</strong> installed on your system</p></li>
@@ -523,9 +521,9 @@ document.write(`
 </section>
 <hr class="docutils" />
 <section id="phase-1-initial-setup-one-time">
-<h2>🚀 <strong>Phase 1: Initial Setup (One-Time)</strong><a class="headerlink" href="#phase-1-initial-setup-one-time" title="Link to this heading">#</a></h2>
+<h2>🚀 Phase 1: Initial Setup (One-Time)<a class="headerlink" href="#phase-1-initial-setup-one-time" title="Link to this heading">#</a></h2>
 <section id="step-1-clone-and-setup-repository">
-<h3><strong>Step 1: Clone and Setup Repository</strong><a class="headerlink" href="#step-1-clone-and-setup-repository" title="Link to this heading">#</a></h3>
+<h3>Step 1: Clone and Setup Repository<a class="headerlink" href="#step-1-clone-and-setup-repository" title="Link to this heading">#</a></h3>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Clone the TinyTorch repository</span>
 git<span class="w"> </span>clone<span class="w"> </span>https://github.com/your-org/TinyTorch.git
 <span class="nb">cd</span><span class="w"> </span>TinyTorch
@@ -541,7 +539,7 @@ pip<span class="w"> </span>install<span class="w"> </span>nbgrader<span class="w
 </div>
 </section>
 <section id="step-2-verify-installation">
-<h3><strong>Step 2: Verify Installation</strong><a class="headerlink" href="#step-2-verify-installation" title="Link to this heading">#</a></h3>
+<h3>Step 2: Verify Installation<a class="headerlink" href="#step-2-verify-installation" title="Link to this heading">#</a></h3>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Test that everything is working</span>
 ./bin/tito<span class="w"> </span>system<span class="w"> </span>doctor
 
@@ -554,7 +552,7 @@ pip<span class="w"> </span>install<span class="w"> </span>nbgrader<span class="w
 </div>
 </section>
 <section id="step-3-initialize-nbgrader-environment">
-<h3><strong>Step 3: Initialize NBGrader Environment</strong><a class="headerlink" href="#step-3-initialize-nbgrader-environment" title="Link to this heading">#</a></h3>
+<h3>Step 3: Initialize NBGrader Environment<a class="headerlink" href="#step-3-initialize-nbgrader-environment" title="Link to this heading">#</a></h3>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Initialize the grading infrastructure</span>
 ./bin/tito<span class="w"> </span>nbgrader<span class="w"> </span>init
 
@@ -567,7 +565,7 @@ pip<span class="w"> </span>install<span class="w"> </span>nbgrader<span class="w
 </div>
 </section>
 <section id="step-4-verify-complete-setup">
-<h3><strong>Step 4: Verify Complete Setup</strong><a class="headerlink" href="#step-4-verify-complete-setup" title="Link to this heading">#</a></h3>
+<h3>Step 4: Verify Complete Setup<a class="headerlink" href="#step-4-verify-complete-setup" title="Link to this heading">#</a></h3>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Check system status</span>
 ./bin/tito<span class="w"> </span>module<span class="w"> </span>status<span class="w"> </span>--comprehensive
 
@@ -581,9 +579,9 @@ pip<span class="w"> </span>install<span class="w"> </span>nbgrader<span class="w
 </section>
 <hr class="docutils" />
 <section id="phase-2-course-preparation">
-<h2>🎓 <strong>Phase 2: Course Preparation</strong><a class="headerlink" href="#phase-2-course-preparation" title="Link to this heading">#</a></h2>
+<h2>🎓 Phase 2: Course Preparation<a class="headerlink" href="#phase-2-course-preparation" title="Link to this heading">#</a></h2>
 <section id="understanding-the-tinytorch-module-structure">
-<h3><strong>Understanding the TinyTorch Module Structure</strong><a class="headerlink" href="#understanding-the-tinytorch-module-structure" title="Link to this heading">#</a></h3>
+<h3>Understanding the TinyTorch Module Structure<a class="headerlink" href="#understanding-the-tinytorch-module-structure" title="Link to this heading">#</a></h3>
 <p>TinyTorch has <strong>17 progressive modules</strong>:</p>
 <p><strong>Foundation (Modules 00-02):</strong></p>
 <ul class="simple">
@@ -616,7 +614,7 @@ pip<span class="w"> </span>install<span class="w"> </span>nbgrader<span class="w
 </ul>
 </section>
 <section id="course-planning-recommendations">
-<h3><strong>Course Planning Recommendations</strong><a class="headerlink" href="#course-planning-recommendations" title="Link to this heading">#</a></h3>
+<h3>Course Planning Recommendations<a class="headerlink" href="#course-planning-recommendations" title="Link to this heading">#</a></h3>
 <p><strong>📅 Semester Planning (14-16 weeks):</strong></p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Week</span> <span class="mi">1</span><span class="p">:</span> <span class="mi">00</span><span class="n">_introduction</span> <span class="o">+</span> <span class="mi">01</span><span class="n">_setup</span>
 <span class="n">Week</span> <span class="mi">2</span><span class="p">:</span> <span class="mi">02</span><span class="n">_tensor</span>  
@@ -640,9 +638,9 @@ pip<span class="w"> </span>install<span class="w"> </span>nbgrader<span class="w
 </section>
 <hr class="docutils" />
 <section id="phase-3-assignment-management">
-<h2>📝 <strong>Phase 3: Assignment Management</strong><a class="headerlink" href="#phase-3-assignment-management" title="Link to this heading">#</a></h2>
+<h2>📝 Phase 3: Assignment Management<a class="headerlink" href="#phase-3-assignment-management" title="Link to this heading">#</a></h2>
 <section id="creating-student-assignments">
-<h3><strong>Creating Student Assignments</strong><a class="headerlink" href="#creating-student-assignments" title="Link to this heading">#</a></h3>
+<h3>Creating Student Assignments<a class="headerlink" href="#creating-student-assignments" title="Link to this heading">#</a></h3>
 <p><strong>For Individual Modules:</strong></p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Generate assignment from TinyTorch module</span>
 ./bin/tito<span class="w"> </span>nbgrader<span class="w"> </span>generate<span class="w"> </span>01_setup
@@ -669,7 +667,7 @@ pip<span class="w"> </span>install<span class="w"> </span>nbgrader<span class="w
 </ol>
 </section>
 <section id="releasing-assignments-to-students">
-<h3><strong>Releasing Assignments to Students</strong><a class="headerlink" href="#releasing-assignments-to-students" title="Link to this heading">#</a></h3>
+<h3>Releasing Assignments to Students<a class="headerlink" href="#releasing-assignments-to-students" title="Link to this heading">#</a></h3>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Release individual assignment</span>
 ./bin/tito<span class="w"> </span>nbgrader<span class="w"> </span>release<span class="w"> </span>01_setup
 
@@ -688,7 +686,7 @@ pip<span class="w"> </span>install<span class="w"> </span>nbgrader<span class="w
 </ul>
 </section>
 <section id="monitoring-assignment-status">
-<h3><strong>Monitoring Assignment Status</strong><a class="headerlink" href="#monitoring-assignment-status" title="Link to this heading">#</a></h3>
+<h3>Monitoring Assignment Status<a class="headerlink" href="#monitoring-assignment-status" title="Link to this heading">#</a></h3>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Check what assignments exist</span>
 ./bin/tito<span class="w"> </span>nbgrader<span class="w"> </span>status
 
@@ -706,9 +704,9 @@ pip<span class="w"> </span>install<span class="w"> </span>nbgrader<span class="w
 </section>
 <hr class="docutils" />
 <section id="phase-4-grading-workflow">
-<h2>📊 <strong>Phase 4: Grading Workflow</strong><a class="headerlink" href="#phase-4-grading-workflow" title="Link to this heading">#</a></h2>
+<h2>📊 Phase 4: Grading Workflow<a class="headerlink" href="#phase-4-grading-workflow" title="Link to this heading">#</a></h2>
 <section id="collecting-student-submissions">
-<h3><strong>Collecting Student Submissions</strong><a class="headerlink" href="#collecting-student-submissions" title="Link to this heading">#</a></h3>
+<h3>Collecting Student Submissions<a class="headerlink" href="#collecting-student-submissions" title="Link to this heading">#</a></h3>
 <p><strong>Manual Collection (Most Common):</strong></p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Students submit via LMS, you download to:</span>
 mkdir<span class="w"> </span>-p<span class="w"> </span>assignments/submitted/01_setup/student_name/
@@ -722,7 +720,7 @@ mkdir<span class="w"> </span>-p<span class="w"> </span>assignments/submitted/01_
 </div>
 </section>
 <section id="auto-grading-process">
-<h3><strong>Auto-Grading Process</strong><a class="headerlink" href="#auto-grading-process" title="Link to this heading">#</a></h3>
+<h3>Auto-Grading Process<a class="headerlink" href="#auto-grading-process" title="Link to this heading">#</a></h3>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Auto-grade specific assignment</span>
 ./bin/tito<span class="w"> </span>nbgrader<span class="w"> </span>autograde<span class="w"> </span>01_setup
 
@@ -739,7 +737,7 @@ mkdir<span class="w"> </span>-p<span class="w"> </span>assignments/submitted/01_
 </div>
 </section>
 <section id="generating-student-feedback">
-<h3><strong>Generating Student Feedback</strong><a class="headerlink" href="#generating-student-feedback" title="Link to this heading">#</a></h3>
+<h3>Generating Student Feedback<a class="headerlink" href="#generating-student-feedback" title="Link to this heading">#</a></h3>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Generate feedback for specific assignment</span>
 ./bin/tito<span class="w"> </span>nbgrader<span class="w"> </span>feedback<span class="w"> </span>01_setup
 
@@ -752,7 +750,7 @@ mkdir<span class="w"> </span>-p<span class="w"> </span>assignments/submitted/01_
 </div>
 </section>
 <section id="exporting-grades">
-<h3><strong>Exporting Grades</strong><a class="headerlink" href="#exporting-grades" title="Link to this heading">#</a></h3>
+<h3>Exporting Grades<a class="headerlink" href="#exporting-grades" title="Link to this heading">#</a></h3>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Export grades to CSV</span>
 ./bin/tito<span class="w"> </span>nbgrader<span class="w"> </span>report<span class="w"> </span>--format<span class="w"> </span>csv
 
@@ -763,9 +761,9 @@ mkdir<span class="w"> </span>-p<span class="w"> </span>assignments/submitted/01_
 </section>
 <hr class="docutils" />
 <section id="phase-5-common-workflows">
-<h2>🔧 <strong>Phase 5: Common Workflows</strong><a class="headerlink" href="#phase-5-common-workflows" title="Link to this heading">#</a></h2>
+<h2>🔧 Phase 5: Common Workflows<a class="headerlink" href="#phase-5-common-workflows" title="Link to this heading">#</a></h2>
 <section id="weekly-assignment-routine">
-<h3><strong>Weekly Assignment Routine</strong><a class="headerlink" href="#weekly-assignment-routine" title="Link to this heading">#</a></h3>
+<h3>Weekly Assignment Routine<a class="headerlink" href="#weekly-assignment-routine" title="Link to this heading">#</a></h3>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Monday: Generate and release new assignment</span>
 ./bin/tito<span class="w"> </span>nbgrader<span class="w"> </span>generate<span class="w"> </span>03_activations
 ./bin/tito<span class="w"> </span>nbgrader<span class="w"> </span>release<span class="w"> </span>03_activations
@@ -783,7 +781,7 @@ mkdir<span class="w"> </span>-p<span class="w"> </span>assignments/submitted/01_
 </div>
 </section>
 <section id="mid-semester-status-check">
-<h3><strong>Mid-Semester Status Check</strong><a class="headerlink" href="#mid-semester-status-check" title="Link to this heading">#</a></h3>
+<h3>Mid-Semester Status Check<a class="headerlink" href="#mid-semester-status-check" title="Link to this heading">#</a></h3>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Comprehensive system status</span>
 ./bin/tito<span class="w"> </span>module<span class="w"> </span>status<span class="w"> </span>--comprehensive
 
@@ -796,7 +794,7 @@ mkdir<span class="w"> </span>-p<span class="w"> </span>assignments/submitted/01_
 </div>
 </section>
 <section id="end-of-semester-workflow">
-<h3><strong>End-of-Semester Workflow</strong><a class="headerlink" href="#end-of-semester-workflow" title="Link to this heading">#</a></h3>
+<h3>End-of-Semester Workflow<a class="headerlink" href="#end-of-semester-workflow" title="Link to this heading">#</a></h3>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Generate final gradebook</span>
 ./bin/tito<span class="w"> </span>nbgrader<span class="w"> </span>report<span class="w"> </span>--format<span class="w"> </span>csv
 
@@ -812,9 +810,9 @@ tar<span class="w"> </span>-czf<span class="w"> </span>course_archive_fall2024.t
 </section>
 <hr class="docutils" />
 <section id="phase-6-troubleshooting-tips">
-<h2>🛠️ <strong>Phase 6: Troubleshooting &amp; Tips</strong><a class="headerlink" href="#phase-6-troubleshooting-tips" title="Link to this heading">#</a></h2>
+<h2>🛠️ Phase 6: Troubleshooting &amp; Tips<a class="headerlink" href="#phase-6-troubleshooting-tips" title="Link to this heading">#</a></h2>
 <section id="common-issues">
-<h3><strong>Common Issues</strong><a class="headerlink" href="#common-issues" title="Link to this heading">#</a></h3>
+<h3>Common Issues<a class="headerlink" href="#common-issues" title="Link to this heading">#</a></h3>
 <p><strong>“Module not found” when generating:</strong></p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Check available modules</span>
 ls<span class="w"> </span>modules/source/
@@ -838,7 +836,7 @@ ls<span class="w"> </span>modules/source/
 </div>
 </section>
 <section id="best-practices">
-<h3><strong>Best Practices</strong><a class="headerlink" href="#best-practices" title="Link to this heading">#</a></h3>
+<h3>Best Practices<a class="headerlink" href="#best-practices" title="Link to this heading">#</a></h3>
 <p><strong>📋 Assignment Preparation:</strong></p>
 <ul class="simple">
 <li><p>Generate all assignments at start of semester</p></li>
@@ -859,7 +857,7 @@ ls<span class="w"> </span>modules/source/
 </ul>
 </section>
 <section id="advanced-configuration">
-<h3><strong>Advanced Configuration</strong><a class="headerlink" href="#advanced-configuration" title="Link to this heading">#</a></h3>
+<h3>Advanced Configuration<a class="headerlink" href="#advanced-configuration" title="Link to this heading">#</a></h3>
 <p><strong>Customize point values in <code class="docutils literal notranslate"><span class="pre">nbgrader_config.py</span></code>:</strong></p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Adjust timeout for long-running assignments</span>
 <span class="n">c</span><span class="o">.</span><span class="n">ExecutePreprocessor</span><span class="o">.</span><span class="n">timeout</span> <span class="o">=</span> <span class="mi">300</span>  <span class="c1"># 5 minutes per cell</span>
@@ -874,9 +872,9 @@ ls<span class="w"> </span>modules/source/
 </section>
 <hr class="docutils" />
 <section id="phase-7-student-guidance">
-<h2>📚 <strong>Phase 7: Student Guidance</strong><a class="headerlink" href="#phase-7-student-guidance" title="Link to this heading">#</a></h2>
+<h2>📚 Phase 7: Student Guidance<a class="headerlink" href="#phase-7-student-guidance" title="Link to this heading">#</a></h2>
 <section id="what-to-tell-your-students">
-<h3><strong>What to Tell Your Students</strong><a class="headerlink" href="#what-to-tell-your-students" title="Link to this heading">#</a></h3>
+<h3>What to Tell Your Students<a class="headerlink" href="#what-to-tell-your-students" title="Link to this heading">#</a></h3>
 <p><strong>Setup Instructions for Students:</strong></p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Students should run:</span>
 git<span class="w"> </span>clone<span class="w"> </span><span class="o">[</span>your-course-repo<span class="o">]</span>
@@ -910,9 +908,9 @@ pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </s
 </section>
 <hr class="docutils" />
 <section id="quick-reference-commands">
-<h2>🎯 <strong>Quick Reference Commands</strong><a class="headerlink" href="#quick-reference-commands" title="Link to this heading">#</a></h2>
+<h2>🎯 Quick Reference Commands<a class="headerlink" href="#quick-reference-commands" title="Link to this heading">#</a></h2>
 <section id="essential-daily-commands">
-<h3><strong>Essential Daily Commands</strong><a class="headerlink" href="#essential-daily-commands" title="Link to this heading">#</a></h3>
+<h3>Essential Daily Commands<a class="headerlink" href="#essential-daily-commands" title="Link to this heading">#</a></h3>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Check overall system status</span>
 ./bin/tito<span class="w"> </span>module<span class="w"> </span>status<span class="w"> </span>--comprehensive
 
@@ -929,7 +927,7 @@ pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </s
 </div>
 </section>
 <section id="batch-operations">
-<h3><strong>Batch Operations</strong><a class="headerlink" href="#batch-operations" title="Link to this heading">#</a></h3>
+<h3>Batch Operations<a class="headerlink" href="#batch-operations" title="Link to this heading">#</a></h3>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Work with multiple modules</span>
 ./bin/tito<span class="w"> </span>nbgrader<span class="w"> </span>generate<span class="w"> </span>--range<span class="w"> </span><span class="m">01</span>-04
 ./bin/tito<span class="w"> </span>nbgrader<span class="w"> </span>release<span class="w"> </span>--all
@@ -939,7 +937,7 @@ pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </s
 </div>
 </section>
 <section id="system-maintenance">
-<h3><strong>System Maintenance</strong><a class="headerlink" href="#system-maintenance" title="Link to this heading">#</a></h3>
+<h3>System Maintenance<a class="headerlink" href="#system-maintenance" title="Link to this heading">#</a></h3>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Environment health</span>
 ./bin/tito<span class="w"> </span>system<span class="w"> </span>doctor
 
@@ -954,7 +952,7 @@ pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </s
 </section>
 <hr class="docutils" />
 <section id="getting-help">
-<h2>📞 <strong>Getting Help</strong><a class="headerlink" href="#getting-help" title="Link to this heading">#</a></h2>
+<h2>📞 Getting Help<a class="headerlink" href="#getting-help" title="Link to this heading">#</a></h2>
 <p><strong>If you encounter issues:</strong></p>
 <ol class="arabic simple">
 <li><p><strong>Check system status</strong>: <code class="docutils literal notranslate"><span class="pre">./bin/tito</span> <span class="pre">system</span> <span class="pre">doctor</span></code></p></li>
@@ -971,7 +969,7 @@ pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </s
 </section>
 <hr class="docutils" />
 <section id="success-metrics">
-<h2>🎉 <strong>Success Metrics</strong><a class="headerlink" href="#success-metrics" title="Link to this heading">#</a></h2>
+<h2>🎉 Success Metrics<a class="headerlink" href="#success-metrics" title="Link to this heading">#</a></h2>
 <p><strong>You’ll know you’re successful when:</strong></p>
 <ul class="simple">
 <li><p>✅ Students can download and run assignments without setup issues</p></li>
@@ -1026,11 +1024,11 @@ pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </s
       </div>
     </a>
     <a class="right-next"
-       href="chapters/00-introduction.html"
+       href="chapters/01-setup.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">TinyTorch System Introduction &amp; Architecture</p>
+        <p class="prev-next-title">Module: Setup</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -1050,57 +1048,57 @@ pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </s
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-complete-instructor-journey">🎯 <strong>The Complete Instructor Journey</strong></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#prerequisites">📋 <strong>Prerequisites</strong></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phase-1-initial-setup-one-time">🚀 <strong>Phase 1: Initial Setup (One-Time)</strong></a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-1-clone-and-setup-repository"><strong>Step 1: Clone and Setup Repository</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-2-verify-installation"><strong>Step 2: Verify Installation</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-3-initialize-nbgrader-environment"><strong>Step 3: Initialize NBGrader Environment</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-4-verify-complete-setup"><strong>Step 4: Verify Complete Setup</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-complete-instructor-journey">🎯 The Complete Instructor Journey</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#prerequisites">📋 Prerequisites</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phase-1-initial-setup-one-time">🚀 Phase 1: Initial Setup (One-Time)</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-1-clone-and-setup-repository">Step 1: Clone and Setup Repository</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-2-verify-installation">Step 2: Verify Installation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-3-initialize-nbgrader-environment">Step 3: Initialize NBGrader Environment</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-4-verify-complete-setup">Step 4: Verify Complete Setup</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phase-2-course-preparation">🎓 <strong>Phase 2: Course Preparation</strong></a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#understanding-the-tinytorch-module-structure"><strong>Understanding the TinyTorch Module Structure</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#course-planning-recommendations"><strong>Course Planning Recommendations</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phase-2-course-preparation">🎓 Phase 2: Course Preparation</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#understanding-the-tinytorch-module-structure">Understanding the TinyTorch Module Structure</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#course-planning-recommendations">Course Planning Recommendations</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phase-3-assignment-management">📝 <strong>Phase 3: Assignment Management</strong></a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#creating-student-assignments"><strong>Creating Student Assignments</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#releasing-assignments-to-students"><strong>Releasing Assignments to Students</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#monitoring-assignment-status"><strong>Monitoring Assignment Status</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phase-3-assignment-management">📝 Phase 3: Assignment Management</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#creating-student-assignments">Creating Student Assignments</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#releasing-assignments-to-students">Releasing Assignments to Students</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#monitoring-assignment-status">Monitoring Assignment Status</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phase-4-grading-workflow">📊 <strong>Phase 4: Grading Workflow</strong></a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#collecting-student-submissions"><strong>Collecting Student Submissions</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#auto-grading-process"><strong>Auto-Grading Process</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#generating-student-feedback"><strong>Generating Student Feedback</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#exporting-grades"><strong>Exporting Grades</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phase-4-grading-workflow">📊 Phase 4: Grading Workflow</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#collecting-student-submissions">Collecting Student Submissions</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#auto-grading-process">Auto-Grading Process</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#generating-student-feedback">Generating Student Feedback</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#exporting-grades">Exporting Grades</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phase-5-common-workflows">🔧 <strong>Phase 5: Common Workflows</strong></a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#weekly-assignment-routine"><strong>Weekly Assignment Routine</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#mid-semester-status-check"><strong>Mid-Semester Status Check</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#end-of-semester-workflow"><strong>End-of-Semester Workflow</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phase-5-common-workflows">🔧 Phase 5: Common Workflows</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#weekly-assignment-routine">Weekly Assignment Routine</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#mid-semester-status-check">Mid-Semester Status Check</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#end-of-semester-workflow">End-of-Semester Workflow</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phase-6-troubleshooting-tips">🛠️ <strong>Phase 6: Troubleshooting &amp; Tips</strong></a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#common-issues"><strong>Common Issues</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#best-practices"><strong>Best Practices</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#advanced-configuration"><strong>Advanced Configuration</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phase-6-troubleshooting-tips">🛠️ Phase 6: Troubleshooting &amp; Tips</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#common-issues">Common Issues</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#best-practices">Best Practices</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#advanced-configuration">Advanced Configuration</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phase-7-student-guidance">📚 <strong>Phase 7: Student Guidance</strong></a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#what-to-tell-your-students"><strong>What to Tell Your Students</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#phase-7-student-guidance">📚 Phase 7: Student Guidance</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#what-to-tell-your-students">What to Tell Your Students</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#quick-reference-commands">🎯 <strong>Quick Reference Commands</strong></a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#essential-daily-commands"><strong>Essential Daily Commands</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#batch-operations"><strong>Batch Operations</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#system-maintenance"><strong>System Maintenance</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#quick-reference-commands">🎯 Quick Reference Commands</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#essential-daily-commands">Essential Daily Commands</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#batch-operations">Batch Operations</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#system-maintenance">System Maintenance</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#getting-help">📞 <strong>Getting Help</strong></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#success-metrics">🎉 <strong>Success Metrics</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#getting-help">📞 Getting Help</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#success-metrics">🎉 Success Metrics</a></li>
 </ul>
   </nav></div>
 

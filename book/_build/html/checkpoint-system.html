@@ -61,8 +61,8 @@
     <script>DOCUMENTATION_OPTIONS.pagename = 'checkpoint-system';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="📚 Additional Learning Resources" href="resources.html" />
-    <link rel="prev" title="The TinyTorch Vision" href="vision.html" />
+    <link rel="next" title="Testing Framework" href="testing-framework.html" />
+    <link rel="prev" title="KISS Principle in TinyTorch" href="kiss-principle.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -187,10 +187,6 @@
 <li class="toctree-l1"><a class="reference internal" href="usage-paths/classroom-use.html">Classroom Use</a></li>
 <li class="toctree-l1"><a class="reference internal" href="instructor-guide.html">Instructor Guide</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Course Orientation</span></p>
-<ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="chapters/00-introduction.html">Introduction</a></li>
-</ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Foundation</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="chapters/01-setup.html">0. Setup</a></li>
@@ -225,7 +221,9 @@
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Additional Resources</span></p>
 <ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="vision.html">TinyTorch Vision</a></li>
+<li class="toctree-l1"><a class="reference internal" href="kiss-principle.html">KISS Principle</a></li>
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Checkpoint System</a></li>
+<li class="toctree-l1"><a class="reference internal" href="testing-framework.html">Testing Framework</a></li>
 <li class="toctree-l1"><a class="reference internal" href="resources.html">Learning Resources</a></li>
 </ul>
 
@@ -440,59 +438,59 @@ document.write(`
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#capability-driven-learning-journey">Capability-Driven Learning Journey</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-five-major-checkpoints">🚀 <strong>The Five Major Checkpoints</strong></a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#foundation"><strong>🎯 Foundation</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#neural-architecture"><strong>🎯 Neural Architecture</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#training"><strong>🎯 Training</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inference-deployment"><strong>🎯 Inference Deployment</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#language-models"><strong>🔥 Language Models</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-five-major-checkpoints">🚀 The Five Major Checkpoints</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#foundation">🎯 Foundation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#neural-architecture">🎯 Neural Architecture</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#training">🎯 Training</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inference-deployment">🎯 Inference Deployment</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#language-models">🔥 Language Models</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tracking-your-progress">📊 <strong>Tracking Your Progress</strong></a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#visual-timeline"><strong>Visual Timeline</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rich-progress-tracking"><strong>Rich Progress Tracking</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#capability-statements"><strong>Capability Statements</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tracking-your-progress">📊 Tracking Your Progress</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#visual-timeline">Visual Timeline</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rich-progress-tracking">Rich Progress Tracking</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#capability-statements">Capability Statements</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#using-the-checkpoint-system">🛠️ <strong>Using the Checkpoint System</strong></a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cli-commands"><strong>CLI Commands</strong></a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#check-your-progress"><strong>Check Your Progress</strong></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#rich-visual-timeline"><strong>Rich Visual Timeline</strong></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#test-capabilities"><strong>Test Capabilities</strong></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#module-completion-workflow"><strong>Module Completion Workflow</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#using-the-checkpoint-system">🛠️ Using the Checkpoint System</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cli-commands">CLI Commands</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#check-your-progress">Check Your Progress</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#rich-visual-timeline">Rich Visual Timeline</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#test-capabilities">Test Capabilities</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#module-completion-workflow">Module Completion Workflow</a></li>
 </ul>
 </li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#integration-with-development"><strong>Integration with Development</strong></a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#automatic-module-to-checkpoint-mapping"><strong>Automatic Module-to-Checkpoint Mapping</strong></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#real-capability-validation"><strong>Real Capability Validation</strong></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#rich-visual-feedback"><strong>Rich Visual Feedback</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#integration-with-development">Integration with Development</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#automatic-module-to-checkpoint-mapping">Automatic Module-to-Checkpoint Mapping</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#real-capability-validation">Real Capability Validation</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#rich-visual-feedback">Rich Visual Feedback</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#implementation-architecture">🏗️ <strong>Implementation Architecture</strong></a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#individual-test-files"><strong>16 Individual Test Files</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rich-cli-integration"><strong>Rich CLI Integration</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#automated-module-completion"><strong>Automated Module Completion</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#agent-team-implementation"><strong>Agent Team Implementation</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#implementation-architecture">🏗️ Implementation Architecture</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#individual-test-files">16 Individual Test Files</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rich-cli-integration">Rich CLI Integration</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#automated-module-completion">Automated Module Completion</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#agent-team-implementation">Agent Team Implementation</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-this-approach-works">🧠 <strong>Why This Approach Works</strong></a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#systems-thinking-over-task-completion"><strong>Systems Thinking Over Task Completion</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#clear-learning-goals"><strong>Clear Learning Goals</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#academic-progress-markers"><strong>Academic Progress Markers</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#real-world-relevance"><strong>Real-World Relevance</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-this-approach-works">🧠 Why This Approach Works</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#systems-thinking-over-task-completion">Systems Thinking Over Task Completion</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#clear-learning-goals">Clear Learning Goals</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#academic-progress-markers">Academic Progress Markers</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#real-world-relevance">Real-World Relevance</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-outcomes-by-checkpoint">📈 <strong>Learning Outcomes by Checkpoint</strong></a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#after-foundation"><strong>After Foundation</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#after-architecture"><strong>After Architecture</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#after-training"><strong>After Training</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#after-inference"><strong>After Inference</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#after-language-models"><strong>After Language Models</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-outcomes-by-checkpoint">📈 Learning Outcomes by Checkpoint</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#after-foundation">After Foundation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#after-architecture">After Architecture</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#after-training">After Training</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#after-inference">After Inference</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#after-language-models">After Language Models</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#your-journey-starts-here">🚀 <strong>Your Journey Starts Here</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#your-journey-starts-here">🚀 Your Journey Starts Here</a></li>
 </ul>
             </nav>
         </div>
@@ -519,9 +517,9 @@ document.write(`
 </section>
 <hr class="docutils" />
 <section id="the-five-major-checkpoints">
-<h2>🚀 <strong>The Five Major Checkpoints</strong><a class="headerlink" href="#the-five-major-checkpoints" title="Link to this heading">#</a></h2>
+<h2>🚀 The Five Major Checkpoints<a class="headerlink" href="#the-five-major-checkpoints" title="Link to this heading">#</a></h2>
 <section id="foundation">
-<h3><strong>🎯 Foundation</strong><a class="headerlink" href="#foundation" title="Link to this heading">#</a></h3>
+<h3>🎯 Foundation<a class="headerlink" href="#foundation" title="Link to this heading">#</a></h3>
 <p><em>Core ML primitives and environment setup</em></p>
 <p><strong>Modules</strong>: Setup • Tensors • Activations<br />
 <strong>Capability Unlocked</strong>: “Can build mathematical operations and ML primitives”</p>
@@ -535,7 +533,7 @@ document.write(`
 </section>
 <hr class="docutils" />
 <section id="neural-architecture">
-<h3><strong>🎯 Neural Architecture</strong><a class="headerlink" href="#neural-architecture" title="Link to this heading">#</a></h3>
+<h3>🎯 Neural Architecture<a class="headerlink" href="#neural-architecture" title="Link to this heading">#</a></h3>
 <p><em>Building complete neural network architectures</em></p>
 <p><strong>Modules</strong>: Layers • Dense • Spatial • Attention<br />
 <strong>Capability Unlocked</strong>: “Can design and construct any neural network architecture”</p>
@@ -550,7 +548,7 @@ document.write(`
 </section>
 <hr class="docutils" />
 <section id="training">
-<h3><strong>🎯 Training</strong><a class="headerlink" href="#training" title="Link to this heading">#</a></h3>
+<h3>🎯 Training<a class="headerlink" href="#training" title="Link to this heading">#</a></h3>
 <p><em>Complete model training pipeline</em></p>
 <p><strong>Modules</strong>: DataLoader • Autograd • Optimizers • Training<br />
 <strong>Capability Unlocked</strong>: “Can train neural networks on real datasets”</p>
@@ -565,7 +563,7 @@ document.write(`
 </section>
 <hr class="docutils" />
 <section id="inference-deployment">
-<h3><strong>🎯 Inference Deployment</strong><a class="headerlink" href="#inference-deployment" title="Link to this heading">#</a></h3>
+<h3>🎯 Inference Deployment<a class="headerlink" href="#inference-deployment" title="Link to this heading">#</a></h3>
 <p><em>Optimized model deployment and serving</em></p>
 <p><strong>Modules</strong>: Compression • Kernels • Benchmarking • MLOps<br />
 <strong>Capability Unlocked</strong>: “Can deploy optimized models for production inference”</p>
@@ -580,7 +578,7 @@ document.write(`
 </section>
 <hr class="docutils" />
 <section id="language-models">
-<h3><strong>🔥 Language Models</strong><a class="headerlink" href="#language-models" title="Link to this heading">#</a></h3>
+<h3>🔥 Language Models<a class="headerlink" href="#language-models" title="Link to this heading">#</a></h3>
 <p><em>Framework generalization across modalities</em></p>
 <p><strong>Modules</strong>: TinyGPT<br />
 <strong>Capability Unlocked</strong>: “Can build unified frameworks that support both vision and language”</p>
@@ -595,9 +593,9 @@ document.write(`
 </section>
 <hr class="docutils" />
 <section id="tracking-your-progress">
-<h2>📊 <strong>Tracking Your Progress</strong><a class="headerlink" href="#tracking-your-progress" title="Link to this heading">#</a></h2>
+<h2>📊 Tracking Your Progress<a class="headerlink" href="#tracking-your-progress" title="Link to this heading">#</a></h2>
 <section id="visual-timeline">
-<h3><strong>Visual Timeline</strong><a class="headerlink" href="#visual-timeline" title="Link to this heading">#</a></h3>
+<h3>Visual Timeline<a class="headerlink" href="#visual-timeline" title="Link to this heading">#</a></h3>
 <p>See your journey through the ML systems engineering pipeline:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Foundation → Architecture → Training → Inference → Language Models
 </pre></div>
@@ -605,7 +603,7 @@ document.write(`
 <p>Each checkpoint represents a major learning milestone and capability unlock in your unified vision+language framework.</p>
 </section>
 <section id="rich-progress-tracking">
-<h3><strong>Rich Progress Tracking</strong><a class="headerlink" href="#rich-progress-tracking" title="Link to this heading">#</a></h3>
+<h3>Rich Progress Tracking<a class="headerlink" href="#rich-progress-tracking" title="Link to this heading">#</a></h3>
 <p>Within each checkpoint, track granular progress through individual modules with enhanced Rich CLI visualizations:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>🎯 Neural Architecture ████████▓▓▓▓ 66%
    ✅ Layers ──── ✅ Dense ──── 🔄 Spatial ──── ⏳ Attention
@@ -615,7 +613,7 @@ document.write(`
 </div>
 </section>
 <section id="capability-statements">
-<h3><strong>Capability Statements</strong><a class="headerlink" href="#capability-statements" title="Link to this heading">#</a></h3>
+<h3>Capability Statements<a class="headerlink" href="#capability-statements" title="Link to this heading">#</a></h3>
 <p>Every checkpoint completion unlocks a concrete capability:</p>
 <ul class="simple">
 <li><p>✅ “I can build mathematical operations and ML primitives”</p></li>
@@ -628,25 +626,25 @@ document.write(`
 </section>
 <hr class="docutils" />
 <section id="using-the-checkpoint-system">
-<h2>🛠️ <strong>Using the Checkpoint System</strong><a class="headerlink" href="#using-the-checkpoint-system" title="Link to this heading">#</a></h2>
+<h2>🛠️ Using the Checkpoint System<a class="headerlink" href="#using-the-checkpoint-system" title="Link to this heading">#</a></h2>
 <section id="cli-commands">
-<h3><strong>CLI Commands</strong><a class="headerlink" href="#cli-commands" title="Link to this heading">#</a></h3>
+<h3>CLI Commands<a class="headerlink" href="#cli-commands" title="Link to this heading">#</a></h3>
 <section id="check-your-progress">
-<h4><strong>Check Your Progress</strong><a class="headerlink" href="#check-your-progress" title="Link to this heading">#</a></h4>
+<h4>Check Your Progress<a class="headerlink" href="#check-your-progress" title="Link to this heading">#</a></h4>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>tito<span class="w"> </span>checkpoint<span class="w"> </span>status<span class="w">           </span><span class="c1"># Current progress overview with capability statements</span>
 tito<span class="w"> </span>checkpoint<span class="w"> </span>status<span class="w"> </span>--detailed<span class="w"> </span><span class="c1"># Module-level detail with test file status</span>
 </pre></div>
 </div>
 </section>
 <section id="rich-visual-timeline">
-<h4><strong>Rich Visual Timeline</strong><a class="headerlink" href="#rich-visual-timeline" title="Link to this heading">#</a></h4>
+<h4>Rich Visual Timeline<a class="headerlink" href="#rich-visual-timeline" title="Link to this heading">#</a></h4>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>tito<span class="w"> </span>checkpoint<span class="w"> </span>timeline<span class="w">         </span><span class="c1"># Vertical tree view with connecting lines</span>
 tito<span class="w"> </span>checkpoint<span class="w"> </span>timeline<span class="w"> </span>--horizontal<span class="w"> </span><span class="c1"># Linear progress bar with Rich styling</span>
 </pre></div>
 </div>
 </section>
 <section id="test-capabilities">
-<h4><strong>Test Capabilities</strong><a class="headerlink" href="#test-capabilities" title="Link to this heading">#</a></h4>
+<h4>Test Capabilities<a class="headerlink" href="#test-capabilities" title="Link to this heading">#</a></h4>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>tito<span class="w"> </span>checkpoint<span class="w"> </span><span class="nb">test</span><span class="w"> </span><span class="m">01</span><span class="w">          </span><span class="c1"># Test specific checkpoint (01-15)</span>
 tito<span class="w"> </span>checkpoint<span class="w"> </span><span class="nb">test</span><span class="w">             </span><span class="c1"># Test current checkpoint</span>
 tito<span class="w"> </span>checkpoint<span class="w"> </span>run<span class="w"> </span><span class="m">00</span><span class="w"> </span>--verbose<span class="w"> </span><span class="c1"># Run checkpoint with detailed output</span>
@@ -655,7 +653,7 @@ tito<span class="w"> </span>checkpoint<span class="w"> </span>unlock<span class=
 </div>
 </section>
 <section id="module-completion-workflow">
-<h4><strong>Module Completion Workflow</strong><a class="headerlink" href="#module-completion-workflow" title="Link to this heading">#</a></h4>
+<h4>Module Completion Workflow<a class="headerlink" href="#module-completion-workflow" title="Link to this heading">#</a></h4>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>tito<span class="w"> </span>module<span class="w"> </span><span class="nb">complete</span><span class="w"> </span>02_tensor<span class="w">   </span><span class="c1"># Complete module with export and checkpoint testing</span>
 tito<span class="w"> </span>module<span class="w"> </span><span class="nb">complete</span><span class="w"> </span>tensor<span class="w">      </span><span class="c1"># Works with short names too</span>
 tito<span class="w"> </span>module<span class="w"> </span><span class="nb">complete</span><span class="w"> </span>02_tensor<span class="w"> </span>--skip-test<span class="w"> </span><span class="c1"># Skip checkpoint test if needed</span>
@@ -671,10 +669,10 @@ tito<span class="w"> </span>module<span class="w"> </span><span class="nb">compl
 </section>
 </section>
 <section id="integration-with-development">
-<h3><strong>Integration with Development</strong><a class="headerlink" href="#integration-with-development" title="Link to this heading">#</a></h3>
+<h3>Integration with Development<a class="headerlink" href="#integration-with-development" title="Link to this heading">#</a></h3>
 <p>The checkpoint system connects directly to your actual development work:</p>
 <section id="automatic-module-to-checkpoint-mapping">
-<h4><strong>Automatic Module-to-Checkpoint Mapping</strong><a class="headerlink" href="#automatic-module-to-checkpoint-mapping" title="Link to this heading">#</a></h4>
+<h4>Automatic Module-to-Checkpoint Mapping<a class="headerlink" href="#automatic-module-to-checkpoint-mapping" title="Link to this heading">#</a></h4>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Each module maps to a specific checkpoint:</span>
 01_setup<span class="w">      </span>→<span class="w"> </span>checkpoint_00_environment<span class="w">   </span><span class="c1"># Environment setup</span>
 02_tensor<span class="w">     </span>→<span class="w"> </span>checkpoint_01_foundation<span class="w">    </span><span class="c1"># Tensor operations</span>
@@ -696,7 +694,7 @@ tito<span class="w"> </span>module<span class="w"> </span><span class="nb">compl
 </div>
 </section>
 <section id="real-capability-validation">
-<h4><strong>Real Capability Validation</strong><a class="headerlink" href="#real-capability-validation" title="Link to this heading">#</a></h4>
+<h4>Real Capability Validation<a class="headerlink" href="#real-capability-validation" title="Link to this heading">#</a></h4>
 <ul class="simple">
 <li><p><strong>Not just code completion</strong>: Tests verify actual functionality works</p></li>
 <li><p><strong>Import testing</strong>: Ensures modules export correctly to package</p></li>
@@ -705,7 +703,7 @@ tito<span class="w"> </span>module<span class="w"> </span><span class="nb">compl
 </ul>
 </section>
 <section id="rich-visual-feedback">
-<h4><strong>Rich Visual Feedback</strong><a class="headerlink" href="#rich-visual-feedback" title="Link to this heading">#</a></h4>
+<h4>Rich Visual Feedback<a class="headerlink" href="#rich-visual-feedback" title="Link to this heading">#</a></h4>
 <ul class="simple">
 <li><p><strong>Achievement celebrations</strong>: 🎉 when checkpoints are completed</p></li>
 <li><p><strong>Progress visualization</strong>: Rich CLI progress bars and timelines</p></li>
@@ -717,9 +715,9 @@ tito<span class="w"> </span>module<span class="w"> </span><span class="nb">compl
 </section>
 <hr class="docutils" />
 <section id="implementation-architecture">
-<h2>🏗️ <strong>Implementation Architecture</strong><a class="headerlink" href="#implementation-architecture" title="Link to this heading">#</a></h2>
+<h2>🏗️ Implementation Architecture<a class="headerlink" href="#implementation-architecture" title="Link to this heading">#</a></h2>
 <section id="individual-test-files">
-<h3><strong>16 Individual Test Files</strong><a class="headerlink" href="#individual-test-files" title="Link to this heading">#</a></h3>
+<h3>16 Individual Test Files<a class="headerlink" href="#individual-test-files" title="Link to this heading">#</a></h3>
 <p>Each checkpoint is implemented as a standalone Python test file in <code class="docutils literal notranslate"><span class="pre">tests/checkpoints/</span></code>:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>tests/checkpoints/
 ├── checkpoint_00_environment.py   # &quot;Can I configure my environment?&quot;
@@ -731,7 +729,7 @@ tito<span class="w"> </span>module<span class="w"> </span><span class="nb">compl
 </div>
 </section>
 <section id="rich-cli-integration">
-<h3><strong>Rich CLI Integration</strong><a class="headerlink" href="#rich-cli-integration" title="Link to this heading">#</a></h3>
+<h3>Rich CLI Integration<a class="headerlink" href="#rich-cli-integration" title="Link to this heading">#</a></h3>
 <p>The <code class="docutils literal notranslate"><span class="pre">tito</span> <span class="pre">checkpoint</span></code> command system provides:</p>
 <ul class="simple">
 <li><p><strong>Visual progress tracking</strong> with progress bars and timelines</p></li>
@@ -741,7 +739,7 @@ tito<span class="w"> </span>module<span class="w"> </span><span class="nb">compl
 </ul>
 </section>
 <section id="automated-module-completion">
-<h3><strong>Automated Module Completion</strong><a class="headerlink" href="#automated-module-completion" title="Link to this heading">#</a></h3>
+<h3>Automated Module Completion<a class="headerlink" href="#automated-module-completion" title="Link to this heading">#</a></h3>
 <p>The <code class="docutils literal notranslate"><span class="pre">tito</span> <span class="pre">module</span> <span class="pre">complete</span></code> workflow:</p>
 <ol class="arabic simple">
 <li><p><strong>Exports module</strong> using existing <code class="docutils literal notranslate"><span class="pre">tito</span> <span class="pre">export</span></code> functionality</p></li>
@@ -751,7 +749,7 @@ tito<span class="w"> </span>module<span class="w"> </span><span class="nb">compl
 </ol>
 </section>
 <section id="agent-team-implementation">
-<h3><strong>Agent Team Implementation</strong><a class="headerlink" href="#agent-team-implementation" title="Link to this heading">#</a></h3>
+<h3>Agent Team Implementation<a class="headerlink" href="#agent-team-implementation" title="Link to this heading">#</a></h3>
 <p>This system was successfully implemented by coordinated AI agents:</p>
 <ul class="simple">
 <li><p><strong>Module Developer</strong>: Built checkpoint tests and CLI integration</p></li>
@@ -763,18 +761,18 @@ tito<span class="w"> </span>module<span class="w"> </span><span class="nb">compl
 </section>
 <hr class="docutils" />
 <section id="why-this-approach-works">
-<h2>🧠 <strong>Why This Approach Works</strong><a class="headerlink" href="#why-this-approach-works" title="Link to this heading">#</a></h2>
+<h2>🧠 Why This Approach Works<a class="headerlink" href="#why-this-approach-works" title="Link to this heading">#</a></h2>
 <section id="systems-thinking-over-task-completion">
-<h3><strong>Systems Thinking Over Task Completion</strong><a class="headerlink" href="#systems-thinking-over-task-completion" title="Link to this heading">#</a></h3>
+<h3>Systems Thinking Over Task Completion<a class="headerlink" href="#systems-thinking-over-task-completion" title="Link to this heading">#</a></h3>
 <p>Traditional approach: <em>“I finished Module 3”</em><br />
 Checkpoint approach: *“My framework can now build neural networks”</p>
 </section>
 <section id="clear-learning-goals">
-<h3><strong>Clear Learning Goals</strong><a class="headerlink" href="#clear-learning-goals" title="Link to this heading">#</a></h3>
+<h3>Clear Learning Goals<a class="headerlink" href="#clear-learning-goals" title="Link to this heading">#</a></h3>
 <p>Every module contributes to a <strong>concrete system capability</strong> rather than abstract completion.</p>
 </section>
 <section id="academic-progress-markers">
-<h3><strong>Academic Progress Markers</strong><a class="headerlink" href="#academic-progress-markers" title="Link to this heading">#</a></h3>
+<h3>Academic Progress Markers<a class="headerlink" href="#academic-progress-markers" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p><strong>Rich CLI visualizations</strong> with progress bars and connecting lines show your growing ML framework</p></li>
 <li><p><strong>Capability unlocks</strong> feel like real learning milestones achieved in academic progression</p></li>
@@ -783,15 +781,15 @@ Checkpoint approach: *“My framework can now build neural networks”</p>
 </ul>
 </section>
 <section id="real-world-relevance">
-<h3><strong>Real-World Relevance</strong><a class="headerlink" href="#real-world-relevance" title="Link to this heading">#</a></h3>
+<h3>Real-World Relevance<a class="headerlink" href="#real-world-relevance" title="Link to this heading">#</a></h3>
 <p>The checkpoint progression <strong>Foundation → Architecture → Training → Inference → Language Models</strong> mirrors both academic learning progression and the evolution from specialized to unified ML frameworks.</p>
 </section>
 </section>
 <hr class="docutils" />
 <section id="learning-outcomes-by-checkpoint">
-<h2>📈 <strong>Learning Outcomes by Checkpoint</strong><a class="headerlink" href="#learning-outcomes-by-checkpoint" title="Link to this heading">#</a></h2>
+<h2>📈 Learning Outcomes by Checkpoint<a class="headerlink" href="#learning-outcomes-by-checkpoint" title="Link to this heading">#</a></h2>
 <section id="after-foundation">
-<h3><strong>After Foundation</strong><a class="headerlink" href="#after-foundation" title="Link to this heading">#</a></h3>
+<h3>After Foundation<a class="headerlink" href="#after-foundation" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p>Understand tensor operations and mathematical foundations</p></li>
 <li><p>Have working development environment</p></li>
@@ -799,7 +797,7 @@ Checkpoint approach: *“My framework can now build neural networks”</p>
 </ul>
 </section>
 <section id="after-architecture">
-<h3><strong>After Architecture</strong><a class="headerlink" href="#after-architecture" title="Link to this heading">#</a></h3>
+<h3>After Architecture<a class="headerlink" href="#after-architecture" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p>Can implement any neural network architecture</p></li>
 <li><p>Understand dense, convolutional, and attention mechanisms</p></li>
@@ -807,7 +805,7 @@ Checkpoint approach: *“My framework can now build neural networks”</p>
 </ul>
 </section>
 <section id="after-training">
-<h3><strong>After Training</strong><a class="headerlink" href="#after-training" title="Link to this heading">#</a></h3>
+<h3>After Training<a class="headerlink" href="#after-training" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p>Can train models on real datasets like CIFAR-10</p></li>
 <li><p>Understand automatic differentiation and optimization</p></li>
@@ -815,7 +813,7 @@ Checkpoint approach: *“My framework can now build neural networks”</p>
 </ul>
 </section>
 <section id="after-inference">
-<h3><strong>After Inference</strong><a class="headerlink" href="#after-inference" title="Link to this heading">#</a></h3>
+<h3>After Inference<a class="headerlink" href="#after-inference" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p>Can optimize models for production deployment</p></li>
 <li><p>Understand performance bottlenecks and solutions</p></li>
@@ -823,7 +821,7 @@ Checkpoint approach: *“My framework can now build neural networks”</p>
 </ul>
 </section>
 <section id="after-language-models">
-<h3><strong>After Language Models</strong><a class="headerlink" href="#after-language-models" title="Link to this heading">#</a></h3>
+<h3>After Language Models<a class="headerlink" href="#after-language-models" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p>Have extended your vision framework to language models</p></li>
 <li><p>Understand the unified mathematical foundations of modern AI</p></li>
@@ -833,7 +831,7 @@ Checkpoint approach: *“My framework can now build neural networks”</p>
 </section>
 <hr class="docutils" />
 <section id="your-journey-starts-here">
-<h2>🚀 <strong>Your Journey Starts Here</strong><a class="headerlink" href="#your-journey-starts-here" title="Link to this heading">#</a></h2>
+<h2>🚀 Your Journey Starts Here<a class="headerlink" href="#your-journey-starts-here" title="Link to this heading">#</a></h2>
 <p>The checkpoint system transforms TinyTorch from “16 separate exercises” into <strong>“building a complete ML framework.”</strong></p>
 <p>Each step builds real capabilities. Each checkpoint unlocks new powers like academic progress markers. Each completion brings you closer to <strong>ML systems mastery</strong>.</p>
 <p><strong>Ready to begin?</strong> Start with:</p>
@@ -875,20 +873,20 @@ Checkpoint approach: *“My framework can now build neural networks”</p>
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="vision.html"
+       href="kiss-principle.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">The TinyTorch Vision</p>
+        <p class="prev-next-title">KISS Principle in TinyTorch</p>
       </div>
     </a>
     <a class="right-next"
-       href="resources.html"
+       href="testing-framework.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">📚 Additional Learning Resources</p>
+        <p class="prev-next-title">Testing Framework</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -909,59 +907,59 @@ Checkpoint approach: *“My framework can now build neural networks”</p>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#capability-driven-learning-journey">Capability-Driven Learning Journey</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-five-major-checkpoints">🚀 <strong>The Five Major Checkpoints</strong></a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#foundation"><strong>🎯 Foundation</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#neural-architecture"><strong>🎯 Neural Architecture</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#training"><strong>🎯 Training</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inference-deployment"><strong>🎯 Inference Deployment</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#language-models"><strong>🔥 Language Models</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-five-major-checkpoints">🚀 The Five Major Checkpoints</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#foundation">🎯 Foundation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#neural-architecture">🎯 Neural Architecture</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#training">🎯 Training</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inference-deployment">🎯 Inference Deployment</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#language-models">🔥 Language Models</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tracking-your-progress">📊 <strong>Tracking Your Progress</strong></a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#visual-timeline"><strong>Visual Timeline</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rich-progress-tracking"><strong>Rich Progress Tracking</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#capability-statements"><strong>Capability Statements</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tracking-your-progress">📊 Tracking Your Progress</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#visual-timeline">Visual Timeline</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rich-progress-tracking">Rich Progress Tracking</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#capability-statements">Capability Statements</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#using-the-checkpoint-system">🛠️ <strong>Using the Checkpoint System</strong></a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cli-commands"><strong>CLI Commands</strong></a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#check-your-progress"><strong>Check Your Progress</strong></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#rich-visual-timeline"><strong>Rich Visual Timeline</strong></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#test-capabilities"><strong>Test Capabilities</strong></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#module-completion-workflow"><strong>Module Completion Workflow</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#using-the-checkpoint-system">🛠️ Using the Checkpoint System</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cli-commands">CLI Commands</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#check-your-progress">Check Your Progress</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#rich-visual-timeline">Rich Visual Timeline</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#test-capabilities">Test Capabilities</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#module-completion-workflow">Module Completion Workflow</a></li>
 </ul>
 </li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#integration-with-development"><strong>Integration with Development</strong></a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#automatic-module-to-checkpoint-mapping"><strong>Automatic Module-to-Checkpoint Mapping</strong></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#real-capability-validation"><strong>Real Capability Validation</strong></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#rich-visual-feedback"><strong>Rich Visual Feedback</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#integration-with-development">Integration with Development</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#automatic-module-to-checkpoint-mapping">Automatic Module-to-Checkpoint Mapping</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#real-capability-validation">Real Capability Validation</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#rich-visual-feedback">Rich Visual Feedback</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#implementation-architecture">🏗️ <strong>Implementation Architecture</strong></a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#individual-test-files"><strong>16 Individual Test Files</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rich-cli-integration"><strong>Rich CLI Integration</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#automated-module-completion"><strong>Automated Module Completion</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#agent-team-implementation"><strong>Agent Team Implementation</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#implementation-architecture">🏗️ Implementation Architecture</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#individual-test-files">16 Individual Test Files</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rich-cli-integration">Rich CLI Integration</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#automated-module-completion">Automated Module Completion</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#agent-team-implementation">Agent Team Implementation</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-this-approach-works">🧠 <strong>Why This Approach Works</strong></a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#systems-thinking-over-task-completion"><strong>Systems Thinking Over Task Completion</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#clear-learning-goals"><strong>Clear Learning Goals</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#academic-progress-markers"><strong>Academic Progress Markers</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#real-world-relevance"><strong>Real-World Relevance</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-this-approach-works">🧠 Why This Approach Works</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#systems-thinking-over-task-completion">Systems Thinking Over Task Completion</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#clear-learning-goals">Clear Learning Goals</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#academic-progress-markers">Academic Progress Markers</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#real-world-relevance">Real-World Relevance</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-outcomes-by-checkpoint">📈 <strong>Learning Outcomes by Checkpoint</strong></a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#after-foundation"><strong>After Foundation</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#after-architecture"><strong>After Architecture</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#after-training"><strong>After Training</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#after-inference"><strong>After Inference</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#after-language-models"><strong>After Language Models</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-outcomes-by-checkpoint">📈 Learning Outcomes by Checkpoint</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#after-foundation">After Foundation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#after-architecture">After Architecture</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#after-training">After Training</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#after-inference">After Inference</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#after-language-models">After Language Models</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#your-journey-starts-here">🚀 <strong>Your Journey Starts Here</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#your-journey-starts-here">🚀 Your Journey Starts Here</a></li>
 </ul>
   </nav></div>
 

@@ -187,10 +187,6 @@
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Classroom Use</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../instructor-guide.html">Instructor Guide</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Course Orientation</span></p>
-<ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../chapters/00-introduction.html">Introduction</a></li>
-</ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Foundation</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../chapters/01-setup.html">0. Setup</a></li>
@@ -225,7 +221,9 @@
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Additional Resources</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../vision.html">TinyTorch Vision</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../kiss-principle.html">KISS Principle</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../checkpoint-system.html">Checkpoint System</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../testing-framework.html">Testing Framework</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../resources.html">Learning Resources</a></li>
 </ul>
 
@@ -441,48 +439,48 @@ document.write(`
                 <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#complete-course-infrastructure">Complete Course Infrastructure</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-choose-tinytorch-for-teaching">Why Choose TinyTorch for Teaching?</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#comprehensive-curriculum"><strong>Comprehensive Curriculum</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#instructor-friendly-features"><strong>Instructor-Friendly Features</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pedagogical-excellence"><strong>Pedagogical Excellence</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#comprehensive-curriculum">Comprehensive Curriculum</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#instructor-friendly-features">Instructor-Friendly Features</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pedagogical-excellence">Pedagogical Excellence</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#course-module-overview">Course Module Overview</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#foundation-modules-00-02"><strong>Foundation (Modules 00-02)</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#building-blocks-modules-03-07"><strong>Building Blocks (Modules 03-07)</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#training-systems-modules-08-11"><strong>Training Systems (Modules 08-11)</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#production-modules-12-15"><strong>Production (Modules 12-15)</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#language-models-module-16"><strong>Language Models (Module 16)</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#foundation-modules-00-02">Foundation (Modules 00-02)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#building-blocks-modules-03-07">Building Blocks (Modules 03-07)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#training-systems-modules-08-11">Training Systems (Modules 08-11)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#production-modules-12-15">Production (Modules 12-15)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#language-models-module-16">Language Models (Module 16)</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#proven-learning-outcomes">Proven Learning Outcomes</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#student-success-metrics"><strong>Student Success Metrics</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#industry-feedback"><strong>Industry Feedback</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#academic-recognition"><strong>Academic Recognition</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#student-success-metrics">Student Success Metrics</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#industry-feedback">Industry Feedback</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#academic-recognition">Academic Recognition</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#getting-started-as-an-instructor">Getting Started as an Instructor</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#quick-start-3-steps"><strong>Quick Start (3 Steps)</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#quick-start-3-steps">Quick Start (3 Steps)</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#assessment-options">📋 <strong>Assessment Options</strong></a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#automated-grading"><strong>Automated Grading</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#flexible-point-distribution"><strong>Flexible Point Distribution</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#project-based-assessment"><strong>Project-Based Assessment</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#assessment-options">📋 Assessment Options</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#automated-grading">Automated Grading</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#flexible-point-distribution">Flexible Point Distribution</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#project-based-assessment">Project-Based Assessment</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#instructor-resources">Instructor Resources</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#documentation"><strong>Documentation</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#support-tools"><strong>Support Tools</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#community"><strong>Community</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#documentation">Documentation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#support-tools">Support Tools</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#community">Community</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#success-stories">🌟 <strong>Success Stories</strong></a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#university-adoption"><strong>University Adoption</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#student-testimonials"><strong>Student Testimonials</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#industry-preparation"><strong>Industry Preparation</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#success-stories">🌟 Success Stories</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#university-adoption">University Adoption</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#student-testimonials">Student Testimonials</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#industry-preparation">Industry Preparation</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#next-steps">📞 <strong>Next Steps</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#next-steps">📞 Next Steps</a></li>
 </ul>
             </nav>
         </div>
@@ -527,7 +525,7 @@ document.write(`
 <section id="why-choose-tinytorch-for-teaching">
 <h2>Why Choose TinyTorch for Teaching?<a class="headerlink" href="#why-choose-tinytorch-for-teaching" title="Link to this heading">#</a></h2>
 <section id="comprehensive-curriculum">
-<h3><strong>Comprehensive Curriculum</strong><a class="headerlink" href="#comprehensive-curriculum" title="Link to this heading">#</a></h3>
+<h3>Comprehensive Curriculum<a class="headerlink" href="#comprehensive-curriculum" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p><strong>16 modules</strong> progressing from basics to language models</p></li>
 <li><p><strong>200+ automated tests</strong> ensuring correctness</p></li>
@@ -536,7 +534,7 @@ document.write(`
 </ul>
 </section>
 <section id="instructor-friendly-features">
-<h3><strong>Instructor-Friendly Features</strong><a class="headerlink" href="#instructor-friendly-features" title="Link to this heading">#</a></h3>
+<h3>Instructor-Friendly Features<a class="headerlink" href="#instructor-friendly-features" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p><strong>NBGrader Integration</strong>: Automated grading with <code class="docutils literal notranslate"><span class="pre">tito</span> <span class="pre">nbgrader</span></code></p></li>
 <li><p><strong>Module Status Dashboard</strong>: Track student progress at a glance</p></li>
@@ -545,7 +543,7 @@ document.write(`
 </ul>
 </section>
 <section id="pedagogical-excellence">
-<h3><strong>Pedagogical Excellence</strong><a class="headerlink" href="#pedagogical-excellence" title="Link to this heading">#</a></h3>
+<h3>Pedagogical Excellence<a class="headerlink" href="#pedagogical-excellence" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p><strong>Learn by Building</strong>: Students create their own PyTorch</p></li>
 <li><p><strong>Immediate Testing</strong>: Every implementation validated instantly</p></li>
@@ -558,7 +556,7 @@ document.write(`
 <section id="course-module-overview">
 <h2>Course Module Overview<a class="headerlink" href="#course-module-overview" title="Link to this heading">#</a></h2>
 <section id="foundation-modules-00-02">
-<h3><strong>Foundation (Modules 00-02)</strong><a class="headerlink" href="#foundation-modules-00-02" title="Link to this heading">#</a></h3>
+<h3>Foundation (Modules 00-02)<a class="headerlink" href="#foundation-modules-00-02" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p><strong>00: Introduction</strong> - System overview and architecture</p></li>
 <li><p><strong>01: Setup</strong> - Development environment and workflow</p></li>
@@ -566,7 +564,7 @@ document.write(`
 </ul>
 </section>
 <section id="building-blocks-modules-03-07">
-<h3><strong>Building Blocks (Modules 03-07)</strong><a class="headerlink" href="#building-blocks-modules-03-07" title="Link to this heading">#</a></h3>
+<h3>Building Blocks (Modules 03-07)<a class="headerlink" href="#building-blocks-modules-03-07" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p><strong>03: Activations</strong> - Mathematical functions and nonlinearity</p></li>
 <li><p><strong>04: Layers</strong> - Neural network abstractions</p></li>
@@ -576,7 +574,7 @@ document.write(`
 </ul>
 </section>
 <section id="training-systems-modules-08-11">
-<h3><strong>Training Systems (Modules 08-11)</strong><a class="headerlink" href="#training-systems-modules-08-11" title="Link to this heading">#</a></h3>
+<h3>Training Systems (Modules 08-11)<a class="headerlink" href="#training-systems-modules-08-11" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p><strong>08: DataLoader</strong> - Data pipeline and batching</p></li>
 <li><p><strong>09: Autograd</strong> - Automatic differentiation</p></li>
@@ -585,7 +583,7 @@ document.write(`
 </ul>
 </section>
 <section id="production-modules-12-15">
-<h3><strong>Production (Modules 12-15)</strong><a class="headerlink" href="#production-modules-12-15" title="Link to this heading">#</a></h3>
+<h3>Production (Modules 12-15)<a class="headerlink" href="#production-modules-12-15" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p><strong>12: Compression</strong> - Model optimization</p></li>
 <li><p><strong>13: Kernels</strong> - Hardware acceleration</p></li>
@@ -594,7 +592,7 @@ document.write(`
 </ul>
 </section>
 <section id="language-models-module-16">
-<h3><strong>Language Models (Module 16)</strong><a class="headerlink" href="#language-models-module-16" title="Link to this heading">#</a></h3>
+<h3>Language Models (Module 16)<a class="headerlink" href="#language-models-module-16" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p><strong>16: TinyGPT</strong> - Framework generalization to language models</p></li>
 </ul>
@@ -604,7 +602,7 @@ document.write(`
 <section id="proven-learning-outcomes">
 <h2>Proven Learning Outcomes<a class="headerlink" href="#proven-learning-outcomes" title="Link to this heading">#</a></h2>
 <section id="student-success-metrics">
-<h3><strong>Student Success Metrics</strong><a class="headerlink" href="#student-success-metrics" title="Link to this heading">#</a></h3>
+<h3>Student Success Metrics<a class="headerlink" href="#student-success-metrics" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p>✅ <strong>95%</strong> can implement neural networks from scratch</p></li>
 <li><p>✅ <strong>90%</strong> understand autograd and backpropagation deeply</p></li>
@@ -613,14 +611,14 @@ document.write(`
 </ul>
 </section>
 <section id="industry-feedback">
-<h3><strong>Industry Feedback</strong><a class="headerlink" href="#industry-feedback" title="Link to this heading">#</a></h3>
+<h3>Industry Feedback<a class="headerlink" href="#industry-feedback" title="Link to this heading">#</a></h3>
 <blockquote>
 <div><p>“TinyTorch graduates understand our ML infrastructure immediately. They don’t just use frameworks - they understand how they work.”<br />
 — <em>Senior ML Engineer, Major Tech Company</em></p>
 </div></blockquote>
 </section>
 <section id="academic-recognition">
-<h3><strong>Academic Recognition</strong><a class="headerlink" href="#academic-recognition" title="Link to this heading">#</a></h3>
+<h3>Academic Recognition<a class="headerlink" href="#academic-recognition" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p>Used in ML systems courses at multiple universities</p></li>
 <li><p>Positive feedback from both students and instructors</p></li>
@@ -632,7 +630,7 @@ document.write(`
 <section id="getting-started-as-an-instructor">
 <h2>Getting Started as an Instructor<a class="headerlink" href="#getting-started-as-an-instructor" title="Link to this heading">#</a></h2>
 <section id="quick-start-3-steps">
-<h3><strong>Quick Start (3 Steps)</strong><a class="headerlink" href="#quick-start-3-steps" title="Link to this heading">#</a></h3>
+<h3>Quick Start (3 Steps)<a class="headerlink" href="#quick-start-3-steps" title="Link to this heading">#</a></h3>
 <ol class="arabic">
 <li><p><strong>Setup Your Environment</strong> (30 minutes)</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/your-org/TinyTorch.git
@@ -660,9 +658,9 @@ pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </s
 </section>
 <hr class="docutils" />
 <section id="assessment-options">
-<h2>📋 <strong>Assessment Options</strong><a class="headerlink" href="#assessment-options" title="Link to this heading">#</a></h2>
+<h2>📋 Assessment Options<a class="headerlink" href="#assessment-options" title="Link to this heading">#</a></h2>
 <section id="automated-grading">
-<h3><strong>Automated Grading</strong><a class="headerlink" href="#automated-grading" title="Link to this heading">#</a></h3>
+<h3>Automated Grading<a class="headerlink" href="#automated-grading" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p>NBGrader integration for all modules</p></li>
 <li><p>Automatic test execution and scoring</p></li>
@@ -670,7 +668,7 @@ pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </s
 </ul>
 </section>
 <section id="flexible-point-distribution">
-<h3><strong>Flexible Point Distribution</strong><a class="headerlink" href="#flexible-point-distribution" title="Link to this heading">#</a></h3>
+<h3>Flexible Point Distribution<a class="headerlink" href="#flexible-point-distribution" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p>Customize weights per module</p></li>
 <li><p>Add bonus challenges</p></li>
@@ -678,7 +676,7 @@ pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </s
 </ul>
 </section>
 <section id="project-based-assessment">
-<h3><strong>Project-Based Assessment</strong><a class="headerlink" href="#project-based-assessment" title="Link to this heading">#</a></h3>
+<h3>Project-Based Assessment<a class="headerlink" href="#project-based-assessment" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p>Combine modules into larger projects</p></li>
 <li><p>Capstone project for final evaluation</p></li>
@@ -690,15 +688,15 @@ pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </s
 <section id="instructor-resources">
 <h2>Instructor Resources<a class="headerlink" href="#instructor-resources" title="Link to this heading">#</a></h2>
 <section id="documentation">
-<h3><strong>Documentation</strong><a class="headerlink" href="#documentation" title="Link to this heading">#</a></h3>
+<h3>Documentation<a class="headerlink" href="#documentation" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p><a class="reference internal" href="../instructor-guide.html"><span class="std std-doc">Complete Instructor Guide</span></a> - Detailed setup and workflow</p></li>
-<li><p><span class="xref myst">Quick Reference Card</span> - Essential commands</p></li>
+<li><p><a class="reference internal" href="#../../NBGrader_Quick_Reference.md"><span class="xref myst">Quick Reference Card</span></a> - Essential commands</p></li>
 <li><p>Module-specific teaching notes in each chapter</p></li>
 </ul>
 </section>
 <section id="support-tools">
-<h3><strong>Support Tools</strong><a class="headerlink" href="#support-tools" title="Link to this heading">#</a></h3>
+<h3>Support Tools<a class="headerlink" href="#support-tools" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">tito</span> <span class="pre">module</span> <span class="pre">status</span> <span class="pre">--comprehensive</span></code> - System health dashboard</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">tito</span> <span class="pre">nbgrader</span> <span class="pre">status</span></code> - Assignment tracking</p></li>
@@ -706,7 +704,7 @@ pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </s
 </ul>
 </section>
 <section id="community">
-<h3><strong>Community</strong><a class="headerlink" href="#community" title="Link to this heading">#</a></h3>
+<h3>Community<a class="headerlink" href="#community" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p>GitHub Issues for technical support</p></li>
 <li><p>Instructor discussion forum (coming soon)</p></li>
@@ -716,23 +714,23 @@ pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </s
 </section>
 <hr class="docutils" />
 <section id="success-stories">
-<h2>🌟 <strong>Success Stories</strong><a class="headerlink" href="#success-stories" title="Link to this heading">#</a></h2>
+<h2>🌟 Success Stories<a class="headerlink" href="#success-stories" title="Link to this heading">#</a></h2>
 <section id="university-adoption">
-<h3><strong>University Adoption</strong><a class="headerlink" href="#university-adoption" title="Link to this heading">#</a></h3>
+<h3>University Adoption<a class="headerlink" href="#university-adoption" title="Link to this heading">#</a></h3>
 <blockquote>
 <div><p>“TinyTorch transformed our ML systems course. Students finally understand what happens inside the black box of neural networks.”<br />
 — <em>Professor of Computer Science</em></p>
 </div></blockquote>
 </section>
 <section id="student-testimonials">
-<h3><strong>Student Testimonials</strong><a class="headerlink" href="#student-testimonials" title="Link to this heading">#</a></h3>
+<h3>Student Testimonials<a class="headerlink" href="#student-testimonials" title="Link to this heading">#</a></h3>
 <blockquote>
 <div><p>“Building my own PyTorch gave me confidence to tackle any ML engineering challenge.”<br />
 — <em>Recent Graduate, now ML Engineer</em></p>
 </div></blockquote>
 </section>
 <section id="industry-preparation">
-<h3><strong>Industry Preparation</strong><a class="headerlink" href="#industry-preparation" title="Link to this heading">#</a></h3>
+<h3>Industry Preparation<a class="headerlink" href="#industry-preparation" title="Link to this heading">#</a></h3>
 <blockquote>
 <div><p>“TinyTorch students are job-ready. They understand both the theory and the engineering.”<br />
 — <em>Hiring Manager, AI Startup</em></p>
@@ -741,10 +739,10 @@ pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </s
 </section>
 <hr class="docutils" />
 <section id="next-steps">
-<h2>📞 <strong>Next Steps</strong><a class="headerlink" href="#next-steps" title="Link to this heading">#</a></h2>
+<h2>📞 Next Steps<a class="headerlink" href="#next-steps" title="Link to this heading">#</a></h2>
 <ol class="arabic simple">
 <li><p><strong>📖 Read the <a class="reference internal" href="../instructor-guide.html"><span class="std std-doc">Instructor Guide</span></a></strong> for complete details</p></li>
-<li><p><strong>🚀 Start with Module 0: <a class="reference internal" href="../chapters/00-introduction.html"><span class="std std-doc">Introduction</span></a></strong> to see the system overview</p></li>
+<li><p><strong>🚀 Start with Module 0: <a class="reference internal" href="#../chapters/00-introduction.md"><span class="xref myst">Introduction</span></a></strong> to see the system overview</p></li>
 <li><p><strong>💻 Set up your environment</strong> following the guide</p></li>
 <li><p><strong>📧 Contact us</strong> for instructor support</p></li>
 </ol>
@@ -819,48 +817,48 @@ pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </s
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#complete-course-infrastructure">Complete Course Infrastructure</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-choose-tinytorch-for-teaching">Why Choose TinyTorch for Teaching?</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#comprehensive-curriculum"><strong>Comprehensive Curriculum</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#instructor-friendly-features"><strong>Instructor-Friendly Features</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pedagogical-excellence"><strong>Pedagogical Excellence</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#comprehensive-curriculum">Comprehensive Curriculum</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#instructor-friendly-features">Instructor-Friendly Features</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pedagogical-excellence">Pedagogical Excellence</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#course-module-overview">Course Module Overview</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#foundation-modules-00-02"><strong>Foundation (Modules 00-02)</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#building-blocks-modules-03-07"><strong>Building Blocks (Modules 03-07)</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#training-systems-modules-08-11"><strong>Training Systems (Modules 08-11)</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#production-modules-12-15"><strong>Production (Modules 12-15)</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#language-models-module-16"><strong>Language Models (Module 16)</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#foundation-modules-00-02">Foundation (Modules 00-02)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#building-blocks-modules-03-07">Building Blocks (Modules 03-07)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#training-systems-modules-08-11">Training Systems (Modules 08-11)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#production-modules-12-15">Production (Modules 12-15)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#language-models-module-16">Language Models (Module 16)</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#proven-learning-outcomes">Proven Learning Outcomes</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#student-success-metrics"><strong>Student Success Metrics</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#industry-feedback"><strong>Industry Feedback</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#academic-recognition"><strong>Academic Recognition</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#student-success-metrics">Student Success Metrics</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#industry-feedback">Industry Feedback</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#academic-recognition">Academic Recognition</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#getting-started-as-an-instructor">Getting Started as an Instructor</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#quick-start-3-steps"><strong>Quick Start (3 Steps)</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#quick-start-3-steps">Quick Start (3 Steps)</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#assessment-options">📋 <strong>Assessment Options</strong></a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#automated-grading"><strong>Automated Grading</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#flexible-point-distribution"><strong>Flexible Point Distribution</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#project-based-assessment"><strong>Project-Based Assessment</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#assessment-options">📋 Assessment Options</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#automated-grading">Automated Grading</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#flexible-point-distribution">Flexible Point Distribution</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#project-based-assessment">Project-Based Assessment</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#instructor-resources">Instructor Resources</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#documentation"><strong>Documentation</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#support-tools"><strong>Support Tools</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#community"><strong>Community</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#documentation">Documentation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#support-tools">Support Tools</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#community">Community</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#success-stories">🌟 <strong>Success Stories</strong></a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#university-adoption"><strong>University Adoption</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#student-testimonials"><strong>Student Testimonials</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#industry-preparation"><strong>Industry Preparation</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#success-stories">🌟 Success Stories</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#university-adoption">University Adoption</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#student-testimonials">Student Testimonials</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#industry-preparation">Industry Preparation</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#next-steps">📞 <strong>Next Steps</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#next-steps">📞 Next Steps</a></li>
 </ul>
   </nav></div>
 

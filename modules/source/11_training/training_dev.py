@@ -79,6 +79,35 @@ from tinytorch.core.optimizers import SGD, Adam, StepLR
 # 🔥 AUTOGRAD INTEGRATION: Loss functions now return Variables that support .backward()
 # This enables automatic gradient computation for neural network training!
 
+# Utility function for tensor data access
+def get_tensor_value(tensor_obj):
+    """Extract numeric value from tensor/variable objects for testing."""
+    # Handle Variable wrapper
+    if hasattr(tensor_obj, 'data'):
+        data = tensor_obj.data
+    else:
+        data = tensor_obj
+    
+    # Handle nested Tensor data access
+    if hasattr(data, 'data'):
+        value = data.data
+    else:
+        value = data
+    
+    # Extract scalar value
+    if hasattr(value, 'item'):
+        return value.item()
+    elif hasattr(value, '__len__') and len(value) == 1:
+        return value[0]
+    elif hasattr(value, '__iter__'):
+        # For numpy arrays or lists
+        try:
+            return float(value)
+        except:
+            return value
+    else:
+        return value
+
 # %% [markdown]
 """
 ## 🔧 DEVELOPMENT
@@ -259,7 +288,8 @@ def test_unit_mse_loss():
     y_pred = Tensor([[1.0, 2.0], [3.0, 4.0]])
     y_true = Tensor([[1.0, 2.0], [3.0, 4.0]])
     loss = mse(y_pred, y_true)
-    assert abs(loss.data) < 1e-6, f"Perfect predictions should have loss ≈ 0, got {loss.data}"
+    loss_value = get_tensor_value(loss)
+    assert abs(loss_value) < 1e-6, f"Perfect predictions should have loss ≈ 0, got {loss_value}"
     print("✅ Perfect predictions test passed")
     
     # Test 2: Known loss computation
@@ -267,7 +297,8 @@ def test_unit_mse_loss():
     y_true = Tensor([[0.0, 1.0]])
     loss = mse(y_pred, y_true)
     expected = 1.0  # [(1-0)² + (2-1)²] / 2 = [1 + 1] / 2 = 1.0
-    assert abs(loss.data - expected) < 1e-6, f"Expected loss {expected}, got {loss.data}"
+    loss_value = get_tensor_value(loss)
+    assert abs(loss_value - expected) < 1e-6, f"Expected loss {expected}, got {loss_value}"
     print("✅ Known loss computation test passed")
     
     # Test 3: Batch processing
@@ -275,7 +306,8 @@ def test_unit_mse_loss():
     y_true = Tensor([[1.5, 2.5], [2.5, 3.5]])
     loss = mse(y_pred, y_true)
     expected = 0.25  # All squared differences are 0.25
-    assert abs(loss.data - expected) < 1e-6, f"Expected batch loss {expected}, got {loss.data}"
+    loss_value = get_tensor_value(loss)
+    assert abs(loss_value - expected) < 1e-6, f"Expected batch loss {expected}, got {loss_value}"
     print("✅ Batch processing test passed")
     
     # Test 4: Single value
@@ -283,7 +315,8 @@ def test_unit_mse_loss():
     y_true = Tensor([3.0])
     loss = mse(y_pred, y_true)
     expected = 4.0  # (5-3)² = 4
-    assert abs(loss.data - expected) < 1e-6, f"Expected single value loss {expected}, got {loss.data}"
+    loss_value = get_tensor_value(loss)
+    assert abs(loss_value - expected) < 1e-6, f"Expected single value loss {expected}, got {loss_value}"
     print("✅ Single value test passed")
     
     print("🎯 MSE Loss: All tests passed!")
@@ -437,7 +470,8 @@ def test_unit_crossentropy_loss():
     y_pred = Tensor([[10.0, 0.0, 0.0], [0.0, 10.0, 0.0]])  # Very confident correct predictions
     y_true = Tensor([0, 1])  # Class indices
     loss = ce(y_pred, y_true)
-    assert loss.data < 0.1, f"Perfect predictions should have low loss, got {loss.data}"
+    loss_value = get_tensor_value(loss)
+    assert loss_value < 0.1, f"Perfect predictions should have low loss, got {loss_value}"
     print("✅ Perfect predictions test passed")
     
     # Test 2: Random predictions (should have higher loss)
@@ -445,21 +479,24 @@ def test_unit_crossentropy_loss():
     y_true = Tensor([0, 1])
     loss = ce(y_pred, y_true)
     expected_random = -np.log(1.0/3.0)  # log(1/num_classes) for uniform distribution
-    assert abs(loss.data - expected_random) < 0.1, f"Random predictions should have loss ≈ {expected_random}, got {loss.data}"
+    loss_value = get_tensor_value(loss)
+    assert abs(loss_value - expected_random) < 0.1, f"Random predictions should have loss ≈ {expected_random}, got {loss_value}"
     print("✅ Random predictions test passed")
     
     # Test 3: Binary classification
     y_pred = Tensor([[2.0, 1.0], [1.0, 2.0]])
     y_true = Tensor([0, 1])
     loss = ce(y_pred, y_true)
-    assert 0.0 < loss.data < 2.0, f"Binary classification loss should be reasonable, got {loss.data}"
+    loss_value = get_tensor_value(loss)
+    assert 0.0 < loss_value < 2.0, f"Binary classification loss should be reasonable, got {loss_value}"
     print("✅ Binary classification test passed")
     
     # Test 4: One-hot encoded labels
     y_pred = Tensor([[2.0, 1.0, 0.0], [0.0, 2.0, 1.0]])
     y_true = Tensor([[1.0, 0.0, 0.0], [0.0, 1.0, 0.0]])  # One-hot encoded
     loss = ce(y_pred, y_true)
-    assert 0.0 < loss.data < 2.0, f"One-hot encoded loss should be reasonable, got {loss.data}"
+    loss_value = get_tensor_value(loss)
+    assert 0.0 < loss_value < 2.0, f"One-hot encoded loss should be reasonable, got {loss_value}"
     print("✅ One-hot encoded labels test passed")
     
     print("🎯 CrossEntropy Loss: All tests passed!")
@@ -607,7 +644,8 @@ def test_unit_binary_crossentropy_loss():
     y_pred = Tensor([[10.0], [-10.0]])  # Very confident correct predictions
     y_true = Tensor([[1.0], [0.0]])
     loss = bce(y_pred, y_true)
-    assert loss.data < 0.1, f"Perfect predictions should have low loss, got {loss.data}"
+    loss_value = get_tensor_value(loss)
+    assert loss_value < 0.1, f"Perfect predictions should have low loss, got {loss_value}"
     print("✅ Perfect predictions test passed")
     
     # Test 2: Random predictions (should have higher loss)
@@ -615,21 +653,24 @@ def test_unit_binary_crossentropy_loss():
     y_true = Tensor([[1.0], [0.0]])
     loss = bce(y_pred, y_true)
     expected_random = -np.log(0.5)  # log(0.5) for random guessing
-    assert abs(loss.data - expected_random) < 0.1, f"Random predictions should have loss ≈ {expected_random}, got {loss.data}"
+    loss_value = get_tensor_value(loss)
+    assert abs(loss_value - expected_random) < 0.1, f"Random predictions should have loss ≈ {expected_random}, got {loss_value}"
     print("✅ Random predictions test passed")
     
     # Test 3: Batch processing
     y_pred = Tensor([[1.0], [2.0], [-1.0]])
     y_true = Tensor([[1.0], [1.0], [0.0]])
     loss = bce(y_pred, y_true)
-    assert 0.0 < loss.data < 2.0, f"Batch processing loss should be reasonable, got {loss.data}"
+    loss_value = get_tensor_value(loss)
+    assert 0.0 < loss_value < 2.0, f"Batch processing loss should be reasonable, got {loss_value}"
     print("✅ Batch processing test passed")
     
     # Test 4: Edge cases
     y_pred = Tensor([[100.0], [-100.0]])  # Extreme values
     y_true = Tensor([[1.0], [0.0]])
     loss = bce(y_pred, y_true)
-    assert loss.data < 0.1, f"Extreme correct predictions should have low loss, got {loss.data}"
+    loss_value = get_tensor_value(loss)
+    assert loss_value < 0.1, f"Extreme correct predictions should have low loss, got {loss_value}"
     print("✅ Edge cases test passed")
     
     print("🎯 Binary CrossEntropy Loss: All tests passed!")
@@ -1277,19 +1318,22 @@ def test_module_training():
         y_pred = Tensor([[1.0, 2.0]])
         y_true = Tensor([[1.0, 2.0]])
         loss = mse(y_pred, y_true)
-        assert abs(loss.data) < 1e-6, "MSE should work for perfect predictions"
+        loss_value = get_tensor_value(loss)
+        assert abs(loss_value) < 1e-6, "MSE should work for perfect predictions"
         
         # CrossEntropy test
         y_pred = Tensor([[10.0, 0.0], [0.0, 10.0]])
         y_true = Tensor([0, 1])
         loss = ce(y_pred, y_true)
-        assert loss.data < 1.0, "CrossEntropy should work for good predictions"
+        loss_value = get_tensor_value(loss)
+        assert loss_value < 1.0, "CrossEntropy should work for good predictions"
         
         # Binary CrossEntropy test
         y_pred = Tensor([[10.0], [-10.0]])
         y_true = Tensor([[1.0], [0.0]])
         loss = bce(y_pred, y_true)
-        assert loss.data < 1.0, "Binary CrossEntropy should work for good predictions"
+        loss_value = get_tensor_value(loss)
+        assert loss_value < 1.0, "Binary CrossEntropy should work for good predictions"
         
         print("✅ Loss functions work correctly")
         
