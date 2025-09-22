@@ -1,7 +1,20 @@
 # Claude Code Instructions for TinyTorch
 
-## ⚡ **MANDATORY: Read Git Policies First**
-**Before any development work, you MUST read and follow the Git Workflow Standards section below.**
+## 📚 **MANDATORY: Read Guidelines First**
+
+**All development standards are documented in the `.claude/` directory.**
+
+### Required Reading Order:
+1. `.claude/guidelines/DESIGN_PHILOSOPHY.md` - KISS principle and core values
+2. `.claude/guidelines/GIT_WORKFLOW.md` - Git policies and branching standards
+3. `.claude/guidelines/MODULE_DEVELOPMENT.md` - How to build modules
+4. `.claude/guidelines/TESTING_STANDARDS.md` - Testing requirements
+5. `.claude/guidelines/PERFORMANCE_CLAIMS.md` - Honest reporting standards
+6. `.claude/guidelines/AGENT_COORDINATION.md` - How to work with AI agents
+
+**Start with `.claude/README.md` for a complete overview.**
+
+## ⚡ **CRITICAL: Core Policies**
 
 **CRITICAL POLICIES - NO EXCEPTIONS:**
 - ✅ Always use virtual environment (`.venv`)
@@ -15,28 +28,6 @@
 
 ---
 
-## 💡 **CORE PRINCIPLE: Keep It Simple, Stupid (KISS)**
-
-**Simplicity is a fundamental principle of TinyTorch. Always prefer simple, clear solutions over complex ones.**
-
-**KISS Guidelines:**
-- **One file, one purpose** - Don't create multiple versions doing the same thing
-- **Clear over clever** - Code should be readable by students learning ML
-- **Minimal dependencies** - Avoid unnecessary libraries or complex UI
-- **Direct implementation** - Show the core concepts without abstraction layers
-- **Honest performance** - Report what actually works, not theoretical possibilities
-
-**Examples:**
-- ✅ `random_baseline.py` and `train.py` - two files, clear story
-- ❌ Multiple optimization scripts with unverified claims
-- ✅ Simple console output showing progress
-- ❌ Complex dashboards with ASCII plots that don't add educational value
-- ✅ "Achieves 55% accuracy" (verified)
-- ❌ "Can achieve 60-70% with optimization" (unverified)
-
-**When in doubt, choose the simpler option. If students can't understand it, we've failed.**
-
----
 
 ## 🚨 **CRITICAL: Think First, Don't Just Agree**
 
