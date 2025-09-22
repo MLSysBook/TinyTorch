@@ -492,7 +492,20 @@ class SGD:
                 # Update parameter
                 # CRITICAL: Preserve original parameter shape - modify numpy array in-place
                 update = self.learning_rate * self.momentum_buffers[param_id]
-                param.data._data[:] = param.data.data - update
+                new_data = param.data.data - update
+                
+                # Handle different tensor shapes (scalar vs array)
+                if hasattr(param.data, '_data'):
+                    # Real Tensor class with _data attribute
+                    if param.data.data.ndim == 0:
+                        # 0D array (scalar)
+                        param.data._data = new_data
+                    else:
+                        # Multi-dimensional array
+                        param.data._data[:] = new_data
+                else:
+                    # Fallback Tensor class - replace data directly
+                    param.data.data = new_data
         
         self.step_count += 1
         ### END SOLUTION
@@ -797,7 +810,20 @@ class Adam:
                 # Update parameter with adaptive learning rate
                 # CRITICAL: Preserve original parameter shape - modify numpy array in-place
                 update = self.learning_rate * first_moment_corrected / (np.sqrt(second_moment_corrected) + self.epsilon)
-                param.data._data[:] = param.data.data - update
+                new_data = param.data.data - update
+                
+                # Handle different tensor shapes (scalar vs array)
+                if hasattr(param.data, '_data'):
+                    # Real Tensor class with _data attribute
+                    if param.data.data.ndim == 0:
+                        # 0D array (scalar)
+                        param.data._data = new_data
+                    else:
+                        # Multi-dimensional array
+                        param.data._data[:] = new_data
+                else:
+                    # Fallback Tensor class - replace data directly
+                    param.data.data = new_data
         ### END SOLUTION
     
     def zero_grad(self) -> None:

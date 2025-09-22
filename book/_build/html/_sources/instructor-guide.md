@@ -4,13 +4,13 @@
 
 ---
 
-## 🎯 **The Complete Instructor Journey**
+## 🎯 The Complete Instructor Journey
 
 This guide walks you through everything you need to know to successfully run a TinyTorch course with automated grading, from initial setup to semester completion.
 
 ---
 
-## 📋 **Prerequisites**
+## 📋 Prerequisites
 
 Before you begin, ensure you have:
 - **Python 3.8+** installed on your system
@@ -22,9 +22,9 @@ Before you begin, ensure you have:
 
 ---
 
-## 🚀 **Phase 1: Initial Setup (One-Time)**
+## 🚀 Phase 1: Initial Setup (One-Time)
 
-### **Step 1: Clone and Setup Repository**
+### Step 1: Clone and Setup Repository
 
 ```bash
 # Clone the TinyTorch repository
@@ -40,7 +40,7 @@ pip install -r requirements.txt
 pip install nbgrader jupyter jupytext rich
 ```
 
-### **Step 2: Verify Installation**
+### Step 2: Verify Installation
 
 ```bash
 # Test that everything is working
@@ -53,7 +53,7 @@ pip install nbgrader jupyter jupytext rich
 # ✅ TinyTorch CLI ready
 ```
 
-### **Step 3: Initialize NBGrader Environment**
+### Step 3: Initialize NBGrader Environment
 
 ```bash
 # Initialize the grading infrastructure
@@ -66,7 +66,7 @@ pip install nbgrader jupyter jupytext rich
 # 🎉 NBGrader environment initialized successfully!
 ```
 
-### **Step 4: Verify Complete Setup**
+### Step 4: Verify Complete Setup
 
 ```bash
 # Check system status
@@ -80,9 +80,9 @@ pip install nbgrader jupyter jupytext rich
 
 ---
 
-## 🎓 **Phase 2: Course Preparation**
+## 🎓 Phase 2: Course Preparation
 
-### **Understanding the TinyTorch Module Structure**
+### Understanding the TinyTorch Module Structure
 
 TinyTorch has **17 progressive modules**:
 
@@ -111,7 +111,7 @@ TinyTorch has **17 progressive modules**:
 - `15_mlops` - Production deployment and monitoring
 - `16_capstone` - Final integration project
 
-### **Course Planning Recommendations**
+### Course Planning Recommendations
 
 **📅 Semester Planning (14-16 weeks):**
 ```
@@ -135,9 +135,9 @@ Week 16: Final presentations
 
 ---
 
-## 📝 **Phase 3: Assignment Management**
+## 📝 Phase 3: Assignment Management
 
-### **Creating Student Assignments**
+### Creating Student Assignments
 
 **For Individual Modules:**
 ```bash
@@ -164,7 +164,7 @@ Week 16: Final presentations
 4. Removes instructor solutions, adds `# YOUR CODE HERE` stubs
 5. Creates assignments in `assignments/source/XX_module/`
 
-### **Releasing Assignments to Students**
+### Releasing Assignments to Students
 
 ```bash
 # Release individual assignment
@@ -182,7 +182,7 @@ Week 16: Final presentations
 - Or provide direct access to the `assignments/release/` directory
 - Students download and work on their local copies
 
-### **Monitoring Assignment Status**
+### Monitoring Assignment Status
 
 ```bash
 # Check what assignments exist
@@ -200,9 +200,9 @@ Week 16: Final presentations
 
 ---
 
-## 📊 **Phase 4: Grading Workflow**
+## 📊 Phase 4: Grading Workflow
 
-### **Collecting Student Submissions**
+### Collecting Student Submissions
 
 **Manual Collection (Most Common):**
 ```bash
@@ -217,7 +217,7 @@ mkdir -p assignments/submitted/01_setup/student_name/
 ./bin/tito nbgrader collect 01_setup
 ```
 
-### **Auto-Grading Process**
+### Auto-Grading Process
 
 ```bash
 # Auto-grade specific assignment
@@ -234,7 +234,7 @@ mkdir -p assignments/submitted/01_setup/student_name/
 # - Creates detailed grading reports
 ```
 
-### **Generating Student Feedback**
+### Generating Student Feedback
 
 ```bash
 # Generate feedback for specific assignment
@@ -247,7 +247,7 @@ mkdir -p assignments/submitted/01_setup/student_name/
 # assignments/feedback/01_setup/student_name/01_setup.html
 ```
 
-### **Exporting Grades**
+### Exporting Grades
 
 ```bash
 # Export grades to CSV
@@ -258,9 +258,9 @@ mkdir -p assignments/submitted/01_setup/student_name/
 
 ---
 
-## 🔧 **Phase 5: Common Workflows**
+## 🔧 Phase 5: Common Workflows
 
-### **Weekly Assignment Routine**
+### Weekly Assignment Routine
 
 ```bash
 # Monday: Generate and release new assignment
@@ -278,7 +278,7 @@ mkdir -p assignments/submitted/01_setup/student_name/
 # Monday: Return graded assignments and feedback to students
 ```
 
-### **Mid-Semester Status Check**
+### Mid-Semester Status Check
 
 ```bash
 # Comprehensive system status
@@ -291,7 +291,7 @@ mkdir -p assignments/submitted/01_setup/student_name/
 ./bin/tito nbgrader report --format csv
 ```
 
-### **End-of-Semester Workflow**
+### End-of-Semester Workflow
 
 ```bash
 # Generate final gradebook
@@ -307,9 +307,9 @@ tar -czf course_archive_fall2024.tar.gz assignments/ gradebook.db
 
 ---
 
-## 🛠️ **Phase 6: Troubleshooting & Tips**
+## 🛠️ Phase 6: Troubleshooting & Tips
 
-### **Common Issues**
+### Common Issues
 
 **"Module not found" when generating:**
 ```bash
@@ -335,7 +335,7 @@ source .venv/bin/activate
 ./bin/tito system doctor
 ```
 
-### **Best Practices**
+### Best Practices
 
 **📋 Assignment Preparation:**
 - Generate all assignments at start of semester
@@ -352,7 +352,7 @@ source .venv/bin/activate
 - Encourage testing with provided test functions
 - Provide clear error message interpretation
 
-### **Advanced Configuration**
+### Advanced Configuration
 
 **Customize point values in `nbgrader_config.py`:**
 ```python
@@ -367,9 +367,9 @@ c.ClearSolutions.code_stub = {
 
 ---
 
-## 📚 **Phase 7: Student Guidance**
+## 📚 Phase 7: Student Guidance
 
-### **What to Tell Your Students**
+### What to Tell Your Students
 
 **Setup Instructions for Students:**
 ```bash
@@ -405,9 +405,9 @@ pip install -r requirements.txt
 
 ---
 
-## 🎯 **Quick Reference Commands**
+## 🎯 Quick Reference Commands
 
-### **Essential Daily Commands**
+### Essential Daily Commands
 ```bash
 # Check overall system status
 ./bin/tito module status --comprehensive
@@ -423,7 +423,7 @@ pip install -r requirements.txt
 ./bin/tito nbgrader analytics MODULE_NAME
 ```
 
-### **Batch Operations**
+### Batch Operations
 ```bash
 # Work with multiple modules
 ./bin/tito nbgrader generate --range 01-04
@@ -432,7 +432,7 @@ pip install -r requirements.txt
 ./bin/tito nbgrader feedback --all
 ```
 
-### **System Maintenance**
+### System Maintenance
 ```bash
 # Environment health
 ./bin/tito system doctor
@@ -446,7 +446,7 @@ pip install -r requirements.txt
 
 ---
 
-## 📞 **Getting Help**
+## 📞 Getting Help
 
 **If you encounter issues:**
 
@@ -462,7 +462,7 @@ pip install -r requirements.txt
 
 ---
 
-## 🎉 **Success Metrics**
+## 🎉 Success Metrics
 
 **You'll know you're successful when:**
 - ✅ Students can download and run assignments without setup issues  

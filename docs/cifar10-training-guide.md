@@ -1,7 +1,7 @@
-# 🎯 CIFAR-10 Training Guide: Achieving 75% Accuracy
+# 🎯 CIFAR-10 Training Guide: Achieving 55%+ Accuracy
 
 ## Overview
-This guide walks you through training a CNN on CIFAR-10 using your TinyTorch implementation to achieve our north star goal of 75% accuracy.
+This guide walks you through training a CNN on CIFAR-10 using your TinyTorch implementation to achieve solid 55%+ accuracy with your own framework built from scratch.
 
 ## Prerequisites
 Complete these modules first:
@@ -121,6 +121,7 @@ history = trainer.fit(
 )
 
 print(f"🎉 Best validation accuracy: {max(history['val_accuracy']):.2%}")
+print("🎯 Target: 55%+ accuracy - proving your framework works!")
 ```
 
 ## Step 5: Evaluate Performance
@@ -171,7 +172,7 @@ for i in range(10):
             print(f"{classes[i]} confused as {classes[j]}: {cm[i, j]} times")
 ```
 
-## Training Tips for 75%+ Accuracy
+## Training Tips for Optimal Performance
 
 ### 1. Data Preprocessing
 ```python
@@ -225,10 +226,10 @@ if epoch % 5 == 0:
 
 ## Expected Results Timeline
 
-- **After 5 epochs**: ~40-50% accuracy (model learning basic patterns)
-- **After 10 epochs**: ~55-65% accuracy (recognizing shapes)
-- **After 20 epochs**: ~70-75% accuracy (good feature extraction)
-- **After 30 epochs**: ~75-80% accuracy (north star achieved! 🎉)
+- **After 5 epochs**: ~30-40% accuracy (model learning basic patterns)
+- **After 10 epochs**: ~45-50% accuracy (recognizing shapes)
+- **After 20 epochs**: ~50-55% accuracy (good feature extraction)
+- **After 30 epochs**: ~55%+ accuracy (solid performance achieved! 🎉)
 
 ## Troubleshooting Common Issues
 
@@ -249,7 +250,7 @@ if epoch % 5 == 0:
 
 ## Celebrating Success! 🎉
 
-Once you achieve 75% accuracy:
+Once you achieve 55%+ accuracy:
 
 1. **Save your model**: This is a real achievement!
 ```python
@@ -266,17 +267,17 @@ print(f"Best epoch: {np.argmax(history['val_accuracy'])}")
 3. **Share your results**: You built this from scratch!
 ```python
 print(f"🏆 CIFAR-10 Test Accuracy: {results['accuracy']:.2%}")
-print("✅ North Star Goal Achieved!")
+print("✅ Solid Performance Achieved!")
 print("🎯 Built entirely with TinyTorch - no PyTorch/TensorFlow!")
 ```
 
 ## Next Challenges
 
-After achieving 75%:
-- 🚀 Push for 80%+ with better architectures
-- 🎨 Implement data augmentation for 85%+  
+After achieving 55%+:
+- 🚀 Push for 60%+ with better architectures and hyperparameters
+- 🎨 Implement data augmentation for improved generalization  
 - ⚡ Optimize training speed with better kernels
 - 🔬 Analyze what your CNN learned with visualizations
 - 🏆 Try other datasets (Fashion-MNIST, etc.)
 
-Remember: You built every component from scratch - from tensors to convolutions to optimizers. This 75% accuracy represents deep understanding of ML systems, not just API usage!
+Remember: You built every component from scratch - from tensors to convolutions to optimizers. This 55%+ accuracy represents deep understanding of ML systems, not just API usage!

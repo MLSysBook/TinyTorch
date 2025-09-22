@@ -187,10 +187,6 @@
 <li class="toctree-l1"><a class="reference internal" href="classroom-use.html">Classroom Use</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../instructor-guide.html">Instructor Guide</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Course Orientation</span></p>
-<ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../chapters/00-introduction.html">Introduction</a></li>
-</ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Foundation</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../chapters/01-setup.html">0. Setup</a></li>
@@ -225,7 +221,9 @@
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Additional Resources</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../vision.html">TinyTorch Vision</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../kiss-principle.html">KISS Principle</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../checkpoint-system.html">Checkpoint System</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../testing-framework.html">Testing Framework</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../resources.html">Learning Resources</a></li>
 </ul>
 
@@ -441,34 +439,34 @@ document.write(`
                 <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-youll-build">What You’ll Build</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#quick-start-5-minutes">Quick Start (5 minutes)</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-1-get-the-code"><strong>Step 1: Get the Code</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-2-setup-environment"><strong>Step 2: Setup Environment</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-3-start-building"><strong>Step 3: Start Building</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-4-build-test-export-use"><strong>Step 4: Build → Test → Export → Use</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-1-get-the-code">Step 1: Get the Code</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-2-setup-environment">Step 2: Setup Environment</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-3-start-building">Step 3: Start Building</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-4-build-test-export-use">Step 4: Build → Test → Export → Use</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-path-progressive-complexity">Learning Path (Progressive Complexity)</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#foundation-weeks-1-2"><strong>Foundation (Weeks 1-2)</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#building-blocks-weeks-3-4"><strong>🧱 Building Blocks (Weeks 3-4)</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#training-systems-weeks-5-6"><strong>Training Systems (Weeks 5-6)</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#production-performance-weeks-7-8"><strong>Production &amp; Performance (Weeks 7-8)</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#foundation-weeks-1-2">Foundation (Weeks 1-2)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#building-blocks-weeks-3-4">🧱 Building Blocks (Weeks 3-4)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#training-systems-weeks-5-6">Training Systems (Weeks 5-6)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#production-performance-weeks-7-8">Production &amp; Performance (Weeks 7-8)</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#development-workflow">Development Workflow</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-tito-cli-system"><strong>The <code class="docutils literal notranslate"><span class="pre">tito</span></code> CLI System</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#quality-assurance"><strong>Quality Assurance</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-tito-cli-system">The <code class="docutils literal notranslate"><span class="pre">tito</span></code> CLI System</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#quality-assurance">Quality Assurance</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#proven-student-outcomes">Proven Student Outcomes</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-this-approach-works">Why This Approach Works</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#build-use-understand"><strong>Build → Use → Understand</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#real-data-real-systems"><strong>Real Data, Real Systems</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#immediate-feedback"><strong>Immediate Feedback</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#build-use-understand">Build → Use → Understand</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#real-data-real-systems">Real Data, Real Systems</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#immediate-feedback">Immediate Feedback</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ready-to-start">Ready to Start?</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#choose-your-module"><strong>Choose Your Module</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#get-help"><strong>Get Help</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#choose-your-module">Choose Your Module</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#get-help">Get Help</a></li>
 </ul>
 </li>
 </ul>
@@ -502,14 +500,14 @@ document.write(`
 <section id="quick-start-5-minutes">
 <h2>Quick Start (5 minutes)<a class="headerlink" href="#quick-start-5-minutes" title="Link to this heading">#</a></h2>
 <section id="step-1-get-the-code">
-<h3><strong>Step 1: Get the Code</strong><a class="headerlink" href="#step-1-get-the-code" title="Link to this heading">#</a></h3>
+<h3>Step 1: Get the Code<a class="headerlink" href="#step-1-get-the-code" title="Link to this heading">#</a></h3>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/your-org/tinytorch.git
 <span class="nb">cd</span><span class="w"> </span>TinyTorch
 </pre></div>
 </div>
 </section>
 <section id="step-2-setup-environment">
-<h3><strong>Step 2: Setup Environment</strong><a class="headerlink" href="#step-2-setup-environment" title="Link to this heading">#</a></h3>
+<h3>Step 2: Setup Environment<a class="headerlink" href="#step-2-setup-environment" title="Link to this heading">#</a></h3>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Activate virtual environment  </span>
 <span class="nb">source</span><span class="w"> </span>bin/activate-tinytorch.sh
 
@@ -522,7 +520,7 @@ tito<span class="w"> </span>system<span class="w"> </span>doctor
 </div>
 </section>
 <section id="step-3-start-building">
-<h3><strong>Step 3: Start Building</strong><a class="headerlink" href="#step-3-start-building" title="Link to this heading">#</a></h3>
+<h3>Step 3: Start Building<a class="headerlink" href="#step-3-start-building" title="Link to this heading">#</a></h3>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Open first assignment</span>
 <span class="nb">cd</span><span class="w"> </span>modules/source/01_setup
 jupyter<span class="w"> </span>lab<span class="w"> </span>setup_dev.py
@@ -530,7 +528,7 @@ jupyter<span class="w"> </span>lab<span class="w"> </span>setup_dev.py
 </div>
 </section>
 <section id="step-4-build-test-export-use">
-<h3><strong>Step 4: Build → Test → Export → Use</strong><a class="headerlink" href="#step-4-build-test-export-use" title="Link to this heading">#</a></h3>
+<h3>Step 4: Build → Test → Export → Use<a class="headerlink" href="#step-4-build-test-export-use" title="Link to this heading">#</a></h3>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># After implementing code in the notebook:</span>
 tito<span class="w"> </span><span class="nb">export</span><span class="w">               </span><span class="c1"># Export your code to tinytorch package</span>
 tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>setup<span class="w">          </span><span class="c1"># Test your implementation</span>
@@ -546,7 +544,7 @@ python<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;f
 <section id="learning-path-progressive-complexity">
 <h2>Learning Path (Progressive Complexity)<a class="headerlink" href="#learning-path-progressive-complexity" title="Link to this heading">#</a></h2>
 <section id="foundation-weeks-1-2">
-<h3><strong>Foundation (Weeks 1-2)</strong><a class="headerlink" href="#foundation-weeks-1-2" title="Link to this heading">#</a></h3>
+<h3>Foundation (Weeks 1-2)<a class="headerlink" href="#foundation-weeks-1-2" title="Link to this heading">#</a></h3>
 <p>Build the core infrastructure:</p>
 <p><strong>Module 01: Setup &amp; CLI</strong></p>
 <ul class="simple">
@@ -569,7 +567,7 @@ python<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;f
 </section>
 <hr class="docutils" />
 <section id="building-blocks-weeks-3-4">
-<h3><strong>🧱 Building Blocks (Weeks 3-4)</strong><a class="headerlink" href="#building-blocks-weeks-3-4" title="Link to this heading">#</a></h3>
+<h3>🧱 Building Blocks (Weeks 3-4)<a class="headerlink" href="#building-blocks-weeks-3-4" title="Link to this heading">#</a></h3>
 <p>Create neural network components:</p>
 <p><strong>Module 03: Layers</strong></p>
 <ul class="simple">
@@ -592,7 +590,7 @@ python<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;f
 </section>
 <hr class="docutils" />
 <section id="training-systems-weeks-5-6">
-<h3><strong>Training Systems (Weeks 5-6)</strong><a class="headerlink" href="#training-systems-weeks-5-6" title="Link to this heading">#</a></h3>
+<h3>Training Systems (Weeks 5-6)<a class="headerlink" href="#training-systems-weeks-5-6" title="Link to this heading">#</a></h3>
 <p>Complete training infrastructure:</p>
 <p><strong>Module 06: DataLoader</strong></p>
 <ul class="simple">
@@ -621,7 +619,7 @@ python<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;f
 </section>
 <hr class="docutils" />
 <section id="production-performance-weeks-7-8">
-<h3><strong>Production &amp; Performance (Weeks 7-8)</strong><a class="headerlink" href="#production-performance-weeks-7-8" title="Link to this heading">#</a></h3>
+<h3>Production &amp; Performance (Weeks 7-8)<a class="headerlink" href="#production-performance-weeks-7-8" title="Link to this heading">#</a></h3>
 <p>Real-world deployment:</p>
 <p><strong>Module 10: Compression</strong></p>
 <ul class="simple">
@@ -660,7 +658,7 @@ python<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;f
 <section id="development-workflow">
 <h2>Development Workflow<a class="headerlink" href="#development-workflow" title="Link to this heading">#</a></h2>
 <section id="the-tito-cli-system">
-<h3><strong>The <code class="docutils literal notranslate"><span class="pre">tito</span></code> CLI System</strong><a class="headerlink" href="#the-tito-cli-system" title="Link to this heading">#</a></h3>
+<h3>The <code class="docutils literal notranslate"><span class="pre">tito</span></code> CLI System<a class="headerlink" href="#the-tito-cli-system" title="Link to this heading">#</a></h3>
 <p>TinyTorch includes a complete CLI for professional development:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># System management</span>
 tito<span class="w"> </span>system<span class="w"> </span>doctor<span class="w">          </span><span class="c1"># Check environment health</span>
@@ -679,7 +677,7 @@ tito<span class="w"> </span>nbgrader<span class="w"> </span>autograde<span class
 </div>
 </section>
 <section id="quality-assurance">
-<h3><strong>Quality Assurance</strong><a class="headerlink" href="#quality-assurance" title="Link to this heading">#</a></h3>
+<h3>Quality Assurance<a class="headerlink" href="#quality-assurance" title="Link to this heading">#</a></h3>
 <p>Every module includes comprehensive testing:</p>
 <ul class="simple">
 <li><p><strong>100+ automated tests</strong> ensure correctness</p></li>
@@ -709,7 +707,7 @@ tito<span class="w"> </span>nbgrader<span class="w"> </span>autograde<span class
 <section id="why-this-approach-works">
 <h2>Why This Approach Works<a class="headerlink" href="#why-this-approach-works" title="Link to this heading">#</a></h2>
 <section id="build-use-understand">
-<h3><strong>Build → Use → Understand</strong><a class="headerlink" href="#build-use-understand" title="Link to this heading">#</a></h3>
+<h3>Build → Use → Understand<a class="headerlink" href="#build-use-understand" title="Link to this heading">#</a></h3>
 <p>Every component follows this pattern:</p>
 <ol class="arabic simple">
 <li><p><strong>🔧 Build</strong>: Implement <code class="docutils literal notranslate"><span class="pre">ReLU()</span></code> from scratch</p></li>
@@ -718,7 +716,7 @@ tito<span class="w"> </span>nbgrader<span class="w"> </span>autograde<span class
 </ol>
 </section>
 <section id="real-data-real-systems">
-<h3><strong>Real Data, Real Systems</strong><a class="headerlink" href="#real-data-real-systems" title="Link to this heading">#</a></h3>
+<h3>Real Data, Real Systems<a class="headerlink" href="#real-data-real-systems" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p>Work with CIFAR-10 (not toy datasets)</p></li>
 <li><p>Production-style code organization</p></li>
@@ -727,7 +725,7 @@ tito<span class="w"> </span>nbgrader<span class="w"> </span>autograde<span class
 </ul>
 </section>
 <section id="immediate-feedback">
-<h3><strong>Immediate Feedback</strong><a class="headerlink" href="#immediate-feedback" title="Link to this heading">#</a></h3>
+<h3>Immediate Feedback<a class="headerlink" href="#immediate-feedback" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p>Code works immediately after implementation</p></li>
 <li><p>Visual progress indicators and success messages</p></li>
@@ -740,13 +738,13 @@ tito<span class="w"> </span>nbgrader<span class="w"> </span>autograde<span class
 <section id="ready-to-start">
 <h2>Ready to Start?<a class="headerlink" href="#ready-to-start" title="Link to this heading">#</a></h2>
 <section id="choose-your-module">
-<h3><strong>Choose Your Module</strong><a class="headerlink" href="#choose-your-module" title="Link to this heading">#</a></h3>
+<h3>Choose Your Module<a class="headerlink" href="#choose-your-module" title="Link to this heading">#</a></h3>
 <p><strong>New to ML frameworks?</strong> → Start with <a class="reference internal" href="../chapters/01-setup.html"><span class="std std-doc">Setup</span></a>
 <strong>Have ML experience?</strong> → Jump to <a class="reference internal" href="../chapters/02-tensor.html"><span class="std std-doc">Tensors</span></a>
 <strong>Want to see the vision?</strong> → Try <a class="reference internal" href="../chapters/03-activations.html"><span class="std std-doc">Activations</span></a></p>
 </section>
 <section id="get-help">
-<h3><strong>Get Help</strong><a class="headerlink" href="#get-help" title="Link to this heading">#</a></h3>
+<h3>Get Help<a class="headerlink" href="#get-help" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p><strong>💬 Discussions</strong>: GitHub Discussions for questions</p></li>
 <li><p><strong>🐛 Issues</strong>: Report bugs or suggest improvements</p></li>
@@ -824,34 +822,34 @@ tito<span class="w"> </span>nbgrader<span class="w"> </span>autograde<span class
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-youll-build">What You’ll Build</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#quick-start-5-minutes">Quick Start (5 minutes)</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-1-get-the-code"><strong>Step 1: Get the Code</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-2-setup-environment"><strong>Step 2: Setup Environment</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-3-start-building"><strong>Step 3: Start Building</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-4-build-test-export-use"><strong>Step 4: Build → Test → Export → Use</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-1-get-the-code">Step 1: Get the Code</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-2-setup-environment">Step 2: Setup Environment</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-3-start-building">Step 3: Start Building</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-4-build-test-export-use">Step 4: Build → Test → Export → Use</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-path-progressive-complexity">Learning Path (Progressive Complexity)</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#foundation-weeks-1-2"><strong>Foundation (Weeks 1-2)</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#building-blocks-weeks-3-4"><strong>🧱 Building Blocks (Weeks 3-4)</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#training-systems-weeks-5-6"><strong>Training Systems (Weeks 5-6)</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#production-performance-weeks-7-8"><strong>Production &amp; Performance (Weeks 7-8)</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#foundation-weeks-1-2">Foundation (Weeks 1-2)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#building-blocks-weeks-3-4">🧱 Building Blocks (Weeks 3-4)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#training-systems-weeks-5-6">Training Systems (Weeks 5-6)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#production-performance-weeks-7-8">Production &amp; Performance (Weeks 7-8)</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#development-workflow">Development Workflow</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-tito-cli-system"><strong>The <code class="docutils literal notranslate"><span class="pre">tito</span></code> CLI System</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#quality-assurance"><strong>Quality Assurance</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-tito-cli-system">The <code class="docutils literal notranslate"><span class="pre">tito</span></code> CLI System</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#quality-assurance">Quality Assurance</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#proven-student-outcomes">Proven Student Outcomes</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-this-approach-works">Why This Approach Works</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#build-use-understand"><strong>Build → Use → Understand</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#real-data-real-systems"><strong>Real Data, Real Systems</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#immediate-feedback"><strong>Immediate Feedback</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#build-use-understand">Build → Use → Understand</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#real-data-real-systems">Real Data, Real Systems</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#immediate-feedback">Immediate Feedback</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ready-to-start">Ready to Start?</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#choose-your-module"><strong>Choose Your Module</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#get-help"><strong>Get Help</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#choose-your-module">Choose Your Module</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#get-help">Get Help</a></li>
 </ul>
 </li>
 </ul>

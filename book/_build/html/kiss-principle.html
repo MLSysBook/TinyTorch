@@ -1,0 +1,901 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>KISS Principle in TinyTorch &#8212; TinyTorch</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css?v=6644e6bb" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="_static/custom.css?v=5a689c52" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="_static/copybutton.js?v=f281be69"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'kiss-principle';</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="🎯 TinyTorch Checkpoint System" href="checkpoint-system.html" />
+    <link rel="prev" title="The TinyTorch Vision" href="vision.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="_static/logo.png" class="logo__image only-light" alt="TinyTorch - Home"/>
+    <script>document.write(`<img src="_static/logo.png" class="logo__image only-dark" alt="TinyTorch - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="intro.html">
+                    TinyTorch: Build Your Own ML Framework from First Principles
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Usage Paths</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="usage-paths/quick-exploration.html">Quick Exploration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage-paths/serious-development.html">Serious Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage-paths/classroom-use.html">Classroom Use</a></li>
+<li class="toctree-l1"><a class="reference internal" href="instructor-guide.html">Instructor Guide</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Foundation</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="chapters/01-setup.html">0. Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapters/02-tensor.html">1. Tensors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapters/03-activations.html">2. Activations</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Building Blocks</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="chapters/04-layers.html">3. Layers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapters/05-dense.html">4. Dense</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapters/06-spatial.html">5. Spatial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapters/07-attention.html">6. Attention</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Training Systems</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="chapters/08-dataloader.html">7. DataLoader</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapters/09-autograd.html">8. Autograd</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapters/10-optimizers.html">9. Optimizers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapters/11-training.html">10. Training</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Inference &amp; Serving</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="chapters/12-compression.html">11. Compression</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapters/13-kernels.html">12. Kernels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapters/14-benchmarking.html">13. Benchmarking</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapters/15-mlops.html">14. MLOps</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Language Models</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="chapters/16-tinygpt.html">15. TinyGPT</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Additional Resources</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="vision.html">TinyTorch Vision</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">KISS Principle</a></li>
+<li class="toctree-l1"><a class="reference internal" href="checkpoint-system.html">Checkpoint System</a></li>
+<li class="toctree-l1"><a class="reference internal" href="testing-framework.html">Testing Framework</a></li>
+<li class="toctree-l1"><a class="reference internal" href="resources.html">Learning Resources</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/mlsysbook/TinyTorch" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/mlsysbook/TinyTorch/edit/main/book/kiss-principle.md" target="_blank"
+   class="btn btn-sm btn-source-edit-button dropdown-item"
+   title="Suggest edit"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="btn__text-container">Suggest edit</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/mlsysbook/TinyTorch/issues/new?title=Issue%20on%20page%20%2Fkiss-principle.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/kiss-principle.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>KISS Principle in TinyTorch</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#keep-it-simple-stupid">Keep It Simple, Stupid</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-kiss-matters-in-ml-education">Why KISS Matters in ML Education</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#traditional-ml-frameworks-complexity-by-default">Traditional ML Frameworks: Complexity by Default</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tinytorch-clarity-by-design">TinyTorch: Clarity by Design</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kiss-in-practice">KISS in Practice</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#single-responsibility-components">1. Single Responsibility Components</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minimal-interfaces">2. Minimal Interfaces</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#explicit-over-implicit">3. Explicit Over Implicit</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kiss-design-decisions">KISS Design Decisions</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#file-organization">File Organization</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#module-design">Module Design</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#code-style">Code Style</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#educational-benefits">Educational Benefits</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cognitive-load-reduction">1. Cognitive Load Reduction</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#debugging-clarity">2. Debugging Clarity</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#modification-confidence">3. Modification Confidence</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kiss-vs-performance">KISS vs. Performance</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-trade-off">The Trade-off</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#when-we-optimize">When We Optimize</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#documentation-of-trade-offs">Documentation of Trade-offs</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kiss-guidelines-for-contributors">KISS Guidelines for Contributors</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#before-adding-complexity">Before Adding Complexity</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#code-review-checklist">Code Review Checklist</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#refactoring-triggers">Refactoring Triggers</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-kiss-promise">The KISS Promise</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="kiss-principle-in-tinytorch">
+<h1>KISS Principle in TinyTorch<a class="headerlink" href="#kiss-principle-in-tinytorch" title="Link to this heading">#</a></h1>
+<section id="keep-it-simple-stupid">
+<h2>Keep It Simple, Stupid<a class="headerlink" href="#keep-it-simple-stupid" title="Link to this heading">#</a></h2>
+<p>The KISS principle is at the core of TinyTorch’s design philosophy. Every component, interface, and implementation follows this fundamental rule: <strong>simplicity enables understanding</strong>.</p>
+</section>
+<section id="why-kiss-matters-in-ml-education">
+<h2>Why KISS Matters in ML Education<a class="headerlink" href="#why-kiss-matters-in-ml-education" title="Link to this heading">#</a></h2>
+<section id="traditional-ml-frameworks-complexity-by-default">
+<h3>Traditional ML Frameworks: Complexity by Default<a class="headerlink" href="#traditional-ml-frameworks-complexity-by-default" title="Link to this heading">#</a></h3>
+<p>Most production ML frameworks prioritize performance and features over clarity:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># PyTorch: Multiple ways to do everything</span>
+<span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">64</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># Object-oriented</span>
+<span class="n">F</span><span class="o">.</span><span class="n">conv2d</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">weight</span><span class="p">,</span> <span class="n">bias</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>               <span class="c1"># Functional</span>
+<span class="n">torch</span><span class="o">.</span><span class="n">conv2d</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">weight</span><span class="p">,</span> <span class="n">bias</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>       <span class="c1"># Low-level</span>
+
+<span class="c1"># Result: Students learn APIs, not concepts</span>
+</pre></div>
+</div>
+</section>
+<section id="tinytorch-clarity-by-design">
+<h3>TinyTorch: Clarity by Design<a class="headerlink" href="#tinytorch-clarity-by-design" title="Link to this heading">#</a></h3>
+<p>TinyTorch chooses the simplest approach that teaches the concept:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># TinyTorch: One clear way to do each operation</span>
+<span class="n">Conv2D</span><span class="p">(</span><span class="n">in_channels</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">out_channels</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="c1"># Result: Students understand the operation itself</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="kiss-in-practice">
+<h2>KISS in Practice<a class="headerlink" href="#kiss-in-practice" title="Link to this heading">#</a></h2>
+<section id="single-responsibility-components">
+<h3>1. Single Responsibility Components<a class="headerlink" href="#single-responsibility-components" title="Link to this heading">#</a></h3>
+<p>Every class has one clear purpose:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># ✅ GOOD: Clear, single responsibility</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ReLU</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">backward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">grad_output</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">grad_output</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">last_input</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
+
+<span class="c1"># ❌ AVOID: Multiple responsibilities</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ActivationWithDropoutAndNormalization</span><span class="p">:</span>
+    <span class="c1"># Too many concerns in one class</span>
+</pre></div>
+</div>
+</section>
+<section id="minimal-interfaces">
+<h3>2. Minimal Interfaces<a class="headerlink" href="#minimal-interfaces" title="Link to this heading">#</a></h3>
+<p>Functions do one thing with clear inputs/outputs:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># ✅ GOOD: Simple, predictable interface</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">conv2d</span><span class="p">(</span><span class="nb">input</span><span class="p">,</span> <span class="n">weight</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">stride</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+    <span class="c1"># Implementation...</span>
+    <span class="k">return</span> <span class="n">output</span>
+
+<span class="c1"># ❌ AVOID: Complex, unclear interface  </span>
+<span class="k">def</span><span class="w"> </span><span class="nf">conv2d_advanced</span><span class="p">(</span><span class="nb">input</span><span class="p">,</span> <span class="n">weight</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">stride</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> 
+                   <span class="n">dilation</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">groups</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">padding_mode</span><span class="o">=</span><span class="s1">&#39;zeros&#39;</span><span class="p">,</span> 
+                   <span class="n">output_padding</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="c1"># Too many options obscure the core concept</span>
+</pre></div>
+</div>
+</section>
+<section id="explicit-over-implicit">
+<h3>3. Explicit Over Implicit<a class="headerlink" href="#explicit-over-implicit" title="Link to this heading">#</a></h3>
+<p>Make the “magic” visible:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># ✅ GOOD: Shows what&#39;s happening</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">train_step</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">loss_fn</span><span class="p">,</span> <span class="n">optimizer</span><span class="p">,</span> <span class="n">batch_x</span><span class="p">,</span> <span class="n">batch_y</span><span class="p">):</span>
+    <span class="c1"># Forward pass</span>
+    <span class="n">pred</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">batch_x</span><span class="p">)</span>
+    <span class="n">loss</span> <span class="o">=</span> <span class="n">loss_fn</span><span class="p">(</span><span class="n">pred</span><span class="p">,</span> <span class="n">batch_y</span><span class="p">)</span>
+    
+    <span class="c1"># Backward pass</span>
+    <span class="n">loss</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
+    <span class="n">optimizer</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
+    <span class="n">optimizer</span><span class="o">.</span><span class="n">zero_grad</span><span class="p">()</span>
+    
+    <span class="k">return</span> <span class="n">loss</span><span class="o">.</span><span class="n">data</span>
+
+<span class="c1"># ❌ AVOID: Hidden complexity</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">train_step</span><span class="p">(</span><span class="n">trainer</span><span class="p">,</span> <span class="n">batch</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">trainer</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">batch</span><span class="p">)</span>  <span class="c1"># What actually happens?</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="kiss-design-decisions">
+<h2>KISS Design Decisions<a class="headerlink" href="#kiss-design-decisions" title="Link to this heading">#</a></h2>
+<section id="file-organization">
+<h3>File Organization<a class="headerlink" href="#file-organization" title="Link to this heading">#</a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span># ✅ Simple structure
+tinytorch/
+├── core/           # Core implementations
+├── utils/          # Utilities
+└── datasets/       # Data handling
+
+# vs. complex hierarchies with deep nesting
+</pre></div>
+</div>
+</section>
+<section id="module-design">
+<h3>Module Design<a class="headerlink" href="#module-design" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>One concept per module</strong>: Tensors, Activations, Layers, etc.</p></li>
+<li><p><strong>Progressive complexity</strong>: Each module builds on previous ones</p></li>
+<li><p><strong>Self-contained</strong>: Each module can be understood independently</p></li>
+</ul>
+</section>
+<section id="code-style">
+<h3>Code Style<a class="headerlink" href="#code-style" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>No magic methods</strong>: <code class="docutils literal notranslate"><span class="pre">__add__</span></code> is clear, <code class="docutils literal notranslate"><span class="pre">__radd__</span></code> is confusing</p></li>
+<li><p><strong>Explicit names</strong>: <code class="docutils literal notranslate"><span class="pre">conv2d</span></code> not <code class="docutils literal notranslate"><span class="pre">conv</span></code>, <code class="docutils literal notranslate"><span class="pre">ReLU</span></code> not <code class="docutils literal notranslate"><span class="pre">R</span></code></p></li>
+<li><p><strong>Minimal inheritance</strong>: Composition over complex hierarchies</p></li>
+</ul>
+</section>
+</section>
+<section id="educational-benefits">
+<h2>Educational Benefits<a class="headerlink" href="#educational-benefits" title="Link to this heading">#</a></h2>
+<section id="cognitive-load-reduction">
+<h3>1. Cognitive Load Reduction<a class="headerlink" href="#cognitive-load-reduction" title="Link to this heading">#</a></h3>
+<p>Simple code means students focus on concepts, not syntax:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Cognitive load: LOW - focus on the math</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">sigmoid</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="k">return</span> <span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">x</span><span class="p">))</span>
+
+<span class="c1"># Cognitive load: HIGH - distracted by implementation details</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">sigmoid</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">memory_format</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="c1"># Complex implementation with many edge cases</span>
+</pre></div>
+</div>
+</section>
+<section id="debugging-clarity">
+<h3>2. Debugging Clarity<a class="headerlink" href="#debugging-clarity" title="Link to this heading">#</a></h3>
+<p>When something breaks, simple code is easy to debug:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># ✅ Easy to debug: clear execution path</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">last_input</span> <span class="o">=</span> <span class="n">x</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+
+<span class="c1"># ❌ Hard to debug: hidden state and side effects</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_apply_with_state_management</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_relu_impl</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="modification-confidence">
+<h3>3. Modification Confidence<a class="headerlink" href="#modification-confidence" title="Link to this heading">#</a></h3>
+<p>Simple code invites experimentation:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Students think: &quot;I can modify this!&quot;</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">adam_update</span><span class="p">(</span><span class="n">param</span><span class="p">,</span> <span class="n">grad</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">lr</span><span class="o">=</span><span class="mf">0.001</span><span class="p">,</span> <span class="n">beta1</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span> <span class="n">beta2</span><span class="o">=</span><span class="mf">0.999</span><span class="p">):</span>
+    <span class="n">m</span> <span class="o">=</span> <span class="n">beta1</span> <span class="o">*</span> <span class="n">m</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">beta1</span><span class="p">)</span> <span class="o">*</span> <span class="n">grad</span>
+    <span class="n">v</span> <span class="o">=</span> <span class="n">beta2</span> <span class="o">*</span> <span class="n">v</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">beta2</span><span class="p">)</span> <span class="o">*</span> <span class="n">grad</span> <span class="o">*</span> <span class="n">grad</span>
+    <span class="n">param</span> <span class="o">-=</span> <span class="n">lr</span> <span class="o">*</span> <span class="n">m</span> <span class="o">/</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="o">+</span> <span class="mf">1e-8</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">param</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">v</span>
+
+<span class="c1"># Students think: &quot;I better not touch this...&quot;</span>
+<span class="c1"># [100 lines of optimized, abstracted update logic]</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="kiss-vs-performance">
+<h2>KISS vs. Performance<a class="headerlink" href="#kiss-vs-performance" title="Link to this heading">#</a></h2>
+<section id="the-trade-off">
+<h3>The Trade-off<a class="headerlink" href="#the-trade-off" title="Link to this heading">#</a></h3>
+<p>KISS sometimes means choosing clarity over peak performance:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># TinyTorch: Clear but not optimized</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">conv2d_simple</span><span class="p">(</span><span class="nb">input</span><span class="p">,</span> <span class="n">kernel</span><span class="p">):</span>
+    <span class="n">output</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">output_shape</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">output_height</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">output_width</span><span class="p">):</span>
+            <span class="c1"># Clear nested loops show the operation</span>
+            <span class="n">output</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="nb">input</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="n">i</span><span class="o">+</span><span class="n">k_h</span><span class="p">,</span> <span class="n">j</span><span class="p">:</span><span class="n">j</span><span class="o">+</span><span class="n">k_w</span><span class="p">]</span> <span class="o">*</span> <span class="n">kernel</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">output</span>
+
+<span class="c1"># Production: Optimized but opaque</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">conv2d_optimized</span><span class="p">(</span><span class="nb">input</span><span class="p">,</span> <span class="n">kernel</span><span class="p">):</span>
+    <span class="c1"># BLAS calls, memory optimization, SIMD instructions</span>
+    <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">_C</span><span class="o">.</span><span class="n">_nn</span><span class="o">.</span><span class="n">conv2d</span><span class="p">(</span><span class="nb">input</span><span class="p">,</span> <span class="n">kernel</span><span class="p">,</span> <span class="o">...</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="when-we-optimize">
+<h3>When We Optimize<a class="headerlink" href="#when-we-optimize" title="Link to this heading">#</a></h3>
+<p>We add optimization layers <strong>after</strong> establishing clarity:</p>
+<ol class="arabic simple">
+<li><p><strong>First</strong>: Implement the clearest possible version</p></li>
+<li><p><strong>Then</strong>: Profile and identify bottlenecks</p></li>
+<li><p><strong>Finally</strong>: Add optimizations with clear documentation</p></li>
+</ol>
+</section>
+<section id="documentation-of-trade-offs">
+<h3>Documentation of Trade-offs<a class="headerlink" href="#documentation-of-trade-offs" title="Link to this heading">#</a></h3>
+<p>Every optimization is explained:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">conv2d_vectorized</span><span class="p">(</span><span class="nb">input</span><span class="p">,</span> <span class="n">kernel</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Vectorized convolution implementation.</span>
+<span class="sd">    </span>
+<span class="sd">    This version uses im2col transformation for speed.</span>
+<span class="sd">    For the clear, educational version, see conv2d_simple().</span>
+<span class="sd">    </span>
+<span class="sd">    Trade-off: 10x faster, but obscures the sliding window concept.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="kiss-guidelines-for-contributors">
+<h2>KISS Guidelines for Contributors<a class="headerlink" href="#kiss-guidelines-for-contributors" title="Link to this heading">#</a></h2>
+<section id="before-adding-complexity">
+<h3>Before Adding Complexity<a class="headerlink" href="#before-adding-complexity" title="Link to this heading">#</a></h3>
+<p>Ask these questions:</p>
+<ol class="arabic simple">
+<li><p><strong>Is this essential for understanding the concept?</strong></p></li>
+<li><p><strong>Can students modify this confidently?</strong></p></li>
+<li><p><strong>Does this make debugging easier or harder?</strong></p></li>
+<li><p><strong>Is there a simpler way to achieve the same goal?</strong></p></li>
+</ol>
+</section>
+<section id="code-review-checklist">
+<h3>Code Review Checklist<a class="headerlink" href="#code-review-checklist" title="Link to this heading">#</a></h3>
+<ul class="contains-task-list simple">
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> Single responsibility per function/class</p></li>
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> Clear, explicit names</p></li>
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> Minimal parameter lists</p></li>
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> No hidden state or side effects</p></li>
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> Students can understand the implementation</p></li>
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> Debugging is straightforward</p></li>
+</ul>
+</section>
+<section id="refactoring-triggers">
+<h3>Refactoring Triggers<a class="headerlink" href="#refactoring-triggers" title="Link to this heading">#</a></h3>
+<p>Refactor when:</p>
+<ul class="simple">
+<li><p>Functions have more than 3-4 parameters</p></li>
+<li><p>Classes have more than one clear responsibility</p></li>
+<li><p>Students ask “what does this do?” frequently</p></li>
+<li><p>Debugging requires deep knowledge of implementation details</p></li>
+</ul>
+</section>
+</section>
+<section id="the-kiss-promise">
+<h2>The KISS Promise<a class="headerlink" href="#the-kiss-promise" title="Link to this heading">#</a></h2>
+<p>TinyTorch promises that every component follows KISS principles:</p>
+<ul class="simple">
+<li><p><strong>You can understand any implementation in 5 minutes</strong></p></li>
+<li><p><strong>You can modify any component confidently</strong></p></li>
+<li><p><strong>When something breaks, you can debug it yourself</strong></p></li>
+<li><p><strong>The simplest solution is always preferred</strong></p></li>
+</ul>
+<p>This isn’t just about code - it’s about <strong>empowering learners</strong> to become confident ML systems engineers who understand their tools completely.</p>
+<p>Remember: <strong>Complex problems often have simple solutions. Simple solutions enable deep understanding.</strong></p>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="vision.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">The TinyTorch Vision</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="checkpoint-system.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">🎯 TinyTorch Checkpoint System</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#keep-it-simple-stupid">Keep It Simple, Stupid</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-kiss-matters-in-ml-education">Why KISS Matters in ML Education</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#traditional-ml-frameworks-complexity-by-default">Traditional ML Frameworks: Complexity by Default</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tinytorch-clarity-by-design">TinyTorch: Clarity by Design</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kiss-in-practice">KISS in Practice</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#single-responsibility-components">1. Single Responsibility Components</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minimal-interfaces">2. Minimal Interfaces</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#explicit-over-implicit">3. Explicit Over Implicit</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kiss-design-decisions">KISS Design Decisions</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#file-organization">File Organization</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#module-design">Module Design</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#code-style">Code Style</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#educational-benefits">Educational Benefits</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cognitive-load-reduction">1. Cognitive Load Reduction</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#debugging-clarity">2. Debugging Clarity</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#modification-confidence">3. Modification Confidence</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kiss-vs-performance">KISS vs. Performance</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-trade-off">The Trade-off</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#when-we-optimize">When We Optimize</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#documentation-of-trade-offs">Documentation of Trade-offs</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kiss-guidelines-for-contributors">KISS Guidelines for Contributors</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#before-adding-complexity">Before Adding Complexity</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#code-review-checklist">Code Review Checklist</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#refactoring-triggers">Refactoring Triggers</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-kiss-promise">The KISS Promise</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Prof. Vijay Janapa Reddi (Harvard University)
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2025.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
