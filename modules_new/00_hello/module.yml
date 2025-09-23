@@ -1,0 +1,39 @@
+module:
+  number: 0
+  name: hello
+  title: "Hello - Personalized Setup"
+  description: "Interactive personalized setup with Rich CLI and system profiling"
+  difficulty: "⭐"
+  estimated_time: "30 minutes"
+  
+learning_objectives:
+  - "Set up personalized TinyTorch environment"
+  - "Detect and understand system capabilities"
+  - "Create interactive CLI experience"
+  - "Configure development environment"
+
+prerequisites:
+  - "Python 3.8+"
+  - "Basic command line knowledge"
+  
+exports:
+  - "None (setup module only)"
+  
+concepts:
+  - "System profiling"
+  - "Environment configuration"
+  - "CLI interaction design"
+  - "Development tool setup"
+
+ml_systems_focus:
+  - "Hardware capability detection (CPU/GPU/RAM)"
+  - "Environment optimization for ML workloads"
+  - "Development workflow setup"
+
+success_criteria:
+  - "Personalized configuration created"
+  - "System capabilities detected"
+  - "TinyTorch CLI working"
+  - "Ready for Module 01"
+
+next_module: "01_tensor"
