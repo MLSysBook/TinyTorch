@@ -454,6 +454,38 @@ class Tensor:
         """Computes the mean of the tensor's elements."""
         return Tensor(np.mean(self.data))
 
+    def sum(self) -> 'Tensor':
+        """
+        Sum all elements in the tensor.
+        
+        Returns a new tensor containing the sum of all elements.
+        This is commonly used in loss functions and gradient computation.
+        
+        Returns:
+            Tensor: A scalar tensor containing the sum of all elements
+            
+        Example:
+            Tensor([1, 2, 3]).sum() → Tensor(6)
+            Tensor([[1, 2], [3, 4]]).sum() → Tensor(10)
+        """
+        return Tensor(np.sum(self.data))
+    
+    @property
+    def T(self) -> 'Tensor':
+        """
+        Transpose of the tensor.
+        
+        Returns a new tensor with transposed data. For 1D tensors,
+        returns the tensor unchanged. For 2D+ tensors, swaps the dimensions.
+        
+        Returns:
+            Tensor: Transposed tensor
+            
+        Example:
+            Tensor([[1, 2], [3, 4]]).T → Tensor([[1, 3], [2, 4]])
+        """
+        return Tensor(self.data.T)
+
     def matmul(self, other: 'Tensor') -> 'Tensor':
         """
         Perform matrix multiplication between two tensors.
