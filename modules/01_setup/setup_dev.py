@@ -12,33 +12,33 @@
 """
 # Setup - TinyTorch Development Environment Configuration
 
-Welcome to the Setup module! You'll configure your development environment and master the foundation of professional ML systems development.
+Welcome to TinyTorch! This is your first module where you'll verify your environment is ready and set up your personal TinyTorch installation.
 
 ## Learning Goals
-- Systems understanding: How environment configuration affects ML system reproducibility and performance
-- Core implementation skill: Build system configuration and introspection capabilities
-- Pattern recognition: Understand how professional ML teams manage development environments
-- Framework connection: See how PyTorch handles environment detection and hardware optimization
-- Performance insight: Learn why proper environment setup is critical for ML system performance
+- **Environment Verification**: Confirm your Python environment is working correctly
+- **Personal Configuration**: Set up your identity for TinyTorch development
+- **System Information**: Learn to query basic system specs
+- **Testing Introduction**: Experience automated testing with your first functions
+- **Ready to Build**: Confirm you're prepared to start building ML systems
 
 ## Build → Use → Reflect
-1. **Build**: System configuration and environment detection functions
-2. **Use**: Configure your personal TinyTorch installation with environment-aware settings
-3. **Reflect**: Why do ML systems fail when environments differ between development and production?
+1. **Build**: Simple environment verification and personal configuration functions
+2. **Use**: Configure your TinyTorch installation and verify everything works
+3. **Reflect**: Why is proper environment setup important for any programming project?
 
 ## What You'll Achieve
-By the end of this module, you'll understand:
-- Deep technical understanding of how ML systems detect and adapt to their runtime environment
-- Practical capability to build robust configuration systems that work across different platforms
-- Systems insight into why environment reproducibility is critical for ML system reliability
-- Performance consideration of how hardware detection enables automatic optimization choices
-- Connection to production ML systems and how frameworks like PyTorch handle cross-platform deployment
+By the end of this module, you'll have:
+- ✅ **Working Environment**: Confirmed Python and required packages are installed
+- ✅ **Personal Setup**: Your name and information configured in TinyTorch
+- ✅ **System Awareness**: Basic understanding of your hardware capabilities
+- ✅ **First Functions**: Successfully implemented and tested your first TinyTorch code
+- ✅ **Ready to Code**: Confidence that your environment is prepared for building ML systems
 
-## Systems Reality Check
-💡 **Production Context**: PyTorch automatically detects CUDA availability and optimizes operations based on hardware - your configuration system enables similar adaptability
-⚡ **Performance Note**: Environment detection happens once at startup, but configuration choices affect every operation - design for minimal runtime overhead
+## First Day Success
+💡 **Goal**: Get your environment working and feel confident about building TinyTorch
+🎯 **Outcome**: You'll know your setup is correct and be excited to start building ML systems
 
-Let's build the foundation of your ML systems engineering skills!
+Let's make sure you're ready to build amazing things!
 """
 
 # %% nbgrader={"grade": false, "grade_id": "setup-imports", "locked": false, "schema_version": 3, "solution": false, "task": false}
@@ -58,183 +58,228 @@ print("Ready to configure your TinyTorch installation!")
 
 # %% [markdown]
 """
-## 🏗️ The Architecture of ML Systems Configuration
+### Before We Code: Environment Verification Function
 
-### Configuration Layers in Production ML
-Real ML systems have multiple configuration layers:
+```python
+# CONCEPT: What is Environment Verification?
+# A simple function that checks if your development environment is ready.
+# Think of it like a "systems check" before takeoff - making sure everything
+# works before you start building complex ML systems.
 
+# CODE STRUCTURE: What We're Building  
+def verify_environment() -> Dict[str, bool]:   # Returns success/failure for each check
+    checks = {}                                # Dictionary to store results
+    
+    # Test basic Python operations
+    try:
+        result = 2 + 2                        # Simple math test
+        checks['basic_math'] = (result == 4)   # Should be True
+    except:
+        checks['basic_math'] = False           # Something's wrong
+    
+    # Test package imports (more tests here...)
+    return checks                              # Return all check results
+
+# CONNECTIONS: Real-World Equivalents
+# Docker health checks - verify containers are working
+# pytest setup/teardown - ensure test environment is ready
+# CI/CD pipeline checks - validate environment before deployment
+# Software installation verification - confirm everything installed correctly
+
+# CONSTRAINTS: Keep It Simple
+# - Only test essential functionality (math, imports, version)
+# - Return boolean results (True = success, False = failure)
+# - Use try/except to handle any errors gracefully
+# - Make it quick - this should run in under a second
+
+# CONTEXT: Why This Matters
+# Environment verification prevents frustration:
+# - Catch setup problems early, not during complex implementations
+# - Build confidence that your environment is ready
+# - Provide clear success/failure feedback
+# - Create a foundation for more advanced TinyTorch modules
 ```
-┌─────────────────────────────────────┐
-│        Application Config           │  ← Your personal info
-├─────────────────────────────────────┤
-│        System Environment           │  ← Hardware specs
-├─────────────────────────────────────┤
-│        Runtime Configuration        │  ← Python, libraries
-├─────────────────────────────────────┤
-│        Infrastructure Config        │  ← Cloud, containers
-└─────────────────────────────────────┘
-```
 
-### Why Each Layer Matters
-- **Application**: Identifies who built what and when
-- **System**: Determines performance characteristics and limitations
-- **Runtime**: Affects compatibility and feature availability
-- **Infrastructure**: Enables scaling and deployment strategies
-
-### Connection to Real ML Frameworks
-Every major ML framework has configuration:
-- **PyTorch**: `torch.cuda.is_available()`, `torch.get_num_threads()`
-- **TensorFlow**: `tf.config.list_physical_devices()`, `tf.sysconfig.get_build_info()`
-- **Hugging Face**: Model cards with system requirements and performance metrics
-- **MLflow**: Experiment tracking with system context and reproducibility
-
-### TinyTorch's Approach
-We'll build configuration that's:
-- **Educational**: Teaches system awareness
-- **Practical**: Actually useful for debugging
-- **Professional**: Follows industry standards
-- **Extensible**: Ready for future ML systems features
+**You're building your first TinyTorch function - a simple environment checker!**
 """
+
+# %% nbgrader={"grade": false, "grade_id": "verify-environment", "locked": false, "schema_version": 3, "solution": true, "task": false}
+#| export
+def verify_environment() -> Dict[str, bool]:
+    """
+    Simple verification that environment is ready for TinyTorch.
+    
+    This function performs basic checks to ensure your Python environment
+    is working correctly and ready for TinyTorch development. It's your
+    first TinyTorch function!
+    
+    TODO: Implement environment verification checks.
+    
+    STEP-BY-STEP IMPLEMENTATION:
+    1. Create empty dictionary to store check results
+    2. Test basic Python math operations (2 + 2 = 4)
+    3. Test that required packages can be imported
+    4. Test that Python version is compatible (>= 3.8)
+    5. Return dictionary with results
+    
+    EXAMPLE USAGE:
+    ```python
+    # Check if environment is ready
+    checks = verify_environment()
+    print(checks)  # Expected: {'basic_math': True, 'required_packages': True, 'python_version_ok': True}
+    
+    # Check individual results
+    if checks['basic_math']:
+        print("✅ Python math works!")
+    if checks['required_packages']:
+        print("✅ Required packages available!")
+    if checks['python_version_ok']:
+        print("✅ Python version compatible!")
+    ```
+    
+    IMPLEMENTATION HINTS:
+    - Use try/except blocks to handle any import or operation errors
+    - Test simple math: result = 2 + 2, then check if result == 4
+    - Import sys, platform, psutil in a try block
+    - Check sys.version_info >= (3, 8) for Python version
+    - Return False for any check that fails
+    
+    LEARNING CONNECTIONS:
+    - This is like pytest fixtures that verify test environment
+    - Similar to Docker health checks that verify container status
+    - Parallels CI/CD pipeline verification steps
+    - Foundation for more complex TinyTorch functionality
+    """
+    ### BEGIN SOLUTION
+    checks = {}
+    
+    # Test basic Python operations
+    try:
+        result = 2 + 2
+        checks['basic_math'] = (result == 4)
+    except:
+        checks['basic_math'] = False
+    
+    # Test package imports
+    try:
+        import sys, platform, psutil
+        checks['required_packages'] = True
+    except ImportError:
+        checks['required_packages'] = False
+    
+    # Test Python version compatibility
+    checks['python_version_ok'] = sys.version_info >= (3, 8)
+    
+    return checks
+    ### END SOLUTION
 
 # %% [markdown]
 """
-## Step 1: What is System Configuration?
+### 🧪 Unit Test: Environment Verification
 
-### Definition
-**System configuration** is the process of setting up your development environment with personalized information and system diagnostics. In TinyTorch, this means:
-
-- **Personal Information**: Your name, email, institution for identification
-- **System Information**: Hardware specs, Python version, platform details
-- **Customization**: Making your TinyTorch installation uniquely yours
-
-### Why Configuration Matters in ML Systems
-Proper system configuration is crucial because:
-
-#### 1. **Reproducibility** 
-Your setup can be documented and shared:
-```python
-# Someone else can recreate your environment
-config = {
-    'developer': 'Your Name',
-    'python_version': '3.9.7',
-    'platform': 'Darwin',
-    'memory_gb': 16.0
-}
-```
-
-#### 2. **Debugging**
-System info helps troubleshoot ML performance issues:
-- **Memory errors**: "Do I have enough RAM for this model?"
-- **Performance issues**: "How many CPU cores can I use?"
-- **Compatibility problems**: "What Python version am I running?"
-
-#### 3. **Professional Development**
-Shows proper engineering practices:
-- **Attribution**: Your work is properly credited
-- **Collaboration**: Others can contact you about your code
-- **Documentation**: System context is preserved
-
-#### 4. **ML Systems Integration**
-Connects to broader ML engineering:
-- **Model cards**: Document system requirements
-- **Experiment tracking**: Record hardware context
-- **Deployment**: Match development to production environments
-
-### Real-World Examples
-- **Google Colab**: Shows GPU type, RAM, disk space
-- **Kaggle**: Displays system specs for reproducibility
-- **MLflow**: Tracks system context with experiments
-- **Docker**: Containerizes entire system configuration
-
-Let's start configuring your TinyTorch system!
+This test validates your `verify_environment()` function implementation, ensuring it correctly checks that your development environment is ready for TinyTorch.
 """
 
+# %% nbgrader={"grade": true, "grade_id": "test-verify-environment-immediate", "locked": true, "points": 5, "schema_version": 3, "solution": false, "task": false}
+def test_unit_verify_environment():
+    """Test verify_environment function implementation."""
+    print("🔬 Unit Test: Environment Verification...")
+    
+    # Test verify_environment function
+    checks = verify_environment()
+    
+    # Test return type
+    assert isinstance(checks, dict), "verify_environment should return a dictionary"
+    
+    # Test required keys
+    required_keys = ['basic_math', 'required_packages', 'python_version_ok']
+    for key in required_keys:
+        assert key in checks, f"Dictionary should have '{key}' key"
+    
+    # Test data types (all should be boolean)
+    for key, value in checks.items():
+        assert isinstance(value, bool), f"Value for '{key}' should be boolean (True/False)"
+    
+    # Test that basic functionality works (these should be True on a working system)
+    assert checks['basic_math'] == True, "Basic math should work (2 + 2 = 4)"
+    assert checks['required_packages'] == True, "Required packages should be importable"
+    assert checks['python_version_ok'] == True, "Python version should be >= 3.8"
+    
+    print("✅ Environment verification function tests passed!")
+    print("✅ Your environment is ready for TinyTorch development!")
+
+# Test function defined (called in main block)
+
+# %% [markdown]
+"""
+## Step 1: Environment Verification
+
+### What We're Doing
+Before we start building TinyTorch, let's make sure your environment is working correctly. We'll create a simple function that checks:
+
+- **Basic Python**: Can Python do simple math operations?
+- **Required Packages**: Are the packages we need installed?
+- **Python Version**: Is your Python version compatible?
+
+### Why This Matters
+- **Confidence**: Know your setup works before diving into complex code
+- **Debugging**: If something goes wrong later, we know it's not a basic setup issue
+- **Learning**: This is your first TinyTorch function - a gentle introduction to coding
+
+### What We're Building
+```python
+def verify_environment() -> Dict[str, bool]:
+    # Test that basic Python operations work
+    # Test that required packages are available  
+    # Test that Python version is compatible
+    return {"basic_math": True, "required_packages": True, "python_version_ok": True}
+```
+
+Let's implement this together!
+"""
 
 # %% [markdown]
 """
 ## Step 2: Personal Information Configuration
 
-### The Concept: Identity in ML Systems
-Your **personal information** identifies you as the developer and configures your TinyTorch installation. This isn't just administrative - it's foundational to professional ML development.
+### What We're Doing
+Now that we've verified your environment works, let's set up your personal TinyTorch installation. This means adding your name, email, and other information so TinyTorch knows who you are.
 
-### Why Personal Info Matters in ML Engineering
+### Why Personal Information Matters
+- **Identification**: Your work should be properly attributed to you
+- **Contact**: Others can reach you if they have questions about your code
+- **Professional Practice**: All software should know who built it
+- **Customization**: Makes your TinyTorch installation uniquely yours
 
-#### 1. **Attribution and Accountability**
-- **Model ownership**: Who built this model?
-- **Responsibility**: Who should be contacted about issues?
-- **Credit**: Proper recognition for your work
+### What We're Building
+```python
+def personal_info() -> Dict[str, str]:
+    return {
+        'developer': 'Your Name',
+        'email': 'your@email.com',
+        'institution': 'Your School',
+        'system_name': 'YourName-TinyTorch-Dev',
+        'version': '1.0.0'
+    }
+```
 
-#### 2. **Collaboration and Communication**
-- **Team coordination**: Multiple developers on ML projects
-- **Knowledge sharing**: Others can learn from your work
-- **Bug reports**: Contact info for issues and improvements
+### Real-World Examples
+- **Git commits**: Every commit has author name and email
+- **Python packages**: setup.py includes author information
+- **Software licenses**: Show who created the software
 
-#### 3. **Professional Standards**
-- **Industry practice**: All professional software has attribution
-- **Open source**: Proper credit in shared code
-- **Academic integrity**: Clear authorship in research
-
-#### 4. **System Customization**
-- **Personalized experience**: Your TinyTorch installation
-- **Unique identification**: Distinguish your work from others
-- **Development tracking**: Link code to developer
-
-### Real-World Parallels
-- **Git commits**: Author name and email in every commit
-- **Docker images**: Maintainer information in container metadata
-- **Python packages**: Author info in `setup.py` and `pyproject.toml`
-- **Model cards**: Creator information for ML models
-
-### Best Practices for Personal Configuration
-- **Use real information**: Not placeholders or fake data
-- **Professional email**: Accessible and appropriate
-- **Descriptive system name**: Unique and meaningful
-- **Consistent formatting**: Follow established conventions
-
-Now let's implement your personal configuration!
+Let's set up your personal TinyTorch configuration!
 """
+
+
 
 # %% [markdown]
 """
-### Before We Code: The 5 C's
+### Personal Information Configuration
 
-```python
-# CONCEPT: What is Personal Information Configuration?
-# Developer identity configuration that identifies you as the creator and
-# configures your TinyTorch installation. Think Git commit attribution -
-# every professional system needs to know who built it.
+Now let's set up your personal TinyTorch installation with your identity information. This function configures your personal details so TinyTorch knows who you are.
 
-# CODE STRUCTURE: What We're Building  
-def personal_info() -> Dict[str, str]:     # Returns developer identity
-    return {                               # Dictionary with required fields
-        'developer': 'Your Name',         # Your actual name
-        'email': 'your@domain.com',       # Contact information
-        'institution': 'Your Place',      # Affiliation
-        'system_name': 'YourName-Dev',    # Unique system identifier
-        'version': '1.0.0'                # Configuration version
-    }
-
-# CONNECTIONS: Real-World Equivalents
-# Git commits - author name and email in every commit
-# Docker images - maintainer information in container metadata
-# Python packages - author info in setup.py and pyproject.toml
-# Model cards - creator information for ML models
-
-# CONSTRAINTS: Key Implementation Requirements
-# - Use actual information (not placeholder text)
-# - Email must be valid format (contains @ and domain)
-# - System name should be unique and descriptive
-# - All values must be strings, version stays '1.0.0'
-
-# CONTEXT: Why This Matters in ML Systems
-# Professional ML development requires attribution:
-# - Model ownership: Who built this neural network?
-# - Collaboration: Others can contact you about issues
-# - Professional standards: Industry practice for all software
-# - System customization: Makes your TinyTorch installation unique
-```
-
-**You're establishing your identity in the ML systems world.**
+This is similar to setting up Git with your name and email - professional software development always includes proper attribution.
 """
 
 # %% nbgrader={"grade": false, "grade_id": "personal-info", "locked": false, "schema_version": 3, "solution": true, "task": false}
@@ -343,122 +388,44 @@ def test_unit_personal_info_basic():
 """
 ## Step 3: System Information Queries
 
-### The Concept: Hardware-Aware ML Systems
-**System information** provides details about your hardware and software environment. This is crucial for ML development because machine learning is fundamentally about computation, and computation depends on hardware.
+### What We're Doing
+Next, let's gather some basic information about your computer. This helps us understand what hardware we're working with.
 
-### Why System Information Matters in ML Engineering
+### Why System Information Matters
+- **Debugging**: If something runs slowly, we can check if it's a hardware limitation
+- **Compatibility**: Different operating systems sometimes behave differently
+- **Learning**: Understanding your development environment
+- **Future Planning**: Knowing your specs helps with more advanced modules
 
-#### 1. **Performance Optimization**
-- **CPU cores**: Determines parallelization strategies
-- **Memory**: Limits batch size and model size
-- **Architecture**: Affects numerical precision and optimization
-
-#### 2. **Compatibility and Debugging**
-- **Python version**: Determines available features and libraries
-- **Platform**: Affects file paths, process management, and system calls
-- **Architecture**: Influences numerical behavior and optimization
-
-#### 3. **Resource Planning**
-- **Training time estimation**: More cores = faster training
-- **Memory requirements**: Avoid out-of-memory errors
-- **Deployment matching**: Development should match production
-
-#### 4. **Reproducibility**
-- **Environment documentation**: Exact system specifications
-- **Performance comparison**: Same code, different hardware
-- **Bug reproduction**: System-specific issues
-
-### The Python System Query Toolkit
-You'll learn to use these essential Python modules:
-
-#### `sys.version_info` - Python Version
+### What We're Building
 ```python
-version_info = sys.version_info
-python_version = f"{version_info.major}.{version_info.minor}.{version_info.micro}"
-# Example: "3.9.7"
+def system_info() -> Dict[str, Any]:
+    return {
+        'python_version': '3.9.7',      # What Python version you're using
+        'platform': 'Darwin',           # Your operating system (Mac/Windows/Linux)
+        'architecture': 'arm64',        # Your CPU type
+        'cpu_count': 8,                 # How many CPU cores you have
+        'memory_gb': 16.0               # How much RAM you have
+    }
 ```
 
-#### `platform.system()` - Operating System
-```python
-platform_name = platform.system()
-# Examples: "Darwin" (macOS), "Linux", "Windows"
-```
+### Python Tools We'll Use
+- **`sys.version_info`**: Gets your Python version
+- **`platform.system()`**: Gets your operating system
+- **`platform.machine()`**: Gets your CPU architecture
+- **`psutil.cpu_count()`**: Counts your CPU cores
+- **`psutil.virtual_memory()`**: Gets your RAM amount
 
-#### `platform.machine()` - CPU Architecture
-```python
-architecture = platform.machine()
-# Examples: "x86_64", "arm64", "aarch64"
-```
-
-#### `psutil.cpu_count()` - CPU Cores
-```python
-cpu_count = psutil.cpu_count()
-# Example: 8 (cores available for parallel processing)
-```
-
-#### `psutil.virtual_memory().total` - Total RAM
-```python
-memory_bytes = psutil.virtual_memory().total
-memory_gb = round(memory_bytes / (1024**3), 1)
-# Example: 16.0 GB
-```
-
-### Real-World Applications
-- **PyTorch**: `torch.get_num_threads()` uses CPU count
-- **TensorFlow**: `tf.config.list_physical_devices()` queries hardware
-- **Scikit-learn**: `n_jobs=-1` uses all available cores
-- **Dask**: Automatically configures workers based on CPU count
-
-### ML Systems Performance Considerations
-- **Memory-bound operations**: Matrix multiplication, large model loading
-- **CPU-bound operations**: Data preprocessing, feature engineering
-- **I/O-bound operations**: Data loading, model saving
-- **Platform-specific optimizations**: SIMD instructions, memory management
-
-Now let's implement system information queries!
+Let's implement system information queries!
 """
 
 # %% [markdown]
 """
-### Before We Code: The 5 C's
+### System Information Queries
 
-```python
-# CONCEPT: What is System Information?
-# Hardware and software environment detection for ML systems.
-# Think computer specifications for gaming - ML needs to know what
-# resources are available for optimal performance.
+Next, let's gather basic information about your computer hardware and software. This helps us understand what resources we're working with and can be useful for debugging performance issues.
 
-# CODE STRUCTURE: What We're Building  
-def system_info() -> Dict[str, Any]:       # Queries system specs
-    return {                               # Hardware/software details
-        'python_version': '3.9.7',        # Python compatibility
-        'platform': 'Darwin',             # Operating system
-        'architecture': 'arm64',          # CPU architecture
-        'cpu_count': 8,                   # Parallel processing cores
-        'memory_gb': 16.0                 # Available RAM
-    }
-
-# CONNECTIONS: Real-World Equivalents
-# torch.get_num_threads() (PyTorch) - uses CPU count for optimization
-# tf.config.list_physical_devices() (TensorFlow) - queries hardware
-# psutil.cpu_count() (System monitoring) - same underlying queries
-# MLflow system tracking - documents environment for reproducibility
-
-# CONSTRAINTS: Key Implementation Requirements
-# - Use actual system queries (not hardcoded values)
-# - Convert memory from bytes to GB for readability
-# - Round memory to 1 decimal place for clean output
-# - Return proper data types (strings, int, float)
-
-# CONTEXT: Why This Matters in ML Systems
-# Hardware awareness enables performance optimization:
-# - Training: More CPU cores = faster data processing
-# - Memory: Determines maximum model and batch sizes
-# - Debugging: System specs help troubleshoot performance issues
-# - Reproducibility: Document exact environment for experiment tracking
-```
-
-**You're building hardware-aware ML systems that adapt to their environment.**
+We'll query your Python version, operating system, CPU cores, and available memory.
 """
 
 # %% nbgrader={"grade": false, "grade_id": "system-info", "locked": false, "schema_version": 3, "solution": true, "task": false}
@@ -634,34 +601,38 @@ Now let's test your configuration functions!
 """
 
 if __name__ == "__main__":
-    # Run the unit tests
+    # Run all unit tests
+    test_unit_verify_environment()
     test_unit_personal_info_basic()
     test_unit_system_info_basic()
     
-    print("All tests passed!")
-    print("Setup module complete!")
+    print("\n🎉 All tests passed!")
+    print("✅ Your environment is verified and ready")
+    print("✅ Personal configuration is set up")
+    print("✅ System information is available")
+    print("\n🚀 Setup module complete! Ready to start building TinyTorch!")
 
 
 # %% [markdown]
 """
 ## 🤔 ML Systems Thinking: Interactive Questions
 
-Now that you've built configuration management for your TinyTorch system, let's connect this foundational work to broader ML systems challenges. These questions help you think critically about how basic setup principles scale to production ML environments.
+Now that you've set up your TinyTorch environment, let's think about why proper setup matters and how it connects to larger programming and ML challenges.
 
-Take time to reflect thoughtfully on each question - your insights will help you understand how the configuration concepts you've implemented connect to real-world ML systems engineering.
+Take time to think about each question - your insights will help you understand why these basic setup steps are important for any programming project.
 """
 
 # %% [markdown]
 """
-### Question 1: Team Development Configuration
+### Question 1: Environment Problems
 
-**Context**: You've implemented personal configuration for individual TinyTorch development. In real ML teams, multiple developers, data scientists, and engineers collaborate on shared models and infrastructure.
+**Context**: You've implemented environment verification that checks if basic functionality works. In real programming projects, environment setup is often the first source of frustration for new developers.
 
-**Reflection Question**: How would you design a configuration system that balances individual developer identity with team coordination needs in a production ML environment? Consider scenarios where teams share GPU clusters, model registries, and deployment pipelines while maintaining individual accountability and debugging capabilities.
+**Reflection Question**: Think about a time when you had trouble getting software to work on your computer (maybe installing a game, app, or programming tool). What went wrong? How could a verification function like the one you built have helped identify the problem faster? What additional checks would you add to catch common setup issues?
 
-Think about: individual vs shared resources, conflict resolution, attribution tracking, and environment standardization.
+Think about: common installation problems, version conflicts, missing dependencies, and helpful error messages.
 
-*Target length: 150-300 words*
+*Target length: 100-200 words*
 """
 
 # %% nbgrader={"grade": true, "grade_id": "question-1-team-config", "locked": false, "points": 10, "schema_version": 3, "solution": true, "task": false}
@@ -695,15 +666,15 @@ GRADING RUBRIC (Instructor Use):
 
 # %% [markdown]
 """
-### Question 2: Hardware-Aware System Design
+### Question 2: System Information Usage
 
-**Context**: Your system_info() function detects CPU cores, memory, and architecture. In production ML systems, this hardware awareness becomes critical for performance optimization and automated resource allocation.
+**Context**: Your system_info() function detects CPU cores, memory, and other hardware details. This information can be useful for understanding why programs run fast or slow.
 
-**Reflection Question**: Design a hardware-aware configuration system that automatically adapts ML training strategies based on detected resources. How would your system handle the transition from development (8GB laptop) to training (64GB GPU server) to inference (edge device with 2GB)? What configuration decisions would be automated vs. manual?
+**Reflection Question**: Imagine you're working on a group project and your code runs much slower on your teammate's computer than on yours. How could the system information you're collecting help debug this problem? What hardware differences might cause performance issues? How would you use this information to help your teammate?
 
-Think about: automatic batch size scaling, parallelization strategies, memory management, and deployment target optimization.
+Think about: memory limitations, CPU differences, operating system variations, and how to explain technical issues to others.
 
-*Target length: 150-300 words*
+*Target length: 100-200 words*
 """
 
 # %% nbgrader={"grade": true, "grade_id": "question-2-hardware-aware", "locked": false, "points": 10, "schema_version": 3, "solution": true, "task": false}
@@ -737,15 +708,15 @@ GRADING RUBRIC (Instructor Use):
 
 # %% [markdown]
 """
-### Question 3: Configuration in Production ML Pipelines
+### Question 3: Professional Attribution
 
-**Context**: Your configuration functions provide system information and personal attribution. In production ML pipelines, configuration becomes part of model lineage, experiment tracking, and compliance requirements.
+**Context**: Your personal_info() function records your name, email, and other identifying information. In professional software development, proper attribution is important for collaboration and accountability.
 
-**Reflection Question**: How would configuration management integrate with modern ML operations (MLOps) tools for model deployment and monitoring? Consider a scenario where your model needs to be deployed across multiple environments with different compliance requirements, monitoring needs, and performance targets. What configuration information becomes part of the model artifact vs. environment-specific?
+**Reflection Question**: Why do you think it's important for software to know who created it? Think about situations where you might need to contact the person who wrote some code, or when you might want credit for your work. How does personal attribution help in team projects, open source software, or professional development?
 
-Think about: model lineage tracking, compliance auditing, A/B testing configuration, and production monitoring requirements.
+Think about: collaboration benefits, getting help with code, career development, and responsibility in software projects.
 
-*Target length: 150-300 words*
+*Target length: 100-200 words*
 """
 
 # %% nbgrader={"grade": true, "grade_id": "question-3-production-config", "locked": false, "points": 10, "schema_version": 3, "solution": true, "task": false}
@@ -781,69 +752,58 @@ GRADING RUBRIC (Instructor Use):
 """
 ## 🎯 MODULE SUMMARY: Setup Configuration
 
-You've successfully configured your TinyTorch installation and learned the foundations of ML systems engineering:
+Congratulations! You've successfully set up your TinyTorch development environment and you're ready to start building.
 
 ### What You've Accomplished
-✅ **Personal Configuration**: Set up your identity and custom system name  
-✅ **System Queries**: Learned to gather hardware and software information  
-✅ **NBGrader Workflow**: Mastered solution blocks and automated testing  
-✅ **Code Export**: Created functions that become part of your tinytorch package  
-✅ **Professional Setup**: Established proper development practices  
+✅ **Environment Verification**: Confirmed your Python setup works correctly
+✅ **Personal Configuration**: Set up your identity in the TinyTorch system
+✅ **System Information**: Learned to query your computer's hardware specs
+✅ **First Functions**: Successfully implemented and tested your first TinyTorch code
+✅ **Testing Experience**: Experienced automated testing and saw how it validates your work
 
-### Key Concepts You've Learned
+### Key Skills You've Learned
 
-#### 1. **System Awareness**
-- **Hardware constraints**: Understanding CPU, memory, and architecture limitations
-- **Software dependencies**: Python version and platform compatibility
-- **Performance implications**: How system specs affect ML workloads
+#### 1. **Environment Setup**
+- **Verification**: How to check if your development environment is working
+- **Troubleshooting**: Understanding what can go wrong with setup
+- **Confidence Building**: Knowing your environment is ready before starting
 
-#### 2. **Configuration Management**
-- **Personal identification**: Professional attribution and contact information
-- **Environment documentation**: Reproducible system specifications
-- **Professional standards**: Industry-standard development practices
+#### 2. **Basic Programming**
+- **Function Implementation**: Writing functions that return structured data
+- **Error Handling**: Using try/except to handle potential problems
+- **Data Types**: Working with dictionaries, strings, booleans, and numbers
 
-#### 3. **ML Systems Foundations**
-- **Reproducibility**: System context for experiment tracking
-- **Debugging**: Hardware info for performance troubleshooting
-- **Collaboration**: Proper attribution and contact information
+#### 3. **System Awareness**
+- **Hardware Information**: Understanding your computer's capabilities
+- **Software Versions**: Knowing what Python version you're using
+- **Cross-Platform Thinking**: Awareness that different computers behave differently
 
-#### 4. **Development Workflow**
-- **NBGrader integration**: Automated testing and grading
-- **Code export**: Functions become part of production package
-- **Testing practices**: Comprehensive validation of functionality
+#### 4. **Professional Practices**
+- **Attribution**: Proper identification of who wrote code
+- **Testing**: Automated validation that code works correctly
+- **Documentation**: Clear explanations of what code does
 
-### Next Steps in Your ML Systems Journey
+### Next Steps in Your TinyTorch Journey
 
 #### **Immediate Actions**
-1. **Export your code**: `tito module export 01_setup`
-2. **Test your installation**: 
-   ```python
-   from tinytorch.core.setup import personal_info, system_info
-   print(personal_info())  # Your personal details
-   print(system_info())    # System information
-   ```
-3. **Verify package integration**: Ensure your functions work in the tinytorch package
+1. **Export your code**: Use the tito command to make your functions available
+2. **Test your installation**: Verify everything works in the full TinyTorch package
+3. **Celebrate**: You've completed your first TinyTorch module!
 
 #### **Looking Ahead**
-- **Module 1 (Tensor)**: Build the fundamental data structure for ML
-- **Module 2 (Activations)**: Add nonlinearity for complex learning
-- **Module 3 (Layers)**: Create the building blocks of neural networks
-- **Module 4 (Networks)**: Compose layers into powerful architectures
+You're now ready to start building the core components of machine learning systems:
+- **Module 2 (Tensor)**: The fundamental data structure for ML
+- **Module 3 (Activations)**: Adding the intelligence to neural networks
+- **Module 4 (Layers)**: Building blocks of neural networks
+- **And beyond**: Training, optimization, and complete ML systems
 
-#### **Course Progression**
-You're now ready to build a complete ML system from scratch:
-```
-Setup → Tensor → Activations → Layers → Networks → CNN → DataLoader → 
-Autograd → Optimizers → Training → Compression → Kernels → Benchmarking → MLOps
-```
+### Development Milestone
 
-### Professional Development Milestone
+You've taken your first step in building machine learning systems from scratch! This module taught you:
+- **Environment confidence**: Your setup works and you're ready to code
+- **Basic implementation**: How to write and test functions
+- **Professional practices**: Proper attribution and testing
+- **Foundation building**: Creating reliable, tested code
 
-You've taken your first step in ML systems engineering! This module taught you:
-- **System thinking**: Understanding hardware and software constraints
-- **Professional practices**: Proper attribution, testing, and documentation
-- **Tool mastery**: NBGrader workflow and package development
-- **Foundation building**: Creating reusable, tested, documented code
-
-**Ready for the next challenge?** Let's build the foundation of ML systems with tensors!
+**You're ready to build something amazing!** Let's start building the core of machine learning systems with tensors!
 """
