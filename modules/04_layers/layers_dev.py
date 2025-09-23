@@ -964,7 +964,7 @@ demonstrate_autograd_integration()
 
 # %% [markdown]
 """
-# Module Summary
+## 🎯 MODULE SUMMARY: Layers
 
 ## 🎯 What You've Accomplished
 
