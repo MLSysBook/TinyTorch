@@ -40,7 +40,7 @@ By the end of this module, you'll understand:
 """
 
 # %% nbgrader={"grade": false, "grade_id": "networks-imports", "locked": false, "schema_version": 3, "solution": false, "task": false}
-#| default_exp core.dense
+#| default_exp core.networks
 
 #| export
 import numpy as np
