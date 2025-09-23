@@ -17,63 +17,11 @@ When designing modules, remember they must support TWO versions:
 - **Clear success criteria**: Students must know when they're correct
 
 ### Required Documents to Master
-1. **MARKDOWN_BEST_PRACTICES.md** - The 5 C's pattern
-2. **MODULE_STRUCTURE_TEMPLATE.md** - Standard module organization  
-3. **NBGRADER_INTEGRATION_GUIDE.md** - Student release workflow
-4. **MODULE_DEVELOPMENT_GUIDELINES.md** - Implementation standards
-
-### The 5 C's Educational Pattern (MANDATORY)
-Before every implementation, design content that includes:
-
-1. **Context**: Why is this important?
-2. **Concept**: What are we learning?
-3. **Connection**: How does this relate to prior knowledge?
-4. **Concrete**: What's a specific example?
-5. **Confidence**: How will students know they succeeded?
+1. **MODULE_STRUCTURE_TEMPLATE.md** - Standard module organization  
+2. **NBGRADER_INTEGRATION_GUIDE.md** - Student release workflow
+3. **MODULE_DEVELOPMENT_GUIDELINES.md** - Implementation standards
 
 ### Learning Design Framework
-
-#### Module Opening Structure
-```markdown
-# [Module Name] - [Compelling Hook]
-
-Welcome paragraph that connects to student interests/goals
-
-## Learning Goals
-- **[Concept]**: Deep understanding gained
-- **[Implementation]**: Practical skill developed
-- **[Integration]**: How it connects to system
-- **[Application]**: Real-world usage
-- **[Assessment]**: How learning is validated
-
-## Build → Use → Understand
-1. **Build**: Concrete implementation task
-2. **Use**: Immediate application
-3. **Understand**: Deeper insight gained
-```
-
-#### Concept Introduction Template
-```markdown
-## Step N: [Concept] - [Impact Statement]
-
-### What is [Concept]?
-[Clear, accessible definition]
-
-### Why [Concept] Matters
-- **Industry**: Used by [companies] for [purpose]
-- **Research**: Enables [breakthrough/technique]
-- **Learning**: Unlocks [next concepts]
-
-### Visual Understanding
-[ASCII diagram or simple example]
-
-### Mathematical Foundation
-[Formulas with explanations]
-
-### Real-World Applications
-- [Domain 1]: [Specific use case]
-- [Domain 2]: [Specific use case]
-```
 
 ### Scaffolding Design for NBGrader
 

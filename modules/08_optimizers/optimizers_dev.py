@@ -58,7 +58,7 @@ def setup_import_paths():
     # Add module directories to path
     base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     tensor_dir = os.path.join(base_dir, '01_tensor')
-    autograd_dir = os.path.join(base_dir, '07_autograd')
+    autograd_dir = os.path.join(base_dir, '06_autograd')  # Fixed: Module 6, not 7
     
     if tensor_dir not in sys.path:
         sys.path.append(tensor_dir)
@@ -76,8 +76,8 @@ except ImportError:
         from tensor_dev import Tensor
         from autograd_dev import Variable
     except ImportError:
-        # Create minimal fallback classes for testing
-        print("Warning: Using fallback classes for testing")
+        # Create simplified fallback classes for basic gradient operations
+        print("Warning: Using simplified classes for basic gradient operations")
         
         class Tensor:
             def __init__(self, data):
@@ -94,9 +94,10 @@ except ImportError:
                 else:
                     self.data = Tensor(data)
                 self.requires_grad = requires_grad
-                self.grad = None
+                self.grad = None  # Simple gradient storage
             
             def zero_grad(self):
+                """Reset gradients to None (basic operation from Module 6)"""
                 self.grad = None
             
             def __str__(self):
@@ -387,127 +388,111 @@ Let's implement SGD with momentum!
 #| export
 class SGD:
     """
-    SGD Optimizer with Momentum
+    Simplified SGD Optimizer
     
-    Implements stochastic gradient descent with momentum:
-    v_t = momentum * v_{t-1} + gradient
-    parameter = parameter - learning_rate * v_t
+    Implements basic stochastic gradient descent with optional momentum.
+    Uses simple gradient operations from Module 6.
+    
+    Mathematical Update Rule:
+    parameter = parameter - learning_rate * gradient
+    
+    With momentum:
+    velocity = momentum * velocity + gradient
+    parameter = parameter - learning_rate * velocity
     """
     
     def __init__(self, parameters: List[Variable], learning_rate: float = 0.01, 
-                 momentum: float = 0.0, weight_decay: float = 0.0):
+                 momentum: float = 0.0):
         """
-        Initialize SGD optimizer.
+        Initialize SGD optimizer with basic parameters.
         
         Args:
-            parameters: List of Variables to optimize
+            parameters: List of Variables to optimize (from Module 6)
             learning_rate: Learning rate (default: 0.01)
             momentum: Momentum coefficient (default: 0.0)
-            weight_decay: L2 regularization coefficient (default: 0.0)
         
-        TODO: Implement SGD optimizer initialization.
+        TODO: Implement basic SGD optimizer initialization.
         
         APPROACH:
-        1. Store parameters and hyperparameters
-        2. Initialize momentum buffers for each parameter
-        3. Set up state tracking for optimization
-        4. Prepare for step() and zero_grad() methods
+        1. Store parameters and learning rate
+        2. Store momentum coefficient
+        3. Initialize simple momentum buffers
         
         EXAMPLE:
         ```python
-        # Create optimizer
-        optimizer = SGD([w1, w2, b1, b2], learning_rate=0.01, momentum=0.9)
+        # Basic optimizer setup
+        w = Variable(1.0, requires_grad=True)
+        b = Variable(0.0, requires_grad=True)
+        optimizer = SGD([w, b], learning_rate=0.01)
         
-        # In training loop:
+        # In training:
         optimizer.zero_grad()
-        loss.backward()
+        # ... compute gradients ...
         optimizer.step()
         ```
-        
-        HINTS:
-        - Store parameters as a list
-        - Initialize momentum buffers as empty dict
-        - Use parameter id() as key for momentum tracking
-        - Momentum buffers will be created lazily in step()
         """
         ### BEGIN SOLUTION
         self.parameters = parameters
         self.learning_rate = learning_rate
         self.momentum = momentum
-        self.weight_decay = weight_decay
         
-        # Initialize momentum buffers (created lazily)
-        self.momentum_buffers = {}
-        
-        # Track optimization steps
-        self.step_count = 0
+        # Simple momentum storage (using basic dict)
+        self.velocity = {}
+        for i, param in enumerate(parameters):
+            if self.momentum > 0:
+                self.velocity[i] = 0.0  # Initialize velocity to zero
         ### END SOLUTION
     
     def step(self) -> None:
         """
-        Perform one optimization step.
+        Perform one optimization step using basic gradient operations.
         
-        TODO: Implement SGD parameter update with momentum.
+        TODO: Implement simplified SGD parameter update.
         
         APPROACH:
         1. Iterate through all parameters
-        2. For each parameter with gradient:
-           a. Get current gradient
-           b. Apply weight decay if specified
-           c. Update momentum buffer (or create if first time)
-           d. Update parameter using momentum
-        3. Increment step count
+        2. For each parameter with gradient (from Module 6):
+           a. Get gradient using simple param.grad access
+           b. Apply momentum if specified
+           c. Update parameter with learning rate
         
-        MATHEMATICAL FORMULATION:
-        - If weight_decay > 0: gradient = gradient + weight_decay * parameter
-        - momentum_buffer = momentum * momentum_buffer + gradient
-        - parameter = parameter - learning_rate * momentum_buffer
+        SIMPLIFIED MATHEMATICAL FORMULATION:
+        - Without momentum: parameter = parameter - learning_rate * gradient
+        - With momentum: velocity = momentum * velocity + gradient
+                        parameter = parameter - learning_rate * velocity
         
         IMPLEMENTATION HINTS:
-        - Use id(param) as key for momentum buffers
-        - Initialize buffer with zeros if not exists
-        - Handle case where momentum = 0 (no momentum)
-        - Update parameter.data with new Tensor
+        - Use basic param.grad access (from Module 6)
+        - Simple momentum using self.velocity dict
+        - Basic parameter update using scalar operations
         """
         ### BEGIN SOLUTION
-        for param in self.parameters:
+        for i, param in enumerate(self.parameters):
             if param.grad is not None:
-                # Get gradient
+                # Get gradient (basic operation from Module 6)
                 gradient = param.grad.data.data
                 
-                # Apply weight decay (L2 regularization)
-                if self.weight_decay > 0:
-                    gradient = gradient + self.weight_decay * param.data.data
-                
-                # Get or create momentum buffer
-                param_id = id(param)
-                if param_id not in self.momentum_buffers:
-                    self.momentum_buffers[param_id] = np.zeros_like(param.data.data)
-                
-                # Update momentum buffer
-                self.momentum_buffers[param_id] = (
-                    self.momentum * self.momentum_buffers[param_id] + gradient
-                )
-                
-                # Update parameter
-                # CRITICAL: Preserve original parameter shape - modify numpy array in-place
-                update = self.learning_rate * self.momentum_buffers[param_id]
-                new_data = param.data.data - update
-                
-                # Handle different tensor shapes (scalar vs array)
-                if hasattr(param.data, '_data'):
-                    # Real Tensor class with _data attribute
-                    if param.data.data.ndim == 0:
-                        # 0D array (scalar)
-                        param.data._data = new_data
+                if self.momentum > 0:
+                    # Apply momentum (simplified)
+                    if i in self.velocity:
+                        self.velocity[i] = self.momentum * self.velocity[i] + gradient
                     else:
-                        # Multi-dimensional array
-                        param.data._data[:] = new_data
+                        self.velocity[i] = gradient
+                    update = self.velocity[i]
                 else:
-                    # Fallback Tensor class - replace data directly
-                    param.data.data = new_data
-        
-        self.step_count += 1
+                    # Simple gradient descent (no momentum)
+                    update = gradient
+                
+                # Basic parameter update (like Module 6)
+                new_value = param.data.data - self.learning_rate * update
+                
+                # Simple parameter data update (in-place modification)
+                if hasattr(param.data.data, 'item'):
+                    # Scalar parameter - create new tensor
+                    param.data = Tensor(new_value)
+                else:
+                    # Array parameter - update in place
+                    param.data.data[:] = new_value
         ### END SOLUTION
     
     def zero_grad(self) -> None:
@@ -597,14 +582,15 @@ def test_unit_sgd_optimizer():
         print(f"❌ Parameter updates failed: {e}")
         raise
     
-    # Test momentum buffers
+    # Test simplified momentum storage
     try:
-        assert len(optimizer.momentum_buffers) == 3, f"Should have 3 momentum buffers, got {len(optimizer.momentum_buffers)}"
-        assert optimizer.step_count == 1, f"Step count should be 1, got {optimizer.step_count}"
-        print("✅ Momentum buffers created correctly")
+        # Check velocity dict exists and has momentum if momentum > 0
+        if optimizer.momentum > 0:
+            assert len(optimizer.velocity) == 3, f"Should have 3 velocity entries, got {len(optimizer.velocity)}"
+        print("✅ Simplified momentum storage works correctly")
         
     except Exception as e:
-        print(f"❌ Momentum buffers failed: {e}")
+        print(f"❌ Momentum storage failed: {e}")
         raise
     
     # Test step counting
@@ -615,8 +601,8 @@ def test_unit_sgd_optimizer():
         
         optimizer.step()
         
-        assert optimizer.step_count == 2, f"Step count should be 2, got {optimizer.step_count}"
-        print("✅ Step counting works correctly")
+        # Step counting removed from simplified SGD for educational clarity
+        print("✅ Step counting simplified for Module 8")
         
     except Exception as e:
         print(f"❌ Step counting failed: {e}")
@@ -676,53 +662,48 @@ Let's implement Adam optimizer!
 #| export
 class Adam:
     """
-    Adam Optimizer
+    Simplified Adam Optimizer
     
-    Implements Adam algorithm with adaptive learning rates:
-    - First moment: exponential moving average of gradients
-    - Second moment: exponential moving average of squared gradients
-    - Bias correction: accounts for initialization bias
-    - Adaptive updates: different learning rate per parameter
+    Implements a simplified version of Adam algorithm with adaptive learning rates.
+    Educational focus on understanding optimization concepts rather than complex implementation.
+    
+    Key concepts:
+    - Momentum: Running average of gradients (first moment)
+    - Adaptive learning: Running average of squared gradients (second moment)
+    - Bias correction: Adjust for initialization bias
     """
     
     def __init__(self, parameters: List[Variable], learning_rate: float = 0.001,
-                 beta1: float = 0.9, beta2: float = 0.999, epsilon: float = 1e-8,
-                 weight_decay: float = 0.0):
+                 beta1: float = 0.9, beta2: float = 0.999, epsilon: float = 1e-8):
         """
-        Initialize Adam optimizer.
+        Initialize simplified Adam optimizer.
         
         Args:
-            parameters: List of Variables to optimize
+            parameters: List of Variables to optimize (from Module 6)
             learning_rate: Learning rate (default: 0.001)
-            beta1: Exponential decay rate for first moment (default: 0.9)
-            beta2: Exponential decay rate for second moment (default: 0.999)
+            beta1: Decay rate for momentum (default: 0.9)
+            beta2: Decay rate for squared gradients (default: 0.999)
             epsilon: Small constant for numerical stability (default: 1e-8)
-            weight_decay: L2 regularization coefficient (default: 0.0)
         
-        TODO: Implement Adam optimizer initialization.
+        TODO: Implement simplified Adam optimizer initialization.
         
         APPROACH:
-        1. Store parameters and hyperparameters
-        2. Initialize first moment buffers (m_t)
-        3. Initialize second moment buffers (v_t)
-        4. Set up step counter for bias correction
+        1. Store parameters and learning rate
+        2. Store Adam hyperparameters (beta1, beta2, epsilon)
+        3. Initialize simple moment storage
+        
+        EDUCATIONAL FOCUS:
+        - Understand Adam concepts: momentum + adaptive learning
+        - Learn why Adam uses running averages
+        - See how bias correction helps early training
         
         EXAMPLE:
         ```python
-        # Create Adam optimizer
-        optimizer = Adam([w1, w2, b1, b2], learning_rate=0.001)
-        
-        # In training loop:
-        optimizer.zero_grad()
-        loss.backward()
-        optimizer.step()
+        # Simple Adam setup
+        w = Variable(1.0, requires_grad=True)
+        b = Variable(0.0, requires_grad=True)
+        optimizer = Adam([w, b], learning_rate=0.001)
         ```
-        
-        HINTS:
-        - Store all hyperparameters
-        - Initialize moment buffers as empty dicts
-        - Use parameter id() as key for tracking
-        - Buffers will be created lazily in step()
         """
         ### BEGIN SOLUTION
         self.parameters = parameters
@@ -730,100 +711,76 @@ class Adam:
         self.beta1 = beta1
         self.beta2 = beta2
         self.epsilon = epsilon
-        self.weight_decay = weight_decay
         
-        # Initialize moment buffers (created lazily)
-        self.first_moment = {}   # m_t
-        self.second_moment = {}  # v_t
+        # Simple moment storage (using basic dict with indices)
+        self.m = {}  # First moment (momentum)
+        self.v = {}  # Second moment (squared gradients)
         
-        # Track optimization steps for bias correction
-        self.step_count = 0
+        # Initialize moments for each parameter
+        for i, param in enumerate(parameters):
+            self.m[i] = 0.0
+            self.v[i] = 0.0
+        
+        # Step counter for bias correction
+        self.t = 0
         ### END SOLUTION
     
     def step(self) -> None:
         """
-        Perform one optimization step using Adam algorithm.
+        Perform one optimization step using simplified Adam algorithm.
         
-        TODO: Implement Adam parameter update.
+        TODO: Implement simplified Adam parameter update.
         
         APPROACH:
-        1. Increment step count
+        1. Increment step counter
         2. For each parameter with gradient:
-           a. Get current gradient
-           b. Apply weight decay if specified
-           c. Update first moment (momentum)
-           d. Update second moment (variance)
-           e. Apply bias correction
-           f. Update parameter with adaptive learning rate
+           a. Get gradient (basic operation from Module 6)
+           b. Update momentum (first moment)
+           c. Update squared gradient average (second moment)
+           d. Apply bias correction
+           e. Update parameter with adaptive learning rate
         
-        MATHEMATICAL FORMULATION:
-        - m_t = beta1 * m_{t-1} + (1 - beta1) * gradient
-        - v_t = beta2 * v_{t-1} + (1 - beta2) * gradient^2
-        - m_hat = m_t / (1 - beta1^t)
-        - v_hat = v_t / (1 - beta2^t)
-        - parameter = parameter - learning_rate * m_hat / (sqrt(v_hat) + epsilon)
+        SIMPLIFIED MATHEMATICAL FORMULATION:
+        - m = beta1 * m + (1 - beta1) * gradient         (momentum)
+        - v = beta2 * v + (1 - beta2) * gradient²        (squared gradients)
+        - m_corrected = m / (1 - beta1^t)                (bias correction)
+        - v_corrected = v / (1 - beta2^t)                (bias correction)
+        - parameter = parameter - lr * m_corrected / (√v_corrected + ε)
         
-        IMPLEMENTATION HINTS:
-        - Use id(param) as key for moment buffers
-        - Initialize buffers with zeros if not exists
-        - Use np.sqrt() for square root
-        - Handle numerical stability with epsilon
+        EDUCATIONAL INSIGHTS:
+        - Momentum helps accelerate learning
+        - Squared gradients adapt learning rate per parameter
+        - Bias correction prevents slow start
         """
         ### BEGIN SOLUTION
-        self.step_count += 1
+        self.t += 1  # Increment step counter
         
-        for param in self.parameters:
+        for i, param in enumerate(self.parameters):
             if param.grad is not None:
-                # Get gradient
+                # Get gradient (basic operation from Module 6)
                 gradient = param.grad.data.data
                 
-                # Apply weight decay (L2 regularization)
-                if self.weight_decay > 0:
-                    gradient = gradient + self.weight_decay * param.data.data
-                
-                # Get or create moment buffers
-                param_id = id(param)
-                if param_id not in self.first_moment:
-                    self.first_moment[param_id] = np.zeros_like(param.data.data)
-                    self.second_moment[param_id] = np.zeros_like(param.data.data)
-                
                 # Update first moment (momentum)
-                self.first_moment[param_id] = (
-                    self.beta1 * self.first_moment[param_id] + 
-                    (1 - self.beta1) * gradient
-                )
+                self.m[i] = self.beta1 * self.m[i] + (1 - self.beta1) * gradient
                 
-                # Update second moment (variance)
-                self.second_moment[param_id] = (
-                    self.beta2 * self.second_moment[param_id] + 
-                    (1 - self.beta2) * gradient * gradient
-                )
+                # Update second moment (squared gradients)
+                self.v[i] = self.beta2 * self.v[i] + (1 - self.beta2) * gradient * gradient
                 
                 # Bias correction
-                first_moment_corrected = (
-                    self.first_moment[param_id] / (1 - self.beta1 ** self.step_count)
-                )
-                second_moment_corrected = (
-                    self.second_moment[param_id] / (1 - self.beta2 ** self.step_count)
-                )
+                m_corrected = self.m[i] / (1 - self.beta1 ** self.t)
+                v_corrected = self.v[i] / (1 - self.beta2 ** self.t)
                 
-                # Update parameter with adaptive learning rate
-                # CRITICAL: Preserve original parameter shape - modify numpy array in-place
-                update = self.learning_rate * first_moment_corrected / (np.sqrt(second_moment_corrected) + self.epsilon)
-                new_data = param.data.data - update
+                # Adaptive parameter update
+                update = self.learning_rate * m_corrected / (np.sqrt(v_corrected) + self.epsilon)
+                new_value = param.data.data - update
                 
-                # Handle different tensor shapes (scalar vs array)
-                if hasattr(param.data, '_data'):
-                    # Real Tensor class with _data attribute
-                    if param.data.data.ndim == 0:
-                        # 0D array (scalar)
-                        param.data._data = new_data
-                    else:
-                        # Multi-dimensional array
-                        param.data._data[:] = new_data
+                # Simple parameter data update (like Module 6)
+                if hasattr(param.data.data, 'item'):
+                    # Scalar parameter - create new tensor
+                    param.data = Tensor(new_value)
                 else:
-                    # Fallback Tensor class - replace data directly
-                    param.data.data = new_data
+                    # Array parameter - update in place
+                    param.data.data[:] = new_value
         ### END SOLUTION
     
     def zero_grad(self) -> None:
@@ -910,19 +867,19 @@ def test_unit_adam_optimizer():
         print(f"❌ Parameter updates failed: {e}")
         raise
     
-    # Test moment buffers
+    # Test simplified moment storage
     try:
-        assert len(optimizer.first_moment) == 3, f"Should have 3 first moment buffers, got {len(optimizer.first_moment)}"
-        assert len(optimizer.second_moment) == 3, f"Should have 3 second moment buffers, got {len(optimizer.second_moment)}"
-        print("✅ Moment buffers created correctly")
+        assert len(optimizer.m) == 3, f"Should have 3 momentum entries, got {len(optimizer.m)}"
+        assert len(optimizer.v) == 3, f"Should have 3 squared gradient entries, got {len(optimizer.v)}"
+        print("✅ Simplified moment storage works correctly")
         
     except Exception as e:
-        print(f"❌ Moment buffers failed: {e}")
+        print(f"❌ Moment storage failed: {e}")
         raise
     
     # Test step counting and bias correction
     try:
-        assert optimizer.step_count == 1, f"Step count should be 1, got {optimizer.step_count}"
+        assert optimizer.t == 1, f"Step count should be 1, got {optimizer.t}"
         
         # Take another step
         w1.grad = Variable(0.1)
@@ -931,7 +888,7 @@ def test_unit_adam_optimizer():
         
         optimizer.step()
         
-        assert optimizer.step_count == 2, f"Step count should be 2, got {optimizer.step_count}"
+        assert optimizer.t == 2, f"Step count should be 2, got {optimizer.t}"
         print("✅ Step counting and bias correction work correctly")
         
     except Exception as e:
