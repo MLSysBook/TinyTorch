@@ -174,6 +174,98 @@ def test_complete_setup():
     print(f"Email: {info['email']}")
     print("✅ Ready to build neural networks!")
 
+# %% [markdown]
+"""
+## 🔬 Systems Analysis: Environment Impact
+
+### Memory and Performance Analysis
+"""
+
+# %% nbgrader={"grade": false, "grade_id": "systems-analysis", "locked": false, "schema_version": 3, "solution": false, "task": false}
+#| export
+def analyze_environment_resources():
+    """Analyze memory usage and performance characteristics of environment setup."""
+    import tracemalloc
+    import time
+    import psutil
+    
+    print("🔬 Environment Resource Analysis")
+    print("=" * 40)
+    
+    # Memory analysis
+    tracemalloc.start()
+    start_time = time.time()
+    
+    # Simulate setup operations
+    setup()
+    check_versions()
+    _ = get_info()  # Get info for completeness
+    
+    # Measure resources
+    current, peak = tracemalloc.get_traced_memory()
+    setup_time = time.time() - start_time
+    
+    # System resources
+    memory_info = psutil.virtual_memory()
+    cpu_count = psutil.cpu_count()
+    
+    print(f"📊 Setup Performance:")
+    print(f"   ⏱️  Time: {setup_time:.3f} seconds")
+    print(f"   🧠 Memory used: {current / 1024:.1f} KB")
+    print(f"   📈 Peak memory: {peak / 1024:.1f} KB")
+    print(f"   💾 Total system RAM: {memory_info.total / (1024**3):.1f} GB")
+    print(f"   🖥️  CPU cores: {cpu_count}")
+    
+    tracemalloc.stop()
+    
+    return {
+        "setup_time": setup_time,
+        "memory_used": current,
+        "peak_memory": peak,
+        "system_ram": memory_info.total,
+        "cpu_cores": cpu_count
+    }
+
+# %% [markdown]
+"""
+### Production Context: Container Environments
+
+In production ML systems, environment setup must be:
+- **Reproducible**: Identical across development, staging, production
+- **Lightweight**: Minimal resource footprint for container deployment
+- **Scalable**: Support for distributed training environments
+- **Robust**: Handle dependency conflicts and version mismatches
+
+**Real-world considerations:**
+- Docker containers limit memory and CPU resources
+- Kubernetes pods may restart, requiring fast environment initialization
+- Dependency management critical for model serving reliability
+- Environment drift can cause model performance degradation
+"""
+
+# %% [markdown]
+"""
+### 🧪 Test: Systems Analysis
+"""
+
+# %% nbgrader={"grade": true, "grade_id": "test-systems-analysis", "locked": true, "points": 5, "schema_version": 3, "solution": false, "task": false}
+def test_analyze_environment_resources():
+    """Test environment resource analysis."""
+    print("🔬 Testing systems analysis...")
+    
+    # Test that function exists and is callable
+    assert callable(analyze_environment_resources), "analyze_environment_resources should be callable"
+    
+    # Run analysis
+    results = analyze_environment_resources()
+    
+    # Verify return structure
+    assert isinstance(results, dict), "Should return dict"
+    assert "setup_time" in results, "Should include setup_time"
+    assert "memory_used" in results, "Should include memory_used"
+    
+    print("✅ Systems analysis function works!")
+
 if __name__ == "__main__":
     print("🚀 TinyTorch Simple Setup!")
     print("Quick and easy environment setup...\n")
@@ -193,35 +285,98 @@ if __name__ == "__main__":
     
     print("🧪 Step 4: Complete Test")
     test_complete_setup()
+    print()
+    
+    print("🔬 Step 5: Systems Analysis")
+    test_analyze_environment_resources()
     
     print("\n" + "="*50)
     print("🎉 TINYTORCH SETUP COMPLETE! 🎉")
     print("="*50)
     print("✅ Packages installed")
     print("✅ Versions verified")
-    print("✅ Basic info collected") 
+    print("✅ Basic info collected")
+    print("✅ Systems analysis completed")
     print("✅ Ready to build AI!")
     print("\n🚀 Next: Module 2 - Tensors!")
 
+
 # %% [markdown]
 """
-## 🤔 Your AI Journey Starts Here!
+## 🤔 ML Systems Thinking: Interactive Questions
 
-Time to think about what you want to create!
+### Question 1: Environment Dependencies
 """
 
-# %% nbgrader={"grade": true, "grade_id": "question-excitement", "locked": false, "points": 10, "schema_version": 3, "solution": true, "task": false}
+# %% nbgrader={"grade": true, "grade_id": "question-dependencies", "locked": false, "points": 10, "schema_version": 3, "solution": true, "task": false}
 """
-### What Are You Most Excited to Build?
+When setting up ML environments, why is dependency management more critical than in traditional software?
 
-Write one sentence about what AI application you want to create!
+Consider:
+- Model reproducibility across different environments
+- Version conflicts between ML libraries (NumPy, PyTorch, etc.)
+- Container deployment and resource constraints
 
-YOUR ANSWER:
-TODO: Write what you're excited to build!
+YOUR ANALYSIS:
+TODO: Explain why ML systems have unique dependency challenges
 """
 
 ### BEGIN SOLUTION
-# Student writes their excitement
+# ML systems require exact reproducibility for model consistency.
+# Version mismatches can cause different numerical results.
+# Container environments have strict resource limits.
+### END SOLUTION
+
+# %% [markdown]
+"""
+### Question 2: Setup Automation
+"""
+
+# %% nbgrader={"grade": true, "grade_id": "question-automation", "locked": false, "points": 10, "schema_version": 3, "solution": true, "task": false}
+"""
+How would you automate environment setup for a team of 50 ML engineers?
+
+Think about:
+- Consistency across developer machines
+- Dependency version locking and updates
+- Platform differences (macOS, Linux, Windows)
+- CI/CD pipeline integration
+
+YOUR STRATEGY:
+TODO: Design an automated setup strategy for large ML teams
+"""
+
+### BEGIN SOLUTION
+# Use Docker containers with locked dependency versions.
+# Automated setup scripts with platform detection.
+# CI/CD integration with environment validation.
+# Dependency management tools like Poetry or Conda.
+### END SOLUTION
+
+# %% [markdown]
+"""
+### Question 3: Production Environment Design
+"""
+
+# %% nbgrader={"grade": true, "grade_id": "question-production", "locked": false, "points": 10, "schema_version": 3, "solution": true, "task": false}
+"""
+You're deploying a model serving 1M requests/day. How does your environment setup change?
+
+Consider:
+- Memory and CPU resource optimization
+- Container orchestration and scaling
+- Monitoring and health checks
+- Rollback strategies for failed deployments
+
+YOUR DESIGN:
+TODO: Describe production environment considerations for high-scale model serving
+"""
+
+### BEGIN SOLUTION
+# Lightweight containers with minimal dependencies.
+# Kubernetes with horizontal pod autoscaling.
+# Health checks and monitoring for environment drift.
+# Blue-green deployment for safe rollbacks.
 ### END SOLUTION
 
 # %% [markdown]
