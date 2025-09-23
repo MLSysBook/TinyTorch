@@ -46,19 +46,19 @@ Every module introduction MUST follow this exact template:
 
 Welcome to the [Module Name] module! [One exciting sentence about what students will achieve/learn].
 
-## Learning Goals
+## 🎯 Learning Goals
 - [Systems understanding - memory/performance/scaling focus]
 - [Core implementation skill they'll master]
 - [Pattern/abstraction they'll understand]
 - [Framework connection to PyTorch/TensorFlow]
 - [Optimization/trade-off understanding]
 
-## Build → Use → Reflect
+## 🔄 Build → Use → Reflect
 1. **Build**: [What they implement from scratch]
 2. **Use**: [Real application with real data/problems]
 3. **Reflect**: [Systems thinking question about performance/scaling/trade-offs]
 
-## What You'll Achieve
+## 🚀 What You'll Achieve
 By the end of this module, you'll understand:
 - [Deep technical understanding gained]
 - [Practical capability developed]
@@ -66,15 +66,30 @@ By the end of this module, you'll understand:
 - [Performance consideration mastered]
 - [Connection to production ML systems]
 
-## Systems Reality Check
+## ⚡ Systems Reality Check
 💡 **Production Context**: [How this is used in real ML systems like PyTorch/TensorFlow]
 ⚡ **Performance Note**: [Key performance insight, bottleneck, or optimization to understand]
+"""
+
+# Later in the file, include this standardized location section:
+"""
+## 📦 Where This Code Lives in the Final Package
+
+**Package Export:** Code exports to `tinytorch.core.[module_name]`
+
+```python
+# When students install tinytorch, they import your work like this:
+from tinytorch.core.[module_name] import [ComponentA], [ComponentB]  # Your implementations!
+from tinytorch.core.tensor import Tensor  # Foundation from earlier modules
+# ... other related imports from the growing tinytorch package
+```
 """
 ```
 
 **Introduction Rules:**
 - Always use "Build → Use → Reflect" (never "Understand" or "Analyze")
 - Always use "What You'll Achieve" (never "What You'll Learn")
+- Always use "📦 Where This Code Lives in the Final Package"
 - Always include exactly 5 learning goals with specified focus areas
 - Always include "Systems Reality Check" section
 - Keep friendly "Welcome to..." opening

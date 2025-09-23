@@ -44,13 +44,13 @@ def test_module_[module]_[other]_integration():
 - **Immediate execution**: Tests run at cell bottom
 - **Success feedback**: Celebratory messages build confidence
 
-### The 5 C's Validation
-Every implementation must be preceded by:
-1. **Context**: Is the "why" clear?
-2. **Concept**: Is the technical explanation accurate?
-3. **Connection**: Does it link to prior knowledge?
-4. **Concrete**: Are there specific examples?
-5. **Confidence**: Will students know when they succeed?
+### Educational Content Validation
+Every implementation must have:
+1. **Clear Purpose**: Is the "why" clear?
+2. **Technical Accuracy**: Is the explanation correct?
+3. **Prior Knowledge Links**: Does it connect to previous concepts?
+4. **Concrete Examples**: Are there specific usage examples?
+5. **Success Criteria**: Will students know when they succeed?
 
 ### Validation Workflow
 
@@ -276,7 +276,7 @@ Your validation is successful when:
 - [x] Student version generates
 
 ## Educational Quality
-- [x] 5 C's pattern present
+- [x] Educational content validation complete
 - [x] Immediate testing
 - [x] Clear progression
 - [x] Real-world connections

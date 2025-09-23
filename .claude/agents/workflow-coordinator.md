@@ -34,7 +34,7 @@ Educational Spec → Workflow Coordinator → Module Developer
 **Module Developer** does:
 - Implement code with educational scaffolding
 - Create BEGIN/END SOLUTION blocks for NBGrader
-- Add 5 C's format as specified by Education Architect
+- Add educational content as specified by Education Architect
 - Implement test-immediately pattern
 - Add lab-style content sections
 - Ensure NBGrader metadata is correct
@@ -42,7 +42,7 @@ Educational Spec → Workflow Coordinator → Module Developer
 **Handoff Criteria**: Complete module with:
 - All implementations finished
 - NBGrader compatibility verified
-- 5 C's format applied
+- Educational content applied
 - Lab sections included
 - Tests working
 
@@ -121,7 +121,7 @@ Released Module → Workflow Coordinator → Documentation Publisher
 **Gate 2: Implementation Complete**
 - All code implemented with scaffolding
 - NBGrader compatibility ensured
-- 5 C's format applied
+- Educational content applied
 - Lab content added
 - Tests passing
 
