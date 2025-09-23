@@ -55,10 +55,10 @@ sys.path.append(os.path.abspath('modules/source/02_tensor'))
 sys.path.append(os.path.abspath('modules/source/03_activations'))
 sys.path.append(os.path.abspath('modules/source/04_layers'))
 sys.path.append(os.path.abspath('modules/source/05_dense'))
-sys.path.append(os.path.abspath('modules/source/06_spatial'))
-sys.path.append(os.path.abspath('modules/source/08_dataloader'))
-sys.path.append(os.path.abspath('modules/source/09_autograd'))
-sys.path.append(os.path.abspath('modules/source/10_optimizers'))
+sys.path.append(os.path.abspath('modules/source/10_spatial'))
+sys.path.append(os.path.abspath('modules/source/06_dataloader'))
+sys.path.append(os.path.abspath('modules/source/07_autograd'))
+sys.path.append(os.path.abspath('modules/source/08_optimizers'))
 
 # Helper function to set up import paths
 # No longer needed, will use direct relative imports
@@ -2027,8 +2027,8 @@ Your implementations mirror production systems:
 - **Production Tools**: Similar to Ray Train, Horovod, and distributed training frameworks
 
 ### Next Steps
-1. **Export your code**: `tito export 11_training`
-2. **Test your implementation**: `tito test 11_training`
+1. **Export your code**: `tito export 10_training`
+2. **Test your implementation**: `tito test 10_training`
 3. **Build evaluation pipelines**: Add benchmarking and validation
 4. **Move to Module 12**: Add model compression and optimization!
 

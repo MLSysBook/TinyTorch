@@ -3304,8 +3304,8 @@ Your implementations mirror production systems:
 - **Industry Standard**: Every major ML framework uses these exact algorithms and patterns
 
 ### Next Steps
-1. **Export your code**: `tito export 10_optimizers`
-2. **Test your implementation**: `tito test 10_optimizers`
+1. **Export your code**: `tito export 08_optimizers`
+2. **Test your implementation**: `tito test 08_optimizers`
 3. **Deploy ML systems**: Use your profiler for real optimizer selection
 4. **Build training systems**: Combine with neural networks for complete training
 5. **Move to Module 11**: Add complete training pipelines!

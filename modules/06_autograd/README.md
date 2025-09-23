@@ -105,7 +105,7 @@ tito test --module layers
    ```
 
 ### Development Workflow
-1. **Open the development file**: `modules/source/08_autograd/autograd_dev.py`
+1. **Open the development file**: `modules/source/06_autograd/autograd_dev.py`
 2. **Implement Variable class**: Create gradient tracking wrapper around Tensors
 3. **Add basic operations**: Implement differentiable arithmetic (add, multiply, power)
 4. **Build backward propagation**: Implement chain rule for gradient computation
@@ -213,21 +213,21 @@ Understanding autodiff from first principles—implementing the Variable class a
 :margin: 2
 
 {grid-item-card} 🚀 Launch Builder
-:link: https://mybinder.org/v2/gh/VJProductions/TinyTorch/main?filepath=modules/source/08_autograd/autograd_dev.py
+:link: https://mybinder.org/v2/gh/VJProductions/TinyTorch/main?filepath=modules/source/06_autograd/autograd_dev.py
 :class-title: text-center
 :class-body: text-center
 
 Interactive development environment
 
 {grid-item-card} 📓 Open in Colab  
-:link: https://colab.research.google.com/github/VJProductions/TinyTorch/blob/main/modules/source/08_autograd/autograd_dev.ipynb
+:link: https://colab.research.google.com/github/VJProductions/TinyTorch/blob/main/modules/source/06_autograd/autograd_dev.ipynb
 :class-title: text-center
 :class-body: text-center
 
 Google Colab notebook
 
 {grid-item-card} 👀 View Source
-:link: https://github.com/VJProductions/TinyTorch/blob/main/modules/source/08_autograd/autograd_dev.py  
+:link: https://github.com/VJProductions/TinyTorch/blob/main/modules/source/06_autograd/autograd_dev.py  
 :class-title: text-center
 :class-body: text-center
 
