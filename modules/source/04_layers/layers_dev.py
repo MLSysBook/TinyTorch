@@ -50,17 +50,125 @@ from typing import Union, Tuple, Optional, Any
 
 # Import our building blocks - try package first, then local modules
 try:
-    from tinytorch.core.tensor import Tensor
+    from tinytorch.core.tensor import Tensor, Parameter
 except ImportError:
     # For development, import from local modules
     sys.path.append(os.path.join(os.path.dirname(__file__), '..', '02_tensor'))
-    from tensor_dev import Tensor
+    from tensor_dev import Tensor, Parameter
 
 # %% nbgrader={"grade": false, "grade_id": "layers-setup", "locked": false, "schema_version": 3, "solution": false, "task": false}
 print("🔥 TinyTorch Layers Module")
 print(f"NumPy version: {np.__version__}")
 print(f"Python version: {sys.version_info.major}.{sys.version_info.minor}")
 print("Ready to build neural network layers!")
+
+# %% [markdown]
+"""
+## Module Base Class - Neural Network Foundation
+
+Before building specific layers like Dense and Conv2d, we need a base class that handles parameter management and provides a clean interface. This is the foundation that makes neural networks composable and easy to use.
+
+### Why We Need a Module Base Class
+
+🏗️ **Organization**: Automatic parameter collection across all layers  
+🔄 **Composition**: Modules can contain other modules (networks of networks)  
+🎯 **Clean API**: Enable `model(input)` instead of `model.forward(input)`  
+📦 **PyTorch Compatibility**: Same patterns as `torch.nn.Module`  
+
+Let's build the foundation that will make all our neural network code clean and powerful:
+"""
+
+# %% nbgrader={"grade": false, "grade_id": "module-base-class", "locked": false, "schema_version": 3, "solution": false, "task": false}
+#| export
+class Module:
+    """
+    Base class for all neural network modules.
+    
+    Provides automatic parameter collection, forward pass management,
+    and clean composition patterns. All layers (Dense, Conv2d, etc.)
+    inherit from this class.
+    
+    Key Features:
+    - Automatic parameter registration when you assign Tensors with requires_grad=True
+    - Recursive parameter collection from sub-modules
+    - Clean __call__ interface: model(x) instead of model.forward(x)
+    - Extensible for custom layers
+    
+    Example Usage:
+        class MLP(Module):
+            def __init__(self):
+                super().__init__()
+                self.layer1 = Dense(784, 128)  # Auto-registered!
+                self.layer2 = Dense(128, 10)   # Auto-registered!
+                
+            def forward(self, x):
+                x = self.layer1(x)
+                return self.layer2(x)
+                
+        model = MLP()
+        params = model.parameters()  # Gets all parameters automatically!
+        output = model(input)        # Clean interface!
+    """
+    
+    def __init__(self):
+        """Initialize module with empty parameter and sub-module storage."""
+        self._parameters = []
+        self._modules = []
+    
+    def __setattr__(self, name, value):
+        """
+        Intercept attribute assignment to auto-register parameters and modules.
+        
+        When you do self.weight = Parameter(...), this automatically adds
+        the parameter to our collection for easy optimization.
+        """
+        # Check if it's a tensor that needs gradients (a parameter)
+        if hasattr(value, 'requires_grad') and value.requires_grad:
+            self._parameters.append(value)
+        # Check if it's another Module (sub-module)
+        elif isinstance(value, Module):
+            self._modules.append(value)
+        
+        # Always call parent to actually set the attribute
+        super().__setattr__(name, value)
+    
+    def parameters(self):
+        """
+        Recursively collect all parameters from this module and sub-modules.
+        
+        Returns:
+            List of all parameters (Tensors with requires_grad=True)
+            
+        This enables: optimizer = Adam(model.parameters())
+        """
+        # Start with our own parameters
+        params = list(self._parameters)
+        
+        # Add parameters from sub-modules recursively
+        for module in self._modules:
+            params.extend(module.parameters())
+            
+        return params
+    
+    def __call__(self, *args, **kwargs):
+        """
+        Makes modules callable: model(x) instead of model.forward(x).
+        
+        This is the magic that enables clean syntax like:
+            output = model(input)
+        instead of:
+            output = model.forward(input)
+        """
+        return self.forward(*args, **kwargs)
+    
+    def forward(self, *args, **kwargs):
+        """
+        Forward pass - must be implemented by subclasses.
+        
+        This is where the actual computation happens. Every layer
+        defines its own forward() method.
+        """
+        raise NotImplementedError("Subclasses must implement forward()")
 
 # %% [markdown]
 """
@@ -263,13 +371,19 @@ By implementing Dense layers, you'll understand:
 
 # %% nbgrader={"grade": false, "grade_id": "dense-implementation", "locked": false, "schema_version": 3, "solution": true, "task": false}
 #| export
-class Dense:
+class Dense(Module):
     """
     Dense (Fully Connected) Layer implementation.
     
     Applies the transformation: output = input @ weights + bias
     
+    Inherits from Module for automatic parameter management and clean API.
     This is equivalent to PyTorch's nn.Linear layer.
+    
+    Features:
+    - Automatic parameter registration (weights and bias)
+    - Clean call interface: layer(input) instead of layer.forward(input)
+    - Works with optimizers via model.parameters()
     """
     
     def __init__(self, input_size: int, output_size: int, use_bias: bool = True):
@@ -303,19 +417,21 @@ class Dense:
         - Store use_bias flag for forward pass logic
         """
         ### BEGIN SOLUTION
+        super().__init__()  # Initialize Module base class
+        
         self.input_size = input_size
         self.output_size = output_size
         self.use_bias = use_bias
         
-        # Initialize weights with small random values
+        # Initialize weights with small random values using Parameter
         # Shape: (input_size, output_size) for matrix multiplication
         weight_data = np.random.randn(input_size, output_size) * 0.1
-        self.weights = Tensor(weight_data)
+        self.weights = Parameter(weight_data)  # Auto-registers for optimization!
         
         # Initialize bias if requested
         if use_bias:
             bias_data = np.random.randn(output_size) * 0.1
-            self.bias = Tensor(bias_data)
+            self.bias = Parameter(bias_data)  # Auto-registers for optimization!
         else:
             self.bias = None
         ### END SOLUTION
@@ -388,10 +504,6 @@ class Dense:
         
         return output
         ### END SOLUTION
-    
-    def __call__(self, x: Union[Tensor, 'Variable']) -> Union[Tensor, 'Variable']:
-        """Make the layer callable: layer(x) instead of layer.forward(x)"""
-        return self.forward(x)
 
 # %% [markdown]
 """
