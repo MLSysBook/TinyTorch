@@ -83,7 +83,7 @@ def train_xor_network():
     
     # Create model and optimizer - notice how clean this is!
     model = XORNet()
-    optimizer = optim.SGD(model.parameters(), lr=0.1)  # Auto parameter collection!
+    optimizer = optim.SGD(model.parameters(), learning_rate=0.1)  # Auto parameter collection!
     criterion = MSELoss()
     
     # Create dataset
