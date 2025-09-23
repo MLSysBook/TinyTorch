@@ -1599,8 +1599,8 @@ Your implementations mirror production systems:
 - **Industry Standard**: Every major ML framework uses these exact principles
 
 ### Next Steps
-1. **Export your code**: `tito export 09_autograd`
-2. **Test your implementation**: `tito test 09_autograd`
+1. **Export your code**: `tito export 06_autograd`
+2. **Test your implementation**: `tito test 06_autograd`
 3. **Build training systems**: Combine with optimizers for complete training
 4. **Move to Module 10**: Add optimization algorithms!
 

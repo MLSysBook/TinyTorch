@@ -1728,8 +1728,8 @@ Your implementations mirror production systems:
 - **Industry Standard**: Every major ML framework uses these exact patterns
 
 ### Next Steps
-1. **Export your code**: `tito export 08_dataloader`
-2. **Test your implementation**: `tito test 08_dataloader`
+1. **Export your code**: `tito export 09_dataloader`
+2. **Test your implementation**: `tito test 09_dataloader`
 3. **Build training pipelines**: Combine with neural networks for complete ML systems
 4. **Move to Module 9**: Add automatic differentiation for training!
 

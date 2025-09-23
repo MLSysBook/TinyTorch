@@ -91,7 +91,7 @@ tito test --module networks
 ```
 
 ### Development Workflow
-1. **Open the development file**: `modules/source/06_cnn/cnn_dev.py`
+1. **Open the development file**: `modules/source/07_spatial/spatial_dev.py`
 2. **Implement convolution operation**: Start with explicit for-loop implementation for understanding
 3. **Build Conv2D layer class**: Wrap convolution in reusable layer interface
 4. **Add pooling operations**: Implement MaxPool and AvgPool for spatial reduction
@@ -199,21 +199,21 @@ Understanding convolution from the ground up—implementing the sliding window o
 :margin: 2
 
 {grid-item-card} 🚀 Launch Builder
-:link: https://mybinder.org/v2/gh/VJProductions/TinyTorch/main?filepath=modules/source/06_cnn/cnn_dev.py
+:link: https://mybinder.org/v2/gh/VJProductions/TinyTorch/main?filepath=modules/source/07_spatial/spatial_dev.py
 :class-title: text-center
 :class-body: text-center
 
 Interactive development environment
 
 {grid-item-card} 📓 Open in Colab  
-:link: https://colab.research.google.com/github/VJProductions/TinyTorch/blob/main/modules/source/06_cnn/cnn_dev.ipynb
+:link: https://colab.research.google.com/github/VJProductions/TinyTorch/blob/main/modules/source/07_spatial/spatial_dev.ipynb
 :class-title: text-center
 :class-body: text-center
 
 Google Colab notebook
 
 {grid-item-card} 👀 View Source
-:link: https://github.com/VJProductions/TinyTorch/blob/main/modules/source/06_cnn/cnn_dev.py  
+:link: https://github.com/VJProductions/TinyTorch/blob/main/modules/source/07_spatial/spatial_dev.py  
 :class-title: text-center
 :class-body: text-center
 

@@ -2374,7 +2374,7 @@ predictions = classifier(flatten(features2))    # (64,6,6) → (1,10)
 ```
 
 ### Next Steps
-1. **Export to package**: Use `tito module complete 06_spatial` to export your implementation
+1. **Export to package**: Use `tito module complete 10_spatial` to export your implementation
 2. **Test with real data**: Load CIFAR-10 dataset and train your CNN
 3. **Experiment with architectures**: Try different channel numbers and kernel sizes
 4. **Optimize performance**: Profile memory usage and computational bottlenecks
