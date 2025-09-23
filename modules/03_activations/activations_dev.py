@@ -1171,11 +1171,11 @@ def test_unit_activations_tensor_compatibility():
     assert isinstance(tanh_result, Tensor), "Tanh should return Tensor when input is Tensor"
     assert isinstance(softmax_result, Tensor), "Softmax should return Tensor when input is Tensor"
     
-    # Test that none have autograd attributes
-    assert not hasattr(relu_result, 'requires_grad'), "Tensor output should not have autograd attributes"
-    assert not hasattr(sigmoid_result, 'requires_grad'), "Tensor output should not have autograd attributes"
-    assert not hasattr(tanh_result, 'requires_grad'), "Tensor output should not have autograd attributes"
-    assert not hasattr(softmax_result, 'requires_grad'), "Tensor output should not have autograd attributes"
+    # Test that autograd is disabled by default
+    assert not relu_result.requires_grad, "Tensor output should have requires_grad=False by default"
+    assert not sigmoid_result.requires_grad, "Tensor output should have requires_grad=False by default"
+    assert not tanh_result.requires_grad, "Tensor output should have requires_grad=False by default"
+    assert not softmax_result.requires_grad, "Tensor output should have requires_grad=False by default"
     
     # Test that results are mathematically correct
     expected_relu = np.array([[0, 0, 0, 1, 2]])

@@ -53,6 +53,7 @@ try:
     from tinytorch.core.tensor import Tensor, Parameter
     from tinytorch.core.layers import Linear, Module
     from tinytorch.core.activations import ReLU
+    Dense = Linear  # Alias for consistency
 except ImportError:
     # For development, import from local modules
     sys.path.append(os.path.join(os.path.dirname(__file__), '..', '02_tensor'))
@@ -61,6 +62,7 @@ except ImportError:
     from tensor_dev import Tensor, Parameter
     from activations_dev import ReLU
     from layers_dev import Linear, Module
+    Dense = Linear  # Alias for consistency
 
 # %% nbgrader={"grade": false, "grade_id": "cnn-welcome", "locked": false, "schema_version": 3, "solution": false, "task": false}
 print("🔥 TinyTorch CNN Module")
@@ -872,11 +874,11 @@ try:
     print(f"  Input channels: {conv_rgb.in_channels}")
     print(f"  Output channels: {conv_rgb.out_channels}")
     print(f"  Kernel size: {conv_rgb.kernel_size}")
-    print(f"  Weight shape: {conv_rgb.weights.shape}")
+    print(f"  Weight shape: {conv_rgb.weight.shape}")
     
     # Verify weight initialization
-    assert conv_rgb.weights.shape == (8, 3, 3, 3), f"Weight shape should be (8, 3, 3, 3), got {conv_rgb.weights.shape}"
-    assert not np.allclose(conv_rgb.weights, 0), "Weights should not be all zeros"
+    assert conv_rgb.weight.shape == (8, 3, 3, 3), f"Weight shape should be (8, 3, 3, 3), got {conv_rgb.weight.shape}"
+    assert not np.allclose(conv_rgb.weight.data, 0), "Weights should not be all zeros"
     assert conv_rgb.bias.shape == (8,), f"Bias shape should be (8,), got {conv_rgb.bias.shape}"
     print("✅ Multi-channel layer initialization successful")
     
@@ -938,7 +940,7 @@ except Exception as e:
 # Test 4: Parameter counting
 try:
     # Verify parameter count scaling
-    params_3_to_8 = conv_rgb.weights.size + (conv_rgb.bias.size if conv_rgb.use_bias else 0)
+    params_3_to_8 = conv_rgb.weight.size + (conv_rgb.bias.size if conv_rgb.use_bias else 0)
     expected_params = (8 * 3 * 3 * 3) + 8  # weights + bias
     assert params_3_to_8 == expected_params, f"Parameter count should be {expected_params}, got {params_3_to_8}"
     
@@ -1615,7 +1617,7 @@ try:
     ]
     
     for conv_layer, desc in configs:
-        params = conv_layer.weights.size + (conv_layer.bias.size if conv_layer.use_bias else 0)
+        params = conv_layer.weight.size + (conv_layer.bias.size if conv_layer.use_bias else 0)
         memory_mb = params * 4 / (1024 * 1024)  # float32 = 4 bytes
         print(f"  {desc}: {params:,} parameters ({memory_mb:.3f} MB)")
     
@@ -2127,8 +2129,8 @@ def test_unit_multichannel_conv2d():
     output = conv(input_rgb)
     
     assert output.shape == (8, 4, 4), "Multi-channel Conv2D should produce correct output shape"
-    assert hasattr(conv, 'weights'), "Multi-channel Conv2D should have weights attribute"
-    assert conv.weights.shape == (8, 3, 3, 3), "Weights should have correct multi-channel shape"
+    assert hasattr(conv, 'weight'), "Multi-channel Conv2D should have weights attribute"
+    assert conv.weight.shape == (8, 3, 3, 3), "Weights should have correct multi-channel shape"
     
     print("✅ Multi-channel Conv2D works correctly")
 

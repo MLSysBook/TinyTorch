@@ -459,7 +459,7 @@ try:
     
     # Test layer types
     layer_types = [type(layer).__name__ for layer in mlp.layers]
-    expected_pattern = ['Dense', 'ReLU', 'Dense', 'ReLU', 'Dense', 'Sigmoid']
+    expected_pattern = ['Linear', 'ReLU', 'Linear', 'ReLU', 'Linear', 'Sigmoid']
     assert layer_types == expected_pattern, f"Expected pattern {expected_pattern}, got {layer_types}"
     print("✅ MLP follows correct layer pattern")
     
