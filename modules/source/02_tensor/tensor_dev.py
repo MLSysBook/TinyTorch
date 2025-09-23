@@ -282,13 +282,14 @@ class Tensor:
     Wraps NumPy arrays with ML-specific functionality.
     """
     
-    def __init__(self, data: Any, dtype: Optional[str] = None):
+    def __init__(self, data: Any, dtype: Optional[str] = None, requires_grad: bool = False):
         """
         Create a new tensor from data.
         
         Args:
             data: Input data (scalar, list, or numpy array)
             dtype: Data type ('float32', 'int32', etc.). Defaults to auto-detect.
+            requires_grad: Whether this tensor needs gradients for training. Defaults to False.
             
         TODO: Implement tensor creation with proper type handling.
         
@@ -340,9 +341,23 @@ class Tensor:
                 else:
                     dtype = str(data.dtype)
             self._data = data.astype(dtype) if dtype != data.dtype else data.copy()
+        elif isinstance(data, Tensor):
+            # Input is another Tensor - extract its data
+            if dtype is None:
+                # Keep existing dtype, but prefer float32 for float64
+                if data.data.dtype == np.float64:
+                    dtype = 'float32'
+                else:
+                    dtype = str(data.data.dtype)
+            self._data = data.data.astype(dtype) if dtype != str(data.data.dtype) else data.data.copy()
         else:
             # Try to convert unknown types
             self._data = np.array(data, dtype=dtype)
+        
+        # Initialize gradient tracking attributes
+        self.requires_grad = requires_grad
+        self.grad = None if requires_grad else None
+        self._grad_fn = None
         ### END SOLUTION
 
     @property
@@ -740,6 +755,55 @@ class Tensor:
         result = np.matmul(self._data, other._data)
         return Tensor(result)
         ### END SOLUTION
+
+    def __matmul__(self, other: 'Tensor') -> 'Tensor':
+        """
+        Matrix multiplication operator: tensor @ other
+        
+        Enables the @ operator for matrix multiplication, providing
+        clean syntax for neural network operations.
+        """
+        return self.matmul(other)
+    
+    def backward(self, gradient=None):
+        """
+        Compute gradients for this tensor and propagate backward.
+        
+        This is a stub for now - full implementation in Module 09 (Autograd).
+        For now, just accumulates gradients if requires_grad=True.
+        
+        Args:
+            gradient: Gradient from upstream. If None, assumes scalar with grad=1
+        """
+        if not self.requires_grad:
+            return
+            
+        if gradient is None:
+            # Scalar case - gradient is 1
+            gradient = Tensor(np.ones_like(self._data))
+        
+        # Accumulate gradients
+        if self.grad is None:
+            self.grad = gradient
+        else:
+            self.grad = self.grad + gradient
+
+    def reshape(self, *shape: int) -> 'Tensor':
+        """
+        Return a new tensor with the same data but different shape.
+        
+        Args:
+            *shape: New shape dimensions. Use -1 for automatic sizing.
+            
+        Returns:
+            New Tensor with reshaped data
+            
+        Example:
+            tensor.reshape(2, -1)  # Reshape to 2 rows, auto columns
+            tensor.reshape(4, 3)   # Reshape to 4x3 matrix
+        """
+        reshaped_data = self._data.reshape(*shape)
+        return Tensor(reshaped_data)
 
 # %% [markdown]
 """
@@ -1201,6 +1265,35 @@ GRADING RUBRIC (Instructor Use):
 # This is a manually graded question requiring understanding of computational graphs and automatic differentiation
 # Students should demonstrate knowledge of how tensor operations enable gradient computation
 ### END SOLUTION
+
+# %% [markdown]
+"""
+## Parameter Helper Function
+
+Now that we have Tensor with gradient support, let's add a convenient helper function for creating trainable parameters:
+"""
+
+# %% nbgrader={"grade": false, "grade_id": "parameter-helper", "locked": false, "schema_version": 3, "solution": false, "task": false}
+#| export
+def Parameter(data, dtype=None):
+    """
+    Convenience function for creating trainable tensors.
+    
+    This is equivalent to Tensor(data, requires_grad=True) but provides
+    cleaner syntax for neural network parameters.
+    
+    Args:
+        data: Input data (scalar, list, or numpy array)
+        dtype: Data type ('float32', 'int32', etc.). Defaults to auto-detect.
+        
+    Returns:
+        Tensor with requires_grad=True
+        
+    Examples:
+        weight = Parameter(np.random.randn(784, 128))  # Neural network weight
+        bias = Parameter(np.zeros(128))                # Neural network bias
+    """
+    return Tensor(data, dtype=dtype, requires_grad=True)
 
 # %% [markdown]
 """
