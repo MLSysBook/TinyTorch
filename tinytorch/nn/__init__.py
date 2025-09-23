@@ -33,11 +33,8 @@ The key insight: Students implement the core algorithms (conv, linear transforms
 while this infrastructure provides the clean API they expect from PyTorch.
 """
 
-# Import base Module class
-from .modules import Module
-
-# Import layers from core (these contain the student implementations)
-from ..core.layers import Dense as Linear  # Dense was renamed to Linear
+# Import layers from core (these contain the student implementations)  
+from ..core.layers import Linear, Module  # Use the same Module class as layers
 from ..core.spatial import Conv2d
 
 # Import functional interface  
