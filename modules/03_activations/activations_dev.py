@@ -57,13 +57,8 @@ except ImportError:
     sys.path.append(os.path.join(os.path.dirname(__file__), '..', '01_tensor'))
     from tensor_dev import Tensor
 
-# Import Variable for autograd support
-try:
-    from tinytorch.core.autograd import Variable
-except ImportError:
-    # For development, import from local autograd module
-    sys.path.append(os.path.join(os.path.dirname(__file__), '..', '09_autograd'))
-    from autograd_dev import Variable
+# Note: Autograd support comes later in Module 9
+# For now, we work with pure Tensor objects only
 
 # %% nbgrader={"grade": false, "grade_id": "activations-welcome", "locked": false, "schema_version": 3, "solution": false, "task": false}
 print("🔥 TinyTorch Activations Module")
@@ -189,70 +184,38 @@ class ReLU:
         """
         Apply ReLU activation: f(x) = max(0, x)
         
-        Now supports both Tensor and Variable inputs with automatic differentiation.
+        Works with Tensor inputs for nonlinear transformations.
         
         STEP-BY-STEP IMPLEMENTATION:
-        1. Check if input is Variable (for autograd) or Tensor
-        2. For each element in the input tensor, apply max(0, element)
-        3. If input is Variable: create Variable output with proper gradient function
-        4. If input is Tensor: return Tensor as before
+        1. For each element in the input tensor, apply max(0, element)
+        2. Return new Tensor with ReLU applied
         
         MATHEMATICAL FOUNDATION:
         - Forward: f(x) = max(0, x)
-        - Backward: f'(x) = 1 if x > 0, else 0
+        - Sets negative values to 0, keeps positive values unchanged
         
         EXAMPLE USAGE:
         ```python
         relu = ReLU()
-        # With Tensor (no gradients)
         tensor_input = Tensor([[-2, -1, 0, 1, 2]])
         tensor_output = relu(tensor_input)
-        
-        # With Variable (with gradients)
-        var_input = Variable([[-2, -1, 0, 1, 2]], requires_grad=True)
-        var_output = relu(var_input)
-        var_output.backward()
-        print(var_input.grad)  # Gradients: [0, 0, 0, 1, 1]
+        # Output: [[0, 0, 0, 1, 2]]
         ```
         
         IMPLEMENTATION HINTS:
-        - Check type with hasattr(x, 'requires_grad')
-        - For Variables: implement gradient function for backward pass
-        - ReLU gradient: 1 where input > 0, 0 elsewhere
-        - Use np.maximum(0, x.data) for forward pass
+        - Use np.maximum(0, x.data) for element-wise max operation
+        - Return same type as input (Tensor)
         
         LEARNING CONNECTIONS:
-        - This is like torch.nn.ReLU() in PyTorch with autograd support
-        - Enables gradient-based training of neural networks
-        - ReLU's simple gradient (0 or 1) prevents vanishing gradients
-        - Creates sparse representations and efficient gradient flow
+        - This is the core of torch.nn.ReLU() in PyTorch
+        - Enables neural networks to learn nonlinear patterns
+        - ReLU's simplicity makes it computationally efficient
+        - Creates sparse representations (many zeros)
         """
         ### BEGIN SOLUTION
-        # Check if input is a Variable (autograd-enabled)
-        if hasattr(x, 'requires_grad') and hasattr(x, 'grad_fn'):
-            # Input is a Variable - preserve autograd capabilities
-            
-            # Forward pass: ReLU activation
-            input_data = x.data.data if hasattr(x.data, 'data') else x.data
-            output_data = np.maximum(0, input_data)
-            
-            # Create gradient function for backward pass
-            def relu_grad_fn(grad_output):
-                if x.requires_grad:
-                    # ReLU gradient: 1 where input > 0, 0 elsewhere
-                    relu_mask = (input_data > 0).astype(np.float32)
-                    grad_input_data = grad_output.data.data * relu_mask
-                    grad_input = Variable(grad_input_data)
-                    x.backward(grad_input)
-            
-            # Return Variable with gradient function
-            requires_grad = x.requires_grad
-            result = Variable(output_data, requires_grad=requires_grad, grad_fn=relu_grad_fn if requires_grad else None)
-            return result
-        else:
-            # Input is a Tensor - use original implementation
-            result = np.maximum(0, x.data)
-            return type(x)(result)
+        # Apply ReLU: max(0, x) element-wise
+        result = np.maximum(0, x.data)
+        return type(x)(result)
         ### END SOLUTION
     
     def forward_(self, x):
@@ -263,10 +226,8 @@ class ReLU:
         Critical for large models where memory is constrained.
         
         STEP-BY-STEP IMPLEMENTATION:
-        1. Check if input is Variable (for autograd) or Tensor
-        2. Apply ReLU operation directly to tensor.data
-        3. Return the same tensor object (modified in-place)
-        4. For Variables: handle gradient tracking properly
+        1. Apply ReLU operation directly to tensor._data
+        2. Return the same tensor object (modified in-place)
         
         MEMORY BENEFITS:
         - No new tensor allocation (saves memory)
@@ -287,8 +248,7 @@ class ReLU:
         ```
         
         IMPLEMENTATION HINTS:
-        - Modify x.data directly with np.maximum(0, x.data, out=x.data)
-        - For Variables: preserve requires_grad and handle gradients
+        - Modify x._data directly with np.maximum(0, x._data, out=x._data)
         - Return the same object for method chaining
         
         LEARNING CONNECTIONS:
@@ -297,28 +257,9 @@ class ReLU:
         - Trade-off: can't recover original values after operation
         """
         ### BEGIN SOLUTION
-        # Check if input is a Variable (autograd-enabled)
-        if hasattr(x, 'requires_grad') and hasattr(x, 'grad_fn'):
-            # For Variables, we'll use a simplified approach for in-place operations
-            # In practice, in-place operations with autograd require complex handling
-            # For educational purposes, we modify the data and preserve the Variable
-            
-            # Store original data for gradient computation
-            input_data = x.data.data if hasattr(x.data, 'data') else x.data
-            original_data = input_data.copy()
-            
-            # Apply ReLU in-place
-            np.maximum(0, input_data, out=input_data)
-            
-            # For Variables with gradients, we note that full autograd support
-            # for in-place operations is complex and beyond this module's scope
-            # The data is modified, Variable structure is preserved
-            
-            return x
-        else:
-            # Input is a Tensor - modify in-place
-            np.maximum(0, x._data, out=x._data)
-            return x
+        # Apply ReLU in-place: modify tensor data directly
+        np.maximum(0, x._data, out=x._data)
+        return x
         ### END SOLUTION
     
     def __call__(self, x):
@@ -422,68 +363,38 @@ class Sigmoid:
         """
         Apply Sigmoid activation: f(x) = 1 / (1 + e^(-x))
         
-        Now supports both Tensor and Variable inputs with automatic differentiation.
+        Works with Tensor inputs for probability-like outputs.
         
         STEP-BY-STEP IMPLEMENTATION:
-        1. Check if input is Variable (for autograd) or Tensor
-        2. Compute sigmoid: 1 / (1 + exp(-x))
-        3. If input is Variable: create Variable output with proper gradient function
-        4. If input is Tensor: return Tensor as before
+        1. Compute sigmoid: 1 / (1 + exp(-x))
+        2. Return new Tensor with sigmoid applied
         
         MATHEMATICAL FOUNDATION:
         - Forward: f(x) = 1 / (1 + e^(-x))
-        - Backward: f'(x) = f(x) * (1 - f(x)) = sigmoid(x) * (1 - sigmoid(x))
+        - Maps any real number to range (0, 1)
         
         EXAMPLE USAGE:
         ```python
         sigmoid = Sigmoid()
-        # With Variable (with gradients)
-        var_input = Variable([[0.0]], requires_grad=True)
-        var_output = sigmoid(var_input)  # 0.5
-        var_output.backward()
-        print(var_input.grad)  # 0.25 = 0.5 * (1 - 0.5)
+        tensor_input = Tensor([[0.0]])
+        tensor_output = sigmoid(tensor_input)  # [[0.5]]
         ```
         
         IMPLEMENTATION HINTS:
-        - Check type with hasattr(x, 'requires_grad')
-        - For Variables: implement gradient function for backward pass
-        - Sigmoid gradient: sigmoid(x) * (1 - sigmoid(x))
         - Use numerical stability: clip inputs to prevent overflow
+        - Use np.exp() for exponential function
         
         LEARNING CONNECTIONS:
-        - This is like torch.nn.Sigmoid() in PyTorch with autograd support
+        - This is the core of torch.nn.Sigmoid() in PyTorch
         - Used in binary classification and gating mechanisms
         - Smooth gradients enable stable training
-        - Self-normalizing gradient (max at x=0, decreases at extremes)
+        - Self-normalizing output always between 0 and 1
         """
         ### BEGIN SOLUTION
-        # Check if input is a Variable (autograd-enabled)
-        if hasattr(x, 'requires_grad') and hasattr(x, 'grad_fn'):
-            # Input is a Variable - preserve autograd capabilities
-            
-            # Forward pass: Sigmoid activation with numerical stability
-            input_data = x.data.data if hasattr(x.data, 'data') else x.data
-            clipped_input = np.clip(-input_data, -500, 500)
-            output_data = 1 / (1 + np.exp(clipped_input))
-            
-            # Create gradient function for backward pass
-            def sigmoid_grad_fn(grad_output):
-                if x.requires_grad:
-                    # Sigmoid gradient: sigmoid(x) * (1 - sigmoid(x))
-                    sigmoid_grad = output_data * (1 - output_data)
-                    grad_input_data = grad_output.data.data * sigmoid_grad
-                    grad_input = Variable(grad_input_data)
-                    x.backward(grad_input)
-            
-            # Return Variable with gradient function
-            requires_grad = x.requires_grad
-            result = Variable(output_data, requires_grad=requires_grad, grad_fn=sigmoid_grad_fn if requires_grad else None)
-            return result
-        else:
-            # Input is a Tensor - use original implementation
-            clipped_input = np.clip(-x.data, -500, 500)
-            result = 1 / (1 + np.exp(clipped_input))
-            return type(x)(result)
+        # Apply Sigmoid with numerical stability
+        clipped_input = np.clip(-x.data, -500, 500)
+        result = 1 / (1 + np.exp(clipped_input))
+        return type(x)(result)
         ### END SOLUTION
     
     def forward_(self, x):
@@ -494,14 +405,11 @@ class Sigmoid:
         Important for memory-constrained environments.
         
         STEP-BY-STEP IMPLEMENTATION:
-        1. Check if input is Variable (for autograd) or Tensor
-        2. Compute sigmoid directly into tensor.data
-        3. Return the same tensor object (modified in-place)
-        4. For Variables: handle gradient tracking properly
+        1. Compute sigmoid directly into tensor._data
+        2. Return the same tensor object (modified in-place)
         
         MATHEMATICAL FOUNDATION:
         - Forward: f(x) = 1 / (1 + e^(-x))
-        - Backward: f'(x) = f(x) * (1 - f(x)) = sigmoid(x) * (1 - sigmoid(x))
         
         MEMORY BENEFITS:
         - No new tensor allocation (saves memory)
@@ -519,8 +427,7 @@ class Sigmoid:
         
         IMPLEMENTATION HINTS:
         - Use numerical stability: clip inputs to prevent overflow
-        - Modify x.data directly
-        - For Variables: preserve requires_grad and handle gradients
+        - Modify x._data directly
         
         LEARNING CONNECTIONS:
         - This is like torch.nn.functional.sigmoid_() in PyTorch
@@ -528,23 +435,10 @@ class Sigmoid:
         - Trade-off: can't recover original values after operation
         """
         ### BEGIN SOLUTION
-        # Check if input is a Variable (autograd-enabled)
-        if hasattr(x, 'requires_grad') and hasattr(x, 'grad_fn'):
-            # For Variables, simplified in-place approach
-            # Store original data for potential gradient computation
-            input_data = x.data.data if hasattr(x.data, 'data') else x.data
-            
-            # Apply Sigmoid in-place with numerical stability
-            clipped_input = np.clip(-input_data, -500, 500)
-            np.divide(1, 1 + np.exp(clipped_input), out=input_data)
-            
-            # Variable structure preserved, data modified in-place
-            return x
-        else:
-            # Input is a Tensor - modify in-place
-            clipped_input = np.clip(-x._data, -500, 500)
-            np.divide(1, 1 + np.exp(clipped_input), out=x._data)
-            return x
+        # Apply Sigmoid in-place with numerical stability
+        clipped_input = np.clip(-x._data, -500, 500)
+        np.divide(1, 1 + np.exp(clipped_input), out=x._data)
+        return x
         ### END SOLUTION
     
     def __call__(self, x):
@@ -657,66 +551,37 @@ class Tanh:
         """
         Apply Tanh activation: f(x) = (e^x - e^(-x)) / (e^x + e^(-x))
         
-        Now supports both Tensor and Variable inputs with automatic differentiation.
+        Works with Tensor inputs for zero-centered nonlinearity.
         
         STEP-BY-STEP IMPLEMENTATION:
-        1. Check if input is Variable (for autograd) or Tensor
-        2. Compute tanh: (e^x - e^(-x)) / (e^x + e^(-x))
-        3. If input is Variable: create Variable output with proper gradient function
-        4. If input is Tensor: return Tensor as before
+        1. Compute tanh: (e^x - e^(-x)) / (e^x + e^(-x))
+        2. Return new Tensor with tanh applied
         
         MATHEMATICAL FOUNDATION:
         - Forward: f(x) = tanh(x)
-        - Backward: f'(x) = 1 - tanh²(x) = 1 - f(x)²
+        - Maps any real number to range (-1, 1)
         
         EXAMPLE USAGE:
         ```python
         tanh = Tanh()
-        # With Variable (with gradients)
-        var_input = Variable([[0.0]], requires_grad=True)
-        var_output = tanh(var_input)  # 0.0
-        var_output.backward()
-        print(var_input.grad)  # 1.0 = 1 - 0²
+        tensor_input = Tensor([[0.0]])
+        tensor_output = tanh(tensor_input)  # [[0.0]]
         ```
         
         IMPLEMENTATION HINTS:
-        - Check type with hasattr(x, 'requires_grad')
-        - For Variables: implement gradient function for backward pass
-        - Tanh gradient: 1 - tanh²(x)
         - Use np.tanh() for numerical stability
+        - Return same type as input (Tensor)
         
         LEARNING CONNECTIONS:
-        - This is like torch.nn.Tanh() in PyTorch with autograd support
+        - This is the core of torch.nn.Tanh() in PyTorch
         - Used in RNN, LSTM, and GRU cells
         - Zero-centered outputs improve gradient flow
         - Strong gradients near zero, weaker at extremes
         """
         ### BEGIN SOLUTION
-        # Check if input is a Variable (autograd-enabled)
-        if hasattr(x, 'requires_grad') and hasattr(x, 'grad_fn'):
-            # Input is a Variable - preserve autograd capabilities
-            
-            # Forward pass: Tanh activation
-            input_data = x.data.data if hasattr(x.data, 'data') else x.data
-            output_data = np.tanh(input_data)
-            
-            # Create gradient function for backward pass
-            def tanh_grad_fn(grad_output):
-                if x.requires_grad:
-                    # Tanh gradient: 1 - tanh²(x)
-                    tanh_grad = 1 - output_data ** 2
-                    grad_input_data = grad_output.data.data * tanh_grad
-                    grad_input = Variable(grad_input_data)
-                    x.backward(grad_input)
-            
-            # Return Variable with gradient function
-            requires_grad = x.requires_grad
-            result = Variable(output_data, requires_grad=requires_grad, grad_fn=tanh_grad_fn if requires_grad else None)
-            return result
-        else:
-            # Input is a Tensor - use original implementation
-            result = np.tanh(x.data)
-            return type(x)(result)
+        # Apply Tanh: numerically stable hyperbolic tangent
+        result = np.tanh(x.data)
+        return type(x)(result)
         ### END SOLUTION
     
     def forward_(self, x):
@@ -727,14 +592,11 @@ class Tanh:
         Particularly useful for RNN and LSTM implementations.
         
         STEP-BY-STEP IMPLEMENTATION:
-        1. Check if input is Variable (for autograd) or Tensor
-        2. Compute tanh directly into tensor.data
-        3. Return the same tensor object (modified in-place)
-        4. For Variables: handle gradient tracking properly
+        1. Compute tanh directly into tensor._data
+        2. Return the same tensor object (modified in-place)
         
         MATHEMATICAL FOUNDATION:
         - Forward: f(x) = tanh(x)
-        - Backward: f'(x) = 1 - tanh²(x) = 1 - f(x)²
         
         MEMORY BENEFITS:
         - No new tensor allocation (saves memory)
@@ -752,8 +614,7 @@ class Tanh:
         
         IMPLEMENTATION HINTS:
         - Use np.tanh() for numerical stability
-        - Modify x.data directly
-        - For Variables: preserve requires_grad and handle gradients
+        - Modify x._data directly
         
         LEARNING CONNECTIONS:
         - This is like torch.nn.functional.tanh_() in PyTorch
@@ -761,20 +622,9 @@ class Tanh:
         - Trade-off: can't recover original values after operation
         """
         ### BEGIN SOLUTION
-        # Check if input is a Variable (autograd-enabled)
-        if hasattr(x, 'requires_grad') and hasattr(x, 'grad_fn'):
-            # For Variables, simplified in-place approach
-            input_data = x.data.data if hasattr(x.data, 'data') else x.data
-            
-            # Apply Tanh in-place
-            np.tanh(input_data, out=input_data)
-            
-            # Variable structure preserved, data modified in-place
-            return x
-        else:
-            # Input is a Tensor - modify in-place
-            np.tanh(x._data, out=x._data)
-            return x
+        # Apply Tanh in-place: modify tensor data directly
+        np.tanh(x._data, out=x._data)
+        return x
         ### END SOLUTION
     
     def __call__(self, x: Tensor) -> Tensor:
@@ -891,99 +741,55 @@ class Softmax:
         """
         Apply Softmax activation: f(x_i) = e^(x_i) / Σ(e^(x_j))
         
-        Now supports both Tensor and Variable inputs with automatic differentiation.
+        Works with Tensor inputs for probability distributions.
         
         STEP-BY-STEP IMPLEMENTATION:
-        1. Check if input is Variable (for autograd) or Tensor
-        2. Compute softmax with numerical stability
-        3. If input is Variable: create Variable output with proper gradient function
-        4. If input is Tensor: return Tensor as before
+        1. Compute softmax with numerical stability
+        2. Return new Tensor with softmax applied
         
         MATHEMATICAL FOUNDATION:
         - Forward: f(x_i) = e^(x_i) / Σ(e^(x_j))
-        - Backward: ∂f_i/∂x_j = f_i * (δ_ij - f_j) where δ_ij is Kronecker delta
-        - Simplified: ∂f_i/∂x_i = f_i * (1 - f_i), ∂f_i/∂x_j = -f_i * f_j (i ≠ j)
+        - Converts any real vector to probability distribution (sums to 1)
         
         EXAMPLE USAGE:
         ```python
         softmax = Softmax()
-        # With Variable (with gradients)
-        var_input = Variable([[1.0, 2.0]], requires_grad=True)
-        var_output = softmax(var_input)
-        var_output.backward(Variable([[1.0, 0.0]]))
-        # Gradients computed automatically
+        tensor_input = Tensor([[1.0, 2.0, 3.0]])
+        tensor_output = softmax(tensor_input)
+        # Output: [[0.09, 0.24, 0.67]] (approximately)
         ```
         
         IMPLEMENTATION HINTS:
-        - Check type with hasattr(x, 'requires_grad')
-        - For Variables: implement gradient function for backward pass
-        - Softmax gradient: Jacobian matrix with f_i * (δ_ij - f_j)
         - Use numerical stability: subtract max before exponential
+        - Normalize by sum to get probabilities
         
         LEARNING CONNECTIONS:
-        - This is like torch.nn.Softmax() in PyTorch with autograd support
+        - This is the core of torch.nn.Softmax() in PyTorch
         - Used in classification and attention mechanisms
         - Converts logits to probability distributions
-        - Complex gradient structure due to normalization
+        - Always outputs positive values that sum to 1
         """
         ### BEGIN SOLUTION
-        # Check if input is a Variable (autograd-enabled)
-        if hasattr(x, 'requires_grad') and hasattr(x, 'grad_fn'):
-            # Input is a Variable - preserve autograd capabilities
-            
-            # Forward pass: Softmax activation with numerical stability
-            input_data = x.data.data if hasattr(x.data, 'data') else x.data
-            
-            # Handle empty input
-            if input_data.size == 0:
-                return Variable(input_data.copy(), requires_grad=x.requires_grad)
-            
-            # Subtract max for numerical stability
-            x_shifted = input_data - np.max(input_data, axis=-1, keepdims=True)
-            
-            # Compute exponentials
-            exp_values = np.exp(x_shifted)
-            
-            # Sum along last axis
-            sum_exp = np.sum(exp_values, axis=-1, keepdims=True)
-            
-            # Divide to get probabilities
-            output_data = exp_values / sum_exp
-            
-            # Create gradient function for backward pass
-            def softmax_grad_fn(grad_output):
-                if x.requires_grad:
-                    # Softmax gradient: for each element i,j: ∂f_i/∂x_j = f_i * (δ_ij - f_j)
-                    # For vector input, this becomes: grad_input = softmax * (grad_output - (softmax * grad_output).sum(keepdims=True))
-                    grad_out_data = grad_output.data.data
-                    softmax_grad_sum = np.sum(output_data * grad_out_data, axis=-1, keepdims=True)
-                    grad_input_data = output_data * (grad_out_data - softmax_grad_sum)
-                    grad_input = Variable(grad_input_data)
-                    x.backward(grad_input)
-            
-            # Return Variable with gradient function
-            requires_grad = x.requires_grad
-            result = Variable(output_data, requires_grad=requires_grad, grad_fn=softmax_grad_fn if requires_grad else None)
-            return result
-        else:
-            # Input is a Tensor - use original implementation
-            # Handle empty input
-            if x.data.size == 0:
-                return type(x)(x.data.copy())
-            
-            # Subtract max for numerical stability
-            x_shifted = x.data - np.max(x.data, axis=-1, keepdims=True)
-            
-            # Compute exponentials
-            exp_values = np.exp(x_shifted)
-            
-            # Sum along last axis
-            sum_exp = np.sum(exp_values, axis=-1, keepdims=True)
-            
-            # Divide to get probabilities
-            result = exp_values / sum_exp
-            
-            return type(x)(result)
+        # Apply Softmax with numerical stability
+        input_data = x.data
+        
+        # Handle empty input
+        if input_data.size == 0:
+            return type(x)(input_data.copy())
+        
+        # Subtract max for numerical stability
+        x_shifted = input_data - np.max(input_data, axis=-1, keepdims=True)
+        
+        # Compute exponentials
+        exp_values = np.exp(x_shifted)
+        
+        # Sum along last axis
+        sum_exp = np.sum(exp_values, axis=-1, keepdims=True)
+        
+        # Divide to get probabilities
+        output_data = exp_values / sum_exp
+        
+        return type(x)(output_data)
         ### END SOLUTION
     
     def forward_(self, x):
@@ -994,14 +800,11 @@ class Softmax:
         Important for classification layers with large vocabulary.
         
         STEP-BY-STEP IMPLEMENTATION:
-        1. Check if input is Variable (for autograd) or Tensor
-        2. Compute softmax directly into tensor.data
-        3. Return the same tensor object (modified in-place)
-        4. For Variables: handle gradient tracking properly
+        1. Compute softmax directly into tensor._data
+        2. Return the same tensor object (modified in-place)
         
         MATHEMATICAL FOUNDATION:
         - Forward: f(x_i) = e^(x_i) / Σ(e^(x_j))
-        - Backward: ∂f_i/∂x_j = f_i * (δ_ij - f_j) where δ_ij is Kronecker delta
         
         MEMORY BENEFITS:
         - No new tensor allocation (saves memory)
@@ -1019,8 +822,7 @@ class Softmax:
         
         IMPLEMENTATION HINTS:
         - Use numerical stability: subtract max before exponential
-        - Modify x.data directly
-        - For Variables: preserve requires_grad and handle gradients
+        - Modify x._data directly
         
         LEARNING CONNECTIONS:
         - This is like torch.nn.functional.softmax_() in PyTorch
@@ -1028,44 +830,25 @@ class Softmax:
         - Trade-off: can't recover original logits after operation
         """
         ### BEGIN SOLUTION
-        # Check if input is a Variable (autograd-enabled)
-        if hasattr(x, 'requires_grad') and hasattr(x, 'grad_fn'):
-            # For Variables, simplified in-place approach
-            input_data = x.data.data if hasattr(x.data, 'data') else x.data
-            
-            # Handle empty input
-            if input_data.size == 0:
-                return x
-            
-            # Apply Softmax in-place with numerical stability
-            max_vals = np.max(input_data, axis=-1, keepdims=True)
-            input_data -= max_vals
-            np.exp(input_data, out=input_data)
-            sum_exp = np.sum(input_data, axis=-1, keepdims=True)
-            input_data /= sum_exp
-            
-            # Variable structure preserved, data modified in-place
+        # Apply Softmax in-place with numerical stability
+        # Handle empty input
+        if x._data.size == 0:
             return x
-        else:
-            # Input is a Tensor - modify in-place
-            # Handle empty input
-            if x._data.size == 0:
-                return x
-            
-            # Subtract max for numerical stability
-            max_vals = np.max(x._data, axis=-1, keepdims=True)
-            x._data -= max_vals
-            
-            # Compute exponentials in-place
-            np.exp(x._data, out=x._data)
-            
-            # Sum along last axis
-            sum_exp = np.sum(x._data, axis=-1, keepdims=True)
-            
-            # Divide to get probabilities in-place
-            x._data /= sum_exp
-            
-            return x
+        
+        # Subtract max for numerical stability
+        max_vals = np.max(x._data, axis=-1, keepdims=True)
+        x._data -= max_vals
+        
+        # Compute exponentials in-place
+        np.exp(x._data, out=x._data)
+        
+        # Sum along last axis
+        sum_exp = np.sum(x._data, axis=-1, keepdims=True)
+        
+        # Divide to get probabilities in-place
+        x._data /= sum_exp
+        
+        return x
         ### END SOLUTION
     
     def __call__(self, x):
@@ -1309,113 +1092,15 @@ def test_module_activation_tensor_integration():
 
 # %% [markdown]
 """
-## 🧪 New Tests: Variable Support and Autograd Integration
+## 🧪 Comprehensive Testing Suite
 
-Let's test that our activation functions work correctly with Variables and compute proper gradients.
-
-### 🚀 Training Pipeline Example
-
-Here's how the autograd-enabled activation functions work in a simple training scenario:
-
-```python
-# Training-like scenario with autograd
-x = Variable([[1.0, -0.5, 2.0]], requires_grad=True)
-weights = Variable([[0.5], [0.3], [-0.2]], requires_grad=True)
-
-# Forward pass through network
-hidden = x @ weights  # Matrix multiplication (would use autograd)
-activated = relu(hidden)  # ReLU activation with gradient tracking
-loss = activated ** 2  # Simple loss function
-
-# Backward pass
-loss.backward()
-
-# Now x.grad and weights.grad contain gradients for optimization
-print(f"Input gradients: {x.grad}")
-print(f"Weight gradients: {weights.grad}")
-```
-
-This shows how activation functions seamlessly integrate with the autograd system to enable end-to-end neural network training.
+Let's test that our activation functions work correctly with Tensor inputs and produce mathematically correct outputs.
 """
 
-# %% nbgrader={"grade": true, "grade_id": "test-activations-variable-support", "locked": true, "points": 20, "schema_version": 3, "solution": false, "task": false}
-def test_unit_activations_variable_support():
-    """Test activation functions with Variable inputs and gradient computation."""
-    print("🔬 Unit Test: Activation Functions Variable Support...")
-    
-    # Test 1: ReLU with Variables
-    print("  Testing ReLU with Variables...")
-    relu = ReLU()
-    
-    # Test ReLU forward pass with Variable
-    x_var = Variable([[2.0, -1.0, 0.0, 3.0]], requires_grad=True)
-    relu_output = relu(x_var)
-    
-    assert hasattr(relu_output, 'requires_grad'), "ReLU should return Variable when input is Variable"
-    assert relu_output.requires_grad == True, "ReLU should preserve requires_grad"
-    assert np.array_equal(relu_output.data.data, [[2.0, 0.0, 0.0, 3.0]]), "ReLU forward pass incorrect"
-    
-    # Test ReLU backward pass
-    relu_output.backward(Variable([[1.0, 1.0, 1.0, 1.0]]))
-    expected_grad = [[1.0, 0.0, 0.0, 1.0]]  # Gradient is 1 where input > 0, 0 elsewhere
-    assert np.array_equal(x_var.grad.data.data, expected_grad), f"ReLU gradient incorrect: expected {expected_grad}, got {x_var.grad.data.data}"
-    
-    # Test 2: Sigmoid with Variables
-    print("  Testing Sigmoid with Variables...")
-    sigmoid = Sigmoid()
-    
-    x_var2 = Variable([[0.0]], requires_grad=True)
-    sigmoid_output = sigmoid(x_var2)
-    
-    assert hasattr(sigmoid_output, 'requires_grad'), "Sigmoid should return Variable when input is Variable"
-    assert abs(sigmoid_output.data.data[0][0] - 0.5) < 1e-6, "Sigmoid(0) should be 0.5"
-    
-    # Test Sigmoid backward pass
-    sigmoid_output.backward(Variable([[1.0]]))
-    expected_sigmoid_grad = 0.5 * (1.0 - 0.5)  # sigmoid(0) * (1 - sigmoid(0)) = 0.5 * 0.5 = 0.25
-    assert abs(x_var2.grad.data.data[0][0] - expected_sigmoid_grad) < 1e-6, f"Sigmoid gradient incorrect: expected {expected_sigmoid_grad}, got {x_var2.grad.data.data[0][0]}"
-    
-    # Test 3: Tanh with Variables
-    print("  Testing Tanh with Variables...")
-    tanh = Tanh()
-    
-    x_var3 = Variable([[0.0]], requires_grad=True)
-    tanh_output = tanh(x_var3)
-    
-    assert hasattr(tanh_output, 'requires_grad'), "Tanh should return Variable when input is Variable"
-    assert abs(tanh_output.data.data[0][0] - 0.0) < 1e-6, "Tanh(0) should be 0.0"
-    
-    # Test Tanh backward pass
-    tanh_output.backward(Variable([[1.0]]))
-    expected_tanh_grad = 1.0 - 0.0**2  # 1 - tanh²(0) = 1 - 0² = 1
-    assert abs(x_var3.grad.data.data[0][0] - expected_tanh_grad) < 1e-6, f"Tanh gradient incorrect: expected {expected_tanh_grad}, got {x_var3.grad.data.data[0][0]}"
-    
-    # Test 4: Softmax with Variables
-    print("  Testing Softmax with Variables...")
-    softmax = Softmax()
-    
-    x_var4 = Variable([[1.0, 2.0, 3.0]], requires_grad=True)
-    softmax_output = softmax(x_var4)
-    
-    assert hasattr(softmax_output, 'requires_grad'), "Softmax should return Variable when input is Variable"
-    assert abs(np.sum(softmax_output.data.data) - 1.0) < 1e-6, "Softmax outputs should sum to 1"
-    
-    # Test Softmax backward pass
-    softmax_output.backward(Variable([[1.0, 0.0, 0.0]]))  # Gradient for first element only
-    assert x_var4.grad is not None, "Softmax should compute gradients"
-    assert x_var4.grad.data.data.shape == (1, 3), "Softmax gradient should have correct shape"
-    
-    print("✅ Variable support tests passed!")
-    print(f"✅ ReLU gradients computed correctly")
-    print(f"✅ Sigmoid gradients computed correctly") 
-    print(f"✅ Tanh gradients computed correctly")
-    print(f"✅ Softmax gradients computed correctly")
-
-# Test function defined (called in main block)
 
 # %% nbgrader={"grade": true, "grade_id": "test-activations-tensor-compatibility", "locked": true, "points": 10, "schema_version": 3, "solution": false, "task": false}
 def test_unit_activations_tensor_compatibility():
-    """Test that activation functions still work correctly with plain Tensors."""
+    """Test that activation functions work correctly with Tensor inputs."""
     print("🔬 Unit Test: Activation Functions Tensor Compatibility...")
     
     # Create instances of all activation functions
@@ -1424,7 +1109,7 @@ def test_unit_activations_tensor_compatibility():
     tanh = Tanh()
     softmax = Softmax()
     
-    # Test with plain Tensor (should work as before)
+    # Test with Tensor inputs
     tensor_input = Tensor([[-2, -1, 0, 1, 2]])
     
     # Test that all activations return Tensors when given Tensors
@@ -1437,12 +1122,6 @@ def test_unit_activations_tensor_compatibility():
     assert isinstance(sigmoid_result, Tensor), "Sigmoid should return Tensor when input is Tensor"
     assert isinstance(tanh_result, Tensor), "Tanh should return Tensor when input is Tensor"
     assert isinstance(softmax_result, Tensor), "Softmax should return Tensor when input is Tensor"
-    
-    # Test that autograd is disabled by default
-    assert not relu_result.requires_grad, "Tensor output should have requires_grad=False by default"
-    assert not sigmoid_result.requires_grad, "Tensor output should have requires_grad=False by default"
-    assert not tanh_result.requires_grad, "Tensor output should have requires_grad=False by default"
-    assert not softmax_result.requires_grad, "Tensor output should have requires_grad=False by default"
     
     # Test that results are mathematically correct
     expected_relu = np.array([[0, 0, 0, 1, 2]])
@@ -1457,84 +1136,10 @@ def test_unit_activations_tensor_compatibility():
     assert abs(np.sum(softmax_result.data) - 1.0) < 1e-6, "Softmax should sum to 1"
     
     print("✅ Tensor compatibility tests passed!")
-    print(f"✅ All activations work with plain Tensors")
-    print(f"✅ No autograd attributes on Tensor outputs")
+    print(f"✅ All activations work with Tensors")
     print(f"✅ Mathematical correctness preserved")
 
 # Test function defined (called in main block)
-
-# %% nbgrader={"grade": true, "grade_id": "test-activations-gradient-accuracy", "locked": true, "points": 15, "schema_version": 3, "solution": false, "task": false}
-def test_unit_activations_gradient_accuracy():
-    """Test gradient computation accuracy by comparing known derivatives."""
-    print("🔬 Unit Test: Activation Functions Gradient Accuracy...")
-    
-    # Test 1: ReLU gradient accuracy with known values
-    print("  Testing ReLU gradient accuracy...")
-    relu = ReLU()
-    
-    # Test case 1: Positive input (gradient should be 1)
-    x_pos = Variable([[2.0]], requires_grad=True)
-    relu_output = relu(x_pos)
-    relu_output.backward(Variable([[1.0]]))
-    assert abs(x_pos.grad.data.data[0][0] - 1.0) < 1e-6, f"ReLU gradient for positive input should be 1, got {x_pos.grad.data.data[0][0]}"
-    
-    # Test case 2: Negative input (gradient should be 0)
-    x_neg = Variable([[-1.0]], requires_grad=True)
-    relu_output = relu(x_neg)
-    relu_output.backward(Variable([[1.0]]))
-    assert abs(x_neg.grad.data.data[0][0] - 0.0) < 1e-6, f"ReLU gradient for negative input should be 0, got {x_neg.grad.data.data[0][0]}"
-    
-    # Test 2: Sigmoid gradient accuracy with known values
-    print("  Testing Sigmoid gradient accuracy...")
-    sigmoid = Sigmoid()
-    
-    # Test at x=0 where sigmoid(0)=0.5, gradient should be 0.5*(1-0.5)=0.25
-    x_zero = Variable([[0.0]], requires_grad=True)
-    sigmoid_output = sigmoid(x_zero)
-    sigmoid_output.backward(Variable([[1.0]]))
-    expected_grad = 0.5 * (1.0 - 0.5)  # sigmoid(0) * (1 - sigmoid(0))
-    assert abs(x_zero.grad.data.data[0][0] - expected_grad) < 1e-6, f"Sigmoid gradient at x=0 should be {expected_grad}, got {x_zero.grad.data.data[0][0]}"
-    
-    # Test at x=1 where sigmoid(1)≈0.731, gradient should be sigmoid(1)*(1-sigmoid(1))
-    x_one = Variable([[1.0]], requires_grad=True)
-    sigmoid_output = sigmoid(x_one)
-    sigmoid_val = sigmoid_output.data.data[0][0]
-    sigmoid_output.backward(Variable([[1.0]]))
-    expected_grad = sigmoid_val * (1.0 - sigmoid_val)
-    assert abs(x_one.grad.data.data[0][0] - expected_grad) < 1e-6, f"Sigmoid gradient should match derivative formula"
-    
-    # Test 3: Tanh gradient accuracy with known values
-    print("  Testing Tanh gradient accuracy...")
-    tanh = Tanh()
-    
-    # Test at x=0 where tanh(0)=0, gradient should be 1-0²=1
-    x_zero_tanh = Variable([[0.0]], requires_grad=True)
-    tanh_output = tanh(x_zero_tanh)
-    tanh_output.backward(Variable([[1.0]]))
-    expected_grad = 1.0 - 0.0**2  # 1 - tanh²(0)
-    assert abs(x_zero_tanh.grad.data.data[0][0] - expected_grad) < 1e-6, f"Tanh gradient at x=0 should be {expected_grad}, got {x_zero_tanh.grad.data.data[0][0]}"
-    
-    # Test at x=1 where tanh(1)≈0.762, gradient should be 1-tanh²(1)
-    x_one_tanh = Variable([[1.0]], requires_grad=True)
-    tanh_output = tanh(x_one_tanh)
-    tanh_val = tanh_output.data.data[0][0]
-    tanh_output.backward(Variable([[1.0]]))
-    expected_grad = 1.0 - tanh_val**2
-    assert abs(x_one_tanh.grad.data.data[0][0] - expected_grad) < 1e-6, f"Tanh gradient should match derivative formula"
-    
-    # Test 4: Test batch gradients work correctly
-    print("  Testing batch gradient computation...")
-    x_batch = Variable([[2.0, -1.0, 0.5]], requires_grad=True)
-    relu_batch = relu(x_batch)
-    relu_batch.backward(Variable([[1.0, 1.0, 1.0]]))
-    expected_batch_grad = [[1.0, 0.0, 1.0]]  # [pos, neg, pos] -> [1, 0, 1]
-    assert np.array_equal(x_batch.grad.data.data, expected_batch_grad), f"Batch ReLU gradients incorrect"
-    
-    print("✅ Gradient accuracy tests passed!")
-    print(f"✅ ReLU gradients match known derivatives")
-    print(f"✅ Sigmoid gradients match known derivatives")
-    print(f"✅ Tanh gradients match known derivatives")
-    print(f"✅ Batch gradient computation works correctly")
 
 # Test function defined (called in main block)
 
@@ -1743,73 +1348,6 @@ def test_unit_memory_comparison():
 
 # Test function defined (called in main block)
 
-# %% nbgrader={"grade": true, "grade_id": "test-inplace-variable-support", "locked": true, "points": 15, "schema_version": 3, "solution": false, "task": false}
-def test_unit_inplace_variable_support():
-    """Test in-place operations with Variable inputs and gradient computation."""
-    print("🔬 Unit Test: In-Place Variable Support...")
-    
-    # Test 1: ReLU in-place with Variables
-    print("  Testing ReLU in-place with Variables...")
-    relu = ReLU()
-    
-    x_var = Variable([[2.0, -1.0, 0.0]], requires_grad=True)
-    original_id = id(x_var)
-    original_data_id = id(x_var.data.data)
-    
-    result = relu.forward_(x_var)
-    
-    # Verify same Variable object returned
-    assert result is x_var, "In-place should return same Variable object"
-    # Note: Variable data handling may differ from Tensor, so we check the Variable still works
-    assert result is x_var, "In-place should preserve Variable identity"
-    
-    # Verify correct computation
-    expected = [[2.0, 0.0, 0.0]]
-    assert np.array_equal(x_var.data.data, expected), "ReLU in-place with Variable incorrect"
-    
-    # Note: In-place operations with full autograd support is complex
-    # For educational purposes, we focus on the in-place data modification
-    # In production systems like PyTorch, in-place ops have special autograd handling
-    
-    # Test 2: Sigmoid in-place with Variables  
-    print("  Testing Sigmoid in-place with Variables...")
-    sigmoid = Sigmoid()
-    
-    x_var2 = Variable([[0.0]], requires_grad=True)
-    original_id = id(x_var2)
-    
-    result = sigmoid.forward_(x_var2)
-    
-    assert result is x_var2, "Sigmoid in-place should return same Variable"
-    assert abs(x_var2.data.data[0][0] - 0.5) < 1e-6, "Sigmoid(0) should be 0.5"
-    
-    # Test 3: Tanh in-place with Variables
-    print("  Testing Tanh in-place with Variables...")
-    tanh = Tanh()
-    
-    x_var3 = Variable([[0.0]], requires_grad=True)
-    result = tanh.forward_(x_var3)
-    
-    assert result is x_var3, "Tanh in-place should return same Variable"
-    assert abs(x_var3.data.data[0][0] - 0.0) < 1e-6, "Tanh(0) should be 0.0"
-    
-    # Test 4: Softmax in-place with Variables
-    print("  Testing Softmax in-place with Variables...")
-    softmax = Softmax()
-    
-    x_var4 = Variable([[1.0, 2.0, 3.0]], requires_grad=True)
-    result = softmax.forward_(x_var4)
-    
-    assert result is x_var4, "Softmax in-place should return same Variable"
-    assert abs(np.sum(x_var4.data.data) - 1.0) < 1e-6, "Softmax in-place should sum to 1"
-    
-    print("✅ In-place Variable support tests passed!")
-    print(f"✅ All in-place operations work with Variables")
-    print(f"✅ Object identity preserved during in-place operations")
-    print(f"✅ Data modification works correctly with Variable structure")
-    print(f"✅ Simplified in-place implementation for educational purposes")
-
-# Test function defined (called in main block)
 
 # %% [markdown]
 """
@@ -2177,15 +1715,12 @@ if __name__ == "__main__":
     test_unit_activations_comprehensive()
     test_module_activation_tensor_integration()
     
-    # Run new autograd tests
-    test_unit_activations_variable_support()
+    # Run tensor compatibility tests
     test_unit_activations_tensor_compatibility()
-    test_unit_activations_gradient_accuracy()
     
     # Run in-place operation tests
     test_unit_inplace_operations()
     test_unit_memory_comparison()
-    test_unit_inplace_variable_support()
     
     test_activation_profiler()
     
@@ -2383,8 +1918,8 @@ GRADING RUBRIC (Instructor Use):
     - **Sigmoid**: Classic activation for binary classification and probability outputs
     - **Tanh**: Zero-centered activation with better gradient properties
     - **Softmax**: Probability distribution for multi-class classification
-    - **🆕 Autograd Support**: All activations now work with Variables for automatic differentiation
-    - **🆕 Gradient Computation**: Correct derivatives implemented for training neural networks
+    - **💾 Memory Efficiency**: In-place operations to minimize memory usage
+    - **⚡ Performance Analysis**: Tools to measure and optimize computational costs
     - **🆕 In-Place Operations**: Memory-efficient versions (forward_) that modify tensors directly
     - **🆕 Memory Optimization**: Understand and measure memory vs performance trade-offs
 
@@ -2421,8 +1956,8 @@ GRADING RUBRIC (Instructor Use):
     - **Dense layers**: Linear transformations with nonlinear activations
     - **Convolutional layers**: Spatial feature extraction with ReLU
     - **Network architectures**: Complete neural networks with proper activations
-    - **🆕 Training Pipelines**: Full gradient-based optimization with autograd support
-    - **🆕 Neural Network Layers**: Components that can be trained end-to-end
+    - **🧠 Neural Network Building Blocks**: Foundation components for network architecture
+    - **🚀 Production Ready**: Numerically stable implementations
 
 ### 🔗 Connection to Real ML Systems
     Your implementations mirror production systems:

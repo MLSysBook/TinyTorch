@@ -12,15 +12,8 @@ from collections import defaultdict
 import time
 import pickle
 
-# Add module directories to Python path
-sys.path.append(os.path.abspath('modules/source/02_tensor'))
-sys.path.append(os.path.abspath('modules/source/03_activations'))
-sys.path.append(os.path.abspath('modules/source/04_layers'))
-sys.path.append(os.path.abspath('modules/source/05_dense'))
-sys.path.append(os.path.abspath('modules/source/06_spatial'))
-sys.path.append(os.path.abspath('modules/source/08_dataloader'))
-sys.path.append(os.path.abspath('modules/source/09_autograd'))
-sys.path.append(os.path.abspath('modules/source/10_optimizers'))
+# Note: Module imports corrected to match actual learning progression:
+# Module 6: autograd, Module 7: spatial, Module 8: optimizers, Module 9: dataloader
 
 # Helper function to set up import paths
 # No longer needed, will use direct relative imports
@@ -32,11 +25,11 @@ sys.path.append(os.path.abspath('modules/source/10_optimizers'))
 from .tensor import Tensor
 from .activations import ReLU, Sigmoid, Tanh, Softmax
 from .layers import Dense
-from .dense import Sequential, create_mlp
+from .networks import Sequential, create_mlp
 from .spatial import Conv2D, flatten
 from .dataloader import Dataset, DataLoader
 from .autograd import Variable  # FOR AUTOGRAD INTEGRATION
-from .optimizers import SGD, Adam, StepLR
+from .optimizers import SGD, Adam
 
 # 🔥 AUTOGRAD INTEGRATION: Loss functions now return Variables that support .backward()
 # This enables automatic gradient computation for neural network training!

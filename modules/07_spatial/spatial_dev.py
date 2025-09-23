@@ -139,7 +139,7 @@ def flatten(x, start_dim=1):
     if hasattr(x, 'data'):
         # It's a Tensor - preserve type and gradient tracking
         flattened_data = data.reshape(new_shape)
-        result = Tensor(flattened_data, requires_grad=x.requires_grad if hasattr(x, 'requires_grad') else False)
+        result = Tensor(flattened_data)
         return result
     else:
         # It's a numpy array
@@ -214,7 +214,7 @@ def max_pool2d(x, kernel_size, stride=None):
     
     # Preserve tensor type if input was a tensor
     if hasattr(x, 'data'):
-        result = Tensor(output, requires_grad=x.requires_grad if hasattr(x, 'requires_grad') else False)
+        result = Tensor(output)
         return result
     else:
         return output
@@ -500,27 +500,9 @@ class Conv2D:
         else: # Handle single image case
             output_data = conv2d_naive(x.data, self.kernel)
 
-        # Preserve Variable type if input is Variable for gradient flow
-        from tinytorch.core.autograd import Variable
-        if isinstance(x, Variable):
-            # Create gradient function for convolution backward pass
-            def grad_fn(grad_output):
-                # Conv2D backward: gradient w.r.t input and weights
-                # For simplicity, we'll pass gradients through without modification
-                # A full implementation would compute proper conv gradients
-                if x.requires_grad:
-                    # Pass gradient to input (simplified - should be transposed conv)
-                    x.backward(grad_output)
-                
-                if hasattr(self, 'kernel') and isinstance(self.kernel, Variable) and self.kernel.requires_grad:
-                    # Gradient for kernel (simplified - should be correlation)
-                    # For now, just accumulate some gradient to allow learning
-                    kernel_grad = np.zeros_like(self.kernel.data)
-                    self.kernel.backward(Variable(kernel_grad))
-            
-            return Variable(output_data, requires_grad=x.requires_grad, grad_fn=grad_fn)
-        else:
-            return Tensor(output_data)
+        # Return Tensor result - gradient support will be added in later modules
+        # For now, focus on learning convolution mechanics without complex autograd
+        return Tensor(output_data)
     
     def __call__(self, x):
         """Make layer callable: layer(x) same as layer.forward(x)"""
@@ -771,79 +753,9 @@ class Conv2d(Module):
         if single_image:
             output = output[0]
         
-        # Preserve Variable type if input is Variable for gradient flow
-        from tinytorch.core.autograd import Variable
-        if isinstance(x, Variable):
-            # Store values needed for backward pass
-            input_data_copy = input_data.copy()
-            weights_data = self.weight.data if hasattr(self.weight, 'data') else self.weight
-            if hasattr(weights_data, 'data'):
-                weights_data = weights_data.data
-            
-            # Create gradient function for multi-channel convolution backward pass
-            def grad_fn(grad_output):
-                # Conv2d backward pass
-                grad_out_data = grad_output.data.data if hasattr(grad_output.data, 'data') else grad_output.data
-                
-                # Ensure grad_out has batch dimension
-                if single_image and len(grad_out_data.shape) == 3:
-                    grad_out_data = grad_out_data[np.newaxis, ...]
-                
-                # Gradient w.r.t weights (simplified but functional)
-                if hasattr(self.weight, 'requires_grad') and self.weight.requires_grad:
-                    # Initialize weight gradients
-                    weight_grad = np.zeros_like(weights_data)
-                    
-                    # Compute gradient for each filter
-                    batch_size = input_data_copy.shape[0]
-                    for b in range(batch_size):
-                        for out_c in range(self.out_channels):
-                            for in_c in range(self.in_channels):
-                                for i in range(out_H):
-                                    for j in range(out_W):
-                                        # Gradient contribution from this output position
-                                        grad_val = grad_out_data[b, out_c, i, j]
-                                        # Input patch that contributed to this output
-                                        patch = input_data_copy[b, in_c, i:i+kH, j:j+kW]
-                                        # Accumulate gradient
-                                        weight_grad[out_c, in_c] += grad_val * patch
-                    
-                    # Average over batch
-                    weight_grad /= batch_size
-                    self.weight.backward(Variable(weight_grad))
-                
-                # Gradient w.r.t bias
-                if self.use_bias and hasattr(self.bias, 'requires_grad') and self.bias.requires_grad:
-                    # Sum gradients across batch and spatial dimensions for each output channel
-                    bias_grad = np.sum(grad_out_data, axis=(0, 2, 3))
-                    self.bias.backward(Variable(bias_grad))
-                
-                # Gradient w.r.t input (simplified but functional)
-                if x.requires_grad:
-                    # For proper implementation, this would be a transposed convolution
-                    # For now, broadcast the gradient back with some scaling
-                    input_grad = np.zeros_like(input_data_copy)
-                    
-                    # Simple approximation: distribute gradients back
-                    for b in range(batch_size):
-                        for out_c in range(self.out_channels):
-                            for in_c in range(self.in_channels):
-                                filter_weights = weights_data[out_c, in_c]
-                                for i in range(out_H):
-                                    for j in range(out_W):
-                                        grad_val = grad_out_data[b, out_c, i, j]
-                                        # Distribute gradient to input patch
-                                        input_grad[b, in_c, i:i+kH, j:j+kW] += grad_val * filter_weights * 0.1
-                    
-                    # Remove batch dim if needed
-                    if single_image:
-                        input_grad = input_grad[0]
-                    
-                    x.backward(Variable(input_grad))
-            
-            return Variable(output, requires_grad=x.requires_grad, grad_fn=grad_fn)
-        else:
-            return Tensor(output)
+        # Return Tensor result - gradient support will be added in later modules
+        # For now, focus on learning multi-channel convolution mechanics
+        return Tensor(output)
     
     def __call__(self, x):
         """Make layer callable: layer(x) same as layer.forward(x)"""
@@ -1138,57 +1050,9 @@ class MaxPool2D:
         for _ in range(added_dims):
             output = output[0]
         
-        # Preserve Variable type if input is Variable for gradient flow
-        from tinytorch.core.autograd import Variable
-        if isinstance(x, Variable):
-            # Store input shape and data for backward pass
-            input_shape = input_data.shape
-            
-            # Create gradient function for max pooling backward pass
-            def grad_fn(grad_output):
-                if x.requires_grad:
-                    # MaxPool backward: gradient flows only to max elements
-                    grad_out_data = grad_output.data.data if hasattr(grad_output.data, 'data') else grad_output.data
-                    
-                    # Initialize input gradient with zeros
-                    input_grad = np.zeros(input_shape)
-                    
-                    # Add dimensions back if they were removed
-                    grad_out_expanded = grad_out_data
-                    for _ in range(added_dims):
-                        grad_out_expanded = grad_out_expanded[np.newaxis, ...]
-                    
-                    # Distribute gradients to positions that were max
-                    for b in range(batch_size):
-                        for c in range(channels):
-                            for i in range(out_H):
-                                for j in range(out_W):
-                                    h_start = i * sH
-                                    h_end = h_start + pH
-                                    w_start = j * sW
-                                    w_end = w_start + pW
-                                    
-                                    # Find which element was max in the window
-                                    window = input_data[b, c, h_start:h_end, w_start:w_end]
-                                    max_val = np.max(window)
-                                    
-                                    # Pass gradient to all positions that equal max
-                                    # (handles ties by splitting gradient)
-                                    mask = (window == max_val)
-                                    num_max = np.sum(mask)
-                                    if num_max > 0:
-                                        input_grad[b, c, h_start:h_end, w_start:w_end][mask] += \
-                                            grad_out_expanded[b, c, i, j] / num_max
-                    
-                    # Remove added dimensions from gradient
-                    for _ in range(added_dims):
-                        input_grad = input_grad[0]
-                    
-                    x.backward(Variable(input_grad))
-            
-            return Variable(output, requires_grad=x.requires_grad, grad_fn=grad_fn)
-        else:
-            return Tensor(output)
+        # Return Tensor result - gradient support will be added in later modules
+        # For now, focus on learning pooling mechanics without complex autograd
+        return Tensor(output)
     
     def __call__(self, x):
         """Make layer callable: layer(x) same as layer.forward(x)"""
