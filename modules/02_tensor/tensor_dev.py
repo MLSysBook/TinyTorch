@@ -719,6 +719,38 @@ class Tensor:
         """Computes the mean of the tensor's elements."""
         return Tensor(np.mean(self.data))
 
+    def sum(self) -> 'Tensor':
+        """
+        Sum all elements in the tensor.
+        
+        Returns a new tensor containing the sum of all elements.
+        This is commonly used in loss functions and gradient computation.
+        
+        Returns:
+            Tensor: A scalar tensor containing the sum of all elements
+            
+        Example:
+            Tensor([1, 2, 3]).sum() → Tensor(6)
+            Tensor([[1, 2], [3, 4]]).sum() → Tensor(10)
+        """
+        return Tensor(np.sum(self.data))
+    
+    @property
+    def T(self) -> 'Tensor':
+        """
+        Transpose of the tensor.
+        
+        Returns a new tensor with transposed data. For 1D tensors,
+        returns the tensor unchanged. For 2D+ tensors, swaps the dimensions.
+        
+        Returns:
+            Tensor: Transposed tensor
+            
+        Example:
+            Tensor([[1, 2], [3, 4]]).T → Tensor([[1, 3], [2, 4]])
+        """
+        return Tensor(self.data.T)
+
     def matmul(self, other: 'Tensor') -> 'Tensor':
         """
         Perform matrix multiplication between two tensors.
@@ -811,6 +843,13 @@ class Tensor:
 
 Now let's test our tensor implementation with comprehensive tests that validate all functionality.
 
+**Testing Standards**: All tests follow the immediate testing pattern where each test is:
+1. **Wrapped in a test_ function** for clear organization
+2. **Called immediately after definition** for instant feedback  
+3. **Educational and explanatory** to help you understand what's being verified
+
+This approach ensures you get immediate verification that your implementation works correctly.
+
 """
 # %% [markdown]
 """
@@ -821,37 +860,41 @@ Let's test your tensor creation implementation right away! This gives you immedi
 **This is a unit test** - it tests one specific function (tensor creation) in isolation.
 """
 # %% nbgrader={"grade": true, "grade_id": "test_unit_tensor_creation_immediate", "locked": true, "points": 5, "schema_version": 3, "solution": false, "task": false}
-# Test tensor creation immediately after implementation
-print("🔬 Unit Test: Tensor Creation...")
+def test_tensor_creation_immediate():
+    """Test tensor creation immediately after implementation."""
+    print("🔬 Unit Test: Tensor Creation...")
+    
+    # Test basic tensor creation
+    try:
+        # Test scalar
+        scalar = Tensor(5.0)
+        assert hasattr(scalar, '_data'), "Tensor should have _data attribute"
+        assert scalar._data.shape == (), f"Scalar should have shape (), got {scalar._data.shape}"
+        print("✅ Scalar creation works")
+        
+        # Test vector
+        vector = Tensor([1, 2, 3])
+        assert vector._data.shape == (3,), f"Vector should have shape (3,), got {vector._data.shape}"
+        print("✅ Vector creation works")
+        
+        # Test matrix
+        matrix = Tensor([[1, 2], [3, 4]])
+        assert matrix._data.shape == (2, 2), f"Matrix should have shape (2, 2), got {matrix._data.shape}"
+        print("✅ Matrix creation works")
+        
+        print("📈 Progress: Tensor Creation ✓")
+        
+    except Exception as e:
+        print(f"❌ Tensor creation test failed: {e}")
+        raise
+    
+    print("🎯 Tensor creation behavior:")
+    print("   Converts data to NumPy arrays")
+    print("   Preserves shape and data type")
+    print("   Stores in _data attribute")
 
-# Test basic tensor creation
-try:
-    # Test scalar
-    scalar = Tensor(5.0)
-    assert hasattr(scalar, '_data'), "Tensor should have _data attribute"
-    assert scalar._data.shape == (), f"Scalar should have shape (), got {scalar._data.shape}"
-    print("✅ Scalar creation works")
-    
-    # Test vector
-    vector = Tensor([1, 2, 3])
-    assert vector._data.shape == (3,), f"Vector should have shape (3,), got {vector._data.shape}"
-    print("✅ Vector creation works")
-    
-    # Test matrix
-    matrix = Tensor([[1, 2], [3, 4]])
-    assert matrix._data.shape == (2, 2), f"Matrix should have shape (2, 2), got {matrix._data.shape}"
-    print("✅ Matrix creation works")
-    
-    print("📈 Progress: Tensor Creation ✓")
-    
-except Exception as e:
-    print(f"❌ Tensor creation test failed: {e}")
-    raise
-
-print("🎯 Tensor creation behavior:")
-print("   Converts data to NumPy arrays")
-print("   Preserves shape and data type")
-print("   Stores in _data attribute")
+# Test immediately after definition
+test_tensor_creation_immediate()
 
 # %% [markdown]
 """
@@ -862,41 +905,167 @@ Now let's test that your tensor properties work correctly. This tests the @prope
 **This is a unit test** - it tests specific properties (shape, size, dtype, data) in isolation.
 """
 # %% nbgrader={"grade": true, "grade_id": "test_unit_tensor_properties_immediate", "locked": true, "points": 5, "schema_version": 3, "solution": false, "task": false}
-# Test tensor properties immediately after implementation
-print("🔬 Unit Test: Tensor Properties...")
+def test_tensor_properties_immediate():
+    """Test tensor properties immediately after implementation."""
+    print("🔬 Unit Test: Tensor Properties...")
+    
+    # Test properties with simple examples
+    try:
+        # Test with a simple matrix
+        tensor = Tensor([[1, 2, 3], [4, 5, 6]])
+        
+        # Test shape property
+        assert tensor.shape == (2, 3), f"Shape should be (2, 3), got {tensor.shape}"
+        print("✅ Shape property works")
+        
+        # Test size property
+        assert tensor.size == 6, f"Size should be 6, got {tensor.size}"
+        print("✅ Size property works")
+        
+        # Test data property
+        assert np.array_equal(tensor.data, np.array([[1, 2, 3], [4, 5, 6]])), "Data property should return numpy array"
+        print("✅ Data property works")
+        
+        # Test dtype property
+        assert tensor.dtype in [np.int32, np.int64], f"Dtype should be int32 or int64, got {tensor.dtype}"
+        print("✅ Dtype property works")
+        
+        print("📈 Progress: Tensor Properties ✓")
+        
+    except Exception as e:
+        print(f"❌ Tensor properties test failed: {e}")
+        raise
+    
+    print("🎯 Tensor properties behavior:")
+    print("   shape: Returns tuple of dimensions")
+    print("   size: Returns total number of elements")
+    print("   data: Returns underlying NumPy array")
+    print("   dtype: Returns NumPy data type")
 
-# Test properties with simple examples
-try:
-    # Test with a simple matrix
-    tensor = Tensor([[1, 2, 3], [4, 5, 6]])
-    
-    # Test shape property
-    assert tensor.shape == (2, 3), f"Shape should be (2, 3), got {tensor.shape}"
-    print("✅ Shape property works")
-    
-    # Test size property
-    assert tensor.size == 6, f"Size should be 6, got {tensor.size}"
-    print("✅ Size property works")
-    
-    # Test data property
-    assert np.array_equal(tensor.data, np.array([[1, 2, 3], [4, 5, 6]])), "Data property should return numpy array"
-    print("✅ Data property works")
-    
-    # Test dtype property
-    assert tensor.dtype in [np.int32, np.int64], f"Dtype should be int32 or int64, got {tensor.dtype}"
-    print("✅ Dtype property works")
-    
-    print("📈 Progress: Tensor Properties ✓")
-    
-except Exception as e:
-    print(f"❌ Tensor properties test failed: {e}")
-    raise
+# Test immediately after definition
+test_tensor_properties_immediate()
 
-print("🎯 Tensor properties behavior:")
-print("   shape: Returns tuple of dimensions")
-print("   size: Returns total number of elements")
-print("   data: Returns underlying NumPy array")
-print("   dtype: Returns NumPy data type")
+# %% [markdown]
+"""
+### 🧪 Educational Deep Dive: Matrix Multiplication Understanding
+
+Before we test matrix multiplication, let's understand HOW it works by implementing it with loops. This educational section helps you understand what `np.matmul()` does internally.
+
+**Educational Goal**: Understand the mathematical operations behind matrix multiplication.
+"""
+
+# %% nbgrader={"grade": false, "grade_id": "matrix-multiplication-education", "locked": false, "schema_version": 3, "solution": false, "task": false}
+def educational_matmul_with_loops(a_data, b_data):
+    """
+    Educational implementation of matrix multiplication using loops.
+    
+    This shows exactly how matrix multiplication works mathematically.
+    DO NOT use this in production - it's for understanding only!
+    
+    Args:
+        a_data: 2D numpy array (rows, cols)
+        b_data: 2D numpy array (cols, new_cols)
+        
+    Returns:
+        2D numpy array: Result of matrix multiplication
+    """
+    # Get dimensions
+    a_rows, a_cols = a_data.shape
+    b_rows, b_cols = b_data.shape
+    
+    # Check compatibility
+    if a_cols != b_rows:
+        raise ValueError(f"Cannot multiply {a_data.shape} @ {b_data.shape}: inner dimensions don't match")
+    
+    # Initialize result matrix
+    result = np.zeros((a_rows, b_cols))
+    
+    # Triple nested loop - this is why we use optimized libraries!
+    for i in range(a_rows):          # For each row in A
+        for j in range(b_cols):      # For each column in B
+            for k in range(a_cols):  # For each element in the dot product
+                result[i, j] += a_data[i, k] * b_data[k, j]
+    
+    return result
+
+print("🎓 Educational Matrix Multiplication with Loops")
+print("This shows HOW matrix multiplication works mathematically.")
+print("In production, we use optimized np.matmul() for speed.")
+print()
+
+# Example: 2x2 @ 2x2 matrix multiplication
+a_example = np.array([[1, 2], [3, 4]])
+b_example = np.array([[5, 6], [7, 8]])
+
+# Educational implementation (slow but clear)
+result_loops = educational_matmul_with_loops(a_example, b_example)
+print(f"Educational result (loops): \n{result_loops}")
+
+# Production implementation (fast and optimized)
+result_numpy = np.matmul(a_example, b_example)
+print(f"Production result (numpy): \n{result_numpy}")
+
+# Verify they match
+print(f"Results match: {np.array_equal(result_loops, result_numpy)}")
+print()
+print("💡 Key insight: The math is identical, but numpy is ~100x faster!")
+print("   That's why we use np.matmul() in our Tensor implementation.")
+
+# %% [markdown]
+"""
+### 🧪 Unit Test: New Tensor Operations
+
+Let's test the new `sum()` and `transpose()` operations we just added.
+
+**This is a unit test** - it tests specific new operations in isolation.
+"""
+
+# %% nbgrader={"grade": true, "grade_id": "test_unit_new_tensor_operations", "locked": true, "points": 5, "schema_version": 3, "solution": false, "task": false}
+def test_tensor_sum():
+    """Test sum operation on tensors."""
+    print("🔬 Testing tensor sum operation...")
+    
+    # Test vector sum
+    vector = Tensor([1, 2, 3, 4])
+    sum_result = vector.sum()
+    assert sum_result.data == 10, f"Vector sum should be 10, got {sum_result.data}"
+    print("✅ Vector sum works")
+    
+    # Test matrix sum
+    matrix = Tensor([[1, 2], [3, 4]])
+    matrix_sum = matrix.sum()
+    assert matrix_sum.data == 10, f"Matrix sum should be 10, got {matrix_sum.data}"
+    print("✅ Matrix sum works")
+
+def test_tensor_transpose():
+    """Test transpose operation on tensors."""
+    print("🔬 Testing tensor transpose operation...")
+    
+    # Test matrix transpose
+    matrix = Tensor([[1, 2, 3], [4, 5, 6]])
+    transposed = matrix.T
+    expected = np.array([[1, 4], [2, 5], [3, 6]])
+    assert np.array_equal(transposed.data, expected), f"Transpose failed: expected \n{expected}, got \n{transposed.data}"
+    print("✅ Matrix transpose works")
+    
+    # Test vector transpose (should be unchanged for 1D)
+    vector = Tensor([1, 2, 3])
+    vector_t = vector.T
+    assert np.array_equal(vector_t.data, vector.data), "Vector transpose should preserve 1D arrays"
+    print("✅ Vector transpose works")
+
+def test_new_tensor_operations_immediate():
+    """Test new tensor operations immediately after definition."""
+    print("🔬 Unit Test: New Tensor Operations (sum, transpose)...")
+    test_tensor_sum()
+    test_tensor_transpose()
+    print("📈 Progress: New Tensor Operations (sum, transpose) ✓")
+    print("🎯 New operations behavior:")
+    print("   sum(): Returns scalar tensor with sum of all elements")
+    print("   .T: Returns new tensor with transposed dimensions")
+
+# Test immediately after definition
+test_new_tensor_operations_immediate()
 
 # %% [markdown]
 """
@@ -907,47 +1076,51 @@ Let's test your tensor arithmetic operations. This tests the __add__, __mul__, _
 **This is a unit test** - it tests specific arithmetic operations in isolation.
 """
 # %% nbgrader={"grade": true, "grade_id": "test_unit_tensor_arithmetic_immediate", "locked": true, "points": 5, "schema_version": 3, "solution": false, "task": false}
-# Test tensor arithmetic immediately after implementation
-print("🔬 Unit Test: Tensor Arithmetic...")
+def test_tensor_arithmetic_immediate():
+    """Test tensor arithmetic immediately after implementation."""
+    print("🔬 Unit Test: Tensor Arithmetic...")
+    
+    # Test basic arithmetic with simple examples
+    try:
+        # Test addition
+        a = Tensor([1, 2, 3])
+        b = Tensor([4, 5, 6])
+        result = a + b
+        expected = np.array([5, 7, 9])
+        assert np.array_equal(result.data, expected), f"Addition failed: expected {expected}, got {result.data}"
+        print("✅ Addition works")
+        
+        # Test scalar addition
+        result_scalar = a + 10
+        expected_scalar = np.array([11, 12, 13])
+        assert np.array_equal(result_scalar.data, expected_scalar), f"Scalar addition failed: expected {expected_scalar}, got {result_scalar.data}"
+        print("✅ Scalar addition works")
+        
+        # Test multiplication
+        result_mul = a * b
+        expected_mul = np.array([4, 10, 18])
+        assert np.array_equal(result_mul.data, expected_mul), f"Multiplication failed: expected {expected_mul}, got {result_mul.data}"
+        print("✅ Multiplication works")
+        
+        # Test scalar multiplication
+        result_scalar_mul = a * 2
+        expected_scalar_mul = np.array([2, 4, 6])
+        assert np.array_equal(result_scalar_mul.data, expected_scalar_mul), f"Scalar multiplication failed: expected {expected_scalar_mul}, got {result_scalar_mul.data}"
+        print("✅ Scalar multiplication works")
+        
+        print("📈 Progress: Tensor Arithmetic ✓")
+        
+    except Exception as e:
+        print(f"❌ Tensor arithmetic test failed: {e}")
+        raise
+    
+    print("🎯 Tensor arithmetic behavior:")
+    print("   Element-wise operations on tensors")
+    print("   Broadcasting with scalars")
+    print("   Returns new Tensor objects")
 
-# Test basic arithmetic with simple examples
-try:
-    # Test addition
-    a = Tensor([1, 2, 3])
-    b = Tensor([4, 5, 6])
-    result = a + b
-    expected = np.array([5, 7, 9])
-    assert np.array_equal(result.data, expected), f"Addition failed: expected {expected}, got {result.data}"
-    print("✅ Addition works")
-    
-    # Test scalar addition
-    result_scalar = a + 10
-    expected_scalar = np.array([11, 12, 13])
-    assert np.array_equal(result_scalar.data, expected_scalar), f"Scalar addition failed: expected {expected_scalar}, got {result_scalar.data}"
-    print("✅ Scalar addition works")
-    
-    # Test multiplication
-    result_mul = a * b
-    expected_mul = np.array([4, 10, 18])
-    assert np.array_equal(result_mul.data, expected_mul), f"Multiplication failed: expected {expected_mul}, got {result_mul.data}"
-    print("✅ Multiplication works")
-    
-    # Test scalar multiplication
-    result_scalar_mul = a * 2
-    expected_scalar_mul = np.array([2, 4, 6])
-    assert np.array_equal(result_scalar_mul.data, expected_scalar_mul), f"Scalar multiplication failed: expected {expected_scalar_mul}, got {result_scalar_mul.data}"
-    print("✅ Scalar multiplication works")
-    
-    print("📈 Progress: Tensor Arithmetic ✓")
-    
-except Exception as e:
-    print(f"❌ Tensor arithmetic test failed: {e}")
-    raise
-
-print("🎯 Tensor arithmetic behavior:")
-print("   Element-wise operations on tensors")
-print("   Broadcasting with scalars")
-print("   Returns new Tensor objects")
+# Test immediately after definition
+test_tensor_arithmetic_immediate()
 
 # %% [markdown]
 """
@@ -1050,6 +1223,24 @@ def test_unit_tensor_arithmetic():
     f = b / a
     expected = np.array([4.0, 2.5, 2.0])
     assert np.allclose(f.data, expected)
+    
+    # Test new operations: sum and transpose
+    sum_a = a.sum()
+    assert sum_a.data == 6, f"Sum should be 6, got {sum_a.data}"
+    
+    # Test matrix operations
+    matrix = Tensor([[1, 2], [3, 4]])
+    matrix_t = matrix.T
+    expected_t = np.array([[1, 3], [2, 4]])
+    assert np.array_equal(matrix_t.data, expected_t), "Transpose should swap dimensions"
+    
+    # Test matrix multiplication
+    mat_a = Tensor([[1, 2], [3, 4]])
+    mat_b = Tensor([[5, 6], [7, 8]])
+    result = mat_a @ mat_b
+    expected_matmul = np.array([[19, 22], [43, 50]])
+    assert np.array_equal(result.data, expected_matmul), "Matrix multiplication should work correctly"
+    
     print("✅ Tensor arithmetic tests passed!")
 
 # Test function defined (called in main block)
@@ -1123,13 +1314,23 @@ def test_module_tensor_numpy_integration():
 
 if __name__ == "__main__":
     # Run all tensor tests
+    test_tensor_creation_immediate()
+    test_tensor_properties_immediate()
+    test_new_tensor_operations_immediate()
+    test_tensor_arithmetic_immediate()
     test_unit_tensor_creation()
     test_unit_tensor_properties()
     test_unit_tensor_arithmetic()
     test_module_tensor_numpy_integration()
     
-    print("All tests passed!")
-    print("Tensor module complete!")
+    print("\n🎯 All tensor functionality verified:")
+    print("   ✅ Tensor creation from various data types")
+    print("   ✅ Property access (shape, size, dtype, data)")
+    print("   ✅ Arithmetic operations (+, -, *, /)")
+    print("   ✅ Matrix operations (matmul @, sum, transpose .T)")
+    print("   ✅ NumPy integration and compatibility")
+    print("\n🚀 Tensor module complete!")
+    print("Ready to build neural networks with your tensor foundation!")
 
 # %% [markdown]
 """
