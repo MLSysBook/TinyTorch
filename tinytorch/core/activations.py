@@ -18,6 +18,14 @@ except ImportError:
     sys.path.append(os.path.join(os.path.dirname(__file__), '..', '01_tensor'))
     from tensor_dev import Tensor
 
+# Import Variable for autograd support
+try:
+    from tinytorch.core.autograd import Variable
+except ImportError:
+    # For development, import from local autograd module
+    sys.path.append(os.path.join(os.path.dirname(__file__), '..', '09_autograd'))
+    from autograd_dev import Variable
+
 # %% ../../modules/source/03_activations/activations_dev.ipynb 7
 class ReLU:
     """
@@ -31,33 +39,43 @@ class ReLU:
         """
         Apply ReLU activation: f(x) = max(0, x)
         
-        TODO: Implement ReLU activation function.
+        Now supports both Tensor and Variable inputs with automatic differentiation.
         
         STEP-BY-STEP IMPLEMENTATION:
-        1. For each element in the input tensor, apply max(0, element)
-        2. Use NumPy's maximum function for efficient element-wise operation
-        3. Return a new tensor of the same type with the results
-        4. Preserve the input tensor's shape
+        1. Check if input is Variable (for autograd) or Tensor
+        2. For each element in the input tensor, apply max(0, element)
+        3. If input is Variable: create Variable output with proper gradient function
+        4. If input is Tensor: return Tensor as before
+        
+        MATHEMATICAL FOUNDATION:
+        - Forward: f(x) = max(0, x)
+        - Backward: f'(x) = 1 if x > 0, else 0
         
         EXAMPLE USAGE:
         ```python
         relu = ReLU()
-        input_tensor = Tensor([[-2, -1, 0, 1, 2]])
-        output = relu(input_tensor)
-        print(output.data)  # [[0, 0, 0, 1, 2]]
+        # With Tensor (no gradients)
+        tensor_input = Tensor([[-2, -1, 0, 1, 2]])
+        tensor_output = relu(tensor_input)
+        
+        # With Variable (with gradients)
+        var_input = Variable([[-2, -1, 0, 1, 2]], requires_grad=True)
+        var_output = relu(var_input)
+        var_output.backward()
+        print(var_input.grad)  # Gradients: [0, 0, 0, 1, 1]
         ```
         
         IMPLEMENTATION HINTS:
-        - Use np.maximum(0, x.data) for element-wise max with 0
-        - Return the same type as input: return type(x)(result)
-        - The shape should remain the same as input
-        - Do not modify the input tensor (immutable operations)
+        - Check type with hasattr(x, 'requires_grad')
+        - For Variables: implement gradient function for backward pass
+        - ReLU gradient: 1 where input > 0, 0 elsewhere
+        - Use np.maximum(0, x.data) for forward pass
         
         LEARNING CONNECTIONS:
-        - This is like torch.nn.ReLU() in PyTorch
-        - Used in virtually every modern neural network
-        - Enables deep networks by preventing vanishing gradients
-        - Creates sparse representations (many zeros)
+        - This is like torch.nn.ReLU() in PyTorch with autograd support
+        - Enables gradient-based training of neural networks
+        - ReLU's simple gradient (0 or 1) prevents vanishing gradients
+        - Creates sparse representations and efficient gradient flow
         """
         ### BEGIN SOLUTION
         # Check if input is a Variable (autograd-enabled)
@@ -74,21 +92,11 @@ class ReLU:
                     # ReLU gradient: 1 where input > 0, 0 elsewhere
                     relu_mask = (input_data > 0).astype(np.float32)
                     grad_input_data = grad_output.data.data * relu_mask
-                    # Import Variable locally to avoid circular imports
-                    try:
-                        from tinytorch.core.autograd import Variable
-                    except ImportError:
-                        from autograd_dev import Variable
                     grad_input = Variable(grad_input_data)
                     x.backward(grad_input)
             
             # Return Variable with gradient function
             requires_grad = x.requires_grad
-            # Import Variable locally to avoid circular imports
-            try:
-                from tinytorch.core.autograd import Variable
-            except ImportError:
-                from autograd_dev import Variable
             result = Variable(output_data, requires_grad=requires_grad, grad_fn=relu_grad_fn if requires_grad else None)
             return result
         else:
@@ -114,53 +122,68 @@ class Sigmoid:
         """
         Apply Sigmoid activation: f(x) = 1 / (1 + e^(-x))
         
-        TODO: Implement Sigmoid activation function.
+        Now supports both Tensor and Variable inputs with automatic differentiation.
         
         STEP-BY-STEP IMPLEMENTATION:
-        1. Compute the negative of input: -x.data
-        2. Compute the exponential: np.exp(-x.data)
-        3. Add 1 to the exponential: 1 + np.exp(-x.data)
-        4. Take the reciprocal: 1 / (1 + np.exp(-x.data))
-        5. Return as new Tensor
+        1. Check if input is Variable (for autograd) or Tensor
+        2. Compute sigmoid: 1 / (1 + exp(-x))
+        3. If input is Variable: create Variable output with proper gradient function
+        4. If input is Tensor: return Tensor as before
+        
+        MATHEMATICAL FOUNDATION:
+        - Forward: f(x) = 1 / (1 + e^(-x))
+        - Backward: f'(x) = f(x) * (1 - f(x)) = sigmoid(x) * (1 - sigmoid(x))
         
         EXAMPLE USAGE:
         ```python
         sigmoid = Sigmoid()
-        input_tensor = Tensor([[-2, -1, 0, 1, 2]])
-        output = sigmoid(input_tensor)
-        print(output.data)  # [[0.119, 0.269, 0.5, 0.731, 0.881]]
+        # With Variable (with gradients)
+        var_input = Variable([[0.0]], requires_grad=True)
+        var_output = sigmoid(var_input)  # 0.5
+        var_output.backward()
+        print(var_input.grad)  # 0.25 = 0.5 * (1 - 0.5)
         ```
         
         IMPLEMENTATION HINTS:
-        - Use np.exp() for exponential function
-        - Formula: 1 / (1 + np.exp(-x.data))
-        - Handle potential overflow with np.clip(-x.data, -500, 500)
-        - Return Tensor(result)
+        - Check type with hasattr(x, 'requires_grad')
+        - For Variables: implement gradient function for backward pass
+        - Sigmoid gradient: sigmoid(x) * (1 - sigmoid(x))
+        - Use numerical stability: clip inputs to prevent overflow
         
         LEARNING CONNECTIONS:
-        - This is like torch.nn.Sigmoid() in PyTorch
-        - Used in binary classification output layers
-        - Key component in LSTM and GRU gating mechanisms
-        - Historically important for early neural networks
+        - This is like torch.nn.Sigmoid() in PyTorch with autograd support
+        - Used in binary classification and gating mechanisms
+        - Smooth gradients enable stable training
+        - Self-normalizing gradient (max at x=0, decreases at extremes)
         """
         ### BEGIN SOLUTION
-        # Handle both Variable (x.data) and Tensor (x._data) inputs
-        if hasattr(x, 'data'):
-            # x is a Variable, get the tensor data
-            if hasattr(x.data, '_data'):
-                # x.data is a Tensor
-                data = x.data._data
-            else:
-                # x.data is already numpy array
-                data = x.data
+        # Check if input is a Variable (autograd-enabled)
+        if hasattr(x, 'requires_grad') and hasattr(x, 'grad_fn'):
+            # Input is a Variable - preserve autograd capabilities
+            
+            # Forward pass: Sigmoid activation with numerical stability
+            input_data = x.data.data if hasattr(x.data, 'data') else x.data
+            clipped_input = np.clip(-input_data, -500, 500)
+            output_data = 1 / (1 + np.exp(clipped_input))
+            
+            # Create gradient function for backward pass
+            def sigmoid_grad_fn(grad_output):
+                if x.requires_grad:
+                    # Sigmoid gradient: sigmoid(x) * (1 - sigmoid(x))
+                    sigmoid_grad = output_data * (1 - output_data)
+                    grad_input_data = grad_output.data.data * sigmoid_grad
+                    grad_input = Variable(grad_input_data)
+                    x.backward(grad_input)
+            
+            # Return Variable with gradient function
+            requires_grad = x.requires_grad
+            result = Variable(output_data, requires_grad=requires_grad, grad_fn=sigmoid_grad_fn if requires_grad else None)
+            return result
         else:
-            # x is a Tensor
-            data = x._data
-        
-        # Clip to prevent overflow
-        clipped_input = np.clip(-data, -500, 500)
-        result = 1 / (1 + np.exp(clipped_input))
-        return type(x)(result)
+            # Input is a Tensor - use original implementation
+            clipped_input = np.clip(-x.data, -500, 500)
+            result = 1 / (1 + np.exp(clipped_input))
+            return type(x)(result)
         ### END SOLUTION
     
     def __call__(self, x):
@@ -176,43 +199,70 @@ class Tanh:
     Better gradient properties than sigmoid.
     """
     
-    def forward(self, x: Tensor) -> Tensor:
+    def forward(self, x):
         """
         Apply Tanh activation: f(x) = (e^x - e^(-x)) / (e^x + e^(-x))
         
-        TODO: Implement Tanh activation function.
+        Now supports both Tensor and Variable inputs with automatic differentiation.
         
         STEP-BY-STEP IMPLEMENTATION:
-        1. Use NumPy's built-in tanh function: np.tanh(x.data)
-        2. Alternatively, implement manually:
-           - Compute e^x and e^(-x)
-           - Calculate (e^x - e^(-x)) / (e^x + e^(-x))
-        3. Return as new Tensor
+        1. Check if input is Variable (for autograd) or Tensor
+        2. Compute tanh: (e^x - e^(-x)) / (e^x + e^(-x))
+        3. If input is Variable: create Variable output with proper gradient function
+        4. If input is Tensor: return Tensor as before
+        
+        MATHEMATICAL FOUNDATION:
+        - Forward: f(x) = tanh(x)
+        - Backward: f'(x) = 1 - tanh²(x) = 1 - f(x)²
         
         EXAMPLE USAGE:
         ```python
         tanh = Tanh()
-        input_tensor = Tensor([[-2, -1, 0, 1, 2]])
-        output = tanh(input_tensor)
-        print(output.data)  # [[-0.964, -0.762, 0, 0.762, 0.964]]
+        # With Variable (with gradients)
+        var_input = Variable([[0.0]], requires_grad=True)
+        var_output = tanh(var_input)  # 0.0
+        var_output.backward()
+        print(var_input.grad)  # 1.0 = 1 - 0²
         ```
         
         IMPLEMENTATION HINTS:
-        - Use np.tanh(x.data) for simplicity
-        - Manual implementation: (np.exp(x.data) - np.exp(-x.data)) / (np.exp(x.data) + np.exp(-x.data))
-        - Handle overflow by clipping inputs: np.clip(x.data, -500, 500)
-        - Return Tensor(result)
+        - Check type with hasattr(x, 'requires_grad')
+        - For Variables: implement gradient function for backward pass
+        - Tanh gradient: 1 - tanh²(x)
+        - Use np.tanh() for numerical stability
         
         LEARNING CONNECTIONS:
-        - This is like torch.nn.Tanh() in PyTorch
+        - This is like torch.nn.Tanh() in PyTorch with autograd support
         - Used in RNN, LSTM, and GRU cells
-        - Better than sigmoid for hidden layers
-        - Zero-centered outputs help with gradient flow
+        - Zero-centered outputs improve gradient flow
+        - Strong gradients near zero, weaker at extremes
         """
         ### BEGIN SOLUTION
-        # Use NumPy's built-in tanh function
-        result = np.tanh(x.data)
-        return type(x)(result)
+        # Check if input is a Variable (autograd-enabled)
+        if hasattr(x, 'requires_grad') and hasattr(x, 'grad_fn'):
+            # Input is a Variable - preserve autograd capabilities
+            
+            # Forward pass: Tanh activation
+            input_data = x.data.data if hasattr(x.data, 'data') else x.data
+            output_data = np.tanh(input_data)
+            
+            # Create gradient function for backward pass
+            def tanh_grad_fn(grad_output):
+                if x.requires_grad:
+                    # Tanh gradient: 1 - tanh²(x)
+                    tanh_grad = 1 - output_data ** 2
+                    grad_input_data = grad_output.data.data * tanh_grad
+                    grad_input = Variable(grad_input_data)
+                    x.backward(grad_input)
+            
+            # Return Variable with gradient function
+            requires_grad = x.requires_grad
+            result = Variable(output_data, requires_grad=requires_grad, grad_fn=tanh_grad_fn if requires_grad else None)
+            return result
+        else:
+            # Input is a Tensor - use original implementation
+            result = np.tanh(x.data)
+            return type(x)(result)
         ### END SOLUTION
     
     def __call__(self, x: Tensor) -> Tensor:
@@ -232,54 +282,51 @@ class Softmax:
         """
         Apply Softmax activation: f(x_i) = e^(x_i) / Σ(e^(x_j))
         
-        TODO: Implement Softmax activation function.
+        Now supports both Tensor and Variable inputs with automatic differentiation.
         
         STEP-BY-STEP IMPLEMENTATION:
-        1. Handle empty input case
-        2. Subtract max value for numerical stability: x - max(x)
-        3. Compute exponentials: np.exp(x - max(x))
-        4. Compute sum of exponentials: np.sum(exp_values)
-        5. Divide each exponential by the sum: exp_values / sum
-        6. Return as same tensor type as input
+        1. Check if input is Variable (for autograd) or Tensor
+        2. Compute softmax with numerical stability
+        3. If input is Variable: create Variable output with proper gradient function
+        4. If input is Tensor: return Tensor as before
+        
+        MATHEMATICAL FOUNDATION:
+        - Forward: f(x_i) = e^(x_i) / Σ(e^(x_j))
+        - Backward: ∂f_i/∂x_j = f_i * (δ_ij - f_j) where δ_ij is Kronecker delta
+        - Simplified: ∂f_i/∂x_i = f_i * (1 - f_i), ∂f_i/∂x_j = -f_i * f_j (i ≠ j)
         
         EXAMPLE USAGE:
         ```python
         softmax = Softmax()
-        input_tensor = Tensor([[1, 2, 3]])
-        output = softmax(input_tensor)
-        print(output.data)  # [[0.09, 0.24, 0.67]]
-        print(np.sum(output.data))  # 1.0
+        # With Variable (with gradients)
+        var_input = Variable([[1.0, 2.0]], requires_grad=True)
+        var_output = softmax(var_input)
+        var_output.backward(Variable([[1.0, 0.0]]))
+        # Gradients computed automatically
         ```
         
         IMPLEMENTATION HINTS:
-        - Handle empty case: if x.data.size == 0: return type(x)(x.data.copy())
-        - Subtract max for numerical stability: x_shifted = x.data - np.max(x.data, axis=-1, keepdims=True)
-        - Compute exponentials: exp_values = np.exp(x_shifted)
-        - Sum along last axis: sum_exp = np.sum(exp_values, axis=-1, keepdims=True)
-        - Divide: result = exp_values / sum_exp
-        - Return same type as input: return type(x)(result)
+        - Check type with hasattr(x, 'requires_grad')
+        - For Variables: implement gradient function for backward pass
+        - Softmax gradient: Jacobian matrix with f_i * (δ_ij - f_j)
+        - Use numerical stability: subtract max before exponential
         
         LEARNING CONNECTIONS:
-        - This is like torch.nn.Softmax() in PyTorch
-        - Used in classification output layers
-        - Key component in attention mechanisms
-        - Enables probability-based decision making
+        - This is like torch.nn.Softmax() in PyTorch with autograd support
+        - Used in classification and attention mechanisms
+        - Converts logits to probability distributions
+        - Complex gradient structure due to normalization
         """
         ### BEGIN SOLUTION
         # Check if input is a Variable (autograd-enabled)
         if hasattr(x, 'requires_grad') and hasattr(x, 'grad_fn'):
             # Input is a Variable - preserve autograd capabilities
             
-            # Forward pass: Softmax activation
+            # Forward pass: Softmax activation with numerical stability
             input_data = x.data.data if hasattr(x.data, 'data') else x.data
             
             # Handle empty input
             if input_data.size == 0:
-                # Import Variable locally to avoid circular imports
-                try:
-                    from tinytorch.core.autograd import Variable
-                except ImportError:
-                    from autograd_dev import Variable
                 return Variable(input_data.copy(), requires_grad=x.requires_grad)
             
             # Subtract max for numerical stability
@@ -297,23 +344,16 @@ class Softmax:
             # Create gradient function for backward pass
             def softmax_grad_fn(grad_output):
                 if x.requires_grad:
-                    # Softmax gradient: softmax(x) * (grad_output - (softmax(x) * grad_output).sum())
-                    grad_input_data = output_data * (grad_output.data.data - np.sum(output_data * grad_output.data.data, axis=-1, keepdims=True))
-                    # Import Variable locally to avoid circular imports
-                    try:
-                        from tinytorch.core.autograd import Variable
-                    except ImportError:
-                        from autograd_dev import Variable
+                    # Softmax gradient: for each element i,j: ∂f_i/∂x_j = f_i * (δ_ij - f_j)
+                    # For vector input, this becomes: grad_input = softmax * (grad_output - (softmax * grad_output).sum(keepdims=True))
+                    grad_out_data = grad_output.data.data
+                    softmax_grad_sum = np.sum(output_data * grad_out_data, axis=-1, keepdims=True)
+                    grad_input_data = output_data * (grad_out_data - softmax_grad_sum)
                     grad_input = Variable(grad_input_data)
                     x.backward(grad_input)
             
             # Return Variable with gradient function
             requires_grad = x.requires_grad
-            # Import Variable locally to avoid circular imports
-            try:
-                from tinytorch.core.autograd import Variable
-            except ImportError:
-                from autograd_dev import Variable
             result = Variable(output_data, requires_grad=requires_grad, grad_fn=softmax_grad_fn if requires_grad else None)
             return result
         else:
@@ -341,7 +381,7 @@ class Softmax:
         """Make the class callable: softmax(x) instead of softmax.forward(x)"""
         return self.forward(x)
 
-# %% ../../modules/source/03_activations/activations_dev.ipynb 26
+# %% ../../modules/source/03_activations/activations_dev.ipynb 30
 import time
 
 class ActivationProfiler:

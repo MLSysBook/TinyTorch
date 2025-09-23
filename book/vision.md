@@ -119,11 +119,11 @@ Every component implemented from scratch:
 - Complete training loops with checkpointing and monitoring
 
 ### 2. Use Immediately
-No toy examples - real applications:
-- Train CNNs on CIFAR-10 (90%+ accuracy achievable)
-- Implement transformer attention mechanisms
-- Deploy production systems with MLOps monitoring
-- Profile and optimize for performance bottlenecks
+No toy examples - recreate ML history with real results:
+- **MLP Era**: Train MLPs to 52.7% CIFAR-10 accuracy (the baseline that motivated CNNs)
+- **CNN Revolution**: Build LeNet-1 (39.4%) and LeNet-5 (47.5%) - witness the breakthrough
+- **Modern CNNs**: Push beyond MLPs with optimized architectures (55%+ achievable)
+- **Transformer Era**: Language models using 95% vision framework reuse
 
 ### 3. Understand Systems
 Connect implementations to production reality:

@@ -22,52 +22,55 @@ parts:
   - file: chapters/00-introduction
     title: "Introduction"
 
-- caption: Foundation
+- caption: "🧠 MLP Era Foundation (1980s)"
   chapters:
   - file: chapters/01-setup
-    title: "0. Setup"
+    title: "1. Setup"
   - file: chapters/02-tensor
-    title: "1. Tensors"
+    title: "2. Tensors"
   - file: chapters/03-activations
-    title: "2. Activations"
-
-- caption: Building Blocks
-  chapters:
+    title: "3. Activations" 
   - file: chapters/04-layers
-    title: "3. Layers"
-  - file: chapters/05-dense
-    title: "4. Dense"
-  - file: chapters/06-spatial
-    title: "5. Spatial"
-  - file: chapters/07-attention
-    title: "6. Attention"
+    title: "4. Layers"
 
-- caption: Training Systems  
+- caption: "🧠 MLP Intelligence (1980s)"
   chapters:
-  - file: chapters/08-dataloader
-    title: "7. DataLoader"
-  - file: chapters/09-autograd
-    title: "8. Autograd"
-  - file: chapters/10-optimizers
-    title: "9. Optimizers"
+  - file: chapters/05-dense
+    title: "5. Dense Networks"
   - file: chapters/11-training
-    title: "10. Training"
+    title: "6. Training (52.7% baseline)"
 
-- caption: Inference & Serving
+- caption: "📡 CNN Revolution (1989-1998)"
+  chapters:
+  - file: chapters/06-spatial
+    title: "7. Spatial Convolutions"
+  - file: chapters/08-dataloader
+    title: "8. DataLoader (CIFAR-10)"
+
+- caption: "🔥 Modern Training Systems"  
+  chapters:
+  - file: chapters/09-autograd
+    title: "9. Autograd"
+  - file: chapters/10-optimizers
+    title: "10. Optimizers"
+  - file: chapters/07-attention
+    title: "11. Attention Mechanisms"
+
+- caption: "🚀 Production Systems"
   chapters:
   - file: chapters/12-compression
-    title: "11. Compression"
+    title: "12. Compression"
   - file: chapters/13-kernels
-    title: "12. Kernels"
+    title: "13. Kernels"
   - file: chapters/14-benchmarking
-    title: "13. Benchmarking"
+    title: "14. Benchmarking"
   - file: chapters/15-mlops
-    title: "14. MLOps"
+    title: "15. MLOps"
 
-- caption: Language Models
+- caption: "🤖 Universal Intelligence (2017+)"
   chapters:
   - file: chapters/16-tinygpt
-    title: "15. TinyGPT"
+    title: "16. TinyGPT"
 
 - caption: Additional Resources
   chapters:

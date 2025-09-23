@@ -109,11 +109,21 @@ def train_modern_cnn():
             optimizer.step()
             optimizer.zero_grad()
             
-            # Statistics
-            epoch_loss += loss.data.item() if hasattr(loss.data, 'item') else float(loss.data)
+            # Statistics - extract scalar value from Variable -> Tensor -> numpy scalar
+            if hasattr(loss.data, 'data'):
+                # loss.data is a Tensor, so get its numpy data
+                loss_value = loss.data.data.item() if hasattr(loss.data.data, 'item') else float(loss.data.data)
+            else:
+                # loss.data is already numpy
+                loss_value = loss.data.item() if hasattr(loss.data, 'item') else float(loss.data)
+            epoch_loss += loss_value
             
-            # Calculate accuracy
-            predicted = np.argmax(outputs.data, axis=1)
+            # Calculate accuracy - extract data from Variable -> Tensor -> numpy array
+            if hasattr(outputs.data, 'data'):
+                output_data = outputs.data.data
+            else:
+                output_data = outputs.data
+            predicted = np.argmax(output_data, axis=1)
             if hasattr(targets.data, 'data'):
                 target_data = targets.data.data
             else:

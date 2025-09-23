@@ -111,7 +111,14 @@ def train_xor_network():
             optimizer.step()
             optimizer.zero_grad()
             
-            total_loss += loss.data.item() if hasattr(loss.data, 'item') else float(loss.data)
+            # Extract scalar value from Variable -> Tensor -> numpy scalar
+            if hasattr(loss.data, 'data'):
+                # loss.data is a Tensor, so get its numpy data
+                loss_value = loss.data.data.item() if hasattr(loss.data.data, 'item') else float(loss.data.data)
+            else:
+                # loss.data is already numpy
+                loss_value = loss.data.item() if hasattr(loss.data, 'item') else float(loss.data)
+            total_loss += loss_value
         
         # Progress update
         if epoch % 100 == 0 or epoch == num_epochs - 1:
@@ -138,7 +145,11 @@ def test_xor_network(model):
         
         # Forward pass
         output = model(inputs)
-        predicted = output.data[0, 0]
+        # Extract scalar value from Variable -> Tensor -> numpy array
+        if hasattr(output.data, 'data'):
+            predicted = output.data.data[0, 0]
+        else:
+            predicted = output.data[0, 0]
         target = y[i, 0]
         
         # Binary classification threshold

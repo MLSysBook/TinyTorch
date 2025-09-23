@@ -1,84 +1,123 @@
-# TinyTorch Examples
+# TinyTorch Examples - Modern API
 
-**Complete Applications Built with Your Framework**
+**Professional ML Applications with Clean, PyTorch-like Interfaces**
 
-These examples demonstrate that the ML framework you built from scratch actually works! Each example is a real application that uses the components you created.
+These examples demonstrate TinyTorch's modern API that mirrors industry-standard PyTorch patterns. Students learn fundamental ML concepts while using professional development practices.
 
-## 📁 Example Structure
+## 🎯 Modern API Philosophy
 
-Each example folder contains clearly named files:
-- `train_*.py` - Training scripts that teach the model
-- `test_*.py` - Testing scripts that evaluate performance
-- `demo_*.py` - Interactive demonstrations
-- `utils.py` - Helper functions specific to that example
-- `README.md` - Detailed documentation for students
+**Clean APIs enhance learning rather than obscure it:**
+- Students still implement core algorithms (gradients, backpropagation, optimizers)
+- Professional patterns prepare students for industry
+- Reduced boilerplate lets students focus on concepts
+- Scalable practices work from toys to production
 
-## 🎯 The Three Capstone Examples
+## 📁 Available Examples
 
-### 1. **xornet/** - Neural Network Fundamentals
-**Proves**: Your neural networks can learn non-linear functions
+### 1. **mnist/** - Multi-Layer Perceptron Fundamentals
+**Neural Network Basics with Modern Patterns**
 
-Files:
-- `train_xor_network.py` - Trains a network to solve XOR
-- `visualize_decision_boundary.py` - Shows what the network learned
-- `README.md` - Explains why XOR is important
+- `train_mlp_modern_api.py` - Clean MLP implementation for digit classification
+- Demonstrates automatic parameter registration and collection
+- Shows modern training loop patterns with optimizers
 
-**What students learn**: XOR can't be solved linearly, but neural networks with hidden layers can solve it perfectly.
+**Key Learning**: Neural network fundamentals with professional interfaces
 
-### 2. **cifar10/** - Computer Vision 
-**Proves**: Your framework can handle real-world image classification
+### 2. **xornet/** - Nonlinear Learning
+**Proves Neural Networks Can Learn Complex Functions**
 
-Files:
-- `train_image_classifier.py` - Trains CNN on CIFAR-10 images
-- `test_random_baseline.py` - Shows random guessing gets ~10%
-- `evaluate_model.py` - Tests your trained model
-- `visualize_predictions.py` - Shows what the model sees
-- `README.md` - Explains computer vision concepts
+- `train_xor_modern_api.py` - Clean XOR solution using modern API
+- Demonstrates PyTorch-like model definition and training
+- Shows API comparison between old and new patterns
 
-**What students learn**: How convolutions extract features and how real ML systems train on actual data.
+**Key Learning**: Nonlinear function approximation with clean code
 
-### 3. **tinygpt/** - Language Models
-**Proves**: Your framework can build transformers and generate text
+### 3. **cifar10/** - Computer Vision
+**Real-World Image Classification**
 
-Files:
-- `train_language_model.py` - Trains GPT on text data
-- `generate_text.py` - Interactive text generation
-- `test_simple_patterns.py` - Verifies the model can learn
-- `tokenizer.py` - Text processing utilities
-- `README.md` - Explains language modeling
+- `train_cnn_modern_api.py` - CNN training with modern patterns
+- Full CIFAR-10 dataset loading and preprocessing
+- Professional model definition and training loops
 
-**What students learn**: How attention mechanisms enable language understanding and generation.
+**Key Learning**: Convolutional networks and real data handling
 
-## 🚀 Running the Examples
+## 🚀 Modern API Patterns Demonstrated
 
-Each example can be run immediately:
-
-```bash
-# XOR - Takes seconds, shows 100% accuracy
-cd examples/xornet
-python train_xor_network.py
-
-# CIFAR-10 - Takes minutes, achieves 55%+ accuracy  
-cd examples/cifar10
-python train_image_classifier.py
-
-# TinyGPT - Takes minutes, generates text
-cd examples/tinygpt
-python train_language_model.py
-python generate_text.py
+### Clean Model Definition
+```python
+class SimpleMLP(nn.Module):
+    def __init__(self):
+        super().__init__()
+        self.hidden1 = nn.Linear(784, 128)  # Auto-registered!
+        self.hidden2 = nn.Linear(128, 64)   # Auto-registered!
+        self.output = nn.Linear(64, 10)     # Auto-registered!
+    
+    def forward(self, x):
+        x = F.flatten(x, start_dim=1)
+        x = F.relu(self.hidden1(x))
+        x = F.relu(self.hidden2(x))
+        return self.output(x)
 ```
 
-## 📊 What Success Looks Like
+### Automatic Parameter Collection
+```python
+model = SimpleMLP()
+optimizer = optim.Adam(model.parameters())  # All parameters automatically collected!
+```
 
-- **XORNet**: 100% accuracy on XOR problem
-- **CIFAR-10**: 55%+ accuracy (5.5x better than random)
-- **TinyGPT**: Generates coherent character sequences
+### Professional Training Loop
+```python
+for epoch in range(num_epochs):
+    outputs = model(inputs)
+    loss = criterion(outputs, targets)
+    loss.backward()
+    optimizer.step()
+    optimizer.zero_grad()
+```
+
+## 🏃 Running the Examples
+
+```bash
+# From TinyTorch root directory
+
+# MNIST MLP - Quick demo with synthetic data
+python examples/mnist/train_mlp_modern_api.py
+
+# XOR Network - Seconds to solve, shows API comparison
+python examples/xornet/train_xor_modern_api.py
+
+# CIFAR-10 CNN - Real image classification (downloads data)
+python examples/cifar10/train_cnn_modern_api.py
+```
+
+## 📊 Expected Results
+
+- **MNIST MLP**: Learns synthetic data patterns quickly
+- **XOR Network**: 100% accuracy on XOR problem (given sufficient training)
+- **CIFAR-10 CNN**: 60%+ accuracy on real image classification
+
+## 🎓 Educational Value
+
+These examples prove that **modern APIs enhance educational outcomes**:
+
+1. **Faster Learning**: Students spend time on concepts, not boilerplate
+2. **Industry Preparation**: Patterns transfer directly to PyTorch/TensorFlow
+3. **Scalable Practices**: Same patterns work for research and production
+4. **Professional Development**: Real-world software engineering practices
+
+## 🔧 API Features Showcased
+
+- **Automatic Parameter Registration**: Models collect their own parameters
+- **Functional Interface**: F.relu, F.flatten for common operations
+- **Module System**: Hierarchical model construction
+- **Modern Optimizers**: Adam, SGD with automatic parameter collection
+- **Clean Training Loops**: Professional patterns for model training
 
 ## 💡 For Students
 
-These examples are the **proof that you succeeded**. You didn't just learn about neural networks - you built a framework capable of:
-- Learning any function (XORNet)
-- Classifying real images (CIFAR-10)
-- Generating language (TinyGPT)
+You've built a framework with **industry-standard interfaces** that can:
+- **Learn any function** (XOR, MNIST patterns)
+- **Process real data** (CIFAR-10 images)
+- **Scale to complex models** (CNNs, future transformers)
 
-This is what ML engineers do in production!
+This is exactly how professional ML engineers work!
