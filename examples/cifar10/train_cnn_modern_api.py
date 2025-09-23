@@ -74,7 +74,7 @@ def train_modern_cnn():
     model = ModernCNN()
     
     # Create optimizer - automatic parameter collection!
-    optimizer = optim.Adam(model.parameters(), lr=0.001)
+    optimizer = optim.Adam(model.parameters(), learning_rate=0.001)
     criterion = CrossEntropyLoss()
     
     # Load data
