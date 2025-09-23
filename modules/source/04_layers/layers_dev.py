@@ -371,14 +371,14 @@ By implementing Dense layers, you'll understand:
 
 # %% nbgrader={"grade": false, "grade_id": "dense-implementation", "locked": false, "schema_version": 3, "solution": true, "task": false}
 #| export
-class Dense(Module):
+class Linear(Module):
     """
-    Dense (Fully Connected) Layer implementation.
+    Linear (Fully Connected) Layer implementation.
     
     Applies the transformation: output = input @ weights + bias
     
     Inherits from Module for automatic parameter management and clean API.
-    This is equivalent to PyTorch's nn.Linear layer.
+    This is PyTorch's nn.Linear equivalent with the same name for familiarity.
     
     Features:
     - Automatic parameter registration (weights and bias)
@@ -388,14 +388,14 @@ class Dense(Module):
     
     def __init__(self, input_size: int, output_size: int, use_bias: bool = True):
         """
-        Initialize Dense layer with random weights and optional bias.
+        Initialize Linear layer with random weights and optional bias.
         
         Args:
             input_size: Number of input features
             output_size: Number of output features  
             use_bias: Whether to include bias term
         
-        TODO: Implement Dense layer initialization.
+        TODO: Implement Linear layer initialization.
         
         STEP-BY-STEP IMPLEMENTATION:
         1. Store input_size and output_size as instance variables
@@ -438,7 +438,7 @@ class Dense(Module):
     
     def forward(self, x: Union[Tensor, 'Variable']) -> Union[Tensor, 'Variable']:
         """
-        Forward pass through the Dense layer.
+        Forward pass through the Linear layer.
         
         Args:
             x: Input tensor or Variable (shape: ..., input_size)
@@ -505,11 +505,16 @@ class Dense(Module):
         return output
         ### END SOLUTION
 
+# Backward compatibility alias
+#| export  
+Dense = Linear
+
 # %% [markdown]
 """
-## Testing Dense Layer
+## Testing Linear Layer
 
-Let's verify our Dense layer works correctly with comprehensive tests.
+Let's verify our Linear layer works correctly with comprehensive tests.
+The tests use Dense for backward compatibility, but Dense is now an alias for Linear.
 """
 
 # %% nbgrader={"grade": true, "grade_id": "test-dense", "locked": true, "points": 3, "schema_version": 3, "solution": false, "task": false}
