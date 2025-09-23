@@ -681,7 +681,382 @@ Let's visualize the different network architectures for educational purposes:
 
 # %% [markdown]
 """
-## Step 5: Comprehensive Test - Complete Network Applications
+## Step 5: Weight Initialization Methods
+
+### Why Weight Initialization Matters
+Proper weight initialization is critical for training deep networks:
+
+- **Xavier Initialization**: Maintains variance across layers (good for tanh/sigmoid)
+- **He Initialization**: Designed for ReLU activations (prevents vanishing gradients)
+- **Uniform vs Normal**: Different distribution shapes affect training dynamics
+
+### Production Context
+- **PyTorch**: Uses Kaiming (He) initialization by default for ReLU networks
+- **TensorFlow**: Provides various initializers for different activation functions
+- **Critical**: Poor initialization can make networks untrainable
+"""
+
+# %% nbgrader={"grade": false, "grade_id": "weight-initialization", "locked": false, "schema_version": 3, "solution": true, "task": false}
+#| export
+def xavier_uniform_init(input_size: int, output_size: int) -> np.ndarray:
+    """
+    Xavier (Glorot) uniform initialization for neural network weights.
+    
+    Designed to maintain variance across layers, especially good for 
+    tanh and sigmoid activations.
+    
+    Formula: U(-sqrt(6/(fan_in + fan_out)), sqrt(6/(fan_in + fan_out)))
+    
+    Args:
+        input_size: Number of input features
+        output_size: Number of output features
+        
+    Returns:
+        Weight matrix with Xavier uniform initialization
+    """
+    limit = np.sqrt(6.0 / (input_size + output_size))
+    return np.random.uniform(-limit, limit, (input_size, output_size))
+
+def xavier_normal_init(input_size: int, output_size: int) -> np.ndarray:
+    """
+    Xavier (Glorot) normal initialization for neural network weights.
+    
+    Normal distribution version of Xavier initialization.
+    
+    Formula: N(0, sqrt(2/(fan_in + fan_out)))
+    
+    Args:
+        input_size: Number of input features
+        output_size: Number of output features
+        
+    Returns:
+        Weight matrix with Xavier normal initialization
+    """
+    std = np.sqrt(2.0 / (input_size + output_size))
+    return np.random.normal(0, std, (input_size, output_size))
+
+def he_uniform_init(input_size: int, output_size: int) -> np.ndarray:
+    """
+    He (Kaiming) uniform initialization for neural network weights.
+    
+    Designed specifically for ReLU activations to prevent vanishing gradients.
+    
+    Formula: U(-sqrt(6/fan_in), sqrt(6/fan_in))
+    
+    Args:
+        input_size: Number of input features
+        output_size: Number of output features
+        
+    Returns:
+        Weight matrix with He uniform initialization
+    """
+    limit = np.sqrt(6.0 / input_size)
+    return np.random.uniform(-limit, limit, (input_size, output_size))
+
+def he_normal_init(input_size: int, output_size: int) -> np.ndarray:
+    """
+    He (Kaiming) normal initialization for neural network weights.
+    
+    Normal distribution version of He initialization, most commonly used.
+    
+    Formula: N(0, sqrt(2/fan_in))
+    
+    Args:
+        input_size: Number of input features
+        output_size: Number of output features
+        
+    Returns:
+        Weight matrix with He normal initialization
+    """
+    std = np.sqrt(2.0 / input_size)
+    return np.random.normal(0, std, (input_size, output_size))
+
+# %% [markdown]
+"""
+### 🧪 Unit Test: Weight Initialization Methods
+
+Let's test the weight initialization functions to ensure they produce properly scaled weights.
+"""
+
+# %% nbgrader={"grade": true, "grade_id": "test-weight-init", "locked": true, "points": 10, "schema_version": 3, "solution": false, "task": false}
+def test_unit_weight_initialization():
+    """Unit test for weight initialization methods."""
+    print("🔬 Unit Test: Weight Initialization Methods...")
+    
+    input_size, output_size = 100, 50
+    
+    # Test Xavier uniform
+    xavier_uniform_weights = xavier_uniform_init(input_size, output_size)
+    expected_limit = np.sqrt(6.0 / (input_size + output_size))
+    assert np.all(np.abs(xavier_uniform_weights) <= expected_limit), "Xavier uniform weights out of range"
+    assert xavier_uniform_weights.shape == (input_size, output_size), "Xavier uniform shape incorrect"
+    print("✅ Xavier uniform initialization works correctly")
+    
+    # Test Xavier normal
+    xavier_normal_weights = xavier_normal_init(input_size, output_size)
+    expected_std = np.sqrt(2.0 / (input_size + output_size))
+    actual_std = np.std(xavier_normal_weights)
+    assert abs(actual_std - expected_std) < 0.1, f"Xavier normal std {actual_std} != expected {expected_std}"
+    assert xavier_normal_weights.shape == (input_size, output_size), "Xavier normal shape incorrect"
+    print("✅ Xavier normal initialization works correctly")
+    
+    # Test He uniform
+    he_uniform_weights = he_uniform_init(input_size, output_size)
+    expected_limit = np.sqrt(6.0 / input_size)
+    assert np.all(np.abs(he_uniform_weights) <= expected_limit), "He uniform weights out of range"
+    assert he_uniform_weights.shape == (input_size, output_size), "He uniform shape incorrect"
+    print("✅ He uniform initialization works correctly")
+    
+    # Test He normal
+    he_normal_weights = he_normal_init(input_size, output_size)
+    expected_std = np.sqrt(2.0 / input_size)
+    actual_std = np.std(he_normal_weights)
+    assert abs(actual_std - expected_std) < 0.1, f"He normal std {actual_std} != expected {expected_std}"
+    assert he_normal_weights.shape == (input_size, output_size), "He normal shape incorrect"
+    print("✅ He normal initialization works correctly")
+    
+    print("🎯 All weight initialization methods work correctly")
+
+# Test function defined (called in main block)
+
+# %% [markdown]
+"""
+### 📊 Performance Analysis: Weight Initialization Impact
+
+Let's analyze how different initialization methods affect network behavior.
+"""
+
+# %% nbgrader={"grade": false, "grade_id": "weight-init-analysis", "locked": false, "schema_version": 3, "solution": false, "task": false}
+def analyze_initialization_impact():
+    """Analyze the impact of different weight initialization methods."""
+    print("📊 WEIGHT INITIALIZATION IMPACT ANALYSIS")
+    print("=" * 50)
+    
+    # Create networks with different initializations
+    input_size, hidden_size, output_size = 10, 20, 1
+    
+    # Test different initialization methods
+    init_methods = {
+        "Xavier Uniform": lambda: xavier_uniform_init(input_size, hidden_size),
+        "Xavier Normal": lambda: xavier_normal_init(input_size, hidden_size),
+        "He Uniform": lambda: he_uniform_init(input_size, hidden_size),
+        "He Normal": lambda: he_normal_init(input_size, hidden_size),
+        "Random Normal": lambda: np.random.normal(0, 1, (input_size, hidden_size))
+    }
+    
+    # Create test input
+    x = Tensor(np.random.randn(5, input_size))
+    
+    print(f"\n🔍 Analyzing activation statistics for different initializations:")
+    
+    for init_name, init_func in init_methods.items():
+        # Create network with specific initialization
+        network = Sequential([
+            Dense(input_size, hidden_size),
+            ReLU(),
+            Dense(hidden_size, output_size)
+        ])
+        
+        # Override weights with specific initialization
+        network.layers[0].weights.data[:] = init_func()
+        network.layers[2].weights.data[:] = xavier_normal_init(hidden_size, output_size)
+        
+        # Forward pass
+        try:
+            hidden_output = network.layers[0](x)
+            final_output = network(x)
+            
+            print(f"\n📈 {init_name}:")
+            print(f"   Hidden layer output mean: {np.mean(hidden_output.data):.4f}")
+            print(f"   Hidden layer output std:  {np.std(hidden_output.data):.4f}")
+            print(f"   Final output range: [{np.min(final_output.data):.4f}, {np.max(final_output.data):.4f}]")
+            
+            # Check for dead neurons (ReLU outputs all zeros)
+            relu_output = network.layers[1](hidden_output)
+            dead_neurons = np.sum(np.all(relu_output.data == 0, axis=0))
+            print(f"   Dead neurons: {dead_neurons}/{hidden_size}")
+            
+        except Exception as e:
+            print(f"   ❌ Forward pass failed: {str(e)}")
+
+analyze_initialization_impact()
+
+# %% [markdown]
+"""
+## Step 6: Complete NeuralNetwork Class
+
+### Production-Ready Neural Network Class
+Let's implement a complete NeuralNetwork class that provides parameter management 
+and professional network interfaces similar to PyTorch's nn.Module.
+"""
+
+# %% nbgrader={"grade": false, "grade_id": "neural-network-class", "locked": false, "schema_version": 3, "solution": true, "task": false}
+#| export
+class NeuralNetwork:
+    """
+    Complete Neural Network class with parameter management.
+    
+    Provides a professional interface for neural networks similar to PyTorch's nn.Module.
+    Includes parameter counting, initialization options, and state management.
+    """
+    
+    def __init__(self, layers: List = None, name: str = "NeuralNetwork"):
+        """
+        Initialize neural network with layers and metadata.
+        
+        Args:
+            layers: List of layers to include in the network
+            name: Name for the network (useful for logging/debugging)
+        """
+        self.layers = layers if layers is not None else []
+        self.name = name
+        self._training = True
+        
+    def forward(self, x: Tensor) -> Tensor:
+        """Forward pass through all layers."""
+        for layer in self.layers:
+            x = layer(x)
+        return x
+    
+    def __call__(self, x: Tensor) -> Tensor:
+        """Make network callable."""
+        return self.forward(x)
+    
+    def add_layer(self, layer):
+        """Add a layer to the network."""
+        self.layers.append(layer)
+    
+    def count_parameters(self) -> dict:
+        """
+        Count trainable parameters in the network.
+        
+        Returns:
+            Dictionary with parameter counts and memory estimates
+        """
+        total_params = 0
+        layer_info = []
+        
+        for i, layer in enumerate(self.layers):
+            layer_params = 0
+            if hasattr(layer, 'weights'):
+                layer_params += layer.weights.data.size
+            if hasattr(layer, 'bias'):
+                layer_params += layer.bias.data.size
+            
+            layer_info.append({
+                'layer_index': i,
+                'layer_type': type(layer).__name__,
+                'parameters': layer_params
+            })
+            total_params += layer_params
+        
+        # Estimate memory usage (float32 = 4 bytes)
+        memory_mb = (total_params * 4) / (1024 * 1024)
+        
+        return {
+            'total_parameters': total_params,
+            'memory_estimate_mb': memory_mb,
+            'layer_breakdown': layer_info
+        }
+    
+    def initialize_weights(self, method: str = "he_normal"):
+        """
+        Initialize all network weights using specified method.
+        
+        Args:
+            method: Initialization method ("xavier_uniform", "xavier_normal", 
+                   "he_uniform", "he_normal")
+        """
+        init_functions = {
+            "xavier_uniform": xavier_uniform_init,
+            "xavier_normal": xavier_normal_init,
+            "he_uniform": he_uniform_init,
+            "he_normal": he_normal_init
+        }
+        
+        if method not in init_functions:
+            raise ValueError(f"Unknown initialization method: {method}")
+        
+        init_func = init_functions[method]
+        
+        for layer in self.layers:
+            if hasattr(layer, 'weights'):
+                input_size, output_size = layer.weights.shape
+                layer.weights.data[:] = init_func(input_size, output_size)
+    
+    def summary(self):
+        """Print network architecture summary."""
+        print(f"🔥 {self.name} Architecture Summary")
+        print("=" * 50)
+        
+        param_info = self.count_parameters()
+        
+        print(f"{'Layer':<15} {'Type':<15} {'Parameters':<15}")
+        print("-" * 45)
+        
+        for layer_info in param_info['layer_breakdown']:
+            print(f"{layer_info['layer_index']:<15} "
+                  f"{layer_info['layer_type']:<15} "
+                  f"{layer_info['parameters']:,}")
+        
+        print("-" * 45)
+        print(f"Total Parameters: {param_info['total_parameters']:,}")
+        print(f"Memory Estimate: {param_info['memory_estimate_mb']:.2f} MB")
+        print("=" * 50)
+
+# %% [markdown]
+"""
+### 🧪 Unit Test: Complete NeuralNetwork Class
+
+Let's test the complete NeuralNetwork class with parameter management.
+"""
+
+# %% nbgrader={"grade": true, "grade_id": "test-neural-network-class", "locked": true, "points": 10, "schema_version": 3, "solution": false, "task": false}
+def test_unit_complete_neural_network():
+    """Unit test for the complete NeuralNetwork class."""
+    print("🔬 Unit Test: Complete NeuralNetwork Class...")
+    
+    # Create a network using the NeuralNetwork class
+    network = NeuralNetwork([
+        Dense(10, 20),
+        ReLU(),
+        Dense(20, 5),
+        ReLU(),
+        Dense(5, 1)
+    ], name="TestNetwork")
+    
+    # Test forward pass
+    x = Tensor(np.random.randn(3, 10))
+    y = network(x)
+    assert y.shape == (3, 1), "Network should produce correct output shape"
+    print("✅ Forward pass works correctly")
+    
+    # Test parameter counting
+    param_info = network.count_parameters()
+    expected_params = (10*20 + 20) + (20*5 + 5) + (5*1 + 1)  # weights + biases
+    assert param_info['total_parameters'] == expected_params, "Parameter count incorrect"
+    print("✅ Parameter counting works correctly")
+    
+    # Test weight initialization
+    network.initialize_weights("he_normal")
+    first_layer = network.layers[0]
+    assert hasattr(first_layer, 'weights'), "First layer should have weights"
+    print("✅ Weight initialization works correctly")
+    
+    # Test summary (should not crash)
+    try:
+        network.summary()
+        print("✅ Network summary works correctly")
+    except Exception as e:
+        print(f"❌ Network summary failed: {e}")
+    
+    print("🎯 Complete NeuralNetwork class works correctly")
+
+# Test function defined (called in main block)
+
+# %% [markdown]
+"""
+## Step 7: Comprehensive Test - Complete Network Applications
 
 ### Real-World Network Applications
 Let's test our networks on realistic scenarios:
@@ -1161,7 +1536,9 @@ class NetworkStabilityMonitor:
                 original_weight = first_layer.weights.data[0, 0]
                 
                 # Forward pass with small perturbation
-                first_layer.weights.data[0, 0] = original_weight + epsilon
+                weights_copy = first_layer.weights.data.copy()
+                weights_copy[0, 0] = original_weight + epsilon
+                first_layer.weights.data[:] = weights_copy
                 output_plus = network(input_tensor)
                 loss_plus = 0.5 * np.sum((output_plus.data - target_output.data)**2)
                 
@@ -1170,7 +1547,8 @@ class NetworkStabilityMonitor:
                 gradient_estimates.append(abs(grad_estimate))
                 
                 # Restore original weight
-                first_layer.weights.data[0, 0] = original_weight
+                weights_copy[0, 0] = original_weight
+                first_layer.weights.data[:] = weights_copy
         
         # Analyze gradient magnitudes
         if gradient_estimates:
@@ -1317,8 +1695,10 @@ def create_unstable_network_demo():
         ReLU(),
         Dense(5, 2)
     ])
-    # Inject NaN values
-    nan_net.layers[0].weights.data[0, 0] = np.nan
+    # Inject NaN values (create a copy and modify it)
+    weights_copy = nan_net.layers[0].weights.data.copy()
+    weights_copy[0, 0] = np.nan
+    nan_net.layers[0].weights.data[:] = weights_copy
     demo_networks['nan'] = nan_net
     print("   Created network with NaN values in weights")
     
@@ -1469,16 +1849,433 @@ print(f"- Enable automatic recovery strategies (restart training)")
 print(f"- Provide debugging information for model developers")
 print(f"- Critical for unattended training jobs in production")
 
+# %% [markdown]
+"""
+## 🔧 ML Systems Analysis: Memory Profiling and Performance Characteristics
+
+### Memory Analysis: Network Architecture Impact on System Resources
+
+Understanding memory usage patterns is critical for deploying networks in production environments with constrained resources.
+"""
+
+# %%
+import tracemalloc
+import time
+
+def profile_network_memory():
+    """
+    Profile memory usage patterns of different network architectures.
+    
+    This function demonstrates ML systems engineering by measuring actual
+    memory consumption, not just theoretical parameter counts.
+    """
+    print("💾 NETWORK MEMORY PROFILING")
+    print("=" * 50)
+    
+    # Start memory tracking
+    tracemalloc.start()
+    
+    architectures = [
+        ("Shallow Wide", create_mlp(100, [200], 10)),
+        ("Deep Narrow", create_mlp(100, [50, 50, 50, 50], 10)),
+        ("Balanced", create_mlp(100, [128, 64], 10)),
+        ("Very Deep", create_mlp(100, [32, 32, 32, 32, 32, 32], 10))
+    ]
+    
+    memory_profiles = []
+    
+    for arch_name, network in architectures:
+        # Clear memory tracking
+        tracemalloc.clear_traces()
+        start_mem = tracemalloc.get_traced_memory()[0]
+        
+        # Create batch of data and perform forward pass
+        batch_size = 64
+        x = Tensor(np.random.randn(batch_size, 100))
+        
+        # Time the forward pass
+        start_time = time.time()
+        y = network(x)
+        forward_time = time.time() - start_time
+        
+        # Get memory usage
+        current_mem, peak_mem = tracemalloc.get_traced_memory()
+        memory_mb = peak_mem / (1024 * 1024)
+        
+        # Count parameters
+        param_count = 0
+        for layer in network.layers:
+            if hasattr(layer, 'weights'):
+                param_count += layer.weights.data.size
+            if hasattr(layer, 'bias'):
+                param_count += layer.bias.data.size
+        
+        profile = {
+            'architecture': arch_name,
+            'parameters': param_count,
+            'memory_mb': memory_mb,
+            'forward_time_ms': forward_time * 1000,
+            'throughput_samples_per_sec': batch_size / forward_time
+        }
+        memory_profiles.append(profile)
+        
+        print(f"\n📊 {arch_name}:")
+        print(f"   Parameters: {param_count:,}")
+        print(f"   Memory Usage: {memory_mb:.2f} MB")
+        print(f"   Forward Time: {forward_time*1000:.2f} ms")
+        print(f"   Throughput: {batch_size/forward_time:.1f} samples/sec")
+    
+    tracemalloc.stop()
+    
+    print(f"\n🎯 MEMORY ENGINEERING INSIGHTS:")
+    print(f"=" * 40)
+    
+    # Find most memory efficient
+    min_memory = min(profiles['memory_mb'] for profiles in memory_profiles)
+    max_throughput = max(profiles['throughput_samples_per_sec'] for profiles in memory_profiles)
+    
+    for profile in memory_profiles:
+        if profile['memory_mb'] == min_memory:
+            print(f"   🏆 Most Memory Efficient: {profile['architecture']}")
+        if profile['throughput_samples_per_sec'] == max_throughput:
+            print(f"   🚀 Highest Throughput: {profile['architecture']}")
+    
+    print(f"\n💡 PRODUCTION IMPLICATIONS:")
+    print(f"   - Deep networks use more memory due to intermediate activations")
+    print(f"   - Wide networks may be faster but use more parameters")
+    print(f"   - Memory usage scales with batch size (important for deployment)")
+    print(f"   - Consider memory vs accuracy trade-offs for edge deployment")
+    
+    return memory_profiles
+
+# Run memory profiling
+memory_results = profile_network_memory()
+
+# %% [markdown]
+"""
+### Performance Characteristics: Computational Complexity Analysis
+
+Understanding how network architecture affects computational complexity is essential 
+for designing systems that scale to production workloads.
+"""
+
+# %%
+def analyze_computational_complexity():
+    """
+    Analyze computational complexity of different network operations.
+    
+    This function demonstrates ML systems thinking by measuring actual
+    performance characteristics, not just theoretical complexity.
+    """
+    print("⚡ COMPUTATIONAL COMPLEXITY ANALYSIS")
+    print("=" * 50)
+    
+    # Test different input sizes
+    input_sizes = [10, 50, 100, 500, 1000]
+    network_configs = [
+        ("Linear Scaling", lambda n: create_mlp(n, [n], 10)),
+        ("Quadratic Scaling", lambda n: create_mlp(n, [n*2, n], 10)),
+        ("Constant Hidden", lambda n: create_mlp(n, [128], 10))
+    ]
+    
+    print(f"\n📈 Timing analysis for different input sizes:")
+    print(f"{'Input Size':<12} {'Linear':<12} {'Quadratic':<12} {'Constant':<12}")
+    print("-" * 50)
+    
+    complexity_results = {}
+    
+    for input_size in input_sizes:
+        times = {}
+        
+        for config_name, network_func in network_configs:
+            # Create network for this input size
+            network = network_func(input_size)
+            
+            # Create test data
+            x = Tensor(np.random.randn(32, input_size))  # Batch of 32
+            
+            # Time multiple forward passes for accuracy
+            start_time = time.time()
+            for _ in range(10):
+                y = network(x)
+            total_time = time.time() - start_time
+            avg_time = total_time / 10
+            
+            times[config_name] = avg_time * 1000  # Convert to milliseconds
+        
+        complexity_results[input_size] = times
+        
+        print(f"{input_size:<12} "
+              f"{times['Linear Scaling']:<12.2f} "
+              f"{times['Quadratic Scaling']:<12.2f} "
+              f"{times['Constant Hidden']:<12.2f}")
+    
+    print(f"\n🎯 COMPLEXITY ENGINEERING INSIGHTS:")
+    print(f"=" * 40)
+    
+    # Analyze scaling behavior
+    small_input = complexity_results[input_sizes[0]]
+    large_input = complexity_results[input_sizes[-1]]
+    
+    for config_name in ['Linear Scaling', 'Quadratic Scaling', 'Constant Hidden']:
+        scaling_factor = large_input[config_name] / small_input[config_name]
+        input_scaling = input_sizes[-1] / input_sizes[0]
+        
+        print(f"\n📊 {config_name}:")
+        print(f"   Input scaled by: {input_scaling:.1f}x")
+        print(f"   Time scaled by: {scaling_factor:.1f}x")
+        
+        if config_name == 'Linear Scaling':
+            expected_scaling = input_scaling  # O(n) for weights
+            print(f"   Expected O(n): {expected_scaling:.1f}x")
+        elif config_name == 'Quadratic Scaling':
+            expected_scaling = input_scaling * input_scaling  # O(n²) for weights
+            print(f"   Expected O(n²): {expected_scaling:.1f}x")
+        else:
+            expected_scaling = input_scaling  # O(n) for input processing
+            print(f"   Expected O(n): {expected_scaling:.1f}x")
+    
+    print(f"\n💡 SCALING IMPLICATIONS:")
+    print(f"   - Network width (hidden layer size) affects memory linearly")
+    print(f"   - Network depth affects computation and memory linearly")
+    print(f"   - Input size affects computation linearly (for fixed architecture)")
+    print(f"   - Batch size affects memory and computation linearly")
+    print(f"   - Architecture choices have direct performance implications")
+    
+    return complexity_results
+
+# Run complexity analysis
+complexity_results = analyze_computational_complexity()
+
+# %% [markdown]
+"""
+### Scaling Behavior: Production Performance Characteristics
+
+Understanding how networks scale with different parameters is critical for 
+production deployment and resource planning.
+"""
+
+# %%
+def analyze_scaling_behavior():
+    """
+    Analyze how network performance scales with batch size and model complexity.
+    
+    This demonstrates production ML systems engineering by measuring
+    performance characteristics that affect deployment decisions.
+    """
+    print("📈 SCALING BEHAVIOR ANALYSIS")
+    print("=" * 50)
+    
+    # Test batch size scaling
+    batch_sizes = [1, 8, 16, 32, 64, 128]
+    network = create_mlp(100, [128, 64], 10)
+    
+    print(f"\n🔄 Batch Size Scaling (throughput analysis):")
+    print(f"{'Batch Size':<12} {'Time/Batch (ms)':<16} {'Samples/Sec':<12} {'Efficiency':<12}")
+    print("-" * 55)
+    
+    baseline_efficiency = None
+    
+    for batch_size in batch_sizes:
+        x = Tensor(np.random.randn(batch_size, 100))
+        
+        # Time multiple runs
+        start_time = time.time()
+        for _ in range(50):  # More runs for small batches
+            y = network(x)
+        total_time = time.time() - start_time
+        
+        time_per_batch = (total_time / 50) * 1000  # ms
+        samples_per_sec = batch_size / (total_time / 50)
+        
+        # Calculate efficiency (samples per second per parameter)
+        param_count = sum(layer.weights.data.size + layer.bias.data.size 
+                         for layer in network.layers if hasattr(layer, 'weights'))
+        efficiency = samples_per_sec / param_count * 1000  # Scale for readability
+        
+        if baseline_efficiency is None:
+            baseline_efficiency = efficiency
+        
+        relative_efficiency = efficiency / baseline_efficiency
+        
+        print(f"{batch_size:<12} "
+              f"{time_per_batch:<16.2f} "
+              f"{samples_per_sec:<12.1f} "
+              f"{relative_efficiency:<12.2f}")
+    
+    print(f"\n🎯 BATCH SIZE INSIGHTS:")
+    print(f"   - Larger batches improve throughput (better GPU utilization)")
+    print(f"   - Memory usage scales linearly with batch size")
+    print(f"   - Optimal batch size balances memory and throughput")
+    print(f"   - Production systems need batch size tuning")
+    
+    # Test network depth scaling
+    print(f"\n🏗️ Network Depth Scaling (architecture analysis):")
+    print(f"{'Depth':<8} {'Parameters':<12} {'Memory (MB)':<12} {'Time (ms)':<12} {'Accuracy Proxy':<15}")
+    print("-" * 65)
+    
+    depths = [1, 2, 3, 4, 5]
+    hidden_size = 64
+    input_size = 100
+    batch_size = 32
+    
+    for depth in depths:
+        # Create network with specified depth
+        hidden_sizes = [hidden_size] * depth
+        network = create_mlp(input_size, hidden_sizes, 10)
+        
+        # Count parameters
+        param_count = sum(layer.weights.data.size + layer.bias.data.size 
+                         for layer in network.layers if hasattr(layer, 'weights'))
+        
+        # Estimate memory (parameters + activations)
+        param_memory = param_count * 4 / (1024 * 1024)  # 4 bytes per float32
+        activation_memory = batch_size * hidden_size * depth * 4 / (1024 * 1024)
+        total_memory = param_memory + activation_memory
+        
+        # Time forward pass
+        x = Tensor(np.random.randn(batch_size, input_size))
+        start_time = time.time()
+        for _ in range(20):
+            y = network(x)
+        forward_time = (time.time() - start_time) / 20 * 1000
+        
+        # Simple "accuracy proxy" - output variance (more variance often means more capacity)
+        output_variance = np.var(y.data)
+        
+        print(f"{depth:<8} "
+              f"{param_count:<12,} "
+              f"{total_memory:<12.2f} "
+              f"{forward_time:<12.2f} "
+              f"{output_variance:<15.4f}")
+    
+    print(f"\n🎯 DEPTH SCALING INSIGHTS:")
+    print(f"   - Deeper networks have more parameters (capacity)")
+    print(f"   - Memory usage includes parameters + intermediate activations")
+    print(f"   - Forward pass time scales roughly linearly with depth")
+    print(f"   - Gradient computation (backprop) would scale with depth")
+    print(f"   - Production trade-off: capacity vs speed vs memory")
+    
+    print(f"\n💡 PRODUCTION SCALING DECISIONS:")
+    print(f"   🎯 Batch Size: Tune for hardware (GPU memory, throughput)")
+    print(f"   🏗️ Architecture: Balance capacity, speed, and memory")
+    print(f"   📊 Monitoring: Track throughput, latency, and resource usage")
+    print(f"   🔧 Optimization: Profile bottlenecks in production workloads")
+
+# Run scaling analysis
+analyze_scaling_behavior()
+
+# %% [markdown]
+"""
+### Production Context: How Real ML Systems Handle Network Architectures
+
+Understanding how production ML systems optimize network architectures provides insight
+into the engineering challenges of deploying neural networks at scale.
+"""
+
+# %%
+def demonstrate_production_patterns():
+    """
+    Demonstrate common production patterns for network architecture management.
+    
+    This shows how production ML systems handle the challenges we've explored:
+    memory management, performance optimization, and scalability.
+    """
+    print("🏭 PRODUCTION ML SYSTEMS PATTERNS")
+    print("=" * 50)
+    
+    print(f"\n1. 🎯 DYNAMIC BATCH SIZE OPTIMIZATION:")
+    print(f"   Production systems adjust batch sizes based on available memory:")
+    
+    # Simulate production batch size optimization
+    available_memory_mb = 4 * 1024  # 4GB GPU memory
+    network = create_mlp(1000, [512, 256], 100)
+    
+    # Estimate memory per sample
+    param_memory = sum(layer.weights.data.size + layer.bias.data.size 
+                      for layer in network.layers if hasattr(layer, 'weights')) * 4 / (1024 * 1024)
+    activation_memory_per_sample = (1000 + 512 + 256 + 100) * 4 / (1024 * 1024)
+    
+    max_batch_size = int((available_memory_mb - param_memory) / activation_memory_per_sample)
+    optimal_batch_size = min(max_batch_size, 128)  # Cap for numerical stability
+    
+    print(f"   📊 Memory Analysis:")
+    print(f"      Parameter memory: {param_memory:.2f} MB")
+    print(f"      Per-sample activation memory: {activation_memory_per_sample:.4f} MB")
+    print(f"      Maximum batch size: {max_batch_size}")
+    print(f"      Optimal batch size: {optimal_batch_size}")
+    
+    print(f"\n2. 🔧 MODEL ARCHITECTURE OPTIMIZATION:")
+    print(f"   Production systems use architecture search for deployment targets:")
+    
+    # Simulate different deployment targets
+    deployment_targets = {
+        "Cloud GPU": {"memory_limit_mb": 16*1024, "latency_limit_ms": 100},
+        "Edge Device": {"memory_limit_mb": 512, "latency_limit_ms": 50},
+        "Mobile": {"memory_limit_mb": 128, "latency_limit_ms": 20}
+    }
+    
+    for target_name, constraints in deployment_targets.items():
+        print(f"\n   🎯 {target_name} Optimization:")
+        
+        # Design network for this target
+        if target_name == "Cloud GPU":
+            network = create_mlp(1000, [512, 256, 128], 100)
+        elif target_name == "Edge Device":
+            network = create_mlp(1000, [128, 64], 100)
+        else:  # Mobile
+            network = create_mlp(1000, [64], 100)
+        
+        # Estimate performance
+        param_count = sum(layer.weights.data.size + layer.bias.data.size 
+                         for layer in network.layers if hasattr(layer, 'weights'))
+        memory_mb = param_count * 4 / (1024 * 1024)
+        
+        # Simple latency estimate (parameters affect computation)
+        latency_ms = param_count / 10000  # Rough estimate
+        
+        meets_memory = memory_mb <= constraints["memory_limit_mb"]
+        meets_latency = latency_ms <= constraints["latency_limit_ms"]
+        
+        print(f"      Parameters: {param_count:,}")
+        print(f"      Memory: {memory_mb:.1f} MB ({'✅' if meets_memory else '❌'} {constraints['memory_limit_mb']} MB limit)")
+        print(f"      Latency: {latency_ms:.1f} ms ({'✅' if meets_latency else '❌'} {constraints['latency_limit_ms']} ms limit)")
+    
+    print(f"\n3. 🔄 ADAPTIVE ARCHITECTURE PATTERNS:")
+    print(f"   Production systems adapt architectures based on runtime conditions:")
+    print(f"   • Early exit networks (BranchyNet pattern)")
+    print(f"   • Dynamic depth based on input complexity")
+    print(f"   • Cascade architectures (fast → accurate)")
+    print(f"   • Model ensembles with different speed/accuracy trade-offs")
+    
+    print(f"\n4. 📊 PRODUCTION MONITORING:")
+    print(f"   Real systems monitor network performance continuously:")
+    print(f"   • Throughput: samples/second, requests/minute")
+    print(f"   • Latency: P50, P95, P99 response times")
+    print(f"   • Resource usage: GPU/CPU utilization, memory consumption")
+    print(f"   • Quality: accuracy drift, prediction confidence")
+    
+    print(f"\n💡 PRODUCTION ENGINEERING TAKEAWAYS:")
+    print(f"   🎯 Architecture design is a systems engineering problem")
+    print(f"   ⚡ Performance characteristics drive deployment decisions")
+    print(f"   📊 Continuous monitoring enables optimization")
+    print(f"   🔧 Production systems require adaptive, not static, architectures")
+
+# Demonstrate production patterns
+demonstrate_production_patterns()
+
 if __name__ == "__main__":
     # Run all tests
     test_unit_network_architectures()
     test_unit_sequential_networks()
     test_unit_mlp_creation()
     test_unit_network_applications()
+    test_unit_weight_initialization()
+    test_unit_complete_neural_network()
     test_module_full_network_forward_pass()
     
     print("All tests passed!")
-    print("dense_dev module complete!")
+    print("networks_dev module complete!")
 
 # %% [markdown]
 """
@@ -1526,9 +2323,26 @@ GRADING RUBRIC (Instructor Use):
 """
 
 ### BEGIN SOLUTION
-# Student response area - instructor will replace this section during grading setup
-# This is a manually graded question requiring architectural analysis of network composition
-# Students should demonstrate understanding of complex architectural patterns and optimization
+"""
+To support complex architectural patterns beyond sequential composition, I would design a dynamic computational graph system with the following key components:
+
+**Graph-Based Architecture Framework:**
+- Replace linear Sequential with a DAG-based ComputationGraph class that supports arbitrary node connections
+- Implement ModuleNode wrappers that maintain input/output specifications and dependency tracking
+- Add support for branching through conditional execution nodes and merging through concatenation/addition nodes
+
+**Dynamic Architecture Support:**
+- Implement adaptive depth through early-exit mechanisms where inference can terminate at intermediate layers based on confidence thresholds
+- Add dynamic routing through gating networks that decide which computational paths to activate based on input characteristics
+- Support skip connections via residual blocks that maintain gradient flow and enable much deeper architectures
+
+**Optimization Strategies:**
+- Implement computational graph optimization through dead code elimination, operation fusion, and memory reuse analysis
+- Add device placement optimization that automatically distributes different graph regions across available hardware
+- Support just-in-time compilation of graph regions to optimize for specific hardware targets and input shapes
+
+This approach balances architectural flexibility with performance by maintaining explicit graph structure for optimization while enabling complex patterns like attention mechanisms, residual networks, and adaptive computation.
+"""
 ### END SOLUTION
 
 # %% [markdown]
@@ -1568,9 +2382,31 @@ GRADING RUBRIC (Instructor Use):
 """
 
 ### BEGIN SOLUTION
-# Student response area - instructor will replace this section during grading setup
-# This is a manually graded question requiring understanding of distributed training architecture
-# Students should demonstrate knowledge of model parallelism and communication optimization
+"""
+For efficient distributed training across multiple devices, I would architect a modular system with intelligent decomposition and communication strategies:
+
+**Model Decomposition Strategies:**
+- Implement layer-wise parallelism where different layers run on different devices, with pipeline parallelism to maintain throughput
+- Add tensor parallelism for large layers by splitting weight matrices across devices and using collective communication for gathering results
+- Support hybrid data+model parallelism where the batch is split across some devices while the model is split across others
+
+**Communication Optimization:**
+- Implement gradient compression techniques like quantization and sparsification to reduce bandwidth requirements
+- Add asynchronous communication overlap where gradient communication happens during backward pass computation
+- Use hierarchical communication patterns (intra-node vs inter-node) to optimize for network topology
+
+**Device Placement Intelligence:**
+- Implement cost-based placement algorithms that consider compute capability, memory constraints, and communication costs
+- Add dynamic load balancing that can migrate computation based on device utilization and bottleneck identification
+- Support heterogeneous hardware through capability-aware scheduling that matches layer complexity to device capabilities
+
+**Modular Deployment Patterns:**
+- Design containerized model serving where different model components can be deployed independently and composed at runtime
+- Implement versioned module interfaces that enable A/B testing and gradual rollouts of model components
+- Add fault tolerance through checkpoint sharding and component redundancy
+
+This approach enables efficient scaling while maintaining modularity through explicit communication interfaces and intelligent resource management.
+"""
 ### END SOLUTION
 
 # %% [markdown]
@@ -1610,9 +2446,31 @@ GRADING RUBRIC (Instructor Use):
 """
 
 ### BEGIN SOLUTION
-# Student response area - instructor will replace this section during grading setup
-# This is a manually graded question requiring understanding of architecture optimization and deployment
-# Students should demonstrate knowledge of neural architecture search and resource optimization
+"""
+I would design an adaptive architecture optimization system that automatically configures networks for diverse deployment targets through multi-objective optimization:
+
+**Neural Architecture Search Framework:**
+- Implement differentiable architecture search (DARTS) that jointly optimizes architecture and weights through gradient-based methods
+- Add hardware-aware search that includes actual latency and memory measurements in the optimization objective
+- Support progressive search strategies that start with simple architectures and gradually increase complexity based on deployment constraints
+
+**Performance-Constraint Optimization:**
+- Design multi-objective optimization that balances accuracy, latency, memory usage, and energy consumption using Pareto frontier analysis
+- Implement dynamic architecture adaptation where the same model can switch between high-accuracy and high-speed modes based on runtime conditions
+- Add quantization-aware search that finds architectures robust to low-precision deployment while maintaining target performance
+
+**Multi-Target Deployment Strategy:**
+- Create architecture families where the same base design can be scaled up/down for different deployment targets (mobile->edge->cloud)
+- Implement knowledge distillation pipelines that transfer learning from large teacher networks to smaller student networks optimized for specific devices
+- Support elastic architectures with removable components that maintain compatibility across different resource constraints
+
+**Resource-Constrained Edge Optimization:**
+- Design memory-efficient architectures using techniques like depthwise separable convolutions and mobile-optimized activation functions
+- Implement dynamic batching and input resolution scaling to adapt to varying device capabilities and power states
+- Add model compression techniques including pruning, quantization, and knowledge distillation integrated into the search process
+
+This system enables deployment optimization through automated architecture discovery while maintaining performance guarantees across diverse hardware targets.
+"""
 ### END SOLUTION
 
 # %% [markdown]
