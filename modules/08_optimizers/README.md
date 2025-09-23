@@ -107,7 +107,7 @@ tito test --module autograd
 ```
 
 ### Development Workflow
-1. **Open the development file**: `modules/source/09_optimizers/optimizers_dev.py`
+1. **Open the development file**: `modules/source/08_optimizers/optimizers_dev.py`
 2. **Implement gradient descent**: Start with basic parameter update mechanics
 3. **Build SGD with momentum**: Add velocity accumulation for acceleration
 4. **Create Adam optimizer**: Implement adaptive learning rates with moment estimation
