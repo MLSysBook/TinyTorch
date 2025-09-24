@@ -38,52 +38,47 @@ jupyter lab setup_dev.py
 tito checkpoint status
 ```
 
-## 📚 Three-Part Learning Journey
+## 📚 Streamlined Learning Journey - No Forward Dependencies!
 
-### **17 Progressive Modules** - Complete Any Part for Industry-Ready Skills!
+### **12 Progressive Modules** - Build Complete ML Systems Step by Step!
 
-#### **Part I: Foundations** (Modules 1-5)
-**"I can build neural networks from scratch!"**
+#### **Part I: Neural Network Foundations** (Modules 1-7)
+**"I can train neural networks from scratch!"**
 
-| Module | Topic | What You Build |
-|--------|-------|----------------|
-| 01 | Setup | Development environment |
-| 02 | Tensors | N-dimensional arrays |
-| 03 | Activations | ReLU, Sigmoid, Softmax |
-| 04 | Layers | Dense layers |
-| 05 | Networks | Multi-layer networks |
+| Module | Topic | What You Build | Key Innovation |
+|--------|-------|----------------|----------------|
+| 01 | Setup | Development environment | CLI tools, testing framework |
+| 02 | Tensor | N-dimensional arrays + **Basic Autograd** | Gradients from the start! |
+| 03 | Activations | **ReLU + Softmax ONLY** | Focus on what matters most |
+| 04 | Layers | Linear + Module + **Flatten** | Complete building blocks |
+| 05 | Loss | **MSE + CrossEntropy** | Define learning objectives |
+| 06 | Optimizers | **SGD + Adam** | How we learn |
+| 07 | Training | **Complete training loops** | Put it all together |
 
-**✅ Capstone**: XORNet - Solve non-linear problems
+**✅ Capstone**: XOR + MNIST - Train real neural networks after just 7 modules!
 
 ---
 
-#### **Part II: Computer Vision** (Modules 6-11)
+#### **Part II: Computer Vision** (Modules 8-9)
 **"I can build CNNs that classify real images!"**
 
 | Module | Topic | What You Build |
 |--------|-------|----------------|
-| 06 | Spatial | Conv2D, Pooling |
-| 07 | DataLoader | Efficient data pipelines |
-| 08 | Normalization | BatchNorm, LayerNorm |
-| 09 | Autograd | Automatic differentiation |
-| 10 | Optimizers | SGD, Adam |
-| 11 | Training | Complete training loops |
+| 08 | CNN Ops | Conv2d + MaxPool2d |
+| 09 | DataLoader | Efficient data pipelines |
 
 **✅ Capstone**: CIFAR-10 CNN - 55%+ accuracy on real images
 
 ---
 
-#### **Part III: Language Models** (Modules 12-17)
+#### **Part III: Language Models** (Modules 10-12)
 **"I can build transformers that generate text!"**
 
 | Module | Topic | What You Build |
 |--------|-------|----------------|
-| 12 | Embeddings | Token embeddings, positional encoding |
-| 13 | Attention | Multi-head attention |
-| 14 | Transformers | Transformer blocks |
-| 15 | Generation | Autoregressive decoding |
-| 16 | Regularization | Dropout, robustness |
-| 17 | Systems | Production deployment |
+| 10 | Embeddings | Token embeddings, positional encoding |
+| 11 | Attention | Multi-head attention |
+| 12 | Transformers | Transformer blocks |
 
 **✅ Capstone**: TinyGPT - Generate text with transformers
 
@@ -128,18 +123,29 @@ model.fit(X, y)  # Magic happens
 
 As you complete modules, exciting examples unlock to show your framework in action:
 
-### **After Module 05** → `examples/xornet/` 🔥
+### **After Module 07** → `examples/xornet/` + `examples/mnist/` 🔥
 ```bash
 cd examples/xornet
-python train.py
+python train_xor.py
 # 🎯 100% accuracy on XOR problem!
+
+cd examples/mnist
+python train_mlp.py
+# 🏆 95%+ accuracy on handwritten digits!
 ```
 
-### **After Module 11** → `examples/cifar10/` 🎯  
+### **After Module 09** → `examples/cifar10/` 🎯  
 ```bash
 cd examples/cifar10
-python train.py
+python train_cnn.py
 # 🏆 55%+ accuracy on real images!
+```
+
+### **After Module 12** → `examples/tinygpt/` 🚀
+```bash
+cd examples/tinygpt
+python train_gpt.py
+# 🔥 Generate text with transformers!
 ```
 
 **These aren't toy demos** - they're real ML applications achieving solid results with YOUR framework built from scratch following KISS principles!

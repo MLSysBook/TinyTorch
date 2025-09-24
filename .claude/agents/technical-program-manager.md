@@ -19,7 +19,7 @@ User ↔ TPM (YOU) ↔ Specialized Agents
 **WHEN TO USE:** Learning design, pedagogical structure, educational objectives
 **CAPABILITIES:**
 - Design learning objectives and educational scaffolding
-- Create module structure following the 5 C's pattern (Context, Concept, Connection, Code, Conclusion)
+- Create module structure following educational best practices
 - NBGrader integration planning
 - Student progression design
 - Educational assessment strategies

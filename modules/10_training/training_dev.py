@@ -237,12 +237,9 @@ class MeanSquaredError:
         diff = y_pred - y_true  # Variable subtraction
         squared_diff = diff * diff  # Variable multiplication
         
-        # Mean operation that preserves gradients
-        # Create a simple mean operation for Variables
-        if hasattr(squared_diff.data, 'data'):
-            mean_data = np.mean(squared_diff.data.data)
-        else:
-            mean_data = np.mean(squared_diff.data)
+        # Clean mean operation - get raw numpy array
+        # squared_diff.data is a Tensor, so we need its data attribute
+        mean_data = np.mean(squared_diff.data.data)
         
         # Create loss Variable (simplified for educational use)
         # Students at Module 10 use basic Variable operations from Module 6
@@ -373,16 +370,9 @@ class CrossEntropyLoss:
             else:
                 y_true = Variable(y_true, requires_grad=False)
         
-        # Get data for computation
-        if hasattr(y_pred.data, 'data'):
-            pred_data = y_pred.data.data
-        else:
-            pred_data = y_pred.data
-            
-        if hasattr(y_true.data, 'data'):
-            true_data = y_true.data.data
-        else:
-            true_data = y_true.data
+        # Clean data access - get raw numpy arrays
+        pred_data = y_pred.data.data if hasattr(y_pred.data, 'data') else y_pred.data
+        true_data = y_true.data.data if hasattr(y_true.data, 'data') else y_true.data
         
         # Handle both 1D and 2D prediction arrays
         if pred_data.ndim == 1:
@@ -541,16 +531,9 @@ class BinaryCrossEntropyLoss:
             else:
                 y_true = Variable(y_true, requires_grad=False)
         
-        # Get data for computation
-        if hasattr(y_pred.data, 'data'):
-            logits = y_pred.data.data.flatten()
-        else:
-            logits = y_pred.data.flatten()
-            
-        if hasattr(y_true.data, 'data'):
-            labels = y_true.data.data.flatten()
-        else:
-            labels = y_true.data.flatten()
+        # Clean data access - get raw numpy arrays
+        logits = y_pred.data.data.flatten() if hasattr(y_pred.data, 'data') else y_pred.data.flatten()
+        labels = y_true.data.data.flatten() if hasattr(y_true.data, 'data') else y_true.data.flatten()
         
         # Numerically stable binary cross-entropy from logits
         def stable_bce_with_logits(logits, labels):

@@ -142,12 +142,48 @@ def method_name(self, params):
 ```
 
 ### Test-Immediately Pattern (NON-NEGOTIABLE)
-After EVERY implementation:
-1. Add markdown explaining what we're testing and why
-2. Create test with proper NBGrader metadata
-3. Use pattern: `test_unit_[function_name]()`
-4. Include assertions that teach, not just check
-5. Run test at cell bottom with clear output
+After EVERY implementation, BEFORE any ML Systems thinking or additional content:
+1. **Markdown Test Header**: Use EXACT standardized format:
+   ```markdown
+   # %% [markdown]
+   """
+   ### 🧪 Unit Test: [Component Name]
+   
+   This test validates the `function_name`, ensuring it correctly [description of what it tests].
+   """
+   ```
+2. **Test Function**: Create with proper NBGrader metadata
+3. **Naming Convention**: MUST use pattern: `test_unit_[function_name]()`
+4. **Educational Assertions**: Include assertions that teach, not just check
+5. **Immediate Execution**: Call the test function at the end of the cell
+6. **Function Call**: Add `test_unit_[function_name]()` after function definition
+
+**CRITICAL ORDER**: Implementation → Unit Test → ML Systems Thinking → Additional Content
+
+### Complete Testing Structure (MANDATORY)
+Every module MUST have this complete testing hierarchy:
+
+1. **Individual Tests**: `test_unit_[function_name]()` - called immediately after each implementation
+2. **Aggregate Test Function**: `test_unit_all()` - calls all individual test functions
+3. **Main Block**: Uses `if __name__ == "__main__":` to call `test_unit_all()`
+
+```python
+def test_unit_all():
+    """Run all unit tests for this module."""
+    print("🧪 Running all unit tests...")
+    
+    test_unit_function1()
+    test_unit_function2()
+    test_unit_function3()
+    # ... all test functions
+    
+    print("✅ All unit tests passed!")
+
+if __name__ == "__main__":
+    test_unit_all()
+```
+
+**CRITICAL**: Every test function MUST be called immediately after definition AND included in `test_unit_all()` for complete module validation.
 
 ## Responsibilities
 
@@ -157,6 +193,52 @@ After EVERY implementation:
 - Ensure NBGrader compatibility for student releases
 - Follow the exact module structure template
 - Include real-world connections to PyTorch/TensorFlow
+- **FIX EXISTING MODULES**: Update all existing modules to follow the standardized testing pattern and correct ordering
+
+### URGENT: Complete Module Standardization Task
+**TASK**: Systematically go through ALL existing modules and update them to follow the standardized pattern:
+
+1. **Find ALL test code not wrapped in functions** (like 07_spatial violations)
+2. **Update test function names** to `test_unit_[function_name]()`
+3. **Add standardized markdown headers** for all tests
+4. **Add immediate function calls** after each test definition
+5. **Ensure correct ordering**: Implementation → Unit Test → ML Systems Thinking → Additional Content
+6. **Add `test_unit_all()` function** that calls all individual tests
+7. **Add main block** with `if __name__ == "__main__": test_unit_all()`
+
+**MODULES TO PROCESS**: 
+- ✅ 01_setup (COMPLETED)
+- ❌ 02_tensor (NEEDS WORK)
+- ❌ 03_activations (NEEDS WORK) 
+- ❌ 04_layers (NEEDS WORK)
+- ❌ 05_networks (NEEDS WORK)
+- ❌ 06_autograd (NEEDS WORK)
+- ❌ 07_spatial (PARTIALLY STARTED - NEEDS COMPLETION)
+- ❌ 08_optimizers (NEEDS WORK)
+- ❌ 09_dataloader (NEEDS WORK)
+- ❌ 10_training (NEEDS WORK)
+- ❌ 12_attention (NEEDS WORK)
+
+**PROCESS**: Work through modules ONE BY ONE, completely standardizing each before moving to the next.
+
+**CRITICAL ISSUE IDENTIFIED**: 07_spatial module has test code NOT wrapped in functions:
+- Lines 345, 522, 778, 1072, 1281 have test code directly in cells instead of proper `test_unit_*()` functions
+- **IMMEDIATE ACTION REQUIRED**: Wrap ALL test code in proper functions with immediate calls
+
+**EXAMPLE FIX NEEDED**:
+```python
+# WRONG (current):
+print("🔬 Unit Test: Multi-Channel Conv2D Layer...")
+# test code here...
+
+# CORRECT (required):
+def test_unit_multichannel_conv2d():
+    print("🔬 Unit Test: Multi-Channel Conv2D Layer...")
+    # test code here...
+
+# Call immediately
+test_unit_multichannel_conv2d()
+```
 
 ### Quality Standards
 - Every implementation has BEGIN/END SOLUTION blocks

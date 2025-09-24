@@ -13,7 +13,7 @@ Welcome to the **Activations** module! This is where you'll implement the mathem
 By the end of this module, you will be able to:
 
 - **Understand the critical role** of activation functions in enabling neural networks to learn non-linear patterns
-- **Implement three core activation functions**: ReLU, Sigmoid, and Tanh with proper numerical stability
+- **Implement the two essential activation functions**: ReLU and Softmax with proper numerical stability
 - **Apply mathematical reasoning** to understand function properties, ranges, and appropriate use cases
 - **Debug and test** activation implementations using both automated tests and visual analysis
 - **Connect theory to practice** by understanding when and why to use each activation function
@@ -22,44 +22,40 @@ By the end of this module, you will be able to:
 
 This module follows TinyTorch's **Build → Use → Analyze** framework:
 
-1. **Build**: Implement ReLU, Sigmoid, and Tanh activation functions with numerical stability
+1. **Build**: Implement ReLU and Softmax activation functions with numerical stability  
 2. **Use**: Apply these functions in testing scenarios and visualize their mathematical behavior
-3. **Analyze**: Compare function properties, performance characteristics, and appropriate use cases through quantitative analysis
+3. **Analyze**: Understand why these two functions power 90% of modern deep learning
 
 ## 📚 What You'll Build
 
-### Core Activation Functions
+### 🎯 **STREAMLINED: Focus on What Matters**
 ```python
-# ReLU: Simple but powerful
+# ReLU: The workhorse of deep learning
 relu = ReLU()
 output = relu(Tensor([-2, -1, 0, 1, 2]))  # [0, 0, 0, 1, 2]
 
-# Sigmoid: Probabilistic outputs
-sigmoid = Sigmoid()
-output = sigmoid(Tensor([0, 1, -1]))      # [0.5, 0.73, 0.27]
-
-# Tanh: Zero-centered activation
-tanh = Tanh()
-output = tanh(Tensor([0, 1, -1]))         # [0, 0.76, -0.76]
+# Softmax: Multi-class probability distribution
+softmax = Softmax()
+output = softmax(Tensor([1.0, 2.0, 3.0]))  # [0.09, 0.24, 0.67] (sums to 1.0)
 ```
 
-### ReLU (Rectified Linear Unit)
+### ReLU (Rectified Linear Unit) - 80% of Hidden Layers
 - **Formula**: `f(x) = max(0, x)`
-- **Properties**: Simple, sparse, unbounded, most commonly used
-- **Implementation**: Element-wise maximum with zero
-- **Use Cases**: Hidden layers in most modern architectures
+- **Properties**: Simple, sparse, fast, prevents vanishing gradients
+- **Why Essential**: Powers all modern CNNs, Transformers, ResNets
+- **Use Cases**: Hidden layers in 95% of architectures
 
-### Sigmoid Activation
-- **Formula**: `f(x) = 1 / (1 + e^(-x))`
-- **Properties**: Bounded to (0,1), smooth, probabilistic interpretation
-- **Implementation**: Numerically stable version preventing overflow
-- **Use Cases**: Binary classification, attention mechanisms, gates
+### Softmax - Multi-Class Classification
+- **Formula**: `f(x_i) = e^(x_i) / Σ(e^(x_j))`  
+- **Properties**: Outputs sum to 1.0, probability interpretation
+- **Why Essential**: Final layer for classification, attention weights
+- **Use Cases**: Classification output, attention mechanisms
 
-### Tanh (Hyperbolic Tangent)
-- **Formula**: `f(x) = tanh(x)`
-- **Properties**: Bounded to (-1,1), zero-centered, symmetric
-- **Implementation**: Direct NumPy implementation with shape preservation
-- **Use Cases**: Hidden layers, RNNs, when zero-centered outputs are beneficial
+### 🧠 **Why Just Two Functions?**
+- **ReLU**: Solves vanishing gradients, enables deep networks, computationally efficient
+- **Softmax**: Converts logits to probabilities, differentiable, temperature control
+- **90% Coverage**: These two functions appear in virtually every modern architecture
+- **Simplicity**: Focus on mastering essential concepts rather than memorizing many variants
 
 ## 🚀 Getting Started
 

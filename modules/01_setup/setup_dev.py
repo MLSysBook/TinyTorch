@@ -53,13 +53,15 @@ def setup():
 
 # %% [markdown]
 """
-### 🧪 Test: Package Installation
+### 🧪 Unit Test: Package Installation
+
+This test validates the `setup` function, ensuring it correctly installs required packages and handles errors gracefully.
 """
 
 # %% nbgrader={"grade": true, "grade_id": "test-setup", "locked": true, "points": 5, "schema_version": 3, "solution": false, "task": false}
-def test_setup():
+def test_unit_setup():
     """Test setup function."""
-    print("🔬 Testing setup...")
+    print("🔬 Unit Test: Package Installation...")
     
     # Test that function exists and is callable
     assert callable(setup), "setup should be callable"
@@ -68,6 +70,9 @@ def test_setup():
     setup()
     
     print("✅ Setup function works!")
+
+# Call the test immediately
+test_unit_setup()
 
 # %% [markdown]
 """
@@ -92,13 +97,15 @@ def check_versions():
 
 # %% [markdown]
 """
-### 🧪 Test: Version Check
+### 🧪 Unit Test: Version Check
+
+This test validates the `check_versions` function, ensuring it correctly displays system and package version information.
 """
 
 # %% nbgrader={"grade": true, "grade_id": "test-versions", "locked": true, "points": 5, "schema_version": 3, "solution": false, "task": false}
-def test_check_versions():
+def test_unit_check_versions():
     """Test check_versions function."""
-    print("🔬 Testing version check...")
+    print("🔬 Unit Test: Version Check...")
     
     # Test that function exists and is callable
     assert callable(check_versions), "check_versions should be callable"
@@ -107,6 +114,9 @@ def test_check_versions():
     check_versions()
     
     print("✅ Version check function works!")
+
+# Call the test immediately
+test_unit_check_versions()
 
 # %% [markdown]
 """
@@ -129,13 +139,15 @@ def get_info():
 
 # %% [markdown]
 """
-### 🧪 Test: Basic Info
+### 🧪 Unit Test: Basic Info
+
+This test validates the `get_info` function, ensuring it correctly collects and displays user information.
 """
 
 # %% nbgrader={"grade": true, "grade_id": "test-basic-info", "locked": true, "points": 5, "schema_version": 3, "solution": false, "task": false}
-def test_get_info():
+def test_unit_get_info():
     """Test get_info function."""
-    print("🔬 Testing basic info...")
+    print("🔬 Unit Test: Basic Info...")
     
     # Test that function exists and is callable
     assert callable(get_info), "get_info should be callable"
@@ -154,15 +166,20 @@ def test_get_info():
     
     print("✅ Basic info function works!")
 
+# Call the test immediately
+test_unit_get_info()
+
 # %% [markdown]
 """
-## 🧪 Complete Setup Test
+### 🧪 Unit Test: Complete Setup
+
+This test validates the complete setup workflow, ensuring all functions work together properly.
 """
 
 # %% nbgrader={"grade": true, "grade_id": "test-complete", "locked": true, "points": 10, "schema_version": 3, "solution": false, "task": false}
-def test_complete_setup():
+def test_unit_complete_setup():
     """Test complete setup workflow."""
-    print("🔬 Testing complete setup...")
+    print("🔬 Unit Test: Complete Setup...")
     
     # Test all functions work together
     setup()
@@ -173,6 +190,9 @@ def test_complete_setup():
     print(f"Welcome {info['name']}!")
     print(f"Email: {info['email']}")
     print("✅ Ready to build neural networks!")
+
+# Call the test immediately
+test_unit_complete_setup()
 
 # %% [markdown]
 """
@@ -228,6 +248,34 @@ def analyze_environment_resources():
 
 # %% [markdown]
 """
+### 🧪 Unit Test: Systems Analysis
+
+This test validates the `analyze_environment_resources` function, ensuring it correctly analyzes system performance and resource usage.
+"""
+
+# %% nbgrader={"grade": true, "grade_id": "test-systems-analysis", "locked": true, "points": 5, "schema_version": 3, "solution": false, "task": false}
+def test_unit_analyze_environment_resources():
+    """Test environment resource analysis."""
+    print("🔬 Unit Test: Systems Analysis...")
+    
+    # Test that function exists and is callable
+    assert callable(analyze_environment_resources), "analyze_environment_resources should be callable"
+    
+    # Run analysis
+    results = analyze_environment_resources()
+    
+    # Verify return structure
+    assert isinstance(results, dict), "Should return dict"
+    assert "setup_time" in results, "Should include setup_time"
+    assert "memory_used" in results, "Should include memory_used"
+    
+    print("✅ Systems analysis function works!")
+
+# Call the test immediately
+test_unit_analyze_environment_resources()
+
+# %% [markdown]
+"""
 ### Production Context: Container Environments
 
 In production ML systems, environment setup must be:
@@ -243,52 +291,29 @@ In production ML systems, environment setup must be:
 - Environment drift can cause model performance degradation
 """
 
-# %% [markdown]
-"""
-### 🧪 Test: Systems Analysis
-"""
-
-# %% nbgrader={"grade": true, "grade_id": "test-systems-analysis", "locked": true, "points": 5, "schema_version": 3, "solution": false, "task": false}
-def test_analyze_environment_resources():
-    """Test environment resource analysis."""
-    print("🔬 Testing systems analysis...")
-    
-    # Test that function exists and is callable
-    assert callable(analyze_environment_resources), "analyze_environment_resources should be callable"
-    
-    # Run analysis
-    results = analyze_environment_resources()
-    
-    # Verify return structure
-    assert isinstance(results, dict), "Should return dict"
-    assert "setup_time" in results, "Should include setup_time"
-    assert "memory_used" in results, "Should include memory_used"
-    
-    print("✅ Systems analysis function works!")
-
 if __name__ == "__main__":
     print("🚀 TinyTorch Simple Setup!")
     print("Quick and easy environment setup...\n")
     
     # Run all tests
     print("📦 Step 1: Package Installation")
-    test_setup()
+    test_unit_setup()
     print()
     
     print("✅ Step 2: Version Check")
-    test_check_versions()
+    test_unit_check_versions()
     print()
     
     print("👋 Step 3: Basic Info")
-    test_get_info()
+    test_unit_get_info()
     print()
     
     print("🧪 Step 4: Complete Test")
-    test_complete_setup()
+    test_unit_complete_setup()
     print()
     
     print("🔬 Step 5: Systems Analysis")
-    test_analyze_environment_resources()
+    test_unit_analyze_environment_resources()
     
     print("\n" + "="*50)
     print("🎉 TINYTORCH SETUP COMPLETE! 🎉")
@@ -397,3 +422,4 @@ Congratulations! Your TinyTorch environment is ready! 🎉
 
 You're officially ready to create AI from scratch! ⚡
 """
+

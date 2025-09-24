@@ -469,8 +469,9 @@ class SGD:
         ### BEGIN SOLUTION
         for i, param in enumerate(self.parameters):
             if param.grad is not None:
-                # Get gradient (basic operation from Module 6)
-                gradient = param.grad.data.data
+                # Get gradient data (works for both Tensor and Variable)
+                # In modern PyTorch style, grad.data gives us the numpy array
+                gradient = param.grad.data
                 
                 if self.momentum > 0:
                     # Apply momentum (simplified)
@@ -483,16 +484,13 @@ class SGD:
                     # Simple gradient descent (no momentum)
                     update = gradient
                 
-                # Basic parameter update (like Module 6)
-                new_value = param.data.data - self.learning_rate * update
-                
-                # Simple parameter data update (in-place modification)
-                if hasattr(param.data.data, 'item'):
-                    # Scalar parameter - create new tensor
-                    param.data = Tensor(new_value)
-                else:
-                    # Array parameter - update in place
-                    param.data.data[:] = new_value
+                # Clean parameter update - PyTorch style
+                # NOTE: In production PyTorch, this is an in-place operation (param.data.sub_())
+                # for memory efficiency. We create a new Tensor here for clarity, but real
+                # systems modify the existing memory to avoid allocation overhead.
+                from tinytorch.core.tensor import Tensor
+                new_value = param.data - self.learning_rate * update
+                param.data = Tensor(new_value)
         ### END SOLUTION
     
     def zero_grad(self) -> None:
@@ -713,6 +711,11 @@ class Adam:
         self.epsilon = epsilon
         
         # Simple moment storage (using basic dict with indices)
+        # MEMORY INSIGHT: Adam uses 3x memory of SGD because it stores:
+        # 1. Parameters (1x memory)
+        # 2. First moment estimates m[i] (1x memory) 
+        # 3. Second moment estimates v[i] (1x memory)
+        # This is why Adam can be problematic for very large models!
         self.m = {}  # First moment (momentum)
         self.v = {}  # Second moment (squared gradients)
         
@@ -757,8 +760,8 @@ class Adam:
         
         for i, param in enumerate(self.parameters):
             if param.grad is not None:
-                # Get gradient (basic operation from Module 6)
-                gradient = param.grad.data.data
+                # Get gradient data - clean PyTorch style
+                gradient = param.grad.data
                 
                 # Update first moment (momentum)
                 self.m[i] = self.beta1 * self.m[i] + (1 - self.beta1) * gradient
@@ -770,17 +773,14 @@ class Adam:
                 m_corrected = self.m[i] / (1 - self.beta1 ** self.t)
                 v_corrected = self.v[i] / (1 - self.beta2 ** self.t)
                 
-                # Adaptive parameter update
+                # Clean adaptive parameter update - PyTorch style
+                # NOTE: In production PyTorch, parameters are updated in-place for efficiency.
+                # We create a new Tensor for educational clarity, but real systems use
+                # param.data.add_(-update) to modify memory directly without allocation.
                 update = self.learning_rate * m_corrected / (np.sqrt(v_corrected) + self.epsilon)
-                new_value = param.data.data - update
-                
-                # Simple parameter data update (like Module 6)
-                if hasattr(param.data.data, 'item'):
-                    # Scalar parameter - create new tensor
-                    param.data = Tensor(new_value)
-                else:
-                    # Array parameter - update in place
-                    param.data.data[:] = new_value
+                from tinytorch.core.tensor import Tensor
+                new_value = param.data - update
+                param.data = Tensor(new_value)
         ### END SOLUTION
     
     def zero_grad(self) -> None:

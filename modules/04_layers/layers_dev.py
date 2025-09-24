@@ -12,31 +12,31 @@
 """
 # Layers - Neural Network Building Blocks and Composition Patterns
 
-Welcome to the Layers module! You'll build the fundamental components that stack together to form any neural network architecture, from simple perceptrons to transformers.
+Welcome to the unified Layers module! You'll build all the fundamental components for neural networks: base classes, linear transformations, network composition, and tensor reshaping operations.
 
 ## Learning Goals
-- Systems understanding: How layer composition creates complex function approximators and why stacking enables deep learning
-- Core implementation skill: Build matrix multiplication and Dense layers with proper parameter management
-- Pattern recognition: Understand how different layer types solve different computational problems
-- Framework connection: See how your layer implementations mirror PyTorch's nn.Module design patterns
-- Performance insight: Learn why layer computation order and memory layout determine training speed
+- Systems understanding: How layer composition creates complex function approximators from simple building blocks
+- Core implementation skill: Build Module base class, Linear layers, Sequential networks, and Flatten operations
+- Pattern recognition: Understand how different layer types solve different computational problems and compose together
+- Framework connection: See how your implementations mirror PyTorch's nn.Module, nn.Linear, nn.Sequential, and nn.Flatten patterns
+- Performance insight: Learn why layer composition, memory layout, and tensor operations determine training speed
 
 ## Build → Use → Reflect
-1. **Build**: Matrix multiplication primitives and Dense layers with parameter initialization strategies
-2. **Use**: Compose layers into multi-layer networks and observe how data transforms through the stack
-3. **Reflect**: Why does layer depth enable more complex functions, and when does it hurt performance?
+1. **Build**: Module system, matrix operations, Dense layers, Sequential networks, and tensor flattening
+2. **Use**: Compose all components into complete neural networks and observe data flow patterns
+3. **Reflect**: Why does proper abstraction enable complex architectures while maintaining clean interfaces?
 
 ## What You'll Achieve
 By the end of this module, you'll understand:
-- Deep technical understanding of how matrix operations enable neural networks to learn arbitrary functions
-- Practical capability to build and compose layers into complex architectures
-- Systems insight into why layer composition is the fundamental pattern for scalable ML systems
-- Performance consideration of how layer size and depth affect memory usage and computational cost
-- Connection to production ML systems and how frameworks optimize layer execution for different hardware
+- Deep technical understanding of neural network component architecture and composition patterns
+- Practical capability to build complete neural network systems from fundamental building blocks  
+- Systems insight into why modular design is essential for scalable ML systems
+- Performance consideration of how tensor operations and memory layout affect computational efficiency
+- Connection to production ML systems and how major frameworks organize neural network components
 
 ## Systems Reality Check
-💡 **Production Context**: PyTorch's nn.Linear uses optimized BLAS operations and can automatically select GPU vs CPU execution based on data size
-⚡ **Performance Note**: Large matrix multiplications can be memory-bound rather than compute-bound - understanding this shapes how production systems optimize layer execution
+💡 **Production Context**: PyTorch's nn.Module system enables all modern neural networks through clean composition patterns
+⚡ **Performance Note**: Tensor reshape operations and layer composition can create memory bottlenecks - understanding this is key to efficient neural network design
 """
 
 # %% nbgrader={"grade": false, "grade_id": "layers-imports", "locked": false, "schema_version": 3, "solution": false, "task": false}
@@ -176,21 +176,21 @@ class Module:
 """
 ## Where This Code Lives in the Final Package
 
-**Learning Side:** You work in modules/source/04_layers/layers_dev.py  
+**Learning Side:** You work in modules/04_layers/layers_dev.py  
 **Building Side:** Code exports to tinytorch.core.layers
 
 ```python
 # Final package structure:
-from tinytorch.core.layers import Dense, matmul  # All layer types together!
-from tinytorch.core.tensor import Tensor  # The foundation
+from tinytorch.core.layers import Module, Linear, Dense, Sequential, Flatten, matmul  # Complete layer system!
+from tinytorch.core.tensor import Tensor, Parameter  # The foundation
 from tinytorch.core.activations import ReLU, Sigmoid  # Nonlinearity
 ```
 
 **Why this matters:**
-- **Learning:** Focused modules for deep understanding
-- **Production:** Proper organization like PyTorch's torch.nn.Linear
-- **Consistency:** All layer types live together in core.layers
-- **Integration:** Works seamlessly with tensors and activations
+- **Learning:** Complete layer system in one focused module for deep understanding
+- **Production:** Proper organization like PyTorch's torch.nn with all core components together
+- **Consistency:** All layer types, network composition, and tensor operations in core.layers
+- **Integration:** Works seamlessly with tensors and activations for complete neural networks
 """
 
 # %% [markdown]
@@ -558,6 +558,295 @@ test_dense_parameter_management()
 
 # %% [markdown]
 """
+# Sequential Network Composition - Building Complete Architectures
+
+Now that we have solid layers, let's build the Sequential network that composes layers into complete neural network architectures. This is the foundation for all neural networks from MLPs to complex deep learning models.
+
+## Why Sequential Networks Matter
+
+🏗️ **Architecture Foundation**: Sequential is the building block for all neural network architectures  
+🔄 **Function Composition**: Chain simple functions to create complex behaviors
+📦 **Clean Interface**: Write networks as lists of layers - intuitive and maintainable  
+⚡ **Production Standard**: Every major framework uses this pattern for neural network construction  
+
+## Learning Objectives
+By implementing Sequential networks, you'll understand:
+- How function composition enables universal approximation in neural networks
+- The architectural patterns that power everything from MLPs to transformers
+- Why clean abstractions matter for building complex systems
+- How layer composition creates the foundation for all modern deep learning
+"""
+
+# %% nbgrader={"grade": false, "grade_id": "sequential-implementation", "locked": false, "schema_version": 3, "solution": true, "task": false}
+#| export
+class Sequential(Module):
+    """
+    Sequential Network: Composes layers in sequence.
+    
+    The most fundamental network architecture that applies layers in order:
+    f(x) = layer_n(...layer_2(layer_1(x)))
+    
+    Inherits from Module for automatic parameter collection from all sub-layers.
+    This enables optimizers to find all parameters automatically.
+    
+    Example Usage:
+        # Create a 3-layer MLP
+        model = Sequential([
+            Linear(784, 128),
+            ReLU(),
+            Linear(128, 64), 
+            ReLU(),
+            Linear(64, 10)
+        ])
+        
+        # Use the model
+        output = model(input_data)  # Clean interface!
+        params = model.parameters()  # All parameters from all layers!
+    """
+    
+    def __init__(self, layers=None):
+        """
+        Initialize Sequential network with layers.
+        
+        Args:
+            layers: List of layers to compose in order (optional)
+        """
+        super().__init__()  # Initialize Module base class
+        self.layers = layers if layers is not None else []
+        
+        # Register all layers as sub-modules for parameter collection
+        for i, layer in enumerate(self.layers):
+            # This automatically adds each layer to self._modules
+            setattr(self, f'layer_{i}', layer)
+    
+    def forward(self, x):
+        """
+        Forward pass through all layers in sequence.
+        
+        Args:
+            x: Input tensor
+            
+        Returns:
+            Output tensor after passing through all layers
+        """
+        for layer in self.layers:
+            x = layer(x)
+        return x
+    
+    def add(self, layer):
+        """Add a layer to the network."""
+        self.layers.append(layer)
+        # Register the new layer for parameter collection
+        setattr(self, f'layer_{len(self.layers)-1}', layer)
+
+# %% [markdown]
+"""
+## Testing Sequential Networks
+
+Let's verify our Sequential network works correctly with comprehensive tests.
+"""
+
+# %% nbgrader={"grade": true, "grade_id": "test-sequential", "locked": true, "points": 4, "schema_version": 3, "solution": false, "task": false}
+def test_sequential_network():
+    """Test Sequential network implementation."""
+    print("🧪 Testing Sequential Network...")
+    
+    # Test case 1: Create empty network
+    empty_net = Sequential()
+    assert len(empty_net.layers) == 0, "Empty Sequential should have no layers"
+    print("✅ Empty Sequential network creation")
+    
+    # Test case 2: Create network with layers
+    layers = [Dense(3, 4), Dense(4, 2)]
+    network = Sequential(layers)
+    assert len(network.layers) == 2, "Network should have 2 layers"
+    print("✅ Sequential network with layers")
+    
+    # Test case 3: Forward pass through network
+    input_tensor = Tensor([[1.0, 2.0, 3.0]])
+    output = network(input_tensor)
+    assert output.shape == (1, 2), f"Expected output shape (1, 2), got {output.shape}"
+    print("✅ Forward pass through Sequential network")
+    
+    # Test case 4: Parameter collection from all layers
+    all_params = network.parameters()
+    # Should have 4 parameters: 2 weights + 2 biases from 2 Dense layers
+    assert len(all_params) == 4, f"Expected 4 parameters from Sequential network, got {len(all_params)}"
+    print("✅ Parameter collection from all layers")
+    
+    # Test case 5: Adding layers dynamically
+    network.add(Dense(2, 1))
+    assert len(network.layers) == 3, "Network should have 3 layers after adding one"
+    
+    # Test forward pass after adding layer
+    final_output = network(input_tensor)
+    assert final_output.shape == (1, 1), f"Expected final output shape (1, 1), got {final_output.shape}"
+    print("✅ Dynamic layer addition")
+    
+    print("🎉 All Sequential network tests passed!")
+
+test_sequential_network()
+
+# %% [markdown]
+"""
+# Flatten Operation - Connecting Different Layer Types
+
+The Flatten operation is essential for connecting convolutional layers to dense layers, or reshaping tensors between different network components. This is a fundamental operation in neural networks.
+
+## Why Flatten Matters
+
+🔗 **Interface Bridge**: Connects spatial layers (Conv2D) to dense layers (Linear)  
+📐 **Dimension Management**: Converts multi-dimensional tensors to vectors for different layer types  
+🏗️ **Architecture Flexibility**: Enables mixing different layer types in the same network  
+⚡ **Memory Efficiency**: Provides clean tensor reshaping without copying data  
+
+## Learning Objectives
+By implementing Flatten, you'll understand:
+- How neural networks handle tensors of different shapes between layer types
+- The critical role of tensor reshaping in network architecture design
+- How to preserve batch dimensions while flattening spatial dimensions
+- The connection between memory layout and computational efficiency
+"""
+
+# %% nbgrader={"grade": false, "grade_id": "flatten-implementation", "locked": false, "schema_version": 3, "solution": true, "task": false}
+#| export
+class Flatten(Module):
+    """
+    Flatten layer that reshapes tensors from multi-dimensional to 2D.
+    
+    Essential for connecting convolutional layers (which output 4D tensors)
+    to linear layers (which expect 2D tensors). Preserves the batch dimension.
+    
+    Example Usage:
+        # In a CNN architecture
+        model = Sequential([
+            Conv2D(3, 16, kernel_size=3),  # Output: (batch, 16, height, width)
+            ReLU(),
+            Flatten(),                     # Output: (batch, 16*height*width)
+            Linear(16*height*width, 10)    # Now compatible!
+        ])
+    """
+    
+    def __init__(self, start_dim=1):
+        """
+        Initialize Flatten layer.
+        
+        Args:
+            start_dim: Dimension to start flattening from (default: 1 to preserve batch)
+        """
+        super().__init__()
+        self.start_dim = start_dim
+    
+    def forward(self, x):
+        """
+        Flatten tensor starting from start_dim.
+        
+        Args:
+            x: Input tensor
+            
+        Returns:
+            Flattened tensor with batch dimension preserved
+        """
+        return flatten(x, start_dim=self.start_dim)
+
+# %% nbgrader={"grade": false, "grade_id": "flatten-function", "locked": false, "schema_version": 3, "solution": true, "task": false}
+#| export
+def flatten(x, start_dim=1):
+    """
+    Flatten tensor starting from a given dimension.
+    
+    This is essential for transitioning from convolutional layers
+    (which output 4D tensors) to linear layers (which expect 2D).
+    
+    Args:
+        x: Input tensor (Tensor or any array-like)
+        start_dim: Dimension to start flattening from (default: 1 to preserve batch)
+        
+    Returns:
+        Flattened tensor preserving batch dimension
+        
+    Examples:
+        # Flatten CNN output for Linear layer
+        conv_output = Tensor(np.random.randn(32, 64, 8, 8))  # (batch, channels, height, width)
+        flat = flatten(conv_output)  # (32, 4096) - ready for Linear layer!
+        
+        # Flatten image for MLP
+        images = Tensor(np.random.randn(32, 3, 28, 28))  # CIFAR-10 batch
+        flat = flatten(images)  # (32, 2352) - ready for MLP!
+    """
+    # Get the data (handle both Tensor and numpy arrays)
+    if hasattr(x, 'data'):
+        data = x.data
+    else:
+        data = x
+    
+    # Calculate new shape
+    batch_size = data.shape[0] if start_dim > 0 else 1
+    remaining_size = np.prod(data.shape[start_dim:])
+    new_shape = (batch_size, remaining_size) if start_dim > 0 else (remaining_size,)
+    
+    # Reshape preserving tensor type
+    if hasattr(x, 'data'):
+        # It's a Tensor - preserve type
+        flattened_data = data.reshape(new_shape)
+        return type(x)(flattened_data)
+    else:
+        # It's a numpy array
+        return data.reshape(new_shape)
+
+# %% [markdown]
+"""
+## Testing Flatten Operations
+
+Let's verify our Flatten implementation works correctly with various tensor shapes.
+"""
+
+# %% nbgrader={"grade": true, "grade_id": "test-flatten", "locked": true, "points": 3, "schema_version": 3, "solution": false, "task": false}
+def test_flatten_operations():
+    """Test Flatten layer and function implementation."""
+    print("🧪 Testing Flatten Operations...")
+    
+    # Test case 1: Flatten function with 2D tensor
+    x_2d = Tensor([[1, 2], [3, 4]])
+    flattened_func = flatten(x_2d)
+    assert flattened_func.shape == (2, 2), f"Expected shape (2, 2), got {flattened_func.shape}"
+    print("✅ Flatten function with 2D tensor")
+    
+    # Test case 2: Flatten function with 4D tensor (simulating CNN output)
+    x_4d = Tensor(np.random.randn(2, 3, 4, 4))  # (batch, channels, height, width)
+    flattened_4d = flatten(x_4d)
+    assert flattened_4d.shape == (2, 48), f"Expected shape (2, 48), got {flattened_4d.shape}"  # 3*4*4 = 48
+    print("✅ Flatten function with 4D tensor")
+    
+    # Test case 3: Flatten layer class
+    flatten_layer = Flatten()
+    layer_output = flatten_layer(x_4d)
+    assert layer_output.shape == (2, 48), f"Expected shape (2, 48), got {layer_output.shape}"
+    assert np.allclose(layer_output.data, flattened_4d.data), "Flatten layer should match flatten function"
+    print("✅ Flatten layer class")
+    
+    # Test case 4: Different start dimensions
+    flatten_from_0 = Flatten(start_dim=0)
+    full_flat = flatten_from_0(x_2d)
+    assert len(full_flat.shape) <= 2, "Flattening from dim 0 should create vector"
+    print("✅ Different start dimensions")
+    
+    # Test case 5: Integration with Sequential
+    network = Sequential([
+        Dense(8, 4),
+        Flatten()
+    ])
+    test_input = Tensor(np.random.randn(2, 8))
+    output = network(test_input)
+    assert output.shape == (2, 4), f"Expected shape (2, 4), got {output.shape}"
+    print("✅ Flatten integration with Sequential")
+    
+    print("🎉 All Flatten operations tests passed!")
+
+test_flatten_operations()
+
+# %% [markdown]
+"""
 # Systems Analysis: Memory and Performance Characteristics
 
 Let's analyze the memory usage and computational complexity of our layer implementations.
@@ -641,9 +930,86 @@ explore_layer_scaling()
 
 # %% [markdown]
 """
+# Complete Neural Network Demo - All Components Working Together
+
+Let's demonstrate how all our components work together to build complete neural networks.
+"""
+
+# %% nbgrader={"grade": false, "grade_id": "complete-network-demo", "locked": false, "schema_version": 3, "solution": false, "task": false}
+def demonstrate_complete_networks():
+    """Demonstrate complete neural networks using all implemented components."""
+    print("🔥 Complete Neural Network Demo")
+    print("=" * 50)
+    
+    print("\n1. MLP for Classification (MNIST-style):")
+    # Multi-layer perceptron for image classification
+    mlp = Sequential([
+        Flatten(),              # Flatten input images
+        Linear(784, 256),       # First hidden layer
+        Linear(256, 128),       # Second hidden layer  
+        Linear(128, 10)         # Output layer (10 classes)
+    ])
+    
+    # Test with batch of "images"
+    batch_images = Tensor(np.random.randn(32, 28, 28))  # 32 MNIST-like images
+    mlp_output = mlp(batch_images)
+    print(f"   Input: {batch_images.shape} (batch of 28x28 images)")
+    print(f"   Output: {mlp_output.shape} (class logits for 32 images)")
+    print(f"   Parameters: {len(mlp.parameters())} tensors")
+    
+    print("\n2. CNN-style Architecture (with Flatten):")
+    # Simulate CNN → Flatten → Dense pattern
+    cnn_style = Sequential([
+        # Simulate Conv2D output with random "features"
+        Flatten(),              # Flatten spatial features
+        Linear(512, 256),       # Dense layer after convolution
+        Linear(256, 10)         # Classification head
+    ])
+    
+    # Test with simulated conv output
+    conv_features = Tensor(np.random.randn(16, 8, 8, 8))  # Simulated (B,C,H,W)
+    cnn_output = cnn_style(conv_features)
+    print(f"   Input: {conv_features.shape} (simulated conv features)")
+    print(f"   Output: {cnn_output.shape} (class predictions)")
+    
+    print("\n3. Deep Network with Many Layers:")
+    # Demonstrate deep composition
+    deep_net = Sequential()
+    layer_sizes = [100, 80, 60, 40, 20, 10]
+    
+    for i in range(len(layer_sizes) - 1):
+        deep_net.add(Linear(layer_sizes[i], layer_sizes[i+1]))
+        print(f"   Added layer: {layer_sizes[i]} → {layer_sizes[i+1]}")
+    
+    # Test deep network
+    deep_input = Tensor(np.random.randn(8, 100))
+    deep_output = deep_net(deep_input)
+    print(f"   Deep network: {deep_input.shape} → {deep_output.shape}")
+    print(f"   Total parameters: {len(deep_net.parameters())} tensors")
+    
+    print("\n4. Parameter Management Across Networks:")
+    networks = {'MLP': mlp, 'CNN-style': cnn_style, 'Deep': deep_net}
+    
+    for name, net in networks.items():
+        params = net.parameters()
+        total_params = sum(p.data.size for p in params)
+        memory_mb = total_params * 4 / (1024 * 1024)  # float32 = 4 bytes
+        print(f"   {name}: {len(params)} param tensors, {total_params:,} total params, {memory_mb:.2f} MB")
+    
+    print("\n🎉 All components work together seamlessly!")
+    print("   • Module system enables automatic parameter collection")
+    print("   • Linear layers handle matrix transformations") 
+    print("   • Sequential composes layers into complete architectures")
+    print("   • Flatten connects different layer types")
+    print("   • Everything integrates for production-ready neural networks!")
+
+demonstrate_complete_networks()
+
+# %% [markdown]
+"""
 ## 🤔 ML Systems Thinking: Interactive Questions
 
-Now that you've implemented the core components, let's think about their implications for ML systems:
+Now that you've implemented all the core neural network components, let's think about their implications for ML systems:
 """
 
 # %% nbgrader={"grade": false, "grade_id": "question-1", "locked": false, "schema_version": 3, "solution": false, "task": false}
@@ -859,95 +1225,79 @@ demonstrate_layer_composition()
 
 # %% [markdown]
 """
-## 🎯 MODULE SUMMARY: Layers
+## 🎯 MODULE SUMMARY: Layers - Complete Neural Network Foundation
 
 ## 🎯 What You've Accomplished
 
-You've successfully implemented the fundamental building blocks of neural networks:
+You've successfully implemented the complete foundation for neural networks - all the essential components working together:
 
-### ✅ **Core Implementations**
+### ✅ **Complete Core System**
+- **Module Base Class**: Parameter management and composition patterns for all neural network components
 - **Matrix Multiplication**: The computational primitive underlying all neural network operations
-- **Dense Layer**: Complete implementation with proper parameter initialization and forward propagation
-- **Module System**: Clean composition patterns for building complex neural networks
-- **Composition Patterns**: How layers stack together to form complex function approximators
+- **Linear (Dense) Layers**: Complete implementation with proper parameter initialization and forward propagation
+- **Sequential Networks**: Clean composition system for building complete neural network architectures
+- **Flatten Operations**: Tensor reshaping to connect different layer types (essential for CNN→MLP transitions)
 
 ### ✅ **Systems Understanding**
-- **Memory Analysis**: How layer size affects memory usage and why this matters for deployment
-- **Performance Characteristics**: Understanding computational complexity and scaling behavior
-- **Production Context**: Connection to real-world ML systems and optimization techniques
+- **Architectural Patterns**: How modular design enables everything from MLPs to complex deep networks
+- **Memory Analysis**: How layer composition affects memory usage and computational efficiency
+- **Performance Characteristics**: Understanding how tensor operations and layer composition affect performance
+- **Production Context**: Connection to real-world ML frameworks and their component organization
 
 ### ✅ **ML Engineering Skills**
-- **Parameter Management**: How neural networks store and update learnable parameters
-- **Batch Processing**: Efficient handling of multiple data samples simultaneously
-- **Architecture Design**: Trade-offs between network width, depth, and resource requirements
+- **Complete Parameter Management**: How neural networks automatically collect parameters from all components
+- **Network Composition**: Building complex architectures from simple, reusable components
+- **Tensor Operations**: Essential reshaping and transformation operations for different network types
+- **Clean Abstraction**: Professional software design patterns that scale to production systems
 
 ## 🔗 **Connection to Production ML Systems**
 
-Your implementations mirror the core concepts used in:
-- **PyTorch's nn.Linear**: Same mathematical operations with production optimizations
-- **TensorFlow's Dense layers**: Identical parameter structure and forward pass logic
-- **Transformer architectures**: Dense layers form the foundation of modern language models
-- **Computer vision models**: ConvNets use similar principles with spatial structure
+Your unified implementation mirrors the complete component systems used in:
+- **PyTorch's nn.Module system**: Same parameter management and composition patterns
+- **PyTorch's nn.Sequential**: Identical architecture composition approach
+- **All major frameworks**: The same modular design principles that power TensorFlow, JAX, and others
+- **Production ML systems**: Clean abstractions that enable complex models while maintaining manageable code
 
 ## 🚀 **What's Next**
 
-With solid layer implementations, you're ready to:
-- **Compose** these layers into complete neural networks
-- **Add** nonlinear activations to enable complex function approximation
-- **Implement** training algorithms to learn from data
-- **Scale** to larger, more sophisticated architectures
+With your complete layer foundation, you're ready to:
+- **Add nonlinear activations** to enable complex function approximation
+- **Implement loss functions** to define learning objectives
+- **Build training algorithms** to optimize networks on data
+- **Create specialized layers** like convolutions for computer vision
 
 ## 💡 **Key Systems Insights**
 
-1. **Matrix multiplication is the computational bottleneck** in neural networks
-2. **Memory layout and access patterns** often matter more than raw compute power
-3. **Layer composition** is the fundamental abstraction for building complex ML systems
-4. **Parameter initialization and management** directly affects training success
+1. **Modular composition is the key to scalable ML systems** - clean interfaces enable complex behaviors
+2. **Parameter management must be automatic** - manual parameter tracking doesn't scale to deep networks
+3. **Tensor operations like flattening are architectural requirements** - different layer types need different tensor shapes
+4. **Clean abstractions enable innovation** - good foundational design supports unlimited architectural experimentation
 
-You now understand the mathematical and computational foundations that enable neural networks to learn complex patterns from data!
+You now understand how to build complete, production-ready neural network foundations that can scale to any architecture!
 """
 
 # %% nbgrader={"grade": false, "grade_id": "final-demo", "locked": false, "schema_version": 3, "solution": false, "task": false}
 if __name__ == "__main__":
-    print("🔥 TinyTorch Layers Module - Final Demo")
-    print("=" * 50)
+    print("🔥 TinyTorch Layers Module - Complete Foundation Demo")
+    print("=" * 60)
     
-    # Create a simple neural network architecture
-    print("\n🏗️ Building a 3-layer neural network:")
-    layer1 = Dense(784, 128)  # Input layer (like MNIST images)
-    layer2 = Dense(128, 64)   # Hidden layer
-    layer3 = Dense(64, 10)    # Output layer (10 classes)
+    # Test all core components
+    print("\n🧪 Testing All Core Components:")
+    test_matmul()
+    test_dense_layer()
+    test_dense_parameter_management()
+    test_sequential_network()
+    test_flatten_operations()
     
-    print(f"  Layer 1: {layer1.input_size} → {layer1.output_size} ({layer1.weights.data.size:,} parameters)")
-    print(f"  Layer 2: {layer2.input_size} → {layer2.output_size} ({layer2.weights.data.size:,} parameters)")
-    print(f"  Layer 3: {layer3.input_size} → {layer3.output_size} ({layer3.weights.data.size:,} parameters)")
+    print("\n" + "="*60)
+    demonstrate_complete_networks()
     
-    # Simulate forward pass
-    print("\n🚀 Forward pass through network:")
-    batch_size = 32
-    input_data = Tensor(np.random.randn(batch_size, 784))
-    
-    print(f"  Input shape: {input_data.shape}")
-    hidden1 = layer1(input_data)
-    print(f"  After layer 1: {hidden1.shape}")
-    hidden2 = layer2(hidden1)
-    print(f"  After layer 2: {hidden2.shape}")
-    output = layer3(hidden2)
-    print(f"  Final output: {output.shape}")
-    
-    # Calculate total parameters
-    total_params = (layer1.weights.data.size + layer1.bias.data.size + 
-                   layer2.weights.data.size + layer2.bias.data.size +
-                   layer3.weights.data.size + layer3.bias.data.size)
-    
-    print(f"\n📊 Network Statistics:")
-    print(f"  Total parameters: {total_params:,}")
-    print(f"  Memory usage: ~{total_params * 4 / 1024 / 1024:.2f} MB (float32)")
-    print(f"  Forward pass: {batch_size} samples processed simultaneously")
-    
-    print("\n✅ Neural network construction complete!")
-    print("Ready for activation functions and training algorithms!")
-    
-    # Run layer composition demo
     print("\n" + "="*60)
     demonstrate_layer_composition()
+    
+    print("\n🎉 Complete neural network foundation ready!")
+    print("   ✅ Module system for parameter management")
+    print("   ✅ Linear layers for transformations")
+    print("   ✅ Sequential networks for composition")
+    print("   ✅ Flatten operations for tensor reshaping")
+    print("   ✅ All components tested and integrated!")

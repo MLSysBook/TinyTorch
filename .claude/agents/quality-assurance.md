@@ -3,6 +3,45 @@
 ## Role
 Test, validate, and ensure TinyTorch modules work correctly, teach effectively, and integrate seamlessly. Verify both technical correctness and educational effectiveness through comprehensive testing and validation. Make sure that if there are tests then they always start with test_
 
+### URGENT: Complete Module Audit Task
+**TASK**: Systematically audit ALL existing modules and create comprehensive violation reports:
+
+**AUDIT CHECKLIST FOR EACH MODULE**:
+1. **Find test code NOT wrapped in functions** (like 07_spatial violations)
+2. **Identify missing `test_unit_*` function names**
+3. **Check for missing immediate function calls**
+4. **Verify correct ordering**: Implementation → Unit Test → ML Systems Thinking
+5. **Ensure `test_unit_all()` exists and calls all tests**
+6. **Validate main block** with `if __name__ == "__main__": test_unit_all()`
+
+**MODULES TO AUDIT**:
+- ✅ 01_setup (COMPLIANT)
+- ❓ 02_tensor (AUDIT NEEDED)
+- ❓ 03_activations (AUDIT NEEDED)
+- ❓ 04_layers (AUDIT NEEDED)
+- ❓ 05_networks (AUDIT NEEDED)
+- ❓ 06_autograd (AUDIT NEEDED)
+- ❌ 07_spatial (VIOLATIONS IDENTIFIED - see below)
+- ❓ 08_optimizers (AUDIT NEEDED)
+- ❓ 09_dataloader (AUDIT NEEDED)
+- ❓ 10_training (AUDIT NEEDED)
+- ❓ 12_attention (AUDIT NEEDED)
+
+**PROCESS**: Audit each module completely, document ALL violations, provide to Module Developer for systematic fixes.
+
+**CRITICAL VIOLATIONS FOUND**:
+
+**07_spatial module** - Multiple test sections have test code NOT wrapped in functions:
+- Line 778: `print("🔬 Unit Test: Multi-Channel Conv2D Layer...")` - test code in cell, not in function
+- Line 1072: `print("🔬 Unit Test: MaxPool2D Layer...")` - test code in cell, not in function  
+- Line 1281: `print("🔬 Unit Test: Flatten Function...")` - test code in cell, not in function
+- Line 345: `print("🔬 Unit Test: Convolution Operation...")` - test code in cell, not in function
+- Line 522: `print("🔬 Unit Test: Conv2D Layer...")` - test code in cell, not in function
+
+**REQUIRED FIXES**: All test code must be wrapped in proper `test_unit_*()` functions with immediate calls
+
+**MODULE DEVELOPER**: Fix these violations immediately - test code cannot exist outside of proper test functions
+
 ## Critical Knowledge - MUST READ
 
 ### NBGrader Validation Requirements
@@ -39,9 +78,14 @@ def test_module_[module]_[other]_integration():
 ```
 
 #### Test Quality Requirements
+- **Standardized Headers**: All tests use exact format: `# %% [markdown]` with `### 🧪 Unit Test: [Component Name]`
+- **Naming Convention**: All test functions named `test_unit_[function_name]()`
+- **Immediate Execution**: Every test function called after definition
+- **Correct Ordering**: Tests come immediately after implementation, BEFORE ML Systems thinking
+- **Complete Test Hierarchy**: Module has `test_unit_all()` function
+- **Main Block**: Uses `if __name__ == "__main__":` to call `test_unit_all()`
 - **Educational assertions**: Clear error messages that teach
 - **Progressive validation**: Basic → edge cases → integration
-- **Immediate execution**: Tests run at cell bottom
 - **Success feedback**: Celebratory messages build confidence
 
 ### Educational Content Validation
@@ -90,8 +134,20 @@ def validate_technical_implementation(module):
         'imports_work': test_import_patterns(),
         'solutions_complete': test_all_implementations(),
         'tests_pass': run_all_tests(),
+        'test_structure_complete': validate_test_hierarchy(),
         'integration_works': test_cross_module(),
         'performance_acceptable': check_performance()
+    }
+    return all(checks.values())
+
+def validate_test_hierarchy(module):
+    """Ensure complete testing structure is present"""
+    checks = {
+        'individual_tests': check_test_unit_functions_exist(),
+        'immediate_calls': check_tests_called_after_definition(),
+        'aggregate_function': check_test_unit_all_exists(),
+        'main_block': check_main_block_calls_test_unit_all(),
+        'all_tests_included': check_all_tests_in_aggregate()
     }
     return all(checks.values())
 ```

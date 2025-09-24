@@ -1,123 +1,104 @@
-# TinyTorch Examples - Modern API
+# TinyTorch Examples: A Journey Through AI History
 
-**Professional ML Applications with Clean, PyTorch-like Interfaces**
+These examples tell the story of neural networks through historical breakthroughs. Each example represents a pivotal moment in AI history, and you'll build the same architectures that changed the field.
 
-These examples demonstrate TinyTorch's modern API that mirrors industry-standard PyTorch patterns. Students learn fundamental ML concepts while using professional development practices.
+## The Historical Journey
 
-## 🎯 Modern API Philosophy
+### 1957: The Perceptron - Where It All Began
+**`perceptron_1957/rosenblatt_perceptron.py`** (Run after Module 4)
+- Frank Rosenblatt's first trainable neural network
+- Could learn linearly separable patterns
+- Sparked dreams of artificial intelligence
+- **You'll build:** Single-layer network for linear classification
 
-**Clean APIs enhance learning rather than obscure it:**
-- Students still implement core algorithms (gradients, backpropagation, optimizers)
-- Professional patterns prepare students for industry
-- Reduced boilerplate lets students focus on concepts
-- Scalable practices work from toys to production
+### 1969: The XOR Problem - The First AI Winter
+**`xor_1969/minsky_xor_problem.py`** (Run after Module 6)
+- Minsky & Papert proved perceptrons can't solve XOR
+- Led to decade-long "AI Winter" (1969-1980s)
+- Solution required hidden layers + nonlinearity + backpropagation
+- **You'll build:** Multi-layer perceptron that solves XOR
 
-## 📁 Available Examples
+### 1998: LeNet - The Convolution Revolution
+**`lenet_1998/train_mlp.py`** (Run after Module 9)
+- Yann LeCun's convolutional neural network
+- First practical system for reading handwritten digits
+- Deployed in banks for check processing
+- **You'll build:** Network for MNIST digit recognition
 
-### 1. **mnist/** - Multi-Layer Perceptron Fundamentals
-**Neural Network Basics with Modern Patterns**
+### 2012: AlexNet - The Deep Learning Explosion
+**`alexnet_2012/train_cnn.py`** (Run after Module 10)
+- Alex Krizhevsky's ImageNet breakthrough
+- Proved deep networks could surpass traditional CV
+- Triggered the modern deep learning boom
+- **You'll build:** Deep CNN for CIFAR-10 classification
 
-- `train_mlp_modern_api.py` - Clean MLP implementation for digit classification
-- Demonstrates automatic parameter registration and collection
-- Shows modern training loop patterns with optimizers
+### 2018: GPT - The Transformer Era
+**`gpt_2018/simple_tinygpt.py`** (Run after Module 14)
+- OpenAI's transformer architecture
+- Self-attention revolutionized NLP
+- Foundation for ChatGPT and modern AI
+- **You'll build:** Character-level language model
 
-**Key Learning**: Neural network fundamentals with professional interfaces
+## Running the Examples
 
-### 2. **xornet/** - Nonlinear Learning
-**Proves Neural Networks Can Learn Complex Functions**
-
-- `train_xor_modern_api.py` - Clean XOR solution using modern API
-- Demonstrates PyTorch-like model definition and training
-- Shows API comparison between old and new patterns
-
-**Key Learning**: Nonlinear function approximation with clean code
-
-### 3. **cifar10/** - Computer Vision
-**Real-World Image Classification**
-
-- `train_cnn_modern_api.py` - CNN training with modern patterns
-- Full CIFAR-10 dataset loading and preprocessing
-- Professional model definition and training loops
-
-**Key Learning**: Convolutional networks and real data handling
-
-## 🚀 Modern API Patterns Demonstrated
-
-### Clean Model Definition
-```python
-class SimpleMLP(nn.Module):
-    def __init__(self):
-        super().__init__()
-        self.hidden1 = nn.Linear(784, 128)  # Auto-registered!
-        self.hidden2 = nn.Linear(128, 64)   # Auto-registered!
-        self.output = nn.Linear(64, 10)     # Auto-registered!
-    
-    def forward(self, x):
-        x = F.flatten(x, start_dim=1)
-        x = F.relu(self.hidden1(x))
-        x = F.relu(self.hidden2(x))
-        return self.output(x)
-```
-
-### Automatic Parameter Collection
-```python
-model = SimpleMLP()
-optimizer = optim.Adam(model.parameters())  # All parameters automatically collected!
-```
-
-### Professional Training Loop
-```python
-for epoch in range(num_epochs):
-    outputs = model(inputs)
-    loss = criterion(outputs, targets)
-    loss.backward()
-    optimizer.step()
-    optimizer.zero_grad()
-```
-
-## 🏃 Running the Examples
+Each example shows which modules are required:
 
 ```bash
-# From TinyTorch root directory
+# After Module 4: Can build architectures
+python examples/perceptron_1957/rosenblatt_perceptron.py
 
-# MNIST MLP - Quick demo with synthetic data
-python examples/mnist/train_mlp_modern_api.py
+# After Module 6: Can train with gradients  
+python examples/xor_1969/minsky_xor_problem.py
 
-# XOR Network - Seconds to solve, shows API comparison
-python examples/xornet/train_xor_modern_api.py
+# After Module 9: Can use convolutions
+python examples/lenet_1998/train_mlp.py
 
-# CIFAR-10 CNN - Real image classification (downloads data)
-python examples/cifar10/train_cnn_modern_api.py
+# After Module 10: Full training pipeline
+python examples/alexnet_2012/train_cnn.py
+
+# After Module 14: Transformers work!
+python examples/gpt_2018/simple_tinygpt.py
 ```
 
-## 📊 Expected Results
+## The Learning Flow
 
-- **MNIST MLP**: Learns synthetic data patterns quickly
-- **XOR Network**: 100% accuracy on XOR problem (given sufficient training)
-- **CIFAR-10 CNN**: 60%+ accuracy on real image classification
+1. **Build modules** → Core engine development
+2. **Pass unit tests** → Verify your implementation
+3. **Complete module** → `tito module complete XX_modulename`
+4. **Pass integration tests** → Automatic validation with other modules
+5. **Unlock capability** → New historical example available!
+6. **Run example** → See what you've enabled!
 
-## 🎓 Educational Value
+📚 **See [CAPABILITIES.md](CAPABILITIES.md) for the complete progression system**
 
-These examples prove that **modern APIs enhance educational outcomes**:
+## PyTorch-Style Code
 
-1. **Faster Learning**: Students spend time on concepts, not boilerplate
-2. **Industry Preparation**: Patterns transfer directly to PyTorch/TensorFlow
-3. **Scalable Practices**: Same patterns work for research and production
-4. **Professional Development**: Real-world software engineering practices
+All examples follow modern PyTorch conventions:
 
-## 🔧 API Features Showcased
+```python
+class HistoricNetwork:
+    def __init__(self):
+        # Define layers
+        self.fc1 = Dense(input_size, hidden_size)
+        self.activation = ReLU()
+        self.fc2 = Dense(hidden_size, output_size)
+    
+    def forward(self, x):
+        # Forward pass
+        x = self.fc1(x)
+        x = self.activation(x)
+        x = self.fc2(x)
+        return x
+```
 
-- **Automatic Parameter Registration**: Models collect their own parameters
-- **Functional Interface**: F.relu, F.flatten for common operations
-- **Module System**: Hierarchical model construction
-- **Modern Optimizers**: Adam, SGD with automatic parameter collection
-- **Clean Training Loops**: Professional patterns for model training
+## What You're Building
 
-## 💡 For Students
+You're not just learning ML - you're rebuilding the breakthroughs that created modern AI:
 
-You've built a framework with **industry-standard interfaces** that can:
-- **Learn any function** (XOR, MNIST patterns)
-- **Process real data** (CIFAR-10 images)
-- **Scale to complex models** (CNNs, future transformers)
+- **1957**: Linear models that could learn
+- **1969**: Multi-layer networks for complex patterns  
+- **1998**: Convolutional networks for vision
+- **2012**: Deep networks that changed everything
+- **2018**: Attention mechanisms powering ChatGPT
 
-This is exactly how professional ML engineers work!
+Each example runs on YOUR implementation. When GPT works, it's because YOU built every component from scratch!
