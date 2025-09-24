@@ -172,48 +172,40 @@ After TinyTorch, you'll be the person your team asks:
 
 ---
 
-## 📚 Course Journey: Recreating ML History in 16 Modules
+## 📚 **STREAMLINED Journey: Train Neural Networks in 7 Modules!**
 
-```{admonition} 🧠 MLP Era Foundation (Modules 1-4)
-:class: note
-**1. Setup** • **2. Tensors** • **3. Activations** • **4. Layers**
-
-Build the mathematical foundation that powered 1980s neural networks: tensor operations, nonlinear functions, and dense layers.
+```{admonition} ✨ **NEW: Accelerated Learning Path** 
+:class: important
+**BREAKTHROUGH: Students can train neural networks after just 7 modules** (vs 11 before)!
+The reorganization eliminates forward dependencies and focuses on essentials.
 ```
 
-```{admonition} 🧠 MLP Intelligence (Modules 5-6) 
+```{admonition} 🧠 Neural Network Foundations (Modules 1-7)
 :class: note
-**5. Dense Networks** • **6. Training Loops**
+**1. Setup** • **2. Tensor + Autograd** • **3. ReLU + Softmax** • **4. Linear + Module + Flatten**  
+**5. Loss Functions** • **6. Optimizers** • **7. Training**
 
-Complete the MLP era: sequential networks and training systems that achieve **52.7% CIFAR-10 accuracy** - the baseline everyone tried to beat.
+**GAME CHANGER**: Complete neural network training capability in 7 modules!
+- **Module 2**: Gradients from the start (no waiting until Module 9!)
+- **Module 3**: Focus on 2 essential activations (not 6 distractions)
+- **Module 4**: All building blocks in one place (Linear + Module + Flatten)
+- **Module 7**: **Train XOR and MNIST after 7 modules!**
 ```
 
-```{admonition} 📡 CNN Revolution (Modules 7-8)
+```{admonition} 📡 Computer Vision (Modules 8-9)
 :class: note
-**7. Spatial Operations** • **8. DataLoader**
+**8. CNN Operations** • **9. DataLoader**
 
-Enter the 1989 CNN breakthrough: convolutional layers and real data loading. Build **LeNet-1** (39.4%) and **LeNet-5** (47.5%) - witness the spatial intelligence revolution.
+Add convolutional intelligence: Conv2d, MaxPool2d, and efficient data loading.
+**Result**: Train CNNs on CIFAR-10 after just 9 modules!
 ```
 
-```{admonition} 🔥 Modern Training Systems (Modules 9-12)
+```{admonition} 🔥 Language Models (Modules 10-12)
 :class: note
-**9. Autograd** • **10. Optimizers** • **11. Training** • **12. Attention**
+**10. Embeddings** • **11. Attention** • **12. Transformers**
 
-Master the systems that power modern AI: automatic differentiation, advanced optimizers, and attention mechanisms. Push CNNs beyond MLP baselines.
-```
-
-```{admonition} 🚀 Production Systems (Modules 13-15)
-:class: note
-**13. Compression** • **14. Kernels** • **15. MLOps**
-
-Scale to production: model optimization, high-performance computing, and deployment monitoring with real-world patterns.
-```
-
-```{admonition} 🤖 Universal Intelligence (Module 16)
-:class: note
-**16. TinyGPT**
-
-The culmination: GPT-style transformers for language generation using **95% of your vision components**. Prove your framework is universal - the same foundations power vision AND language.
+Universal intelligence: Build GPT-style language models using your vision infrastructure.
+**Result**: Complete TinyGPT using 95% of your vision components!
 ```
 
 ---
@@ -227,36 +219,32 @@ The culmination: GPT-style transformers for language generation using **95% of y
 
 ```{mermaid}
 flowchart TD
-    Z[00_introduction<br/>🎯 System Overview] --> A[01_setup<br/>Setup & Environment] 
-    A --> B[02_tensor<br/>Core Tensor Operations]
-    B --> C[03_activations<br/>ReLU, Sigmoid, Tanh]
-    B --> I[09_autograd<br/>Automatic Differentiation]
+    A[01_setup<br/>🔧 Environment & CLI] --> B[02_tensor<br/>📊 Tensor + Basic Autograd<br/>🚀 GRADIENTS FROM START!]
     
-    C --> D[04_layers<br/>Dense Layers]
-    D --> E[05_dense<br/>Sequential Networks]
+    B --> C[03_activations<br/>⚡ ReLU + Softmax<br/>🎯 ESSENTIALS ONLY]
     
-    E --> F[06_spatial<br/>Convolutional Networks]
-    E --> G[07_attention<br/>Self-Attention]
+    C --> D[04_layers<br/>🧱 Linear + Module + Flatten<br/>💎 COMPLETE BUILDING BLOCKS]
     
-    B --> H[08_dataloader<br/>Data Loading]
+    D --> E[05_losses<br/>📊 MSE + CrossEntropy<br/>🎯 WHAT TO OPTIMIZE]
     
-    I --> J[10_optimizers<br/>SGD & Adam]
+    E --> F[06_optimizers<br/>🚀 SGD + Adam<br/>🎯 HOW TO OPTIMIZE]
     
-    H --> K[11_training<br/>Training Loops]
-    E --> K
-    F --> K
-    G --> K
-    J --> K
+    F --> G[07_training<br/>🔥 Complete Training<br/>✅ TRAIN NETWORKS NOW!]
     
-    K --> L[12_compression<br/>Model Optimization]
-    K --> M[13_kernels<br/>High-Performance Ops]
-    K --> N[14_benchmarking<br/>Performance Analysis]
-    K --> O[15_mlops<br/>Production Monitoring]
+    G --> H[08_cnn_ops<br/>👁️ Conv2d + MaxPool2d<br/>🖼️ VISION INTELLIGENCE]
     
-    L --> P[16_tinygpt<br/>🔥 Language Models]
-    G --> P
-    J --> P
-    K --> P
+    G --> I[09_dataloader<br/>📁 CIFAR10 + DataLoader<br/>🗂️ REAL DATA]
+    
+    H --> I
+    I --> J[🖼️ CIFAR-10 CNNs<br/>Train on Real Images]
+    
+    G --> K[10_embeddings<br/>📚 Token Embeddings]
+    K --> L[11_attention<br/>🔍 Multi-Head Attention]
+    L --> M[12_transformers<br/>🤖 TinyGPT<br/>🔥 LANGUAGE MODELS]
+    
+    style G fill:#ff6b6b,stroke:#333,stroke-width:3px,color:#fff
+    style J fill:#4ecdc4,stroke:#333,stroke-width:3px,color:#fff
+    style M fill:#45b7d1,stroke:#333,stroke-width:3px,color:#fff
 ```
 
 **Result:** Every component you build converges into TinyGPT - proving your framework is complete and production-ready.

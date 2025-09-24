@@ -1,0 +1,33 @@
+name: "Attention"
+number: 13
+description: "Scaled dot-product and multi-head attention mechanisms that enable transformer architectures"
+learning_objectives:
+  - "Implement scaled dot-product attention with proper masking and numerical stability"
+  - "Build multi-head attention with parallel head processing and output projection"
+  - "Design KV-cache systems for efficient autoregressive generation"
+  - "Understand attention's O(N²) scaling and memory optimization techniques"
+  - "Analyze attention performance bottlenecks and production optimization strategies"
+
+prerequisites:
+  - "02_tensor"
+  - "12_embeddings"
+
+exports:
+  - "ScaledDotProductAttention"
+  - "MultiHeadAttention"
+  - "KVCache"
+  - "AttentionProfiler"
+
+systems_concepts:
+  - "Quadratic memory scaling O(N²) with sequence length"
+  - "Memory-bandwidth bound attention computation"
+  - "KV-cache optimization for autoregressive generation"
+  - "Multi-head parallelization and hardware optimization"
+  - "Attention masking patterns and causal dependencies"
+
+ml_systems_focus: "Attention memory scaling, generation efficiency optimization, sequence length limitations"
+
+estimated_time: "5-6 hours"
+
+next_modules:
+  - "14_transformers"
