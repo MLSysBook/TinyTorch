@@ -349,19 +349,6 @@ class Tensor:
         ### BEGIN SOLUTION
         return self._data
         ### END SOLUTION
-    
-    @data.setter
-    def data(self, value: Union[np.ndarray, 'Tensor']) -> None:
-        """
-        Set the underlying data of the tensor.
-        
-        Args:
-            value: New data (numpy array or Tensor)
-        """
-        if isinstance(value, Tensor):
-            self._data = value._data.copy()
-        else:
-            self._data = np.array(value)
 
     @property
     def shape(self) -> Tuple[int, ...]:
@@ -510,52 +497,8 @@ class Tensor:
         - NumPy handles broadcasting automatically
         """
         ### BEGIN SOLUTION
-        result_data = self._data + other._data
-        result = Tensor(result_data)
-        
-        # Set gradient tracking if either input requires gradients
-        if self.requires_grad or other.requires_grad:
-            result.requires_grad = True
-            
-            def grad_fn(grad):
-                # Addition gradient: gradient flows equally to both inputs
-                if self.requires_grad:
-                    # Handle broadcasting by summing over added dimensions
-                    grad_self = grad.data
-                    if self.shape != grad.shape:
-                        # Sum over broadcasted dimensions
-                        sum_axes = []
-                        for i in range(len(grad.shape) - len(self.shape)):
-                            sum_axes.append(i)
-                        if sum_axes:
-                            grad_self = np.sum(grad_self, axis=tuple(sum_axes))
-                        # Sum over dimensions where self had size 1 but result doesn't
-                        for i, (s1, s2) in enumerate(zip(self.shape, grad_self.shape)):
-                            if s1 == 1 and s2 > 1:
-                                grad_self = np.sum(grad_self, axis=i, keepdims=True)
-                        grad_self = grad_self.reshape(self.shape)
-                    self.backward(Tensor(grad_self))
-                
-                if other.requires_grad:
-                    # Handle broadcasting by summing over added dimensions
-                    grad_other = grad.data
-                    if other.shape != grad.shape:
-                        # Sum over broadcasted dimensions
-                        sum_axes = []
-                        for i in range(len(grad.shape) - len(other.shape)):
-                            sum_axes.append(i)
-                        if sum_axes:
-                            grad_other = np.sum(grad_other, axis=tuple(sum_axes))
-                        # Sum over dimensions where other had size 1 but result doesn't
-                        for i, (s1, s2) in enumerate(zip(other.shape, grad_other.shape)):
-                            if s1 == 1 and s2 > 1:
-                                grad_other = np.sum(grad_other, axis=i, keepdims=True)
-                        grad_other = grad_other.reshape(other.shape)
-                    other.backward(Tensor(grad_other))
-            
-            result._grad_fn = grad_fn
-        
-        return result
+        result = self._data + other._data
+        return Tensor(result)
         ### END SOLUTION
 
     def multiply(self, other: 'Tensor') -> 'Tensor':
@@ -591,48 +534,8 @@ class Tensor:
         - This is element-wise, not matrix multiplication
         """
         ### BEGIN SOLUTION
-        result_data = self._data * other._data
-        result = Tensor(result_data)
-        
-        # Set gradient tracking if either input requires gradients
-        if self.requires_grad or other.requires_grad:
-            result.requires_grad = True
-            
-            def grad_fn(grad):
-                # Multiplication gradient: d/da (a*b) = b, d/db (a*b) = a
-                if self.requires_grad:
-                    grad_self = grad.data * other._data
-                    if self.shape != grad_self.shape:
-                        # Handle broadcasting
-                        sum_axes = []
-                        for i in range(len(grad_self.shape) - len(self.shape)):
-                            sum_axes.append(i)
-                        if sum_axes:
-                            grad_self = np.sum(grad_self, axis=tuple(sum_axes))
-                        for i, (s1, s2) in enumerate(zip(self.shape, grad_self.shape)):
-                            if s1 == 1 and s2 > 1:
-                                grad_self = np.sum(grad_self, axis=i, keepdims=True)
-                        grad_self = grad_self.reshape(self.shape)
-                    self.backward(Tensor(grad_self))
-                
-                if other.requires_grad:
-                    grad_other = grad.data * self._data
-                    if other.shape != grad_other.shape:
-                        # Handle broadcasting
-                        sum_axes = []
-                        for i in range(len(grad_other.shape) - len(other.shape)):
-                            sum_axes.append(i)
-                        if sum_axes:
-                            grad_other = np.sum(grad_other, axis=tuple(sum_axes))
-                        for i, (s1, s2) in enumerate(zip(other.shape, grad_other.shape)):
-                            if s1 == 1 and s2 > 1:
-                                grad_other = np.sum(grad_other, axis=i, keepdims=True)
-                        grad_other = grad_other.reshape(other.shape)
-                    other.backward(Tensor(grad_other))
-            
-            result._grad_fn = grad_fn
-        
-        return result
+        result = self._data * other._data
+        return Tensor(result)
         ### END SOLUTION
 
     def __add__(self, other: Union['Tensor', int, float]) -> 'Tensor':
@@ -780,51 +683,6 @@ class Tensor:
     def mean(self) -> 'Tensor':
         """Computes the mean of the tensor's elements."""
         return Tensor(np.mean(self.data))
-    
-    def sum(self, axis=None, keepdims=False) -> 'Tensor':
-        """
-        Sum tensor elements along specified axes.
-        
-        Args:
-            axis: Axis or axes to sum over. If None, sum all elements.
-            keepdims: Whether to keep dimensions of size 1 in output.
-            
-        Returns:
-            New tensor with summed values.
-        """
-        result_data = np.sum(self._data, axis=axis, keepdims=keepdims)
-        result = Tensor(result_data)
-        
-        if self.requires_grad:
-            result.requires_grad = True
-            
-            def grad_fn(grad):
-                # Sum gradient: broadcast gradient back to original shape
-                grad_data = grad.data
-                if axis is None:
-                    # Sum over all axes - gradient is broadcast to full shape
-                    grad_data = np.full(self.shape, grad_data)
-                else:
-                    # Sum over specific axes - expand back those dimensions
-                    if not isinstance(axis, tuple):
-                        axis_tuple = (axis,) if axis is not None else ()
-                    else:
-                        axis_tuple = axis
-                    
-                    # Expand dimensions that were summed
-                    for ax in sorted(axis_tuple):
-                        if ax < 0:
-                            ax = len(self.shape) + ax
-                        grad_data = np.expand_dims(grad_data, axis=ax)
-                    
-                    # Broadcast to original shape
-                    grad_data = np.broadcast_to(grad_data, self.shape)
-                
-                self.backward(Tensor(grad_data))
-            
-            result._grad_fn = grad_fn
-        
-        return result
 
     def matmul(self, other: 'Tensor') -> 'Tensor':
         """
@@ -876,8 +734,8 @@ class Tensor:
         """
         Compute gradients for this tensor and propagate backward.
 
-        Basic backward pass - accumulates gradients and propagates to dependencies.
-        This enables simple gradient computation for basic operations.
+        This is a stub for now - full implementation in Module 09 (Autograd).
+        For now, just accumulates gradients if requires_grad=True.
 
         Args:
             gradient: Gradient from upstream. If None, assumes scalar with grad=1
@@ -894,19 +752,6 @@ class Tensor:
             self.grad = gradient
         else:
             self.grad = self.grad + gradient
-
-        # Propagate to dependencies via grad_fn
-        if self._grad_fn is not None:
-            self._grad_fn(gradient)
-    
-    def zero_grad(self):
-        """
-        Reset gradients to None. Used by optimizers before backward pass.
-        
-        This method is called by optimizers to clear gradients before
-        computing new ones, preventing gradient accumulation across batches.
-        """
-        self.grad = None
 
     def reshape(self, *shape: int) -> 'Tensor':
         """

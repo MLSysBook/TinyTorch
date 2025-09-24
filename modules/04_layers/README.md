@@ -4,7 +4,7 @@
 - **Difficulty**: ⭐⭐ Intermediate
 - **Time Estimate**: 4-5 hours
 - **Prerequisites**: Tensor, Activations modules
-- **Next Steps**: Networks module
+- **Next Steps**: Loss Functions module
 
 Build the fundamental transformations that compose into neural networks. This module teaches you that layers are simply functions that transform tensors, and neural networks are just sophisticated function composition using these building blocks.
 
@@ -13,7 +13,7 @@ Build the fundamental transformations that compose into neural networks. This mo
 By the end of this module, you will be able to:
 
 - **Understand layers as mathematical functions**: Recognize that layers transform tensors through well-defined mathematical operations
-- **Implement Dense layers**: Build linear transformations using matrix multiplication and bias addition (`y = Wx + b`)
+- **Implement Linear layers + Module base + Flatten**: Complete neural network building blocks
 - **Integrate activation functions**: Combine linear layers with nonlinear activations to enable complex pattern learning
 - **Compose simple building blocks**: Chain layers together to create complete neural network architectures
 - **Debug layer implementations**: Use shape analysis and mathematical properties to verify correct implementation
@@ -22,45 +22,50 @@ By the end of this module, you will be able to:
 
 This module follows TinyTorch's **Build → Use → Reflect** framework:
 
-1. **Build**: Implement Dense layers and activation functions from mathematical foundations
-2. **Use**: Transform tensors through layer operations and see immediate results in various scenarios
-3. **Reflect**: Understand how simple layers compose into complex neural networks and why architecture matters
+1. **Build**: Implement Linear layers, Module base class, and Flatten operation
+2. **Use**: Build complete neural networks with parameter tracking
+3. **Reflect**: Understand how Module base enables automatic parameter management
 
 ## 📚 What You'll Build
 
-### Core Layer Implementation
+### 🎯 **COMPLETE BUILDING BLOCKS: Everything You Need**
 ```python
-# Dense layer: fundamental building block
-layer = Dense(input_size=3, output_size=2)
-x = Tensor([[1.0, 2.0, 3.0]])
-y = layer(x)  # Shape transformation: (1, 3) → (1, 2)
+# Linear layer: fundamental building block
+class MLP(Module):  # Module base provides parameter tracking!
+    def __init__(self):
+        super().__init__()
+        self.fc1 = Linear(784, 128)  # Linear transformation
+        self.fc2 = Linear(128, 10)   # Output layer
+    
+    def forward(self, x):
+        x = flatten(x, start_dim=1)  # Flatten: 2D images → 1D vectors
+        x = self.fc1(x)              # Linear: matrix multiply + bias
+        x = relu(x)                  # Activation (from Module 03)
+        return self.fc2(x)           # Final prediction
 
-# With activation functions
-relu = ReLU()
-activated = relu(y)  # Apply nonlinearity
-
-# Chaining operations
-layer1 = Dense(784, 128)  # Image → hidden
-layer2 = Dense(128, 10)   # Hidden → classes
-activation = ReLU()
-
-# Forward pass composition
-x = Tensor([[1.0, 2.0, 3.0, ...]])  # Input data
-h1 = activation(layer1(x))           # First transformation
-output = layer2(h1)                  # Final prediction
+# Automatic parameter collection!
+model = MLP()
+params = model.parameters()  # Gets all Linear layer weights/biases automatically!
+optimizer = SGD(params)      # Ready for training!
 ```
 
-### Dense Layer Implementation
+### Linear Layer (renamed from Dense)
 - **Mathematical foundation**: Linear transformation `y = Wx + b`
 - **Weight initialization**: Xavier/Glorot uniform initialization for stable gradients
 - **Bias handling**: Optional bias terms for translation invariance
 - **Shape management**: Automatic handling of batch dimensions and matrix operations
 
-### Activation Layer Integration
-- **ReLU integration**: Most common activation for hidden layers
-- **Sigmoid integration**: Probability outputs for binary classification
-- **Tanh integration**: Zero-centered outputs for better optimization
-- **Composition patterns**: Standard ways to combine layers and activations
+### Module Base Class - **GAME CHANGER**
+- **Automatic parameter tracking**: Collects all trainable weights recursively
+- **Nested module support**: Handles complex architectures automatically
+- **Clean interface**: Standard `forward()` method for all layers
+- **Production pattern**: Same design as PyTorch nn.Module
+
+### Flatten Operation - **ESSENTIAL FOR VISION**
+- **Shape transformation**: Convert 2D/3D tensors to 1D for Linear layers
+- **Batch preservation**: Keeps batch dimension, flattens the rest
+- **Vision pipeline**: Connect CNNs to fully-connected layers
+- **Memory efficient**: View operation, no data copying
 
 ## 🚀 Getting Started
 
@@ -78,11 +83,11 @@ tito test --module activations
 
 ### Development Workflow
 1. **Open the development file**: `modules/source/04_layers/layers_dev.py`
-2. **Implement Dense layer class**: Start with `__init__` and `forward` methods
-3. **Test layer functionality**: Use inline tests for immediate feedback
-4. **Add activation integration**: Combine layers with activation functions
-5. **Build complete networks**: Chain multiple layers together
-6. **Export and verify**: `tito export --module layers && tito test --module layers`
+2. **Implement Linear layer**: Matrix multiplication + bias (`y = Wx + b`)
+3. **Build Module base class**: Automatic parameter collection infrastructure
+4. **Add Flatten operation**: Essential for connecting CNNs to Linear layers
+5. **Build complete networks**: Use Module base to create complex architectures
+6. **Export and verify**: `tito module complete 04_layers` (includes testing)
 
 ## 🧪 Testing Your Implementation
 

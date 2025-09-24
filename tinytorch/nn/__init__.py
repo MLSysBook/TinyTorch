@@ -37,17 +37,58 @@ while this infrastructure provides the clean API they expect from PyTorch.
 from ..core.layers import Linear, Module  # Use the same Module class as layers
 from ..core.spatial import Conv2d
 
+# Import transformer components
+from ..core.embeddings import Embedding, PositionalEncoding
+from ..core.attention import SelfAttention, scaled_dot_product_attention
+from ..core.transformers import LayerNorm, TransformerBlock
+
 # Import functional interface  
 from . import functional
 
 # Make functional available as F (PyTorch convention)
 import tinytorch.nn.functional as F
 
+# Utility functions
+def Parameter(data, requires_grad=True):
+    """Create a parameter tensor (learnable weight)."""
+    from ..core.tensor import Tensor
+    import numpy as np
+    if not isinstance(data, Tensor):
+        data = Tensor(np.array(data))
+    data.requires_grad = requires_grad
+    return data
+
+class Sequential(Module):
+    """Sequential container for stacking layers."""
+    def __init__(self, *layers):
+        super().__init__()
+        self.layers = layers
+        
+    def forward(self, x):
+        for layer in self.layers:
+            x = layer(x) if hasattr(layer, '__call__') else layer.forward(x)
+        return x
+    
+    def parameters(self):
+        params = []
+        for layer in self.layers:
+            if hasattr(layer, 'parameters'):
+                params.extend(layer.parameters())
+        return params
+
 # Export the main public API
 __all__ = [
     'Module',
     'Linear', 
     'Conv2d',
+    'Embedding',
+    'PositionalEncoding',
+    'SelfAttention',
+    'LayerNorm',
+    'TransformerBlock',
+    'Sequential',
+    'Parameter',
+    'scaled_dot_product_attention',
     'functional',
     'F'
 ]

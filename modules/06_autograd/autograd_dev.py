@@ -451,14 +451,11 @@ def add(a: Union[Variable, float, int], b: Union[Variable, float, int]) -> Varia
     def grad_fn(grad_output):
         # Addition distributes gradients equally, but must handle broadcasting
         if a.requires_grad:
-            # Get gradient data
-            if hasattr(grad_output.data, 'data'):
-                grad_data = grad_output.data.data
-            else:
-                grad_data = grad_output.data
+            # Clean gradient data access
+            grad_data = grad_output.data
             
             # Check if we need to sum over broadcasted dimensions
-            a_shape = a.data.shape if hasattr(a.data, 'shape') else ()
+            a_shape = a.data.shape
             if grad_data.shape != a_shape:
                 # Sum over the broadcasted dimensions
                 # For bias: (batch_size, features) -> (features,)
@@ -473,14 +470,11 @@ def add(a: Union[Variable, float, int], b: Union[Variable, float, int]) -> Varia
             a.backward(grad_for_a)
             
         if b.requires_grad:
-            # Get gradient data
-            if hasattr(grad_output.data, 'data'):
-                grad_data = grad_output.data.data
-            else:
-                grad_data = grad_output.data
+            # Clean gradient data access
+            grad_data = grad_output.data
             
             # Check if we need to sum over broadcasted dimensions
-            b_shape = b.data.shape if hasattr(b.data, 'shape') else ()
+            b_shape = b.data.shape
             if grad_data.shape != b_shape:
                 # Sum over the broadcasted dimensions
                 # For bias: (batch_size, features) -> (features,)
