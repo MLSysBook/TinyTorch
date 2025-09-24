@@ -21,18 +21,18 @@ class ExportCommand(BaseCommand):
         "02_tensor": "01",         # Tensor → Foundation checkpoint
         "03_activations": "02",    # Activations → Intelligence checkpoint
         "04_layers": "03",         # Layers → Components checkpoint
-        "05_dense": "04",          # Dense → Networks checkpoint
-        "06_spatial": "05",        # Spatial → Learning checkpoint
-        "07_attention": "06",      # Attention → Attention checkpoint
-        "08_dataloader": "07",     # Dataloader → Stability checkpoint (data prep)
-        "09_autograd": "08",       # Autograd → Differentiation checkpoint
-        "10_optimizers": "09",     # Optimizers → Optimization checkpoint
-        "11_training": "10",       # Training → Training checkpoint
-        "12_compression": "11",    # Compression → Regularization checkpoint
-        "13_kernels": "12",        # Kernels → Kernels checkpoint
-        "14_benchmarking": "13",   # Benchmarking → Benchmarking checkpoint
-        "15_mlops": "14",          # MLOps → Deployment checkpoint
-        "16_tinygpt": "15",        # TinyGPT → Capstone checkpoint
+        "05_losses": "04",         # Losses → Networks checkpoint (was dense)
+        "06_optimizers": "05",     # Optimizers → Learning checkpoint (was spatial)
+        "07_autograd": "06",       # Autograd → Attention checkpoint (was attention)
+        "08_training": "07",       # Training → Stability checkpoint (was dataloader)
+        "09_spatial": "08",        # Spatial → Differentiation checkpoint (was autograd)
+        "10_dataloader": "09",     # Dataloader → Optimization checkpoint (was optimizers)
+        "11_tokenization": "10",   # Tokenization → Training checkpoint (was training)
+        "12_embeddings": "11",     # Embeddings → Regularization checkpoint (was compression)
+        "13_attention": "12",      # Attention → Kernels checkpoint (was kernels)
+        "14_transformers": "13",   # Transformers → Benchmarking checkpoint (was benchmarking)
+        "15_acceleration": "14",   # Acceleration → Deployment checkpoint (was mlops)
+        "20_capstone": "15",       # Capstone → Capstone checkpoint (was tinygpt)
     }
 
     @property
@@ -169,23 +169,23 @@ class ExportCommand(BaseCommand):
                 module_num = int(completed_module[:2])
                 next_num = module_num + 1
                 
-                # Suggest next module
+                # Suggest next module (updated for reordered progression)
                 next_modules = {
                     1: ("02_tensor", "Tensor operations - the foundation of ML"),
                     2: ("03_activations", "Activation functions - adding intelligence"),
                     3: ("04_layers", "Neural layers - building blocks"),
-                    4: ("05_dense", "Dense networks - complete architectures"),
-                    5: ("06_spatial", "Spatial processing - convolutional operations"),
-                    6: ("07_attention", "Attention mechanisms - sequence understanding"),
-                    7: ("08_dataloader", "Data loading - efficient training"),
-                    8: ("09_autograd", "Automatic differentiation - gradient computation"),
-                    9: ("10_optimizers", "Optimization algorithms - sophisticated learning"),
-                    10: ("11_training", "Training loops - end-to-end learning"),
-                    11: ("12_compression", "Model compression - efficient deployment"),
-                    12: ("13_kernels", "High-performance kernels - optimized computation"),
-                    13: ("14_benchmarking", "Performance analysis - bottleneck identification"),
-                    14: ("15_mlops", "MLOps - production deployment"),
-                    15: ("16_capstone", "Capstone project - complete ML systems"),
+                    4: ("05_losses", "Loss functions - measuring performance"),
+                    5: ("06_optimizers", "Optimization algorithms - systematic weight updates"),
+                    6: ("07_autograd", "Automatic differentiation - gradient computation"),
+                    7: ("08_training", "Training loops - end-to-end learning"),
+                    8: ("09_spatial", "Spatial processing - convolutional operations"),
+                    9: ("10_dataloader", "Data loading - efficient training pipelines"),
+                    10: ("11_tokenization", "Text preprocessing - sequence understanding"),
+                    11: ("12_embeddings", "Vector representations - semantic learning"),
+                    12: ("13_attention", "Attention mechanisms - selective focus"),
+                    13: ("14_transformers", "Transformer architectures - sequence modeling"),
+                    14: ("15_acceleration", "Performance optimization - efficient computation"),
+                    19: ("20_capstone", "Capstone project - complete ML systems"),
                 }
                 
                 if next_num in next_modules:

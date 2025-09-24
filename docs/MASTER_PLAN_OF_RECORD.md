@@ -19,7 +19,7 @@
 | 02 | Tensor | ✅ COMPLETE | `modules/02_tensor/` | N-dimensional arrays, operations |
 | 03 | Activations | ✅ COMPLETE | `modules/03_activations/` | Nonlinearity (enables learning) |
 | 04 | Layers | ✅ COMPLETE | `modules/04_layers/` | Linear transformation, parameters |
-| 05 | Networks | ✅ COMPLETE | `modules/05_networks/` | Sequential composition |
+| 05 | Losses | ✅ COMPLETE | `modules/05_losses/` | Performance measurement |
 
 **Phase 1 Milestone**: ✅ XOR network inference (proves nonlinearity requirement)
 
@@ -30,11 +30,11 @@
 
 | # | Module | Status | Current Location | Milestone Contribution |
 |---|--------|--------|------------------|----------------------|
-| 06 | Autograd | ✅ COMPLETE | `modules/06_autograd/` | Automatic differentiation |
-| 07 | Spatial (CNNs) | ✅ COMPLETE | `modules/07_spatial/` | Convolutional operations |
-| 08 | Optimizers | ✅ COMPLETE | `modules/08_optimizers/` | SGD, Adam parameter updates |
-| 09 | DataLoader | ✅ COMPLETE | `modules/09_dataloader/` | Batch processing, data pipeline |
-| 10 | Training | ✅ COMPLETE | `modules/10_training/` | Loss functions, training loops |
+| 06 | Optimizers | ✅ COMPLETE | `modules/06_optimizers/` | SGD, Adam parameter updates |
+| 07 | Autograd | ✅ COMPLETE | `modules/07_autograd/` | Automatic differentiation |
+| 08 | Training | ✅ COMPLETE | `modules/08_training/` | Loss functions, training loops |
+| 09 | Spatial (CNNs) | ✅ COMPLETE | `modules/09_spatial/` | Convolutional operations |
+| 10 | DataLoader | ✅ COMPLETE | `modules/10_dataloader/` | Batch processing, data pipeline |
 
 **Phase 2 Milestone**: ✅ CIFAR-10 CNN training to 75% accuracy
 

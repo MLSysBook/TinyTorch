@@ -1,9 +1,9 @@
 """
-Module 10: Progressive Integration Tests  
-Tests that Module 10 (Optimizers) works correctly AND that the entire prior stack works.
+Module 07: Progressive Integration Tests
+Tests that Module 07 (Attention) works correctly AND that the entire prior stack works.
 
-DEPENDENCY CHAIN: 01_setup → 02_tensor → 03_activations → 04_layers → 05_dense → 06_spatial → 07_attention → 08_dataloader → 09_autograd → 10_optimizers
-This is where we enable actual learning through gradient-based optimization.
+DEPENDENCY CHAIN: 01_setup → 02_tensor → 03_activations → 04_layers → 05_dense → 06_spatial → 07_attention
+This is where attention mechanisms enable sequence understanding.
 """
 
 import numpy as np
@@ -15,485 +15,322 @@ sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 
 
 class TestPriorStackStillWorking:
-    """Quick regression checks that prior modules (01→09) still work."""
+    """Quick regression checks that prior modules (01→06) still work."""
     
-    def test_foundation_and_data_stable(self):
-        """Verify foundation + data stack remains stable."""
+    def test_foundation_stack_stable(self):
+        """Verify foundation stack (01→05) remains stable."""
         # Environment (Module 01)
         assert sys.version_info >= (3, 8), "Foundation broken: Python version"
         
-        # Neural networks + data should work
+        # Tensor foundation (Module 02)
         try:
             from tinytorch.core.tensor import Tensor
-            from tinytorch.core.layers import Dense
-            from tinytorch.core.data import Dataset
-            
-            # Complete ML pipeline components should work
-            layer = Dense(10, 5)
-            x = Tensor(np.random.randn(4, 10))
-            output = layer(x)
-            assert output.shape == (4, 5), "Foundation broken: Neural network"
-            
+            t = Tensor([1, 2, 3])
+            assert t.shape == (3,), "Foundation broken: Tensor creation"
         except ImportError:
-            assert True, "Foundation not implemented yet"
+            assert True, "Tensor foundation not implemented yet"
     
-    def test_autograd_stable(self):
-        """Verify Module 09 (Autograd) still works."""
+    def test_spatial_operations_stable(self):
+        """Verify Module 06 (Spatial) operations still work."""
         try:
-            from tinytorch.core.autograd import Variable, backward
-            from tinytorch.core.tensor import Tensor
+            from tinytorch.core.spatial import Conv2D, MaxPool2D
             
-            # Autograd should compute gradients
-            x = Variable(Tensor([2.0]), requires_grad=True)
-            y = x * x + 3 * x + 1  # Simple function
+            # Basic spatial operations should work
+            conv = Conv2D(in_channels=3, out_channels=16, kernel_size=3)
+            pool = MaxPool2D(kernel_size=2)
             
-            if hasattr(y, 'backward'):
-                y.backward()
-                # dy/dx = 2x + 3, at x=2 should be 7
-                assert x.grad is not None, "Autograd broken: No gradients"
+            assert hasattr(conv, 'forward'), "Spatial broken: Conv2D interface"
+            assert hasattr(pool, 'forward'), "Spatial broken: MaxPool2D interface"
             
         except ImportError:
-            assert True, "Autograd not implemented yet"
+            assert True, "Spatial operations not implemented yet"
 
 
-class TestModule10OptimizersCore:
-    """Test Module 10 (Optimizers) core functionality."""
+class TestModule07AttentionCore:
+    """Test Module 07 (Attention) core functionality."""
     
-    def test_sgd_optimizer_creation(self):
-        """Test SGD optimizer creation and basic functionality."""
+    def test_attention_mechanism_creation(self):
+        """Test basic attention mechanism works."""
         try:
-            from tinytorch.core.optimizers import SGD
-            from tinytorch.core.layers import Dense
+            from tinytorch.core.attention import MultiHeadAttention
             from tinytorch.core.tensor import Tensor
             
-            # Create model with parameters
-            layer = Dense(5, 3)
+            # Create attention mechanism
+            attention = MultiHeadAttention(embed_dim=64, num_heads=8)
             
-            # Create SGD optimizer
-            optimizer = SGD(layer.parameters(), lr=0.01)
+            # Should have proper components
+            assert hasattr(attention, 'query_proj'), "Attention broken: No query projection"
+            assert hasattr(attention, 'key_proj'), "Attention broken: No key projection"
+            assert hasattr(attention, 'value_proj'), "Attention broken: No value projection"
             
-            # Should have learning rate and parameter groups
-            assert hasattr(optimizer, 'lr'), "SGD broken: No learning rate"
-            assert hasattr(optimizer, 'param_groups') or hasattr(optimizer, 'parameters'), "SGD broken: No parameters"
+            # Test with sequence input
+            seq_len, batch_size, embed_dim = 10, 4, 64
+            x = Tensor(np.random.randn(seq_len, batch_size, embed_dim))
             
-            # Test zero_grad
-            if hasattr(optimizer, 'zero_grad'):
-                optimizer.zero_grad()
-            
-            # Test step (even without gradients)
-            if hasattr(optimizer, 'step'):
-                optimizer.step()
-                
-        except ImportError:
-            assert True, "SGD optimizer not implemented yet"
-    
-    def test_adam_optimizer_creation(self):
-        """Test Adam optimizer creation and advanced features."""
-        try:
-            from tinytorch.core.optimizers import Adam
-            from tinytorch.core.layers import Dense
-            
-            # Create model
-            layer = Dense(10, 5)
-            
-            # Create Adam optimizer with hyperparameters
-            optimizer = Adam(layer.parameters(), lr=0.001, betas=(0.9, 0.999), eps=1e-8)
-            
-            # Should have Adam-specific parameters
-            assert hasattr(optimizer, 'lr'), "Adam broken: No learning rate"
-            assert hasattr(optimizer, 'betas') or hasattr(optimizer, 'beta1'), "Adam broken: No momentum terms"
-            
-            # Adam uses momentum buffers
-            if hasattr(optimizer, 'state'):
-                # State should be initialized (might be empty initially)
-                assert isinstance(optimizer.state, dict), "Adam broken: State not dict"
+            output = attention(x)
+            assert output.shape == (seq_len, batch_size, embed_dim), "Attention output shape broken"
             
         except ImportError:
-            assert True, "Adam optimizer not implemented yet"
+            assert True, "Attention mechanism not implemented yet"
     
-    def test_optimizer_parameter_updates(self):
-        """Test that optimizers actually update parameters."""
+    def test_scaled_dot_product_attention(self):
+        """Test core attention computation."""
         try:
-            from tinytorch.core.optimizers import SGD
-            from tinytorch.core.layers import Dense
+            from tinytorch.core.attention import scaled_dot_product_attention
             from tinytorch.core.tensor import Tensor
-            from tinytorch.core.autograd import Variable
             
-            # Create simple model
-            layer = Dense(2, 1)
-            optimizer = SGD(layer.parameters(), lr=0.1)
+            # Attention inputs: queries, keys, values
+            seq_len, embed_dim = 8, 16
+            Q = Tensor(np.random.randn(seq_len, embed_dim))
+            K = Tensor(np.random.randn(seq_len, embed_dim))
+            V = Tensor(np.random.randn(seq_len, embed_dim))
             
-            # Get initial weights
-            initial_weights = layer.weights.data.copy()
+            # Compute attention
+            output, attention_weights = scaled_dot_product_attention(Q, K, V)
             
-            # Create dummy gradients
-            if hasattr(layer.weights, 'grad'):
-                layer.weights.grad = Tensor(np.random.randn(*layer.weights.shape))
-            elif hasattr(layer, 'zero_grad'):
-                # Simulate backward pass
-                x = Variable(Tensor(np.random.randn(1, 2)))
-                y = layer(x)
-                if hasattr(y, 'backward'):
-                    y.backward()
+            assert output.shape == V.shape, "Attention output shape wrong"
+            assert attention_weights.shape == (seq_len, seq_len), "Attention weights shape wrong"
             
-            # Take optimizer step
-            optimizer.step()
-            
-            # Weights should have changed (if gradients exist)
-            if hasattr(layer.weights, 'grad') and layer.weights.grad is not None:
-                updated_weights = layer.weights.data
-                # Check if weights actually updated
-                weight_changed = not np.array_equal(initial_weights, updated_weights)
-                assert weight_changed, "Optimizer didn't update parameters"
+            # Attention weights should sum to 1 across keys
+            weight_sums = np.sum(attention_weights.data, axis=1)
+            assert np.allclose(weight_sums, 1.0), "Attention weights don't sum to 1"
             
         except ImportError:
-            assert True, "Parameter updates not ready yet"
+            assert True, "Scaled dot-product attention not implemented yet"
 
 
 class TestProgressiveStackIntegration:
-    """Test that the complete stack (01→10) works together."""
+    """Test that the complete stack (01→07) works together."""
     
-    def test_complete_training_step(self):
-        """Test complete training step: forward → backward → optimize."""
+    def test_neural_network_with_attention(self):
+        """Test neural network enhanced with attention."""
         try:
             from tinytorch.core.tensor import Tensor
             from tinytorch.core.layers import Dense
             from tinytorch.core.activations import ReLU
-            from tinytorch.core.optimizers import SGD
-            from tinytorch.core.data import Dataset, DataLoader
-            from tinytorch.core.autograd import Variable
+            from tinytorch.core.attention import MultiHeadAttention
             
-            # Create dataset
-            class TrainingDataset(Dataset):
-                def __init__(self):
-                    self.data = np.random.randn(20, 5)
-                    self.targets = np.random.randn(20, 1)
-                
-                def __len__(self):
-                    return 20
-                
-                def __getitem__(self, idx):
-                    return Tensor(self.data[idx]), Tensor(self.targets[idx])
-            
-            # Create model
-            layer1 = Dense(5, 10)
-            layer2 = Dense(10, 1)
+            # Build network: dense → attention → dense
+            encoder = Dense(64, 64)
+            attention = MultiHeadAttention(embed_dim=64, num_heads=8)
+            decoder = Dense(64, 10)
             relu = ReLU()
             
-            # Create optimizer
-            # Collect all parameters
-            params = []
-            if hasattr(layer1, 'parameters'):
-                params.extend(layer1.parameters())
-            if hasattr(layer2, 'parameters'):
-                params.extend(layer2.parameters())
+            # Sequence input
+            seq_len, batch_size, input_dim = 12, 4, 64
+            x = Tensor(np.random.randn(seq_len, batch_size, input_dim))
             
-            optimizer = SGD(params, lr=0.01)
+            # Forward pass through network with attention
+            h = relu(encoder(x))        # Dense processing
+            attn_out = attention(h)     # Attention mechanism
+            output = decoder(attn_out)  # Final projection
             
-            # Create data loader
-            dataset = TrainingDataset()
-            dataloader = DataLoader(dataset, batch_size=4)
+            assert output.shape == (seq_len, batch_size, 10), "Network with attention broken"
             
-            # Training step
-            for batch_x, batch_y in dataloader:
-                # Forward pass
-                h = relu(layer1(batch_x))
-                pred = layer2(h)
-                
-                # Simple loss (MSE)
-                if hasattr(pred, '__sub__') and hasattr(batch_y, '__sub__'):
-                    diff = pred - batch_y
-                    loss = diff * diff  # Simplified MSE
-                    
-                    # Backward pass (if available)
-                    if hasattr(loss, 'backward'):
-                        optimizer.zero_grad()
-                        loss.backward()
-                        optimizer.step()
-                
-                # Test one batch
-                assert pred.shape == batch_y.shape, "Training step broken"
-                break
-                
         except ImportError:
-            assert True, "Complete training step not ready yet"
+            assert True, "Neural network with attention not ready yet"
     
-    def test_cnn_optimization(self):
-        """Test optimization with convolutional networks."""
+    def test_transformer_block_capability(self):
+        """Test building transformer-style blocks."""
         try:
-            from tinytorch.core.spatial import Conv2D, MaxPool2D
+            from tinytorch.core.attention import MultiHeadAttention
             from tinytorch.core.layers import Dense
-            from tinytorch.core.optimizers import Adam
+            from tinytorch.core.activations import ReLU
             from tinytorch.core.tensor import Tensor
             
-            # CNN architecture
-            conv1 = Conv2D(in_channels=3, out_channels=16, kernel_size=3)
-            pool = MaxPool2D(kernel_size=2)
-            fc = Dense(16 * 15 * 15, 10)  # Approximate size
+            # Transformer block components
+            attention = MultiHeadAttention(embed_dim=128, num_heads=8)
+            ff1 = Dense(128, 512)
+            ff2 = Dense(512, 128)
+            relu = ReLU()
             
-            # Collect CNN parameters
-            params = []
-            for module in [conv1, fc]:
-                if hasattr(module, 'parameters'):
-                    params.extend(module.parameters())
-                elif hasattr(module, 'weights'):
-                    params.append(module.weights)
-                    if hasattr(module, 'bias') and module.bias is not None:
-                        params.append(module.bias)
+            # Input sequence
+            seq_len, batch_size, embed_dim = 16, 2, 128
+            x = Tensor(np.random.randn(seq_len, batch_size, embed_dim))
             
-            # Create Adam optimizer for CNN
-            optimizer = Adam(params, lr=0.001)
+            # Transformer block: attention + feedforward
+            attn_out = attention(x)
+            ff_out = ff2(relu(ff1(attn_out)))
             
-            # Test image batch
-            batch = Tensor(np.random.randn(4, 3, 32, 32))
+            # Residual connection (if implemented)
+            if hasattr(x, '__add__'):
+                output = x + ff_out  # Residual connection
+            else:
+                output = ff_out
             
-            # Forward pass through CNN
-            if hasattr(conv1, '__call__'):
-                conv_out = conv1(batch)
-                
-                # Optimizer should handle CNN parameters
-                assert len(params) > 0, "CNN parameters not found"
-                
+            assert output.shape == x.shape, "Transformer block broken"
+            
         except ImportError:
-            assert True, "CNN optimization not ready yet"
+            assert True, "Transformer block capability not ready yet"
 
 
-class TestOptimizationAlgorithms:
-    """Test different optimization algorithms and their characteristics."""
+class TestSequenceUnderstandingCapability:
+    """Test that attention enables sequence understanding."""
     
-    def test_sgd_vs_adam_behavior(self):
-        """Test SGD vs Adam optimization behavior."""
+    def test_sequence_to_sequence_capability(self):
+        """Test sequence-to-sequence processing."""
         try:
-            from tinytorch.core.optimizers import SGD, Adam
-            from tinytorch.core.layers import Dense
+            from tinytorch.core.attention import MultiHeadAttention
             from tinytorch.core.tensor import Tensor
             
-            # Create identical models
-            model_sgd = Dense(10, 1)
-            model_adam = Dense(10, 1)
+            # Encoder-decoder style processing
+            encoder_attention = MultiHeadAttention(embed_dim=64, num_heads=4)
+            decoder_attention = MultiHeadAttention(embed_dim=64, num_heads=4)
             
-            # Make weights identical
-            model_adam.weights.data = model_sgd.weights.data.copy()
-            if hasattr(model_sgd, 'bias') and model_sgd.bias is not None:
-                model_adam.bias.data = model_sgd.bias.data.copy()
+            # Source and target sequences
+            src_len, tgt_len, batch_size, embed_dim = 10, 8, 2, 64
+            src = Tensor(np.random.randn(src_len, batch_size, embed_dim))
+            tgt = Tensor(np.random.randn(tgt_len, batch_size, embed_dim))
             
-            # Create optimizers
-            opt_sgd = SGD(model_sgd.parameters(), lr=0.01)
-            opt_adam = Adam(model_adam.parameters(), lr=0.01)
+            # Encode source sequence
+            encoded = encoder_attention(src)
             
-            # They should have different internal states
-            sgd_has_momentum = hasattr(opt_sgd, 'momentum') or hasattr(opt_sgd, 'velocity')
-            adam_has_momentum = hasattr(opt_adam, 'betas') or hasattr(opt_adam, 'state')
-            
-            # Adam should have more sophisticated state
-            if adam_has_momentum and not sgd_has_momentum:
-                assert True, "SGD and Adam have different complexity as expected"
+            # Decode target sequence (with potential cross-attention)
+            if hasattr(decoder_attention, 'cross_attention'):
+                decoded = decoder_attention(tgt, encoded)
             else:
-                assert True, "Optimizers created successfully"
-                
+                decoded = decoder_attention(tgt)
+            
+            assert encoded.shape == src.shape, "Sequence encoding broken"
+            assert decoded.shape == tgt.shape, "Sequence decoding broken"
+            
         except ImportError:
-            assert True, "Multiple optimizers not ready yet"
+            assert True, "Sequence-to-sequence not ready yet"
     
-    def test_learning_rate_scheduling(self):
-        """Test learning rate scheduling capabilities."""
+    def test_attention_pattern_analysis(self):
+        """Test that attention creates meaningful patterns."""
         try:
-            from tinytorch.core.optimizers import SGD
-            from tinytorch.core.layers import Dense
+            from tinytorch.core.attention import scaled_dot_product_attention
+            from tinytorch.core.tensor import Tensor
             
-            layer = Dense(5, 1)
-            optimizer = SGD(layer.parameters(), lr=0.1)
+            # Create sequence with clear patterns
+            seq_len, embed_dim = 6, 8
             
-            initial_lr = optimizer.lr
+            # Pattern: first and last tokens should attend to each other
+            pattern_input = np.zeros((seq_len, embed_dim))
+            pattern_input[0, :] = 1.0  # First token
+            pattern_input[-1, :] = 1.0  # Last token
             
-            # Test learning rate modification
-            if hasattr(optimizer, 'set_lr'):
-                optimizer.set_lr(0.05)
-                assert optimizer.lr == 0.05, "Learning rate scheduling broken"
-            elif hasattr(optimizer, 'param_groups'):
-                # PyTorch-style parameter groups
-                for group in optimizer.param_groups:
-                    group['lr'] = 0.05
-                new_lr = optimizer.param_groups[0]['lr']
-                assert new_lr == 0.05, "Parameter group LR scheduling broken"
-            else:
-                # Direct lr modification
-                optimizer.lr = 0.05
-                assert optimizer.lr == 0.05, "Direct LR modification broken"
-                
+            Q = Tensor(pattern_input)
+            K = Tensor(pattern_input)
+            V = Tensor(pattern_input)
+            
+            output, attention_weights = scaled_dot_product_attention(Q, K, V)
+            
+            # Check attention patterns make sense
+            # First token should attend strongly to last token
+            first_to_last = attention_weights.data[0, -1]
+            last_to_first = attention_weights.data[-1, 0]
+            
+            # These should be among the highest attention weights
+            assert first_to_last > 0.1, "Attention pattern not detected"
+            assert last_to_first > 0.1, "Attention pattern not detected"
+            
         except ImportError:
-            assert True, "Learning rate scheduling not ready yet"
-    
-    def test_optimizer_memory_efficiency(self):
-        """Test optimizer memory usage and efficiency."""
-        try:
-            from tinytorch.core.optimizers import SGD, Adam
-            from tinytorch.core.layers import Dense
-            
-            # Large model to test memory
-            large_model = Dense(1000, 500)
-            
-            # SGD should use less memory than Adam
-            sgd_optimizer = SGD(large_model.parameters(), lr=0.01)
-            adam_optimizer = Adam(large_model.parameters(), lr=0.01)
-            
-            # Adam should have more state (momentum buffers)
-            if hasattr(adam_optimizer, 'state'):
-                # Adam state will grow as optimization proceeds
-                assert hasattr(adam_optimizer, 'state'), "Adam missing state for momentum"
-            
-            # SGD should be simpler
-            sgd_simple = not hasattr(sgd_optimizer, 'state') or len(sgd_optimizer.state) == 0
-            adam_complex = hasattr(adam_optimizer, 'betas') or hasattr(adam_optimizer, 'state')
-            
-            if sgd_simple and adam_complex:
-                assert True, "SGD is simpler than Adam as expected"
-            else:
-                assert True, "Optimizers have reasonable complexity"
-                
-        except ImportError:
-            assert True, "Memory efficiency testing not ready yet"
+            assert True, "Attention pattern analysis not ready yet"
 
 
-class TestProductionOptimization:
-    """Test production-ready optimization features."""
+class TestNLPReadiness:
+    """Test readiness for NLP applications."""
     
-    def test_gradient_clipping(self):
-        """Test gradient clipping for stable training."""
+    def test_language_modeling_architecture(self):
+        """Test architecture suitable for language modeling."""
         try:
-            from tinytorch.core.optimizers import SGD
+            from tinytorch.core.attention import MultiHeadAttention
             from tinytorch.core.layers import Dense
             from tinytorch.core.tensor import Tensor
             
-            layer = Dense(10, 1)
-            optimizer = SGD(layer.parameters(), lr=0.1)
+            # Language model components
+            vocab_size, embed_dim, seq_len = 1000, 256, 32
             
-            # Simulate large gradients
-            if hasattr(layer.weights, 'grad'):
-                layer.weights.grad = Tensor(np.random.randn(*layer.weights.shape) * 100)  # Large gradients
+            # Embedding layer (simplified)
+            embedding = Dense(vocab_size, embed_dim)
             
-            # Test gradient clipping if available
-            if hasattr(optimizer, 'clip_gradients'):
-                optimizer.clip_gradients(max_norm=1.0)
-                
-                # Gradients should be clipped
-                if layer.weights.grad is not None:
-                    grad_norm = np.linalg.norm(layer.weights.grad.data)
-                    assert grad_norm <= 1.1, "Gradient clipping not working"  # Allow small numerical error
+            # Attention layers
+            attention1 = MultiHeadAttention(embed_dim=embed_dim, num_heads=8)
+            attention2 = MultiHeadAttention(embed_dim=embed_dim, num_heads=8)
+            
+            # Output projection
+            output_proj = Dense(embed_dim, vocab_size)
+            
+            # Token sequence (as embeddings)
+            batch_size = 4
+            tokens = Tensor(np.random.randint(0, vocab_size, (seq_len, batch_size)))
+            
+            # Simple embedding lookup (simplified)
+            if hasattr(embedding, 'embedding_lookup'):
+                x = embedding.embedding_lookup(tokens)
+            else:
+                # Simplified: random embeddings
+                x = Tensor(np.random.randn(seq_len, batch_size, embed_dim))
+            
+            # Transformer layers
+            h1 = attention1(x)
+            h2 = attention2(h1)
+            
+            # Output logits
+            logits = output_proj(h2)
+            
+            assert logits.shape == (seq_len, batch_size, vocab_size), "Language model architecture broken"
             
         except ImportError:
-            assert True, "Gradient clipping not ready yet"
-    
-    def test_optimizer_state_persistence(self):
-        """Test saving and loading optimizer state."""
-        try:
-            from tinytorch.core.optimizers import Adam
-            from tinytorch.core.layers import Dense
-            
-            layer = Dense(5, 1)
-            optimizer = Adam(layer.parameters(), lr=0.001)
-            
-            # Take some steps to build state
-            if hasattr(layer.weights, 'grad'):
-                layer.weights.grad = Tensor(np.random.randn(*layer.weights.shape))
-                
-                for _ in range(3):
-                    optimizer.step()
-            
-            # Test state dictionary
-            if hasattr(optimizer, 'state_dict'):
-                state = optimizer.state_dict()
-                assert isinstance(state, dict), "Optimizer state_dict not dict"
-                
-                # Test loading state
-                if hasattr(optimizer, 'load_state_dict'):
-                    optimizer.load_state_dict(state)
-                    
-        except ImportError:
-            assert True, "Optimizer persistence not ready yet"
+            assert True, "Language modeling architecture not ready yet"
 
 
 class TestRegressionPrevention:
-    """Ensure previous modules still work after Module 10 development."""
+    """Ensure previous modules still work after Module 07 development."""
     
     def test_no_foundation_regression(self):
         """Verify foundation stack (01→05) unchanged."""
-        # Core functionality should remain stable
+        # Environment should remain stable
         assert sys.version_info.major >= 3, "Foundation: Python detection broken"
         
-        # Neural networks should still work
-        try:
-            from tinytorch.core.tensor import Tensor
-            from tinytorch.core.layers import Dense
-            
-            layer = Dense(5, 3)
-            x = Tensor(np.random.randn(2, 5))
-            output = layer(x)
-            assert output.shape == (2, 3), "Foundation regression: Neural network broken"
-            
-        except ImportError:
-            import numpy as np
-            assert np.random is not None, "Foundation regression: Numpy broken"
+        # Project structure should remain intact
+        project_root = Path(__file__).parent.parent.parent
+        assert project_root.exists(), "Foundation: Project structure broken"
     
-    def test_no_data_and_autograd_regression(self):
-        """Verify data loading (08) and autograd (09) unchanged."""
+    def test_no_spatial_regression(self):
+        """Verify spatial operations (Module 06) unchanged."""
         try:
-            from tinytorch.core.data import Dataset
-            from tinytorch.core.autograd import Variable
+            from tinytorch.core.spatial import Conv2D
             
-            # Data loading should still work
-            class TestDataset(Dataset):
-                def __len__(self):
-                    return 5
-                def __getitem__(self, idx):
-                    return idx, idx * 2
+            # Spatial operations should still work
+            conv = Conv2D(in_channels=1, out_channels=8, kernel_size=3)
+            assert hasattr(conv, 'forward'), "Spatial regression: Conv2D broken"
             
-            dataset = TestDataset()
-            assert len(dataset) == 5, "Data regression: Dataset broken"
-            
-            # Autograd should still work
-            if hasattr(Variable, '__init__'):
-                x = Variable(np.array([1.0]), requires_grad=True)
-                assert hasattr(x, 'requires_grad'), "Autograd regression: Variable broken"
-                
         except ImportError:
-            # Basic functionality should work
+            # If not implemented, that's fine
+            # But numpy should still work (from foundation)
             import numpy as np
-            assert np is not None, "Data/Autograd regression: Basic functionality broken"
+            arr = np.array([1, 2, 3])
+            assert arr.shape == (3,), "Spatial regression: Numpy foundation broken"
     
     def test_progressive_stability(self):
-        """Test the progressive stack is stable through optimization."""
-        # Stack should be stable through: Setup → ... → Autograd → Optimizers
+        """Test the progressive stack is stable through attention."""
+        # Stack should be stable through: Setup → Tensor → Activations → Layers → Dense → Spatial → Attention
         
         # Setup level
         import numpy as np
         assert np is not None, "Setup level broken"
         
-        # ML pipeline level (if available)
+        # Foundation level (if available)
         try:
             from tinytorch.core.tensor import Tensor
             from tinytorch.core.layers import Dense
-            from tinytorch.core.data import Dataset
             
-            # Complete ML components should work together
-            layer = Dense(3, 2)
-            x = Tensor(np.random.randn(1, 3))
+            # Should still be able to build neural networks
+            layer = Dense(10, 5)
+            x = Tensor(np.random.randn(4, 10))
             output = layer(x)
-            assert output.shape == (1, 2), "ML pipeline level broken"
+            assert output.shape == (4, 5), "Foundation level broken"
             
         except ImportError:
             pass  # Not implemented yet
         
-        # Optimization level (if available)
+        # Attention level (if available)
         try:
-            from tinytorch.core.optimizers import SGD
-            
-            class DummyModule:
-                def parameters(self):
-                    return [np.array([1.0, 2.0])]
-            
-            module = DummyModule()
-            optimizer = SGD(module.parameters(), lr=0.01)
-            assert hasattr(optimizer, 'lr'), "Optimization level broken"
-            
+            from tinytorch.core.attention import MultiHeadAttention
+            attention = MultiHeadAttention(embed_dim=32, num_heads=4)
+            assert callable(attention), "Attention level broken"
         except ImportError:
             pass  # Not implemented yet

@@ -1,9 +1,9 @@
 """
-Module 08: Progressive Integration Tests
-Tests that Module 08 (DataLoader) works correctly AND that the entire prior stack works.
+Module 10: Progressive Integration Tests  
+Tests that Module 10 (Optimizers) works correctly AND that the entire prior stack works.
 
-DEPENDENCY CHAIN: 01_setup → 02_tensor → 03_activations → 04_layers → 05_dense → 06_spatial → 07_attention → 08_dataloader
-This is where we enable real data processing for ML systems.
+DEPENDENCY CHAIN: 01_setup → 02_tensor → 03_activations → 04_layers → 05_dense → 06_spatial → 07_attention → 08_dataloader → 09_autograd → 10_optimizers
+This is where we enable actual learning through gradient-based optimization.
 """
 
 import numpy as np
@@ -15,19 +15,20 @@ sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 
 
 class TestPriorStackStillWorking:
-    """Quick regression checks that prior modules (01→07) still work."""
+    """Quick regression checks that prior modules (01→09) still work."""
     
-    def test_foundation_stack_stable(self):
-        """Verify foundation stack (01→05) remains stable."""
+    def test_foundation_and_data_stable(self):
+        """Verify foundation + data stack remains stable."""
         # Environment (Module 01)
         assert sys.version_info >= (3, 8), "Foundation broken: Python version"
         
-        # Core functionality should work
+        # Neural networks + data should work
         try:
             from tinytorch.core.tensor import Tensor
             from tinytorch.core.layers import Dense
+            from tinytorch.core.data import Dataset
             
-            # Should still be able to build networks
+            # Complete ML pipeline components should work
             layer = Dense(10, 5)
             x = Tensor(np.random.randn(4, 10))
             output = layer(x)
@@ -36,366 +37,463 @@ class TestPriorStackStillWorking:
         except ImportError:
             assert True, "Foundation not implemented yet"
     
-    def test_advanced_stack_stable(self):
-        """Verify advanced modules (06→07) still work."""
+    def test_autograd_stable(self):
+        """Verify Module 09 (Autograd) still works."""
         try:
-            from tinytorch.core.spatial import Conv2D
-            from tinytorch.core.attention import MultiHeadAttention
-            
-            # Spatial and attention should work
-            conv = Conv2D(in_channels=3, out_channels=16, kernel_size=3)
-            attention = MultiHeadAttention(embed_dim=64, num_heads=8)
-            
-            assert hasattr(conv, 'forward'), "Advanced stack broken: Spatial"
-            assert hasattr(attention, 'forward'), "Advanced stack broken: Attention"
-            
-        except ImportError:
-            assert True, "Advanced stack not implemented yet"
-
-
-class TestModule08DataLoaderCore:
-    """Test Module 08 (DataLoader) core functionality."""
-    
-    def test_dataset_creation(self):
-        """Test basic dataset creation works."""
-        try:
-            from tinytorch.core.data import Dataset
-            
-            # Create simple dataset
-            class SimpleDataset(Dataset):
-                def __init__(self, size=100):
-                    self.size = size
-                    self.data = np.random.randn(size, 10)
-                    self.targets = np.random.randint(0, 3, size)
-                
-                def __len__(self):
-                    return self.size
-                
-                def __getitem__(self, idx):
-                    return self.data[idx], self.targets[idx]
-            
-            dataset = SimpleDataset(50)
-            assert len(dataset) == 50, "Dataset length broken"
-            
-            # Test data access
-            sample, target = dataset[0]
-            assert sample.shape == (10,), "Dataset sample shape broken"
-            assert isinstance(target, (int, np.integer)), "Dataset target type broken"
-            
-        except ImportError:
-            assert True, "Dataset not implemented yet"
-    
-    def test_dataloader_creation(self):
-        """Test DataLoader creation and batching."""
-        try:
-            from tinytorch.core.data import DataLoader, Dataset
+            from tinytorch.core.autograd import Variable, backward
             from tinytorch.core.tensor import Tensor
             
-            # Simple dataset for testing
-            class TestDataset(Dataset):
-                def __init__(self):
-                    self.data = np.random.randn(20, 5)
-                    self.targets = np.random.randint(0, 2, 20)
-                
-                def __len__(self):
-                    return 20
-                
-                def __getitem__(self, idx):
-                    return Tensor(self.data[idx]), self.targets[idx]
+            # Autograd should compute gradients
+            x = Variable(Tensor([2.0]), requires_grad=True)
+            y = x * x + 3 * x + 1  # Simple function
             
-            dataset = TestDataset()
-            dataloader = DataLoader(dataset, batch_size=4, shuffle=True)
+            if hasattr(y, 'backward'):
+                y.backward()
+                # dy/dx = 2x + 3, at x=2 should be 7
+                assert x.grad is not None, "Autograd broken: No gradients"
             
-            # Test batching
-            for batch_x, batch_y in dataloader:
-                assert batch_x.shape == (4, 5), "DataLoader batch shape broken"
-                assert len(batch_y) == 4, "DataLoader target batch broken"
-                break  # Just test first batch
-                
         except ImportError:
-            assert True, "DataLoader not implemented yet"
+            assert True, "Autograd not implemented yet"
+
+
+class TestModule10OptimizersCore:
+    """Test Module 10 (Optimizers) core functionality."""
     
-    def test_real_dataset_support(self):
-        """Test support for real datasets like CIFAR-10."""
+    def test_sgd_optimizer_creation(self):
+        """Test SGD optimizer creation and basic functionality."""
         try:
-            from tinytorch.core.data import CIFAR10Dataset
+            from tinytorch.core.optimizers import SGD
+            from tinytorch.core.layers import Dense
+            from tinytorch.core.tensor import Tensor
             
-            # Note: This might download data, so we'll just test instantiation
-            # In real usage, students would download CIFAR-10
-            try:
-                dataset = CIFAR10Dataset(root='./data', train=True, download=False)
-                # If dataset exists, test basic functionality
-                if len(dataset) > 0:
-                    sample, target = dataset[0]
-                    assert len(sample.shape) >= 2, "CIFAR-10 sample shape invalid"
-                    assert isinstance(target, (int, np.integer)), "CIFAR-10 target invalid"
-            except (FileNotFoundError, RuntimeError):
-                # Data not downloaded, which is fine for testing
-                assert True, "CIFAR-10 data not available (expected)"
+            # Create model with parameters
+            layer = Dense(5, 3)
+            
+            # Create SGD optimizer
+            optimizer = SGD(layer.parameters(), lr=0.01)
+            
+            # Should have learning rate and parameter groups
+            assert hasattr(optimizer, 'lr'), "SGD broken: No learning rate"
+            assert hasattr(optimizer, 'param_groups') or hasattr(optimizer, 'parameters'), "SGD broken: No parameters"
+            
+            # Test zero_grad
+            if hasattr(optimizer, 'zero_grad'):
+                optimizer.zero_grad()
+            
+            # Test step (even without gradients)
+            if hasattr(optimizer, 'step'):
+                optimizer.step()
                 
         except ImportError:
-            assert True, "Real dataset support not implemented yet"
+            assert True, "SGD optimizer not implemented yet"
+    
+    def test_adam_optimizer_creation(self):
+        """Test Adam optimizer creation and advanced features."""
+        try:
+            from tinytorch.core.optimizers import Adam
+            from tinytorch.core.layers import Dense
+            
+            # Create model
+            layer = Dense(10, 5)
+            
+            # Create Adam optimizer with hyperparameters
+            optimizer = Adam(layer.parameters(), lr=0.001, betas=(0.9, 0.999), eps=1e-8)
+            
+            # Should have Adam-specific parameters
+            assert hasattr(optimizer, 'lr'), "Adam broken: No learning rate"
+            assert hasattr(optimizer, 'betas') or hasattr(optimizer, 'beta1'), "Adam broken: No momentum terms"
+            
+            # Adam uses momentum buffers
+            if hasattr(optimizer, 'state'):
+                # State should be initialized (might be empty initially)
+                assert isinstance(optimizer.state, dict), "Adam broken: State not dict"
+            
+        except ImportError:
+            assert True, "Adam optimizer not implemented yet"
+    
+    def test_optimizer_parameter_updates(self):
+        """Test that optimizers actually update parameters."""
+        try:
+            from tinytorch.core.optimizers import SGD
+            from tinytorch.core.layers import Dense
+            from tinytorch.core.tensor import Tensor
+            from tinytorch.core.autograd import Variable
+            
+            # Create simple model
+            layer = Dense(2, 1)
+            optimizer = SGD(layer.parameters(), lr=0.1)
+            
+            # Get initial weights
+            initial_weights = layer.weights.data.copy()
+            
+            # Create dummy gradients
+            if hasattr(layer.weights, 'grad'):
+                layer.weights.grad = Tensor(np.random.randn(*layer.weights.shape))
+            elif hasattr(layer, 'zero_grad'):
+                # Simulate backward pass
+                x = Variable(Tensor(np.random.randn(1, 2)))
+                y = layer(x)
+                if hasattr(y, 'backward'):
+                    y.backward()
+            
+            # Take optimizer step
+            optimizer.step()
+            
+            # Weights should have changed (if gradients exist)
+            if hasattr(layer.weights, 'grad') and layer.weights.grad is not None:
+                updated_weights = layer.weights.data
+                # Check if weights actually updated
+                weight_changed = not np.array_equal(initial_weights, updated_weights)
+                assert weight_changed, "Optimizer didn't update parameters"
+            
+        except ImportError:
+            assert True, "Parameter updates not ready yet"
 
 
 class TestProgressiveStackIntegration:
-    """Test that the complete stack (01→08) works together."""
+    """Test that the complete stack (01→10) works together."""
     
-    def test_complete_training_pipeline(self):
-        """Test complete ML pipeline: data → model → training."""
+    def test_complete_training_step(self):
+        """Test complete training step: forward → backward → optimize."""
         try:
-            from tinytorch.core.data import DataLoader, Dataset
             from tinytorch.core.tensor import Tensor
             from tinytorch.core.layers import Dense
-            from tinytorch.core.activations import ReLU, Softmax
+            from tinytorch.core.activations import ReLU
+            from tinytorch.core.optimizers import SGD
+            from tinytorch.core.data import Dataset, DataLoader
+            from tinytorch.core.autograd import Variable
             
             # Create dataset
-            class MLDataset(Dataset):
+            class TrainingDataset(Dataset):
                 def __init__(self):
-                    self.data = np.random.randn(40, 10)
-                    self.targets = np.random.randint(0, 3, 40)
-                
-                def __len__(self):
-                    return 40
-                
-                def __getitem__(self, idx):
-                    return Tensor(self.data[idx]), self.targets[idx]
-            
-            # Create data pipeline
-            dataset = MLDataset()
-            dataloader = DataLoader(dataset, batch_size=8, shuffle=True)
-            
-            # Create model using prior modules
-            layer1 = Dense(10, 16)
-            layer2 = Dense(16, 3)
-            relu = ReLU()
-            softmax = Softmax()
-            
-            # Test training loop structure
-            for batch_x, batch_y in dataloader:
-                # Forward pass through complete pipeline
-                h = relu(layer1(batch_x))
-                logits = layer2(h)
-                predictions = softmax(logits)
-                
-                assert predictions.shape == (8, 3), "Complete pipeline broken"
-                
-                # Test one batch
-                break
-                
-        except ImportError:
-            assert True, "Complete training pipeline not ready yet"
-    
-    def test_cnn_data_pipeline(self):
-        """Test CNN pipeline with spatial data."""
-        try:
-            from tinytorch.core.data import DataLoader, Dataset  
-            from tinytorch.core.spatial import Conv2D, MaxPool2D
-            from tinytorch.core.layers import Dense
-            from tinytorch.core.tensor import Tensor
-            
-            # Image dataset
-            class ImageDataset(Dataset):
-                def __init__(self):
-                    # 32x32 RGB images
-                    self.data = np.random.randn(20, 3, 32, 32)
-                    self.targets = np.random.randint(0, 5, 20)
+                    self.data = np.random.randn(20, 5)
+                    self.targets = np.random.randn(20, 1)
                 
                 def __len__(self):
                     return 20
                 
                 def __getitem__(self, idx):
-                    return Tensor(self.data[idx]), self.targets[idx]
+                    return Tensor(self.data[idx]), Tensor(self.targets[idx])
             
-            dataset = ImageDataset()
+            # Create model
+            layer1 = Dense(5, 10)
+            layer2 = Dense(10, 1)
+            relu = ReLU()
+            
+            # Create optimizer
+            # Collect all parameters
+            params = []
+            if hasattr(layer1, 'parameters'):
+                params.extend(layer1.parameters())
+            if hasattr(layer2, 'parameters'):
+                params.extend(layer2.parameters())
+            
+            optimizer = SGD(params, lr=0.01)
+            
+            # Create data loader
+            dataset = TrainingDataset()
             dataloader = DataLoader(dataset, batch_size=4)
             
-            # CNN components
-            conv1 = Conv2D(in_channels=3, out_channels=16, kernel_size=3)
-            pool = MaxPool2D(kernel_size=2)
-            fc = Dense(16 * 15 * 15, 5)  # Approximate after conv/pool
-            
-            # Test CNN pipeline
+            # Training step
             for batch_x, batch_y in dataloader:
-                assert batch_x.shape == (4, 3, 32, 32), "Image batch shape broken"
+                # Forward pass
+                h = relu(layer1(batch_x))
+                pred = layer2(h)
                 
-                # Simplified CNN forward (shape checking)
-                if hasattr(conv1, '__call__'):
-                    conv_out = conv1(batch_x)
-                    # Check reasonable conv output shape
-                    assert len(conv_out.shape) == 4, "Conv output dimensionality broken"
+                # Simple loss (MSE)
+                if hasattr(pred, '__sub__') and hasattr(batch_y, '__sub__'):
+                    diff = pred - batch_y
+                    loss = diff * diff  # Simplified MSE
+                    
+                    # Backward pass (if available)
+                    if hasattr(loss, 'backward'):
+                        optimizer.zero_grad()
+                        loss.backward()
+                        optimizer.step()
                 
+                # Test one batch
+                assert pred.shape == batch_y.shape, "Training step broken"
                 break
                 
         except ImportError:
-            assert True, "CNN data pipeline not ready yet"
-
-
-class TestRealWorldDataCapability:
-    """Test capability to handle real-world datasets."""
+            assert True, "Complete training step not ready yet"
     
-    def test_data_preprocessing_pipeline(self):
-        """Test data preprocessing and augmentation."""
+    def test_cnn_optimization(self):
+        """Test optimization with convolutional networks."""
         try:
-            from tinytorch.core.data import transforms
+            from tinytorch.core.spatial import Conv2D, MaxPool2D
+            from tinytorch.core.layers import Dense
+            from tinytorch.core.optimizers import Adam
             from tinytorch.core.tensor import Tensor
             
-            # Basic transforms
-            if hasattr(transforms, 'Normalize'):
-                normalize = transforms.Normalize(mean=[0.5], std=[0.5])
-                
-                # Test data
-                data = Tensor(np.random.randn(3, 32, 32))
-                normalized = normalize(data)
-                
-                assert normalized.shape == data.shape, "Normalization broken"
+            # CNN architecture
+            conv1 = Conv2D(in_channels=3, out_channels=16, kernel_size=3)
+            pool = MaxPool2D(kernel_size=2)
+            fc = Dense(16 * 15 * 15, 10)  # Approximate size
             
-            if hasattr(transforms, 'RandomCrop'):
-                crop = transforms.RandomCrop(size=28)
+            # Collect CNN parameters
+            params = []
+            for module in [conv1, fc]:
+                if hasattr(module, 'parameters'):
+                    params.extend(module.parameters())
+                elif hasattr(module, 'weights'):
+                    params.append(module.weights)
+                    if hasattr(module, 'bias') and module.bias is not None:
+                        params.append(module.bias)
+            
+            # Create Adam optimizer for CNN
+            optimizer = Adam(params, lr=0.001)
+            
+            # Test image batch
+            batch = Tensor(np.random.randn(4, 3, 32, 32))
+            
+            # Forward pass through CNN
+            if hasattr(conv1, '__call__'):
+                conv_out = conv1(batch)
                 
-                data = Tensor(np.random.randn(3, 32, 32))
-                cropped = crop(data)
-                
-                assert cropped.shape[-2:] == (28, 28), "Random crop broken"
+                # Optimizer should handle CNN parameters
+                assert len(params) > 0, "CNN parameters not found"
                 
         except ImportError:
-            assert True, "Data preprocessing not implemented yet"
+            assert True, "CNN optimization not ready yet"
+
+
+class TestOptimizationAlgorithms:
+    """Test different optimization algorithms and their characteristics."""
     
-    def test_memory_efficient_loading(self):
-        """Test memory efficient data loading."""
+    def test_sgd_vs_adam_behavior(self):
+        """Test SGD vs Adam optimization behavior."""
         try:
-            from tinytorch.core.data import DataLoader, Dataset
+            from tinytorch.core.optimizers import SGD, Adam
+            from tinytorch.core.layers import Dense
+            from tinytorch.core.tensor import Tensor
             
-            # Large dataset simulation
-            class LargeDataset(Dataset):
-                def __init__(self, size=1000):
-                    self.size = size
-                    # Don't load all data at once - simulate lazy loading
-                
-                def __len__(self):
-                    return self.size
-                
-                def __getitem__(self, idx):
-                    # Simulate loading data on-demand
-                    return np.random.randn(100), idx % 10
+            # Create identical models
+            model_sgd = Dense(10, 1)
+            model_adam = Dense(10, 1)
             
-            dataset = LargeDataset(1000)
-            dataloader = DataLoader(dataset, batch_size=32, shuffle=True)
+            # Make weights identical
+            model_adam.weights.data = model_sgd.weights.data.copy()
+            if hasattr(model_sgd, 'bias') and model_sgd.bias is not None:
+                model_adam.bias.data = model_sgd.bias.data.copy()
             
-            # Should be able to iterate without loading all data
-            batch_count = 0
-            for batch_x, batch_y in dataloader:
-                batch_count += 1
-                if batch_count >= 3:  # Test a few batches
-                    break
+            # Create optimizers
+            opt_sgd = SGD(model_sgd.parameters(), lr=0.01)
+            opt_adam = Adam(model_adam.parameters(), lr=0.01)
             
-            assert batch_count == 3, "Memory efficient loading broken"
+            # They should have different internal states
+            sgd_has_momentum = hasattr(opt_sgd, 'momentum') or hasattr(opt_sgd, 'velocity')
+            adam_has_momentum = hasattr(opt_adam, 'betas') or hasattr(opt_adam, 'state')
             
-        except ImportError:
-            assert True, "Memory efficient loading not ready yet"
-    
-    def test_parallel_data_loading(self):
-        """Test parallel/multi-threaded data loading."""
-        try:
-            from tinytorch.core.data import DataLoader, Dataset
-            
-            class ParallelDataset(Dataset):
-                def __init__(self):
-                    self.data = np.random.randn(100, 50)
-                
-                def __len__(self):
-                    return 100
-                
-                def __getitem__(self, idx):
-                    # Simulate some processing time
-                    return self.data[idx], idx % 5
-            
-            dataset = ParallelDataset()
-            
-            # Test with num_workers if supported
-            if 'num_workers' in DataLoader.__init__.__code__.co_varnames:
-                dataloader = DataLoader(dataset, batch_size=16, num_workers=2)
+            # Adam should have more sophisticated state
+            if adam_has_momentum and not sgd_has_momentum:
+                assert True, "SGD and Adam have different complexity as expected"
             else:
-                dataloader = DataLoader(dataset, batch_size=16)
-            
-            # Should work regardless of parallel support
-            for batch_x, batch_y in dataloader:
-                assert batch_x.shape == (16, 50), "Parallel loading broken"
-                break
+                assert True, "Optimizers created successfully"
                 
         except ImportError:
-            assert True, "Parallel data loading not ready yet"
+            assert True, "Multiple optimizers not ready yet"
+    
+    def test_learning_rate_scheduling(self):
+        """Test learning rate scheduling capabilities."""
+        try:
+            from tinytorch.core.optimizers import SGD
+            from tinytorch.core.layers import Dense
+            
+            layer = Dense(5, 1)
+            optimizer = SGD(layer.parameters(), lr=0.1)
+            
+            initial_lr = optimizer.lr
+            
+            # Test learning rate modification
+            if hasattr(optimizer, 'set_lr'):
+                optimizer.set_lr(0.05)
+                assert optimizer.lr == 0.05, "Learning rate scheduling broken"
+            elif hasattr(optimizer, 'param_groups'):
+                # PyTorch-style parameter groups
+                for group in optimizer.param_groups:
+                    group['lr'] = 0.05
+                new_lr = optimizer.param_groups[0]['lr']
+                assert new_lr == 0.05, "Parameter group LR scheduling broken"
+            else:
+                # Direct lr modification
+                optimizer.lr = 0.05
+                assert optimizer.lr == 0.05, "Direct LR modification broken"
+                
+        except ImportError:
+            assert True, "Learning rate scheduling not ready yet"
+    
+    def test_optimizer_memory_efficiency(self):
+        """Test optimizer memory usage and efficiency."""
+        try:
+            from tinytorch.core.optimizers import SGD, Adam
+            from tinytorch.core.layers import Dense
+            
+            # Large model to test memory
+            large_model = Dense(1000, 500)
+            
+            # SGD should use less memory than Adam
+            sgd_optimizer = SGD(large_model.parameters(), lr=0.01)
+            adam_optimizer = Adam(large_model.parameters(), lr=0.01)
+            
+            # Adam should have more state (momentum buffers)
+            if hasattr(adam_optimizer, 'state'):
+                # Adam state will grow as optimization proceeds
+                assert hasattr(adam_optimizer, 'state'), "Adam missing state for momentum"
+            
+            # SGD should be simpler
+            sgd_simple = not hasattr(sgd_optimizer, 'state') or len(sgd_optimizer.state) == 0
+            adam_complex = hasattr(adam_optimizer, 'betas') or hasattr(adam_optimizer, 'state')
+            
+            if sgd_simple and adam_complex:
+                assert True, "SGD is simpler than Adam as expected"
+            else:
+                assert True, "Optimizers have reasonable complexity"
+                
+        except ImportError:
+            assert True, "Memory efficiency testing not ready yet"
+
+
+class TestProductionOptimization:
+    """Test production-ready optimization features."""
+    
+    def test_gradient_clipping(self):
+        """Test gradient clipping for stable training."""
+        try:
+            from tinytorch.core.optimizers import SGD
+            from tinytorch.core.layers import Dense
+            from tinytorch.core.tensor import Tensor
+            
+            layer = Dense(10, 1)
+            optimizer = SGD(layer.parameters(), lr=0.1)
+            
+            # Simulate large gradients
+            if hasattr(layer.weights, 'grad'):
+                layer.weights.grad = Tensor(np.random.randn(*layer.weights.shape) * 100)  # Large gradients
+            
+            # Test gradient clipping if available
+            if hasattr(optimizer, 'clip_gradients'):
+                optimizer.clip_gradients(max_norm=1.0)
+                
+                # Gradients should be clipped
+                if layer.weights.grad is not None:
+                    grad_norm = np.linalg.norm(layer.weights.grad.data)
+                    assert grad_norm <= 1.1, "Gradient clipping not working"  # Allow small numerical error
+            
+        except ImportError:
+            assert True, "Gradient clipping not ready yet"
+    
+    def test_optimizer_state_persistence(self):
+        """Test saving and loading optimizer state."""
+        try:
+            from tinytorch.core.optimizers import Adam
+            from tinytorch.core.layers import Dense
+            
+            layer = Dense(5, 1)
+            optimizer = Adam(layer.parameters(), lr=0.001)
+            
+            # Take some steps to build state
+            if hasattr(layer.weights, 'grad'):
+                layer.weights.grad = Tensor(np.random.randn(*layer.weights.shape))
+                
+                for _ in range(3):
+                    optimizer.step()
+            
+            # Test state dictionary
+            if hasattr(optimizer, 'state_dict'):
+                state = optimizer.state_dict()
+                assert isinstance(state, dict), "Optimizer state_dict not dict"
+                
+                # Test loading state
+                if hasattr(optimizer, 'load_state_dict'):
+                    optimizer.load_state_dict(state)
+                    
+        except ImportError:
+            assert True, "Optimizer persistence not ready yet"
 
 
 class TestRegressionPrevention:
-    """Ensure previous modules still work after Module 08 development."""
+    """Ensure previous modules still work after Module 10 development."""
     
     def test_no_foundation_regression(self):
         """Verify foundation stack (01→05) unchanged."""
         # Core functionality should remain stable
         assert sys.version_info.major >= 3, "Foundation: Python detection broken"
         
-        # Tensor operations should still work
+        # Neural networks should still work
         try:
             from tinytorch.core.tensor import Tensor
-            t = Tensor([1, 2, 3])
-            assert t.shape == (3,), "Foundation regression: Tensor broken"
+            from tinytorch.core.layers import Dense
+            
+            layer = Dense(5, 3)
+            x = Tensor(np.random.randn(2, 5))
+            output = layer(x)
+            assert output.shape == (2, 3), "Foundation regression: Neural network broken"
+            
         except ImportError:
             import numpy as np
-            arr = np.array([1, 2, 3])
-            assert arr.shape == (3,), "Foundation regression: Numpy broken"
+            assert np.random is not None, "Foundation regression: Numpy broken"
     
-    def test_no_advanced_regression(self):
-        """Verify advanced modules (06→07) unchanged."""
+    def test_no_data_and_autograd_regression(self):
+        """Verify data loading (08) and autograd (09) unchanged."""
         try:
-            from tinytorch.core.spatial import Conv2D
-            from tinytorch.core.attention import MultiHeadAttention
+            from tinytorch.core.data import Dataset
+            from tinytorch.core.autograd import Variable
             
-            # Advanced operations should still work
-            conv = Conv2D(in_channels=1, out_channels=4, kernel_size=3)
-            attention = MultiHeadAttention(embed_dim=32, num_heads=4)
+            # Data loading should still work
+            class TestDataset(Dataset):
+                def __len__(self):
+                    return 5
+                def __getitem__(self, idx):
+                    return idx, idx * 2
             
-            assert hasattr(conv, 'forward'), "Advanced regression: Spatial broken"
-            assert hasattr(attention, 'forward'), "Advanced regression: Attention broken"
+            dataset = TestDataset()
+            assert len(dataset) == 5, "Data regression: Dataset broken"
             
+            # Autograd should still work
+            if hasattr(Variable, '__init__'):
+                x = Variable(np.array([1.0]), requires_grad=True)
+                assert hasattr(x, 'requires_grad'), "Autograd regression: Variable broken"
+                
         except ImportError:
-            # If not implemented, basic functionality should work
+            # Basic functionality should work
             import numpy as np
-            assert np.random is not None, "Advanced regression: Random broken"
+            assert np is not None, "Data/Autograd regression: Basic functionality broken"
     
     def test_progressive_stability(self):
-        """Test the progressive stack is stable through data loading."""
-        # Stack should be stable through: Setup → ... → Attention → DataLoader
+        """Test the progressive stack is stable through optimization."""
+        # Stack should be stable through: Setup → ... → Autograd → Optimizers
         
         # Setup level
         import numpy as np
         assert np is not None, "Setup level broken"
         
-        # Foundation level (if available)
+        # ML pipeline level (if available)
         try:
             from tinytorch.core.tensor import Tensor
             from tinytorch.core.layers import Dense
+            from tinytorch.core.data import Dataset
             
-            # Neural networks should still work
-            layer = Dense(5, 3)
-            x = Tensor(np.random.randn(2, 5))
+            # Complete ML components should work together
+            layer = Dense(3, 2)
+            x = Tensor(np.random.randn(1, 3))
             output = layer(x)
-            assert output.shape == (2, 3), "Foundation level broken"
+            assert output.shape == (1, 2), "ML pipeline level broken"
             
         except ImportError:
             pass  # Not implemented yet
         
-        # Data level (if available)
+        # Optimization level (if available)
         try:
-            from tinytorch.core.data import Dataset
+            from tinytorch.core.optimizers import SGD
             
-            class TestDataset(Dataset):
-                def __len__(self):
-                    return 10
-                def __getitem__(self, idx):
-                    return idx, idx * 2
+            class DummyModule:
+                def parameters(self):
+                    return [np.array([1.0, 2.0])]
             
-            dataset = TestDataset()
-            assert len(dataset) == 10, "Data level broken"
+            module = DummyModule()
+            optimizer = SGD(module.parameters(), lr=0.01)
+            assert hasattr(optimizer, 'lr'), "Optimization level broken"
             
         except ImportError:
             pass  # Not implemented yet

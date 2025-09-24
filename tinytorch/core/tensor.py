@@ -469,15 +469,20 @@ class Tensor:
 
     def matmul(self, other: 'Tensor') -> 'Tensor':
         """
-        Perform matrix multiplication between two tensors.
+        Perform matrix multiplication between two tensors using explicit loops.
+        
+        This implementation uses triple-nested loops for educational understanding
+        of the fundamental operations. Module 15 will show the optimization progression
+        from loops → blocking → vectorized operations.
 
         TODO: Implement matrix multiplication.
 
         STEP-BY-STEP IMPLEMENTATION:
         1. Extract numpy arrays from both tensors
-        2. Use np.matmul() for proper matrix multiplication
-        3. Create new Tensor object with the result
-        4. Return the new tensor
+        2. Check tensor shapes for compatibility
+        3. Use triple-nested loops for educational understanding
+        4. Create new Tensor object with the result
+        5. Return the new tensor
 
         LEARNING CONNECTIONS:
         Real-world relevance:
@@ -486,21 +491,49 @@ class Tensor:
         - CNN convolutions: Implemented as matrix multiplications
         - Batch processing: Matrix ops enable parallel computation
 
-        APPROACH:
-        1. Use np.matmul() to perform matrix multiplication
-        2. Return a new Tensor with the result
-        3. Handle broadcasting automatically
+        EDUCATIONAL APPROACH:
+        1. Show every operation explicitly with loops
+        2. Build understanding before optimizing in Module 15
+        3. Connect mathematical operations to computational patterns
 
         EXAMPLE:
         Tensor([[1, 2], [3, 4]]) @ Tensor([[5, 6], [7, 8]]) → Tensor([[19, 22], [43, 50]])
 
         HINTS:
-        - Use np.matmul(self._data, other._data)
-        - Return Tensor(result)
-        - This is matrix multiplication, not element-wise multiplication
+        - This is intentionally simple for education, not optimized
+        - Module 15 will show the progression to high-performance implementations
+        - Understanding loops helps appreciate vectorization benefits
         """
         ### BEGIN SOLUTION
-        result = np.matmul(self._data, other._data)
+        # Matrix multiplication using explicit loops for educational understanding
+        a_data = self._data
+        b_data = other._data
+        
+        # Get dimensions and validate compatibility
+        if len(a_data.shape) != 2 or len(b_data.shape) != 2:
+            raise ValueError("matmul requires 2D tensors")
+        
+        m, k = a_data.shape
+        k2, n = b_data.shape
+        
+        if k != k2:
+            raise ValueError(f"Inner dimensions must match: {k} != {k2}")
+        
+        # Initialize result matrix
+        result = np.zeros((m, n), dtype=a_data.dtype)
+        
+        # Triple nested loops - educational, shows every operation
+        # This is intentionally simple to understand the fundamental computation
+        # Module 15 will show the optimization journey:
+        #   Step 1 (here): Educational loops - slow but clear
+        #   Step 2: Loop blocking for cache efficiency  
+        #   Step 3: Vectorized operations with NumPy
+        #   Step 4: GPU acceleration and BLAS libraries
+        for i in range(m):                      # For each row in result
+            for j in range(n):                  # For each column in result
+                for k_idx in range(k):          # Dot product: sum over inner dimension
+                    result[i, j] += a_data[i, k_idx] * b_data[k_idx, j]
+        
         return Tensor(result)
         ### END SOLUTION
 
