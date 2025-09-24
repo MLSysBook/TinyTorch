@@ -1,0 +1,28 @@
+name: Precision
+number: 17
+type: optimization
+difficulty: advanced
+estimated_hours: 8-10
+
+description: |
+  Numerical precision optimization through quantization. Students learn to trade
+  precision for performance and memory efficiency using INT8 quantization.
+
+learning_objectives:
+  - Understand floating point representation
+  - Implement post-training quantization
+  - Learn calibration and scaling techniques
+  - Measure accuracy vs performance tradeoffs
+
+prerequisites:
+  - Module 15: Acceleration
+  - Module 16: Caching
+
+skills_developed:
+  - Quantization techniques
+  - Numerical precision management
+  - Performance vs accuracy tradeoffs
+  - Model size reduction
+
+exports:
+  - tinytorch.optimizations.quantization

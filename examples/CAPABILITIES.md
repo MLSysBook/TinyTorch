@@ -60,29 +60,29 @@ tito module complete 05_losses
 🎯 Achievement: Can evaluate model predictions
 ```
 
-### 🔓 Capability 5: Automatic Differentiation (Module 6)
+### 🔓 Capability 5: Optimization (Module 6)
+**Unlocked**: Advanced training algorithms (SGD, Adam)
+```bash
+tito module complete 06_optimizers
+✅ Integration tests: Optimizer algorithms ready
+🎯 Achievement: Systematic weight updates prepared
+```
+
+### 🔓 Capability 6: Automatic Differentiation (Module 7)
 **Unlocked**: Networks can learn through backpropagation
 ```bash
-tito module complete 06_autograd
+tito module complete 07_autograd
 ✅ Integration tests: Gradient flow through layers
 🎯 Achievement: Solve the XOR Problem (1969)!
 ➡️ RUN: python examples/xor_1969/minsky_xor_problem.py
 ```
 
-### 🔓 Capability 6: Data Loading (Module 7)
-**Unlocked**: Can handle real datasets efficiently
+### 🔓 Capability 7: Complete Training (Module 8)
+**Unlocked**: Full training pipelines with validation
 ```bash
-tito module complete 07_dataloader
-✅ Integration tests: Batching, shuffling, iteration
-🎯 Achievement: Load real-world datasets
-```
-
-### 🔓 Capability 7: Optimization (Module 8)
-**Unlocked**: Advanced training algorithms (SGD, Adam)
-```bash
-tito module complete 08_optimizers
-✅ Integration tests: Optimizer + Autograd + Layers
-🎯 Achievement: Train networks efficiently
+tito module complete 08_training
+✅ Integration tests: Complete training loop
+🎯 Achievement: Train networks end-to-end
 ➡️ RUN: python examples/xor_1969/minsky_xor_problem.py --train
 ```
 
@@ -95,12 +95,12 @@ tito module complete 09_spatial
 ➡️ RUN: python examples/lenet_1998/train_mnist.py
 ```
 
-### 🔓 Capability 9: Complete Training (Module 10)
-**Unlocked**: Full training pipelines with validation
+### 🔓 Capability 9: Data Loading (Module 10)
+**Unlocked**: Can handle real datasets efficiently
 ```bash
-tito module complete 10_training
-✅ Integration tests: Complete training loop
-🎯 Achievement: Train AlexNet-style networks (2012)!
+tito module complete 10_dataloader
+✅ Integration tests: Batching, shuffling, iteration
+🎯 Achievement: Train AlexNet-scale networks (2012)!
 ➡️ RUN: python examples/alexnet_2012/train_cnn.py
 ```
 

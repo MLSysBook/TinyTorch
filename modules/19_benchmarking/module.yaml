@@ -1,0 +1,30 @@
+name: Benchmarking
+number: 19
+type: analysis
+difficulty: intermediate
+estimated_hours: 6-8
+
+description: |
+  Performance measurement and analysis. Students learn to scientifically benchmark
+  ML systems, identify bottlenecks, and compare optimization techniques.
+
+learning_objectives:
+  - Build performance profiling tools
+  - Measure memory and compute usage
+  - Compare optimization techniques
+  - Create reproducible benchmarks
+
+prerequisites:
+  - Module 15: Acceleration
+  - Module 16: Caching
+  - Module 17: Precision
+  - Module 18: Compression
+
+skills_developed:
+  - Performance profiling
+  - Bottleneck identification
+  - Scientific measurement
+  - Benchmark design
+
+exports:
+  - tinytorch.benchmarks
