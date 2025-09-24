@@ -33,6 +33,3 @@ Issues = "https://github.com/VJ/TinyTorch/issues"
 [tool.setuptools.packages.find]
 where = ["."]
 include = ["tinytorch_placeholder*"]
-
-[tool.setuptools.package-dir]
-tinytorch = "tinytorch_placeholder"

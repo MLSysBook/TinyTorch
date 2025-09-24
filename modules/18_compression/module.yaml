@@ -1,0 +1,28 @@
+name: Compression
+number: 18
+type: optimization
+difficulty: advanced
+estimated_hours: 8-10
+
+description: |
+  Model compression through pruning and distillation. Students learn to reduce
+  model size while maintaining performance through structured optimization techniques.
+
+learning_objectives:
+  - Understand sparsity and pruning concepts
+  - Implement magnitude-based pruning
+  - Learn knowledge distillation basics
+  - Optimize model size vs accuracy
+
+prerequisites:
+  - Module 15: Acceleration
+  - Module 17: Precision
+
+skills_developed:
+  - Model pruning techniques
+  - Sparsity patterns
+  - Knowledge distillation
+  - Model size optimization
+
+exports:
+  - tinytorch.optimizations.compression

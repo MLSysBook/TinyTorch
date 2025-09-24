@@ -218,7 +218,11 @@ By implementing matrix multiplication, you'll understand:
 #| export
 def matmul(a: Tensor, b: Tensor) -> Tensor:
     """
-    Matrix multiplication for tensors.
+    Matrix multiplication for tensors using explicit loops.
+    
+    This implementation uses triple-nested loops for educational understanding
+    of the fundamental operations. Module 15 will show the optimization progression
+    from loops → blocking → vectorized operations.
     
     Args:
         a: Left tensor (shape: ..., m, k)
@@ -227,18 +231,24 @@ def matmul(a: Tensor, b: Tensor) -> Tensor:
     Returns:
         Result tensor (shape: ..., m, n)
     
-    TODO: Implement matrix multiplication using numpy's @ operator.
+    TODO: Implement matrix multiplication using explicit loops.
     
     STEP-BY-STEP IMPLEMENTATION:
     1. Extract numpy arrays from both tensors using .data
-    2. Perform matrix multiplication: result_data = a_data @ b_data
-    3. Wrap result in a new Tensor and return
+    2. Check tensor shapes for compatibility
+    3. Use triple-nested loops to show every operation
+    4. Wrap result in a new Tensor and return
     
     LEARNING CONNECTIONS:
     - This is the core operation in Dense layers: output = input @ weights
-    - PyTorch uses optimized BLAS libraries for this operation
-    - GPU implementations parallelize this across thousands of cores
-    - Understanding this operation is key to neural network performance
+    - Shows the fundamental computation before optimization
+    - Module 15 will demonstrate the progression to high-performance implementations
+    - Understanding loops helps appreciate vectorization and GPU parallelization
+    
+    EDUCATIONAL APPROACH:
+    - Intentionally simple for understanding, not performance
+    - Makes every multiply-add operation explicit
+    - Sets up Module 15 to show optimization techniques
     
     EXAMPLE:
     ```python
@@ -249,20 +259,42 @@ def matmul(a: Tensor, b: Tensor) -> Tensor:
     ```
     
     IMPLEMENTATION HINTS:
-    - Use the @ operator for clean matrix multiplication
-    - Ensure you return a Tensor, not a numpy array
-    - The operation should work for any compatible matrix shapes
+    - Use explicit loops to show every operation
+    - This is educational, not optimized for performance
+    - Module 15 will show the progression to fast implementations
     """
     ### BEGIN SOLUTION
     # Extract numpy arrays from tensors
     a_data = a.data
     b_data = b.data
     
-    # Perform matrix multiplication
-    result_data = a_data @ b_data
+    # Get dimensions and validate compatibility
+    if len(a_data.shape) != 2 or len(b_data.shape) != 2:
+        raise ValueError("matmul requires 2D tensors")
+    
+    m, k = a_data.shape
+    k2, n = b_data.shape
+    
+    if k != k2:
+        raise ValueError(f"Inner dimensions must match: {k} != {k2}")
+    
+    # Initialize result matrix
+    result = np.zeros((m, n), dtype=a_data.dtype)
+    
+    # Triple nested loops - educational, shows every operation
+    # This is intentionally simple to understand the fundamental computation
+    # Module 15 will show the optimization journey:
+    #   Step 1 (here): Educational loops - slow but clear
+    #   Step 2: Loop blocking for cache efficiency  
+    #   Step 3: Vectorized operations with NumPy
+    #   Step 4: GPU acceleration and BLAS libraries
+    for i in range(m):                      # For each row in result
+        for j in range(n):                  # For each column in result
+            for k_idx in range(k):          # Dot product: sum over inner dimension
+                result[i, j] += a_data[i, k_idx] * b_data[k_idx, j]
     
     # Return new Tensor with result
-    return Tensor(result_data)
+    return Tensor(result)
     ### END SOLUTION
 
 # %% [markdown]

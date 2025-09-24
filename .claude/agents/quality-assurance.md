@@ -20,18 +20,18 @@ Test, validate, and ensure TinyTorch modules work correctly, teach effectively, 
 - ❓ 03_activations (AUDIT NEEDED)
 - ❓ 04_layers (AUDIT NEEDED)
 - ❓ 05_networks (AUDIT NEEDED)
-- ❓ 06_autograd (AUDIT NEEDED)
-- ❌ 07_spatial (VIOLATIONS IDENTIFIED - see below)
-- ❓ 08_optimizers (AUDIT NEEDED)
-- ❓ 09_dataloader (AUDIT NEEDED)
-- ❓ 10_training (AUDIT NEEDED)
+- ❓ 06_optimizers (AUDIT NEEDED)
+- ❓ 07_autograd (AUDIT NEEDED)
+- ❓ 08_training (AUDIT NEEDED)
+- ❌ 09_spatial (VIOLATIONS IDENTIFIED - see below)
+- ❓ 10_dataloader (AUDIT NEEDED)
 - ❓ 12_attention (AUDIT NEEDED)
 
 **PROCESS**: Audit each module completely, document ALL violations, provide to Module Developer for systematic fixes.
 
 **CRITICAL VIOLATIONS FOUND**:
 
-**07_spatial module** - Multiple test sections have test code NOT wrapped in functions:
+**09_spatial module** - Multiple test sections have test code NOT wrapped in functions:
 - Line 778: `print("🔬 Unit Test: Multi-Channel Conv2D Layer...")` - test code in cell, not in function
 - Line 1072: `print("🔬 Unit Test: MaxPool2D Layer...")` - test code in cell, not in function  
 - Line 1281: `print("🔬 Unit Test: Flatten Function...")` - test code in cell, not in function
