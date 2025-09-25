@@ -206,16 +206,27 @@ class SGD:
                 # In modern PyTorch style, grad.data gives us the numpy array
                 gradient = param.grad.data
                 
+                # Ensure gradient is numpy array (fix for memoryview issue)
+                if hasattr(gradient, 'data'):
+                    gradient_data = gradient.data
+                    # Check if the inner data is memoryview and convert
+                    if isinstance(gradient_data, memoryview):
+                        gradient_data = np.array(gradient_data)
+                elif isinstance(gradient, memoryview):
+                    gradient_data = np.array(gradient)
+                else:
+                    gradient_data = np.array(gradient)
+                
                 if self.momentum > 0:
-                    # Apply momentum (simplified)
+                    # Apply momentum (simplified) using numpy arrays
                     if i in self.velocity:
-                        self.velocity[i] = self.momentum * self.velocity[i] + gradient
+                        self.velocity[i] = self.momentum * self.velocity[i] + gradient_data
                     else:
-                        self.velocity[i] = gradient
+                        self.velocity[i] = gradient_data
                     update = self.velocity[i]
                 else:
                     # Simple gradient descent (no momentum)
-                    update = gradient
+                    update = gradient_data
                 
                 # Clean parameter update - PyTorch style
                 # NOTE: In production PyTorch, this is an in-place operation (param.data.sub_())
@@ -353,11 +364,22 @@ class Adam:
                 # Get gradient data - clean PyTorch style
                 gradient = param.grad.data
                 
-                # Update first moment (momentum)
-                self.m[i] = self.beta1 * self.m[i] + (1 - self.beta1) * gradient
+                # Ensure gradient is numpy array (fix for memoryview issue)
+                if hasattr(gradient, 'data'):
+                    gradient_data = gradient.data
+                    # Check if the inner data is memoryview and convert
+                    if isinstance(gradient_data, memoryview):
+                        gradient_data = np.array(gradient_data)
+                elif isinstance(gradient, memoryview):
+                    gradient_data = np.array(gradient)
+                else:
+                    gradient_data = np.array(gradient)
                 
-                # Update second moment (squared gradients)
-                self.v[i] = self.beta2 * self.v[i] + (1 - self.beta2) * gradient * gradient
+                # Update first moment (momentum) - use numpy arrays
+                self.m[i] = self.beta1 * self.m[i] + (1 - self.beta1) * gradient_data
+                
+                # Update second moment (squared gradients) - use numpy arrays
+                self.v[i] = self.beta2 * self.v[i] + (1 - self.beta2) * gradient_data * gradient_data
                 
                 # Bias correction
                 m_corrected = self.m[i] / (1 - self.beta1 ** self.t)
