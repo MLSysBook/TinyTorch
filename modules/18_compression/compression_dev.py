@@ -43,7 +43,7 @@ By the end of this module, you'll understand:
 """
 
 # %% nbgrader={"grade": false, "grade_id": "compression-imports", "locked": false, "schema_version": 3, "solution": false, "task": false}
-#| default_exp compression
+#| default_exp nn.utils.prune
 
 #| export
 import numpy as np

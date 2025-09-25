@@ -217,12 +217,112 @@ def test_attention_mechanism():
     print("Notice how padding (position 1) gets less attention")
 ```
 
+## 🔧 **Module Integration Testing**
+
+### Three-Tier Testing Strategy
+
+TinyTorch uses a comprehensive testing approach:
+
+1. **Unit Tests**: Individual module functionality (in modules)
+2. **Module Integration Tests**: Inter-module compatibility (tests/integration/)
+3. **System Integration Tests**: End-to-end examples (examples/)
+
+### Module Integration Tests Explained
+
+**Purpose**: Test that modules work TOGETHER, not just individually.
+
+**What Integration Tests Cover**:
+- Data flows correctly between modules
+- Import paths don't conflict  
+- Modules can consume each other's outputs
+- Training pipelines work end-to-end
+- Optimization modules integrate with core modules
+
+**Example Integration Test**:
+```python
+def test_tensor_autograd_integration():
+    """Test tensor and autograd modules work together"""
+    from tinytorch.core.tensor import Tensor
+    from tinytorch.core.autograd import Variable
+    
+    # Test data flow between modules
+    t = Tensor([1.0, 2.0, 3.0])
+    v = Variable(t, requires_grad=True)
+    
+    # Test that autograd can handle tensor operations
+    result = v * 2
+    assert result.data.tolist() == [2.0, 4.0, 6.0]
+    print("✅ Tensor + Autograd integration working")
+
+def test_training_pipeline_integration():
+    """Test complete training pipeline works"""
+    from tinytorch.utils.data import DataLoader, SimpleDataset
+    from tinytorch.nn import Linear  
+    from tinytorch.core.optimizers import SGD
+    
+    # Test that data → model → optimizer → training works
+    dataset = SimpleDataset([(i, i*2) for i in range(10)])
+    dataloader = DataLoader(dataset, batch_size=2)
+    model = Linear(1, 1)
+    optimizer = SGD([model.weight], lr=0.01)
+    
+    # Integration test: does the pipeline execute?
+    for batch_data, batch_labels in dataloader:
+        output = model(batch_data)
+        optimizer.step()
+        break  # Just test one iteration
+    print("✅ Training pipeline integration working")
+```
+
+### Running Integration Tests
+
+```bash
+# Run module integration tests
+python tests/integration/test_module_integration.py
+
+# Expected output:
+# ✅ Core Module Integration
+# ✅ Training Pipeline Integration  
+# ✅ Optimization Module Integration
+# ✅ Import Compatibility
+# ✅ Cross-Module Data Flow
+```
+
+### Integration Test Categories
+
+1. **Core Module Integration**: tensor + autograd + layers
+2. **Training Pipeline Integration**: data + models + optimizers + training
+3. **Optimization Module Integration**: profiler + quantization + pruning with core
+4. **Import Compatibility**: All import paths work without conflicts
+
+### Critical Integration Points
+
+- **Data Flow**: Tensor objects work across module boundaries
+- **Interface Compatibility**: Module APIs match expectations
+- **Training Workflows**: Complete training pipelines execute
+- **Performance Integration**: Optimizations preserve correctness
+
+## 📋 **Testing Checklist**
+
+### Before Any Commit
+- [ ] Modified module unit tests pass
+- [ ] Integration tests pass (90%+ success rate)
+- [ ] At least one example still works
+- [ ] No import errors in package structure
+
+### Module Completion Requirements
+- [ ] Unit tests in module pass
+- [ ] Integration tests with other modules pass
+- [ ] Module exports correctly to package
+- [ ] Module works in training pipeline
+
 ## 🎯 Remember
 
 > Tests are teaching tools, not just verification tools.
 
 Every test should help a student understand:
 - What the code does
-- Why it matters
+- Why it matters  
 - How to verify it works
 - What success looks like
+- **How modules work together** (integration focus)

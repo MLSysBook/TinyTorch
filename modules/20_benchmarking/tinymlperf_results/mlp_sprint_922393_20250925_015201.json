@@ -1,0 +1,32 @@
+{
+  "submission_id": "mlp_sprint_922393_20250925_015201",
+  "timestamp": "2025-09-25T01:52:01.915218",
+  "team_name": "Speed Demons",
+  "event_name": "mlp_sprint",
+  "optimization_description": "Reduced hidden layer size for 2x speedup",
+  "github_url": "https://github.com/speed-demons/fast-mlp",
+  "performance_metrics": {
+    "event": "MLP Sprint",
+    "model_type": "FastMLPModel",
+    "input_shape": [
+      100,
+      784
+    ],
+    "benchmark_timestamp": "2025-09-25T01:52:01.850282",
+    "mean_inference_time": 0.0003929615020751953,
+    "std_inference_time": 3.69683825527451e-05,
+    "min_inference_time": 0.00034999847412109375,
+    "max_inference_time": 0.00044798851013183594,
+    "p95_inference_time": 0.00044078826904296874,
+    "mean_cpu_time": 0.00039299999999999893,
+    "cpu_efficiency": 1.0001875917645375,
+    "profiling_method": "TinyTorch Module 15 Profiler",
+    "memory_delta_mb": 0.00547027587890625,
+    "peak_memory_mb": 0.07584381103515625,
+    "result_size_mb": 0.003814697265625,
+    "speedup_vs_baseline": 1.2968086397281884
+  },
+  "speedup_score": 1.2968086397281884,
+  "baseline_time_ms": 0.5095958709716797,
+  "submission_time_ms": 0.3929615020751953
+}

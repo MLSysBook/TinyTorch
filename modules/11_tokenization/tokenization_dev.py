@@ -338,8 +338,8 @@ def test_unit_char_tokenizer():
     assert tokens_with_special[0] == tokenizer.char_to_idx['<BOS>'], "First token should be BOS"
     assert tokens_with_special[-1] == tokenizer.char_to_idx['<EOS>'], "Last token should be EOS"
     
-    # Test vocabulary size
-    assert tokenizer.vocab_size >= 100, "Should have at least 100 tokens (special + ASCII)"
+    # Test vocabulary size (4 special + 95 ASCII = 99 total)
+    assert tokenizer.vocab_size >= 99, "Should have at least 99 tokens (4 special + 95 ASCII)"
     
     # Test unknown character handling
     unknown_tokens = tokenizer.encode("🚀", add_special_tokens=False)  # Emoji not in ASCII

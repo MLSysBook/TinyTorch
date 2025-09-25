@@ -24,7 +24,7 @@ By the end of this module, you will be able to:
 """
 
 # %%
-#| default_exp benchmarking
+#| default_exp utils.benchmark
 
 import time
 import json
