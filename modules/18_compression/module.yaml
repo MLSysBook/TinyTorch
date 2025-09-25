@@ -1,28 +1,29 @@
 name: Compression
-number: 18
+number: 17
 type: optimization
 difficulty: advanced
 estimated_hours: 8-10
 
 description: |
-  Model compression through pruning and distillation. Students learn to reduce
-  model size while maintaining performance through structured optimization techniques.
+  Model compression through pruning and sparsity. Students learn to identify and remove
+  redundant parameters, achieving 70-80% sparsity while maintaining accuracy. Essential
+  for edge deployment and mobile devices.
 
 learning_objectives:
-  - Understand sparsity and pruning concepts
+  - Understand sparsity and redundancy in neural networks
   - Implement magnitude-based pruning
-  - Learn knowledge distillation basics
-  - Optimize model size vs accuracy
+  - Build structured and unstructured pruning
+  - Measure accuracy vs model size tradeoffs
 
 prerequisites:
   - Module 15: Acceleration
-  - Module 17: Precision
+  - Module 16: Quantization
 
 skills_developed:
-  - Model pruning techniques
-  - Sparsity patterns
-  - Knowledge distillation
-  - Model size optimization
+  - Pruning techniques
+  - Sparsity management
+  - Model compression
+  - Edge deployment optimization
 
 exports:
   - tinytorch.optimizations.compression

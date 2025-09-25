@@ -1,0 +1,34 @@
+{
+  "submission_id": "cnn_marathon_c8bced_20250924_213227",
+  "timestamp": "2025-09-24T21:32:27.403323",
+  "team_name": "CNN Champions",
+  "event_name": "cnn_marathon",
+  "optimization_description": "Custom convolution kernels + memory optimization",
+  "github_url": "https://github.com/cnn-champions/efficient-cnn",
+  "performance_metrics": {
+    "event": "CNN Marathon",
+    "model_type": "EfficientCNNModel",
+    "input_shape": [
+      50,
+      28,
+      28,
+      1
+    ],
+    "benchmark_timestamp": "2025-09-24T21:32:27.352917",
+    "mean_inference_time": 0.0003046989440917969,
+    "std_inference_time": 3.9369253655535306e-05,
+    "min_inference_time": 0.00025916099548339844,
+    "max_inference_time": 0.0003590583801269531,
+    "p95_inference_time": 0.00035605430603027346,
+    "mean_cpu_time": 0.00030439999999996024,
+    "cpu_efficiency": 0.9989474972249474,
+    "profiling_method": "TinyTorch Module 15 Profiler",
+    "memory_delta_mb": 0.0049896240234375,
+    "peak_memory_mb": 0.31513214111328125,
+    "result_size_mb": 0.0019073486328125,
+    "speedup_vs_baseline": 0.9708920187793427
+  },
+  "speedup_score": 0.9708920187793427,
+  "baseline_time_ms": 0.29582977294921875,
+  "submission_time_ms": 0.3046989440917969
+}
