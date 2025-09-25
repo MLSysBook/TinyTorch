@@ -47,13 +47,18 @@ import numpy as np
 import sys
 import os
 
-# Import our building blocks - try package first, then local modules
-try:
+# Clean production-style imports - no try/except hacking
+if 'tinytorch' in sys.modules:
+    # Production: Import from installed package
     from tinytorch.core.tensor import Tensor, Parameter
-except ImportError:
-    # For development, import from local modules
-    sys.path.append(os.path.join(os.path.dirname(__file__), '..', '02_tensor'))
-    from tensor_dev import Tensor, Parameter
+else:
+    # Development: Direct import from local module
+    tensor_module_path = os.path.join(os.path.dirname(__file__), '..', '02_tensor')
+    sys.path.insert(0, tensor_module_path)
+    try:
+        from tensor_dev import Tensor, Parameter
+    finally:
+        sys.path.pop(0)  # Clean up path
 
 # %% nbgrader={"grade": false, "grade_id": "layers-setup", "locked": false, "schema_version": 3, "solution": false, "task": false}
 print("🔥 TinyTorch Layers Module")
