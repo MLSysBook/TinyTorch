@@ -1,0 +1,32 @@
+{
+  "submission_id": "mlp_sprint_ae0b86_20250924_210826",
+  "timestamp": "2025-09-24T21:08:26.392390",
+  "team_name": "Lightning Fast",
+  "event_name": "mlp_sprint",
+  "optimization_description": "Quantization + kernel optimization",
+  "github_url": "https://github.com/lightning-fast/mlp-opt",
+  "performance_metrics": {
+    "event": "MLP Sprint",
+    "model_type": "FastMLPModel",
+    "input_shape": [
+      100,
+      784
+    ],
+    "benchmark_timestamp": "2025-09-24T21:08:26.316346",
+    "mean_inference_time": 0.0004211902618408203,
+    "std_inference_time": 2.198762268067939e-05,
+    "min_inference_time": 0.0004029273986816406,
+    "max_inference_time": 0.00046181678771972656,
+    "p95_inference_time": 0.0004548549652099609,
+    "mean_cpu_time": 0.00041700000000002293,
+    "cpu_efficiency": 0.9909474656336081,
+    "profiling_method": "TinyTorch Module 15 Profiler",
+    "memory_delta_mb": 0.00547027587890625,
+    "peak_memory_mb": 0.07584381103515625,
+    "result_size_mb": 0.003814697265625,
+    "speedup_vs_baseline": 1.2779350164157137
+  },
+  "speedup_score": 1.2779350164157137,
+  "baseline_time_ms": 0.5382537841796875,
+  "submission_time_ms": 0.4211902618408203
+}

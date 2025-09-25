@@ -2,7 +2,9 @@
 
 # %% auto 0
 __all__ = ['scaled_dot_product_attention', 'SelfAttention', 'create_causal_mask', 'create_padding_mask',
-           'create_bidirectional_mask', 'AttentionEfficiencyProfiler']
+           'create_bidirectional_mask', 'AttentionEfficiencyProfiler',
+           # Compatibility aliases for optimization modules
+           'MultiHeadAttention', 'ScaledDotProductAttention']
 
 # %% ../../modules/source/12_attention/attention_dev.ipynb 1
 import numpy as np
@@ -601,3 +603,8 @@ class AttentionEfficiencyProfiler:
         print(f"  Trade-off: More heads = better parallelism but higher memory")
         
         return multi_head_results
+
+# Compatibility aliases for optimization modules (15-20)
+# These provide backward compatibility with modules that expect different naming
+MultiHeadAttention = SelfAttention  # SelfAttention can be used as MultiHeadAttention
+ScaledDotProductAttention = scaled_dot_product_attention  # Function alias

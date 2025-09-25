@@ -1,0 +1,43 @@
+{
+  "submission_id": "cnn_marathon_26be9c_20250924_203222",
+  "timestamp": "2025-09-24T20:32:22.997075",
+  "team_name": "Pruning Pioneers",
+  "event_name": "cnn_marathon",
+  "optimization_description": "Structured pruning + knowledge distillation + memory optimization",
+  "github_url": "https://github.com/pruning-pioneers/pruned-cnn",
+  "performance_metrics": {
+    "event": "CNN Marathon",
+    "model_type": "PrunedCNN",
+    "input_shape": [
+      50,
+      28,
+      28,
+      1
+    ],
+    "benchmark_timestamp": "2025-09-24T20:32:22.927363",
+    "mean_inference_time": 0.0003931999206542969,
+    "std_inference_time": 3.0254707074748502e-05,
+    "min_inference_time": 0.0003719329833984375,
+    "max_inference_time": 0.0004520416259765625,
+    "p95_inference_time": 0.0004398822784423828,
+    "mean_cpu_time": 0.00039280000000001535,
+    "cpu_efficiency": 0.9990653676037982,
+    "profiling_method": "TinyTorch Module 15 Profiler",
+    "memory_delta_mb": 0.0049896240234375,
+    "peak_memory_mb": 0.31513214111328125,
+    "result_size_mb": 0.0019073486328125,
+    "speedup_vs_baseline": 1.0908319185059423
+  },
+  "speedup_score": 1.0908319185059423,
+  "baseline_time_ms": 0.42891502380371094,
+  "submission_time_ms": 0.3931999206542969,
+  "innovation_analysis": {
+    "innovation_score": 0.15,
+    "detected_techniques": [
+      "pruning"
+    ],
+    "num_techniques": 1,
+    "creativity_bonus": false
+  },
+  "composite_score": 0.8085823429541596
+}

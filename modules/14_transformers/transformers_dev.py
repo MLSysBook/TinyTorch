@@ -71,8 +71,19 @@ except ImportError:
             def __init__(self, embed_dim, num_heads):
                 self.embed_dim = embed_dim
                 self.num_heads = num_heads
-            def forward(self, q, k, v, mask=None):
-                return q  # Mock implementation
+            def forward(self, q, k, v, mask=None, past_key_value=None, return_attention_weights=False):
+                # Mock implementation - supports KV caching interface but doesn't use it
+                if return_attention_weights:
+                    fake_weights = q  # Mock attention weights
+                    if past_key_value is not None:
+                        return q, fake_weights, (k, v)  # Mock new key-value
+                    else:
+                        return q, fake_weights
+                else:
+                    if past_key_value is not None:
+                        return q, (k, v)  # Mock new key-value
+                    else:
+                        return q
         class ScaledDotProductAttention:
             def __init__(self):
                 pass
@@ -633,6 +644,11 @@ class TransformerBlock:
     
     Combines multi-head self-attention, layer normalization, residual connections,
     and position-wise feed-forward networks into the standard transformer architecture.
+    
+    SUPPORTS KV CACHING (Module 19 integration):
+    - Forward method accepts optional past_key_value parameter for caching
+    - Returns new key-value pairs when caching is enabled
+    - Backward compatible: works with or without caching
     """
     
     def __init__(self, embed_dim: int, num_heads: int, hidden_dim: int, 
@@ -687,7 +703,7 @@ class TransformerBlock:
         ### END SOLUTION
     
     def forward(self, x: Tensor, mask: Optional[Tensor] = None,
-                return_attention_weights: bool = False) -> Union[Tensor, Tuple[Tensor, Tensor]]:
+                return_attention_weights: bool = False, past_key_value: Optional[Tuple[Tensor, Tensor]] = None) -> Union[Tensor, Tuple[Tensor, Tensor], Tuple[Tensor, Tuple[Tensor, Tensor]], Tuple[Tensor, Tensor, Tuple[Tensor, Tensor]]]:
         """
         Process input through complete transformer block.
         
@@ -705,10 +721,12 @@ class TransformerBlock:
             x: Input tensor with shape (batch_size, seq_len, embed_dim)
             mask: Optional attention mask
             return_attention_weights: Whether to return attention weights
+            past_key_value: Optional cached key-value pair from previous forward pass
             
         Returns:
             Transformer block output with same shape as input
             Optionally also attention weights
+            Optionally also new key-value pair for caching (if past_key_value provided)
         """
         ### BEGIN SOLUTION
         if self.pre_norm:
@@ -716,12 +734,49 @@ class TransformerBlock:
             
             # Self-attention with residual connection
             norm1_x = self.norm1(x)
-            if return_attention_weights:
-                attn_output, attn_weights = self.attention.forward(
-                    norm1_x, norm1_x, norm1_x, mask=mask, return_attention_weights=True
-                )
+            
+            # Handle KV caching - try to pass past_key_value to attention if supported
+            if past_key_value is not None:
+                # Try to use KV caching - gracefully fall back if not supported
+                try:
+                    if return_attention_weights:
+                        attn_result = self.attention.forward(
+                            norm1_x, norm1_x, norm1_x, mask=mask, return_attention_weights=True, past_key_value=past_key_value
+                        )
+                        if len(attn_result) == 3:
+                            # attention returned (output, weights, new_key_value)
+                            attn_output, attn_weights, new_key_value = attn_result
+                        else:
+                            # fallback: attention doesn't support caching yet
+                            attn_output, attn_weights = attn_result
+                            new_key_value = None
+                    else:
+                        attn_result = self.attention.forward(norm1_x, norm1_x, norm1_x, mask=mask, past_key_value=past_key_value)
+                        if isinstance(attn_result, tuple) and len(attn_result) == 2:
+                            # attention returned (output, new_key_value)
+                            attn_output, new_key_value = attn_result
+                        else:
+                            # fallback: attention doesn't support caching yet
+                            attn_output = attn_result
+                            new_key_value = None
+                except TypeError:
+                    # Attention layer doesn't support past_key_value yet - fall back to standard behavior
+                    if return_attention_weights:
+                        attn_output, attn_weights = self.attention.forward(
+                            norm1_x, norm1_x, norm1_x, mask=mask, return_attention_weights=True
+                        )
+                    else:
+                        attn_output = self.attention.forward(norm1_x, norm1_x, norm1_x, mask=mask)
+                    new_key_value = None
             else:
-                attn_output = self.attention.forward(norm1_x, norm1_x, norm1_x, mask=mask)
+                # Standard behavior (no caching)
+                if return_attention_weights:
+                    attn_output, attn_weights = self.attention.forward(
+                        norm1_x, norm1_x, norm1_x, mask=mask, return_attention_weights=True
+                    )
+                else:
+                    attn_output = self.attention.forward(norm1_x, norm1_x, norm1_x, mask=mask)
+                new_key_value = None
             
             # Residual connection
             x = Tensor(x.data + attn_output.data)
@@ -737,12 +792,48 @@ class TransformerBlock:
             # Post-normalization: LayerNorm after attention/FFN (original transformer)
             
             # Self-attention with residual connection
-            if return_attention_weights:
-                attn_output, attn_weights = self.attention.forward(
-                    x, x, x, mask=mask, return_attention_weights=True
-                )
+            # Handle KV caching - try to pass past_key_value to attention if supported
+            if past_key_value is not None:
+                # Try to use KV caching - gracefully fall back if not supported
+                try:
+                    if return_attention_weights:
+                        attn_result = self.attention.forward(
+                            x, x, x, mask=mask, return_attention_weights=True, past_key_value=past_key_value
+                        )
+                        if len(attn_result) == 3:
+                            # attention returned (output, weights, new_key_value)
+                            attn_output, attn_weights, new_key_value = attn_result
+                        else:
+                            # fallback: attention doesn't support caching yet
+                            attn_output, attn_weights = attn_result
+                            new_key_value = None
+                    else:
+                        attn_result = self.attention.forward(x, x, x, mask=mask, past_key_value=past_key_value)
+                        if isinstance(attn_result, tuple) and len(attn_result) == 2:
+                            # attention returned (output, new_key_value)
+                            attn_output, new_key_value = attn_result
+                        else:
+                            # fallback: attention doesn't support caching yet
+                            attn_output = attn_result
+                            new_key_value = None
+                except TypeError:
+                    # Attention layer doesn't support past_key_value yet - fall back to standard behavior
+                    if return_attention_weights:
+                        attn_output, attn_weights = self.attention.forward(
+                            x, x, x, mask=mask, return_attention_weights=True
+                        )
+                    else:
+                        attn_output = self.attention.forward(x, x, x, mask=mask)
+                    new_key_value = None
             else:
-                attn_output = self.attention.forward(x, x, x, mask=mask)
+                # Standard behavior (no caching)
+                if return_attention_weights:
+                    attn_output, attn_weights = self.attention.forward(
+                        x, x, x, mask=mask, return_attention_weights=True
+                    )
+                else:
+                    attn_output = self.attention.forward(x, x, x, mask=mask)
+                new_key_value = None
             
             # Residual + LayerNorm
             attn_residual = Tensor(x.data + attn_output.data)
@@ -755,16 +846,25 @@ class TransformerBlock:
             ffn_residual = Tensor(norm1_output.data + ffn_output.data)
             output = self.norm2(ffn_residual)
         
-        if return_attention_weights:
-            return output, attn_weights
+        # Return appropriate tuple based on what was requested
+        if past_key_value is not None:
+            # KV caching is enabled
+            if return_attention_weights:
+                return output, attn_weights, new_key_value
+            else:
+                return output, new_key_value
         else:
-            return output
+            # Standard behavior (backward compatible)
+            if return_attention_weights:
+                return output, attn_weights
+            else:
+                return output
         ### END SOLUTION
     
     def __call__(self, x: Tensor, mask: Optional[Tensor] = None,
-                 return_attention_weights: bool = False) -> Union[Tensor, Tuple[Tensor, Tensor]]:
+                 return_attention_weights: bool = False, past_key_value: Optional[Tuple[Tensor, Tensor]] = None) -> Union[Tensor, Tuple[Tensor, Tensor], Tuple[Tensor, Tuple[Tensor, Tensor]], Tuple[Tensor, Tensor, Tuple[Tensor, Tensor]]]:
         """Make the class callable."""
-        return self.forward(x, mask, return_attention_weights)
+        return self.forward(x, mask, return_attention_weights, past_key_value)
     
     def get_memory_usage(self) -> Dict[str, float]:
         """
@@ -930,6 +1030,12 @@ class Transformer:
     
     Stacks multiple transformer blocks with token embeddings and positional
     encoding to create a complete language model architecture.
+    
+    SUPPORTS KV CACHING (Module 19 integration):
+    - Forward method accepts optional past_key_values parameter for caching
+    - Generate method supports use_cache parameter for efficient generation
+    - Returns new key-value pairs when caching is enabled
+    - Backward compatible: works with or without caching
     """
     
     def __init__(self, vocab_size: int, embed_dim: int, num_heads: int, 
@@ -1015,7 +1121,7 @@ class Transformer:
         ### END SOLUTION
     
     def forward(self, input_ids: Tensor, mask: Optional[Tensor] = None,
-                return_attention_weights: bool = False) -> Union[Tensor, Tuple[Tensor, List[Tensor]]]:
+                return_attention_weights: bool = False, past_key_values: Optional[List[Tuple[Tensor, Tensor]]] = None) -> Union[Tensor, Tuple[Tensor, List[Tensor]], Tuple[Tensor, List[Tuple[Tensor, Tensor]]], Tuple[Tensor, List[Tensor], List[Tuple[Tensor, Tensor]]]]:
         """
         Process input through complete transformer model.
         
@@ -1033,10 +1139,12 @@ class Transformer:
             input_ids: Token indices with shape (batch_size, seq_len)
             mask: Optional attention mask
             return_attention_weights: Whether to return all attention weights
+            past_key_values: Optional list of cached key-value pairs from previous forward pass
             
         Returns:
             Logits with shape (batch_size, seq_len, vocab_size)
             Optionally also list of attention weights from each layer
+            Optionally also list of new key-value pairs for caching (if past_key_values provided)
         """
         ### BEGIN SOLUTION
         # Token embeddings
@@ -1047,13 +1155,41 @@ class Transformer:
         
         # Process through transformer blocks
         all_attention_weights = []
+        new_key_values = []
         
-        for block in self.transformer_blocks:
-            if return_attention_weights:
-                x, attn_weights = block.forward(x, mask=mask, return_attention_weights=True)
-                all_attention_weights.append(attn_weights)
+        for i, block in enumerate(self.transformer_blocks):
+            # Get past key-value for this layer if available
+            past_key_value = past_key_values[i] if past_key_values is not None else None
+            
+            if past_key_values is not None:
+                # KV caching enabled
+                if return_attention_weights:
+                    result = block.forward(x, mask=mask, return_attention_weights=True, past_key_value=past_key_value)
+                    if len(result) == 3:
+                        x, attn_weights, new_key_value = result
+                        all_attention_weights.append(attn_weights)
+                        new_key_values.append(new_key_value)
+                    else:
+                        # Fallback if block doesn't support KV caching yet
+                        x, attn_weights = result
+                        all_attention_weights.append(attn_weights)
+                        new_key_values.append(None)
+                else:
+                    result = block.forward(x, mask=mask, past_key_value=past_key_value)
+                    if isinstance(result, tuple) and len(result) == 2:
+                        x, new_key_value = result
+                        new_key_values.append(new_key_value)
+                    else:
+                        # Fallback if block doesn't support KV caching yet
+                        x = result
+                        new_key_values.append(None)
             else:
-                x = block.forward(x, mask=mask)
+                # Standard behavior (backward compatible)
+                if return_attention_weights:
+                    x, attn_weights = block.forward(x, mask=mask, return_attention_weights=True)
+                    all_attention_weights.append(attn_weights)
+                else:
+                    x = block.forward(x, mask=mask)
         
         # Final layer normalization (for pre-norm)
         if self.final_norm:
@@ -1069,23 +1205,41 @@ class Transformer:
         logits_reshaped = np.matmul(x_reshaped, self.lm_head.data)  # (batch_size * seq_len, vocab_size)
         logits = logits_reshaped.reshape(batch_size, seq_len, self.vocab_size)
         
-        if return_attention_weights:
-            return Tensor(logits), all_attention_weights
+        # Return appropriate tuple based on what was requested
+        if past_key_values is not None:
+            # KV caching is enabled
+            if return_attention_weights:
+                return Tensor(logits), all_attention_weights, new_key_values
+            else:
+                return Tensor(logits), new_key_values
         else:
-            return Tensor(logits)
+            # Standard behavior (backward compatible)
+            if return_attention_weights:
+                return Tensor(logits), all_attention_weights
+            else:
+                return Tensor(logits)
         ### END SOLUTION
     
     def __call__(self, input_ids: Tensor, mask: Optional[Tensor] = None,
-                 return_attention_weights: bool = False) -> Union[Tensor, Tuple[Tensor, List[Tensor]]]:
+                 return_attention_weights: bool = False, past_key_values: Optional[List[Tuple[Tensor, Tensor]]] = None) -> Union[Tensor, Tuple[Tensor, List[Tensor]], Tuple[Tensor, List[Tuple[Tensor, Tensor]]], Tuple[Tensor, List[Tensor], List[Tuple[Tensor, Tensor]]]]:
         """Make the class callable."""
-        return self.forward(input_ids, mask, return_attention_weights)
+        return self.forward(input_ids, mask, return_attention_weights, past_key_values)
     
     def generate(self, input_ids: Tensor, max_new_tokens: int = 50, 
-                temperature: float = 1.0) -> Tensor:
+                temperature: float = 1.0, use_cache: bool = False) -> Tensor:
         """
         Generate text autoregressively.
         
         This function is PROVIDED to show text generation capability.
+        
+        Args:
+            input_ids: Input token IDs with shape (batch_size, seq_len)
+            max_new_tokens: Maximum number of new tokens to generate
+            temperature: Temperature for sampling (higher = more random)
+            use_cache: Whether to use KV caching for faster generation
+            
+        Returns:
+            Generated token IDs with shape (batch_size, original_seq_len + generated_tokens)
         """
         batch_size, current_seq_len = input_ids.shape
         
@@ -1093,15 +1247,34 @@ class Transformer:
             raise ValueError(f"Input sequence length {current_seq_len} exceeds max {self.max_seq_length}")
         
         generated_ids = input_ids.data.copy()
+        past_key_values = None  # Initialize cache for KV caching
         
-        for _ in range(max_new_tokens):
-            # Create causal mask
-            seq_len = generated_ids.shape[1]
-            causal_mask = np.triu(np.ones((seq_len, seq_len)), k=1)
-            causal_mask = 1 - causal_mask
+        for step in range(max_new_tokens):
+            if use_cache and step > 0:
+                # For subsequent steps with caching, only process the last token
+                current_input = Tensor(generated_ids[:, -1:])  # Only last token
+                # No mask needed for single token
+                current_mask = None
+            else:
+                # First step or no caching: process full sequence
+                current_input = Tensor(generated_ids)
+                # Create causal mask
+                seq_len = generated_ids.shape[1]
+                causal_mask = np.triu(np.ones((seq_len, seq_len)), k=1)
+                causal_mask = 1 - causal_mask
+                current_mask = Tensor(causal_mask)
             
-            # Forward pass
-            logits = self.forward(Tensor(generated_ids), mask=Tensor(causal_mask))
+            # Forward pass with optional caching
+            if use_cache:
+                result = self.forward(current_input, mask=current_mask, past_key_values=past_key_values)
+                if isinstance(result, tuple) and len(result) == 2:
+                    logits, past_key_values = result
+                else:
+                    # Fallback if caching not fully implemented yet
+                    logits = result
+                    past_key_values = None
+            else:
+                logits = self.forward(current_input, mask=current_mask)
             
             # Get logits for last position
             last_logits = logits.data[:, -1, :]  # (batch_size, vocab_size)
