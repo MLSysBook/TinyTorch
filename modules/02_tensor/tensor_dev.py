@@ -298,23 +298,34 @@ class Tensor:
                     dtype = str(temp_array.dtype)
             self._data = np.array(data, dtype=dtype)
         elif isinstance(data, np.ndarray):
-            # Already a numpy array
+            # Already a numpy array - avoid unnecessary copies (PyTorch pattern)
             if dtype is None:
                 # Keep existing dtype, but prefer float32 for float64
                 if data.dtype == np.float64:
                     dtype = 'float32'
                 else:
                     dtype = str(data.dtype)
-            self._data = data.astype(dtype) if dtype != data.dtype else data.copy()
+            
+            # Only copy/convert when necessary - mimic PyTorch memory efficiency
+            if dtype != str(data.dtype):
+                self._data = data.astype(dtype)  # Type conversion creates new array
+            else:
+                self._data = data  # Share memory when possible - zero-copy view
+                
         elif isinstance(data, Tensor):
-            # Input is another Tensor - extract its data
+            # Input is another Tensor - avoid defensive copying
             if dtype is None:
                 # Keep existing dtype, but prefer float32 for float64
                 if data.data.dtype == np.float64:
                     dtype = 'float32'
                 else:
                     dtype = str(data.data.dtype)
-            self._data = data.data.astype(dtype) if dtype != str(data.data.dtype) else data.data.copy()
+            
+            # Efficient tensor creation - only copy when type conversion needed
+            if dtype != str(data.data.dtype):
+                self._data = data.data.astype(dtype)  # Type conversion creates new array
+            else:
+                self._data = data.data  # Share underlying array when types match
         else:
             # Try to convert unknown types
             self._data = np.array(data, dtype=dtype)
@@ -476,6 +487,26 @@ class Tensor:
         ### BEGIN SOLUTION
         return f"Tensor({self._data.tolist()}, shape={self.shape}, dtype={self.dtype})"
         ### END SOLUTION
+
+    def item(self) -> Union[int, float]:
+        """
+        Extract a scalar value from a single-element tensor.
+        
+        Returns:
+            The scalar value contained in the tensor
+            
+        Raises:
+            ValueError: If tensor contains more than one element
+            
+        Examples:
+            >>> t = Tensor([5.0])
+            >>> t.item()  # Returns 5.0
+            >>> t2 = Tensor([[1]])
+            >>> t2.item()  # Returns 1
+        """
+        if self._data.size != 1:
+            raise ValueError(f"item() can only be called on tensors with exactly one element, got {self._data.size} elements")
+        return self._data.item()
 
     def add(self, other: 'Tensor') -> 'Tensor':
         """
