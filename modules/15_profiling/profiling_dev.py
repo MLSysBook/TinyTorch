@@ -29,7 +29,7 @@ By the end of this module, you'll be able to:
 The tools you build here will be essential for Module 16 (Acceleration) when you actually fix the problems you discover.
 """
 
-#| default_exp profiling
+#| default_exp profiler
 
 # %% [markdown]
 """

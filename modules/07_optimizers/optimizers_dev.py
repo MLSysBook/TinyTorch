@@ -440,7 +440,16 @@ class SGD:
         self.velocity = {}
         for i, param in enumerate(parameters):
             if self.momentum > 0:
-                self.velocity[i] = 0.0  # Initialize velocity to zero
+                # Initialize velocity as numpy array with same shape as parameter
+                if hasattr(param, 'data') and hasattr(param.data, 'data'):
+                    # For Variables with nested data structure
+                    self.velocity[i] = np.zeros_like(param.data.data)
+                elif hasattr(param, 'data'):
+                    # For Variables or Tensors with data attribute
+                    self.velocity[i] = np.zeros_like(param.data)
+                else:
+                    # For simple numpy arrays
+                    self.velocity[i] = np.zeros_like(param)
         ### END SOLUTION
     
     def step(self) -> None:
@@ -474,23 +483,43 @@ class SGD:
                 gradient = param.grad.data
                 
                 if self.momentum > 0:
-                    # Apply momentum (simplified)
+                    # Apply momentum (simplified) using numpy arrays
                     if i in self.velocity:
-                        self.velocity[i] = self.momentum * self.velocity[i] + gradient
+                        # Ensure gradient is numpy array
+                        if hasattr(gradient, 'data'):
+                            gradient_data = gradient.data
+                        else:
+                            gradient_data = np.array(gradient)
+                        # Numpy arithmetic: momentum * velocity + gradient
+                        self.velocity[i] = self.momentum * self.velocity[i] + gradient_data
                     else:
-                        self.velocity[i] = gradient
+                        if hasattr(gradient, 'data'):
+                            self.velocity[i] = gradient.data
+                        else:
+                            self.velocity[i] = np.array(gradient)
                     update = self.velocity[i]
                 else:
                     # Simple gradient descent (no momentum)
-                    update = gradient
+                    if hasattr(gradient, 'data'):
+                        update = gradient.data
+                    else:
+                        update = np.array(gradient)
                 
-                # Clean parameter update - PyTorch style
+                # Clean parameter update - Educational style
                 # NOTE: In production PyTorch, this is an in-place operation (param.data.sub_())
-                # for memory efficiency. We create a new Tensor here for clarity, but real
-                # systems modify the existing memory to avoid allocation overhead.
-                from tinytorch.core.tensor import Tensor
-                new_value = param.data - self.learning_rate * update
-                param.data = Tensor(new_value)
+                # for memory efficiency. Here we update the underlying data directly.
+                if hasattr(param.data, 'data'):
+                    # For Tensors with nested data structure
+                    param.data.data = param.data.data - self.learning_rate * update
+                else:
+                    # For simple data structures - create new Tensor/Variable as needed
+                    try:
+                        # Try to create a new Tensor with the fallback class
+                        param.data = type(param.data)(param.data.data - self.learning_rate * update)
+                    except:
+                        # Fallback: direct numpy array manipulation
+                        if hasattr(param.data, 'data'):
+                            param.data.data = param.data.data - self.learning_rate * update
         ### END SOLUTION
     
     def zero_grad(self) -> None:
@@ -719,10 +748,20 @@ class Adam:
         self.m = {}  # First moment (momentum)
         self.v = {}  # Second moment (squared gradients)
         
-        # Initialize moments for each parameter
+        # Initialize moments for each parameter as numpy arrays
         for i, param in enumerate(parameters):
-            self.m[i] = 0.0
-            self.v[i] = 0.0
+            if hasattr(param, 'data') and hasattr(param.data, 'data'):
+                # For Variables with nested data structure
+                self.m[i] = np.zeros_like(param.data.data)
+                self.v[i] = np.zeros_like(param.data.data)
+            elif hasattr(param, 'data'):
+                # For Variables or Tensors with data attribute
+                self.m[i] = np.zeros_like(param.data)
+                self.v[i] = np.zeros_like(param.data)
+            else:
+                # For simple numpy arrays
+                self.m[i] = np.zeros_like(param)
+                self.v[i] = np.zeros_like(param)
         
         # Step counter for bias correction
         self.t = 0
@@ -763,24 +802,39 @@ class Adam:
                 # Get gradient data - clean PyTorch style
                 gradient = param.grad.data
                 
-                # Update first moment (momentum)
-                self.m[i] = self.beta1 * self.m[i] + (1 - self.beta1) * gradient
+                # Ensure gradient is numpy array
+                if hasattr(gradient, 'data'):
+                    gradient_data = gradient.data
+                else:
+                    gradient_data = np.array(gradient)
                 
-                # Update second moment (squared gradients)
-                self.v[i] = self.beta2 * self.v[i] + (1 - self.beta2) * gradient * gradient
+                # Update first moment (momentum) - numpy arrays
+                self.m[i] = self.beta1 * self.m[i] + (1 - self.beta1) * gradient_data
+                
+                # Update second moment (squared gradients) - numpy arrays
+                self.v[i] = self.beta2 * self.v[i] + (1 - self.beta2) * gradient_data * gradient_data
                 
                 # Bias correction
                 m_corrected = self.m[i] / (1 - self.beta1 ** self.t)
                 v_corrected = self.v[i] / (1 - self.beta2 ** self.t)
                 
-                # Clean adaptive parameter update - PyTorch style
+                # Clean adaptive parameter update - Educational style
                 # NOTE: In production PyTorch, parameters are updated in-place for efficiency.
-                # We create a new Tensor for educational clarity, but real systems use
-                # param.data.add_(-update) to modify memory directly without allocation.
                 update = self.learning_rate * m_corrected / (np.sqrt(v_corrected) + self.epsilon)
-                from tinytorch.core.tensor import Tensor
-                new_value = param.data - update
-                param.data = Tensor(new_value)
+                
+                # Update parameter data directly 
+                if hasattr(param.data, 'data'):
+                    # For Tensors with nested data structure
+                    param.data.data = param.data.data - update
+                else:
+                    # For simple data structures - create new Tensor/Variable as needed
+                    try:
+                        # Try to create a new Tensor with the fallback class
+                        param.data = type(param.data)(param.data.data - update)
+                    except:
+                        # Fallback: direct numpy array manipulation
+                        if hasattr(param.data, 'data'):
+                            param.data.data = param.data.data - update
         ### END SOLUTION
     
     def zero_grad(self) -> None:

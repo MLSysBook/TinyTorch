@@ -41,7 +41,7 @@ By the end of this module, you'll understand:
 """
 
 # %% nbgrader={"grade": false, "grade_id": "caching-imports", "locked": false, "schema_version": 3, "solution": false, "task": false}
-#| default_exp caching
+#| default_exp experimental.kv_cache
 
 #| export
 import math

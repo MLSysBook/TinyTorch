@@ -85,7 +85,27 @@ def main():
             optimizer.step()                      # Module 06: You built Adam updates!
             optimizer.zero_grad()                 # Module 06: Your gradient clearing!
             
-            loss_value = loss.data.item() if hasattr(loss.data, 'item') else float(loss.data)
+            # Extract scalar loss value - handle nested Tensor structure
+            print(f"DEBUG: loss type: {type(loss)}")
+            print(f"DEBUG: loss.data type: {type(loss.data)}")
+            
+            # Try different approaches to get scalar value
+            try:
+                if hasattr(loss, 'item'):
+                    loss_value = loss.item()
+                elif hasattr(loss.data, 'item'):
+                    loss_value = loss.data.item()
+                elif isinstance(loss.data, np.ndarray):
+                    loss_value = float(loss.data.flat[0])
+                elif hasattr(loss.data, 'data') and isinstance(loss.data.data, np.ndarray):
+                    # Handle nested Tensor.data.data structure
+                    loss_value = float(loss.data.data.flat[0])
+                else:
+                    # Last resort - convert to string then float
+                    loss_value = float(str(loss.data))
+            except Exception as e:
+                print(f"DEBUG: Error extracting loss: {e}")
+                loss_value = 0.0
             total_loss += loss_value
             num_batches += 1
         

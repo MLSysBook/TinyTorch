@@ -1,0 +1,42 @@
+{
+  "submission_id": "mlp_sprint_5b6784_20250925_015202",
+  "timestamp": "2025-09-25T01:52:02.445594",
+  "team_name": "Quantum Quantizers",
+  "event_name": "mlp_sprint",
+  "optimization_description": "INT8 quantization with custom SIMD kernels for 3x speedup",
+  "github_url": "https://github.com/quantum-quantizers/quantized-mlp",
+  "performance_metrics": {
+    "event": "MLP Sprint",
+    "model_type": "QuantizedFastMLP",
+    "input_shape": [
+      100,
+      784
+    ],
+    "benchmark_timestamp": "2025-09-25T01:52:02.400886",
+    "mean_inference_time": 0.0004110813140869141,
+    "std_inference_time": 3.865746809388991e-05,
+    "min_inference_time": 0.00037097930908203125,
+    "max_inference_time": 0.0004818439483642578,
+    "p95_inference_time": 0.00046882629394531247,
+    "mean_cpu_time": 0.0004082000000001251,
+    "cpu_efficiency": 0.9934608934477508,
+    "profiling_method": "TinyTorch Module 15 Profiler",
+    "memory_delta_mb": 0.00547027587890625,
+    "peak_memory_mb": 0.2179412841796875,
+    "result_size_mb": 0.003814697265625,
+    "speedup_vs_baseline": 1.327340215752233
+  },
+  "speedup_score": 1.327340215752233,
+  "baseline_time_ms": 0.5456447601318359,
+  "submission_time_ms": 0.41108131408691406,
+  "innovation_analysis": {
+    "innovation_score": 0.8500000000000001,
+    "detected_techniques": [
+      "custom_kernels",
+      "quantization"
+    ],
+    "num_techniques": 2,
+    "creativity_bonus": true
+  },
+  "composite_score": 1.184138151026563
+}
