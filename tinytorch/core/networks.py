@@ -13,7 +13,7 @@ import matplotlib.pyplot as plt
 # Import all the building blocks we need - try package first, then local modules
 try:
     from tinytorch.core.tensor import Tensor
-    from tinytorch.core.layers import Dense
+    from tinytorch.core.layers import Dense, Module
     from tinytorch.core.activations import ReLU, Sigmoid, Tanh, Softmax
 except ImportError:
     # For development, import from local modules
@@ -22,7 +22,7 @@ except ImportError:
     sys.path.append(os.path.join(os.path.dirname(__file__), '..', '03_layers'))
     from tensor_dev import Tensor
     from activations_dev import ReLU, Sigmoid, Tanh, Softmax
-    from layers_dev import Dense
+    from layers_dev import Dense, Module
 
 # %% ../../modules/source/05_dense/dense_dev.ipynb 2
 def _should_show_plots():
@@ -40,12 +40,13 @@ def _should_show_plots():
     return not is_pytest
 
 # %% ../../modules/source/05_dense/dense_dev.ipynb 7
-class Sequential:
+class Sequential(Module):
     """
     Sequential Network: Composes layers in sequence
     
     The most fundamental network architecture.
     Applies layers in order: f(x) = layer_n(...layer_2(layer_1(x)))
+    Inherits from Module for automatic parameter collection.
     """
     
     def __init__(self, layers: Optional[List] = None):
@@ -71,7 +72,11 @@ class Sequential:
         - Handle empty initialization case
         """
         ### BEGIN SOLUTION
+        super().__init__()  # Initialize Module base class
         self.layers = layers if layers is not None else []
+        # Register all layers as sub-modules for parameter collection
+        for i, layer in enumerate(self.layers):
+            setattr(self, f'layer_{i}', layer)
         ### END SOLUTION
     
     def forward(self, x: Tensor) -> Tensor:
@@ -119,6 +124,8 @@ class Sequential:
     def add(self, layer):
         """Add a layer to the network."""
         self.layers.append(layer)
+        # Register the new layer for parameter collection
+        setattr(self, f'layer_{len(self.layers)-1}', layer)
 
 # %% ../../modules/source/05_dense/dense_dev.ipynb 11
 def create_mlp(input_size: int, hidden_sizes: List[int], output_size: int, 

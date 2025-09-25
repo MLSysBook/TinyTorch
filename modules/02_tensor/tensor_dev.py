@@ -989,6 +989,80 @@ class Tensor:
         reshaped_data = self._data.reshape(*shape)
         return Tensor(reshaped_data)
 
+    def numpy(self) -> np.ndarray:
+        """
+        Convert tensor to NumPy array.
+        
+        This is the PyTorch-inspired method for tensor-to-numpy conversion.
+        Provides clean interface for interoperability with NumPy operations.
+        
+        Returns:
+            NumPy array containing the tensor's data
+            
+        Example:
+            tensor = Tensor([1, 2, 3])
+            array = tensor.numpy()  # Get NumPy array for scientific computing
+        """
+        return self._data
+    
+    def __array__(self, dtype=None) -> np.ndarray:
+        """
+        NumPy array protocol implementation.
+        
+        This enables NumPy functions to work directly with Tensor objects
+        by automatically converting them to arrays when needed.
+        
+        This is the key method that fixes np.allclose() compatibility!
+        
+        Args:
+            dtype: Optional dtype to cast to (NumPy may request this)
+        
+        Returns:
+            The underlying NumPy array, optionally cast to requested dtype
+            
+        Examples:
+            tensor = Tensor([1, 2, 3])
+            np.sum(tensor)        # Works automatically
+            np.allclose(tensor, [1, 2, 3])  # Now works!
+        """
+        if dtype is not None:
+            return self._data.astype(dtype)
+        return self._data
+    
+    def __array_ufunc__(self, ufunc, method, *inputs, **kwargs):
+        """
+        NumPy universal function protocol implementation.
+        
+        This enables NumPy ufuncs to work with Tensor objects by converting
+        them to arrays first, then wrapping results back in Tensor objects.
+        
+        This fixes advanced NumPy operations like np.maximum, np.minimum, etc.
+        """
+        # Convert Tensor inputs to NumPy arrays
+        args = []
+        for input_ in inputs:
+            if isinstance(input_, Tensor):
+                args.append(input_._data)
+            else:
+                args.append(input_)
+        
+        # Call the ufunc on NumPy arrays
+        outputs = getattr(ufunc, method)(*args, **kwargs)
+        
+        # If method returns NotImplemented, let NumPy handle it
+        if outputs is NotImplemented:
+            return NotImplemented
+            
+        # Wrap result back in Tensor if appropriate
+        if method == '__call__':
+            if isinstance(outputs, np.ndarray):
+                return Tensor(outputs)
+            elif isinstance(outputs, tuple):
+                return tuple(Tensor(output) if isinstance(output, np.ndarray) else output 
+                           for output in outputs)
+        
+        return outputs
+
 
 # # Testing Your Implementation
 # 

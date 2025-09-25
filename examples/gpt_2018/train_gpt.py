@@ -102,6 +102,7 @@ class TinyGPT(nn.Module):
         # Output head
         self.layer_norm = nn.LayerNorm(embed_dim)
         self.output_proj = nn.Linear(embed_dim, vocab_size)
+        self.vocab_size = vocab_size  # Store for reshaping
     
     def forward(self, x):
         # Convert tokens to contextual vectors
@@ -115,7 +116,17 @@ class TinyGPT(nn.Module):
         
         # Generate predictions
         x = self.layer_norm(x)       # final normalization (Module 14)
-        return self.output_proj(x)   # vocab predictions (Module 04)
+        
+        # Reshape for Linear layer: (batch, seq, embed) → (batch*seq, embed)
+        batch_size, seq_len, embed_dim = x.shape
+        x_2d = x.reshape(batch_size * seq_len, embed_dim)
+        
+        # Apply output projection
+        logits_2d = self.output_proj(x_2d)   # vocab predictions (Module 04)
+        
+        # Reshape back: (batch*seq, vocab) → (batch, seq, vocab)
+        logits = logits_2d.reshape(batch_size, seq_len, self.vocab_size)
+        return logits
 
 def main():
     # Hyperparameters for demo GPT

@@ -309,61 +309,31 @@ class Linear(Module):
         Returns:
             Output tensor or Variable (shape: ..., output_size)
             Preserves Variable type for gradient tracking in training
-        
-        TODO: Implement autograd-aware forward pass: output = input @ weights + bias
-        
-        STEP-BY-STEP IMPLEMENTATION:
-        1. Perform matrix multiplication: output = matmul(x, self.weights)
-        2. If bias exists, add it appropriately based on input type
-        3. Preserve Variable type for gradient tracking if input is Variable
-        4. Return result maintaining autograd capabilities
-        
-        AUTOGRAD CONSIDERATIONS:
-        - If x is Variable: weights and bias should also be Variables for training
-        - Preserve gradient tracking through the entire computation
-        - Enable backpropagation through this layer's parameters
-        - Handle mixed Tensor/Variable scenarios gracefully
-        
-        LEARNING CONNECTIONS:
-        - This is the core neural network transformation
-        - Matrix multiplication scales input features to output features  
-        - Bias provides offset (like y-intercept in linear equations)
-        - Broadcasting handles different batch sizes automatically
-        - Autograd support enables automatic parameter optimization
-        
-        IMPLEMENTATION HINTS:
-        - Use the matmul function you implemented above (now autograd-aware)
-        - Handle bias addition based on input/output types
-        - Variables support + operator for gradient-tracked addition
-        - Check if self.bias is not None before adding
         """
         ### BEGIN SOLUTION
-        # Matrix multiplication: input @ weights (now autograd-aware)
-        output = matmul(x, self.weights)
+        # Import Variable for gradient tracking
+        try:
+            from tinytorch.core.autograd import Variable
+        except ImportError:
+            # Fallback for development
+            import sys
+            import os
+            sys.path.append(os.path.join(os.path.dirname(__file__), '..', '06_autograd'))
+            from autograd_dev import Variable
+        
+        # Ensure input supports autograd if it's a Variable
+        input_var = x if isinstance(x, Variable) else Variable(x, requires_grad=False)
+        
+        # Convert parameters to Variables to maintain gradient connections  
+        weight_var = Variable(self.weights, requires_grad=True) if not isinstance(self.weights, Variable) else self.weights
+        
+        # Matrix multiplication using Variable.__matmul__ which calls matmul_vars
+        output = input_var @ weight_var
         
         # Add bias if it exists
-        # The addition will preserve Variable type if output is Variable
         if self.bias is not None:
-            # Check if we need Variable-aware addition
-            if hasattr(output, 'requires_grad'):
-                # output is a Variable, use Variable addition
-                if hasattr(self.bias, 'requires_grad'):
-                    # bias is also Variable, direct addition works
-                    output = output + self.bias
-                else:
-                    # bias is Tensor, convert to Variable for addition
-                    # Import Variable if not already available
-                    if 'Variable' not in globals():
-                        try:
-                            from tinytorch.core.autograd import Variable
-                        except ImportError:
-                            from autograd_dev import Variable
-                    
-                    bias_var = Variable(self.bias.data, requires_grad=False)
-                    output = output + bias_var
-            else:
-                # output is Tensor, use regular addition
-                output = output + self.bias
+            bias_var = Variable(self.bias, requires_grad=True) if not isinstance(self.bias, Variable) else self.bias
+            output = output + bias_var
         
         return output
         ### END SOLUTION

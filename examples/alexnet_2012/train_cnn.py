@@ -54,8 +54,10 @@ class CIFARCNN(nn.Module):
         self.conv1 = nn.Conv2d(3, 32, (3, 3))      # Module 07: You built 2D convolution!
         self.conv2 = nn.Conv2d(32, 64, (3, 3))     # Module 07: You built filter sliding!
         
-        # Dense classification   
-        self.fc1 = nn.Linear(64 * 5 * 5, 256)      # Module 04: You built Linear layers!
+        # Dense classification
+        # After conv1(32x32→30x30) → pool(15x15) → conv2(13x13) → pool(6x6)
+        # Final feature size: 64 channels * 6 * 6 = 2304
+        self.fc1 = nn.Linear(64 * 6 * 6, 256)      # Module 04: You built Linear layers!
         self.fc2 = nn.Linear(256, 10)              # Module 04: Your weight matrices!
     
     def forward(self, x):

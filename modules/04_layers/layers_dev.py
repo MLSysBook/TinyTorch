@@ -433,41 +433,62 @@ class Linear(Module):
             self.bias = None
         ### END SOLUTION
     
-    def forward(self, x: Tensor) -> Tensor:
+    def forward(self, x):
         """
         Forward pass through the Linear layer.
         
         Args:
-            x: Input tensor (shape: ..., input_size)
+            x: Input tensor or Variable (shape: ..., input_size)
         
         Returns:
-            Output tensor (shape: ..., output_size)
+            Output tensor or Variable (shape: ..., output_size)
+            Preserves Variable type for gradient tracking in training
         
-        TODO: Implement forward pass: output = input @ weights + bias
+        TODO: Implement autograd-aware forward pass: output = input @ weights + bias
         
         STEP-BY-STEP IMPLEMENTATION:
-        1. Perform matrix multiplication: output = matmul(x, self.weights)
-        2. If bias exists, add it: output = output + self.bias
-        3. Return result as Tensor
+        1. Handle both Tensor and Variable inputs seamlessly
+        2. Convert Parameters to Variables to maintain gradient connections
+        3. Perform matrix multiplication: output = input @ weights
+        4. Add bias if it exists: output = output + bias
+        5. Return result maintaining Variable chain for training
         
         LEARNING CONNECTIONS:
-        - This is the core neural network transformation
-        - Matrix multiplication scales input features to output features  
-        - Bias provides offset (like y-intercept in linear equations)
-        - Broadcasting handles different batch sizes automatically
+        - This supports both inference (Tensors) and training (Variables)
+        - Parameters are converted to Variables to enable gradient flow
+        - Result maintains computational graph for automatic differentiation
+        - Works with optimizers that expect Parameter gradients
         
         IMPLEMENTATION HINTS:
-        - Use the matmul function you implemented above
-        - Handle bias addition with simple + operator
-        - Check if self.bias is not None before adding
+        - Import Variable from autograd module
+        - Convert self.weights to Variable(self.weights) when needed
+        - Use @ operator for matrix multiplication (calls __matmul__)
+        - Handle bias addition with + operator
         """
         ### BEGIN SOLUTION
-        # Matrix multiplication: input @ weights
-        output = matmul(x, self.weights)
+        # Import Variable for gradient tracking
+        try:
+            from tinytorch.core.autograd import Variable
+        except ImportError:
+            # Fallback for development
+            import sys
+            import os
+            sys.path.append(os.path.join(os.path.dirname(__file__), '..', '06_autograd'))
+            from autograd_dev import Variable
+        
+        # Ensure input supports autograd if it's a Variable
+        input_var = x if isinstance(x, Variable) else Variable(x, requires_grad=False)
+        
+        # Convert parameters to Variables to maintain gradient connections
+        weight_var = Variable(self.weights) if not isinstance(self.weights, Variable) else self.weights
+        
+        # Matrix multiplication: input @ weights using Variable-aware operation
+        output = input_var @ weight_var  # Use Variable.__matmul__ which calls matmul_vars
         
         # Add bias if it exists
         if self.bias is not None:
-            output = output + self.bias
+            bias_var = Variable(self.bias) if not isinstance(self.bias, Variable) else self.bias
+            output = output + bias_var
         
         return output
         ### END SOLUTION
