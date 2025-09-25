@@ -32,7 +32,7 @@ Let's start with the educational triple-nested loops you implemented earlier. Th
 """
 
 # %%
-#| default_exp acceleration
+#| default_exp backends.acceleration
 
 import time
 import numpy as np

@@ -40,7 +40,7 @@ By the end of this module, you'll understand:
 """
 
 # %% nbgrader={"grade": false, "grade_id": "dataloader-imports", "locked": false, "schema_version": 3, "solution": false, "task": false}
-#| default_exp core.dataloader
+#| default_exp utils.data
 
 #| export
 import numpy as np

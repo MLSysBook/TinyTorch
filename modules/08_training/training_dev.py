@@ -72,7 +72,7 @@ from tinytorch.core.activations import ReLU, Sigmoid, Tanh, Softmax
 from tinytorch.core.layers import Dense
 from tinytorch.core.networks import Sequential, create_mlp
 from tinytorch.core.spatial import Conv2D, flatten
-from tinytorch.core.dataloader import Dataset, DataLoader
+from tinytorch.utils.data import Dataset, DataLoader
 from tinytorch.core.autograd import Variable  # FOR AUTOGRAD INTEGRATION
 from tinytorch.core.optimizers import SGD, Adam
 

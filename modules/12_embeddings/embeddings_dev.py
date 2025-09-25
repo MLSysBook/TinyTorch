@@ -753,15 +753,21 @@ def test_unit_learned_positional_embedding():
     pos_mean = np.mean(pos_embeddings.data)
     assert abs(pos_mean - original_mean) > 1e-6, "Position embeddings should change the input"
     
-    # Test that different sequence lengths give different results
-    short_embeddings = Tensor(np.random.randn(batch_size, 5, embedding_dim))
-    long_embeddings = Tensor(np.random.randn(batch_size, 15, embedding_dim))
+    # Test that different sequence lengths give consistent positional embeddings
+    # Use same base embeddings for the first 5 positions to test positional consistency
+    base_embeddings = np.random.randn(batch_size, 5, embedding_dim)
+    short_embeddings = Tensor(base_embeddings)
+    
+    # For long embeddings, use same first 5 positions plus additional positions
+    extended_embeddings = np.random.randn(batch_size, 10, embedding_dim)
+    extended_embeddings[:, :5, :] = base_embeddings  # Same first 5 positions
+    long_embeddings = Tensor(extended_embeddings)
     
     short_pos = learned_pos.forward(short_embeddings)
     long_pos = learned_pos.forward(long_embeddings)
     
-    # The first 5 positions should be the same
-    assert np.allclose(short_pos.data, long_pos.data[:, :5, :]), "Same positions should have same embeddings"
+    # The first 5 positions should be the same (same input + same positional embeddings)
+    assert np.allclose(short_pos.data, long_pos.data[:, :5, :], atol=1e-6), "Same positions should have same embeddings"
     
     # Test sequence length validation
     try:

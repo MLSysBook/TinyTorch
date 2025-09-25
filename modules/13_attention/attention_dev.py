@@ -454,10 +454,15 @@ class MultiHeadAttention:
         V = Tensor(np.matmul(value.data, self.w_v.data))
         
         # Step 2: Reshape for multiple heads
+        # Get actual sequence lengths (may differ for cross-attention)
+        query_seq_len = Q.shape[1]
+        key_seq_len = K.shape[1] 
+        value_seq_len = V.shape[1]
+        
         # (batch, seq, embed) -> (batch, seq, num_heads, head_dim)
-        Q_reshaped = Q.data.reshape(batch_size, seq_len, self.num_heads, self.head_dim)
-        K_reshaped = K.data.reshape(batch_size, seq_len, self.num_heads, self.head_dim)
-        V_reshaped = V.data.reshape(batch_size, seq_len, self.num_heads, self.head_dim)
+        Q_reshaped = Q.data.reshape(batch_size, query_seq_len, self.num_heads, self.head_dim)
+        K_reshaped = K.data.reshape(batch_size, key_seq_len, self.num_heads, self.head_dim)
+        V_reshaped = V.data.reshape(batch_size, value_seq_len, self.num_heads, self.head_dim)
         
         # Transpose to (batch, num_heads, seq, head_dim) for easier processing
         Q_heads = np.transpose(Q_reshaped, (0, 2, 1, 3))
@@ -467,9 +472,9 @@ class MultiHeadAttention:
         # Step 3: Apply attention to all heads simultaneously
         # We need to reshape to (batch*num_heads, seq, head_dim) for the attention function
         batch_heads = batch_size * self.num_heads
-        Q_flat = Q_heads.reshape(batch_heads, seq_len, self.head_dim)
-        K_flat = K_heads.reshape(batch_heads, seq_len, self.head_dim)
-        V_flat = V_heads.reshape(batch_heads, seq_len, self.head_dim)
+        Q_flat = Q_heads.reshape(batch_heads, query_seq_len, self.head_dim)
+        K_flat = K_heads.reshape(batch_heads, key_seq_len, self.head_dim)
+        V_flat = V_heads.reshape(batch_heads, value_seq_len, self.head_dim)
         
         # Apply attention
         if return_attention_weights:
@@ -484,20 +489,21 @@ class MultiHeadAttention:
         
         # Step 4: Reshape back to separate heads
         # (batch*num_heads, seq, head_dim) -> (batch, num_heads, seq, head_dim)
-        attn_output_heads = attn_output_flat.data.reshape(batch_size, self.num_heads, seq_len, self.head_dim)
+        attn_output_heads = attn_output_flat.data.reshape(batch_size, self.num_heads, query_seq_len, self.head_dim)
         
         # Transpose back to (batch, seq, num_heads, head_dim)
         attn_output_reshaped = np.transpose(attn_output_heads, (0, 2, 1, 3))
         
         # Concatenate heads: (batch, seq, num_heads, head_dim) -> (batch, seq, embed_dim)
-        attn_output_concat = attn_output_reshaped.reshape(batch_size, seq_len, embed_dim)
+        attn_output_concat = attn_output_reshaped.reshape(batch_size, query_seq_len, embed_dim)
         
         # Step 5: Apply output projection
         output = np.matmul(attn_output_concat, self.w_o.data)
         
         if return_attention_weights:
             # Reshape attention weights back to per-head format
-            attn_weights_heads = attn_weights_flat.data.reshape(batch_size, self.num_heads, seq_len, seq_len)
+            # Attention weights shape: (query_seq_len, key_seq_len)
+            attn_weights_heads = attn_weights_flat.data.reshape(batch_size, self.num_heads, query_seq_len, key_seq_len)
             return Tensor(output), Tensor(attn_weights_heads)
         else:
             return Tensor(output)

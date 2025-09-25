@@ -9,7 +9,7 @@
 ### One Module = One .py File
 
 ```
-modules/source/XX_modulename/
+modules/XX_modulename/
 ├── modulename_dev.py     # The ONLY file you edit
 ├── modulename_dev.ipynb  # Auto-generated from .py (DO NOT EDIT)
 └── README.md            # Module overview
