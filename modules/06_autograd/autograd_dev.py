@@ -221,13 +221,24 @@ class Variable:
         """
         ### BEGIN SOLUTION
         # Convert data to Tensor if needed
-        if isinstance(data, Tensor):
-            self.data = data
+        # Check both local Tensor and built package Tensor
+        if hasattr(data, '_data') and hasattr(data, 'shape'):
+            # This is already a tensor-like object
+            if hasattr(data, 'data'):
+                # It's a built tensor, extract the underlying array and rewrap
+                self.data = Tensor(data.data)  # Use our local Tensor class
+            else:
+                # It's our local Tensor, use directly
+                self.data = data
+            # CRITICAL FIX: Keep reference to source tensor for gradient flow
+            self._source_tensor = data if getattr(data, 'requires_grad', False) else None
         else:
+            # Create new tensor from raw data
             self.data = Tensor(data)
+            self._source_tensor = None
         
         # Set gradient tracking
-        self.requires_grad = requires_grad
+        self.requires_grad = requires_grad or (isinstance(data, Tensor) and data.requires_grad)
         self.grad = None  # Will be initialized when needed
         self.grad_fn = grad_fn
         self.is_leaf = grad_fn is None
@@ -290,19 +301,44 @@ class Variable:
             gradient = Variable(np.ones_like(self.data.data))
         
         if self.requires_grad:
+            # Store gradient in Variable
             if self.grad is None:
                 self.grad = gradient
             else:
                 # Accumulate gradients
                 self.grad = Variable(self.grad.data.data + gradient.data.data)
+            
+            # CRITICAL FIX: Propagate gradients back to source Tensor (Parameters)
+            if self._source_tensor is not None and self._source_tensor.requires_grad:
+                if self._source_tensor.grad is None:
+                    self._source_tensor.grad = gradient.data
+                else:
+                    # Accumulate gradients in the source tensor
+                    self._source_tensor.grad = Tensor(self._source_tensor.grad.data + gradient.data.data)
         
-            if self.grad_fn is not None:
-                self.grad_fn(gradient)
+        if self.grad_fn is not None:
+            self.grad_fn(gradient)
         ### END SOLUTION
     
     def zero_grad(self) -> None:
         """Reset gradients to zero."""
         self.grad = None
+    
+    def numpy(self) -> np.ndarray:
+        """
+        Convert Variable to NumPy array - Universal data extraction interface.
+        
+        This is the PyTorch-inspired solution to inconsistent data access.
+        ALWAYS returns np.ndarray, regardless of internal structure.
+        
+        Returns:
+            NumPy array containing the variable's data
+            
+        Usage:
+            var = Variable([1, 2, 3])
+            array = var.numpy()  # Always np.ndarray, no conditional logic needed
+        """
+        return self.data.data
     
     def __add__(self, other: Union['Variable', float, int]) -> 'Variable':
         """Addition operator: self + other"""
@@ -318,7 +354,11 @@ class Variable:
     
     def __truediv__(self, other: Union['Variable', float, int]) -> 'Variable':
         """Division operator: self / other"""
-        return divide(self, other) 
+        return divide(self, other)
+    
+    def __matmul__(self, other: 'Variable') -> 'Variable':
+        """Matrix multiplication operator: self @ other"""
+        return matmul(self, other) 
 
 # %% [markdown]
 """
@@ -726,6 +766,101 @@ def subtract(a: Union[Variable, float, int], b: Union[Variable, float, int]) -> 
     # Determine if result requires gradients
     requires_grad = a.requires_grad or b.requires_grad
     
+    return Variable(result_data, requires_grad=requires_grad, grad_fn=grad_fn)
+    ### END SOLUTION
+
+#| export
+def matmul(a: Union[Variable, float, int], b: Union[Variable, float, int]) -> Variable:
+    """
+    Matrix multiplication operation with gradient tracking: a @ b
+    
+    TODO: Implement matrix multiplication with automatic differentiation.
+    
+    STEP-BY-STEP IMPLEMENTATION:
+    1. Convert inputs to Variables if they are scalars
+    2. Compute forward pass: result = a.data @ b.data
+    3. Create gradient function implementing matmul gradients
+    4. Return new Variable with result and gradient function
+    
+    MATHEMATICAL FOUNDATION:
+    - Forward: C = A @ B
+    - Backward: ∂C/∂A = grad_C @ B^T, ∂C/∂B = A^T @ grad_C
+    - Chain rule: Gradients flow through matrix multiplication rules
+    
+    EXAMPLE USAGE:
+    ```python
+    a = Variable([[1, 2], [3, 4]], requires_grad=True)
+    b = Variable([[5, 6], [7, 8]], requires_grad=True)
+    c = matmul(a, b)  # Matrix multiply
+    c.backward()
+    print(a.grad)  # Gradients computed automatically
+    ```
+    
+    IMPLEMENTATION HINTS:
+    - Use tensor matmul: result_data = a.data @ b.data  
+    - Backward: grad_a = grad_output @ b.data.T, grad_b = a.data.T @ grad_output
+    - Handle gradient shapes correctly for broadcasting
+    """
+    ### BEGIN SOLUTION
+    # Convert scalars to Variables
+    if isinstance(a, (int, float)):
+        a = Variable(a, requires_grad=False)
+    if isinstance(b, (int, float)):
+        b = Variable(b, requires_grad=False)
+    
+    # Forward pass - matrix multiplication
+    # Use numpy directly to avoid Tensor matmul restrictions
+    result_data = Tensor(a.data.data @ b.data.data)
+    
+    # Backward function
+    def grad_fn(grad_output):
+        # Matrix multiplication gradients
+        if a.requires_grad:
+            # ∂C/∂A = grad_C @ B^T
+            grad_a_data = grad_output.data.data @ b.data.data.T
+            a.backward(Variable(grad_a_data))
+        
+        if b.requires_grad:
+            # ∂C/∂B = A^T @ grad_C  
+            grad_b_data = a.data.data.T @ grad_output.data.data
+            b.backward(Variable(grad_b_data))
+    
+    # Return new Variable with gradient function
+    requires_grad = a.requires_grad or b.requires_grad
+    return Variable(result_data, requires_grad=requires_grad, grad_fn=grad_fn)
+    ### END SOLUTION
+
+#| export  
+def divide(a: Union[Variable, float, int], b: Union[Variable, float, int]) -> Variable:
+    """
+    Division operation with gradient tracking: a / b
+    
+    MATHEMATICAL FOUNDATION:
+    - Forward: z = x / y
+    - Backward: ∂z/∂x = 1/y, ∂z/∂y = -x/y²
+    """
+    ### BEGIN SOLUTION
+    # Convert scalars to Variables
+    if isinstance(a, (int, float)):
+        a = Variable(a, requires_grad=False)
+    if isinstance(b, (int, float)):
+        b = Variable(b, requires_grad=False)
+    
+    # Forward pass
+    result_data = a.data / b.data
+    
+    # Backward function
+    def grad_fn(grad_output):
+        if a.requires_grad:
+            # ∂(a/b)/∂a = 1/b
+            grad_a = Variable(grad_output.data.data / b.data.data)
+            a.backward(grad_a)
+        if b.requires_grad:
+            # ∂(a/b)/∂b = -a/b²
+            grad_b = Variable(-grad_output.data.data * a.data.data / (b.data.data ** 2))
+            b.backward(grad_b)
+    
+    requires_grad = a.requires_grad or b.requires_grad
     return Variable(result_data, requires_grad=requires_grad, grad_fn=grad_fn)
     ### END SOLUTION
 
