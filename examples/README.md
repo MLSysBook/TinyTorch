@@ -223,42 +223,113 @@ examples/
 
 ---
 
-## 🚀 **Running the Examples**
+## 🚀 **How to Run These Examples**
 
 ### **Prerequisites Check**
 ```bash
-# Verify your TinyTorch installation
+# 1. Verify your TinyTorch installation
 tito system doctor
 
-# Check which modules you've completed
+# 2. Check which modules you've completed  
 tito checkpoint status
+
+# 3. Ensure you're in the project root
+cd /path/to/TinyTorch
 ```
 
-### **Run Examples by Module Completion**
+### **Dataset Management (Automatic)**
+**Don't worry about data logistics!** Each example automatically handles dataset downloading:
+
+- **MNIST**: Downloads from official LeCun server (~60MB)
+- **CIFAR-10**: Downloads from University of Toronto (~170MB)
+- **XOR/Perceptron**: Generates synthetic data instantly
+
+**First run will download data, subsequent runs use cached data.**
+
+### **Running Examples by Module Completion**
+
+#### **📱 Quick Test (No Training)**
+Test architecture and imports without waiting for downloads:
+```bash
+# Test what you've built so far
+python examples/perceptron_1957/rosenblatt_perceptron.py --test-only
+python examples/xor_1969/minsky_xor_problem.py --test-only
+```
+
+#### **🎯 Full Milestone Demonstrations**
 
 ```bash
-# After Module 04 - Basic networks
+# After Module 04 - Foundation (30 seconds)
 python examples/perceptron_1957/rosenblatt_perceptron.py
+# Demonstrates: YOU built Linear layers + activation functions
 
-# After Module 06 - Autograd  
+# After Module 06 - Autograd (1 minute)  
 python examples/xor_1969/minsky_xor_problem.py
+# Demonstrates: YOU built gradient computation + training loops
 
-# After Module 08 - Training
+# After Module 08 - Training (2-3 minutes + MNIST download)
 python examples/mnist_mlp_1986/train_mlp.py
+# Demonstrates: YOU built complete vision pipeline
 
-# After Module 10 - DataLoader + Spatial
-python examples/cifar_cnn_modern/train_cnn.py
+# After Module 10 - DataLoader + Spatial (3-5 minutes + CIFAR download)
+python examples/cifar_cnn_modern/train_cnn.py  
+# Demonstrates: YOU built convolutional networks
 
-# After Module 14 - Transformers
+# After Module 14 - Transformers (5-10 minutes)
 python examples/gpt_2018/train_gpt.py
+# Demonstrates: YOU built attention mechanisms + language models
 ```
 
-### **Quick Demo with Pre-trained Weights**
+### **🚫 Troubleshooting Common Issues**
+
+#### **Import Errors**
 ```bash
+# If you see "ModuleNotFoundError: No module named 'tinytorch'"
+cd /path/to/TinyTorch
+python -m pip install -e .
+
+# Or run with explicit path
+PYTHONPATH=/path/to/TinyTorch python examples/perceptron_1957/rosenblatt_perceptron.py
+```
+
+#### **Dataset Download Issues**
+```bash
+# Manual dataset download if automatic fails
+python examples/data_manager.py  # Test all datasets
+
+# Or download specific datasets
+python -c "from examples.data_manager import DatasetManager; DatasetManager().get_mnist()"
+```
+
+#### **Memory Issues**
+```bash
+# Reduce batch size for limited memory
+python examples/cifar_cnn_modern/train_cnn.py --batch-size 16
+
+# Use test mode for architecture validation only
+python examples/mnist_mlp_1986/train_mlp.py --test-only
+```
+
+#### **Slow Training**
+```bash
+# Quick demo mode (reduced epochs)
+python examples/mnist_mlp_1986/train_mlp.py --demo-mode
+
 # Use pre-trained weights for instant results
 python examples/mnist_mlp_1986/train_mlp.py --use-pretrained
-python examples/cifar_cnn_modern/train_cnn.py --use-pretrained
 ```
+
+### **📊 Expected Performance & Timing**
+
+| Example | Dataset Size | Download Time | Training Time | Expected Accuracy |
+|---------|-------------|---------------|---------------|------------------|
+| **Perceptron 1957** | 1K synthetic | 0s | 30s | 95%+ (linearly separable) |
+| **XOR 1969** | 1K synthetic | 0s | 1min | 90%+ (non-linear) |
+| **MNIST MLP 1986** | 60K images | 2-5min | 2-3min | 85%+ (real vision) |
+| **CIFAR CNN Modern** | 50K images | 5-10min | 3-5min | 65%+ (natural images) |
+| **TinyGPT 2018** | Text corpus | 1-2min | 5-10min | Coherent generation |
+
+**Note**: First run includes dataset download time. Subsequent runs are much faster.
 
 ---
 
