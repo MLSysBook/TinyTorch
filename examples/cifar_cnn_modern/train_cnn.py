@@ -85,11 +85,9 @@ sys.path.append(project_root)
 from tinytorch.core.tensor import Tensor              # Module 02: YOU built this!
 from tinytorch.core.layers import Linear             # Module 04: YOU built this!
 from tinytorch.core.activations import ReLU, Softmax  # Module 03: YOU built this!
-from tinytorch.core.spatial import Conv2D, MaxPool2D  # Module 09: YOU built this!
-from tinytorch.core.losses import CrossEntropyLoss    # Module 05: YOU built this!
+from tinytorch.core.spatial import Conv2d, MaxPool2D  # Module 09: YOU built this!
 from tinytorch.core.optimizers import Adam            # Module 07: YOU built this!
-# DataLoader would normally be imported from Module 10
-# For this demo, we'll use the data_manager directly
+from tinytorch.core.dataloader import DataLoader, Dataset  # Module 10: YOU built this!
 
 # Import dataset manager
 try:
@@ -97,6 +95,26 @@ try:
 except ImportError:
     sys.path.append(os.path.join(project_root, 'examples'))
     from data_manager import DatasetManager
+
+class CIFARDataset(Dataset):
+    """Custom CIFAR-10 Dataset using YOUR Dataset interface from Module 10!"""
+    
+    def __init__(self, data, labels):
+        """Initialize with data and labels arrays."""
+        self.data = data
+        self.labels = labels
+    
+    def __getitem__(self, idx):
+        """Get a single sample - YOUR Dataset interface!"""
+        return Tensor(self.data[idx]), Tensor([self.labels[idx]])
+    
+    def __len__(self):
+        """Return dataset size - YOUR Dataset interface!"""
+        return len(self.data)
+    
+    def get_num_classes(self):
+        """Return number of classes."""
+        return 10
 
 def flatten(x):
     """Flatten spatial features for dense layers - YOUR implementation!"""
@@ -115,8 +133,8 @@ class CIFARCNN:
         print("🧠 Building CIFAR-10 CNN with YOUR TinyTorch modules...")
         
         # Convolutional feature extractors - YOUR spatial modules!
-        self.conv1 = Conv2D(in_channels=3, out_channels=32, kernel_size=3)   # Module 09!
-        self.conv2 = Conv2D(in_channels=32, out_channels=64, kernel_size=3)  # Module 09!
+        self.conv1 = Conv2d(in_channels=3, out_channels=32, kernel_size=(3, 3))   # Module 09!
+        self.conv2 = Conv2d(in_channels=32, out_channels=64, kernel_size=(3, 3))  # Module 09!
         self.pool = MaxPool2D(pool_size=2)  # Module 09: YOUR pooling!
         
         # Activation functions
@@ -203,41 +221,47 @@ def visualize_cifar_cnn():
     """)
     print("="*70)
 
-def train_cifar_cnn(model, train_data, train_labels, 
-                    epochs=3, batch_size=32, learning_rate=0.001):
-    """Train CNN using YOUR complete training system!"""
+def train_cifar_cnn(model, train_loader, epochs=3, learning_rate=0.001):
+    """Train CNN using YOUR complete training system with DataLoader!"""
     print("\n🚀 Training CIFAR-10 CNN with YOUR TinyTorch!")
-    print(f"   Dataset: {len(train_data)} color images")
-    print(f"   Batch size: {batch_size}")
+    print(f"   Dataset: {len(train_loader.dataset)} color images")
+    print(f"   Batch size: {train_loader.batch_size}")
+    print(f"   YOUR DataLoader (Module 10) handles batching!")
     print(f"   YOUR Adam optimizer (Module 07)")
     
-    # YOUR optimizer and loss
+    # YOUR optimizer
     optimizer = Adam(model.parameters(), learning_rate=learning_rate)
-    loss_fn = CrossEntropyLoss()
-    
-    # Training loop
-    num_batches = min(100, len(train_data) // batch_size)  # Demo mode
     
     for epoch in range(epochs):
         print(f"\n   Epoch {epoch+1}/{epochs}:")
         epoch_loss = 0
         correct = 0
         total = 0
+        batch_count = 0
         
-        for batch_idx in range(num_batches):
-            # Get batch
-            start_idx = batch_idx * batch_size
-            end_idx = start_idx + batch_size
-            batch_X = train_data[start_idx:end_idx]
-            batch_y = train_labels[start_idx:end_idx]
-            
-            # YOUR Tensors
-            inputs = Tensor(batch_X)    # Module 02!
-            targets = Tensor(batch_y)   # Module 02!
+        # Use YOUR DataLoader to iterate through batches!
+        for batch_idx, (batch_data, batch_labels) in enumerate(train_loader):
+            if batch_idx >= 100:  # Demo mode - limit batches
+                break
             
             # Forward pass with YOUR CNN
-            outputs = model.forward(inputs)  # YOUR spatial features!
-            loss = loss_fn(outputs, targets)  # Module 05!
+            outputs = model.forward(batch_data)  # YOUR spatial features!
+            
+            # Manual cross-entropy loss
+            batch_size = len(batch_labels.data)
+            num_classes = 10
+            targets_one_hot = np.zeros((batch_size, num_classes))
+            for i in range(batch_size):
+                targets_one_hot[i, int(batch_labels.data[i])] = 1.0
+            
+            # Cross-entropy: -sum(y * log(softmax(x)))
+            # Apply softmax first
+            exp_outputs = np.exp(outputs.data - np.max(outputs.data, axis=1, keepdims=True))
+            softmax_outputs = exp_outputs / np.sum(exp_outputs, axis=1, keepdims=True)
+            
+            eps = 1e-8
+            loss_value = -np.mean(np.sum(targets_one_hot * np.log(softmax_outputs + eps), axis=1))
+            loss = Tensor([loss_value])
             
             # Backward pass with YOUR autograd
             optimizer.zero_grad()  # Module 07!
@@ -246,58 +270,50 @@ def train_cifar_cnn(model, train_data, train_labels,
             
             # Track accuracy
             predictions = np.argmax(outputs.data, axis=1)
-            correct += np.sum(predictions == batch_y)
-            total += len(batch_y)
-            
-            # Extract loss
-            if hasattr(loss, 'item'):
-                loss_value = loss.item()
-            else:
-                loss_value = float(loss.data) if not isinstance(loss.data, np.ndarray) else float(loss.data.flat[0])
+            correct += np.sum(predictions == batch_labels.data.flatten())
+            total += len(batch_labels.data)
             
             epoch_loss += loss_value
+            batch_count += 1
             
             # Progress
             if (batch_idx + 1) % 20 == 0:
                 acc = 100 * correct / total
-                print(f"   Batch {batch_idx+1}/{num_batches}: "
+                print(f"   Batch {batch_idx+1}: "
                       f"Loss = {loss_value:.4f}, Accuracy = {acc:.1f}%")
         
         # Epoch summary
         epoch_acc = 100 * correct / total
-        avg_loss = epoch_loss / num_batches
+        avg_loss = epoch_loss / max(1, batch_count)
         print(f"   → Epoch Complete: Loss = {avg_loss:.4f}, "
-              f"Accuracy = {epoch_acc:.1f}% (YOUR CNN learning!)")
+              f"Accuracy = {epoch_acc:.1f}% (YOUR CNN + DataLoader!)")
     
     return model
 
-def test_cifar_cnn(model, test_data, test_labels, class_names):
-    """Test YOUR CNN on CIFAR-10 test set."""
-    print("\n🧪 Testing YOUR CNN on Natural Images...")
+def test_cifar_cnn(model, test_loader, class_names):
+    """Test YOUR CNN on CIFAR-10 test set using DataLoader."""
+    print("\n🧪 Testing YOUR CNN on Natural Images with YOUR DataLoader...")
     
-    batch_size = 100
     correct = 0
     total = 0
     class_correct = np.zeros(10)
     class_total = np.zeros(10)
     
-    # Test in batches
-    num_test_batches = min(20, len(test_data) // batch_size)  # Demo
-    
-    for i in range(num_test_batches):
-        batch_X = test_data[i*batch_size:(i+1)*batch_size]
-        batch_y = test_labels[i*batch_size:(i+1)*batch_size]
+    # Test using YOUR DataLoader
+    for batch_idx, (batch_data, batch_labels) in enumerate(test_loader):
+        if batch_idx >= 20:  # Demo mode - limit batches
+            break
         
-        inputs = Tensor(batch_X)
-        outputs = model.forward(inputs)
+        outputs = model.forward(batch_data)
         
         predictions = np.argmax(outputs.data, axis=1)
+        batch_y = batch_labels.data.flatten()
         correct += np.sum(predictions == batch_y)
         total += len(batch_y)
         
         # Per-class accuracy
         for j in range(len(batch_y)):
-            label = batch_y[j]
+            label = int(batch_y[j])
             class_total[label] += 1
             if predictions[j] == label:
                 class_correct[label] += 1
@@ -415,38 +431,51 @@ def main():
         test_data = np.random.randn(20, 3, 32, 32).astype(np.float32)
         test_labels = np.random.randint(0, 10, 20).astype(np.int64)
     
-    # Step 2: Build CNN
+    # Step 2: Create Datasets and DataLoaders using YOUR Module 10!
+    print("\n📦 Creating YOUR Dataset and DataLoader (Module 10)...")
+    train_dataset = CIFARDataset(train_data, train_labels)
+    test_dataset = CIFARDataset(test_data, test_labels)
+    
+    # YOUR DataLoader handles batching and shuffling!
+    train_loader = DataLoader(train_dataset, batch_size=args.batch_size, shuffle=True)
+    test_loader = DataLoader(test_dataset, batch_size=100, shuffle=False)
+    print(f"   Train DataLoader: {len(train_dataset)} samples, batch_size={args.batch_size}")
+    print(f"   Test DataLoader: {len(test_dataset)} samples, batch_size=100")
+    
+    # Step 3: Build CNN
     model = CIFARCNN()
     
     if args.test_only:
         print("\n🧪 ARCHITECTURE TEST MODE")
-        test_input = Tensor(train_data[:5])
-        test_output = model.forward(test_input)
-        print(f"✅ Forward pass successful! Shape: {test_output.data.shape}")
-        print("✅ YOUR CNN architecture works!")
+        # Test with a single batch from YOUR DataLoader
+        for batch_data, batch_labels in train_loader:
+            test_output = model.forward(batch_data)
+            print(f"✅ Forward pass successful! Shape: {test_output.data.shape}")
+            print("✅ YOUR CNN + DataLoader work together!")
+            break
         return
     
-    # Step 3: Train
+    # Step 4: Train using YOUR DataLoader
     start_time = time.time()
-    model = train_cifar_cnn(model, train_data, train_labels,
-                           epochs=args.epochs, batch_size=args.batch_size)
+    model = train_cifar_cnn(model, train_loader, epochs=args.epochs)
     train_time = time.time() - start_time
     
-    # Step 4: Test
-    accuracy = test_cifar_cnn(model, test_data, test_labels, class_names)
+    # Step 5: Test using YOUR DataLoader
+    accuracy = test_cifar_cnn(model, test_loader, class_names)
     
     # Step 5: Analysis
     analyze_cnn_systems(model)
     
     print(f"\n⏱️  Training time: {train_time:.1f} seconds")
-    print(f"   Images/sec: {len(train_data) * args.epochs / train_time:.0f}")
+    print(f"   Images/sec: {len(train_dataset) * args.epochs / train_time:.0f}")
     
     print("\n✅ SUCCESS! CIFAR-10 CNN Milestone Complete!")
     print("\n🎓 What YOU Accomplished:")
     print("   • YOUR Conv2D extracts spatial features from natural images")
     print("   • YOUR MaxPool2D reduces dimensions while preserving information")
+    print("   • YOUR DataLoader efficiently batches and shuffles data")
     print("   • YOUR CNN achieves real accuracy on complex photos")
-    print("   • YOUR implementation demonstrates core computer vision principles!")
+    print("   • YOUR complete ML system works end-to-end!")
     
     print("\n🚀 Next Steps:")
     print("   • Continue to TinyGPT after Module 14 (Transformers)")
