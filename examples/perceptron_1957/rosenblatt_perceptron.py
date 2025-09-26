@@ -26,6 +26,28 @@ started it all - proving that YOU can build the foundation of modern AI from scr
     │ (x1, x2)    │    │     04      │    │     03      │    │ (0 or 1)    │
     └─────────────┘    └─────────────┘    └─────────────┘    └─────────────┘
 
+🔍 THE PERCEPTRON - HOW IT SEES THE WORLD:
+
+The perceptron learns a linear decision boundary to separate two classes:
+
+    Input Space:                    Decision Boundary:
+    
+    4 │     • • •                   4 │     • • • 
+      │   • • • •  Class 1            │   • • • • ╱
+    2 │ • • • • •                   2 │ • • • • •╱  ← Linear boundary
+      │   ○ ○ ○                       │   ○ ○ ○╱     (w₁x₁ + w₂x₂ + b = 0)
+    0 │ ○ ○ ○ ○ ○  Class 0         0 │ ○ ○ ○ ○╱○ 
+      └────────────                   └────────────
+        0   2   4                       0   2   4
+
+    Mathematical Operation:
+    y = sigmoid(w₁·x₁ + w₂·x₂ + b)
+    
+    Where YOUR modules compute:
+    - Linear: z = w₁·x₁ + w₂·x₂ + b  (weighted sum)
+    - Sigmoid: y = 1/(1 + e⁻ᶻ)       (squash to [0,1])
+    - Decision: class = 1 if y > 0.5 else 0
+
 🔍 KEY INSIGHTS:
 - Single-layer architecture: Just linear transformation + activation
 - Linearly separable only: Can't solve XOR problem (that comes later!)
@@ -126,6 +148,38 @@ def simple_training_loop(model, X, y, learning_rate=0.1, epochs=100):
     
     return model
 
+def visualize_perceptron_learning():
+    """Show how the perceptron learns with ASCII art."""
+    print("\n" + "="*70)
+    print("🎯 HOW THE PERCEPTRON LEARNS - Gradient Descent Visualization")
+    print("="*70)
+    
+    print("""
+    INITIAL (Random Weights):          TRAINING (Adjusting):
+    
+    4 │ • • • • •                      4 │ • • • • • 
+      │ • • • • •  Class 1              │ • • • • • ╱
+    2 │ - - - - -  ← Wrong boundary    2 │ • • • • ╱ •  
+      │ ○ ○ ○ ○ ○                        │ ○ ○ ○ ╱ ○ ○  ← Moving!
+    0 │ ○ ○ ○ ○ ○  Class 0            0 │ ○ ○ ╱ ○ ○ ○
+      └────────────                      └────────────
+        0   2   4                          0   2   4
+    
+    CONVERGED (Correct Boundary):     How Gradient Descent Works:
+    
+    4 │ • • • • •                      For each misclassified point:
+      │ • • • • • ╱                    1. Calculate error
+    2 │ • • • • ╱ •  ← Perfect!       2. Compute gradient: ∇L = ∂L/∂w
+      │ ○ ○ ○ ╱ ○ ○                    3. Update weights: w = w - η·∇L
+    0 │ ○ ○ ╱ ○ ○ ○                    
+      └────────────                     YOUR autograd does step 2!
+        0   2   4
+    
+    The decision boundary rotates and shifts until it correctly separates
+    the two classes. YOUR autograd computes the gradients automatically!
+    """)
+    print("="*70)
+
 def test_model(model, X, y):
     """Test YOUR perceptron on the data."""
     print("\n🧪 Testing YOUR Perceptron Implementation:")
@@ -202,8 +256,11 @@ def main():
     print("   Components used: YOUR Tensor + YOUR Linear + YOUR Sigmoid")
     print()
     
+    # Show visualization of how perceptron learning works
+    visualize_perceptron_learning()
+    
     # Step 1: Get linearly separable data
-    print("📊 Preparing linearly separable data...")
+    print("\n📊 Preparing linearly separable data...")
     data_manager = DatasetManager()
     X, y = data_manager.get_perceptron_data(num_samples=1000)
     
