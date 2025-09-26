@@ -1,4 +1,4 @@
-# TinyTorch 🔥
+# TinyTorch
 
 **Build ML Systems From First Principles**
 
@@ -9,17 +9,17 @@
 
 A Harvard University course that teaches ML systems engineering by building a complete deep learning framework from scratch. From tensors to transformers, understand every line of code powering modern AI.
 
-## 🎯 What You'll Build
+## What You'll Build
 
 A **complete ML framework** capable of:
-- Training neural networks on CIFAR-10 to 55%+ accuracy (reliably achievable!)
+- Training neural networks on CIFAR-10 to 75%+ accuracy (reliably achievable!)
 - Building GPT-style language models  
 - Implementing modern optimizers (Adam, learning rate scheduling)
 - Production deployment with monitoring and MLOps
 
 All built from scratch using only NumPy - no PyTorch, no TensorFlow!
 
-## 🚀 Quick Start
+## Quick Start
 
 ```bash
 # Clone and setup
@@ -38,12 +38,12 @@ jupyter lab setup_dev.py
 tito checkpoint status
 ```
 
-## 📚 Streamlined Learning Journey - No Forward Dependencies!
+## Learning Journey
 
-### **21 Progressive Modules** - Build Complete ML Systems Step by Step!
+### 20 Progressive Modules
 
-#### **Part I: Neural Network Foundations** (Modules 1-8)
-**"I can train neural networks from scratch!"**
+#### Part I: Neural Network Foundations (Modules 1-8)
+Build and train neural networks from scratch
 
 | Module | Topic | What You Build | ML Systems Learning |
 |--------|-------|----------------|-------------------|
@@ -56,24 +56,24 @@ tito checkpoint status
 | 07 | Optimizers | SGD + Adam + learning schedules | **Memory efficiency** (Adam uses 3x SGD), convergence dynamics |
 | 08 | Training | Complete training loops + evaluation | **Training dynamics**, checkpoint systems, performance monitoring |
 
-**✅ Capstone**: XOR + MNIST - Train real neural networks after just 8 modules!
+**Milestone Achievement**: Train XOR solver and MNIST classifier after Module 8
 
 ---
 
-#### **Part II: Computer Vision** (Modules 9-10)
-**"I can build CNNs that classify real images!"**
+#### Part II: Computer Vision (Modules 9-10)
+Build CNNs that classify real images
 
 | Module | Topic | What You Build | ML Systems Learning |
 |--------|-------|----------------|-------------------|
 | 09 | Spatial | Conv2d + MaxPool2d + CNN operations | **Parameter scaling** (filters × channels), spatial locality, convolution efficiency |
 | 10 | DataLoader | Efficient data pipelines + CIFAR-10 | **Batch processing**, memory-mapped I/O, data pipeline bottlenecks |
 
-**✅ Capstone**: CIFAR-10 CNN - 55%+ accuracy on real images
+**Milestone Achievement**: CIFAR-10 CNN with 75%+ accuracy
 
 ---
 
-#### **Part III: Language Models** (Modules 11-14)
-**"I can build transformers that generate text!"**
+#### Part III: Language Models (Modules 11-14)
+Build transformers that generate text
 
 | Module | Topic | What You Build | ML Systems Learning |
 |--------|-------|----------------|-------------------|
@@ -82,12 +82,12 @@ tito checkpoint status
 | 13 | Attention | Multi-head attention mechanisms | **O(N²) scaling**, memory bottlenecks, attention optimization |
 | 14 | Transformers | Complete transformer blocks | **Layer scaling**, memory requirements, architectural trade-offs |
 
-**✅ Capstone**: TinyGPT - Generate text with transformers
+**Milestone Achievement**: TinyGPT language generation
 
 ---
 
-#### **Part IV: System Optimization** (Modules 15-20)
-**"I can profile, optimize, and benchmark ML systems!"**
+#### Part IV: System Optimization (Modules 15-20)
+Profile, optimize, and benchmark ML systems
 
 | Module | Topic | What You Build | ML Systems Learning |
 |--------|-------|----------------|-------------------|
@@ -98,20 +98,12 @@ tito checkpoint status
 | 19 | Caching | Memory optimization + KV caching | **Memory vs compute trade-offs**, cache management, generation efficiency |
 | 20 | Benchmarking | **TinyMLPerf competition framework** | **Competitive optimization**, relative performance metrics, innovation scoring |
 
-**✅ Capstone**: TinyMLPerf Competition - Optimize models for speed and efficiency
+**Milestone Achievement**: TinyMLPerf optimization competition
 
 ---
 
-#### **Part V: Production Systems** (Module 21)
-**"I can deploy and monitor ML systems in production!"**
 
-| Module | Topic | What You Build | ML Systems Learning |
-|--------|-------|----------------|-------------------|
-| 21 | MLOps | Model monitoring + drift detection + automated retraining | **Production monitoring**, model lifecycle management, **drift detection**, automated response systems |
-
-**✅ Capstone**: Production ML Pipeline - Complete end-to-end system
-
-## 🎓 Learning Philosophy
+## Learning Philosophy
 
 **Most courses teach you to USE frameworks. TinyTorch teaches you to UNDERSTAND them.**
 
@@ -129,12 +121,12 @@ model.fit(X, y)  # Magic happens
 
 ### Why Build Your Own Framework?
 
-✅ **Deep Understanding** - Know exactly what `loss.backward()` does  
-✅ **Systems Thinking** - Understand memory, compute, and scaling  
-✅ **Debugging Skills** - Fix problems at any level of the stack  
-✅ **Production Ready** - Learn patterns used in real ML systems  
+- **Deep Understanding** - Know exactly what `loss.backward()` does  
+- **Systems Thinking** - Understand memory, compute, and scaling  
+- **Debugging Skills** - Fix problems at any level of the stack  
+- **Production Ready** - Learn patterns used in real ML systems  
 
-## 🛠️ Key Features
+## Key Features
 
 ### For Students
 - **Interactive Demos**: Rich CLI visualizations for every concept
@@ -148,58 +140,65 @@ model.fit(X, y)  # Magic happens
 - **Jupyter Book**: Professional course website
 - **Complete Solutions**: Reference implementations included
 
-## 🔥 Examples You Can Run
+## Milestone Examples
 
 As you complete modules, exciting examples unlock to show your framework in action:
 
-### **After Module 08** → Neural Network Foundations Complete! 🔥
+### After Module 04: First Neural Network
 ```bash
 cd examples/perceptron_1957
 python rosenblatt_perceptron.py
-# 🎯 Classic perceptron implementation!
+# Build the first trainable neural network (1957)
+```
 
+### After Module 06: Multi-Layer Networks
+```bash
 cd examples/xor_1969  
 python minsky_xor_problem.py
-# 🧠 Solve the famous XOR problem!
-
-cd examples/lenet_1998
-python train_mlp.py
-# 🏆 95%+ accuracy on MNIST handwritten digits!
+# Solve the XOR problem with multi-layer networks (1969)
 ```
 
-### **After Module 10** → Computer Vision Complete! 🎯  
+### After Module 08: Real Computer Vision
 ```bash
-cd examples/alexnet_2012
-python train_cnn.py
-# 🏆 55%+ accuracy on CIFAR-10 real images!
+cd examples/mnist_mlp_1986
+python train_mlp.py
+# Achieve 95%+ accuracy on MNIST (1986)
 ```
 
-### **After Module 14** → Language Models Complete! 🚀
+### After Module 10: Modern CNNs  
+```bash
+cd examples/cifar_cnn_modern
+python train_cnn.py
+# Achieve 75%+ accuracy on CIFAR-10
+```
+
+### After Module 14: Language Models
 ```bash
 cd examples/gpt_2018
 python train_gpt.py
-# 🔥 Generate text with transformers you built!
+# Generate text with your transformer implementation
 ```
 
-### **After Module 20** → System Optimization Complete! ⚡
+### After Module 20: TinyMLPerf Competition
 ```bash
 # Use TinyMLPerf to benchmark your optimizations
 tito benchmark run --event mlp_sprint
 tito benchmark run --event cnn_marathon  
 tito benchmark run --event transformer_decathlon
-# 🏆 Compete in the Olympics of ML Systems Optimization!
+# Compete in ML systems optimization benchmarks
 ```
 
-### **After Module 21** → Production Systems Complete! 🌟
+### After Module 20: Complete Optimization Suite
 ```bash
-# Deploy complete production ML pipeline
-python examples/production_pipeline.py
-# 🚀 Monitor, deploy, and scale ML systems like a pro!
+# Use TinyMLPerf to benchmark and optimize your complete framework
+tito benchmark run --comprehensive
+python examples/optimization_showcase.py
+# Professional ML systems optimization
 ```
 
-**These aren't toy demos** - they're real ML applications achieving solid results with YOUR framework built from scratch, optimized for performance, and deployed at production scale!
+**These aren't toy demos** - they're real ML applications achieving solid results with YOUR framework built from scratch and optimized for performance!
 
-## 🧪 Testing & Validation
+## Testing & Validation
 
 All demos and modules are thoroughly tested:
 
@@ -217,28 +216,28 @@ tito test --module tensor
 python tests/run_all_modules.py
 ```
 
-✅ **21 modules passing all tests** with 100% health status  
-✅ **16 capability checkpoints** tracking learning progress  
-✅ **Complete optimization pipeline** from profiling to competition benchmarking  
-✅ **Production-ready MLOps** with monitoring and automated retraining  
-✅ **KISS principle design** for clear, maintainable code  
+- **20 modules** passing all tests with 100% health status  
+- **16 capability checkpoints** tracking learning progress  
+- **Complete optimization pipeline** from profiling to benchmarking  
+- **TinyMLPerf competition framework** for performance excellence  
+- **KISS principle design** for clear, maintainable code  
 
-## 📖 Documentation
+## Documentation
 
 - **[Course Website](https://mlsysbook.github.io/TinyTorch/)** - Complete interactive course
 - **[Instructor Guide](docs/INSTRUCTOR_GUIDE.md)** - Teaching resources  
 - **[Student Quickstart](docs/STUDENT_QUICKSTART.md)** - Getting started guide
 - **[CIFAR-10 Training Guide](docs/cifar10-training-guide.md)** - Detailed training walkthrough
 
-## 🤝 Contributing
+## Contributing
 
 We welcome contributions! See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 
-## 📄 License
+## License
 
 MIT License - see [LICENSE](LICENSE) for details.
 
-## 🙏 Acknowledgments
+## Acknowledgments
 
 Created by [Prof. Vijay Janapa Reddi](https://vijay.seas.harvard.edu) at Harvard University.
 

@@ -122,7 +122,7 @@ Every component implemented from scratch:
 No toy examples - recreate ML history with real results:
 - **MLP Era**: Train MLPs to 52.7% CIFAR-10 accuracy (the baseline that motivated CNNs)
 - **CNN Revolution**: Build LeNet-1 (39.4%) and LeNet-5 (47.5%) - witness the breakthrough
-- **Modern CNNs**: Push beyond MLPs with optimized architectures (55%+ achievable)
+- **Modern CNNs**: Push beyond MLPs with optimized architectures (75%+ achievable)
 - **Transformer Era**: Language models using 95% vision framework reuse
 
 ### 3. Understand Systems
@@ -155,7 +155,7 @@ ML Systems Thinking sections in every module:
 - Connection to industry practices and framework design decisions
 
 **Framework Generalization**
-- 16 modules that build ONE cohesive ML framework supporting vision AND language
+- 20 modules that build ONE cohesive ML framework supporting vision AND language
 - 95% component reuse from computer vision to language models
 - Professional package structure with CLI tools and testing
 
