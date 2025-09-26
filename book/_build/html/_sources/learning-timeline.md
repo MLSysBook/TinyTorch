@@ -98,7 +98,7 @@ timeline
 
 | Week | Module | Historical Context | What You Build | Unlock Achievement |
 |------|--------|-------------------|-----------------|-------------------|
-| 15 | Profiling | Performance analysis | Memory & compute profiling | Find bottlenecks |
+| 15 | Mixed Precision | Memory optimization | FP16 training | 2x speedup |
 | 16 | Acceleration | Hardware optimization | Vectorization, caching | 10x speedups |
 | 17 | Quantization | Model compression | INT8 inference | 4x memory reduction |
 | 18 | Compression | Pruning & distillation | Sparse models | 90% size reduction |

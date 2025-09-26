@@ -76,13 +76,10 @@ parts:
   - file: chapters/20-benchmarking
     title: "20. Benchmarking"
 
-- caption: "Production Deployment"
-  chapters:
-  - file: chapters/21-mlops
-    title: "21. MLOps"
-
 - caption: Resources & Tools
   chapters:
+  - file: leaderboard
+    title: "TinyMLPerf Leaderboard"
   - file: checkpoint-system
     title: "Progress Tracking"
   - file: testing-framework

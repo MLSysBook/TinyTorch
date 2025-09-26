@@ -23,7 +23,7 @@ A **complete ML framework** capable of:
 - Training neural networks on CIFAR-10 to 75%+ accuracy (reliably achievable!)
 - Building GPT-style language models  
 - Implementing modern optimizers (Adam, learning rate scheduling)
-- Production deployment with monitoring and MLOps
+- Performance optimization and competitive benchmarking
 
 All built from scratch using only NumPy - no PyTorch, no TensorFlow!
 
@@ -259,7 +259,7 @@ tito benchmark submit --event cnn_marathon
 - **Efficiency**: Best accuracy/resource ratio
 - **Innovation**: Novel optimization techniques
 
-📊 **View Leaderboard**: [Coming Spring 2025] - Be among the first to set baselines!
+📊 **View Leaderboard**: [TinyMLPerf Competition](https://mlsysbook.github.io/TinyTorch/leaderboard.html) | Future: `tinytorch.org/leaderboard`
 
 ## Contributing
 
