@@ -34,47 +34,37 @@ parts:
     title: "03. Activations" 
   - file: chapters/04-layers
     title: "04. Layers"
-  - file: chapters/05-losses
+  - file: chapters/05-dense
     title: "05. Losses"
-  - file: chapters/06-autograd
+  - file: chapters/09-autograd
     title: "06. Autograd"
-  - file: chapters/07-optimizers
+  - file: chapters/10-optimizers
     title: "07. Optimizers"
-  - file: chapters/08-training
+  - file: chapters/11-training
     title: "08. Training"
 
 - caption: "Computer Vision"
   chapters:
-  - file: chapters/09-spatial
+  - file: chapters/06-spatial
     title: "09. Spatial"
-  - file: chapters/10-dataloader
+  - file: chapters/08-dataloader
     title: "10. DataLoader"
 
 - caption: "Language Models"
   chapters:
-  - file: chapters/11-regularization
-    title: "11. Regularization"
-  - file: chapters/12-normalization
-    title: "12. Normalization"
-  - file: chapters/13-attention
-    title: "13. Attention"
-  - file: chapters/14-transformers
-    title: "14. Transformers"
+  - file: chapters/07-attention
+    title: "11. Attention"
+  - file: chapters/16-tinygpt
+    title: "12. Transformers"
 
 - caption: "System Optimization"
   chapters:
-  - file: chapters/15-mixed_precision
-    title: "15. Mixed Precision"
-  - file: chapters/16-acceleration
-    title: "16. Acceleration"
-  - file: chapters/17-quantization
-    title: "17. Quantization"
-  - file: chapters/18-compression
-    title: "18. Compression"
-  - file: chapters/19-caching
-    title: "19. Caching"
-  - file: chapters/20-benchmarking
-    title: "20. Benchmarking"
+  - file: chapters/12-compression
+    title: "13. Compression"
+  - file: chapters/13-kernels
+    title: "14. Kernels"
+  - file: chapters/14-benchmarking
+    title: "15. Benchmarking"
 
 - caption: Resources & Tools
   chapters:
