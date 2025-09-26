@@ -14,7 +14,7 @@ learn simple classification tasks through iterative weight updates.
 Required Modules (can run after Module 4):
 - Module 2 (Tensor): Core data structure
 - Module 3 (Activations): Step function for binary output
-- Module 4 (Layers): Dense layer for linear transformation
+- Module 4 (Layers): Linear layer for linear transformation
 
 This Example Demonstrates:
 - The original perceptron architecture
@@ -28,8 +28,9 @@ import os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from tinytorch.core.tensor import Tensor
-from tinytorch.core.layers import Dense
+from tinytorch.core.layers import Linear
 from tinytorch.core.activations import Sigmoid  # Using sigmoid as step function approximation
+from tinytorch.core.autograd import to_numpy
 
 
 class Perceptron:
@@ -42,7 +43,7 @@ class Perceptron:
     
     def __init__(self, input_size=2, output_size=1):
         # Single layer - just like the original!
-        self.linear = Dense(input_size, output_size)
+        self.linear = Linear(input_size, output_size)
         self.activation = Sigmoid()  # Original used step function
         
     def forward(self, x):
@@ -57,7 +58,7 @@ class Perceptron:
     def predict(self, x):
         """Binary classification prediction."""
         output = self.forward(x)
-        return (output.data > 0.5).astype(int)
+        return (to_numpy(output) > 0.5).astype(int)
 
 
 def generate_linear_data(n_samples=100):

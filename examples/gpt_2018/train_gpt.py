@@ -82,6 +82,7 @@ to understand context and meaning relationships.
 
 from tinytorch import nn, optim
 from tinytorch.core.tensor import Tensor
+from tinytorch.core.autograd import to_numpy
 import numpy as np
 
 class TinyGPT(nn.Module):
@@ -118,58 +119,64 @@ class TinyGPT(nn.Module):
         x = self.layer_norm(x)       # final normalization (Module 14)
         
         # Reshape for Linear layer: (batch, seq, embed) → (batch*seq, embed)
-        batch_size, seq_len, embed_dim = x.shape
-        x_2d = x.reshape(batch_size * seq_len, embed_dim)
+        x_np = to_numpy(x)
+        batch_size, seq_len, embed_dim = x_np.shape
+        x_2d_np = x_np.reshape(batch_size * seq_len, embed_dim)
+        x_2d = Tensor(x_2d_np)
         
         # Apply output projection
         logits_2d = self.output_proj(x_2d)   # vocab predictions (Module 04)
         
         # Reshape back: (batch*seq, vocab) → (batch, seq, vocab)
-        logits = logits_2d.reshape(batch_size, seq_len, self.vocab_size)
+        logits_2d_np = to_numpy(logits_2d)
+        logits_np = logits_2d_np.reshape(batch_size, seq_len, self.vocab_size)
+        logits = Tensor(logits_np)
         return logits
 
 def main():
-    # Hyperparameters for demo GPT
-    vocab_size = 1000
-    embed_dim = 128
-    max_length = 50
-    num_heads = 8
-    num_layers = 4
+    # Simpler hyperparameters for validation
+    vocab_size = 100  # Smaller vocabulary
+    embed_dim = 32    # Smaller embeddings  
+    max_length = 16   # Shorter sequences
+    num_heads = 4     # Fewer attention heads
+    num_layers = 2    # Fewer layers
     
     model = TinyGPT(vocab_size, embed_dim, max_length, num_heads, num_layers)
     optimizer = optim.Adam(model.parameters(), learning_rate=0.001)  # Module 08
     
     # Demo training data (random tokens)
-    batch_size, seq_length = 2, 10
+    batch_size, seq_length = 1, 8  # Smaller batch and sequence
     input_ids = Tensor(np.random.randint(0, vocab_size, (batch_size, seq_length)))
     target_ids = Tensor(np.random.randint(0, vocab_size, (batch_size, seq_length)))
     
     print("🤖 Training Transformer Language Model")
-    print("   Architecture: Embedding → Position → Attention × 4 → Output")
+    print(f"   Architecture: Embedding → Position → Attention × {num_layers} → Output")
     print(f"   Parameters: {sum(p.data.size for p in model.parameters()):,} weights")
     print(f"   Vocabulary: {vocab_size:,} possible tokens")
     print(f"   Context: {max_length} token sequences")
     print()
     
     # What students built: Complete transformer training
-    for step in range(10):
+    for step in range(5):  # Fewer steps for validation
         logits = model(input_ids)    # Forward: Full transformer stack
         
         # Language modeling loss (Module 10)
-        batch_size, seq_length = target_ids.data.shape
+        logits_np = to_numpy(logits)
+        targets_np = to_numpy(target_ids)
+        batch_size, seq_length = targets_np.shape
         targets_one_hot = np.zeros((batch_size, seq_length, vocab_size))
         for b in range(batch_size):
             for s in range(seq_length):
-                targets_one_hot[b, s, int(target_ids.data[b, s])] = 1.0
+                targets_one_hot[b, s, int(targets_np[b, s])] = 1.0
         
-        loss_value = np.mean((logits.data - targets_one_hot) ** 2)
+        loss_value = np.mean((logits_np - targets_one_hot) ** 2)
         loss = Tensor([loss_value])
         
         loss.backward()      # Autodiff through transformer (Module 06)
         optimizer.step()     # Adam updates (Module 08)
         optimizer.zero_grad()
         
-        if step % 5 == 0:
+        if step % 2 == 0:
             print(f"   Step {step:2d}: Loss = {loss_value:.4f}")
     
     print("\n✅ Success! Complete transformer language model")
