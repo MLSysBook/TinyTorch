@@ -54,8 +54,8 @@ def matmul_naive(a: np.ndarray, b: np.ndarray) -> np.ndarray:
     # Triple nested loop - the educational implementation
     for i in range(m):
         for j in range(n):
-            for l in range(k):
-                c[i, j] += a[i, l] * b[l, j]
+            for k_idx in range(k):
+                c[i, j] += a[i, k_idx] * b[k_idx, j]
     
     return c
 
@@ -145,9 +145,10 @@ def matmul_blocked(a: np.ndarray, b: np.ndarray, block_size: int = 64) -> np.nda
     
     This version processes data in blocks that fit in CPU cache.
     
-    **Memory Analysis**:
-    - 64x64 block = 4KB floats = 16KB memory (fits in 32KB L1 cache)
-    - 3 blocks (A, B, C) = 48KB total (fits in 256KB L2 cache)
+    **Memory Analysis (Quantitative)**:
+    - 64x64 float32 block = 4096 * 4 bytes = 16KB per block
+    - 3 blocks (A_block, B_block, C_block) = 48KB total
+    - Fits comfortably in 256KB L2 cache with room for other data
     - Reuses each data element 64 times before evicting from cache
     
     **Why This Works**:
@@ -157,7 +158,7 @@ def matmul_blocked(a: np.ndarray, b: np.ndarray, block_size: int = 64) -> np.nda
     Args:
         a: Left matrix (m × k)
         b: Right matrix (k × n) 
-        block_size: Cache-friendly block size (32-128, default 64)
+        block_size: Cache-friendly block size (64 = 16KB fits in 32KB L1 cache)
     """
     m, k = a.shape
     k2, n = b.shape
@@ -169,20 +170,40 @@ def matmul_blocked(a: np.ndarray, b: np.ndarray, block_size: int = 64) -> np.nda
     # Process in blocks to maximize cache utilization
     for i in range(0, m, block_size):
         for j in range(0, n, block_size):
-            for l in range(0, k, block_size):
+            for k_idx in range(0, k, block_size):
                 # Define block boundaries
                 i_end = min(i + block_size, m)
                 j_end = min(j + block_size, n)
-                l_end = min(l + block_size, k)
+                k_end = min(k_idx + block_size, k)
                 
                 # Extract blocks (these stay in cache)
-                a_block = a[i:i_end, l:l_end]
-                b_block = b[l:l_end, j:j_end]
+                a_block = a[i:i_end, k_idx:k_end]
+                b_block = b[k_idx:k_end, j:j_end]
                 
                 # Multiply blocks using NumPy (optimized BLAS)
                 c[i:i_end, j:j_end] += a_block @ b_block
     
     return c
+
+def calculate_cache_footprint(block_size: int) -> dict:
+    """
+    Calculate memory footprint for educational purposes.
+    
+    This helps students understand why different block sizes work better or worse.
+    """
+    bytes_per_float = 4
+    elements_per_block = block_size * block_size
+    bytes_per_block = elements_per_block * bytes_per_float
+    total_blocks = 3  # A_block, B_block, C_block
+    total_bytes = bytes_per_block * total_blocks
+    
+    return {
+        "block_size": block_size,
+        "bytes_per_block": bytes_per_block,
+        "total_bytes": total_bytes,
+        "fits_in_l1": total_bytes <= 32 * 1024,  # 32KB L1 cache
+        "fits_in_l2": total_bytes <= 256 * 1024  # 256KB L2 cache
+    }
 
 # %% [markdown]
 """
@@ -217,7 +238,9 @@ def test_blocked_optimization():
     start = time.perf_counter()
     _ = matmul_naive(test_a[:50, :50], test_b[:50, :50])
     naive_time = time.perf_counter() - start
-    naive_time_scaled = naive_time * (size/50)**3  # Scale up for comparison
+    # Scale cubic complexity: (200/50)³ = 4³ = 64x operations
+    scaling_factor = (size / 50) ** 3  
+    naive_time_scaled = naive_time * scaling_factor
     
     # Time blocked
     start = time.perf_counter()
@@ -435,8 +458,11 @@ def test_ml_model_acceleration():
     h2_opt = matmul(h1_opt, W2)
     opt_time = time.perf_counter() - start
     
-    # Scale naive time for comparison
-    naive_scaled = naive_time * (32/8) * (256/64) * (128/32)
+    # Scale for: batch_size (32/8) × input_dim (256/64) × hidden_dim (128/32)
+    batch_scale = 32/8  # 4x more samples
+    input_scale = 256/64  # 4x larger input
+    hidden_scale = 128/32  # 4x larger hidden layer
+    naive_scaled = naive_time * batch_scale * input_scale * hidden_scale
     speedup = naive_scaled / opt_time
     
     print(f"   Naive (estimated): {naive_scaled*1000:.1f} ms")

@@ -1159,10 +1159,6 @@ class TinyMLPerfCompetition:
         self.profiler = CompetitionProfiler(warmup_runs=DEFAULT_WARMUP_RUNS, 
                                           timing_runs=DEFAULT_TIMING_RUNS)
         
-        # Initialize storage and leaderboard components
-        self.storage = CompetitionStorage(results_dir)
-        self.leaderboard = CompetitionLeaderboard(self.storage)
-        
         # Load baseline models for relative scoring
         self.baselines = self._establish_baselines()
         
@@ -1216,7 +1212,7 @@ class TinyMLPerfCompetition:
         _, dataset = self.tinyperf.load_benchmark(event_name)
         
         # Benchmark the submitted model with baseline comparison
-        results = self.profiler.benchmark_with_baseline(
+        results = self.profiler.benchmark_model(
             optimized_model, dataset,
             baseline_time=self.baselines[event_name]
         )
@@ -1240,13 +1236,13 @@ class TinyMLPerfCompetition:
             'submission_time_ms': submission_time * 1000
         }
         
-        # Save submission to storage
+        # Save submission
         self.storage.save_submission(submission)
         
-        # Display submission results  
+        # Display results
         self._display_submission_results(submission)
         
-        return submission
+        return submission_data
     
     def _generate_submission_id(self, team_name: str, event_name: str) -> str:
         """Generate unique submission ID"""
@@ -1259,8 +1255,8 @@ class TinyMLPerfCompetition:
         # Load benchmark dataset
         _, dataset = self.tinyperf.load_benchmark(submission.event_name)
         
-        # Run profiling
-        results = self.profiler.benchmark_model(
+        # Run profiling with baseline comparison
+        results = self.profiler.benchmark_with_baseline(
             submission.optimized_model, dataset,
             baseline_time=self.baselines[submission.event_name]
         )
@@ -1623,8 +1619,6 @@ The simplified framework teaches students that good software engineering means:
 This refactored competition framework proves that educational software can be both pedagogically effective AND well-engineered, setting a positive example for students about professional software development practices.
 """
 
-# %% [markdown]
-"""
 ## Main Execution Block
 
 Run the complete TinyMLPerf competition system when this module is executed directly.
@@ -1696,4 +1690,435 @@ This refactor teaches students that excellent engineering means:
 - Making sophisticated functionality accessible without dumbing it down
 
 **The ultimate lesson**: Great ML systems engineers build tools that make complex concepts simple to use, not simple concepts complex to understand. This competition framework exemplifies how educational software can teach both domain knowledge and engineering excellence simultaneously.
+"""
+    
+    def generate_innovation_report(self, analysis: Dict[str, Any]) -> str:
+        """Generate human-readable innovation report"""
+        score = analysis['innovation_score']
+        techniques = analysis['detected_techniques']
+        
+        if score == 0:
+            return "No innovative techniques detected. Consider exploring quantization, pruning, or custom optimizations!"
+        
+        report = f"Innovation Score: {score:.2f}/1.00\n"
+        report += f"Detected Techniques ({len(techniques)}):\n"
+        
+        for technique in techniques:
+            report += f"  • {technique.replace('_', ' ').title()}\n"
+        
+        if analysis['creativity_bonus']:
+            report += "🌟 Creativity Bonus: Multiple optimization techniques combined!\n"
+        
+        # Award levels
+        if score >= 0.8:
+            report += "🏆 INNOVATION MASTER - Outstanding creativity!"
+        elif score >= 0.6:
+            report += "🚀 INNOVATION EXPERT - Excellent techniques!"
+        elif score >= 0.4:
+            report += "⭐ INNOVATION PRACTITIONER - Good optimization work!"
+        else:
+            report += "🔍 INNOVATION EXPLORER - Keep experimenting!"
+        
+        return report
+
+# Enhanced competition class with innovation scoring
+class TinyMLPerfCompetitionPlus(TinyMLPerfCompetition):
+    """
+    Enhanced TinyMLPerf Competition with innovation detection and advanced scoring.
+    
+    Extends the base competition with:
+    - Innovation technique detection
+    - Advanced composite scoring
+    - Creativity rewards
+    - Multi-dimensional leaderboards
+    """
+    
+    def __init__(self, results_dir: str = "tinymlperf_results"):
+        """Initialize enhanced competition with innovation detection"""
+        super().__init__(results_dir)
+        self.innovation_detector = InnovationDetector()
+        print("🔬 Innovation detection enabled!")
+    
+    def submit_entry(self, team_name: str, event_name: str, optimized_model,
+                     optimization_description: str = "", github_url: str = "") -> Dict[str, Any]:
+        """Submit entry with innovation analysis"""
+        
+        # Get base submission
+        submission = super().submit_entry(team_name, event_name, optimized_model, 
+                                        optimization_description, github_url)
+        
+        # Add innovation analysis
+        innovation_analysis = self.innovation_detector.analyze_innovation(
+            optimized_model, optimization_description
+        )
+        
+        submission['innovation_analysis'] = innovation_analysis
+        
+        # Calculate composite score (speed + innovation)
+        speed_score = submission['speedup_score']  # Relative speedup
+        innovation_score = innovation_analysis['innovation_score']
+        
+        # Weighted composite: 70% speed, 30% innovation
+        composite_score = 0.7 * speed_score + 0.3 * innovation_score
+        submission['composite_score'] = composite_score
+        
+        # Display innovation results
+        print(f"\n🔬 Innovation Analysis:")
+        innovation_report = self.innovation_detector.generate_innovation_report(innovation_analysis)
+        print(innovation_report)
+        print(f"\n🏆 Composite Score: {composite_score:.3f} (Speed: {speed_score:.2f}, Innovation: {innovation_score:.2f})")
+        
+        # Re-save with innovation data
+        self._save_submission(submission)
+        
+        return submission
+    
+    def display_innovation_leaderboard(self, event_name: str, top_n: int = 10):
+        """Display leaderboard ranked by innovation score"""
+        submissions = self._load_event_submissions(event_name)
+        
+        # Filter submissions with innovation data
+        innovation_submissions = [s for s in submissions if 'innovation_analysis' in s]
+        
+        if not innovation_submissions:
+            print(f"🔬 Innovation Leaderboard - {event_name.replace('_', ' ').title()}")
+            print("No innovation submissions yet!")
+            return
+        
+        # Sort by innovation score
+        innovation_submissions.sort(key=lambda s: s['innovation_analysis']['innovation_score'], reverse=True)
+        top_submissions = innovation_submissions[:top_n]
+        
+        print(f"\n🔬 INNOVATION LEADERBOARD - {event_name.replace('_', ' ').title()}")
+        print("=" * 80)
+        print(f"{'Rank':<6} {'Team':<20} {'Innovation':<12} {'Techniques':<8} {'Description':<25}")
+        print("-" * 80)
+        
+        for i, submission in enumerate(top_submissions):
+            rank = i + 1
+            team = submission['team_name'][:19]
+            innovation = f"{submission['innovation_analysis']['innovation_score']:.3f}"
+            num_tech = submission['innovation_analysis']['num_techniques']
+            description = submission['optimization_description'][:24]
+            
+            print(f"{rank:<6} {team:<20} {innovation:<12} {num_tech:<8} {description:<25}")
+        
+        print("-" * 80)
+        print(f"Top {len(top_submissions)} most innovative submissions")
+    
+    def display_composite_leaderboard(self, event_name: str, top_n: int = 10):
+        """Display leaderboard ranked by composite score (speed + innovation)"""
+        submissions = self._load_event_submissions(event_name)
+        
+        # Filter submissions with composite scores
+        composite_submissions = [s for s in submissions if 'composite_score' in s]
+        
+        if not composite_submissions:
+            print(f"🏆 Composite Leaderboard - {event_name.replace('_', ' ').title()}")
+            print("No composite submissions yet!")
+            return
+        
+        # Sort by composite score
+        composite_submissions.sort(key=lambda s: s['composite_score'], reverse=True)
+        top_submissions = composite_submissions[:top_n]
+        
+        print(f"\n🏆 COMPOSITE LEADERBOARD - {event_name.replace('_', ' ').title()}")
+        print("=" * 90)  
+        print(f"{'Rank':<6} {'Team':<18} {'Composite':<11} {'Speed':<9} {'Innovation':<11} {'Techniques'}")
+        print("-" * 90)
+        
+        for i, submission in enumerate(top_submissions):
+            rank = i + 1
+            team = submission['team_name'][:17]
+            composite = f"{submission['composite_score']:.3f}"
+            speed = f"{submission['speedup_score']:.2f}x"
+            innovation = f"{submission['innovation_analysis']['innovation_score']:.3f}"
+            techniques = ", ".join(submission['innovation_analysis']['detected_techniques'][:3])[:20]
+            
+            print(f"{rank:<6} {team:<18} {composite:<11} {speed:<9} {innovation:<11} {techniques}")
+        
+        print("-" * 90)
+        print(f"Top {len(top_submissions)} best overall submissions (70% speed + 30% innovation)")
+    
+    def display_all_enhanced_leaderboards(self):
+        """Display all leaderboard types for all events"""
+        events = ['mlp_sprint', 'cnn_marathon', 'transformer_decathlon']
+        
+        for event in events:
+            print(f"\n{'='*60}")
+            print(f"🏆 {event.replace('_', ' ').title()} - All Leaderboards")
+            print(f"{'='*60}")
+            
+            # Speed leaderboard  
+            self.display_leaderboard(event, top_n=5)
+            print()
+            
+            # Innovation leaderboard
+            self.display_innovation_leaderboard(event, top_n=5)
+            print()
+            
+            # Composite leaderboard
+            self.display_composite_leaderboard(event, top_n=5)
+            print()
+
+# %% [markdown]
+"""
+### Test Enhanced Competition with Innovation Detection
+
+Let's test the enhanced competition framework with innovation detection.
+"""
+
+# %%
+def test_enhanced_competition():
+    """Test enhanced competition with innovation detection"""
+    print("Testing Enhanced TinyMLPerf Competition...")
+    
+    # Initialize enhanced competition
+    competition = TinyMLPerfCompetitionPlus()
+    
+    # Create innovative models with optimization attributes
+    class QuantizedFastMLP:
+        """Simulated quantized MLP"""
+        def __init__(self):
+            self.weights1 = np.random.randn(784, 64).astype(np.int8)  # Quantized weights
+            self.bias1 = np.random.randn(64).astype(np.float32) * 0.1
+            self.weights2 = np.random.randn(64, 10).astype(np.int8)
+            self.bias2 = np.random.randn(10).astype(np.float32) * 0.1
+            self.quantized = True  # Innovation marker
+        
+        def predict(self, x):
+            # Simulate quantized computation
+            h1 = np.maximum(0, x @ self.weights1.astype(np.float32) * 0.1 + self.bias1)
+            return h1 @ self.weights2.astype(np.float32) * 0.1 + self.bias2
+    
+    class PrunedCNN:
+        """Simulated pruned CNN"""
+        def __init__(self):
+            self.fc_weights = np.random.randn(1600, 10).astype(np.float32) * 0.05
+            self.fc_bias = np.random.randn(10).astype(np.float32) * 0.05
+            self.pruned = True  # Innovation marker
+            self.sparsity = 0.7  # 70% of weights pruned
+        
+        def predict(self, x):
+            batch_size = x.shape[0]
+            x_flat = x.reshape(batch_size, -1)
+            if x_flat.shape[1] != 1600:
+                x_flat = x_flat[:, :1600] if x_flat.shape[1] > 1600 else np.pad(x_flat, ((0, 0), (0, 1600 - x_flat.shape[1])), 'constant')
+            return x_flat @ self.fc_weights + self.fc_bias
+    
+    # Submit innovative entries
+    print("\n🚀 Submitting Innovative Entries...")
+    
+    # Quantized MLP submission
+    quantized_submission = competition.submit_entry(
+        team_name="Quantum Quantizers",
+        event_name="mlp_sprint",
+        optimized_model=QuantizedFastMLP(),
+        optimization_description="INT8 quantization with custom SIMD kernels for 3x speedup",
+        github_url="https://github.com/quantum-quantizers/quantized-mlp"
+    )
+    
+    # Pruned CNN submission
+    pruned_submission = competition.submit_entry(
+        team_name="Pruning Pioneers", 
+        event_name="cnn_marathon",
+        optimized_model=PrunedCNN(),
+        optimization_description="Structured pruning + knowledge distillation + memory optimization",
+        github_url="https://github.com/pruning-pioneers/pruned-cnn"
+    )
+    
+    # Display enhanced leaderboards
+    print("\n📊 Enhanced Competition Leaderboards:")
+    competition.display_all_enhanced_leaderboards()
+    
+    print("\n✅ Enhanced competition test complete!")
+    return competition
+
+# %% [markdown]
+"""
+## Comprehensive Testing
+
+Let's run a complete TinyMLPerf competition demonstration with all features.
+"""
+
+# %%
+def run_complete_tinymlperf_demo():
+    """Run comprehensive TinyMLPerf competition demonstration"""
+    print("🏆 TINYMLPERF - THE ULTIMATE ML SYSTEMS COMPETITION")
+    print("=" * 80)
+    
+    print("\n0. 🎓 Running Learning Checkpoints...")
+    # Run learning checkpoints first
+    learning_results = test_learning_checkpoints()
+    
+    print("\n1. 🏗️  Setting up TinyMLPerf Benchmark Suite...")
+    # Test benchmark suite
+    benchmark_suite = test_tinymlperf_benchmark_suite()
+    
+    print("\n2. ⚡ Testing Competition Profiling...")  
+    # Test profiling infrastructure
+    competition_profiler, mlp_results, cnn_results = test_competition_profiler()
+    
+    print("\n3. 🚀 Running Basic Competition...")
+    # Test basic competition
+    basic_competition = test_tinymlperf_competition()
+    
+    print("\n4. 🔬 Testing Enhanced Competition with Innovation...")
+    # Test enhanced competition
+    enhanced_competition = test_enhanced_competition()
+    
+    print("\n" + "=" * 80)
+    print("🎉 TINYMLPERF DEMO COMPLETE!")
+    print("=" * 80)
+    
+    print("\n🏆 TinyMLPerf Competition Ready:")
+    print("✅ Three exciting events: MLP Sprint, CNN Marathon, Transformer Decathlon") 
+    print("✅ TinyTorch Module 15 profiler integration for rigorous benchmarking")
+    print("✅ Hardware-independent relative scoring (speedup ratios)")
+    print("✅ Transparent leaderboards with evidence requirements")
+    print("✅ Innovation detection and creativity rewards")
+    print("✅ Composite scoring balancing speed and innovation")
+    
+    print("\n🚀 Competition Features:")
+    print("• Standardized benchmark models and datasets")
+    print("• Statistical reliability with multiple timing runs")
+    print("• Multiple leaderboard categories (speed, innovation, composite)")
+    print("• GitHub integration for transparency and reproducibility")
+    print("• Automatic technique detection and innovation scoring")
+    
+    print("\n🎯 Ready to Compete:")
+    print("1. Optimize your models using techniques from Modules 16-19")
+    print("2. Submit to TinyMLPerf events using competition.submit_entry()")
+    print("3. See your results on leaderboards instantly") 
+    print("4. Iterate and improve based on performance feedback")
+    print("5. Prove your ML systems optimization mastery!")
+    
+    return {
+        'learning_checkpoints': learning_results,
+        'benchmark_suite': benchmark_suite,
+        'profiler': competition_profiler,
+        'basic_competition': basic_competition, 
+        'enhanced_competition': enhanced_competition
+    }
+
+# %% [markdown]
+"""
+## Systems Analysis Summary
+
+This TinyMLPerf competition module demonstrates advanced ML systems engineering through competitive benchmarking:
+
+### 🏗️ **Competition Infrastructure Excellence**
+- **Standardized Benchmarking**: Fair competition through consistent profiling protocols using Module 15's profiler
+- **Statistical Rigor**: Multiple timing runs with warmup periods ensure reliable performance measurements
+- **Hardware Independence**: Relative speedup scoring allows fair competition across different hardware platforms
+- **Transparency Requirements**: GitHub integration and evidence tracking prevent gaming and ensure reproducibility
+
+### ⚡ **Multi-Dimensional Performance Optimization**
+- **Speed Optimization**: Direct latency measurement rewarding inference performance improvements
+- **Innovation Detection**: Automated recognition of advanced techniques like quantization, pruning, distillation
+- **Composite Scoring**: Balanced evaluation combining speed improvements with optimization creativity
+- **Multiple Event Categories**: MLP Sprint, CNN Marathon, Transformer Decathlon test different optimization domains
+
+### 📊 **Systematic Competition Analysis**
+- **TinyTorch Profiler Integration**: Leverages Module 15's profiling infrastructure for consistent measurement
+- **Memory Tracking**: Comprehensive resource usage analysis beyond just timing measurements
+- **Progress Tracking**: Team improvement analysis across multiple submissions and iterations
+- **Leaderboard Visualization**: Multiple ranking systems (speed, innovation, composite) prevent tunnel vision
+
+### 💡 **Production ML Systems Insights**
+- **Benchmarking Best Practices**: Industry-standard profiling methodology with warmup and statistical analysis
+- **Optimization Technique Recognition**: Systematic detection of real-world optimization approaches
+- **Performance Claims Validation**: Evidence-based performance reporting with reproducible results
+- **Resource Constraint Awareness**: Multi-metric evaluation reflecting production deployment considerations
+
+### 🎯 **Key Educational Insights**
+- Competition accelerates optimization learning by making improvements concrete and measurable
+- Hardware-independent scoring ensures fair comparison while teaching relative performance analysis
+- Innovation detection rewards creativity and exposure to diverse optimization techniques
+- Multiple leaderboards prevent single-metric optimization and encourage balanced system thinking
+- Evidence requirements teach reproducibility and honest performance reporting practices
+
+### 🏆 **The Ultimate Learning Achievement**
+This competition framework proves students can systematically optimize ML systems for real production constraints. By combining techniques from Modules 16-19 (quantization, pruning, acceleration, memory optimization), students demonstrate mastery of the complete ML systems optimization stack through measurable competitive performance.
+
+The TinyMLPerf competition transforms optimization from abstract concepts into concrete, competitive achievements that mirror real-world ML systems engineering challenges.
+"""
+
+# %% [markdown]
+"""
+## Main Execution Block
+
+Run the complete TinyMLPerf competition system when this module is executed directly.
+"""
+
+# %%
+if __name__ == "__main__":
+    print("Module 20: TinyMLPerf - The Ultimate ML Systems Competition")
+    print("=" * 80)
+    
+    # Run complete TinyMLPerf demonstration
+    results = run_complete_tinymlperf_demo()
+    
+    print(f"\n🎉 Module 20 complete!")
+    print(f"🏆 TinyMLPerf competition infrastructure ready!")
+    print(f"🚀 Time to optimize your models and climb the leaderboards!")
+
+# %% [markdown]
+"""
+## 🤔 ML Systems Thinking: Interactive Questions
+
+1. **Why use hardware-independent relative scoring in ML competitions?** Your TinyMLPerf uses speedup ratios rather than absolute timing. Explain why this enables fair competition across different hardware platforms and how this mirrors real production environments where optimization techniques must be portable across diverse deployment targets.
+
+2. **How does competitive benchmarking accelerate optimization learning compared to individual assignments?** You've built leaderboards, innovation detection, and multi-dimensional scoring. Analyze why competition pressure drives deeper exploration of optimization techniques and how this mirrors real industry environments where performance benchmarks determine system adoption.
+
+3. **What makes innovation detection crucial for preventing optimization tunnel vision?** Your system detects quantization, pruning, distillation, and custom kernels automatically. Explain why rewarding diverse techniques prevents students from over-optimizing single metrics and how this teaches balanced systems thinking rather than algorithmic tunnel vision.
+
+4. **How does evidence-based competition ensure educational integrity and real-world relevance?** Your framework requires GitHub links, generates checksums, and validates reproducibility. Analyze why these requirements prevent academic dishonesty while teaching students the performance reporting standards expected in production ML systems development.
+"""
+
+# %% [markdown]
+"""
+## 🎯 MODULE SUMMARY: TinyMLPerf - The Ultimate ML Systems Competition
+
+This capstone module creates the ultimate ML systems competition, proving optimization mastery through measurable performance improvements in three exciting events.
+
+### 🛤️ **The TinyMLPerf Journey**
+- **Modules 1-19**: You built comprehensive optimization techniques across the entire ML systems stack
+- **Module 20**: You compete to prove mastery through concrete, measurable performance improvements
+- **Ultimate Goal**: Demonstrate professional-level ML systems optimization through competitive achievement
+
+### 🛠️ **What We Built**
+- **TinyMLPerf Benchmark Suite**: Three standardized competition events - MLP Sprint, CNN Marathon, Transformer Decathlon
+- **Competition Profiler**: Integration with Module 15's profiler for rigorous, statistical performance measurement
+- **Multi-Dimensional Leaderboards**: Speed, innovation, and composite scoring systems preventing tunnel vision
+- **Innovation Detection**: Automatic recognition and scoring of advanced optimization techniques
+
+### 🧠 **Key Learning Outcomes**
+- **Competitive Optimization**: Apply learned techniques competitively with measurable, hardware-independent results
+- **Systematic Benchmarking**: Use statistical profiling methodology for reliable performance measurement
+- **Innovation Recognition**: Understand and apply diverse optimization approaches beyond simple speed improvements
+- **Evidence-Based Performance**: Support optimization claims with reproducible benchmarking and transparent evidence
+
+### ⚡ **Competition Events Mastered**
+- **MLP Sprint**: Fastest feedforward neural network inference optimization
+- **CNN Marathon**: Most efficient convolutional neural network processing
+- **Transformer Decathlon**: Ultimate attention mechanism and sequence processing optimization
+
+### 🏆 **Technical Skills Developed**
+- Design and implement standardized benchmarking infrastructure for fair ML competition
+- Integrate profiling tools for statistical performance measurement and analysis
+- Build multi-dimensional leaderboard systems balancing multiple optimization objectives
+- Detect and score innovation techniques automatically to reward optimization creativity
+
+### 📊 **Systems Engineering Insights Gained**
+- **Competition accelerates learning**: Measurable challenges drive deeper optimization exploration than individual assignments
+- **Hardware-independent scoring**: Relative performance metrics enable fair comparison across diverse deployment environments  
+- **Innovation detection prevents tunnel vision**: Multi-dimensional scoring teaches balanced systems optimization
+- **Evidence requirements ensure integrity**: Reproducible results and transparency are essential for professional optimization claims
+
+### 💡 **The Capstone Achievement**
+You've completed the ultimate ML systems optimization journey! Through competitive pressure in TinyMLPerf, you've applied quantization, pruning, distillation, acceleration, memory optimization, and innovation techniques to achieve measurable performance improvements. This competition framework proves you can optimize ML systems like a professional engineer, balancing speed, memory, innovation, and deployment constraints to build production-ready systems.
+
+### 🎉 **Competition Glory Awaits**
+Ready to prove your optimization mastery? Load your optimized models into TinyMLPerf, submit to the three events, and climb the leaderboards! Your journey from basic tensors to competition-winning ML systems optimization is complete - now show the world what you can build!
 """
