@@ -17,7 +17,7 @@ are essential for learning non-linear patterns.
 Required Modules (can run after Module 6):
 - Module 2 (Tensor): Core data structure with gradients
 - Module 3 (Activations): ReLU/Sigmoid for nonlinearity (the key!)
-- Module 4 (Layers): Dense layers for transformations
+- Module 4 (Layers): Linear layers for transformations
 - Module 5 (Losses): Binary cross-entropy for classification
 - Module 6 (Autograd): Backpropagation (the missing piece in 1969!)
 
@@ -33,9 +33,10 @@ import os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from tinytorch.core.tensor import Tensor
-from tinytorch.core.layers import Dense
+from tinytorch.core.layers import Linear
 from tinytorch.core.activations import ReLU, Sigmoid
 from tinytorch.core.training import MeanSquaredError
+from tinytorch.core.autograd import to_numpy
 
 
 class XORNet:
@@ -48,9 +49,9 @@ class XORNet:
     
     def __init__(self):
         # Hidden layer - the key innovation!
-        self.hidden = Dense(2, 4)  # 2 inputs → 4 hidden units
+        self.hidden = Linear(2, 4)  # 2 inputs → 4 hidden units
         self.relu = ReLU()         # Nonlinearity (crucial!)
-        self.output = Dense(4, 1)  # 4 hidden → 1 output
+        self.output = Linear(4, 1)  # 4 hidden → 1 output
         self.sigmoid = Sigmoid()   # For binary classification
         
         # Enable gradients for training
@@ -73,7 +74,7 @@ class XORNet:
     def predict(self, x):
         """Binary prediction."""
         output = self.forward(x)
-        return (output.data > 0.5).astype(int)
+        return (to_numpy(output) > 0.5).astype(int)
     
     def parameters(self):
         """Get all parameters."""
@@ -150,7 +151,7 @@ def train_xor(model, X, y, epochs=100, lr=0.1):
         
         # Print progress
         if epoch % 20 == 0:
-            loss_value = loss.data._data if hasattr(loss.data, '_data') else loss.data
+            loss_value = to_numpy(loss)
             predictions = model.predict(X_tensor)
             accuracy = np.mean(predictions == y) * 100
             print(f"Epoch {epoch:3d}: Loss = {float(loss_value):.4f}, Accuracy = {accuracy:.0f}%")
