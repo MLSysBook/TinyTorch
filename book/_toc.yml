@@ -6,8 +6,10 @@ root: intro
 title: "TinyTorch Course"
 
 parts:
-- caption: Usage Paths
+- caption: Getting Started
   chapters:
+  - file: learning-timeline
+    title: "Your Learning Journey"
   - file: usage-paths/quick-exploration
     title: "Quick Exploration"
   - file: usage-paths/serious-development
@@ -22,7 +24,7 @@ parts:
   - file: chapters/00-introduction
     title: "Introduction"
 
-- caption: "🧠 MLP Era Foundation (1980s)"
+- caption: "MLP Era Foundation (1980s)"
   chapters:
   - file: chapters/01-setup
     title: "1. Setup"
@@ -33,21 +35,21 @@ parts:
   - file: chapters/04-layers
     title: "4. Layers"
 
-- caption: "🧠 MLP Intelligence (1980s)"
+- caption: "MLP Intelligence (1980s)"
   chapters:
   - file: chapters/05-dense
     title: "5. Dense Networks"
   - file: chapters/11-training
-    title: "6. Training (52.7% baseline)"
+    title: "6. Training"
 
-- caption: "📡 CNN Revolution (1989-1998)"
+- caption: "CNN Revolution (1989-1998)"
   chapters:
   - file: chapters/06-spatial
     title: "7. Spatial Convolutions"
   - file: chapters/08-dataloader
-    title: "8. DataLoader (CIFAR-10)"
+    title: "8. DataLoader"
 
-- caption: "🔥 Modern Training Systems"  
+- caption: "Modern Training Systems"  
   chapters:
   - file: chapters/09-autograd
     title: "9. Autograd"
@@ -56,7 +58,7 @@ parts:
   - file: chapters/07-attention
     title: "11. Attention Mechanisms"
 
-- caption: "🚀 Production Systems"
+- caption: "Production Systems"
   chapters:
   - file: chapters/12-compression
     title: "12. Compression"
@@ -67,7 +69,7 @@ parts:
   - file: chapters/15-mlops
     title: "15. MLOps"
 
-- caption: "🤖 Universal Intelligence (2017+)"
+- caption: "Universal Intelligence (2017+)"
   chapters:
   - file: chapters/16-tinygpt
     title: "16. TinyGPT"
