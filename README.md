@@ -7,7 +7,15 @@
 [![Documentation](https://img.shields.io/badge/docs-jupyter_book-orange.svg)](https://mlsysbook.github.io/TinyTorch/)
 ![Status](https://img.shields.io/badge/status-active-success.svg)
 
-A Harvard University course that teaches ML systems engineering by building a complete deep learning framework from scratch. From tensors to transformers, understand every line of code powering modern AI.
+> 🚧 **Work in Progress** - We're actively developing TinyTorch for Spring 2025! All core modules are complete and tested. Join us in building the future of ML systems education.
+
+## Why TinyTorch?
+
+**"Most ML education teaches you to _use_ frameworks. TinyTorch teaches you to _build_ them."**
+
+In an era where AI is reshaping every industry, the difference between ML users and ML engineers determines who drives innovation versus who merely consumes it. TinyTorch bridges this critical gap by teaching you to build every component of modern AI systems from scratch—from tensors to transformers.
+
+A Harvard University course that transforms you from framework user to systems engineer, giving you the deep understanding needed to optimize, debug, and innovate at the foundation of AI.
 
 ## What You'll Build
 
@@ -229,6 +237,30 @@ python tests/run_all_modules.py
 - **[Student Quickstart](docs/STUDENT_QUICKSTART.md)** - Getting started guide
 - **[CIFAR-10 Training Guide](docs/cifar10-training-guide.md)** - Detailed training walkthrough
 
+## TinyMLPerf Competition & Leaderboard
+
+### Compete and Compare Your Optimizations
+
+TinyMLPerf is our performance benchmarking competition where you optimize your TinyTorch implementations and compete on the leaderboard:
+
+```bash
+# Run benchmarks locally
+tito benchmark run --event mlp_sprint      # Quick MLP benchmark
+tito benchmark run --event cnn_marathon    # CNN optimization challenge
+tito benchmark run --event transformer_decathlon  # Ultimate transformer test
+
+# Submit to leaderboard (coming soon)
+tito benchmark submit --event cnn_marathon
+```
+
+**Leaderboard Categories:**
+- **Speed**: Fastest inference time
+- **Memory**: Lowest memory footprint  
+- **Efficiency**: Best accuracy/resource ratio
+- **Innovation**: Novel optimization techniques
+
+📊 **View Leaderboard**: [Coming Spring 2025] - Be among the first to set baselines!
+
 ## Contributing
 
 We welcome contributions! See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
@@ -236,6 +268,16 @@ We welcome contributions! See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 ## License
 
 MIT License - see [LICENSE](LICENSE) for details.
+
+## Related Projects
+
+We acknowledge several excellent educational ML framework projects with similar names:
+- [tinygrad](https://github.com/tinygrad/tinygrad) - George Hotz's minimalist deep learning framework
+- [micrograd](https://github.com/karpathy/micrograd) - Andrej Karpathy's tiny autograd engine
+- [MiniTorch](https://minitorch.github.io/) - Cornell's educational framework
+- Other TinyTorch implementations - Various educational implementations on GitHub
+
+**Our TinyTorch** focuses specifically on ML systems engineering with a complete curriculum, NBGrader integration, and production deployment—designed as a comprehensive university course rather than a standalone library.
 
 ## Acknowledgments
 
