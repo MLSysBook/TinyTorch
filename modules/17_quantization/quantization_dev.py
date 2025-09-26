@@ -63,7 +63,6 @@ from typing import Union, List, Optional, Tuple, Dict, Any
 try:
     from tinytorch.core.tensor import Tensor
     from tinytorch.core.spatial import Conv2d, MaxPool2D
-    MaxPool2d = MaxPool2D  # Alias for consistent naming
 except ImportError:
     # For development, import from local modules
     sys.path.append(os.path.join(os.path.dirname(__file__), '..', '02_tensor'))
@@ -71,7 +70,6 @@ except ImportError:
     try:
         from tensor_dev import Tensor
         from spatial_dev import Conv2d, MaxPool2D
-        MaxPool2d = MaxPool2D  # Alias for consistent naming
     except ImportError:
         # Create minimal mock classes if not available
         class Tensor:
