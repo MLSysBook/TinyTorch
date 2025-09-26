@@ -87,8 +87,8 @@ def _determine_layer_type_and_sparsity(shape: tuple) -> Tuple[str, float]:
     if len(shape) == 4:  # Convolution: (filters, channels, height, width)
         layer_type = "Conv2D"
         recommended_sparsity = DEFAULT_CONV_SPARSITY  # Conservative - conv layers extract spatial features
-    elif len(shape) == 2:  # Dense/Linear: (output_neurons, input_neurons)  
-        layer_type = "Dense"
+    elif len(shape) == 2:  # Linear/Linear: (output_neurons, input_neurons)  
+        layer_type = "Linear"
         recommended_sparsity = DEFAULT_DENSE_SPARSITY  # Aggressive - dense layers have high redundancy
     else:
         layer_type = "Other"
@@ -175,17 +175,17 @@ def test_redundancy_analysis():
     # Create realistic CNN weights with natural sparsity
     np.random.seed(42)
     conv_weights = np.random.normal(0, 0.02, (64, 32, 3, 3))  # Conv layer
-    fc_weights = np.random.normal(0, 0.01, (1000, 512))       # FC layer
+    linear_weights = np.random.normal(0, 0.01, (1000, 512))       # Linear layer
     
     # Analyze both layer types
     conv_stats = analyze_weight_redundancy(conv_weights, "Conv2D Layer Weights")
-    fc_stats = analyze_weight_redundancy(fc_weights, "Dense Layer Weights")
+    linear_stats = analyze_weight_redundancy(linear_weights, "Linear Layer Weights")
     
     # Verify analysis produces reasonable results
     assert conv_stats['total_params'] == 64*32*3*3, "Conv param count mismatch"
-    assert fc_stats['total_params'] == 1000*512, "FC param count mismatch"
+    assert linear_stats['total_params'] == 1000*512, "Linear param count mismatch"
     assert conv_stats['natural_sparsity'] > 0, "Should detect some natural sparsity"
-    assert fc_stats['natural_sparsity'] > 0, "Should detect some natural sparsity"
+    assert linear_stats['natural_sparsity'] > 0, "Should detect some natural sparsity"
     
     print("✅ Weight redundancy analysis test passed!")
 
@@ -594,7 +594,7 @@ class SparseLinear:
             out_features: Number of output features
             
         Attributes:
-            dense_weights: Original dense weight matrix (out_features, in_features)
+            linear_weights: Original dense weight matrix (out_features, in_features)
             sparse_weights: Pruned weight matrix with zeros
             mask: Binary mask indicating kept weights (1=keep, 0=prune)
             sparsity: Fraction of weights that are zero
@@ -605,8 +605,8 @@ class SparseLinear:
         self.in_features = in_features
         self.out_features = out_features
         
-        # Dense weights (will be pruned)
-        self.dense_weights = None
+        # Linear weights (will be pruned)
+        self.linear_weights = None
         self.bias = None
         
         # Sparse representation
@@ -619,23 +619,23 @@ class SparseLinear:
         self.sparse_ops = 0
         # END SOLUTION
     
-    def load_dense_weights(self, weights: np.ndarray, bias: Optional[np.ndarray] = None):
+    def load_linear_weights(self, weights: np.ndarray, bias: Optional[np.ndarray] = None):
         """Load dense weights before pruning."""
         # BEGIN SOLUTION
         assert weights.shape == (self.out_features, self.in_features), f"Weight shape mismatch"
-        self.dense_weights = weights.copy()
+        self.linear_weights = weights.copy()
         self.bias = bias.copy() if bias is not None else np.zeros(self.out_features)
         # END SOLUTION
     
     def prune_weights(self, sparsity: float = DEFAULT_SPARSITY):
         """Prune weights using magnitude-based pruning."""
         # BEGIN SOLUTION
-        if self.dense_weights is None:
+        if self.linear_weights is None:
             raise ValueError("Must load dense weights before pruning")
         
         # Use magnitude pruner
         pruner = MagnitudePruner()
-        self.sparse_weights, self.mask, stats = pruner.prune(self.dense_weights, sparsity)
+        self.sparse_weights, self.mask, stats = pruner.prune(self.linear_weights, sparsity)
         self.sparsity = stats['actual_sparsity']
         
         print(f"✂️  Pruned {self.sparsity:.1%} of weights")
@@ -645,14 +645,14 @@ class SparseLinear:
     def forward_dense(self, x: np.ndarray) -> np.ndarray:
         """Forward pass using dense weights (reference)."""
         # BEGIN SOLUTION
-        if self.dense_weights is None:
-            raise ValueError("Dense weights not loaded")
+        if self.linear_weights is None:
+            raise ValueError("Linear weights not loaded")
         
         # Count operations
         self.dense_ops = self.in_features * self.out_features
         
         # Standard matrix multiply: y = x @ W^T + b
-        output = np.dot(x, self.dense_weights.T) + self.bias
+        output = np.dot(x, self.linear_weights.T) + self.bias
         return output
         # END SOLUTION
     
@@ -759,7 +759,7 @@ def test_sparse_neural_network():
     np.random.seed(42)
     weights = np.random.normal(0, 0.1, (128, 256))
     bias = np.random.normal(0, 0.01, 128)
-    sparse_layer.load_dense_weights(weights, bias)
+    sparse_layer.load_linear_weights(weights, bias)
     
     # Prune weights
     sparse_layer.prune_weights(sparsity=0.8)  # 80% sparsity
@@ -773,13 +773,13 @@ def test_sparse_neural_network():
     output_sparse_opt = sparse_layer.forward_sparse_optimized(x)
     
     print(f"Output shapes:")
-    print(f"  Dense: {output_dense.shape}")
+    print(f"  Linear: {output_dense.shape}")
     print(f"  Sparse naive: {output_sparse_naive.shape}")
     print(f"  Sparse optimized: {output_sparse_opt.shape}")
     
     # Verify outputs have correct shape
     expected_shape = (4, 128)
-    assert output_dense.shape == expected_shape, "Dense output shape incorrect"
+    assert output_dense.shape == expected_shape, "Linear output shape incorrect"
     assert output_sparse_naive.shape == expected_shape, "Sparse naive output shape incorrect"
     assert output_sparse_opt.shape == expected_shape, "Sparse optimized output shape incorrect"
     
@@ -801,7 +801,7 @@ def test_sparse_neural_network():
     
     print(f"\nPerformance Benchmark:")
     print(f"  Sparsity: {benchmark['sparsity']:.1%}")
-    print(f"  Dense ops: {benchmark['dense_ops']:,}")
+    print(f"  Linear ops: {benchmark['dense_ops']:,}")
     print(f"  Sparse ops: {benchmark['sparse_ops']:,}")
     print(f"  Theoretical speedup: {benchmark['theoretical_speedup']:.1f}x")
     print(f"  Actual speedup: {benchmark['actual_speedup']:.1f}x")
@@ -809,7 +809,7 @@ def test_sparse_neural_network():
     
     # Verify operation counting
     expected_dense_ops = 256 * 128
-    assert benchmark['dense_ops'] == expected_dense_ops, "Dense op count incorrect"
+    assert benchmark['dense_ops'] == expected_dense_ops, "Linear op count incorrect"
     assert benchmark['sparse_ops'] < benchmark['dense_ops'], "Sparse should use fewer ops"
     
     print("✅ Sparse neural network test passed!")
@@ -841,13 +841,13 @@ def _determine_layer_type_and_sparsity(shape: tuple) -> Tuple[str, float]:
         shape: Weight tensor shape
         
     Returns:
-        layer_type: Type of layer (Conv2D, Dense, Other)
+        layer_type: Type of layer (Conv2D, Linear, Other)
         recommended_sparsity: Recommended sparsity level for this layer type
     """
     if len(shape) == CONV2D_NDIM:  # Conv layer: (out, in, H, W)
         return "Conv2D", DEFAULT_CONV_SPARSITY
-    elif len(shape) == DENSE_NDIM:  # Dense layer: (out, in)  
-        return "Dense", DEFAULT_DENSE_SPARSITY
+    elif len(shape) == DENSE_NDIM:  # Linear layer: (out, in)  
+        return "Linear", DEFAULT_DENSE_SPARSITY
     else:
         return "Other", DEFAULT_OTHER_SPARSITY
 
@@ -980,7 +980,7 @@ class ModelCompressor:
             )
             
             analysis['total_params'] += weights.size
-            if layer_type in ['Conv2D', 'Dense']:
+            if layer_type in ['Conv2D', 'Linear']:
                 analysis['compressible_params'] += weights.size
             
             _print_layer_analysis_row(layer_name, layer_type, weights.size,
@@ -1155,8 +1155,8 @@ def test_compression_pipeline():
     model_weights = {
         'conv1': np.random.normal(0, 0.02, (32, 3, 3, 3)),    # Conv: 32 filters, 3 input channels
         'conv2': np.random.normal(0, 0.02, (64, 32, 3, 3)),   # Conv: 64 filters, 32 input channels
-        'fc1': np.random.normal(0, 0.01, (512, 1024)),        # Dense: 512 → 1024
-        'fc2': np.random.normal(0, 0.01, (10, 512)),          # Dense: 10 → 512 (output layer)
+        'linear1': np.random.normal(0, 0.01, (512, 1024)),        # Linear: 512 → 1024
+        'linear2': np.random.normal(0, 0.01, (10, 512)),          # Linear: 10 → 512 (output layer)
     }
     
     # Create compressor
@@ -1168,18 +1168,18 @@ def test_compression_pipeline():
     assert analysis['total_params'] > 0, "Should count total parameters"
     assert len(analysis['layers']) == 4, "Should analyze all 4 layers"
     assert 'conv1' in analysis['layers'], "Should analyze conv1"
-    assert 'fc1' in analysis['layers'], "Should analyze fc1"
+    assert 'linear1' in analysis['layers'], "Should analyze linear1"
     
     # Verify layer type detection
     assert analysis['layers']['conv1']['type'] == 'Conv2D', "Should detect conv layers"
-    assert analysis['layers']['fc1']['type'] == 'Dense', "Should detect dense layers"
+    assert analysis['layers']['linear1']['type'] == 'Linear', "Should detect linear layers"
     
     # Step 2: Compress model with custom sparsities
     custom_sparsities = {
         'conv1': 0.5,  # Conservative for first conv layer
         'conv2': 0.6,  # Moderate for second conv layer
-        'fc1': 0.8,    # Aggressive for large dense layer
-        'fc2': 0.3     # Conservative for output layer
+        'linear1': 0.8,    # Aggressive for large dense layer
+        'linear2': 0.3     # Conservative for output layer
     }
     
     compressed_model = compressor.compress_model(model_weights, custom_sparsities)
@@ -1262,8 +1262,8 @@ def profile_compression_memory():
     model_weights = {
         'conv1': np.random.normal(0, 0.02, (128, 64, 3, 3)),     # ~0.3M parameters
         'conv2': np.random.normal(0, 0.02, (256, 128, 3, 3)),    # ~1.2M parameters  
-        'fc1': np.random.normal(0, 0.01, (1024, 4096)),          # ~4.2M parameters
-        'fc2': np.random.normal(0, 0.01, (10, 1024)),            # ~10K parameters
+        'linear1': np.random.normal(0, 0.01, (1024, 4096)),          # ~4.2M parameters
+        'linear2': np.random.normal(0, 0.01, (10, 1024)),            # ~10K parameters
     }
     
     snapshot1 = tracemalloc.take_snapshot()
@@ -1351,13 +1351,13 @@ def analyze_deployment_scenarios():
     
     # Model sizes at different compression levels
     model_configs = [
-        {'name': 'Dense Model', 'size_mb': 200, 'gflops': 50, 'accuracy': 95.0},
+        {'name': 'Linear Model', 'size_mb': 200, 'gflops': 50, 'accuracy': 95.0},
         {'name': '50% Sparse', 'size_mb': 100, 'gflops': 25, 'accuracy': 94.5},
         {'name': '70% Sparse', 'size_mb': 60, 'gflops': 15, 'accuracy': 93.8},
         {'name': '90% Sparse', 'size_mb': 20, 'gflops': 5, 'accuracy': 91.2},
     ]
     
-    print("Scenario       | Memory | Compute | Dense | 50% | 70% | 90% | Best Option")
+    print("Scenario       | Memory | Compute | Linear | 50% | 70% | 90% | Best Option")
     print("-" * 80)
     
     for scenario in scenarios:
@@ -1435,7 +1435,7 @@ def benchmark_sparse_inference_speedup():
         
         # Load and prune weights
         weights = np.random.normal(0, 0.1, (size[1], size[0]))
-        sparse_layer.load_dense_weights(weights)
+        sparse_layer.load_linear_weights(weights)
         sparse_layer.prune_weights(sparsity)
         
         # Benchmark
@@ -1711,11 +1711,11 @@ def run_all_tests():
         np.random.seed(42)
         demo_model = {
             'backbone_conv': np.random.normal(0, 0.02, (128, 64, 3, 3)),
-            'classifier_fc': np.random.normal(0, 0.01, (10, 2048)),
+            'classifier_linear': np.random.normal(0, 0.01, (10, 2048)),
         }
         
         compressor = ModelCompressor()
-        compressed = compressor.compress_model(demo_model, {'backbone_conv': 0.7, 'classifier_fc': 0.8})
+        compressed = compressor.compress_model(demo_model, {'backbone_conv': 0.7, 'classifier_linear': 0.8})
         
         original_params = sum(w.size for w in demo_model.values())
         compressed_params = sum(np.sum(info['weights'] != 0) for info in compressed.values())
@@ -1773,7 +1773,7 @@ b) The structured vs unstructured tradeoff:
 - Inference speed: structured pruning provides actual speedup, unstructured often theoretical only
 
 c) Layer-specific sparsity tolerance:
-- Dense layers: High redundancy, many parameters, more overparametrized → tolerate 80% sparsity
+- Linear layers: High redundancy, many parameters, more overparametrized → tolerate 80% sparsity
 - Conv layers: Fewer parameters, each filter captures important spatial features → more sensitive
 - First layers: Extract low-level features (edges, textures) → very sensitive to pruning
 - Later layers: More abstract features with redundancy → can handle moderate pruning

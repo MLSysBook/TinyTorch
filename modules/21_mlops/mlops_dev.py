@@ -67,7 +67,7 @@ from collections import defaultdict
 try:
     from tinytorch.core.tensor import Tensor
     from tinytorch.core.training import Trainer
-    from tinytorch.core.layers import Dense
+    from tinytorch.core.layers import Linear
 except ImportError:
     # For development, fallback gracefully
     print("⚠️  Some TinyTorch modules not available - MLOps will use mock implementations")
