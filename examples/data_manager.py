@@ -39,13 +39,22 @@ class DatasetManager:
         self.data_dir.mkdir(exist_ok=True)
         
     def download_with_progress(self, url, filename):
-        """Download with progress bar."""
+        """Download with visual progress bar."""
         def progress_hook(block_num, block_size, total_size):
             if total_size > 0:
-                percent = min(100, (block_num * block_size / total_size) * 100)
-                print(f"\r   Progress: {percent:.1f}%", end='', flush=True)
+                downloaded = block_num * block_size
+                percent = min(100, (downloaded / total_size) * 100)
+                mb_downloaded = downloaded / (1024 * 1024)
+                mb_total = total_size / (1024 * 1024)
+                
+                # Visual progress bar
+                bar_length = 30
+                filled = int(bar_length * percent / 100)
+                bar = '█' * filled + '░' * (bar_length - filled)
+                
+                print(f"\r   [{bar}] {percent:.1f}% ({mb_downloaded:.1f}/{mb_total:.1f} MB)", end='', flush=True)
         
-        print(f"📥 Downloading {filename}...")
+        print(f"📥 Downloading {Path(filename).name}...")
         urllib.request.urlretrieve(url, filename, progress_hook)
         print("\n✅ Download complete!")
     
