@@ -184,67 +184,25 @@ class Variable:
                  requires_grad: bool = True, grad_fn: Optional[Callable] = None):
         """
         Create a Variable with gradient tracking.
-            
-        TODO: Implement Variable initialization with gradient tracking.
         
-        STEP-BY-STEP IMPLEMENTATION:
-        1. Convert data to Tensor if it is not already a Tensor
-        2. Store the tensor data in self.data
-        3. Set gradient tracking flag (requires_grad)
-        4. Initialize gradient to None (will be computed during backward pass)
-        5. Store the gradient function for backward pass
-        6. Track if this is a leaf node (no grad_fn means it is a leaf)
+        Simple, clear conversion focused on core autograd concepts.
         
-        EXAMPLE USAGE:
-        ```python
-        # Create leaf variables (input data)
-        x = Variable(5.0, requires_grad=True)
-        y = Variable([1, 2, 3], requires_grad=True)
-        
-        # Create intermediate variables (results of operations)
-        z = x + y  # Has grad_fn for addition
-        ```
-        
-        IMPLEMENTATION HINTS:
-        - Use isinstance(data, Tensor) to check type
-        - Convert with Tensor(data) if needed
-        - Store requires_grad, grad_fn flags
-        - Initialize self.grad = None
-        - Leaf nodes have grad_fn = None
-        - Set self.is_leaf = (grad_fn is None)
-        
-        LEARNING CONNECTIONS:
-        - This is like torch.Tensor with requires_grad=True
-        - Forms the basis for all neural network training
-        - Each Variable is a node in the computational graph
-        - Enables automatic gradient computation
+        Args:
+            data: The data (will be converted to Tensor if needed)
+            requires_grad: Whether to track gradients for this Variable
+            grad_fn: Function for computing gradients (None for leaf nodes)
         """
         ### BEGIN SOLUTION
-        # Convert data to Tensor if needed
-        # Check both local Tensor and built package Tensor
-        if hasattr(data, '_data') and hasattr(data, 'shape'):
-            # This is already a tensor-like object
-            if hasattr(data, 'data'):
-                # It's a built tensor, extract the underlying array and rewrap
-                self.data = Tensor(data.data)  # Use our local Tensor class
-            else:
-                # It's our local Tensor, use directly
-                self.data = data
-            # CRITICAL FIX: Keep reference to source tensor for gradient flow
-            self._source_tensor = data if getattr(data, 'requires_grad', False) else None
+        # Simple, clear conversion
+        if isinstance(data, Tensor):
+            self.data = data
         else:
-            # Create new tensor from raw data
             self.data = Tensor(data)
-            self._source_tensor = None
         
-        # Set gradient tracking
-        self.requires_grad = requires_grad or (isinstance(data, Tensor) and data.requires_grad)
-        self.grad = None  # Will be initialized when needed
+        self.requires_grad = requires_grad
+        self.grad = None
         self.grad_fn = grad_fn
         self.is_leaf = grad_fn is None
-        
-        # For computational graph
-        self._backward_hooks = []
         ### END SOLUTION
     
     @property
@@ -259,62 +217,28 @@ class Variable:
     
     def __repr__(self) -> str:
         """String representation of the Variable."""
-        grad_str = f", grad_fn={self.grad_fn.__name__}" if self.grad_fn else ""
-        return f"Variable({self.data.data.tolist()}, requires_grad={self.requires_grad}{grad_str})"
+        grad_str = f", grad_fn=<{self.grad_fn.__name__}>" if self.grad_fn else ""
+        return f"Variable(shape={self.shape}, requires_grad={self.requires_grad}{grad_str})"
     
     def backward(self, gradient: Optional['Variable'] = None) -> None:
         """
         Compute gradients using backpropagation.
         
-        TODO: Implement backward pass for gradient computation.
+        Simple gradient accumulation focused on learning the core concepts.
         
-        STEP-BY-STEP IMPLEMENTATION:
-        1. If gradient is None, create gradient of ones (for scalar outputs)
-        2. If this Variable requires gradients, accumulate the gradient
-        3. If this Variable has a grad_fn, call it to propagate gradients
-        4. The grad_fn will recursively call backward on input Variables
-        
-        EXAMPLE USAGE:
-        ```python
-        x = Variable(2.0, requires_grad=True)
-        y = Variable(3.0, requires_grad=True)
-        z = add(x, y)  # z = 5.0
-        z.backward()
-        print(x.grad)  # 1.0 (∂z/∂x = 1)
-        print(y.grad)  # 1.0 (∂z/∂y = 1)
-        ```
-        
-        IMPLEMENTATION HINTS:
-        - If gradient is None: gradient = Variable(np.ones_like(self.data.data))
-        - If self.requires_grad: accumulate gradient into self.grad
-        - If self.grad_fn: call self.grad_fn(gradient)
-        - Handle gradient accumulation (add to existing gradient)
-        
-        LEARNING CONNECTIONS:
-        - This implements the chain rule of calculus
-        - Gradients flow backward through the computational graph
-        - Each operation contributes its local gradient
-        - Enables training of any differentiable function
+        Args:
+            gradient: Incoming gradient (defaults to ones for scalar outputs)
         """
         ### BEGIN SOLUTION
         if gradient is None:
-            gradient = Variable(np.ones_like(self.data.data))
+            gradient = Variable(np.ones_like(self.numpy()))
         
         if self.requires_grad:
-            # Store gradient in Variable
             if self.grad is None:
                 self.grad = gradient
             else:
                 # Accumulate gradients
-                self.grad = Variable(self.grad.data.data + gradient.data.data)
-            
-            # CRITICAL FIX: Propagate gradients back to source Tensor (Parameters)
-            if self._source_tensor is not None and self._source_tensor.requires_grad:
-                if self._source_tensor.grad is None:
-                    self._source_tensor.grad = gradient.data
-                else:
-                    # Accumulate gradients in the source tensor
-                    self._source_tensor.grad = Tensor(self._source_tensor.grad.data + gradient.data.data)
+                self.grad = Variable(self.grad.numpy() + gradient.numpy())
         
         if self.grad_fn is not None:
             self.grad_fn(gradient)
@@ -337,6 +261,19 @@ class Variable:
         Usage:
             var = Variable([1, 2, 3])
             array = var.numpy()  # Always np.ndarray, no conditional logic needed
+        """
+        return self.data.data
+    
+    @property 
+    def array(self) -> np.ndarray:
+        """
+        Clean property access to underlying numpy array.
+        
+        Use this instead of .data.data for cleaner, more readable code.
+        
+        Example:
+            x = Variable([1, 2, 3])
+            arr = x.array  # Clean access instead of x.data.data
         """
         return self.data.data
     
@@ -379,7 +316,7 @@ def test_unit_variable_class():
     assert x.grad is None, "Gradient should be None initially"
     
     # Test data access
-    assert x.data.data.item() == 5.0, "Data should be accessible"
+    assert x.numpy().item() == 5.0, "Data should be accessible"
     assert x.shape == (), "Scalar should have empty shape"
     assert x.size == 1, "Scalar should have size 1"
     
@@ -434,6 +371,55 @@ Each operation returns a new Variable with:
 - **Forward result**: Computed value
 - **Backward function**: Gradient computation
 """
+
+# %% [markdown]
+"""
+## Helper Functions for Binary Operations
+
+These helper functions reduce code repetition and make operations more consistent.
+"""
+
+#| export
+def _ensure_variables(a, b):
+    """Convert inputs to Variables if they are scalars."""
+    if isinstance(a, (int, float)):
+        a = Variable(a, requires_grad=False)
+    if isinstance(b, (int, float)):
+        b = Variable(b, requires_grad=False)
+    return a, b
+
+def _create_binary_operation(forward_fn, grad_fn_a, grad_fn_b):
+    """
+    Helper to create binary operations with consistent structure.
+    
+    Args:
+        forward_fn: Function to compute forward pass
+        grad_fn_a: Function to compute gradient for first argument
+        grad_fn_b: Function to compute gradient for second argument
+    
+    Returns:
+        Binary operation function
+    """
+    def operation(a, b):
+        # Convert inputs
+        a, b = _ensure_variables(a, b)
+        
+        # Forward pass
+        result_data = forward_fn(a.data, b.data)
+        
+        # Backward function
+        def grad_fn(grad_output):
+            if a.requires_grad:
+                grad_a = grad_fn_a(grad_output, a, b)
+                a.backward(grad_a)
+            if b.requires_grad:
+                grad_b = grad_fn_b(grad_output, a, b)
+                b.backward(grad_b)
+        
+        requires_grad = a.requires_grad or b.requires_grad
+        return Variable(result_data, requires_grad=requires_grad, grad_fn=grad_fn)
+    
+    return operation
 
 # %% nbgrader={"grade": false, "grade_id": "add-operation", "locked": false, "schema_version": 3, "solution": true, "task": false}
 #| export
@@ -550,7 +536,7 @@ def test_unit_add_operation():
     y = Variable(3.0, requires_grad=True)
     z = add(x, y)
     
-    assert z.data.data.item() == 5.0, "Addition result should be 5.0"
+    assert z.numpy().item() == 5.0, "Addition result should be 5.0"
     assert z.requires_grad == True, "Result should require gradients"
     assert z.is_leaf == False, "Result should not be a leaf node"
     
@@ -559,17 +545,17 @@ def test_unit_add_operation():
     
     assert x.grad is not None, "x should have gradient"
     assert y.grad is not None, "y should have gradient"
-    assert x.grad.data.data.item() == 1.0, "∂z/∂x should be 1.0"
-    assert y.grad.data.data.item() == 1.0, "∂z/∂y should be 1.0"
+    assert x.grad.numpy().item() == 1.0, "∂z/∂x should be 1.0"
+    assert y.grad.numpy().item() == 1.0, "∂z/∂y should be 1.0"
     
     # Test with scalar
     a = Variable(5.0, requires_grad=True)
     b = add(a, 3.0)  # Add scalar
     
-    assert b.data.data.item() == 8.0, "Addition with scalar should work"
+    assert b.numpy().item() == 8.0, "Addition with scalar should work"
     
     b.backward()
-    assert a.grad.data.data.item() == 1.0, "Gradient through scalar addition should be 1.0"
+    assert a.grad.numpy().item() == 1.0, "Gradient through scalar addition should be 1.0"
     
     print("✅ Addition operation tests passed!")
     print(f"✅ Forward pass computing correct results")
@@ -607,59 +593,21 @@ def multiply(a: Union[Variable, float, int], b: Union[Variable, float, int]) -> 
     """
     Multiplication operation with gradient tracking: a * b
     
-    TODO: Implement multiplication with automatic differentiation.
-    
-    STEP-BY-STEP IMPLEMENTATION:
-    1. Convert inputs to Variables if they are scalars
-    2. Compute forward pass: result = a.data * b.data
-    3. Create gradient function implementing product rule: ∂(a*b)/∂a = b, ∂(a*b)/∂b = a
-    4. Return new Variable with result and gradient function
-    
-    MATHEMATICAL FOUNDATION:
-    - Forward: z = x * y
-    - Backward: ∂z/∂x = y, ∂z/∂y = x
-    - Chain rule: ∂L/∂x = ∂L/∂z · y, ∂L/∂y = ∂L/∂z · x
-    
-    EXAMPLE USAGE:
-    ```python
-    x = Variable(2.0, requires_grad=True)
-    y = Variable(3.0, requires_grad=True)
-    z = multiply(x, y)  # z = 6.0
-    z.backward()
-    print(x.grad)  # 3.0 (∂z/∂x = y)
-    print(y.grad)  # 2.0 (∂z/∂y = x)
-    ```
-    
-    IMPLEMENTATION HINTS:
-    - Convert scalars to Variables (same as addition)
-    - Forward pass: result_data = a.data * b.data
-    - Backward function: multiply incoming gradient by the other variable
-    - For a: a.backward(grad_output * b.data)
-    - For b: b.backward(grad_output * a.data)
-    
-    LEARNING CONNECTIONS:
-    - This is like torch.mul() with autograd
-    - Product rule is fundamental to backpropagation
-    - Used in weight updates and attention mechanisms
-    - Each input's gradient depends on the other input's value
+    Uses the product rule: ∂(a*b)/∂a = b, ∂(a*b)/∂b = a
     """
     ### BEGIN SOLUTION
     # Convert scalars to Variables
-    if isinstance(a, (int, float)):
-        a = Variable(a, requires_grad=False)
-    if isinstance(b, (int, float)):
-        b = Variable(b, requires_grad=False)
+    a, b = _ensure_variables(a, b)
     
     # Forward pass
     result_data = a.data * b.data
     
-    # Backward function
+    # Backward function using product rule
     def grad_fn(grad_output):
-        # Product rule: d(xy)/dx = y, d(xy)/dy = x
         if a.requires_grad:
-            a.backward(Variable(grad_output.data.data * b.data.data))
+            a.backward(Variable(grad_output.numpy() * b.numpy()))
         if b.requires_grad:
-            b.backward(Variable(grad_output.data.data * a.data.data))
+            b.backward(Variable(grad_output.numpy() * a.numpy()))
     
     # Return new Variable with gradient function
     requires_grad = a.requires_grad or b.requires_grad
@@ -683,7 +631,7 @@ def test_unit_multiply_operation():
     y = Variable(3.0, requires_grad=True)
     z = multiply(x, y)
     
-    assert z.data.data.item() == 6.0, "Multiplication result should be 6.0"
+    assert z.numpy().item() == 6.0, "Multiplication result should be 6.0"
     assert z.requires_grad == True, "Result should require gradients"
     
     # Test backward pass
@@ -691,17 +639,17 @@ def test_unit_multiply_operation():
     
     assert x.grad is not None, "x should have gradient"
     assert y.grad is not None, "y should have gradient"
-    assert x.grad.data.data.item() == 3.0, "∂z/∂x should be y = 3.0"
-    assert y.grad.data.data.item() == 2.0, "∂z/∂y should be x = 2.0"
+    assert x.grad.numpy().item() == 3.0, "∂z/∂x should be y = 3.0"
+    assert y.grad.numpy().item() == 2.0, "∂z/∂y should be x = 2.0"
     
     # Test with scalar
     a = Variable(4.0, requires_grad=True)
     b = multiply(a, 2.0)  # Multiply by scalar
     
-    assert b.data.data.item() == 8.0, "Multiplication with scalar should work"
+    assert b.numpy().item() == 8.0, "Multiplication with scalar should work"
     
     b.backward()
-    assert a.grad.data.data.item() == 2.0, "Gradient through scalar multiplication should be the scalar"
+    assert a.grad.numpy().item() == 2.0, "Gradient through scalar multiplication should be the scalar"
     
     print("✅ Multiplication operation tests passed!")
     print(f"✅ Forward pass computing correct results")
@@ -714,42 +662,13 @@ def test_unit_multiply_operation():
 #| export
 def subtract(a: Union[Variable, float, int], b: Union[Variable, float, int]) -> Variable:
     """
-    Subtraction operation with gradient tracking.
+    Subtraction operation with gradient tracking: a - b
     
-    Args:
-        a: First operand (minuend)
-        b: Second operand (subtrahend)
-        
-    Returns:
-        Variable with difference and gradient function
-        
-    TODO: Implement subtraction with gradient computation.
-    
-    APPROACH:
-    1. Convert inputs to Variables if needed
-    2. Compute forward pass: result = a - b
-    3. Create gradient function with correct signs
-    4. Return Variable with result and grad_fn
-    
-    MATHEMATICAL RULE:
-    If z = x - y, then dz/dx = 1, dz/dy = -1
-    
-    EXAMPLE:
-    x = Variable(5.0), y = Variable(3.0)
-    z = subtract(x, y)  # z.data = 2.0
-    z.backward()        # x.grad = 1.0, y.grad = -1.0
-    
-    HINTS:
-    - Forward pass is straightforward: a - b
-    - Gradient for a is positive, for b is negative
-    - Remember to negate the gradient for b
+    Uses the rule: ∂(a-b)/∂a = 1, ∂(a-b)/∂b = -1
     """
     ### BEGIN SOLUTION
     # Convert to Variables if needed
-    if not isinstance(a, Variable):
-        a = Variable(a, requires_grad=False)
-    if not isinstance(b, Variable):
-        b = Variable(b, requires_grad=False)
+    a, b = _ensure_variables(a, b)
     
     # Forward pass
     result_data = a.data - b.data
@@ -760,7 +679,7 @@ def subtract(a: Union[Variable, float, int], b: Union[Variable, float, int]) -> 
         if a.requires_grad:
             a.backward(grad_output)
         if b.requires_grad:
-            b_grad = Variable(-grad_output.data.data)
+            b_grad = Variable(-grad_output.numpy())
             b.backward(b_grad)
     
     # Determine if result requires gradients
@@ -774,55 +693,26 @@ def matmul(a: Union[Variable, float, int], b: Union[Variable, float, int]) -> Va
     """
     Matrix multiplication operation with gradient tracking: a @ b
     
-    TODO: Implement matrix multiplication with automatic differentiation.
-    
-    STEP-BY-STEP IMPLEMENTATION:
-    1. Convert inputs to Variables if they are scalars
-    2. Compute forward pass: result = a.data @ b.data
-    3. Create gradient function implementing matmul gradients
-    4. Return new Variable with result and gradient function
-    
-    MATHEMATICAL FOUNDATION:
-    - Forward: C = A @ B
-    - Backward: ∂C/∂A = grad_C @ B^T, ∂C/∂B = A^T @ grad_C
-    - Chain rule: Gradients flow through matrix multiplication rules
-    
-    EXAMPLE USAGE:
-    ```python
-    a = Variable([[1, 2], [3, 4]], requires_grad=True)
-    b = Variable([[5, 6], [7, 8]], requires_grad=True)
-    c = matmul(a, b)  # Matrix multiply
-    c.backward()
-    print(a.grad)  # Gradients computed automatically
-    ```
-    
-    IMPLEMENTATION HINTS:
-    - Use tensor matmul: result_data = a.data @ b.data  
-    - Backward: grad_a = grad_output @ b.data.T, grad_b = a.data.T @ grad_output
-    - Handle gradient shapes correctly for broadcasting
+    Uses matrix multiplication gradients: ∂C/∂A = grad_C @ B^T, ∂C/∂B = A^T @ grad_C
     """
     ### BEGIN SOLUTION
     # Convert scalars to Variables
-    if isinstance(a, (int, float)):
-        a = Variable(a, requires_grad=False)
-    if isinstance(b, (int, float)):
-        b = Variable(b, requires_grad=False)
+    a, b = _ensure_variables(a, b)
     
     # Forward pass - matrix multiplication
-    # Use numpy directly to avoid Tensor matmul restrictions
-    result_data = Tensor(a.data.data @ b.data.data)
+    result_data = Tensor(a.numpy() @ b.numpy())
     
     # Backward function
     def grad_fn(grad_output):
         # Matrix multiplication gradients
         if a.requires_grad:
             # ∂C/∂A = grad_C @ B^T
-            grad_a_data = grad_output.data.data @ b.data.data.T
+            grad_a_data = grad_output.numpy() @ b.numpy().T
             a.backward(Variable(grad_a_data))
         
         if b.requires_grad:
             # ∂C/∂B = A^T @ grad_C  
-            grad_b_data = a.data.data.T @ grad_output.data.data
+            grad_b_data = a.numpy().T @ grad_output.numpy()
             b.backward(Variable(grad_b_data))
     
     # Return new Variable with gradient function
@@ -835,16 +725,11 @@ def divide(a: Union[Variable, float, int], b: Union[Variable, float, int]) -> Va
     """
     Division operation with gradient tracking: a / b
     
-    MATHEMATICAL FOUNDATION:
-    - Forward: z = x / y
-    - Backward: ∂z/∂x = 1/y, ∂z/∂y = -x/y²
+    Uses the quotient rule: ∂(a/b)/∂a = 1/b, ∂(a/b)/∂b = -a/b²
     """
     ### BEGIN SOLUTION
     # Convert scalars to Variables
-    if isinstance(a, (int, float)):
-        a = Variable(a, requires_grad=False)
-    if isinstance(b, (int, float)):
-        b = Variable(b, requires_grad=False)
+    a, b = _ensure_variables(a, b)
     
     # Forward pass
     result_data = a.data / b.data
@@ -853,11 +738,11 @@ def divide(a: Union[Variable, float, int], b: Union[Variable, float, int]) -> Va
     def grad_fn(grad_output):
         if a.requires_grad:
             # ∂(a/b)/∂a = 1/b
-            grad_a = Variable(grad_output.data.data / b.data.data)
+            grad_a = Variable(grad_output.numpy() / b.numpy())
             a.backward(grad_a)
         if b.requires_grad:
             # ∂(a/b)/∂b = -a/b²
-            grad_b = Variable(-grad_output.data.data * a.data.data / (b.data.data ** 2))
+            grad_b = Variable(-grad_output.numpy() * a.numpy() / (b.numpy() ** 2))
             b.backward(grad_b)
     
     requires_grad = a.requires_grad or b.requires_grad
@@ -874,7 +759,7 @@ def test_unit_subtract_operation():
     y = Variable(3.0, requires_grad=True)
     z = subtract(x, y)
     
-    assert z.data.data.item() == 2.0, "Subtraction result should be 2.0"
+    assert z.numpy().item() == 2.0, "Subtraction result should be 2.0"
     assert z.requires_grad == True, "Result should require gradients"
     
     # Test backward pass
@@ -882,17 +767,17 @@ def test_unit_subtract_operation():
     
     assert x.grad is not None, "x should have gradient"
     assert y.grad is not None, "y should have gradient"
-    assert x.grad.data.data.item() == 1.0, "∂z/∂x should be 1.0"
-    assert y.grad.data.data.item() == -1.0, "∂z/∂y should be -1.0"
+    assert x.grad.numpy().item() == 1.0, "∂z/∂x should be 1.0"
+    assert y.grad.numpy().item() == -1.0, "∂z/∂y should be -1.0"
     
     # Test with scalar
     a = Variable(4.0, requires_grad=True)
     b = subtract(a, 2.0)  # Subtract scalar
     
-    assert b.data.data.item() == 2.0, "Subtraction with scalar should work"
+    assert b.numpy().item() == 2.0, "Subtraction with scalar should work"
     
     b.backward()
-    assert a.grad.data.data.item() == 1.0, "Gradient through scalar subtraction should be 1.0"
+    assert a.grad.numpy().item() == 1.0, "Gradient through scalar subtraction should be 1.0"
     
     print("✅ Subtraction operation tests passed!")
     print(f"✅ Forward pass computing correct results")
@@ -944,17 +829,17 @@ def test_unit_chain_rule():
     result = multiply(sum_xy, diff_xy)  # (x + y) * (x - y) = 5.0
     
     # Check forward pass
-    assert result.data.data.item() == 5.0, "Forward pass should compute 5.0"
+    assert result.numpy().item() == 5.0, "Forward pass should compute 5.0"
     
     # Compute gradients
     result.backward()
     
     # Check gradients: ∂(x²-y²)/∂x = 2x, ∂(x²-y²)/∂y = -2y
-    expected_x_grad = 2 * x.data.data.item()  # 2 * 3 = 6
-    expected_y_grad = -2 * y.data.data.item()  # -2 * 2 = -4
+    expected_x_grad = 2 * x.numpy().item()  # 2 * 3 = 6
+    expected_y_grad = -2 * y.numpy().item()  # -2 * 2 = -4
     
-    assert abs(x.grad.data.data.item() - expected_x_grad) < 1e-6, f"x gradient should be {expected_x_grad}"
-    assert abs(y.grad.data.data.item() - expected_y_grad) < 1e-6, f"y gradient should be {expected_y_grad}"
+    assert abs(x.grad.numpy().item() - expected_x_grad) < 1e-6, f"x gradient should be {expected_x_grad}"
+    assert abs(y.grad.numpy().item() - expected_y_grad) < 1e-6, f"y gradient should be {expected_y_grad}"
     
     # Test more complex expression: f(x) = (x + 1) * (x + 2) * (x + 3)
     x2 = Variable(1.0, requires_grad=True)
@@ -966,7 +851,7 @@ def test_unit_chain_rule():
     product1 = multiply(term1, term2)  # (x + 1) * (x + 2) = 6.0
     result2 = multiply(product1, term3)  # * (x + 3) = 24.0
     
-    assert result2.data.data.item() == 24.0, "Complex expression should compute 24.0"
+    assert result2.numpy().item() == 24.0, "Complex expression should compute 24.0"
     
     result2.backward()
     
@@ -974,7 +859,7 @@ def test_unit_chain_rule():
     # At x=1: f'(1) = 3 + 12 + 11 = 26
     expected_grad = 3 * (1.0**2) + 12 * 1.0 + 11  # 26
     
-    assert abs(x2.grad.data.data.item() - expected_grad) < 1e-6, f"Complex gradient should be {expected_grad}"
+    assert abs(x2.grad.numpy().item() - expected_grad) < 1e-6, f"Complex gradient should be {expected_grad}"
     
     print("✅ Chain rule tests passed!")
     print(f"✅ Simple expression: (x+y)*(x-y) = x²-y²")
@@ -1067,13 +952,13 @@ def test_module_neural_network_training():
         
         # Update parameters
         if w.grad is not None:
-            w.data = Tensor(w.data.data - learning_rate * w.grad.data.data)
+            w.data = Tensor(w.numpy() - learning_rate * w.grad.numpy())
         if b.grad is not None:
-            b.data = Tensor(b.data.data - learning_rate * b.grad.data.data)
+            b.data = Tensor(b.numpy() - learning_rate * b.grad.numpy())
     
     # Check that parameters converged to correct values
-    final_w = w.data.data.item()
-    final_b = b.data.data.item()
+    final_w = w.numpy().item()
+    final_b = b.numpy().item()
     
     print(f"Final weights: w = {final_w:.3f}, b = {final_b:.3f}")
     print(f"Target weights: w = 2.000, b = 1.000")
@@ -1087,7 +972,7 @@ def test_module_neural_network_training():
     test_prediction = add(multiply(w, test_x), b)
     expected_output = 2.0 * 5.0 + 1.0  # 11.0
     
-    prediction_error = abs(test_prediction.data.data.item() - expected_output)
+    prediction_error = abs(test_prediction.numpy().item() - expected_output)
     assert prediction_error < 0.5, f"Prediction error should be small, got {prediction_error}"
     
     print("✅ Neural network training comprehensive tests passed!")
@@ -1434,7 +1319,7 @@ class AutogradSystemsProfiler:
             no_checkpoint_memory = base_graph_depth * base_memory_per_layer
             
             # With checkpointing: only store every freq-th activation
-            checkpointed_memory = (base_graph_depth // freq + 1) * base_memory_per_layer
+            checkpointed_memory = max(base_memory_per_layer, (base_graph_depth // freq + 1) * base_memory_per_layer)
             memory_savings = no_checkpoint_memory - checkpointed_memory
             memory_reduction_pct = (memory_savings / no_checkpoint_memory) * 100
             

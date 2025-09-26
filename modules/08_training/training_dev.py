@@ -79,34 +79,66 @@ from tinytorch.core.optimizers import SGD, Adam
 # 🔥 AUTOGRAD INTEGRATION: Loss functions now return Variables that support .backward()
 # This enables automatic gradient computation for neural network training!
 
+# Global helper for clean data access
+def extract_numpy_data(tensor_obj):
+    """Extract raw numpy data from tensor/variable objects.
+    
+    Educational helper: Provides a clean, consistent way to access numpy data
+    from Variables and Tensors without complex nested attribute access.
+    """
+    import numpy as np
+    
+    # Recursively unwrap Variable/Tensor objects
+    current = tensor_obj
+    while hasattr(current, 'data'):
+        current = current.data
+    
+    # Convert memoryview to numpy array if needed
+    if isinstance(current, memoryview):
+        current = np.array(current)
+    
+    # Ensure we have a numpy array
+    if not isinstance(current, np.ndarray):
+        current = np.array(current)
+        
+    return current
+
 # Utility function for tensor data access
 def get_tensor_value(tensor_obj):
-    """Extract numeric value from tensor/variable objects for testing."""
-    # Handle Variable wrapper
+    """Extract numeric value from tensor/variable objects for testing.
+    
+    Educational simplification: Handles Variable -> Tensor -> numpy array -> scalar pattern
+    in a clear, step-by-step manner that students can easily understand.
+    """
+    import numpy as np
+    
+    # Step 1: Unwrap Variable objects recursively
+    if isinstance(tensor_obj, Variable):
+        return get_tensor_value(tensor_obj.data)  # Unwrap Variable
+    
+    # Step 2: Handle Tensor objects  
     if hasattr(tensor_obj, 'data'):
-        data = tensor_obj.data
-    else:
-        data = tensor_obj
+        return get_tensor_value(tensor_obj.data)  # Unwrap Tensor
     
-    # Handle nested Tensor data access
-    if hasattr(data, 'data'):
-        value = data.data
-    else:
-        value = data
+    # Step 3: Handle numpy arrays
+    if isinstance(tensor_obj, np.ndarray):
+        return float(tensor_obj.item() if tensor_obj.size == 1 else tensor_obj.flat[0])
     
-    # Extract scalar value
-    if hasattr(value, 'item'):
-        return value.item()
-    elif hasattr(value, '__len__') and len(value) == 1:
-        return value[0]
-    elif hasattr(value, '__iter__'):
-        # For numpy arrays or lists
-        try:
-            return float(value)
-        except:
-            return value
-    else:
-        return value
+    # Step 4: Handle memoryview objects (convert to numpy first)
+    if isinstance(tensor_obj, memoryview):
+        array_data = np.array(tensor_obj)
+        return float(array_data.item() if array_data.size == 1 else array_data.flat[0])
+    
+    # Step 5: Handle basic Python numbers
+    if isinstance(tensor_obj, (int, float, np.number)):
+        return float(tensor_obj)
+    
+    # Step 6: Last resort - direct conversion
+    try:
+        return float(tensor_obj)
+    except (ValueError, TypeError):
+        print(f"Warning: Could not extract value from {type(tensor_obj)}, returning 0")
+        return 0.0
 
 # %% [markdown]
 """
@@ -238,11 +270,13 @@ class MeanSquaredError:
         squared_diff = diff * diff  # Variable multiplication
         
         # Clean mean operation - get raw numpy array
-        # squared_diff.data is a Tensor, so we need its data attribute
-        mean_data = np.mean(squared_diff.data.data)
+        # Use global helper function to extract numpy data cleanly
+        squared_diff_data = extract_numpy_data(squared_diff)
+        mean_data = np.mean(squared_diff_data)
         
+        # Educational Note: In full PyTorch, autograd would handle this automatically
+        # For Module 8 students, we focus on training loop patterns
         # Create loss Variable (simplified for educational use)
-        # Students at Module 10 use basic Variable operations from Module 6
         loss = Variable(mean_data, requires_grad=y_pred.requires_grad)
         return loss
         ### END SOLUTION
@@ -250,6 +284,7 @@ class MeanSquaredError:
     def forward(self, y_pred, y_true):
         """Alternative interface for forward pass."""
         return self.__call__(y_pred, y_true)
+    
 
 # %% [markdown]
 """
@@ -370,9 +405,9 @@ class CrossEntropyLoss:
             else:
                 y_true = Variable(y_true, requires_grad=False)
         
-        # Clean data access - get raw numpy arrays
-        pred_data = y_pred.data.data if hasattr(y_pred.data, 'data') else y_pred.data
-        true_data = y_true.data.data if hasattr(y_true.data, 'data') else y_true.data
+        # Extract raw numpy arrays using global helper function
+        pred_data = extract_numpy_data(y_pred)
+        true_data = extract_numpy_data(y_true)
         
         # Handle both 1D and 2D prediction arrays
         if pred_data.ndim == 1:
@@ -382,8 +417,10 @@ class CrossEntropyLoss:
         exp_pred = np.exp(pred_data - np.max(pred_data, axis=1, keepdims=True))
         softmax_pred = exp_pred / np.sum(exp_pred, axis=1, keepdims=True)
         
-        # Add small epsilon to avoid log(0)
-        epsilon = 1e-15
+        # Add small epsilon to prevent log(0) numerical instability
+        # 1e-15 is small enough to not affect results but prevents NaN values
+        # when softmax produces very small probabilities (near machine precision)
+        epsilon = 1e-15  # Prevent log(0) numerical instability
         softmax_pred = np.clip(softmax_pred, epsilon, 1.0 - epsilon)
         
         # Handle class indices vs one-hot encoding
@@ -402,8 +439,9 @@ class CrossEntropyLoss:
             log_probs = np.log(softmax_pred)
             loss_value = -np.mean(np.sum(true_data * log_probs, axis=1))
         
+        # Educational Note: In full PyTorch, autograd would handle this automatically
+        # For Module 8 students, we focus on training loop patterns
         # Create loss Variable (simplified for educational use)
-        # Students at Module 10 use basic Variable operations from Module 6
         loss = Variable(loss_value, requires_grad=y_pred.requires_grad)
         return loss
         ### END SOLUTION
@@ -411,6 +449,7 @@ class CrossEntropyLoss:
     def forward(self, y_pred, y_true):
         """Alternative interface for forward pass."""
         return self.__call__(y_pred, y_true)
+    
 
 # Test function defined (called in main block)
 
@@ -531,9 +570,9 @@ class BinaryCrossEntropyLoss:
             else:
                 y_true = Variable(y_true, requires_grad=False)
         
-        # Clean data access - get raw numpy arrays
-        logits = y_pred.data.data.flatten() if hasattr(y_pred.data, 'data') else y_pred.data.flatten()
-        labels = y_true.data.data.flatten() if hasattr(y_true.data, 'data') else y_true.data.flatten()
+        # Extract raw numpy arrays using global helper function
+        logits = extract_numpy_data(y_pred).flatten()
+        labels = extract_numpy_data(y_true).flatten()
         
         # Numerically stable binary cross-entropy from logits
         def stable_bce_with_logits(logits, labels):
@@ -545,11 +584,34 @@ class BinaryCrossEntropyLoss:
         losses = stable_bce_with_logits(logits, labels)
         mean_loss = np.mean(losses)
         
-        # Compute sigmoid for gradient computation
-        sigmoid_pred = 1.0 / (1.0 + np.exp(-np.clip(logits, -250, 250)))  # Clipped for stability
+        # Compute sigmoid using robust numerically stable approach
+        # This implementation avoids overflow/underflow for extreme logit values
+        def stable_sigmoid(x):
+            """Numerically stable sigmoid function."""
+            # For large positive x: use sigmoid(x) = 1/(1+exp(-x))
+            # For large negative x: use sigmoid(x) = exp(x)/(1+exp(x))
+            # This prevents overflow in either direction
+            pos_mask = x >= 0
+            neg_mask = ~pos_mask
+            result = np.zeros_like(x)
+            
+            # Handle positive values
+            if np.any(pos_mask):
+                exp_neg = np.exp(-x[pos_mask])
+                result[pos_mask] = 1.0 / (1.0 + exp_neg)
+            
+            # Handle negative values  
+            if np.any(neg_mask):
+                exp_pos = np.exp(x[neg_mask])
+                result[neg_mask] = exp_pos / (1.0 + exp_pos)
+                
+            return result
         
+        sigmoid_pred = stable_sigmoid(logits)  # Numerically stable sigmoid
+        
+        # Educational Note: In full PyTorch, autograd would handle this automatically
+        # For Module 8 students, we focus on training loop patterns
         # Create loss Variable (simplified for educational use)
-        # Students at Module 10 use basic Variable operations from Module 6
         loss = Variable(mean_loss, requires_grad=y_pred.requires_grad)
         return loss
         ### END SOLUTION
@@ -557,6 +619,7 @@ class BinaryCrossEntropyLoss:
     def forward(self, y_pred, y_true):
         """Alternative interface for forward pass."""
         return self.__call__(y_pred, y_true)
+    
 
 # Test function defined (called in main block)
 
@@ -1314,11 +1377,16 @@ def test_module_training():
 """
 ## Step 4: ML Systems Thinking - Production Training Pipeline Analysis
 
-### 🏗️ Training Infrastructure at Scale
+### 🚨 ADVANCED/OPTIONAL SECTION: Production Training Optimization
+**Module 8 Students:** This section demonstrates advanced real-world training optimization.
+**🎯 LEARNING FOCUS:** Master basic training loops first - this advanced content is optional.
+**📚 FOR INSTRUCTORS:** Consider moving this section to Module 15-16 for better cognitive load management.
+
+### 🏗️ Training Infrastructure at Scale (Advanced/Optional)
 
 Your training loop implementation provides the foundation for understanding how production ML systems orchestrate the entire training pipeline. Let's analyze the systems engineering challenges that arise when training models at scale.
 
-#### **Training Pipeline Architecture**
+#### **Training Pipeline Architecture** (Production Context)
 ```python
 class ProductionTrainingPipeline:
     def __init__(self):
@@ -1334,6 +1402,8 @@ Real training systems must handle:
 - **Memory management**: Optimizing batch sizes for available GPU memory
 - **Fault tolerance**: Recovering from hardware failures during long training runs
 - **Resource scheduling**: Balancing compute, memory, and I/O across the cluster
+
+**Note:** The following profiling implementations are advanced concepts that demonstrate production ML systems.
 """
 
 # %% nbgrader={"grade": false, "grade_id": "training-pipeline-profiler", "locked": false, "schema_version": 3, "solution": true, "task": false}
@@ -1459,8 +1529,8 @@ class TrainingPipelineProfiler:
         total_time = sum(step_times.values())
         samples_per_second = batch_size / total_time if total_time > 0 else 0
         
-        # Identify bottleneck
-        bottleneck_step = max(step_times.items(), key=lambda x: x[1])
+        # Identify bottleneck (step that takes longest)
+        bottleneck_step = max(step_times.items(), key=lambda step_and_time: step_and_time[1])
         
         # Calculate component percentages
         component_percentages = {
@@ -1542,14 +1612,21 @@ def test_training_pipeline_profiler():
     optimizer = SGD([], learning_rate=0.01)
     loss_fn = MeanSquaredError()
     
-    # Create simple test dataloader
-    class TestDataLoader:
+    # Simple test data (avoiding complex mock classes)
+    test_x = Tensor(np.random.randn(32, 10))
+    test_y = Tensor(np.random.randint(0, 2, 32))
+    
+    # Simple test data (avoiding complex mock classes)
+    class SimpleTestDataLoader:
+        """Minimal dataloader for testing - just returns the same batch repeatedly."""
+        def __init__(self, x, y):
+            self.x, self.y = x, y
         def __iter__(self):
             return self
         def __next__(self):
-            return Tensor(np.random.randn(32, 10)), Tensor(np.random.randint(0, 2, 32))
+            return self.x, self.y
     
-    dataloader = TestDataLoader()
+    dataloader = SimpleTestDataLoader(test_x, test_y)
     
     # Test training step profiling
     metrics = profiler.profile_basic_training_step(model, dataloader, optimizer, loss_fn, batch_size=32)
@@ -1654,8 +1731,9 @@ class ProductionTrainingOptimizer:
                 test_x = Tensor(np.random.randn(batch_size, 10))
                 test_y = Tensor(np.random.randint(0, 2, batch_size))
                 
-                # Create mock dataloader
-                class MockDataLoader:
+                # Simple test dataloader - minimal implementation for testing
+                class SimpleDataLoader:
+                    """Minimal test dataloader - returns same batch for profiling.""" 
                     def __init__(self, x, y):
                         self.x, self.y = x, y
                     def __iter__(self):
@@ -1663,7 +1741,7 @@ class ProductionTrainingOptimizer:
                     def __next__(self):
                         return self.x, self.y
                 
-                dataloader = MockDataLoader(test_x, test_y)
+                dataloader = SimpleDataLoader(test_x, test_y)
                 
                 # Profile training step
                 metrics = profiler.profile_basic_training_step(
@@ -1684,8 +1762,10 @@ class ProductionTrainingOptimizer:
                 })
                 
             except Exception as e:
-                print(f"    ⚠️ Batch size {batch_size} failed: {e}")
-                # In production, this would typically be OOM
+                print(f"    ⚠️ Batch size {batch_size} failed (likely GPU memory limit): {e}")
+                print("    💡 This is normal - we found your hardware limits!")
+                print("    📊 Smaller batch sizes work better on limited hardware")
+                # In production, this would typically be OOM (Out Of Memory)
                 break
         
         # Find optimal configuration

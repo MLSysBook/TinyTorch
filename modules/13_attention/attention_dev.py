@@ -49,6 +49,12 @@ import os
 import sys
 from typing import Union, List, Optional, Tuple, Dict
 
+# Constants for attention computation
+ATTENTION_MASK_VALUE = -1e9  # Large negative value that becomes ~0 after softmax
+                             # -1e9 chosen to avoid numerical underflow while ensuring masking
+NUMERICAL_STABILITY_EPSILON = 1e-8  # For numerical stability in computations
+FLOAT32_BYTES = 4  # Size of float32 in bytes for memory calculations
+
 # Import our Tensor class - try from package first, then from local module
 try:
     from tinytorch.core.tensor import Tensor
@@ -967,7 +973,7 @@ class AttentionProfiler:
             output_memory_mb = output.data.nbytes / (1024 * 1024)
             
             # Attention matrix memory (batch_size * seq_len * seq_len)
-            attention_matrix_memory_mb = (batch_size * seq_len * seq_len * 4) / (1024 * 1024)  # 4 bytes per float32
+            attention_matrix_memory_mb = (batch_size * seq_len * seq_len * FLOAT32_BYTES) / (1024 * 1024)
             
             # Calculate throughput
             total_operations = batch_size * seq_len * seq_len * embed_dim  # Rough estimate
@@ -1139,13 +1145,13 @@ class AttentionProfiler:
         for seq_len in seq_lengths:
             # Without cache: recompute K,V for all tokens every generation step
             # Memory: attention matrices for all positions
-            no_cache_attention_memory = batch_size * seq_len * seq_len * 4 / (1024 * 1024)  # bytes -> MB
-            no_cache_kv_memory = batch_size * seq_len * embed_dim * 2 * 4 / (1024 * 1024)  # K + V
+            no_cache_attention_memory = batch_size * seq_len * seq_len * FLOAT32_BYTES / (1024 * 1024)  # bytes -> MB
+            no_cache_kv_memory = batch_size * seq_len * embed_dim * 2 * FLOAT32_BYTES / (1024 * 1024)  # K + V
             no_cache_total = no_cache_attention_memory + no_cache_kv_memory
             
             # With cache: store K,V, only compute attention for new token
-            cache_storage = batch_size * seq_len * embed_dim * 2 * 4 / (1024 * 1024)  # K + V storage
-            cache_attention_memory = batch_size * 1 * seq_len * 4 / (1024 * 1024)  # Only new token attention
+            cache_storage = batch_size * seq_len * embed_dim * 2 * FLOAT32_BYTES / (1024 * 1024)  # K + V storage
+            cache_attention_memory = batch_size * 1 * seq_len * FLOAT32_BYTES / (1024 * 1024)  # Only new token attention
             cache_total = cache_storage + cache_attention_memory
             
             # Compute benefits
@@ -1212,7 +1218,7 @@ def analyze_attention_system_design():
         # Calculate attention memory per layer
         batch_size = 1
         seq_len = config['seq_length']
-        attention_matrix_memory_mb = (batch_size * seq_len * seq_len * 4) / (1024 * 1024)
+        attention_matrix_memory_mb = (batch_size * seq_len * seq_len * FLOAT32_BYTES) / (1024 * 1024)
         
         # Total attention memory across all layers
         total_attention_memory_mb = attention_matrix_memory_mb * config['num_layers']
@@ -1594,7 +1600,7 @@ if __name__ == "__main__":
     processing_time = time.time() - start_time
     
     # Calculate attention matrix memory
-    attention_memory_mb = (batch_size * num_heads * seq_length * seq_length * 4) / (1024 * 1024)
+    attention_memory_mb = (batch_size * num_heads * seq_length * seq_length * FLOAT32_BYTES) / (1024 * 1024)
     output_memory_mb = output.data.nbytes / (1024 * 1024)
     
     print(f"\nPerformance analysis:")
@@ -1607,7 +1613,7 @@ if __name__ == "__main__":
     print(f"\nScaling limits:")
     max_gpu_memory_gb = 24  # Typical high-end GPU
     max_attention_memory_gb = max_gpu_memory_gb * 0.5  # Assume 50% for attention
-    max_seq_len_theoretical = int(math.sqrt(max_attention_memory_gb * 1024 * 1024 * 1024 / (batch_size * num_heads * 4)))
+    max_seq_len_theoretical = int(math.sqrt(max_attention_memory_gb * 1024 * 1024 * 1024 / (batch_size * num_heads * FLOAT32_BYTES)))
     
     print(f"  Theoretical max sequence (24GB GPU): ~{max_seq_len_theoretical} tokens")
     print(f"  Current sequence uses: {attention_memory_mb:.1f}MB")

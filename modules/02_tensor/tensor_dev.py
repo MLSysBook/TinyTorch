@@ -259,80 +259,41 @@ class Tensor:
         TODO: Implement tensor creation with proper type handling.
 
         STEP-BY-STEP:
-        1. Check if data is a scalar (int/float) - convert to numpy array
-        2. Check if data is a list - convert to numpy array  
-        3. Check if data is already a numpy array - use as-is
-        4. Apply dtype conversion if specified
-        5. Store the result in self._data
+        1. Convert input data to numpy array using np.array()
+        2. Apply dtype conversion if specified
+        3. Set default float32 for float64 arrays (ML convention)
+        4. Store the result in self._data
+        5. Initialize gradient tracking attributes
 
         EXAMPLE:
-        Tensor(5) → stores np.array(5)
-        Tensor([1, 2, 3]) → stores np.array([1, 2, 3])
-        Tensor(np.array([1, 2, 3])) → stores the array directly
+        Tensor(5) → stores np.array(5, dtype='int32')
+        Tensor([1.0, 2.0, 3.0]) → stores np.array([1.0, 2.0, 3.0], dtype='float32')
+        Tensor(np.array([1, 2, 3])) → stores the array with consistent dtype
 
         HINTS:
-        - Use isinstance() to check data types
-        - Use np.array() for conversion
-        - Handle dtype parameter for type conversion
+        - Let NumPy handle most type conversions with np.array()
+        - Convert float64 to float32 by default (ML best practice)
         - Store the array in self._data
+        - Initialize gradient tracking for later modules
         """
         ### BEGIN SOLUTION
-        # Convert input to numpy array
-        if isinstance(data, (int, float, np.number)):
-            # Handle Python and NumPy scalars
-            if dtype is None:
-                # Auto-detect type: int for integers, float32 for floats
-                if isinstance(data, int) or (isinstance(data, np.number) and np.issubdtype(type(data), np.integer)):
-                    dtype = 'int32'
-                else:
-                    dtype = 'float32'
-            self._data = np.array(data, dtype=dtype)
-        elif isinstance(data, list):
-            # Let NumPy auto-detect type, then convert if needed
-            temp_array = np.array(data)
-            if dtype is None:
-                # Use NumPy's auto-detected type, but prefer float32 for floats
-                if temp_array.dtype == np.float64:
-                    dtype = 'float32'
-                else:
-                    dtype = str(temp_array.dtype)
-            self._data = np.array(data, dtype=dtype)
-        elif isinstance(data, np.ndarray):
-            # Already a numpy array - avoid unnecessary copies (PyTorch pattern)
-            if dtype is None:
-                # Keep existing dtype, but prefer float32 for float64
-                if data.dtype == np.float64:
-                    dtype = 'float32'
-                else:
-                    dtype = str(data.dtype)
-            
-            # Only copy/convert when necessary - mimic PyTorch memory efficiency
-            if dtype != str(data.dtype):
-                self._data = data.astype(dtype)  # Type conversion creates new array
-            else:
-                self._data = data  # Share memory when possible - zero-copy view
-                
-        elif isinstance(data, Tensor):
-            # Input is another Tensor - avoid defensive copying
-            if dtype is None:
-                # Keep existing dtype, but prefer float32 for float64
-                if data.data.dtype == np.float64:
-                    dtype = 'float32'
-                else:
-                    dtype = str(data.data.dtype)
-            
-            # Efficient tensor creation - only copy when type conversion needed
-            if dtype != str(data.data.dtype):
-                self._data = data.data.astype(dtype)  # Type conversion creates new array
-            else:
-                self._data = data.data  # Share underlying array when types match
+        # Convert input to numpy array - let NumPy handle most conversions
+        if isinstance(data, Tensor):
+            # Input is another Tensor - share data efficiently
+            self._data = data.data.copy() if dtype else data.data
         else:
-            # Try to convert unknown types
+            # Convert to numpy array
             self._data = np.array(data, dtype=dtype)
-
-        # Initialize gradient tracking attributes
+        
+        # Apply ML-friendly dtype defaults
+        if dtype is None and self._data.dtype == np.float64:
+            self._data = self._data.astype(np.float32)  # ML convention: prefer float32
+        elif dtype and self._data.dtype != np.dtype(dtype):
+            self._data = self._data.astype(dtype)
+        
+        # Initialize gradient tracking attributes (used in Module 9 - Autograd)
         self.requires_grad = requires_grad
-        self.grad = None if requires_grad else None
+        self.grad = None
         self._grad_fn = None
         ### END SOLUTION
 
@@ -454,14 +415,14 @@ class Tensor:
 
     def __repr__(self) -> str:
         """
-        String representation.
+        String representation with size limits for readability.
 
         TODO: Create a clear string representation of the tensor.
 
         STEP-BY-STEP IMPLEMENTATION:
-        1. Convert the numpy array to a list using .tolist()
-        2. Get shape and dtype information from properties
-        3. Format as "Tensor([data], shape=shape, dtype=dtype)"
+        1. Check tensor size - if large, show shape/dtype only
+        2. For small tensors, convert numpy array to list using .tolist()
+        3. Format appropriately based on size
         4. Return the formatted string
 
         LEARNING CONNECTIONS:
@@ -469,23 +430,29 @@ class Tensor:
         - Debugging: Clear tensor representation speeds debugging
         - Jupyter notebooks: Good __repr__ improves data exploration
         - Logging: Production systems log tensor info for monitoring
-        - Education: Students understand tensors better with clear output
+        - Large tensors: Shape/dtype more useful than full data for big arrays
 
         APPROACH:
-        1. Convert the numpy array to a list for readable output
-        2. Include the shape and dtype information
-        3. Format: "Tensor([data], shape=shape, dtype=dtype)"
+        1. For large tensors (>20 elements): Show shape and dtype only
+        2. For small tensors: Show data, shape, and dtype
+        3. Keep format consistent and readable
 
         EXAMPLE:
         Tensor([1, 2, 3]) → "Tensor([1, 2, 3], shape=(3,), dtype=int32)"
+        Large tensor → "Tensor(shape=(1000, 1000), dtype=float32)"
 
         HINTS:
-        - Use .tolist() to convert numpy array to list
-        - Include shape and dtype information
-        - Keep format consistent and readable
+        - Check self.size to determine if tensor is large
+        - Use .tolist() for small tensors, shape/dtype for large ones
+        - Include shape and dtype information for debugging
         """
         ### BEGIN SOLUTION
-        return f"Tensor({self._data.tolist()}, shape={self.shape}, dtype={self.dtype})"
+        if self.size > 20:
+            # Large tensors: show shape and dtype only for readability
+            return f"Tensor(shape={self.shape}, dtype={self.dtype})"
+        else:
+            # Small tensors: show data, shape, and dtype
+            return f"Tensor({self._data.tolist()}, shape={self.shape}, dtype={self.dtype})"
         ### END SOLUTION
 
     def item(self) -> Union[int, float]:
@@ -544,47 +511,9 @@ class Tensor:
         result_data = self._data + other._data
         result = Tensor(result_data)
         
-        # Set gradient tracking if either input requires gradients
-        if self.requires_grad or other.requires_grad:
-            result.requires_grad = True
-            
-            def grad_fn(grad):
-                # Addition gradient: gradient flows equally to both inputs
-                if self.requires_grad:
-                    # Handle broadcasting by summing over added dimensions
-                    grad_self = grad.data
-                    if self.shape != grad.shape:
-                        # Sum over broadcasted dimensions
-                        sum_axes = []
-                        for i in range(len(grad.shape) - len(self.shape)):
-                            sum_axes.append(i)
-                        if sum_axes:
-                            grad_self = np.sum(grad_self, axis=tuple(sum_axes))
-                        # Sum over dimensions where self had size 1 but result doesn't
-                        for i, (s1, s2) in enumerate(zip(self.shape, grad_self.shape)):
-                            if s1 == 1 and s2 > 1:
-                                grad_self = np.sum(grad_self, axis=i, keepdims=True)
-                        grad_self = grad_self.reshape(self.shape)
-                    self.backward(Tensor(grad_self))
-                
-                if other.requires_grad:
-                    # Handle broadcasting by summing over added dimensions
-                    grad_other = grad.data
-                    if other.shape != grad.shape:
-                        # Sum over broadcasted dimensions
-                        sum_axes = []
-                        for i in range(len(grad.shape) - len(other.shape)):
-                            sum_axes.append(i)
-                        if sum_axes:
-                            grad_other = np.sum(grad_other, axis=tuple(sum_axes))
-                        # Sum over dimensions where other had size 1 but result doesn't
-                        for i, (s1, s2) in enumerate(zip(other.shape, grad_other.shape)):
-                            if s1 == 1 and s2 > 1:
-                                grad_other = np.sum(grad_other, axis=i, keepdims=True)
-                        grad_other = grad_other.reshape(other.shape)
-                    other.backward(Tensor(grad_other))
-            
-            result._grad_fn = grad_fn
+        # TODO: Gradient tracking will be added in Module 9 (Autograd)
+        # This enables automatic differentiation for neural network training
+        # For now, we focus on the core tensor operation
         
         return result
         ### END SOLUTION
@@ -625,43 +554,9 @@ class Tensor:
         result_data = self._data * other._data
         result = Tensor(result_data)
         
-        # Set gradient tracking if either input requires gradients
-        if self.requires_grad or other.requires_grad:
-            result.requires_grad = True
-            
-            def grad_fn(grad):
-                # Multiplication gradient: d/da (a*b) = b, d/db (a*b) = a
-                if self.requires_grad:
-                    grad_self = grad.data * other._data
-                    if self.shape != grad_self.shape:
-                        # Handle broadcasting
-                        sum_axes = []
-                        for i in range(len(grad_self.shape) - len(self.shape)):
-                            sum_axes.append(i)
-                        if sum_axes:
-                            grad_self = np.sum(grad_self, axis=tuple(sum_axes))
-                        for i, (s1, s2) in enumerate(zip(self.shape, grad_self.shape)):
-                            if s1 == 1 and s2 > 1:
-                                grad_self = np.sum(grad_self, axis=i, keepdims=True)
-                        grad_self = grad_self.reshape(self.shape)
-                    self.backward(Tensor(grad_self))
-                
-                if other.requires_grad:
-                    grad_other = grad.data * self._data
-                    if other.shape != grad_other.shape:
-                        # Handle broadcasting
-                        sum_axes = []
-                        for i in range(len(grad_other.shape) - len(other.shape)):
-                            sum_axes.append(i)
-                        if sum_axes:
-                            grad_other = np.sum(grad_other, axis=tuple(sum_axes))
-                        for i, (s1, s2) in enumerate(zip(other.shape, grad_other.shape)):
-                            if s1 == 1 and s2 > 1:
-                                grad_other = np.sum(grad_other, axis=i, keepdims=True)
-                        grad_other = grad_other.reshape(other.shape)
-                    other.backward(Tensor(grad_other))
-            
-            result._grad_fn = grad_fn
+        # TODO: Gradient tracking will be added in Module 9 (Autograd)
+        # This enables automatic differentiation for neural network training
+        # For now, we focus on the core tensor operation
         
         return result
         ### END SOLUTION
@@ -859,20 +754,20 @@ class Tensor:
 
     def matmul(self, other: 'Tensor') -> 'Tensor':
         """
-        Perform matrix multiplication between two tensors using explicit loops.
+        Matrix multiplication with both educational and efficient implementations.
         
-        This implementation uses triple-nested loops for educational understanding
-        of the fundamental operations. Module 15 will show the optimization progression
-        from loops → blocking → vectorized operations.
+        Shows the learning progression from basic loops to optimized operations.
+        This dual approach helps students understand both the concept and production reality.
 
         TODO: Implement matrix multiplication.
 
         STEP-BY-STEP IMPLEMENTATION:
         1. Extract numpy arrays from both tensors
         2. Check tensor shapes for compatibility
-        3. Use triple-nested loops for educational understanding
-        4. Create new Tensor object with the result
-        5. Return the new tensor
+        3. For small tensors: use educational loops to show concept
+        4. For larger tensors: use NumPy's optimized implementation
+        5. Create new Tensor object with the result
+        6. Return the new tensor
 
         LEARNING CONNECTIONS:
         Real-world relevance:
@@ -882,24 +777,23 @@ class Tensor:
         - Batch processing: Matrix ops enable parallel computation
 
         EDUCATIONAL APPROACH:
-        1. Show every operation explicitly with loops
-        2. Build understanding before optimizing in Module 15
-        3. Connect mathematical operations to computational patterns
+        1. Small examples: Show every operation explicitly with loops
+        2. Larger examples: Use NumPy's optimized BLAS implementation
+        3. Connect mathematical operations to performance considerations
 
         EXAMPLE:
         Tensor([[1, 2], [3, 4]]) @ Tensor([[5, 6], [7, 8]]) → Tensor([[19, 22], [43, 50]])
 
         HINTS:
-        - This is intentionally simple for education, not optimized
-        - Module 15 will show the progression to high-performance implementations
-        - Understanding loops helps appreciate vectorization benefits
+        - Small tensors show educational loops for understanding
+        - Large tensors use optimized NumPy for realistic performance
+        - This progression mirrors real ML framework design
         """
         ### BEGIN SOLUTION
-        # Matrix multiplication using explicit loops for educational understanding
         a_data = self._data
         b_data = other._data
         
-        # Get dimensions and validate compatibility
+        # Validate tensor shapes
         if len(a_data.shape) != 2 or len(b_data.shape) != 2:
             raise ValueError("matmul requires 2D tensors")
         
@@ -909,23 +803,38 @@ class Tensor:
         if k != k2:
             raise ValueError(f"Inner dimensions must match: {k} != {k2}")
         
+        # For small tensors (≤ 4x4): Educational loops to show the concept
+        if m <= 4 and n <= 4 and k <= 4:
+            return self._matmul_educational(other)
+        
+        # For larger tensors: Use NumPy's optimized implementation (production approach)
+        result_data = np.dot(a_data, b_data)
+        return Tensor(result_data)
+        ### END SOLUTION
+
+    def _matmul_educational(self, other: 'Tensor') -> 'Tensor':
+        """
+        Educational matrix multiplication using explicit loops.
+        
+        This shows the fundamental computation clearly for small examples.
+        Understanding this helps appreciate why optimized BLAS libraries are essential.
+        """
+        a_data = self._data
+        b_data = other._data
+        m, k = a_data.shape
+        k2, n = b_data.shape
+        
         # Initialize result matrix
         result = np.zeros((m, n), dtype=a_data.dtype)
         
         # Triple nested loops - educational, shows every operation
-        # This is intentionally simple to understand the fundamental computation
-        # Module 15 will show the optimization journey:
-        #   Step 1 (here): Educational loops - slow but clear
-        #   Step 2: Loop blocking for cache efficiency  
-        #   Step 3: Vectorized operations with NumPy
-        #   Step 4: GPU acceleration and BLAS libraries
+        # This demonstrates the O(n³) complexity clearly
         for i in range(m):                      # For each row in result
             for j in range(n):                  # For each column in result
                 for k_idx in range(k):          # Dot product: sum over inner dimension
                     result[i, j] += a_data[i, k_idx] * b_data[k_idx, j]
         
         return Tensor(result)
-        ### END SOLUTION
 
     def __matmul__(self, other: 'Tensor') -> 'Tensor':
         """
@@ -1005,14 +914,18 @@ class Tensor:
         """
         return self._data
     
+# ============================================================================
+# ADVANCED: NumPy Integration Protocols
+# These methods enable tensors to work seamlessly with NumPy functions
+# You can skip these on first reading - they're for integration with scientific Python
+# ============================================================================
+
     def __array__(self, dtype=None) -> np.ndarray:
         """
-        NumPy array protocol implementation.
+        Enable np.array(tensor) and np.allclose(tensor, array).
         
-        This enables NumPy functions to work directly with Tensor objects
-        by automatically converting them to arrays when needed.
-        
-        This is the key method that fixes np.allclose() compatibility!
+        This protocol method allows NumPy functions to automatically convert
+        Tensor objects to arrays when needed for scientific computing integration.
         
         Args:
             dtype: Optional dtype to cast to (NumPy may request this)
@@ -1022,8 +935,8 @@ class Tensor:
             
         Examples:
             tensor = Tensor([1, 2, 3])
-            np.sum(tensor)        # Works automatically
-            np.allclose(tensor, [1, 2, 3])  # Now works!
+            np.sum(tensor)        # Works automatically via this method
+            np.allclose(tensor, [1, 2, 3])  # Also works!
         """
         if dtype is not None:
             return self._data.astype(dtype)
@@ -1031,12 +944,12 @@ class Tensor:
     
     def __array_ufunc__(self, ufunc, method, *inputs, **kwargs):
         """
-        NumPy universal function protocol implementation.
+        Enable NumPy universal functions with Tensor objects.
         
-        This enables NumPy ufuncs to work with Tensor objects by converting
-        them to arrays first, then wrapping results back in Tensor objects.
+        This protocol allows NumPy ufuncs (like np.maximum, np.minimum) to work
+        with Tensor objects by converting them to arrays and wrapping results.
         
-        This fixes advanced NumPy operations like np.maximum, np.minimum, etc.
+        Advanced feature - most students can ignore this implementation detail.
         """
         # Convert Tensor inputs to NumPy arrays
         args = []

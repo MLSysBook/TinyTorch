@@ -245,6 +245,7 @@ class KVCache:
             raise ValueError(f"Layer {layer_idx} not found in cache")
         
         if self.current_position >= self.max_seq_len:
+            # This prevents cache overflow which would cause memory corruption
             raise ValueError(f"Cache overflow: position {self.current_position} >= max {self.max_seq_len}")
         
         # Store key and value at current position
@@ -486,87 +487,140 @@ class CachedMultiHeadAttention:
             Tuple of (attention_output, updated_cache)
         """
         ### BEGIN SOLUTION
-        # Handle defaults
+        # Handle input defaults
         if key is None:
             key = query
         if value is None:
             value = query
         
-        batch_size = query.shape[0]
-        query_seq_len = query.shape[1]
+        batch_size, query_seq_len = query.shape[0], query.shape[1]
         
-        # Compute Q, K, V projections
-        Q = Tensor(np.matmul(query.data, self.w_q.data))
-        K = Tensor(np.matmul(key.data, self.w_k.data))
-        V = Tensor(np.matmul(value.data, self.w_v.data))
+        # Step 1: Project query, key, value with descriptive names
+        query_projected, key_projected, value_projected = self._compute_qkv_projections(query, key, value)
         
-        # Reshape for multi-head attention
-        # (batch, seq_len, embed_dim) -> (batch, seq_len, num_heads, head_dim)
-        Q = Q.data.reshape(batch_size, query_seq_len, self.num_heads, self.head_dim)
-        K = K.data.reshape(batch_size, query_seq_len, self.num_heads, self.head_dim)
-        V = V.data.reshape(batch_size, query_seq_len, self.num_heads, self.head_dim)
+        # Step 2: Reshape for multi-head attention
+        query_multihead, key_multihead, value_multihead = self._reshape_for_multihead(
+            query_projected, key_projected, value_projected, batch_size, query_seq_len
+        )
         
-        # Transpose to (batch, num_heads, seq_len, head_dim)
-        Q = np.transpose(Q, (0, 2, 1, 3))
-        K = np.transpose(K, (0, 2, 1, 3))
-        V = np.transpose(V, (0, 2, 1, 3))
+        # Step 3: Combine with cached K,V if available
+        keys_combined, values_combined = self._combine_with_cache(
+            cache, layer_idx, key_multihead, value_multihead
+        )
         
-        if cache is not None and cache.current_position > 0:
-            # Retrieve cached K, V and combine with current
-            cached_K, cached_V = cache.get(layer_idx, cache.current_position)
-            
-            # Reshape cached tensors to match multi-head format
-            # cached shape: (seq_len, num_heads, head_dim)
-            # target shape: (batch, num_heads, seq_len, head_dim)
-            cached_K = cached_K.data.transpose(1, 0, 2)[None, ...]  # Add batch dimension
-            cached_V = cached_V.data.transpose(1, 0, 2)[None, ...]
-            
-            # Concatenate past and current K, V
-            K_combined = np.concatenate([cached_K, K], axis=2)  # Concat along seq dimension
-            V_combined = np.concatenate([cached_V, V], axis=2)
-        else:
-            K_combined = K
-            V_combined = V
+        # Step 4: Compute attention output
+        attention_output = self._compute_attention(
+            query_multihead, keys_combined, values_combined, batch_size, query_seq_len
+        )
         
-        # Compute scaled dot-product attention
-        # Q: (batch, num_heads, query_len, head_dim)
-        # K: (batch, num_heads, total_seq_len, head_dim)
-        # V: (batch, num_heads, total_seq_len, head_dim)
+        # Step 5: Update cache if requested
+        updated_cache = self._update_cache_if_needed(
+            cache, use_cache, advance_cache, layer_idx, key_multihead, value_multihead, query_seq_len
+        )
         
-        scores = np.matmul(Q, np.transpose(K_combined, (0, 1, 3, 2)))  # (batch, heads, query_len, total_seq_len)
-        scores = scores / math.sqrt(self.head_dim)
-        
-        # Apply softmax
-        scores_exp = np.exp(scores - np.max(scores, axis=-1, keepdims=True))
-        attention_weights = scores_exp / np.sum(scores_exp, axis=-1, keepdims=True)
-        
-        # Apply attention to values
-        attention_output = np.matmul(attention_weights, V_combined)  # (batch, heads, query_len, head_dim)
-        
-        # Reshape back to original format
-        # (batch, heads, query_len, head_dim) -> (batch, query_len, heads, head_dim)
-        attention_output = np.transpose(attention_output, (0, 2, 1, 3))
-        # -> (batch, query_len, embed_dim)
-        attention_output = attention_output.reshape(batch_size, query_seq_len, self.embed_dim)
-        
-        # Apply output projection
-        output = Tensor(np.matmul(attention_output, self.w_o.data))
-        
-        # Update cache if requested
-        updated_cache = cache
-        if use_cache and cache is not None:
-            # Store current K, V in cache
-            # We need to store per-head K, V with shape (num_heads, head_dim)
-            # Current K, V have shape (batch, num_heads, 1, head_dim) for single token
-            if query_seq_len == 1:  # Only cache when generating single tokens
-                current_K = Tensor(K[0, :, 0, :])  # (num_heads, head_dim)
-                current_V = Tensor(V[0, :, 0, :])  # (num_heads, head_dim)
-                cache.update(layer_idx, current_K, current_V)
-                if advance_cache:  # Only advance position when requested
-                    cache.advance_position()
-        
-        return output, updated_cache
+        return attention_output, updated_cache
         ### END SOLUTION
+    
+    def _compute_qkv_projections(self, query: Tensor, key: Tensor, value: Tensor) -> Tuple[Tensor, Tensor, Tensor]:
+        """Compute Q, K, V projections with descriptive variable names."""
+        query_projected = Tensor(np.matmul(query.data, self.w_q.data))
+        key_projected = Tensor(np.matmul(key.data, self.w_k.data))
+        value_projected = Tensor(np.matmul(value.data, self.w_v.data))
+        return query_projected, key_projected, value_projected
+    
+    def _reshape_for_multihead(self, query_proj: Tensor, key_proj: Tensor, value_proj: Tensor, 
+                              batch_size: int, seq_len: int) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
+        """Reshape tensors for multi-head attention computation."""
+        # Reshape: (batch, seq_len, embed_dim) -> (batch, seq_len, num_heads, head_dim)
+        query_heads = query_proj.data.reshape(batch_size, seq_len, self.num_heads, self.head_dim)
+        key_heads = key_proj.data.reshape(batch_size, seq_len, self.num_heads, self.head_dim)
+        value_heads = value_proj.data.reshape(batch_size, seq_len, self.num_heads, self.head_dim)
+        
+        # Transpose to (batch, num_heads, seq_len, head_dim) for attention computation
+        query_multihead = np.transpose(query_heads, (0, 2, 1, 3))
+        key_multihead = np.transpose(key_heads, (0, 2, 1, 3))
+        value_multihead = np.transpose(value_heads, (0, 2, 1, 3))
+        
+        return query_multihead, key_multihead, value_multihead
+    
+    def _combine_with_cache(self, cache: Optional[KVCache], layer_idx: int, 
+                           current_keys: np.ndarray, current_values: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
+        """Combine current K,V with cached K,V if cache is available."""
+        if cache is not None and cache.current_position > 0:
+            # Retrieve cached K, V tensors
+            cached_keys, cached_values = cache.get(layer_idx, cache.current_position)
+            
+            # Transform cached tensors to match current format
+            cached_keys_formatted = self._format_cached_tensors(cached_keys)
+            cached_values_formatted = self._format_cached_tensors(cached_values)
+            
+            # Concatenate past and current along sequence dimension (axis=2)
+            keys_combined = np.concatenate([cached_keys_formatted, current_keys], axis=2)
+            values_combined = np.concatenate([cached_values_formatted, current_values], axis=2)
+        else:
+            keys_combined = current_keys
+            values_combined = current_values
+            
+        return keys_combined, values_combined
+    
+    def _format_cached_tensors(self, cached_tensor: Tensor) -> np.ndarray:
+        """Format cached tensors for concatenation with current tensors."""
+        # cached shape: (seq_len, num_heads, head_dim)
+        # Step 1: Transpose to (num_heads, seq_len, head_dim)
+        tensor_transposed = cached_tensor.data.transpose(1, 0, 2)
+        # Step 2: Add batch dimension -> (batch=1, num_heads, seq_len, head_dim)
+        tensor_batched = tensor_transposed[None, ...]
+        return tensor_batched
+    
+    def _compute_attention(self, query_multihead: np.ndarray, keys_combined: np.ndarray, 
+                          values_combined: np.ndarray, batch_size: int, query_seq_len: int) -> Tensor:
+        """Compute scaled dot-product attention with clear variable names."""
+        # Calculate attention scores: Q @ K^T
+        keys_transposed = np.transpose(keys_combined, (0, 1, 3, 2))  # Transpose last two dims
+        attention_scores = np.matmul(query_multihead, keys_transposed)
+        scaled_scores = attention_scores / math.sqrt(self.head_dim)
+        
+        # Apply softmax to get attention weights
+        attention_weights = self._apply_softmax(scaled_scores)
+        
+        # Apply attention weights to values: weights @ V
+        attention_output = np.matmul(attention_weights, values_combined)
+        
+        # Reshape back to original format and apply output projection
+        final_output = self._reshape_attention_output(attention_output, batch_size, query_seq_len)
+        
+        return Tensor(np.matmul(final_output, self.w_o.data))
+    
+    def _apply_softmax(self, scores: np.ndarray) -> np.ndarray:
+        """Apply numerically stable softmax to attention scores."""
+        scores_shifted = scores - np.max(scores, axis=-1, keepdims=True)
+        scores_exp = np.exp(scores_shifted)
+        attention_weights = scores_exp / np.sum(scores_exp, axis=-1, keepdims=True)
+        return attention_weights
+    
+    def _reshape_attention_output(self, attention_output: np.ndarray, batch_size: int, seq_len: int) -> np.ndarray:
+        """Reshape attention output back to original format."""
+        # (batch, heads, seq_len, head_dim) -> (batch, seq_len, heads, head_dim)
+        output_transposed = np.transpose(attention_output, (0, 2, 1, 3))
+        # -> (batch, seq_len, embed_dim)
+        output_reshaped = output_transposed.reshape(batch_size, seq_len, self.embed_dim)
+        return output_reshaped
+    
+    def _update_cache_if_needed(self, cache: Optional[KVCache], use_cache: bool, advance_cache: bool,
+                               layer_idx: int, key_multihead: np.ndarray, value_multihead: np.ndarray, 
+                               query_seq_len: int) -> Optional[KVCache]:
+        """Update cache with current K,V if caching is enabled."""
+        if use_cache and cache is not None and query_seq_len == 1:
+            # Extract single token's K, V for cache storage (remove batch and sequence dims)
+            current_key_for_cache = Tensor(key_multihead[0, :, 0, :])  # (num_heads, head_dim)
+            current_value_for_cache = Tensor(value_multihead[0, :, 0, :])  # (num_heads, head_dim)
+            
+            cache.update(layer_idx, current_key_for_cache, current_value_for_cache)
+            
+            if advance_cache:
+                cache.advance_position()
+                
+        return cache
 
 # %% [markdown]
 """
@@ -650,6 +704,7 @@ Now let's implement the complete generation function that uses KV caching for dr
 
 # %% nbgrader={"grade": false, "grade_id": "cached-generation", "locked": false, "schema_version": 3, "solution": true, "task": false}
 #| export
+
 def generate_with_cache(model_func, 
                        initial_tokens: Tensor, 
                        max_new_tokens: int = 50,
@@ -691,75 +746,121 @@ def generate_with_cache(model_func,
         Complete sequence including initial and generated tokens
     """
     ### BEGIN SOLUTION
+    # Initialize generation components
+    cache, attention_layers = _initialize_generation_components(
+        initial_tokens, max_new_tokens, embed_dim, num_heads, num_layers
+    )
+    
+    # Populate cache with initial tokens
+    _populate_cache_with_initial_tokens(initial_tokens, attention_layers, cache)
+    
+    # Generate new tokens iteratively
+    generated_sequence = _generate_tokens_iteratively(
+        initial_tokens, attention_layers, cache, max_new_tokens
+    )
+    
+    return generated_sequence
+    ### END SOLUTION
+
+def _initialize_generation_components(initial_tokens: Tensor, max_new_tokens: int, 
+                                    embed_dim: int, num_heads: int, num_layers: int) -> Tuple[KVCache, List]:
+    """Initialize KV cache and attention layers for generation."""
     batch_size, initial_seq_len, _ = initial_tokens.shape
     head_dim = embed_dim // num_heads
     max_seq_len = initial_seq_len + max_new_tokens
     
     # Initialize KV cache
     cache = KVCache(max_seq_len, num_layers, num_heads, head_dim)
-    # Initialize cached attention layers for each layer
+    
+    # Initialize attention layers for each transformer layer
     attention_layers = []
     for layer_idx in range(num_layers):
         attention_layers.append(CachedMultiHeadAttention(embed_dim, num_heads))
     
-    # Start with initial tokens
-    generated_sequence = [initial_tokens]
-    current_tokens = initial_tokens
+    return cache, attention_layers
+
+def _populate_cache_with_initial_tokens(initial_tokens: Tensor, attention_layers: List, cache: KVCache) -> None:
+    """Populate cache with initial tokens to prepare for generation."""
+    batch_size, initial_seq_len, embed_dim = initial_tokens.shape
+    num_heads = attention_layers[0].num_heads
+    head_dim = attention_layers[0].head_dim
     
-    # Process initial tokens to populate cache
-    for pos in range(initial_seq_len):
-        # Extract K,V for this position and store in cache for each layer
-        token_slice = Tensor(current_tokens.data[:, pos:pos+1, :])  # (batch, 1, embed_dim)
+    # Process each initial token position
+    for token_position in range(initial_seq_len):
+        # Extract single token: (batch, 1, embed_dim)
+        current_token = Tensor(initial_tokens.data[:, token_position:token_position+1, :])
         
+        # Store K,V for this token across all layers
         for layer_idx, attention_layer in enumerate(attention_layers):
-            # Compute K, V for this token
-            K = Tensor(np.matmul(token_slice.data, attention_layer.w_k.data))
-            V = Tensor(np.matmul(token_slice.data, attention_layer.w_v.data))
-            
-            # Reshape to (num_heads, head_dim)
-            K_reshaped = K.data.reshape(1, num_heads, head_dim)[0]  # Remove batch dim
-            V_reshaped = V.data.reshape(1, num_heads, head_dim)[0]
-            
-            cache.update(layer_idx, Tensor(K_reshaped), Tensor(V_reshaped))
+            key_for_cache, value_for_cache = _compute_and_format_kv_for_cache(
+                current_token, attention_layer, num_heads, head_dim
+            )
+            cache.update(layer_idx, key_for_cache, value_for_cache)
         
         # Advance cache position once per token (shared across all layers)
         cache.advance_position()
+
+def _compute_and_format_kv_for_cache(token: Tensor, attention_layer, num_heads: int, head_dim: int) -> Tuple[Tensor, Tensor]:
+    """Compute K,V projections for a token and format for cache storage."""
+    # Compute K, V projections
+    token_key_projection = Tensor(np.matmul(token.data, attention_layer.w_k.data))
+    token_value_projection = Tensor(np.matmul(token.data, attention_layer.w_v.data))
     
-    # Generate new tokens one by one
-    for step in range(max_new_tokens):
-        # Use the last token as query for next prediction
-        last_token = Tensor(current_tokens.data[:, -1:, :])  # (batch, 1, embed_dim)
+    # Reshape to (num_heads, head_dim) for cache storage
+    key_for_cache = token_key_projection.data.reshape(1, num_heads, head_dim)[0]  # Remove batch dim
+    value_for_cache = token_value_projection.data.reshape(1, num_heads, head_dim)[0]
+    
+    return Tensor(key_for_cache), Tensor(value_for_cache)
+
+def _generate_tokens_iteratively(initial_tokens: Tensor, attention_layers: List, 
+                               cache: KVCache, max_new_tokens: int) -> Tensor:
+    """Generate new tokens one by one using cached attention."""
+    generated_sequence = [initial_tokens]
+    current_sequence = initial_tokens
+    
+    for generation_step in range(max_new_tokens):
+        # Get the most recent token as query
+        last_token = Tensor(current_sequence.data[:, -1:, :])  # (batch, 1, embed_dim)
         
         # Process through all attention layers with caching
-        layer_input = last_token
-        for layer_idx, attention_layer in enumerate(attention_layers):
-            # Don't advance cache in forward method - we'll do it once at the end
-            layer_output, cache = attention_layer.forward(
-                query=layer_input,
-                cache=cache,
-                layer_idx=layer_idx,
-                use_cache=True,
-                advance_cache=False  # Don't advance yet
-            )
-            layer_input = layer_output
+        next_token = _process_token_through_layers(last_token, attention_layers, cache)
         
-        # Advance cache position once after processing all layers
-        cache.advance_position()
-        
-        # Simulate next token generation (in real implementation, this would be a language model head)
-        # For demo, we'll just add some variation to continue the pattern
-        next_token = Tensor(layer_output.data + np.random.randn(*layer_output.shape) * 0.1)
-        
-        # Add to sequence
+        # Add generated token to sequence
         generated_sequence.append(next_token)
         
-        # Update current tokens (in practice, you'd convert logits to tokens)
-        current_tokens = Tensor(np.concatenate([current_tokens.data, next_token.data], axis=1))
+        # Update current sequence for next iteration
+        current_sequence = Tensor(np.concatenate([current_sequence.data, next_token.data], axis=1))
     
-    # Combine all tokens
+    # Combine all tokens into final sequence
     final_sequence = Tensor(np.concatenate([seq.data for seq in generated_sequence], axis=1))
     return final_sequence
-    ### END SOLUTION
+
+def _process_token_through_layers(input_token: Tensor, attention_layers: List, cache: KVCache) -> Tensor:
+    """Process a token through all attention layers with caching."""
+    layer_input = input_token
+    
+    # Pass through each attention layer
+    for layer_idx, attention_layer in enumerate(attention_layers):
+        layer_output, cache = attention_layer.forward(
+            query=layer_input,
+            cache=cache,
+            layer_idx=layer_idx,
+            use_cache=True,
+            advance_cache=False  # Don't advance yet - will do once at the end
+        )
+        layer_input = layer_output
+    
+    # Advance cache position once after processing all layers
+    cache.advance_position()
+    
+    # Simulate next token generation with demo logic
+    # DEMO ONLY: In real systems, this would be:
+    # logits = language_model_head(layer_output)
+    # next_token_id = sample_from_logits(logits)
+    # next_token = embedding_lookup(next_token_id)
+    next_token = Tensor(layer_output.data + np.random.randn(*layer_output.shape) * 0.1)
+    
+    return next_token
 
 # %% [markdown]
 """
@@ -773,13 +874,22 @@ def test_cached_generation():
     """Test and benchmark cached generation."""
     print("Testing Cached Generation...")
     
-    # Test parameters
-    batch_size = 1
-    embed_dim = 32  # Smaller for faster testing
-    num_heads = 4
-    num_layers = 2
-    initial_seq_len = 5
-    max_new_tokens = 5  # Reduced for debugging
+    # Test configuration - optimized for clarity and testing speed
+    test_config = {
+        'batch_size': 1,
+        'embed_dim': 32,        # Smaller embedding for faster testing
+        'num_heads': 4,         # Fewer heads for simpler debugging
+        'num_layers': 2,        # Fewer layers for faster execution
+        'initial_seq_len': 5,   # Short initial sequence for quick setup
+        'max_new_tokens': 5     # Limited generation for testing focus
+    }
+    
+    batch_size = test_config['batch_size']
+    embed_dim = test_config['embed_dim']
+    num_heads = test_config['num_heads']
+    num_layers = test_config['num_layers']
+    initial_seq_len = test_config['initial_seq_len']
+    max_new_tokens = test_config['max_new_tokens']
     
     # Create initial tokens
     initial_tokens = Tensor(np.random.randn(batch_size, initial_seq_len, embed_dim))
@@ -830,99 +940,45 @@ Let's analyze the memory and computational characteristics of KV caching.
 """
 
 # %% nbgrader={"grade": false, "grade_id": "kv-cache-analysis", "locked": false, "schema_version": 3, "solution": true, "task": false}
-def analyze_kv_cache_performance():
-    """
-    Comprehensive analysis of KV cache memory and performance characteristics.
+def benchmark_cached_attention(seq_len: int, attention: CachedMultiHeadAttention, 
+                              cache: KVCache, token: Tensor) -> float:
+    """Benchmark cached attention performance for a given sequence length."""
+    start_time = time.time()
+    for pos in range(seq_len):
+        output, cache = attention.forward(
+            query=token, 
+            cache=cache, 
+            layer_idx=0, 
+            use_cache=True
+        )
+    return time.time() - start_time
+
+def benchmark_non_cached_attention(seq_len: int, attention: CachedMultiHeadAttention, 
+                                  full_sequence: Tensor) -> float:
+    """Benchmark non-cached attention performance for a given sequence length."""
+    start_time = time.time()
+    for pos in range(seq_len):
+        # Simulate recomputing attention for growing sequence
+        subseq = Tensor(full_sequence.data[:, :pos+1, :])
+        output, _ = attention.forward(query=subseq, cache=None, use_cache=False)
+    return time.time() - start_time
+
+def calculate_theoretical_speedup(seq_len: int) -> Dict[str, int]:
+    """Calculate theoretical operation counts for cached vs non-cached approaches."""
+    # Cached: O(N) operations per step, O(N²) total
+    cached_ops = seq_len * seq_len  # Simplified model
     
-    TODO: Implement performance analysis for KV caching.
+    # Non-cached: O(N²) operations per step, O(N³) total  
+    non_cached_ops = sum(i*i for i in range(1, seq_len+1))
     
-    STEP-BY-STEP IMPLEMENTATION:
-    1. Set up test scenarios with different sequence lengths
-    2. Measure memory usage with and without caching
-    3. Benchmark computation time for both approaches
-    4. Analyze scaling behavior as sequence length increases
-    5. Calculate the break-even point where caching becomes beneficial
-    
-    ANALYSIS DIMENSIONS:
-    - Memory usage: How much RAM does caching consume?
-    - Computation time: How much faster is cached generation?
-    - Scaling behavior: How does performance change with sequence length?
-    - Break-even analysis: When is caching worth the memory cost?
-    """
-    ### BEGIN SOLUTION
-    print("🔍 Analyzing KV Cache Performance Characteristics...")
-    
-    # Test configuration
-    embed_dim = 64
-    num_heads = 8
-    head_dim = embed_dim // num_heads
-    num_layers = 4
-    batch_size = 1
-    
-    sequence_lengths = [10, 25, 50, 100, 200]
-    results = []
-    
-    for seq_len in sequence_lengths:
-        print(f"\n📊 Testing sequence length: {seq_len}")
-        
-        # Memory analysis
-        cache = KVCache(seq_len, num_layers, num_heads, head_dim)
-        memory_info = cache.get_memory_usage()
-        
-        # Simulate cache usage
-        attention = CachedMultiHeadAttention(embed_dim, num_heads)
-        
-        # Benchmark cached vs non-cached attention
-        token = Tensor(np.random.randn(batch_size, 1, embed_dim))
-        full_sequence = Tensor(np.random.randn(batch_size, seq_len, embed_dim))
-        
-        # Time cached approach (simulating incremental generation)
-        start_time = time.time()
-        for pos in range(seq_len):
-            output, cache = attention.forward(
-                query=token, 
-                cache=cache, 
-                layer_idx=0, 
-                use_cache=True
-            )
-        cached_time = time.time() - start_time
-        
-        # Time non-cached approach (full sequence each time)
-        start_time = time.time()
-        for pos in range(seq_len):
-            # Simulate recomputing attention for growing sequence
-            subseq = Tensor(full_sequence.data[:, :pos+1, :])
-            output, _ = attention.forward(query=subseq, cache=None, use_cache=False)
-        non_cached_time = time.time() - start_time
-        
-        # Calculate theoretical operation counts
-        # Cached: O(N) operations per step, O(N²) total
-        cached_ops = seq_len * seq_len  # Simplified model
-        
-        # Non-cached: O(N²) operations per step, O(N³) total  
-        non_cached_ops = sum(i*i for i in range(1, seq_len+1))
-        
-        speedup = non_cached_time / cached_time if cached_time > 0 else 0
-        theoretical_speedup = non_cached_ops / cached_ops if cached_ops > 0 else 0
-        
-        results.append({
-            'seq_len': seq_len,
-            'cache_memory_mb': memory_info['total_cache_size_mb'],
-            'cached_time': cached_time,
-            'non_cached_time': non_cached_time,
-            'actual_speedup': speedup,
-            'theoretical_speedup': theoretical_speedup,
-            'cached_ops': cached_ops,
-            'non_cached_ops': non_cached_ops
-        })
-        
-        print(f"   Cache memory: {memory_info['total_cache_size_mb']:.2f} MB")
-        print(f"   Cached time: {cached_time:.4f}s")
-        print(f"   Non-cached time: {non_cached_time:.4f}s") 
-        print(f"   Actual speedup: {speedup:.2f}x")
-        print(f"   Theoretical speedup: {theoretical_speedup:.2f}x")
-    
-    # Summary analysis
+    return {
+        'cached_ops': cached_ops,
+        'non_cached_ops': non_cached_ops,
+        'theoretical_speedup': non_cached_ops / cached_ops if cached_ops > 0 else 0
+    }
+
+def format_performance_results(results: List[Dict[str, Any]]) -> None:
+    """Format and display performance analysis results in a readable table."""
     print(f"\n📈 Performance Summary:")
     print(f"{'Seq Len':<8} {'Memory(MB)':<12} {'Speedup':<10} {'Memory/Speedup':<15}")
     print("-" * 50)
@@ -930,16 +986,99 @@ def analyze_kv_cache_performance():
     for result in results:
         efficiency = result['cache_memory_mb'] / result['actual_speedup'] if result['actual_speedup'] > 0 else float('inf')
         print(f"{result['seq_len']:<8} {result['cache_memory_mb']:<12.2f} {result['actual_speedup']:<10.2f} {efficiency:<15.2f}")
+
+def analyze_kv_cache_performance():
+    """
+    Comprehensive analysis of KV cache memory and performance characteristics.
     
-    # Key insights
+    This function has been refactored into smaller, focused helper functions
+    for better readability and maintainability.
+    """
+    print("🔍 Analyzing KV Cache Performance Characteristics...")
+    
+    # Define test configuration
+    test_config = {
+        'embed_dim': 64,
+        'num_heads': 8,
+        'num_layers': 4,
+        'batch_size': 1,
+        'sequence_lengths': [10, 25, 50, 100, 200]
+    }
+    
+    # Run performance analysis across different sequence lengths
+    results = _run_performance_analysis_across_lengths(test_config)
+    
+    # Display formatted summary and insights
+    _display_analysis_summary(results, test_config['sequence_lengths'])
+    
+    return results
+
+def _run_performance_analysis_across_lengths(config: Dict[str, Any]) -> List[Dict[str, Any]]:
+    """Run performance analysis across different sequence lengths."""
+    results = []
+    head_dim = config['embed_dim'] // config['num_heads']
+    
+    for seq_len in config['sequence_lengths']:
+        print(f"\n📊 Testing sequence length: {seq_len}")
+        
+        # Analyze memory and performance for this sequence length
+        result = _analyze_single_sequence_length(
+            seq_len, config['embed_dim'], config['num_heads'], 
+            config['num_layers'], config['batch_size'], head_dim
+        )
+        
+        results.append(result)
+        _display_individual_results(result)
+    
+    return results
+
+def _analyze_single_sequence_length(seq_len: int, embed_dim: int, num_heads: int, 
+                                   num_layers: int, batch_size: int, head_dim: int) -> Dict[str, Any]:
+    """Analyze memory and performance for a single sequence length."""
+    # Set up test components
+    cache = KVCache(seq_len, num_layers, num_heads, head_dim)
+    memory_info = cache.get_memory_usage()
+    
+    attention = CachedMultiHeadAttention(embed_dim, num_heads)
+    single_token = Tensor(np.random.randn(batch_size, 1, embed_dim))
+    full_sequence = Tensor(np.random.randn(batch_size, seq_len, embed_dim))
+    
+    # Benchmark performance
+    cached_time = benchmark_cached_attention(seq_len, attention, cache, single_token)
+    non_cached_time = benchmark_non_cached_attention(seq_len, attention, full_sequence)
+    
+    # Calculate metrics
+    theoretical_metrics = calculate_theoretical_speedup(seq_len)
+    actual_speedup = non_cached_time / cached_time if cached_time > 0 else 0
+    
+    return {
+        'seq_len': seq_len,
+        'cache_memory_mb': memory_info['total_cache_size_mb'],
+        'cached_time': cached_time,
+        'non_cached_time': non_cached_time,
+        'actual_speedup': actual_speedup,
+        'theoretical_speedup': theoretical_metrics['theoretical_speedup'],
+        'cached_ops': theoretical_metrics['cached_ops'],
+        'non_cached_ops': theoretical_metrics['non_cached_ops']
+    }
+
+def _display_individual_results(result: Dict[str, Any]) -> None:
+    """Display results for a single sequence length test."""
+    print(f"   Cache memory: {result['cache_memory_mb']:.2f} MB")
+    print(f"   Cached time: {result['cached_time']:.4f}s")
+    print(f"   Non-cached time: {result['non_cached_time']:.4f}s") 
+    print(f"   Actual speedup: {result['actual_speedup']:.2f}x")
+    print(f"   Theoretical speedup: {result['theoretical_speedup']:.2f}x")
+
+def _display_analysis_summary(results: List[Dict[str, Any]], sequence_lengths: List[int]) -> None:
+    """Display formatted summary and key insights."""
+    format_performance_results(results)
+    
     print(f"\n🎯 Key Insights:")
     print(f"   • Memory scales as O(L × N × H × D) where L=layers, N=seq_len, H=heads, D=head_dim")
     print(f"   • Computation scales as O(N²) with cache vs O(N³) without")
     print(f"   • Break-even point: ~{sequence_lengths[1]} tokens for this configuration")
     print(f"   • Memory-efficiency trade-off: more cache memory for better performance")
-    
-    return results
-    ### END SOLUTION
 
 # Run the analysis
 performance_results = analyze_kv_cache_performance()

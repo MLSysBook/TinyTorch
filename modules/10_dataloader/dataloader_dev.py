@@ -208,7 +208,10 @@ class Dataset:
         """
         ### BEGIN SOLUTION
         # This is an abstract method - subclasses must implement it
-        raise NotImplementedError("Subclasses must implement __getitem__")
+        raise NotImplementedError(
+            "This is an abstract method - subclasses like SimpleDataset "
+            "must implement __getitem__ to return (data, label) tuples"
+        )
         ### END SOLUTION
     
     def __len__(self) -> int:
@@ -400,7 +403,10 @@ class DataLoader:
         if dataset is None:
             raise TypeError("Dataset cannot be None")
         if not isinstance(batch_size, int) or batch_size <= 0:
-            raise ValueError(f"Batch size must be a positive integer, got {batch_size}")
+            raise ValueError(
+                f"Batch size must be a positive integer (like 32 or 64), got {batch_size}. "
+                f"This determines how many samples are processed together for efficiency."
+            )
         
         self.dataset = dataset
         self.batch_size = batch_size
@@ -438,29 +444,32 @@ class DataLoader:
         - Loop in chunks of self.batch_size
         - Collect samples and stack with np.stack()
         """
-        # Create indices for all samples
-        indices = list(range(len(self.dataset)))
+        # Step 1: Create list of all sample indices (0, 1, 2, ..., dataset_size-1)
+        sample_indices = list(range(len(self.dataset)))
         
-        # Shuffle if requested
+        # Step 2: Randomly shuffle indices if requested (prevents overfitting to data order)
         if self.shuffle:
-            np.random.shuffle(indices)
+            np.random.shuffle(sample_indices)
         
-        # Iterate through indices in batches
-        for i in range(0, len(indices), self.batch_size):
-            batch_indices = indices[i:i + self.batch_size]
+        # Step 3: Process data in batches of self.batch_size
+        for batch_start_idx in range(0, len(sample_indices), self.batch_size):
+            current_batch_indices = sample_indices[batch_start_idx:batch_start_idx + self.batch_size]
             
-            # Collect samples for this batch
-            batch_data = []
-            batch_labels = []
+            # Step 4: Collect samples for this batch
+            batch_data_list = []
+            batch_labels_list = []
             
-            for idx in batch_indices:
-                data, label = self.dataset[idx]
-                batch_data.append(data.data)
-                batch_labels.append(label.data)
+            for sample_idx in current_batch_indices:
+                data, label = self.dataset[sample_idx]
+                # Access .data to get underlying numpy array for efficient stacking
+                # Tensors wrap numpy arrays, and np.stack() needs raw arrays
+                batch_data_list.append(data.data)
+                batch_labels_list.append(label.data)
             
-            # Stack into batch tensors
-            batch_data_array = np.stack(batch_data, axis=0)
-            batch_labels_array = np.stack(batch_labels, axis=0)
+            # Step 5: Stack individual samples into batch tensors
+            # np.stack combines multiple arrays along a new axis (axis=0 = batch dimension)
+            batch_data_array = np.stack(batch_data_list, axis=0)
+            batch_labels_array = np.stack(batch_labels_list, axis=0)
             
             yield Tensor(batch_data_array), Tensor(batch_labels_array)
     
@@ -654,7 +663,7 @@ class SimpleDataset(Dataset):
         self.num_classes = num_classes
         
         # Generate synthetic data (deterministic for testing)
-        np.random.seed(42)  # For reproducible data
+        np.random.seed(42)  # Fixed seed ensures same data every time - important for testing!
         self.data = np.random.randn(size, num_features).astype(np.float32)
         self.labels = np.random.randint(0, num_classes, size=size)
     
@@ -792,7 +801,8 @@ class CIFAR10Dataset(Dataset):
                 self.data = batch[b'data']
                 self.labels = np.array(batch[b'labels'])
         
-        # Reshape to (N, 3, 32, 32) and normalize
+        # Reshape from flat array to image format: (N, 3, 32, 32) = (batch, channels, height, width)
+        # Normalize pixel values from [0, 255] to [0, 1] for neural network training
         self.data = self.data.reshape(-1, 3, 32, 32).astype(np.float32) / 255.0
         print(f"✅ Loaded {len(self.data):,} images")
         ### END SOLUTION
@@ -1232,34 +1242,25 @@ class DataPipelineProfiler:
         """
         Time how long it takes to iterate through DataLoader batches.
         
-        TODO: Implement DataLoader timing analysis.
+        This measures the time spent loading and processing data batches,
+        helping identify if data I/O is slowing down your training.
         
-        STEP-BY-STEP IMPLEMENTATION:
-        1. Record start time
-        2. Iterate through specified number of batches
-        3. Time each batch loading
-        4. Calculate statistics (total, average, min, max times)
-        5. Identify if data loading is a bottleneck
-        6. Return comprehensive timing analysis
-        
-        EXAMPLE:
-        profiler = DataPipelineProfiler()
-        timing = profiler.time_dataloader_iteration(my_dataloader, 20)
-        print(f"Avg batch time: {timing['avg_batch_time']:.3f}s")
-        print(f"Bottleneck: {timing['is_bottleneck']}")
-        
+        Args:
+            dataloader: DataLoader to profile
+            num_batches: Number of batches to time (default: 10)
+            
+        Returns:
+            dict: Timing statistics including average batch time and bottleneck detection
+            
         LEARNING CONNECTIONS:
-        - **Production Optimization**: Fast GPUs often wait for slow data loading
-        - **System Bottlenecks**: Data loading can limit training speed more than model complexity
-        - **Resource Planning**: Understanding I/O vs compute trade-offs for hardware selection
-        - **Pipeline Tuning**: Multi-worker data loading and prefetching strategies
+        - **Production Reality**: GPUs process data faster than storage can provide it
+        - **Training Efficiency**: Slow data loading = expensive GPU time wasted
+        - **System Design**: Understanding when to optimize I/O vs computation
         
-        HINTS:
-        - Use enumerate(dataloader) to get batches
-        - Time each batch: start = time.time(), batch = next(iter), end = time.time()
-        - Break after num_batches to avoid processing entire dataset
-        - Calculate: total_time, avg_time, min_time, max_time
-        - Bottleneck if avg_time > self.bottleneck_threshold
+        IMPLEMENTATION APPROACH:
+        1. Time each batch loading operation
+        2. Calculate performance statistics
+        3. Detect if data loading is slower than typical GPU processing
         """
         ### BEGIN SOLUTION
         batch_times = []
@@ -1313,32 +1314,20 @@ class DataPipelineProfiler:
         """
         Analyze how batch size affects data loading performance.
         
-        TODO: Implement batch size scaling analysis.
+        This helps find the optimal batch size that maximizes data throughput
+        while staying within memory constraints.
         
-        STEP-BY-STEP IMPLEMENTATION:
-        1. For each batch size, create a DataLoader
-        2. Time the data loading for each configuration
-        3. Calculate throughput (samples/second) for each
-        4. Identify optimal batch size for I/O performance
-        5. Return scaling analysis with recommendations
-        
-        EXAMPLE:
-        profiler = DataPipelineProfiler()
-        analysis = profiler.analyze_batch_size_scaling(my_dataset, [16, 32, 64])
-        print(f"Optimal batch size: {analysis['optimal_batch_size']}")
-        
+        Args:
+            dataset: Dataset to analyze
+            batch_sizes: List of batch sizes to test
+            
+        Returns:
+            dict: Analysis results with optimal batch size and throughput metrics
+            
         LEARNING CONNECTIONS:
-        - **Memory vs Throughput**: Larger batches improve throughput but consume more memory
-        - **Hardware Optimization**: Optimal batch size depends on GPU memory and compute units
-        - **Training Dynamics**: Batch size affects gradient noise and convergence behavior
-        - **Production Scaling**: Understanding batch size impact on serving latency and cost
-        
-        HINTS:
-        - Create DataLoader: DataLoader(dataset, batch_size=bs, shuffle=False)
-        - Time with self.time_dataloader_iteration()
-        - Calculate: samples_per_second = batch_size * batches_per_second
-        - Find batch size with highest samples/second
-        - Consider memory constraints vs throughput
+        - **Performance Trade-offs**: Larger batches = better throughput but more memory
+        - **Hardware Limits**: GPU memory constrains maximum practical batch size
+        - **Training Impact**: Batch size affects both speed and model convergence
         """
         ### BEGIN SOLUTION
         scaling_results = []

@@ -171,7 +171,7 @@ class ReLU:
         In-place ReLU saves memory by reusing existing tensor buffer.
         
         STEP-BY-STEP IMPLEMENTATION:
-        1. Apply ReLU directly to tensor._data
+        1. Apply ReLU directly to tensor.data
         2. Return the same tensor object (modified in-place)
         
         MEMORY BENEFITS:
@@ -180,10 +180,10 @@ class ReLU:
         - Used in PyTorch with relu_() syntax
         
         IMPLEMENTATION HINTS:
-        - Use np.maximum(0, x._data, out=x._data) for in-place operation
+        - Use np.maximum(0, x.data, out=x.data) for in-place operation
         """
         ### BEGIN SOLUTION
-        np.maximum(0, x._data, out=x._data)
+        np.maximum(0, x.data, out=x.data)
         return x
         ### END SOLUTION
     
@@ -426,16 +426,9 @@ def test_unit_softmax_activation():
 Let's run comprehensive tests that validate both activations working together:
 """
 
-# %% nbgrader={"grade": true, "grade_id": "test-activations-comprehensive", "locked": true, "points": 15, "schema_version": 3, "solution": false, "task": false}
-def test_unit_activations_comprehensive():
-    """Comprehensive test of both activation functions."""
-    print("🔬 Comprehensive Test: ReLU + Softmax Pipeline...")
-    
-    # Create activation instances
-    relu = ReLU()
-    softmax = Softmax()
-    
-    # Test realistic neural network scenario
+# Helper functions for comprehensive test
+def _test_relu_scenario(relu):
+    """Test ReLU in realistic neural network scenario."""
     # Simulate a network layer output (could be negative)
     layer_output = Tensor([[-2.0, -1.0, 0.0, 1.0, 2.0]])
     
@@ -444,8 +437,11 @@ def test_unit_activations_comprehensive():
     expected_relu = np.array([[0.0, 0.0, 0.0, 1.0, 2.0]])
     
     assert np.array_equal(hidden_activation.data, expected_relu), "ReLU should zero negatives"
-    
-    # Apply Softmax to different tensor (classification output)
+    return hidden_activation
+
+def _test_softmax_scenario(softmax):
+    """Test Softmax in classification scenario."""
+    # Apply Softmax to classification output
     logits = Tensor([[2.0, 1.0, 0.1]])
     class_probabilities = softmax(logits)
     
@@ -458,7 +454,10 @@ def test_unit_activations_comprehensive():
     max_prob_idx = np.argmax(class_probabilities.data)
     assert max_logit_idx == max_prob_idx, "Highest logit should get highest probability"
     
-    # Test with batch data (realistic scenario)
+    return class_probabilities
+
+def _test_batch_processing(softmax):
+    """Test batch processing with realistic data."""
     batch_logits = Tensor([
         [1.0, 2.0, 0.5],  # Batch item 1
         [0.1, 0.2, 0.9],  # Batch item 2
@@ -470,6 +469,26 @@ def test_unit_activations_comprehensive():
     # Each row should sum to 1
     row_sums = np.sum(batch_probs.data, axis=1)
     assert np.allclose(row_sums, [1.0, 1.0, 1.0]), "Each batch item should form probability distribution"
+    
+    return batch_probs
+
+# %% nbgrader={"grade": true, "grade_id": "test-activations-comprehensive", "locked": true, "points": 15, "schema_version": 3, "solution": false, "task": false}
+def test_unit_activations_comprehensive():
+    """Comprehensive test of both activation functions."""
+    print("🔬 Comprehensive Test: ReLU + Softmax Pipeline...")
+    
+    # Create activation instances
+    relu = ReLU()
+    softmax = Softmax()
+    
+    # Test ReLU in realistic scenario
+    _test_relu_scenario(relu)
+    
+    # Test Softmax in classification scenario
+    _test_softmax_scenario(softmax)
+    
+    # Test batch processing
+    _test_batch_processing(softmax)
     
     print("✅ Comprehensive activation tests passed!")
     print(f"✅ ReLU correctly processes hidden layer outputs")
@@ -486,49 +505,48 @@ def test_unit_activations_comprehensive():
 Let's test these activations in a realistic neural network context:
 """
 
-# %% nbgrader={"grade": true, "grade_id": "test-activations-integration", "locked": true, "points": 10, "schema_version": 3, "solution": false, "task": false}
-def test_module_activation_integration():
-    """Integration test: activations in a realistic neural network pipeline."""
-    print("🔬 Integration Test: Neural Network Pipeline...")
-    
-    # Simulate a complete forward pass through a small network
-    relu = ReLU()
-    softmax = Softmax()
-    
-    # Step 1: Input data (batch of 3 samples, 4 features each)
+# Helper functions for integration test
+def _setup_integration_test_data():
+    """Create test data for neural network pipeline simulation."""
+    # Input data (batch of 3 samples, 4 features each)
     input_data = Tensor([
         [0.5, -0.3, 1.2, -0.8],  # Sample 1
         [-1.0, 0.8, 0.0, 1.5],   # Sample 2
         [0.2, -0.5, -0.9, 0.3]   # Sample 3
     ])
     
-    # Step 2: Simulate hidden layer output (after linear transformation)
-    # In real network this would be: input @ weights + bias
+    # Simulate hidden layer output (after linear transformation)
     hidden_output = Tensor([
         [-1.5, 0.8, 2.1],   # Sample 1 hidden activations
         [0.3, -0.6, 1.2],   # Sample 2 hidden activations
         [-0.8, 1.5, -0.3]   # Sample 3 hidden activations
     ])
     
-    # Step 3: Apply ReLU to hidden layer
-    hidden_activated = relu(hidden_output)
-    
-    # Verify ReLU behavior
-    expected_relu = np.array([
-        [0.0, 0.8, 2.1],
-        [0.3, 0.0, 1.2],
-        [0.0, 1.5, 0.0]
-    ])
-    assert np.allclose(hidden_activated.data, expected_relu), "ReLU should zero negatives in hidden layer"
-    
-    # Step 4: Simulate final layer output (logits for 3 classes)
+    # Simulate final layer output (logits for 3 classes)
     final_logits = Tensor([
         [2.1, 0.5, 1.2],   # Sample 1 class scores
         [0.8, 1.5, 0.3],   # Sample 2 class scores
         [1.0, 2.0, 0.1]    # Sample 3 class scores
     ])
     
-    # Step 5: Apply Softmax for classification
+    return input_data, hidden_output, final_logits
+
+def _test_relu_hidden_layer(relu, hidden_output):
+    """Test ReLU processing of hidden layer activations."""
+    hidden_activated = relu(hidden_output)
+    
+    expected_relu = np.array([
+        [0.0, 0.8, 2.1],
+        [0.3, 0.0, 1.2],
+        [0.0, 1.5, 0.0]
+    ])
+    assert np.allclose(hidden_activated.data, expected_relu), "ReLU should zero negatives in hidden layer"
+    assert hidden_activated.shape == hidden_output.shape, "ReLU should preserve tensor shape"
+    
+    return hidden_activated
+
+def _test_softmax_classification(softmax, final_logits):
+    """Test Softmax processing for classification output."""
     class_probabilities = softmax(final_logits)
     
     # Verify softmax properties
@@ -541,9 +559,36 @@ def test_module_activation_integration():
         max_prob_class = np.argmax(class_probabilities.data[i])
         assert max_logit_class == max_prob_class, f"Sample {i}: highest logit should get highest probability"
     
-    # Test memory efficiency (shapes preserved)
-    assert hidden_activated.shape == hidden_output.shape, "ReLU should preserve tensor shape"
     assert class_probabilities.shape == final_logits.shape, "Softmax should preserve tensor shape"
+    
+    return class_probabilities
+
+def _display_predictions(class_probabilities):
+    """Display sample predictions with confidence scores."""
+    print(f"\n📊 Sample Predictions:")
+    for i in range(3):
+        probs = class_probabilities.data[i]
+        predicted_class = np.argmax(probs)
+        confidence = probs[predicted_class]
+        print(f"   Sample {i+1}: Class {predicted_class} (confidence: {confidence:.3f})")
+
+# %% nbgrader={"grade": true, "grade_id": "test-activations-integration", "locked": true, "points": 10, "schema_version": 3, "solution": false, "task": false}
+def test_module_activation_integration():
+    """Integration test: activations in a realistic neural network pipeline."""
+    print("🔬 Integration Test: Neural Network Pipeline...")
+    
+    # Setup test components
+    relu = ReLU()
+    softmax = Softmax()
+    
+    # Create test data
+    input_data, hidden_output, final_logits = _setup_integration_test_data()
+    
+    # Test hidden layer processing with ReLU
+    hidden_activated = _test_relu_hidden_layer(relu, hidden_output)
+    
+    # Test classification output with Softmax
+    class_probabilities = _test_softmax_classification(softmax, final_logits)
     
     print("✅ Integration test passed!")
     print(f"✅ Complete forward pass simulation successful")
@@ -552,12 +597,7 @@ def test_module_activation_integration():
     print(f"✅ Batch processing works throughout pipeline")
     
     # Display sample predictions
-    print(f"\n📊 Sample Predictions:")
-    for i in range(3):
-        probs = class_probabilities.data[i]
-        predicted_class = np.argmax(probs)
-        confidence = probs[predicted_class]
-        print(f"   Sample {i+1}: Class {predicted_class} (confidence: {confidence:.3f})")
+    _display_predictions(class_probabilities)
 
 # Test function defined (called in main block)
 
@@ -576,9 +616,72 @@ if __name__ == "__main__":
 
 # %% [markdown]
 """
+# Systems Analysis: Memory and Performance Characteristics of Activation Functions
+
+Let's analyze the systems engineering implications of our activation function implementations.
+
+## Memory Analysis
+
+### ReLU Memory Characteristics
+- **Memory complexity**: O(n) where n is input size
+- **In-place operation potential**: ReLU can be computed in-place (no additional memory)
+- **Memory bandwidth**: Limited by input tensor size, no expansion
+- **Cache efficiency**: Excellent - simple element-wise operation with linear memory access
+
+### Softmax Memory Characteristics  
+- **Memory complexity**: O(n) for computation, O(1) additional for max/sum
+- **Memory bandwidth**: Higher due to two-pass algorithm (max computation + softmax)
+- **Temporary storage**: Requires intermediate arrays for numerical stability
+- **Cache behavior**: Good for small tensors, may have cache misses for large tensors
+
+## Computational Complexity Analysis
+
+### ReLU Performance
+- **Time complexity**: O(n) - single pass through input
+- **Operations per element**: 1 comparison + 1 conditional assignment  
+- **Vectorization potential**: Excellent - maps perfectly to SIMD instructions
+- **GPU acceleration**: Ideal for parallel execution (embarrassingly parallel)
+
+### Softmax Performance
+- **Time complexity**: O(n) but with higher constant factors
+- **Operations per element**: 1 subtraction + 1 exp + 1 division + reduction operations
+- **Vectorization**: Good for element-wise ops, reduction requires synchronization
+- **GPU acceleration**: Good but limited by reduction operations
+
+## Production Systems Analysis
+
+### Why ReLU Dominates Production Systems
+1. **Computational efficiency**: Minimal CPU/GPU cycles per operation
+2. **Memory efficiency**: Can be computed in-place to save memory
+3. **Numerical stability**: No overflow/underflow issues unlike sigmoid/tanh
+4. **Hardware optimization**: Maps perfectly to modern processor architectures
+
+### Softmax Production Considerations
+1. **Numerical stability**: Requires careful implementation to avoid overflow
+2. **Batch processing**: Reduction operations must handle variable batch sizes
+3. **Precision requirements**: May need higher precision for numerical stability
+4. **Kernel fusion**: Often fused with loss computation for efficiency
+
+## Real-World Performance Implications
+
+**Memory bandwidth analysis for a typical CNN layer:**
+- ReLU on 512 feature maps (224×224): ~50MB memory bandwidth
+- In-place optimization reduces this to ~25MB effective bandwidth
+- Softmax on classification head (1000 classes): ~4KB memory bandwidth
+
+**Computational throughput analysis:**
+- Modern GPU: ~100 TFLOPS peak performance
+- ReLU achieves ~80% of peak (memory-bound, not compute-bound)
+- Softmax achieves ~30% of peak (reduction operations create bottlenecks)
+
+This analysis shows why ReLU became the dominant activation function - it perfectly matches modern hardware capabilities while Softmax is reserved for specific use cases where its functionality is essential.
+"""
+
+# %% [markdown]
+"""
 ## 🤔 ML Systems Thinking: Interactive Questions
 
-Now that you've built the essential activation functions, let's connect this work to broader ML systems challenges. These questions help you think critically about how activation choices scale to production ML environments.
+Now that you've built the essential activation functions and analyzed their systems characteristics, let's connect this work to broader ML systems challenges. These questions help you think critically about how activation choices scale to production ML environments.
 
 ### Question 1: Performance and Hardware Optimization
 
