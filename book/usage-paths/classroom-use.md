@@ -93,14 +93,11 @@ TinyTorch provides a **turn-key ML systems course** with:
 - ✅ **85%** can optimize models for production deployment
 - ✅ **80%** rate better framework understanding than library-only courses
 
-### Industry Feedback
-> "TinyTorch graduates understand our ML infrastructure immediately. They don't just use frameworks - they understand how they work."  
-> — *Senior ML Engineer, Major Tech Company*
-
-### Academic Recognition
-- Used in ML systems courses at multiple universities
-- Positive feedback from both students and instructors
-- Bridges gap between theory and implementation
+### Academic Goals
+- Build deep systems understanding through implementation
+- Bridge gap between ML theory and engineering practice
+- Prepare students for real-world ML systems challenges
+- Enable research into novel architectures and optimizations
 
 ---
 

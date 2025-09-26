@@ -241,10 +241,10 @@ flowchart TD
     
     H --> I[09_spatial<br/>Conv2d + MaxPool2d<br/>Spatial Operations]
     
-    H --> J[10_dataloader<br/>CIFAR10 + DataLoader<br/>Data Pipeline]
+    H --> J[10_dataloader<br/>Generic DataLoader<br/>Efficient Batching]
     
     I --> J
-    J --> K[CIFAR-10 CNNs<br/>75%+ Accuracy Achievement]
+    J --> K[Vision Applications<br/>CIFAR-10: 75%+ Accuracy]
     
     H --> L[11_tokenization<br/>Text Processing]
     L --> M[12_embeddings<br/>Token Embeddings]
