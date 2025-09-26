@@ -7,7 +7,7 @@
 ## Complete Course Infrastructure
 
 TinyTorch provides a **turn-key ML systems course** with:
-- **16 progressive modules** (00-15) building from foundations to language models
+- **20 progressive modules** (01-20) building from foundations to system optimization
 - **Full NBGrader integration** for automated grading
 - **Comprehensive tito CLI** for professional development workflow
 - **Real-world datasets** and production practices
@@ -32,7 +32,7 @@ TinyTorch provides a **turn-key ML systems course** with:
 ## Why Choose TinyTorch for Teaching?
 
 ### Comprehensive Curriculum
-- **16 modules** progressing from basics to language models
+- **20 modules** progressing from basics to system optimization
 - **200+ automated tests** ensuring correctness
 - **Professional workflow** using industry-standard tools
 - **Real datasets** (CIFAR-10, text generation) for practical experience
@@ -53,32 +53,35 @@ TinyTorch provides a **turn-key ML systems course** with:
 
 ## Course Module Overview
 
-### Foundation (Modules 00-02)
-- **00: Introduction** - System overview and architecture
+### Foundation (Modules 01-03)
 - **01: Setup** - Development environment and workflow
-- **02: Tensors** - Multi-dimensional arrays and operations
-
-### Building Blocks (Modules 03-07)
+- **02: Tensor** - Multi-dimensional arrays and automatic differentiation
 - **03: Activations** - Mathematical functions and nonlinearity
+
+### Building Blocks (Modules 04-08)
 - **04: Layers** - Neural network abstractions
-- **05: Dense** - Fully connected layers
-- **06: Spatial** - Convolutional operations
-- **07: Attention** - Transformer mechanisms
+- **05: Losses** - Loss functions for learning
+- **06: Autograd** - Automatic differentiation
+- **07: Optimizers** - SGD, Adam, and scheduling
+- **08: Training** - Complete training loops
 
-### Training Systems (Modules 08-11)
-- **08: DataLoader** - Data pipeline and batching
-- **09: Autograd** - Automatic differentiation
-- **10: Optimizers** - SGD, Adam, and scheduling
-- **11: Training** - Complete training loops
+### Computer Vision (Modules 09-10)
+- **09: Spatial** - Convolutional operations
+- **10: DataLoader** - Data pipeline and CIFAR-10
 
-### Production (Modules 12-15)
-- **12: Compression** - Model optimization
-- **13: Kernels** - Hardware acceleration
-- **14: Benchmarking** - Performance evaluation
-- **15: MLOps** - Production deployment
+### Language Models (Modules 11-14)
+- **11: Tokenization** - Text processing
+- **12: Embeddings** - Token embeddings
+- **13: Attention** - Transformer mechanisms
+- **14: Transformers** - Complete language models
 
-### Language Models (Module 16)
-- **16: TinyGPT** - Framework generalization to language models
+### System Optimization (Modules 15-20)
+- **15: Profiling** - Performance analysis
+- **16: Acceleration** - Hardware optimization
+- **17: Quantization** - Model compression
+- **18: Compression** - Pruning and distillation
+- **19: Caching** - Memory optimization
+- **20: Benchmarking** - Performance evaluation and competition
 
 ---
 
