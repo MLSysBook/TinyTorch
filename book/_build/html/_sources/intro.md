@@ -22,16 +22,26 @@ Tiny🔥Torch is a minimalist framework for building machine learning systems fr
 
 This hands-on approach builds the deep systems intuition that separates ML engineers from ML users. You'll understand not just *what* neural networks do, but *how* they work under the hood, *why* certain design choices matter in production, and *when* to make trade-offs between memory, speed, and accuracy.
 
-```{admonition} What You'll Build
+```{admonition} What You'll Build: The Complete ML Evolution Story
 :class: tip
-**A complete ML framework from scratch**: your own production-ready toolkit that can:
-- **Train neural networks to 55%+ accuracy on CIFAR-10** (solid, reliable performance!)
-- Implement automatic differentiation from first principles
-- Build complete training loops with real datasets
-- Handle full ML pipeline from data loading to evaluation
-- **Master XOR problem with 100% accuracy** using your own autograd
+**A complete ML framework from scratch** that recreates the history of ML breakthroughs:
 
-**Result:** You become the expert others ask about "how ML frameworks actually work" and "why autograd enables all modern deep learning." All 16 modules pass comprehensive tests with 100% health status.
+**MLP Era (1980s): The Foundation**
+- **Train MLPs to 95%+ accuracy on MNIST** (handwritten digit recognition)
+- Implement automatic differentiation from first principles
+- Master gradient-based optimization with SGD and Adam
+
+**CNN Revolution (2012): Spatial Intelligence**
+- **Modern CNNs**: Build convolutional networks from scratch
+- **CIFAR-10 Achievement**: 75%+ accuracy on real images (our north star goal)
+- **Spatial Operations**: Conv2d, MaxPool2d, and efficient data pipelines
+
+**Transformer Era (2017-present): Language & Beyond**
+- **TinyGPT**: Complete language models using your vision framework
+- **Universal Architecture**: 95% component reuse from vision to language
+- **Modern ML Systems**: Full pipeline from data loading to deployment
+
+**Result:** You experience firsthand how ML evolved from simple perceptrons to modern AI systems, implementing every breakthrough yourself. All 20 modules pass comprehensive tests with 100% health status.
 ```
 
 _Understanding how to build ML systems makes you a more effective ML engineer._
@@ -43,26 +53,32 @@ TinyTorch was designed as the hands-on lab companion to [**Machine Learning Syst
 
 ---
 
-## The Core Difference
+## The Historic Journey: From MLPs to Modern AI
 
-Most ML courses focus on algorithms and theory. You learn *what* neural networks do and *why* they work, but you import everything:
+TinyTorch recreates the actual progression of machine learning breakthroughs. You don't just learn modern AI - you **experience the evolution that created it**:
 
 ```python
-Traditional ML Course:          TinyTorch Approach:
-├── import torch               ├── class Tensor:
-├── model = nn.Linear(10, 1)   │     def __add__(self, other): ...
-├── loss = nn.MSELoss()        │     def backward(self): ...
-└── optimizer.step()           ├── class Linear:
-                               │     def forward(self, x):
-                               │       return x @ self.weight + self.bias
-                               ├── def mse_loss(pred, target):
-                               │     return ((pred - target) ** 2).mean()
-                               ├── class SGD:
-                               │     def step(self):
-                               └──     param.data -= lr * param.grad
+MLP Era (1980s):              CNN Revolution (2012):         Transformer Era (2017):
+├── class MLP:                ├── class CNN:                 ├── class TinyGPT:
+│   def forward(self, x):     │   def forward(self, x):      │   def forward(self, x):
+│   h = x.reshape(batch,-1)   │   h = self.conv1(x)          │   h = self.embed(x)
+│   h = self.fc1(h)           │   h = self.pool(h)           │   h = self.attention(h)
+│   return self.fc2(h)        │   h = self.conv2(h)          │   return self.lm_head(h)
+│                             │   return self.fc(h.flat())   │
+│ Result: 95%+ MNIST          │ Result: 75%+ CIFAR-10        │ Result: Language generation
+└── "Foundation for all       └── "Spatial features excel"  └── "Universal architecture"
+    neural networks"
 
-Transform from "How does this work?" to "I implemented every line!"
+The SAME tensor operations power all three eras - you build them once, use everywhere.
 ```
+
+**The ML Evolution Story:**
+- **1980s**: MLPs could learn, but struggled with complex patterns
+- **1989**: LeNet-1 proved convolutions extract spatial features  
+- **1998**: LeNet-5 established CNNs as the vision standard
+- **2012**: AlexNet showed deep CNNs dominate computer vision
+- **2017**: Transformers unified vision AND language processing
+- **Today**: Same mathematical foundations power all AI systems
 
 TinyTorch focuses on implementation and systems thinking. You learn *how* to build working systems with progressive scaffolding, production ready practices, and comprehensive course infrastructure that bridges the gap between learning and building.
 
@@ -111,7 +127,7 @@ model = Sequential([
 
 This pattern repeats for every component: tensors, layers, optimizers, even MLOps systems. You build it, use it immediately, then reflect on how it fits into larger systems.
 
-**🎯 Track Your Capabilities**
+### Track Your Capabilities
 
 TinyTorch uses a [checkpoint system](checkpoint-system.md) to track your progress through **ML systems engineering capabilities**:
 - **Foundation** → Core ML primitives and setup
@@ -122,7 +138,7 @@ TinyTorch uses a [checkpoint system](checkpoint-system.md) to track your progres
 
 Use `tito checkpoint status` to see your progress anytime!
 
-**🎯 Beyond Code: Systems Intuition**
+### Beyond Code: Systems Intuition
 
 Each module includes **ML Systems Thinking** sections that connect your implementations to production reality:
 - *"How does your tensor implementation compare to PyTorch's memory management?"*
@@ -134,21 +150,21 @@ These aren't just academic questions - they're the system-level challenges that 
 
 ---
 
-## 👥 Who This Is For
+## Who This Is For
 
-### 🎯 Perfect For:
+### Perfect For:
 - **CS students** who want to understand ML systems beyond high-level APIs
 - **Software engineers** transitioning to ML engineering roles
 - **ML practitioners** who want to optimize and debug production systems
 - **Researchers** who need to implement custom operations and architectures
 - **Anyone curious** about how PyTorch/TensorFlow actually work under the hood
 
-### 📚 Prerequisites:
+### Prerequisites:
 - **Python programming** (comfortable with classes, functions, basic NumPy)
 - **Linear algebra basics** (matrix multiplication, gradients)
 - **Learning mindset** - we'll teach you everything else!
 
-### 🚀 Career Impact:
+### Career Impact:
 After TinyTorch, you'll be the person your team asks:
 - *"Why is this training so slow?"* (You'll know how to profile and optimize)
 - *"Can we fit this model in GPU memory?"* (You'll understand memory trade-offs)  
@@ -156,100 +172,118 @@ After TinyTorch, you'll be the person your team asks:
 
 ---
 
-## 📚 Course Journey: 16 Modules - Foundation to Framework
+## Progressive Learning Journey: 20 Modules
 
-```{admonition} Foundation
-:class: note
-**0. Setup** • **1. Tensors** • **2. Activations**
-
-Development workflow, multi-dimensional arrays, and mathematical functions that enable learning.
+```{admonition} ML Systems Engineering Focus 
+:class: important
+**20 modules** that build complete ML systems understanding through implementation:
+From tensors to transformers, profiling to production deployment!
 ```
 
-```{admonition} Building Blocks
+```{admonition} Neural Network Foundations (Modules 1-8)
 :class: note
-**3. Layers** • **4. Dense** • **5. Spatial** • **6. Attention**
+**1. Setup** • **2. Tensor** • **3. Activations** • **4. Layers** • **5. Losses** • **6. Autograd** • **7. Optimizers** • **8. Training**
 
-Dense layers, sequential networks, convolutional operations, and self-attention mechanisms with memory analysis.
+**Foundation**: Complete neural network training capability with gradient computation!
+- **Module 2**: Tensor operations and autograd from the start
+- **Module 6**: Computational graphs and automatic differentiation
+- **Module 8**: **Train XOR and MNIST with complete framework!**
 ```
 
-```{admonition} Training Systems
+```{admonition} Computer Vision (Modules 9-10)
 :class: note
-**7. DataLoader** • **8. Autograd** • **9. Optimizers** • **10. Training**
+**9. Spatial** • **10. DataLoader**
 
-CIFAR-10 loading, automatic differentiation with graph management, SGD/Adam with memory profiling, and complete training orchestration.
+Add convolutional intelligence: Conv2d, MaxPool2d, and efficient data loading.
+**Result**: Train CNNs on CIFAR-10 to 75%+ accuracy!
 ```
 
-```{admonition} Production Systems
+```{admonition} Language Models (Modules 11-14)
 :class: note
-**11. Compression** • **12. Kernels** • **13. Benchmarking** • **14. MLOps**
+**11. Tokenization** • **12. Embeddings** • **13. Attention** • **14. Transformers**
 
-Model optimization, high-performance operations, systematic evaluation, and production monitoring with real deployment patterns.
+Universal intelligence: Build GPT-style language models using your vision infrastructure.
+**Result**: Complete TinyGPT using 95% of your vision components!
 ```
 
-```{admonition} Framework Generalization
+```{admonition} Systems Optimization (Modules 15-20)
 :class: note
-**15. TinyGPT**
+**15. Profiling** • **16. Acceleration** • **17. Quantization** • **18. Compression** • **19. Caching** • **20. Benchmarking**
 
-Demonstrate framework universality: GPT-style transformers, character tokenization, autoregressive generation with 95% component reuse from your ML systems foundation.
+Production systems: Optimize, profile, and compete in ML systems performance.
+**Result**: TinyMLPerf competition framework for optimization excellence!
 ```
 
 ---
 
-## 🔗 Complete System Integration
+## Complete System Integration
 
-**This isn't 16 separate exercises.** Every component you build integrates into one fully functional ML framework with universal foundations:
+**This isn't 20 separate exercises.** Every component you build integrates into one fully functional ML framework with universal foundations:
 
-```{admonition} 🎯 How It All Connects
+```{admonition} How It All Connects
 :class: important
 
 ```{mermaid}
 flowchart TD
-    Z[00_introduction<br/>🎯 System Overview] --> A[01_setup<br/>Setup & Environment] 
-    A --> B[02_tensor<br/>Core Tensor Operations]
-    B --> C[03_activations<br/>ReLU, Sigmoid, Tanh]
-    B --> I[09_autograd<br/>Automatic Differentiation]
+    A[01_setup<br/>Environment & CLI] --> B[02_tensor<br/>Tensor + Autograd<br/>GRADIENTS FROM START]
     
-    C --> D[04_layers<br/>Dense Layers]
-    D --> E[05_dense<br/>Sequential Networks]
+    B --> C[03_activations<br/>ReLU + Softmax<br/>Nonlinearity Functions]
     
-    E --> F[06_spatial<br/>Convolutional Networks]
-    E --> G[07_attention<br/>Self-Attention]
+    C --> D[04_layers<br/>Linear + Module<br/>Building Blocks]
     
-    B --> H[08_dataloader<br/>Data Loading]
+    D --> E[05_losses<br/>MSE + CrossEntropy<br/>Loss Functions]
     
-    I --> J[10_optimizers<br/>SGD & Adam]
+    E --> F[06_autograd<br/>Computation Graphs<br/>Automatic Differentiation]
     
-    H --> K[11_training<br/>Training Loops]
-    E --> K
-    F --> K
-    G --> K
-    J --> K
+    F --> G[07_optimizers<br/>SGD + Adam<br/>Gradient Descent]
     
-    K --> L[12_compression<br/>Model Optimization]
-    K --> M[13_kernels<br/>High-Performance Ops]
-    K --> N[14_benchmarking<br/>Performance Analysis]
-    K --> O[15_mlops<br/>Production Monitoring]
+    G --> H[08_training<br/>Complete Training<br/>TRAIN NETWORKS NOW]
     
-    L --> P[16_tinygpt<br/>🔥 Language Models]
-    G --> P
-    J --> P
-    K --> P
+    H --> I[09_spatial<br/>Conv2d + MaxPool2d<br/>Spatial Operations]
+    
+    H --> J[10_dataloader<br/>CIFAR10 + DataLoader<br/>Data Pipeline]
+    
+    I --> J
+    J --> K[CIFAR-10 CNNs<br/>75%+ Accuracy Achievement]
+    
+    H --> L[11_tokenization<br/>Text Processing]
+    L --> M[12_embeddings<br/>Token Embeddings]
+    M --> N[13_attention<br/>Multi-Head Attention]
+    N --> O[14_transformers<br/>TinyGPT<br/>Language Models]
+    
+    K --> P[15_profiling<br/>Performance Analysis]
+    O --> P
+    P --> Q[16_acceleration<br/>Hardware Optimization]
+    Q --> R[17_quantization<br/>Model Compression]
+    R --> S[18_compression<br/>Pruning & Distillation]
+    S --> T[19_caching<br/>Memory Optimization]
+    T --> U[20_benchmarking<br/>TinyMLPerf Competition]
+    
+    style H fill:#ff6b6b,stroke:#333,stroke-width:3px,color:#fff
+    style K fill:#4ecdc4,stroke:#333,stroke-width:3px,color:#fff
+    style O fill:#45b7d1,stroke:#333,stroke-width:3px,color:#fff
+    style U fill:#ffd93d,stroke:#333,stroke-width:3px,color:#333
 ```
 
 **Result:** Every component you build converges into TinyGPT - proving your framework is complete and production-ready.
 ```
 
-### 🔥 TinyGPT: The Complete Framework in Action
+### TinyGPT: Proving Framework Universality
 
-After building all the components, TinyGPT is your **capstone demonstration** - showing how everything clicks together into a working system.
+TinyGPT is your **capstone achievement** - demonstrating that the same foundations power all modern AI:
+
+**The Historical Proof:**
+- **1980s MLP components** → **1989 CNN revolution** → **2017 Transformer era**
+- **95% component reuse**: Your tensors, layers, and training systems work across all three eras
+- **Universal mathematics**: The same operations that power MLPs (52.7%) and CNNs (LeNet-5: 47.5%) also power language models
 
 **What TinyGPT Proves:**
-- **Component Integration**: Your tensors, layers, autograd, and optimizers work together seamlessly  
-- **Universal Foundations**: The same mathematical primitives power any neural architecture
-- **Framework Completeness**: You built a production-ready ML framework from scratch
-- **Systems Mastery**: You understand how every piece fits together under the hood
+- **Framework Universality**: Vision and language use identical mathematical foundations  
+- **Component Integration**: All 20 modules work together seamlessly across domains
+- **Systems Mastery**: You understand how modern AI builds on historical breakthroughs
+- **Career Readiness**: You can implement any architecture from any era
 
-**The Achievement:** Build a complete GPT-style language model using only components you implemented. This proves your framework is real, complete, and ready for any ML task.
+**The Achievement:** Build GPT using components you designed for computer vision. This proves you didn't just learn isolated techniques - you built a complete, universal ML framework capable of any task.
 
 ---
 
@@ -269,7 +303,7 @@ After building all the components, TinyGPT is your **capstone demonstration** - 
 *"I want to build this myself"*
 - Fork the repo and work locally with full development environment
 - Build complete ML framework from scratch with `tito` CLI
-- 16 progressive assignments from setup to language models
+- 20 progressive assignments from setup to system optimization
 - Professional development workflow with automated testing
 
 ### [Classroom Use](usage-paths/classroom-use.md) *(Instructors)*
