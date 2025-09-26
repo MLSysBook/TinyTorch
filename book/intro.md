@@ -16,7 +16,7 @@ html_meta:
 
 **Most ML education teaches you to _use_ frameworks. TinyTorch teaches you to _build_ them.**
 
-Tiny🔥Torch is a minimalist framework for building machine learning systems from scratch—from tensors to systems. Instead of relying on PyTorch or TensorFlow, you implement everything yourself—tensors, autograd, optimizers, even MLOps tooling.
+Tiny🔥Torch is a minimalist framework for building machine learning systems from scratch—from tensors to systems. Instead of relying on PyTorch or TensorFlow, you implement everything yourself—tensors, autograd, optimizers, and system optimizations.
 
 **The Vision: Train ML Systems Engineers, Not Just ML Users**
 
@@ -125,7 +125,7 @@ model = Sequential([
 ])
 ```
 
-This pattern repeats for every component: tensors, layers, optimizers, even MLOps systems. You build it, use it immediately, then reflect on how it fits into larger systems.
+This pattern repeats for every component: tensors, layers, optimizers, and system optimizations. You build it, use it immediately, then reflect on how it fits into larger systems.
 
 ### Track Your Capabilities
 
