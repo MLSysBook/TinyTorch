@@ -40,47 +40,76 @@ tito checkpoint status
 
 ## 📚 Streamlined Learning Journey - No Forward Dependencies!
 
-### **12 Progressive Modules** - Build Complete ML Systems Step by Step!
+### **21 Progressive Modules** - Build Complete ML Systems Step by Step!
 
-#### **Part I: Neural Network Foundations** (Modules 1-7)
+#### **Part I: Neural Network Foundations** (Modules 1-8)
 **"I can train neural networks from scratch!"**
 
-| Module | Topic | What You Build | Key Innovation |
-|--------|-------|----------------|----------------|
-| 01 | Setup | Development environment | CLI tools, testing framework |
-| 02 | Tensor | N-dimensional arrays + **Basic Autograd** | Gradients from the start! |
-| 03 | Activations | **ReLU + Softmax ONLY** | Focus on what matters most |
-| 04 | Layers | Linear + Module + **Flatten** | Complete building blocks |
-| 05 | Loss | **MSE + CrossEntropy** | Define learning objectives |
-| 06 | Optimizers | **SGD + Adam** | How we learn |
-| 07 | Training | **Complete training loops** | Put it all together |
+| Module | Topic | What You Build | ML Systems Learning |
+|--------|-------|----------------|-------------------|
+| 01 | Setup | Development environment | CLI tools, dependency management, testing frameworks |
+| 02 | Tensor | N-dimensional arrays + gradients | **Memory layout, cache efficiency**, broadcasting semantics |
+| 03 | Activations | ReLU + Softmax + derivatives | **Numerical stability**, saturation analysis, gradient flow |
+| 04 | Layers | Linear + Module + parameter management | **Parameter counting**, weight initialization, modularity patterns |
+| 05 | Loss | MSE + CrossEntropy + gradient computation | **Numerical precision**, loss landscape analysis, convergence metrics |
+| 06 | Autograd | Automatic differentiation engine | **Computational graphs**, memory management, gradient accumulation |
+| 07 | Optimizers | SGD + Adam + learning schedules | **Memory efficiency** (Adam uses 3x SGD), convergence dynamics |
+| 08 | Training | Complete training loops + evaluation | **Training dynamics**, checkpoint systems, performance monitoring |
 
-**✅ Capstone**: XOR + MNIST - Train real neural networks after just 7 modules!
+**✅ Capstone**: XOR + MNIST - Train real neural networks after just 8 modules!
 
 ---
 
-#### **Part II: Computer Vision** (Modules 8-9)
+#### **Part II: Computer Vision** (Modules 9-10)
 **"I can build CNNs that classify real images!"**
 
-| Module | Topic | What You Build |
-|--------|-------|----------------|
-| 08 | CNN Ops | Conv2d + MaxPool2d |
-| 09 | DataLoader | Efficient data pipelines |
+| Module | Topic | What You Build | ML Systems Learning |
+|--------|-------|----------------|-------------------|
+| 09 | Spatial | Conv2d + MaxPool2d + CNN operations | **Parameter scaling** (filters × channels), spatial locality, convolution efficiency |
+| 10 | DataLoader | Efficient data pipelines + CIFAR-10 | **Batch processing**, memory-mapped I/O, data pipeline bottlenecks |
 
 **✅ Capstone**: CIFAR-10 CNN - 55%+ accuracy on real images
 
 ---
 
-#### **Part III: Language Models** (Modules 10-12)
+#### **Part III: Language Models** (Modules 11-14)
 **"I can build transformers that generate text!"**
 
-| Module | Topic | What You Build |
-|--------|-------|----------------|
-| 10 | Embeddings | Token embeddings, positional encoding |
-| 11 | Attention | Multi-head attention |
-| 12 | Transformers | Transformer blocks |
+| Module | Topic | What You Build | ML Systems Learning |
+|--------|-------|----------------|-------------------|
+| 11 | Tokenization | Text processing + vocabulary | **Vocabulary scaling** (memory vs sequence length), tokenization bottlenecks |
+| 12 | Embeddings | Token embeddings + positional encoding | **Embedding tables** (vocab × dim parameters), lookup performance |
+| 13 | Attention | Multi-head attention mechanisms | **O(N²) scaling**, memory bottlenecks, attention optimization |
+| 14 | Transformers | Complete transformer blocks | **Layer scaling**, memory requirements, architectural trade-offs |
 
 **✅ Capstone**: TinyGPT - Generate text with transformers
+
+---
+
+#### **Part IV: System Optimization** (Modules 15-20)
+**"I can profile, optimize, and benchmark ML systems!"**
+
+| Module | Topic | What You Build | ML Systems Learning |
+|--------|-------|----------------|-------------------|
+| 15 | Profiling | Performance analysis + bottleneck detection | **Memory profiling**, FLOP counting, **Amdahl's Law**, performance measurement |
+| 16 | Acceleration | Hardware optimization + cache-friendly algorithms | **Cache hierarchies**, memory access patterns, **vectorization vs loops** |
+| 17 | Quantization | Model compression + precision reduction | **Precision trade-offs** (FP32→INT8), memory reduction, accuracy preservation |
+| 18 | Compression | Pruning + knowledge distillation | **Sparsity patterns**, parameter reduction, **compression ratios** |
+| 19 | Caching | Memory optimization + KV caching | **Memory vs compute trade-offs**, cache management, generation efficiency |
+| 20 | Benchmarking | **TinyMLPerf competition framework** | **Competitive optimization**, relative performance metrics, innovation scoring |
+
+**✅ Capstone**: TinyMLPerf Competition - Optimize models for speed and efficiency
+
+---
+
+#### **Part V: Production Systems** (Module 21)
+**"I can deploy and monitor ML systems in production!"**
+
+| Module | Topic | What You Build | ML Systems Learning |
+|--------|-------|----------------|-------------------|
+| 21 | MLOps | Model monitoring + drift detection + automated retraining | **Production monitoring**, model lifecycle management, **drift detection**, automated response systems |
+
+**✅ Capstone**: Production ML Pipeline - Complete end-to-end system
 
 ## 🎓 Learning Philosophy
 
@@ -123,32 +152,52 @@ model.fit(X, y)  # Magic happens
 
 As you complete modules, exciting examples unlock to show your framework in action:
 
-### **After Module 07** → `examples/xornet/` + `examples/mnist/` 🔥
+### **After Module 08** → Neural Network Foundations Complete! 🔥
 ```bash
-cd examples/xornet
-python train_xor.py
-# 🎯 100% accuracy on XOR problem!
+cd examples/perceptron_1957
+python rosenblatt_perceptron.py
+# 🎯 Classic perceptron implementation!
 
-cd examples/mnist
+cd examples/xor_1969  
+python minsky_xor_problem.py
+# 🧠 Solve the famous XOR problem!
+
+cd examples/lenet_1998
 python train_mlp.py
-# 🏆 95%+ accuracy on handwritten digits!
+# 🏆 95%+ accuracy on MNIST handwritten digits!
 ```
 
-### **After Module 09** → `examples/cifar10/` 🎯  
+### **After Module 10** → Computer Vision Complete! 🎯  
 ```bash
-cd examples/cifar10
+cd examples/alexnet_2012
 python train_cnn.py
-# 🏆 55%+ accuracy on real images!
+# 🏆 55%+ accuracy on CIFAR-10 real images!
 ```
 
-### **After Module 12** → `examples/tinygpt/` 🚀
+### **After Module 14** → Language Models Complete! 🚀
 ```bash
-cd examples/tinygpt
+cd examples/gpt_2018
 python train_gpt.py
-# 🔥 Generate text with transformers!
+# 🔥 Generate text with transformers you built!
 ```
 
-**These aren't toy demos** - they're real ML applications achieving solid results with YOUR framework built from scratch following KISS principles!
+### **After Module 20** → System Optimization Complete! ⚡
+```bash
+# Use TinyMLPerf to benchmark your optimizations
+tito benchmark run --event mlp_sprint
+tito benchmark run --event cnn_marathon  
+tito benchmark run --event transformer_decathlon
+# 🏆 Compete in the Olympics of ML Systems Optimization!
+```
+
+### **After Module 21** → Production Systems Complete! 🌟
+```bash
+# Deploy complete production ML pipeline
+python examples/production_pipeline.py
+# 🚀 Monitor, deploy, and scale ML systems like a pro!
+```
+
+**These aren't toy demos** - they're real ML applications achieving solid results with YOUR framework built from scratch, optimized for performance, and deployed at production scale!
 
 ## 🧪 Testing & Validation
 
@@ -168,9 +217,10 @@ tito test --module tensor
 python tests/run_all_modules.py
 ```
 
-✅ **16 modules passing all tests** with 100% health status  
+✅ **21 modules passing all tests** with 100% health status  
 ✅ **16 capability checkpoints** tracking learning progress  
-✅ **Comprehensive testing framework** with module and integration tests  
+✅ **Complete optimization pipeline** from profiling to competition benchmarking  
+✅ **Production-ready MLOps** with monitoring and automated retraining  
 ✅ **KISS principle design** for clear, maintainable code  
 
 ## 📖 Documentation

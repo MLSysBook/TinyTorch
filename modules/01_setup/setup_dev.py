@@ -86,7 +86,7 @@ Let's make sure everything installed correctly.
 def check_versions():
     """Quick version check."""
     try:
-        import numpy as np
+        import numpy as np  # NumPy is the foundation for all ML math
         print(f"🐍 Python: {sys.version_info.major}.{sys.version_info.minor}")
         print(f"🔢 NumPy: {np.__version__}")
         print(f"💻 Platform: {platform.system()}")
@@ -204,10 +204,14 @@ test_unit_complete_setup()
 # %% nbgrader={"grade": false, "grade_id": "systems-analysis", "locked": false, "schema_version": 3, "solution": false, "task": false}
 #| export
 def analyze_environment_resources():
-    """Analyze memory usage and performance characteristics of environment setup."""
-    import tracemalloc
-    import time
-    import psutil
+    """Analyze memory usage and performance characteristics of environment setup.
+    
+    This teaches you to think about resource usage from day 1 - 
+    even simple operations have measurable computational costs!
+    """
+    import tracemalloc  # For tracking memory allocations
+    import time         # For measuring execution time
+    import psutil       # For system resource information
     
     print("🔬 Environment Resource Analysis")
     print("=" * 40)
@@ -216,13 +220,13 @@ def analyze_environment_resources():
     tracemalloc.start()
     start_time = time.time()
     
-    # Simulate setup operations
+    # Simulate setup operations to measure resource usage
     setup()
     check_versions()
-    _ = get_info()  # Get info for completeness
+    info_data = get_info()  # Store info for completeness (unused but measured)
     
-    # Measure resources
-    current, peak = tracemalloc.get_traced_memory()
+    # Measure resources used during setup
+    current_memory, peak_memory = tracemalloc.get_traced_memory()
     setup_time = time.time() - start_time
     
     # System resources
@@ -231,18 +235,18 @@ def analyze_environment_resources():
     
     print(f"📊 Setup Performance:")
     print(f"   ⏱️  Time: {setup_time:.3f} seconds")
-    print(f"   🧠 Memory used: {current / 1024:.1f} KB")
-    print(f"   📈 Peak memory: {peak / 1024:.1f} KB")
-    print(f"   💾 Total system RAM: {memory_info.total / (1024**3):.1f} GB")
+    print(f"   🧠 Memory used: {current_memory / 1024:.1f} KB")
+    print(f"   📈 Peak memory: {peak_memory / 1024:.1f} KB")
+    print(f"   💾 Total system RAM: {memory_info.total / (1024**3):.1f} GB")  # Total RAM available on this machine
     print(f"   🖥️  CPU cores: {cpu_count}")
     
     tracemalloc.stop()
     
     return {
         "setup_time": setup_time,
-        "memory_used": current,
-        "peak_memory": peak,
-        "system_ram": memory_info.total,
+        "memory_used": current_memory,
+        "peak_memory": peak_memory,
+        "system_ram": memory_info.total,  # Total RAM available on this machine
         "cpu_cores": cpu_count
     }
 

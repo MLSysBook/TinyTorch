@@ -1,0 +1,8 @@
+{
+  "submission_id": "test1",
+  "team_name": "Fast Team",
+  "event_name": "mlp_sprint",
+  "speedup_score": 3.0,
+  "submission_time_ms": 10.0,
+  "optimization_description": "quantized INT8 model"
+}

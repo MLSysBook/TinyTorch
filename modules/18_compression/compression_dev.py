@@ -52,6 +52,56 @@ import sys
 from typing import Tuple, Optional, Dict, Any, List
 from dataclasses import dataclass
 
+# Constants for compression configuration
+DEFAULT_SPARSITY = 0.7
+NEAR_ZERO_THRESHOLD_RATIO = 0.1  # 10% of mean weight magnitude
+MIN_FILTERS_TO_KEEP = 1
+EPS_DIVISION_SAFETY = 1e-8  # Avoid division by zero
+
+# Layer type detection thresholds
+CONV2D_NDIM = 4  # (out_channels, in_channels, H, W)
+DENSE_NDIM = 2   # (out_features, in_features)
+
+# Default sparsity levels by layer type
+DEFAULT_CONV_SPARSITY = 0.6   # Conservative for conv layers
+DEFAULT_DENSE_SPARSITY = 0.8  # Aggressive for dense layers
+DEFAULT_OTHER_SPARSITY = 0.5  # Safe default for unknown layers
+
+# Quality score thresholds
+EXCELLENT_QUALITY_THRESHOLD = 0.8
+ACCEPTABLE_QUALITY_THRESHOLD = 0.6
+
+# Helper function for layer analysis
+def _determine_layer_type_and_sparsity(shape: tuple) -> Tuple[str, float]:
+    """
+    Determine layer type and recommended sparsity from weight tensor shape.
+    
+    Args:
+        shape: Weight tensor shape
+        
+    Returns:
+        layer_type: String describing the layer type
+        recommended_sparsity: Suggested sparsity level for this layer type
+    """
+    # Detect layer type from weight tensor dimensions
+    if len(shape) == 4:  # Convolution: (filters, channels, height, width)
+        layer_type = "Conv2D"
+        recommended_sparsity = DEFAULT_CONV_SPARSITY  # Conservative - conv layers extract spatial features
+    elif len(shape) == 2:  # Dense/Linear: (output_neurons, input_neurons)  
+        layer_type = "Dense"
+        recommended_sparsity = DEFAULT_DENSE_SPARSITY  # Aggressive - dense layers have high redundancy
+    else:
+        layer_type = "Other"
+        recommended_sparsity = DEFAULT_OTHER_SPARSITY  # Safe default for unknown layer types
+    
+    return layer_type, recommended_sparsity
+
+# Benchmarking defaults
+DEFAULT_BATCH_SIZE = 32
+DEFAULT_BENCHMARK_ITERATIONS = 100
+SPEEDUP_EFFICIENCY_HIGH = 0.8
+SPEEDUP_EFFICIENCY_MEDIUM = 0.5
+
 # %% [markdown]
 """
 ## Part 1: Understanding Neural Network Redundancy
@@ -93,7 +143,7 @@ def analyze_weight_redundancy(weights: np.ndarray, title: str = "Weight Analysis
         print(f"  {p:2d}%: {val:.6f} ({smaller_count:,} weights ≤ this value)")
     
     # Show natural sparsity (near-zero weights)
-    zero_threshold = w_abs.mean() * 0.1  # 10% of mean as "near-zero"
+    zero_threshold = w_abs.mean() * NEAR_ZERO_THRESHOLD_RATIO  # Threshold for "near-zero" weights
     near_zero_count = np.sum(w_abs <= zero_threshold)
     natural_sparsity = near_zero_count / len(w_flat) * 100
     
@@ -166,10 +216,16 @@ class MagnitudePruner:
     """
     
     def __init__(self):
+        """
+        Initialize magnitude-based pruner.
+        
+        Stores pruning masks, original weights, and statistics for 
+        tracking compression across multiple layers.
+        """
         # BEGIN SOLUTION
-        self.pruning_masks = {}
-        self.original_weights = {}
-        self.pruning_stats = {}
+        self.pruning_masks = {}      # Binary masks for each pruned layer
+        self.original_weights = {}   # Original dense weights before pruning
+        self.pruning_stats = {}      # Compression statistics per layer
         # END SOLUTION
     
     def calculate_threshold(self, weights: np.ndarray, sparsity: float) -> float:
@@ -213,7 +269,7 @@ class MagnitudePruner:
         return mask
         # END SOLUTION
     
-    def prune(self, weights: np.ndarray, sparsity: float = 0.7) -> Tuple[np.ndarray, np.ndarray, Dict]:
+    def prune(self, weights: np.ndarray, sparsity: float = DEFAULT_SPARSITY) -> Tuple[np.ndarray, np.ndarray, Dict]:
         """
         Prune network weights using magnitude-based pruning.
         
@@ -240,19 +296,22 @@ class MagnitudePruner:
         # Apply pruning
         pruned_weights = weights * mask
         
-        # Calculate statistics
+        # Calculate statistics - breaking down for clarity
         actual_sparsity = np.sum(mask == 0) / mask.size
         remaining_params = np.sum(mask == 1)
+        
+        # Calculate pruning effectiveness metrics
+        pruned_count = int(original_size - remaining_params)
         compression_ratio = original_size / remaining_params if remaining_params > 0 else float('inf')
         
         stats = {
-            'target_sparsity': sparsity,
-            'actual_sparsity': actual_sparsity,
-            'threshold': threshold,
-            'original_params': original_size,
-            'remaining_params': int(remaining_params),
-            'pruned_params': int(original_size - remaining_params),
-            'compression_ratio': compression_ratio
+            'target_sparsity': sparsity,           # What we aimed for
+            'actual_sparsity': actual_sparsity,    # What we achieved  
+            'threshold': threshold,                # Magnitude cutoff used
+            'original_params': original_size,      # Before pruning
+            'remaining_params': int(remaining_params), # After pruning (non-zero)
+            'pruned_params': pruned_count,         # Parameters removed
+            'compression_ratio': compression_ratio  # Size reduction factor
         }
         
         return pruned_weights, mask, stats
@@ -270,7 +329,7 @@ class MagnitudePruner:
         
         # Normalize by original weight magnitude for relative comparison
         original_abs = np.abs(original_weights)
-        relative_error = weight_diff / (original_abs + 1e-8)  # Avoid division by zero
+        relative_error = weight_diff / (original_abs + EPS_DIVISION_SAFETY)  # Avoid division by zero
         
         return {
             'mean_absolute_error': weight_diff.mean(),
@@ -382,7 +441,7 @@ def prune_conv_filters(conv_weights: np.ndarray, sparsity: float = 0.5) -> Tuple
     
     # Determine how many filters to keep
     num_filters_to_keep = int(out_channels * (1 - sparsity))
-    num_filters_to_keep = max(1, num_filters_to_keep)  # Keep at least 1 filter
+    num_filters_to_keep = max(MIN_FILTERS_TO_KEEP, num_filters_to_keep)  # Keep at least 1 filter
     
     # Find indices of top filters to keep
     top_filter_indices = np.argsort(filter_norms)[-num_filters_to_keep:]
@@ -527,6 +586,21 @@ class SparseLinear:
     """
     
     def __init__(self, in_features: int, out_features: int):
+        """
+        Initialize sparse linear layer.
+        
+        Args:
+            in_features: Number of input features
+            out_features: Number of output features
+            
+        Attributes:
+            dense_weights: Original dense weight matrix (out_features, in_features)
+            sparse_weights: Pruned weight matrix with zeros
+            mask: Binary mask indicating kept weights (1=keep, 0=prune)
+            sparsity: Fraction of weights that are zero
+            dense_ops: Number of operations for dense computation
+            sparse_ops: Number of operations for sparse computation
+        """
         # BEGIN SOLUTION
         self.in_features = in_features
         self.out_features = out_features
@@ -553,7 +627,7 @@ class SparseLinear:
         self.bias = bias.copy() if bias is not None else np.zeros(self.out_features)
         # END SOLUTION
     
-    def prune_weights(self, sparsity: float = 0.7):
+    def prune_weights(self, sparsity: float = DEFAULT_SPARSITY):
         """Prune weights using magnitude-based pruning."""
         # BEGIN SOLUTION
         if self.dense_weights is None:
@@ -603,32 +677,34 @@ class SparseLinear:
         if self.sparse_weights is None:
             raise ValueError("Weights not pruned yet")
         
-        # Find non-zero weights
+        # Step 1: Extract indices of all non-zero weights for efficient iteration
         nonzero_indices = np.nonzero(self.sparse_weights)
         
-        # Count actual operations
+        # Step 2: Count actual operations (only non-zero weights)
         self.sparse_ops = len(nonzero_indices[0])
         
+        # Step 3: Initialize output tensor
         # Optimized sparse computation (simulated)
-        # In practice, this would use specialized sparse matrix libraries
+        # In practice, this would use specialized sparse matrix libraries (CSR, CSC formats)
         output = np.zeros((x.shape[0], self.out_features))
         
-        # Only compute for non-zero weights
+        # Step 4: Process each non-zero weight individually (avoiding zero multiplications)
         for i in range(len(nonzero_indices[0])):
-            row = nonzero_indices[0][i]
-            col = nonzero_indices[1][i]
+            # Extract weight position: row = output neuron, col = input neuron
+            row, col = nonzero_indices[0][i], nonzero_indices[1][i]
             weight = self.sparse_weights[row, col]
             
-            # Accumulate: output[batch, row] += input[batch, col] * weight
+            # Step 5: Accumulate contribution for this weight
+            # output[batch, output_neuron] += input[batch, input_neuron] * weight
             output[:, row] += x[:, col] * weight
         
-        # Add bias
+        # Step 6: Add bias term
         output += self.bias
         
         return output
         # END SOLUTION
     
-    def benchmark_speedup(self, batch_size: int = 32, iterations: int = 100) -> Dict:
+    def benchmark_speedup(self, batch_size: int = DEFAULT_BATCH_SIZE, iterations: int = DEFAULT_BENCHMARK_ITERATIONS) -> Dict:
         """Benchmark sparse vs dense computation speedup."""
         # BEGIN SOLUTION
         import time
@@ -756,6 +832,94 @@ Now let's build a complete model compression pipeline that can prune entire neur
 
 # %% nbgrader={"grade": false, "grade_id": "compression-pipeline", "locked": false, "schema_version": 3, "solution": true, "task": false}
 #| export
+
+def _determine_layer_type_and_sparsity(shape: tuple) -> Tuple[str, float]:
+    """
+    Determine layer type and recommended sparsity from weight tensor shape.
+    
+    Args:
+        shape: Weight tensor shape
+        
+    Returns:
+        layer_type: Type of layer (Conv2D, Dense, Other)
+        recommended_sparsity: Recommended sparsity level for this layer type
+    """
+    if len(shape) == CONV2D_NDIM:  # Conv layer: (out, in, H, W)
+        return "Conv2D", DEFAULT_CONV_SPARSITY
+    elif len(shape) == DENSE_NDIM:  # Dense layer: (out, in)  
+        return "Dense", DEFAULT_DENSE_SPARSITY
+    else:
+        return "Other", DEFAULT_OTHER_SPARSITY
+
+def _calculate_layer_analysis_info(layer_name: str, weights: np.ndarray, layer_type: str, 
+                                 natural_sparsity: float, recommended_sparsity: float) -> Dict[str, Any]:
+    """
+    Create layer analysis information dictionary.
+    
+    Args:
+        layer_name: Name of the layer
+        weights: Weight tensor
+        layer_type: Type of layer 
+        natural_sparsity: Natural sparsity percentage
+        recommended_sparsity: Recommended sparsity level
+        
+    Returns:
+        Layer analysis information dictionary
+    """
+    return {
+        'type': layer_type,
+        'shape': weights.shape,
+        'parameters': weights.size,
+        'natural_sparsity': natural_sparsity,
+        'recommended_sparsity': recommended_sparsity
+    }
+
+def _print_layer_analysis_row(layer_name: str, layer_type: str, num_params: int, 
+                             natural_sparsity: float, recommended_sparsity: float) -> None:
+    """Print a single row of layer analysis results."""
+    print(f"{layer_name:12} | {layer_type:7} | {num_params:10,} | "
+          f"{natural_sparsity:12.1f}% | {recommended_sparsity:.0%}")
+
+def _calculate_compression_stats(total_original_params: int, total_remaining_params: int) -> Tuple[float, float]:
+    """
+    Calculate overall compression statistics.
+    
+    Args:
+        total_original_params: Original number of parameters
+        total_remaining_params: Remaining parameters after compression
+        
+    Returns:
+        overall_compression: Compression ratio (original/remaining)
+        overall_sparsity: Sparsity fraction (1 - remaining/original)
+    """
+    overall_compression = total_original_params / total_remaining_params if total_remaining_params > 0 else 1
+    overall_sparsity = 1 - (total_remaining_params / total_original_params)
+    return overall_compression, overall_sparsity
+
+def _calculate_quality_score(norm_preservation: float, mean_error: float, original_mean: float) -> float:
+    """
+    Calculate quality score for compression validation.
+    
+    Args:
+        norm_preservation: Weight norm preservation ratio
+        mean_error: Mean absolute error between original and compressed
+        original_mean: Mean absolute value of original weights
+        
+    Returns:
+        quality_score: Quality score between 0 and 1 (higher is better)
+    """
+    quality_score = norm_preservation * (1 - mean_error / (original_mean + EPS_DIVISION_SAFETY))
+    return max(0, min(1, quality_score))  # Clamp to [0, 1]
+
+def _get_quality_assessment(quality_score: float) -> str:
+    """Get quality assessment string based on score."""
+    if quality_score > EXCELLENT_QUALITY_THRESHOLD:
+        return "✅ Excellent compression quality!"
+    elif quality_score > ACCEPTABLE_QUALITY_THRESHOLD:
+        return "⚠️  Acceptable compression quality"  
+    else:
+        return "❌ Poor compression quality - consider lower sparsity"
+
 class ModelCompressor:
     """
     Complete model compression pipeline for neural networks.
@@ -765,11 +929,20 @@ class ModelCompressor:
     """
     
     def __init__(self):
+        """
+        Initialize model compression pipeline.
+        
+        Attributes:
+            original_model: Storage for original dense model weights
+            compressed_model: Storage for compressed model weights and metadata
+            compression_stats: Overall compression statistics
+            layer_sensitivities: Per-layer sensitivity analysis results
+        """
         # BEGIN SOLUTION
-        self.original_model = {}
-        self.compressed_model = {}
-        self.compression_stats = {}
-        self.layer_sensitivities = {}
+        self.original_model = {}        # Original dense weights
+        self.compressed_model = {}      # Compressed weights and metadata
+        self.compression_stats = {}     # Overall compression statistics
+        self.layer_sensitivities = {}   # Layer-wise sensitivity analysis
         # END SOLUTION
     
     def analyze_model_for_compression(self, model_weights: Dict[str, np.ndarray]) -> Dict[str, Any]:
@@ -798,31 +971,20 @@ class ModelCompressor:
         for layer_name, weights in model_weights.items():
             layer_analysis = analyze_weight_redundancy(weights, f"Layer {layer_name}")
             
-            # Determine layer type from shape
-            if len(weights.shape) == 4:  # Conv layer: (out, in, H, W)
-                layer_type = "Conv2D"
-                recommended_sparsity = 0.6  # Conservative for conv layers
-            elif len(weights.shape) == 2:  # Dense layer: (out, in)  
-                layer_type = "Dense"
-                recommended_sparsity = 0.8  # Aggressive for dense layers
-            else:
-                layer_type = "Other"
-                recommended_sparsity = 0.5  # Safe default
+            # Analyze layer characteristics and determine compression strategy
+            layer_type, recommended_sparsity = _determine_layer_type_and_sparsity(weights.shape)
             
-            analysis['layers'][layer_name] = {
-                'type': layer_type,
-                'shape': weights.shape,
-                'parameters': weights.size,
-                'natural_sparsity': layer_analysis['natural_sparsity'],
-                'recommended_sparsity': recommended_sparsity
-            }
+            analysis['layers'][layer_name] = _calculate_layer_analysis_info(
+                layer_name, weights, layer_type, 
+                layer_analysis['natural_sparsity'], recommended_sparsity
+            )
             
             analysis['total_params'] += weights.size
             if layer_type in ['Conv2D', 'Dense']:
                 analysis['compressible_params'] += weights.size
             
-            print(f"{layer_name:12} | {layer_type:7} | {weights.size:10,} | "
-                  f"{layer_analysis['natural_sparsity']:12.1f}% | {recommended_sparsity:.0%}")
+            _print_layer_analysis_row(layer_name, layer_type, weights.size,
+                                    layer_analysis['natural_sparsity'], recommended_sparsity)
         
         # Calculate overall compression potential
         compression_potential = analysis['compressible_params'] / analysis['total_params']
@@ -865,7 +1027,7 @@ class ModelCompressor:
         total_remaining_params = 0
         
         for layer_name, weights in model_weights.items():
-            sparsity = layer_sparsities.get(layer_name, 0.7)  # Default 70%
+            sparsity = layer_sparsities.get(layer_name, DEFAULT_SPARSITY)  # Default sparsity
             
             print(f"\n🔧 Compressing {layer_name} (target: {sparsity:.0%} sparsity)...")
             
@@ -887,8 +1049,9 @@ class ModelCompressor:
             print(f"   Compression: {stats['compression_ratio']:.1f}x")
         
         # Calculate overall compression
-        overall_compression = total_original_params / total_remaining_params if total_remaining_params > 0 else 1
-        overall_sparsity = 1 - (total_remaining_params / total_original_params)
+        overall_compression, overall_sparsity = _calculate_compression_stats(
+            total_original_params, total_remaining_params
+        )
         
         self.compressed_model = compressed_weights
         self.compression_stats = {
@@ -946,8 +1109,7 @@ class ModelCompressor:
             
             # Simple quality score (higher is better)
             # Penalize high error, reward norm preservation
-            quality_score = norm_preservation * (1 - mean_error / (np.abs(original).mean() + 1e-8))
-            quality_score = max(0, min(1, quality_score))  # Clamp to [0, 1]
+            quality_score = _calculate_quality_score(norm_preservation, mean_error, np.abs(original).mean())
             
             validation_results['layer_quality'][layer_name] = {
                 'mean_error': mean_error,
@@ -971,12 +1133,7 @@ class ModelCompressor:
         validation_results['quality_score'] = overall_quality_score
         
         print(f"\n🎯 Overall Quality Score: {overall_quality_score:.3f}")
-        if overall_quality_score > 0.8:
-            print("   ✅ Excellent compression quality!")
-        elif overall_quality_score > 0.6:
-            print("   ⚠️  Acceptable compression quality")  
-        else:
-            print("   ❌ Poor compression quality - consider lower sparsity")
+        print(f"   {_get_quality_assessment(overall_quality_score)}")
         
         return validation_results
         # END SOLUTION
@@ -1289,9 +1446,9 @@ def benchmark_sparse_inference_speedup():
         efficiency = benchmark['efficiency']
         
         # Determine bottleneck
-        if efficiency > 0.8:
+        if efficiency > SPEEDUP_EFFICIENCY_HIGH:
             notes = "CPU bound"
-        elif efficiency > 0.5:
+        elif efficiency > SPEEDUP_EFFICIENCY_MEDIUM:
             notes = "Memory bound"
         else:
             notes = "Framework overhead"

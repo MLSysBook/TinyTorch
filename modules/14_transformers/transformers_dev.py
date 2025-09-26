@@ -204,11 +204,18 @@ class LayerNorm:
             eps: Small value for numerical stability
         """
         ### BEGIN SOLUTION
+        # Input validation
         if isinstance(normalized_shape, int):
+            if normalized_shape <= 0:
+                raise ValueError(f"normalized_shape must be positive, got {normalized_shape}")
             self.normalized_shape = (normalized_shape,)
         else:
-            self.normalized_shape = normalized_shape
+            if any(dim <= 0 for dim in normalized_shape):
+                raise ValueError(f"All dimensions in normalized_shape must be positive, got {normalized_shape}")
+            self.normalized_shape = tuple(normalized_shape)
         
+        if eps <= 0:
+            raise ValueError(f"eps must be positive, got {eps}")
         self.eps = eps
         
         # Initialize learnable parameters
@@ -249,30 +256,85 @@ class LayerNorm:
             Normalized tensor with same shape as input
         """
         ### BEGIN SOLUTION
-        # Calculate mean and variance across the feature dimensions (last axes)
-        # For shape (..., *normalized_shape), we want to normalize over the last len(normalized_shape) axes
+        # Input validation
+        if len(x.shape) < len(self.normalized_shape):
+            raise ValueError(
+                f"Input has {len(x.shape)} dimensions, but normalized_shape "
+                f"requires at least {len(self.normalized_shape)} dimensions"
+            )
         
-        # Determine axes to normalize over
-        axes_to_normalize = tuple(range(len(x.shape) - len(self.normalized_shape), len(x.shape)))
+        # Check that the last dimensions match normalized_shape
+        input_norm_shape = x.shape[-len(self.normalized_shape):]
+        if input_norm_shape != self.normalized_shape:
+            raise ValueError(
+                f"Input shape {input_norm_shape} doesn't match "
+                f"normalized_shape {self.normalized_shape}"
+            )
         
-        # Calculate mean
+        # Step 1: Determine which axes to normalize over (the last len(normalized_shape) axes)
+        input_ndim = len(x.shape)
+        norm_ndim = len(self.normalized_shape)
+        # We normalize over the last 'norm_ndim' dimensions
+        start_axis = input_ndim - norm_ndim
+        axes_to_normalize = tuple(range(start_axis, input_ndim))
+        
+        # Step 2: Calculate statistics (mean and variance)
         mean = np.mean(x.data, axis=axes_to_normalize, keepdims=True)
-        
-        # Calculate variance
         variance = np.var(x.data, axis=axes_to_normalize, keepdims=True)
         
-        # Normalize
-        normalized = (x.data - mean) / np.sqrt(variance + self.eps)
+        # Step 3: Normalize (subtract mean, divide by std)
+        std = np.sqrt(variance + self.eps)  # Add eps for numerical stability
+        normalized_input = (x.data - mean) / std
         
-        # Apply learnable scale and shift
-        # Reshape gamma and beta to be broadcastable
-        gamma_broadcasted = self.gamma.data.reshape([1] * (len(x.shape) - len(self.normalized_shape)) + list(self.normalized_shape))
-        beta_broadcasted = self.beta.data.reshape([1] * (len(x.shape) - len(self.normalized_shape)) + list(self.normalized_shape))
+        # Step 4: Apply learnable scale and shift parameters
+        scaled_output = self._apply_scale_and_shift(normalized_input, x.shape)
         
-        output = gamma_broadcasted * normalized + beta_broadcasted
-        
-        return Tensor(output)
+        return Tensor(scaled_output)
         ### END SOLUTION
+    
+    def _prepare_parameter_for_broadcast(self, param: Tensor, input_shape: tuple) -> np.ndarray:
+        """
+        Reshape parameter tensor to be broadcastable with input.
+        
+        This helper method makes the broadcasting logic clearer by separating
+        the complex reshape operation into a dedicated function.
+        
+        Args:
+            param: Parameter tensor (gamma or beta)
+            input_shape: Shape of the input tensor
+            
+        Returns:
+            Reshaped parameter array ready for broadcasting
+        """
+        # Calculate how many batch dimensions we need to add
+        batch_dims = len(input_shape) - len(self.normalized_shape)
+        
+        # Create broadcast shape: [1, 1, ..., 1, *normalized_shape]
+        # The number of 1s equals the number of batch dimensions
+        broadcast_shape = [1] * batch_dims + list(self.normalized_shape)
+        
+        return param.data.reshape(broadcast_shape)
+    
+    def _apply_scale_and_shift(self, normalized: np.ndarray, input_shape: tuple) -> np.ndarray:
+        """
+        Apply learnable gamma (scale) and beta (shift) parameters.
+        
+        This method handles the broadcasting logic for applying the learnable
+        parameters to the normalized input.
+        
+        Args:
+            normalized: Normalized input array
+            input_shape: Shape of the original input tensor
+            
+        Returns:
+            Scaled and shifted output array
+        """
+        # Prepare parameters for broadcasting with the input
+        gamma_broadcast = self._prepare_parameter_for_broadcast(self.gamma, input_shape)
+        beta_broadcast = self._prepare_parameter_for_broadcast(self.beta, input_shape)
+        
+        # Apply transformation: gamma * normalized + beta
+        return gamma_broadcast * normalized + beta_broadcast
     
     def __call__(self, x: Tensor) -> Tensor:
         """Make the class callable."""
