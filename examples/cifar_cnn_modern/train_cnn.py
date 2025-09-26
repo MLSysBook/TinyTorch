@@ -27,19 +27,14 @@ features from real-world photographs!
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 🏗️ ARCHITECTURE (Hierarchical Feature Extraction):
-    ┌─────────────┐  ┌─────────┐  ┌─────────┐  ┌─────────┐  ┌─────────┐
-    │ Input Image │  │ Conv2D  │  │ MaxPool │  │ Conv2D  │  │ MaxPool │
-    │ 32×32×3 RGB │─▶│ 3→32    │─▶│  2×2    │─▶│ 32→64   │─▶│  2×2    │
-    │   Pixels    │  │ YOUR M9 │  │ YOUR M9 │  │ YOUR M9 │  │ YOUR M9 │
-    └─────────────┘  └─────────┘  └─────────┘  └─────────┘  └─────────┘
-                           ↓                          ↓
-                    Edge Detection             Shape Detection
-                    
-                     ┌─────────────────────────────────┐
-                     │ Flatten → Linear → Linear → 10  │
-                     │ YOUR M9    YOUR M4  YOUR M4     │
-                     └─────────────────────────────────┘
-                     Object Recognition → Classification
+    ┌─────────────┐  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐
+    │ Input Image │  │   Conv2D    │  │   MaxPool   │  │   Conv2D    │  │   MaxPool   │  │   Flatten   │  │   Linear    │  │   Linear    │
+    │ 32×32×3 RGB │─▶│    3→32     │─▶│     2×2     │─▶│    32→64    │─▶│     2×2     │─▶│   →2304     │─▶│  2304→256   │─▶│   256→10    │
+    │   Pixels    │  │   YOUR M9   │  │   YOUR M9   │  │   YOUR M9   │  │   YOUR M9   │  │   YOUR M9   │  │   YOUR M4   │  │   YOUR M4   │
+    └─────────────┘  └─────────────┘  └─────────────┘  └─────────────┘  └─────────────┘  └─────────────┘  └─────────────┘  └─────────────┘
+                      Edge Detection     Downsample      Shape Detection    Downsample       Vectorize     Hidden Layer    Classification
+                           ↓                                  ↓                                                                   ↓
+                    Low-level features              High-level features                                                  10 Class Probs
 
 🔍 CIFAR-10 DATASET - REAL NATURAL IMAGES:
 
@@ -48,17 +43,17 @@ CIFAR-10 contains 60,000 32×32 color images in 10 classes:
     Sample Images:                    Feature Hierarchy YOUR CNN Learns:
     
     ┌──────────┐                     Layer 1 (Conv 3→32):
-    │ ✈️ Plane  │                     • Edge detectors
-    │[Sky blue ]│                     • Color gradients
-    │[White    ]│                     • Simple textures
-    │[Wings    ]│                     
+    │ ✈️ Plane │                     • Edge detectors
+    │[Sky blue │                     • Color gradients
+    │[White    │                     • Simple textures
+    │[Wings    │                     
     └──────────┘                     Layer 2 (Conv 32→64):
                                       • Object parts
     ┌──────────┐                     • Complex patterns
     │ 🚗 Car   │                     • Spatial relationships
-    │[Red body ]│                     
-    │[Wheels   ]│                     Output Layer:
-    │[Windows  ]│                     • Complete objects
+    │[Red body]│                     
+    │[Wheels]  │                     Output Layer:
+    │[Windows] │                     • Complete objects
     └──────────┘                     • Class probabilities
 
     Classes: plane, car, bird, cat, deer, dog, frog, horse, ship, truck
@@ -185,15 +180,15 @@ def visualize_cifar_cnn():
     Original Image (32×32×3):           After Conv1 (30×30×32):
     ┌────────────────┐                 ┌─┬─┬─┬─┬─┬─┬─┬─┬─┐
     │ [Cat in grass] │                 │Edge detectors...│ 32 filters
-    │ Complex scene  │ → Conv+ReLU →   │Texture maps... │ detect
+    │ Complex scene  │ → Conv+ReLU →   │Texture maps...  │ detect
     │ Many patterns  │                 │Color gradients. │ features
     └────────────────┘                 └─┴─┴─┴─┴─┴─┴─┴─┴─┘
     
     After Pool1 (15×15×32):            After Conv2 (13×13×64):
     ┌─────────┐                        ┌─┬─┬─┬─┬─┬─┬─┬─┬─┐
-    │Reduced  │                        │Cat ears...     │ 64 filters
-    │spatial  │ → Conv+ReLU →          │Cat eyes...     │ combine
-    │dimension│                        │Grass texture...│ features
+    │Reduced  │                        │Cat ears...      │ 64 filters
+    │spatial  │ → Conv+ReLU →          │Cat eyes...      │ combine
+    │dimension│                        │Grass texture... │ features
     └─────────┘                        └─┴─┴─┴─┴─┴─┴─┴─┴─┘
     
     After Pool2 + Flatten:             Classification:
