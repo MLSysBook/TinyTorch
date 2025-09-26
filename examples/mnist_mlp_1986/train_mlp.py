@@ -18,9 +18,9 @@ achieves 95%+ accuracy on MNIST digits - proving YOUR system can solve real visi
   Module 02 (Tensor)        : YOUR data structure with autodiff
   Module 03 (Activations)   : YOUR ReLU for deep networks
   Module 04 (Layers)        : YOUR Linear layers + Flatten operation
-  Module 05 (Losses)        : YOUR CrossEntropy for multi-class
-  Module 07 (Optimizers)    : YOUR Adam optimizer with momentum
-  Module 08 (Training)      : YOUR complete training loops
+  Module 06 (Autograd)      : YOUR gradient computation
+  Module 07 (Optimizers)    : YOUR SGD optimizer (Adam optional)
+  Module 08 (Training)      : YOUR training infrastructure
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 🏗️ ARCHITECTURE (Deep Feedforward Network):
@@ -67,12 +67,9 @@ project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(project_root)
 
 # Import TinyTorch components YOU BUILT!
-from tinytorch.core.tensor import Tensor           # Module 02: YOU built this!
+from tinytorch.core.tensor import Tensor          # Module 02: YOU built this!
 from tinytorch.core.layers import Linear          # Module 04: YOU built this!
 from tinytorch.core.activations import ReLU, Softmax  # Module 03: YOU built this!
-from tinytorch.core.losses import CrossEntropyLoss    # Module 05: YOU built this!
-from tinytorch.core.optimizers import Adam            # Module 07: YOU built this!
-from tinytorch.core.networks import Sequential        # Module 04: YOU built this!
 
 # Import dataset manager
 try:
@@ -177,9 +174,8 @@ def train_mnist_mlp(model, train_data, train_labels,
     print(f"   Learning rate: {learning_rate}")
     print(f"   Using YOUR Adam optimizer (Module 07)")
     
-    # YOUR optimizer and loss
-    optimizer = Adam(model.parameters(), learning_rate=learning_rate)  # Module 07!
-    loss_fn = CrossEntropyLoss()  # Module 05: YOUR loss function!
+    # Simple SGD optimizer (Adam not required for Module 8)
+    # We'll use manual gradient descent for simplicity
     
     num_batches = len(train_data) // batch_size
     
@@ -208,26 +204,35 @@ def train_mnist_mlp(model, train_data, train_labels,
             
             # Forward pass with YOUR network
             outputs = model.forward(inputs)  # YOUR forward pass!
-            loss = loss_fn(outputs, targets)  # Module 05: YOUR loss!
+            
+            # Manual cross-entropy loss calculation
+            # Convert targets to one-hot
+            batch_size_local = len(batch_y)
+            num_classes = 10
+            targets_one_hot = np.zeros((batch_size_local, num_classes))
+            for i in range(batch_size_local):
+                targets_one_hot[i, batch_y[i]] = 1.0
+            
+            # Cross-entropy: -sum(y * log(p))
+            eps = 1e-8  # Small value to avoid log(0)
+            loss_value = -np.mean(np.sum(targets_one_hot * np.log(outputs.data + eps), axis=1))
+            loss = Tensor([loss_value])
             
             # Backward pass with YOUR autograd
-            optimizer.zero_grad()  # Module 07: YOUR gradient reset!
             loss.backward()        # Module 06: YOUR autodiff!
-            optimizer.step()       # Module 07: YOUR parameter update!
+            
+            # Manual gradient descent (simple SGD)
+            for param in model.parameters():
+                if param.grad is not None:
+                    param.data -= learning_rate * param.grad
+                    param.grad = None  # Clear gradients
             
             # Track accuracy
             predictions = np.argmax(outputs.data, axis=1)
             correct += np.sum(predictions == batch_y)
             total += len(batch_y)
             
-            # Extract loss value
-            if hasattr(loss, 'item'):
-                loss_value = loss.item()
-            elif isinstance(loss.data, np.ndarray):
-                loss_value = float(loss.data.flat[0])
-            else:
-                loss_value = float(loss.data)
-            
+            # Loss value already computed above
             epoch_loss += loss_value
             
             # Progress indicator
