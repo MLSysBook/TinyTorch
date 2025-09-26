@@ -47,18 +47,26 @@ import numpy as np
 import sys
 import os
 
-# Clean production-style imports - no try/except hacking
+# Smart import system: works both during development and in production
+# This pattern allows the same code to work in two scenarios:
+# 1. During development: imports from local module files (tensor_dev.py)
+# 2. In production: imports from installed tinytorch package
+# This flexibility is essential for educational development workflows
+
 if 'tinytorch' in sys.modules:
     # Production: Import from installed package
+    # When tinytorch is installed as a package, use the packaged version
     from tinytorch.core.tensor import Tensor, Parameter
 else:
-    # Development: Direct import from local module
+    # Development: Import from local module files
+    # During development, we need to import directly from the source files
+    # This allows us to work with modules before they're packaged
     tensor_module_path = os.path.join(os.path.dirname(__file__), '..', '02_tensor')
     sys.path.insert(0, tensor_module_path)
     try:
         from tensor_dev import Tensor, Parameter
     finally:
-        sys.path.pop(0)  # Clean up path
+        sys.path.pop(0)  # Always clean up path to avoid side effects
 
 # %% nbgrader={"grade": false, "grade_id": "layers-setup", "locked": false, "schema_version": 3, "solution": false, "task": false}
 print("🔥 TinyTorch Layers Module")
@@ -126,17 +134,22 @@ class Module:
         When you do self.weight = Parameter(...), this automatically adds
         the parameter to our collection for easy optimization.
         """
-        # Check if it's a Tensor that looks like a parameter (has .data attribute)
-        # Parameters are typically named 'weights', 'bias', 'weight', etc.
-        if (hasattr(value, 'data') and hasattr(value, 'shape') and 
-            isinstance(value, Tensor) and 
-            name in ['weights', 'weight', 'bias']):
+        # Step 1: Check if this looks like a parameter (Tensor with data and specific name)
+        # Break down the complex boolean logic for clarity:
+        is_tensor_like = hasattr(value, 'data') and hasattr(value, 'shape')
+        is_tensor_type = isinstance(value, Tensor)
+        is_parameter_name = name in ['weights', 'weight', 'bias']
+        
+        if is_tensor_like and is_tensor_type and is_parameter_name:
+            # Step 2: Add to our parameter list for optimization
             self._parameters.append(value)
-        # Check if it's another Module (sub-module)
+        
+        # Step 3: Check if it's a sub-module (another neural network layer)
         elif isinstance(value, Module):
+            # Step 4: Add to module list for recursive parameter collection
             self._modules.append(value)
         
-        # Always call parent to actually set the attribute
+        # Step 5: Always set the actual attribute (this is essential!)
         super().__setattr__(name, value)
     
     def parameters(self):
@@ -281,13 +294,28 @@ def matmul(a: Tensor, b: Tensor) -> Tensor:
     k2, n = b_data.shape
     
     if k != k2:
-        raise ValueError(f"Inner dimensions must match: {k} != {k2}")
+        raise ValueError(
+            f"Matrix multiplication requires inner dimensions to match!\n"
+            f"Left matrix: {a_data.shape} (inner dim: {k})\n"
+            f"Right matrix: {b_data.shape} (inner dim: {k2})\n"
+            f"For A @ B, A's columns must equal B's rows."
+        )
     
     # Initialize result matrix
     result = np.zeros((m, n), dtype=a_data.dtype)
     
     # Triple nested loops - educational, shows every operation
     # This is intentionally simple to understand the fundamental computation
+    #
+    # Matrix multiplication visualization:
+    # A (2,3) @ B (3,4) = C (2,4)
+    # 
+    # A = [[a11, a12, a13],     B = [[b11, b12, b13, b14],
+    #      [a21, a22, a23]]          [b21, b22, b23, b24],
+    #                                [b31, b32, b33, b34]]
+    #
+    # C[0,0] = a11*b11 + a12*b21 + a13*b31 (dot product of A's row 0 with B's column 0)
+    #
     # Module 15 will show the optimization journey:
     #   Step 1 (here): Educational loops - slow but clear
     #   Step 2: Loop blocking for cache efficiency  
@@ -422,11 +450,18 @@ class Linear(Module):
         
         # Initialize weights with small random values using Parameter
         # Shape: (input_size, output_size) for matrix multiplication
+        # 
+        # Weight initialization explanation:
+        # - Use small random values (scaled by 0.1) to prevent vanishing/exploding gradients
+        # - Small initial values help networks train more stably in deep architectures
+        # - In production systems, Xavier or Kaiming initialization would be used
+        # - The 0.1 scaling factor is a simple but effective approach for basic networks
         weight_data = np.random.randn(input_size, output_size) * 0.1
         self.weights = Parameter(weight_data)  # Auto-registers for optimization!
         
         # Initialize bias if requested
         if use_bias:
+            # Bias also uses small random initialization (could be zeros, but small random works well)
             bias_data = np.random.randn(output_size) * 0.1
             self.bias = Parameter(bias_data)  # Auto-registers for optimization!
         else:
@@ -438,59 +473,51 @@ class Linear(Module):
         Forward pass through the Linear layer.
         
         Args:
-            x: Input tensor or Variable (shape: ..., input_size)
+            x: Input tensor (shape: ..., input_size)
         
         Returns:
-            Output tensor or Variable (shape: ..., output_size)
-            Preserves Variable type for gradient tracking in training
+            Output tensor (shape: ..., output_size)
         
-        TODO: Implement autograd-aware forward pass: output = input @ weights + bias
+        COMMON PITFALL: Make sure input tensor has shape (..., input_size)
+        If you get shape mismatch errors, check that your input's last dimension
+        matches the layer's input_size parameter.
+        
+        TODO: Implement the linear transformation: output = input @ weights + bias
         
         STEP-BY-STEP IMPLEMENTATION:
-        1. Handle both Tensor and Variable inputs seamlessly
-        2. Convert Parameters to Variables to maintain gradient connections
-        3. Perform matrix multiplication: output = input @ weights
-        4. Add bias if it exists: output = output + bias
-        5. Return result maintaining Variable chain for training
+        1. Extract data from input tensor using x.data
+        2. Get weight and bias data using self.weights.data and self.bias.data
+        3. Perform matrix multiplication: np.dot(x.data, weights.data)
+        4. Add bias if it exists: result + bias.data
+        5. Return new Tensor with result
         
         LEARNING CONNECTIONS:
-        - This supports both inference (Tensors) and training (Variables)
-        - Parameters are converted to Variables to enable gradient flow
-        - Result maintains computational graph for automatic differentiation
-        - Works with optimizers that expect Parameter gradients
+        - This is the core neural network operation: y = Wx + b
+        - Matrix multiplication handles batch processing automatically
+        - Each row in input produces one row in output
+        - This is pure linear algebra - no autograd complexity yet
         
         IMPLEMENTATION HINTS:
-        - Import Variable from autograd module
-        - Convert self.weights to Variable(self.weights) when needed
-        - Use @ operator for matrix multiplication (calls __matmul__)
-        - Handle bias addition with + operator
+        - Use np.dot() for matrix multiplication
+        - Handle the case where bias is None
+        - Always return a new Tensor object
+        - Focus on the mathematical operation, not gradient tracking
         """
         ### BEGIN SOLUTION
-        # Import Variable for gradient tracking
-        try:
-            from tinytorch.core.autograd import Variable
-        except ImportError:
-            # Fallback for development
-            import sys
-            import os
-            sys.path.append(os.path.join(os.path.dirname(__file__), '..', '06_autograd'))
-            from autograd_dev import Variable
+        # Extract data from input tensor
+        x_data = x.data
+        weights_data = self.weights.data
         
-        # Ensure input supports autograd if it's a Variable
-        input_var = x if isinstance(x, Variable) else Variable(x, requires_grad=False)
-        
-        # Convert parameters to Variables to maintain gradient connections
-        weight_var = Variable(self.weights) if not isinstance(self.weights, Variable) else self.weights
-        
-        # Matrix multiplication: input @ weights using Variable-aware operation
-        output = input_var @ weight_var  # Use Variable.__matmul__ which calls matmul_vars
+        # Matrix multiplication: input @ weights
+        output_data = np.dot(x_data, weights_data)
         
         # Add bias if it exists
         if self.bias is not None:
-            bias_var = Variable(self.bias) if not isinstance(self.bias, Variable) else self.bias
-            output = output + bias_var
+            bias_data = self.bias.data
+            output_data = output_data + bias_data
         
-        return output
+        # Return new Tensor with result
+        return Tensor(output_data)
         ### END SOLUTION
 
 # Backward compatibility alias
@@ -843,13 +870,15 @@ def flatten(x, start_dim=1):
     remaining_size = np.prod(data.shape[start_dim:])
     new_shape = (batch_size, remaining_size) if start_dim > 0 else (remaining_size,)
     
-    # Reshape preserving tensor type
+    # Reshape while preserving the original tensor type
     if hasattr(x, 'data'):
-        # It's a Tensor - preserve type
+        # It's a Tensor - create a new Tensor with flattened data
         flattened_data = data.reshape(new_shape)
+        # Use type(x) to preserve the exact Tensor type (Parameter vs regular Tensor)
+        # This ensures that if input was a Parameter, output is also a Parameter
         return type(x)(flattened_data)
     else:
-        # It's a numpy array
+        # It's a numpy array - just reshape and return
         return data.reshape(new_shape)
 
 # %% [markdown]
