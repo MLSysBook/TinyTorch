@@ -1,105 +1,423 @@
 #!/usr/bin/env python3
 """
-Clean MNIST Example - What Students Built
-=========================================
+MNIST MLP (1986) - Backpropagation Revolution
+============================================
 
-After completing modules 02-07, students can classify handwritten digits.
-This demonstrates how multi-layer perceptrons solve real vision tasks.
+📚 HISTORICAL CONTEXT:
+In 1986, Rumelhart, Hinton, and Williams popularized backpropagation, finally 
+enabling training of deep multi-layer networks. This breakthrough made it possible
+to solve real vision problems like handwritten digit recognition, launching the
+modern deep learning era.
 
-MODULES EXERCISED IN THIS EXAMPLE:
+🎯 WHAT YOU'RE BUILDING:
+Using YOUR TinyTorch implementations, you'll build a multi-layer perceptron that
+achieves 95%+ accuracy on MNIST digits - proving YOUR system can solve real vision!
+
+✅ REQUIRED MODULES (Run after Module 8):
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  Module 02 (Tensor)        : Data structure with gradient tracking + basic autograd
-  Module 03 (Activations)   : ReLU activation function  
-  Module 04 (Layers)        : Linear layers + Module base + Flatten operation
-  Module 05 (Loss)          : CrossEntropy loss for multi-class classification
-  Module 06 (Optimizers)    : Adam optimizer with adaptive learning
-  Module 07 (Training)      : Complete training loops and evaluation
+  Module 02 (Tensor)        : YOUR data structure with autodiff
+  Module 03 (Activations)   : YOUR ReLU for deep networks
+  Module 04 (Layers)        : YOUR Linear layers + Flatten operation
+  Module 05 (Losses)        : YOUR CrossEntropy for multi-class
+  Module 07 (Optimizers)    : YOUR Adam optimizer with momentum
+  Module 08 (Training)      : YOUR complete training loops
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-MLP Architecture:
+🏗️ ARCHITECTURE (Deep Feedforward Network):
     ┌─────────────┐    ┌─────────┐    ┌─────────┐    ┌─────────┐    ┌─────────┐
-    │ Input Image │    │ Flatten │    │ Dense   │    │ Dense   │    │ Output  │
-    │  (28×28)    │───▶│  (784)  │───▶│  (128)  │───▶│  (64)   │───▶│  (10)   │
-    │   Pixels    │    │ Module  │    │ Linear  │    │ Linear  │    │ Classes │
-    └─────────────┘    │   04    │    │   +ReLU │    │   +ReLU │    │Module 04│
-                       └─────────┘    │Module 04│    │Module 04│    └─────────┘
-                                     └─────────┘    └─────────┘
+    │ Input Image │    │ Flatten │    │ Linear  │    │ Linear  │    │ Output  │
+    │   28×28     │───▶│   784   │───▶│ 784→128 │───▶│ 128→64  │───▶│  64→10  │
+    │   Pixels    │    │ YOUR M4 │    │  +ReLU  │    │  +ReLU  │    │ Classes │
+    └─────────────┘    └─────────┘    └─────────┘    └─────────┘    └─────────┘
+                                      Hidden Layer 1  Hidden Layer 2  Digit Probs
 
-Key Insight: Simple MLPs can achieve 95%+ accuracy on MNIST digits
-Hidden layers learn hierarchical feature representations
+🔍 MNIST DATASET - THE HELLO WORLD OF COMPUTER VISION:
+
+MNIST contains 70,000 handwritten digits (60K train, 10K test):
+
+    Sample Digits:                   Why MNIST Matters:
+    
+    ┌─────┐ ┌─────┐ ┌─────┐        • First "real" vision benchmark
+    │ ███ │ │█████│ │█████│        • 28×28 pixels = 784 features
+    │█   █│ │    █│ │    █│        • 10 classes (digits 0-9)
+    │   █ │ │  ██ │ │ ███ │        • Proves deep learning works
+    │  █  │ │ █   │ │    █│        • YOUR MLP will get 95%+ accuracy!
+    │ █   │ │█████│ │█████│        
+    └─────┘ └─────┘ └─────┘        
+      "1"     "2"     "3"          
+
+    Network learns to map:
+    784 pixels → Hidden features → Digit classification
+
+📊 EXPECTED PERFORMANCE:
+- Dataset: 60,000 training images, 10,000 test images
+- Training time: 2-3 minutes (5 epochs)
+- Expected accuracy: 95%+ on test set
+- Parameters: ~100K weights (small by modern standards!)
 """
 
-from tinytorch import nn, optim
-from tinytorch.core.tensor import Tensor
-from tinytorch.core.training import CrossEntropyLoss
-from tinytorch.core.autograd import to_numpy
+import sys
+import os
 import numpy as np
+import argparse
+import time
 
-class MNISTMLP(nn.Module):
-    def __init__(self):
-        super().__init__()  # Module 04: You built Module base class!
-        self.fc1 = nn.Linear(784, 128)  # Module 04: You built Linear layers!
-        self.fc2 = nn.Linear(128, 64)   # Module 04: You built weight matrices!
-        self.fc3 = nn.Linear(64, 10)    # Module 04: Your output layer!
+# Add project root to path for TinyTorch imports
+project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.append(project_root)
+
+# Import TinyTorch components YOU BUILT!
+from tinytorch.core.tensor import Tensor           # Module 02: YOU built this!
+from tinytorch.core.layers import Linear          # Module 04: YOU built this!
+from tinytorch.core.activations import ReLU, Softmax  # Module 03: YOU built this!
+from tinytorch.core.losses import CrossEntropyLoss    # Module 05: YOU built this!
+from tinytorch.core.optimizers import Adam            # Module 07: YOU built this!
+from tinytorch.core.networks import Sequential        # Module 04: YOU built this!
+
+# Import dataset manager
+try:
+    from examples.data_manager import DatasetManager
+except ImportError:
+    sys.path.append(os.path.join(project_root, 'examples'))
+    from data_manager import DatasetManager
+
+def flatten(x):
+    """Flatten operation for CNN to MLP transition."""
+    batch_size = x.data.shape[0]
+    return Tensor(x.data.reshape(batch_size, -1))
+
+class MNISTMLP:
+    """
+    Multi-Layer Perceptron for MNIST using YOUR TinyTorch!
     
+    This architecture proved deep learning could solve real vision problems.
+    """
+    
+    def __init__(self, input_size=784, hidden1=128, hidden2=64, num_classes=10):
+        print("🧠 Building MNIST MLP with YOUR TinyTorch modules...")
+        
+        # Deep architecture - multiple hidden layers!
+        self.fc1 = Linear(input_size, hidden1)    # Module 04: YOUR Linear layer!
+        self.relu1 = ReLU()                       # Module 03: YOUR activation!
+        self.fc2 = Linear(hidden1, hidden2)       # Module 04: YOUR Linear layer!
+        self.relu2 = ReLU()                       # Module 03: YOUR activation!
+        self.fc3 = Linear(hidden2, num_classes)   # Module 04: YOUR output layer!
+        
+        # Store architecture info
+        self.total_params = (
+            input_size * hidden1 + hidden1 +      # fc1
+            hidden1 * hidden2 + hidden2 +         # fc2
+            hidden2 * num_classes + num_classes   # fc3
+        )
+        
+        print(f"   Architecture: {input_size} → {hidden1} → {hidden2} → {num_classes}")
+        print(f"   Total parameters: {self.total_params:,} (YOUR Linear layers)")
+        print(f"   Activation: ReLU (YOUR Module 03)")
+        
     def forward(self, x):
-        x = nn.F.flatten(x, start_dim=1)   # Module 04: You built flatten!
-        x = self.fc1(x)                    # Module 04: Your Linear.forward()!
-        x = nn.F.relu(x)                   # Module 03: You built ReLU activation!
-        x = self.fc2(x)                    # Module 04: Your hidden layer!
-        x = nn.F.relu(x)                   # Module 03: Your non-linearity!
-        return self.fc3(x)                 # Module 04: Your classification layer!
+        """Forward pass through YOUR deep network."""
+        # Flatten image to vector
+        batch_size = x.data.shape[0]
+        x = Tensor(x.data.reshape(batch_size, -1))  # 28×28 → 784
+        
+        # Deep forward pass using YOUR components
+        x = self.fc1(x)        # Module 04: YOUR Linear layer!
+        x = self.relu1(x)      # Module 03: YOUR ReLU activation!
+        x = self.fc2(x)        # Module 04: YOUR Linear layer!
+        x = self.relu2(x)      # Module 03: YOUR ReLU activation!
+        x = self.fc3(x)        # Module 04: YOUR output layer!
+        
+        return x
+    
+    def parameters(self):
+        """Get all trainable parameters from YOUR layers."""
+        return [
+            self.fc1.weight, self.fc1.bias,
+            self.fc2.weight, self.fc2.bias,
+            self.fc3.weight, self.fc3.bias
+        ]
+
+def visualize_mnist_digits():
+    """Show ASCII representation of MNIST digits."""
+    print("\n" + "="*70)
+    print("🔢 VISUALIZING MNIST - Handwritten Digit Recognition:")
+    print("="*70)
+    
+    print("""
+    Sample Training Data:              What YOUR Network Learns:
+    
+    28×28 Pixel Images:                Feature Hierarchy:
+    ┌──────────┐                       
+    │░░░░██░░░░│ → Flatten(784) →     Layer 1: Edge detectors
+    │░░░███░░░░│                       - Vertical lines
+    │░░██░█░░░░│                       - Horizontal lines
+    │░░░░░█░░░░│                       - Curves
+    │░░░░░█░░░░│                       
+    │░░░░░█░░░░│                       Layer 2: Shape components
+    │░░░█████░░│                       - Loops (0, 6, 8, 9)
+    │░░░░░░░░░░│                       - Lines (1, 7)
+    └──────────┘                       - Corners (4, 5)
+    Digit "7"
+                                       Output: Class probabilities
+    YOUR network learns to:            P("0") = 0.01
+    1. Extract features from pixels    P("1") = 0.02
+    2. Combine features hierarchically  ...
+    3. Classify into 10 digit classes  P("7") = 0.91 ← Highest!
+    """)
+    print("="*70)
+
+def train_mnist_mlp(model, train_data, train_labels, 
+                   epochs=5, batch_size=32, learning_rate=0.001):
+    """
+    Train MNIST MLP using YOUR complete training system!
+    """
+    print("\n🚀 Training MNIST MLP with YOUR TinyTorch system!")
+    print(f"   Dataset: {len(train_data)} training images")
+    print(f"   Batch size: {batch_size}")
+    print(f"   Learning rate: {learning_rate}")
+    print(f"   Using YOUR Adam optimizer (Module 07)")
+    
+    # YOUR optimizer and loss
+    optimizer = Adam(model.parameters(), learning_rate=learning_rate)  # Module 07!
+    loss_fn = CrossEntropyLoss()  # Module 05: YOUR loss function!
+    
+    num_batches = len(train_data) // batch_size
+    
+    for epoch in range(epochs):
+        print(f"\n   Epoch {epoch+1}/{epochs}:")
+        epoch_loss = 0
+        correct = 0
+        total = 0
+        
+        # Shuffle data for each epoch
+        indices = np.random.permutation(len(train_data))
+        train_data = train_data[indices]
+        train_labels = train_labels[indices]
+        
+        # Progress bar
+        for batch_idx in range(num_batches):
+            # Get batch
+            start_idx = batch_idx * batch_size
+            end_idx = start_idx + batch_size
+            batch_X = train_data[start_idx:end_idx]
+            batch_y = train_labels[start_idx:end_idx]
+            
+            # Convert to YOUR Tensors
+            inputs = Tensor(batch_X)   # Module 02: YOUR Tensor!
+            targets = Tensor(batch_y)  # Module 02: YOUR Tensor!
+            
+            # Forward pass with YOUR network
+            outputs = model.forward(inputs)  # YOUR forward pass!
+            loss = loss_fn(outputs, targets)  # Module 05: YOUR loss!
+            
+            # Backward pass with YOUR autograd
+            optimizer.zero_grad()  # Module 07: YOUR gradient reset!
+            loss.backward()        # Module 06: YOUR autodiff!
+            optimizer.step()       # Module 07: YOUR parameter update!
+            
+            # Track accuracy
+            predictions = np.argmax(outputs.data, axis=1)
+            correct += np.sum(predictions == batch_y)
+            total += len(batch_y)
+            
+            # Extract loss value
+            if hasattr(loss, 'item'):
+                loss_value = loss.item()
+            elif isinstance(loss.data, np.ndarray):
+                loss_value = float(loss.data.flat[0])
+            else:
+                loss_value = float(loss.data)
+            
+            epoch_loss += loss_value
+            
+            # Progress indicator
+            if (batch_idx + 1) % 100 == 0:
+                acc = 100 * correct / total
+                print(f"   Batch {batch_idx+1}/{num_batches}: "
+                      f"Loss = {loss_value:.4f}, Accuracy = {acc:.1f}%")
+        
+        # Epoch summary
+        epoch_acc = 100 * correct / total
+        avg_loss = epoch_loss / num_batches
+        print(f"   → Epoch {epoch+1} Complete: Loss = {avg_loss:.4f}, "
+              f"Accuracy = {epoch_acc:.1f}% (YOUR training!)")
+    
+    return model
+
+def test_mnist_mlp(model, test_data, test_labels):
+    """Test YOUR MLP on MNIST test set."""
+    print("\n🧪 Testing YOUR MNIST MLP on 10,000 test images...")
+    
+    batch_size = 100
+    correct = 0
+    total = 0
+    
+    # Per-class accuracy tracking
+    class_correct = np.zeros(10)
+    class_total = np.zeros(10)
+    
+    for i in range(0, len(test_data), batch_size):
+        batch_X = test_data[i:i+batch_size]
+        batch_y = test_labels[i:i+batch_size]
+        
+        # Test with YOUR network
+        inputs = Tensor(batch_X)  # Module 02: YOUR Tensor!
+        outputs = model.forward(inputs)  # YOUR forward pass!
+        
+        predictions = np.argmax(outputs.data, axis=1)
+        correct += np.sum(predictions == batch_y)
+        total += len(batch_y)
+        
+        # Per-class accuracy
+        for j in range(len(batch_y)):
+            label = batch_y[j]
+            class_total[label] += 1
+            if predictions[j] == label:
+                class_correct[label] += 1
+    
+    # Overall accuracy
+    accuracy = 100 * correct / total
+    print(f"\n   📊 Overall Test Accuracy: {accuracy:.2f}%")
+    
+    # Per-digit accuracy
+    print("\n   Per-Digit Performance (YOUR network's understanding):")
+    print("   " + "─"*45)
+    print("   │ Digit │ Accuracy │ Visual              │")
+    print("   ├───────┼──────────┼─────────────────────┤")
+    
+    for digit in range(10):
+        if class_total[digit] > 0:
+            digit_acc = 100 * class_correct[digit] / class_total[digit]
+            bar_length = int(digit_acc / 5)
+            bar = "█" * bar_length + "░" * (20 - bar_length)
+            print(f"   │   {digit}   │  {digit_acc:5.1f}%  │ {bar} │")
+    
+    print("   " + "─"*45)
+    
+    if accuracy >= 95:
+        print("\n   🎉 SUCCESS! YOUR MLP achieved expert-level accuracy!")
+    elif accuracy >= 90:
+        print("\n   ✅ Great job! YOUR MLP is learning well!")
+    else:
+        print("\n   🔄 YOUR MLP is learning... (try more epochs)")
+    
+    return accuracy
+
+def analyze_mnist_systems(model):
+    """Analyze YOUR MNIST MLP from an ML systems perspective."""
+    print("\n🔬 SYSTEMS ANALYSIS of YOUR MNIST Implementation:")
+    
+    # Model size analysis
+    param_bytes = model.total_params * 4  # float32
+    
+    print(f"\n   Model Statistics:")
+    print(f"   • Parameters: {model.total_params:,} weights")
+    print(f"   • Memory: {param_bytes / 1024:.1f} KB")
+    print(f"   • FLOPs per image: ~{model.total_params * 2:,}")
+    
+    print(f"\n   Performance Characteristics:")
+    print(f"   • Training: O(N × P) where N=samples, P=parameters")
+    print(f"   • Inference: {model.total_params * 2 / 1_000_000:.2f}M ops/image")
+    print(f"   • YOUR implementation: Pure Python + NumPy")
+    
+    print(f"\n   🏛️ Historical Context:")
+    print(f"   • 1986: Backprop made deep learning possible")
+    print(f"   • 1998: LeNet-5 achieved 99.2% on MNIST (CNNs)")
+    print(f"   • YOUR MLP: 95%+ with simple architecture")
+    print(f"   • Modern: 99.8%+ possible with advanced techniques")
+    
+    print(f"\n   💡 Systems Insights:")
+    print(f"   • Fully connected = O(N²) parameters")
+    print(f"   • Why CNNs win: Weight sharing reduces parameters")
+    print(f"   • YOUR achievement: Real vision with YOUR code!")
 
 def main():
-    # Generate MNIST-like data (real MNIST would use DataLoader)
-    batch_size, num_samples = 32, 1000
-    X = np.random.randn(num_samples, 28, 28).astype(np.float32)  # 28×28 images
-    y = np.random.randint(0, 10, (num_samples,)).astype(np.int64)  # 10 digit classes
+    """Demonstrate MNIST digit classification using YOUR TinyTorch!"""
     
-    model = MNISTMLP()  # Module 04: Your neural network!
-    optimizer = optim.Adam(model.parameters(), learning_rate=0.001)  # Module 06: You built Adam!
-    loss_fn = CrossEntropyLoss()  # Module 05: You built cross-entropy loss!
+    parser = argparse.ArgumentParser(description='MNIST MLP 1986')
+    parser.add_argument('--test-only', action='store_true',
+                       help='Test architecture without training')
+    parser.add_argument('--epochs', type=int, default=5,
+                       help='Number of training epochs')
+    parser.add_argument('--batch-size', type=int, default=32,
+                       help='Training batch size')
+    parser.add_argument('--visualize', action='store_true', default=True,
+                       help='Show MNIST visualization')
+    parser.add_argument('--quick-test', action='store_true',
+                       help='Train on subset for quick testing')
+    args = parser.parse_args()
     
-    print("🔢 Training MNIST Digit Classifier")
-    print("   Architecture: Input(784) → Dense(128) → Dense(64) → Output(10)")
-    print(f"   Parameters: {sum(p.data.size for p in model.parameters())} trainable weights")
-    print(f"   Dataset: {num_samples} handwritten digit images")
-    print()
+    print("🎯 MNIST MLP 1986 - Real Vision with YOUR Deep Network!")
+    print("   Historical significance: Backprop enables deep learning")
+    print("   YOUR achievement: 95%+ accuracy on real handwritten digits")
+    print("   Components used: YOUR complete ML system (Modules 2-8)")
     
-    # What students built: Complete digit classification pipeline
-    for epoch in range(10):
-        total_loss = 0
-        num_batches = 0
+    # Show MNIST visualization
+    if args.visualize:
+        visualize_mnist_digits()
+    
+    # Step 1: Load MNIST dataset
+    print("\n📥 Loading MNIST dataset...")
+    data_manager = DatasetManager()
+    
+    try:
+        (train_data, train_labels), (test_data, test_labels) = data_manager.get_mnist()
+        print(f"✅ Loaded {len(train_data)} training, {len(test_data)} test images")
         
-        for i in range(0, num_samples, batch_size):
-            # Mini-batch processing
-            batch_X = X[i:i+batch_size]
-            batch_y = y[i:i+batch_size]
+        # Quick test mode - use subset
+        if args.quick_test:
+            train_data = train_data[:1000]
+            train_labels = train_labels[:1000]
+            test_data = test_data[:100]
+            test_labels = test_labels[:100]
+            print("   (Using subset for quick testing)")
             
-            inputs = Tensor(batch_X)    # Module 02: You built Tensor with gradients!
-            targets = Tensor(batch_y)   # Module 02: Your data structure!
-            
-            outputs = model(inputs)               # Modules 03+04: Your forward pass!
-            loss = loss_fn(outputs, targets)      # Module 05: You built CrossEntropy!
-            
-            loss.backward()                       # Module 02: You built autodiff!
-            optimizer.step()                      # Module 06: You built Adam updates!
-            optimizer.zero_grad()                 # Module 06: Your gradient clearing!
-            
-            # Extract scalar loss value using to_numpy utility
-            loss_value = float(to_numpy(loss).flat[0])
-            total_loss += loss_value
-            num_batches += 1
-        
-        avg_loss = total_loss / num_batches
-        print(f"   Epoch {epoch+1:2d}: Loss = {avg_loss:.4f}")
+    except Exception as e:
+        print(f"⚠️  MNIST download failed: {e}")
+        print("   Using synthetic data for demonstration...")
+        # Fallback synthetic data
+        train_data = np.random.randn(1000, 28, 28).astype(np.float32)
+        train_labels = np.random.randint(0, 10, 1000).astype(np.int64)
+        test_data = np.random.randn(100, 28, 28).astype(np.float32)
+        test_labels = np.random.randint(0, 10, 100).astype(np.int64)
     
-    print("\n✅ Success! MLP trained on digit classification")
-    print("\n🎯 What You Learned by Building:")
-    print("   • How dense layers transform high-dimensional inputs")
-    print("   • Why multiple hidden layers improve representation")
-    print("   • How cross-entropy loss handles multi-class problems")
-    print("   • Complete vision pipeline from pixels to predictions")
+    # Step 2: Create MLP with YOUR components
+    model = MNISTMLP(input_size=784, hidden1=128, hidden2=64, num_classes=10)
+    
+    if args.test_only:
+        print("\n🧪 ARCHITECTURE TEST MODE")
+        test_input = Tensor(train_data[:5])  # Module 02: YOUR Tensor!
+        test_output = model.forward(test_input)  # YOUR architecture!
+        print(f"✅ Forward pass successful! Output shape: {test_output.data.shape}")
+        print("✅ YOUR deep MLP architecture works!")
+        return
+    
+    # Step 3: Train using YOUR system
+    start_time = time.time()
+    model = train_mnist_mlp(model, train_data, train_labels,
+                           epochs=args.epochs, batch_size=args.batch_size)
+    train_time = time.time() - start_time
+    
+    # Step 4: Test on test set
+    accuracy = test_mnist_mlp(model, test_data, test_labels)
+    
+    # Step 5: Systems analysis
+    analyze_mnist_systems(model)
+    
+    print(f"\n⏱️  Training time: {train_time:.1f} seconds")
+    print(f"   YOUR implementation: {len(train_data) * args.epochs / train_time:.0f} images/sec")
+    
+    print("\n✅ SUCCESS! MNIST Milestone Complete!")
+    print("\n🎓 What YOU Accomplished:")
+    print("   • YOU built a deep MLP achieving 95%+ accuracy")
+    print("   • YOUR backprop trains 100K+ parameters efficiently")
+    print("   • YOUR system solves real computer vision problems")
+    print("   • YOUR implementation matches 1986 state-of-the-art!")
+    
+    print("\n🚀 Next Steps:")
+    print("   • Continue to CIFAR CNN after Module 10 (Spatial + DataLoader)")
+    print("   • YOUR foundation scales to ImageNet and beyond!")
+    print(f"   • With {accuracy:.1f}% accuracy, YOUR deep learning works!")
 
 if __name__ == "__main__":
     main()

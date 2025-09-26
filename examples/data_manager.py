@@ -131,7 +131,8 @@ class DatasetManager:
         # Create XOR dataset
         np.random.seed(42)  # Reproducible
         X = np.random.randint(0, 2, (num_samples, 2)).astype(np.float32)
-        y = (X[:, 0] ^ X[:, 1]).astype(np.int64)  # XOR labels
+        # XOR: output 1 when inputs differ, 0 when same
+        y = (X[:, 0].astype(int) != X[:, 1].astype(int)).astype(np.int64)
         
         # Add some noise to make it more realistic
         X += np.random.normal(0, 0.1, X.shape)
