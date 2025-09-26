@@ -69,7 +69,7 @@ sys.path.append(os.path.abspath('modules/source/09_dataloader'))
 # Import all the building blocks we need
 from tinytorch.core.tensor import Tensor
 from tinytorch.core.activations import ReLU, Sigmoid, Tanh, Softmax
-from tinytorch.core.layers import Dense
+from tinytorch.core.layers import Linear
 from tinytorch.core.networks import Sequential, create_mlp
 from tinytorch.core.spatial import Conv2D, flatten
 from tinytorch.utils.data import Dataset, DataLoader
@@ -918,7 +918,7 @@ class Trainer:
         4. Prepare for training and validation loops
         
         EXAMPLE:
-        model = Sequential([Dense(10, 5), ReLU(), Dense(5, 2)])
+        model = Sequential([Linear(10, 5), ReLU(), Linear(5, 2)])
         optimizer = Adam(model.parameters, learning_rate=0.001)
         loss_fn = CrossEntropyLoss()
         metrics = [Accuracy()]
@@ -1260,7 +1260,7 @@ def test_unit_trainer():
     print("🔬 Unit Test: Trainer Class...")
     
     # Create simple model and components
-    model = Sequential([Dense(2, 3), ReLU(), Dense(3, 2)])  # Simple model
+    model = Sequential([Linear(2, 3), ReLU(), Linear(3, 2)])  # Simple model
     optimizer = SGD([], learning_rate=0.01)  # Empty parameters list for testing
     loss_fn = MeanSquaredError()
     metrics = [Accuracy()]
@@ -1608,7 +1608,7 @@ def test_training_pipeline_profiler():
     profiler = TrainingPipelineProfiler(warning_threshold_seconds=1.0)
     
     # Create test components
-    model = Sequential([Dense(10, 5), ReLU(), Dense(5, 2)])
+    model = Sequential([Linear(10, 5), ReLU(), Linear(5, 2)])
     optimizer = SGD([], learning_rate=0.01)
     loss_fn = MeanSquaredError()
     
@@ -1839,7 +1839,7 @@ def test_production_training_optimizer():
     optimizer_tool = ProductionTrainingOptimizer()
     
     # Create test components
-    model = Sequential([Dense(10, 5), ReLU(), Dense(5, 2)])
+    model = Sequential([Linear(10, 5), ReLU(), Linear(5, 2)])
     optimizer = SGD([], learning_rate=0.01)
     loss_fn = MeanSquaredError()
     

@@ -110,8 +110,8 @@ class Module:
         class MLP(Module):
             def __init__(self):
                 super().__init__()
-                self.layer1 = Dense(784, 128)  # Auto-registered!
-                self.layer2 = Dense(128, 10)   # Auto-registered!
+                self.layer1 = Linear(784, 128)  # Auto-registered!
+                self.layer2 = Linear(128, 10)   # Auto-registered!
                 
             def forward(self, x):
                 x = self.layer1(x)
@@ -520,9 +520,6 @@ class Linear(Module):
         return Tensor(output_data)
         ### END SOLUTION
 
-# Backward compatibility alias
-#| export  
-Dense = Linear
 
 # %% [markdown]
 """
@@ -538,7 +535,7 @@ def test_dense_layer():
     print("🧪 Testing Dense Layer...")
     
     # Test case 1: Basic functionality
-    layer = Dense(input_size=3, output_size=2)
+    layer = Linear(input_size=3, output_size=2)
     input_tensor = Tensor([[1.0, 2.0, 3.0]])  # Shape: (1, 3)
     output = layer.forward(input_tensor)
     
@@ -547,13 +544,13 @@ def test_dense_layer():
     print("✅ Output shape correct")
     
     # Test case 2: No bias
-    layer_no_bias = Dense(input_size=2, output_size=3, use_bias=False)
+    layer_no_bias = Linear(input_size=2, output_size=3, use_bias=False)
     assert layer_no_bias.bias is None, "Bias should be None when use_bias=False"
     print("✅ No bias option works")
     
     # Test case 3: Multiple samples (batch processing)
     batch_input = Tensor([[1.0, 2.0], [3.0, 4.0], [5.0, 6.0]])  # Shape: (3, 2)
-    layer_batch = Dense(input_size=2, output_size=2)
+    layer_batch = Linear(input_size=2, output_size=2)
     batch_output = layer_batch.forward(batch_input)
     
     assert batch_output.shape == (3, 2), f"Expected shape (3, 2), got {batch_output.shape}"
@@ -565,7 +562,7 @@ def test_dense_layer():
     print("✅ Callable interface works")
     
     # Test case 5: Parameter initialization
-    layer_init = Dense(input_size=10, output_size=5)
+    layer_init = Linear(input_size=10, output_size=5)
     assert layer_init.weights.shape == (10, 5), f"Expected weights shape (10, 5), got {layer_init.weights.shape}"
     assert layer_init.bias.shape == (5,), f"Expected bias shape (5,), got {layer_init.bias.shape}"
     
@@ -590,7 +587,7 @@ def test_dense_parameter_management():
     print("🧪 Testing Dense Layer Parameter Management...")
     
     # Test case 1: Parameter registration
-    layer = Dense(input_size=3, output_size=2)
+    layer = Linear(input_size=3, output_size=2)
     params = layer.parameters()
     
     assert len(params) == 2, f"Expected 2 parameters (weights + bias), got {len(params)}"
@@ -602,8 +599,8 @@ def test_dense_parameter_management():
     class SimpleNetwork(Module):
         def __init__(self):
             super().__init__()
-            self.layer1 = Dense(4, 3)
-            self.layer2 = Dense(3, 2)
+            self.layer1 = Linear(4, 3)
+            self.layer2 = Linear(3, 2)
         
         def forward(self, x):
             x = self.layer1(x)
@@ -624,13 +621,13 @@ def test_dense_parameter_management():
     print("✅ Network forward pass works")
     
     # Test case 4: Parameter shapes
-    layer = Dense(input_size=10, output_size=5)
+    layer = Linear(input_size=10, output_size=5)
     assert layer.weights.shape == (10, 5), f"Expected weights shape (10, 5), got {layer.weights.shape}"
     assert layer.bias.shape == (5,), f"Expected bias shape (5,), got {layer.bias.shape}"
     print("✅ Parameter shapes correct")
     
     # Test case 5: No bias option
-    layer_no_bias = Dense(input_size=3, output_size=2, use_bias=False)
+    layer_no_bias = Linear(input_size=3, output_size=2, use_bias=False)
     params_no_bias = layer_no_bias.parameters()
     
     assert len(params_no_bias) == 1, f"Expected 1 parameter (weights only), got {len(params_no_bias)}"
@@ -742,7 +739,7 @@ def test_sequential_network():
     print("✅ Empty Sequential network creation")
     
     # Test case 2: Create network with layers
-    layers = [Dense(3, 4), Dense(4, 2)]
+    layers = [Linear(3, 4), Linear(4, 2)]
     network = Sequential(layers)
     assert len(network.layers) == 2, "Network should have 2 layers"
     print("✅ Sequential network with layers")
@@ -760,7 +757,7 @@ def test_sequential_network():
     print("✅ Parameter collection from all layers")
     
     # Test case 5: Adding layers dynamically
-    network.add(Dense(2, 1))
+    network.add(Linear(2, 1))
     assert len(network.layers) == 3, "Network should have 3 layers after adding one"
     
     # Test forward pass after adding layer
@@ -920,7 +917,7 @@ def test_flatten_operations():
     
     # Test case 5: Integration with Sequential
     network = Sequential([
-        Dense(8, 4),
+        Linear(8, 4),
         Flatten()
     ])
     test_input = Tensor(np.random.randn(2, 8))
@@ -1193,8 +1190,8 @@ def run_comprehensive_tests():
     print("\n2. Dense Layer Composition:")
     
     # Create a simple 2-layer network
-    layer1 = Dense(4, 3)
-    layer2 = Dense(3, 2)
+    layer1 = Linear(4, 3)
+    layer2 = Linear(3, 2)
     
     # Test data flow
     input_data = Tensor([[1, 2, 3, 4]])
@@ -1218,7 +1215,7 @@ def run_comprehensive_tests():
     # Test 4: Parameter access and modification
     print("\n4. Parameter Management:")
     
-    layer = Dense(5, 3)
+    layer = Linear(5, 3)
     original_weights = layer.weights.data.copy()
     
     # Simulate parameter update
@@ -1246,8 +1243,8 @@ def demonstrate_layer_composition():
     print("=" * 50)
     
     print("\n1. Creating individual layers:")
-    layer1 = Dense(input_size=4, output_size=3)
-    layer2 = Dense(input_size=3, output_size=2)
+    layer1 = Linear(input_size=4, output_size=3)
+    layer2 = Linear(input_size=3, output_size=2)
     
     print(f"   Layer 1: {layer1.input_size} → {layer1.output_size}")
     print(f"   Layer 2: {layer2.input_size} → {layer2.output_size}")
@@ -1268,8 +1265,8 @@ def demonstrate_layer_composition():
     class TwoLayerNetwork(Module):
         def __init__(self, input_size, hidden_size, output_size):
             super().__init__()
-            self.layer1 = Dense(input_size, hidden_size)
-            self.layer2 = Dense(hidden_size, output_size)
+            self.layer1 = Linear(input_size, hidden_size)
+            self.layer2 = Linear(hidden_size, output_size)
         
         def forward(self, x):
             x = self.layer1(x)

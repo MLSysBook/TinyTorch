@@ -80,8 +80,8 @@ print("Ready to build convolutional neural networks!")
 
 ```python
 # Final package structure:
-from tinytorch.core.cnn import Conv2D, conv2d_naive, flatten  # CNN operations!
-from tinytorch.core.layers import Dense  # Fully connected layers
+from tinytorch.core.spatial import Conv2D, MaxPool2D, flatten  # CNN operations!
+from tinytorch.core.layers import Linear  # Fully connected layers
 from tinytorch.core.activations import ReLU  # Nonlinearity
 from tinytorch.core.tensor import Tensor  # Foundation
 ```
@@ -140,6 +140,10 @@ def flatten(x, start_dim=1):
     # Special case: for 2D tensors, treat as single samples and add batch dimension
     if len(data.shape) == 2 and start_dim == 1:
         # Flatten 2D to (1, total_elements) - treat as single sample
+        total_size = int(np.prod(data.shape))
+        new_shape = (1, total_size)
+    elif start_dim == 0:
+        # Special case: flatten everything but maintain 2D for Linear layers
         total_size = int(np.prod(data.shape))
         new_shape = (1, total_size)
     else:
@@ -1187,20 +1191,20 @@ print("📈 Progress: Single-channel ✓, Multi-channel ✓, Pooling ✓")
 
 # %% [markdown]
 """
-## Step 5: Flattening for Dense Layers
+## Step 5: Flattening for Linear Layers
 
 ### What is Flattening?
 **Flattening** converts multi-dimensional tensors to 1D vectors, enabling connection between convolutional and dense layers.
 
 ### Why Flattening is Needed
-- **Interface compatibility**: Conv2D outputs 2D/3D, Dense expects 1D
+- **Interface compatibility**: Conv2D outputs 2D/3D, Linear expects 1D
 - **Network composition**: Connect spatial features to classification
 - **Standard practice**: Almost all CNNs use this pattern
 - **Dimension management**: Preserve information while changing shape
 
 ### The Pattern
 ```
-Conv2D → ReLU → MaxPool2D → Flatten → Dense → Output
+Conv2D → ReLU → MaxPool2D → Flatten → Linear → Output
 ```
 
 ### Real-World Usage
@@ -1215,7 +1219,7 @@ Conv2D → ReLU → MaxPool2D → Flatten → Dense → Output
 # We use that single implementation throughout this module for consistency and clarity.
 
 print("✅ Flatten function is available from the Spatial Helper Functions section")
-print("🔍 The flatten() function handles tensor flattening for CNN-to-Dense transitions")
+print("🔍 The flatten() function handles tensor flattening for CNN-to-Linear transitions")
 
 # %% [markdown]
 """
@@ -1281,7 +1285,7 @@ except Exception as e:
 print("🎯 Flatten behavior:")
 print("   Converts 2D tensor to 1D")
 print("   Preserves batch dimension")
-print("   Enables connection to Dense layers")
+print("   Enables connection to Linear layers")
 print("📈 Progress: Convolution operation ✓, Conv2D layer ✓, Flatten ✓")
 
 # %% [markdown]
@@ -1294,13 +1298,13 @@ Let us test our complete CNN system with realistic multi-channel scenarios:
 #### **CIFAR-10 Style CNN**
 ```python
 # RGB images to classification
-RGB Input → Multi-Channel Conv2D → ReLU → MaxPool2D → Flatten → Dense → Output
+RGB Input → Multi-Channel Conv2D → ReLU → MaxPool2D → Flatten → Linear → Output
 ```
 
 #### **Deep Multi-Channel CNN**
 ```python
 # Progressive feature extraction
-RGB → Conv2D(3→32) → ReLU → Pool → Conv2D(32→64) → ReLU → Pool → Flatten → Dense
+RGB → Conv2D(3→32) → ReLU → Pool → Conv2D(32→64) → ReLU → Pool → Flatten → Linear
 ```
 
 #### **Production CNN Pattern**
@@ -1320,11 +1324,11 @@ try:
     # Test 1: CIFAR-10 Style RGB CNN Pipeline
     print("\n1. CIFAR-10 Style RGB CNN Pipeline:")
     
-    # Create pipeline: RGB → Conv2D(3→16) → ReLU → MaxPool2D → Flatten → Dense
+    # Create pipeline: RGB → Conv2D(3→16) → ReLU → MaxPool2D → Flatten → Linear
     rgb_conv = Conv2D(in_channels=3, out_channels=16, kernel_size=(3, 3))
     relu = ReLU()
     pool = MaxPool2D(pool_size=(2, 2))
-    dense = Dense(input_size=16 * 3 * 3, output_size=10)  # 16 channels, 3x3 spatial = 144 features
+    dense = Linear(input_size=16 * 3 * 3, output_size=10)  # 16 channels, 3x3 spatial = 144 features
     
     # Simulated CIFAR-10 image (3 channels, 8x8 for testing)
     rgb_image = Tensor(np.random.randn(3, 8, 8))  # RGB 8x8 image
@@ -1334,7 +1338,7 @@ try:
     conv_features = rgb_conv(rgb_image)    # (3,8,8) → (16,6,6)
     activated = relu(conv_features)        # (16,6,6) → (16,6,6)
     pooled = pool(activated)              # (16,6,6) → (16,3,3)
-    flattened = flatten(pooled)           # (16,3,3) → (1,144)
+    flattened = flatten(pooled, start_dim=0)           # (16,3,3) → (1,144)
     predictions = dense(flattened)        # (1,144) → (1,10)
     
     assert conv_features.shape == (16, 6, 6), f"Conv features wrong: {conv_features.shape}"
@@ -1348,14 +1352,14 @@ try:
     # Test 2: Deep Multi-Channel CNN
     print("\n2. Deep Multi-Channel CNN:")
     
-    # Create deeper pipeline: RGB → Conv1(3→32) → ReLU → Pool → Conv2(32→64) → ReLU → Pool → Dense
+    # Create deeper pipeline: RGB → Conv1(3→32) → ReLU → Pool → Conv2(32→64) → ReLU → Pool → Linear
     conv1_deep = Conv2D(in_channels=3, out_channels=32, kernel_size=(3, 3))
     relu1 = ReLU()
     pool1 = MaxPool2D(pool_size=(2, 2))
     conv2_deep = Conv2D(in_channels=32, out_channels=64, kernel_size=(3, 3))
     relu2 = ReLU()
     pool2 = MaxPool2D(pool_size=(2, 2))
-    classifier_deep = Dense(input_size=64 * 1 * 1, output_size=5)  # 64 channels, 1x1 spatial
+    classifier_deep = Linear(input_size=64 * 1 * 1, output_size=5)  # 64 channels, 1x1 spatial
     
     # Larger RGB input for deep processing
     large_rgb = Tensor(np.random.randn(3, 12, 12))  # RGB 12x12 image
@@ -1368,7 +1372,7 @@ try:
     h4 = conv2_deep(h3)         # (32,5,5) → (64,3,3)
     h5 = relu2(h4)              # (64,3,3) → (64,3,3)
     h6 = pool2(h5)              # (64,3,3) → (64,1,1)
-    h7 = flatten(h6)            # (64,1,1) → (1,64)
+    h7 = flatten(h6, start_dim=0)            # (64,1,1) → (1,64)
     output_deep = classifier_deep(h7)  # (1,64) → (1,5)
     
     assert h1.shape == (32, 10, 10), f"Conv1 output wrong: {h1.shape}"
@@ -1398,7 +1402,7 @@ try:
     
     # Create classifier with correct input size
     feature_size = batch_flat.shape[1]  # 32 features
-    batch_classifier = Dense(input_size=feature_size, output_size=3)
+    batch_classifier = Linear(input_size=feature_size, output_size=3)
     batch_pred = batch_classifier(batch_flat) # (4,32) → (4,3)
     
     assert batch_conv_out.shape == (4, 8, 4, 4), f"Batch conv wrong: {batch_conv_out.shape}"
@@ -1424,10 +1428,10 @@ try:
     
     # Analyze different configurations
     configs = [
-        (Conv2D(1, 8, (3, 3)), "1→8 channels"),
-        (Conv2D(3, 16, (3, 3)), "3→16 channels (RGB)"),
-        (Conv2D(16, 32, (3, 3)), "16→32 channels"),
-        (Conv2D(32, 64, (3, 3)), "32→64 channels"),
+        (Conv2D(in_channels=1, out_channels=8, kernel_size=(3, 3)), "1→8 channels"),
+        (Conv2D(in_channels=3, out_channels=16, kernel_size=(3, 3)), "3→16 channels (RGB)"),
+        (Conv2D(in_channels=16, out_channels=32, kernel_size=(3, 3)), "16→32 channels"),
+        (Conv2D(in_channels=32, out_channels=64, kernel_size=(3, 3)), "32→64 channels"),
     ]
     
     for conv_layer, desc in configs:
@@ -1443,7 +1447,7 @@ try:
     print("  • Batch processing with multiple channels")
     print("  • Backward compatibility with single-channel")
     print("  • Production-ready parameter scaling")
-    print("  • Complete Conv → Pool → Dense pipelines")
+    print("  • Complete Conv → Pool → Linear pipelines")
     print("📈 Progress: Production-ready multi-channel CNN system!")
     
 except Exception as e:
@@ -1559,20 +1563,21 @@ def test_module_conv2d_tensor_compatibility():
 
     # 1. Define a Conv2D layer
     # Kernel of size 3x3
-    conv_layer = Conv2D((3, 3))
+    conv_layer = Conv2D(in_channels=1, out_channels=1, kernel_size=(3, 3))
 
     # 2. Create a batch of 5 grayscale images (10x10)
-    # Shape: (batch_size, height, width)
-    input_images = np.random.randn(5, 10, 10)
+    # Shape: (batch_size, channels, height, width)
+    input_images = np.random.randn(5, 1, 10, 10)
     input_tensor = Tensor(input_images)
 
     # 3. Perform a forward pass
     output_tensor = conv_layer(input_tensor)
 
     # 4. Assert the output shape is correct
+    # Output: (batch_size, out_channels, height, width)
     # Output height = 10 - 3 + 1 = 8
     # Output width = 10 - 3 + 1 = 8
-    expected_shape = (5, 8, 8)
+    expected_shape = (5, 1, 8, 8)
     assert isinstance(output_tensor, Tensor), "Conv2D output must be a Tensor"
     assert output_tensor.shape == expected_shape, f"Expected output shape {expected_shape}, but got {output_tensor.shape}"
     print("✅ Integration Test Passed: Conv2D layer correctly transformed image tensor.")
@@ -2020,7 +2025,7 @@ Congratulations! You have successfully implemented a complete multi-channel CNN 
 - **Parameter scaling**: How memory requirements grow with channels and kernel sizes
 - **Spatial downsampling**: MaxPooling for translation invariance and efficiency  
 - **Feature hierarchy**: Progressive extraction from RGB → edges → objects → concepts
-- **Production architectures**: Conv → ReLU → Pool → Conv → ReLU → Pool → Dense patterns
+- **Production architectures**: Conv → ReLU → Pool → Conv → ReLU → Pool → Linear patterns
 - **He initialization**: Proper weight initialization for stable multi-layer training
 
 ### Mathematical Foundations
@@ -2044,7 +2049,7 @@ Congratulations! You have successfully implemented a complete multi-channel CNN 
 - **Computer vision**: Face recognition, document analysis, quality inspection
 
 ### CNN Architecture Patterns
-- **Basic CNN**: RGB → Conv(3→32) → ReLU → Pool → Conv(32→64) → ReLU → Pool → Dense
+- **Basic CNN**: RGB → Conv(3→32) → ReLU → Pool → Conv(32→64) → ReLU → Pool → Linear
 - **Parameter efficiency**: 32×3×3×3 = 864 parameters vs 32×32×32 = 32,768 for dense layer
 - **Spatial hierarchy**: Early layers detect edges, later layers detect objects
 - **Translation invariance**: Same features detected regardless of position in image
@@ -2058,7 +2063,7 @@ Congratulations! You have successfully implemented a complete multi-channel CNN 
 ### Production-Ready Features
 ```python
 from tinytorch.core.spatial import Conv2D, MaxPool2D, flatten
-from tinytorch.core.layers import Dense
+from tinytorch.core.layers import Linear
 from tinytorch.core.activations import ReLU
 
 # CIFAR-10 CNN architecture
@@ -2066,13 +2071,13 @@ conv1 = Conv2D(in_channels=3, out_channels=32, kernel_size=(3, 3))
 pool1 = MaxPool2D(pool_size=(2, 2))
 conv2 = Conv2D(in_channels=32, out_channels=64, kernel_size=(3, 3))
 pool2 = MaxPool2D(pool_size=(2, 2))
-classifier = Dense(input_size=64*6*6, output_size=10)
+classifier = Linear(input_size=64*6*6, output_size=10)
 
 # Process RGB image
 rgb_image = Tensor(np.random.randn(3, 32, 32))  # CIFAR-10 format
 features1 = pool1(ReLU()(conv1(rgb_image)))     # (3,32,32) → (32,15,15)
 features2 = pool2(ReLU()(conv2(features1)))     # (32,15,15) → (64,6,6)
-predictions = classifier(flatten(features2))    # (64,6,6) → (1,10)
+predictions = classifier(flatten(features2, start_dim=0))    # (64,6,6) → (1,10)
 ```
 
 ### Next Steps

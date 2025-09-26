@@ -58,7 +58,7 @@ print("Ready to build tensors!")
 # # Final package structure:
 # from tinytorch.core.tensor import Tensor  # The foundation of everything!
 # from tinytorch.core.activations import ReLU, Sigmoid, Tanh
-# from tinytorch.core.layers import Dense, Conv2D
+# from tinytorch.core.layers import Linear, Conv2D
 # ```
 # 
 # **Why this matters:**
