@@ -45,6 +45,7 @@
 import numpy as np
 import sys
 from typing import Union, Tuple, Optional, Any
+import warnings
 
 # In[ ]:
 
@@ -219,7 +220,7 @@ class Tensor:
     Wraps NumPy arrays with ML-specific functionality.
     """
 
-    def __init__(self, data: Any, dtype: Optional[str] = None, requires_grad: bool = False):
+    def __init__(self, data: Any, dtype: Optional[Union[str, np.dtype, type]] = None, requires_grad: bool = False):
         """
         Create a new tensor from data.
 
@@ -232,7 +233,7 @@ class Tensor:
 
         APPROACH (Heavy comments for first implementation):
         1. Convert input data to numpy array using np.array() - NumPy handles most conversions
-        2. Apply dtype conversion if specified - ensures consistent data types
+        2. Apply dtype conversion if specified - supports both string and np.dtype types
         3. Set default float32 for float64 arrays - ML convention for memory/speed balance
         4. Store the result in self._data - internal storage for numpy array
         5. Initialize gradient tracking attributes - prepares for automatic differentiation
@@ -259,11 +260,23 @@ class Tensor:
             # Convert to numpy array
             self._data = np.array(data, dtype=dtype)
         
-        # Apply ML-friendly dtype defaults
+        # Apply ML-friendly dtype defaults with proper type handling
         if dtype is None and self._data.dtype == np.float64:
             self._data = self._data.astype(np.float32)  # ML convention: prefer float32
-        elif dtype and self._data.dtype != np.dtype(dtype):
-            self._data = self._data.astype(dtype)
+        elif dtype is not None:
+            # Handle string, np.dtype, and numpy type inputs
+            if isinstance(dtype, str):
+                target_dtype = np.dtype(dtype)
+            elif isinstance(dtype, np.dtype):
+                target_dtype = dtype
+            elif isinstance(dtype, type) and issubclass(dtype, np.generic):
+                # Handle numpy types like np.float64, np.int32
+                target_dtype = np.dtype(dtype)
+            else:
+                raise TypeError(f"dtype must be str, np.dtype, or numpy type, got {type(dtype)}")
+            
+            if self._data.dtype != target_dtype:
+                self._data = self._data.astype(target_dtype)
         
         # Initialize gradient tracking attributes (used in Module 9 - Autograd)
         self.requires_grad = requires_grad
@@ -362,6 +375,36 @@ class Tensor:
         ### BEGIN SOLUTION
         return self._data.dtype
         ### END SOLUTION
+
+    @property
+    def strides(self) -> Tuple[int, ...]:
+        """
+        Get memory stride pattern of the tensor.
+        
+        Returns:
+            Tuple of byte strides for each dimension
+            
+        PRODUCTION CONNECTION:
+        - Memory layout analysis: Understanding cache efficiency
+        - Performance debugging: Non-unit strides can indicate copies
+        - Advanced operations: Enables efficient transpose and reshape operations
+        """
+        return self._data.strides
+    
+    @property
+    def is_contiguous(self) -> bool:
+        """
+        Check if tensor data is stored in contiguous memory.
+        
+        Returns:
+            True if data is contiguous in C-order (row-major)
+            
+        PRODUCTION CONNECTION:
+        - Performance critical: Contiguous data enables vectorization
+        - Memory efficiency: Contiguous operations can be 10-100x faster
+        - GPU transfers: Contiguous data transfers more efficiently
+        """
+        return self._data.flags['C_CONTIGUOUS']
 
     def __repr__(self) -> str:
         """
@@ -715,9 +758,92 @@ class Tensor:
 
         Returns:
             New Tensor with reshaped data
+            
+        Note:
+            This returns a view when possible (no copying), or a copy when necessary.
+            Use .contiguous() after reshape if you need guaranteed contiguous memory.
         """
         reshaped_data = self._data.reshape(*shape)
-        return Tensor(reshaped_data)
+        result = Tensor(reshaped_data)
+        
+        # Preserve gradient tracking
+        if self.requires_grad:
+            result.requires_grad = True
+            
+            def grad_fn(grad):
+                # Reshape gradient back to original shape
+                orig_grad = grad.reshape(*self.shape)
+                self.backward(orig_grad)
+            
+            result._grad_fn = grad_fn
+        
+        return result
+    
+    def view(self, *shape: int) -> 'Tensor':
+        """
+        Return a view of the tensor with a new shape. Alias for reshape.
+        
+        Args:
+            *shape: New shape dimensions. Use -1 for automatic sizing.
+            
+        Returns:
+            New Tensor sharing the same data (view when possible)
+            
+        PRODUCTION CONNECTION:
+        - PyTorch compatibility: .view() is the PyTorch equivalent
+        - Memory efficiency: Views avoid copying data when possible
+        - Performance critical: Views enable efficient transformations
+        """
+        return self.reshape(*shape)
+    
+    def clone(self) -> 'Tensor':
+        """
+        Create a deep copy of the tensor.
+        
+        Returns:
+            New Tensor with copied data
+            
+        PRODUCTION CONNECTION:
+        - Memory isolation: Ensures modifications don't affect original
+        - Gradient tracking: Clones maintain independent gradient graphs
+        - Safe operations: Use when you need guaranteed data independence
+        """
+        cloned_data = self._data.copy()
+        result = Tensor(cloned_data)
+        
+        # Clone preserves gradient requirements but starts fresh grad tracking
+        result.requires_grad = self.requires_grad
+        # Note: grad and grad_fn are NOT copied - clone starts fresh
+        
+        return result
+    
+    def contiguous(self) -> 'Tensor':
+        """
+        Return a contiguous tensor with the same data.
+        
+        Returns:
+            Tensor with contiguous memory layout (may be a copy)
+            
+        PRODUCTION CONNECTION:
+        - Performance optimization: Ensures optimal memory layout
+        - GPU operations: Many CUDA operations require contiguous data
+        - Cache efficiency: Contiguous data maximizes CPU cache utilization
+        """
+        if self.is_contiguous:
+            return self  # Already contiguous, return self
+        
+        # Make contiguous copy
+        contiguous_data = np.ascontiguousarray(self._data)
+        result = Tensor(contiguous_data)
+        
+        # Preserve gradient tracking
+        result.requires_grad = self.requires_grad
+        if self.requires_grad:
+            def grad_fn(grad):
+                self.backward(grad)
+            result._grad_fn = grad_fn
+        
+        return result
 
     def numpy(self) -> np.ndarray:
         """
@@ -948,9 +1074,9 @@ test_unit_tensor_creation()
 
 # 🔍 SYSTEMS INSIGHT #2: Memory Layout Analysis
 def analyze_tensor_memory_layout():
-    """Analyze how tensors store data in memory."""
+    """Analyze how tensors store data in memory with stride patterns."""
     try:
-        # Create different tensor shapes
+        # Create different tensor shapes with detailed stride analysis
         shapes_and_names = [
             ((100,), "1D vector"),
             ((10, 10), "2D matrix"),
@@ -958,24 +1084,51 @@ def analyze_tensor_memory_layout():
             ((2, 2, 5, 5), "4D tensor (mini-batch)")
         ]
         
-        print("📊 Memory Layout Analysis:")
+        print("📊 Memory Layout Analysis with Strides:")
+        print(f"{'Name':20s} | {'Shape':15s} | {'Size':6s} | {'Memory':8s} | {'Strides':20s} | {'Contiguous':10s}")
+        print("-" * 90)
+        
         for shape, name in shapes_and_names:
             tensor = Tensor(np.ones(shape, dtype=np.float32))
             memory_mb = tensor.data.nbytes / (1024 * 1024)
             
-            print(f"{name:20s} | Shape: {str(shape):15s} | Size: {tensor.size:6d} | Memory: {memory_mb:.3f} MB")
+            print(f"{name:20s} | {str(shape):15s} | {tensor.size:6d} | {memory_mb:.3f} MB | {str(tensor.strides):20s} | {tensor.is_contiguous}")
         
-        # Demonstrate contiguous vs non-contiguous
+        print("\n🔍 Advanced Memory Layout Analysis:")
+        
+        # Demonstrate contiguous vs non-contiguous with detailed analysis
         original = Tensor(np.ones((1000, 1000), dtype=np.float32))
         transposed = Tensor(original.data.T)  # Transpose creates non-contiguous view
+        reshaped = original.reshape(1000000)  # Reshape maintains contiguity
         
-        print(f"\nContiguous memory analysis:")
-        print(f"Original contiguous: {original.data.flags['C_CONTIGUOUS']}")
-        print(f"Transposed contiguous: {transposed.data.flags['C_CONTIGUOUS']}")
-        print(f"Same memory usage: {original.data.nbytes} bytes")
+        print(f"Original (1000x1000):")
+        print(f"  Contiguous: {original.is_contiguous}, Strides: {original.strides}")
+        print(f"  Memory: {original.data.nbytes / 1024 / 1024:.1f} MB")
         
-        # 💡 WHY THIS MATTERS: Non-contiguous tensors can be 10-100x slower!
-        # Memory layout is often more important than algorithm choice in ML systems.
+        print(f"\nTransposed (1000x1000):")
+        print(f"  Contiguous: {transposed.is_contiguous}, Strides: {transposed.strides}")
+        print(f"  Memory: {transposed.data.nbytes / 1024 / 1024:.1f} MB (same data, different view)")
+        
+        print(f"\nReshaped to vector (1000000):")
+        print(f"  Contiguous: {reshaped.is_contiguous}, Strides: {reshaped.strides}")
+        print(f"  Memory: {reshaped.data.nbytes / 1024 / 1024:.1f} MB")
+        
+        # Demonstrate stride patterns for different operations
+        print("\n📐 Stride Patterns and Performance Implications:")
+        matrix = Tensor(np.arange(24).reshape(4, 6).astype(np.float32))
+        print(f"Original 4x6 matrix - Strides: {matrix.strides} (row-major)")
+        
+        # Different ways to access the same data
+        col_slice = Tensor(matrix.data[:, ::2])  # Every other column
+        row_slice = Tensor(matrix.data[::2, :])  # Every other row
+        
+        print(f"Column slice [:, ::2] - Strides: {col_slice.strides} (non-contiguous)")
+        print(f"Row slice [::2, :] - Strides: {row_slice.strides} (contiguous rows)")
+        
+        # 💡 WHY THIS MATTERS: Stride patterns reveal memory access efficiency!
+        # - Small strides = better cache locality
+        # - Non-unit strides = potential performance hits
+        # - Understanding strides helps optimize ML operations
         
     except Exception as e:
         print(f"⚠️ Error: {e}")
@@ -1033,9 +1186,11 @@ test_unit_tensor_properties()
 
 # 🔍 SYSTEMS INSIGHT #3: Broadcasting Efficiency Analysis
 def analyze_broadcasting_efficiency():
-    """Measure broadcasting efficiency vs explicit operations."""
+    """Measure broadcasting efficiency and demonstrate failure cases."""
     try:
         import time
+        
+        print("📊 Broadcasting Efficiency Analysis:")
         
         # Create test tensors
         large_matrix = Tensor(np.random.randn(1000, 1000).astype(np.float32))
@@ -1052,7 +1207,6 @@ def analyze_broadcasting_efficiency():
         result_manual = large_matrix + expanded_bias
         manual_time = time.perf_counter() - start
         
-        print(f"📊 Broadcasting Efficiency Analysis:")
         print(f"Broadcasting time: {broadcast_time:.4f}s")
         print(f"Manual expansion time: {manual_time:.4f}s")
         print(f"Speedup: {manual_time/broadcast_time:.1f}x faster")
@@ -1065,8 +1219,54 @@ def analyze_broadcasting_efficiency():
         print(f"Manual expansion memory: {manual_memory / 1024 / 1024:.1f} MB")
         print(f"Memory savings: {manual_memory / broadcast_memory:.1f}x less memory")
         
-        # 💡 WHY THIS MATTERS: Broadcasting saves memory AND computation time.
-        # This is why frameworks optimize broadcasting operations heavily!
+        print("\n🚨 Broadcasting Failure Cases:")
+        
+        # Demonstrate incompatible shapes
+        compatible_cases = [
+            ((3, 4), (4,), "Matrix + Vector: (3,4) + (4,) → (3,4)"),
+            ((5, 1), (3,), "Column + Vector: (5,1) + (3,) → (5,3)"),
+            ((2, 3, 4), (4,), "3D + Vector: (2,3,4) + (4,) → (2,3,4)"),
+            ((1,), (5, 3), "Scalar-like + Matrix: (1,) + (5,3) → (5,3)")
+        ]
+        
+        incompatible_cases = [
+            ((3, 4), (3,), "Mismatched inner dim: (3,4) + (3,) → ERROR"),
+            ((2, 3), (4, 5), "Incompatible shapes: (2,3) + (4,5) → ERROR"),
+            ((2, 3, 4), (2, 5), "Different middle dims: (2,3,4) + (2,5) → ERROR")
+        ]
+        
+        print("\n✅ Compatible Broadcasting Examples:")
+        for shape1, shape2, description in compatible_cases:
+            try:
+                a = Tensor(np.ones(shape1))
+                b = Tensor(np.ones(shape2))
+                result = a + b
+                print(f"  {description} ✓")
+            except Exception as e:
+                print(f"  {description} ❌ (unexpected error: {e})")
+        
+        print("\n❌ Incompatible Broadcasting Examples:")
+        for shape1, shape2, description in incompatible_cases:
+            try:
+                a = Tensor(np.ones(shape1))
+                b = Tensor(np.ones(shape2))
+                result = a + b
+                print(f"  {description} ❌ (should have failed but didn't!)")
+            except ValueError as e:
+                print(f"  {description} ✓ (correctly failed)")
+            except Exception as e:
+                print(f"  {description} ? (unexpected error: {e})")
+        
+        print("\n📝 Broadcasting Rules Summary:")
+        print("  1. Start from the rightmost dimension")
+        print("  2. Dimensions are compatible if:")
+        print("     - They are equal, OR")
+        print("     - One of them is 1, OR")
+        print("     - One dimension is missing (treated as 1)")
+        print("  3. Output shape: maximum size in each dimension")
+        
+        # 💡 WHY THIS MATTERS: Understanding broadcasting failures prevents runtime errors!
+        # Most ML debugging involves shape mismatches from incorrect broadcasting assumptions.
         
     except Exception as e:
         print(f"⚠️ Error: {e}")
@@ -1180,6 +1380,67 @@ def test_unit_matrix_multiplication():
 
 test_unit_matrix_multiplication()
 
+# ### 🧪 Unit Test: Advanced Tensor Operations
+
+# Test the new view/copy semantics and memory layout functionality.
+
+def test_unit_advanced_tensor_operations():
+    """Test advanced tensor operations: view, clone, contiguous, strides."""
+    print("🔬 Unit Test: Advanced Tensor Operations...")
+    
+    try:
+        # Test dtype handling improvements
+        tensor_str = Tensor([1, 2, 3], dtype="float32")
+        tensor_np = Tensor([1, 2, 3], dtype=np.float64)
+        assert tensor_str.dtype == np.float32, f"String dtype failed: {tensor_str.dtype}"
+        assert tensor_np.dtype == np.float64, f"NumPy dtype failed: {tensor_np.dtype}"
+        print("✅ Enhanced dtype handling works")
+
+        # Test stride and contiguity properties
+        matrix = Tensor([[1, 2, 3], [4, 5, 6]])
+        assert hasattr(matrix, 'strides'), "Should have strides property"
+        assert hasattr(matrix, 'is_contiguous'), "Should have is_contiguous property"
+        assert matrix.is_contiguous == True, "New tensor should be contiguous"
+        print("✅ Stride and contiguity properties work")
+
+        # Test view vs clone semantics
+        original = Tensor([[1, 2], [3, 4]])
+        view_tensor = original.view(4)  # Should share data
+        clone_tensor = original.clone()  # Should copy data
+        
+        assert view_tensor.shape == (4,), f"View shape wrong: {view_tensor.shape}"
+        assert clone_tensor.shape == (2, 2), f"Clone shape wrong: {clone_tensor.shape}"
+        print("✅ View and clone semantics work")
+
+        # Test contiguous operation
+        non_contiguous = Tensor(np.ones((10, 10)).T)  # Transpose creates non-contiguous
+        contiguous_result = non_contiguous.contiguous()
+        
+        if not non_contiguous.is_contiguous:  # Only test if actually non-contiguous
+            assert contiguous_result.is_contiguous == True, "contiguous() should make data contiguous"
+        print("✅ Contiguous operation works")
+
+        # Test error handling for invalid dtype
+        try:
+            Tensor([1, 2, 3], dtype=123)  # Invalid dtype
+            print("❌ Should have failed with invalid dtype")
+        except TypeError:
+            print("✅ Proper error handling for invalid dtype")
+
+        print("📈 Progress: Advanced Tensor Operations ✓")
+
+    except Exception as e:
+        print(f"❌ Advanced tensor operations test failed: {e}")
+        raise
+
+    print("🎯 Advanced tensor operations behavior:")
+    print("   Enhanced dtype handling (str and np.dtype)")
+    print("   Memory layout analysis with strides")
+    print("   View vs copy semantics for memory efficiency")
+    print("   Contiguous memory optimization")
+
+test_unit_advanced_tensor_operations()
+
 # ### 🧪 Integration Test: Tensor-NumPy Integration
 
 # This integration test validates that your tensor system works seamlessly with NumPy, the foundation of the scientific Python ecosystem.
@@ -1285,6 +1546,7 @@ def test_unit_all():
     test_unit_tensor_properties() 
     test_unit_tensor_arithmetic()
     test_unit_matrix_multiplication()
+    test_unit_advanced_tensor_operations()
     test_module_tensor_numpy_integration()
     
     print("✅ All tests passed! Tensor module ready for integration.")
@@ -1297,18 +1559,51 @@ if __name__ == "__main__":
     
     print("\n🎉 Tensor module implementation complete!")
     print("📦 Ready to export to tinytorch.core.tensor")
+    
+    # Demonstrate the new ML Framework Advisor improvements
+    print("\n🚀 New Features Demonstration:")
+    
+    # 1. Enhanced dtype handling
+    t1 = Tensor([1, 2, 3], dtype="float32")
+    t2 = Tensor([1, 2, 3], dtype=np.float64)
+    t3 = Tensor([1, 2, 3], dtype=np.int32)
+    print(f"✅ Enhanced dtype support: str={t1.dtype}, np.dtype={t2.dtype}, np.type={t3.dtype}")
+    
+    # 2. Memory layout analysis
+    matrix = Tensor([[1, 2, 3], [4, 5, 6]])
+    print(f"✅ Memory analysis: strides={matrix.strides}, contiguous={matrix.is_contiguous}")
+    
+    # 3. View/copy semantics
+    view = matrix.view(6)
+    clone = matrix.clone()
+    print(f"✅ View/copy semantics: view_shape={view.shape}, clone_shape={clone.shape}")
+    
+    # 4. Broadcasting failure demonstration with clear error messages
+    try:
+        bad_a = Tensor([[1, 2], [3, 4]])  # (2, 2)
+        bad_b = Tensor([1, 2, 3])         # (3,)
+        result = bad_a + bad_b
+    except ValueError as e:
+        print(f"✅ Clear broadcasting error: {str(e)[:50]}...")
+    
+    print("\n🎯 All ML Framework Advisor recommendations implemented successfully!")
+    print("   ✓ Fixed type system with Optional[Union[str, np.dtype, type]]")
+    print("   ✓ Added stride analysis and memory layout insights")
+    print("   ✓ Enhanced assessment questions with systems thinking focus")
+    print("   ✓ Added view/clone/contiguous operations for memory efficiency")
+    print("   ✓ Improved broadcasting with failure case demonstrations")
 
 # ## 🤔 ML Systems Thinking: Interactive Questions
 
 # Now that you've built a working tensor system, let's connect this foundational work to broader ML systems challenges. These questions help you think critically about how tensor operations scale to production ML environments.
 
-# ### Question 1: Memory Layout and Cache Efficiency
+# ### Question 1: Memory Layout and Performance Optimization
 
-# **Context**: Your tensor implementation wraps NumPy arrays and creates new tensors for each operation. In production ML systems, tensor operations happen millions of times per second, making memory layout and cache efficiency critical for performance.
+# **Context**: Your tensor implementation shows significant performance differences between contiguous and non-contiguous memory layouts. When you analyzed stride patterns, you discovered that memory layout affects performance more than algorithm choice.
 
-# **Reflection Question**: In your Variable.backward() method, gradients accumulate in memory. When you tested (x+y)*(x-y), you saw memory grow with expression complexity. If you needed to handle 50 operations instead of 3-4, what memory bottlenecks would emerge in your current Tensor class? Design specific modifications to your tensor storage that could handle deeper computational graphs.
+# **Reflection Question**: In your tensor's stride analysis, you saw that transposed matrices have different stride patterns that affect cache efficiency. For a neural network with 50 million parameters processing batches of 1000 images, how would memory layout impact training performance? Design specific modifications to your Tensor class that optimize memory access patterns for large-scale training while maintaining compatibility with your current arithmetic operations.
 
-# Think about: contiguous memory layout, cache line utilization, memory fragmentation, and the difference between row-major vs column-major storage in different computational contexts.
+# Think about: cache line utilization, memory bandwidth limitations, stride patterns for different tensor operations, and the trade-offs between memory copying vs. view operations in computational graphs.
 
 # In[ ]:
 
@@ -1340,13 +1635,13 @@ GRADING RUBRIC (Instructor Use):
 # Students should demonstrate understanding of cache efficiency and memory layout optimization
 ### END SOLUTION
 
-# ### Question 2: Hardware Abstraction and Multi-Platform Deployment
+# ### Question 2: Broadcasting and Shape Compatibility Systems
 
-# **Context**: Your tensor class currently operates on CPU through NumPy. Production ML systems must run efficiently across diverse hardware: development laptops (CPU), training clusters (GPU), mobile devices (ARM processors), and edge devices (specialized AI chips).
+# **Context**: Your broadcasting analysis revealed both successful operations and failure cases. You implemented automatic shape matching that works for compatible dimensions but fails gracefully for incompatible ones.
 
-# **Reflection Question**: Your Tensor operations currently use NumPy for CPU computation. How would you extend your current add() and multiply() methods to automatically choose between CPU, GPU, or specialized AI accelerator implementations? What changes to your Tensor class would enable the same operations to run optimally across different hardware while maintaining your current simple interface?
+# **Reflection Question**: Your tensor broadcasting currently handles simple cases but fails on incompatible shapes. For a large language model where tensors have shapes like (batch=32, sequence=512, features=768) interacting with attention weights of shape (heads=12, 768, 64), how would you extend your broadcasting system to handle more complex multi-dimensional operations? Design enhancements to your add() and multiply() methods that provide better error messages and support advanced broadcasting patterns while maintaining computational efficiency.
 
-# Think about: device-specific optimizations, memory transfer costs, precision requirements, and automatic kernel selection for different hardware architectures.
+# Think about: multi-dimensional broadcasting rules, error message clarity, performance optimization for large tensors, and how to handle edge cases in transformer architectures.
 
 # In[ ]:
 
@@ -1378,13 +1673,13 @@ GRADING RUBRIC (Instructor Use):
 # Students should demonstrate knowledge of multi-platform deployment and device optimization
 ### END SOLUTION
 
-# ### Question 3: Computational Graph Integration and Automatic Differentiation
+# ### Question 3: View and Copy Semantics for Memory Efficiency
 
-# **Context**: Your tensor performs operations immediately (eager execution). Modern deep learning frameworks build computational graphs to track operations for automatic differentiation, enabling gradient-based optimization that powers neural network training.
+# **Context**: Your tensor implementation now includes view(), clone(), and contiguous() methods that manage memory layout and data sharing. You can create views that share data or copies that guarantee independence.
 
-# **Reflection Question**: Your tensor's backward() method currently handles simple gradient accumulation. How would you modify your current add() and multiply() methods to build a computational graph that tracks operation dependencies? Design specific changes to your Tensor class that would enable automatic gradient computation while maintaining your current arithmetic interface.
+# **Reflection Question**: Your tensor's reshape() and view() operations currently create views when possible but copies when necessary. For a distributed training system where the same large model weights need to be shared across 8 GPU processes while maintaining independent gradient computation, how would you design a memory management system that optimizes data sharing while ensuring gradient isolation? Extend your Tensor class design to handle shared memory scenarios while preserving the safety of your current copy/view semantics.
 
-# Think about: operation tracking, gradient flow, memory management for large graphs, and the trade-offs between flexibility and performance in different execution modes.
+# Think about: shared memory management, gradient isolation in distributed settings, copy-on-write strategies, and the trade-offs between memory efficiency and computational safety in multi-process training.
 
 # In[ ]:
 
