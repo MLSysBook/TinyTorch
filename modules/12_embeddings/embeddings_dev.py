@@ -106,33 +106,81 @@ from tinytorch.core.attention import MultiHeadAttention  # Next module
 
 ### The Problem: Discrete to Continuous
 Tokens are discrete symbols, but neural networks work best with continuous vectors:
+
 ```
-Token: 42 → Dense Vector: [0.1, -0.3, 0.8, 0.2, ...]
+Discrete Token Transformation:
+    Token ID    →    Dense Vector Representation
+       42       →    [0.1, -0.3, 0.8, 0.2, ...]
+       
+Visualization:
+    Sparse One-Hot      Dense Embedding
+    [0,0,0,1,0,...]  →  [0.1,-0.3,0.8,0.2]
+    100,000 dims        512 dims
 ```
 
-### Embedding Table (Lookup Table)
+### Embedding Table Visualization
 An embedding layer is essentially a learnable lookup table:
+
 ```
-Vocabulary size: 50,000 tokens
-Embedding dimension: 512
-Total parameters: 50,000 × 512 = 25.6M parameters
+Embedding Table Memory Layout:
+┌─────────────────────────────────────┐
+│ Embedding Weight Matrix             │
+├─────────────────────────────────────┤
+│ Token 0:  [0.1, -0.2,  0.3, ...]  │  ← "<PAD>" token
+│ Token 1:  [0.4,  0.1, -0.5, ...]  │  ← "<UNK>" token  
+│ Token 2:  [-0.1, 0.8,  0.2, ...]  │  ← "the" token
+│ Token 3:  [0.7, -0.3,  0.1, ...]  │  ← "and" token
+│ ...                               │
+│ Token N:  [0.2,  0.5, -0.7, ...]  │  ← Final token
+└─────────────────────────────────────┘
+    ↑                    ↑
+  vocab_size        embedding_dim
+
+Example: 50,000 × 512 = 25.6M parameters = 102.4MB (float32)
+```
+
+### Embedding Lookup Process
+```
+Lookup Operation Flow:
+    Token IDs: [42, 17, 8]  (Input sequence)
+         ↓ Advanced Indexing
+    Embedding Table[42] → [0.1, -0.3, 0.8, ...]
+    Embedding Table[17] → [0.4,  0.1, -0.5, ...] 
+    Embedding Table[8]  → [-0.1, 0.8,  0.2, ...]
+         ↓ Stack Results
+    Output: [[0.1, -0.3, 0.8, ...],    ← Token 42 embedding
+             [0.4,  0.1, -0.5, ...],    ← Token 17 embedding  
+             [-0.1, 0.8,  0.2, ...]]    ← Token 8 embedding
+    
+Complexity: O(seq_length) lookups, O(seq_length × embed_dim) memory
 ```
 
 ### Why Embeddings Work
 - **Similarity**: Similar words get similar vectors through training
-- **Composition**: Vector operations capture semantic relationships
+- **Composition**: Vector operations capture semantic relationships  
 - **Learning**: Gradients update embeddings to improve task performance
+- **Efficiency**: Dense vectors are more efficient than sparse one-hot
 
-### Positional Encoding
+### Positional Encoding Visualization
 Since transformers lack inherent position awareness, we add positional information:
+
 ```
-Token embedding + Positional encoding = Position-aware representation
+Position-Aware Embedding Creation:
+    Token Embedding    +    Positional Encoding    =    Final Representation
+    ┌─────────────┐         ┌─────────────┐             ┌─────────────┐
+    │[0.1,-0.3,0.8]│    +    │[0.0, 1.0,0.0]│        =    │[0.1, 0.7,0.8]│  ← Pos 0
+    │[0.4, 0.1,-0.5]│    +    │[0.1, 0.9,0.1]│        =    │[0.5, 1.0,-0.4]│  ← Pos 1
+    │[-0.1,0.8, 0.2]│    +    │[0.2, 0.8,0.2]│        =    │[0.1, 1.6, 0.4]│  ← Pos 2
+    └─────────────┘         └─────────────┘             └─────────────┘
+         ↑                       ↑                           ↑
+    Content Info           Position Info              Complete Context
 ```
 
 ### Systems Trade-offs
-- **Embedding dimension**: Higher = more capacity, more memory
+- **Embedding dimension**: Higher = more capacity, more memory  
 - **Vocabulary size**: Larger = more parameters, better coverage
 - **Lookup efficiency**: Memory access patterns affect performance
+- **Position encoding**: Fixed vs learned vs hybrid approaches
 """
 
 # %% [markdown]
@@ -140,6 +188,27 @@ Token embedding + Positional encoding = Position-aware representation
 ## Embedding Layer Implementation
 
 Let's start with the core embedding layer - a learnable lookup table that converts token indices to dense vectors.
+
+### Implementation Strategy
+```
+Embedding Layer Architecture:
+    Input: Token IDs [batch_size, seq_length]
+         ↓ Index into weight matrix
+    Weight Matrix: [vocab_size, embedding_dim] 
+         ↓ Advanced indexing: weight[input_ids]
+    Output: Embeddings [batch_size, seq_length, embedding_dim]
+
+Memory Layout:
+┌──────────────────────────────────────┐
+│ Embedding Weight Matrix              │  ← Main parameter storage
+├──────────────────────────────────────┤  
+│ Input Token IDs (integers)           │  ← Temporary during forward
+├──────────────────────────────────────┤
+│ Output Embeddings (float32)          │  ← Result tensor
+└──────────────────────────────────────┘
+
+Operation: O(1) lookup per token, O(seq_length) total
+```
 """
 
 # %% nbgrader={"grade": false, "grade_id": "embedding-layer", "locked": false, "schema_version": 3, "solution": true, "task": false}
@@ -181,17 +250,21 @@ class Embedding:
         self.padding_idx = padding_idx
         self.init_type = init_type
         
-        # Initialize embedding table based on strategy
+        # Initialize embedding table based on strategy  
+        # Different initialization strategies affect training dynamics
         if init_type == 'uniform':
             # Uniform initialization in [-1/sqrt(dim), 1/sqrt(dim)]
-            bound = 1.0 / math.sqrt(embedding_dim)
+            # Keeps initial embeddings in reasonable range for gradient flow
+            bound = 1.0 / math.sqrt(embedding_dim)  # Scale with dimension
             self.weight = Tensor(np.random.uniform(-bound, bound, (vocab_size, embedding_dim)))
         elif init_type == 'normal':
             # Normal initialization with std=1/sqrt(dim)
+            # Gaussian distribution with dimension-aware scaling
             std = 1.0 / math.sqrt(embedding_dim)
             self.weight = Tensor(np.random.normal(0, std, (vocab_size, embedding_dim)))
         elif init_type == 'xavier':
-            # Xavier/Glorot initialization
+            # Xavier/Glorot initialization - considers fan-in and fan-out
+            # Good for maintaining activation variance across layers
             bound = math.sqrt(6.0 / (vocab_size + embedding_dim))
             self.weight = Tensor(np.random.uniform(-bound, bound, (vocab_size, embedding_dim)))
         else:
@@ -247,10 +320,11 @@ class Embedding:
         if np.any(indices < 0) or np.any(indices >= self.vocab_size):
             raise ValueError(f"Token indices must be in range [0, {self.vocab_size})")
         
-        # Look up embeddings using advanced indexing
+        # Look up embeddings using advanced indexing (very efficient operation)
+        # Memory access pattern: Random access into embedding table
         # self.weight.data has shape (vocab_size, embedding_dim)
         # indices has shape (...), result has shape (..., embedding_dim)
-        embeddings = self.weight.data[indices]
+        embeddings = self.weight.data[indices]  # O(seq_length) lookups
         
         return Tensor(embeddings)
         ### END SOLUTION
@@ -355,6 +429,47 @@ def test_unit_embedding_layer():
 ## Positional Encoding Implementation
 
 Transformers need explicit position information since attention is position-agnostic. Let's implement sinusoidal positional encoding used in the original transformer.
+
+### Sinusoidal Positional Encoding Visualization
+```
+Mathematical Foundation:
+    PE(pos, 2i)   = sin(pos / 10000^(2i/d_model))     ← Even dimensions
+    PE(pos, 2i+1) = cos(pos / 10000^(2i/d_model))     ← Odd dimensions
+
+Frequency Pattern:
+    Position →   0    1    2    3    4   ...
+    Dim 0:    [sin] [sin] [sin] [sin] [sin] ... ← High frequency
+    Dim 1:    [cos] [cos] [cos] [cos] [cos] ... ← High frequency
+    Dim 2:    [sin] [sin] [sin] [sin] [sin] ... ← Med frequency
+    Dim 3:    [cos] [cos] [cos] [cos] [cos] ... ← Med frequency
+    ...        ...   ...   ...   ...   ...   
+    Dim n-2:  [sin] [sin] [sin] [sin] [sin] ... ← Low frequency  
+    Dim n-1:  [cos] [cos] [cos] [cos] [cos] ... ← Low frequency
+
+Why This Works:
+    - Each position gets unique encoding across all dimensions
+    - Relative positions have consistent patterns
+    - Model can learn to use positional relationships
+    - No parameters needed (computed deterministically)
+```
+
+### Position Encoding Memory Layout
+```
+Precomputed Position Matrix:
+┌─────────────────────────────────────┐
+│ Position Encoding Matrix            │
+├─────────────────────────────────────┤ 
+│ Pos 0:  [0.00, 1.00, 0.00, 1.00...]│  ← sin(0), cos(0), sin(0), cos(0)
+│ Pos 1:  [0.84, 0.54, 0.10, 0.99...]│  ← sin(1), cos(1), sin(f1), cos(f1)
+│ Pos 2:  [0.91,-0.42, 0.20, 0.98...]│  ← sin(2), cos(2), sin(f2), cos(f2) 
+│ Pos 3:  [0.14,-0.99, 0.30, 0.95...]│  ← sin(3), cos(3), sin(f3), cos(f3)
+│ ...                               │
+└─────────────────────────────────────┘
+    ↑                    ↑
+max_seq_length     embedding_dim
+
+Memory: max_seq_length × embedding_dim × 4 bytes (precomputed)
+```
 """
 
 # %% nbgrader={"grade": false, "grade_id": "positional-encoding", "locked": false, "schema_version": 3, "solution": true, "task": false}
@@ -408,13 +523,16 @@ class PositionalEncoding:
         
         # Create dimension indices for frequency calculation
         # div_term calculates 10000^(2i/d_model) for i = 0, 1, 2, ...
+        # This creates decreasing frequencies: high freq for early dims, low freq for later dims
         div_term = np.exp(np.arange(0, embedding_dim, 2) * 
                          -(math.log(10000.0) / embedding_dim))
         
-        # Apply sine to even dimensions (0, 2, 4, ...)
-        pe[:, 0::2] = np.sin(position * div_term)
+        # Apply sine to even dimensions (0, 2, 4, ...) 
+        # Broadcasting: position (max_seq_length, 1) * div_term (embedding_dim//2,)
+        pe[:, 0::2] = np.sin(position * div_term)  # High to low frequency sine waves
         
         # Apply cosine to odd dimensions (1, 3, 5, ...)
+        # Cosine provides phase-shifted version of sine for each frequency
         if embedding_dim % 2 == 1:
             # Handle odd embedding_dim - cosine gets one less dimension
             pe[:, 1::2] = np.cos(position * div_term[:-1])
@@ -467,10 +585,12 @@ class PositionalEncoding:
         # Extract positional encodings for this sequence length
         position_encodings = self.pe.data[:seq_length, :]
         
-        # Add positional encodings to embeddings
+        # Add positional encodings to embeddings (element-wise addition)
+        # This combines content information with positional information
         if batch_size is not None:
             # Broadcast positional encodings across batch dimension
             # embeddings: (batch, seq, dim) + position_encodings: (seq, dim)
+            # Broadcasting rule: (B,S,D) + (1,S,D) = (B,S,D)
             result = embeddings.data + position_encodings[np.newaxis, :, :]
         else:
             # embeddings: (seq, dim) + position_encodings: (seq, dim)
@@ -605,6 +725,38 @@ def test_unit_positional_encoding():
 ## Learned Positional Embeddings
 
 Some models use learned positional embeddings instead of fixed sinusoidal ones. Let's implement this alternative approach:
+
+### Learned vs Sinusoidal Comparison
+```
+Sinusoidal Positional Encoding:
+    ✓ Zero parameters (deterministic computation)
+    ✓ Can extrapolate to longer sequences
+    ✓ Mathematical guarantees about relative positions
+    ✗ Fixed pattern - cannot adapt to task
+    
+Learned Positional Embeddings:
+    ✓ Learnable parameters (adapts to task/data)
+    ✓ Can capture task-specific positional patterns
+    ✗ Requires additional parameters (max_seq_len × embed_dim)
+    ✗ Cannot extrapolate beyond training sequence length
+    ✗ Needs sufficient training data to learn good positions
+```
+
+### Learned Position Architecture
+```
+Learned Position System:
+    Position IDs: [0, 1, 2, 3, ...]
+          ↓ Embedding lookup (just like token embeddings)
+    Position Table: [max_seq_length, embedding_dim]
+          ↓ Standard embedding lookup
+    Position Embeddings: [seq_length, embedding_dim]
+          ↓ Add to token embeddings
+    Final Representation: Token + Position information
+
+This is essentially two embedding tables:
+    - Token Embedding: token_id → content vector
+    - Position Embedding: position_id → position vector
+```
 """
 
 # %% nbgrader={"grade": false, "grade_id": "learned-positional", "locked": false, "schema_version": 3, "solution": true, "task": false}
@@ -640,11 +792,12 @@ class LearnedPositionalEmbedding:
         self.embedding_dim = embedding_dim
         
         # Create learned positional embedding table
-        # This is like an embedding layer for positions
+        # This is like an embedding layer for positions (not tokens)
+        # Vocabulary size = max sequence length (each position is a "token")
         self.position_embedding = Embedding(
-            vocab_size=max_seq_length,
-            embedding_dim=embedding_dim,
-            init_type='normal'
+            vocab_size=max_seq_length,  # Position 0, 1, 2, ..., max_seq_length-1
+            embedding_dim=embedding_dim,  # Same dimension as token embeddings
+            init_type='normal'  # Start with small random values
         )
         
         # Track parameters for optimization
@@ -691,9 +844,11 @@ class LearnedPositionalEmbedding:
             raise ValueError(f"Sequence length {seq_length} exceeds max {self.max_seq_length}")
         
         # Create position indices [0, 1, 2, ..., seq_length-1]
+        # These are the "token IDs" for positions in the sequence
         position_ids = list(range(seq_length))
         
-        # Look up position embeddings
+        # Look up position embeddings (same process as token embedding lookup)
+        # Each position gets its own learned vector representation
         position_embeddings = self.position_embedding.forward(position_ids)
         
         # Add position embeddings to input embeddings
@@ -795,6 +950,192 @@ def test_unit_learned_positional_embedding():
     print(f"✅ Max sequence length: {max_seq_length}, Embedding dim: {embedding_dim}")
 
 # Test function defined (called in main block)
+
+# ✅ IMPLEMENTATION CHECKPOINT: Ensure all embedding components are complete before analysis
+
+# 🤔 PREDICTION: How does embedding table memory scale with vocabulary size and dimension?
+# Linear with vocab_size? Linear with embedding_dim? Quadratic with both?
+# Your prediction: _______
+
+# 🔍 SYSTEMS INSIGHT #1: Embedding Memory Scaling Analysis
+def analyze_embedding_memory_scaling():
+    """Analyze how embedding memory scales with vocabulary and dimension parameters."""
+    try:
+        import time
+        
+        print("📊 EMBEDDING MEMORY SCALING ANALYSIS")
+        print("=" * 50)
+        
+        # Test different configurations
+        test_configs = [
+            (1000, 128),   # Small model
+            (10000, 256),  # Medium model  
+            (50000, 512),  # Large model
+            (100000, 1024) # Very large model
+        ]
+        
+        print(f"{'Vocab Size':<12} {'Embed Dim':<10} {'Parameters':<12} {'Memory (MB)':<12} {'Lookup Time':<12}")
+        print("-" * 70)
+        
+        for vocab_size, embed_dim in test_configs:
+            # Create embedding layer
+            embed = Embedding(vocab_size=vocab_size, embedding_dim=embed_dim)
+            
+            # Calculate memory
+            memory_stats = embed.get_memory_usage()
+            params = memory_stats['total_parameters']
+            memory_mb = memory_stats['total_memory_mb']
+            
+            # Test lookup performance
+            test_tokens = np.random.randint(0, vocab_size, (32, 64))
+            start_time = time.time()
+            _ = embed.forward(test_tokens) 
+            lookup_time = (time.time() - start_time) * 1000
+            
+            print(f"{vocab_size:<12,} {embed_dim:<10} {params:<12,} {memory_mb:<12.1f} {lookup_time:<12.2f}")
+        
+        # 💡 WHY THIS MATTERS: GPT-3 has 50k vocab × 12k dim = 600M embedding parameters!
+        # That's 2.4GB just for the embedding table (before any other model weights)
+        print("\n💡 SCALING INSIGHTS:")
+        print("   - Memory scales linearly with both vocab_size AND embedding_dim")
+        print("   - Lookup time is dominated by memory bandwidth, not computation")
+        print("   - Large models spend significant memory on embeddings alone")
+        
+    except Exception as e:
+        print(f"⚠️ Error in memory scaling analysis: {e}")
+        print("Make sure your Embedding class is implemented correctly")
+
+analyze_embedding_memory_scaling()
+
+# ✅ IMPLEMENTATION CHECKPOINT: Ensure positional encoding works before analysis
+
+# 🤔 PREDICTION: Which positional encoding uses more memory - sinusoidal or learned?
+# Which can handle longer sequences? Your answer: _______
+
+# 🔍 SYSTEMS INSIGHT #2: Positional Encoding Trade-offs
+def analyze_positional_encoding_tradeoffs():
+    """Compare memory and performance characteristics of different positional encodings."""
+    try:
+        import time
+        
+        print("\n🔍 POSITIONAL ENCODING COMPARISON")
+        print("=" * 50)
+        
+        embedding_dim = 512
+        max_seq_length = 2048
+        
+        # Create both types
+        sinusoidal_pe = PositionalEncoding(embedding_dim=embedding_dim, max_seq_length=max_seq_length)
+        learned_pe = LearnedPositionalEmbedding(max_seq_length=max_seq_length, embedding_dim=embedding_dim)
+        
+        # Test different sequence lengths
+        seq_lengths = [128, 512, 1024, 2048]
+        batch_size = 16
+        
+        print(f"{'Seq Len':<8} {'Method':<12} {'Time (ms)':<10} {'Memory (MB)':<12} {'Parameters':<12}")
+        print("-" * 65)
+        
+        for seq_len in seq_lengths:
+            embeddings = Tensor(np.random.randn(batch_size, seq_len, embedding_dim))
+            
+            # Test sinusoidal
+            start_time = time.time()
+            _ = sinusoidal_pe.forward(embeddings)
+            sin_time = (time.time() - start_time) * 1000
+            sin_memory = 0  # No parameters
+            sin_params = 0
+            
+            # Test learned
+            start_time = time.time() 
+            _ = learned_pe.forward(embeddings)
+            learned_time = (time.time() - start_time) * 1000
+            learned_memory = learned_pe.position_embedding.get_memory_usage()['total_memory_mb']
+            learned_params = max_seq_length * embedding_dim
+            
+            print(f"{seq_len:<8} {'Sinusoidal':<12} {sin_time:<10.2f} {sin_memory:<12.1f} {sin_params:<12,}")
+            print(f"{seq_len:<8} {'Learned':<12} {learned_time:<10.2f} {learned_memory:<12.1f} {learned_params:<12,}")
+            print()
+        
+        # 💡 WHY THIS MATTERS: Choice affects model size and sequence length flexibility
+        print("💡 TRADE-OFF INSIGHTS:")
+        print("   - Sinusoidal: 0 parameters, can extrapolate to any length")
+        print("   - Learned: Many parameters, limited to training sequence length")
+        print("   - Modern models often use learned for better task adaptation")
+        
+    except Exception as e:
+        print(f"⚠️ Error in positional encoding analysis: {e}")
+        print("Make sure both positional encoding classes are implemented")
+
+analyze_positional_encoding_tradeoffs()
+
+# ✅ IMPLEMENTATION CHECKPOINT: Ensure full embedding pipeline works
+
+# 🤔 PREDICTION: What's the bottleneck in embedding pipelines - computation or memory?
+# How does batch size affect throughput? Your prediction: _______
+
+# 🔍 SYSTEMS INSIGHT #3: Embedding Pipeline Performance
+def analyze_embedding_pipeline_performance():
+    """Analyze performance characteristics of the complete embedding pipeline."""
+    try:
+        import time
+        
+        print("\n⚡ EMBEDDING PIPELINE PERFORMANCE")
+        print("=" * 50)
+        
+        # Create pipeline components
+        vocab_size = 10000
+        embedding_dim = 256
+        max_seq_length = 512
+        
+        embed = Embedding(vocab_size=vocab_size, embedding_dim=embedding_dim)
+        pos_enc = PositionalEncoding(embedding_dim=embedding_dim, max_seq_length=max_seq_length)
+        
+        # Test different batch sizes and sequence lengths
+        test_configs = [
+            (8, 128),    # Small batch, short sequences
+            (32, 256),   # Medium batch, medium sequences
+            (64, 512),   # Large batch, long sequences
+        ]
+        
+        print(f"{'Batch':<6} {'Seq Len':<8} {'Total Tokens':<12} {'Time (ms)':<10} {'Tokens/sec':<12} {'Memory (MB)':<12}")
+        print("-" * 75)
+        
+        for batch_size, seq_length in test_configs:
+            # Create random token sequence
+            tokens = np.random.randint(0, vocab_size, (batch_size, seq_length))
+            token_tensor = Tensor(tokens)
+            
+            # Measure full pipeline
+            start_time = time.time()
+            
+            # Step 1: Embedding lookup
+            embeddings = embed.forward(token_tensor)
+            
+            # Step 2: Add positional encoding
+            pos_embeddings = pos_enc.forward(embeddings)
+            
+            end_time = time.time()
+            
+            # Calculate metrics
+            total_tokens = batch_size * seq_length
+            pipeline_time = (end_time - start_time) * 1000
+            tokens_per_sec = total_tokens / (end_time - start_time) if end_time > start_time else 0
+            memory_mb = pos_embeddings.data.nbytes / (1024 * 1024)
+            
+            print(f"{batch_size:<6} {seq_length:<8} {total_tokens:<12,} {pipeline_time:<10.2f} {tokens_per_sec:<12,.0f} {memory_mb:<12.1f}")
+        
+        # 💡 WHY THIS MATTERS: Understanding pipeline bottlenecks for production deployment
+        print("\n💡 PIPELINE INSIGHTS:")
+        print("   - Embedding lookup is memory-bandwidth bound (not compute bound)")
+        print("   - Larger batches improve throughput due to better memory utilization")
+        print("   - Sequence length affects memory linearly, performance sublinearly")
+        print("   - Production systems optimize with: embedding caching, mixed precision, etc.")
+        
+    except Exception as e:
+        print(f"⚠️ Error in pipeline analysis: {e}")
+        print("Make sure your full embedding pipeline is working")
+
+analyze_embedding_pipeline_performance()
 
 # %% [markdown]
 """
@@ -1358,11 +1699,11 @@ Take time to reflect thoughtfully on each question - your insights will help you
 """
 ### Question 1: Embedding Memory Optimization and Model Scaling
 
-**Context**: Your embedding implementations demonstrate how vocabulary size and embedding dimension directly impact model parameters and memory usage. In production language models, embedding tables often contain billions of parameters (GPT-3's embedding table alone has ~600M parameters), making memory optimization critical for deployment and training efficiency.
+**Context**: Your embedding implementations demonstrate how vocabulary size and embedding dimension directly impact model parameters and memory usage. In your memory scaling analysis, you saw how a 100k vocabulary with 1024-dimensional embeddings requires ~400MB just for the embedding table. In production language models, embedding tables often contain billions of parameters (GPT-3's embedding table alone has ~600M parameters), making memory optimization critical for deployment and training efficiency.
 
-**Reflection Question**: Design a memory-optimized embedding system for a production language model that needs to handle a 100k vocabulary with 1024-dimensional embeddings while operating under GPU memory constraints. How would you implement embedding compression techniques, design efficient lookup patterns for high-throughput training, and handle dynamic vocabulary expansion for domain adaptation? Consider the challenges of maintaining embedding quality while reducing memory footprint and optimizing for both training and inference scenarios.
+**Reflection Question**: Based on your `Embedding` class implementation and memory scaling analysis, design a memory-optimized embedding system for a production language model that needs to handle a 100k vocabulary with 1024-dimensional embeddings while operating under GPU memory constraints. How would you modify your current `Embedding.forward()` method to implement embedding compression techniques, design efficient lookup patterns for high-throughput training, and handle dynamic vocabulary expansion for domain adaptation? Consider how your current weight initialization strategies could be adapted and what changes to your `get_memory_usage()` analysis would be needed for compressed embeddings.
 
-Think about: embedding compression techniques, memory-efficient lookup patterns, dynamic vocabulary management, and quality-memory trade-offs.
+Think about: adapting your embedding lookup implementation, modifying weight storage patterns, extending your memory analysis for compression techniques, and designing efficient gradient updates for compressed representations.
 
 *Target length: 150-300 words*
 """
@@ -1400,11 +1741,11 @@ GRADING RUBRIC (Instructor Use):
 """
 ### Question 2: Positional Encoding and Sequence Length Scalability
 
-**Context**: Your positional encoding implementations show the trade-offs between fixed sinusoidal patterns and learned position embeddings. Production language models increasingly need to handle variable sequence lengths efficiently while maintaining consistent position representations across different tasks and deployment scenarios.
+**Context**: Your positional encoding implementations show the trade-offs between fixed sinusoidal patterns and learned position embeddings. In your analysis, you saw that `PositionalEncoding` requires 0 parameters but `LearnedPositionalEmbedding` needs max_seq_length × embedding_dim parameters. Production language models increasingly need to handle variable sequence lengths efficiently while maintaining consistent position representations across different tasks and deployment scenarios.
 
-**Reflection Question**: Architect a positional encoding system for a production transformer that needs to efficiently handle sequences ranging from 512 tokens (typical sentences) to 32k tokens (long documents) while maintaining training stability and inference efficiency. How would you design hybrid positional encoding that combines the benefits of sinusoidal and learned approaches, implement efficient position computation for variable-length sequences, and optimize for both memory usage and computational efficiency across different sequence length distributions?
+**Reflection Question**: Based on your `PositionalEncoding` and `LearnedPositionalEmbedding` implementations, architect a hybrid positional encoding system for a production transformer that efficiently handles sequences from 512 tokens to 32k tokens. How would you modify your current `forward()` methods to create a hybrid approach that combines the benefits of both systems? What changes would you make to your position computation to optimize for variable-length sequences, and how would you extend your positional encoding comparison analysis to measure performance across different sequence length distributions?
 
-Think about: hybrid encoding strategies, variable-length optimization, memory-efficient position computation, and sequence length distribution handling.
+Think about: combining your two encoding implementations, modifying the forward pass for variable lengths, extending your performance analysis methods, and optimizing position computation patterns from your current code.
 
 *Target length: 150-300 words*
 """
@@ -1442,11 +1783,11 @@ GRADING RUBRIC (Instructor Use):
 """
 ### Question 3: Embedding Pipeline Integration and Training Efficiency
 
-**Context**: Your embedding pipeline integration demonstrates how tokenization, embedding lookup, and positional encoding work together in language model preprocessing. In production training systems, the embedding pipeline often becomes a bottleneck due to memory bandwidth limitations and the need to process billions of tokens efficiently during training.
+**Context**: Your embedding pipeline integration demonstrates how tokenization, embedding lookup, and positional encoding work together in language model preprocessing. In your `test_embedding_integration()` function, you measured pipeline performance and saw how batch size affects throughput. In production training systems, the embedding pipeline often becomes a bottleneck due to memory bandwidth limitations and the need to process billions of tokens efficiently during training.
 
-**Reflection Question**: Design an embedding pipeline optimization strategy for large-scale language model training that processes 1 trillion tokens efficiently while maintaining high GPU utilization and minimizing memory bandwidth bottlenecks. How would you implement pipeline parallelism for embedding operations, optimize batch processing for mixed sequence lengths, and design efficient gradient updates for massive embedding tables? Consider the challenges of coordinating embedding updates across distributed training nodes while maintaining numerical stability and convergence.
+**Reflection Question**: Based on your complete embedding pipeline implementation (tokenization → `Embedding.forward()` → `PositionalEncoding.forward()`), design an optimization strategy for large-scale language model training that processes 1 trillion tokens efficiently. How would you modify your current pipeline functions to implement batch processing optimizations for mixed sequence lengths, design efficient gradient updates for your massive `Embedding.weight` parameters, and coordinate embedding updates across distributed training nodes? Consider how your current memory analysis and performance measurement techniques could be extended to monitor pipeline bottlenecks in distributed settings.
 
-Think about: pipeline parallelism, batch optimization, gradient update efficiency, and distributed training coordination.
+Think about: optimizing your current pipeline implementation, extending your performance analysis to distributed settings, modifying your batch processing patterns, and scaling your embedding weight update mechanisms.
 
 *Target length: 150-300 words*
 """

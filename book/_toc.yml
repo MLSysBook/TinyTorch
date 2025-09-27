@@ -8,10 +8,17 @@ title: "TinyTorch Course"
 parts:
 - caption: 🚀 Getting Started
   chapters:
-  - file: learning-timeline
-    title: "Your Learning Journey"
+  - file: quickstart-guide
+    title: "Quick Start Guide"
   - file: usage-paths/classroom-use
     title: "For Instructors"
+
+- caption: 🛠️ Using TinyTorch  
+  chapters:
+  - file: tito-essentials
+    title: "Essential Commands"
+  - file: learning-progress
+    title: "Track Your Progress"
 
 - caption: 🧭 Course Orientation
   chapters:

@@ -1703,6 +1703,41 @@ These questions connect your profiling implementations to real-world ML systems 
 Answer them to master performance analysis thinking!
 """)
 
+# %%
+if __name__ == "__main__":
+    print("🔍 PROFILING MODULE: Performance Detective Suite")
+    print("=" * 60)
+    
+    # Run all profiling tests in sequence
+    print("\n1️⃣ Testing Timer Infrastructure...")
+    test_timer()
+    
+    print("\n2️⃣ Testing Memory Profiler...")
+    test_memory_profiler()
+    
+    print("\n3️⃣ Testing FLOP Counter...")
+    test_flop_counter()
+    
+    print("\n4️⃣ Testing Comprehensive Profiling...")
+    test_comprehensive_profiling()
+    
+    print("\n5️⃣ Running Bottleneck Detection...")
+    simulate_complete_model_profiling()
+    
+    print("\n6️⃣ Analyzing Systems Implications...")
+    analyze_systems_implications()
+    
+    print("\n7️⃣ Running Integration Tests...")
+    integration_test_profiling_suite()
+    
+    print("\n🎉 ALL PROFILING TESTS COMPLETED SUCCESSFULLY!")
+    print("\n🚀 Your profiling suite is ready to:")
+    print("   - Identify bottlenecks in neural networks")
+    print("   - Guide optimization decisions with data")
+    print("   - Predict performance at scale")
+    print("   - Support production monitoring systems")
+    print("\n📚 Next: Complete the ML Systems Thinking questions!")
+
 # %% [markdown]
 """
 ## 🎯 MODULE SUMMARY: Profiling - Performance Detective Work

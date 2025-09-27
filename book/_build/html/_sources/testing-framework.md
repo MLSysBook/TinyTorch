@@ -374,7 +374,7 @@ tito checkpoint status
 ```
 
 **Testing Integration with Your Learning Path:**
-- **[Start Building →](learning-timeline.html)** - See how testing fits into your overall journey
+- **[Track Your Progress →](learning-progress.html)** - See how testing fits into capability development
 - **[Track Capabilities →](checkpoint-system.html)** - Use automated testing for progress validation
 - **[Showcase Achievements →](leaderboard.html)** - Testing validates the skills you can claim
 

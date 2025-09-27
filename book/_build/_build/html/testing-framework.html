@@ -1,0 +1,1139 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>🧪 Testing Framework &#8212; TinyTorch</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="_static/custom.css?v=b7a97b18" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="_static/copybutton.js?v=f281be69"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'testing-framework';</script>
+    <link rel="icon" href="_static/favicon.svg"/>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="📚 Additional Learning Resources" href="resources.html" />
+    <link rel="prev" title="🎯 TinyTorch Checkpoint System" href="checkpoint-system.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="_static/tensortorch.png" class="logo__image only-light" alt="TinyTorch - Home"/>
+    <script>document.write(`<img src="_static/tensortorch.png" class="logo__image only-dark" alt="TinyTorch - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="intro.html">
+                    TinyTorch: Build ML Systems from Scratch
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">🚀 Getting Started</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="quickstart-guide.html">Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage-paths/classroom-use.html">For Instructors</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">🛠️ Using TinyTorch</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="tito-essentials.html">Essential Commands</a></li>
+<li class="toctree-l1"><a class="reference internal" href="learning-progress.html">Track Your Progress</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">🧭 Course Orientation</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="chapters/00-introduction.html">Introduction</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">🧱 Building Blocks</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="chapters/01-setup.html">01. Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapters/02-tensor.html">02. Tensor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapters/03-activations.html">03. Activations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapters/04-layers.html">04. Layers</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">🧠 Learning Systems</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="chapters/05-dense.html">05. Losses</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapters/09-autograd.html">06. Autograd</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapters/10-optimizers.html">07. Optimizers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapters/11-training.html">08. Training</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">🏗️ Neural Architectures</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="chapters/06-spatial.html">09. Spatial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapters/08-dataloader.html">10. DataLoader</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapters/11-tokenization.html">11. Tokenization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapters/12-embeddings.html">12. Embeddings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapters/07-attention.html">13. Attention</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapters/16-tinygpt.html">14. Transformers</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">⚡ Performance Optimization</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="chapters/15-profiling.html">15. Profiling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapters/13-kernels.html">16. Acceleration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapters/17-quantization.html">17. Quantization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapters/12-compression.html">18. Compression</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapters/19-caching.html">19. KV Caching</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapters/14-benchmarking.html">20. Benchmarking</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">🏅 Community &amp; Competition</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="leaderboard.html">Leaderboard</a></li>
+<li class="toctree-l1"><a class="reference internal" href="competitions.html">Competitions</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">🛠️ Resources &amp; Tools</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="checkpoint-system.html">Progress Tracking</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Testing Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="resources.html">Additional Resources</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/mlsysbook/TinyTorch" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/mlsysbook/TinyTorch/edit/main/book/testing-framework.md" target="_blank"
+   class="btn btn-sm btn-source-edit-button dropdown-item"
+   title="Suggest edit"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="btn__text-container">Suggest edit</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/mlsysbook/TinyTorch/issues/new?title=Issue%20on%20page%20%2Ftesting-framework.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/testing-framework.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>🧪 Testing Framework</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#testing-philosophy-verify-understanding-through-implementation">🎯 Testing Philosophy: Verify Understanding Through Implementation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#quick-start-validate-your-implementation">⚡ Quick Start: Validate Your Implementation</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#run-everything-recommended">🚀 Run Everything (Recommended)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#target-specific-testing">🎯 Target-Specific Testing</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#testing-levels-from-components-to-systems">🔬 Testing Levels: From Components to Systems</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#module-level-testing">1. 🧩 Module-Level Testing</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#integration-testing">2. 🔗 Integration Testing</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#checkpoint-testing">3. 🏆 Checkpoint Testing</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#performance-systems-testing">4. 📊 Performance &amp; Systems Testing</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#real-world-example-validation">5. 🌍 Real-World Example Validation</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#test-architecture-systems-engineering-approach">🏗️ Test Architecture: Systems Engineering Approach</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#progressive-testing-pattern">📋 Progressive Testing Pattern</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#test-organization-structure">📁 Test Organization Structure</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#understanding-test-results">📊 Understanding Test Results</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#health-status-interpretation">🎯 Health Status Interpretation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#module-status-indicators">🚦 Module Status Indicators</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#best-practices-test-driven-ml-engineering">💡 Best Practices: Test-Driven ML Engineering</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#during-active-development">🔄 During Active Development</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#before-code-commits">✅ Before Code Commits</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#before-module-completion">🎯 Before Module Completion</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#troubleshooting-guide">🔧 Troubleshooting Guide</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#common-test-failures-solutions">🚨 Common Test Failures &amp; Solutions</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#module-import-errors">Module Import Errors</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#mathematical-correctness-failures">Mathematical Correctness Failures</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#memory-usage-issues">Memory Usage Issues</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#integration-test-failures">Integration Test Failures</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#advanced-debugging-techniques">🔍 Advanced Debugging Techniques</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#verbose-test-output">Verbose Test Output</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#performance-profiling">Performance Profiling</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#environment-validation">Environment Validation</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#test-failure-decision-tree">📋 Test Failure Decision Tree</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#testing-philosophy-building-reliable-ml-systems">🎯 Testing Philosophy: Building Reliable ML Systems</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#kiss-principle-in-testing">🧩 KISS Principle in Testing</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#systems-engineering-mindset">🔗 Systems Engineering Mindset</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#educational-excellence">📚 Educational Excellence</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#production-readiness">🚀 Production Readiness</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#success-metrics">🏆 Success Metrics</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#next-steps">🚀 Next Steps</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="testing-framework">
+<h1>🧪 Testing Framework<a class="headerlink" href="#testing-framework" title="Link to this heading">#</a></h1>
+<div class="tip admonition">
+<p class="admonition-title">Test-Driven ML Engineering</p>
+<p>TinyTorch’s testing framework ensures your implementations are not just educational, but production-ready and reliable.</p>
+</div>
+<section id="testing-philosophy-verify-understanding-through-implementation">
+<h2>🎯 Testing Philosophy: Verify Understanding Through Implementation<a class="headerlink" href="#testing-philosophy-verify-understanding-through-implementation" title="Link to this heading">#</a></h2>
+<p>TinyTorch testing goes beyond checking syntax - it validates that you understand ML systems engineering through working implementations.</p>
+</section>
+<section id="quick-start-validate-your-implementation">
+<h2>⚡ Quick Start: Validate Your Implementation<a class="headerlink" href="#quick-start-validate-your-implementation" title="Link to this heading">#</a></h2>
+<section id="run-everything-recommended">
+<h3>🚀 Run Everything (Recommended)<a class="headerlink" href="#run-everything-recommended" title="Link to this heading">#</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Complete validation suite</span>
+tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--comprehensive
+
+<span class="c1"># Expected output:</span>
+<span class="c1"># 🧪 Running 16 module tests...</span>
+<span class="c1"># 🔗 Running integration tests...</span>
+<span class="c1"># 📊 Running performance benchmarks...</span>
+<span class="c1"># ✅ Overall TinyTorch Health: 100.0%</span>
+</pre></div>
+</div>
+</section>
+<section id="target-specific-testing">
+<h3>🎯 Target-Specific Testing<a class="headerlink" href="#target-specific-testing" title="Link to this heading">#</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Test what you just built</span>
+tito<span class="w"> </span>module<span class="w"> </span><span class="nb">complete</span><span class="w"> </span>02_tensor<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>tito<span class="w"> </span>checkpoint<span class="w"> </span><span class="nb">test</span><span class="w"> </span><span class="m">01</span>
+
+<span class="c1"># Quick module check</span>
+tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--module<span class="w"> </span>attention<span class="w"> </span>--verbose
+
+<span class="c1"># Performance validation</span>
+tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--performance<span class="w"> </span>--module<span class="w"> </span>training
+</pre></div>
+</div>
+</section>
+</section>
+<section id="testing-levels-from-components-to-systems">
+<h2>🔬 Testing Levels: From Components to Systems<a class="headerlink" href="#testing-levels-from-components-to-systems" title="Link to this heading">#</a></h2>
+<section id="module-level-testing">
+<h3>1. 🧩 Module-Level Testing<a class="headerlink" href="#module-level-testing" title="Link to this heading">#</a></h3>
+<p><strong>Goal</strong>: Verify individual components work correctly in isolation</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Test what you just implemented</span>
+tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--module<span class="w"> </span>tensor<span class="w"> </span>--verbose
+tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--module<span class="w"> </span>attention<span class="w"> </span>--detailed
+
+<span class="c1"># Quick health check for specific module</span>
+tito<span class="w"> </span>module<span class="w"> </span>validate<span class="w"> </span>spatial
+
+<span class="c1"># Debug failing module</span>
+tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--module<span class="w"> </span>autograd<span class="w"> </span>--debug
+</pre></div>
+</div>
+<p><strong>What Gets Tested:</strong></p>
+<ul class="simple">
+<li><p>✅ Core functionality (forward pass, backward pass)</p></li>
+<li><p>✅ Memory usage patterns and leaks</p></li>
+<li><p>✅ Mathematical correctness vs reference implementations</p></li>
+<li><p>✅ Edge cases and error handling</p></li>
+</ul>
+</section>
+<section id="integration-testing">
+<h3>2. 🔗 Integration Testing<a class="headerlink" href="#integration-testing" title="Link to this heading">#</a></h3>
+<p><strong>Goal</strong>: Ensure modules work together seamlessly</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Test module dependencies</span>
+tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--integration<span class="w"> </span>--focus<span class="w"> </span>training
+
+<span class="c1"># Validate export/import chain</span>
+tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--exports<span class="w"> </span>--all-modules
+
+<span class="c1"># Full pipeline validation</span>
+tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--pipeline<span class="w"> </span>--from<span class="w"> </span>tensor<span class="w"> </span>--to<span class="w"> </span>training
+</pre></div>
+</div>
+<p><strong>Integration Scenarios:</strong></p>
+<ul class="simple">
+<li><p><strong>Tensor → Autograd</strong>: Gradient flow works correctly</p></li>
+<li><p><strong>Spatial → Training</strong>: CNN training pipeline functions end-to-end</p></li>
+<li><p><strong>Attention → TinyGPT</strong>: Transformer components integrate properly</p></li>
+<li><p><strong>All Modules</strong>: Complete framework functionality</p></li>
+</ul>
+</section>
+<section id="checkpoint-testing">
+<h3>3. 🏆 Checkpoint Testing<a class="headerlink" href="#checkpoint-testing" title="Link to this heading">#</a></h3>
+<p><strong>Goal</strong>: Validate you’ve achieved specific learning capabilities</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Test your current capabilities</span>
+tito<span class="w"> </span>checkpoint<span class="w"> </span><span class="nb">test</span><span class="w"> </span><span class="m">01</span><span class="w">  </span><span class="c1"># &quot;Can I create and manipulate tensors?&quot;</span>
+tito<span class="w"> </span>checkpoint<span class="w"> </span><span class="nb">test</span><span class="w"> </span><span class="m">08</span><span class="w">  </span><span class="c1"># &quot;Can I train neural networks end-to-end?&quot;</span>
+tito<span class="w"> </span>checkpoint<span class="w"> </span><span class="nb">test</span><span class="w"> </span><span class="m">13</span><span class="w">  </span><span class="c1"># &quot;Can I build attention mechanisms?&quot;</span>
+
+<span class="c1"># Progressive capability validation</span>
+tito<span class="w"> </span>checkpoint<span class="w"> </span>validate<span class="w"> </span>--from<span class="w"> </span><span class="m">00</span><span class="w"> </span>--to<span class="w"> </span><span class="m">15</span>
+</pre></div>
+</div>
+<p><strong><a class="reference internal" href="#checkpoint-system.html"><span class="xref myst">See Complete Checkpoint System Documentation →</span></a></strong></p>
+<p><strong>Key Capability Categories:</strong></p>
+<ul class="simple">
+<li><p><strong>Foundation (00-03)</strong>: Building blocks of neural networks</p></li>
+<li><p><strong>Training (04-08)</strong>: End-to-end learning systems</p></li>
+<li><p><strong>Architecture (09-14)</strong>: Advanced model architectures</p></li>
+<li><p><strong>Optimization (15+)</strong>: Production-ready systems</p></li>
+</ul>
+</section>
+<section id="performance-systems-testing">
+<h3>4. 📊 Performance &amp; Systems Testing<a class="headerlink" href="#performance-systems-testing" title="Link to this heading">#</a></h3>
+<p><strong>Goal</strong>: Verify your implementation meets performance expectations</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Memory usage analysis</span>
+tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--memory<span class="w"> </span>--module<span class="w"> </span>training<span class="w"> </span>--profile
+
+<span class="c1"># Speed benchmarking</span>
+tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--speed<span class="w"> </span>--compare-baseline
+
+<span class="c1"># Scaling behavior validation</span>
+tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--scaling<span class="w"> </span>--model-sizes<span class="w"> </span>1M,5M,10M
+</pre></div>
+</div>
+<p><strong>Performance Metrics:</strong></p>
+<ul class="simple">
+<li><p><strong>Memory efficiency</strong>: Peak usage, gradient memory, batch scaling</p></li>
+<li><p><strong>Training speed</strong>: Convergence time, throughput (samples/sec)</p></li>
+<li><p><strong>Inference latency</strong>: Forward pass time, batch processing efficiency</p></li>
+<li><p><strong>Scaling behavior</strong>: Performance vs model size, memory vs accuracy trade-offs</p></li>
+</ul>
+</section>
+<section id="real-world-example-validation">
+<h3>5. 🌍 Real-World Example Validation<a class="headerlink" href="#real-world-example-validation" title="Link to this heading">#</a></h3>
+<p><strong>Goal</strong>: Demonstrate production-ready functionality</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Train actual models</span>
+tito<span class="w"> </span>example<span class="w"> </span>train-mnist-mlp<span class="w">     </span><span class="c1"># 95%+ accuracy target</span>
+tito<span class="w"> </span>example<span class="w"> </span>train-cifar-cnn<span class="w">     </span><span class="c1"># 75%+ accuracy target  </span>
+tito<span class="w"> </span>example<span class="w"> </span>generate-text<span class="w">       </span><span class="c1"># TinyGPT coherent generation</span>
+
+<span class="c1"># Production scenarios</span>
+tito<span class="w"> </span>example<span class="w"> </span>benchmark-inference<span class="w">  </span><span class="c1"># Speed/memory competitive analysis</span>
+tito<span class="w"> </span>example<span class="w"> </span>deploy-edge<span class="w">         </span><span class="c1"># Resource-constrained deployment</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="test-architecture-systems-engineering-approach">
+<h2>🏗️ Test Architecture: Systems Engineering Approach<a class="headerlink" href="#test-architecture-systems-engineering-approach" title="Link to this heading">#</a></h2>
+<section id="progressive-testing-pattern">
+<h3>📋 Progressive Testing Pattern<a class="headerlink" href="#progressive-testing-pattern" title="Link to this heading">#</a></h3>
+<p>Every TinyTorch module follows consistent testing standards:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Module testing template (every module follows this pattern)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ModuleTest</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_core_functionality</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>     <span class="c1"># Basic operations work</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_mathematical_correctness</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> <span class="c1"># Matches reference implementations  </span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_memory_usage</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>          <span class="c1"># No memory leaks, efficient usage</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_integration_ready</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>     <span class="c1"># Exports correctly for other modules</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_real_world_usage</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>      <span class="c1"># Works in actual ML pipelines</span>
+</pre></div>
+</div>
+</section>
+<section id="test-organization-structure">
+<h3>📁 Test Organization Structure<a class="headerlink" href="#test-organization-structure" title="Link to this heading">#</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>tests/
+├──<span class="w"> </span>checkpoints/<span class="w">                    </span><span class="c1"># 16 capability validation tests</span>
+│<span class="w">   </span>├──<span class="w"> </span>checkpoint_00_environment.py<span class="w">   </span><span class="c1"># Development setup working</span>
+│<span class="w">   </span>├──<span class="w"> </span>checkpoint_01_foundation.py<span class="w">    </span><span class="c1"># Tensor operations mastered</span>
+│<span class="w">   </span>└──<span class="w"> </span>checkpoint_15_capstone.py<span class="w">      </span><span class="c1"># Complete ML systems expertise</span>
+├──<span class="w"> </span>integration/<span class="w">                    </span><span class="c1"># Cross-module compatibility</span>
+│<span class="w">   </span>├──<span class="w"> </span>test_training_pipeline.py<span class="w">      </span><span class="c1"># End-to-end training works</span>
+│<span class="w">   </span>└──<span class="w"> </span>test_module_exports.py<span class="w">         </span><span class="c1"># All modules export correctly  </span>
+├──<span class="w"> </span>performance/<span class="w">                    </span><span class="c1"># Systems performance validation</span>
+│<span class="w">   </span>├──<span class="w"> </span>memory_profiling.py<span class="w">           </span><span class="c1"># Memory usage analysis</span>
+│<span class="w">   </span>└──<span class="w"> </span>speed_benchmarks.py<span class="w">           </span><span class="c1"># Computational performance</span>
+└──<span class="w"> </span>examples/<span class="w">                      </span><span class="c1"># Real-world usage validation</span>
+<span class="w">    </span>├──<span class="w"> </span>test_mnist_training.py<span class="w">         </span><span class="c1"># Actual MNIST training works</span>
+<span class="w">    </span>└──<span class="w"> </span>test_cifar_cnn.py<span class="w">             </span><span class="c1"># CNN achieves 75%+ on CIFAR-10</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="understanding-test-results">
+<h2>📊 Understanding Test Results<a class="headerlink" href="#understanding-test-results" title="Link to this heading">#</a></h2>
+<section id="health-status-interpretation">
+<h3>🎯 Health Status Interpretation<a class="headerlink" href="#health-status-interpretation" title="Link to this heading">#</a></h3>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Score</p></th>
+<th class="head"><p>Status</p></th>
+<th class="head"><p>Action Required</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>100%</strong></p></td>
+<td><p>🟢 Excellent</p></td>
+<td><p>All systems operational, ready for production</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>95-99%</strong></p></td>
+<td><p>🟡 Good</p></td>
+<td><p>Minor issues, investigate warnings</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>90-94%</strong></p></td>
+<td><p>🟠 Caution</p></td>
+<td><p>Some failing tests, address specific modules</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>&lt;90%</strong></p></td>
+<td><p>🔴 Issues</p></td>
+<td><p>Significant problems, requires immediate attention</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="module-status-indicators">
+<h3>🚦 Module Status Indicators<a class="headerlink" href="#module-status-indicators" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>✅ <strong>Passing</strong>: Module implemented correctly, all tests green</p></li>
+<li><p>⚠️ <strong>Warning</strong>: Minor issues detected, functionality mostly intact</p></li>
+<li><p>❌ <strong>Failing</strong>: Critical errors, module needs debugging</p></li>
+<li><p>🚧 <strong>In Progress</strong>: Module under development, tests expected to fail</p></li>
+<li><p>🎯 <strong>Checkpoint Ready</strong>: Module ready for capability testing</p></li>
+</ul>
+</section>
+</section>
+<section id="best-practices-test-driven-ml-engineering">
+<h2>💡 Best Practices: Test-Driven ML Engineering<a class="headerlink" href="#best-practices-test-driven-ml-engineering" title="Link to this heading">#</a></h2>
+<section id="during-active-development">
+<h3>🔄 During Active Development<a class="headerlink" href="#during-active-development" title="Link to this heading">#</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Continuous validation workflow</span>
+tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--module<span class="w"> </span>tensor<span class="w">         </span><span class="c1"># After implementing core functionality</span>
+tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--integration<span class="w"> </span>tensor<span class="w">    </span><span class="c1"># After module completion  </span>
+tito<span class="w"> </span>checkpoint<span class="w"> </span><span class="nb">test</span><span class="w"> </span><span class="m">01</span><span class="w">          </span><span class="c1"># After achieving milestone</span>
+</pre></div>
+</div>
+<p><strong>Development Testing Pattern:</strong></p>
+<ol class="arabic simple">
+<li><p><strong>Write minimal test first</strong>: Define expected behavior before implementation</p></li>
+<li><p><strong>Test each component</strong>: Validate individual functions as you build them</p></li>
+<li><p><strong>Integration early</strong>: Test module interactions frequently, not just at the end</p></li>
+<li><p><strong>Performance check</strong>: Monitor memory and speed throughout development</p></li>
+</ol>
+</section>
+<section id="before-code-commits">
+<h3>✅ Before Code Commits<a class="headerlink" href="#before-code-commits" title="Link to this heading">#</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Pre-commit validation checklist</span>
+tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--comprehensive<span class="w">        </span><span class="c1"># Full test suite passes</span>
+tito<span class="w"> </span>system<span class="w"> </span>doctor<span class="w">              </span><span class="c1"># Environment is healthy</span>
+tito<span class="w"> </span>checkpoint<span class="w"> </span>status<span class="w">          </span><span class="c1"># All achieved capabilities still work</span>
+</pre></div>
+</div>
+<p><strong>Commit Readiness Criteria:</strong></p>
+<ul class="simple">
+<li><p>✅ All tests pass (100% health status)</p></li>
+<li><p>✅ No memory leaks detected in performance tests</p></li>
+<li><p>✅ Integration tests confirm module exports work</p></li>
+<li><p>✅ Checkpoint tests validate learning objectives met</p></li>
+</ul>
+</section>
+<section id="before-module-completion">
+<h3>🎯 Before Module Completion<a class="headerlink" href="#before-module-completion" title="Link to this heading">#</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Module completion validation</span>
+tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--module<span class="w"> </span>mymodule<span class="w"> </span>--comprehensive
+tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--integration<span class="w"> </span>--focus<span class="w"> </span>mymodule<span class="w">  </span>
+tito<span class="w"> </span>module<span class="w"> </span>validate<span class="w"> </span>mymodule
+tito<span class="w"> </span>module<span class="w"> </span><span class="nb">complete</span><span class="w"> </span>mymodule<span class="w">    </span><span class="c1"># Only after all tests pass</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="troubleshooting-guide">
+<h2>🔧 Troubleshooting Guide<a class="headerlink" href="#troubleshooting-guide" title="Link to this heading">#</a></h2>
+<section id="common-test-failures-solutions">
+<h3>🚨 Common Test Failures &amp; Solutions<a class="headerlink" href="#common-test-failures-solutions" title="Link to this heading">#</a></h3>
+<section id="module-import-errors">
+<h4>Module Import Errors<a class="headerlink" href="#module-import-errors" title="Link to this heading">#</a></h4>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Problem: Module won&#39;t import</span>
+❌<span class="w"> </span>ModuleNotFoundError:<span class="w"> </span>No<span class="w"> </span>module<span class="w"> </span>named<span class="w"> </span><span class="s1">&#39;tinytorch.core.tensor&#39;</span>
+
+<span class="c1"># Solution: Check module export</span>
+tito<span class="w"> </span>module<span class="w"> </span><span class="nb">complete</span><span class="w"> </span>tensor<span class="w">      </span><span class="c1"># Ensure module is properly exported</span>
+tito<span class="w"> </span>system<span class="w"> </span>doctor<span class="w">             </span><span class="c1"># Verify Python path and virtual environment</span>
+</pre></div>
+</div>
+</section>
+<section id="mathematical-correctness-failures">
+<h4>Mathematical Correctness Failures<a class="headerlink" href="#mathematical-correctness-failures" title="Link to this heading">#</a></h4>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Problem: Your implementation doesn&#39;t match reference</span>
+❌<span class="w"> </span>AssertionError:<span class="w"> </span>Expected<span class="w"> </span><span class="m">0</span>.5,<span class="w"> </span>got<span class="w"> </span><span class="m">0</span>.48<span class="w"> </span><span class="o">(</span>tolerance:<span class="w"> </span><span class="m">0</span>.01<span class="o">)</span>
+
+<span class="c1"># Debug process:</span>
+tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--module<span class="w"> </span>tensor<span class="w"> </span>--debug<span class="w">          </span><span class="c1"># Get detailed failure info</span>
+python<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import tinytorch; help(tinytorch.tensor)&quot;</span><span class="w">  </span><span class="c1"># Check implementation</span>
+</pre></div>
+</div>
+</section>
+<section id="memory-usage-issues">
+<h4>Memory Usage Issues<a class="headerlink" href="#memory-usage-issues" title="Link to this heading">#</a></h4>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Problem: Memory tests failing</span>
+❌<span class="w"> </span>Memory<span class="w"> </span>usage:<span class="w"> </span>150MB<span class="w"> </span><span class="o">(</span>expected:<span class="w"> </span>&lt;100MB<span class="o">)</span>
+
+<span class="c1"># Investigation:</span>
+tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--memory<span class="w"> </span>--profile<span class="w"> </span>tensor<span class="w">       </span><span class="c1"># Get memory profile</span>
+tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--scaling<span class="w"> </span>--module<span class="w"> </span>tensor<span class="w">       </span><span class="c1"># Check scaling behavior</span>
+</pre></div>
+</div>
+</section>
+<section id="integration-test-failures">
+<h4>Integration Test Failures<a class="headerlink" href="#integration-test-failures" title="Link to this heading">#</a></h4>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Problem: Modules don&#39;t work together</span>
+❌<span class="w"> </span>Integration<span class="w"> </span>test:<span class="w"> </span>tensor→autograd<span class="w"> </span>failed
+
+<span class="c1"># Debugging approach:</span>
+tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--integration<span class="w"> </span>--focus<span class="w"> </span>autograd<span class="w"> </span>--verbose
+tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--exports<span class="w"> </span>tensor<span class="w">                </span><span class="c1"># Check tensor exports correctly</span>
+tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--imports<span class="w"> </span>autograd<span class="w">             </span><span class="c1"># Check autograd imports correctly</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="advanced-debugging-techniques">
+<h3>🔍 Advanced Debugging Techniques<a class="headerlink" href="#advanced-debugging-techniques" title="Link to this heading">#</a></h3>
+<section id="verbose-test-output">
+<h4>Verbose Test Output<a class="headerlink" href="#verbose-test-output" title="Link to this heading">#</a></h4>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Get detailed test information</span>
+tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--module<span class="w"> </span>attention<span class="w"> </span>--verbose<span class="w"> </span>--debug
+
+<span class="c1"># See exact error locations</span>
+tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--traceback<span class="w"> </span>--module<span class="w"> </span>training
+</pre></div>
+</div>
+</section>
+<section id="performance-profiling">
+<h4>Performance Profiling<a class="headerlink" href="#performance-profiling" title="Link to this heading">#</a></h4>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Memory usage analysis</span>
+tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--memory<span class="w"> </span>--profile<span class="w"> </span>--module<span class="w"> </span>spatial
+
+<span class="c1"># Speed profiling  </span>
+tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--speed<span class="w"> </span>--profile<span class="w"> </span>--module<span class="w"> </span>training<span class="w"> </span>--iterations<span class="w"> </span><span class="m">100</span>
+</pre></div>
+</div>
+</section>
+<section id="environment-validation">
+<h4>Environment Validation<a class="headerlink" href="#environment-validation" title="Link to this heading">#</a></h4>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Complete environment check</span>
+tito<span class="w"> </span>system<span class="w"> </span>doctor<span class="w"> </span>--comprehensive
+
+<span class="c1"># Specific dependency verification</span>
+tito<span class="w"> </span>system<span class="w"> </span>check-dependencies<span class="w"> </span>--module<span class="w"> </span>autograd
+</pre></div>
+</div>
+</section>
+</section>
+<section id="test-failure-decision-tree">
+<h3>📋 Test Failure Decision Tree<a class="headerlink" href="#test-failure-decision-tree" title="Link to this heading">#</a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Test Failed?
+├── Import Error?
+│   ├── Run `tito system doctor`
+│   └── Check virtual environment activation
+├── Mathematical Error?
+│   ├── Compare with reference implementation
+│   └── Check tensor shapes and dtypes
+├── Memory Error? 
+│   ├── Profile memory usage patterns
+│   └── Check for memory leaks in loops
+├── Integration Error?
+│   ├── Test modules individually first
+│   └── Verify export/import chain
+└── Performance Error?
+    ├── Profile bottlenecks
+    └── Check algorithmic complexity
+</pre></div>
+</div>
+</section>
+</section>
+<section id="testing-philosophy-building-reliable-ml-systems">
+<h2>🎯 Testing Philosophy: Building Reliable ML Systems<a class="headerlink" href="#testing-philosophy-building-reliable-ml-systems" title="Link to this heading">#</a></h2>
+<p>The TinyTorch testing framework embodies professional ML engineering principles:</p>
+<section id="kiss-principle-in-testing">
+<h3>🧩 KISS Principle in Testing<a class="headerlink" href="#kiss-principle-in-testing" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Consistent patterns</strong>: Every module follows identical testing structure - learn once, apply everywhere</p></li>
+<li><p><strong>Actionable feedback</strong>: Tests provide specific error messages with exact fix suggestions</p></li>
+<li><p><strong>Essential focus</strong>: Tests validate critical functionality without unnecessary complexity</p></li>
+</ul>
+</section>
+<section id="systems-engineering-mindset">
+<h3>🔗 Systems Engineering Mindset<a class="headerlink" href="#systems-engineering-mindset" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Integration-first</strong>: Tests verify components work together, not just in isolation</p></li>
+<li><p><strong>Real-world validation</strong>: Examples prove your code works on actual datasets (CIFAR-10, MNIST)</p></li>
+<li><p><strong>Performance consciousness</strong>: All tests include memory and speed awareness</p></li>
+</ul>
+</section>
+<section id="educational-excellence">
+<h3>📚 Educational Excellence<a class="headerlink" href="#educational-excellence" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Understanding verification</strong>: Tests confirm you grasp concepts, not just syntax</p></li>
+<li><p><strong>Progressive mastery</strong>: Capabilities build systematically through checkpoint validation</p></li>
+<li><p><strong>Immediate feedback</strong>: Know instantly if your implementation meets professional standards</p></li>
+</ul>
+</section>
+<section id="production-readiness">
+<h3>🚀 Production Readiness<a class="headerlink" href="#production-readiness" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Professional standards</strong>: Tests match industry-level validation practices</p></li>
+<li><p><strong>Scalability validation</strong>: Ensure your code works at realistic data sizes</p></li>
+<li><p><strong>Reliability assurance</strong>: Comprehensive testing prevents production failures</p></li>
+</ul>
+</section>
+</section>
+<hr class="docutils" />
+<section id="success-metrics">
+<h2>🏆 Success Metrics<a class="headerlink" href="#success-metrics" title="Link to this heading">#</a></h2>
+<div class="tip admonition">
+<p class="admonition-title">Testing Success</p>
+<p>A well-tested TinyTorch implementation should achieve:</p>
+<ul class="simple">
+<li><p><strong>100% test suite passing</strong> - All functionality works correctly</p></li>
+<li><p><strong>&gt;95% memory efficiency</strong> - Comparable to reference implementations</p></li>
+<li><p><strong>Real dataset success</strong> - MNIST 95%+, CIFAR-10 75%+ accuracy targets</p></li>
+<li><p><strong>Clean integration</strong> - All modules work together seamlessly</p></li>
+</ul>
+</div>
+<p><strong>Remember</strong>: TinyTorch testing doesn’t just verify your code works - it confirms you understand ML systems engineering well enough to build production-ready implementations.</p>
+<p>Your testing discipline here translates directly to building reliable ML systems in industry settings!</p>
+</section>
+<section id="next-steps">
+<h2>🚀 Next Steps<a class="headerlink" href="#next-steps" title="Link to this heading">#</a></h2>
+<p><strong>Ready to start testing your implementations?</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Begin with comprehensive health check</span>
+tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--comprehensive
+
+<span class="c1"># Start building and testing your first module</span>
+tito<span class="w"> </span>module<span class="w"> </span><span class="nb">complete</span><span class="w"> </span>01_setup
+
+<span class="c1"># Track your testing progress</span>
+tito<span class="w"> </span>checkpoint<span class="w"> </span>status
+</pre></div>
+</div>
+<p><strong>Testing Integration with Your Learning Path:</strong></p>
+<ul class="simple">
+<li><p><strong><a class="reference internal" href="#learning-progress.html"><span class="xref myst">Track Your Progress →</span></a></strong> - See how testing fits into capability development</p></li>
+<li><p><strong><a class="reference internal" href="#checkpoint-system.html"><span class="xref myst">Track Capabilities →</span></a></strong> - Use automated testing for progress validation</p></li>
+<li><p><strong><a class="reference internal" href="#leaderboard.html"><span class="xref myst">Showcase Achievements →</span></a></strong> - Testing validates the skills you can claim</p></li>
+</ul>
+<div style="background: #e3f2fd; border: 2px solid #1976d2; padding: 1.5rem; border-radius: 0.5rem; margin: 2rem 0; text-align: center;">
+<h4 style="margin: 0 0 1rem 0; color: #1565c0;">🎯 Testing Excellence = ML Systems Mastery</h4>
+<p style="margin: 0; color: #1976d2;">Every test you write and run builds the discipline needed for production ML engineering</p>
+</div></section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="checkpoint-system.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">🎯 TinyTorch Checkpoint System</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="resources.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">📚 Additional Learning Resources</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#testing-philosophy-verify-understanding-through-implementation">🎯 Testing Philosophy: Verify Understanding Through Implementation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#quick-start-validate-your-implementation">⚡ Quick Start: Validate Your Implementation</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#run-everything-recommended">🚀 Run Everything (Recommended)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#target-specific-testing">🎯 Target-Specific Testing</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#testing-levels-from-components-to-systems">🔬 Testing Levels: From Components to Systems</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#module-level-testing">1. 🧩 Module-Level Testing</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#integration-testing">2. 🔗 Integration Testing</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#checkpoint-testing">3. 🏆 Checkpoint Testing</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#performance-systems-testing">4. 📊 Performance &amp; Systems Testing</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#real-world-example-validation">5. 🌍 Real-World Example Validation</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#test-architecture-systems-engineering-approach">🏗️ Test Architecture: Systems Engineering Approach</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#progressive-testing-pattern">📋 Progressive Testing Pattern</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#test-organization-structure">📁 Test Organization Structure</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#understanding-test-results">📊 Understanding Test Results</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#health-status-interpretation">🎯 Health Status Interpretation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#module-status-indicators">🚦 Module Status Indicators</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#best-practices-test-driven-ml-engineering">💡 Best Practices: Test-Driven ML Engineering</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#during-active-development">🔄 During Active Development</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#before-code-commits">✅ Before Code Commits</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#before-module-completion">🎯 Before Module Completion</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#troubleshooting-guide">🔧 Troubleshooting Guide</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#common-test-failures-solutions">🚨 Common Test Failures &amp; Solutions</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#module-import-errors">Module Import Errors</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#mathematical-correctness-failures">Mathematical Correctness Failures</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#memory-usage-issues">Memory Usage Issues</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#integration-test-failures">Integration Test Failures</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#advanced-debugging-techniques">🔍 Advanced Debugging Techniques</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#verbose-test-output">Verbose Test Output</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#performance-profiling">Performance Profiling</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#environment-validation">Environment Validation</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#test-failure-decision-tree">📋 Test Failure Decision Tree</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#testing-philosophy-building-reliable-ml-systems">🎯 Testing Philosophy: Building Reliable ML Systems</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#kiss-principle-in-testing">🧩 KISS Principle in Testing</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#systems-engineering-mindset">🔗 Systems Engineering Mindset</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#educational-excellence">📚 Educational Excellence</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#production-readiness">🚀 Production Readiness</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#success-metrics">🏆 Success Metrics</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#next-steps">🚀 Next Steps</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Prof. Vijay Janapa Reddi (Harvard University)
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2025.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

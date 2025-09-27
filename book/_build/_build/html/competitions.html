@@ -1,0 +1,784 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>🏆 TinyTorch Competitions &#8212; TinyTorch</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="_static/custom.css?v=b7a97b18" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="_static/copybutton.js?v=f281be69"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'competitions';</script>
+    <link rel="icon" href="_static/favicon.svg"/>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="🎯 TinyTorch Checkpoint System" href="checkpoint-system.html" />
+    <link rel="prev" title="🌍 Community Leaderboard" href="leaderboard.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="_static/tensortorch.png" class="logo__image only-light" alt="TinyTorch - Home"/>
+    <script>document.write(`<img src="_static/tensortorch.png" class="logo__image only-dark" alt="TinyTorch - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="intro.html">
+                    TinyTorch: Build ML Systems from Scratch
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">🚀 Getting Started</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="quickstart-guide.html">Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage-paths/classroom-use.html">For Instructors</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">🛠️ Using TinyTorch</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="tito-essentials.html">Essential Commands</a></li>
+<li class="toctree-l1"><a class="reference internal" href="learning-progress.html">Track Your Progress</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">🧭 Course Orientation</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="chapters/00-introduction.html">Introduction</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">🧱 Building Blocks</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="chapters/01-setup.html">01. Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapters/02-tensor.html">02. Tensor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapters/03-activations.html">03. Activations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapters/04-layers.html">04. Layers</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">🧠 Learning Systems</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="chapters/05-dense.html">05. Losses</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapters/09-autograd.html">06. Autograd</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapters/10-optimizers.html">07. Optimizers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapters/11-training.html">08. Training</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">🏗️ Neural Architectures</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="chapters/06-spatial.html">09. Spatial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapters/08-dataloader.html">10. DataLoader</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapters/11-tokenization.html">11. Tokenization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapters/12-embeddings.html">12. Embeddings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapters/07-attention.html">13. Attention</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapters/16-tinygpt.html">14. Transformers</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">⚡ Performance Optimization</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="chapters/15-profiling.html">15. Profiling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapters/13-kernels.html">16. Acceleration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapters/17-quantization.html">17. Quantization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapters/12-compression.html">18. Compression</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapters/19-caching.html">19. KV Caching</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapters/14-benchmarking.html">20. Benchmarking</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">🏅 Community &amp; Competition</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="leaderboard.html">Leaderboard</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Competitions</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">🛠️ Resources &amp; Tools</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="checkpoint-system.html">Progress Tracking</a></li>
+<li class="toctree-l1"><a class="reference internal" href="testing-framework.html">Testing Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="resources.html">Additional Resources</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/mlsysbook/TinyTorch" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/mlsysbook/TinyTorch/edit/main/book/competitions.md" target="_blank"
+   class="btn btn-sm btn-source-edit-button dropdown-item"
+   title="Suggest edit"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="btn__text-container">Suggest edit</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/mlsysbook/TinyTorch/issues/new?title=Issue%20on%20page%20%2Fcompetitions.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/competitions.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>🏆 TinyTorch Competitions</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#educational-challenges-not-just-leaderboards">Educational Challenges, Not Just Leaderboards</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-educational-vision">The Educational Vision</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#planned-competition-categories">Planned Competition Categories</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#how-competitions-will-work">How Competitions Will Work</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#competition-timeline">Competition Timeline</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#educational-focus-areas">Educational Focus Areas</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#join-the-design-process">Join the Design Process</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-you-can-do-now">What You Can Do Now</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-bigger-picture">The Bigger Picture</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="tinytorch-competitions">
+<h1>🏆 TinyTorch Competitions<a class="headerlink" href="#tinytorch-competitions" title="Link to this heading">#</a></h1>
+<section id="educational-challenges-not-just-leaderboards">
+<h2>Educational Challenges, Not Just Leaderboards<a class="headerlink" href="#educational-challenges-not-just-leaderboards" title="Link to this heading">#</a></h2>
+<p>TinyTorch competitions are <strong>planned educational challenges</strong> designed to deepen your understanding of ML systems through hands-on problem solving. These aren’t just about who gets the highest scores—they’re about learning systems engineering principles while building real ML systems.</p>
+<section id="the-educational-vision">
+<h3>The Educational Vision<a class="headerlink" href="#the-educational-vision" title="Link to this heading">#</a></h3>
+<p>We’re designing competitions that teach you to think like an ML systems engineer:</p>
+<ul class="simple">
+<li><p><strong>Efficiency Mastery</strong>: Achieve accuracy targets within strict memory/compute constraints</p></li>
+<li><p><strong>Systems Understanding</strong>: Debug and optimize real bottlenecks in your implementations</p></li>
+<li><p><strong>Innovation Challenges</strong>: Solve problems using creative system design approaches</p></li>
+<li><p><strong>Collaborative Learning</strong>: Learn from others’ approaches while building your own solutions</p></li>
+</ul>
+</section>
+<section id="planned-competition-categories">
+<h3>Planned Competition Categories<a class="headerlink" href="#planned-competition-categories" title="Link to this heading">#</a></h3>
+<p><strong>🎯 Accuracy Challenges</strong></p>
+<ul class="simple">
+<li><p><strong>CIFAR-10 Sprint</strong>: First to achieve 75% accuracy using only your TinyTorch implementations</p></li>
+<li><p><strong>Efficient Training</strong>: Highest accuracy achieved within memory limits (256MB, 512MB, 1GB tiers)</p></li>
+<li><p><strong>Small Model Olympics</strong>: Best performance with parameter count restrictions</p></li>
+</ul>
+<p><strong>⚡ Performance Challenges</strong></p>
+<ul class="simple">
+<li><p><strong>Speed Runs</strong>: Fastest training time to reach accuracy milestones</p></li>
+<li><p><strong>Memory Optimization</strong>: Lowest memory usage while maintaining target accuracy</p></li>
+<li><p><strong>Inference Efficiency</strong>: Fastest model inference on standard hardware</p></li>
+</ul>
+<p><strong>🛠️ Systems Mastery Challenges</strong></p>
+<ul class="simple">
+<li><p><strong>Debugging Olympics</strong>: Identify and fix intentionally buggy implementations</p></li>
+<li><p><strong>Scaling Challenges</strong>: Optimize code for larger datasets and models</p></li>
+<li><p><strong>Hardware Awareness</strong>: Best use of CPU vectorization and cache efficiency</p></li>
+</ul>
+<p><strong>💡 Innovation Competitions</strong></p>
+<ul class="simple">
+<li><p><strong>Creative Implementations</strong>: Most elegant solution to standard ML problems</p></li>
+<li><p><strong>Novel Optimizations</strong>: Discover new ways to improve training efficiency</p></li>
+<li><p><strong>Educational Tools</strong>: Build the best learning aids for future TinyTorch students</p></li>
+</ul>
+</section>
+<section id="how-competitions-will-work">
+<h3>How Competitions Will Work<a class="headerlink" href="#how-competitions-will-work" title="Link to this heading">#</a></h3>
+<p><strong>Learning-First Design:</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Future CLI commands (in development)</span>
+tito<span class="w"> </span>compete<span class="w"> </span>list<span class="w">                    </span><span class="c1"># See available challenges</span>
+tito<span class="w"> </span>compete<span class="w"> </span>join<span class="w"> </span>accuracy-sprint<span class="w">    </span><span class="c1"># Register for a challenge</span>
+tito<span class="w"> </span>compete<span class="w"> </span>submit<span class="w"> </span>--challenge<span class="o">=</span>cifar10<span class="w">  </span><span class="c1"># Submit your solution</span>
+tito<span class="w"> </span>compete<span class="w"> </span>results<span class="w"> </span>--detailed<span class="w">      </span><span class="c1"># See results with learning insights</span>
+</pre></div>
+</div>
+<p><strong>What Makes These Different:</strong></p>
+<ul class="simple">
+<li><p><strong>Detailed Analysis</strong>: Every submission gets performance profiling and optimization suggestions</p></li>
+<li><p><strong>Learning Resources</strong>: Access to hints, debugging guides, and optimization tutorials</p></li>
+<li><p><strong>Peer Review</strong>: Option to share your approach and learn from others’ solutions</p></li>
+<li><p><strong>Multiple Tiers</strong>: Challenges for beginners (20% accuracy) through experts (90%+)</p></li>
+</ul>
+</section>
+<section id="competition-timeline">
+<h3>Competition Timeline<a class="headerlink" href="#competition-timeline" title="Link to this heading">#</a></h3>
+<p><strong>Phase 1: Foundation Building</strong> (Next 2-3 months)</p>
+<ul class="simple">
+<li><p>Community feedback and competition design</p></li>
+<li><p>Initial infrastructure development</p></li>
+<li><p>Beta testing with volunteer participants</p></li>
+</ul>
+<p><strong>Phase 2: Soft Launch</strong> (3-4 months)</p>
+<ul class="simple">
+<li><p>First “CIFAR-10 Efficiency Challenge”</p></li>
+<li><p>Small group of participants (~20-50)</p></li>
+<li><p>Rapid iteration based on feedback</p></li>
+</ul>
+<p><strong>Phase 3: Full Launch</strong> (4-6 months)</p>
+<ul class="simple">
+<li><p>Multiple simultaneous competitions</p></li>
+<li><p>Automated submission and scoring</p></li>
+<li><p>Rich community features and collaboration tools</p></li>
+</ul>
+</section>
+<section id="educational-focus-areas">
+<h3>Educational Focus Areas<a class="headerlink" href="#educational-focus-areas" title="Link to this heading">#</a></h3>
+<p><strong>Systems Engineering Skills:</strong></p>
+<ul class="simple">
+<li><p>Memory profiling and optimization techniques</p></li>
+<li><p>Performance bottleneck identification</p></li>
+<li><p>Scaling behavior analysis</p></li>
+<li><p>Cache-efficient algorithm design</p></li>
+</ul>
+<p><strong>Real-World ML Engineering:</strong></p>
+<ul class="simple">
+<li><p>Production-ready code practices</p></li>
+<li><p>Debugging distributed training issues</p></li>
+<li><p>Resource constraint optimization</p></li>
+<li><p>Hardware-aware implementations</p></li>
+</ul>
+<p><strong>Collaborative Problem Solving:</strong></p>
+<ul class="simple">
+<li><p>Code review and peer learning</p></li>
+<li><p>Mentoring between experience levels</p></li>
+<li><p>Team-based challenges for larger projects</p></li>
+</ul>
+</section>
+<section id="join-the-design-process">
+<h3>Join the Design Process<a class="headerlink" href="#join-the-design-process" title="Link to this heading">#</a></h3>
+<p><strong>Help Us Build Better Competitions:</strong></p>
+<p>We want your input on what would make these competitions most valuable for learning:</p>
+<ul class="simple">
+<li><p>What systems engineering skills do you want to develop?</p></li>
+<li><p>What types of challenges would motivate you to participate?</p></li>
+<li><p>How can we make competitions inclusive for all skill levels?</p></li>
+<li><p>What would help you learn most from other participants’ approaches?</p></li>
+</ul>
+<p><strong>Current Discussion Topics:</strong></p>
+<ul class="simple">
+<li><p>Competition format and scoring criteria</p></li>
+<li><p>Mentorship and collaboration features</p></li>
+<li><p>Fair resource usage policies</p></li>
+<li><p>Educational content integration</p></li>
+</ul>
+<p><strong>Share Your Ideas:</strong> <a class="reference external" href="https://github.com/harvard-edge/TinyTorch/discussions">GitHub Discussions - Competitions</a></p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="what-you-can-do-now">
+<h2>What You Can Do Now<a class="headerlink" href="#what-you-can-do-now" title="Link to this heading">#</a></h2>
+<p>🚧 <strong>While We Build This Feature</strong></p>
+<p><strong>1. Practice Competition Skills:</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Use existing tools to prepare</span>
+tito<span class="w"> </span>checkpoint<span class="w"> </span><span class="nb">test</span><span class="w"> </span><span class="m">14</span><span class="w">      </span><span class="c1"># Practice benchmarking skills</span>
+tito<span class="w"> </span>checkpoint<span class="w"> </span><span class="nb">test</span><span class="w"> </span><span class="m">13</span><span class="w">      </span><span class="c1"># Test your kernel optimization knowledge</span>
+tito<span class="w"> </span>module<span class="w"> </span><span class="nb">complete</span><span class="w"> </span>11_training<span class="w">  </span><span class="c1"># Master the training pipeline</span>
+</pre></div>
+</div>
+<p><strong>2. Connect with Future Competitors:</strong></p>
+<ul class="simple">
+<li><p>Find training partners in GitHub Discussions</p></li>
+<li><p>Share your current accuracy achievements</p></li>
+<li><p>Ask for optimization tips and debugging help</p></li>
+<li><p>Form study groups for collaborative learning</p></li>
+</ul>
+<p><strong>3. Build Your Competition Portfolio:</strong></p>
+<ul class="simple">
+<li><p>Track your CIFAR-10 accuracy improvements over time</p></li>
+<li><p>Document your optimization techniques and learnings</p></li>
+<li><p>Practice explaining your system design decisions</p></li>
+<li><p>Build profiling and debugging skills</p></li>
+</ul>
+<p><strong>4. Share Your Training Journey:</strong></p>
+<ul class="simple">
+<li><p>Post milestone achievements (50%, 60%, 70%+ accuracy)</p></li>
+<li><p>Share interesting bugs you’ve debugged</p></li>
+<li><p>Explain optimization techniques you’ve discovered</p></li>
+<li><p>Help others troubleshoot their implementations</p></li>
+</ul>
+<hr class="docutils" />
+<div style="background: #e8f4fd; border: 2px solid #1976d2; padding: 2rem; border-radius: 0.5rem; margin: 2rem 0; text-align: center;">
+<h3 style="margin: 0 0 1rem 0; color: #1976d2;">🚀 Early Access Program</h3>
+<p style="margin: 0 0 1rem 0; color: #424242;">Want to be among the first to try TinyTorch competitions?</p>
+<p style="margin: 0 0 1rem 0; color: #424242;"><strong>Join our beta testing group:</strong> We'll notify you when the first challenges are ready for testing</p>
+<a href="https://github.com/harvard-edge/TinyTorch/discussions/new?category=competitions" style="display: inline-block; background: #1976d2; color: white; padding: 0.5rem 1rem; border-radius: 0.25rem; text-decoration: none;">Join Beta Program →</a>
+</div>
+</section>
+<hr class="docutils" />
+<section id="the-bigger-picture">
+<h2>The Bigger Picture<a class="headerlink" href="#the-bigger-picture" title="Link to this heading">#</a></h2>
+<p><strong>Why We’re Building This:</strong></p>
+<p>TinyTorch competitions aren’t about proving who’s the smartest—they’re about creating a community where everyone can push their understanding of ML systems engineering further. Whether you’re aiming for your first 30% accuracy or optimizing for 95%+, these challenges will help you think like a systems engineer.</p>
+<p><strong>Our Promise:</strong></p>
+<ul class="simple">
+<li><p>Educational value always comes first</p></li>
+<li><p>Inclusive design for all skill levels</p></li>
+<li><p>Honest timelines and realistic expectations</p></li>
+<li><p>Community collaboration over individual competition</p></li>
+<li><p>Real learning outcomes, not just leaderboard positions</p></li>
+</ul>
+<p><strong>The ultimate goal:</strong> Help you become the kind of ML engineer who can debug any training issue, optimize any bottleneck, and build systems that scale—skills you’ll use throughout your career.</p>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="leaderboard.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">🌍 Community Leaderboard</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="checkpoint-system.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">🎯 TinyTorch Checkpoint System</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#educational-challenges-not-just-leaderboards">Educational Challenges, Not Just Leaderboards</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-educational-vision">The Educational Vision</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#planned-competition-categories">Planned Competition Categories</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#how-competitions-will-work">How Competitions Will Work</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#competition-timeline">Competition Timeline</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#educational-focus-areas">Educational Focus Areas</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#join-the-design-process">Join the Design Process</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-you-can-do-now">What You Can Do Now</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-bigger-picture">The Bigger Picture</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Prof. Vijay Janapa Reddi (Harvard University)
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2025.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
