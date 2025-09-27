@@ -35,7 +35,7 @@
     <link rel="stylesheet" type="text/css" href="_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css?v=6644e6bb" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
-    <link rel="stylesheet" type="text/css" href="_static/custom.css?v=bf48879e" />
+    <link rel="stylesheet" type="text/css" href="_static/custom.css?v=b7a97b18" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
@@ -62,7 +62,7 @@
     <link rel="icon" href="_static/favicon.svg"/>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Your TinyTorch Journey: From First Neural Network to Modern AI" href="learning-timeline.html" />
+    <link rel="next" title="Quick Start Guide" href="quickstart-guide.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -184,8 +184,13 @@
         </ul>
         <p aria-level="2" class="caption" role="heading"><span class="caption-text">🚀 Getting Started</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="learning-timeline.html">Your Learning Journey</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quickstart-guide.html">Quick Start Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="usage-paths/classroom-use.html">For Instructors</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">🛠️ Using TinyTorch</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="tito-essentials.html">Essential Commands</a></li>
+<li class="toctree-l1"><a class="reference internal" href="learning-progress.html">Track Your Progress</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">🧭 Course Orientation</span></p>
 <ul class="nav bd-sidenav">
@@ -445,12 +450,11 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#get-started-in-2-minutes">🚀 Get Started in 2 Minutes</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-vision-train-ml-systems-engineers-not-just-ml-users">The Vision: Train ML Systems Engineers, Not Just ML Users</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-youll-achieve">🎯 What You’ll Achieve</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-method-build-use-reflect">Learning Method: Build → Use → Reflect</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-systems-engineering-matters">Why Systems Engineering Matters</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ready-to-transform-your-ml-understanding">Ready to Transform Your ML Understanding?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-is-tinytorch">What is TinyTorch?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-build-instead-of-use">Why Build Instead of Use?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#start-building-in-15-minutes">🚀 Start Building in 15 Minutes</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#three-clear-learning-paths">Three Clear Learning Paths</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learn-more">Learn More</a></li>
 </ul>
             </nav>
         </div>
@@ -464,85 +468,148 @@ document.write(`
                   
   <section id="tinytorch-build-ml-systems-from-scratch">
 <h1>TinyTorch: Build ML Systems from Scratch<a class="headerlink" href="#tinytorch-build-ml-systems-from-scratch" title="Link to this heading">#</a></h1>
-<h2 style="background: linear-gradient(135deg, #E74C3C 0%, #E67E22 50%, #F39C12 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; text-align: center; font-size: 2.5rem; margin: 2rem 0;">
+<h2 style="background: linear-gradient(135deg, #E74C3C 0%, #E67E22 50%, #F39C12 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; text-align: center; font-size: 2.5rem; margin: 3rem 0;">
 Don't just import it. Build it.
 </h2>
-<p><strong>Tiny🔥Torch</strong> is a minimalist framework for building machine learning systems from scratch. While most ML education teaches you to <em>use</em> frameworks, TinyTorch teaches you to <em>build</em> them—from tensors to systems.</p>
-<section id="get-started-in-2-minutes">
-<h2>🚀 Get Started in 2 Minutes<a class="headerlink" href="#get-started-in-2-minutes" title="Link to this heading">#</a></h2>
-<p>Choose your learning path based on your commitment level:</p>
-<div style="display: grid; grid-template-columns: repeat(2, 1fr); grid-template-rows: repeat(2, 1fr); gap: 1rem; margin: 2rem 0;">
-<div style="background: #f8f9fa; border: 1px solid #dee2e6; padding: 1.5rem; border-radius: 0.5rem; text-align: center;">
-<h3 style="margin: 0 0 0.5rem 0; font-size: 1.1rem; color: #495057;">🔬 Quick Setup</h3>
-<p style="margin: 0 0 1rem 0; font-size: 0.9rem; color: #6c757d;"><strong>15 minutes</strong> • Local development</p>
-<a href="chapters/01-setup.html" style="display: inline-block; background: #007bff; color: white; padding: 0.5rem 1rem; border-radius: 0.25rem; text-decoration: none; font-weight: 500;">Quick Start →</a>
-</div>
-<div style="background: #f8f9fa; border: 1px solid #dee2e6; padding: 1.5rem; border-radius: 0.5rem; text-align: center;">
-<h3 style="margin: 0 0 0.5rem 0; font-size: 1.1rem; color: #495057;">🛠️ Serious Building</h3>
-<p style="margin: 0 0 1rem 0; font-size: 0.9rem; color: #6c757d;"><strong>8+ weeks</strong> • Full framework</p>
-<a href="chapters/01-setup.html" style="display: inline-block; background: #28a745; color: white; padding: 0.5rem 1rem; border-radius: 0.25rem; text-decoration: none; font-weight: 500;">Start Building →</a>
-</div>
-<div style="background: #f8f9fa; border: 1px solid #dee2e6; padding: 1.5rem; border-radius: 0.5rem; text-align: center;">
-<h3 style="margin: 0 0 0.5rem 0; font-size: 1.1rem; color: #495057;">🎓 Teach This Course</h3>
-<p style="margin: 0 0 1rem 0; font-size: 0.9rem; color: #6c757d;"><strong>Instructors</strong> • NBGrader ready</p>
-<a href="usage-paths/classroom-use.html" style="display: inline-block; background: #6f42c1; color: white; padding: 0.5rem 1rem; border-radius: 0.25rem; text-decoration: none; font-weight: 500;">Course Setup →</a>
-</div>
-<div style="background: #f8f9fa; border: 1px solid #dee2e6; padding: 1.5rem; border-radius: 0.5rem; text-align: center;">
-<h3 style="margin: 0 0 0.5rem 0; font-size: 1.1rem; color: #495057;">🌍 View Leaderboard</h3>
-<p style="margin: 0 0 1rem 0; font-size: 0.9rem; color: #6c757d;"><strong>Coming soon</strong> • Join the community</p>
-<a href="leaderboard.html" style="display: inline-block; background: #fd7e14; color: white; padding: 0.5rem 1rem; border-radius: 0.25rem; text-decoration: none; font-weight: 500;">Learn More →</a>
-</div>
+<section id="what-is-tinytorch">
+<h2>What is TinyTorch?<a class="headerlink" href="#what-is-tinytorch" title="Link to this heading">#</a></h2>
+<p>TinyTorch is an educational ML systems course where you build complete neural networks from scratch. Instead of using PyTorch or TensorFlow as black boxes, you implement every component yourself and gain deep understanding of how ML frameworks actually work.</p>
+<div style="text-align: center; margin: 2rem 0;">
+<div style="background: linear-gradient(90deg, #E74C3C, #E67E22, #F39C12, #E67E22, #E74C3C); height: 2px; max-width: 400px; margin: 0 auto; opacity: 0.7;"></div>
 </div>
 </section>
-<section id="the-vision-train-ml-systems-engineers-not-just-ml-users">
-<h2>The Vision: Train ML Systems Engineers, Not Just ML Users<a class="headerlink" href="#the-vision-train-ml-systems-engineers-not-just-ml-users" title="Link to this heading">#</a></h2>
-<p>Build the deep systems intuition that separates ML engineers from ML users. Understand not just <em>what</em> neural networks do, but <em>how</em> they work under the hood.</p>
+<section id="why-build-instead-of-use">
+<h2>Why Build Instead of Use?<a class="headerlink" href="#why-build-instead-of-use" title="Link to this heading">#</a></h2>
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin: 2rem 0;">
+<!-- Top Row: Using Libraries Examples -->
+<div style="background: #fff5f5; border: 1px solid #feb2b2; padding: 1.5rem; border-radius: 0.5rem; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+<h3 style="margin: 0 0 1rem 0; color: #c53030; font-size: 1.1rem;">❌ PyTorch</h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">torch.nn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">nn</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">784</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+<span class="c1"># How does this work internally?</span>
+<span class="c1"># Where are the weights stored?</span>
+</pre></div>
+</div>
+<p style="color: #c53030; font-weight: 500; margin-top: 1rem; font-size: 0.9rem;">
+Black box implementation
+</p>
+</div>
+<div style="background: #fff5f5; border: 1px solid #feb2b2; padding: 1.5rem; border-radius: 0.5rem; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+<h3 style="margin: 0 0 1rem 0; color: #c53030; font-size: 1.1rem;">❌ TensorFlow</h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">tensorflow</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">tf</span>
+
+<span class="n">layer</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+<span class="c1"># Why does Adam use 3x memory?</span>
+<span class="c1"># What&#39;s the actual math?</span>
+</pre></div>
+</div>
+<p style="color: #c53030; font-weight: 500; margin-top: 1rem; font-size: 0.9rem;">
+Limited systems understanding
+</p>
+</div>
+<!-- Bottom Row: Building Your Own Examples -->
+<div style="background: #f0fff4; border: 1px solid #9ae6b4; padding: 1.5rem; border-radius: 0.5rem; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+<h3 style="margin: 0 0 1rem 0; color: #2f855a; font-size: 1.1rem;">✅ TinyTorch Linear</h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">Linear</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">x</span> <span class="o">@</span> <span class="bp">self</span><span class="o">.</span><span class="n">weight</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">bias</span>
+        <span class="c1"># You understand exactly what happens</span>
+</pre></div>
+</div>
+<p style="color: #2f855a; font-weight: 500; margin-top: 1rem; font-size: 0.9rem;">
+Complete implementation knowledge
+</p>
+</div>
+<div style="background: #f0fff4; border: 1px solid #9ae6b4; padding: 1.5rem; border-radius: 0.5rem; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+<h3 style="margin: 0 0 1rem 0; color: #2f855a; font-size: 1.1rem;">✅ TinyTorch Optimizer</h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">Adam</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># You know why it needs 3x memory</span>
+        <span class="c1"># You can optimize performance</span>
+</pre></div>
+</div>
+<p style="color: #2f855a; font-weight: 500; margin-top: 1rem; font-size: 0.9rem;">
+Deep systems understanding
+</p>
+</div>
+</div>
+<div style="text-align: center; margin: 2rem 0;">
+<div style="background: linear-gradient(90deg, #E74C3C, #E67E22, #F39C12, #E67E22, #E74C3C); height: 2px; max-width: 400px; margin: 0 auto; opacity: 0.7;"></div>
+</div>
 </section>
-<section id="what-youll-achieve">
-<h2>🎯 What You’ll Achieve<a class="headerlink" href="#what-youll-achieve" title="Link to this heading">#</a></h2>
-<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin: 2rem 0;">
-<div style="background: #e3f2fd; padding: 1.5rem; border-radius: 0.5rem; border-left: 4px solid #2196f3;">
-<h4 style="margin: 0 0 1rem 0; color: #1976d2;">🧠 Neural Network Mastery</h4>
-<p style="margin: 0 0 0.5rem 0; font-weight: 600;">Build and train neural networks on real datasets</p>
-<p style="margin: 0; font-size: 0.9rem; color: #64748b;">Using 100% your own tensor operations, automatic differentiation, and optimizers from scratch</p>
+<section id="start-building-in-15-minutes">
+<h2>🚀 Start Building in 15 Minutes<a class="headerlink" href="#start-building-in-15-minutes" title="Link to this heading">#</a></h2>
+<div style="text-align: center; margin: 3rem 0;">
+<p style="font-size: 1.2rem; margin-bottom: 1.5rem; color: #2d3748;">
+Ready to understand ML frameworks from the ground up? Get hands-on experience with tensor operations, neural networks, and autograd in minutes.
+</p>
+<a href="quickstart-guide.html" style="display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 1rem 2rem; border-radius: 0.5rem; text-decoration: none; font-weight: 600; font-size: 1.2rem; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); margin-bottom: 0.5rem;">
+🚀 Quick Start Guide
+</a>
+<p style="font-size: 0.9rem; color: #718096; margin: 0;">
+No installation required • Browser-based exploration • Real neural network training
+</p>
 </div>
-<div style="background: #f0fdf4; padding: 1.5rem; border-radius: 0.5rem; border-left: 4px solid #22c55e;">
-<h4 style="margin: 0 0 1rem 0; color: #15803d;">🏗️ Neural Architectures</h4>
-<p style="margin: 0 0 0.5rem 0; font-weight: 600;">Master computer vision and language processing</p>
-<p style="margin: 0; font-size: 0.9rem; color: #64748b;">Build CNNs, attention mechanisms, and transformers using unified foundations. Same math, different applications.</p>
-</div>
-<div style="background: #fffbeb; padding: 1.5rem; border-radius: 0.5rem; border-left: 4px solid #f59e0b;">
-<h4 style="margin: 0 0 1rem 0; color: #d97706;">⚡ Production Systems</h4>
-<p style="margin: 0 0 0.5rem 0; font-weight: 600;">Understand optimization at every level</p>
-<p style="margin: 0; font-size: 0.9rem; color: #64748b;">Profile memory usage, identify bottlenecks, and apply optimization techniques from quantization to caching</p>
-</div>
-<div style="background: #fef3c7; padding: 1.5rem; border-radius: 0.5rem; border-left: 4px solid #f59e0b;">
-<h4 style="margin: 0 0 1rem 0; color: #92400e;">🌍 Community Leaderboard</h4>
-<p style="margin: 0 0 0.5rem 0; font-weight: 600;">Join learners worldwide building ML systems</p>
-<p style="margin: 0 0 0.5rem 0; font-size: 0.9rem; color: #64748b;">Share your progress, learn from peers, and celebrate every milestone - from first training to 80%+ accuracy</p>
-<a href="leaderboard.html" style="display: inline-block; margin-top: 0.5rem; color: #92400e; text-decoration: underline; font-weight: 500; font-size: 0.9rem;">View Community →</a>
-</div>
+<div style="text-align: center; margin: 2rem 0;">
+<div style="background: linear-gradient(90deg, #E74C3C, #E67E22, #F39C12, #E67E22, #E74C3C); height: 2px; max-width: 400px; margin: 0 auto; opacity: 0.7;"></div>
 </div>
 </section>
-<section id="learning-method-build-use-reflect">
-<h2>Learning Method: Build → Use → Reflect<a class="headerlink" href="#learning-method-build-use-reflect" title="Link to this heading">#</a></h2>
-<p><strong>🎯 Active Learning</strong>: You don’t just read about tensors—you build them. You don’t just use optimizers—you implement them.</p>
-<p><strong>🔬 Immediate Testing</strong>: Every concept is immediately tested and validated. No abstract theory without concrete implementation.</p>
-<p><strong>🧠 Systems Thinking</strong>: Understand the full stack from mathematical foundations to production deployment.</p>
+<section id="three-clear-learning-paths">
+<h2>Three Clear Learning Paths<a class="headerlink" href="#three-clear-learning-paths" title="Link to this heading">#</a></h2>
+<div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin: 3rem 0;">
+<div style="background: #f8f9fa; border: 1px solid #dee2e6; padding: 2rem; border-radius: 0.5rem; text-align: center;">
+<h3 style="margin: 0 0 1rem 0; font-size: 1.2rem; color: #495057;">🔬 Quick Start</h3>
+<p style="margin: 0 0 1.5rem 0; font-size: 0.95rem; color: #6c757d;">15 minutes setup • Try foundational modules • Hands-on experience</p>
+<a href="quickstart-guide.html" style="display: inline-block; background: #007bff; color: white; padding: 0.75rem 1.5rem; border-radius: 0.25rem; text-decoration: none; font-weight: 500; font-size: 1rem;">Start Building →</a>
+</div>
+<div style="background: #f0fff4; border: 1px solid #9ae6b4; padding: 2rem; border-radius: 0.5rem; text-align: center;">
+<h3 style="margin: 0 0 1rem 0; font-size: 1.2rem; color: #495057;">📚 Full Course</h3>
+<p style="margin: 0 0 1.5rem 0; font-size: 0.95rem; color: #6c757d;">8+ weeks study • Complete ML framework • Systems mastery</p>
+<a href="chapters/00-introduction.html" style="display: inline-block; background: #28a745; color: white; padding: 0.75rem 1.5rem; border-radius: 0.25rem; text-decoration: none; font-weight: 500; font-size: 1rem;">Course Overview →</a>
+</div>
+<div style="background: #faf5ff; border: 1px solid #b794f6; padding: 2rem; border-radius: 0.5rem; text-align: center;">
+<h3 style="margin: 0 0 1rem 0; font-size: 1.2rem; color: #495057;">🎓 Instructors</h3>
+<p style="margin: 0 0 1.5rem 0; font-size: 0.95rem; color: #6c757d;">Classroom-ready • NBGrader integration • Automated grading</p>
+<a href="usage-paths/classroom-use.html" style="display: inline-block; background: #6f42c1; color: white; padding: 0.75rem 1.5rem; border-radius: 0.25rem; text-decoration: none; font-weight: 500; font-size: 1rem;">Teaching Guide →</a>
+</div>
+</div>
+<div style="text-align: center; margin: 2rem 0;">
+<div style="background: linear-gradient(90deg, #E74C3C, #E67E22, #F39C12, #E67E22, #E74C3C); height: 2px; max-width: 400px; margin: 0 auto; opacity: 0.7;"></div>
+</div>
 </section>
-<section id="why-systems-engineering-matters">
-<h2>Why Systems Engineering Matters<a class="headerlink" href="#why-systems-engineering-matters" title="Link to this heading">#</a></h2>
-<p>Most ML education focuses on using existing tools. TinyTorch focuses on building them:</p>
-<ul class="simple">
-<li><p><strong>Framework User</strong>: “I call <code class="docutils literal notranslate"><span class="pre">torch.nn.Linear()</span></code>”</p></li>
-<li><p><strong>Systems Engineer</strong>: “I understand memory layout, gradient computation, and optimization trade-offs”</p></li>
+<section id="learn-more">
+<h2>Learn More<a class="headerlink" href="#learn-more" title="Link to this heading">#</a></h2>
+<div style="background: #f8f9fa; border: 1px solid #dee2e6; padding: 2rem; border-radius: 0.5rem; margin: 3rem 0;">
+<div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem;">
+<div>
+<h4 style="margin: 0 0 1rem 0; color: #495057;">Course Details</h4>
+<ul style="list-style: none; padding: 0; margin: 0;">
+<li style="margin-bottom: 0.5rem;"><a href="chapters/00-introduction.html" style="color: #007bff; text-decoration: none;">Complete Course Overview</a></li>
+<li style="margin-bottom: 0.5rem;"><a href="learning-progress.html" style="color: #007bff; text-decoration: none;">Progress Tracking</a></li>
+<li style="margin-bottom: 0.5rem;"><a href="tito-essentials.html" style="color: #007bff; text-decoration: none;">Essential Commands</a></li>
 </ul>
-<p><strong>The Ultimate Proof: TinyGPT</strong> - By the end, you’ll have built a complete language model from scratch.</p>
-</section>
-<section id="ready-to-transform-your-ml-understanding">
-<h2>Ready to Transform Your ML Understanding?<a class="headerlink" href="#ready-to-transform-your-ml-understanding" title="Link to this heading">#</a></h2>
-<p><strong>Acknowledgments</strong>: Built with the amazing educational technology stack including NBGrader, Jupyter Book, and the broader Python ecosystem.</p>
-</section>
+</div>
+<div>
+<h4 style="margin: 0 0 1rem 0; color: #495057;">Resources</h4>
+<ul style="list-style: none; padding: 0; margin: 0;">
+<li style="margin-bottom: 0.5rem;"><a href="resources.html" style="color: #007bff; text-decoration: none;">Documentation & Guides</a></li>
+<li style="margin-bottom: 0.5rem;"><a href="testing-framework.html" style="color: #007bff; text-decoration: none;">Testing Framework</a></li>
+<li style="margin-bottom: 0.5rem;"><a href="checkpoint-system.html" style="color: #007bff; text-decoration: none;">Checkpoint System</a></li>
+</ul>
+</div>
+<div>
+<h4 style="margin: 0 0 1rem 0; color: #495057;">Community</h4>
+<ul style="list-style: none; padding: 0; margin: 0;">
+<li style="margin-bottom: 0.5rem;"><a href="leaderboard.html" style="color: #007bff; text-decoration: none;">Student Leaderboard</a></li>
+<li style="margin-bottom: 0.5rem;"><a href="competitions.html" style="color: #007bff; text-decoration: none;">Competitions</a></li>
+<li style="margin-bottom: 0.5rem;"><a href="usage-paths/classroom-use.html" style="color: #007bff; text-decoration: none;">Teaching Resources</a></li>
+</ul>
+</div>
+</div>
+</div></section>
+<div class="toctree-wrapper compound">
+</div>
 <div class="toctree-wrapper compound">
 </div>
 <div class="toctree-wrapper compound">
@@ -592,11 +659,11 @@ Don't just import it. Build it.
                   
 <div class="prev-next-area">
     <a class="right-next"
-       href="learning-timeline.html"
+       href="quickstart-guide.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Your TinyTorch Journey: From First Neural Network to Modern AI</p>
+        <p class="prev-next-title">Quick Start Guide</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -616,12 +683,11 @@ Don't just import it. Build it.
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#get-started-in-2-minutes">🚀 Get Started in 2 Minutes</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-vision-train-ml-systems-engineers-not-just-ml-users">The Vision: Train ML Systems Engineers, Not Just ML Users</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-youll-achieve">🎯 What You’ll Achieve</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-method-build-use-reflect">Learning Method: Build → Use → Reflect</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-systems-engineering-matters">Why Systems Engineering Matters</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ready-to-transform-your-ml-understanding">Ready to Transform Your ML Understanding?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-is-tinytorch">What is TinyTorch?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-build-instead-of-use">Why Build Instead of Use?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#start-building-in-15-minutes">🚀 Start Building in 15 Minutes</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#three-clear-learning-paths">Three Clear Learning Paths</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learn-more">Learn More</a></li>
 </ul>
   </nav></div>
 
