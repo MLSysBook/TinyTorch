@@ -36,6 +36,38 @@ When you implement your own tensor operations, write your own autograd, build yo
 
 ---
 
+## 🎯 Core Learning Concepts
+
+<div style="background: #f7fafc; border: 1px solid #e2e8f0; padding: 2rem; border-radius: 0.5rem; margin: 2rem 0;">
+
+**Concept 1: Systems Memory Analysis**
+```python
+# Learning objective: Understand memory usage patterns
+# Framework user: "torch.optim.Adam()" - black box
+# TinyTorch student: Implements Adam and discovers why it needs 3x parameter memory
+# Result: Deep understanding of optimizer trade-offs applicable to any framework
+```
+
+**Concept 2: Computational Complexity**
+```python
+# Learning objective: Analyze algorithmic scaling behavior
+# Framework user: "Attention mechanism" - abstract concept
+# TinyTorch student: Implements attention from scratch, measures O(n²) scaling
+# Result: Intuition for sequence modeling limits across PyTorch, TensorFlow, JAX
+```
+
+**Concept 3: Automatic Differentiation**
+```python
+# Learning objective: Understand gradient computation
+# Framework user: "loss.backward()" - mysterious process
+# TinyTorch student: Builds autograd engine with computational graphs
+# Result: Knowledge of how all modern ML frameworks enable learning
+```
+
+</div>
+
+---
+
 ## What Makes TinyTorch Different
 
 Most ML education teaches you to **use** frameworks (PyTorch, TensorFlow, JAX, etc.). TinyTorch teaches you to **build** them.
@@ -238,5 +270,151 @@ By the end of this course, you'll have built a complete ML framework that rivals
 
 All using code you wrote yourself, from scratch.
 ```
+
+---
+
+## Complete Learning Timeline & Course Structure
+
+### Capability Progression: Foundation to Production
+
+```mermaid
+timeline
+    title TinyTorch Capability Development: Building ML Systems
+
+    section Foundation Capabilities
+        Environment Setup     : Checkpoint 00 Complete
+                             : Configure development environment
+                             : Verify dependencies
+
+        Tensor Operations     : Checkpoint 01 Complete
+                             : N-dimensional arrays
+                             : Mathematical foundations
+
+    section Core Learning
+        Neural Intelligence   : Checkpoint 02 Complete
+                             : Nonlinear activations
+                             : ReLU, Sigmoid, Softmax
+
+        Network Building     : Checkpoint 03 Complete
+                             : Layer abstractions
+                             : Forward propagation
+
+    section Training Systems
+        Gradient Computation  : Checkpoint 05 Complete
+                             : Automatic differentiation
+                             : Backpropagation mechanics
+
+        Optimization         : Checkpoint 06 Complete
+                             : SGD, Adam algorithms
+                             : Learning rate scheduling
+
+    section Advanced Architectures
+        Computer Vision      : Checkpoint 08 Complete
+                             : Convolutional operations
+                             : Spatial feature extraction
+
+        Language Processing  : Checkpoint 12 Complete
+                             : Attention mechanisms
+                             : Transformer architectures
+
+    section Production Systems
+        Performance Analysis : Checkpoint 14 Complete
+                             : Profiling and optimization
+                             : Bottleneck identification
+
+        Complete Mastery     : Checkpoint 15 Complete
+                             : End-to-end ML systems
+                             : Production deployment
+```
+
+### Part I: Core Foundations (Modules 1-8)
+**Focus: Neural Network Fundamentals | 8 weeks**
+
+| Week | Module | Core Capability | Implementation Focus | Checkpoint Unlocked |
+|------|--------|-----------------|---------------------|--------------------|
+| 1 | Setup | Environment Configuration | Development environment setup | 00: Environment |
+| 2 | Tensor | Mathematical Foundations | N-dimensional arrays with gradients | 01: Foundation |
+| 3 | Activations | Neural Intelligence | ReLU, Sigmoid, Softmax functions | 02: Intelligence |
+| 4 | Layers | Network Components | Linear layers and module system | 03: Components |
+| 5 | Losses | Learning Measurement | MSE, CrossEntropy loss functions | 04: Networks |
+| 6 | Autograd | Gradient Computation | Automatic differentiation engine | 05: Learning |
+| 7 | Optimizers | Parameter Updates | SGD, Adam optimization algorithms | 06: Optimization |
+| 8 | Training | Complete Systems | End-to-end training loops | 07: Training |
+
+**Capability Milestone**: After Module 8, you have complete neural network training capability!
+
+---
+
+### Part II: Computer Vision (Modules 9-10)
+**Focus: Spatial Processing | 2 weeks**
+
+| Week | Module | Core Capability | Implementation Focus | Checkpoint Unlocked |
+|------|--------|-----------------|---------------------|--------------------|
+| 9 | Spatial | Spatial Processing | Conv2d, MaxPool2d operations | 08: Vision |
+| 10 | DataLoader | Data Management | Efficient data loading pipelines | 09: Data |
+
+**Capability Milestone**: Computer vision systems with spatial feature processing!
+
+---
+
+### Part III: Language Processing (Modules 11-14)
+**Focus: Sequence Understanding | 4 weeks**
+
+| Week | Module | Core Capability | Implementation Focus | Checkpoint Unlocked |
+|------|--------|-----------------|---------------------|--------------------|
+| 11 | Tokenization | Text Processing | Vocabulary and token systems | 10: Language |
+| 12 | Embeddings | Representation Learning | Token and positional encodings | 11: Representation |
+| 13 | Attention | Sequence Understanding | Multi-head attention mechanisms | 12: Attention |
+| 14 | Transformers | Architecture Mastery | Complete transformer blocks | 13: Architecture |
+
+**Capability Milestone**: Complete language understanding and generation systems!
+
+---
+
+### Part IV: Production Systems (Modules 15-20)
+**Focus: Performance Optimization | 6 weeks**
+
+| Week | Module | Core Capability | Implementation Focus | Checkpoint Unlocked |
+|------|--------|-----------------|---------------------|--------------------|
+| 15 | Profiling | Performance Analysis | Memory and compute profiling | 14: Systems |
+| 16 | Acceleration | Hardware Optimization | Vectorization and caching | |
+| 17 | Quantization | Model Compression | INT8 inference optimization | |
+| 18 | Compression | Size Optimization | Pruning and distillation | |
+| 19 | Caching | Memory Management | KV-cache for generation | |
+| 20 | Capstone | Complete Mastery | End-to-end ML systems | 15: Mastery |
+
+**Final Capability**: Complete ML systems engineering mastery!
+
+---
+
+## 📈 8-Week Learning Progression Overview
+
+For a quick visual overview of the main learning phases:
+
+<div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin: 2rem 0;">
+
+<div style="background: #fef5e7; border-left: 4px solid #f6ad55; padding: 1rem;">
+<h4 style="margin: 0 0 0.5rem 0; color: #c05621;">Weeks 1-2: Mathematical Foundations</h4>
+<p style="font-size: 0.85rem; margin: 0;">Implement tensor operations, understand memory layout, build arithmetic foundations. Core mathematical building blocks.</p>
+</div>
+
+<div style="background: #e6fffa; border-left: 4px solid #4fd1c7; padding: 1rem;">
+<h4 style="margin: 0 0 0.5rem 0; color: #234e52;">Weeks 3-4: Neural Network Components</h4>
+<p style="font-size: 0.85rem; margin: 0;">Linear transformations, activation functions, loss functions. Build the mathematical components of neural computation.</p>
+</div>
+
+<div style="background: #f0fff4; border-left: 4px solid #9ae6b4; padding: 1rem;">
+<h4 style="margin: 0 0 0.5rem 0; color: #22543d;">Weeks 5-6: Learning Algorithms</h4>
+<p style="font-size: 0.85rem; margin: 0;">Automatic differentiation, optimization algorithms, training procedures. Understand how neural networks learn.</p>
+</div>
+
+<div style="background: #faf5ff; border-left: 4px solid #b794f6; padding: 1rem;">
+<h4 style="margin: 0 0 0.5rem 0; color: #553c9a;">Weeks 7-8: Systems Engineering</h4>
+<p style="font-size: 0.85rem; margin: 0;">Performance analysis, computational kernels, benchmarking. Study the engineering principles behind ML systems.</p>
+</div>
+
+</div>
+
+---
 
 Welcome to ML systems engineering!

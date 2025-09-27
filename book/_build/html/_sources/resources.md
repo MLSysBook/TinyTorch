@@ -8,7 +8,7 @@
 While TinyTorch teaches you to build complete ML systems from scratch, these resources provide broader context, alternative perspectives, and production tools.
 
 **TinyTorch Learning Resources:**
-- **[Your Learning Journey →](learning-timeline.html)** - Start here to understand the 5-stage progression
+- **[Track Your Progress →](learning-progress.html)** - Monitor capability development and learning progression
 - **[Progress Tracking →](checkpoint-system.html)** - Technical details on capability testing
 - **[Testing Guide →](testing-framework.html)** - Comprehensive testing methodology
 - **[Achievement Showcase →](leaderboard.html)** - Portfolio development and career readiness
@@ -91,23 +91,14 @@ While TinyTorch teaches you to build complete ML systems from scratch, these res
 
 ## 🚀 Ready to Begin Your Journey?
 
-**Start with the fundamentals and build your way up:**
+**Start with the fundamentals and build your way up.**
 
-```bash
-# Check your current progress
-tito checkpoint status
-
-# Begin your first module
-tito module complete 01_setup
-
-# See your learning path
-tito checkpoint timeline
-```
+**📖 See [Essential Commands](tito-essentials.html)** for complete TITO command reference.
 
 **Your Next Steps:**
-1. **[Understanding the Journey →](learning-timeline.html)** - See the big picture of what you'll build
-2. **[Start Building →](../chapters/01-setup.html)** - Configure environment and begin Module 1
-3. **[Track Progress →](checkpoint-system.html)** - Learn the capability testing system
+1. **[Quick Start Guide →](quickstart-guide.html)** - 15-minute hands-on experience
+2. **[Track Your Progress →](learning-progress.html)** - Understand capability development
+3. **[Course Introduction →](chapters/00-introduction.html)** - Deep dive into course philosophy
 
 <div style="background: #f8f9fa; border: 1px solid #dee2e6; padding: 1.5rem; border-radius: 0.5rem; margin: 2rem 0; text-align: center;">
 <h4 style="margin: 0 0 1rem 0; color: #495057;">🎯 Transform from Framework User to Systems Engineer</h4>

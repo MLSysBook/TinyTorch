@@ -1,138 +1,153 @@
-# TinyTorch .claude Directory Structure
+# 📚 TinyTorch .claude Configuration Hub
 
-This directory contains all guidelines, standards, and agent definitions for the TinyTorch project.
+This directory contains the complete development system for TinyTorch: workflows, agents, and guidelines.
+
+## 🚀 Quick Start: Slash Commands
+
+Use these commands to trigger workflows:
+```
+/website [request]   - Update website content
+/module [request]    - Module development  
+/test [target]       - Run tests
+/tito [request]      - CLI updates
+/education [request] - Educational improvements
+```
+
+### Example Usage
+```
+/website add a debugging guide
+/module fix tensor backward pass
+/test all checkpoints
+/tito add progress visualization
+/education improve autograd learning
+```
 
 ## 📁 Directory Structure
 
 ```
 .claude/
-├── README.md                    # This file
-├── guidelines/                  # Development standards and principles
-│   ├── DESIGN_PHILOSOPHY.md    # KISS principle and simplicity guidelines
-│   ├── GIT_WORKFLOW.md         # Git branching and commit standards
-│   ├── MODULE_DEVELOPMENT.md   # How to develop TinyTorch modules
-│   ├── TESTING_STANDARDS.md    # Testing patterns and requirements
-│   ├── PERFORMANCE_CLAIMS.md   # How to make honest performance claims
-│   └── AGENT_COORDINATION.md   # How AI agents work together
-├── agents/                      # AI agent definitions
-│   ├── technical-program-manager.md
-│   ├── education-architect.md
-│   ├── module-developer.md
-│   ├── package-manager.md
-│   ├── quality-assurance.md
-│   ├── documentation-publisher.md
-│   ├── workflow-coordinator.md
-│   ├── devops-engineer.md
-│   └── tito-cli-developer.md
-└── [legacy files to review]
-
+├── README.md                           # This file (START HERE)
+│
+├── workflows/                          # 🎯 WORKFLOW DEFINITIONS
+│   ├── README.md                      # Workflow system documentation
+│   ├── website.md                     # /website command workflow
+│   ├── module.md                      # /module command workflow
+│   ├── test.md                        # /test command workflow
+│   ├── tito.md                        # /tito command workflow
+│   └── education.md                   # /education command workflow
+│
+├── agents/                             # AI AGENT DEFINITIONS
+│   ├── website-content-strategist.md  # Website content & strategy
+│   ├── website-designer.md            # Website implementation
+│   ├── module-developer.md            # Module implementation
+│   ├── quality-assurance.md           # Testing & validation
+│   ├── package-manager.md             # Integration & packaging
+│   ├── education-architect.md         # Learning design
+│   ├── tito-cli-developer.md          # CLI development
+│   └── technical-program-manager.md   # Orchestration
+│
+├── guidelines/                         # DEVELOPMENT STANDARDS
+│   ├── DESIGN_PHILOSOPHY.md          # KISS principle
+│   ├── GIT_WORKFLOW.md               # Git standards
+│   ├── MODULE_DEVELOPMENT.md         # Module patterns
+│   ├── TESTING_STANDARDS.md          # Testing requirements
+│   ├── PERFORMANCE_CLAIMS.md         # Honest reporting
+│   └── AGENT_COORDINATION.md         # Agent teamwork
+│
+└── docs/                              # Additional documentation
 ```
 
-## 🎯 Quick Start for New Development
+## 🎯 How the System Works
 
-1. **Read Core Principles First**
-   - `guidelines/DESIGN_PHILOSOPHY.md` - Understand KISS principle
-   - `guidelines/GIT_WORKFLOW.md` - Learn branching requirements
+### 1. Slash Commands → Workflows
+When you type `/website add content`, Claude:
+1. Recognizes the `/website` command
+2. Loads the `workflows/website.md` specification
+3. Executes the defined agent sequence
+4. Ensures quality gates are met
 
-2. **For Module Development**
-   - `guidelines/MODULE_DEVELOPMENT.md` - Module structure and patterns
-   - `guidelines/TESTING_STANDARDS.md` - How to write tests
-   - `guidelines/PERFORMANCE_CLAIMS.md` - How to report results
+### 2. Workflows → Agents
+Each workflow defines:
+- Which agents to use
+- What order to execute them
+- What each agent should produce
+- How to handle failures
 
-3. **For Agent Coordination**
-   - `guidelines/AGENT_COORDINATION.md` - How agents work together
-   - Start with Technical Program Manager (TPM) for all requests
+### 3. Agents → Implementation
+Each agent has:
+- Specific expertise area
+- Clear responsibilities
+- Quality standards
+- Handoff protocols
 
-## 📋 Key Principles Summary
+## 📖 Key Documents to Read
 
-### 1. Keep It Simple, Stupid (KISS)
-- One file, one purpose
-- Clear over clever
-- Verified over theoretical
-- Direct over abstract
+### For New Users
+1. **Start Here:** `../CLAUDE.md` - Main instructions
+2. **Workflows:** `workflows/README.md` - How to use slash commands
+3. **Guidelines:** `guidelines/DESIGN_PHILOSOPHY.md` - Core principles
 
-### 2. Git Workflow
-- ALWAYS work on feature branches
-- NEVER commit directly to main/dev
-- Test before committing
-- No automated attribution in commits
+### For Development
+- `guidelines/GIT_WORKFLOW.md` - Git practices
+- `guidelines/MODULE_DEVELOPMENT.md` - Module standards
+- `guidelines/TESTING_STANDARDS.md` - Testing requirements
 
-### 3. Module Development
-- Edit .py files only (never .ipynb)
-- Test immediately after implementation
-- Include systems analysis (memory, performance)
-- Follow exact structure pattern
+### For Understanding Agents
+- `agents/` folder - Individual agent capabilities
+- `workflows/` folder - How agents work together
+- `guidelines/AGENT_COORDINATION.md` - Coordination patterns
 
-### 4. Testing Standards
-- Test immediately, not at the end
-- Simple assertions over complex frameworks
-- Tests should educate, not just verify
-- Always compare against baseline
+## 🚨 Important Rules
 
-### 5. Performance Claims
-- Only claim what you've measured
-- Include all relevant metrics
-- Report failures honestly
-- Reproducibility is key
+1. **Always use slash commands** when available
+2. **Follow workflow sequences** - don't skip steps
+3. **Respect quality gates** - fix failures before proceeding
+4. **Check guidelines** before major changes
+5. **Use version control** - work on feature branches
 
-### 6. Agent Coordination
-- TPM is primary interface
-- Sequential workflow with clear handoffs
-- QA testing is MANDATORY
-- Package integration is MANDATORY
+## 💡 Best Practices
 
-## 🚀 Common Workflows
+### Using Slash Commands
+✅ DO: `/website add debugging guide`
+❌ DON'T: "Can you update the website with a debugging guide?"
 
-### Starting New Module Development
+### Following Workflows  
+✅ DO: Let workflow complete all steps
+❌ DON'T: Skip agents or change order
+
+### Quality Standards
+✅ DO: Fix issues when quality gates fail
+❌ DON'T: Bypass testing or validation
+
+## 🔧 Customization
+
+### Adding New Workflows
+1. Create `workflows/[name].md`
+2. Define agent sequence
+3. Add to slash commands in `CLAUDE.md`
+4. Document in `workflows/README.md`
+
+### Adding New Agents
+1. Create `agents/[name].md`
+2. Define capabilities and responsibilities
+3. Update relevant workflows
+4. Add to agent coordination guide
+
+## 📊 System Health
+
+### Check Configuration
 ```bash
-1. Create feature branch
-2. Request TPM agent assistance
-3. Follow MODULE_DEVELOPMENT.md structure
-4. Test with TESTING_STANDARDS.md patterns
-5. Verify performance per PERFORMANCE_CLAIMS.md
-6. Merge following GIT_WORKFLOW.md
+ls -la .claude/          # View structure
+ls .claude/workflows/    # List workflows
+ls .claude/agents/       # List agents
 ```
 
-### Making Performance Claims
-```bash
-1. Run baseline measurements
-2. Run actual measurements
-3. Calculate real improvements
-4. Document with all metrics
-5. No unverified claims
-```
+### Validate Setup
+- All workflows have corresponding files
+- All agents referenced in workflows exist
+- Guidelines are up to date
+- No orphaned or duplicate files
 
-### Working with Agents
-```bash
-1. Always start with TPM agent
-2. Let TPM coordinate other agents
-3. Wait for QA approval before proceeding
-4. Wait for Package Manager integration
-5. Only then commit
-```
+---
 
-## 📝 Important Notes
-
-- **Virtual Environment**: Always activate .venv before development
-- **Honesty**: Report actual results, not aspirations
-- **Simplicity**: When in doubt, choose the simpler option
-- **Education First**: We're teaching, not impressing
-
-## 🔗 Quick Links
-
-- Main Instructions: `/CLAUDE.md`
-- Module Source: `/modules/source/`
-- Examples: `/examples/`
-- Tests: `/tests/`
-
-## 📌 Remember
-
-> "If students can't understand it, we've failed."
-
-Every decision should be filtered through:
-1. Is it simple?
-2. Is it honest?
-3. Is it educational?
-4. Is it verified?
-
-If any answer is "no", reconsider.
+**Questions?** Start with `workflows/README.md` for detailed workflow documentation.

@@ -35,7 +35,7 @@
     <link rel="stylesheet" type="text/css" href="_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css?v=6644e6bb" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
-    <link rel="stylesheet" type="text/css" href="_static/custom.css?v=bf48879e" />
+    <link rel="stylesheet" type="text/css" href="_static/custom.css?v=b7a97b18" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
@@ -183,8 +183,13 @@
         </ul>
         <p aria-level="2" class="caption" role="heading"><span class="caption-text">🚀 Getting Started</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="learning-timeline.html">Your Learning Journey</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quickstart-guide.html">Quick Start Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="usage-paths/classroom-use.html">For Instructors</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">🛠️ Using TinyTorch</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="tito-essentials.html">Essential Commands</a></li>
+<li class="toctree-l1"><a class="reference internal" href="learning-progress.html">Track Your Progress</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">🧭 Course Orientation</span></p>
 <ul class="nav bd-sidenav">
@@ -458,14 +463,7 @@ document.write(`
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#capability-statements">Capability Statements</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#using-the-checkpoint-system">🛠️ Using the Checkpoint System</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cli-commands">CLI Commands</a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#check-your-progress">Check Your Progress</a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#rich-visual-timeline">Rich Visual Timeline</a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#test-capabilities">Test Capabilities</a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#module-completion-workflow">Module Completion Workflow</a></li>
-</ul>
-</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#technical-usage">🛠️ Technical Usage</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#integration-with-development">Integration with Development</a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#automatic-module-to-checkpoint-mapping">Automatic Module-to-Checkpoint Mapping</a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#real-capability-validation">Real Capability Validation</a></li>
@@ -493,7 +491,7 @@ document.write(`
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#checkpoint-test-structure">Checkpoint Test Structure</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#advanced-checkpoint-usage">🚀 Advanced Checkpoint Usage</a><ul class="nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#advanced-usage-features">🚀 Advanced Usage Features</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#batch-testing">Batch Testing</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#custom-checkpoint-development">Custom Checkpoint Development</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#performance-profiling">Performance Profiling</a></li>
@@ -513,10 +511,11 @@ document.write(`
   <section id="tinytorch-checkpoint-system">
 <h1>🎯 TinyTorch Checkpoint System<a class="headerlink" href="#tinytorch-checkpoint-system" title="Link to this heading">#</a></h1>
 <div style="background: #f8f9fa; border: 1px solid #dee2e6; padding: 2rem; border-radius: 0.5rem; text-align: center; margin: 2rem 0;">
-<h2 style="margin: 0 0 1rem 0; color: #495057;">Capability-Driven Learning Journey</h2>
-<p style="margin: 0; color: #6c757d;">Transform traditional modules into capability unlocks with visual progress tracking</p>
+<h2 style="margin: 0 0 1rem 0; color: #495057;">Technical Implementation Guide</h2>
+<p style="margin: 0; color: #6c757d;">Capability validation system architecture and implementation details</p>
 </div>
-<p>TinyTorch transforms traditional module-based learning into a <strong>capability-driven progression system</strong>. Like academic checkpoints that mark learning progress, each checkpoint represents a major capability unlock in your ML systems engineering journey.</p>
+<p><strong>Purpose</strong>: Technical documentation for the checkpoint validation system. Understand the architecture and implementation details of capability-based learning assessment.</p>
+<p>The TinyTorch checkpoint system provides technical infrastructure for capability validation and progress tracking. This system transforms traditional module completion into measurable skill assessment through automated testing and validation.</p>
 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; margin: 2rem 0;">
 <div style="background: #f8f9fa; border-left: 4px solid #007bff; padding: 1rem; border-radius: 0.25rem;">
 <h4 style="margin: 0 0 0.5rem 0; color: #0056b3;">Progress Markers</h4>
@@ -645,73 +644,16 @@ document.write(`
 </section>
 </section>
 <hr class="docutils" />
-<section id="using-the-checkpoint-system">
-<h2>🛠️ Using the Checkpoint System<a class="headerlink" href="#using-the-checkpoint-system" title="Link to this heading">#</a></h2>
-<section id="cli-commands">
-<h3>CLI Commands<a class="headerlink" href="#cli-commands" title="Link to this heading">#</a></h3>
-<section id="check-your-progress">
-<h4>Check Your Progress<a class="headerlink" href="#check-your-progress" title="Link to this heading">#</a></h4>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>tito<span class="w"> </span>checkpoint<span class="w"> </span>status<span class="w">           </span><span class="c1"># Current progress overview with capability statements</span>
-tito<span class="w"> </span>checkpoint<span class="w"> </span>status<span class="w"> </span>--detailed<span class="w"> </span><span class="c1"># Module-level detail with test file status</span>
-</pre></div>
-</div>
-</section>
-<section id="rich-visual-timeline">
-<h4>Rich Visual Timeline<a class="headerlink" href="#rich-visual-timeline" title="Link to this heading">#</a></h4>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>tito<span class="w"> </span>checkpoint<span class="w"> </span>timeline<span class="w">         </span><span class="c1"># Vertical tree view with connecting lines</span>
-tito<span class="w"> </span>checkpoint<span class="w"> </span>timeline<span class="w"> </span>--horizontal<span class="w"> </span><span class="c1"># Linear progress bar with Rich styling</span>
-</pre></div>
-</div>
-</section>
-<section id="test-capabilities">
-<h4>Test Capabilities<a class="headerlink" href="#test-capabilities" title="Link to this heading">#</a></h4>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>tito<span class="w"> </span>checkpoint<span class="w"> </span><span class="nb">test</span><span class="w"> </span><span class="m">01</span><span class="w">          </span><span class="c1"># Test specific checkpoint (01-15)</span>
-tito<span class="w"> </span>checkpoint<span class="w"> </span><span class="nb">test</span><span class="w">             </span><span class="c1"># Test current checkpoint</span>
-tito<span class="w"> </span>checkpoint<span class="w"> </span>run<span class="w"> </span><span class="m">00</span><span class="w"> </span>--verbose<span class="w"> </span><span class="c1"># Run checkpoint with detailed output</span>
-tito<span class="w"> </span>checkpoint<span class="w"> </span>unlock<span class="w">          </span><span class="c1"># Show next checkpoint to unlock</span>
-</pre></div>
-</div>
-</section>
-<section id="module-completion-workflow">
-<h4>Module Completion Workflow<a class="headerlink" href="#module-completion-workflow" title="Link to this heading">#</a></h4>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>tito<span class="w"> </span>module<span class="w"> </span><span class="nb">complete</span><span class="w"> </span>02_tensor<span class="w">   </span><span class="c1"># Complete module with export and checkpoint testing</span>
-tito<span class="w"> </span>module<span class="w"> </span><span class="nb">complete</span><span class="w"> </span>tensor<span class="w">      </span><span class="c1"># Works with short names too</span>
-tito<span class="w"> </span>module<span class="w"> </span><span class="nb">complete</span><span class="w"> </span>02_tensor<span class="w"> </span>--skip-test<span class="w"> </span><span class="c1"># Skip checkpoint test if needed</span>
-</pre></div>
-</div>
-<p><strong>What <code class="docutils literal notranslate"><span class="pre">tito</span> <span class="pre">module</span> <span class="pre">complete</span></code> does:</strong></p>
-<ol class="arabic simple">
-<li><p><strong>Exports module</strong> to the <code class="docutils literal notranslate"><span class="pre">tinytorch</span></code> package</p></li>
-<li><p><strong>Maps to checkpoint</strong> (e.g., 02_tensor → checkpoint_01_foundation)</p></li>
-<li><p><strong>Runs capability test</strong> with Rich progress tracking</p></li>
-<li><p><strong>Shows achievement</strong> celebration and next steps</p></li>
-</ol>
-</section>
-</section>
+<section id="technical-usage">
+<h2>🛠️ Technical Usage<a class="headerlink" href="#technical-usage" title="Link to this heading">#</a></h2>
+<p>The checkpoint system provides comprehensive progress tracking and capability validation through automated testing infrastructure.</p>
+<p><strong>📖 See <a class="reference internal" href="#tito-essentials.html"><span class="xref myst">Essential Commands</span></a></strong> for complete command reference and usage examples.</p>
 <section id="integration-with-development">
 <h3>Integration with Development<a class="headerlink" href="#integration-with-development" title="Link to this heading">#</a></h3>
 <p>The checkpoint system connects directly to your actual development work:</p>
 <section id="automatic-module-to-checkpoint-mapping">
 <h4>Automatic Module-to-Checkpoint Mapping<a class="headerlink" href="#automatic-module-to-checkpoint-mapping" title="Link to this heading">#</a></h4>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Each module maps to a specific checkpoint:</span>
-01_setup<span class="w">      </span>→<span class="w"> </span>checkpoint_00_environment<span class="w">   </span><span class="c1"># Environment setup</span>
-02_tensor<span class="w">     </span>→<span class="w"> </span>checkpoint_01_foundation<span class="w">    </span><span class="c1"># Tensor operations</span>
-03_activations<span class="w"> </span>→<span class="w"> </span>checkpoint_02_intelligence<span class="w"> </span><span class="c1"># Activation functions</span>
-04_layers<span class="w">     </span>→<span class="w"> </span>checkpoint_03_components<span class="w">    </span><span class="c1"># Neural building blocks</span>
-05_dense<span class="w">      </span>→<span class="w"> </span>checkpoint_04_networks<span class="w">      </span><span class="c1"># Multi-layer networks</span>
-06_spatial<span class="w">    </span>→<span class="w"> </span>checkpoint_05_learning<span class="w">      </span><span class="c1"># Spatial processing</span>
-07_attention<span class="w">  </span>→<span class="w"> </span>checkpoint_06_attention<span class="w">     </span><span class="c1"># Attention mechanisms</span>
-08_dataloader<span class="w"> </span>→<span class="w"> </span>checkpoint_07_stability<span class="w">     </span><span class="c1"># Data preparation</span>
-09_autograd<span class="w">   </span>→<span class="w"> </span>checkpoint_08_differentiation<span class="w"> </span><span class="c1"># Gradient computation</span>
-10_optimizers<span class="w"> </span>→<span class="w"> </span>checkpoint_09_optimization<span class="w">  </span><span class="c1"># Optimization algorithms</span>
-11_training<span class="w">   </span>→<span class="w"> </span>checkpoint_10_training<span class="w">      </span><span class="c1"># Training loops</span>
-12_compression<span class="w"> </span>→<span class="w"> </span>checkpoint_11_regularization<span class="w"> </span><span class="c1"># Model compression</span>
-13_kernels<span class="w">    </span>→<span class="w"> </span>checkpoint_12_kernels<span class="w">       </span><span class="c1"># High-performance ops</span>
-14_benchmarking<span class="w"> </span>→<span class="w"> </span>checkpoint_13_benchmarking<span class="w"> </span><span class="c1"># Performance analysis</span>
-15_mlops<span class="w">      </span>→<span class="w"> </span>checkpoint_14_deployment<span class="w">    </span><span class="c1"># Production deployment</span>
-16_tinygpt<span class="w">    </span>→<span class="w"> </span>checkpoint_15_capstone<span class="w">      </span><span class="c1"># Language model extension</span>
-</pre></div>
-</div>
+<p>Each module automatically maps to its corresponding checkpoint for seamless testing integration.</p>
 </section>
 <section id="real-capability-validation">
 <h4>Real Capability Validation<a class="headerlink" href="#real-capability-validation" title="Link to this heading">#</a></h4>
@@ -750,7 +692,7 @@ tito<span class="w"> </span>module<span class="w"> </span><span class="nb">compl
 </section>
 <section id="rich-cli-integration">
 <h3>Rich CLI Integration<a class="headerlink" href="#rich-cli-integration" title="Link to this heading">#</a></h3>
-<p>The <code class="docutils literal notranslate"><span class="pre">tito</span> <span class="pre">checkpoint</span></code> command system provides:</p>
+<p>The command-line interface provides:</p>
 <ul class="simple">
 <li><p><strong>Visual progress tracking</strong> with progress bars and timelines</p></li>
 <li><p><strong>Capability testing</strong> with immediate feedback</p></li>
@@ -760,9 +702,9 @@ tito<span class="w"> </span>module<span class="w"> </span><span class="nb">compl
 </section>
 <section id="automated-module-completion">
 <h3>Automated Module Completion<a class="headerlink" href="#automated-module-completion" title="Link to this heading">#</a></h3>
-<p>The <code class="docutils literal notranslate"><span class="pre">tito</span> <span class="pre">module</span> <span class="pre">complete</span></code> workflow:</p>
+<p>The module completion workflow:</p>
 <ol class="arabic simple">
-<li><p><strong>Exports module</strong> using existing <code class="docutils literal notranslate"><span class="pre">tito</span> <span class="pre">export</span></code> functionality</p></li>
+<li><p><strong>Exports module</strong> using existing export functionality</p></li>
 <li><p><strong>Maps module to checkpoint</strong> using predefined mapping table</p></li>
 <li><p><strong>Runs capability test</strong> with Rich progress visualization</p></li>
 <li><p><strong>Shows results</strong> with achievement celebration or guidance</p></li>
@@ -808,36 +750,25 @@ Checkpoint approach: *“My framework can now build neural networks”</p>
 <hr class="docutils" />
 <section id="debugging-checkpoint-failures">
 <h2>🐛 Debugging Checkpoint Failures<a class="headerlink" href="#debugging-checkpoint-failures" title="Link to this heading">#</a></h2>
-<p><strong>When checkpoint tests fail, use these debugging strategies:</strong></p>
+<p><strong>When checkpoint tests fail, use debugging strategies to identify and resolve issues:</strong></p>
 <section id="common-failure-patterns">
 <h3>Common Failure Patterns<a class="headerlink" href="#common-failure-patterns" title="Link to this heading">#</a></h3>
 <p><strong>Import Errors:</strong></p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Problem: Module not found</span>
-ModuleNotFoundError:<span class="w"> </span>No<span class="w"> </span>module<span class="w"> </span>named<span class="w"> </span><span class="s1">&#39;tinytorch.core.tensor&#39;</span>
-
-<span class="c1"># Solution: Ensure module is properly exported</span>
-tito<span class="w"> </span>module<span class="w"> </span><span class="nb">complete</span><span class="w"> </span>02_tensor
-tito<span class="w"> </span>system<span class="w"> </span>doctor<span class="w">  </span><span class="c1"># Verify environment setup</span>
-</pre></div>
-</div>
+<ul class="simple">
+<li><p><strong>Problem</strong>: Module not found errors indicate missing exports</p></li>
+<li><p><strong>Solution</strong>: Ensure modules are properly exported and environment is configured</p></li>
+</ul>
 <p><strong>Functionality Errors:</strong></p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Problem: Implementation doesn&#39;t work as expected</span>
-AssertionError:<span class="w"> </span>Expected<span class="w"> </span>tensor<span class="w"> </span>shape<span class="w"> </span><span class="o">(</span><span class="m">5</span>,<span class="w"> </span><span class="m">3</span><span class="o">)</span>,<span class="w"> </span>got<span class="w"> </span><span class="o">(</span><span class="m">3</span>,<span class="w"> </span><span class="m">5</span><span class="o">)</span>
-
-<span class="c1"># Debug approach:</span>
-tito<span class="w"> </span>checkpoint<span class="w"> </span><span class="nb">test</span><span class="w"> </span><span class="m">01</span><span class="w"> </span>--verbose<span class="w">    </span><span class="c1"># Get detailed error info</span>
-tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--module<span class="w"> </span>tensor<span class="w"> </span>--debug<span class="w">     </span><span class="c1"># Test module individually</span>
-</pre></div>
-</div>
+<ul class="simple">
+<li><p><strong>Problem</strong>: Implementation doesn’t work as expected (shape mismatches, incorrect outputs)</p></li>
+<li><p><strong>Debug approach</strong>: Use verbose testing to get detailed error information</p></li>
+</ul>
 <p><strong>Integration Errors:</strong></p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Problem: Modules don&#39;t work together</span>
-CheckpointError:<span class="w"> </span>Autograd<span class="w"> </span>requires<span class="w"> </span>tensor<span class="w"> </span>gradient<span class="w"> </span>support
-
-<span class="c1"># Solution: Check dependencies</span>
-tito<span class="w"> </span>checkpoint<span class="w"> </span><span class="nb">test</span><span class="w"> </span><span class="m">01</span><span class="w">  </span><span class="c1"># Verify foundation works first</span>
-tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--integration<span class="w"> </span>--focus<span class="w"> </span>autograd
-</pre></div>
-</div>
+<ul class="simple">
+<li><p><strong>Problem</strong>: Modules don’t work together due to missing dependencies</p></li>
+<li><p><strong>Solution</strong>: Verify prerequisite capabilities before testing advanced features</p></li>
+</ul>
+<p><strong>📖 See <a class="reference internal" href="#tito-essentials.html"><span class="xref myst">Essential Commands</span></a></strong> for complete debugging command reference.</p>
 </section>
 <section id="checkpoint-test-structure">
 <h3>Checkpoint Test Structure<a class="headerlink" href="#checkpoint-test-structure" title="Link to this heading">#</a></h3>
@@ -869,46 +800,33 @@ tito<span class="w"> </span><span class="nb">test</span><span class="w"> </span>
 </section>
 </section>
 <hr class="docutils" />
-<section id="advanced-checkpoint-usage">
-<h2>🚀 Advanced Checkpoint Usage<a class="headerlink" href="#advanced-checkpoint-usage" title="Link to this heading">#</a></h2>
-<p><strong>Power user features for advanced development workflows:</strong></p>
+<section id="advanced-usage-features">
+<h2>🚀 Advanced Usage Features<a class="headerlink" href="#advanced-usage-features" title="Link to this heading">#</a></h2>
+<p><strong>The checkpoint system supports advanced development workflows:</strong></p>
 <section id="batch-testing">
 <h3>Batch Testing<a class="headerlink" href="#batch-testing" title="Link to this heading">#</a></h3>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Test multiple checkpoints</span>
-tito<span class="w"> </span>checkpoint<span class="w"> </span><span class="nb">test</span><span class="w"> </span><span class="m">01</span>,02,03
-
-<span class="c1"># Test range of checkpoints</span>
-tito<span class="w"> </span>checkpoint<span class="w"> </span><span class="nb">test</span><span class="w"> </span><span class="m">01</span>-05
-
-<span class="c1"># Test all completed checkpoints</span>
-tito<span class="w"> </span>checkpoint<span class="w"> </span>validate<span class="w"> </span>--all-completed
-</pre></div>
-</div>
+<ul class="simple">
+<li><p>Test multiple checkpoints simultaneously</p></li>
+<li><p>Test ranges of checkpoints for comprehensive validation</p></li>
+<li><p>Validate all completed checkpoints for regression testing</p></li>
+</ul>
 </section>
 <section id="custom-checkpoint-development">
 <h3>Custom Checkpoint Development<a class="headerlink" href="#custom-checkpoint-development" title="Link to this heading">#</a></h3>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Create custom checkpoint for your extensions</span>
-tito<span class="w"> </span>checkpoint<span class="w"> </span>create<span class="w"> </span>my_custom_test.py
-
-<span class="c1"># Run custom checkpoint</span>
-tito<span class="w"> </span>checkpoint<span class="w"> </span>run<span class="w"> </span>my_custom_test.py<span class="w"> </span>--verbose
-</pre></div>
-</div>
+<ul class="simple">
+<li><p>Create custom checkpoint tests for extensions</p></li>
+<li><p>Run custom validation with verbose output</p></li>
+<li><p>Extend the checkpoint system for specialized needs</p></li>
+</ul>
 </section>
 <section id="performance-profiling">
 <h3>Performance Profiling<a class="headerlink" href="#performance-profiling" title="Link to this heading">#</a></h3>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Profile checkpoint execution</span>
-tito<span class="w"> </span>checkpoint<span class="w"> </span><span class="nb">test</span><span class="w"> </span><span class="m">10</span><span class="w"> </span>--profile<span class="w"> </span>--iterations<span class="w"> </span><span class="m">100</span>
-
-<span class="c1"># Memory usage analysis during testing</span>
-tito<span class="w"> </span>checkpoint<span class="w"> </span><span class="nb">test</span><span class="w"> </span><span class="m">08</span><span class="w"> </span>--memory-profile
-</pre></div>
-</div>
-<p><strong>Ready to start testing?</strong> Begin with:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>tito<span class="w"> </span>checkpoint<span class="w"> </span>status<span class="w">    </span><span class="c1"># See your current progress</span>
-tito<span class="w"> </span>module<span class="w"> </span><span class="nb">complete</span><span class="w"> </span>01_setup<span class="w">  </span><span class="c1"># Complete and test your first module</span>
-</pre></div>
-</div>
+<ul class="simple">
+<li><p>Profile checkpoint execution performance</p></li>
+<li><p>Analyze memory usage during testing</p></li>
+<li><p>Identify bottlenecks in capability validation</p></li>
+</ul>
+<p><strong>📖 See <a class="reference internal" href="#tito-essentials.html"><span class="xref myst">Essential Commands</span></a></strong> for complete command reference and advanced usage examples.</p>
 </section>
 </section>
 </section>
@@ -991,14 +909,7 @@ tito<span class="w"> </span>module<span class="w"> </span><span class="nb">compl
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#capability-statements">Capability Statements</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#using-the-checkpoint-system">🛠️ Using the Checkpoint System</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cli-commands">CLI Commands</a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#check-your-progress">Check Your Progress</a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#rich-visual-timeline">Rich Visual Timeline</a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#test-capabilities">Test Capabilities</a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#module-completion-workflow">Module Completion Workflow</a></li>
-</ul>
-</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#technical-usage">🛠️ Technical Usage</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#integration-with-development">Integration with Development</a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#automatic-module-to-checkpoint-mapping">Automatic Module-to-Checkpoint Mapping</a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#real-capability-validation">Real Capability Validation</a></li>
@@ -1026,7 +937,7 @@ tito<span class="w"> </span>module<span class="w"> </span><span class="nb">compl
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#checkpoint-test-structure">Checkpoint Test Structure</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#advanced-checkpoint-usage">🚀 Advanced Checkpoint Usage</a><ul class="nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#advanced-usage-features">🚀 Advanced Usage Features</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#batch-testing">Batch Testing</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#custom-checkpoint-development">Custom Checkpoint Development</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#performance-profiling">Performance Profiling</a></li>

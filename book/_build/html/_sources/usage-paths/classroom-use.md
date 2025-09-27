@@ -103,35 +103,9 @@
 
 ## Course Module Overview
 
-### Foundation (Modules 01-03)
-- **01: Setup** - Development environment and workflow
-- **02: Tensor** - Multi-dimensional arrays and automatic differentiation
-- **03: Activations** - Mathematical functions and nonlinearity
+The TinyTorch course consists of 20 progressive modules organized into learning stages.
 
-### Building Blocks (Modules 04-08)
-- **04: Layers** - Neural network abstractions
-- **05: Losses** - Loss functions for learning
-- **06: Autograd** - Automatic differentiation
-- **07: Optimizers** - SGD, Adam, and scheduling
-- **08: Training** - Complete training loops
-
-### Computer Vision (Modules 09-10)
-- **09: Spatial** - Convolutional operations
-- **10: DataLoader** - Data pipeline and CIFAR-10
-
-### Language Models (Modules 11-14)
-- **11: Tokenization** - Text processing
-- **12: Embeddings** - Token embeddings
-- **13: Attention** - Transformer mechanisms
-- **14: Transformers** - Complete language models
-
-### System Optimization (Modules 15-20)
-- **15: Profiling** - Performance analysis
-- **16: Acceleration** - Hardware optimization
-- **17: Quantization** - Model compression
-- **18: Compression** - Pruning and distillation
-- **19: Caching** - Memory optimization
-- **20: Benchmarking** - Performance evaluation and competition
+**📖 See [Complete Course Structure](../chapters/00-introduction.html#course-structure)** for detailed module descriptions, learning objectives, and prerequisites for each module.
 
 ---
 
