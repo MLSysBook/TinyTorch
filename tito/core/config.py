@@ -46,7 +46,7 @@ class CLIConfig:
             else:
                 project_root = Path.cwd()
         
-        modules_path = project_root / 'modules' / 'source'
+        modules_path = project_root / 'assignments' / 'source'
         return cls(
             project_root=project_root,
             assignments_dir=modules_path,
@@ -64,9 +64,17 @@ class CLIConfig:
             issues.append(f"Python {'.'.join(map(str, self.python_min_version))}+ required, "
                          f"found {sys.version_info.major}.{sys.version_info.minor}")
         
-        # Check virtual environment
-        in_venv = (hasattr(sys, 'real_prefix') or 
-                   (hasattr(sys, 'base_prefix') and sys.base_prefix != sys.prefix))
+        # Check virtual environment (more robust detection)
+        in_venv = (
+            # Method 1: Check VIRTUAL_ENV environment variable
+            os.environ.get('VIRTUAL_ENV') is not None or
+            # Method 2: Check sys.prefix vs sys.base_prefix
+            (hasattr(sys, 'base_prefix') and sys.base_prefix != sys.prefix) or
+            # Method 3: Check for sys.real_prefix (older Python versions)
+            hasattr(sys, 'real_prefix') or
+            # Method 4: Check if .venv directory exists and packages are available
+            (Path('.venv').exists() and self._packages_available())
+        )
         if not in_venv:
             issues.append("Virtual environment not activated. Run: source .venv/bin/activate")
         
@@ -84,4 +92,13 @@ class CLIConfig:
             except ImportError:
                 issues.append(f"Missing dependency: {package}. Run: pip install -r requirements.txt")
         
-        return issues 
+        return issues
+    
+    def _packages_available(self) -> bool:
+        """Check if required packages are available (helper for venv detection)."""
+        try:
+            for package in self.required_packages:
+                __import__(package)
+            return True
+        except ImportError:
+            return False 
