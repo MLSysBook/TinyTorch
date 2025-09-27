@@ -1,31 +1,30 @@
 # TinyTorch Module Metadata
 # Essential system information for CLI tools and build systems
 
-name: "tensor"
-title: "Tensor"
-description: "Core tensor data structure and operations"
+name: "activations"
+title: "Activation Functions"
+description: "Neural network activation functions (ReLU, Sigmoid, Tanh, Softmax)"
 
 # Dependencies - Used by CLI for module ordering and prerequisites
 dependencies:
-  prerequisites: ["setup"]
-  enables: ["activations", "layers", "autograd"] 
+  prerequisites: ["tensor"] 
 
 # Package Export - What gets built into tinytorch package
-exports_to: "tinytorch.core.tensor"
+exports_to: "tinytorch.core.activations"
 
 # File Structure - What files exist in this module
 files:
-  dev_file: "tensor_dev.py"
+  dev_file: "activations_dev.py"
   readme: "README.md"
   tests: "inline"
 
 # Educational Metadata
 difficulty: "⭐⭐"
-time_estimate: "4-6 hours"
+time_estimate: "3-4 hours"
 
 # Components - What's implemented in this module
 components:
-  - "Tensor"
-  - "tensor_creation"
-  - "tensor_operations"
-  - "tensor_arithmetic" 
+  - "ReLU"
+  - "Sigmoid"
+  - "Tanh"
+  - "Softmax" 
