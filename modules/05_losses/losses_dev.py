@@ -283,6 +283,104 @@ class MeanSquaredError:
         """Alternative interface for forward pass."""
         return self.__call__(y_pred, y_true)
 
+# 🔍 SYSTEMS INSIGHT: Gradient Landscape Visualization
+def visualize_loss_landscapes():
+    """Visualize how different loss functions create different optimization landscapes."""
+    print("🔍 Loss Function Landscape Visualization")
+    print("=" * 45)
+
+    try:
+        import numpy as np
+
+        # Create prediction space for visualization
+        prediction_range = np.linspace(-3, 3, 100)
+        true_value = 0.0  # Target value
+
+        print("\n📈 Loss Landscape Comparison:")
+        print("   How loss changes as predictions move away from target")
+
+        # Calculate loss landscapes
+        mse = MeanSquaredError()
+        ce = CrossEntropyLoss()
+        bce = BinaryCrossEntropyLoss()
+
+        # MSE landscape (regression)
+        mse_losses = []
+        for pred in prediction_range:
+            loss = mse(Tensor([pred]), Tensor([true_value]))
+            mse_losses.append(loss.data)
+
+        # Binary CE landscape (classification)
+        bce_losses = []
+        for pred in prediction_range:
+            loss = bce(Tensor([pred]), Tensor([1.0]))  # Target: positive class
+            bce_losses.append(loss.data)
+
+        # Find key gradient characteristics
+        mse_gradient_at_zero = 2 * (0 - true_value)  # MSE gradient formula
+        mse_gradient_at_one = 2 * (1 - true_value)
+
+        print(f"\n🎯 Gradient Behavior Analysis:")
+        print(f"   MSE gradient at prediction=0: {mse_gradient_at_zero:.3f}")
+        print(f"   MSE gradient at prediction=1: {mse_gradient_at_one:.3f}")
+        print(f"   MSE provides linear gradient growth")
+
+        # Binary CE gradient analysis
+        sigmoid_at_zero = 1 / (1 + np.exp(-0))  # = 0.5
+        bce_grad_at_zero = sigmoid_at_zero - 1.0  # = -0.5
+        sigmoid_at_one = 1 / (1 + np.exp(-1))    # ≈ 0.73
+        bce_grad_at_one = sigmoid_at_one - 1.0   # ≈ -0.27
+
+        print(f"   BCE gradient at logit=0: {bce_grad_at_zero:.3f}")
+        print(f"   BCE gradient at logit=1: {bce_grad_at_one:.3f}")
+        print(f"   BCE provides adaptive gradient magnitude")
+
+        # Visualize ASCII loss curves
+        print(f"\n📊 Loss Function Shapes (ASCII visualization):")
+        print(f"   Prediction range: {prediction_range[0]:.1f} to {prediction_range[-1]:.1f}")
+
+        # Sample key points for visualization
+        sample_points = [-2, -1, 0, 1, 2]
+        print(f"\n   {'Prediction':>10} {'MSE Loss':>10} {'BCE Loss':>10} {'Gradient Type':>15}")
+        print(f"   {'-'*10} {'-'*10} {'-'*10} {'-'*15}")
+
+        for point in sample_points:
+            mse_loss = mse(Tensor([point]), Tensor([0.0]))
+            bce_loss = bce(Tensor([point]), Tensor([1.0]))
+
+            # Characterize gradient steepness
+            if abs(point) < 0.5:
+                grad_type = "Gentle"
+            elif abs(point) < 1.5:
+                grad_type = "Moderate"
+            else:
+                grad_type = "Steep"
+
+            print(f"   {point:>10.1f} {mse_loss.data:>10.3f} {bce_loss.data:>10.3f} {grad_type:>15}")
+
+        # Optimization implications
+        print(f"\n🚀 Optimization Implications:")
+        print(f"   MSE (Regression):")
+        print(f"     • Quadratic penalty grows smoothly")
+        print(f"     • Large errors → large gradients (aggressive correction)")
+        print(f"     • Small errors → small gradients (fine-tuning)")
+        print(f"     • Symmetric around target value")
+
+        print(f"   Binary CrossEntropy (Classification):")
+        print(f"     • Logarithmic penalty creates adaptive gradients")
+        print(f"     • Wrong confident predictions → steep gradients")
+        print(f"     • Right confident predictions → gentle gradients")
+        print(f"     • Asymmetric penalty structure encourages confidence")
+
+        # 💡 WHY THIS MATTERS: Different loss landscapes create different
+        # optimization dynamics. MSE's smooth quadratic surface enables
+        # stable gradient descent, while CrossEntropy's adaptive gradients
+        # help classification models learn faster from confident mistakes.
+
+    except Exception as e:
+        print(f"⚠️ Visualization error: {e}")
+        print("Ensure loss functions are implemented for landscape analysis")
+
 # 🔍 SYSTEMS INSIGHT: MSE Computational Analysis
 def analyze_mse_properties():
     """Analyze MSE loss characteristics for systems understanding."""
@@ -977,6 +1075,188 @@ test_unit_binary_crossentropy_loss()
 
 # %% [markdown]
 """
+# Custom Loss Functions - Aligning with Business Objectives
+
+Beyond standard loss functions, production ML systems often need custom losses that align with specific business objectives and domain constraints.
+
+## Business-Aligned Loss Design Patterns
+
+### Asymmetric Loss Functions
+When false positives and false negatives have different costs:
+
+```python
+# Medical diagnosis: False negatives (missing disease) cost 10× more
+class AsymmetricBinaryCrossEntropy(BinaryCrossEntropyLoss):
+    def __init__(self, false_negative_weight=10.0):
+        super().__init__()
+        self.fn_weight = false_negative_weight
+
+    def __call__(self, y_pred, y_true):
+        # Standard BCE
+        base_loss = super().__call__(y_pred, y_true)
+
+        # Weight false negatives more heavily
+        # When y_true=1 and y_pred is low, increase penalty
+        sigmoid_pred = 1 / (1 + np.exp(-y_pred.data))
+        fn_penalty = y_true.data * (1 - sigmoid_pred) * self.fn_weight
+
+        weighted_loss = base_loss.data + np.mean(fn_penalty)
+        return Tensor(weighted_loss)
+```
+
+### Focal Loss for Imbalanced Data
+Addresses class imbalance by focusing on hard examples:
+
+```python
+class FocalLoss(CrossEntropyLoss):
+    def __init__(self, alpha=1.0, gamma=2.0):
+        super().__init__()
+        self.alpha = alpha  # Class balance weight
+        self.gamma = gamma  # Focusing parameter
+
+    def __call__(self, y_pred, y_true):
+        # Get standard cross-entropy
+        ce_loss = super().__call__(y_pred, y_true)
+
+        # Calculate softmax probabilities
+        max_logits = np.max(y_pred.data, axis=1, keepdims=True)
+        stable_logits = y_pred.data - max_logits
+        exp_logits = np.exp(stable_logits)
+        softmax_probs = exp_logits / np.sum(exp_logits, axis=1, keepdims=True)
+
+        # Get probability of correct class
+        batch_size = y_true.data.shape[0]
+        correct_probs = softmax_probs[np.arange(batch_size), y_true.data.astype(int)]
+
+        # Apply focal loss formula: -α(1-p)^γ log(p)
+        focal_weight = self.alpha * ((1 - correct_probs) ** self.gamma)
+        focal_loss = focal_weight * ce_loss.data
+
+        return Tensor(np.mean(focal_loss))
+```
+
+### Ranking-Aware Loss
+For problems where order matters (search, recommendations):
+
+```python
+class RankingAwareLoss:
+    def __init__(self, position_weights=None):
+        # Higher weights for top positions
+        self.position_weights = position_weights or [10.0, 5.0, 2.0, 1.0, 0.5]
+
+    def __call__(self, predictions, targets, positions):
+        """predictions: relevance scores, targets: true relevance, positions: result positions"""
+        mse = MeanSquaredError()
+
+        # Weight errors by position importance
+        weighted_errors = []
+        for pred, target, pos in zip(predictions.data, targets.data, positions.data):
+            pos_weight = self.position_weights[min(int(pos), len(self.position_weights)-1)]
+            error = ((pred - target) ** 2) * pos_weight
+            weighted_errors.append(error)
+
+        return Tensor(np.mean(weighted_errors))
+```
+
+## Advanced Custom Loss Patterns
+
+### Multi-Task Learning Loss
+Combining multiple objectives with learned weights:
+
+```python
+class MultiTaskLoss:
+    def __init__(self, num_tasks=3):
+        # Learnable loss weights (log-variance parameterization for stability)
+        self.log_vars = [0.0] * num_tasks
+
+    def __call__(self, predictions_list, targets_list):
+        """predictions_list: [task1_preds, task2_preds, ...]"""
+        total_loss = 0
+
+        for i, (preds, targets) in enumerate(zip(predictions_list, targets_list)):
+            # Choose appropriate loss for each task
+            if i == 0:  # Regression task
+                task_loss = MeanSquaredError()(preds, targets)
+            else:  # Classification tasks
+                task_loss = CrossEntropyLoss()(preds, targets)
+
+            # Uncertainty-weighted combination
+            precision = np.exp(-self.log_vars[i])
+            weighted_loss = precision * task_loss.data + self.log_vars[i]
+            total_loss += weighted_loss
+
+        return Tensor(total_loss)
+```
+
+### Contrastive Loss for Similarity Learning
+For learning embeddings and similarity:
+
+```python
+class ContrastiveLoss:
+    def __init__(self, margin=1.0):
+        self.margin = margin
+
+    def __call__(self, embeddings1, embeddings2, labels):
+        """labels: 1 for similar pairs, 0 for dissimilar"""
+        # Euclidean distance between embeddings
+        distances = np.sqrt(np.sum((embeddings1.data - embeddings2.data) ** 2, axis=1))
+
+        # Contrastive loss formula
+        positive_loss = labels.data * (distances ** 2)
+        negative_loss = (1 - labels.data) * np.maximum(0, self.margin - distances) ** 2
+
+        total_loss = 0.5 * (positive_loss + negative_loss)
+        return Tensor(np.mean(total_loss))
+```
+
+## Custom Loss Implementation Guidelines
+
+### Numerical Stability Considerations
+```python
+# Always include stability measures in custom losses
+class StableCustomLoss:
+    def __call__(self, predictions, targets):
+        # 1. Input validation
+        if not isinstance(predictions, Tensor):
+            predictions = Tensor(predictions)
+
+        # 2. Handle edge cases
+        predictions_clipped = np.clip(predictions.data, -100, 100)  # Prevent overflow
+
+        # 3. Use numerically stable formulations
+        # Avoid: exp(large_number), log(small_number)
+        # Use: log-sum-exp trick, epsilon clipping
+
+        # 4. Return tensor for consistency
+        return Tensor(computed_loss)
+```
+
+### Gradient-Friendly Design
+```python
+# Ensure gradients flow properly
+class GradientFriendlyLoss:
+    def __call__(self, predictions, targets):
+        # Avoid operations that create zero gradients:
+        # - Hard thresholding: use soft approximations
+        # - Discrete operations: use continuous relaxations
+        # - Large plateaus: ensure non-zero gradients everywhere
+
+        # Good: Smooth, differentiable operations
+        smooth_loss = self.smooth_l1_loss(predictions, targets)
+        return smooth_loss
+
+    def smooth_l1_loss(self, pred, target, beta=1.0):
+        """Smooth L1 loss - less sensitive to outliers than MSE"""
+        diff = np.abs(pred.data - target.data)
+        loss = np.where(diff < beta,
+                       0.5 * diff * diff / beta,
+                       diff - 0.5 * beta)
+        return Tensor(np.mean(loss))
+```
+"""
+
+# %% [markdown]
+"""
 # Loss Function Application Guide and Comparison
 
 ## When to Use Each Loss Function
@@ -1452,7 +1732,119 @@ def analyze_numerical_stability_edge_cases():
         print(f"⚠️ Stability analysis error: {e}")
         print("Stability analysis requires complete implementations")
 
-# 🔍 SYSTEMS INSIGHT: Production Deployment Analysis  
+# 🔍 SYSTEMS INSIGHT: Mixed Precision Training Analysis
+def analyze_mixed_precision_considerations():
+    """Analyze loss function behavior with FP16 mixed precision training."""
+    print("🔍 Mixed Precision Training Analysis")
+    print("=" * 40)
+
+    try:
+        print("\n⚡ FP16 Numerical Range Analysis:")
+        print("   FP16 range: ~±65,504 (much smaller than FP32's ~±3.4×10³⁸)")
+
+        # Simulate FP16 range limitations
+        fp16_max = 65504.0
+        fp16_min_normal = 2**-14  # Smallest normal FP16 number ≈ 6.1×10⁻⁵
+
+        print(f"   FP16 maximum: ±{fp16_max:,.0f}")
+        print(f"   FP16 min normal: {fp16_min_normal:.2e}")
+        print(f"   Risk: Gradients/losses exceeding range → infinity/NaN")
+
+        mse = MeanSquaredError()
+        ce = CrossEntropyLoss()
+        bce = BinaryCrossEntropyLoss()
+
+        print(f"\n🎯 Loss Function Mixed Precision Compatibility:")
+
+        # Test cases that might overflow in FP16
+        test_cases = [
+            ("Small values", 1.0, 1.1),
+            ("Medium values", 100.0, 110.0),
+            ("Large values", 1000.0, 1100.0),
+            ("FP16 edge", 200.0, 250.0)  # Could cause issues when squared
+        ]
+
+        print(f"\n   {'Test Case':>15} {'MSE Loss':>12} {'FP16 Safe?':>12}")
+        print(f"   {'-'*15} {'-'*12} {'-'*12}")
+
+        for name, pred, true in test_cases:
+            mse_loss = mse(Tensor([pred]), Tensor([true]))
+            squared_error = (pred - true) ** 2
+            fp16_safe = squared_error < fp16_max
+
+            print(f"   {name:>15} {mse_loss.data:>12.1f} {'✅' if fp16_safe else '❌':>12}")
+
+        print(f"\n🛡️ Mixed Precision Loss Scaling Strategy:")
+
+        # Demonstrate loss scaling concept
+        loss_scales = [1.0, 128.0, 1024.0, 8192.0]
+        base_loss = 0.01  # Small loss that might underflow
+
+        print(f"   {'Scale Factor':>12} {'Scaled Loss':>12} {'FP16 Precision':>15}")
+        print(f"   {'-'*12} {'-'*12} {'-'*15}")
+
+        for scale in loss_scales:
+            scaled_loss = base_loss * scale
+
+            # Check if loss is representable in FP16
+            if scaled_loss > fp16_min_normal and scaled_loss < fp16_max:
+                precision = "Good"
+            elif scaled_loss <= fp16_min_normal:
+                precision = "Underflow risk"
+            else:
+                precision = "Overflow risk"
+
+            print(f"   {scale:>12.0f} {scaled_loss:>12.3f} {precision:>15}")
+
+        print(f"\n⚖️ Loss Function Mixed Precision Recommendations:")
+
+        recommendations = [
+            ("MSE", "Monitor for gradient explosion in high-dynamic-range problems", "Medium risk"),
+            ("CrossEntropy", "Use FP32 for softmax computation, FP16 for storage", "High risk"),
+            ("Binary CE", "Stable formulation handles FP16 well with proper scaling", "Low risk")
+        ]
+
+        for loss_type, recommendation, risk in recommendations:
+            print(f"   {loss_type:>12}: {recommendation} ({risk})")
+
+        print(f"\n🔧 Implementation Best Practices for Mixed Precision:")
+
+        best_practices = [
+            "1. Use automatic mixed precision (AMP) libraries that handle scaling",
+            "2. Keep loss computation in FP32, only cast inputs to FP16",
+            "3. Monitor for overflow/underflow during training",
+            "4. Use gradient clipping to prevent extreme gradients",
+            "5. Scale losses up during forward pass, scale gradients down during backward"
+        ]
+
+        for practice in best_practices:
+            print(f"      {practice}")
+
+        # Example mixed precision training pattern
+        print(f"\n💻 Mixed Precision Training Pattern:")
+        print(f"   ```python")
+        print(f"   # Forward pass in FP16")
+        print(f"   with autocast():")
+        print(f"       predictions = model(inputs.half())  # FP16 inputs")
+        print(f"       loss = loss_fn(predictions, targets)  # Loss computed in FP32")
+        print(f"   ")
+        print(f"   # Scale loss to prevent underflow")
+        print(f"   scaled_loss = loss * scale_factor")
+        print(f"   scaled_loss.backward()")
+        print(f"   ")
+        print(f"   # Unscale gradients before optimizer step")
+        print(f"   scaler.step(optimizer)  # Automatically unscales gradients")
+        print(f"   ```")
+
+        # 💡 WHY THIS MATTERS: Mixed precision training can provide 1.5-2× speedup
+        # and 50% memory reduction, but loss functions must be carefully implemented
+        # to handle the reduced numerical precision without losing training stability.
+
+    except Exception as e:
+        print(f"⚠️ Mixed precision analysis error: {e}")
+        print("Mixed precision analysis requires complete loss implementations")
+
+# 🔍 SYSTEMS INSIGHT: Production Deployment Analysis
 def analyze_production_deployment_patterns():
     """Analyze how loss functions affect production ML system design."""
     print("🔍 Production Deployment Pattern Analysis")
@@ -1602,41 +1994,44 @@ Research how PyTorch and TensorFlow handle these same challenges in their loss i
 
 # %% nbgrader={"grade": false, "grade_id": "question-3-custom-loss-design", "locked": false, "schema_version": 3, "solution": false, "task": false}
 """
-🤔 **Question 3: Designing Custom Loss Functions for Business Objectives**
+🤔 **Question 3: Implementing and Optimizing Custom Loss Functions**
 
-Standard loss functions don't always align with business objectives. Consider these scenarios:
+You've seen examples of custom loss functions for business objectives. Now analyze implementation and optimization challenges:
 
-**Scenario A: Medical Diagnosis**  
-False negatives (missing cancer) cost 10× more than false positives (unnecessary follow-up)
+**Scenario Analysis:**
+Choose one custom loss from the examples (Asymmetric BCE, Focal Loss, Ranking-Aware, Multi-Task, or Contrastive) and analyze:
 
-**Scenario B: Search Ranking**  
-Being wrong about the top result is 100× worse than being wrong about result #50
+**Implementation Deep Dive:**
+1. Trace through the numerical computation step-by-step for your chosen custom loss
+2. Identify potential numerical stability issues compared to standard loss functions
+3. How does the computational complexity compare to MSE/CrossEntropy/Binary CE?
+4. What additional memory overhead does the custom formulation introduce?
 
-**Scenario C: Financial Trading**  
-Large losses should be penalized exponentially more than small losses (risk management)
+**Gradient Flow Analysis:**
+5. How do the custom weighting schemes affect gradient magnitudes during backpropagation?
+6. What happens to gradient flow when the custom weights become extreme (very large or very small)?
+7. How would you detect and handle gradient explosion or vanishing in your custom loss?
+8. Design gradient clipping strategies specific to your chosen custom loss function
 
-**For each scenario, design analysis:**
+**Production Integration Challenges:**
+9. How would you implement your custom loss to work with mixed precision training (FP16)?
+10. What logging and monitoring would you add to track custom loss behavior in production?
+11. How would you A/B test a custom loss against standard losses without affecting user experience?
+12. Design a rollback strategy if the custom loss causes training instability
 
-**Loss Function Modification:**
-1. How would you modify your Binary CrossEntropy implementation for Scenario A to asymmetrically penalize errors?
-2. For Scenario B, how could you adapt CrossEntropy to incorporate position-aware penalties?
-3. For Scenario C, how would you modify MSE to create exponential rather than quadratic penalties?
+**Performance Optimization:**
+13. Identify computational bottlenecks in your chosen custom loss implementation
+14. How could you vectorize operations to improve batch processing efficiency?
+15. What caching strategies could reduce redundant computations?
+16. How would you benchmark training speed impact compared to standard losses?
 
-**Implementation Challenges:**
-- How do custom loss modifications affect gradient flow and convergence behavior?
-- What numerical stability issues might arise with exponential penalties or asymmetric losses?
-- How would you validate that your custom loss actually improves business outcomes?
+**Business Validation Framework:**
+17. Design metrics to validate that your custom loss actually improves business objectives
+18. How would you separate loss function improvements from other training improvements?
+19. What offline evaluation would you perform before deploying the custom loss?
+20. How would you monitor for unexpected business metric changes after deployment?
 
-**Systems Considerations:**
-- How do custom losses affect training speed compared to standard implementations?
-- What additional monitoring and debugging capabilities would you need?
-- How would you A/B test a custom loss against standard losses in production?
-
-Design a custom loss function for one scenario, including:
-- Mathematical formulation
-- Implementation approach building on your existing code
-- Numerical stability considerations  
-- Validation strategy for business impact
+Implement one optimization for your chosen custom loss and explain how it addresses a specific production challenge.
 """
 
 # %% [markdown]
@@ -1710,10 +2105,12 @@ if __name__ == "__main__":
     print("\n" + "="*60)
     print("🔍 Systems Analysis Functions")
     print("=" * 30)
-    
+
+    visualize_loss_landscapes()
     analyze_mse_properties()
     analyze_crossentropy_stability()
     analyze_binary_crossentropy_efficiency()
+    analyze_mixed_precision_considerations()
     analyze_loss_performance_characteristics()
     analyze_numerical_stability_edge_cases()
     analyze_production_deployment_patterns()

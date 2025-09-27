@@ -568,17 +568,44 @@ class Linear(Module):
         
         # Initialize weights with small random values using Parameter
         # Shape: (input_size, output_size) for matrix multiplication
-        # 
-        # Weight initialization explanation:
-        # - Use small random values (scaled by 0.1) to prevent vanishing/exploding gradients
-        # - Small initial values help networks train more stably in deep architectures
-        # - In production systems, Xavier or Kaiming initialization would be used
-        # - The 0.1 scaling factor is a simple but effective approach for basic networks
+        #
+        # 🔍 WEIGHT INITIALIZATION CONTEXT:
+        # Weight initialization is critical for training deep networks successfully.
+        # Our simple approach (small random * 0.1) works for shallow networks, but
+        # deeper networks require more sophisticated initialization strategies:
+        #
+        # • Xavier/Glorot: scale = sqrt(1/fan_in) - good for tanh/sigmoid activations
+        # • Kaiming/He: scale = sqrt(2/fan_in) - optimized for ReLU activations
+        # • Our approach: scale = 0.1 - simple but effective for basic networks
+        #
+        # Why proper initialization matters:
+        # - Prevents vanishing gradients (weights too small → signals disappear)
+        # - Prevents exploding gradients (weights too large → signals blow up)
+        # - Enables stable training in deeper architectures (Module 11 training)
+        # - Affects convergence speed and final model performance
+        #
+        # Production frameworks automatically choose initialization based on layer type!
         weight_data = np.random.randn(input_size, output_size) * 0.1
         self.weights = Parameter(weight_data)  # Auto-registers for optimization!
         
         # Initialize bias if requested
         if use_bias:
+            # 🔍 GRADIENT FLOW PREPARATION:
+            # Clean parameter management is essential for backpropagation (Module 09).
+            # When we implement autograd, the optimizer needs to find ALL trainable
+            # parameters automatically. Our Module base class ensures that:
+            #
+            # • Parameters are automatically registered when assigned
+            # • Recursive parameter collection works through network hierarchies
+            # • Gradient updates can flow to all learnable weights and biases
+            # • Memory management handles parameter lifecycle correctly
+            #
+            # This design enables the autograd system to:
+            # - Track computational graphs through all layers
+            # - Accumulate gradients for each parameter during backpropagation
+            # - Support optimizers that update parameters based on gradients
+            # - Scale to arbitrarily deep and complex network architectures
+            #
             # Bias also uses small random initialization (could be zeros, but small random works well)
             bias_data = np.random.randn(output_size) * 0.1
             self.bias = Parameter(bias_data)  # Auto-registers for optimization!
