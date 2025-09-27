@@ -40,6 +40,8 @@ from .commands.grade import GradeCommand
 from .commands.demo import DemoCommand
 from .commands.logo import LogoCommand
 from .commands.milestone import MilestoneCommand
+from .commands.leaderboard import LeaderboardCommand
+from .commands.olympics import OlympicsCommand
 
 # Configure logging
 logging.basicConfig(
@@ -68,6 +70,8 @@ class TinyTorchCLI:
             'nbgrader': NBGraderCommand,
             'checkpoint': CheckpointCommand,
             'milestone': MilestoneCommand,
+            'leaderboard': LeaderboardCommand,
+            'olympics': OlympicsCommand,
             # Convenience commands
             'export': ExportCommand,
             'test': TestCommand,
@@ -85,12 +89,14 @@ class TinyTorchCLI:
             formatter_class=argparse.RawDescriptionHelpFormatter,
             epilog="""
 Command Groups:
-  system      System environment and configuration commands
-  module      Module development and management commands  
-  package     Package management and nbdev integration commands
-  nbgrader    Assignment management and auto-grading commands
-  checkpoint  Track ML systems engineering progress through checkpoints
-  milestone   Epic capability achievements and ML systems mastery
+  system       System environment and configuration commands
+  module       Module development and management commands  
+  package      Package management and nbdev integration commands
+  nbgrader     Assignment management and auto-grading commands
+  checkpoint   Track ML systems engineering progress through checkpoints
+  milestone    Epic capability achievements and ML systems mastery
+  leaderboard  Join the inclusive community, share progress, celebrate achievements
+  olympics     Special competition events with focused challenges and recognition
 
 Convenience Commands:
   export      Export modules to package (quick shortcut)
@@ -105,6 +111,8 @@ Examples:
   tito module view 01_setup     Start coding in Jupyter Lab
   tito export 01_tensor         Export specific module to package
   tito checkpoint timeline      Visual progress timeline
+  tito leaderboard register     Join the inclusive community
+  tito olympics events          See special competitions
   tito book build               Build the Jupyter Book locally
             """
         )
@@ -198,12 +206,14 @@ Examples:
                 # Show enhanced help with command groups
                 self.console.print(Panel(
                     "[bold]Command Groups:[/bold]\n"
-                    "  [bold green]system[/bold green]      - System environment and configuration\n"
-                    "  [bold green]module[/bold green]      - Module development and management\n"
-                    "  [bold green]package[/bold green]     - Package management and nbdev integration\n"
-                    "  [bold green]nbgrader[/bold green]    - Assignment management and auto-grading\n"
-                    "  [bold green]checkpoint[/bold green]  - Track ML systems engineering progress\n"
-                    "  [bold magenta]milestone[/bold magenta]   - Epic capability achievements and ML mastery\n\n"
+                    "  [bold green]system[/bold green]       - System environment and configuration\n"
+                    "  [bold green]module[/bold green]       - Module development and management\n"
+                    "  [bold green]package[/bold green]      - Package management and nbdev integration\n"
+                    "  [bold green]nbgrader[/bold green]     - Assignment management and auto-grading\n"
+                    "  [bold green]checkpoint[/bold green]   - Track ML systems engineering progress\n"
+                    "  [bold magenta]milestone[/bold magenta]    - Epic capability achievements and ML mastery\n"
+                    "  [bold bright_blue]leaderboard[/bold bright_blue] - Join the inclusive community, share progress\n"
+                    "  [bold bright_yellow]olympics[/bold bright_yellow]     - Special competition events and recognition\n\n"
                     "[bold]Convenience Commands:[/bold]\n"
                     "  [bold green]export[/bold green]      - Export modules to package\n"
                     "  [bold green]test[/bold green]        - Run tests\n"
@@ -214,6 +224,8 @@ Examples:
                     "  [dim]tito module status --metadata[/dim] - Module status with metadata\n"
                     "  [dim]tito module view 01_setup[/dim]     - Start coding in Jupyter Lab\n"
                     "  [dim]tito checkpoint timeline[/dim]      - Visual progress timeline\n"
+                    "  [dim]tito leaderboard register[/dim]     - Join the inclusive community\n"
+                    "  [dim]tito olympics events[/dim]          - See special competitions\n"
                     "  [dim]tito milestone status[/dim]         - See your epic achievement progress\n"
                     "[bold]Get Help:[/bold]\n"
                     "  [dim]tito system[/dim]                   - Show system subcommands\n"
