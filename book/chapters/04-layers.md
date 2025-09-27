@@ -225,7 +225,6 @@ Browse the Python source code and understand the implementation.
 :class: tip
 **Binder sessions are temporary!** Download your completed notebook when done, or switch to local development for persistent work.
 
-Ready for serious development? → [🏗️ Local Setup Guide](../usage-paths/serious-development.md)
 ```
 
 ---

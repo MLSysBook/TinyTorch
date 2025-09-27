@@ -1,8 +1,17 @@
 # 📚 Additional Learning Resources
 
-**Complement your TinyTorch journey with these carefully selected resources.**
+<div style="background: #f8f9fa; border: 1px solid #dee2e6; padding: 2rem; border-radius: 0.5rem; text-align: center; margin: 2rem 0;">
+<h2 style="margin: 0 0 1rem 0; color: #495057;">Complement Your TinyTorch Journey</h2>
+<p style="margin: 0; color: #6c757d;">Carefully selected resources for broader context, alternative perspectives, and production tools</p>
+</div>
 
 While TinyTorch teaches you to build complete ML systems from scratch, these resources provide broader context, alternative perspectives, and production tools.
+
+**TinyTorch Learning Resources:**
+- **[Your Learning Journey →](learning-timeline.html)** - Start here to understand the 5-stage progression
+- **[Progress Tracking →](checkpoint-system.html)** - Technical details on capability testing
+- **[Testing Guide →](testing-framework.html)** - Comprehensive testing methodology
+- **[Achievement Showcase →](leaderboard.html)** - Portfolio development and career readiness
 
 ---
 
@@ -56,6 +65,9 @@ While TinyTorch teaches you to build complete ML systems from scratch, these res
 - **[Micrograd](https://github.com/karpathy/micrograd)** by Andrej Karpathy  
   *Minimal autograd engine in 100 lines. **Micrograd shows you the math, TinyTorch shows you the systems.***
 
+- **[Microtorch](https://github.com/Kipre/microtorch)** by Kipre  
+  *PyTorch-like API in pure Python. **Microtorch focuses on clean API design, TinyTorch emphasizes systems engineering and scalability.***
+
 - **[Tinygrad](https://github.com/geohot/tinygrad)** by George Hotz  
   *Performance-focused educational framework. **Tinygrad optimizes for speed, TinyTorch optimizes for learning.***
 
@@ -75,4 +87,29 @@ While TinyTorch teaches you to build complete ML systems from scratch, these res
 
 ---
 
-*Building ML systems from scratch gives you the implementation foundation most ML engineers lack. These resources help you apply that knowledge to broader systems and production environments.* 🚀 
+*Building ML systems from scratch gives you the implementation foundation most ML engineers lack. These resources help you apply that knowledge to broader systems and production environments.*
+
+## 🚀 Ready to Begin Your Journey?
+
+**Start with the fundamentals and build your way up:**
+
+```bash
+# Check your current progress
+tito checkpoint status
+
+# Begin your first module
+tito module complete 01_setup
+
+# See your learning path
+tito checkpoint timeline
+```
+
+**Your Next Steps:**
+1. **[Understanding the Journey →](learning-timeline.html)** - See the big picture of what you'll build
+2. **[Start Building →](../chapters/01-setup.html)** - Configure environment and begin Module 1
+3. **[Track Progress →](checkpoint-system.html)** - Learn the capability testing system
+
+<div style="background: #f8f9fa; border: 1px solid #dee2e6; padding: 1.5rem; border-radius: 0.5rem; margin: 2rem 0; text-align: center;">
+<h4 style="margin: 0 0 1rem 0; color: #495057;">🎯 Transform from Framework User to Systems Engineer</h4>
+<p style="margin: 0; color: #6c757d;">These external resources complement the hands-on systems building you'll do in TinyTorch</p>
+</div> 

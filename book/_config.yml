@@ -4,7 +4,7 @@
 title: "TinyTorch"
 author: "Prof. Vijay Janapa Reddi (Harvard University)"
 copyright: "2025"
-logo: logo.png
+logo: logo-tinytorch-white.png
 
 # Book description and metadata
 description: >-
@@ -35,6 +35,9 @@ html:
   # Custom styling
   extra_css:
     - _static/custom.css
+  
+  # Favicon configuration
+  favicon: "_static/favicon.svg"
   
   # Binder integration for executable notebooks
   launch_buttons:
