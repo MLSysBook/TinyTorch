@@ -1,9 +1,6 @@
 # Your TinyTorch Journey: From First Neural Network to Modern AI
 
-```{admonition} Your Learning Timeline
-:class: tip
-Follow the historical evolution of ML while building every breakthrough yourself. Each milestone represents a real achievement you'll accomplish with your own code.
-```
+Follow the historical evolution of ML while building every breakthrough yourself. Each milestone represents a real achievement you'll accomplish with your own code - from the 1957 Perceptron to modern transformers.
 
 ## Visual Progress Timeline
 

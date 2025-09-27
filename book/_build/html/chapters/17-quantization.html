@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Quick Exploration Path &#8212; TinyTorch</title>
+    <title>17. Quantization &#8212; TinyTorch</title>
   
   
   
@@ -35,7 +35,7 @@
     <link rel="stylesheet" type="text/css" href="../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css?v=6644e6bb" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
-    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=5a689c52" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=bf48879e" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
@@ -58,11 +58,12 @@
     <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'usage-paths/quick-exploration';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'chapters/17-quantization';</script>
+    <link rel="icon" href="../_static/favicon.svg"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Serious Development Path" href="serious-development.html" />
-    <link rel="prev" title="Your TinyTorch Journey: From First Neural Network to Modern AI" href="../learning-timeline.html" />
+    <link rel="next" title="Module: Compression" href="12-compression.html" />
+    <link rel="prev" title="Module: Kernels" href="13-kernels.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -154,8 +155,8 @@
       
     
     
-    <img src="../_static/logo.png" class="logo__image only-light" alt="TinyTorch - Home"/>
-    <script>document.write(`<img src="../_static/logo.png" class="logo__image only-dark" alt="TinyTorch - Home"/>`);</script>
+    <img src="../_static/logo-tinytorch-white.png" class="logo__image only-light" alt="TinyTorch - Home"/>
+    <script>document.write(`<img src="../_static/logo-tinytorch-white.png" class="logo__image only-dark" alt="TinyTorch - Home"/>`);</script>
   
   
 </a></div>
@@ -176,48 +177,58 @@
         <ul class="nav bd-sidenav bd-sidenav__home-link">
             <li class="toctree-l1">
                 <a class="reference internal" href="../intro.html">
-                    TinyTorch: Build Your Own ML Framework from First Principles
+                    TinyTorch: Build ML Systems from Scratch
                 </a>
             </li>
         </ul>
-        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
-<ul class="current nav bd-sidenav">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">🚀 Getting Started</span></p>
+<ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../learning-timeline.html">Your Learning Journey</a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">Quick Exploration</a></li>
-<li class="toctree-l1"><a class="reference internal" href="serious-development.html">Serious Development</a></li>
-<li class="toctree-l1"><a class="reference internal" href="classroom-use.html">Classroom Use</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../instructor-guide.html">Instructor Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage-paths/classroom-use.html">For Instructors</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Neural Network Foundations</span></p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">🧭 Course Orientation</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../chapters/01-setup.html">01. Setup</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../chapters/02-tensor.html">02. Tensor</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../chapters/03-activations.html">03. Activations</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../chapters/04-layers.html">04. Layers</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../chapters/05-dense.html">05. Losses</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../chapters/09-autograd.html">06. Autograd</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../chapters/10-optimizers.html">07. Optimizers</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../chapters/11-training.html">08. Training</a></li>
+<li class="toctree-l1"><a class="reference internal" href="00-introduction.html">Introduction</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Computer Vision</span></p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">🧱 Building Blocks</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../chapters/06-spatial.html">09. Spatial</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../chapters/08-dataloader.html">10. DataLoader</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01-setup.html">01. Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="02-tensor.html">02. Tensor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="03-activations.html">03. Activations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="04-layers.html">04. Layers</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Language Models</span></p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">🧠 Learning Systems</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../chapters/07-attention.html">11. Attention</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../chapters/16-tinygpt.html">12. Transformers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="05-dense.html">05. Losses</a></li>
+<li class="toctree-l1"><a class="reference internal" href="09-autograd.html">06. Autograd</a></li>
+<li class="toctree-l1"><a class="reference internal" href="10-optimizers.html">07. Optimizers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="11-training.html">08. Training</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">System Optimization</span></p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">🏗️ Neural Architectures</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../chapters/12-compression.html">13. Compression</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../chapters/13-kernels.html">14. Kernels</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../chapters/14-benchmarking.html">15. Benchmarking</a></li>
+<li class="toctree-l1"><a class="reference internal" href="06-spatial.html">09. Spatial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="08-dataloader.html">10. DataLoader</a></li>
+<li class="toctree-l1"><a class="reference internal" href="11-tokenization.html">11. Tokenization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="12-embeddings.html">12. Embeddings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="07-attention.html">13. Attention</a></li>
+<li class="toctree-l1"><a class="reference internal" href="16-tinygpt.html">14. Transformers</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Resources &amp; Tools</span></p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">⚡ Performance Optimization</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="15-profiling.html">15. Profiling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="13-kernels.html">16. Acceleration</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">17. Quantization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="12-compression.html">18. Compression</a></li>
+<li class="toctree-l1"><a class="reference internal" href="19-caching.html">19. KV Caching</a></li>
+<li class="toctree-l1"><a class="reference internal" href="14-benchmarking.html">20. Benchmarking</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">🏅 Community &amp; Competition</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../leaderboard.html">TinyMLPerf Leaderboard</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../leaderboard.html">Leaderboard</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../competitions.html">Competitions</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">🛠️ Resources &amp; Tools</span></p>
+<ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../checkpoint-system.html">Progress Tracking</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../testing-framework.html">Testing Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../resources.html">Additional Resources</a></li>
@@ -292,7 +303,7 @@
       
       
       
-      <li><a href="https://github.com/mlsysbook/TinyTorch/edit/main/book/usage-paths/quick-exploration.md" target="_blank"
+      <li><a href="https://github.com/mlsysbook/TinyTorch/edit/main/book/chapters/17-quantization.md" target="_blank"
    class="btn btn-sm btn-source-edit-button dropdown-item"
    title="Suggest edit"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -309,7 +320,7 @@
       
       
       
-      <li><a href="https://github.com/mlsysbook/TinyTorch/issues/new?title=Issue%20on%20page%20%2Fusage-paths/quick-exploration.html&body=Your%20issue%20content%20here." target="_blank"
+      <li><a href="https://github.com/mlsysbook/TinyTorch/issues/new?title=Issue%20on%20page%20%2Fchapters/17-quantization.html&body=Your%20issue%20content%20here." target="_blank"
    class="btn btn-sm btn-source-issues-button dropdown-item"
    title="Open an issue"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -339,7 +350,7 @@
       
       
       
-      <li><a href="../_sources/usage-paths/quick-exploration.md" target="_blank"
+      <li><a href="../_sources/chapters/17-quantization.md" target="_blank"
    class="btn btn-sm btn-download-source-button dropdown-item"
    title="Download source file"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -423,7 +434,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Quick Exploration Path</h1>
+    <h1>17. Quantization</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -433,16 +444,15 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#launch-immediately-0-setup-required">Launch Immediately (0 Setup Required)</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#recommended-exploration-path">Recommended Exploration Path</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#start-here-chapter-1-setup">Start Here: Chapter 1 - Setup</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#then-try-chapter-3-activations">Then Try: Chapter 3 - Activations</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#build-up-chapter-4-layers">Build Up: Chapter 4 - Layers</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#reducing-model-size-without-losing-accuracy">Reducing Model Size Without Losing Accuracy</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#what-youll-build">What You’ll Build</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#why-this-matters">Why This Matters</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-objectives">Learning Objectives</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#prerequisites">Prerequisites</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#real-world-applications">Real-World Applications</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#coming-up-next">Coming Up Next</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#important-limitations">Important Limitations</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-youll-understand">What You’ll Understand</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#next-steps">Next Steps</a></li>
 </ul>
             </nav>
         </div>
@@ -454,95 +464,70 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="quick-exploration-path">
-<h1>Quick Exploration Path<a class="headerlink" href="#quick-exploration-path" title="Link to this heading">#</a></h1>
-<p><strong>Perfect for:</strong> “I want to see what this is about” • “Can I try this without installing anything?”</p>
+  <section id="quantization">
+<h1>17. Quantization<a class="headerlink" href="#quantization" title="Link to this heading">#</a></h1>
+<section id="reducing-model-size-without-losing-accuracy">
+<h2>Reducing Model Size Without Losing Accuracy<a class="headerlink" href="#reducing-model-size-without-losing-accuracy" title="Link to this heading">#</a></h2>
+<p>Quantization is a critical technique for deploying ML models in production, especially on edge devices. In this module, you’ll learn how to reduce model size and increase inference speed by converting floating-point weights to lower precision formats.</p>
+<section id="what-youll-build">
+<h3>What You’ll Build<a class="headerlink" href="#what-youll-build" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>INT8 Quantization</strong>: Convert 32-bit floats to 8-bit integers</p></li>
+<li><p><strong>Quantization-Aware Training</strong>: Train models that quantize well</p></li>
+<li><p><strong>Dynamic Quantization</strong>: Quantize activations at runtime</p></li>
+<li><p><strong>Static Quantization</strong>: Pre-compute quantization parameters</p></li>
+</ul>
+</section>
+<section id="why-this-matters">
+<h3>Why This Matters<a class="headerlink" href="#why-this-matters" title="Link to this heading">#</a></h3>
+<p>Modern ML models are often too large for deployment:</p>
+<ul class="simple">
+<li><p>GPT models can be hundreds of gigabytes</p></li>
+<li><p>Mobile devices have limited memory</p></li>
+<li><p>Edge computing requires efficient models</p></li>
+<li><p>Quantization can reduce model size by 75% with minimal accuracy loss</p></li>
+</ul>
+</section>
+<section id="learning-objectives">
+<h3>Learning Objectives<a class="headerlink" href="#learning-objectives" title="Link to this heading">#</a></h3>
+<p>By the end of this module, you will:</p>
+<ul class="simple">
+<li><p>Understand the trade-offs between model size and accuracy</p></li>
+<li><p>Implement INT8 quantization from scratch</p></li>
+<li><p>Build quantization-aware training pipelines</p></li>
+<li><p>Measure the impact on model performance</p></li>
+</ul>
+</section>
+<section id="prerequisites">
+<h3>Prerequisites<a class="headerlink" href="#prerequisites" title="Link to this heading">#</a></h3>
+<p>Before starting this module, you should have completed:</p>
+<ul class="simple">
+<li><p>Module 02: Tensor (for basic operations)</p></li>
+<li><p>Module 04: Layers (for model structure)</p></li>
+<li><p>Module 08: Training (for fine-tuning quantized models)</p></li>
+</ul>
+</section>
+<section id="real-world-applications">
+<h3>Real-World Applications<a class="headerlink" href="#real-world-applications" title="Link to this heading">#</a></h3>
+<p>Quantization is used everywhere in production ML:</p>
+<ul class="simple">
+<li><p><strong>Mobile Apps</strong>: TensorFlow Lite uses INT8 for on-device inference</p></li>
+<li><p><strong>Edge Devices</strong>: Raspberry Pi and Arduino deployment</p></li>
+<li><p><strong>Cloud Inference</strong>: Reducing serving costs at scale</p></li>
+<li><p><strong>Neural Processors</strong>: Apple Neural Engine, Google Edge TPU</p></li>
+</ul>
+</section>
+<section id="coming-up-next">
+<h3>Coming Up Next<a class="headerlink" href="#coming-up-next" title="Link to this heading">#</a></h3>
+<p>After mastering quantization, you’ll explore:</p>
+<ul class="simple">
+<li><p>Module 18: Compression - Further model size reduction techniques</p></li>
+<li><p>Module 19: Caching - Optimizing inference latency</p></li>
+<li><p>Module 20: Benchmarking - Measuring the impact of optimizations</p></li>
+</ul>
 <hr class="docutils" />
-<section id="launch-immediately-0-setup-required">
-<h2>Launch Immediately (0 Setup Required)<a class="headerlink" href="#launch-immediately-0-setup-required" title="Link to this heading">#</a></h2>
-<p>Click the <strong>Launch Binder</strong> button on any chapter to get:</p>
-<ul class="simple">
-<li><p>Live Jupyter environment in your browser</p></li>
-<li><p>Pre-configured TinyTorch development setup</p></li>
-<li><p>Ability to run and modify all code immediately</p></li>
-<li><p>No installation, no account creation needed</p></li>
-</ul>
-<div class="tip admonition">
-<p class="admonition-title">What You’ll Experience</p>
-<p><strong>5 minutes from now</strong>, you’ll be implementing real ML components:</p>
-<ul class="simple">
-<li><p><strong>ReLU activation function</strong> from scratch</p></li>
-<li><p><strong>Tensor operations</strong> that power neural networks</p></li>
-<li><p><strong>Dense layers</strong> that transform data</p></li>
-<li><p><strong>Complete neural networks</strong> for image classification</p></li>
-<li><p><strong>🔥 Language models</strong> built from the same foundations</p></li>
-</ul>
-<p>All running live in your browser!</p>
-</div>
+<p><em>This module is currently under development. The implementation will cover practical quantization techniques used in production ML systems.</em></p>
 </section>
-<hr class="docutils" />
-<section id="recommended-exploration-path">
-<h2>Recommended Exploration Path<a class="headerlink" href="#recommended-exploration-path" title="Link to this heading">#</a></h2>
-<section id="start-here-chapter-1-setup">
-<h3>Start Here: Chapter 1 - Setup<a class="headerlink" href="#start-here-chapter-1-setup" title="Link to this heading">#</a></h3>
-<ul class="simple">
-<li><p>Understand the TinyTorch development workflow</p></li>
-<li><p>Get familiar with the educational approach</p></li>
-<li><p>See how components fit together</p></li>
-</ul>
-<p><strong><a class="reference internal" href="../chapters/01-setup.html"><span class="std std-doc">Launch Setup Chapter</span></a></strong></p>
-</section>
-<section id="then-try-chapter-3-activations">
-<h3>Then Try: Chapter 3 - Activations<a class="headerlink" href="#then-try-chapter-3-activations" title="Link to this heading">#</a></h3>
-<ul class="simple">
-<li><p>Implement your first ML function (ReLU)</p></li>
-<li><p>See immediate visual results</p></li>
-<li><p>Understand why nonlinearity matters</p></li>
-</ul>
-<p><strong><a class="reference internal" href="../chapters/03-activations.html"><span class="std std-doc">Launch Activations Chapter</span></a></strong></p>
-</section>
-<section id="build-up-chapter-4-layers">
-<h3>Build Up: Chapter 4 - Layers<a class="headerlink" href="#build-up-chapter-4-layers" title="Link to this heading">#</a></h3>
-<ul class="simple">
-<li><p>Create the building blocks of neural networks</p></li>
-<li><p>Combine your ReLU with matrix operations</p></li>
-<li><p>See how simple math becomes powerful AI</p></li>
-</ul>
-<p><strong><a class="reference internal" href="../chapters/04-layers.html"><span class="std std-doc">Launch Layers Chapter</span></a></strong></p>
-</section>
-</section>
-<hr class="docutils" />
-<section id="important-limitations">
-<h2>Important Limitations<a class="headerlink" href="#important-limitations" title="Link to this heading">#</a></h2>
-<p><strong>Sessions are temporary:</strong></p>
-<ul class="simple">
-<li><p>Binder sessions timeout after ~20 minutes of inactivity</p></li>
-<li><p>Your work is <strong>not saved</strong> when the session ends</p></li>
-<li><p>Great for exploration, not for ongoing projects</p></li>
-</ul>
-<p><strong>For persistent work:</strong> Ready to build your own TinyTorch? → <strong><a class="reference internal" href="serious-development.html"><span class="std std-doc">Serious Development Path</span></a></strong></p>
-</section>
-<hr class="docutils" />
-<section id="what-youll-understand">
-<h2>What You’ll Understand<a class="headerlink" href="#what-youll-understand" title="Link to this heading">#</a></h2>
-<p>After exploring 2-3 chapters, you’ll have hands-on understanding of:</p>
-<ul class="simple">
-<li><p><strong>How ML frameworks work under the hood</strong></p></li>
-<li><p><strong>Why activation functions are crucial</strong></p></li>
-<li><p><strong>How matrix multiplication powers neural networks</strong></p></li>
-<li><p><strong>The relationship between layers, networks, and learning</strong></p></li>
-<li><p><strong>Real implementation vs. high-level APIs</strong></p></li>
-<li><p><strong>Why vision and language models share the same foundations</strong></p></li>
-</ul>
-</section>
-<hr class="docutils" />
-<section id="next-steps">
-<h2>Next Steps<a class="headerlink" href="#next-steps" title="Link to this heading">#</a></h2>
-<p><strong>Satisfied with exploration?</strong> You’ve gained valuable insight into ML systems!</p>
-<p><strong>Want to build more?</strong> → <strong><a class="reference internal" href="serious-development.html"><span class="std std-doc">Fork the repo and work locally</span></a></strong></p>
-<p><strong>Teaching a class?</strong> → <strong><a class="reference internal" href="classroom-use.html"><span class="std std-doc">Classroom setup guide</span></a></strong></p>
-<hr class="docutils" />
-<p><em>No commitment required - just click and explore!</em></p>
 </section>
 </section>
 
@@ -559,7 +544,7 @@ document.write(`
         },
         kernelOptions: {
             name: "python3",
-            path: "./usage-paths"
+            path: "./chapters"
         },
         predefinedOutput: true
     }
@@ -577,20 +562,20 @@ document.write(`
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="../learning-timeline.html"
+       href="13-kernels.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Your TinyTorch Journey: From First Neural Network to Modern AI</p>
+        <p class="prev-next-title">Module: Kernels</p>
       </div>
     </a>
     <a class="right-next"
-       href="serious-development.html"
+       href="12-compression.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Serious Development Path</p>
+        <p class="prev-next-title">Module: Compression</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -610,16 +595,15 @@ document.write(`
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#launch-immediately-0-setup-required">Launch Immediately (0 Setup Required)</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#recommended-exploration-path">Recommended Exploration Path</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#start-here-chapter-1-setup">Start Here: Chapter 1 - Setup</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#then-try-chapter-3-activations">Then Try: Chapter 3 - Activations</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#build-up-chapter-4-layers">Build Up: Chapter 4 - Layers</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#reducing-model-size-without-losing-accuracy">Reducing Model Size Without Losing Accuracy</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#what-youll-build">What You’ll Build</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#why-this-matters">Why This Matters</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-objectives">Learning Objectives</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#prerequisites">Prerequisites</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#real-world-applications">Real-World Applications</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#coming-up-next">Coming Up Next</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#important-limitations">Important Limitations</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-youll-understand">What You’ll Understand</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#next-steps">Next Steps</a></li>
 </ul>
   </nav></div>
 

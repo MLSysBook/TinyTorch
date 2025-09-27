@@ -1,173 +1,92 @@
-# TinyMLPerf Leaderboard
+# 🌍 Community Leaderboard
 
-```{admonition} TinyMLPerf Competition
-:class: tip
-**Coming Spring 2025** - Be among the first to set baseline performance scores with your TinyTorch implementations!
-```
+<div style="background: #f8f9fa; border: 1px solid #dee2e6; padding: 2rem; border-radius: 0.5rem; text-align: center; margin: 2rem 0;">
+<h2 style="margin: 0 0 1rem 0; color: #495057;">Planned Community Feature</h2>
+<p style="margin: 0; color: #6c757d;">Help learners track progress and connect with others building ML systems from scratch</p>
+</div>
 
-## Competition Overview
+## What This Will Be
 
-TinyMLPerf is TinyTorch's performance benchmarking competition where students optimize their implementations and compete across multiple categories. Test your ML systems engineering skills against peers worldwide!
+The TinyTorch Community Leaderboard is a **planned feature** to help learners track their progress and connect with others building ML systems from scratch.
 
-### Competition Categories
+### The Vision
 
-| Event | Challenge | Metric | Status |
-|-------|-----------|--------|--------|
-| **MLP Sprint** | Train MNIST MLP to 95%+ accuracy | Training time + memory | 🚧 Coming Soon |
-| **CNN Marathon** | CIFAR-10 CNN to 75%+ accuracy | Inference speed + memory | 🚧 Coming Soon |
-| **Transformer Decathlon** | TinyGPT generation quality | Tokens/second + BLEU score | 🚧 Coming Soon |
-| **Memory Master** | Minimize memory footprint | Peak memory usage | 🚧 Coming Soon |
-| **Innovation Track** | Novel optimization techniques | Judged submissions | 🚧 Coming Soon |
+We want to create an inclusive space where:
+- Everyone can track their learning journey (from 10% to 90% accuracy)
+- Students can find study partners at similar skill levels
+- Progress is celebrated at all stages, not just the top scores
+- The community helps each other debug and improve
 
-### Leaderboard Structure
+### How It Will Work
 
-#### Speed Champions
-*Fastest inference times across all benchmarks*
-
-#### Memory Masters  
-*Lowest memory footprint while maintaining accuracy*
-
-#### Efficiency Leaders
-*Best accuracy-per-resource ratio*
-
-#### Innovation Awards
-*Most creative optimization techniques*
-
-## How to Participate
-
-### 1. Complete Your TinyTorch Implementation
-Finish modules 1-20 to unlock all benchmarking capabilities:
-
+**Simple Progress Tracking:**
 ```bash
-# Check your progress
-tito checkpoint status
-
-# Ensure all modules are complete
-tito module status --all
+# Future CLI commands (not yet implemented)
+tito leaderboard join        # Register for the community
+tito leaderboard submit      # Submit your model's accuracy
+tito leaderboard view        # See community progress
 ```
 
-### 2. Run Local Benchmarks
-Test your optimizations locally:
+**What We'll Track:**
+- Your best accuracy on standard benchmarks (CIFAR-10, etc.)
+- Which modules you've completed
+- Your learning streak (days active)
+- Helpful contributions to others
 
-```bash
-# Quick performance check
-tito benchmark run --event mlp_sprint
+### Community Levels
 
-# Full competition suite
-tito benchmark run --all-events
+We envision organizing learners into supportive groups:
 
-# Get detailed profiling
-tito benchmark profile --event cnn_marathon
-```
+- **🚀 Starting** (<20% accuracy) - Just beginning the journey
+- **🌱 Learning** (20-40%) - Building foundations
+- **📈 Progressing** (40-60%) - Gaining momentum
+- **⭐ Advanced** (60-80%) - Mastering concepts
+- **🏆 Elite** (80%+) - Systems experts
 
-### 3. Submit to Leaderboard
-*Coming Spring 2025*
+### Special Events
 
-```bash
-# Future submission command
-tito benchmark submit --event cnn_marathon --team "YourTeamName"
-```
+**Monthly Olympics** (planned):
+- Efficiency challenges (highest accuracy with memory limits)
+- Speed runs (fastest to reach milestones)
+- Creative implementations (most innovative approaches)
+
+### Join the Discussion
+
+Want to help shape this feature? We'd love your input:
+
+- What would motivate you to participate?
+- What metrics matter most to you?
+- How can we make this inclusive for all skill levels?
+
+**Share your thoughts:** [GitHub Discussions](https://github.com/harvard-edge/TinyTorch/discussions)
+
+---
 
 ## Current Status
 
-### 🚧 Development Phase
+🚧 **Under Development** 
 
-- **Baseline Implementation**: Setting reference scores with optimized TinyTorch
-- **Benchmark Infrastructure**: Building fair comparison framework  
-- **Submission System**: Creating automated evaluation pipeline
-- **Leaderboard Website**: Developing at `tinytorch.org/leaderboard`
+The leaderboard system is planned but not yet implemented. For now:
 
-### Launch Timeline
+1. **Track your own progress** using the checkpoint system:
+   ```bash
+   tito checkpoint status
+   ```
 
-| Milestone | Date | Status |
-|-----------|------|--------|
-| Baseline Scores | January 2025 | In Progress |
-| Beta Testing | February 2025 | Planned |
-| Public Launch | March 2025 | Planned |
-| First Competition | April 2025 | Planned |
+2. **Share your achievements** in our community:
+   - Post your progress in GitHub Discussions
+   - Share your accuracy milestones
+   - Ask for help when stuck
 
-## Benchmark Specifications
-
-### MLP Sprint
-- **Dataset**: MNIST (60K training, 10K test)
-- **Target**: 95%+ accuracy
-- **Measurement**: Wall-clock training time + peak memory
-- **Hardware**: Standardized CPU benchmarking environment
-
-### CNN Marathon  
-- **Dataset**: CIFAR-10 (50K training, 10K test)
-- **Target**: 75%+ accuracy  
-- **Measurement**: Inference time for 1K samples + memory usage
-- **Optimization**: Any technique (quantization, pruning, etc.)
-
-### Transformer Decathlon
-- **Task**: Text generation with TinyGPT
-- **Evaluation**: Perplexity + generation speed
-- **Context**: 512 token sequences
-- **Quality Threshold**: Coherent multi-sentence generation
-
-## Fair Competition Guidelines
-
-### Allowed Optimizations
-✅ **Mathematical optimizations** (vectorization, cache-friendly algorithms)  
-✅ **Memory management** (gradient checkpointing, activation recomputation)  
-✅ **Quantization** (INT8, FP16 precision)  
-✅ **Model compression** (pruning, knowledge distillation)  
-✅ **Hardware-specific** (SIMD, parallel processing)  
-
-### Prohibited Actions
-❌ **External libraries** beyond NumPy (no PyTorch, TensorFlow, etc.)  
-❌ **Pre-trained models** or weights  
-❌ **Dataset modifications** or augmentations  
-❌ **Accuracy sacrifices** below minimum thresholds  
-
-## Recognition & Rewards
-
-### Digital Badges
-- **Speed Demon**: Top 10% in any speed category
-- **Memory Wizard**: Top 10% in memory efficiency  
-- **Innovation Pioneer**: Novel optimization technique
-- **Triple Crown**: Top 10% in three different events
-
-### Academic Recognition
-- Certificate of achievement for course completion
-- Special recognition for leaderboard leaders
-- Potential research collaboration opportunities
-
-## Get Ready
-
-### Optimization Strategies to Explore
-
-**Memory Optimization:**
-- Gradient accumulation instead of large batches
-- Activation checkpointing for memory-compute trade-offs
-- Efficient attention implementations (O(N√N) variants)
-
-**Speed Optimization:**
-- Vectorized operations and cache-friendly memory access
-- Batch processing and parallel computation
-- Custom kernel implementations for bottlenecks
-
-**Quality Optimization:**
-- Learning rate scheduling and optimizer tuning
-- Architecture search within parameter constraints
-- Regularization techniques for better generalization
+3. **Connect with others**:
+   - Find study partners in Discussions
+   - Share debugging tips
+   - Celebrate breakthroughs together
 
 ---
 
-## Join the Competition
-
-**Ready to compete?** Start building your TinyTorch implementation:
-
-1. **[Begin Module 01](chapters/01-setup.md)** - Set up your development environment
-2. **[Track Progress](checkpoint-system.md)** - Use checkpoints to monitor your journey
-3. **[Join Community](https://github.com/mlsysbook/TinyTorch/discussions)** - Connect with other competitors
-
-**Stay Updated:**
-- 📧 **Email**: Subscribe to TinyTorch announcements
-- 🌐 **Website**: `tinytorch.org/leaderboard` (launching soon)
-- 💬 **Discord**: TinyTorch community server (coming soon)
-
----
-
-> 🏆 **"The best way to understand ML systems is to optimize them yourself"** - Be ready to prove your mastery when the leaderboard launches!
+<div style="background: #f8f9fa; border: 1px solid #dee2e6; padding: 2rem; border-radius: 0.5rem; margin: 2rem 0; text-align: center;">
+<h3 style="margin: 0 0 1rem 0; color: #495057;">📊 Want to Help Build This?</h3>
+<p style="margin: 0 0 1rem 0; color: #6c757d;">We're looking for contributors to help implement the leaderboard system</p>
+<a href="https://github.com/harvard-edge/TinyTorch/issues" style="display: inline-block; background: #28a745; color: white; padding: 0.5rem 1rem; border-radius: 0.25rem; text-decoration: none; font-weight: 500;">Contribute on GitHub →</a>
+</div>

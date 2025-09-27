@@ -1,6 +1,7 @@
 # Quick Exploration Path
 
-**Perfect for:** "I want to see what this is about" • "Can I try this without installing anything?"
+**Perfect for:** "I want to see what this is about" • "Can I try this without installing anything?"  
+**Time Commitment:** 5-30 minutes • **Setup Required:** None
 
 ---
 
@@ -12,16 +13,16 @@ Click the **Launch Binder** button on any chapter to get:
 - Ability to run and modify all code immediately
 - No installation, no account creation needed
 
-```{admonition} What You'll Experience
+```{admonition} What You'll Experience in 5-30 Minutes
 :class: tip
-**5 minutes from now**, you'll be implementing real ML components:
-- **ReLU activation function** from scratch
-- **Tensor operations** that power neural networks  
-- **Dense layers** that transform data
-- **Complete neural networks** for image classification
-- **🔥 Language models** built from the same foundations
+**Immediate implementation experience** with real ML components:
+- **5 min**: ReLU activation function from scratch
+- **10 min**: Tensor operations that power neural networks  
+- **15 min**: Dense layers that transform data
+- **20 min**: Complete neural networks for image classification
+- **30 min**: See how language models use the same foundations
 
-All running live in your browser!
+All running live in your browser with zero setup!
 ```
 
 ---

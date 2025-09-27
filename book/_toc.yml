@@ -6,25 +6,19 @@ root: intro
 title: "TinyTorch Course"
 
 parts:
-- caption: Getting Started
+- caption: 🚀 Getting Started
   chapters:
   - file: learning-timeline
     title: "Your Learning Journey"
-  - file: usage-paths/quick-exploration
-    title: "Quick Exploration"
-  - file: usage-paths/serious-development
-    title: "Serious Development"
   - file: usage-paths/classroom-use
-    title: "Classroom Use"
-  - file: instructor-guide
-    title: "Instructor Guide"
+    title: "For Instructors"
 
-- caption: Course Orientation
+- caption: 🧭 Course Orientation
   chapters:
   - file: chapters/00-introduction
     title: "Introduction"
 
-- caption: "Neural Network Foundations"
+- caption: 🧱 Building Blocks
   chapters:
   - file: chapters/01-setup
     title: "01. Setup"
@@ -34,6 +28,9 @@ parts:
     title: "03. Activations" 
   - file: chapters/04-layers
     title: "04. Layers"
+
+- caption: 🧠 Learning Systems
+  chapters:
   - file: chapters/05-dense
     title: "05. Losses"
   - file: chapters/09-autograd
@@ -43,38 +40,48 @@ parts:
   - file: chapters/11-training
     title: "08. Training"
 
-- caption: "Computer Vision"
+- caption: 🏗️ Neural Architectures
   chapters:
   - file: chapters/06-spatial
     title: "09. Spatial"
   - file: chapters/08-dataloader
     title: "10. DataLoader"
-
-- caption: "Language Models"
-  chapters:
+  - file: chapters/11-tokenization
+    title: "11. Tokenization" 
+  - file: chapters/12-embeddings
+    title: "12. Embeddings"
   - file: chapters/07-attention
-    title: "11. Attention"
+    title: "13. Attention"
   - file: chapters/16-tinygpt
-    title: "12. Transformers"
+    title: "14. Transformers"
 
-- caption: "System Optimization"
+- caption: ⚡ Performance Optimization
   chapters:
-  - file: chapters/12-compression
-    title: "13. Compression"
+  - file: chapters/15-profiling
+    title: "15. Profiling"
   - file: chapters/13-kernels
-    title: "14. Kernels"
+    title: "16. Acceleration"
+  - file: chapters/17-quantization
+    title: "17. Quantization"
+  - file: chapters/12-compression
+    title: "18. Compression"
+  - file: chapters/19-caching
+    title: "19. KV Caching"
   - file: chapters/14-benchmarking
-    title: "15. Benchmarking"
+    title: "20. Benchmarking"
 
-- caption: Resources & Tools
+- caption: 🏅 Community & Competition
   chapters:
   - file: leaderboard
-    title: "TinyMLPerf Leaderboard"
+    title: "Leaderboard"
+  - file: competitions
+    title: "Competitions"
+
+- caption: 🛠️ Resources & Tools
+  chapters:
   - file: checkpoint-system
     title: "Progress Tracking"
   - file: testing-framework
     title: "Testing Guide"
   - file: resources
     title: "Additional Resources"
-
-
