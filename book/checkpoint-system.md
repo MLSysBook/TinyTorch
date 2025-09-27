@@ -1,14 +1,35 @@
 # 🎯 TinyTorch Checkpoint System
 
-## Capability-Driven Learning Journey
+<div style="background: #f8f9fa; border: 1px solid #dee2e6; padding: 2rem; border-radius: 0.5rem; text-align: center; margin: 2rem 0;">
+<h2 style="margin: 0 0 1rem 0; color: #495057;">Capability-Driven Learning Journey</h2>
+<p style="margin: 0; color: #6c757d;">Transform traditional modules into capability unlocks with visual progress tracking</p>
+</div>
 
 TinyTorch transforms traditional module-based learning into a **capability-driven progression system**. Like academic checkpoints that mark learning progress, each checkpoint represents a major capability unlock in your ML systems engineering journey.
 
-**Academic Checkpoint Philosophy:**
-- **Progress Markers**: Each checkpoint functions like academic milestones, marking concrete learning achievements
-- **Capability-Based**: Unlike traditional assignments, you unlock actual ML systems engineering capabilities
-- **Cumulative Learning**: Each checkpoint builds on previous capabilities, creating comprehensive expertise
-- **Visual Progress**: Rich CLI tools provide academic-style progress tracking and achievement visualization
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; margin: 2rem 0;">
+
+<div style="background: #f8f9fa; border-left: 4px solid #007bff; padding: 1rem; border-radius: 0.25rem;">
+<h4 style="margin: 0 0 0.5rem 0; color: #0056b3;">Progress Markers</h4>
+<p style="margin: 0; font-size: 0.9rem; color: #6c757d;">Academic milestones marking concrete learning achievements</p>
+</div>
+
+<div style="background: #f8f9fa; border-left: 4px solid #28a745; padding: 1rem; border-radius: 0.25rem;">
+<h4 style="margin: 0 0 0.5rem 0; color: #1e7e34;">Capability-Based</h4>
+<p style="margin: 0; font-size: 0.9rem; color: #6c757d;">Unlock actual ML systems engineering capabilities</p>
+</div>
+
+<div style="background: #f8f9fa; border-left: 4px solid #ffc107; padding: 1rem; border-radius: 0.25rem;">
+<h4 style="margin: 0 0 0.5rem 0; color: #856404;">Cumulative Learning</h4>
+<p style="margin: 0; font-size: 0.9rem; color: #6c757d;">Each checkpoint builds comprehensive expertise</p>
+</div>
+
+<div style="background: #f8f9fa; border-left: 4px solid #6f42c1; padding: 1rem; border-radius: 0.25rem;">
+<h4 style="margin: 0 0 0.5rem 0; color: #4e2b80;">Visual Progress</h4>
+<p style="margin: 0; font-size: 0.9rem; color: #6c757d;">Rich CLI tools with achievement visualization</p>
+</div>
+
+</div>
 
 ---
 
@@ -249,44 +270,108 @@ The checkpoint progression **Foundation → Architecture → Training → Infere
 
 ---
 
-## 📈 Learning Outcomes by Checkpoint
+## 🐛 Debugging Checkpoint Failures
 
-### After Foundation
-- Understand tensor operations and mathematical foundations
-- Have working development environment
-- Ready to build neural network components
+**When checkpoint tests fail, use these debugging strategies:**
 
-### After Architecture  
-- Can implement any neural network architecture
-- Understand dense, convolutional, and attention mechanisms
-- Ready to train complex models
+### Common Failure Patterns
 
-### After Training
-- Can train models on real datasets like CIFAR-10
-- Understand automatic differentiation and optimization
-- Ready to deploy trained models
+**Import Errors:**
+```bash
+# Problem: Module not found
+ModuleNotFoundError: No module named 'tinytorch.core.tensor'
 
-### After Inference
-- Can optimize models for production deployment
-- Understand performance bottlenecks and solutions
-- Ready to build complete ML systems
+# Solution: Ensure module is properly exported
+tito module complete 02_tensor
+tito system doctor  # Verify environment setup
+```
 
-### After Language Models
-- Have extended your vision framework to language models
-- Understand the unified mathematical foundations of modern AI
-- Ready for advanced ML engineering roles across all modalities
+**Functionality Errors:**
+```bash
+# Problem: Implementation doesn't work as expected
+AssertionError: Expected tensor shape (5, 3), got (3, 5)
+
+# Debug approach:
+tito checkpoint test 01 --verbose    # Get detailed error info
+tito test --module tensor --debug     # Test module individually
+```
+
+**Integration Errors:**
+```bash
+# Problem: Modules don't work together
+CheckpointError: Autograd requires tensor gradient support
+
+# Solution: Check dependencies
+tito checkpoint test 01  # Verify foundation works first
+tito test --integration --focus autograd
+```
+
+### Checkpoint Test Structure
+
+**Each checkpoint test follows this pattern:**
+```python
+# Example: checkpoint_01_foundation.py
+import sys
+sys.path.append('/path/to/tinytorch')
+
+try:
+    from tinytorch.core.tensor import Tensor
+    print("✅ Tensor import successful")
+except ImportError as e:
+    print(f"❌ Tensor import failed: {e}")
+    sys.exit(1)
+
+# Test basic functionality
+tensor = Tensor([[1, 2], [3, 4]])
+assert tensor.shape == (2, 2), f"Expected shape (2, 2), got {tensor.shape}"
+print("✅ Basic tensor operations working")
+
+# Test integration capabilities
+result = tensor + tensor
+assert result.data.tolist() == [[2, 4], [6, 8]], "Addition failed"
+print("✅ Tensor arithmetic working")
+
+print("🏆 Foundation checkpoint PASSED")
+```
 
 ---
 
-## 🚀 Your Journey Starts Here
+## 🚀 Advanced Checkpoint Usage
 
-The checkpoint system transforms TinyTorch from "16 separate exercises" into **"building a complete ML framework."** 
+**Power user features for advanced development workflows:**
 
-Each step builds real capabilities. Each checkpoint unlocks new powers like academic progress markers. Each completion brings you closer to **ML systems mastery**.
-
-**Ready to begin?** Start with:
+### Batch Testing
 ```bash
-tito checkpoint status
+# Test multiple checkpoints
+tito checkpoint test 01,02,03
+
+# Test range of checkpoints
+tito checkpoint test 01-05
+
+# Test all completed checkpoints
+tito checkpoint validate --all-completed
 ```
 
-See where you are in your ML systems engineering journey!
+### Custom Checkpoint Development
+```bash
+# Create custom checkpoint for your extensions
+tito checkpoint create my_custom_test.py
+
+# Run custom checkpoint
+tito checkpoint run my_custom_test.py --verbose
+```
+
+### Performance Profiling
+```bash
+# Profile checkpoint execution
+tito checkpoint test 10 --profile --iterations 100
+
+# Memory usage analysis during testing
+tito checkpoint test 08 --memory-profile
+```
+
+**Ready to start testing?** Begin with:
+```bash
+tito checkpoint status    # See your current progress
+tito module complete 01_setup  # Complete and test your first module
+```

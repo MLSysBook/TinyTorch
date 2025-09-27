@@ -200,20 +200,6 @@ ML Systems Thinking sections in every module:
 
 ---
 
-## Success Stories: What Students Say
-
-*"Finally understood what happens when I call `loss.backward()` - now I can debug gradient issues instead of just hoping they go away."*
-
-*"Built my own attention mechanism from scratch, then extended my vision framework to language models with 95% component reuse. When GPT-4 came out, I actually understood both the technical details AND the framework unification."*
-
-*"Got hired as an ML engineer specifically because I could explain how optimizers work at the memory level during the technical interview."*
-
-*"Used TinyTorch concepts to optimize our production training pipeline for both vision and language models - saved 40% on cloud costs by understanding memory bottlenecks across modalities."*
-
-*"Implemented a custom loss function for our research project in 30 minutes instead of spending days figuring out PyTorch internals."*
-
----
-
 ## Ready to Become an ML Systems Engineer?
 
 **TinyTorch transforms ML users into ML builders.**

@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>TinyTorch System Introduction &amp; Architecture &#8212; TinyTorch</title>
+    <title>Course Introduction: ML Systems Engineering Through Implementation &#8212; TinyTorch</title>
   
   
   
@@ -35,7 +35,7 @@
     <link rel="stylesheet" type="text/css" href="../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css?v=6644e6bb" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
-    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=5a689c52" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=bf48879e" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
@@ -59,10 +59,11 @@
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'chapters/00-introduction';</script>
+    <link rel="icon" href="../_static/favicon.svg"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Module: Setup" href="01-setup.html" />
-    <link rel="prev" title="👨‍🏫 Instructor Guide: NBGrader + TinyTorch" href="../instructor-guide.html" />
+    <link rel="prev" title="TinyTorch for Instructors: Complete ML Systems Course" href="../usage-paths/classroom-use.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -154,8 +155,8 @@
       
     
     
-    <img src="../_static/logo.png" class="logo__image only-light" alt="TinyTorch - Home"/>
-    <script>document.write(`<img src="../_static/logo.png" class="logo__image only-dark" alt="TinyTorch - Home"/>`);</script>
+    <img src="../_static/logo-tinytorch-white.png" class="logo__image only-light" alt="TinyTorch - Home"/>
+    <script>document.write(`<img src="../_static/logo-tinytorch-white.png" class="logo__image only-dark" alt="TinyTorch - Home"/>`);</script>
   
   
 </a></div>
@@ -176,57 +177,61 @@
         <ul class="nav bd-sidenav bd-sidenav__home-link">
             <li class="toctree-l1">
                 <a class="reference internal" href="../intro.html">
-                    TinyTorch: Build Your Own ML Framework from First Principles
+                    TinyTorch: Build ML Systems from Scratch
                 </a>
             </li>
         </ul>
-        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Usage Paths</span></p>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">🚀 Getting Started</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../usage-paths/quick-exploration.html">Quick Exploration</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../usage-paths/serious-development.html">Serious Development</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../usage-paths/classroom-use.html">Classroom Use</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../instructor-guide.html">Instructor Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../learning-timeline.html">Your Learning Journey</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage-paths/classroom-use.html">For Instructors</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Course Orientation</span></p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">🧭 Course Orientation</span></p>
 <ul class="current nav bd-sidenav">
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Introduction</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Foundation</span></p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">🧱 Building Blocks</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="01-setup.html">0. Setup</a></li>
-<li class="toctree-l1"><a class="reference internal" href="02-tensor.html">1. Tensors</a></li>
-<li class="toctree-l1"><a class="reference internal" href="03-activations.html">2. Activations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01-setup.html">01. Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="02-tensor.html">02. Tensor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="03-activations.html">03. Activations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="04-layers.html">04. Layers</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Building Blocks</span></p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">🧠 Learning Systems</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="04-layers.html">3. Layers</a></li>
-<li class="toctree-l1"><a class="reference internal" href="05-dense.html">4. Dense</a></li>
-<li class="toctree-l1"><a class="reference internal" href="06-spatial.html">5. Spatial</a></li>
-<li class="toctree-l1"><a class="reference internal" href="07-attention.html">6. Attention</a></li>
+<li class="toctree-l1"><a class="reference internal" href="05-dense.html">05. Losses</a></li>
+<li class="toctree-l1"><a class="reference internal" href="09-autograd.html">06. Autograd</a></li>
+<li class="toctree-l1"><a class="reference internal" href="10-optimizers.html">07. Optimizers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="11-training.html">08. Training</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Training Systems</span></p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">🏗️ Neural Architectures</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="08-dataloader.html">7. DataLoader</a></li>
-<li class="toctree-l1"><a class="reference internal" href="09-autograd.html">8. Autograd</a></li>
-<li class="toctree-l1"><a class="reference internal" href="10-optimizers.html">9. Optimizers</a></li>
-<li class="toctree-l1"><a class="reference internal" href="11-training.html">10. Training</a></li>
+<li class="toctree-l1"><a class="reference internal" href="06-spatial.html">09. Spatial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="08-dataloader.html">10. DataLoader</a></li>
+<li class="toctree-l1"><a class="reference internal" href="11-tokenization.html">11. Tokenization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="12-embeddings.html">12. Embeddings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="07-attention.html">13. Attention</a></li>
+<li class="toctree-l1"><a class="reference internal" href="16-tinygpt.html">14. Transformers</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Inference &amp; Serving</span></p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">⚡ Performance Optimization</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="12-compression.html">11. Compression</a></li>
-<li class="toctree-l1"><a class="reference internal" href="13-kernels.html">12. Kernels</a></li>
-<li class="toctree-l1"><a class="reference internal" href="14-benchmarking.html">13. Benchmarking</a></li>
-<li class="toctree-l1"><a class="reference internal" href="15-mlops.html">14. MLOps</a></li>
+<li class="toctree-l1"><a class="reference internal" href="15-profiling.html">15. Profiling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="13-kernels.html">16. Acceleration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="17-quantization.html">17. Quantization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="12-compression.html">18. Compression</a></li>
+<li class="toctree-l1"><a class="reference internal" href="19-caching.html">19. KV Caching</a></li>
+<li class="toctree-l1"><a class="reference internal" href="14-benchmarking.html">20. Benchmarking</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Language Models</span></p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">🏅 Community &amp; Competition</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="16-tinygpt.html">15. TinyGPT</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../leaderboard.html">Leaderboard</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../competitions.html">Competitions</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Additional Resources</span></p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">🛠️ Resources &amp; Tools</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../vision.html">TinyTorch Vision</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../checkpoint-system.html">Checkpoint System</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../resources.html">Learning Resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../checkpoint-system.html">Progress Tracking</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../testing-framework.html">Testing Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../resources.html">Additional Resources</a></li>
 </ul>
 
     </div>
@@ -429,7 +434,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>TinyTorch System Introduction & Architecture</h1>
+    <h1>Course Introduction: ML Systems Engineering Through Implementation</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -439,42 +444,47 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-overview">🎯 Module Overview</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#what-youll-explore">What You’ll Explore</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-origin-story-why-tinytorch-exists">The Origin Story: Why TinyTorch Exists</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-problem-were-solving">The Problem We’re Solving</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#how-tinytorch-began">How TinyTorch Began</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#our-solution-learn-by-building">Our Solution: Learn By Building</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#key-features">🚀 Key Features</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#automated-analysis-system">Automated Analysis System</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#interactive-visualizations">Interactive Visualizations</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#export-functions">Export Functions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-makes-tinytorch-different">What Makes TinyTorch Different</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-learning-philosophy-build-use-reflect">The Learning Philosophy: Build → Use → Reflect</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-youll-discover">📊 What You’ll Discover</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#system-statistics">System Statistics</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-progression">Learning Progression</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#who-this-course-serves">Who This Course Serves</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#perfect-for">Perfect For:</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#prerequisites">Prerequisites</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#visualization-gallery">🎨 Visualization Gallery</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dependency-graph">Dependency Graph</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#system-architecture">System Architecture</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-roadmap">Learning Roadmap</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-youll-achieve-complete-ml-systems-mastery">What You’ll Achieve: Complete ML Systems Mastery</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#immediate-achievements-modules-1-8">Immediate Achievements (Modules 1-8)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#advanced-capabilities-modules-9-14">Advanced Capabilities (Modules 9-14)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#production-systems-modules-15-20">Production Systems (Modules 15-20)</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#technical-implementation">🔧 Technical Implementation</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#module-analysis-engine">Module Analysis Engine</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#visualization-system">Visualization System</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-recommendations">Learning Recommendations</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-ml-evolution-story-youll-experience">The ML Evolution Story You’ll Experience</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#era-1-foundation-1980s-modules-1-8">🧠 Era 1: Foundation (1980s) - Modules 1-8</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#era-2-spatial-intelligence-1989-2012-modules-9-10">👁️ Era 2: Spatial Intelligence (1989-2012) - Modules 9-10</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#era-3-universal-architecture-2017-present-modules-11-14">🗣️ Era 3: Universal Architecture (2017-Present) - Modules 11-14</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#era-4-production-systems-present-modules-15-20">⚡ Era 4: Production Systems (Present) - Modules 15-20</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ml-systems-thinking">🤔 ML Systems Thinking</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#framework-design-patterns">Framework Design Patterns</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#production-considerations">Production Considerations</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#educational-philosophy">Educational Philosophy</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#systems-engineering-focus-why-it-matters">Systems Engineering Focus: Why It Matters</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#what-traditional-courses-teach">What Traditional Courses Teach:</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#what-tinytorch-teaches">What TinyTorch Teaches:</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#career-impact">Career Impact</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-outcomes">📈 Learning Outcomes</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#integration-with-tinytorch">🔗 Integration with TinyTorch</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#getting-started">🎓 Getting Started</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-support-community">Learning Support &amp; Community</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#comprehensive-infrastructure">Comprehensive Infrastructure</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#multiple-learning-paths">Multiple Learning Paths</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#professional-development-practices">Professional Development Practices</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ready-to-begin">Ready to Begin?</a></li>
 </ul>
             </nav>
         </div>
@@ -486,240 +496,281 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="tinytorch-system-introduction-architecture">
-<h1>TinyTorch System Introduction &amp; Architecture<a class="headerlink" href="#tinytorch-system-introduction-architecture" title="Link to this heading">#</a></h1>
-<div class="badges docutils">
-<p>⭐ | ⏱️ 1-2 hours</p>
-</div>
-<p>Welcome to <strong>TinyTorch</strong> - a complete neural network framework built from scratch for deep learning education and understanding.</p>
-<section id="module-overview">
-<h2>🎯 Module Overview<a class="headerlink" href="#module-overview" title="Link to this heading">#</a></h2>
-<p>This introduction module provides a comprehensive visual overview of the entire TinyTorch system, helping you understand how all 16 modules work together to create a complete machine learning framework.</p>
-<section id="what-youll-explore">
-<h3>What You’ll Explore<a class="headerlink" href="#what-youll-explore" title="Link to this heading">#</a></h3>
-<ul class="simple">
-<li><p><strong>🏗️ System Architecture</strong> - Complete framework overview with visual diagrams</p></li>
-<li><p><strong>📊 Interactive Dependency Graphs</strong> - See how all modules connect and depend on each other</p></li>
-<li><p><strong>📚 Learning Roadmap</strong> - Optimal path through the entire TinyTorch curriculum</p></li>
-<li><p><strong>🔍 Component Analysis</strong> - Deep dive into what each module implements</p></li>
-<li><p><strong>📈 Progress Visualization</strong> - Track your learning journey through the system</p></li>
-</ul>
-</section>
-</section>
-<section id="key-features">
-<h2>🚀 Key Features<a class="headerlink" href="#key-features" title="Link to this heading">#</a></h2>
-<section id="automated-analysis-system">
-<h3>Automated Analysis System<a class="headerlink" href="#automated-analysis-system" title="Link to this heading">#</a></h3>
-<ul class="simple">
-<li><p><strong>Module Metadata Parser</strong> - Automatically loads and analyzes all module.yaml files</p></li>
-<li><p><strong>Dependency Graph Builder</strong> - Creates NetworkX graphs of module relationships</p></li>
-<li><p><strong>Learning Path Generator</strong> - Uses topological sort to find optimal learning sequence</p></li>
-</ul>
-</section>
-<section id="interactive-visualizations">
-<h3>Interactive Visualizations<a class="headerlink" href="#interactive-visualizations" title="Link to this heading">#</a></h3>
-<ul class="simple">
-<li><p><strong>Dependency Graph</strong> - Hierarchical and circular layouts showing module connections</p></li>
-<li><p><strong>System Architecture</strong> - Layered view of how components work together</p></li>
-<li><p><strong>Learning Roadmap</strong> - Timeline view with time estimates and difficulty progression</p></li>
-<li><p><strong>Component Analysis</strong> - Statistical analysis of module complexity and relationships</p></li>
-</ul>
-</section>
-<section id="export-functions">
-<h3>Export Functions<a class="headerlink" href="#export-functions" title="Link to this heading">#</a></h3>
-<ul class="simple">
-<li><p><strong>System Overview API</strong> - Programmatic access to TinyTorch metadata</p></li>
-<li><p><strong>Module Information</strong> - Detailed data about any specific module</p></li>
-<li><p><strong>Learning Recommendations</strong> - Personalized next steps based on progress</p></li>
-</ul>
-</section>
-</section>
-<section id="what-youll-discover">
-<h2>📊 What You’ll Discover<a class="headerlink" href="#what-youll-discover" title="Link to this heading">#</a></h2>
-<section id="system-statistics">
-<h3>System Statistics<a class="headerlink" href="#system-statistics" title="Link to this heading">#</a></h3>
-<ul class="simple">
-<li><p><strong>16 modules</strong> spanning from basic tensors to production MLOps</p></li>
-<li><p><strong>60+ components</strong> implementing complete ML framework functionality</p></li>
-<li><p><strong>Estimated 80+ hours</strong> of comprehensive learning content</p></li>
-<li><p><strong>5 difficulty levels</strong> progressing from foundation to advanced topics</p></li>
-</ul>
-</section>
-<section id="learning-progression">
-<h3>Learning Progression<a class="headerlink" href="#learning-progression" title="Link to this heading">#</a></h3>
-<ol class="arabic simple">
-<li><p><strong>Foundation</strong> (3 modules) - Setup, tensors, activations</p></li>
-<li><p><strong>Core Architecture</strong> (4 modules) - Layers, networks, attention, data loading</p></li>
-<li><p><strong>Training System</strong> (3 modules) - Autograd, optimization, training loops</p></li>
-<li><p><strong>Production Ready</strong> (5 modules) - Compression, kernels, benchmarking, MLOps, capstone</p></li>
-<li><p><strong>Integration</strong> (1 module) - Final capstone project</p></li>
-</ol>
-</section>
-</section>
-<section id="visualization-gallery">
-<h2>🎨 Visualization Gallery<a class="headerlink" href="#visualization-gallery" title="Link to this heading">#</a></h2>
-<section id="dependency-graph">
-<h3>Dependency Graph<a class="headerlink" href="#dependency-graph" title="Link to this heading">#</a></h3>
-<p>See how modules build upon each other with interactive dependency visualizations showing:</p>
-<ul class="simple">
-<li><p><strong>Prerequisite relationships</strong> - What you need to learn first</p></li>
-<li><p><strong>Module difficulty</strong> - Color-coded complexity levels</p></li>
-<li><p><strong>Component count</strong> - Size indicates implementation scope</p></li>
-</ul>
-</section>
-<section id="system-architecture">
-<h3>System Architecture<a class="headerlink" href="#system-architecture" title="Link to this heading">#</a></h3>
-<p>Layered architecture diagram showing:</p>
-<ul class="simple">
-<li><p><strong>Foundation Layer</strong> - Core tensors and setup</p></li>
-<li><p><strong>Component Layer</strong> - Activations, layers, data loading</p></li>
-<li><p><strong>Network Layer</strong> - Dense networks, CNNs, attention</p></li>
-<li><p><strong>Training Layer</strong> - Autograd, optimizers, training</p></li>
-<li><p><strong>Production Layer</strong> - Compression, kernels, MLOps</p></li>
-</ul>
-</section>
-<section id="learning-roadmap">
-<h3>Learning Roadmap<a class="headerlink" href="#learning-roadmap" title="Link to this heading">#</a></h3>
-<p>Timeline visualization featuring:</p>
-<ul class="simple">
-<li><p><strong>Optimal sequence</strong> - Dependency-respecting learning order</p></li>
-<li><p><strong>Time estimates</strong> - Realistic hour commitments per module</p></li>
-<li><p><strong>Difficulty progression</strong> - Smooth learning curve design</p></li>
-<li><p><strong>Milestone tracking</strong> - Major learning achievements</p></li>
-</ul>
-</section>
-</section>
-<section id="technical-implementation">
-<h2>🔧 Technical Implementation<a class="headerlink" href="#technical-implementation" title="Link to this heading">#</a></h2>
-<section id="module-analysis-engine">
-<h3>Module Analysis Engine<a class="headerlink" href="#module-analysis-engine" title="Link to this heading">#</a></h3>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Automatically analyze all TinyTorch modules</span>
-<span class="n">analyzer</span> <span class="o">=</span> <span class="n">TinyTorchAnalyzer</span><span class="p">()</span>
-<span class="n">overview</span> <span class="o">=</span> <span class="n">analyzer</span><span class="o">.</span><span class="n">get_tinytorch_overview</span><span class="p">()</span>
-<span class="n">learning_path</span> <span class="o">=</span> <span class="n">analyzer</span><span class="o">.</span><span class="n">get_learning_path</span><span class="p">()</span>
-</pre></div>
-</div>
-</section>
-<section id="visualization-system">
-<h3>Visualization System<a class="headerlink" href="#visualization-system" title="Link to this heading">#</a></h3>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Generate comprehensive system visualizations</span>
-<span class="n">visualizations</span> <span class="o">=</span> <span class="n">visualize_tinytorch_system</span><span class="p">()</span>
-<span class="n">dependency_graph</span> <span class="o">=</span> <span class="n">create_dependency_graph_visualization</span><span class="p">()</span>
-<span class="n">architecture</span> <span class="o">=</span> <span class="n">create_system_architecture_diagram</span><span class="p">()</span>
-<span class="n">roadmap</span> <span class="o">=</span> <span class="n">create_learning_roadmap</span><span class="p">()</span>
-</pre></div>
-</div>
-</section>
-<section id="learning-recommendations">
-<h3>Learning Recommendations<a class="headerlink" href="#learning-recommendations" title="Link to this heading">#</a></h3>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Get personalized learning suggestions</span>
-<span class="n">recommendations</span> <span class="o">=</span> <span class="n">get_learning_recommendations</span><span class="p">()</span>
-<span class="n">next_modules</span> <span class="o">=</span> <span class="n">recommendations</span><span class="p">[</span><span class="s1">&#39;next_modules&#39;</span><span class="p">]</span>
-<span class="n">estimated_time</span> <span class="o">=</span> <span class="n">recommendations</span><span class="p">[</span><span class="s1">&#39;remaining_time&#39;</span><span class="p">]</span>
-</pre></div>
-</div>
-</section>
-</section>
-<section id="ml-systems-thinking">
-<h2>🤔 ML Systems Thinking<a class="headerlink" href="#ml-systems-thinking" title="Link to this heading">#</a></h2>
-<p>This module connects TinyTorch’s educational architecture to real-world ML systems:</p>
-<section id="framework-design-patterns">
-<h3>Framework Design Patterns<a class="headerlink" href="#framework-design-patterns" title="Link to this heading">#</a></h3>
-<ul class="simple">
-<li><p><strong>Modular Dependencies</strong> - How PyTorch and TensorFlow organize components</p></li>
-<li><p><strong>Component Composition</strong> - Building complex operations from simple primitives</p></li>
-<li><p><strong>Abstraction Layers</strong> - Balancing usability with performance control</p></li>
-</ul>
-</section>
-<section id="production-considerations">
-<h3>Production Considerations<a class="headerlink" href="#production-considerations" title="Link to this heading">#</a></h3>
-<ul class="simple">
-<li><p><strong>Deployment Pipelines</strong> - From research code to production systems</p></li>
-<li><p><strong>Performance Optimization</strong> - Hardware-aware kernel design</p></li>
-<li><p><strong>Monitoring &amp; MLOps</strong> - Continuous learning and model management</p></li>
-</ul>
-</section>
-<section id="educational-philosophy">
-<h3>Educational Philosophy<a class="headerlink" href="#educational-philosophy" title="Link to this heading">#</a></h3>
-<ul class="simple">
-<li><p><strong>Progressive Complexity</strong> - Foundation → Architecture → Training → Production</p></li>
-<li><p><strong>Hands-on Learning</strong> - Build before you use, understand before you optimize</p></li>
-<li><p><strong>Real-world Relevance</strong> - Educational choices that mirror industry patterns</p></li>
-</ul>
-</section>
-</section>
-<section id="learning-outcomes">
-<h2>📈 Learning Outcomes<a class="headerlink" href="#learning-outcomes" title="Link to this heading">#</a></h2>
-<p>After completing this module, you will:</p>
-<ol class="arabic simple">
-<li><p><strong>Understand TinyTorch Architecture</strong> - Complete mental model of the framework</p></li>
-<li><p><strong>Navigate Module Dependencies</strong> - Know what to learn when and why</p></li>
-<li><p><strong>Plan Your Learning Journey</strong> - Realistic timeline and progression tracking</p></li>
-<li><p><strong>Connect to Industry</strong> - See how educational patterns map to production ML</p></li>
-</ol>
-</section>
-<section id="integration-with-tinytorch">
-<h2>🔗 Integration with TinyTorch<a class="headerlink" href="#integration-with-tinytorch" title="Link to this heading">#</a></h2>
-<p>This introduction module:</p>
-<ul class="simple">
-<li><p><strong>Requires no prerequisites</strong> - Perfect starting point for new learners</p></li>
-<li><p><strong>Enables all other modules</strong> - Provides context for the entire journey</p></li>
-<li><p><strong>Exports analysis tools</strong> - Used by other modules for self-reflection</p></li>
-<li><p><strong>Updates automatically</strong> - Visualization stays current as modules evolve</p></li>
-</ul>
-</section>
-<section id="getting-started">
-<h2>🎓 Getting Started<a class="headerlink" href="#getting-started" title="Link to this heading">#</a></h2>
-<ol class="arabic simple">
-<li><p><strong>Run the introduction notebook</strong> to see all visualizations</p></li>
-<li><p><strong>Explore the dependency graph</strong> to understand module relationships</p></li>
-<li><p><strong>Review the learning roadmap</strong> to plan your journey</p></li>
-<li><p><strong>Bookmark key functions</strong> for reference during your learning</p></li>
-</ol>
-<p><strong>Ready to build a neural network framework from scratch? Let’s begin! 🚀</strong></p>
+  <section id="course-introduction-ml-systems-engineering-through-implementation">
+<h1>Course Introduction: ML Systems Engineering Through Implementation<a class="headerlink" href="#course-introduction-ml-systems-engineering-through-implementation" title="Link to this heading">#</a></h1>
+<p><strong>Transform from ML user to ML systems engineer by building everything yourself.</strong></p>
 <hr class="docutils" />
-<p><em>This module serves as your guide through the complete TinyTorch learning experience. Use it to maintain big-picture understanding as you dive deep into implementation details.</em></p>
-<p>Choose your preferred way to engage with this module:</p>
-<div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
-<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-3 sd-row-cols-lg-3 docutils">
-<div class="sd-col sd-d-flex-row docutils">
-<div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm sd-card-hover docutils">
-<div class="sd-card-body docutils">
-<div class="sd-card-title sd-font-weight-bold docutils">
-🚀 Launch Binder</div>
-<p class="sd-card-text">Run this module interactively in your browser. No installation required!</p>
+<section id="the-origin-story-why-tinytorch-exists">
+<h2>The Origin Story: Why TinyTorch Exists<a class="headerlink" href="#the-origin-story-why-tinytorch-exists" title="Link to this heading">#</a></h2>
+<section id="the-problem-were-solving">
+<h3>The Problem We’re Solving<a class="headerlink" href="#the-problem-were-solving" title="Link to this heading">#</a></h3>
+<p>There’s a critical gap in ML engineering today. Plenty of people can use ML frameworks (PyTorch, TensorFlow, JAX, etc.), but very few understand the systems underneath. This creates real problems:</p>
+<ul class="simple">
+<li><p><strong>Engineers deploy models</strong> but can’t debug when things go wrong</p></li>
+<li><p><strong>Teams hit performance walls</strong> because no one understands the bottlenecks</p></li>
+<li><p><strong>Companies struggle to scale</strong> - whether to tiny edge devices or massive clusters</p></li>
+<li><p><strong>Innovation stalls</strong> when everyone is limited to existing framework capabilities</p></li>
+</ul>
+</section>
+<section id="how-tinytorch-began">
+<h3>How TinyTorch Began<a class="headerlink" href="#how-tinytorch-began" title="Link to this heading">#</a></h3>
+<p>TinyTorch started as exercises for the <a class="reference external" href="https://mlsysbook.ai">MLSysBook.ai</a> textbook - students needed hands-on implementation experience. But it quickly became clear this addressed a much bigger problem:</p>
+<p><strong>The industry desperately needs engineers who can BUILD ML systems, not just USE them.</strong></p>
+<p>Deploying ML systems at scale is hard. Scale means both directions:</p>
+<ul class="simple">
+<li><p><strong>Small scale</strong>: Running models on edge devices with 1MB of RAM</p></li>
+<li><p><strong>Large scale</strong>: Training models across thousands of GPUs</p></li>
+<li><p><strong>Production scale</strong>: Serving millions of requests with &lt;100ms latency</p></li>
+</ul>
+<p>We need more engineers who understand memory hierarchies, computational graphs, kernel optimization, distributed communication - the actual systems that make ML work.</p>
+</section>
+<section id="our-solution-learn-by-building">
+<h3>Our Solution: Learn By Building<a class="headerlink" href="#our-solution-learn-by-building" title="Link to this heading">#</a></h3>
+<p>TinyTorch teaches ML systems the only way that really works: <strong>by building them yourself</strong>.</p>
+<p>When you implement your own tensor operations, write your own autograd, build your own optimizer - you gain understanding that’s impossible to achieve by just calling APIs. You learn not just what these systems do, but HOW they do it and WHY they’re designed that way.</p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="what-makes-tinytorch-different">
+<h2>What Makes TinyTorch Different<a class="headerlink" href="#what-makes-tinytorch-different" title="Link to this heading">#</a></h2>
+<p>Most ML education teaches you to <strong>use</strong> frameworks (PyTorch, TensorFlow, JAX, etc.). TinyTorch teaches you to <strong>build</strong> them.</p>
+<p>This fundamental difference creates engineers who understand systems deeply, not just APIs superficially.</p>
+<section id="the-learning-philosophy-build-use-reflect">
+<h3>The Learning Philosophy: Build → Use → Reflect<a class="headerlink" href="#the-learning-philosophy-build-use-reflect" title="Link to this heading">#</a></h3>
+<p><strong>Traditional Approach:</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">784</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>  <span class="c1"># Use someone else&#39;s implementation</span>
+<span class="n">output</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="nb">input</span><span class="p">)</span>             <span class="c1"># Trust it works, don&#39;t understand how</span>
+</pre></div>
 </div>
-<a class="sd-stretched-link sd-hide-link-text reference external" href="https://mybinder.org/v2/gh/mlsysbook/TinyTorch/main?filepath=modules/source/00_introduction/introduction_dev.ipynb"><span>https://mybinder.org/v2/gh/mlsysbook/TinyTorch/main?filepath=modules/source/00_introduction/introduction_dev.ipynb</span></a></div>
+<p><strong>TinyTorch Approach:</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># 1. BUILD: You implement Linear from scratch</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Linear</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">x</span> <span class="o">@</span> <span class="bp">self</span><span class="o">.</span><span class="n">weight</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">bias</span>  <span class="c1"># You write this</span>
+        
+<span class="c1"># 2. USE: Your implementation in action</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tinytorch.core.layers</span><span class="w"> </span><span class="kn">import</span> <span class="n">Linear</span>  <span class="c1"># YOUR code</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">Linear</span><span class="p">(</span><span class="mi">784</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>                  <span class="c1"># YOUR implementation</span>
+<span class="n">output</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="nb">input</span><span class="p">)</span>                    <span class="c1"># YOU know exactly how this works</span>
+
+<span class="c1"># 3. REFLECT: Systems thinking</span>
+<span class="c1"># &quot;Why does matrix multiplication dominate compute time?&quot;</span>
+<span class="c1"># &quot;How does this scale with larger models?&quot;</span>
+<span class="c1"># &quot;What memory optimizations are possible?&quot;</span>
+</pre></div>
 </div>
-<div class="sd-col sd-d-flex-row docutils">
-<div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm sd-card-hover docutils">
-<div class="sd-card-body docutils">
-<div class="sd-card-title sd-font-weight-bold docutils">
-⚡ Open in Colab</div>
-<p class="sd-card-text">Use Google Colab for GPU access and cloud compute power.</p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="who-this-course-serves">
+<h2>Who This Course Serves<a class="headerlink" href="#who-this-course-serves" title="Link to this heading">#</a></h2>
+<section id="perfect-for">
+<h3>Perfect For:<a class="headerlink" href="#perfect-for" title="Link to this heading">#</a></h3>
+<p><strong>🎓 Computer Science Students</strong></p>
+<ul class="simple">
+<li><p>Want to understand ML systems beyond high-level APIs</p></li>
+<li><p>Need to implement custom operations for research</p></li>
+<li><p>Preparing for ML engineering roles that require systems knowledge</p></li>
+</ul>
+<p><strong>👩‍💻 Software Engineers → ML Engineers</strong></p>
+<ul class="simple">
+<li><p>Transitioning into ML engineering roles</p></li>
+<li><p>Need to debug and optimize production ML systems</p></li>
+<li><p>Want to understand what happens “under the hood” of ML frameworks</p></li>
+</ul>
+<p><strong>🔬 ML Practitioners &amp; Researchers</strong></p>
+<ul class="simple">
+<li><p>Debug performance issues in production systems</p></li>
+<li><p>Implement novel architectures and custom operations</p></li>
+<li><p>Optimize training and inference for resource constraints</p></li>
+</ul>
+<p><strong>🧠 Anyone Curious About ML Systems</strong></p>
+<ul class="simple">
+<li><p>Understand how PyTorch, TensorFlow actually work</p></li>
+<li><p>Build intuition for ML systems design and optimization</p></li>
+<li><p>Appreciate the engineering behind modern AI breakthroughs</p></li>
+</ul>
+</section>
+<section id="prerequisites">
+<h3>Prerequisites<a class="headerlink" href="#prerequisites" title="Link to this heading">#</a></h3>
+<p><strong>Required:</strong></p>
+<ul class="simple">
+<li><p><strong>Python Programming</strong>: Comfortable with classes, functions, basic NumPy</p></li>
+<li><p><strong>Linear Algebra Basics</strong>: Matrix multiplication, gradients (we review as needed)</p></li>
+<li><p><strong>Learning Mindset</strong>: Willingness to implement rather than just use</p></li>
+</ul>
+<p><strong>Not Required:</strong></p>
+<ul class="simple">
+<li><p>Prior ML framework experience (we build our own!)</p></li>
+<li><p>Deep learning theory (we learn through implementation)</p></li>
+<li><p>Advanced math (we focus on practical systems implementation)</p></li>
+</ul>
+</section>
+</section>
+<hr class="docutils" />
+<section id="what-youll-achieve-complete-ml-systems-mastery">
+<h2>What You’ll Achieve: Complete ML Systems Mastery<a class="headerlink" href="#what-youll-achieve-complete-ml-systems-mastery" title="Link to this heading">#</a></h2>
+<section id="immediate-achievements-modules-1-8">
+<h3>Immediate Achievements (Modules 1-8)<a class="headerlink" href="#immediate-achievements-modules-1-8" title="Link to this heading">#</a></h3>
+<p>By Module 8, you’ll have built a complete neural network framework from scratch:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># YOUR implementation training real networks on real data</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">Sequential</span><span class="p">([</span>
+    <span class="n">Linear</span><span class="p">(</span><span class="mi">784</span><span class="p">,</span> <span class="mi">128</span><span class="p">),</span>    <span class="c1"># Your linear layer</span>
+    <span class="n">ReLU</span><span class="p">(),</span>              <span class="c1"># Your activation function  </span>
+    <span class="n">Linear</span><span class="p">(</span><span class="mi">128</span><span class="p">,</span> <span class="mi">64</span><span class="p">),</span>     <span class="c1"># Your architecture design</span>
+    <span class="n">ReLU</span><span class="p">(),</span>              <span class="c1"># Your nonlinearity</span>
+    <span class="n">Linear</span><span class="p">(</span><span class="mi">64</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>       <span class="c1"># Your final classifier</span>
+<span class="p">])</span>
+
+<span class="c1"># YOUR training loop using YOUR optimizer</span>
+<span class="n">optimizer</span> <span class="o">=</span> <span class="n">Adam</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">lr</span><span class="o">=</span><span class="mf">0.001</span><span class="p">)</span>  <span class="c1"># Your Adam implementation</span>
+<span class="k">for</span> <span class="n">batch</span> <span class="ow">in</span> <span class="n">dataloader</span><span class="p">:</span>  <span class="c1"># Your data loading</span>
+    <span class="n">output</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">batch</span><span class="o">.</span><span class="n">x</span><span class="p">)</span>                     <span class="c1"># Your forward pass</span>
+    <span class="n">loss</span> <span class="o">=</span> <span class="n">CrossEntropyLoss</span><span class="p">()(</span><span class="n">output</span><span class="p">,</span> <span class="n">batch</span><span class="o">.</span><span class="n">y</span><span class="p">)</span>  <span class="c1"># Your loss function</span>
+    <span class="n">loss</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>                             <span class="c1"># Your backpropagation</span>
+    <span class="n">optimizer</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>                            <span class="c1"># Your parameter updates</span>
+</pre></div>
 </div>
-<a class="sd-stretched-link sd-hide-link-text reference external" href="https://colab.research.google.com/github/mlsysbook/TinyTorch/blob/main/modules/source/00_introduction/introduction_dev.ipynb"><span>https://colab.research.google.com/github/mlsysbook/TinyTorch/blob/main/modules/source/00_introduction/introduction_dev.ipynb</span></a></div>
-</div>
-<div class="sd-col sd-d-flex-row docutils">
-<div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm sd-card-hover docutils">
-<div class="sd-card-body docutils">
-<div class="sd-card-title sd-font-weight-bold docutils">
-📖 View Source</div>
-<p class="sd-card-text">Browse the Python source code and understand the implementation.</p>
-</div>
-<a class="sd-stretched-link sd-hide-link-text reference external" href="https://github.com/mlsysbook/TinyTorch/blob/main/modules/source/00_introduction/introduction_dev.py"><span>https://github.com/mlsysbook/TinyTorch/blob/main/modules/source/00_introduction/introduction_dev.py</span></a></div>
-</div>
-</div>
-</div>
+<p><strong>Result: 95%+ accuracy on MNIST using 100% your own code.</strong></p>
+</section>
+<section id="advanced-capabilities-modules-9-14">
+<h3>Advanced Capabilities (Modules 9-14)<a class="headerlink" href="#advanced-capabilities-modules-9-14" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Computer Vision</strong>: CNNs achieving 75%+ accuracy on CIFAR-10</p></li>
+<li><p><strong>Language Models</strong>: TinyGPT built using 95% of your vision components</p></li>
+<li><p><strong>Universal Architecture</strong>: Same mathematical foundations power all modern AI</p></li>
+</ul>
+</section>
+<section id="production-systems-modules-15-20">
+<h3>Production Systems (Modules 15-20)<a class="headerlink" href="#production-systems-modules-15-20" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Performance Engineering</strong>: Profile, measure, and optimize ML systems</p></li>
+<li><p><strong>Memory Optimization</strong>: Understand and implement compression techniques</p></li>
+<li><p><strong>Hardware Acceleration</strong>: Build efficient kernels and vectorized operations</p></li>
+<li><p><strong>TinyMLPerf Competition</strong>: Compete with optimized implementations</p></li>
+</ul>
+</section>
+</section>
+<hr class="docutils" />
+<section id="the-ml-evolution-story-youll-experience">
+<h2>The ML Evolution Story You’ll Experience<a class="headerlink" href="#the-ml-evolution-story-youll-experience" title="Link to this heading">#</a></h2>
+<p>TinyTorch follows the actual historical progression of machine learning breakthroughs:</p>
+<section id="era-1-foundation-1980s-modules-1-8">
+<h3>🧠 Era 1: Foundation (1980s) - Modules 1-8<a class="headerlink" href="#era-1-foundation-1980s-modules-1-8" title="Link to this heading">#</a></h3>
+<p><strong>The Beginning</strong>: Perceptrons and multi-layer networks</p>
+<ul class="simple">
+<li><p>Build tensor operations and automatic differentiation</p></li>
+<li><p>Implement gradient-based optimization (SGD, Adam)</p></li>
+<li><p><strong>Achievement</strong>: Train MLPs to 95%+ accuracy on MNIST</p></li>
+</ul>
+</section>
+<section id="era-2-spatial-intelligence-1989-2012-modules-9-10">
+<h3>👁️ Era 2: Spatial Intelligence (1989-2012) - Modules 9-10<a class="headerlink" href="#era-2-spatial-intelligence-1989-2012-modules-9-10" title="Link to this heading">#</a></h3>
+<p><strong>The Revolution</strong>: Convolutional neural networks</p>
+<ul class="simple">
+<li><p>Add spatial processing with Conv2d and pooling operations</p></li>
+<li><p>Build efficient data pipelines for real-world datasets</p></li>
+<li><p><strong>Achievement</strong>: Train CNNs to 75%+ accuracy on CIFAR-10</p></li>
+</ul>
+</section>
+<section id="era-3-universal-architecture-2017-present-modules-11-14">
+<h3>🗣️ Era 3: Universal Architecture (2017-Present) - Modules 11-14<a class="headerlink" href="#era-3-universal-architecture-2017-present-modules-11-14" title="Link to this heading">#</a></h3>
+<p><strong>The Unification</strong>: Transformers for vision AND language</p>
+<ul class="simple">
+<li><p>Implement attention mechanisms and positional embeddings</p></li>
+<li><p>Build TinyGPT using your existing vision infrastructure</p></li>
+<li><p><strong>Achievement</strong>: Language generation with 95% component reuse</p></li>
+</ul>
+</section>
+<section id="era-4-production-systems-present-modules-15-20">
+<h3>⚡ Era 4: Production Systems (Present) - Modules 15-20<a class="headerlink" href="#era-4-production-systems-present-modules-15-20" title="Link to this heading">#</a></h3>
+<p><strong>The Engineering</strong>: Optimized, deployable ML systems</p>
+<ul class="simple">
+<li><p>Profile performance and identify bottlenecks</p></li>
+<li><p>Implement compression, quantization, and acceleration</p></li>
+<li><p><strong>Achievement</strong>: TinyMLPerf competition-ready implementations</p></li>
+</ul>
+</section>
+</section>
+<hr class="docutils" />
+<section id="systems-engineering-focus-why-it-matters">
+<h2>Systems Engineering Focus: Why It Matters<a class="headerlink" href="#systems-engineering-focus-why-it-matters" title="Link to this heading">#</a></h2>
+<p>Traditional ML courses focus on <strong>algorithms</strong>. TinyTorch focuses on <strong>systems</strong>.</p>
+<section id="what-traditional-courses-teach">
+<h3>What Traditional Courses Teach:<a class="headerlink" href="#what-traditional-courses-teach" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>“Use <code class="docutils literal notranslate"><span class="pre">torch.optim.Adam</span></code> for optimization”</p></li>
+<li><p>“Transformers use attention mechanisms”</p></li>
+<li><p>“Larger models generally perform better”</p></li>
+</ul>
+</section>
+<section id="what-tinytorch-teaches">
+<h3>What TinyTorch Teaches:<a class="headerlink" href="#what-tinytorch-teaches" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>“Why Adam consumes 3× more memory than SGD and when that matters in production”</p></li>
+<li><p>“How attention scales O(N²) with sequence length and limits context windows”</p></li>
+<li><p>“How to profile memory usage and identify training bottlenecks”</p></li>
+</ul>
+</section>
+<section id="career-impact">
+<h3>Career Impact<a class="headerlink" href="#career-impact" title="Link to this heading">#</a></h3>
+<p>After TinyTorch, you become the team member who:</p>
+<ul class="simple">
+<li><p><strong>Debugs performance issues</strong>: “Your convolution is memory-bound, not compute-bound”</p></li>
+<li><p><strong>Optimizes production systems</strong>: “We can use gradient accumulation to train with less GPU memory”</p></li>
+<li><p><strong>Implements custom operations</strong>: “I’ll write a custom kernel for this novel architecture”</p></li>
+<li><p><strong>Designs system architecture</strong>: “Here’s why this model won’t scale and how to fix it”</p></li>
+</ul>
+</section>
+</section>
+<hr class="docutils" />
+<section id="learning-support-community">
+<h2>Learning Support &amp; Community<a class="headerlink" href="#learning-support-community" title="Link to this heading">#</a></h2>
+<section id="comprehensive-infrastructure">
+<h3>Comprehensive Infrastructure<a class="headerlink" href="#comprehensive-infrastructure" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Automated Testing</strong>: Every component includes comprehensive test suites</p></li>
+<li><p><strong>Progress Tracking</strong>: 16-checkpoint capability assessment system</p></li>
+<li><p><strong>CLI Tools</strong>: <code class="docutils literal notranslate"><span class="pre">tito</span></code> command-line interface for development workflow</p></li>
+<li><p><strong>Visual Progress</strong>: Real-time tracking of learning milestones</p></li>
+</ul>
+</section>
+<section id="multiple-learning-paths">
+<h3>Multiple Learning Paths<a class="headerlink" href="#multiple-learning-paths" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Quick Exploration</strong> (5 min): Browser-based exploration, no setup required</p></li>
+<li><p><strong>Serious Development</strong> (8+ weeks): Full local development environment</p></li>
+<li><p><strong>Classroom Use</strong>: Complete course infrastructure with automated grading</p></li>
+</ul>
+</section>
+<section id="professional-development-practices">
+<h3>Professional Development Practices<a class="headerlink" href="#professional-development-practices" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Version Control</strong>: Git-based workflow with feature branches</p></li>
+<li><p><strong>Testing Culture</strong>: Test-driven development for all implementations</p></li>
+<li><p><strong>Code Quality</strong>: Professional coding standards and review processes</p></li>
+<li><p><strong>Documentation</strong>: Comprehensive guides and system architecture documentation</p></li>
+</ul>
+</section>
+</section>
+<hr class="docutils" />
+<section id="ready-to-begin">
+<h2>Ready to Begin?<a class="headerlink" href="#ready-to-begin" title="Link to this heading">#</a></h2>
+<p>You’re about to embark on a journey that will transform how you think about machine learning systems. Instead of using black-box frameworks, you’ll understand every component from the ground up.</p>
+<p><strong>Next Step</strong>: <a class="reference internal" href="01-setup.html"><span class="std std-doc">Module 01: Setup</span></a> - Configure your development environment and build your first TinyTorch function.</p>
 <div class="tip admonition">
-<p class="admonition-title">💾 Save Your Progress</p>
-<p><strong>Binder sessions are temporary!</strong> Download your completed notebook when done, or switch to local development for persistent work.</p>
-<p>Ready for serious development? → <a class="reference internal" href="../usage-paths/serious-development.html"><span class="std std-doc">🏗️ Local Setup Guide</span></a></p>
+<p class="admonition-title">Your Learning Journey Awaits</p>
+<p>By the end of this course, you’ll have built a complete ML framework that rivals educational implementations like MiniTorch and micrograd, while achieving production-level results:</p>
+<ul class="simple">
+<li><p><strong>95%+ accuracy on MNIST</strong> (handwritten digit recognition)</p></li>
+<li><p><strong>75%+ accuracy on CIFAR-10</strong> (real-world image classification)</p></li>
+<li><p><strong>TinyGPT language generation</strong> (modern transformer architecture)</p></li>
+<li><p><strong>TinyMLPerf competition entries</strong> (optimized systems performance)</p></li>
+</ul>
+<p>All using code you wrote yourself, from scratch.</p>
 </div>
-<hr class="docutils" />
-<div class="prev-next-area">
-<a class="right-next" href="../chapters/01_introduction.html" title="next page">Next Module →</a>
-</div>
+<p>Welcome to ML systems engineering!</p>
 </section>
 </section>
 
@@ -754,12 +805,12 @@ document.write(`
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="../instructor-guide.html"
+       href="../usage-paths/classroom-use.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">👨‍🏫 Instructor Guide: NBGrader + TinyTorch</p>
+        <p class="prev-next-title">TinyTorch for Instructors: Complete ML Systems Course</p>
       </div>
     </a>
     <a class="right-next"
@@ -787,42 +838,47 @@ document.write(`
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-overview">🎯 Module Overview</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#what-youll-explore">What You’ll Explore</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-origin-story-why-tinytorch-exists">The Origin Story: Why TinyTorch Exists</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-problem-were-solving">The Problem We’re Solving</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#how-tinytorch-began">How TinyTorch Began</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#our-solution-learn-by-building">Our Solution: Learn By Building</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#key-features">🚀 Key Features</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#automated-analysis-system">Automated Analysis System</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#interactive-visualizations">Interactive Visualizations</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#export-functions">Export Functions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-makes-tinytorch-different">What Makes TinyTorch Different</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-learning-philosophy-build-use-reflect">The Learning Philosophy: Build → Use → Reflect</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-youll-discover">📊 What You’ll Discover</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#system-statistics">System Statistics</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-progression">Learning Progression</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#who-this-course-serves">Who This Course Serves</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#perfect-for">Perfect For:</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#prerequisites">Prerequisites</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#visualization-gallery">🎨 Visualization Gallery</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dependency-graph">Dependency Graph</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#system-architecture">System Architecture</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-roadmap">Learning Roadmap</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-youll-achieve-complete-ml-systems-mastery">What You’ll Achieve: Complete ML Systems Mastery</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#immediate-achievements-modules-1-8">Immediate Achievements (Modules 1-8)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#advanced-capabilities-modules-9-14">Advanced Capabilities (Modules 9-14)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#production-systems-modules-15-20">Production Systems (Modules 15-20)</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#technical-implementation">🔧 Technical Implementation</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#module-analysis-engine">Module Analysis Engine</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#visualization-system">Visualization System</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-recommendations">Learning Recommendations</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-ml-evolution-story-youll-experience">The ML Evolution Story You’ll Experience</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#era-1-foundation-1980s-modules-1-8">🧠 Era 1: Foundation (1980s) - Modules 1-8</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#era-2-spatial-intelligence-1989-2012-modules-9-10">👁️ Era 2: Spatial Intelligence (1989-2012) - Modules 9-10</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#era-3-universal-architecture-2017-present-modules-11-14">🗣️ Era 3: Universal Architecture (2017-Present) - Modules 11-14</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#era-4-production-systems-present-modules-15-20">⚡ Era 4: Production Systems (Present) - Modules 15-20</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ml-systems-thinking">🤔 ML Systems Thinking</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#framework-design-patterns">Framework Design Patterns</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#production-considerations">Production Considerations</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#educational-philosophy">Educational Philosophy</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#systems-engineering-focus-why-it-matters">Systems Engineering Focus: Why It Matters</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#what-traditional-courses-teach">What Traditional Courses Teach:</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#what-tinytorch-teaches">What TinyTorch Teaches:</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#career-impact">Career Impact</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-outcomes">📈 Learning Outcomes</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#integration-with-tinytorch">🔗 Integration with TinyTorch</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#getting-started">🎓 Getting Started</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learning-support-community">Learning Support &amp; Community</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#comprehensive-infrastructure">Comprehensive Infrastructure</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#multiple-learning-paths">Multiple Learning Paths</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#professional-development-practices">Professional Development Practices</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ready-to-begin">Ready to Begin?</a></li>
 </ul>
   </nav></div>
 
