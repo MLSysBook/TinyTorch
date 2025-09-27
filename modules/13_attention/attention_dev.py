@@ -119,6 +119,81 @@ Traditional RNNs process sequences step-by-step, making it hard to capture long-
     Subject must agree with verb - but they're far apart!
 ```
 
+### Visual Understanding: Attention Mechanism
+
+```
+Query-Key-Value Attention Visualization:
+
+      Query (Q)      Key (K)        Value (V)
+    ┌─────────────┐ ┌───────────┐ ┌─────────────┐
+    │ "What am I  │ │ "What can │ │ "What info  │
+    │  looking    │ │  I attend │ │  do I get   │
+    │  for?"      │ │  to?"     │ │  from it?"  │
+    └─────────────┘ └───────────┘ └─────────────┘
+           │              │              │
+           └──────┬───────┘              │
+                  ▼                      │
+              Attention                   │
+               Scores                     │
+           QK^T / √d_k                   │
+                  │                      │
+                  ▼                      │
+               Softmax ──────────────────┘
+              Weights                    │
+                  │                      │
+                  └──────────────────────┘
+                                         │
+                                         ▼
+                                   Weighted Sum
+                                 (Attended Output)
+```
+
+### Step-by-Step Attention Process:
+
+```
+Step 1: Compute Attention Scores
+    Q: [seq_len, d_model]  @  K^T: [d_model, seq_len]
+    ────────────────────────────────────────────────
+    Scores: [seq_len, seq_len]  ("How much to attend?")
+
+Step 2: Scale for Numerical Stability
+    Scores = Scores / √d_k
+    (Prevents saturation in softmax)
+
+Step 3: Apply Softmax
+    Weights = softmax(Scores)
+    [Each row sums to 1 - probability distribution]
+
+Step 4: Weighted Combination
+    Output = Weights @ V
+    [Weighted average of all values based on attention]
+```
+
+### Multi-Head Attention Architecture:
+
+```
+    Input Embeddings [batch, seq_len, d_model]
+            │
+    ┌───────┼───────┐
+    │       │       │
+   W_Q     W_K     W_V  (Linear projections)
+    │       │       │
+    │   Reshape to Multiple Heads
+    │   [batch, heads, seq_len, d_k]
+    │       │       │
+    └───────┼───────┘
+            │
+    Scaled Dot-Product Attention
+     (Applied to each head)
+            │
+    Concatenate Heads
+    [batch, seq_len, d_model]
+            │
+    Linear Output Projection (W_O)
+            │
+    Multi-Head Output
+```
+
 ### Attention Solution
 Attention allows every position to directly attend to every other position:
 ```
@@ -135,6 +210,26 @@ Where:
 - **Long-range**: Direct connections between distant tokens
 - **Flexible**: Attention weights learned during training
 - **Interpretable**: Attention patterns show what the model focuses on
+
+### Causal Masking for Language Generation:
+
+```
+Without Masking (Bi-directional):
+       t1  t2  t3  t4
+    t1 [A] [A] [A] [A]  ← Can see all positions
+    t2 [A] [A] [A] [A]
+    t3 [A] [A] [A] [A]
+    t4 [A] [A] [A] [A]
+
+With Causal Masking (Auto-regressive):
+       t1  t2  t3  t4
+    t1 [A] [-] [-] [-]  ← Can only see current/past
+    t2 [A] [A] [-] [-]
+    t3 [A] [A] [A] [-]
+    t4 [A] [A] [A] [A]
+    
+    [A] = Attend   [-] = Masked (set to -∞)
+```
 
 ### Systems Trade-offs
 - **Memory**: O(N²) scaling with sequence length
@@ -219,6 +314,9 @@ class ScaledDotProductAttention:
         assert seq_len_k == seq_len_v, "Key and Value must have same sequence length"
         
         # Step 1: Compute attention scores QK^T
+        # Visualization: Q[batch,seq_q,d_k] @ K^T[batch,d_k,seq_k] -> Scores[batch,seq_q,seq_k]
+        # Each element scores[i,j] = "how much should position i attend to position j?"
+        
         # query: (batch, seq_q, d_k), key: (batch, seq_k, d_k)
         # We need key^T, so we transpose the last two dimensions
         key_transposed = np.transpose(key.data, (0, 2, 1))  # (batch, d_k, seq_k)
@@ -227,32 +325,38 @@ class ScaledDotProductAttention:
         scores = np.matmul(query.data, key_transposed)
         
         # Step 2: Scale by sqrt(d_k) for numerical stability
+        # Why scaling? Large dot products -> extreme softmax -> vanishing gradients
+        # Temperature allows additional control over attention distribution sharpness
         scores = scores / math.sqrt(d_k) / self.temperature
         
-        # Step 3: Apply mask if provided
+        # Step 3: Apply mask if provided (critical for causal/autoregressive attention)
         if mask is not None:
-            mask_value = -1e9  # Large negative value that becomes ~0 after softmax
+            # Large negative value that becomes ~0 after softmax
+            # -1e9 chosen to avoid numerical underflow while ensuring effective masking
+            mask_value = ATTENTION_MASK_VALUE  # -1e9
             
-            # Handle different mask shapes
+            # Handle different mask input types
             if isinstance(mask, Tensor):
                 mask_array = mask.data
             else:
                 mask_array = mask
                 
             # Apply mask: set masked positions to large negative values
-            # mask should be 1 for positions to keep, 0 for positions to mask
+            # mask convention: 1 for positions to keep, 0 for positions to mask
+            # This enables causal masking for autoregressive generation
             masked_scores = np.where(mask_array == 0, mask_value, scores)
             scores = masked_scores
         
         # Step 4: Apply softmax to get attention weights
-        # Numerical stable softmax
+        # Numerical stable softmax: subtract max to prevent overflow
+        # Result: each row sums to 1 (proper probability distribution)
         scores_max = np.max(scores, axis=-1, keepdims=True)
         exp_scores = np.exp(scores - scores_max)
         attention_weights = exp_scores / np.sum(exp_scores, axis=-1, keepdims=True)
         
-        # Step 5: Apply attention weights to values
+        # Step 5: Apply attention weights to values (weighted combination)
         # attention_weights: (batch, seq_q, seq_k), value: (batch, seq_k, d_v)
-        # Result: (batch, seq_q, d_v)
+        # Result: (batch, seq_q, d_v) - each output position is weighted sum of all values
         attended_values = np.matmul(attention_weights, value.data)
         
         output = Tensor(attended_values)
@@ -268,6 +372,64 @@ class ScaledDotProductAttention:
                  return_attention_weights: bool = False) -> Union[Tensor, Tuple[Tensor, Tensor]]:
         """Make the class callable."""
         return self.forward(query, key, value, mask, return_attention_weights)
+
+# ✅ IMPLEMENTATION CHECKPOINT: Ensure your ScaledDotProductAttention is complete before running
+
+# 🤔 PREDICTION: How do you think attention weights will distribute?
+# With random inputs: Uniform? Concentrated? Your guess: _______
+
+# 🔍 SYSTEMS INSIGHT #1: Attention Weight Distribution Analysis
+def analyze_attention_distribution():
+    """Analyze how attention weights distribute across different scenarios."""
+    try:
+        print("📊 ATTENTION WEIGHT DISTRIBUTION ANALYSIS")
+        print("=" * 50)
+        
+        attention = ScaledDotProductAttention()
+        batch_size, seq_len, d_k = 2, 8, 16
+        
+        # Test different input scenarios
+        scenarios = [
+            ("Random inputs", np.random.randn(batch_size, seq_len, d_k)),
+            ("Similar queries/keys", np.ones((batch_size, seq_len, d_k)) * 0.1),
+            ("Extreme values", np.random.randn(batch_size, seq_len, d_k) * 10)
+        ]
+        
+        for scenario_name, data in scenarios:
+            query = key = value = Tensor(data)
+            
+            # Get attention weights
+            output, weights = attention.forward(query, key, value, return_attention_weights=True)
+            
+            # Analyze distribution
+            weights_flat = weights.data.flatten()
+            max_weight = np.max(weights_flat)
+            min_weight = np.min(weights_flat)
+            std_weight = np.std(weights_flat)
+            entropy = -np.sum(weights_flat * np.log(weights_flat + 1e-10))  # Attention entropy
+            
+            print(f"\n{scenario_name}:")
+            print(f"  Max attention: {max_weight:.4f}")
+            print(f"  Min attention: {min_weight:.4f}")
+            print(f"  Std deviation: {std_weight:.4f}")
+            print(f"  Attention entropy: {entropy:.2f} (higher = more dispersed)")
+            
+            # Check if weights sum to 1 (softmax property)
+            row_sums = np.sum(weights.data, axis=-1)
+            assert np.allclose(row_sums, 1.0), f"Attention weights should sum to 1 in {scenario_name}"
+        
+        print(f"\n💡 WHY THIS MATTERS:")
+        print(f"  - Random inputs → relatively uniform attention (high entropy)")
+        print(f"  - Similar inputs → more concentrated attention (lower entropy)")
+        print(f"  - Extreme values can lead to attention collapse (very low entropy)")
+        print(f"  - Real language models learn meaningful attention patterns!")
+        
+    except Exception as e:
+        print(f"⚠️ Make sure ScaledDotProductAttention is implemented correctly")
+        print(f"Error: {e}")
+
+# Run the analysis
+analyze_attention_distribution()
 
 # %% [markdown]
 """
@@ -453,36 +615,43 @@ class MultiHeadAttention:
         ### BEGIN SOLUTION
         batch_size, seq_len, embed_dim = query.shape
         
-        # Step 1: Linear projections
-        # query @ w_q: (batch, seq, embed) @ (embed, embed) -> (batch, seq, embed)
-        Q = Tensor(np.matmul(query.data, self.w_q.data))
+        # Step 1: Linear projections for Q, K, V
+        # Transform input embeddings into query, key, value representations
+        # Each projection learns different aspects: Q=what to look for, K=what's available, V=what to extract
+        Q = Tensor(np.matmul(query.data, self.w_q.data))  # (batch, seq, embed) @ (embed, embed)
         K = Tensor(np.matmul(key.data, self.w_k.data))
         V = Tensor(np.matmul(value.data, self.w_v.data))
         
-        # Step 2: Reshape for multiple heads
+        # Step 2: Reshape for multiple heads (split embedding dimension across heads)
+        # Multi-head design: each head sees different representation subspace
+        # embed_dim = num_heads * head_dim (must be evenly divisible)
+        
         # Get actual sequence lengths (may differ for cross-attention)
         query_seq_len = Q.shape[1]
         key_seq_len = K.shape[1] 
         value_seq_len = V.shape[1]
         
-        # (batch, seq, embed) -> (batch, seq, num_heads, head_dim)
+        # Reshape: (batch, seq, embed) -> (batch, seq, num_heads, head_dim)
+        # This splits the embedding dimension across multiple attention heads
         Q_reshaped = Q.data.reshape(batch_size, query_seq_len, self.num_heads, self.head_dim)
         K_reshaped = K.data.reshape(batch_size, key_seq_len, self.num_heads, self.head_dim)
         V_reshaped = V.data.reshape(batch_size, value_seq_len, self.num_heads, self.head_dim)
         
-        # Transpose to (batch, num_heads, seq, head_dim) for easier processing
+        # Transpose to (batch, num_heads, seq, head_dim) for easier parallel processing
+        # Now each head can be processed independently
         Q_heads = np.transpose(Q_reshaped, (0, 2, 1, 3))
         K_heads = np.transpose(K_reshaped, (0, 2, 1, 3))
         V_heads = np.transpose(V_reshaped, (0, 2, 1, 3))
         
         # Step 3: Apply attention to all heads simultaneously
-        # We need to reshape to (batch*num_heads, seq, head_dim) for the attention function
+        # Flatten batch and head dimensions for efficient computation
+        # (batch, num_heads, seq, head_dim) -> (batch*num_heads, seq, head_dim)
         batch_heads = batch_size * self.num_heads
         Q_flat = Q_heads.reshape(batch_heads, query_seq_len, self.head_dim)
         K_flat = K_heads.reshape(batch_heads, key_seq_len, self.head_dim)
         V_flat = V_heads.reshape(batch_heads, value_seq_len, self.head_dim)
         
-        # Apply attention
+        # Apply scaled dot-product attention to all heads in parallel
         if return_attention_weights:
             attn_output_flat, attn_weights_flat = self.scaled_attention.forward(
                 Tensor(Q_flat), Tensor(K_flat), Tensor(V_flat), 
@@ -493,17 +662,19 @@ class MultiHeadAttention:
                 Tensor(Q_flat), Tensor(K_flat), Tensor(V_flat), mask=mask
             )
         
-        # Step 4: Reshape back to separate heads
+        # Step 4: Reshape back to separate heads and concatenate
         # (batch*num_heads, seq, head_dim) -> (batch, num_heads, seq, head_dim)
         attn_output_heads = attn_output_flat.data.reshape(batch_size, self.num_heads, query_seq_len, self.head_dim)
         
-        # Transpose back to (batch, seq, num_heads, head_dim)
+        # Transpose back to (batch, seq, num_heads, head_dim) for concatenation
         attn_output_reshaped = np.transpose(attn_output_heads, (0, 2, 1, 3))
         
         # Concatenate heads: (batch, seq, num_heads, head_dim) -> (batch, seq, embed_dim)
+        # This combines all head outputs back into the original embedding dimension
         attn_output_concat = attn_output_reshaped.reshape(batch_size, query_seq_len, embed_dim)
         
-        # Step 5: Apply output projection
+        # Step 5: Apply output projection to learn how to combine head information
+        # Final linear transformation to produce multi-head attention output
         output = np.matmul(attn_output_concat, self.w_o.data)
         
         if return_attention_weights:
@@ -540,6 +711,72 @@ class MultiHeadAttention:
             'head_dim': self.head_dim,
             'total_parameters': sum(param.data.size for param in self.parameters)
         }
+
+# ✅ IMPLEMENTATION CHECKPOINT: Ensure your MultiHeadAttention is complete before running
+
+# 🤔 PREDICTION: Multi-head vs single-head - which uses more memory and why?
+# Your answer: _______
+
+# 🔍 SYSTEMS INSIGHT #2: Multi-Head vs Single-Head Comparison
+def compare_attention_architectures():
+    """Compare single-head vs multi-head attention characteristics."""
+    try:
+        print("🔍 MULTI-HEAD vs SINGLE-HEAD ATTENTION COMPARISON")
+        print("=" * 60)
+        
+        embed_dim = 256
+        seq_len = 128
+        batch_size = 4
+        
+        # Test configurations
+        configs = [
+            ("Single Head", 1),
+            ("4 Heads", 4),
+            ("8 Heads", 8),
+            ("16 Heads", 16)
+        ]
+        
+        print(f"{'Configuration':<15} {'Parameters':<12} {'Memory (MB)':<12} {'Head Dim':<10} {'Complexity'}")
+        print("-" * 70)
+        
+        input_tensor = Tensor(np.random.randn(batch_size, seq_len, embed_dim))
+        
+        for name, num_heads in configs:
+            if embed_dim % num_heads != 0:
+                continue
+                
+            # Create multi-head attention
+            mha = MultiHeadAttention(embed_dim=embed_dim, num_heads=num_heads)
+            
+            # Measure memory usage
+            memory_stats = mha.get_memory_usage()
+            head_dim = embed_dim // num_heads
+            
+            # Estimate computational complexity (FLOPs for attention matrix)
+            attention_flops = batch_size * num_heads * seq_len * seq_len * head_dim
+            
+            print(f"{name:<15} {memory_stats['total_parameters']:<12,} "
+                  f"{memory_stats['total_parameter_memory_mb']:<12.2f} "
+                  f"{head_dim:<10} {attention_flops/1e6:.1f}M FLOPs")
+        
+        print(f"\n📊 ANALYSIS:")
+        print(f"  Parameter Count: Constant across heads (embed_dim² × 4 matrices)")
+        print(f"  Head Dimension: Decreases as num_heads increases (embed_dim/num_heads)")
+        print(f"  Representation: More heads = richer, diverse attention patterns")
+        print(f"  Computation: Linear scaling with number of heads")
+        
+        print(f"\n💡 WHY MULTI-HEAD WORKS:")
+        print(f"  - Different heads learn different types of relationships")
+        print(f"  - Some heads focus on syntax, others on semantics")
+        print(f"  - Parallel computation across heads")
+        print(f"  - Better representation learning without parameter increase")
+        
+    except Exception as e:
+        print(f"⚠️ Make sure MultiHeadAttention is implemented correctly")
+        print(f"Error: {e}")
+
+# Run the comparison
+compare_attention_architectures()
 
 # %% [markdown]
 """
@@ -723,24 +960,26 @@ class KVCache:
             Full cached keys and values with shape (num_heads, total_cached_len, head_dim)
         """
         ### BEGIN SOLUTION
-        # Get current cache position
+        # Get current cache position for this batch sequence
         current_pos = self.cache_lengths[batch_idx]
         new_seq_len = new_keys.shape[1]  # Assuming shape (num_heads, seq_len, head_dim)
         
-        # Check bounds
+        # Boundary check: prevent cache overflow
         if current_pos + new_seq_len > self.max_seq_length:
             raise ValueError(f"Cache overflow: {current_pos + new_seq_len} > {self.max_seq_length}")
         
-        # Update cache with new keys and values
+        # Update cache with new keys and values at current position
+        # This is the core KV-cache optimization: append new K,V instead of recomputing all
         end_pos = current_pos + new_seq_len
         self.cached_keys[batch_idx, :, current_pos:end_pos, :] = new_keys.data
         self.cached_values[batch_idx, :, current_pos:end_pos, :] = new_values.data
         
-        # Update cache length
+        # Update cache metadata
         self.cache_lengths[batch_idx] = end_pos
         self.is_active = True
         
-        # Return full cached keys and values
+        # Return full cached keys and values for attention computation
+        # This includes both previously cached and newly added K,V pairs
         full_keys = self.cached_keys[batch_idx, :, :end_pos, :]
         full_values = self.cached_values[batch_idx, :, :end_pos, :]
         
@@ -787,6 +1026,91 @@ class KVCache:
             'head_dim': self.head_dim,
             'cache_utilization': np.mean(self.cache_lengths / self.max_seq_length) if self.is_active else 0.0
         }
+
+# ✅ IMPLEMENTATION CHECKPOINT: Ensure your KVCache is complete before running
+
+# 🤔 PREDICTION: How much memory could KV-cache save during generation?
+# For 1000 tokens: 10%? 50%? 90%? Your guess: _______
+
+# 🔍 SYSTEMS INSIGHT #3: KV-Cache Generation Efficiency Analysis
+def analyze_kv_cache_efficiency():
+    """Analyze KV-cache memory and computation savings during generation."""
+    try:
+        print("💾 KV-CACHE GENERATION EFFICIENCY ANALYSIS")
+        print("=" * 55)
+        
+        # Realistic language model configuration
+        embed_dim = 512
+        num_heads = 8
+        head_dim = embed_dim // num_heads
+        batch_size = 1  # Typical generation scenario
+        
+        sequence_lengths = [64, 128, 256, 512, 1024]
+        
+        print(f"{'Seq Length':<10} {'No Cache':<12} {'With Cache':<12} {'Savings':<10} {'Speedup Est'}")
+        print("-" * 65)
+        
+        for seq_len in sequence_lengths:
+            # Without cache: recompute K,V for all previous tokens every step
+            # Memory: Store attention scores for full sequence every generation step
+            no_cache_kv_memory = seq_len * embed_dim * 2 * 4 / (1024**2)  # K+V in MB
+            no_cache_attention = seq_len * seq_len * 4 / (1024**2)  # Attention matrix
+            no_cache_total = no_cache_kv_memory + no_cache_attention
+            
+            # With cache: store K,V once, only compute new token attention
+            cache_storage = seq_len * embed_dim * 2 * 4 / (1024**2)  # Persistent K+V cache
+            cache_attention = seq_len * 1 * 4 / (1024**2)  # Only new token vs all cached
+            cache_total = cache_storage + cache_attention
+            
+            # Calculate savings
+            memory_savings = (no_cache_total - cache_total) / no_cache_total * 100
+            computation_speedup = seq_len  # Rough estimate: avoid seq_len token recomputations
+            
+            print(f"{seq_len:<10} {no_cache_total:<12.2f} {cache_total:<12.2f} "
+                  f"{memory_savings:<10.1f}% {computation_speedup:<10.1f}x")
+        
+        # Demonstrate cache usage pattern
+        print(f"\n🔄 GENERATION PATTERN DEMONSTRATION:")
+        cache = KVCache(max_batch_size=1, max_seq_length=512, 
+                       num_heads=num_heads, head_dim=head_dim)
+        
+        print(f"Generation simulation (first 5 tokens):")
+        batch_idx = 0
+        
+        for step in range(5):
+            if step == 0:
+                # Initial prompt processing
+                new_seq_len = 10  # Process initial 10 tokens
+                print(f"  Step {step}: Process initial prompt ({new_seq_len} tokens)")
+            else:
+                # Generate one new token
+                new_seq_len = 1
+                print(f"  Step {step}: Generate new token ({new_seq_len} token)")
+            
+            # Simulate K,V for new tokens
+            new_keys = Tensor(np.random.randn(num_heads, new_seq_len, head_dim))
+            new_values = Tensor(np.random.randn(num_heads, new_seq_len, head_dim))
+            
+            # Update cache
+            cached_k, cached_v = cache.update(batch_idx, new_keys, new_values)
+            total_cached = cached_k.shape[1]
+            
+            print(f"    Cache now contains: {total_cached} tokens")
+            print(f"    Memory used: {total_cached * embed_dim * 2 * 4 / 1024:.1f} KB")
+        
+        print(f"\n💡 WHY KV-CACHE IS ESSENTIAL:")
+        print(f"  - Without cache: O(N²) computation growth per token")
+        print(f"  - With cache: O(N) computation per token")
+        print(f"  - Memory trade-off: Store K,V to avoid recomputation")
+        print(f"  - Critical for: Interactive chat, real-time generation")
+        print(f"  - Production impact: 10-100x speedup for long sequences")
+        
+    except Exception as e:
+        print(f"⚠️ Make sure KVCache is implemented correctly")
+        print(f"Error: {e}")
+
+# Run the efficiency analysis
+analyze_kv_cache_efficiency()
 
 # %% [markdown]
 """
@@ -1636,6 +1960,93 @@ Take time to reflect thoughtfully on each question - your insights will help you
 
 # %% [markdown]
 """
+### 🎯 Computational Assessment: Attention Complexity Analysis
+
+**Learning Objective**: Analyze the computational and memory complexity of attention mechanisms to understand their practical limitations and optimization opportunities.
+
+**Task**: Based on your attention implementations, analyze the scaling behavior and optimization techniques for different attention scenarios.
+"""
+
+# %% nbgrader={"grade": true, "grade_id": "attention-complexity-analysis", "locked": false, "points": 15, "schema_version": 3, "solution": true, "task": false}
+def analyze_attention_complexity():
+    """
+    Analyze computational complexity of attention mechanisms.
+    
+    TODO: Complete this complexity analysis function.
+    
+    Requirements:
+    1. Calculate memory usage for attention matrices with different sequence lengths
+    2. Estimate computational FLOPs for attention computation
+    3. Compare single-head vs multi-head complexity
+    4. Analyze the impact of sequence length on performance
+    
+    Returns:
+        dict: Analysis results with complexity metrics
+    """
+    ### BEGIN SOLUTION
+    results = {}
+    
+    # Test different sequence lengths
+    seq_lengths = [128, 256, 512, 1024]
+    embed_dim = 512
+    num_heads = 8
+    batch_size = 16
+    
+    for seq_len in seq_lengths:
+        # Memory for attention matrix: batch_size * seq_len * seq_len * 4 bytes (float32)
+        attention_memory_bytes = batch_size * seq_len * seq_len * 4
+        attention_memory_mb = attention_memory_bytes / (1024 * 1024)
+        
+        # Multi-head attention memory: num_heads * attention_memory
+        multihead_memory_mb = attention_memory_mb * num_heads
+        
+        # Computational FLOPs estimation
+        # QK^T: batch * heads * seq_len * seq_len * head_dim
+        # Softmax: batch * heads * seq_len * seq_len
+        # Attention*V: batch * heads * seq_len * seq_len * head_dim
+        head_dim = embed_dim // num_heads
+        qk_flops = batch_size * num_heads * seq_len * seq_len * head_dim
+        av_flops = batch_size * num_heads * seq_len * seq_len * head_dim
+        total_flops = qk_flops + av_flops
+        
+        results[seq_len] = {
+            'sequence_length': seq_len,
+            'attention_memory_mb': attention_memory_mb,
+            'multihead_memory_mb': multihead_memory_mb,
+            'total_flops': total_flops,
+            'flops_per_token': total_flops / (batch_size * seq_len),
+            'memory_scaling_factor': (seq_len / 128) ** 2,  # Relative to 128 baseline
+            'compute_scaling_factor': (seq_len / 128) ** 2
+        }
+    
+    return results
+    ### END SOLUTION
+
+# Test the complexity analysis
+if 'ScaledDotProductAttention' in globals():
+    complexity_results = analyze_attention_complexity()
+    
+    print("📊 ATTENTION COMPLEXITY ANALYSIS RESULTS:")
+    print("=" * 60)
+    print(f"{'Seq Len':<8} {'Attn Mem (MB)':<12} {'MHA Mem (MB)':<12} {'FLOPs (M)':<10} {'Scale Factor'}")
+    print("-" * 60)
+    
+    for seq_len, metrics in complexity_results.items():
+        print(f"{seq_len:<8} {metrics['attention_memory_mb']:<12.1f} "
+              f"{metrics['multihead_memory_mb']:<12.1f} "
+              f"{metrics['total_flops']/1e6:<10.1f} "
+              f"{metrics['memory_scaling_factor']:<10.1f}x")
+    
+    print(f"\n💡 COMPLEXITY INSIGHTS:")
+    print(f"  - Memory scales O(N²) with sequence length")
+    print(f"  - Computation scales O(N²) with sequence length")
+    print(f"  - Multi-head attention multiplies memory by number of heads")
+    print(f"  - 2x sequence length = 4x memory and computation")
+else:
+    print("⚠️ Complete attention implementations first")
+
+# %% [markdown]
+"""
 ### Question 1: Attention Memory Scaling and Sequence Length Optimization
 
 **Context**: Your attention implementations demonstrate the fundamental O(N²) memory scaling that limits transformer sequence length. Production language models must balance sequence length capabilities with memory constraints, leading to complex architectural decisions about attention patterns, memory optimization, and deployment strategies.
@@ -1678,6 +2089,146 @@ GRADING RUBRIC (Instructor Use):
 
 # %% [markdown]
 """
+### 🎯 Computational Assessment: Causal Masking and Generation Patterns
+
+**Learning Objective**: Understand how causal masking enables autoregressive generation and analyze different attention masking strategies.
+
+**Task**: Implement and analyze different attention masking patterns to understand their impact on model behavior and computational efficiency.
+"""
+
+# %% nbgrader={"grade": true, "grade_id": "attention-masking-analysis", "locked": false, "points": 15, "schema_version": 3, "solution": true, "task": false}
+def analyze_attention_masking_patterns():
+    """
+    Analyze different attention masking patterns and their computational implications.
+    
+    TODO: Complete this masking pattern analysis.
+    
+    Requirements:
+    1. Create and test causal (autoregressive) masks
+    2. Implement and test different sparse attention patterns
+    3. Measure attention entropy with different masking strategies
+    4. Compare computational efficiency of different mask types
+    
+    Returns:
+        dict: Analysis results comparing different masking strategies
+    """
+    ### BEGIN SOLUTION
+    if 'ScaledDotProductAttention' not in globals():
+        return {"error": "ScaledDotProductAttention not implemented"}
+    
+    attention = ScaledDotProductAttention()
+    seq_len = 16
+    batch_size = 2
+    d_k = 32
+    
+    # Create test inputs
+    query = key = value = Tensor(np.random.randn(batch_size, seq_len, d_k))
+    
+    results = {}
+    
+    # 1. No masking (full attention)
+    output_full, weights_full = attention.forward(
+        query, key, value, return_attention_weights=True
+    )
+    entropy_full = -np.sum(weights_full.data * np.log(weights_full.data + 1e-10))
+    
+    results['no_mask'] = {
+        'attention_entropy': entropy_full,
+        'effective_connections': np.sum(weights_full.data > 0.01),  # Significant connections
+        'max_attention': np.max(weights_full.data),
+        'computation_ratio': 1.0  # Baseline
+    }
+    
+    # 2. Causal masking (autoregressive)
+    causal_mask = np.triu(np.ones((seq_len, seq_len)), k=1)
+    causal_mask = 1 - causal_mask  # Convert to attention mask
+    
+    output_causal, weights_causal = attention.forward(
+        query, key, value, mask=Tensor(causal_mask), return_attention_weights=True
+    )
+    entropy_causal = -np.sum(weights_causal.data * np.log(weights_causal.data + 1e-10))
+    
+    results['causal_mask'] = {
+        'attention_entropy': entropy_causal,
+        'effective_connections': np.sum(weights_causal.data > 0.01),
+        'max_attention': np.max(weights_causal.data),
+        'computation_ratio': 0.5  # Roughly half the connections
+    }
+    
+    # 3. Local attention window (sparse)
+    window_size = 4
+    local_mask = np.zeros((seq_len, seq_len))
+    for i in range(seq_len):
+        start = max(0, i - window_size // 2)
+        end = min(seq_len, i + window_size // 2 + 1)
+        local_mask[i, start:end] = 1
+    
+    output_local, weights_local = attention.forward(
+        query, key, value, mask=Tensor(local_mask), return_attention_weights=True
+    )
+    entropy_local = -np.sum(weights_local.data * np.log(weights_local.data + 1e-10))
+    
+    results['local_mask'] = {
+        'attention_entropy': entropy_local,
+        'effective_connections': np.sum(weights_local.data > 0.01),
+        'max_attention': np.max(weights_local.data),
+        'computation_ratio': window_size / seq_len  # Fraction of full attention
+    }
+    
+    # 4. Strided attention pattern
+    stride = 2
+    strided_mask = np.zeros((seq_len, seq_len))
+    for i in range(seq_len):
+        # Attend to every stride-th position
+        strided_mask[i, ::stride] = 1
+        # Also attend to local neighborhood
+        start = max(0, i - 1)
+        end = min(seq_len, i + 2)
+        strided_mask[i, start:end] = 1
+    
+    output_strided, weights_strided = attention.forward(
+        query, key, value, mask=Tensor(strided_mask), return_attention_weights=True
+    )
+    entropy_strided = -np.sum(weights_strided.data * np.log(weights_strided.data + 1e-10))
+    
+    results['strided_mask'] = {
+        'attention_entropy': entropy_strided,
+        'effective_connections': np.sum(weights_strided.data > 0.01),
+        'max_attention': np.max(weights_strided.data),
+        'computation_ratio': (1 + seq_len // stride + 2) / seq_len
+    }
+    
+    return results
+    ### END SOLUTION
+
+# Test the masking analysis
+if 'ScaledDotProductAttention' in globals():
+    masking_results = analyze_attention_masking_patterns()
+    
+    if 'error' not in masking_results:
+        print("🎭 ATTENTION MASKING PATTERN ANALYSIS:")
+        print("=" * 50)
+        print(f"{'Pattern':<15} {'Entropy':<10} {'Connections':<12} {'Max Attn':<10} {'Compute %'}")
+        print("-" * 60)
+        
+        for pattern, metrics in masking_results.items():
+            print(f"{pattern:<15} {metrics['attention_entropy']:<10.2f} "
+                  f"{metrics['effective_connections']:<12} "
+                  f"{metrics['max_attention']:<10.4f} "
+                  f"{metrics['computation_ratio']*100:<10.1f}%")
+        
+        print(f"\n💡 MASKING INSIGHTS:")
+        print(f"  - Causal masking: Essential for autoregressive generation")
+        print(f"  - Local attention: Good for capturing local dependencies")
+        print(f"  - Strided attention: Balances long-range and local connections")
+        print(f"  - Sparse patterns: Reduce computation while maintaining performance")
+    else:
+        print(masking_results['error'])
+else:
+    print("⚠️ Complete attention implementations first")
+
+# %% [markdown]
+"""
 ### Question 2: Multi-Head Attention Parallelization and Hardware Optimization
 
 **Context**: Your multi-head attention implementation shows how attention heads can process different representation subspaces in parallel. Production transformer systems must optimize multi-head attention for diverse hardware platforms (CPUs, GPUs, TPUs) while maximizing throughput and minimizing latency for both training and inference workloads.
@@ -1717,6 +2268,181 @@ GRADING RUBRIC (Instructor Use):
 # This is a manually graded question requiring understanding of attention parallelization and hardware optimization
 # Students should demonstrate knowledge of distributed training and platform-specific optimization
 ### END SOLUTION
+
+# %% [markdown]
+"""
+### 🎯 Computational Assessment: Attention Scaling and Production Optimization
+
+**Learning Objective**: Analyze how attention scaling affects production deployment and design optimization strategies for different use cases.
+
+**Task**: Design and analyze attention optimization strategies for production systems with different constraints and requirements.
+"""
+
+# %% nbgrader={"grade": true, "grade_id": "attention-production-optimization", "locked": false, "points": 20, "schema_version": 3, "solution": true, "task": false}
+def design_production_attention_system():
+    """
+    Design an optimized attention system for production deployment.
+    
+    TODO: Complete this production optimization analysis.
+    
+    Requirements:
+    1. Analyze memory requirements for different sequence lengths and batch sizes
+    2. Design KV-cache strategies for different workload types
+    3. Estimate throughput and latency for different configurations
+    4. Propose optimization techniques for memory-constrained environments
+    
+    Returns:
+        dict: Production system design with optimization strategies
+    """
+    ### BEGIN SOLUTION
+    # Production system analysis
+    design = {
+        'workload_analysis': {},
+        'memory_optimization': {},
+        'kv_cache_strategies': {},
+        'performance_estimates': {}
+    }
+    
+    # Workload scenarios
+    workloads = {
+        'real_time_chat': {
+            'max_seq_length': 2048,
+            'typical_batch_size': 1,
+            'latency_requirement_ms': 100,
+            'throughput_requirement': '10 requests/sec'
+        },
+        'batch_processing': {
+            'max_seq_length': 4096,
+            'typical_batch_size': 32,
+            'latency_requirement_ms': 5000,
+            'throughput_requirement': '1000 docs/hour'
+        },
+        'code_generation': {
+            'max_seq_length': 8192,
+            'typical_batch_size': 4,
+            'latency_requirement_ms': 500,
+            'throughput_requirement': '100 completions/min'
+        }
+    }
+    
+    embed_dim = 4096  # Large model configuration
+    num_heads = 32
+    head_dim = embed_dim // num_heads
+    
+    for workload_name, config in workloads.items():
+        seq_len = config['max_seq_length']
+        batch_size = config['typical_batch_size']
+        
+        # Memory analysis
+        attention_memory_gb = (batch_size * num_heads * seq_len * seq_len * 4) / (1024**3)
+        kv_cache_memory_gb = (batch_size * seq_len * embed_dim * 2 * 4) / (1024**3)
+        total_memory_gb = attention_memory_gb + kv_cache_memory_gb
+        
+        # Performance estimates
+        tokens_per_request = seq_len * batch_size
+        attention_flops = batch_size * num_heads * seq_len * seq_len * head_dim * 2
+        
+        design['workload_analysis'][workload_name] = {
+            'attention_memory_gb': attention_memory_gb,
+            'kv_cache_memory_gb': kv_cache_memory_gb,
+            'total_memory_gb': total_memory_gb,
+            'attention_flops': attention_flops,
+            'tokens_per_request': tokens_per_request,
+            'memory_bandwidth_gb_s': total_memory_gb * 1000 / config['latency_requirement_ms']
+        }
+    
+    # Memory optimization strategies
+    design['memory_optimization'] = {
+        'flash_attention': {
+            'memory_reduction': '10-20x for attention computation',
+            'technique': 'Tiled computation to reduce intermediate storage',
+            'trade_off': 'Slight computation increase for massive memory savings'
+        },
+        'sparse_attention': {
+            'memory_reduction': 'O(N√N) or O(N log N) instead of O(N²)',
+            'technique': 'Local + strided + global attention patterns',
+            'trade_off': 'Potential quality loss vs memory/compute savings'
+        },
+        'gradient_checkpointing': {
+            'memory_reduction': '~50% activation memory',
+            'technique': 'Recompute activations instead of storing',
+            'trade_off': '20-30% slower training for memory savings'
+        }
+    }
+    
+    # KV-cache strategies
+    design['kv_cache_strategies'] = {
+        'adaptive_caching': {
+            'real_time_chat': 'Small cache, fast eviction for responsiveness',
+            'batch_processing': 'Large cache, batch-optimized allocation',
+            'code_generation': 'Variable cache size based on context length'
+        },
+        'cache_sharing': {
+            'prefix_sharing': 'Share cache for common prefixes (system prompts)',
+            'multi_tenant': 'Isolated caches with memory pooling',
+            'eviction_policy': 'LRU with workload-specific priorities'
+        }
+    }
+    
+    # Performance estimates with optimizations
+    design['performance_estimates'] = {
+        'baseline_gpt_3_scale': {
+            'memory_required_gb': 700,  # For 175B parameters
+            'max_seq_length': 2048,
+            'bottleneck': 'Attention memory at long sequences'
+        },
+        'optimized_system': {
+            'flash_attention_memory_gb': 35,  # 20x reduction
+            'sparse_attention_seq_length': 32768,  # 16x longer sequences
+            'kv_cache_speedup': '10-100x generation speedup'
+        }
+    }
+    
+    return design
+    ### END SOLUTION
+
+# Test the production optimization design
+if 'KVCache' in globals():
+    production_design = design_production_attention_system()
+    
+    print("🏭 PRODUCTION ATTENTION SYSTEM DESIGN:")
+    print("=" * 50)
+    
+    print("\n📊 WORKLOAD ANALYSIS:")
+    for workload, analysis in production_design['workload_analysis'].items():
+        print(f"\n{workload.replace('_', ' ').title()}:")
+        print(f"  Memory requirement: {analysis['total_memory_gb']:.1f} GB")
+        print(f"  Attention FLOPs: {analysis['attention_flops']/1e12:.1f} TFLOPs")
+        print(f"  Memory bandwidth: {analysis['memory_bandwidth_gb_s']:.1f} GB/s")
+    
+    print("\n🚀 OPTIMIZATION STRATEGIES:")
+    for strategy, details in production_design['memory_optimization'].items():
+        print(f"\n{strategy.replace('_', ' ').title()}:")
+        print(f"  Reduction: {details['memory_reduction']}")
+        print(f"  Technique: {details['technique']}")
+    
+    print("\n💾 KV-CACHE OPTIMIZATION:")
+    for category, strategies in production_design['kv_cache_strategies'].items():
+        print(f"\n{category.replace('_', ' ').title()}:")
+        if isinstance(strategies, dict):
+            for k, v in strategies.items():
+                print(f"  {k}: {v}")
+        else:
+            print(f"  {strategies}")
+    
+    print("\n📈 PERFORMANCE IMPACT:")
+    perf = production_design['performance_estimates']
+    baseline = perf['baseline_gpt_3_scale']
+    optimized = perf['optimized_system']
+    
+    memory_improvement = baseline['memory_required_gb'] / optimized['flash_attention_memory_gb']
+    seq_improvement = optimized['sparse_attention_seq_length'] / baseline['max_seq_length']
+    
+    print(f"  Memory reduction: {memory_improvement:.0f}x with Flash Attention")
+    print(f"  Sequence length: {seq_improvement:.0f}x with sparse attention")
+    print(f"  Generation speedup: {optimized['kv_cache_speedup']}")
+else:
+    print("⚠️ Complete all attention implementations first")
 
 # %% [markdown]
 """

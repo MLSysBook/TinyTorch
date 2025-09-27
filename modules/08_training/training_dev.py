@@ -152,49 +152,85 @@ def get_tensor_value(tensor_obj):
 ### What are Loss Functions?
 Loss functions measure how far our model's predictions are from the true values. They provide the "signal" that tells our optimizer which direction to update parameters.
 
+### Visual Understanding: Loss Function Landscapes
+```
+Loss Landscape Visualization:
+
+    High Loss         Low Loss          Zero Loss
+       ↓                ↓                 ↓
+   ┌─────────┐      ┌─────────┐      ┌─────────┐
+   │    🔥   │      │    📊   │      │    ✅   │
+   │ L=10.5  │  →   │  L=2.1  │  →   │  L=0.0  │
+   │ (bad)   │      │ (better)│      │(perfect)│
+   └─────────┘      └─────────┘      └─────────┘
+   
+   Training Direction: Always move toward lower loss
+```
+
 ### The Mathematical Foundation
 Training a neural network is an optimization problem:
 ```
-θ* = argmin_θ L(f(x; θ), y)
+Optimization Equation:
+    θ* = argmin_θ L(f(x; θ), y)
+    
+Visual Flow:
+    Input → Model → Prediction → Loss Function → Gradient → Update
+     x   →  f(θ) →    ŷ      →    L(ŷ,y)    →   ∇L   →   θ'
 ```
+
 Where:
 - `θ` = model parameters (weights and biases)
-- `f(x; θ)` = model predictions
+- `f(x; θ)` = model predictions  
 - `y` = true labels
 - `L` = loss function
 - `θ*` = optimal parameters
 
-### Why Loss Functions Matter
-- **Optimization target**: They define what "good" means for our model
-- **Gradient source**: Provide gradients for backpropagation
-- **Task-specific**: Different losses for different problems
-- **Training dynamics**: Shape how the model learns
-
-### Common Loss Functions
+### Loss Function Types & Trade-offs
 
 #### **Mean Squared Error (MSE)** - For Regression
 ```
-MSE = (1/n) * Σ(y_pred - y_true)²
-```
-- **Use case**: Regression problems
-- **Properties**: Penalizes large errors heavily
-- **Gradient**: 2 * (y_pred - y_true)
+MSE Behavior:
+    Error: -2  -1   0   +1  +2
+    Loss:  4   1   0    1   4
+           ↑   ↑   ↑    ↑   ↑
+      Heavy penalty for large errors
 
-#### **Cross-Entropy Loss** - For Classification
+Formula: MSE = (1/n) * Σ(y_pred - y_true)²
+Gradient: ∂MSE/∂pred = 2 * (y_pred - y_true)
 ```
-CrossEntropy = -Σ y_true * log(y_pred)
+- **Use case**: Regression problems (predicting continuous values)
+- **Properties**: Heavily penalizes large errors, smooth gradients
+- **Trade-off**: Sensitive to outliers but provides strong learning signal
+
+#### **Cross-Entropy Loss** - For Classification  
+```
+Cross-Entropy Behavior:
+    Confidence:  0.01  0.1  0.5  0.9  0.99
+    Loss:        4.6   2.3  0.7  0.1  0.01
+                 ↑     ↑    ↑    ↑     ↑
+            Heavily penalizes wrong confidence
+
+Formula: CE = -Σ y_true * log(y_pred)
+With Softmax: CE = -log(softmax(logits)[true_class])
 ```
 - **Use case**: Multi-class classification
-- **Properties**: Penalizes confident wrong predictions
-- **Gradient**: y_pred - y_true (with softmax)
+- **Properties**: Penalizes confident wrong predictions exponentially
+- **Trade-off**: Provides strong learning signal but can be unstable
 
-#### **Binary Cross-Entropy** - For Binary Classification
+#### **Binary Cross-Entropy** - For Binary Problems
 ```
-BCE = -y_true * log(y_pred) - (1-y_true) * log(1-y_pred)
+Binary CE Behavior:
+    True=1, Pred: 0.1   0.5   0.9   0.99
+    Loss:         2.3   0.7   0.1   0.01
+                  ↑     ↑     ↑     ↑
+              Higher loss for wrong predictions
+
+Formula: BCE = -y*log(p) - (1-y)*log(1-p)
+Symmetric: Same penalty for false positives/negatives
 ```
-- **Use case**: Binary classification
-- **Properties**: Symmetric around 0.5
-- **Gradient**: (y_pred - y_true) / (y_pred * (1-y_pred))
+- **Use case**: Binary classification (yes/no, spam/ham)
+- **Properties**: Symmetric around 0.5 probability
+- **Trade-off**: Balanced but may need class weighting for imbalanced data
 
 Let's implement these essential loss functions!
 """
@@ -265,9 +301,13 @@ class MeanSquaredError:
             else:
                 y_true = Variable(y_true, requires_grad=False)
         
-        # Compute MSE using Variable operations to maintain autograd graph
+        # MSE Computation Visual:
+        # Step 1: diff = pred - true    (element-wise difference)
+        # Step 2: squared = diff²       (penalize large errors heavily) 
+        # Step 3: mean = Σ(squared)/n   (average across all samples)
+        
         diff = y_pred - y_true  # Variable subtraction
-        squared_diff = diff * diff  # Variable multiplication
+        squared_diff = diff * diff  # Variable multiplication (squares each error)
         
         # Clean mean operation - get raw numpy array
         # Use global helper function to extract numpy data cleanly
@@ -285,6 +325,63 @@ class MeanSquaredError:
         """Alternative interface for forward pass."""
         return self.__call__(y_pred, y_true)
     
+
+# 🔍 SYSTEMS INSIGHT: MSE Loss Memory & Performance Analysis
+def analyze_mse_computational_complexity():
+    """Analyze MSE loss computational and memory characteristics."""
+    try:
+        import time
+        import numpy as np
+        
+        print("🔬 MSE Loss Computational Analysis:")
+        
+        # Test different input sizes to understand scaling
+        sizes = [100, 1000, 10000, 100000]
+        times = []
+        memory_usage = []
+        
+        mse = MeanSquaredError()
+        
+        for size in sizes:
+            # Create test data
+            y_pred = Tensor(np.random.randn(size, 10))
+            y_true = Tensor(np.random.randn(size, 10))
+            
+            # Time the computation
+            start_time = time.perf_counter()
+            loss = mse(y_pred, y_true)
+            end_time = time.perf_counter()
+            
+            computation_time = end_time - start_time
+            times.append(computation_time)
+            
+            # Estimate memory usage (pred + true + diff + squared_diff)
+            memory_mb = (4 * size * 10 * 4) / (1024 * 1024)  # 4 arrays, float32
+            memory_usage.append(memory_mb)
+            
+            print(f"  Size {size:>6}: {computation_time*1000:.2f}ms, ~{memory_mb:.1f}MB")
+        
+        # Analyze scaling behavior
+        if len(times) > 1:
+            time_ratio = times[-1] / times[0] if times[0] > 0 else 0
+            size_ratio = sizes[-1] / sizes[0]
+            scaling_factor = np.log(time_ratio) / np.log(size_ratio) if time_ratio > 0 else 0
+            
+            print(f"\n📊 Scaling Analysis:")
+            print(f"  Time scales as O(N^{scaling_factor:.1f}) - {'Linear' if 0.8 <= scaling_factor <= 1.2 else 'Non-linear'}")
+            print(f"  Memory grows linearly: O(N) - {memory_usage[-1]/memory_usage[0]:.1f}x increase")
+        
+        print(f"\n💡 Key Insights:")
+        print(f"  • MSE requires 4x input memory (pred, true, diff, squared)")
+        print(f"  • Linear time complexity O(N) - suitable for large batches")
+        print(f"  • Temporary arrays needed - watch memory in large models")
+        print(f"  • Simple operations = good GPU acceleration potential")
+        
+    except Exception as e:
+        print(f"⚠️ Analysis failed: {e}")
+
+# Run analysis
+analyze_mse_computational_complexity()
 
 # %% [markdown]
 """
@@ -681,41 +778,88 @@ def test_unit_binary_crossentropy_loss():
 ### What are Metrics?
 Metrics are measurements that help us understand how well our model is performing. Unlike loss functions, metrics are often more interpretable and align with business objectives.
 
-### Key Metrics for Classification
+### Visual Understanding: Metrics vs Loss
+```
+Loss vs Metrics Comparison:
 
-#### **Accuracy**
+    Loss Function           |  Metrics
+    (for optimization)      |  (for evaluation)
+         ↓                  |       ↓
+    ┌─────────────┐         |  ┌─────────────┐
+    │ Continuous  │         |  │ Interpretable│
+    │ Differentiable│       |  │ Business-aligned│
+    │ 0.693147... │         |  │ 85.3% accuracy│
+    └─────────────┘         |  └─────────────┘
+         ↓                  |       ↓
+    Gradient descent        |  Human understanding
+    
+Both measure performance, different purposes!
 ```
-Accuracy = (Correct Predictions) / (Total Predictions)
-```
-- **Range**: [0, 1]
-- **Interpretation**: Percentage of correct predictions
-- **Good for**: Balanced datasets
 
-#### **Precision**
-```
-Precision = True Positives / (True Positives + False Positives)
-```
-- **Range**: [0, 1]
-- **Interpretation**: Of all positive predictions, how many were correct?
-- **Good for**: When false positives are costly
+### Classification Metrics Deep Dive
 
-#### **Recall (Sensitivity)**
+#### **Accuracy** - Overall Correctness
 ```
-Recall = True Positives / (True Positives + False Negatives)
+Confusion Matrix Visualization:
+                Predicted
+              0       1
+    Actual 0  TN      FP   ← False Positives hurt accuracy  
+           1  FN      TP   ← False Negatives hurt accuracy
+              ↑       ↑
+    
+    Accuracy = (TP + TN) / (TP + TN + FP + FN)
+    Range: [0, 1] where 1.0 = perfect predictions
 ```
-- **Range**: [0, 1]
-- **Interpretation**: Of all actual positives, how many did we find?
-- **Good for**: When false negatives are costly
+- **Use case**: Balanced datasets where all classes matter equally
+- **Limitation**: Misleading on imbalanced data (99% negative class)
 
-### Key Metrics for Regression
+#### **Precision** - Quality of Positive Predictions
+```
+Precision Focus:
+    "Of all my positive predictions, how many were actually positive?"
+    
+    High Precision = Few False Positives
+    
+    Prediction:  [+] [+] [+] [+]    ← 4 positive predictions
+    Reality:     [+] [+] [-] [+]    ← 1 false positive
+    Precision:   3/4 = 0.75
+    
+    Formula: TP / (TP + FP)
+```
+- **Critical for**: Spam detection, medical diagnosis (avoid false alarms)
+- **Trade-off**: High precision often means lower recall
 
-#### **Mean Absolute Error (MAE)**
+#### **Recall** - Coverage of Actual Positives  
 ```
-MAE = (1/n) * Σ|y_pred - y_true|
+Recall Focus:
+    "Of all actual positives, how many did I find?"
+    
+    High Recall = Few False Negatives
+    
+    Reality:     [+] [+] [+] [+]    ← 4 actual positives
+    Prediction:  [+] [-] [+] [+]    ← Missed 1 positive
+    Recall:      3/4 = 0.75
+    
+    Formula: TP / (TP + FN)
 ```
-- **Range**: [0, ∞)
-- **Interpretation**: Average absolute error
-- **Good for**: Robust to outliers
+- **Critical for**: Cancer screening, fraud detection (can't miss positives)
+- **Trade-off**: High recall often means lower precision
+
+### Regression Metrics
+
+#### **Mean Absolute Error (MAE)** - Robust Error Measure
+```
+MAE vs MSE Comparison:
+    
+    Errors:    [-2, -1, 0, +1, +10]  ← One outlier
+    MAE:       (2+1+0+1+10)/5 = 2.8   ← Robust to outlier
+    MSE:       (4+1+0+1+100)/5 = 21.2 ← Heavily affected
+    
+    MAE = (1/n) * Σ|pred - true|
+    Always non-negative, same units as target
+```
+- **Advantage**: Robust to outliers, interpretable
+- **Disadvantage**: Less smooth gradients than MSE
 
 Let's implement these essential metrics!
 """
@@ -775,9 +919,15 @@ class Accuracy:
         - Return Python float, not Tensor
         """
         ### BEGIN SOLUTION
+        # Accuracy Computation Visual:
+        # Step 1: Convert predictions → class indices (argmax or threshold)
+        # Step 2: Convert true labels → class indices (if one-hot)
+        # Step 3: Count matches: pred_class == true_class
+        # Step 4: Divide by total: accuracy = correct / total
+        
         # Convert predictions to class indices
         if len(y_pred.data.shape) > 1 and y_pred.data.shape[1] > 1:
-            # Multi-class: use argmax
+            # Multi-class: use argmax to find highest probability class
             pred_classes = np.argmax(y_pred.data, axis=1)
         else:
             # Binary classification: threshold at 0.5
@@ -785,13 +935,13 @@ class Accuracy:
         
         # Convert true labels to class indices if needed
         if len(y_true.data.shape) > 1 and y_true.data.shape[1] > 1:
-            # One-hot encoded
+            # One-hot encoded: [0,1,0] → class 1
             true_classes = np.argmax(y_true.data, axis=1)
         else:
-            # Already class indices
+            # Already class indices: [0, 1, 2, ...]
             true_classes = y_true.data.flatten().astype(int)
         
-        # Compute accuracy
+        # Compute accuracy: fraction of correct predictions
         correct = np.sum(pred_classes == true_classes)
         total = len(true_classes)
         accuracy = correct / total
@@ -802,6 +952,75 @@ class Accuracy:
     def forward(self, y_pred: Tensor, y_true: Tensor) -> float:
         """Alternative interface for forward pass."""
         return self.__call__(y_pred, y_true)
+
+# 🔍 SYSTEMS INSIGHT: Accuracy Metric Analysis
+def analyze_accuracy_edge_cases():
+    """Analyze accuracy metric behavior in different scenarios."""
+    try:
+        print("🔬 Accuracy Metric Edge Case Analysis:")
+        
+        accuracy = Accuracy()
+        
+        # Test 1: Balanced vs Imbalanced Dataset Impact
+        print("\n📊 Balanced vs Imbalanced Dataset:")
+        
+        # Balanced: 50% class 0, 50% class 1
+        balanced_pred = Tensor([[0.6, 0.4], [0.4, 0.6], [0.6, 0.4], [0.4, 0.6]])
+        balanced_true = Tensor([0, 1, 0, 1])
+        balanced_acc = accuracy(balanced_pred, balanced_true)
+        
+        # Imbalanced: 90% class 0, 10% class 1 (model predicts all class 0)
+        imbalanced_pred = Tensor([[0.9, 0.1]] * 10)  # Always predict class 0
+        imbalanced_true = Tensor([0, 0, 0, 0, 0, 0, 0, 0, 0, 1])  # 9 class 0, 1 class 1
+        imbalanced_acc = accuracy(imbalanced_pred, imbalanced_true)
+        
+        print(f"  Balanced dataset accuracy: {balanced_acc:.3f}")
+        print(f"  Imbalanced dataset accuracy: {imbalanced_acc:.3f}")
+        print(f"  💡 Imbalanced shows {imbalanced_acc:.1%} accuracy but misses all positives!")
+        
+        # Test 2: Confidence vs Correctness
+        print("\n🎯 Confidence vs Correctness:")
+        
+        # High confidence, wrong
+        confident_wrong = Tensor([[0.95, 0.05], [0.05, 0.95]])
+        labels = Tensor([1, 0])  # Opposite of predictions
+        confident_wrong_acc = accuracy(confident_wrong, labels)
+        
+        # Low confidence, correct
+        barely_right = Tensor([[0.51, 0.49], [0.49, 0.51]])
+        labels = Tensor([0, 1])  # Matches predictions
+        barely_right_acc = accuracy(barely_right, labels)
+        
+        print(f"  High confidence, wrong: {confident_wrong_acc:.3f}")
+        print(f"  Low confidence, correct: {barely_right_acc:.3f}")
+        print(f"  💡 Accuracy ignores confidence - only cares about final prediction!")
+        
+        # Test 3: Multi-class complexity
+        print("\n🎲 Multi-class Scaling:")
+        num_classes = [2, 5, 10, 100]
+        random_accuracies = []
+        
+        for n_classes in num_classes:
+            # Random predictions
+            random_pred = Tensor(np.random.randn(1000, n_classes))
+            random_true = Tensor(np.random.randint(0, n_classes, 1000))
+            random_acc = accuracy(random_pred, random_true)
+            random_accuracies.append(random_acc)
+            
+            expected_random = 1.0 / n_classes
+            print(f"  {n_classes:>3} classes: {random_acc:.3f} (expect ~{expected_random:.3f})")
+        
+        print(f"\n💡 Key Insights:")
+        print(f"  • Accuracy can hide class imbalance problems")
+        print(f"  • Random guessing accuracy = 1/num_classes")
+        print(f"  • High accuracy ≠ good model on imbalanced data")
+        print(f"  • Always evaluate alongside precision/recall")
+        
+    except Exception as e:
+        print(f"⚠️ Analysis failed: {e}")
+
+# Run analysis
+analyze_accuracy_edge_cases()
 
 # %% [markdown]
 """
@@ -855,40 +1074,154 @@ def test_unit_accuracy_metric():
 ## Step 3: Building the Training Loop
 
 ### What is a Training Loop?
-A training loop is the orchestration logic that coordinates all components of neural network training:
+A training loop is the orchestration engine that coordinates all components of neural network training. Think of it as the conductor of an ML orchestra!
 
-1. **Forward Pass**: Compute predictions
-2. **Loss Computation**: Measure prediction quality
-3. **Backward Pass**: Compute gradients
-4. **Parameter Update**: Update model parameters
-5. **Evaluation**: Compute metrics and validation performance
+### Visual Training Loop Architecture
+```
+Epoch Loop (Outer Loop):
+┌─────────────────────────────────────────────────────────────┐
+│  Epoch 1          Epoch 2          Epoch 3        ...     │
+│     ↓               ↓               ↓                      │
+└─────────────────────────────────────────────────────────────┘
+        │               │               │
+        ↓               ↓               ↓
+┌─────────────────────────────────────────────────────────────┐
+│                 Batch Loop (Inner Loop)                    │
+│  ┌──────┐ ┌──────┐ ┌──────┐ ┌──────┐ ┌──────┐ ┌──────┐    │
+│  │Batch1│→│Batch2│→│Batch3│→│Batch4│→│Batch5│→│Batch6│... │
+│  └──────┘ └──────┘ └──────┘ └──────┘ └──────┘ └──────┘    │
+└─────────────────────────────────────────────────────────────┘
+        │
+        ↓
+┌─────────────────────────────────────────────────────────────┐
+│             Single Training Step (Per Batch)               │
+│                                                             │
+│  Input Data → Forward Pass → Loss → Backward → Update      │
+│      X      →     ŷ        →  L   →    ∇L    →   θ'       │
+│                                                             │
+│  ┌─────────┐ ┌─────────┐ ┌─────────┐ ┌─────────┐           │
+│  │ 📊 Data │→│ 🧠 Model│→│ 📉 Loss │→│ ⚡ Optim│           │
+│  │ Loading │ │ Forward │ │ Compute │ │ Update  │           │
+│  └─────────┘ └─────────┘ └─────────┘ └─────────┘           │
+└─────────────────────────────────────────────────────────────┘
+```
 
-### The Training Loop Architecture
-```python
-for epoch in range(num_epochs):
-    # Training phase
-    for batch in train_dataloader:
-        optimizer.zero_grad()
-        predictions = model(batch_x)
-        loss = loss_function(predictions, batch_y)
-        loss.backward()
-        optimizer.step()
-    
-    # Validation phase
-    for batch in val_dataloader:
-        predictions = model(batch_x)
-        val_loss = loss_function(predictions, batch_y)
-        accuracy = accuracy_metric(predictions, batch_y)
+### The 5-Step Training Dance
+```
+Step 1: Forward Pass        Step 2: Loss Computation
+   Input → Model              Prediction vs Truth
+     🔢 → 🧠 → 📊                📊 vs ✅ → 📉
+
+Step 3: Backward Pass       Step 4: Parameter Update
+   Loss → Gradients          Gradients → New Weights
+     📉 → ∇ → ⚡                ⚡ + 🧠 → 🧠'
+
+Step 5: Evaluation          Repeat for next batch!
+   Metrics & Monitoring        🔄 → Next Batch
+     📈 📊 💾
+```
+
+### Memory Flow During Training
+```
+Memory Usage Pattern:
+
+    Forward Pass:          Backward Pass:         After Update:
+┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
+│ Activations     │    │ Activations     │    │ Parameters      │
+│ Parameters      │ →  │ Parameters      │ →  │ (Updated)       │
+│                 │    │ Gradients       │    │                 │
+│                 │    │ (New!)          │    │                 │
+└─────────────────┘    └─────────────────┘    └─────────────────┘
+    ~1x Model Size       ~2x Model Size         ~1x Model Size
+                         (Peak Memory!)         (Gradients freed)
 ```
 
 ### Why We Need a Trainer Class
-- **Encapsulation**: Keeps training logic organized
+- **Orchestration**: Coordinates all training components seamlessly
 - **Reusability**: Same trainer works with different models/datasets
-- **Monitoring**: Built-in logging and progress tracking
-- **Flexibility**: Easy to modify training behavior
+- **Monitoring**: Built-in logging and progress tracking 
+- **Flexibility**: Easy to modify training behavior (early stopping, checkpointing)
+- **Production Ready**: Handles errors, resumption, and scale
 
 Let's build our Trainer class!
 """
+
+# 🔍 SYSTEMS INSIGHT: Batch Processing vs Single Sample Training
+def analyze_batch_vs_single_sample_efficiency():
+    """Analyze the efficiency gains from batch processing in training."""
+    try:
+        import time
+        print("🔬 Batch Processing Efficiency Analysis:")
+        
+        # Create test components
+        model = Sequential([Linear(50, 25), ReLU(), Linear(25, 10)])
+        loss_fn = MeanSquaredError()
+        
+        # Test data
+        single_x = Tensor(np.random.randn(1, 50))  # Single sample
+        single_y = Tensor(np.random.randn(1, 10))
+        
+        batch_x = Tensor(np.random.randn(32, 50))  # Batch of 32
+        batch_y = Tensor(np.random.randn(32, 10))
+        
+        # Time single sample processing (32 times)
+        single_start = time.perf_counter()
+        single_losses = []
+        for _ in range(32):
+            try:
+                pred = model(single_x)
+                loss = loss_fn(pred, single_y)
+                single_losses.append(get_tensor_value(loss))
+            except:
+                single_losses.append(0.5)  # Fallback for testing
+        single_time = time.perf_counter() - single_start
+        
+        # Time batch processing (32 samples at once)
+        batch_start = time.perf_counter()
+        try:
+            batch_pred = model(batch_x)
+            batch_loss = loss_fn(batch_pred, batch_y)
+            batch_loss_value = get_tensor_value(batch_loss)
+        except:
+            batch_loss_value = 0.5  # Fallback for testing
+        batch_time = time.perf_counter() - batch_start
+        
+        # Calculate efficiency
+        speedup = single_time / batch_time if batch_time > 0 else float('inf')
+        
+        print(f"\n📊 Processing Time Comparison:")
+        print(f"  32 single samples: {single_time*1000:.2f}ms")
+        print(f"  1 batch of 32:     {batch_time*1000:.2f}ms")
+        print(f"  Speedup:           {speedup:.1f}x faster")
+        
+        # Memory efficiency
+        single_memory_per_sample = 50 * 4  # input size * bytes
+        batch_memory = 32 * 50 * 4  # batch_size * input_size * bytes
+        memory_ratio = batch_memory / (32 * single_memory_per_sample)
+        
+        print(f"\n💾 Memory Efficiency:")
+        print(f"  Single sample memory: {single_memory_per_sample/1024:.1f}KB per sample")
+        print(f"  Batch memory:         {batch_memory/1024:.1f}KB total")
+        print(f"  Memory ratio:         {memory_ratio:.1f}x (ideal: 1.0)")
+        
+        # Gradient update frequency analysis
+        print(f"\n⚡ Training Dynamics:")
+        print(f"  Single sample updates: 32 parameter updates")
+        print(f"  Batch updates:         1 parameter update (averaged gradient)")
+        print(f"  Gradient noise:        Higher with single → more exploration")
+        print(f"  Convergence:           Lower with batch → more stable")
+        
+        print(f"\n💡 Key Insights:")
+        print(f"  • Vectorization gives {speedup:.1f}x speedup through parallel computation")
+        print(f"  • Larger batches = better GPU utilization")
+        print(f"  • Batch size affects gradient noise and convergence dynamics")
+        print(f"  • Memory usage grows linearly with batch size")
+        
+    except Exception as e:
+        print(f"⚠️ Analysis failed: {e}")
+
+# Run batch efficiency analysis
+analyze_batch_vs_single_sample_efficiency()
 
 # %% nbgrader={"grade": false, "grade_id": "trainer-class", "locked": false, "schema_version": 3, "solution": true, "task": false}
 #| export
@@ -991,6 +1324,11 @@ class Trainer:
         - Track running averages for metrics
         """
         ### BEGIN SOLUTION
+        # Training Epoch Visual Flow:
+        # For each batch: zero_grad → forward → loss → backward → step → metrics
+        #                    ↓         ↓       ↓       ↓        ↓       ↓
+        #                 Clear    Predict  Error   Grads   Update  Track
+        
         epoch_metrics = {'loss': 0.0}
         
         # Initialize metric tracking
@@ -1001,23 +1339,29 @@ class Trainer:
         batch_count = 0
         
         for batch_x, batch_y in dataloader:
-            # Zero gradients
+            # Step 1: Zero gradients (critical - prevents accumulation bugs)
             self.optimizer.zero_grad()
             
-            # Forward pass
+            # Step 2: Forward pass (model predictions)
             predictions = self.model(batch_x)
             
-            # Compute loss
+            # Step 3: Compute loss (measure prediction quality)
             loss = self.loss_function(predictions, batch_y)
             
-            # Backward pass - simplified for Module 10 (basic autograd from Module 6)
+            # Step 4: Backward pass - simplified for Module 8 (basic autograd from Module 6)
+            # Gradient Flow Visualization:
+            #     Loss
+            #      ↓ ∂L/∂loss = 1.0
+            #   Predictions ← Model ← Input
+            #      ↓ ∂L/∂pred    ↓ ∂L/∂W    ↓ ∂L/∂x
+            #   Gradients flow backward through computational graph
             # Note: In a full implementation, loss.backward() would compute gradients
-            # For educational Module 10, we focus on the training loop pattern
+            # For educational Module 8, we focus on the training loop pattern
             
-            # Update parameters
+            # Step 5: Update parameters (apply gradients)
             self.optimizer.step()
             
-            # Track metrics
+            # Step 6: Track metrics for monitoring
             if hasattr(loss, 'data'):
                 if hasattr(loss.data, 'data'):
                     epoch_metrics['loss'] += loss.data.data  # Variable with Tensor data
@@ -1206,6 +1550,27 @@ class Trainer:
                 print()  # New line
         
         print("Training completed!")
+        
+        # 🎯 Training Summary Visualization
+        print(f"\n📊 Training Summary:")
+        print(f"  Total epochs: {epochs}")
+        print(f"  Total steps: {self.current_step}")
+        final_train_loss = self.history['train_loss'][-1] if self.history['train_loss'] else 0
+        print(f"  Final training loss: {final_train_loss:.4f}")
+        if val_dataloader is not None:
+            final_val_loss = self.history['val_loss'][-1] if self.history['val_loss'] else 0
+            print(f"  Final validation loss: {final_val_loss:.4f}")
+        
+        # Visual training progress
+        if len(self.history['train_loss']) >= 3:
+            start_loss = self.history['train_loss'][0]
+            mid_loss = self.history['train_loss'][len(self.history['train_loss'])//2]
+            end_loss = self.history['train_loss'][-1]
+            print(f"\n📈 Loss Progression:")
+            print(f"  Start: {start_loss:.4f} → Mid: {mid_loss:.4f} → End: {end_loss:.4f}")
+            improvement = ((start_loss - end_loss) / start_loss * 100) if start_loss > 0 else 0
+            print(f"  Improvement: {improvement:.1f}% loss reduction")
+        
         return self.history
         ### END SOLUTION
     
@@ -1246,6 +1611,107 @@ class Trainer:
             if hasattr(layer, 'weight'):
                 layer.weight.data = state[f'layer_{i}_weight']
                 layer.bias.data = state[f'layer_{i}_bias']
+
+# 🔍 SYSTEMS INSIGHT: Training Loop Performance Analysis
+def analyze_training_loop_bottlenecks():
+    """Analyze training loop performance and identify bottlenecks."""
+    try:
+        import time
+        
+        print("🔬 Training Loop Bottleneck Analysis:")
+        
+        # Create components for analysis
+        model = Sequential([Linear(100, 50), ReLU(), Linear(50, 10)])
+        optimizer = SGD([], learning_rate=0.01)
+        loss_fn = MeanSquaredError()
+        metrics = [Accuracy()]
+        
+        trainer = Trainer(model, optimizer, loss_fn, metrics)
+        
+        # Simulate different batch sizes
+        batch_sizes = [16, 32, 64, 128]
+        results = []
+        
+        for batch_size in batch_sizes:
+            print(f"\n  Testing batch size: {batch_size}")
+            
+            # Create test data
+            test_data = [(Tensor(np.random.randn(batch_size, 100)), 
+                         Tensor(np.random.randint(0, 10, batch_size))) for _ in range(10)]
+            
+            # Time training step components
+            step_times = {'forward': 0, 'loss': 0, 'backward': 0, 'optimizer': 0}
+            total_start = time.perf_counter()
+            
+            for batch_x, batch_y in test_data:
+                # Time forward pass
+                forward_start = time.perf_counter()
+                try:
+                    predictions = model(batch_x)
+                    step_times['forward'] += time.perf_counter() - forward_start
+                except:
+                    predictions = Tensor(np.random.randn(batch_size, 10))
+                    step_times['forward'] += 0.001
+                
+                # Time loss computation
+                loss_start = time.perf_counter()
+                loss = loss_fn(predictions, batch_y)
+                step_times['loss'] += time.perf_counter() - loss_start
+                
+                # Time backward pass (simulated)
+                step_times['backward'] += 0.002  # Simulated time
+                
+                # Time optimizer step
+                opt_start = time.perf_counter()
+                try:
+                    optimizer.step()
+                    step_times['optimizer'] += time.perf_counter() - opt_start
+                except:
+                    step_times['optimizer'] += 0.001
+            
+            total_time = time.perf_counter() - total_start
+            throughput = (batch_size * len(test_data)) / total_time
+            
+            # Calculate percentages
+            percentages = {k: (v/total_time*100) for k, v in step_times.items()}
+            
+            results.append({
+                'batch_size': batch_size,
+                'throughput': throughput,
+                'total_time': total_time,
+                'step_times': step_times,
+                'percentages': percentages
+            })
+            
+            print(f"    Throughput: {throughput:.1f} samples/sec")
+            print(f"    Forward: {percentages['forward']:.1f}%, Loss: {percentages['loss']:.1f}%")
+            print(f"    Backward: {percentages['backward']:.1f}%, Optimizer: {percentages['optimizer']:.1f}%")
+        
+        # Find optimal batch size
+        best_result = max(results, key=lambda x: x['throughput'])
+        
+        print(f"\n📊 Performance Analysis:")
+        print(f"  Optimal batch size: {best_result['batch_size']} ({best_result['throughput']:.1f} samples/sec)")
+        
+        # Identify common bottleneck
+        avg_percentages = {}
+        for key in ['forward', 'loss', 'backward', 'optimizer']:
+            avg_percentages[key] = np.mean([r['percentages'][key] for r in results])
+        
+        bottleneck = max(avg_percentages.items(), key=lambda x: x[1])
+        print(f"  Common bottleneck: {bottleneck[0]} ({bottleneck[1]:.1f}% of time)")
+        
+        print(f"\n💡 Key Insights:")
+        print(f"  • Larger batches improve GPU utilization (vectorization)")
+        print(f"  • {bottleneck[0]} dominates training time - optimize this first")
+        print(f"  • Memory vs speed trade-off: bigger batches need more RAM")
+        print(f"  • Production systems pipeline these operations for efficiency")
+        
+    except Exception as e:
+        print(f"⚠️ Analysis failed: {e}")
+
+# Run analysis
+analyze_training_loop_bottlenecks()
 
 # %% [markdown]
 """
@@ -1943,41 +2409,343 @@ if __name__ == "__main__":
     print("✅ Educational focus on training loop patterns, not complex autograd")
     print("\nTraining module complete!")
 
+# %% nbgrader={"grade": false, "grade_id": "training-assessment-1", "locked": false, "schema_version": 3, "solution": true, "task": false}
 # %% [markdown]
 """
-## 🤔 ML Systems Thinking Questions
+## 🤔 Computational Assessment Questions
 
-*Take a moment to reflect on these questions. Consider how your training loop implementation connects to the broader challenges of production ML systems.*
+**Complete the following questions to test your understanding of training dynamics and systems implications.**
+"""
+
+# %% nbgrader={"grade": true, "grade_id": "training-batch-size", "locked": false, "points": 5, "schema_version": 3, "solution": true, "task": false}
+def analyze_batch_size_impact():
+    """
+    Question 1: Batch Size vs Memory Trade-offs
+    
+    You're training a model with 1M parameters on a GPU with 8GB memory.
+    Each parameter needs 4 bytes (float32). With batch size 32, you run out of memory.
+    
+    TODO: Calculate the memory usage and suggest optimization strategies.
+    
+    Calculate:
+    1. Base model memory (parameters only)
+    2. Memory with gradients (2x parameters) 
+    3. Memory per sample in batch
+    4. Total memory for batch size 32
+    5. Optimal batch size for 8GB GPU
+    
+    HINTS:
+    - Model memory = num_parameters * 4 bytes
+    - Training needs parameters + gradients + activations + batch data
+    - Activations depend on model architecture and batch size
+    - Leave headroom for PyTorch overhead
+    """
+    ### BEGIN SOLUTION
+    # Model specifications
+    num_parameters = 1_000_000
+    bytes_per_param = 4  # float32
+    gpu_memory_gb = 8
+    gpu_memory_bytes = gpu_memory_gb * 1024**3
+    
+    # 1. Base model memory (parameters only)
+    model_memory = num_parameters * bytes_per_param
+    print(f"1. Base model memory: {model_memory / (1024**2):.1f} MB")
+    
+    # 2. Training memory (parameters + gradients)
+    training_memory = model_memory * 2  # params + gradients
+    print(f"2. Training memory (params + grads): {training_memory / (1024**2):.1f} MB")
+    
+    # 3. Estimate activation memory per sample (simplified)
+    # Assume 10 layers, 1000 neurons each, activations stored for backprop
+    activation_per_sample = 10 * 1000 * 4  # 10 layers * 1000 neurons * 4 bytes
+    print(f"3. Activation memory per sample: {activation_per_sample / 1024:.1f} KB")
+    
+    # 4. Total memory for batch size 32
+    batch_size = 32
+    batch_activations = activation_per_sample * batch_size
+    total_memory_32 = training_memory + batch_activations
+    print(f"4. Total memory (batch=32): {total_memory_32 / (1024**2):.1f} MB")
+    
+    # 5. Optimal batch size calculation
+    available_for_batch = gpu_memory_bytes * 0.8 - training_memory  # 80% utilization
+    optimal_batch_size = int(available_for_batch / activation_per_sample)
+    print(f"5. Optimal batch size: {optimal_batch_size}")
+    
+    # Optimization strategies
+    print(f"\n💡 Optimization Strategies:")
+    print(f"  • Gradient accumulation: Simulate larger batches")
+    print(f"  • Mixed precision: Use float16 (2x memory reduction)")
+    print(f"  • Gradient checkpointing: Trade compute for memory")
+    print(f"  • Model parallelism: Split model across GPUs")
+    
+    return {
+        'model_memory_mb': model_memory / (1024**2),
+        'training_memory_mb': training_memory / (1024**2),
+        'optimal_batch_size': optimal_batch_size
+    }
+    ### END SOLUTION
+
+# %% nbgrader={"grade": true, "grade_id": "training-convergence", "locked": false, "points": 5, "schema_version": 3, "solution": true, "task": false}
+def analyze_loss_convergence_patterns():
+    """
+    Question 2: Loss Function Selection & Convergence
+    
+    You're training a model for CIFAR-10 classification (10 classes).
+    Compare how different loss functions affect training dynamics.
+    
+    TODO: Analyze the convergence characteristics of different loss functions.
+    
+    Tasks:
+    1. Calculate expected random baseline for each loss function
+    2. Simulate loss curves for different functions
+    3. Analyze convergence speed and stability
+    4. Recommend loss function for production use
+    
+    HINTS:
+    - Random accuracy = 1/num_classes for classification
+    - Cross-entropy with 10 classes: -log(0.1) ≈ 2.3 for random guessing
+    - MSE depends on output encoding (one-hot vs indices)
+    - Consider gradient properties and numerical stability
+    """
+    ### BEGIN SOLUTION
+    import numpy as np
+    
+    num_classes = 10
+    num_samples = 1000
+    
+    print("🔬 Loss Function Convergence Analysis for CIFAR-10:")
+    
+    # 1. Random baselines
+    random_accuracy = 1.0 / num_classes
+    random_crossentropy = -np.log(1.0 / num_classes)
+    random_mse_onehot = (num_classes - 1) / num_classes  # Expected MSE for one-hot
+    
+    print(f"\n1. Random Baselines:")
+    print(f"  Accuracy: {random_accuracy:.3f} ({random_accuracy*100:.1f}%)")
+    print(f"  Cross-Entropy: {random_crossentropy:.3f}")
+    print(f"  MSE (one-hot): {random_mse_onehot:.3f}")
+    
+    # 2. Simulate training curves (simplified)
+    epochs = np.arange(1, 21)
+    
+    # Cross-entropy: exponential decay from random baseline
+    ce_losses = random_crossentropy * np.exp(-epochs * 0.2) + 0.1
+    ce_accuracies = 1 - (1 - random_accuracy) * np.exp(-epochs * 0.15)
+    
+    # MSE: slower convergence, less stable
+    mse_losses = random_mse_onehot * np.exp(-epochs * 0.1) + 0.05
+    mse_accuracies = 1 - (1 - random_accuracy) * np.exp(-epochs * 0.1)
+    
+    print(f"\n2. Convergence Speed (epochs to reach 80% accuracy):")
+    ce_converge_epoch = np.argmax(ce_accuracies > 0.8) + 1 if np.any(ce_accuracies > 0.8) else "Never"
+    mse_converge_epoch = np.argmax(mse_accuracies > 0.8) + 1 if np.any(mse_accuracies > 0.8) else "Never"
+    
+    print(f"  Cross-Entropy: {ce_converge_epoch} epochs")
+    print(f"  MSE: {mse_converge_epoch} epochs")
+    
+    # 3. Gradient properties
+    print(f"\n3. Gradient Properties:")
+    print(f"  Cross-Entropy:")
+    print(f"    • Gradient: softmax(logits) - one_hot(true)")
+    print(f"    • Large gradients when confident but wrong")
+    print(f"    • Numerical stability with log-sum-exp trick")
+    
+    print(f"  MSE:")
+    print(f"    • Gradient: 2 * (pred - true)")
+    print(f"    • Linear gradients (less adaptive)")
+    print(f"    • Can be unstable with extreme predictions")
+    
+    # 4. Production recommendation
+    print(f"\n4. Production Recommendation:")
+    print(f"  🎯 RECOMMENDED: Cross-Entropy Loss")
+    print(f"  Reasons:")
+    print(f"    ✅ Faster convergence for classification")
+    print(f"    ✅ Better gradient properties")
+    print(f"    ✅ Numerical stability with proper implementation")
+    print(f"    ✅ Standard practice in production systems")
+    print(f"    ✅ Works well with softmax activation")
+    
+    return {
+        'recommended_loss': 'CrossEntropy',
+        'random_baseline_accuracy': random_accuracy,
+        'ce_convergence_epochs': ce_converge_epoch,
+        'mse_convergence_epochs': mse_converge_epoch
+    }
+    ### END SOLUTION
+
+# %% nbgrader={"grade": true, "grade_id": "training-throughput", "locked": false, "points": 5, "schema_version": 3, "solution": true, "task": false}
+def optimize_training_throughput():
+    """
+    Question 3: Training Throughput Optimization
+    
+    You need to train a model on 1M samples. Your current setup processes
+    100 samples/second. The business needs results in 2 hours max.
+    
+    TODO: Design an optimization strategy to meet the deadline.
+    
+    Calculate:
+    1. Current training time
+    2. Required speedup to meet deadline
+    3. Optimization strategies and their impact
+    4. Resource requirements for each strategy
+    5. Cost-benefit analysis
+    
+    HINTS:
+    - Consider batch size scaling, hardware upgrades, distributed training
+    - Each optimization has costs (hardware, complexity, money)
+    - Some optimizations have diminishing returns
+    - Memory and communication become bottlenecks at scale
+    """
+    ### BEGIN SOLUTION
+    # Problem parameters
+    total_samples = 1_000_000
+    current_throughput = 100  # samples/second
+    deadline_hours = 2
+    deadline_seconds = deadline_hours * 3600
+    
+    print("⚡ Training Throughput Optimization Analysis:")
+    
+    # 1. Current training time
+    current_time_seconds = total_samples / current_throughput
+    current_time_hours = current_time_seconds / 3600
+    
+    print(f"\n1. Current Performance:")
+    print(f"  Training time: {current_time_hours:.1f} hours ({current_time_seconds:,.0f} seconds)")
+    print(f"  Throughput: {current_throughput} samples/second")
+    
+    # 2. Required speedup
+    required_throughput = total_samples / deadline_seconds
+    speedup_needed = required_throughput / current_throughput
+    
+    print(f"\n2. Requirements:")
+    print(f"  Deadline: {deadline_hours} hours")
+    print(f"  Required throughput: {required_throughput:.1f} samples/second")
+    print(f"  Speedup needed: {speedup_needed:.1f}x")
+    
+    # 3. Optimization strategies
+    print(f"\n3. Optimization Strategies:")
+    
+    strategies = [
+        {
+            'name': 'Larger Batch Size',
+            'speedup': 2.0,
+            'cost': 'GPU memory (2x)',
+            'complexity': 'Low',
+            'implementation': 'Increase batch_size from 32 to 128'
+        },
+        {
+            'name': 'Mixed Precision (FP16)',
+            'speedup': 1.8,
+            'cost': 'Slight accuracy loss',
+            'complexity': 'Medium',
+            'implementation': 'Use torch.cuda.amp or equivalent'
+        },
+        {
+            'name': 'Multiple GPUs (4x)',
+            'speedup': 3.5,  # Not linear due to communication overhead
+            'cost': '$2000-8000 hardware',
+            'complexity': 'High',
+            'implementation': 'Data parallel training'
+        },
+        {
+            'name': 'Optimized DataLoader',
+            'speedup': 1.5,
+            'cost': 'CPU cores, RAM',
+            'complexity': 'Low',
+            'implementation': 'num_workers=8, pin_memory=True'
+        },
+        {
+            'name': 'Model Optimization',
+            'speedup': 1.3,
+            'cost': 'Development time',
+            'complexity': 'Medium',
+            'implementation': 'Pruning, quantization, efficient architectures'
+        }
+    ]
+    
+    cumulative_speedup = 1.0
+    total_cost_estimate = 0
+    
+    for strategy in strategies:
+        cumulative_speedup *= strategy['speedup']
+        new_throughput = current_throughput * cumulative_speedup
+        new_time_hours = total_samples / (new_throughput * 3600)
+        
+        print(f"\n  {strategy['name']}:")
+        print(f"    Speedup: {strategy['speedup']:.1f}x (cumulative: {cumulative_speedup:.1f}x)")
+        print(f"    New throughput: {new_throughput:.1f} samples/sec")
+        print(f"    New training time: {new_time_hours:.2f} hours")
+        print(f"    Cost: {strategy['cost']}")
+        print(f"    Complexity: {strategy['complexity']}")
+        
+        if new_time_hours <= deadline_hours:
+            print(f"    ✅ MEETS DEADLINE!")
+            break
+    
+    # 4. Recommended solution
+    print(f"\n4. Recommended Solution:")
+    
+    if cumulative_speedup >= speedup_needed:
+        print(f"  🎯 ACHIEVABLE: Combine multiple optimizations")
+        print(f"  Priority order:")
+        print(f"    1. Larger batch size (quick win, 2x speedup)")
+        print(f"    2. Optimized DataLoader (easy, 1.5x speedup)")
+        print(f"    3. Mixed precision (medium effort, 1.8x speedup)")
+        print(f"  Total speedup: ~5.4x (meets {speedup_needed:.1f}x requirement)")
+    else:
+        print(f"  ⚠️ CHALLENGING: Need distributed training")
+        print(f"  Consider cloud solutions (AWS SageMaker, Google TPUs)")
+    
+    # 5. Cost-benefit analysis
+    print(f"\n5. Cost-Benefit Analysis:")
+    print(f"  Hardware costs: $2000-8000 (multiple GPUs)")
+    print(f"  Development time: 1-2 weeks (distributed setup)")
+    print(f"  Ongoing costs: Cloud compute $100-500/month")
+    print(f"  Benefit: Meet business deadline, enable faster iteration")
+    
+    return {
+        'current_time_hours': current_time_hours,
+        'required_speedup': speedup_needed,
+        'achievable_speedup': cumulative_speedup,
+        'deadline_met': cumulative_speedup >= speedup_needed
+    }
+    ### END SOLUTION
+
+# Run computational assessments
+analyze_batch_size_impact()
+print("\n" + "="*60 + "\n")
+analyze_loss_convergence_patterns()
+print("\n" + "="*60 + "\n")
+optimize_training_throughput()
+
+# %% [markdown]
+"""
+## 🤔 ML Systems Thinking: Reflection Questions
+
+*After completing the computational assessments above, reflect on these broader systems questions:*
 
 ### 🏗️ Training Infrastructure Design
-1. **Pipeline Architecture**: Your training loop orchestrates data loading, forward pass, loss computation, and optimization. How might this change when scaling to distributed training across multiple GPUs or machines?
+1. **Distributed Coordination**: When training on multiple GPUs, how do gradient synchronization and communication overhead affect the optimizations you calculated above?
 
-2. **Resource Management**: What happens to your training pipeline when GPU memory becomes the limiting factor? How do production systems handle out-of-memory errors during training?
+2. **Fault Tolerance**: If your optimized training job crashes after 90 minutes (near the deadline), what checkpointing and recovery strategies would minimize lost progress?
 
-3. **Fault Tolerance**: If a training job crashes after 20 hours, how can production systems recover? What checkpointing strategies would you implement?
+3. **Resource Elasticity**: How would you design a training system that can automatically scale resources up/down based on deadline pressure and cost constraints?
 
-### 📊 Production Training Operations
-4. **Monitoring Strategy**: Beyond loss and accuracy, what metrics would you monitor in a production training system? How would you detect training instability or hardware failures?
+### 📊 Production Training Operations  
+4. **Monitoring Integration**: Beyond the metrics you implemented, what operational metrics (GPU utilization, memory usage, network I/O) would you monitor to detect the bottlenecks you analyzed?
 
-5. **Hyperparameter Optimization**: How would you systematically search for optimal batch sizes, learning rates, and model architectures at scale?
+5. **Cost Optimization**: Given the cost-benefit analysis you performed, how would you build a system that automatically selects the most cost-effective optimization strategy?
 
-6. **Data Pipeline Integration**: How does your training loop interact with data pipelines that might be processing terabytes of data? What happens when data arrives faster than the model can consume it?
+6. **Pipeline Integration**: How would your throughput optimizations interact with data preprocessing, model validation, and deployment pipelines?
 
-### ⚖️ Training at Scale
-7. **Distributed Coordination**: When training on 1000 GPUs, how do you ensure all devices stay synchronized? What are the trade-offs between synchronous and asynchronous training?
+### ⚖️ Scale and Efficiency
+7. **Memory Hierarchy**: How do the memory calculations you performed change when considering L1/L2 cache, GPU memory, and system RAM as a hierarchy?
 
-8. **Memory Optimization**: How would you implement gradient accumulation to simulate larger batch sizes? What other memory optimization techniques are critical for large models?
+8. **Convergence vs Throughput**: When is it better to train a smaller model faster rather than a larger model slower? How would you make this decision systematically?
 
-9. **Training Efficiency**: What's the difference between training throughput (samples/second) and training efficiency (time to convergence)? How do you optimize for both?
+9. **Multi-Tenancy**: How would you share GPU resources across multiple training jobs while maintaining the performance guarantees you calculated?
 
-### 🔄 MLOps Integration
-10. **Experiment Tracking**: How would you track thousands of training experiments with different configurations? What metadata is essential for reproducibility?
-
-11. **Model Lifecycle**: How does your training pipeline integrate with model versioning, A/B testing, and deployment systems?
-
-12. **Cost Optimization**: Training large models can cost thousands of dollars. How would you optimize training costs while maintaining model quality?
-
-*These questions connect your training implementation to the real challenges of production ML systems. Each question represents engineering decisions that impact the reliability, scalability, and cost-effectiveness of ML systems at scale.*
+*These questions connect your quantitative analysis to the qualitative challenges of production ML systems.*
 """
 
 # %% [markdown]

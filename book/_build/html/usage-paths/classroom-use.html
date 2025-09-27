@@ -35,7 +35,7 @@
     <link rel="stylesheet" type="text/css" href="../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css?v=6644e6bb" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
-    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=bf48879e" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=b7a97b18" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
@@ -62,8 +62,8 @@
     <link rel="icon" href="../_static/favicon.svg"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Course Introduction: ML Systems Engineering Through Implementation" href="../chapters/00-introduction.html" />
-    <link rel="prev" title="Your TinyTorch Journey: From First Neural Network to Modern AI" href="../learning-timeline.html" />
+    <link rel="next" title="Essential TITO Commands" href="../tito-essentials.html" />
+    <link rel="prev" title="Quick Start Guide" href="../quickstart-guide.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -183,8 +183,13 @@
         </ul>
         <p aria-level="2" class="caption" role="heading"><span class="caption-text">🚀 Getting Started</span></p>
 <ul class="current nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../learning-timeline.html">Your Learning Journey</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart-guide.html">Quick Start Guide</a></li>
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">For Instructors</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">🛠️ Using TinyTorch</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../tito-essentials.html">Essential Commands</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../learning-progress.html">Track Your Progress</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">🧭 Course Orientation</span></p>
 <ul class="nav bd-sidenav">
@@ -446,14 +451,7 @@ document.write(`
                 <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#complete-course-infrastructure">🎯 Complete Course Infrastructure</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-tinytorch-for-your-classroom">🌟 Why TinyTorch for Your Classroom</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#course-module-overview">Course Module Overview</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#foundation-modules-01-03">Foundation (Modules 01-03)</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#building-blocks-modules-04-08">Building Blocks (Modules 04-08)</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#computer-vision-modules-09-10">Computer Vision (Modules 09-10)</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#language-models-modules-11-14">Language Models (Modules 11-14)</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#system-optimization-modules-15-20">System Optimization (Modules 15-20)</a></li>
-</ul>
-</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#course-module-overview">Course Module Overview</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#academic-learning-goals">Academic Learning Goals</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#quick-start-for-instructors">🚀 Quick Start for Instructors</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#assessment-options">📋 Assessment Options</a><ul class="nav section-nav flex-column">
@@ -575,51 +573,8 @@ document.write(`
 <hr class="docutils" />
 <section id="course-module-overview">
 <h2>Course Module Overview<a class="headerlink" href="#course-module-overview" title="Link to this heading">#</a></h2>
-<section id="foundation-modules-01-03">
-<h3>Foundation (Modules 01-03)<a class="headerlink" href="#foundation-modules-01-03" title="Link to this heading">#</a></h3>
-<ul class="simple">
-<li><p><strong>01: Setup</strong> - Development environment and workflow</p></li>
-<li><p><strong>02: Tensor</strong> - Multi-dimensional arrays and automatic differentiation</p></li>
-<li><p><strong>03: Activations</strong> - Mathematical functions and nonlinearity</p></li>
-</ul>
-</section>
-<section id="building-blocks-modules-04-08">
-<h3>Building Blocks (Modules 04-08)<a class="headerlink" href="#building-blocks-modules-04-08" title="Link to this heading">#</a></h3>
-<ul class="simple">
-<li><p><strong>04: Layers</strong> - Neural network abstractions</p></li>
-<li><p><strong>05: Losses</strong> - Loss functions for learning</p></li>
-<li><p><strong>06: Autograd</strong> - Automatic differentiation</p></li>
-<li><p><strong>07: Optimizers</strong> - SGD, Adam, and scheduling</p></li>
-<li><p><strong>08: Training</strong> - Complete training loops</p></li>
-</ul>
-</section>
-<section id="computer-vision-modules-09-10">
-<h3>Computer Vision (Modules 09-10)<a class="headerlink" href="#computer-vision-modules-09-10" title="Link to this heading">#</a></h3>
-<ul class="simple">
-<li><p><strong>09: Spatial</strong> - Convolutional operations</p></li>
-<li><p><strong>10: DataLoader</strong> - Data pipeline and CIFAR-10</p></li>
-</ul>
-</section>
-<section id="language-models-modules-11-14">
-<h3>Language Models (Modules 11-14)<a class="headerlink" href="#language-models-modules-11-14" title="Link to this heading">#</a></h3>
-<ul class="simple">
-<li><p><strong>11: Tokenization</strong> - Text processing</p></li>
-<li><p><strong>12: Embeddings</strong> - Token embeddings</p></li>
-<li><p><strong>13: Attention</strong> - Transformer mechanisms</p></li>
-<li><p><strong>14: Transformers</strong> - Complete language models</p></li>
-</ul>
-</section>
-<section id="system-optimization-modules-15-20">
-<h3>System Optimization (Modules 15-20)<a class="headerlink" href="#system-optimization-modules-15-20" title="Link to this heading">#</a></h3>
-<ul class="simple">
-<li><p><strong>15: Profiling</strong> - Performance analysis</p></li>
-<li><p><strong>16: Acceleration</strong> - Hardware optimization</p></li>
-<li><p><strong>17: Quantization</strong> - Model compression</p></li>
-<li><p><strong>18: Compression</strong> - Pruning and distillation</p></li>
-<li><p><strong>19: Caching</strong> - Memory optimization</p></li>
-<li><p><strong>20: Benchmarking</strong> - Performance evaluation and competition</p></li>
-</ul>
-</section>
+<p>The TinyTorch course consists of 20 progressive modules organized into learning stages.</p>
+<p><strong>📖 See <a class="reference internal" href="#../chapters/00-introduction.html#course-structure"><span class="xref myst">Complete Course Structure</span></a></strong> for detailed module descriptions, learning objectives, and prerequisites for each module.</p>
 </section>
 <hr class="docutils" />
 <section id="academic-learning-goals">
@@ -780,20 +735,20 @@ tito nbgrader release 01_setup
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="../learning-timeline.html"
+       href="../quickstart-guide.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Your TinyTorch Journey: From First Neural Network to Modern AI</p>
+        <p class="prev-next-title">Quick Start Guide</p>
       </div>
     </a>
     <a class="right-next"
-       href="../chapters/00-introduction.html"
+       href="../tito-essentials.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Course Introduction: ML Systems Engineering Through Implementation</p>
+        <p class="prev-next-title">Essential TITO Commands</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -815,14 +770,7 @@ tito nbgrader release 01_setup
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#complete-course-infrastructure">🎯 Complete Course Infrastructure</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-tinytorch-for-your-classroom">🌟 Why TinyTorch for Your Classroom</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#course-module-overview">Course Module Overview</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#foundation-modules-01-03">Foundation (Modules 01-03)</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#building-blocks-modules-04-08">Building Blocks (Modules 04-08)</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#computer-vision-modules-09-10">Computer Vision (Modules 09-10)</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#language-models-modules-11-14">Language Models (Modules 11-14)</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#system-optimization-modules-15-20">System Optimization (Modules 15-20)</a></li>
-</ul>
-</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#course-module-overview">Course Module Overview</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#academic-learning-goals">Academic Learning Goals</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#quick-start-for-instructors">🚀 Quick Start for Instructors</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#assessment-options">📋 Assessment Options</a><ul class="nav section-nav flex-column">

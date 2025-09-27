@@ -1,0 +1,1000 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>🎯 TinyTorch Checkpoint System &#8212; TinyTorch</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="_static/custom.css?v=b7a97b18" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="_static/copybutton.js?v=f281be69"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'checkpoint-system';</script>
+    <link rel="icon" href="_static/favicon.svg"/>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="🧪 Testing Framework" href="testing-framework.html" />
+    <link rel="prev" title="🏆 TinyTorch Competitions" href="competitions.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="_static/tensortorch.png" class="logo__image only-light" alt="TinyTorch - Home"/>
+    <script>document.write(`<img src="_static/tensortorch.png" class="logo__image only-dark" alt="TinyTorch - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="intro.html">
+                    TinyTorch: Build ML Systems from Scratch
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">🚀 Getting Started</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="quickstart-guide.html">Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage-paths/classroom-use.html">For Instructors</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">🛠️ Using TinyTorch</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="tito-essentials.html">Essential Commands</a></li>
+<li class="toctree-l1"><a class="reference internal" href="learning-progress.html">Track Your Progress</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">🧭 Course Orientation</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="chapters/00-introduction.html">Introduction</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">🧱 Building Blocks</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="chapters/01-setup.html">01. Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapters/02-tensor.html">02. Tensor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapters/03-activations.html">03. Activations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapters/04-layers.html">04. Layers</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">🧠 Learning Systems</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="chapters/05-dense.html">05. Losses</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapters/09-autograd.html">06. Autograd</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapters/10-optimizers.html">07. Optimizers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapters/11-training.html">08. Training</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">🏗️ Neural Architectures</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="chapters/06-spatial.html">09. Spatial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapters/08-dataloader.html">10. DataLoader</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapters/11-tokenization.html">11. Tokenization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapters/12-embeddings.html">12. Embeddings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapters/07-attention.html">13. Attention</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapters/16-tinygpt.html">14. Transformers</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">⚡ Performance Optimization</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="chapters/15-profiling.html">15. Profiling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapters/13-kernels.html">16. Acceleration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapters/17-quantization.html">17. Quantization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapters/12-compression.html">18. Compression</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapters/19-caching.html">19. KV Caching</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chapters/14-benchmarking.html">20. Benchmarking</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">🏅 Community &amp; Competition</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="leaderboard.html">Leaderboard</a></li>
+<li class="toctree-l1"><a class="reference internal" href="competitions.html">Competitions</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">🛠️ Resources &amp; Tools</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Progress Tracking</a></li>
+<li class="toctree-l1"><a class="reference internal" href="testing-framework.html">Testing Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="resources.html">Additional Resources</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/mlsysbook/TinyTorch" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/mlsysbook/TinyTorch/edit/main/book/checkpoint-system.md" target="_blank"
+   class="btn btn-sm btn-source-edit-button dropdown-item"
+   title="Suggest edit"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="btn__text-container">Suggest edit</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/mlsysbook/TinyTorch/issues/new?title=Issue%20on%20page%20%2Fcheckpoint-system.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/checkpoint-system.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>🎯 TinyTorch Checkpoint System</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-five-major-checkpoints">🚀 The Five Major Checkpoints</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#foundation">🎯 Foundation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#neural-architecture">🎯 Neural Architecture</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#training">🎯 Training</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inference-deployment">🎯 Inference Deployment</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#language-models">🔥 Language Models</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tracking-your-progress">📊 Tracking Your Progress</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#visual-timeline">Visual Timeline</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rich-progress-tracking">Rich Progress Tracking</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#capability-statements">Capability Statements</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#technical-usage">🛠️ Technical Usage</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#integration-with-development">Integration with Development</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#automatic-module-to-checkpoint-mapping">Automatic Module-to-Checkpoint Mapping</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#real-capability-validation">Real Capability Validation</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#rich-visual-feedback">Rich Visual Feedback</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#implementation-architecture">🏗️ Implementation Architecture</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#individual-test-files">16 Individual Test Files</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rich-cli-integration">Rich CLI Integration</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#automated-module-completion">Automated Module Completion</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#agent-team-implementation">Agent Team Implementation</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-this-approach-works">🧠 Why This Approach Works</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#systems-thinking-over-task-completion">Systems Thinking Over Task Completion</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#clear-learning-goals">Clear Learning Goals</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#academic-progress-markers">Academic Progress Markers</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#real-world-relevance">Real-World Relevance</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#debugging-checkpoint-failures">🐛 Debugging Checkpoint Failures</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#common-failure-patterns">Common Failure Patterns</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#checkpoint-test-structure">Checkpoint Test Structure</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#advanced-usage-features">🚀 Advanced Usage Features</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#batch-testing">Batch Testing</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#custom-checkpoint-development">Custom Checkpoint Development</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#performance-profiling">Performance Profiling</a></li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="tinytorch-checkpoint-system">
+<h1>🎯 TinyTorch Checkpoint System<a class="headerlink" href="#tinytorch-checkpoint-system" title="Link to this heading">#</a></h1>
+<div style="background: #f8f9fa; border: 1px solid #dee2e6; padding: 2rem; border-radius: 0.5rem; text-align: center; margin: 2rem 0;">
+<h2 style="margin: 0 0 1rem 0; color: #495057;">Technical Implementation Guide</h2>
+<p style="margin: 0; color: #6c757d;">Capability validation system architecture and implementation details</p>
+</div>
+<p><strong>Purpose</strong>: Technical documentation for the checkpoint validation system. Understand the architecture and implementation details of capability-based learning assessment.</p>
+<p>The TinyTorch checkpoint system provides technical infrastructure for capability validation and progress tracking. This system transforms traditional module completion into measurable skill assessment through automated testing and validation.</p>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; margin: 2rem 0;">
+<div style="background: #f8f9fa; border-left: 4px solid #007bff; padding: 1rem; border-radius: 0.25rem;">
+<h4 style="margin: 0 0 0.5rem 0; color: #0056b3;">Progress Markers</h4>
+<p style="margin: 0; font-size: 0.9rem; color: #6c757d;">Academic milestones marking concrete learning achievements</p>
+</div>
+<div style="background: #f8f9fa; border-left: 4px solid #28a745; padding: 1rem; border-radius: 0.25rem;">
+<h4 style="margin: 0 0 0.5rem 0; color: #1e7e34;">Capability-Based</h4>
+<p style="margin: 0; font-size: 0.9rem; color: #6c757d;">Unlock actual ML systems engineering capabilities</p>
+</div>
+<div style="background: #f8f9fa; border-left: 4px solid #ffc107; padding: 1rem; border-radius: 0.25rem;">
+<h4 style="margin: 0 0 0.5rem 0; color: #856404;">Cumulative Learning</h4>
+<p style="margin: 0; font-size: 0.9rem; color: #6c757d;">Each checkpoint builds comprehensive expertise</p>
+</div>
+<div style="background: #f8f9fa; border-left: 4px solid #6f42c1; padding: 1rem; border-radius: 0.25rem;">
+<h4 style="margin: 0 0 0.5rem 0; color: #4e2b80;">Visual Progress</h4>
+<p style="margin: 0; font-size: 0.9rem; color: #6c757d;">Rich CLI tools with achievement visualization</p>
+</div>
+</div>
+<hr class="docutils" />
+<section id="the-five-major-checkpoints">
+<h2>🚀 The Five Major Checkpoints<a class="headerlink" href="#the-five-major-checkpoints" title="Link to this heading">#</a></h2>
+<section id="foundation">
+<h3>🎯 Foundation<a class="headerlink" href="#foundation" title="Link to this heading">#</a></h3>
+<p><em>Core ML primitives and environment setup</em></p>
+<p><strong>Modules</strong>: Setup • Tensors • Activations<br />
+<strong>Capability Unlocked</strong>: “Can build mathematical operations and ML primitives”</p>
+<p><strong>What You Build:</strong></p>
+<ul class="simple">
+<li><p>Working development environment with all tools</p></li>
+<li><p>Multi-dimensional tensor operations (the foundation of all ML)</p></li>
+<li><p>Mathematical functions that enable neural network learning</p></li>
+<li><p>Core computational primitives that power everything else</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="neural-architecture">
+<h3>🎯 Neural Architecture<a class="headerlink" href="#neural-architecture" title="Link to this heading">#</a></h3>
+<p><em>Building complete neural network architectures</em></p>
+<p><strong>Modules</strong>: Layers • Dense • Spatial • Attention<br />
+<strong>Capability Unlocked</strong>: “Can design and construct any neural network architecture”</p>
+<p><strong>What You Build:</strong></p>
+<ul class="simple">
+<li><p>Fundamental layer abstractions for all neural networks</p></li>
+<li><p>Dense (fully-connected) networks for classification</p></li>
+<li><p>Convolutional layers for spatial pattern recognition</p></li>
+<li><p>Attention mechanisms for sequence and vision tasks</p></li>
+<li><p>Complete architectural building blocks</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="training">
+<h3>🎯 Training<a class="headerlink" href="#training" title="Link to this heading">#</a></h3>
+<p><em>Complete model training pipeline</em></p>
+<p><strong>Modules</strong>: DataLoader • Autograd • Optimizers • Training<br />
+<strong>Capability Unlocked</strong>: “Can train neural networks on real datasets”</p>
+<p><strong>What You Build:</strong></p>
+<ul class="simple">
+<li><p>CIFAR-10 data loading and preprocessing pipeline</p></li>
+<li><p>Automatic differentiation engine (the “magic” behind PyTorch)</p></li>
+<li><p>SGD and Adam optimizers with memory profiling</p></li>
+<li><p>Complete training orchestration system</p></li>
+<li><p>Real model training on real datasets</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="inference-deployment">
+<h3>🎯 Inference Deployment<a class="headerlink" href="#inference-deployment" title="Link to this heading">#</a></h3>
+<p><em>Optimized model deployment and serving</em></p>
+<p><strong>Modules</strong>: Compression • Kernels • Benchmarking • MLOps<br />
+<strong>Capability Unlocked</strong>: “Can deploy optimized models for production inference”</p>
+<p><strong>What You Build:</strong></p>
+<ul class="simple">
+<li><p>Model compression techniques (75% size reduction achievable)</p></li>
+<li><p>High-performance kernel optimizations</p></li>
+<li><p>Systematic performance benchmarking</p></li>
+<li><p>Production monitoring and deployment systems</p></li>
+<li><p>Real-world inference optimization</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="language-models">
+<h3>🔥 Language Models<a class="headerlink" href="#language-models" title="Link to this heading">#</a></h3>
+<p><em>Framework generalization across modalities</em></p>
+<p><strong>Modules</strong>: TinyGPT<br />
+<strong>Capability Unlocked</strong>: “Can build unified frameworks that support both vision and language”</p>
+<p><strong>What You Build:</strong></p>
+<ul class="simple">
+<li><p>GPT-style transformer using your framework components</p></li>
+<li><p>Character-level tokenization and text generation</p></li>
+<li><p>95% component reuse from vision to language</p></li>
+<li><p>Understanding of universal ML foundations</p></li>
+</ul>
+</section>
+</section>
+<hr class="docutils" />
+<section id="tracking-your-progress">
+<h2>📊 Tracking Your Progress<a class="headerlink" href="#tracking-your-progress" title="Link to this heading">#</a></h2>
+<section id="visual-timeline">
+<h3>Visual Timeline<a class="headerlink" href="#visual-timeline" title="Link to this heading">#</a></h3>
+<p>See your journey through the ML systems engineering pipeline:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Foundation → Architecture → Training → Inference → Language Models
+</pre></div>
+</div>
+<p>Each checkpoint represents a major learning milestone and capability unlock in your unified vision+language framework.</p>
+</section>
+<section id="rich-progress-tracking">
+<h3>Rich Progress Tracking<a class="headerlink" href="#rich-progress-tracking" title="Link to this heading">#</a></h3>
+<p>Within each checkpoint, track granular progress through individual modules with enhanced Rich CLI visualizations:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>🎯 Neural Architecture ████████▓▓▓▓ 66%
+   ✅ Layers ──── ✅ Dense ──── 🔄 Spatial ──── ⏳ Attention
+     │              │            │              │
+   100%           100%          33%            0%
+</pre></div>
+</div>
+</section>
+<section id="capability-statements">
+<h3>Capability Statements<a class="headerlink" href="#capability-statements" title="Link to this heading">#</a></h3>
+<p>Every checkpoint completion unlocks a concrete capability:</p>
+<ul class="simple">
+<li><p>✅ “I can build mathematical operations and ML primitives”</p></li>
+<li><p>✅ “I can design and construct any neural network architecture”</p></li>
+<li><p>🔄 “I can train neural networks on real datasets”</p></li>
+<li><p>⏳ “I can deploy optimized models for production inference”</p></li>
+<li><p>🔥 “I can build unified frameworks supporting vision and language”</p></li>
+</ul>
+</section>
+</section>
+<hr class="docutils" />
+<section id="technical-usage">
+<h2>🛠️ Technical Usage<a class="headerlink" href="#technical-usage" title="Link to this heading">#</a></h2>
+<p>The checkpoint system provides comprehensive progress tracking and capability validation through automated testing infrastructure.</p>
+<p><strong>📖 See <a class="reference internal" href="#tito-essentials.html"><span class="xref myst">Essential Commands</span></a></strong> for complete command reference and usage examples.</p>
+<section id="integration-with-development">
+<h3>Integration with Development<a class="headerlink" href="#integration-with-development" title="Link to this heading">#</a></h3>
+<p>The checkpoint system connects directly to your actual development work:</p>
+<section id="automatic-module-to-checkpoint-mapping">
+<h4>Automatic Module-to-Checkpoint Mapping<a class="headerlink" href="#automatic-module-to-checkpoint-mapping" title="Link to this heading">#</a></h4>
+<p>Each module automatically maps to its corresponding checkpoint for seamless testing integration.</p>
+</section>
+<section id="real-capability-validation">
+<h4>Real Capability Validation<a class="headerlink" href="#real-capability-validation" title="Link to this heading">#</a></h4>
+<ul class="simple">
+<li><p><strong>Not just code completion</strong>: Tests verify actual functionality works</p></li>
+<li><p><strong>Import testing</strong>: Ensures modules export correctly to package</p></li>
+<li><p><strong>Functionality testing</strong>: Validates capabilities like tensor operations, neural layers</p></li>
+<li><p><strong>Integration testing</strong>: Confirms components work together</p></li>
+</ul>
+</section>
+<section id="rich-visual-feedback">
+<h4>Rich Visual Feedback<a class="headerlink" href="#rich-visual-feedback" title="Link to this heading">#</a></h4>
+<ul class="simple">
+<li><p><strong>Achievement celebrations</strong>: 🎉 when checkpoints are completed</p></li>
+<li><p><strong>Progress visualization</strong>: Rich CLI progress bars and timelines</p></li>
+<li><p><strong>Next step guidance</strong>: Suggests the next module to work on</p></li>
+<li><p><strong>Capability statements</strong>: Clear “I can…” statements for each achievement</p></li>
+</ul>
+</section>
+</section>
+</section>
+<hr class="docutils" />
+<section id="implementation-architecture">
+<h2>🏗️ Implementation Architecture<a class="headerlink" href="#implementation-architecture" title="Link to this heading">#</a></h2>
+<section id="individual-test-files">
+<h3>16 Individual Test Files<a class="headerlink" href="#individual-test-files" title="Link to this heading">#</a></h3>
+<p>Each checkpoint is implemented as a standalone Python test file in <code class="docutils literal notranslate"><span class="pre">tests/checkpoints/</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>tests/checkpoints/
+├── checkpoint_00_environment.py   # &quot;Can I configure my environment?&quot;
+├── checkpoint_01_foundation.py    # &quot;Can I create ML building blocks?&quot;
+├── checkpoint_02_intelligence.py  # &quot;Can I add nonlinearity?&quot;
+├── ...
+└── checkpoint_15_capstone.py      # &quot;Can I build complete end-to-end ML systems?&quot;
+</pre></div>
+</div>
+</section>
+<section id="rich-cli-integration">
+<h3>Rich CLI Integration<a class="headerlink" href="#rich-cli-integration" title="Link to this heading">#</a></h3>
+<p>The command-line interface provides:</p>
+<ul class="simple">
+<li><p><strong>Visual progress tracking</strong> with progress bars and timelines</p></li>
+<li><p><strong>Capability testing</strong> with immediate feedback</p></li>
+<li><p><strong>Achievement celebrations</strong> with next step guidance</p></li>
+<li><p><strong>Detailed status reporting</strong> with module-level information</p></li>
+</ul>
+</section>
+<section id="automated-module-completion">
+<h3>Automated Module Completion<a class="headerlink" href="#automated-module-completion" title="Link to this heading">#</a></h3>
+<p>The module completion workflow:</p>
+<ol class="arabic simple">
+<li><p><strong>Exports module</strong> using existing export functionality</p></li>
+<li><p><strong>Maps module to checkpoint</strong> using predefined mapping table</p></li>
+<li><p><strong>Runs capability test</strong> with Rich progress visualization</p></li>
+<li><p><strong>Shows results</strong> with achievement celebration or guidance</p></li>
+</ol>
+</section>
+<section id="agent-team-implementation">
+<h3>Agent Team Implementation<a class="headerlink" href="#agent-team-implementation" title="Link to this heading">#</a></h3>
+<p>This system was successfully implemented by coordinated AI agents:</p>
+<ul class="simple">
+<li><p><strong>Module Developer</strong>: Built checkpoint tests and CLI integration</p></li>
+<li><p><strong>QA Agent</strong>: Tested all 16 checkpoints and CLI functionality</p></li>
+<li><p><strong>Package Manager</strong>: Validated integration with package system</p></li>
+<li><p><strong>Documentation Publisher</strong>: Created this documentation and usage guides</p></li>
+</ul>
+</section>
+</section>
+<hr class="docutils" />
+<section id="why-this-approach-works">
+<h2>🧠 Why This Approach Works<a class="headerlink" href="#why-this-approach-works" title="Link to this heading">#</a></h2>
+<section id="systems-thinking-over-task-completion">
+<h3>Systems Thinking Over Task Completion<a class="headerlink" href="#systems-thinking-over-task-completion" title="Link to this heading">#</a></h3>
+<p>Traditional approach: <em>“I finished Module 3”</em><br />
+Checkpoint approach: *“My framework can now build neural networks”</p>
+</section>
+<section id="clear-learning-goals">
+<h3>Clear Learning Goals<a class="headerlink" href="#clear-learning-goals" title="Link to this heading">#</a></h3>
+<p>Every module contributes to a <strong>concrete system capability</strong> rather than abstract completion.</p>
+</section>
+<section id="academic-progress-markers">
+<h3>Academic Progress Markers<a class="headerlink" href="#academic-progress-markers" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Rich CLI visualizations</strong> with progress bars and connecting lines show your growing ML framework</p></li>
+<li><p><strong>Capability unlocks</strong> feel like real learning milestones achieved in academic progression</p></li>
+<li><p><strong>Clear direction</strong> toward complete ML systems mastery through structured checkpoints</p></li>
+<li><p><strong>Visual timeline</strong> similar to academic transcripts tracking completed coursework</p></li>
+</ul>
+</section>
+<section id="real-world-relevance">
+<h3>Real-World Relevance<a class="headerlink" href="#real-world-relevance" title="Link to this heading">#</a></h3>
+<p>The checkpoint progression <strong>Foundation → Architecture → Training → Inference → Language Models</strong> mirrors both academic learning progression and the evolution from specialized to unified ML frameworks.</p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="debugging-checkpoint-failures">
+<h2>🐛 Debugging Checkpoint Failures<a class="headerlink" href="#debugging-checkpoint-failures" title="Link to this heading">#</a></h2>
+<p><strong>When checkpoint tests fail, use debugging strategies to identify and resolve issues:</strong></p>
+<section id="common-failure-patterns">
+<h3>Common Failure Patterns<a class="headerlink" href="#common-failure-patterns" title="Link to this heading">#</a></h3>
+<p><strong>Import Errors:</strong></p>
+<ul class="simple">
+<li><p><strong>Problem</strong>: Module not found errors indicate missing exports</p></li>
+<li><p><strong>Solution</strong>: Ensure modules are properly exported and environment is configured</p></li>
+</ul>
+<p><strong>Functionality Errors:</strong></p>
+<ul class="simple">
+<li><p><strong>Problem</strong>: Implementation doesn’t work as expected (shape mismatches, incorrect outputs)</p></li>
+<li><p><strong>Debug approach</strong>: Use verbose testing to get detailed error information</p></li>
+</ul>
+<p><strong>Integration Errors:</strong></p>
+<ul class="simple">
+<li><p><strong>Problem</strong>: Modules don’t work together due to missing dependencies</p></li>
+<li><p><strong>Solution</strong>: Verify prerequisite capabilities before testing advanced features</p></li>
+</ul>
+<p><strong>📖 See <a class="reference internal" href="#tito-essentials.html"><span class="xref myst">Essential Commands</span></a></strong> for complete debugging command reference.</p>
+</section>
+<section id="checkpoint-test-structure">
+<h3>Checkpoint Test Structure<a class="headerlink" href="#checkpoint-test-structure" title="Link to this heading">#</a></h3>
+<p><strong>Each checkpoint test follows this pattern:</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Example: checkpoint_01_foundation.py</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;/path/to/tinytorch&#39;</span><span class="p">)</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">tinytorch.core.tensor</span><span class="w"> </span><span class="kn">import</span> <span class="n">Tensor</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;✅ Tensor import successful&quot;</span><span class="p">)</span>
+<span class="k">except</span> <span class="ne">ImportError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;❌ Tensor import failed: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="c1"># Test basic functionality</span>
+<span class="n">tensor</span> <span class="o">=</span> <span class="n">Tensor</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">]])</span>
+<span class="k">assert</span> <span class="n">tensor</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;Expected shape (2, 2), got </span><span class="si">{</span><span class="n">tensor</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;✅ Basic tensor operations working&quot;</span><span class="p">)</span>
+
+<span class="c1"># Test integration capabilities</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">tensor</span> <span class="o">+</span> <span class="n">tensor</span>
+<span class="k">assert</span> <span class="n">result</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span> <span class="o">==</span> <span class="p">[[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span> <span class="p">[</span><span class="mi">6</span><span class="p">,</span> <span class="mi">8</span><span class="p">]],</span> <span class="s2">&quot;Addition failed&quot;</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;✅ Tensor arithmetic working&quot;</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;🏆 Foundation checkpoint PASSED&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="advanced-usage-features">
+<h2>🚀 Advanced Usage Features<a class="headerlink" href="#advanced-usage-features" title="Link to this heading">#</a></h2>
+<p><strong>The checkpoint system supports advanced development workflows:</strong></p>
+<section id="batch-testing">
+<h3>Batch Testing<a class="headerlink" href="#batch-testing" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Test multiple checkpoints simultaneously</p></li>
+<li><p>Test ranges of checkpoints for comprehensive validation</p></li>
+<li><p>Validate all completed checkpoints for regression testing</p></li>
+</ul>
+</section>
+<section id="custom-checkpoint-development">
+<h3>Custom Checkpoint Development<a class="headerlink" href="#custom-checkpoint-development" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Create custom checkpoint tests for extensions</p></li>
+<li><p>Run custom validation with verbose output</p></li>
+<li><p>Extend the checkpoint system for specialized needs</p></li>
+</ul>
+</section>
+<section id="performance-profiling">
+<h3>Performance Profiling<a class="headerlink" href="#performance-profiling" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Profile checkpoint execution performance</p></li>
+<li><p>Analyze memory usage during testing</p></li>
+<li><p>Identify bottlenecks in capability validation</p></li>
+</ul>
+<p><strong>📖 See <a class="reference internal" href="#tito-essentials.html"><span class="xref myst">Essential Commands</span></a></strong> for complete command reference and advanced usage examples.</p>
+</section>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="competitions.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">🏆 TinyTorch Competitions</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="testing-framework.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">🧪 Testing Framework</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-five-major-checkpoints">🚀 The Five Major Checkpoints</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#foundation">🎯 Foundation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#neural-architecture">🎯 Neural Architecture</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#training">🎯 Training</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inference-deployment">🎯 Inference Deployment</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#language-models">🔥 Language Models</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tracking-your-progress">📊 Tracking Your Progress</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#visual-timeline">Visual Timeline</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rich-progress-tracking">Rich Progress Tracking</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#capability-statements">Capability Statements</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#technical-usage">🛠️ Technical Usage</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#integration-with-development">Integration with Development</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#automatic-module-to-checkpoint-mapping">Automatic Module-to-Checkpoint Mapping</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#real-capability-validation">Real Capability Validation</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#rich-visual-feedback">Rich Visual Feedback</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#implementation-architecture">🏗️ Implementation Architecture</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#individual-test-files">16 Individual Test Files</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rich-cli-integration">Rich CLI Integration</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#automated-module-completion">Automated Module Completion</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#agent-team-implementation">Agent Team Implementation</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-this-approach-works">🧠 Why This Approach Works</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#systems-thinking-over-task-completion">Systems Thinking Over Task Completion</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#clear-learning-goals">Clear Learning Goals</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#academic-progress-markers">Academic Progress Markers</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#real-world-relevance">Real-World Relevance</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#debugging-checkpoint-failures">🐛 Debugging Checkpoint Failures</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#common-failure-patterns">Common Failure Patterns</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#checkpoint-test-structure">Checkpoint Test Structure</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#advanced-usage-features">🚀 Advanced Usage Features</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#batch-testing">Batch Testing</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#custom-checkpoint-development">Custom Checkpoint Development</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#performance-profiling">Performance Profiling</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Prof. Vijay Janapa Reddi (Harvard University)
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2025.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

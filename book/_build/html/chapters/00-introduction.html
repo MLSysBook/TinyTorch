@@ -35,7 +35,7 @@
     <link rel="stylesheet" type="text/css" href="../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css?v=6644e6bb" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
-    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=bf48879e" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=b7a97b18" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
@@ -63,7 +63,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Module: Setup" href="01-setup.html" />
-    <link rel="prev" title="TinyTorch for Instructors: Complete ML Systems Course" href="../usage-paths/classroom-use.html" />
+    <link rel="prev" title="Track Your Progress" href="../learning-progress.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -183,8 +183,13 @@
         </ul>
         <p aria-level="2" class="caption" role="heading"><span class="caption-text">🚀 Getting Started</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../learning-timeline.html">Your Learning Journey</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart-guide.html">Quick Start Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../usage-paths/classroom-use.html">For Instructors</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">🛠️ Using TinyTorch</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../tito-essentials.html">Essential Commands</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../learning-progress.html">Track Your Progress</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">🧭 Course Orientation</span></p>
 <ul class="current nav bd-sidenav">
@@ -450,6 +455,7 @@ document.write(`
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#our-solution-learn-by-building">Our Solution: Learn By Building</a></li>
 </ul>
 </li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#core-learning-concepts">🎯 Core Learning Concepts</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-makes-tinytorch-different">What Makes TinyTorch Different</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-learning-philosophy-build-use-reflect">The Learning Philosophy: Build → Use → Reflect</a></li>
 </ul>
@@ -485,6 +491,15 @@ document.write(`
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ready-to-begin">Ready to Begin?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#complete-learning-timeline-course-structure">Complete Learning Timeline &amp; Course Structure</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#capability-progression-foundation-to-production">Capability Progression: Foundation to Production</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#part-i-core-foundations-modules-1-8">Part I: Core Foundations (Modules 1-8)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#part-ii-computer-vision-modules-9-10">Part II: Computer Vision (Modules 9-10)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#part-iii-language-processing-modules-11-14">Part III: Language Processing (Modules 11-14)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#part-iv-production-systems-modules-15-20">Part IV: Production Systems (Modules 15-20)</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#week-learning-progression-overview">📈 8-Week Learning Progression Overview</a></li>
 </ul>
             </nav>
         </div>
@@ -529,6 +544,33 @@ document.write(`
 <p>TinyTorch teaches ML systems the only way that really works: <strong>by building them yourself</strong>.</p>
 <p>When you implement your own tensor operations, write your own autograd, build your own optimizer - you gain understanding that’s impossible to achieve by just calling APIs. You learn not just what these systems do, but HOW they do it and WHY they’re designed that way.</p>
 </section>
+</section>
+<hr class="docutils" />
+<section id="core-learning-concepts">
+<h2>🎯 Core Learning Concepts<a class="headerlink" href="#core-learning-concepts" title="Link to this heading">#</a></h2>
+<div style="background: #f7fafc; border: 1px solid #e2e8f0; padding: 2rem; border-radius: 0.5rem; margin: 2rem 0;">
+<p><strong>Concept 1: Systems Memory Analysis</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Learning objective: Understand memory usage patterns</span>
+<span class="c1"># Framework user: &quot;torch.optim.Adam()&quot; - black box</span>
+<span class="c1"># TinyTorch student: Implements Adam and discovers why it needs 3x parameter memory</span>
+<span class="c1"># Result: Deep understanding of optimizer trade-offs applicable to any framework</span>
+</pre></div>
+</div>
+<p><strong>Concept 2: Computational Complexity</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Learning objective: Analyze algorithmic scaling behavior</span>
+<span class="c1"># Framework user: &quot;Attention mechanism&quot; - abstract concept</span>
+<span class="c1"># TinyTorch student: Implements attention from scratch, measures O(n²) scaling</span>
+<span class="c1"># Result: Intuition for sequence modeling limits across PyTorch, TensorFlow, JAX</span>
+</pre></div>
+</div>
+<p><strong>Concept 3: Automatic Differentiation</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Learning objective: Understand gradient computation</span>
+<span class="c1"># Framework user: &quot;loss.backward()&quot; - mysterious process</span>
+<span class="c1"># TinyTorch student: Builds autograd engine with computational graphs</span>
+<span class="c1"># Result: Knowledge of how all modern ML frameworks enable learning</span>
+</pre></div>
+</div>
+</div>
 </section>
 <hr class="docutils" />
 <section id="what-makes-tinytorch-different">
@@ -770,6 +812,281 @@ document.write(`
 </ul>
 <p>All using code you wrote yourself, from scratch.</p>
 </div>
+</section>
+<hr class="docutils" />
+<section id="complete-learning-timeline-course-structure">
+<h2>Complete Learning Timeline &amp; Course Structure<a class="headerlink" href="#complete-learning-timeline-course-structure" title="Link to this heading">#</a></h2>
+<section id="capability-progression-foundation-to-production">
+<h3>Capability Progression: Foundation to Production<a class="headerlink" href="#capability-progression-foundation-to-production" title="Link to this heading">#</a></h3>
+<div class="highlight-mermaid notranslate"><div class="highlight"><pre><span></span>timeline
+    title TinyTorch Capability Development: Building ML Systems
+
+    section Foundation Capabilities
+        Environment Setup     : Checkpoint 00 Complete
+                             : Configure development environment
+                             : Verify dependencies
+
+        Tensor Operations     : Checkpoint 01 Complete
+                             : N-dimensional arrays
+                             : Mathematical foundations
+
+    section Core Learning
+        Neural Intelligence   : Checkpoint 02 Complete
+                             : Nonlinear activations
+                             : ReLU, Sigmoid, Softmax
+
+        Network Building     : Checkpoint 03 Complete
+                             : Layer abstractions
+                             : Forward propagation
+
+    section Training Systems
+        Gradient Computation  : Checkpoint 05 Complete
+                             : Automatic differentiation
+                             : Backpropagation mechanics
+
+        Optimization         : Checkpoint 06 Complete
+                             : SGD, Adam algorithms
+                             : Learning rate scheduling
+
+    section Advanced Architectures
+        Computer Vision      : Checkpoint 08 Complete
+                             : Convolutional operations
+                             : Spatial feature extraction
+
+        Language Processing  : Checkpoint 12 Complete
+                             : Attention mechanisms
+                             : Transformer architectures
+
+    section Production Systems
+        Performance Analysis : Checkpoint 14 Complete
+                             : Profiling and optimization
+                             : Bottleneck identification
+
+        Complete Mastery     : Checkpoint 15 Complete
+                             : End-to-end ML systems
+                             : Production deployment
+</pre></div>
+</div>
+</section>
+<section id="part-i-core-foundations-modules-1-8">
+<h3>Part I: Core Foundations (Modules 1-8)<a class="headerlink" href="#part-i-core-foundations-modules-1-8" title="Link to this heading">#</a></h3>
+<p><strong>Focus: Neural Network Fundamentals | 8 weeks</strong></p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Week</p></th>
+<th class="head"><p>Module</p></th>
+<th class="head"><p>Core Capability</p></th>
+<th class="head"><p>Implementation Focus</p></th>
+<th class="head"><p>Checkpoint Unlocked</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>1</p></td>
+<td><p>Setup</p></td>
+<td><p>Environment Configuration</p></td>
+<td><p>Development environment setup</p></td>
+<td><p>00: Environment</p></td>
+</tr>
+<tr class="row-odd"><td><p>2</p></td>
+<td><p>Tensor</p></td>
+<td><p>Mathematical Foundations</p></td>
+<td><p>N-dimensional arrays with gradients</p></td>
+<td><p>01: Foundation</p></td>
+</tr>
+<tr class="row-even"><td><p>3</p></td>
+<td><p>Activations</p></td>
+<td><p>Neural Intelligence</p></td>
+<td><p>ReLU, Sigmoid, Softmax functions</p></td>
+<td><p>02: Intelligence</p></td>
+</tr>
+<tr class="row-odd"><td><p>4</p></td>
+<td><p>Layers</p></td>
+<td><p>Network Components</p></td>
+<td><p>Linear layers and module system</p></td>
+<td><p>03: Components</p></td>
+</tr>
+<tr class="row-even"><td><p>5</p></td>
+<td><p>Losses</p></td>
+<td><p>Learning Measurement</p></td>
+<td><p>MSE, CrossEntropy loss functions</p></td>
+<td><p>04: Networks</p></td>
+</tr>
+<tr class="row-odd"><td><p>6</p></td>
+<td><p>Autograd</p></td>
+<td><p>Gradient Computation</p></td>
+<td><p>Automatic differentiation engine</p></td>
+<td><p>05: Learning</p></td>
+</tr>
+<tr class="row-even"><td><p>7</p></td>
+<td><p>Optimizers</p></td>
+<td><p>Parameter Updates</p></td>
+<td><p>SGD, Adam optimization algorithms</p></td>
+<td><p>06: Optimization</p></td>
+</tr>
+<tr class="row-odd"><td><p>8</p></td>
+<td><p>Training</p></td>
+<td><p>Complete Systems</p></td>
+<td><p>End-to-end training loops</p></td>
+<td><p>07: Training</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><strong>Capability Milestone</strong>: After Module 8, you have complete neural network training capability!</p>
+</section>
+<hr class="docutils" />
+<section id="part-ii-computer-vision-modules-9-10">
+<h3>Part II: Computer Vision (Modules 9-10)<a class="headerlink" href="#part-ii-computer-vision-modules-9-10" title="Link to this heading">#</a></h3>
+<p><strong>Focus: Spatial Processing | 2 weeks</strong></p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Week</p></th>
+<th class="head"><p>Module</p></th>
+<th class="head"><p>Core Capability</p></th>
+<th class="head"><p>Implementation Focus</p></th>
+<th class="head"><p>Checkpoint Unlocked</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>9</p></td>
+<td><p>Spatial</p></td>
+<td><p>Spatial Processing</p></td>
+<td><p>Conv2d, MaxPool2d operations</p></td>
+<td><p>08: Vision</p></td>
+</tr>
+<tr class="row-odd"><td><p>10</p></td>
+<td><p>DataLoader</p></td>
+<td><p>Data Management</p></td>
+<td><p>Efficient data loading pipelines</p></td>
+<td><p>09: Data</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><strong>Capability Milestone</strong>: Computer vision systems with spatial feature processing!</p>
+</section>
+<hr class="docutils" />
+<section id="part-iii-language-processing-modules-11-14">
+<h3>Part III: Language Processing (Modules 11-14)<a class="headerlink" href="#part-iii-language-processing-modules-11-14" title="Link to this heading">#</a></h3>
+<p><strong>Focus: Sequence Understanding | 4 weeks</strong></p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Week</p></th>
+<th class="head"><p>Module</p></th>
+<th class="head"><p>Core Capability</p></th>
+<th class="head"><p>Implementation Focus</p></th>
+<th class="head"><p>Checkpoint Unlocked</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>11</p></td>
+<td><p>Tokenization</p></td>
+<td><p>Text Processing</p></td>
+<td><p>Vocabulary and token systems</p></td>
+<td><p>10: Language</p></td>
+</tr>
+<tr class="row-odd"><td><p>12</p></td>
+<td><p>Embeddings</p></td>
+<td><p>Representation Learning</p></td>
+<td><p>Token and positional encodings</p></td>
+<td><p>11: Representation</p></td>
+</tr>
+<tr class="row-even"><td><p>13</p></td>
+<td><p>Attention</p></td>
+<td><p>Sequence Understanding</p></td>
+<td><p>Multi-head attention mechanisms</p></td>
+<td><p>12: Attention</p></td>
+</tr>
+<tr class="row-odd"><td><p>14</p></td>
+<td><p>Transformers</p></td>
+<td><p>Architecture Mastery</p></td>
+<td><p>Complete transformer blocks</p></td>
+<td><p>13: Architecture</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><strong>Capability Milestone</strong>: Complete language understanding and generation systems!</p>
+</section>
+<hr class="docutils" />
+<section id="part-iv-production-systems-modules-15-20">
+<h3>Part IV: Production Systems (Modules 15-20)<a class="headerlink" href="#part-iv-production-systems-modules-15-20" title="Link to this heading">#</a></h3>
+<p><strong>Focus: Performance Optimization | 6 weeks</strong></p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Week</p></th>
+<th class="head"><p>Module</p></th>
+<th class="head"><p>Core Capability</p></th>
+<th class="head"><p>Implementation Focus</p></th>
+<th class="head"><p>Checkpoint Unlocked</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>15</p></td>
+<td><p>Profiling</p></td>
+<td><p>Performance Analysis</p></td>
+<td><p>Memory and compute profiling</p></td>
+<td><p>14: Systems</p></td>
+</tr>
+<tr class="row-odd"><td><p>16</p></td>
+<td><p>Acceleration</p></td>
+<td><p>Hardware Optimization</p></td>
+<td><p>Vectorization and caching</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p>17</p></td>
+<td><p>Quantization</p></td>
+<td><p>Model Compression</p></td>
+<td><p>INT8 inference optimization</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p>18</p></td>
+<td><p>Compression</p></td>
+<td><p>Size Optimization</p></td>
+<td><p>Pruning and distillation</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p>19</p></td>
+<td><p>Caching</p></td>
+<td><p>Memory Management</p></td>
+<td><p>KV-cache for generation</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p>20</p></td>
+<td><p>Capstone</p></td>
+<td><p>Complete Mastery</p></td>
+<td><p>End-to-end ML systems</p></td>
+<td><p>15: Mastery</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><strong>Final Capability</strong>: Complete ML systems engineering mastery!</p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="week-learning-progression-overview">
+<h2>📈 8-Week Learning Progression Overview<a class="headerlink" href="#week-learning-progression-overview" title="Link to this heading">#</a></h2>
+<p>For a quick visual overview of the main learning phases:</p>
+<div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin: 2rem 0;">
+<div style="background: #fef5e7; border-left: 4px solid #f6ad55; padding: 1rem;">
+<h4 style="margin: 0 0 0.5rem 0; color: #c05621;">Weeks 1-2: Mathematical Foundations</h4>
+<p style="font-size: 0.85rem; margin: 0;">Implement tensor operations, understand memory layout, build arithmetic foundations. Core mathematical building blocks.</p>
+</div>
+<div style="background: #e6fffa; border-left: 4px solid #4fd1c7; padding: 1rem;">
+<h4 style="margin: 0 0 0.5rem 0; color: #234e52;">Weeks 3-4: Neural Network Components</h4>
+<p style="font-size: 0.85rem; margin: 0;">Linear transformations, activation functions, loss functions. Build the mathematical components of neural computation.</p>
+</div>
+<div style="background: #f0fff4; border-left: 4px solid #9ae6b4; padding: 1rem;">
+<h4 style="margin: 0 0 0.5rem 0; color: #22543d;">Weeks 5-6: Learning Algorithms</h4>
+<p style="font-size: 0.85rem; margin: 0;">Automatic differentiation, optimization algorithms, training procedures. Understand how neural networks learn.</p>
+</div>
+<div style="background: #faf5ff; border-left: 4px solid #b794f6; padding: 1rem;">
+<h4 style="margin: 0 0 0.5rem 0; color: #553c9a;">Weeks 7-8: Systems Engineering</h4>
+<p style="font-size: 0.85rem; margin: 0;">Performance analysis, computational kernels, benchmarking. Study the engineering principles behind ML systems.</p>
+</div>
+</div>
+<hr class="docutils" />
 <p>Welcome to ML systems engineering!</p>
 </section>
 </section>
@@ -805,12 +1122,12 @@ document.write(`
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="../usage-paths/classroom-use.html"
+       href="../learning-progress.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">TinyTorch for Instructors: Complete ML Systems Course</p>
+        <p class="prev-next-title">Track Your Progress</p>
       </div>
     </a>
     <a class="right-next"
@@ -844,6 +1161,7 @@ document.write(`
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#our-solution-learn-by-building">Our Solution: Learn By Building</a></li>
 </ul>
 </li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#core-learning-concepts">🎯 Core Learning Concepts</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-makes-tinytorch-different">What Makes TinyTorch Different</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-learning-philosophy-build-use-reflect">The Learning Philosophy: Build → Use → Reflect</a></li>
 </ul>
@@ -879,6 +1197,15 @@ document.write(`
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ready-to-begin">Ready to Begin?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#complete-learning-timeline-course-structure">Complete Learning Timeline &amp; Course Structure</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#capability-progression-foundation-to-production">Capability Progression: Foundation to Production</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#part-i-core-foundations-modules-1-8">Part I: Core Foundations (Modules 1-8)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#part-ii-computer-vision-modules-9-10">Part II: Computer Vision (Modules 9-10)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#part-iii-language-processing-modules-11-14">Part III: Language Processing (Modules 11-14)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#part-iv-production-systems-modules-15-20">Part IV: Production Systems (Modules 15-20)</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#week-learning-progression-overview">📈 8-Week Learning Progression Overview</a></li>
 </ul>
   </nav></div>
 

@@ -452,9 +452,9 @@ document.write(`
                 <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-is-tinytorch">What is TinyTorch?</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-build-instead-of-use">Why Build Instead of Use?</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#start-building-in-15-minutes">🚀 Start Building in 15 Minutes</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#three-clear-learning-paths">Three Clear Learning Paths</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learn-more">Learn More</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#who-is-this-for">Who Is This For?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#how-to-choose-your-learning-path">How to Choose Your Learning Path</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ready-to-start-building">Ready to Start Building?</a></li>
 </ul>
             </nav>
         </div>
@@ -473,91 +473,108 @@ Don't just import it. Build it.
 </h2>
 <section id="what-is-tinytorch">
 <h2>What is TinyTorch?<a class="headerlink" href="#what-is-tinytorch" title="Link to this heading">#</a></h2>
-<p>TinyTorch is an educational ML systems course where you build complete neural networks from scratch. Instead of using PyTorch or TensorFlow as black boxes, you implement every component yourself and gain deep understanding of how ML frameworks actually work.</p>
-<div style="text-align: center; margin: 2rem 0;">
-<div style="background: linear-gradient(90deg, #E74C3C, #E67E22, #F39C12, #E67E22, #E74C3C); height: 2px; max-width: 400px; margin: 0 auto; opacity: 0.7;"></div>
-</div>
+<p>TinyTorch is an educational ML systems course where you <strong>build complete neural networks from scratch</strong>. Instead of blindly using PyTorch or TensorFlow as black boxes, you implement every component yourself—from tensors and gradients to optimizers and attention mechanisms—gaining deep understanding of how modern ML frameworks actually work.</p>
+<p><strong>Core Learning Approach</strong>: Build → Profile → Optimize. You’ll implement each system component, measure its performance characteristics, and understand the engineering trade-offs that shape production ML systems.</p>
 </section>
 <section id="why-build-instead-of-use">
 <h2>Why Build Instead of Use?<a class="headerlink" href="#why-build-instead-of-use" title="Link to this heading">#</a></h2>
+<p>The difference between using a library and understanding a system is the difference between being limited by tools and being empowered to create them. When you build from scratch, you transform from a framework user into a systems engineer:</p>
 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin: 2rem 0;">
 <!-- Top Row: Using Libraries Examples -->
 <div style="background: #fff5f5; border: 1px solid #feb2b2; padding: 1.5rem; border-radius: 0.5rem; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-<h3 style="margin: 0 0 1rem 0; color: #c53030; font-size: 1.1rem;">❌ PyTorch</h3>
+<h3 style="margin: 0 0 1rem 0; color: #c53030; font-size: 1.1rem;">❌ Using PyTorch</h3>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">torch.nn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">nn</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch.optim</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">optim</span>
 
 <span class="n">model</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">784</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
-<span class="c1"># How does this work internally?</span>
-<span class="c1"># Where are the weights stored?</span>
+<span class="n">optimizer</span> <span class="o">=</span> <span class="n">optim</span><span class="o">.</span><span class="n">Adam</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">lr</span><span class="o">=</span><span class="mf">0.001</span><span class="p">)</span>
+
+<span class="c1"># Your model trains but then...</span>
+<span class="c1"># 🔥 OOM error! Why?</span>
+<span class="c1"># 🔥 Loss is NaN! How to debug?</span>
+<span class="c1"># 🔥 Training is slow! What&#39;s the bottleneck?</span>
 </pre></div>
 </div>
 <p style="color: #c53030; font-weight: 500; margin-top: 1rem; font-size: 0.9rem;">
-Black box implementation
+You're stuck when things break
 </p>
 </div>
 <div style="background: #fff5f5; border: 1px solid #feb2b2; padding: 1.5rem; border-radius: 0.5rem; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-<h3 style="margin: 0 0 1rem 0; color: #c53030; font-size: 1.1rem;">❌ TensorFlow</h3>
+<h3 style="margin: 0 0 1rem 0; color: #c53030; font-size: 1.1rem;">❌ Using TensorFlow</h3>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">tensorflow</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">tf</span>
 
-<span class="n">layer</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
-<span class="c1"># Why does Adam use 3x memory?</span>
-<span class="c1"># What&#39;s the actual math?</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">Sequential</span><span class="p">([</span>
+    <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="mi">128</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s1">&#39;relu&#39;</span><span class="p">),</span>
+    <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+<span class="p">])</span>
+
+<span class="c1"># Magic happens somewhere...</span>
+<span class="c1"># 🤷 How are gradients computed?</span>
+<span class="c1"># 🤷 Why this initialization?</span>
+<span class="c1"># 🤷 What&#39;s happening in backward pass?</span>
 </pre></div>
 </div>
 <p style="color: #c53030; font-weight: 500; margin-top: 1rem; font-size: 0.9rem;">
-Limited systems understanding
+Magic boxes you can't understand
 </p>
 </div>
 <!-- Bottom Row: Building Your Own Examples -->
 <div style="background: #f0fff4; border: 1px solid #9ae6b4; padding: 1.5rem; border-radius: 0.5rem; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-<h3 style="margin: 0 0 1rem 0; color: #2f855a; font-size: 1.1rem;">✅ TinyTorch Linear</h3>
+<h3 style="margin: 0 0 1rem 0; color: #2f855a; font-size: 1.1rem;">✅ Building TinyTorch</h3>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">Linear</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">in_features</span><span class="p">,</span> <span class="n">out_features</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">weight</span> <span class="o">=</span> <span class="n">randn</span><span class="p">(</span><span class="n">in_features</span><span class="p">,</span> <span class="n">out_features</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.01</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bias</span> <span class="o">=</span> <span class="n">zeros</span><span class="p">(</span><span class="n">out_features</span><span class="p">)</span>
+
     <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">input</span> <span class="o">=</span> <span class="n">x</span>  <span class="c1"># Save for backward</span>
         <span class="k">return</span> <span class="n">x</span> <span class="o">@</span> <span class="bp">self</span><span class="o">.</span><span class="n">weight</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">bias</span>
-        <span class="c1"># You understand exactly what happens</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">backward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">grad</span><span class="p">):</span>
+        <span class="c1"># You wrote this! You know exactly why:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">grad</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">input</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">grad</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bias</span><span class="o">.</span><span class="n">grad</span> <span class="o">=</span> <span class="n">grad</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">grad</span> <span class="o">@</span> <span class="bp">self</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">T</span>
 </pre></div>
 </div>
 <p style="color: #2f855a; font-weight: 500; margin-top: 1rem; font-size: 0.9rem;">
-Complete implementation knowledge
+You can debug anything
 </p>
 </div>
 <div style="background: #f0fff4; border: 1px solid #9ae6b4; padding: 1.5rem; border-radius: 0.5rem; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-<h3 style="margin: 0 0 1rem 0; color: #2f855a; font-size: 1.1rem;">✅ TinyTorch Optimizer</h3>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">Adam</span><span class="p">:</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="c1"># You know why it needs 3x memory</span>
-        <span class="c1"># You can optimize performance</span>
+<h3 style="margin: 0 0 1rem 0; color: #2f855a; font-size: 1.1rem;">✅ Building KV Cache</h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">KVCache</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">max_seq_len</span><span class="p">,</span> <span class="n">n_heads</span><span class="p">,</span> <span class="n">head_dim</span><span class="p">):</span>
+        <span class="c1"># You understand EXACTLY the memory layout:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">k_cache</span> <span class="o">=</span> <span class="n">zeros</span><span class="p">(</span><span class="n">max_seq_len</span><span class="p">,</span> <span class="n">n_heads</span><span class="p">,</span> <span class="n">head_dim</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">v_cache</span> <span class="o">=</span> <span class="n">zeros</span><span class="p">(</span><span class="n">max_seq_len</span><span class="p">,</span> <span class="n">n_heads</span><span class="p">,</span> <span class="n">head_dim</span><span class="p">)</span>
+        <span class="c1"># That&#39;s why GPT needs GBs of RAM!</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">pos</span><span class="p">):</span>
+        <span class="c1"># You know why position matters:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">k_cache</span><span class="p">[</span><span class="n">pos</span><span class="p">:</span><span class="n">pos</span><span class="o">+</span><span class="nb">len</span><span class="p">(</span><span class="n">k</span><span class="p">)]</span> <span class="o">=</span> <span class="n">k</span>  <span class="c1"># Reuse past computations</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">v_cache</span><span class="p">[</span><span class="n">pos</span><span class="p">:</span><span class="n">pos</span><span class="o">+</span><span class="nb">len</span><span class="p">(</span><span class="n">v</span><span class="p">)]</span> <span class="o">=</span> <span class="n">v</span>  <span class="c1"># O(n²) → O(n) speedup!</span>
+        <span class="c1"># Now you understand why context windows are limited</span>
 </pre></div>
 </div>
 <p style="color: #2f855a; font-weight: 500; margin-top: 1rem; font-size: 0.9rem;">
-Deep systems understanding
+You master modern LLM optimizations
 </p>
 </div>
-</div>
-<div style="text-align: center; margin: 2rem 0;">
-<div style="background: linear-gradient(90deg, #E74C3C, #E67E22, #F39C12, #E67E22, #E74C3C); height: 2px; max-width: 400px; margin: 0 auto; opacity: 0.7;"></div>
 </div>
 </section>
-<section id="start-building-in-15-minutes">
-<h2>🚀 Start Building in 15 Minutes<a class="headerlink" href="#start-building-in-15-minutes" title="Link to this heading">#</a></h2>
-<div style="text-align: center; margin: 3rem 0;">
-<p style="font-size: 1.2rem; margin-bottom: 1.5rem; color: #2d3748;">
-Ready to understand ML frameworks from the ground up? Get hands-on experience with tensor operations, neural networks, and autograd in minutes.
-</p>
-<a href="quickstart-guide.html" style="display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 1rem 2rem; border-radius: 0.5rem; text-decoration: none; font-weight: 600; font-size: 1.2rem; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); margin-bottom: 0.5rem;">
-🚀 Quick Start Guide
-</a>
-<p style="font-size: 0.9rem; color: #718096; margin: 0;">
-No installation required • Browser-based exploration • Real neural network training
-</p>
-</div>
-<div style="text-align: center; margin: 2rem 0;">
-<div style="background: linear-gradient(90deg, #E74C3C, #E67E22, #F39C12, #E67E22, #E74C3C); height: 2px; max-width: 400px; margin: 0 auto; opacity: 0.7;"></div>
-</div>
+<section id="who-is-this-for">
+<h2>Who Is This For?<a class="headerlink" href="#who-is-this-for" title="Link to this heading">#</a></h2>
+<p><strong>Perfect if you’re asking these questions:</strong></p>
+<p><strong>Students &amp; Researchers</strong>: “How does that <code class="docutils literal notranslate"><span class="pre">nn.Linear()</span></code> call actually compute gradients? Why does Adam optimizer need three times the memory of my model parameters?” You’ll implement the mathematics you learned in class and see how theoretical concepts become practical systems.</p>
+<p><strong>Academics &amp; Educators</strong>: “How can I teach ML systems effectively?” TinyTorch provides a complete pedagogical framework with NBGrader integration, automated assessment, and rigorously tested foundations. Use it as a semester-long course or integrate individual modules.</p>
+<p><strong>ML Practitioners</strong>: “Why do I get stuck debugging training issues?” Even experienced engineers often treat frameworks as black boxes. By building your own, you’ll debug faster, optimize better, and implement custom operations with confidence.</p>
 </section>
-<section id="three-clear-learning-paths">
-<h2>Three Clear Learning Paths<a class="headerlink" href="#three-clear-learning-paths" title="Link to this heading">#</a></h2>
-<div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin: 3rem 0;">
+<section id="how-to-choose-your-learning-path">
+<h2>How to Choose Your Learning Path<a class="headerlink" href="#how-to-choose-your-learning-path" title="Link to this heading">#</a></h2>
+<p><strong>Two Learning Approaches</strong>: You can either <strong>build it yourself</strong> (work through student notebooks and implement from scratch) or <strong>learn by reading</strong> (study the solution notebooks to understand how ML systems work). Both approaches use the same <strong>Build → Profile → Optimize</strong> methodology at different scales.</p>
+<div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; margin: 3rem 0;">
+<!-- Top Row -->
 <div style="background: #f8f9fa; border: 1px solid #dee2e6; padding: 2rem; border-radius: 0.5rem; text-align: center;">
 <h3 style="margin: 0 0 1rem 0; font-size: 1.2rem; color: #495057;">🔬 Quick Start</h3>
 <p style="margin: 0 0 1.5rem 0; font-size: 0.95rem; color: #6c757d;">15 minutes setup • Try foundational modules • Hands-on experience</p>
@@ -568,46 +585,30 @@ No installation required • Browser-based exploration • Real neural network t
 <p style="margin: 0 0 1.5rem 0; font-size: 0.95rem; color: #6c757d;">8+ weeks study • Complete ML framework • Systems mastery</p>
 <a href="chapters/00-introduction.html" style="display: inline-block; background: #28a745; color: white; padding: 0.75rem 1.5rem; border-radius: 0.25rem; text-decoration: none; font-weight: 500; font-size: 1rem;">Course Overview →</a>
 </div>
+<!-- Bottom Row -->
 <div style="background: #faf5ff; border: 1px solid #b794f6; padding: 2rem; border-radius: 0.5rem; text-align: center;">
 <h3 style="margin: 0 0 1rem 0; font-size: 1.2rem; color: #495057;">🎓 Instructors</h3>
 <p style="margin: 0 0 1.5rem 0; font-size: 0.95rem; color: #6c757d;">Classroom-ready • NBGrader integration • Automated grading</p>
 <a href="usage-paths/classroom-use.html" style="display: inline-block; background: #6f42c1; color: white; padding: 0.75rem 1.5rem; border-radius: 0.25rem; text-decoration: none; font-weight: 500; font-size: 1rem;">Teaching Guide →</a>
 </div>
+<div style="background: #fff8dc; border: 1px solid #daa520; padding: 2rem; border-radius: 0.5rem; text-align: center;">
+<h3 style="margin: 0 0 1rem 0; font-size: 1.2rem; color: #495057;">📊 Learning Community</h3>
+<p style="margin: 0 0 1.5rem 0; font-size: 0.95rem; color: #6c757d;">Track progress • Join competitions • Student leaderboard</p>
+<a href="leaderboard.html" style="display: inline-block; background: #b8860b; color: white; padding: 0.75rem 1.5rem; border-radius: 0.25rem; text-decoration: none; font-weight: 500; font-size: 1rem;">View Progress →</a>
 </div>
-<div style="text-align: center; margin: 2rem 0;">
-<div style="background: linear-gradient(90deg, #E74C3C, #E67E22, #F39C12, #E67E22, #E74C3C); height: 2px; max-width: 400px; margin: 0 auto; opacity: 0.7;"></div>
 </div>
 </section>
-<section id="learn-more">
-<h2>Learn More<a class="headerlink" href="#learn-more" title="Link to this heading">#</a></h2>
-<div style="background: #f8f9fa; border: 1px solid #dee2e6; padding: 2rem; border-radius: 0.5rem; margin: 3rem 0;">
-<div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem;">
-<div>
-<h4 style="margin: 0 0 1rem 0; color: #495057;">Course Details</h4>
-<ul style="list-style: none; padding: 0; margin: 0;">
-<li style="margin-bottom: 0.5rem;"><a href="chapters/00-introduction.html" style="color: #007bff; text-decoration: none;">Complete Course Overview</a></li>
-<li style="margin-bottom: 0.5rem;"><a href="learning-progress.html" style="color: #007bff; text-decoration: none;">Progress Tracking</a></li>
-<li style="margin-bottom: 0.5rem;"><a href="tito-essentials.html" style="color: #007bff; text-decoration: none;">Essential Commands</a></li>
+<section id="ready-to-start-building">
+<h2>Ready to Start Building?<a class="headerlink" href="#ready-to-start-building" title="Link to this heading">#</a></h2>
+<p>Transform from framework user to systems engineer. <strong>📖 See <a class="reference internal" href="#tito-essentials.html"><span class="xref myst">Essential Commands</span></a></strong> for complete setup and command reference, or <strong>📖 See <a class="reference internal" href="#chapters/00-introduction.html"><span class="xref myst">Complete Course Structure</span></a></strong> for detailed module descriptions.</p>
+<p><strong>Additional Resources</strong>:</p>
+<ul class="simple">
+<li><p><strong><a class="reference internal" href="#learning-progress.html"><span class="xref myst">Progress Tracking</span></a></strong> - Monitor your learning journey with 16 capability checkpoints</p></li>
+<li><p><strong><a class="reference internal" href="#testing-framework.html"><span class="xref myst">Testing Framework</span></a></strong> - Understand our comprehensive validation system</p></li>
+<li><p><strong><a class="reference internal" href="#resources.html"><span class="xref myst">Documentation &amp; Guides</span></a></strong> - Complete technical documentation and tutorials</p></li>
 </ul>
-</div>
-<div>
-<h4 style="margin: 0 0 1rem 0; color: #495057;">Resources</h4>
-<ul style="list-style: none; padding: 0; margin: 0;">
-<li style="margin-bottom: 0.5rem;"><a href="resources.html" style="color: #007bff; text-decoration: none;">Documentation & Guides</a></li>
-<li style="margin-bottom: 0.5rem;"><a href="testing-framework.html" style="color: #007bff; text-decoration: none;">Testing Framework</a></li>
-<li style="margin-bottom: 0.5rem;"><a href="checkpoint-system.html" style="color: #007bff; text-decoration: none;">Checkpoint System</a></li>
-</ul>
-</div>
-<div>
-<h4 style="margin: 0 0 1rem 0; color: #495057;">Community</h4>
-<ul style="list-style: none; padding: 0; margin: 0;">
-<li style="margin-bottom: 0.5rem;"><a href="leaderboard.html" style="color: #007bff; text-decoration: none;">Student Leaderboard</a></li>
-<li style="margin-bottom: 0.5rem;"><a href="competitions.html" style="color: #007bff; text-decoration: none;">Competitions</a></li>
-<li style="margin-bottom: 0.5rem;"><a href="usage-paths/classroom-use.html" style="color: #007bff; text-decoration: none;">Teaching Resources</a></li>
-</ul>
-</div>
-</div>
-</div></section>
+<p>TinyTorch is more than a course—it’s a community of learners building together. Join thousands exploring ML systems from the ground up.</p>
+</section>
 <div class="toctree-wrapper compound">
 </div>
 <div class="toctree-wrapper compound">
@@ -685,9 +686,9 @@ No installation required • Browser-based exploration • Real neural network t
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-is-tinytorch">What is TinyTorch?</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-build-instead-of-use">Why Build Instead of Use?</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#start-building-in-15-minutes">🚀 Start Building in 15 Minutes</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#three-clear-learning-paths">Three Clear Learning Paths</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#learn-more">Learn More</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#who-is-this-for">Who Is This For?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#how-to-choose-your-learning-path">How to Choose Your Learning Path</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ready-to-start-building">Ready to Start Building?</a></li>
 </ul>
   </nav></div>
 

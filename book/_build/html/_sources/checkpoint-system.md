@@ -1,11 +1,13 @@
 # 🎯 TinyTorch Checkpoint System
 
 <div style="background: #f8f9fa; border: 1px solid #dee2e6; padding: 2rem; border-radius: 0.5rem; text-align: center; margin: 2rem 0;">
-<h2 style="margin: 0 0 1rem 0; color: #495057;">Capability-Driven Learning Journey</h2>
-<p style="margin: 0; color: #6c757d;">Transform traditional modules into capability unlocks with visual progress tracking</p>
+<h2 style="margin: 0 0 1rem 0; color: #495057;">Technical Implementation Guide</h2>
+<p style="margin: 0; color: #6c757d;">Capability validation system architecture and implementation details</p>
 </div>
 
-TinyTorch transforms traditional module-based learning into a **capability-driven progression system**. Like academic checkpoints that mark learning progress, each checkpoint represents a major capability unlock in your ML systems engineering journey.
+**Purpose**: Technical documentation for the checkpoint validation system. Understand the architecture and implementation details of capability-based learning assessment.
+
+The TinyTorch checkpoint system provides technical infrastructure for capability validation and progress tracking. This system transforms traditional module completion into measurable skill assessment through automated testing and validation.
 
 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; margin: 2rem 0;">
 
@@ -139,66 +141,17 @@ Every checkpoint completion unlocks a concrete capability:
 
 ---
 
-## 🛠️ Using the Checkpoint System
+## 🛠️ Technical Usage
 
-### CLI Commands
+The checkpoint system provides comprehensive progress tracking and capability validation through automated testing infrastructure.
 
-#### Check Your Progress
-```bash
-tito checkpoint status           # Current progress overview with capability statements
-tito checkpoint status --detailed # Module-level detail with test file status
-```
-
-#### Rich Visual Timeline
-```bash
-tito checkpoint timeline         # Vertical tree view with connecting lines
-tito checkpoint timeline --horizontal # Linear progress bar with Rich styling
-```
-
-#### Test Capabilities
-```bash
-tito checkpoint test 01          # Test specific checkpoint (01-15)
-tito checkpoint test             # Test current checkpoint
-tito checkpoint run 00 --verbose # Run checkpoint with detailed output
-tito checkpoint unlock          # Show next checkpoint to unlock
-```
-
-#### Module Completion Workflow 
-```bash
-tito module complete 02_tensor   # Complete module with export and checkpoint testing
-tito module complete tensor      # Works with short names too
-tito module complete 02_tensor --skip-test # Skip checkpoint test if needed
-```
-
-**What `tito module complete` does:**
-1. **Exports module** to the `tinytorch` package
-2. **Maps to checkpoint** (e.g., 02_tensor → checkpoint_01_foundation)
-3. **Runs capability test** with Rich progress tracking
-4. **Shows achievement** celebration and next steps
+**📖 See [Essential Commands](tito-essentials.html)** for complete command reference and usage examples.
 
 ### Integration with Development
 The checkpoint system connects directly to your actual development work:
 
 #### Automatic Module-to-Checkpoint Mapping
-```bash
-# Each module maps to a specific checkpoint:
-01_setup      → checkpoint_00_environment   # Environment setup
-02_tensor     → checkpoint_01_foundation    # Tensor operations
-03_activations → checkpoint_02_intelligence # Activation functions
-04_layers     → checkpoint_03_components    # Neural building blocks
-05_dense      → checkpoint_04_networks      # Multi-layer networks
-06_spatial    → checkpoint_05_learning      # Spatial processing
-07_attention  → checkpoint_06_attention     # Attention mechanisms
-08_dataloader → checkpoint_07_stability     # Data preparation
-09_autograd   → checkpoint_08_differentiation # Gradient computation
-10_optimizers → checkpoint_09_optimization  # Optimization algorithms
-11_training   → checkpoint_10_training      # Training loops
-12_compression → checkpoint_11_regularization # Model compression
-13_kernels    → checkpoint_12_kernels       # High-performance ops
-14_benchmarking → checkpoint_13_benchmarking # Performance analysis
-15_mlops      → checkpoint_14_deployment    # Production deployment
-16_tinygpt    → checkpoint_15_capstone      # Language model extension
-```
+Each module automatically maps to its corresponding checkpoint for seamless testing integration.
 
 #### Real Capability Validation
 - **Not just code completion**: Tests verify actual functionality works
@@ -228,15 +181,15 @@ tests/checkpoints/
 ```
 
 ### Rich CLI Integration
-The `tito checkpoint` command system provides:
+The command-line interface provides:
 - **Visual progress tracking** with progress bars and timelines
 - **Capability testing** with immediate feedback
 - **Achievement celebrations** with next step guidance
 - **Detailed status reporting** with module-level information
 
 ### Automated Module Completion
-The `tito module complete` workflow:
-1. **Exports module** using existing `tito export` functionality
+The module completion workflow:
+1. **Exports module** using existing export functionality
 2. **Maps module to checkpoint** using predefined mapping table
 3. **Runs capability test** with Rich progress visualization
 4. **Shows results** with achievement celebration or guidance
@@ -272,39 +225,23 @@ The checkpoint progression **Foundation → Architecture → Training → Infere
 
 ## 🐛 Debugging Checkpoint Failures
 
-**When checkpoint tests fail, use these debugging strategies:**
+**When checkpoint tests fail, use debugging strategies to identify and resolve issues:**
 
 ### Common Failure Patterns
 
 **Import Errors:**
-```bash
-# Problem: Module not found
-ModuleNotFoundError: No module named 'tinytorch.core.tensor'
-
-# Solution: Ensure module is properly exported
-tito module complete 02_tensor
-tito system doctor  # Verify environment setup
-```
+- **Problem**: Module not found errors indicate missing exports
+- **Solution**: Ensure modules are properly exported and environment is configured
 
 **Functionality Errors:**
-```bash
-# Problem: Implementation doesn't work as expected
-AssertionError: Expected tensor shape (5, 3), got (3, 5)
-
-# Debug approach:
-tito checkpoint test 01 --verbose    # Get detailed error info
-tito test --module tensor --debug     # Test module individually
-```
+- **Problem**: Implementation doesn't work as expected (shape mismatches, incorrect outputs)
+- **Debug approach**: Use verbose testing to get detailed error information
 
 **Integration Errors:**
-```bash
-# Problem: Modules don't work together
-CheckpointError: Autograd requires tensor gradient support
+- **Problem**: Modules don't work together due to missing dependencies
+- **Solution**: Verify prerequisite capabilities before testing advanced features
 
-# Solution: Check dependencies
-tito checkpoint test 01  # Verify foundation works first
-tito test --integration --focus autograd
-```
+**📖 See [Essential Commands](tito-essentials.html)** for complete debugging command reference.
 
 ### Checkpoint Test Structure
 
@@ -336,42 +273,23 @@ print("🏆 Foundation checkpoint PASSED")
 
 ---
 
-## 🚀 Advanced Checkpoint Usage
+## 🚀 Advanced Usage Features
 
-**Power user features for advanced development workflows:**
+**The checkpoint system supports advanced development workflows:**
 
 ### Batch Testing
-```bash
-# Test multiple checkpoints
-tito checkpoint test 01,02,03
-
-# Test range of checkpoints
-tito checkpoint test 01-05
-
-# Test all completed checkpoints
-tito checkpoint validate --all-completed
-```
+- Test multiple checkpoints simultaneously
+- Test ranges of checkpoints for comprehensive validation
+- Validate all completed checkpoints for regression testing
 
 ### Custom Checkpoint Development
-```bash
-# Create custom checkpoint for your extensions
-tito checkpoint create my_custom_test.py
-
-# Run custom checkpoint
-tito checkpoint run my_custom_test.py --verbose
-```
+- Create custom checkpoint tests for extensions
+- Run custom validation with verbose output
+- Extend the checkpoint system for specialized needs
 
 ### Performance Profiling
-```bash
-# Profile checkpoint execution
-tito checkpoint test 10 --profile --iterations 100
+- Profile checkpoint execution performance
+- Analyze memory usage during testing
+- Identify bottlenecks in capability validation
 
-# Memory usage analysis during testing
-tito checkpoint test 08 --memory-profile
-```
-
-**Ready to start testing?** Begin with:
-```bash
-tito checkpoint status    # See your current progress
-tito module complete 01_setup  # Complete and test your first module
-```
+**📖 See [Essential Commands](tito-essentials.html)** for complete command reference and advanced usage examples.

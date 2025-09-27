@@ -281,6 +281,111 @@ All agents are available via the Task tool. The TPM manages:
 - **Escalation** when new agents are needed
 - **Integration** across all deliverables
 
+## 🎯 **Quick Slash Commands for Workflows**
+
+**📖 DETAILED WORKFLOWS:** See `.claude/workflows/` for complete specifications
+
+### Available Commands:
+| Command | Purpose | Workflow | Details |
+|---------|---------|----------|---------|
+| `/website` | Website updates | Content Strategist → Designer | [workflow](/.claude/workflows/website.md) |
+| `/module` | Module development | Developer → QA → Package | [workflow](/.claude/workflows/module.md) |
+| `/test` | Testing | QA → Report | [workflow](/.claude/workflows/test.md) |
+| `/tito` | CLI updates | CLI Developer → QA | [workflow](/.claude/workflows/tito.md) |
+| `/education` | Educational content | Architect → Developer → QA | [workflow](/.claude/workflows/education.md) |
+
+### Usage:
+```
+/[workflow] [your specific request]
+```
+
+### Examples:
+```
+/website add a debugging guide
+/module fix tensor operations  
+/test all checkpoints
+/tito add progress command
+/education improve autograd learning
+```
+
+**🚨 RULES:**
+1. When user starts with `/`, IMMEDIATELY use that workflow
+2. NEVER ask "Should I use agents?" - just execute the workflow
+3. Follow the EXACT sequence defined in `.claude/workflows/[name].md`
+4. Each workflow has quality gates - don't skip steps
+
+---
+
+### 🌐 **Website Update Workflow - AUTOMATIC TRIGGERS**
+
+**SLASH COMMAND**: `/website [request]`
+
+**ALTERNATIVE TRIGGER PHRASES** - When user says any of these, also use website workflow:
+- "update the website" / "website needs" / "fix the website"
+- "add content to" / "change the documentation" / "update docs"
+- "improve the site" / "website content" / "fix the docs"
+- "add a page" / "update the page" / "change the page"
+
+**MANDATORY WORKFLOW SEQUENCE**:
+```
+Step 1: Website Content Strategist (ALWAYS FIRST)
+   ↓ Audits existing content for duplicates
+   ↓ Creates detailed content specification
+   ↓ Identifies what goes where
+   
+Step 2: Website Designer (ALWAYS SECOND)
+   ↓ Implements the specification
+   ↓ Applies consistent styling
+   ↓ Tests all cross-references
+```
+
+**AUTOMATIC EXECUTION EXAMPLE**:
+```
+User: "The website needs a new debugging guide"
+Claude: [Automatically invokes Content Strategist first, then Designer]
+
+User: "Update the docs to explain checkpoints better"
+Claude: [Automatically invokes Content Strategist → Designer workflow]
+```
+
+**DO NOT ASK** "Should I use the agents?" - Just use them when triggered!
+
+### 📦 **Module Development Workflow - AUTOMATIC TRIGGERS**
+
+**SLASH COMMAND**: `/module [request]`
+
+**ALTERNATIVE TRIGGER PHRASES**:
+- "implement module" / "build module" / "create module"
+- "fix the module" / "update module" / "improve module"
+- "add tests to" / "test the module"
+
+**MANDATORY WORKFLOW**:
+```
+Module Developer → QA Agent → Package Manager
+```
+
+### 🧪 **Testing Workflow - AUTOMATIC TRIGGERS**
+
+**TRIGGER PHRASES**:
+- "test everything" / "run tests" / "verify it works"
+- "check if" / "make sure" / "validate"
+
+**MANDATORY WORKFLOW**:
+```
+QA Agent → Report Results → Fix Issues if Found
+```
+
+### 📚 **Educational Content Workflow - AUTOMATIC TRIGGERS**
+
+**TRIGGER PHRASES**:
+- "improve learning" / "educational content" / "teaching materials"
+- "student experience" / "learning objectives"
+
+**MANDATORY WORKFLOW**:
+```
+Education Architect → Module Developer → QA Agent
+```
+
 ### 🤖 Agent Team Orchestration - Best Practices
 
 **The TPM manages multiple AI agents with structured coordination:**
