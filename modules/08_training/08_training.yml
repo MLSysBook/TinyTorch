@@ -8,7 +8,6 @@ description: "Neural network training loops, loss functions, and metrics"
 # Dependencies - Used by CLI for module ordering and prerequisites
 dependencies:
   prerequisites: ["setup", "tensor", "activations", "layers", "networks", "dataloader", "autograd", "optimizers"]
-  enables: ["compression", "kernels", "benchmarking", "mlops"]
 
 # Package Export - What gets built into tinytorch package
 exports_to: "tinytorch.core.training"

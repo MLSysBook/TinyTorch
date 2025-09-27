@@ -8,7 +8,6 @@ description: "Dataset interfaces and data loading pipelines"
 # Dependencies - Used by CLI for module ordering and prerequisites
 dependencies:
   prerequisites: ["setup", "tensor"]
-  enables: ["training", "dense", "spatial", "attention"]
 
 # Package Export - What gets built into tinytorch package
 exports_to: "tinytorch.core.dataloader"

@@ -1,31 +1,29 @@
 # TinyTorch Module Metadata
 # Essential system information for CLI tools and build systems
 
-name: "setup"
-title: "Setup & Environment"
-description: "Development environment setup and basic TinyTorch functionality"
+name: "spatial"
+title: "Spatial Networks"
+description: "Convolutional networks for spatial pattern recognition and image processing"
 
 # Dependencies - Used by CLI for module ordering and prerequisites
 dependencies:
-  prerequisites: []
-  enables: ["tensor", "activations", "layers"] 
+  prerequisites: ["setup", "tensor", "activations", "layers", "dense"]
 
 # Package Export - What gets built into tinytorch package
-exports_to: "tinytorch.core.setup"
+exports_to: "tinytorch.core.spatial"
 
 # File Structure - What files exist in this module
 files:
-  dev_file: "setup_dev.py"
+  dev_file: "spatial_dev.py"
   readme: "README.md"
   tests: "inline"
 
 # Educational Metadata
-difficulty: "⭐"
-time_estimate: "1-2 hours"
+difficulty: "⭐⭐⭐"
+time_estimate: "6-8 hours"
 
 # Components - What's implemented in this module
 components:
-  - "personal_info"
-  - "system_info"
-  - "setup_health"
-  - "DeveloperProfile" 
+  - "conv2d_naive"
+  - "Conv2D"
+  - "flatten" 

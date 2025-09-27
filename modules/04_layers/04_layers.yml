@@ -1,31 +1,29 @@
 # TinyTorch Module Metadata
 # Essential system information for CLI tools and build systems
 
-name: "activations"
-title: "Activation Functions"
-description: "Neural network activation functions (ReLU, Sigmoid, Tanh, Softmax)"
+name: "layers"
+title: "Layers"
+description: "Neural network layers (Linear, activation layers)"
 
 # Dependencies - Used by CLI for module ordering and prerequisites
 dependencies:
-  prerequisites: ["tensor"]
-  enables: ["layers", "networks"] 
+  prerequisites: ["setup", "tensor", "activations"]
 
 # Package Export - What gets built into tinytorch package
-exports_to: "tinytorch.core.activations"
+exports_to: "tinytorch.core.layers"
 
 # File Structure - What files exist in this module
 files:
-  dev_file: "activations_dev.py"
+  dev_file: "layers_dev.py"
   readme: "README.md"
   tests: "inline"
 
 # Educational Metadata
 difficulty: "⭐⭐"
-time_estimate: "3-4 hours"
+time_estimate: "4-5 hours"
 
 # Components - What's implemented in this module
 components:
-  - "ReLU"
-  - "Sigmoid"
-  - "Tanh"
-  - "Softmax" 
+  - "Dense"
+  - "Linear"
+  - "matmul" 
