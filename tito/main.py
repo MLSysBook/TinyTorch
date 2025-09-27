@@ -224,7 +224,7 @@ Examples:
                     "  [dim]tito module status --metadata[/dim] - Module status with metadata\n"
                     "  [dim]tito module view 01_setup[/dim]     - Start coding in Jupyter Lab\n"
                     "  [dim]tito checkpoint timeline[/dim]      - Visual progress timeline\n"
-                    "  [dim]tito leaderboard register[/dim]     - Join the inclusive community\n"
+                    "  [dim]tito leaderboard join[/dim]         - Join the inclusive community\n"
                     "  [dim]tito olympics events[/dim]          - See special competitions\n"
                     "  [dim]tito milestone status[/dim]         - See your epic achievement progress\n"
                     "[bold]Get Help:[/bold]\n"
