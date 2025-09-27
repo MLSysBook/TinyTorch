@@ -268,8 +268,8 @@ User Request → TPM Agent → Coordinates Specialized Agents → Reports Back
 - **Module Developer** (.claude/agents/module-developer.md) - Implementation  
 - **Package Manager** (.claude/agents/package-manager.md) - Integration
 - **Quality Assurance** (.claude/agents/quality-assurance.md) - Testing
-- **Documentation Publisher** (.claude/agents/documentation-publisher.md) - Content
-- **Workflow Coordinator** (.claude/agents/workflow-coordinator.md) - Process management
+- **Website Content Strategist** (.claude/agents/website-content-strategist.md) - Website content & strategy
+- **Educational Review Expert** (.claude/agents/educational-review-expert.md) - Educational & technical validation
 - **DevOps Engineer** (.claude/agents/devops-engineer.md) - Infrastructure
 - **Tito CLI Developer** (.claude/agents/tito-cli-developer.md) - CLI functionality
 
@@ -288,21 +288,22 @@ All agents are available via the Task tool. The TPM manages:
 ### 📊 Agent Team Structure
 
 ```
-Workflow Coordinator (Team Lead)
+Technical Program Manager (Enhanced - Project Lead)
     ├── Education Architect (Strategy)
     ├── Module Developer (Implementation)
     ├── Package Manager (Integration)
     ├── Quality Assurance (Validation)
-    └── Documentation Publisher (Communication)
+    ├── Website Content Strategist (Website Content & Strategy)
+    └── Educational Review Expert (Educational & Technical Validation)
 ```
 
 ### 🎯 **Checkpoint System Implementation - Agent Workflow Case Study**
 
 **SUCCESSFUL IMPLEMENTATION:** The agent team successfully implemented a comprehensive 16-checkpoint capability assessment system with integration testing. Here's how the workflow functioned:
 
-#### **Phase 1: Strategic Planning** (Education Architect + Workflow Coordinator)
+#### **Phase 1: Strategic Planning** (Education Architect + Enhanced TPM)
 - **Education Architect**: Designed capability-based learning progression (Foundation → Architecture → Training → Inference → Serving)
-- **Workflow Coordinator**: Orchestrated agent coordination and defined implementation phases
+- **Enhanced TPM**: Orchestrated agent coordination using Chen Method workflow management
 - **Result**: 16-checkpoint structure aligned with 17 TinyTorch modules, each with clear capability statements
 
 #### **Phase 2: Implementation** (Module Developer)
@@ -326,16 +327,16 @@ Workflow Coordinator (Team Lead)
 - **Ensured complete package build**: All checkpoint functionality available in built package
 - **Integration success confirmed**: Complete system works end-to-end
 
-#### **Phase 5: Documentation** (Documentation Publisher)
-- **Updated documentation**: This CLAUDE.md file, checkpoint-system.md, README.md updates
-- **Documented agent workflow**: How agents successfully coordinated implementation
-- **Created CLI documentation**: Usage examples and command reference
-- **Explained integration testing**: How checkpoint system validates student progress
+#### **Phase 5: Website Content** (Website Content Strategist)
+- **Updated documentation**: This CLAUDE.md file, checkpoint-system.md, README.md updates with design strategy
+- **Documented agent workflow**: How agents successfully coordinated implementation with user experience design
+- **Created CLI documentation**: Usage examples and command reference with visual hierarchy
+- **Explained integration testing**: How checkpoint system validates student progress with content presentation optimization
 
-#### **Phase 6: Review and Approval** (Workflow Coordinator)
-- **Verified all agents completed tasks**: QA passed, Package Manager confirmed integration
-- **Confirmed capability delivery**: 16-checkpoint system with CLI and integration testing
-- **Approved for commit**: Complete implementation ready for production use
+#### **Phase 6: Review and Approval** (Enhanced TPM)
+- **Verified all Chen Gates passed**: QA approved, Package Manager confirmed integration through systematic workflow
+- **Confirmed capability delivery**: 16-checkpoint system with CLI and integration testing using Chen State Machine
+- **Approved for commit**: Complete implementation ready for production use through enhanced workflow authority
 
 ### 🚀 **Implemented Checkpoint System Capabilities**
 
@@ -714,26 +715,28 @@ Content here...
 - **MUST validate systems analysis is present and accurate**
 - **MUST report test results to Package Manager**
 
-**Documentation Publisher:**
-- Markdown prose emphasizing SYSTEMS UNDERSTANDING
-- **MANDATORY: ML systems analysis sections** in every module
-- **Module-specific ML systems thinking questions** (analyze actual implementations, memory usage, scaling)
-- **Performance implications documentation**: Explain computational complexity and memory usage
-- **Production context**: How do real systems handle these operations?
-- **Checkpoint system documentation**: Update documentation to reflect new capabilities
-- **Agent workflow documentation**: Document successful agent coordination patterns  
-- **CLI usage documentation**: Document new commands and workflows for users
-- **MUST connect every implementation to broader systems principles**
+**Website Content Strategist:**
+- **Unified content & design strategy**: Both WHAT content says AND HOW it's presented
+- **Educational website content**: Content creation with presentation optimization for open source frameworks
+- **ML systems analysis sections**: MANDATORY systems understanding documentation in every module
+- **Production context documentation**: How real systems (PyTorch/TensorFlow) handle operations with optimal presentation
+- **Module-specific ML systems thinking questions**: Analyze actual implementations with user experience design
+- **Website strategy**: Visual hierarchy, content architecture, and educational framework design guidelines
+- **Checkpoint system documentation**: Update documentation with design strategy integration
+- **Agent workflow documentation**: Document patterns with presentation optimization
+- **CLI usage documentation**: Document commands with user experience considerations
+- **MUST connect implementations to systems principles through cohesive content and design**
 
-**Workflow Coordinator:**
-- **ML Systems focus enforcement**: Ensure all modules teach systems principles through implementation  
-- **Checkpoint system orchestration**: Coordinate complex multi-agent implementations like checkpoint system
-- **Agent workflow enforcement**: Ensure proper agent handoffs and communication protocols
-- **Systems analysis validation**: Verify every module includes memory/performance/scaling analysis
-- **MUST enforce QA testing after EVERY module update**
-- **CANNOT approve changes without QA test results**
-- **MUST block commits if tests fail**
-- **MUST ensure modules teach systems thinking, not just algorithms**
+**Enhanced Technical Program Manager (Integrated Workflow Authority):**
+- **Complete workflow orchestration**: Chen Method state machine management for all development processes
+- **ML Systems focus enforcement**: Ensure all modules teach systems principles through implementation using systematic quality gates
+- **Checkpoint system orchestration**: Coordinate complex multi-agent implementations using Chen Gates validation
+- **Agent workflow coordination**: Manage handoffs with strict quality criteria and timeline tracking
+- **Systems analysis validation**: Verify every module includes memory/performance/scaling analysis through comprehensive review
+- **MUST enforce QA testing after EVERY module update** through Chen Gate 3 (Quality Certification)
+- **CANNOT approve changes without QA test results** - absolute workflow authority
+- **MUST block commits if tests fail** using quality gate enforcement
+- **MUST ensure modules teach systems thinking** through systematic Chen Method validation
 
 ### 🧪 QA Testing Protocol - MANDATORY
 
