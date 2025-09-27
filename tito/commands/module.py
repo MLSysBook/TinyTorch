@@ -18,6 +18,7 @@ import json
 import time
 import subprocess
 from datetime import datetime
+from typing import Optional
 
 from .base import BaseCommand
 from .status import StatusCommand
@@ -28,6 +29,7 @@ from .export import ExportCommand
 from .view import ViewCommand
 from .checkpoint import CheckpointSystem
 from .milestone import MilestoneSystem
+from .leaderboard import LeaderboardCommand
 from ..core.console import print_ascii_logo
 from pathlib import Path
 
@@ -384,6 +386,28 @@ class ModuleCommand(BaseCommand):
                 "error": f"Failed to run integration test: {e}",
                 "module_name": module_name
             }
+    
+    def _get_checkpoint_id_for_module(self, module_name: str) -> Optional[str]:
+        """Get the checkpoint ID that corresponds to a module."""
+        module_to_checkpoint = {
+            "01_setup": "00",          # Setup → Environment checkpoint  
+            "02_tensor": "01",         # Tensor → Foundation checkpoint
+            "03_activations": "02",    # Activations → Intelligence checkpoint
+            "04_layers": "03",         # Layers → Components checkpoint
+            "05_dense": "04",          # Dense → Networks checkpoint
+            "06_spatial": "05",        # Spatial → Learning checkpoint
+            "07_attention": "06",      # Attention → Attention checkpoint
+            "08_dataloader": "07",     # Dataloader → Stability checkpoint (data prep)
+            "09_autograd": "08",       # Autograd → Differentiation checkpoint
+            "10_optimizers": "09",     # Optimizers → Optimization checkpoint
+            "11_training": "10",       # Training → Training checkpoint
+            "12_compression": "11",    # Compression → Regularization checkpoint
+            "13_kernels": "12",        # Kernels → Kernels checkpoint
+            "14_benchmarking": "13",   # Benchmarking → Benchmarking checkpoint
+            "15_mlops": "14",          # MLOPs → Deployment checkpoint
+            "16_tinygpt": "15",        # TinyGPT → Capstone checkpoint
+        }
+        return module_to_checkpoint.get(module_name)
 
     def _check_milestone_unlock(self, module_name: str) -> dict:
         """Check if completing this module unlocks a milestone."""
@@ -399,11 +423,21 @@ class ModuleCommand(BaseCommand):
             console.print(f"[green]✅ Module {module_name} exported successfully![/green]")
             # Still record completion even if skipped
             self._record_module_completion(module_name)
+            
+            # Update leaderboard profile even for skipped checkpoints
+            checkpoint_unlocked = self._get_checkpoint_id_for_module(module_name)
+            leaderboard_cmd = LeaderboardCommand(self.config)
+            leaderboard_cmd.update_profile_on_module_completion(module_name, checkpoint_unlocked)
             return
         
         if result["success"]:
             # Record successful completion first
             self._record_module_completion(module_name)
+            
+            # Update leaderboard profile with module completion
+            checkpoint_unlocked = self._get_checkpoint_id_for_module(module_name)
+            leaderboard_cmd = LeaderboardCommand(self.config)
+            leaderboard_cmd.update_profile_on_module_completion(module_name, checkpoint_unlocked)
             
             # Check for EPIC MILESTONE UNLOCK first!
             if milestone_result and milestone_result.get("milestone_unlocked"):
