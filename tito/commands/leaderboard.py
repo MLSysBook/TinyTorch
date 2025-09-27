@@ -44,24 +44,25 @@ class LeaderboardCommand(BaseCommand):
             metavar='COMMAND'
         )
         
-        # Register command
-        register_parser = subparsers.add_parser(
-            'register',
-            help='Join the TinyTorch community (inclusive, welcoming)'
+        # Join/Register command (join is primary, register is alias)
+        join_parser = subparsers.add_parser(
+            'join',
+            help='Join the TinyTorch community (inclusive, welcoming)',
+            aliases=['register']
         )
-        register_parser.add_argument(
+        join_parser.add_argument(
             '--username',
             help='Your display name (defaults to system username)'
         )
-        register_parser.add_argument(
+        join_parser.add_argument(
             '--institution',
             help='Institution/organization (optional)'
         )
-        register_parser.add_argument(
+        join_parser.add_argument(
             '--country',
             help='Country (optional, for global community view)'
         )
-        register_parser.add_argument(
+        join_parser.add_argument(
             '--update',
             action='store_true',
             help='Update existing registration'
@@ -139,6 +140,12 @@ class LeaderboardCommand(BaseCommand):
             'status',
             help='Quick personal stats and next steps'
         )
+        
+        # Help command
+        help_parser = subparsers.add_parser(
+            'help',
+            help='Explain the community leaderboard system'
+        )
     
     def run(self, args: Namespace) -> int:
         """Execute leaderboard command."""
@@ -148,7 +155,7 @@ class LeaderboardCommand(BaseCommand):
             self._show_leaderboard_overview()
             return 0
         
-        if command == 'register':
+        if command in ['join', 'register']:
             return self._register_user(args)
         elif command == 'submit':
             return self._submit_results(args)
@@ -158,6 +165,8 @@ class LeaderboardCommand(BaseCommand):
             return self._show_profile(args)
         elif command == 'status':
             return self._show_status(args)
+        elif command == 'help':
+            return self._show_help()
         else:
             raise TinyTorchCLIError(f"Unknown leaderboard command: {command}")
     
@@ -174,13 +183,14 @@ class LeaderboardCommand(BaseCommand):
                 "• [magenta]No minimum required[/magenta] - Join with any level of progress",
                 "",
                 "[bold]Available Commands:[/bold]",
-                "  [green]register[/green]  - Join our welcoming community (free, inclusive)",
+                "  [green]join[/green]      - Join our welcoming community (free, inclusive)",
                 "  [green]submit[/green]    - Share your progress (any level welcome!)",
                 "  [green]view[/green]      - See everyone's journey together",
                 "  [green]profile[/green]   - Your personal achievement story",
                 "  [green]status[/green]    - Quick stats and encouragement",
+                "  [green]help[/green]      - Learn about the community system",
                 "",
-                "[dim]💡 Tip: Start with 'tito leaderboard register' to join the community![/dim]",
+                "[dim]💡 Tip: Start with 'tito leaderboard join' to join the community![/dim]",
             ),
             title="Community Leaderboard",
             border_style="bright_green",
@@ -301,9 +311,9 @@ class LeaderboardCommand(BaseCommand):
         profile = self._load_user_profile()
         if not profile:
             self.console.print(Panel(
-                "[yellow]Please register first to join our community![/yellow]\n\n"
-                "Run: [bold]tito leaderboard register[/bold]",
-                title="📝 Registration Required",
+                "[yellow]Please join our community first![/yellow]\n\n"
+                "Run: [bold]tito leaderboard join[/bold]",
+                title="📝 Community Membership Required",
                 border_style="yellow"
             ))
             return 1
@@ -420,9 +430,9 @@ class LeaderboardCommand(BaseCommand):
         profile = self._load_user_profile()
         if not profile:
             self.console.print(Panel(
-                "[yellow]Please register first to see your profile![/yellow]\n\n"
-                "Run: [bold]tito leaderboard register[/bold]",
-                title="📝 Registration Required",
+                "[yellow]Please join our community first to see your profile![/yellow]\n\n"
+                "Run: [bold]tito leaderboard join[/bold]",
+                title="📝 Community Membership Required",
                 border_style="yellow"
             ))
             return 1
@@ -436,9 +446,9 @@ class LeaderboardCommand(BaseCommand):
         profile = self._load_user_profile()
         if not profile:
             self.console.print(Panel(
-                "[yellow]Please register first![/yellow]\n\n"
-                "Run: [bold]tito leaderboard register[/bold]",
-                title="📝 Registration Required",
+                "[yellow]Please join our community first![/yellow]\n\n"
+                "Run: [bold]tito leaderboard join[/bold]",
+                title="📝 Community Membership Required",
                 border_style="yellow"
             ))
             return 1
@@ -476,6 +486,48 @@ class LeaderboardCommand(BaseCommand):
             padding=(1, 2)
         ))
         
+        return 0
+    
+    def _show_help(self) -> int:
+        """Show detailed explanation of the leaderboard system."""
+        self.console.print(Panel(
+            Group(
+                Align.center("[bold bright_green]🎓 TinyTorch Community Leaderboard Guide 🎓[/bold bright_green]"),
+                "",
+                "[bold bright_blue]🌟 What is this?[/bold bright_blue]",
+                "The TinyTorch Community Leaderboard is an [bold]inclusive showcase[/bold] where ML learners",
+                "share their journey, celebrate achievements, and support each other's growth.",
+                "",
+                "[bold bright_blue]🚀 What gets submitted?[/bold bright_blue]",
+                "• [green]Model checkpoints[/green] - Your trained TinyTorch models (not PyTorch!)",
+                "• [green]Accuracy results[/green] - Performance on tasks like CIFAR-10, MNIST",
+                "• [green]Learning progress[/green] - Which TinyTorch checkpoints you've completed",
+                "• [green]Model descriptions[/green] - Your architecture choices and approaches",
+                "",
+                "[bold bright_blue]🔍 How does verification work?[/bold bright_blue]",
+                "• Models must be built with [yellow]TinyTorch[/yellow] (the framework you're learning)",
+                "• We verify checkpoints contain your custom implementations",
+                "• Community review ensures submissions are genuine learning artifacts",
+                "• [dim]Focus is on learning, not gaming the system[/dim]",
+                "",
+                "[bold bright_blue]🌈 Community guidelines:[/bold bright_blue]",
+                "• [green]Celebrate all levels[/green] - 10% accuracy gets same respect as 90%",
+                "• [blue]Share knowledge[/blue] - Help others learn from your approaches",
+                "• [yellow]Be encouraging[/yellow] - Everyone started as a beginner",
+                "• [magenta]Learn together[/magenta] - Community success > individual ranking",
+                "",
+                "[bold bright_blue]🎯 Getting started:[/bold bright_blue]",
+                "1. [dim]tito leaderboard join[/dim] - Join our welcoming community",
+                "2. Train any model using your TinyTorch implementations",
+                "3. [dim]tito leaderboard submit --accuracy 25.3[/dim] - Share your results",
+                "4. [dim]tito leaderboard view[/dim] - See the community progress",
+                "",
+                "[bold bright_green]💝 Remember: This is about learning, growing, and supporting each other![/bold bright_green]",
+            ),
+            title="🤗 Community Leaderboard System",
+            border_style="bright_green",
+            padding=(1, 2)
+        ))
         return 0
     
     def _get_user_data_dir(self) -> Path:
@@ -556,15 +608,38 @@ class LeaderboardCommand(BaseCommand):
     
     def _load_community_data(self, task: str) -> List[Dict[str, Any]]:
         """Load community data (mock implementation)."""
-        # Mock community data for demonstration
-        return [
-            {"username": "alex_chen", "accuracy": 78.2, "model": "ResNet-Custom", "country": "USA", "recent": True},
-            {"username": "neural_ninja", "accuracy": 72.1, "model": "CNN-5-layer", "country": "Canada", "recent": False},
-            {"username": "ml_student", "accuracy": 45.3, "model": "Basic-CNN", "country": "UK", "recent": True},
-            {"username": "curious_coder", "accuracy": 28.7, "model": "First-Try", "country": "Germany", "recent": True},
-            {"username": "tinytorch_fan", "accuracy": 15.2, "model": "Learning-Net", "country": "Australia", "recent": False},
-            {"username": "beginner_ml", "accuracy": 8.9, "model": "Simple-Model", "country": "India", "recent": True},
-        ]
+        # Mock community data for demonstration - shows diverse community with all skill levels
+        if task == "cifar10":
+            return [
+                {"username": "alex_chen", "accuracy": 78.2, "model": "ResNet-Custom", "country": "USA", "recent": True, "checkpoint": "15"},
+                {"username": "neural_ninja", "accuracy": 72.1, "model": "CNN-5-layer", "country": "Canada", "recent": False, "checkpoint": "12"},
+                {"username": "sara_codes", "accuracy": 65.8, "model": "AttentionCNN", "country": "Sweden", "recent": True, "checkpoint": "11"},
+                {"username": "ml_explorer", "accuracy": 58.4, "model": "DeepCNN", "country": "Brazil", "recent": False, "checkpoint": "10"},
+                {"username": "code_learner", "accuracy": 52.3, "model": "ModernCNN", "country": "South Korea", "recent": True, "checkpoint": "09"},
+                {"username": "ml_student", "accuracy": 45.3, "model": "Basic-CNN", "country": "UK", "recent": True, "checkpoint": "08"},
+                {"username": "data_dreamer", "accuracy": 38.9, "model": "Experimental", "country": "Netherlands", "recent": False, "checkpoint": "07"},
+                {"username": "curious_coder", "accuracy": 32.7, "model": "First-CNN", "country": "Germany", "recent": True, "checkpoint": "06"},
+                {"username": "ai_enthusiast", "accuracy": 27.1, "model": "SimpleNet", "country": "Japan", "recent": False, "checkpoint": "05"},
+                {"username": "future_engineer", "accuracy": 22.8, "model": "LearnNet", "country": "Mexico", "recent": True, "checkpoint": "04"},
+                {"username": "tinytorch_fan", "accuracy": 18.2, "model": "TryHard-Net", "country": "Australia", "recent": False, "checkpoint": "03"},
+                {"username": "beginner_ml", "accuracy": 14.9, "model": "FirstModel", "country": "India", "recent": True, "checkpoint": "02"},
+                {"username": "brave_starter", "accuracy": 11.3, "model": "BasicTorch", "country": "Nigeria", "recent": True, "checkpoint": "02"},
+                {"username": "learning_path", "accuracy": 8.7, "model": "StartNet", "country": "Philippines", "recent": False, "checkpoint": "01"},
+                {"username": "new_to_ml", "accuracy": 6.2, "model": "FirstTry", "country": "Egypt", "recent": True, "checkpoint": "01"},
+            ]
+        elif task == "mnist":
+            return [
+                {"username": "digit_master", "accuracy": 94.2, "model": "Deep-MNIST", "country": "USA", "recent": True, "checkpoint": "08"},
+                {"username": "neural_ninja", "accuracy": 89.1, "model": "CNN-MNIST", "country": "Canada", "recent": False, "checkpoint": "07"},
+                {"username": "ml_student", "accuracy": 76.3, "model": "Simple-CNN", "country": "UK", "recent": True, "checkpoint": "05"},
+                {"username": "beginner_ml", "accuracy": 52.9, "model": "Basic-Net", "country": "India", "recent": True, "checkpoint": "03"},
+            ]
+        else:  # tinygpt or other tasks
+            return [
+                {"username": "language_lover", "accuracy": 45.2, "model": "TinyGPT-v1", "country": "USA", "recent": True, "checkpoint": "16"},
+                {"username": "transformer_fan", "accuracy": 32.1, "model": "MiniTransformer", "country": "UK", "recent": False, "checkpoint": "14"},
+                {"username": "nlp_explorer", "accuracy": 18.7, "model": "BasicGPT", "country": "Germany", "recent": True, "checkpoint": "13"},
+            ]
     
     def _show_community_leaderboard(self, data: List[Dict[str, Any]], task: str, show_all: bool = False) -> None:
         """Show inclusive community leaderboard."""
@@ -583,6 +658,7 @@ class LeaderboardCommand(BaseCommand):
         table.add_column("Username", style="bold")
         table.add_column("Accuracy", style="green", justify="right")
         table.add_column("Model", style="blue")
+        table.add_column("Checkpoint", style="magenta", justify="center")
         table.add_column("Country", style="cyan")
         table.add_column("Status", style="yellow")
         
@@ -595,6 +671,7 @@ class LeaderboardCommand(BaseCommand):
                 entry["username"],
                 f"{entry['accuracy']:.1f}%",
                 entry["model"],
+                entry.get("checkpoint", "—"),
                 entry.get("country", "Global"),
                 status
             )
