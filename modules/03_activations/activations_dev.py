@@ -1,42 +1,39 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# # Activations - Making Networks Learn Efficiently
+# # Activations - Nonlinear Intelligence for Neural Networks
 
-# Welcome to Activations! You'll implement the essential nonlinear functions that enable neural networks to learn complex patterns.
+# Welcome to Activations! You'll implement the functions that break linearity and enable neural networks to learn complex patterns.
 
 # ## 🔗 Building on Previous Learning
 # **What You Built Before**:
-# - Module 01 (Setup): Python environment and development tools
-# - Module 02 (Tensor): N-dimensional arrays with shape management and broadcasting
+# - Module 02 (Tensor): N-dimensional arrays with broadcasting
 
-# **What's Working**: You can create and manipulate tensors with vectorized operations and memory-efficient broadcasting!
+# **The Problem**: Your current tensors only support linear operations. Multiple linear layers stacked together create... more linear operations. This means your "deep" network can only learn patterns that a single linear layer could learn - essentially expensive linear regression.
 
-# **The Gap**: Your tensors can only perform linear operations. Without nonlinearity, neural networks can't learn complex patterns - they're just expensive linear regression.
-
-# **This Module's Solution**: Implement ReLU and Softmax - the activation functions that provide the nonlinear intelligence enabling deep learning breakthroughs.
+# **This Module's Solution**: Implement ReLU and Softmax activation functions that inject nonlinearity between layers, enabling your networks to learn complex patterns like image recognition and natural language understanding.
 
 # **Connection Map**:
 # ```
-# Tensor → Activations → Layers
-# (data)    (intelligence)  (architecture)
+# Tensor → Activations → Neural Networks
+# (data)    (intelligence)  (complex learning)
 # ```
 
 # ## Learning Goals
-# - Systems understanding: How activation choice affects memory usage, computational complexity, and training stability
-# - Core implementation skill: Build numerically stable activation functions used in 90%+ of production systems
-# - Pattern/abstraction mastery: Understand when to use ReLU (hidden layers) vs Softmax (classification outputs)
-# - Framework connections: See how your implementations mirror PyTorch's essential activation functions
-# - Optimization trade-offs: Learn why ReLU's simplicity revolutionized deep learning and why Softmax requires careful numerical implementation
+# - Systems understanding: How activation choice affects memory, computation, and hardware utilization
+# - Core implementation skill: Build production-grade activation functions with proper error handling
+# - Pattern/abstraction mastery: Understand the computational trade-offs between different activation types
+# - Framework connections: Your implementations mirror PyTorch's core activation functions
+# - Optimization trade-offs: Experience memory bottlenecks and discover why ReLU dominates modern architectures
 
 # ## Build → Use → Reflect
-# 1. **Build**: ReLU and Softmax activation functions with proper numerical stability and performance characteristics
-# 2. **Use**: Apply these activations in realistic neural network scenarios with batch processing
-# 3. **Reflect**: How do activation functions affect both learning capacity and computational efficiency in ML systems?
+# 1. **Build**: ReLU and Softmax with validation, error handling, and systems analysis
+# 2. **Use**: Test in realistic neural network pipelines with edge cases
+# 3. **Reflect**: Connect your implementation measurements to production ML systems design
 
 # ## Systems Reality Check
-# 💡 **Production Context**: PyTorch implements ReLU with highly optimized CUDA kernels while Softmax requires careful numerical stability - your implementation reveals these design trade-offs
-# ⚡ **Performance Insight**: ReLU is popular partly because it's computationally cheap (just max(0,x)), while Softmax requires expensive exponentials - hardware considerations drive ML algorithm choice
+# 💡 **Production Context**: Your ReLU implementation uses the same algorithm as PyTorch's CUDA kernels
+# ⚡ **Performance Insight**: You'll experience firsthand why ReLU's computational simplicity revolutionized deep learning
 
 # In[ ]:
 
@@ -191,33 +188,32 @@ class ReLU:
     def forward(self, x):
         """
         Apply ReLU activation: f(x) = max(0, x)
-        
+
         The core function that enabled the deep learning revolution.
         Simple yet powerful - sets negative values to zero, preserves positive values.
-        
+
         Args:
             x (Tensor): Input tensor of any shape
-            
+
         Returns:
             Tensor: Output tensor with ReLU applied element-wise
-            
+
+        Raises:
+            TypeError: If input is not a Tensor
+            ValueError: If tensor contains NaN or infinite values
+
         Mathematical Foundation:
             f(x) = max(0, x) = { x if x > 0
                                { 0 if x ≤ 0
-            
+
             Gradient: f'(x) = { 1 if x > 0
                                { 0 if x ≤ 0
-        
+
         Implementation Approach:
-        1. Use numpy's maximum function for vectorized operation
-        2. Compare each element with 0 simultaneously
+        1. Validate input tensor and check for edge cases
+        2. Use numpy's maximum function for vectorized operation
         3. Return new tensor with results
-        
-        Why This Works:
-        - np.maximum broadcasts 0 across entire tensor
-        - Vectorized operation leverages CPU/GPU parallelism
-        - Creates new tensor (preserves input for backpropagation)
-        
+
         Example:
             >>> relu = ReLU()
             >>> x = Tensor([[-1.0, 0.0, 1.0, 2.0]])
@@ -225,6 +221,18 @@ class ReLU:
             >>> print(y.data)  # [[0.0, 0.0, 1.0, 2.0]]
         """
         ### BEGIN SOLUTION
+        # Input validation
+        if not isinstance(x, Tensor):
+            raise TypeError(f"Expected Tensor, got {type(x)}")
+
+        # Check for empty tensor
+        if x.data.size == 0:
+            return Tensor(np.array([]))
+
+        # Check for NaN or infinite values
+        if np.any(np.isnan(x.data)) or np.any(np.isinf(x.data)):
+            raise ValueError("Input tensor contains NaN or infinite values")
+
         # Vectorized element-wise maximum with 0
         # This is the exact operation that revolutionized deep learning!
         result = np.maximum(0, x.data)
@@ -234,26 +242,29 @@ class ReLU:
     def forward_(self, x):
         """
         Apply ReLU activation in-place for memory efficiency.
-        
+
         In-place operations are crucial for large models where memory is constrained.
         Modifies the input tensor directly rather than creating a new one.
-        
+
         Args:
             x (Tensor): Input tensor to modify in-place
-            
+
         Returns:
             Tensor: The same tensor object (modified)
-            
+
+        Raises:
+            TypeError: If input is not a Tensor
+            ValueError: If tensor contains NaN or infinite values
+
         Memory Benefits:
         - No additional memory allocation
         - Critical for training very large networks
         - Used in production systems for memory efficiency
-        
+
         Trade-offs:
         - Destroys original input (can't backpropagate through)
         - Used in inference or when gradients aren't needed
-        - PyTorch notation: relu_() vs relu()
-        
+
         Example:
             >>> relu = ReLU()
             >>> x = Tensor([[-1.0, 2.0]])
@@ -261,6 +272,18 @@ class ReLU:
             >>> print(x.data)    # [[0.0, 2.0]]
         """
         ### BEGIN SOLUTION
+        # Input validation
+        if not isinstance(x, Tensor):
+            raise TypeError(f"Expected Tensor, got {type(x)}")
+
+        # Check for empty tensor
+        if x.data.size == 0:
+            return x
+
+        # Check for NaN or infinite values
+        if np.any(np.isnan(x.data)) or np.any(np.isinf(x.data)):
+            raise ValueError("Input tensor contains NaN or infinite values")
+
         # In-place operation: modify tensor data directly
         # 'out' parameter writes result back to input array
         np.maximum(0, x.data, out=x.data)
@@ -276,7 +299,89 @@ class ReLU:
 # 🤔 PREDICTION: How much faster is ReLU compared to traditional activations like sigmoid?
 # Your guess: ___x faster
 
-# 🔍 SYSTEMS INSIGHT #1: Why ReLU Revolutionized Deep Learning
+# 🔍 SYSTEMS INSIGHT #1: Memory Bottleneck Experience - Hit Your Hardware Limits!
+def experience_memory_bottleneck():
+    """Experience memory limitations firsthand - see when your system breaks!"""
+    try:
+        import psutil
+        import time
+
+        print("Memory Bottleneck Experience:")
+        print("=" * 50)
+
+        # Get system memory info
+        memory = psutil.virtual_memory()
+        available_gb = memory.available / (1024**3)
+        print(f"Available system memory: {available_gb:.1f} GB")
+
+        # Start with manageable size and scale up
+        print(f"\nTesting activation memory usage (increasing size until bottleneck):")
+
+        relu = ReLU()
+        sizes = []
+        times = []
+        memories = []
+
+        # Scale up until we hit memory pressure
+        base_size = 1_000_000  # 1M elements
+        multiplier = 1
+
+        while True:
+            size = base_size * multiplier
+            memory_needed_gb = size * 4 * 3 / (1024**3)  # 3x memory for processing
+
+            if memory_needed_gb > available_gb * 0.7:  # Don't crash the system
+                print(f"\n⚠️ Stopping at {size:,} elements ({memory_needed_gb:.1f} GB needed)")
+                print(f"This would exceed 70% of available memory ({available_gb:.1f} GB)")
+                break
+
+            # Create large tensor and measure processing
+            print(f"Size {size:,}: ", end="")
+
+            try:
+                start_time = time.perf_counter()
+                large_tensor = Tensor(np.random.randn(size) - 0.5)
+                memory_before = psutil.virtual_memory().used
+
+                # Apply ReLU
+                result = relu(large_tensor)
+
+                memory_after = psutil.virtual_memory().used
+                elapsed = time.perf_counter() - start_time
+                memory_used = (memory_after - memory_before) / (1024**2)  # MB
+
+                sizes.append(size)
+                times.append(elapsed)
+                memories.append(memory_used)
+
+                print(f"{elapsed:.3f}s, {memory_used:.1f}MB")
+
+                # Clean up
+                del large_tensor, result
+
+                multiplier *= 2
+                if multiplier > 32:  # Safety limit
+                    break
+
+            except MemoryError:
+                print("💥 Memory limit reached!")
+                break
+
+        if len(times) >= 2:
+            print(f"\n💡 Key Insights:")
+            print(f"• Largest tensor processed: {sizes[-1]:,} elements")
+            print(f"• Memory scaling: ~{memories[-1]/memories[0]:.1f}x for {sizes[-1]/sizes[0]:.0f}x data")
+            print(f"• This experience shows real hardware constraints in ML!")
+            print(f"• In production, this is why gradient checkpointing exists")
+
+    except Exception as e:
+        print(f"⚠️ Error in memory experience: {e}")
+        print("Note: This exercise shows real system limits!")
+
+# Run the memory bottleneck experience
+experience_memory_bottleneck()
+
+# 🔍 SYSTEMS INSIGHT #2: Why ReLU Revolutionized Deep Learning
 def analyze_relu_performance():
     """Measure why ReLU became the dominant activation function."""
     try:
@@ -441,33 +546,32 @@ class Softmax:
     def forward(self, x):
         """
         Apply Softmax activation with numerical stability.
-        
+
         Converts logits (raw scores) into probabilities using the softmax function.
         Includes numerical stability measures to prevent overflow.
-        
+
         Args:
             x (Tensor): Input tensor containing logits/scores
-            
+
         Returns:
             Tensor: Output tensor with probabilities (sums to 1 along specified dim)
-            
+
+        Raises:
+            TypeError: If input is not a Tensor
+            ValueError: If tensor contains NaN values or is empty
+
         Mathematical Foundation:
             Standard: f(x_i) = e^(x_i) / Σ(e^(x_j))
             Stable:   f(x_i) = e^(x_i - max(x)) / Σ(e^(x_j - max(x)))
-            
+
             The stable version prevents overflow by subtracting the maximum value.
-        
+
         Implementation Approach:
-        1. Find maximum value along specified dimension (for stability)
-        2. Subtract max from all values (prevents exp overflow)
-        3. Compute exponentials of shifted values
-        4. Normalize by sum to create probability distribution
-        
-        Why Numerical Stability Matters:
-        - e^(large_number) can overflow to infinity
-        - Subtracting max shifts values to reasonable range
-        - Mathematically equivalent but numerically stable
-        
+        1. Validate input and handle edge cases
+        2. Find maximum value along specified dimension (for stability)
+        3. Subtract max from all values (prevents exp overflow)
+        4. Compute exponentials and normalize
+
         Example:
             >>> softmax = Softmax()
             >>> x = Tensor([[1.0, 2.0, 3.0]])
@@ -476,18 +580,35 @@ class Softmax:
             >>> print(np.sum(y.data))  # 1.0 (probability distribution)
         """
         ### BEGIN SOLUTION
+        # Input validation
+        if not isinstance(x, Tensor):
+            raise TypeError(f"Expected Tensor, got {type(x)}")
+
+        # Check for empty tensor
+        if x.data.size == 0:
+            raise ValueError("Cannot apply softmax to empty tensor")
+
+        # Check for NaN values (infinite values are handled by max subtraction)
+        if np.any(np.isnan(x.data)):
+            raise ValueError("Input tensor contains NaN values")
+
         # Step 1: Numerical stability - subtract maximum value
         # This prevents exp(large_number) from overflowing to infinity
         max_vals = np.max(x.data, axis=self.dim, keepdims=True)
         x_stable = x.data - max_vals
-        
+
         # Step 2: Compute exponentials of stable values
         exp_vals = np.exp(x_stable)
-        
+
         # Step 3: Normalize to create probability distribution
         sum_exp = np.sum(exp_vals, axis=self.dim, keepdims=True)
+
+        # Handle edge case where sum is zero (shouldn't happen with valid input)
+        if np.any(sum_exp == 0):
+            raise ValueError("Softmax normalization resulted in zero sum")
+
         result = exp_vals / sum_exp
-        
+
         return Tensor(result)
         ### END SOLUTION
     
@@ -500,7 +621,7 @@ class Softmax:
 # 🤔 PREDICTION: How does softmax computational cost scale with vector size?
 # O(N)? O(N²)? O(N log N)? Your answer: _______
 
-# 🔍 SYSTEMS INSIGHT #2: Softmax Computational Complexity and Numerical Stability
+# 🔍 SYSTEMS INSIGHT #3: Softmax Computational Complexity and Numerical Stability
 def analyze_softmax_complexity():
     """Analyze Softmax performance characteristics and numerical stability."""
     try:
@@ -669,7 +790,7 @@ test_unit_softmax_activation()
 # 🤔 PREDICTION: Which activation uses more memory during computation?
 # ReLU or Softmax? Why? Your answer: _______
 
-# 🔍 SYSTEMS INSIGHT #3: Activation Function Memory Comparison
+# 🔍 SYSTEMS INSIGHT #4: Activation Function Memory Comparison
 def analyze_activation_memory():
     """Compare memory usage patterns between ReLU and Softmax."""
     try:
@@ -759,54 +880,77 @@ analyze_activation_memory()
 def test_unit_activations_comprehensive():
     """Comprehensive test of both activation functions working together."""
     print("🔬 Comprehensive Test: ReLU + Softmax Pipeline...")
-    
+
     # Create activation instances
     relu = ReLU()
     softmax = Softmax()
-    
+
     # Test Case 1: Hidden layer processing with ReLU
     print("\nTest 1: Hidden Layer Processing")
     # Simulate output from a linear layer (can be negative)
     hidden_output = Tensor([[-2.0, -1.0, 0.0, 1.0, 2.0]])
     hidden_activated = relu(hidden_output)
     expected_relu = np.array([[0.0, 0.0, 0.0, 1.0, 2.0]])
-    
+
     assert np.array_equal(hidden_activated.data, expected_relu), "ReLU should zero negatives"
     print("✅ ReLU correctly processes hidden layer outputs")
-    
+
     # Test Case 2: Classification output with Softmax
     print("\nTest 2: Classification Output")
     class_logits = Tensor([[2.0, 1.0, 0.1]])
     class_probabilities = softmax(class_logits)
-    
+
     # Verify probability properties
     assert np.allclose(np.sum(class_probabilities.data, axis=-1), 1.0), "Softmax should create probability distribution"
     assert np.all(class_probabilities.data >= 0), "Probabilities should be non-negative"
-    
+
     # Highest logit should get highest probability
     max_logit_idx = np.argmax(class_logits.data)
     max_prob_idx = np.argmax(class_probabilities.data)
     assert max_logit_idx == max_prob_idx, "Highest logit should get highest probability"
     print("✅ Softmax correctly creates probability distributions")
-    
-    # Test Case 3: Batch processing
-    print("\nTest 3: Batch Processing")
+
+    # Test Case 3: Error handling validation
+    print("\nTest 3: Error Handling")
+    try:
+        relu("not a tensor")
+        assert False, "Should raise TypeError"
+    except TypeError:
+        print("✅ ReLU properly validates input type")
+
+    try:
+        nan_tensor = Tensor([np.nan, 1.0, 2.0])
+        relu(nan_tensor)
+        assert False, "Should raise ValueError for NaN"
+    except ValueError:
+        print("✅ ReLU properly handles NaN inputs")
+
+    try:
+        empty_tensor = Tensor([])
+        softmax(empty_tensor)
+        assert False, "Should raise ValueError for empty tensor"
+    except ValueError:
+        print("✅ Softmax properly handles empty tensors")
+
+    # Test Case 4: Batch processing
+    print("\nTest 4: Batch Processing")
     batch_logits = Tensor([
         [1.0, 2.0, 0.5],  # Sample 1
         [0.1, 0.2, 0.9],  # Sample 2
         [2.0, 1.0, 1.5]   # Sample 3
     ])
-    
+
     batch_probs = softmax(batch_logits)
-    
+
     # Each row should sum to 1
     row_sums = np.sum(batch_probs.data, axis=1)
     assert np.allclose(row_sums, [1.0, 1.0, 1.0]), "Each batch item should form probability distribution"
     print("✅ Batch processing works correctly")
-    
+
     print("\n✅ Comprehensive activation tests passed!")
     print(f"✅ ReLU enables nonlinear hidden representations")
     print(f"✅ Softmax provides interpretable classification outputs")
+    print(f"✅ Both functions handle edge cases and errors properly")
     print(f"✅ Both functions handle batch processing correctly")
 
 # Test comprehensive functionality
@@ -819,15 +963,16 @@ test_unit_activations_comprehensive()
 # Test activations in a complete neural network forward pass simulation
 
 def test_module_activation_integration():
-    """Integration test: activations in a realistic neural network pipeline."""
-    print("🔬 Integration Test: Neural Network Pipeline...")
-    
+    """Enhanced integration test: activations in realistic neural network pipeline with edge cases."""
+    print("🔬 Enhanced Integration Test: Neural Network Pipeline with Edge Cases...")
+
     # Setup test components
     relu = ReLU()
     softmax = Softmax()
-    
-    # Simulate a complete forward pass
-    
+
+    # Test Case 1: Standard forward pass
+    print("\nTest 1: Standard Forward Pass")
+
     # Step 1: Input data (batch of 3 samples, 4 features each)
     input_data = Tensor([
         [0.5, -0.3, 1.2, -0.8],  # Sample 1
@@ -835,16 +980,14 @@ def test_module_activation_integration():
         [0.2, -0.5, -0.9, 0.3]   # Sample 3
     ])
     print(f"Input shape: {input_data.shape}")
-    
+
     # Step 2: Simulate hidden layer output (after linear transformation)
-    # In reality, this would be: output = input @ weights + bias
     hidden_output = Tensor([
         [-1.5, 0.8, 2.1],   # Sample 1 hidden activations
         [0.3, -0.6, 1.2],   # Sample 2 hidden activations
         [-0.8, 1.5, -0.3]   # Sample 3 hidden activations
     ])
-    print(f"Hidden layer output shape: {hidden_output.shape}")
-    
+
     # Step 3: Apply ReLU to hidden layer
     hidden_activated = relu(hidden_output)
     expected_relu = np.array([
@@ -852,46 +995,75 @@ def test_module_activation_integration():
         [0.3, 0.0, 1.2],   # Negatives zeroed
         [0.0, 1.5, 0.0]    # Negatives zeroed
     ])
-    
+
     assert np.allclose(hidden_activated.data, expected_relu), "ReLU should zero negatives in hidden layer"
     print("✅ Hidden layer ReLU activation successful")
-    
-    # Step 4: Simulate final layer output (classification logits)
+
+    # Step 4: Apply Softmax for classification
     final_logits = Tensor([
         [2.1, 0.5, 1.2],   # Sample 1 class scores
         [0.8, 1.5, 0.3],   # Sample 2 class scores
         [1.0, 2.0, 0.1]    # Sample 3 class scores
     ])
-    print(f"Final logits shape: {final_logits.shape}")
-    
-    # Step 5: Apply Softmax for classification
+
     class_probabilities = softmax(final_logits)
-    
+
     # Verify softmax properties
     batch_sums = np.sum(class_probabilities.data, axis=1)
     assert np.allclose(batch_sums, [1.0, 1.0, 1.0]), "Each sample should have probabilities summing to 1"
-    
-    # Verify predictions make sense (highest logit → highest probability)
-    for i in range(3):
-        max_logit_class = np.argmax(final_logits.data[i])
-        max_prob_class = np.argmax(class_probabilities.data[i])
-        assert max_logit_class == max_prob_class, f"Sample {i}: highest logit should get highest probability"
-    
-    print("✅ Classification Softmax successful")
-    
-    # Display predictions
-    print(f"\n📊 Sample Predictions:")
-    for i in range(3):
-        probs = class_probabilities.data[i]
-        predicted_class = np.argmax(probs)
-        confidence = probs[predicted_class]
-        print(f"   Sample {i+1}: Class {predicted_class} (confidence: {confidence:.3f})")
-    
-    print("\n✅ Integration test passed!")
-    print(f"✅ Complete forward pass simulation successful")
-    print(f"✅ ReLU enables nonlinear hidden representations")
-    print(f"✅ Softmax provides interpretable classification outputs")
-    print(f"✅ Pipeline handles realistic batch processing")
+    print("✅ Standard forward pass successful")
+
+    # Test Case 2: Large batch processing (realistic production scale)
+    print("\nTest 2: Large Batch Processing")
+    large_batch_size = 128
+    num_classes = 1000
+
+    # Create large batch of logits
+    large_logits = Tensor(np.random.randn(large_batch_size, num_classes) * 10)
+
+    # Process with softmax
+    large_probs = softmax(large_logits)
+
+    # Verify all properties hold at scale
+    large_sums = np.sum(large_probs.data, axis=1)
+    assert np.allclose(large_sums, 1.0), "Large batch softmax should maintain probability properties"
+    assert np.all(large_probs.data >= 0), "Large batch probabilities should be non-negative"
+    print(f"✅ Large batch processing ({large_batch_size} samples, {num_classes} classes) successful")
+
+    # Test Case 3: Extreme values (numerical stability)
+    print("\nTest 3: Extreme Values Handling")
+    extreme_logits = Tensor([
+        [1000.0, 999.0, 998.0],  # Very large values
+        [-1000.0, -999.0, -998.0],  # Very small values
+        [0.0, 0.0, 0.0]  # All zeros
+    ])
+
+    extreme_probs = softmax(extreme_logits)
+    extreme_sums = np.sum(extreme_probs.data, axis=1)
+
+    assert np.allclose(extreme_sums, 1.0), "Extreme values should still create valid probability distributions"
+    assert not np.any(np.isnan(extreme_probs.data)), "No NaN values should be produced"
+    assert not np.any(np.isinf(extreme_probs.data)), "No infinite values should be produced"
+    print("✅ Extreme values handling successful")
+
+    # Test Case 4: Memory efficiency with in-place ReLU
+    print("\nTest 4: Memory Efficiency Test")
+    memory_test_tensor = Tensor(np.random.randn(1000, 1000) - 0.5)  # 50% negative
+
+    # Test in-place operation
+    original_id = id(memory_test_tensor.data)
+    relu.forward_(memory_test_tensor)
+
+    assert id(memory_test_tensor.data) == original_id, "In-place operation should modify original tensor"
+    assert np.all(memory_test_tensor.data >= 0), "In-place ReLU should zero all negatives"
+    print("✅ Memory efficient in-place operations successful")
+
+    print("\n✅ Enhanced integration test passed!")
+    print(f"✅ Standard neural network pipeline works correctly")
+    print(f"✅ Large-scale batch processing handles production workloads")
+    print(f"✅ Numerical stability maintained under extreme conditions")
+    print(f"✅ Memory-efficient operations function properly")
+    print(f"✅ Ready for real-world deployment scenarios!")
 
 # Test integration functionality
 test_module_activation_integration()
@@ -932,45 +1104,45 @@ if __name__ == "__main__":
 
 # Now that you've built ReLU and Softmax activation functions and analyzed their performance characteristics, let's connect this work to broader ML systems challenges.
 
-# ### Question 1: Hardware Optimization Strategy
+# ### Question 1: Memory Bottleneck Analysis and Hardware Trade-offs
 
-# **Context**: Your ReLU implementation uses `np.maximum(0, x)` while Softmax requires exponentials, divisions, and reductions. In production systems, these functions are called billions of times during training and inference.
+# **Context**: In your memory bottleneck experience, you saw how activation memory usage scales with tensor size. Your ReLU analysis showed 2x memory usage while Softmax peaked at 3x. You also measured performance differences between ReLU's simple comparison vs Softmax's exponential computations.
 
-# **Reflection Question**: Design a comprehensive optimization strategy for activation functions across different hardware platforms. How would you optimize ReLU and Softmax differently for CPU vs GPU vs TPU execution? Consider the specific characteristics of each activation (ReLU's sparsity, Softmax's reduction operations) and how they interact with different memory hierarchies, instruction sets, and parallelization capabilities.
+# **Reflection Question**: Based on your measurements, design a memory-efficient activation strategy for training a large language model with 7B parameters where GPU memory is the primary constraint. How would you modify your ReLU and Softmax implementations to reduce memory overhead? Consider when to use in-place operations, how to handle gradient computation, and specific optimizations for different parts of the network (hidden layers vs attention vs output layers).
 
-# Think about: SIMD vectorization opportunities, memory bandwidth vs compute intensity, kernel fusion strategies, precision trade-offs between training and inference, and the impact of activation sparsity on subsequent layer computations.
+# Think about: gradient checkpointing integration, when in-place operations break backpropagation, memory vs recomputation trade-offs, and how activation sparsity affects subsequent layer memory usage.
 
 # *Target length: 200-400 words*
 
-# **YOUR REFLECTION ON HARDWARE OPTIMIZATION:**
+# **YOUR ANALYSIS OF MEMORY-EFFICIENT ACTIVATION STRATEGIES:**
 
 # [Student response area - replace this text with your analysis]
 
-# ### Question 2: Numerical Stability in Distributed Systems
+# ### Question 2: Numerical Stability and Error Propagation
 
-# **Context**: Your Softmax implementation includes numerical stability measures, but distributed training introduces additional challenges: gradient synchronization across nodes, mixed precision arithmetic, and maintaining consistency when different hardware has different floating-point behaviors.
+# **Context**: Your Softmax implementation includes numerical stability measures (subtracting max values) and error handling for NaN/infinite inputs. You tested extreme values like [1000.0, 999.0, 998.0] and verified the stability measures work correctly.
 
-# **Reflection Question**: Architect a robust activation system for distributed training that maintains numerical stability across heterogeneous hardware. How would you handle scenarios where ReLU creates different sparsity patterns on different nodes, or where Softmax produces slightly different probability distributions due to hardware-specific floating-point precision? Design specific mechanisms to ensure training convergence isn't affected by these numerical inconsistencies.
+# **Reflection Question**: Analyze how numerical errors in activations propagate through deep networks during training. If small floating-point inconsistencies occur in your ReLU or Softmax implementations (due to hardware differences or precision settings), how do these errors compound across 100+ layers? Design specific error detection and mitigation strategies for your activation functions that could be integrated into a production training loop.
 
-# Think about: gradient synchronization protocols, deterministic activation implementations, precision hierarchies for different training phases, and error accumulation across distributed components.
+# Think about: error accumulation patterns, early error detection strategies, precision monitoring during training, and how to balance numerical accuracy with computational efficiency.
 
 # *Target length: 200-400 words*
 
-# **YOUR REFLECTION ON DISTRIBUTED NUMERICAL STABILITY:**
+# **YOUR ANALYSIS OF NUMERICAL STABILITY AND ERROR PROPAGATION:**
 
 # [Student response area - replace this text with your analysis]
 
-# ### Question 3: Activation Function Evolution and Framework Design
+# ### Question 3: Production Integration and Framework Evolution
 
-# **Context**: You implemented the current standard activations (ReLU, Softmax), but the field continues evolving (GELU, Swish, etc.). Production frameworks must support established functions optimally while enabling experimentation with new activations.
+# **Context**: Your implementations mirror PyTorch's ReLU and Softmax algorithms, but production frameworks add optimizations like CUDA kernels, kernel fusion, and automatic mixed precision. You've built the core algorithms that these optimizations build upon.
 
-# **Reflection Question**: Design an extensible activation system that balances optimal performance for established functions with flexibility for research. How would you architect a plugin system that maintains zero-overhead for ReLU/Softmax while supporting experimental activations? Consider automatic differentiation integration, performance profiling systems, and how to handle activations that might need different optimization strategies than current ones.
+# **Reflection Question**: Design an evolution path for your activation implementations to support advanced production features. How would you extend your current ReLU and Softmax classes to support automatic mixed precision, gradient checkpointing, and kernel fusion? What interfaces would you add to make your implementations compatible with advanced optimizers and distributed training systems while maintaining the simplicity of your current API?
 
-# Think about: plugin architectures, performance regression detection, automatic code generation for new activations, backward compatibility guarantees, and integration with existing optimization pipelines.
+# Think about: backward compatibility, performance monitoring hooks, optimization hint interfaces, and how to abstract hardware-specific optimizations while keeping the mathematical core unchanged.
 
 # *Target length: 200-400 words*
 
-# **YOUR REFLECTION ON EXTENSIBLE ACTIVATION SYSTEMS:**
+# **YOUR ANALYSIS OF PRODUCTION EVOLUTION STRATEGIES:**
 
 # [Student response area - replace this text with your analysis]
 

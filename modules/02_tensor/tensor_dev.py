@@ -54,18 +54,28 @@ print(f"NumPy version: {np.__version__}")
 print(f"Python version: {sys.version_info.major}.{sys.version_info.minor}")
 print("Ready to build tensors!")
 
+# ## 🎯 TinyTorch Module Assumptions
+#
+# For this module, we assume:
+# - **Simple dtype system**: String-based types ("float32", "int32") instead of complex Union types
+# - **Educational error handling**: Clear error messages that explain problems, not comprehensive validation
+# - **Conceptual memory analysis**: Understanding patterns without detailed profiling complexity
+# - **Single-threaded implementation**: Focus on algorithmic clarity without concurrency concerns
+#
+# These assumptions let us focus on **core tensor concepts** without implementation complexity barriers.
+
 # ## Visual Guide: Understanding Tensors Through Diagrams
 
 # ### What Are Tensors? A Visual Journey
-# 
-# Tensors are like containers that hold different types of data:
-# 
+#
+# **The Story**: Think of tensors as smart containers that know their shape and can efficiently store numbers for machine learning. They're like upgraded versions of regular Python lists that understand mathematics.
+#
 # ```
 # Scalar (0D Tensor):     Vector (1D Tensor):     Matrix (2D Tensor):
 #      [5]                   [1, 2, 3]             ┌ 1  2  3 ┐
 #                                                   │ 4  5  6 │
 #                                                   └ 7  8  9 ┘
-# 
+#
 # 3D Tensor (RGB Image):                   4D Tensor (Batch of Images):
 # ┌─────────────┐                         ┌─────────────┐ ┌─────────────┐
 # │ Red Channel │                         │   Image 1   │ │   Image 2   │
@@ -80,44 +90,53 @@ print("Ready to build tensors!")
 # │             │
 # └─────────────┘
 # ```
+#
+# **What's happening step-by-step**: As we add dimensions, tensors represent more complex data. A single number becomes a list, a list becomes a grid, a grid becomes a volume (like an image with red/green/blue channels), and a volume becomes a collection (like a batch of images for training). Each dimension adds a new way to organize and access the data.
 
 # ### Memory Layout: Why Performance Matters
-# 
+#
+# **The Story**: Imagine your computer's memory as a long street with numbered houses. When your CPU needs data, it doesn't just grab one house - it loads an entire city block (64 bytes) into its cache.
+#
 # ```
 # Contiguous Memory (FAST):
 # [1][2][3][4][5][6] ──> Cache-friendly, vectorized operations
 #  ↑  ↑  ↑  ↑  ↑  ↑
 #  Sequential access pattern
-# 
+#
 # Non-contiguous Memory (SLOW):
 # [1]...[2].....[3] ──> Cache misses, scattered access
 #  ↑     ↑       ↑
 #  Random access pattern
-# 
-# Why this matters:
-# - CPU cache loads 64-byte chunks
-# - Contiguous = more useful data per cache load
-# - Non-contiguous = wasted memory bandwidth
 # ```
+#
+# **What's happening step-by-step**: When you access element [1], the CPU automatically loads elements [1] through [6] in one cache load. Every subsequent access ([2], [3], [4]...) is already in the cache - no extra memory trips needed! With non-contiguous data, each access requires a new, expensive trip to main memory.
+#
+# **The Performance Impact**: This creates 10-100x speedups because you get 6 elements for the price of fetching 1. It's like getting 6 books from the library for the effort of finding just 1.
 
 # ### Tensor Operations: Broadcasting Magic
-# 
+#
+# **The Story**: Broadcasting is like having a smart photocopier that automatically copies data to match different shapes without actually using extra memory. It's NumPy's way of making operations "just work" between tensors of different sizes.
+#
 # ```
 # Broadcasting Example:
 #     Matrix (2×3)     +     Scalar        =     Result (2×3)
 #   ┌ 1  2  3 ┐             [10]              ┌ 11 12 13 ┐
 #   └ 4  5  6 ┘                               └ 14 15 16 ┘
-# 
+#
 # Broadcasting Rules:
 # 1. Align shapes from right to left
 # 2. Dimensions of size 1 stretch to match
 # 3. Missing dimensions assume size 1
-# 
+#
 # Vector + Matrix Broadcasting:
 #   [1, 2, 3]    +    [[10],     =    [[11, 12, 13],
 #   (1×3)             [20]]            [21, 22, 23]]
 #                     (2×1)            (2×3)
 # ```
+#
+# **What's happening step-by-step**: Python aligns shapes from right to left, like comparing numbers by their ones place first. When shapes don't match, dimensions of size 1 automatically "stretch" to match the larger dimension - but no data is actually copied. The operation happens as if the data were copied, but uses the original memory locations.
+#
+# **Why this matters for ML**: Adding a bias vector to a 1000×1000 matrix would normally require copying the vector 1000 times, but broadcasting does it with zero copies and massive memory savings.
 
 # ### Neural Network Data Flow
 # 
@@ -220,7 +239,7 @@ class Tensor:
     Wraps NumPy arrays with ML-specific functionality.
     """
 
-    def __init__(self, data: Any, dtype: Optional[Union[str, np.dtype, type]] = None, requires_grad: bool = False):
+    def __init__(self, data: Any, dtype: Optional[str] = None, requires_grad: bool = False):
         """
         Create a new tensor from data.
 
@@ -229,55 +248,43 @@ class Tensor:
             dtype: Data type ('float32', 'int32', etc.). Defaults to auto-detect.
             requires_grad: Whether this tensor needs gradients for training. Defaults to False.
 
-        TODO: Implement tensor creation with proper type handling.
+        TODO: Implement tensor creation with simple, clear type handling.
 
-        APPROACH (Heavy comments for first implementation):
-        1. Convert input data to numpy array using np.array() - NumPy handles most conversions
-        2. Apply dtype conversion if specified - supports both string and np.dtype types
-        3. Set default float32 for float64 arrays - ML convention for memory/speed balance
+        APPROACH (Clear implementation for learning):
+        1. Convert input data to numpy array - NumPy handles conversions
+        2. Apply dtype if specified - common string types like 'float32'
+        3. Set default float32 for float64 arrays - ML convention for efficiency
         4. Store the result in self._data - internal storage for numpy array
-        5. Initialize gradient tracking attributes - prepares for automatic differentiation
+        5. Initialize gradient tracking - prepares for automatic differentiation
 
         EXAMPLE:
-        >>> Tensor(5) 
+        >>> Tensor(5)
         # Creates: np.array(5, dtype='int32')
         >>> Tensor([1.0, 2.0, 3.0])
         # Creates: np.array([1.0, 2.0, 3.0], dtype='float32')
-        >>> Tensor(np.array([1, 2, 3]))
-        # Preserves: array with consistent dtype
+        >>> Tensor([1, 2, 3], dtype='float32')
+        # Creates: np.array([1, 2, 3], dtype='float32')
 
-        PRODUCTION CONNECTION:
-        - PyTorch: torch.tensor([1, 2, 3]) does exactly this
-        - TensorFlow: tf.constant([1, 2, 3]) similar behavior
-        - Key insight: Frameworks prioritize float32 for GPU efficiency
+        PRODUCTION CONTEXT:
+        PyTorch tensors handle 47+ dtype formats with complex validation.
+        Our version teaches the core concept that transfers directly.
         """
         ### BEGIN SOLUTION
         # Convert input to numpy array - let NumPy handle most conversions
         if isinstance(data, Tensor):
-            # Input is another Tensor - share data efficiently
-            self._data = data.data.copy() if dtype else data.data
+            # Input is another Tensor - copy data efficiently
+            self._data = data.data.copy()
         else:
             # Convert to numpy array
-            self._data = np.array(data, dtype=dtype)
-        
-        # Apply ML-friendly dtype defaults with proper type handling
-        if dtype is None and self._data.dtype == np.float64:
-            self._data = self._data.astype(np.float32)  # ML convention: prefer float32
-        elif dtype is not None:
-            # Handle string, np.dtype, and numpy type inputs
-            if isinstance(dtype, str):
-                target_dtype = np.dtype(dtype)
-            elif isinstance(dtype, np.dtype):
-                target_dtype = dtype
-            elif isinstance(dtype, type) and issubclass(dtype, np.generic):
-                # Handle numpy types like np.float64, np.int32
-                target_dtype = np.dtype(dtype)
-            else:
-                raise TypeError(f"dtype must be str, np.dtype, or numpy type, got {type(dtype)}")
-            
-            if self._data.dtype != target_dtype:
-                self._data = self._data.astype(target_dtype)
-        
+            self._data = np.array(data)
+
+        # Apply dtype if specified
+        if dtype is not None:
+            self._data = self._data.astype(dtype)
+        elif self._data.dtype == np.float64:
+            # ML convention: prefer float32 for memory and GPU efficiency
+            self._data = self._data.astype(np.float32)
+
         # Initialize gradient tracking attributes (used in Module 9 - Autograd)
         self.requires_grad = requires_grad
         self.grad = None
@@ -1586,12 +1593,88 @@ if __name__ == "__main__":
     except ValueError as e:
         print(f"✅ Clear broadcasting error: {str(e)[:50]}...")
     
-    print("\n🎯 All ML Framework Advisor recommendations implemented successfully!")
-    print("   ✓ Fixed type system with Optional[Union[str, np.dtype, type]]")
-    print("   ✓ Added stride analysis and memory layout insights")
-    print("   ✓ Enhanced assessment questions with systems thinking focus")
-    print("   ✓ Added view/clone/contiguous operations for memory efficiency")
-    print("   ✓ Improved broadcasting with failure case demonstrations")
+    print("\n🎯 Core tensor implementation complete!")
+    print("   ✓ Simple, clear tensor creation and operations")
+    print("   ✓ Memory layout analysis and performance insights")
+    print("   ✓ Broadcasting with comprehensive error handling")
+    print("   ✓ View/copy semantics for memory efficiency")
+
+# ## 🔬 Advanced: Production Type Handling
+#
+# **Note**: This section demonstrates how production frameworks handle complex dtype requirements.
+# The core implementation above teaches the essential concepts. This section shows the full complexity.
+#
+# **When to use**: Only when building production libraries or debugging framework internals.
+
+# In[ ]:
+
+def advanced_tensor_creation_demo():
+    """
+    Demonstrate complex dtype handling like production frameworks.
+
+    Production frameworks like PyTorch accept:
+    - String dtypes: 'float32', 'int64', 'bool'
+    - NumPy dtypes: np.float32, np.int64
+    - NumPy types: np.float64, np.int32
+    - Type objects: type(np.float32)
+
+    This complexity exists for API compatibility, not educational clarity.
+    """
+    print("🔬 Advanced: Production-Level Dtype Handling")
+    print("=" * 50)
+
+    # Simulate complex dtype handling that was removed from core implementation
+    def create_tensor_with_complex_dtypes(data, dtype=None):
+        """Show how production systems handle Union[str, np.dtype, type] inputs."""
+        # Convert input to numpy array
+        arr = np.array(data)
+
+        if dtype is not None:
+            # Complex type handling (removed from core for clarity)
+            if isinstance(dtype, str):
+                target_dtype = np.dtype(dtype)
+                print(f"   String dtype '{dtype}' → {target_dtype}")
+            elif isinstance(dtype, np.dtype):
+                target_dtype = dtype
+                print(f"   NumPy dtype {dtype} → {target_dtype}")
+            elif isinstance(dtype, type) and issubclass(dtype, np.generic):
+                target_dtype = np.dtype(dtype)
+                print(f"   NumPy type {dtype} → {target_dtype}")
+            else:
+                raise TypeError(f"Unsupported dtype: {type(dtype)}")
+
+            if arr.dtype != target_dtype:
+                arr = arr.astype(target_dtype)
+
+        return arr
+
+    # Demonstrate various input types
+    data = [1.0, 2.0, 3.0]
+
+    print("\n📊 String dtype input:")
+    result1 = create_tensor_with_complex_dtypes(data, 'float32')
+    print(f"   Result: {result1.dtype}")
+
+    print("\n📊 NumPy dtype input:")
+    result2 = create_tensor_with_complex_dtypes(data, np.int32)
+    print(f"   Result: {result2.dtype}")
+
+    print("\n📊 NumPy type input:")
+    result3 = create_tensor_with_complex_dtypes(data, type(np.float64()))
+    print(f"   Result: {result3.dtype}")
+
+    print("\n💡 Production Reality:")
+    print("   - PyTorch handles 47+ dtype variations")
+    print("   - This complexity exists for API compatibility")
+    print("   - Educational implementations can use simpler string-only dtypes")
+    print("   - Core concepts (data + metadata) remain the same")
+
+if __name__ == "__main__":
+    # Only run advanced demo if explicitly executed
+    try:
+        advanced_tensor_creation_demo()
+    except Exception as e:
+        print(f"Advanced demo skipped: {e}")
 
 # ## 🤔 ML Systems Thinking: Interactive Questions
 
