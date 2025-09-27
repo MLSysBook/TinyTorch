@@ -433,35 +433,34 @@ Let's implement SGD with momentum!
 #| export
 class SGD:
     """
-    Simplified SGD Optimizer
+    Simple SGD Optimizer - Basic Implementation
     
-    Implements basic stochastic gradient descent with optional momentum.
-    Uses simple gradient operations from Module 6.
+    Implements basic stochastic gradient descent without momentum for simplicity.
+    Demonstrates core optimization concepts with minimal complexity.
     
     Mathematical Update Rule:
     parameter = parameter - learning_rate * gradient
     
-    With momentum:
-    velocity = momentum * velocity + gradient
-    parameter = parameter - learning_rate * velocity
+    SYSTEMS INSIGHT - Memory Usage:
+    SGD stores only the parameters list and learning rate - no additional state.
+    This makes SGD extremely memory efficient compared to adaptive optimizers like Adam,
+    which require storing momentum and velocity terms for each parameter.
+    Memory usage: O(1) additional memory per parameter.
     """
     
-    def __init__(self, parameters: List[Variable], learning_rate: float = 0.01, 
-                 momentum: float = 0.0):
+    def __init__(self, parameters: List[Variable], learning_rate: float = 0.01):
         """
-        Initialize SGD optimizer with basic parameters.
+        Initialize basic SGD optimizer.
         
         Args:
             parameters: List of Variables to optimize (from Module 6)
-            learning_rate: Learning rate (default: 0.01)
-            momentum: Momentum coefficient (default: 0.0)
+            learning_rate: Learning rate for gradient steps (default: 0.01)
         
-        TODO: Implement basic SGD optimizer initialization.
+        TODO: Store the parameters and learning rate for optimization.
         
         APPROACH:
-        1. Store parameters and learning rate
-        2. Store momentum coefficient
-        3. Initialize simple momentum buffers
+        1. Store the list of parameters to optimize
+        2. Store the learning rate for gradient updates
         
         EXAMPLE:
         ```python
@@ -470,70 +469,49 @@ class SGD:
         b = Variable(0.0, requires_grad=True)
         optimizer = SGD([w, b], learning_rate=0.01)
         
-        # In training:
-        optimizer.zero_grad()
-        # ... compute gradients ...
-        optimizer.step()
+        # Training loop:
+        optimizer.zero_grad()  # Clear gradients
+        loss = compute_loss()  # Forward pass
+        loss.backward()        # Backward pass
+        optimizer.step()       # Update parameters
         ```
         """
         ### BEGIN SOLUTION
         self.parameters = parameters
         self.learning_rate = learning_rate
-        self.momentum = momentum
-        
-        # Simple momentum storage using consistent data access
-        self.velocity = {}
-        for i, param in enumerate(parameters):
-            if self.momentum > 0:
-                # Initialize velocity with same shape as parameter data
-                param_data = get_param_data(param)
-                self.velocity[i] = np.zeros_like(param_data)
         ### END SOLUTION
     
     def step(self) -> None:
         """
-        Perform one optimization step using basic gradient operations.
+        Perform one optimization step - update all parameters using their gradients.
         
-        TODO: Implement simplified SGD parameter update.
+        TODO: Implement the core SGD parameter update rule.
         
         APPROACH:
         1. Iterate through all parameters
-        2. For each parameter with gradient (from Module 6):
-           a. Get gradient using simple param.grad access
-           b. Apply momentum if specified
-           c. Update parameter with learning rate
+        2. For each parameter that has a gradient:
+           a. Get the gradient value
+           b. Update parameter: param = param - learning_rate * gradient
         
-        SIMPLIFIED MATHEMATICAL FORMULATION:
-        - Without momentum: parameter = parameter - learning_rate * gradient
-        - With momentum: velocity = momentum * velocity + gradient
-                        parameter = parameter - learning_rate * velocity
+        MATHEMATICAL FORMULATION:
+        parameter_new = parameter_old - learning_rate * gradient
         
         IMPLEMENTATION HINTS:
-        - Use basic param.grad access (from Module 6)
-        - Simple momentum using self.velocity dict
-        - Basic parameter update using scalar operations
+        - Check if param.grad exists before using it
+        - Use get_grad_data() and set_param_data() helper functions
+        - Apply the learning rate to scale the gradient step
         """
         ### BEGIN SOLUTION
-        for i, param in enumerate(self.parameters):
+        for param in self.parameters:
             grad_data = get_grad_data(param)
             if grad_data is not None:
-                # Convert to numpy array for consistent operations
-                gradient = np.array(grad_data)
-                
-                if self.momentum > 0:
-                    # Apply momentum using simple numpy operations
-                    if i in self.velocity:
-                        self.velocity[i] = self.momentum * self.velocity[i] + gradient
-                    else:
-                        self.velocity[i] = gradient.copy()
-                    update = self.velocity[i]
-                else:
-                    # Simple gradient descent (no momentum)
-                    update = gradient
-                
-                # Core SGD update: parameter = parameter - learning_rate * update
+                # Get current parameter value
                 current_data = get_param_data(param)
-                new_data = current_data - self.learning_rate * update
+                
+                # Apply SGD update rule: param = param - lr * grad
+                new_data = current_data - self.learning_rate * grad_data
+                
+                # Update the parameter
                 set_param_data(param, new_data)
         ### END SOLUTION
     
@@ -541,17 +519,17 @@ class SGD:
         """
         Zero out gradients for all parameters.
         
-        TODO: Implement gradient zeroing.
+        TODO: Clear all gradients to prepare for the next backward pass.
         
         APPROACH:
         1. Iterate through all parameters
         2. Set gradient to None for each parameter
-        3. This prepares for next backward pass
+        3. This prevents gradient accumulation from previous steps
         
         IMPLEMENTATION HINTS:
-        - Simply set param.grad = None
-        - This is called before loss.backward()
-        - Essential for proper gradient accumulation
+        - Set param.grad = None for each parameter
+        - This is essential to call before each backward pass
+        - Prevents gradients from accumulating across iterations
         """
         ### BEGIN SOLUTION
         for param in self.parameters:
@@ -569,16 +547,26 @@ Let's test your SGD optimizer implementation! This optimizer adds momentum to gr
 
 # %% nbgrader={"grade": true, "grade_id": "test-sgd", "locked": true, "points": 15, "schema_version": 3, "solution": false, "task": false}
 def test_unit_sgd_optimizer():
-    """Unit test for the SGD optimizer implementation."""
-    print("🔬 Unit Test: SGD Optimizer...")
+    """Unit test for the simple SGD optimizer implementation."""
+    print("🔬 Unit Test: Simple SGD Optimizer...")
     
     # Create test parameters
     w1 = Variable(1.0, requires_grad=True)
     w2 = Variable(2.0, requires_grad=True)
     b = Variable(0.5, requires_grad=True)
     
-    # Create optimizer
-    optimizer = SGD([w1, w2, b], learning_rate=0.1, momentum=0.9)
+    # Create simple SGD optimizer (no momentum)
+    optimizer = SGD([w1, w2, b], learning_rate=0.1)
+    
+    # Test initialization
+    try:
+        assert optimizer.learning_rate == 0.1, "Learning rate should be stored correctly"
+        assert len(optimizer.parameters) == 3, "Should store all 3 parameters"
+        print("✅ Initialization works correctly")
+        
+    except Exception as e:
+        print(f"❌ Initialization failed: {e}")
+        raise
     
     # Test zero_grad
     try:
@@ -603,14 +591,14 @@ def test_unit_sgd_optimizer():
         w2.grad = Variable(0.2)
         b.grad = Variable(0.05)
         
-        # First step (no momentum yet)
+        # Store original values
         original_w1 = w1.data.data.item()
         original_w2 = w2.data.data.item()
         original_b = b.data.data.item()
         
         optimizer.step()
         
-        # Check parameter updates
+        # Check parameter updates using SGD rule: param = param - lr * grad
         expected_w1 = original_w1 - 0.1 * 0.1  # 1.0 - 0.01 = 0.99
         expected_w2 = original_w2 - 0.1 * 0.2  # 2.0 - 0.02 = 1.98
         expected_b = original_b - 0.1 * 0.05   # 0.5 - 0.005 = 0.495
@@ -624,39 +612,122 @@ def test_unit_sgd_optimizer():
         print(f"❌ Parameter updates failed: {e}")
         raise
     
-    # Test simplified momentum storage
+    # Test step with no gradients
     try:
-        # Check velocity dict exists and has momentum if momentum > 0
-        if optimizer.momentum > 0:
-            assert len(optimizer.velocity) == 3, f"Should have 3 velocity entries, got {len(optimizer.velocity)}"
-        print("✅ Simplified momentum storage works correctly")
+        optimizer.zero_grad()  # Clear gradients
+        
+        # Store values before step
+        before_w1 = w1.data.data.item()
+        before_w2 = w2.data.data.item()
+        before_b = b.data.data.item()
+        
+        optimizer.step()  # Should do nothing when no gradients
+        
+        # Parameters should be unchanged
+        assert w1.data.data.item() == before_w1, "Parameter should not change when gradient is None"
+        assert w2.data.data.item() == before_w2, "Parameter should not change when gradient is None"
+        assert b.data.data.item() == before_b, "Parameter should not change when gradient is None"
+        print("✅ Handles missing gradients correctly")
         
     except Exception as e:
-        print(f"❌ Momentum storage failed: {e}")
-        raise
-    
-    # Test step counting
-    try:
-        w1.grad = Variable(0.1)
-        w2.grad = Variable(0.2)
-        b.grad = Variable(0.05)
-        
-        optimizer.step()
-        
-        # Step counting removed from simplified SGD for educational clarity
-        print("✅ Step counting simplified for Module 8")
-        
-    except Exception as e:
-        print(f"❌ Step counting failed: {e}")
+        print(f"❌ Missing gradient handling failed: {e}")
         raise
 
-    print("🎯 SGD optimizer behavior:")
-    print("   Maintains momentum buffers for accelerated updates")
-    print("   Tracks step count for learning rate scheduling")
-    print("   Supports weight decay for regularization")
-    print("📈 Progress: SGD Optimizer ✓")
+    print("🎯 Simple SGD optimizer behavior:")
+    print("   ✓ Stores parameters and learning rate only")
+    print("   ✓ Updates parameters using: param = param - lr * grad")
+    print("   ✓ Memory efficient: O(1) additional memory per parameter")
+    print("   ✓ Foundation for more advanced optimizers (Adam, RMSprop)")
+    print("📈 Progress: Simple SGD Optimizer ✓")
 
-# Test function defined (called in main block)
+# Immediate test execution
+test_unit_sgd_optimizer()
+
+# %% nbgrader={"grade": true, "grade_id": "compute-sgd-memory", "points": 2}
+"""
+### 📊 Computation Question: SGD Memory Requirements
+
+You implemented SGD which only stores parameters and learning rate.
+
+For a model with 175M parameters (like GPT-2), calculate:
+1. Memory for parameters (float32)
+2. Additional memory SGD needs for optimization
+3. Total memory for training with SGD
+4. How much memory Adam would need instead (stores m and v buffers)
+
+Give answers in GB.
+
+YOUR ANSWER:
+"""
+### BEGIN SOLUTION
+"""
+1. Parameters: 175M × 4 bytes = 700 MB = 0.7 GB
+
+2. SGD additional memory: ~0 GB (only stores lr, negligible)
+
+3. Total SGD training: 0.7 GB (params) + 0.7 GB (gradients) = 1.4 GB
+
+4. Adam memory:
+   - Parameters: 0.7 GB
+   - Gradients: 0.7 GB
+   - Momentum (m): 0.7 GB
+   - Velocity (v): 0.7 GB
+   - Total: 2.8 GB (2× more than SGD!)
+
+Key insight: SGD is memory-optimal but may converge slower than Adam.
+"""
+### END SOLUTION
+
+# %% nbgrader={"grade": true, "grade_id": "compute-sgd-updates", "points": 2}
+"""
+### 📊 Computation Question: Multi-Step Updates
+
+Given:
+- Parameter initial value: 10.0
+- Learning rate: 0.1
+- Gradient sequence: [2.0, -1.0, 3.0, -2.0]
+
+Calculate the parameter value after each SGD update step.
+Show: initial → step1 → step2 → step3 → step4
+
+YOUR ANSWER:
+"""
+### BEGIN SOLUTION
+"""
+SGD update rule: param = param - lr * grad
+
+Initial: 10.0
+Step 1: 10.0 - 0.1 × 2.0 = 10.0 - 0.2 = 9.8
+Step 2: 9.8 - 0.1 × (-1.0) = 9.8 + 0.1 = 9.9
+Step 3: 9.9 - 0.1 × 3.0 = 9.9 - 0.3 = 9.6
+Step 4: 9.6 - 0.1 × (-2.0) = 9.6 + 0.2 = 9.8
+
+Final value: 9.8
+
+Note: Parameter oscillates due to changing gradient signs.
+"""
+### END SOLUTION
+
+# %% nbgrader={"grade": true, "grade_id": "reflect-sgd-simplicity", "points": 2}
+"""
+### 🤔 Micro-Reflection: SGD Design
+
+SGD doesn't store momentum buffers like Adam does.
+
+Q: What is ONE advantage and ONE disadvantage of SGD's minimal memory approach
+for training very large models (>10B parameters)?
+
+YOUR ANSWER (2-3 sentences):
+"""
+### BEGIN SOLUTION
+"""
+Advantage: SGD can train 2× larger models than Adam in the same memory budget,
+enabling larger architectures on limited hardware.
+
+Disadvantage: Without momentum, SGD converges slower and is more sensitive to 
+learning rate choices, potentially requiring more epochs to reach the same loss.
+"""
+### END SOLUTION
 
 # %% [markdown]
 """

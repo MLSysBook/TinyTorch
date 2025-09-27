@@ -8,7 +8,6 @@ description: "Automatic differentiation engine for gradient computation"
 # Dependencies - Used by CLI for module ordering and prerequisites
 dependencies:
   prerequisites: ["setup", "tensor", "activations"]
-  enables: ["optimizers", "training"]
 
 # Package Export - What gets built into tinytorch package
 exports_to: "tinytorch.core.autograd"
