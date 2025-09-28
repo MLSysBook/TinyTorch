@@ -27,55 +27,53 @@ parts:
 
 - caption: 🧱 Building Blocks
   chapters:
-  - file: chapters/01-setup
-    title: "01. Setup"
   - file: chapters/02-tensor
-    title: "02. Tensor"
+    title: "01. Tensor"
   - file: chapters/03-activations
-    title: "03. Activations" 
+    title: "02. Activations"
   - file: chapters/04-layers
-    title: "04. Layers"
+    title: "03. Layers"
+  - file: chapters/05-dense
+    title: "04. Losses"
 
 - caption: 🧠 Learning Systems
   chapters:
-  - file: chapters/05-dense
-    title: "05. Losses"
   - file: chapters/09-autograd
-    title: "06. Autograd"
+    title: "05. Autograd"
   - file: chapters/10-optimizers
-    title: "07. Optimizers"
+    title: "06. Optimizers"
   - file: chapters/11-training
-    title: "08. Training"
+    title: "07. Training"
+  - file: chapters/06-spatial
+    title: "08. Spatial"
 
 - caption: 🏗️ Neural Architectures
   chapters:
-  - file: chapters/06-spatial
-    title: "09. Spatial"
   - file: chapters/08-dataloader
-    title: "10. DataLoader"
+    title: "09. DataLoader"
   - file: chapters/11-tokenization
-    title: "11. Tokenization" 
+    title: "10. Tokenization"
   - file: chapters/12-embeddings
-    title: "12. Embeddings"
+    title: "11. Embeddings"
   - file: chapters/07-attention
-    title: "13. Attention"
+    title: "12. Attention"
   - file: chapters/16-tinygpt
-    title: "14. Transformers"
+    title: "13. Transformers"
 
 - caption: ⚡ Performance Optimization
   chapters:
   - file: chapters/15-profiling
-    title: "15. Profiling"
+    title: "14. Profiling"
   - file: chapters/13-kernels
-    title: "16. Acceleration"
+    title: "15. Acceleration"
   - file: chapters/17-quantization
-    title: "17. Quantization"
+    title: "16. Quantization"
   - file: chapters/12-compression
-    title: "18. Compression"
+    title: "17. Compression"
   - file: chapters/19-caching
-    title: "19. KV Caching"
+    title: "18. KV Caching"
   - file: chapters/14-benchmarking
-    title: "20. Benchmarking"
+    title: "19. Benchmarking"
 
 - caption: 🏅 Community & Competition
   chapters:
