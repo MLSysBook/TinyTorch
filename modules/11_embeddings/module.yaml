@@ -1,0 +1,29 @@
+description: Dense vector representations that convert discrete tokens into continuous
+  semantic spaces
+estimated_time: 4-5 hours
+exports:
+- Embedding
+- PositionalEncoding
+- LearnedPositionalEmbedding
+- EmbeddingProfiler
+learning_objectives:
+- Implement embedding layers with efficient lookup operations
+- Build sinusoidal and learned positional encoding systems
+- Understand embedding memory scaling and optimization techniques
+- Analyze how embedding choices affect model capacity and performance
+- Design embedding systems for production language model deployment
+ml_systems_focus: Memory-efficient embedding lookup, position encoding scalability,
+  large-scale parameter management
+name: Embeddings
+next_modules:
+- 13_attention
+number: 12
+prerequisites:
+- 02_tensor
+- 11_tokenization
+systems_concepts:
+- "Embedding table memory scaling O(vocab_size \xD7 embed_dim)"
+- Memory-bandwidth bound lookup operations
+- Cache-friendly embedding access patterns
+- Position encoding trade-offs and extrapolation
+- Distributed embedding table management

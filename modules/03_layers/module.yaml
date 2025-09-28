@@ -1,0 +1,21 @@
+components:
+- Dense
+- Linear
+- matmul
+dependencies:
+  enables:
+  - networks
+  - training
+  prerequisites:
+  - tensor
+  - activations
+description: Neural network layers (Linear, activation layers)
+difficulty: "\u2B50\u2B50"
+exports_to: tinytorch.core.layers
+files:
+  dev_file: layers_dev.py
+  readme: README.md
+  tests: inline
+name: layers
+time_estimate: 4-5 hours
+title: Layers

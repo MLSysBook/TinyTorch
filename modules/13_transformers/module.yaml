@@ -1,0 +1,32 @@
+description: Complete transformer architecture with LayerNorm, transformer blocks,
+  and language model implementation
+estimated_time: 6-7 hours
+exports:
+- LayerNorm
+- PositionwiseFeedForward
+- TransformerBlock
+- Transformer
+- TransformerProfiler
+learning_objectives:
+- Implement LayerNorm for stable deep network training
+- Build position-wise feed-forward networks for transformer blocks
+- Create complete transformer blocks with attention, normalization, and residual connections
+- Develop full transformer models with embeddings, multiple layers, and generation
+  capability
+- Understand transformer scaling characteristics and production deployment considerations
+ml_systems_focus: Transformer architecture optimization, memory scaling with depth,
+  production deployment strategies
+name: Transformers
+next_modules:
+- Advanced transformer architectures and optimization techniques
+number: 14
+prerequisites:
+- 02_tensor
+- 12_embeddings
+- 13_attention
+systems_concepts:
+- Linear memory scaling with transformer depth
+- Layer normalization vs batch normalization trade-offs
+- Residual connection gradient flow optimization
+- Parameter allocation across depth, width, and attention heads
+- Training memory vs inference memory requirements

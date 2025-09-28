@@ -1,0 +1,24 @@
+description: "Build professional profiling infrastructure to measure and analyze performance.\n\
+  Students learn to create timing, memory, and operation profilers that reveal\nbottlenecks\
+  \ and guide optimization decisions. Performance detective work that \nmakes optimization\
+  \ exciting through data-driven insights.\n"
+difficulty: advanced
+estimated_hours: 8-10
+exports:
+- tinytorch.profiling
+learning_objectives:
+- Build accurate timing infrastructure with statistical rigor
+- Implement memory profiling and allocation tracking
+- Create FLOP counting for computational analysis
+- Master profiling methodology for bottleneck identification
+- Connect profiling insights to ML systems optimization decisions
+name: Profiling
+number: 15
+prerequisites:
+- Module 14: Transformers (need models to profile)
+skills_developed:
+- Performance measurement
+- Bottleneck identification
+- Profiling tool development
+- Statistical analysis
+type: systems
