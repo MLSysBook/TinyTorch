@@ -57,7 +57,7 @@ def _import_from_module_dev(module_name, class_names):
     module_path = os.path.join(os.path.dirname(__file__), '..', module_name)
     sys.path.insert(0, module_path)
     try:
-        if module_name == '02_tensor':
+        if module_name == '01_tensor':
             from tensor_dev import Tensor
             return {'Tensor': Tensor}
         elif module_name == '13_attention':
@@ -81,7 +81,7 @@ if 'tinytorch' in sys.modules:
     from tinytorch.core.embeddings import Embedding, PositionalEncoding
 else:
     # Development: Import from local modules
-    tensor_imports = _import_from_module_dev('02_tensor', ['Tensor'])
+    tensor_imports = _import_from_module_dev('01_tensor', ['Tensor'])
     Tensor = tensor_imports['Tensor']
     
     attention_imports = _import_from_module_dev('13_attention', 

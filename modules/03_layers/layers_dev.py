@@ -71,7 +71,7 @@ else:
     # Development: Import from local module files
     # During development, we need to import directly from the source files
     # This allows us to work with modules before they're packaged
-    tensor_module_path = os.path.join(os.path.dirname(__file__), '..', '02_tensor')
+    tensor_module_path = os.path.join(os.path.dirname(__file__), '..', '01_tensor')
     sys.path.insert(0, tensor_module_path)
     try:
         from tensor_dev import Tensor, Parameter
