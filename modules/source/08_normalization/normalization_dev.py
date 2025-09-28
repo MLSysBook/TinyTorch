@@ -347,48 +347,30 @@ class BatchNorm2d(Module):
         self.training = False
         return self
 
-# MAGNIFY SYSTEMS INSIGHT: Batch Normalization Memory Analysis
-def analyze_batchnorm_memory():
-    """Let's analyze BatchNorm memory usage and batch dependency!"""
-    try:
-        print("MAGNIFY SYSTEMS INSIGHT: Batch Normalization Analysis")
-        print("=" * 50)
+# 🔍 SYSTEMS INSIGHT: BatchNorm Memory and Batch Dependencies
+def analyze_batchnorm_behavior():
+    """Quick analysis of BatchNorm memory and batch size effects."""
+    print("🔍 BatchNorm Memory Scaling:")
 
-        # Different channel sizes to show scaling
-        channel_sizes = [64, 256, 512, 1024]
+    # Test different channel sizes
+    for channels in [64, 256, 512]:
+        bn = BatchNorm2d(channels)
+        param_memory = 4 * channels * 4  # 4 params per channel * 4 bytes
+        print(f"  {channels} channels: {param_memory // 1024} KB ({4 * channels} parameters)")
 
-        for channels in channel_sizes:
-            bn = BatchNorm2d(channels)
+    print("\n🔍 Batch Size Dependency:")
+    bn = BatchNorm2d(64)
 
-            # Parameter memory calculation
-            param_memory = 4 * channels * 4  # 4 params per channel * 4 bytes (float32)
-            print(f"Channels: {channels:4d} | Parameters: {4 * channels:4d} | Memory: {param_memory / 1024:.2f} KB")
+    # Test different batch sizes
+    for batch_size in [1, 8, 32]:
+        if batch_size == 1:
+            print(f"  Batch size {batch_size}: ⚠️ Unstable (no batch statistics)")
+        else:
+            print(f"  Batch size {batch_size}: ✅ Good statistics")
 
-        print("\nTIP KEY INSIGHTS:")
-        print("• BatchNorm memory scales linearly with channel count")
-        print("• Only 4 parameters per channel (γ, β, running_mean, running_var)")
-        print("• Memory overhead is typically < 1% of layer weights")
+    print("\n💡 Key insight: BatchNorm needs batch_size > 1 for training")
 
-        # Batch size dependency demonstration
-        print("\nTARGET BATCH SIZE DEPENDENCY:")
-        bn = BatchNorm2d(64)
-
-        for batch_size in [1, 8, 32, 128]:
-            x = Tensor(np.random.randn(batch_size, 64, 32, 32))
-
-            if batch_size == 1:
-                print(f"Batch size {batch_size:3d}: WARNING️  May be unstable (poor statistics)")
-            else:
-                print(f"Batch size {batch_size:3d}: PASS Good statistics")
-
-        print("\n🚨 CRITICAL: BatchNorm needs batch_size > 1 for stable training!")
-        print("   Single-sample batches have undefined variance")
-
-    except Exception as e:
-        print(f"WARNING️ Error in BatchNorm analysis: {e}")
-
-# Run the analysis
-analyze_batchnorm_memory()
+analyze_batchnorm_behavior()
 
 # %% [markdown]
 """
@@ -478,7 +460,7 @@ def test_unit_batch_norm():
     print(f"PASS Uses running statistics during evaluation")
     print(f"PASS Maintains gradient flow through learnable parameters")
 
-# Test function defined (called in main block)
+test_unit_batch_norm()
 
 # %% [markdown]
 """
@@ -608,61 +590,31 @@ class LayerNorm(Module):
 # THINK PREDICTION: How does LayerNorm memory scale compared to BatchNorm?
 # Your guess: LayerNorm uses _____ memory than BatchNorm for the same feature size
 
-# MAGNIFY SYSTEMS INSIGHT: LayerNorm vs BatchNorm Memory Comparison
-def compare_normalization_memory():
-    """Compare memory usage between different normalization techniques."""
-    try:
-        print("MAGNIFY SYSTEMS INSIGHT: Normalization Memory Comparison")
-        print("=" * 60)
+# 🔍 SYSTEMS INSIGHT: LayerNorm Memory and Batch Independence
+def compare_norm_characteristics():
+    """Compare key characteristics of BatchNorm vs LayerNorm."""
+    print("🔍 Memory Comparison:")
 
-        # Test different feature configurations
-        configs = [
-            (64, "Small ConvNet channel"),
-            (256, "ResNet channel"),
-            (512, "Transformer embedding"),
-            (1024, "Large transformer")
-        ]
+    # Compare memory usage
+    for features in [64, 256, 512]:
+        bn_memory = 4 * features * 4  # γ, β, running_mean, running_var
+        ln_memory = 2 * features * 4  # γ, β only
+        ratio = bn_memory / ln_memory
+        print(f"  {features} features: BatchNorm {bn_memory//1024}KB vs LayerNorm {ln_memory//1024}KB ({ratio:.1f}x)")
 
-        print(f"{'Features':<8} {'BatchNorm':<12} {'LayerNorm':<12} {'Ratio':<8} {'Context'}")
-        print("-" * 60)
+    print("\n🔍 Batch Size Independence:")
+    ln = LayerNorm(256)
 
-        for features, context in configs:
-            # BatchNorm memory: 4 parameters per channel (γ, β, running_mean, running_var)
-            bn_memory = 4 * features * 4  # 4 bytes per float32
+    # Test different batch sizes
+    for batch_size in [1, 8, 32]:
+        x = Tensor(np.random.randn(batch_size, 64, 256))
+        output = ln.forward(x)
+        sample_var = np.var(output.data[0, :, :])
+        print(f"  Batch size {batch_size}: Variance = {sample_var:.3f} ✅")
 
-            # LayerNorm memory: 2 parameters per feature (γ, β only)
-            ln_memory = 2 * features * 4  # 4 bytes per float32
+    print("\n💡 Key insight: LayerNorm works consistently at any batch size")
 
-            ratio = bn_memory / ln_memory
-
-            print(f"{features:<8} {bn_memory/1024:.2f} KB     {ln_memory/1024:.2f} KB     {ratio:.1f}x      {context}")
-
-        print(f"\nTIP KEY INSIGHTS:")
-        print("• BatchNorm uses 2* more memory than LayerNorm")
-        print("• BatchNorm stores running statistics (inference requirements)")
-        print("• LayerNorm has no running state (batch-independent)")
-
-        # Batch size independence demonstration
-        print(f"\nTARGET BATCH SIZE INDEPENDENCE:")
-        ln = LayerNorm(256)
-
-        for batch_size in [1, 8, 32, 128]:
-            x = Tensor(np.random.randn(batch_size, 64, 256))
-            output = ln.forward(x)
-
-            # Check normalization quality
-            sample_mean = np.mean(output.data[0, :, :])  # First sample mean
-            sample_var = np.var(output.data[0, :, :])    # First sample variance
-
-            print(f"Batch size {batch_size:3d}: Mean={sample_mean:.6f}, Var={sample_var:.6f} PASS")
-
-        print(f"\n✨ LayerNorm gives consistent results regardless of batch size!")
-
-    except Exception as e:
-        print(f"WARNING️ Error in normalization comparison: {e}")
-
-# Run the comparison
-compare_normalization_memory()
+compare_norm_characteristics()
 
 # %% [markdown]
 """
@@ -757,7 +709,7 @@ def test_unit_layer_norm():
     print(f"PASS Batch-size independent behavior")
     print(f"PASS Supports multi-dimensional normalization")
 
-# Test function defined (called in main block)
+test_unit_layer_norm()
 
 # %% [markdown]
 """
@@ -901,90 +853,49 @@ class GroupNorm(Module):
 # THINK PREDICTION: Which normalization uses the most memory - Batch, Layer, or Group?
 # Your answer: _______ because _______
 
-# MAGNIFY SYSTEMS INSIGHT: Complete Normalization Scaling Analysis
-def analyze_normalization_scaling():
-    """Analyze how different normalization techniques scale with architecture size."""
-    try:
-        print("MAGNIFY SYSTEMS INSIGHT: Normalization Scaling Analysis")
-        print("=" * 70)
+# 🔍 SYSTEMS INSIGHT: Comparing All Three Normalization Techniques
+def analyze_all_normalization_types():
+    """Compare memory and behavior of all three normalization types."""
+    print("🔍 Complete Normalization Comparison:")
 
-        # Different model scales to analyze
-        model_configs = [
-            (64, "Small CNN"),
-            (256, "ResNet-50 layer"),
-            (512, "Large CNN"),
-            (1024, "Vision Transformer")
-        ]
+    # Memory comparison
+    print("\nMemory Usage (per channel):")
+    channels = 256
+    bn_memory = 4 * channels * 4  # γ, β, running_mean, running_var
+    ln_memory = 2 * channels * 4  # γ, β only
+    gn_memory = 2 * channels * 4  # γ, β only
 
-        print(f"{'Channels':<8} {'BatchNorm':<12} {'LayerNorm':<12} {'GroupNorm':<12} {'Context'}")
-        print("-" * 70)
+    print(f"  BatchNorm: {bn_memory//1024} KB (stores running statistics)")
+    print(f"  LayerNorm: {ln_memory//1024} KB (no running state)")
+    print(f"  GroupNorm: {gn_memory//1024} KB (no running state)")
 
-        for channels, context in model_configs:
-            # Memory calculations (in bytes, float32 = 4 bytes)
-            bn_memory = 4 * channels * 4  # γ, β, running_mean, running_var
-            ln_memory = 2 * channels * 4  # γ, β only
-            gn_memory = 2 * channels * 4  # γ, β only (same as LayerNorm)
+    # Batch size effects
+    print("\n🔍 Batch Size Behavior:")
+    test_channels = 64
+    bn = BatchNorm2d(test_channels)
+    ln = LayerNorm((test_channels, 16, 16))
+    gn = GroupNorm(8, test_channels)
 
-            print(f"{channels:<8} {bn_memory/1024:.2f} KB     {ln_memory/1024:.2f} KB     {gn_memory/1024:.2f} KB     {context}")
+    for batch_size in [1, 8, 32]:
+        x = Tensor(np.random.randn(batch_size, test_channels, 16, 16))
 
-        print(f"\nTIP MEMORY INSIGHTS:")
-        print("• BatchNorm: Highest memory (stores running statistics)")
-        print("• LayerNorm: 50% less memory than BatchNorm")
-        print("• GroupNorm: Same memory as LayerNorm")
+        if batch_size > 1:
+            bn_out = bn.forward(x)
+            bn_status = "✅ Stable"
+        else:
+            bn_status = "⚠️ Unstable"
 
-        # Computational complexity analysis
-        print(f"\nSPEED COMPUTATIONAL COMPLEXITY:")
-        batch_size, height, width = 32, 64, 64
-        channels = 256
+        ln_out = ln.forward(x)
+        gn_out = gn.forward(x)
 
-        # Calculate FLOPs for each normalization type
-        spatial_size = height * width
-        total_elements = batch_size * channels * spatial_size
+        print(f"  Batch size {batch_size}: BN={bn_status}, LN=✅ Stable, GN=✅ Stable")
 
-        # All normalizations require: mean, variance, normalize, scale, shift
-        base_flops = 5 * total_elements  # 5 operations per element
+    print("\n💡 Usage recommendations:")
+    print("  • BatchNorm: CNNs with large batches")
+    print("  • LayerNorm: Transformers, variable batch sizes")
+    print("  • GroupNorm: Small batches, object detection")
 
-        print(f"Input: ({batch_size}, {channels}, {height}, {width})")
-        print(f"BatchNorm FLOPs: ~{base_flops/1e6:.1f}M (batch statistics)")
-        print(f"LayerNorm FLOPs: ~{base_flops/1e6:.1f}M (per-sample statistics)")
-        print(f"GroupNorm FLOPs: ~{base_flops/1e6:.1f}M (group statistics)")
-
-        print(f"\nTARGET WHEN TO USE EACH:")
-        print("• BatchNorm: Large batches, CNNs, stable batch sizes")
-        print("• LayerNorm: Transformers, variable batch sizes, RNNs")
-        print("• GroupNorm: Small batches, object detection, fine-tuning")
-
-        # Demonstrate batch size effects
-        print(f"\n📊 BATCH SIZE EFFECTS:")
-        test_channels = 128
-        bn = BatchNorm2d(test_channels)
-        ln = LayerNorm((test_channels, 32, 32))
-        gn = GroupNorm(32, test_channels)
-
-        for batch_size in [1, 4, 16, 64]:
-            x = Tensor(np.random.randn(batch_size, test_channels, 32, 32))
-
-            # Only test mean for first sample to see consistency
-            if batch_size > 1:  # BatchNorm needs batch_size > 1
-                bn_out = bn.forward(x)
-                bn_mean = np.mean(bn_out.data[0])
-            else:
-                bn_mean = "unstable"
-
-            ln_out = ln.forward(x)
-            ln_mean = np.mean(ln_out.data[0])
-
-            gn_out = gn.forward(x)
-            gn_mean = np.mean(gn_out.data[0])
-
-            print(f"Batch {batch_size:2d}: BN={bn_mean if isinstance(bn_mean, str) else f'{bn_mean:.6f}':<10} "
-                  f"LN={ln_mean:.6f} GN={gn_mean:.6f}")
-
-    except Exception as e:
-        print(f"WARNING️ Error in scaling analysis: {e}")
-
-# Run the scaling analysis
-analyze_normalization_scaling()
+analyze_all_normalization_types()
 
 # %% [markdown]
 """
@@ -1086,7 +997,7 @@ def test_unit_group_norm():
     print(f"PASS Supports special cases (Instance/Layer norm variants)")
     print(f"PASS Maintains gradient flow through learnable parameters")
 
-# Test function defined (called in main block)
+test_unit_group_norm()
 
 # %% [markdown]
 """
@@ -1187,86 +1098,38 @@ Let's compare how different normalization techniques affect training stability b
 # THINK PREDICTION: Which normalization technique will be most stable for very small batch sizes?
 # Your answer: _______ because _______
 
-# MAGNIFY SYSTEMS INSIGHT: Training Stability Analysis
+# 🔍 SYSTEMS INSIGHT: Training Stability Across Batch Sizes
 def analyze_training_stability():
-    """Analyze how normalization affects training stability across different scenarios."""
-    try:
-        print("MAGNIFY SYSTEMS INSIGHT: Training Stability Analysis")
-        print("=" * 60)
+    """Test how each normalization handles different training scenarios."""
+    print("🔍 Training Stability Analysis:")
 
-        # Test stability across different batch sizes
-        channels = 128
-        scenarios = [
-            (1, "Single sample (inference)"),
-            (2, "Tiny batch (edge case)"),
-            (8, "Small batch (mobile/edge)"),
-            (32, "Standard batch"),
-            (128, "Large batch")
-        ]
+    channels = 64
+    bn = BatchNorm2d(channels)
+    ln = LayerNorm((channels, 16, 16))
+    gn = GroupNorm(8, channels)
 
-        bn = BatchNorm2d(channels)
-        ln = LayerNorm((channels, 16, 16))
-        gn = GroupNorm(16, channels)
+    print("\nStability across batch sizes:")
+    for batch_size in [1, 8, 32]:
+        x = Tensor(np.random.randn(batch_size, channels, 16, 16))
 
-        print(f"{'Batch Size':<12} {'BatchNorm':<12} {'LayerNorm':<12} {'GroupNorm':<12} {'Scenario'}")
-        print("-" * 70)
+        # Test each normalization
+        if batch_size == 1:
+            bn_status = "⚠️ Unstable"
+        else:
+            bn.train()
+            bn_out = bn.forward(x)
+            bn_status = "✅ Stable"
 
-        for batch_size, scenario in scenarios:
-            x = Tensor(np.random.randn(batch_size, channels, 16, 16) * 2 + 1)
-
-            # BatchNorm stability
-            if batch_size == 1:
-                bn_stability = "UNSTABLE"  # Can't compute batch stats with N=1
-            else:
-                bn.train()
-                bn_out = bn.forward(x)
-                bn_var = np.var(bn_out.data)
-                bn_stability = f"{bn_var:.4f}"
-
-            # LayerNorm stability
-            ln_out = ln.forward(x)
-            ln_var = np.var(ln_out.data[0])  # Per sample variance
-            ln_stability = f"{ln_var:.4f}"
-
-            # GroupNorm stability
-            gn_out = gn.forward(x)
-            gn_var = np.var(gn_out.data[0])  # Per sample variance
-            gn_stability = f"{gn_var:.4f}"
-
-            print(f"{batch_size:<12} {bn_stability:<12} {ln_stability:<12} {gn_stability:<12} {scenario}")
-
-        print(f"\nTIP STABILITY INSIGHTS:")
-        print("• BatchNorm: Unstable with batch_size=1, best with large batches")
-        print("• LayerNorm: Consistent across all batch sizes")
-        print("• GroupNorm: Consistent across all batch sizes")
-
-        # Gradient flow analysis
-        print(f"\n🌊 GRADIENT FLOW ANALYSIS:")
-
-        # Simulate deep network gradients
-        x = Tensor(np.random.randn(16, channels, 16, 16))
-
-        # Test gradient magnitude after normalization
-        original_grad_norm = np.linalg.norm(x.data)
-
-        bn_out = bn.forward(x)
         ln_out = ln.forward(x)
         gn_out = gn.forward(x)
 
-        print(f"Original gradient norm: {original_grad_norm:.3f}")
-        print(f"After BatchNorm: ~{np.linalg.norm(bn_out.data):.3f} (normalized)")
-        print(f"After LayerNorm: ~{np.linalg.norm(ln_out.data):.3f} (normalized)")
-        print(f"After GroupNorm: ~{np.linalg.norm(gn_out.data):.3f} (normalized)")
+        print(f"  Batch {batch_size}: BN={bn_status}, LN=✅ Stable, GN=✅ Stable")
 
-        print(f"\nTARGET PRACTICAL RECOMMENDATIONS:")
-        print("• Use BatchNorm for: CNNs with batch_size >= 8, stable training")
-        print("• Use LayerNorm for: Transformers, RNNs, variable batch sizes")
-        print("• Use GroupNorm for: Object detection, fine-tuning, small batches")
+    print("\n💡 Stability insights:")
+    print("  • BatchNorm: Needs batch_size > 1, best with large batches")
+    print("  • LayerNorm: Consistent across all batch sizes")
+    print("  • GroupNorm: Batch-independent like LayerNorm")
 
-    except Exception as e:
-        print(f"WARNING️ Error in stability analysis: {e}")
-
-# Run the stability analysis
 analyze_training_stability()
 
 # %% [markdown]
@@ -1358,7 +1221,7 @@ def test_unit_normalization_integration():
     print(f"PASS Memory usage patterns are as expected")
     print(f"PASS Batch size independence works correctly")
 
-# Test function defined (called in main block)
+test_unit_normalization_integration()
 
 # %% [markdown]
 """
@@ -1367,78 +1230,6 @@ def test_unit_normalization_integration():
 Let's run comprehensive tests to ensure all normalization implementations work correctly.
 """
 
-# %% [markdown]
-"""
-### Performance Benchmarking
-
-Let's benchmark the performance characteristics of our normalization implementations.
-"""
-
-def benchmark_normalization_performance():
-    """
-    Benchmark performance of different normalization techniques.
-
-    This function is PROVIDED for educational analysis.
-    """
-    print("SPEED Performance Benchmark: Normalization Techniques")
-    print("=" * 55)
-
-    import time
-
-    # Test configuration
-    batch_size, channels, height, width = 32, 256, 64, 64
-    num_iterations = 100
-
-    # Create test data
-    x = Tensor(np.random.randn(batch_size, channels, height, width))
-
-    # Initialize normalization layers
-    bn = BatchNorm2d(channels)
-    ln = LayerNorm((channels, height, width))
-    gn = GroupNorm(32, channels)  # 8 channels per group
-
-    # Benchmark each technique
-    techniques = [
-        ("BatchNorm2d", bn),
-        ("LayerNorm", ln),
-        ("GroupNorm", gn)
-    ]
-
-    results = {}
-
-    for name, norm_layer in techniques:
-        if name == "BatchNorm2d":
-            norm_layer.train()  # Ensure training mode
-
-        # Warmup
-        for _ in range(10):
-            _ = norm_layer.forward(x)
-
-        # Benchmark
-        start_time = time.perf_counter()
-        for _ in range(num_iterations):
-            output = norm_layer.forward(x)
-        end_time = time.perf_counter()
-
-        avg_time_ms = (end_time - start_time) * 1000 / num_iterations
-        results[name] = avg_time_ms
-
-        print(f"{name:<12}: {avg_time_ms:.3f} ms/forward")
-
-    # Analysis
-    print(f"\n📊 Performance Analysis:")
-    baseline = results["BatchNorm2d"]
-    for name, time_ms in results.items():
-        speedup = baseline / time_ms
-        print(f"  {name}: {speedup:.2f}x relative to BatchNorm")
-
-    print(f"\nTIP Performance Insights:")
-    print(f"  • All normalizations have similar computational complexity")
-    print(f"  • Differences mainly due to memory access patterns")
-    print(f"  • BatchNorm may be slightly faster due to batch parallelization")
-
-# Run performance benchmark
-benchmark_normalization_performance()
 
 # %% [markdown]
 """
@@ -1447,27 +1238,41 @@ benchmark_normalization_performance()
 Run all tests to validate our normalization implementations.
 """
 
+def test_module():
+    """Integration test for complete normalization module."""
+    print("🧪 Testing Complete Normalization Module...")
+
+    # Test all normalization techniques work together
+    batch_size, channels, height, width = 16, 64, 32, 32
+    x = Tensor(np.random.randn(batch_size, channels, height, width) * 3 + 2)
+
+    # Initialize all normalization types
+    bn = BatchNorm2d(channels)
+    ln = LayerNorm((channels, height, width))
+    gn = GroupNorm(8, channels)
+
+    # Test that all work with same input
+    bn.train()
+    bn_output = bn.forward(x)
+    ln_output = ln.forward(x)
+    gn_output = gn.forward(x)
+
+    # Verify all outputs are properly normalized
+    assert bn_output.shape == x.shape, "BatchNorm should preserve shape"
+    assert ln_output.shape == x.shape, "LayerNorm should preserve shape"
+    assert gn_output.shape == x.shape, "GroupNorm should preserve shape"
+
+    # Check normalization effectiveness
+    for name, output in [("BatchNorm", bn_output), ("LayerNorm", ln_output), ("GroupNorm", gn_output)]:
+        output_mean = np.mean(output.data)
+        output_std = np.std(output.data)
+        assert abs(output_mean) < 2.0, f"{name} should reduce mean magnitude"
+        assert 0.5 < output_std < 2.0, f"{name} should normalize standard deviation"
+
+    print("✅ All normalization techniques working correctly!")
+
 if __name__ == "__main__":
-    """Main execution block - runs all normalization tests."""
-    print("TEST Running Complete Normalization Test Suite")
-    print("=" * 50)
-
-    # Run all unit tests
-    test_unit_batch_norm()
-    print()
-
-    test_unit_layer_norm()
-    print()
-
-    test_unit_group_norm()
-    print()
-
-    test_unit_normalization_integration()
-    print()
-
-    print("PASS All normalization tests passed!")
-    print("\nTARGET NORMALIZATION SUITE COMPLETE")
-    print("Your normalization implementations are ready for use in neural networks!")
+    test_module()
 
 # %% [markdown]
 """
