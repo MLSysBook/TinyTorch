@@ -136,7 +136,7 @@ You master modern LLM optimizations
 
 <div style="background: #f0fff4; border: 1px solid #9ae6b4; padding: 2rem; border-radius: 0.5rem; text-align: center;">
 <h3 style="margin: 0 0 1rem 0; font-size: 1.2rem; color: #495057;">📚 Full Course</h3>
-<p style="margin: 0 0 1.5rem 0; font-size: 0.95rem; color: #6c757d;">8+ weeks study • Complete ML framework • Systems mastery</p>
+<p style="margin: 0 0 1.5rem 0; font-size: 0.95rem; color: #6c757d;">8+ weeks study • Complete ML framework • Systems understanding</p>
 <a href="chapters/00-introduction.html" style="display: inline-block; background: #28a745; color: white; padding: 0.75rem 1.5rem; border-radius: 0.25rem; text-decoration: none; font-weight: 500; font-size: 1rem;">Course Overview →</a>
 </div>
 
@@ -155,9 +155,9 @@ You master modern LLM optimizations
 
 </div>
 
-## Ready to Start Building?
+## Getting Started
 
-Transform from framework user to systems engineer. **📖 See [Essential Commands](tito-essentials.html)** for complete setup and command reference, or **📖 See [Complete Course Structure](chapters/00-introduction.html)** for detailed module descriptions.
+Whether you're just exploring or ready to dive in, here are helpful resources: **📖 See [Essential Commands](tito-essentials.html)** for complete setup and command reference, or **📖 See [Complete Course Structure](chapters/00-introduction.html)** for detailed module descriptions.
 
 **Additional Resources**:
 - **[Progress Tracking](learning-progress.html)** - Monitor your learning journey with 16 capability checkpoints
