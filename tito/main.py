@@ -42,6 +42,7 @@ from .commands.logo import LogoCommand
 from .commands.milestone import MilestoneCommand
 from .commands.leaderboard import LeaderboardCommand
 from .commands.olympics import OlympicsCommand
+from .commands.setup import SetupCommand
 
 # Configure logging
 logging.basicConfig(
@@ -63,6 +64,8 @@ class TinyTorchCLI:
         self.config = CLIConfig.from_project_root()
         self.console = get_console()
         self.commands: Dict[str, Type[BaseCommand]] = {
+            # Essential commands
+            'setup': SetupCommand,
             # Hierarchical command groups only
             'system': SystemCommand,
             'module': ModuleCommand,
@@ -169,9 +172,67 @@ Examples:
         
         return True
     
+    def handle_numeric_shortcut(self, command: str) -> Optional[int]:
+        """Handle numeric shortcuts like 'tito 01', 'tito 02', etc."""
+        if not command.isdigit() and not (len(command) == 2 and command.isdigit()):
+            return None
+        
+        # Map numbers to modules
+        module_mapping = {
+            "01": "01_tensor",
+            "02": "02_activations", 
+            "03": "03_layers",
+            "04": "04_losses",
+            "05": "05_autograd",
+            "06": "06_optimizers",
+            "07": "07_training",
+            "08": "08_spatial",
+            "09": "09_dataloader",
+            "10": "10_tokenization",
+            "11": "11_embeddings",
+            "12": "12_attention",
+            "13": "13_transformers",
+            "14": "14_profiling",
+            "15": "15_acceleration",
+            "16": "16_quantization",
+            "17": "17_compression",
+            "18": "18_caching",
+            "19": "19_benchmarking",
+            "20": "20_capstone",
+            "21": "21_mlops"
+        }
+        
+        # Normalize to 2-digit format
+        normalized = f"{int(command):02d}"
+        
+        if normalized in module_mapping:
+            module_name = module_mapping[normalized]
+            self.console.print(f"🚀 Opening module {normalized}: {module_name}")
+            
+            # Create fake args for module view command
+            from argparse import Namespace
+            fake_args = Namespace()
+            fake_args.module = module_name
+            fake_args.force = False
+            
+            # Execute module view command
+            from .commands.view import ViewCommand
+            view_command = ViewCommand(self.config)
+            return view_command.run(fake_args)
+        else:
+            self.console.print(f"[red]❌ Module {normalized} not found[/red]")
+            self.console.print("💡 Available modules: 01-21")
+            return 1
+
     def run(self, args: Optional[List[str]] = None) -> int:
         """Run the CLI application."""
         try:
+            # Check for numeric shortcuts first (before argparse)
+            if args and len(args) >= 1:
+                first_arg = args[0]
+                if first_arg.isdigit() or (len(first_arg) == 2 and first_arg.isdigit()):
+                    return self.handle_numeric_shortcut(first_arg)
+            
             parser = self.create_parser()
             parsed_args = parser.parse_args(args)
             
@@ -261,7 +322,7 @@ Examples:
 def main() -> int:
     """Main entry point for the CLI."""
     cli = TinyTorchCLI()
-    return cli.run()
+    return cli.run(sys.argv[1:])
 
 if __name__ == "__main__":
     sys.exit(main()) 

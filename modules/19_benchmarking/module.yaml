@@ -1,0 +1,31 @@
+description: 'TinyMLPerf Olympics - the culmination of your TinyTorch journey! Build
+  a comprehensive
+
+  benchmarking suite using your profiler from Module 19, then compete on speed, memory,
+
+  and efficiency. Benchmark the models you built throughout the course to see the
+  impact
+
+  of all your optimizations.
+
+  '
+difficulty: advanced
+estimated_hours: 10-12
+exports:
+- tinytorch.benchmarking
+learning_objectives:
+- Build TinyMLPerf benchmark suite
+- Implement fair performance comparison
+- Create reproducible benchmarks
+- Understand MLPerf methodology
+name: Benchmarking
+number: 20
+prerequisites:
+- Module 15: Profiling
+- All optimization modules (16-19)
+skills_developed:
+- Benchmarking methodology
+- Performance reporting
+- Fair comparison techniques
+- Competition optimization
+type: project

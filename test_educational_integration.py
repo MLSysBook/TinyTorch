@@ -17,17 +17,17 @@ class EducationalIntegrationTester:
     def __init__(self):
         self.results = {}
         self.module_paths = [
-            "/Users/VJ/GitHub/TinyTorch/modules/02_tensor/tensor_dev.py",
-            "/Users/VJ/GitHub/TinyTorch/modules/03_activations/activations_dev.py", 
-            "/Users/VJ/GitHub/TinyTorch/modules/04_layers/layers_dev.py",
-            "/Users/VJ/GitHub/TinyTorch/modules/05_losses/losses_dev.py",
-            "/Users/VJ/GitHub/TinyTorch/modules/06_autograd/autograd_dev.py",
-            "/Users/VJ/GitHub/TinyTorch/modules/07_optimizers/optimizers_dev.py",
-            "/Users/VJ/GitHub/TinyTorch/modules/08_training/training_dev.py",
-            "/Users/VJ/GitHub/TinyTorch/modules/09_spatial/spatial_dev.py",
-            "/Users/VJ/GitHub/TinyTorch/modules/10_dataloader/dataloader_dev.py",
-            "/Users/VJ/GitHub/TinyTorch/modules/12_embeddings/embeddings_dev.py",
-            "/Users/VJ/GitHub/TinyTorch/modules/13_attention/attention_dev.py"
+            "/Users/VJ/GitHub/TinyTorch/modules/01_tensor/tensor_dev.py",
+            "/Users/VJ/GitHub/TinyTorch/modules/02_activations/activations_dev.py", 
+            "/Users/VJ/GitHub/TinyTorch/modules/03_layers/layers_dev.py",
+            "/Users/VJ/GitHub/TinyTorch/modules/04_losses/losses_dev.py",
+            "/Users/VJ/GitHub/TinyTorch/modules/05_autograd/autograd_dev.py",
+            "/Users/VJ/GitHub/TinyTorch/modules/06_optimizers/optimizers_dev.py",
+            "/Users/VJ/GitHub/TinyTorch/modules/07_training/training_dev.py",
+            "/Users/VJ/GitHub/TinyTorch/modules/08_spatial/spatial_dev.py",
+            "/Users/VJ/GitHub/TinyTorch/modules/09_dataloader/dataloader_dev.py",
+            "/Users/VJ/GitHub/TinyTorch/modules/11_embeddings/embeddings_dev.py",
+            "/Users/VJ/GitHub/TinyTorch/modules/12_attention/attention_dev.py"
         ]
         
     def print_section(self, title):

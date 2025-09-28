@@ -30,10 +30,10 @@ class ModuleConverter:
         
         # Module to chapter mapping
         self.module_mapping = {
-            "01_setup": {"title": "Development Environment", "filename": "01-setup"},
-            "02_tensor": {"title": "Tensors", "filename": "02-tensor"},
-            "03_activations": {"title": "Activations", "filename": "03-activations"},
-            "04_layers": {"title": "Layers", "filename": "04-layers"},
+            "": {"title": "Development Environment", "filename": "01-setup"},
+            "01_tensor": {"title": "Tensors", "filename": "02-tensor"},
+            "02_activations": {"title": "Activations", "filename": "03-activations"},
+            "03_layers": {"title": "Layers", "filename": "04-layers"},
             "05_networks": {"title": "Networks", "filename": "05-networks"},
             "06_cnn": {"title": "CNNs", "filename": "06-cnn"},
             "07_dataloader": {"title": "DataLoader", "filename": "07-dataloader"},
@@ -48,10 +48,10 @@ class ModuleConverter:
         
         # Mapping from directory name to dev file name
         self.dev_file_mapping = {
-            "01_setup": "setup_dev.py",
-            "02_tensor": "tensor_dev.py", 
-            "03_activations": "activations_dev.py",
-            "04_layers": "layers_dev.py",
+            "": "setup_dev.py",
+            "01_tensor": "tensor_dev.py", 
+            "02_activations": "activations_dev.py",
+            "03_layers": "layers_dev.py",
             "05_networks": "networks_dev.py",
             "06_cnn": "cnn_dev.py",
             "07_dataloader": "dataloader_dev.py",
@@ -409,7 +409,7 @@ def main():
     import argparse
     
     parser = argparse.ArgumentParser(description="Convert TinyTorch modules to Jupyter Book")
-    parser.add_argument('--module', help='Convert specific module (e.g., 01_setup)')
+    parser.add_argument('--module', help='Convert specific module (e.g., )')
     parser.add_argument('--all', action='store_true', help='Convert all modules')
     parser.add_argument('--overview', action='store_true', help='Create overview pages instead of full notebooks')
     parser.add_argument('--overview-module', help='Create overview page for specific module')

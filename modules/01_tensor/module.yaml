@@ -1,0 +1,21 @@
+components:
+- Tensor
+- tensor_creation
+- tensor_operations
+- tensor_arithmetic
+dependencies:
+  enables:
+  - activations
+  - layers
+  - autograd
+  prerequisites: []
+description: Core tensor data structure and operations
+difficulty: "\u2B50\u2B50"
+exports_to: tinytorch.core.tensor
+files:
+  dev_file: tensor_dev.py
+  readme: README.md
+  tests: inline
+name: tensor
+time_estimate: 4-6 hours
+title: Tensor

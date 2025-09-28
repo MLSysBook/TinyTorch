@@ -45,12 +45,18 @@ class ViewCommand(BaseCommand):
             if not module_dir.exists():
                 raise ModuleNotFoundError(f"Module directory '{args.module}' not found")
             
-            # Look for any *_dev.py file in the module directory
-            dev_files = list(module_dir.glob("*_dev.py"))
-            if not dev_files:
-                raise ModuleNotFoundError(
-                    f"No *_dev.py files found in module '{args.module}'"
-                )
+            # Look for the specific dev file for this module
+            # Extract module name (e.g., "tensor" from "01_tensor")
+            module_name = args.module.split('_', 1)[1] if '_' in args.module else args.module
+            dev_file = module_dir / f"{module_name}_dev.py"
+            
+            if not dev_file.exists():
+                # Fallback: look for any *_dev.py file
+                dev_files = list(module_dir.glob("*_dev.py"))
+                if not dev_files:
+                    raise ModuleNotFoundError(
+                        f"No dev file found in module '{args.module}'. Expected: {dev_file}"
+                    )
     
     def _find_dev_files(self) -> List[Path]:
         """Find all *_dev.py files in modules directory."""
@@ -123,8 +129,16 @@ class ViewCommand(BaseCommand):
         # Determine target directory for Jupyter Lab
         if args.module:
             target_dir = self.config.modules_dir / args.module
-            # Find the actual dev file(s) in this module directory
-            dev_files = list(target_dir.glob("*_dev.py"))
+            # Find the specific dev file for this module
+            module_name = args.module.split('_', 1)[1] if '_' in args.module else args.module
+            dev_file = target_dir / f"{module_name}_dev.py"
+            
+            if dev_file.exists():
+                dev_files = [dev_file]
+            else:
+                # Fallback: find any dev files
+                dev_files = list(target_dir.glob("*_dev.py"))
+            
             self.console.print(f"🔄 Generating notebook for module: {args.module}")
         else:
             target_dir = self.config.modules_dir
