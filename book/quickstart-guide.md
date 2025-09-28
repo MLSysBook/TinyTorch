@@ -40,49 +40,57 @@ Confirm you're ready to begin building ML systems from scratch. Your development
 
 Let's build your first neural network component and unlock your first capability:
 
-### Module 01: Environment Setup
+### Module 01: Tensor Foundations
 
 <div style="background: #fffbeb; padding: 1.5rem; border-radius: 0.5rem; border-left: 4px solid #f59e0b; margin: 1.5rem 0;">
 
-**🎯 Learning Goal:** Configure development environment and verify setup
+**🎯 Learning Goal:** Build N-dimensional arrays - the foundation of all neural networks
 
-**⏱️ Time:** 5 minutes
+**⏱️ Time:** 15 minutes
 
-**💻 Action:** Start with Module 01 to configure your development environment and verify setup.
+**💻 Action:** Start with Module 01 to build tensor operations from scratch.
 
-Follow the guided exercises to:
-- Configure your Python environment
-- Install required dependencies
-- Verify Jupyter integration
-- Test basic imports
-
-**📖 See [Essential Commands](tito-essentials.html)** for module workflow commands.
-
-**✅ Achievement Unlocked:** Environment capability
-
-</div>
-
-### Module 02: Tensor Foundations
-
-<div style="background: #fdf2f8; padding: 1.5rem; border-radius: 0.5rem; border-left: 4px solid #ec4899; margin: 1.5rem 0;">
-
-**🎯 Learning Goal:** Build N-dimensional arrays with gradient support
-
-**⏱️ Time:** 10 minutes
-
-**💻 Action:** Build your first neural network component with Module 02.
+```bash
+# Navigate to the tensor module
+cd modules/01_tensor
+jupyter lab tensor_dev.py
+```
 
 You'll implement core tensor operations:
 - N-dimensional array creation
-- Basic mathematical operations
-- Shape manipulation
+- Basic mathematical operations (add, multiply, matmul)
+- Shape manipulation (reshape, transpose)
 - Memory layout understanding
 
 **Key Implementation:** Build the `Tensor` class that forms the foundation of all neural networks
 
+**📖 See [Essential Commands](tito-essentials.html)** for module workflow commands.
+
+**✅ Achievement Unlocked:** Foundation capability - "Can I create and manipulate the building blocks of ML?"
+
+</div>
+
+### Next Step: Module 02 - Activations
+
+<div style="background: #fdf2f8; padding: 1.5rem; border-radius: 0.5rem; border-left: 4px solid #ec4899; margin: 1.5rem 0;">
+
+**🎯 Learning Goal:** Add nonlinearity - the key to neural network intelligence
+
+**⏱️ Time:** 10 minutes
+
+**💻 Action:** Continue with Module 02 to add activation functions.
+
+You'll implement essential activation functions:
+- ReLU (Rectified Linear Unit) - the workhorse of deep learning
+- Softmax - for probability distributions
+- Understand gradient flow and numerical stability
+- Learn why nonlinearity enables learning
+
+**Key Implementation:** Build activation functions that allow neural networks to learn complex patterns
+
 **📖 See [Essential Commands](tito-essentials.html)** for module development workflow.
 
-**✅ Achievement Unlocked:** Foundation capability
+**✅ Achievement Unlocked:** Intelligence capability - "Can I add nonlinearity to enable learning?"
 
 </div>
 
@@ -105,8 +113,8 @@ In 15 minutes, you've:
 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; margin: 2rem 0;">
 
 <div style="background: #e6fffa; padding: 1rem; border-radius: 0.5rem; border-left: 3px solid #26d0ce;">
-<h4 style="margin: 0 0 0.5rem 0; color: #0d9488;">🔧 Built Infrastructure</h4>
-<p style="margin: 0; font-size: 0.9rem;">Configured a complete ML development environment</p>
+<h4 style="margin: 0 0 0.5rem 0; color: #0d9488;">🔧 Setup Complete</h4>
+<p style="margin: 0; font-size: 0.9rem;">Installed TinyTorch and verified your environment</p>
 </div>
 
 <div style="background: #f0f9ff; padding: 1rem; border-radius: 0.5rem; border-left: 3px solid #3b82f6;">
@@ -115,8 +123,8 @@ In 15 minutes, you've:
 </div>
 
 <div style="background: #fefce8; padding: 1rem; border-radius: 0.5rem; border-left: 3px solid #eab308;">
-<h4 style="margin: 0 0 0.5rem 0; color: #a16207;">🏆 Unlocked Capabilities</h4>
-<p style="margin: 0; font-size: 0.9rem;">Earned your first 2 of 16 ML systems capabilities</p>
+<h4 style="margin: 0 0 0.5rem 0; color: #a16207;">🏆 First Capability</h4>
+<p style="margin: 0; font-size: 0.9rem;">Earned your first ML systems capability checkpoint</p>
 </div>
 
 </div>

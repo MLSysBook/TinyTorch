@@ -277,7 +277,9 @@ All using code you wrote yourself, from scratch.
 
 ### Capability Progression: Foundation to Production
 
-```mermaid
+```{mermaid}
+:align: center
+
 timeline
     title TinyTorch Capability Development: Building ML Systems
 
