@@ -10,6 +10,12 @@ TinyTorch is an educational ML systems course where you **build complete neural 
 
 **Core Learning Approach**: Build → Profile → Optimize. You'll implement each system component, measure its performance characteristics, and understand the engineering trade-offs that shape production ML systems.
 
+## The ML Evolution Story You'll Experience
+
+Journey through 40+ years of ML breakthroughs by building each era yourself: **1980s neural foundations** → **1990s backpropagation** → **2012 CNN revolution** → **2017 transformer unification** → **2024 production optimization**. Each module teaches both the breakthrough AND the systems engineering that made it possible.
+
+**📖 See [Complete ML Evolution Timeline](chapters/00-introduction.html#the-ml-evolution-story-youll-experience)** for the full historical context and technical progression.
+
 ## Why Build Instead of Use?
 
 The difference between using a library and understanding a system is the difference between being limited by tools and being empowered to create them. When you build from scratch, you transform from a framework user into a systems engineer:
@@ -115,11 +121,15 @@ You master modern LLM optimizations
 
 **Perfect if you're asking these questions:**
 
-**Students & Researchers**: "How does that `nn.Linear()` call actually compute gradients? Why does Adam optimizer need three times the memory of my model parameters?" You'll implement the mathematics you learned in class and see how theoretical concepts become practical systems.
+**ML Systems Engineers**: "Why does my model training OOM at batch size 32? How do attention mechanisms scale quadratically with sequence length? When does data loading become the bottleneck?" You'll build and profile every component, understanding memory hierarchies, computational complexity, and system bottlenecks that production ML systems face daily.
 
-**Academics & Educators**: "How can I teach ML systems effectively?" TinyTorch provides a complete pedagogical framework with NBGrader integration, automated assessment, and rigorously tested foundations. Use it as a semester-long course or integrate individual modules.
+**Students & Researchers**: "How does that `nn.Linear()` call actually compute gradients? Why does Adam optimizer need 3× the memory of SGD? What's actually happening during a forward pass?" You'll implement the mathematics you learned in class and discover how theoretical concepts become practical systems with real performance implications.
 
-**ML Practitioners**: "Why do I get stuck debugging training issues?" Even experienced engineers often treat frameworks as black boxes. By building your own, you'll debug faster, optimize better, and implement custom operations with confidence.
+**Performance Engineers**: "Where are the actual bottlenecks in transformer inference? How does KV-cache reduce computation by 10-100×? Why does my CNN use 4GB of memory?" By building these systems from scratch, you'll understand memory access patterns, cache efficiency, and optimization opportunities that profilers alone can't teach.
+
+**Academics & Educators**: "How can I teach ML systems—not just ML algorithms?" TinyTorch provides a complete pedagogical framework emphasizing systems thinking: memory profiling, performance analysis, and scaling behavior are built into every module, not added as an afterthought.
+
+**ML Practitioners**: "Why does training slow down after epoch 10? How do I debug gradient explosions? When should I use mixed precision?" Even experienced engineers often treat frameworks as black boxes. By understanding the systems underneath, you'll debug faster, optimize better, and make informed architectural decisions.
 
 ## How to Choose Your Learning Path
 
@@ -160,7 +170,7 @@ You master modern LLM optimizations
 Whether you're just exploring or ready to dive in, here are helpful resources: **📖 See [Essential Commands](tito-essentials.html)** for complete setup and command reference, or **📖 See [Complete Course Structure](chapters/00-introduction.html)** for detailed module descriptions.
 
 **Additional Resources**:
-- **[Progress Tracking](learning-progress.html)** - Monitor your learning journey with 16 capability checkpoints
+- **[Progress Tracking](learning-progress.html)** - Monitor your learning journey with 21 capability checkpoints
 - **[Testing Framework](testing-framework.html)** - Understand our comprehensive validation system
 - **[Documentation & Guides](resources.html)** - Complete technical documentation and tutorials
 

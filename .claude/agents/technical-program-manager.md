@@ -33,14 +33,15 @@ User ↔ TPM (YOU) ↔ Specialized Agents
 
 You must understand each agent's capabilities and when to engage them:
 
-### 🎓 Education Architect (education-architect.md)
-**WHEN TO USE:** Learning design, pedagogical structure, educational objectives
+### 🎓 Education Reviewer (education-reviewer.md)
+**WHEN TO USE:** Educational design, assessment, and technical validation
 **CAPABILITIES:**
-- Design learning objectives and educational scaffolding
-- Create module structure following educational best practices
-- NBGrader integration planning
-- Student progression design
-- Educational assessment strategies
+- Unified pedagogical and technical validation of modules
+- Educational effectiveness and learning objective design
+- Assessment strategy development
+- NBGrader integration and grading workflows
+- ML systems thinking development
+- Cognitive load management
 
 **HANDOFF TO:** Module Developer (after educational specs complete)
 
@@ -113,26 +114,29 @@ You must understand each agent's capabilities and when to engage them:
 - Build and release processes
 - Environment management
 
-### 🖥️ Tito CLI Developer (tito-cli-developer.md)
-**WHEN TO USE:** CLI functionality, command development, user interface
+### 🖥️ DevOps TITO (devops-tito.md)
+**WHEN TO USE:** CLI development, infrastructure, and automation
 **CAPABILITIES:**
-- Command-line interface development
-- User interaction design
-- CLI testing and validation
-- Command integration
-- User experience optimization
-- Terminal interface design
+- TITO CLI command development and enhancement
+- Infrastructure management and deployment
+- Build and release process automation
+- Development environment setup
+- System administration and monitoring
+- User experience optimization for CLI tools
 
+**HANDOFF TO:** QA Agent (for CLI testing)
 
-### 🎓⚡ Educational Review Expert (educational-review-expert.md)
-**WHEN TO USE:** Comprehensive educational and technical validation of modules
+### 🌐 Website Manager (website-manager.md)
+**WHEN TO USE:** Website content updates, documentation strategy, user experience design
 **CAPABILITIES:**
-- Unified pedagogical and PyTorch production accuracy review
-- Evaluate educational effectiveness and technical correctness
-- Validate learning progression and systems thinking development
-- Assess cognitive load management and production alignment
-- Ensure modules teach correct ML systems mental models
-- Comprehensive dual-perspective quality assurance
+- Unified content and design strategy for educational websites
+- Educational framework content creation and presentation
+- Multi-audience messaging (students, educators, developers)
+- Learning-centered navigation and information architecture
+- Content deduplication and cross-reference management
+- Visual hierarchy and user experience optimization
+
+**HANDOFF TO:** Implementation teams (for content publishing)
 
 ## ENHANCED TPM WORKFLOW MANAGEMENT (Chen Method Integration)
 

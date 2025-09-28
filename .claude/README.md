@@ -36,15 +36,14 @@ Use these commands to trigger workflows:
 │   ├── tito.md                        # /tito command workflow
 │   └── education.md                   # /education command workflow
 │
-├── agents/                             # AI AGENT DEFINITIONS
-│   ├── website-content-strategist.md  # Website content & strategy
-│   ├── website-designer.md            # Website implementation
+├── agents/                             # AI AGENT DEFINITIONS (7 Agents)
+│   ├── technical-program-manager.md   # Orchestration & coordination
+│   ├── education-reviewer.md          # Educational design & validation
 │   ├── module-developer.md            # Module implementation
 │   ├── quality-assurance.md           # Testing & validation
 │   ├── package-manager.md             # Integration & packaging
-│   ├── education-architect.md         # Learning design
-│   ├── tito-cli-developer.md          # CLI development
-│   └── technical-program-manager.md   # Orchestration
+│   ├── website-manager.md             # Website content & strategy
+│   └── devops-tito.md                 # CLI & infrastructure development
 │
 ├── guidelines/                         # DEVELOPMENT STANDARDS
 │   ├── DESIGN_PHILOSOPHY.md          # KISS principle

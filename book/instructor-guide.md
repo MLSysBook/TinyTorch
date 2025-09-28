@@ -1,5 +1,10 @@
 # 👨‍🏫 Instructor Guide: NBGrader + TinyTorch
 
+<div style="background: #f0fff4; border: 1px solid #22c55e; padding: 1rem; border-radius: 0.5rem; margin: 1rem 0;">
+<strong>📖 Technical Setup & Workflow:</strong> This page provides step-by-step NBGrader setup and daily semester management.<br>
+<strong>📖 For Course Overview & Benefits:</strong> See <a href="usage-paths/classroom-use.html">TinyTorch for Instructors</a> for educational philosophy and course structure.
+</div>
+
 **Complete workflow for instructors and TAs using TinyTorch with automated grading**
 
 ---

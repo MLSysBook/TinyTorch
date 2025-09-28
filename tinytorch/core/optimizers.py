@@ -11,6 +11,28 @@ import os
 from typing import List, Dict, Any, Optional, Union
 from collections import defaultdict
 
+def _safe_extract_grad_data(param):
+    """
+    Safely extract gradient data handling both Variable and memoryview cases.
+
+    Args:
+        param: Parameter with grad attribute
+
+    Returns:
+        numpy array: Gradient data as numpy array
+    """
+    if param.grad is None:
+        return None
+
+    # Extract the gradient data step by step
+    grad_data = param.grad.data.data if hasattr(param.grad.data, 'data') else param.grad.data
+
+    # Convert memoryview to numpy array if needed
+    if isinstance(grad_data, memoryview):
+        return np.array(grad_data)
+
+    return grad_data
+
 # Helper function to set up import paths
 def setup_import_paths():
     """Set up import paths for development modules."""
@@ -107,9 +129,9 @@ def gradient_descent_step(parameter: Variable, learning_rate: float) -> None:
     """
     ### BEGIN SOLUTION
     if parameter.grad is not None:
-        # Get current parameter value and gradient
-        current_value = parameter.data.data
-        gradient_value = parameter.grad.data.data
+        # Get current parameter value and gradient - handle memoryview
+        current_value = parameter.data.data if hasattr(parameter.data, 'data') else parameter.data
+        gradient_value = _safe_extract_grad_data(parameter)
         
         # Update parameter: new_value = old_value - learning_rate * gradient
         new_value = current_value - learning_rate * gradient_value
@@ -640,7 +662,8 @@ class OptimizerConvergenceProfiler:
                 param_count = 0
                 for param in optimizer.parameters:
                     if param.grad is not None:
-                        grad_data = param.grad.data.data
+                        # Safely extract gradient data - handle memoryview
+                        grad_data = _safe_extract_grad_data(param)
                         if hasattr(grad_data, 'flatten'):
                             grad_norm = np.linalg.norm(grad_data.flatten())
                         else:

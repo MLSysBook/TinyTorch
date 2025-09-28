@@ -5,16 +5,16 @@
 <p style="margin: 0; font-size: 1.1rem; color: #6c757d;">Track your capability development through 16 essential ML systems skills</p>
 </div>
 
-**Purpose**: Monitor your capability development through the 16-checkpoint system. Track progress from foundation skills to production ML systems mastery.
+**Purpose**: Monitor your capability development through the 21-checkpoint system. Track progress from foundation skills to production ML systems mastery.
 
-Track your progression through 16 essential ML systems capabilities. Each checkpoint represents fundamental competencies you'll master through hands-on implementation—from tensor operations to production-ready systems.
+Track your progression through 21 essential ML systems capabilities. Each checkpoint represents fundamental competencies you'll master through hands-on implementation—from tensor operations to production-ready systems.
 
 ## How to Track Your Progress
 
 <div style="background: #e3f2fd; padding: 1.5rem; border-radius: 0.5rem; border-left: 4px solid #2196f3; margin: 1.5rem 0;">
 <h4 style="margin: 0 0 1rem 0; color: #1976d2;">🎯 Capability-Based Learning</h4>
 
-Use TinyTorch's 16-checkpoint system to monitor your capability development. Track progress from foundation skills to production ML systems mastery.
+Use TinyTorch's 21-checkpoint system to monitor your capability development. Track progress from foundation skills to production ML systems mastery.
 
 **📖 See [Essential Commands](tito-essentials.html)** for complete progress tracking commands and workflow.
 
@@ -26,7 +26,23 @@ TinyTorch organizes learning through four major phases, each building essential 
 
 **📖 See [Complete Course Structure](chapters/00-introduction.html)** for the full learning timeline and detailed module descriptions.
 
-## 16 Core Capabilities
+## Student Learning Journey
+
+### Typical Student Progression
+- **Week 1-2**: Foundation capabilities (Environment, Tensors, Activations)
+- **Week 3-4**: Core learning systems (Layers, Losses, Autograd)
+- **Week 5-6**: Training and optimization (Optimizers, Training loops)
+- **Week 7-8**: Advanced architectures (Spatial processing, Attention)
+- **Week 9-12**: Production systems (Profiling, Optimization, Deployment)
+
+### Study Approaches
+- **Full Implementation** (8-12 weeks): Build every component from scratch
+- **Guided Study** (4-6 weeks): Study solution notebooks with implementation exercises
+- **Quick Exploration** (2 weeks): Focus on key concepts with provided implementations
+
+**📖 See [Quick Start Guide](quickstart-guide.html)** for immediate hands-on experience with your first module.
+
+## 21 Core Capabilities
 
 Track progress through essential ML systems competencies:
 
@@ -51,8 +67,13 @@ Each checkpoint validates mastery of fundamental ML systems skills.
 | 11 | Can I create embeddings? | 12 | ⬜ Representation |
 | 12 | Can I implement attention? | 13 | ⬜ Attention |
 | 13 | Can I build transformers? | 14 | ⬜ Architecture |
-| 14 | Can I profile performance? | 15-19 | ⬜ Systems |
-| 15 | Can I optimize and compete? | 20 | ⬜ Mastery |
+| 14 | Can I profile performance? | 14 | ⬜ Deployment |
+| 15 | Can I accelerate algorithms? | 15 | ⬜ Acceleration |
+| 16 | Can I quantize models? | 16 | ⬜ Quantization |
+| 17 | Can I compress networks? | 17 | ⬜ Compression |
+| 18 | Can I cache computations? | 18 | ⬜ Caching |
+| 19 | Can I benchmark competitively? | 19 | ⬜ Competition |
+| 20 | Can I build complete language models? | 20 | ⬜ TinyGPT Capstone |
 
 **📖 See [Essential Commands](tito-essentials.html)** for progress monitoring commands.
 

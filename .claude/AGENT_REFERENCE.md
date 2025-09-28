@@ -1,6 +1,16 @@
 # TinyTorch Agent Reference
 
-## Agent Team Structure
+## Current 7-Agent Team Structure
+
+### Primary Interface
+#### 🟡 Technical Program Manager
+**Location**: `.claude/agents/technical-program-manager.md`
+**Role**: Primary communication interface and project orchestration
+**Responsibilities**:
+- Single point of contact for all user communications
+- Coordinates specialized agents and manages workflows
+- Tracks progress and manages dependencies
+- Ensures quality gates and timeline management
 
 ### Core Development Agents
 
@@ -8,191 +18,122 @@
 **Location**: `.claude/agents/module-developer.md`
 **Responsibilities**:
 - Implements modules with educational scaffolding
-- Ensures NBGrader compatibility
+- Ensures NBGrader compatibility and proper exports
 - Creates immediate tests after implementations
-- Follows 5 C's pattern for markdown
+- Follows ML systems analysis patterns
 
 **Key Knowledge**:
 - BEGIN/END SOLUTION blocks for student releases
 - Scaffolding must be OUTSIDE solution blocks
 - Test-immediately pattern is non-negotiable
 - Every cell needs unique grade_id
+- ML systems focus with performance analysis
 
-#### 🟣 Education Architect  
-**Location**: `.claude/agents/education-architect.md`
+#### 🟣 Education Reviewer
+**Location**: `.claude/agents/education-reviewer.md`
 **Responsibilities**:
-- Designs learning objectives and progression
-- Creates pedagogical framework
-- Ensures educational effectiveness
-- Plans assessment strategies
+- Educational design, assessment, and technical validation
+- Unified pedagogical and technical review
+- Learning progression and systems thinking development
+- Cognitive load management and production alignment
 
 **Key Knowledge**:
 - NBGrader enables dual instructor/student versions
-- 5 C's pattern for educational content
+- Educational effectiveness evaluation
 - Progressive difficulty with immediate feedback
-- Scaffolding architecture for student success
+- ML systems mental model development
 
 #### 🔴 Quality Assurance
 **Location**: `.claude/agents/quality-assurance.md`
 **Responsibilities**:
-- Validates NBGrader compatibility
-- Tests educational effectiveness
-- Ensures technical correctness
-- Verifies integration works
+- Comprehensive testing and validation
+- NBGrader compatibility verification
+- Technical correctness and performance validation
+- Integration testing and quality gates
 
 **Key Knowledge**:
 - Unique grade_ids prevent autograding failures
 - Solution blocks must be properly placed
 - Test cells must be locked with points
-- 5 C's validation for educational quality
+- Performance and systems analysis validation
 
-#### 🔵 DevOps Engineer
-**Location**: `.claude/agents/devops-engineer.md`
+#### 🔵 Package Manager
+**Location**: `.claude/agents/package-manager.md`
 **Responsibilities**:
-- Manages NBGrader student release workflow
-- Maintains CI/CD pipelines
-- Ensures infrastructure health
-- Automates module distribution
+- Module integration and export validation
+- Dependency resolution between modules
+- Package builds and distribution management
+- Integration testing coordination
 
 **Key Knowledge**:
-- NBGrader generate_assignment creates student versions
-- Autograding workflow for scale
-- TITO CLI integration for releases
-- Docker and environment management
+- Module export directives and package structure
+- Cross-module dependencies and compatibility
+- Build system integration and validation
+- TinyTorch package architecture
 
-#### 🟠 Documentation Publisher
-**Location**: `.claude/agents/documentation-publisher.md`
+#### 🌐 Website Manager
+**Location**: `.claude/agents/website-manager.md`
 **Responsibilities**:
-- Manages Jupyter Book documentation
-- Creates student and instructor materials
-- Maintains public-facing documentation
-- Publishes release materials
+- Unified content and design strategy
+- Educational framework content creation
+- Multi-audience messaging and user experience
+- Content deduplication and cross-reference management
 
 **Key Knowledge**:
-- Dual documentation for instructor/student
-- Jupyter Book configuration
-- Publishing workflow and standards
-- Version management
+- Educational website architecture and navigation
+- Content presentation optimization for learning
+- Visual hierarchy and design guidelines
+- Open source framework documentation patterns
 
-## Critical Shared Knowledge
+#### 🖥️ DevOps TITO
+**Location**: `.claude/agents/devops-tito.md`
+**Responsibilities**:
+- TITO CLI development and enhancement
+- Infrastructure management and deployment
+- Build and release process automation
+- Development environment optimization
 
-### NBGrader Workflow
-1. **Instructor creates** complete solution with scaffolding
-2. **NBGrader generates** student version (removes solutions)
-3. **Students implement** using scaffolding guidance
-4. **Tests validate** immediately after implementation
-5. **NBGrader autogrades** at scale
+**Key Knowledge**:
+- CLI command development and testing
+- Rich library integration for visualizations
+- System administration and monitoring
+- User experience optimization for tools
 
-### The 5 C's Pattern
-Every implementation preceded by:
-1. **Context** - Why this matters
-2. **Concept** - Technical explanation
-3. **Connection** - Link to prior knowledge
-4. **Concrete** - Specific examples
-5. **Confidence** - Success criteria
+## Workflow Coordination
 
-### Module Structure
+### Standard Development Flow
 ```
-modules/source/XX_module/
-├── module_dev.py       # Complete implementation
-├── module.yaml         # Dependencies and metadata
-└── README.md          # Module documentation
+User Request → TPM → Specialized Agents → Quality Gates → Delivery
 ```
 
-### NBGrader Metadata
-```python
-# Implementation cell
-{"grade": false, "solution": true, "locked": false}
+### Agent Handoff Criteria
+- Module Developer → QA Agent (after implementation complete)
+- QA Agent → Package Manager (after tests pass)
+- Package Manager → TPM (after integration verified)
+- Education Reviewer → Module Developer (after educational specs complete)
+- Website Manager → Implementation teams (after content strategy complete)
 
-# Test cell
-{"grade": true, "locked": true, "points": N, "solution": false}
+### Quality Gates
+- **QA Agent can block**: No commits without test approval
+- **Package Manager can block**: No releases without integration verification
+- **TPM coordinates**: Final approval and user communication
 
-# Documentation cell  
-{"grade": false, "solution": false, "locked": false}
-```
+## REMOVED AGENTS (Historical Reference)
+These agents were consolidated into the current 7-agent structure:
+- Education Architect → merged into Education Reviewer
+- Website Content Strategist → merged into Website Manager
+- Website Designer → merged into Website Manager
+- Assessment Designer → merged into Education Reviewer
+- TITO CLI Developer → became DevOps TITO
+- ML Framework Advisor → capabilities distributed among agents
+- Educational Review Expert → merged into Education Reviewer
 
-## Agent Collaboration Workflow
+## Agent Communication Protocol
+All agents follow structured handoffs with:
+1. What was completed
+2. What needs to be done next
+3. Any issues found
+4. Test results (if applicable)
+5. Recommendations for next agent
 
-```mermaid
-graph LR
-    EA[Education Architect] --> MD[Module Developer]
-    MD --> QA[Quality Assurance]
-    QA --> DO[DevOps Engineer]
-    DO --> DP[Documentation Publisher]
-    DP --> EA
-```
-
-1. **Education Architect** designs learning objectives
-2. **Module Developer** implements with scaffolding
-3. **Quality Assurance** validates implementation
-4. **DevOps Engineer** manages releases
-5. **Documentation Publisher** creates materials
-
-## Common Commands
-
-### Module Development
-```bash
-tito module create [name]        # Create new module
-tito module test [name]          # Test module
-tito module validate [name]      # Validate NBGrader
-tito module export [name]        # Export to package
-```
-
-### Release Management
-```bash
-tito module release [name] --student  # Generate student version
-tito module grade [name]              # Run autograding
-tito module package [name]            # Package for distribution
-```
-
-### Documentation
-```bash
-tito docs generate [name]        # Generate documentation
-tito docs build                  # Build Jupyter Book
-tito docs deploy                 # Deploy to web
-```
-
-## Success Metrics
-
-### Module Success
-- NBGrader compatibility verified
-- Students complete with scaffolding alone
-- Tests provide educational feedback
-- Autograding works without errors
-- Learning objectives achieved
-
-### System Success
-- All modules integrate seamlessly
-- Documentation is comprehensive
-- Release process is automated
-- Student experience is smooth
-- Instructor adoption is high
-
-## Quick Reference
-
-### File Locations
-```
-.claude/agents/           # Agent knowledge bases
-modules/source/          # Module implementations  
-docs/student/           # Student documentation
-docs/instructor/        # Instructor materials
-.github/workflows/      # CI/CD pipelines
-```
-
-### Key Documents (Embedded in Agents)
-- Module structure template
-- NBGrader integration guide
-- Markdown best practices
-- Development guidelines
-- Git workflow standards
-
-## Agent Activation
-
-To use any agent, reference their knowledge base:
-```
-Agent: module-developer
-Knowledge: .claude/agents/module-developer.md
-Task: Implement Module 05 following all guidelines
-```
-
-Each agent has complete knowledge embedded in their description file, eliminating the need for external documentation lookups.
+**Updated**: September 2024 - Reflects current 7-agent structure with streamlined coordination.

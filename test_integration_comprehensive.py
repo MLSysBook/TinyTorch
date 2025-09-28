@@ -156,11 +156,12 @@ class IntegrationTestRunner:
         try:
             # Test CNN Pipeline integration
             print("Testing CNN pipeline integration...")
-            from tinytorch.core.spatial import Conv2D, MaxPool2D, Flatten
+            from tinytorch.core.spatial import Conv2d, MaxPool2D
+            from tinytorch.core.layers import Flatten
             from tinytorch.core.layers import Linear
             
             # Create a simple CNN pipeline
-            conv = Conv2D(in_channels=1, out_channels=2, kernel_size=3)
+            conv = Conv2d(in_channels=1, out_channels=2, kernel_size=3)
             pool = MaxPool2D(kernel_size=2)
             flatten = Flatten()
             fc = Linear(2, 1)  # Will adjust input size as needed
@@ -184,7 +185,7 @@ class IntegrationTestRunner:
             from tinytorch.core.layers import Linear
             from tinytorch.core.activations import ReLU
             from tinytorch.core.optimizers import SGD
-            from tinytorch.core.autograd import GradEngine
+            from tinytorch.core.autograd import Variable
             
             # Create simple network
             layer1 = Linear(2, 4)

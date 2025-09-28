@@ -29,7 +29,7 @@ from ..core.console import get_console, print_error, print_success
 class CheckpointSystem:
     """Core checkpoint tracking system."""
     
-    # Define the 16-checkpoint structure aligned with actual test files
+    # Define the 20-checkpoint structure for complete ML systems engineering journey
     CHECKPOINTS = {
         "00": {
             "name": "Environment",
@@ -38,21 +38,21 @@ class CheckpointSystem:
             "capability": "Can I configure my TinyTorch development environment?"
         },
         "01": {
-            "name": "Foundation", 
+            "name": "Foundation",
             "description": "Basic tensor operations and ML building blocks",
             "test_file": "checkpoint_01_foundation.py",
             "capability": "Can I create and manipulate the building blocks of ML?"
         },
         "02": {
             "name": "Intelligence",
-            "description": "Nonlinear activation functions", 
+            "description": "Nonlinear activation functions",
             "test_file": "checkpoint_02_intelligence.py",
             "capability": "Can I add nonlinearity - the key to neural network intelligence?"
         },
         "03": {
             "name": "Components",
             "description": "Fundamental neural network building blocks",
-            "test_file": "checkpoint_03_components.py", 
+            "test_file": "checkpoint_03_components.py",
             "capability": "Can I build the fundamental building blocks of neural networks?"
         },
         "04": {
@@ -63,7 +63,7 @@ class CheckpointSystem:
         },
         "05": {
             "name": "Learning",
-            "description": "Spatial data processing with convolutional operations", 
+            "description": "Spatial data processing with convolutional operations",
             "test_file": "checkpoint_05_learning.py",
             "capability": "Can I process spatial data like images with convolutional operations?"
         },
@@ -118,14 +118,44 @@ class CheckpointSystem:
         "14": {
             "name": "Deployment",
             "description": "Production deployment and monitoring",
-            "test_file": "checkpoint_14_deployment.py", 
+            "test_file": "checkpoint_14_deployment.py",
             "capability": "Can I deploy and monitor ML systems in production?"
         },
         "15": {
-            "name": "Capstone",
-            "description": "Complete end-to-end ML systems from scratch",
-            "test_file": "checkpoint_15_capstone.py",
-            "capability": "Can I build complete end-to-end ML systems from scratch?"
+            "name": "Acceleration",
+            "description": "Algorithmic optimization and acceleration techniques",
+            "test_file": "checkpoint_15_acceleration.py",
+            "capability": "Can I accelerate computations through algorithmic optimization?"
+        },
+        "16": {
+            "name": "Quantization",
+            "description": "Trading precision for speed with INT8 quantization",
+            "test_file": "checkpoint_16_quantization.py",
+            "capability": "Can I trade precision for speed with INT8 quantization?"
+        },
+        "17": {
+            "name": "Compression",
+            "description": "Neural network pruning for edge deployment",
+            "test_file": "checkpoint_17_compression.py",
+            "capability": "Can I remove 70% of parameters while maintaining accuracy?"
+        },
+        "18": {
+            "name": "Caching",
+            "description": "KV caching for transformer inference optimization",
+            "test_file": "checkpoint_18_caching.py",
+            "capability": "Can I transform O(N²) to O(N) complexity with intelligent caching?"
+        },
+        "19": {
+            "name": "Competition",
+            "description": "TinyMLPerf competition system for optimization mastery",
+            "test_file": "checkpoint_19_competition.py",
+            "capability": "Can I build competition-grade benchmarking infrastructure?"
+        },
+        "20": {
+            "name": "TinyGPT Capstone",
+            "description": "Complete language model demonstrating ML systems mastery",
+            "test_file": "checkpoint_20_capstone.py",
+            "capability": "Can I build a complete language model that generates coherent text from scratch?"
         }
     }
     
@@ -279,7 +309,7 @@ class CheckpointCommand(BaseCommand):
         test_parser.add_argument(
             'checkpoint_id',
             nargs='?',
-            help='Checkpoint ID to test (00-15, current checkpoint if not specified)'
+            help='Checkpoint ID to test (00-20, current checkpoint if not specified)'
         )
         
         # Run command (new)
@@ -289,7 +319,7 @@ class CheckpointCommand(BaseCommand):
         )
         run_parser.add_argument(
             'checkpoint_id',
-            help='Checkpoint ID to run (00-15)'
+            help='Checkpoint ID to run (00-20)'
         )
         run_parser.add_argument(
             '--verbose', '-v',
@@ -329,13 +359,12 @@ class CheckpointCommand(BaseCommand):
         console = get_console()
         console.print(Panel(
             "[bold cyan]TinyTorch Checkpoint System[/bold cyan]\n\n"
-            "[bold]Track your progress through 16 capability checkpoints:[/bold]\n"
-            "  00: Environment    → Development setup\n"
-            "  01: Foundation     → Tensor operations\n"
-            "  02: Intelligence   → Activation functions\n"
-            "  03: Components     → Neural building blocks\n"
-            "  04: Networks       → Multi-layer networks\n"
-            "  05-15: Learning → Attention → Training → Deployment\n\n"
+            "[bold]Track your progress through 20 capability checkpoints:[/bold]\n"
+            "  00-04: Foundation  → Environment, tensors, networks\n"
+            "  05-09: Architecture → Spatial, attention, autograd, optimization\n"
+            "  10-14: Systems     → Training, kernels, benchmarking, deployment\n"
+            "  15-19: Optimization → Acceleration, quantization, compression, caching, competition\n"
+            "  20: Capstone       → Complete TinyGPT language model\n\n"
             "[bold]Available Commands:[/bold]\n"
             "  [green]status[/green]     - Show current progress and capabilities\n"
             "  [green]timeline[/green]   - Visual progress timeline\n"
@@ -345,9 +374,9 @@ class CheckpointCommand(BaseCommand):
             "[bold]Examples:[/bold]\n"
             "  [dim]tito checkpoint status --detailed[/dim]\n"
             "  [dim]tito checkpoint timeline --horizontal[/dim]\n"
-            "  [dim]tito checkpoint test 01[/dim]\n"
-            "  [dim]tito checkpoint run 00 --verbose[/dim]",
-            title="Checkpoint System",
+            "  [dim]tito checkpoint test 16[/dim]\n"
+            "  [dim]tito checkpoint run 20 --verbose[/dim]",
+            title="Checkpoint System (20 Checkpoints)",
             border_style="bright_blue"
         ))
         return 0
@@ -472,7 +501,7 @@ class CheckpointCommand(BaseCommand):
             
         else:
             # Vertical timeline (tree structure)
-            tree = Tree("ML Systems Engineering Journey (16 Checkpoints)")
+            tree = Tree("ML Systems Engineering Journey (20 Checkpoints)")
             
             for checkpoint_id, checkpoint_data in progress_data["checkpoints"].items():
                 checkpoint = checkpoint_data["checkpoint"]

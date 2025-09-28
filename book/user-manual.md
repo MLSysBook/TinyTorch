@@ -59,7 +59,7 @@ tito help --interactive
 
 **✅ Success Indicators:**
 - `tito system doctor` shows all green checkmarks
-- `tito checkpoint status` displays 16 learning checkpoints
+- `tito checkpoint status` displays 21 learning checkpoints
 - `tito demo quick` runs without errors
 
 ---

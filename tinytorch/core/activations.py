@@ -91,7 +91,9 @@ class ReLU:
                 if x.requires_grad:
                     # ReLU gradient: 1 where input > 0, 0 elsewhere
                     relu_mask = (input_data > 0).astype(np.float32)
-                    grad_input_data = grad_output.data.data * relu_mask
+                    # Safely extract gradient data - handle both Variable and memoryview
+                    grad_data = grad_output.data.data if hasattr(grad_output.data, 'data') else grad_output.data
+                    grad_input_data = grad_data * relu_mask
                     grad_input = Variable(grad_input_data)
                     x.backward(grad_input)
             
@@ -171,7 +173,9 @@ class Sigmoid:
                 if x.requires_grad:
                     # Sigmoid gradient: sigmoid(x) * (1 - sigmoid(x))
                     sigmoid_grad = output_data * (1 - output_data)
-                    grad_input_data = grad_output.data.data * sigmoid_grad
+                    # Safely extract gradient data - handle both Variable and memoryview
+                    grad_data = grad_output.data.data if hasattr(grad_output.data, 'data') else grad_output.data
+                    grad_input_data = grad_data * sigmoid_grad
                     grad_input = Variable(grad_input_data)
                     x.backward(grad_input)
             
@@ -251,7 +255,9 @@ class Tanh:
                 if x.requires_grad:
                     # Tanh gradient: 1 - tanh²(x)
                     tanh_grad = 1 - output_data ** 2
-                    grad_input_data = grad_output.data.data * tanh_grad
+                    # Safely extract gradient data - handle both Variable and memoryview
+                    grad_data = grad_output.data.data if hasattr(grad_output.data, 'data') else grad_output.data
+                    grad_input_data = grad_data * tanh_grad
                     grad_input = Variable(grad_input_data)
                     x.backward(grad_input)
             
@@ -346,7 +352,8 @@ class Softmax:
                 if x.requires_grad:
                     # Softmax gradient: for each element i,j: ∂f_i/∂x_j = f_i * (δ_ij - f_j)
                     # For vector input, this becomes: grad_input = softmax * (grad_output - (softmax * grad_output).sum(keepdims=True))
-                    grad_out_data = grad_output.data.data
+                    # Safely extract gradient data - handle both Variable and memoryview
+                    grad_out_data = grad_output.data.data if hasattr(grad_output.data, 'data') else grad_output.data
                     softmax_grad_sum = np.sum(output_data * grad_out_data, axis=-1, keepdims=True)
                     grad_input_data = output_data * (grad_out_data - softmax_grad_sum)
                     grad_input = Variable(grad_input_data)
