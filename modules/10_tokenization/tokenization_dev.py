@@ -394,7 +394,7 @@ def test_unit_char_tokenizer():
     assert tokenizer.vocab_size >= 99, "Should have at least 99 tokens (4 special + 95 ASCII)"
     
     # Test unknown character handling
-    unknown_tokens = tokenizer.encode("ROCKET", add_special_tokens=False)  # Emoji not in ASCII
+    unknown_tokens = tokenizer.encode("🚀", add_special_tokens=False)  # Emoji not in ASCII
     assert unknown_tokens[0] == tokenizer.char_to_idx['<UNK>'], "Should use UNK token for unknown chars"
     
     # Test padding
