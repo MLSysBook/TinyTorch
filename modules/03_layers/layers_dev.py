@@ -65,7 +65,7 @@ import os
 if 'tinytorch' in sys.modules:
     # Production: Import from installed package
     # When tinytorch is installed as a package, use the packaged version
-    from tinytorch.core.tensor import Tensor, Parameter
+    from tinytorch.core.tensor import Tensor
 else:
     # Development: Import from local module files
     # During development, we need to import directly from the source files
@@ -73,9 +73,21 @@ else:
     tensor_module_path = os.path.join(os.path.dirname(__file__), '..', '01_tensor')
     sys.path.insert(0, tensor_module_path)
     try:
-        from tensor_dev import Tensor, Parameter
+        from tensor_dev import Tensor
     finally:
         sys.path.pop(0)  # Always clean up path to avoid side effects
+
+# For now, Parameter is just an alias for Tensor with additional metadata
+class Parameter(Tensor):
+    """
+    A kind of Tensor that is to be considered a module parameter.
+
+    This is a simple wrapper around Tensor that marks it as a trainable parameter.
+    In more advanced implementations, this could include additional metadata
+    like whether the parameter requires gradients, initialization schemes, etc.
+    """
+    def __init__(self, data):
+        super().__init__(data)
 
 # In[ ]:
 
@@ -93,7 +105,7 @@ print("Ready to build neural network layers!")
 ```
 Individual Neuron:                Neural Network Layer:
     x₁ --○ w₁                    +---------------------+
-          \                     |   Input Vector      |
+          \\                     |   Input Vector      |
     x₂ --○ w₂ --> Sum --> f() --> y |   [x₁, x₂, x₃]    |
           /                     +---------------------+
     x₃ --○ w₃                              v
@@ -301,178 +313,70 @@ class Module:
 # THINK PREDICTION: How many parameters would a simple 3-layer network have?
 # Write your guess here: _______
 
-# 🔍 SYSTEMS ANALYSIS: Neural Network Layer Performance and Scaling
+# 🔍 SYSTEMS ANALYSIS: Layer Performance and Scaling
 def analyze_layer_performance():
-    """Consolidated analysis of layer performance and scaling characteristics."""
+    """Analyze layer performance and scaling characteristics."""
+    print("📊 LAYER SYSTEMS ANALYSIS")
+    print("Understanding how neural network layers scale and perform...")
+
     try:
-        print("📊 Layer Systems Analysis:")
-        print(f"  • Parameter Scaling: Linear layers scale O(input_size × output_size) - quadratic growth")
-        print(f"  • Matrix Multiplication: O(M×N×K) complexity - GPU acceleration essential for large layers")
-        print(f"  • Memory Usage: Each parameter uses 4 bytes (float32) - 1M params = 4MB memory")
-        print(f"  • Architecture Impact: Deep vs wide networks - depth adds expressivity, width adds capacity")
-        print(f"  • Production Reality: Modern networks (GPT-3: 175B params) require distributed training")
+        # Parameter scaling analysis
+        print("\n1. Parameter Scaling:")
+        layer_sizes = [(784, 256), (256, 128), (128, 10)]
+        total_params = 0
+
+        for i, (input_size, output_size) in enumerate(layer_sizes):
+            weights = input_size * output_size
+            biases = output_size
+            layer_params = weights + biases
+            total_params += layer_params
+            print(f"   Layer {i+1} ({input_size}→{output_size}): {layer_params:,} params")
+
+        print(f"   Total network: {total_params:,} parameters")
+        print(f"   Memory usage: {total_params * 4 / 1024 / 1024:.2f} MB (float32)")
+
+        # Computational complexity
+        print("\n2. Computational Complexity:")
+        batch_size = 32
+        total_flops = 0
+
+        for i, (input_size, output_size) in enumerate(layer_sizes):
+            matmul_flops = 2 * batch_size * input_size * output_size
+            bias_flops = batch_size * output_size
+            layer_flops = matmul_flops + bias_flops
+            total_flops += layer_flops
+            print(f"   Layer {i+1}: {layer_flops:,} FLOPs ({matmul_flops:,} matmul + {bias_flops:,} bias)")
+
+        print(f"   Total forward pass: {total_flops:,} FLOPs")
+
+        # Scaling patterns
+        print("\n3. Scaling Insights:")
+        print("   • Parameter growth: O(input_size × output_size) - quadratic")
+        print("   • Computation: O(batch × input × output) - linear in each dimension")
+        print("   • Memory: Parameters + activations scale differently")
+        print("   • Bottlenecks: Large layers dominate both memory and compute")
+
+        print("\n💡 KEY INSIGHT: Layer size quadratically affects parameters but linearly affects computation per sample")
 
     except Exception as e:
-        print(f"⚠️ Analysis failed: {e}")
+        print(f"⚠️ Analysis error: {e}")
 
 # In[ ]:
 
 # %% [markdown]
 """
-## Part 2: Matrix Multiplication - The Heart of Neural Networks
+### ✅ IMPLEMENTATION CHECKPOINT: Module Base Class Complete
 
-Every neural network operation ultimately reduces to matrix multiplication. Let's build the foundation that powers everything from simple perceptrons to transformers.
+You've built the foundation that enables automatic parameter management across all neural network components!
+
+🤔 **PREDICTION**: How many parameters would a simple 3-layer network have?
+Network: 784 → 256 → 128 → 10
+Your guess: _______
 """
-
-#| export
-def matmul(a: Tensor, b: Tensor) -> Tensor:
-    """
-    Matrix multiplication for tensors using explicit loops.
-    
-    This implementation uses triple-nested loops for educational understanding
-    of the fundamental operations. Module 15 will show the optimization progression
-    from loops -> blocking -> vectorized operations.
-    
-    Args:
-        a: Left tensor (shape: ..., m, k)
-        b: Right tensor (shape: ..., k, n)
-    
-    Returns:
-        Result tensor (shape: ..., m, n)
-    
-    TODO: Implement matrix multiplication using explicit loops.
-    
-    STEP-BY-STEP IMPLEMENTATION:
-    1. Extract numpy arrays from both tensors using .data
-    2. Check tensor shapes for compatibility
-    3. Use triple-nested loops to show every operation
-    4. Wrap result in a new Tensor and return
-    
-    LEARNING CONNECTIONS:
-    - This is the core operation in Dense layers: output = input @ weights
-    - Shows the fundamental computation before optimization
-    - Module 15 will demonstrate the progression to high-performance implementations
-    - Understanding loops helps appreciate vectorization and GPU parallelization
-    
-    EDUCATIONAL APPROACH:
-    - Intentionally simple for understanding, not performance
-    - Makes every multiply-add operation explicit
-    - Sets up Module 15 to show optimization techniques
-    
-    EXAMPLE:
-    ```python
-    a = Tensor([[1, 2], [3, 4]])  # shape (2, 2)
-    b = Tensor([[5, 6], [7, 8]])  # shape (2, 2)
-    result = matmul(a, b)
-    # result.data = [[19, 22], [43, 50]]
-    ```
-    
-    IMPLEMENTATION HINTS:
-    - Use explicit loops to show every operation
-    - This is educational, not optimized for performance
-    - Module 15 will show the progression to fast implementations
-    """
-    ### BEGIN SOLUTION
-    # Extract numpy arrays from tensors
-    a_data = a.data
-    b_data = b.data
-    
-    # Get dimensions and validate compatibility
-    if len(a_data.shape) != 2 or len(b_data.shape) != 2:
-        raise ValueError("matmul requires 2D tensors")
-    
-    m, k = a_data.shape
-    k2, n = b_data.shape
-    
-    if k != k2:
-        raise ValueError(
-            f"Matrix multiplication requires inner dimensions to match!\n"
-            f"Left matrix: {a_data.shape} (inner dim: {k})\n"
-            f"Right matrix: {b_data.shape} (inner dim: {k2})\n"
-            f"For A @ B, A's columns must equal B's rows."
-        )
-    
-    # Initialize result matrix
-    result = np.zeros((m, n), dtype=a_data.dtype)
-    
-    # Triple nested loops - educational, shows every operation
-    # This is intentionally simple to understand the fundamental computation
-    #
-    # Matrix multiplication visualization:
-    # A (2,3) @ B (3,4) = C (2,4)
-    # 
-    # A = [[a11, a12, a13],     B = [[b11, b12, b13, b14],
-    #      [a21, a22, a23]]          [b21, b22, b23, b24],
-    #                                [b31, b32, b33, b34]]
-    #
-    # C[0,0] = a11*b11 + a12*b21 + a13*b31 (dot product of A's row 0 with B's column 0)
-    #
-    # Module 15 will show the optimization journey:
-    #   Step 1 (here): Educational loops - slow but clear
-    #   Step 2: Loop blocking for cache efficiency  
-    #   Step 3: Vectorized operations with NumPy
-    #   Step 4: GPU acceleration and BLAS libraries
-    for i in range(m):                      # For each row in result
-        for j in range(n):                  # For each column in result
-            for k_idx in range(k):          # Dot product: sum over inner dimension
-                result[i, j] += a_data[i, k_idx] * b_data[k_idx, j]
-    
-    # Return new Tensor with result
-    return Tensor(result)
-    ### END SOLUTION
-
-# In[ ]:
-
-# TEST Unit Test: Matrix Multiplication
-def test_unit_matmul():
-    """Test matrix multiplication implementation."""
-    print("TEST Testing Matrix Multiplication...")
-    
-    # Test case 1: Simple 2x2 matrices
-    a = Tensor([[1, 2], [3, 4]])
-    b = Tensor([[5, 6], [7, 8]])
-    result = matmul(a, b)
-    expected = np.array([[19, 22], [43, 50]])
-    
-    assert np.allclose(result.data, expected), f"Expected {expected}, got {result.data}"
-    print("PASS 2x2 matrix multiplication")
-    
-    # Test case 2: Non-square matrices
-    a = Tensor([[1, 2, 3], [4, 5, 6]])  # 2x3
-    b = Tensor([[7, 8], [9, 10], [11, 12]])  # 3x2
-    result = matmul(a, b)
-    expected = np.array([[58, 64], [139, 154]])
-    
-    assert np.allclose(result.data, expected), f"Expected {expected}, got {result.data}"
-    print("PASS Non-square matrix multiplication")
-    
-    # Test case 3: Vector-matrix multiplication
-    a = Tensor([[1, 2, 3]])  # 1x3 (row vector)
-    b = Tensor([[4], [5], [6]])  # 3x1 (column vector)
-    result = matmul(a, b)
-    expected = np.array([[32]])  # 1*4 + 2*5 + 3*6 = 32
-    
-    assert np.allclose(result.data, expected), f"Expected {expected}, got {result.data}"
-    print("PASS Vector-matrix multiplication")
-    
-    print("CELEBRATE All matrix multiplication tests passed!")
-
-test_unit_matmul()
-
-# In[ ]:
-
-# PASS IMPLEMENTATION CHECKPOINT: Matrix multiplication complete
-
-# THINK PREDICTION: How many operations does matrix multiplication take?
-# For two N*N matrices, your guess: _______
-
-# Matrix multiplication analysis consolidated into analyze_layer_performance() above
-
-# Analysis consolidated into analyze_layer_performance() above
 
 # %% [markdown]
 """
-## Part 3: Linear Layer - The Fundamental Neural Network Component
+## Part 2: Linear Layer - The Fundamental Neural Network Component
 
 Linear layers (also called Dense or Fully Connected layers) are the building blocks of neural networks.
 """
@@ -619,7 +523,7 @@ class Linear(Module):
         x_data = x.data
         weights_data = self.weights.data
         
-        # Matrix multiplication: input @ weights
+        # Matrix multiplication using NumPy's optimized implementation
         output_data = np.dot(x_data, weights_data)
         
         # Add bias if it exists
@@ -998,144 +902,25 @@ test_unit_flatten()
 
 # %% [markdown]
 """
-## NBGrader Assessment Questions
+## 📦 Where This Code Lives in the Final Package
 
-⭐ QUESTION 1: Parameter Counting Challenge
+**Learning Side:** You work in modules/03_layers/layers_dev.py
+**Building Side:** Code exports to tinytorch.core.layers
 
-You're building a Multi-Layer Perceptron (MLP) for MNIST digit classification.
+```python
+# Final package structure:
+from tinytorch.core.layers import Module, Linear, Sequential, Flatten  # This module
+from tinytorch.core.tensor import Tensor, Parameter  # Foundation (always needed)
+```
 
-Network architecture:
-- Input: 784 features (28*28 pixel images, flattened)
-- Hidden layer 1: 256 neurons with ReLU activation
-- Hidden layer 2: 128 neurons with ReLU activation
-- Output layer: 10 neurons (one per digit class)
-
-Calculate the total number of trainable parameters in this network.
-
-Show your work:
-- Layer 1 parameters: _____
-- Layer 2 parameters: _____
-- Layer 3 parameters: _____
-- Total parameters: _____
-
-Hint: Remember that each Linear layer has both weights and biases!
+**Why this matters:**
+- **Learning:** Complete layer system in one focused module for deep understanding
+- **Production:** Proper organization like PyTorch's torch.nn with all core components together
+- **Consistency:** All layer operations and parameter management in core.layers
+- **Integration:** Works seamlessly with tensors for complete neural network building
 """
 
-# ### BEGIN SOLUTION
-# Layer 1: Linear(784, 256)
-# - Weights: 784 * 256 = 200,704
-# - Biases: 256
-# - Subtotal: 200,960
-
-# Layer 2: Linear(256, 128)  
-# - Weights: 256 * 128 = 32,768
-# - Biases: 128
-# - Subtotal: 32,896
-
-# Layer 3: Linear(128, 10)
-# - Weights: 128 * 10 = 1,280
-# - Biases: 10
-# - Subtotal: 1,290
-
-# Total: 200,960 + 32,896 + 1,290 = 235,146 parameters
-# ### END SOLUTION
-
-# ⭐ QUESTION 2: Memory Analysis Challenge
-"""
-Compare the memory requirements of two different MLP architectures for the same task:
-
-Architecture A (Wide): 784 -> 512 -> 512 -> 10
-Architecture B (Deep): 784 -> 128 -> 128 -> 128 -> 128 -> 10
-
-For each architecture, calculate:
-1. Total number of parameters
-2. Memory usage for parameters (assume float32 = 4 bytes per parameter)
-3. Which architecture would you choose for a mobile device with limited memory?
-
-Architecture A calculations:
-- Total parameters: _____
-- Memory usage: _____ MB
-
-Architecture B calculations:  
-- Total parameters: _____
-- Memory usage: _____ MB
-
-Mobile device choice and reasoning: _____
-"""
-
-# ### BEGIN SOLUTION
-# Architecture A (Wide): 784 -> 512 -> 512 -> 10
-# - Layer 1: (784 * 512) + 512 = 401,920
-# - Layer 2: (512 * 512) + 512 = 262,656  
-# - Layer 3: (512 * 10) + 10 = 5,130
-# - Total: 669,706 parameters
-# - Memory: 669,706 * 4 bytes = 2.68 MB
-
-# Architecture B (Deep): 784 -> 128 -> 128 -> 128 -> 128 -> 10
-# - Layer 1: (784 * 128) + 128 = 100,480
-# - Layer 2: (128 * 128) + 128 = 16,512
-# - Layer 3: (128 * 128) + 128 = 16,512  
-# - Layer 4: (128 * 128) + 128 = 16,512
-# - Layer 5: (128 * 10) + 10 = 1,290
-# - Total: 151,306 parameters
-# - Memory: 151,306 * 4 bytes = 0.61 MB
-
-# Mobile choice: Architecture B (Deep)
-# Reasoning: Uses 4.4x less memory while maintaining similar representational capacity through depth
-# ### END SOLUTION
-
-# ⭐ QUESTION 3: FLOPS Calculation Challenge
-"""
-Calculate the computational cost (in FLOPs) for a forward pass through this network:
-
-Input batch: 32 samples * 784 features
-Network: 784 -> 256 -> 128 -> 10
-
-For each layer, calculate:
-- Matrix multiplication FLOPs: 2 * batch_size * input_size * output_size
-- Bias addition FLOPs: batch_size * output_size
-- Total FLOPs per layer
-
-Layer 1 (784 -> 256):
-- MatMul FLOPs: _____
-- Bias FLOPs: _____
-- Layer total: _____
-
-Layer 2 (256 -> 128):
-- MatMul FLOPs: _____  
-- Bias FLOPs: _____
-- Layer total: _____
-
-Layer 3 (128 -> 10):
-- MatMul FLOPs: _____
-- Bias FLOPs: _____
-- Layer total: _____
-
-Network total FLOPs: _____
-"""
-
-# ### BEGIN SOLUTION
-# Batch size = 32 samples
-
-# Layer 1 (784 -> 256):
-# - MatMul FLOPs: 2 * 32 * 784 * 256 = 12,582,912
-# - Bias FLOPs: 32 * 256 = 8,192
-# - Layer total: 12,591,104
-
-# Layer 2 (256 -> 128):
-# - MatMul FLOPs: 2 * 32 * 256 * 128 = 2,097,152
-# - Bias FLOPs: 32 * 128 = 4,096  
-# - Layer total: 2,101,248
-
-# Layer 3 (128 -> 10):
-# - MatMul FLOPs: 2 * 32 * 128 * 10 = 81,920
-# - Bias FLOPs: 32 * 10 = 320
-# - Layer total: 82,240
-
-# Network total: 12,591,104 + 2,101,248 + 82,240 = 14,774,592 FLOPs (~14.8 MFLOPS)
-# ### END SOLUTION
-
-# In[ ]:
+# %%
 
 # %% [markdown]
 """
@@ -1218,41 +1003,38 @@ demonstrate_complete_networks()
 ## Testing Framework
 """
 
-def test_unit_all():
+def test_module():
     """Run complete module validation."""
-    print("TEST Running all unit tests...")
-    
+    print("🧪 TESTING ALL LAYER COMPONENTS")
+    print("=" * 40)
+
     # Call every individual test function
-    test_unit_matmul()
     test_unit_linear()
     test_unit_parameter_management()
     test_unit_sequential()
     test_unit_flatten()
-    
-    print("PASS All tests passed! Module ready for integration.")
+
+    print("\n✅ ALL TESTS PASSED! Layer module ready for integration.")
 
 # In[ ]:
 
 if __name__ == "__main__":
-    print("FIRE TinyTorch Layers Module - Complete Foundation Demo")
-    print("=" * 60)
+    print("🚀 TINYTORCH LAYERS MODULE")
+    print("=" * 50)
 
-    # Test all core components
-    print("\nTEST Testing All Core Components:")
-    test_unit_all()
+    # Test all components
+    test_module()
 
-    # Single consolidated analysis for foundation module
+    # Systems analysis
+    print("\n" + "=" * 50)
     analyze_layer_performance()
 
-    print("\n" + "="*60)
+    # Complete demo
+    print("\n" + "=" * 50)
     demonstrate_complete_networks()
-    
-    print("\nCELEBRATE Complete neural network foundation ready!")
-    print("   PASS Module system for parameter management")
-    print("   PASS Linear layers for transformations")
-    print("   PASS Sequential networks for composition")
-    print("   PASS Flatten operations for tensor reshaping")
-    print("   PASS All components tested and integrated!")
+
+    print("\n🎉 LAYERS MODULE COMPLETE!")
+    print("✅ Ready for advanced architectures and training!")
 
 # %% [markdown]
 """
