@@ -242,6 +242,38 @@ class Variable:
     def __matmul__(self, other):
         """Matrix multiplication with gradient tracking."""
         return matmul(self, other)
+
+    @staticmethod
+    def sum(variable):
+        """
+        Sum all elements of a Variable, maintaining gradient tracking.
+
+        This is essential for creating scalar losses from multi-element results.
+        Unlike extracting scalar values, this preserves the computational graph.
+
+        Args:
+            variable: Variable to sum
+
+        Returns:
+            Variable containing the sum with gradient tracking
+        """
+        # Forward pass: compute sum
+        sum_data = np.sum(variable.data.data)
+
+        # Determine if result requires gradients
+        requires_grad = variable.requires_grad
+
+        # Define backward function for gradient propagation
+        def grad_fn(gradient):
+            """Propagate gradients back to all elements."""
+            if variable.requires_grad:
+                # For sum operation, gradient is broadcast to all elements
+                # Since d(sum)/d(xi) = 1 for all i
+                grad_shape = variable.data.data.shape
+                element_grad = np.full(grad_shape, gradient)
+                variable.backward(element_grad)
+
+        return Variable(sum_data, requires_grad=requires_grad, grad_fn=grad_fn if requires_grad else None)
     ### END SOLUTION
 
 # %% [markdown]

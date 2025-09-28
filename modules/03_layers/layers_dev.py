@@ -77,17 +77,75 @@ else:
     finally:
         sys.path.pop(0)  # Always clean up path to avoid side effects
 
-# For now, Parameter is just an alias for Tensor with additional metadata
-class Parameter(Tensor):
+# CRITICAL FIX: Parameter must be Variable-based for gradient tracking
+class Parameter:
     """
-    A kind of Tensor that is to be considered a module parameter.
+    A trainable parameter that supports automatic differentiation.
 
-    This is a simple wrapper around Tensor that marks it as a trainable parameter.
-    In more advanced implementations, this could include additional metadata
-    like whether the parameter requires gradients, initialization schemes, etc.
+    This creates a Variable with requires_grad=True for use as neural network parameters.
+    Essential for gradient-based optimization of weights and biases.
+
+    IMPORTANT: Parameters must participate in autograd for training to work.
     """
     def __init__(self, data):
-        super().__init__(data)
+        # Import Variable locally to avoid circular imports
+        try:
+            from tinytorch.core.autograd import Variable
+        except ImportError:
+            # For development, import from local module
+            import sys
+            import os
+            sys.path.append(os.path.join(os.path.dirname(__file__), '..', '05_autograd'))
+            from autograd_dev import Variable
+
+        # Create Variable with gradient tracking enabled
+        if isinstance(data, Variable):
+            self._variable = data
+            if not data.requires_grad:
+                # Ensure parameters always require gradients
+                self._variable.requires_grad = True
+        else:
+            # Convert data to Variable with gradient tracking
+            self._variable = Variable(data, requires_grad=True)
+
+    def __getattr__(self, name):
+        """Delegate all attribute access to the underlying Variable."""
+        return getattr(self._variable, name)
+
+    def __setattr__(self, name, value):
+        """Handle setting attributes."""
+        if name == '_variable':
+            super().__setattr__(name, value)
+        else:
+            # Delegate to underlying Variable
+            setattr(self._variable, name, value)
+
+    @property
+    def data(self):
+        """Access to underlying data."""
+        return self._variable.data
+
+    @property
+    def grad(self):
+        """Access to gradient."""
+        return self._variable.grad
+
+    @grad.setter
+    def grad(self, value):
+        """Set gradient."""
+        self._variable.grad = value
+
+    @property
+    def requires_grad(self):
+        """Whether this parameter requires gradients."""
+        return self._variable.requires_grad
+
+    def backward(self, gradient=None):
+        """Backpropagate gradients."""
+        return self._variable.backward(gradient)
+
+    def __repr__(self):
+        return f"Parameter({self._variable})"
 
 # In[ ]:
 

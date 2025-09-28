@@ -257,6 +257,36 @@ class Tensor:
         """
         return self.matmul(other)
 
+    def __getitem__(self, key):
+        """
+        Access tensor elements using subscript notation: tensor[key]
+
+        Supports all NumPy indexing patterns:
+        - Single index: tensor[0]
+        - Multiple indices: tensor[0, 1]
+        - Slices: tensor[0:2, 1:3]
+        - Fancy indexing: tensor[[0, 2], [1, 3]]
+
+        Args:
+            key: Index or slice specification
+
+        Returns:
+            Scalar, array value, or new Tensor with subset of data
+
+        Examples:
+            tensor = Tensor([[1, 2], [3, 4]])
+            tensor[0, 0]  # Returns 1 (scalar)
+            tensor[0]     # Returns Tensor([1, 2])
+            tensor[0:1, 0:1]  # Returns Tensor([[1]])
+        """
+        result = self._data[key]
+
+        # If result is a scalar, return the scalar value directly
+        if np.isscalar(result):
+            return result
+
+        # If result is an array, wrap it in a Tensor
+        return Tensor(result)
 
     def reshape(self, *shape: int) -> 'Tensor':
         """

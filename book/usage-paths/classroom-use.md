@@ -1,5 +1,10 @@
 # TinyTorch for Instructors: Complete ML Systems Course
 
+<div style="background: #e3f2fd; border: 1px solid #2196f3; padding: 1rem; border-radius: 0.5rem; margin: 1rem 0;">
+<strong>📖 Course Overview & Benefits:</strong> This page explains WHAT TinyTorch offers for ML education and WHY it's effective.<br>
+<strong>📖 For Setup & Daily Workflow:</strong> See <a href="../instructor-guide.html">Technical Instructor Guide</a> for step-by-step NBGrader setup and semester management.
+</div>
+
 <div style="background: #f8f9fa; border: 1px solid #dee2e6; padding: 2rem; border-radius: 0.5rem; text-align: center; margin: 2rem 0;">
 <h2 style="margin: 0 0 1rem 0; color: #495057;">🏫 Turn-Key ML Systems Education</h2>
 <p style="font-size: 1.1rem; margin: 0; color: #6c757d;">Transform students from framework users to systems engineers</p>

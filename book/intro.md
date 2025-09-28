@@ -10,6 +10,12 @@ TinyTorch is an educational ML systems course where you **build complete neural 
 
 **Core Learning Approach**: Build → Profile → Optimize. You'll implement each system component, measure its performance characteristics, and understand the engineering trade-offs that shape production ML systems.
 
+## The ML Evolution Story You'll Experience
+
+Journey through 40+ years of ML breakthroughs by building each era yourself: **1980s neural foundations** → **1990s backpropagation** → **2012 CNN revolution** → **2017 transformer unification** → **2024 production optimization**. Each module teaches both the breakthrough AND the systems engineering that made it possible.
+
+**📖 See [Complete ML Evolution Timeline](chapters/00-introduction.html#the-ml-evolution-story-youll-experience)** for the full historical context and technical progression.
+
 ## Why Build Instead of Use?
 
 The difference between using a library and understanding a system is the difference between being limited by tools and being empowered to create them. When you build from scratch, you transform from a framework user into a systems engineer:
@@ -164,7 +170,7 @@ You master modern LLM optimizations
 Whether you're just exploring or ready to dive in, here are helpful resources: **📖 See [Essential Commands](tito-essentials.html)** for complete setup and command reference, or **📖 See [Complete Course Structure](chapters/00-introduction.html)** for detailed module descriptions.
 
 **Additional Resources**:
-- **[Progress Tracking](learning-progress.html)** - Monitor your learning journey with 16 capability checkpoints
+- **[Progress Tracking](learning-progress.html)** - Monitor your learning journey with 21 capability checkpoints
 - **[Testing Framework](testing-framework.html)** - Understand our comprehensive validation system
 - **[Documentation & Guides](resources.html)** - Complete technical documentation and tutorials
 

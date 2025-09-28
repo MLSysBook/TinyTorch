@@ -60,16 +60,16 @@ means = x.mean(axis=0)      # Mean along axis
 
 ### Prerequisites Check
 ```bash
-tito test --module setup  # Should pass ✅
+tito checkpoint test 00  # Environment setup should pass ✅
 ```
 
 ### Development Workflow
 ```bash
 # Navigate to tensor module
-cd modules/source/02_tensor
+cd modules/01_tensor
 
 # Open development file
-jupyter notebook tensor_dev.ipynb
+jupyter lab tensor_dev.py
 # OR edit directly: code tensor_dev.py
 ```
 
@@ -92,11 +92,11 @@ print(f"Sum: {x.sum()}")    # Should be 10.0
 
 ### Module Tests
 ```bash
-# Export your tensor implementation
-tito export
+# Complete and export your tensor implementation
+tito module complete 01_tensor
 
-# Test your implementation
-tito test --module tensor
+# Test specific checkpoint
+tito checkpoint test 01  # Foundation checkpoint
 ```
 
 ### Manual Verification

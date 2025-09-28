@@ -1021,7 +1021,7 @@ class LeaderboardCommand(BaseCommand):
             ]
         else:  # tinygpt or other tasks
             return [
-                {"username": "language_lover", "accuracy": 45.2, "model": "TinyGPT-v1", "country": "USA", "recent": True, "checkpoint": "16"},
+                {"username": "language_lover", "accuracy": 45.2, "model": "TinyGPT-v1", "country": "USA", "recent": True, "checkpoint": "15"},
                 {"username": "transformer_fan", "accuracy": 32.1, "model": "MiniTransformer", "country": "UK", "recent": False, "checkpoint": "14"},
                 {"username": "nlp_explorer", "accuracy": 18.7, "model": "BasicGPT", "country": "Germany", "recent": True, "checkpoint": "13"},
             ]

@@ -183,16 +183,28 @@ class Variable:
             if self.grad is None:
                 self.grad = gradient
             else:
-                # Accumulate gradients
-                self.grad = Variable(self.grad.data.data + gradient.data.data)
+                # Accumulate gradients - handle memoryview safely
+                grad_data = self.grad.data.data if hasattr(self.grad.data, 'data') else self.grad.data
+                gradient_data = gradient.data.data if hasattr(gradient.data, 'data') else gradient.data
+
+                # Convert memoryview to numpy array if needed
+                if isinstance(grad_data, memoryview):
+                    grad_data = np.array(grad_data)
+                if isinstance(gradient_data, memoryview):
+                    gradient_data = np.array(gradient_data)
+
+                self.grad = Variable(grad_data + gradient_data)
             
             # CRITICAL FIX: Propagate gradients back to source Tensor (Parameters)
             if self._source_tensor is not None and self._source_tensor.requires_grad:
                 if self._source_tensor.grad is None:
                     self._source_tensor.grad = gradient.data
                 else:
-                    # Accumulate gradients in the source tensor
-                    self._source_tensor.grad = Tensor(self._source_tensor.grad.data + gradient.data.data)
+                    # Accumulate gradients in the source tensor - handle memoryview safely
+                    gradient_data = gradient.data.data if hasattr(gradient.data, 'data') else gradient.data
+                    if isinstance(gradient_data, memoryview):
+                        gradient_data = np.array(gradient_data)
+                    self._source_tensor.grad = Tensor(self._source_tensor.grad.data + gradient_data)
         
         if self.grad_fn is not None:
             self.grad_fn(gradient)
@@ -201,7 +213,39 @@ class Variable:
     def zero_grad(self) -> None:
         """Reset gradients to zero."""
         self.grad = None
-    
+
+    @staticmethod
+    def sum(variable):
+        """
+        Sum all elements of a Variable, maintaining gradient tracking.
+
+        This is essential for creating scalar losses from multi-element results.
+        Unlike extracting scalar values, this preserves the computational graph.
+
+        Args:
+            variable: Variable to sum
+
+        Returns:
+            Variable containing the sum with gradient tracking
+        """
+        # Forward pass: compute sum
+        sum_data = np.sum(variable.data.data)
+
+        # Determine if result requires gradients
+        requires_grad = variable.requires_grad
+
+        # Define backward function for gradient propagation
+        def grad_fn(gradient):
+            """Propagate gradients back to all elements."""
+            if variable.requires_grad:
+                # For sum operation, gradient is broadcast to all elements
+                # Since d(sum)/d(xi) = 1 for all i
+                grad_shape = variable.data.data.shape
+                element_grad = np.full(grad_shape, gradient.data.data)
+                variable.backward(Variable(element_grad))
+
+        return Variable(sum_data, requires_grad=requires_grad, grad_fn=grad_fn if requires_grad else None)
+
     def numpy(self) -> np.ndarray:
         """
         Convert Variable to NumPy array - Universal data extraction interface.
@@ -394,9 +438,23 @@ def multiply(a: Union[Variable, float, int], b: Union[Variable, float, int]) -> 
     def grad_fn(grad_output):
         # Product rule: d(xy)/dx = y, d(xy)/dy = x
         if a.requires_grad:
-            a.backward(Variable(grad_output.data.data * b.data.data))
+            # Safely extract gradient data - handle memoryview
+            grad_data = grad_output.data.data if hasattr(grad_output.data, 'data') else grad_output.data
+            b_data = b.data.data if hasattr(b.data, 'data') else b.data
+            if isinstance(grad_data, memoryview):
+                grad_data = np.array(grad_data)
+            if isinstance(b_data, memoryview):
+                b_data = np.array(b_data)
+            a.backward(Variable(grad_data * b_data))
         if b.requires_grad:
-            b.backward(Variable(grad_output.data.data * a.data.data))
+            # Safely extract gradient data - handle memoryview
+            grad_data = grad_output.data.data if hasattr(grad_output.data, 'data') else grad_output.data
+            a_data = a.data.data if hasattr(a.data, 'data') else a.data
+            if isinstance(grad_data, memoryview):
+                grad_data = np.array(grad_data)
+            if isinstance(a_data, memoryview):
+                a_data = np.array(a_data)
+            b.backward(Variable(grad_data * a_data))
     
     # Return new Variable with gradient function
     requires_grad = a.requires_grad or b.requires_grad
