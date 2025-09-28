@@ -1,42 +1,52 @@
-#!/usr/bin/env python
-# coding: utf-8
+# ---
+# jupyter:
+#   jupytext:
+#     text_representation:
+#       extension: .py
+#       format_name: percent
+#       format_version: '1.3'
+#       jupytext_version: 1.17.1
+# ---
 
-# # Layers - Building Neural Network Architectures
+# %% [markdown]
+"""
+# Layers - Building Neural Network Architectures
 
-# Welcome to Layers! You'll implement the essential building blocks that compose into complete neural network architectures.
+Welcome to Layers! You'll implement the essential building blocks that compose into complete neural network architectures.
 
-# ## 🔗 Building on Previous Learning
-# **What You Built Before**:
-# - Module 02 (Tensor): N-dimensional arrays with shape management and broadcasting
-# - Module 03 (Activations): ReLU and Softmax functions providing nonlinear intelligence
+## 🔗 Building on Previous Learning
+**What You Built Before**:
+- Module 02 (Tensor): N-dimensional arrays with shape management and broadcasting
+- Module 03 (Activations): ReLU and Softmax functions providing nonlinear intelligence
 
-# **What's Working**: You can create tensors and apply nonlinear transformations for complex pattern learning!
+**What's Working**: You can create tensors and apply nonlinear transformations for complex pattern learning!
 
-# **The Gap**: You have data structures and nonlinear functions, but no way to combine them into trainable neural network architectures.
+**The Gap**: You have data structures and nonlinear functions, but no way to combine them into trainable neural network architectures.
 
-# **This Module's Solution**: Implement Linear layers, Module composition patterns, and Sequential networks - the architectural foundations enabling everything from MLPs to transformers.
+**This Module's Solution**: Implement Linear layers, Module composition patterns, and Sequential networks - the architectural foundations enabling everything from MLPs to transformers.
 
-# **Connection Map**:
-# ```
-# Activations → Layers → Training
-# (intelligence)  (architecture)  (learning)
-# ```
+**Connection Map**:
+```
+Activations → Layers → Training
+(intelligence)  (architecture)  (learning)
+```
 
-# ## Learning Goals
-# - Systems understanding: How layer composition affects memory usage, parameter counts, and computational complexity in neural networks
-# - Core implementation skill: Build complete Module system, Linear transformations, and Sequential composition for scalable architectures  
-# - Pattern/abstraction mastery: Understand how modular design patterns enable building complex networks from simple, reusable components
-# - Framework connections: See how your implementation mirrors PyTorch's nn.Module, nn.Linear, and nn.Sequential - the foundation of all modern ML frameworks
-# - Optimization trade-offs: Learn why proper parameter management and clean abstractions are essential for both performance and maintainability in production systems
+## Learning Goals
+- Systems understanding: How layer composition affects memory usage, parameter counts, and computational complexity in neural networks
+- Core implementation skill: Build complete Module system, Linear transformations, and Sequential composition for scalable architectures
+- Pattern/abstraction mastery: Understand how modular design patterns enable building complex networks from simple, reusable components
+- Framework connections: See how your implementation mirrors PyTorch's nn.Module, nn.Linear, and nn.Sequential - the foundation of all modern ML frameworks
+- Optimization trade-offs: Learn why proper parameter management and clean abstractions are essential for both performance and maintainability in production systems
 
-# ## Build → Use → Reflect
-# 1. **Build**: Complete layer system with Module base class, Linear transformations, Sequential composition, and tensor reshaping operations
-# 2. **Use**: Compose layers into complete neural networks and analyze architectural trade-offs with real parameter counting
-# 3. **Reflect**: How does modular architecture design affect both system scalability and computational efficiency in production ML systems?
+## Build → Use → Reflect
+1. **Build**: Complete layer system with Module base class, Linear transformations, Sequential composition, and tensor reshaping operations
+2. **Use**: Compose layers into complete neural networks and analyze architectural trade-offs with real parameter counting
+3. **Reflect**: How does modular architecture design affect both system scalability and computational efficiency in production ML systems?
 
-# ## Systems Reality Check
-# 💡 **Production Context**: PyTorch's nn.Module system enables all modern neural networks through automatic parameter collection and clean composition patterns
-# ⚡ **Performance Insight**: Layer composition and parameter management patterns determine training speed and memory efficiency - proper abstraction is a systems requirement, not just good design
+## Systems Reality Check
+💡 **Production Context**: PyTorch's nn.Module system enables all modern neural networks through automatic parameter collection and clean composition patterns
+⚡ **Performance Insight**: Layer composition and parameter management patterns determine training speed and memory efficiency - proper abstraction is a systems requirement, not just good design
+"""
 
 # In[ ]:
 
@@ -174,7 +184,7 @@ print("Ready to build neural network layers!")
 # Why contiguous tensors matter in production!
 # ```
 
-# In[ ]:
+# %% nbgrader={"grade": false, "grade_id": "module-base", "solution": true}
 
 # ## Part 1: Module Base Class - The Foundation of Neural Network Architecture
 
@@ -507,7 +517,7 @@ def analyze_matmul_complexity():
 # Run the analysis
 analyze_matmul_complexity()
 
-# In[ ]:
+# %% nbgrader={"grade": false, "grade_id": "linear-layer", "solution": true}
 
 # ## Part 3: Linear Layer - The Fundamental Neural Network Component
 
@@ -823,7 +833,7 @@ def analyze_architecture_scaling():
 # Run the analysis
 analyze_architecture_scaling()
 
-# In[ ]:
+# %% nbgrader={"grade": false, "grade_id": "sequential-composition", "solution": true}
 
 # ## Part 4: Sequential Network Composition
 
@@ -931,7 +941,7 @@ def test_unit_sequential():
 
 test_unit_sequential()
 
-# In[ ]:
+# %% nbgrader={"grade": false, "grade_id": "flatten-operations", "solution": true}
 
 # ## Part 5: Flatten Operation - Connecting Different Layer Types
 

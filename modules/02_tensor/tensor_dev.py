@@ -1,41 +1,50 @@
-#!/usr/bin/env python
-# coding: utf-8
+# ---
+# jupyter:
+#   jupytext:
+#     text_representation:
+#       extension: .py
+#       format_name: percent
+#       format_version: '1.3'
+#       jupytext_version: 1.17.1
+# ---
 
-# # Tensor - Making Networks Learn Efficiently
+# %% [markdown]
+"""
+# Tensor - The Foundation of Machine Learning
 
-# Welcome to Tensor! You'll implement the fundamental data structure that powers all neural networks.
+Welcome to Tensor! You'll build the fundamental data structure that powers every neural network.
 
-# ## 🔗 Building on Previous Learning
-# **What You Built Before**:
-# - Module 01 (Setup): Python environment and NumPy foundations
+## 🔗 Building on Previous Learning
+**What You Built Before**:
+- Module 01 (Setup): Python environment with NumPy, the foundation for numerical computing
 
-# **What's Working**: You can create Python environments and import libraries for scientific computing!
+**What's Working**: You have a complete development environment with all the tools needed for machine learning!
 
-# **The Gap**: You have the tools, but you need the fundamental data structure that all ML operations use.
+**The Gap**: You can import NumPy, but you need to understand how to build the core data structure that makes ML possible.
 
-# **This Module's Solution**: Implement tensors - N-dimensional arrays with ML superpowers that form the foundation of every neural network.
+**This Module's Solution**: Build a complete Tensor class that wraps NumPy arrays with ML-specific operations and memory management.
 
-# **Connection Map**:
-# ```
-# Setup → Tensor → Activations
-# (tools)   (data)   (intelligence)
-# ```
+**Connection Map**:
+```
+Setup → Tensor → Activations
+(tools)   (data)   (nonlinearity)
+```
 
-# ## Learning Goals
-# - Systems understanding: Memory layout affects cache performance and computational efficiency
-# - Core implementation skill: Build complete Tensor class with shape management and arithmetic operations  
-# - Pattern/abstraction mastery: Understand how tensors abstract N-dimensional data for ML algorithms
-# - Framework connections: See how your implementation mirrors PyTorch's tensor design and memory model
-# - Optimization trade-offs: Learn why contiguous memory layout and vectorized operations are critical for ML performance
+## Learning Objectives
 
-# ## Build → Use → Reflect
-# 1. **Build**: Complete Tensor class with shape management, broadcasting, and vectorized operations
-# 2. **Use**: Perform tensor arithmetic and transformations on real multi-dimensional data
-# 3. **Reflect**: Why does tensor memory layout become the performance bottleneck in large neural networks?
+By completing this module, you will:
 
-# ## Systems Reality Check
-# 💡 **Production Context**: PyTorch tensors automatically choose optimal memory layouts and can seamlessly move between CPU and GPU
-# ⚡ **Performance Insight**: Non-contiguous tensors can be 10-100x slower than contiguous ones - memory layout matters more than algorithm choice
+1. **Implement tensor operations** - Build a complete N-dimensional array system with arithmetic, broadcasting, and matrix multiplication
+2. **Master memory efficiency** - Understand why memory layout affects performance more than algorithm choice
+3. **Create ML-ready APIs** - Design clean interfaces that mirror PyTorch and TensorFlow patterns
+4. **Enable neural networks** - Build the foundation that supports weights, biases, and data in all ML models
+
+## Build → Test → Use
+
+1. **Build**: Implement Tensor class with creation, arithmetic, and advanced operations
+2. **Test**: Validate each component immediately to ensure correctness and performance
+3. **Use**: Apply tensors to real multi-dimensional data operations that neural networks require
+"""
 
 # In[ ]:
 
@@ -54,181 +63,195 @@ print(f"NumPy version: {np.__version__}")
 print(f"Python version: {sys.version_info.major}.{sys.version_info.minor}")
 print("Ready to build tensors!")
 
-# ## 🎯 TinyTorch Module Assumptions
-#
-# For this module, we assume:
-# - **Simple dtype system**: String-based types ("float32", "int32") instead of complex Union types
-# - **Educational error handling**: Clear error messages that explain problems, not comprehensive validation
-# - **Conceptual memory analysis**: Understanding patterns without detailed profiling complexity
-# - **Single-threaded implementation**: Focus on algorithmic clarity without concurrency concerns
-#
-# These assumptions let us focus on **core tensor concepts** without implementation complexity barriers.
+# %% [markdown]
+"""
+## Understanding Tensors: Visual Guide
 
-# ## Visual Guide: Understanding Tensors Through Diagrams
+### What Are Tensors? A Visual Journey
 
-# ### What Are Tensors? A Visual Journey
-#
-# **The Story**: Think of tensors as smart containers that know their shape and can efficiently store numbers for machine learning. They're like upgraded versions of regular Python lists that understand mathematics.
-#
-# ```
-# Scalar (0D Tensor):     Vector (1D Tensor):     Matrix (2D Tensor):
-#      [5]                   [1, 2, 3]             ┌ 1  2  3 ┐
-#                                                   │ 4  5  6 │
-#                                                   └ 7  8  9 ┘
-#
-# 3D Tensor (RGB Image):                   4D Tensor (Batch of Images):
-# ┌─────────────┐                         ┌─────────────┐ ┌─────────────┐
-# │ Red Channel │                         │   Image 1   │ │   Image 2   │
-# │             │                         │             │ │             │
-# └─────────────┘                         └─────────────┘ └─────────────┘
-# ┌─────────────┐                                      ...
-# │Green Channel│
-# │             │
-# └─────────────┘
-# ┌─────────────┐
-# │Blue Channel │
-# │             │
-# └─────────────┘
-# ```
-#
-# **What's happening step-by-step**: As we add dimensions, tensors represent more complex data. A single number becomes a list, a list becomes a grid, a grid becomes a volume (like an image with red/green/blue channels), and a volume becomes a collection (like a batch of images for training). Each dimension adds a new way to organize and access the data.
+**The Story**: Think of tensors as smart containers that know their shape and can efficiently store numbers for machine learning. They're like upgraded versions of regular Python lists that understand mathematics.
 
-# ### Memory Layout: Why Performance Matters
-#
-# **The Story**: Imagine your computer's memory as a long street with numbered houses. When your CPU needs data, it doesn't just grab one house - it loads an entire city block (64 bytes) into its cache.
-#
-# ```
-# Contiguous Memory (FAST):
-# [1][2][3][4][5][6] ──> Cache-friendly, vectorized operations
-#  ↑  ↑  ↑  ↑  ↑  ↑
-#  Sequential access pattern
-#
-# Non-contiguous Memory (SLOW):
-# [1]...[2].....[3] ──> Cache misses, scattered access
-#  ↑     ↑       ↑
-#  Random access pattern
-# ```
-#
-# **What's happening step-by-step**: When you access element [1], the CPU automatically loads elements [1] through [6] in one cache load. Every subsequent access ([2], [3], [4]...) is already in the cache - no extra memory trips needed! With non-contiguous data, each access requires a new, expensive trip to main memory.
-#
-# **The Performance Impact**: This creates 10-100x speedups because you get 6 elements for the price of fetching 1. It's like getting 6 books from the library for the effort of finding just 1.
+```
+Scalar (0D Tensor):     Vector (1D Tensor):     Matrix (2D Tensor):
+     [5]                   [1, 2, 3]             ┌ 1  2  3 ┐
+                                                  │ 4  5  6 │
+                                                  └ 7  8  9 ┘
 
-# ### Tensor Operations: Broadcasting Magic
-#
-# **The Story**: Broadcasting is like having a smart photocopier that automatically copies data to match different shapes without actually using extra memory. It's NumPy's way of making operations "just work" between tensors of different sizes.
-#
-# ```
-# Broadcasting Example:
-#     Matrix (2×3)     +     Scalar        =     Result (2×3)
-#   ┌ 1  2  3 ┐             [10]              ┌ 11 12 13 ┐
-#   └ 4  5  6 ┘                               └ 14 15 16 ┘
-#
-# Broadcasting Rules:
-# 1. Align shapes from right to left
-# 2. Dimensions of size 1 stretch to match
-# 3. Missing dimensions assume size 1
-#
-# Vector + Matrix Broadcasting:
-#   [1, 2, 3]    +    [[10],     =    [[11, 12, 13],
-#   (1×3)             [20]]            [21, 22, 23]]
-#                     (2×1)            (2×3)
-# ```
-#
-# **What's happening step-by-step**: Python aligns shapes from right to left, like comparing numbers by their ones place first. When shapes don't match, dimensions of size 1 automatically "stretch" to match the larger dimension - but no data is actually copied. The operation happens as if the data were copied, but uses the original memory locations.
-#
-# **Why this matters for ML**: Adding a bias vector to a 1000×1000 matrix would normally require copying the vector 1000 times, but broadcasting does it with zero copies and massive memory savings.
+3D Tensor (RGB Image):                   4D Tensor (Batch of Images):
+┌─────────────┐                         ┌─────────────┐ ┌─────────────┐
+│ Red Channel │                         │   Image 1   │ │   Image 2   │
+│             │                         │             │ │             │
+└─────────────┘                         └─────────────┘ └─────────────┘
+┌─────────────┐                                      ...
+│Green Channel│
+│             │
+└─────────────┘
+┌─────────────┐
+│Blue Channel │
+│             │
+└─────────────┘
+```
 
-# ### Neural Network Data Flow
-# 
-# ```
-# Batch Processing in Neural Networks:
-# 
-# Input Batch (32 images, 28×28 pixels):
-# ┌─────────────────────────────────┐
-# │ [Batch=32, Height=28, Width=28] │
-# └─────────────────────────────────┘
-#              ↓ Flatten
-# ┌─────────────────────────────────┐
-# │     [Batch=32, Features=784]    │ ← Matrix multiplication ready
-# └─────────────────────────────────┘
-#              ↓ Linear Layer
-# ┌─────────────────────────────────┐
-# │     [Batch=32, Hidden=128]      │ ← Hidden layer activations
-# └─────────────────────────────────┘
-# 
-# Why batching matters:
-# - Single image: 784 × 128 = 100,352 operations
-# - Batch of 32: Same 100,352 ops, but 32× the data
-# - GPU utilization: 32× better parallelization
-# ```
+**What's happening step-by-step**: As we add dimensions, tensors represent more complex data. A single number becomes a list, a list becomes a grid, a grid becomes a volume (like an image with red/green/blue channels), and a volume becomes a collection (like a batch of images for training). Each dimension adds a new way to organize and access the data.
+"""
 
-# ## The Mathematical Foundation
-# 
-# Before we implement, let's understand the mathematical concepts:
+# %% [markdown]
+"""
+### Memory Layout: Why Performance Matters
 
-# ### Scalars to Tensors: Building Complexity
-# 
-# **Scalar (Rank 0)**:
-# - A single number: `5.0` or `temperature`
-# - Shape: `()` (empty tuple)
-# - ML examples: loss values, learning rates
-# 
-# **Vector (Rank 1)**:
-# - Ordered list of numbers: `[1, 2, 3]`
-# - Shape: `(3,)` (one dimension)
-# - ML examples: word embeddings, gradients
-# 
-# **Matrix (Rank 2)**:
-# - 2D array: `[[1, 2], [3, 4]]`
-# - Shape: `(2, 2)` (rows, columns)
-# - ML examples: weight matrices, images
-# 
-# **Higher-Order Tensors**:
-# - 3D: RGB images `(height, width, channels)`
-# - 4D: Image batches `(batch, height, width, channels)`
-# - 5D: Video batches `(batch, time, height, width, channels)`
+**The Story**: Imagine your computer's memory as a long street with numbered houses. When your CPU needs data, it doesn't just grab one house - it loads an entire city block (64 bytes) into its cache.
 
-# ### Why Not Just Use NumPy?
-# 
-# While NumPy is excellent, our Tensor class adds ML-specific features:
-# 
-# **Future Extensions** (coming in later modules):
-# - **Automatic gradients**: Track operations for backpropagation
-# - **GPU acceleration**: Move computations to graphics cards
-# - **Lazy evaluation**: Build computation graphs for optimization
-# 
-# **Educational Value**:
-# - **Understanding**: See how PyTorch/TensorFlow work internally
-# - **Debugging**: Trace operations step by step
-# - **Customization**: Add domain-specific operations
+```
+Contiguous Memory (FAST):
+[1][2][3][4][5][6] ──> Cache-friendly, vectorized operations
+ ↑  ↑  ↑  ↑  ↑  ↑
+ Sequential access pattern
 
-# ## Implementation Overview
-# 
-# Our Tensor class design:
-# 
-# ```python
-# class Tensor:
-#     def __init__(self, data)      # Create from any data type
-#     
-#     # Properties
-#     .shape                        # Dimensions tuple
-#     .size                         # Total element count
-#     .dtype                        # Data type
-#     .data                         # Access underlying NumPy array
-#     
-#     # Arithmetic Operations
-#     def __add__(self, other)      # tensor + tensor
-#     def __mul__(self, other)      # tensor * tensor
-#     def __sub__(self, other)      # tensor - tensor
-#     def __truediv__(self, other)  # tensor / tensor
-#     
-#     # Advanced Operations
-#     def matmul(self, other)       # Matrix multiplication
-#     def sum(self, axis=None)      # Sum along axes
-#     def reshape(self, *shape)     # Change shape
-# ```
+Non-contiguous Memory (SLOW):
+[1]...[2].....[3] ──> Cache misses, scattered access
+ ↑     ↑       ↑
+ Random access pattern
+```
 
-# In[ ]:
+**What's happening step-by-step**: When you access element [1], the CPU automatically loads elements [1] through [6] in one cache load. Every subsequent access ([2], [3], [4]...) is already in the cache - no extra memory trips needed! With non-contiguous data, each access requires a new, expensive trip to main memory.
+
+**The Performance Impact**: This creates 10-100x speedups because you get 6 elements for the price of fetching 1. It's like getting 6 books from the library for the effort of finding just 1.
+"""
+
+# %% [markdown]
+"""
+### Tensor Operations: Broadcasting Magic
+
+**The Story**: Broadcasting is like having a smart photocopier that automatically copies data to match different shapes without actually using extra memory. It's NumPy's way of making operations "just work" between tensors of different sizes.
+
+```
+Broadcasting Example:
+    Matrix (2×3)     +     Scalar        =     Result (2×3)
+  ┌ 1  2  3 ┐             [10]              ┌ 11 12 13 ┐
+  └ 4  5  6 ┘                               └ 14 15 16 ┘
+
+Broadcasting Rules:
+1. Align shapes from right to left
+2. Dimensions of size 1 stretch to match
+3. Missing dimensions assume size 1
+
+Vector + Matrix Broadcasting:
+  [1, 2, 3]    +    [[10],     =    [[11, 12, 13],
+  (1×3)             [20]]            [21, 22, 23]]
+                    (2×1)            (2×3)
+```
+
+**What's happening step-by-step**: Python aligns shapes from right to left, like comparing numbers by their ones place first. When shapes don't match, dimensions of size 1 automatically "stretch" to match the larger dimension - but no data is actually copied. The operation happens as if the data were copied, but uses the original memory locations.
+
+**Why this matters for ML**: Adding a bias vector to a 1000×1000 matrix would normally require copying the vector 1000 times, but broadcasting does it with zero copies and massive memory savings.
+"""
+
+# %% [markdown]
+"""
+### Neural Network Data Flow
+
+```
+Batch Processing in Neural Networks:
+
+Input Batch (32 images, 28×28 pixels):
+┌─────────────────────────────────┐
+│ [Batch=32, Height=28, Width=28] │
+└─────────────────────────────────┘
+             ↓ Flatten
+┌─────────────────────────────────┐
+│     [Batch=32, Features=784]    │ ← Matrix multiplication ready
+└─────────────────────────────────┘
+             ↓ Linear Layer
+┌─────────────────────────────────┐
+│     [Batch=32, Hidden=128]      │ ← Hidden layer activations
+└─────────────────────────────────┘
+
+Why batching matters:
+- Single image: 784 × 128 = 100,352 operations
+- Batch of 32: Same 100,352 ops, but 32× the data
+- GPU utilization: 32× better parallelization
+```
+"""
+
+# %% [markdown]
+"""
+## The Mathematical Foundation
+
+Before we implement, let's understand the mathematical concepts:
+"""
+
+# %% [markdown]
+"""
+### Scalars to Tensors: Building Complexity
+
+**Scalar (Rank 0)**:
+- A single number: `5.0` or `temperature`
+- Shape: `()` (empty tuple)
+- ML examples: loss values, learning rates
+
+**Vector (Rank 1)**:
+- Ordered list of numbers: `[1, 2, 3]`
+- Shape: `(3,)` (one dimension)
+- ML examples: word embeddings, gradients
+
+**Matrix (Rank 2)**:
+- 2D array: `[[1, 2], [3, 4]]`
+- Shape: `(2, 2)` (rows, columns)
+- ML examples: weight matrices, images
+
+**Higher-Order Tensors**:
+- 3D: RGB images `(height, width, channels)`
+- 4D: Image batches `(batch, height, width, channels)`
+- 5D: Video batches `(batch, time, height, width, channels)`
+"""
+
+# %% [markdown]
+"""
+### Why Not Just Use NumPy?
+
+While NumPy is excellent, our Tensor class adds ML-specific features:
+
+**Future Extensions** (coming in later modules):
+- **Automatic gradients**: Track operations for backpropagation
+- **GPU acceleration**: Move computations to graphics cards
+- **Lazy evaluation**: Build computation graphs for optimization
+
+**Educational Value**:
+- **Understanding**: See how PyTorch/TensorFlow work internally
+- **Debugging**: Trace operations step by step
+- **Customization**: Add domain-specific operations
+"""
+
+# %% [markdown]
+"""
+## Implementation Overview
+
+Our Tensor class design:
+
+```python
+class Tensor:
+    def __init__(self, data)      # Create from any data type
+
+    # Properties
+    .shape                        # Dimensions tuple
+    .size                         # Total element count
+    .dtype                        # Data type
+    .data                         # Access underlying NumPy array
+
+    # Arithmetic Operations
+    def __add__(self, other)      # tensor + tensor
+    def __mul__(self, other)      # tensor * tensor
+    def __sub__(self, other)      # tensor - tensor
+    def __truediv__(self, other)  # tensor / tensor
+
+    # Advanced Operations
+    def matmul(self, other)       # Matrix multiplication
+    def sum(self, axis=None)      # Sum along axes
+    def reshape(self, *shape)     # Change shape
+```
+"""
+
+# %% nbgrader={"grade": false, "grade_id": "tensor-init", "solution": true}
 
 #| export
 class Tensor:
@@ -443,6 +466,7 @@ class Tensor:
             raise ValueError(f"item() can only be called on tensors with exactly one element, got {self._data.size} elements")
         return self._data.item()
 
+# %% nbgrader={"grade": false, "grade_id": "tensor-arithmetic", "solution": true}
     def add(self, other: 'Tensor') -> 'Tensor':
         """
         Add two tensors element-wise.
@@ -646,75 +670,38 @@ class Tensor:
         
         return result
 
+    # %% nbgrader={"grade": false, "grade_id": "tensor-matmul", "solution": true}
     def matmul(self, other: 'Tensor') -> 'Tensor':
         """
-        Matrix multiplication with both educational and efficient implementations.
-        
-        Shows the learning progression from basic loops to optimized operations.
-        This dual approach helps students understand both the concept and production reality.
+        Matrix multiplication using NumPy's optimized implementation.
 
         TODO: Implement matrix multiplication.
 
         APPROACH:
         1. Extract numpy arrays from both tensors
         2. Check tensor shapes for compatibility
-        3. For small tensors: use educational loops to show concept
-        4. For larger tensors: use NumPy's optimized implementation
-        5. Create new Tensor object with the result
-        6. Return the new tensor
-
-        PRODUCTION CONNECTION:
-        - Linear layers: input @ weight matrices in neural networks
-        - Transformer attention: Q @ K^T for attention scores
-        - CNN convolutions: Implemented as matrix multiplications
-        - Batch processing: Matrix ops enable parallel computation
+        3. Use NumPy's optimized dot product
+        4. Create new Tensor object with the result
+        5. Return the new tensor
         """
         ### BEGIN SOLUTION
         a_data = self._data
         b_data = other._data
-        
+
         # Validate tensor shapes
         if len(a_data.shape) != 2 or len(b_data.shape) != 2:
             raise ValueError("matmul requires 2D tensors")
-        
+
         m, k = a_data.shape
         k2, n = b_data.shape
-        
+
         if k != k2:
             raise ValueError(f"Inner dimensions must match: {k} != {k2}")
-        
-        # For small tensors (≤ 4x4): Educational loops to show the concept
-        if m <= 4 and n <= 4 and k <= 4:
-            return self._matmul_educational(other)
-        
-        # For larger tensors: Use NumPy's optimized implementation (production approach)
+
+        # Use NumPy's optimized implementation
         result_data = np.dot(a_data, b_data)
         return Tensor(result_data)
         ### END SOLUTION
-
-    def _matmul_educational(self, other: 'Tensor') -> 'Tensor':
-        """
-        Educational matrix multiplication using explicit loops.
-        
-        This shows the fundamental computation clearly for small examples.
-        Understanding this helps appreciate why optimized BLAS libraries are essential.
-        """
-        a_data = self._data
-        b_data = other._data
-        m, k = a_data.shape
-        k2, n = b_data.shape
-        
-        # Initialize result matrix
-        result = np.zeros((m, n), dtype=a_data.dtype)
-        
-        # Triple nested loops - educational, shows every operation
-        # This demonstrates the O(n³) complexity clearly
-        for i in range(m):                      # For each row in result
-            for j in range(n):                  # For each column in result
-                for k_idx in range(k):          # Dot product: sum over inner dimension
-                    result[i, j] += a_data[i, k_idx] * b_data[k_idx, j]
-        
-        return Tensor(result)
 
     def __matmul__(self, other: 'Tensor') -> 'Tensor':
         """
@@ -756,6 +743,7 @@ class Tensor:
         """Reset gradients to None. Used by optimizers before backward pass."""
         self.grad = None
 
+# %% nbgrader={"grade": false, "grade_id": "tensor-reshape", "solution": true}
     def reshape(self, *shape: int) -> 'Tensor':
         """
         Return a new tensor with the same data but different shape.
@@ -894,149 +882,23 @@ class Tensor:
         
         return outputs
 
-# ## Computational Assessment Questions
 
-# Now let's build understanding through hands-on calculations that connect to real ML scenarios.
 
-# ### 📊 Memory Calculation Challenge
-# 
-# **Question 1: How much memory do tensors actually use?**
-# 
-# Calculate the memory usage for these common ML tensors:
-# 
-# ```python
-# # Image batch for training
-# batch_size = 32
-# height = 224  
-# width = 224
-# channels = 3
-# 
-# # Calculate: batch_size × height × width × channels × bytes_per_float32
-# # Answer: _______ MB
-# 
-# # Large language model embedding
-# vocab_size = 50000
-# embedding_dim = 768
-# 
-# # Calculate: vocab_size × embedding_dim × bytes_per_float32  
-# # Answer: _______ MB
-# ```
-# 
-# **Real-world context**: A single batch of high-resolution images uses ~600MB RAM. Language model embeddings can use 150MB just for the vocabulary. Understanding memory requirements helps you:
-# - Choose appropriate batch sizes for your hardware
-# - Estimate training memory requirements
-# - Debug out-of-memory errors
 
-# ### 🔢 Broadcasting Calculation Challenge
-# 
-# **Question 2: Predict the output shapes**
-# 
-# Given these tensor operations, predict the resulting shapes:
-# 
-# ```python
-# # Operation 1: Matrix + Vector
-# matrix = Tensor([[1, 2, 3], [4, 5, 6]])  # Shape: (2, 3)
-# vector = Tensor([10, 20, 30])            # Shape: (3,)
-# result1 = matrix + vector                # Shape: ?
-# 
-# # Operation 2: 3D + 2D Broadcasting  
-# tensor_3d = Tensor(np.ones((4, 1, 3)))   # Shape: (4, 1, 3)
-# tensor_2d = Tensor(np.ones((2, 3)))      # Shape: (2, 3)
-# result2 = tensor_3d + tensor_2d          # Shape: ?
-# 
-# # Operation 3: Scalar Broadcasting
-# big_tensor = Tensor(np.ones((8, 16, 32))) # Shape: (8, 16, 32)
-# scalar = Tensor(5.0)                      # Shape: ()
-# result3 = big_tensor * scalar             # Shape: ?
-# ```
-# 
-# **Real-world context**: Broadcasting enables efficient operations without copying data. This pattern appears everywhere:
-# - Adding bias terms to neural network layers
-# - Normalizing data by subtracting means
-# - Scaling features in batch normalization
+# %% [markdown]
+"""
+## Testing Your Tensor Implementation
 
-# ### ⚡ Parameter Counting Challenge
-# 
-# **Question 3: Count learnable parameters**
-# 
-# For this simple neural network, calculate total parameters:
-# 
-# ```python
-# # Network architecture:
-# # Input layer: 784 features (28×28 image flattened)
-# # Hidden layer 1: 256 neurons with bias
-# # Hidden layer 2: 128 neurons with bias  
-# # Output layer: 10 neurons with bias
-# 
-# # Layer 1: input_size × hidden_size + bias_terms
-# layer1_params = 784 * 256 + 256 = ?
-# 
-# # Layer 2: hidden1_size × hidden2_size + bias_terms
-# layer2_params = 256 * 128 + 128 = ?
-# 
-# # Layer 3: hidden2_size × output_size + bias_terms
-# layer3_params = 128 * 10 + 10 = ?
-# 
-# # Total parameters: ? 
-# # Memory at float32: ? MB
-# ```
-# 
-# **Real-world context**: Modern neural networks have millions to billions of parameters. GPT-3 has 175 billion parameters ≈ 700GB of memory. Understanding parameter counts helps you:
-# - Estimate model size and memory requirements
-# - Compare model complexity across architectures
-# - Design models that fit your computational budget
+Let's validate each component immediately to ensure everything works correctly:
+"""
 
-# ## Testing Your Implementation
 
-# Let's test your tensor implementation with immediate feedback after each component.
+# %% [markdown]
+"""
+### 🧪 Unit Test: Tensor Creation
 
-# ### ✅ IMPLEMENTATION CHECKPOINT: Basic Tensor class complete
-
-# 🤔 PREDICTION: How much faster are numpy arrays vs Python lists?
-# Your guess: ___x faster
-
-# 🔍 SYSTEMS INSIGHT #1: Why Numpy Arrays?
-def analyze_array_performance():
-    """Let's measure why we use numpy arrays!"""
-    try:
-        import time
-        size = 100000
-        
-        # Python list
-        lst = list(range(size))
-        start = time.perf_counter()
-        _ = [x * 2 for x in lst]
-        list_time = time.perf_counter() - start
-        
-        # Numpy array
-        arr = np.arange(size)
-        start = time.perf_counter()
-        _ = arr * 2
-        array_time = time.perf_counter() - start
-        
-        print(f"Python list: {list_time:.4f}s")
-        print(f"Numpy array: {array_time:.4f}s")
-        print(f"Speedup: {list_time/array_time:.1f}x faster!")
-        
-        # Memory analysis
-        import sys
-        list_memory = sys.getsizeof(lst) + sum(sys.getsizeof(x) for x in lst[:100])
-        array_memory = arr.nbytes
-        print(f"List memory (100 elements): {list_memory:,} bytes")
-        print(f"Array memory (100,000 elements): {array_memory:,} bytes")
-        print(f"Memory efficiency: {list_memory/array_memory*1000:.1f}x more efficient per element")
-        
-        # 💡 WHY THIS MATTERS: Numpy uses contiguous memory for 10-100x speedup.
-        # This is why ALL ML frameworks build on numpy/tensor libraries!
-        
-    except Exception as e:
-        print(f"⚠️ Error: {e}")
-
-analyze_array_performance()
-
-# ### 🧪 Unit Test: Tensor Creation
-
-# Let's test your tensor creation implementation right away! This gives you immediate feedback on whether your `__init__` method works correctly.
+Let's test your tensor creation implementation right away! This gives you immediate feedback on whether your `__init__` method works correctly.
+"""
 
 # In[ ]:
 
@@ -1074,77 +936,13 @@ def test_unit_tensor_creation():
 
 test_unit_tensor_creation()
 
-# ### ✅ IMPLEMENTATION CHECKPOINT: Tensor properties complete
 
-# 🤔 PREDICTION: What happens when you access tensor.shape on a 3D array?
-# Your answer: _______
+# %% [markdown]
+"""
+### 🧪 Unit Test: Tensor Properties
 
-# 🔍 SYSTEMS INSIGHT #2: Memory Layout Analysis
-def analyze_tensor_memory_layout():
-    """Analyze how tensors store data in memory with stride patterns."""
-    try:
-        # Create different tensor shapes with detailed stride analysis
-        shapes_and_names = [
-            ((100,), "1D vector"),
-            ((10, 10), "2D matrix"),
-            ((5, 5, 4), "3D tensor"),
-            ((2, 2, 5, 5), "4D tensor (mini-batch)")
-        ]
-        
-        print("📊 Memory Layout Analysis with Strides:")
-        print(f"{'Name':20s} | {'Shape':15s} | {'Size':6s} | {'Memory':8s} | {'Strides':20s} | {'Contiguous':10s}")
-        print("-" * 90)
-        
-        for shape, name in shapes_and_names:
-            tensor = Tensor(np.ones(shape, dtype=np.float32))
-            memory_mb = tensor.data.nbytes / (1024 * 1024)
-            
-            print(f"{name:20s} | {str(shape):15s} | {tensor.size:6d} | {memory_mb:.3f} MB | {str(tensor.strides):20s} | {tensor.is_contiguous}")
-        
-        print("\n🔍 Advanced Memory Layout Analysis:")
-        
-        # Demonstrate contiguous vs non-contiguous with detailed analysis
-        original = Tensor(np.ones((1000, 1000), dtype=np.float32))
-        transposed = Tensor(original.data.T)  # Transpose creates non-contiguous view
-        reshaped = original.reshape(1000000)  # Reshape maintains contiguity
-        
-        print(f"Original (1000x1000):")
-        print(f"  Contiguous: {original.is_contiguous}, Strides: {original.strides}")
-        print(f"  Memory: {original.data.nbytes / 1024 / 1024:.1f} MB")
-        
-        print(f"\nTransposed (1000x1000):")
-        print(f"  Contiguous: {transposed.is_contiguous}, Strides: {transposed.strides}")
-        print(f"  Memory: {transposed.data.nbytes / 1024 / 1024:.1f} MB (same data, different view)")
-        
-        print(f"\nReshaped to vector (1000000):")
-        print(f"  Contiguous: {reshaped.is_contiguous}, Strides: {reshaped.strides}")
-        print(f"  Memory: {reshaped.data.nbytes / 1024 / 1024:.1f} MB")
-        
-        # Demonstrate stride patterns for different operations
-        print("\n📐 Stride Patterns and Performance Implications:")
-        matrix = Tensor(np.arange(24).reshape(4, 6).astype(np.float32))
-        print(f"Original 4x6 matrix - Strides: {matrix.strides} (row-major)")
-        
-        # Different ways to access the same data
-        col_slice = Tensor(matrix.data[:, ::2])  # Every other column
-        row_slice = Tensor(matrix.data[::2, :])  # Every other row
-        
-        print(f"Column slice [:, ::2] - Strides: {col_slice.strides} (non-contiguous)")
-        print(f"Row slice [::2, :] - Strides: {row_slice.strides} (contiguous rows)")
-        
-        # 💡 WHY THIS MATTERS: Stride patterns reveal memory access efficiency!
-        # - Small strides = better cache locality
-        # - Non-unit strides = potential performance hits
-        # - Understanding strides helps optimize ML operations
-        
-    except Exception as e:
-        print(f"⚠️ Error: {e}")
-
-analyze_tensor_memory_layout()
-
-# ### 🧪 Unit Test: Tensor Properties
-
-# Now let's test that your tensor properties work correctly. This tests the @property methods you implemented.
+Now let's test that your tensor properties work correctly. This tests the @property methods you implemented.
+"""
 
 # In[ ]:
 
@@ -1186,103 +984,13 @@ def test_unit_tensor_properties():
 
 test_unit_tensor_properties()
 
-# ### ✅ IMPLEMENTATION CHECKPOINT: Arithmetic operations complete
 
-# 🤔 PREDICTION: How does tensor broadcasting work with different shapes?
-# Your example: _______
+# %% [markdown]
+"""
+### 🧪 Unit Test: Tensor Arithmetic
 
-# 🔍 SYSTEMS INSIGHT #3: Broadcasting Efficiency Analysis
-def analyze_broadcasting_efficiency():
-    """Measure broadcasting efficiency and demonstrate failure cases."""
-    try:
-        import time
-        
-        print("📊 Broadcasting Efficiency Analysis:")
-        
-        # Create test tensors
-        large_matrix = Tensor(np.random.randn(1000, 1000).astype(np.float32))
-        bias_vector = Tensor(np.random.randn(1000).astype(np.float32))
-        
-        # Method 1: Broadcasting (efficient)
-        start = time.perf_counter()
-        result_broadcast = large_matrix + bias_vector
-        broadcast_time = time.perf_counter() - start
-        
-        # Method 2: Manual expansion (inefficient)
-        start = time.perf_counter()
-        expanded_bias = Tensor(np.tile(bias_vector.data, (1000, 1)))
-        result_manual = large_matrix + expanded_bias
-        manual_time = time.perf_counter() - start
-        
-        print(f"Broadcasting time: {broadcast_time:.4f}s")
-        print(f"Manual expansion time: {manual_time:.4f}s")
-        print(f"Speedup: {manual_time/broadcast_time:.1f}x faster")
-        
-        # Memory analysis
-        broadcast_memory = large_matrix.data.nbytes + bias_vector.data.nbytes
-        manual_memory = large_matrix.data.nbytes + expanded_bias.data.nbytes
-        
-        print(f"Broadcasting memory: {broadcast_memory / 1024 / 1024:.1f} MB")
-        print(f"Manual expansion memory: {manual_memory / 1024 / 1024:.1f} MB")
-        print(f"Memory savings: {manual_memory / broadcast_memory:.1f}x less memory")
-        
-        print("\n🚨 Broadcasting Failure Cases:")
-        
-        # Demonstrate incompatible shapes
-        compatible_cases = [
-            ((3, 4), (4,), "Matrix + Vector: (3,4) + (4,) → (3,4)"),
-            ((5, 1), (3,), "Column + Vector: (5,1) + (3,) → (5,3)"),
-            ((2, 3, 4), (4,), "3D + Vector: (2,3,4) + (4,) → (2,3,4)"),
-            ((1,), (5, 3), "Scalar-like + Matrix: (1,) + (5,3) → (5,3)")
-        ]
-        
-        incompatible_cases = [
-            ((3, 4), (3,), "Mismatched inner dim: (3,4) + (3,) → ERROR"),
-            ((2, 3), (4, 5), "Incompatible shapes: (2,3) + (4,5) → ERROR"),
-            ((2, 3, 4), (2, 5), "Different middle dims: (2,3,4) + (2,5) → ERROR")
-        ]
-        
-        print("\n✅ Compatible Broadcasting Examples:")
-        for shape1, shape2, description in compatible_cases:
-            try:
-                a = Tensor(np.ones(shape1))
-                b = Tensor(np.ones(shape2))
-                result = a + b
-                print(f"  {description} ✓")
-            except Exception as e:
-                print(f"  {description} ❌ (unexpected error: {e})")
-        
-        print("\n❌ Incompatible Broadcasting Examples:")
-        for shape1, shape2, description in incompatible_cases:
-            try:
-                a = Tensor(np.ones(shape1))
-                b = Tensor(np.ones(shape2))
-                result = a + b
-                print(f"  {description} ❌ (should have failed but didn't!)")
-            except ValueError as e:
-                print(f"  {description} ✓ (correctly failed)")
-            except Exception as e:
-                print(f"  {description} ? (unexpected error: {e})")
-        
-        print("\n📝 Broadcasting Rules Summary:")
-        print("  1. Start from the rightmost dimension")
-        print("  2. Dimensions are compatible if:")
-        print("     - They are equal, OR")
-        print("     - One of them is 1, OR")
-        print("     - One dimension is missing (treated as 1)")
-        print("  3. Output shape: maximum size in each dimension")
-        
-        # 💡 WHY THIS MATTERS: Understanding broadcasting failures prevents runtime errors!
-        # Most ML debugging involves shape mismatches from incorrect broadcasting assumptions.
-        
-    except Exception as e:
-        print(f"⚠️ Error: {e}")
-
-analyze_broadcasting_efficiency()
-
-# ### 🧪 Unit Test: Tensor Arithmetic
-
-# Let's test your tensor arithmetic operations. This tests the __add__, __mul__, __sub__, __truediv__ methods.
+Let's test your tensor arithmetic operations. This tests the __add__, __mul__, __sub__, __truediv__ methods.
+"""
 
 # In[ ]:
 
@@ -1343,9 +1051,12 @@ def test_unit_tensor_arithmetic():
 
 test_unit_tensor_arithmetic()
 
-# ### 🧪 Unit Test: Matrix Multiplication
+# %% [markdown]
+"""
+### 🧪 Unit Test: Matrix Multiplication
 
-# Test the matrix multiplication implementation that shows both educational and optimized approaches.
+Test the matrix multiplication implementation that shows both educational and optimized approaches.
+"""
 
 # In[ ]:
 
@@ -1387,9 +1098,14 @@ def test_unit_matrix_multiplication():
 
 test_unit_matrix_multiplication()
 
-# ### 🧪 Unit Test: Advanced Tensor Operations
+# %% [markdown]
+"""
+### 🧪 Unit Test: Advanced Tensor Operations
 
-# Test the new view/copy semantics and memory layout functionality.
+Test the new view/copy semantics and memory layout functionality.
+"""
+
+# In[ ]:
 
 def test_unit_advanced_tensor_operations():
     """Test advanced tensor operations: view, clone, contiguous, strides."""
@@ -1448,9 +1164,12 @@ def test_unit_advanced_tensor_operations():
 
 test_unit_advanced_tensor_operations()
 
-# ### 🧪 Integration Test: Tensor-NumPy Integration
+# %% [markdown]
+"""
+### 🧪 Integration Test: Tensor-NumPy Integration
 
-# This integration test validates that your tensor system works seamlessly with NumPy, the foundation of the scientific Python ecosystem.
+This integration test validates that your tensor system works seamlessly with NumPy, the foundation of the scientific Python ecosystem.
+"""
 
 # In[ ]:
 
@@ -1511,9 +1230,12 @@ def test_module_tensor_numpy_integration():
 
 test_module_tensor_numpy_integration()
 
-# ## Parameter Helper Function
+# %% [markdown]
+"""
+## Parameter Helper Function
 
-# Now that we have Tensor with gradient support, let's add a convenient helper function for creating trainable parameters:
+Now that we have Tensor with gradient support, let's add a convenient helper function for creating trainable parameters:
+"""
 
 # In[ ]:
 
@@ -1538,9 +1260,12 @@ def Parameter(data, dtype=None):
     """
     return Tensor(data, dtype=dtype, requires_grad=True)
 
-# ## Comprehensive Testing Function
+# %% [markdown]
+"""
+## Comprehensive Testing Function
 
-# Let's create a comprehensive test that runs all our unit tests together:
+Let's create a comprehensive test that runs all our unit tests together:
+"""
 
 # In[ ]:
 
@@ -1558,7 +1283,10 @@ def test_unit_all():
     
     print("✅ All tests passed! Tensor module ready for integration.")
 
-# ## Main Execution Block
+# %% [markdown]
+"""
+## Main Execution Block
+"""
 
 if __name__ == "__main__":
     # Run all tensor tests
@@ -1599,249 +1327,92 @@ if __name__ == "__main__":
     print("   ✓ Broadcasting with comprehensive error handling")
     print("   ✓ View/copy semantics for memory efficiency")
 
-# ## 🔬 Advanced: Production Type Handling
-#
-# **Note**: This section demonstrates how production frameworks handle complex dtype requirements.
-# The core implementation above teaches the essential concepts. This section shows the full complexity.
-#
-# **When to use**: Only when building production libraries or debugging framework internals.
 
-# In[ ]:
+# %% [markdown]
+"""
+## 🤔 ML Systems Thinking
 
-def advanced_tensor_creation_demo():
-    """
-    Demonstrate complex dtype handling like production frameworks.
+Now that you've built a complete tensor system, let's connect your implementation to real ML challenges:
+"""
 
-    Production frameworks like PyTorch accept:
-    - String dtypes: 'float32', 'int64', 'bool'
-    - NumPy dtypes: np.float32, np.int64
-    - NumPy types: np.float64, np.int32
-    - Type objects: type(np.float32)
+# %% [markdown]
+"""
+### Question 1: Memory Efficiency at Scale
 
-    This complexity exists for API compatibility, not educational clarity.
-    """
-    print("🔬 Advanced: Production-Level Dtype Handling")
-    print("=" * 50)
+**Challenge**: Your Tensor class showed that contiguous memory is 10-100x faster than scattered memory. Consider a language model with 7 billion parameters (28GB at float32). How would you modify your memory layout strategies to handle training with limited GPU memory (16GB)?
 
-    # Simulate complex dtype handling that was removed from core implementation
-    def create_tensor_with_complex_dtypes(data, dtype=None):
-        """Show how production systems handle Union[str, np.dtype, type] inputs."""
-        # Convert input to numpy array
-        arr = np.array(data)
-
-        if dtype is not None:
-            # Complex type handling (removed from core for clarity)
-            if isinstance(dtype, str):
-                target_dtype = np.dtype(dtype)
-                print(f"   String dtype '{dtype}' → {target_dtype}")
-            elif isinstance(dtype, np.dtype):
-                target_dtype = dtype
-                print(f"   NumPy dtype {dtype} → {target_dtype}")
-            elif isinstance(dtype, type) and issubclass(dtype, np.generic):
-                target_dtype = np.dtype(dtype)
-                print(f"   NumPy type {dtype} → {target_dtype}")
-            else:
-                raise TypeError(f"Unsupported dtype: {type(dtype)}")
-
-            if arr.dtype != target_dtype:
-                arr = arr.astype(target_dtype)
-
-        return arr
-
-    # Demonstrate various input types
-    data = [1.0, 2.0, 3.0]
-
-    print("\n📊 String dtype input:")
-    result1 = create_tensor_with_complex_dtypes(data, 'float32')
-    print(f"   Result: {result1.dtype}")
-
-    print("\n📊 NumPy dtype input:")
-    result2 = create_tensor_with_complex_dtypes(data, np.int32)
-    print(f"   Result: {result2.dtype}")
-
-    print("\n📊 NumPy type input:")
-    result3 = create_tensor_with_complex_dtypes(data, type(np.float64()))
-    print(f"   Result: {result3.dtype}")
-
-    print("\n💡 Production Reality:")
-    print("   - PyTorch handles 47+ dtype variations")
-    print("   - This complexity exists for API compatibility")
-    print("   - Educational implementations can use simpler string-only dtypes")
-    print("   - Core concepts (data + metadata) remain the same")
-
-if __name__ == "__main__":
-    # Only run advanced demo if explicitly executed
-    try:
-        advanced_tensor_creation_demo()
-    except Exception as e:
-        print(f"Advanced demo skipped: {e}")
-
-# ## 🤔 ML Systems Thinking: Interactive Questions
-
-# Now that you've built a working tensor system, let's connect this foundational work to broader ML systems challenges. These questions help you think critically about how tensor operations scale to production ML environments.
-
-# ### Question 1: Memory Layout and Performance Optimization
-
-# **Context**: Your tensor implementation shows significant performance differences between contiguous and non-contiguous memory layouts. When you analyzed stride patterns, you discovered that memory layout affects performance more than algorithm choice.
-
-# **Reflection Question**: In your tensor's stride analysis, you saw that transposed matrices have different stride patterns that affect cache efficiency. For a neural network with 50 million parameters processing batches of 1000 images, how would memory layout impact training performance? Design specific modifications to your Tensor class that optimize memory access patterns for large-scale training while maintaining compatibility with your current arithmetic operations.
-
-# Think about: cache line utilization, memory bandwidth limitations, stride patterns for different tensor operations, and the trade-offs between memory copying vs. view operations in computational graphs.
+Calculate the memory requirements for parameters, gradients, and optimizer states, then propose specific optimizations to your Tensor implementation.
+"""
 
 # In[ ]:
 
 """
-YOUR REFLECTION ON MEMORY LAYOUT AND CACHE EFFICIENCY:
+YOUR ANALYSIS:
 
-TODO: Replace this text with your thoughtful response about memory-efficient tensor system design.
-
-Consider addressing:
-- How would you optimize memory layout for large batch processing?
-- What strategies would you use to minimize cache misses during tensor operations?
-- How would you handle the trade-off between memory copying and in-place operations?
-- What role does contiguous memory layout play in computational efficiency?
-- How would different storage patterns (row-major vs column-major) affect performance?
-
-Write a practical design connecting your tensor implementation to real memory optimization challenges.
-
-GRADING RUBRIC (Instructor Use):
-- Demonstrates understanding of memory layout impact on performance (3 points)
-- Addresses cache efficiency and locality concerns appropriately (3 points)
-- Shows practical knowledge of memory optimization strategies (2 points)
-- Demonstrates systems thinking about large-scale tensor operations (2 points)
-- Clear technical reasoning and practical considerations (bonus points for innovative approaches)
+[Write your response here - consider memory layout, cache efficiency,
+and optimization strategies for large-scale tensor operations]
 """
 
-### BEGIN SOLUTION
-# Student response area - instructor will replace this section during grading setup
-# This is a manually graded question requiring technical analysis of memory optimization
-# Students should demonstrate understanding of cache efficiency and memory layout optimization
-### END SOLUTION
+# %% [markdown]
+"""
+### Question 2: Production Broadcasting
 
-# ### Question 2: Broadcasting and Shape Compatibility Systems
+**Challenge**: Your broadcasting implementation handles basic cases. In transformer models, you need operations like:
+- Query (32, 512, 768) × Key (32, 512, 768) → Attention (32, 512, 512)
+- Attention (32, 8, 512, 512) + Bias (1, 1, 512, 512)
 
-# **Context**: Your broadcasting analysis revealed both successful operations and failure cases. You implemented automatic shape matching that works for compatible dimensions but fails gracefully for incompatible ones.
-
-# **Reflection Question**: Your tensor broadcasting currently handles simple cases but fails on incompatible shapes. For a large language model where tensors have shapes like (batch=32, sequence=512, features=768) interacting with attention weights of shape (heads=12, 768, 64), how would you extend your broadcasting system to handle more complex multi-dimensional operations? Design enhancements to your add() and multiply() methods that provide better error messages and support advanced broadcasting patterns while maintaining computational efficiency.
-
-# Think about: multi-dimensional broadcasting rules, error message clarity, performance optimization for large tensors, and how to handle edge cases in transformer architectures.
+How would you extend your `__add__` and `__mul__` methods to handle these complex shapes while providing clear error messages when shapes are incompatible?
+"""
 
 # In[ ]:
 
 """
-YOUR REFLECTION ON HARDWARE ABSTRACTION AND MULTI-PLATFORM DEPLOYMENT:
+YOUR ANALYSIS:
 
-TODO: Replace this text with your thoughtful response about hardware abstraction design.
-
-Consider addressing:
-- How would you design an abstraction layer that works across CPU, GPU, and AI accelerators?
-- What strategies would you use for automatic device placement and memory management?
-- How would you handle different precision requirements across hardware platforms?
-- What role would kernel selection and optimization play in your design?
-- How would you minimize memory transfer costs between different compute devices?
-
-Write an architectural analysis connecting your tensor foundation to real hardware deployment challenges.
-
-GRADING RUBRIC (Instructor Use):
-- Shows understanding of multi-platform hardware challenges (3 points)
-- Designs practical abstraction layer for device management (3 points)
-- Addresses precision and optimization considerations (2 points)
-- Demonstrates systems thinking about hardware-software interfaces (2 points)
-- Clear architectural reasoning with practical insights (bonus points for comprehensive understanding)
+[Write your response here - consider broadcasting rules, error handling,
+and complex shape operations in transformer architectures]
 """
 
-### BEGIN SOLUTION
-# Student response area - instructor will replace this section during grading setup
-# This is a manually graded question requiring understanding of hardware abstraction challenges
-# Students should demonstrate knowledge of multi-platform deployment and device optimization
-### END SOLUTION
+# %% [markdown]
+"""
+### Question 3: Gradient Compatibility
 
-# ### Question 3: View and Copy Semantics for Memory Efficiency
+**Challenge**: Your Tensor class includes `requires_grad` and basic gradient tracking. When you implement automatic differentiation (Module 09), how will your current design support gradient computation?
 
-# **Context**: Your tensor implementation now includes view(), clone(), and contiguous() methods that manage memory layout and data sharing. You can create views that share data or copies that guarantee independence.
-
-# **Reflection Question**: Your tensor's reshape() and view() operations currently create views when possible but copies when necessary. For a distributed training system where the same large model weights need to be shared across 8 GPU processes while maintaining independent gradient computation, how would you design a memory management system that optimizes data sharing while ensuring gradient isolation? Extend your Tensor class design to handle shared memory scenarios while preserving the safety of your current copy/view semantics.
-
-# Think about: shared memory management, gradient isolation in distributed settings, copy-on-write strategies, and the trade-offs between memory efficiency and computational safety in multi-process training.
+Consider how operations like `c = a * b` need to track both forward computation and backward gradient flow. What modifications would your Tensor methods need to support this?
+"""
 
 # In[ ]:
 
 """
-YOUR REFLECTION ON COMPUTATIONAL GRAPH INTEGRATION:
+YOUR ANALYSIS:
 
-TODO: Replace this text with your thoughtful response about computational graph design.
-
-Consider addressing:
-- How would you modify your tensor class to support computational graph construction?
-- What strategies would you use to balance eager execution with graph-based optimization?
-- How would you handle gradient flow and automatic differentiation in your design?
-- What memory management challenges arise with large computational graphs?
-- How would you support both debugging-friendly and production-optimized execution modes?
-
-Write a design analysis connecting your tensor operations to automatic differentiation and training systems.
-
-GRADING RUBRIC (Instructor Use):
-- Understands computational graph concepts and gradient tracking (3 points)
-- Designs practical approach to eager vs graph execution modes (3 points)
-- Addresses memory management and performance considerations (2 points)
-- Shows systems thinking about training vs inference requirements (2 points)
-- Clear design reasoning with automatic differentiation insights (bonus points for deep understanding)
+[Write your response here - consider gradient tracking, computational graphs,
+and how your tensor operations will support automatic differentiation]
 """
 
-### BEGIN SOLUTION
-# Student response area - instructor will replace this section during grading setup
-# This is a manually graded question requiring understanding of computational graphs and automatic differentiation
-# Students should demonstrate knowledge of how tensor operations enable gradient computation
-### END SOLUTION
+# %% [markdown]
+"""
+## 🎯 MODULE SUMMARY: Tensor Foundation
 
-# ## 🎯 MODULE SUMMARY: Tensor Foundation
+Congratulations! You've built the fundamental data structure that powers all machine learning!
 
-# Congratulations! You've successfully implemented the fundamental data structure that powers all machine learning:
+### Key Learning Outcomes
+- **Complete Tensor System**: Built a 400+ line implementation with 15 methods supporting all essential tensor operations
+- **Memory Efficiency Mastery**: Discovered that memory layout affects performance more than algorithms (10-100x speedups)
+- **Broadcasting Implementation**: Created automatic shape matching that saves memory and enables flexible operations
+- **Production-Ready API**: Designed interfaces that mirror PyTorch and TensorFlow patterns
 
-# ### What You've Accomplished
-# ✅ **Tensor Class Implementation**: Complete N-dimensional array wrapper with 15+ methods and properties
-# ✅ **Core Operations Mastery**: Creation, arithmetic, matrix multiplication, and NumPy integration  
-# ✅ **Memory Layout Understanding**: Discovered why contiguous arrays are 10-100x faster than scattered memory
-# ✅ **Broadcasting Implementation**: Built efficient operations that handle different tensor shapes automatically
-# ✅ **Systems Performance Analysis**: Measured and understood why NumPy arrays outperform Python lists by 50-100x
+### Ready for Next Steps
+Your tensor implementation now enables:
+- **Module 03 (Activations)**: Add nonlinear functions that make neural networks powerful
+- **Neural network operations**: Matrix multiplication, broadcasting, and gradient preparation
+- **Real data processing**: Handle images, text, and complex multi-dimensional datasets
 
-# ### Key Learning Outcomes
-# - **Tensor Fundamentals**: Understanding how N-dimensional arrays work as the foundation of machine learning
-# - **Memory Performance**: Discovered that memory layout affects performance more than algorithm choice
-# - **Broadcasting Mechanics**: Implemented automatic shape matching that saves both memory and computation
-# - **API Design Patterns**: Built clean, intuitive interfaces that mirror production ML frameworks
-# - **NumPy Integration**: Created seamless compatibility with the scientific Python ecosystem
+### Export Your Work
+1. **Export to package**: `tito module complete 02_tensor`
+2. **Verify integration**: Your Tensor class will be available as `tinytorch.core.tensor.Tensor`
+3. **Enable next module**: Activations build on your tensor foundation
 
-# ### Mathematical Foundations Mastered
-# - **N-dimensional Arrays**: Shape, size, and dimensionality concepts from scalars to higher-order tensors
-# - **Element-wise Operations**: Addition, subtraction, multiplication, division with broadcasting
-# - **Matrix Multiplication**: Both educational (O(n³) loops) and optimized (BLAS) implementations
-# - **Memory Complexity**: Understanding space requirements and cache efficiency patterns
-
-# ### Professional Skills Developed
-# - **Systems Programming**: Building efficient, reusable components with proper error handling
-# - **Performance Analysis**: Measuring and optimizing memory usage and computational efficiency
-# - **API Design**: Creating intuitive interfaces that hide complexity while enabling power
-# - **Integration Testing**: Validating compatibility with external libraries and workflows
-
-# ### Ready for Advanced Applications
-# Your tensor implementation now enables:
-# - **Neural Network Layers**: Foundation for linear transformations and complex architectures
-# - **Automatic Differentiation**: Gradient computation through computational graphs (Module 09)
-# - **Complex Models**: CNNs, RNNs, Transformers - all built on your tensor foundation
-# - **Real-World Training**: Processing actual datasets with efficient batch operations
-
-# ### Connection to Real ML Systems
-# Your implementation mirrors production systems:
-# - **PyTorch**: `torch.Tensor` provides identical functionality with GPU acceleration
-# - **TensorFlow**: `tf.Tensor` implements similar concepts with distributed computing
-# - **NumPy**: `numpy.ndarray` serves as the foundation you built upon
-# - **Industry Standard**: Every major ML framework uses these exact principles and patterns
-
-# ### Next Steps
-# 1. **Export your module**: `tito module complete 02_tensor`
-# 2. **Validate integration**: `tito test --module tensor`
-# 3. **Explore broadcasting**: Experiment with different tensor shapes and operations
-# 4. **Ready for Module 03**: Activation functions - adding the nonlinearity that makes neural networks powerful!
-
-# **Your tensor implementation is the foundation of modern AI!** You've built the universal data structure that represents everything from single numbers to massive neural network parameters. Now let's add the mathematical functions that enable machines to learn complex patterns!
+**Achievement unlocked**: You've built the universal data structure of modern AI! Every neural network, from simple classifiers to ChatGPT, relies on the tensor concepts you've just implemented.
+"""

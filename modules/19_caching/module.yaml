@@ -1,0 +1,29 @@
+name: Caching
+number: 18
+type: optimization
+difficulty: advanced
+estimated_hours: 8-10
+
+description: |
+  Memory optimization through KV caching for transformer inference. Students learn to
+  transform O(N²) attention complexity into O(N) for autoregressive generation, achieving
+  dramatic speedups in transformer inference.
+
+learning_objectives:
+  - Understand attention memory complexity
+  - Implement KV caching for transformers
+  - Build incremental computation patterns
+  - Optimize autoregressive generation
+
+prerequisites:
+  - Module 14: Transformers
+  - Module 17: Compression
+
+skills_developed:
+  - KV caching implementation
+  - Memory-computation tradeoffs
+  - Incremental computation
+  - Production inference patterns
+
+exports:
+  - tinytorch.optimizations.caching
