@@ -1,33 +1,43 @@
-#!/usr/bin/env python
-# coding: utf-8
+# ---
+# jupyter:
+#   jupytext:
+#     text_representation:
+#       extension: .py
+#       format_name: percent
+#       format_version: '1.3'
+#       jupytext_version: 1.17.1
+# ---
 
-# # Activations - Nonlinear Intelligence for Neural Networks
+# %% [markdown]
+"""
+# Activations - Nonlinear Intelligence for Neural Networks
 
-# Welcome to Activations! You'll implement the functions that break linearity and enable neural networks to learn complex patterns.
+Welcome to Activations! You'll implement the functions that break linearity and enable neural networks to learn complex patterns.
 
-# ## 🔗 Building on Previous Learning
-# **What You Built Before**:
-# - Module 02 (Tensor): N-dimensional arrays with broadcasting
+## 🔗 Building on Previous Learning
+**What You Built Before**:
+- Module 02 (Tensor): N-dimensional arrays with broadcasting
 
-# **The Problem**: Your current tensors only support linear operations. Multiple linear layers stacked together create... more linear operations. This means your "deep" network can only learn patterns that a single linear layer could learn - essentially expensive linear regression.
+**The Problem**: Your current tensors only support linear operations. Multiple linear layers stacked together create... more linear operations. This means your "deep" network can only learn patterns that a single linear layer could learn - essentially expensive linear regression.
 
-# **This Module's Solution**: Implement ReLU and Softmax activation functions that inject nonlinearity between layers, enabling your networks to learn complex patterns like image recognition and natural language understanding.
+**This Module's Solution**: Implement ReLU and Softmax activation functions that inject nonlinearity between layers, enabling your networks to learn complex patterns like image recognition and natural language understanding.
 
-# **Connection Map**:
-# ```
-# Tensor → Activations → Neural Networks
-# (data)    (intelligence)  (complex learning)
-# ```
+**Connection Map**:
+```
+Tensor → Activations → Neural Networks
+(data)    (intelligence)  (complex learning)
+```
 
-# ## Learning Goals
-# - Systems understanding: How activation choice affects memory, computation, and hardware utilization
-# - Core implementation skill: Build production-grade activation functions with proper error handling
-# - Pattern/abstraction mastery: Understand the computational trade-offs between different activation types
-# - Framework connections: Your implementations mirror PyTorch's core activation functions
-# - Optimization trade-offs: Experience memory bottlenecks and discover why ReLU dominates modern architectures
+## Learning Goals
+- Systems understanding: How activation choice affects memory, computation, and hardware utilization
+- Core implementation skill: Build production-grade activation functions with proper error handling
+- Pattern/abstraction mastery: Understand the computational trade-offs between different activation types
+- Framework connections: Your implementations mirror PyTorch's core activation functions
+- Optimization trade-offs: Experience memory bottlenecks and discover why ReLU dominates modern architectures
 
-# ## Build → Use → Reflect
-# 1. **Build**: ReLU and Softmax with validation, error handling, and systems analysis
+## Build → Use → Reflect
+1. **Build**: ReLU and Softmax with validation, error handling, and systems analysis
+"""
 # 2. **Use**: Test in realistic neural network pipelines with edge cases
 # 3. **Reflect**: Connect your implementation measurements to production ML systems design
 
@@ -61,52 +71,55 @@ print(f"NumPy version: {np.__version__}")
 print(f"Python version: {sys.version_info.major}.{sys.version_info.minor}")
 print("Ready to build essential activation functions!")
 
-# ## Visual Guide: Understanding Activation Functions Through Diagrams
+# %% [markdown]
+"""
+## Visual Guide: Understanding Activation Functions Through Diagrams
 
-# ### Why Nonlinearity Matters: A Visual Journey
-# 
-# ```
-# Linear vs Nonlinear Decision Boundaries:
-# 
-# Linear (WITHOUT Activations):     Nonlinear (WITH Activations):
-# 
-#   Class A  │  Class B                Class A ╭─╮  Class B
-#           │                                  │ │
-#           │                                  │ ╰─╮ Class A
-#           │                                  │   │
-#           │                                  ╰───╯
-#    ───────┼───────                    ─────────────────
-#           │                              Complex boundary
-#    Simple line boundary                  enabled by ReLU!
-# 
-# Key Insight: Linear combinations of linear functions = still linear
-#             Activation functions break linearity → enable complex patterns
-# ```
+### Why Nonlinearity Matters: A Visual Journey
 
-# ### ReLU: The Breakthrough That Enabled Deep Learning
-# 
-# ```
-# ReLU Function Visualization:
-# 
-#         Output
-#           ▲
-#        2  │     ╱
-#           │    ╱
-#        1  │   ╱
-#           │  ╱
-#         0 │ ╱─────────►  Input
-#           │╱ -2 -1  1  2
-#          ╱│
-#         ╱ │
-#        ╱  │
-# 
-# Mathematical: f(x) = max(0, x)
-# 
-# Why Revolutionary:
-# ┌─────────────────┬────────────────┬─────────────────┐
-# │   Old Problem   │   ReLU Solves  │  ML Impact      │
-# ├─────────────────┼────────────────┼─────────────────┤
-# │ Vanishing Grads │ ∂f/∂x = 1 or 0 │ Deep networks   │
+```
+Linear vs Nonlinear Decision Boundaries:
+
+Linear (WITHOUT Activations):     Nonlinear (WITH Activations):
+
+  Class A  │  Class B                Class A ╭─╮  Class B
+          │                                  │ │
+          │                                  │ ╰─╮ Class A
+          │                                  │   │
+          │                                  ╰───╯
+   ───────┼───────                    ─────────────────
+          │                              Complex boundary
+   Simple line boundary                  enabled by ReLU!
+
+Key Insight: Linear combinations of linear functions = still linear
+            Activation functions break linearity → enable complex patterns
+```
+
+### ReLU: The Breakthrough That Enabled Deep Learning
+
+```
+ReLU Function Visualization:
+
+        Output
+          ▲
+       2  │     ╱
+          │    ╱
+       1  │   ╱
+          │  ╱
+        0 │ ╱─────────►  Input
+          │╱ -2 -1  1  2
+         ╱│
+        ╱ │
+       ╱  │
+
+Mathematical: f(x) = max(0, x)
+
+Why Revolutionary:
+┌─────────────────┬────────────────┬─────────────────┐
+│   Old Problem   │   ReLU Solves  │  ML Impact      │
+├─────────────────┼────────────────┼─────────────────┤
+│ Vanishing Grads │ ∂f/∂x = 1 or 0 │ Deep networks   │
+"""
 # │ Slow computation│ Just max(0,x)  │ 6x training     │
 # │ Complex math    │ Simple compare  │ Hardware-friendly│
 # │ Always active   │ 50% sparse     │ Efficient memory│
@@ -164,7 +177,7 @@ print("Ready to build essential activation functions!")
 # Softmax: [Good]    Needs temporary storage for stability
 # ```
 
-# In[ ]:
+# %% nbgrader={"grade": false, "grade_id": "relu-class", "solution": true}
 
 # ## Part 1: ReLU - The Foundation of Modern Deep Learning
 
@@ -505,7 +518,7 @@ def test_unit_relu_activation():
 # Test immediately after implementation
 test_unit_relu_activation()
 
-# In[ ]:
+# %% nbgrader={"grade": false, "grade_id": "softmax-class", "solution": true}
 
 # ## Part 2: Softmax - Converting Scores to Probabilities
 
