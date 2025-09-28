@@ -110,12 +110,12 @@ Convenience Commands:
 
 Examples:
   tito setup                    First-time environment setup
-  tito module 01                Open Module 01 in Jupyter Lab
+  tito module start 01          Start Module 01 (tensors)
   tito module complete 01       Complete Module 01 (test + export)
+  tito module resume 02         Resume working on Module 02
   tito module status            View your learning progress
   tito system info              Show system information
   tito checkpoint timeline      Visual progress timeline
-  tito leaderboard register     Join the inclusive community
   tito book build               Build the Jupyter Book locally
             """
         )
@@ -175,15 +175,6 @@ Examples:
     def run(self, args: Optional[List[str]] = None) -> int:
         """Run the CLI application."""
         try:
-            # Handle special case: tito module 01, tito module 02, etc.
-            if args and len(args) >= 2 and args[0] == 'module':
-                second_arg = args[1]
-                if second_arg.isdigit() or (len(second_arg) == 2 and second_arg.isdigit()):
-                    # This is a direct module number, handle it specially
-                    from .commands.module_workflow import ModuleWorkflowCommand
-                    module_cmd = ModuleWorkflowCommand(self.config)
-                    return module_cmd.open_module(second_arg)
-            
             parser = self.create_parser()
             parsed_args = parser.parse_args(args)
             
@@ -235,9 +226,9 @@ Examples:
                     "  [bold green]logo[/bold green]        - Learn about TinyTorch philosophy\n"
                     "[bold]Quick Start:[/bold]\n"
                     "  [dim]tito setup[/dim]                    - First-time environment setup\n"
-                    "  [dim]tito module 01[/dim]                - Start building tensors in Jupyter Lab\n"
+                    "  [dim]tito module start 01[/dim]          - Start building tensors (first time)\n"
                     "  [dim]tito module complete 01[/dim]       - Complete Module 01 (test + export)\n"
-                    "  [dim]tito module 02[/dim]                - Continue to activation functions\n"
+                    "  [dim]tito module start 02[/dim]          - Begin activation functions\n"
                     "  [dim]tito module status[/dim]            - View your progress\n"
                     "[bold]Get Help:[/bold]\n"
                     "  [dim]tito system[/dim]                   - Show system subcommands\n"
