@@ -36,20 +36,42 @@ class ModuleWorkflowCommand(BaseCommand):
     
     def add_arguments(self, parser: ArgumentParser) -> None:
         """Add module workflow arguments."""
-        # Add subcommands first
+        # Add subcommands - clean lifecycle workflow
         subparsers = parser.add_subparsers(
             dest='module_command',
-            help='Module operations'
+            help='Module lifecycle operations'
         )
         
-        # Complete command - the key workflow
+        # START command - begin working on a module
+        start_parser = subparsers.add_parser(
+            'start',
+            help='Start working on a module (first time)'
+        )
+        start_parser.add_argument(
+            'module_number',
+            help='Module number to start (01, 02, 03, etc.)'
+        )
+        
+        # RESUME command - continue working on a module
+        resume_parser = subparsers.add_parser(
+            'resume',
+            help='Resume working on a module (continue previous work)'
+        )
+        resume_parser.add_argument(
+            'module_number',
+            nargs='?',
+            help='Module number to resume (01, 02, 03, etc.) - defaults to last worked'
+        )
+        
+        # COMPLETE command - finish and validate a module
         complete_parser = subparsers.add_parser(
             'complete',
             help='Complete module: run tests, export if passing, update progress'
         )
         complete_parser.add_argument(
             'module_number',
-            help='Module number to complete (01, 02, 03, etc.)'
+            nargs='?',
+            help='Module number to complete (01, 02, 03, etc.) - defaults to current'
         )
         complete_parser.add_argument(
             '--skip-tests',
@@ -62,24 +84,11 @@ class ModuleWorkflowCommand(BaseCommand):
             help='Skip automatic export'
         )
         
-        # Status command
+        # STATUS command - show progress
         status_parser = subparsers.add_parser(
             'status',
-            help='Show module completion status'
+            help='Show module completion status and progress'
         )
-        
-        # Advanced commands (less commonly used)
-        test_parser = subparsers.add_parser(
-            'test',
-            help='Run tests for specific module'
-        )
-        test_parser.add_argument('module_number', help='Module to test')
-        
-        export_parser = subparsers.add_parser(
-            'export',
-            help='Export module to package'
-        )
-        export_parser.add_argument('module_number', help='Module to export')
     
     def get_module_mapping(self) -> Dict[str, str]:
         """Get mapping from numbers to module names."""
@@ -113,8 +122,8 @@ class ModuleWorkflowCommand(BaseCommand):
             return f"{int(module_input):02d}"
         return module_input
     
-    def open_module(self, module_number: str) -> int:
-        """Open a module in Jupyter Lab."""
+    def start_module(self, module_number: str) -> int:
+        """Start working on a module (first time)."""
         module_mapping = self.get_module_mapping()
         normalized = self.normalize_module_number(module_number)
         
@@ -125,10 +134,60 @@ class ModuleWorkflowCommand(BaseCommand):
         
         module_name = module_mapping[normalized]
         
-        self.console.print(f"🚀 Opening Module {normalized}: {module_name}")
+        # Check if already started
+        if self.is_module_started(normalized):
+            self.console.print(f"[yellow]⚠️  Module {normalized} already started[/yellow]")
+            self.console.print(f"💡 Did you mean: [bold cyan]tito module resume {normalized}[/bold cyan]")
+            return 1
+        
+        # Mark as started
+        self.mark_module_started(normalized)
+        
+        self.console.print(f"🚀 Starting Module {normalized}: {module_name}")
         self.console.print("💡 Work in Jupyter, save your changes, then run:")
         self.console.print(f"   [bold cyan]tito module complete {normalized}[/bold cyan]")
         
+        return self._open_jupyter(module_name)
+    
+    def resume_module(self, module_number: Optional[str] = None) -> int:
+        """Resume working on a module (continue previous work)."""
+        module_mapping = self.get_module_mapping()
+        
+        # If no module specified, resume last worked
+        if not module_number:
+            last_worked = self.get_last_worked_module()
+            if not last_worked:
+                self.console.print("[yellow]⚠️  No module to resume[/yellow]")
+                self.console.print("💡 Start with: [bold cyan]tito module start 01[/bold cyan]")
+                return 1
+            module_number = last_worked
+        
+        normalized = self.normalize_module_number(module_number)
+        
+        if normalized not in module_mapping:
+            self.console.print(f"[red]❌ Module {normalized} not found[/red]")
+            self.console.print("💡 Available modules: 01-21")
+            return 1
+        
+        module_name = module_mapping[normalized]
+        
+        # Check if module was started
+        if not self.is_module_started(normalized):
+            self.console.print(f"[yellow]⚠️  Module {normalized} not started yet[/yellow]")
+            self.console.print(f"💡 Start with: [bold cyan]tito module start {normalized}[/bold cyan]")
+            return 1
+        
+        # Update last worked
+        self.update_last_worked(normalized)
+        
+        self.console.print(f"🔄 Resuming Module {normalized}: {module_name}")
+        self.console.print("💡 Continue your work, then run:")
+        self.console.print(f"   [bold cyan]tito module complete {normalized}[/bold cyan]")
+        
+        return self._open_jupyter(module_name)
+    
+    def _open_jupyter(self, module_name: str) -> int:
+        """Open Jupyter Lab for a module."""
         # Use the existing view command
         fake_args = Namespace()
         fake_args.module = module_name
@@ -137,9 +196,19 @@ class ModuleWorkflowCommand(BaseCommand):
         view_command = ViewCommand(self.config)
         return view_command.run(fake_args)
     
-    def complete_module(self, module_number: str, skip_tests: bool = False, skip_export: bool = False) -> int:
+    def complete_module(self, module_number: Optional[str] = None, skip_tests: bool = False, skip_export: bool = False) -> int:
         """Complete a module with testing and export."""
         module_mapping = self.get_module_mapping()
+        
+        # If no module specified, complete current/last worked
+        if not module_number:
+            last_worked = self.get_last_worked_module()
+            if not last_worked:
+                self.console.print("[yellow]⚠️  No module to complete[/yellow]")
+                self.console.print("💡 Start with: [bold cyan]tito module start 01[/bold cyan]")
+                return 1
+            module_number = last_worked
+        
         normalized = self.normalize_module_number(module_number)
         
         if normalized not in module_mapping:
@@ -227,38 +296,89 @@ class ModuleWorkflowCommand(BaseCommand):
             self.console.print(f"[red]Error exporting module: {e}[/red]")
             return 1
     
-    def update_progress(self, module_number: str, module_name: str) -> None:
-        """Update user progress tracking."""
+    def get_progress_data(self) -> dict:
+        """Get current progress data."""
+        progress_file = self.config.project_root / "progress.json"
+        
+        try:
+            import json
+            if progress_file.exists():
+                with open(progress_file, 'r') as f:
+                    return json.load(f)
+        except Exception:
+            pass
+        
+        return {
+            'started_modules': [],
+            'completed_modules': [],
+            'last_worked': None,
+            'last_completed': None,
+            'last_updated': None
+        }
+    
+    def save_progress_data(self, progress: dict) -> None:
+        """Save progress data."""
         progress_file = self.config.project_root / "progress.json"
         
         try:
             import json
             from datetime import datetime
-            
-            # Load existing progress
-            progress = {}
-            if progress_file.exists():
-                with open(progress_file, 'r') as f:
-                    progress = json.load(f)
-            
-            # Update progress
-            if 'completed_modules' not in progress:
-                progress['completed_modules'] = []
-            
-            if module_number not in progress['completed_modules']:
-                progress['completed_modules'].append(module_number)
-            
-            progress['last_completed'] = module_number
             progress['last_updated'] = datetime.now().isoformat()
             
-            # Save progress
             with open(progress_file, 'w') as f:
                 json.dump(progress, f, indent=2)
-            
-            self.console.print(f"📈 Progress updated: {len(progress['completed_modules'])} modules completed")
-            
         except Exception as e:
-            self.console.print(f"[yellow]⚠️  Could not update progress: {e}[/yellow]")
+            self.console.print(f"[yellow]⚠️  Could not save progress: {e}[/yellow]")
+    
+    def is_module_started(self, module_number: str) -> bool:
+        """Check if a module has been started."""
+        progress = self.get_progress_data()
+        return module_number in progress.get('started_modules', [])
+    
+    def is_module_completed(self, module_number: str) -> bool:
+        """Check if a module has been completed."""
+        progress = self.get_progress_data()
+        return module_number in progress.get('completed_modules', [])
+    
+    def mark_module_started(self, module_number: str) -> None:
+        """Mark a module as started."""
+        progress = self.get_progress_data()
+        
+        if 'started_modules' not in progress:
+            progress['started_modules'] = []
+        
+        if module_number not in progress['started_modules']:
+            progress['started_modules'].append(module_number)
+        
+        progress['last_worked'] = module_number
+        self.save_progress_data(progress)
+    
+    def update_last_worked(self, module_number: str) -> None:
+        """Update the last worked module."""
+        progress = self.get_progress_data()
+        progress['last_worked'] = module_number
+        self.save_progress_data(progress)
+    
+    def get_last_worked_module(self) -> Optional[str]:
+        """Get the last worked module."""
+        progress = self.get_progress_data()
+        return progress.get('last_worked')
+    
+    def update_progress(self, module_number: str, module_name: str) -> None:
+        """Update user progress tracking."""
+        progress = self.get_progress_data()
+        
+        # Update completed modules
+        if 'completed_modules' not in progress:
+            progress['completed_modules'] = []
+        
+        if module_number not in progress['completed_modules']:
+            progress['completed_modules'].append(module_number)
+        
+        progress['last_completed'] = module_number
+        self.save_progress_data(progress)
+        
+        self.console.print(f"📈 Progress updated: {len(progress['completed_modules'])} modules completed")
     
     def show_next_steps(self, completed_module: str) -> None:
         """Show next steps after completing a module."""
@@ -287,88 +407,86 @@ class ModuleWorkflowCommand(BaseCommand):
     
     def show_status(self) -> int:
         """Show module completion status."""
-        progress_file = self.config.project_root / "progress.json"
         module_mapping = self.get_module_mapping()
+        progress = self.get_progress_data()
         
-        try:
-            progress = {}
-            if progress_file.exists():
-                import json
-                with open(progress_file, 'r') as f:
-                    progress = json.load(f)
-            
-            completed = progress.get('completed_modules', [])
-            
-            self.console.print(Panel(
-                "📊 Module Completion Status",
-                title="Your Progress",
-                border_style="bright_blue"
-            ))
-            
-            for num, name in module_mapping.items():
-                status = "✅" if num in completed else "⏳"
-                self.console.print(f"  {status} Module {num}: {name}")
-            
-            self.console.print(f"\n📈 Progress: {len(completed)}/{len(module_mapping)} modules completed")
-            
-            if completed:
-                last = progress.get('last_completed', completed[-1])
-                next_num = f"{int(last) + 1:02d}"
-                if next_num in module_mapping:
-                    self.console.print(f"💡 Next: [bold cyan]tito module {next_num}[/bold cyan]")
+        started = progress.get('started_modules', [])
+        completed = progress.get('completed_modules', [])
+        last_worked = progress.get('last_worked')
+        
+        self.console.print(Panel(
+            "📊 Module Status & Progress",
+            title="Your Learning Journey",
+            border_style="bright_blue"
+        ))
+        
+        for num, name in module_mapping.items():
+            if num in completed:
+                status = "✅"
+                state = "completed"
+            elif num in started:
+                status = "🚀" if num == last_worked else "💻"
+                state = "in progress" if num == last_worked else "started"
             else:
-                self.console.print("💡 Start with: [bold cyan]tito module 01[/bold cyan]")
+                status = "⏳"
+                state = "not started"
             
-            return 0
-            
-        except Exception as e:
-            self.console.print(f"[red]Error reading progress: {e}[/red]")
-            return 1
+            marker = " ← current" if num == last_worked else ""
+            self.console.print(f"  {status} Module {num}: {name} ({state}){marker}")
+        
+        # Summary
+        self.console.print(f"\n📈 Progress: {len(completed)}/{len(module_mapping)} completed, {len(started)} started")
+        
+        # Next steps
+        if last_worked:
+            if last_worked not in completed:
+                self.console.print(f"💡 Continue: [bold cyan]tito module resume {last_worked}[/bold cyan]")
+                self.console.print(f"💡 Or complete: [bold cyan]tito module complete {last_worked}[/bold cyan]")
+            else:
+                next_num = f"{int(last_worked) + 1:02d}"
+                if next_num in module_mapping:
+                    self.console.print(f"💡 Next: [bold cyan]tito module start {next_num}[/bold cyan]")
+        else:
+            self.console.print("💡 Start with: [bold cyan]tito module start 01[/bold cyan]")
+        
+        return 0
     
     def run(self, args: Namespace) -> int:
         """Execute the module workflow command."""
         # Handle subcommands
         if hasattr(args, 'module_command') and args.module_command:
-            if args.module_command == 'complete':
+            if args.module_command == 'start':
+                return self.start_module(args.module_number)
+            elif args.module_command == 'resume':
+                return self.resume_module(getattr(args, 'module_number', None))
+            elif args.module_command == 'complete':
                 return self.complete_module(
-                    args.module_number,
+                    getattr(args, 'module_number', None),
                     getattr(args, 'skip_tests', False),
                     getattr(args, 'skip_export', False)
                 )
             elif args.module_command == 'status':
                 return self.show_status()
-            elif args.module_command == 'test':
-                module_mapping = self.get_module_mapping()
-                normalized = self.normalize_module_number(args.module_number)
-                if normalized in module_mapping:
-                    return self.run_module_tests(module_mapping[normalized])
-                else:
-                    self.console.print(f"[red]❌ Module {normalized} not found[/red]")
-                    return 1
-            elif args.module_command == 'export':
-                module_mapping = self.get_module_mapping()
-                normalized = self.normalize_module_number(args.module_number)
-                if normalized in module_mapping:
-                    return self.export_module(module_mapping[normalized])
-                else:
-                    self.console.print(f"[red]❌ Module {normalized} not found[/red]")
-                    return 1
         
         # Show help if no valid command
         self.console.print(Panel(
-            "[bold cyan]Module Workflow Commands[/bold cyan]\n\n"
-            "[bold]Main Workflow:[/bold]\n"
-            "  [bold green]tito module 01[/bold green]           - Open Module 01 in Jupyter Lab\n"
+            "[bold cyan]Module Lifecycle Commands[/bold cyan]\n\n"
+            "[bold]Core Workflow:[/bold]\n"
+            "  [bold green]tito module start 01[/bold green]     - Start working on Module 01 (first time)\n"
+            "  [bold green]tito module resume 01[/bold green]    - Resume working on Module 01 (continue)\n"
             "  [bold green]tito module complete 01[/bold green]  - Complete Module 01 (test + export)\n\n"
-            "[bold]Status & Management:[/bold]\n"
-            "  [bold]tito module status[/bold]        - Show completion progress\n"
-            "  [bold]tito module test 01[/bold]       - Run tests for Module 01\n"
-            "  [bold]tito module export 01[/bold]     - Export Module 01 to package\n\n"
-            "[bold]Natural Workflow:[/bold]\n"
-            "  1. [dim]tito module 01[/dim]           → Open and work in Jupyter\n"
-            "  2. [dim]Save your work[/dim]           → Ctrl+S in Jupyter\n"
+            "[bold]Smart Defaults:[/bold]\n"
+            "  [bold]tito module resume[/bold]        - Resume last worked module\n"
+            "  [bold]tito module complete[/bold]      - Complete current module\n"
+            "  [bold]tito module status[/bold]        - Show progress with states\n\n"
+            "[bold]Natural Learning Flow:[/bold]\n"
+            "  1. [dim]tito module start 01[/dim]     → Begin tensors (first time)\n"
+            "  2. [dim]Work in Jupyter, save[/dim]    → Ctrl+S to save progress\n"
             "  3. [dim]tito module complete 01[/dim]  → Test, export, track progress\n"
-            "  4. [dim]tito module 02[/dim]           → Continue to next module",
+            "  4. [dim]tito module start 02[/dim]     → Begin activations\n"
+            "  5. [dim]tito module resume 02[/dim]    → Continue activations later\n\n"
+            "[bold]Module States:[/bold]\n"
+            "  ⏳ Not started  🚀 In progress  ✅ Completed",
             title="Module Development Workflow",
             border_style="bright_cyan"
         ))
