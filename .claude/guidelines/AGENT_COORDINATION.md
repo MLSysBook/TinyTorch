@@ -4,7 +4,7 @@
 
 **Agents work in sequence with clear handoffs, not in isolation.**
 
-## 🤖 The Agent Team
+## 🤖 The Agent Team (Consolidated)
 
 ### Primary Interface: Technical Program Manager (TPM)
 
@@ -14,15 +14,13 @@ The TPM is your SINGLE point of communication for all development.
 User Request → TPM → Coordinates Agents → Reports Back
 ```
 
-**The TPM knows when to invoke:**
-- Education Architect - Learning design
-- Module Developer - Implementation  
-- Package Manager - Integration
-- Quality Assurance - Testing
-- Documentation Publisher - Content
-- Workflow Coordinator - Process
-- DevOps Engineer - Infrastructure
-- Tito CLI Developer - CLI features
+**The TPM coordinates these core agents:**
+- **Education Reviewer** - Educational design, assessment, and technical validation
+- **Module Developer** - Code implementation
+- **Package Manager** - Integration and builds
+- **Quality Assurance** - Testing and validation
+- **Website Manager** - Website content and strategy
+- **DevOps TITO** - Infrastructure and CLI development
 
 ## 📋 Standard Development Workflow
 
@@ -31,7 +29,7 @@ User Request → TPM → Coordinates Agents → Reports Back
 **For EVERY module development:**
 
 ```
-1. Planning (Workflow Coordinator + Education Architect)
+1. Planning (TPM + Education Reviewer)
    ↓
 2. Implementation (Module Developer)
    ↓
@@ -39,9 +37,9 @@ User Request → TPM → Coordinates Agents → Reports Back
    ↓
 4. Integration (Package Manager) ← MANDATORY
    ↓
-5. Documentation (Documentation Publisher)
+5. Documentation (Education Reviewer)
    ↓
-6. Review (Workflow Coordinator)
+6. Review (TPM)
 ```
 
 ### Critical Handoff Points
@@ -135,12 +133,12 @@ Recommendations:
 
 **How agents successfully implemented the 16-checkpoint system:**
 
-1. **Education Architect** designed capability progression
-2. **Workflow Coordinator** orchestrated implementation
+1. **Education Reviewer** designed capability progression
+2. **TPM** orchestrated implementation
 3. **Module Developer** built checkpoint tests + CLI
 4. **QA Agent** validated all 16 checkpoints work
 5. **Package Manager** ensured integration with modules
-6. **Documentation Publisher** updated all docs
+6. **Website Manager** updated all docs
 
 **Result:** Complete working system with proper handoffs
 
@@ -154,7 +152,7 @@ Recommendations:
 ### Skipping Handoffs
 ❌ Direct commit without QA approval
 ❌ Missing Package Manager validation
-❌ No Workflow Coordinator review
+❌ No TPM review
 
 ### Poor Communication
 ❌ "It's done" (no details)
@@ -164,8 +162,8 @@ Recommendations:
 ## 📋 Agent Checklist
 
 ### Before Module Developer Starts
-- [ ] Education Architect defined learning objectives
-- [ ] Workflow Coordinator approved plan
+- [ ] Education Reviewer defined learning objectives
+- [ ] TPM approved plan
 - [ ] Clear specifications provided
 
 ### Before QA Testing
@@ -181,15 +179,15 @@ Recommendations:
 ### Before Commit
 - [ ] Package Manager verified integration
 - [ ] Documentation complete
-- [ ] Workflow Coordinator approved
+- [ ] TPM approved
 
 ## 🔧 Conflict Resolution
 
 **If agents disagree:**
 
 1. **QA has veto on quality** - If tests fail, stop
-2. **Education Architect owns learning objectives**
-3. **Workflow Coordinator resolves other disputes**
+2. **Education Reviewer owns learning objectives**
+3. **TPM resolves other disputes**
 4. **User has final override**
 
 ## 📌 Remember
