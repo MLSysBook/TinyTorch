@@ -16,7 +16,7 @@ Welcome to Tensor! You'll build the fundamental data structure that powers every
 
 ## 🔗 Building on Previous Learning
 **What You Built Before**:
-- Environment Setup: Python environment with NumPy, the foundation for numerical computing
+- Module 01 (Setup): Python environment with NumPy, the foundation for numerical computing
 
 **What's Working**: You have a complete development environment with all the tools needed for machine learning!
 
@@ -26,8 +26,8 @@ Welcome to Tensor! You'll build the fundamental data structure that powers every
 
 **Connection Map**:
 ```
-Environment → Tensor → Activations
-  (tools)     (data)   (nonlinearity)
+Setup → Tensor → Activations
+(tools)   (data)   (nonlinearity)
 ```
 
 ## Learning Objectives
@@ -39,11 +39,11 @@ By completing this module, you will:
 3. **Create ML-ready APIs** - Design clean interfaces that mirror PyTorch and TensorFlow patterns
 4. **Enable neural networks** - Build the foundation that supports weights, biases, and data in all ML models
 
-## Build → Use → Reflect
+## Build → Test → Use
 
 1. **Build**: Implement Tensor class with creation, arithmetic, and advanced operations
-2. **Use**: Apply tensors to real multi-dimensional data operations that neural networks require
-3. **Reflect**: Understand how memory layout and broadcasting enable efficient ML computations at scale
+2. **Test**: Validate each component immediately to ensure correctness and performance
+3. **Use**: Apply tensors to real multi-dimensional data operations that neural networks require
 """
 
 # In[ ]:
@@ -308,7 +308,7 @@ class Tensor:
             # ML convention: prefer float32 for memory and GPU efficiency
             self._data = self._data.astype(np.float32)
 
-        # Initialize gradient tracking attributes (used in Module 05 - Autograd)
+        # Initialize gradient tracking attributes (used in Module 9 - Autograd)
         self.requires_grad = requires_grad
         self.grad = None
         self._grad_fn = None
@@ -1288,15 +1288,32 @@ def test_unit_all():
 ## Main Execution Block
 """
 
+def analyze_tensor_performance():
+    """
+    🔍 SYSTEMS ANALYSIS: Tensor Performance and Memory Characteristics
+
+    Focused analysis of core tensor behavior for ML systems understanding.
+    """
+    try:
+        print("📊 Tensor Systems Analysis:")
+        print(f"  • Memory Layout: NumPy provides contiguous memory for 10-100x speedup over Python lists")
+        print(f"  • Broadcasting: Automatic shape matching saves memory and enables vectorized operations")
+        print(f"  • Matrix Operations: O(N³) complexity for NxN matrices - GPU acceleration critical for large models")
+        print(f"  • Memory Scaling: Each tensor uses N*dtype_bytes RAM - batch size directly impacts memory usage")
+        print(f"  • Production Pattern: Your Tensor mirrors PyTorch's core design for 100% compatibility")
+
+    except Exception as e:
+        print(f"⚠️ Analysis failed: {e}")
+
 if __name__ == "__main__":
     # Run all tensor tests
     test_unit_all()
-    
+
+    # Single focused analysis for foundation module
+    analyze_tensor_performance()
+
     print("\n🎉 Tensor module implementation complete!")
     print("📦 Ready to export to tinytorch.core.tensor")
-    
-    # Demonstrate the new ML Framework Advisor improvements
-    print("\n🚀 New Features Demonstration:")
     
     # 1. Enhanced dtype handling
     t1 = Tensor([1, 2, 3], dtype="float32")
@@ -1347,34 +1364,10 @@ Calculate the memory requirements for parameters, gradients, and optimizer state
 # In[ ]:
 
 """
-SYSTEMS ANALYSIS: Memory Efficiency at Production Scale
+YOUR ANALYSIS:
 
-Key Insights from Your Tensor Implementation:
-
-1. **Memory Layout Impact**:
-   - Contiguous tensors: 10-100x faster due to cache efficiency
-   - Your implementation defaults to contiguous NumPy arrays
-   - Production impact: GPT-3 training requires 700GB+ of contiguous memory
-
-2. **Memory Requirements Calculation**:
-   - Parameters: 7B × 4 bytes = 28GB
-   - Gradients: 7B × 4 bytes = 28GB  
-   - Optimizer states (Adam): 7B × 8 bytes = 56GB
-   - Total: 112GB > 16GB GPU memory → Need optimization!
-
-3. **Tensor-Level Optimizations**:
-   - Gradient checkpointing: Trade compute for memory (your tensor.clone() enables this)
-   - Mixed precision: float16 for forward, float32 for gradients
-   - Parameter sharding: Split tensors across multiple GPUs
-   - Memory mapping: Stream tensors from disk when needed
-
-4. **Your Implementation Enables**:
-   - .contiguous() method for memory layout optimization
-   - dtype conversion for mixed precision training
-   - .view() operations for zero-copy tensor reshaping
-   - Gradient tracking foundation for automatic differentiation
-
-Production Connection: Your tensor design choices directly impact whether a model can train on available hardware. Every major ML framework (PyTorch, JAX, TensorFlow) implements these same optimizations at the tensor level.
+[Write your response here - consider memory layout, cache efficiency,
+and optimization strategies for large-scale tensor operations]
 """
 
 # %% [markdown]
@@ -1391,51 +1384,17 @@ How would you extend your `__add__` and `__mul__` methods to handle these comple
 # In[ ]:
 
 """
-SYSTEMS ANALYSIS: Broadcasting in Production Transformer Architectures
+YOUR ANALYSIS:
 
-Key Insights from Your Broadcasting Implementation:
-
-1. **Current Implementation Strengths**:
-   - Your __add__ and __mul__ methods handle basic broadcasting via NumPy
-   - Automatic shape alignment from right to left
-   - Memory-efficient operations without data copying
-
-2. **Transformer Broadcasting Challenges**:
-   ```
-   Query @ Key^T: (32, 512, 768) × (32, 768, 512) → (32, 512, 512)
-   Attention + Bias: (32, 8, 512, 512) + (1, 1, 512, 512) → (32, 8, 512, 512)
-   Multi-head: (32, 8, 512, 64) → reshape → (32, 512, 512)
-   ```
-
-3. **Enhanced Error Handling Needed**:
-   ```python
-   def __add__(self, other):
-       if isinstance(other, Tensor):
-           try:
-               result = self._data + other._data  # NumPy handles broadcasting
-           except ValueError as e:
-               raise ValueError(f"Cannot broadcast shapes {self.shape} and {other.shape}: {e}")
-           return Tensor(result)
-   ```
-
-4. **Production Broadcasting Patterns**:
-   - Attention masks: (batch, 1, seq_len, seq_len) broadcasts to (batch, heads, seq_len, seq_len)
-   - Position embeddings: (1, seq_len, hidden) broadcasts to (batch, seq_len, hidden)
-   - Layer normalization: (hidden,) broadcasts to (batch, seq_len, hidden)
-
-5. **Memory Implications**:
-   - Broadcasting saves memory: No data copying for dimension expansion
-   - Your implementation leverages NumPy's optimized broadcasting
-   - Critical for transformer efficiency: 8-head attention without 8x memory
-
-Production Connection: Transformer models rely heavily on broadcasting for attention mechanisms. Your tensor broadcasting foundation enables efficient multi-head attention, position encoding, and layer normalization - the core operations that make modern NLP possible.
+[Write your response here - consider broadcasting rules, error handling,
+and complex shape operations in transformer architectures]
 """
 
 # %% [markdown]
 """
 ### Question 3: Gradient Compatibility
 
-**Challenge**: Your Tensor class includes `requires_grad` and basic gradient tracking. When you implement automatic differentiation (Module 05), how will your current design support gradient computation?
+**Challenge**: Your Tensor class includes `requires_grad` and basic gradient tracking. When you implement automatic differentiation (Module 09), how will your current design support gradient computation?
 
 Consider how operations like `c = a * b` need to track both forward computation and backward gradient flow. What modifications would your Tensor methods need to support this?
 """
@@ -1443,54 +1402,10 @@ Consider how operations like `c = a * b` need to track both forward computation 
 # In[ ]:
 
 """
-SYSTEMS ANALYSIS: Gradient Compatibility and Computational Graphs
+YOUR ANALYSIS:
 
-Key Insights from Your Gradient-Ready Tensor Design:
-
-1. **Current Gradient Foundation**:
-   - `requires_grad` flag enables gradient tracking
-   - `grad` attribute stores computed gradients
-   - `_grad_fn` placeholder for backward function references
-
-2. **Computational Graph Requirements**:
-   ```python
-   # Forward: c = a * b
-   # Your current implementation:
-   def __mul__(self, other):
-       result = Tensor(self._data * other._data)
-       # Missing: gradient function attachment
-       return result
-   
-   # Autograd-ready version needed:
-   def __mul__(self, other):
-       result = Tensor(self._data * other._data)
-       if self.requires_grad or other.requires_grad:
-           result.requires_grad = True
-           result._grad_fn = MultiplyBackward(self, other)  # Store backward function
-       return result
-   ```
-
-3. **Gradient Flow Architecture**:
-   - Forward pass: Compute values and build computational graph
-   - Backward pass: Traverse graph in reverse, accumulating gradients
-   - Your tensor operations become nodes in the computation graph
-
-4. **Memory Implications for Gradients**:
-   - Each tensor operation must store references to inputs
-   - Gradient computation requires keeping intermediate values
-   - Your implementation's memory efficiency directly impacts gradient memory
-
-5. **Production Gradient Patterns**:
-   - Chain rule: ∂loss/∂a = ∂loss/∂c × ∂c/∂a
-   - Gradient accumulation: Multiple backward passes sum gradients
-   - Memory optimization: Gradient checkpointing trades compute for memory
-
-6. **Your Design Enables**:
-   - Zero-copy operations preserve gradient tracking
-   - Contiguous memory layout accelerates gradient computation
-   - Broadcasting rules apply to gradient shapes automatically
-
-Production Connection: Your tensor design directly enables automatic differentiation. Every PyTorch operation (torch.add, torch.mul) follows this exact pattern - storing forward results while building the computational graph for backward gradient flow. Your foundation makes neural network training possible.
+[Write your response here - consider gradient tracking, computational graphs,
+and how your tensor operations will support automatic differentiation]
 """
 
 # %% [markdown]
@@ -1504,16 +1419,15 @@ Congratulations! You've built the fundamental data structure that powers all mac
 - **Memory Efficiency Mastery**: Discovered that memory layout affects performance more than algorithms (10-100x speedups)
 - **Broadcasting Implementation**: Created automatic shape matching that saves memory and enables flexible operations
 - **Production-Ready API**: Designed interfaces that mirror PyTorch and TensorFlow patterns
-- **Systems Thinking**: Connected tensor design choices to production ML constraints and GPU acceleration patterns
 
 ### Ready for Next Steps
 Your tensor implementation now enables:
-- **Module 02 (Activations)**: Add nonlinear functions that make neural networks powerful
+- **Module 03 (Activations)**: Add nonlinear functions that make neural networks powerful
 - **Neural network operations**: Matrix multiplication, broadcasting, and gradient preparation
 - **Real data processing**: Handle images, text, and complex multi-dimensional datasets
 
 ### Export Your Work
-1. **Export to package**: `tito module complete 01`
+1. **Export to package**: `tito module complete 01_tensor`
 2. **Verify integration**: Your Tensor class will be available as `tinytorch.core.tensor.Tensor`
 3. **Enable next module**: Activations build on your tensor foundation
 

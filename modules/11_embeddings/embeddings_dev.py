@@ -21,7 +21,7 @@ Welcome to the Embeddings module! You'll implement the systems that convert disc
 - Framework connection: See how your implementations match PyTorch's embedding systems
 - Performance insight: Learn how embedding lookup patterns affect cache efficiency and memory bandwidth
 
-## Build → Use → Reflect
+## Build -> Use -> Reflect
 1. **Build**: Embedding layer with lookup table and positional encoding systems
 2. **Use**: Transform token sequences into rich vector representations for language processing
 3. **Reflect**: How do embedding choices determine model capacity and computational efficiency?
@@ -35,8 +35,8 @@ By the end of this module, you'll understand:
 - Connection to production systems like transformer embedding layers and their optimization techniques
 
 ## Systems Reality Check
-💡 **Production Context**: Modern language models have embedding tables with billions of parameters (GPT-3: 50k vocab × 12k dim = 600M embedding params)
-⚡ **Performance Note**: Embedding lookups are memory-bandwidth bound - efficient access patterns are critical for high-throughput training
+TIP **Production Context**: Modern language models have embedding tables with billions of parameters (GPT-3: 50k vocab * 12k dim = 600M embedding params)
+SPEED **Performance Note**: Embedding lookups are memory-bandwidth bound - efficient access patterns are critical for high-throughput training
 """
 
 # %% nbgrader={"grade": false, "grade_id": "embeddings-imports", "locked": false, "schema_version": 3, "solution": false, "task": false}
@@ -75,13 +75,13 @@ except ImportError:
                 self.vocab_size = vocab_size
 
 # %% nbgrader={"grade": false, "grade_id": "embeddings-welcome", "locked": false, "schema_version": 3, "solution": false, "task": false}
-print("🎯 TinyTorch Embeddings Module")
+print("TARGET TinyTorch Embeddings Module")
 print(f"NumPy version: {np.__version__}")
 print("Ready to build embedding systems!")
 
 # %% [markdown]
 """
-## 📦 Where This Code Lives in the Final Package
+## PACKAGE Where This Code Lives in the Final Package
 
 **Learning Side:** You work in `modules/source/12_embeddings/embeddings_dev.py`  
 **Building Side:** Code exports to `tinytorch.core.embeddings`
@@ -109,12 +109,12 @@ Tokens are discrete symbols, but neural networks work best with continuous vecto
 
 ```
 Discrete Token Transformation:
-    Token ID    →    Dense Vector Representation
-       42       →    [0.1, -0.3, 0.8, 0.2, ...]
+    Token ID    ->    Dense Vector Representation
+       42       ->    [0.1, -0.3, 0.8, 0.2, ...]
        
 Visualization:
     Sparse One-Hot      Dense Embedding
-    [0,0,0,1,0,...]  →  [0.1,-0.3,0.8,0.2]
+    [0,0,0,1,0,...]  ->  [0.1,-0.3,0.8,0.2]
     100,000 dims        512 dims
 ```
 
@@ -123,36 +123,36 @@ An embedding layer is essentially a learnable lookup table:
 
 ```
 Embedding Table Memory Layout:
-┌─────────────────────────────────────┐
-│ Embedding Weight Matrix             │
-├─────────────────────────────────────┤
-│ Token 0:  [0.1, -0.2,  0.3, ...]  │  ← "<PAD>" token
-│ Token 1:  [0.4,  0.1, -0.5, ...]  │  ← "<UNK>" token  
-│ Token 2:  [-0.1, 0.8,  0.2, ...]  │  ← "the" token
-│ Token 3:  [0.7, -0.3,  0.1, ...]  │  ← "and" token
-│ ...                               │
-│ Token N:  [0.2,  0.5, -0.7, ...]  │  ← Final token
-└─────────────────────────────────────┘
-    ↑                    ↑
++-------------------------------------+
+| Embedding Weight Matrix             |
++-------------------------------------┤
+| Token 0:  [0.1, -0.2,  0.3, ...]  |  <- "<PAD>" token
+| Token 1:  [0.4,  0.1, -0.5, ...]  |  <- "<UNK>" token  
+| Token 2:  [-0.1, 0.8,  0.2, ...]  |  <- "the" token
+| Token 3:  [0.7, -0.3,  0.1, ...]  |  <- "and" token
+| ...                               |
+| Token N:  [0.2,  0.5, -0.7, ...]  |  <- Final token
++-------------------------------------+
+    ^                    ^
   vocab_size        embedding_dim
 
-Example: 50,000 × 512 = 25.6M parameters = 102.4MB (float32)
+Example: 50,000 * 512 = 25.6M parameters = 102.4MB (float32)
 ```
 
 ### Embedding Lookup Process
 ```
 Lookup Operation Flow:
     Token IDs: [42, 17, 8]  (Input sequence)
-         ↓ Advanced Indexing
-    Embedding Table[42] → [0.1, -0.3, 0.8, ...]
-    Embedding Table[17] → [0.4,  0.1, -0.5, ...] 
-    Embedding Table[8]  → [-0.1, 0.8,  0.2, ...]
-         ↓ Stack Results
-    Output: [[0.1, -0.3, 0.8, ...],    ← Token 42 embedding
-             [0.4,  0.1, -0.5, ...],    ← Token 17 embedding  
-             [-0.1, 0.8,  0.2, ...]]    ← Token 8 embedding
+         v Advanced Indexing
+    Embedding Table[42] -> [0.1, -0.3, 0.8, ...]
+    Embedding Table[17] -> [0.4,  0.1, -0.5, ...] 
+    Embedding Table[8]  -> [-0.1, 0.8,  0.2, ...]
+         v Stack Results
+    Output: [[0.1, -0.3, 0.8, ...],    <- Token 42 embedding
+             [0.4,  0.1, -0.5, ...],    <- Token 17 embedding  
+             [-0.1, 0.8,  0.2, ...]]    <- Token 8 embedding
     
-Complexity: O(seq_length) lookups, O(seq_length × embed_dim) memory
+Complexity: O(seq_length) lookups, O(seq_length * embed_dim) memory
 ```
 
 ### Why Embeddings Work
@@ -167,12 +167,12 @@ Since transformers lack inherent position awareness, we add positional informati
 ```
 Position-Aware Embedding Creation:
     Token Embedding    +    Positional Encoding    =    Final Representation
-    ┌─────────────┐         ┌─────────────┐             ┌─────────────┐
-    │[0.1,-0.3,0.8]│    +    │[0.0, 1.0,0.0]│        =    │[0.1, 0.7,0.8]│  ← Pos 0
-    │[0.4, 0.1,-0.5]│    +    │[0.1, 0.9,0.1]│        =    │[0.5, 1.0,-0.4]│  ← Pos 1
-    │[-0.1,0.8, 0.2]│    +    │[0.2, 0.8,0.2]│        =    │[0.1, 1.6, 0.4]│  ← Pos 2
-    └─────────────┘         └─────────────┘             └─────────────┘
-         ↑                       ↑                           ↑
+    +-------------+         +-------------+             +-------------+
+    |[0.1,-0.3,0.8]|    +    |[0.0, 1.0,0.0]|        =    |[0.1, 0.7,0.8]|  <- Pos 0
+    |[0.4, 0.1,-0.5]|    +    |[0.1, 0.9,0.1]|        =    |[0.5, 1.0,-0.4]|  <- Pos 1
+    |[-0.1,0.8, 0.2]|    +    |[0.2, 0.8,0.2]|        =    |[0.1, 1.6, 0.4]|  <- Pos 2
+    +-------------+         +-------------+             +-------------+
+         ^                       ^                           ^
     Content Info           Position Info              Complete Context
 ```
 
@@ -193,19 +193,19 @@ Let's start with the core embedding layer - a learnable lookup table that conver
 ```
 Embedding Layer Architecture:
     Input: Token IDs [batch_size, seq_length]
-         ↓ Index into weight matrix
+         v Index into weight matrix
     Weight Matrix: [vocab_size, embedding_dim] 
-         ↓ Advanced indexing: weight[input_ids]
+         v Advanced indexing: weight[input_ids]
     Output: Embeddings [batch_size, seq_length, embedding_dim]
 
 Memory Layout:
-┌──────────────────────────────────────┐
-│ Embedding Weight Matrix              │  ← Main parameter storage
-├──────────────────────────────────────┤  
-│ Input Token IDs (integers)           │  ← Temporary during forward
-├──────────────────────────────────────┤
-│ Output Embeddings (float32)          │  ← Result tensor
-└──────────────────────────────────────┘
++--------------------------------------+
+| Embedding Weight Matrix              |  <- Main parameter storage
++--------------------------------------┤  
+| Input Token IDs (integers)           |  <- Temporary during forward
++--------------------------------------┤
+| Output Embeddings (float32)          |  <- Result tensor
++--------------------------------------+
 
 Operation: O(1) lookup per token, O(seq_length) total
 ```
@@ -355,7 +355,7 @@ class Embedding:
 
 # %% [markdown]
 """
-### 🧪 Test Your Embedding Layer Implementation
+### TEST Test Your Embedding Layer Implementation
 
 Once you implement the Embedding forward method above, run this cell to test it:
 """
@@ -417,10 +417,10 @@ def test_unit_embedding_layer():
     assert 'total_memory_mb' in memory_stats, "Should provide memory statistics"
     assert memory_stats['total_parameters'] == vocab_size * embedding_dim, "Should calculate parameters correctly"
     
-    print("✅ Embedding layer tests passed!")
-    print(f"✅ Handles various input shapes correctly")
-    print(f"✅ Consistent lookup and parameter tracking")
-    print(f"✅ Memory usage: {memory_stats['total_memory_mb']:.2f}MB")
+    print("PASS Embedding layer tests passed!")
+    print(f"PASS Handles various input shapes correctly")
+    print(f"PASS Consistent lookup and parameter tracking")
+    print(f"PASS Memory usage: {memory_stats['total_memory_mb']:.2f}MB")
 
 # Test function defined (called in main block)
 
@@ -433,18 +433,18 @@ Transformers need explicit position information since attention is position-agno
 ### Sinusoidal Positional Encoding Visualization
 ```
 Mathematical Foundation:
-    PE(pos, 2i)   = sin(pos / 10000^(2i/d_model))     ← Even dimensions
-    PE(pos, 2i+1) = cos(pos / 10000^(2i/d_model))     ← Odd dimensions
+    PE(pos, 2i)   = sin(pos / 10000^(2i/d_model))     <- Even dimensions
+    PE(pos, 2i+1) = cos(pos / 10000^(2i/d_model))     <- Odd dimensions
 
 Frequency Pattern:
-    Position →   0    1    2    3    4   ...
-    Dim 0:    [sin] [sin] [sin] [sin] [sin] ... ← High frequency
-    Dim 1:    [cos] [cos] [cos] [cos] [cos] ... ← High frequency
-    Dim 2:    [sin] [sin] [sin] [sin] [sin] ... ← Med frequency
-    Dim 3:    [cos] [cos] [cos] [cos] [cos] ... ← Med frequency
+    Position ->   0    1    2    3    4   ...
+    Dim 0:    [sin] [sin] [sin] [sin] [sin] ... <- High frequency
+    Dim 1:    [cos] [cos] [cos] [cos] [cos] ... <- High frequency
+    Dim 2:    [sin] [sin] [sin] [sin] [sin] ... <- Med frequency
+    Dim 3:    [cos] [cos] [cos] [cos] [cos] ... <- Med frequency
     ...        ...   ...   ...   ...   ...   
-    Dim n-2:  [sin] [sin] [sin] [sin] [sin] ... ← Low frequency  
-    Dim n-1:  [cos] [cos] [cos] [cos] [cos] ... ← Low frequency
+    Dim n-2:  [sin] [sin] [sin] [sin] [sin] ... <- Low frequency  
+    Dim n-1:  [cos] [cos] [cos] [cos] [cos] ... <- Low frequency
 
 Why This Works:
     - Each position gets unique encoding across all dimensions
@@ -456,19 +456,19 @@ Why This Works:
 ### Position Encoding Memory Layout
 ```
 Precomputed Position Matrix:
-┌─────────────────────────────────────┐
-│ Position Encoding Matrix            │
-├─────────────────────────────────────┤ 
-│ Pos 0:  [0.00, 1.00, 0.00, 1.00...]│  ← sin(0), cos(0), sin(0), cos(0)
-│ Pos 1:  [0.84, 0.54, 0.10, 0.99...]│  ← sin(1), cos(1), sin(f1), cos(f1)
-│ Pos 2:  [0.91,-0.42, 0.20, 0.98...]│  ← sin(2), cos(2), sin(f2), cos(f2) 
-│ Pos 3:  [0.14,-0.99, 0.30, 0.95...]│  ← sin(3), cos(3), sin(f3), cos(f3)
-│ ...                               │
-└─────────────────────────────────────┘
-    ↑                    ↑
++-------------------------------------+
+| Position Encoding Matrix            |
++-------------------------------------┤ 
+| Pos 0:  [0.00, 1.00, 0.00, 1.00...]|  <- sin(0), cos(0), sin(0), cos(0)
+| Pos 1:  [0.84, 0.54, 0.10, 0.99...]|  <- sin(1), cos(1), sin(f1), cos(f1)
+| Pos 2:  [0.91,-0.42, 0.20, 0.98...]|  <- sin(2), cos(2), sin(f2), cos(f2) 
+| Pos 3:  [0.14,-0.99, 0.30, 0.95...]|  <- sin(3), cos(3), sin(f3), cos(f3)
+| ...                               |
++-------------------------------------+
+    ^                    ^
 max_seq_length     embedding_dim
 
-Memory: max_seq_length × embedding_dim × 4 bytes (precomputed)
+Memory: max_seq_length * embedding_dim * 4 bytes (precomputed)
 ```
 """
 
@@ -630,7 +630,7 @@ class PositionalEncoding:
             print()
         
         # Show frequency analysis
-        print(f"\n📈 FREQUENCY ANALYSIS:")
+        print(f"\nPROGRESS FREQUENCY ANALYSIS:")
         print("Even dimensions (sine): Lower frequencies for early dimensions")
         print("Odd dimensions (cosine): Same frequencies, phase-shifted")
         
@@ -641,7 +641,7 @@ class PositionalEncoding:
 
 # %% [markdown]
 """
-### 🧪 Test Your Positional Encoding Implementation
+### TEST Test Your Positional Encoding Implementation
 
 Once you implement the PositionalEncoding methods above, run this cell to test it:
 """
@@ -713,10 +713,10 @@ def test_unit_positional_encoding():
     pos_embeddings_callable = pos_enc(embeddings)
     assert np.allclose(pos_embeddings_callable.data, pos_embeddings.data), "Callable interface should work"
     
-    print("✅ Positional encoding tests passed!")
-    print(f"✅ Handles 2D and 3D inputs correctly")
-    print(f"✅ Proper validation and deterministic behavior")
-    print(f"✅ Encoding dimension: {embedding_dim}, Max length: {max_seq_length}")
+    print("PASS Positional encoding tests passed!")
+    print(f"PASS Handles 2D and 3D inputs correctly")
+    print(f"PASS Proper validation and deterministic behavior")
+    print(f"PASS Encoding dimension: {embedding_dim}, Max length: {max_seq_length}")
 
 # Test function defined (called in main block)
 
@@ -729,15 +729,15 @@ Some models use learned positional embeddings instead of fixed sinusoidal ones. 
 ### Learned vs Sinusoidal Comparison
 ```
 Sinusoidal Positional Encoding:
-    ✓ Zero parameters (deterministic computation)
-    ✓ Can extrapolate to longer sequences
-    ✓ Mathematical guarantees about relative positions
+    OK Zero parameters (deterministic computation)
+    OK Can extrapolate to longer sequences
+    OK Mathematical guarantees about relative positions
     ✗ Fixed pattern - cannot adapt to task
     
 Learned Positional Embeddings:
-    ✓ Learnable parameters (adapts to task/data)
-    ✓ Can capture task-specific positional patterns
-    ✗ Requires additional parameters (max_seq_len × embed_dim)
+    OK Learnable parameters (adapts to task/data)
+    OK Can capture task-specific positional patterns
+    ✗ Requires additional parameters (max_seq_len * embed_dim)
     ✗ Cannot extrapolate beyond training sequence length
     ✗ Needs sufficient training data to learn good positions
 ```
@@ -746,16 +746,16 @@ Learned Positional Embeddings:
 ```
 Learned Position System:
     Position IDs: [0, 1, 2, 3, ...]
-          ↓ Embedding lookup (just like token embeddings)
+          v Embedding lookup (just like token embeddings)
     Position Table: [max_seq_length, embedding_dim]
-          ↓ Standard embedding lookup
+          v Standard embedding lookup
     Position Embeddings: [seq_length, embedding_dim]
-          ↓ Add to token embeddings
+          v Add to token embeddings
     Final Representation: Token + Position information
 
 This is essentially two embedding tables:
-    - Token Embedding: token_id → content vector
-    - Position Embedding: position_id → position vector
+    - Token Embedding: token_id -> content vector
+    - Position Embedding: position_id -> position vector
 ```
 """
 
@@ -867,7 +867,7 @@ class LearnedPositionalEmbedding:
 
 # %% [markdown]
 """
-### 🧪 Test Your Learned Positional Embedding Implementation
+### TEST Test Your Learned Positional Embedding Implementation
 
 Once you implement the LearnedPositionalEmbedding methods above, run this cell to test it:
 """
@@ -944,20 +944,20 @@ def test_unit_learned_positional_embedding():
     pos_embeddings_callable = learned_pos(embeddings)
     assert np.allclose(pos_embeddings_callable.data, pos_embeddings.data), "Callable interface should work"
     
-    print("✅ Learned positional embedding tests passed!")
-    print(f"✅ Parameter tracking and optimization ready")
-    print(f"✅ Handles various input shapes correctly")
-    print(f"✅ Max sequence length: {max_seq_length}, Embedding dim: {embedding_dim}")
+    print("PASS Learned positional embedding tests passed!")
+    print(f"PASS Parameter tracking and optimization ready")
+    print(f"PASS Handles various input shapes correctly")
+    print(f"PASS Max sequence length: {max_seq_length}, Embedding dim: {embedding_dim}")
 
 # Test function defined (called in main block)
 
-# ✅ IMPLEMENTATION CHECKPOINT: Ensure all embedding components are complete before analysis
+# PASS IMPLEMENTATION CHECKPOINT: Ensure all embedding components are complete before analysis
 
-# 🤔 PREDICTION: How does embedding table memory scale with vocabulary size and dimension?
+# THINK PREDICTION: How does embedding table memory scale with vocabulary size and dimension?
 # Linear with vocab_size? Linear with embedding_dim? Quadratic with both?
 # Your prediction: _______
 
-# 🔍 SYSTEMS INSIGHT #1: Embedding Memory Scaling Analysis
+# MAGNIFY SYSTEMS INSIGHT #1: Embedding Memory Scaling Analysis
 def analyze_embedding_memory_scaling():
     """Analyze how embedding memory scales with vocabulary and dimension parameters."""
     try:
@@ -994,31 +994,31 @@ def analyze_embedding_memory_scaling():
             
             print(f"{vocab_size:<12,} {embed_dim:<10} {params:<12,} {memory_mb:<12.1f} {lookup_time:<12.2f}")
         
-        # 💡 WHY THIS MATTERS: GPT-3 has 50k vocab × 12k dim = 600M embedding parameters!
+        # TIP WHY THIS MATTERS: GPT-3 has 50k vocab * 12k dim = 600M embedding parameters!
         # That's 2.4GB just for the embedding table (before any other model weights)
-        print("\n💡 SCALING INSIGHTS:")
+        print("\nTIP SCALING INSIGHTS:")
         print("   - Memory scales linearly with both vocab_size AND embedding_dim")
         print("   - Lookup time is dominated by memory bandwidth, not computation")
         print("   - Large models spend significant memory on embeddings alone")
         
     except Exception as e:
-        print(f"⚠️ Error in memory scaling analysis: {e}")
+        print(f"WARNING️ Error in memory scaling analysis: {e}")
         print("Make sure your Embedding class is implemented correctly")
 
 analyze_embedding_memory_scaling()
 
-# ✅ IMPLEMENTATION CHECKPOINT: Ensure positional encoding works before analysis
+# PASS IMPLEMENTATION CHECKPOINT: Ensure positional encoding works before analysis
 
-# 🤔 PREDICTION: Which positional encoding uses more memory - sinusoidal or learned?
+# THINK PREDICTION: Which positional encoding uses more memory - sinusoidal or learned?
 # Which can handle longer sequences? Your answer: _______
 
-# 🔍 SYSTEMS INSIGHT #2: Positional Encoding Trade-offs
+# MAGNIFY SYSTEMS INSIGHT #2: Positional Encoding Trade-offs
 def analyze_positional_encoding_tradeoffs():
     """Compare memory and performance characteristics of different positional encodings."""
     try:
         import time
         
-        print("\n🔍 POSITIONAL ENCODING COMPARISON")
+        print("\nMAGNIFY POSITIONAL ENCODING COMPARISON")
         print("=" * 50)
         
         embedding_dim = 512
@@ -1056,30 +1056,30 @@ def analyze_positional_encoding_tradeoffs():
             print(f"{seq_len:<8} {'Learned':<12} {learned_time:<10.2f} {learned_memory:<12.1f} {learned_params:<12,}")
             print()
         
-        # 💡 WHY THIS MATTERS: Choice affects model size and sequence length flexibility
-        print("💡 TRADE-OFF INSIGHTS:")
+        # TIP WHY THIS MATTERS: Choice affects model size and sequence length flexibility
+        print("TIP TRADE-OFF INSIGHTS:")
         print("   - Sinusoidal: 0 parameters, can extrapolate to any length")
         print("   - Learned: Many parameters, limited to training sequence length")
         print("   - Modern models often use learned for better task adaptation")
         
     except Exception as e:
-        print(f"⚠️ Error in positional encoding analysis: {e}")
+        print(f"WARNING️ Error in positional encoding analysis: {e}")
         print("Make sure both positional encoding classes are implemented")
 
 analyze_positional_encoding_tradeoffs()
 
-# ✅ IMPLEMENTATION CHECKPOINT: Ensure full embedding pipeline works
+# PASS IMPLEMENTATION CHECKPOINT: Ensure full embedding pipeline works
 
-# 🤔 PREDICTION: What's the bottleneck in embedding pipelines - computation or memory?
+# THINK PREDICTION: What's the bottleneck in embedding pipelines - computation or memory?
 # How does batch size affect throughput? Your prediction: _______
 
-# 🔍 SYSTEMS INSIGHT #3: Embedding Pipeline Performance
+# MAGNIFY SYSTEMS INSIGHT #3: Embedding Pipeline Performance
 def analyze_embedding_pipeline_performance():
     """Analyze performance characteristics of the complete embedding pipeline."""
     try:
         import time
         
-        print("\n⚡ EMBEDDING PIPELINE PERFORMANCE")
+        print("\nSPEED EMBEDDING PIPELINE PERFORMANCE")
         print("=" * 50)
         
         # Create pipeline components
@@ -1124,22 +1124,22 @@ def analyze_embedding_pipeline_performance():
             
             print(f"{batch_size:<6} {seq_length:<8} {total_tokens:<12,} {pipeline_time:<10.2f} {tokens_per_sec:<12,.0f} {memory_mb:<12.1f}")
         
-        # 💡 WHY THIS MATTERS: Understanding pipeline bottlenecks for production deployment
-        print("\n💡 PIPELINE INSIGHTS:")
+        # TIP WHY THIS MATTERS: Understanding pipeline bottlenecks for production deployment
+        print("\nTIP PIPELINE INSIGHTS:")
         print("   - Embedding lookup is memory-bandwidth bound (not compute bound)")
         print("   - Larger batches improve throughput due to better memory utilization")
         print("   - Sequence length affects memory linearly, performance sublinearly")
         print("   - Production systems optimize with: embedding caching, mixed precision, etc.")
         
     except Exception as e:
-        print(f"⚠️ Error in pipeline analysis: {e}")
+        print(f"WARNING️ Error in pipeline analysis: {e}")
         print("Make sure your full embedding pipeline is working")
 
 analyze_embedding_pipeline_performance()
 
 # %% [markdown]
 """
-## 🎯 ML Systems: Performance Analysis & Embedding Scaling
+## TARGET ML Systems: Performance Analysis & Embedding Scaling
 
 Now let's develop systems engineering skills by analyzing embedding performance and understanding how embedding choices affect downstream ML system efficiency.
 
@@ -1271,7 +1271,7 @@ class EmbeddingProfiler:
                 print(f"{vocab_size:<12,} {embed_dim:<10} {total_params:<12,} {total_memory_mb:<12.2f} {lookup_time_ms:<12.2f}")
         
         # Analyze scaling patterns
-        print(f"\n📈 SCALING INSIGHTS:")
+        print(f"\nPROGRESS SCALING INSIGHTS:")
         if len(vocab_sizes) > 1 and len(embedding_dims) > 1:
             # Compare scaling with vocab size (fixed embedding dim)
             fixed_dim = embedding_dims[0]
@@ -1284,7 +1284,7 @@ class EmbeddingProfiler:
             if small_key in scaling_results and large_key in scaling_results:
                 vocab_ratio = large_vocab / small_vocab
                 memory_ratio = scaling_results[large_key]['memory_mb'] / scaling_results[small_key]['memory_mb']
-                print(f"   Vocabulary scaling: {vocab_ratio:.1f}x vocab → {memory_ratio:.1f}x memory (Linear)")
+                print(f"   Vocabulary scaling: {vocab_ratio:.1f}x vocab -> {memory_ratio:.1f}x memory (Linear)")
             
             # Compare scaling with embedding dim (fixed vocab)
             fixed_vocab = vocab_sizes[0]
@@ -1297,7 +1297,7 @@ class EmbeddingProfiler:
             if small_key in scaling_results and large_key in scaling_results:
                 dim_ratio = large_dim / small_dim
                 memory_ratio = scaling_results[large_key]['memory_mb'] / scaling_results[small_key]['memory_mb']
-                print(f"   Dimension scaling: {dim_ratio:.1f}x dim → {memory_ratio:.1f}x memory (Linear)")
+                print(f"   Dimension scaling: {dim_ratio:.1f}x dim -> {memory_ratio:.1f}x memory (Linear)")
         
         return scaling_results
     
@@ -1307,7 +1307,7 @@ class EmbeddingProfiler:
         
         This function is PROVIDED to show positional encoding comparison.
         """
-        print(f"\n🔍 POSITIONAL ENCODING COMPARISON")
+        print(f"\nMAGNIFY POSITIONAL ENCODING COMPARISON")
         print("=" * 50)
         
         # Create test embeddings
@@ -1353,7 +1353,7 @@ class EmbeddingProfiler:
         print(f"{'Sinusoidal':<12} {sin_time:<10.2f} {sin_memory:<12.2f} {0:<12,} {'Good'}")
         print(f"{'Learned':<12} {learned_time:<10.2f} {learned_memory:<12.2f} {results['learned']['parameters']:<12,} {'Limited'}")
         
-        print(f"\n💡 INSIGHTS:")
+        print(f"\nTIP INSIGHTS:")
         print(f"   - Sinusoidal: Zero parameters, deterministic, good extrapolation")
         print(f"   - Learned: Requires parameters, model-specific, limited extrapolation")
         print(f"   - Choice depends on: model capacity, sequence length requirements, extrapolation needs")
@@ -1390,7 +1390,7 @@ def analyze_embedding_system_design():
         print(f"{config['name']:<12} {config['vocab_size']:<10,} {config['embed_dim']:<10} "
               f"{config['seq_length']:<8} {embed_params:<12,} {embed_memory_mb:<10.1f}")
     
-    print(f"\n🎯 DESIGN TRADE-OFFS:")
+    print(f"\nTARGET DESIGN TRADE-OFFS:")
     print(f"   1. Vocabulary Size:")
     print(f"      - Larger vocab: Better text coverage, more parameters")
     print(f"      - Smaller vocab: Longer sequences, more compute")
@@ -1401,8 +1401,8 @@ def analyze_embedding_system_design():
     print(f"      - Sinusoidal: No parameters, good extrapolation")
     print(f"      - Learned: Model-specific, limited to training length")
     print(f"   4. Memory Scaling:")
-    print(f"      - Embedding table: O(vocab_size × embed_dim)")
-    print(f"      - Sequence processing: O(batch_size × seq_length × embed_dim)")
+    print(f"      - Embedding table: O(vocab_size * embed_dim)")
+    print(f"      - Sequence processing: O(batch_size * seq_length * embed_dim)")
     print(f"      - Total memory dominated by model size, not embedding table")
     
     print(f"\n🏭 PRODUCTION CONSIDERATIONS:")
@@ -1413,7 +1413,7 @@ def analyze_embedding_system_design():
 
 # %% [markdown]
 """
-### 🧪 Test: Embedding Performance Analysis
+### TEST Test: Embedding Performance Analysis
 
 Let's test our embedding profiler with realistic performance scenarios.
 """
@@ -1453,7 +1453,7 @@ def test_embedding_profiler():
         assert metrics['lookup_time_ms'] >= 0, "Time should be non-negative"
         assert metrics['tokens_per_second'] >= 0, "Throughput should be non-negative"
     
-    print("✅ Lookup performance measurement test passed")
+    print("PASS Lookup performance measurement test passed")
     
     # Test memory scaling analysis
     vocab_sizes = [500, 1000]
@@ -1471,7 +1471,7 @@ def test_embedding_profiler():
         assert metrics['total_parameters'] > 0, "Should have parameters"
         assert metrics['memory_mb'] > 0, "Should use memory"
     
-    print("✅ Memory scaling analysis test passed")
+    print("PASS Memory scaling analysis test passed")
     
     # Test positional encoding comparison
     comparison_results = profiler.compare_positional_encodings(seq_length=50, embedding_dim=64)
@@ -1485,8 +1485,8 @@ def test_embedding_profiler():
         assert 'memory_usage_mb' in metrics, "Should measure memory usage"
         assert 'parameters' in metrics, "Should count parameters"
     
-    print("✅ Positional encoding comparison test passed")
-    print("🎯 Embedding Profiler: All tests passed!")
+    print("PASS Positional encoding comparison test passed")
+    print("TARGET Embedding Profiler: All tests passed!")
 
 # Test function defined (called in main block)
 
@@ -1500,7 +1500,7 @@ Let's test how all our embedding components work together in a realistic languag
 # %% nbgrader={"grade": false, "grade_id": "test-embedding-integration", "locked": false, "schema_version": 3, "solution": false, "task": false}
 def test_embedding_integration():
     """Test complete embedding pipeline with tokenization integration."""
-    print("🧪 Integration Test: Complete Embedding Pipeline...")
+    print("TEST Integration Test: Complete Embedding Pipeline...")
     
     # Create tokenizer
     tokenizer = CharTokenizer()
@@ -1589,10 +1589,10 @@ def test_embedding_integration():
     print(f"    Embedding table memory: {total_memory_mb:.2f}MB")
     print(f"    Sequence memory: {large_pos_embeddings.data.nbytes / (1024*1024):.2f}MB")
     
-    print("✅ Complete embedding pipeline integration test passed!")
-    print(f"✅ Tokenization → Embedding → Positional Encoding pipeline works")
-    print(f"✅ Handles various batch sizes and sequence lengths")
-    print(f"✅ Memory usage is reasonable for production systems")
+    print("PASS Complete embedding pipeline integration test passed!")
+    print(f"PASS Tokenization -> Embedding -> Positional Encoding pipeline works")
+    print(f"PASS Handles various batch sizes and sequence lengths")
+    print(f"PASS Memory usage is reasonable for production systems")
 
 # Test function defined (called in main block)
 
@@ -1613,7 +1613,7 @@ if __name__ == "__main__":
     test_embedding_integration()
     
     print("\n" + "="*60)
-    print("🔍 EMBEDDING SYSTEMS ANALYSIS")
+    print("MAGNIFY EMBEDDING SYSTEMS ANALYSIS")
     print("="*60)
     
     # Performance analysis
@@ -1681,14 +1681,14 @@ if __name__ == "__main__":
     print(f"  Throughput: {(batch_size * seq_length) / total_time:.0f} tokens/second")
     
     print("\n" + "="*60)
-    print("🎯 EMBEDDINGS MODULE COMPLETE!")
+    print("TARGET EMBEDDINGS MODULE COMPLETE!")
     print("="*60)
     print("All embedding tests passed!")
     print("Ready for attention mechanism integration!")
 
 # %% [markdown]
 """
-## 🤔 ML Systems Thinking: Interactive Questions
+## THINK ML Systems Thinking: Interactive Questions
 
 Now that you've built the embedding systems that convert tokens to rich vector representations, let's connect this work to broader ML systems challenges. These questions help you think critically about how embedding design scales to production language processing systems.
 
@@ -1715,7 +1715,7 @@ YOUR REFLECTION ON EMBEDDING MEMORY OPTIMIZATION:
 TODO: Replace this text with your thoughtful response about memory-optimized embedding system design.
 
 Consider addressing:
-- How would you implement embedding compression for a 100k × 1024 vocabulary under GPU constraints?
+- How would you implement embedding compression for a 100k * 1024 vocabulary under GPU constraints?
 - What techniques would you use to optimize lookup patterns for high-throughput training?
 - How would you design dynamic vocabulary expansion while maintaining memory efficiency?
 - What trade-offs would you make between embedding quality and memory footprint?
@@ -1741,7 +1741,7 @@ GRADING RUBRIC (Instructor Use):
 """
 ### Question 2: Positional Encoding and Sequence Length Scalability
 
-**Context**: Your positional encoding implementations show the trade-offs between fixed sinusoidal patterns and learned position embeddings. In your analysis, you saw that `PositionalEncoding` requires 0 parameters but `LearnedPositionalEmbedding` needs max_seq_length × embedding_dim parameters. Production language models increasingly need to handle variable sequence lengths efficiently while maintaining consistent position representations across different tasks and deployment scenarios.
+**Context**: Your positional encoding implementations show the trade-offs between fixed sinusoidal patterns and learned position embeddings. In your analysis, you saw that `PositionalEncoding` requires 0 parameters but `LearnedPositionalEmbedding` needs max_seq_length * embedding_dim parameters. Production language models increasingly need to handle variable sequence lengths efficiently while maintaining consistent position representations across different tasks and deployment scenarios.
 
 **Reflection Question**: Based on your `PositionalEncoding` and `LearnedPositionalEmbedding` implementations, architect a hybrid positional encoding system for a production transformer that efficiently handles sequences from 512 tokens to 32k tokens. How would you modify your current `forward()` methods to create a hybrid approach that combines the benefits of both systems? What changes would you make to your position computation to optimize for variable-length sequences, and how would you extend your positional encoding comparison analysis to measure performance across different sequence length distributions?
 
@@ -1785,7 +1785,7 @@ GRADING RUBRIC (Instructor Use):
 
 **Context**: Your embedding pipeline integration demonstrates how tokenization, embedding lookup, and positional encoding work together in language model preprocessing. In your `test_embedding_integration()` function, you measured pipeline performance and saw how batch size affects throughput. In production training systems, the embedding pipeline often becomes a bottleneck due to memory bandwidth limitations and the need to process billions of tokens efficiently during training.
 
-**Reflection Question**: Based on your complete embedding pipeline implementation (tokenization → `Embedding.forward()` → `PositionalEncoding.forward()`), design an optimization strategy for large-scale language model training that processes 1 trillion tokens efficiently. How would you modify your current pipeline functions to implement batch processing optimizations for mixed sequence lengths, design efficient gradient updates for your massive `Embedding.weight` parameters, and coordinate embedding updates across distributed training nodes? Consider how your current memory analysis and performance measurement techniques could be extended to monitor pipeline bottlenecks in distributed settings.
+**Reflection Question**: Based on your complete embedding pipeline implementation (tokenization -> `Embedding.forward()` -> `PositionalEncoding.forward()`), design an optimization strategy for large-scale language model training that processes 1 trillion tokens efficiently. How would you modify your current pipeline functions to implement batch processing optimizations for mixed sequence lengths, design efficient gradient updates for your massive `Embedding.weight` parameters, and coordinate embedding updates across distributed training nodes? Consider how your current memory analysis and performance measurement techniques could be extended to monitor pipeline bottlenecks in distributed settings.
 
 Think about: optimizing your current pipeline implementation, extending your performance analysis to distributed settings, modifying your batch processing patterns, and scaling your embedding weight update mechanisms.
 
@@ -1823,54 +1823,54 @@ GRADING RUBRIC (Instructor Use):
 
 # %% [markdown]
 """
-## 🎯 MODULE SUMMARY: Embeddings
+## TARGET MODULE SUMMARY: Embeddings
 
 Congratulations! You have successfully implemented comprehensive embedding systems for language processing:
 
-### ✅ What You Have Built
+### PASS What You Have Built
 - **Embedding Layer**: Learnable lookup table converting tokens to dense vector representations
 - **Positional Encoding**: Sinusoidal position information for sequence understanding
 - **Learned Positional Embeddings**: Trainable position representations for model-specific optimization
 - **Memory-Efficient Lookups**: Optimized embedding access patterns for production systems
 - **Performance Analysis**: Comprehensive profiling and scaling analysis tools
-- **🆕 Integration Pipeline**: Complete tokenization → embedding → positional encoding workflow
+- **🆕 Integration Pipeline**: Complete tokenization -> embedding -> positional encoding workflow
 - **🆕 Systems Optimization**: Memory usage analysis and performance optimization techniques
 
-### ✅ Key Learning Outcomes
+### PASS Key Learning Outcomes
 - **Understanding**: How discrete tokens become continuous vector representations
 - **Implementation**: Built embedding systems from scratch with efficient lookup operations
 - **Systems Insight**: How embedding table size affects model memory and training efficiency
 - **Performance Engineering**: Measured and optimized embedding lookup patterns and memory usage
 - **Production Context**: Understanding real-world embedding challenges and optimization techniques
 
-### ✅ Technical Mastery
+### PASS Technical Mastery
 - **Embedding Lookup**: Efficient table lookup with various initialization strategies
 - **Positional Encoding**: Mathematical sine/cosine patterns for position representation
-- **Memory Scaling**: Understanding O(vocab_size × embedding_dim) parameter scaling
+- **Memory Scaling**: Understanding O(vocab_size * embedding_dim) parameter scaling
 - **Performance Optimization**: Cache-friendly access patterns and memory bandwidth optimization
 - **🆕 Integration Design**: Seamless pipeline from text processing to vector representations
 
-### ✅ Professional Skills Developed
+### PASS Professional Skills Developed
 - **Systems Architecture**: Designing embedding systems for production scale
 - **Memory Engineering**: Optimizing large parameter tables for efficient access
 - **Performance Analysis**: Measuring and improving embedding pipeline throughput
 - **Integration Thinking**: Connecting embedding systems with tokenization and attention
 
-### ✅ Ready for Next Steps
+### PASS Ready for Next Steps
 Your embedding systems are now ready to power:
 - **Attention Mechanisms**: Processing sequence representations with attention
 - **Transformer Models**: Complete language model architectures
 - **Language Understanding**: Rich semantic representations for NLP tasks
 - **🧠 Sequence Processing**: Foundation for advanced sequence modeling
 
-### 🔗 Connection to Real ML Systems
+### LINK Connection to Real ML Systems
 Your implementations mirror production systems:
 - **PyTorch Embeddings**: `torch.nn.Embedding` and `torch.nn.functional.embedding`
 - **Transformer Models**: All modern language models use similar embedding approaches
 - **Production Optimizations**: Memory mapping, gradient checkpointing, and distributed embeddings
 - **Industry Applications**: GPT, BERT, and other transformer models rely on these foundations
 
-### 🎯 The Power of Dense Representations
+### TARGET The Power of Dense Representations
 You have unlocked the bridge between discrete tokens and continuous understanding:
 - **Before**: Tokens were sparse, discrete symbols
 - **After**: Tokens become rich, continuous vectors that capture semantic relationships

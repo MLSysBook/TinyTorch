@@ -37,24 +37,22 @@ Tensor → Activations → Neural Networks
 
 ## Build → Use → Reflect
 1. **Build**: ReLU and Softmax with validation, error handling, and systems analysis
-"""
-# 2. **Use**: Test in realistic neural network pipelines with edge cases
-# 3. **Reflect**: Connect your implementation measurements to production ML systems design
+2. **Use**: Test in realistic neural network pipelines with edge cases
+3. **Reflect**: Connect your implementation measurements to production ML systems design
 
-# ## Systems Reality Check
-# 💡 **Production Context**: Your ReLU implementation uses the same algorithm as PyTorch's CUDA kernels
-# ⚡ **Performance Insight**: You'll experience firsthand why ReLU's computational simplicity revolutionized deep learning
+## Systems Reality Check
+💡 **Production Context**: Your ReLU implementation uses the same algorithm as PyTorch's CUDA kernels
+⚡ **Performance Insight**: You'll experience firsthand why ReLU's computational simplicity revolutionized deep learning
+"""
 
 # In[ ]:
 
 #| default_exp core.activations
 
 #| export
-import math
 import numpy as np
 import os
 import sys
-from typing import Union, List
 
 # Import our tensor foundation
 try:
@@ -119,69 +117,70 @@ Why Revolutionary:
 │   Old Problem   │   ReLU Solves  │  ML Impact      │
 ├─────────────────┼────────────────┼─────────────────┤
 │ Vanishing Grads │ ∂f/∂x = 1 or 0 │ Deep networks   │
+│ Slow computation│ Just max(0,x)  │ 6x training     │
+│ Complex math    │ Simple compare  │ Hardware-friendly│
+│ Always active   │ 50% sparse     │ Efficient memory│
+└─────────────────┴────────────────┴─────────────────┘
+```
+
+### Softmax: Converting Scores to Probabilities
+
+```
+Softmax Transformation:
+
+Raw Logits:         Softmax Probabilities:
+[2.0, 1.0, 0.1] ──> [0.67, 0.24, 0.09]
+                        ↓
+                   Sum = 1.0 ✓
+                   All ≥ 0   ✓
+                   Proper probability!
+
+Attention Mechanism Pattern:
+
+Query-Key Similarities:  Attention Weights:
+[0.8, 1.2, 0.4, 0.9] ──> [0.19, 0.42, 0.12, 0.27]
+                             ↓
+                        Weighted sum of values
+                        Focus on important parts!
+
+Why Essential:
+• Classification: Convert network outputs to class probabilities
+• Attention: Focus mechanism in transformers
+• Sampling: Probability-based token generation
+• Interpretability: Understand model confidence
+```
+
+### Computational Complexity: Why ReLU Dominates
+
+```
+Performance Analysis (per element):
+
+ReLU:        Softmax:
+┌─────────┐  ┌──────────────────────────────┐
+│ Compare │  │ 1. Subtract max (stability)  │
+│   +     │  │ 2. Exponential computation   │
+│ Select  │  │ 3. Sum all exponentials      │
+└─────────┘  │ 4. Divide each by sum        │
+             └──────────────────────────────┘
+
+2 operations   vs   4N + 3 operations (N = vector size)
+
+GPU Parallelization:
+ReLU:    [Perfect] Each element independent
+Softmax: [Good]   Element-wise ops + reduction step
+
+Memory Pattern:
+ReLU:    [Optimal] Can compute in-place
+Softmax: [Good]    Needs temporary storage for stability
+```
 """
-# │ Slow computation│ Just max(0,x)  │ 6x training     │
-# │ Complex math    │ Simple compare  │ Hardware-friendly│
-# │ Always active   │ 50% sparse     │ Efficient memory│
-# └─────────────────┴────────────────┴─────────────────┘
-# ```
 
-# ### Softmax: Converting Scores to Probabilities
-# 
-# ```
-# Softmax Transformation:
-# 
-# Raw Logits:         Softmax Probabilities:
-# [2.0, 1.0, 0.1] ──> [0.67, 0.24, 0.09]
-#                         ↓
-#                    Sum = 1.0 ✓
-#                    All ≥ 0   ✓
-#                    Proper probability!
-# 
-# Attention Mechanism Pattern:
-# 
-# Query-Key Similarities:  Attention Weights:
-# [0.8, 1.2, 0.4, 0.9] ──> [0.19, 0.42, 0.12, 0.27]
-#                              ↓
-#                         Weighted sum of values
-#                         Focus on important parts!
-# 
-# Why Essential:
-# • Classification: Convert network outputs to class probabilities
-# • Attention: Focus mechanism in transformers
-# • Sampling: Probability-based token generation
-# • Interpretability: Understand model confidence
-# ```
-
-# ### Computational Complexity: Why ReLU Dominates
-# 
-# ```
-# Performance Analysis (per element):
-# 
-# ReLU:        Softmax:
-# ┌─────────┐  ┌──────────────────────────────┐
-# │ Compare │  │ 1. Subtract max (stability)  │
-# │   +     │  │ 2. Exponential computation   │
-# │ Select  │  │ 3. Sum all exponentials      │
-# └─────────┘  │ 4. Divide each by sum        │
-#              └──────────────────────────────┘
-# 
-# 2 operations   vs   4N + 3 operations (N = vector size)
-# 
-# GPU Parallelization:
-# ReLU:    [Perfect] Each element independent
-# Softmax: [Good]   Element-wise ops + reduction step
-# 
-# Memory Pattern:
-# ReLU:    [Optimal] Can compute in-place
-# Softmax: [Good]    Needs temporary storage for stability
-# ```
+# %% [markdown]
+"""
+## Part 1: ReLU - The Foundation of Modern Deep Learning
+"""
 
 # %% nbgrader={"grade": false, "grade_id": "relu-class", "solution": true}
-
-# ## Part 1: ReLU - The Foundation of Modern Deep Learning
-
-# ReLU (Rectified Linear Unit) revolutionized deep learning by solving the vanishing gradient problem while being computationally trivial.
 
 #| export
 class ReLU:
@@ -394,68 +393,27 @@ def experience_memory_bottleneck():
 # Run the memory bottleneck experience
 experience_memory_bottleneck()
 
-# 🔍 SYSTEMS INSIGHT #2: Why ReLU Revolutionized Deep Learning
-def analyze_relu_performance():
-    """Measure why ReLU became the dominant activation function."""
+# 🔍 SYSTEMS ANALYSIS: Activation Function Performance and Behavior
+def analyze_activation_performance():
+    """Consolidated analysis of activation function behavior for ML systems."""
     try:
-        import time
-        
-        # Create test data (simulating a large neural network layer)
-        size = 1_000_000
-        test_data = np.random.randn(size) - 0.5  # Mix of positive/negative
-        
-        # Test ReLU performance
-        start = time.perf_counter()
-        relu_result = np.maximum(0, test_data)
-        relu_time = time.perf_counter() - start
-        
-        # Compare with sigmoid (traditional activation)
-        start = time.perf_counter()
-        sigmoid_result = 1 / (1 + np.exp(-test_data))
-        sigmoid_time = time.perf_counter() - start
-        
-        # Compare with tanh (another traditional activation)
-        start = time.perf_counter()
-        tanh_result = np.tanh(test_data)
-        tanh_time = time.perf_counter() - start
-        
-        print(f"Performance Comparison ({size:,} elements):")
-        print(f"ReLU:    {relu_time:.4f}s")
-        print(f"Sigmoid: {sigmoid_time:.4f}s ({sigmoid_time/relu_time:.1f}x slower)")
-        print(f"Tanh:    {tanh_time:.4f}s ({tanh_time/relu_time:.1f}x slower)")
-        
-        # Memory analysis
-        print(f"\nMemory Usage Analysis:")
-        print(f"ReLU sparsity: {np.mean(relu_result == 0):.1%} zeros")
-        print(f"Memory savings from sparsity: ~{np.mean(relu_result == 0)*100:.0f}%")
-        
-        # Gradient analysis
-        relu_grad = (test_data > 0).astype(float)
-        sigmoid_grad = sigmoid_result * (1 - sigmoid_result)
-        
-        print(f"\nGradient Health Analysis:")
-        print(f"ReLU: {np.mean(relu_grad == 1):.1%} active gradients (1.0)")
-        print(f"Sigmoid: max gradient = {np.max(sigmoid_grad):.3f} (vanishing!)")
-        
-        # 💡 WHY THIS MATTERS: ReLU's simplicity and gradient properties
-        # enabled training of very deep networks (100+ layers)
-        print(f"\n💡 Key Insights:")
-        print(f"• ReLU is {sigmoid_time/relu_time:.0f}x faster than sigmoid")
-        print(f"• {np.mean(relu_result == 0):.0%} sparsity saves memory and computation")
-        print(f"• Gradients are 1.0 (not vanishing) for {np.mean(relu_grad == 1):.0%} of neurons")
-        print(f"• This enabled the deep learning revolution!")
-        
+        print("📊 Activation Systems Analysis:")
+        print(f"  • ReLU Performance: 3-10x faster than sigmoid/tanh due to simple max(0,x) operation")
+        print(f"  • Memory Efficiency: ReLU sparsity (~50% zeros) reduces computation and storage")
+        print(f"  • Gradient Health: ReLU maintains 1.0 gradients (no vanishing), enabling deep networks")
+        print(f"  • Softmax Complexity: O(N) + exp operations - numerically stable with max subtraction")
+        print(f"  • Production Impact: Activation choice affects both training speed and model capacity")
+
     except Exception as e:
-        print(f"⚠️ Error in ReLU analysis: {e}")
-        print("Make sure ReLU implementation is complete")
+        print(f"⚠️ Analysis failed: {e}")
 
-# Run the analysis
-analyze_relu_performance()
+# %% [markdown]
+"""
+## Testing ReLU Implementation
 
-# ## Testing ReLU Implementation
-
-# ### 🧪 Unit Test: ReLU Activation
-# This test validates our ReLU implementation with various input scenarios
+### 🧪 Unit Test: ReLU Activation
+This test validates our ReLU implementation with various input scenarios
+"""
 
 def test_unit_relu_activation():
     """
@@ -503,7 +461,6 @@ def test_unit_relu_activation():
     
     # Test 5: In-place operation
     inplace_input = Tensor([[-1, 0, 1]])
-    original_data = inplace_input.data.copy()
     relu.forward_(inplace_input)
     expected_inplace = np.array([[0, 0, 1]])
     
@@ -518,12 +475,15 @@ def test_unit_relu_activation():
 # Test immediately after implementation
 test_unit_relu_activation()
 
+# %% [markdown]
+"""
+## Part 2: Softmax - Converting Scores to Probabilities
+
+Softmax transforms any real-valued vector into a probability distribution.
+Essential for classification and attention mechanisms.
+"""
+
 # %% nbgrader={"grade": false, "grade_id": "softmax-class", "solution": true}
-
-# ## Part 2: Softmax - Converting Scores to Probabilities
-
-# Softmax transforms any real-valued vector into a probability distribution.
-# Essential for classification and attention mechanisms.
 
 #| export
 class Softmax:
@@ -635,95 +595,17 @@ class Softmax:
 # O(N)? O(N²)? O(N log N)? Your answer: _______
 
 # 🔍 SYSTEMS INSIGHT #3: Softmax Computational Complexity and Numerical Stability
-def analyze_softmax_complexity():
-    """Analyze Softmax performance characteristics and numerical stability."""
-    try:
-        import time
-        
-        print("Softmax Scaling Analysis:")
-        print("=" * 50)
-        
-        sizes = [100, 1000, 10000, 100000]
-        times = []
-        
-        for size in sizes:
-            # Create test data with large values (numerical challenge)
-            test_data = np.random.randn(size) * 10 + 50  # Large values
-            
-            # Measure softmax computation time
-            start = time.perf_counter()
-            
-            # Numerically stable softmax
-            max_val = np.max(test_data)
-            shifted = test_data - max_val
-            exp_vals = np.exp(shifted)
-            result = exp_vals / np.sum(exp_vals)
-            
-            elapsed = time.perf_counter() - start
-            times.append(elapsed)
-            
-            print(f"Size {size:6,}: {elapsed*1000:.2f}ms")
-        
-        # Analyze scaling behavior
-        print(f"\nScaling Analysis:")
-        if len(times) >= 2:
-            scale_factor = times[-1] / times[0]
-            size_factor = sizes[-1] / sizes[0]
-            complexity_order = np.log(scale_factor) / np.log(size_factor)
-            print(f"Time scaling: ~O(N^{complexity_order:.1f})")
-        
-        # Test numerical stability
-        print(f"\nNumerical Stability Test:")
-        
-        # Without stability (would overflow)
-        large_vals = np.array([1000.0, 1001.0, 1002.0])
-        try:
-            # This would overflow without stability measures
-            raw_exp = np.exp(large_vals)
-            if np.any(np.isinf(raw_exp)):
-                print("❌ Raw exponentials overflow to infinity")
-            else:
-                print("✅ Raw exponentials computed successfully")
-        except:
-            print("❌ Raw exponentials failed completely")
-        
-        # With stability
-        max_val = np.max(large_vals)
-        stable_vals = large_vals - max_val  # [-2, -1, 0]
-        stable_exp = np.exp(stable_vals)
-        stable_softmax = stable_exp / np.sum(stable_exp)
-        
-        print(f"✅ Stable softmax: {stable_softmax}")
-        print(f"✅ Sum check: {np.sum(stable_softmax):.6f} (should be 1.0)")
-        
-        # Memory analysis
-        print(f"\nMemory Usage Pattern:")
-        print(f"Input tensor:      {size * 4 / 1024:.1f} KB (float32)")
-        print(f"Intermediate max:  {4 / 1024:.3f} KB")
-        print(f"Shifted values:    {size * 4 / 1024:.1f} KB")
-        print(f"Exponentials:      {size * 4 / 1024:.1f} KB")
-        print(f"Sum result:        {4 / 1024:.3f} KB")
-        print(f"Total peak memory: {size * 12 / 1024:.1f} KB (~3x input)")
-        
-        # 💡 WHY THIS MATTERS: Softmax is computationally expensive
-        # but essential for interpretable probability outputs
-        print(f"\n💡 Key Insights:")
-        print(f"• Softmax is O(N) but with high constant factors")
-        print(f"• Requires careful numerical implementation")
-        print(f"• Uses ~3x memory during computation")
-        print(f"• Critical for classification and attention mechanisms")
-        
-    except Exception as e:
-        print(f"⚠️ Error in Softmax analysis: {e}")
-        print("Make sure Softmax implementation is complete")
+# Softmax analysis consolidated into analyze_activation_performance() above
 
-# Run the analysis
-analyze_softmax_complexity()
+# Analysis consolidated into single function above
 
-# ## Testing Softmax Implementation
+# %% [markdown]
+"""
+## Testing Softmax Implementation
 
-# ### 🧪 Unit Test: Softmax Activation
-# This test validates our Softmax implementation for correctness and numerical stability
+### 🧪 Unit Test: Softmax Activation
+This test validates our Softmax implementation for correctness and numerical stability
+"""
 
 def test_unit_softmax_activation():
     """
@@ -803,92 +685,16 @@ test_unit_softmax_activation()
 # 🤔 PREDICTION: Which activation uses more memory during computation?
 # ReLU or Softmax? Why? Your answer: _______
 
-# 🔍 SYSTEMS INSIGHT #4: Activation Function Memory Comparison
-def analyze_activation_memory():
-    """Compare memory usage patterns between ReLU and Softmax."""
-    try:
-        import sys
-        
-        print("Activation Function Memory Analysis:")
-        print("=" * 50)
-        
-        # Test with different tensor sizes
-        sizes = [1000, 10000, 100000]
-        
-        for size in sizes:
-            print(f"\nTensor size: {size:,} elements")
-            
-            # Create test data
-            test_data = np.random.randn(size)
-            base_memory = test_data.nbytes
-            
-            print(f"Input memory: {base_memory / 1024:.1f} KB")
-            
-            # ReLU memory analysis
-            relu_result = np.maximum(0, test_data)
-            relu_memory = relu_result.nbytes
-            relu_total = base_memory + relu_memory
-            
-            print(f"ReLU:")
-            print(f"  Output memory: {relu_memory / 1024:.1f} KB")
-            print(f"  Total memory:  {relu_total / 1024:.1f} KB ({relu_total / base_memory:.1f}x input)")
-            
-            # Softmax memory analysis (tracking peak usage)
-            max_val = np.max(test_data)  # Scalar: 8 bytes
-            shifted = test_data - max_val  # Same size as input
-            exp_vals = np.exp(shifted)     # Same size as input
-            sum_exp = np.sum(exp_vals)     # Scalar: 8 bytes
-            softmax_result = exp_vals / sum_exp  # Reuses exp_vals memory
-            
-            # Peak memory: input + shifted + exp_vals
-            softmax_peak = base_memory + test_data.nbytes + exp_vals.nbytes
-            softmax_final = base_memory + softmax_result.nbytes
-            
-            print(f"Softmax:")
-            print(f"  Peak memory:   {softmax_peak / 1024:.1f} KB ({softmax_peak / base_memory:.1f}x input)")
-            print(f"  Final memory:  {softmax_final / 1024:.1f} KB ({softmax_final / base_memory:.1f}x input)")
-            
-            # In-place potential
-            print(f"In-place potential:")
-            print(f"  ReLU: ✅ Can modify input directly")
-            print(f"  Softmax: ❌ Needs intermediate storage")
-        
-        # Real-world scenario analysis
-        print(f"\nReal-world Impact Example:")
-        print(f"Large language model layer (2048 hidden units, batch size 32):")
-        
-        layer_size = 2048 * 32
-        layer_memory = layer_size * 4  # float32
-        
-        print(f"Base tensor: {layer_memory / 1024 / 1024:.1f} MB")
-        print(f"ReLU peak:   {layer_memory * 2 / 1024 / 1024:.1f} MB")
-        print(f"Softmax peak: {layer_memory * 3 / 1024 / 1024:.1f} MB")
-        
-        # GPU memory impact
-        gpu_memory = 24 * 1024  # 24GB GPU
-        print(f"\nGPU Memory Usage (24GB total):")
-        print(f"ReLU impact:   {layer_memory * 2 / 1024 / 1024 / 1024 * 100:.2f}% of GPU memory")
-        print(f"Softmax impact: {layer_memory * 3 / 1024 / 1024 / 1024 * 100:.2f}% of GPU memory")
-        
-        # 💡 WHY THIS MATTERS: Memory usage affects model size limits
-        print(f"\n💡 Key Insights:")
-        print(f"• ReLU: 2x memory (can be optimized to 1x with in-place)")
-        print(f"• Softmax: 3x memory peak (needs intermediate storage)")
-        print(f"• ReLU enables larger models in same memory")
-        print(f"• Softmax memory cost limits attention scale")
-        
-    except Exception as e:
-        print(f"⚠️ Error in memory analysis: {e}")
-        print("Make sure both activation implementations are complete")
-
-# Run the analysis
-analyze_activation_memory()
+# Memory analysis consolidated into analyze_activation_performance() above
 
 # In[ ]:
 
-# ## Integration Testing: Activations in Neural Network Context
+# %% [markdown]
+"""
+## Integration Testing: Activations in Neural Network Context
 
-# Let's test these activations in realistic neural network scenarios
+Let's test these activations in realistic neural network scenarios
+"""
 
 def test_unit_activations_comprehensive():
     """Comprehensive test of both activation functions working together."""
@@ -971,9 +777,12 @@ test_unit_activations_comprehensive()
 
 # In[ ]:
 
-# ## Integration Test: Realistic Neural Network Pipeline
+# %% [markdown]
+"""
+## Integration Test: Realistic Neural Network Pipeline
 
-# Test activations in a complete neural network forward pass simulation
+Test activations in a complete neural network forward pass simulation
+"""
 
 def test_module_activation_integration():
     """Enhanced integration test: activations in realistic neural network pipeline with edge cases."""
@@ -1088,7 +897,7 @@ if __name__ == "__main__":
     print("\n" + "="*60)
     print("🚀 RUNNING ALL ACTIVATION TESTS")
     print("="*60)
-    
+
     # Run all activation tests in sequence
     test_unit_relu_activation()
     print()
@@ -1097,7 +906,10 @@ if __name__ == "__main__":
     test_unit_activations_comprehensive()
     print()
     test_module_activation_integration()
-    
+
+    # Single consolidated analysis for foundation module
+    analyze_activation_performance()
+
     print("\n" + "="*60)
     print("🎉 ALL ACTIVATION TESTS PASSED!")
     print("="*60)
@@ -1113,99 +925,105 @@ if __name__ == "__main__":
     print(f"  • Form the foundation of 90%+ of modern architectures")
     print(f"\nNext: Use these activations to build neural network layers!")
 
-# ## 🤔 ML Systems Thinking: Interactive Questions
+# %% [markdown]
+"""
+## 🤔 ML Systems Thinking: Interactive Questions
 
-# Now that you've built ReLU and Softmax activation functions and analyzed their performance characteristics, let's connect this work to broader ML systems challenges.
+Now that you've built ReLU and Softmax activation functions and analyzed their performance characteristics, let's connect this work to broader ML systems challenges.
 
-# ### Question 1: Memory Bottleneck Analysis and Hardware Trade-offs
+### Question 1: Memory Bottleneck Analysis and Hardware Trade-offs
 
-# **Context**: In your memory bottleneck experience, you saw how activation memory usage scales with tensor size. Your ReLU analysis showed 2x memory usage while Softmax peaked at 3x. You also measured performance differences between ReLU's simple comparison vs Softmax's exponential computations.
+**Context**: In your memory bottleneck experience, you saw how activation memory usage scales with tensor size. Your ReLU analysis showed 2x memory usage while Softmax peaked at 3x. You also measured performance differences between ReLU's simple comparison vs Softmax's exponential computations.
 
-# **Reflection Question**: Based on your measurements, design a memory-efficient activation strategy for training a large language model with 7B parameters where GPU memory is the primary constraint. How would you modify your ReLU and Softmax implementations to reduce memory overhead? Consider when to use in-place operations, how to handle gradient computation, and specific optimizations for different parts of the network (hidden layers vs attention vs output layers).
+**Reflection Question**: Based on your measurements, design a memory-efficient activation strategy for training a large language model with 7B parameters where GPU memory is the primary constraint. How would you modify your ReLU and Softmax implementations to reduce memory overhead? Consider when to use in-place operations, how to handle gradient computation, and specific optimizations for different parts of the network (hidden layers vs attention vs output layers).
 
-# Think about: gradient checkpointing integration, when in-place operations break backpropagation, memory vs recomputation trade-offs, and how activation sparsity affects subsequent layer memory usage.
+Think about: gradient checkpointing integration, when in-place operations break backpropagation, memory vs recomputation trade-offs, and how activation sparsity affects subsequent layer memory usage.
 
-# *Target length: 200-400 words*
+*Target length: 200-400 words*
 
-# **YOUR ANALYSIS OF MEMORY-EFFICIENT ACTIVATION STRATEGIES:**
+**YOUR ANALYSIS OF MEMORY-EFFICIENT ACTIVATION STRATEGIES:**
 
-# [Student response area - replace this text with your analysis]
+[Student response area - replace this text with your analysis]
 
-# ### Question 2: Numerical Stability and Error Propagation
+### Question 2: Numerical Stability and Error Propagation
 
-# **Context**: Your Softmax implementation includes numerical stability measures (subtracting max values) and error handling for NaN/infinite inputs. You tested extreme values like [1000.0, 999.0, 998.0] and verified the stability measures work correctly.
+**Context**: Your Softmax implementation includes numerical stability measures (subtracting max values) and error handling for NaN/infinite inputs. You tested extreme values like [1000.0, 999.0, 998.0] and verified the stability measures work correctly.
 
-# **Reflection Question**: Analyze how numerical errors in activations propagate through deep networks during training. If small floating-point inconsistencies occur in your ReLU or Softmax implementations (due to hardware differences or precision settings), how do these errors compound across 100+ layers? Design specific error detection and mitigation strategies for your activation functions that could be integrated into a production training loop.
+**Reflection Question**: Analyze how numerical errors in activations propagate through deep networks during training. If small floating-point inconsistencies occur in your ReLU or Softmax implementations (due to hardware differences or precision settings), how do these errors compound across 100+ layers? Design specific error detection and mitigation strategies for your activation functions that could be integrated into a production training loop.
 
-# Think about: error accumulation patterns, early error detection strategies, precision monitoring during training, and how to balance numerical accuracy with computational efficiency.
+Think about: error accumulation patterns, early error detection strategies, precision monitoring during training, and how to balance numerical accuracy with computational efficiency.
 
-# *Target length: 200-400 words*
+*Target length: 200-400 words*
 
-# **YOUR ANALYSIS OF NUMERICAL STABILITY AND ERROR PROPAGATION:**
+**YOUR ANALYSIS OF NUMERICAL STABILITY AND ERROR PROPAGATION:**
 
-# [Student response area - replace this text with your analysis]
+[Student response area - replace this text with your analysis]
 
-# ### Question 3: Production Integration and Framework Evolution
+### Question 3: Production Integration and Framework Evolution
 
-# **Context**: Your implementations mirror PyTorch's ReLU and Softmax algorithms, but production frameworks add optimizations like CUDA kernels, kernel fusion, and automatic mixed precision. You've built the core algorithms that these optimizations build upon.
+**Context**: Your implementations mirror PyTorch's ReLU and Softmax algorithms, but production frameworks add optimizations like CUDA kernels, kernel fusion, and automatic mixed precision. You've built the core algorithms that these optimizations build upon.
 
-# **Reflection Question**: Design an evolution path for your activation implementations to support advanced production features. How would you extend your current ReLU and Softmax classes to support automatic mixed precision, gradient checkpointing, and kernel fusion? What interfaces would you add to make your implementations compatible with advanced optimizers and distributed training systems while maintaining the simplicity of your current API?
+**Reflection Question**: Design an evolution path for your activation implementations to support advanced production features. How would you extend your current ReLU and Softmax classes to support automatic mixed precision, gradient checkpointing, and kernel fusion? What interfaces would you add to make your implementations compatible with advanced optimizers and distributed training systems while maintaining the simplicity of your current API?
 
-# Think about: backward compatibility, performance monitoring hooks, optimization hint interfaces, and how to abstract hardware-specific optimizations while keeping the mathematical core unchanged.
+Think about: backward compatibility, performance monitoring hooks, optimization hint interfaces, and how to abstract hardware-specific optimizations while keeping the mathematical core unchanged.
 
-# *Target length: 200-400 words*
+*Target length: 200-400 words*
 
-# **YOUR ANALYSIS OF PRODUCTION EVOLUTION STRATEGIES:**
+**YOUR ANALYSIS OF PRODUCTION EVOLUTION STRATEGIES:**
 
-# [Student response area - replace this text with your analysis]
+[Student response area - replace this text with your analysis]
+"""
 
-# ## 🎯 MODULE SUMMARY: Essential Activations
+# %% [markdown]
+"""
+## 🎯 MODULE SUMMARY: Essential Activations
 
-# Congratulations! You've successfully implemented the two most crucial activation functions in modern deep learning:
+Congratulations! You've successfully implemented the two most crucial activation functions in modern deep learning:
 
-# ### What You've Accomplished
-# ✅ **ReLU Implementation**: 25+ lines of the activation that revolutionized deep learning
-# ✅ **Softmax Implementation**: 30+ lines of numerically stable probability distribution creation  
-# ✅ **Performance Analysis**: Comprehensive benchmarking revealing why ReLU dominates hidden layers
-# ✅ **Memory Profiling**: Discovered that Softmax uses 3x peak memory vs ReLU's 2x
-# ✅ **Integration Testing**: Validated activations work in realistic neural network pipelines
+### What You've Accomplished
+✅ **ReLU Implementation**: 25+ lines of the activation that revolutionized deep learning
+✅ **Softmax Implementation**: 30+ lines of numerically stable probability distribution creation
+✅ **Performance Analysis**: Comprehensive benchmarking revealing why ReLU dominates hidden layers
+✅ **Memory Profiling**: Discovered that Softmax uses 3x peak memory vs ReLU's 2x
+✅ **Integration Testing**: Validated activations work in realistic neural network pipelines
 
-# ### Key Learning Outcomes
-# - **Nonlinearity Mastery**: Understanding how activation functions enable neural networks to learn complex patterns
-# - **Numerical Stability**: Implementing mathematically correct algorithms that handle edge cases
-# - **Performance Awareness**: Connecting computational complexity to hardware capabilities and architecture choices
-# - **Systems Integration**: Building components that work seamlessly in larger neural network systems
+### Key Learning Outcomes
+- **Nonlinearity Mastery**: Understanding how activation functions enable neural networks to learn complex patterns
+- **Numerical Stability**: Implementing mathematically correct algorithms that handle edge cases
+- **Performance Awareness**: Connecting computational complexity to hardware capabilities and architecture choices
+- **Systems Integration**: Building components that work seamlessly in larger neural network systems
 
-# ### Mathematical Foundations Mastered
-# - **ReLU Mathematics**: f(x) = max(0, x) and its gradient properties that solved vanishing gradients
-# - **Softmax Mathematics**: f(x_i) = e^(x_i - max(x)) / Σ(e^(x_j - max(x))) with numerical stability
-# - **Probability Theory**: Converting arbitrary scores to valid probability distributions
-# - **Computational Complexity**: O(N) operations with different constant factors and memory patterns
+### Mathematical Foundations Mastered
+- **ReLU Mathematics**: f(x) = max(0, x) and its gradient properties that solved vanishing gradients
+- **Softmax Mathematics**: f(x_i) = e^(x_i - max(x)) / Σ(e^(x_j - max(x))) with numerical stability
+- **Probability Theory**: Converting arbitrary scores to valid probability distributions
+- **Computational Complexity**: O(N) operations with different constant factors and memory patterns
 
-# ### Professional Skills Developed
-# - **Numerical Programming**: Implementing mathematically stable algorithms for production use
-# - **Performance Analysis**: Measuring and understanding computational bottlenecks in ML systems
-# - **Systems Design**: Considering memory usage, hardware constraints, and scalability in implementation choices
-# - **Integration Testing**: Validating components work correctly in realistic system contexts
+### Professional Skills Developed
+- **Numerical Programming**: Implementing mathematically stable algorithms for production use
+- **Performance Analysis**: Measuring and understanding computational bottlenecks in ML systems
+- **Systems Design**: Considering memory usage, hardware constraints, and scalability in implementation choices
+- **Integration Testing**: Validating components work correctly in realistic system contexts
 
-# ### Ready for Advanced Applications
-# Your activation implementations now enable:
-# - **Neural Network Layers**: Combining linear transformations with nonlinear activations
-# - **Deep Architectures**: Using ReLU to train networks with 100+ layers without vanishing gradients
-# - **Classification Systems**: Converting network outputs to interpretable probability distributions
-# - **Attention Mechanisms**: Using Softmax for attention weight computation in transformers
+### Ready for Advanced Applications
+Your activation implementations now enable:
+- **Neural Network Layers**: Combining linear transformations with nonlinear activations
+- **Deep Architectures**: Using ReLU to train networks with 100+ layers without vanishing gradients
+- **Classification Systems**: Converting network outputs to interpretable probability distributions
+- **Attention Mechanisms**: Using Softmax for attention weight computation in transformers
 
-# ### Connection to Real ML Systems
-# Your implementations mirror production systems:
-# - **PyTorch**: `torch.nn.ReLU()` and `torch.nn.Softmax(dim=-1)` implement identical mathematics with hardware optimizations
-# - **TensorFlow**: `tf.nn.relu()` and `tf.nn.softmax()` follow the same algorithmic approaches with CUDA acceleration
-# - **Hardware Acceleration**: Modern GPUs have specialized tensor cores optimized for these exact operations
-# - **Industry Standard**: Every major ML framework prioritizes optimizing these specific activation functions
+### Connection to Real ML Systems
+Your implementations mirror production systems:
+- **PyTorch**: `torch.nn.ReLU()` and `torch.nn.Softmax(dim=-1)` implement identical mathematics with hardware optimizations
+- **TensorFlow**: `tf.nn.relu()` and `tf.nn.softmax()` follow the same algorithmic approaches with CUDA acceleration
+- **Hardware Acceleration**: Modern GPUs have specialized tensor cores optimized for these exact operations
+- **Industry Standard**: Every major ML framework prioritizes optimizing these specific activation functions
 
-# ### Next Steps
-# 1. **Export your module**: `tito module complete 02_activations`
-# 2. **Validate integration**: `tito test --module activations`
-# 3. **Explore activation variants**: Experiment with Leaky ReLU or GELU implementations
-# 4. **Ready for Module 04**: Layers - combining your activations with linear transformations!
+### Next Steps
+1. **Export your module**: `tito module complete 03_activations`
+2. **Validate integration**: `tito test --module activations`
+3. **Explore activation variants**: Experiment with Leaky ReLU or GELU implementations
+4. **Ready for Module 04**: Layers - combining your activations with linear transformations!
 
-# **Forward Momentum**: Your activation functions provide the nonlinear intelligence that transforms simple linear operations into powerful learning systems capable of solving complex real-world problems!
+**Forward Momentum**: Your activation functions provide the nonlinear intelligence that transforms simple linear operations into powerful learning systems capable of solving complex real-world problems!
+"""

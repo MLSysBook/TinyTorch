@@ -21,7 +21,7 @@ Welcome to the KV Caching module! You'll implement the key-value cache optimizat
 - Systems insight: How memory management enables dramatic speedups
 - Incremental computation: Build systems that efficiently reuse previous work
 
-## Build → Profile → Optimize
+## Build -> Profile -> Optimize
 1. **Build**: Implement KV caching for multi-head attention with incremental generation
 2. **Profile**: Compare O(N²) vs O(N) performance and memory usage patterns
 3. **Optimize**: Apply caching to complete transformer inference pipeline
@@ -35,9 +35,9 @@ By the end of this module, you'll understand:
 - Connection to how ChatGPT, GPT-4, and other LLMs achieve fast response times
 
 ## Systems Reality Check
-💡 **Production Context**: GPT-4 uses KV caching for all inference - without it, generating 100 tokens would take minutes instead of seconds
-⚡ **Performance Note**: KV caching is the difference between research models and production LLMs
-🔥 **Memory Trade-off**: Cache grows with sequence length but saves quadratic recomputation
+TIP **Production Context**: GPT-4 uses KV caching for all inference - without it, generating 100 tokens would take minutes instead of seconds
+SPEED **Performance Note**: KV caching is the difference between research models and production LLMs
+FIRE **Memory Trade-off**: Cache grows with sequence length but saves quadratic recomputation
 """
 
 # %% nbgrader={"grade": false, "grade_id": "caching-imports", "locked": false, "schema_version": 3, "solution": false, "task": false}
@@ -82,13 +82,13 @@ except ImportError:
                 self.dropout = dropout
 
 # %% nbgrader={"grade": false, "grade_id": "caching-welcome", "locked": false, "schema_version": 3, "solution": false, "task": false}
-print("🚀 TinyTorch KV Caching Module")
+print("ROCKET TinyTorch KV Caching Module")
 print(f"NumPy version: {np.__version__}")
 print("Ready to implement the most sophisticated optimization!")
 
 # %% [markdown]
 """
-## 📦 Where This Code Lives in the Final Package
+## PACKAGE Where This Code Lives in the Final Package
 
 **Learning Side:** You work in `modules/source/19_caching/caching_dev.py`  
 **Building Side:** Code exports to `tinytorch.core.caching`
@@ -128,7 +128,7 @@ Generate token N: Attend to [token_1, ..., token_{N-1}]
 ### Memory and Compute Analysis
 For each new token, traditional attention:
 1. **Recomputes K,V** for all previous tokens (wasted computation)
-2. **Attention matrix** grows: 1×1, 2×2, 3×3, ..., N×N (quadratic memory)
+2. **Attention matrix** grows: 1*1, 2*2, 3*3, ..., N*N (quadratic memory)
 3. **Total operations**: 1² + 2² + 3² + ... + N² = O(N³) for full sequence!
 
 **This is why naive transformer generation is impossibly slow for long sequences.**
@@ -190,7 +190,7 @@ class KVCache:
         MEMORY LAYOUT:
         - Cache per layer: keys[seq_len, n_heads, head_dim]
         - Cache per layer: values[seq_len, n_heads, head_dim]
-        - Total memory: 2 × n_layers × max_seq_len × n_heads × head_dim
+        - Total memory: 2 * n_layers * max_seq_len * n_heads * head_dim
         
         Args:
             max_seq_len: Maximum sequence length to cache
@@ -387,20 +387,20 @@ def test_kv_cache():
     cache.reset()
     assert cache.current_position == 0, "Reset should return to position 0"
     
-    print("✅ KV Cache tests passed!")
+    print("PASS KV Cache tests passed!")
     print(f"   Cache capacity: {memory_info['total_cache_size_mb']:.2f} MB")
-    print(f"   Memory efficiency: O(L × N × H × D) scaling")
+    print(f"   Memory efficiency: O(L * N * H * D) scaling")
 
 # Run the test
 test_kv_cache()
 
-# ✅ IMPLEMENTATION CHECKPOINT: Basic KV Cache complete
+# PASS IMPLEMENTATION CHECKPOINT: Basic KV Cache complete
 
-# 🤔 PREDICTION: How much memory would a KV cache use for GPT-3?
+# THINK PREDICTION: How much memory would a KV cache use for GPT-3?
 # GPT-3: 96 layers, 96 heads, 128 head_dim, 2048 max tokens
 # Your guess: _____ GB
 
-# 🔍 SYSTEMS INSIGHT #1: Cache Memory Scaling Analysis
+# MAGNIFY SYSTEMS INSIGHT #1: Cache Memory Scaling Analysis
 def analyze_cache_memory_scaling():
     """Analyze how KV cache memory scales with model and sequence parameters."""
     try:
@@ -434,18 +434,18 @@ def analyze_cache_memory_scaling():
             
             print(f"{config['name']:<15} {config['layers']:<8} {total_mb:<12.1f}MB {per_token_kb:<12.1f}KB")
         
-        print(f"\n🔍 Key Insights:")
-        print(f"   • Memory scales as: O(Layers × Heads × HeadDim × SeqLen)")
-        print(f"   • Each token adds: 2 × Layers × Heads × HeadDim × 4 bytes")
+        print(f"\nMAGNIFY Key Insights:")
+        print(f"   • Memory scales as: O(Layers * Heads * HeadDim * SeqLen)")
+        print(f"   • Each token adds: 2 * Layers * Heads * HeadDim * 4 bytes")
         print(f"   • GPT-3 cache: ~2.4GB for full 2048-token context!")
         print(f"   • Trade-off: Large memory cost but eliminates O(N²) recomputation")
         
-        # 💡 WHY THIS MATTERS: Understanding memory scaling helps design
+        # TIP WHY THIS MATTERS: Understanding memory scaling helps design
         # systems that can handle large models and long sequences efficiently.
         # Real inference servers must budget memory for multiple concurrent caches!
         
     except Exception as e:
-        print(f"⚠️ Error in memory analysis: {e}")
+        print(f"WARNING️ Error in memory analysis: {e}")
         print("Make sure KVCache class is implemented correctly")
 
 # Analyze cache memory scaling
@@ -745,23 +745,23 @@ def test_cached_attention():
     # The outputs should be similar (not exactly equal due to different computation paths)
     assert full_output.shape == (batch_size, 2, embed_dim), "Full sequence output should have correct shape"
     
-    print("✅ Cached Attention tests passed!")
+    print("PASS Cached Attention tests passed!")
     print(f"   Memory saved: {cache.get_memory_usage()['used_cache_size_mb']:.2f} MB cache vs full recomputation")
     print(f"   Cache position: {cache.current_position}")
 
 # Run the test
 test_cached_attention()
 
-# ✅ IMPLEMENTATION CHECKPOINT: Cached Attention complete
+# PASS IMPLEMENTATION CHECKPOINT: Cached Attention complete
 
-# 🤔 PREDICTION: How much faster is cached vs non-cached attention for 100 tokens?
+# THINK PREDICTION: How much faster is cached vs non-cached attention for 100 tokens?
 # Your guess: ___x faster
 
-# 🔍 SYSTEMS INSIGHT #2: Attention Performance Comparison
+# MAGNIFY SYSTEMS INSIGHT #2: Attention Performance Comparison
 def analyze_attention_performance_scaling():
     """Compare cached vs non-cached attention across different sequence lengths."""
     try:
-        print("\n⚡ Attention Performance Scaling Analysis")
+        print("\nSPEED Attention Performance Scaling Analysis")
         print("=" * 45)
         
         embed_dim = 64
@@ -801,19 +801,19 @@ def analyze_attention_performance_scaling():
             
             print(f"{seq_len:<10} {cached_time:<12.2f} {non_cached_time:<15.2f} {speedup:<10.2f}x")
         
-        print(f"\n🔍 Key Insights:")
+        print(f"\nMAGNIFY Key Insights:")
         print(f"   • Speedup increases with sequence length (more reuse!)")
         print(f"   • Cached: O(N) complexity per token")
         print(f"   • Non-cached: O(N²) complexity per token")
         print(f"   • Break-even typically around 20-50 tokens")
         print(f"   • Memory cost: Linear cache vs quadratic recomputation")
         
-        # 💡 WHY THIS MATTERS: This analysis shows why KV caching is essential
+        # TIP WHY THIS MATTERS: This analysis shows why KV caching is essential
         # for any practical transformer deployment. The speedup becomes dramatic
         # for longer sequences that are common in real applications!
         
     except Exception as e:
-        print(f"⚠️ Error in performance analysis: {e}")
+        print(f"WARNING️ Error in performance analysis: {e}")
         print("Make sure cached attention is implemented correctly")
 
 # Analyze attention performance scaling
@@ -1048,7 +1048,7 @@ def test_cached_generation():
         "Initial tokens should be preserved in output"
     )
     
-    print("✅ Cached Generation tests passed!")
+    print("PASS Cached Generation tests passed!")
     print(f"   Generated sequence length: {generated_sequence.shape[1]}")
     print(f"   Processing time: {cached_time:.3f}s")
     print(f"   Memory efficiency: O(N) per step instead of O(N²)")
@@ -1056,17 +1056,17 @@ def test_cached_generation():
 # Run the test
 test_cached_generation()
 
-# ✅ IMPLEMENTATION CHECKPOINT: Cached Generation complete
+# PASS IMPLEMENTATION CHECKPOINT: Cached Generation complete
 
-# 🤔 PREDICTION: For a 1000-token story, how many fewer operations does caching save?
+# THINK PREDICTION: For a 1000-token story, how many fewer operations does caching save?
 # Without cache: ~333 million operations, With cache: ~1 million operations
 # Your calculation: _____ million operations saved
 
-# 🔍 SYSTEMS INSIGHT #3: Generation Efficiency Analysis
+# MAGNIFY SYSTEMS INSIGHT #3: Generation Efficiency Analysis
 def analyze_generation_efficiency():
     """Analyze the computational savings from KV caching in text generation."""
     try:
-        print("\n🚀 Text Generation Efficiency Analysis")
+        print("\nROCKET Text Generation Efficiency Analysis")
         print("=" * 45)
         
         # Analyze different generation scenarios
@@ -1098,10 +1098,10 @@ def analyze_generation_efficiency():
             
             print(f"{scenario['name']:<15} {n:<8} {ops_without_str:<15} {ops_with_str:<12} {reduction:<12.0f}x")
         
-        print(f"\n🔍 Computational Complexity:")
+        print(f"\nMAGNIFY Computational Complexity:")
         print(f"   • Without Cache: O(N³) total operations for N-token generation")
         print(f"   • With Cache: O(N²) total operations for N-token generation")
-        print(f"   • Memory Trade-off: O(L×H×D×N) cache vs O(N³) recomputation")
+        print(f"   • Memory Trade-off: O(L*H*D*N) cache vs O(N³) recomputation")
         print(f"   • Real Impact: Makes GPT-style models practical for generation")
         
         # Test actual generation performance
@@ -1124,12 +1124,12 @@ def analyze_generation_efficiency():
         print(f"   Rate: {result.shape[1]/generation_time:.1f} tokens/second")
         print(f"   This enables real-time conversational AI!")
         
-        # 💡 WHY THIS MATTERS: This dramatic computational savings is what
+        # TIP WHY THIS MATTERS: This dramatic computational savings is what
         # makes conversational AI possible. Without KV caching, chatbots would
         # take minutes to generate simple responses!
         
     except Exception as e:
-        print(f"⚠️ Error in efficiency analysis: {e}")
+        print(f"WARNING️ Error in efficiency analysis: {e}")
         print("Make sure generation functions are implemented correctly")
 
 # Analyze generation efficiency
@@ -1182,7 +1182,7 @@ def calculate_theoretical_speedup(seq_len: int) -> Dict[str, int]:
 
 def format_performance_results(results: List[Dict[str, Any]]) -> None:
     """Format and display performance analysis results in a readable table."""
-    print(f"\n📈 Performance Summary:")
+    print(f"\nPROGRESS Performance Summary:")
     print(f"{'Seq Len':<8} {'Memory(MB)':<12} {'Speedup':<10} {'Memory/Speedup':<15}")
     print("-" * 50)
     
@@ -1197,7 +1197,7 @@ def analyze_kv_cache_performance():
     This function has been refactored into smaller, focused helper functions
     for better readability and maintainability.
     """
-    print("🔍 Analyzing KV Cache Performance Characteristics...")
+    print("MAGNIFY Analyzing KV Cache Performance Characteristics...")
     
     # Define test configuration (reduced for faster testing)
     test_config = {
@@ -1277,8 +1277,8 @@ def _display_analysis_summary(results: List[Dict[str, Any]], sequence_lengths: L
     """Display formatted summary and key insights."""
     format_performance_results(results)
     
-    print(f"\n🎯 Key Insights:")
-    print(f"   • Memory scales as O(L × N × H × D) where L=layers, N=seq_len, H=heads, D=head_dim")
+    print(f"\nTARGET Key Insights:")
+    print(f"   • Memory scales as O(L * N * H * D) where L=layers, N=seq_len, H=heads, D=head_dim")
     print(f"   • Computation scales as O(N²) with cache vs O(N³) without")
     print(f"   • Break-even point: ~{sequence_lengths[1]} tokens for this configuration")
     print(f"   • Memory-efficiency trade-off: more cache memory for better performance")
@@ -1345,14 +1345,14 @@ def explore_production_kv_caching():
     
     for system in systems:
         # Calculate cache memory requirements
-        # 2 (K + V) × layers × max_context × heads × head_dim × 4 bytes (float32)
+        # 2 (K + V) * layers * max_context * heads * head_dim * 4 bytes (float32)
         cache_size_bytes = (2 * system['layers'] * system['max_context'] * 
                            system['heads'] * system['head_dim'] * 4)
         cache_size_gb = cache_size_bytes / (1024**3)
         
         print(f"{system['name']:<15} {cache_size_gb:<12.2f}GB {system['max_context']:<12} {system['use_case']:<15}")
     
-    print(f"\n💡 Production Optimizations:")
+    print(f"\nTIP Production Optimizations:")
     print(f"   • Memory pooling: Reuse cache memory across requests")
     print(f"   • Batch processing: Share cache computation across multiple queries")
     print(f"   • Attention masks: Skip computation for padded tokens")
@@ -1360,13 +1360,13 @@ def explore_production_kv_caching():
     print(f"   • Mixed precision: Use FP16/INT8 to reduce cache memory")
     print(f"   • Flash Attention: Optimize memory access patterns")
     
-    print(f"\n⚡ Real-World Performance Impact:")
+    print(f"\nSPEED Real-World Performance Impact:")
     print(f"   • Without KV cache: GPT would take minutes to generate short responses")
     print(f"   • With KV cache: Real-time conversation becomes possible")
     print(f"   • Memory cost: 1-10GB RAM per conversation depending on model size")
     print(f"   • Speedup: 10-100x faster generation for typical use cases")
     
-    print(f"\n🎯 Why This Matters for ML Engineers:")
+    print(f"\nTARGET Why This Matters for ML Engineers:")
     print(f"   • KV caching is THE optimization that makes LLMs practical")
     print(f"   • Memory management becomes critical at scale")
     print(f"   • Understanding trade-offs helps design better systems")
@@ -1385,7 +1385,7 @@ Complete validation of our KV caching implementation.
 # %% nbgrader={"grade": true, "grade_id": "comprehensive-tests", "locked": false, "points": 20, "schema_version": 3, "solution": false, "task": false}
 def run_comprehensive_tests():
     """Run all tests to validate KV caching implementation."""
-    print("🧪 Running Comprehensive KV Caching Tests")
+    print("TEST Running Comprehensive KV Caching Tests")
     print("=" * 50)
     
     # Test 1: Cache capacity and bounds checking
@@ -1409,7 +1409,7 @@ def run_comprehensive_tests():
     except ValueError:
         pass  # Expected
     
-    print("   ✅ Capacity management works")
+    print("   PASS Capacity management works")
     
     # Test 2: Multi-layer cache consistency
     print("Test 2: Multi-layer Consistency...")
@@ -1432,7 +1432,7 @@ def run_comprehensive_tests():
         np.testing.assert_array_equal(cached_k.data, expected_k, f"Layer {layer} keys incorrect")
         np.testing.assert_array_equal(cached_v.data, expected_v, f"Layer {layer} values incorrect")
     
-    print("   ✅ Multi-layer consistency works")
+    print("   PASS Multi-layer consistency works")
     
     # Test 3: Attention output consistency
     print("Test 3: Attention Consistency...")
@@ -1467,7 +1467,7 @@ def run_comprehensive_tests():
     diff = np.abs(cached_outputs[-1] - full_output.data[:, -1:, :]).mean()
     assert diff < 1.0, f"Cached and non-cached outputs too different: {diff}"
     
-    print("   ✅ Attention consistency acceptable")
+    print("   PASS Attention consistency acceptable")
     
     # Test 4: Memory profiling
     print("Test 4: Memory Profiling...")
@@ -1486,9 +1486,9 @@ def run_comprehensive_tests():
     
     print(f"   Actual memory usage: {memory_mb:.2f} MB")
     print(f"   Theoretical cache size: {theoretical_mb:.2f} MB")
-    print("   ✅ Memory usage within expected range")
+    print("   PASS Memory usage within expected range")
     
-    print("\n🎉 All Comprehensive Tests Passed!")
+    print("\nCELEBRATE All Comprehensive Tests Passed!")
     print("KV caching implementation is working correctly!")
 
 # Run comprehensive tests
@@ -1503,7 +1503,7 @@ Consolidate all test execution for when the module is run directly.
 
 # %%
 if __name__ == "__main__":
-    print("🚀 TinyTorch KV Caching Module - Complete Test Suite")
+    print("ROCKET TinyTorch KV Caching Module - Complete Test Suite")
     print("=" * 60)
     
     # Run all tests in sequence
@@ -1525,16 +1525,16 @@ if __name__ == "__main__":
     run_comprehensive_tests()
     
     print("\n" + "=" * 60)
-    print("🎯 MODULE COMPLETE: KV Caching Implementation")
+    print("TARGET MODULE COMPLETE: KV Caching Implementation")
     print("=" * 60)
-    print("✅ All tests passed!")
-    print("✅ Performance analysis complete!")
-    print("✅ Production context understood!")
+    print("PASS All tests passed!")
+    print("PASS Performance analysis complete!")
+    print("PASS Production context understood!")
     print("\nYou now understand the most sophisticated transformer optimization!")
 
 # %% [markdown]
 """
-## 🤔 ML Systems Thinking: Interactive Questions
+## THINK ML Systems Thinking: Interactive Questions
 
 Reflect on how KV caching transforms transformer systems and enables production deployments.
 """
@@ -1618,14 +1618,14 @@ Reflect on how KV caching transforms transformer systems and enables production 
 
 # %% [markdown]
 """
-## 🎯 MODULE SUMMARY: KV Caching - The Most Sophisticated Optimization
+## TARGET MODULE SUMMARY: KV Caching - The Most Sophisticated Optimization
 
 ### What You've Accomplished
-✅ **KVCache Implementation**: 200+ lines of sophisticated cache management with memory-efficient storage and retrieval
-✅ **CachedMultiHeadAttention**: Complete attention mechanism with O(N) complexity instead of O(N²)  
-✅ **Autoregressive Generation**: Full text generation pipeline with dramatic performance improvements
-✅ **Systems Analysis**: Comprehensive memory profiling and performance benchmarking across model scales
-✅ **Production Context**: Understanding of real-world deployment challenges and optimization strategies
+PASS **KVCache Implementation**: 200+ lines of sophisticated cache management with memory-efficient storage and retrieval
+PASS **CachedMultiHeadAttention**: Complete attention mechanism with O(N) complexity instead of O(N²)  
+PASS **Autoregressive Generation**: Full text generation pipeline with dramatic performance improvements
+PASS **Systems Analysis**: Comprehensive memory profiling and performance benchmarking across model scales
+PASS **Production Context**: Understanding of real-world deployment challenges and optimization strategies
 
 ### Key Learning Outcomes
 - **Algorithmic Transformation**: Mastered how changing the algorithm (not just implementation) achieves orders-of-magnitude speedups
@@ -1634,8 +1634,8 @@ Reflect on how KV caching transforms transformer systems and enables production 
 - **Systems Engineering**: Gained insight into memory management, cache eviction, and resource optimization at scale
 
 ### Mathematical Foundations Mastered
-- **Complexity Analysis**: O(N³) → O(N²) total operations transformation for sequence generation
-- **Memory Scaling**: O(L × N × H × D) cache memory requirements across layers, sequence length, heads, and dimensions
+- **Complexity Analysis**: O(N³) -> O(N²) total operations transformation for sequence generation
+- **Memory Scaling**: O(L * N * H * D) cache memory requirements across layers, sequence length, heads, and dimensions
 - **Performance Metrics**: Break-even analysis between cache memory cost and computational savings
 
 ### Professional Skills Developed
@@ -1648,32 +1648,32 @@ Reflect on how KV caching transforms transformer systems and enables production 
 Complexity Transformation Achieved:
 
 Without KV Cache (O(N³) total):
-Token 1: [■]                    ← 0 ops
-Token 2: [■]───[■]              ← 1 op  
-Token 3: [■]───[■]───[■]        ← 4 ops (recompute all)
-Token 4: [■]───[■]───[■]───[■]  ← 9 ops (recompute all)
+Token 1: [■]                    <- 0 ops
+Token 2: [■]---[■]              <- 1 op  
+Token 3: [■]---[■]---[■]        <- 4 ops (recompute all)
+Token 4: [■]---[■]---[■]---[■]  <- 9 ops (recompute all)
 ...
 Total: 0 + 1 + 4 + 9 + 16 + ... = O(N³) scaling
 
 With KV Cache (O(N²) total):
-Token 1: [■] → Cache            ← 1 op + store
-Token 2: [C]───[■] → Cache      ← 1 op + reuse
-Token 3: [C]───[C]───[■]        ← 1 op + reuse  
-Token 4: [C]───[C]───[C]───[■]  ← 1 op + reuse
+Token 1: [■] -> Cache            <- 1 op + store
+Token 2: [C]---[■] -> Cache      <- 1 op + reuse
+Token 3: [C]---[C]---[■]        <- 1 op + reuse  
+Token 4: [C]---[C]---[C]---[■]  <- 1 op + reuse
 ...
 Total: 1 + 1 + 1 + 1 + ... = O(N) per token, O(N²) total
 
 Memory Layout You Implemented:
-┌──────────────────────────────────────────────────┐
-│ KVCache: Multi-Layer Storage System              │
-├──────────────────────────────────────────────────┤
-│ Layer 0: K[seq_len, heads, head_dim]             │
-│          V[seq_len, heads, head_dim]             │
-├──────────────────────────────────────────────────┤
-│ Layer 1: K[seq_len, heads, head_dim]             │
-│          V[seq_len, heads, head_dim]             │
-└──────────────────────────────────────────────────┘
-Position Tracking: current_position → shared across layers
++--------------------------------------------------+
+| KVCache: Multi-Layer Storage System              |
++--------------------------------------------------┤
+| Layer 0: K[seq_len, heads, head_dim]             |
+|          V[seq_len, heads, head_dim]             |
++--------------------------------------------------┤
+| Layer 1: K[seq_len, heads, head_dim]             |
+|          V[seq_len, heads, head_dim]             |
++--------------------------------------------------+
+Position Tracking: current_position -> shared across layers
 ```
 
 ### Ready for Advanced Applications
@@ -1700,7 +1700,7 @@ Your implementation mirrors production systems:
 3. **Explore advanced features**: Multi-precision caching, Flash Attention integration
 4. **Ready for Production**: Apply these techniques to real transformer deployments
 
-**Congratulations!** Your KV caching implementation represents the pinnacle of transformer optimization - the algorithmic innovation that makes conversational AI possible. You've mastered the most sophisticated optimization in modern ML systems! 🚀
+**Congratulations!** Your KV caching implementation represents the pinnacle of transformer optimization - the algorithmic innovation that makes conversational AI possible. You've mastered the most sophisticated optimization in modern ML systems! ROCKET
 
 This completes your journey through transformer optimization techniques - from basic implementations to the algorithmic innovations that power production AI systems.
 """

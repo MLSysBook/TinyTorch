@@ -21,7 +21,7 @@ Welcome to the Attention module! You'll implement the scaled dot-product attenti
 - Framework connection: See how your implementations match PyTorch's attention systems
 - Performance insight: Learn how attention patterns affect training efficiency and model capabilities
 
-## Build → Use → Reflect
+## Build -> Use -> Reflect
 1. **Build**: Scaled dot-product attention and multi-head attention with masking and KV-cache
 2. **Use**: Process sequences to capture dependencies between distant tokens
 3. **Reflect**: How does attention's quadratic scaling determine practical limits of sequence length?
@@ -35,8 +35,8 @@ By the end of this module, you'll understand:
 - Connection to production systems like GPT's attention layers and their optimization techniques
 
 ## Systems Reality Check
-💡 **Production Context**: Attention is the memory bottleneck in transformers - GPT-3 uses 96 attention heads across 96 layers
-⚡ **Performance Note**: O(N²) memory scaling means 2x sequence length = 4x attention memory - this fundamentally limits transformer sequence length
+TIP **Production Context**: Attention is the memory bottleneck in transformers - GPT-3 uses 96 attention heads across 96 layers
+SPEED **Performance Note**: O(N²) memory scaling means 2x sequence length = 4x attention memory - this fundamentally limits transformer sequence length
 """
 
 # %% nbgrader={"grade": false, "grade_id": "attention-imports", "locked": false, "schema_version": 3, "solution": false, "task": false}
@@ -82,13 +82,13 @@ except ImportError:
                 self.embedding_dim = embedding_dim
 
 # %% nbgrader={"grade": false, "grade_id": "attention-welcome", "locked": false, "schema_version": 3, "solution": false, "task": false}
-print("🎯 TinyTorch Attention Module")
+print("TARGET TinyTorch Attention Module")
 print(f"NumPy version: {np.__version__}")
 print("Ready to build attention mechanisms!")
 
 # %% [markdown]
 """
-## 📦 Where This Code Lives in the Final Package
+## PACKAGE Where This Code Lives in the Final Package
 
 **Learning Side:** You work in `modules/source/13_attention/attention_dev.py`  
 **Building Side:** Code exports to `tinytorch.core.attention`
@@ -125,25 +125,25 @@ Traditional RNNs process sequences step-by-step, making it hard to capture long-
 Query-Key-Value Attention Visualization:
 
       Query (Q)      Key (K)        Value (V)
-    ┌─────────────┐ ┌───────────┐ ┌─────────────┐
-    │ "What am I  │ │ "What can │ │ "What info  │
-    │  looking    │ │  I attend │ │  do I get   │
-    │  for?"      │ │  to?"     │ │  from it?"  │
-    └─────────────┘ └───────────┘ └─────────────┘
-           │              │              │
-           └──────┬───────┘              │
-                  ▼                      │
-              Attention                   │
-               Scores                     │
-           QK^T / √d_k                   │
-                  │                      │
-                  ▼                      │
-               Softmax ──────────────────┘
-              Weights                    │
-                  │                      │
-                  └──────────────────────┘
-                                         │
-                                         ▼
+    +-------------+ +-----------+ +-------------+
+    | "What am I  | | "What can | | "What info  |
+    |  looking    | |  I attend | |  do I get   |
+    |  for?"      | |  to?"     | |  from it?"  |
+    +-------------+ +-----------+ +-------------+
+           |              |              |
+           +------+-------+              |
+                  v                      |
+              Attention                   |
+               Scores                     |
+           QK^T / sqrtd_k                   |
+                  |                      |
+                  v                      |
+               Softmax ------------------+
+              Weights                    |
+                  |                      |
+                  +----------------------+
+                                         |
+                                         v
                                    Weighted Sum
                                  (Attended Output)
 ```
@@ -153,11 +153,11 @@ Query-Key-Value Attention Visualization:
 ```
 Step 1: Compute Attention Scores
     Q: [seq_len, d_model]  @  K^T: [d_model, seq_len]
-    ────────────────────────────────────────────────
+    ------------------------------------------------
     Scores: [seq_len, seq_len]  ("How much to attend?")
 
 Step 2: Scale for Numerical Stability
-    Scores = Scores / √d_k
+    Scores = Scores / sqrtd_k
     (Prevents saturation in softmax)
 
 Step 3: Apply Softmax
@@ -173,24 +173,24 @@ Step 4: Weighted Combination
 
 ```
     Input Embeddings [batch, seq_len, d_model]
-            │
-    ┌───────┼───────┐
-    │       │       │
+            |
+    +-------+-------+
+    |       |       |
    W_Q     W_K     W_V  (Linear projections)
-    │       │       │
-    │   Reshape to Multiple Heads
-    │   [batch, heads, seq_len, d_k]
-    │       │       │
-    └───────┼───────┘
-            │
+    |       |       |
+    |   Reshape to Multiple Heads
+    |   [batch, heads, seq_len, d_k]
+    |       |       |
+    +-------+-------+
+            |
     Scaled Dot-Product Attention
      (Applied to each head)
-            │
+            |
     Concatenate Heads
     [batch, seq_len, d_model]
-            │
+            |
     Linear Output Projection (W_O)
-            │
+            |
     Multi-Head Output
 ```
 
@@ -216,19 +216,19 @@ Where:
 ```
 Without Masking (Bi-directional):
        t1  t2  t3  t4
-    t1 [A] [A] [A] [A]  ← Can see all positions
+    t1 [A] [A] [A] [A]  <- Can see all positions
     t2 [A] [A] [A] [A]
     t3 [A] [A] [A] [A]
     t4 [A] [A] [A] [A]
 
 With Causal Masking (Auto-regressive):
        t1  t2  t3  t4
-    t1 [A] [-] [-] [-]  ← Can only see current/past
+    t1 [A] [-] [-] [-]  <- Can only see current/past
     t2 [A] [A] [-] [-]
     t3 [A] [A] [A] [-]
     t4 [A] [A] [A] [A]
     
-    [A] = Attend   [-] = Masked (set to -∞)
+    [A] = Attend   [-] = Masked (set to -inf)
 ```
 
 ### Systems Trade-offs
@@ -373,12 +373,12 @@ class ScaledDotProductAttention:
         """Make the class callable."""
         return self.forward(query, key, value, mask, return_attention_weights)
 
-# ✅ IMPLEMENTATION CHECKPOINT: Ensure your ScaledDotProductAttention is complete before running
+# PASS IMPLEMENTATION CHECKPOINT: Ensure your ScaledDotProductAttention is complete before running
 
-# 🤔 PREDICTION: How do you think attention weights will distribute?
+# THINK PREDICTION: How do you think attention weights will distribute?
 # With random inputs: Uniform? Concentrated? Your guess: _______
 
-# 🔍 SYSTEMS INSIGHT #1: Attention Weight Distribution Analysis
+# MAGNIFY SYSTEMS INSIGHT #1: Attention Weight Distribution Analysis
 def analyze_attention_distribution():
     """Analyze how attention weights distribute across different scenarios."""
     try:
@@ -418,14 +418,14 @@ def analyze_attention_distribution():
             row_sums = np.sum(weights.data, axis=-1)
             assert np.allclose(row_sums, 1.0), f"Attention weights should sum to 1 in {scenario_name}"
         
-        print(f"\n💡 WHY THIS MATTERS:")
-        print(f"  - Random inputs → relatively uniform attention (high entropy)")
-        print(f"  - Similar inputs → more concentrated attention (lower entropy)")
+        print(f"\nTIP WHY THIS MATTERS:")
+        print(f"  - Random inputs -> relatively uniform attention (high entropy)")
+        print(f"  - Similar inputs -> more concentrated attention (lower entropy)")
         print(f"  - Extreme values can lead to attention collapse (very low entropy)")
         print(f"  - Real language models learn meaningful attention patterns!")
         
     except Exception as e:
-        print(f"⚠️ Make sure ScaledDotProductAttention is implemented correctly")
+        print(f"WARNING️ Make sure ScaledDotProductAttention is implemented correctly")
         print(f"Error: {e}")
 
 # Run the analysis
@@ -433,7 +433,7 @@ analyze_attention_distribution()
 
 # %% [markdown]
 """
-### 🧪 Test Your Scaled Dot-Product Attention Implementation
+### TEST Test Your Scaled Dot-Product Attention Implementation
 
 Once you implement the ScaledDotProductAttention forward method above, run this cell to test it:
 """
@@ -507,11 +507,11 @@ def test_unit_scaled_attention():
     assert not np.any(np.isnan(extreme_output.data)), "Should handle extreme values without NaN"
     assert not np.any(np.isinf(extreme_output.data)), "Should handle extreme values without inf"
     
-    print("✅ Scaled dot-product attention tests passed!")
-    print(f"✅ Handles various input shapes and sequence lengths")
-    print(f"✅ Attention weights sum to 1 (softmax property)")
-    print(f"✅ Causal masking works correctly")
-    print(f"✅ Numerical stability with extreme values")
+    print("PASS Scaled dot-product attention tests passed!")
+    print(f"PASS Handles various input shapes and sequence lengths")
+    print(f"PASS Attention weights sum to 1 (softmax property)")
+    print(f"PASS Causal masking works correctly")
+    print(f"PASS Numerical stability with extreme values")
 
 # Test function defined (called in main block)
 
@@ -712,16 +712,16 @@ class MultiHeadAttention:
             'total_parameters': sum(param.data.size for param in self.parameters)
         }
 
-# ✅ IMPLEMENTATION CHECKPOINT: Ensure your MultiHeadAttention is complete before running
+# PASS IMPLEMENTATION CHECKPOINT: Ensure your MultiHeadAttention is complete before running
 
-# 🤔 PREDICTION: Multi-head vs single-head - which uses more memory and why?
+# THINK PREDICTION: Multi-head vs single-head - which uses more memory and why?
 # Your answer: _______
 
-# 🔍 SYSTEMS INSIGHT #2: Multi-Head vs Single-Head Comparison
+# MAGNIFY SYSTEMS INSIGHT #2: Multi-Head vs Single-Head Comparison
 def compare_attention_architectures():
     """Compare single-head vs multi-head attention characteristics."""
     try:
-        print("🔍 MULTI-HEAD vs SINGLE-HEAD ATTENTION COMPARISON")
+        print("MAGNIFY MULTI-HEAD vs SINGLE-HEAD ATTENTION COMPARISON")
         print("=" * 60)
         
         embed_dim = 256
@@ -760,19 +760,19 @@ def compare_attention_architectures():
                   f"{head_dim:<10} {attention_flops/1e6:.1f}M FLOPs")
         
         print(f"\n📊 ANALYSIS:")
-        print(f"  Parameter Count: Constant across heads (embed_dim² × 4 matrices)")
+        print(f"  Parameter Count: Constant across heads (embed_dim² * 4 matrices)")
         print(f"  Head Dimension: Decreases as num_heads increases (embed_dim/num_heads)")
         print(f"  Representation: More heads = richer, diverse attention patterns")
         print(f"  Computation: Linear scaling with number of heads")
         
-        print(f"\n💡 WHY MULTI-HEAD WORKS:")
+        print(f"\nTIP WHY MULTI-HEAD WORKS:")
         print(f"  - Different heads learn different types of relationships")
         print(f"  - Some heads focus on syntax, others on semantics")
         print(f"  - Parallel computation across heads")
         print(f"  - Better representation learning without parameter increase")
         
     except Exception as e:
-        print(f"⚠️ Make sure MultiHeadAttention is implemented correctly")
+        print(f"WARNING️ Make sure MultiHeadAttention is implemented correctly")
         print(f"Error: {e}")
 
 # Run the comparison
@@ -780,7 +780,7 @@ compare_attention_architectures()
 
 # %% [markdown]
 """
-### 🧪 Test Your Multi-Head Attention Implementation
+### TEST Test Your Multi-Head Attention Implementation
 
 Once you implement the MultiHeadAttention methods above, run this cell to test it:
 """
@@ -865,11 +865,11 @@ def test_unit_multi_head_attention():
     self_attn_output = mha.forward(query, query, query)
     assert self_attn_output.shape == expected_shape, "Self-attention should work"
     
-    print("✅ Multi-head attention tests passed!")
-    print(f"✅ Handles {num_heads} heads with {mha.head_dim} dimensions each")
-    print(f"✅ Parameter memory: {memory_stats['total_parameter_memory_mb']:.2f}MB")
-    print(f"✅ Causal masking works across all heads")
-    print(f"✅ Self-attention capability verified")
+    print("PASS Multi-head attention tests passed!")
+    print(f"PASS Handles {num_heads} heads with {mha.head_dim} dimensions each")
+    print(f"PASS Parameter memory: {memory_stats['total_parameter_memory_mb']:.2f}MB")
+    print(f"PASS Causal masking works across all heads")
+    print(f"PASS Self-attention capability verified")
 
 # Test function defined (called in main block)
 
@@ -1027,12 +1027,12 @@ class KVCache:
             'cache_utilization': np.mean(self.cache_lengths / self.max_seq_length) if self.is_active else 0.0
         }
 
-# ✅ IMPLEMENTATION CHECKPOINT: Ensure your KVCache is complete before running
+# PASS IMPLEMENTATION CHECKPOINT: Ensure your KVCache is complete before running
 
-# 🤔 PREDICTION: How much memory could KV-cache save during generation?
+# THINK PREDICTION: How much memory could KV-cache save during generation?
 # For 1000 tokens: 10%? 50%? 90%? Your guess: _______
 
-# 🔍 SYSTEMS INSIGHT #3: KV-Cache Generation Efficiency Analysis
+# MAGNIFY SYSTEMS INSIGHT #3: KV-Cache Generation Efficiency Analysis
 def analyze_kv_cache_efficiency():
     """Analyze KV-cache memory and computation savings during generation."""
     try:
@@ -1098,7 +1098,7 @@ def analyze_kv_cache_efficiency():
             print(f"    Cache now contains: {total_cached} tokens")
             print(f"    Memory used: {total_cached * embed_dim * 2 * 4 / 1024:.1f} KB")
         
-        print(f"\n💡 WHY KV-CACHE IS ESSENTIAL:")
+        print(f"\nTIP WHY KV-CACHE IS ESSENTIAL:")
         print(f"  - Without cache: O(N²) computation growth per token")
         print(f"  - With cache: O(N) computation per token")
         print(f"  - Memory trade-off: Store K,V to avoid recomputation")
@@ -1106,7 +1106,7 @@ def analyze_kv_cache_efficiency():
         print(f"  - Production impact: 10-100x speedup for long sequences")
         
     except Exception as e:
-        print(f"⚠️ Make sure KVCache is implemented correctly")
+        print(f"WARNING️ Make sure KVCache is implemented correctly")
         print(f"Error: {e}")
 
 # Run the efficiency analysis
@@ -1114,7 +1114,7 @@ analyze_kv_cache_efficiency()
 
 # %% [markdown]
 """
-### 🧪 Test Your KV-Cache Implementation
+### TEST Test Your KV-Cache Implementation
 
 Once you implement the KVCache methods above, run this cell to test it:
 """
@@ -1212,17 +1212,17 @@ def test_unit_kv_cache():
     assert memory_stats['max_batch_size'] == max_batch_size, "Should report correct batch size"
     assert memory_stats['max_seq_length'] == max_seq_length, "Should report correct sequence length"
     
-    print("✅ KV-Cache tests passed!")
-    print(f"✅ Handles {max_batch_size} sequences of up to {max_seq_length} tokens")
-    print(f"✅ Memory usage: {memory_stats['total_cache_memory_mb']:.2f}MB total")
-    print(f"✅ Cache overflow protection works")
-    print(f"✅ Independent batch sequence management")
+    print("PASS KV-Cache tests passed!")
+    print(f"PASS Handles {max_batch_size} sequences of up to {max_seq_length} tokens")
+    print(f"PASS Memory usage: {memory_stats['total_cache_memory_mb']:.2f}MB total")
+    print(f"PASS Cache overflow protection works")
+    print(f"PASS Independent batch sequence management")
 
 # Test function defined (called in main block)
 
 # %% [markdown]
 """
-## 🎯 ML Systems: Performance Analysis & Attention Scaling
+## TARGET ML Systems: Performance Analysis & Attention Scaling
 
 Now let's develop systems engineering skills by analyzing attention performance and understanding how attention's quadratic scaling affects practical transformer deployment.
 
@@ -1323,7 +1323,7 @@ class AttentionProfiler:
         
         This function is PROVIDED to show scaling pattern analysis.
         """
-        print("📈 ATTENTION QUADRATIC SCALING ANALYSIS")
+        print("PROGRESS ATTENTION QUADRATIC SCALING ANALYSIS")
         print("=" * 60)
         
         seq_lengths = sorted(scaling_results.keys())
@@ -1370,7 +1370,7 @@ class AttentionProfiler:
             print(f"{length_ratio:<12.1f} {time_ratio:<12.1f} {memory_ratio:<12.1f} {theoretical_ratio:<12.1f}")
         
         # Analysis insights
-        print(f"\n💡 SCALING INSIGHTS:")
+        print(f"\nTIP SCALING INSIGHTS:")
         avg_memory_efficiency = np.mean([scaling_analysis[seq]['memory_ratio'] / scaling_analysis[seq]['theoretical_ratio'] 
                                        for seq in seq_lengths[1:] if seq in scaling_analysis])
         
@@ -1387,7 +1387,7 @@ class AttentionProfiler:
         
         This function is PROVIDED to show attention type comparison.
         """
-        print(f"\n🔍 ATTENTION TYPE COMPARISON")
+        print(f"\nMAGNIFY ATTENTION TYPE COMPARISON")
         print("=" * 50)
         
         batch_size = 8
@@ -1429,7 +1429,7 @@ class AttentionProfiler:
         }
         
         # Display comparison
-        print(f"Test configuration: {batch_size} batch × {seq_length} seq × {embed_dim} dim")
+        print(f"Test configuration: {batch_size} batch * {seq_length} seq * {embed_dim} dim")
         print(f"{'Type':<15} {'Time (ms)':<10} {'Parameters':<12} {'Memory (MB)':<12} {'Description'}")
         print("-" * 70)
         
@@ -1492,7 +1492,7 @@ class AttentionProfiler:
             print(f"{seq_len:<10} {no_cache_total:<14.2f} {cache_total:<16.2f} "
                   f"{memory_savings:<10.1f}% {speedup_estimate:<10.1f}x")
         
-        print(f"\n💡 KV-CACHE INSIGHTS:")
+        print(f"\nTIP KV-CACHE INSIGHTS:")
         print(f"   - Memory: Significant savings for long sequences")
         print(f"   - Speed: Avoid recomputing K,V for all previous tokens")
         print(f"   - Trade-off: Cache storage vs recomputation")
@@ -1550,7 +1550,7 @@ def analyze_attention_system_design():
         print(f"{config['name']:<12} {seq_len:<8} {config['num_heads']:<6} "
               f"{config['num_layers']:<7} {attention_matrix_memory_mb:<12.1f} {total_attention_memory_mb:<12.1f}")
     
-    print(f"\n🎯 KEY DESIGN IMPLICATIONS:")
+    print(f"\nTARGET KEY DESIGN IMPLICATIONS:")
     print(f"   1. Sequence Length Scaling:")
     print(f"      - Memory scales O(N²) with sequence length")
     print(f"      - 2x sequence length = 4x attention memory")
@@ -1573,14 +1573,14 @@ def analyze_attention_system_design():
     
     print(f"\n🏭 OPTIMIZATION STRATEGIES:")
     print(f"   - Flash Attention: Memory-efficient attention computation")
-    print(f"   - Sparse Attention: Reduce O(N²) to O(N√N) or O(N log N)")
+    print(f"   - Sparse Attention: Reduce O(N²) to O(NsqrtN) or O(N log N)")
     print(f"   - Linear Attention: Approximate attention with linear complexity")
     print(f"   - Sliding Window: Local attention with fixed window size")
     print(f"   - KV-Cache: Essential for autoregressive generation")
 
 # %% [markdown]
 """
-### 🧪 Test: Attention Performance Analysis
+### TEST Test: Attention Performance Analysis
 
 Let's test our attention profiler with realistic performance scenarios.
 """
@@ -1618,7 +1618,7 @@ def test_attention_profiler():
         assert result['computation_time_ms'] >= 0, "Time should be non-negative"
         assert result['total_memory_mb'] > 0, "Memory usage should be positive"
     
-    print("✅ Scaling measurement test passed")
+    print("PASS Scaling measurement test passed")
     
     # Test quadratic scaling analysis
     scaling_analysis = profiler.analyze_quadratic_scaling(scaling_results)
@@ -1633,7 +1633,7 @@ def test_attention_profiler():
             assert analysis['length_ratio'] > 1, f"Length ratio should be > 1 for {seq_len}"
             assert analysis['theoretical_ratio'] > 1, f"Theoretical ratio should be > 1 for {seq_len}"
     
-    print("✅ Quadratic scaling analysis test passed")
+    print("PASS Quadratic scaling analysis test passed")
     
     # Test attention type comparison
     comparison_results = profiler.compare_attention_types(seq_length=64, embed_dim=128)
@@ -1648,7 +1648,7 @@ def test_attention_profiler():
         assert 'memory_mb' in metrics, "Should measure memory usage"
         assert metrics['computation_time_ms'] > 0, "Should have positive computation time"
     
-    print("✅ Attention type comparison test passed")
+    print("PASS Attention type comparison test passed")
     
     # Test KV-cache benefits simulation
     cache_results = profiler.simulate_kv_cache_benefits([64, 128], embed_dim=128)
@@ -1660,8 +1660,8 @@ def test_attention_profiler():
         assert 'memory_savings_percent' in result, "Should calculate savings"
         assert result['memory_savings_percent'] > 0, "Should show memory savings"
     
-    print("✅ KV-cache benefits simulation test passed")
-    print("🎯 Attention Profiler: All tests passed!")
+    print("PASS KV-cache benefits simulation test passed")
+    print("TARGET Attention Profiler: All tests passed!")
 
 # Test function defined (called in main block)
 
@@ -1675,7 +1675,7 @@ Let's test how all our attention components work together in a realistic transfo
 # %% nbgrader={"grade": false, "grade_id": "test-attention-integration", "locked": false, "schema_version": 3, "solution": false, "task": false}
 def test_attention_integration():
     """Test complete attention pipeline with embeddings integration."""
-    print("🧪 Integration Test: Complete Attention Pipeline...")
+    print("TEST Integration Test: Complete Attention Pipeline...")
     
     # Configuration
     vocab_size = 1000
@@ -1830,10 +1830,10 @@ def test_attention_integration():
     
     print(f"    Attention throughput: {throughput:.0f} tokens/second")
     
-    print("✅ Complete attention pipeline integration test passed!")
-    print(f"✅ Self-attention, cross-attention, and causal masking work correctly")
-    print(f"✅ KV-cache integration ready for autoregressive generation")
-    print(f"✅ Memory usage and performance characteristics measured")
+    print("PASS Complete attention pipeline integration test passed!")
+    print(f"PASS Self-attention, cross-attention, and causal masking work correctly")
+    print(f"PASS KV-cache integration ready for autoregressive generation")
+    print(f"PASS Memory usage and performance characteristics measured")
 
 # Test function defined (called in main block)
 
@@ -1854,14 +1854,14 @@ if __name__ == "__main__":
     test_attention_integration()
     
     print("\n" + "="*60)
-    print("🔍 ATTENTION SYSTEMS ANALYSIS")
+    print("MAGNIFY ATTENTION SYSTEMS ANALYSIS")
     print("="*60)
     
     # Performance analysis
     profiler = AttentionProfiler()
     
     # Test attention scaling with different sequence lengths
-    print("📈 ATTENTION SCALING ANALYSIS:")
+    print("PROGRESS ATTENTION SCALING ANALYSIS:")
     scaled_attention = ScaledDotProductAttention()
     seq_lengths = [64, 128, 256, 512]
     embed_dim = 256
@@ -1944,14 +1944,14 @@ if __name__ == "__main__":
     print(f"  Memory efficiency critical for longer sequences")
     
     print("\n" + "="*60)
-    print("🎯 ATTENTION MODULE COMPLETE!")
+    print("TARGET ATTENTION MODULE COMPLETE!")
     print("="*60)
     print("All attention tests passed!")
     print("Ready for transformer architecture integration!")
 
 # %% [markdown]
 """
-## 🤔 ML Systems Thinking: Interactive Questions
+## THINK ML Systems Thinking: Interactive Questions
 
 Now that you've built the attention mechanisms that revolutionized language understanding, let's connect this work to broader ML systems challenges. These questions help you think critically about how attention's quadratic scaling affects production transformer deployment.
 
@@ -1960,7 +1960,7 @@ Take time to reflect thoughtfully on each question - your insights will help you
 
 # %% [markdown]
 """
-### 🎯 Computational Assessment: Attention Complexity Analysis
+### TARGET Computational Assessment: Attention Complexity Analysis
 
 **Learning Objective**: Analyze the computational and memory complexity of attention mechanisms to understand their practical limitations and optimization opportunities.
 
@@ -2037,13 +2037,13 @@ if 'ScaledDotProductAttention' in globals():
               f"{metrics['total_flops']/1e6:<10.1f} "
               f"{metrics['memory_scaling_factor']:<10.1f}x")
     
-    print(f"\n💡 COMPLEXITY INSIGHTS:")
+    print(f"\nTIP COMPLEXITY INSIGHTS:")
     print(f"  - Memory scales O(N²) with sequence length")
     print(f"  - Computation scales O(N²) with sequence length")
     print(f"  - Multi-head attention multiplies memory by number of heads")
     print(f"  - 2x sequence length = 4x memory and computation")
 else:
-    print("⚠️ Complete attention implementations first")
+    print("WARNING️ Complete attention implementations first")
 
 # %% [markdown]
 """
@@ -2089,7 +2089,7 @@ GRADING RUBRIC (Instructor Use):
 
 # %% [markdown]
 """
-### 🎯 Computational Assessment: Causal Masking and Generation Patterns
+### TARGET Computational Assessment: Causal Masking and Generation Patterns
 
 **Learning Objective**: Understand how causal masking enables autoregressive generation and analyze different attention masking strategies.
 
@@ -2217,7 +2217,7 @@ if 'ScaledDotProductAttention' in globals():
                   f"{metrics['max_attention']:<10.4f} "
                   f"{metrics['computation_ratio']*100:<10.1f}%")
         
-        print(f"\n💡 MASKING INSIGHTS:")
+        print(f"\nTIP MASKING INSIGHTS:")
         print(f"  - Causal masking: Essential for autoregressive generation")
         print(f"  - Local attention: Good for capturing local dependencies")
         print(f"  - Strided attention: Balances long-range and local connections")
@@ -2225,7 +2225,7 @@ if 'ScaledDotProductAttention' in globals():
     else:
         print(masking_results['error'])
 else:
-    print("⚠️ Complete attention implementations first")
+    print("WARNING️ Complete attention implementations first")
 
 # %% [markdown]
 """
@@ -2271,7 +2271,7 @@ GRADING RUBRIC (Instructor Use):
 
 # %% [markdown]
 """
-### 🎯 Computational Assessment: Attention Scaling and Production Optimization
+### TARGET Computational Assessment: Attention Scaling and Production Optimization
 
 **Learning Objective**: Analyze how attention scaling affects production deployment and design optimization strategies for different use cases.
 
@@ -2359,7 +2359,7 @@ def design_production_attention_system():
             'trade_off': 'Slight computation increase for massive memory savings'
         },
         'sparse_attention': {
-            'memory_reduction': 'O(N√N) or O(N log N) instead of O(N²)',
+            'memory_reduction': 'O(NsqrtN) or O(N log N) instead of O(N²)',
             'technique': 'Local + strided + global attention patterns',
             'trade_off': 'Potential quality loss vs memory/compute savings'
         },
@@ -2415,7 +2415,7 @@ if 'KVCache' in globals():
         print(f"  Attention FLOPs: {analysis['attention_flops']/1e12:.1f} TFLOPs")
         print(f"  Memory bandwidth: {analysis['memory_bandwidth_gb_s']:.1f} GB/s")
     
-    print("\n🚀 OPTIMIZATION STRATEGIES:")
+    print("\nROCKET OPTIMIZATION STRATEGIES:")
     for strategy, details in production_design['memory_optimization'].items():
         print(f"\n{strategy.replace('_', ' ').title()}:")
         print(f"  Reduction: {details['memory_reduction']}")
@@ -2430,7 +2430,7 @@ if 'KVCache' in globals():
         else:
             print(f"  {strategies}")
     
-    print("\n📈 PERFORMANCE IMPACT:")
+    print("\nPROGRESS PERFORMANCE IMPACT:")
     perf = production_design['performance_estimates']
     baseline = perf['baseline_gpt_3_scale']
     optimized = perf['optimized_system']
@@ -2442,7 +2442,7 @@ if 'KVCache' in globals():
     print(f"  Sequence length: {seq_improvement:.0f}x with sparse attention")
     print(f"  Generation speedup: {optimized['kv_cache_speedup']}")
 else:
-    print("⚠️ Complete all attention implementations first")
+    print("WARNING️ Complete all attention implementations first")
 
 # %% [markdown]
 """
@@ -2488,11 +2488,11 @@ GRADING RUBRIC (Instructor Use):
 
 # %% [markdown]
 """
-## 🎯 MODULE SUMMARY: Attention
+## TARGET MODULE SUMMARY: Attention
 
 Congratulations! You have successfully implemented the attention mechanisms that revolutionized language understanding:
 
-### ✅ What You Have Built
+### PASS What You Have Built
 - **Scaled Dot-Product Attention**: The fundamental attention mechanism with proper masking support
 - **Multi-Head Attention**: Parallel attention heads for richer representation learning
 - **KV-Cache System**: Efficient caching for autoregressive generation workloads
@@ -2501,41 +2501,41 @@ Congratulations! You have successfully implemented the attention mechanisms that
 - **🆕 Memory Optimization**: Understanding and measuring attention's O(N²) scaling characteristics
 - **🆕 Systems Integration**: Complete attention pipeline with embeddings and generation support
 
-### ✅ Key Learning Outcomes
+### PASS Key Learning Outcomes
 - **Understanding**: How attention enables transformers to model sequence relationships
 - **Implementation**: Built attention mechanisms with memory-efficient patterns and causal masking
 - **Systems Insight**: How attention's quadratic scaling affects model architecture and deployment
 - **Performance Engineering**: Measured and analyzed attention bottlenecks and optimization techniques
 - **Production Context**: Understanding real-world attention challenges and optimization strategies
 
-### ✅ Technical Mastery
-- **Attention Mathematics**: Attention(Q,K,V) = softmax(QK^T/√d_k)V with proper scaling
+### PASS Technical Mastery
+- **Attention Mathematics**: Attention(Q,K,V) = softmax(QK^T/sqrtd_k)V with proper scaling
 - **Multi-Head Architecture**: Parallel attention computation with head dimension management
 - **Causal Masking**: Autoregressive attention patterns for language generation
 - **Memory Scaling**: Understanding O(N²) complexity and its implications for sequence length
 - **🆕 KV-Cache Efficiency**: Optimizing attention computation for generation workloads
 
-### ✅ Professional Skills Developed
+### PASS Professional Skills Developed
 - **Systems Architecture**: Designing attention systems for production scale and efficiency
 - **Memory Engineering**: Understanding and optimizing attention's memory bottlenecks
 - **Performance Analysis**: Measuring and improving attention computation throughput
 - **Integration Design**: Building attention systems that work with embeddings and transformers
 
-### ✅ Ready for Next Steps
+### PASS Ready for Next Steps
 Your attention systems are now ready to power:
 - **Transformer Blocks**: Complete transformer architectures with attention and feedforward layers
 - **Language Generation**: Autoregressive text generation with efficient attention patterns
 - **Sequence Modeling**: Advanced sequence processing for various NLP tasks
 - **🧠 Modern AI Systems**: Foundation for GPT, BERT, and other transformer-based models
 
-### 🔗 Connection to Real ML Systems
+### LINK Connection to Real ML Systems
 Your implementations mirror production systems:
 - **PyTorch Attention**: `torch.nn.MultiheadAttention` and `torch.nn.functional.scaled_dot_product_attention`
 - **Flash Attention**: Memory-efficient attention computation used in production systems
 - **KV-Cache Optimization**: Essential for efficient language model serving and generation
 - **Industry Applications**: Every modern language model relies on optimized attention mechanisms
 
-### 🎯 The Revolution of Attention
+### TARGET The Revolution of Attention
 You have built the mechanism that transformed AI:
 - **Before**: RNNs struggled with long-range dependencies and sequential computation
 - **After**: Attention enables parallel processing and direct long-range connections
