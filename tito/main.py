@@ -31,7 +31,7 @@ from .commands.jupyter import JupyterCommand
 from .commands.nbdev import NbdevCommand
 from .commands.status import StatusCommand
 from .commands.system import SystemCommand
-from .commands.module import ModuleCommand
+from .commands.module_workflow import ModuleWorkflowCommand
 from .commands.package import PackageCommand
 from .commands.nbgrader import NBGraderCommand
 from .commands.book import BookCommand
@@ -68,7 +68,7 @@ class TinyTorchCLI:
             'setup': SetupCommand,
             # Hierarchical command groups only
             'system': SystemCommand,
-            'module': ModuleCommand,
+            'module': ModuleWorkflowCommand,
             'package': PackageCommand,
             'nbgrader': NBGraderCommand,
             'checkpoint': CheckpointCommand,
@@ -110,13 +110,12 @@ Convenience Commands:
 
 Examples:
   tito setup                    First-time environment setup
+  tito module 01                Open Module 01 in Jupyter Lab
+  tito module complete 01       Complete Module 01 (test + export)
+  tito module status            View your learning progress
   tito system info              Show system information
-  tito module status --metadata Module status with metadata
-  tito module view 01_tensor    Start coding in Jupyter Lab
-  tito export 01_tensor         Export specific module to package
   tito checkpoint timeline      Visual progress timeline
   tito leaderboard register     Join the inclusive community
-  tito olympics events          See special competitions
   tito book build               Build the Jupyter Book locally
             """
         )
@@ -176,6 +175,15 @@ Examples:
     def run(self, args: Optional[List[str]] = None) -> int:
         """Run the CLI application."""
         try:
+            # Handle special case: tito module 01, tito module 02, etc.
+            if args and len(args) >= 2 and args[0] == 'module':
+                second_arg = args[1]
+                if second_arg.isdigit() or (len(second_arg) == 2 and second_arg.isdigit()):
+                    # This is a direct module number, handle it specially
+                    from .commands.module_workflow import ModuleWorkflowCommand
+                    module_cmd = ModuleWorkflowCommand(self.config)
+                    return module_cmd.open_module(second_arg)
+            
             parser = self.create_parser()
             parsed_args = parser.parse_args(args)
             
@@ -227,11 +235,10 @@ Examples:
                     "  [bold green]logo[/bold green]        - Learn about TinyTorch philosophy\n"
                     "[bold]Quick Start:[/bold]\n"
                     "  [dim]tito setup[/dim]                    - First-time environment setup\n"
-                    "  [dim]tito module view 01_tensor[/dim]    - Start building tensors in Jupyter Lab\n"
-                    "  [dim]tito module view 02_activations[/dim] - Add activation functions\n"
-                    "  [dim]tito module view 03_layers[/dim]    - Build neural network layers\n"
-                    "  [dim]tito checkpoint timeline[/dim]      - Visual progress timeline\n"
-                    "  [dim]tito leaderboard join[/dim]         - Join the inclusive community\n"
+                    "  [dim]tito module 01[/dim]                - Start building tensors in Jupyter Lab\n"
+                    "  [dim]tito module complete 01[/dim]       - Complete Module 01 (test + export)\n"
+                    "  [dim]tito module 02[/dim]                - Continue to activation functions\n"
+                    "  [dim]tito module status[/dim]            - View your progress\n"
                     "[bold]Get Help:[/bold]\n"
                     "  [dim]tito system[/dim]                   - Show system subcommands\n"
                     "  [dim]tito module[/dim]                   - Show module subcommands\n"
