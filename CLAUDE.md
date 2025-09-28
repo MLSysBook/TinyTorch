@@ -264,14 +264,12 @@ User Request → TPM Agent → Coordinates Specialized Agents → Reports Back
 ```
 
 **The TPM knows when to invoke:**
-- **Education Architect** (.claude/agents/education-architect.md) - Learning design
-- **Module Developer** (.claude/agents/module-developer.md) - Implementation  
-- **Package Manager** (.claude/agents/package-manager.md) - Integration
-- **Quality Assurance** (.claude/agents/quality-assurance.md) - Testing
-- **Website Content Strategist** (.claude/agents/website-content-strategist.md) - Website content & strategy
-- **Educational Review Expert** (.claude/agents/educational-review-expert.md) - Educational & technical validation
-- **DevOps Engineer** (.claude/agents/devops-engineer.md) - Infrastructure
-- **Tito CLI Developer** (.claude/agents/tito-cli-developer.md) - CLI functionality
+- **Education Reviewer** (.claude/agents/education-reviewer.md) - Educational design, assessment, and technical validation
+- **Module Developer** (.claude/agents/module-developer.md) - Code implementation
+- **Package Manager** (.claude/agents/package-manager.md) - Integration and builds
+- **Quality Assurance** (.claude/agents/quality-assurance.md) - Testing and validation
+- **Website Manager** (.claude/agents/website-manager.md) - Website content and strategy
+- **DevOps TITO** (.claude/agents/devops-tito.md) - Infrastructure and CLI development
 
 #### **Agent Communication Protocol:**
 All agents are available via the Task tool. The TPM manages:
@@ -328,12 +326,12 @@ All agents are available via the Task tool. The TPM manages:
 
 **MANDATORY WORKFLOW SEQUENCE**:
 ```
-Step 1: Website Content Strategist (ALWAYS FIRST)
+Step 1: Website Manager (ALWAYS FIRST)
    ↓ Audits existing content for duplicates
    ↓ Creates detailed content specification
    ↓ Identifies what goes where
    
-Step 2: Website Designer (ALWAYS SECOND)
+Step 2: Website Manager implements the content
    ↓ Implements the specification
    ↓ Applies consistent styling
    ↓ Tests all cross-references
@@ -383,7 +381,7 @@ QA Agent → Report Results → Fix Issues if Found
 
 **MANDATORY WORKFLOW**:
 ```
-Education Architect → Module Developer → QA Agent
+Education Reviewer → Module Developer → QA Agent
 ```
 
 ### 🤖 Agent Team Orchestration - Best Practices
@@ -394,21 +392,20 @@ Education Architect → Module Developer → QA Agent
 
 ```
 Technical Program Manager (Enhanced - Project Lead)
-    ├── Education Architect (Strategy)
+    ├── Education Reviewer (Strategy & Assessment)
     ├── Module Developer (Implementation)
     ├── Package Manager (Integration)
     ├── Quality Assurance (Validation)
-    ├── Website Content Strategist (Website Content & Strategy)
-    └── Educational Review Expert (Educational & Technical Validation)
+    └── Website Manager (Website Content & Strategy)
 ```
 
 ### 🎯 **Checkpoint System Implementation - Agent Workflow Case Study**
 
 **SUCCESSFUL IMPLEMENTATION:** The agent team successfully implemented a comprehensive 16-checkpoint capability assessment system with integration testing. Here's how the workflow functioned:
 
-#### **Phase 1: Strategic Planning** (Education Architect + Enhanced TPM)
-- **Education Architect**: Designed capability-based learning progression (Foundation → Architecture → Training → Inference → Serving)
-- **Enhanced TPM**: Orchestrated agent coordination using Chen Method workflow management
+#### **Phase 1: Strategic Planning** (Education Reviewer + TPM)
+- **Education Reviewer**: Designed capability-based learning progression (Foundation → Architecture → Training → Inference → Serving)
+- **TPM**: Orchestrated agent coordination and workflow management
 - **Result**: 16-checkpoint structure aligned with 17 TinyTorch modules, each with clear capability statements
 
 #### **Phase 2: Implementation** (Module Developer)
@@ -432,13 +429,13 @@ Technical Program Manager (Enhanced - Project Lead)
 - **Ensured complete package build**: All checkpoint functionality available in built package
 - **Integration success confirmed**: Complete system works end-to-end
 
-#### **Phase 5: Website Content** (Website Content Strategist)
+#### **Phase 5: Website Content** (Website Manager)
 - **Updated documentation**: This CLAUDE.md file, checkpoint-system.md, README.md updates with design strategy
 - **Documented agent workflow**: How agents successfully coordinated implementation with user experience design
 - **Created CLI documentation**: Usage examples and command reference with visual hierarchy
 - **Explained integration testing**: How checkpoint system validates student progress with content presentation optimization
 
-#### **Phase 6: Review and Approval** (Enhanced TPM)
+#### **Phase 6: Review and Approval** (TPM)
 - **Verified all Chen Gates passed**: QA approved, Package Manager confirmed integration through systematic workflow
 - **Confirmed capability delivery**: 16-checkpoint system with CLI and integration testing using Chen State Machine
 - **Approved for commit**: Complete implementation ready for production use through enhanced workflow authority
@@ -503,7 +500,7 @@ tito module complete 02_tensor --skip-test # Skip checkpoint test if needed
 
 **For EVERY module update, follow this sequence:**
 
-1. **Planning Phase** (Workflow Coordinator + Education Architect)
+1. **Planning Phase** (TPM + Education Reviewer)
    - Define learning objectives
    - Plan module structure
    - Set implementation goals
@@ -528,12 +525,12 @@ tito module complete 02_tensor --skip-test # Skip checkpoint test if needed
    - Ensure complete package works
    - **Block progress if integration fails**
 
-5. **Documentation Phase** (Documentation Publisher)
+5. **Documentation Phase** (Education Reviewer)
    - Add explanatory markdown
    - Create ML systems thinking questions
    - Ensure clarity and consistency
 
-6. **Review Phase** (Workflow Coordinator)
+6. **Review Phase** (TPM)
    - Verify all agents completed their tasks
    - Ensure QA tests passed
    - Confirm package integration successful
@@ -557,8 +554,8 @@ workflow_coordinator.plan_update(module="tensor")
 
 **Parallel Tasks (can happen simultaneously):**
 - Multiple Module Developers working on different modules
-- Documentation Publisher preparing content while code is tested
-- Education Architect planning next modules
+- Education Reviewer preparing documentation while code is tested
+- Education Reviewer planning next modules
 
 **Sequential Tasks (must happen in order):**
 - Virtual Environment Setup → Implementation → Testing → Commit
@@ -570,9 +567,9 @@ workflow_coordinator.plan_update(module="tensor")
 1. **Module Developer**: Cannot mark task complete without QA approval
 2. **QA Agent**: Must test EVERY change, no exceptions
 3. **Package Manager**: Must validate integration, can block releases
-4. **Workflow Coordinator**: Cannot proceed without all agent sign-offs
-5. **Documentation Publisher**: Must verify code works before documenting
-6. **Education Architect**: Must validate learning objectives are met
+4. **TPM**: Cannot proceed without all agent sign-offs
+5. **Education Reviewer**: Must verify code works before documenting
+6. **Education Reviewer**: Must validate learning objectives are met
 
 ### 📝 Agent Handoff Checklist
 
@@ -587,8 +584,8 @@ When passing work between agents, include:
 
 If agents disagree or find conflicts:
 1. QA Agent has veto power on code quality
-2. Education Architect has final say on learning objectives
-3. Workflow Coordinator resolves all other disputes
+2. Education Reviewer has final say on learning objectives
+3. TPM resolves all other disputes
 4. User has ultimate override authority
 
 ### 🤖 Workflow Compliance
@@ -682,7 +679,7 @@ def profile_memory_usage():
 ```
 
 ### 🤔 ML Systems Thinking Questions - REQUIRED
-**Documentation Publisher must create systems-focused reflection questions that analyze the actual implementations.**
+**Education Reviewer must create systems-focused reflection questions that analyze the actual implementations.**
 
 **MANDATORY Question Categories:**
 1. **Memory & Performance**: "Why does this operation use O(N²) memory? When does this become problematic?"
@@ -774,7 +771,7 @@ Content here...
 
 ### 🏗️ Agent Responsibilities for Modules
 
-**Education Architect:**
+**Education Reviewer:**
 - Learning objectives focused on ML SYSTEMS understanding
 - Ensure Build→Profile→Optimize workflow compliance  
 - Educational strategy emphasizing systems engineering
@@ -820,7 +817,7 @@ Content here...
 - **MUST validate systems analysis is present and accurate**
 - **MUST report test results to Package Manager**
 
-**Website Content Strategist:**
+**Website Manager:**
 - **Unified content & design strategy**: Both WHAT content says AND HOW it's presented
 - **Educational website content**: Content creation with presentation optimization for open source frameworks
 - **ML systems analysis sections**: MANDATORY systems understanding documentation in every module
@@ -832,16 +829,16 @@ Content here...
 - **CLI usage documentation**: Document commands with user experience considerations
 - **MUST connect implementations to systems principles through cohesive content and design**
 
-**Enhanced Technical Program Manager (Integrated Workflow Authority):**
-- **Complete workflow orchestration**: Chen Method state machine management for all development processes
-- **ML Systems focus enforcement**: Ensure all modules teach systems principles through implementation using systematic quality gates
-- **Checkpoint system orchestration**: Coordinate complex multi-agent implementations using Chen Gates validation
-- **Agent workflow coordination**: Manage handoffs with strict quality criteria and timeline tracking
-- **Systems analysis validation**: Verify every module includes memory/performance/scaling analysis through comprehensive review
-- **MUST enforce QA testing after EVERY module update** through Chen Gate 3 (Quality Certification)
-- **CANNOT approve changes without QA test results** - absolute workflow authority
-- **MUST block commits if tests fail** using quality gate enforcement
-- **MUST ensure modules teach systems thinking** through systematic Chen Method validation
+**Technical Program Manager (TPM):**
+- **Complete workflow orchestration**: Manages all development processes and agent coordination
+- **ML Systems focus enforcement**: Ensures all modules teach systems principles through implementation
+- **Checkpoint system orchestration**: Coordinates complex multi-agent implementations
+- **Agent workflow coordination**: Manages handoffs with strict quality criteria and timeline tracking
+- **Systems analysis validation**: Verifies every module includes memory/performance/scaling analysis
+- **MUST enforce QA testing after EVERY module update**
+- **CANNOT approve changes without QA test results**
+- **MUST block commits if tests fail**
+- **MUST ensure modules teach systems thinking**
 
 ### 🧪 QA Testing Protocol - MANDATORY
 
@@ -888,7 +885,7 @@ tito module complete tensor --skip-test
 1. **Immediate Testing After Changes**
    - QA Agent MUST be invoked after ANY module modification
    - Module Developer CANNOT proceed without QA approval
-   - Workflow Coordinator MUST enforce this requirement
+   - TPM MUST enforce this requirement
 
 2. **Comprehensive Test Suite - INCLUDING SYSTEMS VALIDATION**
    ```python
@@ -925,7 +922,7 @@ tito module complete tensor --skip-test
 5. **Success Protocol**
    - Only after ALL tests pass, QA Agent:
      * Approves the changes
-     * Reports success to Workflow Coordinator
+     * Reports success to TPM
      * Allows commit to proceed
 
 6. **Test Results Documentation**
