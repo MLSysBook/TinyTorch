@@ -115,11 +115,15 @@ You master modern LLM optimizations
 
 **Perfect if you're asking these questions:**
 
-**Students & Researchers**: "How does that `nn.Linear()` call actually compute gradients? Why does Adam optimizer need three times the memory of my model parameters?" You'll implement the mathematics you learned in class and see how theoretical concepts become practical systems.
+**ML Systems Engineers**: "Why does my model training OOM at batch size 32? How do attention mechanisms scale quadratically with sequence length? When does data loading become the bottleneck?" You'll build and profile every component, understanding memory hierarchies, computational complexity, and system bottlenecks that production ML systems face daily.
 
-**Academics & Educators**: "How can I teach ML systems effectively?" TinyTorch provides a complete pedagogical framework with NBGrader integration, automated assessment, and rigorously tested foundations. Use it as a semester-long course or integrate individual modules.
+**Students & Researchers**: "How does that `nn.Linear()` call actually compute gradients? Why does Adam optimizer need 3× the memory of SGD? What's actually happening during a forward pass?" You'll implement the mathematics you learned in class and discover how theoretical concepts become practical systems with real performance implications.
 
-**ML Practitioners**: "Why do I get stuck debugging training issues?" Even experienced engineers often treat frameworks as black boxes. By building your own, you'll debug faster, optimize better, and implement custom operations with confidence.
+**Performance Engineers**: "Where are the actual bottlenecks in transformer inference? How does KV-cache reduce computation by 10-100×? Why does my CNN use 4GB of memory?" By building these systems from scratch, you'll understand memory access patterns, cache efficiency, and optimization opportunities that profilers alone can't teach.
+
+**Academics & Educators**: "How can I teach ML systems—not just ML algorithms?" TinyTorch provides a complete pedagogical framework emphasizing systems thinking: memory profiling, performance analysis, and scaling behavior are built into every module, not added as an afterthought.
+
+**ML Practitioners**: "Why does training slow down after epoch 10? How do I debug gradient explosions? When should I use mixed precision?" Even experienced engineers often treat frameworks as black boxes. By understanding the systems underneath, you'll debug faster, optimize better, and make informed architectural decisions.
 
 ## How to Choose Your Learning Path
 
