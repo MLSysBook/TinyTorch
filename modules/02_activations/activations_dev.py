@@ -61,7 +61,7 @@ try:
     from tinytorch.core.tensor import Tensor
 except ImportError:
     # For development - import from local modules
-    sys.path.append(os.path.join(os.path.dirname(__file__), '..', '02_tensor'))
+    sys.path.append(os.path.join(os.path.dirname(__file__), '..', '01_tensor'))
     from tensor_dev import Tensor
 
 # In[ ]:
@@ -1203,7 +1203,7 @@ if __name__ == "__main__":
 # - **Industry Standard**: Every major ML framework prioritizes optimizing these specific activation functions
 
 # ### Next Steps
-# 1. **Export your module**: `tito module complete 03_activations`
+# 1. **Export your module**: `tito module complete 02_activations`
 # 2. **Validate integration**: `tito test --module activations`
 # 3. **Explore activation variants**: Experiment with Leaky ReLU or GELU implementations
 # 4. **Ready for Module 04**: Layers - combining your activations with linear transformations!

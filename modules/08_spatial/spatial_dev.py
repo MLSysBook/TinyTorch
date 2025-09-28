@@ -57,9 +57,9 @@ try:
 except ImportError:
     # Development mode - import from local module files
     sys.path.extend([
-        os.path.join(os.path.dirname(__file__), '..', '02_tensor'),
-        os.path.join(os.path.dirname(__file__), '..', '03_activations'), 
-        os.path.join(os.path.dirname(__file__), '..', '04_layers')
+        os.path.join(os.path.dirname(__file__), '..', '01_tensor'),
+        os.path.join(os.path.dirname(__file__), '..', '02_activations'), 
+        os.path.join(os.path.dirname(__file__), '..', '03_layers')
     ])
     from tensor_dev import Tensor, Parameter
     from activations_dev import ReLU

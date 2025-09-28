@@ -55,7 +55,7 @@ try:
     from tinytorch.core.tensor import Tensor
 except ImportError:
     # For development, import from local tensor module
-    sys.path.append(os.path.join(os.path.dirname(__file__), '..', '02_tensor'))
+    sys.path.append(os.path.join(os.path.dirname(__file__), '..', '01_tensor'))
     from tensor_dev import Tensor
 
 # %% nbgrader={"grade": false, "grade_id": "tokenization-welcome", "locked": false, "schema_version": 3, "solution": false, "task": false}

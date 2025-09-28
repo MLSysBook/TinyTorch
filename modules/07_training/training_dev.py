@@ -51,9 +51,9 @@ import time
 import pickle
 
 # Add module directories to Python path
-sys.path.append(os.path.abspath('modules/source/02_tensor'))
-sys.path.append(os.path.abspath('modules/source/03_activations'))
-sys.path.append(os.path.abspath('modules/source/04_layers'))
+sys.path.append(os.path.abspath('modules/source/01_tensor'))
+sys.path.append(os.path.abspath('modules/source/02_activations'))
+sys.path.append(os.path.abspath('modules/source/03_layers'))
 sys.path.append(os.path.abspath('modules/source/05_networks'))
 sys.path.append(os.path.abspath('modules/source/06_autograd'))
 sys.path.append(os.path.abspath('modules/source/07_spatial'))
@@ -67,14 +67,34 @@ sys.path.append(os.path.abspath('modules/source/09_dataloader'))
 # No longer needed
 
 # Import all the building blocks we need
-from tinytorch.core.tensor import Tensor
-from tinytorch.core.activations import ReLU, Sigmoid, Tanh, Softmax
-from tinytorch.core.layers import Linear
-from tinytorch.core.networks import Sequential, create_mlp
-from tinytorch.core.spatial import Conv2D, flatten
-from tinytorch.utils.data import Dataset, DataLoader
-from tinytorch.core.autograd import Variable  # FOR AUTOGRAD INTEGRATION
-from tinytorch.core.optimizers import SGD, Adam
+try:
+    from tinytorch.core.tensor import Tensor
+    from tinytorch.core.activations import ReLU, Sigmoid, Tanh, Softmax
+    from tinytorch.core.layers import Linear
+    from tinytorch.core.networks import Sequential, create_mlp
+    from tinytorch.core.spatial import Conv2D, flatten
+    from tinytorch.utils.data import Dataset, DataLoader
+    from tinytorch.core.autograd import Variable  # FOR AUTOGRAD INTEGRATION
+    from tinytorch.core.optimizers import SGD, Adam
+except ImportError:
+    # For development - import from local modules
+    import sys
+    import os
+    sys.path.append(os.path.join(os.path.dirname(__file__), '..', '01_tensor'))
+    sys.path.append(os.path.join(os.path.dirname(__file__), '..', '02_activations'))
+    sys.path.append(os.path.join(os.path.dirname(__file__), '..', '03_layers'))
+    sys.path.append(os.path.join(os.path.dirname(__file__), '..', '05_autograd'))
+    sys.path.append(os.path.join(os.path.dirname(__file__), '..', '06_optimizers'))
+    sys.path.append(os.path.join(os.path.dirname(__file__), '..', '08_spatial'))
+    sys.path.append(os.path.join(os.path.dirname(__file__), '..', '09_dataloader'))
+    
+    from tensor_dev import Tensor
+    from activations_dev import ReLU, Sigmoid, Tanh, Softmax
+    from layers_dev import Linear, Sequential, create_mlp
+    from spatial_dev import Conv2D, flatten
+    from dataloader_dev import Dataset, DataLoader
+    from autograd_dev import Variable
+    from optimizers_dev import SGD, Adam
 
 # 🔥 AUTOGRAD INTEGRATION: Loss functions now return Variables that support .backward()
 # This enables automatic gradient computation for neural network training!

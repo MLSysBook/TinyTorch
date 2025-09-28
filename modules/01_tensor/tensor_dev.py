@@ -1410,7 +1410,7 @@ Your tensor implementation now enables:
 - **Real data processing**: Handle images, text, and complex multi-dimensional datasets
 
 ### Export Your Work
-1. **Export to package**: `tito module complete 02_tensor`
+1. **Export to package**: `tito module complete 01_tensor`
 2. **Verify integration**: Your Tensor class will be available as `tinytorch.core.tensor.Tensor`
 3. **Enable next module**: Activations build on your tensor foundation
 
