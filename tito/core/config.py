@@ -46,11 +46,11 @@ class CLIConfig:
             else:
                 project_root = Path.cwd()
         
-        modules_path = project_root / 'assignments' / 'source'
+        modules_path = project_root / 'modules'
         return cls(
             project_root=project_root,
-            assignments_dir=modules_path,
-            modules_dir=modules_path,  # Same as assignments_dir
+            assignments_dir=project_root / 'assignments',
+            modules_dir=modules_path,
             tinytorch_dir=project_root / 'tinytorch',
             bin_dir=project_root / 'bin'
         )
