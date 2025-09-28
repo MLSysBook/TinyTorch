@@ -429,7 +429,7 @@ def transformer_component_demo():
             v = v.reshape(batch_size, seq_len, self.n_heads, self.d_k).transpose(0, 2, 1, 3)
             
             # Attention computation
-            scores = q @ k.transpose(-2, -1) / np.sqrt(self.d_k)
+            scores = q @ np.swapaxes(k, -2, -1) / np.sqrt(self.d_k)
             weights = np.exp(scores) / np.sum(np.exp(scores), axis=-1, keepdims=True)
             attended = weights @ v
             
@@ -729,7 +729,7 @@ class TinyGPTTransformerLayer:
         v = v.reshape(batch_size, seq_len, self.n_heads, d_k).transpose(0, 2, 1, 3)
         
         # Scaled dot-product attention with causal masking
-        scores = q @ k.transpose(-2, -1) / np.sqrt(d_k)  # (batch, heads, seq, seq)
+        scores = q @ np.swapaxes(k, -2, -1) / np.sqrt(d_k)  # (batch, heads, seq, seq)
         
         # Apply causal mask (prevent attending to future tokens)
         if mask is None:
