@@ -318,24 +318,8 @@ class ModuleCommand(BaseCommand):
     def _run_checkpoint_for_module(self, module_name: str) -> dict:
         """Run checkpoint test for a module."""
         # Use the same mapping as ExportCommand
-        module_to_checkpoint = {
-            "01_setup": "00",          # Setup → Environment checkpoint  
-            "02_tensor": "01",         # Tensor → Foundation checkpoint
-            "03_activations": "02",    # Activations → Intelligence checkpoint
-            "04_layers": "03",         # Layers → Components checkpoint
-            "05_dense": "04",          # Dense → Networks checkpoint
-            "06_spatial": "05",        # Spatial → Learning checkpoint
-            "07_attention": "06",      # Attention → Attention checkpoint
-            "08_dataloader": "07",     # Dataloader → Stability checkpoint (data prep)
-            "09_autograd": "08",       # Autograd → Differentiation checkpoint
-            "10_optimizers": "09",     # Optimizers → Optimization checkpoint
-            "11_training": "10",       # Training → Training checkpoint
-            "12_compression": "11",    # Compression → Regularization checkpoint
-            "13_kernels": "12",        # Kernels → Kernels checkpoint
-            "14_benchmarking": "13",   # Benchmarking → Benchmarking checkpoint
-            "15_mlops": "14",          # MLOPs → Deployment checkpoint
-            "16_tinygpt": "15",        # TinyGPT → Capstone checkpoint
-        }
+        from .export import ExportCommand
+        module_to_checkpoint = ExportCommand.MODULE_TO_CHECKPOINT
         
         if module_name not in module_to_checkpoint:
             return {"skipped": True, "reason": f"No checkpoint mapping for module {module_name}"}
@@ -389,25 +373,8 @@ class ModuleCommand(BaseCommand):
     
     def _get_checkpoint_id_for_module(self, module_name: str) -> Optional[str]:
         """Get the checkpoint ID that corresponds to a module."""
-        module_to_checkpoint = {
-            "01_setup": "00",          # Setup → Environment checkpoint  
-            "02_tensor": "01",         # Tensor → Foundation checkpoint
-            "03_activations": "02",    # Activations → Intelligence checkpoint
-            "04_layers": "03",         # Layers → Components checkpoint
-            "05_dense": "04",          # Dense → Networks checkpoint
-            "06_spatial": "05",        # Spatial → Learning checkpoint
-            "07_attention": "06",      # Attention → Attention checkpoint
-            "08_dataloader": "07",     # Dataloader → Stability checkpoint (data prep)
-            "09_autograd": "08",       # Autograd → Differentiation checkpoint
-            "10_optimizers": "09",     # Optimizers → Optimization checkpoint
-            "11_training": "10",       # Training → Training checkpoint
-            "12_compression": "11",    # Compression → Regularization checkpoint
-            "13_kernels": "12",        # Kernels → Kernels checkpoint
-            "14_benchmarking": "13",   # Benchmarking → Benchmarking checkpoint
-            "15_mlops": "14",          # MLOPs → Deployment checkpoint
-            "16_tinygpt": "15",        # TinyGPT → Capstone checkpoint
-        }
-        return module_to_checkpoint.get(module_name)
+        from .export import ExportCommand
+        return ExportCommand.MODULE_TO_CHECKPOINT.get(module_name)
 
     def _check_milestone_unlock(self, module_name: str) -> dict:
         """Check if completing this module unlocks a milestone."""

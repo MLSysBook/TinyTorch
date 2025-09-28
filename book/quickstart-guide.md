@@ -100,7 +100,7 @@ After completing your first modules:
 
 <div style="background: #f8f9fa; padding: 1.5rem; border: 1px solid #dee2e6; border-radius: 0.5rem; margin: 1.5rem 0;">
 
-**Check your new capabilities:** Track your progress through the 16-checkpoint system to see your growing ML systems expertise.
+**Check your new capabilities:** Track your progress through the 21-checkpoint system to see your growing ML systems expertise.
 
 **📖 See [Track Your Progress](learning-progress.html)** for detailed capability tracking and [Essential Commands](tito-essentials.html)** for progress monitoring commands.
 

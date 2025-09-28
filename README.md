@@ -9,6 +9,17 @@
 
 > 🚧 **Work in Progress** - We're actively developing TinyTorch for Spring 2025! All core modules are complete and tested. Join us in building the future of ML systems education.
 
+## 📖 Table of Contents
+- [Why TinyTorch?](#why-tinytorch)
+- [What You'll Build](#what-youll-build) - Including the **CIFAR-10 North Star Goal**
+- [Quick Start](#quick-start) - Get running in 5 minutes
+- [Learning Journey](#learning-journey) - 20 progressive modules
+- [Learning Progression & Checkpoints](#learning-progression--checkpoints) - 21 capability checkpoints
+- [Key Features](#key-features) - Essential-only design
+- [Milestone Examples](#milestone-examples) - Real achievements
+- [Documentation & Resources](#-documentation--resources) - For students, instructors, developers
+- [Ready to Start Building?](#-ready-to-start-building) - Your path forward
+
 ## Why TinyTorch?
 
 **"Most ML education teaches you to _use_ frameworks. TinyTorch teaches you to _build_ them."**
@@ -20,12 +31,55 @@ A Harvard University course that transforms you from framework user to systems e
 ## What You'll Build
 
 A **complete ML framework** capable of:
-- Training neural networks on CIFAR-10 to 75%+ accuracy (reliably achievable!)
-- Building GPT-style language models  
-- Implementing modern optimizers (Adam, learning rate scheduling)
-- Performance optimization and competitive benchmarking
 
-All built from scratch using only NumPy - no PyTorch, no TensorFlow!
+🎯 **North Star Achievement**: Train CNNs on CIFAR-10 to **75%+ accuracy**
+- Real computer vision with 50,000 training images
+- Built entirely from scratch using only NumPy
+- Competitive performance with modern frameworks
+
+**Additional Capabilities**:
+- Building GPT-style language models with attention mechanisms
+- Modern optimizers (Adam, SGD) with learning rate scheduling
+- Performance profiling, optimization, and competitive benchmarking
+- Complete ML systems pipeline from tensors to deployment
+
+**No dependencies on PyTorch or TensorFlow - everything is YOUR code!**
+
+## Repository Structure
+
+```
+TinyTorch/
+├── modules/           # 🏗️ YOUR workspace - implement ML systems here
+│   ├── 01_tensor/     # Start: Build tensor operations from scratch
+│   ├── 02_activations/# Add: Neural network intelligence (ReLU, Softmax)
+│   ├── 03_layers/     # Build: Network components (Linear, Module system)
+│   └── ...            # Progress through 20 learning modules
+│
+├── tinytorch/         # 📦 Generated package (auto-built from your work)
+│   ├── core/          # Your implementations exported for use
+│   ├── nn/            # Neural network components you built
+│   └── optim/         # Optimizers you implemented
+│
+├── tests/             # 🧪 Comprehensive validation system
+│   ├── checkpoints/   # 16 capability tests tracking your progress
+│   └── integration/   # Full system validation tests
+│
+├── book/              # 📚 Complete course documentation (Jupyter Book)
+│   ├── chapters/      # Learning guides for each module
+│   └── resources/     # Additional learning materials
+│
+└── examples/          # 🎯 Milestone demonstrations (unlock as you progress)
+    ├── mnist_training.py    # Train neural networks on real data
+    └── cifar10_cnn.py       # Achieve 75%+ accuracy on CIFAR-10
+```
+
+**🚨 CRITICAL: Work in `modules/`, Import from `tinytorch/`**
+- ✅ **Edit code**: Always in `modules/XX_name/name_dev.py` files
+- ✅ **Import & use**: Your built components from `tinytorch.core.component`
+- ❌ **Never edit**: Files in `tinytorch/` directly (auto-generated from modules)
+- 🔄 **Sync changes**: Use `tito module complete XX_name` to update package
+
+**Why this structure?** Learn by building (modules) → Use what you built (tinytorch) → Validate mastery (tests)
 
 ## Quick Start
 
@@ -39,8 +93,8 @@ pip install -r requirements.txt
 pip install -e .
 
 # Start learning
-cd modules/source/01_setup
-jupyter lab setup_dev.py
+cd modules/01_tensor
+jupyter lab tensor_dev.py
 
 # Track progress
 tito checkpoint status
@@ -55,14 +109,14 @@ Build and train neural networks from scratch
 
 | Module | Topic | What You Build | ML Systems Learning |
 |--------|-------|----------------|-------------------|
-| 01 | Setup | Development environment | CLI tools, dependency management, testing frameworks |
-| 02 | Tensor | N-dimensional arrays + gradients | **Memory layout, cache efficiency**, broadcasting semantics |
-| 03 | Activations | ReLU + Softmax + derivatives | **Numerical stability**, saturation analysis, gradient flow |
-| 04 | Layers | Linear + Module + parameter management | **Parameter counting**, weight initialization, modularity patterns |
-| 05 | Loss | MSE + CrossEntropy + gradient computation | **Numerical precision**, loss landscape analysis, convergence metrics |
-| 06 | Autograd | Automatic differentiation engine | **Computational graphs**, memory management, gradient accumulation |
-| 07 | Optimizers | SGD + Adam + learning schedules | **Memory efficiency** (Adam uses 3x SGD), convergence dynamics |
-| 08 | Training | Complete training loops + evaluation | **Training dynamics**, checkpoint systems, performance monitoring |
+| 01 | Tensor | N-dimensional arrays + operations | **Memory layout, cache efficiency**, broadcasting semantics |
+| 02 | Activations | ReLU + Softmax (essential functions) | **Numerical stability**, gradient flow, function properties |
+| 03 | Layers | Linear layers + Module abstraction | **Parameter management**, weight initialization, forward/backward |
+| 04 | Losses | MSE + CrossEntropy (essential losses) | **Numerical precision**, loss landscapes, training objectives |
+| 05 | Autograd | Automatic differentiation engine | **Computational graphs**, memory management, gradient flow |
+| 06 | Optimizers | SGD + Adam (essential optimizers) | **Memory efficiency** (Adam uses 3x memory), convergence |
+| 07 | Training | Complete training loops + evaluation | **Training dynamics**, checkpoints, monitoring systems |
+| 08 | Spatial | Conv2d + MaxPool2d + CNN operations | **Parameter scaling**, spatial locality, convolution efficiency |
 
 **Milestone Achievement**: Train XOR solver and MNIST classifier after Module 8
 
@@ -73,8 +127,8 @@ Build CNNs that classify real images
 
 | Module | Topic | What You Build | ML Systems Learning |
 |--------|-------|----------------|-------------------|
-| 09 | Spatial | Conv2d + MaxPool2d + CNN operations | **Parameter scaling** (filters × channels), spatial locality, convolution efficiency |
-| 10 | DataLoader | Efficient data pipelines + CIFAR-10 | **Batch processing**, memory-mapped I/O, data pipeline bottlenecks |
+| 09 | DataLoader | Efficient data pipelines + CIFAR-10 | **Batch processing**, memory-mapped I/O, data pipeline bottlenecks |
+| 10 | Tokenization | Text processing + vocabulary | **Vocabulary scaling**, tokenization bottlenecks, sequence processing |
 
 **Milestone Achievement**: CIFAR-10 CNN with 75%+ accuracy
 
@@ -129,18 +183,59 @@ model.fit(X, y)  # Magic happens
 
 ### Why Build Your Own Framework?
 
-- **Deep Understanding** - Know exactly what `loss.backward()` does  
-- **Systems Thinking** - Understand memory, compute, and scaling  
-- **Debugging Skills** - Fix problems at any level of the stack  
-- **Production Ready** - Learn patterns used in real ML systems  
+- **Deep Understanding** - Know exactly what `loss.backward()` does
+- **Systems Thinking** - Understand memory, compute, and scaling
+- **Debugging Skills** - Fix problems at any level of the stack
+- **Production Ready** - Learn patterns used in real ML systems
+
+## Learning Progression & Checkpoints
+
+### 16-Checkpoint Capability System
+
+Track your progress through **capability-based checkpoints** that validate your ML systems knowledge:
+
+```bash
+# Check your current progress
+tito checkpoint status
+
+# See your capability development timeline
+tito checkpoint timeline
+```
+
+**Checkpoint Progression:**
+- **00-02**: Foundation (Environment, Tensors, Activations)
+- **03-07**: Core Networks (Layers, Losses, Autograd, Optimizers, Training)
+- **08-10**: Computer Vision (Spatial ops, DataLoaders, Real datasets)
+- **11-14**: Language Models (Tokenization, Embeddings, Attention, Transformers)
+- **15**: Capstone (Complete end-to-end ML systems)
+
+Each checkpoint asks: **"Can I build this capability from scratch?"** with hands-on validation.
+
+### Module Completion Workflow
+
+```bash
+# Complete a module (automatic export + testing)
+tito module complete 01_tensor
+
+# This automatically:
+# 1. Exports your implementation to the tinytorch package
+# 2. Runs the corresponding capability checkpoint test
+# 3. Shows your achievement and suggests next steps
+```  
 
 ## Key Features
 
+### Essential-Only Design
+- **Focus on What Matters**: ReLU + Softmax (not 20 activation functions)
+- **Production Relevance**: Adam + SGD (the optimizers you actually use)
+- **Core ML Systems**: Memory profiling, performance analysis, scaling insights
+- **Real Applications**: CIFAR-10 CNNs, not toy examples
+
 ### For Students
 - **Interactive Demos**: Rich CLI visualizations for every concept
-- **Checkpoint System**: Track your learning progress
+- **Checkpoint System**: Track your learning progress through 16 capabilities
 - **Immediate Testing**: Validate your implementations instantly
-- **Real Datasets**: Train on CIFAR-10, not toy examples
+- **Systems Focus**: Learn ML engineering, not just algorithms
 
 ### For Instructors
 - **NBGrader Integration**: Automated grading workflow
@@ -211,31 +306,45 @@ python examples/optimization_showcase.py
 All demos and modules are thoroughly tested:
 
 ```bash
-# Run comprehensive test suite (recommended)
-tito test --comprehensive
+# Check your learning progress
+tito checkpoint status
 
-# Run checkpoint tests
-tito checkpoint test 01
+# Test specific capabilities
+tito checkpoint test 01  # Foundation checkpoint
+tito checkpoint test 05  # Autograd checkpoint
 
-# Test specific modules
-tito test --module tensor
+# Complete and test modules
+tito module complete 01_tensor  # Exports and tests
 
-# Run all module tests
+# Run comprehensive validation
 python tests/run_all_modules.py
 ```
 
-- **20 modules** passing all tests with 100% health status  
-- **16 capability checkpoints** tracking learning progress  
-- **Complete optimization pipeline** from profiling to benchmarking  
-- **TinyMLPerf competition framework** for performance excellence  
-- **KISS principle design** for clear, maintainable code  
+- **20 modules** passing all tests with 100% health status
+- **21 capability checkpoints** tracking learning progress
+- **Complete optimization pipeline** from profiling to benchmarking
+- **TinyMLPerf competition framework** for performance excellence
+- **KISS principle design** for clear, maintainable code
+- **Streamlined development**: 7-agent workflow for efficient coordination
+- **Essential-only features**: Focus on what's used in production ML systems  
 
-## Documentation
+## 📚 Documentation & Resources
 
-- **[Course Website](https://mlsysbook.github.io/TinyTorch/)** - Complete interactive course
-- **[Instructor Guide](docs/INSTRUCTOR_GUIDE.md)** - Teaching resources  
-- **[Student Quickstart](docs/STUDENT_QUICKSTART.md)** - Getting started guide
-- **[CIFAR-10 Training Guide](docs/cifar10-training-guide.md)** - Detailed training walkthrough
+### 🎓 For Students
+- **[Interactive Course Website](https://mlsysbook.github.io/TinyTorch/)** - Complete learning platform
+- **[Getting Started Guide](docs/README.md)** - Installation and first steps
+- **[CIFAR-10 Training Guide](docs/cifar10-training-guide.md)** - Achieving the north star goal
+- **[Module READMEs](/modules/)** - Individual module documentation
+
+### 👨‍🏫 For Instructors
+- **[Instructor Guide](instructor/README.md)** - Complete teaching resources
+- **[NBGrader Workflow](book/instructor-guide.md)** - Automated grading setup
+- **[System Architecture](book/system-architecture.md)** - Technical overview
+
+### 🛠️ For Developers
+- **[Agent Coordination](.claude/guidelines/AGENT_COORDINATION.md)** - Development workflow
+- **[Module Development](.claude/guidelines/MODULE_DEVELOPMENT.md)** - Creating new modules
+- **[Testing Standards](.claude/guidelines/TESTING_STANDARDS.md)** - Quality assurance
 
 ## TinyMLPerf Competition & Leaderboard
 
@@ -284,6 +393,34 @@ We acknowledge several excellent educational ML framework projects with similar 
 Created by [Prof. Vijay Janapa Reddi](https://vijay.seas.harvard.edu) at Harvard University.
 
 Special thanks to students and contributors who helped refine this educational framework.
+
+---
+
+## 🚀 Ready to Start Building?
+
+**TinyTorch transforms you from ML framework user to ML systems engineer.**
+
+### What Makes TinyTorch Different?
+- ✅ **Essential-only features** - Focus on what's actually used in production
+- ✅ **Complete implementation** - Build every component from scratch
+- ✅ **Real achievements** - Train CNNs on CIFAR-10 to 75%+ accuracy
+- ✅ **Systems thinking** - Understand memory, performance, and scaling
+- ✅ **Production relevance** - Learn patterns from PyTorch and TensorFlow
+- ✅ **Immediate validation** - 21 capability checkpoints track progress
+
+### Your Learning Journey
+1. **Week 1-2**: Foundation (Tensors, Activations, Layers)
+2. **Week 3-4**: Training Pipeline (Losses, Autograd, Optimizers, Training)
+3. **Week 5-6**: Computer Vision (Spatial ops, DataLoaders, CIFAR-10)
+4. **Week 7-8**: Language Models (Tokenization, Attention, Transformers)
+5. **Week 9-10**: Optimization (Profiling, Acceleration, Benchmarking)
+
+### Getting Started
+```bash
+git clone https://github.com/mlsysbook/TinyTorch.git
+cd TinyTorch && source setup.sh
+cd modules/01_tensor && jupyter lab tensor_dev.py
+```
 
 ---
 

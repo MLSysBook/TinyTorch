@@ -17,22 +17,28 @@ from .checkpoint import CheckpointSystem
 class ExportCommand(BaseCommand):
     # Module to checkpoint mapping - defines which checkpoint is triggered after each module
     MODULE_TO_CHECKPOINT = {
-        "01_setup": "00",          # Setup → Environment checkpoint  
-        "02_tensor": "01",         # Tensor → Foundation checkpoint
-        "03_activations": "02",    # Activations → Intelligence checkpoint
-        "04_layers": "03",         # Layers → Components checkpoint
-        "05_losses": "04",         # Losses → Networks checkpoint (was dense)
-        "06_optimizers": "05",     # Optimizers → Learning checkpoint (was spatial)
-        "07_autograd": "06",       # Autograd → Attention checkpoint (was attention)
-        "08_training": "07",       # Training → Stability checkpoint (was dataloader)
-        "09_spatial": "08",        # Spatial → Differentiation checkpoint (was autograd)
-        "10_dataloader": "09",     # Dataloader → Optimization checkpoint (was optimizers)
-        "11_tokenization": "10",   # Tokenization → Training checkpoint (was training)
-        "12_embeddings": "11",     # Embeddings → Regularization checkpoint (was compression)
-        "13_attention": "12",      # Attention → Kernels checkpoint (was kernels)
-        "14_transformers": "13",   # Transformers → Benchmarking checkpoint (was benchmarking)
-        "15_acceleration": "14",   # Acceleration → Deployment checkpoint (was mlops)
-        "20_capstone": "15",       # Capstone → Capstone checkpoint (was tinygpt)
+        # Direct mapping: Module NN → Checkpoint NN for intuitive workflow
+        # Note: Checkpoint 00 (Environment) is standalone, not tied to any module
+        "01_tensor": "01",         # Tensor → Foundation checkpoint
+        "02_activations": "02",    # Activations → Intelligence checkpoint
+        "03_layers": "03",         # Layers → Components checkpoint
+        "04_losses": "04",         # Losses → Networks checkpoint
+        "05_autograd": "05",       # Autograd → Learning checkpoint
+        "06_optimizers": "06",     # Optimizers → Optimization checkpoint
+        "07_training": "07",       # Training → Training checkpoint
+        "08_spatial": "08",        # Spatial → Vision checkpoint
+        "09_dataloader": "09",     # Dataloader → Data checkpoint
+        "10_tokenization": "10",   # Tokenization → Language checkpoint
+        "11_embeddings": "11",     # Embeddings → Representation checkpoint
+        "12_attention": "12",      # Attention → Attention checkpoint
+        "13_transformers": "13",   # Transformers → Architecture checkpoint
+        "14_profiling": "14",      # Profiling → Systems checkpoint
+        "15_acceleration": "15",   # Acceleration → Acceleration checkpoint
+        "16_quantization": "16",   # Quantization → Quantization checkpoint
+        "17_compression": "17",    # Compression → Compression checkpoint
+        "18_caching": "18",        # Caching → Caching checkpoint
+        "19_benchmarking": "19",   # Benchmarking → Competition checkpoint
+        "20_capstone": "20",       # Capstone → TinyGPT Capstone checkpoint
     }
 
     @property

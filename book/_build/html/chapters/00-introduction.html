@@ -58,11 +58,19 @@
     <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script type="module" src="https://cdn.jsdelivr.net/npm/mermaid@10.6.1/dist/mermaid.esm.min.mjs"></script>
+    <script type="module" src="https://cdn.jsdelivr.net/npm/@mermaid-js/layout-elk@0.1.4/dist/mermaid-layout-elk.esm.min.mjs"></script>
+    <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10.6.1/dist/mermaid.esm.min.mjs";import elkLayouts from "https://cdn.jsdelivr.net/npm/@mermaid-js/layout-elk@0.1.4/dist/mermaid-layout-elk.esm.min.mjs";mermaid.registerLayoutLoaders(elkLayouts);mermaid.initialize({startOnLoad:false});</script>
+    <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
+    <script type="module">
+import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10.6.1/dist/mermaid.esm.min.mjs";
+window.addEventListener("load", () => mermaid.run());
+</script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'chapters/00-introduction';</script>
     <link rel="icon" href="../_static/favicon.svg"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Module: Setup" href="01-setup.html" />
+    <link rel="next" title="Module: Tensor" href="02-tensor.html" />
     <link rel="prev" title="Track Your Progress" href="../learning-progress.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -197,35 +205,34 @@
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">🧱 Building Blocks</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="01-setup.html">01. Setup</a></li>
-<li class="toctree-l1"><a class="reference internal" href="02-tensor.html">02. Tensor</a></li>
-<li class="toctree-l1"><a class="reference internal" href="03-activations.html">03. Activations</a></li>
-<li class="toctree-l1"><a class="reference internal" href="04-layers.html">04. Layers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="02-tensor.html">01. Tensor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="03-activations.html">02. Activations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="04-layers.html">03. Layers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="05-dense.html">04. Losses</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">🧠 Learning Systems</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="05-dense.html">05. Losses</a></li>
-<li class="toctree-l1"><a class="reference internal" href="09-autograd.html">06. Autograd</a></li>
-<li class="toctree-l1"><a class="reference internal" href="10-optimizers.html">07. Optimizers</a></li>
-<li class="toctree-l1"><a class="reference internal" href="11-training.html">08. Training</a></li>
+<li class="toctree-l1"><a class="reference internal" href="09-autograd.html">05. Autograd</a></li>
+<li class="toctree-l1"><a class="reference internal" href="10-optimizers.html">06. Optimizers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="11-training.html">07. Training</a></li>
+<li class="toctree-l1"><a class="reference internal" href="06-spatial.html">08. Spatial</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">🏗️ Neural Architectures</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="06-spatial.html">09. Spatial</a></li>
-<li class="toctree-l1"><a class="reference internal" href="08-dataloader.html">10. DataLoader</a></li>
-<li class="toctree-l1"><a class="reference internal" href="11-tokenization.html">11. Tokenization</a></li>
-<li class="toctree-l1"><a class="reference internal" href="12-embeddings.html">12. Embeddings</a></li>
-<li class="toctree-l1"><a class="reference internal" href="07-attention.html">13. Attention</a></li>
-<li class="toctree-l1"><a class="reference internal" href="16-tinygpt.html">14. Transformers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="08-dataloader.html">09. DataLoader</a></li>
+<li class="toctree-l1"><a class="reference internal" href="11-tokenization.html">10. Tokenization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="12-embeddings.html">11. Embeddings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="07-attention.html">12. Attention</a></li>
+<li class="toctree-l1"><a class="reference internal" href="16-tinygpt.html">13. Transformers</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">⚡ Performance Optimization</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="15-profiling.html">15. Profiling</a></li>
-<li class="toctree-l1"><a class="reference internal" href="13-kernels.html">16. Acceleration</a></li>
-<li class="toctree-l1"><a class="reference internal" href="17-quantization.html">17. Quantization</a></li>
-<li class="toctree-l1"><a class="reference internal" href="12-compression.html">18. Compression</a></li>
-<li class="toctree-l1"><a class="reference internal" href="19-caching.html">19. KV Caching</a></li>
-<li class="toctree-l1"><a class="reference internal" href="14-benchmarking.html">20. Benchmarking</a></li>
+<li class="toctree-l1"><a class="reference internal" href="15-profiling.html">14. Profiling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="13-kernels.html">15. Acceleration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="17-quantization.html">16. Quantization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="12-compression.html">17. Compression</a></li>
+<li class="toctree-l1"><a class="reference internal" href="19-caching.html">18. KV Caching</a></li>
+<li class="toctree-l1"><a class="reference internal" href="14-benchmarking.html">19. Benchmarking</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">🏅 Community &amp; Competition</span></p>
 <ul class="nav bd-sidenav">
@@ -800,7 +807,7 @@ document.write(`
 <section id="ready-to-begin">
 <h2>Ready to Begin?<a class="headerlink" href="#ready-to-begin" title="Link to this heading">#</a></h2>
 <p>You’re about to embark on a journey that will transform how you think about machine learning systems. Instead of using black-box frameworks, you’ll understand every component from the ground up.</p>
-<p><strong>Next Step</strong>: <a class="reference internal" href="01-setup.html"><span class="std std-doc">Module 01: Setup</span></a> - Configure your development environment and build your first TinyTorch function.</p>
+<p><strong>Next Step</strong>: <span class="xref myst">Module 01: Setup</span> - Configure your development environment and build your first TinyTorch function.</p>
 <div class="tip admonition">
 <p class="admonition-title">Your Learning Journey Awaits</p>
 <p>By the end of this course, you’ll have built a complete ML framework that rivals educational implementations like MiniTorch and micrograd, while achieving production-level results:</p>
@@ -818,7 +825,8 @@ document.write(`
 <h2>Complete Learning Timeline &amp; Course Structure<a class="headerlink" href="#complete-learning-timeline-course-structure" title="Link to this heading">#</a></h2>
 <section id="capability-progression-foundation-to-production">
 <h3>Capability Progression: Foundation to Production<a class="headerlink" href="#capability-progression-foundation-to-production" title="Link to this heading">#</a></h3>
-<div class="highlight-mermaid notranslate"><div class="highlight"><pre><span></span>timeline
+<pre align="center" class="mermaid align-center">
+        timeline
     title TinyTorch Capability Development: Building ML Systems
 
     section Foundation Capabilities
@@ -865,9 +873,7 @@ document.write(`
         Complete Mastery     : Checkpoint 15 Complete
                              : End-to-end ML systems
                              : Production deployment
-</pre></div>
-</div>
-</section>
+    </pre></section>
 <section id="part-i-core-foundations-modules-1-8">
 <h3>Part I: Core Foundations (Modules 1-8)<a class="headerlink" href="#part-i-core-foundations-modules-1-8" title="Link to this heading">#</a></h3>
 <p><strong>Focus: Neural Network Fundamentals | 8 weeks</strong></p>
@@ -1131,11 +1137,11 @@ document.write(`
       </div>
     </a>
     <a class="right-next"
-       href="01-setup.html"
+       href="02-tensor.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Module: Setup</p>
+        <p class="prev-next-title">Module: Tensor</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
