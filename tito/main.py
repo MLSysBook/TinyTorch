@@ -109,9 +109,10 @@ Convenience Commands:
   demo        Run AI capability demos (show what your framework can do!)
 
 Examples:
+  tito setup                    First-time environment setup
   tito system info              Show system information
   tito module status --metadata Module status with metadata
-  tito module view 01_setup     Start coding in Jupyter Lab
+  tito module view 01_tensor    Start coding in Jupyter Lab
   tito export 01_tensor         Export specific module to package
   tito checkpoint timeline      Visual progress timeline
   tito leaderboard register     Join the inclusive community
@@ -172,67 +173,9 @@ Examples:
         
         return True
     
-    def handle_numeric_shortcut(self, command: str) -> Optional[int]:
-        """Handle numeric shortcuts like 'tito 01', 'tito 02', etc."""
-        if not command.isdigit() and not (len(command) == 2 and command.isdigit()):
-            return None
-        
-        # Map numbers to modules
-        module_mapping = {
-            "01": "01_tensor",
-            "02": "02_activations", 
-            "03": "03_layers",
-            "04": "04_losses",
-            "05": "05_autograd",
-            "06": "06_optimizers",
-            "07": "07_training",
-            "08": "08_spatial",
-            "09": "09_dataloader",
-            "10": "10_tokenization",
-            "11": "11_embeddings",
-            "12": "12_attention",
-            "13": "13_transformers",
-            "14": "14_profiling",
-            "15": "15_acceleration",
-            "16": "16_quantization",
-            "17": "17_compression",
-            "18": "18_caching",
-            "19": "19_benchmarking",
-            "20": "20_capstone",
-            "21": "21_mlops"
-        }
-        
-        # Normalize to 2-digit format
-        normalized = f"{int(command):02d}"
-        
-        if normalized in module_mapping:
-            module_name = module_mapping[normalized]
-            self.console.print(f"🚀 Opening module {normalized}: {module_name}")
-            
-            # Create fake args for module view command
-            from argparse import Namespace
-            fake_args = Namespace()
-            fake_args.module = module_name
-            fake_args.force = False
-            
-            # Execute module view command
-            from .commands.view import ViewCommand
-            view_command = ViewCommand(self.config)
-            return view_command.run(fake_args)
-        else:
-            self.console.print(f"[red]❌ Module {normalized} not found[/red]")
-            self.console.print("💡 Available modules: 01-21")
-            return 1
-
     def run(self, args: Optional[List[str]] = None) -> int:
         """Run the CLI application."""
         try:
-            # Check for numeric shortcuts first (before argparse)
-            if args and len(args) >= 1:
-                first_arg = args[0]
-                if first_arg.isdigit() or (len(first_arg) == 2 and first_arg.isdigit()):
-                    return self.handle_numeric_shortcut(first_arg)
-            
             parser = self.create_parser()
             parsed_args = parser.parse_args(args)
             
@@ -266,6 +209,8 @@ Examples:
                 
                 # Show enhanced help with command groups
                 self.console.print(Panel(
+                    "[bold]Essential Commands:[/bold]\n"
+                    "  [bold cyan]setup[/bold cyan]        - First-time environment setup\n\n"
                     "[bold]Command Groups:[/bold]\n"
                     "  [bold green]system[/bold green]       - System environment and configuration\n"
                     "  [bold green]module[/bold green]       - Module development and management\n"
@@ -281,13 +226,12 @@ Examples:
                     "  [bold green]book[/bold green]        - Build and manage Jupyter Book\n"
                     "  [bold green]logo[/bold green]        - Learn about TinyTorch philosophy\n"
                     "[bold]Quick Start:[/bold]\n"
-                    "  [dim]tito system info[/dim]              - Show system information\n"
-                    "  [dim]tito module status --metadata[/dim] - Module status with metadata\n"
-                    "  [dim]tito module view 01_setup[/dim]     - Start coding in Jupyter Lab\n"
+                    "  [dim]tito setup[/dim]                    - First-time environment setup\n"
+                    "  [dim]tito module view 01_tensor[/dim]    - Start building tensors in Jupyter Lab\n"
+                    "  [dim]tito module view 02_activations[/dim] - Add activation functions\n"
+                    "  [dim]tito module view 03_layers[/dim]    - Build neural network layers\n"
                     "  [dim]tito checkpoint timeline[/dim]      - Visual progress timeline\n"
                     "  [dim]tito leaderboard join[/dim]         - Join the inclusive community\n"
-                    "  [dim]tito olympics events[/dim]          - See special competitions\n"
-                    "  [dim]tito milestone status[/dim]         - See your epic achievement progress\n"
                     "[bold]Get Help:[/bold]\n"
                     "  [dim]tito system[/dim]                   - Show system subcommands\n"
                     "  [dim]tito module[/dim]                   - Show module subcommands\n"
