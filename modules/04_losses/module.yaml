@@ -1,0 +1,21 @@
+description: Essential loss functions for neural network training objectives
+difficulty: "\u2B50\u2B50\u2B50"
+exports:
+- MeanSquaredError
+- CrossEntropyLoss
+- BinaryCrossEntropyLoss
+key_concepts:
+- Training objectives and optimization
+- Numerical stability in loss computation
+- Regression vs classification loss functions
+- Batch processing for scalable training
+learning_objectives:
+- Implement MSE, CrossEntropy, and BinaryCrossEntropy loss functions
+- Understand numerical stability in loss computation
+- Match loss functions to problem types (regression vs classification)
+- Build production-ready loss functions with batch processing
+name: Loss Functions
+number: 5
+prerequisites:
+- 02_tensor
+time_estimate: 2-3 hours

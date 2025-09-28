@@ -1,0 +1,21 @@
+components:
+- ReLU
+- Sigmoid
+- Tanh
+- Softmax
+dependencies:
+  enables:
+  - layers
+  - networks
+  prerequisites:
+  - tensor
+description: Neural network activation functions (ReLU, Sigmoid, Tanh, Softmax)
+difficulty: "\u2B50\u2B50"
+exports_to: tinytorch.core.activations
+files:
+  dev_file: activations_dev.py
+  readme: README.md
+  tests: inline
+name: activations
+time_estimate: 3-4 hours
+title: Activation Functions

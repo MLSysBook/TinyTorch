@@ -1,0 +1,23 @@
+components:
+- SGD
+- Adam
+- StepLR
+- gradient_descent_step
+dependencies:
+  enables:
+  - training
+  - compression
+  - mlops
+  prerequisites:
+  - tensor
+  - autograd
+description: Gradient-based parameter optimization algorithms
+difficulty: "\u2B50\u2B50\u2B50\u2B50"
+exports_to: tinytorch.core.optimizers
+files:
+  dev_file: optimizers_dev.py
+  readme: README.md
+  tests: inline
+name: optimizers
+time_estimate: 6-8 hours
+title: Optimizers
