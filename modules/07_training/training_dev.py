@@ -1724,7 +1724,7 @@ Let's test the complete training pipeline with all components working together.
 """
 
 # %% nbgrader={"grade": true, "grade_id": "test-training-comprehensive", "locked": true, "points": 25, "schema_version": 3, "solution": false, "task": false}
-def test_module_training():
+def test_module():
     """Test complete training pipeline with all components."""
     print("🔬 Integration Test: Complete Training Pipeline...")
     
@@ -1798,1251 +1798,267 @@ def test_module_training():
 
 # %% [markdown]
 """
-## Step 4: ML Systems Thinking - Production Training Pipeline Analysis
+## 🔍 Systems Analysis
 
-### 🚨 ADVANCED/OPTIONAL SECTION: Production Training Optimization
-**Module 8 Students:** This section demonstrates advanced real-world training optimization.
-**🎯 LEARNING FOCUS:** Master basic training loops first - this advanced content is optional.
-**📚 FOR INSTRUCTORS:** Consider moving this section to Module 15-16 for better cognitive load management.
-
-### 🏗️ Training Infrastructure at Scale (Advanced/Optional)
-
-Your training loop implementation provides the foundation for understanding how production ML systems orchestrate the entire training pipeline. Let's analyze the systems engineering challenges that arise when training models at scale.
-
-#### **Training Pipeline Architecture** (Production Context)
-```python
-class ProductionTrainingPipeline:
-    def __init__(self):
-        # Resource allocation and distributed coordination
-        self.gpu_memory_pool = GPUMemoryManager()
-        self.distributed_coordinator = DistributedTrainingCoordinator() 
-        self.checkpoint_manager = CheckpointManager()
-        self.metrics_aggregator = MetricsAggregator()
-```
-
-Real training systems must handle:
-- **Multi-GPU coordination**: Synchronizing gradients across devices
-- **Memory management**: Optimizing batch sizes for available GPU memory
-- **Fault tolerance**: Recovering from hardware failures during long training runs
-- **Resource scheduling**: Balancing compute, memory, and I/O across the cluster
-
-**Note:** The following profiling implementations are advanced concepts that demonstrate production ML systems.
+Now that your training implementation is complete and tested, let's measure its behavior:
 """
 
-# %% nbgrader={"grade": false, "grade_id": "training-pipeline-profiler", "locked": false, "schema_version": 3, "solution": true, "task": false}
-#| export
-class TrainingPipelineProfiler:
+# %%
+def measure_training_scaling():
     """
-    Production Training Pipeline Analysis and Optimization
-    
-    Monitors end-to-end training performance and identifies bottlenecks
-    across the complete training infrastructure.
+    📊 SYSTEMS MEASUREMENT: Training Performance Scaling
+
+    Measure how training performance scales with batch size.
     """
-    
-    def __init__(self, warning_threshold_seconds=5.0):
-        """
-        Initialize training pipeline profiler.
-        
-        Args:
-            warning_threshold_seconds: Warn if any pipeline step exceeds this time
-        """
-        self.warning_threshold = warning_threshold_seconds
-        self.profiling_data = defaultdict(list)
-        self.resource_usage = defaultdict(list)
-        
-    def profile_basic_training_step(self, model, dataloader, optimizer, loss_fn, batch_size=32):
-        """
-        Profile complete training step including all pipeline components.
-        
-        TODO: Implement comprehensive training step profiling.
-        
-        STEP-BY-STEP IMPLEMENTATION:
-        1. Time each component: data loading, forward pass, loss computation, backward pass, optimization
-        2. Monitor memory usage throughout the pipeline
-        3. Calculate throughput metrics (samples/second, batches/second)
-        4. Identify pipeline bottlenecks and optimization opportunities
-        5. Generate performance recommendations
-        
-        EXAMPLE:
-        profiler = TrainingPipelineProfiler()
-        step_metrics = profiler.profile_complete_training_step(model, dataloader, optimizer, loss_fn)
-        
-        LEARNING CONNECTIONS:
-        - **Performance Optimization**: Identifying bottlenecks in training pipeline
-        - **Resource Planning**: Understanding memory and compute requirements
-        - **Hardware Selection**: Data guides GPU vs CPU trade-offs
-        - **Production Scaling**: Optimizing training throughput for large models
-        print(f"Training throughput: {step_metrics['samples_per_second']:.1f} samples/sec")
-        
-        HINTS:
-        - Use time.time() for timing measurements
-        - Monitor before/after memory usage
-        - Calculate ratios: compute_time / total_time
-        - Identify which step is the bottleneck
-        """
-        ### BEGIN SOLUTION
+    print("📊 Training Performance Scaling Analysis")
+    print("Testing training performance with different batch sizes...")
+
+    try:
         import time
-        
-        # Initialize timing and memory tracking
-        step_times = {}
-        memory_usage = {}
-        
-        # Get initial memory baseline (simplified - in production would use GPU monitoring)
-        baseline_memory = self._estimate_memory_usage()
-        
-        # 1. Data Loading Phase
-        data_start = time.time()
-        try:
-            batch_x, batch_y = next(iter(dataloader))
-            data_time = time.time() - data_start
-            step_times['data_loading'] = data_time
-        except:
-            # Handle case where dataloader is not iterable for testing
-            data_time = 0.001  # Minimal time for testing
-            step_times['data_loading'] = data_time
-            batch_x = Tensor(np.random.randn(batch_size, 10))
-            batch_y = Tensor(np.random.randint(0, 2, batch_size))
-        
-        memory_usage['after_data_loading'] = self._estimate_memory_usage()
-        
-        # 2. Forward Pass Phase
-        forward_start = time.time()
-        try:
-            predictions = model(batch_x)
-            forward_time = time.time() - forward_start
-            step_times['forward_pass'] = forward_time
-        except:
-            # Handle case for testing with simplified model
-            forward_time = 0.002
-            step_times['forward_pass'] = forward_time
-            predictions = Tensor(np.random.randn(batch_size, 2))
-        
-        memory_usage['after_forward_pass'] = self._estimate_memory_usage()
-        
-        # 3. Loss Computation Phase
-        loss_start = time.time()
-        loss = loss_fn(predictions, batch_y)
-        loss_time = time.time() - loss_start
-        step_times['loss_computation'] = loss_time
-        
-        memory_usage['after_loss_computation'] = self._estimate_memory_usage()
-        
-        # 4. Backward Pass Phase (simplified for testing)
-        backward_start = time.time()
-        # In real implementation: loss.backward()
-        backward_time = 0.003  # Simulated backward pass time
-        step_times['backward_pass'] = backward_time
-        
-        memory_usage['after_backward_pass'] = self._estimate_memory_usage()
-        
-        # 5. Optimization Phase
-        optimization_start = time.time()
-        try:
-            optimizer.step()
-            optimization_time = time.time() - optimization_start
-            step_times['optimization'] = optimization_time
-        except:
-            # Handle case for testing
-            optimization_time = 0.001
-            step_times['optimization'] = optimization_time
-        
-        memory_usage['after_optimization'] = self._estimate_memory_usage()
-        
-        # Calculate total time and throughput
-        total_time = sum(step_times.values())
-        samples_per_second = batch_size / total_time if total_time > 0 else 0
-        
-        # Identify bottleneck (step that takes longest)
-        bottleneck_step = max(step_times.items(), key=lambda step_and_time: step_and_time[1])
-        
-        # Calculate component percentages
-        component_percentages = {
-            step: (time_taken / total_time * 100) if total_time > 0 else 0
-            for step, time_taken in step_times.items()
-        }
-        
-        # Generate performance analysis
-        performance_analysis = self._analyze_pipeline_performance(step_times, memory_usage, component_percentages)
-        
-        # Store profiling data
-        self.profiling_data['total_time'].append(total_time)
-        self.profiling_data['samples_per_second'].append(samples_per_second)
-        self.profiling_data['bottleneck_step'].append(bottleneck_step[0])
-        
-        return {
-            'step_times': step_times,
-            'total_time': total_time,
-            'samples_per_second': samples_per_second,
-            'bottleneck_step': bottleneck_step[0],
-            'bottleneck_time': bottleneck_step[1],
-            'component_percentages': component_percentages,
-            'memory_usage': memory_usage,
-            'performance_analysis': performance_analysis
-        }
-        ### END SOLUTION
-    
-    def _estimate_memory_usage(self):
-        """Estimate current memory usage (simplified implementation)."""
-        # In production: would use psutil.Process().memory_info().rss or GPU monitoring
-        import sys
-        return sys.getsizeof({}) * 1024  # Simplified estimate
-    
-    def _analyze_pipeline_performance(self, step_times, memory_usage, component_percentages):
-        """Analyze training pipeline performance and generate recommendations."""
-        analysis = []
-        
-        # Identify performance bottlenecks
-        max_step = max(step_times.items(), key=lambda x: x[1])
-        if max_step[1] > self.warning_threshold:
-            analysis.append(f"⚠️ BOTTLENECK: {max_step[0]} taking {max_step[1]:.3f}s (>{self.warning_threshold}s threshold)")
-        
-        # Analyze component balance
-        forward_pct = component_percentages.get('forward_pass', 0)
-        backward_pct = component_percentages.get('backward_pass', 0)
-        data_pct = component_percentages.get('data_loading', 0)
-        
-        if data_pct > 30:
-            analysis.append("📊 Data loading is >30% of total time - consider data pipeline optimization")
-        
-        if forward_pct > 60:
-            analysis.append("🔄 Forward pass dominates (>60%) - consider model optimization or batch size tuning")
-        
-        # Memory analysis
-        memory_keys = list(memory_usage.keys())
-        if len(memory_keys) > 1:
-            memory_growth = memory_usage[memory_keys[-1]] - memory_usage[memory_keys[0]]
-            if memory_growth > 1024 * 1024:  # > 1MB growth
-                analysis.append("💾 Significant memory growth during training step - monitor for memory leaks")
-        
-        return analysis
 
-# %% [markdown]
-"""
-### 🧪 Test: Training Pipeline Profiling
+        # Create simple model for testing
+        model = Sequential([Linear(10, 1)])
+        optimizer = SGD(model.parameters(), learning_rate=0.01)
+        loss_fn = MeanSquaredError()
 
-Let's test our training pipeline profiler with a realistic training scenario.
-"""
+        batch_sizes = [4, 8, 16, 32]
+        times = []
 
-# %% nbgrader={"grade": false, "grade_id": "test-training-pipeline-profiler", "locked": false, "schema_version": 3, "solution": false, "task": false}
-def test_training_pipeline_profiler():
-    """Test training pipeline profiler with comprehensive scenarios."""
-    print("🔬 Unit Test: Training Pipeline Profiler...")
-    
-    profiler = TrainingPipelineProfiler(warning_threshold_seconds=1.0)
-    
-    # Create test components
-    model = Sequential([Linear(10, 5), ReLU(), Linear(5, 2)])
-    optimizer = SGD([], learning_rate=0.01)
-    loss_fn = MeanSquaredError()
-    
-    # Simple test data (avoiding complex mock classes)
-    test_x = Tensor(np.random.randn(32, 10))
-    test_y = Tensor(np.random.randint(0, 2, 32))
-    
-    # Simple test data (avoiding complex mock classes)
-    class SimpleTestDataLoader:
-        """Minimal dataloader for testing - just returns the same batch repeatedly."""
-        def __init__(self, x, y):
-            self.x, self.y = x, y
-        def __iter__(self):
-            return self
-        def __next__(self):
-            return self.x, self.y
-    
-    dataloader = SimpleTestDataLoader(test_x, test_y)
-    
-    # Test training step profiling
-    metrics = profiler.profile_basic_training_step(model, dataloader, optimizer, loss_fn, batch_size=32)
-    
-    # Verify profiling results
-    assert 'step_times' in metrics, "Should track step times"
-    assert 'total_time' in metrics, "Should track total time"
-    assert 'samples_per_second' in metrics, "Should calculate throughput"
-    assert 'bottleneck_step' in metrics, "Should identify bottleneck"
-    assert 'performance_analysis' in metrics, "Should provide performance analysis"
-    
-    # Verify all pipeline steps are profiled
-    expected_steps = ['data_loading', 'forward_pass', 'loss_computation', 'backward_pass', 'optimization']
-    for step in expected_steps:
-        assert step in metrics['step_times'], f"Should profile {step}"
-        assert metrics['step_times'][step] >= 0, f"Step time should be non-negative for {step}"
-    
-    # Verify throughput calculation
-    assert metrics['samples_per_second'] >= 0, "Throughput should be non-negative"
-    
-    # Verify component percentages
-    total_percentage = sum(metrics['component_percentages'].values())
-    assert abs(total_percentage - 100.0) < 1.0, f"Component percentages should sum to ~100%, got {total_percentage}"
-    
-    print("✅ Training pipeline profiling test passed")
-    
-    # Test performance analysis
-    assert isinstance(metrics['performance_analysis'], list), "Performance analysis should be a list"
-    print("✅ Performance analysis generation test passed")
-    
-    print("🎯 Training Pipeline Profiler: All tests passed!")
+        for batch_size in batch_sizes:
+            # Generate test data
+            X = Tensor(np.random.randn(batch_size, 10))
+            y = Tensor(np.random.randn(batch_size, 1))
 
-# Test function defined (called in main block)
+            # Time a training step
+            start = time.perf_counter()
 
-# %% nbgrader={"grade": false, "grade_id": "production-training-optimizer", "locked": false, "schema_version": 3, "solution": true, "task": false}
-#| export
-class ProductionTrainingOptimizer:
+            predictions = model(X)
+            loss = loss_fn(predictions, y)
+            # Note: In real training, we'd call loss.backward() and optimizer.step()
+
+            elapsed = time.perf_counter() - start
+            times.append(elapsed)
+
+            throughput = batch_size / elapsed
+            print(f"Batch size {batch_size:2d}: {elapsed*1000:.2f}ms ({throughput:.1f} samples/sec)")
+
+        # Analyze scaling
+        if len(times) >= 2:
+            scaling_factor = times[-1] / times[0]
+            batch_factor = batch_sizes[-1] / batch_sizes[0]
+            efficiency = batch_factor / scaling_factor
+
+            print(f"\n💡 Scaling Insight:")
+            print(f"   Batch size increased {batch_factor:.1f}x")
+            print(f"   Time increased {scaling_factor:.1f}x")
+            print(f"   Scaling efficiency: {efficiency:.1f}x")
+
+            if efficiency > 0.8:
+                print(f"   ✅ Good scaling - training benefits from larger batches")
+            else:
+                print(f"   ⚠️  Poor scaling - diminishing returns from larger batches")
+
+        print(f"\n💡 SYSTEMS INSIGHT:")
+        print(f"   Training performance scales sub-linearly with batch size")
+        print(f"   This reveals the balance between computation and memory access")
+
+    except Exception as e:
+        print(f"⚠️ Error in scaling analysis: {e}")
+
+# Run the measurement
+measure_training_scaling()
+
+# %%
+def measure_training_memory():
     """
-    Production Training Pipeline Optimization
-    
-    Optimizes training pipelines for production deployment with focus on
-    throughput, resource utilization, and system stability.
+    💾 SYSTEMS MEASUREMENT: Training Memory Usage
+
+    Measure memory usage patterns during training.
     """
-    
-    def __init__(self):
-        """Initialize production training optimizer."""
-        self.optimization_history = []
-        self.baseline_metrics = None
-        
-    def optimize_batch_size_for_throughput(self, model, loss_fn, optimizer, initial_batch_size=32, max_batch_size=512):
-        """
-        Find optimal batch size for maximum training throughput.
-        
-        TODO: Implement batch size optimization for production throughput.
-        
-        STEP-BY-STEP IMPLEMENTATION:
-        1. Test range of batch sizes from initial to maximum
-        2. For each batch size, measure:
-           - Training throughput (samples/second)
-           - Memory usage
-           - Time per step
-        3. Find optimal batch size balancing throughput and memory
-        4. Handle memory limitations gracefully
-        5. Return recommendations with trade-off analysis
-        
-        EXAMPLE:
-        optimizer = ProductionTrainingOptimizer()
-        optimal_config = optimizer.optimize_batch_size_for_throughput(model, loss_fn, optimizer)
-        print(f"Optimal batch size: {optimal_config['batch_size']}")
-        
-        LEARNING CONNECTIONS:
-        - **Memory vs Throughput**: Larger batches improve GPU utilization but use more memory
-        - **Hardware Optimization**: Optimal batch size depends on GPU memory and compute units
-        - **Training Dynamics**: Batch size affects gradient noise and convergence behavior
-        - **Production Cost**: Throughput optimization directly impacts cloud computing costs
-        print(f"Expected throughput: {optimal_config['throughput']:.1f} samples/sec")
-        
-        HINTS:
-        - Test powers of 2: 32, 64, 128, 256, 512
-        - Monitor memory usage to avoid OOM
-        - Calculate samples_per_second for each batch size
-        - Consider memory efficiency (throughput per MB)
-        """
-        ### BEGIN SOLUTION
-        print("🔧 Optimizing batch size for production throughput...")
-        
-        # Test batch sizes (powers of 2 for optimal GPU utilization)
-        test_batch_sizes = []
-        current_batch = initial_batch_size
-        while current_batch <= max_batch_size:
-            test_batch_sizes.append(current_batch)
-            current_batch *= 2
-        
-        optimization_results = []
-        profiler = TrainingPipelineProfiler()
-        
-        for batch_size in test_batch_sizes:
-            print(f"  Testing batch size: {batch_size}")
-            
-            try:
-                # Create test data for this batch size
-                test_x = Tensor(np.random.randn(batch_size, 10))
-                test_y = Tensor(np.random.randint(0, 2, batch_size))
-                
-                # Simple test dataloader - minimal implementation for testing
-                class SimpleDataLoader:
-                    """Minimal test dataloader - returns same batch for profiling.""" 
-                    def __init__(self, x, y):
-                        self.x, self.y = x, y
-                    def __iter__(self):
-                        return self
-                    def __next__(self):
-                        return self.x, self.y
-                
-                dataloader = SimpleDataLoader(test_x, test_y)
-                
-                # Profile training step
-                metrics = profiler.profile_basic_training_step(
-                    model, dataloader, optimizer, loss_fn, batch_size
-                )
-                
-                # Estimate memory usage (simplified)
-                estimated_memory_mb = batch_size * 10 * 4 / (1024 * 1024)  # 4 bytes per float
-                memory_efficiency = metrics['samples_per_second'] / estimated_memory_mb if estimated_memory_mb > 0 else 0
-                
-                optimization_results.append({
-                    'batch_size': batch_size,
-                    'throughput': metrics['samples_per_second'],
-                    'total_time': metrics['total_time'],
-                    'estimated_memory_mb': estimated_memory_mb,
-                    'memory_efficiency': memory_efficiency,
-                    'bottleneck_step': metrics['bottleneck_step']
-                })
-                
-            except Exception as e:
-                print(f"    ⚠️ Batch size {batch_size} failed (likely GPU memory limit): {e}")
-                print("    💡 This is normal - we found your hardware limits!")
-                print("    📊 Smaller batch sizes work better on limited hardware")
-                # In production, this would typically be OOM (Out Of Memory)
-                break
-        
-        # Find optimal configuration
-        if not optimization_results:
-            return {'error': 'No valid batch sizes found'}
-        
-        # Optimal = highest throughput that doesn't exceed memory limits
-        best_config = max(optimization_results, key=lambda x: x['throughput'])
-        
-        # Generate optimization analysis
-        analysis = self._generate_batch_size_analysis(optimization_results, best_config)
-        
-        # Store optimization history
-        self.optimization_history.append({
-            'optimization_type': 'batch_size',
-            'results': optimization_results,
-            'best_config': best_config,
-            'analysis': analysis
-        })
-        
-        return {
-            'optimal_batch_size': best_config['batch_size'],
-            'expected_throughput': best_config['throughput'],
-            'estimated_memory_usage': best_config['estimated_memory_mb'],
-            'all_results': optimization_results,
-            'optimization_analysis': analysis
-        }
-        ### END SOLUTION
-    
-    def _generate_batch_size_analysis(self, results, best_config):
-        """Generate analysis of batch size optimization results."""
-        analysis = []
-        
-        # Throughput analysis
-        throughputs = [r['throughput'] for r in results]
-        max_throughput = max(throughputs)
-        min_throughput = min(throughputs)
-        
-        analysis.append(f"📈 Throughput range: {min_throughput:.1f} - {max_throughput:.1f} samples/sec")
-        analysis.append(f"🎯 Optimal batch size: {best_config['batch_size']} ({max_throughput:.1f} samples/sec)")
-        
-        # Memory efficiency analysis
-        memory_efficiencies = [r['memory_efficiency'] for r in results]
-        most_efficient = max(results, key=lambda x: x['memory_efficiency'])
-        
-        analysis.append(f"💾 Most memory efficient: batch size {most_efficient['batch_size']} ({most_efficient['memory_efficiency']:.2f} samples/sec/MB)")
-        
-        # Bottleneck analysis
-        bottleneck_counts = {}
-        for r in results:
-            step = r['bottleneck_step']
-            bottleneck_counts[step] = bottleneck_counts.get(step, 0) + 1
-        
-        common_bottleneck = max(bottleneck_counts.items(), key=lambda x: x[1])
-        analysis.append(f"🔍 Common bottleneck: {common_bottleneck[0]} ({common_bottleneck[1]}/{len(results)} configurations)")
-        
-        return analysis
+    print("\n💾 Training Memory Usage Analysis")
+    print("Analyzing memory consumption during training...")
 
-# %% [markdown]
-"""
-### 🧪 Test: Production Training Optimization
+    try:
+        import psutil
+        import os
 
-Let's test our production training optimizer.
-"""
+        def get_memory_mb():
+            process = psutil.Process(os.getpid())
+            return process.memory_info().rss / 1024 / 1024
 
-# %% nbgrader={"grade": false, "grade_id": "test-production-optimizer", "locked": false, "schema_version": 3, "solution": false, "task": false}
-def test_production_training_optimizer():
-    """Test production training optimizer with realistic scenarios."""
-    print("🔬 Unit Test: Production Training Optimizer...")
-    
-    optimizer_tool = ProductionTrainingOptimizer()
-    
-    # Create test components
-    model = Sequential([Linear(10, 5), ReLU(), Linear(5, 2)])
-    optimizer = SGD([], learning_rate=0.01)
-    loss_fn = MeanSquaredError()
-    
-    # Test batch size optimization
-    result = optimizer_tool.optimize_batch_size_for_throughput(
-        model, loss_fn, optimizer, 
-        initial_batch_size=32, 
-        max_batch_size=128
-    )
-    
-    # Verify optimization results
-    assert 'optimal_batch_size' in result, "Should find optimal batch size"
-    assert 'expected_throughput' in result, "Should calculate expected throughput"
-    assert 'estimated_memory_usage' in result, "Should estimate memory usage"
-    assert 'all_results' in result, "Should provide all test results"
-    assert 'optimization_analysis' in result, "Should provide analysis"
-    
-    # Verify optimal batch size is reasonable
-    assert result['optimal_batch_size'] >= 32, "Optimal batch size should be at least initial size"
-    assert result['optimal_batch_size'] <= 128, "Optimal batch size should not exceed maximum"
-    
-    # Verify throughput is positive
-    assert result['expected_throughput'] > 0, "Expected throughput should be positive"
-    
-    # Verify all results structure
-    all_results = result['all_results']
-    assert len(all_results) > 0, "Should have tested at least one batch size"
-    
-    for test_result in all_results:
-        assert 'batch_size' in test_result, "Each result should have batch size"
-        assert 'throughput' in test_result, "Each result should have throughput"
-        assert 'total_time' in test_result, "Each result should have total time"
-        assert test_result['throughput'] >= 0, "Throughput should be non-negative"
-    
-    print("✅ Batch size optimization test passed")
-    
-    # Test optimization history tracking
-    assert len(optimizer_tool.optimization_history) == 1, "Should track optimization history"
-    history_entry = optimizer_tool.optimization_history[0]
-    assert history_entry['optimization_type'] == 'batch_size', "Should track optimization type"
-    assert 'results' in history_entry, "Should store optimization results"
-    assert 'best_config' in history_entry, "Should store best configuration"
-    
-    print("✅ Optimization history tracking test passed")
-    
-    print("🎯 Production Training Optimizer: All tests passed!")
+        baseline_memory = get_memory_mb()
 
-# Test function defined (called in main block)
+        # Create model and training components
+        model = Sequential([Linear(100, 50), Linear(50, 1)])
+        optimizer = SGD(model.parameters(), learning_rate=0.01)
+        loss_fn = MeanSquaredError()
 
-def test_basic_training_integration():
-    """Test that loss functions work with basic Variable types for educational Module 10."""
-    print("🔬 Basic Training Integration Test: Loss Functions with Variables...")
-    
-    # Test MSE Loss with Variables
-    mse = MeanSquaredError()
-    y_pred = Variable([[2.0, 3.0]], requires_grad=True)
-    y_true = Variable([[1.0, 2.0]], requires_grad=False)
-    
-    loss = mse(y_pred, y_true)
-    assert isinstance(loss, Variable), "MSE should return Variable"
-    print("✅ MSE Loss Variable integration works")
-    
-    # Test CrossEntropy Loss with Variables
-    ce = CrossEntropyLoss()
-    y_pred = Variable([[2.0, 1.0], [1.0, 2.0]], requires_grad=True)
-    y_true = Variable([0, 1], requires_grad=False)
-    
-    loss = ce(y_pred, y_true)
-    assert isinstance(loss, Variable), "CrossEntropy should return Variable"
-    print("✅ CrossEntropy Loss Variable integration works")
-    
-    # Test Binary CrossEntropy Loss with Variables  
-    bce = BinaryCrossEntropyLoss()
-    y_pred = Variable([[1.0], [-1.0]], requires_grad=True)
-    y_true = Variable([[1.0], [0.0]], requires_grad=False)
-    
-    loss = bce(y_pred, y_true)
-    assert isinstance(loss, Variable), "Binary CrossEntropy should return Variable"
-    print("✅ Binary CrossEntropy Loss Variable integration works")
-    
-    print("🎯 Basic Training Integration: Loss functions work with Variables for educational training loops!")
+        memory_before = get_memory_mb()
 
+        # Create different batch sizes and measure memory
+        batch_sizes = [16, 32, 64]
+
+        for batch_size in batch_sizes:
+            X = Tensor(np.random.randn(batch_size, 100))
+            y = Tensor(np.random.randn(batch_size, 1))
+
+            memory_start = get_memory_mb()
+
+            # Forward pass
+            predictions = model(X)
+            loss = loss_fn(predictions, y)
+
+            memory_peak = get_memory_mb()
+            memory_used = memory_peak - memory_start
+
+            print(f"Batch size {batch_size:2d}: {memory_used:.1f}MB memory increase")
+
+            # Clean up
+            del predictions, loss, X, y
+
+        print(f"\n💡 MEMORY INSIGHT:")
+        print(f"   Memory usage grows with batch size")
+        print(f"   Forward pass creates intermediate activations")
+        print(f"   Larger batches = more memory but better GPU utilization")
+
+    except Exception as e:
+        print(f"⚠️ Error in memory analysis: {e}")
+
+# Run the measurement
+measure_training_memory()
+
+# %%
 if __name__ == "__main__":
-    # Run all training tests
+    print("🚀 Running all training tests...")
+
+    # Run all unit tests
     test_unit_mse_loss()
     test_unit_crossentropy_loss()
     test_unit_binary_crossentropy_loss()
     test_unit_accuracy_metric()
     test_unit_trainer()
-    test_module_training()
-    test_basic_training_integration()  # NEW: Test basic Variable integration
-    # Note: Advanced profiling tests skipped in Module 10 for educational focus
-    # Students at Module 10 focus on basic training loops, not production optimization
-    # test_training_pipeline_profiler()  # Advanced - for later modules
-    # test_production_training_optimizer()  # Advanced - for later modules
-    
-    print("\n🎉 SUCCESS: Training module appropriately uses concepts from Modules 6-9!")
-    print("✅ Loss functions work with Variables from Module 6 (autograd)")
-    print("✅ Training loops integrate optimizers from Module 8")
-    print("✅ Ready for basic neural network training with all learned components!")
-    print("✅ Educational focus on training loop patterns, not complex autograd")
-    print("\nTraining module complete!")
 
-# %% nbgrader={"grade": false, "grade_id": "training-assessment-1", "locked": false, "schema_version": 3, "solution": true, "task": false}
-# %% [markdown]
-"""
-## 🤔 Computational Assessment Questions
+    # Run final integration test
+    test_module()
 
-**Complete the following questions to test your understanding of training dynamics and systems implications.**
-"""
-
-# %% nbgrader={"grade": true, "grade_id": "training-batch-size", "locked": false, "points": 5, "schema_version": 3, "solution": true, "task": false}
-def analyze_batch_size_impact():
-    """
-    Question 1: Batch Size vs Memory Trade-offs
-    
-    You're training a model with 1M parameters on a GPU with 8GB memory.
-    Each parameter needs 4 bytes (float32). With batch size 32, you run out of memory.
-    
-    TODO: Calculate the memory usage and suggest optimization strategies.
-    
-    Calculate:
-    1. Base model memory (parameters only)
-    2. Memory with gradients (2x parameters) 
-    3. Memory per sample in batch
-    4. Total memory for batch size 32
-    5. Optimal batch size for 8GB GPU
-    
-    HINTS:
-    - Model memory = num_parameters * 4 bytes
-    - Training needs parameters + gradients + activations + batch data
-    - Activations depend on model architecture and batch size
-    - Leave headroom for PyTorch overhead
-    """
-    ### BEGIN SOLUTION
-    # Model specifications
-    num_parameters = 1_000_000
-    bytes_per_param = 4  # float32
-    gpu_memory_gb = 8
-    gpu_memory_bytes = gpu_memory_gb * 1024**3
-    
-    # 1. Base model memory (parameters only)
-    model_memory = num_parameters * bytes_per_param
-    print(f"1. Base model memory: {model_memory / (1024**2):.1f} MB")
-    
-    # 2. Training memory (parameters + gradients)
-    training_memory = model_memory * 2  # params + gradients
-    print(f"2. Training memory (params + grads): {training_memory / (1024**2):.1f} MB")
-    
-    # 3. Estimate activation memory per sample (simplified)
-    # Assume 10 layers, 1000 neurons each, activations stored for backprop
-    activation_per_sample = 10 * 1000 * 4  # 10 layers * 1000 neurons * 4 bytes
-    print(f"3. Activation memory per sample: {activation_per_sample / 1024:.1f} KB")
-    
-    # 4. Total memory for batch size 32
-    batch_size = 32
-    batch_activations = activation_per_sample * batch_size
-    total_memory_32 = training_memory + batch_activations
-    print(f"4. Total memory (batch=32): {total_memory_32 / (1024**2):.1f} MB")
-    
-    # 5. Optimal batch size calculation
-    available_for_batch = gpu_memory_bytes * 0.8 - training_memory  # 80% utilization
-    optimal_batch_size = int(available_for_batch / activation_per_sample)
-    print(f"5. Optimal batch size: {optimal_batch_size}")
-    
-    # Optimization strategies
-    print(f"\n💡 Optimization Strategies:")
-    print(f"  • Gradient accumulation: Simulate larger batches")
-    print(f"  • Mixed precision: Use float16 (2x memory reduction)")
-    print(f"  • Gradient checkpointing: Trade compute for memory")
-    print(f"  • Model parallelism: Split model across GPUs")
-    
-    return {
-        'model_memory_mb': model_memory / (1024**2),
-        'training_memory_mb': training_memory / (1024**2),
-        'optimal_batch_size': optimal_batch_size
-    }
-    ### END SOLUTION
-
-# %% nbgrader={"grade": true, "grade_id": "training-convergence", "locked": false, "points": 5, "schema_version": 3, "solution": true, "task": false}
-def analyze_loss_convergence_patterns():
-    """
-    Question 2: Loss Function Selection & Convergence
-    
-    You're training a model for CIFAR-10 classification (10 classes).
-    Compare how different loss functions affect training dynamics.
-    
-    TODO: Analyze the convergence characteristics of different loss functions.
-    
-    Tasks:
-    1. Calculate expected random baseline for each loss function
-    2. Simulate loss curves for different functions
-    3. Analyze convergence speed and stability
-    4. Recommend loss function for production use
-    
-    HINTS:
-    - Random accuracy = 1/num_classes for classification
-    - Cross-entropy with 10 classes: -log(0.1) ≈ 2.3 for random guessing
-    - MSE depends on output encoding (one-hot vs indices)
-    - Consider gradient properties and numerical stability
-    """
-    ### BEGIN SOLUTION
-    import numpy as np
-    
-    num_classes = 10
-    num_samples = 1000
-    
-    print("🔬 Loss Function Convergence Analysis for CIFAR-10:")
-    
-    # 1. Random baselines
-    random_accuracy = 1.0 / num_classes
-    random_crossentropy = -np.log(1.0 / num_classes)
-    random_mse_onehot = (num_classes - 1) / num_classes  # Expected MSE for one-hot
-    
-    print(f"\n1. Random Baselines:")
-    print(f"  Accuracy: {random_accuracy:.3f} ({random_accuracy*100:.1f}%)")
-    print(f"  Cross-Entropy: {random_crossentropy:.3f}")
-    print(f"  MSE (one-hot): {random_mse_onehot:.3f}")
-    
-    # 2. Simulate training curves (simplified)
-    epochs = np.arange(1, 21)
-    
-    # Cross-entropy: exponential decay from random baseline
-    ce_losses = random_crossentropy * np.exp(-epochs * 0.2) + 0.1
-    ce_accuracies = 1 - (1 - random_accuracy) * np.exp(-epochs * 0.15)
-    
-    # MSE: slower convergence, less stable
-    mse_losses = random_mse_onehot * np.exp(-epochs * 0.1) + 0.05
-    mse_accuracies = 1 - (1 - random_accuracy) * np.exp(-epochs * 0.1)
-    
-    print(f"\n2. Convergence Speed (epochs to reach 80% accuracy):")
-    ce_converge_epoch = np.argmax(ce_accuracies > 0.8) + 1 if np.any(ce_accuracies > 0.8) else "Never"
-    mse_converge_epoch = np.argmax(mse_accuracies > 0.8) + 1 if np.any(mse_accuracies > 0.8) else "Never"
-    
-    print(f"  Cross-Entropy: {ce_converge_epoch} epochs")
-    print(f"  MSE: {mse_converge_epoch} epochs")
-    
-    # 3. Gradient properties
-    print(f"\n3. Gradient Properties:")
-    print(f"  Cross-Entropy:")
-    print(f"    • Gradient: softmax(logits) - one_hot(true)")
-    print(f"    • Large gradients when confident but wrong")
-    print(f"    • Numerical stability with log-sum-exp trick")
-    
-    print(f"  MSE:")
-    print(f"    • Gradient: 2 * (pred - true)")
-    print(f"    • Linear gradients (less adaptive)")
-    print(f"    • Can be unstable with extreme predictions")
-    
-    # 4. Production recommendation
-    print(f"\n4. Production Recommendation:")
-    print(f"  🎯 RECOMMENDED: Cross-Entropy Loss")
-    print(f"  Reasons:")
-    print(f"    ✅ Faster convergence for classification")
-    print(f"    ✅ Better gradient properties")
-    print(f"    ✅ Numerical stability with proper implementation")
-    print(f"    ✅ Standard practice in production systems")
-    print(f"    ✅ Works well with softmax activation")
-    
-    return {
-        'recommended_loss': 'CrossEntropy',
-        'random_baseline_accuracy': random_accuracy,
-        'ce_convergence_epochs': ce_converge_epoch,
-        'mse_convergence_epochs': mse_converge_epoch
-    }
-    ### END SOLUTION
-
-# %% nbgrader={"grade": true, "grade_id": "training-throughput", "locked": false, "points": 5, "schema_version": 3, "solution": true, "task": false}
-def optimize_training_throughput():
-    """
-    Question 3: Training Throughput Optimization
-    
-    You need to train a model on 1M samples. Your current setup processes
-    100 samples/second. The business needs results in 2 hours max.
-    
-    TODO: Design an optimization strategy to meet the deadline.
-    
-    Calculate:
-    1. Current training time
-    2. Required speedup to meet deadline
-    3. Optimization strategies and their impact
-    4. Resource requirements for each strategy
-    5. Cost-benefit analysis
-    
-    HINTS:
-    - Consider batch size scaling, hardware upgrades, distributed training
-    - Each optimization has costs (hardware, complexity, money)
-    - Some optimizations have diminishing returns
-    - Memory and communication become bottlenecks at scale
-    """
-    ### BEGIN SOLUTION
-    # Problem parameters
-    total_samples = 1_000_000
-    current_throughput = 100  # samples/second
-    deadline_hours = 2
-    deadline_seconds = deadline_hours * 3600
-    
-    print("⚡ Training Throughput Optimization Analysis:")
-    
-    # 1. Current training time
-    current_time_seconds = total_samples / current_throughput
-    current_time_hours = current_time_seconds / 3600
-    
-    print(f"\n1. Current Performance:")
-    print(f"  Training time: {current_time_hours:.1f} hours ({current_time_seconds:,.0f} seconds)")
-    print(f"  Throughput: {current_throughput} samples/second")
-    
-    # 2. Required speedup
-    required_throughput = total_samples / deadline_seconds
-    speedup_needed = required_throughput / current_throughput
-    
-    print(f"\n2. Requirements:")
-    print(f"  Deadline: {deadline_hours} hours")
-    print(f"  Required throughput: {required_throughput:.1f} samples/second")
-    print(f"  Speedup needed: {speedup_needed:.1f}x")
-    
-    # 3. Optimization strategies
-    print(f"\n3. Optimization Strategies:")
-    
-    strategies = [
-        {
-            'name': 'Larger Batch Size',
-            'speedup': 2.0,
-            'cost': 'GPU memory (2x)',
-            'complexity': 'Low',
-            'implementation': 'Increase batch_size from 32 to 128'
-        },
-        {
-            'name': 'Mixed Precision (FP16)',
-            'speedup': 1.8,
-            'cost': 'Slight accuracy loss',
-            'complexity': 'Medium',
-            'implementation': 'Use torch.cuda.amp or equivalent'
-        },
-        {
-            'name': 'Multiple GPUs (4x)',
-            'speedup': 3.5,  # Not linear due to communication overhead
-            'cost': '$2000-8000 hardware',
-            'complexity': 'High',
-            'implementation': 'Data parallel training'
-        },
-        {
-            'name': 'Optimized DataLoader',
-            'speedup': 1.5,
-            'cost': 'CPU cores, RAM',
-            'complexity': 'Low',
-            'implementation': 'num_workers=8, pin_memory=True'
-        },
-        {
-            'name': 'Model Optimization',
-            'speedup': 1.3,
-            'cost': 'Development time',
-            'complexity': 'Medium',
-            'implementation': 'Pruning, quantization, efficient architectures'
-        }
-    ]
-    
-    cumulative_speedup = 1.0
-    total_cost_estimate = 0
-    
-    for strategy in strategies:
-        cumulative_speedup *= strategy['speedup']
-        new_throughput = current_throughput * cumulative_speedup
-        new_time_hours = total_samples / (new_throughput * 3600)
-        
-        print(f"\n  {strategy['name']}:")
-        print(f"    Speedup: {strategy['speedup']:.1f}x (cumulative: {cumulative_speedup:.1f}x)")
-        print(f"    New throughput: {new_throughput:.1f} samples/sec")
-        print(f"    New training time: {new_time_hours:.2f} hours")
-        print(f"    Cost: {strategy['cost']}")
-        print(f"    Complexity: {strategy['complexity']}")
-        
-        if new_time_hours <= deadline_hours:
-            print(f"    ✅ MEETS DEADLINE!")
-            break
-    
-    # 4. Recommended solution
-    print(f"\n4. Recommended Solution:")
-    
-    if cumulative_speedup >= speedup_needed:
-        print(f"  🎯 ACHIEVABLE: Combine multiple optimizations")
-        print(f"  Priority order:")
-        print(f"    1. Larger batch size (quick win, 2x speedup)")
-        print(f"    2. Optimized DataLoader (easy, 1.5x speedup)")
-        print(f"    3. Mixed precision (medium effort, 1.8x speedup)")
-        print(f"  Total speedup: ~5.4x (meets {speedup_needed:.1f}x requirement)")
-    else:
-        print(f"  ⚠️ CHALLENGING: Need distributed training")
-        print(f"  Consider cloud solutions (AWS SageMaker, Google TPUs)")
-    
-    # 5. Cost-benefit analysis
-    print(f"\n5. Cost-Benefit Analysis:")
-    print(f"  Hardware costs: $2000-8000 (multiple GPUs)")
-    print(f"  Development time: 1-2 weeks (distributed setup)")
-    print(f"  Ongoing costs: Cloud compute $100-500/month")
-    print(f"  Benefit: Meet business deadline, enable faster iteration")
-    
-    return {
-        'current_time_hours': current_time_hours,
-        'required_speedup': speedup_needed,
-        'achievable_speedup': cumulative_speedup,
-        'deadline_met': cumulative_speedup >= speedup_needed
-    }
-    ### END SOLUTION
-
-# Run computational assessments
-analyze_batch_size_impact()
-print("\n" + "="*60 + "\n")
-analyze_loss_convergence_patterns()
-print("\n" + "="*60 + "\n")
-optimize_training_throughput()
+    print("\n🎉 SUCCESS: All training tests passed!")
+    print("✅ Loss functions compute correctly")
+    print("✅ Metrics evaluate properly")
+    print("✅ Training loop integrates all components")
+    print("✅ Ready for complete neural network training!")
 
 # %% [markdown]
 """
-## 🚀 Advanced Production Training Concepts
+## 🤔 ML Systems Thinking: Interactive Questions
 
-Building on our core training infrastructure, let's explore advanced production training techniques that modern ML systems use for scale and efficiency.
+**Complete these questions to deepen your understanding of training systems:**
 """
 
-# ✅ IMPLEMENTATION CHECKPOINT: Core training pipeline complete
-
-# 🤔 PREDICTION: How much memory does distributed training save compared to single-GPU training?
-# Your guess: _____ (2x less? 4x less? Or does it use MORE?)
-
-# 🔍 SYSTEMS INSIGHT: Distributed Training Analysis
-def analyze_distributed_training_patterns():
-    """Analyze distributed training strategies and their trade-offs."""
-    try:
-        print("🌐 Distributed Training Analysis:")
-        print("="*50)
-
-        # Model parameters for analysis
-        model_params = 175_000_000  # 175M parameters (GPT-3 scale)
-        param_size_bytes = 4  # float32
-
-        print(f"\n📊 Model: {model_params:,} parameters ({model_params * param_size_bytes / 1024**3:.1f} GB)")
-
-        # Data Parallel Analysis
-        print(f"\n1. DATA PARALLEL TRAINING:")
-        num_gpus = [1, 2, 4, 8]
-        for gpus in num_gpus:
-            memory_per_gpu = (model_params * param_size_bytes * 3) / 1024**3 / gpus  # params + grads + optimizer
-            effective_batch = 32 * gpus
-            print(f"  {gpus} GPUs: {memory_per_gpu:.1f} GB/GPU, batch size {effective_batch}")
-
-        # Model Parallel Analysis
-        print(f"\n2. MODEL PARALLEL TRAINING:")
-        for gpus in [2, 4, 8]:
-            params_per_gpu = model_params // gpus
-            memory_per_gpu = (params_per_gpu * param_size_bytes * 3) / 1024**3
-            print(f"  {gpus} GPUs: {params_per_gpu:,} params/GPU, {memory_per_gpu:.1f} GB/GPU")
-
-        # Communication overhead analysis
-        print(f"\n3. COMMUNICATION OVERHEAD:")
-        gradient_size_gb = model_params * param_size_bytes / 1024**3
-        network_bandwidth = 25  # GB/s (InfiniBand)
-
-        for gpus in [2, 4, 8]:
-            # All-reduce communication pattern
-            comm_data = gradient_size_gb * 2 * (gpus - 1) / gpus  # AllReduce algorithm
-            comm_time_ms = (comm_data / network_bandwidth) * 1000
-            print(f"  {gpus} GPUs: {comm_data:.2f} GB transfer, {comm_time_ms:.1f}ms overhead")
-
-        # Pipeline Parallel Analysis
-        print(f"\n4. PIPELINE PARALLEL:")
-        pipeline_stages = [2, 4, 8]
-        for stages in pipeline_stages:
-            params_per_stage = model_params // stages
-            memory_savings = f"{stages}x reduction"
-            pipeline_bubbles = f"~{(stages-1)/stages*100:.0f}% efficiency"
-            print(f"  {stages} stages: {params_per_stage:,} params/stage, {memory_savings}, {pipeline_bubbles}")
-
-        # 💡 WHY THIS MATTERS: Each distributed strategy has different trade-offs:
-        print(f"\n💡 KEY INSIGHTS:")
-        print(f"• Data Parallel: Scales batch size, requires gradient sync")
-        print(f"• Model Parallel: Reduces memory per GPU, increases communication")
-        print(f"• Pipeline Parallel: Best memory efficiency, introduces pipeline bubbles")
-        print(f"• Communication often becomes bottleneck at scale!")
-
-        return {
-            'data_parallel_memory_8gpu': memory_per_gpu,
-            'model_parallel_params_8gpu': model_params // 8,
-            'communication_overhead_8gpu': comm_time_ms
-        }
-
-    except Exception as e:
-        print(f"⚠️ Error in distributed training analysis: {e}")
-        print("Make sure your training infrastructure is complete")
-        return None
-
-# Analyze distributed training
-distributed_results = analyze_distributed_training_patterns()
-
-# ✅ IMPLEMENTATION CHECKPOINT: Distributed training analysis complete
-
-# 🤔 PREDICTION: How much memory does mixed precision training save?
-# Your guess: _____ (2x? 50%? Or does it use more for conversions?)
-
-# 🔍 SYSTEMS INSIGHT: Mixed Precision Training Analysis
-def analyze_mixed_precision_training():
-    """Analyze mixed precision training memory and performance benefits."""
-    try:
-        print("\n🎯 Mixed Precision Training Analysis:")
-        print("="*50)
-
-        # Model configuration for analysis
-        model_params = 175_000_000  # 175M parameters
-        activation_memory_mb = 512  # Typical activation memory per layer
-
-        print(f"\n📊 Model: {model_params:,} parameters")
-
-        # Memory analysis: FP32 vs FP16
-        print(f"\n1. MEMORY COMPARISON:")
-
-        # FP32 training
-        fp32_params = model_params * 4  # 4 bytes per param
-        fp32_grads = model_params * 4   # 4 bytes per grad
-        fp32_optimizer = model_params * 8  # Adam: momentum + velocity
-        fp32_activations = activation_memory_mb * 1024 * 1024  # MB to bytes
-        fp32_total = (fp32_params + fp32_grads + fp32_optimizer + fp32_activations) / 1024**3
-
-        # FP16 training (mixed precision)
-        fp16_params = model_params * 2  # 2 bytes per param in FP16
-        fp16_grads = model_params * 2   # 2 bytes per grad in FP16
-        fp16_optimizer = model_params * 8  # Optimizer state stays FP32 for stability
-        fp16_activations = (activation_memory_mb * 1024 * 1024) // 2  # FP16 activations
-        fp16_master_weights = model_params * 4  # Master weights in FP32
-        fp16_total = (fp16_params + fp16_grads + fp16_optimizer + fp16_activations + fp16_master_weights) / 1024**3
-
-        print(f"  FP32 Training: {fp32_total:.2f} GB")
-        print(f"    Parameters: {fp32_params/1024**3:.2f} GB")
-        print(f"    Gradients:  {fp32_grads/1024**3:.2f} GB")
-        print(f"    Optimizer:  {fp32_optimizer/1024**3:.2f} GB")
-        print(f"    Activations: {fp32_activations/1024**3:.2f} GB")
-
-        print(f"\n  FP16 Training: {fp16_total:.2f} GB")
-        print(f"    Parameters: {fp16_params/1024**3:.2f} GB")
-        print(f"    Gradients:  {fp16_grads/1024**3:.2f} GB")
-        print(f"    Optimizer:  {fp16_optimizer/1024**3:.2f} GB")
-        print(f"    Activations: {fp16_activations/1024**3:.2f} GB")
-        print(f"    Master Weights: {fp16_master_weights/1024**3:.2f} GB")
-
-        memory_savings = (fp32_total - fp16_total) / fp32_total * 100
-        print(f"\n  Memory Savings: {memory_savings:.1f}%")
-
-        # Performance analysis
-        print(f"\n2. PERFORMANCE COMPARISON:")
-
-        # Theoretical speedups (hardware dependent)
-        tensor_core_speedup = 1.7  # Typical speedup with Tensor Cores
-        memory_bandwidth_improvement = 1.4  # Less memory transfers
-
-        print(f"  Compute Speedup: {tensor_core_speedup:.1f}x (Tensor Cores)")
-        print(f"  Memory Speedup: {memory_bandwidth_improvement:.1f}x (bandwidth)")
-        print(f"  Combined Speedup: ~{tensor_core_speedup * memory_bandwidth_improvement:.1f}x")
-
-        # Numerical stability considerations
-        print(f"\n3. NUMERICAL STABILITY:")
-        print(f"  FP16 Range: ±65,504 (limited)")
-        print(f"  FP32 Range: ±3.4e38 (extensive)")
-        print(f"  Solution: Master weights in FP32, compute in FP16")
-        print(f"  Loss Scaling: Prevent gradient underflow")
-
-        # Training stability analysis
-        print(f"\n4. TRAINING STABILITY TECHNIQUES:")
-        print(f"  • Dynamic Loss Scaling: Automatic scaling adjustment")
-        print(f"  • Gradient Clipping: Prevent gradient overflow")
-        print(f"  • Master Weight Updates: FP32 precision for parameter updates")
-        print(f"  • Automatic Mixed Precision: Framework handles conversions")
-
-        # 💡 WHY THIS MATTERS: Mixed precision enables larger models
-        print(f"\n💡 KEY INSIGHTS:")
-        print(f"• ~{memory_savings:.0f}% memory reduction enables larger models/batches")
-        print(f"• ~{tensor_core_speedup * memory_bandwidth_improvement:.1f}x speedup reduces training time significantly")
-        print(f"• Requires careful numerical stability handling")
-        print(f"• Modern GPUs (V100+) have hardware acceleration for FP16")
-
-        return {
-            'memory_savings_percent': memory_savings,
-            'theoretical_speedup': tensor_core_speedup * memory_bandwidth_improvement,
-            'fp32_memory_gb': fp32_total,
-            'fp16_memory_gb': fp16_total
-        }
-
-    except Exception as e:
-        print(f"⚠️ Error in mixed precision analysis: {e}")
-        return None
-
-# Analyze mixed precision training
-mixed_precision_results = analyze_mixed_precision_training()
-
-# ✅ IMPLEMENTATION CHECKPOINT: Mixed precision analysis complete
-
-# 🤔 PREDICTION: What's the biggest bottleneck in model serving for real-time inference?
-# Your guess: _____ (Model size? Network latency? Preprocessing?)
-
-# 🔍 SYSTEMS INSIGHT: Model Serving Pipeline Analysis
-def analyze_model_serving_pipeline():
-    """Analyze model serving performance and optimization strategies."""
-    try:
-        print("\n🚀 Model Serving Pipeline Analysis:")
-        print("="*50)
-
-        # Inference performance analysis
-        model_params = 175_000_000  # 175M parameter model
-
-        print(f"\n📊 Model: {model_params:,} parameters")
-
-        # Latency breakdown analysis
-        print(f"\n1. INFERENCE LATENCY BREAKDOWN:")
-
-        # Typical latency components (milliseconds)
-        network_latency = 50      # Network round-trip
-        preprocessing = 10        # Input preprocessing
-        model_inference = 100     # Model forward pass
-        postprocessing = 5        # Output processing
-        serialization = 15        # Response serialization
-
-        total_latency = network_latency + preprocessing + model_inference + postprocessing + serialization
-
-        print(f"  Network Latency:    {network_latency:>3}ms ({network_latency/total_latency*100:.1f}%)")
-        print(f"  Preprocessing:      {preprocessing:>3}ms ({preprocessing/total_latency*100:.1f}%)")
-        print(f"  Model Inference:    {model_inference:>3}ms ({model_inference/total_latency*100:.1f}%)")
-        print(f"  Postprocessing:     {postprocessing:>3}ms ({postprocessing/total_latency*100:.1f}%)")
-        print(f"  Serialization:      {serialization:>3}ms ({serialization/total_latency*100:.1f}%)")
-        print(f"  TOTAL LATENCY:      {total_latency:>3}ms")
-
-        # Throughput analysis
-        print(f"\n2. THROUGHPUT OPTIMIZATION:")
-
-        batch_sizes = [1, 4, 16, 64]
-        for batch_size in batch_sizes:
-            # Model inference scales sublinearly with batch size
-            batch_inference_time = model_inference * (1 + 0.1 * (batch_size - 1))
-            per_sample_latency = batch_inference_time / batch_size
-            throughput = 1000 / per_sample_latency  # samples/second
-
-            print(f"  Batch size {batch_size:>2}: {per_sample_latency:>5.1f}ms/sample, {throughput:>6.1f} samples/sec")
-
-        # Memory optimization strategies
-        print(f"\n3. MEMORY OPTIMIZATION:")
-
-        # Model size optimizations
-        fp32_size = model_params * 4 / 1024**3  # GB
-        fp16_size = model_params * 2 / 1024**3  # GB
-        int8_size = model_params * 1 / 1024**3  # GB
-
-        print(f"  FP32 Model:   {fp32_size:.2f} GB")
-        print(f"  FP16 Model:   {fp16_size:.2f} GB ({fp16_size/fp32_size*100:.0f}% size)")
-        print(f"  INT8 Model:   {int8_size:.2f} GB ({int8_size/fp32_size*100:.0f}% size)")
-
-        # Caching strategies
-        print(f"\n4. CACHING STRATEGIES:")
-        print(f"  • Model Caching: Keep model in GPU memory")
-        print(f"  • KV-Cache: Store attention key-value pairs")
-        print(f"  • Result Caching: Cache frequent query results")
-        print(f"  • Preprocessing Cache: Cache tokenized inputs")
-
-        # Deployment patterns
-        print(f"\n5. DEPLOYMENT PATTERNS:")
-        print(f"  • Single Model: Simple, low latency")
-        print(f"  • Model Ensemble: Better accuracy, higher latency")
-        print(f"  • A/B Testing: Compare model versions")
-        print(f"  • Canary Deployment: Gradual rollout")
-
-        # Scaling analysis
-        print(f"\n6. SCALING STRATEGIES:")
-        replicas = [1, 2, 4, 8]
-        for replica_count in replicas:
-            requests_per_sec = 1000 / total_latency * replica_count
-            cost_multiplier = replica_count
-            print(f"  {replica_count} replicas: {requests_per_sec:>6.1f} req/sec, {cost_multiplier}x cost")
-
-        # 💡 WHY THIS MATTERS: Serving is often more challenging than training
-        print(f"\n💡 KEY INSIGHTS:")
-        print(f"• Model inference is only {model_inference/total_latency*100:.0f}% of total latency")
-        print(f"• Batching improves throughput but increases latency")
-        print(f"• Quantization reduces memory by {int8_size/fp32_size*100:.0f}% (FP32→INT8)")
-        print(f"• Network and preprocessing often dominate latency")
-        print(f"• Horizontal scaling provides linear throughput improvement")
-
-        return {
-            'total_latency_ms': total_latency,
-            'model_inference_percent': model_inference/total_latency*100,
-            'quantization_memory_savings': (1 - int8_size/fp32_size)*100,
-            'max_throughput_single_replica': 1000/total_latency
-        }
-
-    except Exception as e:
-        print(f"⚠️ Error in model serving analysis: {e}")
-        return None
-
-# Analyze model serving pipeline
-serving_results = analyze_model_serving_pipeline()
-
-print("\n" + "="*60 + "\n")
-
+# %% nbgrader={"grade": true, "grade_id": "training-systems-question-1", "locked": false, "points": 5, "schema_version": 3, "solution": true, "task": false}
 # %% [markdown]
 """
-## 🤔 ML Systems Thinking: Reflection Questions
+### Question 1: Memory vs Batch Size Trade-offs
 
-*After completing the computational assessments above, reflect on these broader systems questions:*
+In your `Trainer` implementation, you control batch size during training. When you tested different batch sizes in the scaling analysis, you discovered that memory usage grows with batch size.
 
-### 🏗️ Training Infrastructure Design
-1. **Distributed Coordination**: When training on multiple GPUs, how do gradient synchronization and communication overhead affect the optimizations you calculated above?
+**Reflection Question**: Analyze the memory patterns in your training loop. If you have 8GB of GPU memory and your model has 1M parameters (4MB), how would you determine the optimal batch size? What happens to training dynamics when memory constraints force you to use smaller batches?
 
-2. **Fault Tolerance**: If your optimized training job crashes after 90 minutes (near the deadline), what checkpointing and recovery strategies would minimize lost progress?
+Think about:
+- Parameter memory (weights + gradients + optimizer state)
+- Activation memory (grows with batch size)
+- Memory vs convergence speed trade-offs
+- How this affects real ML systems at scale
 
-3. **Resource Elasticity**: How would you design a training system that can automatically scale resources up/down based on deadline pressure and cost constraints?
+**Your Analysis:**
+```
+// Write your analysis here
+```
+"""
 
-### 📊 Production Training Operations  
-4. **Monitoring Integration**: Beyond the metrics you implemented, what operational metrics (GPU utilization, memory usage, network I/O) would you monitor to detect the bottlenecks you analyzed?
+# %% nbgrader={"grade": true, "grade_id": "training-systems-question-2", "locked": false, "points": 5, "schema_version": 3, "solution": true, "task": false}
+# %% [markdown]
+"""
+### Question 2: Loss Function Choice and Training Stability
 
-5. **Cost Optimization**: Given the cost-benefit analysis you performed, how would you build a system that automatically selects the most cost-effective optimization strategy?
+You implemented MSE, CrossEntropy, and Binary CrossEntropy loss functions. Each has different mathematical properties that affect training dynamics.
 
-6. **Pipeline Integration**: How would your throughput optimizations interact with data preprocessing, model validation, and deployment pipelines?
+**Reflection Question**: Your `MeanSquaredError` loss can produce very large gradients when predictions are far from targets, while `CrossEntropyLoss` has more stable gradients. How does this difference affect training stability and convergence speed? When would you choose each loss function, and how would you modify your training loop to handle unstable gradients?
 
-### ⚖️ Scale and Efficiency
-7. **Memory Hierarchy**: How do the memory calculations you performed change when considering L1/L2 cache, GPU memory, and system RAM as a hierarchy?
+Think about:
+- Gradient magnitude differences between loss functions
+- How loss landscapes affect optimization
+- Gradient clipping and learning rate scheduling
+- Production implications for model reliability
 
-8. **Convergence vs Throughput**: When is it better to train a smaller model faster rather than a larger model slower? How would you make this decision systematically?
+**Your Analysis:**
+```
+// Write your analysis here
+```
+"""
 
-9. **Multi-Tenancy**: How would you share GPU resources across multiple training jobs while maintaining the performance guarantees you calculated?
+# %% nbgrader={"grade": true, "grade_id": "training-systems-question-3", "locked": false, "points": 5, "schema_version": 3, "solution": true, "task": false}
+# %% [markdown]
+"""
+### Question 3: Training Loop Bottlenecks and Optimization
 
-*These questions connect your quantitative analysis to the qualitative challenges of production ML systems.*
+Your `Trainer` class orchestrates data loading, forward passes, loss computation, and optimization. In the performance analysis, you measured how different components contribute to training time.
+
+**Reflection Question**: If you discovered that data loading is your bottleneck (taking 60% of training time), how would you modify your training loop architecture to address this? What systems-level changes would you make to achieve better data/compute overlap?
+
+Think about:
+- Data prefetching and parallel data loading
+- CPU vs GPU workload distribution
+- Memory caching and data preprocessing optimization
+- How training loop design affects overall system throughput
+
+**Your Analysis:**
+```
+// Write your analysis here
+```
 """
 
 # %% [markdown]
 """
-## 🎯 MODULE SUMMARY: Training Pipelines
+## 🎯 MODULE SUMMARY: Training Complete!
 
-Congratulations! You've successfully implemented complete training pipelines:
+Congratulations! You've successfully implemented complete training infrastructure:
 
 ### What You've Accomplished
-✅ **Training Loops**: End-to-end training with loss computation and optimization  
-✅ **Loss Functions**: Implementation and integration of loss calculations  
-✅ **Metrics Tracking**: Monitoring accuracy and loss during training  
-✅ **Integration**: Seamless compatibility with neural networks and optimizers  
-✅ **Real Applications**: Training real models on real data  
-✅ **Pipeline Profiling**: Production-grade performance analysis and optimization  
-✅ **Systems Thinking**: Understanding training infrastructure at scale  
+✅ **Loss Function Implementation**: MSE, CrossEntropy, and Binary CrossEntropy with proper gradient support
+✅ **Metrics System**: Accuracy evaluation with batch processing and edge case handling
+✅ **Training Loop Architecture**: Complete `Trainer` class that orchestrates all ML components
+✅ **Systems Analysis**: Performance scaling and memory usage measurement capabilities
+✅ **Integration Testing**: End-to-end validation of the complete training pipeline
 
-### Key Concepts You've Learned
-- **Training loops**: How to iterate over data, compute loss, and update parameters
-- **Loss functions**: Quantifying model performance
-- **Metrics tracking**: Monitoring progress and diagnosing issues
-- **Integration patterns**: How training works with all components
-- **Performance optimization**: Efficient training for large models
-- **Pipeline profiling**: Identifying bottlenecks in training infrastructure
-- **Production optimization**: Balancing throughput, memory, and resource utilization
+### Key Learning Outcomes
+- **Training Orchestration**: How training loops coordinate data, models, losses, and optimizers into unified systems
+- **Loss Function Design**: Mathematical properties that affect training stability and convergence
+- **Performance Analysis**: How to measure and optimize training pipeline bottlenecks
+- **Memory Management**: Understanding memory scaling patterns and resource constraints
 
 ### Professional Skills Developed
-- **Training orchestration**: Building robust training systems
-- **Loss engineering**: Implementing and tuning loss functions
-- **Metrics analysis**: Understanding and improving model performance
-- **Integration testing**: Ensuring all components work together
-- **Performance profiling**: Optimizing training pipelines for production
-- **Systems design**: Understanding distributed training challenges
+- **Systems Integration**: Building complex pipelines from independent components
+- **Performance Profiling**: Measuring and analyzing training system behavior
+- **Production Patterns**: Training loop designs that handle errors and scale effectively
 
 ### Ready for Advanced Applications
-Your training pipeline implementations now enable:
-- **Basic model training**: End-to-end training using concepts from Modules 6-9
-- **Component integration**: Combining tensors, layers, optimizers, and data loaders
-- **Educational experimentation**: Testing different loss functions and metrics
-- **Foundation building**: Understanding training loop patterns for future modules
-- **Conceptual understanding**: How all ML system components work together
-- **Next module preparation**: Ready for more advanced training techniques
+Your training implementation now enables:
+- **Complete Neural Networks**: Train any model architecture on real datasets
+- **Performance Optimization**: Identify and resolve training bottlenecks
+- **Production Deployment**: Reliable training loops with monitoring and checkpointing
 
 ### Connection to Real ML Systems
-Your implementations mirror production systems:
-- **PyTorch**: `torch.nn.Module`, `torch.optim`, and training loops
-- **TensorFlow**: `tf.keras.Model`, `tf.keras.optimizers`, and fit methods
-- **Industry Standard**: Every major ML framework uses these exact patterns
-- **Production Tools**: Similar to Ray Train, Horovod, and distributed training frameworks
+Your implementation mirrors production frameworks:
+- **PyTorch**: Your `Trainer` class patterns match PyTorch Lightning trainers
+- **TensorFlow**: Loss functions and metrics follow tf.keras patterns
+- **Industry Standard**: Training loop design reflects MLOps best practices
 
 ### Next Steps
-1. **Export your code**: `tito export 10_training`
-2. **Test your implementation**: `tito test 10_training`
-3. **Build evaluation pipelines**: Add benchmarking and validation
-4. **Move to Module 12**: Add model compression and optimization!
+Your training infrastructure completes the core ML system! You can now:
+1. **Train on Real Data**: Use your complete system on CIFAR-10, MNIST, or custom datasets
+2. **Optimize Performance**: Apply scaling analysis to improve training throughput
+3. **Build Complex Models**: Combine all modules into sophisticated architectures
+4. **Deploy Systems**: Take your implementations toward production-ready systems
 
-**Ready for compression?** Your training pipelines are now ready for real-world deployment!
+**You've built real ML training infrastructure from scratch!** This foundation enables everything from research experiments to production ML systems.
 """
