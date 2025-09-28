@@ -65,7 +65,7 @@ try:
     from tinytorch.core.spatial import Conv2d, MaxPool2D
 except ImportError:
     # For development, import from local modules
-    sys.path.append(os.path.join(os.path.dirname(__file__), '..', '02_tensor'))
+    sys.path.append(os.path.join(os.path.dirname(__file__), '..', '01_tensor'))
     sys.path.append(os.path.join(os.path.dirname(__file__), '..', '06_spatial'))
     try:
         from tensor_dev import Tensor

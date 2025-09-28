@@ -72,7 +72,7 @@ try:
     # In a complete system, these would integrate with the autograd Variable system
 except ImportError:
     # For development, import from local modules
-    sys.path.append(os.path.join(os.path.dirname(__file__), '..', '02_tensor'))
+    sys.path.append(os.path.join(os.path.dirname(__file__), '..', '01_tensor'))
     from tensor_dev import Tensor
 
 # %% nbgrader={"grade": false, "grade_id": "losses-setup", "locked": false, "schema_version": 3, "solution": false, "task": false}
@@ -85,7 +85,7 @@ print("Ready to build loss functions for neural network training!")
 """
 ## Where This Code Lives in the Final Package
 
-**Learning Side:** You work in modules/05_losses/losses_dev.py  
+**Learning Side:** You work in modules/04_losses/losses_dev.py  
 **Building Side:** Code exports to tinytorch.core.losses
 
 ```python
@@ -2081,7 +2081,7 @@ Your implementations mirror the essential patterns used in:
 
 ### Next Steps
 With solid loss function implementations, you're ready to:
-1. **Export your module**: `tito module complete 05_losses`
+1. **Export your module**: `tito module complete 04_losses`
 2. **Validate integration**: `tito test --module losses`
 3. **Explore autograd integration**: See how loss functions connect with automatic differentiation
 4. **Ready for Module 06**: Build automatic gradient computation that makes loss-based learning possible!
