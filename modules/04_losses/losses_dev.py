@@ -14,7 +14,7 @@
 
 Welcome to Loss Functions! You'll implement the critical bridge between model predictions and learning objectives that makes neural network training possible.
 
-## 🔗 Building on Previous Learning
+## LINK Building on Previous Learning
 **What You Built Before**:
 - Module 02 (Tensor): Data structures for predictions and targets
 - Module 03 (Activations): Nonlinear transformations for model outputs
@@ -28,33 +28,31 @@ Welcome to Loss Functions! You'll implement the critical bridge between model pr
 
 **Connection Map**:
 ```
-Layers → Loss Functions → Gradients
+Layers -> Loss Functions -> Gradients
 (predictions)  (objectives)   (learning signals)
 ```
 
-## Learning Goals (Systems-Focused)
-- **Systems understanding**: How loss functions translate business problems into optimization objectives with proper numerical stability
-- **Core implementation skill**: Build production-quality loss functions with stable computation and efficient batch processing
-- **Pattern mastery**: Understand how different loss functions shape learning dynamics and convergence behavior
-- **Framework connections**: See how your implementations mirror PyTorch's loss functions and autograd integration patterns
-- **Optimization trade-offs**: Learn why numerical stability and computational efficiency matter for reliable training at scale
+## Learning Objectives
 
-## Build → Use → Reflect
-1. **Build**: Complete loss function implementations with numerical stability and gradient support
-2. **Use**: Apply loss functions to regression and classification problems with real neural networks
-3. **Reflect**: Why do different loss functions lead to different learning behaviors, and when does numerical stability matter?
+By completing this module, you will:
+
+1. **Understand loss functions** - Learn how to measure the quality of model predictions
+2. **Implement MSE Loss** - Build loss functions for regression problems
+3. **Implement CrossEntropy Loss** - Create loss functions for classification tasks
+4. **Handle numerical stability** - Deal with edge cases and extreme values safely
+5. **Enable learning** - Provide the feedback signal that allows networks to improve
+
+## Build -> Use -> Reflect
+1. **Build**: MSE, CrossEntropy, and BinaryCrossEntropy loss functions with proper error handling
+2. **Use**: Apply different loss functions to real prediction problems and compare results
+3. **Reflect**: Understand when to use each loss function and why numerical stability matters
 
 ## What You'll Achieve
-By implementing loss functions from scratch, you'll understand:
-- Deep technical understanding of how loss functions quantify prediction quality and enable learning
-- Practical capability to implement numerically stable loss computation for production ML systems
-- Systems insight into computational complexity, memory requirements, and batch processing efficiency
-- Performance awareness of how loss function choice affects training speed and convergence characteristics
-- Production knowledge of how frameworks implement robust loss computation with proper error handling
-
-## Systems Reality Check
-💡 **Production Context**: PyTorch's loss functions use numerically stable implementations and automatic mixed precision to handle extreme gradients and values
-⚡ **Performance Insight**: Numerically unstable loss functions can cause training to fail catastrophically - proper implementation is critical for reliable ML systems
+- **Mathematical understanding**: How loss functions quantify prediction quality
+- **Implementation skills**: Building robust loss functions with error handling
+- **Problem matching**: Choosing the right loss function for different ML tasks
+- **Numerical awareness**: Understanding and preventing common computational issues
+- **Training foundation**: Enabling the learning process that makes neural networks work
 """
 
 # %% nbgrader={"grade": false, "grade_id": "losses-imports", "locked": false, "schema_version": 3, "solution": false, "task": false}
@@ -76,7 +74,7 @@ except ImportError:
     from tensor_dev import Tensor
 
 # %% nbgrader={"grade": false, "grade_id": "losses-setup", "locked": false, "schema_version": 3, "solution": false, "task": false}
-print("🔥 TinyTorch Loss Functions Module")
+print("FIRE TinyTorch Loss Functions Module")
 print(f"NumPy version: {np.__version__}")
 print(f"Python version: {sys.version_info.major}.{sys.version_info.minor}")
 print("Ready to build loss functions for neural network training!")
@@ -112,21 +110,21 @@ Loss functions are the mathematical bridge between what your model predicts and 
 
 ```
 Business Goal: "Predict house prices accurately"
-            ↓
+            v
 Mathematical Loss: MSE = (predicted_price - actual_price)²
-            ↓  
-Optimization Signal: gradient = 2 × (predicted - actual)
-            ↓
-Learning Update: parameter -= learning_rate × gradient
+            v  
+Optimization Signal: gradient = 2 * (predicted - actual)
+            v
+Learning Update: parameter -= learning_rate * gradient
 ```
 
 ## The Learning Ecosystem
 
 Loss functions provide four critical capabilities:
 
-🎯 **Learning Objectives**: Define what "good" performance means mathematically  
-📈 **Gradient Signal**: Provide directional improvement information for parameters  
-🔍 **Progress Measurement**: Enable monitoring training progress and convergence detection  
+TARGET **Learning Objectives**: Define what "good" performance means mathematically  
+PROGRESS **Gradient Signal**: Provide directional improvement information for parameters  
+MAGNIFY **Progress Measurement**: Enable monitoring training progress and convergence detection  
 ⚖️ **Trade-off Control**: Balance different aspects of model performance and regularization  
 
 ## Visual Understanding: Loss Function Landscape
@@ -134,12 +132,12 @@ Loss functions provide four critical capabilities:
 ```
 Loss Function Behavior:
            MSE Loss                    CrossEntropy Loss
-    High │    ╱╲                High │     ╱╲
-         │   ╱  ╲                    │    ╱  ╲
-         │  ╱    ╲                   │   ╱    ╲
-         │ ╱      ╲                  │  ╱      ╲
-     Low │╱        ╲              Low │ ╱        ╲
-         └──────────────         └──────────────
+    High |    /\\                High |     /\\
+         |   /  \\                    |    /  \\
+         |  /    \\                   |   /    \\
+         | /      \\                  |  /      \\
+     Low |/        \\             Low | /        \\
+         +--------------         +--------------
          Wrong  Right              Wrong  Right
          
    • Smooth gradients          • Steep near wrong predictions
@@ -160,30 +158,30 @@ MSE is the cornerstone loss function for regression problems. It measures predic
 
 ```
 MSE Loss Visualization:
-          
-    Loss │     ╱╲
-       4 │    ╱  ╲        • Error = 2 → Loss = 4
-       3 │   ╱    ╲       • Error = 1 → Loss = 1
-       2 │  ╱      ╲      • Error = 0 → Loss = 0
-       1 │ ╱        ╲     • Quadratic penalty!
-       0 │╱__________╲____
+
+    Loss |     /\\
+       4 |    /  \\        • Error = 2 -> Loss = 4
+       3 |   /    \\       • Error = 1 -> Loss = 1
+       2 |  /      \\      • Error = 0 -> Loss = 0
+       1 | /        \\     • Quadratic penalty!
+       0 |/__________\\____
          -2  -1   0   1   2
               Error
               
 Gradient Flow:
-    ∂Loss/∂prediction = 2 × (predicted - actual)
+    dLoss/dprediction = 2 * (predicted - actual)
     
-    Large errors → Large gradients → Big updates
-    Small errors → Small gradients → Fine tuning
+    Large errors -> Large gradients -> Big updates
+    Small errors -> Small gradients -> Fine tuning
 ```
 
 ## Mathematical Foundation
 
 For batch of predictions and targets:
 ```
-MSE = (1/n) × Σ(y_pred - y_true)²
+MSE = (1/n) * Sum(y_pred - y_true)²
 
-Gradient: ∂MSE/∂y_pred = (2/n) × (y_pred - y_true)
+Gradient: dMSE/dy_pred = (2/n) * (y_pred - y_true)
 ```
 
 ## Learning Objectives
@@ -196,7 +194,7 @@ By implementing MSE, you'll understand:
 
 # %% nbgrader={"grade": false, "grade_id": "mse-concept-question", "locked": false, "schema_version": 3, "solution": false, "task": false}
 """
-🤔 **Computational Question: MSE Properties**
+THINK **Computational Question: MSE Properties**
 
 Before implementing, let's understand MSE behavior:
 
@@ -215,7 +213,7 @@ class MeanSquaredError:
     Mean Squared Error Loss for Regression Problems
     
     Computes the average squared difference between predictions and targets:
-    MSE = (1/n) × Σ(y_pred - y_true)²
+    MSE = (1/n) * Sum(y_pred - y_true)²
     
     Features:
     - Numerically stable computation
@@ -283,10 +281,10 @@ class MeanSquaredError:
         """Alternative interface for forward pass."""
         return self.__call__(y_pred, y_true)
 
-# 🔍 SYSTEMS INSIGHT: Gradient Landscape Visualization
+# MAGNIFY SYSTEMS INSIGHT: Gradient Landscape Visualization
 def visualize_loss_landscapes():
     """Visualize how different loss functions create different optimization landscapes."""
-    print("🔍 Loss Function Landscape Visualization")
+    print("MAGNIFY Loss Function Landscape Visualization")
     print("=" * 45)
 
     try:
@@ -296,12 +294,12 @@ def visualize_loss_landscapes():
         prediction_range = np.linspace(-3, 3, 100)
         true_value = 0.0  # Target value
 
-        print("\n📈 Loss Landscape Comparison:")
+        print("\nPROGRESS Loss Landscape Comparison:")
         print("   How loss changes as predictions move away from target")
 
         # Calculate loss landscapes
         mse = MeanSquaredError()
-        ce = CrossEntropyLoss()
+        _ = CrossEntropyLoss()  # Not used in this comparison
         bce = BinaryCrossEntropyLoss()
 
         # MSE landscape (regression)
@@ -320,7 +318,7 @@ def visualize_loss_landscapes():
         mse_gradient_at_zero = 2 * (0 - true_value)  # MSE gradient formula
         mse_gradient_at_one = 2 * (1 - true_value)
 
-        print(f"\n🎯 Gradient Behavior Analysis:")
+        print(f"\nTARGET Gradient Behavior Analysis:")
         print(f"   MSE gradient at prediction=0: {mse_gradient_at_zero:.3f}")
         print(f"   MSE gradient at prediction=1: {mse_gradient_at_one:.3f}")
         print(f"   MSE provides linear gradient growth")
@@ -328,8 +326,8 @@ def visualize_loss_landscapes():
         # Binary CE gradient analysis
         sigmoid_at_zero = 1 / (1 + np.exp(-0))  # = 0.5
         bce_grad_at_zero = sigmoid_at_zero - 1.0  # = -0.5
-        sigmoid_at_one = 1 / (1 + np.exp(-1))    # ≈ 0.73
-        bce_grad_at_one = sigmoid_at_one - 1.0   # ≈ -0.27
+        sigmoid_at_one = 1 / (1 + np.exp(-1))    # ~= 0.73
+        bce_grad_at_one = sigmoid_at_one - 1.0   # ~= -0.27
 
         print(f"   BCE gradient at logit=0: {bce_grad_at_zero:.3f}")
         print(f"   BCE gradient at logit=1: {bce_grad_at_one:.3f}")
@@ -359,32 +357,32 @@ def visualize_loss_landscapes():
             print(f"   {point:>10.1f} {mse_loss.data:>10.3f} {bce_loss.data:>10.3f} {grad_type:>15}")
 
         # Optimization implications
-        print(f"\n🚀 Optimization Implications:")
+        print(f"\nROCKET Optimization Implications:")
         print(f"   MSE (Regression):")
         print(f"     • Quadratic penalty grows smoothly")
-        print(f"     • Large errors → large gradients (aggressive correction)")
-        print(f"     • Small errors → small gradients (fine-tuning)")
+        print(f"     • Large errors -> large gradients (aggressive correction)")
+        print(f"     • Small errors -> small gradients (fine-tuning)")
         print(f"     • Symmetric around target value")
 
         print(f"   Binary CrossEntropy (Classification):")
         print(f"     • Logarithmic penalty creates adaptive gradients")
-        print(f"     • Wrong confident predictions → steep gradients")
-        print(f"     • Right confident predictions → gentle gradients")
+        print(f"     • Wrong confident predictions -> steep gradients")
+        print(f"     • Right confident predictions -> gentle gradients")
         print(f"     • Asymmetric penalty structure encourages confidence")
 
-        # 💡 WHY THIS MATTERS: Different loss landscapes create different
+        # TIP WHY THIS MATTERS: Different loss landscapes create different
         # optimization dynamics. MSE's smooth quadratic surface enables
         # stable gradient descent, while CrossEntropy's adaptive gradients
         # help classification models learn faster from confident mistakes.
 
     except Exception as e:
-        print(f"⚠️ Visualization error: {e}")
+        print(f"WARNING️ Visualization error: {e}")
         print("Ensure loss functions are implemented for landscape analysis")
 
-# 🔍 SYSTEMS INSIGHT: MSE Computational Analysis
+# MAGNIFY SYSTEMS INSIGHT: MSE Computational Analysis
 def analyze_mse_properties():
     """Analyze MSE loss characteristics for systems understanding."""
-    print("🔍 MSE Loss Analysis - Understanding the Math")
+    print("MAGNIFY MSE Loss Analysis - Understanding the Math")
     print("=" * 45)
     
     try:
@@ -397,12 +395,12 @@ def analyze_mse_properties():
             pred = Tensor([error])
             true = Tensor([0.0])
             loss = mse(pred, true)
-            print(f"   Error: {error:4.1f} → Loss: {loss.data:8.3f} (× {loss.data/(error**2):5.1f} baseline)")
+            print(f"   Error: {error:4.1f} -> Loss: {loss.data:8.3f} (* {loss.data/(error**2):5.1f} baseline)")
         
         # Batch vs individual processing
-        print(f"\n⚡ Batch Processing Efficiency:")
+        print(f"\nSPEED Batch Processing Efficiency:")
         single_losses = []
-        for i in range(100):
+        for _ in range(100):
             pred = Tensor([np.random.randn()])
             true = Tensor([np.random.randn()])
             loss = mse(pred, true)
@@ -428,25 +426,25 @@ def analyze_mse_properties():
         print(f"   Large loss memory: {sys.getsizeof(large_tensor.data)} bytes")
         print(f"   MSE memory is independent of input size!")
         
-        # 💡 WHY THIS MATTERS: MSE provides stable, well-behaved gradients
+        # TIP WHY THIS MATTERS: MSE provides stable, well-behaved gradients
         # that are proportional to error magnitude, making optimization smooth.
         # The quadratic penalty means large errors dominate learning initially,
         # then fine-tuning happens as errors get smaller.
         
     except Exception as e:
-        print(f"⚠️ Analysis error: {e}")
+        print(f"WARNING️ Analysis error: {e}")
         print("Ensure MSE implementation is complete before running analysis")
 
 # %% [markdown]
 """
-### 🧪 Unit Test: MSE Loss Computation
+### TEST Unit Test: MSE Loss Computation
 This test validates `MeanSquaredError.__call__`, ensuring correct MSE computation with various input types and batch sizes.
 """
 
 # %% nbgrader={"grade": true, "grade_id": "test-mse-loss", "locked": true, "points": 3, "schema_version": 3, "solution": false, "task": false}
 def test_unit_mse_loss():
     """Test MSE loss implementation."""
-    print("🧪 Testing Mean Squared Error Loss...")
+    print("TEST Testing Mean Squared Error Loss...")
     
     mse = MeanSquaredError()
     
@@ -454,8 +452,8 @@ def test_unit_mse_loss():
     y_pred = Tensor([[1.0, 2.0], [3.0, 4.0]])
     y_true = Tensor([[1.0, 2.0], [3.0, 4.0]])
     loss = mse(y_pred, y_true)
-    assert abs(loss.data) < 1e-6, f"Perfect predictions should have loss ≈ 0, got {loss.data}"
-    print("✅ Perfect predictions test passed")
+    assert abs(loss.data) < 1e-6, f"Perfect predictions should have loss ~= 0, got {loss.data}"
+    print("PASS Perfect predictions test passed")
     
     # Test case 2: Known loss computation
     y_pred = Tensor([[1.0, 2.0]])
@@ -463,7 +461,7 @@ def test_unit_mse_loss():
     loss = mse(y_pred, y_true)
     expected = 1.0  # [(1-0)² + (2-1)²] / 2 = [1 + 1] / 2 = 1.0
     assert abs(loss.data - expected) < 1e-6, f"Expected loss {expected}, got {loss.data}"
-    print("✅ Known loss computation test passed")
+    print("PASS Known loss computation test passed")
     
     # Test case 3: Batch processing
     y_pred = Tensor([[1.0, 2.0], [3.0, 4.0]])
@@ -471,7 +469,7 @@ def test_unit_mse_loss():
     loss = mse(y_pred, y_true)
     expected = 0.25  # All squared differences are 0.25
     assert abs(loss.data - expected) < 1e-6, f"Expected batch loss {expected}, got {loss.data}"
-    print("✅ Batch processing test passed")
+    print("PASS Batch processing test passed")
     
     # Test case 4: Single value
     y_pred = Tensor([5.0])
@@ -479,9 +477,9 @@ def test_unit_mse_loss():
     loss = mse(y_pred, y_true)
     expected = 4.0  # (5-3)² = 4
     assert abs(loss.data - expected) < 1e-6, f"Expected single value loss {expected}, got {loss.data}"
-    print("✅ Single value test passed")
+    print("PASS Single value test passed")
     
-    print("🎉 MSE loss tests passed! Understanding regression objectives.")
+    print("CELEBRATE MSE loss tests passed! Understanding regression objectives.")
 
 test_unit_mse_loss()
 
@@ -497,21 +495,21 @@ Cross-Entropy Loss measures the "information distance" between predicted probabi
 Cross-Entropy Loss for 3-Class Problem:
 
 Class Probabilities after Softmax:
-    Input: [2.0, 1.0, 0.1]    →    Probabilities: [0.66, 0.24, 0.10]
-    True:  Class 0 (index 0)   →    Target:       [1.0,  0.0,  0.0]
+    Input: [2.0, 1.0, 0.1]    ->    Probabilities: [0.66, 0.24, 0.10]
+    True:  Class 0 (index 0)   ->    Target:       [1.0,  0.0,  0.0]
     
 Loss Computation:
     CE = -log(probability_of_correct_class)
     CE = -log(0.66) = 0.415
     
 Intuition:
-    High confidence + Correct → Low loss
-    High confidence + Wrong   → High loss  
-    Low confidence  + Any     → Medium loss
+    High confidence + Correct -> Low loss
+    High confidence + Wrong   -> High loss  
+    Low confidence  + Any     -> Medium loss
 
 Gradient Behavior:
-    Wrong predictions → Steep gradients → Big corrections
-    Right predictions → Gentle gradients → Fine tuning
+    Wrong predictions -> Steep gradients -> Big corrections
+    Right predictions -> Gentle gradients -> Fine tuning
 ```
 
 ## Numerical Stability Challenge
@@ -521,7 +519,7 @@ The Numerical Stability Problem:
     
     Raw logits: [50.0, 49.0, 48.0]
     Naive softmax: exp(50)/[exp(50)+exp(49)+exp(48)]
-    Problem: exp(50) ≈ 5×10²¹ → Overflow!
+    Problem: exp(50) ~= 5*10²¹ -> Overflow!
     
 Our Solution (Log-Sum-Exp Trick):
     1. max_val = max(logits) = 50.0
@@ -534,10 +532,10 @@ Our Solution (Log-Sum-Exp Trick):
 
 For predictions and class indices:
 ```
-CrossEntropy = -Σ y_true × log(softmax(y_pred))
+CrossEntropy = -Sum y_true * log(softmax(y_pred))
 
-Softmax: softmax(x_i) = exp(x_i) / Σ exp(x_j)
-Stable: softmax(x_i) = exp(x_i - max(x)) / Σ exp(x_j - max(x))
+Softmax: softmax(x_i) = exp(x_i) / Sum exp(x_j)
+Stable: softmax(x_i) = exp(x_i - max(x)) / Sum exp(x_j - max(x))
 ```
 
 ## Learning Objectives
@@ -550,7 +548,7 @@ By implementing Cross-Entropy, you'll understand:
 
 # %% nbgrader={"grade": false, "grade_id": "crossentropy-concept-question", "locked": false, "schema_version": 3, "solution": false, "task": false}
 """
-🤔 **Computational Question: CrossEntropy Stability**
+THINK **Computational Question: CrossEntropy Stability**
 
 Consider numerical stability in cross-entropy:
 
@@ -641,7 +639,7 @@ class CrossEntropyLoss:
         softmax_pred = exp_pred / np.sum(exp_pred, axis=1, keepdims=True)
         
         # Step 4: Prevent numerical instability in log computation
-        epsilon = 1e-15  # Small value to prevent log(0) → -inf and log(1) → 0 issues
+        epsilon = 1e-15  # Small value to prevent log(0) -> -inf and log(1) -> 0 issues
         softmax_pred = np.clip(softmax_pred, epsilon, 1.0 - epsilon)
         
         # Step 5: Compute cross-entropy loss based on target format
@@ -666,17 +664,17 @@ class CrossEntropyLoss:
         """Alternative interface for forward pass."""
         return self.__call__(y_pred, y_true)
 
-# 🔍 SYSTEMS INSIGHT: CrossEntropy Stability Analysis
+# MAGNIFY SYSTEMS INSIGHT: CrossEntropy Stability Analysis
 def analyze_crossentropy_stability():
     """Analyze numerical stability in cross-entropy computation."""
-    print("🔍 CrossEntropy Stability Analysis")
+    print("MAGNIFY CrossEntropy Stability Analysis")
     print("=" * 40)
     
     try:
         ce = CrossEntropyLoss()
         
         # Test numerical stability with extreme values
-        print("\n⚡ Numerical Stability Testing:")
+        print("\nSPEED Numerical Stability Testing:")
         
         # Extreme logits that would overflow in naive implementation
         extreme_logits = Tensor([[100.0, 99.0, 98.0]])
@@ -720,26 +718,26 @@ def analyze_crossentropy_stability():
         
         print(f"   Small vocab (100 classes): {small_memory / 1024:.1f} KB")
         print(f"   Large vocab (10k classes): {large_memory / 1024:.1f} KB")
-        print(f"   Memory scales O(batch_size × num_classes)")
+        print(f"   Memory scales O(batch_size * num_classes)")
         
-        # 💡 WHY THIS MATTERS: CrossEntropy memory scales with vocabulary size.
+        # TIP WHY THIS MATTERS: CrossEntropy memory scales with vocabulary size.
         # This is why large language models use techniques like hierarchical softmax
         # or sampling-based training to handle vocabularies with 50k+ tokens.
         
     except Exception as e:
-        print(f"⚠️ Analysis error: {e}")
+        print(f"WARNING️ Analysis error: {e}")
         print("Ensure CrossEntropy implementation is complete")
 
 # %% [markdown]
 """
-### 🧪 Unit Test: Cross-Entropy Loss Computation
+### TEST Unit Test: Cross-Entropy Loss Computation
 This test validates `CrossEntropyLoss.__call__`, ensuring correct cross-entropy computation with numerically stable softmax.
 """
 
 # %% nbgrader={"grade": true, "grade_id": "test-crossentropy-loss", "locked": true, "points": 4, "schema_version": 3, "solution": false, "task": false}
 def test_unit_crossentropy_loss():
     """Test CrossEntropy loss implementation."""
-    print("🧪 Testing Cross-Entropy Loss...")
+    print("TEST Testing Cross-Entropy Loss...")
     
     ce = CrossEntropyLoss()
     
@@ -748,31 +746,31 @@ def test_unit_crossentropy_loss():
     y_true = Tensor([0, 1])  # Class indices
     loss = ce(y_pred, y_true)
     assert loss.data < 0.1, f"Perfect predictions should have low loss, got {loss.data}"
-    print("✅ Perfect predictions test passed")
+    print("PASS Perfect predictions test passed")
     
     # Test case 2: Random predictions (should have higher loss)
     y_pred = Tensor([[0.0, 0.0, 0.0], [0.0, 0.0, 0.0]])  # Uniform after softmax
     y_true = Tensor([0, 1])
     loss = ce(y_pred, y_true)
     expected_random = -np.log(1.0/3.0)  # log(1/num_classes) for uniform distribution
-    assert abs(loss.data - expected_random) < 0.1, f"Random predictions should have loss ≈ {expected_random}, got {loss.data}"
-    print("✅ Random predictions test passed")
+    assert abs(loss.data - expected_random) < 0.1, f"Random predictions should have loss ~= {expected_random}, got {loss.data}"
+    print("PASS Random predictions test passed")
     
     # Test case 3: Binary classification
     y_pred = Tensor([[2.0, 1.0], [1.0, 2.0]])
     y_true = Tensor([0, 1])
     loss = ce(y_pred, y_true)
     assert 0.0 < loss.data < 2.0, f"Binary classification loss should be reasonable, got {loss.data}"
-    print("✅ Binary classification test passed")
+    print("PASS Binary classification test passed")
     
     # Test case 4: One-hot encoded labels
     y_pred = Tensor([[2.0, 1.0, 0.0], [0.0, 2.0, 1.0]])
     y_true = Tensor([[1.0, 0.0, 0.0], [0.0, 1.0, 0.0]])  # One-hot encoded
     loss = ce(y_pred, y_true)
     assert 0.0 < loss.data < 2.0, f"One-hot encoded loss should be reasonable, got {loss.data}"
-    print("✅ One-hot encoded labels test passed")
+    print("PASS One-hot encoded labels test passed")
     
-    print("🎉 Cross-Entropy loss tests passed! Understanding classification objectives.")
+    print("CELEBRATE Cross-Entropy loss tests passed! Understanding classification objectives.")
 
 test_unit_crossentropy_loss()
 
@@ -788,21 +786,21 @@ Binary Cross-Entropy Loss is the specialized, efficient version of cross-entropy
 Binary Classification Landscape:
 
 Sigmoid Activation:
-    Raw Logit → Sigmoid → Probability → Loss
-    -5.0     → 0.007   → 0.007       → High loss (if true=1)
-     0.0     → 0.500   → 0.500       → Medium loss
-    +5.0     → 0.993   → 0.993       → Low loss (if true=1)
+    Raw Logit -> Sigmoid -> Probability -> Loss
+    -5.0     -> 0.007   -> 0.007       -> High loss (if true=1)
+     0.0     -> 0.500   -> 0.500       -> Medium loss
+    +5.0     -> 0.993   -> 0.993       -> Low loss (if true=1)
 
 Loss Behavior:
-    BCE = -[y×log(p) + (1-y)×log(1-p)]
+    BCE = -[y*log(p) + (1-y)*log(1-p)]
     
     For y=1 (positive class):
-        p=0.9 → -log(0.9) = 0.105  (low loss)
-        p=0.1 → -log(0.1) = 2.303  (high loss)
+        p=0.9 -> -log(0.9) = 0.105  (low loss)
+        p=0.1 -> -log(0.1) = 2.303  (high loss)
     
     For y=0 (negative class):
-        p=0.1 → -log(0.9) = 0.105  (low loss)  
-        p=0.9 → -log(0.1) = 2.303  (high loss)
+        p=0.1 -> -log(0.9) = 0.105  (low loss)  
+        p=0.9 -> -log(0.1) = 2.303  (high loss)
 ```
 
 ## Numerical Stability Solution
@@ -810,30 +808,30 @@ Loss Behavior:
 ```
 The Binary Cross-Entropy Stability Problem:
     
-    BCE = -[y×log(σ(x)) + (1-y)×log(1-σ(x))]
+    BCE = -[y*log(σ(x)) + (1-y)*log(1-σ(x))]
     
     Where σ(x) = 1/(1+exp(-x))
     
     Problems:
-    - Large positive x: exp(-x) → 0, then log(1) → 0 (loss of precision)
-    - Large negative x: σ(x) → 0, then log(0) → -∞
+    - Large positive x: exp(-x) -> 0, then log(1) -> 0 (loss of precision)
+    - Large negative x: σ(x) -> 0, then log(0) -> -inf
     
 Our Stable Solution:
-    BCE = max(x,0) - x×y + log(1 + exp(-|x|))
+    BCE = max(x,0) - x*y + log(1 + exp(-|x|))
     
     Why this works:
     - max(x,0) handles positive values
-    - -x×y is the "cross" term  
-    - log(1+exp(-|x|)) is always stable (exp≤1)
+    - -x*y is the "cross" term  
+    - log(1+exp(-|x|)) is always stable (exp<=1)
 ```
 
 ## Mathematical Foundation
 
 For binary predictions and labels:
 ```
-BCE = -y × log(σ(x)) - (1-y) × log(1-σ(x))
+BCE = -y * log(σ(x)) - (1-y) * log(1-σ(x))
 
-Stable form: BCE = max(x,0) - x×y + log(1 + exp(-|x|))
+Stable form: BCE = max(x,0) - x*y + log(1 + exp(-|x|))
 ```
 
 ## Learning Objectives
@@ -846,11 +844,11 @@ By implementing Binary Cross-Entropy, you'll understand:
 
 # %% nbgrader={"grade": false, "grade_id": "binary-crossentropy-concept", "locked": false, "schema_version": 3, "solution": false, "task": false}
 """
-🤔 **Computational Question: Binary Stability**
+THINK **Computational Question: Binary Stability**
 
 Consider the stable BCE formulation:
 
-1. Why does max(x,0) - x×y + log(1+exp(-|x|)) work?
+1. Why does max(x,0) - x*y + log(1+exp(-|x|)) work?
 2. What happens when x=100? (trace through the computation)
 3. What happens when x=-100? (trace through the computation)
 4. How does this prevent both overflow and underflow?
@@ -897,7 +895,7 @@ class BinaryCrossEntropyLoss:
         
         APPROACH:
         1. Convert inputs to tensors and flatten for consistent processing
-        2. Use stable BCE formula: max(x,0) - x×y + log(1+exp(-|x|))
+        2. Use stable BCE formula: max(x,0) - x*y + log(1+exp(-|x|))
         3. Apply this formula element-wise across the batch
         4. Return mean loss across all samples
         
@@ -911,7 +909,7 @@ class BinaryCrossEntropyLoss:
         
         HINTS:
         - Use np.maximum(logits, 0) for the max(x,0) term
-        - Use np.abs(logits) to ensure exp argument is ≤ 0
+        - Use np.abs(logits) to ensure exp argument is <= 0
         - The formula naturally handles both positive and negative logits
         - Return np.mean() for batch averaging
         """
@@ -933,8 +931,8 @@ class BinaryCrossEntropyLoss:
             BCE(logits, y) = max(logits, 0) - logits * y + log(1 + exp(-|logits|))
             
             This formulation prevents:
-            - exp(large_positive_logit) → overflow
-            - log(very_small_sigmoid) → -inf
+            - exp(large_positive_logit) -> overflow
+            - log(very_small_sigmoid) -> -inf
             
             Mathematical equivalence:
             - For positive logits: x - x*y + log(1 + exp(-x))
@@ -963,10 +961,10 @@ class BinaryCrossEntropyLoss:
         """Alternative interface for forward pass."""
         return self.__call__(y_pred, y_true)
 
-# 🔍 SYSTEMS INSIGHT: Binary CrossEntropy Efficiency Analysis
+# MAGNIFY SYSTEMS INSIGHT: Binary CrossEntropy Efficiency Analysis
 def analyze_binary_crossentropy_efficiency():
     """Analyze binary cross-entropy computational efficiency."""
-    print("🔍 Binary CrossEntropy Efficiency Analysis")
+    print("MAGNIFY Binary CrossEntropy Efficiency Analysis")
     print("=" * 45)
     
     try:
@@ -974,7 +972,7 @@ def analyze_binary_crossentropy_efficiency():
         ce = CrossEntropyLoss()  # For comparison
         
         # Compare binary-specific vs general cross-entropy
-        print("\n⚡ Binary vs Multi-Class Efficiency:")
+        print("\nSPEED Binary vs Multi-Class Efficiency:")
         
         # Binary problem solved two ways
         binary_logits = Tensor([[1.5], [-0.8], [2.1]])
@@ -1001,7 +999,7 @@ def analyze_binary_crossentropy_efficiency():
         
         print(f"   Binary approach:    {binary_memory / 1024:.1f} KB")
         print(f"   Multi-class (2):    {multiclass_memory / 1024:.1f} KB")
-        print(f"   Binary is {multiclass_memory/binary_memory:.1f}× more memory efficient")
+        print(f"   Binary is {multiclass_memory/binary_memory:.1f}* more memory efficient")
         
         # Stability test with extreme values
         print(f"\n🛡️ Extreme Value Stability:")
@@ -1018,24 +1016,24 @@ def analyze_binary_crossentropy_efficiency():
             is_stable = not (np.isnan(loss.data) or np.isinf(loss.data))
             print(f"   {name:15}: Loss = {loss.data:.6f}, Stable = {is_stable}")
         
-        # 💡 WHY THIS MATTERS: Binary CrossEntropy is 2× more memory efficient
+        # TIP WHY THIS MATTERS: Binary CrossEntropy is 2* more memory efficient
         # than regular CrossEntropy for binary problems, and provides better
         # numerical stability through its specialized formulation.
         
     except Exception as e:
-        print(f"⚠️ Analysis error: {e}")
+        print(f"WARNING️ Analysis error: {e}")
         print("Ensure BinaryCrossEntropy implementation is complete")
 
 # %% [markdown]
 """
-### 🧪 Unit Test: Binary Cross-Entropy Loss
+### TEST Unit Test: Binary Cross-Entropy Loss
 This test validates `BinaryCrossEntropyLoss.__call__`, ensuring stable binary cross-entropy computation with extreme values.
 """
 
 # %% nbgrader={"grade": true, "grade_id": "test-binary-crossentropy", "locked": true, "points": 4, "schema_version": 3, "solution": false, "task": false}
 def test_unit_binary_crossentropy_loss():
     """Test Binary CrossEntropy loss implementation."""
-    print("🧪 Testing Binary Cross-Entropy Loss...")
+    print("TEST Testing Binary Cross-Entropy Loss...")
     
     bce = BinaryCrossEntropyLoss()
     
@@ -1044,22 +1042,22 @@ def test_unit_binary_crossentropy_loss():
     y_true = Tensor([[1.0], [0.0]])
     loss = bce(y_pred, y_true)
     assert loss.data < 0.1, f"Perfect predictions should have low loss, got {loss.data}"
-    print("✅ Perfect predictions test passed")
+    print("PASS Perfect predictions test passed")
     
     # Test case 2: Random predictions (should have higher loss)
     y_pred = Tensor([[0.0], [0.0]])  # 0.5 probability after sigmoid
     y_true = Tensor([[1.0], [0.0]])
     loss = bce(y_pred, y_true)
     expected_random = -np.log(0.5)  # log(0.5) for random guessing
-    assert abs(loss.data - expected_random) < 0.1, f"Random predictions should have loss ≈ {expected_random}, got {loss.data}"
-    print("✅ Random predictions test passed")
+    assert abs(loss.data - expected_random) < 0.1, f"Random predictions should have loss ~= {expected_random}, got {loss.data}"
+    print("PASS Random predictions test passed")
     
     # Test case 3: Batch processing
     y_pred = Tensor([[1.0], [2.0], [-1.0]])
     y_true = Tensor([[1.0], [1.0], [0.0]])
     loss = bce(y_pred, y_true)
     assert 0.0 < loss.data < 2.0, f"Batch processing loss should be reasonable, got {loss.data}"
-    print("✅ Batch processing test passed")
+    print("PASS Batch processing test passed")
     
     # Test case 4: Extreme values (test numerical stability)
     y_pred = Tensor([[100.0], [-100.0]])  # Extreme logits
@@ -1067,9 +1065,9 @@ def test_unit_binary_crossentropy_loss():
     loss = bce(y_pred, y_true)
     assert not np.isnan(loss.data) and not np.isinf(loss.data), f"Extreme values should not cause NaN/Inf, got {loss.data}"
     assert loss.data < 1.0, f"Extreme correct predictions should have low loss, got {loss.data}"
-    print("✅ Extreme values test passed")
+    print("PASS Extreme values test passed")
     
-    print("🎉 Binary Cross-Entropy loss tests passed! Understanding binary objectives.")
+    print("CELEBRATE Binary Cross-Entropy loss tests passed! Understanding binary objectives.")
 
 test_unit_binary_crossentropy_loss()
 
@@ -1085,7 +1083,7 @@ Beyond standard loss functions, production ML systems often need custom losses t
 When false positives and false negatives have different costs:
 
 ```python
-# Medical diagnosis: False negatives (missing disease) cost 10× more
+# Medical diagnosis: False negatives (missing disease) cost 10* more
 class AsymmetricBinaryCrossEntropy(BinaryCrossEntropyLoss):
     def __init__(self, false_negative_weight=10.0):
         super().__init__()
@@ -1134,11 +1132,15 @@ class FocalLoss(CrossEntropyLoss):
 
         return Tensor(np.mean(focal_loss))
 ```
+"""
 
+# %% [markdown]
+"""
 ### Ranking-Aware Loss
 For problems where order matters (search, recommendations):
+"""
 
-```python
+# %% nbgrader={"grade": false, "grade_id": "ranking-loss", "solution": true}
 class RankingAwareLoss:
     def __init__(self, position_weights=None):
         # Higher weights for top positions
@@ -1146,7 +1148,7 @@ class RankingAwareLoss:
 
     def __call__(self, predictions, targets, positions):
         """predictions: relevance scores, targets: true relevance, positions: result positions"""
-        mse = MeanSquaredError()
+        # Not using MeanSquaredError() - computing directly
 
         # Weight errors by position importance
         weighted_errors = []
@@ -1156,14 +1158,16 @@ class RankingAwareLoss:
             weighted_errors.append(error)
 
         return Tensor(np.mean(weighted_errors))
-```
 
+# %% [markdown]
+"""
 ## Advanced Custom Loss Patterns
 
 ### Multi-Task Learning Loss
 Combining multiple objectives with learned weights:
+"""
 
-```python
+# %% nbgrader={"grade": false, "grade_id": "multitask-loss", "solution": true}
 class MultiTaskLoss:
     def __init__(self, num_tasks=3):
         # Learnable loss weights (log-variance parameterization for stability)
@@ -1186,12 +1190,14 @@ class MultiTaskLoss:
             total_loss += weighted_loss
 
         return Tensor(total_loss)
-```
 
+# %% [markdown]
+"""
 ### Contrastive Loss for Similarity Learning
 For learning embeddings and similarity:
+"""
 
-```python
+# %% nbgrader={"grade": false, "grade_id": "contrastive-loss", "solution": true}
 class ContrastiveLoss:
     def __init__(self, margin=1.0):
         self.margin = margin
@@ -1207,12 +1213,15 @@ class ContrastiveLoss:
 
         total_loss = 0.5 * (positive_loss + negative_loss)
         return Tensor(np.mean(total_loss))
-```
 
+# %% [markdown]
+"""
 ## Custom Loss Implementation Guidelines
 
 ### Numerical Stability Considerations
-```python
+"""
+
+# %% nbgrader={"grade": false, "grade_id": "stable-loss", "solution": true}
 # Always include stability measures in custom losses
 class StableCustomLoss:
     def __call__(self, predictions, targets):
@@ -1221,16 +1230,21 @@ class StableCustomLoss:
             predictions = Tensor(predictions)
 
         # 2. Handle edge cases
-        predictions_clipped = np.clip(predictions.data, -100, 100)  # Prevent overflow
+        # predictions_clipped would be used here for actual computation
+        # predictions_clipped = np.clip(predictions.data, -100, 100)  # Prevent overflow
 
         # 3. Use numerically stable formulations
         # Avoid: exp(large_number), log(small_number)
         # Use: log-sum-exp trick, epsilon clipping
 
-        # 4. Return tensor for consistency
-        return Tensor(computed_loss)
-```
+        # 4. Compute loss (example - actual implementation depends on loss type)
+        computed_loss = np.mean((predictions.data - targets.data) ** 2)
 
+        # 5. Return tensor for consistency
+        return Tensor(computed_loss)
+
+# %% [markdown]
+"""
 ### Gradient-Friendly Design
 ```python
 # Ensure gradients flow properly
@@ -1246,7 +1260,7 @@ class GradientFriendlyLoss:
         return smooth_loss
 
     def smooth_l1_loss(self, pred, target, beta=1.0):
-        """Smooth L1 loss - less sensitive to outliers than MSE"""
+        \"\"\"Smooth L1 loss - less sensitive to outliers than MSE\"\"\"
         diff = np.abs(pred.data - target.data)
         loss = np.where(diff < beta,
                        0.5 * diff * diff / beta,
@@ -1272,7 +1286,7 @@ Activation: Usually none (linear output)
 Penalty: Quadratic (large errors >> small errors)
 
 Model Architecture:
-Input → Hidden Layers → Linear Output → MSE Loss
+Input -> Hidden Layers -> Linear Output -> MSE Loss
 ```
 
 ### Cross-Entropy Loss - Multi-Class Classification  
@@ -1284,7 +1298,7 @@ Activation: Softmax
 Penalty: Logarithmic (encouraging confident correct predictions)
 
 Model Architecture:
-Input → Hidden Layers → Softmax → CrossEntropy Loss
+Input -> Hidden Layers -> Softmax -> CrossEntropy Loss
 ```
 
 ### Binary Cross-Entropy Loss - Binary Classification
@@ -1296,7 +1310,7 @@ Activation: Sigmoid
 Penalty: Asymmetric (confident wrong predictions heavily penalized)
 
 Model Architecture:
-Input → Hidden Layers → Sigmoid → Binary CrossEntropy Loss
+Input -> Hidden Layers -> Sigmoid -> Binary CrossEntropy Loss
 ```
 
 ## Performance and Stability Comparison
@@ -1304,8 +1318,8 @@ Input → Hidden Layers → Sigmoid → Binary CrossEntropy Loss
 ```
 Computational Characteristics:
                       MSE    CrossEntropy    Binary CE
-Time Complexity:     O(n)      O(n×c)        O(n)
-Memory Complexity:   O(1)      O(n×c)        O(n)
+Time Complexity:     O(n)      O(n*c)        O(n)
+Memory Complexity:   O(1)      O(n*c)        O(n)
 Numerical Stability: High      Medium        High
 Convergence Speed:   Fast      Medium        Fast
 
@@ -1319,27 +1333,27 @@ Where: n = batch size, c = number of classes
 
 # Regression Problem (House Price Prediction)
 regression_model = Sequential([
-    Linear(10, 64),   # Input features → Hidden
+    Linear(10, 64),   # Input features -> Hidden
     ReLU(),
-    Linear(64, 1),    # Hidden → Single output
+    Linear(64, 1),    # Hidden -> Single output
     # No activation - linear output for regression
 ])
 loss_fn = MeanSquaredError()
 
 # Multi-Class Classification (Image Recognition)
 classification_model = Sequential([
-    Linear(784, 128), # Flattened image → Hidden
+    Linear(784, 128), # Flattened image -> Hidden
     ReLU(),
-    Linear(128, 10),  # Hidden → 10 classes
+    Linear(128, 10),  # Hidden -> 10 classes
     Softmax()         # Convert to probabilities
 ])
 loss_fn = CrossEntropyLoss()
 
 # Binary Classification (Spam Detection)
 binary_model = Sequential([
-    Linear(100, 64),  # Text features → Hidden
+    Linear(100, 64),  # Text features -> Hidden
     ReLU(),
-    Linear(64, 1),    # Hidden → Single output
+    Linear(64, 1),    # Hidden -> Single output
     Sigmoid()         # Convert to probability
 ])
 loss_fn = BinaryCrossEntropyLoss()
@@ -1355,7 +1369,7 @@ for batch in dataloader:
 
 # %% [markdown]
 """
-### 🧪 Comprehensive Integration Test
+### TEST Comprehensive Integration Test
 This test validates all loss functions work together correctly and can be used interchangeably in production systems.
 """
 
@@ -1370,7 +1384,7 @@ def test_unit_comprehensive_loss_integration():
     mse = MeanSquaredError()
     ce = CrossEntropyLoss()
     bce = BinaryCrossEntropyLoss()
-    print("   ✅ All loss functions created successfully")
+    print("   PASS All loss functions created successfully")
     
     # Test 2: Loss functions return appropriate types
     print("\n2. Return Type Verification:")
@@ -1396,7 +1410,7 @@ def test_unit_comprehensive_loss_integration():
     assert isinstance(loss, Tensor), "Binary CrossEntropy should return Tensor"
     assert loss.data.shape == (), "Binary CrossEntropy should return scalar"
     
-    print("   ✅ All loss functions return correct types")
+    print("   PASS All loss functions return correct types")
     
     # Test 3: Loss values are reasonable
     print("\n3. Loss Value Sanity Checks:")
@@ -1406,7 +1420,7 @@ def test_unit_comprehensive_loss_integration():
     assert ce.forward(Tensor([[1.0, 0.0]]), Tensor([0])).data >= 0, "CrossEntropy should be non-negative"
     assert bce.forward(Tensor([1.0]), Tensor([1.0])).data >= 0, "Binary CrossEntropy should be non-negative"
     
-    print("   ✅ All loss functions produce reasonable values")
+    print("   PASS All loss functions produce reasonable values")
     
     # Test 4: Perfect predictions give low loss
     print("\n4. Perfect Prediction Tests:")
@@ -1419,9 +1433,9 @@ def test_unit_comprehensive_loss_integration():
     assert perfect_ce.data < 0.1, f"Perfect CE should be low, got {perfect_ce.data}"
     assert perfect_bce.data < 0.1, f"Perfect BCE should be low, got {perfect_bce.data}"
     
-    print("   ✅ Perfect predictions produce low loss")
+    print("   PASS Perfect predictions produce low loss")
     
-    print("\n🎉 All comprehensive integration tests passed!")
+    print("\nCELEBRATE All comprehensive integration tests passed!")
     print("   • Loss functions instantiate correctly")
     print("   • Return types are consistent (Tensor scalars)")
     print("   • Loss values are mathematically sound")
@@ -1448,9 +1462,9 @@ MSE (Mean Squared Error):
     Bottleneck: Memory bandwidth (simple arithmetic operations)
     
 CrossEntropy (Multi-Class):
-    Time: O(n×c) - linear in samples × classes  
-    Space: O(n×c) - store full probability distributions
-    Operations: n×c exp + n×c divisions + n×c logs + reductions
+    Time: O(n*c) - linear in samples * classes  
+    Space: O(n*c) - store full probability distributions
+    Operations: n*c exp + n*c divisions + n*c logs + reductions
     Bottleneck: Exponential computations and memory bandwidth
     
 Binary CrossEntropy:
@@ -1468,9 +1482,9 @@ Understanding memory requirements is crucial for large-scale training:
 Memory Requirements by Problem Scale:
 
 Small Problem (1K samples, 100 classes):
-    MSE:         8 KB (1K samples × 8 bytes)
-    CrossEntropy: 800 KB (1K × 100 × 8 bytes)
-    Binary CE:   16 KB (1K × 2 × 8 bytes)
+    MSE:         8 KB (1K samples * 8 bytes)
+    CrossEntropy: 800 KB (1K * 100 * 8 bytes)
+    Binary CE:   16 KB (1K * 2 * 8 bytes)
 
 Large Problem (100K samples, 10K classes):
     MSE:         800 KB (independent of classes!)
@@ -1491,14 +1505,14 @@ Production systems must handle edge cases robustly:
 Stability Challenges and Solutions:
 
 CrossEntropy Stability Issues:
-    Problem: exp(large_logit) → overflow → NaN gradients
+    Problem: exp(large_logit) -> overflow -> NaN gradients
     Solution: log-sum-exp trick with max subtraction
     
-    Problem: log(very_small_prob) → -∞ → training collapse
+    Problem: log(very_small_prob) -> -inf -> training collapse
     Solution: epsilon clipping (1e-15 to 1-1e-15)
     
 Binary CrossEntropy Stability Issues:
-    Problem: sigmoid(large_positive) → 1.0 → log(0) issues
+    Problem: sigmoid(large_positive) -> 1.0 -> log(0) issues
     Solution: stable logits formulation bypasses sigmoid
     
     Problem: exp(large_negative) in naive implementation
@@ -1520,13 +1534,13 @@ Inference Throughput (measured on modern hardware):
 
 Training Memory Bandwidth Requirements:
     MSE:         ~800 MB/s (lightweight computation)
-    CrossEntropy: ~80 GB/s (10× higher due to softmax!)
+    CrossEntropy: ~80 GB/s (10* higher due to softmax!)
     Binary CE:   ~1.6 GB/s (moderate requirements)
 
 Gradient Computation Overhead:
-    MSE:         1.1× forward pass time (simple derivatives)
-    CrossEntropy: 1.5× forward pass time (softmax gradients)
-    Binary CE:   1.2× forward pass time (sigmoid gradients)
+    MSE:         1.1* forward pass time (simple derivatives)
+    CrossEntropy: 1.5* forward pass time (softmax gradients)
+    Binary CE:   1.2* forward pass time (sigmoid gradients)
 ```
 
 ## Framework Integration and Production Patterns
@@ -1573,10 +1587,10 @@ Monitoring and Debugging:
 ```
 """
 
-# 🔍 SYSTEMS INSIGHT: Performance Profiling Analysis
+# MAGNIFY SYSTEMS INSIGHT: Performance Profiling Analysis
 def analyze_loss_performance_characteristics():
     """Comprehensive performance analysis of all loss functions."""
-    print("🔍 Loss Function Performance Analysis")
+    print("MAGNIFY Loss Function Performance Analysis")
     print("=" * 45)
     
     try:
@@ -1587,7 +1601,7 @@ def analyze_loss_performance_characteristics():
         ce = CrossEntropyLoss()
         bce = BinaryCrossEntropyLoss()
         
-        print("\n⚡ Computational Complexity Measurement:")
+        print("\nSPEED Computational Complexity Measurement:")
         
         # Test different batch sizes to see scaling behavior
         batch_sizes = [100, 1000, 10000]
@@ -1601,7 +1615,7 @@ def analyze_loss_performance_characteristics():
             
             start = time.perf_counter()
             for _ in range(100):  # Average over multiple runs
-                mse_loss = mse(mse_pred, mse_true)
+                _ = mse(mse_pred, mse_true)
             mse_time = (time.perf_counter() - start) / 100
             
             # CrossEntropy timing
@@ -1610,7 +1624,7 @@ def analyze_loss_performance_characteristics():
             
             start = time.perf_counter()
             for _ in range(100):
-                ce_loss = ce(ce_pred, ce_true)
+                _ = ce(ce_pred, ce_true)
             ce_time = (time.perf_counter() - start) / 100
             
             # Binary CrossEntropy timing
@@ -1619,7 +1633,7 @@ def analyze_loss_performance_characteristics():
             
             start = time.perf_counter()
             for _ in range(100):
-                bce_loss = bce(bce_pred, bce_true)
+                _ = bce(bce_pred, bce_true)
             bce_time = (time.perf_counter() - start) / 100
             
             print(f"      MSE:         {mse_time*1000:8.3f} ms")
@@ -1649,19 +1663,19 @@ def analyze_loss_performance_characteristics():
             print(f"      BCE memory:    {bce_memory / 1024 / 1024:8.1f} MB")
             print(f"      CE overhead:   {ce_memory/mse_memory:8.1f}x")
         
-        # 💡 WHY THIS MATTERS: These performance characteristics determine
+        # TIP WHY THIS MATTERS: These performance characteristics determine
         # which loss functions are feasible for different deployment scenarios.
-        # CrossEntropy's O(n×c) memory scaling makes it prohibitive for 
+        # CrossEntropy's O(n*c) memory scaling makes it prohibitive for 
         # large vocabularies without specialized techniques.
         
     except Exception as e:
-        print(f"⚠️ Performance analysis error: {e}")
+        print(f"WARNING️ Performance analysis error: {e}")
         print("Performance analysis requires complete implementations")
 
-# 🔍 SYSTEMS INSIGHT: Numerical Stability Deep Analysis
+# MAGNIFY SYSTEMS INSIGHT: Numerical Stability Deep Analysis
 def analyze_numerical_stability_edge_cases():
     """Deep analysis of numerical stability across all loss functions."""
-    print("🔍 Numerical Stability Edge Case Analysis")
+    print("MAGNIFY Numerical Stability Edge Case Analysis")
     print("=" * 50)
     
     try:
@@ -1719,42 +1733,42 @@ def analyze_numerical_stability_edge_cases():
             ("Very right", [[5.0, -5.0, 0.0]], [0])
         ]
         
-        print("      Prediction Quality → CrossEntropy Loss:")
+        print("      Prediction Quality -> CrossEntropy Loss:")
         for name, logits, labels in confidence_levels:
             loss = ce(Tensor(logits), Tensor(labels))
             print(f"      {name:15}: {loss.data:8.4f}")
         
-        # 💡 WHY THIS MATTERS: Understanding how loss functions behave
+        # TIP WHY THIS MATTERS: Understanding how loss functions behave
         # at extremes helps debug training failures and choose appropriate
         # loss scaling and clipping strategies for production systems.
         
     except Exception as e:
-        print(f"⚠️ Stability analysis error: {e}")
+        print(f"WARNING️ Stability analysis error: {e}")
         print("Stability analysis requires complete implementations")
 
-# 🔍 SYSTEMS INSIGHT: Mixed Precision Training Analysis
+# MAGNIFY SYSTEMS INSIGHT: Mixed Precision Training Analysis
 def analyze_mixed_precision_considerations():
     """Analyze loss function behavior with FP16 mixed precision training."""
-    print("🔍 Mixed Precision Training Analysis")
+    print("MAGNIFY Mixed Precision Training Analysis")
     print("=" * 40)
 
     try:
-        print("\n⚡ FP16 Numerical Range Analysis:")
-        print("   FP16 range: ~±65,504 (much smaller than FP32's ~±3.4×10³⁸)")
+        print("\nSPEED FP16 Numerical Range Analysis:")
+        print("   FP16 range: ~±65,504 (much smaller than FP32's ~±3.4*10³⁸)")
 
         # Simulate FP16 range limitations
         fp16_max = 65504.0
-        fp16_min_normal = 2**-14  # Smallest normal FP16 number ≈ 6.1×10⁻⁵
+        fp16_min_normal = 2**-14  # Smallest normal FP16 number ~= 6.1*10⁻⁵
 
         print(f"   FP16 maximum: ±{fp16_max:,.0f}")
         print(f"   FP16 min normal: {fp16_min_normal:.2e}")
-        print(f"   Risk: Gradients/losses exceeding range → infinity/NaN")
+        print(f"   Risk: Gradients/losses exceeding range -> infinity/NaN")
 
         mse = MeanSquaredError()
-        ce = CrossEntropyLoss()
-        bce = BinaryCrossEntropyLoss()
+        # ce = CrossEntropyLoss()  # Not used in this test
+        # bce = BinaryCrossEntropyLoss()  # Not used in this test
 
-        print(f"\n🎯 Loss Function Mixed Precision Compatibility:")
+        print(f"\nTARGET Loss Function Mixed Precision Compatibility:")
 
         # Test cases that might overflow in FP16
         test_cases = [
@@ -1772,7 +1786,7 @@ def analyze_mixed_precision_considerations():
             squared_error = (pred - true) ** 2
             fp16_safe = squared_error < fp16_max
 
-            print(f"   {name:>15} {mse_loss.data:>12.1f} {'✅' if fp16_safe else '❌':>12}")
+            print(f"   {name:>15} {mse_loss.data:>12.1f} {'PASS' if fp16_safe else 'FAIL':>12}")
 
         print(f"\n🛡️ Mixed Precision Loss Scaling Strategy:")
 
@@ -1836,22 +1850,22 @@ def analyze_mixed_precision_considerations():
         print(f"   scaler.step(optimizer)  # Automatically unscales gradients")
         print(f"   ```")
 
-        # 💡 WHY THIS MATTERS: Mixed precision training can provide 1.5-2× speedup
+        # TIP WHY THIS MATTERS: Mixed precision training can provide 1.5-2* speedup
         # and 50% memory reduction, but loss functions must be carefully implemented
         # to handle the reduced numerical precision without losing training stability.
 
     except Exception as e:
-        print(f"⚠️ Mixed precision analysis error: {e}")
+        print(f"WARNING️ Mixed precision analysis error: {e}")
         print("Mixed precision analysis requires complete loss implementations")
 
-# 🔍 SYSTEMS INSIGHT: Production Deployment Analysis
+# MAGNIFY SYSTEMS INSIGHT: Production Deployment Analysis
 def analyze_production_deployment_patterns():
     """Analyze how loss functions affect production ML system design."""
-    print("🔍 Production Deployment Pattern Analysis")
+    print("MAGNIFY Production Deployment Pattern Analysis")
     print("=" * 50)
     
     try:
-        print("\n🚀 Deployment Scenario Analysis:")
+        print("\nROCKET Deployment Scenario Analysis:")
         
         # Different deployment scenarios with constraints
         scenarios = [
@@ -1897,7 +1911,7 @@ def analyze_production_deployment_patterns():
         trade_offs = [
             ("Memory Efficiency", "MSE > Binary CE >> CrossEntropy"),
             ("Computational Speed", "MSE > Binary CE > CrossEntropy"),
-            ("Numerical Stability", "MSE ≈ Binary CE > CrossEntropy"), 
+            ("Numerical Stability", "MSE ~= Binary CE > CrossEntropy"), 
             ("Implementation Complexity", "MSE > CrossEntropy > Binary CE"),
             ("Gradient Quality", "CrossEntropy > Binary CE > MSE"),
             ("Debug-ability", "MSE > Binary CE > CrossEntropy")
@@ -1918,24 +1932,24 @@ def analyze_production_deployment_patterns():
         for framework, losses in frameworks:
             print(f"      {framework:12}: {losses}")
         
-        # 💡 WHY THIS MATTERS: Loss function choice affects every aspect
+        # TIP WHY THIS MATTERS: Loss function choice affects every aspect
         # of ML system design - from memory requirements to latency to
         # debugging complexity. Understanding these trade-offs enables
         # informed architectural decisions for production systems.
         
     except Exception as e:
-        print(f"⚠️ Deployment analysis error: {e}")
+        print(f"WARNING️ Deployment analysis error: {e}")
 
 # %% [markdown]
 """
-## 🤔 ML Systems Thinking: Interactive Questions
+## THINK ML Systems Thinking: Interactive Questions
 
 Now that you've implemented all core loss functions and analyzed their systems characteristics, let's explore their implications for real ML systems:
 """
 
 # %% nbgrader={"grade": false, "grade_id": "question-1-loss-selection", "locked": false, "schema_version": 3, "solution": false, "task": false}
 """
-🤔 **Question 1: Loss Function Selection for Production Systems**
+THINK **Question 1: Loss Function Selection for Production Systems**
 
 You're building a production recommendation system that predicts user ratings (1-5 stars) for movies.
 
@@ -1947,8 +1961,8 @@ C) Ordinal approach: Use a custom loss that penalizes being off by multiple star
 Analyze each approach considering your implementations:
 
 **Technical Analysis:**
-- How does the memory scaling of CrossEntropy (O(batch_size × num_classes)) affect this 5-class problem?
-- What are the computational complexity differences between MSE's O(n) and CrossEntropy's O(n×c) for c=5?
+- How does the memory scaling of CrossEntropy (O(batch_size * num_classes)) affect this 5-class problem?
+- What are the computational complexity differences between MSE's O(n) and CrossEntropy's O(n*c) for c=5?
 - How do the gradient behaviors differ? (MSE's quadratic vs CrossEntropy's logarithmic penalties)
 
 **Systems Implications:**
@@ -1966,7 +1980,7 @@ Recommend an approach with justification based on your implementation experience
 
 # %% nbgrader={"grade": false, "grade_id": "question-2-numerical-stability", "locked": false, "schema_version": 3, "solution": false, "task": false}
 """
-🤔 **Question 2: Debugging Numerical Stability in Production**
+THINK **Question 2: Debugging Numerical Stability in Production**
 
 Your cross-entropy loss function works perfectly in development, but in production you start seeing NaN losses that crash training after several hours.
 
@@ -1994,7 +2008,7 @@ Research how PyTorch and TensorFlow handle these same challenges in their loss i
 
 # %% nbgrader={"grade": false, "grade_id": "question-3-custom-loss-design", "locked": false, "schema_version": 3, "solution": false, "task": false}
 """
-🤔 **Question 3: Implementing and Optimizing Custom Loss Functions**
+THINK **Question 3: Implementing and Optimizing Custom Loss Functions**
 
 You've seen examples of custom loss functions for business objectives. Now analyze implementation and optimization challenges:
 
@@ -2036,16 +2050,16 @@ Implement one optimization for your chosen custom loss and explain how it addres
 
 # %% [markdown]
 """
-## 🎯 MODULE SUMMARY: Loss Functions - Learning Objectives Made Mathematical
+## TARGET MODULE SUMMARY: Loss Functions - Learning Objectives Made Mathematical
 
 Congratulations! You've successfully implemented the complete foundation for neural network training objectives:
 
 ### What You've Accomplished
-✅ **Complete Loss Function Library**: MSE for regression, CrossEntropy for multi-class classification, and Binary CrossEntropy for binary classification with production-grade numerical stability
-✅ **Systems Engineering Understanding**: Deep comprehension of computational complexity, memory scaling, and numerical stability requirements for reliable ML systems
-✅ **Mathematical Implementation Mastery**: Built loss functions from mathematical foundations through stable computational formulations to working code
-✅ **Production Readiness Knowledge**: Understanding of how loss function choice affects training speed, memory usage, and deployment feasibility
-✅ **Framework Integration Insight**: Clear connection between your implementations and how PyTorch/TensorFlow solve the same problems
+PASS **Complete Loss Function Library**: MSE for regression, CrossEntropy for multi-class classification, and Binary CrossEntropy for binary classification with production-grade numerical stability
+PASS **Systems Engineering Understanding**: Deep comprehension of computational complexity, memory scaling, and numerical stability requirements for reliable ML systems
+PASS **Mathematical Implementation Mastery**: Built loss functions from mathematical foundations through stable computational formulations to working code
+PASS **Production Readiness Knowledge**: Understanding of how loss function choice affects training speed, memory usage, and deployment feasibility
+PASS **Framework Integration Insight**: Clear connection between your implementations and how PyTorch/TensorFlow solve the same problems
 
 ### Key Learning Outcomes
 - **Loss Function Theory**: How mathematical loss functions translate business objectives into optimization targets that neural networks can learn from
@@ -2054,9 +2068,9 @@ Congratulations! You've successfully implemented the complete foundation for neu
 - **Production ML Patterns**: Knowledge of how loss function choice affects system architecture, monitoring requirements, and debugging complexity
 
 ### Mathematical Foundations Mastered  
-- **MSE computation**: `(1/n) × Σ(y_pred - y_true)²` with smooth quadratic gradients for regression optimization
+- **MSE computation**: `(1/n) * Sum(y_pred - y_true)²` with smooth quadratic gradients for regression optimization
 - **CrossEntropy with stable softmax**: Log-sum-exp trick and epsilon clipping for numerically robust classification
-- **Binary CrossEntropy stability**: `max(x,0) - x×y + log(1 + exp(-|x|))` formulation preventing overflow/underflow issues
+- **Binary CrossEntropy stability**: `max(x,0) - x*y + log(1 + exp(-|x|))` formulation preventing overflow/underflow issues
 - **Gradient behavior understanding**: How different loss functions create different optimization landscapes and learning dynamics
 
 ### Professional Skills Developed
@@ -2091,11 +2105,11 @@ With solid loss function implementations, you're ready to:
 
 # %% nbgrader={"grade": false, "grade_id": "final-demo", "locked": false, "schema_version": 3, "solution": false, "task": false}
 if __name__ == "__main__":
-    print("🔥 TinyTorch Loss Functions Module - Complete Demo")
+    print("FIRE TinyTorch Loss Functions Module - Complete Demo")
     print("=" * 55)
     
     # Test all core implementations
-    print("\n🧪 Testing All Loss Functions:")
+    print("\nTEST Testing All Loss Functions:")
     test_unit_mse_loss()
     test_unit_crossentropy_loss()
     test_unit_binary_crossentropy_loss()
@@ -2103,7 +2117,7 @@ if __name__ == "__main__":
     
     # Run systems analysis functions
     print("\n" + "="*60)
-    print("🔍 Systems Analysis Functions")
+    print("MAGNIFY Systems Analysis Functions")
     print("=" * 30)
 
     visualize_loss_landscapes()
@@ -2145,7 +2159,7 @@ if __name__ == "__main__":
     print(f"   Spam detection loss: {spam_loss.data:.4f}")
     
     print("\n" + "="*60)
-    print("🎯 Loss Function Characteristics")
+    print("TARGET Loss Function Characteristics")
     print("=" * 35)
     
     # Compare perfect vs imperfect predictions
@@ -2169,11 +2183,11 @@ if __name__ == "__main__":
     print(f"   Random CE loss:   {random_ce.data:.6f}")
     print(f"   Random BCE loss:  {random_bce.data:.6f}")
     
-    print("\n🎉 Complete loss function foundation ready!")
-    print("   ✅ MSE for regression problems")
-    print("   ✅ CrossEntropy for multi-class classification")
-    print("   ✅ Binary CrossEntropy for binary classification")
-    print("   ✅ Numerically stable implementations")
-    print("   ✅ Production-ready batch processing")
-    print("   ✅ Systems analysis and performance insights")
-    print("   ✅ Ready for neural network training!")
+    print("\nCELEBRATE Complete loss function foundation ready!")
+    print("   PASS MSE for regression problems")
+    print("   PASS CrossEntropy for multi-class classification")
+    print("   PASS Binary CrossEntropy for binary classification")
+    print("   PASS Numerically stable implementations")
+    print("   PASS Production-ready batch processing")
+    print("   PASS Systems analysis and performance insights")
+    print("   PASS Ready for neural network training!")

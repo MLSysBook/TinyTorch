@@ -4,7 +4,7 @@
 
 Welcome to the TinyGPT Capstone! You'll integrate everything from modules 02-19 to build a complete language model from first principles.
 
-## 🔗 Building on Previous Learning
+## LINK Building on Previous Learning
 **What You Built Before**:
 - Modules 02-11: Core ML infrastructure (tensors, layers, training, optimization)
 - Modules 12-15: Advanced systems (attention, profiling, benchmarking)
@@ -18,25 +18,25 @@ Welcome to the TinyGPT Capstone! You'll integrate everything from modules 02-19 
 
 **Connection Map**:
 ```
-All Previous Modules → TinyGPT Integration → Complete ML System
+All Previous Modules -> TinyGPT Integration -> Complete ML System
     (components)         (assembly)         (text generation)
 ```
 
 ## Learning Goals
 1. **Systems Integration**: Combine all TinyTorch components into working language model
-2. **End-to-End Pipeline**: Build complete tokenization → inference → generation workflow
+2. **End-to-End Pipeline**: Build complete tokenization -> inference -> generation workflow
 3. **Performance Analysis**: Profile and optimize complete system bottlenecks
 4. **Production Readiness**: Deploy working model with monitoring and optimization
 5. **Mastery Demonstration**: Prove comprehensive ML systems engineering capability
 
-## Build → Use → Reflect
+## Build -> Use -> Reflect
 1. **Build**: Complete TinyGPT integration from all previous modules
 2. **Use**: Generate text and analyze end-to-end performance characteristics
 3. **Reflect**: Evaluate system design decisions and optimization opportunities
 
 ## Systems Reality Check
-💡 **Production Context**: Real language models require careful component integration and system optimization
-⚡ **Performance Insight**: End-to-end systems reveal bottlenecks invisible in isolated components
+TIP **Production Context**: Real language models require careful component integration and system optimization
+SPEED **Performance Insight**: End-to-end systems reveal bottlenecks invisible in isolated components
 """
 
 # %%
@@ -63,9 +63,9 @@ try:
     from tinytorch.core.attention import MultiHeadAttention
     from tinytorch.utils.profiler import SimpleProfiler
     TINYTORCH_AVAILABLE = True
-    print("✅ TinyTorch components loaded successfully")
+    print("PASS TinyTorch components loaded successfully")
 except ImportError as e:
-    print(f"⚠️  TinyTorch components not available: {e}")
+    print(f"WARNING️  TinyTorch components not available: {e}")
     print("   Some functionality will use NumPy fallbacks")
     TINYTORCH_AVAILABLE = False
 
@@ -137,11 +137,11 @@ def _check_component_availability():
         except (ImportError, AttributeError):
             COMPONENT_STATUS[component_name] = False
     
-    print(f"🔍 Component Integration Status: {available_count}/{len(components_to_check)} available")
+    print(f"MAGNIFY Component Integration Status: {available_count}/{len(components_to_check)} available")
     
     # Display detailed status
     for component, available in COMPONENT_STATUS.items():
-        status = "✅" if available else "❌"
+        status = "PASS" if available else "FAIL"
         print(f"   {status} {component.capitalize()}")
     
     return available_count, len(components_to_check)
@@ -161,46 +161,46 @@ Before building the complete system, let's understand how all TinyTorch componen
 TinyGPT Language Model Pipeline:
 
     Input Text
-        │
-        ↓ (Tokenization)
+        |
+        v (Tokenization)
     Token IDs [7, 23, 145, ...]
-        │
-        ↓ (Token Embedding)
-    ┌───────────────────────────────────┐
-    │  Token + Position Embeddings        │
-    │  Shape: (batch, seq_len, d_model)   │
-    └───────────────────────────────────┘
-        │
-        ↓ (Transformer Layers x6)
-    ┌───────────────────────────────────┐
-    │  Layer 1: MultiHeadAttention       │
-    │  │  ┌──────────────────────────┐  │
-    │  │  │ Q, K, V → Attention    │  │
-    │  │  │ O(n²) complexity       │  │
-    │  │  └──────────────────────────┘  │
-    │  ↓                               │
-    │  LayerNorm + Residual            │
-    │  ↓                               │
-    │  Feed Forward (Linear → GELU → Linear) │
-    │  ↓                               │
-    │  LayerNorm + Residual            │
-    └───────────────────────────────────┘
-        │ (Repeat for layers 2-6)
-        ↓
-    ┌───────────────────────────────────┐
-    │  Final Layer Norm                │
-    └───────────────────────────────────┘
-        │
-        ↓ (Language Modeling Head)
-    ┌───────────────────────────────────┐
-    │  Linear: d_model → vocab_size     │
-    │  Output: (batch, seq_len, vocab)  │
-    └───────────────────────────────────┘
-        │
-        ↓ (Softmax + Sampling)
+        |
+        v (Token Embedding)
+    +-----------------------------------+
+    |  Token + Position Embeddings        |
+    |  Shape: (batch, seq_len, d_model)   |
+    +-----------------------------------+
+        |
+        v (Transformer Layers x6)
+    +-----------------------------------+
+    |  Layer 1: MultiHeadAttention       |
+    |  |  +--------------------------+  |
+    |  |  | Q, K, V -> Attention    |  |
+    |  |  | O(n²) complexity       |  |
+    |  |  +--------------------------+  |
+    |  v                               |
+    |  LayerNorm + Residual            |
+    |  v                               |
+    |  Feed Forward (Linear -> GELU -> Linear) |
+    |  v                               |
+    |  LayerNorm + Residual            |
+    +-----------------------------------+
+        | (Repeat for layers 2-6)
+        v
+    +-----------------------------------+
+    |  Final Layer Norm                |
+    +-----------------------------------+
+        |
+        v (Language Modeling Head)
+    +-----------------------------------+
+    |  Linear: d_model -> vocab_size     |
+    |  Output: (batch, seq_len, vocab)  |
+    +-----------------------------------+
+        |
+        v (Softmax + Sampling)
     Next Token Probabilities
-        │
-        ↓ (Generation Loop)
+        |
+        v (Generation Loop)
     Generated Text Output
 ```
 
@@ -209,17 +209,17 @@ TinyGPT Language Model Pipeline:
 ```
 TinyGPT Memory Footprint (Educational Scale):
 
-┌──────────────────────────────────────────┐
-│ Component           │ Parameters │ Memory (MB) │
-├──────────────────────────────────────────┤
-│ Token Embedding     │   128,000  │    0.5     │  vocab × d_model
-│ Position Embedding  │     8,192  │    0.03    │  seq_len × d_model  
-│ 6x Attention Layers │   294,912  │    1.1     │  4 × d_model² × layers
-│ 6x Feed Forward     │   393,216  │    1.5     │  8 × d_model² × layers
-│ Output Head         │   128,000  │    0.5     │  d_model × vocab
-├──────────────────────────────────────────┤
-│ TOTAL MODEL         │   952,320  │    3.6     │  → 1M parameters!
-└──────────────────────────────────────────┘
++------------------------------------------+
+| Component           | Parameters | Memory (MB) |
++------------------------------------------┤
+| Token Embedding     |   128,000  |    0.5     |  vocab * d_model
+| Position Embedding  |     8,192  |    0.03    |  seq_len * d_model  
+| 6x Attention Layers |   294,912  |    1.1     |  4 * d_model² * layers
+| 6x Feed Forward     |   393,216  |    1.5     |  8 * d_model² * layers
+| Output Head         |   128,000  |    0.5     |  d_model * vocab
++------------------------------------------┤
+| TOTAL MODEL         |   952,320  |    3.6     |  -> 1M parameters!
++------------------------------------------+
 
 Runtime Memory (per batch):
 - Forward pass activations: ~2-4 MB
@@ -228,7 +228,7 @@ Runtime Memory (per batch):
 - Total training memory: ~15-20 MB
 ```
 
-### ⚡ Performance Characteristics
+### SPEED Performance Characteristics
 
 ```
 Inference Performance Analysis:
@@ -240,20 +240,20 @@ Sequence Length Scaling (O(n²) attention bottleneck):
    128 tokens:  ~128ms (64x slower)
 
 Bottleneck Analysis:
-1. 🔍 Attention: 60-70% of computation time
-2. 🔍 Feed Forward: 20-25% of computation time  
-3. 🔍 Embedding Lookup: 5-10% of computation time
-4. 🔍 Other Operations: 5-10% of computation time
+1. MAGNIFY Attention: 60-70% of computation time
+2. MAGNIFY Feed Forward: 20-25% of computation time  
+3. MAGNIFY Embedding Lookup: 5-10% of computation time
+4. MAGNIFY Other Operations: 5-10% of computation time
 ```
 """
 
 # %%
 def simple_tokenizer_demo():
-    """🎯 Learning Checkpoint 1: Basic Text Tokenization
+    """TARGET Learning Checkpoint 1: Basic Text Tokenization
     
     Understand how text becomes numerical tokens for language modeling.
     """
-    print("🔍 Learning Checkpoint 1: Text Tokenization for Language Models")
+    print("MAGNIFY Learning Checkpoint 1: Text Tokenization for Language Models")
     print("=" * 60)
     
     # Simple vocabulary for demonstration (real tokenizers are much more sophisticated)
@@ -305,17 +305,17 @@ def simple_tokenizer_demo():
             'length': len(token_ids)
         })
     
-    print(f"💡 Key Insight: Language models work with token IDs, not raw text!")
+    print(f"TIP Key Insight: Language models work with token IDs, not raw text!")
     print(f"   Tokenization quality directly affects model performance.")
     
     return {'vocab': vocab, 'results': tokenization_results}
 
 def attention_scaling_demo():
-    """🎯 Learning Checkpoint 2: Understanding Attention Complexity
+    """TARGET Learning Checkpoint 2: Understanding Attention Complexity
     
     Understand why attention is O(n²) and becomes the bottleneck in large models.
     """
-    print("\n🔍 Learning Checkpoint 2: Attention Scaling Analysis")
+    print("\nMAGNIFY Learning Checkpoint 2: Attention Scaling Analysis")
     print("=" * 60)
     
     def simple_attention(query, key, value):
@@ -380,7 +380,7 @@ def attention_scaling_demo():
         base_time = scaling_results[0]['time_ms']
         base_length = scaling_results[0]['seq_len']
         
-        print(f"\n📈 Scaling Analysis:")
+        print(f"\nPROGRESS Scaling Analysis:")
         for result in scaling_results[1:]:
             length_ratio = result['seq_len'] / base_length
             time_ratio = result['time_ms'] / base_time
@@ -388,17 +388,17 @@ def attention_scaling_demo():
             
             print(f"   {result['seq_len']}vs{base_length}: {time_ratio:.1f}x time (expected O(n²): {expected_quadratic:.1f}x)")
     
-    print(f"\n💡 Key Insight: Attention scales quadratically with sequence length!")
+    print(f"\nTIP Key Insight: Attention scales quadratically with sequence length!")
     print(f"   This is why long sequences are expensive in transformers.")
     
     return {'results': scaling_results}
 
 def transformer_component_demo():
-    """🎯 Learning Checkpoint 3: Transformer Component Integration
+    """TARGET Learning Checkpoint 3: Transformer Component Integration
     
     Understand how transformer components work together in language models.
     """
-    print("\n🔍 Learning Checkpoint 3: Transformer Component Integration")
+    print("\nMAGNIFY Learning Checkpoint 3: Transformer Component Integration")
     print("=" * 60)
     
     # Simple transformer components for demonstration
@@ -526,7 +526,7 @@ def transformer_component_demo():
     print(f"   Feed Forward:  {ff_params:,} parameters ({ff_params/total_params*100:.1f}%)")
     print(f"   Total Layer:   {total_params:,} parameters")
     
-    print(f"\n💡 Key Insight: Attention dominates compute, FF dominates parameters!")
+    print(f"\nTIP Key Insight: Attention dominates compute, FF dominates parameters!")
     print(f"   Understanding component characteristics guides optimization.")
     
     return {'timing': components_timing, 'params': {'attention': attn_params, 'ff': ff_params}}
@@ -548,7 +548,7 @@ def run_learning_checkpoints():
     component_results = transformer_component_demo()
     
     print("\n" + "=" * 80)
-    print("🎉 Learning checkpoints complete! Ready for TinyGPT integration.")
+    print("CELEBRATE Learning checkpoints complete! Ready for TinyGPT integration.")
     print("=" * 80)
     
     return {
@@ -569,7 +569,7 @@ def test_learning_checkpoints():
     """Test the TinyGPT learning checkpoint system"""
     print("Testing TinyGPT learning checkpoints...")
     results = run_learning_checkpoints()
-    print("\n✅ TinyGPT learning checkpoints test complete!")
+    print("\nPASS TinyGPT learning checkpoints test complete!")
     return results
 
 # %% [markdown]
@@ -830,7 +830,7 @@ class TinyGPTModel:
         # Calculate total parameters
         self.total_parameters = self._count_parameters()
         
-        print(f"🚀 TinyGPT Model Initialized:")
+        print(f"ROCKET TinyGPT Model Initialized:")
         print(f"   📊 Parameters: {self.total_parameters:,}")
         print(f"   🏗️ Architecture: {n_layers} layers, {n_heads} heads, {d_model} dim")
         print(f"   📚 Vocabulary: {vocab_size} tokens")
@@ -979,8 +979,8 @@ class TinyGPTSystem:
         self.warmup_runs = warmup_runs
         self.timing_runs = timing_runs
         
-        print("🚀 TinyGPT Complete System Initializing...")
-        print("🎯 Integrating All TinyTorch Components (Modules 02-19)")
+        print("ROCKET TinyGPT Complete System Initializing...")
+        print("TARGET Integrating All TinyTorch Components (Modules 02-19)")
         
         # Initialize tokenizer (text processing foundation)
         self.tokenizer = TinyGPTTokenizer(vocab_size)
@@ -997,9 +997,9 @@ class TinyGPTSystem:
         # Initialize profiler for performance analysis
         self.profiler_available = TINYTORCH_AVAILABLE and available_components >= 6
         if self.profiler_available:
-            print("✅ Advanced profiling available (Module 15 integrated)")
+            print("PASS Advanced profiling available (Module 15 integrated)")
         else:
-            print("⚠️  Using basic timing (complete TinyTorch integration recommended)")
+            print("WARNING️  Using basic timing (complete TinyTorch integration recommended)")
         
         # System status and integration validation
         self._validate_system_integration()
@@ -1007,7 +1007,7 @@ class TinyGPTSystem:
     
     def _validate_system_integration(self):
         """Validate that all TinyTorch components are properly integrated."""
-        print("🔍 Validating TinyGPT System Integration...")
+        print("MAGNIFY Validating TinyGPT System Integration...")
         
         integration_checks = {
             'tokenizer': self.tokenizer is not None,
@@ -1019,15 +1019,15 @@ class TinyGPTSystem:
         
         all_passed = True
         for check_name, passed in integration_checks.items():
-            status = "✅" if passed else "❌"
+            status = "PASS" if passed else "FAIL"
             print(f"   {status} {check_name.replace('_', ' ').title()}")
             if not passed:
                 all_passed = False
         
         if all_passed:
-            print("✅ All integration checks passed!")
+            print("PASS All integration checks passed!")
         else:
-            print("⚠️  Some integration issues detected - functionality may be limited")
+            print("WARNING️  Some integration issues detected - functionality may be limited")
         
         return all_passed
     
@@ -1056,13 +1056,13 @@ class TinyGPTSystem:
         print(f"   • Integration: {available_components}/{total_components} components")
         
         # System capabilities
-        print(f"\n🚀 Capabilities:")
-        print(f"   • Text Generation: ✅ Autoregressive generation with sampling")
-        print(f"   • Performance Analysis: {'✅' if self.profiler_available else '⚠️ '} {'Advanced' if self.profiler_available else 'Basic'} profiling")
-        print(f"   • Scaling Analysis: ✅ Memory and compute profiling")
-        print(f"   • Production Ready: ✅ Complete end-to-end pipeline")
+        print(f"\nROCKET Capabilities:")
+        print(f"   • Text Generation: PASS Autoregressive generation with sampling")
+        print(f"   • Performance Analysis: {'PASS' if self.profiler_available else 'WARNING️ '} {'Advanced' if self.profiler_available else 'Basic'} profiling")
+        print(f"   • Scaling Analysis: PASS Memory and compute profiling")
+        print(f"   • Production Ready: PASS Complete end-to-end pipeline")
         
-        print("\n🎯 Ready for text generation and performance analysis!")
+        print("\nTARGET Ready for text generation and performance analysis!")
     
     def encode_text(self, text: str) -> np.ndarray:
         """
@@ -1078,7 +1078,7 @@ class TinyGPTSystem:
         
         # Ensure sequence doesn't exceed max length
         if len(token_ids) > self.model.max_seq_len:
-            print(f"⚠️  Text truncated: {len(token_ids)} -> {self.model.max_seq_len} tokens")
+            print(f"WARNING️  Text truncated: {len(token_ids)} -> {self.model.max_seq_len} tokens")
             token_ids = token_ids[:self.model.max_seq_len]
         
         return token_ids
@@ -1114,9 +1114,9 @@ class TinyGPTSystem:
             Complete generated text (prompt + new tokens)
         """
         if verbose:
-            print(f"🚀 TinyGPT Text Generation Starting...")
+            print(f"ROCKET TinyGPT Text Generation Starting...")
             print(f"   📝 Prompt: '{prompt}'")
-            print(f"   🎯 Generating {max_new_tokens} tokens with temp={temperature}, top_k={top_k}")
+            print(f"   TARGET Generating {max_new_tokens} tokens with temp={temperature}, top_k={top_k}")
         
         # Encode prompt to token IDs
         initial_tokens = self.encode_text(prompt)
@@ -1131,7 +1131,7 @@ class TinyGPTSystem:
             # Check if we've reached max sequence length
             if current_tokens.shape[1] >= self.model.max_seq_len:
                 if verbose:
-                    print(f"   ⚠️  Reached max sequence length ({self.model.max_seq_len}), stopping generation")
+                    print(f"   WARNING️  Reached max sequence length ({self.model.max_seq_len}), stopping generation")
                 break
             
             # Generate next token using the model
@@ -1144,7 +1144,7 @@ class TinyGPTSystem:
             # Check for end-of-sequence token
             if next_token[0] == self.tokenizer.vocab['<EOS>']:
                 if verbose:
-                    print(f"   ✅ Generated <EOS> token, stopping generation")
+                    print(f"   PASS Generated <EOS> token, stopping generation")
                 break
             
             # Add new token to sequence
@@ -1161,7 +1161,7 @@ class TinyGPTSystem:
         final_text = self.decode_tokens(current_tokens[0])
         
         if verbose:
-            print(f"   ✅ Generation complete: {len(generated_tokens)} new tokens")
+            print(f"   PASS Generation complete: {len(generated_tokens)} new tokens")
             print(f"   📚 Final text: '{final_text}'")
         
         return final_text
@@ -1215,7 +1215,7 @@ class TinyGPTSystem:
         Returns:
             Performance profiling results
         """
-        print(f"⚡ Profiling TinyGPT Inference Performance...")
+        print(f"SPEED Profiling TinyGPT Inference Performance...")
         
         # Encode text once
         token_ids = self.encode_text(text)
@@ -1266,10 +1266,10 @@ class TinyGPTSystem:
         
         return performance_results
 
-# 🔍 SYSTEMS INSIGHT: Complete System Performance Analysis
+# MAGNIFY SYSTEMS INSIGHT: Complete System Performance Analysis
 def analyze_complete_system_performance():
     """Comprehensive performance analysis of the complete TinyGPT system."""
-    print("🔍 SYSTEMS INSIGHT: Complete TinyGPT Performance Analysis")
+    print("MAGNIFY SYSTEMS INSIGHT: Complete TinyGPT Performance Analysis")
     print("=" * 70)
     
     # Initialize system
@@ -1283,8 +1283,8 @@ def analyze_complete_system_performance():
     # 1. Tokenization analysis
     complexity = system.analyze_text_complexity(test_text)
     print(f"   📝 Text: '{test_text}'")
-    print(f"   🔤 Tokenization: {complexity['word_count']} words → {complexity['token_count']} tokens")
-    print(f"   📈 Compression: {complexity['compression_ratio']:.2f} chars/token")
+    print(f"   🔤 Tokenization: {complexity['word_count']} words -> {complexity['token_count']} tokens")
+    print(f"   PROGRESS Compression: {complexity['compression_ratio']:.2f} chars/token")
     print(f"   📚 Coverage: {complexity['vocabulary_coverage']*100:.1f}% known tokens")
     
     # 2. Model size analysis
@@ -1300,10 +1300,10 @@ def analyze_complete_system_performance():
     attention_memory = seq_len * seq_len * 4 / 1024 / 1024  # Attention matrix in MB
     attention_flops = seq_len * seq_len * system.model.d_model  # Approximate FLOPs
     
-    print(f"\n   ⚡ Attention Analysis (seq_len={seq_len}):")
+    print(f"\n   SPEED Attention Analysis (seq_len={seq_len}):")
     print(f"   💾 Attention Memory: {attention_memory:.3f} MB per head")
     print(f"   🧮 Total Attention Memory: {attention_memory * system.model.n_heads:.2f} MB")
-    print(f"   ⚡ Attention FLOPs: {attention_flops:,}")
+    print(f"   SPEED Attention FLOPs: {attention_flops:,}")
     
     # 4. Performance profiling
     print(f"\n   ⏱️  Performance Profiling:")
@@ -1316,8 +1316,8 @@ def analyze_complete_system_performance():
         actual_scaling = batch_results[1]['mean_time_ms'] / batch_results[0]['mean_time_ms']
         efficiency = linear_scaling / actual_scaling
         
-        print(f"   📈 Batch Scaling Efficiency: {efficiency:.2f} (1.0 = perfect)")
-        print(f"   🎯 Best Throughput: {max(r['tokens_per_second'] for r in batch_results):.1f} tokens/sec")
+        print(f"   PROGRESS Batch Scaling Efficiency: {efficiency:.2f} (1.0 = perfect)")
+        print(f"   TARGET Best Throughput: {max(r['tokens_per_second'] for r in batch_results):.1f} tokens/sec")
     
     # 5. Memory scaling with sequence length
     print(f"\n   📊 Memory Scaling Analysis:")
@@ -1328,11 +1328,11 @@ def analyze_complete_system_performance():
         
         print(f"   📏 Seq {seq_len:2d}: {total_attn_mem:.2f} MB attention ({seq_len*seq_len:,} elements)")
     
-    print(f"\n💡 KEY INSIGHTS:")
-    print(f"   🔍 Attention dominates memory: O(n²) scaling with sequence length")
-    print(f"   🚀 Batch processing improves throughput via parallelization")
+    print(f"\nTIP KEY INSIGHTS:")
+    print(f"   MAGNIFY Attention dominates memory: O(n²) scaling with sequence length")
+    print(f"   ROCKET Batch processing improves throughput via parallelization")
     print(f"   💾 Model parameters: {memory_mb:.1f} MB, Attention: varies with sequence")
-    print(f"   ⚡ Total system uses all TinyTorch components from modules 02-19")
+    print(f"   SPEED Total system uses all TinyTorch components from modules 02-19")
     
     return {
         'complexity': complexity,
@@ -1345,10 +1345,10 @@ def analyze_complete_system_performance():
         }
     }
 
-# 🔍 SYSTEMS INSIGHT: Scaling Behavior Analysis
+# MAGNIFY SYSTEMS INSIGHT: Scaling Behavior Analysis
 def analyze_scaling_bottlenecks():
     """Analyze how TinyGPT performance scales with different dimensions."""
-    print("\n🔍 SYSTEMS INSIGHT: TinyGPT Scaling Bottleneck Analysis")
+    print("\nMAGNIFY SYSTEMS INSIGHT: TinyGPT Scaling Bottleneck Analysis")
     print("=" * 70)
     
     test_text = "the quick brown fox jumps over the lazy dog"
@@ -1404,7 +1404,7 @@ def analyze_scaling_bottlenecks():
     
     # Analyze scaling relationships
     if len(scaling_results) >= 2:
-        print(f"\n📈 Scaling Analysis:")
+        print(f"\nPROGRESS Scaling Analysis:")
         base = scaling_results[0]
         
         for result in scaling_results[1:]:
@@ -1417,18 +1417,18 @@ def analyze_scaling_bottlenecks():
             print(f"     ⏱️  Time: {time_ratio:.1f}x")
             print(f"     💾 Memory: {memory_ratio:.1f}x")
     
-    print(f"\n💡 SCALING INSIGHTS:")
-    print(f"   🔍 Parameter count grows roughly O(d_model²) due to attention")
+    print(f"\nTIP SCALING INSIGHTS:")
+    print(f"   MAGNIFY Parameter count grows roughly O(d_model²) due to attention")
     print(f"   ⏱️  Inference time scales with both parameters and sequence length")
     print(f"   💾 Memory usage is dominated by model parameters (not activations)")
-    print(f"   🎯 Sweet spot: Balance model size with inference speed requirements")
+    print(f"   TARGET Sweet spot: Balance model size with inference speed requirements")
     
     return scaling_results
 
-# 🔍 SYSTEMS INSIGHT: End-to-End Pipeline Analysis  
+# MAGNIFY SYSTEMS INSIGHT: End-to-End Pipeline Analysis  
 def analyze_end_to_end_pipeline():
     """Analyze the complete text generation pipeline from input to output."""
-    print("\n🔍 SYSTEMS INSIGHT: End-to-End Pipeline Analysis")
+    print("\nMAGNIFY SYSTEMS INSIGHT: End-to-End Pipeline Analysis")
     print("=" * 70)
     
     system = TinyGPTSystem()
@@ -1442,7 +1442,7 @@ def analyze_end_to_end_pipeline():
     tokenization_time = (time.perf_counter() - start_time) * 1000
     
     print(f"   1️⃣  Tokenization: {tokenization_time:.3f} ms")
-    print(f"       '{test_prompt}' → {token_ids.tolist()}")
+    print(f"       '{test_prompt}' -> {token_ids.tolist()}")
     
     # Stage 2: Model Forward Pass
     batch_tokens = token_ids.reshape(1, -1)
@@ -1451,7 +1451,7 @@ def analyze_end_to_end_pipeline():
     forward_time = (time.perf_counter() - start_time) * 1000
     
     print(f"   2️⃣  Model Forward: {forward_time:.3f} ms")
-    print(f"       {batch_tokens.shape} → {logits.shape}")
+    print(f"       {batch_tokens.shape} -> {logits.shape}")
     
     # Stage 3: Next Token Generation
     start_time = time.perf_counter()
@@ -1468,7 +1468,7 @@ def analyze_end_to_end_pipeline():
     detokenization_time = (time.perf_counter() - start_time) * 1000
     
     print(f"   4️⃣  Detokenization: {detokenization_time:.3f} ms")
-    print(f"       {complete_tokens.tolist()} → '{output_text}'")
+    print(f"       {complete_tokens.tolist()} -> '{output_text}'")
     
     # Total pipeline time
     total_time = tokenization_time + forward_time + generation_time + detokenization_time
@@ -1478,27 +1478,27 @@ def analyze_end_to_end_pipeline():
     print(f"   🧠 Model Forward:  {forward_time:6.3f} ms ({forward_time/total_time*100:4.1f}%)")
     print(f"   🎲 Token Generation: {generation_time:6.3f} ms ({generation_time/total_time*100:4.1f}%)")
     print(f"   🔤 Detokenization: {detokenization_time:6.3f} ms ({detokenization_time/total_time*100:4.1f}%)")
-    print(f"   ⚡ TOTAL:          {total_time:6.3f} ms (100.0%)")
+    print(f"   SPEED TOTAL:          {total_time:6.3f} ms (100.0%)")
     
     # Calculate tokens per second for generation
     tokens_per_second = 1000 / total_time  # 1 token generated per total_time ms
     
     print(f"\n📊 Generation Performance:")
-    print(f"   🚀 Speed: {tokens_per_second:.1f} tokens/second")
+    print(f"   ROCKET Speed: {tokens_per_second:.1f} tokens/second")
     print(f"   📏 Latency: {total_time:.1f} ms per token")
     
     # Estimate full text generation time
     target_tokens = 50
     estimated_time = target_tokens * total_time / 1000  # Convert to seconds
     
-    print(f"\n🎯 Scaling Projection:")
+    print(f"\nTARGET Scaling Projection:")
     print(f"   📝 Generate {target_tokens} tokens: ~{estimated_time:.1f} seconds")
     print(f"   📊 Rate: {target_tokens/estimated_time:.1f} tokens/sec sustained")
     
-    print(f"\n💡 PIPELINE INSIGHTS:")
-    print(f"   🔍 Model forward pass dominates computation time")
-    print(f"   ⚡ Tokenization/detokenization are negligible overhead")
-    print(f"   🚀 Autoregressive generation requires N forward passes for N tokens")
+    print(f"\nTIP PIPELINE INSIGHTS:")
+    print(f"   MAGNIFY Model forward pass dominates computation time")
+    print(f"   SPEED Tokenization/detokenization are negligible overhead")
+    print(f"   ROCKET Autoregressive generation requires N forward passes for N tokens")
     print(f"   💾 Memory usage stays constant (no KV caching implemented)")
     
     return {
@@ -1526,14 +1526,14 @@ def test_tinygpt_complete_system():
         # Initialize complete system
         system = TinyGPTSystem()
         
-        print(f"\n🧪 Component Integration Tests:")
+        print(f"\nTEST Component Integration Tests:")
         
         # Test 1: Tokenization
         test_text = "hello world how are you"
         token_ids = system.encode_text(test_text)
         decoded_text = system.decode_tokens(token_ids)
         
-        print(f"   ✅ Tokenization: '{test_text}' → {len(token_ids)} tokens → '{decoded_text}'")
+        print(f"   PASS Tokenization: '{test_text}' -> {len(token_ids)} tokens -> '{decoded_text}'")
         
         # Test 2: Model forward pass
         batch_tokens = token_ids.reshape(1, -1)
@@ -1541,24 +1541,24 @@ def test_tinygpt_complete_system():
         expected_shape = (1, len(token_ids), system.model.vocab_size)
         
         assert logits.shape == expected_shape, f"Shape mismatch: {logits.shape} != {expected_shape}"
-        print(f"   ✅ Model Forward: {batch_tokens.shape} → {logits.shape}")
+        print(f"   PASS Model Forward: {batch_tokens.shape} -> {logits.shape}")
         
         # Test 3: Text generation
         generated_text = system.generate_text("the cat", max_new_tokens=5, verbose=False)
         
-        print(f"   ✅ Text Generation: 'the cat' → '{generated_text}'")
+        print(f"   PASS Text Generation: 'the cat' -> '{generated_text}'")
         
         # Test 4: Performance analysis
         complexity = system.analyze_text_complexity(test_text)
         
-        print(f"   ✅ Text Analysis: {complexity['word_count']} words, {complexity['token_count']} tokens")
+        print(f"   PASS Text Analysis: {complexity['word_count']} words, {complexity['token_count']} tokens")
         
         # Test 5: Performance profiling
         perf_results = system.profile_inference_performance(test_text, batch_sizes=[1, 2])
         
-        print(f"   ✅ Performance Profiling: {len(perf_results['batch_results'])} batch sizes tested")
+        print(f"   PASS Performance Profiling: {len(perf_results['batch_results'])} batch sizes tested")
         
-        print(f"\n🎯 Integration Validation:")
+        print(f"\nTARGET Integration Validation:")
         
         # Validate component integration
         validation_results = {
@@ -1570,22 +1570,22 @@ def test_tinygpt_complete_system():
         }
         
         for test_name, passed in validation_results.items():
-            status = "✅" if passed else "❌"
+            status = "PASS" if passed else "FAIL"
             print(f"   {status} {test_name.replace('_', ' ').title()}")
         
         all_tests_passed = all(validation_results.values())
         
         if all_tests_passed:
-            print(f"\n🎉 ALL TESTS PASSED! TinyGPT system fully operational.")
-            print(f"   🚀 Ready for comprehensive text generation and analysis")
+            print(f"\nCELEBRATE ALL TESTS PASSED! TinyGPT system fully operational.")
+            print(f"   ROCKET Ready for comprehensive text generation and analysis")
         else:
-            print(f"\n⚠️  Some tests failed - check TinyTorch component integration")
+            print(f"\nWARNING️  Some tests failed - check TinyTorch component integration")
         
         return system, validation_results
         
     except Exception as e:
-        print(f"\n❌ System test failed: {e}")
-        print(f"   💡 Ensure all TinyTorch modules (02-19) are properly integrated")
+        print(f"\nFAIL System test failed: {e}")
+        print(f"   TIP Ensure all TinyTorch modules (02-19) are properly integrated")
         return None, {}
 
 # %% [markdown]
@@ -2082,7 +2082,7 @@ Let's test the complete TinyGPT system with all systems insights and demonstrate
 # %%
 def run_complete_tinygpt_demonstration():
     """Comprehensive demonstration of the complete TinyGPT system capabilities."""
-    print("🚀 TINYGPT CAPSTONE DEMONSTRATION")
+    print("ROCKET TINYGPT CAPSTONE DEMONSTRATION")
     print("=" * 80)
     print("Complete ML Systems Integration - Modules 02-19 Working Together!")
     print("=" * 80)
@@ -2101,22 +2101,22 @@ def run_complete_tinygpt_demonstration():
     print("🏆 TINYGPT CAPSTONE COMPLETION SUMMARY")
     print("=" * 80)
     
-    print(f"\n🎯 Complete Integration Achieved:")
-    print(f"   ✅ Tokenizer: {system.tokenizer.get_vocab_size():,} token vocabulary")
-    print(f"   ✅ Model: {system.model.total_parameters:,} parameters across {system.model.n_layers} layers")
-    print(f"   ✅ Generation: Working autoregressive text generation")
-    print(f"   ✅ Systems Analysis: Memory, compute, and scaling characteristics")
+    print(f"\nTARGET Complete Integration Achieved:")
+    print(f"   PASS Tokenizer: {system.tokenizer.get_vocab_size():,} token vocabulary")
+    print(f"   PASS Model: {system.model.total_parameters:,} parameters across {system.model.n_layers} layers")
+    print(f"   PASS Generation: Working autoregressive text generation")
+    print(f"   PASS Systems Analysis: Memory, compute, and scaling characteristics")
     
     print(f"\n🔧 TinyTorch Component Integration:")
     integrated_components = [name for name, status in COMPONENT_STATUS.items() if status]
-    print(f"   ✅ Integrated: {', '.join(integrated_components)}")
+    print(f"   PASS Integrated: {', '.join(integrated_components)}")
     print(f"   📊 Coverage: {len(integrated_components)}/{len(COMPONENT_STATUS)} components")
     
     print(f"\n🎓 Educational Achievement:")
-    print(f"   ✅ End-to-end language model built from scratch")
-    print(f"   ✅ All TinyTorch modules integrated into working system")
-    print(f"   ✅ Production-ready systems understanding demonstrated")
-    print(f"   ✅ Complete ML systems engineering pipeline mastered")
+    print(f"   PASS End-to-end language model built from scratch")
+    print(f"   PASS All TinyTorch modules integrated into working system")
+    print(f"   PASS Production-ready systems understanding demonstrated")
+    print(f"   PASS Complete ML systems engineering pipeline mastered")
     
     return {'system': system}
 
@@ -2129,8 +2129,8 @@ Test the complete TinyGPT system functionality.
 
 # %%
 def test_unit_tinygpt_system():
-    """🧪 Unit Test: Complete TinyGPT System Integration"""
-    print("🧪 Unit Test: TinyGPT Complete System")
+    """TEST Unit Test: Complete TinyGPT System Integration"""
+    print("TEST Unit Test: TinyGPT Complete System")
     print("-" * 50)
     
     try:
@@ -2138,70 +2138,70 @@ def test_unit_tinygpt_system():
         system = TinyGPTSystem()
         assert system.model is not None, "Model should be initialized"
         assert system.tokenizer is not None, "Tokenizer should be initialized"
-        print("   ✅ System initialization successful")
+        print("   PASS System initialization successful")
         
         # Test tokenization
         test_text = "hello world"
         token_ids = system.encode_text(test_text)
         decoded_text = system.decode_tokens(token_ids)
         assert len(token_ids) > 0, "Tokenization should produce tokens"
-        print(f"   ✅ Tokenization works: '{test_text}' → {len(token_ids)} tokens → '{decoded_text}'")
+        print(f"   PASS Tokenization works: '{test_text}' -> {len(token_ids)} tokens -> '{decoded_text}'")
         
         # Test model forward pass
         batch_tokens = token_ids.reshape(1, -1)
         logits = system.model.forward(batch_tokens)
         expected_shape = (1, len(token_ids), system.model.vocab_size)
         assert logits.shape == expected_shape, f"Shape mismatch: {logits.shape} != {expected_shape}"
-        print(f"   ✅ Model forward pass: {batch_tokens.shape} → {logits.shape}")
+        print(f"   PASS Model forward pass: {batch_tokens.shape} -> {logits.shape}")
         
         # Test text generation
         generated = system.generate_text("the", max_new_tokens=3, verbose=False)
         assert len(generated) > len("the"), "Generation should add tokens"
-        print(f"   ✅ Text generation: 'the' → '{generated}'")
+        print(f"   PASS Text generation: 'the' -> '{generated}'")
         
         # Test performance profiling
         performance = system.profile_inference_performance(test_text, batch_sizes=[1])
         assert len(performance['batch_results']) > 0, "Performance profiling should work"
-        print(f"   ✅ Performance profiling: {performance['batch_results'][0]['tokens_per_second']:.1f} tokens/sec")
+        print(f"   PASS Performance profiling: {performance['batch_results'][0]['tokens_per_second']:.1f} tokens/sec")
         
-        print("✅ TinyGPT system integration test passed!")
+        print("PASS TinyGPT system integration test passed!")
         return True
         
     except Exception as e:
-        print(f"❌ TinyGPT system test failed: {e}")
+        print(f"FAIL TinyGPT system test failed: {e}")
         return False
 
 def test_unit_systems_insights():
-    """🧪 Unit Test: Systems Insights Functions"""
-    print("🧪 Unit Test: Systems Insights Analysis")
+    """TEST Unit Test: Systems Insights Functions"""
+    print("TEST Unit Test: Systems Insights Analysis")
     print("-" * 50)
     
     try:
         # Test complete system analysis
         analysis = analyze_complete_system_performance()
         assert 'complexity' in analysis, "Should include complexity analysis"
-        print("   ✅ Complete system performance analysis works")
+        print("   PASS Complete system performance analysis works")
         
         # Test scaling analysis
         scaling = analyze_scaling_bottlenecks()
         assert len(scaling) > 0, "Should return scaling results"
-        print("   ✅ Scaling bottleneck analysis works")
+        print("   PASS Scaling bottleneck analysis works")
         
         # Test pipeline analysis
         pipeline = analyze_end_to_end_pipeline()
         assert 'tokenization_ms' in pipeline, "Should include pipeline timing"
-        print("   ✅ End-to-end pipeline analysis works")
+        print("   PASS End-to-end pipeline analysis works")
         
-        print("✅ Systems insights test passed!")
+        print("PASS Systems insights test passed!")
         return True
         
     except Exception as e:
-        print(f"❌ Systems insights test failed: {e}")
+        print(f"FAIL Systems insights test failed: {e}")
         return False
 
 def test_unit_computational_assessments():
-    """🧪 Unit Test: Computational Assessment Questions"""
-    print("🧪 Unit Test: Computational Assessment Questions")
+    """TEST Unit Test: Computational Assessment Questions"""
+    print("TEST Unit Test: Computational Assessment Questions")
     print("-" * 50)
     
     try:
@@ -2210,33 +2210,33 @@ def test_unit_computational_assessments():
         # Test integration analysis
         integration = analyze_system_integration_bottlenecks(system)
         assert 'pipeline_breakdown' in integration, "Should analyze pipeline"
-        print("   ✅ System integration analysis assessment works")
+        print("   PASS System integration analysis assessment works")
         
         # Test scaling analysis
         scaling = analyze_scaling_characteristics(system)
         assert 'sequence_scaling' in scaling, "Should analyze sequence scaling"
-        print("   ✅ Scaling characteristics assessment works")
+        print("   PASS Scaling characteristics assessment works")
         
         # Test optimization strategy
         optimization = design_optimization_strategy(system)
         assert 'current_performance' in optimization, "Should analyze current performance"
-        print("   ✅ Optimization strategy assessment works")
+        print("   PASS Optimization strategy assessment works")
         
         # Test deployment strategy
         deployment = design_production_deployment_strategy(system)
         assert 'system_analysis' in deployment, "Should analyze system"
-        print("   ✅ Production deployment assessment works")
+        print("   PASS Production deployment assessment works")
         
-        print("✅ Computational assessments test passed!")
+        print("PASS Computational assessments test passed!")
         return True
         
     except Exception as e:
-        print(f"❌ Computational assessments test failed: {e}")
+        print(f"FAIL Computational assessments test failed: {e}")
         return False
 
 def test_unit_all():
     """Run all TinyGPT capstone unit tests."""
-    print("🧪 Running All TinyGPT Capstone Unit Tests...")
+    print("TEST Running All TinyGPT Capstone Unit Tests...")
     print("=" * 60)
     
     tests = [
@@ -2253,11 +2253,11 @@ def test_unit_all():
     
     print("=" * 60)
     if passed == len(tests):
-        print(f"🎉 ALL TESTS PASSED! ({passed}/{len(tests)})")
-        print("✅ TinyGPT Capstone module is fully operational!")
+        print(f"CELEBRATE ALL TESTS PASSED! ({passed}/{len(tests)})")
+        print("PASS TinyGPT Capstone module is fully operational!")
     else:
-        print(f"⚠️ {len(tests) - passed}/{len(tests)} tests failed")
-        print("💡 Check TinyTorch component integration")
+        print(f"WARNING️ {len(tests) - passed}/{len(tests)} tests failed")
+        print("TIP Check TinyTorch component integration")
     
     return passed == len(tests)
 
@@ -2283,20 +2283,20 @@ if __name__ == "__main__":
     checkpoint_results = run_learning_checkpoints()
     
     # Test complete system
-    print("\n🧪 Testing Complete TinyGPT System...")
+    print("\nTEST Testing Complete TinyGPT System...")
     system_tests_passed = test_unit_all()
     
     # Run comprehensive demonstration
-    print("\n🚀 Running Complete TinyGPT Demonstration...")
+    print("\nROCKET Running Complete TinyGPT Demonstration...")
     demo_results = run_complete_tinygpt_demonstration()
     
-    print(f"\n🎉 Module 20 Capstone Complete!")
+    print(f"\nCELEBRATE Module 20 Capstone Complete!")
     print(f"🏆 TinyGPT system fully integrated and operational!")
-    print(f"🚀 Ready for real-world ML systems engineering!")
+    print(f"ROCKET Ready for real-world ML systems engineering!")
 
 # %% [markdown]
 """
-## 🤔 ML Systems Thinking: Interactive Questions
+## THINK ML Systems Thinking: Interactive Questions
 
 1. **How does end-to-end system integration reveal bottlenecks invisible in isolated components?** Your TinyGPT system integrates tokenization, transformer layers, attention mechanisms, and generation into a complete pipeline. Analyze how profiling the complete system revealed different performance characteristics than testing individual components in isolation, and explain why production ML systems require end-to-end optimization rather than component-wise optimization.
 
@@ -2309,7 +2309,7 @@ if __name__ == "__main__":
 
 # %% [markdown]
 """
-## 🎯 MODULE SUMMARY: TinyGPT Capstone - Complete ML Systems Mastery
+## TARGET MODULE SUMMARY: TinyGPT Capstone - Complete ML Systems Mastery
 
 Congratulations! You have successfully completed the ultimate ML systems engineering challenge by building a complete language model from first principles.
 
@@ -2325,11 +2325,11 @@ Congratulations! You have successfully completed the ultimate ML systems enginee
 - **TinyGPTSystem**: End-to-end pipeline with profiling, analysis, and optimization capabilities
 
 ### 🔧 **Technical Integration Achieved**
-✅ **Component Integration**: All TinyTorch modules (02-19) working together seamlessly
-✅ **Text Generation**: Working autoregressive language model with sampling and temperature control
-✅ **Performance Analysis**: Complete system profiling with bottleneck identification and scaling analysis
-✅ **Production Strategy**: Comprehensive deployment planning with monitoring and reliability considerations
-✅ **Optimization Roadmap**: Phased optimization strategy based on actual performance profiling results
+PASS **Component Integration**: All TinyTorch modules (02-19) working together seamlessly
+PASS **Text Generation**: Working autoregressive language model with sampling and temperature control
+PASS **Performance Analysis**: Complete system profiling with bottleneck identification and scaling analysis
+PASS **Production Strategy**: Comprehensive deployment planning with monitoring and reliability considerations
+PASS **Optimization Roadmap**: Phased optimization strategy based on actual performance profiling results
 
 ### 📊 **Systems Engineering Mastery**
 Your implementation demonstrates mastery of:
@@ -2339,7 +2339,7 @@ Your implementation demonstrates mastery of:
 - **Production Deployment**: Real-world architecture design, monitoring strategies, and reliability planning
 - **End-to-End Thinking**: Integration challenges that only emerge when components work together
 
-### 🎯 **Real-World Capability Achieved**
+### TARGET **Real-World Capability Achieved**
 You can now:
 - **Build**: Complete language models from individual components
 - **Analyze**: System performance characteristics and scaling bottlenecks
@@ -2357,7 +2357,7 @@ This capstone proves you understand:
 
 **You are now equipped to tackle real-world ML systems engineering challenges with confidence and expertise!**
 
-### 🚀 **Next Steps**
+### ROCKET **Next Steps**
 1. **Apply Knowledge**: Use your TinyGPT system as foundation for more advanced projects
 2. **Optimize Further**: Implement advanced optimizations from your roadmap
 3. **Scale Up**: Deploy your system and measure real-world performance

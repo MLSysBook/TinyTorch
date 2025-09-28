@@ -21,7 +21,7 @@ Welcome to the Transformers module! You'll implement complete transformer blocks
 - Framework connection: See how your implementations match production transformer systems
 - Performance insight: Learn how transformer layer memory accumulation affects model deployment
 
-## Build → Use → Reflect
+## Build -> Use -> Reflect
 1. **Build**: LayerNorm, transformer blocks, and complete transformer models
 2. **Use**: Process sequences through multi-layer transformer architectures
 3. **Reflect**: How do transformer design choices affect scalability and training dynamics?
@@ -35,8 +35,8 @@ By the end of this module, you'll understand:
 - Connection to production systems like GPT's transformer blocks and their optimization techniques
 
 ## Systems Reality Check
-💡 **Production Context**: GPT-3 has 96 transformer layers, each with 12k-dimensional representations and complex memory management
-⚡ **Performance Note**: Transformer layer memory accumulates linearly with depth - deep models require careful activation checkpointing
+TIP **Production Context**: GPT-3 has 96 transformer layers, each with 12k-dimensional representations and complex memory management
+SPEED **Performance Note**: Transformer layer memory accumulates linearly with depth - deep models require careful activation checkpointing
 """
 
 # %% nbgrader={"grade": false, "grade_id": "transformers-imports", "locked": false, "schema_version": 3, "solution": false, "task": false}
@@ -101,7 +101,7 @@ print("Ready to build complete transformer architectures!")
 
 # %% [markdown]
 """
-## 📦 Where This Code Lives in the Final Package
+## PACKAGE Where This Code Lives in the Final Package
 
 **Learning Side:** You work in `modules/source/14_transformers/transformers_dev.py`  
 **Building Side:** Code exports to `tinytorch.core.transformers`
@@ -129,7 +129,7 @@ Transformers revolutionized AI by replacing recurrent connections with attention
 
 **Traditional RNN/LSTM:**
 ```
-h₁ → h₂ → h₃ → h₄  (Sequential processing)
+h₁ -> h₂ -> h₃ -> h₄  (Sequential processing)
 ```
 
 **Transformer:**
@@ -148,9 +148,9 @@ Each transformer block contains:
 ### The Complete Architecture
 ```
 Input Embeddings + Positional Encoding
-    ↓
-[Transformer Block] × N layers
-    ↓
+    v
+[Transformer Block] * N layers
+    v
 Output Layer (Language Modeling Head)
 ```
 
@@ -170,7 +170,7 @@ Layer normalization is crucial for training stable transformers. Unlike batch no
 
 # %% [markdown]
 """
-## 🎯 Building Transformer Components
+## TARGET Building Transformer Components
 
 ### Transformer Architecture Overview
 
@@ -179,51 +179,51 @@ Before implementing individual components, let's visualize how they fit together
 ```
 Transformer Architecture:
 
-┌─────────────────────────────────────────────────────┐
-│                   Input Tokens                      │
-└─────────────────┬───────────────────────────────────┘
-                  │
-┌─────────────────▼───────────────────────────────────┐
-│              Token Embeddings                       │
-│            + Positional Encoding                    │
-└─────────────────┬───────────────────────────────────┘
-                  │
-┌─────────────────▼───────────────────────────────────┐
-│               Layer 1                               │
-│  ┌─────────────────────────────────────────────┐    │
-│  │         Multi-Head Attention                │    │
-│  │    ┌───────┐ ┌───────┐ ┌───────┐           │    │
-│  │    │Head 1 │ │Head 2 │ │Head n │  →  Concat│    │
-│  │    └───────┘ └───────┘ └───────┘           │    │
-│  └─────────────────────────────────────────────┘    │
-│                        │                            │
-│                        ▼                            │
-│                 ┌─────────────┐                     │
-│            ┌────│ Add & Norm  │◄────┐               │
-│            │    └─────────────┘     │ Residual      │
-│            │                        │ Connection    │
-│            ▼                        │               │
-│  ┌─────────────────────────────────┐ │               │
-│  │     Position-wise FFN           │ │               │
-│  │   Linear → ReLU → Linear        │ │               │
-│  └─────────────────────────────────┘ │               │
-│                        │              │               │
-│                        ▼              │               │
-│                 ┌─────────────┐       │               │
-│                 │ Add & Norm  │◄──────┘               │
-│                 └─────────────┘                       │
-└─────────────────┬───────────────────────────────────┘
-                  │
-                  ▼
-    ┌─────────────────────────────────────┐
-    │          Layer 2, 3, ..., N        │  (Same structure)
-    └─────────────────────────────────────┘
-                  │
-                  ▼
-    ┌─────────────────────────────────────┐
-    │         Output Projection           │
-    │      Linear(embed_dim, vocab_size)  │
-    └─────────────────────────────────────┘
++-----------------------------------------------------+
+|                   Input Tokens                      |
++-----------------+-----------------------------------+
+                  |
++-----------------v-----------------------------------+
+|              Token Embeddings                       |
+|            + Positional Encoding                    |
++-----------------+-----------------------------------+
+                  |
++-----------------v-----------------------------------+
+|               Layer 1                               |
+|  +---------------------------------------------+    |
+|  |         Multi-Head Attention                |    |
+|  |    +-------+ +-------+ +-------+           |    |
+|  |    |Head 1 | |Head 2 | |Head n |  ->  Concat|    |
+|  |    +-------+ +-------+ +-------+           |    |
+|  +---------------------------------------------+    |
+|                        |                            |
+|                        v                            |
+|                 +-------------+                     |
+|            +----| Add & Norm  |<----+               |
+|            |    +-------------+     | Residual      |
+|            |                        | Connection    |
+|            v                        |               |
+|  +---------------------------------+ |               |
+|  |     Position-wise FFN           | |               |
+|  |   Linear -> ReLU -> Linear        | |               |
+|  +---------------------------------+ |               |
+|                        |              |               |
+|                        v              |               |
+|                 +-------------+       |               |
+|                 | Add & Norm  |<------+               |
+|                 +-------------+                       |
++-----------------+-----------------------------------+
+                  |
+                  v
+    +-------------------------------------+
+    |          Layer 2, 3, ..., N        |  (Same structure)
+    +-------------------------------------+
+                  |
+                  v
+    +-------------------------------------+
+    |         Output Projection           |
+    |      Linear(embed_dim, vocab_size)  |
+    +-------------------------------------+
 ```
 
 ### Memory Layout Visualization
@@ -231,25 +231,25 @@ Transformer Architecture:
 ```
 Transformer Memory Organization:
 
-┌─────────────────────────────────────────────────┐
-│                Model Parameters                 │
-├─────────────────────────────────────────────────┤
-│ Token Embeddings    │ vocab × embed_dim         │ ← 70% of parameters
-│ Position Encodings  │ max_seq × embed_dim       │   (for large vocab)
-│ N × Transformer Layers:                         │
-│   ├ Multi-Head Attn │ 4 × embed_dim²           │ ← 25% of parameters  
-│   ├ Feed-Forward    │ 2 × embed_dim × ffn_dim  │   (per layer)
-│   └ Layer Norms     │ 2 × embed_dim            │
-│ Output Projection   │ embed_dim × vocab_size    │ ← Same as embeddings
-└─────────────────────────────────────────────────┘
++-------------------------------------------------+
+|                Model Parameters                 |
++-------------------------------------------------┤
+| Token Embeddings    | vocab * embed_dim         | <- 70% of parameters
+| Position Encodings  | max_seq * embed_dim       |   (for large vocab)
+| N * Transformer Layers:                         |
+|   + Multi-Head Attn | 4 * embed_dim²           | <- 25% of parameters  
+|   + Feed-Forward    | 2 * embed_dim * ffn_dim  |   (per layer)
+|   + Layer Norms     | 2 * embed_dim            |
+| Output Projection   | embed_dim * vocab_size    | <- Same as embeddings
++-------------------------------------------------+
 
 Activation Memory (Forward Pass):
-┌─────────────────────────────────────────────────┐
-│ Input: batch × seq_len × embed_dim             │ ← Base memory unit
-│ Attention Scores: batch × heads × seq × seq    │ ← O(seq²) scaling!
-│ Layer Outputs: N × batch × seq × embed_dim     │ ← Linear with depth
-│ Gradients: 2× parameter memory                  │ ← Training overhead
-└─────────────────────────────────────────────────┘
++-------------------------------------------------+
+| Input: batch * seq_len * embed_dim             | <- Base memory unit
+| Attention Scores: batch * heads * seq * seq    | <- O(seq²) scaling!
+| Layer Outputs: N * batch * seq * embed_dim     | <- Linear with depth
+| Gradients: 2* parameter memory                  | <- Training overhead
++-------------------------------------------------+
 
 For GPT-3 scale (175B parameters):
 - Parameters: 700GB (fp32) / 350GB (fp16)
@@ -293,7 +293,7 @@ class LayerNorm:
         
         EXAMPLE (LayerNorm Operation):
         >>> ln = LayerNorm(512)  # For 512-dim embeddings
-        >>> x = Tensor(np.random.randn(32, 100, 512))  # batch × seq × embed
+        >>> x = Tensor(np.random.randn(32, 100, 512))  # batch * seq * embed
         >>> normalized = ln(x)
         >>> print(f"Mean: {normalized.data.mean(axis=-1)[0,0]:.6f}")  # ~0
         >>> print(f"Std: {normalized.data.std(axis=-1)[0,0]:.6f}")    # ~1
@@ -462,7 +462,7 @@ class LayerNorm:
 
 # %% [markdown]
 """
-### 🧪 Test Your Layer Normalization Implementation
+### TEST Test Your Layer Normalization Implementation
 
 Once you implement the LayerNorm methods above, run this cell to test it:
 """
@@ -536,11 +536,11 @@ def test_unit_layer_norm():
     assert 'parameter_memory_mb' in memory_stats, "Should provide memory statistics"
     assert memory_stats['total_parameters'] == 2 * embed_dim, "Should count gamma and beta parameters"
     
-    print("✅ Layer normalization tests passed!")
-    print(f"✅ Properly normalizes across feature dimensions")
-    print(f"✅ Handles 2D and 3D inputs correctly")
-    print(f"✅ Maintains ~0 mean and ~1 variance after normalization")
-    print(f"✅ Parameter memory: {memory_stats['parameter_memory_mb']:.4f}MB")
+    print("PASS Layer normalization tests passed!")
+    print(f"PASS Properly normalizes across feature dimensions")
+    print(f"PASS Handles 2D and 3D inputs correctly")
+    print(f"PASS Maintains ~0 mean and ~1 variance after normalization")
+    print(f"PASS Parameter memory: {memory_stats['parameter_memory_mb']:.4f}MB")
 
 # Test function defined (called in main block)
 
@@ -556,30 +556,30 @@ Each transformer block contains a position-wise feed-forward network that applie
 Position-wise FFN Structure:
 
 Input: (batch, seq_len, embed_dim)
-   │
-   ▼
-┌───────────────────────────────────────────┐
-│              Linear Layer 1                 │
-│          embed_dim → hidden_dim             │  ← Expansion
-│        W1: (embed_dim, hidden_dim)           │    (usually 4x)
-│        b1: (hidden_dim,)                     │
-└───────────────────────────────────────────┘
-   │
-   ▼
-┌───────────────────────────────────────────┐
-│                ReLU                      │  ← Nonlinearity
-│             max(0, x)                    │    (makes it powerful)
-└───────────────────────────────────────────┘
-   │
-   ▼
-┌───────────────────────────────────────────┐
-│              Linear Layer 2                 │
-│          hidden_dim → embed_dim             │  ← Compression
-│        W2: (hidden_dim, embed_dim)           │    (back to original)
-│        b2: (embed_dim,)                      │
-└───────────────────────────────────────────┘
-   │
-   ▼
+   |
+   v
++-------------------------------------------+
+|              Linear Layer 1                 |
+|          embed_dim -> hidden_dim             |  <- Expansion
+|        W1: (embed_dim, hidden_dim)           |    (usually 4x)
+|        b1: (hidden_dim,)                     |
++-------------------------------------------+
+   |
+   v
++-------------------------------------------+
+|                ReLU                      |  <- Nonlinearity
+|             max(0, x)                    |    (makes it powerful)
++-------------------------------------------+
+   |
+   v
++-------------------------------------------+
+|              Linear Layer 2                 |
+|          hidden_dim -> embed_dim             |  <- Compression
+|        W2: (hidden_dim, embed_dim)           |    (back to original)
+|        b2: (embed_dim,)                      |
++-------------------------------------------+
+   |
+   v
 Output: (batch, seq_len, embed_dim)
 ```
 
@@ -590,19 +590,19 @@ FFN Parameter Breakdown:
 
 For embed_dim=512, hidden_dim=2048:
 
-┌──────────────────────────────────────────────┐
-│ W1: 512 × 2048 = 1,048,576 parameters     │  ← 67% of FFN
-│ b1: 2048 parameters                      │
-│ W2: 2048 × 512 = 1,048,576 parameters     │  ← 67% of FFN
-│ b2: 512 parameters                       │
-├──────────────────────────────────────────────┤
-│ Total: 2,099,712 parameters              │
-│ Memory (fp32): 8.4 MB                   │
-└──────────────────────────────────────────────┘
++----------------------------------------------+
+| W1: 512 * 2048 = 1,048,576 parameters     |  <- 67% of FFN
+| b1: 2048 parameters                      |
+| W2: 2048 * 512 = 1,048,576 parameters     |  <- 67% of FFN
+| b2: 512 parameters                       |
++----------------------------------------------┤
+| Total: 2,099,712 parameters              |
+| Memory (fp32): 8.4 MB                   |
++----------------------------------------------+
 
-Scaling: Parameters ∝ embed_dim × hidden_dim
-Typical ratio: hidden_dim = 4 × embed_dim
-→ FFN params ∝ 8 × embed_dim²
+Scaling: Parameters ∝ embed_dim * hidden_dim
+Typical ratio: hidden_dim = 4 * embed_dim
+-> FFN params ∝ 8 * embed_dim²
 ```
 
 ### Computational Pattern
@@ -610,10 +610,10 @@ Typical ratio: hidden_dim = 4 × embed_dim
 ```
 FFN applies the same transformation to EVERY position independently:
 
-Position 0: [e0_0, e0_1, ..., e0_d] → FFN → [o0_0, o0_1, ..., o0_d]
-Position 1: [e1_0, e1_1, ..., e1_d] → FFN → [o1_0, o1_1, ..., o1_d]
+Position 0: [e0_0, e0_1, ..., e0_d] -> FFN -> [o0_0, o0_1, ..., o0_d]
+Position 1: [e1_0, e1_1, ..., e1_d] -> FFN -> [o1_0, o1_1, ..., o1_d]
     ...            ...                      ...            ...
-Position N: [eN_0, eN_1, ..., eN_d] → FFN → [oN_0, oN_1, ..., oN_d]
+Position N: [eN_0, eN_1, ..., eN_d] -> FFN -> [oN_0, oN_1, ..., oN_d]
 
 This is why it's called "position-wise" - each position gets the same treatment!
 ```
@@ -643,9 +643,9 @@ class PositionwiseFeedForward:
         
         ARCHITECTURE:
         - Input: (batch, seq_len, embed_dim)
-        - Linear 1: embed_dim → hidden_dim
+        - Linear 1: embed_dim -> hidden_dim
         - ReLU activation
-        - Linear 2: hidden_dim → embed_dim
+        - Linear 2: hidden_dim -> embed_dim
         - Output: (batch, seq_len, embed_dim)
         
         PARAMETER INITIALIZATION:
@@ -662,12 +662,12 @@ class PositionwiseFeedForward:
         self.dropout = dropout
         
         # Initialize weights using Xavier initialization
-        # W1: embed_dim → hidden_dim
+        # W1: embed_dim -> hidden_dim
         xavier_bound_1 = math.sqrt(6.0 / (embed_dim + hidden_dim))
         self.w1 = Tensor(np.random.uniform(-xavier_bound_1, xavier_bound_1, (embed_dim, hidden_dim)))
         self.b1 = Tensor(np.zeros(hidden_dim))
         
-        # W2: hidden_dim → embed_dim
+        # W2: hidden_dim -> embed_dim
         xavier_bound_2 = math.sqrt(6.0 / (hidden_dim + embed_dim))
         self.w2 = Tensor(np.random.uniform(-xavier_bound_2, xavier_bound_2, (hidden_dim, embed_dim)))
         self.b2 = Tensor(np.zeros(embed_dim))
@@ -755,7 +755,7 @@ class PositionwiseFeedForward:
 
 # %% [markdown]
 """
-### 🧪 Test Your Feed-Forward Network Implementation
+### TEST Test Your Feed-Forward Network Implementation
 
 Once you implement the PositionwiseFeedForward methods above, run this cell to test it:
 """
@@ -840,12 +840,12 @@ def test_unit_feed_forward():
     assert memory_stats['w2_parameters'] == expected_w2_params, "Should count W2 parameters correctly"
     assert memory_stats['total_parameters'] == expected_total, "Should count total parameters correctly"
     
-    print("✅ Position-wise feed-forward tests passed!")
-    print(f"✅ Handles 2D and 3D inputs correctly")
-    print(f"✅ Position-wise processing verified")
-    print(f"✅ ReLU activation working properly")
-    print(f"✅ Total parameters: {memory_stats['total_parameters']:,}")
-    print(f"✅ Parameter memory: {memory_stats['parameter_memory_mb']:.2f}MB")
+    print("PASS Position-wise feed-forward tests passed!")
+    print(f"PASS Handles 2D and 3D inputs correctly")
+    print(f"PASS Position-wise processing verified")
+    print(f"PASS ReLU activation working properly")
+    print(f"PASS Total parameters: {memory_stats['total_parameters']:,}")
+    print(f"PASS Parameter memory: {memory_stats['parameter_memory_mb']:.2f}MB")
 
 # Test function defined (called in main block)
 
@@ -886,8 +886,8 @@ class TransformerBlock:
         5. Set up parameter tracking from all sub-components
         
         ARCHITECTURE CHOICE: Pre-norm vs Post-norm
-        - Pre-norm: LayerNorm → Attention → Residual (more stable)
-        - Post-norm: Attention → LayerNorm → Residual (original paper)
+        - Pre-norm: LayerNorm -> Attention -> Residual (more stable)
+        - Post-norm: Attention -> LayerNorm -> Residual (original paper)
         
         Args:
             embed_dim: Embedding dimension
@@ -1119,7 +1119,7 @@ class TransformerBlock:
 
 # %% [markdown]
 """
-### 🧪 Test Your Transformer Block Implementation
+### TEST Test Your Transformer Block Implementation
 
 Once you implement the TransformerBlock methods above, run this cell to test it:
 """
@@ -1228,12 +1228,12 @@ def test_unit_transformer_block():
     assert memory_stats['total_memory_mb'] > 0, "Should have positive memory usage"
     assert memory_stats['total_parameters'] > 0, "Should count parameters"
     
-    print("✅ Transformer block tests passed!")
-    print(f"✅ Pre-norm and post-norm architectures work correctly")
-    print(f"✅ Residual connections preserve information flow")
-    print(f"✅ Causal masking works across all attention heads")
-    print(f"✅ Total parameters: {memory_stats['total_parameters']:,}")
-    print(f"✅ Total memory: {memory_stats['total_memory_mb']:.2f}MB")
+    print("PASS Transformer block tests passed!")
+    print(f"PASS Pre-norm and post-norm architectures work correctly")
+    print(f"PASS Residual connections preserve information flow")
+    print(f"PASS Causal masking works across all attention heads")
+    print(f"PASS Total parameters: {memory_stats['total_parameters']:,}")
+    print(f"PASS Total memory: {memory_stats['total_memory_mb']:.2f}MB")
 
 # Test function defined (called in main block)
 
@@ -1570,7 +1570,7 @@ class Transformer:
 
 # %% [markdown]
 """
-### 🧪 Test Your Complete Transformer Implementation
+### TEST Test Your Complete Transformer Implementation
 
 Once you implement the Transformer methods above, run this cell to test it:
 """
@@ -1699,19 +1699,19 @@ def test_unit_transformer_model():
     assert memory_stats['transformer_blocks_memory_mb'] > 0, "Should have transformer block memory"
     assert memory_stats['lm_head_memory_mb'] > 0, "Should have language modeling head memory"
     
-    print("✅ Complete transformer model tests passed!")
-    print(f"✅ Forward pass produces correct logit shapes")
-    print(f"✅ Causal masking works across all {num_layers} layers")
-    print(f"✅ Text generation capability verified")
-    print(f"✅ Total parameters: {memory_stats['total_parameters']:,}")
-    print(f"✅ Total memory: {memory_stats['total_memory_mb']:.2f}MB")
-    print(f"✅ Pre-norm and post-norm architectures work correctly")
+    print("PASS Complete transformer model tests passed!")
+    print(f"PASS Forward pass produces correct logit shapes")
+    print(f"PASS Causal masking works across all {num_layers} layers")
+    print(f"PASS Text generation capability verified")
+    print(f"PASS Total parameters: {memory_stats['total_parameters']:,}")
+    print(f"PASS Total memory: {memory_stats['total_memory_mb']:.2f}MB")
+    print(f"PASS Pre-norm and post-norm architectures work correctly")
 
 # Test function defined (called in main block)
 
 # %% [markdown]
 """
-## 🎯 ML Systems: Performance Analysis & Transformer Scaling
+## TARGET ML Systems: Performance Analysis & Transformer Scaling
 
 Now let's develop systems engineering skills by analyzing transformer performance and understanding how model depth and width affect memory usage and computational requirements.
 
@@ -1865,7 +1865,7 @@ class TransformerProfiler:
                 print(f"{config_name:<15} ERROR: {str(e)[:50]}")
         
         # Analysis
-        print(f"\n💡 TRADE-OFF INSIGHTS:")
+        print(f"\nTIP TRADE-OFF INSIGHTS:")
         print(f"   - Deeper models: Better at learning complex patterns, more sequential")
         print(f"   - Wider models: More parallelizable, can capture diverse features")
         print(f"   - More heads: Richer attention patterns, more computation")
@@ -1951,7 +1951,7 @@ class TransformerProfiler:
             
             print(f"{size:<12} {total_params/1e6:.1f}M {training_memory_gb:.1f} {training_gpu:<12} {inference_req}")
         
-        print(f"\n📈 SCALING OBSERVATIONS:")
+        print(f"\nPROGRESS SCALING OBSERVATIONS:")
         print(f"   - Model size grows super-linearly with dimension increases")
         print(f"   - Memory requirements dominate deployment decisions")
         print(f"   - Training requires 3-4x more memory than inference")
@@ -1976,7 +1976,7 @@ def analyze_transformer_system_design():
         },
         'Attention Patterns': {
             'Full attention': {'complexity': 'O(N²)', 'quality': 'Best', 'scalability': 'Limited'},
-            'Sparse attention': {'complexity': 'O(N√N)', 'quality': 'Good', 'scalability': 'Better'},
+            'Sparse attention': {'complexity': 'O(NsqrtN)', 'quality': 'Good', 'scalability': 'Better'},
             'Linear attention': {'complexity': 'O(N)', 'quality': 'Reduced', 'scalability': 'Excellent'}
         },
         'Feed-Forward Size': {
@@ -1986,7 +1986,7 @@ def analyze_transformer_system_design():
         }
     }
     
-    print("🎯 ARCHITECTURAL DESIGN CHOICES:")
+    print("TARGET ARCHITECTURAL DESIGN CHOICES:")
     for category, choices in design_choices.items():
         print(f"\n{category}:")
         for choice, properties in choices.items():
@@ -1996,12 +1996,12 @@ def analyze_transformer_system_design():
     # Memory scaling analysis
     print(f"\n📊 MEMORY SCALING PATTERNS:")
     print(f"Component breakdown for typical transformer:")
-    print(f"   - Token embeddings: vocab_size × embed_dim parameters")
-    print(f"   - Position encodings: 0 parameters (sinusoidal) or seq_len × embed_dim (learned)")
-    print(f"   - Attention layers: 4 × embed_dim² parameters per layer")
-    print(f"   - Feed-forward: 2 × embed_dim × hidden_dim parameters per layer")
-    print(f"   - Layer normalization: 2 × embed_dim parameters per layer")
-    print(f"   - Output projection: embed_dim × vocab_size parameters")
+    print(f"   - Token embeddings: vocab_size * embed_dim parameters")
+    print(f"   - Position encodings: 0 parameters (sinusoidal) or seq_len * embed_dim (learned)")
+    print(f"   - Attention layers: 4 * embed_dim² parameters per layer")
+    print(f"   - Feed-forward: 2 * embed_dim * hidden_dim parameters per layer")
+    print(f"   - Layer normalization: 2 * embed_dim parameters per layer")
+    print(f"   - Output projection: embed_dim * vocab_size parameters")
     
     print(f"\n🔧 OPTIMIZATION STRATEGIES:")
     optimization_techniques = [
@@ -2017,7 +2017,7 @@ def analyze_transformer_system_design():
     for technique in optimization_techniques:
         print(f"   - {technique}")
     
-    print(f"\n🎯 PRODUCTION DEPLOYMENT CONSIDERATIONS:")
+    print(f"\nTARGET PRODUCTION DEPLOYMENT CONSIDERATIONS:")
     deployment_factors = [
         "Batch size: Larger batches improve GPU utilization but increase memory",
         "Sequence length: Quadratic impact on attention memory",
@@ -2034,7 +2034,7 @@ def analyze_transformer_system_design():
 
 # %% [markdown]
 """
-### 🧪 Test: Transformer Performance Analysis
+### TEST Test: Transformer Performance Analysis
 
 Let's test our transformer profiler with realistic scaling scenarios.
 """
@@ -2089,7 +2089,7 @@ def test_transformer_profiler():
         assert 1.0 < param_ratio < layer_ratio * 2, f"Parameters should scale sub-linearly, got {param_ratio:.2f}"
         assert 1.0 < memory_ratio < layer_ratio * 2, f"Memory should scale sub-linearly, got {memory_ratio:.2f}"
     
-    print("✅ Depth scaling measurement test passed")
+    print("PASS Depth scaling measurement test passed")
     
     # Test width vs depth analysis
     configurations = [
@@ -2108,7 +2108,7 @@ def test_transformer_profiler():
         assert 'computation_time_ms' in result, "Should measure computation time"
         assert result['actual_parameters'] > 0, "Should have positive parameter count"
     
-    print("✅ Width vs depth analysis test passed")
+    print("PASS Width vs depth analysis test passed")
     
     # Test production scaling simulation
     production_results = profiler.simulate_production_scaling(['Small', 'Medium'])
@@ -2124,8 +2124,8 @@ def test_transformer_profiler():
         assert result['total_parameters'] > 1e6, "Should have millions of parameters"
         assert result['training_memory_gb'] > result['inference_memory_gb'], "Training should require more memory"
     
-    print("✅ Production scaling simulation test passed")
-    print("🎯 Transformer Profiler: All tests passed!")
+    print("PASS Production scaling simulation test passed")
+    print("TARGET Transformer Profiler: All tests passed!")
 
 # Test function defined (called in main block)
 
@@ -2139,7 +2139,7 @@ Let's test the complete pipeline from tokenization through transformer processin
 # %% nbgrader={"grade": false, "grade_id": "test-transformer-integration", "locked": false, "schema_version": 3, "solution": false, "task": false}
 def test_complete_language_model_pipeline():
     """Test complete language model pipeline integration."""
-    print("🧪 Integration Test: Complete Language Model Pipeline...")
+    print("TEST Integration Test: Complete Language Model Pipeline...")
     
     # Create a small but complete language model
     vocab_size = 1000
@@ -2295,10 +2295,10 @@ def test_complete_language_model_pipeline():
     
     print(f"    Model shows appropriate sensitivity to input changes")
     
-    print("✅ Complete language model pipeline integration test passed!")
-    print(f"✅ Forward pass, masking, generation, and performance verified")
-    print(f"✅ Model processes {tokens_per_second:.0f} tokens/second")
-    print(f"✅ Memory footprint: {memory_stats['total_memory_mb']:.1f}MB")
+    print("PASS Complete language model pipeline integration test passed!")
+    print(f"PASS Forward pass, masking, generation, and performance verified")
+    print(f"PASS Model processes {tokens_per_second:.0f} tokens/second")
+    print(f"PASS Memory footprint: {memory_stats['total_memory_mb']:.1f}MB")
 
 # Test function defined (called in main block)
 
@@ -2320,14 +2320,14 @@ if __name__ == "__main__":
     test_complete_language_model_pipeline()
     
     print("\n" + "="*60)
-    print("🔍 TRANSFORMER SYSTEMS ANALYSIS")
+    print("MAGNIFY TRANSFORMER SYSTEMS ANALYSIS")
     print("="*60)
     
     # Performance analysis
     profiler = TransformerProfiler()
     
     # Test transformer scaling with different depths
-    print("📈 TRANSFORMER DEPTH SCALING ANALYSIS:")
+    print("PROGRESS TRANSFORMER DEPTH SCALING ANALYSIS:")
     base_config = {
         'vocab_size': 1000,
         'embed_dim': 256,
@@ -2446,7 +2446,7 @@ if __name__ == "__main__":
         print(f"  {factor}x scale: {scaled_params/1e6:.0f}M params, ~{scaled_memory_gb:.1f}GB memory")
     
     print("\n" + "="*60)
-    print("🎯 TRANSFORMERS MODULE COMPLETE!")
+    print("TARGET TRANSFORMERS MODULE COMPLETE!")
     print("="*60)
     print("All transformer tests passed!")
     print("Complete language model architecture implemented!")
@@ -2455,16 +2455,16 @@ if __name__ == "__main__":
     # Final systems analysis
     analyze_transformer_memory_scaling_final()
 
-# 🔍 SYSTEMS INSIGHT: Final Transformer Memory Scaling Analysis
+# MAGNIFY SYSTEMS INSIGHT: Final Transformer Memory Scaling Analysis
 def analyze_transformer_memory_scaling_final():
     """Comprehensive analysis of transformer memory scaling patterns."""
     try:
         print("\n" + "="*70)
-        print("📈 TRANSFORMER MEMORY SCALING ANALYSIS")
+        print("PROGRESS TRANSFORMER MEMORY SCALING ANALYSIS")
         print("="*70)
         
         # Test sequence length scaling (the quadratic bottleneck)
-        print("🔍 SEQUENCE LENGTH SCALING (Quadratic Alert!)")
+        print("MAGNIFY SEQUENCE LENGTH SCALING (Quadratic Alert!)")
         embed_dim = 512
         num_heads = 8
         batch_size = 16
@@ -2476,10 +2476,10 @@ def analyze_transformer_memory_scaling_final():
         
         base_memory = None
         for seq_len in seq_lengths:
-            # Input activation memory: batch × seq × embed
+            # Input activation memory: batch * seq * embed
             input_memory = batch_size * seq_len * embed_dim * 4 / (1024**2)
             
-            # Attention matrix memory: batch × heads × seq × seq (the killer!)
+            # Attention matrix memory: batch * heads * seq * seq (the killer!)
             attention_memory = batch_size * num_heads * seq_len * seq_len * 4 / (1024**2)
             
             total_memory = input_memory + attention_memory
@@ -2492,10 +2492,10 @@ def analyze_transformer_memory_scaling_final():
             
             print(f"{seq_len:<8} {input_memory:<11.2f} {attention_memory:<14.2f} {total_memory:<11.2f} {scale_factor:<12.2f}")
         
-        print(f"\n⚠️  QUADRATIC SCALING ALERT: 2× sequence = 4× attention memory!")
+        print(f"\nWARNING️  QUADRATIC SCALING ALERT: 2* sequence = 4* attention memory!")
         
         # Model size comparison
-        print(f"\n🔍 MODEL SIZE COMPARISON (Parameter Count)")
+        print(f"\nMAGNIFY MODEL SIZE COMPARISON (Parameter Count)")
         configs = [
             ("GPT-2 Small", 50257, 768, 12, 12, 3072),
             ("GPT-2 Medium", 50257, 1024, 24, 16, 4096),
@@ -2522,9 +2522,9 @@ def analyze_transformer_memory_scaling_final():
         print(f"   - Sequence length: O(N²) scaling due to attention matrices")
         print(f"   - Model parameters: O(embed_dim²) dominates for transformer blocks")
         print(f"   - Vocabulary size: O(vocab_size) can dominate total parameters")
-        print(f"   - Training memory: 4-16× parameter memory (gradients + optimizer)")
+        print(f"   - Training memory: 4-16* parameter memory (gradients + optimizer)")
         
-        print(f"\n💡 PRODUCTION IMPLICATIONS:")
+        print(f"\nTIP PRODUCTION IMPLICATIONS:")
         print(f"   - Attention memory limits sequence length in practice")
         print(f"   - Large vocabularies dominate parameter count")
         print(f"   - Deep models need careful memory management")
@@ -2535,11 +2535,11 @@ def analyze_transformer_memory_scaling_final():
         print(f"     • Mixed precision for memory efficiency")
         
     except Exception as e:
-        print(f"⚠️ Error in scaling analysis: {e}")
+        print(f"WARNING️ Error in scaling analysis: {e}")
 
 # %% [markdown]
 """
-## 🤔 ML Systems Thinking: Interactive Questions
+## THINK ML Systems Thinking: Interactive Questions
 
 Now that you've built complete transformer architectures, let's connect this work to broader ML systems challenges. These questions help you think critically about how transformer design choices affect production deployment and system performance.
 
@@ -2552,7 +2552,7 @@ Take time to reflect thoughtfully on each question - your insights will help you
 
 **Context**: Your transformer implementations reveal how architectural choices affect memory usage and computational complexity. In your TransformerBlock implementation, you saw how FFN parameters dominate (67% of block parameters), while attention creates O(N²) memory scaling with sequence length. Your memory scaling analysis showed quadratic growth with sequence length.
 
-**Reflection Question**: Analyze the memory and performance trade-offs in your transformer architecture. Based on your parameter counting and memory analysis, how would you modify your TransformerBlock implementation to handle sequences 4× longer while staying within the same memory budget? Consider the attention matrix scaling you observed (quadratic with sequence length) and the FFN parameter dominance you measured. What specific changes to your MultiHeadAttention and PositionwiseFeedForward classes would enable more efficient long-sequence processing, and how would these modifications affect the residual connections and layer normalization in your transformer blocks?
+**Reflection Question**: Analyze the memory and performance trade-offs in your transformer architecture. Based on your parameter counting and memory analysis, how would you modify your TransformerBlock implementation to handle sequences 4* longer while staying within the same memory budget? Consider the attention matrix scaling you observed (quadratic with sequence length) and the FFN parameter dominance you measured. What specific changes to your MultiHeadAttention and PositionwiseFeedForward classes would enable more efficient long-sequence processing, and how would these modifications affect the residual connections and layer normalization in your transformer blocks?
 
 Think about: attention matrix memory scaling, FFN parameter reduction strategies, efficient residual connection patterns, and layer normalization placement optimization.
 
@@ -2674,11 +2674,11 @@ GRADING RUBRIC (Instructor Use):
 
 # %% [markdown]
 """
-## 🎯 MODULE SUMMARY: Transformers
+## TARGET MODULE SUMMARY: Transformers
 
 Congratulations! You have successfully implemented complete transformer architectures that power modern language models:
 
-### ✅ What You Have Built
+### PASS What You Have Built
 - **Layer Normalization**: Stable normalization for deep transformer training
 - **Position-wise Feed-Forward**: Non-linear transformations applied to each sequence position
 - **Transformer Blocks**: Complete transformer layers with attention, normalization, and residual connections
@@ -2687,28 +2687,28 @@ Congratulations! You have successfully implemented complete transformer architec
 - **🆕 Performance Analysis**: Comprehensive scaling analysis and architectural optimization tools
 - **🆕 Production Insights**: Understanding of real-world transformer deployment challenges
 
-### ✅ Key Learning Outcomes
+### PASS Key Learning Outcomes
 - **Understanding**: How transformer blocks enable powerful sequence modeling through attention and feed-forward layers
 - **Implementation**: Built complete transformer architectures with proper layer organization and residual connections
 - **Systems Insight**: How transformer depth affects memory usage, training efficiency, and model capacity
 - **Performance Engineering**: Measured and analyzed transformer scaling characteristics and optimization opportunities
 - **Production Context**: Understanding transformer deployment challenges and architectural trade-offs
 
-### ✅ Technical Mastery
+### PASS Technical Mastery
 - **Layer Normalization**: Stabilizing deep network training with proper feature normalization
 - **Residual Connections**: Enabling gradient flow through deep transformer architectures
 - **Pre-norm vs Post-norm**: Understanding normalization placement effects on training stability
 - **Parameter Scaling**: Understanding how transformer parameters scale with architectural choices
 - **🆕 Generation Systems**: Autoregressive text generation with causal attention patterns
 
-### ✅ Professional Skills Developed
+### PASS Professional Skills Developed
 - **Systems Architecture**: Designing complete transformer systems for production scale
 - **Memory Engineering**: Understanding transformer memory scaling (O(N²) attention, parameter distribution)
 - **Computational Assessment**: Parameter counting, memory analysis, and production-scale calculations
 - **Performance Analysis**: Measuring and improving transformer computation and memory efficiency
 - **Integration Design**: Building complete language processing pipelines from tokenization to generation
 
-### ✅ Ready for Next Steps
+### PASS Ready for Next Steps
 Your transformer implementations and analysis provide the foundation for:
 - **Advanced Language Models**: GPT, BERT, and other transformer-based architectures
 - **Multi-modal Models**: Extending transformers to vision, audio, and other modalities
@@ -2716,14 +2716,14 @@ Your transformer implementations and analysis provide the foundation for:
 - **Scale Analysis**: Understanding memory bottlenecks from small models to GPT-3 scale (175B parameters)
 - **🧠 AI Applications**: Real-world language processing applications and services
 
-### 🔗 Connection to Real ML Systems
+### LINK Connection to Real ML Systems
 Your implementations mirror production systems:
 - **GPT Architecture**: Your transformer matches GPT's decoder-only architecture
 - **BERT Components**: Layer normalization and attention mechanisms used in BERT
 - **Production Optimization**: Understanding of memory scaling, batching, and generation optimization
 - **Industry Applications**: Foundation for all modern language model deployments
 
-### 🎯 The Complete Language Model
+### TARGET The Complete Language Model
 You have built the architecture that transformed AI:
 - **Before**: RNNs and CNNs limited by sequential processing and local dependencies
 - **After**: Transformers enable parallel processing and global attention across entire sequences

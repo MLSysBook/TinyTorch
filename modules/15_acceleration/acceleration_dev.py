@@ -4,7 +4,7 @@
 
 Welcome to Hardware Acceleration! You'll discover the easiest optimization in ML systems - getting 100x speedups with zero code changes!
 
-## 🔗 Building on Previous Learning
+## LINK Building on Previous Learning
 **What You Built Before**:
 - Module 02 (Tensor): Triple-nested loops for matrix operations
 - Module 04 (Layers): Forward pass implementations
@@ -18,7 +18,7 @@ Welcome to Hardware Acceleration! You'll discover the easiest optimization in ML
 
 **Connection Map**:
 ```
-Profiling → Acceleration → Production ML
+Profiling -> Acceleration -> Production ML
 (identify)   (optimize)    (deploy at scale)
 ```
 
@@ -29,21 +29,21 @@ Profiling → Acceleration → Production ML
 - **Framework connections**: How PyTorch/TensorFlow achieve performance
 - **Optimization trade-offs**: Educational clarity vs production speed
 
-## Build → Use → Reflect
+## Build -> Use -> Reflect
 1. **Build**: Cache-friendly blocked matrix multiplication from scratch
 2. **Use**: Apply acceleration to real ML model operations (MLP, CNN, Attention)
 3. **Reflect**: Analyze the educational-to-production optimization spectrum
 
 ## Systems Reality Check
-💡 **Production Context**: ML frameworks use these exact principles for 100x speedups
-⚡ **Performance Insight**: Memory access patterns matter more than raw computation speed
+TIP **Production Context**: ML frameworks use these exact principles for 100x speedups
+SPEED **Performance Insight**: Memory access patterns matter more than raw computation speed
 
 ## The Free Speedup Journey
 
 **Key Message**: This is the EASIEST optimization - just use better backends! No accuracy trade-offs, no complex math - just 10-100x faster code.
 
 ```
-Educational Loops → Cache Blocking → NumPy/BLAS → Smart Backends
+Educational Loops -> Cache Blocking -> NumPy/BLAS -> Smart Backends
     (learning)       (understanding)   (production)    (automation)
     1000x slower     100x slower      optimal speed   transparent
 ```
@@ -68,19 +68,19 @@ Let's start with the educational triple-nested loops you implemented earlier. Th
 
 ```
 CPU Architecture (Optimized for Sequential):         GPU Architecture (Optimized for Parallel):
-┌─────────────────────────────────────────────┐     ┌─────────────────────────────────────────────┐
-│ Complex Control Unit                        │     │ Simple Control Units                       │
-│ ┌─────────┐  Large Caches                 │     │ ┌─┐ ┌─┐ ┌─┐ ┌─┐ Small Caches              │
-│ │  Core 1 │  ┌──────────────────────────┐  │     │ │C│ │C│ │C│ │C│ ┌──────────────────────┐   │
-│ └─────────┘  │     L3 Cache (8MB)       │  │     │ └─┘ └─┘ └─┘ └─┘ │  Shared Memory (48KB) │   │
-│ ┌─────────┐  │                          │  │     │ ┌─┐ ┌─┐ ┌─┐ ┌─┐ │                      │   │
-│ │  Core 2 │  └──────────────────────────┘  │     │ │C│ │C│ │C│ │C│ └──────────────────────┘   │
-│ └─────────┘                                │     │ └─┘ └─┘ └─┘ └─┘ ... (thousands of cores) │
-│ ┌─────────┐  Main Memory (16GB)           │     │                                           │
-│ │  Core 4 │  ┌──────────────────────────┐  │     │ High Bandwidth Memory (HBM)              │
-│ └─────────┘  │ 200+ cycle latency       │  │     │ ┌──────────────────────────────────────┐  │
-│              └──────────────────────────┘  │     │ │ 1000+ GB/s bandwidth                 │  │
-└─────────────────────────────────────────────┘     └─────────────────────────────────────────────┘
++---------------------------------------------+     +---------------------------------------------+
+| Complex Control Unit                        |     | Simple Control Units                       |
+| +---------+  Large Caches                 |     | +-+ +-+ +-+ +-+ Small Caches              |
+| |  Core 1 |  +--------------------------+  |     | |C| |C| |C| |C| +----------------------+   |
+| +---------+  |     L3 Cache (8MB)       |  |     | +-+ +-+ +-+ +-+ |  Shared Memory (48KB) |   |
+| +---------+  |                          |  |     | +-+ +-+ +-+ +-+ |                      |   |
+| |  Core 2 |  +--------------------------+  |     | |C| |C| |C| |C| +----------------------+   |
+| +---------+                                |     | +-+ +-+ +-+ +-+ ... (thousands of cores) |
+| +---------+  Main Memory (16GB)           |     |                                           |
+| |  Core 4 |  +--------------------------+  |     | High Bandwidth Memory (HBM)              |
+| +---------+  | 200+ cycle latency       |  |     | +--------------------------------------+  |
+|              +--------------------------+  |     | | 1000+ GB/s bandwidth                 |  |
++---------------------------------------------+     +---------------------------------------------+
 
 CPU: Few cores, complex, optimized for latency    GPU: Many cores, simple, optimized for throughput
 Best for: Sequential algorithms, complex logic    Best for: Parallel algorithms, simple operations
@@ -91,19 +91,19 @@ Best for: Sequential algorithms, complex logic    Best for: Parallel algorithms,
 ```
 Memory Hierarchy (Latency and Size Trade-offs):
 
-Registers:   4 bytes     │ 1 cycle      │ ██████████ Speed
-L1 Cache:    32KB       │ 3-4 cycles   │ ████████▒▒ 
-L2 Cache:    256KB      │ 10-20 cycles │ ██████▒▒▒▒
-L3 Cache:    8MB        │ 50-100 cycles│ ████▒▒▒▒▒▒
-Main RAM:    16GB       │ 200+ cycles  │ ██▒▒▒▒▒▒▒▒
-SSD Storage: 1TB        │ 100,000+ cyc │ ▒▒▒▒▒▒▒▒▒▒
-             ↑                          ↑
+Registers:   4 bytes     | 1 cycle      | ██████████ Speed
+L1 Cache:    32KB       | 3-4 cycles   | ████████▒▒ 
+L2 Cache:    256KB      | 10-20 cycles | ██████▒▒▒▒
+L3 Cache:    8MB        | 50-100 cycles| ████▒▒▒▒▒▒
+Main RAM:    16GB       | 200+ cycles  | ██▒▒▒▒▒▒▒▒
+SSD Storage: 1TB        | 100,000+ cyc | ▒▒▒▒▒▒▒▒▒▒
+             ^                          ^
            Size                      Speed
 ```
 
 **The Cache Miss Problem**:
-- Cache hit: Data found in L1 → 1 cycle
-- Cache miss: Must fetch from RAM → 200+ cycles
+- Cache hit: Data found in L1 -> 1 cycle
+- Cache miss: Must fetch from RAM -> 200+ cycles
 - 200x slowdown for every cache miss!
 """
 
@@ -125,10 +125,10 @@ def matmul_naive(a: np.ndarray, b: np.ndarray) -> np.ndarray:
     Memory Access Pattern Analysis:
     ```
     Inner loop accesses:
-    a[i, k] → Sequential access (cache-friendly)
-    b[k, j] → Strided access (cache-hostile!)
+    a[i, k] -> Sequential access (cache-friendly)
+    b[k, j] -> Strided access (cache-hostile!)
     
-    For 1000×1000 matrices:
+    For 1000*1000 matrices:
     - a[i,k]: 1000 sequential reads per row (good)
     - b[k,j]: 1000 random column reads (terrible!)
     - Total cache misses: ~1 billion!
@@ -154,7 +154,7 @@ def matmul_naive(a: np.ndarray, b: np.ndarray) -> np.ndarray:
     
     return c
 
-# 🔍 SYSTEMS INSIGHT: Memory Access Pattern Analysis
+# MAGNIFY SYSTEMS INSIGHT: Memory Access Pattern Analysis
 def analyze_memory_access_patterns():
     """
     Visualize why naive loops create terrible cache performance.
@@ -175,8 +175,8 @@ def analyze_memory_access_patterns():
         print("Memory: [b00 b01 b02 b03 | b10 b11 b12 b13 | b20 b21 b22 b23 | b30 b31 b32 b33]")
         
         print("\n🔴 PROBLEM: Computing C[0,0] = sum(A[0,k] * B[k,0])")
-        print("A[0,k] accesses: a00, a01, a02, a03  (sequential ✓)")
-        print("B[k,0] accesses: b00, b10, b20, b30  (every 4th element ❌)")
+        print("A[0,k] accesses: a00, a01, a02, a03  (sequential OK)")
+        print("B[k,0] accesses: b00, b10, b20, b30  (every 4th element FAIL)")
         
         print("\n📊 Cache Miss Analysis:")
         cache_line_size = 64  # bytes
@@ -204,7 +204,7 @@ def analyze_memory_access_patterns():
         print(f"Performance penalty: 200x slower!")
         
     except Exception as e:
-        print(f"⚠️ Error in memory analysis: {e}")
+        print(f"WARNING️ Error in memory analysis: {e}")
         print("Make sure numpy is available")
 
 # Run the analysis
@@ -212,17 +212,17 @@ analyze_memory_access_patterns()
 
 # %% [markdown]
 """
-### 🧪 Unit Test: Educational Implementation
+### TEST Unit Test: Educational Implementation
 
 Let's test our educational loops and measure their performance characteristics.
 """
 
-# ✅ IMPLEMENTATION CHECKPOINT: Naive matrix multiplication complete
+# PASS IMPLEMENTATION CHECKPOINT: Naive matrix multiplication complete
 
-# 🤔 PREDICTION: How much slower are educational loops vs NumPy?
+# THINK PREDICTION: How much slower are educational loops vs NumPy?
 # Your guess: ___x slower for 100x100 matrices
 
-# 🔍 SYSTEMS INSIGHT #1: Why Educational Loops Are Slow
+# MAGNIFY SYSTEMS INSIGHT #1: Why Educational Loops Are Slow
 def analyze_educational_loop_performance():
     """
     Measure and understand why educational loops create performance problems.
@@ -278,14 +278,14 @@ def analyze_educational_loop_performance():
         print(f"• Cache misses make large matrices exponentially slower")
         print(f"• NumPy: Professional optimizations give 100-1000x speedup")
         
-        print(f"\n💡 Why This Matters for ML Systems:")
-        print(f"• Understanding algorithms ≠ performance optimization")
+        print(f"\nTIP Why This Matters for ML Systems:")
+        print(f"• Understanding algorithms != performance optimization")
         print(f"• Educational clarity vs production speed trade-off")
         print(f"• Memory access patterns dominate performance")
         print(f"• Library choice impacts application feasibility")
         
     except Exception as e:
-        print(f"⚠️ Error in performance analysis: {e}")
+        print(f"WARNING️ Error in performance analysis: {e}")
         print("Make sure matrices are small enough for educational timing")
 
 # Run the educational performance analysis
@@ -299,7 +299,7 @@ def test_naive_baseline():
     This test validates correctness and demonstrates the performance gap
     between educational loops and optimized implementations.
     """
-    print("🧪 Testing Naive Implementation...")
+    print("TEST Testing Naive Implementation...")
     
     # Test correctness with small matrices first
     a = np.array([[1, 2], [3, 4]], dtype=np.float32)
@@ -311,7 +311,7 @@ def test_naive_baseline():
     
     assert np.allclose(result_naive, result_numpy), "Naive matmul incorrect vs NumPy"
     assert np.allclose(result_naive, expected), "Naive matmul incorrect vs expected"
-    print("✅ Naive implementation produces correct results")
+    print("PASS Naive implementation produces correct results")
     
     # Performance comparison (small sizes only - educational is VERY slow)
     print("\n📊 Performance comparison:")
@@ -338,9 +338,9 @@ def test_naive_baseline():
     print(f"\n📊 Scaling Analysis (100x100 baseline):")
     print(f"For 500x500 matrix: ~{speedup * 125:.0f}x slower than NumPy")  # (500/100)^3 = 125
     print(f"For 1000x1000 matrix: ~{speedup * 1000:.0f}x slower than NumPy")  # (1000/100)^3 = 1000
-    print(f"\n💡 Why: O(N³) complexity + cache misses = exponential slowdown")
+    print(f"\nTIP Why: O(N³) complexity + cache misses = exponential slowdown")
     
-    print("✅ Naive baseline established")
+    print("PASS Naive baseline established")
     return naive_time, numpy_time, speedup
 
 # Execute the test
@@ -356,14 +356,14 @@ test_naive_baseline()
 ```
 CPU Cache Hierarchy (Latency vs Capacity Trade-off):
 
-┌──────────────────────────────────────────────────────────────────────────────────┐
-Register:  4 bytes   │ ██████████ 1 cycle      (instant access)           │
-L1 Cache:  32KB      │ ████████▒▒ 3-4 cycles   (lightning fast)           │
-L2 Cache:  256KB     │ ██████▒▒▒▒ 10-20 cycles (fast)                   │
-L3 Cache:  8MB       │ ████▒▒▒▒▒▒ 50-100 cycles(slow)                   │
-Main RAM:  16GB      │ ██▒▒▒▒▒▒▒▒ 200+ cycles  (VERY slow)              │
-SSD:       1TB       │ ▒▒▒▒▒▒▒▒▒▒ 100,000+ cyc (glacial)                │
-└──────────────────────────────────────────────────────────────────────────────────┘
++----------------------------------------------------------------------------------+
+Register:  4 bytes   | ██████████ 1 cycle      (instant access)           |
+L1 Cache:  32KB      | ████████▒▒ 3-4 cycles   (lightning fast)           |
+L2 Cache:  256KB     | ██████▒▒▒▒ 10-20 cycles (fast)                   |
+L3 Cache:  8MB       | ████▒▒▒▒▒▒ 50-100 cycles(slow)                   |
+Main RAM:  16GB      | ██▒▒▒▒▒▒▒▒ 200+ cycles  (VERY slow)              |
+SSD:       1TB       | ▒▒▒▒▒▒▒▒▒▒ 100,000+ cyc (glacial)                |
++----------------------------------------------------------------------------------+
      Size                        Speed                      Characteristics
 ```
 
@@ -373,27 +373,27 @@ SSD:       1TB       │ ▒▒▒▒▒▒▒▒▒▒ 100,000+ cyc (glacial)  
 
 ```
 Vectorization (SIMD - Single Instruction, Multiple Data):
-┌──────────────────────────────────────────────────┐
-│ Scalar: for i in range(4): c[i] = a[i] + b[i]   │
-│         ADD a[0], b[0] → c[0]  (4 operations)    │  
-│         ADD a[1], b[1] → c[1]                   │
-│         ADD a[2], b[2] → c[2]                   │
-│         ADD a[3], b[3] → c[3]                   │
-│                                                │
-│ Vector: c = a + b  (NumPy/BLAS)               │
-│         VADD [a0,a1,a2,a3], [b0,b1,b2,b3]     │
-│           → [c0,c1,c2,c3]  (1 operation!)      │
-└──────────────────────────────────────────────────┘
++--------------------------------------------------+
+| Scalar: for i in range(4): c[i] = a[i] + b[i]   |
+|         ADD a[0], b[0] -> c[0]  (4 operations)    |  
+|         ADD a[1], b[1] -> c[1]                   |
+|         ADD a[2], b[2] -> c[2]                   |
+|         ADD a[3], b[3] -> c[3]                   |
+|                                                |
+| Vector: c = a + b  (NumPy/BLAS)               |
+|         VADD [a0,a1,a2,a3], [b0,b1,b2,b3]     |
+|           -> [c0,c1,c2,c3]  (1 operation!)      |
++--------------------------------------------------+
 
 Parallelization (Multiple cores working simultaneously):
-┌──────────────────────────────────────────────────┐
-│ Core 1: Computes rows 0-249   of result matrix    │
-│ Core 2: Computes rows 250-499 of result matrix    │
-│ Core 3: Computes rows 500-749 of result matrix    │  
-│ Core 4: Computes rows 750-999 of result matrix    │
-│                                                │
-│ 4x speedup (ideal) if no synchronization costs  │
-└──────────────────────────────────────────────────┘
++--------------------------------------------------+
+| Core 1: Computes rows 0-249   of result matrix    |
+| Core 2: Computes rows 250-499 of result matrix    |
+| Core 3: Computes rows 500-749 of result matrix    |  
+| Core 4: Computes rows 750-999 of result matrix    |
+|                                                |
+| 4x speedup (ideal) if no synchronization costs  |
++--------------------------------------------------+
 ```
 
 ### Memory Access Pattern Analysis
@@ -409,7 +409,7 @@ for i in range(m):      # Loop over output rows
 **The Problem**: `b[k,j]` creates terrible access patterns:
 - Each `j` increment jumps to a new column (cache miss)
 - Each `k` increment jumps to a new row (another cache miss)  
-- For 1000×1000 matrix: 1 billion cache misses!
+- For 1000*1000 matrix: 1 billion cache misses!
 
 **Visualization of Memory Access**:
 ```
@@ -417,7 +417,7 @@ Matrix B in memory (row-major):
 [b00 b01 b02 b03 | b10 b11 b12 b13 | b20 b21 b22 b23 | ...]
 
 Accessing column 0: b00, b10, b20, b30, ...
-                    │    │    │    │
+                    |    |    |    |
                     4    4    4    4  elements apart = strided access
                    🔴  🔴  🔴  🔴 cache misses!
 ```
@@ -434,7 +434,7 @@ def matmul_blocked(a: np.ndarray, b: np.ndarray, block_size: int = 64) -> np.nda
     dramatically reducing cache misses and improving performance.
     
     **Memory Analysis (Quantitative)**:
-    - 64×64 float32 block = 4096 * 4 bytes = 16KB per block
+    - 64*64 float32 block = 4096 * 4 bytes = 16KB per block
     - 3 blocks (A_block, B_block, C_block) = 48KB total
     - Fits comfortably in 256KB L2 cache with room for other data
     - Reuses each data element 64 times before evicting from cache
@@ -446,21 +446,21 @@ def matmul_blocked(a: np.ndarray, b: np.ndarray, block_size: int = 64) -> np.nda
     **Blocking Visualization**:
     ```
     Large Matrix Multiplication:
-    A (1000x1000) × B (1000x1000) = C (1000x1000)
+    A (1000x1000) * B (1000x1000) = C (1000x1000)
     
     Blocked Approach:
-    ┌────────────────┐   ┌────────────────┐   ┌────────────────┐
-    │ 64x64│      │   │ 64x64│      │   │ 64x64│      │
-    │ block │  A   │ × │ block │  B   │ = │ block │  C   │
-    │       │      │   │       │      │   │       │      │
-    └────────────────┘   └────────────────┘   └────────────────┘
+    +----------------+   +----------------+   +----------------+
+    | 64x64|      |   | 64x64|      |   | 64x64|      |
+    | block |  A   | * | block |  B   | = | block |  C   |
+    |       |      |   |       |      |   |       |      |
+    +----------------+   +----------------+   +----------------+
     
     Each 64x64 block fits in L1/L2 cache!
     ```
     
     Args:
-        a: Left matrix (m × k)
-        b: Right matrix (k × n) 
+        a: Left matrix (m * k)
+        b: Right matrix (k * n) 
         block_size: Cache-friendly block size (64 = 16KB fits in L2 cache)
     """
     m, k = a.shape
@@ -483,8 +483,8 @@ def matmul_blocked(a: np.ndarray, b: np.ndarray, block_size: int = 64) -> np.nda
                 
                 # Extract blocks that fit in cache
                 # These slices create views, not copies (memory efficient)
-                a_block = a[i:i_end, k_idx:k_end]      # Shape: (≤64, ≤64)
-                b_block = b[k_idx:k_end, j:j_end]      # Shape: (≤64, ≤64)
+                a_block = a[i:i_end, k_idx:k_end]      # Shape: (<=64, <=64)
+                b_block = b[k_idx:k_end, j:j_end]      # Shape: (<=64, <=64)
                 
                 # Multiply blocks using optimized NumPy BLAS
                 # This operates on cache-resident data
@@ -527,7 +527,7 @@ def calculate_cache_footprint(block_size: int) -> dict:
         )
     }
 
-# 🔍 SYSTEMS INSIGHT: Cache Optimization Analysis
+# MAGNIFY SYSTEMS INSIGHT: Cache Optimization Analysis
 def analyze_cache_optimization():
     """
     Analyze how different block sizes affect cache performance.
@@ -569,31 +569,31 @@ def analyze_cache_optimization():
         print(f"Reuse factor: Each element used 64 times")
         print(f"Cache efficiency: 64x better than naive")
         
-        print("\n💡 Key Insights:")
+        print("\nTIP Key Insights:")
         print("• Blocks too small: High loop overhead")
         print("• Blocks too large: Cache misses")
         print("• Sweet spot: 64x64 fits in L2 cache")
         print("• Modern CPUs: Designed for this pattern!")
         
     except Exception as e:
-        print(f"⚠️ Error in cache analysis: {e}")
+        print(f"WARNING️ Error in cache analysis: {e}")
 
 # Run the cache analysis
 analyze_cache_optimization()
 
 # %% [markdown]
 """
-### 🧪 Unit Test: Blocked Implementation
+### TEST Unit Test: Blocked Implementation
 
 Let's see how much faster cache-friendly blocking is compared to educational loops.
 """
 
-# ✅ IMPLEMENTATION CHECKPOINT: Cache-friendly blocking complete
+# PASS IMPLEMENTATION CHECKPOINT: Cache-friendly blocking complete
 
-# 🤔 PREDICTION: How much speedup does cache blocking provide?
+# THINK PREDICTION: How much speedup does cache blocking provide?
 # Your guess: ___x faster than educational loops
 
-# 🔍 SYSTEMS INSIGHT #2: Cache Blocking Effectiveness
+# MAGNIFY SYSTEMS INSIGHT #2: Cache Blocking Effectiveness
 def analyze_cache_blocking_effectiveness():
     """
     Measure how cache-friendly blocking improves performance.
@@ -662,19 +662,19 @@ def analyze_cache_blocking_effectiveness():
         speedup_blocked = naive_scaled / best_time
         speedup_numpy = naive_scaled / numpy_time
         
-        print(f"\n🚀 Speedup Results:")
+        print(f"\nROCKET Speedup Results:")
         print(f"Blocking: {speedup_blocked:.0f}x faster than naive")
         print(f"NumPy: {speedup_numpy:.0f}x faster than naive")
         print(f"Block size {best_block}: Optimal for this matrix size")
         
-        print(f"\n💡 Key Cache Insights:")
+        print(f"\nTIP Key Cache Insights:")
         print(f"• 64x64 blocks typically optimal (fits L2 cache)")
         print(f"• Too small: High loop overhead")
         print(f"• Too large: Cache misses return")
         print(f"• Cache hierarchy shapes algorithm design")
         
     except Exception as e:
-        print(f"⚠️ Error in blocking analysis: {e}")
+        print(f"WARNING️ Error in blocking analysis: {e}")
         print("Make sure all blocking functions are implemented correctly")
 
 # Run the cache blocking analysis
@@ -692,7 +692,7 @@ def test_blocked_optimization():
     result_numpy = a @ b
     
     assert np.allclose(result_blocked, result_numpy, atol=1e-3), "Blocked matmul incorrect"
-    print("✅ Blocked implementation produces correct results")
+    print("PASS Blocked implementation produces correct results")
     
     # Performance comparison
     print("\nPerformance comparison:")
@@ -727,15 +727,15 @@ def test_blocked_optimization():
     speedup_blocked = naive_time_scaled / blocked_time
     speedup_numpy = naive_time_scaled / numpy_time
     
-    print(f"\n🚀 SPEEDUP RESULTS:")
+    print(f"\nROCKET SPEEDUP RESULTS:")
     print(f"Blocked is {speedup_blocked:.1f}x faster than naive loops!")
     print(f"NumPy is {speedup_numpy:.1f}x faster than naive loops!")
-    print(f"\n💡 Why blocking works: Better cache utilization!")
+    print(f"\nTIP Why blocking works: Better cache utilization!")
     print(f"   • Naive: 1 cache miss per operation")
     print(f"   • Blocked: 1 cache miss per 64 operations")
     print(f"   • NumPy: Professional optimizations + vectorization")
     
-    print("✅ Blocked optimization tested successfully")
+    print("PASS Blocked optimization tested successfully")
     return blocked_time, numpy_time
 
 # Execute the blocked test
@@ -760,17 +760,17 @@ def matmul_numpy(a: np.ndarray, b: np.ndarray) -> np.ndarray:
 
 # %% [markdown]
 """
-### 🧪 Unit Test: Production Implementation
+### TEST Unit Test: Production Implementation
 
 Let's verify that NumPy is indeed the best choice for production.
 """
 
-# ✅ IMPLEMENTATION CHECKPOINT: Production backend system complete
+# PASS IMPLEMENTATION CHECKPOINT: Production backend system complete
 
-# 🤔 PREDICTION: What makes NumPy faster than our blocking algorithm?
+# THINK PREDICTION: What makes NumPy faster than our blocking algorithm?
 # Your answer: ___ (vectorization, BLAS, assembly, etc.)
 
-# 🔍 SYSTEMS INSIGHT #3: Production Optimization Analysis
+# MAGNIFY SYSTEMS INSIGHT #3: Production Optimization Analysis
 def analyze_production_optimization_stack():
     """
     Analyze the complete optimization stack that makes NumPy so fast.
@@ -786,7 +786,7 @@ def analyze_production_optimization_stack():
         sizes = [100, 300, 500, 1000]
         
         print("\nOptimization Stack Performance:")
-        print("Size | Naive Est | Blocked | NumPy | Block→NumPy | Total Speedup")
+        print("Size | Naive Est | Blocked | NumPy | Block->NumPy | Total Speedup")
         print("-" * 70)
         
         for size in sizes:
@@ -833,19 +833,19 @@ def analyze_production_optimization_stack():
         print(f"🔧 6. Threading: Automatic parallelization for large matrices")
         
         print(f"\n📊 Development Cost vs Performance Benefit:")
-        print(f"• Custom blocking: 1 week implementation → 10-50x speedup")
-        print(f"• BLAS integration: 1 month implementation → additional 5-10x")
-        print(f"• Assembly optimization: 6+ months → additional 2-5x")
-        print(f"• NumPy: 0 development time → all optimizations included")
+        print(f"• Custom blocking: 1 week implementation -> 10-50x speedup")
+        print(f"• BLAS integration: 1 month implementation -> additional 5-10x")
+        print(f"• Assembly optimization: 6+ months -> additional 2-5x")
+        print(f"• NumPy: 0 development time -> all optimizations included")
         
-        print(f"\n💡 ML Systems Engineering Insight:")
+        print(f"\nTIP ML Systems Engineering Insight:")
         print(f"• Focus on system architecture, not micro-optimizations")
         print(f"• Leverage existing optimized libraries (NumPy, PyTorch, TensorFlow)")
         print(f"• Understanding principles enables better system design")
         print(f"• Build on foundations, don't reinvent optimized wheels")
         
     except Exception as e:
-        print(f"⚠️ Error in production analysis: {e}")
+        print(f"WARNING️ Error in production analysis: {e}")
         print("Make sure all performance functions are implemented correctly")
 
 # Run the production optimization analysis
@@ -881,13 +881,13 @@ def test_production_performance():
         print(f"NumPy:       {numpy_time*1000:6.1f} ms")
         print(f"NumPy is {speedup:.1f}x faster than blocked")
     
-    print("\n💡 Key Insight: NumPy already has these optimizations built-in!")
+    print("\nTIP Key Insight: NumPy already has these optimizations built-in!")
     print("   • Blocking algorithms")
     print("   • Vectorization")
     print("   • Hardware-specific BLAS libraries")
     print("   • Assembly-level optimizations")
     
-    print("\n✅ Production performance verified")
+    print("\nPASS Production performance verified")
     return True
 
 # Execute the production test
@@ -947,7 +947,7 @@ def matmul(a: np.ndarray, b: np.ndarray) -> np.ndarray:
 
 # %% [markdown]
 """
-### 🧪 Unit Test: Backend System
+### TEST Unit Test: Backend System
 
 Let's verify our backend system works correctly and uses optimal implementations.
 """
@@ -966,7 +966,7 @@ def test_backend_system():
     expected = a @ b
     
     assert np.allclose(result, expected), "Backend matmul incorrect"
-    print("✅ Backend produces correct results")
+    print("PASS Backend produces correct results")
     
     # Compare performance
     start = time.perf_counter()
@@ -982,7 +982,7 @@ def test_backend_system():
     print(f"NumPy:   {numpy_time*1000:.1f} ms")
     print(f"Backend uses optimal NumPy implementation")
     
-    print("\n✅ Backend system works correctly")
+    print("\nPASS Backend system works correctly")
     return True
 
 # Execute the backend test
@@ -990,7 +990,7 @@ test_backend_system()
 
 # %% [markdown]
 """
-## 🎯 Computational Assessment Questions
+## TARGET Computational Assessment Questions
 
 Practice your understanding of hardware acceleration concepts with these NBGrader-compatible questions.
 
@@ -1002,7 +1002,7 @@ def calculate_cache_efficiency(matrix_size: int, block_size: int) -> Tuple[int, 
     """
     Calculate the cache efficiency improvement of blocked vs naive matrix multiplication.
     
-    For a matrix_size × matrix_size multiplication using block_size × block_size blocks:
+    For a matrix_size * matrix_size multiplication using block_size * block_size blocks:
     1. Calculate total number of cache misses for naive implementation
     2. Calculate total number of cache misses for blocked implementation  
     3. Return (total_operations, efficiency_ratio)
@@ -1013,7 +1013,7 @@ def calculate_cache_efficiency(matrix_size: int, block_size: int) -> Tuple[int, 
     - Blocked: 1 cache miss per block load, then block stays in cache
     
     Args:
-        matrix_size: Size of square matrices (N×N)
+        matrix_size: Size of square matrices (N*N)
         block_size: Size of blocks for blocked algorithm
         
     Returns:
@@ -1023,8 +1023,8 @@ def calculate_cache_efficiency(matrix_size: int, block_size: int) -> Tuple[int, 
     
     HINTS:
     - Total operations = matrix_size³ 
-    - Naive cache misses ≈ matrix_size³ (every B access misses)
-    - Blocked cache misses = (matrix_size/block_size)³ × block_size² 
+    - Naive cache misses ~= matrix_size³ (every B access misses)
+    - Blocked cache misses = (matrix_size/block_size)³ * block_size² 
     - Efficiency ratio = naive_misses / blocked_misses
     """
     ### BEGIN SOLUTION
@@ -1109,7 +1109,7 @@ def optimize_block_size(matrix_size: int, cache_sizes: Dict[str, int]) -> Tuple[
     
     APPROACH:
     1. For each candidate block size, calculate memory footprint
-    2. Check which cache level it fits in (3 blocks × block_size² × 4 bytes)
+    2. Check which cache level it fits in (3 blocks * block_size² * 4 bytes)
     3. Select largest block size that fits in L2 cache
     4. Calculate memory utilization = footprint / cache_size
     
@@ -1219,7 +1219,7 @@ def test_ml_model_acceleration():
     print("Testing Acceleration on Real ML Models...")
     
     # Test 1: MLP Forward Pass (common in Module 4)
-    print("\n1. MLP Forward Pass (256 → 128 → 64):")
+    print("\n1. MLP Forward Pass (256 -> 128 -> 64):")
     batch_size, input_dim, hidden_dim, output_dim = 32, 256, 128, 64
     
     # Simulated MLP layers
@@ -1239,7 +1239,7 @@ def test_ml_model_acceleration():
     h2_opt = matmul(h1_opt, W2)
     opt_time = time.perf_counter() - start
     
-    # Scale for: batch_size (32/8) × input_dim (256/64) × hidden_dim (128/32)
+    # Scale for: batch_size (32/8) * input_dim (256/64) * hidden_dim (128/32)
     batch_scale = 32/8  # 4x more samples
     input_scale = 256/64  # 4x larger input
     hidden_scale = 128/32  # 4x larger hidden layer
@@ -1260,7 +1260,7 @@ def test_ml_model_acceleration():
     conv_output = matmul(img_patches, conv_filters)
     conv_time = time.perf_counter() - start
     print(f"   Convolution output: {conv_time*1000:.1f} ms")
-    print(f"   Shape: {conv_output.shape} (1024 locations × 64 filters)")
+    print(f"   Shape: {conv_output.shape} (1024 locations * 64 filters)")
     
     # Test 3: Transformer-like Attention (scaled down)
     print("\n3. Transformer Attention (Q·K^T):")
@@ -1272,16 +1272,16 @@ def test_ml_model_acceleration():
     attention_scores = matmul(Q, K.T)  # Shape: (seq_len, seq_len)
     attn_time = time.perf_counter() - start
     print(f"   Attention computation: {attn_time*1000:.1f} ms")
-    print(f"   Shape: {attention_scores.shape} (128×128 attention matrix)")
+    print(f"   Shape: {attention_scores.shape} (128*128 attention matrix)")
     
-    print(f"\n✅ All ML model operations accelerated successfully!")
-    print(f"💡 Key insight: Matrix multiplication is EVERYWHERE in ML!")
+    print(f"\nPASS All ML model operations accelerated successfully!")
+    print(f"TIP Key insight: Matrix multiplication is EVERYWHERE in ML!")
     return True
 
 # Execute the ML model test
 test_ml_model_acceleration()
 
-# 🔍 SYSTEMS INSIGHT: Acceleration Scaling Analysis
+# MAGNIFY SYSTEMS INSIGHT: Acceleration Scaling Analysis
 def analyze_acceleration_scaling():
     """
     Analyze how different acceleration techniques scale with problem size.
@@ -1312,10 +1312,10 @@ def analyze_acceleration_scaling():
         small_speedup = compare_acceleration_techniques(100)['cache_blocking']
         large_speedup = compare_acceleration_techniques(2000)['cache_blocking']
         
-        print(f"• Cache blocking: {small_speedup:.1f}x → {large_speedup:.1f}x (scales with cache misses)")
+        print(f"• Cache blocking: {small_speedup:.1f}x -> {large_speedup:.1f}x (scales with cache misses)")
         print(f"• Vectorization: 8.0x constant (independent of matrix size)")
         print(f"• Parallelization: 4.0x constant (perfect scaling assumed)")
-        print(f"• Combined: Multiplicative effect = cache × vector × parallel")
+        print(f"• Combined: Multiplicative effect = cache * vector * parallel")
         
         print(f"\n📊 Real-World Performance Expectations:")
         realistic_combined = large_speedup * 4.0 * 4.0  # Conservative vectorization
@@ -1323,14 +1323,14 @@ def analyze_acceleration_scaling():
         print(f"• Why not perfect: Memory bandwidth limits, overhead, synchronization")
         print(f"• Production systems: Focus on cache + vectorization first")
         
-        print(f"\n💡 ML Systems Implications:")
-        print(f"• Small models (≤500): Vectorization dominates")
-        print(f"• Large models (≥1000): Cache optimization critical")
+        print(f"\nTIP ML Systems Implications:")
+        print(f"• Small models (<=500): Vectorization dominates")
+        print(f"• Large models (>=1000): Cache optimization critical")
         print(f"• Production: Memory bandwidth becomes bottleneck")
         print(f"• GPU: Different scaling - thousands of cores, different cache hierarchy")
         
     except Exception as e:
-        print(f"⚠️ Error in scaling analysis: {e}")
+        print(f"WARNING️ Error in scaling analysis: {e}")
         print("Make sure all analysis functions are implemented correctly")
 
 # Run the scaling analysis
@@ -1338,7 +1338,7 @@ analyze_acceleration_scaling()
 
 def run_complete_acceleration_demo():
     """Run the complete acceleration demonstration"""
-    print("🚀 Complete Hardware Acceleration Demo")
+    print("ROCKET Complete Hardware Acceleration Demo")
     print("=" * 55)
     print("THE FREE SPEEDUP: From Naive Loops to Optimized Backends")
     
@@ -1363,23 +1363,23 @@ def run_complete_acceleration_demo():
     test_backend_system()
     
     print("\n" + "=" * 55)
-    print("🎯 HARDWARE ACCELERATION MASTERED")
+    print("TARGET HARDWARE ACCELERATION MASTERED")
     print("=" * 55)
     
     print("\n📚 What You Mastered:")
-    print("✅ Why your Module 2/4 loops were slow (cache hierarchy matters!)")
-    print("✅ How cache-friendly blocking works (process data in chunks)")
-    print("✅ Why NumPy dominates (professional optimizations built-in)")
-    print("✅ How to build smart backend systems (automatic optimization)")
-    print("✅ Real ML applications (MLPs, CNNs, Transformers all use matmul!)")
+    print("PASS Why your Module 2/4 loops were slow (cache hierarchy matters!)")
+    print("PASS How cache-friendly blocking works (process data in chunks)")
+    print("PASS Why NumPy dominates (professional optimizations built-in)")
+    print("PASS How to build smart backend systems (automatic optimization)")
+    print("PASS Real ML applications (MLPs, CNNs, Transformers all use matmul!)")
     
-    print("\n🎯 The Free Speedup Philosophy:")
-    print("• 🚀 Same math, better implementation = 100x speedup")
+    print("\nTARGET The Free Speedup Philosophy:")
+    print("• ROCKET Same math, better implementation = 100x speedup")
     print("• 🧠 Educational loops teach algorithms")
-    print("• ⚡ Blocked algorithms teach cache optimization")
+    print("• SPEED Blocked algorithms teach cache optimization")
     print("• 🏭 NumPy provides production performance")
-    print("• 🎯 Smart backends make optimization transparent")
-    print("• 💡 Understanding the spectrum makes you a better engineer!")
+    print("• TARGET Smart backends make optimization transparent")
+    print("• TIP Understanding the spectrum makes you a better engineer!")
     
     return naive_results
 
@@ -1395,7 +1395,7 @@ This module demonstrates the fundamental principles of hardware acceleration in 
 - **Memory Layout**: Contiguous access patterns for optimal performance
 - **Backend Abstraction**: Transparent dispatch between naive and optimized implementations
 
-### ⚡ **Optimization Techniques**
+### SPEED **Optimization Techniques**
 - **Blocked Algorithms**: Process data in cache-friendly blocks
 - **Vectorized Operations**: Avoid Python loops, use NumPy's optimized routines
 - **In-place Operations**: Minimize memory allocation overhead
@@ -1403,16 +1403,16 @@ This module demonstrates the fundamental principles of hardware acceleration in 
 
 ### 📊 **Performance Understanding**
 - **Measurement First**: Profile real bottlenecks before optimizing
-- **Algorithmic Impact**: O(N³) → O(N²) matters more than 2x constant factors
+- **Algorithmic Impact**: O(N³) -> O(N²) matters more than 2x constant factors
 - **Hardware Awareness**: CPU cache misses cost 100x more than cache hits
 - **Library Utilization**: Optimized BLAS libraries beat custom implementations
 
-### 🎯 **Real-World Applications**
+### TARGET **Real-World Applications**
 - **ML Frameworks**: How PyTorch/TensorFlow apply these same principles
 - **Production Systems**: Where optimization efforts provide real value
 - **Development Practice**: When to optimize vs when to use existing solutions
 
-### 💡 **Key Insights**
+### TIP **Key Insights**
 - Cache-friendly algorithms provide 2-5x speedups from memory access patterns alone
 - Vectorization eliminates Python overhead for 10-100x improvements
 - Most NumPy operations are already optimized - focus on system-level improvements
@@ -1424,7 +1424,7 @@ This approach teaches students to think like systems engineers: understand the h
 
 def test_unit_all():
     """Run all unit tests for the acceleration module."""
-    print("🧪 Running all Hardware Acceleration tests...")
+    print("TEST Running all Hardware Acceleration tests...")
     print("=" * 55)
     
     try:
@@ -1449,34 +1449,34 @@ def test_unit_all():
         test_ml_model_acceleration()
         
         print("\n" + "=" * 55)
-        print("✅ All Hardware Acceleration tests passed!")
-        print("🚀 Module ready for production ML systems.")
+        print("PASS All Hardware Acceleration tests passed!")
+        print("ROCKET Module ready for production ML systems.")
         
     except Exception as e:
-        print(f"❌ Test failed: {e}")
+        print(f"FAIL Test failed: {e}")
         raise
 
 if __name__ == "__main__":
     print("Module 16: Hardware Acceleration - The Free Speedup!")
     print("=" * 60)
-    print("🚀 THE EASIEST OPTIMIZATION: Better Backends, Zero Trade-offs")
+    print("ROCKET THE EASIEST OPTIMIZATION: Better Backends, Zero Trade-offs")
     
     # Run complete testing suite
     test_unit_all()
     
-    print(f"\n🎉 Module 16: Hardware Acceleration COMPLETE!")
-    print(f"⚡ Mastered: 10-100x speedups with no accuracy loss")
+    print(f"\nCELEBRATE Module 16: Hardware Acceleration COMPLETE!")
+    print(f"SPEED Mastered: 10-100x speedups with no accuracy loss")
     print(f"🧠 Learned: Cache hierarchy, blocking, vectorization")
     print(f"🏭 Applied: MLPs, CNNs, Transformers all benefit")
-    print(f"🎯 Ready: To build high-performance ML systems!")
+    print(f"TARGET Ready: To build high-performance ML systems!")
 
 # %% [markdown]
 """
-## 🤔 ML Systems Thinking: Interactive Questions
+## THINK ML Systems Thinking: Interactive Questions
 
-1. **Memory Access Pattern Analysis**: In your `matmul_naive()` implementation, the innermost loop accesses `a[i, k]` sequentially but `b[k, j]` with large strides. When you tested 200×200 matrices, you saw dramatic slowdowns. Analyze why: (a) Calculate cache misses for both access patterns, (b) Explain why `b[k, j]` creates O(N²) cache misses, (c) Show how this scales to 1000×1000 matrices, and (d) Design a memory layout that would eliminate strided access.
+1. **Memory Access Pattern Analysis**: In your `matmul_naive()` implementation, the innermost loop accesses `a[i, k]` sequentially but `b[k, j]` with large strides. When you tested 200*200 matrices, you saw dramatic slowdowns. Analyze why: (a) Calculate cache misses for both access patterns, (b) Explain why `b[k, j]` creates O(N²) cache misses, (c) Show how this scales to 1000*1000 matrices, and (d) Design a memory layout that would eliminate strided access.
 
-2. **Cache Blocking Optimization**: Your `matmul_blocked()` function uses 64×64 blocks and showed significant speedups over naive loops. Analyze the cache efficiency: (a) Calculate total memory footprint (3 blocks × 64² × 4 bytes), (b) Verify it fits in L2 cache (256KB), (c) Compute cache reuse factor (64 operations per cache line), (d) Predict performance change with 128×128 blocks, and (e) Explain why your cache analysis function showed 64×64 as optimal.
+2. **Cache Blocking Optimization**: Your `matmul_blocked()` function uses 64*64 blocks and showed significant speedups over naive loops. Analyze the cache efficiency: (a) Calculate total memory footprint (3 blocks * 64² * 4 bytes), (b) Verify it fits in L2 cache (256KB), (c) Compute cache reuse factor (64 operations per cache line), (d) Predict performance change with 128*128 blocks, and (e) Explain why your cache analysis function showed 64*64 as optimal.
 
 3. **Production Stack Engineering**: You measured that NumPy beats your blocked implementation by 5-10x. Analyze the engineering trade-offs: (a) List three specific optimizations NumPy includes (BLAS, vectorization, threading), (b) Calculate development time vs. performance gain for each, (c) Estimate why custom optimization rarely beats production libraries, and (d) Determine when custom optimization is justified in ML systems.
 
@@ -1485,7 +1485,7 @@ if __name__ == "__main__":
 
 # %% [markdown]
 """
-## 🎯 MODULE SUMMARY: Hardware Acceleration - The Free Speedup
+## TARGET MODULE SUMMARY: Hardware Acceleration - The Free Speedup
 
 This module demonstrates the easiest optimization in ML systems: using better backends for free speedups with zero accuracy trade-offs. You learned why understanding the optimization spectrum makes you a better engineer.
 
@@ -1497,7 +1497,7 @@ This module demonstrates the easiest optimization in ML systems: using better ba
 
 ### 🛠️ **What We Built and Tested**
 - **Educational Baseline**: Your triple-nested loops from Module 2/4 (algorithm understanding)
-- **Cache-Friendly Blocking**: 64×64 blocks fitting in L1/L2 cache (10x+ speedup)
+- **Cache-Friendly Blocking**: 64*64 blocks fitting in L1/L2 cache (10x+ speedup)
 - **NumPy Production**: Leveraging professional BLAS optimizations (another 10x speedup)
 - **Smart Backend System**: Automatic dispatch to optimal implementations
 - **Real ML Applications**: MLP, CNN, Transformer operations using matrix multiplication
@@ -1508,7 +1508,7 @@ This module demonstrates the easiest optimization in ML systems: using better ba
 - **When to use NumPy**: It already has these optimizations (and more) built-in
 - **Systems thinking**: Understanding enables better decisions about when to optimize
 
-### ⚡ **Performance Spectrum Mastered**
+### SPEED **Performance Spectrum Mastered**
 - **Educational loops**: Algorithm understanding (1000x slower, perfect for learning)
 - **Cache-friendly blocking**: Systems understanding (100x slower, teaches optimization)
 - **NumPy production**: Professional performance (optimal speed, built-in optimizations)
@@ -1526,7 +1526,7 @@ This module demonstrates the easiest optimization in ML systems: using better ba
 - **Libraries beat custom optimization**: NumPy already has expert-level optimizations
 - **Understanding enables better tools**: You can build smarter systems when you know the principles
 
-### 💡 **The Free Speedup Philosophy**
+### TIP **The Free Speedup Philosophy**
 This is the EASIEST optimization in ML systems: same math, better implementation, massive speedups, zero downsides. You implemented loops to understand algorithms. You implemented blocking to understand cache optimization. Now you use NumPy because it has all optimizations built-in. Understanding this spectrum - from educational to production - makes you a superior ML systems engineer who can make informed optimization decisions.
 """
 

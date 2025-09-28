@@ -4,7 +4,7 @@
 
 Welcome to Normalization! You'll implement the normalization techniques that make deep neural networks trainable and stable.
 
-## 🔗 Building on Previous Learning
+## LINK Building on Previous Learning
 **What You Built Before**:
 - Module 02 (Tensor): Data structures with gradient tracking
 - Module 04 (Layers): Neural network layer primitives
@@ -19,7 +19,7 @@ Welcome to Normalization! You'll implement the normalization techniques that mak
 
 **Connection Map**:
 ```
-Layers → Normalization → Stable Training
+Layers -> Normalization -> Stable Training
 (unstable)  (stabilized)    (convergence)
 ```
 
@@ -30,14 +30,14 @@ Layers → Normalization → Stable Training
 - **Framework connections**: Connect to PyTorch's nn.BatchNorm2d, nn.LayerNorm, nn.GroupNorm
 - **Optimization trade-offs**: Analyze memory vs stability vs computation trade-offs
 
-## Build → Use → Reflect
+## Build -> Use -> Reflect
 1. **Build**: Implementation of BatchNorm, LayerNorm, and GroupNorm with running statistics
 2. **Use**: Apply normalization to stabilize training of deep networks
 3. **Reflect**: How do different normalization schemes affect memory, computation, and training dynamics?
 
 ## Systems Reality Check
-💡 **Production Context**: Normalization is critical in all modern deep learning - ResNet uses BatchNorm, Transformers use LayerNorm, modern ConvNets use GroupNorm
-⚡ **Performance Insight**: BatchNorm adds 2× parameters per layer but often enables 10× larger learning rates, dramatically accelerating training
+TIP **Production Context**: Normalization is critical in all modern deep learning - ResNet uses BatchNorm, Transformers use LayerNorm, modern ConvNets use GroupNorm
+SPEED **Performance Insight**: BatchNorm adds 2* parameters per layer but often enables 10* larger learning rates, dramatically accelerating training
 
 ## What You'll Achieve
 By the end of this module, you'll have implemented the normalization arsenal that makes modern deep learning possible, with complete understanding of their memory characteristics and performance trade-offs.
@@ -51,9 +51,9 @@ Internal covariate shift occurs when the distribution of inputs to each layer ch
 
 ### The Core Problem:
 ```
-Layer 1: x₁ → f₁(x₁) → y₁  (distribution D₁)
-Layer 2: y₁ → f₂(y₁) → y₂  (distribution changes as f₁ changes!)
-Layer 3: y₂ → f₃(y₂) → y₃  (distribution keeps shifting!)
+Layer 1: x₁ -> f₁(x₁) -> y₁  (distribution D₁)
+Layer 2: y₁ -> f₂(y₁) -> y₂  (distribution changes as f₁ changes!)
+Layer 3: y₂ -> f₃(y₂) -> y₃  (distribution keeps shifting!)
 ```
 
 ### The Normalization Solution:
@@ -65,7 +65,7 @@ Normalize activations to have stable statistics (mean=0, variance=1):
 
 Where:
 - μ = E[x] (mean)
-- σ = √(Var[x] + ε) (standard deviation)
+- σ = sqrt(Var[x] + ε) (standard deviation)
 - γ = learnable scale parameter
 - β = learnable shift parameter
 - ε = numerical stability constant (usually 1e-5)
@@ -89,7 +89,7 @@ Where:
 - **Object Detection**: GroupNorm enables small-batch training with stable results
 
 ### Memory vs Performance Trade-offs
-- **BatchNorm**: 2× parameters, but enables 5-10× larger learning rates
+- **BatchNorm**: 2* parameters, but enables 5-10* larger learning rates
 - **LayerNorm**: No batch dimension dependence, consistent across batch sizes
 - **GroupNorm**: Balance between batch and layer normalization benefits
 """
@@ -141,9 +141,9 @@ Building normalization layers teaches:
 
 1. **Normalization Axis Selection**:
    ```
-   BatchNorm: Normalize across batch dimension (N, C, H, W) → across N
-   LayerNorm: Normalize across feature dimensions → across C, H, W
-   GroupNorm: Normalize across channel groups → within groups of C
+   BatchNorm: Normalize across batch dimension (N, C, H, W) -> across N
+   LayerNorm: Normalize across feature dimensions -> across C, H, W
+   GroupNorm: Normalize across channel groups -> within groups of C
    ```
 
 2. **Parameter Organization**:
@@ -205,13 +205,13 @@ Batch Normalization normalizes activations across the batch dimension, making tr
 #| export
 class BatchNorm2d(Module):
     """
-    Batch Normalization for 2D convolutions (4D tensors: N×C×H×W).
+    Batch Normalization for 2D convolutions (4D tensors: N*C*H*W).
 
     Normalizes across the batch dimension, computing μ and σ² across N, H, W
     for each channel C independently.
 
     MATHEMATICAL FOUNDATION:
-    BN(x) = γ * (x - μ_batch) / √(σ²_batch + ε) + β
+    BN(x) = γ * (x - μ_batch) / sqrt(σ²_batch + ε) + β
 
     Where μ_batch and σ²_batch are computed across (N, H, W) dimensions.
     """
@@ -229,13 +229,13 @@ class BatchNorm2d(Module):
         4. Set training mode flag for different train/eval behavior
 
         MEMORY ANALYSIS:
-        - Learnable parameters: 2 × num_features (γ and β)
-        - Running statistics: 2 × num_features (running_mean and running_var)
-        - Total memory: 4 × num_features parameters
+        - Learnable parameters: 2 * num_features (γ and β)
+        - Running statistics: 2 * num_features (running_mean and running_var)
+        - Total memory: 4 * num_features parameters
 
         EXAMPLE (BatchNorm Usage):
         >>> bn = BatchNorm2d(64)  # For 64 channels
-        >>> x = Tensor(np.random.randn(32, 64, 28, 28))  # batch × channels × height × width
+        >>> x = Tensor(np.random.randn(32, 64, 28, 28))  # batch * channels * height * width
         >>> normalized = bn(x)
         >>> print(f"Normalized shape: {normalized.shape}")  # (32, 64, 28, 28)
 
@@ -283,7 +283,7 @@ class BatchNorm2d(Module):
         5. Update running statistics during training
 
         DIMENSION ANALYSIS for 4D input (N, C, H, W):
-        - Batch statistics computed across dims (0, 2, 3) → shape (C,)
+        - Batch statistics computed across dims (0, 2, 3) -> shape (C,)
         - γ and β broadcasted to match input: (1, C, 1, 1)
         - Output has same shape as input
 
@@ -347,11 +347,11 @@ class BatchNorm2d(Module):
         self.training = False
         return self
 
-# 🔍 SYSTEMS INSIGHT: Batch Normalization Memory Analysis
+# MAGNIFY SYSTEMS INSIGHT: Batch Normalization Memory Analysis
 def analyze_batchnorm_memory():
     """Let's analyze BatchNorm memory usage and batch dependency!"""
     try:
-        print("🔍 SYSTEMS INSIGHT: Batch Normalization Analysis")
+        print("MAGNIFY SYSTEMS INSIGHT: Batch Normalization Analysis")
         print("=" * 50)
 
         # Different channel sizes to show scaling
@@ -361,38 +361,38 @@ def analyze_batchnorm_memory():
             bn = BatchNorm2d(channels)
 
             # Parameter memory calculation
-            param_memory = 4 * channels * 4  # 4 params per channel × 4 bytes (float32)
+            param_memory = 4 * channels * 4  # 4 params per channel * 4 bytes (float32)
             print(f"Channels: {channels:4d} | Parameters: {4 * channels:4d} | Memory: {param_memory / 1024:.2f} KB")
 
-        print("\n💡 KEY INSIGHTS:")
+        print("\nTIP KEY INSIGHTS:")
         print("• BatchNorm memory scales linearly with channel count")
         print("• Only 4 parameters per channel (γ, β, running_mean, running_var)")
         print("• Memory overhead is typically < 1% of layer weights")
 
         # Batch size dependency demonstration
-        print("\n🎯 BATCH SIZE DEPENDENCY:")
+        print("\nTARGET BATCH SIZE DEPENDENCY:")
         bn = BatchNorm2d(64)
 
         for batch_size in [1, 8, 32, 128]:
             x = Tensor(np.random.randn(batch_size, 64, 32, 32))
 
             if batch_size == 1:
-                print(f"Batch size {batch_size:3d}: ⚠️  May be unstable (poor statistics)")
+                print(f"Batch size {batch_size:3d}: WARNING️  May be unstable (poor statistics)")
             else:
-                print(f"Batch size {batch_size:3d}: ✅ Good statistics")
+                print(f"Batch size {batch_size:3d}: PASS Good statistics")
 
         print("\n🚨 CRITICAL: BatchNorm needs batch_size > 1 for stable training!")
         print("   Single-sample batches have undefined variance")
 
     except Exception as e:
-        print(f"⚠️ Error in BatchNorm analysis: {e}")
+        print(f"WARNING️ Error in BatchNorm analysis: {e}")
 
 # Run the analysis
 analyze_batchnorm_memory()
 
 # %% [markdown]
 """
-### 🧪 Unit Test: Batch Normalization
+### TEST Unit Test: Batch Normalization
 
 This test validates BatchNorm2d implementation, ensuring proper normalization across batch dimension and correct running statistics updates.
 """
@@ -472,11 +472,11 @@ def test_unit_batch_norm():
     assert hasattr(bn, 'beta'), "Should have beta parameter"
     assert len(bn.parameters) == 2, "Should have 2 learnable parameters"
 
-    print("✅ Batch normalization tests passed!")
-    print(f"✅ Properly normalizes across batch dimension")
-    print(f"✅ Updates running statistics during training")
-    print(f"✅ Uses running statistics during evaluation")
-    print(f"✅ Maintains gradient flow through learnable parameters")
+    print("PASS Batch normalization tests passed!")
+    print(f"PASS Properly normalizes across batch dimension")
+    print(f"PASS Updates running statistics during training")
+    print(f"PASS Uses running statistics during evaluation")
+    print(f"PASS Maintains gradient flow through learnable parameters")
 
 # Test function defined (called in main block)
 
@@ -499,7 +499,7 @@ class LayerNorm(Module):
     Unlike BatchNorm, LayerNorm doesn't depend on batch statistics.
 
     MATHEMATICAL FOUNDATION:
-    LN(x) = γ * (x - μ) / √(σ² + ε) + β
+    LN(x) = γ * (x - μ) / sqrt(σ² + ε) + β
 
     Where μ and σ² are computed across feature dimensions for each sample.
     """
@@ -603,16 +603,16 @@ class LayerNorm(Module):
         """Allow LayerNorm to be called directly."""
         return self.forward(x)
 
-# ✅ IMPLEMENTATION CHECKPOINT: Basic LayerNorm complete
+# PASS IMPLEMENTATION CHECKPOINT: Basic LayerNorm complete
 
-# 🤔 PREDICTION: How does LayerNorm memory scale compared to BatchNorm?
+# THINK PREDICTION: How does LayerNorm memory scale compared to BatchNorm?
 # Your guess: LayerNorm uses _____ memory than BatchNorm for the same feature size
 
-# 🔍 SYSTEMS INSIGHT: LayerNorm vs BatchNorm Memory Comparison
+# MAGNIFY SYSTEMS INSIGHT: LayerNorm vs BatchNorm Memory Comparison
 def compare_normalization_memory():
     """Compare memory usage between different normalization techniques."""
     try:
-        print("🔍 SYSTEMS INSIGHT: Normalization Memory Comparison")
+        print("MAGNIFY SYSTEMS INSIGHT: Normalization Memory Comparison")
         print("=" * 60)
 
         # Test different feature configurations
@@ -637,13 +637,13 @@ def compare_normalization_memory():
 
             print(f"{features:<8} {bn_memory/1024:.2f} KB     {ln_memory/1024:.2f} KB     {ratio:.1f}x      {context}")
 
-        print(f"\n💡 KEY INSIGHTS:")
-        print("• BatchNorm uses 2× more memory than LayerNorm")
+        print(f"\nTIP KEY INSIGHTS:")
+        print("• BatchNorm uses 2* more memory than LayerNorm")
         print("• BatchNorm stores running statistics (inference requirements)")
         print("• LayerNorm has no running state (batch-independent)")
 
         # Batch size independence demonstration
-        print(f"\n🎯 BATCH SIZE INDEPENDENCE:")
+        print(f"\nTARGET BATCH SIZE INDEPENDENCE:")
         ln = LayerNorm(256)
 
         for batch_size in [1, 8, 32, 128]:
@@ -654,19 +654,19 @@ def compare_normalization_memory():
             sample_mean = np.mean(output.data[0, :, :])  # First sample mean
             sample_var = np.var(output.data[0, :, :])    # First sample variance
 
-            print(f"Batch size {batch_size:3d}: Mean={sample_mean:.6f}, Var={sample_var:.6f} ✅")
+            print(f"Batch size {batch_size:3d}: Mean={sample_mean:.6f}, Var={sample_var:.6f} PASS")
 
         print(f"\n✨ LayerNorm gives consistent results regardless of batch size!")
 
     except Exception as e:
-        print(f"⚠️ Error in normalization comparison: {e}")
+        print(f"WARNING️ Error in normalization comparison: {e}")
 
 # Run the comparison
 compare_normalization_memory()
 
 # %% [markdown]
 """
-### 🧪 Unit Test: Layer Normalization
+### TEST Unit Test: Layer Normalization
 
 This test validates LayerNorm implementation, ensuring proper normalization across feature dimensions and batch-size independence.
 """
@@ -751,11 +751,11 @@ def test_unit_layer_norm():
     assert ln.gamma in ln.parameters, "Gamma should be tracked"
     assert ln.beta in ln.parameters, "Beta should be tracked"
 
-    print("✅ Layer normalization tests passed!")
-    print(f"✅ Properly normalizes across feature dimensions")
-    print(f"✅ Works with any input shape")
-    print(f"✅ Batch-size independent behavior")
-    print(f"✅ Supports multi-dimensional normalization")
+    print("PASS Layer normalization tests passed!")
+    print(f"PASS Properly normalizes across feature dimensions")
+    print(f"PASS Works with any input shape")
+    print(f"PASS Batch-size independent behavior")
+    print(f"PASS Supports multi-dimensional normalization")
 
 # Test function defined (called in main block)
 
@@ -780,7 +780,7 @@ class GroupNorm(Module):
     MATHEMATICAL FOUNDATION:
     For input (N, C, H, W) with G groups:
     1. Reshape to (N, G, C//G, H, W)
-    2. Normalize within each group: GN(x) = γ * (x - μ_group) / √(σ²_group + ε) + β
+    2. Normalize within each group: GN(x) = γ * (x - μ_group) / sqrt(σ²_group + ε) + β
     3. Reshape back to (N, C, H, W)
     """
 
@@ -802,14 +802,14 @@ class GroupNorm(Module):
         - Parameters γ and β have shape (num_channels,) for per-channel scaling
 
         EXAMPLE (GroupNorm Configurations):
-        >>> gn1 = GroupNorm(32, 64)   # 32 groups, 64 channels → 2 channels per group
-        >>> gn2 = GroupNorm(8, 256)   # 8 groups, 256 channels → 32 channels per group
-        >>> gn3 = GroupNorm(1, 128)   # 1 group, 128 channels → LayerNorm equivalent
+        >>> gn1 = GroupNorm(32, 64)   # 32 groups, 64 channels -> 2 channels per group
+        >>> gn2 = GroupNorm(8, 256)   # 8 groups, 256 channels -> 32 channels per group
+        >>> gn3 = GroupNorm(1, 128)   # 1 group, 128 channels -> LayerNorm equivalent
 
         HINTS:
         - Use assert to validate num_channels % num_groups == 0
-        - Special case: num_groups = num_channels → InstanceNorm (each channel is a group)
-        - Special case: num_groups = 1 → LayerNorm for spatial data
+        - Special case: num_groups = num_channels -> InstanceNorm (each channel is a group)
+        - Special case: num_groups = 1 -> LayerNorm for spatial data
 
         Args:
             num_groups: Number of groups to divide channels into
@@ -846,7 +846,7 @@ class GroupNorm(Module):
         TODO: Implement group normalization forward pass.
 
         STEP-BY-STEP IMPLEMENTATION:
-        1. Reshape input to separate groups: (N, C, H, W) → (N, G, C//G, H, W)
+        1. Reshape input to separate groups: (N, C, H, W) -> (N, G, C//G, H, W)
         2. Compute mean and variance within each group
         3. Normalize within groups
         4. Reshape back to original shape
@@ -873,7 +873,7 @@ class GroupNorm(Module):
         N, C, H, W = x.shape
         assert C == self.num_channels, f"Expected {self.num_channels} channels, got {C}"
 
-        # Reshape to separate groups: (N, C, H, W) → (N, G, C//G, H, W)
+        # Reshape to separate groups: (N, C, H, W) -> (N, G, C//G, H, W)
         x_grouped = x.data.reshape(N, self.num_groups, self.channels_per_group, H, W)
 
         # Compute mean and variance within each group
@@ -884,7 +884,7 @@ class GroupNorm(Module):
         # Normalize within groups
         normalized = (x_grouped - mean) / np.sqrt(var + self.eps)
 
-        # Reshape back to original shape: (N, G, C//G, H, W) → (N, C, H, W)
+        # Reshape back to original shape: (N, G, C//G, H, W) -> (N, C, H, W)
         normalized = normalized.reshape(N, C, H, W)
 
         # Apply per-channel learnable parameters
@@ -896,16 +896,16 @@ class GroupNorm(Module):
         return Tensor(output)
         ### END SOLUTION
 
-# ✅ IMPLEMENTATION CHECKPOINT: All normalization techniques complete
+# PASS IMPLEMENTATION CHECKPOINT: All normalization techniques complete
 
-# 🤔 PREDICTION: Which normalization uses the most memory - Batch, Layer, or Group?
+# THINK PREDICTION: Which normalization uses the most memory - Batch, Layer, or Group?
 # Your answer: _______ because _______
 
-# 🔍 SYSTEMS INSIGHT: Complete Normalization Scaling Analysis
+# MAGNIFY SYSTEMS INSIGHT: Complete Normalization Scaling Analysis
 def analyze_normalization_scaling():
     """Analyze how different normalization techniques scale with architecture size."""
     try:
-        print("🔍 SYSTEMS INSIGHT: Normalization Scaling Analysis")
+        print("MAGNIFY SYSTEMS INSIGHT: Normalization Scaling Analysis")
         print("=" * 70)
 
         # Different model scales to analyze
@@ -927,13 +927,13 @@ def analyze_normalization_scaling():
 
             print(f"{channels:<8} {bn_memory/1024:.2f} KB     {ln_memory/1024:.2f} KB     {gn_memory/1024:.2f} KB     {context}")
 
-        print(f"\n💡 MEMORY INSIGHTS:")
+        print(f"\nTIP MEMORY INSIGHTS:")
         print("• BatchNorm: Highest memory (stores running statistics)")
         print("• LayerNorm: 50% less memory than BatchNorm")
         print("• GroupNorm: Same memory as LayerNorm")
 
         # Computational complexity analysis
-        print(f"\n⚡ COMPUTATIONAL COMPLEXITY:")
+        print(f"\nSPEED COMPUTATIONAL COMPLEXITY:")
         batch_size, height, width = 32, 64, 64
         channels = 256
 
@@ -949,7 +949,7 @@ def analyze_normalization_scaling():
         print(f"LayerNorm FLOPs: ~{base_flops/1e6:.1f}M (per-sample statistics)")
         print(f"GroupNorm FLOPs: ~{base_flops/1e6:.1f}M (group statistics)")
 
-        print(f"\n🎯 WHEN TO USE EACH:")
+        print(f"\nTARGET WHEN TO USE EACH:")
         print("• BatchNorm: Large batches, CNNs, stable batch sizes")
         print("• LayerNorm: Transformers, variable batch sizes, RNNs")
         print("• GroupNorm: Small batches, object detection, fine-tuning")
@@ -981,14 +981,14 @@ def analyze_normalization_scaling():
                   f"LN={ln_mean:.6f} GN={gn_mean:.6f}")
 
     except Exception as e:
-        print(f"⚠️ Error in scaling analysis: {e}")
+        print(f"WARNING️ Error in scaling analysis: {e}")
 
 # Run the scaling analysis
 analyze_normalization_scaling()
 
 # %% [markdown]
 """
-### 🧪 Unit Test: Group Normalization
+### TEST Unit Test: Group Normalization
 
 This test validates GroupNorm implementation, ensuring proper grouping and normalization within channel groups.
 """
@@ -1080,11 +1080,11 @@ def test_unit_group_norm():
     assert gn.gamma in gn.parameters, "Gamma should be tracked"
     assert gn.beta in gn.parameters, "Beta should be tracked"
 
-    print("✅ Group normalization tests passed!")
-    print(f"✅ Properly groups channels and normalizes within groups")
-    print(f"✅ Validates configuration constraints")
-    print(f"✅ Supports special cases (Instance/Layer norm variants)")
-    print(f"✅ Maintains gradient flow through learnable parameters")
+    print("PASS Group normalization tests passed!")
+    print(f"PASS Properly groups channels and normalizes within groups")
+    print(f"PASS Validates configuration constraints")
+    print(f"PASS Supports special cases (Instance/Layer norm variants)")
+    print(f"PASS Maintains gradient flow through learnable parameters")
 
 # Test function defined (called in main block)
 
@@ -1103,17 +1103,17 @@ Here's how normalization layers are typically used in different architectures:
 
 **ConvNet with BatchNorm:**
 ```
-Conv2d → BatchNorm2d → ReLU → Conv2d → BatchNorm2d → ReLU → ...
+Conv2d -> BatchNorm2d -> ReLU -> Conv2d -> BatchNorm2d -> ReLU -> ...
 ```
 
 **Transformer with LayerNorm:**
 ```
-Embedding → LayerNorm → Attention → Add & Norm → FFN → Add & Norm → ...
+Embedding -> LayerNorm -> Attention -> Add & Norm -> FFN -> Add & Norm -> ...
 ```
 
 **ResNet Block with GroupNorm:**
 ```
-Conv2d → GroupNorm → ReLU → Conv2d → GroupNorm → Add → ReLU
+Conv2d -> GroupNorm -> ReLU -> Conv2d -> GroupNorm -> Add -> ReLU
 ```
 """
 
@@ -1168,8 +1168,8 @@ def demonstrate_normalization_usage():
     print(f"  Mean: {np.mean(gn_output.data):.6f}")
     print(f"  Std:  {np.std(gn_output.data):.3f}")
 
-    print(f"\n✅ All normalization techniques stabilize activations!")
-    print(f"✅ Mean ≈ 0, Std ≈ 1 for all methods")
+    print(f"\nPASS All normalization techniques stabilize activations!")
+    print(f"PASS Mean ~= 0, Std ~= 1 for all methods")
     ### END SOLUTION
 
 # Run the demonstration
@@ -1182,16 +1182,16 @@ demonstrate_normalization_usage()
 Let's compare how different normalization techniques affect training stability by simulating gradient updates.
 """
 
-# ✅ IMPLEMENTATION CHECKPOINT: All normalization implementations complete
+# PASS IMPLEMENTATION CHECKPOINT: All normalization implementations complete
 
-# 🤔 PREDICTION: Which normalization technique will be most stable for very small batch sizes?
+# THINK PREDICTION: Which normalization technique will be most stable for very small batch sizes?
 # Your answer: _______ because _______
 
-# 🔍 SYSTEMS INSIGHT: Training Stability Analysis
+# MAGNIFY SYSTEMS INSIGHT: Training Stability Analysis
 def analyze_training_stability():
     """Analyze how normalization affects training stability across different scenarios."""
     try:
-        print("🔍 SYSTEMS INSIGHT: Training Stability Analysis")
+        print("MAGNIFY SYSTEMS INSIGHT: Training Stability Analysis")
         print("=" * 60)
 
         # Test stability across different batch sizes
@@ -1235,7 +1235,7 @@ def analyze_training_stability():
 
             print(f"{batch_size:<12} {bn_stability:<12} {ln_stability:<12} {gn_stability:<12} {scenario}")
 
-        print(f"\n💡 STABILITY INSIGHTS:")
+        print(f"\nTIP STABILITY INSIGHTS:")
         print("• BatchNorm: Unstable with batch_size=1, best with large batches")
         print("• LayerNorm: Consistent across all batch sizes")
         print("• GroupNorm: Consistent across all batch sizes")
@@ -1258,20 +1258,20 @@ def analyze_training_stability():
         print(f"After LayerNorm: ~{np.linalg.norm(ln_out.data):.3f} (normalized)")
         print(f"After GroupNorm: ~{np.linalg.norm(gn_out.data):.3f} (normalized)")
 
-        print(f"\n🎯 PRACTICAL RECOMMENDATIONS:")
-        print("• Use BatchNorm for: CNNs with batch_size ≥ 8, stable training")
+        print(f"\nTARGET PRACTICAL RECOMMENDATIONS:")
+        print("• Use BatchNorm for: CNNs with batch_size >= 8, stable training")
         print("• Use LayerNorm for: Transformers, RNNs, variable batch sizes")
         print("• Use GroupNorm for: Object detection, fine-tuning, small batches")
 
     except Exception as e:
-        print(f"⚠️ Error in stability analysis: {e}")
+        print(f"WARNING️ Error in stability analysis: {e}")
 
 # Run the stability analysis
 analyze_training_stability()
 
 # %% [markdown]
 """
-### 🧪 Integration Test: Complete Normalization Suite
+### TEST Integration Test: Complete Normalization Suite
 
 This test validates that all normalization techniques work together and can be used interchangeably in neural network architectures.
 """
@@ -1352,11 +1352,11 @@ def test_unit_normalization_integration():
     assert bn_total_memory > ln_total_memory, "BatchNorm should use more memory (running stats)"
     assert ln_total_memory == gn_total_memory, "LayerNorm and GroupNorm should use same memory"
 
-    print("✅ Normalization integration tests passed!")
-    print(f"✅ All techniques work with same input format")
-    print(f"✅ All produce appropriately normalized outputs")
-    print(f"✅ Memory usage patterns are as expected")
-    print(f"✅ Batch size independence works correctly")
+    print("PASS Normalization integration tests passed!")
+    print(f"PASS All techniques work with same input format")
+    print(f"PASS All produce appropriately normalized outputs")
+    print(f"PASS Memory usage patterns are as expected")
+    print(f"PASS Batch size independence works correctly")
 
 # Test function defined (called in main block)
 
@@ -1380,7 +1380,7 @@ def benchmark_normalization_performance():
 
     This function is PROVIDED for educational analysis.
     """
-    print("⚡ Performance Benchmark: Normalization Techniques")
+    print("SPEED Performance Benchmark: Normalization Techniques")
     print("=" * 55)
 
     import time
@@ -1432,7 +1432,7 @@ def benchmark_normalization_performance():
         speedup = baseline / time_ms
         print(f"  {name}: {speedup:.2f}x relative to BatchNorm")
 
-    print(f"\n💡 Performance Insights:")
+    print(f"\nTIP Performance Insights:")
     print(f"  • All normalizations have similar computational complexity")
     print(f"  • Differences mainly due to memory access patterns")
     print(f"  • BatchNorm may be slightly faster due to batch parallelization")
@@ -1449,7 +1449,7 @@ Run all tests to validate our normalization implementations.
 
 if __name__ == "__main__":
     """Main execution block - runs all normalization tests."""
-    print("🧪 Running Complete Normalization Test Suite")
+    print("TEST Running Complete Normalization Test Suite")
     print("=" * 50)
 
     # Run all unit tests
@@ -1465,13 +1465,13 @@ if __name__ == "__main__":
     test_unit_normalization_integration()
     print()
 
-    print("✅ All normalization tests passed!")
-    print("\n🎯 NORMALIZATION SUITE COMPLETE")
+    print("PASS All normalization tests passed!")
+    print("\nTARGET NORMALIZATION SUITE COMPLETE")
     print("Your normalization implementations are ready for use in neural networks!")
 
 # %% [markdown]
 """
-## 🤔 ML Systems Thinking: Interactive Questions
+## THINK ML Systems Thinking: Interactive Questions
 
 Now that you've implemented all three major normalization techniques, let's reflect on their systems implications and design trade-offs.
 """
@@ -1480,7 +1480,7 @@ Now that you've implemented all three major normalization techniques, let's refl
 """
 ### Question 1: Memory and Batch Size Trade-offs
 
-**Context**: In your BatchNorm2d implementation, you saw that running statistics require additional memory (4× parameters vs 2× for LayerNorm/GroupNorm), but BatchNorm fails completely with batch_size=1. Your memory analysis showed that BatchNorm needs 2× the memory of other techniques, while your stability analysis revealed batch size dependencies.
+**Context**: In your BatchNorm2d implementation, you saw that running statistics require additional memory (4* parameters vs 2* for LayerNorm/GroupNorm), but BatchNorm fails completely with batch_size=1. Your memory analysis showed that BatchNorm needs 2* the memory of other techniques, while your stability analysis revealed batch size dependencies.
 
 **Reflection Question**: Analyze the memory vs batch size trade-offs in your normalization implementations. When you tested different batch sizes, you discovered BatchNorm becomes unstable with small batches while LayerNorm/GroupNorm remain consistent. For a production system that needs to handle both training (large batches) and inference (single samples), how would you modify your current normalization implementations to optimize memory usage while maintaining stability? Consider the running statistics storage in your BatchNorm class and the per-sample computation in your LayerNorm class.
 
@@ -1517,39 +1517,39 @@ Think about: automatic technique selection, runtime adaptation, memory budget co
 
 # %% [markdown]
 """
-## 🎯 MODULE SUMMARY: Normalization
+## TARGET MODULE SUMMARY: Normalization
 
 Congratulations! You have successfully implemented the complete normalization toolkit that makes modern deep learning possible:
 
-### ✅ What You Have Built
+### PASS What You Have Built
 - **BatchNorm2d**: Complete batch normalization with running statistics and train/eval modes
 - **LayerNorm**: Batch-independent normalization for any tensor dimensions
 - **GroupNorm**: Channel group normalization balancing batch and layer norm benefits
 - **🆕 Comprehensive Analysis**: Memory scaling, training stability, and performance benchmarking
 - **🆕 Integration Examples**: How normalization fits into different network architectures
 
-### ✅ Technical Mastery
+### PASS Technical Mastery
 - **Statistical Computing**: Efficient mean/variance computation across different tensor dimensions
 - **Memory Management**: Understanding parameter storage vs running statistics trade-offs
 - **Training Dynamics**: How normalization affects gradient flow and training stability
 - **Batch Dependencies**: When and why batch size affects normalization behavior
 - **🆕 Production Patterns**: Architecture-specific normalization choices and deployment considerations
 
-### ✅ Systems Understanding
-- **Memory Scaling**: BatchNorm uses 2× memory of LayerNorm/GroupNorm due to running statistics
+### PASS Systems Understanding
+- **Memory Scaling**: BatchNorm uses 2* memory of LayerNorm/GroupNorm due to running statistics
 - **Computational Complexity**: All techniques have similar O(N) complexity but different access patterns
 - **Batch Size Effects**: BatchNorm requires batch_size > 1, others work with any batch size
 - **Cache Efficiency**: How normalization axes affect memory access patterns and vectorization
 - **🆕 Training Stability**: Why normalization enables higher learning rates and deeper networks
 
-### 🔗 Connection to Real ML Systems
+### LINK Connection to Real ML Systems
 Your implementations mirror production systems:
 - **PyTorch nn.BatchNorm2d**: Your BatchNorm2d matches PyTorch's interface and behavior
 - **BERT LayerNorm**: Your LayerNorm enables transformer training stability
 - **Object Detection GroupNorm**: Your GroupNorm provides batch-independent normalization
 - **Production Deployment**: Understanding of when to use each technique in real systems
 
-### 🚀 What You Can Build Now
+### ROCKET What You Can Build Now
 - **Stable CNNs**: Use BatchNorm for ResNet-style architectures with large batches
 - **Transformer Models**: Use LayerNorm for attention-based architectures
 - **Detection Systems**: Use GroupNorm for models with variable batch sizes
@@ -1560,5 +1560,5 @@ Your implementations mirror production systems:
 2. **Integration ready**: Your normalization layers integrate with any neural network architecture
 3. **Ready for Module 09**: Spatial operations will use your normalization for CNN stability
 
-**🎉 Achievement Unlocked**: You've mastered the normalization techniques that enable modern deep learning, with complete understanding of their memory characteristics and performance trade-offs!
+**CELEBRATE Achievement Unlocked**: You've mastered the normalization techniques that enable modern deep learning, with complete understanding of their memory characteristics and performance trade-offs!
 """

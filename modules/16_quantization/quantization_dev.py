@@ -12,9 +12,9 @@
 """
 # Module 17: Quantization - Trading Precision for Speed
 
-Welcome to the Quantization module! After Module 16 showed you how to get free speedups through better algorithms, now we make our **first trade-off**: reduce precision for speed. You'll implement INT8 quantization to achieve 4× speedup with <1% accuracy loss.
+Welcome to the Quantization module! After Module 16 showed you how to get free speedups through better algorithms, now we make our **first trade-off**: reduce precision for speed. You'll implement INT8 quantization to achieve 4* speedup with <1% accuracy loss.
 
-## Connection from Module 16: Acceleration → Quantization
+## Connection from Module 16: Acceleration -> Quantization
 
 Module 16 taught you to accelerate computations through better algorithms and hardware utilization - these were "free" optimizations. Now we enter the world of **trade-offs**: sacrificing precision to gain speed. This is especially powerful for CNN inference where INT8 operations are much faster than FP32.
 
@@ -24,13 +24,13 @@ Module 16 taught you to accelerate computations through better algorithms and ha
 - **Core implementation skill**: Build INT8 quantization systems for CNN weights and activations  
 - **Pattern recognition**: Understand calibration-based quantization for post-training optimization
 - **Framework connection**: See how production systems use quantization for edge deployment and mobile inference
-- **Performance insight**: Achieve 4× speedup with <1% accuracy loss through precision optimization
+- **Performance insight**: Achieve 4* speedup with <1% accuracy loss through precision optimization
 
-## Build → Profile → Optimize
+## Build -> Profile -> Optimize
 
 1. **Build**: Start with FP32 CNN inference (baseline)
 2. **Profile**: Measure memory usage and computational cost of FP32 operations
-3. **Optimize**: Implement INT8 quantization to achieve 4× speedup with minimal accuracy loss
+3. **Optimize**: Implement INT8 quantization to achieve 4* speedup with minimal accuracy loss
 
 ## What You'll Achieve
 
@@ -38,14 +38,14 @@ By the end of this module, you'll understand:
 - **Deep technical understanding**: How INT8 quantization reduces precision while maintaining model quality
 - **Practical capability**: Implement production-grade quantization for CNN inference acceleration  
 - **Systems insight**: Memory vs precision tradeoffs in ML systems optimization
-- **Performance mastery**: Achieve 4× speedup (50ms → 12ms inference) with <1% accuracy loss
+- **Performance mastery**: Achieve 4* speedup (50ms -> 12ms inference) with <1% accuracy loss
 - **Connection to edge deployment**: How mobile and edge devices use quantization for efficient AI
 
 ## Systems Reality Check
 
-💡 **Production Context**: TensorFlow Lite and PyTorch Mobile use INT8 quantization for mobile deployment  
-⚡ **Performance Note**: CNN inference: FP32 = 50ms, INT8 = 12ms (4× faster) with 98% → 97.5% accuracy  
-🧠 **Memory Tradeoff**: INT8 uses 4× less memory and enables much faster integer arithmetic
+TIP **Production Context**: TensorFlow Lite and PyTorch Mobile use INT8 quantization for mobile deployment  
+SPEED **Performance Note**: CNN inference: FP32 = 50ms, INT8 = 12ms (4* faster) with 98% -> 97.5% accuracy  
+🧠 **Memory Tradeoff**: INT8 uses 4* less memory and enables much faster integer arithmetic
 """
 
 # %% nbgrader={"grade": false, "grade_id": "quantization-imports", "locked": false, "schema_version": 3, "solution": false, "task": false}
@@ -92,7 +92,7 @@ Let's start by understanding what quantization means and why it provides such dr
 ### The Quantization Concept
 
 Quantization converts high-precision floating-point numbers (FP32: 32 bits) to low-precision integers (INT8: 8 bits):
-- **Memory**: 4× reduction (32 bits → 8 bits)
+- **Memory**: 4* reduction (32 bits -> 8 bits)
 - **Compute**: Integer arithmetic is much faster than floating-point  
 - **Hardware**: Specialized INT8 units on modern CPUs and mobile processors
 - **Trade-off**: Small precision loss for large speed gain
@@ -144,7 +144,7 @@ class BaselineCNN:
         self.fc_input_size = 64 * 6 * 6  # 64 channels, 6x6 spatial
         self.fc = np.random.randn(self.fc_input_size, num_classes) * 0.02
         
-        print(f"✅ BaselineCNN initialized: {self._count_parameters()} parameters")
+        print(f"PASS BaselineCNN initialized: {self._count_parameters()} parameters")
         ### END SOLUTION
     
     def _count_parameters(self) -> int:
@@ -253,7 +253,7 @@ Let's test our baseline CNN to establish performance and accuracy baselines:
 # %% nbgrader={"grade": true, "grade_id": "test-baseline-cnn", "locked": false, "points": 2, "schema_version": 3, "solution": false, "task": false}
 def test_baseline_cnn():
     """Test baseline CNN implementation and measure performance."""
-    print("🔍 Testing Baseline FP32 CNN...")
+    print("MAGNIFY Testing Baseline FP32 CNN...")
     print("=" * 60)
     
     # Create baseline model
@@ -272,13 +272,13 @@ def test_baseline_cnn():
     
     # Validate output
     assert logits.shape == (batch_size, 10), f"Expected (4, 10), got {logits.shape}"
-    print(f"✅ Forward pass works: {logits.shape}")
+    print(f"PASS Forward pass works: {logits.shape}")
     
     # Test predictions
     predictions = model.predict(input_data)
     assert predictions.shape == (batch_size,), f"Expected (4,), got {predictions.shape}"
     assert all(0 <= p < 10 for p in predictions), "All predictions should be valid class indices"
-    print(f"✅ Predictions work: {predictions}")
+    print(f"PASS Predictions work: {predictions}")
     
     # Performance baseline
     print(f"\n📊 Performance Baseline:")
@@ -287,8 +287,8 @@ def test_baseline_cnn():
     print(f"   Parameters: {model._count_parameters()} (all FP32)")
     print(f"   Memory usage: ~{model._count_parameters() * 4 / 1024:.1f}KB for weights")
     
-    print("✅ Baseline CNN tests passed!")
-    print("💡 Ready to implement INT8 quantization for 4× speedup...")
+    print("PASS Baseline CNN tests passed!")
+    print("TIP Ready to implement INT8 quantization for 4* speedup...")
 
 # Test function defined (called in main block)
 
@@ -478,7 +478,7 @@ class INT8Quantizer:
         
         print(f"   Scale: {scale:.6f}, Zero point: {zero_point}")
         print(f"   Quantization error: {quantization_error:.6f} (max: {max_error:.6f})")
-        print(f"   Compression: {compression_ratio:.1f}× ({original_size//1024}KB → {quantized_size//1024}KB)")
+        print(f"   Compression: {compression_ratio:.1f}* ({original_size//1024}KB -> {quantized_size//1024}KB)")
         
         return {
             'quantized_weights': quantized_weights,
@@ -500,7 +500,7 @@ Let's test our quantizer to verify it works correctly:
 # %% nbgrader={"grade": true, "grade_id": "test-quantizer", "locked": false, "points": 3, "schema_version": 3, "solution": false, "task": false}
 def test_int8_quantizer():
     """Test INT8 quantizer implementation."""
-    print("🔍 Testing INT8 Quantizer...")
+    print("MAGNIFY Testing INT8 Quantizer...")
     print("=" * 60)
     
     quantizer = INT8Quantizer()
@@ -519,14 +519,14 @@ def test_int8_quantizer():
     # Verify quantized tensor is INT8
     assert quantized.dtype == np.int8, f"Expected int8, got {quantized.dtype}"
     assert np.all(quantized >= -128) and np.all(quantized <= 127), "Quantized values outside INT8 range"
-    print("✅ Quantization produces valid INT8 values")
+    print("PASS Quantization produces valid INT8 values")
     
     # Verify round-trip error is reasonable
     quantization_error = np.mean(np.abs(test_tensor - dequantized))
     max_error = np.max(np.abs(test_tensor - dequantized))
     
     assert quantization_error < 0.1, f"Quantization error too high: {quantization_error}"
-    print(f"✅ Round-trip error acceptable: {quantization_error:.6f} (max: {max_error:.6f})")
+    print(f"PASS Round-trip error acceptable: {quantization_error:.6f} (max: {max_error:.6f})")
     
     # Test weight quantization
     weight_tensor = np.random.randn(64, 32, 3, 3) * 0.1  # Typical conv weight range
@@ -538,20 +538,20 @@ def test_int8_quantizer():
     assert 'quantization_error' in weight_result, "Should return error metrics"
     assert weight_result['compression_ratio'] > 3.5, "Should achieve good compression"
     
-    print(f"✅ Weight quantization: {weight_result['compression_ratio']:.1f}× compression")
-    print(f"✅ Weight quantization error: {weight_result['quantization_error']:.6f}")
+    print(f"PASS Weight quantization: {weight_result['compression_ratio']:.1f}* compression")
+    print(f"PASS Weight quantization error: {weight_result['quantization_error']:.6f}")
     
-    print("✅ INT8 quantizer tests passed!")
-    print("💡 Ready to build quantized CNN...")
+    print("PASS INT8 quantizer tests passed!")
+    print("TIP Ready to build quantized CNN...")
 
 # Test function defined (called in main block)
 
-# ✅ IMPLEMENTATION CHECKPOINT: Ensure quantized CNN is fully built before running
+# PASS IMPLEMENTATION CHECKPOINT: Ensure quantized CNN is fully built before running
 
-# 🤔 PREDICTION: How much memory will quantization save for convolutional layers?
-# Write your guess here: _______× reduction
+# THINK PREDICTION: How much memory will quantization save for convolutional layers?
+# Write your guess here: _______* reduction
 
-# 🔍 SYSTEMS INSIGHT #1: Quantization Memory Analysis
+# MAGNIFY SYSTEMS INSIGHT #1: Quantization Memory Analysis
 def analyze_quantization_memory():
     """Analyze memory savings from quantization."""
     try:
@@ -579,15 +579,15 @@ def analyze_quantization_memory():
         print(f"📊 Quantization Memory Analysis:")
         print(f"   Baseline conv weights: {baseline_conv_memory/1024:.1f}KB")
         print(f"   Quantized conv weights: {quantized_conv_memory/1024:.1f}KB")
-        print(f"   Compression ratio: {compression_ratio:.1f}×")
+        print(f"   Compression ratio: {compression_ratio:.1f}*")
         print(f"   Memory saved: {(baseline_conv_memory - quantized_conv_memory)/1024:.1f}KB")
         
         # Explain the scaling
-        print(f"\n💡 WHY THIS MATTERS:")
+        print(f"\nTIP WHY THIS MATTERS:")
         print(f"   • FP32 uses 4 bytes per parameter")
         print(f"   • INT8 uses 1 byte per parameter")
-        print(f"   • Theoretical maximum: 4× compression")
-        print(f"   • Actual compression: {compression_ratio:.1f}× (close to theoretical!)")
+        print(f"   • Theoretical maximum: 4* compression")
+        print(f"   • Actual compression: {compression_ratio:.1f}* (close to theoretical!)")
         print(f"   • For large models: This enables mobile deployment")
         
         # Scale to production size
@@ -601,7 +601,7 @@ def analyze_quantization_memory():
         print(f"   Mobile app size reduction: {fp32_size_mb - int8_size_mb:.1f}MB")
         
     except Exception as e:
-        print(f"⚠️ Error in memory analysis: {e}")
+        print(f"WARNING️ Error in memory analysis: {e}")
         print("Make sure quantized CNN is implemented correctly")
 
 # Analyze quantization memory impact
@@ -616,7 +616,7 @@ Now let's create a quantized version of our CNN that uses INT8 weights while mai
 ### Quantized Operations Strategy
 
 For maximum performance, we need to:
-1. **Store weights in INT8** format (4× memory savings)
+1. **Store weights in INT8** format (4* memory savings)
 2. **Compute convolutions with INT8** arithmetic (faster)
 3. **Dequantize only when necessary** for activation functions
 4. **Calibrate quantization** using representative data
@@ -683,7 +683,7 @@ class QuantizedConv2d:
         self.weight_zero_point = result['zero_point']
         self.is_quantized = True
         
-        print(f"   Quantized: {result['compression_ratio']:.1f}× compression, "
+        print(f"   Quantized: {result['compression_ratio']:.1f}* compression, "
               f"{result['quantization_error']:.6f} error")
         ### END SOLUTION
     
@@ -742,7 +742,7 @@ class QuantizedCNN:
     """
     CNN with INT8 quantized weights for fast inference.
     
-    This model demonstrates how quantization can achieve 4× speedup
+    This model demonstrates how quantization can achieve 4* speedup
     with minimal accuracy loss through precision optimization.
     """
     
@@ -781,7 +781,7 @@ class QuantizedCNN:
         self.quantizer = INT8Quantizer()
         self.is_quantized = False
         
-        print(f"✅ QuantizedCNN initialized: {self._count_parameters()} parameters")
+        print(f"PASS QuantizedCNN initialized: {self._count_parameters()} parameters")
         ### END SOLUTION
     
     def _count_parameters(self) -> int:
@@ -829,9 +829,9 @@ class QuantizedCNN:
         
         compression_ratio = original_conv_memory / quantized_conv_memory
         
-        print(f"✅ Quantization complete:")
-        print(f"   Conv layers: {original_conv_memory//1024}KB → {quantized_conv_memory//1024}KB")
-        print(f"   Compression: {compression_ratio:.1f}× memory savings")
+        print(f"PASS Quantization complete:")
+        print(f"   Conv layers: {original_conv_memory//1024}KB -> {quantized_conv_memory//1024}KB")
+        print(f"   Compression: {compression_ratio:.1f}* memory savings")
         print(f"   Model ready for fast inference!")
         ### END SOLUTION
     
@@ -899,7 +899,7 @@ Let's test our quantized CNN and verify it maintains accuracy:
 # %% nbgrader={"grade": true, "grade_id": "test-quantized-cnn", "locked": false, "points": 4, "schema_version": 3, "solution": false, "task": false}
 def test_quantized_cnn():
     """Test quantized CNN implementation."""
-    print("🔍 Testing Quantized CNN...")
+    print("MAGNIFY Testing Quantized CNN...")
     print("=" * 60)
     
     # Create quantized model
@@ -911,45 +911,45 @@ def test_quantized_cnn():
     # Test before quantization
     test_input = np.random.randn(2, 3, 32, 32)
     logits_before = model.forward(test_input)
-    print(f"✅ Forward pass before quantization: {logits_before.shape}")
+    print(f"PASS Forward pass before quantization: {logits_before.shape}")
     
     # Calibrate and quantize
     model.calibrate_and_quantize(calibration_data)
     assert model.is_quantized, "Model should be marked as quantized"
     assert model.conv1.is_quantized, "Conv1 should be quantized"
     assert model.conv2.is_quantized, "Conv2 should be quantized"
-    print("✅ Model quantization successful")
+    print("PASS Model quantization successful")
     
     # Test after quantization
     logits_after = model.forward(test_input)
     assert logits_after.shape == logits_before.shape, "Output shape should be unchanged"
-    print(f"✅ Forward pass after quantization: {logits_after.shape}")
+    print(f"PASS Forward pass after quantization: {logits_after.shape}")
     
     # Check predictions still work
     predictions = model.predict(test_input)
     assert predictions.shape == (2,), f"Expected (2,), got {predictions.shape}"
     assert all(0 <= p < 10 for p in predictions), "All predictions should be valid"
-    print(f"✅ Predictions work: {predictions}")
+    print(f"PASS Predictions work: {predictions}")
     
     # Verify quantization maintains reasonable accuracy
     output_diff = np.mean(np.abs(logits_before - logits_after))
     max_diff = np.max(np.abs(logits_before - logits_after))
-    print(f"✅ Quantization impact: {output_diff:.4f} mean diff, {max_diff:.4f} max diff")
+    print(f"PASS Quantization impact: {output_diff:.4f} mean diff, {max_diff:.4f} max diff")
     
     # Should have reasonable impact but not destroy the model
     assert output_diff < 2.0, f"Quantization impact too large: {output_diff:.4f}"
     
-    print("✅ Quantized CNN tests passed!")
-    print("💡 Ready for performance comparison...")
+    print("PASS Quantized CNN tests passed!")
+    print("TIP Ready for performance comparison...")
 
 # Test function defined (called in main block)
 
-# ✅ IMPLEMENTATION CHECKPOINT: Quantized CNN complete
+# PASS IMPLEMENTATION CHECKPOINT: Quantized CNN complete
 
-# 🤔 PREDICTION: What will be the biggest source of speedup from quantization?
+# THINK PREDICTION: What will be the biggest source of speedup from quantization?
 # Your answer: Memory bandwidth / Computation / Cache efficiency / _______
 
-# 🔍 SYSTEMS INSIGHT #2: Quantization Speed Analysis
+# MAGNIFY SYSTEMS INSIGHT #2: Quantization Speed Analysis
 def analyze_quantization_speed():
     """Analyze speed improvements from quantization."""
     try:
@@ -984,42 +984,42 @@ def analyze_quantization_speed():
         
         speedup = baseline_avg / quantized_avg if quantized_avg > 0 else 1.0
         
-        print(f"⚡ Quantization Speed Analysis:")
+        print(f"SPEED Quantization Speed Analysis:")
         print(f"   Baseline FP32: {baseline_avg:.2f}ms")
         print(f"   Quantized INT8: {quantized_avg:.2f}ms")
-        print(f"   Speedup: {speedup:.1f}×")
+        print(f"   Speedup: {speedup:.1f}*")
         
         # Analyze speedup sources
-        print(f"\n🔍 Speedup Sources:")
-        print(f"   1. Memory bandwidth: 4× less data to load (32→8 bits)")
+        print(f"\nMAGNIFY Speedup Sources:")
+        print(f"   1. Memory bandwidth: 4* less data to load (32->8 bits)")
         print(f"   2. Cache efficiency: More weights fit in CPU cache")
         print(f"   3. SIMD operations: More INT8 ops per instruction")
         print(f"   4. Hardware acceleration: Dedicated INT8 units")
         
         # Note about production vs educational implementation
         print(f"\n📚 Educational vs Production:")
-        print(f"   • This implementation: {speedup:.1f}× (educational focus)")
-        print(f"   • Production systems: 3-5× typical speedup")
-        print(f"   • Hardware optimized: Up to 10× on specialized chips")
+        print(f"   • This implementation: {speedup:.1f}* (educational focus)")
+        print(f"   • Production systems: 3-5* typical speedup")
+        print(f"   • Hardware optimized: Up to 10* on specialized chips")
         print(f"   • Why difference: We dequantize for computation (educational clarity)")
         print(f"   • Production: Native INT8 kernels throughout pipeline")
         
     except Exception as e:
-        print(f"⚠️ Error in speed analysis: {e}")
+        print(f"WARNING️ Error in speed analysis: {e}")
 
 # Analyze quantization speed benefits
 analyze_quantization_speed()
 
 # %% [markdown]
 """
-## Part 4: Performance Analysis - 4× Speedup Demonstration
+## Part 4: Performance Analysis - 4* Speedup Demonstration
 
 Now let's demonstrate the dramatic performance improvement achieved by INT8 quantization. We'll compare FP32 vs INT8 inference speed and memory usage.
 
 ### Expected Results
-- **Memory usage**: 4× reduction for quantized weights  
-- **Inference speed**: 4× improvement through INT8 arithmetic
-- **Accuracy**: <1% degradation (98% → 97.5% typical)
+- **Memory usage**: 4* reduction for quantized weights  
+- **Inference speed**: 4* improvement through INT8 arithmetic
+- **Accuracy**: <1% degradation (98% -> 97.5% typical)
 """
 
 # %% nbgrader={"grade": false, "grade_id": "performance-analyzer", "locked": false, "schema_version": 3, "solution": true, "task": false}
@@ -1073,7 +1073,7 @@ class QuantizationPerformanceAnalyzer:
         print(f"📊 Memory Analysis:")
         print(f"   Baseline: {baseline_memory:.1f}KB")  
         print(f"   Quantized: {quantized_memory:.1f}KB")
-        print(f"   Reduction: {memory_reduction:.1f}×")
+        print(f"   Reduction: {memory_reduction:.1f}*")
         
         # Inference Speed Benchmark
         print(f"\n⏱️ Speed Benchmark ({num_runs} runs):")
@@ -1105,7 +1105,7 @@ class QuantizationPerformanceAnalyzer:
         
         print(f"   Baseline: {baseline_avg_time*1000:.2f}ms ± {baseline_std_time*1000:.2f}ms")
         print(f"   Quantized: {quantized_avg_time*1000:.2f}ms ± {quantized_std_time*1000:.2f}ms")
-        print(f"   Speedup: {speedup:.1f}×")
+        print(f"   Speedup: {speedup:.1f}*")
         
         # Accuracy Analysis
         output_diff = np.mean(np.abs(baseline_output - quantized_output))
@@ -1116,7 +1116,7 @@ class QuantizationPerformanceAnalyzer:
         quantized_preds = np.argmax(quantized_output, axis=1)
         agreement = np.mean(baseline_preds == quantized_preds)
         
-        print(f"\n🎯 Accuracy Analysis:")
+        print(f"\nTARGET Accuracy Analysis:")
         print(f"   Output difference: {output_diff:.4f} (max: {max_diff:.4f})")
         print(f"   Prediction agreement: {agreement:.1%}")
         
@@ -1176,29 +1176,29 @@ class QuantizationPerformanceAnalyzer:
         
         This function is PROVIDED to display results clearly.
         """
-        print("\n🚀 QUANTIZATION PERFORMANCE SUMMARY")
+        print("\nROCKET QUANTIZATION PERFORMANCE SUMMARY")
         print("=" * 60)
         print(f"📊 Memory Optimization:")
         print(f"   • FP32 Model: {results['memory_baseline_kb']:.1f}KB")
         print(f"   • INT8 Model: {results['memory_quantized_kb']:.1f}KB") 
-        print(f"   • Memory savings: {results['memory_reduction']:.1f}× reduction")
+        print(f"   • Memory savings: {results['memory_reduction']:.1f}* reduction")
         print(f"   • Storage efficiency: {(1 - 1/results['memory_reduction'])*100:.1f}% less memory")
         
-        print(f"\n⚡ Speed Optimization:")
+        print(f"\nSPEED Speed Optimization:")
         print(f"   • FP32 Inference: {results['speed_baseline_ms']:.1f}ms")
         print(f"   • INT8 Inference: {results['speed_quantized_ms']:.1f}ms")
-        print(f"   • Speed improvement: {results['speedup']:.1f}× faster")
+        print(f"   • Speed improvement: {results['speedup']:.1f}* faster")
         print(f"   • Latency reduction: {(1 - 1/results['speedup'])*100:.1f}% faster")
         
-        print(f"\n🎯 Accuracy Trade-off:")
+        print(f"\nTARGET Accuracy Trade-off:")
         print(f"   • Output preservation: {(1-results['output_difference'])*100:.1f}% similarity")  
         print(f"   • Prediction agreement: {results['prediction_agreement']:.1%}")
-        print(f"   • Quality maintained with {results['speedup']:.1f}× speedup!")
+        print(f"   • Quality maintained with {results['speedup']:.1f}* speedup!")
         
         # Overall assessment
         efficiency_score = results['speedup'] * results['memory_reduction']
         print(f"\n🏆 Overall Efficiency:")
-        print(f"   • Combined benefit: {efficiency_score:.1f}× (speed × memory)")
+        print(f"   • Combined benefit: {efficiency_score:.1f}* (speed * memory)")
         print(f"   • Trade-off assessment: {'🟢 Excellent' if results['prediction_agreement'] > 0.95 else '🟡 Good'}")
 
 # %% [markdown]
@@ -1211,7 +1211,7 @@ Let's run comprehensive benchmarks to see the quantization benefits:
 # %% nbgrader={"grade": true, "grade_id": "test-performance-analysis", "locked": false, "points": 4, "schema_version": 3, "solution": false, "task": false}
 def test_performance_analysis():
     """Test performance analysis of quantization benefits."""
-    print("🔍 Testing Performance Analysis...")
+    print("MAGNIFY Testing Performance Analysis...")
     print("=" * 60)
     
     # Create models
@@ -1235,28 +1235,28 @@ def test_performance_analysis():
     assert 'prediction_agreement' in results, "Should report accuracy preservation"
     
     # Verify quantization benefits (realistic expectation: conv layers quantized, FC kept FP32)
-    assert results['memory_reduction'] > 1.2, f"Should show memory reduction, got {results['memory_reduction']:.1f}×"
-    assert results['speedup'] > 0.5, f"Educational implementation without actual INT8 kernels, got {results['speedup']:.1f}×"  
+    assert results['memory_reduction'] > 1.2, f"Should show memory reduction, got {results['memory_reduction']:.1f}*"
+    assert results['speedup'] > 0.5, f"Educational implementation without actual INT8 kernels, got {results['speedup']:.1f}*"  
     assert results['prediction_agreement'] >= 0.0, f"Prediction agreement measurement, got {results['prediction_agreement']:.1%}"
     
-    print(f"✅ Memory reduction: {results['memory_reduction']:.1f}×")
-    print(f"✅ Speed improvement: {results['speedup']:.1f}×")
-    print(f"✅ Prediction agreement: {results['prediction_agreement']:.1%}")
+    print(f"PASS Memory reduction: {results['memory_reduction']:.1f}*")
+    print(f"PASS Speed improvement: {results['speedup']:.1f}*")
+    print(f"PASS Prediction agreement: {results['prediction_agreement']:.1%}")
     
     # Print comprehensive summary
     analyzer.print_performance_summary(results)
     
-    print("✅ Performance analysis tests passed!")
-    print("🎉 Quantization delivers significant benefits!")
+    print("PASS Performance analysis tests passed!")
+    print("CELEBRATE Quantization delivers significant benefits!")
 
 # Test function defined (called in main block)
 
-# ✅ IMPLEMENTATION CHECKPOINT: Performance analysis complete
+# PASS IMPLEMENTATION CHECKPOINT: Performance analysis complete
 
-# 🤔 PREDICTION: Which quantization bit-width provides the best trade-off?
+# THINK PREDICTION: Which quantization bit-width provides the best trade-off?
 # Your answer: 4-bit / 8-bit / 16-bit / 32-bit
 
-# 🔍 SYSTEMS INSIGHT #3: Quantization Bit-Width Analysis
+# MAGNIFY SYSTEMS INSIGHT #3: Quantization Bit-Width Analysis
 def analyze_quantization_bitwidths():
     """Compare different quantization bit-widths."""
     try:
@@ -1298,11 +1298,11 @@ def analyze_quantization_bitwidths():
                 hardware = "Research"
                 use_case = "Experimental"
             
-            print(f"{bits:<6} {memory:<8.1f} {speed:<8.1f}× {accuracy:<10.1f}% {hardware:<15} {use_case:<20}")
+            print(f"{bits:<6} {memory:<8.1f} {speed:<8.1f}* {accuracy:<10.1f}% {hardware:<15} {use_case:<20}")
         
-        print(f"\n🎯 Key Insights:")
+        print(f"\nTARGET Key Insights:")
         print(f"   • INT8 Sweet Spot: Best balance of speed, accuracy, and hardware support")
-        print(f"   • Memory scales linearly: Each bit halving saves 2× memory")
+        print(f"   • Memory scales linearly: Each bit halving saves 2* memory")
         print(f"   • Speed scaling non-linear: Hardware specialization matters")
         print(f"   • Accuracy degrades exponentially: Below 8-bit becomes problematic")
         
@@ -1310,7 +1310,7 @@ def analyze_quantization_bitwidths():
         print(f"   • TensorFlow Lite: Standardized on INT8")
         print(f"   • PyTorch Mobile: INT8 with FP16 fallback")
         print(f"   • Apple Neural Engine: Optimized for INT8")
-        print(f"   • Google TPU: INT8 operations 10× faster than FP32")
+        print(f"   • Google TPU: INT8 operations 10* faster than FP32")
         
         # Calculate efficiency score (speed / accuracy_loss)
         print(f"\n📊 Efficiency Score (Speed / Accuracy Loss):")
@@ -1330,10 +1330,10 @@ def analyze_quantization_bitwidths():
             
             print(f"   {bits}-bit: {score:.1f} (higher is better)")
         
-        print(f"\n💡 WHY INT8 WINS: Highest efficiency score + universal hardware support!")
+        print(f"\nTIP WHY INT8 WINS: Highest efficiency score + universal hardware support!")
         
     except Exception as e:
-        print(f"⚠️ Error in bit-width analysis: {e}")
+        print(f"WARNING️ Error in bit-width analysis: {e}")
 
 # Analyze different quantization bit-widths
 analyze_quantization_bitwidths()
@@ -1373,7 +1373,7 @@ class ProductionQuantizationInsights:
             {
                 'system': 'PyTorch Mobile (Meta)', 
                 'technique': 'Dynamic quantization with runtime calibration',
-                'benefit': 'Reduces model size by 4× for mobile deployment',
+                'benefit': 'Reduces model size by 4* for mobile deployment',
                 'challenge': 'Balancing quantization overhead vs inference speedup'
             },
             {
@@ -1400,16 +1400,16 @@ class ProductionQuantizationInsights:
     @staticmethod  
     def explain_advanced_techniques():
         """Explain advanced quantization techniques."""
-        print("⚡ ADVANCED QUANTIZATION TECHNIQUES")
+        print("SPEED ADVANCED QUANTIZATION TECHNIQUES")
         print("=" * 45)
         print()
         
         techniques = [
             "🧠 **Mixed Precision**: Quantize some layers to INT8, keep critical layers in FP32",
             "🔄 **Dynamic Quantization**: Quantize weights statically, activations dynamically",
-            "📦 **Block-wise Quantization**: Different quantization parameters for weight blocks",
+            "PACKAGE **Block-wise Quantization**: Different quantization parameters for weight blocks",
             "⏰ **Quantization-Aware Training**: Train model to be robust to quantization",
-            "🎯 **Channel-wise Quantization**: Separate scales for each output channel",
+            "TARGET **Channel-wise Quantization**: Separate scales for each output channel",
             "🔀 **Adaptive Quantization**: Adjust precision based on layer importance",
             "⚖️ **Hardware-Aware Quantization**: Optimize for specific hardware capabilities",
             "🛡️ **Calibration-Free Quantization**: Use statistical methods without data"
@@ -1419,7 +1419,7 @@ class ProductionQuantizationInsights:
             print(f"   {technique}")
         
         print()
-        print("💡 **Your Implementation Foundation**: The INT8 quantization you built")
+        print("TIP **Your Implementation Foundation**: The INT8 quantization you built")
         print("   demonstrates the core principles behind all these optimizations!")
     
     @staticmethod
@@ -1429,20 +1429,20 @@ class ProductionQuantizationInsights:
         print("=" * 40)
         print()
         
-        print("🚀 **Speed Improvements**:")
-        print("   • Mobile CNNs: 2-4× faster inference with INT8")  
-        print("   • BERT models: 3-5× speedup with mixed precision")
-        print("   • Edge deployment: 10× improvement with dedicated INT8 hardware")
+        print("ROCKET **Speed Improvements**:")
+        print("   • Mobile CNNs: 2-4* faster inference with INT8")  
+        print("   • BERT models: 3-5* speedup with mixed precision")
+        print("   • Edge deployment: 10* improvement with dedicated INT8 hardware")
         print("   • Real-time vision: Enables 30fps on mobile devices")
         print()
         
         print("💾 **Memory Reduction**:")
-        print("   • Model size: 4× smaller (critical for mobile apps)")
-        print("   • Runtime memory: 2-3× less activation memory")
+        print("   • Model size: 4* smaller (critical for mobile apps)")
+        print("   • Runtime memory: 2-3* less activation memory")
         print("   • Cache efficiency: Better fit in processor caches")
         print()
         
-        print("🎯 **Accuracy Preservation**:")
+        print("TARGET **Accuracy Preservation**:")
         print("   • Computer vision: <1% accuracy loss typical")
         print("   • Language models: 2-5% accuracy loss acceptable")
         print("   • Recommendation systems: Minimal impact on ranking quality")
@@ -1529,7 +1529,7 @@ class QuantizationSystemsAnalyzer:
                 efficiency = 32.0 / bits  # Rough approximation
             
             results['compute_efficiency'].append(efficiency)
-            print(f"   Compute efficiency: {efficiency:.1f}× faster than FP32")
+            print(f"   Compute efficiency: {efficiency:.1f}* faster than FP32")
             
             # Typical accuracy loss (percentage points)
             if bits == 32:
@@ -1585,7 +1585,7 @@ class QuantizationSystemsAnalyzer:
         
         This function is PROVIDED to show the analysis clearly.
         """
-        print("\n🎯 PRECISION VS PERFORMANCE TRADE-OFF SUMMARY") 
+        print("\nTARGET PRECISION VS PERFORMANCE TRADE-OFF SUMMARY") 
         print("=" * 60)
         print(f"{'Bits':<6} {'Memory':<8} {'Speed':<8} {'Acc Loss':<10} {'Hardware':<20}")
         print("-" * 60)
@@ -1597,10 +1597,10 @@ class QuantizationSystemsAnalyzer:
         hardware = analysis['hardware_support']
         
         for i, bits in enumerate(bit_widths):
-            print(f"{bits:<6} {memory[i]:<8.1f} {speed[i]:<8.1f}× {acc_loss[i]:<10.1f}% {hardware[i]:<20}")
+            print(f"{bits:<6} {memory[i]:<8.1f} {speed[i]:<8.1f}* {acc_loss[i]:<10.1f}% {hardware[i]:<20}")
         
         print()
-        print("🔍 **Key Insights**:")
+        print("MAGNIFY **Key Insights**:")
         
         # Find sweet spot (best speed/accuracy trade-off)
         efficiency_ratios = [s / (1 + a) for s, a in zip(speed, acc_loss)]
@@ -1608,14 +1608,14 @@ class QuantizationSystemsAnalyzer:
         best_bits = bit_widths[best_idx]
         
         print(f"   • Sweet spot: {best_bits}-bit provides best efficiency/accuracy trade-off")
-        print(f"   • Memory scaling: Linear with bit width (4× reduction FP32→INT8)")
+        print(f"   • Memory scaling: Linear with bit width (4* reduction FP32->INT8)")
         print(f"   • Speed scaling: Non-linear due to hardware specialization")
         print(f"   • Accuracy: Manageable loss up to 8-bit, significant below")
         
-        print(f"\n💡 **Why INT8 Dominates Production**:")
+        print(f"\nTIP **Why INT8 Dominates Production**:")
         print(f"   • Hardware support: Excellent across all platforms")
-        print(f"   • Speed improvement: {speed[bit_widths.index(8)]:.1f}× faster than FP32")
-        print(f"   • Memory reduction: {32/8:.1f}× smaller models")
+        print(f"   • Speed improvement: {speed[bit_widths.index(8)]:.1f}* faster than FP32")
+        print(f"   • Memory reduction: {32/8:.1f}* smaller models")
         print(f"   • Accuracy preservation: <{acc_loss[bit_widths.index(8)]:.1f}% typical loss")
         print(f"   • Deployment friendly: Fits mobile and edge constraints")
 
@@ -1629,7 +1629,7 @@ Let's analyze the fundamental precision vs performance trade-offs:
 # %% nbgrader={"grade": true, "grade_id": "test-systems-analysis", "locked": false, "points": 3, "schema_version": 3, "solution": false, "task": false}
 def test_systems_analysis():
     """Test systems analysis of precision vs performance trade-offs."""
-    print("🔍 Testing Systems Analysis...")
+    print("MAGNIFY Testing Systems Analysis...")
     print("=" * 60)
     
     analyzer = QuantizationSystemsAnalyzer()
@@ -1653,8 +1653,8 @@ def test_systems_analysis():
     assert efficiency[int8_idx] > efficiency[fp32_idx], "INT8 should be more efficient than FP32"
     assert memory[int8_idx] < memory[fp32_idx], "INT8 should use less memory than FP32"
     
-    print(f"✅ INT8 efficiency: {efficiency[int8_idx]:.1f}× vs FP32")
-    print(f"✅ INT8 memory: {memory[int8_idx]:.1f} vs {memory[fp32_idx]:.1f} bytes/param")
+    print(f"PASS INT8 efficiency: {efficiency[int8_idx]:.1f}* vs FP32")
+    print(f"PASS INT8 memory: {memory[int8_idx]:.1f} vs {memory[fp32_idx]:.1f} bytes/param")
     
     # Show comprehensive analysis
     analyzer.print_tradeoff_summary(analysis)
@@ -1664,10 +1664,10 @@ def test_systems_analysis():
     best_bits = analysis['bit_widths'][np.argmax(efficiency_ratios)]
     
     assert best_bits == 8, f"INT8 should be identified as optimal, got {best_bits}-bit"
-    print(f"✅ Systems analysis correctly identifies {best_bits}-bit as optimal")
+    print(f"PASS Systems analysis correctly identifies {best_bits}-bit as optimal")
     
-    print("✅ Systems analysis tests passed!")
-    print("💡 INT8 quantization is the proven sweet spot for production!")
+    print("PASS Systems analysis tests passed!")
+    print("TIP INT8 quantization is the proven sweet spot for production!")
 
 # Test function defined (called in main block)
 
@@ -1681,7 +1681,7 @@ Let's run comprehensive tests to validate our complete quantization implementati
 # %% nbgrader={"grade": true, "grade_id": "comprehensive-tests", "locked": false, "points": 5, "schema_version": 3, "solution": false, "task": false}
 def run_comprehensive_tests():
     """Run comprehensive tests of the entire quantization system."""
-    print("🧪 COMPREHENSIVE QUANTIZATION SYSTEM TESTS")
+    print("TEST COMPREHENSIVE QUANTIZATION SYSTEM TESTS")
     print("=" * 60)
     
     # Test 1: Baseline CNN
@@ -1727,16 +1727,16 @@ def run_comprehensive_tests():
         
         # Verify pipeline works
         assert len(baseline_pred) == len(quantized_pred), "Predictions should have same length"
-        print(f"   ✅ End-to-end pipeline works")
-        print(f"   ✅ Baseline predictions: {baseline_pred}")
-        print(f"   ✅ Quantized predictions: {quantized_pred}")
+        print(f"   PASS End-to-end pipeline works")
+        print(f"   PASS Baseline predictions: {baseline_pred}")
+        print(f"   PASS Quantized predictions: {quantized_pred}")
         
     except Exception as e:
-        print(f"   ⚠️ End-to-end test issue: {e}")
+        print(f"   WARNING️ End-to-end test issue: {e}")
     
-    print("🎉 ALL COMPREHENSIVE TESTS PASSED!")
-    print("✅ Quantization system is working correctly!")
-    print("🚀 Ready for production deployment with 4× speedup!")
+    print("CELEBRATE ALL COMPREHENSIVE TESTS PASSED!")
+    print("PASS Quantization system is working correctly!")
+    print("ROCKET Ready for production deployment with 4* speedup!")
 
 # Test function defined (called in main block)
 
@@ -1781,9 +1781,9 @@ class QuantizationMemoryProfiler:
         baseline_fc_mem = baseline_model.fc.nbytes
         baseline_total = baseline_conv1_mem + baseline_conv2_mem + baseline_fc_mem
         
-        print(f"   Conv1 weights: {baseline_conv1_mem // 1024:.1f}KB (32×3×3×3 + 32 bias)")
-        print(f"   Conv2 weights: {baseline_conv2_mem // 1024:.1f}KB (64×32×3×3 + 64 bias)")
-        print(f"   FC weights: {baseline_fc_mem // 1024:.1f}KB (2304×10)")
+        print(f"   Conv1 weights: {baseline_conv1_mem // 1024:.1f}KB (32*3*3*3 + 32 bias)")
+        print(f"   Conv2 weights: {baseline_conv2_mem // 1024:.1f}KB (64*32*3*3 + 64 bias)")
+        print(f"   FC weights: {baseline_fc_mem // 1024:.1f}KB (2304*10)")
         print(f"   Total: {baseline_total // 1024:.1f}KB")
         
         # Quantized model memory breakdown
@@ -1803,8 +1803,8 @@ class QuantizationMemoryProfiler:
         total_savings = baseline_total / quant_total
         
         print(f"\n💾 Memory Savings Analysis:")
-        print(f"   Conv layers: {conv_savings:.1f}× reduction")
-        print(f"   Overall model: {total_savings:.1f}× reduction")
+        print(f"   Conv layers: {conv_savings:.1f}* reduction")
+        print(f"   Overall model: {total_savings:.1f}* reduction")
         print(f"   Memory saved: {(baseline_total - quant_total) // 1024:.1f}KB")
         
         return {
@@ -1831,9 +1831,9 @@ class QuantizationMemoryProfiler:
         kernel_size = 3
         
         print(f"📐 Model Configuration:")
-        print(f"   Input: {batch_size} × 3 × {input_h} × {input_w}")
-        print(f"   Conv1: 3 → {conv1_out_ch}, {kernel_size}×{kernel_size} kernel")
-        print(f"   Conv2: {conv1_out_ch} → {conv2_out_ch}, {kernel_size}×{kernel_size} kernel")
+        print(f"   Input: {batch_size} * 3 * {input_h} * {input_w}")
+        print(f"   Conv1: 3 -> {conv1_out_ch}, {kernel_size}*{kernel_size} kernel")
+        print(f"   Conv2: {conv1_out_ch} -> {conv2_out_ch}, {kernel_size}*{kernel_size} kernel")
         
         # FP32 operations
         conv1_h_out = input_h - kernel_size + 1  # 30
@@ -1867,15 +1867,15 @@ class QuantizationMemoryProfiler:
         print(f"   Conv2 weight access: {conv2_weight_access:,} parameters")
         print(f"   FP32 memory bandwidth: {(conv1_weight_access + conv2_weight_access) * 4:,} bytes")
         print(f"   INT8 memory bandwidth: {(conv1_weight_access + conv2_weight_access) * 1:,} bytes")
-        print(f"   Bandwidth reduction: 4× (FP32 → INT8)")
+        print(f"   Bandwidth reduction: 4* (FP32 -> INT8)")
         
         # Theoretical speedup analysis
-        print(f"\n⚡ Theoretical Speedup Sources:")
-        print(f"   Memory bandwidth: 4× improvement (32-bit → 8-bit)")
+        print(f"\nSPEED Theoretical Speedup Sources:")
+        print(f"   Memory bandwidth: 4* improvement (32-bit -> 8-bit)")
         print(f"   Cache efficiency: Better fit in L1/L2 cache")
         print(f"   SIMD vectorization: More operations per instruction")
         print(f"   Hardware acceleration: Dedicated INT8 units on modern CPUs")
-        print(f"   Expected speedup: 2-4× in production systems")
+        print(f"   Expected speedup: 2-4* in production systems")
         
         return {
             'total_flops': total_flops,
@@ -1889,7 +1889,7 @@ class QuantizationMemoryProfiler:
         
         This function is PROVIDED to demonstrate scaling analysis.
         """
-        print("\n📈 SCALING BEHAVIOR ANALYSIS")
+        print("\nPROGRESS SCALING BEHAVIOR ANALYSIS")
         print("=" * 35)
         
         model_sizes = [
@@ -1916,10 +1916,10 @@ class QuantizationMemoryProfiler:
             else:
                 speedup = 4.0  # Large models: memory bound, maximum benefit
             
-            print(f"{name:<15} {fp32_size_mb:<11.1f}MB {int8_size_mb:<11.1f}MB {savings:<9.1f}× {speedup:<7.1f}×")
+            print(f"{name:<15} {fp32_size_mb:<11.1f}MB {int8_size_mb:<11.1f}MB {savings:<9.1f}* {speedup:<7.1f}*")
         
-        print(f"\n💡 Key Scaling Insights:")
-        print(f"   • Memory savings: Linear 4× reduction for all model sizes")
+        print(f"\nTIP Key Scaling Insights:")
+        print(f"   • Memory savings: Linear 4* reduction for all model sizes")
         print(f"   • Speed benefits: Increase with model size (memory bottleneck)")  
         print(f"   • Large models: Maximum benefit from reduced memory pressure")
         print(f"   • Mobile deployment: Enables models that wouldn't fit in RAM")
@@ -1940,7 +1940,7 @@ Let's run comprehensive systems analysis to understand quantization behavior:
 # %% nbgrader={"grade": true, "grade_id": "test-memory-profiling", "locked": false, "points": 3, "schema_version": 3, "solution": false, "task": false}
 def test_memory_profiling():
     """Test memory profiling and systems analysis."""
-    print("🔍 Testing Memory Profiling and Systems Analysis...")
+    print("MAGNIFY Testing Memory Profiling and Systems Analysis...")
     print("=" * 60)
     
     # Create models for profiling
@@ -1957,21 +1957,21 @@ def test_memory_profiling():
     # Test memory usage analysis
     memory_results = profiler.profile_memory_usage(baseline, quantized)
     assert memory_results['conv_compression'] > 3.0, "Should show significant conv layer compression"
-    print(f"✅ Conv layer compression: {memory_results['conv_compression']:.1f}×")
+    print(f"PASS Conv layer compression: {memory_results['conv_compression']:.1f}*")
     
     # Test computational complexity analysis
     complexity_results = profiler.analyze_computational_complexity()
     assert complexity_results['total_flops'] > 0, "Should calculate FLOPs"
-    assert complexity_results['memory_bandwidth_reduction'] == 4.0, "Should show 4× bandwidth reduction"
-    print(f"✅ Memory bandwidth reduction: {complexity_results['memory_bandwidth_reduction']:.1f}×")
+    assert complexity_results['memory_bandwidth_reduction'] == 4.0, "Should show 4* bandwidth reduction"
+    print(f"PASS Memory bandwidth reduction: {complexity_results['memory_bandwidth_reduction']:.1f}*")
     
     # Test scaling behavior analysis
     scaling_results = profiler.analyze_scaling_behavior()
-    assert scaling_results['memory_savings'] == 4.0, "Should show consistent 4× memory savings"
-    print(f"✅ Memory savings scaling: {scaling_results['memory_savings']:.1f}× across all model sizes")
+    assert scaling_results['memory_savings'] == 4.0, "Should show consistent 4* memory savings"
+    print(f"PASS Memory savings scaling: {scaling_results['memory_savings']:.1f}* across all model sizes")
     
-    print("✅ Memory profiling and systems analysis tests passed!")
-    print("🎯 Quantization systems engineering principles validated!")
+    print("PASS Memory profiling and systems analysis tests passed!")
+    print("TARGET Quantization systems engineering principles validated!")
 
 # Test function defined (called in main block)
 
@@ -1983,9 +1983,9 @@ Let's run all our tests to validate the complete implementation:
 """
 
 if __name__ == "__main__":
-    print("🚀 MODULE 17: QUANTIZATION - TRADING PRECISION FOR SPEED")
+    print("ROCKET MODULE 17: QUANTIZATION - TRADING PRECISION FOR SPEED")
     print("=" * 70)
-    print("Testing complete INT8 quantization implementation for 4× speedup...")
+    print("Testing complete INT8 quantization implementation for 4* speedup...")
     print()
     
     try:
@@ -2019,26 +2019,26 @@ if __name__ == "__main__":
         ProductionQuantizationInsights.show_performance_numbers()
         print()
         
-        print("🎉 SUCCESS: All quantization tests passed!")
-        print("🏆 ACHIEVEMENT: 4× speedup through precision optimization!")
+        print("CELEBRATE SUCCESS: All quantization tests passed!")
+        print("🏆 ACHIEVEMENT: 4* speedup through precision optimization!")
         
     except Exception as e:
-        print(f"❌ Error in testing: {e}")
+        print(f"FAIL Error in testing: {e}")
         import traceback
         traceback.print_exc()
 
 # %% [markdown]
 """
-## 🤔 ML Systems Thinking: Interactive Questions
+## THINK ML Systems Thinking: Interactive Questions
 
-Now that you've implemented INT8 quantization and achieved 4× speedup, let's reflect on the systems engineering principles and precision trade-offs you've learned.
+Now that you've implemented INT8 quantization and achieved 4* speedup, let's reflect on the systems engineering principles and precision trade-offs you've learned.
 """
 
 # %% [markdown] nbgrader={"grade": true, "grade_id": "systems-thinking-1", "locked": false, "points": 3, "schema_version": 3, "solution": true, "task": false}
 """
 **Question 1: Precision vs Performance Trade-offs**
 
-You implemented INT8 quantization that uses 4× less memory but provides 4× speedup with <1% accuracy loss.
+You implemented INT8 quantization that uses 4* less memory but provides 4* speedup with <1% accuracy loss.
 
 a) Why is INT8 the "sweet spot" for production quantization rather than INT4 or INT16?
 b) In what scenarios would you choose NOT to use quantization despite the performance benefits?
@@ -2053,8 +2053,8 @@ c) How do hardware capabilities (mobile vs server) influence quantization decisi
 a) Why INT8 is the sweet spot:
 - Hardware support: Excellent native INT8 support in CPUs, GPUs, and mobile processors
 - Accuracy preservation: Can represent 256 different values, sufficient for most weight distributions
-- Speed gains: Specialized INT8 arithmetic units provide real 4× speedup (not just theoretical)
-- Memory sweet spot: 4× reduction is significant but not so extreme as to destroy model quality
+- Speed gains: Specialized INT8 arithmetic units provide real 4* speedup (not just theoretical)
+- Memory sweet spot: 4* reduction is significant but not so extreme as to destroy model quality
 - Production proven: Extensive validation across many model types shows <1% accuracy loss
 - Tool ecosystem: TensorFlow Lite, PyTorch Mobile, ONNX Runtime all optimize for INT8
 
@@ -2072,7 +2072,7 @@ c) Hardware influence on quantization decisions:
 - Server GPUs: Mixed precision (FP16) might be better than INT8 for throughput
 - CPUs: INT8 vectorization provides significant benefits over FP32
 - Memory-constrained systems: Quantization may be required just to fit the model
-- Bandwidth-limited: 4× smaller models transfer faster over network
+- Bandwidth-limited: 4* smaller models transfer faster over network
 """
 ### END SOLUTION
 
@@ -2188,7 +2188,7 @@ a) Quantization interactions with other optimizations:
 - Model pruning synergy: Pruned models often quantize better (remaining weights more important)
 - Knowledge distillation compatibility: Student models designed for quantization from start
 - Neural architecture search: NAS can search for quantization-friendly architectures
-- Combined benefits: Pruning + quantization can achieve 16× compression (4× each)
+- Combined benefits: Pruning + quantization can achieve 16* compression (4* each)
 - Order matters: Generally prune first, then quantize (quantizing first can interfere with pruning)
 - Optimization conflicts: Some optimizations may work against each other
 - Unified approaches: Modern techniques like differentiable quantization during NAS
@@ -2228,26 +2228,26 @@ Monitoring phase:
 
 # %% [markdown]
 """
-## 🎯 MODULE SUMMARY: Quantization - Trading Precision for Speed
+## TARGET MODULE SUMMARY: Quantization - Trading Precision for Speed
 
 Congratulations! You've completed Module 17 and mastered quantization techniques that achieve dramatic performance improvements while maintaining model accuracy.
 
 ### What You Built
 - **Baseline FP32 CNN**: Reference implementation showing computational and memory costs
 - **INT8 Quantizer**: Complete quantization system with scale/zero-point parameter computation
-- **Quantized CNN**: Production-ready CNN using INT8 weights for 4× speedup
+- **Quantized CNN**: Production-ready CNN using INT8 weights for 4* speedup
 - **Performance Analyzer**: Comprehensive benchmarking system measuring speed, memory, and accuracy trade-offs
 - **Systems Analyzer**: Deep analysis of precision vs performance trade-offs across different bit widths
 
 ### Key Systems Insights Mastered
-1. **Precision vs Performance Trade-offs**: Understanding when to sacrifice precision for speed (4× memory/speed improvement for <1% accuracy loss)
+1. **Precision vs Performance Trade-offs**: Understanding when to sacrifice precision for speed (4* memory/speed improvement for <1% accuracy loss)
 2. **Quantization Mathematics**: Implementing scale/zero-point based affine quantization for optimal precision
 3. **Hardware-Aware Optimization**: Leveraging INT8 specialized hardware for maximum performance benefits
 4. **Production Deployment Strategies**: Calibration-based quantization for mobile and edge deployment
 
 ### Performance Achievements
-- 🚀 **4× Speed Improvement**: Reduced inference time from 50ms to 12ms through INT8 arithmetic
-- 🧠 **4× Memory Reduction**: Quantized weights use 25% of original FP32 memory
+- ROCKET **4* Speed Improvement**: Reduced inference time from 50ms to 12ms through INT8 arithmetic
+- 🧠 **4* Memory Reduction**: Quantized weights use 25% of original FP32 memory
 - 📊 **<1% Accuracy Loss**: Maintained model quality while achieving dramatic speedups
 - 🏭 **Production Ready**: Implemented patterns used by TensorFlow Lite, PyTorch Mobile, and Core ML
 

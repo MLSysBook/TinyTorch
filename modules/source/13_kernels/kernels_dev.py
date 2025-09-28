@@ -4,7 +4,7 @@
 
 Welcome to Kernels! You'll implement high-performance computational kernels that power modern ML systems!
 
-## 🔗 Building on Previous Learning
+## LINK Building on Previous Learning
 **What You Built Before**:
 - Module 11 (Training): Complete training loops with gradient computation
 - Module 12 (Regularization): Advanced training techniques for robust models
@@ -17,7 +17,7 @@ Welcome to Kernels! You'll implement high-performance computational kernels that
 
 **Connection Map**:
 ```
-Training → Kernels → Benchmarking
+Training -> Kernels -> Benchmarking
 (correct)   (fast)    (measured)
 ```
 
@@ -28,14 +28,14 @@ Training → Kernels → Benchmarking
 - **Framework connections**: Understanding how PyTorch and TensorFlow achieve high performance
 - **Optimization trade-offs**: Balancing memory usage, computational complexity, and parallelism
 
-## Build → Use → Reflect
+## Build -> Use -> Reflect
 1. **Build**: Implement optimized kernels for matrix operations, activations, and memory management
 2. **Use**: Apply kernels to real ML workloads and measure performance improvements
 3. **Reflect**: Analyze optimization patterns and design production-grade kernel architectures
 
 ## Systems Reality Check
-💡 **Production Context**: PyTorch uses custom CUDA kernels and CPU vectorization for 10-100x speedups
-⚡ **Performance Insight**: Memory bandwidth is often the limiting factor, not compute - optimize data movement first
+TIP **Production Context**: PyTorch uses custom CUDA kernels and CPU vectorization for 10-100x speedups
+SPEED **Performance Insight**: Memory bandwidth is often the limiting factor, not compute - optimize data movement first
 """
 
 # %% [markdown]
@@ -46,18 +46,18 @@ High-performance kernels are optimized computational functions that leverage har
 
 ```
 CPU Kernels:
-┌─────────────────────────────────────┐
-│ SIMD Instructions (AVX, SSE)       │ ← Process 4-16 floats simultaneously
-│ Cache-Friendly Memory Patterns     │ ← Minimize cache misses
-│ Loop Unrolling & Vectorization     │ ← Eliminate loop overhead
-└─────────────────────────────────────┘
++-------------------------------------+
+| SIMD Instructions (AVX, SSE)       | <- Process 4-16 floats simultaneously
+| Cache-Friendly Memory Patterns     | <- Minimize cache misses
+| Loop Unrolling & Vectorization     | <- Eliminate loop overhead
++-------------------------------------+
 
 GPU Kernels:
-┌─────────────────────────────────────┐
-│ Thread Blocks & Shared Memory      │ ← Parallel processing with fast memory
-│ Memory Coalescing                   │ ← Efficient global memory access
-│ Warp-Level Operations               │ ← 32 threads execute together
-└─────────────────────────────────────┘
++-------------------------------------+
+| Thread Blocks & Shared Memory      | <- Parallel processing with fast memory
+| Memory Coalescing                   | <- Efficient global memory access
+| Warp-Level Operations               | <- 32 threads execute together
++-------------------------------------+
 ```
 
 **Why This Matters for ML Systems:**
@@ -112,15 +112,15 @@ y = np.maximum(0, x)  # 8 operations per cycle
 
 ```
 Row-Major Access (Fast):
-A[0,0] A[0,1] A[0,2] A[0,3] ...  ← Sequential memory access
+A[0,0] A[0,1] A[0,2] A[0,3] ...  <- Sequential memory access
 
 Column-Major Access (Slow):
-A[0,0] A[1,0] A[2,0] A[3,0] ...  ← Strided memory access
+A[0,0] A[1,0] A[2,0] A[3,0] ...  <- Strided memory access
 
 Cache Line Impact:
-┌─────┬─────┬─────┬─────┐
-│ A[0,0:4] loaded together │ ← 64-byte cache line
-└─────┴─────┴─────┴─────┘
++-----+-----+-----+-----+
+| A[0,0:4] loaded together | <- 64-byte cache line
++-----+-----+-----+-----+
 ```
 """
 
@@ -212,21 +212,21 @@ except ImportError:
 Our kernel optimization strategy follows a systematic hierarchy:
 
 ```
-🎯 Optimization Strategy:
-┌─────────────────────────────────────┐
-│ 1. Correctness: Get the right answer │
-│ 2. Cache Optimization: Memory patterns │
-│ 3. Vectorization: SIMD instructions  │
-│ 4. Parallelization: Multi-core      │
-│ 5. Quantization: Reduced precision  │
-└─────────────────────────────────────┘
+TARGET Optimization Strategy:
++-------------------------------------+
+| 1. Correctness: Get the right answer |
+| 2. Cache Optimization: Memory patterns |
+| 3. Vectorization: SIMD instructions  |
+| 4. Parallelization: Multi-core      |
+| 5. Quantization: Reduced precision  |
++-------------------------------------+
 
 🔧 Implementation Layers:
-┌─────────────────────────────────────┐
-│ Higher Level: Kernel Composition    │ ← Combine optimizations
-│ Mid Level: Algorithm Optimization   │ ← Cache blocking, tiling
-│ Lower Level: Hardware Primitives    │ ← SIMD, memory layout
-└─────────────────────────────────────┘
++-------------------------------------+
+| Higher Level: Kernel Composition    | <- Combine optimizations
+| Mid Level: Algorithm Optimization   | <- Cache blocking, tiling
+| Lower Level: Hardware Primitives    | <- SIMD, memory layout
++-------------------------------------+
 ```
 
 **Design Principles:**
@@ -292,12 +292,12 @@ def time_kernel(func: Callable, *args, **kwargs) -> Tuple[Any, float]:
     return result, execution_time_us
     ### END SOLUTION
 
-# ✅ IMPLEMENTATION CHECKPOINT: Timing infrastructure complete
+# PASS IMPLEMENTATION CHECKPOINT: Timing infrastructure complete
 
-# 🤔 PREDICTION: How much timing overhead does our measurement add?
+# THINK PREDICTION: How much timing overhead does our measurement add?
 # Your guess: _____ microseconds
 
-# 🔍 SYSTEMS INSIGHT: Timing Overhead Analysis
+# MAGNIFY SYSTEMS INSIGHT: Timing Overhead Analysis
 def analyze_timing_overhead():
     """Measure the overhead of our timing infrastructure."""
     try:
@@ -321,7 +321,7 @@ def analyze_timing_overhead():
         print(f"  Minimum: {min_overhead:.3f} μs")
         print(f"  Relative precision: ±{std_overhead/avg_overhead*100:.1f}%")
 
-        # 💡 WHY THIS MATTERS: Timing overhead must be much smaller than
+        # TIP WHY THIS MATTERS: Timing overhead must be much smaller than
         # the operations we're measuring, or results will be meaningless.
         # Modern CPUs: ~1-10 μs overhead, so measure operations >100 μs
 
@@ -331,7 +331,7 @@ def analyze_timing_overhead():
             'reliable_for_operations_above_us': avg_overhead * 10
         }
     except Exception as e:
-        print(f"⚠️ Timing analysis error: {e}")
+        print(f"WARNING️ Timing analysis error: {e}")
         return None
 
 # Run the analysis
@@ -339,14 +339,14 @@ timing_analysis = analyze_timing_overhead()
 
 # %% [markdown]
 """
-### 🧪 Unit Test: Timing Infrastructure
+### TEST Unit Test: Timing Infrastructure
 This test validates `time_kernel`, ensuring accurate performance measurement
 """
 
 # %%
 def test_unit_timing_infrastructure():
     """Test timing infrastructure with known operations."""
-    print("🧪 Unit Test: Timing Infrastructure")
+    print("TEST Unit Test: Timing Infrastructure")
 
     # Test 1: Basic timing functionality
     def test_operation():
@@ -357,7 +357,7 @@ def test_unit_timing_infrastructure():
 
     assert result == "done", "Function result should be preserved"
     assert 800 <= elapsed_us <= 2000, f"1ms sleep should take ~1000μs, got {elapsed_us:.1f}μs"
-    print(f"✅ Basic timing: {elapsed_us:.1f}μs for 1ms operation")
+    print(f"PASS Basic timing: {elapsed_us:.1f}μs for 1ms operation")
 
     # Test 2: Timing precision
     def fast_operation():
@@ -370,7 +370,7 @@ def test_unit_timing_infrastructure():
 
     cv = np.std(measurements) / np.mean(measurements)
     assert cv < 0.5, f"Timing precision should be reasonable, CV={cv:.3f}"
-    print(f"✅ Timing precision: CV={cv:.3f} across 10 measurements")
+    print(f"PASS Timing precision: CV={cv:.3f} across 10 measurements")
 
     # Test 3: Argument passing
     def add_operation(a, b, c=0):
@@ -378,7 +378,7 @@ def test_unit_timing_infrastructure():
 
     result, _ = time_kernel(add_operation, 5, 10, c=2)
     assert result == 17, f"Arguments should pass correctly, got {result}"
-    print("✅ Argument passing works correctly")
+    print("PASS Argument passing works correctly")
 
 # Run the test
 test_unit_timing_infrastructure()
@@ -432,9 +432,9 @@ def matmul_baseline(A: np.ndarray, B: np.ndarray) -> np.ndarray:
     return result
     ### END SOLUTION
 
-# ✅ IMPLEMENTATION CHECKPOINT: Baseline matrix multiplication complete
+# PASS IMPLEMENTATION CHECKPOINT: Baseline matrix multiplication complete
 
-# 🔍 SYSTEMS INSIGHT: Matrix Multiplication Performance Scaling
+# MAGNIFY SYSTEMS INSIGHT: Matrix Multiplication Performance Scaling
 def analyze_matmul_scaling():
     """Analyze how matrix multiplication performance scales with size."""
     try:
@@ -471,14 +471,14 @@ def analyze_matmul_scaling():
         print(f"  Theoretical (O(n³)): {size_scaling:.1f}x")
         print(f"  Efficiency: {efficiency:.3f} (1.0 = perfect scaling)")
 
-        # 💡 WHY THIS MATTERS: Matrix multiplication is O(n³), but cache effects
+        # TIP WHY THIS MATTERS: Matrix multiplication is O(n³), but cache effects
         # and memory bandwidth limits mean real performance doesn't scale perfectly.
         # Understanding these limits helps size operations for optimal performance.
 
         return results
 
     except Exception as e:
-        print(f"⚠️ Scaling analysis error: {e}")
+        print(f"WARNING️ Scaling analysis error: {e}")
         return None
 
 # Run the analysis
@@ -557,14 +557,14 @@ def cache_friendly_matmul(A: np.ndarray, B: np.ndarray, block_size: int = 64) ->
 
 # %% [markdown]
 """
-### 🧪 Unit Test: Cache-Friendly Matrix Multiplication
+### TEST Unit Test: Cache-Friendly Matrix Multiplication
 This test validates `cache_friendly_matmul`, ensuring correctness and performance improvement
 """
 
 # %%
 def test_unit_cache_friendly_matmul():
     """Test cache-friendly matrix multiplication."""
-    print("🧪 Unit Test: Cache-Friendly Matrix Multiplication")
+    print("TEST Unit Test: Cache-Friendly Matrix Multiplication")
 
     # Test 1: Correctness
     A = np.array([[1, 2], [3, 4]], dtype=np.float32)
@@ -574,7 +574,7 @@ def test_unit_cache_friendly_matmul():
     result_baseline = matmul_baseline(A, B)
 
     assert np.allclose(result_cache, result_baseline), "Cache-friendly result should match baseline"
-    print("✅ Correctness: Matches baseline implementation")
+    print("PASS Correctness: Matches baseline implementation")
 
     # Test 2: Performance comparison
     size = 256
@@ -584,7 +584,7 @@ def test_unit_cache_friendly_matmul():
     _, baseline_time = time_kernel(matmul_baseline, A_large, B_large)
     _, cache_time = time_kernel(cache_friendly_matmul, A_large, B_large, 64)
 
-    print(f"✅ Performance: Baseline={baseline_time:.1f}μs, Cache-friendly={cache_time:.1f}μs")
+    print(f"PASS Performance: Baseline={baseline_time:.1f}μs, Cache-friendly={cache_time:.1f}μs")
 
     # Test 3: Different block sizes
     block_sizes = [32, 64, 128]
@@ -592,7 +592,7 @@ def test_unit_cache_friendly_matmul():
         result = cache_friendly_matmul(A, B, block_size=bs)
         assert np.allclose(result, result_baseline), f"Block size {bs} should be correct"
 
-    print(f"✅ Block sizes: Tested {block_sizes}")
+    print(f"PASS Block sizes: Tested {block_sizes}")
 
 # Run the test
 test_unit_cache_friendly_matmul()
@@ -714,9 +714,9 @@ def vectorized_operations(x: np.ndarray, y: np.ndarray) -> Dict[str, np.ndarray]
     return results
     ### END SOLUTION
 
-# ✅ IMPLEMENTATION CHECKPOINT: Vectorized operations complete
+# PASS IMPLEMENTATION CHECKPOINT: Vectorized operations complete
 
-# 🔍 SYSTEMS INSIGHT: Vectorization Performance Analysis
+# MAGNIFY SYSTEMS INSIGHT: Vectorization Performance Analysis
 def analyze_vectorization_performance():
     """Compare vectorized vs scalar performance."""
     try:
@@ -755,7 +755,7 @@ def analyze_vectorization_performance():
         print(f"  Vectorized operations: {ops_time:.1f}μs")
         print(f"  Throughput: {operations_per_second/1e6:.1f}M ops/sec")
 
-        # 💡 WHY THIS MATTERS: Vectorization provides 4-16x speedups on modern CPUs.
+        # TIP WHY THIS MATTERS: Vectorization provides 4-16x speedups on modern CPUs.
         # This is essential for real-time inference and efficient training.
         # ML frameworks like PyTorch rely heavily on vectorized operations.
 
@@ -765,7 +765,7 @@ def analyze_vectorization_performance():
         }
 
     except Exception as e:
-        print(f"⚠️ Vectorization analysis error: {e}")
+        print(f"WARNING️ Vectorization analysis error: {e}")
         return None
 
 # Run the analysis
@@ -773,14 +773,14 @@ vectorization_analysis = analyze_vectorization_performance()
 
 # %% [markdown]
 """
-### 🧪 Unit Test: Vectorized Operations
+### TEST Unit Test: Vectorized Operations
 This test validates vectorized implementations for correctness and performance
 """
 
 # %%
 def test_unit_vectorized_operations():
     """Test vectorized operations."""
-    print("🧪 Unit Test: Vectorized Operations")
+    print("TEST Unit Test: Vectorized Operations")
 
     # Test 1: Vectorized ReLU correctness
     x = np.array([-2, -1, 0, 1, 2], dtype=np.float32)
@@ -788,7 +788,7 @@ def test_unit_vectorized_operations():
     expected = np.array([0, 0, 0, 1, 2], dtype=np.float32)
 
     assert np.allclose(result, expected), "Vectorized ReLU should be correct"
-    print("✅ ReLU correctness: Produces expected outputs")
+    print("PASS ReLU correctness: Produces expected outputs")
 
     # Test 2: Vectorized operations correctness
     x = np.array([1, 2, 3, 4], dtype=np.float32)
@@ -800,7 +800,7 @@ def test_unit_vectorized_operations():
     assert np.allclose(results['element_wise_multiply'], [2, 6, 12, 20]), "Multiplication should be correct"
     assert np.allclose(results['dot_product'], 40), "Dot product should be correct"
 
-    print("✅ Operations correctness: All operations produce expected results")
+    print("PASS Operations correctness: All operations produce expected results")
 
     # Test 3: Performance with larger arrays
     large_x = np.random.randn(10000).astype(np.float32)
@@ -812,7 +812,7 @@ def test_unit_vectorized_operations():
     assert relu_time < 1000, f"ReLU should be fast, took {relu_time:.1f}μs"
     assert ops_time < 5000, f"Operations should be fast, took {ops_time:.1f}μs"
 
-    print(f"✅ Performance: ReLU={relu_time:.1f}μs, Operations={ops_time:.1f}μs")
+    print(f"PASS Performance: ReLU={relu_time:.1f}μs, Operations={ops_time:.1f}μs")
 
 # Run the test
 test_unit_vectorized_operations()
@@ -958,9 +958,9 @@ def parallel_batch_processing(batch_data: np.ndarray, operation: Callable = None
     return np.concatenate(results, axis=0)
     ### END SOLUTION
 
-# ✅ IMPLEMENTATION CHECKPOINT: Parallel processing complete
+# PASS IMPLEMENTATION CHECKPOINT: Parallel processing complete
 
-# 🔍 SYSTEMS INSIGHT: Parallel Processing Scaling Analysis
+# MAGNIFY SYSTEMS INSIGHT: Parallel Processing Scaling Analysis
 def analyze_parallel_scaling():
     """Analyze how parallel processing scales with worker count."""
     try:
@@ -1017,7 +1017,7 @@ def analyze_parallel_scaling():
         print(f"  ReLU efficiency: {max_speedup_relu/8:.2f} (theoretical max: 1.0)")
         print(f"  Batch efficiency: {max_speedup_batch/8:.2f} (theoretical max: 1.0)")
 
-        # 💡 WHY THIS MATTERS: Parallel processing has diminishing returns due to:
+        # TIP WHY THIS MATTERS: Parallel processing has diminishing returns due to:
         # 1. Thread overhead and synchronization costs
         # 2. Memory bandwidth limitations
         # 3. Amdahl's law - sequential portions limit speedup
@@ -1026,7 +1026,7 @@ def analyze_parallel_scaling():
         return results
 
     except Exception as e:
-        print(f"⚠️ Parallel scaling analysis error: {e}")
+        print(f"WARNING️ Parallel scaling analysis error: {e}")
         return None
 
 # Run the analysis
@@ -1034,14 +1034,14 @@ parallel_scaling = analyze_parallel_scaling()
 
 # %% [markdown]
 """
-### 🧪 Unit Test: Parallel Processing
+### TEST Unit Test: Parallel Processing
 This test validates parallel implementations for correctness and performance scaling
 """
 
 # %%
 def test_unit_parallel_processing():
     """Test parallel processing implementations."""
-    print("🧪 Unit Test: Parallel Processing")
+    print("TEST Unit Test: Parallel Processing")
 
     # Test 1: Parallel ReLU correctness
     x = np.array([-2, -1, 0, 1, 2], dtype=np.float32)
@@ -1050,7 +1050,7 @@ def test_unit_parallel_processing():
     result_sequential = vectorized_relu(x)
 
     assert np.allclose(result_parallel, result_sequential), "Parallel ReLU should match sequential"
-    print("✅ ReLU correctness: Parallel matches sequential result")
+    print("PASS ReLU correctness: Parallel matches sequential result")
 
     # Test 2: Parallel batch processing correctness
     batch = np.random.randn(16, 10).astype(np.float32)
@@ -1060,7 +1060,7 @@ def test_unit_parallel_processing():
 
     assert np.allclose(result_parallel, result_sequential), "Parallel batch should match sequential"
     assert result_parallel.shape == batch.shape, "Output shape should match input"
-    print("✅ Batch correctness: Parallel matches sequential result")
+    print("PASS Batch correctness: Parallel matches sequential result")
 
     # Test 3: Performance with larger data
     large_x = np.random.randn(20000).astype(np.float32)
@@ -1069,7 +1069,7 @@ def test_unit_parallel_processing():
     _, sequential_time = time_kernel(vectorized_relu, large_x)
     _, parallel_time = time_kernel(parallel_relu, large_x, 4)
 
-    print(f"✅ Performance: Sequential={sequential_time:.1f}μs, Parallel={parallel_time:.1f}μs")
+    print(f"PASS Performance: Sequential={sequential_time:.1f}μs, Parallel={parallel_time:.1f}μs")
 
     # Test 4: Edge cases
     small_x = np.array([1, 2, 3])
@@ -1077,7 +1077,7 @@ def test_unit_parallel_processing():
     expected_small = vectorized_relu(small_x)
 
     assert np.allclose(result_small, expected_small), "Small arrays should work correctly"
-    print("✅ Edge cases: Small arrays handled correctly")
+    print("PASS Edge cases: Small arrays handled correctly")
 
 # Run the test
 test_unit_parallel_processing()
@@ -1125,7 +1125,7 @@ def quantized_matmul(A: np.ndarray, B: np.ndarray, bits: int = 8) -> np.ndarray:
     >>> C = quantized_matmul(A, B, bits=8)
 
     PERFORMANCE BENEFITS:
-    - 4x memory reduction (float32 → int8)
+    - 4x memory reduction (float32 -> int8)
     - Faster integer arithmetic on some hardware
     - Enables deployment on memory-constrained devices
     """
@@ -1226,9 +1226,9 @@ def quantized_relu(x: np.ndarray, bits: int = 8) -> np.ndarray:
     return result
     ### END SOLUTION
 
-# ✅ IMPLEMENTATION CHECKPOINT: Quantization kernels complete
+# PASS IMPLEMENTATION CHECKPOINT: Quantization kernels complete
 
-# 🔍 SYSTEMS INSIGHT: Quantization Analysis
+# MAGNIFY SYSTEMS INSIGHT: Quantization Analysis
 def analyze_quantization_impact():
     """Analyze the impact of quantization on accuracy and performance."""
     try:
@@ -1281,7 +1281,7 @@ def analyze_quantization_impact():
         print(f"  MatMul: {baseline_time:.1f}μs, {baseline_size/1024:.1f}KB")
         print(f"  ReLU: {baseline_relu_time:.1f}μs, {x.nbytes/1024:.1f}KB")
 
-        # 💡 WHY THIS MATTERS: Quantization trades accuracy for memory and speed.
+        # TIP WHY THIS MATTERS: Quantization trades accuracy for memory and speed.
         # 8-bit quantization: 4x memory reduction, variable performance impact
         # Critical for edge deployment where memory is constrained
         # Modern ML accelerators (TPUs, mobile chips) heavily use quantization
@@ -1293,7 +1293,7 @@ def analyze_quantization_impact():
         }
 
     except Exception as e:
-        print(f"⚠️ Quantization analysis error: {e}")
+        print(f"WARNING️ Quantization analysis error: {e}")
         return None
 
 # Run the analysis
@@ -1301,14 +1301,14 @@ quantization_analysis = analyze_quantization_impact()
 
 # %% [markdown]
 """
-### 🧪 Unit Test: Quantization Kernels
+### TEST Unit Test: Quantization Kernels
 This test validates quantization implementations for correctness and efficiency trade-offs
 """
 
 # %%
 def test_unit_quantization_kernels():
     """Test quantization kernel implementations."""
-    print("🧪 Unit Test: Quantization Kernels")
+    print("TEST Unit Test: Quantization Kernels")
 
     # Test 1: Quantized matrix multiplication correctness
     A = np.array([[1.0, 2.0], [3.0, 4.0]], dtype=np.float32)
@@ -1320,7 +1320,7 @@ def test_unit_quantization_kernels():
     # Should be approximately correct (quantization introduces error)
     relative_error = np.mean(np.abs(result_quant - result_baseline) / np.abs(result_baseline + 1e-8))
     assert relative_error < 0.1, f"Quantization error too high: {relative_error:.3f}"
-    print(f"✅ MatMul quantization: relative error {relative_error:.3f}")
+    print(f"PASS MatMul quantization: relative error {relative_error:.3f}")
 
     # Test 2: Quantized ReLU correctness
     x = np.array([-2.0, -1.0, 0.0, 1.0, 2.0], dtype=np.float32)
@@ -1331,7 +1331,7 @@ def test_unit_quantization_kernels():
     # Check that negative values become zero and positive values remain positive
     assert np.all(result_quant_relu >= 0), "Quantized ReLU should be non-negative"
     assert np.allclose(result_quant_relu[x <= 0], 0, atol=0.1), "Negative inputs should become zero"
-    print("✅ ReLU quantization: maintains ReLU properties")
+    print("PASS ReLU quantization: maintains ReLU properties")
 
     # Test 3: Different bit depths
     for bits in [8, 16]:
@@ -1341,7 +1341,7 @@ def test_unit_quantization_kernels():
         result_relu_bits = quantized_relu(x, bits=bits)
         assert result_relu_bits.shape == x.shape, f"{bits}-bit ReLU shape should match"
 
-    print("✅ Bit depths: 8-bit and 16-bit quantization work correctly")
+    print("PASS Bit depths: 8-bit and 16-bit quantization work correctly")
 
     # Test 4: Performance characteristics
     large_A = np.random.randn(64, 64).astype(np.float32)
@@ -1350,7 +1350,7 @@ def test_unit_quantization_kernels():
     _, baseline_time = time_kernel(matmul_baseline, large_A, large_B)
     _, quant_time = time_kernel(quantized_matmul, large_A, large_B, 8)
 
-    print(f"✅ Performance: Baseline={baseline_time:.1f}μs, Quantized={quant_time:.1f}μs")
+    print(f"PASS Performance: Baseline={baseline_time:.1f}μs, Quantized={quant_time:.1f}μs")
 
 # Run the test
 test_unit_quantization_kernels()
@@ -1366,7 +1366,7 @@ At this level, you design comprehensive analyses from scratch - no scaffolding p
 
 # %% [markdown]
 """
-### 🎯 ADVANCED ANALYSIS CHALLENGE: Comprehensive Kernel Optimization Analysis
+### TARGET ADVANCED ANALYSIS CHALLENGE: Comprehensive Kernel Optimization Analysis
 
 **CHALLENGE**: Design and implement a complete kernel optimization analysis system that:
 
@@ -1558,7 +1558,7 @@ class KernelOptimizationAnalyzer:
             cache_analysis['recommendations'].append("Memory bandwidth limited - consider cache blocking")
 
         if max(data_sizes)**2 * 4 > l3_size:
-            cache_analysis['recommendations'].append(f"Large matrices exceed L3 cache - use block size ≤ {cache_analysis['optimal_block_sizes']['L2']}")
+            cache_analysis['recommendations'].append(f"Large matrices exceed L3 cache - use block size <= {cache_analysis['optimal_block_sizes']['L2']}")
 
         self.analysis_results['cache_efficiency'] = cache_analysis
         return cache_analysis
@@ -2177,16 +2177,16 @@ class KernelOptimizationAnalyzer:
         return roadmap
         ### END SOLUTION
 
-# ✅ IMPLEMENTATION CHECKPOINT: Advanced optimization analyzer complete
+# PASS IMPLEMENTATION CHECKPOINT: Advanced optimization analyzer complete
 
-# 🤔 PREDICTION: What will be the most impactful optimization for matrix operations?
+# THINK PREDICTION: What will be the most impactful optimization for matrix operations?
 # Your guess: _______
 
-# 🔍 SYSTEMS INSIGHT: Comprehensive Kernel Optimization Analysis
+# MAGNIFY SYSTEMS INSIGHT: Comprehensive Kernel Optimization Analysis
 def comprehensive_kernel_analysis():
     """Run complete kernel optimization analysis using the advanced analyzer."""
     try:
-        print("🚀 Comprehensive Kernel Optimization Analysis")
+        print("ROCKET Comprehensive Kernel Optimization Analysis")
         print("=" * 60)
 
         # Initialize analyzer
@@ -2206,7 +2206,7 @@ def comprehensive_kernel_analysis():
         print(f"  Recommendations: {'; '.join(cache_results['recommendations'])}")
 
         # 2. Vectorization potential analysis
-        print("\n🚀 Vectorization Potential Analysis:")
+        print("\nROCKET Vectorization Potential Analysis:")
         vec_results = analyzer.analyze_vectorization_potential(
             ['matmul', 'relu', 'add', 'multiply'],
             [(1000,), (1000, 1000)]
@@ -2261,7 +2261,7 @@ def comprehensive_kernel_analysis():
         for rec in roadmap['recommendations'][:3]:
             print(f"    • {rec}")
 
-        # 💡 WHY THIS MATTERS: Comprehensive analysis guides optimization decisions:
+        # TIP WHY THIS MATTERS: Comprehensive analysis guides optimization decisions:
         # 1. Cache analysis reveals memory bottlenecks and optimal algorithms
         # 2. Vectorization analysis shows where SIMD can provide biggest gains
         # 3. Parallel analysis identifies when threading helps vs hurts
@@ -2277,7 +2277,7 @@ def comprehensive_kernel_analysis():
         }
 
     except Exception as e:
-        print(f"⚠️ Comprehensive analysis error: {e}")
+        print(f"WARNING️ Comprehensive analysis error: {e}")
         return None
 
 # Run the comprehensive analysis
@@ -2285,21 +2285,21 @@ comprehensive_analysis = comprehensive_kernel_analysis()
 
 # %% [markdown]
 """
-### 🧪 Unit Test: Advanced Optimization Analyzer
+### TEST Unit Test: Advanced Optimization Analyzer
 This test validates the comprehensive kernel optimization analyzer
 """
 
 # %%
 def test_unit_advanced_optimization_analyzer():
     """Test the advanced kernel optimization analyzer."""
-    print("🧪 Unit Test: Advanced Optimization Analyzer")
+    print("TEST Unit Test: Advanced Optimization Analyzer")
 
     # Test 1: Analyzer initialization
     analyzer = KernelOptimizationAnalyzer()
 
     assert hasattr(analyzer, 'hardware_config'), "Analyzer should have hardware config"
     assert analyzer.hardware_config['cpu_cores'] > 0, "Should detect CPU cores"
-    print("✅ Initialization: Hardware configuration detected")
+    print("PASS Initialization: Hardware configuration detected")
 
     # Test 2: Cache efficiency analysis
     cache_results = analyzer.analyze_cache_efficiency(matmul_baseline, [64, 128])
@@ -2307,28 +2307,28 @@ def test_unit_advanced_optimization_analyzer():
     assert 'cache_efficiency' in cache_results, "Should return cache efficiency results"
     assert 'bandwidth_utilization' in cache_results, "Should analyze bandwidth utilization"
     assert 'recommendations' in cache_results, "Should provide recommendations"
-    print("✅ Cache analysis: Complete analysis with recommendations")
+    print("PASS Cache analysis: Complete analysis with recommendations")
 
     # Test 3: Vectorization potential analysis
     vec_results = analyzer.analyze_vectorization_potential(['relu', 'add'])
 
     assert 'simd_opportunities' in vec_results, "Should identify SIMD opportunities"
     assert 'speedup_estimates' in vec_results, "Should estimate speedup potential"
-    print("✅ Vectorization analysis: SIMD opportunities identified")
+    print("PASS Vectorization analysis: SIMD opportunities identified")
 
     # Test 4: Parallel scaling analysis
     parallel_results = analyzer.analyze_parallel_scaling(parallel_relu, [1, 2, 4])
 
     assert 'scaling_results' in parallel_results, "Should provide scaling results"
     assert 'efficiency_analysis' in parallel_results, "Should analyze efficiency"
-    print("✅ Parallel analysis: Scaling efficiency measured")
+    print("PASS Parallel analysis: Scaling efficiency measured")
 
     # Test 5: Quantization analysis
     quant_results = analyzer.analyze_quantization_trade_offs([vectorized_relu])
 
     assert 'deployment_recommendations' in quant_results, "Should provide deployment recommendations"
     assert 'accuracy_analysis' in quant_results, "Should analyze accuracy impact"
-    print("✅ Quantization analysis: Trade-offs evaluated")
+    print("PASS Quantization analysis: Trade-offs evaluated")
 
     # Test 6: Optimization roadmap
     roadmap = analyzer.generate_optimization_roadmap('cloud')
@@ -2337,11 +2337,11 @@ def test_unit_advanced_optimization_analyzer():
     assert 'implementation_plan' in roadmap, "Should provide implementation plan"
     assert 'expected_outcomes' in roadmap, "Should estimate outcomes"
     assert 'recommendations' in roadmap, "Should give actionable recommendations"
-    print("✅ Roadmap generation: Comprehensive optimization plan created")
+    print("PASS Roadmap generation: Comprehensive optimization plan created")
 
     # Test 7: Integration across analyses
     assert len(analyzer.analysis_results) >= 4, "Should store all analysis results"
-    print("✅ Integration: All analyses stored and accessible")
+    print("PASS Integration: All analyses stored and accessible")
 
 # Run the test
 test_unit_advanced_optimization_analyzer()
@@ -2356,7 +2356,7 @@ test_unit_advanced_optimization_analyzer()
 # %%
 def test_unit_all():
     """Run comprehensive kernel module validation."""
-    print("🧪 Running all kernel unit tests...")
+    print("TEST Running all kernel unit tests...")
 
     # Core infrastructure tests
     test_unit_timing_infrastructure()
@@ -2382,7 +2382,7 @@ def test_unit_all():
     test_unit_advanced_optimization_analyzer()
     print()
 
-    print("✅ All kernel unit tests passed! High-performance kernels ready for deployment.")
+    print("PASS All kernel unit tests passed! High-performance kernels ready for deployment.")
 
 # %% [markdown]
 """
@@ -2449,7 +2449,7 @@ if __name__ == "__main__":
 
 # %% [markdown]
 """
-## 🤔 ML Systems Thinking: Interactive Questions
+## THINK ML Systems Thinking: Interactive Questions
 
 Now that you've implemented high-performance computational kernels, let's explore the systems implications through hands-on analysis.
 """
@@ -2502,16 +2502,16 @@ Now that you've implemented high-performance computational kernels, let's explor
 
 # %% [markdown]
 """
-## 🎯 MODULE SUMMARY: Kernels
+## TARGET MODULE SUMMARY: Kernels
 
 Congratulations! You've successfully implemented high-performance computational kernels that power modern ML systems!
 
 ### What You've Accomplished
-✅ **High-Performance Implementation**: 200+ lines of optimized kernel code with cache blocking, vectorization, and parallelization
-✅ **Advanced Optimization Analysis**: Comprehensive `KernelOptimizationAnalyzer` with multi-dimensional performance evaluation
-✅ **Production-Ready Kernels**: Matrix multiplication, activation functions, and quantization kernels optimized for real-world deployment
-✅ **Systems Integration**: Complete optimization pipeline from profiling through deployment recommendations
-✅ **Performance Engineering**: Deep understanding of cache hierarchy, SIMD vectorization, and parallel processing trade-offs
+PASS **High-Performance Implementation**: 200+ lines of optimized kernel code with cache blocking, vectorization, and parallelization
+PASS **Advanced Optimization Analysis**: Comprehensive `KernelOptimizationAnalyzer` with multi-dimensional performance evaluation
+PASS **Production-Ready Kernels**: Matrix multiplication, activation functions, and quantization kernels optimized for real-world deployment
+PASS **Systems Integration**: Complete optimization pipeline from profiling through deployment recommendations
+PASS **Performance Engineering**: Deep understanding of cache hierarchy, SIMD vectorization, and parallel processing trade-offs
 
 ### Key Learning Outcomes
 - **Cache Optimization**: Implementing cache-friendly algorithms that minimize memory access latency
