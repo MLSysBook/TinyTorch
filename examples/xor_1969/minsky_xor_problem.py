@@ -120,8 +120,8 @@ class XORNetwork:
     def parameters(self):
         """Get all trainable parameters from YOUR layers."""
         return [
-            self.hidden.weight, self.hidden.bias,    # Module 04: YOUR hidden parameters!
-            self.output.weight, self.output.bias     # Module 04: YOUR output parameters!
+            self.hidden.weights, self.hidden.bias,    # Module 04: YOUR hidden parameters!
+            self.output.weights, self.output.bias     # Module 04: YOUR output parameters!
         ]
 
 def visualize_xor_problem():
@@ -185,8 +185,11 @@ def train_xor_network(model, X, y, learning_rate=0.1, epochs=1000):
         predictions = model.forward(X_tensor)  # YOUR multi-layer forward!
         
         # Binary cross-entropy loss
-        loss_value = np.mean(-y_tensor.data * np.log(predictions.data + 1e-8) - 
-                            (1 - y_tensor.data) * np.log(1 - predictions.data + 1e-8))
+        # Convert to numpy arrays for math operations
+        y_np = np.array(y_tensor.data.data if hasattr(y_tensor.data, 'data') else y_tensor.data)
+        pred_np = np.array(predictions.data.data if hasattr(predictions.data, 'data') else predictions.data)
+        loss_value = np.mean(-y_np * np.log(pred_np + 1e-8) -
+                            (1 - y_np) * np.log(1 - pred_np + 1e-8))
         loss = Tensor([loss_value])
         
         # Backward pass using YOUR autograd
@@ -200,7 +203,7 @@ def train_xor_network(model, X, y, learning_rate=0.1, epochs=1000):
         
         # Progress updates
         if epoch % 100 == 0 or epoch == epochs - 1:
-            accuracy = np.mean((predictions.data > 0.5) == y_tensor.data) * 100
+            accuracy = np.mean((pred_np > 0.5) == y_np) * 100
             print(f"   Epoch {epoch:4d}: Loss = {loss_value:.4f}, "
                   f"Accuracy = {accuracy:.1f}% (YOUR training!)")
     
@@ -218,7 +221,8 @@ def test_xor_solution(model, show_examples=True):
     # Test with YOUR network
     X_test = Tensor(test_cases)  # Module 02: YOUR Tensor!
     predictions = model.forward(X_test)  # YOUR forward pass!
-    predicted_classes = (predictions.data > 0.5).astype(int).flatten()
+    pred_np = np.array(predictions.data.data if hasattr(predictions.data, 'data') else predictions.data)
+    predicted_classes = (pred_np > 0.5).astype(int).flatten()
     
     # Display results
     print("   │ x1 │ x2 │ Expected │ YOUR Output │ ✓/✗ │")
@@ -229,7 +233,7 @@ def test_xor_solution(model, show_examples=True):
         x1, x2 = test_cases[i]
         exp = expected[i]
         pred = predicted_classes[i]
-        prob = predictions.data[i, 0]
+        prob = pred_np[i, 0]
         status = "✓" if pred == exp else "✗"
         if pred != exp:
             all_correct = False
