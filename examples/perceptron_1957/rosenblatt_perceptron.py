@@ -104,7 +104,7 @@ class RosenblattPerceptron:
     
     def parameters(self):
         """Get trainable parameters from YOUR Linear layer."""
-        return [self.linear.weight, self.linear.bias]  # Module 04: YOUR parameters!
+        return [self.linear.weights, self.linear.bias]  # Module 04: YOUR parameters!
 
 def simple_training_loop(model, X, y, learning_rate=0.1, epochs=100):
     """
@@ -128,8 +128,11 @@ def simple_training_loop(model, X, y, learning_rate=0.1, epochs=100):
         
         # Simple binary cross-entropy loss (manually computed)
         # Note: Later you'll build a proper loss function in Module 05!
-        loss_value = np.mean(-y_tensor.data * np.log(predictions.data + 1e-8) - 
-                            (1 - y_tensor.data) * np.log(1 - predictions.data + 1e-8))
+        # Convert to numpy arrays for math operations
+        y_np = np.array(y_tensor.data.data if hasattr(y_tensor.data, 'data') else y_tensor.data)
+        pred_np = np.array(predictions.data.data if hasattr(predictions.data, 'data') else predictions.data)
+        loss_value = np.mean(-y_np * np.log(pred_np + 1e-8) -
+                            (1 - y_np) * np.log(1 - pred_np + 1e-8))
         loss = Tensor([loss_value])
         
         # Backward pass using YOUR autograd
@@ -156,7 +159,8 @@ def test_model(model, X, y):
     predictions = model.forward(X_tensor)  # YOUR architecture!
     
     # Convert to binary predictions
-    binary_preds = (predictions.data > 0.5).astype(int)
+    pred_np = np.array(predictions.data.data if hasattr(predictions.data, 'data') else predictions.data)
+    binary_preds = (pred_np > 0.5).astype(int)
     accuracy = np.mean(binary_preds.flatten() == y) * 100
     
     print(f"   Accuracy: {accuracy:.1f}% on linearly separable data")
@@ -191,7 +195,7 @@ def analyze_perceptron_systems(model, X):
     tracemalloc.stop()
     
     # Parameter analysis
-    total_params = model.linear.weight.data.size + model.linear.bias.data.size
+    total_params = model.linear.weights.data.size + model.linear.bias.data.size
     memory_per_param = 4  # bytes for float32
     
     print(f"   Memory usage: {peak / 1024:.1f} KB peak (YOUR Tensor operations)")
