@@ -60,16 +60,19 @@ def _import_from_module_dev(module_name, class_names):
         if module_name == '01_tensor':
             from tensor_dev import Tensor
             return {'Tensor': Tensor}
-        elif module_name == '13_attention':
+        elif module_name == '12_attention':
             from attention_dev import ScaledDotProductAttention, MultiHeadAttention, KVCache
             return {
                 'ScaledDotProductAttention': ScaledDotProductAttention,
                 'MultiHeadAttention': MultiHeadAttention,
                 'KVCache': KVCache
             }
-        elif module_name == '12_embeddings':
+        elif module_name == '11_embeddings':
             from embeddings_dev import Embedding, PositionalEncoding
             return {'Embedding': Embedding, 'PositionalEncoding': PositionalEncoding}
+        else:
+            # Return empty dict if module not found - will use mocks below
+            return {}
     finally:
         sys.path.pop(0)
 
@@ -84,15 +87,31 @@ else:
     tensor_imports = _import_from_module_dev('01_tensor', ['Tensor'])
     Tensor = tensor_imports['Tensor']
     
-    attention_imports = _import_from_module_dev('13_attention', 
+    attention_imports = _import_from_module_dev('12_attention',
                                                ['ScaledDotProductAttention', 'MultiHeadAttention', 'KVCache'])
-    ScaledDotProductAttention = attention_imports['ScaledDotProductAttention']
-    MultiHeadAttention = attention_imports['MultiHeadAttention'] 
-    KVCache = attention_imports['KVCache']
-    
-    embedding_imports = _import_from_module_dev('12_embeddings', ['Embedding', 'PositionalEncoding'])
-    Embedding = embedding_imports['Embedding']
-    PositionalEncoding = embedding_imports['PositionalEncoding']
+    if attention_imports:
+        ScaledDotProductAttention = attention_imports['ScaledDotProductAttention']
+        MultiHeadAttention = attention_imports['MultiHeadAttention']
+        KVCache = attention_imports['KVCache']
+    else:
+        # Mock classes for standalone testing
+        class ScaledDotProductAttention:
+            def __init__(self, *args, **kwargs): pass
+        class MultiHeadAttention:
+            def __init__(self, *args, **kwargs): pass
+        class KVCache:
+            def __init__(self, *args, **kwargs): pass
+
+    embedding_imports = _import_from_module_dev('11_embeddings', ['Embedding', 'PositionalEncoding'])
+    if embedding_imports:
+        Embedding = embedding_imports['Embedding']
+        PositionalEncoding = embedding_imports['PositionalEncoding']
+    else:
+        # Mock classes for standalone testing
+        class Embedding:
+            def __init__(self, *args, **kwargs): pass
+        class PositionalEncoding:
+            def __init__(self, *args, **kwargs): pass
 
 # %% nbgrader={"grade": false, "grade_id": "transformers-welcome", "locked": false, "schema_version": 3, "solution": false, "task": false}
 print("🏗️ TinyTorch Transformers Module")
@@ -2310,7 +2329,11 @@ All transformer tests and demonstrations are run from here when the module is ex
 """
 
 # %% nbgrader={"grade": false, "grade_id": "transformers-main", "locked": false, "schema_version": 3, "solution": false, "task": false}
-if __name__ == "__main__":
+def test_module():
+    """Run all unit tests for this module."""
+    print("🧪 TESTING MODULE: Transformers")
+    print("=" * 50)
+
     # Run all unit tests
     test_unit_layer_norm()
     test_unit_feed_forward()
@@ -2318,6 +2341,13 @@ if __name__ == "__main__":
     test_unit_transformer_model()
     test_transformer_profiler()
     test_complete_language_model_pipeline()
+
+    print("\n" + "=" * 50)
+    print("✅ ALL TESTS PASSED! Module ready for export.")
+    print("Run: tito module complete 13_transformers")
+
+if __name__ == "__main__":
+    test_module()
     
     print("\n" + "="*60)
     print("MAGNIFY TRANSFORMER SYSTEMS ANALYSIS")
@@ -2445,18 +2475,95 @@ if __name__ == "__main__":
         
         print(f"  {factor}x scale: {scaled_params/1e6:.0f}M params, ~{scaled_memory_gb:.1f}GB memory")
     
+# MAGNIFY SYSTEMS INSIGHT: Final Transformer Memory Scaling Analysis
+def analyze_transformer_memory_scaling_final():
+    """Comprehensive analysis of transformer memory scaling patterns."""
+    try:
+        print("\n" + "="*70)
+        print("PROGRESS TRANSFORMER MEMORY SCALING ANALYSIS")
+        print("="*70)
+
+        # Test sequence length scaling (the quadratic bottleneck)
+        print("MAGNIFY SEQUENCE LENGTH SCALING (Quadratic Alert!)")
+        embed_dim = 512
+        num_heads = 8
+
+        # Create attention mechanism for scaling analysis
+        attention = MultiHeadAttention(embed_dim=embed_dim, num_heads=num_heads)
+
+        seq_lengths = [128, 256, 512, 1024]
+        batch_size = 8
+
+        print(f"{'Seq Length':<12} {'Memory (MB)':<12} {'Time (ms)':<12} {'Memory/Token':<15}")
+        print("-" * 60)
+
+        for seq_len in seq_lengths:
+            # Create dummy input
+            input_tensor = Tensor(np.random.randn(batch_size, seq_len, embed_dim))
+
+            # Measure memory and time
+            import time
+            start_time = time.time()
+
+            # Forward pass
+            output = attention.forward(input_tensor, input_tensor, input_tensor)
+
+            end_time = time.time()
+
+            # Calculate metrics
+            memory_mb = output.data.nbytes / (1024 * 1024)
+            time_ms = (end_time - start_time) * 1000
+            memory_per_token = memory_mb / (batch_size * seq_len) * 1024  # KB per token
+
+            print(f"{seq_len:<12} {memory_mb:<12.2f} {time_ms:<12.2f} {memory_per_token:<15.2f}")
+
+            # Break early if too slow
+            if time_ms > 5000:  # 5 seconds
+                print("⚠️ Stopping analysis - sequence too long for this demo")
+                break
+
+        # Model size scaling analysis
+        print(f"\nTARGET MODEL SIZE SCALING:")
+        configs = [
+            ("Small", 128, 4, 4),
+            ("Medium", 256, 8, 6),
+            ("Large", 512, 16, 12),
+            ("XL", 1024, 32, 24)
+        ]
+
+        print(f"{'Model':<8} {'Embed Dim':<10} {'Heads':<6} {'Layers':<8} {'Parameters':<12} {'Memory (GB)':<12}")
+        print("-" * 70)
+
+        for name, embed_dim, num_heads, num_layers in configs:
+            # Estimate parameters
+            attention_params = num_layers * 4 * embed_dim * embed_dim  # Q, K, V, O projections
+            ffn_params = num_layers * 2 * embed_dim * (4 * embed_dim)  # Up and down projections
+            embed_params = 5000 * embed_dim  # Vocabulary embeddings
+            norm_params = num_layers * 2 * embed_dim  # Layer norms
+
+            total_params = attention_params + ffn_params + embed_params + norm_params
+            memory_gb = total_params * 4 / (1024**3)  # 4 bytes per parameter
+
+            print(f"{name:<8} {embed_dim:<10} {num_heads:<6} {num_layers:<8} {total_params:<12,} {memory_gb:<12.2f}")
+
+        print(f"\nTIP SCALING INSIGHTS:")
+        print(f"   - Attention memory scales O(N²) with sequence length")
+        print(f"   - Model parameters scale O(embed_dim²) for attention layers")
+        print(f"   - FFN parameters scale O(embed_dim * ffn_dim) - usually dominant")
+        print(f"   - Activation memory depends on batch size and sequence length")
+        print(f"   - Training requires ~3x more memory than inference")
+
+    except Exception as e:
+        print(f"⚠️ Error in memory scaling analysis: {e}")
+
     print("\n" + "="*60)
     print("TARGET TRANSFORMERS MODULE COMPLETE!")
     print("="*60)
     print("All transformer tests passed!")
     print("Complete language model architecture implemented!")
     print("Ready for production deployment and optimization!")
-    
-    # Final systems analysis
-    analyze_transformer_memory_scaling_final()
 
-# MAGNIFY SYSTEMS INSIGHT: Final Transformer Memory Scaling Analysis
-def analyze_transformer_memory_scaling_final():
+def analyze_transformer_memory_scaling_final_placeholder():
     """Comprehensive analysis of transformer memory scaling patterns."""
     try:
         print("\n" + "="*70)
