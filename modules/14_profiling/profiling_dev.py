@@ -7,7 +7,7 @@ But here's the million-dollar question: **Why is your transformer 100x slower th
 
 Time to become a performance detective and find out what's really happening under the hood.
 
-## 🔍 What You'll Discover
+## MAGNIFY What You'll Discover
 
 Ever wonder why your models feel sluggish? We're about to reveal the culprits:
 - Which operations are eating your CPU cycles
@@ -18,7 +18,7 @@ Ever wonder why your models feel sluggish? We're about to reveal the culprits:
 **Spoiler Alert**: The results might surprise you. That "simple" attention mechanism? 
 It's probably consuming 73% of your compute time!
 
-## 🎯 Learning Objectives
+## TARGET Learning Objectives
 
 By the end of this module, you'll be able to:
 1. **Build Professional Profilers**: Create timing, memory, and FLOP counters
@@ -44,7 +44,7 @@ import time
 start = time.time()
 result = my_function()
 end = time.time()
-print(f"Took {end - start:.2f}s")  # ❌ Unreliable!
+print(f"Took {end - start:.2f}s")  # FAIL Unreliable!
 ```
 
 **Problems:**
@@ -70,7 +70,7 @@ try:
     from tinytorch.core.spatial import Conv2d, MaxPool2d
     from tinytorch.core.transformers import Transformer
 except ImportError:
-    print("⚠️  TinyTorch modules not available - using mocks for development")
+    print("WARNING️  TinyTorch modules not available - using mocks for development")
     
     class Tensor:
         def __init__(self, data):
@@ -149,7 +149,7 @@ class Timer:
         self.measurements = []
         
         # Warmup runs to get code in CPU cache
-        print(f"🔥 Running {warmup} warmup iterations...")
+        print(f"FIRE Running {warmup} warmup iterations...")
         for _ in range(warmup):
             _ = func(*args, **kwargs)
             
@@ -219,7 +219,7 @@ class Timer:
     def print_report(self, name: str = "Function"):
         """Print a formatted timing report."""
         if not self.measurements:
-            print(f"❌ No measurements available for {name}")
+            print(f"FAIL No measurements available for {name}")
             return
             
         stats = self._compute_stats()
@@ -228,20 +228,20 @@ class Timer:
         print("=" * 50)
         print(f"Runs:     {stats['runs']}")
         print(f"Mean:     {stats['mean_ms']:.3f} ms ± {stats['std_ms']:.3f} ms")
-        print(f"Range:    {stats['min_ms']:.3f} ms → {stats['max_ms']:.3f} ms")
+        print(f"Range:    {stats['min_ms']:.3f} ms -> {stats['max_ms']:.3f} ms")
         print(f"P50:      {stats['p50_ms']:.3f} ms")
         print(f"P95:      {stats['p95_ms']:.3f} ms") 
         print(f"P99:      {stats['p99_ms']:.3f} ms")
         
         # Helpful interpretation
         if stats['std_ms'] / stats['mean_ms'] > 0.1:
-            print("⚠️  High variability - consider more warmup runs")
+            print("WARNING️  High variability - consider more warmup runs")
         else:
-            print("✅ Stable timing measurements")
+            print("PASS Stable timing measurements")
 
 # %% [markdown]
 """
-### 🧪 Test the Timer
+### TEST Test the Timer
 
 Let's test our timer on different types of operations to see the statistical rigor in action.
 """
@@ -282,7 +282,7 @@ def test_timer():
     stats = timer.measure(ml_operation, warmup=2, runs=50)
     timer.print_report("Linear Layer Forward")
     
-    print("\n🎯 KEY INSIGHT: Notice the different scales!")
+    print("\nTARGET KEY INSIGHT: Notice the different scales!")
     print("   - CPU operations: microseconds (< 1ms)")
     print("   - Memory operations: low milliseconds") 
     print("   - ML operations: higher milliseconds")
@@ -390,20 +390,20 @@ class MemoryProfiler:
         
         # Memory efficiency insights
         if stats['allocated_mb'] > stats['peak_mb'] * 0.5:
-            print("⚠️  High memory allocation - check for copies")
+            print("WARNING️  High memory allocation - check for copies")
         elif stats['allocated_mb'] < 0:
-            print("✅ Memory efficient - some cleanup occurred")
+            print("PASS Memory efficient - some cleanup occurred")
         else:
-            print("✅ Reasonable memory usage")
+            print("PASS Reasonable memory usage")
             
         # Peak vs final analysis
         peak_vs_final_ratio = stats['peak_mb'] / max(stats['final_mb'], 0.001)
         if peak_vs_final_ratio > 2.0:
-            print(f"💡 Peak was {peak_vs_final_ratio:.1f}x final - temporary allocations detected")
+            print(f"TIP Peak was {peak_vs_final_ratio:.1f}x final - temporary allocations detected")
 
 # %% [markdown]
 """
-### 🧪 Test Memory Profiler
+### TEST Test Memory Profiler
 
 Let's test the memory profiler on operations that have different memory patterns.
 """
@@ -445,7 +445,7 @@ def test_memory_profiler():
     stats = profiler.profile(copying_operation) 
     profiler.print_report(stats, "Copying Operation")
     
-    print("\n🎯 KEY INSIGHT: Memory patterns reveal optimization opportunities!")
+    print("\nTARGET KEY INSIGHT: Memory patterns reveal optimization opportunities!")
     print("   - Small allocations: Usually efficient")
     print("   - Large allocations: Watch for memory bandwidth limits")
     print("   - Copying operations: Major performance killers")
@@ -512,7 +512,7 @@ class FLOPCounter:
         Returns:
             Total FLOPs for this operation
         """
-        # Matrix multiplication: (batch, in) × (in, out) = batch * in * out multiplications
+        # Matrix multiplication: (batch, in) * (in, out) = batch * in * out multiplications
         multiply_ops = batch_size * input_features * output_features
         
         # Addition for bias: batch * out additions  
@@ -548,7 +548,7 @@ class FLOPCounter:
         output_height = input_height - kernel_size + 1
         output_width = input_width - kernel_size + 1
         
-        # Each output pixel requires kernel_size² × input_channels multiplications
+        # Each output pixel requires kernel_size² * input_channels multiplications
         multiply_ops = (batch_size * output_height * output_width * 
                        output_channels * kernel_size * kernel_size * input_channels)
         
@@ -643,7 +643,7 @@ class FLOPCounter:
         
         total_flops = self.operation_counts['total_flops']
         if total_flops == 0:
-            print("❌ No FLOPs counted")
+            print("FAIL No FLOPs counted")
             return
             
         print(f"Total FLOPs:      {total_flops:,}")
@@ -667,7 +667,7 @@ class FLOPCounter:
 
 # %% [markdown]
 """
-### 🧪 Test FLOP Counter
+### TEST Test FLOP Counter
 
 Let's count operations for different architectures and see the scaling differences.
 """
@@ -681,13 +681,13 @@ def test_flop_counter():
     print("=" * 65)
     
     # Test 1: Simple Linear Layer (MLP building block)
-    print("\n1️⃣ Linear Layer (64 → 32, batch=10)")
+    print("\n1️⃣ Linear Layer (64 -> 32, batch=10)")
     flops = counter.count_linear(input_features=64, output_features=32, batch_size=10)
     counter.print_report("Linear Layer")
     
     # Test 2: Convolutional Layer  
     counter.reset()
-    print("\n2️⃣ Conv2D Layer (32×32×3 → 16 channels, 3×3 kernel)")
+    print("\n2️⃣ Conv2D Layer (32*32*3 -> 16 channels, 3*3 kernel)")
     flops = counter.count_conv2d(input_height=32, input_width=32, input_channels=3,
                                 output_channels=16, kernel_size=3, batch_size=1)
     counter.print_report("Conv2D Layer")
@@ -785,7 +785,7 @@ class ProfilerContext:
         
     def __enter__(self):
         """Start profiling context."""
-        print(f"🔍 PROFILING: {self.name}")
+        print(f"MAGNIFY PROFILING: {self.name}")
         print("=" * (len(self.name) + 12))
         
         if self.enable_memory:
@@ -798,7 +798,7 @@ class ProfilerContext:
     def __exit__(self, exc_type, exc_val, exc_tb):
         """End profiling and generate report."""
         if exc_type is not None:
-            print(f"❌ Error during profiling: {exc_val}")
+            print(f"FAIL Error during profiling: {exc_val}")
             return False
             
         self.generate_report()
@@ -883,7 +883,7 @@ class ProfilerContext:
     
     def _print_insights(self):
         """Print performance insights and recommendations."""
-        print(f"\n💡 PERFORMANCE INSIGHTS:")
+        print(f"\nTIP PERFORMANCE INSIGHTS:")
         
         insights = []
         
@@ -893,11 +893,11 @@ class ProfilerContext:
             std_ms = self.timing_stats.get('std_ms', 0)
             
             if mean_ms < 0.1:
-                insights.append("⚡ Very fast operation (< 0.1ms)")
+                insights.append("SPEED Very fast operation (< 0.1ms)")
             elif mean_ms < 1:
-                insights.append("✅ Fast operation (< 1ms)")  
+                insights.append("PASS Fast operation (< 1ms)")  
             elif mean_ms < 10:
-                insights.append("⚠️  Moderate speed (1-10ms)")
+                insights.append("WARNING️  Moderate speed (1-10ms)")
             else:
                 insights.append("🐌 Slow operation (> 10ms) - optimization target")
                 
@@ -922,18 +922,18 @@ class ProfilerContext:
                 gflops_per_sec = (self.flop_counter.operation_counts['total_flops'] / 1e9) / mean_seconds
                 
                 if gflops_per_sec > 10:
-                    insights.append("🚀 Excellent computational efficiency")
+                    insights.append("ROCKET Excellent computational efficiency")
                 elif gflops_per_sec > 1:
-                    insights.append("✅ Good computational efficiency")
+                    insights.append("PASS Good computational efficiency")
                 else:
-                    insights.append("⚠️  Low efficiency - check for bottlenecks")
+                    insights.append("WARNING️  Low efficiency - check for bottlenecks")
         
         # Print insights
         for insight in insights:
             print(f"   {insight}")
         
         if not insights:
-            print("   📈 Run with more profiling options for insights")
+            print("   PROGRESS Run with more profiling options for insights")
 
 # %%
 #| export
@@ -984,7 +984,7 @@ def profile_function(func, *args, **kwargs):
 
 # %% [markdown]
 """
-### 🧪 Test Comprehensive Profiling
+### TEST Test Comprehensive Profiling
 
 Now let's use the complete profiler to analyze different model architectures. 
 This is where the detective work pays off - you'll see exactly why some models are fast and others are slow!
@@ -994,7 +994,7 @@ This is where the detective work pays off - you'll see exactly why some models a
 def test_comprehensive_profiling():
     """Test comprehensive profiling on different model types."""
     
-    print("🔍 COMPREHENSIVE PROFILING - Architecture Detective Work")
+    print("MAGNIFY COMPREHENSIVE PROFILING - Architecture Detective Work")
     print("=" * 80)
     
     # Test 1: Simple Linear Model (MLP)
@@ -1052,16 +1052,16 @@ def test_comprehensive_profiling():
     print("COMPARATIVE ANALYSIS - The Big Reveal!")
     print("🏁"*25)
     print("""
-🎯 KEY DISCOVERIES:
+TARGET KEY DISCOVERIES:
 
 1️⃣ MLP (Linear): 
    - Fastest for small inputs
-   - Linear scaling: O(input_size × output_size)
+   - Linear scaling: O(input_size * output_size)
    - Excellent for final classification layers
 
 2️⃣ CNN (Convolutional):
    - Moderate speed, excellent for spatial data  
-   - Scaling: O(input_pixels × kernel_size)
+   - Scaling: O(input_pixels * kernel_size)
    - Hardware-friendly (vectorizable)
 
 3️⃣ Transformer (Attention):
@@ -1075,7 +1075,7 @@ def test_comprehensive_profiling():
    - 10x longer sequence = 100x computation
    - This is why GPT models are expensive to run!
 
-💡 OPTIMIZATION STRATEGIES:
+TIP OPTIMIZATION STRATEGIES:
    - MLPs: Focus on batch processing
    - CNNs: Use optimized convolution libraries  
    - Transformers: Implement attention optimizations (next module!)
@@ -1112,7 +1112,7 @@ def simulate_complete_model_profiling():
     print("🕵️ PERFORMANCE DETECTIVE: Complete Model Analysis")
     print("=" * 80)
     print("""
-🎯 MISSION: Find the bottleneck in our neural network
+TARGET MISSION: Find the bottleneck in our neural network
 
 We have a model with:
 - Input processing (Linear layer)
@@ -1152,7 +1152,7 @@ Which component is slowing us down?
     print(f"{'TOTAL':<20s}: {total_time:6.2f} ms")
     
     # Bottleneck analysis
-    print(f"\n🔍 BOTTLENECK ANALYSIS:")
+    print(f"\nMAGNIFY BOTTLENECK ANALYSIS:")
     print("-" * 40)
     
     # Find the slowest component
@@ -1163,7 +1163,7 @@ Which component is slowing us down?
     print(f"   Time: {slowest_time:.2f} ms ({bottleneck_percentage:.1f}% of total)")
     
     # Calculate optimization impact
-    print(f"\n💡 OPTIMIZATION IMPACT ANALYSIS:")
+    print(f"\nTIP OPTIMIZATION IMPACT ANALYSIS:")
     print("-" * 40)
     
     # If we optimize the bottleneck by different amounts
@@ -1202,7 +1202,7 @@ Which component is slowing us down?
     print(f"{'TOTAL':<20s}: {total_memory:5.1f} MB")
     
     # Key insights
-    print(f"\n🎯 KEY PERFORMANCE INSIGHTS:")
+    print(f"\nTARGET KEY PERFORMANCE INSIGHTS:")
     print("=" * 50)
     print(f"""
 1️⃣ BOTTLENECK IDENTIFIED: {slowest_name}
@@ -1260,14 +1260,14 @@ def analyze_systems_implications():
     print("=" * 80)
     
     print("""
-🎯 PROFILING INSIGHTS → SYSTEMS DECISIONS
+TARGET PROFILING INSIGHTS -> SYSTEMS DECISIONS
 
 Our performance detective work revealed several critical patterns.
 Let's trace how these insights drive production ML systems:
 """)
     
     # Memory scaling analysis
-    print("\n📈 MEMORY SCALING ANALYSIS:")
+    print("\nPROGRESS MEMORY SCALING ANALYSIS:")
     print("-" * 50)
     
     sequence_lengths = [128, 512, 1024, 2048, 4096]
@@ -1285,18 +1285,18 @@ Let's trace how these insights drive production ML systems:
         total_memory_gb = (qkv_memory + attention_scores) * 2  # Forward + backward
         
         if seq_len <= 512:
-            note = "✅ Practical"
+            note = "PASS Practical"
         elif seq_len <= 1024:
-            note = "⚠️ Expensive"
+            note = "WARNING️ Expensive"
         else:
             note = "🚨 Prohibitive"
             
         print(f"{seq_len:8d}   |  {total_memory_gb:8.2f}   | {note}")
     
-    print("\n💡 KEY INSIGHT: Memory grows O(n²) - this is why context length is limited!")
+    print("\nTIP KEY INSIGHT: Memory grows O(n²) - this is why context length is limited!")
     
     # Compute scaling analysis  
-    print("\n⚡ COMPUTE SCALING ANALYSIS:")
+    print("\nSPEED COMPUTE SCALING ANALYSIS:")
     print("-" * 50)
     
     print("FLOPs Required by Architecture (1M input features):")
@@ -1313,14 +1313,14 @@ Let's trace how these insights drive production ML systems:
     for arch, flops, scaling, use_case in architectures:
         print(f"{arch:12s} | {flops:8s}   | {scaling:8s} | {use_case}")
     
-    print("\n💡 INSIGHT: Attention is 1000x more expensive than linear layers!")
+    print("\nTIP INSIGHT: Attention is 1000x more expensive than linear layers!")
     
     # Hardware implications
     print("\n🔧 HARDWARE IMPLICATIONS:")
     print("-" * 40)
     
     print("""
-From Profiling Data → Hardware Decisions:
+From Profiling Data -> Hardware Decisions:
 
 1️⃣ CPU vs GPU Choice:
    - Linear layers: CPU fine (low parallelism)
@@ -1360,12 +1360,12 @@ How Our Profiling Insights Play Out in Production:
    - Decision: Use tensor parallelism across GPUs
    - Result: Split attention computation, linear speedup
 
-⚡ EDGE DEVICES:
+SPEED EDGE DEVICES:
    - Profiling shows: Memory bandwidth limited
    - Decision: Quantize to INT8, cache frequent patterns
    - Result: 4x memory reduction, 2x speedup
 
-🎯 KEY TAKEAWAY:
+TARGET KEY TAKEAWAY:
    Profiling isn't academic - it drives billion-dollar infrastructure decisions!
    Every major ML system (GPT, BERT, ResNet) was optimized using these techniques.
 """)
@@ -1389,7 +1389,7 @@ def integration_test_profiling_suite():
     Tests all components working together on a realistic model.
     """
     
-    print("🧪 INTEGRATION TEST: Complete Profiling Suite")
+    print("TEST INTEGRATION TEST: Complete Profiling Suite")
     print("=" * 70)
     
     # Test all profilers working together
@@ -1405,7 +1405,7 @@ def integration_test_profiling_suite():
     timing_stats = timer.measure(sample_computation, warmup=2, runs=50)
     assert timing_stats['runs'] == 50
     assert timing_stats['mean_ms'] > 0
-    print("✅ Timer: Working correctly")
+    print("PASS Timer: Working correctly")
     
     # Memory profiler test
     memory_profiler = MemoryProfiler()
@@ -1415,13 +1415,13 @@ def integration_test_profiling_suite():
     
     memory_stats = memory_profiler.profile(memory_intensive_task)
     assert memory_stats['peak_mb'] > 0
-    print("✅ Memory Profiler: Working correctly")
+    print("PASS Memory Profiler: Working correctly")
     
     # FLOP counter test
     flop_counter = FLOPCounter()
     flops = flop_counter.count_linear(100, 50, batch_size=32)
     assert flops == 32 * 100 * 50 + 32 * 50  # multiply + add operations
-    print("✅ FLOP Counter: Working correctly")
+    print("PASS FLOP Counter: Working correctly")
     
     # Context manager test
     print("\n2️⃣ Testing Profiler Context Integration:")
@@ -1446,7 +1446,7 @@ def integration_test_profiling_suite():
         )
         profiler.add_flop_count(estimated_flops)
     
-    print("✅ Profiler Context: Integration successful")
+    print("PASS Profiler Context: Integration successful")
     
     # Test performance comparison
     print("\n3️⃣ Performance Comparison Test:")
@@ -1466,7 +1466,7 @@ def integration_test_profiling_suite():
             
         results.append(name)
     
-    print("✅ Performance Comparison: All operations profiled successfully")
+    print("PASS Performance Comparison: All operations profiled successfully")
     
     # Validate profiling accuracy
     print("\n4️⃣ Profiling Accuracy Validation:")
@@ -1483,10 +1483,10 @@ def integration_test_profiling_suite():
     tolerance = 0.3
     relative_error = abs(mean_ms - expected_ms) / expected_ms
     if relative_error > tolerance:
-        print(f"⚠️  Timing variance higher than expected: {mean_ms:.2f}ms vs expected {expected_ms:.2f}ms (tolerance: {tolerance*100}%)")
+        print(f"WARNING️  Timing variance higher than expected: {mean_ms:.2f}ms vs expected {expected_ms:.2f}ms (tolerance: {tolerance*100}%)")
         print("   This is normal for mock operations and system-dependent timing")
     else:
-        print("✅ Timing Accuracy: Within acceptable tolerance")
+        print("PASS Timing Accuracy: Within acceptable tolerance")
     
     # Test memory tracking accuracy
     def known_memory_allocation():
@@ -1499,7 +1499,7 @@ def integration_test_profiling_suite():
     # Memory allocation should be positive and reasonable
     assert allocated_mb > 0.5, f"Memory tracking issue: {allocated_mb:.2f}MB seems too low"
     assert allocated_mb < 10, f"Memory tracking issue: {allocated_mb:.2f}MB seems too high"
-    print("✅ Memory Tracking: Reasonable accuracy")
+    print("PASS Memory Tracking: Reasonable accuracy")
     
     # Final integration validation
     print("\n5️⃣ End-to-End Integration Test:")
@@ -1536,7 +1536,7 @@ def integration_test_profiling_suite():
         total_flops = sum(model_flops.values())
         profiler.add_flop_count(total_flops, model_flops)
     
-    print("✅ End-to-End: Complete workflow successful")
+    print("PASS End-to-End: Complete workflow successful")
     
     # Test SimpleProfiler interface (for Module 20 compatibility)
     print("\n6️⃣ SimpleProfiler Interface Test:")
@@ -1556,7 +1556,7 @@ def integration_test_profiling_suite():
         assert 'wall_time' in result
         assert 'cpu_time' in result
         assert 'name' in result
-        print("✅ SimpleProfiler: Full functionality working")
+        print("PASS SimpleProfiler: Full functionality working")
     except ImportError:
         # Fall back to simple computation if numpy not available
         def simple_computation():
@@ -1567,33 +1567,33 @@ def integration_test_profiling_suite():
         assert 'wall_time' in result
         assert 'cpu_time' in result
         assert 'name' in result
-        print("✅ SimpleProfiler: Basic functionality working")
+        print("PASS SimpleProfiler: Basic functionality working")
     
     # Test profile_function utility
     try:
         func_result = profile_function(sample_computation)
         assert 'wall_time' in func_result
-        print("✅ profile_function utility: Working correctly")
+        print("PASS profile_function utility: Working correctly")
     except ImportError:
         def simple_computation():
             return sum(i*i for i in range(1000))
         func_result = profile_function(simple_computation)
         assert 'wall_time' in func_result
-        print("✅ profile_function utility: Working correctly (fallback)")
+        print("PASS profile_function utility: Working correctly (fallback)")
     
     # Success summary
-    print(f"\n🎉 INTEGRATION TEST RESULTS:")
+    print(f"\nCELEBRATE INTEGRATION TEST RESULTS:")
     print("=" * 50)
     print("""
-✅ All profiling components working correctly
-✅ Context manager integration successful  
-✅ Timing accuracy within acceptable range
-✅ Memory tracking functioning properly
-✅ FLOP counting calculations correct
-✅ End-to-end workflow validated
-✅ SimpleProfiler interface ready for Module 20
+PASS All profiling components working correctly
+PASS Context manager integration successful  
+PASS Timing accuracy within acceptable range
+PASS Memory tracking functioning properly
+PASS FLOP counting calculations correct
+PASS End-to-end workflow validated
+PASS SimpleProfiler interface ready for Module 20
 
-🚀 PROFILING SUITE READY FOR PRODUCTION USE!
+ROCKET PROFILING SUITE READY FOR PRODUCTION USE!
 
 Your profiling tools are now ready to:
 - Identify bottlenecks in real models
@@ -1611,7 +1611,7 @@ if __name__ == "__main__":
 
 # %% [markdown]
 """
-## 🤔 ML Systems Thinking: Interactive Questions
+## THINK ML Systems Thinking: Interactive Questions
 
 Now that you've built a complete profiling suite, let's think about how this applies to real ML systems engineering.
 """
@@ -1678,7 +1678,7 @@ How would you modify your profiling approach for production? What are the key de
 
 # %% 
 if __name__ == "__main__":
-    print("🤔 ML Systems Thinking Questions")
+    print("THINK ML Systems Thinking Questions")
     print("=" * 50)
     print("""
 Complete the interactive questions above to deepen your understanding of:
@@ -1705,7 +1705,7 @@ Answer them to master performance analysis thinking!
 
 # %%
 if __name__ == "__main__":
-    print("🔍 PROFILING MODULE: Performance Detective Suite")
+    print("MAGNIFY PROFILING MODULE: Performance Detective Suite")
     print("=" * 60)
     
     # Run all profiling tests in sequence
@@ -1730,8 +1730,8 @@ if __name__ == "__main__":
     print("\n7️⃣ Running Integration Tests...")
     integration_test_profiling_suite()
     
-    print("\n🎉 ALL PROFILING TESTS COMPLETED SUCCESSFULLY!")
-    print("\n🚀 Your profiling suite is ready to:")
+    print("\nCELEBRATE ALL PROFILING TESTS COMPLETED SUCCESSFULLY!")
+    print("\nROCKET Your profiling suite is ready to:")
     print("   - Identify bottlenecks in neural networks")
     print("   - Guide optimization decisions with data")
     print("   - Predict performance at scale")
@@ -1740,7 +1740,7 @@ if __name__ == "__main__":
 
 # %% [markdown]
 """
-## 🎯 MODULE SUMMARY: Profiling - Performance Detective Work
+## TARGET MODULE SUMMARY: Profiling - Performance Detective Work
 
 Congratulations! You've built a comprehensive profiling suite that reveals the performance secrets of neural networks.
 
@@ -1770,7 +1770,7 @@ Congratulations! You've built a comprehensive profiling suite that reveals the p
 - Implemented automatic insight generation
 - Developed production-ready profiling workflow
 
-### 🔍 Key Discoveries Made
+### MAGNIFY Key Discoveries Made
 
 **Architecture Performance Profiles:**
 - **MLPs**: Fast, linear scaling, memory efficient
@@ -1787,7 +1787,7 @@ Congratulations! You've built a comprehensive profiling suite that reveals the p
 - Memory constraints limit batch sizes in attention models
 - Optimization ROI follows Amdahl's Law patterns
 
-### 🚀 Real-World Applications
+### ROCKET Real-World Applications
 
 Your profiling tools enable:
 - **Bottleneck identification** in production models
@@ -1796,7 +1796,7 @@ Your profiling tools enable:
 - **Cost prediction** for scaling ML systems
 - **Performance regression** detection in CI/CD
 
-### 🎯 What's Next
+### TARGET What's Next
 
 Module 16 (Acceleration) will use these profiling insights to:
 - Implement attention optimizations (Flash Attention patterns)
@@ -1817,5 +1817,5 @@ Module 16 (Acceleration) will use these profiling insights to:
 
 You now have the tools to analyze any neural network and understand exactly why it's fast or slow. These are the same techniques used to optimize GPT, BERT, and every other production ML system.
 
-**Welcome to the ranks of ML systems performance engineers!** 🎉
+**Welcome to the ranks of ML systems performance engineers!** CELEBRATE
 """

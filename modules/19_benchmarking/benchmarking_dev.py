@@ -85,10 +85,10 @@ def _check_profiler_availability():
     """Check if TinyTorch profiler is available and explain implications."""
     try:
         from tinytorch.utils.profiler import SimpleProfiler, profile_function
-        print("✅ TinyTorch profiler loaded - using advanced timing")
+        print("PASS TinyTorch profiler loaded - using advanced timing")
         return True, SimpleProfiler, profile_function
     except ImportError:
-        print("⚠️  TinyTorch profiler not available")
+        print("WARNING️  TinyTorch profiler not available")
         print("   Make sure Module 15 (Profiling) is completed first")
         print("   Using basic timing as fallback")
         return False, None, None
@@ -104,11 +104,11 @@ Before diving into the full competition, let's understand the core concepts step
 
 # %%
 def simple_timing_demo():
-    """🎯 Learning Checkpoint 1: Basic Performance Measurement
+    """TARGET Learning Checkpoint 1: Basic Performance Measurement
     
     Understand why we need systematic timing for fair comparison.
     """
-    print("🔍 Learning Checkpoint 1: Basic Performance Measurement")
+    print("MAGNIFY Learning Checkpoint 1: Basic Performance Measurement")
     print("=" * 60)
     
     # Simple function to time
@@ -147,19 +147,19 @@ def simple_timing_demo():
     
     print(f"   Slow version: {slow_time*1000:.2f} ms")
     print(f"   Fast version: {fast_time*1000:.2f} ms")
-    print(f"   🚀 Speedup: {speedup:.2f}x faster")
+    print(f"   ROCKET Speedup: {speedup:.2f}x faster")
     
-    print(f"\n💡 Key Insight: Optimization can provide dramatic speedups!")
+    print(f"\nTIP Key Insight: Optimization can provide dramatic speedups!")
     print(f"   This is why we need systematic benchmarking to measure improvements.")
     
     return {'slow_time': slow_time, 'fast_time': fast_time, 'speedup': speedup}
 
 def statistical_timing_demo():
-    """🎯 Learning Checkpoint 2: Why We Need Multiple Runs
+    """TARGET Learning Checkpoint 2: Why We Need Multiple Runs
     
     Understand timing variability and the need for statistical reliability.
     """
-    print("\n🔍 Learning Checkpoint 2: Statistical Timing Reliability")
+    print("\nMAGNIFY Learning Checkpoint 2: Statistical Timing Reliability")
     print("=" * 60)
     
     # Simple operation to time
@@ -193,19 +193,19 @@ def statistical_timing_demo():
     print(f"   Range: {min_time*1000:.2f} - {max_time*1000:.2f} ms")
     
     variability = (std_time / mean_time) * 100
-    print(f"   📈 Variability: {variability:.1f}% coefficient of variation")
+    print(f"   PROGRESS Variability: {variability:.1f}% coefficient of variation")
     
-    print(f"\n💡 Key Insight: Single measurements are unreliable!")
+    print(f"\nTIP Key Insight: Single measurements are unreliable!")
     print(f"   We need {DEFAULT_TIMING_RUNS}+ runs with warmup for statistical reliability.")
     
     return {'times': times, 'mean': mean_time, 'std': std_time}
 
 def benchmark_model_demo():
-    """🎯 Learning Checkpoint 3: Model Benchmarking Basics
+    """TARGET Learning Checkpoint 3: Model Benchmarking Basics
     
     Understand how to benchmark ML models specifically.
     """
-    print("\n🔍 Learning Checkpoint 3: ML Model Benchmarking")
+    print("\nMAGNIFY Learning Checkpoint 3: ML Model Benchmarking")
     print("=" * 60)
     
     # Simple model for demonstration
@@ -248,7 +248,7 @@ def benchmark_model_demo():
     print(f"   🔢 Size ratio: {256/64:.0f}x parameters")
     print(f"   ⏱️  Time ratio: {large_time/small_time:.1f}x slower")
     
-    print(f"\n💡 Key Insight: Model complexity directly affects inference time!")
+    print(f"\nTIP Key Insight: Model complexity directly affects inference time!")
     print(f"   This is why standardized models are crucial for fair competition.")
     
     return {'small_time': small_time, 'large_time': large_time}
@@ -270,7 +270,7 @@ def run_learning_checkpoints():
     model_results = benchmark_model_demo()
     
     print("\n" + "=" * 80)
-    print("🎉 Learning checkpoints complete! Ready for TinyMLPerf competition.")
+    print("CELEBRATE Learning checkpoints complete! Ready for TinyMLPerf competition.")
     print("=" * 80)
     
     return {
@@ -291,7 +291,7 @@ def test_learning_checkpoints():
     """Test the learning checkpoint system"""
     print("Testing learning checkpoints...")
     results = run_learning_checkpoints()
-    print("\n✅ Learning checkpoints test complete!")
+    print("\nPASS Learning checkpoints test complete!")
     return results
 
 # %% [markdown]
@@ -484,7 +484,7 @@ class TinyMLPerf:
         self.benchmark_datasets = {}
         
         print("🏆 TinyMLPerf Competition Suite Initialized!")
-        print("🎯 Three Events: MLP Sprint, CNN Marathon, Transformer Decathlon")
+        print("TARGET Three Events: MLP Sprint, CNN Marathon, Transformer Decathlon")
         
         # Load standard benchmark models
         self._load_benchmark_models()
@@ -501,7 +501,7 @@ class TinyMLPerf:
             'transformer_decathlon': TransformerBenchmark()
         }
         
-        print("✅ Benchmark models loaded successfully!")
+        print("PASS Benchmark models loaded successfully!")
         for event, model in self.benchmark_models.items():
             print(f"   📋 {event.replace('_', ' ').title()}: {type(model).__name__}")
     
@@ -543,9 +543,9 @@ class TinyMLPerf:
             'transformer_decathlon': transformer_data
         }
         
-        print("✅ Benchmark datasets loaded successfully!")
+        print("PASS Benchmark datasets loaded successfully!")
         for event, data in self.benchmark_datasets.items():
-            print(f"   🎯 {data['event']}: {data['inputs'].shape} -> {data['targets'].shape}")
+            print(f"   TARGET {data['event']}: {data['inputs'].shape} -> {data['targets'].shape}")
     
     def load_benchmark(self, event_name: str) -> Tuple[Any, Dict[str, Any]]:
         """
@@ -605,14 +605,14 @@ def test_tinymlperf_benchmark_suite():
         inputs = dataset['inputs']
         outputs = model.predict(inputs)
         
-        print(f"   ✅ Inference successful: {inputs.shape} -> {outputs.shape}")
+        print(f"   PASS Inference successful: {inputs.shape} -> {outputs.shape}")
         
         # Verify output shape makes sense
         batch_size = inputs.shape[0]
         assert outputs.shape[0] == batch_size, f"Batch size mismatch: {outputs.shape[0]} != {batch_size}"
-        print(f"   ✅ Output shape verified")
+        print(f"   PASS Output shape verified")
     
-    print(f"\n✅ TinyMLPerf benchmark suite test complete!")
+    print(f"\nPASS TinyMLPerf benchmark suite test complete!")
     return benchmark_suite
 
 # %% [markdown]
@@ -648,9 +648,9 @@ class CompetitionProfiler:
         self.has_profiler = HAS_PROFILER
         
         if not self.has_profiler:
-            print("⚠️  Warning: Advanced profiling unavailable, using basic timing")
+            print("WARNING️  Warning: Advanced profiling unavailable, using basic timing")
         else:
-            print("✅ Using TinyTorch Module 15 profiler for advanced metrics")
+            print("PASS Using TinyTorch Module 15 profiler for advanced metrics")
     
     def benchmark_model(self, model, dataset: Dict[str, Any]) -> Dict[str, Any]:
         """
@@ -731,7 +731,7 @@ class CompetitionProfiler:
         
         print(f"📊 Baseline: {comparison['baseline_time']*1000:.2f} ms")
         print(f"📊 Optimized: {comparison['optimized_time']*1000:.2f} ms")
-        print(f"🚀 Speedup: {speedup:.2f}x {'faster' if speedup > 1.0 else 'slower'}")
+        print(f"ROCKET Speedup: {speedup:.2f}x {'faster' if speedup > 1.0 else 'slower'}")
         
         return comparison
     
@@ -751,7 +751,7 @@ class CompetitionProfiler:
         speedup = baseline_time / results['mean_inference_time']
         results['speedup_vs_baseline'] = speedup
         
-        print(f"🚀 Speedup vs baseline: {speedup:.2f}x {'faster' if speedup > 1.0 else 'slower'}")
+        print(f"ROCKET Speedup vs baseline: {speedup:.2f}x {'faster' if speedup > 1.0 else 'slower'}")
         return results
     
     def _run_basic_profiling(self, model, inputs: np.ndarray) -> Dict[str, Any]:
@@ -863,7 +863,7 @@ class CompetitionProfiler:
         print(f"   P95 Time: {results['p95_inference_time']*1000:.2f} ms")
         
         if 'speedup_vs_baseline' in results:
-            print(f"   🚀 Speedup: {results['speedup_vs_baseline']:.2f}x faster")
+            print(f"   ROCKET Speedup: {results['speedup_vs_baseline']:.2f}x faster")
         
         if 'memory_delta_mb' in results:
             print(f"   💾 Memory: {results['memory_delta_mb']:.2f} MB delta, {results['peak_memory_mb']:.2f} MB peak")
@@ -901,7 +901,7 @@ def test_competition_profiler():
         baseline_time=mlp_results['mean_inference_time']  # Use MLP as baseline
     )
     
-    print(f"\n✅ Competition profiler test complete!")
+    print(f"\nPASS Competition profiler test complete!")
     return competition_profiler, mlp_results, cnn_results
 
 # %% [markdown]
@@ -1167,7 +1167,7 @@ class TinyMLPerfCompetition:
         self.baselines = self._establish_baselines()
         
         print("🏆 TinyMLPerf Competition Initialized!")
-        print("🎯 Three Events Ready for Competition!")
+        print("TARGET Three Events Ready for Competition!")
     
     def _establish_baselines(self) -> Dict[str, float]:
         """Establish baseline performance for relative scoring."""
@@ -1201,13 +1201,13 @@ class TinyMLPerfCompetition:
         # Validate event
         if event_name not in self.baselines:
             available = list(self.baselines.keys())
-            print(f"❌ Event '{event_name}' not recognized!")
-            print("🎯 Available competitions:")
+            print(f"FAIL Event '{event_name}' not recognized!")
+            print("TARGET Available competitions:")
             for event in available:
                 print(f"   • {event.replace('_', ' ').title()}")
             return None
         
-        print(f"🚀 TINYMLPERF SUBMISSION")
+        print(f"ROCKET TINYMLPERF SUBMISSION")
         print(f"🏆 Event: {event_name.replace('_', ' ').title()}")
         print(f"👥 Team: {team_name}")
         print("-" * 60)
@@ -1294,25 +1294,25 @@ class TinyMLPerfCompetition:
         print(f"\n⏱️  Performance:")
         print(f"   Your Time:    {submission['submission_time_ms']:.2f} ms")
         print(f"   Baseline:     {submission['baseline_time_ms']:.2f} ms")
-        print(f"   🚀 Speedup:   {speedup:.2f}x {'FASTER' if speedup > 1.0 else 'slower'}")
+        print(f"   ROCKET Speedup:   {speedup:.2f}x {'FASTER' if speedup > 1.0 else 'slower'}")
         
         if 'memory_delta_mb' in metrics:
             print(f"   💾 Memory:    {metrics['memory_delta_mb']:.2f} MB")
         
         # Award celebration for good performance
         if speedup >= 3.0:
-            print(f"\n🎉 AMAZING! 3x+ speedup achieved!")
+            print(f"\nCELEBRATE AMAZING! 3x+ speedup achieved!")
         elif speedup >= 2.0:
             print(f"\n🏆 EXCELLENT! 2x+ speedup!")
         elif speedup >= 1.5:
             print(f"\n⭐ GREAT! 50%+ speedup!")
         elif speedup >= 1.1:
-            print(f"\n✅ Good optimization!")
+            print(f"\nPASS Good optimization!")
         else:
-            print(f"\n🤔 Keep optimizing - you can do better!")
+            print(f"\nTHINK Keep optimizing - you can do better!")
         
         if submission['optimization_description']:
-            print(f"\n💡 Techniques Used:")
+            print(f"\nTIP Techniques Used:")
             print(f"   {submission['optimization_description']}")
     
     def display_leaderboard(self, event_name: str, sort_by: str = 'speed', top_n: int = 10) -> List[Dict[str, Any]]:
@@ -1395,7 +1395,7 @@ def test_tinymlperf_competition():
             return x_flat @ self.fc_weights + self.fc_bias
     
     # Submit optimized models to competition
-    print("\n🚀 Submitting Competition Entries...")
+    print("\nROCKET Submitting Competition Entries...")
     
     # MLP Sprint submissions
     mlp_submission1 = competition.submit_entry(
@@ -1427,7 +1427,7 @@ def test_tinymlperf_competition():
     print("\n📊 Competition Leaderboards:")
     competition.display_all_leaderboards()
     
-    print("\n✅ TinyMLPerf competition framework test complete!")
+    print("\nPASS TinyMLPerf competition framework test complete!")
     return competition
 
 # %% [markdown]
@@ -1474,7 +1474,7 @@ def test_simplified_competition_features():
             return x_flat @ self.fc_weights + self.fc_bias
     
     # Submit entries with different optimization descriptions
-    print("\n🚀 Submitting Competition Entries...")
+    print("\nROCKET Submitting Competition Entries...")
     
     # MLP submissions with different techniques
     submission1 = competition.submit_entry(
@@ -1513,7 +1513,7 @@ def test_simplified_competition_features():
     print("\n3. Composite Leaderboard:")
     competition.display_leaderboard("mlp_sprint", sort_by="composite", top_n=5)
     
-    print("\n✅ Simplified competition features test complete!")
+    print("\nPASS Simplified competition features test complete!")
     return competition
 
 # %% [markdown]
@@ -1532,11 +1532,11 @@ def run_complete_tinymlperf_demo():
     # Test benchmark suite
     benchmark_suite = test_tinymlperf_benchmark_suite()
     
-    print("\n2. ⚡ Testing Competition Profiling...")  
+    print("\n2. SPEED Testing Competition Profiling...")  
     # Test profiling infrastructure
     competition_profiler, mlp_results, cnn_results = test_competition_profiler()
     
-    print("\n3. 🚀 Running Basic Competition...")
+    print("\n3. ROCKET Running Basic Competition...")
     # Test basic competition
     basic_competition = test_tinymlperf_competition()
     
@@ -1545,25 +1545,25 @@ def run_complete_tinymlperf_demo():
     simplified_competition = test_simplified_competition_features()
     
     print("\n" + "=" * 80)
-    print("🎉 TINYMLPERF DEMO COMPLETE!")
+    print("CELEBRATE TINYMLPERF DEMO COMPLETE!")
     print("=" * 80)
     
     print("\n🏆 TinyMLPerf Competition Ready:")
-    print("✅ Three exciting events: MLP Sprint, CNN Marathon, Transformer Decathlon") 
-    print("✅ TinyTorch Module 15 profiler integration for rigorous benchmarking")
-    print("✅ Hardware-independent relative scoring (speedup ratios)")
-    print("✅ Transparent leaderboards with evidence requirements")
-    print("✅ Simplified innovation detection and creativity rewards")
-    print("✅ Three leaderboard types: speed, innovation, and composite scoring")
+    print("PASS Three exciting events: MLP Sprint, CNN Marathon, Transformer Decathlon") 
+    print("PASS TinyTorch Module 15 profiler integration for rigorous benchmarking")
+    print("PASS Hardware-independent relative scoring (speedup ratios)")
+    print("PASS Transparent leaderboards with evidence requirements")
+    print("PASS Simplified innovation detection and creativity rewards")
+    print("PASS Three leaderboard types: speed, innovation, and composite scoring")
     
-    print("\n🚀 Competition Features:")
+    print("\nROCKET Competition Features:")
     print("• Standardized benchmark models and datasets")
     print("• Statistical reliability with multiple timing runs")
     print("• Multiple leaderboard categories with simple keyword detection")
     print("• GitHub integration for transparency and reproducibility")
     print("• Focused classes with single responsibilities")
     
-    print("\n🎯 Ready to Compete:")
+    print("\nTARGET Ready to Compete:")
     print("1. Optimize your models using techniques from Modules 16-19")
     print("2. Submit to TinyMLPerf events using competition.submit_entry()")
     print("3. See your results on speed, innovation, or composite leaderboards") 
@@ -1589,7 +1589,7 @@ This simplified TinyMLPerf competition module demonstrates advanced ML systems e
 - **Consistent API**: Single parameterized leaderboard method replaces three separate implementations
 - **Student-Friendly**: Reduced cognitive load while maintaining all essential functionality
 
-### ⚡ **Streamlined Performance Optimization**
+### SPEED **Streamlined Performance Optimization**
 - **Single Leaderboard Interface**: One method with sort_by parameter ('speed', 'innovation', 'composite') replaces complex multiple methods
 - **Simple Innovation Detection**: Basic keyword matching replaces complex pattern analysis and model introspection
 - **Consistent Formatting**: Centralized header templates ensure visual consistency across all leaderboard types
@@ -1601,13 +1601,13 @@ This simplified TinyMLPerf competition module demonstrates advanced ML systems e
 - **Visual Clarity**: Clear section headers and spacing prevent information overload
 - **Focused Testing**: Each test function validates one specific capability
 
-### 💡 **Educational Improvements**
+### TIP **Educational Improvements**
 - **Reduced Complexity**: Eliminated 100+ line classes in favor of focused 20-30 line classes
 - **Better Mental Models**: Students understand leaderboard concepts instead of getting lost in implementation details
 - **Maintainable Code**: Consistent patterns and centralized formatting make code easier to debug and extend
 - **KISS Principle**: Keep It Simple, Stupid - core pedagogical value preserved with implementation complexity reduced
 
-### 🎯 **Key Learning Objectives Maintained**
+### TARGET **Key Learning Objectives Maintained**
 - Competition still accelerates optimization learning through concrete performance measurements
 - Hardware-independent scoring ensures fair comparison across different development environments
 - Multiple leaderboard types prevent single-metric tunnel vision
@@ -1638,13 +1638,13 @@ if __name__ == "__main__":
     # Run complete TinyMLPerf demonstration
     results = run_complete_tinymlperf_demo()
     
-    print(f"\n🎉 Module 20 complete!")
+    print(f"\nCELEBRATE Module 20 complete!")
     print(f"🏆 TinyMLPerf competition infrastructure ready!")
-    print(f"🚀 Time to optimize your models and climb the leaderboards!")
+    print(f"ROCKET Time to optimize your models and climb the leaderboards!")
 
 # %% [markdown]
 """
-## 🤔 ML Systems Thinking: Interactive Questions
+## THINK ML Systems Thinking: Interactive Questions
 
 1. **Why is separation of concerns crucial in competition software architecture?** Your refactored TinyMLPerf breaks large classes into focused components: CompetitionSubmission, CompetitionStorage, CompetitionLeaderboard, and SimpleInnovationDetector. Explain why this modular design is essential for educational software and how it teaches students professional software development practices beyond just ML systems concepts.
 
@@ -1657,7 +1657,7 @@ if __name__ == "__main__":
 
 # %% [markdown]
 """
-## 🎯 MODULE SUMMARY: TinyMLPerf - Simplified Competition Framework
+## TARGET MODULE SUMMARY: TinyMLPerf - Simplified Competition Framework
 
 This refactored module demonstrates the power of the KISS principle in educational software design, proving that complex systems can be both pedagogically effective and professionally engineered.
 
@@ -1673,7 +1673,7 @@ This refactored module demonstrates the power of the KISS principle in education
 - **SimpleInnovationDetector**: Basic keyword matching replacing complex pattern analysis
 - **TinyMLPerfCompetition**: Orchestrates components with clean delegation patterns
 
-### 🎯 **Educational Excellence**
+### TARGET **Educational Excellence**
 Students learn both ML systems concepts AND professional software engineering:
 - **Modular Design**: How to break complex problems into manageable components  
 - **API Consistency**: Why parameterized methods beat specialized implementations
@@ -1688,7 +1688,7 @@ All essential functionality preserved with improved usability:
 - Evidence requirements ensuring reproducible, honest performance claims
 - Simple but effective innovation detection rewarding creative optimization
 
-### 💡 **Professional Development**
+### TIP **Professional Development**
 This refactor teaches students that excellent engineering means:
 - Choosing clarity over clever complexity
 - Building maintainable systems that others can understand and extend

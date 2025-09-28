@@ -21,7 +21,7 @@ Welcome to the DataLoader module! You'll build the data infrastructure that feed
 - Framework connection: See how your implementation mirrors PyTorch's data loading infrastructure and optimization strategies
 - Performance insight: Learn why data loading parallelization and prefetching are essential for GPU utilization in production systems
 
-## Build → Use → Reflect
+## Build -> Use -> Reflect
 1. **Build**: Complete Dataset and DataLoader classes with efficient batching, shuffling, and real dataset support (CIFAR-10)
 2. **Use**: Load large-scale image datasets and feed them to neural networks with proper batch processing
 3. **Reflect**: Why does data loading speed often determine training speed more than model computation?
@@ -35,8 +35,8 @@ By the end of this module, you'll understand:
 - Connection to production ML systems and how frameworks optimize data loading for different storage systems
 
 ## Systems Reality Check
-💡 **Production Context**: PyTorch's DataLoader uses multiprocessing and memory pinning to overlap data loading with GPU computation, achieving near-zero data loading overhead
-⚡ **Performance Note**: Modern GPUs can process data faster than storage systems can provide it - data loading optimization is critical for hardware utilization in production training
+TIP **Production Context**: PyTorch's DataLoader uses multiprocessing and memory pinning to overlap data loading with GPU computation, achieving near-zero data loading overhead
+SPEED **Performance Note**: Modern GPUs can process data faster than storage systems can provide it - data loading optimization is critical for hardware utilization in production training
 """
 
 # %% nbgrader={"grade": false, "grade_id": "dataloader-imports", "locked": false, "schema_version": 3, "solution": false, "task": false}
@@ -61,14 +61,14 @@ except ImportError:
     from tensor_dev import Tensor
 
 # %% nbgrader={"grade": false, "grade_id": "dataloader-welcome", "locked": false, "schema_version": 3, "solution": false, "task": false}
-print("🔥 TinyTorch DataLoader Module")
+print("FIRE TinyTorch DataLoader Module")
 print(f"NumPy version: {np.__version__}")
 print(f"Python version: {sys.version_info.major}.{sys.version_info.minor}")
 print("Ready to build data pipelines!")
 
 # %% [markdown]
 """
-## 📦 Where This Code Lives in the Final Package
+## PACKAGE Where This Code Lives in the Final Package
 
 **Learning Side:** You work in `modules/source/06_dataloader/dataloader_dev.py`  
 **Building Side:** Code exports to `tinytorch.core.dataloader`
@@ -96,7 +96,7 @@ from tinytorch.core.networks import Sequential  # Models to train
 """
 ## Step 1: Understanding Data Pipelines - The Foundation of ML Systems
 
-### 🔗 Building on Previous Learning
+### LINK Building on Previous Learning
 **What You Built Before**:
 - Module 02 (Tensor): Data structures that hold and manipulate arrays efficiently
 - Module 04 (Layers): Neural network components that need batched inputs
@@ -109,7 +109,7 @@ from tinytorch.core.networks import Sequential  # Models to train
 
 **Connection Map**:
 ```
-Tensor Operations → Data Loading → Training Loop
+Tensor Operations -> Data Loading -> Training Loop
    (Module 02)       (Module 10)    (Next: Module 11)
 ```
 
@@ -118,39 +118,39 @@ Tensor Operations → Data Loading → Training Loop
 
 ### 📊 The Complete Data Pipeline Flow
 ```
-┌─────────────┐    ┌──────────┐    ┌─────────┐    ┌─────────┐    ┌──────────────┐
-│ Raw Storage │───▶│ Dataset  │───▶│ Shuffle │───▶│  Batch  │───▶│ Neural Net   │
-│ (Files/DB)  │    │ Loading  │    │ + Index │    │ + Stack │    │ Training     │
-└─────────────┘    └──────────┘    └─────────┘    └─────────┘    └──────────────┘
-      ↓                 ↓              ↓             ↓               ↓
++-------------+    +----------+    +---------+    +---------+    +--------------+
+| Raw Storage |---▶| Dataset  |---▶| Shuffle |---▶|  Batch  |---▶| Neural Net   |
+| (Files/DB)  |    | Loading  |    | + Index |    | + Stack |    | Training     |
++-------------+    +----------+    +---------+    +---------+    +--------------+
+      v                 v              v             v               v
  Gigabytes         On-Demand      Random Order    GPU-Friendly    Learning!
    of Data          Loading        (No Overfit)    Format
 ```
 
-### 🔍 Why Data Pipelines Are Critical for ML Systems
+### MAGNIFY Why Data Pipelines Are Critical for ML Systems
 - **Performance**: Efficient loading prevents GPU starvation (GPUs idle waiting for data)
 - **Scalability**: Handle datasets larger than memory (ImageNet = 150GB)
 - **Consistency**: Reproducible data processing across experiments
 - **Flexibility**: Easy to switch between datasets and configurations
 
-### ⚡ Real-World Performance Challenges
+### SPEED Real-World Performance Challenges
 ```
 🏎️  GPU Processing Speed:     ~1000 images/second
 🐌  Disk Read Speed:         ~100 images/second
-⚠️   Result: GPU waits 90% of time for data!
+WARNING️   Result: GPU waits 90% of time for data!
 ```
 
 ### 💾 Memory vs Storage Trade-offs
 ```
 Dataset Size Analysis:
-┌─────────────┬─────────────┬─────────────┬─────────────┐
-│   Dataset   │    Size     │ Fits in RAM │  Strategy   │
-├─────────────┼─────────────┼─────────────┼─────────────┤
-│   MNIST     │   ~60 MB    │    ✅ Yes   │ Load All    │
-│  CIFAR-10   │  ~170 MB    │    ✅ Yes   │ Load All    │
-│  ImageNet   │  ~150 GB    │    ❌ No    │ Stream      │
-│  Custom     │   ~1 TB     │    ❌ No    │ Stream      │
-└─────────────┴─────────────┴─────────────┴─────────────┘
++-------------+-------------+-------------+-------------+
+|   Dataset   |    Size     | Fits in RAM |  Strategy   |
++-------------+-------------+-------------+-------------┤
+|   MNIST     |   ~60 MB    |    PASS Yes   | Load All    |
+|  CIFAR-10   |  ~170 MB    |    PASS Yes   | Load All    |
+|  ImageNet   |  ~150 GB    |    FAIL No    | Stream      |
+|  Custom     |   ~1 TB     |    FAIL No    | Stream      |
++-------------+-------------+-------------+-------------+
 ```
 
 ### 🧠 Systems Engineering Principles
@@ -159,15 +159,15 @@ Dataset Size Analysis:
 - **Batching strategies**: Trade-offs between memory usage and training speed
 - **Caching**: When to cache frequently used data vs recompute on-demand
 
-### 📈 Batch Processing Impact
+### PROGRESS Batch Processing Impact
 ```
 Batch Size Performance Analysis:
-    Batch Size │ GPU Utilization │ Memory Usage │ Training Speed
-    ───────────┼─────────────────┼──────────────┼───────────────
-        1      │      ~10%       │    Low       │    Very Slow
-       32      │      ~80%       │   Medium     │      Good
-      128      │      ~95%       │    High      │    Very Fast
-      512      │      ~98%       │  Very High   │   Fastest*
+    Batch Size | GPU Utilization | Memory Usage | Training Speed
+    -----------+-----------------+--------------+---------------
+        1      |      ~10%       |    Low       |    Very Slow
+       32      |      ~80%       |   Medium     |      Good
+      128      |      ~95%       |    High      |    Very Fast
+      512      |      ~98%       |  Very High   |   Fastest*
     
     * Until you run out of GPU memory!
 ```
@@ -182,24 +182,24 @@ Let's start by building the most fundamental component: **Dataset**.
 ### What is a Dataset?
 A **Dataset** is an abstract interface that provides consistent access to data. It's the foundation of all data loading systems and the key abstraction that makes ML frameworks flexible.
 
-### 🎯 The Universal Dataset Pattern
+### TARGET The Universal Dataset Pattern
 ```
            Dataset Interface
-    ┌─────────────────────────────┐
-    │  def __getitem__(index):    │◄─── Get single sample by index
-    │      return data, label     │     (like a list or dictionary)
-    │                             │
-    │  def __len__():             │◄─── Total number of samples
-    │      return total_samples   │     (enables progress tracking)
-    └─────────────────────────────┘
-                    ▲
-                    │ Implements
-    ┌───────────────┼───────────────┐
-    │               │               │
-┌───▼────┐  ┌──────▼─────┐  ┌──────▼──────┐
-│ MNIST  │  │  CIFAR-10  │  │ Custom Data │
-│Dataset │  │  Dataset   │  │   Dataset   │
-└────────┘  └────────────┘  └─────────────┘
+    +-----------------------------+
+    |  def __getitem__(index):    |<--- Get single sample by index
+    |      return data, label     |     (like a list or dictionary)
+    |                             |
+    |  def __len__():             |<--- Total number of samples
+    |      return total_samples   |     (enables progress tracking)
+    +-----------------------------+
+                    ^
+                    | Implements
+    +---------------+---------------+
+    |               |               |
++---v----+  +------v-----+  +------v------+
+| MNIST  |  |  CIFAR-10  |  | Custom Data |
+|Dataset |  |  Dataset   |  |   Dataset   |
++--------+  +------------+  +-------------+
 ```
 
 ### 🔧 Why Abstract Interfaces Are Systems Engineering Gold
@@ -229,12 +229,12 @@ Real-World Dataset Implementations:
     - AudioSet: 2M YouTube clips with audio events
     - Custom: Your company's audio data
 
-📈 Time Series:
+PROGRESS Time Series:
     - Stock prices, sensor data, user behavior logs
     - Custom: Your company's time series data
 ```
 
-### 🚀 Framework Integration Power
+### ROCKET Framework Integration Power
 ```
 # PyTorch Compatibility:
 torch_dataset = torch.utils.data.Dataset  # Same interface!
@@ -394,7 +394,7 @@ class Dataset:
 
 # %% [markdown]
 """
-### 🧪 Unit Test: Dataset Interface
+### TEST Unit Test: Dataset Interface
 
 Let's understand the Dataset interface! While we can't test the abstract class directly, we'll create a simple test dataset.
 
@@ -434,28 +434,28 @@ A **DataLoader** efficiently batches and iterates through datasets. It's the bri
 ### 🔄 The DataLoader Processing Pipeline
 ```
          Dataset Samples              DataLoader Magic               Neural Network
-    ┌─────────────────────┐       ┌─────────────────────┐       ┌─────────────────┐
-    │ [sample_1]          │       │ 1. Shuffle indices  │       │ Efficient GPU   │
-    │ [sample_2]          │──────▶│ 2. Group into       │──────▶│ Batch           │
-    │ [sample_3]          │       │    batches          │       │ Processing      │
-    │ [sample_4]          │       │ 3. Stack tensors    │       │                 │
-    │ ...                 │       │ 4. Yield batches    │       │ batch_size=32   │
-    │ [sample_n]          │       │                     │       │ shape=(32,...)  │
-    └─────────────────────┘       └─────────────────────┘       └─────────────────┘
+    +---------------------+       +---------------------+       +-----------------+
+    | [sample_1]          |       | 1. Shuffle indices  |       | Efficient GPU   |
+    | [sample_2]          |------▶| 2. Group into       |------▶| Batch           |
+    | [sample_3]          |       |    batches          |       | Processing      |
+    | [sample_4]          |       | 3. Stack tensors    |       |                 |
+    | ...                 |       | 4. Yield batches    |       | batch_size=32   |
+    | [sample_n]          |       |                     |       | shape=(32,...)  |
+    +---------------------+       +---------------------+       +-----------------+
 ```
 
-### ⚡ Why DataLoaders Are Critical for Performance
+### SPEED Why DataLoaders Are Critical for Performance
 ```
 GPU Utilization Without Batching:
-┌─────┬─────┬─────┬─────┬─────┬─────┬─────┬─────┐
-│  🔄  │ ... │ ... │ ... │ ... │ ... │ ... │ ... │ Time
-└─────┴─────┴─────┴─────┴─────┴─────┴─────┴─────┘
++-----+-----+-----+-----+-----+-----+-----+-----+
+|  🔄  | ... | ... | ... | ... | ... | ... | ... | Time
++-----+-----+-----+-----+-----+-----+-----+-----+
   ~5%   GPU mostly idle (underutilized)
 
 GPU Utilization With Proper Batching:
-┌████████████████████████████████████████████████┐
-│          ████████████████████████████████      │ Time
-└████████████████████████████████████████████████┘
++████████████████████████████████████████████████+
+|          ████████████████████████████████      | Time
++████████████████████████████████████████████████+
   ~95%   GPU fully utilized (efficient!)
 ```
 
@@ -463,33 +463,33 @@ GPU Utilization With Proper Batching:
 ```
 Batch Size Impact Analysis:
     
-    Batch Size │ Memory Usage │ GPU Utilization │ Gradient Quality
-    ───────────┼──────────────┼─────────────────┼─────────────────
-        1      │     Low      │      ~10%       │   Noisy (bad)
-       16      │   Medium     │      ~60%       │     Better
-       64      │    High      │      ~90%       │      Good
-      256      │  Very High   │      ~95%       │    Very Good
-      512      │ TOO HIGH! 💥 │       N/A       │   OOM Error
+    Batch Size | Memory Usage | GPU Utilization | Gradient Quality
+    -----------+--------------+-----------------+-----------------
+        1      |     Low      |      ~10%       |   Noisy (bad)
+       16      |   Medium     |      ~60%       |     Better
+       64      |    High      |      ~90%       |      Good
+      256      |  Very High   |      ~95%       |    Very Good
+      512      | TOO HIGH! CRASH |       N/A       |   OOM Error
 ```
 
 ### 🔀 Shuffling: Preventing Overfitting to Data Order
 ```
 Without Shuffling (Bad!):
     Epoch 1: [cat, cat, dog, dog, bird, bird] 
-    Epoch 2: [cat, cat, dog, dog, bird, bird]  ← Same order!
+    Epoch 2: [cat, cat, dog, dog, bird, bird]  <- Same order!
     Model learns data order, not features 😞
 
 With Shuffling (Good!):
     Epoch 1: [dog, cat, bird, cat, dog, bird]
-    Epoch 2: [bird, dog, cat, bird, cat, dog]  ← Random order!
+    Epoch 2: [bird, dog, cat, bird, cat, dog]  <- Random order!
     Model learns features, generalizes well 😊
 ```
 
-### 🎯 Production Training Pattern
+### TARGET Production Training Pattern
 ```python
 # The universal ML training pattern:
 for epoch in range(num_epochs):
-    for batch_data, batch_labels in dataloader:  # ← This line!
+    for batch_data, batch_labels in dataloader:  # <- This line!
         predictions = model(batch_data)
         loss = criterion(predictions, batch_labels)
         loss.backward()
@@ -639,7 +639,7 @@ class DataLoader:
         3. Use ceiling division: (n + batch_size - 1) // batch_size
         
         EXAMPLE:
-        Dataset size 100, batch size 32 → 4 batches
+        Dataset size 100, batch size 32 -> 4 batches
         
         HINTS:
         - Use len(self.dataset) for dataset size
@@ -655,7 +655,7 @@ class DataLoader:
 
 # %% [markdown]
 """
-### 🧪 Unit Test: DataLoader
+### TEST Unit Test: DataLoader
 
 Let's test your DataLoader implementation! This is the heart of efficient data loading for neural networks.
 
@@ -696,7 +696,7 @@ try:
     # Test __len__
     expected_batches = (10 + 3 - 1) // 3  # Ceiling division: 4 batches
     assert len(dataloader) == expected_batches, f"Should have {expected_batches} batches, got {len(dataloader)}"
-    print("✅ DataLoader __len__ works correctly")
+    print("PASS DataLoader __len__ works correctly")
     
     # Test iteration
     batch_count = 0
@@ -717,10 +717,10 @@ try:
         
     assert batch_count == expected_batches, f"Should iterate {expected_batches} times, got {batch_count}"
     assert total_samples == 10, f"Should process 10 total samples, got {total_samples}"
-    print("✅ DataLoader iteration works correctly")
+    print("PASS DataLoader iteration works correctly")
     
 except Exception as e:
-    print(f"❌ DataLoader test failed: {e}")
+    print(f"FAIL DataLoader test failed: {e}")
     raise
 
 # Test shuffling
@@ -732,10 +732,10 @@ try:
     batch1_shuffle = next(iter(dataloader_shuffle))
     batch1_no_shuffle = next(iter(dataloader_no_shuffle))
     
-    print("✅ DataLoader shuffling parameter works")
+    print("PASS DataLoader shuffling parameter works")
     
 except Exception as e:
-    print(f"❌ DataLoader shuffling test failed: {e}")
+    print(f"FAIL DataLoader shuffling test failed: {e}")
     raise
 
 # Test different batch sizes
@@ -745,18 +745,18 @@ try:
     
     assert len(small_loader) == 5, f"Small loader should have 5 batches, got {len(small_loader)}"
     assert len(large_loader) == 2, f"Large loader should have 2 batches, got {len(large_loader)}"
-    print("✅ DataLoader handles different batch sizes correctly")
+    print("PASS DataLoader handles different batch sizes correctly")
     
 except Exception as e:
-    print(f"❌ DataLoader batch size test failed: {e}")
+    print(f"FAIL DataLoader batch size test failed: {e}")
     raise
 
 # Show the DataLoader behavior
-print("🎯 DataLoader behavior:")
+print("TARGET DataLoader behavior:")
 print("   Batches data for efficient processing")
 print("   Handles shuffling and iteration")
 print("   Provides clean interface for training loops")
-print("📈 Progress: Dataset interface ✓, DataLoader ✓")
+print("PROGRESS Progress: Dataset interface OK, DataLoader OK")
 
 # %% [markdown]
 """
@@ -910,13 +910,13 @@ Let's implement loading CIFAR-10, the dataset we'll use to achieve our ambitious
 ### 🇺🇸 CIFAR-10 Dataset Specifications
 ```
 🖼️ CIFAR-10 Dataset Overview:
-    ┌────────────────────────────────────────┐
-    │ 🎨 Classes: 10 (airplane, car, bird, etc.)  │
-    │ 🖼️ Images: 60,000 total (50k train + 10k test) │
-    │ 📌 Size: 32x32 pixels, RGB color           │
-    │ 💾 Storage: ~170MB compressed             │
-    │ 🎯 Goal: 75% classification accuracy      │
-    └────────────────────────────────────────┘
+    +----------------------------------------+
+    | 🎨 Classes: 10 (airplane, car, bird, etc.)  |
+    | 🖼️ Images: 60,000 total (50k train + 10k test) |
+    | 📌 Size: 32x32 pixels, RGB color           |
+    | 💾 Storage: ~170MB compressed             |
+    | TARGET Goal: 75% classification accuracy      |
+    +----------------------------------------+
     
     Classes: airplane, automobile, bird, cat, deer, 
              dog, frog, horse, ship, truck
@@ -927,16 +927,16 @@ Let's implement loading CIFAR-10, the dataset we'll use to achieve our ambitious
 CIFAR-10 Loading Pipeline:
     
     Raw Files         Dataset Class        DataLoader        CNN Model
-┌─────────────────┐ ┌─────────────────┐ ┌─────────────────┐ ┌─────────────────┐
-│ data_batch_1    │ │ CIFAR10Dataset │ │ Batch: (32,3,  │ │ Convolutional │
-│ data_batch_2    │▶│ __getitem__()   │▶│ 32,32) images  │▶│ Neural        │
-│ data_batch_3    │ │ Loads on-demand │ │ Labels: (32,)  │ │ Network       │
-│ data_batch_4    │ │ Normalizes [0,1]│ │ Shuffled order │ │ Training      │
-│ data_batch_5    │ │ Shape: (3,32,32)│ │               │ │               │
-└─────────────────┘ └─────────────────┘ └─────────────────┘ └─────────────────┘
++-----------------+ +-----------------+ +-----------------+ +-----------------+
+| data_batch_1    | | CIFAR10Dataset | | Batch: (32,3,  | | Convolutional |
+| data_batch_2    |▶| __getitem__()   |▶| 32,32) images  |▶| Neural        |
+| data_batch_3    | | Loads on-demand | | Labels: (32,)  | | Network       |
+| data_batch_4    | | Normalizes [0,1]| | Shuffled order | | Training      |
+| data_batch_5    | | Shape: (3,32,32)| |               | |               |
++-----------------+ +-----------------+ +-----------------+ +-----------------+
 ```
 
-### 📈 Why CIFAR-10 is Perfect for Learning
+### PROGRESS Why CIFAR-10 is Perfect for Learning
 - **Manageable size**: Fits in memory, fast iteration
 - **Real complexity**: Natural images, not toy data
 - **Standard benchmark**: Compare with published results
@@ -961,7 +961,7 @@ def download_cifar10(root: str = "./data") -> str:
     dataset_dir = os.path.join(root, "cifar-10-batches-py")
     
     if os.path.exists(dataset_dir):
-        print(f"✅ CIFAR-10 found at {dataset_dir}")
+        print(f"PASS CIFAR-10 found at {dataset_dir}")
         return dataset_dir
     
     url = "https://www.cs.toronto.edu/~kriz/cifar-10-python.tar.gz"
@@ -969,12 +969,12 @@ def download_cifar10(root: str = "./data") -> str:
     
     print(f"📥 Downloading CIFAR-10 (~170MB)...")
     urllib.request.urlretrieve(url, tar_path)
-    print("✅ Downloaded!")
+    print("PASS Downloaded!")
     
-    print("📦 Extracting...")
+    print("PACKAGE Extracting...")
     with tarfile.open(tar_path, 'r:gz') as tar:
         tar.extractall(root)
-    print("✅ Ready!")
+    print("PASS Ready!")
     
     return dataset_dir
     ### END SOLUTION
@@ -1010,7 +1010,7 @@ class CIFAR10Dataset(Dataset):
         # Normalize pixel values from [0, 255] to [0, 1] for neural network training
         # This is critical: neural networks expect inputs in [0,1] range!
         self.data = self.data.reshape(-1, 3, 32, 32).astype(np.float32) / 255.0
-        print(f"✅ Loaded {len(self.data):,} images")
+        print(f"PASS Loaded {len(self.data):,} images")
         print(f"   Data shape: {self.data.shape}")
         print(f"   Value range: [{self.data.min():.2f}, {self.data.max():.2f}]")
         ### END SOLUTION
@@ -1037,7 +1037,7 @@ class CIFAR10Dataset(Dataset):
 
 # %% [markdown]
 """
-### 🧪 Unit Test: SimpleDataset
+### TEST Unit Test: SimpleDataset
 
 Let's test your SimpleDataset implementation! This concrete example shows how the Dataset pattern works.
 
@@ -1057,7 +1057,7 @@ try:
         # Test basic properties
     assert len(dataset) == 20, f"Dataset length should be 20, got {len(dataset)}"
     assert dataset.get_num_classes() == 4, f"Should have 4 classes, got {dataset.get_num_classes()}"
-    print("✅ SimpleDataset basic properties work correctly")
+    print("PASS SimpleDataset basic properties work correctly")
         
     # Test sample access
     data, label = dataset[0]
@@ -1065,19 +1065,19 @@ try:
     assert isinstance(label, Tensor), "Label should be a Tensor"
     assert data.shape == (5,), f"Data shape should be (5,), got {data.shape}"
     assert label.shape == (), f"Label shape should be (), got {label.shape}"
-    print("✅ SimpleDataset sample access works correctly")
+    print("PASS SimpleDataset sample access works correctly")
     
     # Test sample shape
     sample_shape = dataset.get_sample_shape()
     assert sample_shape == (5,), f"Sample shape should be (5,), got {sample_shape}"
-    print("✅ SimpleDataset get_sample_shape works correctly")
+    print("PASS SimpleDataset get_sample_shape works correctly")
     
     # Test multiple samples
     for i in range(5):
             data, label = dataset[i]
             assert data.shape == (5,), f"Data shape should be (5,) for sample {i}, got {data.shape}"
             assert 0 <= label.data < 4, f"Label should be in [0, 3] for sample {i}, got {label.data}"
-    print("✅ SimpleDataset multiple samples work correctly")
+    print("PASS SimpleDataset multiple samples work correctly")
     
     # Test deterministic data (same seed should give same data)
     dataset2 = SimpleDataset(size=20, num_features=5, num_classes=4)
@@ -1085,17 +1085,17 @@ try:
     data2, label2 = dataset2[0]
     assert np.array_equal(data1.data, data2.data), "Data should be deterministic"
     assert np.array_equal(label1.data, label2.data), "Labels should be deterministic"
-    print("✅ SimpleDataset data is deterministic")
+    print("PASS SimpleDataset data is deterministic")
 
 except Exception as e:
-    print(f"❌ SimpleDataset test failed: {e}")
+    print(f"FAIL SimpleDataset test failed: {e}")
 
 # Show the SimpleDataset behavior
-print("🎯 SimpleDataset behavior:")
+print("TARGET SimpleDataset behavior:")
 print("   Generates synthetic data for testing")
 print("   Implements complete Dataset interface")
 print("   Provides deterministic data for reproducibility")
-print("📈 Progress: Dataset interface ✓, DataLoader ✓, SimpleDataset ✓")
+print("PROGRESS Progress: Dataset interface OK, DataLoader OK, SimpleDataset OK")
 
 # %% [markdown]
 """
@@ -1166,7 +1166,7 @@ try:
     assert epoch_samples == 100, f"Should process 100 samples, got {epoch_samples}"
     expected_batches = (100 + 16 - 1) // 16
     assert epoch_batches == expected_batches, f"Should have {expected_batches} batches, got {epoch_batches}"
-    print("✅ Training pipeline works correctly")
+    print("PASS Training pipeline works correctly")
     
     # Test 2: Validation Data Pipeline
     print("\n2. Validation Data Pipeline Test:")
@@ -1189,7 +1189,7 @@ try:
         
     assert val_samples == 50, f"Should process 50 validation samples, got {val_samples}"
     assert val_batches == 5, f"Should have 5 validation batches, got {val_batches}"
-    print("✅ Validation pipeline works correctly")
+    print("PASS Validation pipeline works correctly")
     
     # Test 3: Different Dataset Configurations
     print("\n3. Dataset Configuration Test:")
@@ -1212,7 +1212,7 @@ try:
         assert len(dataset) == size, f"Size mismatch for config {configs}"
         assert dataset.get_num_classes() == classes, f"Classes mismatch for config {configs}"
     
-    print("✅ Different dataset configurations work correctly")
+    print("PASS Different dataset configurations work correctly")
     
     # Test 4: Memory Efficiency Simulation
     print("\n4. Memory Efficiency Test:")
@@ -1233,7 +1233,7 @@ try:
         assert batch_data.shape[0] <= 50, f"Batch size should not exceed 50, got {batch_data.shape[0]}"
     
     assert processed_samples == 500, f"Should process all 500 samples, got {processed_samples}"
-    print("✅ Memory efficiency works correctly")
+    print("PASS Memory efficiency works correctly")
     
     # Test 5: Multi-Epoch Training Simulation
     print("\n5. Multi-Epoch Training Test:")
@@ -1253,25 +1253,25 @@ try:
         
         assert epoch_samples == 60, f"Should process 60 samples in epoch {epoch}, got {epoch_samples}"
     
-    print("✅ Multi-epoch training works correctly")
+    print("PASS Multi-epoch training works correctly")
     
-    print("\n🎉 Comprehensive test passed! Your data pipeline works correctly for:")
+    print("\nCELEBRATE Comprehensive test passed! Your data pipeline works correctly for:")
     print("  • Large-scale dataset handling")
     print("  • Batch processing with multiple workers")
     print("  • Shuffling and sampling strategies")
     print("  • Memory-efficient data loading")
     print("  • Complete training pipeline integration")
-    print("📈 Progress: Production-ready data pipeline ✓")
+    print("PROGRESS Progress: Production-ready data pipeline OK")
     
 except Exception as e:
-    print(f"❌ Comprehensive test failed: {e}")
+    print(f"FAIL Comprehensive test failed: {e}")
     raise
 
-print("📈 Final Progress: Complete data pipeline ready for production ML!")
+print("PROGRESS Final Progress: Complete data pipeline ready for production ML!")
 
 # %% [markdown]
 """
-### 🧪 Unit Test: Dataset Interface Implementation
+### TEST Unit Test: Dataset Interface Implementation
 
 This test validates the abstract Dataset interface, ensuring proper inheritance, method implementation, and interface compliance for creating custom datasets in the TinyTorch data loading pipeline.
 """
@@ -1292,11 +1292,11 @@ def test_unit_dataset_interface():
     assert isinstance(sample, Tensor), "Sample should be Tensor"
     assert isinstance(label, Tensor), "Label should be Tensor"
     
-    print("✅ Dataset interface works correctly")
+    print("PASS Dataset interface works correctly")
 
 # %% [markdown]
 """
-### 🧪 Unit Test: DataLoader Implementation
+### TEST Unit Test: DataLoader Implementation
 
 This test validates the DataLoader class functionality, ensuring proper batch creation, iteration capability, and integration with datasets for efficient data loading in machine learning training pipelines.
 """
@@ -1319,11 +1319,11 @@ def test_unit_dataloader():
     assert batch_data.shape[0] <= 3, "Batch size should be <= 3"
     assert batch_labels.shape[0] <= 3, "Batch labels should match data"
     
-    print("✅ DataLoader works correctly")
+    print("PASS DataLoader works correctly")
 
 # %% [markdown]
 """
-### 🧪 Unit Test: Simple Dataset Implementation
+### TEST Unit Test: Simple Dataset Implementation
 
 This test validates the SimpleDataset class, ensuring it can handle real-world data scenarios including proper data storage, indexing, and compatibility with the DataLoader for practical machine learning workflows.
 """
@@ -1345,11 +1345,11 @@ def test_unit_simple_dataset():
     assert sample.shape == (4,), "Sample should have correct features"
     assert 0 <= label.data < 3, "Label should be valid class"
     
-    print("✅ SimpleDataset works correctly")
+    print("PASS SimpleDataset works correctly")
 
 # %% [markdown]
 """
-### 🧪 Unit Test: Complete Data Pipeline Integration
+### TEST Unit Test: Complete Data Pipeline Integration
 
 This comprehensive test validates the entire data pipeline from dataset creation through DataLoader batching, ensuring all components work together seamlessly for end-to-end machine learning data processing workflows.
 """
@@ -1372,12 +1372,12 @@ def test_unit_dataloader_pipeline():
     
     assert total_samples == 50, "Should process all samples"
     
-    print("✅ Data pipeline integration works correctly")
+    print("PASS Data pipeline integration works correctly")
 
 # %% [markdown]
 # %% [markdown]
 """
-## 🧪 Module Testing
+## TEST Module Testing
 
 Time to test your implementation! This section uses TinyTorch's standardized testing framework to ensure your implementation works correctly.
 
@@ -1420,7 +1420,7 @@ def test_module_dataloader_tensor_yield():
     assert isinstance(labels_batch, Tensor), "Labels batch should be a Tensor"
     assert labels_batch.shape == (10,), f"Expected labels shape (10,), but got {labels_batch.shape}"
 
-    print("✅ Integration Test Passed: DataLoader correctly yields batches of Tensors.")
+    print("PASS Integration Test Passed: DataLoader correctly yields batches of Tensors.")
 
 # Test function defined (called in main block)
 
@@ -1601,7 +1601,7 @@ class DataPipelineProfiler:
         batch_size = 32  # Standard batch size for comparison
         
         for strategy in strategies:
-            print(f"\n🔍 Testing {strategy.upper()} strategy...")
+            print(f"\nMAGNIFY Testing {strategy.upper()} strategy...")
             
             if strategy == 'sequential':
                 dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=False)
@@ -1627,7 +1627,7 @@ class DataPipelineProfiler:
             
             speedup = slowest[1]['avg_batch_time'] / fastest[1]['avg_batch_time']
             
-            print(f"\n🎯 STRATEGY ANALYSIS:")
+            print(f"\nTARGET STRATEGY ANALYSIS:")
             print(f"   Fastest: {fastest[0]} ({fastest[1]['avg_batch_time']:.3f}s)")
             print(f"   Slowest: {slowest[0]} ({slowest[1]['avg_batch_time']:.3f}s)")
             print(f"   Speedup: {speedup:.1f}x")
@@ -1670,7 +1670,7 @@ class DataPipelineProfiler:
         else:
             bottleneck = "Compute"
             utilization = avg_io_time / simulated_compute_time * 100
-            print(f"\n✅ BOTTLENECK: {bottleneck}")
+            print(f"\nPASS BOTTLENECK: {bottleneck}")
             print(f"   I/O utilization: {utilization:.1f}%")
             print(f"   I/O waiting for GPU: {simulated_compute_time - avg_io_time:.3f}s per batch")
         
@@ -1678,17 +1678,17 @@ class DataPipelineProfiler:
         total_cycle_time = max(avg_io_time, simulated_compute_time)
         efficiency = min(avg_io_time, simulated_compute_time) / total_cycle_time * 100
         
-        print(f"\n🎯 TRAINING IMPACT:")
+        print(f"\nTARGET TRAINING IMPACT:")
         print(f"   Pipeline efficiency: {efficiency:.1f}%")
         print(f"   Total cycle time: {total_cycle_time:.3f}s")
         
         if bottleneck == "I/O":
-            print(f"   💡 Recommendation: Optimize data loading")
+            print(f"   TIP Recommendation: Optimize data loading")
             print(f"      - Increase batch size")
             print(f"      - Use data prefetching")
             print(f"      - Faster storage (SSD vs HDD)")
         else:
-            print(f"   💡 Recommendation: I/O is well optimized")
+            print(f"   TIP Recommendation: I/O is well optimized")
             print(f"      - Consider larger models or batch sizes")
             print(f"      - Focus on compute optimization")
         
@@ -1702,7 +1702,7 @@ class DataPipelineProfiler:
 
 # %% [markdown]
 """
-### 🎯 Learning Activity 1: DataLoader Performance Profiling (Medium Guided Implementation)
+### TARGET Learning Activity 1: DataLoader Performance Profiling (Medium Guided Implementation)
 
 **Goal**: Learn to measure data loading performance and identify I/O bottlenecks that can slow down training.
 
@@ -1713,9 +1713,9 @@ Complete the missing implementations in the `DataPipelineProfiler` class above, 
 # Initialize the data pipeline profiler
 profiler = DataPipelineProfiler()
 
-# ✅ IMPLEMENTATION CHECKPOINT: Ensure your profiler methods are complete before running
+# PASS IMPLEMENTATION CHECKPOINT: Ensure your profiler methods are complete before running
 
-# 🤔 PREDICTION: Which will be faster - sequential or shuffled data loading?
+# THINK PREDICTION: Which will be faster - sequential or shuffled data loading?
 # Your answer: _______
 
 # Guard to prevent execution when imported
@@ -1746,7 +1746,7 @@ if __name__ == '__main__':
         print(f"   Error: {timing_result['error']}")
 
     # Test 2: Batch size scaling analysis
-    print(f"\n📈 Batch Size Scaling Analysis:")
+    print(f"\nPROGRESS Batch Size Scaling Analysis:")
 
     # Students use their implemented scaling analysis
     scaling_analysis = profiler.analyze_batch_size_scaling(test_dataset, [16, 32, 64, 128])
@@ -1761,7 +1761,7 @@ if __name__ == '__main__':
     else:
         print(f"   Error: {scaling_analysis['error']}")
 
-    print(f"\n💡 I/O PERFORMANCE INSIGHTS:")
+    print(f"\nTIP I/O PERFORMANCE INSIGHTS:")
     print(f"   - Larger batches often improve throughput (better amortization)")
     print(f"   - But memory constraints limit maximum batch size")
     print(f"   - Sweet spot balances throughput vs memory usage")
@@ -1769,15 +1769,15 @@ if __name__ == '__main__':
 
 # %% [markdown]
 """
-### 🎯 Learning Activity 2: Production I/O Optimization Analysis (Review & Understand)
+### TARGET Learning Activity 2: Production I/O Optimization Analysis (Review & Understand)
 
 **Goal**: Understand how I/O performance affects real training systems and learn optimization strategies used in production.
 """
 
 # %%
-# ✅ IMPLEMENTATION CHECKPOINT: Ensure profiler comparison methods work before running
+# PASS IMPLEMENTATION CHECKPOINT: Ensure profiler comparison methods work before running
 
-# 🔍 SYSTEMS INSIGHT: I/O Strategy Performance Comparison
+# MAGNIFY SYSTEMS INSIGHT: I/O Strategy Performance Comparison
 def analyze_io_strategy_impact():
     """Analyze the performance difference between I/O strategies."""
     print("🔄 I/O STRATEGY IMPACT ANALYSIS")
@@ -1787,7 +1787,7 @@ def analyze_io_strategy_impact():
         # Create test scenarios
         dataset = TestDataset(size=500)
         
-        print("🧪 Testing Sequential vs Random Access:")
+        print("TEST Testing Sequential vs Random Access:")
         
         # Sequential access simulation
         import time
@@ -1810,7 +1810,7 @@ def analyze_io_strategy_impact():
         print(f"  Random access:     {random_time:.3f}s")
         print(f"  Speed difference:   {random_time/sequential_time:.1f}x")
         
-        print("\n💡 WHY PERFORMANCE DIFFERS:")
+        print("\nTIP WHY PERFORMANCE DIFFERS:")
         print("  1. 💾 Cache locality: Sequential = better CPU cache usage")
         print("  2. 💿 Storage patterns: HDDs hate random access")
         print("  3. 🧠 Memory prefetching: CPUs predict sequential patterns")
@@ -1818,22 +1818,22 @@ def analyze_io_strategy_impact():
         
         print("\n⚖️ TRAINING TRADE-OFFS:")
         print("  Sequential Loading:")
-        print("    ✅ Faster I/O performance")
-        print("    ✅ Better cache utilization")
-        print("    ❌ Model learns data order (overfitting!)")
+        print("    PASS Faster I/O performance")
+        print("    PASS Better cache utilization")
+        print("    FAIL Model learns data order (overfitting!)")
         
         print("  Random/Shuffled Loading:")
-        print("    ✅ Better model generalization")
-        print("    ✅ Prevents order memorization")
-        print("    ❌ Slightly slower I/O")
-        print("    ❌ Cache misses more frequent")
+        print("    PASS Better model generalization")
+        print("    PASS Prevents order memorization")
+        print("    FAIL Slightly slower I/O")
+        print("    FAIL Cache misses more frequent")
         
-        print("\n🎯 PRODUCTION RECOMMENDATION:")
+        print("\nTARGET PRODUCTION RECOMMENDATION:")
         print("  Always use shuffling for training (generalization > speed)")
         print("  Use sequential for inference (speed matters, no learning)")
         
     except Exception as e:
-        print(f"⚠️ Error in I/O strategy analysis: {e}")
+        print(f"WARNING️ Error in I/O strategy analysis: {e}")
 
 # Run the analysis
 analyze_io_strategy_impact()
@@ -1860,7 +1860,7 @@ if __name__ == '__main__':
         print(f"\n🖥️  {scenario_name}:")
         balance_analysis = profiler.simulate_compute_vs_io_balance(sample_dataloader, compute_time)
 
-    print(f"\n🎯 PRODUCTION I/O OPTIMIZATION LESSONS:")
+    print(f"\nTARGET PRODUCTION I/O OPTIMIZATION LESSONS:")
     print(f"=" * 50)
 
     print(f"\n1. 📊 I/O BOTTLENECK IDENTIFICATION:")
@@ -1868,7 +1868,7 @@ if __name__ == '__main__':
     print(f"   - CPU training rarely I/O bottlenecked")
     print(f"   - Modern GPUs process data faster than storage provides it")
 
-    print(f"\n2. 🚀 OPTIMIZATION STRATEGIES:")
+    print(f"\n2. ROCKET OPTIMIZATION STRATEGIES:")
     print(f"   - Data prefetching: Load next batch while GPU computes")
     print(f"   - Parallel workers: Multiple threads/processes for loading")
     print(f"   - Faster storage: NVMe SSD vs SATA vs network storage")
@@ -1884,9 +1884,9 @@ if __name__ == '__main__':
     print(f"   - GPU utilization directly affects training costs")
     print(f"   - Faster storage investment pays off in GPU efficiency")
 
-    print(f"\n💡 SYSTEMS ENGINEERING INSIGHT:")
+    print(f"\nTIP SYSTEMS ENGINEERING INSIGHT:")
     print(f"I/O optimization is often the highest-impact performance improvement:")
-    print(f"- GPUs are expensive → maximize their utilization")
+    print(f"- GPUs are expensive -> maximize their utilization")
     print(f"- Data loading is often the limiting factor")
     print(f"- 10% I/O improvement = 10% faster training = 10% cost reduction")
     print(f"- Modern ML systems spend significant effort on data pipeline optimization")
@@ -1902,31 +1902,31 @@ if __name__ == "__main__":
         print(f"Sample 0: data={data}, label={label}")
         assert isinstance(data, Tensor), "Data should be a Tensor"
         assert isinstance(label, Tensor), "Label should be a Tensor"
-        print("✅ Dataset __getitem__ works correctly")
+        print("PASS Dataset __getitem__ works correctly")
         
         # Test __len__
         assert len(test_dataset) == 5, f"Dataset length should be 5, got {len(test_dataset)}"
-        print("✅ Dataset __len__ works correctly")
+        print("PASS Dataset __len__ works correctly")
         
         # Test get_num_classes
         num_classes = test_dataset.get_num_classes()
         assert num_classes == 3, f"Number of classes should be 3, got {num_classes}"
-        print("✅ Dataset get_num_classes works correctly")
+        print("PASS Dataset get_num_classes works correctly")
         
         # Test get_sample_shape
         sample_shape = test_dataset.get_sample_shape()
         assert sample_shape == (2,), f"Sample shape should be (2,), got {sample_shape}"
-        print("✅ Dataset get_sample_shape works correctly")
+        print("PASS Dataset get_sample_shape works correctly")
         
-        print("🎯 Dataset interface pattern:")
+        print("TARGET Dataset interface pattern:")
         print("   __getitem__: Returns (data, label) tuple")
         print("   __len__: Returns dataset size")
         print("   get_num_classes: Returns number of classes")
         print("   get_sample_shape: Returns shape of data samples")
-        print("📈 Progress: Dataset interface ✓")
+        print("PROGRESS Progress: Dataset interface OK")
         
     except Exception as e:
-        print(f"❌ Dataset interface test failed: {e}")
+        print(f"FAIL Dataset interface test failed: {e}")
         raise
     
     # Run all tests
@@ -1941,7 +1941,7 @@ if __name__ == "__main__":
 
 # %% [markdown]
 """
-## 🤔 ML Systems Thinking Questions
+## THINK ML Systems Thinking Questions
 
 ### System Design
 1. How does TinyTorch's DataLoader design compare to PyTorch's DataLoader and TensorFlow's tf.data API in terms of flexibility and performance?
@@ -1966,16 +1966,16 @@ if __name__ == "__main__":
 
 # %% [markdown]
 """
-## 🎯 MODULE SUMMARY: Data Loading and Processing
+## TARGET MODULE SUMMARY: Data Loading and Processing
 
 Congratulations! You've successfully implemented professional data loading systems:
 
 ### What You've Accomplished
-✅ **DataLoader Class**: Efficient batch processing with memory management
-✅ **Dataset Integration**: Seamless compatibility with Tensor operations
-✅ **Batch Processing**: Optimized data loading for training
-✅ **Memory Management**: Efficient handling of large datasets
-✅ **Real Applications**: Image classification, regression, and more
+PASS **DataLoader Class**: Efficient batch processing with memory management
+PASS **Dataset Integration**: Seamless compatibility with Tensor operations
+PASS **Batch Processing**: Optimized data loading for training
+PASS **Memory Management**: Efficient handling of large datasets
+PASS **Real Applications**: Image classification, regression, and more
 
 ### Key Concepts You've Learned
 - **Batch processing**: How to efficiently process data in chunks

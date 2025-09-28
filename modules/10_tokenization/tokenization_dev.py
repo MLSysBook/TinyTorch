@@ -21,7 +21,7 @@ Welcome to the Tokenization module! You'll implement the fundamental text proces
 - Framework connection: See how your implementations match production tokenization systems
 - Performance insight: Learn how tokenization throughput affects training pipeline efficiency
 
-## Build → Use → Reflect
+## Build -> Use -> Reflect
 1. **Build**: Character tokenizer and basic BPE (Byte Pair Encoding) implementation
 2. **Use**: Process real text and observe how different tokenization strategies affect sequence length
 3. **Reflect**: How does tokenization choice determine model efficiency and language understanding?
@@ -35,8 +35,8 @@ By the end of this module, you'll understand:
 - Connection to production systems like GPT's tokenizers and their design trade-offs
 
 ## Systems Reality Check
-💡 **Production Context**: Modern language models use sophisticated tokenizers (GPT's tiktoken, SentencePiece) - your implementation reveals the algorithmic foundations
-⚡ **Performance Note**: Tokenization can become a bottleneck in training pipelines - efficient string processing is critical for high-throughput training
+TIP **Production Context**: Modern language models use sophisticated tokenizers (GPT's tiktoken, SentencePiece) - your implementation reveals the algorithmic foundations
+SPEED **Performance Note**: Tokenization can become a bottleneck in training pipelines - efficient string processing is critical for high-throughput training
 """
 
 # %% nbgrader={"grade": false, "grade_id": "tokenization-imports", "locked": false, "schema_version": 3, "solution": false, "task": false}
@@ -64,7 +64,7 @@ print("Ready to build text processing systems!")
 
 # %% [markdown]
 """
-## 📦 Where This Code Lives in the Final Package
+## PACKAGE Where This Code Lives in the Final Package
 
 **Learning Side:** You work in `modules/source/11_tokenization/tokenization_dev.py`  
 **Building Side:** Code exports to `tinytorch.core.tokenization`
@@ -91,77 +91,77 @@ from tinytorch.core.embeddings import Embedding  # Next module
 Neural networks work with numbers, but we want to process text:
 
 ```
-"Hello world!" → [15496, 995, 0]  # Numbers the model can understand
+"Hello world!" -> [15496, 995, 0]  # Numbers the model can understand
 ```
 
 ### 🔤 Visual Tokenization Flow
 ```
-Raw Text → Tokenization Strategy → Token IDs → Neural Network Input
+Raw Text -> Tokenization Strategy -> Token IDs -> Neural Network Input
 
     "Hello world!"
-         ↓
-┌─────────────────────────┐
-│   Tokenization Process  │
-│  ┌─────────────────────┐│
-│  │  Split into tokens  ││
-│  └─────────────────────┘│
-│           ↓             │
-│  ┌─────────────────────┐│
-│  │  Map to vocabulary  ││
-│  └─────────────────────┘│
-└─────────────────────────┘
-         ↓
+         v
++-------------------------+
+|   Tokenization Process  |
+|  +---------------------+|
+|  |  Split into tokens  ||
+|  +---------------------+|
+|           v             |
+|  +---------------------+|
+|  |  Map to vocabulary  ||
+|  +---------------------+|
++-------------------------+
+         v
     [15496, 995, 0]
-         ↓
+         v
     Neural Network
 ```
 
 ### 📊 Tokenization Strategy Comparison
 ```
-Strategy      │ Vocab Size │ Sequence Length │ Use Case
-──────────────┼────────────┼─────────────────┼─────────────────
-Character     │     ~256   │      Long       │ Simple/Debug
-Subword (BPE) │   ~50,000  │     Medium      │ Production
-Word-level    │  ~100,000+ │      Short      │ Specialized
+Strategy      | Vocab Size | Sequence Length | Use Case
+--------------+------------+-----------------+-----------------
+Character     |     ~256   |      Long       | Simple/Debug
+Subword (BPE) |   ~50,000  |     Medium      | Production
+Word-level    |  ~100,000+ |      Short      | Specialized
 ```
 
-### 🎯 Systems Trade-offs Visualization
+### TARGET Systems Trade-offs Visualization
 ```
         Memory Usage Impact
-              ↓
-    ┌─────────────────────────┐
-    │   Vocabulary Size       │───► Embedding Table Memory
-    │                         │     vocab_size × embed_dim × 4 bytes
-    └─────────────────────────┘
-              ↓
-    ┌─────────────────────────┐
-    │   Sequence Length       │───► Attention Memory  
-    │                         │     O(sequence_length²)
-    └─────────────────────────┘
-              ↓
-    ┌─────────────────────────┐
-    │  Tokenization Speed     │───► Training Throughput
-    │                         │     tokens/second pipeline
-    └─────────────────────────┘
+              v
+    +-------------------------+
+    |   Vocabulary Size       |---> Embedding Table Memory
+    |                         |     vocab_size * embed_dim * 4 bytes
+    +-------------------------+
+              v
+    +-------------------------+
+    |   Sequence Length       |---> Attention Memory  
+    |                         |     O(sequence_length²)
+    +-------------------------+
+              v
+    +-------------------------+
+    |  Tokenization Speed     |---> Training Throughput
+    |                         |     tokens/second pipeline
+    +-------------------------+
 
 Key Insight: Tokenization choices create cascading effects throughout ML systems!
 ```
 
-### 🔍 Character vs Subword vs Word Example
+### MAGNIFY Character vs Subword vs Word Example
 ```
 Input: "The tokenization process"
 
 Character-level:
 ['T','h','e',' ','t','o','k','e','n','i','z','a','t','i','o','n',' ','p','r','o','c','e','s','s']
-↓ (24 tokens, vocab ~256)
+v (24 tokens, vocab ~256)
 
 Subword (BPE):
 ['The', 'token', 'ization', 'process']  
-↓ (4 tokens, vocab ~50k)
+v (4 tokens, vocab ~50k)
 
 Word-level:
 ['The', 'tokenization', 'process']
-↓ (3 tokens, vocab ~100k+)
+v (3 tokens, vocab ~100k+)
 
 Trade-off: Smaller vocab = Longer sequences = More computation
           Larger vocab = More parameters = More memory
@@ -360,7 +360,7 @@ class CharTokenizer:
 
 # %% [markdown]
 """
-### 🧪 Test Your Character Tokenizer Implementation
+### TEST Test Your Character Tokenizer Implementation
 
 Once you implement the CharTokenizer encode and decode methods above, run this cell to test it:
 """
@@ -394,7 +394,7 @@ def test_unit_char_tokenizer():
     assert tokenizer.vocab_size >= 99, "Should have at least 99 tokens (4 special + 95 ASCII)"
     
     # Test unknown character handling
-    unknown_tokens = tokenizer.encode("🚀", add_special_tokens=False)  # Emoji not in ASCII
+    unknown_tokens = tokenizer.encode("ROCKET", add_special_tokens=False)  # Emoji not in ASCII
     assert unknown_tokens[0] == tokenizer.char_to_idx['<UNK>'], "Should use UNK token for unknown chars"
     
     # Test padding
@@ -404,11 +404,11 @@ def test_unit_char_tokenizer():
     assert len(padded[1]) == 4, "Second sequence should be padded to length 4"
     assert padded[1][-1] == tokenizer.char_to_idx['<PAD>'], "Should use PAD token for padding"
     
-    print("✅ Character tokenizer tests passed!")
-    print(f"✅ Vocabulary size: {tokenizer.vocab_size}")
-    print(f"✅ Encode/decode cycle works correctly")
-    print(f"✅ Special tokens handled properly")
-    print(f"✅ Padding functionality works")
+    print("PASS Character tokenizer tests passed!")
+    print(f"PASS Vocabulary size: {tokenizer.vocab_size}")
+    print(f"PASS Encode/decode cycle works correctly")
+    print(f"PASS Special tokens handled properly")
+    print(f"PASS Padding functionality works")
 
 # Test function defined (called in main block)
 
@@ -421,35 +421,35 @@ Now let's implement a simplified version of BPE, the subword tokenization algori
 ### 🧩 BPE Algorithm Visualization
 ```
 Step 1: Start with characters
-"hello" → ['h', 'e', 'l', 'l', 'o', '</w>']
+"hello" -> ['h', 'e', 'l', 'l', 'o', '</w>']
 
 Step 2: Count adjacent pairs
-('l', 'l'): 1 occurrence  ← Most frequent pair
+('l', 'l'): 1 occurrence  <- Most frequent pair
 
 Step 3: Merge most frequent pair
-['h', 'e', 'l', 'l', 'o', '</w>'] → ['h', 'e', 'll', 'o', '</w>']
+['h', 'e', 'l', 'l', 'o', '</w>'] -> ['h', 'e', 'll', 'o', '</w>']
 
 Step 4: Repeat until vocabulary target reached
-Next iteration might merge ('e', 'll') → 'ell' if frequent enough
+Next iteration might merge ('e', 'll') -> 'ell' if frequent enough
 
 BPE Training Process:
-┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
-│ Character Vocab │ ───► │  Count Pairs   │ ───► │  Merge Most     │
-│ a, b, c, d...   │      │ (a,b): 5       │      │  Frequent Pair  │
-└─────────────────┘      │ (c,d): 3       │      │ (a,b) → ab      │
-         ↑               │ (e,f): 1       │      └─────────────────┘
-         │               └─────────────────┘               │
-         │                                                 │
-         └─────────────────── Repeat Until Target ←────────┘
++-----------------+    +-----------------+    +-----------------+
+| Character Vocab | ---> |  Count Pairs   | ---> |  Merge Most     |
+| a, b, c, d...   |      | (a,b): 5       |      |  Frequent Pair  |
++-----------------+      | (c,d): 3       |      | (a,b) -> ab      |
+         ^               | (e,f): 1       |      +-----------------+
+         |               +-----------------+               |
+         |                                                 |
+         +------------------- Repeat Until Target <---------+
 ```
 
-### 📈 BPE Learning Process Example
+### PROGRESS BPE Learning Process Example
 ```
 Initial: "hello" = ['h', 'e', 'l', 'l', 'o', '</w>']
 
 Iteration 1:
   Pairs: (h,e):1, (e,l):1, (l,l):1, (l,o):1, (o,</w>):1
-  Merge: (l,l) → 'll'
+  Merge: (l,l) -> 'll'
   Result: ['h', 'e', 'll', 'o', '</w>']
 
 Iteration 2:  
@@ -460,19 +460,19 @@ Iteration 2:
 Key Insight: BPE learns common subword patterns from data!
 ```
 
-### 🎯 BPE Benefits
+### TARGET BPE Benefits
 ```
 Traditional Tokenization Problems:
-❌ "unhappiness" → UNK (unknown word)
-❌ "supercalifragilisticexpialidocious" → UNK
+FAIL "unhappiness" -> UNK (unknown word)
+FAIL "supercalifragilisticexpialidocious" -> UNK
 
 BPE Solution:  
-✅ "unhappiness" → ['un', 'happy', 'ness'] (recognizable parts)
-✅ "supercali..." → ['super', 'cal', 'i', 'frag', ...] (graceful degradation)
+PASS "unhappiness" -> ['un', 'happy', 'ness'] (recognizable parts)
+PASS "supercali..." -> ['super', 'cal', 'i', 'frag', ...] (graceful degradation)
 
 Memory Efficiency:
-Character: 26 vocab × 512 embed_dim = 13,312 parameters
-BPE-50k:   50,000 vocab × 512 embed_dim = 25,600,000 parameters
+Character: 26 vocab * 512 embed_dim = 13,312 parameters
+BPE-50k:   50,000 vocab * 512 embed_dim = 25,600,000 parameters
 Trade-off: More parameters, shorter sequences (faster attention)
 ```
 """
@@ -754,7 +754,7 @@ class BPETokenizer:
 
 # %% [markdown]
 """
-### 🧪 Test Your BPE Implementation
+### TEST Test Your BPE Implementation
 
 Once you implement the BPE helper methods above, run this cell to test it:
 """
@@ -814,36 +814,36 @@ def test_unit_bpe_tokenizer():
     individual_l_count = sum(1 for token in merged[0] if token == 'l')
     assert individual_l_count == 0, f"Should have no individual 'l' tokens after merge, got {individual_l_count}"
     
-    print("✅ BPE tokenizer tests passed!")
-    print(f"✅ Trained vocabulary size: {len(bpe.char_to_idx)}")
-    print(f"✅ Learned {len(bpe.merges)} merges")
-    print(f"✅ Encode/decode cycle works")
+    print("PASS BPE tokenizer tests passed!")
+    print(f"PASS Trained vocabulary size: {len(bpe.char_to_idx)}")
+    print(f"PASS Learned {len(bpe.merges)} merges")
+    print(f"PASS Encode/decode cycle works")
 
 # Test function defined (called in main block)
 
 # %% [markdown]
 """
-## 🎯 ML Systems: Performance Analysis & Tokenization Efficiency
+## TARGET ML Systems: Performance Analysis & Tokenization Efficiency
 
 Now let's develop systems engineering skills by analyzing tokenization performance and understanding how tokenization choices affect downstream ML system efficiency.
 
 ### **Learning Outcome**: *"I understand how tokenization affects model memory, training speed, and language understanding"*
 
-### 🔍 Systems Insights Functions
+### MAGNIFY Systems Insights Functions
 
 The next few implementations include **executable analysis functions** that help you discover key insights about tokenization performance and memory scaling. These aren't just code - they're interactive learning tools that reveal how tokenization choices affect real ML systems.
 
 ### 📊 What We'll Measure
 ```
 Performance Metrics:
-┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
-│ Tokenization    │    │ Memory Usage    │    │ Scaling         │
-│ Speed           │    │ Analysis        │    │ Behavior        │
-│                 │    │                 │    │                 │
-│ • tokens/sec    │    │ • vocab memory  │    │ • time complexity│
-│ • chars/sec     │    │ • sequence mem  │    │ • space complexity│
-│ • compression   │    │ • total footprint│   │ • bottleneck ID │
-└─────────────────┘    └─────────────────┘    └─────────────────┘
++-----------------+    +-----------------+    +-----------------+
+| Tokenization    |    | Memory Usage    |    | Scaling         |
+| Speed           |    | Analysis        |    | Behavior        |
+|                 |    |                 |    |                 |
+| • tokens/sec    |    | • vocab memory  |    | • time complexity|
+| • chars/sec     |    | • sequence mem  |    | • space complexity|
+| • compression   |    | • total footprint|   | • bottleneck ID |
++-----------------+    +-----------------+    +-----------------+
 ```
 """
 
@@ -932,7 +932,7 @@ class TokenizationProfiler:
         
         This function is PROVIDED to show comprehensive comparison.
         """
-        print("🔍 TOKENIZER COMPARISON")
+        print("MAGNIFY TOKENIZER COMPARISON")
         print("=" * 50)
         
         # Create tokenizers
@@ -969,7 +969,7 @@ class TokenizationProfiler:
         
         This function is PROVIDED to demonstrate scaling analysis.
         """
-        print(f"\n🔍 MEMORY SCALING ANALYSIS")
+        print(f"\nMAGNIFY MEMORY SCALING ANALYSIS")
         print("=" * 40)
         
         scaling_results = []
@@ -999,7 +999,7 @@ class TokenizationProfiler:
             }
             
             scaling_results.append(result)
-            print(f"   {length:>6} chars → {len(tokens):>4} tokens ({time_taken*1000:.2f}ms)")
+            print(f"   {length:>6} chars -> {len(tokens):>4} tokens ({time_taken*1000:.2f}ms)")
         
         # Analyze scaling pattern
         if len(scaling_results) >= 2:
@@ -1010,7 +1010,7 @@ class TokenizationProfiler:
             time_ratio = large['time_ms'] / small['time_ms']
             memory_ratio = large['total_memory_bytes'] / small['total_memory_bytes']
             
-            print(f"\n📈 Scaling Analysis:")
+            print(f"\nPROGRESS Scaling Analysis:")
             print(f"   Text length increased {length_ratio:.1f}x")
             print(f"   Time increased {time_ratio:.1f}x")
             print(f"   Memory increased {memory_ratio:.1f}x")
@@ -1024,7 +1024,7 @@ def analyze_tokenization_impact():
     
     This function is PROVIDED to show systems-level thinking.
     """
-    print("🎯 TOKENIZATION IMPACT ON ML SYSTEMS")
+    print("TARGET TOKENIZATION IMPACT ON ML SYSTEMS")
     print("=" * 60)
     
     # Sample texts for analysis
@@ -1068,16 +1068,16 @@ def analyze_tokenization_impact():
         
         print(f"{name:<12} {tokenizer.vocab_size:<10} {avg_tokens:<10.1f} {total_memory:<15.1f}MB")
     
-    print(f"\n💡 KEY INSIGHTS:")
+    print(f"\nTIP KEY INSIGHTS:")
     print(f"   🔤 Character tokenizer: Small vocabulary, long sequences")
     print(f"   🧩 BPE tokenizer: Medium vocabulary, shorter sequences")
-    print(f"   📈 Memory scaling: O(vocab_size * embed_dim + seq_len * batch_size)")
-    print(f"   ⚡ Attention complexity: O(seq_len²) - shorter sequences = faster attention")
+    print(f"   PROGRESS Memory scaling: O(vocab_size * embed_dim + seq_len * batch_size)")
+    print(f"   SPEED Attention complexity: O(seq_len²) - shorter sequences = faster attention")
     print(f"   🏭 Production trade-off: Vocabulary size vs sequence length vs compute")
 
 # %% [markdown]
 """
-### 🧪 Test: Tokenization Performance Analysis
+### TEST Test: Tokenization Performance Analysis
 
 Let's test our tokenization profiler with realistic performance scenarios.
 """
@@ -1115,14 +1115,14 @@ def test_tokenization_profiler():
     assert metrics['total_tokens'] > 0, "Should count tokens"
     assert metrics['texts_per_second'] > 0, "Should measure throughput"
     
-    print("✅ Basic profiling functionality test passed")
+    print("PASS Basic profiling functionality test passed")
     
     # Test comparison
     comparison_results = profiler.compare_tokenizers(test_texts)
     assert isinstance(comparison_results, dict), "Should return comparison results"
     assert len(comparison_results) >= 1, "Should test at least one tokenizer"
     
-    print("✅ Tokenizer comparison test passed")
+    print("PASS Tokenizer comparison test passed")
     
     # Test scaling analysis
     scaling_results = profiler.analyze_memory_scaling(char_tokenizer, [50, 100])
@@ -1134,8 +1134,8 @@ def test_tokenization_profiler():
         assert 'num_tokens' in result, "Should include token count"
         assert result['num_tokens'] > 0, "Should produce tokens"
     
-    print("✅ Scaling analysis test passed")
-    print("🎯 Tokenization Profiler: All tests passed!")
+    print("PASS Scaling analysis test passed")
+    print("TARGET Tokenization Profiler: All tests passed!")
 
 # Test function defined (called in main block)
 
@@ -1204,7 +1204,7 @@ def analyze_tokenization_systems_impact():
             print(f"   {model_name}: {total_memory:.1f}MB total")
             print(f"     Embedding: {embed_memory:.1f}MB, Sequence: {seq_memory:.1f}MB, Attention: {attention_memory:.1f}MB")
     
-    print(f"\n🎯 KEY SYSTEM DESIGN INSIGHTS:")
+    print(f"\nTARGET KEY SYSTEM DESIGN INSIGHTS:")
     print(f"   1. Vocabulary Size Trade-offs:")
     print(f"      - Larger vocab = more parameters = more memory")
     print(f"      - Smaller vocab = longer sequences = more compute")
@@ -1223,21 +1223,21 @@ def analyze_tokenization_systems_impact():
 
 # %% [markdown]
 """
-## 🔍 Interactive Systems Insights
+## MAGNIFY Interactive Systems Insights
 
 Let's build intuition about tokenization through hands-on analysis. These functions reveal how tokenization choices cascade through ML systems.
 """
 
-# ✅ IMPLEMENTATION CHECKPOINT: Ensure your tokenizers are complete before running
+# PASS IMPLEMENTATION CHECKPOINT: Ensure your tokenizers are complete before running
 
-# 🤔 PREDICTION: Which tokenizer will use more memory - character or BPE? Why?
+# THINK PREDICTION: Which tokenizer will use more memory - character or BPE? Why?
 # Your guess: _______
 
-# 🔍 SYSTEMS INSIGHT #1: Vocabulary Size vs Memory Trade-offs
+# MAGNIFY SYSTEMS INSIGHT #1: Vocabulary Size vs Memory Trade-offs
 def analyze_tokenization_memory_impact():
     """Analyze how vocabulary size affects model memory usage."""
     try:
-        print("🔍 TOKENIZATION MEMORY IMPACT ANALYSIS")
+        print("MAGNIFY TOKENIZATION MEMORY IMPACT ANALYSIS")
         print("=" * 50)
         
         # Create tokenizers with different vocabulary sizes
@@ -1295,7 +1295,7 @@ def analyze_tokenization_memory_impact():
             total_per_sample = sequence_memory_kb + attention_memory_kb
             print(f"   Total per sample: {total_per_sample:.1f} KB")
         
-        print(f"\n💡 KEY INSIGHTS:")
+        print(f"\nTIP KEY INSIGHTS:")
         print(f"   • Vocabulary size directly affects model parameters")
         print(f"   • Sequence length affects computation (attention is O(N²))")
         print(f"   • Character tokenization: Small vocab, long sequences")
@@ -1303,22 +1303,22 @@ def analyze_tokenization_memory_impact():
         print(f"   • Production trade-off: Parameters vs computation")
         
     except Exception as e:
-        print(f"⚠️ Error in memory analysis: {e}")
+        print(f"WARNING️ Error in memory analysis: {e}")
         print("Make sure both tokenizers are implemented correctly")
 
 # Run the analysis
 analyze_tokenization_memory_impact()
 
-# ✅ IMPLEMENTATION CHECKPOINT: Ensure BPE merge functions are working
+# PASS IMPLEMENTATION CHECKPOINT: Ensure BPE merge functions are working
 
-# 🤔 PREDICTION: How does tokenization speed scale with text length?
+# THINK PREDICTION: How does tokenization speed scale with text length?
 # Linear? Quadratic? Your guess: _______
 
-# 🔍 SYSTEMS INSIGHT #2: Tokenization Speed Scaling Analysis  
+# MAGNIFY SYSTEMS INSIGHT #2: Tokenization Speed Scaling Analysis  
 def analyze_tokenization_speed_scaling():
     """Measure how tokenization performance scales with input size."""
     try:
-        print("\n🔍 TOKENIZATION SPEED SCALING ANALYSIS")
+        print("\nMAGNIFY TOKENIZATION SPEED SCALING ANALYSIS")
         print("=" * 50)
         
         char_tokenizer = CharTokenizer()
@@ -1340,22 +1340,22 @@ def analyze_tokenization_speed_scaling():
             
             char_times.append(char_time)
             
-            print(f"   {length:>5} chars → {len(char_tokens):>5} tokens in {char_time*1000:.2f}ms")
+            print(f"   {length:>5} chars -> {len(char_tokens):>5} tokens in {char_time*1000:.2f}ms")
         
         # Analyze scaling pattern
         if len(char_times) >= 2:
-            print(f"\n📈 Scaling Analysis:")
+            print(f"\nPROGRESS Scaling Analysis:")
             for i in range(1, len(text_lengths)):
                 length_ratio = text_lengths[i] / text_lengths[0]
                 time_ratio = char_times[i] / char_times[0] if char_times[0] > 0 else 0
                 
-                print(f"   {text_lengths[i]:>5} chars: {length_ratio:.1f}x length → {time_ratio:.1f}x time")
+                print(f"   {text_lengths[i]:>5} chars: {length_ratio:.1f}x length -> {time_ratio:.1f}x time")
             
             # Calculate approximate complexity
             avg_scaling = sum(char_times[i]/char_times[0] / (text_lengths[i]/text_lengths[0]) 
                             for i in range(1, len(text_lengths)) if char_times[0] > 0) / (len(text_lengths) - 1)
             
-            print(f"\n🎯 SCALING INSIGHTS:")
+            print(f"\nTARGET SCALING INSIGHTS:")
             print(f"   • Character tokenization: ~O(N) time complexity")
             print(f"   • Average scaling factor: {avg_scaling:.2f} (1.0 = perfect linear)")
             if avg_scaling < 1.2:
@@ -1369,22 +1369,22 @@ def analyze_tokenization_speed_scaling():
             print(f"   • Production implication: Tokenization speed rarely bottlenecks training")
             
     except Exception as e:
-        print(f"⚠️ Error in scaling analysis: {e}")
+        print(f"WARNING️ Error in scaling analysis: {e}")
         print("Make sure character tokenizer is implemented correctly")
 
 # Run the scaling analysis
 analyze_tokenization_speed_scaling()
 
-# ✅ IMPLEMENTATION CHECKPOINT: All tokenization systems working
+# PASS IMPLEMENTATION CHECKPOINT: All tokenization systems working
 
-# 🤔 PREDICTION: For a 7B parameter model, what percentage of memory is vocabulary?
+# THINK PREDICTION: For a 7B parameter model, what percentage of memory is vocabulary?
 # Your estimate: _______%
 
-# 🔍 SYSTEMS INSIGHT #3: Production Model Memory Breakdown
+# MAGNIFY SYSTEMS INSIGHT #3: Production Model Memory Breakdown
 def analyze_production_memory_breakdown():
     """Analyze vocabulary memory in production-scale language models."""
     try:
-        print("\n🔍 PRODUCTION MODEL MEMORY BREAKDOWN")
+        print("\nMAGNIFY PRODUCTION MODEL MEMORY BREAKDOWN")
         print("=" * 50)
         
         # Model configurations based on real systems
@@ -1412,10 +1412,10 @@ def analyze_production_memory_breakdown():
             
             print(f"{model_name:<12} {total_params/1e6:>8.0f}M {vocab_params/1e6:>8.1f}M {vocab_percentage:>6.1f}% {vocab_memory_mb:>8.0f}MB")
         
-        print(f"\n🎯 PRODUCTION INSIGHTS:")
+        print(f"\nTARGET PRODUCTION INSIGHTS:")
         print(f"   • Small models (100M): Vocabulary is ~20-30% of parameters")
         print(f"   • Large models (7B+): Vocabulary is ~1-2% of parameters")
-        print(f"   • Vocabulary memory scales with vocab_size × embed_dim")
+        print(f"   • Vocabulary memory scales with vocab_size * embed_dim")
         print(f"   • GPT uses 50k vocabulary, LLaMA uses 32k (efficiency optimization)")
         
         # Calculate tokenization efficiency comparison
@@ -1437,7 +1437,7 @@ def analyze_production_memory_breakdown():
         char_tokens = len(sample_text)  # Approximate character count
         gpt_tokens = char_tokens // 4   # Approximate GPT tokenization (4 chars/token)
         
-        print(f"\n⚡ COMPUTE EFFICIENCY:")
+        print(f"\nSPEED COMPUTE EFFICIENCY:")
         print(f"   Sample text: '{sample_text}'")
         print(f"   Character tokens: ~{char_tokens}")
         print(f"   GPT tokens: ~{gpt_tokens}")
@@ -1446,13 +1446,13 @@ def analyze_production_memory_breakdown():
         print(f"   GPT attention: O({gpt_tokens}²) = {gpt_tokens**2:,} operations")
         print(f"   Compute reduction: {(char_tokens**2)/(gpt_tokens**2):.1f}x faster attention")
         
-        print(f"\n💡 TRADE-OFF SUMMARY:")
+        print(f"\nTIP TRADE-OFF SUMMARY:")
         print(f"   • BPE uses {gpt_memory/char_memory:.0f}x more vocabulary memory")
         print(f"   • BPE provides {(char_tokens**2)/(gpt_tokens**2):.1f}x faster attention computation")
         print(f"   • Production systems choose BPE for compute efficiency")
         
     except Exception as e:
-        print(f"⚠️ Error in production analysis: {e}")
+        print(f"WARNING️ Error in production analysis: {e}")
         print("Error in memory calculation - check model configurations")
 
 # Run the production analysis
@@ -1460,7 +1460,7 @@ analyze_production_memory_breakdown()
 
 # %% [markdown]
 """
-## 🚀 Advanced: Tokenization Efficiency Techniques
+## ROCKET Advanced: Tokenization Efficiency Techniques
 
 Production tokenization systems use several optimization techniques. Let's implement a few key ones:
 """
@@ -1543,7 +1543,7 @@ def demonstrate_production_optimizations():
     
     This function is PROVIDED to show real-world optimization techniques.
     """
-    print("🚀 PRODUCTION TOKENIZATION OPTIMIZATIONS")
+    print("ROCKET PRODUCTION TOKENIZATION OPTIMIZATIONS")
     print("=" * 60)
     
     # Create optimized tokenizer
@@ -1586,18 +1586,18 @@ def demonstrate_production_optimizations():
     # Report results
     cache_stats = optimized_tokenizer.get_cache_stats()
     
-    print(f"\n⚡ PERFORMANCE COMPARISON:")
+    print(f"\nSPEED PERFORMANCE COMPARISON:")
     print(f"   No caching: {no_cache_time*1000:.2f}ms")
     print(f"   With caching: {cache_time*1000:.2f}ms ({(no_cache_time/cache_time):.1f}x speedup)")
     print(f"   Batch processing: {batch_time*1000:.2f}ms")
     
-    print(f"\n📈 CACHE PERFORMANCE:")
+    print(f"\nPROGRESS CACHE PERFORMANCE:")
     print(f"   Hit rate: {cache_stats['hit_rate']*100:.1f}%")
     print(f"   Cache hits: {cache_stats['cache_hits']}")
     print(f"   Cache misses: {cache_stats['cache_misses']}")
     print(f"   Cache size: {cache_stats['cache_size']} entries")
     
-    print(f"\n🎯 PRODUCTION INSIGHTS:")
+    print(f"\nTARGET PRODUCTION INSIGHTS:")
     print(f"   - Caching provides significant speedup for repeated texts")
     print(f"   - Batch processing enables vectorized operations")
     print(f"   - Memory-efficient encoding reduces allocation overhead")
@@ -1615,7 +1615,7 @@ Let's run comprehensive tests to ensure all tokenization functionality works cor
 # %% nbgrader={"grade": false, "grade_id": "test-tokenization-comprehensive", "locked": false, "schema_version": 3, "solution": false, "task": false}
 def test_tokenization_comprehensive():
     """Comprehensive test suite for all tokenization functionality."""
-    print("🧪 Comprehensive Tokenization Tests...")
+    print("TEST Comprehensive Tokenization Tests...")
     
     # Test 1: Character tokenizer edge cases
     print("  Testing character tokenizer edge cases...")
@@ -1640,7 +1640,7 @@ def test_tokenization_comprehensive():
     decoded = char_tokenizer.decode(tokens, skip_special_tokens=True)
     assert decoded == original, "Round-trip should preserve text"
     
-    print("    ✅ Character tokenizer edge cases passed")
+    print("    PASS Character tokenizer edge cases passed")
     
     # Test 2: BPE tokenizer robustness
     print("  Testing BPE tokenizer robustness...")
@@ -1673,7 +1673,7 @@ def test_tokenization_comprehensive():
             # BPE decoding might have slightly different spacing due to word boundaries
             assert test_text.replace(" ", "") in decoded.replace(" ", ""), f"BPE round-trip failed for '{test_text}'"
     
-    print("    ✅ BPE tokenizer robustness passed")
+    print("    PASS BPE tokenizer robustness passed")
     
     # Test 3: Memory efficiency with large texts
     print("  Testing memory efficiency...")
@@ -1686,7 +1686,7 @@ def test_tokenization_comprehensive():
     assert len(char_tokens) > 20000, "Should handle large texts"
     assert char_time < 1.0, "Should tokenize large text quickly"
     
-    print("    ✅ Memory efficiency tests passed")
+    print("    PASS Memory efficiency tests passed")
     
     # Test 4: Integration with optimization features
     print("  Testing optimization features...")
@@ -1710,9 +1710,9 @@ def test_tokenization_comprehensive():
     assert len(batch_results) == len(batch_texts), "Batch size should match input"
     assert all(len(seq) == len(batch_results[0]) for seq in batch_results), "All sequences should be padded to same length"
     
-    print("    ✅ Optimization features tests passed")
+    print("    PASS Optimization features tests passed")
     
-    print("✅ All comprehensive tokenization tests passed!")
+    print("PASS All comprehensive tokenization tests passed!")
 
 # Test function defined (called in main block)
 
@@ -1729,7 +1729,7 @@ if __name__ == "__main__":
     print("="*60)
     
     # Run all unit tests
-    print("\n🧪 UNIT TESTS")
+    print("\nTEST UNIT TESTS")
     print("-" * 30)
     test_unit_char_tokenizer()
     test_unit_bpe_tokenizer()
@@ -1742,7 +1742,7 @@ if __name__ == "__main__":
     
     # Performance analysis
     print("\n" + "="*60)
-    print("🔍 TOKENIZATION PERFORMANCE ANALYSIS")
+    print("MAGNIFY TOKENIZATION PERFORMANCE ANALYSIS")
     print("="*60)
     
     # Create test data
@@ -1767,16 +1767,16 @@ if __name__ == "__main__":
     demonstrate_production_optimizations()
     
     print("\n" + "="*60)
-    print("🎯 TOKENIZATION MODULE COMPLETE!")
+    print("TARGET TOKENIZATION MODULE COMPLETE!")
     print("="*60)
-    print("✅ All tokenization tests passed!")
-    print("✅ Systems insights analysis complete!")
-    print("✅ Performance profiling successful!")
-    print("🚀 Ready for embedding layer integration!")
+    print("PASS All tokenization tests passed!")
+    print("PASS Systems insights analysis complete!")
+    print("PASS Performance profiling successful!")
+    print("ROCKET Ready for embedding layer integration!")
 
 # %% [markdown]
 """
-## 🤔 ML Systems Thinking: Interactive Questions
+## THINK ML Systems Thinking: Interactive Questions
 
 Now that you've built the text processing foundation for language models, let's connect this work to broader ML systems challenges. These questions help you think critically about how tokenization scales to production language processing systems.
 
@@ -1953,11 +1953,11 @@ GRADING RUBRIC (Instructor Use):
 
 # %% [markdown]
 """
-## 🎯 MODULE SUMMARY: Tokenization
+## TARGET MODULE SUMMARY: Tokenization
 
 Congratulations! You have successfully implemented comprehensive tokenization systems for language processing:
 
-### ✅ What You Have Built
+### PASS What You Have Built
 - **Character Tokenizer**: Simple character-level tokenization with special token handling
 - **BPE Tokenizer**: Subword tokenization using Byte Pair Encoding algorithm
 - **Vocabulary Management**: Efficient mapping between text and numerical representations
@@ -1966,41 +1966,41 @@ Congratulations! You have successfully implemented comprehensive tokenization sy
 - **🆕 Memory Efficiency**: Optimized string processing and token caching systems
 - **🆕 Systems Analysis**: Comprehensive performance profiling and scaling analysis
 
-### ✅ Key Learning Outcomes
+### PASS Key Learning Outcomes
 - **Understanding**: How text becomes numbers that neural networks can process
 - **Implementation**: Built character and subword tokenizers from scratch
 - **Systems Insight**: How tokenization affects model memory, performance, and capabilities
 - **Performance Engineering**: Measured and optimized tokenization throughput
 - **Production Context**: Understanding real-world tokenization challenges and solutions
 
-### ✅ Technical Mastery
+### PASS Technical Mastery
 - **Character Tokenization**: Simple but interpretable text processing
 - **BPE Algorithm**: Iterative pair merging for subword discovery
 - **Vocabulary Trade-offs**: Balancing vocabulary size vs sequence length
 - **Memory Optimization**: Efficient caching and batch processing techniques
 - **🆕 Performance Analysis**: Measuring tokenization impact on downstream systems
 
-### ✅ Professional Skills Developed
+### PASS Professional Skills Developed
 - **Algorithm Implementation**: Building complex text processing systems
 - **Performance Engineering**: Optimizing for speed and memory efficiency
 - **Systems Thinking**: Understanding tokenization's role in ML pipelines
 - **Production Optimization**: Caching, batching, and scalability techniques
 
-### ✅ Ready for Next Steps
+### PASS Ready for Next Steps
 Your tokenization systems are now ready to power:
 - **Embedding Layers**: Converting tokens to dense vector representations
 - **Language Models**: Processing text for transformer architectures
 - **Production Systems**: Efficient text processing pipelines
 - **🧠 Text Understanding**: Foundation for natural language processing
 
-### 🔗 Connection to Real ML Systems
+### LINK Connection to Real ML Systems
 Your implementations mirror production systems:
 - **GPT Tokenizers**: Modern language models use sophisticated BPE variants
 - **SentencePiece**: Unigram language model tokenization used in many systems
 - **Hugging Face Tokenizers**: Production-optimized tokenization libraries
 - **Industry Applications**: Every language model relies on efficient tokenization
 
-### 🎯 The Power of Text Processing
+### TARGET The Power of Text Processing
 You have unlocked the bridge between human language and machine understanding:
 - **Before**: Text was just strings of characters
 - **After**: Text becomes structured numerical sequences for neural networks

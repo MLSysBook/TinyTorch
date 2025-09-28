@@ -24,7 +24,7 @@ In Module 17, you learned quantization - reducing precision from FP32 to INT8. B
 - Framework connection: See how your implementation mirrors production sparse inference systems
 - Performance insight: Learn why 70% sparsity often provides optimal accuracy vs size tradeoffs
 
-## Build → Profile → Optimize
+## Build -> Profile -> Optimize
 1. **Build**: Magnitude-based pruners that remove small weights, discover massive redundancy in neural networks
 2. **Profile**: Measure model size reduction, accuracy impact, and sparse computation efficiency
 3. **Optimize**: Implement structured pruning for hardware-friendly sparsity patterns
@@ -38,8 +38,8 @@ By the end of this module, you'll understand:
 - Connection to production systems where pruning enables edge AI applications
 
 ## Systems Reality Check
-💡 **Production Context**: Apple's Neural Engine, Google's Edge TPU, and mobile inference frameworks heavily rely on sparsity for efficient computation
-⚡ **Performance Note**: 70% sparsity provides 3-5x model compression with <2% accuracy loss, but speedup depends on hardware sparse computation support
+TIP **Production Context**: Apple's Neural Engine, Google's Edge TPU, and mobile inference frameworks heavily rely on sparsity for efficient computation
+SPEED **Performance Note**: 70% sparsity provides 3-5x model compression with <2% accuracy loss, but speedup depends on hardware sparse computation support
 """
 
 # %% nbgrader={"grade": false, "grade_id": "compression-imports", "locked": false, "schema_version": 3, "solution": false, "task": false}
@@ -114,42 +114,42 @@ Before implementing pruning, let's understand the fundamental insight: **neural 
     Weight Magnitude Distribution in Typical Neural Network:
     
     Count
-      ↑
-   5000│ ████                        ← Many small weights
-   4000│ █████
-   3000│ ██████
-   2000│ ███████
-   1000│ ████████ ██                 ← Few large weights
-      0│ ████████████████████████
-        └────────────────────────→ Weight Magnitude
+      ^
+   5000| ████                        <- Many small weights
+   4000| █████
+   3000| ██████
+   2000| ███████
+   1000| ████████ ██                 <- Few large weights
+      0| ████████████████████████
+        +-------------------------> Weight Magnitude
         0.0  0.1  0.2  0.3  0.4  0.5
         
     The Natural Sparsity Pattern:
-    ┌─────────────────────────────────────────┐
-    │ 80% of weights have magnitude < 0.1     │ ← Can be pruned
-    │ 15% of weights have magnitude 0.1-0.3   │ ← Moderately important
-    │  5% of weights have magnitude > 0.3     │ ← Critical weights
-    └─────────────────────────────────────────┘
+    +-----------------------------------------+
+    | 80% of weights have magnitude < 0.1     | <- Can be pruned
+    | 15% of weights have magnitude 0.1-0.3   | <- Moderately important
+    |  5% of weights have magnitude > 0.3     | <- Critical weights
+    +-----------------------------------------+
 ```
 
 ### Pruning Strategy Visualization
 
 ```
     Original Dense Network:
-    ┌─────┬─────┬─────┬─────┐
-    │ 0.8 │ 0.1 │ 0.05│ 0.3 │  ← All weights present
-    │ 0.02│ 0.7 │ 0.4 │ 0.09│
-    │ 0.6 │ 0.03│ 0.5 │ 0.2 │
-    │ 0.04│ 0.9 │ 0.06│ 0.1 │
-    └─────┴─────┴─────┴─────┘
+    +-----+-----+-----+-----+
+    | 0.8 | 0.1 | 0.05| 0.3 |  <- All weights present
+    | 0.02| 0.7 | 0.4 | 0.09|
+    | 0.6 | 0.03| 0.5 | 0.2 |
+    | 0.04| 0.9 | 0.06| 0.1 |
+    +-----+-----+-----+-----+
     
     After 70% Magnitude-Based Pruning:
-    ┌─────┬─────┬─────┬─────┐
-    │ 0.8 │  0  │  0  │ 0.3 │  ← Small weights → 0
-    │  0  │ 0.7 │ 0.4 │  0  │
-    │ 0.6 │  0  │ 0.5 │ 0.2 │
-    │  0  │ 0.9 │  0  │  0  │
-    └─────┴─────┴─────┴─────┘
+    +-----+-----+-----+-----+
+    | 0.8 |  0  |  0  | 0.3 |  <- Small weights -> 0
+    |  0  | 0.7 | 0.4 |  0  |
+    | 0.6 |  0  | 0.5 | 0.2 |
+    |  0  | 0.9 |  0  |  0  |
+    +-----+-----+-----+-----+
     
     Result: 70% sparsity, 95%+ accuracy preserved!
 ```
@@ -186,7 +186,7 @@ def analyze_weight_redundancy(weights: np.ndarray, title: str = "Weight Analysis
     for p in percentiles:
         val = np.percentile(w_abs, p)
         smaller_count = np.sum(w_abs <= val)
-        print(f"  {p:2d}%: {val:.6f} ({smaller_count:,} weights ≤ this value)")
+        print(f"  {p:2d}%: {val:.6f} ({smaller_count:,} weights <= this value)")
     
     # Show natural sparsity (near-zero weights)
     zero_threshold = w_abs.mean() * NEAR_ZERO_THRESHOLD_RATIO  # Threshold for "near-zero" weights
@@ -233,7 +233,7 @@ def test_redundancy_analysis():
     assert conv_stats['natural_sparsity'] > 0, "Should detect some natural sparsity"
     assert linear_stats['natural_sparsity'] > 0, "Should detect some natural sparsity"
     
-    print("✅ Weight redundancy analysis test passed!")
+    print("PASS Weight redundancy analysis test passed!")
 
 test_redundancy_analysis()
 
@@ -248,34 +248,34 @@ The simplest and most effective pruning technique: **remove the smallest weights
 ```
     Step 1: Calculate Weight Magnitudes
     Original Weights:        Absolute Values:
-    ┌─────┬─────┬─────┐     ┌─────┬─────┬─────┐
-    │-0.8 │ 0.1 │-0.05│ →   │ 0.8 │ 0.1 │ 0.05│
-    │ 0.02│-0.7 │ 0.4 │     │ 0.02│ 0.7 │ 0.4 │
-    │-0.6 │ 0.03│ 0.5 │     │ 0.6 │ 0.03│ 0.5 │
-    └─────┴─────┴─────┘     └─────┴─────┴─────┘
+    +-----+-----+-----+     +-----+-----+-----+
+    |-0.8 | 0.1 |-0.05| ->   | 0.8 | 0.1 | 0.05|
+    | 0.02|-0.7 | 0.4 |     | 0.02| 0.7 | 0.4 |
+    |-0.6 | 0.03| 0.5 |     | 0.6 | 0.03| 0.5 |
+    +-----+-----+-----+     +-----+-----+-----+
     
     Step 2: Sort and Find Threshold (70% sparsity)
     Sorted magnitudes: [0.02, 0.03, 0.05, 0.1, 0.4, 0.5, 0.6, 0.7, 0.8]
     70th percentile threshold: 0.4
-                             ↑
-                    Keep weights ≥ 0.4
+                             ^
+                    Keep weights >= 0.4
     
     Step 3: Create Binary Mask
-    Magnitude ≥ threshold:    Binary Mask:
-    ┌─────┬─────┬─────┐     ┌─────┬─────┬─────┐
-    │  ✓  │  ✗  │  ✗  │ →   │  1  │  0  │  0  │
-    │  ✗  │  ✓  │  ✓  │     │  0  │  1  │  1  │
-    │  ✓  │  ✗  │  ✓  │     │  1  │  0  │  1  │
-    └─────┴─────┴─────┘     └─────┴─────┴─────┘
+    Magnitude >= threshold:    Binary Mask:
+    +-----+-----+-----+     +-----+-----+-----+
+    |  OK  |  ✗  |  ✗  | ->   |  1  |  0  |  0  |
+    |  ✗  |  OK  |  OK  |     |  0  |  1  |  1  |
+    |  OK  |  ✗  |  OK  |     |  1  |  0  |  1  |
+    +-----+-----+-----+     +-----+-----+-----+
     
     Step 4: Apply Mask (Element-wise Multiplication)
-    Original × Mask = Pruned:
-    ┌─────┬─────┬─────┐     ┌─────┬─────┬─────┐
-    │-0.8 │ 0.1 │-0.05│  ×  │  1  │  0  │  0  │  =  ┌─────┬─────┬─────┐
-    │ 0.02│-0.7 │ 0.4 │     │  0  │  1  │  1  │     │-0.8 │  0  │  0  │
-    │-0.6 │ 0.03│ 0.5 │     │  1  │  0  │  1  │     │  0  │-0.7 │ 0.4 │
-    └─────┴─────┴─────┘     └─────┴─────┴─────┘     │-0.6 │  0  │ 0.5 │
-                                                    └─────┴─────┴─────┘
+    Original * Mask = Pruned:
+    +-----+-----+-----+     +-----+-----+-----+
+    |-0.8 | 0.1 |-0.05|  *  |  1  |  0  |  0  |  =  +-----+-----+-----+
+    | 0.02|-0.7 | 0.4 |     |  0  |  1  |  1  |     |-0.8 |  0  |  0  |
+    |-0.6 | 0.03| 0.5 |     |  1  |  0  |  1  |     |  0  |-0.7 | 0.4 |
+    +-----+-----+-----+     +-----+-----+-----+     |-0.6 |  0  | 0.5 |
+                                                    +-----+-----+-----+
 ```
 
 ### Magnitude Pruning Algorithm
@@ -448,7 +448,7 @@ def test_magnitude_pruning():
         [0.3, 0.02, 0.7]
     ])
     
-    # Test 50% sparsity (should keep 4.5 ≈ 4-5 weights)
+    # Test 50% sparsity (should keep 4.5 ~= 4-5 weights)
     pruned, mask, stats = pruner.prune(weights, sparsity=0.5)
     
     print(f"Original weights:")
@@ -482,7 +482,7 @@ def test_magnitude_pruning():
     assert 'mean_relative_error' in accuracy_impact, "Should measure relative error"
     assert accuracy_impact['weight_norm_preservation'] > 0, "Should preserve some weight norm"
     
-    print("✅ Magnitude-based pruning test passed!")
+    print("PASS Magnitude-based pruning test passed!")
 
 test_magnitude_pruning()
 
@@ -497,43 +497,43 @@ So far we've implemented **unstructured pruning** - removing individual weights 
 ```
     UNSTRUCTURED PRUNING (Individual Weight Removal):
     
-    Original 4×4 Weight Matrix:
-    ┌─────┬─────┬─────┬─────┐
-    │ 0.8 │ 0.1 │ 0.05│ 0.3 │  
-    │ 0.02│ 0.7 │ 0.4 │ 0.09│  
-    │ 0.6 │ 0.03│ 0.5 │ 0.2 │  
-    │ 0.04│ 0.9 │ 0.06│ 0.1 │  
-    └─────┴─────┴─────┴─────┘
+    Original 4*4 Weight Matrix:
+    +-----+-----+-----+-----+
+    | 0.8 | 0.1 | 0.05| 0.3 |  
+    | 0.02| 0.7 | 0.4 | 0.09|  
+    | 0.6 | 0.03| 0.5 | 0.2 |  
+    | 0.04| 0.9 | 0.06| 0.1 |  
+    +-----+-----+-----+-----+
     
     After 50% Unstructured Pruning (irregular pattern):
-    ┌─────┬─────┬─────┬─────┐
-    │ 0.8 │  0  │  0  │ 0.3 │  ← Scattered zeros
-    │  0  │ 0.7 │ 0.4 │  0  │  ← Hard for hardware to optimize
-    │ 0.6 │  0  │ 0.5 │ 0.2 │  ← Requires sparse kernels
-    │  0  │ 0.9 │  0  │  0  │  ← Irregular memory access
-    └─────┴─────┴─────┴─────┘
+    +-----+-----+-----+-----+
+    | 0.8 |  0  |  0  | 0.3 |  <- Scattered zeros
+    |  0  | 0.7 | 0.4 |  0  |  <- Hard for hardware to optimize
+    | 0.6 |  0  | 0.5 | 0.2 |  <- Requires sparse kernels
+    |  0  | 0.9 |  0  |  0  |  <- Irregular memory access
+    +-----+-----+-----+-----+
     
     
     STRUCTURED PRUNING (Channel/Filter Removal):
     
-    Conv Layer: 4 filters × 3 input channels:
+    Conv Layer: 4 filters * 3 input channels:
     Filter 0:  Filter 1:  Filter 2:  Filter 3:
-    ┌─────┐    ┌─────┐    ┌─────┐    ┌─────┐
-    │ 0.8 │    │ 0.1 │    │ 0.05│    │ 0.3 │   
-    │ 0.2 │    │ 0.7 │    │ 0.4 │    │ 0.9 │   ← L2 norms: [1.2, 0.9, 0.6, 1.1]
-    │ 0.6 │    │ 0.3 │    │ 0.5 │    │ 0.7 │   
-    └─────┘    └─────┘    └─────┘    └─────┘
-                   ↓           ↓
+    +-----+    +-----+    +-----+    +-----+
+    | 0.8 |    | 0.1 |    | 0.05|    | 0.3 |   
+    | 0.2 |    | 0.7 |    | 0.4 |    | 0.9 |   <- L2 norms: [1.2, 0.9, 0.6, 1.1]
+    | 0.6 |    | 0.3 |    | 0.5 |    | 0.7 |   
+    +-----+    +-----+    +-----+    +-----+
+                   v           v
                 Remove    Remove
               (weak)    (weak)
     
     After 50% Structured Pruning (remove 2 weakest filters):
     Filter 0:            Filter 3:
-    ┌─────┐              ┌─────┐
-    │ 0.8 │              │ 0.3 │     ← Clean matrix reduction
-    │ 0.2 │              │ 0.9 │     ← Dense computation friendly
-    │ 0.6 │              │ 0.7 │     ← No sparse kernels needed
-    └─────┘              └─────┘     ← Regular memory access
+    +-----+              +-----+
+    | 0.8 |              | 0.3 |     <- Clean matrix reduction
+    | 0.2 |              | 0.9 |     <- Dense computation friendly
+    | 0.6 |              | 0.7 |     <- No sparse kernels needed
+    +-----+              +-----+     <- Regular memory access
 ```
 
 ### Hardware Efficiency Comparison
@@ -542,21 +542,21 @@ So far we've implemented **unstructured pruning** - removing individual weights 
     COMPUTATION PATTERNS:
     
     Unstructured (50% sparse):          Structured (50% fewer filters):
-    ┌─────────────────────────┐         ┌─────────────────────────┐
-    │ for i in range(rows):   │         │ for i in range(rows/2): │
-    │   for j in range(cols): │         │   for j in range(cols): │
-    │     if mask[i,j]:       │ ←─┐     │     result += data[i,j] │
-    │       result += data[i,j]│   │     └─────────────────────────┘
-    │     # else: skip        │   │          ↑
-    └─────────────────────────┘   │     Dense, vectorized
-             ↑                    │     
-        Sparse, branching         │
-        Bad for SIMD              │
-                                  │
-    Memory Access Pattern:        │     Memory Access Pattern:
-    [✓][✗][✓][✗][✓][✗][✗][✓]     │     [✓✓✓✓][✓✓✓✓] ← Contiguous
-         ↑ Irregular              │              ↑ Cache-friendly
-         Bad for cache            │
+    +-------------------------+         +-------------------------+
+    | for i in range(rows):   |         | for i in range(rows/2): |
+    |   for j in range(cols): |         |   for j in range(cols): |
+    |     if mask[i,j]:       | <--+     |     result += data[i,j] |
+    |       result += data[i,j]|   |     +-------------------------+
+    |     # else: skip        |   |          ^
+    +-------------------------+   |     Dense, vectorized
+             ^                    |     
+        Sparse, branching         |
+        Bad for SIMD              |
+                                  |
+    Memory Access Pattern:        |     Memory Access Pattern:
+    [OK][✗][OK][✗][OK][✗][✗][OK]     |     [OKOKOKOK][OKOKOKOK] <- Contiguous
+         ^ Irregular              |              ^ Cache-friendly
+         Bad for cache            |
 ```
 
 ### Structured Pruning Benefits:
@@ -657,7 +657,7 @@ def compare_structured_vs_unstructured(conv_weights: np.ndarray, sparsity: float
     print(f"  Compression: {structured_stats['compression_ratio']:.1f}x")
     print(f"  Filters removed: {structured_stats['pruned_filters']}")
     
-    print(f"\n💡 Key Differences:")
+    print(f"\nTIP Key Differences:")
     print(f"   • Unstructured: Irregular sparsity, requires sparse kernels")
     print(f"   • Structured: Regular reduction, standard dense computation")
     print(f"   • Hardware: Structured pruning provides actual speedup")
@@ -720,7 +720,7 @@ def test_structured_pruning():
     assert unstructured_result.shape == conv_weights.shape, "Unstructured keeps same shape"
     assert structured_result.shape[0] < conv_weights.shape[0], "Structured reduces filters"
     
-    print("✅ Structured pruning test passed!")
+    print("PASS Structured pruning test passed!")
 
 test_structured_pruning()
 
@@ -736,17 +736,17 @@ Pruning creates sparse networks, but how do we compute with them efficiently? We
     DENSE COMPUTATION (Standard):
     
     Input Vector:     Weight Matrix:        Output:
-    ┌─────┐          ┌─────┬─────┬─────┐    ┌─────┐
-    │  2  │          │ 0.8 │  0  │ 0.3 │    │     │
-    │  3  │    ×     │  0  │ 0.7 │ 0.4 │  = │  ?  │
-    │  1  │          │ 0.6 │  0  │ 0.5 │    │     │
-    └─────┘          └─────┴─────┴─────┘    └─────┘
+    +-----+          +-----+-----+-----+    +-----+
+    |  2  |          | 0.8 |  0  | 0.3 |    |     |
+    |  3  |    *     |  0  | 0.7 | 0.4 |  = |  ?  |
+    |  1  |          | 0.6 |  0  | 0.5 |    |     |
+    +-----+          +-----+-----+-----+    +-----+
     
     Standard Matrix Multiply (wastes work on zeros):
-    output[0] = 2×0.8 + 3×0 + 1×0.3     = 1.6 + 0 + 0.3 = 1.9
-    output[1] = 2×0 + 3×0.7 + 1×0.4      = 0 + 2.1 + 0.4 = 2.5  
-    output[2] = 2×0.6 + 3×0 + 1×0.5      = 1.2 + 0 + 0.5 = 1.7
-                 ↑      ↑      ↑
+    output[0] = 2*0.8 + 3*0 + 1*0.3     = 1.6 + 0 + 0.3 = 1.9
+    output[1] = 2*0 + 3*0.7 + 1*0.4      = 0 + 2.1 + 0.4 = 2.5  
+    output[2] = 2*0.6 + 3*0 + 1*0.5      = 1.2 + 0 + 0.5 = 1.7
+                 ^      ^      ^
             Wasted   Useful  Useful
     
     
@@ -756,7 +756,7 @@ Pruning creates sparse networks, but how do we compute with them efficiently? We
     values:  [0.8, 0.3, 0.7, 0.4, 0.6, 0.5]
     cols:    [ 0,   2,   1,   2,   0,   2 ]
     row_ptr: [ 0,   2,   4,   6 ]
-             ↑    ↑    ↑    ↑
+             ^    ^    ^    ^
            row0 row1 row2  end
     
     Optimized Sparse Multiply (skip zeros):
@@ -772,18 +772,18 @@ Pruning creates sparse networks, but how do we compute with them efficiently? We
 ### Memory Layout Comparison
 
 ```
-    DENSE STORAGE (4×4 matrix, 50% sparse):
-    ┌─────┬─────┬─────┬─────┐
-    │ 0.8 │ 0.0 │ 0.0 │ 0.3 │  Memory: 16 floats × 4 bytes = 64 bytes
-    │ 0.0 │ 0.7 │ 0.4 │ 0.0 │  Wasted: 8 zeros × 4 bytes = 32 bytes (50%)
-    │ 0.6 │ 0.0 │ 0.5 │ 0.2 │  Operations: 16 multiply-adds
-    │ 0.0 │ 0.9 │ 0.0 │ 0.0 │  
-    └─────┴─────┴─────┴─────┘
+    DENSE STORAGE (4*4 matrix, 50% sparse):
+    +-----+-----+-----+-----+
+    | 0.8 | 0.0 | 0.0 | 0.3 |  Memory: 16 floats * 4 bytes = 64 bytes
+    | 0.0 | 0.7 | 0.4 | 0.0 |  Wasted: 8 zeros * 4 bytes = 32 bytes (50%)
+    | 0.6 | 0.0 | 0.5 | 0.2 |  Operations: 16 multiply-adds
+    | 0.0 | 0.9 | 0.0 | 0.0 |  
+    +-----+-----+-----+-----+
     
     SPARSE STORAGE (CSR format):
-    values:  [0.8, 0.3, 0.7, 0.4, 0.6, 0.5, 0.2, 0.9] = 8 × 4 = 32 bytes
-    columns: [ 0,   3,   1,   2,   0,   2,   3,   1 ] = 8 × 4 = 32 bytes  
-    row_ptr: [ 0,   2,   4,   7,   8 ]               = 5 × 4 = 20 bytes
+    values:  [0.8, 0.3, 0.7, 0.4, 0.6, 0.5, 0.2, 0.9] = 8 * 4 = 32 bytes
+    columns: [ 0,   3,   1,   2,   0,   2,   3,   1 ] = 8 * 4 = 32 bytes  
+    row_ptr: [ 0,   2,   4,   7,   8 ]               = 5 * 4 = 20 bytes
                                                     Total: 84 bytes
     
     Overhead: 84 vs 64 bytes (+31%) BUT only 8 operations vs 16 (-50%)
@@ -1045,7 +1045,7 @@ def test_sparse_neural_network():
     assert benchmark['dense_ops'] == expected_dense_ops, "Linear op count incorrect"
     assert benchmark['sparse_ops'] < benchmark['dense_ops'], "Sparse should use fewer ops"
     
-    print("✅ Sparse neural network test passed!")
+    print("PASS Sparse neural network test passed!")
 
 test_sparse_neural_network()
 
@@ -1059,27 +1059,27 @@ Now let's build a complete model compression pipeline that can prune entire neur
 
 ```
     PHASE 1: MODEL ANALYSIS
-    ┌─────────────────────────────────────────────────┐
-    │           Original Dense Model                  │
-    ├─────────────┬─────────────┬─────────────────────┤
-    │   Conv1     │    Conv2    │      Dense1         │
-    │  32×3×3×3   │  64×32×3×3  │    512×1024         │
-    │   864 params│  18,432 p   │   524,288 params    │
-    │   Type: Conv│  Type: Conv │   Type: Dense       │
-    │   Sens: Low │  Sens: Med  │   Sens: High        │
-    └─────────────┴─────────────┴─────────────────────┘
-              ↓           ↓              ↓
+    +-------------------------------------------------+
+    |           Original Dense Model                  |
+    +-------------+-------------+---------------------┤
+    |   Conv1     |    Conv2    |      Dense1         |
+    |  32*3*3*3   |  64*32*3*3  |    512*1024         |
+    |   864 params|  18,432 p   |   524,288 params    |
+    |   Type: Conv|  Type: Conv |   Type: Dense       |
+    |   Sens: Low |  Sens: Med  |   Sens: High        |
+    +-------------+-------------+---------------------+
+              v           v              v
     Recommend: 50%   Recommend: 60%  Recommend: 80%
     
     PHASE 2: LAYER-WISE PRUNING
-    ┌─────────────────────────────────────────────────┐
-    │          Compressed Sparse Model                │
-    ├─────────────┬─────────────┬─────────────────────┤
-    │   Conv1     │    Conv2    │      Dense1         │
-    │  432 params │  7,373 p    │   104,858 params    │
-    │  50% sparse │  60% sparse │   80% sparse        │
-    │  ✓ 2x less  │  ✓ 2.5x less│   ✓ 5x less        │
-    └─────────────┴─────────────┴─────────────────────┘
+    +-------------------------------------------------+
+    |          Compressed Sparse Model                |
+    +-------------+-------------+---------------------┤
+    |   Conv1     |    Conv2    |      Dense1         |
+    |  432 params |  7,373 p    |   104,858 params    |
+    |  50% sparse |  60% sparse |   80% sparse        |
+    |  OK 2x less  |  OK 2.5x less|   OK 5x less        |
+    +-------------+-------------+---------------------+
     
     COMPRESSION SUMMARY:
     Original:  864 + 18,432 + 524,288 = 543,584 total params
@@ -1092,20 +1092,20 @@ Now let's build a complete model compression pipeline that can prune entire neur
 ```
     COMPRESSION QUALITY SCORECARD:
     
-    Layer    │ Weight Error │ Norm Ratio │ Quality Score │ Status
-    ─────────┼──────────────┼────────────┼───────────────┼────────
-    Conv1    │   0.000234   │   0.876    │    0.845      │   ✅ Good
-    Conv2    │   0.000567   │   0.823    │    0.789      │   ✅ Good  
-    Dense1   │   0.001234   │   0.734    │    0.692      │   ⚠️ OK
-    ─────────┼──────────────┼────────────┼───────────────┼────────
-    Overall  │      -       │     -      │    0.775      │   ✅ Good
+    Layer    | Weight Error | Norm Ratio | Quality Score | Status
+    ---------+--------------+------------+---------------+--------
+    Conv1    |   0.000234   |   0.876    |    0.845      |   PASS Good
+    Conv2    |   0.000567   |   0.823    |    0.789      |   PASS Good  
+    Dense1   |   0.001234   |   0.734    |    0.692      |   WARNING️ OK
+    ---------+--------------+------------+---------------+--------
+    Overall  |      -       |     -      |    0.775      |   PASS Good
     
     Quality Score Calculation:
-    score = norm_preservation × (1 - relative_error)
+    score = norm_preservation * (1 - relative_error)
     
-    ✅ Excellent: > 0.8    (minimal degradation)
-    ⚠️  Acceptable: 0.6-0.8 (moderate degradation)  
-    ❌ Poor: < 0.6         (significant degradation)
+    PASS Excellent: > 0.8    (minimal degradation)
+    WARNING️  Acceptable: 0.6-0.8 (moderate degradation)  
+    FAIL Poor: < 0.6         (significant degradation)
 ```
 
 ### Production Compression Pipeline:
@@ -1200,11 +1200,11 @@ def _calculate_quality_score(norm_preservation: float, mean_error: float, origin
 def _get_quality_assessment(quality_score: float) -> str:
     """Get quality assessment string based on score."""
     if quality_score > EXCELLENT_QUALITY_THRESHOLD:
-        return "✅ Excellent compression quality!"
+        return "PASS Excellent compression quality!"
     elif quality_score > ACCEPTABLE_QUALITY_THRESHOLD:
-        return "⚠️  Acceptable compression quality"  
+        return "WARNING️  Acceptable compression quality"  
     else:
-        return "❌ Poor compression quality - consider lower sparsity"
+        return "FAIL Poor compression quality - consider lower sparsity"
 
 class ModelCompressor:
     """
@@ -1249,7 +1249,7 @@ class ModelCompressor:
             'recommendations': {}
         }
         
-        print("🔍 Model Compression Analysis")
+        print("MAGNIFY Model Compression Analysis")
         print("=" * 50)
         print("Layer        | Type    | Parameters | Natural Sparsity | Recommendation")
         print("-" * 70)
@@ -1348,7 +1348,7 @@ class ModelCompressor:
             'layer_sparsities': layer_sparsities
         }
         
-        print(f"\n✅ Model Compression Complete!")
+        print(f"\nPASS Model Compression Complete!")
         print(f"   Original parameters: {total_original_params:,}")
         print(f"   Remaining parameters: {total_remaining_params:,}")
         print(f"   Overall sparsity: {overall_sparsity:.1%}")
@@ -1371,7 +1371,7 @@ class ModelCompressor:
             'quality_score': 0.0
         }
         
-        print(f"\n✅ Validating Compression Quality")
+        print(f"\nPASS Validating Compression Quality")
         print("=" * 50)
         print("Layer        | Weight Error | Norm Preservation | Quality")
         print("-" * 55)
@@ -1418,7 +1418,7 @@ class ModelCompressor:
         }
         validation_results['quality_score'] = overall_quality_score
         
-        print(f"\n🎯 Overall Quality Score: {overall_quality_score:.3f}")
+        print(f"\nTARGET Overall Quality Score: {overall_quality_score:.3f}")
         print(f"   {_get_quality_assessment(overall_quality_score)}")
         
         return validation_results
@@ -1441,8 +1441,8 @@ def test_compression_pipeline():
     model_weights = {
         'conv1': np.random.normal(0, 0.02, (32, 3, 3, 3)),    # Conv: 32 filters, 3 input channels
         'conv2': np.random.normal(0, 0.02, (64, 32, 3, 3)),   # Conv: 64 filters, 32 input channels
-        'linear1': np.random.normal(0, 0.01, (512, 1024)),        # Linear: 512 → 1024
-        'linear2': np.random.normal(0, 0.01, (10, 512)),          # Linear: 10 → 512 (output layer)
+        'linear1': np.random.normal(0, 0.01, (512, 1024)),        # Linear: 512 -> 1024
+        'linear2': np.random.normal(0, 0.01, (10, 512)),          # Linear: 10 -> 512 (output layer)
     }
     
     # Create compressor
@@ -1507,7 +1507,7 @@ def test_compression_pipeline():
         # Allow some tolerance in sparsity
         assert abs(sparsity - expected_sparsity) < 0.1, f"{layer_name} sparsity mismatch"
     
-    print("✅ Model compression pipeline test passed!")
+    print("PASS Model compression pipeline test passed!")
 
 test_compression_pipeline()
 
@@ -1522,57 +1522,57 @@ Let's analyze compression from a systems engineering perspective, measuring the 
 ```
     COMPRESSION BENEFITS VISUALIZATION:
     
-    ┌──────────────────────────────────────────────────────────────┐
-    │                     MODEL SIZE IMPACT                        │
-    ├──────────────────────────────────────────────────────────────┤
-    │ Dense Model:     [████████████████████] 200MB     │
-    │ 50% Sparse:      [██████████░░░░░░░░░░] 100MB     │  
-    │ 70% Sparse:      [██████░░░░░░░░░░░░░░]  60MB     │
-    │ 90% Sparse:      [██░░░░░░░░░░░░░░░░░░]  20MB     │
-    └──────────────────────────────────────────────────────────────┘
+    +--------------------------------------------------------------+
+    |                     MODEL SIZE IMPACT                        |
+    +--------------------------------------------------------------┤
+    | Dense Model:     [████████████████████] 200MB     |
+    | 50% Sparse:      [██████████░░░░░░░░░░] 100MB     |  
+    | 70% Sparse:      [██████░░░░░░░░░░░░░░]  60MB     |
+    | 90% Sparse:      [██░░░░░░░░░░░░░░░░░░]  20MB     |
+    +--------------------------------------------------------------+
     
-    ┌──────────────────────────────────────────────────────────────┐
-    │                   INFERENCE SPEED IMPACT                     │
-    ├──────────────────────────────────────────────────────────────┤
-    │ Dense (50ms):    [█████████████████████████] 50ms    │
-    │ Sparse (20ms):   [██████████░░░░░░░░░░░░░░░] 20ms    │
-    │                 2.5x faster inference!                   │
-    └──────────────────────────────────────────────────────────────┘
+    +--------------------------------------------------------------+
+    |                   INFERENCE SPEED IMPACT                     |
+    +--------------------------------------------------------------┤
+    | Dense (50ms):    [█████████████████████████] 50ms    |
+    | Sparse (20ms):   [██████████░░░░░░░░░░░░░░░] 20ms    |
+    |                 2.5x faster inference!                   |
+    +--------------------------------------------------------------+
     
-    ┌──────────────────────────────────────────────────────────────┐
-    │                    DEPLOYMENT ENABLEMENT                     │
-    ├──────────────────────────────────────────────────────────────┤
-    │ Cloud Server:   ✓ Can run any model size                 │
-    │ Mobile Phone:   ✗ Dense, ✓ 70% sparse                     │
-    │ IoT Device:     ✗ Dense, ✗ 50% sparse, ✓ 90% sparse       │
-    │ Smartwatch:     ✗ All except extreme compression            │
-    └──────────────────────────────────────────────────────────────┘
+    +--------------------------------------------------------------+
+    |                    DEPLOYMENT ENABLEMENT                     |
+    +--------------------------------------------------------------┤
+    | Cloud Server:   OK Can run any model size                 |
+    | Mobile Phone:   ✗ Dense, OK 70% sparse                     |
+    | IoT Device:     ✗ Dense, ✗ 50% sparse, OK 90% sparse       |
+    | Smartwatch:     ✗ All except extreme compression            |
+    +--------------------------------------------------------------+
 ```
 
 ### Edge AI Deployment Pipeline
 
 ```
-    COMPRESSION → DEPLOYMENT PIPELINE:
+    COMPRESSION -> DEPLOYMENT PIPELINE:
     
-    ┌──────────────────────────────────────────────────────────────────────┐
-    │  PHASE 1: COMPRESSION     PHASE 2: OPTIMIZATION    PHASE 3: DEPLOYMENT   │
-    ├────────────────────────┬───────────────────────┬───────────────────────┤
-    │  Dense Model (200MB)    │  Pruned Model (60MB)    │  Mobile App            │
-    │         ↓               │         ↓               │                       │
-    │  [███████████]       │  [████░░░░░░░]       │  📱 Real-time AI        │
-    │         ↓               │         ↓               │  🔋 Privacy-first       │
-    │  70% Magnitude Pruning  │  Hardware Optimization  │  ⚡ Low latency          │
-    │  + Structured Removal   │  + Quantization (8-bit) │  🔋 Always available    │
-    │  + Quality Validation   │  + Sparse Kernels       │                       │
-    └────────────────────────┴───────────────────────┴───────────────────────┘
+    +----------------------------------------------------------------------+
+    |  PHASE 1: COMPRESSION     PHASE 2: OPTIMIZATION    PHASE 3: DEPLOYMENT   |
+    +------------------------+-----------------------+-----------------------┤
+    |  Dense Model (200MB)    |  Pruned Model (60MB)    |  Mobile App            |
+    |         v               |         v               |                       |
+    |  [███████████]       |  [████░░░░░░░]       |  📱 Real-time AI        |
+    |         v               |         v               |  🔋 Privacy-first       |
+    |  70% Magnitude Pruning  |  Hardware Optimization  |  SPEED Low latency          |
+    |  + Structured Removal   |  + Quantization (8-bit) |  🔋 Always available    |
+    |  + Quality Validation   |  + Sparse Kernels       |                       |
+    +------------------------+-----------------------+-----------------------+
     
     OUTCOME: AI that was impossible becomes possible!
 ```
 
 ### ML Systems Analysis: Why Pruning Enables Edge AI
 
-**Memory Complexity**: O(N × sparsity) storage reduction where N = original parameters
-**Computational Complexity**: Theoretical O(N × sparsity) speedup, actual depends on hardware
+**Memory Complexity**: O(N * sparsity) storage reduction where N = original parameters
+**Computational Complexity**: Theoretical O(N * sparsity) speedup, actual depends on hardware
 **Cache Efficiency**: Smaller models fit in cache, reducing memory bandwidth bottlenecks  
 **Energy Efficiency**: Fewer operations = lower power consumption for mobile devices
 **Deployment Enablement**: Makes models fit where they couldn't before
@@ -1580,12 +1580,12 @@ Let's analyze compression from a systems engineering perspective, measuring the 
 
 # %% nbgrader={"grade": false, "grade_id": "compression-systems-analysis", "locked": false, "schema_version": 3, "solution": true, "task": false}
 #| export
-# ✅ IMPLEMENTATION CHECKPOINT: Ensure compression pipeline is complete
+# PASS IMPLEMENTATION CHECKPOINT: Ensure compression pipeline is complete
 
-# 🤔 PREDICTION: How much memory do you think a 5M parameter model uses?
+# THINK PREDICTION: How much memory do you think a 5M parameter model uses?
 # Dense model: _______ MB, 80% sparse model: _______ MB
 
-# 🔍 SYSTEMS INSIGHT #1: Memory Profiling Analysis
+# MAGNIFY SYSTEMS INSIGHT #1: Memory Profiling Analysis
 def profile_compression_memory():
     """
     Profile memory usage patterns during model compression.
@@ -1647,7 +1647,7 @@ def profile_compression_memory():
     
     tracemalloc.stop()
     
-    # 💡 WHY THIS MATTERS: Memory is often the limiting factor for edge deployment
+    # TIP WHY THIS MATTERS: Memory is often the limiting factor for edge deployment
     # A 200MB model won't fit on a 128MB mobile device, but a 40MB compressed model will!
     
     return {
@@ -1659,15 +1659,15 @@ def profile_compression_memory():
         'size_reduction': original_size_mb / compressed_size_mb
     }
 
-# ✅ IMPLEMENTATION CHECKPOINT: Memory profiling analysis complete
+# PASS IMPLEMENTATION CHECKPOINT: Memory profiling analysis complete
 
-# 🤔 PREDICTION: Which device constraint is more limiting - memory or compute?
+# THINK PREDICTION: Which device constraint is more limiting - memory or compute?
 # Your guess: Memory / Compute (circle one)
 
-# 🔍 SYSTEMS INSIGHT #2: Deployment Constraint Analysis
+# MAGNIFY SYSTEMS INSIGHT #2: Deployment Constraint Analysis
 def analyze_deployment_scenarios():
     """Analyze how compression enables different deployment scenarios."""
-    print("\n🚀 Compression Deployment Impact Analysis")
+    print("\nROCKET Compression Deployment Impact Analysis")
     print("=" * 60)
     
     # Define deployment constraints
@@ -1742,37 +1742,37 @@ def analyze_deployment_scenarios():
             fits_mem = config['size_mb'] <= mem_limit
             fits_comp = config['gflops'] <= compute_limit
             if fits_mem and fits_comp:
-                status = "✅"
+                status = "PASS"
             elif fits_mem:
-                status = "⚡"  # Memory OK, compute too high
+                status = "SPEED"  # Memory OK, compute too high
             elif fits_comp:
                 status = "💾"  # Compute OK, memory too high
             else:
-                status = "❌"
+                status = "FAIL"
             fit_status.append(status)
         
         print(f"{name:14} | {mem_limit:4d}MB | {compute_limit:5.1f}G | "
               f"{fit_status[0]:3} | {fit_status[1]:3} | {fit_status[2]:3} | {fit_status[3]:3} | {best_option}")
     
-    print(f"\n💡 Key Insights:")
+    print(f"\nTIP Key Insights:")
     print(f"   • Compression often determines deployment feasibility")
     print(f"   • Edge devices require 70-90% sparsity for deployment")
     print(f"   • Mobile devices can use moderate compression (50-70%)")
     print(f"   • Power constraints favor sparse models (fewer operations)")
     print(f"   • Memory limits are often more restrictive than compute limits")
     
-    # 💡 WHY THIS MATTERS: Compression is often about enabling deployment, not optimizing it
+    # TIP WHY THIS MATTERS: Compression is often about enabling deployment, not optimizing it
     # Without compression, many edge AI applications simply wouldn't be possible!
 
-# ✅ IMPLEMENTATION CHECKPOINT: Deployment analysis complete
+# PASS IMPLEMENTATION CHECKPOINT: Deployment analysis complete
 
-# 🤔 PREDICTION: Will 90% sparsity give 10x speedup in practice?
+# THINK PREDICTION: Will 90% sparsity give 10x speedup in practice?
 # Your prediction: ___x actual speedup (vs 10x theoretical)
 
-# 🔍 SYSTEMS INSIGHT #3: Sparse Computation Reality Check
+# MAGNIFY SYSTEMS INSIGHT #3: Sparse Computation Reality Check
 def benchmark_sparse_inference_speedup():
     """Benchmark actual vs theoretical speedup from sparsity."""
-    print("\n⚡ Sparse Inference Speedup Analysis")
+    print("\nSPEED Sparse Inference Speedup Analysis")
     print("=" * 50)
     
     import time
@@ -1818,13 +1818,13 @@ def benchmark_sparse_inference_speedup():
         print(f"{size[0]}x{size[1]:4} | {sparsity:6.0%} | {theoretical:9.1f}x | "
               f"{actual:5.1f}x | {efficiency:8.1%} | {notes}")
     
-    print(f"\n🎯 Speedup Reality Check:")
+    print(f"\nTARGET Speedup Reality Check:")
     print(f"   • Theoretical speedup assumes perfect sparse hardware")
     print(f"   • Actual speedup limited by memory bandwidth and overhead")
     print(f"   • High sparsity (>80%) shows diminishing returns") 
     print(f"   • Production sparse hardware (GPUs, TPUs) achieve better efficiency")
     
-    # 💡 WHY THIS MATTERS: The gap between theoretical and actual speedup reveals
+    # TIP WHY THIS MATTERS: The gap between theoretical and actual speedup reveals
     # why structured pruning and specialized hardware are essential for production deployment!
 
 # %% [markdown]
@@ -1851,7 +1851,7 @@ def test_systems_analysis():
     benchmark_sparse_inference_speedup()
     
     # All functions should run without errors
-    print("✅ Systems analysis test passed!")
+    print("PASS Systems analysis test passed!")
 
 test_systems_analysis()
 
@@ -1866,23 +1866,23 @@ Let's explore how pruning is used in production ML systems and connect our imple
 ```
     PRODUCTION PRUNING LANDSCAPE:
     
-    ┌──────────────────────────────────────────────────────────────────────┐
-    │                      FRAMEWORKS & HARDWARE                      │
-    ├─────────────────────┬─────────────────────┬─────────────────────┤
-    │     RESEARCH         │    PRODUCTION       │    DEPLOYMENT       │
-    ├─────────────────────┼─────────────────────┼─────────────────────┤
-    │ 🔍 PyTorch              │ ⚙️ TensorRT           │ 📱 Mobile Apps       │
-    │   torch.nn.utils     │   Structured pruning │   Apple Neural Eng  │
-    │   .prune             │   2:4 sparsity       │   Google Edge TPU   │
-    ├─────────────────────┼─────────────────────┼─────────────────────┤
-    │ 🧠 TensorFlow          │ 🚀 OpenVINO           │ 🏠 Smart Home        │
-    │   Model Optimization │   Intel optimization │   Always-on AI      │
-    │   Gradual pruning    │   CPU/GPU sparse     │   Voice assistants  │
-    ├─────────────────────┼─────────────────────┼─────────────────────┤
-    │ 🔬 Our TinyTorch       │ 🎯 Production-Ready   │ 🏆 Success Stories    │
-    │   Educational impl.  │   Magnitude + struct │   Tesla Autopilot   │
-    │   Magnitude pruning  │   Quality validation │   Google Pixel      │
-    └─────────────────────┴─────────────────────┴─────────────────────┘
+    +----------------------------------------------------------------------+
+    |                      FRAMEWORKS & HARDWARE                      |
+    +---------------------+---------------------+---------------------┤
+    |     RESEARCH         |    PRODUCTION       |    DEPLOYMENT       |
+    +---------------------+---------------------+---------------------┤
+    | MAGNIFY PyTorch              | ⚙️ TensorRT           | 📱 Mobile Apps       |
+    |   torch.nn.utils     |   Structured pruning |   Apple Neural Eng  |
+    |   .prune             |   2:4 sparsity       |   Google Edge TPU   |
+    +---------------------+---------------------+---------------------┤
+    | 🧠 TensorFlow          | ROCKET OpenVINO           | 🏠 Smart Home        |
+    |   Model Optimization |   Intel optimization |   Always-on AI      |
+    |   Gradual pruning    |   CPU/GPU sparse     |   Voice assistants  |
+    +---------------------+---------------------+---------------------┤
+    | 🔬 Our TinyTorch       | TARGET Production-Ready   | 🏆 Success Stories    |
+    |   Educational impl.  |   Magnitude + struct |   Tesla Autopilot   |
+    |   Magnitude pruning  |   Quality validation |   Google Pixel      |
+    +---------------------+---------------------+---------------------+
 ```
 
 ### Real-World Application Examples
@@ -1892,22 +1892,22 @@ Let's explore how pruning is used in production ML systems and connect our imple
     
     📱 MOBILE PHOTOGRAPHY (Google Pixel)
     Original: Portrait CNN, 45MB, 120ms
-    Compressed: 70% pruning + quantization → 12MB, 35ms
+    Compressed: 70% pruning + quantization -> 12MB, 35ms
     Result: Real-time portrait mode on phone
     
     🚗 AUTONOMOUS VEHICLES (Tesla FSD)
     Original: Object detection, 2GB, 80ms  
-    Compressed: 50% structured pruning → 1GB, 35ms
+    Compressed: 50% structured pruning -> 1GB, 35ms
     Result: Real-time object detection for safety
     
     🏠 SMART HOME (Alexa)
     Original: Wake word detection, 15MB
-    Compressed: 95% pruning + 8-bit quantization → 0.5MB
+    Compressed: 95% pruning + 8-bit quantization -> 0.5MB
     Result: Always-on listening with <1mW power
     
     🎥 AUGMENTED REALITY (Apple ARKit)
     Original: Hand tracking, 80MB, 16ms  
-    Compressed: Channel pruning + mobile optimization → 25MB, 8ms
+    Compressed: Channel pruning + mobile optimization -> 25MB, 8ms
     Result: 60fps hand tracking on mobile GPU
 ```
 
@@ -1980,7 +1980,7 @@ def compare_with_production_pruning():
         
         print(f"{name:9} | {methods_str:12} | {hw_str:16} | {deploy_str:12} | {sim_str}")
     
-    print(f"\n🎯 Key Production Insights:")
+    print(f"\nTARGET Key Production Insights:")
     print(f"   • Our magnitude approach is industry standard")
     print(f"   • Production systems emphasize structured pruning for hardware")
     print(f"   • Real frameworks integrate pruning with quantization")
@@ -2048,7 +2048,7 @@ def demonstrate_pruning_applications():
         print(f"                   Example: {app['example']}")
         print()
     
-    print("💡 Common Patterns in Production Pruning:")
+    print("TIP Common Patterns in Production Pruning:")
     print("   • Latency-critical apps use structured pruning (regular sparsity)")  
     print("   • Memory-constrained devices use aggressive unstructured pruning")
     print("   • Safety-critical systems use conservative pruning with validation")
@@ -2057,14 +2057,14 @@ def demonstrate_pruning_applications():
     
     # Visual success metrics
     print(f"🏆 Production Success Metrics:")
-    print(f"   ┌────────────────────────────────────────────────────┐")
-    print(f"   │ Application       │ Size Reduction │ Latency Gain │")
-    print(f"   ├───────────────────┼───────────────┼──────────────┤")
-    print(f"   │ Mobile Camera     │     4x         │    3.5x     │")
-    print(f"   │ Voice Assistant   │    30x         │   10x      │")
-    print(f"   │ Autonomous Car    │     2x         │    2.3x     │")
-    print(f"   │ AR Hand Tracking  │     3x         │    2x       │")
-    print(f"   └───────────────────┴───────────────┴──────────────┘")
+    print(f"   +----------------------------------------------------+")
+    print(f"   | Application       | Size Reduction | Latency Gain |")
+    print(f"   +-------------------+---------------+--------------┤")
+    print(f"   | Mobile Camera     |     4x         |    3.5x     |")
+    print(f"   | Voice Assistant   |    30x         |   10x      |")
+    print(f"   | Autonomous Car    |     2x         |    2.3x     |")
+    print(f"   | AR Hand Tracking  |     3x         |    2x       |")
+    print(f"   +-------------------+---------------+--------------+")
 
 # %% [markdown]
 """
@@ -2085,7 +2085,7 @@ def test_production_context():
     demonstrate_pruning_applications()
     
     # Both functions should run without errors and provide insights
-    print("✅ Production context analysis test passed!")
+    print("PASS Production context analysis test passed!")
 
 test_production_context()
 
@@ -2099,7 +2099,7 @@ Let's run a comprehensive test of all compression functionality to ensure everyt
 # %% nbgrader={"grade": false, "grade_id": "comprehensive-testing", "locked": false, "schema_version": 3, "solution": false, "task": false}
 def run_all_tests():
     """Run comprehensive test suite for compression module."""
-    print("🧪 Running Comprehensive Compression Test Suite")
+    print("TEST Running Comprehensive Compression Test Suite")
     print("=" * 60)
     
     test_functions = [
@@ -2119,18 +2119,18 @@ def run_all_tests():
         print(f"\n{'='*20} {test_name} {'='*20}")
         try:
             test_func()
-            print(f"✅ {test_name}: PASSED")
+            print(f"PASS {test_name}: PASSED")
             passed += 1
         except Exception as e:
-            print(f"❌ {test_name}: FAILED - {e}")
+            print(f"FAIL {test_name}: FAILED - {e}")
     
-    print(f"\n🎯 Test Results: {passed}/{total} tests passed")
+    print(f"\nTARGET Test Results: {passed}/{total} tests passed")
     
     if passed == total:
-        print("🎉 All compression tests passed! Module implementation complete.")
+        print("CELEBRATE All compression tests passed! Module implementation complete.")
         
         # Show final demo
-        print(f"\n🚀 Final Compression Demo:")
+        print(f"\nROCKET Final Compression Demo:")
         print("=" * 50)
         
         # Create a realistic model and compress it
@@ -2146,15 +2146,15 @@ def run_all_tests():
         original_params = sum(w.size for w in demo_model.values())
         compressed_params = sum(np.sum(info['weights'] != 0) for info in compressed.values())
         
-        print(f"🎯 FINAL RESULT:")
+        print(f"TARGET FINAL RESULT:")
         print(f"   Original model: {original_params:,} parameters")
         print(f"   Compressed model: {compressed_params:,} parameters")
         print(f"   Compression achieved: {original_params/compressed_params:.1f}x smaller")
         print(f"   Size reduction: {(1-compressed_params/original_params)*100:.1f}% of parameters removed")
-        print(f"   ✅ Ready for edge deployment!")
+        print(f"   PASS Ready for edge deployment!")
         
     else:
-        print(f"⚠️  {total - passed} tests failed. Review implementation.")
+        print(f"WARNING️  {total - passed} tests failed. Review implementation.")
 
 # Run all systems insights 
 profile_compression_memory()
@@ -2166,7 +2166,7 @@ if __name__ == "__main__":
 
 # %% [markdown]
 """
-## 🤔 ML Systems Thinking: Interactive Questions
+## THINK ML Systems Thinking: Interactive Questions
 
 Now that you've implemented neural network pruning, let's reflect on the systems engineering principles and production deployment considerations.
 
@@ -2189,7 +2189,7 @@ d) Explain why the threshold approach guarantees the target sparsity level
 ### BEGIN SOLUTION
 a) Sorted weights by magnitude: [0.02, 0.03, 0.05, 0.09, 0.1, 0.3, 0.4, 0.6, 0.7, 0.8]
    70th percentile (keep top 30%) = weights[7] = 0.6
-   Threshold = 0.6 (keep weights ≥ 0.6)
+   Threshold = 0.6 (keep weights >= 0.6)
 
 b) Binary mask for original array [0.8, 0.1, 0.05, 0.3, 0.02, 0.7, 0.4, 0.09, 0.6, 0.03]:
    Mask: [1, 0, 0, 0, 0, 1, 0, 0, 1, 0]
@@ -2197,7 +2197,7 @@ b) Binary mask for original array [0.8, 0.1, 0.05, 0.3, 0.02, 0.7, 0.4, 0.09, 0.
 
 c) Compression ratio calculation:
    - Original parameters: 10
-   - Surviving parameters: 3 (values ≥ 0.6)
+   - Surviving parameters: 3 (values >= 0.6)
    - Actual sparsity: 7/10 = 70% exactly
    - Compression ratio: 10/3 = 3.33x
 
@@ -2224,28 +2224,28 @@ d) For mobile deployment requiring <50 parameters, which pruning strategy works?
 
 ### BEGIN SOLUTION
 a) Unstructured pruning (75% sparsity):
-   - Original parameters: 8 × 4 × 3 × 3 = 288
+   - Original parameters: 8 * 4 * 3 * 3 = 288
    - Sparsity = 75% means keep 25% of weights
-   - Remaining parameters: 288 × 0.25 = 72 parameters
+   - Remaining parameters: 288 * 0.25 = 72 parameters
    - Compression ratio: 288/72 = 4x
    - BUT: Still need to store 288 values (with zeros), irregular sparsity pattern
 
 b) Structured pruning (remove 6 filters, keep 2):
    - Filters removed: 6/8 = 75% of filters
-   - Remaining parameters: 2 × 4 × 3 × 3 = 72 parameters  
+   - Remaining parameters: 2 * 4 * 3 * 3 = 72 parameters  
    - Compression ratio: 288/72 = 4x (same as unstructured)
-   - BUT: Dense 2×4×3×3 tensor, no zeros to store
+   - BUT: Dense 2*4*3*3 tensor, no zeros to store
 
 c) Structured provides better actual speedup because:
-   - Dense computation on smaller tensor (2×4×3×3) vs sparse on large (8×4×3×3)
+   - Dense computation on smaller tensor (2*4*3*3) vs sparse on large (8*4*3*3)
    - No conditional branching (if weight != 0) in inner loops
    - Better cache locality with contiguous memory access
    - Can use optimized BLAS/convolution libraries
    - Unstructured requires specialized sparse kernels (often unavailable)
 
 d) For <50 parameters mobile constraint:
-   - Unstructured: 72 remaining parameters > 50 → doesn't fit
-   - Structured: Need 50/36 ≈ 1.4 filters → keep 1 filter = 36 parameters ✓
+   - Unstructured: 72 remaining parameters > 50 -> doesn't fit
+   - Structured: Need 50/36 ~= 1.4 filters -> keep 1 filter = 36 parameters OK
    - Structured pruning better for extreme resource constraints
 ### END SOLUTION
 """
@@ -2272,9 +2272,9 @@ c) Recommend optimal compression strategy for each deployment target
 
 ### BEGIN SOLUTION
 a) Device compatibility analysis:
-   - Mobile (50MB, 10 GFLOPS): ✗ 50% (100MB > 50MB), ✓ 70% (60MB, 12 GFLOPS), ✓ 90%
+   - Mobile (50MB, 10 GFLOPS): ✗ 50% (100MB > 50MB), OK 70% (60MB, 12 GFLOPS), OK 90%
    - IoT (10MB, 1 GFLOPS): ✗ 50%, ✗ 70%, ✗ 90% (4 GFLOPS > 1 GFLOPS)
-   - Edge Server (500MB, 100 GFLOPS): ✓ All options work
+   - Edge Server (500MB, 100 GFLOPS): OK All options work
 
 b) Accuracy-efficiency tradeoff (accuracy/memory ratio):
    - 50% sparse: 94%/100MB = 0.94%/MB
@@ -2287,8 +2287,8 @@ c) Optimal recommendations:
    - Edge Server: 50% sparse (maximum accuracy 94% with abundant resources)
    
    IoT solution: Combine 90% pruning + 8-bit quantization + structured pruning:
-   - Memory: 20MB → 5MB (quantization) → 2MB (structured) ✓
-   - Compute: 4 GFLOPS → 1 GFLOPS (structured optimization) ✓
+   - Memory: 20MB -> 5MB (quantization) -> 2MB (structured) OK
+   - Compute: 4 GFLOPS -> 1 GFLOPS (structured optimization) OK
 ### END SOLUTION
 """
 
@@ -2311,32 +2311,32 @@ d) Analyze the business case for different deployment scales
 ### BEGIN SOLUTION
 a) Daily compute cost calculation:
    Dense model:
-   - 1M requests × 50ms = 50,000 seconds = 13.9 hours
-   - Daily cost: 13.9 hours × $0.10 = $1.39/day
+   - 1M requests * 50ms = 50,000 seconds = 13.9 hours
+   - Daily cost: 13.9 hours * $0.10 = $1.39/day
    
    Compressed model:
-   - 1M requests × 20ms = 20,000 seconds = 5.6 hours  
-   - Daily cost: 5.6 hours × $0.04 = $0.22/day
+   - 1M requests * 20ms = 20,000 seconds = 5.6 hours  
+   - Daily cost: 5.6 hours * $0.04 = $0.22/day
    
    Daily savings: $1.39 - $0.22 = $1.17/day
 
 b) Infrastructure analysis:
-   - Memory savings: 500MB → 100MB = 5x reduction
+   - Memory savings: 500MB -> 100MB = 5x reduction
    - Server capacity: 5x more models per server (memory bound)
-   - Latency improvement: 50ms → 20ms = 2.5x faster response
+   - Latency improvement: 50ms -> 20ms = 2.5x faster response
    - Throughput: 2.5x more requests per server
 
 c) Break-even timeline:
    - Development cost: $50,000
    - Daily savings: $1.17  
-   - Break-even: $50,000 ÷ $1.17 = 42,735 days ≈ 117 years!
+   - Break-even: $50,000 / $1.17 = 42,735 days ~= 117 years!
    
    This seems wrong - let me recalculate for realistic scale:
    At 100M requests/day (large scale):
-   - Dense: 1,389 hours × $0.10 = $138.90/day
-   - Compressed: 556 hours × $0.04 = $22.24/day
+   - Dense: 1,389 hours * $0.10 = $138.90/day
+   - Compressed: 556 hours * $0.04 = $22.24/day
    - Daily savings: $116.66
-   - Break-even: $50,000 ÷ $116.66 = 428 days ≈ 14 months ✓
+   - Break-even: $50,000 / $116.66 = 428 days ~= 14 months OK
 
 d) Business case by scale:
    - Small scale (<1M/day): ROI unclear, focus on accuracy
@@ -2377,11 +2377,11 @@ b) The structured vs unstructured tradeoff:
 - Inference speed: structured pruning provides actual speedup, unstructured often theoretical only
 
 c) Layer-specific sparsity tolerance:
-- Linear layers: High redundancy, many parameters, more overparametrized → tolerate 80% sparsity
-- Conv layers: Fewer parameters, each filter captures important spatial features → more sensitive
-- First layers: Extract low-level features (edges, textures) → very sensitive to pruning
-- Later layers: More abstract features with redundancy → can handle moderate pruning
-- Output layers: Critical for final predictions → require conservative pruning
+- Linear layers: High redundancy, many parameters, more overparametrized -> tolerate 80% sparsity
+- Conv layers: Fewer parameters, each filter captures important spatial features -> more sensitive
+- First layers: Extract low-level features (edges, textures) -> very sensitive to pruning
+- Later layers: More abstract features with redundancy -> can handle moderate pruning
+- Output layers: Critical for final predictions -> require conservative pruning
 <!-- END SOLUTION -->
 """
 
@@ -2409,10 +2409,10 @@ a) Lower actual speedup due to multiple bottlenecks:
 - Hardware mismatch: Most CPUs/GPUs optimized for dense linear algebra, not sparse
 
 b) Hardware-driven pruning requirements:
-- Mobile: Strict memory (4GB total), battery, thermal constraints → need aggressive 70-90% sparsity
-- Edge servers: More memory (16GB+), power, cooling → moderate 50% sparsity sufficient
-- Cloud: Abundant resources → pruning for cost optimization, not necessity
-- Embedded/IoT: Extreme constraints (MB not GB) → need structured pruning + quantization
+- Mobile: Strict memory (4GB total), battery, thermal constraints -> need aggressive 70-90% sparsity
+- Edge servers: More memory (16GB+), power, cooling -> moderate 50% sparsity sufficient
+- Cloud: Abundant resources -> pruning for cost optimization, not necessity
+- Embedded/IoT: Extreme constraints (MB not GB) -> need structured pruning + quantization
 - Different hardware accelerators: Edge TPU loves sparsity, standard GPUs don't benefit much
 
 c) Pruning-friendly architecture design:
@@ -2515,7 +2515,7 @@ c) Future evolution predictions:
 
 # %% [markdown]
 """
-## 🎯 MODULE SUMMARY: Compression - Neural Network Pruning for Edge Deployment
+## TARGET MODULE SUMMARY: Compression - Neural Network Pruning for Edge Deployment
 
 ### What You Accomplished
 

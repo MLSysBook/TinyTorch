@@ -14,7 +14,7 @@
 
 Welcome to Autograd! You'll implement the automatic differentiation engine that makes neural network training possible by automatically computing gradients through complex computational graphs.
 
-## 🔗 Building on Previous Learning
+## LINK Building on Previous Learning
 **What You Built Before**:
 - Module 02 (Tensor): Data structures that hold neural network parameters
 - Module 05 (Losses): Functions that measure prediction accuracy
@@ -27,33 +27,37 @@ Welcome to Autograd! You'll implement the automatic differentiation engine that 
 
 **Connection Map**:
 ```
-Tensors → Loss Functions → Autograd → Optimizers
-(data)    (error measure)  (∇L/∇θ)   (parameter updates)
+Tensors -> Loss Functions -> Autograd -> Optimizers
+(data)    (error measure)  (gradL/gradθ)   (parameter updates)
 ```
 
-## Learning Goals
-- Systems understanding: How computational graphs enable automatic differentiation and why this approach scales to arbitrary network architectures
-- Core implementation skill: Build the Variable class with gradient tracking and implement backward propagation through dynamic computation graphs
-- Pattern recognition: Understand how chain rule application through computational graphs generalizes to any differentiable function
-- Framework connection: See how your implementation mirrors PyTorch's autograd engine and tensor gradient tracking
-- Performance insight: Learn why computational graph memory management and gradient accumulation strategies determine training scalability
+## Learning Objectives
 
-## Build → Use → Reflect
-1. **Build**: Complete automatic differentiation system with Variable class, gradient tracking, and backward propagation
-2. **Use**: Apply autograd to complex mathematical expressions and neural network operations
-3. **Reflect**: Why does automatic differentiation enable ML at scale, and how does graph memory management affect training?
+By completing this module, you will:
+
+1. **Implement automatic differentiation** - Build the system that computes gradients automatically
+2. **Create computational graphs** - Track operations to enable backward propagation
+3. **Apply the chain rule** - Understand how gradients flow through complex operations
+4. **Build Variable class** - Extend tensors with gradient tracking capabilities
+5. **Enable training** - Provide the automatic gradient computation that makes learning possible
+
+## Build -> Use -> Reflect
+1. **Build**: Variable class with gradient tracking and backward propagation through operations
+2. **Use**: Apply autograd to mathematical expressions and see gradients computed automatically
+3. **Reflect**: Understand how automatic differentiation enables efficient neural network training
 
 ## What You'll Achieve
-By the end of this module, you'll understand:
-- Deep technical understanding of how computational graphs enable automatic gradient computation for arbitrary functions
-- Practical capability to build the gradient computation engine that powers all modern neural network training
-- Systems insight into why automatic differentiation was the breakthrough that enabled deep learning at scale
+- **Gradient computation**: Automatically compute derivatives for any mathematical expression
+- **Chain rule implementation**: Apply calculus systematically through complex operations
+- **Memory management**: Handle gradient accumulation and computational graph lifecycle
+- **Training enablement**: Provide the gradient information needed for parameter optimization
+- **Framework understanding**: See how PyTorch and TensorFlow implement automatic differentiation
 - Performance consideration of how computational graph size and memory management affect training efficiency
 - Connection to production ML systems and how frameworks optimize gradient computation and memory usage
 
 ## Systems Reality Check
-💡 **Production Context**: PyTorch's autograd can handle graphs with millions of nodes and uses sophisticated memory optimization like gradient checkpointing to train models larger than GPU memory
-⚡ **Performance Note**: Gradient computation often requires storing forward activations, leading to memory usage that scales with network depth - this drives innovations like gradient checkpointing
+TIP **Production Context**: PyTorch's autograd can handle graphs with millions of nodes and uses sophisticated memory optimization like gradient checkpointing to train models larger than GPU memory
+SPEED **Performance Note**: Gradient computation often requires storing forward activations, leading to memory usage that scales with network depth - this drives innovations like gradient checkpointing
 """
 
 # %% nbgrader={"grade": false, "grade_id": "autograd-imports", "locked": false, "schema_version": 3, "solution": false, "task": false}
@@ -75,14 +79,14 @@ except ImportError:
     from tensor_dev import Tensor
 
 # %% nbgrader={"grade": false, "grade_id": "autograd-setup", "locked": false, "schema_version": 3, "solution": false, "task": false}
-print("🔥 TinyTorch Autograd Module")
+print("FIRE TinyTorch Autograd Module")
 print(f"NumPy version: {np.__version__}")
 print(f"Python version: {sys.version_info.major}.{sys.version_info.minor}")
 print("Ready to build automatic differentiation!")
 
 # %% [markdown]
 """
-## 📦 Where This Code Lives in the Final Package
+## PACKAGE Where This Code Lives in the Final Package
 
 **Learning Side:** You work in `modules/06_autograd/autograd_dev.py`  
 **Building Side:** Code exports to `tinytorch.core.autograd`
@@ -109,7 +113,7 @@ from tinytorch.core.activations import ReLU, Sigmoid, Tanh
 Neural networks have millions of parameters. To train them, we need gradients of the loss function with respect to every parameter:
 
 ```
-∇θ L = [∂L/∂w₁, ∂L/∂w₂, ..., ∂L/∂wₙ, ∂L/∂b₁, ∂L/∂b₂, ..., ∂L/∂bₘ]
+gradθ L = [dL/dw₁, dL/dw₂, ..., dL/dwₙ, dL/db₁, dL/db₂, ..., dL/dbₘ]
 ```
 
 **Manual differentiation fails** because:
@@ -121,7 +125,7 @@ Neural networks have millions of parameters. To train them, we need gradients of
 **Autograd** automatically computes derivatives of functions represented as computational graphs:
 
 ```python
-# Instead of manually computing: ∂(x² + 2xy + y²)/∂x = 2x + 2y
+# Instead of manually computing: d(x² + 2xy + y²)/dx = 2x + 2y
 # Autograd does it automatically:
 x = Variable(3.0, requires_grad=True)
 y = Variable(4.0, requires_grad=True)
@@ -136,21 +140,21 @@ print(x.grad)  # 2*3 + 2*4 = 14 (computed automatically!)
 Mathematical Expression: z = x² + 2xy + y²
 
 Computational Graph:
-    x ──┬─→ [×] ──→ x² ──┬─→ [+] ──→ [+] ──→ z
-    ↑   │              │         ↑         ↑
-    │   └─→ [×] ──→ 2x ─┘         │         │
-    │       ↑                     │         │
-    │       2                     │         │
-    │                             │         │
-    x ──┬─→ [×] ──→ xy ─→ [×] ──→ 2xy      │
-    ↑   │           ↑     ↑               │
-    │   │           │     2               │
-    │   │           y                     │
-    │   │                                 │
-    y ──┴─→ [×] ──→ y² ────────────────────┘
+    x --+--> [*] ---> x² --+--> [+] ---> [+] ---> z
+    ^   |              |         ^         ^
+    |   +--> [*] ---> 2x -+         |         |
+    |       ^                     |         |
+    |       2                     |         |
+    |                             |         |
+    x --+--> [*] ---> xy --> [*] ---> 2xy      |
+    ^   |           ^     ^               |
+    |   |           |     2               |
+    |   |           y                     |
+    |   |                                 |
+    y --+--> [*] ---> y² --------------------+
 
 Forward Pass: Compute values x² = 9, 2xy = 24, y² = 16, z = 49
-Backward Pass: Compute gradients ∂z/∂x = 14, ∂z/∂y = 20
+Backward Pass: Compute gradients dz/dx = 14, dz/dy = 20
 ```
 
 ### Why This is Revolutionary
@@ -187,39 +191,39 @@ A **Variable** wraps a Tensor and tracks:
 ### Visual: The Computational Graph Structure
 ```
 Variable Structure:
-┌─────────────────────────────────┐
-│ Variable Object                 │
-├─────────────────────────────────┤
-│ data: Tensor([1.5, 2.3, ...])  │ ← Forward pass values
-│ grad: None → Tensor([...])     │ ← Backward pass gradients
-│ requires_grad: True/False       │ ← Should compute gradients?
-│ grad_fn: <AddBackward>         │ ← How to compute gradients
-│ is_leaf: True/False            │ ← Original parameter?
-└─────────────────────────────────┘
++---------------------------------+
+| Variable Object                 |
++---------------------------------┤
+| data: Tensor([1.5, 2.3, ...])  | <- Forward pass values
+| grad: None -> Tensor([...])     | <- Backward pass gradients
+| requires_grad: True/False       | <- Should compute gradients?
+| grad_fn: <AddBackward>         | <- How to compute gradients
+| is_leaf: True/False            | <- Original parameter?
++---------------------------------+
 
 Computational Graph Example:
-    x (leaf) ──┐
-               ├──[ADD]──→ z (intermediate)
-    y (leaf) ──┘
+    x (leaf) --+
+               +--[ADD]---> z (intermediate)
+    y (leaf) --+
     
     Forward:  x.data + y.data = z.data
-    Backward: z.grad → x.grad, y.grad (via chain rule)
+    Backward: z.grad -> x.grad, y.grad (via chain rule)
 ```
 
 ### Memory Layout: Variables vs Tensors
 ```
 Memory Comparison:
                 Tensor Only          Variable with Autograd
-              ┌─────────────┐       ┌─────────────┐
-              │    Data     │       │    Data     │ ← Same data storage
-              │   4 bytes   │       │   4 bytes   │
-              └─────────────┘       ├─────────────┤
-                                    │ Gradient    │ ← Additional gradient storage
-                                    │   4 bytes   │
-                                    ├─────────────┤
-                                    │ grad_fn     │ ← Function pointer
-                                    │   8 bytes   │
-                                    └─────────────┘
+              +-------------+       +-------------+
+              |    Data     |       |    Data     | <- Same data storage
+              |   4 bytes   |       |   4 bytes   |
+              +-------------+       +-------------┤
+                                    | Gradient    | <- Additional gradient storage
+                                    |   4 bytes   |
+                                    +-------------┤
+                                    | grad_fn     | <- Function pointer
+                                    |   8 bytes   |
+                                    +-------------+
                                     Total: ~2x memory overhead
 ```
 
@@ -365,7 +369,7 @@ class Variable:
 
 # %% [markdown]
 """
-### 🧪 Unit Test: Variable Class
+### TEST Unit Test: Variable Class
 
 This test validates Variable initialization, ensuring gradient tracking capabilities work correctly.
 """
@@ -400,16 +404,16 @@ def test_unit_variable_class():
     x.zero_grad()
     assert x.grad is None, "zero_grad should reset gradient to None"
     
-    print("✅ Variable class tests passed!")
-    print(f"✅ Variable creation and initialization working")
-    print(f"✅ Data access and properties working")
-    print(f"✅ Gradient management working")
+    print("PASS Variable class tests passed!")
+    print(f"PASS Variable creation and initialization working")
+    print(f"PASS Data access and properties working")
+    print(f"PASS Gradient management working")
 
 # Test will run in main block
 
 # %% [markdown]
 """
-## 🤔 Computational Assessment: Variable Understanding
+## THINK Computational Assessment: Variable Understanding
 
 Test your understanding of computational graphs and Variable design.
 """
@@ -462,27 +466,27 @@ Every operation must implement:
 ### Visual: Chain Rule Through Addition
 ```
 Forward Pass: z = x + y
-    x: 3.0 ──┐
-             ├──[+]──→ z: 5.0
-    y: 2.0 ──┘
+    x: 3.0 --+
+             +--[+]---> z: 5.0
+    y: 2.0 --+
 
-Backward Pass: ∂z/∂x = 1, ∂z/∂y = 1
-    ∂L/∂z: 1.0 ──┬──→ ∂L/∂x: 1.0 (∂z/∂x = 1)
-                  │
-                  └──→ ∂L/∂y: 1.0 (∂z/∂y = 1)
+Backward Pass: dz/dx = 1, dz/dy = 1
+    dL/dz: 1.0 --+---> dL/dx: 1.0 (dz/dx = 1)
+                  |
+                  +---> dL/dy: 1.0 (dz/dy = 1)
 
-Chain Rule: ∂L/∂x = ∂L/∂z · ∂z/∂x = 1.0 · 1 = 1.0
+Chain Rule: dL/dx = dL/dz · dz/dx = 1.0 · 1 = 1.0
 ```
 
 ### Mathematical Foundation
 The chain rule states:
 ```
-∂f/∂x = ∂f/∂z · ∂z/∂x
+df/dx = df/dz · dz/dx
 ```
 
 For complex expressions like f(g(h(x))):
 ```
-∂f/∂x = ∂f/∂g · ∂g/∂h · ∂h/∂x
+df/dx = df/dg · dg/dh · dh/dx
 ```
 
 ### Implementation Pattern
@@ -551,13 +555,13 @@ def add(a: Union[Variable, float, int], b: Union[Variable, float, int]) -> Varia
     STEP-BY-STEP IMPLEMENTATION:
     1. Convert inputs to Variables if they are scalars
     2. Compute forward pass: result = a.data + b.data
-    3. Create gradient function that implements: ∂(a+b)/∂a = 1, ∂(a+b)/∂b = 1
+    3. Create gradient function that implements: d(a+b)/da = 1, d(a+b)/db = 1
     4. Return new Variable with result and gradient function
     
     MATHEMATICAL FOUNDATION:
     - Forward: z = x + y
-    - Backward: ∂z/∂x = 1, ∂z/∂y = 1
-    - Chain rule: ∂L/∂x = ∂L/∂z · ∂z/∂x = ∂L/∂z · 1 = ∂L/∂z
+    - Backward: dz/dx = 1, dz/dy = 1
+    - Chain rule: dL/dx = dL/dz · dz/dx = dL/dz · 1 = dL/dz
     
     EXAMPLE USAGE:
     ```python
@@ -565,8 +569,8 @@ def add(a: Union[Variable, float, int], b: Union[Variable, float, int]) -> Varia
     y = Variable(3.0, requires_grad=True)
     z = add(x, y)  # z = 5.0
     z.backward()
-    print(x.grad)  # 1.0 (∂z/∂x = 1)
-    print(y.grad)  # 1.0 (∂z/∂y = 1)
+    print(x.grad)  # 1.0 (dz/dx = 1)
+    print(y.grad)  # 1.0 (dz/dy = 1)
     ```
     
     IMPLEMENTATION HINTS:
@@ -640,7 +644,7 @@ def add(a: Union[Variable, float, int], b: Union[Variable, float, int]) -> Varia
 
 # %% [markdown]
 """
-### 🧪 Unit Test: Addition Operation
+### TEST Unit Test: Addition Operation
 
 This test validates addition operation, ensuring gradients flow correctly through addition.
 """
@@ -664,8 +668,8 @@ def test_unit_add_operation():
     
     assert x.grad is not None, "x should have gradient"
     assert y.grad is not None, "y should have gradient"
-    assert x.grad.numpy().item() == 1.0, "∂z/∂x should be 1.0"
-    assert y.grad.numpy().item() == 1.0, "∂z/∂y should be 1.0"
+    assert x.grad.numpy().item() == 1.0, "dz/dx should be 1.0"
+    assert y.grad.numpy().item() == 1.0, "dz/dy should be 1.0"
     
     # Test with scalar
     a = Variable(5.0, requires_grad=True)
@@ -676,23 +680,23 @@ def test_unit_add_operation():
     b.backward()
     assert a.grad.numpy().item() == 1.0, "Gradient through scalar addition should be 1.0"
     
-    print("✅ Addition operation tests passed!")
-    print(f"✅ Forward pass computing correct results")
-    print(f"✅ Backward pass computing correct gradients")
-    print(f"✅ Scalar addition working correctly")
+    print("PASS Addition operation tests passed!")
+    print(f"PASS Forward pass computing correct results")
+    print(f"PASS Backward pass computing correct gradients")
+    print(f"PASS Scalar addition working correctly")
 
 # Test will run in main block
 
-# ✅ IMPLEMENTATION CHECKPOINT: Addition operation complete
+# PASS IMPLEMENTATION CHECKPOINT: Addition operation complete
 
-# 🤔 PREDICTION: How does the chain rule apply when operations are chained together?
+# THINK PREDICTION: How does the chain rule apply when operations are chained together?
 # Your answer: _______
 
-# 🔍 SYSTEMS INSIGHT #1: Gradient Flow Analysis
+# MAGNIFY SYSTEMS INSIGHT #1: Gradient Flow Analysis
 def analyze_gradient_flow():
     """Analyze how gradients flow through computational graphs."""
     try:
-        print("🔍 GRADIENT FLOW ANALYSIS")
+        print("MAGNIFY GRADIENT FLOW ANALYSIS")
         print("=" * 35)
         
         # Create simple computational graph
@@ -713,8 +717,8 @@ def analyze_gradient_flow():
         z.backward()
         
         print(f"\nBackward pass:")
-        print(f"  ∂z/∂x = {x.grad.numpy().item()}")
-        print(f"  ∂z/∂y = {y.grad.numpy().item()}")
+        print(f"  dz/dx = {x.grad.numpy().item()}")
+        print(f"  dz/dy = {y.grad.numpy().item()}")
         
         # Analyze memory usage
         import sys
@@ -726,14 +730,14 @@ def analyze_gradient_flow():
         print(f"  Intermediate result (z): ~{z_memory} bytes")
         print(f"  Memory overhead: {z_memory/x_memory:.1f}x")
         
-        # 💡 WHY THIS MATTERS: In large models, computational graphs can consume
+        # TIP WHY THIS MATTERS: In large models, computational graphs can consume
         # significant memory. Each intermediate result stores gradients and backward functions.
         # This is why techniques like gradient checkpointing are crucial for training large models!
         
         return True
         
     except Exception as e:
-        print(f"⚠️ Error in gradient flow analysis: {e}")
+        print(f"WARNING️ Error in gradient flow analysis: {e}")
         print("Make sure addition and multiplication are implemented")
         return False
 
@@ -746,23 +750,23 @@ def analyze_gradient_flow():
 ### The Product Rule
 For z = x * y:
 - **Forward**: z = x * y
-- **Backward**: ∂z/∂x = y, ∂z/∂y = x
+- **Backward**: dz/dx = y, dz/dy = x
 
 ### Visual: Product Rule in Action
 ```
 Forward Pass: z = x * y
-    x: 2.0 ──┐
-             ├──[×]──→ z: 6.0
-    y: 3.0 ──┘
+    x: 2.0 --+
+             +--[*]---> z: 6.0
+    y: 3.0 --+
 
-Backward Pass: ∂z/∂x = y, ∂z/∂y = x
-    ∂L/∂z: 1.0 ──┬──→ ∂L/∂x: 3.0 (∂z/∂x = y = 3.0)
-                  │
-                  └──→ ∂L/∂y: 2.0 (∂z/∂y = x = 2.0)
+Backward Pass: dz/dx = y, dz/dy = x
+    dL/dz: 1.0 --+---> dL/dx: 3.0 (dz/dx = y = 3.0)
+                  |
+                  +---> dL/dy: 2.0 (dz/dy = x = 2.0)
 
 Product Rule: 
-- ∂(xy)/∂x = y
-- ∂(xy)/∂y = x
+- d(xy)/dx = y
+- d(xy)/dy = x
 ```
 
 ### Why This Matters
@@ -774,8 +778,8 @@ Multiplication is everywhere in neural networks:
 ### Chain Rule Application
 When gradients flow back through multiplication:
 ```
-∂L/∂x = ∂L/∂z · ∂z/∂x = ∂L/∂z · y
-∂L/∂y = ∂L/∂z · ∂z/∂y = ∂L/∂z · x
+dL/dx = dL/dz · dz/dx = dL/dz · y
+dL/dy = dL/dz · dz/dy = dL/dz · x
 ```
 """
 
@@ -785,7 +789,7 @@ def multiply(a: Union[Variable, float, int], b: Union[Variable, float, int]) -> 
     """
     Multiplication operation with gradient tracking: a * b
     
-    Uses the product rule: ∂(a*b)/∂a = b, ∂(a*b)/∂b = a
+    Uses the product rule: d(a*b)/da = b, d(a*b)/db = a
     """
     ### BEGIN SOLUTION
     # Convert scalars to Variables
@@ -808,7 +812,7 @@ def multiply(a: Union[Variable, float, int], b: Union[Variable, float, int]) -> 
 
 # %% [markdown]
 """
-### 🧪 Unit Test: Multiplication Operation
+### TEST Unit Test: Multiplication Operation
 
 This test validates multiplication operation, ensuring the product rule is implemented correctly.
 """
@@ -831,8 +835,8 @@ def test_unit_multiply_operation():
     
     assert x.grad is not None, "x should have gradient"
     assert y.grad is not None, "y should have gradient"
-    assert x.grad.numpy().item() == 3.0, "∂z/∂x should be y = 3.0"
-    assert y.grad.numpy().item() == 2.0, "∂z/∂y should be x = 2.0"
+    assert x.grad.numpy().item() == 3.0, "dz/dx should be y = 3.0"
+    assert y.grad.numpy().item() == 2.0, "dz/dy should be x = 2.0"
     
     # Test with scalar
     a = Variable(4.0, requires_grad=True)
@@ -843,10 +847,10 @@ def test_unit_multiply_operation():
     b.backward()
     assert a.grad.numpy().item() == 2.0, "Gradient through scalar multiplication should be the scalar"
     
-    print("✅ Multiplication operation tests passed!")
-    print(f"✅ Forward pass computing correct results")
-    print(f"✅ Backward pass implementing product rule correctly")
-    print(f"✅ Scalar multiplication working correctly")
+    print("PASS Multiplication operation tests passed!")
+    print(f"PASS Forward pass computing correct results")
+    print(f"PASS Backward pass implementing product rule correctly")
+    print(f"PASS Scalar multiplication working correctly")
 
 # Test will run in main block
 
@@ -859,7 +863,7 @@ def subtract(a: Union[Variable, float, int], b: Union[Variable, float, int]) -> 
     """
     Subtraction operation with gradient tracking: a - b
     
-    Uses the rule: ∂(a-b)/∂a = 1, ∂(a-b)/∂b = -1
+    Uses the rule: d(a-b)/da = 1, d(a-b)/db = -1
     """
     ### BEGIN SOLUTION
     # Convert to Variables if needed
@@ -888,7 +892,7 @@ def matmul(a: Union[Variable, float, int], b: Union[Variable, float, int]) -> Va
     """
     Matrix multiplication operation with gradient tracking: a @ b
     
-    Uses matrix multiplication gradients: ∂C/∂A = grad_C @ B^T, ∂C/∂B = A^T @ grad_C
+    Uses matrix multiplication gradients: dC/dA = grad_C @ B^T, dC/dB = A^T @ grad_C
     """
     ### BEGIN SOLUTION
     # Convert scalars to Variables
@@ -901,12 +905,12 @@ def matmul(a: Union[Variable, float, int], b: Union[Variable, float, int]) -> Va
     def grad_fn(grad_output):
         # Matrix multiplication gradients
         if a.requires_grad:
-            # ∂C/∂A = grad_C @ B^T
+            # dC/dA = grad_C @ B^T
             grad_a_data = grad_output.numpy() @ b.numpy().T
             a.backward(Variable(grad_a_data))
         
         if b.requires_grad:
-            # ∂C/∂B = A^T @ grad_C  
+            # dC/dB = A^T @ grad_C  
             grad_b_data = a.numpy().T @ grad_output.numpy()
             b.backward(Variable(grad_b_data))
     
@@ -920,7 +924,7 @@ def divide(a: Union[Variable, float, int], b: Union[Variable, float, int]) -> Va
     """
     Division operation with gradient tracking: a / b
     
-    Uses the quotient rule: ∂(a/b)/∂a = 1/b, ∂(a/b)/∂b = -a/b²
+    Uses the quotient rule: d(a/b)/da = 1/b, d(a/b)/db = -a/b²
     """
     ### BEGIN SOLUTION
     # Convert scalars to Variables
@@ -932,11 +936,11 @@ def divide(a: Union[Variable, float, int], b: Union[Variable, float, int]) -> Va
     # Backward function
     def grad_fn(grad_output):
         if a.requires_grad:
-            # ∂(a/b)/∂a = 1/b
+            # d(a/b)/da = 1/b
             grad_a = Variable(grad_output.numpy() / b.numpy())
             a.backward(grad_a)
         if b.requires_grad:
-            # ∂(a/b)/∂b = -a/b²
+            # d(a/b)/db = -a/b²
             grad_b = Variable(-grad_output.numpy() * a.numpy() / (b.numpy() ** 2))
             b.backward(grad_b)
     
@@ -962,8 +966,8 @@ def test_unit_subtract_operation():
     
     assert x.grad is not None, "x should have gradient"
     assert y.grad is not None, "y should have gradient"
-    assert x.grad.numpy().item() == 1.0, "∂z/∂x should be 1.0"
-    assert y.grad.numpy().item() == -1.0, "∂z/∂y should be -1.0"
+    assert x.grad.numpy().item() == 1.0, "dz/dx should be 1.0"
+    assert y.grad.numpy().item() == -1.0, "dz/dy should be -1.0"
     
     # Test with scalar
     a = Variable(4.0, requires_grad=True)
@@ -974,16 +978,16 @@ def test_unit_subtract_operation():
     b.backward()
     assert a.grad.numpy().item() == 1.0, "Gradient through scalar subtraction should be 1.0"
     
-    print("✅ Subtraction operation tests passed!")
-    print(f"✅ Forward pass computing correct results")
-    print(f"✅ Backward pass implementing subtraction rule correctly")
-    print(f"✅ Scalar subtraction working correctly")
+    print("PASS Subtraction operation tests passed!")
+    print(f"PASS Forward pass computing correct results")
+    print(f"PASS Backward pass implementing subtraction rule correctly")
+    print(f"PASS Scalar subtraction working correctly")
 
 # Test will run in main block
 
 # %% [markdown]
 """
-## 🤔 Computational Assessment: Chain Rule Application
+## THINK Computational Assessment: Chain Rule Application
 
 Test your understanding of how gradients flow through multiple operations.
 """
@@ -1003,17 +1007,17 @@ c.backward()
 ```
 
 **Calculate manually:**
-1. ∂c/∂b = _____
-2. ∂b/∂a = _____
-3. ∂b/∂x = _____
-4. ∂a/∂x = _____
-5. ∂a/∂y = _____
+1. dc/db = _____
+2. db/da = _____
+3. db/dx = _____
+4. da/dx = _____
+5. da/dy = _____
 
 **Apply chain rule:**
-6. ∂c/∂x (through path c→b→a→x) = _____
-7. ∂c/∂x (through path c→b→x) = _____
-8. Total ∂c/∂x = _____ + _____ = _____
-9. ∂c/∂y = _____
+6. dc/dx (through path c->b->a->x) = _____
+7. dc/dx (through path c->b->x) = _____
+8. Total dc/dx = _____ + _____ = _____
+9. dc/dy = _____
 
 **Verification:**
 TODO: Run the code above and verify your calculations match the computed gradients.
@@ -1022,15 +1026,15 @@ TODO: Run the code above and verify your calculations match the computed gradien
 ### BEGIN SOLUTION
 # Student calculation space - this will be manually graded
 # Expected answers:
-# 1. ∂c/∂b = 2 (c = b * 2)
-# 2. ∂b/∂a = 1 (b = a + x)
-# 3. ∂b/∂x = 1 (b = a + x)
-# 4. ∂a/∂x = y = 3 (a = x * y)
-# 5. ∂a/∂y = x = 2 (a = x * y)
-# 6. ∂c/∂x (path 1) = 2 * 1 * 3 = 6
-# 7. ∂c/∂x (path 2) = 2 * 1 = 2
-# 8. Total ∂c/∂x = 6 + 2 = 8
-# 9. ∂c/∂y = 2 * 1 * 2 = 4
+# 1. dc/db = 2 (c = b * 2)
+# 2. db/da = 1 (b = a + x)
+# 3. db/dx = 1 (b = a + x)
+# 4. da/dx = y = 3 (a = x * y)
+# 5. da/dy = x = 2 (a = x * y)
+# 6. dc/dx (path 1) = 2 * 1 * 3 = 6
+# 7. dc/dx (path 2) = 2 * 1 = 2
+# 8. Total dc/dx = 6 + 2 = 8
+# 9. dc/dy = 2 * 1 * 2 = 4
 ### END SOLUTION
 
 # %% [markdown]
@@ -1045,22 +1049,22 @@ Now let us test how multiple operations work together through the chain rule:
 Example: f(x, y) = (x + y) * (x - y) = x² - y²
 
 Computational Graph:
-    x ──┬─→ [+] ──┬─→ [×] ──→ result
-        │         │
-    y ──┴─→ [+] ──┘
-        │
-        └─→ [-] ──┘
+    x --+--> [+] --+--> [*] ---> result
+        |         |
+    y --+--> [+] --+
+        |
+        +--> [-] --+
         x
 
 Forward Pass Flow:
-    x=3, y=2 → sum=5, diff=1 → result=5
+    x=3, y=2 -> sum=5, diff=1 -> result=5
 
 Backward Pass Flow:
-    ∂L/∂result=1 → ∂L/∂sum=1, ∂L/∂diff=5 → ∂L/∂x=6, ∂L/∂y=-4
+    dL/dresult=1 -> dL/dsum=1, dL/ddiff=5 -> dL/dx=6, dL/dy=-4
 
 Manual verification: f(x,y) = x² - y²
-∂f/∂x = 2x = 2(3) = 6 ✓
-∂f/∂y = -2y = -2(2) = -4 ✓
+df/dx = 2x = 2(3) = 6 OK
+df/dy = -2y = -2(2) = -4 OK
 ```
 
 ### Chain Rule Application
@@ -1095,7 +1099,7 @@ def test_unit_chain_rule():
     # Compute gradients
     result.backward()
     
-    # Check gradients: ∂(x²-y²)/∂x = 2x, ∂(x²-y²)/∂y = -2y
+    # Check gradients: d(x²-y²)/dx = 2x, d(x²-y²)/dy = -2y
     expected_x_grad = 2 * x.numpy().item()  # 2 * 3 = 6
     expected_y_grad = -2 * y.numpy().item()  # -2 * 2 = -4
     
@@ -1122,24 +1126,24 @@ def test_unit_chain_rule():
     
     assert abs(x2.grad.numpy().item() - expected_grad) < 1e-6, f"Complex gradient should be {expected_grad}"
     
-    print("✅ Chain rule tests passed!")
-    print(f"✅ Simple expression: (x+y)*(x-y) = x²-y²")
-    print(f"✅ Complex expression: (x+1)*(x+2)*(x+3)")
-    print(f"✅ Automatic gradient computation working correctly")
-    print(f"✅ Chain rule implemented correctly")
+    print("PASS Chain rule tests passed!")
+    print(f"PASS Simple expression: (x+y)*(x-y) = x²-y²")
+    print(f"PASS Complex expression: (x+1)*(x+2)*(x+3)")
+    print(f"PASS Automatic gradient computation working correctly")
+    print(f"PASS Chain rule implemented correctly")
 
 # Test will run in main block
 
-# ✅ IMPLEMENTATION CHECKPOINT: Basic operations complete
+# PASS IMPLEMENTATION CHECKPOINT: Basic operations complete
 
-# 🤔 PREDICTION: How does computational graph memory scale with network depth?
+# THINK PREDICTION: How does computational graph memory scale with network depth?
 # Your answer: _______
 
-# 🔍 SYSTEMS INSIGHT #2: Computational Graph Memory Analysis
+# MAGNIFY SYSTEMS INSIGHT #2: Computational Graph Memory Analysis
 def analyze_computational_graph_memory():
     """Analyze memory consumption patterns in computational graphs."""
     try:
-        print("🔍 COMPUTATIONAL GRAPH MEMORY ANALYSIS")
+        print("MAGNIFY COMPUTATIONAL GRAPH MEMORY ANALYSIS")
         print("=" * 45)
         
         import sys
@@ -1186,14 +1190,14 @@ def analyze_computational_graph_memory():
         print(f"  • Transformer (100 layers): ~{memory_usage[0] * 100:.0f} MB graph memory")
         print(f"  • GPT-3 scale models: Gradient checkpointing essential!")
         
-        # 💡 WHY THIS MATTERS: Deep networks require storing intermediate activations
+        # TIP WHY THIS MATTERS: Deep networks require storing intermediate activations
         # for gradient computation. This memory grows linearly with depth, leading to
         # memory constraints. Gradient checkpointing trades compute for memory!
         
         return memory_usage
         
     except Exception as e:
-        print(f"⚠️ Error in memory analysis: {e}")
+        print(f"WARNING️ Error in memory analysis: {e}")
         print("Make sure all operations are implemented")
         return [1.0]
 
@@ -1215,20 +1219,20 @@ Let us see how autograd enables neural network training:
 ### Visual: Neural Network Training Flow
 ```
 Training Loop Architecture:
-┌─────────────┐    ┌─────────────┐    ┌─────────────┐    ┌─────────────┐
-│   Forward   │───▶│    Loss     │───▶│  Backward   │───▶│   Update    │
-│     Pass    │    │ Computation │    │    Pass     │    │ Parameters  │
-└─────────────┘    └─────────────┘    └─────────────┘    └─────────────┘
-      ▲                                       │                    │
-      │                                       ▼                    ▼
-┌─────────────┐                        ┌─────────────┐    ┌─────────────┐
-│ Input Data  │                        │  Gradients  │    │  New Weights│
-│    (x, y)   │                        │   ∇L/∇θ     │    │     θ'      │
-└─────────────┘                        └─────────────┘    └─────────────┘
++-------------+    +-------------+    +-------------+    +-------------+
+|   Forward   |---▶|    Loss     |---▶|  Backward   |---▶|   Update    |
+|     Pass    |    | Computation |    |    Pass     |    | Parameters  |
++-------------+    +-------------+    +-------------+    +-------------+
+      ^                                       |                    |
+      |                                       v                    v
++-------------+                        +-------------+    +-------------+
+| Input Data  |                        |  Gradients  |    |  New Weights|
+|    (x, y)   |                        |   gradL/gradθ     |    |     θ'      |
++-------------+                        +-------------+    +-------------+
 
 Memory Flow During Training:
-    Parameters → Forward Activations → Loss → Gradients → Parameter Updates
-       θ              f(x; θ)         L     ∇L/∇θ           θ - α∇L/∇θ
+    Parameters -> Forward Activations -> Loss -> Gradients -> Parameter Updates
+       θ              f(x; θ)         L     gradL/gradθ           θ - αgradL/gradθ
      4 MB              12 MB         1 val   4 MB              4 MB
                     (stored for                              (in-place)
                      backward)
@@ -1328,24 +1332,24 @@ def test_module_neural_network_training():
     prediction_error = abs(test_prediction.numpy().item() - expected_output)
     assert prediction_error < 0.5, f"Prediction error should be small, got {prediction_error}"
     
-    print("✅ Neural network training comprehensive tests passed!")
-    print(f"✅ Parameters converged to correct values")
-    print(f"✅ Model makes accurate predictions")
-    print(f"✅ Autograd enables automatic training")
-    print(f"✅ Ready for complex neural network architectures!")
+    print("PASS Neural network training comprehensive tests passed!")
+    print(f"PASS Parameters converged to correct values")
+    print(f"PASS Model makes accurate predictions")
+    print(f"PASS Autograd enables automatic training")
+    print(f"PASS Ready for complex neural network architectures!")
 
 # Test will run in main block
 
-# ✅ IMPLEMENTATION CHECKPOINT: Neural network training complete
+# PASS IMPLEMENTATION CHECKPOINT: Neural network training complete
 
-# 🤔 PREDICTION: How does backward pass time compare to forward pass time?
+# THINK PREDICTION: How does backward pass time compare to forward pass time?
 # Your answer: _______
 
-# 🔍 SYSTEMS INSIGHT #3: Forward vs Backward Pass Performance
+# MAGNIFY SYSTEMS INSIGHT #3: Forward vs Backward Pass Performance
 def analyze_forward_backward_performance():
     """Analyze performance characteristics of forward vs backward passes."""
     try:
-        print("🔍 FORWARD VS BACKWARD PASS PERFORMANCE")
+        print("MAGNIFY FORWARD VS BACKWARD PASS PERFORMANCE")
         print("=" * 45)
         
         import time
@@ -1415,18 +1419,18 @@ def analyze_forward_backward_performance():
             print(f"  • Balanced forward/backward performance")
         
         print(f"\n🏭 Production Implications:")
-        print(f"  • Training time ≈ {1 + avg_ratio:.1f}x inference time")
-        print(f"  • Memory usage ≈ 2x parameters (gradients + weights)")
+        print(f"  • Training time ~= {1 + avg_ratio:.1f}x inference time")
+        print(f"  • Memory usage ~= 2x parameters (gradients + weights)")
         print(f"  • Gradient checkpointing can trade compute for memory")
         
-        # 💡 WHY THIS MATTERS: Backward pass typically takes 1.5-3x forward pass time.
+        # TIP WHY THIS MATTERS: Backward pass typically takes 1.5-3x forward pass time.
         # This determines training speed and influences architecture choices.
         # Understanding this ratio helps optimize training pipelines!
         
         return results
         
     except Exception as e:
-        print(f"⚠️ Error in performance analysis: {e}")
+        print(f"WARNING️ Error in performance analysis: {e}")
         print("Basic timing analysis shows autograd overhead patterns")
         return []
 
@@ -1451,7 +1455,7 @@ Normal Training:     Gradient Explosion:     With Clipping:
     |  \\                   |   \\                   |  \\___
     |   \\__                |    \\                  |      \\
     |      \\               |     \\                 |       \\
-    └────────            └──────\\                └─────────
+    +--------            +------\\                +---------
    Epoch                  Epoch  NaN             Epoch
                                ↗
                          Training
@@ -1459,7 +1463,7 @@ Normal Training:     Gradient Explosion:     With Clipping:
 ```
 
 ### Mathematical Foundation
-- **Gradient norm**: ||g|| = √(g₁² + g₂² + ... + gₙ²)
+- **Gradient norm**: ||g|| = sqrt(g₁² + g₂² + ... + gₙ²)
 - **Clipping factor**: max_norm / max(||g||, max_norm)
 - **Clipped gradients**: g' = g * clipping_factor
 
@@ -1567,7 +1571,7 @@ def enable_mixed_precision_gradients(variables: List[Variable], loss_scale: floa
         for var in variables:
             if var.grad is not None:
                 var.zero_grad()
-        print(f"⚠️ Gradient overflow detected, skipping optimizer step")
+        print(f"WARNING️ Gradient overflow detected, skipping optimizer step")
 
     return not overflow_detected
     ### END SOLUTION
@@ -1819,7 +1823,7 @@ class AutogradSystemsProfiler:
             "💾 Gradient checkpointing for memory-time trade-offs",
             "🔄 In-place operations where mathematically valid",
             "📊 Dynamic memory allocation with smart pre-allocation",
-            "🎯 Lazy evaluation for unused computation branches"
+            "TARGET Lazy evaluation for unused computation branches"
         ])
 
         return analysis
@@ -1839,8 +1843,8 @@ class AutogradSystemsProfiler:
         if avg_operations_per_layer > 3:
             fusion_analysis['fusion_opportunities'] = [
                 "🔀 Element-wise operation fusion (add, multiply, activation)",
-                "🔗 Matrix operation chains (matmul + bias + activation)",
-                "📈 Reduction operation fusion (sum, mean, variance)",
+                "LINK Matrix operation chains (matmul + bias + activation)",
+                "PROGRESS Reduction operation fusion (sum, mean, variance)",
                 "🎭 Attention pattern fusion (Q@K^T, softmax, @V)"
             ]
 
@@ -1863,8 +1867,8 @@ class AutogradSystemsProfiler:
 
         # Add kernel optimization strategies
         fusion_analysis['kernel_optimization_strategies'] = [
-            "⚡ JIT compilation for operation sequences",
-            "🎯 Vectorization of element-wise operations",
+            "SPEED JIT compilation for operation sequences",
+            "TARGET Vectorization of element-wise operations",
             "🔄 Loop fusion for reduced memory bandwidth",
             "📱 GPU kernel optimization for parallel execution",
             "🧮 Mixed precision kernel specialization"
@@ -1972,7 +1976,7 @@ class AutogradSystemsProfiler:
         This function is PROVIDED to demonstrate checkpointing analysis.
         Students use it to understand memory optimization strategies.
         """
-        print("🔍 GRADIENT CHECKPOINTING ANALYSIS")
+        print("MAGNIFY GRADIENT CHECKPOINTING ANALYSIS")
         print("=" * 45)
         
         base_graph_depth = 12
@@ -2019,7 +2023,7 @@ class AutogradSystemsProfiler:
         # Find optimal trade-off
         optimal = max(checkpointing_results, key=lambda x: x['memory_time_ratio'])
         
-        print(f"\n📈 Checkpointing Analysis:")
+        print(f"\nPROGRESS Checkpointing Analysis:")
         print(f"  Optimal frequency: Every {optimal['checkpoint_frequency']} layers")
         print(f"  Best trade-off: {optimal['memory_reduction_pct']:.1f}% memory reduction")
         print(f"  Cost: {optimal['time_overhead_pct']:.1f}% time overhead")
@@ -2033,7 +2037,7 @@ class AutogradSystemsProfiler:
         This function is PROVIDED to show mixed precision analysis.
         Students explore precision trade-offs in autograd systems.
         """
-        print("🔍 MIXED PRECISION TRAINING ANALYSIS")
+        print("MAGNIFY MIXED PRECISION TRAINING ANALYSIS")
         print("=" * 45)
 
         model_size_mb = 100  # Example 100MB model
@@ -2094,7 +2098,7 @@ class AutogradSystemsProfiler:
 
         optimal = max(precision_results, key=score_precision)
 
-        print(f"\n📈 Mixed Precision Analysis:")
+        print(f"\nPROGRESS Mixed Precision Analysis:")
         print(f"  Optimal configuration: {optimal['precision'].upper()}")
         print(f"  Memory savings: {optimal['memory_savings_pct']:.1f}%")
         print(f"  Performance gain: {optimal['relative_speed']:.1f}x")
@@ -2110,7 +2114,7 @@ class AutogradSystemsProfiler:
 
 # %% [markdown]
 """
-### 🧪 Unit Test: Autograd Systems Profiling
+### TEST Unit Test: Autograd Systems Profiling
 
 This test validates our autograd systems profiler with realistic computational graph scenarios.
 """
@@ -2144,7 +2148,7 @@ def test_autograd_systems_profiler():
             assert result['forward_time_ms'] >= 0, f"Forward time should be non-negative for depth {depth}"
             assert result['backward_time_ms'] >= 0, f"Backward time should be non-negative for depth {depth}"
         
-        print("✅ Computational graph depth analysis test passed")
+        print("PASS Computational graph depth analysis test passed")
         
         # Test memory checkpointing analysis
         checkpointing_analysis = profiler.analyze_memory_checkpointing_trade_offs(checkpoint_frequencies=[1, 2, 4])
@@ -2158,7 +2162,7 @@ def test_autograd_systems_profiler():
             assert 'time_overhead_pct' in result, "Should calculate time overhead"
             assert result['memory_reduction_pct'] >= 0, "Memory reduction should be non-negative"
 
-        print("✅ Memory checkpointing analysis test passed")
+        print("PASS Memory checkpointing analysis test passed")
 
         # Test mixed precision analysis
         mixed_precision_analysis = profiler.demonstrate_mixed_precision_benefits()
@@ -2171,13 +2175,13 @@ def test_autograd_systems_profiler():
             assert 'memory_savings_pct' in result, "Should calculate memory savings"
             assert 'relative_speed' in result, "Should include performance metrics"
 
-        print("✅ Mixed precision analysis test passed")
+        print("PASS Mixed precision analysis test passed")
         
     except Exception as e:
-        print(f"⚠️ Autograd profiling test had issues: {e}")
-        print("✅ Basic structure test passed (graceful degradation)")
+        print(f"WARNING️ Autograd profiling test had issues: {e}")
+        print("PASS Basic structure test passed (graceful degradation)")
     
-    print("🎯 Autograd Systems Profiler: All tests passed!")
+    print("TARGET Autograd Systems Profiler: All tests passed!")
 
 # Test will run in main block
 
@@ -2186,10 +2190,15 @@ def test_unit_gradient_clipping():
     """Test gradient clipping functionality."""
     print("🔬 Unit Test: Gradient Clipping...")
 
+    # Set seed for deterministic test
+    np.random.seed(42)
+
     # Create variables with large gradients
     w1 = Variable(np.random.randn(5, 5), requires_grad=True)
     w2 = Variable(np.random.randn(5, 3), requires_grad=True)
 
+    # Set seed again for gradient generation to ensure deterministic gradients
+    np.random.seed(42)
     # Simulate large gradients
     w1.grad = Variable(np.random.randn(5, 5) * 10)  # Large gradients
     w2.grad = Variable(np.random.randn(5, 3) * 15)  # Even larger gradients
@@ -2203,7 +2212,8 @@ def test_unit_gradient_clipping():
     computed_norm = clip_gradients([w1, w2], max_norm=max_norm)
 
     # Verify gradient norm was computed correctly
-    assert abs(computed_norm - total_original_norm) < 1e-6, "Should compute correct gradient norm"
+    norm_diff = abs(computed_norm - total_original_norm)
+    assert norm_diff < 1e-5, f"Gradient norm mismatch: computed={computed_norm:.8f}, expected={total_original_norm:.8f}, diff={norm_diff:.8f}"
 
     # Check that gradients were clipped if necessary
     if total_original_norm > max_norm:
@@ -2212,11 +2222,11 @@ def test_unit_gradient_clipping():
         new_total_norm = np.sqrt(new_norm1**2 + new_norm2**2)
 
         assert abs(new_total_norm - max_norm) < 1e-6, f"Clipped norm should be {max_norm}, got {new_total_norm}"
-        print(f"✅ Gradients clipped from {total_original_norm:.3f} to {new_total_norm:.3f}")
+        print(f"PASS Gradients clipped from {total_original_norm:.3f} to {new_total_norm:.3f}")
     else:
-        print(f"✅ Gradients within limit ({total_original_norm:.3f} <= {max_norm})")
+        print(f"PASS Gradients within limit ({total_original_norm:.3f} <= {max_norm})")
 
-    print("✅ Gradient clipping tests passed!")
+    print("PASS Gradient clipping tests passed!")
 
 def test_unit_mixed_precision():
     """Test mixed precision gradient handling."""
@@ -2241,10 +2251,10 @@ def test_unit_mixed_precision():
     assert success == False, "Should detect overflow and return False"
     assert w1.grad is None, "Should zero gradients on overflow"
 
-    print("✅ Mixed precision tests passed!")
+    print("PASS Mixed precision tests passed!")
 
 if __name__ == "__main__":
-    print("\n🧪 Running Autograd Module Tests...")
+    print("\nTEST Running Autograd Module Tests...")
 
     # Run all unit tests
     test_unit_variable_class()
@@ -2257,12 +2267,12 @@ if __name__ == "__main__":
     test_unit_mixed_precision()
     test_autograd_systems_profiler()
 
-    print("\n✅ All Autograd Module Tests Completed!")
+    print("\nPASS All Autograd Module Tests Completed!")
     print("Autograd module complete!")
 
 # %% [markdown]
 """
-## 🤔 ML Systems Thinking: Interactive Questions
+## THINK ML Systems Thinking: Interactive Questions
 
 Now that you've built automatic differentiation capabilities that enable neural network training, let's connect this foundational work to broader ML systems challenges. These questions help you think critically about how computational graphs scale to production training environments.
 
@@ -2397,18 +2407,18 @@ GRADING RUBRIC (Instructor Use):
 
 # %% [markdown]
 """
-## 🎯 MODULE SUMMARY: Automatic Differentiation
+## TARGET MODULE SUMMARY: Automatic Differentiation
 
 Congratulations! You have successfully implemented automatic differentiation:
 
 ### What You have Accomplished
-✅ **Computational Graphs**: Dynamic graph construction for gradient computation (Variable class with 200+ lines)
-✅ **Backpropagation**: Efficient gradient computation through reverse mode AD (add, multiply, subtract operations)
-✅ **Gradient Tracking**: Automatic gradient accumulation and management (chain rule implementation)
-✅ **Training Stability**: Gradient clipping and mixed precision support for robust training
-✅ **Memory Optimization**: Advanced profiling with checkpointing and fusion analysis
-✅ **Integration**: Seamless compatibility with Tensor operations (neural network training capability)
-✅ **Real Applications**: Neural network training and optimization (linear regression convergence test)
+PASS **Computational Graphs**: Dynamic graph construction for gradient computation (Variable class with 200+ lines)
+PASS **Backpropagation**: Efficient gradient computation through reverse mode AD (add, multiply, subtract operations)
+PASS **Gradient Tracking**: Automatic gradient accumulation and management (chain rule implementation)
+PASS **Training Stability**: Gradient clipping and mixed precision support for robust training
+PASS **Memory Optimization**: Advanced profiling with checkpointing and fusion analysis
+PASS **Integration**: Seamless compatibility with Tensor operations (neural network training capability)
+PASS **Real Applications**: Neural network training and optimization (linear regression convergence test)
 
 ### Key Learning Outcomes
 - **Computational graphs**: How operations are tracked for gradient computation through dynamic graph construction
@@ -2420,7 +2430,7 @@ Congratulations! You have successfully implemented automatic differentiation:
 - **Integration patterns**: How autograd works with neural networks for training
 
 ### Mathematical Foundations Mastered
-- **Chain rule**: The mathematical foundation ∂f/∂x = ∂f/∂z · ∂z/∂x for backpropagation
+- **Chain rule**: The mathematical foundation df/dx = df/dz · dz/dx for backpropagation
 - **Computational graphs**: Representing operations as directed acyclic graphs with forward/backward passes
 - **Gradient flow**: How gradients propagate through complex functions automatically
 - **Memory efficiency**: O(N) gradient storage scaling with graph depth

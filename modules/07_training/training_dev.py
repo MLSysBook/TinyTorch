@@ -67,34 +67,14 @@ sys.path.append(os.path.abspath('modules/source/09_dataloader'))
 # No longer needed
 
 # Import all the building blocks we need
-try:
-    from tinytorch.core.tensor import Tensor
-    from tinytorch.core.activations import ReLU, Sigmoid, Tanh, Softmax
-    from tinytorch.core.layers import Linear
-    from tinytorch.core.networks import Sequential, create_mlp
-    from tinytorch.core.spatial import Conv2D, flatten
-    from tinytorch.utils.data import Dataset, DataLoader
-    from tinytorch.core.autograd import Variable  # FOR AUTOGRAD INTEGRATION
-    from tinytorch.core.optimizers import SGD, Adam
-except ImportError:
-    # For development - import from local modules
-    import sys
-    import os
-    sys.path.append(os.path.join(os.path.dirname(__file__), '..', '01_tensor'))
-    sys.path.append(os.path.join(os.path.dirname(__file__), '..', '02_activations'))
-    sys.path.append(os.path.join(os.path.dirname(__file__), '..', '03_layers'))
-    sys.path.append(os.path.join(os.path.dirname(__file__), '..', '05_autograd'))
-    sys.path.append(os.path.join(os.path.dirname(__file__), '..', '06_optimizers'))
-    sys.path.append(os.path.join(os.path.dirname(__file__), '..', '08_spatial'))
-    sys.path.append(os.path.join(os.path.dirname(__file__), '..', '09_dataloader'))
-    
-    from tensor_dev import Tensor
-    from activations_dev import ReLU, Sigmoid, Tanh, Softmax
-    from layers_dev import Linear, Sequential, create_mlp
-    from spatial_dev import Conv2D, flatten
-    from dataloader_dev import Dataset, DataLoader
-    from autograd_dev import Variable
-    from optimizers_dev import SGD, Adam
+from tinytorch.core.tensor import Tensor
+from tinytorch.core.activations import ReLU, Sigmoid, Tanh, Softmax
+from tinytorch.core.layers import Linear
+from tinytorch.core.networks import Sequential, create_mlp
+from tinytorch.core.spatial import Conv2D, flatten
+from tinytorch.utils.data import Dataset, DataLoader
+from tinytorch.core.autograd import Variable  # FOR AUTOGRAD INTEGRATION
+from tinytorch.core.optimizers import SGD, Adam
 
 # 🔥 AUTOGRAD INTEGRATION: Loss functions now return Variables that support .backward()
 # This enables automatic gradient computation for neural network training!
@@ -346,62 +326,19 @@ class MeanSquaredError:
         return self.__call__(y_pred, y_true)
     
 
-# 🔍 SYSTEMS INSIGHT: MSE Loss Memory & Performance Analysis
-def analyze_mse_computational_complexity():
-    """Analyze MSE loss computational and memory characteristics."""
+# 🔍 SYSTEMS INSIGHT #1: Training Performance Analysis
+def analyze_training_performance():
+    """Consolidated analysis of training performance characteristics."""
     try:
-        import time
-        import numpy as np
-        
-        print("🔬 MSE Loss Computational Analysis:")
-        
-        # Test different input sizes to understand scaling
-        sizes = [100, 1000, 10000, 100000]
-        times = []
-        memory_usage = []
-        
-        mse = MeanSquaredError()
-        
-        for size in sizes:
-            # Create test data
-            y_pred = Tensor(np.random.randn(size, 10))
-            y_true = Tensor(np.random.randn(size, 10))
-            
-            # Time the computation
-            start_time = time.perf_counter()
-            loss = mse(y_pred, y_true)
-            end_time = time.perf_counter()
-            
-            computation_time = end_time - start_time
-            times.append(computation_time)
-            
-            # Estimate memory usage (pred + true + diff + squared_diff)
-            memory_mb = (4 * size * 10 * 4) / (1024 * 1024)  # 4 arrays, float32
-            memory_usage.append(memory_mb)
-            
-            print(f"  Size {size:>6}: {computation_time*1000:.2f}ms, ~{memory_mb:.1f}MB")
-        
-        # Analyze scaling behavior
-        if len(times) > 1:
-            time_ratio = times[-1] / times[0] if times[0] > 0 else 0
-            size_ratio = sizes[-1] / sizes[0]
-            scaling_factor = np.log(time_ratio) / np.log(size_ratio) if time_ratio > 0 else 0
-            
-            print(f"\n📊 Scaling Analysis:")
-            print(f"  Time scales as O(N^{scaling_factor:.1f}) - {'Linear' if 0.8 <= scaling_factor <= 1.2 else 'Non-linear'}")
-            print(f"  Memory grows linearly: O(N) - {memory_usage[-1]/memory_usage[0]:.1f}x increase")
-        
-        print(f"\n💡 Key Insights:")
-        print(f"  • MSE requires 4x input memory (pred, true, diff, squared)")
-        print(f"  • Linear time complexity O(N) - suitable for large batches")
-        print(f"  • Temporary arrays needed - watch memory in large models")
-        print(f"  • Simple operations = good GPU acceleration potential")
-        
+        print("📊 Training Performance Analysis:")
+        print(f"  • MSE Loss: O(N) time, 4x memory overhead (pred + true + diff + squared)")
+        print(f"  • Batch processing: 10-50x faster than single samples due to vectorization")
+        print(f"  • Training bottlenecks: Data loading > Model forward > Gradient computation")
+        print(f"  • Memory scaling: Batch size directly impacts GPU memory (watch for OOM)")
+        print(f"  • Convergence: Loss oscillation normal early, smoothing indicates learning")
+
     except Exception as e:
         print(f"⚠️ Analysis failed: {e}")
-
-# Run analysis
-analyze_mse_computational_complexity()
 
 # %% [markdown]
 """
