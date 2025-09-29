@@ -180,8 +180,8 @@ class CIFARCNN:
     def parameters(self):
         """Get all trainable parameters from YOUR layers."""
         return [
-            self.conv1.weights, self.conv1.bias,
-            self.conv2.weights, self.conv2.bias,
+            self.conv1.weight, self.conv1.bias,
+            self.conv2.weight, self.conv2.bias,
             self.fc1.weights, self.fc1.bias,
             self.fc2.weights, self.fc2.bias
         ]
