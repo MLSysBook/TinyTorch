@@ -63,18 +63,75 @@ import numpy as np
 import sys
 import os
 
-# Import our building blocks - try package first, then local modules
+# Import our building blocks - Tensor first, autograd operations if available
 try:
     from tinytorch.core.tensor import Tensor
-    from tinytorch.core.autograd import Variable, subtract, multiply, add, matmul
-    # CRITICAL: Now using full autograd integration for proper gradient flow
-    # These losses will work with the autograd computational graph
 except ImportError:
     # For development, import from local modules
     sys.path.append(os.path.join(os.path.dirname(__file__), '..', '01_tensor'))
     from tensor_dev import Tensor
-    sys.path.append(os.path.join(os.path.dirname(__file__), '..', '05_autograd'))
-    from autograd_dev import Variable, subtract, multiply, add, matmul
+
+# Try to import autograd operations if available (after module 05)
+# Initially losses work with basic tensors, get enhanced with autograd later
+_autograd_available = False
+try:
+    from tinytorch.core.autograd import Variable, subtract, multiply, add, matmul
+    _autograd_available = True
+except ImportError:
+    # Try development import
+    try:
+        sys.path.append(os.path.join(os.path.dirname(__file__), '..', '05_autograd'))
+        from autograd_dev import Variable, subtract, multiply, add, matmul
+        _autograd_available = True
+    except ImportError:
+        # Autograd not available yet - losses will work with basic tensor operations
+        # This is the expected case for modules 01-04
+        _autograd_available = False
+
+        # Define basic operations for tensors (will be replaced by autograd versions later)
+        def subtract(a, b):
+            """Basic subtraction for tensors (before autograd)."""
+            if hasattr(a, 'data') and hasattr(b, 'data'):
+                return Tensor(a.data - b.data)
+            elif hasattr(a, 'data'):
+                return Tensor(a.data - b)
+            elif hasattr(b, 'data'):
+                return Tensor(a - b.data)
+            else:
+                return Tensor(a - b)
+
+        def multiply(a, b):
+            """Basic multiplication for tensors (before autograd)."""
+            if hasattr(a, 'data') and hasattr(b, 'data'):
+                return Tensor(a.data * b.data)
+            elif hasattr(a, 'data'):
+                return Tensor(a.data * b)
+            elif hasattr(b, 'data'):
+                return Tensor(a * b.data)
+            else:
+                return Tensor(a * b)
+
+        def add(a, b):
+            """Basic addition for tensors (before autograd)."""
+            if hasattr(a, 'data') and hasattr(b, 'data'):
+                return Tensor(a.data + b.data)
+            elif hasattr(a, 'data'):
+                return Tensor(a.data + b)
+            elif hasattr(b, 'data'):
+                return Tensor(a + b.data)
+            else:
+                return Tensor(a + b)
+
+        def matmul(a, b):
+            """Basic matrix multiplication for tensors (before autograd)."""
+            if hasattr(a, 'data') and hasattr(b, 'data'):
+                return Tensor(a.data @ b.data)
+            elif hasattr(a, 'data'):
+                return Tensor(a.data @ b)
+            elif hasattr(b, 'data'):
+                return Tensor(a @ b.data)
+            else:
+                return Tensor(a @ b)
 
 # %% nbgrader={"grade": false, "grade_id": "losses-setup", "locked": false, "schema_version": 3, "solution": false, "task": false}
 print("FIRE TinyTorch Loss Functions Module")
@@ -2208,11 +2265,11 @@ to enable proper backpropagation through the computational graph.
 #| export
 class MSELoss:
     """
-    Mean Squared Error Loss with Autograd Integration
+    Mean Squared Error Loss - Works with both Tensors and Variables
 
-    This version properly integrates with the autograd system to enable
-    gradient flow during backpropagation. Unlike the basic MeanSquaredError
-    above, this returns a Variable that participates in the computational graph.
+    Initially works with basic Tensors (modules 01-04).
+    Automatically upgrades to use Variables when autograd is available (module 05+).
+    This staged approach allows testing loss functions before learning automatic differentiation.
     """
 
     def __init__(self):
@@ -2221,44 +2278,55 @@ class MSELoss:
 
     def __call__(self, predictions, targets):
         """
-        Compute MSE loss with autograd support.
+        Compute MSE loss.
 
         Args:
-            predictions: Model predictions (Variable or convertible to Variable)
-            targets: True targets (Variable or convertible to Variable)
+            predictions: Model predictions (Tensor/Variable)
+            targets: True targets (Tensor/Variable)
 
         Returns:
-            Variable with scalar loss value and gradient tracking
+            Scalar loss value (Tensor initially, Variable after autograd)
         """
-        # Ensure inputs are Variables for gradient tracking
-        if not isinstance(predictions, Variable):
+        if _autograd_available:
+            # Autograd available - use Variables for gradient tracking
+            if not isinstance(predictions, Variable):
+                pred_data = predictions.data if hasattr(predictions, 'data') else predictions
+                predictions = Variable(pred_data, requires_grad=False)
+
+            if not isinstance(targets, Variable):
+                target_data = targets.data if hasattr(targets, 'data') else targets
+                targets = Variable(target_data, requires_grad=False)
+
+            # Compute MSE using autograd operations
+            diff = subtract(predictions, targets)
+            squared_diff = multiply(diff, diff)
+
+            # Sum all elements and divide by count to get mean
+            loss = Variable.sum(squared_diff)
+
+            # Convert to mean (divide by number of elements)
+            batch_size = predictions.data.data.size
+            mean_loss = multiply(loss, 1.0 / batch_size)
+        else:
+            # Basic tensor operations - no gradient tracking yet
             pred_data = predictions.data if hasattr(predictions, 'data') else predictions
-            predictions = Variable(pred_data, requires_grad=False)
-
-        if not isinstance(targets, Variable):
             target_data = targets.data if hasattr(targets, 'data') else targets
-            targets = Variable(target_data, requires_grad=False)
 
-        # Compute MSE using autograd operations
-        diff = subtract(predictions, targets)
-        squared_diff = multiply(diff, diff)
-
-        # Sum all elements and divide by count to get mean
-        loss = Variable.sum(squared_diff)
-
-        # Convert to mean (divide by number of elements)
-        batch_size = predictions.data.data.size
-        mean_loss = multiply(loss, 1.0 / batch_size)
+            # Compute MSE using numpy operations
+            diff = pred_data - target_data
+            squared_diff = diff * diff
+            mean_loss = Tensor(np.mean(squared_diff))
 
         return mean_loss
 
 #| export
 class CrossEntropyLoss:
     """
-    Cross-Entropy Loss with Autograd Integration
+    Cross-Entropy Loss - Works with both Tensors and Variables
 
-    Simplified cross-entropy that works with the autograd system.
-    For training neural networks with gradient-based optimization.
+    Initially works with basic Tensors (modules 01-04).
+    Automatically upgrades to use Variables when autograd is available (module 05+).
+    This staged approach allows testing loss functions before learning automatic differentiation.
     """
 
     def __init__(self):
@@ -2267,27 +2335,29 @@ class CrossEntropyLoss:
 
     def __call__(self, predictions, targets):
         """
-        Compute cross-entropy loss with autograd support.
+        Compute cross-entropy loss.
 
         Args:
-            predictions: Model predictions/logits (Variable)
-            targets: True class indices (Variable or numpy array)
+            predictions: Model predictions/logits (Tensor/Variable)
+            targets: True class indices (Tensor/Variable or numpy array)
 
         Returns:
-            Variable with scalar loss value and gradient tracking
+            Scalar loss value (Tensor initially, Variable after autograd)
         """
-        # Handle Variable inputs
-        if isinstance(predictions, Variable):
-            pred_data = predictions.data.data
-        elif hasattr(predictions, 'data'):
-            pred_data = predictions.data
+        # Extract raw data from inputs
+        if hasattr(predictions, 'data'):
+            if hasattr(predictions.data, 'data'):  # Variable with nested data
+                pred_data = predictions.data.data
+            else:  # Tensor with data
+                pred_data = predictions.data
         else:
             pred_data = predictions
 
-        if isinstance(targets, Variable):
-            target_data = targets.data.data
-        elif hasattr(targets, 'data'):
-            target_data = targets.data
+        if hasattr(targets, 'data'):
+            if hasattr(targets.data, 'data'):  # Variable with nested data
+                target_data = targets.data.data
+            else:  # Tensor with data
+                target_data = targets.data
         else:
             target_data = targets
 
@@ -2311,27 +2381,31 @@ class CrossEntropyLoss:
             # One-hot labels
             loss = -np.mean(np.sum(target_data * np.log(softmax_pred), axis=-1))
 
-        # Return as Variable with gradient function
-        result = Variable(loss, requires_grad=True)
+        if _autograd_available:
+            # Return as Variable with gradient function
+            result = Variable(loss, requires_grad=True)
 
-        # Define backward function for proper gradient flow
-        def grad_fn(gradient):
-            if isinstance(predictions, Variable) and predictions.requires_grad:
-                batch_size = pred_data.shape[0]
+            # Define backward function for proper gradient flow
+            def grad_fn(gradient):
+                if isinstance(predictions, Variable) and predictions.requires_grad:
+                    batch_size = pred_data.shape[0]
 
-                # Gradient of cross-entropy with softmax
-                if len(target_data.shape) == 1 or target_data.shape[-1] == 1:
-                    # Integer labels - gradient is (softmax - one_hot_targets)
-                    grad = softmax_pred.copy()
-                    for i in range(batch_size):
-                        label = int(target_data[i])
-                        grad[i, label] -= 1
-                    grad = grad / batch_size * gradient  # Scale by incoming gradient
-                else:
-                    # One-hot labels
-                    grad = (softmax_pred - target_data) / batch_size * gradient
+                    # Gradient of cross-entropy with softmax
+                    if len(target_data.shape) == 1 or target_data.shape[-1] == 1:
+                        # Integer labels - gradient is (softmax - one_hot_targets)
+                        grad = softmax_pred.copy()
+                        for i in range(batch_size):
+                            label = int(target_data[i])
+                            grad[i, label] -= 1
+                        grad = grad / batch_size * gradient  # Scale by incoming gradient
+                    else:
+                        # One-hot labels
+                        grad = (softmax_pred - target_data) / batch_size * gradient
 
-                predictions.backward(grad)
+                    predictions.backward(grad)
 
-        result.grad_fn = grad_fn
-        return result
+            result.grad_fn = grad_fn
+            return result
+        else:
+            # Basic tensor operation - no gradient tracking yet
+            return Tensor(loss)

@@ -77,75 +77,116 @@ else:
     finally:
         sys.path.pop(0)  # Always clean up path to avoid side effects
 
-# CRITICAL FIX: Parameter must be Variable-based for gradient tracking
 class Parameter:
     """
-    A trainable parameter that supports automatic differentiation.
+    A trainable parameter that wraps a Tensor and supports gradient tracking.
 
-    This creates a Variable with requires_grad=True for use as neural network parameters.
-    Essential for gradient-based optimization of weights and biases.
+    Initially works with basic Tensors only (modules 01-04).
+    After module 05 (autograd), gets enhanced with automatic differentiation.
 
-    IMPORTANT: Parameters must participate in autograd for training to work.
+    This staged approach allows students to build and test layers before learning autograd.
     """
     def __init__(self, data):
-        # Import Variable locally to avoid circular imports
+        if isinstance(data, Tensor):
+            self._tensor = data
+        else:
+            # Convert numpy array or list to Tensor
+            self._tensor = Tensor(data)
+
+        # Initially no gradient tracking - will be enhanced after autograd module
+        self._grad = None
+        self._requires_grad = True  # Mark as trainable for future enhancement
+
+        # Try to upgrade to Variable if autograd is available (after module 05)
+        self._try_upgrade_to_variable()
+
+    def _try_upgrade_to_variable(self):
+        """Attempt to upgrade to Variable if autograd is available."""
         try:
+            # Try importing Variable (will work after module 05)
             from tinytorch.core.autograd import Variable
+
+            # Upgrade to Variable for gradient tracking
+            self._variable = Variable(self._tensor.data, requires_grad=True)
+            self._is_variable = True
         except ImportError:
-            # For development, import from local module
-            import sys
-            import os
-            sys.path.append(os.path.join(os.path.dirname(__file__), '..', '05_autograd'))
-            from autograd_dev import Variable
-
-        # Create Variable with gradient tracking enabled
-        if isinstance(data, Variable):
-            self._variable = data
-            if not data.requires_grad:
-                # Ensure parameters always require gradients
-                self._variable.requires_grad = True
-        else:
-            # Convert data to Variable with gradient tracking
-            self._variable = Variable(data, requires_grad=True)
-
-    def __getattr__(self, name):
-        """Delegate all attribute access to the underlying Variable."""
-        return getattr(self._variable, name)
-
-    def __setattr__(self, name, value):
-        """Handle setting attributes."""
-        if name == '_variable':
-            super().__setattr__(name, value)
-        else:
-            # Delegate to underlying Variable
-            setattr(self._variable, name, value)
+            # Autograd not yet available - stay as basic Parameter with Tensor
+            self._variable = None
+            self._is_variable = False
 
     @property
     def data(self):
         """Access to underlying data."""
-        return self._variable.data
+        if self._is_variable:
+            return self._variable.data
+        else:
+            return self._tensor.data
+
+    @property
+    def shape(self):
+        """Shape of the parameter tensor."""
+        if self._is_variable:
+            return self._variable.data.shape
+        else:
+            return self._tensor.shape
 
     @property
     def grad(self):
-        """Access to gradient."""
-        return self._variable.grad
+        """Access to gradient (None if autograd not available yet)."""
+        if self._is_variable:
+            return self._variable.grad
+        else:
+            return self._grad  # Will be None initially
 
     @grad.setter
     def grad(self, value):
         """Set gradient."""
-        self._variable.grad = value
+        if self._is_variable:
+            self._variable.grad = value
+        else:
+            self._grad = value
 
     @property
     def requires_grad(self):
         """Whether this parameter requires gradients."""
-        return self._variable.requires_grad
+        if self._is_variable:
+            return self._variable.requires_grad
+        else:
+            return self._requires_grad
 
     def backward(self, gradient=None):
-        """Backpropagate gradients."""
-        return self._variable.backward(gradient)
+        """Backpropagate gradients (only works after autograd module)."""
+        if self._is_variable:
+            return self._variable.backward(gradient)
+        else:
+            raise NotImplementedError("Gradient computation requires autograd module (module 05)")
+
+    def __add__(self, other):
+        """Addition operation."""
+        if self._is_variable:
+            return self._variable + other
+        else:
+            return self._tensor + other
+
+    def __mul__(self, other):
+        """Multiplication operation."""
+        if self._is_variable:
+            return self._variable * other
+        else:
+            return self._tensor * other
+
+    def __matmul__(self, other):
+        """Matrix multiplication."""
+        if self._is_variable:
+            return self._variable @ other
+        else:
+            return self._tensor @ other
 
     def __repr__(self):
-        return f"Parameter({self._variable})"
+        if self._is_variable:
+            return f"Parameter({self._variable})"
+        else:
+            return f"Parameter(Tensor({self._tensor.data.shape}), requires_grad={self._requires_grad})"
 
 # In[ ]:
 
