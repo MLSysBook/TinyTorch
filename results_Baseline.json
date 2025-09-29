@@ -1,34 +1,34 @@
 {
   "Perceptron": {
     "success": true,
-    "time": 1.924880027770996,
+    "time": 1.7636549472808838,
     "output_preview": "ion\n\n\ud83d\ude80 Next Steps:\n   \u2022 Continue to XOR 1969 milestone after Module 06 (Autograd)\n   \u2022 YOUR foundation enables solving non-linear problems!\n   \u2022 With 100.0% accuracy, YOUR perceptron works perfectly!\n",
     "loss": 0.2038,
     "accuracy": 100.0
   },
   "XOR": {
     "success": true,
-    "time": 1.8728010654449463,
+    "time": 1.8759121894836426,
     "output_preview": "ayer networks\n\n\ud83d\ude80 Next Steps:\n   \u2022 Continue to MNIST MLP after Module 08 (Training)\n   \u2022 YOUR XOR solution scales to real vision problems!\n   \u2022 Hidden layers principle powers all modern deep learning!\n",
     "loss": 0.2497,
     "accuracy": 54.5
   },
   "MNIST": {
     "success": true,
-    "time": 1.9613378047943115,
+    "time": 1.8865001201629639,
     "output_preview": " a scalar is deprecated, and will error in future. Ensure you extract a single element from your array before performing this operation. (Deprecated NumPy 1.25.)\n  one_hot[i, int(labels_np[i])] = 1.0\n",
     "loss": 0.0,
-    "accuracy": 11.5
+    "accuracy": 9.0
   },
   "CIFAR": {
     "success": false,
-    "time": 60,
-    "timeout": true
+    "time": 3.8529930114746094,
+    "output_preview": "\n   Total parameters: 612,042\n\n\ud83e\uddea ARCHITECTURE TEST MODE\n   Using minimal dataset for optimization testing framework...\n\u2705 Forward pass successful! Shape: (1, 10)\n\u2705 YOUR CNN + DataLoader work together!\n"
   },
   "TinyGPT": {
     "success": true,
-    "time": 1.9189341068267822,
+    "time": 1.8408770561218262,
     "output_preview": "ining\n   \u2022 Complete transformer architecture from first principles\n\n\ud83c\udfed Production Note:\n   Real PyTorch uses optimized CUDA kernels for attention,\n   but you built and understand the core mathematics!\n",
-    "loss": 0.3419
+    "loss": 0.2969
   }
 }

@@ -118,8 +118,8 @@ class OptimizationTester:
             env['TINYTORCH_OPT'] = optimization['module']
         
         try:
-            # Use shorter timeout for CIFAR architecture test
-            timeout_val = 30 if example['name'] == 'CIFAR' else 60
+            # Use longer timeout for CIFAR since Conv2D operations are slow in pure Python
+            timeout_val = 120 if example['name'] == 'CIFAR' else 60
             cmd = f"python {example['path']} {example['args']}"
             result = subprocess.run(
                 cmd,

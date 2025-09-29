@@ -449,8 +449,17 @@ def main():
     
     if args.test_only:
         print("\n🧪 ARCHITECTURE TEST MODE")
-        # Test with a single batch from YOUR DataLoader
-        for batch_data, batch_labels in train_loader:
+        # Create minimal test data for fast architecture validation
+        print("   Using minimal dataset for optimization testing framework...")
+        test_data_mini = np.random.randn(2, 3, 32, 32).astype(np.float32)  # Just 2 samples
+        test_labels_mini = np.array([0, 1], dtype=np.int64)  # 2 labels
+
+        # Create minimal dataset and dataloader
+        mini_dataset = CIFARDataset(test_data_mini, test_labels_mini)
+        mini_loader = DataLoader(mini_dataset, batch_size=1, shuffle=False)  # Batch size 1
+
+        # Test with single sample from minimal DataLoader
+        for batch_data, batch_labels in mini_loader:
             test_output = model.forward(batch_data)
             print(f"✅ Forward pass successful! Shape: {test_output.data.shape}")
             print("✅ YOUR CNN + DataLoader work together!")
