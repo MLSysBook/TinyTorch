@@ -766,14 +766,20 @@ def analyze_gradient_computation():
 
     # Test 2: Memory usage pattern
     print("\n💾 Memory Usage Analysis:")
-    import psutil
-    import os
+    try:
+        import psutil
+        import os
 
-    def get_memory_mb():
-        process = psutil.Process(os.getpid())
-        return process.memory_info().rss / 1024 / 1024
+        def get_memory_mb():
+            process = psutil.Process(os.getpid())
+            return process.memory_info().rss / 1024 / 1024
 
-    baseline = get_memory_mb()
+        baseline = get_memory_mb()
+        psutil_available = True
+    except ImportError:
+        print("  Note: psutil not installed, skipping detailed memory analysis")
+        psutil_available = False
+        baseline = 0
 
     # Create computation graph with many variables
     variables = []
@@ -786,15 +792,19 @@ def analyze_gradient_computation():
     for var in variables[1:]:
         result = add(result, var)
 
-    memory_after_forward = get_memory_mb()
+    if psutil_available:
+        memory_after_forward = get_memory_mb()
 
     # Backward pass
     result.backward()
-    memory_after_backward = get_memory_mb()
 
-    print(f"  Baseline memory: {baseline:.1f}MB")
-    print(f"  After forward pass: {memory_after_forward:.1f}MB (+{memory_after_forward-baseline:.1f}MB)")
-    print(f"  After backward pass: {memory_after_backward:.1f}MB (+{memory_after_backward-baseline:.1f}MB)")
+    if psutil_available:
+        memory_after_backward = get_memory_mb()
+        print(f"  Baseline memory: {baseline:.1f}MB")
+        print(f"  After forward pass: {memory_after_forward:.1f}MB (+{memory_after_forward-baseline:.1f}MB)")
+        print(f"  After backward pass: {memory_after_backward:.1f}MB (+{memory_after_backward-baseline:.1f}MB)")
+    else:
+        print("  Memory tracking skipped (psutil not available)")
 
     # Test 3: Gradient accumulation
     print("\n🔄 Gradient Accumulation Test:")

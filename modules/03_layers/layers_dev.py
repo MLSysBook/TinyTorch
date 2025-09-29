@@ -312,9 +312,10 @@ class Module:
         # Break down the complex boolean logic for clarity:
         is_tensor_like = hasattr(value, 'data') and hasattr(value, 'shape')
         is_tensor_type = isinstance(value, Tensor)
+        is_parameter_type = isinstance(value, Parameter)
         is_parameter_name = name in ['weights', 'weight', 'bias']
-        
-        if is_tensor_like and is_tensor_type and is_parameter_name:
+
+        if is_tensor_like and (is_tensor_type or is_parameter_type) and is_parameter_name:
             # Step 2: Add to our parameter list for optimization
             self._parameters.append(value)
         
@@ -633,7 +634,13 @@ def test_unit_linear():
     assert layer_init.bias.shape == (5,), f"Expected bias shape (5,), got {layer_init.bias.shape}"
     
     # Check that weights are reasonably small (good initialization)
-    assert np.abs(layer_init.weights.data).mean() < 1.0, "Weights should be small for good initialization"
+    mean_val = np.abs(layer_init.weights.data).mean()
+    # Convert to float if it's a Tensor
+    if hasattr(mean_val, 'item'):
+        mean_val = mean_val.item()
+    elif hasattr(mean_val, 'data'):
+        mean_val = float(mean_val.data)
+    assert mean_val < 1.0, "Weights should be small for good initialization"
     print("PASS Parameter initialization correct")
     
     print("CELEBRATE All Linear layer tests passed!")
