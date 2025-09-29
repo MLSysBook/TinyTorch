@@ -126,6 +126,100 @@ def test_dense_layer():
 test_dense_layer()
 ```
 
+## 🚨 CRITICAL: Module Dependency Rules
+
+### Tensor Evolution Pattern - THE CLEAN APPROACH
+
+**CRITICAL: Use ONE evolving Tensor class, NOT separate Tensor/Variable classes**
+
+Following PyTorch's design philosophy, TinyTorch uses a single `Tensor` class that gains capabilities over time:
+
+#### Module Evolution Plan
+
+```
+Module 01 (Tensor):
+├── Create basic Tensor class with data storage
+├── Add requires_grad=False by default
+├── Add placeholder grad=None
+├── Add NotImplementedError for backward()
+└── Basic operations (__add__, __mul__) without gradient tracking
+
+Module 02-04 (Activations, Layers, Losses):
+├── Use existing Tensor class as-is
+├── Work with requires_grad=False tensors
+├── Build layers, activations, losses on basic Tensor
+└── No gradient functionality needed yet
+
+Module 05 (Autograd):
+├── STUDENTS UPDATE the existing Tensor class
+├── Implement the backward() method (replace NotImplementedError)
+├── Update operations (__add__, __mul__) to build computation graph
+├── Add grad_fn tracking for chain rule
+└── Now requires_grad=True works everywhere automatically
+
+Module 06+ (Optimizers, Training, etc.):
+├── Use enhanced Tensor class with full gradient capabilities
+├── All previous code works unchanged (backward compatibility)
+├── New code can use requires_grad=True for automatic differentiation
+└── Single clean interface throughout
+```
+
+#### Implementation Examples
+
+**Module 01: Basic Tensor**
+```python
+class Tensor:
+    def __init__(self, data, requires_grad=False):
+        self.data = np.array(data)
+        self.requires_grad = requires_grad
+        self.grad = None  # Placeholder for later
+
+    def backward(self, gradient=None):
+        raise NotImplementedError("Autograd coming in Module 05!")
+
+    def __add__(self, other):
+        return Tensor(self.data + other.data)
+```
+
+**Module 03: Layers using Tensor**
+```python
+class Linear:
+    def __init__(self, in_features, out_features):
+        # Use Tensor directly, not Parameter wrapper
+        self.weights = Tensor(np.random.randn(in_features, out_features) * 0.1)
+        self.bias = Tensor(np.zeros(out_features))
+
+    def forward(self, x):
+        return x @ self.weights + self.bias  # Clean operations
+```
+
+**Module 05: Students enhance existing Tensor**
+```python
+def backward(self, gradient=None):
+    """Students implement this to replace NotImplementedError"""
+    if not self.requires_grad:
+        raise RuntimeError("Tensor doesn't require gradients")
+    if self.grad is None:
+        self.grad = np.zeros_like(self.data)
+    self.grad += gradient
+    if self.grad_fn:
+        self.grad_fn(gradient)
+```
+
+### Key Benefits
+- ✅ **No hasattr() checks needed anywhere**
+- ✅ **Single class students always use: Tensor**
+- ✅ **Clean evolution: students enhance existing class**
+- ✅ **Matches PyTorch mental model exactly**
+- ✅ **No type confusion or conversion needed**
+
+### Forbidden Patterns
+- ❌ **BAD**: `if hasattr(x, 'data'): x.data else: x`
+- ❌ **BAD**: Separate Tensor and Variable classes
+- ❌ **BAD**: Parameter wrappers with hasattr() checks
+- ✅ **GOOD**: Single Tensor class with requires_grad flag
+- ✅ **GOOD**: Clear error messages when features not available
+
 ## 🔬 ML Systems Focus
 
 ### MANDATORY Systems Analysis Sections
