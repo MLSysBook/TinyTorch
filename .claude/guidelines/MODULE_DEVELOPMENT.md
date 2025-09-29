@@ -166,59 +166,132 @@ Module 06+ (Optimizers, Training, etc.):
 
 #### Implementation Examples
 
-**Module 01: Basic Tensor**
+**Module 01: Basic Tensor (Focus ONLY on data storage)**
 ```python
 class Tensor:
-    def __init__(self, data, requires_grad=False):
+    def __init__(self, data):
         self.data = np.array(data)
-        self.requires_grad = requires_grad
-        self.grad = None  # Placeholder for later
-
-    def backward(self, gradient=None):
-        raise NotImplementedError("Autograd coming in Module 05!")
+        self.shape = self.data.shape
 
     def __add__(self, other):
         return Tensor(self.data + other.data)
+
+    def __mul__(self, other):
+        return Tensor(self.data * other.data)
+
+    # No gradient-related code AT ALL
 ```
 
-**Module 03: Layers using Tensor**
+**Module 02-04: Use basic Tensor as-is**
 ```python
 class Linear:
     def __init__(self, in_features, out_features):
-        # Use Tensor directly, not Parameter wrapper
+        # Use basic Tensor - no gradient tracking yet
         self.weights = Tensor(np.random.randn(in_features, out_features) * 0.1)
         self.bias = Tensor(np.zeros(out_features))
 
     def forward(self, x):
-        return x @ self.weights + self.bias  # Clean operations
+        return x @ self.weights + self.bias  # Basic operations
 ```
 
-**Module 05: Students enhance existing Tensor**
+**Module 05: Students EXTEND Tensor using Python class decoration**
 ```python
-def backward(self, gradient=None):
-    """Students implement this to replace NotImplementedError"""
-    if not self.requires_grad:
-        raise RuntimeError("Tensor doesn't require gradients")
-    if self.grad is None:
-        self.grad = np.zeros_like(self.data)
-    self.grad += gradient
-    if self.grad_fn:
-        self.grad_fn(gradient)
+def add_autograd(cls):
+    """Decorator that adds gradient tracking to existing Tensor class"""
+
+    # Save original methods
+    original_init = cls.__init__
+    original_add = cls.__add__
+    original_mul = cls.__mul__
+
+    def new_init(self, data, requires_grad=False):
+        # Call original constructor
+        original_init(self, data)
+        # Add gradient tracking
+        self.requires_grad = requires_grad
+        self.grad = None
+        self.grad_fn = None
+
+    def new_add(self, other):
+        result = original_add(self, other)
+        # Add gradient computation graph building
+        if self.requires_grad or (hasattr(other, 'requires_grad') and other.requires_grad):
+            result.requires_grad = True
+            def grad_fn(gradient):
+                if self.requires_grad:
+                    self.backward(gradient)
+                if hasattr(other, 'requires_grad') and other.requires_grad:
+                    other.backward(gradient)
+            result.grad_fn = grad_fn
+        return result
+
+    def backward(self, gradient=None):
+        """New method added to Tensor class"""
+        if not self.requires_grad:
+            raise RuntimeError("Tensor doesn't require gradients")
+        if self.grad is None:
+            self.grad = np.zeros_like(self.data)
+        self.grad += gradient
+        if self.grad_fn:
+            self.grad_fn(gradient)
+
+    # Enhance the existing class
+    cls.__init__ = new_init
+    cls.__add__ = new_add
+    cls.__mul__ = new_mul
+    cls.backward = backward
+
+    return cls
+
+# Students apply the decorator to enhance their existing Tensor
+Tensor = add_autograd(Tensor)
+
+# Now all existing code works with gradient tracking!
+x = Tensor([1, 2, 3], requires_grad=True)
+y = x + x  # Builds computation graph automatically
+y.backward([1, 1, 1])  # Computes gradients
 ```
+
+### 🪄 Python Class Extension Magic
+
+**CRITICAL: Use Python metaprogramming to extend classes cleanly**
+
+The decorator pattern uses Python's dynamic nature to add capabilities to existing classes:
+
+```python
+# This is "monkey patching" - modifying classes after definition
+original_method = MyClass.some_method
+
+def enhanced_method(self, *args, **kwargs):
+    # Add new behavior
+    result = original_method(self, *args, **kwargs)
+    # Add more behavior
+    return result
+
+MyClass.some_method = enhanced_method  # Replace the method
+```
+
+**Educational Benefits:**
+- ✅ **Each module focuses ONLY on its concepts** (no forward-looking code)
+- ✅ **Clean separation** - Module 01 is pure data structure, Module 05 is pure autograd
+- ✅ **Python learning** - Students learn metaprogramming and decorators
+- ✅ **Real-world pattern** - This is how many frameworks actually work
 
 ### Key Benefits
-- ✅ **No hasattr() checks needed anywhere**
-- ✅ **Single class students always use: Tensor**
-- ✅ **Clean evolution: students enhance existing class**
-- ✅ **Matches PyTorch mental model exactly**
-- ✅ **No type confusion or conversion needed**
+- ✅ **Zero hasattr() checks anywhere** - decorator handles all compatibility
+- ✅ **Single class throughout** - always just `Tensor`
+- ✅ **Module focus** - each module teaches exactly one concept
+- ✅ **Python mastery** - students learn advanced Python patterns
+- ✅ **Clean backward compatibility** - all old code works automatically
 
-### Forbidden Patterns
+### Forbidden Patterns (UPDATED)
 - ❌ **BAD**: `if hasattr(x, 'data'): x.data else: x`
 - ❌ **BAD**: Separate Tensor and Variable classes
 - ❌ **BAD**: Parameter wrappers with hasattr() checks
-- ✅ **GOOD**: Single Tensor class with requires_grad flag
-- ✅ **GOOD**: Clear error messages when features not available
+- ❌ **BAD**: `requires_grad` in Module 01 constructor
+- ✅ **GOOD**: Pure data class in Module 01, enhanced via decorator in Module 05
+- ✅ **GOOD**: Python metaprogramming to extend functionality
+- ✅ **GOOD**: Each module contains only what students need to learn at that stage
 
 ## 🔬 ML Systems Focus
 
