@@ -1,0 +1,34 @@
+{
+  "submission_id": "cnn_marathon_c2e53e_20250929_095832",
+  "timestamp": "2025-09-29T09:58:32.654283",
+  "team_name": "Pruning Pros",
+  "event_name": "cnn_marathon",
+  "optimization_description": "Sparse pruned model with distillation",
+  "github_url": "https://github.com/pruning-pros/efficient-cnn",
+  "performance_metrics": {
+    "event": "CNN Marathon",
+    "model_type": "EfficientCNNModel",
+    "input_shape": [
+      50,
+      28,
+      28,
+      1
+    ],
+    "benchmark_timestamp": "2025-09-29T09:58:32.609029",
+    "mean_inference_time": 0.0001154916400082584,
+    "std_inference_time": 3.759119898403894e-06,
+    "min_inference_time": 0.0001096873999813397,
+    "max_inference_time": 0.00011975830004757881,
+    "p95_inference_time": 0.00011967080003614683,
+    "mean_cpu_time": 0.0001154916400082584,
+    "cpu_efficiency": 0.85,
+    "profiling_method": "TinyTorch Module 15 Profiler",
+    "memory_delta_mb": 0.00266265869140625,
+    "peak_memory_mb": 0.31275177001953125,
+    "result_size_mb": 0.1,
+    "speedup_vs_baseline": 0.9904829473972296
+  },
+  "speedup_score": 0.9904829473972296,
+  "baseline_time_ms": 0.11439249999511958,
+  "submission_time_ms": 0.1154916400082584
+}
