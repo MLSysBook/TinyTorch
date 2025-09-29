@@ -993,79 +993,6 @@ from tinytorch.core.tensor import Tensor  # Pure tensor foundation (always neede
 
 # %%
 
-# %% [markdown]
-"""
-## Complete Neural Network Demo
-"""
-
-def demonstrate_complete_networks():
-    """Demonstrate complete neural networks using all implemented components."""
-    print("FIRE Complete Neural Network Demo")
-    print("=" * 50)
-    
-    print("\n1. MLP for Classification (MNIST-style):")
-    # Multi-layer perceptron for image classification
-    mlp = Sequential([
-        Flatten(),              # Flatten input images
-        Linear(784, 256),       # First hidden layer
-        Linear(256, 128),       # Second hidden layer  
-        Linear(128, 10)         # Output layer (10 classes)
-    ])
-    
-    # Test with batch of "images"
-    batch_images = Tensor(np.random.randn(32, 28, 28))  # 32 MNIST-like images
-    mlp_output = mlp(batch_images)
-    print(f"   Input: {batch_images.shape} (batch of 28x28 images)")
-    print(f"   Output: {mlp_output.shape} (class logits for 32 images)")
-    print(f"   Parameters: {len(mlp.parameters())} tensors")
-    
-    print("\n2. CNN-style Architecture (with Flatten):")
-    # Simulate CNN -> Flatten -> Dense pattern
-    cnn_style = Sequential([
-        # Simulate Conv2D output with random "features"
-        Flatten(),              # Flatten spatial features
-        Linear(512, 256),       # Dense layer after convolution
-        Linear(256, 10)         # Classification head
-    ])
-    
-    # Test with simulated conv output
-    conv_features = Tensor(np.random.randn(16, 8, 8, 8))  # Simulated (B,C,H,W)
-    cnn_output = cnn_style(conv_features)
-    print(f"   Input: {conv_features.shape} (simulated conv features)")
-    print(f"   Output: {cnn_output.shape} (class predictions)")
-    
-    print("\n3. Deep Network with Many Layers:")
-    # Demonstrate deep composition
-    deep_net = Sequential()
-    layer_sizes = [100, 80, 60, 40, 20, 10]
-    
-    for i in range(len(layer_sizes) - 1):
-        deep_net.add(Linear(layer_sizes[i], layer_sizes[i+1]))
-        print(f"   Added layer: {layer_sizes[i]} -> {layer_sizes[i+1]}")
-    
-    # Test deep network
-    deep_input = Tensor(np.random.randn(8, 100))
-    deep_output = deep_net(deep_input)
-    print(f"   Deep network: {deep_input.shape} -> {deep_output.shape}")
-    print(f"   Total parameters: {len(deep_net.parameters())} tensors")
-    
-    print("\n4. Parameter Management Across Networks:")
-    networks = {'MLP': mlp, 'CNN-style': cnn_style, 'Deep': deep_net}
-    
-    for name, net in networks.items():
-        params = net.parameters()
-        total_params = sum(p.data.size for p in params)
-        memory_mb = total_params * 4 / (1024 * 1024)  # float32 = 4 bytes
-        print(f"   {name}: {len(params)} param tensors, {total_params:,} total params, {memory_mb:.2f} MB")
-    
-    print("\nCELEBRATE All components work together seamlessly!")
-    print("   • Module system enables automatic parameter collection")
-    print("   • Linear layers handle matrix transformations") 
-    print("   • Sequential composes layers into complete architectures")
-    print("   • Flatten connects different layer types")
-    print("   • Everything integrates for production-ready neural networks!")
-
-demonstrate_complete_networks()
 
 # In[ ]:
 
@@ -1099,10 +1026,6 @@ if __name__ == "__main__":
     # Systems analysis
     print("\n" + "=" * 50)
     analyze_layer_performance()
-
-    # Complete demo
-    print("\n" + "=" * 50)
-    demonstrate_complete_networks()
 
     print("\n🎉 LAYERS MODULE COMPLETE!")
     print("✅ Ready for advanced architectures and training!")
