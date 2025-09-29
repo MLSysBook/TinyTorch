@@ -41,7 +41,7 @@ class OptimizationTester:
             {
                 'name': 'CIFAR',
                 'path': 'examples/cifar_cnn_modern/train_cnn.py',
-                'args': '--test-only',  # Quick test for now
+                'args': '--test-only',  # Architecture test only
                 'metrics': ['forward_pass', 'time']
             },
             {
@@ -52,7 +52,7 @@ class OptimizationTester:
             }
         ]
         
-        # Define optimization levels (modules 15-20)
+        # Define optimization levels (modules 14-19 based on actual TinyTorch structure)
         self.optimizations = [
             {
                 'level': 0,
@@ -61,40 +61,40 @@ class OptimizationTester:
                 'module': None
             },
             {
+                'level': 14,
+                'name': 'Profiling',
+                'description': 'Module 14: Performance profiling and analysis',
+                'module': 'profiling'
+            },
+            {
                 'level': 15,
-                'name': 'Memory Optimization',
-                'description': 'Module 15: Memory-efficient operations',
-                'module': 'memory_opt'
+                'name': 'Acceleration',
+                'description': 'Module 15: Hardware acceleration optimizations',
+                'module': 'acceleration'
             },
             {
                 'level': 16,
-                'name': 'Compute Optimization',
-                'description': 'Module 16: Vectorization and parallelization',
-                'module': 'compute_opt'
+                'name': 'Quantization',
+                'description': 'Module 16: Quantization and compression',
+                'module': 'quantization'
             },
             {
                 'level': 17,
-                'name': 'Cache Optimization',
-                'description': 'Module 17: Cache-friendly operations',
-                'module': 'cache_opt'
+                'name': 'Compression',
+                'description': 'Module 17: Model compression techniques',
+                'module': 'compression'
             },
             {
                 'level': 18,
-                'name': 'Kernel Fusion',
-                'description': 'Module 18: Fused operations',
-                'module': 'kernel_fusion'
+                'name': 'Caching',
+                'description': 'Module 18: Caching and memory optimization',
+                'module': 'caching'
             },
             {
                 'level': 19,
-                'name': 'Mixed Precision',
-                'description': 'Module 19: FP16/BF16 operations',
-                'module': 'mixed_precision'
-            },
-            {
-                'level': 20,
-                'name': 'Full Optimization',
-                'description': 'Module 20: All optimizations combined',
-                'module': 'full_opt'
+                'name': 'Benchmarking',
+                'description': 'Module 19: Advanced benchmarking suite',
+                'module': 'benchmarking'
             }
         ]
     
@@ -118,13 +118,15 @@ class OptimizationTester:
             env['TINYTORCH_OPT'] = optimization['module']
         
         try:
+            # Use shorter timeout for CIFAR architecture test
+            timeout_val = 30 if example['name'] == 'CIFAR' else 60
             cmd = f"python {example['path']} {example['args']}"
             result = subprocess.run(
                 cmd,
                 shell=True,
                 capture_output=True,
                 text=True,
-                timeout=60,
+                timeout=timeout_val,
                 env=env
             )
             
@@ -275,19 +277,27 @@ class OptimizationTester:
         self.log("\nMatrix saved to optimization_matrix.md")
 
 if __name__ == "__main__":
+    import sys
+
     tester = OptimizationTester()
-    
-    # For now, just test baseline
-    print("\nStarting with BASELINE performance testing...")
-    baseline = tester.optimizations[0]
-    baseline_results = tester.test_optimization_level(baseline)
-    
-    # Save baseline results
-    tester.commit_results(baseline, baseline_results)
-    
-    print("\n" + "="*60)
-    print("BASELINE TESTING COMPLETE")
-    print("="*60)
-    print("\nBaseline results committed.")
-    print("Ready to proceed with optimization testing.")
-    print("\nTo run full suite: python optimization_test_framework.py --full")
+
+    # Check if user wants full suite
+    if '--full' in sys.argv:
+        print("\n🚀 RUNNING FULL OPTIMIZATION TEST SUITE...")
+        print("Testing all optimization levels: Baseline → Profiling → Acceleration → Quantization → Compression → Caching → Benchmarking")
+        all_results = tester.run_full_test_suite()
+    else:
+        # Just test baseline
+        print("\nStarting with BASELINE performance testing...")
+        baseline = tester.optimizations[0]
+        baseline_results = tester.test_optimization_level(baseline)
+
+        # Save baseline results
+        tester.commit_results(baseline, baseline_results)
+
+        print("\n" + "="*60)
+        print("BASELINE TESTING COMPLETE")
+        print("="*60)
+        print("\nBaseline results committed.")
+        print("Ready to proceed with optimization testing.")
+        print("\nTo run full suite: python optimization_test_framework.py --full")
