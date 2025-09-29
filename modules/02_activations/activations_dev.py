@@ -66,30 +66,120 @@ print("Ready to build essential activation functions!")
 
 # %% [markdown]
 """
-## Why Activation Functions Matter
+## The Intelligence Layer: How Nonlinearity Enables Learning
 
-Activation functions inject nonlinearity into neural networks, enabling them to learn complex patterns beyond simple linear relationships.
+Without activation functions, neural networks are just fancy linear algebra. No matter how many layers you stack, they can only learn straight lines. Activation functions add the "intelligence" that enables neural networks to learn curves, patterns, and complex relationships.
 
-### ReLU: The Modern Standard
+### The Linearity Problem
 
-ReLU (Rectified Linear Unit) applies f(x) = max(0, x):
-- Zeros out negative values
-- Preserves positive values unchanged
-- Computationally simple and efficient
-- Enables training of very deep networks
+```
+Linear Network (No Activations):
+Input → Linear → Linear → Linear → Output
+  x   →  Ax    →  B(Ax) →C(B(Ax)) = (CBA)x
 
-### Softmax: Converting Scores to Probabilities
+Result: Still just a linear function!
+Cannot learn: curves, XOR, complex patterns
+```
 
-Softmax transforms any vector into a probability distribution:
-- All outputs sum to 1.0
-- All outputs are non-negative
-- Larger inputs get larger probabilities
-- Essential for classification tasks
+### The Nonlinearity Solution
+
+```
+Nonlinear Network (With Activations):
+Input → Linear → ReLU → Linear → ReLU → Output
+  x   →  Ax    → max(0,Ax) → B(·) → max(0,B(·))
+
+Result: Can approximate ANY function!
+Can learn: curves, XOR, images, language
+```
+
+### ReLU: The Intelligence Function
+
+ReLU (Rectified Linear Unit) is the most important function in modern AI:
+
+```
+ReLU Function: f(x) = max(0, x)
+
+   y
+   ▲
+   │   ╱
+   │  ╱  (positive values unchanged)
+   │ ╱
+───┼─────────▶ x
+   │ 0      (negative values → 0)
+   │
+
+Key Properties:
+• Computationally cheap: just comparison and zero
+• Gradient friendly: derivative is 0 or 1
+• Solves vanishing gradients: keeps signal strong
+• Enables deep networks: 100+ layers possible
+```
+
+### Softmax: The Probability Converter
+
+Softmax transforms any numbers into valid probabilities:
+
+```
+Raw Scores → Softmax → Probabilities
+[2.0, 1.0, 0.1] → [0.66, 0.24, 0.10]
+                   ↑    ↑    ↑
+                   Sum = 1.0 ✓
+                   All ≥ 0   ✓
+                   Larger in → Larger out ✓
+
+Formula: softmax(xᵢ) = exp(xᵢ) / Σⱼ exp(xⱼ)
+
+Use Case: Classification ("What percentage dog vs cat?")
+```
 """
 
 # %% [markdown]
 """
 ## Part 1: ReLU - The Foundation of Modern Deep Learning
+
+ReLU transformed deep learning from a curiosity to the technology powering modern AI. Before ReLU, deep networks suffered from vanishing gradients and couldn't learn effectively beyond a few layers. ReLU's simple yet brilliant design solved this problem.
+
+### ReLU in Action: Element-wise Processing
+
+```
+Input Tensor:           After ReLU:
+┌─────────────────┐    ┌─────────────────┐
+│ -2.1   0.5   3.2│    │  0.0   0.5   3.2│
+│  1.7  -0.8   2.1│ →  │  1.7   0.0   2.1│
+│ -1.0   4.0  -0.3│    │  0.0   4.0   0.0│
+└─────────────────┘    └─────────────────┘
+      ↓                      ↓
+Negative → 0            Positive → unchanged
+```
+
+### The Dead Neuron Problem
+
+```
+ReLU can "kill" neurons permanently:
+
+Neuron with weights that produce only negative outputs:
+Input: [1, 2, 3] → Linear: weights*input = -5.2 → ReLU: 0
+Input: [4, 1, 2] → Linear: weights*input = -2.8 → ReLU: 0
+Input: [0, 5, 1] → Linear: weights*input = -1.1 → ReLU: 0
+
+Result: Neuron outputs 0 forever (no learning signal)
+This is why proper weight initialization matters!
+```
+
+### Why ReLU Works Better Than Alternatives
+
+```
+Sigmoid: f(x) = 1/(1 + e^(-x))
+Problem: Gradients vanish for |x| > 3
+
+Tanh: f(x) = tanh(x)
+Problem: Gradients vanish for |x| > 2
+
+ReLU: f(x) = max(0, x)
+Solution: Gradient is exactly 1 for x > 0 (no vanishing!)
+```
+
+Now let's implement this game-changing function:
 """
 
 # %% nbgrader={"grade": false, "grade_id": "relu-class", "solution": true}
@@ -178,6 +268,30 @@ class ReLU:
 
 ### 🧪 Unit Test: ReLU Activation
 This test validates our ReLU implementation with various input scenarios
+
+**What we're testing**: ReLU's core behavior - zero negatives, preserve positives
+**Why it matters**: ReLU must work perfectly for neural networks to learn
+**Expected**: All negative values become 0, positive values unchanged
+
+### ReLU Test Cases Visualization
+
+```
+Test Case 1 - Basic Functionality:
+Input:  [-2, -1,  0,  1,  2]
+Output: [ 0,  0,  0,  1,  2]
+         ↑   ↑   ↑   ↑   ↑
+         ✓   ✓   ✓   ✓   ✓
+      (all negatives → 0, positives preserved)
+
+Test Case 2 - Matrix Processing:
+Input:  [[-1.5,  2.3],    Output: [[0.0, 2.3],
+         [ 0.0, -3.7]]             [0.0, 0.0]]
+
+Test Case 3 - Edge Cases:
+• Very large positive: 1e6 → 1e6 (no overflow)
+• Very small negative: -1e-6 → 0 (proper handling)
+• Zero exactly: 0.0 → 0.0 (boundary condition)
+```
 """
 
 def test_unit_relu_activation():
@@ -220,8 +334,55 @@ test_unit_relu_activation()
 """
 ## Part 2: Softmax - Converting Scores to Probabilities
 
-Softmax transforms any real-valued vector into a probability distribution.
-Essential for classification and attention mechanisms.
+Softmax is the bridge between raw neural network outputs and human-interpretable probabilities. It takes any vector of real numbers and transforms it into a valid probability distribution where all values sum to 1.0.
+
+### The Probability Transformation Process
+
+```
+Step 1: Raw Neural Network Outputs (can be any values)
+Raw scores: [2.0, 1.0, 0.1]
+
+Step 2: Exponentiation (makes everything positive)
+exp([2.0, 1.0, 0.1]) = [7.39, 2.72, 1.10]
+
+Step 3: Normalization (makes sum = 1.0)
+[7.39, 2.72, 1.10] / (7.39+2.72+1.10) = [0.66, 0.24, 0.10]
+                     ↑                      ↑     ↑     ↑
+                   Sum: 11.21              Total: 1.00 ✓
+```
+
+### Softmax in Classification
+
+```
+Neural Network for Image Classification:
+                    Raw Scores      Softmax      Interpretation
+Input: Dog Image → [2.1, 0.3, -0.8] → [0.75, 0.18, 0.07] → 75% Dog
+                    ↑    ↑     ↑        ↑     ↑     ↑         18% Cat
+                   Dog  Cat   Bird     Dog   Cat   Bird       7% Bird
+
+Key Properties:
+• Larger inputs get exponentially larger probabilities
+• Never produces negative probabilities
+• Always sums to exactly 1.0
+• Differentiable (can backpropagate gradients)
+```
+
+### The Numerical Stability Problem
+
+```
+Raw Softmax Formula: softmax(xᵢ) = exp(xᵢ) / Σⱼ exp(xⱼ)
+
+Problem with large numbers:
+Input: [1000, 999, 998]
+exp([1000, 999, 998]) = [∞, ∞, ∞]  ← Overflow!
+
+Solution - Subtract max before exp:
+x_stable = x - max(x)
+Input: [1000, 999, 998] - 1000 = [0, -1, -2]
+exp([0, -1, -2]) = [1.00, 0.37, 0.14] ← Stable!
+```
+
+Now let's implement this essential function:
 """
 
 # %% nbgrader={"grade": false, "grade_id": "softmax-class", "solution": true}
@@ -320,6 +481,35 @@ class Softmax:
 
 ### 🧪 Unit Test: Softmax Activation
 This test validates our Softmax implementation for correctness and numerical stability
+
+**What we're testing**: Softmax probability distribution properties
+**Why it matters**: Softmax must create valid probabilities for classification
+**Expected**: All outputs ≥ 0, sum to 1.0, numerically stable with large inputs
+
+### Softmax Test Cases Visualization
+
+```
+Test Case 1 - Basic Probability Distribution:
+Input:  [1.0, 2.0, 3.0]
+Output: [0.09, 0.24, 0.67]  ← Sum = 1.00 ✓, All ≥ 0 ✓
+         ↑     ↑     ↑
+      e^1/Σ e^2/Σ e^3/Σ    (largest input gets largest probability)
+
+Test Case 2 - Numerical Stability:
+Input:  [1000, 999, 998]     ← Would cause overflow without stability trick
+Output: [0.67, 0.24, 0.09]   ← Still produces valid probabilities!
+
+Test Case 3 - Edge Cases:
+• All equal inputs: [1, 1, 1] → [0.33, 0.33, 0.33] (uniform distribution)
+• One dominant: [10, 0, 0] → [≈1.0, ≈0.0, ≈0.0] (winner-take-all)
+• Negative inputs: [-1, -2, -3] → [0.67, 0.24, 0.09] (still works!)
+
+Test Case 4 - Batch Processing:
+Input Matrix:  [[1, 2, 3],     Output Matrix: [[0.09, 0.24, 0.67],
+                [4, 5, 6]]  →                  [0.09, 0.24, 0.67]]
+                ↑                               ↑
+            Each row processed independently   Each row sums to 1.0
+```
 """
 
 def test_unit_softmax_activation():

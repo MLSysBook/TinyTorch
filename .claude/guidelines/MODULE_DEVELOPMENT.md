@@ -88,6 +88,94 @@ if __name__ == "__main__":
 """
 ```
 
+## 📊 Visual Learning with ASCII Diagrams - MANDATORY
+
+**Every module MUST include ASCII diagrams to visualize key concepts.**
+
+ASCII diagrams provide immediate visual understanding without dependencies. They work in terminals, IDEs, notebooks, and are part of CS education tradition.
+
+### When to Use ASCII Diagrams:
+- **Data structures**: Show memory layout and object relationships
+- **Algorithms**: Visualize step-by-step execution
+- **Gradient flow**: Forward and backward passes
+- **Computation graphs**: Operation dependencies
+- **Performance**: Memory usage, complexity scaling
+- **Systems concepts**: Cache patterns, parallelization
+
+### ASCII Art Toolkit:
+```
+Box drawings: ┌─┐│└┘├┤┬┴┼╔═╗║╚╝╠╣╦╩╬
+Arrows: → ← ↓ ↑ ⇒ ⇐ ⇓ ⇑
+Math symbols: ∂ ∇ Σ ∏ ∫ ≈ ≠ ≤ ≥ ± ×
+Progress bars: ░▒▓█
+```
+
+### Example Excellence from Module 05:
+```
+    Forward Pass:                 Backward Pass:
+    x(2.0) ────┐                 x.grad ←── 1.0
+               ├─► [+] ──► z(5.0)         ↑
+    y(3.0) ────┘              │           │
+                               ▼           │
+                        z.backward(1.0) ───┘
+```
+
+### ASCII vs Equations:
+Let the content decide. Sometimes ASCII explains flow, sometimes equations explain math. Use both:
+```
+Product Rule: ∂z/∂x = y, ∂z/∂y = x
+
+    x(2.0) ──┐
+             ├─[×]→ z(6.0): grad_x = grad × y
+    y(3.0) ──┘              grad_y = grad × x
+```
+
+## 📝 Markdown Flow - Natural Narrative
+
+**CRITICAL: Markdown cells should flow naturally, explaining what's about to happen.**
+
+### Opening Explanation Pattern:
+Start each module with clear context about WHAT we're implementing and WHY:
+
+```python
+# %% [markdown]
+"""
+# Module 05: Autograd - Automatic Differentiation
+
+Here's what we're actually implementing: a system that automatically computes gradients by tracking operations and applying the chain rule backward. This requires:
+
+1. Extending our Tensor data structure to remember gradients
+2. Making operations "smart" so they record how to reverse themselves
+3. Building a computation graph as we compute forward
+4. Traversing that graph backward to compute all gradients
+
+Let's build this step by step, with immediate validation at each stage.
+"""
+```
+
+### Step Introduction Pattern:
+Each implementation step should explain the immediate goal:
+
+```python
+# %% [markdown]
+"""
+Now we'll make addition smart. When we compute z = x + y, we need z to remember
+how to send gradients back to both x and y. Since ∂z/∂x = 1 and ∂z/∂y = 1,
+both inputs will receive the same gradient unchanged.
+
+Here's what the gradient flow looks like:
+[ASCII diagram here]
+
+Let's implement this enhancement:
+"""
+```
+
+### Natural Flow Rules:
+- ❌ Don't add redundant section headers within explanations
+- ✅ Let the narrative flow from concept → visual → implementation → test
+- ✅ Use diagrams inline where they clarify understanding
+- ✅ Explain WHAT you're about to do and WHY before showing code
+
 ## 🧪 Implementation → Test Pattern
 
 **MANDATORY**: Every implementation must be immediately followed by a test.
@@ -422,6 +510,40 @@ class ReLU:
         return grad * (self.input > 0)
 ```
 
+## 🎨 Visual Excellence Examples
+
+### Memory Layout Visualization:
+```
+    Tensor Without Gradients:        Tensor With Gradients:
+    ┌─────────────────┐             ┌─────────────────────────┐
+    │ data: [1,2,3]   │             │ data: [1,2,3]           │
+    │ shape: (3,)     │             │ requires_grad: True     │
+    └─────────────────┘             │ grad: None → [∇₁,∇₂,∇₃] │
+                                    │ grad_fn: <AddBackward>   │
+                                    └─────────────────────────┘
+```
+
+### Algorithm Step Visualization:
+```
+    Convolution Sliding Window:
+    Input:          Kernel:       Step 1:        Step 2:
+    ┌─┬─┬─┬─┐      ┌─┬─┐        ╔═╦═╗┬─┬─┐     ┌─╔═╦═╗─┐
+    ├─┼─┼─┼─┤      ├─┼─┤   →    ╠═╬═╣┼─┼─┤  →  ├─╠═╬═╣─┤
+    ├─┼─┼─┼─┤      └─┴─┘        ╚═╩═╝┴─┴─┘     └─╚═╩═╝─┘
+    └─┴─┴─┴─┘                   Output: 6       Output: 8
+```
+
+### Performance Scaling:
+```
+    Memory Usage vs Network Depth:
+
+    10 layers:  ████████░░░░░░░░░░░░ 40%
+    20 layers:  ████████████████░░░░ 80%
+    30 layers:  ████████████████████ 100% (OOM)
+
+    Solution: Gradient checkpointing
+```
+
 ## ⚠️ Common Pitfalls
 
 1. **Too Much Theory**
@@ -445,15 +567,36 @@ class ReLU:
 Before considering a module complete:
 
 - [ ] All code in .py file (not notebook)
-- [ ] Follows exact structure pattern
+- [ ] Clear upfront explanation of WHAT and WHY
+- [ ] ASCII diagrams for key concepts
+- [ ] Natural markdown flow without redundant headers
+- [ ] Every implementation preceded by explanation
 - [ ] Every implementation has immediate test
-- [ ] Includes memory profiling
-- [ ] Includes complexity analysis
-- [ ] Shows production context
+- [ ] Memory profiling with visual representation
+- [ ] Complexity analysis with scaling diagrams
+- [ ] Production context with system diagrams
 - [ ] NBGrader metadata correct
-- [ ] ML systems thinking questions
+- [ ] ML systems thinking questions with visuals
 - [ ] Summary is LAST section
 - [ ] Tests run when module executed
+
+## 🎯 Visual Learning Philosophy
+
+**Great modules teach through seeing, not just reading.**
+
+Module 05's success comes from:
+1. **Clear goal setting**: Explaining WHAT we're building upfront
+2. **Visual-first teaching**: Concepts shown before implementation
+3. **Natural flow**: Explanations that lead naturally into code
+4. **Immediate feedback**: Tests that validate understanding
+5. **Systems thinking**: Visuals that show real-world implications
+
+When developing modules:
+- Start with the big picture explanation
+- Use ASCII diagrams liberally (they're free and universal!)
+- Let content determine visual needs (not every concept needs a diagram)
+- Ensure markdown flows as natural narrative
+- Show, don't just tell
 
 ## 🎯 Remember
 
