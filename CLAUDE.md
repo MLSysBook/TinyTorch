@@ -128,8 +128,31 @@ Use descriptive branch names that indicate the type of work:
 2. **Create branch** for each logical piece of work
 3. **Make focused commits** related to that branch only
 4. **Test your changes** before committing
-5. **Merge to dev** when feature is complete and tested
-6. **Delete feature branch** after successful merge
+5. **COMMIT FREQUENTLY** - Commit working states to enable rollback if needed
+6. **Merge to dev** when feature is complete and tested
+7. **Delete feature branch** after successful merge
+
+### 💾 Incremental Commit Strategy - TRACK YOUR PROGRESS
+**COMMIT EARLY, COMMIT OFTEN** - Create restore points:
+- ✅ Commit when you get something working (even partially)
+- ✅ Commit before attempting risky changes
+- ✅ Commit completed fixes before moving to next issue
+- ✅ Use clear commit messages that explain what works
+
+**Example Commit Flow:**
+```bash
+git commit -m "Fix Parameter class to work without autograd"
+# Test that it works...
+git commit -m "Add adaptive import for loss functions"
+# Test again...
+git commit -m "Verify all modules work in sequential order"
+```
+
+**Why This Matters:**
+- Easy rollback if something breaks: `git reset --hard HEAD~1`
+- Clear history of what was tried and what worked
+- Can cherry-pick working fixes if needed
+- Helps identify when issues were introduced
 
 ### ✅ Commit Standards - MANDATORY POLICIES
 - **One feature per branch** - don't mix unrelated changes
@@ -640,6 +663,76 @@ All TinyTorch modules MUST follow the standardized structure with MANDATORY syst
 ### 🔬 **New Principle: Every Module Teaches Systems Thinking Through Implementation**
 **MANDATORY**: Every module must demonstrate that understanding systems comes through building them, not just studying them.
 
+### 🚨 **CRITICAL: Module Dependency Rules - NO FORWARD REFERENCES**
+
+**MANDATORY MODULE DEPENDENCY PRINCIPLES:**
+
+#### **1. Sequential Build Order - STRICTLY ENFORCED**
+Modules are built by students in numerical order. Each module can ONLY use what came before:
+```
+01_tensor → 02_activations → 03_layers → 04_losses → 05_autograd → 06_spatial → ...
+```
+
+**GOLDEN RULE: Module N can only import from modules 1 through N-1**
+
+#### **2. NO Forward References - ZERO TOLERANCE**
+- ❌ **FORBIDDEN**: Module 03_layers importing from 05_autograd
+- ❌ **FORBIDDEN**: Module 04_losses importing from 09_optimizers
+- ✅ **CORRECT**: Module 06_spatial importing from 02_tensor and 03_layers
+- ✅ **CORRECT**: Module 10_optimizers using all modules 01-09
+
+#### **3. Progressive Enhancement Pattern**
+When later modules add capabilities (like autograd), use adaptive patterns:
+
+```python
+# CORRECT: Adaptive import in early module
+class Parameter:
+    def __init__(self, data):
+        # Works with basic Tensor initially
+        self._tensor = Tensor(data)
+
+        # Try to upgrade if autograd available
+        try:
+            from tinytorch.core.autograd import Variable
+            self._variable = Variable(data, requires_grad=True)
+            self._has_autograd = True
+        except ImportError:
+            # Autograd not built yet - work without it
+            self._has_autograd = False
+```
+
+#### **4. NO hasattr() Hacks - Find Root Causes**
+- ❌ **BAD**: Using `hasattr()` checks everywhere as band-aids
+- ❌ **BAD**: Catching AttributeErrors without understanding why
+- ✅ **GOOD**: Clean interfaces that work at each stage
+- ✅ **GOOD**: Clear error messages when features aren't available yet
+
+#### **5. Educational Framework Standards**
+**Remember: This is an educational framework, not production code**
+- **Goal**: Good enough to teach concepts clearly
+- **Non-goal**: Production-level performance or features
+- **Priority**: Clear, understandable code that builds incrementally
+- **OK to**: Look at PyTorch/TensorFlow for implementation patterns
+- **NOT OK**: Complex abstractions that confuse learning
+
+#### **6. Module Testing Independence**
+Each module MUST be testable in isolation:
+- Module tests should pass using only prior modules
+- No mocking of future module functionality
+- If a test needs autograd but module comes before autograd, the test is wrong
+
+#### **7. Clear Capability Boundaries**
+Document what each module provides and requires:
+```python
+# Module 03_layers header comment
+"""
+Layers Module - Neural Network Building Blocks
+Prerequisites: 01_tensor, 02_activations
+Provides: Linear, Parameter, Module base class
+Does NOT provide: Automatic differentiation (comes in 05_autograd)
+"""
+```
+
 ### 🧪 Testing Pattern - MANDATORY
 ```
 Implementation → Test Explanation (Markdown) → Test Code → Next Implementation
@@ -778,6 +871,9 @@ Content here...
 - **MUST ensure every module teaches systems thinking through implementation**
 
 **Module Developer:**
+- **MUST respect module dependency order** - NO forward references, EVER
+- **MUST ensure module N only imports from modules 1 through N-1**
+- **MUST NOT use hasattr() hacks** - fix root causes instead
 - Code implementation with MANDATORY ML systems analysis
 - **Memory profiling and complexity analysis** in every module
 - **Performance benchmarking** and bottleneck identification
@@ -787,6 +883,8 @@ Content here...
 - **Checkpoint system implementation**: Build checkpoint test files and CLI integration
 - **Module completion workflow**: Implement `tito module complete` with export and testing
 - **MUST include systems insights**: memory usage, computational complexity, scaling behavior
+- **MUST use adaptive patterns** when later modules add capabilities
+- **MUST ensure each module is testable in isolation**
 - **MUST notify QA Agent after ANY module changes**
 
 **Package Manager:**
