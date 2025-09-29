@@ -532,10 +532,39 @@ class Linear(Module):
 
 # In[ ]:
 
-# TEST Unit Test: Linear Layer
+# %% [markdown]
+"""
+### 🧪 Unit Test: Linear Layer
+This test validates our Linear layer implementation with matrix multiplication and parameter management.
+
+**What we're testing**: Linear layer transforms input dimensions correctly
+**Why it matters**: Linear layers are the fundamental building blocks of neural networks
+**Expected**: Correct output shapes, parameter handling, and batch processing
+
+### Linear Layer Computation Visualization
+
+```
+Forward Pass: y = x @ W + b
+
+Input Batch:          Weight Matrix:        Bias Vector:         Output:
+┌─────────────┐      ┌───────────────┐     ┌─────────┐         ┌──────────┐
+│ [1, 2, 3]   │      │ w₁₁  w₁₂     │     │   b₁    │         │ [y₁, y₂] │
+│ [4, 5, 6]   │  @   │ w₂₁  w₂₂     │  +  │   b₂    │    =    │ [y₃, y₄] │
+└─────────────┘      │ w₃₁  w₃₂     │     └─────────┘         └──────────┘
+  Batch(2,3)         └───────────────┘        (2,)               Batch(2,2)
+                        Weights(3,2)
+
+Memory Layout:
+• Input: [batch_size, input_features]
+• Weights: [input_features, output_features]
+• Bias: [output_features]
+• Output: [batch_size, output_features]
+```
+"""
+
 def test_unit_linear():
     """Test Linear layer implementation."""
-    print("TEST Testing Linear Layer...")
+    print("🔬 Unit Test: Linear Layer...")
     
     # Test case 1: Basic functionality
     layer = Linear(input_size=3, output_size=2)
@@ -583,9 +612,54 @@ test_unit_linear()
 # In[ ]:
 
 # TEST Unit Test: Parameter Management
+# %% [markdown]
+"""
+### 🧪 Unit Test: Parameter Management
+This test validates automatic parameter collection and module composition.
+
+**What we're testing**: Module system automatically collects parameters from nested layers
+**Why it matters**: Enables automatic optimization and parameter management in complex networks
+**Expected**: All parameters collected hierarchically, proper parameter counting
+
+### Parameter Management Hierarchy Visualization
+
+```
+Network Architecture:           Parameter Collection:
+
+SimpleNetwork                   network.parameters()
+├── layer1: Linear(4→3)           ├── layer1.weights [4×3] = 12 params
+│   ├── weights: (4,3)            ├── layer1.bias [3] = 3 params
+│   └── bias: (3,)                ├── layer2.weights [3×2] = 6 params
+└── layer2: Linear(3→2)           └── layer2.bias [2] = 2 params
+    ├── weights: (3,2)                              Total: 23 params
+    └── bias: (2,)
+
+Manual Tracking:          vs    Automatic Collection:
+weights = [                     params = model.parameters()
+  layer1.weights,               # Automatically finds ALL
+  layer1.bias,                  # parameters in the hierarchy
+  layer2.weights,               # No manual bookkeeping!
+  layer2.bias,
+]
+```
+
+### Memory and Parameter Scaling
+
+```
+Layer Configuration:        Parameters:              Memory (float32):
+Linear(100, 50)          → 100×50 + 50    = 5,050  → ~20KB
+Linear(256, 128)         → 256×128 + 128  = 32,896 → ~131KB
+Linear(512, 256)         → 512×256 + 256  = 131,328 → ~525KB
+Linear(1024, 512)        → 1024×512 + 512 = 524,800 → ~2.1MB
+
+Pattern: O(input_size × output_size) scaling
+Large layers dominate memory usage!
+```
+"""
+
 def test_unit_parameter_management():
     """Test Linear layer parameter management and module composition."""
-    print("TEST Testing Parameter Management...")
+    print("🔬 Unit Test: Parameter Management...")
     
     # Test case 1: Parameter registration
     layer = Linear(input_size=3, output_size=2)

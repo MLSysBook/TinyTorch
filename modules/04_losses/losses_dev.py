@@ -440,14 +440,47 @@ def analyze_mse_properties():
 
 # %% [markdown]
 """
-### TEST Unit Test: MSE Loss Computation
+### 🧪 Unit Test: MSE Loss Computation
 This test validates `MeanSquaredError.__call__`, ensuring correct MSE computation with various input types and batch sizes.
+
+**What we're testing**: MSE correctly measures prediction quality with quadratic penalty
+**Why it matters**: MSE must provide smooth gradients for stable regression training
+**Expected**: Zero loss for perfect predictions, increasing quadratic penalty for larger errors
+
+### MSE Loss Test Cases Visualization
+
+```
+Test Case 1 - Perfect Predictions:
+Predicted: [[1.0, 2.0], [3.0, 4.0]]
+Actual:    [[1.0, 2.0], [3.0, 4.0]]  ← Identical!
+MSE Loss:  0.0                       ← Perfect prediction = no penalty
+
+Test Case 2 - Small Errors:
+Predicted: [[1.1, 2.1], [3.1, 4.1]]  ← Each prediction off by 0.1
+Actual:    [[1.0, 2.0], [3.0, 4.0]]
+Errors:    [0.1, 0.1, 0.1, 0.1]      ← Uniform small error
+MSE Loss:  (0.1²+0.1²+0.1²+0.1²)/4 = 0.01
+
+Test Case 3 - Large Error Impact:
+Error = 1.0 → Loss contribution = 1.0²  = 1.0
+Error = 2.0 → Loss contribution = 2.0²  = 4.0   ← 2× error = 4× penalty!
+Error = 3.0 → Loss contribution = 3.0²  = 9.0   ← 3× error = 9× penalty!
+
+Loss Landscape:
+    Loss
+     ↑    /\
+    9 |   /  \        Large errors heavily penalized
+    4 |  /    \
+    1 | /      \      Small errors lightly penalized
+    0 |/__________\   Perfect prediction has zero loss
+      -3  -2  -1  0  1   2   3  → Error
+```
 """
 
 # %% nbgrader={"grade": true, "grade_id": "test-mse-loss", "locked": true, "points": 3, "schema_version": 3, "solution": false, "task": false}
 def test_unit_mse_loss():
     """Test MSE loss implementation."""
-    print("TEST Testing Mean Squared Error Loss...")
+    print("🔬 Unit Test: Mean Squared Error Loss...")
     
     mse = MeanSquaredError()
     
@@ -733,14 +766,58 @@ def analyze_crossentropy_stability():
 
 # %% [markdown]
 """
-### TEST Unit Test: Cross-Entropy Loss Computation
+### 🧪 Unit Test: Cross-Entropy Loss Computation
 This test validates `CrossEntropyLoss.__call__`, ensuring correct cross-entropy computation with numerically stable softmax.
+
+**What we're testing**: CrossEntropy provides correct classification loss with numerical stability
+**Why it matters**: CrossEntropy must handle extreme logits safely and encourage correct predictions
+**Expected**: High loss for wrong predictions, low loss for correct predictions, numerical stability
+
+### CrossEntropy Loss Test Cases Visualization
+
+```
+Classification Scenario: 3-class classification (Cat, Dog, Bird)
+
+Test Case 1 - Perfect Confidence:
+Logits:    [[10, 0, 0], [0, 10, 0]]  ← Very confident predictions
+True:      [0, 1]                    ← Cat, Dog
+Softmax:   [[≈1, 0, 0], [0, ≈1, 0]] ← Near-perfect probabilities
+CE Loss:   ≈0.0                     ← Minimal penalty for confidence
+
+Test Case 2 - Wrong but Confident:
+Logits:    [[0, 0, 10]]              ← Confident Bird prediction
+True:      [0]                       ← Actually Cat!
+Softmax:   [[0, 0, ≈1]]             ← Wrong class gets ≈100%
+CE Loss:   ≈10.0                    ← Heavy penalty for wrong confidence
+
+Test Case 3 - Uncertain (Good):
+Logits:    [[0, 0, 0]]               ← Completely uncertain
+True:      [0]                       ← Cat
+Softmax:   [[0.33, 0.33, 0.33]]     ← Equal probabilities
+CE Loss:   1.099                    ← Moderate penalty for uncertainty
+
+Loss Behavior Pattern:
+    Loss ↑
+    10  |     ●  (wrong + confident = disaster)
+        |
+     5  |
+        |
+     1  |        ●  (uncertain = acceptable)
+        |
+     0  |  ●         (correct + confident = ideal)
+        +________________→ Confidence
+        Wrong  Uncertain  Correct
+
+Numerical Stability:
+Input:  [1000, 0, -1000] → Subtract max: [0, -1000, -2000]
+Result: Prevents overflow while preserving relative differences
+```
 """
 
 # %% nbgrader={"grade": true, "grade_id": "test-crossentropy-loss", "locked": true, "points": 4, "schema_version": 3, "solution": false, "task": false}
 def test_unit_crossentropy_loss():
     """Test CrossEntropy loss implementation."""
-    print("TEST Testing Cross-Entropy Loss...")
+    print("🔬 Unit Test: Cross-Entropy Loss...")
     
     ce = CrossEntropyLoss()
     
