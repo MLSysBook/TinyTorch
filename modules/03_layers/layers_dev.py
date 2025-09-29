@@ -77,116 +77,12 @@ else:
     finally:
         sys.path.pop(0)  # Always clean up path to avoid side effects
 
-class Parameter:
-    """
-    A trainable parameter that wraps a Tensor and supports gradient tracking.
-
-    Initially works with basic Tensors only (modules 01-04).
-    After module 05 (autograd), gets enhanced with automatic differentiation.
-
-    This staged approach allows students to build and test layers before learning autograd.
-    """
-    def __init__(self, data):
-        if isinstance(data, Tensor):
-            self._tensor = data
-        else:
-            # Convert numpy array or list to Tensor
-            self._tensor = Tensor(data)
-
-        # Initially no gradient tracking - will be enhanced after autograd module
-        self._grad = None
-        self._requires_grad = True  # Mark as trainable for future enhancement
-
-        # Try to upgrade to Variable if autograd is available (after module 05)
-        self._try_upgrade_to_variable()
-
-    def _try_upgrade_to_variable(self):
-        """Attempt to upgrade to Variable if autograd is available."""
-        try:
-            # Try importing Variable (will work after module 05)
-            from tinytorch.core.autograd import Variable
-
-            # Upgrade to Variable for gradient tracking
-            self._variable = Variable(self._tensor.data, requires_grad=True)
-            self._is_variable = True
-        except ImportError:
-            # Autograd not yet available - stay as basic Parameter with Tensor
-            self._variable = None
-            self._is_variable = False
-
-    @property
-    def data(self):
-        """Access to underlying data."""
-        if self._is_variable:
-            return self._variable.data
-        else:
-            return self._tensor.data
-
-    @property
-    def shape(self):
-        """Shape of the parameter tensor."""
-        if self._is_variable:
-            return self._variable.data.shape
-        else:
-            return self._tensor.shape
-
-    @property
-    def grad(self):
-        """Access to gradient (None if autograd not available yet)."""
-        if self._is_variable:
-            return self._variable.grad
-        else:
-            return self._grad  # Will be None initially
-
-    @grad.setter
-    def grad(self, value):
-        """Set gradient."""
-        if self._is_variable:
-            self._variable.grad = value
-        else:
-            self._grad = value
-
-    @property
-    def requires_grad(self):
-        """Whether this parameter requires gradients."""
-        if self._is_variable:
-            return self._variable.requires_grad
-        else:
-            return self._requires_grad
-
-    def backward(self, gradient=None):
-        """Backpropagate gradients (only works after autograd module)."""
-        if self._is_variable:
-            return self._variable.backward(gradient)
-        else:
-            raise NotImplementedError("Gradient computation requires autograd module (module 05)")
-
-    def __add__(self, other):
-        """Addition operation."""
-        if self._is_variable:
-            return self._variable + other
-        else:
-            return self._tensor + other
-
-    def __mul__(self, other):
-        """Multiplication operation."""
-        if self._is_variable:
-            return self._variable * other
-        else:
-            return self._tensor * other
-
-    def __matmul__(self, other):
-        """Matrix multiplication."""
-        if self._is_variable:
-            return self._variable @ other
-        else:
-            return self._tensor @ other
-
-    def __repr__(self):
-        if self._is_variable:
-            return f"Parameter({self._variable})"
-        else:
-            return f"Parameter(Tensor({self._tensor.data.shape}), requires_grad={self._requires_grad})"
+# REMOVED: Parameter class - now using Tensor directly with requires_grad=True
+#
+# This creates a clean evolution pattern:
+# - Module 01-04: Use Tensor(data, requires_grad=True) directly
+# - Module 05: Tensor gains full autograd capabilities
+# - No more hasattr() hacks or wrapper classes needed
 
 # In[ ]:
 
@@ -349,14 +245,12 @@ class Module:
         When you do self.weight = Parameter(...), this automatically adds
         the parameter to our collection for easy optimization.
         """
-        # Step 1: Check if this looks like a parameter (Tensor with data and specific name)
-        # Break down the complex boolean logic for clarity:
-        is_tensor_like = hasattr(value, 'data') and hasattr(value, 'shape')
+        # Step 1: Check if this looks like a parameter (Tensor with parameter naming)
+        # Pure tensor evolution: identify parameters by naming convention
         is_tensor_type = isinstance(value, Tensor)
-        is_parameter_type = isinstance(value, Parameter)
         is_parameter_name = name in ['weights', 'weight', 'bias']
 
-        if is_tensor_like and (is_tensor_type or is_parameter_type) and is_parameter_name:
+        if is_tensor_type and is_parameter_name:
             # Step 2: Add to our parameter list for optimization
             self._parameters.append(value)
         
@@ -556,7 +450,7 @@ class Linear(Module):
         #
         # Production frameworks automatically choose initialization based on layer type!
         weight_data = np.random.randn(input_size, output_size) * 0.1
-        self.weights = Parameter(weight_data)  # Auto-registers for optimization!
+        self.weights = Tensor(weight_data)  # Pure tensor - will become trainable in Module 05
         
         # Initialize bias if requested
         if use_bias:
@@ -578,7 +472,7 @@ class Linear(Module):
             #
             # Bias also uses small random initialization (could be zeros, but small random works well)
             bias_data = np.random.randn(output_size) * 0.1
-            self.bias = Parameter(bias_data)  # Auto-registers for optimization!
+            self.bias = Tensor(bias_data)  # Pure tensor - will become trainable in Module 05
         else:
             self.bias = None
         ### END SOLUTION
@@ -616,28 +510,21 @@ class Linear(Module):
         - Handle both Tensor and Variable inputs gracefully
         """
         ### BEGIN SOLUTION
-        # Import autograd operations locally to avoid circular imports
-        try:
-            from tinytorch.core.autograd import Variable, matmul, add
-        except ImportError:
-            # For development, import from local module
-            import sys
-            import os
-            sys.path.append(os.path.join(os.path.dirname(__file__), '..', '05_autograd'))
-            from autograd_dev import Variable, matmul, add
+        # Clean Tensor Evolution Pattern:
+        # - Modules 01-04: Use basic Tensor operations (@, +)
+        # - Module 05+: Tensor gains full autograd capabilities automatically
 
-        # Ensure input is a Variable with appropriate gradient tracking
-        if not isinstance(x, Variable):
-            # Convert to Variable - don't track gradients for input data
-            x = Variable(x.data if hasattr(x, 'data') else x, requires_grad=False)
+        # Ensure input is a Tensor
+        if not isinstance(x, Tensor):
+            x = Tensor(x)
 
-        # Matrix multiplication using autograd: x @ weights
-        # This maintains the computational graph for gradient flow
-        result = matmul(x, self.weights)
+        # Matrix multiplication: input @ weights
+        # Uses Tensor's built-in @ operator (will be autograd-capable after Module 05)
+        result = x @ self.weights
 
-        # Add bias if it exists, using autograd addition
+        # Add bias if it exists
         if self.bias is not None:
-            result = add(result, self.bias)
+            result = result + self.bias
 
         # Result is automatically a Variable with gradient tracking
         return result
@@ -684,11 +571,8 @@ def test_unit_linear():
     
     # Check that weights are reasonably small (good initialization)
     mean_val = np.abs(layer_init.weights.data).mean()
-    # Convert to float if it's a Tensor
-    if hasattr(mean_val, 'item'):
-        mean_val = mean_val.item()
-    elif hasattr(mean_val, 'data'):
-        mean_val = float(mean_val.data)
+    # Convert to float - mean_val is a numpy scalar from np.abs().mean()
+    mean_val = float(mean_val)  # Direct conversion since np.mean returns numpy scalar
     assert mean_val < 1.0, "Weights should be small for good initialization"
     print("PASS Parameter initialization correct")
     
@@ -905,23 +789,22 @@ def flatten(x, start_dim=1):
         flat = flatten(images)  # (32, 2352) - ready for MLP!
     """
     # Get the data (handle both Tensor and numpy arrays)
-    if hasattr(x, 'data'):
+    if isinstance(x, Tensor):
         data = x.data
     else:
         data = x
-    
+
     # Calculate new shape
     batch_size = data.shape[0] if start_dim > 0 else 1
     remaining_size = np.prod(data.shape[start_dim:])
     new_shape = (batch_size, remaining_size) if start_dim > 0 else (remaining_size,)
-    
+
     # Reshape while preserving the original tensor type
-    if hasattr(x, 'data'):
+    if isinstance(x, Tensor):
         # It's a Tensor - create a new Tensor with flattened data
         flattened_data = data.reshape(new_shape)
-        # Use type(x) to preserve the exact Tensor type (Parameter vs regular Tensor)
-        # This ensures that if input was a Parameter, output is also a Parameter
-        return type(x)(flattened_data)
+        # Create new tensor - pure tensor approach (no gradient tracking yet)
+        return Tensor(flattened_data)
     else:
         # It's a numpy array - just reshape and return
         return data.reshape(new_shape)
@@ -1024,7 +907,7 @@ test_unit_flatten()
 ```python
 # Final package structure:
 from tinytorch.core.layers import Module, Linear, Sequential, Flatten  # This module
-from tinytorch.core.tensor import Tensor, Parameter  # Foundation (always needed)
+from tinytorch.core.tensor import Tensor  # Pure tensor foundation (always needed)
 ```
 
 **Why this matters:**

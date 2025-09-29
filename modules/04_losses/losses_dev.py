@@ -71,67 +71,10 @@ except ImportError:
     sys.path.append(os.path.join(os.path.dirname(__file__), '..', '01_tensor'))
     from tensor_dev import Tensor
 
-# Try to import autograd operations if available (after module 05)
-# Initially losses work with basic tensors, get enhanced with autograd later
-_autograd_available = False
-try:
-    from tinytorch.core.autograd import Variable, subtract, multiply, add, matmul
-    _autograd_available = True
-except ImportError:
-    # Try development import
-    try:
-        sys.path.append(os.path.join(os.path.dirname(__file__), '..', '05_autograd'))
-        from autograd_dev import Variable, subtract, multiply, add, matmul
-        _autograd_available = True
-    except ImportError:
-        # Autograd not available yet - losses will work with basic tensor operations
-        # This is the expected case for modules 01-04
-        _autograd_available = False
-
-        # Define basic operations for tensors (will be replaced by autograd versions later)
-        def subtract(a, b):
-            """Basic subtraction for tensors (before autograd)."""
-            if hasattr(a, 'data') and hasattr(b, 'data'):
-                return Tensor(a.data - b.data)
-            elif hasattr(a, 'data'):
-                return Tensor(a.data - b)
-            elif hasattr(b, 'data'):
-                return Tensor(a - b.data)
-            else:
-                return Tensor(a - b)
-
-        def multiply(a, b):
-            """Basic multiplication for tensors (before autograd)."""
-            if hasattr(a, 'data') and hasattr(b, 'data'):
-                return Tensor(a.data * b.data)
-            elif hasattr(a, 'data'):
-                return Tensor(a.data * b)
-            elif hasattr(b, 'data'):
-                return Tensor(a * b.data)
-            else:
-                return Tensor(a * b)
-
-        def add(a, b):
-            """Basic addition for tensors (before autograd)."""
-            if hasattr(a, 'data') and hasattr(b, 'data'):
-                return Tensor(a.data + b.data)
-            elif hasattr(a, 'data'):
-                return Tensor(a.data + b)
-            elif hasattr(b, 'data'):
-                return Tensor(a + b.data)
-            else:
-                return Tensor(a + b)
-
-        def matmul(a, b):
-            """Basic matrix multiplication for tensors (before autograd)."""
-            if hasattr(a, 'data') and hasattr(b, 'data'):
-                return Tensor(a.data @ b.data)
-            elif hasattr(a, 'data'):
-                return Tensor(a.data @ b)
-            elif hasattr(b, 'data'):
-                return Tensor(a @ b.data)
-            else:
-                return Tensor(a @ b)
+# Pure tensor evolution approach:
+# - Loss functions use basic Tensor operations directly
+# - Module 05 will add gradient tracking via decorator pattern
+# - Clean separation of concerns enables focused learning
 
 # %% nbgrader={"grade": false, "grade_id": "losses-setup", "locked": false, "schema_version": 3, "solution": false, "task": false}
 print("FIRE TinyTorch Loss Functions Module")
@@ -2287,35 +2230,23 @@ class MSELoss:
         Returns:
             Scalar loss value (Tensor initially, Variable after autograd)
         """
-        if _autograd_available:
-            # Autograd available - use Variables for gradient tracking
-            if not isinstance(predictions, Variable):
-                pred_data = predictions.data if hasattr(predictions, 'data') else predictions
-                predictions = Variable(pred_data, requires_grad=False)
+        # Clean Tensor Evolution Pattern:
+        # - Modules 01-04: Use basic Tensor operations
+        # - Module 05+: Same operations become autograd-capable automatically
 
-            if not isinstance(targets, Variable):
-                target_data = targets.data if hasattr(targets, 'data') else targets
-                targets = Variable(target_data, requires_grad=False)
+        # Ensure inputs are Tensors
+        if not isinstance(predictions, Tensor):
+            predictions = Tensor(predictions)
+        if not isinstance(targets, Tensor):
+            targets = Tensor(targets)
 
-            # Compute MSE using autograd operations
-            diff = subtract(predictions, targets)
-            squared_diff = multiply(diff, diff)
+        # Compute MSE using clean Tensor operations
+        diff = predictions - targets  # Uses Tensor.__sub__
+        squared_diff = diff * diff      # Uses Tensor.__mul__
 
-            # Sum all elements and divide by count to get mean
-            loss = Variable.sum(squared_diff)
-
-            # Convert to mean (divide by number of elements)
-            batch_size = predictions.data.data.size
-            mean_loss = multiply(loss, 1.0 / batch_size)
-        else:
-            # Basic tensor operations - no gradient tracking yet
-            pred_data = predictions.data if hasattr(predictions, 'data') else predictions
-            target_data = targets.data if hasattr(targets, 'data') else targets
-
-            # Compute MSE using numpy operations
-            diff = pred_data - target_data
-            squared_diff = diff * diff
-            mean_loss = Tensor(np.mean(squared_diff))
+        # Use numpy for mean calculation (will be enhanced in autograd)
+        # Access the underlying numpy data for aggregation
+        mean_loss = Tensor(np.mean(squared_diff.data))
 
         return mean_loss
 
@@ -2344,22 +2275,15 @@ class CrossEntropyLoss:
         Returns:
             Scalar loss value (Tensor initially, Variable after autograd)
         """
-        # Extract raw data from inputs
-        if hasattr(predictions, 'data'):
-            if hasattr(predictions.data, 'data'):  # Variable with nested data
-                pred_data = predictions.data.data
-            else:  # Tensor with data
-                pred_data = predictions.data
-        else:
-            pred_data = predictions
+        # Clean Tensor Evolution Pattern: Extract data cleanly
+        # Ensure inputs are Tensors and get their data
+        if not isinstance(predictions, Tensor):
+            predictions = Tensor(predictions)
+        if not isinstance(targets, Tensor):
+            targets = Tensor(targets)
 
-        if hasattr(targets, 'data'):
-            if hasattr(targets.data, 'data'):  # Variable with nested data
-                target_data = targets.data.data
-            else:  # Tensor with data
-                target_data = targets.data
-        else:
-            target_data = targets
+        pred_data = predictions.data
+        target_data = targets.data
 
         # Apply softmax to predictions (numerically stable)
         exp_pred = np.exp(pred_data - np.max(pred_data, axis=-1, keepdims=True))
@@ -2381,31 +2305,5 @@ class CrossEntropyLoss:
             # One-hot labels
             loss = -np.mean(np.sum(target_data * np.log(softmax_pred), axis=-1))
 
-        if _autograd_available:
-            # Return as Variable with gradient function
-            result = Variable(loss, requires_grad=True)
-
-            # Define backward function for proper gradient flow
-            def grad_fn(gradient):
-                if isinstance(predictions, Variable) and predictions.requires_grad:
-                    batch_size = pred_data.shape[0]
-
-                    # Gradient of cross-entropy with softmax
-                    if len(target_data.shape) == 1 or target_data.shape[-1] == 1:
-                        # Integer labels - gradient is (softmax - one_hot_targets)
-                        grad = softmax_pred.copy()
-                        for i in range(batch_size):
-                            label = int(target_data[i])
-                            grad[i, label] -= 1
-                        grad = grad / batch_size * gradient  # Scale by incoming gradient
-                    else:
-                        # One-hot labels
-                        grad = (softmax_pred - target_data) / batch_size * gradient
-
-                    predictions.backward(grad)
-
-            result.grad_fn = grad_fn
-            return result
-        else:
-            # Basic tensor operation - no gradient tracking yet
-            return Tensor(loss)
+        # Pure tensor evolution - gradient tracking will be added via decorator in Module 05
+        return Tensor(loss)

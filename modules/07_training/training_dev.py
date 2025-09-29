@@ -81,27 +81,22 @@ from tinytorch.core.optimizers import SGD, Adam
 
 # Global helper for clean data access
 def extract_numpy_data(tensor_obj):
-    """Extract raw numpy data from tensor/variable objects.
-    
-    Educational helper: Provides a clean, consistent way to access numpy data
-    from Variables and Tensors without complex nested attribute access.
+    """Extract raw numpy data from tensor objects using clean Tensor interface.
+
+    Clean Tensor Evolution Pattern: Work directly with Tensor.data property.
     """
     import numpy as np
-    
-    # Recursively unwrap Variable/Tensor objects
-    current = tensor_obj
-    while hasattr(current, 'data'):
-        current = current.data
-    
-    # Convert memoryview to numpy array if needed
-    if isinstance(current, memoryview):
-        current = np.array(current)
-    
-    # Ensure we have a numpy array
-    if not isinstance(current, np.ndarray):
-        current = np.array(current)
-        
-    return current
+
+    # Clean extraction: Handle Tensor objects directly
+    if isinstance(tensor_obj, (Tensor, Variable)):
+        return tensor_obj.data
+
+    # Handle raw numpy arrays or other data
+    if isinstance(tensor_obj, np.ndarray):
+        return tensor_obj
+
+    # Convert other types to numpy array
+    return np.array(tensor_obj)
 
 # Utility function for tensor data access
 def get_tensor_value(tensor_obj):
@@ -116,8 +111,8 @@ def get_tensor_value(tensor_obj):
     if isinstance(tensor_obj, Variable):
         return get_tensor_value(tensor_obj.data)  # Unwrap Variable
     
-    # Step 2: Handle Tensor objects  
-    if hasattr(tensor_obj, 'data'):
+    # Step 2: Handle Tensor objects
+    if isinstance(tensor_obj, Tensor):
         return get_tensor_value(tensor_obj.data)  # Unwrap Tensor
     
     # Step 3: Handle numpy arrays

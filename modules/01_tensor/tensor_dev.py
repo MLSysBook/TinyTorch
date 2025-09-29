@@ -63,7 +63,7 @@ Tensors are N-dimensional arrays that store and manipulate numerical data. Think
 - **Matrix (2D)**: A 2D array like `[[1, 2], [3, 4]]` with shape `(2, 2)`
 - **3D Tensor**: Like an RGB image with `(height, width, channels)`
 
-Our Tensor class wraps NumPy arrays with clean operations that prepare you for building neural networks. Every ML framework starts with this foundation.
+Our Tensor class is a PURE data structure that wraps NumPy arrays with clean mathematical operations. This foundation focuses on data storage and computation - gradient tracking will be added in Module 05.
 """
 
 # %% nbgrader={"grade": false, "grade_id": "tensor-init", "solution": true}
@@ -310,6 +310,9 @@ class Tensor:
             raise ValueError("transpose() requires 2D tensor")
         return Tensor(self._data.T)
         ### END SOLUTION
+
+    # Note: gradient computation will be added in Module 05 (Autograd)
+    # This pure Tensor class focuses only on data structure operations
 
 
 
@@ -648,10 +651,11 @@ Congratulations! You've built the fundamental data structure that powers neural 
 - **Testing Approach**: Immediate validation after each implementation
 
 ### Ready for Next Steps
-Your tensor implementation enables:
-- **Module 02 (Activations)**: Add nonlinear functions for neural network intelligence
-- **Neural Networks**: All the data structures needed for building networks
-- **Real ML Work**: Handle actual computations efficiently
+Your pure tensor implementation enables:
+- **Module 02 (Activations)**: Add nonlinear functions using clean tensor operations
+- **Modules 03-04**: Build layers and losses with focused tensor operations
+- **Module 05 (Autograd)**: Will extend this foundation with gradient tracking
+- **Real ML Work**: Handle numerical computations with a clean, extensible foundation
 
 ### Export Your Work
 1. **Module validation**: Complete with `test_module()` comprehensive testing
