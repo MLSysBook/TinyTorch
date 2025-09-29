@@ -16,31 +16,31 @@ Welcome to Autograd! You'll implement the automatic differentiation engine that 
 
 ## 🔗 Building on Previous Learning
 **What You Built Before**:
-- Module 02 (Tensor): Data structures that hold neural network parameters
-- Module 04 (Losses): Functions that measure prediction accuracy
+- Module 01 (Tensor): Pure data structures with ZERO gradient contamination
+- Module 02-04: Built on pure tensors with clean mathematical operations
 
-**What's Working**: You can compute loss values for any prediction!
+**What's Working**: You have a complete pure tensor system with arithmetic operations!
 
-**The Gap**: Loss values tell you HOW WRONG you are, but not HOW TO IMPROVE the parameters.
+**The Gap**: Your tensors are "gradient-blind" - they can't track gradients for training.
 
-**This Module's Solution**: Implement automatic differentiation to compute gradients automatically.
+**This Module's Solution**: Use Python's decorator pattern to enhance your existing Tensor class with gradient tracking, WITHOUT breaking any existing code.
 
 **Connection Map**:
 ```
-Tensors → Losses → Autograd → Optimizers
-(data)   (error)  (∇L/∇θ)   (updates)
+Pure Tensors → Enhanced Tensors → Training
+(Module 01)    (+ Autograd)      (Optimizers)
 ```
 
 ## Learning Objectives
-1. **Core Implementation**: Variable class with gradient tracking
-2. **Mathematical Foundation**: Chain rule application in computational graphs
-3. **Testing Skills**: Gradient computation validation
-4. **Integration Knowledge**: How autograd enables neural network training
+1. **Python Mastery**: Advanced metaprogramming with decorators
+2. **Backward Compatibility**: Enhance without breaking existing functionality
+3. **Mathematical Foundation**: Chain rule application in computational graphs
+4. **Systems Design**: Clean enhancement patterns in software engineering
 
 ## Build → Test → Use
-1. **Build**: Variable class with backward propagation
-2. **Test**: Verify gradients are computed correctly
-3. **Use**: Apply to mathematical expressions and see automatic differentiation
+1. **Build**: Decorator that adds gradient tracking to existing Tensor class
+2. **Test**: Verify ALL previous code still works + new gradient features
+3. **Use**: Enable gradient-based optimization on familiar tensor operations
 
 ## 📦 Where This Code Lives in the Final Package
 
@@ -49,15 +49,18 @@ Tensors → Losses → Autograd → Optimizers
 
 ```python
 # Final package structure:
-from tinytorch.core.autograd import Variable  # This module
-from tinytorch.core.tensor import Tensor      # Foundation (always needed)
+from tinytorch.core.autograd import add_autograd  # This module's decorator
+from tinytorch.core.tensor import Tensor          # Pure tensor from Module 01
+
+# Apply enhancement:
+Tensor = add_autograd(Tensor)  # Now your Tensor has gradient capabilities!
 ```
 
 **Why this matters:**
-- **Learning:** Complete automatic differentiation system for deep understanding
-- **Production:** Proper organization like PyTorch's torch.autograd
-- **Consistency:** All gradient operations in core.autograd
-- **Integration:** Works seamlessly with tensors for complete training systems
+- **Learning:** Experience advanced Python patterns and clean software design
+- **Backward Compatibility:** All Module 01-04 code works unchanged
+- **Professional Practice:** How real systems add features without breaking existing code
+- **Educational Clarity:** See exactly how gradient tracking enhances pure tensors
 """
 
 # %%
@@ -68,13 +71,14 @@ import numpy as np
 import sys
 from typing import Union, List, Optional, Callable
 
-# Import our existing components
+# Import the PURE Tensor class from Module 01
+# This is the clean, gradient-free tensor we'll enhance
 try:
     from tinytorch.core.tensor import Tensor
 except ImportError:
     # For development, import from local modules
     import os
-    sys.path.append(os.path.join(os.path.dirname(__file__), '..', '01_tensor'))
+    sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', '01_tensor'))
     from tensor_dev import Tensor
 
 # %%
@@ -85,241 +89,347 @@ print("Ready to build automatic differentiation!")
 
 # %% [markdown]
 """
-## What is Automatic Differentiation?
+## Python Metaprogramming: The Decorator Pattern
 
-### The Problem: Computing Gradients at Scale
+### The Challenge: Enhancing Existing Classes Without Breaking Code
 
-In neural networks, we need to compute gradients of complex functions with millions of parameters:
+You've built a beautiful, clean Tensor class in Module 01. All your code from Modules 02-04 depends on it working exactly as designed. But now you need gradient tracking.
 
+**Wrong Approach**: Modify the Tensor class directly
+- ❌ Breaks existing code
+- ❌ Contaminates pure mathematical operations
+- ❌ Violates single responsibility principle
+
+**Right Approach**: Use Python's decorator pattern
+- ✅ Enhance without modifying original class
+- ✅ Perfect backward compatibility
+- ✅ Clean separation of concerns
+
+### The Decorator Pattern in Action
+
+```python
+# Your original pure Tensor class
+class Tensor:
+    def __add__(self, other):
+        return Tensor(self.data + other.data)  # Pure math, no gradients
+
+# Decorator adds gradient capabilities
+@add_autograd
+class Tensor:  # Same class, now enhanced!
+    def __add__(self, other):  # Enhanced method
+        result = original_add(self, other)  # Original behavior preserved
+        # + gradient tracking added seamlessly
+        return result
 ```
-Loss = f(W₁, W₂, ..., Wₙ, data)
-∇Loss = [∂Loss/∂W₁, ∂Loss/∂W₂, ..., ∂Loss/∂Wₙ]
-```
 
-Manual differentiation is impossible. Numerical differentiation is too slow.
-
-### The Solution: Automatic Differentiation
-
-🧠 **Core Concept**: Track operations as we compute forward pass, then apply chain rule backwards
-⚡ **Performance**: Same speed as forward pass, exact gradients (not approximations)
-📦 **Framework Compatibility**: This is how PyTorch and TensorFlow work internally
-
-### Visual Representation: Computational Graph
-
-```
-Forward Pass:
-x ──┐
-    ├──[×]──> z = x * y
-y ──┘
-
-Backward Pass:
-∂L/∂z ──┬──> ∂L/∂x = ∂L/∂z * y
-        │
-        └──> ∂L/∂y = ∂L/∂z * x
-```
-
-**Key Insight**: Each operation stores how to compute gradients with respect to its inputs.
+**Key Insight**: Decorators let you enhance classes by wrapping their methods, preserving original functionality while adding new capabilities.
 """
 
 # %% [markdown]
 """
-## Implementation: Variable Class - Gradient Tracking
+## Implementation: The add_autograd Decorator
 
-🏗️ **Organization**: Variables wrap tensors and track gradients
-🎯 **Clean API**: Seamless integration with existing tensor operations
-📐 **Mathematical Foundation**: Computational graph representation of functions
+🏗️ **Design Goal**: Transform pure Tensor class into gradient-capable version
+🎯 **Backward Compatibility**: All existing Tensor code continues to work unchanged
+📐 **Clean Enhancement**: Gradient tracking added without polluting core math operations
 
-### Design Principles
+### The Decorator's Mission
 
-A Variable tracks:
-- **data**: The actual values (using our Tensor)
-- **grad**: Accumulated gradients (starts as None)
-- **grad_fn**: Function to compute gradients during backward pass
-- **requires_grad**: Whether to track gradients for this variable
+The `add_autograd` decorator will:
+1. **Save original methods**: Store pure mathematical implementations
+2. **Enhance constructor**: Add `requires_grad` parameter and gradient storage
+3. **Wrap operations**: Intercept `__add__`, `__mul__`, etc. to build computation graphs
+4. **Add new methods**: Include `backward()` for gradient computation
+5. **Preserve semantics**: Existing code works exactly as before
+
+### Before vs After Enhancement
+
+```python
+# Before: Pure tensor (Module 01)
+x = Tensor([2.0])
+y = Tensor([3.0])
+z = x + y  # Result: Tensor([5.0]) - pure math
+
+# After: Enhanced tensor (this module)
+x = Tensor([2.0], requires_grad=True)  # New optional parameter
+y = Tensor([3.0], requires_grad=True)
+z = x + y  # Result: Tensor([5.0]) - same math + gradient tracking
+z.backward()  # New capability!
+print(x.grad)  # [1.0] - gradients computed automatically
+```
 """
 
-# %% nbgrader={"grade": false, "grade_id": "variable-class", "solution": true}
+# %% nbgrader={"grade": false, "grade_id": "add-autograd-decorator", "solution": true}
 #| export
-class Variable:
+def add_autograd(cls):
     """
-    Variable with automatic differentiation support.
+    Decorator that adds gradient tracking to existing Tensor class.
 
-    A Variable wraps a Tensor and tracks operations for gradient computation.
+    This transforms a pure Tensor class into one capable of automatic differentiation
+    while preserving 100% backward compatibility.
 
-    TODO: Implement Variable class with gradient tracking capabilities
+    TODO: Implement decorator that enhances Tensor class with gradient tracking
 
     APPROACH:
-    1. Initialize with data, optional gradient requirement
-    2. Store grad_fn for backward pass computation
-    3. Implement backward() method to compute gradients
+    1. Save original methods from pure Tensor class
+    2. Create new __init__ that adds gradient parameters
+    3. Wrap arithmetic operations to build computation graphs
+    4. Add backward() method for gradient computation
+    5. Replace methods on the class and return enhanced class
 
     EXAMPLE:
-    >>> x = Variable([2.0], requires_grad=True)
-    >>> y = Variable([3.0], requires_grad=True)
+    >>> # Apply decorator to pure Tensor class
+    >>> Tensor = add_autograd(Tensor)
+    >>>
+    >>> # Now Tensor has gradient capabilities!
+    >>> x = Tensor([2.0], requires_grad=True)
+    >>> y = Tensor([3.0], requires_grad=True)
     >>> z = x * y
     >>> z.backward()
-    >>> print(x.grad)  # Should be [3.0]
-    >>> print(y.grad)  # Should be [2.0]
+    >>> print(x.grad)  # [3.0]
+    >>> print(y.grad)  # [2.0]
 
     HINTS:
-    - Store data as Tensor for consistency
-    - grad starts as None, gets created during backward
-    - grad_fn is a callable that propagates gradients
+    - Store original methods before replacing them
+    - New methods should call original methods first
+    - Only add gradient tracking when requires_grad=True
+    - Preserve all original functionality
     """
     ### BEGIN SOLUTION
-    def __init__(self, data, requires_grad=False, grad_fn=None):
-        """Initialize Variable with data and gradient tracking."""
-        # Convert to Tensor if needed
-        if isinstance(data, (list, tuple, int, float)):
-            self.data = Tensor(data)
-        elif isinstance(data, np.ndarray):
-            self.data = Tensor(data)
-        elif isinstance(data, (np.number, np.floating, np.integer)):
-            # Handle numpy scalar types
-            self.data = Tensor(data)
-        elif isinstance(data, Tensor):
-            self.data = data
-        else:
-            raise TypeError(f"Unsupported data type: {type(data)}")
+    # Store original methods from pure Tensor class
+    original_init = cls.__init__
+    original_add = cls.__add__
+    original_mul = cls.__mul__
+    original_sub = cls.__sub__ if hasattr(cls, '__sub__') else None
+    original_matmul = cls.__matmul__ if hasattr(cls, '__matmul__') else None
 
-        self.grad = None
+    def new_init(self, data, dtype=None, requires_grad=False):
+        """Enhanced constructor with gradient tracking support."""
+        # Call original constructor to preserve all existing functionality
+        original_init(self, data, dtype)
+
+        # Add gradient tracking attributes
         self.requires_grad = requires_grad
-        self.grad_fn = grad_fn
+        self.grad = None
+        self.grad_fn = None
 
-    @property
-    def shape(self):
-        """Shape of the underlying data."""
-        return self.data.shape
+    def new_add(self, other):
+        """Enhanced addition with gradient tracking."""
+        # Forward pass: use original pure addition
+        result = original_add(self, other)
 
-    def __repr__(self):
-        """String representation of Variable."""
-        grad_info = f", grad_fn={self.grad_fn.__name__}" if self.grad_fn else ""
-        requires_grad_info = f", requires_grad={self.requires_grad}" if self.requires_grad else ""
-        return f"Variable({self.data.data}{grad_info}{requires_grad_info})"
+        # Add gradient tracking if either operand requires gradients
+        if self.requires_grad or (hasattr(other, 'requires_grad') and other.requires_grad):
+            result.requires_grad = True
+            result.grad = None
+
+            # Define backward function for gradient computation
+            def grad_fn(gradient):
+                """Apply addition backward pass: d(a+b)/da = 1, d(a+b)/db = 1"""
+                if self.requires_grad:
+                    self.backward(gradient)
+                if hasattr(other, 'requires_grad') and other.requires_grad:
+                    other.backward(gradient)
+
+            result.grad_fn = grad_fn
+
+        return result
+
+    def new_mul(self, other):
+        """Enhanced multiplication with gradient tracking."""
+        # Forward pass: use original pure multiplication
+        result = original_mul(self, other)
+
+        # Add gradient tracking if either operand requires gradients
+        if self.requires_grad or (hasattr(other, 'requires_grad') and other.requires_grad):
+            result.requires_grad = True
+            result.grad = None
+
+            # Define backward function using product rule
+            def grad_fn(gradient):
+                """Apply multiplication backward pass: d(a*b)/da = b, d(a*b)/db = a"""
+                if self.requires_grad:
+                    # Get gradient data, handle both Tensor and scalar cases
+                    if hasattr(other, 'data'):
+                        other_data = other.data
+                    else:
+                        other_data = other
+                    self_grad = gradient * other_data
+                    self.backward(self_grad)
+
+                if hasattr(other, 'requires_grad') and other.requires_grad:
+                    # Get gradient data for self
+                    self_grad = gradient * self.data
+                    other.backward(self_grad)
+
+            result.grad_fn = grad_fn
+
+        return result
+
+    def new_sub(self, other):
+        """Enhanced subtraction with gradient tracking."""
+        if original_sub is None:
+            # If original class doesn't have subtraction, implement it
+            if hasattr(other, 'data'):
+                result_data = self.data - other.data
+            else:
+                result_data = self.data - other
+            result = cls(result_data)
+        else:
+            # Use original subtraction
+            result = original_sub(self, other)
+
+        # Add gradient tracking
+        if self.requires_grad or (hasattr(other, 'requires_grad') and other.requires_grad):
+            result.requires_grad = True
+            result.grad = None
+
+            def grad_fn(gradient):
+                """Apply subtraction backward pass: d(a-b)/da = 1, d(a-b)/db = -1"""
+                if self.requires_grad:
+                    self.backward(gradient)
+                if hasattr(other, 'requires_grad') and other.requires_grad:
+                    other.backward(-gradient)
+
+            result.grad_fn = grad_fn
+
+        return result
+
+    def new_matmul(self, other):
+        """Enhanced matrix multiplication with gradient tracking."""
+        if original_matmul is None:
+            # If original class doesn't have matmul, implement it
+            result_data = self.data @ other.data
+            result = cls(result_data)
+        else:
+            # Use original matrix multiplication
+            result = original_matmul(self, other)
+
+        # Add gradient tracking
+        if self.requires_grad or (hasattr(other, 'requires_grad') and other.requires_grad):
+            result.requires_grad = True
+            result.grad = None
+
+            def grad_fn(gradient):
+                """Apply matmul backward pass."""
+                if self.requires_grad:
+                    # d(A@B)/dA = gradient @ B.T
+                    self_grad = gradient @ other.data.T
+                    self.backward(self_grad)
+                if hasattr(other, 'requires_grad') and other.requires_grad:
+                    # d(A@B)/dB = A.T @ gradient
+                    other_grad = self.data.T @ gradient
+                    other.backward(other_grad)
+
+            result.grad_fn = grad_fn
+
+        return result
 
     def backward(self, gradient=None):
         """
-        Compute gradients via backpropagation.
+        New method: Compute gradients via backpropagation.
 
         Args:
-            gradient: Gradient flowing backwards (defaults to ones)
+            gradient: Gradient flowing backwards (defaults to ones for scalars)
         """
+        if not self.requires_grad:
+            raise RuntimeError("Tensor doesn't require gradients")
+
         # Default gradient for scalar outputs
         if gradient is None:
-            if self.data.data.size == 1:
-                gradient = np.ones_like(self.data.data)
+            if hasattr(self, 'data') and hasattr(self.data, 'size'):
+                if self.data.size == 1:
+                    gradient = np.ones_like(self.data)
+                else:
+                    raise RuntimeError("gradient must be specified for non-scalar tensors")
             else:
-                raise RuntimeError("gradient must be specified for non-scalar variables")
+                gradient = np.ones_like(self.data)
 
         # Accumulate gradients
-        if self.requires_grad:
-            if self.grad is None:
-                self.grad = gradient
-            else:
-                self.grad = self.grad + gradient
+        if self.grad is None:
+            self.grad = gradient
+        else:
+            self.grad = self.grad + gradient
 
         # Propagate gradients backwards through computation graph
         if self.grad_fn is not None:
             self.grad_fn(gradient)
 
-    # Arithmetic operations with gradient tracking
-    def __add__(self, other):
-        """Addition with gradient tracking."""
-        return add(self, other)
+    # Replace methods on the class
+    cls.__init__ = new_init
+    cls.__add__ = new_add
+    cls.__mul__ = new_mul
+    cls.__sub__ = new_sub
+    cls.__matmul__ = new_matmul
+    cls.backward = backward
 
-    def __radd__(self, other):
-        """Reverse addition."""
-        return add(other, self)
-
-    def __mul__(self, other):
-        """Multiplication with gradient tracking."""
-        return multiply(self, other)
-
-    def __rmul__(self, other):
-        """Reverse multiplication."""
-        return multiply(other, self)
-
-    def __sub__(self, other):
-        """Subtraction with gradient tracking."""
-        return subtract(self, other)
-
-    def __rsub__(self, other):
-        """Reverse subtraction."""
-        return subtract(other, self)
-
-    def __matmul__(self, other):
-        """Matrix multiplication with gradient tracking."""
-        return matmul(self, other)
-
-    @staticmethod
-    def sum(variable):
-        """
-        Sum all elements of a Variable, maintaining gradient tracking.
-
-        This is essential for creating scalar losses from multi-element results.
-        Unlike extracting scalar values, this preserves the computational graph.
-
-        Args:
-            variable: Variable to sum
-
-        Returns:
-            Variable containing the sum with gradient tracking
-        """
-        # Forward pass: compute sum
-        sum_data = np.sum(variable.data.data)
-
-        # Determine if result requires gradients
-        requires_grad = variable.requires_grad
-
-        # Define backward function for gradient propagation
-        def grad_fn(gradient):
-            """Propagate gradients back to all elements."""
-            if variable.requires_grad:
-                # For sum operation, gradient is broadcast to all elements
-                # Since d(sum)/d(xi) = 1 for all i
-                grad_shape = variable.data.data.shape
-                element_grad = np.full(grad_shape, gradient)
-                variable.backward(element_grad)
-
-        return Variable(sum_data, requires_grad=requires_grad, grad_fn=grad_fn if requires_grad else None)
+    return cls
     ### END SOLUTION
 
 # %% [markdown]
 """
-### 🧪 Unit Test: Variable Class
-This test validates Variable creation and basic gradient setup
+### 🧪 Unit Test: Decorator Application
+This test validates the decorator enhances Tensor while preserving backward compatibility
 """
 
 # %%
-def test_unit_variable_class():
-    """Test Variable class implementation with gradient tracking."""
-    print("🔬 Unit Test: Variable Class...")
+def test_unit_decorator_application():
+    """Test that decorator enhances Tensor while preserving compatibility."""
+    print("🔬 Unit Test: Decorator Application...")
 
-    # Test basic creation
-    x = Variable([2.0, 3.0], requires_grad=True)
-    assert isinstance(x.data, Tensor), "Variable should wrap Tensor"
-    assert x.requires_grad == True, "Should track gradients when requested"
-    assert x.grad is None, "Gradient should start as None"
+    # Apply decorator to enhance the pure Tensor class
+    EnhancedTensor = add_autograd(Tensor)
 
-    # Test creation without gradients
-    y = Variable([1.0, 2.0], requires_grad=False)
-    assert y.requires_grad == False, "Should not track gradients when not requested"
+    # Test 1: Backward compatibility - existing functionality preserved
+    x = EnhancedTensor([2.0, 3.0])  # No requires_grad - should work like pure Tensor
+    y = EnhancedTensor([1.0, 2.0])
+    z = x + y
 
-    # Test different data types
-    z = Variable(np.array([4.0]), requires_grad=True)
-    assert isinstance(z.data, Tensor), "Should convert numpy arrays to Tensors"
+    # Should behave exactly like original Tensor
+    assert hasattr(z, 'data'), "Enhanced tensor should have data attribute"
+    assert not hasattr(z, 'requires_grad') or not z.requires_grad, "Should not track gradients by default"
 
-    print("✅ Variable class works correctly!")
+    # Test 2: New gradient capabilities when enabled
+    a = EnhancedTensor([2.0], requires_grad=True)
+    b = EnhancedTensor([3.0], requires_grad=True)
 
-test_unit_variable_class()
+    assert a.requires_grad == True, "Should track gradients when requested"
+    assert a.grad is None, "Gradient should start as None"
+    assert hasattr(a, 'backward'), "Should have backward method"
+
+    # Test 3: Operations build computation graphs
+    c = a + b
+    assert c.requires_grad == True, "Result should require gradients if inputs do"
+    assert hasattr(c, 'grad_fn'), "Should have gradient function"
+
+    print("✅ Decorator application works correctly!")
+
+test_unit_decorator_application()
 
 # %% [markdown]
 """
-## Implementation: Addition Operation with Chain Rule
+## Implementation: Apply Decorator to Create Enhanced Tensor
 
-🧠 **Core Concepts**: Addition requires applying chain rule to both operands
-⚡ **Performance**: Gradient computation is O(1) relative to forward pass
-📦 **Framework Compatibility**: Matches PyTorch's autograd behavior
+🏗️ **The Magic Moment**: Transform pure Tensor into gradient-capable version
+✅ **Backward Compatibility**: All existing code continues to work
+🎆 **New Capabilities**: Gradient tracking available when requested
+
+### The Transformation
+
+Applying the decorator is simple but powerful:
+
+```python
+# Before: Pure Tensor class (Module 01)
+class Tensor:
+    def __add__(self, other): return Tensor(self.data + other.data)
+
+# After: Enhanced with autograd capabilities
+Tensor = add_autograd(Tensor)
+
+# Now the same class can do both!
+z1 = Tensor([1, 2]) + Tensor([3, 4])  # Pure math (like before)
+z2 = Tensor([1, 2], requires_grad=True) + Tensor([3, 4], requires_grad=True)  # + gradients!
+```
 
 ### Mathematical Foundation
 
@@ -330,114 +440,18 @@ For z = x + y:
 Chain rule: ∂L/∂x = ∂L/∂z × ∂z/∂x = ∂L/∂z × 1 = ∂L/∂z
 """
 
-# %% nbgrader={"grade": false, "grade_id": "add-operation", "solution": true}
-def _ensure_variable(x):
-    """Convert input to Variable if needed."""
-    if isinstance(x, Variable):
-        return x
-    elif hasattr(x, '_variable'):  # Handle Parameter objects
-        return x._variable  # Parameter wraps a Variable
-    else:
-        return Variable(x, requires_grad=False)
-
+# %% nbgrader={"grade": false, "grade_id": "apply-decorator", "solution": true}
 #| export
-def add(a: Union[Variable, float, int], b: Union[Variable, float, int]) -> Variable:
-    """
-    Add two variables with gradient tracking.
+# Apply the decorator to transform pure Tensor into gradient-capable version
+# This is where the magic happens!
 
-    TODO: Implement addition that properly tracks gradients
+### BEGIN SOLUTION
+# Import pure Tensor class and enhance it with autograd
+Tensor = add_autograd(Tensor)
+### END SOLUTION
 
-    APPROACH:
-    1. Convert inputs to Variables if needed
-    2. Compute forward pass (a.data + b.data)
-    3. Create grad_fn that propagates gradients to both inputs
-    4. Return new Variable with result and grad_fn
-
-    EXAMPLE:
-    >>> x = Variable([2.0], requires_grad=True)
-    >>> y = Variable([3.0], requires_grad=True)
-    >>> z = add(x, y)
-    >>> z.backward()
-    >>> print(x.grad)  # [1.0] - derivative of z w.r.t x
-    >>> print(y.grad)  # [1.0] - derivative of z w.r.t y
-
-    HINTS:
-    - Use chain rule: ∂L/∂x = ∂L/∂z × ∂z/∂x = ∂L/∂z × 1
-    - Both operands get same gradient (derivative of sum is 1)
-    - Only propagate to variables that require gradients
-    """
-    ### BEGIN SOLUTION
-    # Ensure both inputs are Variables
-    a = _ensure_variable(a)
-    b = _ensure_variable(b)
-
-    # Forward pass computation
-    result_data = Tensor(a.data.data + b.data.data)
-
-    # Determine if result requires gradients
-    requires_grad = a.requires_grad or b.requires_grad
-
-    # Define backward function for gradient propagation
-    def grad_fn(gradient):
-        """Propagate gradients to both operands with broadcasting support."""
-        # Addition: ∂(a+b)/∂a = 1, ∂(a+b)/∂b = 1
-        # Handle broadcasting by summing gradients appropriately
-        if a.requires_grad:
-            # Sum out dimensions that were broadcasted for a
-            grad_a = gradient
-            # Sum over axes that were broadcasted
-            original_shape = a.data.data.shape
-            grad_shape = grad_a.shape if hasattr(grad_a, 'shape') else np.array(grad_a).shape
-
-            # Sum along axes that were added due to broadcasting
-            if len(grad_shape) > len(original_shape):
-                axes_to_sum = tuple(range(len(grad_shape) - len(original_shape)))
-                grad_a = np.sum(grad_a, axis=axes_to_sum)
-
-            # Sum along axes that were expanded
-            for i in range(len(original_shape)):
-                if i < len(grad_a.shape) and original_shape[i] == 1 and grad_a.shape[i] > 1:
-                    grad_a = np.sum(grad_a, axis=i, keepdims=True)
-
-            # Handle case where parameter is 1D but gradient is 2D
-            if len(original_shape) == 1 and len(grad_a.shape) == 2:
-                grad_a = np.sum(grad_a, axis=0)  # Sum across batch dimension
-
-            # Squeeze out singleton dimensions to match original shape
-            grad_a = grad_a.reshape(original_shape)
-
-            a.backward(grad_a)
-
-        if b.requires_grad:
-            # Sum out dimensions that were broadcasted for b
-            grad_b = gradient
-            # Sum over axes that were broadcasted
-            original_shape = b.data.data.shape
-            grad_shape = grad_b.shape if hasattr(grad_b, 'shape') else np.array(grad_b).shape
-
-            # Sum along axes that were added due to broadcasting
-            if len(grad_shape) > len(original_shape):
-                axes_to_sum = tuple(range(len(grad_shape) - len(original_shape)))
-                grad_b = np.sum(grad_b, axis=axes_to_sum)
-
-            # Sum along axes that were expanded
-            for i in range(len(original_shape)):
-                if i < len(grad_b.shape) and original_shape[i] == 1 and grad_b.shape[i] > 1:
-                    grad_b = np.sum(grad_b, axis=i, keepdims=True)
-
-            # Handle case where bias is 1D but gradient is 2D
-            if len(original_shape) == 1 and len(grad_b.shape) == 2:
-                grad_b = np.sum(grad_b, axis=0)  # Sum across batch dimension
-
-            # Squeeze out singleton dimensions to match original shape
-            grad_b = grad_b.reshape(original_shape)
-
-            b.backward(grad_b)
-
-    # Create result variable with gradient function
-    result = Variable(result_data, requires_grad=requires_grad, grad_fn=grad_fn if requires_grad else None)
-    return result
-    ### END SOLUTION
+# Now our pure Tensor class has been enhanced with gradient tracking!
+# Let's test that it works correctly...
 
 # %% [markdown]
 """
@@ -1199,50 +1213,55 @@ class GraphOptimizer:
 
 # %% [markdown]
 """
-## 🎯 MODULE SUMMARY: Autograd - Automatic Differentiation Engine
+## 🎯 MODULE SUMMARY: Autograd - Decorator-Based Automatic Differentiation
 
-Congratulations! You've successfully implemented the automatic differentiation engine:
+Congratulations! You've mastered the decorator pattern to enhance pure tensors with gradient tracking:
 
 ### What You've Accomplished
-✅ **Variable Class Implementation**: Complete gradient tracking system with 200+ lines of core functionality
-✅ **Arithmetic Operations**: Addition, multiplication, subtraction, and matrix operations with proper gradient flow
+✅ **Decorator Implementation**: Clean enhancement of existing Tensor class with 100+ lines of elegant code
+✅ **Backward Compatibility**: All Module 01-04 code works unchanged - zero breaking changes
+✅ **Gradient Tracking**: Optional `requires_grad=True` parameter enables automatic differentiation
 ✅ **Chain Rule Application**: Automatic gradient computation through complex mathematical expressions
-✅ **Memory Management**: Efficient gradient accumulation and computational graph construction
-✅ **Systems Analysis**: Understanding of memory scaling and performance characteristics in gradient computation
+✅ **Systems Understanding**: Analysis of memory patterns and performance characteristics
+✅ **Production Connection**: Understanding of how real ML frameworks evolved
 
 ### Key Learning Outcomes
+- **Python Metaprogramming**: Advanced decorator patterns for class enhancement
+- **Software Architecture**: Clean enhancement without code contamination
+- **Backward Compatibility**: Professional approach to adding features safely
 - **Automatic Differentiation**: How computational graphs enable efficient gradient computation
-- **Chain Rule Implementation**: Mathematical foundation for backpropagation in neural networks
-- **Memory Patterns**: How gradient computation affects memory usage in deep learning systems
-- **Production Understanding**: Connection to PyTorch/TensorFlow autograd implementations
+- **Production Understanding**: Connection to PyTorch's evolution from Variable to Tensor-based autograd
 
-### Mathematical Foundations Mastered
-- **Chain Rule**: Systematic application through computational graphs
-- **Product Rule**: Gradient computation for multiplication operations
-- **Computational Complexity**: O(1) gradient overhead per operation in forward pass
-- **Memory Complexity**: O(graph_depth) storage requirements for intermediate activations
+### Technical Foundations Mastered
+- **Decorator Pattern**: Method interception and enhancement techniques
+- **Computational Graphs**: Dynamic graph construction through operation tracking
+- **Chain Rule**: Automatic application through backward propagation
+- **Memory Management**: Efficient gradient accumulation and graph storage
+- **Performance Analysis**: Understanding overhead patterns in gradient computation
 
 ### Professional Skills Developed
-- **Gradient System Design**: Building automatic differentiation from scratch
-- **Performance Analysis**: Understanding memory and computational trade-offs
-- **Testing Methodology**: Comprehensive validation of gradient correctness
+- **Clean Code Enhancement**: Adding features without breaking existing functionality
+- **Advanced Python**: Metaprogramming techniques used in production frameworks
+- **Systems Thinking**: Understanding trade-offs between functionality and performance
+- **Testing Methodology**: Comprehensive validation including backward compatibility
 
 ### Ready for Advanced Applications
-Your autograd implementation now enables:
-- **Neural Network Training**: Automatic gradient computation for parameter updates
+Your enhanced Tensor class now enables:
+- **Neural Network Training**: Seamless gradient computation for parameter updates
 - **Optimization Algorithms**: Foundation for SGD, Adam, and other optimizers
-- **Deep Learning Research**: Understanding of how modern frameworks work internally
+- **Research Applications**: Understanding of how modern frameworks implement autograd
 
 ### Connection to Real ML Systems
-Your implementation mirrors production systems:
-- **PyTorch**: `torch.autograd.Variable` and automatic gradient computation
-- **TensorFlow**: `tf.GradientTape` for automatic differentiation
-- **Industry Standard**: Dynamic computational graphs used in most modern frameworks
+Your decorator-based implementation mirrors production evolution:
+- **PyTorch v0.1**: Separate Variable class (old approach)
+- **PyTorch v0.4+**: Tensor-based autograd using enhancement patterns (your approach!)
+- **TensorFlow**: Similar evolution from separate Variable to enhanced Tensor
+- **Industry Standard**: Decorator pattern widely used for framework evolution
 
 ### Next Steps
 1. **Export your module**: `tito module complete 05_autograd`
-2. **Validate integration**: `tito test --module autograd`
+2. **Validate integration**: All Module 01-04 code still works + new gradient features
 3. **Ready for Module 06**: Optimizers will use your gradients to update neural network parameters!
 
-**🚀 Achievement Unlocked**: Your automatic differentiation engine is the foundation that makes modern neural network training possible!
+**🚀 Achievement Unlocked**: You've mastered the professional approach to enhancing software systems without breaking existing functionality - exactly how real ML frameworks evolved!
 """
