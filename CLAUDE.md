@@ -681,31 +681,72 @@ Modules are built by students in numerical order. Each module can ONLY use what 
 - ✅ **CORRECT**: Module 06_spatial importing from 02_tensor and 03_layers
 - ✅ **CORRECT**: Module 10_optimizers using all modules 01-09
 
-#### **3. Progressive Enhancement Pattern**
-When later modules add capabilities (like autograd), use adaptive patterns:
+#### **3. Tensor Evolution Pattern - THE CLEAN APPROACH**
+**CRITICAL: Use ONE evolving Tensor class, NOT separate Tensor/Variable classes**
+
+Following PyTorch's actual design philosophy, TinyTorch uses a single `Tensor` class that gains capabilities over time:
 
 ```python
-# CORRECT: Adaptive import in early module
-class Parameter:
-    def __init__(self, data):
-        # Works with basic Tensor initially
-        self._tensor = Tensor(data)
+# Module 02: Basic Tensor (no gradients yet)
+class Tensor:
+    def __init__(self, data, requires_grad=False):
+        self.data = np.array(data)
+        self.requires_grad = requires_grad
+        self.grad = None  # Placeholder for later
 
-        # Try to upgrade if autograd available
-        try:
-            from tinytorch.core.autograd import Variable
-            self._variable = Variable(data, requires_grad=True)
-            self._has_autograd = True
-        except ImportError:
-            # Autograd not built yet - work without it
-            self._has_autograd = False
+    def backward(self, gradient=None):
+        # Helpful error message before autograd is implemented
+        raise NotImplementedError("Autograd coming in Module 05! Set requires_grad=True after implementing autograd.")
+
+    def __add__(self, other):
+        # Basic operation without gradient tracking
+        return Tensor(self.data + other.data)
 ```
 
-#### **4. NO hasattr() Hacks - Find Root Causes**
-- ❌ **BAD**: Using `hasattr()` checks everywhere as band-aids
-- ❌ **BAD**: Catching AttributeErrors without understanding why
-- ✅ **GOOD**: Clean interfaces that work at each stage
-- ✅ **GOOD**: Clear error messages when features aren't available yet
+```python
+# Module 05: Students ADD autograd to existing Tensor class
+def backward(self, gradient=None):
+    """Student implements this in Module 05"""
+    if not self.requires_grad:
+        raise RuntimeError("Tensor doesn't require gradients")
+
+    if self.grad is None:
+        self.grad = np.zeros_like(self.data)
+    self.grad += gradient
+
+    if self.grad_fn:
+        self.grad_fn(gradient)
+
+# Students UPDATE existing operations to track gradients
+def __add__(self, other):
+    result_data = self.data + other.data
+    result = Tensor(result_data, requires_grad=(self.requires_grad or other.requires_grad))
+
+    if result.requires_grad:
+        def grad_fn(gradient):
+            if self.requires_grad:
+                self.backward(gradient)
+            if other.requires_grad:
+                other.backward(gradient)
+        result.grad_fn = grad_fn
+
+    return result
+```
+
+**Key Benefits:**
+- ✅ **No hasattr() checks needed anywhere**
+- ✅ **Single class students always use: Tensor**
+- ✅ **Clean evolution: students enhance existing class**
+- ✅ **Matches PyTorch mental model exactly**
+- ✅ **No type confusion or conversion needed**
+
+#### **4. NO hasattr() Hacks - Use Clean Evolution Instead**
+- ❌ **BAD**: `if hasattr(x, 'data'): x.data else: x`
+- ❌ **BAD**: `if hasattr(x, 'grad'): x.grad else: None`
+- ❌ **BAD**: Separate Tensor and Variable classes
+- ✅ **GOOD**: Single Tensor class with `requires_grad` flag
+- ✅ **GOOD**: Clear error messages: "Autograd not implemented yet"
+- ✅ **GOOD**: Students enhance existing classes, don't create new ones
 
 #### **5. Educational Framework Standards**
 **Remember: This is an educational framework, not production code**
@@ -721,15 +762,55 @@ Each module MUST be testable in isolation:
 - No mocking of future module functionality
 - If a test needs autograd but module comes before autograd, the test is wrong
 
-#### **7. Clear Capability Boundaries**
+#### **7. Module Evolution Plan - Tensor Class Growth**
+
+**CRITICAL: This is exactly how students build TinyTorch - evolving ONE Tensor class:**
+
+```
+Module 01 (Tensor):
+├── Create basic Tensor class with data storage
+├── Add requires_grad=False by default
+├── Add placeholder grad=None
+├── Add NotImplementedError for backward()
+└── Basic operations (__add__, __mul__) without gradient tracking
+
+Module 02-04 (Activations, Layers, Losses):
+├── Use existing Tensor class as-is
+├── Work with requires_grad=False tensors
+├── Build layers, activations, losses on basic Tensor
+└── No gradient functionality needed yet
+
+Module 05 (Autograd):
+├── STUDENTS UPDATE the existing Tensor class
+├── Implement the backward() method (replace NotImplementedError)
+├── Update operations (__add__, __mul__) to build computation graph
+├── Add grad_fn tracking for chain rule
+└── Now requires_grad=True works everywhere automatically
+
+Module 06+ (Optimizers, Training, etc.):
+├── Use enhanced Tensor class with full gradient capabilities
+├── All previous code works unchanged (backward compatibility)
+├── New code can use requires_grad=True for automatic differentiation
+└── Single clean interface throughout
+```
+
+**Key Teaching Points:**
+1. **Module 01**: "Here's a Tensor data structure"
+2. **Modules 02-04**: "Here's how to build ML components with Tensors"
+3. **Module 05**: "Now let's add automatic differentiation to our existing Tensor"
+4. **Module 06+**: "Our enhanced Tensor enables gradient-based optimization"
+
+#### **8. Clear Capability Boundaries**
 Document what each module provides and requires:
 ```python
 # Module 03_layers header comment
 """
 Layers Module - Neural Network Building Blocks
 Prerequisites: 01_tensor, 02_activations
+Uses: Tensor class (requires_grad=False only)
 Provides: Linear, Parameter, Module base class
 Does NOT provide: Automatic differentiation (comes in 05_autograd)
+After Module 05: Same code works with requires_grad=True automatically
 """
 ```
 
@@ -873,7 +954,9 @@ Content here...
 **Module Developer:**
 - **MUST respect module dependency order** - NO forward references, EVER
 - **MUST ensure module N only imports from modules 1 through N-1**
-- **MUST NOT use hasattr() hacks** - fix root causes instead
+- **MUST use Tensor Evolution Pattern** - single evolving Tensor class, NO separate Variable class
+- **MUST NOT use hasattr() hacks** - use clean Tensor with requires_grad flag
+- **MUST follow Module Evolution Plan**: basic Tensor → enhanced Tensor in Module 05
 - Code implementation with MANDATORY ML systems analysis
 - **Memory profiling and complexity analysis** in every module
 - **Performance benchmarking** and bottleneck identification
@@ -883,8 +966,8 @@ Content here...
 - **Checkpoint system implementation**: Build checkpoint test files and CLI integration
 - **Module completion workflow**: Implement `tito module complete` with export and testing
 - **MUST include systems insights**: memory usage, computational complexity, scaling behavior
-- **MUST use adaptive patterns** when later modules add capabilities
-- **MUST ensure each module is testable in isolation**
+- **MUST ensure each module is testable in isolation** using only Tensor class
+- **MUST provide clear error messages** when gradient features not yet implemented
 - **MUST notify QA Agent after ANY module changes**
 
 **Package Manager:**
