@@ -98,6 +98,27 @@ Our Tensor class from Module 02 is perfect for storing data and doing math. But 
 
 Think of it like teaching someone to remember the steps of a recipe so they can explain it later to others.
 
+### Gradient Memory Structure
+
+```
+                  Tensor Object
+    ┌──────────────────────────────────┐
+    │  data: [1.0, 2.0, 3.0]           │ ← Original tensor data
+    │  requires_grad: True              │ ← Should track gradients?
+    │  grad: None → [∇₁, ∇₂, ∇₃]       │ ← Accumulated gradients
+    │  grad_fn: None → <AddBackward>    │ ← How to propagate backward
+    └──────────────────────────────────┘
+                        │
+                        ▼
+              Computation Graph Node
+            ┌─────────────────────────┐
+            │   grad_fn stores:       │
+            │   • Parent tensors      │
+            │   • Backward function   │
+            │   • Local derivatives   │
+            └─────────────────────────┘
+```
+
 ### What We're Adding
 
 We need three pieces of memory for our Tensor:
@@ -195,12 +216,43 @@ Now that our Tensor has memory for gradients, we need to teach it how to accumul
 
 Think of this like teaching someone to collect feedback from others and combine it with what they already know.
 
+### Gradient Flow Visualization
+
+```
+    Forward Pass (Building Graph):        Backward Pass (Computing Gradients):
+
+    x ──────┐                            x.grad ←──── gradient
+             │                                   │
+             ├─► [Operation] ──► result          │
+             │                     │             │
+    y ──────┘                     │             │
+                                   ▼             │
+                            result.backward() ───┘
+                                   │
+                                   ▼
+                            y.grad ←──── gradient
+```
+
 ### The Backward Method
 
 The `backward()` method will:
 1. **Check if learning is enabled** (requires_grad must be True)
 2. **Accumulate gradients** (add new gradients to existing ones)
 3. **Propagate backwards** (tell earlier computations about the gradients)
+
+```
+    Gradient Accumulation Pattern:
+
+    First call: tensor.grad = None
+                tensor.backward([1.0])
+                tensor.grad = [1.0]    ← Store first gradient
+
+    Second call: tensor.backward([0.5])
+                 tensor.grad = [1.5]   ← Accumulate: [1.0] + [0.5]
+
+    Third call:  tensor.backward([2.0])
+                 tensor.grad = [3.5]   ← Accumulate: [1.5] + [2.0]
+```
 
 This is the heart of learning - how information flows backward to update our understanding.
 
@@ -310,6 +362,24 @@ Now we'll make addition smart - when two tensors are added, the result should re
 
 Think of this like a conversation between three people: when C = A + B, and someone gives feedback to C, C knows to pass that same feedback to both A and B.
 
+### Addition Gradient Flow
+
+```
+    Forward Pass:                 Backward Pass:
+
+    x(2.0) ────┐                 x.grad ←── 1.0
+               ├─► [+] ──► z(5.0)         ↑
+    y(3.0) ────┘              │           │
+                               ▼           │
+                        z.backward(1.0) ───┘
+                               │
+                               ▼
+                        y.grad ←── 1.0
+
+    Addition Rule: ∂z/∂x = 1, ∂z/∂y = 1
+    Both inputs receive the same gradient!
+```
+
 ### Mathematical Foundation
 
 For addition z = x + y:
@@ -317,6 +387,23 @@ For addition z = x + y:
 - ∂z/∂y = 1 (changing y by 1 changes z by 1)
 
 So gradients flow unchanged to both inputs: grad_x = grad_z, grad_y = grad_z
+
+### Computation Graph Building
+
+```
+    Enhanced Addition Process:
+
+    1. Compute: z.data = x.data + y.data    (math as before)
+
+    2. If gradients needed:
+       z.requires_grad = True
+       z.grad_fn = lambda grad: {
+           x.backward(grad)  ← Send same gradient to x
+           y.backward(grad)  ← Send same gradient to y
+       }
+
+    3. Result: z remembers how to teach x and y!
+```
 
 ### Why Enhancement, Not Replacement
 
@@ -354,7 +441,10 @@ def enhanced_add(self, other):
     """
     ### BEGIN SOLUTION
     # Do the original math - this preserves all existing functionality
-    result = _original_add(self, other)
+    original_result = _original_add(self, other)
+
+    # Create a new enhanced Tensor with the result data to ensure it has gradient capabilities
+    result = Tensor(original_result.data, requires_grad=False)
 
     # Check if either input requires gradients
     other_requires_grad = hasattr(other, 'requires_grad') and other.requires_grad
@@ -436,11 +526,43 @@ Now we'll enhance multiplication with gradient tracking. This is more interestin
 
 Think of multiplication like mixing ingredients: when you change one ingredient, the effect depends on how much of the other ingredient you have.
 
+### Multiplication Gradient Flow
+
+```
+    Forward Pass:                    Backward Pass:
+
+    x(2.0) ────┐                    x.grad ←── grad × y.data = 1.0 × 3.0 = 3.0
+               ├─► [×] ──► z(6.0)           ↑
+    y(3.0) ────┘              │             │
+                               ▼             │
+                        z.backward(1.0) ─────┘
+                               │
+                               ▼
+                        y.grad ←── grad × x.data = 1.0 × 2.0 = 2.0
+
+    Product Rule: ∂z/∂x = y, ∂z/∂y = x
+    Each input's gradient depends on the OTHER input's value!
+```
+
 ### Mathematical Foundation - The Product Rule
 
 For multiplication z = x * y:
 - ∂z/∂x = y (changing x is multiplied by y's current value)
 - ∂z/∂y = x (changing y is multiplied by x's current value)
+
+```
+    Why Product Rule Matters:
+
+    If x = 2.0, y = 3.0, then z = 6.0
+
+    Small change in x: x + 0.1 = 2.1
+    New result: 2.1 × 3.0 = 6.3
+    Change in z: 6.3 - 6.0 = 0.3 = 0.1 × 3.0 ← Scaled by y!
+
+    Small change in y: y + 0.1 = 3.1
+    New result: 2.0 × 3.1 = 6.2
+    Change in z: 6.2 - 6.0 = 0.2 = 0.1 × 2.0 ← Scaled by x!
+```
 
 This means we need to remember the input values to compute gradients correctly.
 
@@ -485,7 +607,10 @@ def enhanced_mul(self, other):
     """
     ### BEGIN SOLUTION
     # Do the original math - preserves existing functionality
-    result = _original_mul(self, other)
+    original_result = _original_mul(self, other)
+
+    # Create a new enhanced Tensor with the result data to ensure it has gradient capabilities
+    result = Tensor(original_result.data, requires_grad=False)
 
     # Check if either input requires gradients
     other_requires_grad = hasattr(other, 'requires_grad') and other.requires_grad
@@ -576,6 +701,37 @@ When you build expressions like `z = (x + y) * (x - y)`, each operation tracks g
 
 Think of it like a telephone game where each person (operation) passes the message (gradient) backward, and everyone modifies it according to their local rule.
 
+### Complex Computation Graph
+
+```
+    Forward Pass: f(x,y) = (x + y) * (x - y)
+
+    x(3.0) ────┬─► [+] ──► t₁(5.0) ──┐
+               │                      ├─► [×] ──► result(5.0)
+    y(2.0) ────┼─► [+] ──────────────┘  ↑
+               │                         │
+               └─► [-] ──► t₂(1.0) ──────┘
+
+    Backward Pass: Chain rule flows gradients backward
+
+    result.backward(1.0)
+                    │
+                    ▼
+            [×] applies product rule:
+            t₁.backward(1.0 × t₂.data) = t₁.backward(1.0)
+            t₂.backward(1.0 × t₁.data) = t₂.backward(5.0)
+                    │                         │
+                    ▼                         ▼
+            [+] sends to both:        [-] sends with signs:
+            x.backward(1.0)           x.backward(5.0)
+            y.backward(1.0)           y.backward(-5.0)
+                    │                         │
+                    ▼                         ▼
+            Final gradients (accumulated):
+            x.grad = 1.0 + 5.0 = 6.0  ← Matches ∂(x²-y²)/∂x = 2x = 6.0
+            y.grad = 1.0 + (-5.0) = -4.0 ← Matches ∂(x²-y²)/∂y = -2y = -4.0
+```
+
 ### The Chain Rule in Action
 
 For f(x,y) = (x + y) * (x - y) = x² - y²:
@@ -587,6 +743,24 @@ For f(x,y) = (x + y) * (x - y) = x² - y²:
 Expected final gradients:
 - ∂f/∂x = 2x (derivative of x² - y²)
 - ∂f/∂y = -2y (derivative of x² - y²)
+
+### Gradient Accumulation in Action
+
+```
+    Notice how x appears in BOTH addition and subtraction:
+
+    x ──┬─► [+] ──► contributes to t₁
+        │
+        └─► [-] ──► contributes to t₂
+
+    During backward pass:
+    • Addition path contributes: x.grad += 1.0
+    • Subtraction path contributes: x.grad += 5.0
+    • Total: x.grad = 6.0 ← Automatic accumulation!
+
+    This is why we need gradient accumulation - same parameter
+    can contribute to loss through multiple paths!
+```
 
 ### Why This Is Revolutionary
 
@@ -619,14 +793,15 @@ def enhanced_sub(self, other):
     ### BEGIN SOLUTION
     # Compute subtraction (implement if not available)
     if _original_sub is not None:
-        result = _original_sub(self, other)
+        original_result = _original_sub(self, other)
+        result = Tensor(original_result.data, requires_grad=False)
     else:
         # Implement subtraction manually
         if hasattr(other, 'data'):
             result_data = self.data - other.data
         else:
             result_data = self.data - other
-        result = Tensor(result_data)
+        result = Tensor(result_data, requires_grad=False)
 
     # Check if either input requires gradients
     other_requires_grad = hasattr(other, 'requires_grad') and other.requires_grad
@@ -656,6 +831,10 @@ Tensor.__sub__ = enhanced_sub
 """
 ### 🧪 Test Step 5: Verify Chain Rule Magic
 This test confirms complex expressions compute gradients automatically
+
+**What we're testing**: The computation graph from our diagram above
+**Expected behavior**: Gradients flow backward through multiple paths and accumulate correctly
+**Success criteria**: Final gradients match analytical derivatives of f(x,y) = x² - y²
 """
 
 # %%
@@ -756,7 +935,8 @@ def test_step6_integration_complete():
 
     # Sum all elements for scalar loss (simplified)
     final_loss = loss  # In real networks, we'd sum across batch
-    final_loss.backward()
+    # For testing, we'll provide gradients for the non-scalar tensor
+    final_loss.backward(np.ones_like(final_loss.data))
 
     # Verify all parameters have gradients
     assert weights.grad is not None, "Weights should have gradients"
@@ -847,6 +1027,43 @@ test_step6_integration_complete()
 
 Now that your autograd system is complete, let's analyze its behavior to understand memory usage patterns and performance characteristics that matter in real ML systems.
 
+### Memory Layout Analysis
+
+```
+    Tensor Without Gradients:        Tensor With Gradients:
+    ┌─────────────────┐             ┌─────────────────────────────────┐
+    │ data: [1,2,3]   │             │ data: [1,2,3]          8 bytes  │
+    │ shape: (3,)     │             │ shape: (3,)            8 bytes  │
+    │ dtype: float64  │             │ dtype: float64         8 bytes  │
+    └─────────────────┘             │ requires_grad: True    1 byte   │
+         ~24 bytes                  │ grad: [∇₁,∇₂,∇₃]       8 bytes  │
+                                    │ grad_fn: <Function>    8 bytes  │
+                                    └─────────────────────────────────┘
+                                             ~41 bytes
+
+    Memory Overhead: ~2x per tensor + computation graph storage
+```
+
+### Computation Graph Memory Growth
+
+```
+    Expression Depth vs Memory Usage:
+
+    Simple: z = x + y
+    Memory: 3 tensors (x, y, z)
+
+    Medium: z = (x + y) * (x - y)
+    Memory: 5 tensors (x, y, x+y, x-y, result)
+
+    Deep: z = ((x + y) * w₁ + b₁) * w₂ + b₂
+    Memory: 7 tensors + intermediate results
+
+    Pattern: Memory = O(expression_depth)
+
+    Production Issue: 50-layer network = 50+ intermediate tensors
+    until backward() is called and graph is freed!
+```
+
 **Analysis Focus**: Memory overhead, computational complexity, and scaling behavior of gradient computation
 """
 
@@ -907,6 +1124,15 @@ def analyze_autograd_behavior():
     print(f"   Operations with gradients: {grad_forward_time*1000:.2f}ms")
     print(f"   Forward pass overhead: {grad_forward_time/no_grad_time:.1f}x")
 
+    print("\n   Performance Visualization:")
+    print("   ┌──────────────────────────────────────────────┐")
+    print("   │ Operation Timeline (forward pass)             │")
+    print("   ├──────────────────────────────────────────────┤")
+    print("   │ No gradients:  [████████████]                 │")
+    print("   │ With gradients: [████████████████████████]     │")
+    print("   │                 ↑ Math      ↑ Graph building │")
+    print("   └──────────────────────────────────────────────┘")
+
     # Test 3: Expression complexity scaling
     print("\n📈 Expression Complexity Scaling:")
 
@@ -958,7 +1184,40 @@ def analyze_autograd_behavior():
     print(f"   100 small gradients: {small_grad_time*1000:.3f}ms → grad={param.grad}")
     print(f"   Accumulation overhead: {small_grad_time/large_grad_time:.1f}x")
 
+    print("\n   Gradient Accumulation Pattern:")
+    print("   ┌──────────────────────────────────────────────────────┐")
+    print("   │ Multiple Loss Sources → Same Parameter:              │")
+    print("   ├──────────────────────────────────────────────────────┤")
+    print("   │                                                      │")
+    print("   │ Loss₁ ──→ grad₁(2.0) ──┐                           │")
+    print("   │                         ├─[+]→ param.grad = 5.0     │")
+    print("   │ Loss₂ ──→ grad₂(3.0) ──┘                           │")
+    print("   │                                                      │")
+    print("   │ Real Example: Same embedding used in encoder         │")
+    print("   │ AND decoder gets gradients from both paths!         │")
+    print("   └──────────────────────────────────────────────────────┘")
+
     print("\n💡 AUTOGRAD INSIGHTS:")
+    print("   ┌───────────────────────────────────────────────────────────┐")
+    print("   │ Autograd Performance Characteristics                        │")
+    print("   ├───────────────────────────────────────────────────────────┤")
+    print("   │ Memory Usage:                                               │")
+    print("   │   • Base tensor: 1x (data only)                           │")
+    print("   │   • Gradient tensor: 2x (data + gradients)                │")
+    print("   │   • Computation graph: +O(depth) intermediate tensors      │")
+    print("   │                                                             │")
+    print("   │ Computational Overhead:                                     │")
+    print("   │   • Forward pass: ~2x (math + graph building)             │")
+    print("   │   • Backward pass: ~1x additional                         │")
+    print("   │   • Total training: ~3x vs inference-only                 │")
+    print("   │                                                             │")
+    print("   │ Scaling Behavior:                                           │")
+    print("   │   • Expression depth: O(n) memory growth                  │")
+    print("   │   • Gradient accumulation: O(1) per accumulation          │")
+    print("   │   • Deep networks: Memory freed after backward()          │")
+    print("   └───────────────────────────────────────────────────────────┘")
+    print("")
+    print("   🚀 Production Implications:")
     print("   • Memory: Gradient tracking doubles memory usage (data + gradients)")
     print("   • Forward pass: ~2x computational overhead for gradient graph building")
     print("   • Backward pass: Additional ~1x computation time")
@@ -1015,6 +1274,32 @@ if __name__ == "__main__":
 ### Question 1: Memory Management in Gradient Computation
 
 Your autograd implementation stores references to input tensors through grad_fn closures. In a deep neural network with 50 layers, each layer creates intermediate tensors with gradient functions.
+
+```
+    Memory Growth in Deep Networks:
+
+    Layer 1: x₁ → f₁(x₁) → h₁  ░░░░░░░░░░░░░░░░░░░░░░░░░░┐
+             ↑               ↑                            │
+             └─ stored ──────┘ h₁.grad_fn keeps x₁ alive │
+                                                          │
+    Layer 2: h₁ → f₂(h₁) → h₂  ░░░░░░░░░░░░░░░░░░░░░░░░░┐ │
+             ↑               ↑                          │ │
+             └─ stored ──────┘ h₂.grad_fn keeps h₁ alive │ │
+                                                        │ │
+    ...                                                 │ │
+                                                        │ │
+    Layer 50: h₄₉ → f₅₀(h₄₉) → h₅₀                      │ │
+                                ↑                       │ │
+                                └─ loss.backward() ────┼─┼─┐
+                                                        │ │ │
+    Peak Memory: All h₁, h₂, ..., h₄₉ kept alive       │ │ │
+    until backward() traverses the entire graph! ──────┘ │ │
+                                                          │ │
+    After backward(): Memory freed in reverse order ─────┘ │
+                     (Python garbage collection)          │
+                                                          │
+    Memory = O(network_depth) until backward() completes ─┘
+```
 
 **Analysis Task**: Examine how your gradient tracking affects memory usage patterns.
 
@@ -1153,6 +1438,37 @@ class CheckpointedOperation:
 ### Question 3: Gradient Flow Analysis
 
 In your autograd implementation, gradients flow backward through the computation graph via the chain rule.
+
+```
+    Gradient Magnitude Changes Through Operations:
+
+    Addition Preserves Magnitudes:           Multiplication Scales Magnitudes:
+    ┌─────────────────────────────┐         ┌─────────────────────────────────┐
+    │ x(0.1) ──┐                 │         │ x(0.1) ──┐                     │
+    │          ├─[+]─→ z(10.1)   │         │          ├─[×]─→ z(1.0)       │
+    │ y(10.0) ─┘     ↑           │         │ y(10.0) ─┘     ↑               │
+    │                │           │         │                │               │
+    │                grad=1.0    │         │                grad=1.0        │
+    │                ↓           │         │                ↓               │
+    │ x.grad ←─ 1.0 (unchanged)  │         │ x.grad ←─ 10.0 (scaled by y!) │
+    │ y.grad ←─ 1.0 (unchanged)  │         │ y.grad ←─ 0.1 (scaled by x!)  │
+    └─────────────────────────────┘         └─────────────────────────────────┘
+
+    Deep Network Gradient Flow Problems:
+
+    Vanishing Gradients:                    Exploding Gradients:
+    ┌──────────────────────────────┐       ┌──────────────────────────────┐
+    │ Layer 1: grad ← 1.0          │       │ Layer 1: grad ← 1.0          │
+    │         ↓ ×0.1 (small weight)│       │         ↓ ×3.0 (large weight)│
+    │ Layer 2: grad ← 0.1          │       │ Layer 2: grad ← 3.0          │
+    │         ↓ ×0.1               │       │         ↓ ×3.0               │
+    │ Layer 3: grad ← 0.01         │       │ Layer 3: grad ← 9.0          │
+    │         ↓ ×0.1               │       │         ↓ ×3.0               │
+    │ Layer 4: grad ← 0.001        │       │ Layer 4: grad ← 27.0         │
+    │         ↓                    │       │         ↓                    │
+    │ Final: grad ≈ 0 (vanished!)  │       │ Final: grad → ∞ (exploded!)  │
+    └──────────────────────────────┘       └──────────────────────────────┘
+```
 
 **Analysis Task**: Analyze how gradient magnitudes change as they flow through different types of operations.
 
