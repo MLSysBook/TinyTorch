@@ -135,7 +135,7 @@ class CIFARCNN:
         # Convolutional feature extractors - YOUR spatial modules!
         self.conv1 = Conv2d(in_channels=3, out_channels=32, kernel_size=(3, 3))   # Module 09!
         self.conv2 = Conv2d(in_channels=32, out_channels=64, kernel_size=(3, 3))  # Module 09!
-        self.pool = MaxPool2D(pool_size=2)  # Module 09: YOUR pooling!
+        self.pool = MaxPool2D(pool_size=(2, 2))  # Module 09: YOUR pooling!
         
         # Activation functions
         self.relu = ReLU()  # Module 03: YOUR activation!
@@ -180,10 +180,10 @@ class CIFARCNN:
     def parameters(self):
         """Get all trainable parameters from YOUR layers."""
         return [
-            self.conv1.weight, self.conv1.bias,
-            self.conv2.weight, self.conv2.bias,
-            self.fc1.weight, self.fc1.bias,
-            self.fc2.weight, self.fc2.bias
+            self.conv1.weights, self.conv1.bias,
+            self.conv2.weights, self.conv2.bias,
+            self.fc1.weights, self.fc1.bias,
+            self.fc2.weights, self.fc2.bias
         ]
 
 def visualize_cifar_cnn():
@@ -255,10 +255,11 @@ def train_cifar_cnn(model, train_loader, epochs=3, learning_rate=0.001):
                 targets_one_hot[i, int(batch_labels.data[i])] = 1.0
             
             # Cross-entropy: -sum(y * log(softmax(x)))
-            # Apply softmax first
-            exp_outputs = np.exp(outputs.data - np.max(outputs.data, axis=1, keepdims=True))
+            # Apply softmax first - handle nested data access
+            outputs_np = np.array(outputs.data.data if hasattr(outputs.data, 'data') else outputs.data)
+            exp_outputs = np.exp(outputs_np - np.max(outputs_np, axis=1, keepdims=True))
             softmax_outputs = exp_outputs / np.sum(exp_outputs, axis=1, keepdims=True)
-            
+
             eps = 1e-8
             loss_value = -np.mean(np.sum(targets_one_hot * np.log(softmax_outputs + eps), axis=1))
             loss = Tensor([loss_value])
@@ -269,7 +270,7 @@ def train_cifar_cnn(model, train_loader, epochs=3, learning_rate=0.001):
             optimizer.step()       # Module 07!
             
             # Track accuracy
-            predictions = np.argmax(outputs.data, axis=1)
+            predictions = np.argmax(outputs_np, axis=1)
             correct += np.sum(predictions == batch_labels.data.flatten())
             total += len(batch_labels.data)
             
@@ -305,8 +306,9 @@ def test_cifar_cnn(model, test_loader, class_names):
             break
         
         outputs = model.forward(batch_data)
-        
-        predictions = np.argmax(outputs.data, axis=1)
+
+        outputs_np = np.array(outputs.data.data if hasattr(outputs.data, 'data') else outputs.data)
+        predictions = np.argmax(outputs_np, axis=1)
         batch_y = batch_labels.data.flatten()
         correct += np.sum(predictions == batch_y)
         total += len(batch_y)

@@ -80,31 +80,58 @@ Key Insight: Attention allows each token to "look at" all other tokens
 to understand context and meaning relationships.
 """
 
-from tinytorch import nn, optim
-from tinytorch.core.tensor import Tensor
-from tinytorch.core.autograd import to_numpy
 import numpy as np
+import sys
+import os
 
-class TinyGPT(nn.Module):
+# Add project root to path
+project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.append(project_root)
+
+from tinytorch.core.tensor import Tensor
+from tinytorch.core.layers import Linear
+from tinytorch.core.activations import ReLU, Softmax
+from tinytorch.core.optimizers import Adam
+from tinytorch.core.attention import MultiHeadAttention
+from tinytorch.core.transformers import LayerNorm, TransformerBlock
+from tinytorch.core.embeddings import Embedding, PositionalEncoding
+
+class TinyGPT:
     def __init__(self, vocab_size, embed_dim, max_length, num_heads, num_layers):
-        super().__init__()
-        
         # Token representation
-        self.embedding = nn.Embedding(vocab_size, embed_dim)
-        self.pos_encoding = nn.PositionalEncoding(embed_dim, max_length)
-        
-        # Transformer stack  
+        self.embedding = Embedding(vocab_size, embed_dim)
+        self.pos_encoding = PositionalEncoding(embed_dim, max_length)
+
+        # Transformer stack
         self.layers = []
         hidden_dim = embed_dim * 4  # Standard 4x expansion in FFN
         for _ in range(num_layers):
-            block = nn.TransformerBlock(embed_dim, num_heads, hidden_dim)
+            block = TransformerBlock(embed_dim, num_heads, hidden_dim)
             self.layers.append(block)
-        
+
         # Output head
-        self.layer_norm = nn.LayerNorm(embed_dim)
-        self.output_proj = nn.Linear(embed_dim, vocab_size)
+        self.layer_norm = LayerNorm(embed_dim)
+        self.output_proj = Linear(embed_dim, vocab_size)
         self.vocab_size = vocab_size  # Store for reshaping
-    
+
+    def parameters(self):
+        """Get all trainable parameters from the model."""
+        params = []
+        # Embedding parameters
+        params.extend([self.embedding.weight])
+        # Transformer block parameters
+        for layer in self.layers:
+            # TransformerBlock has a parameters attribute (list), not a method
+            if hasattr(layer, 'parameters'):
+                if callable(layer.parameters):
+                    params.extend(layer.parameters())
+                else:
+                    params.extend(layer.parameters)
+        # Output projection parameters
+        params.extend([self.layer_norm.gamma, self.layer_norm.beta])
+        params.extend([self.output_proj.weights, self.output_proj.bias])
+        return params
+
     def forward(self, x):
         # Convert tokens to contextual vectors
         x = self.embedding(x)        # tokens → vectors (Module 12)
@@ -117,18 +144,18 @@ class TinyGPT(nn.Module):
         
         # Generate predictions
         x = self.layer_norm(x)       # final normalization (Module 14)
-        
+
         # Reshape for Linear layer: (batch, seq, embed) → (batch*seq, embed)
-        x_np = to_numpy(x)
+        x_np = np.array(x.data.data if hasattr(x.data, 'data') else x.data)
         batch_size, seq_len, embed_dim = x_np.shape
         x_2d_np = x_np.reshape(batch_size * seq_len, embed_dim)
         x_2d = Tensor(x_2d_np)
-        
+
         # Apply output projection
         logits_2d = self.output_proj(x_2d)   # vocab predictions (Module 04)
-        
+
         # Reshape back: (batch*seq, vocab) → (batch, seq, vocab)
-        logits_2d_np = to_numpy(logits_2d)
+        logits_2d_np = np.array(logits_2d.data.data if hasattr(logits_2d.data, 'data') else logits_2d.data)
         logits_np = logits_2d_np.reshape(batch_size, seq_len, self.vocab_size)
         logits = Tensor(logits_np)
         return logits
@@ -142,7 +169,7 @@ def main():
     num_layers = 2    # Fewer layers
     
     model = TinyGPT(vocab_size, embed_dim, max_length, num_heads, num_layers)
-    optimizer = optim.Adam(model.parameters(), learning_rate=0.001)  # Module 08
+    optimizer = Adam(model.parameters(), learning_rate=0.001)  # Module 08
     
     # Demo training data (random tokens)
     batch_size, seq_length = 1, 8  # Smaller batch and sequence
@@ -158,17 +185,17 @@ def main():
     
     # What students built: Complete transformer training
     for step in range(5):  # Fewer steps for validation
-        logits = model(input_ids)    # Forward: Full transformer stack
+        logits = model.forward(input_ids)    # Forward: Full transformer stack
         
         # Language modeling loss (Module 10)
-        logits_np = to_numpy(logits)
-        targets_np = to_numpy(target_ids)
+        logits_np = np.array(logits.data.data if hasattr(logits.data, 'data') else logits.data)
+        targets_np = np.array(target_ids.data.data if hasattr(target_ids.data, 'data') else target_ids.data)
         batch_size, seq_length = targets_np.shape
         targets_one_hot = np.zeros((batch_size, seq_length, vocab_size))
         for b in range(batch_size):
             for s in range(seq_length):
                 targets_one_hot[b, s, int(targets_np[b, s])] = 1.0
-        
+
         loss_value = np.mean((logits_np - targets_one_hot) ** 2)
         loss = Tensor([loss_value])
         

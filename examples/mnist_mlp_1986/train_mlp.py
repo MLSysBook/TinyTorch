@@ -129,9 +129,9 @@ class MNISTMLP:
     def parameters(self):
         """Get all trainable parameters from YOUR layers."""
         return [
-            self.fc1.weight, self.fc1.bias,
-            self.fc2.weight, self.fc2.bias,
-            self.fc3.weight, self.fc3.bias
+            self.fc1.weights, self.fc1.bias,
+            self.fc2.weights, self.fc2.bias,
+            self.fc3.weights, self.fc3.bias
         ]
 
 def visualize_mnist_digits():
@@ -215,7 +215,8 @@ def train_mnist_mlp(model, train_data, train_labels,
             
             # Cross-entropy: -sum(y * log(p))
             eps = 1e-8  # Small value to avoid log(0)
-            loss_value = -np.mean(np.sum(targets_one_hot * np.log(outputs.data + eps), axis=1))
+            outputs_np = np.array(outputs.data.data if hasattr(outputs.data, 'data') else outputs.data)
+            loss_value = -np.mean(np.sum(targets_one_hot * np.log(outputs_np + eps), axis=1))
             loss = Tensor([loss_value])
             
             # Backward pass with YOUR autograd
@@ -228,7 +229,7 @@ def train_mnist_mlp(model, train_data, train_labels,
                     param.grad = None  # Clear gradients
             
             # Track accuracy
-            predictions = np.argmax(outputs.data, axis=1)
+            predictions = np.argmax(outputs_np, axis=1)
             correct += np.sum(predictions == batch_y)
             total += len(batch_y)
             
@@ -269,7 +270,8 @@ def test_mnist_mlp(model, test_data, test_labels):
         inputs = Tensor(batch_X)  # Module 02: YOUR Tensor!
         outputs = model.forward(inputs)  # YOUR forward pass!
         
-        predictions = np.argmax(outputs.data, axis=1)
+        outputs_np = np.array(outputs.data.data if hasattr(outputs.data, 'data') else outputs.data)
+        predictions = np.argmax(outputs_np, axis=1)
         correct += np.sum(predictions == batch_y)
         total += len(batch_y)
         
