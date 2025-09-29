@@ -174,6 +174,9 @@ class Variable:
             self.data = Tensor(data)
         elif isinstance(data, np.ndarray):
             self.data = Tensor(data)
+        elif isinstance(data, (np.number, np.floating, np.integer)):
+            # Handle numpy scalar types
+            self.data = Tensor(data)
         elif isinstance(data, Tensor):
             self.data = data
         else:
@@ -182,6 +185,11 @@ class Variable:
         self.grad = None
         self.requires_grad = requires_grad
         self.grad_fn = grad_fn
+
+    @property
+    def shape(self):
+        """Shape of the underlying data."""
+        return self.data.shape
 
     def __repr__(self):
         """String representation of Variable."""
@@ -327,6 +335,8 @@ def _ensure_variable(x):
     """Convert input to Variable if needed."""
     if isinstance(x, Variable):
         return x
+    elif hasattr(x, '_variable'):  # Handle Parameter objects
+        return x._variable  # Parameter wraps a Variable
     else:
         return Variable(x, requires_grad=False)
 
@@ -369,12 +379,60 @@ def add(a: Union[Variable, float, int], b: Union[Variable, float, int]) -> Varia
 
     # Define backward function for gradient propagation
     def grad_fn(gradient):
-        """Propagate gradients to both operands."""
+        """Propagate gradients to both operands with broadcasting support."""
         # Addition: ∂(a+b)/∂a = 1, ∂(a+b)/∂b = 1
+        # Handle broadcasting by summing gradients appropriately
         if a.requires_grad:
-            a.backward(gradient)
+            # Sum out dimensions that were broadcasted for a
+            grad_a = gradient
+            # Sum over axes that were broadcasted
+            original_shape = a.data.data.shape
+            grad_shape = grad_a.shape if hasattr(grad_a, 'shape') else np.array(grad_a).shape
+
+            # Sum along axes that were added due to broadcasting
+            if len(grad_shape) > len(original_shape):
+                axes_to_sum = tuple(range(len(grad_shape) - len(original_shape)))
+                grad_a = np.sum(grad_a, axis=axes_to_sum)
+
+            # Sum along axes that were expanded
+            for i in range(len(original_shape)):
+                if i < len(grad_a.shape) and original_shape[i] == 1 and grad_a.shape[i] > 1:
+                    grad_a = np.sum(grad_a, axis=i, keepdims=True)
+
+            # Handle case where parameter is 1D but gradient is 2D
+            if len(original_shape) == 1 and len(grad_a.shape) == 2:
+                grad_a = np.sum(grad_a, axis=0)  # Sum across batch dimension
+
+            # Squeeze out singleton dimensions to match original shape
+            grad_a = grad_a.reshape(original_shape)
+
+            a.backward(grad_a)
+
         if b.requires_grad:
-            b.backward(gradient)
+            # Sum out dimensions that were broadcasted for b
+            grad_b = gradient
+            # Sum over axes that were broadcasted
+            original_shape = b.data.data.shape
+            grad_shape = grad_b.shape if hasattr(grad_b, 'shape') else np.array(grad_b).shape
+
+            # Sum along axes that were added due to broadcasting
+            if len(grad_shape) > len(original_shape):
+                axes_to_sum = tuple(range(len(grad_shape) - len(original_shape)))
+                grad_b = np.sum(grad_b, axis=axes_to_sum)
+
+            # Sum along axes that were expanded
+            for i in range(len(original_shape)):
+                if i < len(grad_b.shape) and original_shape[i] == 1 and grad_b.shape[i] > 1:
+                    grad_b = np.sum(grad_b, axis=i, keepdims=True)
+
+            # Handle case where bias is 1D but gradient is 2D
+            if len(original_shape) == 1 and len(grad_b.shape) == 2:
+                grad_b = np.sum(grad_b, axis=0)  # Sum across batch dimension
+
+            # Squeeze out singleton dimensions to match original shape
+            grad_b = grad_b.reshape(original_shape)
+
+            b.backward(grad_b)
 
     # Create result variable with gradient function
     result = Variable(result_data, requires_grad=requires_grad, grad_fn=grad_fn if requires_grad else None)

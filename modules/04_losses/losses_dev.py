@@ -66,12 +66,15 @@ import os
 # Import our building blocks - try package first, then local modules
 try:
     from tinytorch.core.tensor import Tensor
-    # Note: For now, we'll use simplified implementations without full autograd
-    # In a complete system, these would integrate with the autograd Variable system
+    from tinytorch.core.autograd import Variable, subtract, multiply, add, matmul
+    # CRITICAL: Now using full autograd integration for proper gradient flow
+    # These losses will work with the autograd computational graph
 except ImportError:
     # For development, import from local modules
     sys.path.append(os.path.join(os.path.dirname(__file__), '..', '01_tensor'))
     from tensor_dev import Tensor
+    sys.path.append(os.path.join(os.path.dirname(__file__), '..', '05_autograd'))
+    from autograd_dev import Variable, subtract, multiply, add, matmul
 
 # %% nbgrader={"grade": false, "grade_id": "losses-setup", "locked": false, "schema_version": 3, "solution": false, "task": false}
 print("FIRE TinyTorch Loss Functions Module")
@@ -2191,3 +2194,144 @@ if __name__ == "__main__":
     print("   PASS Production-ready batch processing")
     print("   PASS Systems analysis and performance insights")
     print("   PASS Ready for neural network training!")
+
+# %% [markdown]
+"""
+## CRITICAL FIX: Autograd-Integrated Loss Functions
+
+The above implementations use basic Tensor operations without gradient tracking.
+For neural network training, we need loss functions that integrate with the autograd system
+to enable proper backpropagation through the computational graph.
+"""
+
+# %% nbgrader={"grade": false, "grade_id": "autograd-losses", "solution": true}
+#| export
+class MSELoss:
+    """
+    Mean Squared Error Loss with Autograd Integration
+
+    This version properly integrates with the autograd system to enable
+    gradient flow during backpropagation. Unlike the basic MeanSquaredError
+    above, this returns a Variable that participates in the computational graph.
+    """
+
+    def __init__(self):
+        """Initialize MSE loss function."""
+        pass
+
+    def __call__(self, predictions, targets):
+        """
+        Compute MSE loss with autograd support.
+
+        Args:
+            predictions: Model predictions (Variable or convertible to Variable)
+            targets: True targets (Variable or convertible to Variable)
+
+        Returns:
+            Variable with scalar loss value and gradient tracking
+        """
+        # Ensure inputs are Variables for gradient tracking
+        if not isinstance(predictions, Variable):
+            pred_data = predictions.data if hasattr(predictions, 'data') else predictions
+            predictions = Variable(pred_data, requires_grad=False)
+
+        if not isinstance(targets, Variable):
+            target_data = targets.data if hasattr(targets, 'data') else targets
+            targets = Variable(target_data, requires_grad=False)
+
+        # Compute MSE using autograd operations
+        diff = subtract(predictions, targets)
+        squared_diff = multiply(diff, diff)
+
+        # Sum all elements and divide by count to get mean
+        loss = Variable.sum(squared_diff)
+
+        # Convert to mean (divide by number of elements)
+        batch_size = predictions.data.data.size
+        mean_loss = multiply(loss, 1.0 / batch_size)
+
+        return mean_loss
+
+#| export
+class CrossEntropyLoss:
+    """
+    Cross-Entropy Loss with Autograd Integration
+
+    Simplified cross-entropy that works with the autograd system.
+    For training neural networks with gradient-based optimization.
+    """
+
+    def __init__(self):
+        """Initialize CrossEntropy loss function."""
+        self.epsilon = 1e-7  # For numerical stability
+
+    def __call__(self, predictions, targets):
+        """
+        Compute cross-entropy loss with autograd support.
+
+        Args:
+            predictions: Model predictions/logits (Variable)
+            targets: True class indices (Variable or numpy array)
+
+        Returns:
+            Variable with scalar loss value and gradient tracking
+        """
+        # Handle Variable inputs
+        if isinstance(predictions, Variable):
+            pred_data = predictions.data.data
+        elif hasattr(predictions, 'data'):
+            pred_data = predictions.data
+        else:
+            pred_data = predictions
+
+        if isinstance(targets, Variable):
+            target_data = targets.data.data
+        elif hasattr(targets, 'data'):
+            target_data = targets.data
+        else:
+            target_data = targets
+
+        # Apply softmax to predictions (numerically stable)
+        exp_pred = np.exp(pred_data - np.max(pred_data, axis=-1, keepdims=True))
+        softmax_pred = exp_pred / np.sum(exp_pred, axis=-1, keepdims=True)
+
+        # Clip for numerical stability
+        softmax_pred = np.clip(softmax_pred, self.epsilon, 1 - self.epsilon)
+
+        # Compute cross-entropy loss
+        if len(target_data.shape) == 1 or target_data.shape[-1] == 1:
+            # Integer labels
+            batch_size = pred_data.shape[0]
+            loss = 0
+            for i in range(batch_size):
+                label = int(target_data[i])
+                loss -= np.log(softmax_pred[i, label])
+            loss /= batch_size
+        else:
+            # One-hot labels
+            loss = -np.mean(np.sum(target_data * np.log(softmax_pred), axis=-1))
+
+        # Return as Variable with gradient function
+        result = Variable(loss, requires_grad=True)
+
+        # Define backward function for proper gradient flow
+        def grad_fn(gradient):
+            if isinstance(predictions, Variable) and predictions.requires_grad:
+                batch_size = pred_data.shape[0]
+
+                # Gradient of cross-entropy with softmax
+                if len(target_data.shape) == 1 or target_data.shape[-1] == 1:
+                    # Integer labels - gradient is (softmax - one_hot_targets)
+                    grad = softmax_pred.copy()
+                    for i in range(batch_size):
+                        label = int(target_data[i])
+                        grad[i, label] -= 1
+                    grad = grad / batch_size * gradient  # Scale by incoming gradient
+                else:
+                    # One-hot labels
+                    grad = (softmax_pred - target_data) / batch_size * gradient
+
+                predictions.backward(grad)
+
+        result.grad_fn = grad_fn
+        return result
