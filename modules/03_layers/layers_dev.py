@@ -544,54 +544,62 @@ class Linear(Module):
     
     def forward(self, x):
         """
-        Forward pass through the Linear layer.
-        
+        Forward pass through the Linear layer with automatic differentiation.
+
         Args:
-            x: Input tensor (shape: ..., input_size)
-        
+            x: Input Variable (shape: ..., input_size)
+
         Returns:
-            Output tensor (shape: ..., output_size)
-        
-        COMMON PITFALL: Make sure input tensor has shape (..., input_size)
-        If you get shape mismatch errors, check that your input's last dimension
-        matches the layer's input_size parameter.
-        
-        TODO: Implement the linear transformation: output = input @ weights + bias
-        
+            Output Variable (shape: ..., output_size) with gradient tracking
+
+        CRITICAL FIX: This method now properly uses autograd operations
+        to ensure gradients flow through parameters during backpropagation.
+
+        TODO: Implement the linear transformation using autograd operations
+
         STEP-BY-STEP IMPLEMENTATION:
-        1. Extract data from input tensor using x.data
-        2. Get weight and bias data using self.weights.data and self.bias.data
-        3. Perform matrix multiplication: np.dot(x.data, weights.data)
-        4. Add bias if it exists: result + bias.data
-        5. Return new Tensor with result
-        
+        1. Convert input to Variable if needed (with gradient tracking)
+        2. Use autograd matrix multiplication: matmul(x, weights)
+        3. Add bias using autograd addition if it exists: add(result, bias)
+        4. Return Variable with gradient tracking enabled
+
         LEARNING CONNECTIONS:
-        - This is the core neural network operation: y = Wx + b
-        - Matrix multiplication handles batch processing automatically
-        - Each row in input produces one row in output
-        - This is pure linear algebra - no autograd complexity yet
-        
+        - Uses autograd operations instead of raw numpy for gradient flow
+        - Parameters (weights/bias) are Variables with requires_grad=True
+        - Matrix multiplication and addition maintain computational graph
+        - This enables backpropagation through all parameters
+
         IMPLEMENTATION HINTS:
-        - Use np.dot() for matrix multiplication
-        - Handle the case where bias is None
-        - Always return a new Tensor object
-        - Focus on the mathematical operation, not gradient tracking
+        - Import autograd operations locally to avoid circular imports
+        - Ensure result Variable has proper gradient tracking
+        - Handle both Tensor and Variable inputs gracefully
         """
         ### BEGIN SOLUTION
-        # Extract data from input tensor
-        x_data = x.data
-        weights_data = self.weights.data
-        
-        # Matrix multiplication using NumPy's optimized implementation
-        output_data = np.dot(x_data, weights_data)
-        
-        # Add bias if it exists
+        # Import autograd operations locally to avoid circular imports
+        try:
+            from tinytorch.core.autograd import Variable, matmul, add
+        except ImportError:
+            # For development, import from local module
+            import sys
+            import os
+            sys.path.append(os.path.join(os.path.dirname(__file__), '..', '05_autograd'))
+            from autograd_dev import Variable, matmul, add
+
+        # Ensure input is a Variable with appropriate gradient tracking
+        if not isinstance(x, Variable):
+            # Convert to Variable - don't track gradients for input data
+            x = Variable(x.data if hasattr(x, 'data') else x, requires_grad=False)
+
+        # Matrix multiplication using autograd: x @ weights
+        # This maintains the computational graph for gradient flow
+        result = matmul(x, self.weights)
+
+        # Add bias if it exists, using autograd addition
         if self.bias is not None:
-            bias_data = self.bias.data
-            output_data = output_data + bias_data
-        
-        # Return new Tensor with result
-        return Tensor(output_data)
+            result = add(result, self.bias)
+
+        # Result is automatically a Variable with gradient tracking
+        return result
         ### END SOLUTION
 
 # In[ ]:
