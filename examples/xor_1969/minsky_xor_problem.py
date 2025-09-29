@@ -184,21 +184,27 @@ def train_xor_network(model, X, y, learning_rate=0.1, epochs=1000):
         # Forward pass using YOUR network
         predictions = model.forward(X_tensor)  # YOUR multi-layer forward!
         
-        # Binary cross-entropy loss
-        # Convert to numpy arrays for math operations
+        # Use MSE loss to maintain computational graph
+        diff = predictions - y_tensor
+        squared_diff = diff * diff  # Element-wise multiplication
+
+        # For display: compute loss value
         y_np = np.array(y_tensor.data.data if hasattr(y_tensor.data, 'data') else y_tensor.data)
         pred_np = np.array(predictions.data.data if hasattr(predictions.data, 'data') else predictions.data)
-        loss_value = np.mean(-y_np * np.log(pred_np + 1e-8) -
-                            (1 - y_np) * np.log(1 - pred_np + 1e-8))
-        loss = Tensor([loss_value])
-        
-        # Backward pass using YOUR autograd
-        loss.backward()  # Module 06: YOUR automatic differentiation!
-        
+        loss_value = np.mean((pred_np - y_np) ** 2)
+
+        # Backward pass using YOUR autograd - maintain the graph!
+        n_samples = squared_diff.data.shape[0]
+        grad_output = Tensor(np.ones_like(squared_diff.data) / n_samples)
+        squared_diff.backward(grad_output)  # Module 06: YOUR automatic differentiation!
+
         # Update parameters using gradient descent
         for param in model.parameters():
             if param.grad is not None:
-                param.data -= learning_rate * param.grad
+                # Extract gradient data properly
+                grad_data = param.grad.data if hasattr(param.grad, 'data') else param.grad
+                grad_np = np.array(grad_data.data if hasattr(grad_data, 'data') else grad_data)
+                param.data = param.data - learning_rate * grad_np
                 param.grad = None
         
         # Progress updates
