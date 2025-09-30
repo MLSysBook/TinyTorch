@@ -778,6 +778,7 @@ Regular Linear Layer:           QuantizedLinear Layer:
 """
 
 # %% nbgrader={"grade": false, "grade_id": "quantized_linear", "solution": true}
+#| export
 class QuantizedLinear:
     """Quantized version of Linear layer using INT8 arithmetic."""
 

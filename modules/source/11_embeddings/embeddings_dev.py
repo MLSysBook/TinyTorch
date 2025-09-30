@@ -761,6 +761,7 @@ Input: Token IDs [1, 42, 7, 99]
 """
 
 # %% nbgrader={"grade": false, "grade_id": "complete-system", "solution": true}
+#| export
 class EmbeddingLayer:
     """
     Complete embedding system combining token and positional embeddings.

@@ -304,6 +304,7 @@ This design enables **O(1) updates** - just write to the next position!
 
 # %% nbgrader={"grade": false, "grade_id": "kv_cache_class", "solution": true}
 # %%
+#| export
 class KVCache:
     """
     Efficient key-value cache for autoregressive generation.

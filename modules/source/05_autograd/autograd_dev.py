@@ -67,14 +67,7 @@ from typing import Optional, List, Tuple
 import sys
 import os
 
-# Import the Tensor from Module 01
-sys.path.append(os.path.join(os.path.dirname(__file__), '..', '01_tensor'))
-from tensor_dev import Tensor
-
-print("🔥 TinyTorch Autograd Module")
-print(f"NumPy version: {np.__version__}")
-print(f"Python version: {sys.version_info.major}.{sys.version_info.minor}")
-print("Ready to enable automatic differentiation!")
+from tinytorch.core.tensor import Tensor
 
 # %% [markdown]
 """
@@ -678,7 +671,6 @@ This approach follows PyTorch 2.0 style - clean, modern, and educational.
 """
 
 # %% nbgrader={"grade": false, "grade_id": "enable-autograd", "solution": true}
-#| export
 def enable_autograd():
     """
     Enable gradient tracking for all Tensor operations.

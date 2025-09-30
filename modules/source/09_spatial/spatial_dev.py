@@ -57,6 +57,7 @@ from tinytorch.core.spatial import Conv2d, MaxPool2d, AvgPool2d
 
 # %% nbgrader={"grade": false, "grade_id": "spatial-setup", "solution": true}
 
+
 #| default_exp core.spatial
 
 #| export
@@ -344,6 +345,7 @@ This reveals why convolution is expensive: O(B×C_out×H×W×K_h×K_w×C_in) ope
 # %% nbgrader={"grade": false, "grade_id": "conv2d-class", "solution": true}
 
 #| export
+
 class Conv2d(Module):
     """
     2D Convolution layer for spatial feature extraction.
@@ -523,6 +525,7 @@ This test validates our convolution implementation with different configurations
 """
 
 # %% nbgrader={"grade": true, "grade_id": "test-conv2d", "locked": true, "points": 15}
+
 
 def test_unit_conv2d():
     """🔬 Test Conv2d implementation with multiple configurations."""
@@ -727,6 +730,7 @@ For input (1, 64, 224, 224) with 2×2 pooling:
 # %% nbgrader={"grade": false, "grade_id": "maxpool2d-class", "solution": true}
 
 #| export
+
 class MaxPool2d(Module):
     """
     2D Max Pooling layer for spatial dimension reduction.
@@ -923,6 +927,7 @@ Memory access pattern identical to MaxPool, just different aggregation!
 # %% nbgrader={"grade": false, "grade_id": "avgpool2d-class", "solution": true}
 
 #| export
+
 class AvgPool2d(Module):
     """
     2D Average Pooling layer for spatial dimension reduction.
@@ -1059,6 +1064,7 @@ This test validates both max and average pooling implementations.
 
 # %% nbgrader={"grade": true, "grade_id": "test-pooling", "locked": true, "points": 10}
 
+
 def test_unit_pooling():
     """🔬 Test MaxPool2d and AvgPool2d implementations."""
     print("🔬 Unit Test: Pooling Operations...")
@@ -1142,6 +1148,7 @@ Now let's analyze the computational complexity and memory trade-offs of spatial 
 
 # %% nbgrader={"grade": false, "grade_id": "spatial-analysis", "solution": true}
 
+
 def analyze_convolution_complexity():
     """📊 Analyze convolution computational complexity across different configurations."""
     print("📊 Analyzing Convolution Complexity...")
@@ -1198,6 +1205,7 @@ def analyze_convolution_complexity():
 # Analysis will be called in main execution
 
 # %% nbgrader={"grade": false, "grade_id": "pooling-analysis", "solution": true}
+
 
 def analyze_pooling_effects():
     """📊 Analyze pooling's impact on spatial dimensions and features."""
@@ -1411,6 +1419,7 @@ spanning 7×7 regions of original image!
 # %% nbgrader={"grade": false, "grade_id": "simple-cnn", "solution": true}
 
 #| export
+
 class SimpleCNN(Module):
     """
     Simple CNN demonstrating spatial operations integration.
@@ -1522,6 +1531,7 @@ This test validates that spatial operations work together in a complete CNN arch
 
 # %% nbgrader={"grade": true, "grade_id": "test-simple-cnn", "locked": true, "points": 10}
 
+
 def test_unit_simple_cnn():
     """🔬 Test SimpleCNN integration with spatial operations."""
     print("🔬 Unit Test: SimpleCNN Integration...")
@@ -1584,6 +1594,7 @@ Final validation that everything works together correctly.
 """
 
 # %% nbgrader={"grade": true, "grade_id": "module-integration", "locked": true, "points": 15}
+
 
 def test_module():
     """

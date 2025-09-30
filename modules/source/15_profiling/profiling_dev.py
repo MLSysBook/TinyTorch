@@ -219,6 +219,7 @@ Integration Functions
 """
 
 # %% nbgrader={"grade": false, "grade_id": "profiler_class", "solution": true}
+#| export
 class Profiler:
     """
     Professional-grade ML model profiler for performance analysis.

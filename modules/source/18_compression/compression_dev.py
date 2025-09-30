@@ -904,6 +904,7 @@ Temperature T:
 """
 
 # %%
+#| export
 class KnowledgeDistillation:
     """
     Knowledge distillation for model compression.
