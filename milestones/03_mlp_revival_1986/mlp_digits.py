@@ -220,7 +220,7 @@ def compare_batch_sizes(train_images, train_labels, test_images, test_labels):
         final_acc, _ = evaluate_accuracy(model, test_images, test_labels)
         
         # Calculate throughput
-        total_samples = len(train_dataset.features) * epochs
+        total_samples = len(train_dataset) * epochs
         samples_per_sec = total_samples / elapsed
         updates = len(train_loader) * epochs
         
