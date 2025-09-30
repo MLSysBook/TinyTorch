@@ -19,8 +19,6 @@ __all__ = ['import_previous_module', 'MSELoss', 'CrossEntropyLoss', 'BinaryCross
 
 # %% ../../modules/source/04_losses/losses_dev.ipynb 3
 import numpy as np
-import matplotlib.pyplot as plt
-import time
 from typing import Optional
 
 def import_previous_module(module_name: str, component_name: str):
