@@ -253,7 +253,8 @@ def test_unit_cosine_schedule():
 
     print("✅ CosineSchedule works correctly!")
 
-# test_unit_cosine_schedule()  # Moved to main guard
+if __name__ == "__main__":
+    test_unit_cosine_schedule()
 
 # %% [markdown]
 """
@@ -394,7 +395,8 @@ def test_unit_clip_grad_norm():
 
     print("✅ Gradient clipping works correctly!")
 
-# test_unit_clip_grad_norm()  # Moved to main guard
+if __name__ == "__main__":
+    test_unit_clip_grad_norm()
 
 # %% [markdown]
 """
@@ -806,7 +808,8 @@ def test_unit_trainer():
 
     print(f"✅ Trainer works correctly! Final loss: {loss:.4f}")
 
-# test_unit_trainer()  # Moved to main guard
+if __name__ == "__main__":
+    test_unit_trainer()
 
 # %% [markdown]
 """
@@ -1288,7 +1291,8 @@ def test_module():
 
 # %% nbgrader={"grade": false, "grade_id": "main", "locked": false, "solution": false}
 # Run comprehensive module test
-test_module()
+if __name__ == "__main__":
+    test_module()
 
 # %% [markdown]
 """

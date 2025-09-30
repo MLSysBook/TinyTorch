@@ -720,7 +720,8 @@ def test_unit_tensor_creation():
 
     print("✅ Tensor creation works correctly!")
 
-# test_unit_tensor_creation()  # Moved to main block
+if __name__ == "__main__":
+    test_unit_tensor_creation()
 
 # %% [markdown]
 """
@@ -855,7 +856,8 @@ def test_unit_arithmetic_operations():
 
     print("✅ Arithmetic operations work correctly!")
 
-# test_unit_arithmetic_operations()  # Moved to main block
+if __name__ == "__main__":
+    test_unit_arithmetic_operations()
 
 # %% [markdown]
 """
@@ -1004,7 +1006,8 @@ def test_unit_matrix_multiplication():
 
     print("✅ Matrix multiplication works correctly!")
 
-# test_unit_matrix_multiplication()  # Moved to main block
+if __name__ == "__main__":
+    test_unit_matrix_multiplication()
 
 # %% [markdown]
 """
@@ -1169,7 +1172,8 @@ def test_unit_shape_manipulation():
 
     print("✅ Shape manipulation works correctly!")
 
-# test_unit_shape_manipulation()  # Moved to main block
+if __name__ == "__main__":
+    test_unit_shape_manipulation()
 
 # %% [markdown]
 """
@@ -1328,7 +1332,8 @@ def test_unit_reduction_operations():
 
     print("✅ Reduction operations work correctly!")
 
-# test_unit_reduction_operations()  # Moved to main block
+if __name__ == "__main__":
+    test_unit_reduction_operations()
 
 # %% [markdown]
 """
@@ -1637,7 +1642,8 @@ def test_module():
     print("Run: tito module complete 01_tensor")
 
 # Run comprehensive module test
-test_module()
+if __name__ == "__main__":
+    test_module()
 
 
 # %% [markdown]

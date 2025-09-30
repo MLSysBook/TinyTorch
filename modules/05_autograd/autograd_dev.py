@@ -307,7 +307,8 @@ def test_unit_function_base():
 
     print("✅ Function base class works correctly!")
 
-# Test function defined above, will be called in main block
+if __name__ == "__main__":
+    test_unit_function_base()
 
 # %% [markdown]
 """
@@ -725,7 +726,8 @@ def test_unit_operation_functions():
 
     print("✅ Operation functions work correctly!")
 
-# Test function defined above, will be called in main block
+if __name__ == "__main__":
+    test_unit_operation_functions()
 
 # %% [markdown]
 """
@@ -997,7 +999,8 @@ def test_unit_tensor_autograd():
 
     print("✅ Tensor autograd enhancement works correctly!")
 
-# Test function defined above, will be called in main block
+if __name__ == "__main__":
+    test_unit_tensor_autograd()
 
 # %% [markdown]
 """
@@ -1346,7 +1349,8 @@ def test_module():
 
 # %%
 # Run comprehensive module test
-test_module()
+if __name__ == "__main__":
+    test_module()
 
 
 # %% [markdown]

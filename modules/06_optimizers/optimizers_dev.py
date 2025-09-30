@@ -345,6 +345,9 @@ def test_unit_optimizer_base():
 
     print("✅ Base Optimizer works correctly!")
 
+if __name__ == "__main__":
+    test_unit_optimizer_base()
+
 # %% [markdown]
 """
 ## SGD - Stochastic Gradient Descent
@@ -559,6 +562,9 @@ def test_unit_sgd_optimizer():
     assert np.allclose(param3.data, expected_wd)
 
     print("✅ SGD optimizer works correctly!")
+
+if __name__ == "__main__":
+    test_unit_sgd_optimizer()
 
 # %% [markdown]
 """
@@ -803,6 +809,9 @@ def test_unit_adam_optimizer():
 
     print("✅ Adam optimizer works correctly!")
 
+if __name__ == "__main__":
+    test_unit_adam_optimizer()
+
 # %% [markdown]
 """
 ## AdamW - Adam with Decoupled Weight Decay
@@ -1038,6 +1047,9 @@ def test_unit_adamw_optimizer():
     assert np.allclose(param1.data, param2.data, rtol=1e-10)
 
     print("✅ AdamW optimizer works correctly!")
+
+if __name__ == "__main__":
+    test_unit_adamw_optimizer()
 
 # %% [markdown]
 """
@@ -1409,7 +1421,8 @@ def test_module():
 
 # %%
 # Run comprehensive module test
-test_module()
+if __name__ == "__main__":
+    test_module()
 
 # %% [markdown]
 """

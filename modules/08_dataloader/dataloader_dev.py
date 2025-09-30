@@ -209,7 +209,8 @@ def test_unit_dataset():
 
     print("✅ Dataset interface works correctly!")
 
-# test_unit_dataset()  # Moved to main block
+if __name__ == "__main__":
+    test_unit_dataset()
 
 
 # %% [markdown]
@@ -388,7 +389,8 @@ def test_unit_tensordataset():
 
     print("✅ TensorDataset works correctly!")
 
-# test_unit_tensordataset()  # Moved to main block
+if __name__ == "__main__":
+    test_unit_tensordataset()
 
 
 # %% [markdown]
@@ -615,7 +617,8 @@ def test_unit_dataloader():
 
     print("✅ DataLoader works correctly!")
 
-# test_unit_dataloader()  # Moved to main block
+if __name__ == "__main__":
+    test_unit_dataloader()
 
 
 # %% [markdown]
@@ -828,7 +831,8 @@ def test_unit_download_functions():
 
     print("✅ Download functions work correctly!")
 
-# test_unit_download_functions()  # Moved to main block
+if __name__ == "__main__":
+    test_unit_download_functions()
 
 
 # %% [markdown]
@@ -1165,7 +1169,8 @@ def test_module():
 
 # %%
 # Run comprehensive module test
-test_module()
+if __name__ == "__main__":
+    test_module()
 
 
 
