@@ -51,7 +51,7 @@ class ExportCommand(BaseCommand):
 
     def add_arguments(self, parser: ArgumentParser) -> None:
         group = parser.add_mutually_exclusive_group(required=False)
-        group.add_argument("module", nargs="?", help="Export specific module (e.g., setup, tensor)")
+        group.add_argument("modules", nargs="*", help="Export specific modules (e.g., 01_tensor 02_activations)")
         group.add_argument("--all", action="store_true", help="Export all modules")
         parser.add_argument("--from-release", action="store_true", help="Export from release directory (student version) instead of source")
         parser.add_argument("--test-checkpoint", action="store_true", help="Run checkpoint test after successful export")
@@ -528,38 +528,79 @@ class ExportCommand(BaseCommand):
         console = self.console
         
         # Determine what to export
-        if hasattr(args, 'module') and args.module:
-            # Validate module exists
-            module_path = Path(f"modules/source/{args.module}")
-            if not module_path.exists():
-                console.print(Panel(f"[red]❌ Module '{args.module}' not found in modules/source/[/red]", 
-                                  title="Module Not Found", border_style="red"))
-                
-                # Show available modules
-                available_modules = self._discover_modules()
-                if available_modules:
-                    help_text = Text()
-                    help_text.append("Available modules:\n", style="bold yellow")
-                    for module in available_modules:
-                        help_text.append(f"  • {module}\n", style="white")
-                    console.print(Panel(help_text, title="Available Modules", border_style="yellow"))
-                
-                return 1
+        if hasattr(args, 'modules') and args.modules:
+            # Export multiple specific modules
+            modules_to_export = args.modules
             
-            console.print(Panel(f"🔄 Exporting Module: {args.module}", 
+            console.print(Panel(f"🔄 Exporting Modules: {', '.join(modules_to_export)}", 
                                title="Complete Export Workflow", border_style="bright_cyan"))
             
-            # Step 1: Convert .py to .ipynb
-            console.print(f"📝 Converting {args.module} Python file to notebook...")
-            if not self._convert_py_to_notebook(module_path):
-                console.print(Panel("[red]❌ Failed to convert .py file to notebook. Is jupytext installed?[/red]", 
-                                  title="Conversion Error", border_style="red"))
+            exported_notebooks = []
+            
+            # Process each module
+            for module_name in modules_to_export:
+                module_path = Path(f"modules/source/{module_name}")
+                if not module_path.exists():
+                    console.print(Panel(f"[red]❌ Module '{module_name}' not found in modules/source/[/red]", 
+                                      title="Module Not Found", border_style="red"))
+                    
+                    # Show available modules
+                    available_modules = self._discover_modules()
+                    if available_modules:
+                        help_text = Text()
+                        help_text.append("Available modules:\n", style="bold yellow")
+                        for module in available_modules:
+                            help_text.append(f"  • {module}\n", style="white")
+                        console.print(Panel(help_text, title="Available Modules", border_style="yellow"))
+                    
+                    return 1
+                
+                # Check if notebook exists, convert if needed
+                short_name = module_name[3:] if module_name.startswith(tuple(f"{i:02d}_" for i in range(100))) else module_name
+                notebook_file = module_path / f"{short_name}_dev.ipynb"
+                
+                if notebook_file.exists():
+                    console.print(f"📝 Using existing notebook: {notebook_file.name}")
+                    exported_notebooks.append(str(notebook_file))
+                else:
+                    console.print(f"📝 Converting {module_name} Python file to notebook...")
+                    if not self._convert_py_to_notebook(module_path):
+                        console.print(Panel(f"[red]❌ Failed to convert .py file to notebook for {module_name}. Is jupytext installed?[/red]", 
+                                          title="Conversion Error", border_style="red"))
+                        return 1
+                    exported_notebooks.append(str(notebook_file))
+            
+            console.print(f"🔄 Exporting {len(exported_notebooks)} notebooks to tinytorch package...")
+            
+            # Export all notebooks
+            success_count = 0
+            for notebook_path in exported_notebooks:
+                try:
+                    cmd = ["nbdev_export", "--path", notebook_path]
+                    result = subprocess.run(cmd, capture_output=True, text=True, cwd=Path.cwd())
+                    if result.returncode == 0:
+                        success_count += 1
+                        console.print(f"✅ Exported: {Path(notebook_path).name}")
+                    else:
+                        console.print(f"❌ Failed to export: {Path(notebook_path).name}")
+                        console.print(f"   Error: {result.stderr.strip()}")
+                except Exception as e:
+                    console.print(f"❌ Error exporting {Path(notebook_path).name}: {e}")
+            
+            if success_count == len(exported_notebooks):
+                # ALWAYS add auto-generated warnings immediately after export
+                self._add_autogenerated_warnings(console)
+                
+                # 🛡️ AUTOMATIC PROTECTION: Enable protection after export
+                self._auto_enable_protection(console)
+                
+                console.print(Panel(f"[green]✅ Successfully exported {success_count}/{len(exported_notebooks)} modules to tinytorch package![/green]", 
+                              title="Export Success", border_style="green"))
+                return 0
+            else:
+                console.print(Panel(f"[yellow]⚠️ Exported {success_count}/{len(exported_notebooks)} modules. Some exports failed.[/yellow]", 
+                              title="Partial Success", border_style="yellow"))
                 return 1
-            
-            console.print(f"🔄 Exporting {args.module} notebook to tinytorch package...")
-            
-            # Step 2: Use nbdev_export with --path for specific module
-            cmd = ["nbdev_export", "--path", str(module_path)]
         elif hasattr(args, 'all') and args.all:
             console.print(Panel("🔄 Exporting All Modules to Package", 
                                title="Complete Export Workflow", border_style="bright_cyan"))
@@ -578,7 +619,11 @@ class ExportCommand(BaseCommand):
             # Step 2: Use nbdev_export for all modules  
             cmd = ["nbdev_export"]
         else:
-            console.print(Panel("[red]❌ Must specify either a module name or --all[/red]", 
+            console.print(Panel("[red]❌ Must specify either module names or --all[/red]\n\n"
+                              "[dim]Examples:[/dim]\n"
+                              "[dim]  tito module export 01_tensor[/dim]\n"
+                              "[dim]  tito module export 01_tensor 02_activations[/dim]\n"
+                              "[dim]  tito module export --all[/dim]", 
                               title="Missing Arguments", border_style="red"))
             return 1
         
@@ -596,13 +641,16 @@ class ExportCommand(BaseCommand):
                                   title="Export Success", border_style="green"))
                 
                 # Show detailed export information
-                module_name = args.module if hasattr(args, 'module') and args.module else None
-                self._show_export_details(console, module_name)
-                
-                # Run checkpoint test if requested and for single module exports
-                if hasattr(args, 'test_checkpoint') and args.test_checkpoint and module_name:
-                    checkpoint_result = self._run_checkpoint_test(module_name)
-                    self._show_checkpoint_results(checkpoint_result, module_name)
+                module_names = args.modules if hasattr(args, 'modules') and args.modules else None
+                if module_names and len(module_names) == 1:
+                    self._show_export_details(console, module_names[0])
+                    
+                    # Run checkpoint test if requested and for single module exports
+                    if hasattr(args, 'test_checkpoint') and args.test_checkpoint:
+                        checkpoint_result = self._run_checkpoint_test(module_names[0])
+                        self._show_checkpoint_results(checkpoint_result, module_names[0])
+                else:
+                    self._show_export_details(console, None)
                 
             else:
                 error_msg = result.stderr.strip() if result.stderr else "Unknown error"
