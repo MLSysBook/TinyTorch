@@ -409,6 +409,7 @@ With momentum:
 """
 
 # %% nbgrader={"grade": false, "grade_id": "sgd-optimizer", "solution": true}
+#| export
 class SGD(Optimizer):
     """
     Stochastic Gradient Descent with momentum.
@@ -629,6 +630,7 @@ Step 2: m = 0.9*0.1*g + 0.1*g Step 2: m̂ = m / (1-0.9²) = m / 0.19
 """
 
 # %% nbgrader={"grade": false, "grade_id": "adam-optimizer", "solution": true}
+#| export
 class Adam(Optimizer):
     """
     Adam optimizer with adaptive learning rates.
@@ -875,6 +877,7 @@ Coupled (inconsistent)          Decoupled (consistent)
 """
 
 # %% nbgrader={"grade": false, "grade_id": "adamw-optimizer", "solution": true}
+#| export
 class AdamW(Optimizer):
     """
     AdamW optimizer with decoupled weight decay.

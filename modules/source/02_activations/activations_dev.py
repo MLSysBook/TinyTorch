@@ -59,15 +59,6 @@ from tinytorch.core.tensor import Tensor  # Foundation (Module 01)
 - **Integration:** Works seamlessly with Tensor for complete nonlinear transformations
 """
 
-# %% nbgrader={"grade": false, "grade_id": "setup", "solution": true}
-#| default_exp core.activations
-#| export
-
-import numpy as np
-from typing import Optional
-import sys
-import os
-
 # %% [markdown]
 """
 ## 📋 Module Prerequisites & Setup
@@ -81,7 +72,14 @@ This module builds on previous TinyTorch components. Here's what we need and why
 The `import_previous_module()` function below helps us cleanly import components from previous modules during development and testing.
 """
 
-# %%
+# %% nbgrader={"grade": false, "grade_id": "setup", "solution": true}
+#| default_exp core.activations
+
+import numpy as np
+from typing import Optional
+import sys
+import os
+
 def import_previous_module(module_name: str, component_name: str):
     import sys
     import os
