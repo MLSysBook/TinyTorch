@@ -588,7 +588,7 @@ def test_unit_conv2d():
 
     print("✅ Conv2d works correctly!")
 
-test_unit_conv2d()
+# Test will be called in main execution
 
 # %% [markdown]
 """
@@ -1127,7 +1127,7 @@ def test_unit_pooling():
 
     print("✅ Pooling operations work correctly!")
 
-test_unit_pooling()
+# Test will be called in main execution
 
 # %% [markdown]
 """
@@ -1196,7 +1196,7 @@ def analyze_convolution_complexity():
     print("🔸 Large kernels dramatically increase computational cost")
     print("🚀 This motivates depthwise separable convolutions and attention mechanisms")
 
-analyze_convolution_complexity()
+# Analysis will be called in main execution
 
 # %% nbgrader={"grade": false, "grade_id": "pooling-analysis", "solution": true}
 
@@ -1241,7 +1241,7 @@ def analyze_pooling_effects():
     print("🔸 Larger pooling windows lose more spatial detail")
     print("🚀 Choice depends on task: classification vs detection vs segmentation")
 
-analyze_pooling_effects()
+# Analysis will be called in main execution
 
 # %% [markdown]
 """
@@ -1574,7 +1574,7 @@ def test_unit_simple_cnn():
 
     print("✅ SimpleCNN integration works correctly!")
 
-test_unit_simple_cnn()
+# Test will be called in main execution
 
 # %% [markdown]
 """
@@ -1673,7 +1673,22 @@ def test_module():
 
 if __name__ == "__main__":
     print("🚀 Running Spatial Operations module...")
+
+    # Run all unit tests
+    print("\n🔬 Running Unit Tests...")
+    test_unit_conv2d()
+    test_unit_pooling()
+    test_unit_simple_cnn()
+
+    # Run systems analysis
+    print("\n📊 Running Systems Analysis...")
+    analyze_convolution_complexity()
+    analyze_pooling_effects()
+
+    # Run final integration test
+    print("\n🧪 Running Integration Test...")
     test_module()
+
     print("✅ Module validation complete!")
 
 # %% [markdown]

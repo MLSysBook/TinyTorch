@@ -338,7 +338,7 @@ def test_unit_linear_layer():
 
     print("✅ Linear layer works correctly!")
 
-test_unit_linear_layer()
+# Test will be run in main block
 
 # %% [markdown]
 """
@@ -522,7 +522,7 @@ def test_unit_sequential_container():
 
     print("✅ Sequential container works correctly!")
 
-test_unit_sequential_container()
+# Test will be run in main block
 
 # %% [markdown]
 """
@@ -727,7 +727,7 @@ def test_unit_dropout_layer():
 
     print("✅ Dropout layer works correctly!")
 
-test_unit_dropout_layer()
+# Test will be run in main block
 
 # %% [markdown]
 """
@@ -847,7 +847,7 @@ def demonstrate_layer_integration():
 
     return model, output
 
-model, output = demonstrate_layer_integration()
+# Integration demo will be run in main block
 
 # %% [markdown]
 """
@@ -940,7 +940,7 @@ def analyze_layer_memory():
 
         print(f"Hidden={hidden_size:4d}: {total_params:7,} params = {memory_mb:5.1f} MB")
 
-analyze_layer_memory()
+# Analysis will be run in main block
 
 # %% nbgrader={"grade": false, "grade_id": "analyze-layer-performance", "solution": true}
 def analyze_layer_performance():
@@ -968,7 +968,7 @@ def analyze_layer_performance():
     print("🚀 Memory grows linearly with batch size, quadratically with layer width")
     print("🚀 Dropout adds minimal computational overhead (element-wise operations)")
 
-analyze_layer_performance()
+# Analysis will be run in main block
 
 # %% [markdown]
 """
@@ -1050,12 +1050,27 @@ def test_module():
     print("🎉 ALL TESTS PASSED! Module ready for export.")
     print("Run: tito module complete 03_layers")
 
-test_module()
+# Module test will be run in main block
 
 # %%
 if __name__ == "__main__":
     print("🚀 Running Layers module...")
+
+    # Run all unit tests
+    test_unit_linear_layer()
+    test_unit_sequential_container()
+    test_unit_dropout_layer()
+
+    # Run integration demo
+    model, output = demonstrate_layer_integration()
+
+    # Run systems analysis
+    analyze_layer_memory()
+    analyze_layer_performance()
+
+    # Run final module test
     test_module()
+
     print("✅ Module validation complete!")
 
 # %% [markdown]
