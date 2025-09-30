@@ -826,20 +826,15 @@ def demonstrate_complete_training():
     print("🏗️ Complete Training Pipeline Demonstration")
     print("=" * 50)
 
-    # Use simple mock model for demonstration (not teaching model architecture)
-    class DemoModel:
+    # Use MockModel from testing (simple and sufficient for demo)
+    class MockModel:
         def __init__(self):
             self.training = True
-            # Single parameter for demonstration
-            self.weight = type('param', (), {
-                'data': np.array([0.5, -0.3]),
-                'grad': None
-            })()
+            self.weight = type('param', (), {'data': np.array([1.0, 2.0]), 'grad': None})()
 
         def forward(self, x):
-            # Simple linear operation for demo purposes
-            output = np.dot(x.data, self.weight.data)
-            result = type('output', (), {'data': np.array([output])})()
+            # Simple linear operation
+            result = type('output', (), {'data': np.dot(x.data, self.weight.data)})()
             return result
 
         def parameters(self):
@@ -881,7 +876,7 @@ def demonstrate_complete_training():
 
     # 1. Create model and training components
     print("1. Setting up training components...")
-    model = DemoModel()
+    model = MockModel()
     optimizer = MockSGD(model.parameters(), lr=0.1)
     loss_fn = MSELoss()
     scheduler = CosineSchedule(max_lr=0.1, min_lr=0.001, total_epochs=5)
@@ -1178,17 +1173,15 @@ def test_module():
     # Test complete training pipeline integration
     print("🔬 Integration Test: Complete Training Pipeline...")
 
-    # Create simple test model that focuses on training infrastructure, not architecture
-    class TestModel:
+    # Use MockModel (simple and sufficient for integration testing)
+    class MockModel:
         def __init__(self):
             self.training = True
-            # Minimal parameters for testing training infrastructure
-            self.weight = type('param', (), {'data': np.array([1.0, -0.5]), 'grad': None})()
+            self.weight = type('param', (), {'data': np.array([1.0, 2.0]), 'grad': None})()
 
         def forward(self, x):
-            # Simple operation to test training loop
-            output = np.sum(x.data * self.weight.data)
-            result = type('output', (), {'data': np.array([output])})()
+            # Simple linear operation
+            result = type('output', (), {'data': np.dot(x.data, self.weight.data)})()
             return result
 
         def parameters(self):
@@ -1228,7 +1221,7 @@ def test_module():
             self.data = np.array(data, dtype=float)
 
     # Create integrated system
-    model = TestModel()
+    model = MockModel()
     optimizer = IntegrationOptimizer(model.parameters(), lr=0.01)
     loss_fn = IntegrationLoss()
     scheduler = CosineSchedule(max_lr=0.1, min_lr=0.001, total_epochs=3)
