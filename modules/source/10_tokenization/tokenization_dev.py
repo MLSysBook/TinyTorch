@@ -46,14 +46,12 @@ Let's get started!
 """
 ## 📦 Where This Code Lives in the Final Package
 
-**Learning Side:** You work in modules/10_tokenization/tokenization_dev.py
-**Building Side:** Code exports to tinytorch.text.tokenization
+**Learning Side:** You work in `modules/10_tokenization/tokenization_dev.py`  
+**Building Side:** Code exports to `tinytorch.text.tokenization`
 
 ```python
-# Final package structure:
-from tinytorch.text.tokenization import Tokenizer, CharTokenizer, BPETokenizer  # This module
-from tinytorch.core.tensor import Tensor  # Foundation (always needed)
-from tinytorch.data.loader import DataLoader  # For text data batching
+# How to use this module:
+from tinytorch.text.tokenization import Tokenizer, CharTokenizer, BPETokenizer
 ```
 
 **Why this matters:**

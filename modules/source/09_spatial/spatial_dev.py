@@ -40,14 +40,12 @@ Let's get started!
 
 ## 📦 Where This Code Lives in the Final Package
 
-**Learning Side:** You work in modules/09_spatial/spatial_dev.py
-**Building Side:** Code exports to tinytorch.core.spatial
+**Learning Side:** You work in `modules/09_spatial/spatial_dev.py`  
+**Building Side:** Code exports to `tinytorch.core.spatial`
 
 ```python
-# Final package structure:
-from tinytorch.core.spatial import Conv2d, MaxPool2d, AvgPool2d  # This module
-from tinytorch.core.tensor import Tensor  # Foundation (Module 01)
-from tinytorch.core.layers import Module  # Base class (Module 03)
+# How to use this module:
+from tinytorch.core.spatial import Conv2d, MaxPool2d, AvgPool2d
 ```
 
 **Why this matters:**

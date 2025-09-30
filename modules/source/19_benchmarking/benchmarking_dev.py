@@ -46,16 +46,12 @@ Let's build the foundation for data-driven ML systems optimization!
 """
 ## 📦 Where This Code Lives in the Final Package
 
-**Learning Side:** You work in modules/19_benchmarking/benchmarking_dev.py
-**Building Side:** Code exports to tinytorch.benchmarking.benchmark
+**Learning Side:** You work in `modules/19_benchmarking/benchmarking_dev.py`  
+**Building Side:** Code exports to `tinytorch.benchmarking.benchmark`
 
 ```python
-# Final package structure:
-from tinytorch.benchmarking.benchmark import Benchmark, BenchmarkSuite, TinyMLPerf  # This module
-from tinytorch.profiling.profiler import Profiler, profile_forward_pass  # Module 15
-from tinytorch.optimization.acceleration import MixedPrecisionTrainer  # Module 16
-from tinytorch.optimization.quantization import quantize_model, QuantizedLinear  # Module 17
-from tinytorch.optimization.compression import magnitude_prune, structured_prune  # Module 18
+# How to use this module:
+from tinytorch.benchmarking.benchmark import Benchmark, BenchmarkSuite, TinyMLPerf
 ```
 
 **Why this matters:**

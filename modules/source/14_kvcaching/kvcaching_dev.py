@@ -41,15 +41,12 @@ Let's make inference blazingly fast!
 
 ## 📦 Where This Code Lives in the Final Package
 
-**Learning Side:** You work in modules/14_kvcaching/kvcaching_dev.py
-**Building Side:** Code exports to tinytorch.generation.kv_cache
+**Learning Side:** You work in `modules/14_kvcaching/kvcaching_dev.py`  
+**Building Side:** Code exports to `tinytorch.generation.kv_cache`
 
 ```python
-# Final package structure:
-from tinytorch.generation.kv_cache import KVCache, attention_with_cache  # This module
-from tinytorch.core.tensor import Tensor  # Foundation (Module 01)
-from tinytorch.core.attention import MultiHeadAttention  # Dependencies (Module 12)
-from tinytorch.models.transformer import GPT  # Dependencies (Module 13)
+# How to use this module:
+from tinytorch.generation.kv_cache import KVCache, attention_with_cache
 ```
 
 **Why this matters:**

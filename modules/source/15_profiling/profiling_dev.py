@@ -40,14 +40,12 @@ Let's build the measurement foundation for ML systems optimization!
 
 ## 📦 Where This Code Lives in the Final Package
 
-**Learning Side:** You work in modules/15_profiling/profiling_dev.py
-**Building Side:** Code exports to tinytorch.profiling.profiler
+**Learning Side:** You work in `modules/15_profiling/profiling_dev.py`  
+**Building Side:** Code exports to `tinytorch.profiling.profiler`
 
 ```python
-# Final package structure:
+# How to use this module:
 from tinytorch.profiling.profiler import Profiler, profile_forward_pass, profile_backward_pass
-from tinytorch.core.tensor import Tensor  # Foundation
-from tinytorch.models.transformer import GPT  # Example models to profile
 ```
 
 **Why this matters:**

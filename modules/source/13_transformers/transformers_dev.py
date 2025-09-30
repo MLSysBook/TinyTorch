@@ -41,16 +41,12 @@ Let's get started!
 
 ## 📦 Where This Code Lives in the Final Package
 
-**Learning Side:** You work in modules/13_transformers/transformers_dev.py
-**Building Side:** Code exports to tinytorch.models.transformer
+**Learning Side:** You work in `modules/13_transformers/transformers_dev.py`  
+**Building Side:** Code exports to `tinytorch.models.transformer`
 
 ```python
-# Final package structure:
-from tinytorch.models.transformer import TransformerBlock, GPT  # This module
-from tinytorch.core.tensor import Tensor  # Module 01 - foundation
-from tinytorch.core.layers import Linear, Sequential, Dropout  # Module 03 - building blocks
-from tinytorch.core.attention import MultiHeadAttention  # Module 12 - attention mechanism
-from tinytorch.text.embeddings import Embedding, PositionalEncoding  # Module 11 - representations
+# How to use this module:
+from tinytorch.models.transformer import TransformerBlock, GPT
 ```
 
 **Why this matters:**

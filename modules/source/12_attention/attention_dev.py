@@ -44,15 +44,12 @@ Let's get started!
 
 ## 📦 Where This Code Lives in the Final Package
 
-**Learning Side:** You work in modules/12_attention/attention_dev.py
-**Building Side:** Code exports to tinytorch.core.attention
+**Learning Side:** You work in `modules/12_attention/attention_dev.py`  
+**Building Side:** Code exports to `tinytorch.core.attention`
 
 ```python
-# Final package structure:
-from tinytorch.core.attention import scaled_dot_product_attention, MultiHeadAttention  # This module
-from tinytorch.core.tensor import Tensor  # Module 01 - foundation
-from tinytorch.core.layers import Linear  # Module 03 - transformations
-from tinytorch.text.embeddings import Embedding, PositionalEncoding  # Module 11 - representations
+# How to use this module:
+from tinytorch.core.attention import scaled_dot_product_attention, MultiHeadAttention
 ```
 
 **Why this matters:**

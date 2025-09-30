@@ -41,15 +41,12 @@ Let's get started!
 
 ## 📦 Where This Code Lives in the Final Package
 
-**Learning Side:** You work in modules/18_compression/compression_dev.py
-**Building Side:** Code exports to tinytorch.optimization.compression
+**Learning Side:** You work in `modules/18_compression/compression_dev.py`  
+**Building Side:** Code exports to `tinytorch.optimization.compression`
 
 ```python
-# Final package structure:
-from tinytorch.optimization.compression import magnitude_prune, structured_prune, measure_sparsity  # This module
-from tinytorch.core.tensor import Tensor  # Module 01 - foundation
-from tinytorch.core.layers import Linear  # Module 03 - layers to compress
-from tinytorch.optimization.quantization import quantize_model  # Module 17 - precision reduction
+# How to use this module:
+from tinytorch.optimization.compression import magnitude_prune, structured_prune, measure_sparsity
 ```
 
 **Why this matters:**
