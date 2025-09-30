@@ -61,20 +61,15 @@ from tinytorch.data.loader import download_mnist, download_cifar10
 """
 
 # %%
+#| export
 # Essential imports for data loading
 import numpy as np
 import random
 from typing import Iterator, Tuple, List, Optional, Union
 from abc import ABC, abstractmethod
-import os
-import gzip
-import urllib.request
-import pickle
-import sys
 
-# Import real Tensor class from Module 01
-sys.path.append(os.path.join(os.path.dirname(__file__), '..', '01_tensor'))
-from tensor_dev import Tensor
+# Import real Tensor class from tinytorch package
+from tinytorch.core.tensor import Tensor
 
 # %% [markdown]
 """
