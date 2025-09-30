@@ -77,75 +77,70 @@ else:
     finally:
         sys.path.pop(0)  # Always clean up path to avoid side effects
 
-# CRITICAL FIX: Parameter must be Variable-based for gradient tracking
+# CRITICAL FIX: Parameter must be Tensor-based for gradient tracking
 class Parameter:
     """
     A trainable parameter that supports automatic differentiation.
 
-    This creates a Variable with requires_grad=True for use as neural network parameters.
+    This creates a Tensor with requires_grad=True for use as neural network parameters.
     Essential for gradient-based optimization of weights and biases.
 
     IMPORTANT: Parameters must participate in autograd for training to work.
     """
     def __init__(self, data):
-        # Import Variable locally to avoid circular imports
-        try:
-            from tinytorch.core.autograd import Variable
-        except ImportError:
-            # For development, import from local module
-            import sys
-            import os
-            sys.path.append(os.path.join(os.path.dirname(__file__), '..', '05_autograd'))
-            from autograd_dev import Variable
+        # Import Tensor locally to avoid circular imports
+        # NO Tensor imports - using pure Tensor system only!
 
-        # Create Variable with gradient tracking enabled
-        if isinstance(data, Variable):
-            self._variable = data
+        # Use pure Tensor with gradients enabled
+        from tinytorch.core.tensor import Tensor
+
+        if isinstance(data, Tensor):
+            self._tensor = data
             if not data.requires_grad:
                 # Ensure parameters always require gradients
-                self._variable.requires_grad = True
+                data.requires_grad = True
         else:
-            # Convert data to Variable with gradient tracking
-            self._variable = Variable(data, requires_grad=True)
+            # Convert data to Tensor with gradient tracking
+            self._tensor = Tensor(data, requires_grad=True)
 
     def __getattr__(self, name):
-        """Delegate all attribute access to the underlying Variable."""
-        return getattr(self._variable, name)
+        """Delegate all attribute access to the underlying Tensor."""
+        return getattr(self._tensor, name)
 
     def __setattr__(self, name, value):
         """Handle setting attributes."""
-        if name == '_variable':
+        if name == '_tensor':
             super().__setattr__(name, value)
         else:
-            # Delegate to underlying Variable
-            setattr(self._variable, name, value)
+            # Delegate to underlying Tensor
+            setattr(self._tensor, name, value)
 
     @property
     def data(self):
         """Access to underlying data."""
-        return self._variable.data
+        return self._tensor.data
 
     @property
     def grad(self):
         """Access to gradient."""
-        return self._variable.grad
+        return self._tensor.grad
 
     @grad.setter
     def grad(self, value):
         """Set gradient."""
-        self._variable.grad = value
+        self._tensor.grad = value
 
     @property
     def requires_grad(self):
         """Whether this parameter requires gradients."""
-        return self._variable.requires_grad
+        return self._tensor.requires_grad
 
     def backward(self, gradient=None):
         """Backpropagate gradients."""
-        return self._variable.backward(gradient)
+        return self._tensor.backward(gradient)
 
     def __repr__(self):
-        return f"Parameter({self._variable})"
+        return f"Parameter({self._tensor})"
 
 # In[ ]:
 
@@ -547,10 +542,10 @@ class Linear(Module):
         Forward pass through the Linear layer with automatic differentiation.
 
         Args:
-            x: Input Variable (shape: ..., input_size)
+            x: Input Tensor (shape: ..., input_size)
 
         Returns:
-            Output Variable (shape: ..., output_size) with gradient tracking
+            Output Tensor (shape: ..., output_size) with gradient tracking
 
         CRITICAL FIX: This method now properly uses autograd operations
         to ensure gradients flow through parameters during backpropagation.
@@ -558,10 +553,10 @@ class Linear(Module):
         TODO: Implement the linear transformation using autograd operations
 
         STEP-BY-STEP IMPLEMENTATION:
-        1. Convert input to Variable if needed (with gradient tracking)
+        1. Convert input to Tensor if needed (with gradient tracking)
         2. Use autograd matrix multiplication: matmul(x, weights)
         3. Add bias using autograd addition if it exists: add(result, bias)
-        4. Return Variable with gradient tracking enabled
+        4. Return Tensor with gradient tracking enabled
 
         LEARNING CONNECTIONS:
         - Uses autograd operations instead of raw numpy for gradient flow
@@ -571,34 +566,26 @@ class Linear(Module):
 
         IMPLEMENTATION HINTS:
         - Import autograd operations locally to avoid circular imports
-        - Ensure result Variable has proper gradient tracking
-        - Handle both Tensor and Variable inputs gracefully
+        - Ensure result Tensor has proper gradient tracking
+        - Handle both Tensor and Tensor inputs gracefully
         """
         ### BEGIN SOLUTION
-        # Import autograd operations locally to avoid circular imports
-        try:
-            from tinytorch.core.autograd import Variable, matmul, add
-        except ImportError:
-            # For development, import from local module
-            import sys
-            import os
-            sys.path.append(os.path.join(os.path.dirname(__file__), '..', '05_autograd'))
-            from autograd_dev import Variable, matmul, add
+        # Use pure Tensor operations - NO Variables!
+        from tinytorch.core.tensor import Tensor
 
-        # Ensure input is a Variable with appropriate gradient tracking
-        if not isinstance(x, Variable):
-            # Convert to Variable - don't track gradients for input data
-            x = Variable(x.data if hasattr(x, 'data') else x, requires_grad=False)
+        # Ensure input is a Tensor
+        if not isinstance(x, Tensor):
+            x = Tensor(x.data if hasattr(x, 'data') else x)
 
-        # Matrix multiplication using autograd: x @ weights
-        # This maintains the computational graph for gradient flow
-        result = matmul(x, self.weights)
+        # Matrix multiplication: x @ weights
+        # Use Tensor's matmul which should track gradients
+        result = x.matmul(self.weights)
 
-        # Add bias if it exists, using autograd addition
+        # Add bias if it exists
         if self.bias is not None:
-            result = add(result, self.bias)
+            result = result + self.bias
 
-        # Result is automatically a Variable with gradient tracking
+        # Return pure Tensor with gradient tracking preserved
         return result
         ### END SOLUTION
 

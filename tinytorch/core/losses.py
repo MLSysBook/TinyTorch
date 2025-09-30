@@ -3,7 +3,6 @@
 
 import numpy as np
 from tinytorch.core.tensor import Tensor
-from tinytorch.core.autograd import Variable, subtract, multiply, add
 
 class MSELoss:
     """
@@ -22,27 +21,27 @@ class MSELoss:
         Compute MSE loss with autograd support.
 
         Args:
-            predictions: Model predictions (Variable or convertible to Variable)
-            targets: True targets (Variable or convertible to Variable)
+            predictions: Model predictions (Tensor or convertible to Tensor)
+            targets: True targets (Tensor or convertible to Tensor)
 
         Returns:
-            Variable with scalar loss value and gradient tracking
+            Tensor with scalar loss value and gradient tracking
         """
         # Ensure inputs are Variables for gradient tracking
-        if not isinstance(predictions, Variable):
+        if not isinstance(predictions, Tensor):
             pred_data = predictions.data if hasattr(predictions, 'data') else predictions
-            predictions = Variable(pred_data, requires_grad=False)
+            predictions = Tensor(pred_data, requires_grad=False)
 
-        if not isinstance(targets, Variable):
+        if not isinstance(targets, Tensor):
             target_data = targets.data if hasattr(targets, 'data') else targets
-            targets = Variable(target_data, requires_grad=False)
+            targets = Tensor(target_data, requires_grad=False)
 
         # Compute MSE using autograd operations
         diff = subtract(predictions, targets)
         squared_diff = multiply(diff, diff)
 
         # Sum all elements and divide by count to get mean
-        loss = Variable.sum(squared_diff)
+        loss = Tensor.sum(squared_diff)
 
         # Convert to mean (divide by number of elements)
         batch_size = predictions.data.data.size
@@ -67,21 +66,21 @@ class CrossEntropyLoss:
         Compute cross-entropy loss with autograd support.
 
         Args:
-            predictions: Model predictions/logits (Variable)
-            targets: True class indices (Variable or numpy array)
+            predictions: Model predictions/logits (Tensor)
+            targets: True class indices (Tensor or numpy array)
 
         Returns:
-            Variable with scalar loss value and gradient tracking
+            Tensor with scalar loss value and gradient tracking
         """
-        # Handle Variable inputs
-        if isinstance(predictions, Variable):
+        # Handle Tensor inputs
+        if isinstance(predictions, Tensor):
             pred_data = predictions.data.data
         elif hasattr(predictions, 'data'):
             pred_data = predictions.data
         else:
             pred_data = predictions
 
-        if isinstance(targets, Variable):
+        if isinstance(targets, Tensor):
             target_data = targets.data.data
         elif hasattr(targets, 'data'):
             target_data = targets.data
@@ -108,12 +107,12 @@ class CrossEntropyLoss:
             # One-hot labels
             loss = -np.mean(np.sum(target_data * np.log(softmax_pred), axis=-1))
 
-        # Return as Variable with gradient function
-        result = Variable(loss, requires_grad=True)
+        # Return as Tensor with gradient function
+        result = Tensor(loss, requires_grad=True)
 
         # Define backward function for proper gradient flow
         def grad_fn(gradient):
-            if isinstance(predictions, Variable) and predictions.requires_grad:
+            if isinstance(predictions, Tensor) and predictions.requires_grad:
                 batch_size = pred_data.shape[0]
 
                 # Gradient of cross-entropy with softmax

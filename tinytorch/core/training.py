@@ -28,7 +28,6 @@ from .layers import Dense
 from .networks import Sequential, create_mlp
 from .spatial import Conv2D, flatten
 from .dataloader import Dataset, DataLoader
-from .autograd import Variable  # FOR AUTOGRAD INTEGRATION
 from .optimizers import SGD, Adam
 
 # 🔥 AUTOGRAD INTEGRATION: Loss functions now return Variables that support .backward()
@@ -52,56 +51,56 @@ class MeanSquaredError:
         Compute MSE loss between predictions and targets.
         
         Args:
-            y_pred: Model predictions (Tensor or Variable, shape: [batch_size, ...])
-            y_true: True targets (Tensor or Variable, shape: [batch_size, ...])
+            y_pred: Model predictions (Tensor or Tensor, shape: [batch_size, ...])
+            y_true: True targets (Tensor or Tensor, shape: [batch_size, ...])
             
         Returns:
-            Variable with scalar loss value that supports .backward()
+            Tensor with scalar loss value that supports .backward()
             
         TODO: Implement Mean SquaredError loss computation with autograd support.
         
         STEP-BY-STEP IMPLEMENTATION:
         1. Convert inputs to Variables if needed for autograd support
-        2. Compute difference using Variable arithmetic: diff = y_pred - y_true
+        2. Compute difference using Tensor arithmetic: diff = y_pred - y_true
         3. Square the differences: squared_diff = diff * diff
-        4. Take mean over all elements using Variable operations
-        5. Return as Variable that supports .backward() for gradient computation
+        4. Take mean over all elements using Tensor operations
+        5. Return as Tensor that supports .backward() for gradient computation
         
         EXAMPLE:
-        y_pred = Variable([[1.0, 2.0], [3.0, 4.0]], requires_grad=True)
-        y_true = Variable([[1.5, 2.5], [2.5, 3.5]], requires_grad=False)
+        y_pred = Tensor([[1.0, 2.0], [3.0, 4.0]], requires_grad=True)
+        y_true = Tensor([[1.5, 2.5], [2.5, 3.5]], requires_grad=False)
         loss = mse_loss(y_pred, y_true)
         loss.backward()  # Computes gradients for y_pred
         
         LEARNING CONNECTIONS:
         - **Autograd Integration**: Loss functions must participate in computational graph for backpropagation
         - **Gradient Flow**: MSE provides smooth gradients that flow backward through the network
-        - **Variable Operations**: Using Variables keeps computation in the autograd system
+        - **Tensor Operations**: Using Variables keeps computation in the autograd system
         - **Training Pipeline**: Loss.backward() triggers gradient computation for entire network
         
         HINTS:
-        - Convert inputs to Variables if needed: Variable(tensor_data, requires_grad=True)
-        - Use Variable arithmetic to maintain autograd graph
+        - Convert inputs to Variables if needed: Tensor(tensor_data, requires_grad=True)
+        - Use Tensor arithmetic to maintain autograd graph
         - Use operations that preserve gradient computation
-        - Return Variable that supports .backward() method
+        - Return Tensor that supports .backward() method
         """
         ### BEGIN SOLUTION
         # Convert to Variables if needed to support autograd
-        if not isinstance(y_pred, Variable):
+        if not isinstance(y_pred, Tensor):
             if hasattr(y_pred, 'data'):
-                y_pred = Variable(y_pred.data, requires_grad=True)
+                y_pred = Tensor(y_pred.data, requires_grad=True)
             else:
-                y_pred = Variable(y_pred, requires_grad=True)
+                y_pred = Tensor(y_pred, requires_grad=True)
         
-        if not isinstance(y_true, Variable):
+        if not isinstance(y_true, Tensor):
             if hasattr(y_true, 'data'):
-                y_true = Variable(y_true.data, requires_grad=False)  # Targets don't need gradients
+                y_true = Tensor(y_true.data, requires_grad=False)  # Targets don't need gradients
             else:
-                y_true = Variable(y_true, requires_grad=False)
+                y_true = Tensor(y_true, requires_grad=False)
         
-        # Compute MSE using Variable operations to maintain autograd graph
-        diff = y_pred - y_true  # Variable subtraction
-        squared_diff = diff * diff  # Variable multiplication
+        # Compute MSE using Tensor operations to maintain autograd graph
+        diff = y_pred - y_true  # Tensor subtraction
+        squared_diff = diff * diff  # Tensor multiplication
         
         # Mean operation that preserves gradients
         # Create a simple mean operation for Variables
@@ -110,7 +109,7 @@ class MeanSquaredError:
         else:
             mean_data = np.mean(squared_diff.data)
         
-        # Create loss Variable with gradient function for MSE
+        # Create loss Tensor with gradient function for MSE
         def mse_grad_fn(grad_output):
             # MSE gradient: 2 * (y_pred - y_true) / n
             if y_pred.requires_grad:
@@ -126,9 +125,9 @@ class MeanSquaredError:
                 else:
                     final_grad = grad_data * grad_output.data
                 
-                y_pred.backward(Variable(final_grad))
+                y_pred.backward(Tensor(final_grad))
         
-        loss = Variable(mean_data, requires_grad=y_pred.requires_grad, grad_fn=mse_grad_fn)
+        loss = Tensor(mean_data, requires_grad=y_pred.requires_grad, grad_fn=mse_grad_fn)
         return loss
         ### END SOLUTION
     
@@ -154,11 +153,11 @@ class CrossEntropyLoss:
         Compute CrossEntropy loss between predictions and targets.
         
         Args:
-            y_pred: Model predictions (Tensor or Variable, shape: [batch_size, num_classes])
-            y_true: True class indices (Tensor or Variable, shape: [batch_size]) or one-hot
+            y_pred: Model predictions (Tensor or Tensor, shape: [batch_size, num_classes])
+            y_true: True class indices (Tensor or Tensor, shape: [batch_size]) or one-hot
             
         Returns:
-            Variable with scalar loss value that supports .backward()
+            Tensor with scalar loss value that supports .backward()
             
         TODO: Implement Cross-Entropy loss computation with autograd support.
         
@@ -167,11 +166,11 @@ class CrossEntropyLoss:
         2. Handle both class indices and one-hot encoded labels
         3. Apply softmax to predictions for probability distribution
         4. Compute log probabilities while maintaining gradient flow
-        5. Calculate cross-entropy and return Variable with gradient function
+        5. Calculate cross-entropy and return Tensor with gradient function
         
         EXAMPLE:
-        y_pred = Variable([[2.0, 1.0, 0.1], [0.5, 2.1, 0.9]], requires_grad=True)
-        y_true = Variable([0, 1], requires_grad=False)  # Class indices
+        y_pred = Tensor([[2.0, 1.0, 0.1], [0.5, 2.1, 0.9]], requires_grad=True)
+        y_true = Tensor([0, 1], requires_grad=False)  # Class indices
         loss = crossentropy_loss(y_pred, y_true)
         loss.backward()  # Computes gradients for y_pred
         
@@ -189,17 +188,17 @@ class CrossEntropyLoss:
         """
         ### BEGIN SOLUTION
         # Convert to Variables if needed to support autograd
-        if not isinstance(y_pred, Variable):
+        if not isinstance(y_pred, Tensor):
             if hasattr(y_pred, 'data'):
-                y_pred = Variable(y_pred.data, requires_grad=True)
+                y_pred = Tensor(y_pred.data, requires_grad=True)
             else:
-                y_pred = Variable(y_pred, requires_grad=True)
+                y_pred = Tensor(y_pred, requires_grad=True)
         
-        if not isinstance(y_true, Variable):
+        if not isinstance(y_true, Tensor):
             if hasattr(y_true, 'data'):
-                y_true = Variable(y_true.data, requires_grad=False)
+                y_true = Tensor(y_true.data, requires_grad=False)
             else:
-                y_true = Variable(y_true, requires_grad=False)
+                y_true = Tensor(y_true, requires_grad=False)
         
         # Get data for computation
         if hasattr(y_pred.data, 'data'):
@@ -252,9 +251,9 @@ class CrossEntropyLoss:
                 else:
                     final_grad = grad_data * grad_output.data
                 
-                y_pred.backward(Variable(final_grad))
+                y_pred.backward(Tensor(final_grad))
         
-        loss = Variable(loss_value, requires_grad=y_pred.requires_grad, grad_fn=crossentropy_grad_fn)
+        loss = Tensor(loss_value, requires_grad=y_pred.requires_grad, grad_fn=crossentropy_grad_fn)
         return loss
         ### END SOLUTION
     
@@ -282,11 +281,11 @@ class BinaryCrossEntropyLoss:
         Compute Binary CrossEntropy loss between predictions and targets.
         
         Args:
-            y_pred: Model predictions (Tensor or Variable, shape: [batch_size, 1] or [batch_size])
-            y_true: True binary labels (Tensor or Variable, shape: [batch_size, 1] or [batch_size])
+            y_pred: Model predictions (Tensor or Tensor, shape: [batch_size, 1] or [batch_size])
+            y_true: True binary labels (Tensor or Tensor, shape: [batch_size, 1] or [batch_size])
             
         Returns:
-            Variable with scalar loss value that supports .backward()
+            Tensor with scalar loss value that supports .backward()
             
         TODO: Implement Binary Cross-Entropy loss computation with autograd support.
         
@@ -295,11 +294,11 @@ class BinaryCrossEntropyLoss:
         2. Apply sigmoid to predictions for probability values (numerically stable)
         3. Compute binary cross-entropy loss while maintaining gradient flow
         4. Create gradient function for sigmoid + BCE combination
-        5. Return Variable that supports .backward() for gradient computation
+        5. Return Tensor that supports .backward() for gradient computation
         
         EXAMPLE:
-        y_pred = Variable([[2.0], [0.0], [-1.0]], requires_grad=True)  # Raw logits
-        y_true = Variable([[1.0], [1.0], [0.0]], requires_grad=False)   # Binary labels
+        y_pred = Tensor([[2.0], [0.0], [-1.0]], requires_grad=True)  # Raw logits
+        y_true = Tensor([[1.0], [1.0], [0.0]], requires_grad=False)   # Binary labels
         loss = bce_loss(y_pred, y_true)
         loss.backward()  # Computes gradients for y_pred
         
@@ -317,17 +316,17 @@ class BinaryCrossEntropyLoss:
         """
         ### BEGIN SOLUTION
         # Convert to Variables if needed to support autograd
-        if not isinstance(y_pred, Variable):
+        if not isinstance(y_pred, Tensor):
             if hasattr(y_pred, 'data'):
-                y_pred = Variable(y_pred.data, requires_grad=True)
+                y_pred = Tensor(y_pred.data, requires_grad=True)
             else:
-                y_pred = Variable(y_pred, requires_grad=True)
+                y_pred = Tensor(y_pred, requires_grad=True)
         
-        if not isinstance(y_true, Variable):
+        if not isinstance(y_true, Tensor):
             if hasattr(y_true, 'data'):
-                y_true = Variable(y_true.data, requires_grad=False)
+                y_true = Tensor(y_true.data, requires_grad=False)
             else:
-                y_true = Variable(y_true, requires_grad=False)
+                y_true = Tensor(y_true, requires_grad=False)
         
         # Get data for computation
         if hasattr(y_pred.data, 'data'):
@@ -374,9 +373,9 @@ class BinaryCrossEntropyLoss:
                 else:
                     final_grad = grad_data * grad_output.data
                 
-                y_pred.backward(Variable(final_grad))
+                y_pred.backward(Tensor(final_grad))
         
-        loss = Variable(mean_loss, requires_grad=y_pred.requires_grad, grad_fn=bce_grad_fn)
+        loss = Tensor(mean_loss, requires_grad=y_pred.requires_grad, grad_fn=bce_grad_fn)
         return loss
         ### END SOLUTION
     
@@ -595,9 +594,9 @@ class Trainer:
             # Track metrics
             if hasattr(loss, 'data'):
                 if hasattr(loss.data, 'data'):
-                    epoch_metrics['loss'] += loss.data.data  # Variable with Tensor data
+                    epoch_metrics['loss'] += loss.data.data  # Tensor with Tensor data
                 else:
-                    epoch_metrics['loss'] += loss.data  # Variable with numpy data
+                    epoch_metrics['loss'] += loss.data  # Tensor with numpy data
             else:
                 epoch_metrics['loss'] += loss  # Direct value
             
@@ -668,9 +667,9 @@ class Trainer:
             # Track metrics
             if hasattr(loss, 'data'):
                 if hasattr(loss.data, 'data'):
-                    epoch_metrics['loss'] += loss.data.data  # Variable with Tensor data
+                    epoch_metrics['loss'] += loss.data.data  # Tensor with Tensor data
                 else:
-                    epoch_metrics['loss'] += loss.data  # Variable with numpy data
+                    epoch_metrics['loss'] += loss.data  # Tensor with numpy data
             else:
                 epoch_metrics['loss'] += loss  # Direct value
             

@@ -64,21 +64,12 @@ from tinytorch.core.tensor import Tensor  # Foundation (Module 01)
 
 import numpy as np
 from typing import Optional
+import sys
+import os
 
-# Import Tensor from Module 01
-try:
-    from tinytorch.core.tensor import Tensor
-except ImportError:
-    # Fallback for development - create a basic Tensor class
-    class Tensor:
-        def __init__(self, data, requires_grad=False):
-            self.data = np.array(data)
-            self.shape = self.data.shape
-            self.requires_grad = requires_grad
-            self.grad = None
-
-        def backward(self):
-            pass
+# Import the proper Tensor class from Module 01
+sys.path.append(os.path.join(os.path.dirname(__file__), '..', '01_tensor'))
+from tensor_dev import Tensor
 
 # %% [markdown]
 """
@@ -186,6 +177,7 @@ Sigmoid Curve:
 """
 
 # %% nbgrader={"grade": false, "grade_id": "sigmoid-impl", "solution": true}
+#| export
 class Sigmoid:
     """
     Sigmoid activation: σ(x) = 1/(1 + e^(-x))
@@ -296,6 +288,7 @@ ReLU Function:
 """
 
 # %% nbgrader={"grade": false, "grade_id": "relu-impl", "solution": true}
+#| export
 class ReLU:
     """
     ReLU activation: f(x) = max(0, x)
@@ -408,6 +401,7 @@ Tanh Curve:
 """
 
 # %% nbgrader={"grade": false, "grade_id": "tanh-impl", "solution": true}
+#| export
 class Tanh:
     """
     Tanh activation: f(x) = (e^x - e^(-x))/(e^x + e^(-x))
@@ -525,6 +519,7 @@ GELU Function:
 """
 
 # %% nbgrader={"grade": false, "grade_id": "gelu-impl", "solution": true}
+#| export
 class GELU:
     """
     GELU activation: f(x) = x * Φ(x) ≈ x * Sigmoid(1.702 * x)
@@ -642,6 +637,7 @@ Raw scores: [1, 2, 3, 4]
 """
 
 # %% nbgrader={"grade": false, "grade_id": "softmax-impl", "solution": true}
+#| export
 class Softmax:
     """
     Softmax activation: f(x_i) = e^(x_i) / Σ(e^(x_j))

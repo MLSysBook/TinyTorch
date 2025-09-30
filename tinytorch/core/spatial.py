@@ -109,24 +109,23 @@ def conv2d_vars(input_var, weight_var, bias_var, kernel_size):
     following the same pattern as matmul_vars in the autograd module.
     
     Args:
-        input_var: Input Variable (batch_size, in_channels, H, W) or (in_channels, H, W)
-        weight_var: Weight Variable (out_channels, in_channels, kH, kW)  
-        bias_var: Bias Variable (out_channels,) or None
+        input_var: Input Tensor (batch_size, in_channels, H, W) or (in_channels, H, W)
+        weight_var: Weight Tensor (out_channels, in_channels, kH, kW)  
+        bias_var: Bias Tensor (out_channels,) or None
         kernel_size: Tuple (kH, kW)
         
     Returns:
-        Result Variable with gradient function for backpropagation
+        Result Tensor with gradient function for backpropagation
     """
-    # Import Variable for type checking and creation
+    # Import Tensor for type checking and creation
     try:
-        from tinytorch.core.autograd import Variable
+        from tinytorch.core.tensor import Tensor
     except ImportError:
         # Fallback for development
         import sys
         import os
         sys.path.append(os.path.join(os.path.dirname(__file__), '..', '08_autograd'))
-        from autograd_dev import Variable
-    
+            
     # Extract raw numpy data for forward computation
     input_data = input_var.data.data if hasattr(input_var.data, 'data') else input_var.data
     weight_data = weight_var.data.data if hasattr(weight_var.data, 'data') else weight_var.data
@@ -219,9 +218,9 @@ def conv2d_vars(input_var, weight_var, bias_var, kernel_size):
             grad_bias = np.sum(grad_out_data, axis=(0, 2, 3))
             source_bias.grad += grad_bias
     
-    # Create result Variable with gradient function
+    # Create result Tensor with gradient function
     requires_grad = input_var.requires_grad or weight_var.requires_grad or (bias_var is not None and bias_var.requires_grad)
-    return Variable(output, requires_grad=requires_grad, grad_fn=grad_fn if requires_grad else None)
+    return Tensor(output, requires_grad=requires_grad, grad_fn=grad_fn if requires_grad else None)
 
 #| export
 def flatten(x, start_dim=1):
@@ -232,45 +231,45 @@ def flatten(x, start_dim=1):
     (which output 4D tensors) to linear layers (which expect 2D).
     
     Args:
-        x: Input tensor (Tensor, Variable, or any array-like)
+        x: Input tensor (Tensor, Tensor, or any array-like)
         start_dim: Dimension to start flattening from (default: 1 to preserve batch)
         
     Returns:
-        Flattened tensor preserving original type (Variable → Variable, Tensor → Tensor)
+        Flattened tensor preserving original type (Tensor → Tensor, Tensor → Tensor)
         
     Examples:
         # Flatten CNN output for Linear layer
         conv_output = Tensor(np.random.randn(32, 64, 8, 8))  # (batch, channels, height, width)
         flat = flatten(conv_output)  # (32, 4096) - ready for Linear layer!
         
-        # Flatten Variable output (preserves gradients)
-        conv_var = Variable(np.random.randn(32, 64, 8, 8), requires_grad=True)
-        flat_var = flatten(conv_var)  # Still a Variable with gradient tracking!
+        # Flatten Tensor output (preserves gradients)
+        conv_var = Tensor(np.random.randn(32, 64, 8, 8), requires_grad=True)
+        flat_var = flatten(conv_var)  # Still a Tensor with gradient tracking!
     """
-    # Import Variable for type checking
+    # Import Tensor for type checking
     try:
-        from tinytorch.core.autograd import Variable
+        from tinytorch.core.tensor import Tensor
     except ImportError:
         # Fallback for development
         import sys
         import os
         sys.path.append(os.path.join(os.path.dirname(__file__), '..', '08_autograd'))
-        from autograd_dev import Variable
-    
-    # Handle Variable type (preserve gradient tracking)
-    if isinstance(x, Variable):
+        from autograd_dev import Tensor
+
+    # Handle Tensor type (preserve gradient tracking)
+    if isinstance(x, Tensor):
         # Get the underlying data
         if hasattr(x.data, 'data'):
-            data = x.data.data  # Variable wrapping Tensor
+            data = x.data.data  # Tensor wrapping Tensor
         else:
-            data = x.data  # Variable wrapping numpy array
+            data = x.data  # Tensor wrapping numpy array
         
         # Calculate new shape
         batch_size = data.shape[0] if len(data.shape) > 0 else 1
         remaining_size = int(np.prod(data.shape[start_dim:]))
         new_shape = (batch_size, remaining_size)
         
-        # Reshape and create new Variable preserving gradient properties
+        # Reshape and create new Tensor preserving gradient properties
         flattened_data = data.reshape(new_shape)
         
         # Create flatten gradient function
@@ -279,10 +278,10 @@ def flatten(x, start_dim=1):
                 # Reshape gradient back to original shape
                 original_shape = x.shape
                 grad_reshaped = grad_output.data.data.reshape(original_shape)
-                x.backward(Variable(grad_reshaped))
+                x.backward(Tensor(grad_reshaped))
         
         requires_grad = x.requires_grad
-        return Variable(flattened_data, requires_grad=requires_grad, 
+        return Tensor(flattened_data, requires_grad=requires_grad, 
                        grad_fn=grad_fn if requires_grad else None)
     
     # Handle Tensor type
@@ -840,17 +839,16 @@ class Conv2d(Module):
         Forward pass through multi-channel Conv2D layer.
         
         Args:
-            x: Input tensor/Variable with shape (batch_size, in_channels, H, W) or (in_channels, H, W)
+            x: Input tensor/Tensor with shape (batch_size, in_channels, H, W) or (in_channels, H, W)
         Returns:
-            Output tensor/Variable with shape (batch_size, out_channels, out_H, out_W) or (out_channels, out_H, out_W)
+            Output tensor/Tensor with shape (batch_size, out_channels, out_H, out_W) or (out_channels, out_H, out_W)
         """
-        # For Variable inputs, use automatic differentiation path (fixes gradient flow)
+        # For Tensor inputs, use automatic differentiation path (fixes gradient flow)
         try:
-            from tinytorch.core.autograd import Variable
-            if isinstance(x, Variable):
-                # Use Variable-based computation for gradient flow
+                        if isinstance(x, Tensor):
+                # Use Tensor-based computation for gradient flow
                 return self._forward_with_autograd(x)
-        except ImportError:
+    except ImportError:
             pass
         
         # For Tensor inputs, use direct computation (preserves existing behavior)
@@ -859,16 +857,15 @@ class Conv2d(Module):
     def _forward_with_autograd(self, x):
         """Forward pass with automatic differentiation for Variables."""
         # Convert parameters to Variables for gradient flow (same as Linear layer)
-        from tinytorch.core.autograd import Variable
-        
+                
         # CRITICAL FIX: Create Variables that maintain reference to source Parameters
         # This ensures gradients accumulate into the Parameter objects correctly
-        weight_var = Variable(self.weight.data, requires_grad=True)
+        weight_var = Tensor(self.weight.data, requires_grad=True)
         weight_var._source_tensor = self.weight  # Keep reference to original Parameter
         
         bias_var = None
         if self.bias is not None:
-            bias_var = Variable(self.bias.data, requires_grad=True)
+            bias_var = Tensor(self.bias.data, requires_grad=True)
             bias_var._source_tensor = self.bias  # Keep reference to original Parameter
         
         # Use the conv2d_vars function that maintains proper gradient flow
@@ -933,7 +930,7 @@ class Conv2d(Module):
         Core convolution operation with automatic differentiation support.
         
         This function performs the convolution computation while preserving
-        the Variable computational graph for automatic gradient flow.
+        the Tensor computational graph for automatic gradient flow.
         """
         # Universal data extraction - clean PyTorch-inspired interface
         input_data = input_var.numpy() if hasattr(input_var, 'numpy') else np.array(input_var)
@@ -984,10 +981,9 @@ class Conv2d(Module):
         if single_image:
             output = output[0]
         
-        # Create output Variable with gradient function for automatic differentiation
+        # Create output Tensor with gradient function for automatic differentiation
         # This is the key difference from the old manual implementation
-        from tinytorch.core.autograd import Variable
-        
+                
         # Capture variables needed in the gradient function (closure)
         captured_input_data = input_data.copy()
         captured_weight_data = weight_data.copy()
@@ -1040,7 +1036,7 @@ class Conv2d(Module):
                 # Apply gradients to bias parameter (store directly in Parameter)  
                 conv_layer.bias.grad = bias_grad
             
-            # CRITICAL: Call backward on input Variable to continue chain rule
+            # CRITICAL: Call backward on input Tensor to continue chain rule
             # This is what was missing - need to propagate gradients back to input
             if input_var.requires_grad:
                 # Compute input gradients using full convolution (transpose convolution)
@@ -1077,11 +1073,11 @@ class Conv2d(Module):
                                     else:
                                         input_grad[in_c, i:i+captured_kH, j:j+captured_kW] += grad_value * filter_channel
                 
-                # Propagate gradient back to input Variable (CRITICAL for chain rule)
-                input_var.backward(Variable(input_grad))
+                # Propagate gradient back to input Tensor (CRITICAL for chain rule)
+                input_var.backward(Tensor(input_grad))
         
-        # Return Variable that maintains the computational graph
-        return Variable(output, requires_grad=(input_var.requires_grad or weight_var.requires_grad), grad_fn=conv2d_grad_fn)
+        # Return Tensor that maintains the computational graph
+        return Tensor(output, requires_grad=(input_var.requires_grad or weight_var.requires_grad), grad_fn=conv2d_grad_fn)
     
     def __call__(self, x):
         """Make layer callable: layer(x) same as layer.forward(x)"""
@@ -1378,9 +1374,8 @@ class MaxPool2D:
         for _ in range(added_dims):
             output = output[0]
         
-        # Return appropriate type - Variable if input was Variable for gradient flow
-        from tinytorch.core.autograd import Variable
-        if isinstance(x, Variable):
+        # Return appropriate type - Tensor if input was Tensor for gradient flow
+                if isinstance(x, Tensor):
             # Create gradient function for max pooling backward pass
             def grad_fn(grad_output):
                 if x.requires_grad:
@@ -1389,9 +1384,9 @@ class MaxPool2D:
                     grad_data = np.zeros_like(input_data)
                     # For educational simplicity, just pass gradients through
                     # A full implementation would track which elements were max
-                    x.backward(Variable(grad_data.reshape(x.shape)))
+                    x.backward(Tensor(grad_data.reshape(x.shape)))
             
-            return Variable(output, requires_grad=x.requires_grad, grad_fn=grad_fn if x.requires_grad else None)
+            return Tensor(output, requires_grad=x.requires_grad, grad_fn=grad_fn if x.requires_grad else None)
         else:
             return Tensor(output)
     
@@ -1574,11 +1569,10 @@ def flatten(x):
     - Preserve batch dimension for proper Dense layer input
     """
     ### BEGIN SOLUTION
-    # Variable-aware flatten implementation
-    from tinytorch.core.autograd import Variable
-    
-    # Check if input is a Variable - need to preserve gradient tracking
-    is_variable = isinstance(x, Variable)
+    # Tensor-aware flatten implementation
+        
+    # Check if input is a Tensor - need to preserve gradient tracking
+    is_variable = isinstance(x, Tensor)
     input_shape = x.shape
     
     if is_variable:
@@ -1598,23 +1592,23 @@ def flatten(x):
         # Default: keep first dimension, flatten rest
         result_data = x_data.reshape(input_shape[0], -1)
     
-    # If input was Variable, create Variable output with gradient tracking
+    # If input was Tensor, create Tensor output with gradient tracking
     if is_variable:
         # Create gradient function for flatten (reshape operation)
         def flatten_grad_fn(grad_output):
             # Reshape gradient back to original input shape
             if x.requires_grad:
-                # Get original shape from input Variable
+                # Get original shape from input Tensor
                 original_shape = x.shape
                 reshaped_grad_data = grad_output.data.data.reshape(original_shape)
-                x.backward(Variable(reshaped_grad_data))
+                x.backward(Tensor(reshaped_grad_data))
         
-        # Return Variable with gradient function if input required gradients
+        # Return Tensor with gradient function if input required gradients
         requires_grad = x.requires_grad
         grad_fn = flatten_grad_fn if requires_grad else None
-        return Variable(result_data, requires_grad=requires_grad, grad_fn=grad_fn)
+        return Tensor(result_data, requires_grad=requires_grad, grad_fn=grad_fn)
     else:
-        # Return Tensor for non-Variable inputs
+        # Return Tensor for non-Tensor inputs
         return type(x)(result_data)
     ### END SOLUTION
 
