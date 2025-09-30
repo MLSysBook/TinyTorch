@@ -44,14 +44,13 @@ Let's transform scattered data into organized learning batches!
 
 ## 📦 Where This Code Lives in the Final Package
 
-**Learning Side:** You work in modules/08_dataloader/dataloader_dev.py
-**Building Side:** Code exports to tinytorch.data.loader
+**Learning Side:** You work in `modules/08_dataloader/dataloader_dev.py`  
+**Building Side:** Code exports to `tinytorch.data.loader`
 
 ```python
-# Final package structure:
-from tinytorch.data.loader import Dataset, DataLoader, TensorDataset  # This module
-from tinytorch.data.loader import download_mnist, download_cifar10  # Dataset utilities
-from tinytorch.core.tensor import Tensor  # Foundation (Module 01)
+# How to use this module:
+from tinytorch.data.loader import Dataset, DataLoader, TensorDataset
+from tinytorch.data.loader import download_mnist, download_cifar10
 ```
 
 **Why this matters:**
@@ -127,6 +126,7 @@ Dataset Interface
 """
 
 # %% nbgrader={"grade": false, "grade_id": "dataset-implementation", "solution": true}
+#| export
 class Dataset(ABC):
     """
     Abstract base class for all datasets.
@@ -272,6 +272,7 @@ The key insight: TensorDataset transforms "arrays of data" into "a dataset that 
 """
 
 # %% nbgrader={"grade": false, "grade_id": "tensordataset-implementation", "solution": true}
+#| export
 class TensorDataset(Dataset):
     """
     Dataset wrapping tensors for supervised learning.
@@ -467,6 +468,7 @@ This transforms the dataset from "access one sample" to "iterate through batches
 """
 
 # %% nbgrader={"grade": false, "grade_id": "dataloader-implementation", "solution": true}
+#| export
 class DataLoader:
     """
     Data loader with batching and shuffling support.
