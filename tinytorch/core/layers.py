@@ -14,342 +14,203 @@
 # ║  🎓 LEARNING TIP: Work in modules/source/ - that's where real development    ║
 # ║     happens! The tinytorch/ directory is just the compiled output.           ║
 # ╚═══════════════════════════════════════════════════════════════════════════════╝
-
 # %% auto 0
-__all__ = ['Dense', 'Module', 'matmul', 'Linear']
+__all__ = ['Linear', 'Dropout']
 
-# %% ../../modules/source/04_layers/layers_dev.ipynb 1
+# %% ../../modules/source/03_layers/layers_dev.ipynb 1
 import numpy as np
 import sys
 import os
-from typing import Union, Tuple, Optional, Any
 
-# Import our building blocks - try package first, then local modules
-try:
-    from tinytorch.core.tensor import Tensor, Parameter
-except ImportError:
-    # For development, import from local modules
-    sys.path.append(os.path.join(os.path.dirname(__file__), '..', '02_tensor'))
-    from tensor_dev import Tensor, Parameter
+# Import dependencies from tinytorch package
+from .tensor import Tensor
+from .activations import ReLU, Sigmoid
 
-# %% ../../modules/source/04_layers/layers_dev.ipynb 4
-class Module:
+# %% ../../modules/source/03_layers/layers_dev.ipynb 6
+class Linear:
     """
-    Base class for all neural network modules.
-    
-    Provides automatic parameter collection, forward pass management,
-    and clean composition patterns. All layers (Dense, Conv2d, etc.)
-    inherit from this class.
-    
-    Key Features:
-    - Automatic parameter registration when you assign Tensors with requires_grad=True
-    - Recursive parameter collection from sub-modules
-    - Clean __call__ interface: model(x) instead of model.forward(x)
-    - Extensible for custom layers
-    
-    Example Usage:
-        class MLP(Module):
-            def __init__(self):
-                super().__init__()
-                self.layer1 = Dense(784, 128)  # Auto-registered!
-                self.layer2 = Dense(128, 10)   # Auto-registered!
-                
-            def forward(self, x):
-                x = self.layer1(x)
-                return self.layer2(x)
-                
-        model = MLP()
-        params = model.parameters()  # Gets all parameters automatically!
-        output = model(input)        # Clean interface!
-    """
-    
-    def __init__(self):
-        """Initialize module with empty parameter and sub-module storage."""
-        self._parameters = []
-        self._modules = []
-    
-    def __setattr__(self, name, value):
-        """
-        Intercept attribute assignment to auto-register parameters and modules.
-        
-        When you do self.weight = Parameter(...), this automatically adds
-        the parameter to our collection for easy optimization.
-        """
-        # Check if it's a tensor that needs gradients (a parameter)
-        if hasattr(value, 'requires_grad') and value.requires_grad:
-            self._parameters.append(value)
-        # Check if it's another Module (sub-module)
-        elif isinstance(value, Module):
-            self._modules.append(value)
-        
-        # Always call parent to actually set the attribute
-        super().__setattr__(name, value)
-    
-    def parameters(self):
-        """
-        Recursively collect all parameters from this module and sub-modules.
-        
-        Returns:
-            List of all parameters (Tensors with requires_grad=True)
-            
-        This enables: optimizer = Adam(model.parameters())
-        """
-        # Start with our own parameters
-        params = list(self._parameters)
-        
-        # Add parameters from sub-modules recursively
-        for module in self._modules:
-            params.extend(module.parameters())
-            
-        return params
-    
-    def __call__(self, *args, **kwargs):
-        """
-        Makes modules callable: model(x) instead of model.forward(x).
-        
-        This is the magic that enables clean syntax like:
-            output = model(input)
-        instead of:
-            output = model.forward(input)
-        """
-        return self.forward(*args, **kwargs)
-    
-    def forward(self, *args, **kwargs):
-        """
-        Forward pass - must be implemented by subclasses.
-        
-        This is where the actual computation happens. Every layer
-        defines its own forward() method.
-        """
-        raise NotImplementedError("Subclasses must implement forward()")
+    Linear (fully connected) layer: y = xW + b
 
-# %% ../../modules/source/04_layers/layers_dev.ipynb 7
-def matmul(a: Tensor, b: Tensor) -> Tensor:
+    This is the fundamental building block of neural networks.
+    Applies a linear transformation to incoming data.
     """
-    Matrix multiplication for tensors.
-    
-    Args:
-        a: Left tensor (shape: ..., m, k)
-        b: Right tensor (shape: ..., k, n)
-    
-    Returns:
-        Result tensor (shape: ..., m, n)
-    
-    TODO: Implement matrix multiplication using numpy's @ operator.
-    
-    STEP-BY-STEP IMPLEMENTATION:
-    1. Extract numpy arrays from both tensors using .data
-    2. Perform matrix multiplication: result_data = a_data @ b_data
-    3. Wrap result in a new Tensor and return
-    
-    LEARNING CONNECTIONS:
-    - This is the core operation in Dense layers: output = input @ weights
-    - PyTorch uses optimized BLAS libraries for this operation
-    - GPU implementations parallelize this across thousands of cores
-    - Understanding this operation is key to neural network performance
-    
-    EXAMPLE:
-    ```python
-    a = Tensor([[1, 2], [3, 4]])  # shape (2, 2)
-    b = Tensor([[5, 6], [7, 8]])  # shape (2, 2)
-    result = matmul(a, b)
-    # result.data = [[19, 22], [43, 50]]
-    ```
-    
-    IMPLEMENTATION HINTS:
-    - Use the @ operator for clean matrix multiplication
-    - Ensure you return a Tensor, not a numpy array
-    - The operation should work for any compatible matrix shapes
-    """
-    ### BEGIN SOLUTION
-    # Check if we're dealing with Variables (autograd) or plain Tensors
-    a_is_variable = hasattr(a, 'requires_grad') and hasattr(a, 'grad_fn')
-    b_is_variable = hasattr(b, 'requires_grad') and hasattr(b, 'grad_fn')
-    
-    # Extract numpy data appropriately
-    if a_is_variable:
-        a_data = a.data.data  # Variable.data is a Tensor, so .data.data gets numpy array
-    else:
-        a_data = a.data  # Tensor.data is numpy array directly
-    
-    if b_is_variable:
-        b_data = b.data.data
-    else:
-        b_data = b.data
-    
-    # Perform matrix multiplication
-    result_data = a_data @ b_data
-    
-    # If any input is a Variable, return Variable with gradient tracking
-    if a_is_variable or b_is_variable:
-        # Import Variable locally to avoid circular imports
-        if 'Variable' not in globals():
-            try:
-                from tinytorch.core.autograd import Variable
-            except ImportError:
-                from autograd_dev import Variable
-        
-        # Create gradient function for matrix multiplication
-        def grad_fn(grad_output):
-            # Matrix multiplication backward pass:
-            # If C = A @ B, then:
-            # dA = grad_output @ B^T
-            # dB = A^T @ grad_output
-            
-            if a_is_variable and a.requires_grad:
-                # Gradient w.r.t. A: grad_output @ B^T
-                grad_a_data = grad_output.data.data @ b_data.T
-                a.backward(Variable(grad_a_data))
-            
-            if b_is_variable and b.requires_grad:
-                # Gradient w.r.t. B: A^T @ grad_output  
-                grad_b_data = a_data.T @ grad_output.data.data
-                b.backward(Variable(grad_b_data))
-        
-        # Determine if result should require gradients
-        requires_grad = (a_is_variable and a.requires_grad) or (b_is_variable and b.requires_grad)
-        
-        return Variable(result_data, requires_grad=requires_grad, grad_fn=grad_fn)
-    else:
-        # Both inputs are Tensors, return Tensor (backward compatible)
-        return Tensor(result_data)
-    ### END SOLUTION
 
-# %% ../../modules/source/04_layers/layers_dev.ipynb 11
-class Linear(Module):
-    """
-    Linear (Fully Connected) Layer implementation.
-    
-    Applies the transformation: output = input @ weights + bias
-    
-    Inherits from Module for automatic parameter management and clean API.
-    This is PyTorch's nn.Linear equivalent with the same name for familiarity.
-    
-    Features:
-    - Automatic parameter registration (weights and bias)
-    - Clean call interface: layer(input) instead of layer.forward(input)
-    - Works with optimizers via model.parameters()
-    """
-    
-    def __init__(self, input_size: int, output_size: int, use_bias: bool = True):
+    def __init__(self, in_features, out_features, bias=True):
         """
-        Initialize Linear layer with random weights and optional bias.
-        
-        Args:
-            input_size: Number of input features
-            output_size: Number of output features  
-            use_bias: Whether to include bias term
-        
-        TODO: Implement Linear layer initialization.
-        
-        STEP-BY-STEP IMPLEMENTATION:
-        1. Store input_size and output_size as instance variables
-        2. Initialize weights as Tensor with shape (input_size, output_size)
-        3. Use small random values: np.random.randn(...) * 0.1
-        4. Initialize bias as Tensor with shape (output_size,) if use_bias is True
-        5. Set bias to None if use_bias is False
-        
-        LEARNING CONNECTIONS:
-        - Small random initialization prevents symmetry breaking
-        - Weight shape (input_size, output_size) enables matrix multiplication
-        - Bias allows shifting the output (like y-intercept in linear regression)
-        - PyTorch uses more sophisticated initialization (Xavier, Kaiming)
-        
-        IMPLEMENTATION HINTS:
-        - Use np.random.randn() for Gaussian random numbers
-        - Scale by 0.1 to keep initial values small
-        - Remember to wrap numpy arrays in Tensor()
-        - Store use_bias flag for forward pass logic
+        Initialize linear layer with proper weight initialization.
+
+        TODO: Initialize weights and bias with Xavier initialization
+
+        APPROACH:
+        1. Create weight matrix (in_features, out_features) with Xavier scaling
+        2. Create bias vector (out_features,) initialized to zeros if bias=True
+        3. Set requires_grad=True for parameters (ready for Module 05)
+
+        EXAMPLE:
+        >>> layer = Linear(784, 10)  # MNIST classifier final layer
+        >>> print(layer.weight.shape)
+        (784, 10)
+        >>> print(layer.bias.shape)
+        (10,)
+
+        HINTS:
+        - Xavier init: scale = sqrt(1/in_features)
+        - Use np.random.randn() for normal distribution
+        - bias=None when bias=False
         """
         ### BEGIN SOLUTION
-        super().__init__()  # Initialize Module base class
-        
-        self.input_size = input_size
-        self.output_size = output_size
-        self.use_bias = use_bias
-        
-        # Initialize weights with small random values using Parameter
-        # Shape: (input_size, output_size) for matrix multiplication
-        weight_data = np.random.randn(input_size, output_size) * 0.1
-        self.weights = Parameter(weight_data)  # Auto-registers for optimization!
-        
-        # Initialize bias if requested
-        if use_bias:
-            bias_data = np.random.randn(output_size) * 0.1
-            self.bias = Parameter(bias_data)  # Auto-registers for optimization!
+        self.in_features = in_features
+        self.out_features = out_features
+
+        # Xavier/Glorot initialization for stable gradients
+        scale = np.sqrt(1.0 / in_features)
+        weight_data = np.random.randn(in_features, out_features) * scale
+        self.weight = Tensor(weight_data, requires_grad=True)
+
+        # Initialize bias to zeros or None
+        if bias:
+            bias_data = np.zeros(out_features)
+            self.bias = Tensor(bias_data, requires_grad=True)
         else:
             self.bias = None
         ### END SOLUTION
-    
-    def forward(self, x: Union[Tensor, 'Variable']) -> Union[Tensor, 'Variable']:
+
+    def forward(self, x):
         """
-        Forward pass through the Linear layer.
-        
-        Args:
-            x: Input tensor or Variable (shape: ..., input_size)
-        
-        Returns:
-            Output tensor or Variable (shape: ..., output_size)
-            Preserves Variable type for gradient tracking in training
-        
-        TODO: Implement autograd-aware forward pass: output = input @ weights + bias
-        
-        STEP-BY-STEP IMPLEMENTATION:
-        1. Perform matrix multiplication: output = matmul(x, self.weights)
-        2. If bias exists, add it appropriately based on input type
-        3. Preserve Variable type for gradient tracking if input is Variable
-        4. Return result maintaining autograd capabilities
-        
-        AUTOGRAD CONSIDERATIONS:
-        - If x is Variable: weights and bias should also be Variables for training
-        - Preserve gradient tracking through the entire computation
-        - Enable backpropagation through this layer's parameters
-        - Handle mixed Tensor/Variable scenarios gracefully
-        
-        LEARNING CONNECTIONS:
-        - This is the core neural network transformation
-        - Matrix multiplication scales input features to output features  
-        - Bias provides offset (like y-intercept in linear equations)
-        - Broadcasting handles different batch sizes automatically
-        - Autograd support enables automatic parameter optimization
-        
-        IMPLEMENTATION HINTS:
-        - Use the matmul function you implemented above (now autograd-aware)
-        - Handle bias addition based on input/output types
-        - Variables support + operator for gradient-tracked addition
-        - Check if self.bias is not None before adding
+        Forward pass through linear layer.
+
+        TODO: Implement y = xW + b
+
+        APPROACH:
+        1. Matrix multiply input with weights: xW
+        2. Add bias if it exists
+        3. Return result as new Tensor
+
+        EXAMPLE:
+        >>> layer = Linear(3, 2)
+        >>> x = Tensor([[1, 2, 3], [4, 5, 6]])  # 2 samples, 3 features
+        >>> y = layer.forward(x)
+        >>> print(y.shape)
+        (2, 2)  # 2 samples, 2 outputs
+
+        HINTS:
+        - Use tensor.matmul() for matrix multiplication
+        - Handle bias=None case
+        - Broadcasting automatically handles bias addition
         """
         ### BEGIN SOLUTION
-        # Matrix multiplication: input @ weights (now autograd-aware)
-        output = matmul(x, self.weights)
-        
-        # Add bias if it exists
-        # The addition will preserve Variable type if output is Variable
+        # Linear transformation: y = xW
+        output = x.matmul(self.weight)
+
+        # Add bias if present
         if self.bias is not None:
-            # Check if we need Variable-aware addition
-            if hasattr(output, 'requires_grad'):
-                # output is a Variable, use Variable addition
-                if hasattr(self.bias, 'requires_grad'):
-                    # bias is also Variable, direct addition works
-                    output = output + self.bias
-                else:
-                    # bias is Tensor, convert to Variable for addition
-                    # Import Variable if not already available
-                    if 'Variable' not in globals():
-                        try:
-                            from tinytorch.core.autograd import Variable
-                        except ImportError:
-                            from autograd_dev import Variable
-                    
-                    bias_var = Variable(self.bias.data, requires_grad=False)
-                    output = output + bias_var
-            else:
-                # output is Tensor, use regular addition
-                output = output + self.bias
-        
+            output = output + self.bias
+
         return output
         ### END SOLUTION
 
-# Backward compatibility alias
-#| export  
-Dense = Linear
+    def __call__(self, x):
+        """Allows the layer to be called like a function."""
+        return self.forward(x)
+
+    def parameters(self):
+        """
+        Return list of trainable parameters.
+
+        TODO: Return all tensors that need gradients
+
+        APPROACH:
+        1. Start with weight (always present)
+        2. Add bias if it exists
+        3. Return as list for optimizer
+        """
+        ### BEGIN SOLUTION
+        params = [self.weight]
+        if self.bias is not None:
+            params.append(self.bias)
+        return params
+        ### END SOLUTION
+
+    def __repr__(self):
+        """String representation for debugging."""
+        bias_str = f", bias={self.bias is not None}"
+        return f"Linear(in_features={self.in_features}, out_features={self.out_features}{bias_str})"
+
+# %% ../../modules/source/03_layers/layers_dev.ipynb 10
+class Dropout:
+    """
+    Dropout layer for regularization.
+
+    During training: randomly zeros elements with probability p
+    During inference: scales outputs by (1-p) to maintain expected value
+
+    This prevents overfitting by forcing the network to not rely on specific neurons.
+    """
+
+    def __init__(self, p=0.5):
+        """
+        Initialize dropout layer.
+
+        TODO: Store dropout probability
+
+        Args:
+            p: Probability of zeroing each element (0.0 = no dropout, 1.0 = zero everything)
+
+        EXAMPLE:
+        >>> dropout = Dropout(0.5)  # Zero 50% of elements during training
+        """
+        ### BEGIN SOLUTION
+        if not 0.0 <= p <= 1.0:
+            raise ValueError(f"Dropout probability must be between 0 and 1, got {p}")
+        self.p = p
+        ### END SOLUTION
+
+    def forward(self, x, training=True):
+        """
+        Forward pass through dropout layer.
+
+        TODO: Apply dropout during training, pass through during inference
+
+        APPROACH:
+        1. If not training, return input unchanged
+        2. If training, create random mask with probability (1-p)
+        3. Multiply input by mask and scale by 1/(1-p)
+        4. Return result as new Tensor
+
+        EXAMPLE:
+        >>> dropout = Dropout(0.5)
+        >>> x = Tensor([1, 2, 3, 4])
+        >>> y_train = dropout.forward(x, training=True)   # Some elements zeroed
+        >>> y_eval = dropout.forward(x, training=False)   # All elements preserved
+
+        HINTS:
+        - Use np.random.random() < keep_prob for mask
+        - Scale by 1/(1-p) to maintain expected value
+        - training=False should return input unchanged
+        """
+        ### BEGIN SOLUTION
+        if not training or self.p == 0.0:
+            # During inference or no dropout, pass through unchanged
+            return x
+
+        if self.p == 1.0:
+            # Drop everything
+            return Tensor(np.zeros_like(x.data))
+
+        # During training, apply dropout
+        keep_prob = 1.0 - self.p
+
+        # Create random mask: True where we keep elements
+        mask = np.random.random(x.data.shape) < keep_prob
+
+        # Apply mask and scale to maintain expected value
+        output_data = (x.data * mask) / keep_prob
+        return Tensor(output_data)
+        ### END SOLUTION
+
+    def parameters(self):
+        """Dropout has no parameters."""
+        return []
+
+    def __repr__(self):
+        return f"Dropout(p={self.p})"

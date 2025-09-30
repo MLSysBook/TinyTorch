@@ -480,6 +480,7 @@ Different metrics require different measurement strategies:
 """
 
 # %% nbgrader={"grade": false, "grade_id": "benchmark-class", "solution": true}
+#| export
 class Benchmark:
     """
     Professional benchmarking system for ML models and operations.
@@ -788,6 +789,7 @@ Since direct energy measurement requires specialized hardware, we estimate energ
 """
 
 # %% nbgrader={"grade": false, "grade_id": "benchmark-suite", "solution": true}
+#| export
 class BenchmarkSuite:
     """
     Comprehensive benchmark suite for ML systems evaluation.
@@ -1222,6 +1224,7 @@ All TinyMLPerf benchmarks use:
 """
 
 # %% nbgrader={"grade": false, "grade_id": "tinymlperf", "solution": true}
+#| export
 class TinyMLPerf:
     """
     TinyMLPerf-style standardized benchmarking for edge ML systems.

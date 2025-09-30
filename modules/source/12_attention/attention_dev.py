@@ -69,10 +69,10 @@ from typing import Optional, Tuple, List
 
 # Import dependencies from other modules
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', '01_tensor'))
-from tensor_dev import Tensor
+from tinytorch.core.tensor import Tensor
 
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', '03_layers'))
-from layers_dev import Linear
+from tinytorch.core.layers import Linear
 
 # Note: Keeping simplified implementations for reference during development
 class _SimplifiedTensor:
@@ -313,7 +313,6 @@ Step-by-Step Attention Computation:
 """
 
 # %% nbgrader={"grade": false, "grade_id": "attention-function", "locked": false, "solution": true}
-#| export
 def scaled_dot_product_attention(Q: Tensor, K: Tensor, V: Tensor, mask: Optional[Tensor] = None) -> Tuple[Tensor, Tensor]:
     """
     Compute scaled dot-product attention.

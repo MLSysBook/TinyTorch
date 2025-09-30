@@ -223,6 +223,7 @@ AdamW (proper weight decay)
 """
 
 # %% nbgrader={"grade": false, "grade_id": "optimizer-base", "solution": true}
+#| export
 class Optimizer:
     """
     Base class for all optimizers.

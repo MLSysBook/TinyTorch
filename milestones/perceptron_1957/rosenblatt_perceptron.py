@@ -14,16 +14,17 @@ started it all - proving that YOU can build the foundation of modern AI from scr
 
 ✅ REQUIRED MODULES (Run after Module 4):
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  Module 02 (Tensor)        : YOUR data structure with gradient tracking
-  Module 03 (Activations)   : YOUR sigmoid activation for smooth gradients  
-  Module 04 (Layers)        : YOUR Linear layer for weight transformations
+  Module 01 (Tensor)        : YOUR data structure with gradient tracking
+  Module 02 (Activations)   : YOUR sigmoid activation for smooth gradients  
+  Module 03 (Layers)        : YOUR Linear layer for weight transformations
+  Data Generation           : Directly generated within this script
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 🏗️ ARCHITECTURE (Original 1957 Design):
     ┌─────────────┐    ┌─────────────┐    ┌─────────────┐    ┌─────────────┐
     │ Input       │    │   Linear    │    │  Sigmoid    │    │ Binary      │
     │ Features    │───▶│ YOUR Module │───▶│ YOUR Module │───▶│ Output      │
-    │ (x1, x2)    │    │     04      │    │     03      │    │ (0 or 1)    │
+    │ (x1, x2)    │    │     03      │    │     02      │    │ (0 or 1)    │
     └─────────────┘    └─────────────┘    └─────────────┘    └─────────────┘
 
 🔍 HOW THE PERCEPTRON LEARNS - A LINEAR DECISION BOUNDARY:
@@ -31,10 +32,10 @@ started it all - proving that YOU can build the foundation of modern AI from scr
     INITIAL (Random Weights):        TRAINING (Gradient Descent):      CONVERGED (Learned):
     
     4 │ • • • • •                    4 │ • • • • •                    4 │ • • • • • 
-      │ • • • • •  Class 1            │ • • • • • ╱                    │ • • • • • ╱
-    2 │ - - - - -  ← Wrong!         2 │ • • • • ╱ •  ← Adjusting     2 │ • • • • ╱ •  ← Perfect!
+      │ • • • • •  Class 1             │ • • • • • ╱                    │ • • • • • ╱
+    2 │ - - - - -  ← Wrong!          2 │ • • • • ╱ •  ← Adjusting     2 │ • • • • ╱ •  ← Perfect!
       │ ○ ○ ○ ○ ○                      │ ○ ○ ○ ╱ ○ ○                    │ ○ ○ ○ ╱ ○ ○
-    0 │ ○ ○ ○ ○ ○  Class 0         0 │ ○ ○ ╱ ○ ○ ○                  0 │ ○ ○ ╱ ○ ○ ○
+    0 │ ○ ○ ○ ○ ○  Class 0           0 │ ○ ○ ╱ ○ ○ ○                  0 │ ○ ○ ╱ ○ ○ ○
       └────────────                    └────────────                    └────────────
         0   2   4                        0   2   4                        0   2   4
 
@@ -62,17 +63,14 @@ import os
 import numpy as np
 import argparse
 
-# Add project root to path for TinyTorch imports
-project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-sys.path.append(project_root)
+# Add project root to path for correct tinytorch imports
+# This allows the script to be run from the root of the project
+sys.path.insert(0, os.getcwd())
 
 # Import TinyTorch components YOU BUILT!
-from tinytorch.core.tensor import Tensor      # Module 02: YOU built this!
-from tinytorch.core.layers import Linear     # Module 04: YOU built this!
-from tinytorch.core.activations import Sigmoid  # Module 03: YOU built this!
-
-# Import dataset manager for automatic data handling
-from examples.data_manager import DatasetManager
+from tinytorch.core.tensor import Tensor        # Module 01: YOU built this!
+from tinytorch.core.layers import Linear        # Module 03: YOU built this!
+from tinytorch.core.activations import Sigmoid  # Module 02: YOU built this!
 
 class RosenblattPerceptron:
     """
@@ -83,202 +81,76 @@ class RosenblattPerceptron:
     """
     
     def __init__(self, input_size=2, output_size=1):
-        print("🧠 Building Rosenblatt's Perceptron with YOUR TinyTorch modules...")
+        print("🧠 Assembling Rosenblatt's Perceptron with YOUR TinyTorch modules...")
         
         # Single layer - just like the original 1957 design!
-        self.linear = Linear(input_size, output_size)  # Module 04: YOUR Linear layer!
-        self.activation = Sigmoid()                     # Module 03: YOUR Sigmoid function!
+        self.linear = Linear(input_size, output_size)  # Module 03: YOUR Linear layer!
+        self.activation = Sigmoid()                    # Module 02: YOUR Sigmoid function!
         
-        print(f"   Linear layer: {input_size} → {output_size} (YOUR Module 04 implementation!)")
-        print(f"   Activation: Sigmoid (YOUR Module 03 implementation!)")
+        print(f"   ✅ Linear layer: {input_size} → {output_size} (YOUR Module 03 implementation!)")
+        print(f"   ✅ Activation: Sigmoid (YOUR Module 02 implementation!)")
         
     def forward(self, x):
         """Forward pass through YOUR perceptron implementation."""
         # Step 1: Linear transformation using YOUR weights
-        x = self.linear(x)        # Module 04: YOUR Linear.forward() method!
+        x = self.linear(x)        # Module 03: YOUR Linear.forward() method!
         
         # Step 2: Activation using YOUR sigmoid  
-        x = self.activation(x)    # Module 03: YOUR Sigmoid.forward() method!
+        x = self.activation(x)    # Module 02: YOUR Sigmoid.forward() method!
         
         return x
-    
-    def parameters(self):
-        """Get trainable parameters from YOUR Linear layer."""
-        return [self.linear.weights, self.linear.bias]  # Module 04: YOUR parameters!
-
-def simple_training_loop(model, X, y, learning_rate=0.1, epochs=100):
-    """
-    Simple training loop using YOUR Tensor autograd system!
-    
-    Note: We're using a basic training loop here. Later milestones will use
-    YOUR more sophisticated optimizers from Module 07!
-    """
-    print("\n🚀 Training Perceptron with YOUR TinyTorch autograd system!")
-    print(f"   Learning rate: {learning_rate}")
-    print(f"   Epochs: {epochs}")
-    print(f"   Using YOUR Tensor backward() method for gradients!")
-    
-    # Convert to YOUR Tensor format
-    X_tensor = Tensor(X)  # Module 02: YOUR Tensor class!
-    y_tensor = Tensor(y.reshape(-1, 1))  # Module 02: YOUR data structure!
-    
-    for epoch in range(epochs):
-        # Forward pass using YOUR implementations
-        predictions = model.forward(X_tensor)  # YOUR forward method!
-        
-        # For binary classification, we can use MSE as a differentiable loss
-        # that maintains the computational graph
-        # Note: Later you'll build proper loss functions in Module 05!
-
-        # Use MSE loss: (predictions - targets)^2
-        diff = predictions - y_tensor
-        squared_diff = diff * diff  # Element-wise multiplication
-
-        # We need to sum/average to get scalar loss
-        # Since our tensor operations are limited, we'll use backward directly
-        # with a gradient vector of ones to simulate the loss gradient
-
-        # For display purposes, compute loss value
-        y_np = np.array(y_tensor.data.data if hasattr(y_tensor.data, 'data') else y_tensor.data)
-        pred_np = np.array(predictions.data.data if hasattr(predictions.data, 'data') else predictions.data)
-        loss_value = np.mean((pred_np - y_np) ** 2)
-
-        # Backward pass - use the squared diff directly
-        # Provide gradient of ones to simulate scalar loss backward
-        n_samples = squared_diff.data.shape[0]
-        grad_output = Tensor(np.ones_like(squared_diff.data) / n_samples)
-        squared_diff.backward(grad_output)  # Module 02: YOUR backward propagation!
-        
-        # Manual parameter updates (later you'll use YOUR optimizers!)
-        for param in model.parameters():
-            if param.grad is not None:
-                # Extract gradient data properly
-                grad_data = param.grad.data if hasattr(param.grad, 'data') else param.grad
-                grad_np = np.array(grad_data.data if hasattr(grad_data, 'data') else grad_data)
-                param.data = param.data - learning_rate * grad_np  # Simple gradient descent
-                param.grad = None  # Clear gradients
-        
-        if epoch % 20 == 0 or epoch == epochs - 1:
-            print(f"   Epoch {epoch:3d}: Loss = {loss_value:.4f} (YOUR training loop!)")
-    
-    return model
-
-
-def test_model(model, X, y):
-    """Test YOUR perceptron on the data."""
-    print("\n🧪 Testing YOUR Perceptron Implementation:")
-    
-    # Forward pass with YOUR components
-    X_tensor = Tensor(X)  # Module 02: YOUR Tensor!
-    predictions = model.forward(X_tensor)  # YOUR architecture!
-    
-    # Convert to binary predictions
-    pred_np = np.array(predictions.data.data if hasattr(predictions.data, 'data') else predictions.data)
-    binary_preds = (pred_np > 0.5).astype(int)
-    accuracy = np.mean(binary_preds.flatten() == y) * 100
-    
-    print(f"   Accuracy: {accuracy:.1f}% on linearly separable data")
-    print(f"   YOUR perceptron correctly classified {accuracy:.1f}% of examples!")
-    
-    # Show some example predictions
-    print("\n   Sample predictions (YOUR model's output):")
-    for i in range(min(5, len(X))):
-        x_val = X[i]
-        pred_prob = predictions.data[i, 0]
-        pred_class = binary_preds[i, 0]
-        true_class = y[i]
-        status = "✓" if pred_class == true_class else "✗"
-        print(f"   {status} Input: [{x_val[0]:.2f}, {x_val[1]:.2f}] → "
-              f"Probability: {pred_prob:.3f} → Class: {pred_class} (True: {true_class})")
-    
-    return accuracy
-
-def analyze_perceptron_systems(model, X):
-    """Analyze YOUR perceptron from an ML systems perspective."""
-    print("\n🔬 SYSTEMS ANALYSIS of YOUR Perceptron Implementation:")
-    
-    # Memory analysis using YOUR tensor system
-    import tracemalloc
-    tracemalloc.start()
-    
-    # Test forward pass with YOUR components
-    X_tensor = Tensor(X)  # Module 02: YOUR Tensor!
-    output = model.forward(X_tensor)  # Module 04 + 03: YOUR architecture!
-    
-    current, peak = tracemalloc.get_traced_memory()
-    tracemalloc.stop()
-    
-    # Parameter analysis
-    total_params = model.linear.weights.data.size + model.linear.bias.data.size
-    memory_per_param = 4  # bytes for float32
-    
-    print(f"   Memory usage: {peak / 1024:.1f} KB peak (YOUR Tensor operations)")
-    print(f"   Parameters: {total_params} weights (YOUR Linear layer)")
-    print(f"   Model size: {total_params * memory_per_param} bytes")
-    print(f"   Computational complexity: O(n) per forward pass (linear scaling)")
-    print(f"   YOUR implementation handles: Binary classification with linear decision boundary")
-    
-    # Historical context
-    print(f"\n   🏛️  Historical Context:")
-    print(f"   • 1957: YOUR perceptron uses the SAME architecture as Rosenblatt's original")
-    print(f"   • Limitation: Can only solve linearly separable problems")
-    print(f"   • Innovation: First machine learning algorithm that could learn from data")
-    print(f"   • Legacy: Foundation for all modern neural networks (including GPT!)")
 
 def main():
     """Demonstrate Rosenblatt's Perceptron using YOUR TinyTorch system!"""
     
-    parser = argparse.ArgumentParser(description='Rosenblatt Perceptron 1957')
-    parser.add_argument('--test-only', action='store_true', 
-                       help='Test architecture without training')
-    parser.add_argument('--epochs', type=int, default=100,
-                       help='Number of training epochs')
-    args = parser.parse_args()
+    print("🎯 MILESTONE: The Perceptron (1957)")
+    print("   Historical significance: The first trainable neural network.")
+    print("   YOUR achievement: Assembling it from YOUR own modules.")
+    print("   Components used: YOUR Tensor + YOUR Linear + YOUR Sigmoid.")
+    print("-" * 60)
     
-    print("🎯 PERCEPTRON 1957 - Proof of YOUR TinyTorch Mastery!")
-    print("   Historical significance: First trainable neural network")
-    print("   YOUR achievement: Recreated using YOUR own implementations")
-    print("   Components used: YOUR Tensor + YOUR Linear + YOUR Sigmoid")
-    print()
-    
-    # Step 1: Get linearly separable data
-    print("\n📊 Preparing linearly separable data...")
-    data_manager = DatasetManager()
-    X, y = data_manager.get_perceptron_data(num_samples=1000)
-    
-    # Step 2: Create perceptron with YOUR components  
+    # Step 1: Prepare synthetic data
+    print("\n📊 Step 1: Preparing linearly separable data...")
+    np.random.seed(42)
+    cluster1 = np.random.normal([2, 2], 0.5, (5, 2))  # Just a few samples are needed
+    cluster2 = np.random.normal([-2, -2], 0.5, (5, 2))
+    X = np.vstack([cluster1, cluster2]).astype(np.float32)
+    print(f"   ✅ Data created successfully with shape: {X.shape}")
+
+    # Step 2: Create the Perceptron model with YOUR components  
+    print("\n🧠 Step 2: Instantiating the Perceptron model...")
     model = RosenblattPerceptron(input_size=2, output_size=1)
+    print("   ✅ Model assembled successfully!")
+
+    # Step 3: Perform a forward pass
+    print("\n🔬 Step 3: Running a forward pass to test integration...")
+    # Convert data to YOUR Tensor format
+    input_tensor = Tensor(X)  # Module 01: YOUR Tensor class!
+    print(f"   - Input tensor created with shape: {input_tensor.shape}")
+
+    # Run the forward pass through YOUR implementations
+    output_tensor = model.forward(input_tensor)
+    print(f"   - Output tensor received with shape: {output_tensor.shape}")
+
+    # --- Verification ---
+    print("\n" + "="*60)
+    print("✅ SUCCESS! Your components integrated perfectly.")
+    print("   You have successfully assembled the architecture of the first")
+    print("   trainable neural network using the modules YOU built.")
+    print("="*60)
     
-    if args.test_only:
-        print("\n🧪 ARCHITECTURE TEST MODE")
-        print("Testing YOUR components work together...")
-        
-        # Quick forward pass test
-        test_input = Tensor(X[:5])  # Module 02: YOUR Tensor!
-        test_output = model.forward(test_input)  # YOUR architecture!
-        print(f"✅ Forward pass successful! Output shape: {test_output.data.shape}")
-        print("✅ YOUR TinyTorch modules integrate correctly!")
-        return
-    
-    # Step 3: Train using YOUR training system
-    model = simple_training_loop(model, X, y, epochs=args.epochs)
-    
-    # Step 4: Test YOUR implementation
-    accuracy = test_model(model, X, y)
-    
-    # Step 5: Analyze YOUR implementation
-    analyze_perceptron_systems(model, X)
-    
-    print("\n✅ SUCCESS! Perceptron Milestone Complete!")
     print("\n🎓 What YOU Accomplished:")
-    print("   • YOU built the first trainable neural network from scratch")
-    print("   • YOUR Linear layer performs the same math as Rosenblatt's original") 
-    print("   • YOUR Sigmoid activation enables smooth gradient learning")
-    print("   • YOUR Tensor system handles automatic differentiation")
+    print("   • YOU assembled a neural network from scratch.")
+    print("   • YOUR Tensor class handled the data flow.")
+    print("   • YOUR Linear layer performed the mathematical transformation.")
+    print("   • YOUR Sigmoid activation processed the layer's output.")
+    
     print("\n🚀 Next Steps:")
-    print("   • Continue to XOR 1969 milestone after Module 06 (Autograd)")
-    print("   • YOUR foundation enables solving non-linear problems!")
-    print(f"   • With {accuracy:.1f}% accuracy, YOUR perceptron works perfectly!")
+    print("   • In future modules, you will build the components needed to TRAIN this model:")
+    print("     - Module 04 (Losses): To measure how wrong the model's predictions are.")
+    print("     - Module 05 (Autograd): To calculate the gradients needed to improve.")
+    print("     - Module 06 (Optimizers): To update the model's weights automatically.")
+    print("\n   For now, congratulations on this major milestone!")
 
 if __name__ == "__main__":
     main()
