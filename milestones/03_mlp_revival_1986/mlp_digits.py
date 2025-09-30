@@ -278,40 +278,80 @@ def compare_batch_sizes(train_images, train_labels, test_images, test_labels):
 
 def train_mlp():
     """Train MLP on digit recognition task."""
+    
+    # ═══════════════════════════════════════════════════════════════════════
+    # ACT 1: THE CHALLENGE 🎯
+    # ═══════════════════════════════════════════════════════════════════════
+    
     console.print(Panel.fit(
-        "[bold cyan]Training Multi-Layer Perceptron on Real Digits[/bold cyan]\n\n"
-        "[dim]Watch YOUR MLP learn to recognize handwritten digits!\n"
-        "This is the same breakthrough that launched modern deep learning in 1986.[/dim]",
+        "[bold cyan]🎯 1986 - Deep Learning on Real Data[/bold cyan]\n\n"
+        "[dim]Can multi-layer networks learn from real handwritten digits?[/dim]\n"
+        "[dim]Rumelhart, Hinton & Williams prove backprop works on real tasks![/dim]",
         title="🔥 1986 Backpropagation Revolution",
         border_style="cyan",
         box=box.DOUBLE
     ))
     
-    # Load dataset
+    console.print("\n[bold]📊 The Data:[/bold]")
     train_images, train_labels, test_images, test_labels = load_digit_dataset()
+    console.print("  • Dataset: 8×8 handwritten digits (UCI repository)")
+    console.print(f"  • Training samples: {len(train_images.data)}")
+    console.print(f"  • Test samples: {len(test_images.data)}")
+    console.print("  • Classes: 10 digits (0-9)")
+    console.print("  • Challenge: Recognize handwritten digits from pixels!")
     
-    # Create DataLoader (Module 08!)
-    console.print("[bold]Creating DataLoader...[/bold]")
+    console.print("\n" + "─" * 70 + "\n")
+    
+    # ═══════════════════════════════════════════════════════════════════════
+    # ACT 2: THE SETUP 🏗️
+    # ═══════════════════════════════════════════════════════════════════════
+    
+    console.print("[bold]🏗️ The Architecture:[/bold]")
+    console.print("""
+    ┌─────────────┐    ┌─────────┐    ┌─────────┐    ┌─────────┐
+    │ Input Image │    │ Flatten │    │ Linear  │    │ Linear  │
+    │    8×8      │───▶│   64    │───▶│ 64→32   │───▶│ 32→10   │
+    │   Pixels    │    │         │    │  +ReLU  │    │         │
+    └─────────────┘    └─────────┘    └─────────┘    └─────────┘
+                                      Hidden Layer   10 Classes
+    """)
+    
+    console.print("[bold]🔧 Components:[/bold]")
+    model = DigitMLP(input_size=64, hidden_size=32, num_classes=10)
+    console.print("  • Hidden layer: 64 → 32 (learns digit features)")
+    console.print("  • ReLU activation: Non-linear transformations")
+    console.print("  • Output layer: 32 → 10 (one per digit class)")
+    console.print(f"  • Total parameters: ~{64*32 + 32 + 32*10 + 10:,}")
+    
+    console.print("\n[bold]⚙️ Hyperparameters:[/bold]")
+    console.print("  • Batch size: 32 (using YOUR DataLoader!)")
+    console.print("  • Learning rate: 0.01")
+    console.print("  • Epochs: 20")
+    console.print("  • Loss: CrossEntropyLoss (for multi-class)")
+    console.print("  • Optimizer: SGD with backprop")
+    
+    # Create DataLoader
     train_dataset = TensorDataset(train_images, train_labels)
     train_loader = DataLoader(train_dataset, batch_size=32, shuffle=True)
-    console.print(f"✓ Batches per epoch: {len(train_loader)}\n")
+    console.print(f"  • Batches per epoch: {len(train_loader)}")
     
-    # Create model
-    model = DigitMLP(input_size=64, hidden_size=32, num_classes=10)
+    console.print("\n" + "─" * 70 + "\n")
     
-    # Loss and optimizer
+    # ═══════════════════════════════════════════════════════════════════════
+    # ACT 3: THE EXPERIMENT 🔬
+    # ═══════════════════════════════════════════════════════════════════════
+    
     loss_fn = CrossEntropyLoss()
     optimizer = SGD(model.parameters(), lr=0.01)
     
-    # Test BEFORE training
-    console.print("[bold yellow]Step 1:[/bold yellow] Testing untrained network...")
     initial_acc, _ = evaluate_accuracy(model, test_images, test_labels)
-    console.print(f"  Accuracy: [red]{initial_acc:.1f}%[/red] (random guessing ~10%)\n")
     
-    # Training
-    console.print("[bold yellow]Step 2:[/bold yellow] Training on real digits...\n")
-    console.print("[bold cyan]🔥 Training Multi-Layer Perceptron[/bold cyan]")
-    console.print("[dim](Using backpropagation through hidden layers!)[/dim]\n")
+    console.print("[bold]📌 Before Training:[/bold]")
+    console.print(f"  Initial accuracy: {initial_acc:.1f}% (random ~10%)")
+    console.print("  Model has random weights - knows nothing about digits yet!")
+    
+    console.print("\n[bold]🔥 Training in Progress...[/bold]")
+    console.print("[dim](Watch backpropagation optimize through hidden layers!)[/dim]\n")
     
     epochs = 20
     initial_loss = None
@@ -347,18 +387,23 @@ def train_mlp():
                          f"Loss: [cyan]{avg_loss:.4f}[/cyan]  "
                          f"Test Accuracy: [green]{test_acc:.1f}%[/green]")
     
-    console.print("\n[bold green]✅ Training Complete![/bold green]\n")
+    console.print("\n[green]✅ Training Complete![/green]")
     
-    # Final evaluation
-    console.print("[bold yellow]Step 3:[/bold yellow] Final Evaluation...")
     final_acc, predictions = evaluate_accuracy(model, test_images, test_labels)
     
-    # Show results table
-    table = Table(title="🎯 Training Results", box=box.ROUNDED)
-    table.add_column("Metric", style="cyan", width=20)
-    table.add_column("Before Training", style="yellow")
-    table.add_column("After Training", style="green")
-    table.add_column("Improvement", style="magenta")
+    console.print("\n" + "─" * 70 + "\n")
+    
+    # ═══════════════════════════════════════════════════════════════════════
+    # ACT 4: THE DIAGNOSIS 📊
+    # ═══════════════════════════════════════════════════════════════════════
+    
+    console.print("[bold]📊 The Results:[/bold]\n")
+    
+    table = Table(title="Training Outcome", box=box.ROUNDED)
+    table.add_column("Metric", style="cyan", width=18)
+    table.add_column("Before Training", style="yellow", width=16)
+    table.add_column("After Training", style="green", width=16)
+    table.add_column("Improvement", style="magenta", width=14)
     
     table.add_row(
         "Loss",
@@ -375,8 +420,9 @@ def train_mlp():
     
     console.print(table)
     
-    # Show sample predictions
-    console.print("\n[bold]Sample Predictions:[/bold]")
+    console.print("\n[bold]🔍 Sample Predictions:[/bold]")
+    console.print("[dim](First 10 test images)[/dim]\n")
+    
     n_samples = 10
     for i in range(n_samples):
         true_label = test_labels.data[i]
@@ -385,21 +431,56 @@ def train_mlp():
         color = "green" if pred_label == true_label else "red"
         console.print(f"  {status} True: {true_label}, Predicted: {pred_label}", style=color)
     
-    # Historical context
-    console.print()
+    console.print("\n[bold]💡 Key Insights:[/bold]")
+    console.print("  • MLP learned to recognize handwritten digits from pixels")
+    console.print("  • Hidden layer discovered useful digit features")
+    console.print("  • DataLoader enabled efficient batch processing")
+    console.print("  • Backprop through hidden layers works on real data!")
+    
+    console.print("\n" + "─" * 70 + "\n")
+    
+    # ═══════════════════════════════════════════════════════════════════════
+    # ACT 5: THE REFLECTION 🌟
+    # ═══════════════════════════════════════════════════════════════════════
+    
+    console.print("")
     console.print(Panel.fit(
         "[bold green]🎉 Success! Your MLP Learned to Recognize Digits![/bold green]\n\n"
+        
         f"Final accuracy: [bold]{final_acc:.1f}%[/bold]\n\n"
+        
+        "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n"
+        
         "[bold]💡 What YOU Just Accomplished:[/bold]\n"
-        "  • Built a multi-layer network with YOUR components\n"
-        "  • Trained on REAL handwritten digits\n"
-        "  • Used YOUR DataLoader for efficient batching\n"
-        "  • Backprop through hidden layers works perfectly!\n\n"
-        "[bold]📌 Note:[/bold] This is an MLP (fully-connected network).\n"
-        "It flattens images, losing spatial structure.\n\n"
-        "[dim]Next: Milestone 04 (CNN) will show how preserving\n"
-        "spatial structure improves performance![/dim]",
-        title="🌟 1986 Breakthrough Recreated",
+        "  ✓ Built multi-layer network with YOUR components\n"
+        "  ✓ Trained on REAL handwritten digits\n"
+        "  ✓ Used YOUR DataLoader for efficient batching\n"
+        "  ✓ Backprop through hidden layers works on real data!\n"
+        "  ✓ Achieved {:.1f}% accuracy on digit recognition!\n\n".format(final_acc) +
+        
+        "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n"
+        
+        "[bold]🎓 Why This Matters:[/bold]\n"
+        "  This proved backprop works on REAL tasks, not just XOR!\n"
+        "  1986 paper by Rumelhart, Hinton & Williams launched\n"
+        "  modern deep learning revolution.\n\n"
+        
+        "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n"
+        
+        "[bold]📌 The Key Insight:[/bold]\n"
+        "  MLPs flatten images → lose spatial structure.\n"
+        "  Each pixel treated independently with no neighborhood info.\n"
+        "  \n"
+        "  [yellow]Limitation:[/yellow] 8×8 images work, but larger images?\n"
+        "  We need better architectures for spatial data...\n\n"
+        
+        "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n"
+        
+        "[bold]🚀 What's Next:[/bold]\n"
+        "[dim]Milestone 04 (CNN) will show how preserving spatial structure\n"
+        "dramatically improves performance on images![/dim]",
+        
+        title="🌟 1986 MLP Breakthrough Complete",
         border_style="green",
         box=box.DOUBLE
     ))
