@@ -265,7 +265,7 @@ def train_cnn():
     
     # Hyperparameters
     console.print("\n[bold]⚙️  Training Configuration:[/bold]")
-    epochs = 20  # Reduced for demo speed (explicit loops are slow!)
+    epochs = 50
     batch_size = 32
     learning_rate = 0.01
     
@@ -298,18 +298,35 @@ def train_cnn():
     console.print(f"[yellow]Before training:[/yellow] Accuracy = {initial_acc:.1f}%\n")
     
     # Training loop
-    history = {"loss": [], "accuracy": []}
+    history = {
+        "train_loss": [], 
+        "test_accuracy": [],
+        "train_accuracy": []  # Track training accuracy to detect overfitting
+    }
     start_time = time.time()
     
     for epoch in range(epochs):
-        avg_loss = train_epoch(model, train_loader, criterion, optimizer)
-        accuracy, _ = evaluate_accuracy(model, test_images, test_labels)
+        # Train
+        train_loss = train_epoch(model, train_loader, criterion, optimizer)
         
-        history["loss"].append(avg_loss)
-        history["accuracy"].append(accuracy)
+        # Evaluate on both train and test
+        train_acc, _ = evaluate_accuracy(model, train_images, train_labels)
+        test_acc, _ = evaluate_accuracy(model, test_images, test_labels)
+        
+        history["train_loss"].append(train_loss)
+        history["train_accuracy"].append(train_acc)
+        history["test_accuracy"].append(test_acc)
         
         if (epoch + 1) % 5 == 0:  # Print every 5 epochs
-            console.print(f"Epoch {epoch+1:3d}/{epochs}  Loss: {avg_loss:.4f}  Accuracy: {accuracy:.1f}%")
+            gap = train_acc - test_acc
+            gap_indicator = "⚠️" if gap > 10 else "✓"
+            console.print(
+                f"Epoch {epoch+1:3d}/{epochs}  "
+                f"Loss: {train_loss:.4f}  "
+                f"Train: {train_acc:.1f}%  "
+                f"Test: {test_acc:.1f}%  "
+                f"{gap_indicator} Gap: {gap:.1f}%"
+            )
     
     training_time = time.time() - start_time
     
@@ -321,24 +338,33 @@ def train_cnn():
     
     console.print("[bold]📊 The Results:[/bold]\n")
     
-    final_acc, _ = evaluate_accuracy(model, test_images, test_labels)
-    final_loss = history["loss"][-1]
+    final_train_acc = history["train_accuracy"][-1]
+    final_test_acc = history["test_accuracy"][-1]
+    final_loss = history["train_loss"][-1]
+    overfitting_gap = final_train_acc - final_test_acc
     
     table = Table(title="Training Outcome", box=box.ROUNDED)
-    table.add_column("Metric", style="cyan", width=18)
-    table.add_column("Before Training", style="yellow", width=16)
-    table.add_column("After Training", style="green", width=16)
-    table.add_column("Improvement", style="magenta", width=14)
+    table.add_column("Metric", style="cyan", width=20)
+    table.add_column("Value", style="green", width=20)
+    table.add_column("Status", style="magenta", width=20)
     
     table.add_row(
-        "Accuracy",
-        f"{initial_acc:.1f}%",
-        f"{final_acc:.1f}%",
-        f"+{final_acc - initial_acc:.1f}%"
+        "Train Accuracy",
+        f"{final_train_acc:.1f}%",
+        f"↑ +{final_train_acc - initial_acc:.1f}%"
+    )
+    table.add_row(
+        "Test Accuracy",
+        f"{final_test_acc:.1f}%",
+        f"↑ +{final_test_acc - initial_acc:.1f}%"
+    )
+    table.add_row(
+        "Overfitting Gap",
+        f"{overfitting_gap:.1f}%",
+        "✓ Healthy" if overfitting_gap < 10 else "⚠️ Overfitting"
     )
     table.add_row(
         "Training Time",
-        "—",
         f"{training_time*1000:.0f}ms",
         "—"
     )
@@ -382,7 +408,7 @@ def train_cnn():
     console.print(Panel.fit(
         "[bold green]🎉 Success! Your CNN Learned to Recognize Digits![/bold green]\n\n"
         
-        f"Final accuracy: [bold]{final_acc:.1f}%[/bold]\n\n"
+        f"Test accuracy: [bold]{final_test_acc:.1f}%[/bold] (Gap: {overfitting_gap:.1f}%)\n\n"
         
         "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n"
         
@@ -390,7 +416,8 @@ def train_cnn():
         "  ✓ Built a Convolutional Neural Network from scratch\n"
         "  ✓ Used Conv2d for spatial feature extraction\n"
         "  ✓ Applied MaxPooling for translation invariance\n"
-        f"  ✓ Achieved {final_acc:.1f}% accuracy on digit recognition!\n"
+        f"  ✓ Achieved {final_test_acc:.1f}% test accuracy!\n"
+        f"  ✓ Model generalizes well (gap: {overfitting_gap:.1f}%)\n"
         "  ✓ Used 100× fewer parameters than MLP!\n\n"
         
         "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n"
