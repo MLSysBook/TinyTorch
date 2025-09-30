@@ -588,7 +588,8 @@ def test_unit_conv2d():
 
     print("✅ Conv2d works correctly!")
 
-# Test will be called in main execution
+if __name__ == "__main__":
+    test_unit_conv2d()
 
 # %% [markdown]
 """
@@ -1127,7 +1128,8 @@ def test_unit_pooling():
 
     print("✅ Pooling operations work correctly!")
 
-# Test will be called in main execution
+if __name__ == "__main__":
+    test_unit_pooling()
 
 # %% [markdown]
 """
@@ -1574,7 +1576,8 @@ def test_unit_simple_cnn():
 
     print("✅ SimpleCNN integration works correctly!")
 
-# Test will be called in main execution
+if __name__ == "__main__":
+    test_unit_simple_cnn()
 
 # %% [markdown]
 """
@@ -1669,7 +1672,8 @@ def test_module():
 
 # %% nbgrader={"grade": false, "grade_id": "main-execution", "solution": true}
 # Run comprehensive module test
-test_module()
+if __name__ == "__main__":
+    test_module()
 
 
 # %% [markdown]

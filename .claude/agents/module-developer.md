@@ -168,13 +168,25 @@ class Tensor:
         self.data = np.array(data)
     # ... rest of implementation
 
-# Test code MUST be protected
+def test_unit_tensor_creation():
+    """Test function definition"""
+    print("🔬 Unit Test: Tensor Creation...")
+    # Test implementation
+    print("✅ Tensor creation works correctly!")
+
+# Test execution IMMEDIATELY after function - protected by __main__ guard
 if __name__ == "__main__":
-    # Only runs when file is executed directly, NOT on import
-    test_unit_tensor_creation()
-    test_unit_arithmetic_operations()
-    test_unit_matrix_multiplication()
-    demo_systems_analysis()
+    test_unit_tensor_creation()  # Runs when developing this module
+
+# Later in the file...
+def test_module():
+    """Comprehensive module test"""
+    # Runs all unit tests
+    pass
+
+# At the end of file - protected execution
+if __name__ == "__main__":
+    test_module()  # Final integration test
 ```
 
 ### **NEVER Do This (Breaks Imports):**
@@ -195,14 +207,25 @@ demo_function()  # FORBIDDEN at module level
 class Tensor:
     pass
 
-def test_tensor_creation():
+def test_unit_tensor_creation():
     # Test implementation
     pass
 
+# Run test immediately after definition when developing
 if __name__ == "__main__":
-    # Safe to run tests here
-    test_tensor_creation()
-    print("All tests passed!")
+    test_unit_tensor_creation()
+
+def test_unit_arithmetic():
+    # Another test
+    pass
+
+# Run this test too when developing
+if __name__ == "__main__":
+    test_unit_arithmetic()
+
+# At the end - comprehensive test
+if __name__ == "__main__":
+    test_module()
 ```
 
 ## 🚨 **CRITICAL FIRST RULE: ASSESS MODULE COMPLEXITY**
@@ -758,7 +781,9 @@ def test_unit_function_name():
     # Test implementation with clear assertions
     print("✅ [Function] works correctly!")
 
-test_unit_function_name()  # Run immediately
+# Run test immediately when developing this module
+if __name__ == "__main__":
+    test_unit_function_name()
 ```
 
 
@@ -1333,7 +1358,9 @@ def test_unit_some_function():
 
     print("✅ some_function works correctly!")
 
-test_unit_some_function()  # Run immediately
+# Run test immediately after definition when developing
+if __name__ == "__main__":
+    test_unit_some_function()
 ```
 
 **Test Explanation Pattern:**
@@ -1385,8 +1412,9 @@ def test_module():
     print("🎉 ALL TESTS PASSED! Module ready for export.")
     print("Run: tito module complete [module_number]")
 
-# Call before module summary
-test_module()
+# Run comprehensive module test when executed directly
+if __name__ == "__main__":
+    test_module()
 ```
 
 
@@ -1470,16 +1498,9 @@ def test_module():
 
     print("🎉 ALL TESTS PASSED! Module ready for export.")
 
-test_module()
-```
-
-**2. Main Execution Block (Part 8):**
-```python
-# %%
+# Run comprehensive module test when executed directly
 if __name__ == "__main__":
-    print("🚀 Running [Module Name] module...")
-    test_module()  # Run the comprehensive test
-    print("✅ Module validation complete!")
+    test_module()
 ```
 
 **3. Then Module Summary:**

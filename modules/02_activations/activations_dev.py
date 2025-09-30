@@ -250,7 +250,8 @@ def test_unit_sigmoid():
 
     print("✅ Sigmoid works correctly!")
 
-# test_unit_sigmoid()  # Moved to main block
+if __name__ == "__main__":
+    test_unit_sigmoid()
 
 # %% [markdown]
 """
@@ -366,7 +367,8 @@ def test_unit_relu():
 
     print("✅ ReLU works correctly!")
 
-# test_unit_relu()  # Moved to main block
+if __name__ == "__main__":
+    test_unit_relu()
 
 # %% [markdown]
 """
@@ -480,7 +482,8 @@ def test_unit_tanh():
 
     print("✅ Tanh works correctly!")
 
-# test_unit_tanh()  # Moved to main block
+if __name__ == "__main__":
+    test_unit_tanh()
 
 # %% [markdown]
 """
@@ -603,7 +606,8 @@ def test_unit_gelu():
 
     print("✅ GELU works correctly!")
 
-# test_unit_gelu()  # Moved to main block
+if __name__ == "__main__":
+    test_unit_gelu()
 
 # %% [markdown]
 """
@@ -742,7 +746,8 @@ def test_unit_softmax():
 
     print("✅ Softmax works correctly!")
 
-# test_unit_softmax()  # Moved to main block
+if __name__ == "__main__":
+    test_unit_softmax()
 
 # %% [markdown]
 """
@@ -884,7 +889,8 @@ def test_module():
     print("Run: tito module complete 02")
 
 # Run comprehensive module test
-test_module()
+if __name__ == "__main__":
+    test_module()
 
 
 # %% [markdown]
