@@ -57,27 +57,40 @@ A **complete ML framework** capable of:
 ```
 TinyTorch/
 ├── modules/           # 🏗️ YOUR workspace - implement ML systems here
-│   ├── 01_tensor/     # Start: Build tensor operations from scratch
-│   ├── 02_activations/# Add: Neural network intelligence (ReLU, Softmax)
-│   ├── 03_layers/     # Build: Network components (Linear, Module system)
-│   └── ...            # Progress through 20 learning modules
+│   ├── source/
+│   │   ├── 01_setup/      # Module 00: Environment setup
+│   │   ├── 02_tensor/     # Module 01: Tensor operations from scratch
+│   │   ├── 03_activations/# Module 02: ReLU, Softmax activations
+│   │   ├── 04_layers/     # Module 03: Linear layers, Module system
+│   │   ├── 05_losses/     # Module 04: MSE, CrossEntropy losses
+│   │   ├── 06_autograd/   # Module 05: Automatic differentiation
+│   │   ├── 07_optimizers/ # Module 06: SGD, Adam optimizers
+│   │   ├── 08_training/   # Module 07: Complete training loops
+│   │   ├── 09_spatial/    # Module 08: Conv2d, MaxPool2d, CNNs
+│   │   ├── 08_dataloader/ # Module 09: Efficient data pipelines
+│   │   └── ...            # Additional modules
+│
+├── milestones/        # 🏆 Historical ML evolution - prove what you built!
+│   ├── 01_perceptron_1957/   # Rosenblatt's first trainable network
+│   ├── 02_xor_crisis_1969/   # Minsky's challenge & multi-layer solution
+│   ├── 03_mlp_revival_1986/  # Backpropagation & MNIST digits
+│   ├── 04_cnn_revolution_1998/ # LeCun's CNNs & CIFAR-10
+│   ├── 05_transformer_era_2017/ # Attention mechanisms & language
+│   └── 06_systems_age_2024/  # Modern optimization & profiling
 │
 ├── tinytorch/         # 📦 Generated package (auto-built from your work)
-│   ├── core/          # Your implementations exported for use
-│   ├── nn/            # Neural network components you built
-│   └── optim/         # Optimizers you implemented
+│   ├── core/          # Your tensor, autograd implementations
+│   ├── nn/            # Your neural network components
+│   └── optim/         # Your optimizers
 │
 ├── tests/             # 🧪 Comprehensive validation system
-│   ├── checkpoints/   # 16 capability tests tracking your progress
-│   └── integration/   # Full system validation tests
+│   ├── 01_tensor/     # Per-module integration tests
+│   ├── 02_activations/
+│   └── ...            # Tests mirror module structure
 │
-├── book/              # 📚 Complete course documentation (Jupyter Book)
-│   ├── chapters/      # Learning guides for each module
-│   └── resources/     # Additional learning materials
-│
-└── examples/          # 🎯 Milestone demonstrations (unlock as you progress)
-    ├── mnist_training.py    # Train neural networks on real data
-    └── cifar10_cnn.py       # Achieve 75%+ accuracy on CIFAR-10
+└── book/              # 📚 Complete course documentation (Jupyter Book)
+    ├── chapters/      # Learning guides for each module
+    └── resources/     # Additional learning materials
 ```
 
 **🚨 CRITICAL: Work in `modules/`, Import from `tinytorch/`**
@@ -214,63 +227,91 @@ model.fit(X, y)  # Magic happens
 - **Jupyter Book**: Professional course website
 - **Complete Solutions**: Reference implementations included
 
-## Milestone Examples
+## 🏆 Milestone Examples - Journey Through ML History
 
-As you complete modules, exciting examples unlock to show your framework in action:
+As you complete modules, unlock historical ML milestones demonstrating YOUR implementations:
 
-### After Module 04: First Neural Network
+### 🧠 01. Perceptron (1957) - After Module 04
 ```bash
-cd examples/perceptron_1957
-python rosenblatt_perceptron.py
-# Build the first trainable neural network (1957)
+cd milestones/01_perceptron_1957
+python perceptron_trained.py
+# Rosenblatt's first trainable neural network
+# YOUR Linear layer + Sigmoid recreates history!
 ```
+**Requirements**: Modules 02-04 (Tensor, Activations, Layers)  
+**Achievement**: Binary classification with gradient descent
 
-### After Module 06: Multi-Layer Networks
+---
+
+### ⚡ 02. XOR Crisis (1969) - After Module 06
 ```bash
-cd examples/xor_1969  
-python minsky_xor_problem.py
-# Solve the XOR problem with multi-layer networks (1969)
+cd milestones/02_xor_crisis_1969
+python xor_solved.py
+# Solve Minsky's XOR challenge with hidden layers
+# YOUR autograd enables multi-layer learning!
 ```
+**Requirements**: Modules 02-06 (+ Losses, Autograd)  
+**Achievement**: Non-linear problem solving
 
-### After Module 08: Real Computer Vision
+---
+
+### 🔢 03. MLP Revival (1986) - After Module 08
 ```bash
-cd examples/mnist_mlp_1986
-python train_mlp.py
-# Achieve 95%+ accuracy on MNIST (1986)
+cd milestones/03_mlp_revival_1986
+python mlp_digits.py     # 8x8 digit classification
+python mlp_mnist.py      # Full MNIST dataset
+# Backpropagation revolution on real vision!
+# YOUR training loops achieve 95%+ accuracy
 ```
+**Requirements**: Modules 02-08 (+ Optimizers, Training)  
+**Achievement**: Real computer vision with MLPs
 
-### After Module 10: Modern CNNs  
+---
+
+### 🖼️ 04. CNN Revolution (1998) - After Module 09
 ```bash
-cd examples/cifar_cnn_modern
-python train_cnn.py
-# Achieve 75%+ accuracy on CIFAR-10
+cd milestones/04_cnn_revolution_1998
+python cnn_digits.py     # Spatial features on digits
+python lecun_cifar10.py  # Natural images (CIFAR-10)
+# LeCun's CNNs achieve 75%+ on CIFAR-10!
+# YOUR Conv2d + MaxPool2d unlock spatial intelligence
 ```
+**Requirements**: Modules 02-09 (+ Spatial, DataLoader)  
+**Achievement**: **🎯 North Star - CIFAR-10 @ 75%+ accuracy**
 
-### After Module 14: Language Models
+---
+
+### 🤖 05. Transformer Era (2017) - After Module 13
 ```bash
-cd examples/gpt_2018
-python train_gpt.py
-# Generate text with your transformer implementation
+cd milestones/05_transformer_era_2017
+python vaswani_shakespeare.py
+# Attention mechanisms for language modeling
+# YOUR attention implementation generates text!
 ```
+**Requirements**: Modules 02-13 (+ Tokenization, Embeddings, Attention, Transformers)  
+**Achievement**: Language generation with self-attention
 
-### After Module 20: TinyMLPerf Competition
+---
+
+### ⚡ 06. Systems Age (2024) - After Module 19
 ```bash
-# Use TinyMLPerf to benchmark your optimizations
-tito benchmark run --event mlp_sprint
-tito benchmark run --event cnn_marathon  
-tito benchmark run --event transformer_decathlon
-# Compete in ML systems optimization benchmarks
+cd milestones/06_systems_age_2024
+python optimize_models.py
+# Profile, optimize, and benchmark YOUR framework
+# Compete on TinyMLPerf leaderboard!
 ```
+**Requirements**: Modules 02-19 (Full optimization suite)  
+**Achievement**: Production-grade ML systems engineering
 
-### After Module 20: Complete Optimization Suite
-```bash
-# Use TinyMLPerf to benchmark and optimize your complete framework
-tito benchmark run --comprehensive
-python examples/optimization_showcase.py
-# Professional ML systems optimization
-```
+---
 
-**These aren't toy demos** - they're real ML applications achieving solid results with YOUR framework built from scratch and optimized for performance!
+**Why Milestones Matter:**
+- 🎓 **Educational**: Experience the actual evolution of AI (1957→2024)
+- 🔧 **Systems Thinking**: Understand why each innovation mattered
+- 🏆 **Proof of Mastery**: Real achievements with YOUR implementations
+- 📈 **Progressive**: Each milestone builds on previous foundations
+
+**These aren't toy demos** - they're historically significant ML achievements rebuilt with YOUR framework!
 
 ## Testing & Validation
 
