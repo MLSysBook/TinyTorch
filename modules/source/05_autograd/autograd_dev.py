@@ -670,6 +670,70 @@ Enhanced: x + y → addition + gradient tracking (if requires_grad=True)
 This approach follows PyTorch 2.0 style - clean, modern, and educational.
 """
 
+# %% nbgrader={"grade": false, "grade_id": "sigmoid-backward", "solution": true}
+#| export
+class SigmoidBackward(Function):
+    """
+    Gradient computation for sigmoid activation.
+    
+    Sigmoid: σ(x) = 1/(1 + exp(-x))
+    Derivative: σ'(x) = σ(x) * (1 - σ(x))
+    """
+    
+    def __init__(self, input_tensor, output_tensor):
+        """
+        Initialize with both input and output.
+        
+        Args:
+            input_tensor: Original input to sigmoid
+            output_tensor: Output of sigmoid (saves recomputation)
+        """
+        super().__init__(input_tensor)
+        self.output_data = output_tensor.data
+    
+    def apply(self, grad_output):
+        """Compute gradient for sigmoid."""
+        tensor, = self.saved_tensors
+        
+        if isinstance(tensor, Tensor) and tensor.requires_grad:
+            # σ'(x) = σ(x) * (1 - σ(x))
+            sigmoid_grad = self.output_data * (1 - self.output_data)
+            return grad_output * sigmoid_grad,
+        return None,
+
+
+# %% nbgrader={"grade": false, "grade_id": "bce-backward", "solution": true}
+#| export
+class BCEBackward(Function):
+    """
+    Gradient computation for Binary Cross-Entropy Loss.
+    
+    BCE: L = -[y*log(p) + (1-y)*log(1-p)]
+    Derivative: ∂L/∂p = (p - y) / (p*(1-p)*N)
+    """
+    
+    def __init__(self, predictions, targets):
+        """Initialize with predictions and targets."""
+        super().__init__(predictions)
+        self.targets_data = targets.data
+        self.num_samples = np.size(targets.data)
+    
+    def apply(self, grad_output):
+        """Compute gradient for BCE loss."""
+        predictions, = self.saved_tensors
+        
+        if isinstance(predictions, Tensor) and predictions.requires_grad:
+            eps = 1e-7
+            p = np.clip(predictions.data, eps, 1 - eps)
+            y = self.targets_data
+            
+            # Gradient: (p - y) / (p * (1-p) * N)
+            grad = (p - y) / (p * (1 - p) * self.num_samples)
+            
+            return grad * grad_output,
+        return None,
+
+
 # %% nbgrader={"grade": false, "grade_id": "enable-autograd", "solution": true}
 def enable_autograd():
     """
@@ -1068,13 +1132,4 @@ Export with: `tito module complete 05_autograd`
 🔄 Module 06: Optimizers (Learning algorithms)
 🔄 Module 07: Training (Complete training loops)
 ```
-
-The gradient engine is alive! Neural networks can now learn! 🔥
 """
-
-def import_previous_module(module_name: str, component_name: str):
-    import sys
-    import os
-    sys.path.append(os.path.join(os.path.dirname(__file__), '..', module_name))
-    module = __import__(f"{module_name.split('_')[1]}_dev")
-    return getattr(module, component_name)

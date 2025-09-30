@@ -13,7 +13,14 @@ import sys
 import os
 
 # Import dependencies from other modules
-from .tensor import Tensor
-from .layers import Linear
-from .losses import MSELoss, CrossEntropyLoss
-from .optimizers import SGD, AdamW
+sys.path.append(os.path.join(os.path.dirname(__file__), '..', '01_tensor'))
+from tensor_dev import Tensor
+
+sys.path.append(os.path.join(os.path.dirname(__file__), '..', '03_layers'))
+from layers_dev import Linear
+
+sys.path.append(os.path.join(os.path.dirname(__file__), '..', '04_losses'))
+from losses_dev import MSELoss, CrossEntropyLoss
+
+sys.path.append(os.path.join(os.path.dirname(__file__), '..', '06_optimizers'))
+from optimizers_dev import SGD, AdamW
