@@ -221,12 +221,13 @@ def evaluate_and_celebrate(model, X, y, history):
     initial_acc = history["accuracy"][0]
     final_acc = history["accuracy"][-1]
     
-    # Show transformation
-    table = Table(title="\n🎯 The Transformation", show_header=True)
-    table.add_column("Metric", style="cyan")
-    table.add_column("Before Training", style="white")
-    table.add_column("After Training", style="white")
-    table.add_column("Improvement", style="bold green")
+    # 4. RESULTS TABLE - Before/After Comparison
+    console.print("\n")
+    table = Table(title="🎯 Training Results", box=box.ROUNDED)
+    table.add_column("Metric", style="cyan", width=20)
+    table.add_column("Before Training", style="yellow")
+    table.add_column("After Training", style="green")
+    table.add_column("Improvement", style="magenta")
     
     loss_improvement = f"-{initial_loss - final_loss:.4f}"
     acc_improvement = f"+{final_acc - initial_acc:.1%}"
@@ -236,26 +237,8 @@ def evaluate_and_celebrate(model, X, y, history):
     
     console.print(table)
     
-    # Celebrate success!
-    if final_accuracy >= 0.9:
-        console.print(Panel(
-            "[bold green]🎉 SUCCESS! XOR Problem Solved![/bold green]\n\n"
-            f"Final accuracy: {final_accuracy:.1%}\n"
-            f"Final loss: {final_loss:.4f}\n\n"
-            "[bold]The \"impossible\" problem is now trivial![/bold]\n"
-            "Hidden layers + backpropagation = AI renaissance",
-            title="✅ 1986 AI Revival",
-            border_style="green"
-        ))
-    else:
-        console.print(Panel(
-            f"[yellow]Accuracy: {final_accuracy:.1%}[/yellow]\n\n"
-            "Try training longer or adjusting learning rate.",
-            border_style="yellow"
-        ))
-    
-    # Show XOR truth table vs predictions
-    console.print("\n[bold]XOR Truth Table vs Model Predictions:[/bold]")
+    # 5. SAMPLE PREDICTIONS - XOR Truth Table
+    console.print("\n[bold]XOR Truth Table vs Predictions:[/bold]")
     test_inputs = np.array([[0.0, 0.0], [0.0, 1.0], [1.0, 0.0], [1.0, 1.0]])
     test_preds = model(Tensor(test_inputs))
     
@@ -295,32 +278,49 @@ def evaluate_and_celebrate(model, X, y, history):
 def main():
     """Demonstrate solving XOR with multi-layer networks."""
     
+    # 1. OPENING - Historical Context
     console.print(Panel.fit(
-        "[bold]XOR Solved! Multi-Layer Networks (1986)[/bold]\n\n"
-        "[dim]Watch a multi-layer network SOLVE the problem that killed AI.[/dim]\n"
+        "[bold cyan]🎯 1986 - Ending the AI Winter[/bold cyan]\n\n"
+        "[dim]Watch a multi-layer network SOLVE the problem that killed AI![/dim]\n"
         "[dim]Hidden layers + backpropagation = The AI Renaissance![/dim]",
-        border_style="green"
+        title="🔥 1986 AI Renaissance",
+        border_style="cyan",
+        box=box.DOUBLE
     ))
     
-    # Generate data
+    # 2. ARCHITECTURE - Visual Understanding
+    console.print("\n[bold]🏗️ Architecture:[/bold]")
+    console.print("""
+    ┌───────┐    ┌───────────┐    ┌──────┐    ┌─────────┐    ┌────────┐
+    │ Input │    │  Hidden   │    │ ReLU │    │ Output  │    │Sigmoid │
+    │  (2)  │───▶│    (4)    │───▶│  Act │───▶│   (1)   │───▶│  ŷ     │
+    └───────┘    └───────────┘    └──────┘    └─────────┘    └────────┘
+                  ↑ THE KEY!
+             Learns non-linear features
+    """)
+    console.print("  • Multi-layer network (2 → 4 → 1)")
+    console.print("  • [bold green]Hidden layer learns new features![/bold green]")
+    console.print("  • ReLU adds non-linearity (enables XOR solution)")
+    console.print("  • Total parameters: ~17 (vs 3 for single-layer)\n")
+    
+    # 3. STEPS - Numbered Training Process
+    console.print("[bold yellow]Step 1:[/bold yellow] Generate XOR dataset...")
     X, y = generate_xor_data(n_samples=100)
+    console.print(f"  ✓ Created {len(X.data)} XOR samples")
+    console.print("  ✓ XOR pattern: (0,0)→0, (0,1)→1, (1,0)→1, (1,1)→0")
     
-    # Create multi-layer network
-    console.print("\n[bold]Step 2:[/bold] Creating multi-layer network...")
+    console.print("\n[bold yellow]Step 2:[/bold yellow] Create multi-layer network...")
     model = XORNetwork(hidden_size=4)
-    console.print("  ✓ Architecture: Input(2) → [bold green]Hidden(4)[/bold green] → ReLU → Output(1) → Sigmoid")
-    console.print("  ✓ [bold green]Hidden layer is the KEY![/bold green] It learns new features.")
-    console.print("  ✓ Total parameters: ~17 (vs 3 for single-layer)")
-    
-    # Check initial performance
-    console.print("\n[bold]Initial Performance (random weights):[/bold]")
     initial_preds = model(X)
     initial_acc = ((initial_preds.data > 0.5).astype(int) == y.data).mean()
-    console.print(f"  Accuracy: {initial_acc:.1%} (random guessing)")
+    console.print(f"  ✓ Built 2-layer network with hidden size: 4")
+    console.print(f"  ❌ Initial accuracy: {initial_acc:.1%} (random guessing)")
     
-    # Train the network
-    console.print("\n[bold]Step 3:[/bold] Training on XOR...")
+    console.print("\n[bold yellow]Step 3:[/bold yellow] Training on XOR...")
+    console.print("  Epochs: 500, Learning rate: 0.5")
     history = train_network(model, X, y, epochs=500, lr=0.5)
+    
+    console.print("\n[bold yellow]Step 4:[/bold yellow] Evaluate solution...")
     
     # Evaluate and celebrate
     evaluate_and_celebrate(model, X, y, history)
