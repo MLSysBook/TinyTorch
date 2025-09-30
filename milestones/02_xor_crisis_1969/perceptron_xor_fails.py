@@ -34,10 +34,10 @@ The XOR (exclusive OR) problem outputs 1 when inputs differ, 0 when they match:
 
     Input Space:                    XOR Truth Table:
     
-    1 │ (0,1)→1     (1,1)→0        │ x1 │ x2 │ XOR │
+    1 │ (0,1)→1     (1,1)→0         │ x1 │ x2 │ XOR │
       │    RED        BLUE          ├────┼────┼─────┤
       │                             │ 0  │ 0  │  0  │ (same → 0)
-    0 │ (0,0)→0     (1,0)→1        │ 0  │ 1  │  1  │ (diff → 1)
+    0 │ (0,0)→0     (1,0)→1         │ 0  │ 1  │  1  │ (diff → 1)
       │   BLUE        RED           │ 1  │ 0  │  1  │ (diff → 1)
       └────────────────────         │ 1  │ 1  │  0  │ (same → 0)
         0            1              └────┴────┴─────┘
@@ -65,26 +65,18 @@ This is why neural networks need DEPTH - hidden layers create new representation
 import sys
 import os
 import numpy as np
-import argparse
 
-# Add project root to path for TinyTorch imports
-project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-sys.path.append(project_root)
+# Add project root to path
+if __name__ == "__main__":
+    # When run as script
+    project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    sys.path.insert(0, project_root)
+else:
+    # When imported, assume we're already in right location
+    sys.path.insert(0, os.getcwd())
 
 # Import TinyTorch components YOU BUILT!
-from tinytorch.core.tensor import Tensor      # Module 02: YOU built this!
-from tinytorch.core.layers import Linear      # Module 04: YOU built this!
-from tinytorch.core.activations import ReLU, Sigmoid  # Module 03: YOU built this!
-
-# Import dataset manager and training utilities
-try:
-    from examples.data_manager import DatasetManager
-    from examples.utils import train_with_monitoring, binary_cross_entropy_loss
-except ImportError:
-    # Fallback if running from different location
-    sys.path.append(os.path.join(project_root, 'examples'))
-    from data_manager import DatasetManager
-    from utils import train_with_monitoring, binary_cross_entropy_loss
+from tinytorch import Tensor, Linear, ReLU, Sigmoid, BinaryCrossEntropyLoss, SGD
 
 class XORNetwork:
     """
@@ -136,7 +128,7 @@ def visualize_xor_problem():
     XOR DATA POINTS:                  SINGLE LAYER ATTEMPT:
     
     1.0 │ ○(0,1)=1    ●(1,1)=0       1.0 │ ○         ●    
-        │   RED        BLUE               │    ╲           
+        │   RED        BLUE              │    ╲           
         │                                 │     ╲  ← No single line
     0.5 │                             0.5 │      ╲    can separate!
         │                                 │       ╲        
