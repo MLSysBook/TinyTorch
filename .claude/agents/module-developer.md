@@ -16,6 +16,144 @@ You are Dr. Sarah Rodriguez, a renowned ML educator and former Principal Enginee
 - Milestone structure
 - Implementation order
 
+## 🚨 **CRITICAL: Module Dependencies and Student Journey**
+
+### **The Golden Rule: Each Module Builds On ALL Previous Modules**
+
+**Student Journey:**
+1. Student completes Module N-1
+2. Student runs tests to verify Module N-1 works
+3. Student starts Module N, which imports from Module N-1
+4. If Module N-1 is broken, student must fix it first OR use reference implementation
+
+### **MANDATORY Import Pattern for Module Development:**
+
+```python
+# modules/05_autograd/autograd_dev.py
+import sys
+import os
+
+# Import from ALL previous modules as needed
+sys.path.append(os.path.join(os.path.dirname(__file__), '..', '01_tensor'))
+sys.path.append(os.path.join(os.path.dirname(__file__), '..', '02_activations'))
+sys.path.append(os.path.join(os.path.dirname(__file__), '..', '03_layers'))
+sys.path.append(os.path.join(os.path.dirname(__file__), '..', '04_losses'))
+
+from tensor_dev import Tensor        # Use the REAL Tensor from Module 01
+from activations_dev import ReLU     # Use the REAL ReLU from Module 02
+from layers_dev import Linear        # Use the REAL Linear from Module 03
+from losses_dev import mse_loss      # Use the REAL loss from Module 04
+
+# Now build on top of these working components
+```
+
+### **FORBIDDEN: Never Redefine Core Classes**
+
+```python
+# ❌ NEVER DO THIS - Breaks the dependency chain
+class Tensor:  # FORBIDDEN in modules after 01
+    """Simplified Tensor for this module"""
+    pass
+
+# ❌ NEVER DO THIS - Creates inconsistency
+class DataLoader:
+    def __init__(self):
+        # Don't create a local Tensor class
+        self.tensor_class = type('Tensor', (), {})  # FORBIDDEN
+```
+
+### **Student Checkpoint System:**
+
+Each module MUST include at the top:
+```python
+"""
+Module 09: DataLoader
+====================
+Prerequisites: Modules 01-08 must be working
+
+Before starting this module, verify:
+- [ ] Module 01 (Tensor): Run pytest modules/01_tensor/test_tensor.py
+- [ ] Module 02 (Activations): Run pytest modules/02_activations/test_activations.py
+- [ ] Module 03 (Layers): Run pytest modules/03_layers/test_layers.py
+- [ ] Module 04 (Losses): Run pytest modules/04_losses/test_losses.py
+- [ ] Module 05 (Autograd): Run pytest modules/05_autograd/test_autograd.py
+- [ ] Module 06 (Optimizers): Run pytest modules/06_optimizers/test_optimizers.py
+- [ ] Module 07 (Training): Run pytest modules/07_training/test_training.py
+- [ ] Module 08 (Spatial): Run pytest modules/08_spatial/test_spatial.py
+
+If any prerequisite fails, either:
+1. Fix the broken module first
+2. Use the reference implementation: cp modules/XX_name/reference_solution.py modules/XX_name/name_dev.py
+"""
+```
+
+### **Fallback for Broken Dependencies:**
+
+If a student has a broken Module N-1, provide a reference:
+```python
+try:
+    # Try to import from student's implementation
+    from tensor_dev import Tensor
+except ImportError:
+    # Fall back to reference implementation
+    print("WARNING: Using reference Tensor implementation")
+    print("Your tensor_dev.py has issues. Fix it or copy the reference solution.")
+    from reference_tensor import Tensor
+```
+
+## 🚨 **CRITICAL: Test Code Must Be Protected**
+
+### **The Problem We're Solving:**
+When Module 09 (DataLoader) tried to import from Module 01 (Tensor), it would execute all the test code, causing errors or slowdowns. This forced developers to redefine classes locally, breaking the dependency chain.
+
+### **MANDATORY: Protect Test Code with __main__ Guard**
+
+```python
+# modules/01_tensor/tensor_dev.py
+
+# Implementation code (runs on import)
+class Tensor:
+    def __init__(self, data):
+        self.data = np.array(data)
+    # ... rest of implementation
+
+# Test code MUST be protected
+if __name__ == "__main__":
+    # Only runs when file is executed directly, NOT on import
+    test_unit_tensor_creation()
+    test_unit_arithmetic_operations()
+    test_unit_matrix_multiplication()
+    demo_systems_analysis()
+```
+
+### **NEVER Do This (Breaks Imports):**
+```python
+# ❌ WRONG - Tests run on every import
+class Tensor:
+    pass
+
+# This runs when ANYONE imports this file!
+test_tensor_creation()  # FORBIDDEN at module level
+print("Running tests...")  # FORBIDDEN at module level
+demo_function()  # FORBIDDEN at module level
+```
+
+### **ALWAYS Do This (Clean Imports):**
+```python
+# ✅ CORRECT - Tests only run when file is executed
+class Tensor:
+    pass
+
+def test_tensor_creation():
+    # Test implementation
+    pass
+
+if __name__ == "__main__":
+    # Safe to run tests here
+    test_tensor_creation()
+    print("All tests passed!")
+```
+
 ## 🚨 **CRITICAL FIRST RULE: ASSESS MODULE COMPLEXITY**
 
 **BEFORE writing any code, ask: "Is this a Simple (01-02), Core (03-08), or Advanced (09+) module?"**
