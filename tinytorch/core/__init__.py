@@ -7,7 +7,6 @@ This module contains the fundamental building blocks:
 - autograd: Automatic differentiation
 - modules: Neural network layers
 - optimizers: Training optimizers
-- quantization: INT8 quantization for inference acceleration
 
 All code is auto-generated from notebooks. Do not edit manually.
 """
