@@ -1072,66 +1072,6 @@ fixed LR           adaptive LR          adaptive LR + decay
 ```
 """
 
-# %% nbgrader={"grade": false, "grade_id": "integration-demo", "solution": true}
-def demonstrate_optimizer_integration():
-    """
-    Demonstrate optimizers working with neural network parameters.
-
-    This simulates a training step with different optimizers to show
-    how they affect parameter updates differently.
-    """
-    print("🔗 Integration Demo: Optimizer Comparison")
-    print("Simulating one training step with different optimizers")
-
-    # Create identical "network" parameters for comparison
-    # Simulating weights and biases of a simple linear layer
-
-    def create_params():
-        """Create identical parameter sets for fair comparison."""
-        W = Tensor([[0.1, 0.2, 0.3], [0.4, 0.5, 0.6]], requires_grad=True)
-        b = Tensor([0.1, 0.2], requires_grad=True)
-        return W, b
-
-    # Create identical gradients (simulating computed gradients)
-    def add_gradients(W, b):
-        """Add identical gradients to parameters."""
-        W.grad = Tensor([[0.01, 0.02, 0.03], [0.04, 0.05, 0.06]])
-        b.grad = Tensor([0.01, 0.02])
-
-    # Test SGD
-    print("\n📊 SGD Update:")
-    W_sgd, b_sgd = create_params()
-    add_gradients(W_sgd, b_sgd)
-    sgd = SGD([W_sgd, b_sgd], lr=0.1, momentum=0.9)
-
-    print(f"Before: W={W_sgd.data[0, 0]:.6f}, b={b_sgd.data[0]:.6f}")
-    sgd.step()
-    print(f"After:  W={W_sgd.data[0, 0]:.6f}, b={b_sgd.data[0]:.6f}")
-
-    # Test Adam
-    print("\n📊 Adam Update:")
-    W_adam, b_adam = create_params()
-    add_gradients(W_adam, b_adam)
-    adam = Adam([W_adam, b_adam], lr=0.01)
-
-    print(f"Before: W={W_adam.data[0, 0]:.6f}, b={b_adam.data[0]:.6f}")
-    adam.step()
-    print(f"After:  W={W_adam.data[0, 0]:.6f}, b={b_adam.data[0]:.6f}")
-
-    # Test AdamW
-    print("\n📊 AdamW Update:")
-    W_adamw, b_adamw = create_params()
-    add_gradients(W_adamw, b_adamw)
-    adamw = AdamW([W_adamw, b_adamw], lr=0.01, weight_decay=0.01)
-
-    print(f"Before: W={W_adamw.data[0, 0]:.6f}, b={b_adamw.data[0]:.6f}")
-    adamw.step()
-    print(f"After:  W={W_adamw.data[0, 0]:.6f}, b={b_adamw.data[0]:.6f}")
-
-    print("\n💡 Notice how different optimizers make different updates!")
-    print("- SGD: Large, direct steps")
-    print("- Adam: Smaller, adaptive steps")
-    print("- AdamW: Similar to Adam but with weight decay effects")
 
 # %% [markdown]
 """

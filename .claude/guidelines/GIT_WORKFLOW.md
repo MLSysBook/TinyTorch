@@ -150,6 +150,33 @@ git merge dev
 # Then merge via PR
 ```
 
+### Merge Strategy: Preserve Branch History
+```bash
+# When merging feature branches, use --no-ff to preserve history
+git checkout dev
+git merge --no-ff feature/your-branch
+
+# This creates a merge commit even for fast-forward merges
+# Preserves the context that work was done in a feature branch
+```
+
+#### Why use --no-ff?
+- **Preserves branch context**: Shows that commits were part of a feature branch
+- **Cleaner history**: Groups related commits together
+- **Easier rollback**: Can revert entire feature with single merge commit
+- **Better visualization**: `git log --graph` shows clear feature boundaries
+
+#### Example comparison:
+```bash
+# Without --no-ff (fast-forward):
+# dev: A---B---C---D---E (features mixed into linear history)
+
+# With --no-ff (merge commit):
+# dev: A---B-------M---N (M is merge commit)
+#            \   /
+# feature:     C-D-E (feature work clearly grouped)
+```
+
 ## 🏷️ Protected Branches
 
 These branches should have protection rules:
