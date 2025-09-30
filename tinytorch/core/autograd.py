@@ -456,6 +456,20 @@ def enable_autograd():
         # Initialize or accumulate gradient
         if self.grad is None:
             self.grad = np.zeros_like(self.data)
+        
+        # Handle broadcasting: sum gradient to match self.data shape
+        if gradient.shape != self.grad.shape:
+            # Sum over broadcasted dimensions
+            # This handles cases like bias gradients that get broadcast
+            ndims_added = len(gradient.shape) - len(self.grad.shape)
+            for i in range(ndims_added):
+                gradient = np.sum(gradient, axis=0)
+            for i, (grad_dim, self_dim) in enumerate(zip(gradient.shape, self.grad.shape)):
+                if self_dim == 1 and grad_dim > 1:
+                    gradient = np.sum(gradient, axis=i, keepdims=True)
+                elif self_dim != grad_dim:
+                    gradient = np.sum(gradient, axis=i, keepdims=True)
+        
         self.grad += gradient
 
         # Propagate gradients through computation graph
@@ -483,6 +497,52 @@ def enable_autograd():
     Tensor.sum = sum_op
     Tensor.backward = backward
     Tensor.zero_grad = zero_grad
+
+    # Patch activations and losses to track gradients
+    try:
+        from tinytorch.core.activations import Sigmoid
+        from tinytorch.core.losses import BinaryCrossEntropyLoss
+        
+        # Store original methods
+        _original_sigmoid_forward = Sigmoid.forward
+        _original_bce_forward = BinaryCrossEntropyLoss.forward
+        
+        def tracked_sigmoid_forward(self, x):
+            """Sigmoid with gradient tracking."""
+            result_data = 1.0 / (1.0 + np.exp(-x.data))
+            result = Tensor(result_data)
+            
+            if x.requires_grad:
+                result.requires_grad = True
+                result._grad_fn = SigmoidBackward(x, result)
+            
+            return result
+        
+        def tracked_bce_forward(self, predictions, targets):
+            """Binary cross-entropy with gradient tracking."""
+            # Compute BCE loss
+            eps = 1e-7
+            clamped_preds = np.clip(predictions.data, eps, 1 - eps)
+            log_preds = np.log(clamped_preds)
+            log_one_minus_preds = np.log(1 - clamped_preds)
+            bce_per_sample = -(targets.data * log_preds + (1 - targets.data) * log_one_minus_preds)
+            bce_loss = np.mean(bce_per_sample)
+            
+            result = Tensor(bce_loss)
+            
+            if predictions.requires_grad:
+                result.requires_grad = True
+                result._grad_fn = BCEBackward(predictions, targets)
+            
+            return result
+        
+        # Install patched methods
+        Sigmoid.forward = tracked_sigmoid_forward
+        BinaryCrossEntropyLoss.forward = tracked_bce_forward
+        
+    except ImportError:
+        # Activations/losses not yet available (happens during module development)
+        pass
 
     # Mark as enabled
     Tensor._autograd_enabled = True

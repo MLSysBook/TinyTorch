@@ -162,8 +162,8 @@ class SGD(Optimizer):
             if param.grad is None:
                 continue
 
-            # Get gradient
-            grad = param.grad.data
+            # Get gradient (param.grad is already a numpy array)
+            grad = param.grad
 
             # Apply weight decay
             if self.weight_decay != 0:
@@ -263,8 +263,8 @@ class Adam(Optimizer):
             if param.grad is None:
                 continue
 
-            # Get gradient
-            grad = param.grad.data
+            # Get gradient (param.grad is already a numpy array)
+            grad = param.grad
 
             # Apply weight decay
             if self.weight_decay != 0:
@@ -366,8 +366,8 @@ class AdamW(Optimizer):
             if param.grad is None:
                 continue
 
-            # Get gradient (NOT modified by weight decay)
-            grad = param.grad.data
+            # Get gradient (NOT modified by weight decay) - param.grad is already a numpy array
+            grad = param.grad
 
             # Initialize buffers if needed
             if self.m_buffers[i] is None:
