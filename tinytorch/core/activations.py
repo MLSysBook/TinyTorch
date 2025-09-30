@@ -91,10 +91,6 @@ class ReLU:
         return Tensor(result)
         ### END SOLUTION
 
-    def __call__(self, x: Tensor) -> Tensor:
-        """Allows the activation to be called like a function."""
-        return self.forward(x)
-
     def backward(self, grad: Tensor) -> Tensor:
         """Compute gradient (implemented in Module 05)."""
         pass  # Will implement backward pass in Module 05
@@ -132,10 +128,6 @@ class Tanh:
         result = np.tanh(x.data)
         return Tensor(result)
         ### END SOLUTION
-
-    def __call__(self, x: Tensor) -> Tensor:
-        """Allows the activation to be called like a function."""
-        return self.forward(x)
 
     def backward(self, grad: Tensor) -> Tensor:
         """Compute gradient (implemented in Module 05)."""
@@ -179,10 +171,6 @@ class GELU:
         result = x.data * sigmoid_part
         return Tensor(result)
         ### END SOLUTION
-
-    def __call__(self, x: Tensor) -> Tensor:
-        """Allows the activation to be called like a function."""
-        return self.forward(x)
 
     def backward(self, grad: Tensor) -> Tensor:
         """Compute gradient (implemented in Module 05)."""
@@ -237,10 +225,6 @@ class Softmax:
         result = exp_values / exp_sum
         return Tensor(result)
         ### END SOLUTION
-
-    def __call__(self, x: Tensor, dim: int = -1) -> Tensor:
-        """Allows the activation to be called like a function."""
-        return self.forward(x, dim)
 
     def backward(self, grad: Tensor) -> Tensor:
         """Compute gradient (implemented in Module 05)."""
