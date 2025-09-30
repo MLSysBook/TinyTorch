@@ -68,9 +68,29 @@ from typing import Optional
 import sys
 import os
 
-# Import our Tensor class from local tensor module
-sys.path.append(os.path.join(os.path.dirname(__file__), '..', '01_tensor'))
-from tensor_dev import Tensor
+# %% [markdown]
+"""
+## 📋 Module Prerequisites & Setup
+
+This module builds on previous TinyTorch components. Here's what we need and why:
+
+**Required Components:**
+- **Tensor** (Module 01): Foundation for all activation computations and data flow
+
+**Integration Helper:**
+The `import_previous_module()` function below helps us cleanly import components from previous modules during development and testing.
+"""
+
+# %%
+def import_previous_module(module_name: str, component_name: str):
+    import sys
+    import os
+    sys.path.append(os.path.join(os.path.dirname(__file__), '..', module_name))
+    module = __import__(f"{module_name.split('_')[1]}_dev")
+    return getattr(module, component_name)
+
+# Import from previous modules using our helper
+Tensor = import_previous_module('01_tensor', 'Tensor')
 
 # %% [markdown]
 """
@@ -781,6 +801,13 @@ Final validation that everything works together correctly.
 """
 
 # %% nbgrader={"grade": true, "grade_id": "module-test", "locked": true, "points": 20}
+def import_previous_module(module_name: str, component_name: str):
+    import sys
+    import os
+    sys.path.append(os.path.join(os.path.dirname(__file__), '..', module_name))
+    module = __import__(f"{module_name.split('_')[1]}_dev")
+    return getattr(module, component_name)
+
 def test_module():
     """
     Comprehensive test of entire module functionality.
