@@ -681,32 +681,30 @@ class Conv2d(Module):
         """
         Forward pass through multi-channel Conv2D layer with automatic differentiation.
         
-        Uses the same Variable-based approach as Linear layer for proper gradient flow.
+        Uses the same Tensor-based approach as Linear layer for proper gradient flow.
         
         Args:
-            x: Input tensor/Variable with shape (batch_size, in_channels, H, W) or (in_channels, H, W)
+            x: Input tensor/Tensor with shape (batch_size, in_channels, H, W) or (in_channels, H, W)
         Returns:
-            Output tensor/Variable with shape (batch_size, out_channels, out_H, out_W) or (out_channels, out_H, out_W)
+            Output tensor/Tensor with shape (batch_size, out_channels, out_H, out_W) or (out_channels, out_H, out_W)
         """
-        # Import Variable for gradient tracking (same pattern as Linear layer)
+        # Import Tensor for gradient tracking (same pattern as Linear layer)
         try:
-            from tinytorch.core.autograd import Variable
-        except ImportError:
+                    except ImportError:
             # Fallback for development
             import sys
             import os
             sys.path.append(os.path.join(os.path.dirname(__file__), '..', '06_autograd'))
-            from autograd_dev import Variable
-        
-        # Ensure input supports autograd if it's a Variable (same as Linear layer)
-        input_var = x if isinstance(x, Variable) else Variable(x, requires_grad=False)
+                    
+        # Ensure input supports autograd if it's a Tensor (same as Linear layer)
+        input_var = x if isinstance(x, Tensor) else Tensor(x, requires_grad=False)
         
         # Convert parameters to Variables to maintain gradient connections (same as Linear)
-        weight_var = Variable(self.weight, requires_grad=True) if not isinstance(self.weight, Variable) else self.weight
+        weight_var = Tensor(self.weight, requires_grad=True) if not isinstance(self.weight, Tensor) else self.weight
         bias_var = None
         if self.bias is not None:
-            bias_var = Variable(self.bias, requires_grad=True) if not isinstance(self.bias, Variable) else self.bias
-        # Perform convolution operation using Variable-aware computation
+            bias_var = Tensor(self.bias, requires_grad=True) if not isinstance(self.bias, Tensor) else self.bias
+        # Perform convolution operation using Tensor-aware computation
         # This creates the automatic differentiation graph like Linear layer does
         result_var = self._conv2d_operation(input_var, weight_var, bias_var)
         
@@ -717,9 +715,9 @@ class Conv2d(Module):
         Core convolution operation with automatic differentiation support.
         
         This function performs the convolution computation while preserving
-        the Variable computational graph for automatic gradient flow.
+        the Tensor computational graph for automatic gradient flow.
         """
-        # Extract data for computation (while preserving Variable wrapper)
+        # Extract data for computation (while preserving Tensor wrapper)
         input_data = input_var.data if hasattr(input_var, 'data') else input_var
         weight_data = weight_var.data if hasattr(weight_var, 'data') else weight_var
         
@@ -768,18 +766,17 @@ class Conv2d(Module):
         if single_image:
             output = output[0]
         
-        # Create output Variable with gradient function for automatic differentiation
+        # Create output Tensor with gradient function for automatic differentiation
         # This is the key difference from the old manual implementation
-        from tinytorch.core.autograd import Variable
-        
+                
         # Create gradient function that integrates with automatic differentiation
         def conv2d_grad_fn(grad_output):
             # This will be called automatically during backprop
             # The automatic differentiation system handles parameter updates
             pass
         
-        # Return Variable that maintains the computational graph
-        return Variable(output, requires_grad=(input_var.requires_grad or weight_var.requires_grad), grad_fn=conv2d_grad_fn)
+        # Return Tensor that maintains the computational graph
+        return Tensor(output, requires_grad=(input_var.requires_grad or weight_var.requires_grad), grad_fn=conv2d_grad_fn)
     
     def __call__(self, x):
         """Make layer callable: layer(x) same as layer.forward(x)"""
@@ -1028,7 +1025,7 @@ class MaxPool2D:
         """
         # Extract the underlying numpy array properly
         if hasattr(x, 'data') and hasattr(x.data, 'data'):
-            # x is Variable, x.data is Tensor, x.data.data is numpy array
+            # x is Tensor, x.data is Tensor, x.data.data is numpy array
             input_data = x.data.data
         elif hasattr(x, 'data'):
             # x is Tensor, x.data is numpy array
