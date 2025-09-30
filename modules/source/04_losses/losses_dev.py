@@ -409,7 +409,7 @@ class MSELoss:
         >>> loss_fn = MSELoss()
         >>> predictions = Tensor([1.0, 2.0, 3.0])
         >>> targets = Tensor([1.5, 2.5, 2.8])
-        >>> loss = loss_fn.forward(predictions, targets)
+        >>> loss = loss_fn(predictions, targets)
         >>> print(f"MSE Loss: {loss.data:.4f}")
         MSE Loss: 0.1467
 
@@ -586,7 +586,7 @@ class CrossEntropyLoss:
         >>> loss_fn = CrossEntropyLoss()
         >>> logits = Tensor([[2.0, 1.0, 0.1], [0.5, 1.5, 0.8]])  # 2 samples, 3 classes
         >>> targets = Tensor([0, 1])  # First sample is class 0, second is class 1
-        >>> loss = loss_fn.forward(logits, targets)
+        >>> loss = loss_fn(logits, targets)
         >>> print(f"Cross-Entropy Loss: {loss.data:.4f}")
 
         HINTS:
@@ -788,7 +788,7 @@ class BinaryCrossEntropyLoss:
         >>> loss_fn = BinaryCrossEntropyLoss()
         >>> predictions = Tensor([0.9, 0.1, 0.7, 0.3])  # Probabilities between 0 and 1
         >>> targets = Tensor([1.0, 0.0, 1.0, 0.0])      # Binary labels
-        >>> loss = loss_fn.forward(predictions, targets)
+        >>> loss = loss_fn(predictions, targets)
         >>> print(f"Binary Cross-Entropy Loss: {loss.data:.4f}")
 
         HINTS:
