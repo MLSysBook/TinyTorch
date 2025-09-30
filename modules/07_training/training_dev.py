@@ -6,2054 +6,1379 @@
 #       format_name: percent
 #       format_version: '1.3'
 #       jupytext_version: 1.17.1
+#   kernelspec:
+#     display_name: Python 3 (ipykernel)
+#     language: python
+#     name: python3
 # ---
 
 # %% [markdown]
 """
-# Training - Complete End-to-End ML Training Infrastructure
+# Module 07: Training - Complete Learning Loops
 
-Welcome to the Training module! You'll build the complete training infrastructure that orchestrates data loading, forward passes, loss computation, backpropagation, and optimization into a unified system.
+Welcome to Module 07! You're about to build the complete training infrastructure that brings neural networks to life through end-to-end learning.
 
-## Learning Goals
-- Systems understanding: How training loops coordinate all ML system components and why training orchestration determines system reliability
-- Core implementation skill: Build loss functions, evaluation metrics, and complete training loops with checkpointing and monitoring
-- Pattern recognition: Understand how different loss functions affect learning dynamics and model behavior
-- Framework connection: See how your training loop mirrors PyTorch's training patterns and state management
-- Performance insight: Learn why training loop design affects convergence speed, memory usage, and debugging capability
+## 🔗 Prerequisites & Progress
+**You've Built**: Tensors, activations, layers, losses, gradients, and optimizers
+**You'll Build**: Complete training loops with checkpointing, scheduling, and gradient management
+**You'll Enable**: Full model training pipeline for the MLP milestone
 
-## Build → Use → Reflect
-1. **Build**: Complete training infrastructure with loss functions, metrics, checkpointing, and progress monitoring
-2. **Use**: Train real neural networks on CIFAR-10 and achieve meaningful accuracy on complex visual tasks
-3. **Reflect**: Why does training loop design often determine the success or failure of ML projects?
+**Connection Map**:
+```
+Optimizers (Module 06) → Training (Module 07) → DataLoader (Module 08)
+(parameter updates)     (complete loops)      (efficient batching)
+```
 
-## What You'll Achieve
-By the end of this module, you'll understand:
-- Deep technical understanding of how training loops orchestrate complex ML systems into reliable, monitorable processes
-- Practical capability to build production-ready training infrastructure with proper error handling and state management
-- Systems insight into why training stability and reproducibility are critical for reliable ML systems
-- Performance consideration of how training loop efficiency affects iteration speed and resource utilization
-- Connection to production ML systems and how modern MLOps platforms build on these training patterns
+## Learning Objectives
+By the end of this module, you will:
+1. Implement a complete Trainer class with train/eval modes
+2. Build learning rate scheduling and gradient clipping
+3. Create checkpointing for model persistence
+4. Test training loops with immediate validation
+5. Understand gradient accumulation patterns
 
-## Systems Reality Check
-💡 **Production Context**: Modern ML training platforms like PyTorch Lightning and Hugging Face Transformers build sophisticated abstractions on top of basic training loops to handle distributed training, mixed precision, and fault tolerance
-⚡ **Performance Note**: Training loop efficiency often matters more than model efficiency for development speed - good training infrastructure accelerates the entire ML development cycle
+Let's get started!
+
+## 📦 Where This Code Lives in the Final Package
+
+**Learning Side:** You work in modules/07_training/training_dev.py
+**Building Side:** Code exports to tinytorch.core.training
+
+```python
+# Final package structure:
+from tinytorch.core.training import Trainer, CosineSchedule, clip_grad_norm  # This module
+from tinytorch.core.tensor import Tensor  # Foundation (Module 01)
+from tinytorch.core.optimizers import SGD, AdamW  # Parameter updates (Module 06)
+from tinytorch.core.losses import CrossEntropyLoss  # Error measurement (Module 04)
+```
+
+**Why this matters:**
+- **Learning:** Complete training system in one focused module for deep understanding
+- **Production:** Proper organization like PyTorch's training infrastructure with all training components together
+- **Consistency:** All training operations and scheduling functionality in core.training
+- **Integration:** Works seamlessly with optimizers and losses for complete learning pipelines
 """
 
-# %% nbgrader={"grade": false, "grade_id": "training-imports", "locked": false, "schema_version": 3, "solution": false, "task": false}
+# %% nbgrader={"grade": false, "grade_id": "imports", "locked": false, "solution": false}
 #| default_exp core.training
 
-#| export
 import numpy as np
-import sys
-import os
-from collections import defaultdict
-import time
 import pickle
+import time
+from typing import Dict, List, Optional, Tuple, Any, Callable
+from pathlib import Path
 
-# Add module directories to Python path
-sys.path.append(os.path.abspath('modules/source/01_tensor'))
-sys.path.append(os.path.abspath('modules/source/02_activations'))
-sys.path.append(os.path.abspath('modules/source/03_layers'))
-sys.path.append(os.path.abspath('modules/source/05_networks'))
-sys.path.append(os.path.abspath('modules/source/06_autograd'))
-sys.path.append(os.path.abspath('modules/source/07_spatial'))
-sys.path.append(os.path.abspath('modules/source/08_optimizers'))
-sys.path.append(os.path.abspath('modules/source/09_dataloader'))
+# %% [markdown]
+"""
+## 🏗️ Part 1: Introduction - What is Training?
 
-# Helper function to set up import paths
-# No longer needed, will use direct relative imports
+Training is where the magic happens - it's the process that transforms a randomly initialized neural network into an intelligent system that can solve problems. Think of training as teaching: you show the model examples, it makes predictions, you measure how wrong it is, and then you adjust its parameters to do better next time.
 
-# Set up paths
-# No longer needed
+The training process follows a consistent pattern across all machine learning:
 
-# Import all the building blocks we need
-from tinytorch.core.tensor import Tensor
-from tinytorch.core.activations import ReLU, Sigmoid, Tanh, Softmax
-from tinytorch.core.layers import Linear
-from tinytorch.core.networks import Sequential, create_mlp
-from tinytorch.core.spatial import Conv2D, flatten
-from tinytorch.utils.data import Dataset, DataLoader
-from tinytorch.core.autograd import Variable  # FOR AUTOGRAD INTEGRATION
-from tinytorch.core.optimizers import SGD, Adam
+1. **Forward Pass**: Input flows through the model to produce predictions
+2. **Loss Calculation**: Compare predictions to true answers
+3. **Backward Pass**: Compute gradients showing how to improve
+4. **Parameter Update**: Adjust model weights using an optimizer
+5. **Repeat**: Continue until the model learns the pattern
 
-# 🔥 AUTOGRAD INTEGRATION: Loss functions now return Variables that support .backward()
-# This enables automatic gradient computation for neural network training!
+But production training systems need much more than this basic loop. They need learning rate scheduling (starting fast, slowing down), gradient clipping (preventing exploding gradients), checkpointing (saving progress), and evaluation modes (testing without learning).
 
-# Global helper for clean data access
-def extract_numpy_data(tensor_obj):
-    """Extract raw numpy data from tensor objects using clean Tensor interface.
+**What we're building today:**
+- A complete `Trainer` class that orchestrates the entire learning process
+- Learning rate scheduling that adapts during training
+- Gradient clipping that prevents training instability
+- Checkpointing system for saving and resuming training
+- Train/eval modes for proper model behavior
+"""
 
-    Clean Tensor Evolution Pattern: Work directly with Tensor.data property.
+# %% [markdown]
+"""
+## 📐 Part 2: Foundations - Mathematical Background
+
+### Training Loop Mathematics
+
+The core training loop implements gradient descent with sophisticated improvements:
+
+**Basic Update Rule:**
+```
+θ(t+1) = θ(t) - η ∇L(θ(t))
+```
+Where θ are parameters, η is learning rate, and ∇L is the loss gradient.
+
+**Learning Rate Scheduling:**
+For cosine annealing over T epochs:
+```
+η(t) = η_min + (η_max - η_min) * (1 + cos(πt/T)) / 2
+```
+
+**Gradient Clipping:**
+When ||∇L|| > max_norm, rescale:
+```
+∇L ← ∇L * max_norm / ||∇L||
+```
+
+**Gradient Accumulation:**
+For effective batch size B_eff = accumulation_steps * B_actual:
+```
+∇L_accumulated = (1/accumulation_steps) * Σ ∇L_batch_i
+```
+
+### Train vs Eval Modes
+
+Many layers behave differently during training vs inference:
+- **Dropout**: Active during training, disabled during evaluation
+- **BatchNorm**: Updates statistics during training, uses fixed statistics during evaluation
+- **Gradient computation**: Enabled during training, disabled during evaluation for efficiency
+
+This mode switching is crucial for proper model behavior and performance.
+"""
+
+# %% [markdown]
+"""
+## 🏗️ Part 3: Implementation - Building Training Infrastructure
+
+Now let's implement the complete training system. We'll build each component step by step: learning rate scheduling, gradient utilities, and finally the complete Trainer class.
+
+Each component will follow the pattern: **Explanation → Implementation → Test** so you understand what you're building before you build it.
+"""
+
+# %% [markdown]
+"""
+### Learning Rate Scheduling - Adaptive Training Speed
+
+Learning rate scheduling is like adjusting your driving speed based on road conditions. You start fast on the highway (high learning rate for quick progress), then slow down in neighborhoods (low learning rate for fine-tuning).
+
+#### Why Cosine Scheduling Works
+
+Cosine annealing follows a smooth curve that provides:
+- **Aggressive learning initially** - Fast convergence when far from optimum
+- **Gradual slowdown** - Stable convergence as you approach the solution
+- **Smooth transitions** - No sudden learning rate drops that shock the model
+
+#### The Mathematics
+
+Cosine annealing uses the cosine function to smoothly transition from max_lr to min_lr:
+
+```
+Learning Rate Schedule:
+
+max_lr ┌─\
+       │   \
+       │     \
+       │       \
+       │         \
+min_lr └───────────\────────
+       0    25    50   75  100 epochs
+
+Formula: lr = min_lr + (max_lr - min_lr) * (1 + cos(π * epoch / total_epochs)) / 2
+```
+
+This creates a natural learning curve that adapts training speed to the optimization landscape.
+"""
+
+# %% nbgrader={"grade": false, "grade_id": "scheduler", "locked": false, "solution": true}
+class CosineSchedule:
     """
-    import numpy as np
+    Cosine annealing learning rate schedule.
 
-    # Clean extraction: Handle Tensor objects directly
-    if isinstance(tensor_obj, (Tensor, Variable)):
-        return tensor_obj.data
+    Starts at max_lr, decreases following a cosine curve to min_lr over T epochs.
+    This provides aggressive learning initially, then fine-tuning at the end.
 
-    # Handle raw numpy arrays or other data
-    if isinstance(tensor_obj, np.ndarray):
-        return tensor_obj
+    TODO: Implement cosine annealing schedule
 
-    # Convert other types to numpy array
-    return np.array(tensor_obj)
+    APPROACH:
+    1. Store max_lr, min_lr, and total_epochs
+    2. In get_lr(), compute cosine factor: (1 + cos(π * epoch / total_epochs)) / 2
+    3. Interpolate: min_lr + (max_lr - min_lr) * cosine_factor
 
-# Utility function for tensor data access
-def get_tensor_value(tensor_obj):
-    """Extract numeric value from tensor/variable objects for testing.
-    
-    Educational simplification: Handles Variable -> Tensor -> numpy array -> scalar pattern
-    in a clear, step-by-step manner that students can easily understand.
+    EXAMPLE:
+    >>> schedule = CosineSchedule(max_lr=0.1, min_lr=0.01, total_epochs=100)
+    >>> print(schedule.get_lr(0))    # Start: 0.1
+    >>> print(schedule.get_lr(50))   # Middle: ~0.055
+    >>> print(schedule.get_lr(100))  # End: 0.01
+
+    HINT: Use np.cos() and np.pi for the cosine calculation
     """
-    import numpy as np
-    
-    # Step 1: Unwrap Variable objects recursively
-    if isinstance(tensor_obj, Variable):
-        return get_tensor_value(tensor_obj.data)  # Unwrap Variable
-    
-    # Step 2: Handle Tensor objects
-    if isinstance(tensor_obj, Tensor):
-        return get_tensor_value(tensor_obj.data)  # Unwrap Tensor
-    
-    # Step 3: Handle numpy arrays
-    if isinstance(tensor_obj, np.ndarray):
-        return float(tensor_obj.item() if tensor_obj.size == 1 else tensor_obj.flat[0])
-    
-    # Step 4: Handle memoryview objects (convert to numpy first)
-    if isinstance(tensor_obj, memoryview):
-        array_data = np.array(tensor_obj)
-        return float(array_data.item() if array_data.size == 1 else array_data.flat[0])
-    
-    # Step 5: Handle basic Python numbers
-    if isinstance(tensor_obj, (int, float, np.number)):
-        return float(tensor_obj)
-    
-    # Step 6: Last resort - direct conversion
-    try:
-        return float(tensor_obj)
-    except (ValueError, TypeError):
-        print(f"Warning: Could not extract value from {type(tensor_obj)}, returning 0")
+    ### BEGIN SOLUTION
+    def __init__(self, max_lr: float = 0.1, min_lr: float = 0.01, total_epochs: int = 100):
+        self.max_lr = max_lr
+        self.min_lr = min_lr
+        self.total_epochs = total_epochs
+
+    def get_lr(self, epoch: int) -> float:
+        """Get learning rate for current epoch."""
+        if epoch >= self.total_epochs:
+            return self.min_lr
+
+        # Cosine annealing formula
+        cosine_factor = (1 + np.cos(np.pi * epoch / self.total_epochs)) / 2
+        return self.min_lr + (self.max_lr - self.min_lr) * cosine_factor
+    ### END SOLUTION
+
+# %% [markdown]
+"""
+### 🧪 Unit Test: CosineSchedule
+This test validates our learning rate scheduling implementation.
+**What we're testing**: Cosine annealing produces correct learning rates
+**Why it matters**: Proper scheduling often makes the difference between convergence and failure
+**Expected**: Smooth decrease from max_lr to min_lr following cosine curve
+"""
+
+# %% nbgrader={"grade": true, "grade_id": "test_scheduler", "locked": true, "points": 10}
+def test_unit_cosine_schedule():
+    """🔬 Test CosineSchedule implementation."""
+    print("🔬 Unit Test: CosineSchedule...")
+
+    # Test basic schedule
+    schedule = CosineSchedule(max_lr=0.1, min_lr=0.01, total_epochs=100)
+
+    # Test start, middle, and end
+    lr_start = schedule.get_lr(0)
+    lr_middle = schedule.get_lr(50)
+    lr_end = schedule.get_lr(100)
+
+    print(f"Learning rate at epoch 0: {lr_start:.4f}")
+    print(f"Learning rate at epoch 50: {lr_middle:.4f}")
+    print(f"Learning rate at epoch 100: {lr_end:.4f}")
+
+    # Validate behavior
+    assert abs(lr_start - 0.1) < 1e-6, f"Expected 0.1 at start, got {lr_start}"
+    assert abs(lr_end - 0.01) < 1e-6, f"Expected 0.01 at end, got {lr_end}"
+    assert 0.01 < lr_middle < 0.1, f"Middle LR should be between min and max, got {lr_middle}"
+
+    # Test monotonic decrease in first half
+    lr_quarter = schedule.get_lr(25)
+    assert lr_quarter > lr_middle, "LR should decrease monotonically in first half"
+
+    print("✅ CosineSchedule works correctly!")
+
+test_unit_cosine_schedule()
+
+# %% [markdown]
+"""
+### Gradient Clipping - Preventing Training Explosions
+
+Gradient clipping is like having a speed governor on your car - it prevents dangerous situations where gradients become so large they destroy training progress.
+
+#### The Problem: Exploding Gradients
+
+During training, gradients can sometimes become extremely large, causing:
+- **Parameter updates that are too big** - Model jumps far from the optimal solution
+- **Numerical instability** - Values become NaN or infinite
+- **Training collapse** - Model performance suddenly degrades
+
+#### The Solution: Global Norm Clipping
+
+Instead of clipping each gradient individually, we compute the global norm across all parameters and scale uniformly:
+
+```
+Gradient Clipping Process:
+
+1. Compute Global Norm:
+   total_norm = √(sum of all gradient squares)
+
+2. Check if Clipping Needed:
+   if total_norm > max_norm:
+       clip_coefficient = max_norm / total_norm
+
+3. Scale All Gradients:
+   for each gradient:
+       gradient *= clip_coefficient
+
+Visualization:
+Original Gradients:  [100, 200, 50] → norm = 230
+With max_norm=1.0:   [0.43, 0.87, 0.22] → norm = 1.0
+```
+
+This preserves the relative magnitudes while preventing explosion.
+"""
+
+# %% nbgrader={"grade": false, "grade_id": "gradient_clipping", "locked": false, "solution": true}
+def clip_grad_norm(parameters: List, max_norm: float = 1.0) -> float:
+    """
+    Clip gradients by global norm to prevent exploding gradients.
+
+    This is crucial for training stability, especially with RNNs and deep networks.
+    Instead of clipping each gradient individually, we compute the global norm
+    across all parameters and scale uniformly if needed.
+
+    TODO: Implement gradient clipping by global norm
+
+    APPROACH:
+    1. Compute total norm: sqrt(sum of squared gradients across all parameters)
+    2. If total_norm > max_norm, compute clip_coef = max_norm / total_norm
+    3. Scale all gradients by clip_coef: grad *= clip_coef
+    4. Return the original norm for monitoring
+
+    EXAMPLE:
+    >>> params = [Tensor([1, 2, 3], requires_grad=True)]
+    >>> params[0].grad = Tensor([10, 20, 30])  # Large gradients
+    >>> original_norm = clip_grad_norm(params, max_norm=1.0)
+    >>> print(f"Clipped norm: {np.linalg.norm(params[0].grad.data):.2f}")  # Should be ≤ 1.0
+
+    HINTS:
+    - Use np.linalg.norm() to compute norms
+    - Only clip if total_norm > max_norm
+    - Modify gradients in-place for efficiency
+    """
+    ### BEGIN SOLUTION
+    if not parameters:
         return 0.0
 
-# %% [markdown]
-"""
-## 🔧 DEVELOPMENT
-"""
+    # Collect all gradients and compute global norm
+    total_norm = 0.0
+    for param in parameters:
+        if hasattr(param, 'grad') and param.grad is not None:
+            total_norm += np.sum(param.grad.data ** 2)
+
+    total_norm = np.sqrt(total_norm)
+
+    # Clip if necessary
+    if total_norm > max_norm:
+        clip_coef = max_norm / total_norm
+        for param in parameters:
+            if hasattr(param, 'grad') and param.grad is not None:
+                param.grad.data *= clip_coef
+
+    return float(total_norm)
+    ### END SOLUTION
 
 # %% [markdown]
 """
-## Step 1: Understanding Loss Functions
-
-### What are Loss Functions?
-Loss functions measure how far our model's predictions are from the true values. They provide the "signal" that tells our optimizer which direction to update parameters.
-
-### Visual Understanding: Loss Function Landscapes
-```
-Loss Landscape Visualization:
-
-    High Loss         Low Loss          Zero Loss
-       ↓                ↓                 ↓
-   ┌─────────┐      ┌─────────┐      ┌─────────┐
-   │    🔥   │      │    📊   │      │    ✅   │
-   │ L=10.5  │  →   │  L=2.1  │  →   │  L=0.0  │
-   │ (bad)   │      │ (better)│      │(perfect)│
-   └─────────┘      └─────────┘      └─────────┘
-   
-   Training Direction: Always move toward lower loss
-```
-
-### The Mathematical Foundation
-Training a neural network is an optimization problem:
-```
-Optimization Equation:
-    θ* = argmin_θ L(f(x; θ), y)
-    
-Visual Flow:
-    Input → Model → Prediction → Loss Function → Gradient → Update
-     x   →  f(θ) →    ŷ      →    L(ŷ,y)    →   ∇L   →   θ'
-```
-
-Where:
-- `θ` = model parameters (weights and biases)
-- `f(x; θ)` = model predictions  
-- `y` = true labels
-- `L` = loss function
-- `θ*` = optimal parameters
-
-### Loss Function Types & Trade-offs
-
-#### **Mean Squared Error (MSE)** - For Regression
-```
-MSE Behavior:
-    Error: -2  -1   0   +1  +2
-    Loss:  4   1   0    1   4
-           ↑   ↑   ↑    ↑   ↑
-      Heavy penalty for large errors
-
-Formula: MSE = (1/n) * Σ(y_pred - y_true)²
-Gradient: ∂MSE/∂pred = 2 * (y_pred - y_true)
-```
-- **Use case**: Regression problems (predicting continuous values)
-- **Properties**: Heavily penalizes large errors, smooth gradients
-- **Trade-off**: Sensitive to outliers but provides strong learning signal
-
-#### **Cross-Entropy Loss** - For Classification  
-```
-Cross-Entropy Behavior:
-    Confidence:  0.01  0.1  0.5  0.9  0.99
-    Loss:        4.6   2.3  0.7  0.1  0.01
-                 ↑     ↑    ↑    ↑     ↑
-            Heavily penalizes wrong confidence
-
-Formula: CE = -Σ y_true * log(y_pred)
-With Softmax: CE = -log(softmax(logits)[true_class])
-```
-- **Use case**: Multi-class classification
-- **Properties**: Penalizes confident wrong predictions exponentially
-- **Trade-off**: Provides strong learning signal but can be unstable
-
-#### **Binary Cross-Entropy** - For Binary Problems
-```
-Binary CE Behavior:
-    True=1, Pred: 0.1   0.5   0.9   0.99
-    Loss:         2.3   0.7   0.1   0.01
-                  ↑     ↑     ↑     ↑
-              Higher loss for wrong predictions
-
-Formula: BCE = -y*log(p) - (1-y)*log(1-p)
-Symmetric: Same penalty for false positives/negatives
-```
-- **Use case**: Binary classification (yes/no, spam/ham)
-- **Properties**: Symmetric around 0.5 probability
-- **Trade-off**: Balanced but may need class weighting for imbalanced data
-
-Let's implement these essential loss functions!
+### 🧪 Unit Test: Gradient Clipping
+This test validates our gradient clipping implementation.
+**What we're testing**: Global norm clipping properly rescales large gradients
+**Why it matters**: Prevents exploding gradients that can destroy training
+**Expected**: Gradients scaled down when norm exceeds threshold
 """
 
-# %% nbgrader={"grade": false, "grade_id": "mse-loss", "locked": false, "schema_version": 3, "solution": true, "task": false}
-#| export
-class MeanSquaredError:
-    """
-    Mean Squared Error Loss for Regression
-    
-    Measures the average squared difference between predictions and targets.
-    MSE = (1/n) * Σ(y_pred - y_true)²
-    """
-    
-    def __init__(self):
-        """Initialize MSE loss function."""
-        pass
-    
-    def __call__(self, y_pred, y_true):
-        """
-        Compute MSE loss between predictions and targets.
-        
-        Args:
-            y_pred: Model predictions (Tensor or Variable, shape: [batch_size, ...])
-            y_true: True targets (Tensor or Variable, shape: [batch_size, ...])
-            
-        Returns:
-            Variable with scalar loss value that supports .backward()
-            
-        TODO: Implement Mean SquaredError loss computation with autograd support.
-        
-        STEP-BY-STEP IMPLEMENTATION:
-        1. Convert inputs to Variables if needed for autograd support
-        2. Compute difference using Variable arithmetic: diff = y_pred - y_true
-        3. Square the differences: squared_diff = diff * diff
-        4. Take mean over all elements using Variable operations
-        5. Return as Variable that supports .backward() for gradient computation
-        
-        EXAMPLE:
-        y_pred = Variable([[1.0, 2.0], [3.0, 4.0]], requires_grad=True)
-        y_true = Variable([[1.5, 2.5], [2.5, 3.5]], requires_grad=False)
-        loss = mse_loss(y_pred, y_true)
-        loss.backward()  # Computes gradients for y_pred
-        
-        LEARNING CONNECTIONS:
-        - **Autograd Integration**: Loss functions must participate in computational graph for backpropagation
-        - **Gradient Flow**: MSE provides smooth gradients that flow backward through the network
-        - **Variable Operations**: Using Variables keeps computation in the autograd system
-        - **Training Pipeline**: Loss.backward() triggers gradient computation for entire network
-        
-        HINTS:
-        - Convert inputs to Variables if needed: Variable(tensor_data, requires_grad=True)
-        - Use Variable arithmetic to maintain autograd graph
-        - Use operations that preserve gradient computation
-        - Return Variable that supports .backward() method
-        """
-        ### BEGIN SOLUTION
-        # Convert to Variables if needed to support autograd
-        if not isinstance(y_pred, Variable):
-            if hasattr(y_pred, 'data'):
-                y_pred = Variable(y_pred.data, requires_grad=True)
-            else:
-                y_pred = Variable(y_pred, requires_grad=True)
-        
-        if not isinstance(y_true, Variable):
-            if hasattr(y_true, 'data'):
-                y_true = Variable(y_true.data, requires_grad=False)  # Targets don't need gradients
-            else:
-                y_true = Variable(y_true, requires_grad=False)
-        
-        # MSE Computation Visual:
-        # Step 1: diff = pred - true    (element-wise difference)
-        # Step 2: squared = diff²       (penalize large errors heavily) 
-        # Step 3: mean = Σ(squared)/n   (average across all samples)
-        
-        diff = y_pred - y_true  # Variable subtraction
-        squared_diff = diff * diff  # Variable multiplication (squares each error)
-        
-        # Clean mean operation - get raw numpy array
-        # Use global helper function to extract numpy data cleanly
-        squared_diff_data = extract_numpy_data(squared_diff)
-        mean_data = np.mean(squared_diff_data)
-        
-        # Educational Note: In full PyTorch, autograd would handle this automatically
-        # For Module 8 students, we focus on training loop patterns
-        # Create loss Variable (simplified for educational use)
-        loss = Variable(mean_data, requires_grad=y_pred.requires_grad)
-        return loss
-        ### END SOLUTION
-    
-    def forward(self, y_pred, y_true):
-        """Alternative interface for forward pass."""
-        return self.__call__(y_pred, y_true)
-    
+# %% nbgrader={"grade": true, "grade_id": "test_clipping", "locked": true, "points": 10}
+def test_unit_clip_grad_norm():
+    """🔬 Test clip_grad_norm implementation."""
+    print("🔬 Unit Test: Gradient Clipping...")
 
-# 🔍 SYSTEMS INSIGHT #1: Training Performance Analysis
-def analyze_training_performance():
-    """Consolidated analysis of training performance characteristics."""
-    try:
-        print("📊 Training Performance Analysis:")
-        print(f"  • MSE Loss: O(N) time, 4x memory overhead (pred + true + diff + squared)")
-        print(f"  • Batch processing: 10-50x faster than single samples due to vectorization")
-        print(f"  • Training bottlenecks: Data loading > Model forward > Gradient computation")
-        print(f"  • Memory scaling: Batch size directly impacts GPU memory (watch for OOM)")
-        print(f"  • Convergence: Loss oscillation normal early, smoothing indicates learning")
+    # Create mock parameters with gradients (simulating Tensor.grad)
+    class MockParam:
+        def __init__(self, grad_data):
+            self.grad = type('grad', (), {'data': np.array(grad_data)})()
 
-    except Exception as e:
-        print(f"⚠️ Analysis failed: {e}")
+    # Test case 1: Large gradients that need clipping
+    params = [
+        MockParam([3.0, 4.0]),  # norm = 5.0
+        MockParam([6.0, 8.0])   # norm = 10.0
+    ]
+    # Total norm = sqrt(5² + 10²) = sqrt(125) ≈ 11.18
+
+    original_norm = clip_grad_norm(params, max_norm=1.0)
+
+    # Check original norm was large
+    assert original_norm > 1.0, f"Original norm should be > 1.0, got {original_norm}"
+
+    # Check gradients were clipped
+    new_norm = 0.0
+    for param in params:
+        new_norm += np.sum(param.grad.data ** 2)
+    new_norm = np.sqrt(new_norm)
+
+    print(f"Original norm: {original_norm:.2f}")
+    print(f"Clipped norm: {new_norm:.2f}")
+
+    assert abs(new_norm - 1.0) < 1e-6, f"Clipped norm should be 1.0, got {new_norm}"
+
+    # Test case 2: Small gradients that don't need clipping
+    small_params = [MockParam([0.1, 0.2])]
+    original_small = clip_grad_norm(small_params, max_norm=1.0)
+
+    assert original_small < 1.0, "Small gradients shouldn't be clipped"
+
+    print("✅ Gradient clipping works correctly!")
+
+test_unit_clip_grad_norm()
 
 # %% [markdown]
 """
-### 🧪 Unit Test: MSE Loss
+### The Trainer Class - Orchestrating Complete Training
 
-Let's test our MSE loss implementation with known values.
+The Trainer class is like a conductor orchestrating a symphony - it coordinates all the components (model, optimizer, loss function, scheduler) to create beautiful music (successful training).
+
+#### Training Loop Architecture
+
+The training loop follows a consistent pattern across all machine learning:
+
+```
+Training Loop Structure:
+
+for epoch in range(num_epochs):
+    ┌─────────────────── TRAINING PHASE ───────────────────┐
+    │                                                       │
+    │  for batch in dataloader:                            │
+    │      ┌─── Forward Pass ───┐                          │
+    │      │ 1. input → model   │                          │
+    │      │ 2. predictions     │                          │
+    │      └───────────────────┘                          │
+    │               ↓                                      │
+    │      ┌─── Loss Computation ───┐                     │
+    │      │ 3. loss = loss_fn()    │                     │
+    │      └───────────────────────┘                     │
+    │               ↓                                      │
+    │      ┌─── Backward Pass ───┐                       │
+    │      │ 4. loss.backward()  │                       │
+    │      │ 5. gradients        │                       │
+    │      └────────────────────┘                       │
+    │               ↓                                      │
+    │      ┌─── Parameter Update ───┐                    │
+    │      │ 6. optimizer.step()    │                    │
+    │      │ 7. zero gradients      │                    │
+    │      └───────────────────────┘                    │
+    └───────────────────────────────────────────────────┘
+             ↓
+    ┌─── Learning Rate Update ───┐
+    │ 8. scheduler.step()         │
+    └────────────────────────────┘
+```
+
+#### Key Features
+
+- **Train/Eval Modes**: Different behavior during training vs evaluation
+- **Gradient Accumulation**: Effective larger batch sizes with limited memory
+- **Checkpointing**: Save/resume training state for long experiments
+- **Progress Tracking**: Monitor loss, learning rate, and other metrics
 """
 
-# %% nbgrader={"grade": false, "grade_id": "test-mse-loss", "locked": false, "schema_version": 3, "solution": false, "task": false}
-def test_unit_mse_loss():
-    """Test MSE loss with comprehensive examples."""
-    print("🔬 Unit Test: MSE Loss...")
-    
-    mse = MeanSquaredError()
-    
-    # Test 1: Perfect predictions (loss should be 0)
-    y_pred = Tensor([[1.0, 2.0], [3.0, 4.0]])
-    y_true = Tensor([[1.0, 2.0], [3.0, 4.0]])
-    loss = mse(y_pred, y_true)
-    loss_value = get_tensor_value(loss)
-    assert abs(loss_value) < 1e-6, f"Perfect predictions should have loss ≈ 0, got {loss_value}"
-    print("✅ Perfect predictions test passed")
-    
-    # Test 2: Known loss computation
-    y_pred = Tensor([[1.0, 2.0]])
-    y_true = Tensor([[0.0, 1.0]])
-    loss = mse(y_pred, y_true)
-    expected = 1.0  # [(1-0)² + (2-1)²] / 2 = [1 + 1] / 2 = 1.0
-    loss_value = get_tensor_value(loss)
-    assert abs(loss_value - expected) < 1e-6, f"Expected loss {expected}, got {loss_value}"
-    print("✅ Known loss computation test passed")
-    
-    # Test 3: Batch processing
-    y_pred = Tensor([[1.0, 2.0], [3.0, 4.0]])
-    y_true = Tensor([[1.5, 2.5], [2.5, 3.5]])
-    loss = mse(y_pred, y_true)
-    expected = 0.25  # All squared differences are 0.25
-    loss_value = get_tensor_value(loss)
-    assert abs(loss_value - expected) < 1e-6, f"Expected batch loss {expected}, got {loss_value}"
-    print("✅ Batch processing test passed")
-    
-    # Test 4: Single value
-    y_pred = Tensor([5.0])
-    y_true = Tensor([3.0])
-    loss = mse(y_pred, y_true)
-    expected = 4.0  # (5-3)² = 4
-    loss_value = get_tensor_value(loss)
-    assert abs(loss_value - expected) < 1e-6, f"Expected single value loss {expected}, got {loss_value}"
-    print("✅ Single value test passed")
-    
-    print("🎯 MSE Loss: All tests passed!")
-
-# Test function defined (called in main block) 
-
-# %% nbgrader={"grade": false, "grade_id": "crossentropy-loss", "locked": false, "schema_version": 3, "solution": true, "task": false}
-#| export
-class CrossEntropyLoss:
-    """
-    Cross-Entropy Loss for Multi-Class Classification
-    
-    Measures the difference between predicted probability distribution and true labels.
-    CrossEntropy = -Σ y_true * log(y_pred)
-    """
-    
-    def __init__(self):
-        """Initialize CrossEntropy loss function."""
-        pass
-    
-    def __call__(self, y_pred, y_true):
-        """
-        Compute CrossEntropy loss between predictions and targets.
-        
-        Args:
-            y_pred: Model predictions (Tensor or Variable, shape: [batch_size, num_classes])
-            y_true: True class indices (Tensor or Variable, shape: [batch_size]) or one-hot
-            
-        Returns:
-            Variable with scalar loss value that supports .backward()
-            
-        TODO: Implement Cross-Entropy loss computation with autograd support.
-        
-        STEP-BY-STEP IMPLEMENTATION:
-        1. Convert inputs to Variables if needed for autograd support
-        2. Handle both class indices and one-hot encoded labels
-        3. Apply softmax to predictions for probability distribution
-        4. Compute log probabilities while maintaining gradient flow
-        5. Calculate cross-entropy and return Variable with gradient function
-        
-        EXAMPLE:
-        y_pred = Variable([[2.0, 1.0, 0.1], [0.5, 2.1, 0.9]], requires_grad=True)
-        y_true = Variable([0, 1], requires_grad=False)  # Class indices
-        loss = crossentropy_loss(y_pred, y_true)
-        loss.backward()  # Computes gradients for y_pred
-        
-        LEARNING CONNECTIONS:
-        - **Autograd Integration**: CrossEntropy must support gradient computation for classification training
-        - **Softmax Gradients**: Combined softmax + cross-entropy has well-defined gradients
-        - **Classification Training**: Standard loss for multi-class problems in neural networks
-        - **Gradient Flow**: Enables backpropagation through classification layers
-        
-        HINTS:
-        - Convert inputs to Variables to support autograd
-        - Apply softmax for probability distribution
-        - Use numerically stable computations
-        - Implement gradient function for cross-entropy + softmax
-        """
-        ### BEGIN SOLUTION
-        # Convert to Variables if needed to support autograd
-        if not isinstance(y_pred, Variable):
-            if hasattr(y_pred, 'data'):
-                y_pred = Variable(y_pred.data, requires_grad=True)
-            else:
-                y_pred = Variable(y_pred, requires_grad=True)
-        
-        if not isinstance(y_true, Variable):
-            if hasattr(y_true, 'data'):
-                y_true = Variable(y_true.data, requires_grad=False)
-            else:
-                y_true = Variable(y_true, requires_grad=False)
-        
-        # Extract raw numpy arrays using global helper function
-        pred_data = extract_numpy_data(y_pred)
-        true_data = extract_numpy_data(y_true)
-        
-        # Handle both 1D and 2D prediction arrays
-        if pred_data.ndim == 1:
-            pred_data = pred_data.reshape(1, -1)
-            
-        # Apply softmax to get probability distribution (numerically stable)
-        exp_pred = np.exp(pred_data - np.max(pred_data, axis=1, keepdims=True))
-        softmax_pred = exp_pred / np.sum(exp_pred, axis=1, keepdims=True)
-        
-        # Add small epsilon to prevent log(0) numerical instability
-        # 1e-15 is small enough to not affect results but prevents NaN values
-        # when softmax produces very small probabilities (near machine precision)
-        epsilon = 1e-15  # Prevent log(0) numerical instability
-        softmax_pred = np.clip(softmax_pred, epsilon, 1.0 - epsilon)
-        
-        # Handle class indices vs one-hot encoding
-        if len(true_data.shape) == 1:
-            # y_true contains class indices
-            batch_size = true_data.shape[0]
-            log_probs = np.log(softmax_pred[np.arange(batch_size), true_data.astype(int)])
-            loss_value = -np.mean(log_probs)
-            
-            # Create one-hot for gradient computation
-            one_hot = np.zeros_like(softmax_pred)
-            one_hot[np.arange(batch_size), true_data.astype(int)] = 1.0
-        else:
-            # y_true is one-hot encoded
-            one_hot = true_data
-            log_probs = np.log(softmax_pred)
-            loss_value = -np.mean(np.sum(true_data * log_probs, axis=1))
-        
-        # Educational Note: In full PyTorch, autograd would handle this automatically
-        # For Module 8 students, we focus on training loop patterns
-        # Create loss Variable (simplified for educational use)
-        loss = Variable(loss_value, requires_grad=y_pred.requires_grad)
-        return loss
-        ### END SOLUTION
-    
-    def forward(self, y_pred, y_true):
-        """Alternative interface for forward pass."""
-        return self.__call__(y_pred, y_true)
-    
-
-# Test function defined (called in main block)
-
-# %% [markdown]
-"""
-### 🧪 Unit Test: CrossEntropy Loss
-
-Let's test our CrossEntropy loss implementation.
-"""
-
-# %% nbgrader={"grade": false, "grade_id": "test-crossentropy-loss", "locked": false, "schema_version": 3, "solution": false, "task": false}
-def test_unit_crossentropy_loss():
-    """Test CrossEntropy loss with comprehensive examples."""
-    print("🔬 Unit Test: CrossEntropy Loss...")
-    
-    ce = CrossEntropyLoss()
-    
-    # Test 1: Perfect predictions
-    y_pred = Tensor([[10.0, 0.0, 0.0], [0.0, 10.0, 0.0]])  # Very confident correct predictions
-    y_true = Tensor([0, 1])  # Class indices
-    loss = ce(y_pred, y_true)
-    loss_value = get_tensor_value(loss)
-    assert loss_value < 0.1, f"Perfect predictions should have low loss, got {loss_value}"
-    print("✅ Perfect predictions test passed")
-    
-    # Test 2: Random predictions (should have higher loss)
-    y_pred = Tensor([[0.0, 0.0, 0.0], [0.0, 0.0, 0.0]])  # Uniform after softmax
-    y_true = Tensor([0, 1])
-    loss = ce(y_pred, y_true)
-    expected_random = -np.log(1.0/3.0)  # log(1/num_classes) for uniform distribution
-    loss_value = get_tensor_value(loss)
-    assert abs(loss_value - expected_random) < 0.1, f"Random predictions should have loss ≈ {expected_random}, got {loss_value}"
-    print("✅ Random predictions test passed")
-    
-    # Test 3: Binary classification
-    y_pred = Tensor([[2.0, 1.0], [1.0, 2.0]])
-    y_true = Tensor([0, 1])
-    loss = ce(y_pred, y_true)
-    loss_value = get_tensor_value(loss)
-    assert 0.0 < loss_value < 2.0, f"Binary classification loss should be reasonable, got {loss_value}"
-    print("✅ Binary classification test passed")
-    
-    # Test 4: One-hot encoded labels
-    y_pred = Tensor([[2.0, 1.0, 0.0], [0.0, 2.0, 1.0]])
-    y_true = Tensor([[1.0, 0.0, 0.0], [0.0, 1.0, 0.0]])  # One-hot encoded
-    loss = ce(y_pred, y_true)
-    loss_value = get_tensor_value(loss)
-    assert 0.0 < loss_value < 2.0, f"One-hot encoded loss should be reasonable, got {loss_value}"
-    print("✅ One-hot encoded labels test passed")
-    
-    print("🎯 CrossEntropy Loss: All tests passed!")
-
-# Test function defined (called in main block)
-
-# %% nbgrader={"grade": false, "grade_id": "binary-crossentropy-loss", "locked": false, "schema_version": 3, "solution": true, "task": false}
-#| export
-class BinaryCrossEntropyLoss:
-    """
-    Binary Cross-Entropy Loss for Binary Classification
-    
-    Measures the difference between predicted probabilities and binary labels.
-    BCE = -y_true * log(y_pred) - (1-y_true) * log(1-y_pred)
-    """
-    
-    def __init__(self):
-        """Initialize Binary CrossEntropy loss function."""
-        pass
-    
-    def __call__(self, y_pred, y_true):
-        """
-        Compute Binary CrossEntropy loss between predictions and targets.
-        
-        Args:
-            y_pred: Model predictions (Tensor or Variable, shape: [batch_size, 1] or [batch_size])
-            y_true: True binary labels (Tensor or Variable, shape: [batch_size, 1] or [batch_size])
-            
-        Returns:
-            Variable with scalar loss value that supports .backward()
-            
-        TODO: Implement Binary Cross-Entropy loss computation with autograd support.
-        
-        STEP-BY-STEP IMPLEMENTATION:
-        1. Convert inputs to Variables if needed for autograd support
-        2. Apply sigmoid to predictions for probability values (numerically stable)
-        3. Compute binary cross-entropy loss while maintaining gradient flow
-        4. Create gradient function for sigmoid + BCE combination
-        5. Return Variable that supports .backward() for gradient computation
-        
-        EXAMPLE:
-        y_pred = Variable([[2.0], [0.0], [-1.0]], requires_grad=True)  # Raw logits
-        y_true = Variable([[1.0], [1.0], [0.0]], requires_grad=False)   # Binary labels
-        loss = bce_loss(y_pred, y_true)
-        loss.backward()  # Computes gradients for y_pred
-        
-        LEARNING CONNECTIONS:
-        - **Autograd Integration**: Binary CrossEntropy must support gradient computation for binary classification training
-        - **Sigmoid + BCE Gradients**: Combined sigmoid + BCE has well-defined gradients
-        - **Binary Classification**: Standard loss for binary problems in neural networks
-        - **Numerical Stability**: Use log-sum-exp tricks to avoid overflow/underflow
-        
-        HINTS:
-        - Convert inputs to Variables to support autograd
-        - Use numerically stable sigmoid computation
-        - Implement gradient function for sigmoid + BCE
-        - Handle both logits and probability inputs
-        """
-        ### BEGIN SOLUTION
-        # Convert to Variables if needed to support autograd
-        if not isinstance(y_pred, Variable):
-            if hasattr(y_pred, 'data'):
-                y_pred = Variable(y_pred.data, requires_grad=True)
-            else:
-                y_pred = Variable(y_pred, requires_grad=True)
-        
-        if not isinstance(y_true, Variable):
-            if hasattr(y_true, 'data'):
-                y_true = Variable(y_true.data, requires_grad=False)
-            else:
-                y_true = Variable(y_true, requires_grad=False)
-        
-        # Extract raw numpy arrays using global helper function
-        logits = extract_numpy_data(y_pred).flatten()
-        labels = extract_numpy_data(y_true).flatten()
-        
-        # Numerically stable binary cross-entropy from logits
-        def stable_bce_with_logits(logits, labels):
-            # Use the stable formulation: max(x, 0) - x * y + log(1 + exp(-abs(x)))
-            stable_loss = np.maximum(logits, 0) - logits * labels + np.log(1 + np.exp(-np.abs(logits)))
-            return stable_loss
-        
-        # Compute loss for each sample
-        losses = stable_bce_with_logits(logits, labels)
-        mean_loss = np.mean(losses)
-        
-        # Compute sigmoid using robust numerically stable approach
-        # This implementation avoids overflow/underflow for extreme logit values
-        def stable_sigmoid(x):
-            """Numerically stable sigmoid function."""
-            # For large positive x: use sigmoid(x) = 1/(1+exp(-x))
-            # For large negative x: use sigmoid(x) = exp(x)/(1+exp(x))
-            # This prevents overflow in either direction
-            pos_mask = x >= 0
-            neg_mask = ~pos_mask
-            result = np.zeros_like(x)
-            
-            # Handle positive values
-            if np.any(pos_mask):
-                exp_neg = np.exp(-x[pos_mask])
-                result[pos_mask] = 1.0 / (1.0 + exp_neg)
-            
-            # Handle negative values  
-            if np.any(neg_mask):
-                exp_pos = np.exp(x[neg_mask])
-                result[neg_mask] = exp_pos / (1.0 + exp_pos)
-                
-            return result
-        
-        sigmoid_pred = stable_sigmoid(logits)  # Numerically stable sigmoid
-        
-        # Educational Note: In full PyTorch, autograd would handle this automatically
-        # For Module 8 students, we focus on training loop patterns
-        # Create loss Variable (simplified for educational use)
-        loss = Variable(mean_loss, requires_grad=y_pred.requires_grad)
-        return loss
-        ### END SOLUTION
-    
-    def forward(self, y_pred, y_true):
-        """Alternative interface for forward pass."""
-        return self.__call__(y_pred, y_true)
-    
-
-# Test function defined (called in main block)
-
-# %% [markdown]
-"""
-### 🧪 Unit Test: Binary CrossEntropy Loss
-
-Let's test our Binary CrossEntropy loss implementation.
-"""
-
-# %% nbgrader={"grade": false, "grade_id": "test-binary-crossentropy-loss", "locked": false, "schema_version": 3, "solution": false, "task": false}
-def test_unit_binary_crossentropy_loss():
-    """Test Binary CrossEntropy loss with comprehensive examples."""
-    print("🔬 Unit Test: Binary CrossEntropy Loss...")
-    
-    bce = BinaryCrossEntropyLoss()
-    
-    # Test 1: Perfect predictions
-    y_pred = Tensor([[10.0], [-10.0]])  # Very confident correct predictions
-    y_true = Tensor([[1.0], [0.0]])
-    loss = bce(y_pred, y_true)
-    loss_value = get_tensor_value(loss)
-    assert loss_value < 0.1, f"Perfect predictions should have low loss, got {loss_value}"
-    print("✅ Perfect predictions test passed")
-    
-    # Test 2: Random predictions (should have higher loss)
-    y_pred = Tensor([[0.0], [0.0]])  # 0.5 probability after sigmoid
-    y_true = Tensor([[1.0], [0.0]])
-    loss = bce(y_pred, y_true)
-    expected_random = -np.log(0.5)  # log(0.5) for random guessing
-    loss_value = get_tensor_value(loss)
-    assert abs(loss_value - expected_random) < 0.1, f"Random predictions should have loss ≈ {expected_random}, got {loss_value}"
-    print("✅ Random predictions test passed")
-    
-    # Test 3: Batch processing
-    y_pred = Tensor([[1.0], [2.0], [-1.0]])
-    y_true = Tensor([[1.0], [1.0], [0.0]])
-    loss = bce(y_pred, y_true)
-    loss_value = get_tensor_value(loss)
-    assert 0.0 < loss_value < 2.0, f"Batch processing loss should be reasonable, got {loss_value}"
-    print("✅ Batch processing test passed")
-    
-    # Test 4: Edge cases
-    y_pred = Tensor([[100.0], [-100.0]])  # Extreme values
-    y_true = Tensor([[1.0], [0.0]])
-    loss = bce(y_pred, y_true)
-    loss_value = get_tensor_value(loss)
-    assert loss_value < 0.1, f"Extreme correct predictions should have low loss, got {loss_value}"
-    print("✅ Edge cases test passed")
-    
-    print("🎯 Binary CrossEntropy Loss: All tests passed!")
-
-# Test function defined (called in main block) 
-
-# %% [markdown]
-"""
-## Step 2: Understanding Metrics
-
-### What are Metrics?
-Metrics are measurements that help us understand how well our model is performing. Unlike loss functions, metrics are often more interpretable and align with business objectives.
-
-### Visual Understanding: Metrics vs Loss
-```
-Loss vs Metrics Comparison:
-
-    Loss Function           |  Metrics
-    (for optimization)      |  (for evaluation)
-         ↓                  |       ↓
-    ┌─────────────┐         |  ┌─────────────┐
-    │ Continuous  │         |  │ Interpretable│
-    │ Differentiable│       |  │ Business-aligned│
-    │ 0.693147... │         |  │ 85.3% accuracy│
-    └─────────────┘         |  └─────────────┘
-         ↓                  |       ↓
-    Gradient descent        |  Human understanding
-    
-Both measure performance, different purposes!
-```
-
-### Classification Metrics Deep Dive
-
-#### **Accuracy** - Overall Correctness
-```
-Confusion Matrix Visualization:
-                Predicted
-              0       1
-    Actual 0  TN      FP   ← False Positives hurt accuracy  
-           1  FN      TP   ← False Negatives hurt accuracy
-              ↑       ↑
-    
-    Accuracy = (TP + TN) / (TP + TN + FP + FN)
-    Range: [0, 1] where 1.0 = perfect predictions
-```
-- **Use case**: Balanced datasets where all classes matter equally
-- **Limitation**: Misleading on imbalanced data (99% negative class)
-
-#### **Precision** - Quality of Positive Predictions
-```
-Precision Focus:
-    "Of all my positive predictions, how many were actually positive?"
-    
-    High Precision = Few False Positives
-    
-    Prediction:  [+] [+] [+] [+]    ← 4 positive predictions
-    Reality:     [+] [+] [-] [+]    ← 1 false positive
-    Precision:   3/4 = 0.75
-    
-    Formula: TP / (TP + FP)
-```
-- **Critical for**: Spam detection, medical diagnosis (avoid false alarms)
-- **Trade-off**: High precision often means lower recall
-
-#### **Recall** - Coverage of Actual Positives  
-```
-Recall Focus:
-    "Of all actual positives, how many did I find?"
-    
-    High Recall = Few False Negatives
-    
-    Reality:     [+] [+] [+] [+]    ← 4 actual positives
-    Prediction:  [+] [-] [+] [+]    ← Missed 1 positive
-    Recall:      3/4 = 0.75
-    
-    Formula: TP / (TP + FN)
-```
-- **Critical for**: Cancer screening, fraud detection (can't miss positives)
-- **Trade-off**: High recall often means lower precision
-
-### Regression Metrics
-
-#### **Mean Absolute Error (MAE)** - Robust Error Measure
-```
-MAE vs MSE Comparison:
-    
-    Errors:    [-2, -1, 0, +1, +10]  ← One outlier
-    MAE:       (2+1+0+1+10)/5 = 2.8   ← Robust to outlier
-    MSE:       (4+1+0+1+100)/5 = 21.2 ← Heavily affected
-    
-    MAE = (1/n) * Σ|pred - true|
-    Always non-negative, same units as target
-```
-- **Advantage**: Robust to outliers, interpretable
-- **Disadvantage**: Less smooth gradients than MSE
-
-Let's implement these essential metrics!
-"""
-
-# Test function defined (called in main block)
-
-# %% nbgrader={"grade": false, "grade_id": "accuracy-metric", "locked": false, "schema_version": 3, "solution": true, "task": false}
-#| export
-class Accuracy:
-    """
-    Accuracy Metric for Classification
-    
-    Computes the fraction of correct predictions.
-    Accuracy = (Correct Predictions) / (Total Predictions)
-    """
-    
-    def __init__(self):
-        """Initialize Accuracy metric."""
-        pass
-    
-    def __call__(self, y_pred: Tensor, y_true: Tensor) -> float:
-        """
-        Compute accuracy between predictions and targets.
-        
-        Args:
-            y_pred: Model predictions (shape: [batch_size, num_classes] or [batch_size])
-            y_true: True class labels (shape: [batch_size] or [batch_size])
-            
-        Returns:
-            Accuracy as a float value between 0 and 1
-            
-        TODO: Implement accuracy computation.
-        
-        STEP-BY-STEP IMPLEMENTATION:
-        1. Convert predictions to class indices (argmax for multi-class)
-        2. Convert true labels to class indices if needed
-        3. Count correct predictions
-        4. Divide by total predictions
-        5. Return as float
-        
-        EXAMPLE:
-        y_pred = Tensor([[0.9, 0.1], [0.2, 0.8], [0.6, 0.4]])  # Probabilities
-        y_true = Tensor([0, 1, 0])  # True classes
-        accuracy = accuracy_metric(y_pred, y_true)
-        # Should return: 2/3 = 0.667 (first and second predictions correct)
-        
-        LEARNING CONNECTIONS:
-        - **Model Evaluation**: Primary metric for classification model performance
-        - **Business KPIs**: Often directly tied to business objectives and success metrics
-        - **Baseline Comparison**: Standard metric for comparing different models
-        - **Production Monitoring**: Real-time accuracy monitoring for model health
-        
-        HINTS:
-        - Use np.argmax(axis=1) for multi-class predictions
-        - Handle both probability and class index inputs
-        - Use np.mean() for averaging
-        - Return Python float, not Tensor
-        """
-        ### BEGIN SOLUTION
-        # Accuracy Computation Visual:
-        # Step 1: Convert predictions → class indices (argmax or threshold)
-        # Step 2: Convert true labels → class indices (if one-hot)
-        # Step 3: Count matches: pred_class == true_class
-        # Step 4: Divide by total: accuracy = correct / total
-        
-        # Convert predictions to class indices
-        if len(y_pred.data.shape) > 1 and y_pred.data.shape[1] > 1:
-            # Multi-class: use argmax to find highest probability class
-            pred_classes = np.argmax(y_pred.data, axis=1)
-        else:
-            # Binary classification: threshold at 0.5
-            pred_classes = (y_pred.data.flatten() > 0.5).astype(int)
-        
-        # Convert true labels to class indices if needed
-        if len(y_true.data.shape) > 1 and y_true.data.shape[1] > 1:
-            # One-hot encoded: [0,1,0] → class 1
-            true_classes = np.argmax(y_true.data, axis=1)
-        else:
-            # Already class indices: [0, 1, 2, ...]
-            true_classes = y_true.data.flatten().astype(int)
-        
-        # Compute accuracy: fraction of correct predictions
-        correct = np.sum(pred_classes == true_classes)
-        total = len(true_classes)
-        accuracy = correct / total
-        
-        return float(accuracy)
-        ### END SOLUTION
-    
-    def forward(self, y_pred: Tensor, y_true: Tensor) -> float:
-        """Alternative interface for forward pass."""
-        return self.__call__(y_pred, y_true)
-
-# 🔍 SYSTEMS INSIGHT: Accuracy Metric Analysis
-def analyze_accuracy_edge_cases():
-    """Analyze accuracy metric behavior in different scenarios."""
-    try:
-        print("🔬 Accuracy Metric Edge Case Analysis:")
-        
-        accuracy = Accuracy()
-        
-        # Test 1: Balanced vs Imbalanced Dataset Impact
-        print("\n📊 Balanced vs Imbalanced Dataset:")
-        
-        # Balanced: 50% class 0, 50% class 1
-        balanced_pred = Tensor([[0.6, 0.4], [0.4, 0.6], [0.6, 0.4], [0.4, 0.6]])
-        balanced_true = Tensor([0, 1, 0, 1])
-        balanced_acc = accuracy(balanced_pred, balanced_true)
-        
-        # Imbalanced: 90% class 0, 10% class 1 (model predicts all class 0)
-        imbalanced_pred = Tensor([[0.9, 0.1]] * 10)  # Always predict class 0
-        imbalanced_true = Tensor([0, 0, 0, 0, 0, 0, 0, 0, 0, 1])  # 9 class 0, 1 class 1
-        imbalanced_acc = accuracy(imbalanced_pred, imbalanced_true)
-        
-        print(f"  Balanced dataset accuracy: {balanced_acc:.3f}")
-        print(f"  Imbalanced dataset accuracy: {imbalanced_acc:.3f}")
-        print(f"  💡 Imbalanced shows {imbalanced_acc:.1%} accuracy but misses all positives!")
-        
-        # Test 2: Confidence vs Correctness
-        print("\n🎯 Confidence vs Correctness:")
-        
-        # High confidence, wrong
-        confident_wrong = Tensor([[0.95, 0.05], [0.05, 0.95]])
-        labels = Tensor([1, 0])  # Opposite of predictions
-        confident_wrong_acc = accuracy(confident_wrong, labels)
-        
-        # Low confidence, correct
-        barely_right = Tensor([[0.51, 0.49], [0.49, 0.51]])
-        labels = Tensor([0, 1])  # Matches predictions
-        barely_right_acc = accuracy(barely_right, labels)
-        
-        print(f"  High confidence, wrong: {confident_wrong_acc:.3f}")
-        print(f"  Low confidence, correct: {barely_right_acc:.3f}")
-        print(f"  💡 Accuracy ignores confidence - only cares about final prediction!")
-        
-        # Test 3: Multi-class complexity
-        print("\n🎲 Multi-class Scaling:")
-        num_classes = [2, 5, 10, 100]
-        random_accuracies = []
-        
-        for n_classes in num_classes:
-            # Random predictions
-            random_pred = Tensor(np.random.randn(1000, n_classes))
-            random_true = Tensor(np.random.randint(0, n_classes, 1000))
-            random_acc = accuracy(random_pred, random_true)
-            random_accuracies.append(random_acc)
-            
-            expected_random = 1.0 / n_classes
-            print(f"  {n_classes:>3} classes: {random_acc:.3f} (expect ~{expected_random:.3f})")
-        
-        print(f"\n💡 Key Insights:")
-        print(f"  • Accuracy can hide class imbalance problems")
-        print(f"  • Random guessing accuracy = 1/num_classes")
-        print(f"  • High accuracy ≠ good model on imbalanced data")
-        print(f"  • Always evaluate alongside precision/recall")
-        
-    except Exception as e:
-        print(f"⚠️ Analysis failed: {e}")
-
-# Run analysis
-analyze_accuracy_edge_cases()
-
-# %% [markdown]
-"""
-### 🧪 Unit Test: Accuracy Metric
-
-Let's test our Accuracy metric implementation.
-"""
-
-# %% nbgrader={"grade": false, "grade_id": "test-accuracy-metric", "locked": false, "schema_version": 3, "solution": false, "task": false}
-def test_unit_accuracy_metric():
-    """Test Accuracy metric with comprehensive examples."""
-    print("🔬 Unit Test: Accuracy Metric...")
-    
-    accuracy = Accuracy()
-    
-    # Test 1: Perfect predictions
-    y_pred = Tensor([[0.9, 0.1], [0.1, 0.9], [0.8, 0.2]])
-    y_true = Tensor([0, 1, 0])
-    acc = accuracy(y_pred, y_true)
-    assert acc == 1.0, f"Perfect predictions should have accuracy 1.0, got {acc}"
-    print("✅ Perfect predictions test passed")
-    
-    # Test 2: Half correct
-    y_pred = Tensor([[0.9, 0.1], [0.9, 0.1], [0.8, 0.2]])  # All predict class 0
-    y_true = Tensor([0, 1, 0])  # Classes: 0, 1, 0
-    acc = accuracy(y_pred, y_true)
-    expected = 2.0/3.0  # 2 out of 3 correct
-    assert abs(acc - expected) < 1e-6, f"Half correct should have accuracy {expected}, got {acc}"
-    print("✅ Half correct test passed")
-    
-    # Test 3: Binary classification
-    y_pred = Tensor([[0.8], [0.3], [0.9], [0.1]])  # Predictions above/below 0.5
-    y_true = Tensor([1, 0, 1, 0])
-    acc = accuracy(y_pred, y_true)
-    assert acc == 1.0, f"Binary classification should have accuracy 1.0, got {acc}"
-    print("✅ Binary classification test passed")
-    
-    # Test 4: Multi-class
-    y_pred = Tensor([[0.7, 0.2, 0.1], [0.1, 0.8, 0.1], [0.1, 0.1, 0.8]])
-    y_true = Tensor([0, 1, 2])
-    acc = accuracy(y_pred, y_true)
-    assert acc == 1.0, f"Multi-class should have accuracy 1.0, got {acc}"
-    print("✅ Multi-class test passed")
-    
-    print("🎯 Accuracy Metric: All tests passed!")
-
-# Test function defined (called in main block)
-
-# %% [markdown]
-"""
-## Step 3: Building the Training Loop
-
-### What is a Training Loop?
-A training loop is the orchestration engine that coordinates all components of neural network training. Think of it as the conductor of an ML orchestra!
-
-### Visual Training Loop Architecture
-```
-Epoch Loop (Outer Loop):
-┌─────────────────────────────────────────────────────────────┐
-│  Epoch 1          Epoch 2          Epoch 3        ...     │
-│     ↓               ↓               ↓                      │
-└─────────────────────────────────────────────────────────────┘
-        │               │               │
-        ↓               ↓               ↓
-┌─────────────────────────────────────────────────────────────┐
-│                 Batch Loop (Inner Loop)                    │
-│  ┌──────┐ ┌──────┐ ┌──────┐ ┌──────┐ ┌──────┐ ┌──────┐    │
-│  │Batch1│→│Batch2│→│Batch3│→│Batch4│→│Batch5│→│Batch6│... │
-│  └──────┘ └──────┘ └──────┘ └──────┘ └──────┘ └──────┘    │
-└─────────────────────────────────────────────────────────────┘
-        │
-        ↓
-┌─────────────────────────────────────────────────────────────┐
-│             Single Training Step (Per Batch)               │
-│                                                             │
-│  Input Data → Forward Pass → Loss → Backward → Update      │
-│      X      →     ŷ        →  L   →    ∇L    →   θ'       │
-│                                                             │
-│  ┌─────────┐ ┌─────────┐ ┌─────────┐ ┌─────────┐           │
-│  │ 📊 Data │→│ 🧠 Model│→│ 📉 Loss │→│ ⚡ Optim│           │
-│  │ Loading │ │ Forward │ │ Compute │ │ Update  │           │
-│  └─────────┘ └─────────┘ └─────────┘ └─────────┘           │
-└─────────────────────────────────────────────────────────────┘
-```
-
-### The 5-Step Training Dance
-```
-Step 1: Forward Pass        Step 2: Loss Computation
-   Input → Model              Prediction vs Truth
-     🔢 → 🧠 → 📊                📊 vs ✅ → 📉
-
-Step 3: Backward Pass       Step 4: Parameter Update
-   Loss → Gradients          Gradients → New Weights
-     📉 → ∇ → ⚡                ⚡ + 🧠 → 🧠'
-
-Step 5: Evaluation          Repeat for next batch!
-   Metrics & Monitoring        🔄 → Next Batch
-     📈 📊 💾
-```
-
-### Memory Flow During Training
-```
-Memory Usage Pattern:
-
-    Forward Pass:          Backward Pass:         After Update:
-┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
-│ Activations     │    │ Activations     │    │ Parameters      │
-│ Parameters      │ →  │ Parameters      │ →  │ (Updated)       │
-│                 │    │ Gradients       │    │                 │
-│                 │    │ (New!)          │    │                 │
-└─────────────────┘    └─────────────────┘    └─────────────────┘
-    ~1x Model Size       ~2x Model Size         ~1x Model Size
-                         (Peak Memory!)         (Gradients freed)
-```
-
-### Why We Need a Trainer Class
-- **Orchestration**: Coordinates all training components seamlessly
-- **Reusability**: Same trainer works with different models/datasets
-- **Monitoring**: Built-in logging and progress tracking 
-- **Flexibility**: Easy to modify training behavior (early stopping, checkpointing)
-- **Production Ready**: Handles errors, resumption, and scale
-
-Let's build our Trainer class!
-"""
-
-# 🔍 SYSTEMS INSIGHT: Batch Processing vs Single Sample Training
-def analyze_batch_vs_single_sample_efficiency():
-    """Analyze the efficiency gains from batch processing in training."""
-    try:
-        import time
-        print("🔬 Batch Processing Efficiency Analysis:")
-        
-        # Create test components
-        model = Sequential([Linear(50, 25), ReLU(), Linear(25, 10)])
-        loss_fn = MeanSquaredError()
-        
-        # Test data
-        single_x = Tensor(np.random.randn(1, 50))  # Single sample
-        single_y = Tensor(np.random.randn(1, 10))
-        
-        batch_x = Tensor(np.random.randn(32, 50))  # Batch of 32
-        batch_y = Tensor(np.random.randn(32, 10))
-        
-        # Time single sample processing (32 times)
-        single_start = time.perf_counter()
-        single_losses = []
-        for _ in range(32):
-            try:
-                pred = model(single_x)
-                loss = loss_fn(pred, single_y)
-                single_losses.append(get_tensor_value(loss))
-            except:
-                single_losses.append(0.5)  # Fallback for testing
-        single_time = time.perf_counter() - single_start
-        
-        # Time batch processing (32 samples at once)
-        batch_start = time.perf_counter()
-        try:
-            batch_pred = model(batch_x)
-            batch_loss = loss_fn(batch_pred, batch_y)
-            batch_loss_value = get_tensor_value(batch_loss)
-        except:
-            batch_loss_value = 0.5  # Fallback for testing
-        batch_time = time.perf_counter() - batch_start
-        
-        # Calculate efficiency
-        speedup = single_time / batch_time if batch_time > 0 else float('inf')
-        
-        print(f"\n📊 Processing Time Comparison:")
-        print(f"  32 single samples: {single_time*1000:.2f}ms")
-        print(f"  1 batch of 32:     {batch_time*1000:.2f}ms")
-        print(f"  Speedup:           {speedup:.1f}x faster")
-        
-        # Memory efficiency
-        single_memory_per_sample = 50 * 4  # input size * bytes
-        batch_memory = 32 * 50 * 4  # batch_size * input_size * bytes
-        memory_ratio = batch_memory / (32 * single_memory_per_sample)
-        
-        print(f"\n💾 Memory Efficiency:")
-        print(f"  Single sample memory: {single_memory_per_sample/1024:.1f}KB per sample")
-        print(f"  Batch memory:         {batch_memory/1024:.1f}KB total")
-        print(f"  Memory ratio:         {memory_ratio:.1f}x (ideal: 1.0)")
-        
-        # Gradient update frequency analysis
-        print(f"\n⚡ Training Dynamics:")
-        print(f"  Single sample updates: 32 parameter updates")
-        print(f"  Batch updates:         1 parameter update (averaged gradient)")
-        print(f"  Gradient noise:        Higher with single → more exploration")
-        print(f"  Convergence:           Lower with batch → more stable")
-        
-        print(f"\n💡 Key Insights:")
-        print(f"  • Vectorization gives {speedup:.1f}x speedup through parallel computation")
-        print(f"  • Larger batches = better GPU utilization")
-        print(f"  • Batch size affects gradient noise and convergence dynamics")
-        print(f"  • Memory usage grows linearly with batch size")
-        
-    except Exception as e:
-        print(f"⚠️ Analysis failed: {e}")
-
-# Run batch efficiency analysis
-analyze_batch_vs_single_sample_efficiency()
-
-# %% nbgrader={"grade": false, "grade_id": "trainer-class", "locked": false, "schema_version": 3, "solution": true, "task": false}
-#| export
+# %% nbgrader={"grade": false, "grade_id": "trainer_class", "locked": false, "solution": true}
 class Trainer:
     """
-    Training Loop Orchestrator
-    
-    Coordinates model training with loss functions, optimizers, and metrics.
+    Complete training orchestrator for neural networks.
+
+    Handles the full training lifecycle: forward pass, loss computation,
+    backward pass, optimization, scheduling, checkpointing, and evaluation.
+
+    This is the central class that brings together all the components
+    you've built in previous modules.
+
+    TODO: Implement complete Trainer class
+
+    APPROACH:
+    1. Store model, optimizer, loss function, and optional scheduler
+    2. train_epoch(): Loop through data, compute loss, update parameters
+    3. evaluate(): Similar loop but without gradient updates
+    4. save/load_checkpoint(): Persist training state for resumption
+
+    DESIGN PATTERNS:
+    - Context managers for train/eval modes
+    - Gradient accumulation for effective large batch sizes
+    - Progress tracking for monitoring
+    - Flexible scheduling integration
     """
-    
-    def __init__(self, model, optimizer, loss_function, metrics=None):
+    ### BEGIN SOLUTION
+    def __init__(self, model, optimizer, loss_fn, scheduler=None, grad_clip_norm=None):
         """
         Initialize trainer with model and training components.
-        
+
         Args:
-            model: Neural network model to train
-            optimizer: Optimizer for parameter updates
-            loss_function: Loss function for training
-            metrics: List of metrics to track (optional)
-            
-        TODO: Initialize the trainer with all necessary components.
-        
-        APPROACH:
-        1. Store model, optimizer, loss function, and metrics
-        2. Initialize history tracking for losses and metrics
-        3. Set up training state (epoch, step counters)
-        4. Prepare for training and validation loops
-        
-        EXAMPLE:
-        model = Sequential([Linear(10, 5), ReLU(), Linear(5, 2)])
-        optimizer = Adam(model.parameters, learning_rate=0.001)
-        loss_fn = CrossEntropyLoss()
-        metrics = [Accuracy()]
-        trainer = Trainer(model, optimizer, loss_fn, metrics)
-        
-        HINTS:
-        - Store all components as instance variables
-        - Initialize empty history dictionaries
-        - Set metrics to empty list if None provided
-        - Initialize epoch and step counters to 0
+            model: Neural network to train
+            optimizer: Parameter update strategy (SGD, Adam, etc.)
+            loss_fn: Loss function (CrossEntropy, MSE, etc.)
+            scheduler: Optional learning rate scheduler
+            grad_clip_norm: Optional gradient clipping threshold
         """
-        ### BEGIN SOLUTION
         self.model = model
         self.optimizer = optimizer
-        self.loss_function = loss_function
-        self.metrics = metrics or []
-        
-        # Training history
+        self.loss_fn = loss_fn
+        self.scheduler = scheduler
+        self.grad_clip_norm = grad_clip_norm
+
+        # Training state
+        self.epoch = 0
+        self.step = 0
+        self.training_mode = True
+
+        # History tracking
         self.history = {
             'train_loss': [],
-            'val_loss': [],
-            'epoch': []
+            'eval_loss': [],
+            'learning_rates': []
         }
-        
-        # Add metric history tracking
-        for metric in self.metrics:
-            metric_name = metric.__class__.__name__.lower()
-            self.history[f'train_{metric_name}'] = []
-            self.history[f'val_{metric_name}'] = []
-        
-        # Training state
-        self.current_epoch = 0
-        self.current_step = 0
-        ### END SOLUTION
-    
-    def train_epoch(self, dataloader):
+
+    def train_epoch(self, dataloader, accumulation_steps=1):
         """
-        Train for one epoch on the given dataloader.
-        
+        Train for one epoch through the dataset.
+
         Args:
-            dataloader: DataLoader containing training data
-            
+            dataloader: Iterable yielding (inputs, targets) batches
+            accumulation_steps: Number of batches to accumulate before update
+
         Returns:
-            Dictionary with epoch training metrics
-            
-        TODO: Implement single epoch training logic.
-        
-        STEP-BY-STEP IMPLEMENTATION:
-        1. Initialize epoch metrics tracking
-        2. Iterate through batches in dataloader
-        3. For each batch:
-           - Zero gradients
-           - Forward pass
-           - Compute loss
-           - Backward pass
-           - Update parameters
-           - Track metrics
-        4. Return averaged metrics for the epoch
-        
-        LEARNING CONNECTIONS:
-        - **Training Loop Foundation**: Core pattern used in all deep learning frameworks
-        - **Gradient Accumulation**: Optimizer.zero_grad() prevents gradient accumulation bugs
-        - **Backpropagation**: loss.backward() computes gradients through entire network
-        - **Parameter Updates**: optimizer.step() applies computed gradients to model weights
-        
-        HINTS:
-        - Use optimizer.zero_grad() before each batch
-        - Call loss.backward() for gradient computation
-        - Use optimizer.step() for parameter updates
-        - Track running averages for metrics
+            Average loss for the epoch
         """
-        ### BEGIN SOLUTION
-        # Training Epoch Visual Flow:
-        # For each batch: zero_grad → forward → loss → backward → step → metrics
-        #                    ↓         ↓       ↓       ↓        ↓       ↓
-        #                 Clear    Predict  Error   Grads   Update  Track
-        
-        epoch_metrics = {'loss': 0.0}
-        
-        # Initialize metric tracking
-        for metric in self.metrics:
-            metric_name = metric.__class__.__name__.lower()
-            epoch_metrics[metric_name] = 0.0
-        
-        batch_count = 0
-        
-        for batch_x, batch_y in dataloader:
-            # Step 1: Zero gradients (critical - prevents accumulation bugs)
-            self.optimizer.zero_grad()
-            
-            # Step 2: Forward pass (model predictions)
-            predictions = self.model(batch_x)
-            
-            # Step 3: Compute loss (measure prediction quality)
-            loss = self.loss_function(predictions, batch_y)
-            
-            # Step 4: Backward pass - simplified for Module 8 (basic autograd from Module 6)
-            # Gradient Flow Visualization:
-            #     Loss
-            #      ↓ ∂L/∂loss = 1.0
-            #   Predictions ← Model ← Input
-            #      ↓ ∂L/∂pred    ↓ ∂L/∂W    ↓ ∂L/∂x
-            #   Gradients flow backward through computational graph
-            # Note: In a full implementation, loss.backward() would compute gradients
-            # For educational Module 8, we focus on the training loop pattern
-            
-            # Step 5: Update parameters (apply gradients)
-            self.optimizer.step()
-            
-            # Step 6: Track metrics for monitoring
-            if hasattr(loss, 'data'):
-                if hasattr(loss.data, 'data'):
-                    epoch_metrics['loss'] += loss.data.data  # Variable with Tensor data
-                else:
-                    epoch_metrics['loss'] += loss.data  # Variable with numpy data
-            else:
-                epoch_metrics['loss'] += loss  # Direct value
-            
-            for metric in self.metrics:
-                metric_name = metric.__class__.__name__.lower()
-                metric_value = metric(predictions, batch_y)
-                epoch_metrics[metric_name] += metric_value
-            
-            batch_count += 1
-            self.current_step += 1
-        
-        # Average metrics over all batches
-        for key in epoch_metrics:
-            epoch_metrics[key] /= batch_count
-        
-        return epoch_metrics
-        ### END SOLUTION
-    
-    def validate_epoch(self, dataloader):
-        """
-        Validate for one epoch on the given dataloader.
-        
-        Args:
-            dataloader: DataLoader containing validation data
-            
-        Returns:
-            Dictionary with epoch validation metrics
-            
-        TODO: Implement single epoch validation logic.
-        
-        STEP-BY-STEP IMPLEMENTATION:
-        1. Initialize epoch metrics tracking
-        2. Iterate through batches in dataloader
-        3. For each batch:
-           - Forward pass (no gradient computation)
-           - Compute loss
-           - Track metrics
-        4. Return averaged metrics for the epoch
-        
-        LEARNING CONNECTIONS:
-        - **Model Evaluation**: Validation measures generalization to unseen data
-        - **Overfitting Detection**: Comparing train vs validation metrics reveals overfitting
-        - **Model Selection**: Validation metrics guide hyperparameter tuning and architecture choices
-        - **Early Stopping**: Validation loss plateaus indicate optimal training duration
-        
-        HINTS:
-        - No gradient computation needed for validation
-        - No parameter updates during validation
-        - Similar to train_epoch but simpler
-        """
-        ### BEGIN SOLUTION
-        epoch_metrics = {'loss': 0.0}
-        
-        # Initialize metric tracking
-        for metric in self.metrics:
-            metric_name = metric.__class__.__name__.lower()
-            epoch_metrics[metric_name] = 0.0
-        
-        batch_count = 0
-        
-        for batch_x, batch_y in dataloader:
-            # Forward pass only (no gradients needed)
-            predictions = self.model(batch_x)
-            
-            # Compute loss
-            loss = self.loss_function(predictions, batch_y)
-            
-            # Track metrics
-            if hasattr(loss, 'data'):
-                if hasattr(loss.data, 'data'):
-                    epoch_metrics['loss'] += loss.data.data  # Variable with Tensor data
-                else:
-                    epoch_metrics['loss'] += loss.data  # Variable with numpy data
-            else:
-                epoch_metrics['loss'] += loss  # Direct value
-            
-            for metric in self.metrics:
-                metric_name = metric.__class__.__name__.lower()
-                metric_value = metric(predictions, batch_y)
-                epoch_metrics[metric_name] += metric_value
-            
-            batch_count += 1
-        
-        # Average metrics over all batches
-        for key in epoch_metrics:
-            epoch_metrics[key] /= batch_count
-        
-        return epoch_metrics
-        ### END SOLUTION
-    
-    def fit(self, train_dataloader, val_dataloader=None, epochs=10, verbose=True, save_best=False, checkpoint_path="best_model.pkl"):
-        """
-        Train the model for specified number of epochs.
-        
-        Args:
-            train_dataloader: Training data
-            val_dataloader: Validation data (optional)
-            epochs: Number of training epochs
-            verbose: Whether to print training progress
-            
-        Returns:
-            Training history dictionary
-            
-        TODO: Implement complete training loop.
-        
-        STEP-BY-STEP IMPLEMENTATION:
-        1. Loop through epochs
-        2. For each epoch:
-           - Train on training data
-           - Validate on validation data (if provided)
-           - Update history
-           - Print progress (if verbose)
-        3. Return complete training history
-        
-        LEARNING CONNECTIONS:
-        - **Epoch Management**: Organizing training into discrete passes through the dataset
-        - **Learning Curves**: History tracking enables visualization of training progress
-        - **Hyperparameter Tuning**: Training history guides learning rate and architecture decisions
-        - **Production Monitoring**: Training logs provide debugging and optimization insights
-        
-        HINTS:
-        - Use train_epoch() and validate_epoch() methods
-        - Update self.history with results
-        - Print epoch summary if verbose=True
-        """
-        ### BEGIN SOLUTION
-        print(f"Starting training for {epochs} epochs...")
-        best_val_loss = float('inf')
-        
-        for epoch in range(epochs):
-            self.current_epoch = epoch
-            
-            # Training phase
-            train_metrics = self.train_epoch(train_dataloader)
-            
-            # Validation phase
-            val_metrics = {}
-            if val_dataloader is not None:
-                val_metrics = self.validate_epoch(val_dataloader)
-            
-            # Update history
-            self.history['epoch'].append(epoch)
-            self.history['train_loss'].append(train_metrics['loss'])
-            
-            if val_dataloader is not None:
-                self.history['val_loss'].append(val_metrics['loss'])
-            
-            # Update metric history
-            for metric in self.metrics:
-                metric_name = metric.__class__.__name__.lower()
-                self.history[f'train_{metric_name}'].append(train_metrics[metric_name])
-                if val_dataloader is not None:
-                    self.history[f'val_{metric_name}'].append(val_metrics[metric_name])
-            
-            # Save best model checkpoint
-            if save_best and val_dataloader is not None:
-                if val_metrics['loss'] < best_val_loss:
-                    best_val_loss = val_metrics['loss']
-                    self.save_checkpoint(checkpoint_path)
-                    if verbose:
-                        print(f"  💾 Saved best model (val_loss: {best_val_loss:.4f})")
-            
-            # Print progress
-            if verbose:
-                train_loss = train_metrics['loss']
-                print(f"Epoch {epoch+1}/{epochs} - train_loss: {train_loss:.4f}", end="")
-                
-                if val_dataloader is not None:
-                    val_loss = val_metrics['loss']
-                    print(f" - val_loss: {val_loss:.4f}", end="")
-                
-                for metric in self.metrics:
-                    metric_name = metric.__class__.__name__.lower()
-                    train_metric = train_metrics[metric_name]
-                    print(f" - train_{metric_name}: {train_metric:.4f}", end="")
-                    
-                    if val_dataloader is not None:
-                        val_metric = val_metrics[metric_name]
-                        print(f" - val_{metric_name}: {val_metric:.4f}", end="")
-                
-                print()  # New line
-        
-        print("Training completed!")
-        
-        # 🎯 Training Summary Visualization
-        print(f"\n📊 Training Summary:")
-        print(f"  Total epochs: {epochs}")
-        print(f"  Total steps: {self.current_step}")
-        final_train_loss = self.history['train_loss'][-1] if self.history['train_loss'] else 0
-        print(f"  Final training loss: {final_train_loss:.4f}")
-        if val_dataloader is not None:
-            final_val_loss = self.history['val_loss'][-1] if self.history['val_loss'] else 0
-            print(f"  Final validation loss: {final_val_loss:.4f}")
-        
-        # Visual training progress
-        if len(self.history['train_loss']) >= 3:
-            start_loss = self.history['train_loss'][0]
-            mid_loss = self.history['train_loss'][len(self.history['train_loss'])//2]
-            end_loss = self.history['train_loss'][-1]
-            print(f"\n📈 Loss Progression:")
-            print(f"  Start: {start_loss:.4f} → Mid: {mid_loss:.4f} → End: {end_loss:.4f}")
-            improvement = ((start_loss - end_loss) / start_loss * 100) if start_loss > 0 else 0
-            print(f"  Improvement: {improvement:.1f}% loss reduction")
-        
-        return self.history
-        ### END SOLUTION
-    
-    def save_checkpoint(self, filepath):
-        """Save model checkpoint."""
-        checkpoint = {
-            'epoch': self.current_epoch,
-            'model_state': self._get_model_state(),
-            'history': self.history
-        }
-        
-        with open(filepath, 'wb') as f:
-            pickle.dump(checkpoint, f)
-    
-    def load_checkpoint(self, filepath):
-        """Load model checkpoint."""
-        with open(filepath, 'rb') as f:
-            checkpoint = pickle.load(f)
-        
-        self.current_epoch = checkpoint['epoch']
-        self.history = checkpoint['history']
-        self._set_model_state(checkpoint['model_state'])
-        
-        print(f"✅ Loaded checkpoint from epoch {self.current_epoch}")
-    
-    def _get_model_state(self):
-        """Extract model parameters."""
-        state = {}
-        for i, layer in enumerate(self.model.layers):
-            if hasattr(layer, 'weight'):
-                state[f'layer_{i}_weight'] = layer.weight.data.copy()
-                state[f'layer_{i}_bias'] = layer.bias.data.copy()
-        return state
-    
-    def _set_model_state(self, state):
-        """Restore model parameters."""
-        for i, layer in enumerate(self.model.layers):
-            if hasattr(layer, 'weight'):
-                layer.weight.data = state[f'layer_{i}_weight']
-                layer.bias.data = state[f'layer_{i}_bias']
+        self.model.training = True
+        self.training_mode = True
 
-# 🔍 SYSTEMS INSIGHT: Training Loop Performance Analysis
-def analyze_training_loop_bottlenecks():
-    """Analyze training loop performance and identify bottlenecks."""
-    try:
-        import time
-        
-        print("🔬 Training Loop Bottleneck Analysis:")
-        
-        # Create components for analysis
-        model = Sequential([Linear(100, 50), ReLU(), Linear(50, 10)])
-        optimizer = SGD([], learning_rate=0.01)
-        loss_fn = MeanSquaredError()
-        metrics = [Accuracy()]
-        
-        trainer = Trainer(model, optimizer, loss_fn, metrics)
-        
-        # Simulate different batch sizes
-        batch_sizes = [16, 32, 64, 128]
-        results = []
-        
-        for batch_size in batch_sizes:
-            print(f"\n  Testing batch size: {batch_size}")
-            
-            # Create test data
-            test_data = [(Tensor(np.random.randn(batch_size, 100)), 
-                         Tensor(np.random.randint(0, 10, batch_size))) for _ in range(10)]
-            
-            # Time training step components
-            step_times = {'forward': 0, 'loss': 0, 'backward': 0, 'optimizer': 0}
-            total_start = time.perf_counter()
-            
-            for batch_x, batch_y in test_data:
-                # Time forward pass
-                forward_start = time.perf_counter()
-                try:
-                    predictions = model(batch_x)
-                    step_times['forward'] += time.perf_counter() - forward_start
-                except:
-                    predictions = Tensor(np.random.randn(batch_size, 10))
-                    step_times['forward'] += 0.001
-                
-                # Time loss computation
-                loss_start = time.perf_counter()
-                loss = loss_fn(predictions, batch_y)
-                step_times['loss'] += time.perf_counter() - loss_start
-                
-                # Time backward pass (simulated)
-                step_times['backward'] += 0.002  # Simulated time
-                
-                # Time optimizer step
-                opt_start = time.perf_counter()
-                try:
-                    optimizer.step()
-                    step_times['optimizer'] += time.perf_counter() - opt_start
-                except:
-                    step_times['optimizer'] += 0.001
-            
-            total_time = time.perf_counter() - total_start
-            throughput = (batch_size * len(test_data)) / total_time
-            
-            # Calculate percentages
-            percentages = {k: (v/total_time*100) for k, v in step_times.items()}
-            
-            results.append({
-                'batch_size': batch_size,
-                'throughput': throughput,
-                'total_time': total_time,
-                'step_times': step_times,
-                'percentages': percentages
-            })
-            
-            print(f"    Throughput: {throughput:.1f} samples/sec")
-            print(f"    Forward: {percentages['forward']:.1f}%, Loss: {percentages['loss']:.1f}%")
-            print(f"    Backward: {percentages['backward']:.1f}%, Optimizer: {percentages['optimizer']:.1f}%")
-        
-        # Find optimal batch size
-        best_result = max(results, key=lambda x: x['throughput'])
-        
-        print(f"\n📊 Performance Analysis:")
-        print(f"  Optimal batch size: {best_result['batch_size']} ({best_result['throughput']:.1f} samples/sec)")
-        
-        # Identify common bottleneck
-        avg_percentages = {}
-        for key in ['forward', 'loss', 'backward', 'optimizer']:
-            avg_percentages[key] = np.mean([r['percentages'][key] for r in results])
-        
-        bottleneck = max(avg_percentages.items(), key=lambda x: x[1])
-        print(f"  Common bottleneck: {bottleneck[0]} ({bottleneck[1]:.1f}% of time)")
-        
-        print(f"\n💡 Key Insights:")
-        print(f"  • Larger batches improve GPU utilization (vectorization)")
-        print(f"  • {bottleneck[0]} dominates training time - optimize this first")
-        print(f"  • Memory vs speed trade-off: bigger batches need more RAM")
-        print(f"  • Production systems pipeline these operations for efficiency")
-        
-    except Exception as e:
-        print(f"⚠️ Analysis failed: {e}")
+        total_loss = 0.0
+        num_batches = 0
+        accumulated_loss = 0.0
 
-# Run analysis
-analyze_training_loop_bottlenecks()
-
-# %% [markdown]
-"""
-### 🧪 Unit Test: Training Loop
-
-Let's test our Trainer class with a simple example.
-"""
-
-# %% nbgrader={"grade": false, "grade_id": "test-trainer", "locked": false, "schema_version": 3, "solution": false, "task": false}
-def test_unit_trainer():
-    """Test Trainer class with comprehensive examples."""
-    print("🔬 Unit Test: Trainer Class...")
-    
-    # Create simple model and components
-    model = Sequential([Linear(2, 3), ReLU(), Linear(3, 2)])  # Simple model
-    optimizer = SGD([], learning_rate=0.01)  # Empty parameters list for testing
-    loss_fn = MeanSquaredError()
-    metrics = [Accuracy()]
-    
-    # Create trainer
-    trainer = Trainer(model, optimizer, loss_fn, metrics)
-    
-    # Test 1: Trainer initialization
-    assert trainer.model is model, "Model should be stored correctly"
-    assert trainer.optimizer is optimizer, "Optimizer should be stored correctly"
-    assert trainer.loss_function is loss_fn, "Loss function should be stored correctly"
-    assert len(trainer.metrics) == 1, "Metrics should be stored correctly"
-    assert 'train_loss' in trainer.history, "Training history should be initialized"
-    print("✅ Trainer initialization test passed")
-    
-    # Test 2: History structure
-    assert 'epoch' in trainer.history, "History should track epochs"
-    assert 'train_accuracy' in trainer.history, "History should track training accuracy"
-    assert 'val_accuracy' in trainer.history, "History should track validation accuracy"
-    print("✅ History structure test passed")
-    
-    # Test 3: Training state
-    assert trainer.current_epoch == 0, "Current epoch should start at 0"
-    assert trainer.current_step == 0, "Current step should start at 0"
-    print("✅ Training state test passed")
-    
-    print("🎯 Trainer Class: All tests passed!")
-
-# Test function defined (called in main block)
-
-# %% [markdown]
-"""
-### 🧪 Unit Test: Complete Training Comprehensive Test
-
-Let's test the complete training pipeline with all components working together.
-
-**This is a comprehensive test** - it tests all training components working together in a realistic scenario.
-"""
-
-# %% nbgrader={"grade": true, "grade_id": "test-training-comprehensive", "locked": true, "points": 25, "schema_version": 3, "solution": false, "task": false}
-def test_module():
-    """Test complete training pipeline with all components."""
-    print("🔬 Integration Test: Complete Training Pipeline...")
-    
-    try:
-        # Test 1: Loss functions work correctly
-        mse = MeanSquaredError()
-        ce = CrossEntropyLoss()
-        bce = BinaryCrossEntropyLoss()
-        
-        # MSE test
-        y_pred = Tensor([[1.0, 2.0]])
-        y_true = Tensor([[1.0, 2.0]])
-        loss = mse(y_pred, y_true)
-        loss_value = get_tensor_value(loss)
-        assert abs(loss_value) < 1e-6, "MSE should work for perfect predictions"
-        
-        # CrossEntropy test
-        y_pred = Tensor([[10.0, 0.0], [0.0, 10.0]])
-        y_true = Tensor([0, 1])
-        loss = ce(y_pred, y_true)
-        loss_value = get_tensor_value(loss)
-        assert loss_value < 1.0, "CrossEntropy should work for good predictions"
-        
-        # Binary CrossEntropy test
-        y_pred = Tensor([[10.0], [-10.0]])
-        y_true = Tensor([[1.0], [0.0]])
-        loss = bce(y_pred, y_true)
-        loss_value = get_tensor_value(loss)
-        assert loss_value < 1.0, "Binary CrossEntropy should work for good predictions"
-        
-        print("✅ Loss functions work correctly")
-        
-        # Test 2: Metrics work correctly
-        accuracy = Accuracy()
-        
-        y_pred = Tensor([[0.9, 0.1], [0.1, 0.9]])
-        y_true = Tensor([0, 1])
-        acc = accuracy(y_pred, y_true)
-        assert acc == 1.0, "Accuracy should work for perfect predictions"
-        
-        print("✅ Metrics work correctly")
-        
-        # Test 3: Trainer integrates all components
-        model = Sequential([])  # Empty model for testing
-        optimizer = SGD([], learning_rate=0.01)
-        loss_fn = MeanSquaredError()
-        metrics = [Accuracy()]
-        
-        trainer = Trainer(model, optimizer, loss_fn, metrics)
-        
-        # Check trainer setup
-        assert trainer.model is model, "Trainer should store model"
-        assert trainer.optimizer is optimizer, "Trainer should store optimizer"
-        assert trainer.loss_function is loss_fn, "Trainer should store loss function"
-        assert len(trainer.metrics) == 1, "Trainer should store metrics"
-        
-        print("✅ Trainer integrates all components")
-        
-        print("🎉 Complete training pipeline works correctly!")
-        
-        # Test 4: Integration works end-to-end
-        print("✅ End-to-end integration successful")
-        
-    except Exception as e:
-        print(f"❌ Training pipeline test failed: {e}")
-        raise
-    
-    print("🎯 Training Pipeline: All comprehensive tests passed!")
-
-# Test function defined (called in main block)
-
-# %% [markdown]
-"""
-## 🔍 Systems Analysis
-
-Now that your training implementation is complete and tested, let's measure its behavior:
-"""
-
-# %%
-def measure_training_scaling():
-    """
-    📊 SYSTEMS MEASUREMENT: Training Performance Scaling
-
-    Measure how training performance scales with batch size.
-    """
-    print("📊 Training Performance Scaling Analysis")
-    print("Testing training performance with different batch sizes...")
-
-    try:
-        import time
-
-        # Create simple model for testing
-        model = Sequential([Linear(10, 1)])
-        optimizer = SGD(model.parameters(), learning_rate=0.01)
-        loss_fn = MeanSquaredError()
-
-        batch_sizes = [4, 8, 16, 32]
-        times = []
-
-        for batch_size in batch_sizes:
-            # Generate test data
-            X = Tensor(np.random.randn(batch_size, 10))
-            y = Tensor(np.random.randn(batch_size, 1))
-
-            # Time a training step
-            start = time.perf_counter()
-
-            predictions = model(X)
-            loss = loss_fn(predictions, y)
-            # Note: In real training, we'd call loss.backward() and optimizer.step()
-
-            elapsed = time.perf_counter() - start
-            times.append(elapsed)
-
-            throughput = batch_size / elapsed
-            print(f"Batch size {batch_size:2d}: {elapsed*1000:.2f}ms ({throughput:.1f} samples/sec)")
-
-        # Analyze scaling
-        if len(times) >= 2:
-            scaling_factor = times[-1] / times[0]
-            batch_factor = batch_sizes[-1] / batch_sizes[0]
-            efficiency = batch_factor / scaling_factor
-
-            print(f"\n💡 Scaling Insight:")
-            print(f"   Batch size increased {batch_factor:.1f}x")
-            print(f"   Time increased {scaling_factor:.1f}x")
-            print(f"   Scaling efficiency: {efficiency:.1f}x")
-
-            if efficiency > 0.8:
-                print(f"   ✅ Good scaling - training benefits from larger batches")
-            else:
-                print(f"   ⚠️  Poor scaling - diminishing returns from larger batches")
-
-        print(f"\n💡 SYSTEMS INSIGHT:")
-        print(f"   Training performance scales sub-linearly with batch size")
-        print(f"   This reveals the balance between computation and memory access")
-
-    except Exception as e:
-        print(f"⚠️ Error in scaling analysis: {e}")
-
-# Run the measurement
-measure_training_scaling()
-
-# %%
-def measure_training_memory():
-    """
-    💾 SYSTEMS MEASUREMENT: Training Memory Usage
-
-    Measure memory usage patterns during training.
-    """
-    print("\n💾 Training Memory Usage Analysis")
-    print("Analyzing memory consumption during training...")
-
-    try:
-        import psutil
-        import os
-
-        def get_memory_mb():
-            process = psutil.Process(os.getpid())
-            return process.memory_info().rss / 1024 / 1024
-
-        baseline_memory = get_memory_mb()
-
-        # Create model and training components
-        model = Sequential([Linear(100, 50), Linear(50, 1)])
-        optimizer = SGD(model.parameters(), learning_rate=0.01)
-        loss_fn = MeanSquaredError()
-
-        memory_before = get_memory_mb()
-
-        # Create different batch sizes and measure memory
-        batch_sizes = [16, 32, 64]
-
-        for batch_size in batch_sizes:
-            X = Tensor(np.random.randn(batch_size, 100))
-            y = Tensor(np.random.randn(batch_size, 1))
-
-            memory_start = get_memory_mb()
-
+        for batch_idx, (inputs, targets) in enumerate(dataloader):
             # Forward pass
-            predictions = model(X)
-            loss = loss_fn(predictions, y)
+            outputs = self.model.forward(inputs)
+            loss = self.loss_fn.forward(outputs, targets)
 
-            memory_peak = get_memory_mb()
-            memory_used = memory_peak - memory_start
+            # Scale loss for accumulation
+            scaled_loss = loss.data / accumulation_steps
+            accumulated_loss += scaled_loss
 
-            print(f"Batch size {batch_size:2d}: {memory_used:.1f}MB memory increase")
+            # Backward pass
+            if hasattr(loss, 'backward'):
+                loss.backward()
 
-            # Clean up
-            del predictions, loss, X, y
+            # Update parameters every accumulation_steps
+            if (batch_idx + 1) % accumulation_steps == 0:
+                # Gradient clipping
+                if self.grad_clip_norm is not None:
+                    params = []
+                    if hasattr(self.model, 'parameters'):
+                        params = self.model.parameters()
+                    clip_grad_norm(params, self.grad_clip_norm)
 
-        print(f"\n💡 MEMORY INSIGHT:")
-        print(f"   Memory usage grows with batch size")
-        print(f"   Forward pass creates intermediate activations")
-        print(f"   Larger batches = more memory but better GPU utilization")
+                # Optimizer step
+                self.optimizer.step()
+                self.optimizer.zero_grad()
 
-    except Exception as e:
-        print(f"⚠️ Error in memory analysis: {e}")
+                total_loss += accumulated_loss
+                accumulated_loss = 0.0
+                num_batches += 1
+                self.step += 1
 
-# Run the measurement
-measure_training_memory()
+        # Handle remaining accumulated gradients
+        if accumulated_loss > 0:
+            if self.grad_clip_norm is not None:
+                params = []
+                if hasattr(self.model, 'parameters'):
+                    params = self.model.parameters()
+                clip_grad_norm(params, self.grad_clip_norm)
 
-# %%
-if __name__ == "__main__":
-    print("🚀 Running all training tests...")
+            self.optimizer.step()
+            self.optimizer.zero_grad()
+            total_loss += accumulated_loss
+            num_batches += 1
+
+        avg_loss = total_loss / max(num_batches, 1)
+        self.history['train_loss'].append(avg_loss)
+
+        # Update scheduler
+        if self.scheduler is not None:
+            current_lr = self.scheduler.get_lr(self.epoch)
+            # Update optimizer learning rate
+            if hasattr(self.optimizer, 'lr'):
+                self.optimizer.lr = current_lr
+            self.history['learning_rates'].append(current_lr)
+
+        self.epoch += 1
+        return avg_loss
+
+    def evaluate(self, dataloader):
+        """
+        Evaluate model on dataset without updating parameters.
+
+        Args:
+            dataloader: Iterable yielding (inputs, targets) batches
+
+        Returns:
+            Average loss and accuracy
+        """
+        self.model.training = False
+        self.training_mode = False
+
+        total_loss = 0.0
+        correct = 0
+        total = 0
+
+        for inputs, targets in dataloader:
+            # Forward pass only
+            outputs = self.model.forward(inputs)
+            loss = self.loss_fn.forward(outputs, targets)
+
+            total_loss += loss.data
+
+            # Calculate accuracy (for classification)
+            if hasattr(outputs, 'data') and hasattr(targets, 'data'):
+                if len(outputs.data.shape) > 1:  # Multi-class
+                    predictions = np.argmax(outputs.data, axis=1)
+                    if len(targets.data.shape) == 1:  # Integer targets
+                        correct += np.sum(predictions == targets.data)
+                    else:  # One-hot targets
+                        correct += np.sum(predictions == np.argmax(targets.data, axis=1))
+                    total += len(predictions)
+
+        avg_loss = total_loss / len(dataloader) if len(dataloader) > 0 else 0.0
+        accuracy = correct / total if total > 0 else 0.0
+
+        self.history['eval_loss'].append(avg_loss)
+
+        return avg_loss, accuracy
+
+    def save_checkpoint(self, path: str):
+        """
+        Save complete training state for resumption.
+
+        Args:
+            path: File path to save checkpoint
+        """
+        checkpoint = {
+            'epoch': self.epoch,
+            'step': self.step,
+            'model_state': self._get_model_state(),
+            'optimizer_state': self._get_optimizer_state(),
+            'scheduler_state': self._get_scheduler_state(),
+            'history': self.history,
+            'training_mode': self.training_mode
+        }
+
+        Path(path).parent.mkdir(parents=True, exist_ok=True)
+        with open(path, 'wb') as f:
+            pickle.dump(checkpoint, f)
+
+    def load_checkpoint(self, path: str):
+        """
+        Load training state from checkpoint.
+
+        Args:
+            path: File path to load checkpoint from
+        """
+        with open(path, 'rb') as f:
+            checkpoint = pickle.load(f)
+
+        self.epoch = checkpoint['epoch']
+        self.step = checkpoint['step']
+        self.history = checkpoint['history']
+        self.training_mode = checkpoint['training_mode']
+
+        # Restore states (simplified for educational purposes)
+        if 'model_state' in checkpoint:
+            self._set_model_state(checkpoint['model_state'])
+        if 'optimizer_state' in checkpoint:
+            self._set_optimizer_state(checkpoint['optimizer_state'])
+        if 'scheduler_state' in checkpoint:
+            self._set_scheduler_state(checkpoint['scheduler_state'])
+
+    def _get_model_state(self):
+        """Extract model parameters for checkpointing."""
+        if hasattr(self.model, 'parameters'):
+            return {i: param.data.copy() for i, param in enumerate(self.model.parameters())}
+        return {}
+
+    def _set_model_state(self, state):
+        """Restore model parameters from checkpoint."""
+        if hasattr(self.model, 'parameters'):
+            for i, param in enumerate(self.model.parameters()):
+                if i in state:
+                    param.data = state[i].copy()
+
+    def _get_optimizer_state(self):
+        """Extract optimizer state for checkpointing."""
+        state = {}
+        if hasattr(self.optimizer, 'lr'):
+            state['lr'] = self.optimizer.lr
+        if hasattr(self.optimizer, 'momentum_buffers'):
+            state['momentum_buffers'] = self.optimizer.momentum_buffers.copy()
+        return state
+
+    def _set_optimizer_state(self, state):
+        """Restore optimizer state from checkpoint."""
+        if 'lr' in state and hasattr(self.optimizer, 'lr'):
+            self.optimizer.lr = state['lr']
+        if 'momentum_buffers' in state and hasattr(self.optimizer, 'momentum_buffers'):
+            self.optimizer.momentum_buffers = state['momentum_buffers']
+
+    def _get_scheduler_state(self):
+        """Extract scheduler state for checkpointing."""
+        if self.scheduler is None:
+            return None
+        return {
+            'max_lr': getattr(self.scheduler, 'max_lr', None),
+            'min_lr': getattr(self.scheduler, 'min_lr', None),
+            'total_epochs': getattr(self.scheduler, 'total_epochs', None)
+        }
+
+    def _set_scheduler_state(self, state):
+        """Restore scheduler state from checkpoint."""
+        if state is None or self.scheduler is None:
+            return
+        for key, value in state.items():
+            if hasattr(self.scheduler, key):
+                setattr(self.scheduler, key, value)
+    ### END SOLUTION
+
+# %% [markdown]
+"""
+### 🧪 Unit Test: Trainer Class
+This test validates our complete training system.
+**What we're testing**: Trainer orchestrates training loop correctly
+**Why it matters**: This is the backbone that enables all neural network training
+**Expected**: Training reduces loss, evaluation works, checkpointing preserves state
+"""
+
+# %% nbgrader={"grade": true, "grade_id": "test_trainer", "locked": true, "points": 15}
+def test_unit_trainer():
+    """🔬 Test Trainer implementation."""
+    print("🔬 Unit Test: Trainer...")
+
+    # Create mock components for testing
+    class MockModel:
+        def __init__(self):
+            self.training = True
+            self.weight = type('param', (), {'data': np.array([1.0, 2.0]), 'grad': None})()
+
+        def forward(self, x):
+            # Simple linear operation
+            result = type('output', (), {'data': np.dot(x.data, self.weight.data)})()
+            return result
+
+        def parameters(self):
+            return [self.weight]
+
+    class MockOptimizer:
+        def __init__(self):
+            self.lr = 0.01
+
+        def step(self):
+            pass  # Simplified
+
+        def zero_grad(self):
+            pass  # Simplified
+
+    class MockLoss:
+        def forward(self, outputs, targets):
+            # Simple MSE
+            diff = outputs.data - targets.data
+            loss_value = np.mean(diff ** 2)
+            result = type('loss', (), {'data': loss_value})()
+            result.backward = lambda: None  # Simplified
+            return result
+
+    class MockTensor:
+        def __init__(self, data):
+            self.data = np.array(data)
+
+    # Create trainer
+    model = MockModel()
+    optimizer = MockOptimizer()
+    loss_fn = MockLoss()
+    scheduler = CosineSchedule(max_lr=0.1, min_lr=0.01, total_epochs=10)
+
+    trainer = Trainer(model, optimizer, loss_fn, scheduler, grad_clip_norm=1.0)
+
+    # Test training
+    print("Testing training epoch...")
+    mock_dataloader = [
+        (MockTensor([1.0, 0.5]), MockTensor([2.0])),
+        (MockTensor([0.5, 1.0]), MockTensor([1.5]))
+    ]
+
+    loss = trainer.train_epoch(mock_dataloader)
+    assert isinstance(loss, float), f"Expected float loss, got {type(loss)}"
+    assert trainer.epoch == 1, f"Expected epoch 1, got {trainer.epoch}"
+
+    # Test evaluation
+    print("Testing evaluation...")
+    eval_loss, accuracy = trainer.evaluate(mock_dataloader)
+    assert isinstance(eval_loss, float), f"Expected float eval_loss, got {type(eval_loss)}"
+    assert isinstance(accuracy, float), f"Expected float accuracy, got {type(accuracy)}"
+
+    # Test checkpointing
+    print("Testing checkpointing...")
+    checkpoint_path = "/tmp/test_checkpoint.pkl"
+    trainer.save_checkpoint(checkpoint_path)
+
+    # Modify trainer state
+    original_epoch = trainer.epoch
+    trainer.epoch = 999
+
+    # Load checkpoint
+    trainer.load_checkpoint(checkpoint_path)
+    assert trainer.epoch == original_epoch, f"Checkpoint didn't restore epoch correctly"
+
+    # Clean up
+    import os
+    if os.path.exists(checkpoint_path):
+        os.remove(checkpoint_path)
+
+    print(f"✅ Trainer works correctly! Final loss: {loss:.4f}")
+
+test_unit_trainer()
+
+# %% [markdown]
+"""
+## 🔧 Part 4: Integration - Bringing Training Together
+
+Now let's create a complete training example that demonstrates how all the components work together. This integration shows the full power of our training infrastructure.
+"""
+
+# %% nbgrader={"grade": false, "grade_id": "training_integration", "locked": false, "solution": true}
+def demonstrate_complete_training():
+    """
+    Demonstrate complete training pipeline with all components.
+
+    This shows how Trainer, CosineSchedule, and gradient clipping work together
+    to create a robust training system that could handle real neural networks.
+    """
+    print("🏗️ Complete Training Pipeline Demonstration")
+    print("=" * 50)
+
+    # Create mock neural network components
+    class SimpleModel:
+        def __init__(self, input_size=2, hidden_size=4, output_size=1):
+            self.training = True
+            # Initialize weights (simplified)
+            self.w1 = type('param', (), {
+                'data': np.random.randn(input_size, hidden_size) * 0.1,
+                'grad': None
+            })()
+            self.w2 = type('param', (), {
+                'data': np.random.randn(hidden_size, output_size) * 0.1,
+                'grad': None
+            })()
+
+        def forward(self, x):
+            # Simple 2-layer network
+            h = np.maximum(0, np.dot(x.data, self.w1.data))  # ReLU
+            output = np.dot(h, self.w2.data)
+            result = type('output', (), {'data': output})()
+            return result
+
+        def parameters(self):
+            return [self.w1, self.w2]
+
+    class MockSGD:
+        def __init__(self, params, lr=0.01):
+            self.params = params
+            self.lr = lr
+
+        def step(self):
+            # Simplified parameter update
+            for param in self.params:
+                if param.grad is not None:
+                    param.data -= self.lr * param.grad.data
+
+        def zero_grad(self):
+            for param in self.params:
+                param.grad = None
+
+    class MSELoss:
+        def forward(self, outputs, targets):
+            diff = outputs.data - targets.data
+            loss_value = np.mean(diff ** 2)
+            result = type('loss', (), {'data': loss_value})()
+
+            # Simplified backward pass
+            def backward():
+                grad_output = 2 * diff / len(diff)
+                # Set gradients (simplified)
+                outputs.grad = type('grad', (), {'data': grad_output})()
+
+            result.backward = backward
+            return result
+
+    class MockTensor:
+        def __init__(self, data):
+            self.data = np.array(data, dtype=float)
+
+    # 1. Create model and training components
+    print("1. Setting up training components...")
+    model = SimpleModel(input_size=2, hidden_size=8, output_size=1)
+    optimizer = MockSGD(model.parameters(), lr=0.1)
+    loss_fn = MSELoss()
+    scheduler = CosineSchedule(max_lr=0.1, min_lr=0.001, total_epochs=5)
+
+    # 2. Create trainer with gradient clipping
+    trainer = Trainer(
+        model=model,
+        optimizer=optimizer,
+        loss_fn=loss_fn,
+        scheduler=scheduler,
+        grad_clip_norm=1.0
+    )
+
+    # 3. Create simple dataset (XOR-like problem)
+    print("2. Creating synthetic dataset...")
+    train_data = [
+        (MockTensor([0, 0]), MockTensor([0])),
+        (MockTensor([0, 1]), MockTensor([1])),
+        (MockTensor([1, 0]), MockTensor([1])),
+        (MockTensor([1, 1]), MockTensor([0]))
+    ]
+
+    # 4. Training loop
+    print("3. Training model...")
+    print("\nEpoch | Train Loss | Learning Rate")
+    print("-" * 35)
+
+    for epoch in range(5):
+        # Train for one epoch
+        train_loss = trainer.train_epoch(train_data)
+
+        # Get current learning rate
+        current_lr = scheduler.get_lr(epoch)
+
+        print(f"{epoch+1:5d} | {train_loss:10.6f} | {current_lr:12.6f}")
+
+    # 5. Evaluation
+    print("\n4. Evaluating model...")
+    eval_loss, accuracy = trainer.evaluate(train_data)
+    print(f"Final evaluation - Loss: {eval_loss:.6f}, Accuracy: {accuracy:.3f}")
+
+    # 6. Checkpointing demonstration
+    print("\n5. Testing checkpointing...")
+    checkpoint_path = "/tmp/training_demo_checkpoint.pkl"
+    trainer.save_checkpoint(checkpoint_path)
+    print(f"Checkpoint saved to {checkpoint_path}")
+
+    # Modify and restore
+    original_epoch = trainer.epoch
+    trainer.epoch = 999
+    trainer.load_checkpoint(checkpoint_path)
+
+    print(f"Checkpoint restored - Epoch: {trainer.epoch} (was modified to 999)")
+    assert trainer.epoch == original_epoch, "Checkpoint restoration failed"
+
+    # 7. Training history
+    print("\n6. Training history summary...")
+    print(f"Training losses: {[f'{loss:.4f}' for loss in trainer.history['train_loss']]}")
+    print(f"Learning rates: {[f'{lr:.4f}' for lr in trainer.history['learning_rates']]}")
+
+    # Clean up
+    import os
+    if os.path.exists(checkpoint_path):
+        os.remove(checkpoint_path)
+
+    print("\n✅ Complete training pipeline works perfectly!")
+    print("🎓 Ready for real neural network training!")
+
+demonstrate_complete_training()
+
+# %% [markdown]
+"""
+## 📊 Part 5: Systems Analysis - Training Performance and Memory
+
+Training systems have unique performance characteristics that differ significantly from inference. Let's analyze the key factors that affect training efficiency and understand the trade-offs involved.
+
+### Memory Analysis: Training vs Inference
+
+Training requires significantly more memory than inference because:
+
+```
+Memory Usage Breakdown:
+
+    INFERENCE              TRAINING
+┌─────────────┐        ┌─────────────┐
+│ Parameters  │        │ Parameters  │ ← Same
+│    100MB    │        │    100MB    │
+└─────────────┘        ├─────────────┤
+       +               │ Gradients   │ ← Additional
+┌─────────────┐        │    100MB    │
+│ Activations │        ├─────────────┤
+│     50MB    │        │ Optimizer   │ ← 2-3× params
+└─────────────┘        │    200MB    │ (Adam: momentum + velocity)
+                       ├─────────────┤
+   Total: 150MB        │ Activations │ ← Larger (stored for backprop)
+                       │    150MB    │
+                       └─────────────┘
+
+                       Total: 550MB (3.7× inference)
+```
+
+Let's measure these effects and understand their implications.
+"""
+
+# %% nbgrader={"grade": false, "grade_id": "analyze_training_memory", "locked": false, "solution": true}
+def analyze_training_memory():
+    """📊 Analyze memory requirements for training vs inference."""
+    print("📊 Training Memory Analysis")
+    print("=" * 40)
+
+    # Simulate memory usage for different model sizes
+    def estimate_memory_usage(num_params, batch_size=32, sequence_length=512):
+        """Estimate memory usage in MB for training vs inference."""
+
+        # Parameter memory (FP32: 4 bytes per parameter)
+        param_memory = num_params * 4 / (1024 * 1024)  # MB
+
+        # Gradient memory (same size as parameters)
+        grad_memory = param_memory
+
+        # Optimizer state (Adam: 2× parameters for momentum + second moments)
+        optimizer_memory = param_memory * 2
+
+        # Activation memory (depends on batch size and model depth)
+        # Rough estimate: batch_size * sequence_length * hidden_dim * num_layers * 4 bytes
+        activation_memory = batch_size * sequence_length * 512 * 12 * 4 / (1024 * 1024)
+
+        # Inference only needs parameters + activations (no gradients or optimizer state)
+        inference_memory = param_memory + activation_memory * 0.1  # Much smaller activation memory
+        training_memory = param_memory + grad_memory + optimizer_memory + activation_memory
+
+        return {
+            'parameters': param_memory,
+            'gradients': grad_memory,
+            'optimizer': optimizer_memory,
+            'activations': activation_memory,
+            'inference_total': inference_memory,
+            'training_total': training_memory,
+            'overhead_ratio': training_memory / inference_memory
+        }
+
+    # Analyze different model sizes
+    model_sizes = [
+        ("Small MLP", 1_000_000),      # 1M parameters
+        ("Medium Model", 50_000_000),   # 50M parameters
+        ("Large Model", 500_000_000),   # 500M parameters
+        ("GPT-scale", 1_000_000_000)    # 1B parameters
+    ]
+
+    print("Model Size    | Params | Grads | Optimizer | Activations | Inference | Training | Overhead")
+    print("-" * 90)
+
+    for name, num_params in model_sizes:
+        memory = estimate_memory_usage(num_params)
+
+        print(f"{name:12s} | {memory['parameters']:6.0f} | {memory['gradients']:5.0f} | "
+              f"{memory['optimizer']:9.0f} | {memory['activations']:11.0f} | "
+              f"{memory['inference_total']:9.0f} | {memory['training_total']:8.0f} | "
+              f"{memory['overhead_ratio']:7.1f}x")
+
+    print("\n💡 Key Insights:")
+    print("• Training memory grows with model size due to gradient and optimizer storage")
+    print("• Adam optimizer adds 2× parameter memory for momentum and second moments")
+    print("• Activation memory depends on batch size and can be reduced with gradient checkpointing")
+    print("• Training typically requires 3-4× more memory than inference")
+
+analyze_training_memory()
+
+# %% [markdown]
+"""
+### Batch Size Effects - The Memory vs Speed Trade-off
+
+Batch size affects training in complex ways, creating trade-offs between memory usage, compute efficiency, and convergence behavior.
+
+```
+Batch Size Impact Visualization:
+
+Memory Usage (linear):
+ batch=1   |▌
+ batch=8   |████
+ batch=32  |████████████████
+ batch=128 |████████████████████████████████████████████████████████████████
+
+Compute Efficiency (logarithmic):
+ batch=1   |▌
+ batch=8   |████████
+ batch=32  |██████████████
+ batch=128 |████████████████ (plateaus due to hardware limits)
+
+Steps per Epoch (inverse):
+ batch=1   |████████████████████████████████████████████████████████████████
+ batch=8   |████████
+ batch=32  |██
+ batch=128 |▌
+
+Sweet Spot: Usually around 32-64 for most models
+```
+"""
+
+# %% nbgrader={"grade": false, "grade_id": "analyze_batch_size_effects", "locked": false, "solution": true}
+def analyze_batch_size_effects():
+    """📊 Analyze how batch size affects training efficiency and convergence."""
+    print("\n📊 Batch Size Effects Analysis")
+    print("=" * 40)
+
+    # Simulate training with different batch sizes
+    batch_sizes = [1, 4, 16, 64, 256, 1024]
+
+    def simulate_training_efficiency(batch_size):
+        """Simulate training metrics for different batch sizes."""
+
+        # Memory usage (linear with batch size for activations)
+        base_memory = 1000  # MB base model memory
+        activation_memory_per_sample = 50  # MB per sample
+        total_memory = base_memory + batch_size * activation_memory_per_sample
+
+        # Compute efficiency (higher batch size → better GPU utilization)
+        # But diminishing returns due to memory bandwidth limits
+        compute_efficiency = min(1.0, 0.3 + 0.7 * (batch_size / 64))
+
+        # Communication overhead (for distributed training)
+        # More communication needed with larger batches
+        comm_overhead = 1.0 + (batch_size / 1000) * 0.5
+
+        # Convergence speed (larger batches may need more epochs)
+        # This is a simplified model of the batch size vs convergence trade-off
+        convergence_penalty = 1.0 + max(0, (batch_size - 32) / 200)
+
+        # Time per step (includes compute + communication)
+        time_per_step = 100 / compute_efficiency * comm_overhead  # ms
+
+        # Steps per epoch (fewer steps with larger batches)
+        dataset_size = 50000
+        steps_per_epoch = dataset_size // batch_size
+
+        # Time per epoch
+        time_per_epoch = steps_per_epoch * time_per_step / 1000  # seconds
+
+        return {
+            'memory_mb': total_memory,
+            'compute_efficiency': compute_efficiency,
+            'time_per_step_ms': time_per_step,
+            'steps_per_epoch': steps_per_epoch,
+            'time_per_epoch_s': time_per_epoch,
+            'convergence_factor': convergence_penalty
+        }
+
+    print("Batch Size | Memory (MB) | Compute Eff | Steps/Epoch | Time/Epoch | Convergence")
+    print("-" * 75)
+
+    for batch_size in batch_sizes:
+        metrics = simulate_training_efficiency(batch_size)
+
+        print(f"{batch_size:10d} | {metrics['memory_mb']:11.0f} | "
+              f"{metrics['compute_efficiency']:11.2f} | {metrics['steps_per_epoch']:11d} | "
+              f"{metrics['time_per_epoch_s']:10.1f} | {metrics['convergence_factor']:11.2f}")
+
+    print("\n💡 Key Insights:")
+    print("• Memory usage scales linearly with batch size (activation storage)")
+    print("• Compute efficiency improves with batch size but plateaus (GPU utilization)")
+    print("• Larger batches mean fewer steps per epoch but potentially slower convergence")
+    print("• Sweet spot often around 32-64 for most models, balancing all factors")
+
+analyze_batch_size_effects()
+
+# %% [markdown]
+"""
+## 🧪 Part 6: Module Integration Test
+
+Final validation that everything works together correctly.
+"""
+
+# %% nbgrader={"grade": true, "grade_id": "test_module", "locked": true, "points": 20}
+def test_module():
+    """
+    Comprehensive test of entire module functionality.
+
+    This final test runs before module summary to ensure:
+    - All unit tests pass
+    - Functions work together correctly
+    - Module is ready for integration with TinyTorch
+    """
+    print("🧪 RUNNING MODULE INTEGRATION TEST")
+    print("=" * 50)
 
     # Run all unit tests
-    test_unit_mse_loss()
-    test_unit_crossentropy_loss()
-    test_unit_binary_crossentropy_loss()
-    test_unit_accuracy_metric()
+    print("Running unit tests...")
+    test_unit_cosine_schedule()
+    test_unit_clip_grad_norm()
     test_unit_trainer()
 
-    # Run final integration test
-    test_module()
+    print("\nRunning integration scenarios...")
 
-    print("\n🎉 SUCCESS: All training tests passed!")
-    print("✅ Loss functions compute correctly")
-    print("✅ Metrics evaluate properly")
-    print("✅ Training loop integrates all components")
-    print("✅ Ready for complete neural network training!")
+    # Test complete training pipeline integration
+    print("🔬 Integration Test: Complete Training Pipeline...")
+
+    # Create comprehensive test that exercises all components together
+    class IntegrationModel:
+        def __init__(self):
+            self.training = True
+            self.layers = [
+                type('layer', (), {
+                    'weight': type('param', (), {'data': np.random.randn(4, 2), 'grad': None})(),
+                    'bias': type('param', (), {'data': np.zeros(2), 'grad': None})()
+                })()
+            ]
+
+        def forward(self, x):
+            # Simple forward pass
+            layer = self.layers[0]
+            output = np.dot(x.data, layer.weight.data) + layer.bias.data
+            result = type('output', (), {'data': output})()
+            return result
+
+        def parameters(self):
+            params = []
+            for layer in self.layers:
+                params.extend([layer.weight, layer.bias])
+            return params
+
+    class IntegrationOptimizer:
+        def __init__(self, params, lr=0.01):
+            self.params = params
+            self.lr = lr
+
+        def step(self):
+            for param in self.params:
+                if param.grad is not None:
+                    param.data -= self.lr * param.grad.data
+
+        def zero_grad(self):
+            for param in self.params:
+                if hasattr(param, 'grad'):
+                    param.grad = None
+
+    class IntegrationLoss:
+        def forward(self, outputs, targets):
+            diff = outputs.data - targets.data
+            loss_value = np.mean(diff ** 2)
+            result = type('loss', (), {'data': loss_value})()
+
+            def backward():
+                # Simple gradient computation
+                for param in model.parameters():
+                    param.grad = type('grad', (), {'data': np.random.randn(*param.data.shape) * 0.1})()
+
+            result.backward = backward
+            return result
+
+    class IntegrationTensor:
+        def __init__(self, data):
+            self.data = np.array(data, dtype=float)
+
+    # Create integrated system
+    model = IntegrationModel()
+    optimizer = IntegrationOptimizer(model.parameters(), lr=0.01)
+    loss_fn = IntegrationLoss()
+    scheduler = CosineSchedule(max_lr=0.1, min_lr=0.001, total_epochs=3)
+
+    trainer = Trainer(
+        model=model,
+        optimizer=optimizer,
+        loss_fn=loss_fn,
+        scheduler=scheduler,
+        grad_clip_norm=0.5
+    )
+
+    # Test data
+    data = [
+        (IntegrationTensor([[1, 0, 1, 0]]), IntegrationTensor([1, 0])),
+        (IntegrationTensor([[0, 1, 0, 1]]), IntegrationTensor([0, 1]))
+    ]
+
+    # Test training
+    initial_loss = trainer.train_epoch(data)
+    assert isinstance(initial_loss, float), "Training should return float loss"
+    assert trainer.epoch == 1, "Epoch should increment"
+
+    # Test evaluation
+    eval_loss, accuracy = trainer.evaluate(data)
+    assert isinstance(eval_loss, float), "Evaluation should return float loss"
+    assert isinstance(accuracy, float), "Evaluation should return float accuracy"
+
+    # Test scheduling
+    lr_epoch_0 = scheduler.get_lr(0)
+    lr_epoch_1 = scheduler.get_lr(1)
+    assert lr_epoch_0 > lr_epoch_1, "Learning rate should decrease"
+
+    # Test gradient clipping with large gradients
+    large_params = [type('param', (), {'grad': type('grad', (), {'data': np.array([100.0, 200.0])})()})()]
+    original_norm = clip_grad_norm(large_params, max_norm=1.0)
+    assert original_norm > 1.0, "Original norm should be large"
+
+    new_norm = np.linalg.norm(large_params[0].grad.data)
+    assert abs(new_norm - 1.0) < 1e-6, "Clipped norm should equal max_norm"
+
+    # Test checkpointing
+    checkpoint_path = "/tmp/integration_test_checkpoint.pkl"
+    trainer.save_checkpoint(checkpoint_path)
+
+    original_epoch = trainer.epoch
+    trainer.epoch = 999
+    trainer.load_checkpoint(checkpoint_path)
+
+    assert trainer.epoch == original_epoch, "Checkpoint should restore state"
+
+    # Clean up
+    import os
+    if os.path.exists(checkpoint_path):
+        os.remove(checkpoint_path)
+
+    print("✅ End-to-end training pipeline works!")
+
+    print("\n" + "=" * 50)
+    print("🎉 ALL TESTS PASSED! Module ready for export.")
+    print("Run: tito module complete 07")
+
+# Call the integration test
+test_module()
+
+# %% nbgrader={"grade": false, "grade_id": "main", "locked": false, "solution": false}
+if __name__ == "__main__":
+    print("🚀 Running Training module...")
+    test_module()  # Run the comprehensive test
+    print("✅ Module validation complete!")
 
 # %% [markdown]
 """
-## 🤔 ML Systems Thinking: Interactive Questions
+## 🤔 ML Systems Thinking: Training Infrastructure
 
-**Complete these questions to deepen your understanding of training systems:**
-"""
+### Question 1: Memory Scaling
+You implemented a Trainer class that handles forward and backward passes.
+For a model with 100M parameters using Adam optimizer:
+- How much memory do the parameters use? _____ GB (assuming float32)
+- How much additional memory does Adam require? _____ GB
+- What's the total training memory overhead vs inference? _____ x
 
-# %% nbgrader={"grade": true, "grade_id": "training-systems-question-1", "locked": false, "points": 5, "schema_version": 3, "solution": true, "task": false}
-# %% [markdown]
-"""
-### Question 1: Memory vs Batch Size Trade-offs
+### Question 2: Batch Size Trade-offs
+Your training loop supports gradient accumulation.
+If your GPU can fit batch_size=16 but you want effective_batch_size=64:
+- How many accumulation steps do you need? _____
+- How does this affect training speed? _____ (faster/slower/same)
+- How does this affect memory usage? _____ (more/less/same)
 
-In your `Trainer` implementation, you control batch size during training. When you tested different batch sizes in the scaling analysis, you discovered that memory usage grows with batch size.
+### Question 3: Learning Rate Scheduling
+You implemented CosineSchedule that starts at max_lr and ends at min_lr.
+For max_lr=0.1, min_lr=0.001, total_epochs=100:
+- What's the learning rate at epoch 25? _____ (approximately)
+- Why does cosine scheduling work better than constant LR? _____
+- When would you use linear decay instead? _____
 
-**Reflection Question**: Analyze the memory patterns in your training loop. If you have 8GB of GPU memory and your model has 1M parameters (4MB), how would you determine the optimal batch size? What happens to training dynamics when memory constraints force you to use smaller batches?
+### Question 4: Gradient Clipping
+Your clip_grad_norm function prevents exploding gradients.
+If gradients have global norm 5.0 and max_norm=1.0:
+- What's the clipping coefficient? _____
+- How does this affect gradient direction? _____ (changes/preserves)
+- Which models benefit most from gradient clipping? _____
 
-Think about:
-- Parameter memory (weights + gradients + optimizer state)
-- Activation memory (grows with batch size)
-- Memory vs convergence speed trade-offs
-- How this affects real ML systems at scale
-
-**Your Analysis:**
-```
-// Write your analysis here
-```
-"""
-
-# %% nbgrader={"grade": true, "grade_id": "training-systems-question-2", "locked": false, "points": 5, "schema_version": 3, "solution": true, "task": false}
-# %% [markdown]
-"""
-### Question 2: Loss Function Choice and Training Stability
-
-You implemented MSE, CrossEntropy, and Binary CrossEntropy loss functions. Each has different mathematical properties that affect training dynamics.
-
-**Reflection Question**: Your `MeanSquaredError` loss can produce very large gradients when predictions are far from targets, while `CrossEntropyLoss` has more stable gradients. How does this difference affect training stability and convergence speed? When would you choose each loss function, and how would you modify your training loop to handle unstable gradients?
-
-Think about:
-- Gradient magnitude differences between loss functions
-- How loss landscapes affect optimization
-- Gradient clipping and learning rate scheduling
-- Production implications for model reliability
-
-**Your Analysis:**
-```
-// Write your analysis here
-```
-"""
-
-# %% nbgrader={"grade": true, "grade_id": "training-systems-question-3", "locked": false, "points": 5, "schema_version": 3, "solution": true, "task": false}
-# %% [markdown]
-"""
-### Question 3: Training Loop Bottlenecks and Optimization
-
-Your `Trainer` class orchestrates data loading, forward passes, loss computation, and optimization. In the performance analysis, you measured how different components contribute to training time.
-
-**Reflection Question**: If you discovered that data loading is your bottleneck (taking 60% of training time), how would you modify your training loop architecture to address this? What systems-level changes would you make to achieve better data/compute overlap?
-
-Think about:
-- Data prefetching and parallel data loading
-- CPU vs GPU workload distribution
-- Memory caching and data preprocessing optimization
-- How training loop design affects overall system throughput
-
-**Your Analysis:**
-```
-// Write your analysis here
-```
+### Question 5: Checkpointing Strategy
+You implemented save/load checkpoint functionality.
+For long-running training (days/weeks):
+- How often should you save checkpoints? _____
+- What happens if training crashes at 90% completion without checkpoints? _____
+- Why save optimizer state, not just model weights? _____
 """
 
 # %% [markdown]
 """
-## 🎯 MODULE SUMMARY: Training Complete!
+## 🎯 MODULE SUMMARY: Training
 
-Congratulations! You've successfully implemented complete training infrastructure:
+Congratulations! You've built a complete training infrastructure that can orchestrate the entire machine learning training process!
 
-### What You've Accomplished
-✅ **Loss Function Implementation**: MSE, CrossEntropy, and Binary CrossEntropy with proper gradient support
-✅ **Metrics System**: Accuracy evaluation with batch processing and edge case handling
-✅ **Training Loop Architecture**: Complete `Trainer` class that orchestrates all ML components
-✅ **Systems Analysis**: Performance scaling and memory usage measurement capabilities
-✅ **Integration Testing**: End-to-end validation of the complete training pipeline
+### Key Accomplishments
+- Built Trainer class with complete training/evaluation loops
+- Implemented CosineSchedule for adaptive learning rate management
+- Created clip_grad_norm for training stability and gradient management
+- Added comprehensive checkpointing for training persistence
+- Discovered training memory scales 3-4× beyond inference requirements
+- All tests pass ✅ (validated by `test_module()`)
 
-### Key Learning Outcomes
-- **Training Orchestration**: How training loops coordinate data, models, losses, and optimizers into unified systems
-- **Loss Function Design**: Mathematical properties that affect training stability and convergence
-- **Performance Analysis**: How to measure and optimize training pipeline bottlenecks
-- **Memory Management**: Understanding memory scaling patterns and resource constraints
+### Ready for Next Steps
+Your training implementation enables sophisticated model training with proper scheduling, stability controls, and state management.
+Export with: `tito module complete 07`
 
-### Professional Skills Developed
-- **Systems Integration**: Building complex pipelines from independent components
-- **Performance Profiling**: Measuring and analyzing training system behavior
-- **Production Patterns**: Training loop designs that handle errors and scale effectively
+**Next**: Module 08 will add DataLoader for efficient data pipeline management, completing the full training infrastructure needed for the MLP milestone!
 
-### Ready for Advanced Applications
-Your training implementation now enables:
-- **Complete Neural Networks**: Train any model architecture on real datasets
-- **Performance Optimization**: Identify and resolve training bottlenecks
-- **Production Deployment**: Reliable training loops with monitoring and checkpointing
+### Systems Insights Gained
+- Training memory overhead comes from gradients (1×) + optimizer state (2×) + activations
+- Batch size affects memory linearly but compute efficiency sub-linearly
+- Learning rate scheduling often provides better convergence than fixed rates
+- Gradient clipping preserves direction while preventing instability
+- Checkpointing enables fault-tolerant training for production systems
 
-### Connection to Real ML Systems
-Your implementation mirrors production frameworks:
-- **PyTorch**: Your `Trainer` class patterns match PyTorch Lightning trainers
-- **TensorFlow**: Loss functions and metrics follow tf.keras patterns
-- **Industry Standard**: Training loop design reflects MLOps best practices
-
-### Next Steps
-Your training infrastructure completes the core ML system! You can now:
-1. **Train on Real Data**: Use your complete system on CIFAR-10, MNIST, or custom datasets
-2. **Optimize Performance**: Apply scaling analysis to improve training throughput
-3. **Build Complex Models**: Combine all modules into sophisticated architectures
-4. **Deploy Systems**: Take your implementations toward production-ready systems
-
-**You've built real ML training infrastructure from scratch!** This foundation enables everything from research experiments to production ML systems.
+**🎓 You now understand the complete training infrastructure that powers modern ML systems!**
 """
