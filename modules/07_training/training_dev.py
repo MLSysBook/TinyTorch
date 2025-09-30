@@ -826,29 +826,24 @@ def demonstrate_complete_training():
     print("🏗️ Complete Training Pipeline Demonstration")
     print("=" * 50)
 
-    # Create mock neural network components
-    class SimpleModel:
-        def __init__(self, input_size=2, hidden_size=4, output_size=1):
+    # Use simple mock model for demonstration (not teaching model architecture)
+    class DemoModel:
+        def __init__(self):
             self.training = True
-            # Initialize weights (simplified)
-            self.w1 = type('param', (), {
-                'data': np.random.randn(input_size, hidden_size) * 0.1,
-                'grad': None
-            })()
-            self.w2 = type('param', (), {
-                'data': np.random.randn(hidden_size, output_size) * 0.1,
+            # Single parameter for demonstration
+            self.weight = type('param', (), {
+                'data': np.array([0.5, -0.3]),
                 'grad': None
             })()
 
         def forward(self, x):
-            # Simple 2-layer network
-            h = np.maximum(0, np.dot(x.data, self.w1.data))  # ReLU
-            output = np.dot(h, self.w2.data)
-            result = type('output', (), {'data': output})()
+            # Simple linear operation for demo purposes
+            output = np.dot(x.data, self.weight.data)
+            result = type('output', (), {'data': np.array([output])})()
             return result
 
         def parameters(self):
-            return [self.w1, self.w2]
+            return [self.weight]
 
     class MockSGD:
         def __init__(self, params, lr=0.01):
@@ -886,7 +881,7 @@ def demonstrate_complete_training():
 
     # 1. Create model and training components
     print("1. Setting up training components...")
-    model = SimpleModel(input_size=2, hidden_size=8, output_size=1)
+    model = DemoModel()
     optimizer = MockSGD(model.parameters(), lr=0.1)
     loss_fn = MSELoss()
     scheduler = CosineSchedule(max_lr=0.1, min_lr=0.001, total_epochs=5)
@@ -900,13 +895,13 @@ def demonstrate_complete_training():
         grad_clip_norm=1.0
     )
 
-    # 3. Create simple dataset (XOR-like problem)
+    # 3. Create simple dataset (linear function demo)
     print("2. Creating synthetic dataset...")
     train_data = [
-        (MockTensor([0, 0]), MockTensor([0])),
-        (MockTensor([0, 1]), MockTensor([1])),
-        (MockTensor([1, 0]), MockTensor([1])),
-        (MockTensor([1, 1]), MockTensor([0]))
+        (MockTensor([1.0, 0.5]), MockTensor([0.8])),
+        (MockTensor([0.5, 1.0]), MockTensor([0.2])),
+        (MockTensor([0.3, 0.7]), MockTensor([0.5])),
+        (MockTensor([0.9, 0.1]), MockTensor([0.9]))
     ]
 
     # 4. Training loop
@@ -1183,29 +1178,21 @@ def test_module():
     # Test complete training pipeline integration
     print("🔬 Integration Test: Complete Training Pipeline...")
 
-    # Create comprehensive test that exercises all components together
-    class IntegrationModel:
+    # Create simple test model that focuses on training infrastructure, not architecture
+    class TestModel:
         def __init__(self):
             self.training = True
-            self.layers = [
-                type('layer', (), {
-                    'weight': type('param', (), {'data': np.random.randn(4, 2), 'grad': None})(),
-                    'bias': type('param', (), {'data': np.zeros(2), 'grad': None})()
-                })()
-            ]
+            # Minimal parameters for testing training infrastructure
+            self.weight = type('param', (), {'data': np.array([1.0, -0.5]), 'grad': None})()
 
         def forward(self, x):
-            # Simple forward pass
-            layer = self.layers[0]
-            output = np.dot(x.data, layer.weight.data) + layer.bias.data
-            result = type('output', (), {'data': output})()
+            # Simple operation to test training loop
+            output = np.sum(x.data * self.weight.data)
+            result = type('output', (), {'data': np.array([output])})()
             return result
 
         def parameters(self):
-            params = []
-            for layer in self.layers:
-                params.extend([layer.weight, layer.bias])
-            return params
+            return [self.weight]
 
     class IntegrationOptimizer:
         def __init__(self, params, lr=0.01):
@@ -1241,7 +1228,7 @@ def test_module():
             self.data = np.array(data, dtype=float)
 
     # Create integrated system
-    model = IntegrationModel()
+    model = TestModel()
     optimizer = IntegrationOptimizer(model.parameters(), lr=0.01)
     loss_fn = IntegrationLoss()
     scheduler = CosineSchedule(max_lr=0.1, min_lr=0.001, total_epochs=3)
@@ -1256,8 +1243,8 @@ def test_module():
 
     # Test data
     data = [
-        (IntegrationTensor([[1, 0, 1, 0]]), IntegrationTensor([1, 0])),
-        (IntegrationTensor([[0, 1, 0, 1]]), IntegrationTensor([0, 1]))
+        (IntegrationTensor([1.0, 0.5]), IntegrationTensor([0.8])),
+        (IntegrationTensor([0.5, 1.0]), IntegrationTensor([0.2]))
     ]
 
     # Test training
