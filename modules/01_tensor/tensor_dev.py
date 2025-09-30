@@ -720,7 +720,7 @@ def test_unit_tensor_creation():
 
     print("✅ Tensor creation works correctly!")
 
-test_unit_tensor_creation()
+# test_unit_tensor_creation()  # Moved to main block
 
 # %% [markdown]
 """
@@ -855,7 +855,7 @@ def test_unit_arithmetic_operations():
 
     print("✅ Arithmetic operations work correctly!")
 
-test_unit_arithmetic_operations()
+# test_unit_arithmetic_operations()  # Moved to main block
 
 # %% [markdown]
 """
@@ -1004,7 +1004,7 @@ def test_unit_matrix_multiplication():
 
     print("✅ Matrix multiplication works correctly!")
 
-test_unit_matrix_multiplication()
+# test_unit_matrix_multiplication()  # Moved to main block
 
 # %% [markdown]
 """
@@ -1169,7 +1169,7 @@ def test_unit_shape_manipulation():
 
     print("✅ Shape manipulation works correctly!")
 
-test_unit_shape_manipulation()
+# test_unit_shape_manipulation()  # Moved to main block
 
 # %% [markdown]
 """
@@ -1328,7 +1328,7 @@ def test_unit_reduction_operations():
 
     print("✅ Reduction operations work correctly!")
 
-test_unit_reduction_operations()
+# test_unit_reduction_operations()  # Moved to main block
 
 # %% [markdown]
 """
@@ -1517,7 +1517,7 @@ def demonstrate_tensor_integration():
     print("✅ Neural network layer simulation complete!")
     return y
 
-demonstrate_tensor_integration()
+# demonstrate_tensor_integration()  # Moved to main block
 
 # %% [markdown]
 """
@@ -1636,12 +1636,25 @@ def test_module():
     print("🎉 ALL TESTS PASSED! Module ready for export.")
     print("Run: tito module complete 01_tensor")
 
-test_module()
+# test_module()  # Moved to main block
 
 # %%
 if __name__ == "__main__":
     print("🚀 Running Tensor Foundation module...")
+
+    # Run all unit tests
+    test_unit_tensor_creation()
+    test_unit_arithmetic_operations()
+    test_unit_matrix_multiplication()
+    test_unit_shape_manipulation()
+    test_unit_reduction_operations()
+
+    # Run integration demo
+    demonstrate_tensor_integration()
+
+    # Run final module test
     test_module()
+
     print("✅ Module validation complete!")
 
 # %% [markdown]
