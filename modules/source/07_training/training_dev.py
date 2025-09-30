@@ -309,6 +309,7 @@ This preserves the relative magnitudes while preventing explosion.
 """
 
 # %% nbgrader={"grade": false, "grade_id": "gradient_clipping", "locked": false, "solution": true}
+#| export
 def clip_grad_norm(parameters: List, max_norm: float = 1.0) -> float:
     """
     Clip gradients by global norm to prevent exploding gradients.
@@ -485,6 +486,7 @@ for epoch in range(num_epochs):
 """
 
 # %% nbgrader={"grade": false, "grade_id": "trainer_class", "locked": false, "solution": true}
+#| export
 class Trainer:
     """
     Complete training orchestrator for neural networks.
