@@ -1,9 +1,9 @@
 """
-Module 05: Progressive Integration Tests
-Tests that Module 05 (Dense/Networks) works correctly AND that the entire foundation stack works.
+Module 08: Progressive Integration Tests
+Tests that Module 08 (DataLoader) works correctly AND that the entire prior stack works.
 
-DEPENDENCY CHAIN: 01_setup → 02_tensor → 03_activations → 04_layers → 05_dense
-This is the FOUNDATION MILESTONE - everything should work together for neural networks!
+DEPENDENCY CHAIN: 01_setup → 02_tensor → 03_activations → 04_layers → 05_dense → 06_spatial → 07_attention → 08_dataloader
+This is where we enable real data processing for ML systems.
 """
 
 import numpy as np
@@ -14,331 +14,388 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 
 
-class TestEntireFoundationStack:
-    """Test that the complete foundation stack (01→05) works together."""
+class TestPriorStackStillWorking:
+    """Quick regression checks that prior modules (01→07) still work."""
     
-    def test_setup_foundation_intact(self):
-        """Verify Module 01 (Setup) foundation is solid."""
-        # Environment
+    def test_foundation_stack_stable(self):
+        """Verify foundation stack (01→05) remains stable."""
+        # Environment (Module 01)
         assert sys.version_info >= (3, 8), "Foundation broken: Python version"
         
-        # Project structure
-        project_root = Path(__file__).parent.parent.parent
-        assert (project_root / "modules").exists(), "Foundation broken: Module structure"
-        
-        # Dependencies
-        import numpy as np
-        assert np.__version__ is not None, "Foundation broken: Numpy"
-    
-    def test_tensor_foundation_intact(self):
-        """Verify Module 02 (Tensor) foundation is solid."""
+        # Core functionality should work
         try:
             from tinytorch.core.tensor import Tensor
-            
-            # Basic tensor functionality
-            t = Tensor([1, 2, 3])
-            assert t.shape == (3,), "Foundation broken: Tensor creation"
-            
-            # Multi-dimensional tensors
-            t2 = Tensor(np.random.randn(4, 5))
-            assert t2.shape == (4, 5), "Foundation broken: Multi-dim tensors"
-            
-        except ImportError:
-            assert True, "Tensor foundation not implemented yet"
-    
-    def test_activation_foundation_intact(self):
-        """Verify Module 03 (Activations) foundation is solid."""
-        try:
-            from tinytorch.core.activations import ReLU, Sigmoid
-            from tinytorch.core.tensor import Tensor
-            
-            relu = ReLU()
-            sigmoid = Sigmoid()
-            
-            x = Tensor(np.array([-1, 0, 1]))
-            
-            # Activations should work with tensors
-            h = relu(x)
-            y = sigmoid(h)
-            
-            assert h.shape == x.shape, "Foundation broken: ReLU"
-            assert y.shape == x.shape, "Foundation broken: Sigmoid"
-            
-        except ImportError:
-            assert True, "Activation foundation not implemented yet"
-    
-    def test_layer_foundation_intact(self):
-        """Verify Module 04 (Layers) foundation is solid."""
-        try:
-            from tinytorch.core.layers import Layer
-            
-            # Layer base class should exist
-            layer = Layer()
-            assert hasattr(layer, 'forward'), "Foundation broken: Layer interface"
-            assert callable(layer), "Foundation broken: Layer callable"
-            
-        except ImportError:
-            assert True, "Layer foundation not implemented yet"
-
-
-class TestDenseNetworkCapability:
-    """Test that Module 05 enables full neural network capability."""
-    
-    def test_dense_layer_creation(self):
-        """Test Dense layer works with the foundation."""
-        try:
             from tinytorch.core.layers import Dense
-            from tinytorch.core.tensor import Tensor
             
-            # Create Dense layer
+            # Should still be able to build networks
             layer = Dense(10, 5)
-            
-            # Should have proper weights and bias
-            assert hasattr(layer, 'weights'), "Dense broken: No weights"
-            assert layer.weights.shape == (10, 5), "Dense broken: Wrong weight shape"
-            
-            # Should work with tensor input
-            x = Tensor(np.random.randn(32, 10))
+            x = Tensor(np.random.randn(4, 10))
             output = layer(x)
-            
-            assert output.shape == (32, 5), "Dense broken: Wrong output shape"
+            assert output.shape == (4, 5), "Foundation broken: Neural network"
             
         except ImportError:
-            assert True, "Dense layer not implemented yet"
+            assert True, "Foundation not implemented yet"
     
-    def test_multi_layer_network(self):
-        """Test building multi-layer networks."""
+    def test_advanced_stack_stable(self):
+        """Verify advanced modules (06→07) still work."""
         try:
-            from tinytorch.core.layers import Dense
-            from tinytorch.core.activations import ReLU, Sigmoid
+            from tinytorch.core.spatial import Conv2D
+            from tinytorch.core.attention import MultiHeadAttention
+            
+            # Spatial and attention should work
+            conv = Conv2D(in_channels=3, out_channels=16, kernel_size=3)
+            attention = MultiHeadAttention(embed_dim=64, num_heads=8)
+            
+            assert hasattr(conv, 'forward'), "Advanced stack broken: Spatial"
+            assert hasattr(attention, 'forward'), "Advanced stack broken: Attention"
+            
+        except ImportError:
+            assert True, "Advanced stack not implemented yet"
+
+
+class TestModule08DataLoaderCore:
+    """Test Module 08 (DataLoader) core functionality."""
+    
+    def test_dataset_creation(self):
+        """Test basic dataset creation works."""
+        try:
+            from tinytorch.core.data import Dataset
+            
+            # Create simple dataset
+            class SimpleDataset(Dataset):
+                def __init__(self, size=100):
+                    self.size = size
+                    self.data = np.random.randn(size, 10)
+                    self.targets = np.random.randint(0, 3, size)
+                
+                def __len__(self):
+                    return self.size
+                
+                def __getitem__(self, idx):
+                    return self.data[idx], self.targets[idx]
+            
+            dataset = SimpleDataset(50)
+            assert len(dataset) == 50, "Dataset length broken"
+            
+            # Test data access
+            sample, target = dataset[0]
+            assert sample.shape == (10,), "Dataset sample shape broken"
+            assert isinstance(target, (int, np.integer)), "Dataset target type broken"
+            
+        except ImportError:
+            assert True, "Dataset not implemented yet"
+    
+    def test_dataloader_creation(self):
+        """Test DataLoader creation and batching."""
+        try:
+            from tinytorch.core.data import DataLoader, Dataset
             from tinytorch.core.tensor import Tensor
             
-            # Build 3-layer network for XOR
-            hidden = Dense(2, 4, use_bias=True)
-            output = Dense(4, 1, use_bias=True)
-            relu = ReLU()
-            sigmoid = Sigmoid()
+            # Simple dataset for testing
+            class TestDataset(Dataset):
+                def __init__(self):
+                    self.data = np.random.randn(20, 5)
+                    self.targets = np.random.randint(0, 2, 20)
+                
+                def __len__(self):
+                    return 20
+                
+                def __getitem__(self, idx):
+                    return Tensor(self.data[idx]), self.targets[idx]
             
-            # XOR inputs
-            X = Tensor(np.array([[0, 0], [0, 1], [1, 0], [1, 1]], dtype=np.float32))
+            dataset = TestDataset()
+            dataloader = DataLoader(dataset, batch_size=4, shuffle=True)
             
-            # Forward pass through complete network
-            h = hidden(X)           # Dense transformation
-            h_act = relu(h)         # Non-linear activation
-            out = output(h_act)     # Output transformation
-            predictions = sigmoid(out)  # Output activation
-            
-            assert predictions.shape == (4, 1), "Multi-layer network broken"
-            assert np.all(predictions.data >= 0), "Network output invalid"
-            assert np.all(predictions.data <= 1), "Network output invalid"
-            
+            # Test batching
+            for batch_x, batch_y in dataloader:
+                assert batch_x.shape == (4, 5), "DataLoader batch shape broken"
+                assert len(batch_y) == 4, "DataLoader target batch broken"
+                break  # Just test first batch
+                
         except ImportError:
-            assert True, "Multi-layer networks not ready yet"
-
-
-class TestXORProblemSolution:
-    """Test that the foundation can solve the XOR problem."""
+            assert True, "DataLoader not implemented yet"
     
-    def test_xor_network_architecture(self):
-        """Test XOR network architecture is possible."""
+    def test_real_dataset_support(self):
+        """Test support for real datasets like CIFAR-10."""
         try:
-            from tinytorch.core.layers import Dense
-            from tinytorch.core.activations import ReLU, Sigmoid
+            from tinytorch.core.data import CIFAR10Dataset
+            
+            # Note: This might download data, so we'll just test instantiation
+            # In real usage, students would download CIFAR-10
+            try:
+                dataset = CIFAR10Dataset(root='./data', train=True, download=False)
+                # If dataset exists, test basic functionality
+                if len(dataset) > 0:
+                    sample, target = dataset[0]
+                    assert len(sample.shape) >= 2, "CIFAR-10 sample shape invalid"
+                    assert isinstance(target, (int, np.integer)), "CIFAR-10 target invalid"
+            except (FileNotFoundError, RuntimeError):
+                # Data not downloaded, which is fine for testing
+                assert True, "CIFAR-10 data not available (expected)"
+                
+        except ImportError:
+            assert True, "Real dataset support not implemented yet"
+
+
+class TestProgressiveStackIntegration:
+    """Test that the complete stack (01→08) works together."""
+    
+    def test_complete_training_pipeline(self):
+        """Test complete ML pipeline: data → model → training."""
+        try:
+            from tinytorch.core.data import DataLoader, Dataset
             from tinytorch.core.tensor import Tensor
-            
-            # XOR problem setup
-            X = Tensor(np.array([[0, 0], [0, 1], [1, 0], [1, 1]], dtype=np.float32))
-            y_target = np.array([[0], [1], [1], [0]], dtype=np.float32)
-            
-            # Network: 2 -> 4 -> 1 (sufficient for XOR)
-            hidden = Dense(2, 4, use_bias=True)
-            output = Dense(4, 1, use_bias=True)
-            relu = ReLU()
-            sigmoid = Sigmoid()
-            
-            # Forward pass
-            h = hidden(X)
-            h_relu = relu(h)
-            out = output(h_relu)
-            predictions = sigmoid(out)
-            
-            # Network should produce valid outputs
-            assert predictions.shape == (4, 1), "XOR network architecture broken"
-            
-            # Test network capacity (parameter count)
-            hidden_params = 2 * 4 + 4  # weights + bias
-            output_params = 4 * 1 + 1  # weights + bias
-            total_params = hidden_params + output_params
-            
-            # XOR requires at least 9 parameters theoretically
-            assert total_params >= 9, "XOR network has insufficient capacity"
-            
-        except ImportError:
-            assert True, "XOR network not ready yet"
-    
-    def test_nonlinear_problem_solvability(self):
-        """Test that non-linear problems are now solvable."""
-        try:
-            from tinytorch.core.layers import Dense
-            from tinytorch.core.activations import ReLU
-            from tinytorch.core.tensor import Tensor
-            
-            # Create network that can solve non-linear problems
-            layer1 = Dense(2, 10)
-            relu = ReLU()
-            layer2 = Dense(10, 1)
-            
-            # Test various non-linear patterns
-            patterns = [
-                np.array([[0, 0], [0, 1], [1, 0], [1, 1]]),  # XOR pattern
-                np.array([[1, 1], [1, 0], [0, 1], [0, 0]]),  # Inverse XOR
-            ]
-            
-            for pattern in patterns:
-                X = Tensor(pattern.astype(np.float32))
-                
-                # Network should handle any pattern
-                h = layer1(X)
-                h_nonlinear = relu(h)
-                output = layer2(h_nonlinear)
-                
-                assert output.shape[0] == 4, "Pattern processing broken"
-                
-        except ImportError:
-            assert True, "Non-linear problem solving not ready yet"
-
-
-class TestFoundationMilestoneReadiness:
-    """Test that we're ready for Foundation Milestone achievements."""
-    
-    def test_mnist_mlp_architecture_possible(self):
-        """Test we can build MNIST MLP architecture."""
-        try:
             from tinytorch.core.layers import Dense
             from tinytorch.core.activations import ReLU, Softmax
-            from tinytorch.core.tensor import Tensor
             
-            # MNIST MLP: 784 -> 128 -> 64 -> 10
-            layer1 = Dense(784, 128)
-            layer2 = Dense(128, 64)
-            layer3 = Dense(64, 10)
+            # Create dataset
+            class MLDataset(Dataset):
+                def __init__(self):
+                    self.data = np.random.randn(40, 10)
+                    self.targets = np.random.randint(0, 3, 40)
+                
+                def __len__(self):
+                    return 40
+                
+                def __getitem__(self, idx):
+                    return Tensor(self.data[idx]), self.targets[idx]
+            
+            # Create data pipeline
+            dataset = MLDataset()
+            dataloader = DataLoader(dataset, batch_size=8, shuffle=True)
+            
+            # Create model using prior modules
+            layer1 = Dense(10, 16)
+            layer2 = Dense(16, 3)
             relu = ReLU()
             softmax = Softmax()
             
-            # Simulated MNIST batch
-            x = Tensor(np.random.randn(32, 784))  # 32 images, flattened
-            
-            # Forward pass through MLP
-            h1 = relu(layer1(x))     # 32 x 128
-            h2 = relu(layer2(h1))    # 32 x 64
-            logits = layer3(h2)      # 32 x 10
-            probs = softmax(logits)  # 32 x 10
-            
-            assert probs.shape == (32, 10), "MNIST MLP architecture broken"
-            
-            # Softmax should sum to 1 across classes
-            prob_sums = np.sum(probs.data, axis=1)
-            assert np.allclose(prob_sums, 1.0), "Softmax probabilities broken"
-            
-        except ImportError:
-            assert True, "MNIST MLP not ready yet"
-    
-    def test_classification_capability(self):
-        """Test basic classification capability."""
-        try:
-            from tinytorch.core.layers import Dense
-            from tinytorch.core.activations import ReLU, Softmax
-            from tinytorch.core.tensor import Tensor
-            
-            # Simple classifier: features -> hidden -> classes
-            feature_layer = Dense(20, 10)
-            classifier = Dense(10, 3)  # 3 classes
-            relu = ReLU()
-            softmax = Softmax()
-            
-            # Batch of features
-            features = Tensor(np.random.randn(16, 20))
-            
-            # Classification pipeline
-            h = relu(feature_layer(features))
-            logits = classifier(h)
-            class_probs = softmax(logits)
-            
-            # Should produce valid class probabilities
-            assert class_probs.shape == (16, 3), "Classification shape broken"
-            assert np.all(class_probs.data >= 0), "Negative probabilities"
-            assert np.allclose(np.sum(class_probs.data, axis=1), 1.0), "Probabilities don't sum to 1"
-            
-        except ImportError:
-            assert True, "Classification capability not ready yet"
-
-
-class TestCompleteStackValidation:
-    """Validate the complete foundation stack works end-to-end."""
-    
-    def test_end_to_end_neural_network(self):
-        """Test complete neural network from scratch."""
-        try:
-            from tinytorch.core.tensor import Tensor
-            from tinytorch.core.layers import Dense
-            from tinytorch.core.activations import ReLU, Sigmoid
-            
-            # End-to-end test: Build and run a complete neural network
-            
-            # 1. Data (from setup/tensor foundation)
-            np.random.seed(42)  # Reproducible
-            X = Tensor(np.random.randn(10, 5))
-            
-            # 2. Network architecture (from layers foundation)
-            layer1 = Dense(5, 8)
-            layer2 = Dense(8, 3)
-            layer3 = Dense(3, 1)
-            
-            # 3. Activations (from activation foundation)
-            relu = ReLU()
-            sigmoid = Sigmoid()
-            
-            # 4. Forward pass (everything working together)
-            h1 = relu(layer1(X))      # 10 x 8
-            h2 = relu(layer2(h1))     # 10 x 3
-            output = sigmoid(layer3(h2))  # 10 x 1
-            
-            # 5. Validation
-            assert output.shape == (10, 1), "End-to-end network broken"
-            assert np.all(output.data >= 0), "Network output invalid"
-            assert np.all(output.data <= 1), "Network output invalid"
-            
-            # 6. Network should be trainable (parameters exist)
-            assert hasattr(layer1, 'weights'), "Layer 1 not trainable"
-            assert hasattr(layer2, 'weights'), "Layer 2 not trainable"
-            assert hasattr(layer3, 'weights'), "Layer 3 not trainable"
-            
-        except ImportError:
-            assert True, "End-to-end neural network not ready yet"
-    
-    def test_foundation_stability_under_load(self):
-        """Test foundation remains stable under computational load."""
-        try:
-            from tinytorch.core.tensor import Tensor
-            from tinytorch.core.layers import Dense
-            from tinytorch.core.activations import ReLU
-            
-            # Stress test: Large network
-            layer1 = Dense(100, 200)
-            layer2 = Dense(200, 100)
-            layer3 = Dense(100, 10)
-            relu = ReLU()
-            
-            # Large batch
-            X = Tensor(np.random.randn(256, 100))
-            
-            # Multiple forward passes
-            for i in range(5):
-                h1 = relu(layer1(X))
-                h2 = relu(layer2(h1))
-                output = layer3(h2)
+            # Test training loop structure
+            for batch_x, batch_y in dataloader:
+                # Forward pass through complete pipeline
+                h = relu(layer1(batch_x))
+                logits = layer2(h)
+                predictions = softmax(logits)
                 
-                assert output.shape == (256, 10), f"Foundation unstable at iteration {i}"
+                assert predictions.shape == (8, 3), "Complete pipeline broken"
+                
+                # Test one batch
+                break
+                
+        except ImportError:
+            assert True, "Complete training pipeline not ready yet"
+    
+    def test_cnn_data_pipeline(self):
+        """Test CNN pipeline with spatial data."""
+        try:
+            from tinytorch.core.data import DataLoader, Dataset  
+            from tinytorch.core.spatial import Conv2D, MaxPool2D
+            from tinytorch.core.layers import Dense
+            from tinytorch.core.tensor import Tensor
+            
+            # Image dataset
+            class ImageDataset(Dataset):
+                def __init__(self):
+                    # 32x32 RGB images
+                    self.data = np.random.randn(20, 3, 32, 32)
+                    self.targets = np.random.randint(0, 5, 20)
+                
+                def __len__(self):
+                    return 20
+                
+                def __getitem__(self, idx):
+                    return Tensor(self.data[idx]), self.targets[idx]
+            
+            dataset = ImageDataset()
+            dataloader = DataLoader(dataset, batch_size=4)
+            
+            # CNN components
+            conv1 = Conv2D(in_channels=3, out_channels=16, kernel_size=3)
+            pool = MaxPool2D(kernel_size=2)
+            fc = Dense(16 * 15 * 15, 5)  # Approximate after conv/pool
+            
+            # Test CNN pipeline
+            for batch_x, batch_y in dataloader:
+                assert batch_x.shape == (4, 3, 32, 32), "Image batch shape broken"
+                
+                # Simplified CNN forward (shape checking)
+                if hasattr(conv1, '__call__'):
+                    conv_out = conv1(batch_x)
+                    # Check reasonable conv output shape
+                    assert len(conv_out.shape) == 4, "Conv output dimensionality broken"
+                
+                break
+                
+        except ImportError:
+            assert True, "CNN data pipeline not ready yet"
+
+
+class TestRealWorldDataCapability:
+    """Test capability to handle real-world datasets."""
+    
+    def test_data_preprocessing_pipeline(self):
+        """Test data preprocessing and augmentation."""
+        try:
+            from tinytorch.core.data import transforms
+            from tinytorch.core.tensor import Tensor
+            
+            # Basic transforms
+            if hasattr(transforms, 'Normalize'):
+                normalize = transforms.Normalize(mean=[0.5], std=[0.5])
+                
+                # Test data
+                data = Tensor(np.random.randn(3, 32, 32))
+                normalized = normalize(data)
+                
+                assert normalized.shape == data.shape, "Normalization broken"
+            
+            if hasattr(transforms, 'RandomCrop'):
+                crop = transforms.RandomCrop(size=28)
+                
+                data = Tensor(np.random.randn(3, 32, 32))
+                cropped = crop(data)
+                
+                assert cropped.shape[-2:] == (28, 28), "Random crop broken"
+                
+        except ImportError:
+            assert True, "Data preprocessing not implemented yet"
+    
+    def test_memory_efficient_loading(self):
+        """Test memory efficient data loading."""
+        try:
+            from tinytorch.core.data import DataLoader, Dataset
+            
+            # Large dataset simulation
+            class LargeDataset(Dataset):
+                def __init__(self, size=1000):
+                    self.size = size
+                    # Don't load all data at once - simulate lazy loading
+                
+                def __len__(self):
+                    return self.size
+                
+                def __getitem__(self, idx):
+                    # Simulate loading data on-demand
+                    return np.random.randn(100), idx % 10
+            
+            dataset = LargeDataset(1000)
+            dataloader = DataLoader(dataset, batch_size=32, shuffle=True)
+            
+            # Should be able to iterate without loading all data
+            batch_count = 0
+            for batch_x, batch_y in dataloader:
+                batch_count += 1
+                if batch_count >= 3:  # Test a few batches
+                    break
+            
+            assert batch_count == 3, "Memory efficient loading broken"
             
         except ImportError:
-            assert True, "Foundation stress testing not ready yet"
+            assert True, "Memory efficient loading not ready yet"
+    
+    def test_parallel_data_loading(self):
+        """Test parallel/multi-threaded data loading."""
+        try:
+            from tinytorch.core.data import DataLoader, Dataset
+            
+            class ParallelDataset(Dataset):
+                def __init__(self):
+                    self.data = np.random.randn(100, 50)
+                
+                def __len__(self):
+                    return 100
+                
+                def __getitem__(self, idx):
+                    # Simulate some processing time
+                    return self.data[idx], idx % 5
+            
+            dataset = ParallelDataset()
+            
+            # Test with num_workers if supported
+            if 'num_workers' in DataLoader.__init__.__code__.co_varnames:
+                dataloader = DataLoader(dataset, batch_size=16, num_workers=2)
+            else:
+                dataloader = DataLoader(dataset, batch_size=16)
+            
+            # Should work regardless of parallel support
+            for batch_x, batch_y in dataloader:
+                assert batch_x.shape == (16, 50), "Parallel loading broken"
+                break
+                
+        except ImportError:
+            assert True, "Parallel data loading not ready yet"
+
+
+class TestRegressionPrevention:
+    """Ensure previous modules still work after Module 08 development."""
+    
+    def test_no_foundation_regression(self):
+        """Verify foundation stack (01→05) unchanged."""
+        # Core functionality should remain stable
+        assert sys.version_info.major >= 3, "Foundation: Python detection broken"
+        
+        # Tensor operations should still work
+        try:
+            from tinytorch.core.tensor import Tensor
+            t = Tensor([1, 2, 3])
+            assert t.shape == (3,), "Foundation regression: Tensor broken"
+        except ImportError:
+            import numpy as np
+            arr = np.array([1, 2, 3])
+            assert arr.shape == (3,), "Foundation regression: Numpy broken"
+    
+    def test_no_advanced_regression(self):
+        """Verify advanced modules (06→07) unchanged."""
+        try:
+            from tinytorch.core.spatial import Conv2D
+            from tinytorch.core.attention import MultiHeadAttention
+            
+            # Advanced operations should still work
+            conv = Conv2D(in_channels=1, out_channels=4, kernel_size=3)
+            attention = MultiHeadAttention(embed_dim=32, num_heads=4)
+            
+            assert hasattr(conv, 'forward'), "Advanced regression: Spatial broken"
+            assert hasattr(attention, 'forward'), "Advanced regression: Attention broken"
+            
+        except ImportError:
+            # If not implemented, basic functionality should work
+            import numpy as np
+            assert np.random is not None, "Advanced regression: Random broken"
+    
+    def test_progressive_stability(self):
+        """Test the progressive stack is stable through data loading."""
+        # Stack should be stable through: Setup → ... → Attention → DataLoader
+        
+        # Setup level
+        import numpy as np
+        assert np is not None, "Setup level broken"
+        
+        # Foundation level (if available)
+        try:
+            from tinytorch.core.tensor import Tensor
+            from tinytorch.core.layers import Dense
+            
+            # Neural networks should still work
+            layer = Dense(5, 3)
+            x = Tensor(np.random.randn(2, 5))
+            output = layer(x)
+            assert output.shape == (2, 3), "Foundation level broken"
+            
+        except ImportError:
+            pass  # Not implemented yet
+        
+        # Data level (if available)
+        try:
+            from tinytorch.core.data import Dataset
+            
+            class TestDataset(Dataset):
+                def __len__(self):
+                    return 10
+                def __getitem__(self, idx):
+                    return idx, idx * 2
+            
+            dataset = TestDataset()
+            assert len(dataset) == 10, "Data level broken"
+            
+        except ImportError:
+            pass  # Not implemented yet

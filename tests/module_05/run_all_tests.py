@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 """
-Run all tests for Module 05: Dense/Networks
+Run all tests for Module XX: [Module Name]
+Template test runner - copy to each module's test directory
 """
 
 import sys
 from pathlib import Path
-import importlib
+import importlib.util
 import time
 from typing import List, Dict
 
@@ -22,13 +23,21 @@ def run_module_tests() -> Dict:
     
     console = Console()
     
+    # Update module number and name
+    MODULE_NUMBER = "XX"
+    MODULE_NAME = "[Module Name]"
+    
     # Header
-    console.print(Panel("[bold blue]Module 05: Dense/Networks - Test Suite[/bold blue]", 
+    console.print(Panel(f"[bold blue]Module {MODULE_NUMBER}: {MODULE_NAME} - Test Suite[/bold blue]", 
                        expand=False))
     
     # Find all test files in this module
     test_files = list(Path(__file__).parent.glob("test_*.py"))
     test_files = [f for f in test_files if f.name != Path(__file__).name]
+    
+    if not test_files:
+        console.print("[yellow]No test files found in this module![/yellow]")
+        return {'status': 'NO_TESTS', 'passed': 0, 'failed': 0}
     
     all_results = []
     total_passed = 0
@@ -46,78 +55,90 @@ def run_module_tests() -> Dict:
     for test_file in sorted(test_files):
         module_name = test_file.stem
         
-        # Import test module
-        spec = importlib.util.spec_from_file_location(module_name, test_file)
-        test_module = importlib.util.module_from_spec(spec)
-        spec.loader.exec_module(test_module)
-        
-        # Find test classes
-        for class_name in dir(test_module):
-            if class_name.startswith("Test"):
-                test_class = getattr(test_module, class_name)
-                
-                # Create instance
-                try:
-                    instance = test_class()
-                except Exception as e:
-                    table.add_row(
-                        module_name,
-                        class_name,
-                        "initialization",
-                        "[red]❌ ERROR[/red]",
-                        "-"
-                    )
-                    total_failed += 1
-                    continue
-                
-                # Run test methods
-                for method_name in dir(instance):
-                    if method_name.startswith("test_"):
-                        method = getattr(instance, method_name)
-                        
-                        # Run test
-                        start = time.time()
-                        try:
-                            method()
-                            status = "[green]✅ PASS[/green]"
-                            total_passed += 1
-                        except AssertionError as e:
-                            status = "[red]❌ FAIL[/red]"
-                            total_failed += 1
-                        except ImportError:
-                            status = "[yellow]⏭️ SKIP[/yellow]"
-                            total_skipped += 1
-                        except Exception as e:
-                            status = "[red]💥 ERROR[/red]"
-                            total_failed += 1
-                        
-                        duration = time.time() - start
-                        
+        try:
+            # Import test module
+            spec = importlib.util.spec_from_file_location(module_name, test_file)
+            test_module = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(test_module)
+            
+            # Find test classes
+            for class_name in dir(test_module):
+                if class_name.startswith("Test"):
+                    test_class = getattr(test_module, class_name)
+                    
+                    # Create instance
+                    try:
+                        instance = test_class()
+                    except Exception as e:
                         table.add_row(
                             module_name,
                             class_name,
-                            method_name,
-                            status,
-                            f"{duration:.3f}s"
+                            "initialization",
+                            "[red]❌ ERROR[/red]",
+                            "-"
                         )
+                        total_failed += 1
+                        continue
+                    
+                    # Run test methods
+                    for method_name in dir(instance):
+                        if method_name.startswith("test_"):
+                            method = getattr(instance, method_name)
+                            
+                            # Skip template placeholder tests
+                            if "pass" in str(method.__code__.co_code):
+                                continue
+                            
+                            # Run test
+                            start = time.time()
+                            try:
+                                method()
+                                status = "[green]✅ PASS[/green]"
+                                total_passed += 1
+                            except AssertionError as e:
+                                status = "[red]❌ FAIL[/red]"
+                                total_failed += 1
+                            except ImportError:
+                                status = "[yellow]⏭️ SKIP[/yellow]"
+                                total_skipped += 1
+                            except Exception as e:
+                                status = "[red]💥 ERROR[/red]"
+                                total_failed += 1
+                            
+                            duration = time.time() - start
+                            
+                            table.add_row(
+                                module_name,
+                                class_name,
+                                method_name,
+                                status,
+                                f"{duration:.3f}s"
+                            )
+        except Exception as e:
+            console.print(f"[red]Error loading test file {test_file}: {e}[/red]")
+            total_failed += 1
     
-    console.print(table)
-    
-    # Summary
-    console.print(f"\n📊 Summary:")
-    console.print(f"  • Total: {total_passed + total_failed + total_skipped} tests")
-    console.print(f"  • ✅ Passed: {total_passed}")
-    console.print(f"  • ❌ Failed: {total_failed}")
-    if total_skipped > 0:
-        console.print(f"  • ⏭️  Skipped: {total_skipped}")
-    
-    # Final status
-    if total_failed == 0:
-        console.print("\n[green bold]✅ All tests passed![/green bold]")
-        return {'status': 'PASSED', 'passed': total_passed, 'failed': 0}
+    if total_passed + total_failed + total_skipped > 0:
+        console.print(table)
+        
+        # Summary
+        console.print(f"\n📊 Summary:")
+        console.print(f"  • Total: {total_passed + total_failed + total_skipped} tests")
+        console.print(f"  • ✅ Passed: {total_passed}")
+        console.print(f"  • ❌ Failed: {total_failed}")
+        if total_skipped > 0:
+            console.print(f"  • ⏭️  Skipped: {total_skipped}")
+        
+        # Final status
+        if total_failed == 0:
+            console.print("\n[green bold]✅ All tests passed![/green bold]")
+            return {'status': 'PASSED', 'passed': total_passed, 'failed': 0}
+        else:
+            console.print("\n[red]❌ Some tests failed![/red]")
+            return {'status': 'FAILED', 'passed': total_passed, 'failed': total_failed}
     else:
-        console.print("\n[red]❌ Some tests failed![/red]")
-        return {'status': 'FAILED', 'passed': total_passed, 'failed': total_failed}
+        console.print("[yellow]No actual tests implemented yet (only templates).[/yellow]")
+        return {'status': 'NO_TESTS', 'passed': 0, 'failed': 0}
 
 
 if __name__ == "__main__":

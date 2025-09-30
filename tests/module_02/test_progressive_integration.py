@@ -1,9 +1,9 @@
 """
 Module 02: Progressive Integration Tests
-Tests that Module 02 (Tensor) works correctly AND that all previous modules still work.
+Tests that Module 03 (Activations) works correctly AND that all previous modules still work.
 
-DEPENDENCY CHAIN: 01_setup → 02_tensor
-This ensures students can trace back exactly where issues originate.
+DEPENDENCY CHAIN: 01_setup → 02_tensor → 03_activations
+Students can trace back exactly where issues originate.
 """
 
 import numpy as np
@@ -14,165 +14,264 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 
 
-class TestModule01Prerequisites:
-    """Test that Module 01 (Setup) still works correctly."""
+class TestModule01Still Working:
+    """Verify Module 01 (Setup) functionality is still intact."""
     
-    def test_environment_setup_working(self):
-        """Verify setup module functionality is still working."""
-        # Python version detection
-        assert sys.version_info >= (3, 8), "Python 3.8+ required"
+    def test_setup_environment_stable(self):
+        """Ensure setup environment wasn't broken by activations development."""
+        # Core environment should be stable
+        assert sys.version_info >= (3, 8), "Setup: Python version check broken"
         
-        # Project structure
+        # Project structure should remain intact
         project_root = Path(__file__).parent.parent.parent
-        required_dirs = ['modules', 'tests', 'tito', 'tinytorch']
-        for dir_name in required_dirs:
-            dir_path = project_root / dir_name
-            assert dir_path.exists(), f"Setup failed: {dir_name} directory missing"
-    
-    def test_development_environment_ready(self):
-        """Verify development environment is properly configured."""
-        # Required packages
-        required_packages = ['numpy', 'pathlib']
-        for package in required_packages:
-            try:
-                __import__(package)
-            except ImportError:
-                assert False, f"Setup failed: {package} not available"
+        assert (project_root / "modules").exists(), "Setup: Module structure broken"
+        assert (project_root / "tinytorch").exists(), "Setup: Package structure broken"
 
 
-class TestModule02TensorCore:
-    """Test that Module 02 (Tensor) core functionality works."""
+class TestModule02StillWorking:
+    """Verify Module 02 (Tensor) functionality is still intact."""
     
-    def test_tensor_creation_and_basics(self):
-        """Test tensor creation works correctly."""
+    def test_tensor_functionality_stable(self):
+        """Ensure tensor functionality wasn't broken by activations development."""
         try:
             from tinytorch.core.tensor import Tensor
             
-            # Basic tensor creation
-            t1 = Tensor([1, 2, 3])
-            assert t1.shape == (3,), "Tensor creation failed"
+            # Basic tensor operations should still work
+            t = Tensor([1, 2, 3])
+            assert t.shape == (3,), "Module 02: Tensor creation broken"
             
-            # Numpy array integration
+            # Numpy integration should still work
             arr = np.array([[1, 2], [3, 4]])
             t2 = Tensor(arr)
-            assert t2.shape == (2, 2), "Numpy integration failed"
+            assert t2.shape == (2, 2), "Module 02: Numpy integration broken"
             
         except ImportError:
-            assert True, "Tensor not implemented yet (expected)"
+            assert True, "Module 02: Tensor not implemented yet"
+
+
+class TestModule03ActivationsCore:
+    """Test Module 03 (Activations) core functionality."""
     
-    def test_tensor_operations(self):
-        """Test basic tensor operations work."""
+    def test_relu_activation(self):
+        """Test ReLU activation function."""
         try:
+            from tinytorch.core.activations import ReLU
             from tinytorch.core.tensor import Tensor
             
-            t1 = Tensor([1, 2, 3])
-            t2 = Tensor([4, 5, 6])
+            relu = ReLU()
+            x = Tensor(np.array([-2, -1, 0, 1, 2]))
+            output = relu(x)
             
-            # Test operations if implemented
-            if hasattr(t1, '__add__'):
-                result = t1 + t2
-                expected = np.array([5, 7, 9])
-                assert np.array_equal(result.data, expected), "Tensor addition failed"
+            expected = np.array([0, 0, 0, 1, 2])
+            assert np.array_equal(output.data, expected), "ReLU activation failed"
             
         except ImportError:
-            assert True, "Tensor operations not implemented yet (expected)"
-
-
-class TestProgressiveStack:
-    """Test that the progressive stack (01→02) works together."""
+            assert True, "Module 02: Activations not implemented yet"
     
-    def test_setup_enables_tensor(self):
-        """Test that proper setup enables tensor functionality."""
-        # Verify setup created the foundation for tensors
-        
-        # 1. Environment should support numpy (from setup)
-        import numpy as np
-        assert np.__version__ is not None, "Numpy not properly set up"
-        
-        # 2. Project structure should support tensor module
-        tensor_module_path = Path(__file__).parent.parent.parent / "modules" / "source" / "02_tensor"
-        assert tensor_module_path.exists(), "Setup didn't create proper module structure"
-    
-    def test_end_to_end_capability(self):
-        """Test end-to-end capability through Module 02."""
+    def test_sigmoid_activation(self):
+        """Test Sigmoid activation function."""
         try:
-            # This should work if both setup and tensor are implemented
+            from tinytorch.core.activations import Sigmoid
             from tinytorch.core.tensor import Tensor
             
-            # Create tensors using environment from Module 01
-            data = np.random.randn(5, 10)  # Uses numpy from setup
-            t = Tensor(data)  # Uses tensor from Module 02
+            sigmoid = Sigmoid()
+            x = Tensor(np.array([0, 1, -1]))
+            output = sigmoid(x)
             
-            # Basic functionality should work
-            assert t.shape == (5, 10), "End-to-end stack broken"
-            assert isinstance(t.data, np.ndarray), "Tensor-numpy integration broken"
+            # Sigmoid(0) should be 0.5
+            assert np.isclose(output.data[0], 0.5, atol=1e-6), "Sigmoid activation failed"
+            
+            # All outputs should be in (0, 1)
+            assert np.all(output.data > 0) and np.all(output.data < 1), "Sigmoid range failed"
             
         except ImportError:
-            # If tensor not implemented, that's expected
-            # But setup should still work
-            assert sys.version_info >= (3, 8), "Setup module broken"
+            assert True, "Module 02: Sigmoid not implemented yet"
 
 
-class TestDependencyValidation:
-    """Validate that dependencies are working correctly."""
+class TestProgressive StackIntegration:
+    """Test that the full stack (01→02→03) works together."""
     
-    def test_module_01_exports(self):
-        """Test Module 01 exports are available."""
-        try:
-            # Try to import setup functionality
-            from tinytorch.setup import get_system_info
-            info = get_system_info()
-            assert 'platform' in info, "Module 01 exports broken"
-        except ImportError:
-            # If not implemented, verify basic setup works
-            import platform
-            assert platform.system() in ['Darwin', 'Linux', 'Windows'], "Basic setup broken"
-    
-    def test_module_02_builds_on_01(self):
-        """Test Module 02 correctly uses Module 01 foundation."""
+    def test_tensor_activation_pipeline(self):
+        """Test tensors work correctly with activations."""
         try:
             from tinytorch.core.tensor import Tensor
+            from tinytorch.core.activations import ReLU, Sigmoid
             
-            # Tensor should use numpy (set up by Module 01)
-            t = Tensor(np.array([1, 2, 3]))
+            # Create tensor using Module 02
+            x = Tensor(np.array([-1, 0, 1, 2]))
             
-            # Should use system info for optimization hints
-            if hasattr(t, 'device') or hasattr(t, 'dtype'):
-                # Advanced tensor features building on setup
-                assert True, "Module 02 successfully builds on Module 01"
+            # Apply activations from Module 03
+            relu = ReLU()
+            sigmoid = Sigmoid()
+            
+            # Pipeline: input -> ReLU -> Sigmoid
+            h = relu(x)
+            output = sigmoid(h)
+            
+            # Should work end-to-end
+            assert output.shape == x.shape, "Tensor-activation pipeline broken"
+            assert np.all(output.data >= 0) and np.all(output.data <= 1), "Pipeline output invalid"
             
         except ImportError:
-            assert True, "Module 02 not implemented yet"
+            assert True, "Progressive stack not fully implemented yet"
+    
+    def test_activation_chaining(self):
+        """Test multiple activations can be chained."""
+        try:
+            from tinytorch.core.tensor import Tensor
+            from tinytorch.core.activations import ReLU, Sigmoid, Tanh
+            
+            x = Tensor(np.random.randn(5, 10))
+            
+            # Chain multiple activations
+            relu = ReLU()
+            tanh = Tanh()
+            sigmoid = Sigmoid()
+            
+            h1 = relu(x)      # Apply ReLU
+            h2 = tanh(h1)     # Apply Tanh
+            output = sigmoid(h2)  # Apply Sigmoid
+            
+            assert output.shape == x.shape, "Activation chaining broken"
+            
+        except ImportError:
+            assert True, "Activation chaining not implemented yet"
+
+
+class TestNonLinearityCapability:
+    """Test that activations enable non-linear computation."""
+    
+    def test_nonlinearity_proof(self):
+        """Test that activations actually provide non-linearity."""
+        try:
+            from tinytorch.core.tensor import Tensor
+            from tinytorch.core.activations import ReLU
+            
+            relu = ReLU()
+            
+            # Linear input
+            x = Tensor(np.array([-2, -1, 0, 1, 2]))
+            
+            # Non-linear output from ReLU
+            y = relu(x)
+            
+            # Should be different from linear function
+            linear_output = x.data  # Identity function
+            nonlinear_output = y.data
+            
+            # ReLU introduces non-linearity
+            assert not np.array_equal(linear_output, nonlinear_output), "No nonlinearity detected"
+            
+            # Specifically, negative values should become zero
+            assert np.all(nonlinear_output >= 0), "ReLU non-linearity not working"
+            
+        except ImportError:
+            assert True, "Nonlinearity testing not ready yet"
+
+
+class TestXORProblemReadiness:
+    """Test that the stack is ready for XOR problem (non-linear learning)."""
+    
+    def test_xor_components_available(self):
+        """Test components needed for XOR are available."""
+        try:
+            from tinytorch.core.tensor import Tensor
+            from tinytorch.core.activations import ReLU, Sigmoid
+            
+            # XOR inputs
+            X = Tensor(np.array([[0, 0], [0, 1], [1, 0], [1, 1]]))
+            
+            # Should be able to apply activations
+            relu = ReLU()
+            sigmoid = Sigmoid()
+            
+            # Simulated hidden layer output
+            hidden = relu(X)  # Non-linear transformation
+            
+            # Simulated output layer
+            output = sigmoid(hidden)
+            
+            assert output.shape == X.shape, "XOR components not ready"
+            
+        except ImportError:
+            assert True, "XOR components not implemented yet"
+    
+    def test_activation_expressiveness(self):
+        """Test activations provide sufficient expressiveness."""
+        try:
+            from tinytorch.core.tensor import Tensor
+            from tinytorch.core.activations import ReLU, Sigmoid
+            
+            # Test that we can represent different patterns
+            patterns = [
+                np.array([1, 0, 0, 1]),  # XOR pattern
+                np.array([0, 1, 1, 0]),  # Inverse XOR
+                np.array([1, 1, 0, 0]),  # AND-like pattern
+            ]
+            
+            relu = ReLU()
+            sigmoid = Sigmoid()
+            
+            for pattern in patterns:
+                x = Tensor(pattern)
+                
+                # Should be able to transform any pattern
+                h = relu(x)
+                y = sigmoid(h)
+                
+                assert y.shape == x.shape, "Pattern transformation failed"
+                
+        except ImportError:
+            assert True, "Activation expressiveness testing not ready"
 
 
 class TestRegressionPrevention:
-    """Prevent regressions in previously working modules."""
+    """Ensure previous modules still work after Module 03 development."""
     
-    def test_module_01_not_broken(self):
-        """Ensure Module 02 development didn't break Module 01."""
-        # These should ALWAYS work regardless of Module 02 status
+    def test_no_module_01_regression(self):
+        """Verify Module 01 functionality unchanged."""
+        # These should ALWAYS work
+        assert sys.version_info.major >= 3, "Module 01: Python detection broken"
         
-        # Environment detection
-        assert sys.version_info.major >= 3, "Python environment broken"
-        
-        # File system access
         project_root = Path(__file__).parent.parent.parent
-        assert project_root.exists(), "Project structure broken"
-        
-        # Package imports
-        import numpy as np
-        assert np is not None, "Package management broken"
+        assert project_root.exists(), "Module 01: Project structure broken"
     
-    def test_progressive_compatibility(self):
-        """Test that progress doesn't break backwards compatibility."""
-        # Module 02 should not change Module 01 behavior
+    def test_no_module_02_regression(self):
+        """Verify Module 02 functionality unchanged."""
+        try:
+            from tinytorch.core.tensor import Tensor
+            
+            # Basic tensor creation should still work
+            t = Tensor([1, 2, 3])
+            assert t.shape == (3,), "Module 02: Basic tensor broken"
+            
+        except ImportError:
+            # If not implemented, that's fine
+            # But numpy should still work (from Module 01)
+            import numpy as np
+            arr = np.array([1, 2, 3])
+            assert arr.shape == (3,), "Module 02: Numpy foundation broken"
+    
+    def test_progressive_stability(self):
+        """Test the progressive stack is stable."""
+        # Stack should be stable through: Setup -> Tensor -> Activations
         
-        # Basic imports should still work
-        import sys
-        import os
-        from pathlib import Path
+        # Setup level
+        import numpy as np
+        assert np is not None, "Setup level broken"
         
-        # These are Module 01 capabilities that should never break
-        assert callable(Path), "Path functionality broken"
-        assert hasattr(sys, 'version_info'), "System info broken"
-        assert hasattr(os, 'environ'), "Environment access broken"
+        # Tensor level (if available)
+        try:
+            from tinytorch.core.tensor import Tensor
+            t = Tensor([1])
+            assert t.shape == (1,), "Tensor level broken"
+        except ImportError:
+            pass  # Not implemented yet
+        
+        # Activation level (if available)
+        try:
+            from tinytorch.core.activations import ReLU
+            relu = ReLU()
+            assert callable(relu), "Activation level broken"
+        except ImportError:
+            pass  # Not implemented yet

@@ -1,5 +1,5 @@
 """
-Integration test for Module 05: Dense
+Integration test for Module 04: Dense
 
 Validates that the dense module integrates correctly with the TinyTorch package.
 This is a quick validation test, not a comprehensive capability test.

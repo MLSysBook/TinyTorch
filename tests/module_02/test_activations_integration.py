@@ -1,5 +1,5 @@
 """
-Module 03: Activations - Integration Tests
+Module 02: Activations - Integration Tests
 Tests that activations work with Tensor and enable non-linear networks
 """
 
