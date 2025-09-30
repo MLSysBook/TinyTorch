@@ -1082,49 +1082,6 @@ Backward Pass Chain Rule Application:
 4. **Chain Rule**: Local gradients multiply according to calculus rules
 """
 
-# %% nbgrader={"grade": false, "grade_id": "complex-graph-demo", "solution": true}
-def demonstrate_complex_computation_graph():
-    """
-    Demonstrate autograd on a complex computation graph.
-
-    This simulates a simple neural network forward and backward pass:
-    y = ReLU(x @ W1 + b1) @ W2 + b2
-    """
-    print("🔗 Integration Demo: Complex Computation Graph")
-    print("Simulating neural network: y = ReLU(x @ W1 + b1) @ W2 + b2")
-
-    # Create inputs with gradient tracking
-    x = Tensor([[1.0, 2.0, 3.0]], requires_grad=True)  # 1x3 input
-    W1 = Tensor([[0.1, 0.2], [0.3, 0.4], [0.5, 0.6]], requires_grad=True)  # 3x2 weights
-    b1 = Tensor([[0.1, 0.2]], requires_grad=True)  # 1x2 bias
-    W2 = Tensor([[0.7], [0.8]], requires_grad=True)  # 2x1 weights
-    b2 = Tensor([[0.1]], requires_grad=True)  # 1x1 bias
-
-    print(f"Input x: {x.data}")
-    print(f"W1 shape: {W1.shape}, W2 shape: {W2.shape}")
-
-    # Forward pass
-    z1 = x.matmul(W1) + b1  # Linear layer 1
-    print(f"After linear 1: {z1.data}")
-
-    # Simple ReLU (for now, until we implement proper ReLU autograd)
-    a1_data = np.maximum(0, z1.data)  # Manual ReLU
-    a1 = Tensor(a1_data, requires_grad=True)
-    print(f"After ReLU: {a1.data}")
-
-    z2 = a1.matmul(W2) + b2  # Linear layer 2
-    print(f"Final output: {z2.data}")
-
-    # Backward pass
-    z2.backward()
-
-    print(f"∂L/∂x: {x.grad}")
-    print(f"∂L/∂W1: {W1.grad}")
-    print(f"∂L/∂W2: {W2.grad}")
-
-    return z2
-
-# Function defined above, will be called in main block
 
 # %% [markdown]
 """

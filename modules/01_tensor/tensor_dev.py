@@ -1460,69 +1460,6 @@ This simulation shows how our basic operations combine to create the computation
 Every layer in a neural network - from simple MLPs to complex transformers - uses this same pattern.
 """
 
-# %% nbgrader={"grade": false, "grade_id": "integration-demo", "solution": true}
-def demonstrate_tensor_integration():
-    """
-    Demonstrate Tensor operations working together.
-
-    This simulates a simple linear transformation: y = xW + b
-    This is the core computation in neural network layers.
-    """
-    print("🔗 Integration Demo: Linear Transformation")
-    print("Simulating: y = xW + b (core neural network operation)")
-    print()
-
-    # Input data (batch of 2 samples, 3 features each)
-    # This could be: 2 images with 3 pixel values, or 2 sentences with 3 word embeddings
-    x = Tensor([[1, 2, 3], [4, 5, 6]])  # Shape: (2, 3)
-    print("Input x (2 samples, 3 features each):")
-    print(f"  {x.data}")
-    print(f"  Shape: {x.shape}")
-    print()
-
-    # Weight matrix (3 input features → 2 output features)
-    # These are the learned parameters that the network will optimize
-    W = Tensor([[0.1, 0.2], [0.3, 0.4], [0.5, 0.6]])  # Shape: (3, 2)
-    print("Weight W (3 inputs → 2 outputs):")
-    print(f"  {W.data}")
-    print(f"  Shape: {W.shape}")
-    print()
-
-    # Bias vector (2 output features)
-    # Adds flexibility by shifting the output
-    b = Tensor([0.1, 0.2])  # Shape: (2,)
-    print("Bias b (2 outputs):")
-    print(f"  {b.data}")
-    print(f"  Shape: {b.shape}")
-    print()
-
-    # Forward pass: y = xW + b
-    print("Forward pass computation:")
-    print("  Step 1: xW (matrix multiplication)")
-    xW = x.matmul(W)
-    print(f"    {x.shape} @ {W.shape} = {xW.shape}")
-    print(f"    Result: {xW.data}")
-    print()
-
-    print("  Step 2: xW + b (broadcasting addition)")
-    y = xW + b
-    print(f"    {xW.shape} + {b.shape} = {y.shape} (broadcasting)")
-    print(f"    Final result: {y.data}")
-    print()
-
-    # Verify the computation manually for educational purposes
-    print("  Manual verification of first output:")
-    print(f"    Sample 1: [1,2,3] @ [[0.1,0.2],[0.3,0.4],[0.5,0.6]] + [0.1,0.2]")
-    manual_1 = 1*0.1 + 2*0.3 + 3*0.5  # First output feature
-    manual_2 = 1*0.2 + 2*0.4 + 3*0.6  # Second output feature
-    print(f"    = [{manual_1}, {manual_2}] + [0.1, 0.2] = [{manual_1+0.1}, {manual_2+0.2}]")
-    print(f"    Expected: {y.data[0]}")
-    print()
-
-    print("✅ Neural network layer simulation complete!")
-    return y
-
-# demonstrate_tensor_integration()  # Moved to main block
 
 # %% [markdown]
 """

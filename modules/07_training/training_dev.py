@@ -727,55 +727,38 @@ def test_unit_trainer():
     print("🔬 Unit Test: Trainer...")
 
     # Create mock components for testing
-    class MockModel:
+    # Use REAL components from previous modules - no mocks!
+    from modules.01_tensor.tensor_dev import Tensor
+    from modules.03_layers.layers_dev import Linear
+    from modules.04_losses.losses_dev import MSELoss
+    from modules.06_optimizers.optimizers_dev import SGD
+
+    # Create a simple model using REAL Linear layer
+    class SimpleModel:
         def __init__(self):
+            self.layer = Linear(2, 1)  # Real Linear from Module 03
             self.training = True
-            self.weight = type('param', (), {'data': np.array([1.0, 2.0]), 'grad': None})()
 
         def forward(self, x):
-            # Simple linear operation
-            result = type('output', (), {'data': np.dot(x.data, self.weight.data)})()
-            return result
+            return self.layer.forward(x)
 
         def parameters(self):
-            return [self.weight]
+            return self.layer.parameters()
 
-    class MockOptimizer:
-        def __init__(self):
-            self.lr = 0.01
-
-        def step(self):
-            pass  # Simplified
-
-        def zero_grad(self):
-            pass  # Simplified
-
-    class MockLoss:
-        def forward(self, outputs, targets):
-            # Simple MSE
-            diff = outputs.data - targets.data
-            loss_value = np.mean(diff ** 2)
-            result = type('loss', (), {'data': loss_value})()
-            result.backward = lambda: None  # Simplified
-            return result
-
-    class MockTensor:
-        def __init__(self, data):
-            self.data = np.array(data)
-
-    # Create trainer
-    model = MockModel()
-    optimizer = MockOptimizer()
-    loss_fn = MockLoss()
+    # Create trainer with REAL components
+    model = SimpleModel()
+    optimizer = SGD(model.parameters(), lr=0.01)  # Real SGD from Module 06
+    loss_fn = MSELoss()  # Real MSELoss from Module 04
     scheduler = CosineSchedule(max_lr=0.1, min_lr=0.01, total_epochs=10)
 
     trainer = Trainer(model, optimizer, loss_fn, scheduler, grad_clip_norm=1.0)
 
     # Test training
     print("Testing training epoch...")
-    mock_dataloader = [
-        (MockTensor([1.0, 0.5]), MockTensor([2.0])),
-        (MockTensor([0.5, 1.0]), MockTensor([1.5]))
+    # Use real Tensors for data
+    dataloader = [
+        (Tensor([[1.0, 0.5]]), Tensor([[2.0]])),
+        (Tensor([[0.5, 1.0]]), Tensor([[1.5]]))
     ]
 
     loss = trainer.train_epoch(mock_dataloader)
