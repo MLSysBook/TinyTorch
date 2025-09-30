@@ -15,7 +15,7 @@
 # ║     happens! The tinytorch/ directory is just the compiled output.           ║
 # ╚═══════════════════════════════════════════════════════════════════════════════╝
 # %% auto 0
-__all__ = ['import_previous_module', 'MSELoss', 'CrossEntropyLoss', 'BinaryCrossEntropyLoss']
+__all__ = ['import_previous_module', 'log_softmax', 'MSELoss', 'CrossEntropyLoss', 'BinaryCrossEntropyLoss']
 
 # %% ../../modules/source/04_losses/losses_dev.ipynb 3
 import numpy as np
@@ -32,6 +32,43 @@ def import_previous_module(module_name: str, component_name: str):
 from .tensor import Tensor
 from .layers import Linear
 from .activations import ReLU
+
+# %% ../../modules/source/04_losses/losses_dev.ipynb 8
+def log_softmax(x: Tensor, dim: int = -1) -> Tensor:
+    """
+    Compute log-softmax with numerical stability.
+
+    TODO: Implement numerically stable log-softmax using the log-sum-exp trick
+
+    APPROACH:
+    1. Find maximum along dimension (for stability)
+    2. Subtract max from input (prevents overflow)
+    3. Compute log(sum(exp(shifted_input)))
+    4. Return input - max - log_sum_exp
+
+    EXAMPLE:
+    >>> logits = Tensor([[1.0, 2.0, 3.0], [0.1, 0.2, 0.9]])
+    >>> result = log_softmax(logits, dim=-1)
+    >>> print(result.shape)
+    (2, 3)
+
+    HINT: Use np.max(x.data, axis=dim, keepdims=True) to preserve dimensions
+    """
+    ### BEGIN SOLUTION
+    # Step 1: Find max along dimension for numerical stability
+    max_vals = np.max(x.data, axis=dim, keepdims=True)
+
+    # Step 2: Subtract max to prevent overflow
+    shifted = x.data - max_vals
+
+    # Step 3: Compute log(sum(exp(shifted)))
+    log_sum_exp = np.log(np.sum(np.exp(shifted), axis=dim, keepdims=True))
+
+    # Step 4: Return log_softmax = input - max - log_sum_exp
+    result = x.data - max_vals - log_sum_exp
+
+    return Tensor(result)
+    ### END SOLUTION
 
 # %% ../../modules/source/04_losses/losses_dev.ipynb 11
 class MSELoss:
