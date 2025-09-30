@@ -73,21 +73,36 @@ if 'tinytorch' in sys.modules:
     from tinytorch.core.tensor import Tensor
     from tinytorch.core.layers import Module
 else:
-    # Development: Import from local module files
-    # Import Tensor from Module 01
-    try:
-        # Try to find the current directory
-        current_dir = os.path.dirname(os.path.abspath(__file__))
-    except NameError:
-        # Fallback when __file__ is not available (e.g., in exec context)
-        current_dir = os.getcwd()
+    # Development: Use simplified local implementations to avoid import loops
 
-    tensor_module_path = os.path.join(current_dir, '..', '01_tensor')
-    sys.path.insert(0, tensor_module_path)
-    try:
-        from tensor_dev import Tensor
-    finally:
-        sys.path.pop(0)
+    # Simplified Tensor class for development
+    class Tensor:
+        """Simplified tensor for spatial operations development."""
+
+        def __init__(self, data, requires_grad=False):
+            self.data = np.array(data, dtype=np.float32)
+            self.shape = self.data.shape
+            self.requires_grad = requires_grad
+            self.grad = None
+
+        def __repr__(self):
+            return f"Tensor(shape={self.shape}, data=\n{self.data})"
+
+        def __add__(self, other):
+            if isinstance(other, Tensor):
+                return Tensor(self.data + other.data)
+            return Tensor(self.data + other)
+
+        def __mul__(self, other):
+            if isinstance(other, Tensor):
+                return Tensor(self.data * other.data)
+            return Tensor(self.data * other)
+
+        def sum(self):
+            return Tensor(np.sum(self.data))
+
+        def mean(self):
+            return Tensor(np.mean(self.data))
 
     # Create a simple Module base class for inheritance
     class Module:
@@ -1132,12 +1147,12 @@ def analyze_convolution_complexity():
     """📊 Analyze convolution computational complexity across different configurations."""
     print("📊 Analyzing Convolution Complexity...")
 
-    # Test configurations with increasing complexity
+    # Test configurations optimized for educational demonstration (smaller sizes)
     configs = [
-        {"input": (1, 3, 32, 32), "conv": (16, 3, 3), "name": "Small (32×32)"},
-        {"input": (1, 3, 64, 64), "conv": (32, 3, 3), "name": "Medium (64×64)"},
-        {"input": (1, 3, 128, 128), "conv": (64, 3, 3), "name": "Large (128×128)"},
-        {"input": (1, 3, 32, 32), "conv": (16, 3, 7), "name": "Large Kernel (7×7)"},
+        {"input": (1, 3, 16, 16), "conv": (8, 3, 3), "name": "Small (16×16)"},
+        {"input": (1, 3, 24, 24), "conv": (12, 3, 3), "name": "Medium (24×24)"},
+        {"input": (1, 3, 32, 32), "conv": (16, 3, 3), "name": "Large (32×32)"},
+        {"input": (1, 3, 16, 16), "conv": (8, 3, 5), "name": "Large Kernel (5×5)"},
     ]
 
     print(f"{'Configuration':<20} {'FLOPs':<15} {'Memory (MB)':<12} {'Time (ms)':<10}")
@@ -1628,16 +1643,16 @@ def test_module():
     # Test memory efficiency comparison
     print("🔬 Integration Test: Memory efficiency analysis...")
 
-    # Compare different pooling strategies
-    input_data = Tensor(np.random.randn(1, 32, 64, 64))
+    # Compare different pooling strategies (reduced size for faster execution)
+    input_data = Tensor(np.random.randn(1, 16, 32, 32))
 
     # No pooling: maintain spatial size
-    conv_only = Conv2d(32, 64, kernel_size=3, padding=1)
+    conv_only = Conv2d(16, 32, kernel_size=3, padding=1)
     no_pool_out = conv_only(input_data)
     no_pool_size = np.prod(no_pool_out.shape) * 4  # float32 bytes
 
     # With pooling: reduce spatial size
-    conv_with_pool = Conv2d(32, 64, kernel_size=3, padding=1)
+    conv_with_pool = Conv2d(16, 32, kernel_size=3, padding=1)
     pool = MaxPool2d(2, stride=2)
     pool_out = pool(conv_with_pool(input_data))
     pool_size = np.prod(pool_out.shape) * 4  # float32 bytes
@@ -1652,8 +1667,7 @@ def test_module():
     print("🎉 ALL TESTS PASSED! Module ready for export.")
     print("Run: tito module complete 09")
 
-# Call before module summary
-test_module()
+# Integration test will be called in main execution
 
 # %% nbgrader={"grade": false, "grade_id": "main-execution", "solution": true}
 

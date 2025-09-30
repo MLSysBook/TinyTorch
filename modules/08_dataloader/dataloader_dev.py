@@ -71,10 +71,22 @@ import gzip
 import urllib.request
 import pickle
 
-# Import Tensor from our foundation module
-import sys
-sys.path.append('/Users/VJ/GitHub/TinyTorch/modules/01_tensor')
-from tensor_dev import Tensor
+# Simplified Tensor class for DataLoader module
+# This avoids importing the full tensor_dev.py which executes all tests
+class Tensor:
+    """
+    Simplified Tensor class for DataLoader module.
+    Contains only the functionality needed for data loading.
+    """
+    def __init__(self, data):
+        self.data = np.array(data)
+        self.shape = self.data.shape
+
+    def __len__(self):
+        return len(self.data)
+
+    def __repr__(self):
+        return f"Tensor({self.data})"
 
 # %% [markdown]
 """

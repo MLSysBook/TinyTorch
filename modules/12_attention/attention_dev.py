@@ -65,40 +65,77 @@ from tinytorch.text.embeddings import Embedding, PositionalEncoding  # Module 11
 import numpy as np
 import math
 import time
+import sys
+import os
 from typing import Optional, Tuple, List
 
 # Smart import system for development and production compatibility
-import sys
-import os
-
 if 'tinytorch' in sys.modules:
     # Production: Import from installed package
     from tinytorch.core.tensor import Tensor
     from tinytorch.core.layers import Linear
 else:
-    # Development: Import from local module files
-    try:
-        # Try to find the current directory
-        current_dir = os.path.dirname(os.path.abspath(__file__))
-    except NameError:
-        # Fallback when __file__ is not available (e.g., in exec context)
-        current_dir = os.getcwd()
+    # Development: Use simplified local implementations to avoid import loops
 
-    # Import Tensor from Module 01
-    tensor_module_path = os.path.join(current_dir, '..', '01_tensor')
-    sys.path.insert(0, tensor_module_path)
-    try:
-        from tensor_dev import Tensor
-    finally:
-        sys.path.pop(0)
+    # Simplified Tensor class for development
+    class Tensor:
+        """Simplified tensor for attention operations development."""
 
-    # Import Linear from Module 03
-    layers_module_path = os.path.join(current_dir, '..', '03_layers')
-    sys.path.insert(0, layers_module_path)
-    try:
-        from layers_dev import Linear
-    finally:
-        sys.path.pop(0)
+        def __init__(self, data, requires_grad=False):
+            self.data = np.array(data, dtype=np.float32)
+            self.shape = self.data.shape
+            self.requires_grad = requires_grad
+            self.grad = None
+
+        def __repr__(self):
+            return f"Tensor(shape={self.shape}, data=\n{self.data})"
+
+        def __add__(self, other):
+            if isinstance(other, Tensor):
+                return Tensor(self.data + other.data)
+            return Tensor(self.data + other)
+
+        def __mul__(self, other):
+            if isinstance(other, Tensor):
+                return Tensor(self.data * other.data)
+            return Tensor(self.data * other)
+
+        def sum(self, axis=None):
+            return Tensor(np.sum(self.data, axis=axis))
+
+        def mean(self, axis=None):
+            return Tensor(np.mean(self.data, axis=axis))
+
+        def matmul(self, other):
+            return Tensor(np.matmul(self.data, other.data))
+
+        def softmax(self, axis=-1):
+            """Apply softmax along specified axis."""
+            # Subtract max for numerical stability
+            shifted = self.data - np.max(self.data, axis=axis, keepdims=True)
+            exp_values = np.exp(shifted)
+            return Tensor(exp_values / np.sum(exp_values, axis=axis, keepdims=True))
+
+    # Simplified Linear layer for development
+    class Linear:
+        """Simplified linear layer for attention projections."""
+
+        def __init__(self, in_features, out_features):
+            self.in_features = in_features
+            self.out_features = out_features
+            # Initialize weights and bias (simplified Xavier initialization)
+            self.weight = Tensor(np.random.randn(in_features, out_features) * np.sqrt(2.0 / in_features))
+            self.bias = Tensor(np.zeros(out_features))
+
+        def forward(self, x):
+            """Forward pass: y = xW + b"""
+            output = x.matmul(self.weight)
+            # Add bias (broadcast across batch and sequence dimensions)
+            return Tensor(output.data + self.bias.data)
+
+        def parameters(self):
+            """Return list of parameters for this layer."""
+            return [self.weight, self.bias]
 
 # %% [markdown]
 """
