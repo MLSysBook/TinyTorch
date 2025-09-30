@@ -1050,28 +1050,8 @@ def test_module():
     print("🎉 ALL TESTS PASSED! Module ready for export.")
     print("Run: tito module complete 03_layers")
 
-# Module test will be run in main block
-
-# %%
-if __name__ == "__main__":
-    print("🚀 Running Layers module...")
-
-    # Run all unit tests
-    test_unit_linear_layer()
-    test_unit_sequential_container()
-    test_unit_dropout_layer()
-
-    # Run integration demo
-    model, output = demonstrate_layer_integration()
-
-    # Run systems analysis
-    analyze_layer_memory()
-    analyze_layer_performance()
-
-    # Run final module test
-    test_module()
-
-    print("✅ Module validation complete!")
+# Run comprehensive module test
+test_module()
 
 
 # %% [markdown]

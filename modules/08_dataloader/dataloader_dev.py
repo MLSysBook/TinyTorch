@@ -1163,31 +1163,9 @@ def test_module():
     print("🎉 ALL TESTS PASSED! Module ready for export.")
     print("Run: tito module complete 08")
 
-# Call before module summary
-# test_module()  # Moved to main block
-
-
 # %%
-if __name__ == "__main__":
-    print("🚀 Running DataLoader module...")
-
-    # Run all unit tests
-    test_unit_dataset()
-    test_unit_tensordataset()
-    test_unit_dataloader()
-    test_unit_download_functions()
-
-    # Run performance analysis
-    analyze_dataloader_performance()
-    analyze_memory_usage()
-
-    # Run integration test
-    test_training_integration()
-
-    # Run final module test
-    test_module()
-
-    print("✅ Module validation complete!")
+# Run comprehensive module test
+test_module()
 
 
 

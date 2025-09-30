@@ -883,26 +883,8 @@ def test_module():
     print("🎉 ALL TESTS PASSED! Module ready for export.")
     print("Run: tito module complete 02")
 
-# test_module()  # Moved to main block
-
-# %%
-if __name__ == "__main__":
-    print("🚀 Running Activations module...")
-
-    # Run individual unit tests
-    test_unit_sigmoid()
-    test_unit_relu()
-    test_unit_tanh()
-    test_unit_gelu()
-    test_unit_softmax()
-
-    # Demonstrate all activations working together
-    demonstrate_activations()
-
-    # Run comprehensive module test
-    test_module()
-
-    print("✅ Module validation complete!")
+# Run comprehensive module test
+test_module()
 
 
 # %% [markdown]
