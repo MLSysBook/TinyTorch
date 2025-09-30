@@ -147,12 +147,21 @@ training_*.json
 
 # Data (too large for git)
 data/
-datasets/
+# Downloaded datasets (large files, not committed)
+datasets/*
+# BUT allow tiny datasets directory (small files we ship)
+!datasets/tiny/
+!datasets/README.md
+!datasets/download_*.py
 *.csv
-*.npz
+# *.npz  - Don't ignore .npz globally, some are tiny datasets
 *.npy
 *.pickle
 *.pkl
+# Ignore large .npz files (but not in datasets/tiny/)
+data/*.npz
+datasets/mnist/*.npz
+datasets/cifar10/*.npz
 
 # Temporary files
 tmp/
