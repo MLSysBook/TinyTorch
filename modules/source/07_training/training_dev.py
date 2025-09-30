@@ -69,17 +69,10 @@ import sys
 import os
 
 # Import dependencies from other modules
-sys.path.append(os.path.join(os.path.dirname(__file__), '..', '01_tensor'))
-from tensor_dev import Tensor
-
-sys.path.append(os.path.join(os.path.dirname(__file__), '..', '03_layers'))
-from layers_dev import Linear
-
-sys.path.append(os.path.join(os.path.dirname(__file__), '..', '04_losses'))
-from losses_dev import MSELoss, CrossEntropyLoss
-
-sys.path.append(os.path.join(os.path.dirname(__file__), '..', '06_optimizers'))
-from optimizers_dev import SGD, AdamW
+from tinytorch.core.tensor import Tensor
+from tinytorch.core.layers import Linear
+from tinytorch.core.losses import MSELoss, CrossEntropyLoss
+from tinytorch.core.optimizers import SGD, AdamW
 
 # %% [markdown]
 """

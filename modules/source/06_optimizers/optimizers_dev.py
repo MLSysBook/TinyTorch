@@ -63,10 +63,7 @@ import numpy as np
 from typing import List, Union, Optional, Dict, Any
 
 # Import Tensor from Module 01 (now with gradient support from Module 05)
-import sys
-import os
-sys.path.append(os.path.join(os.path.dirname(__file__), '..', '01_tensor'))
-from tensor_dev import Tensor
+from tinytorch.core.tensor import Tensor
 
 # %% [markdown]
 """
