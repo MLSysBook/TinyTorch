@@ -125,11 +125,23 @@ def log_softmax(x: Tensor, dim=-1) -> Tensor  # Numerical stability
 
 ---
 
-## 🪜 **Milestone 1: Perceptron (After Module 04)**
-**Location:** `milestones/01_perceptron/`
-**Deliverable:** Train Linear + Sigmoid on 2D dataset, visualize decision boundary
-**Success Criteria:** 95% accuracy on linearly separable data
-**Unlock:** Complete modules 01-04 + integration test
+## 🪜 **Milestone 1: Perceptron 1957 (After Modules 04 & 07)**
+**Location:** `milestones/01_perceptron_1957/`
+
+**Part 1: Forward Pass (After Module 04)**
+- File: `forward_pass_interactive.py`
+- Build perceptron with random weights
+- Interactive CLI to manually tweak weights (frustration!)
+- Success: ~40-60% accuracy (essentially random)
+- Lesson: "I need automatic training!"
+
+**Part 2: Trained (After Module 07)**
+- File: `perceptron_trained.py`
+- Same architecture, NOW with backprop training
+- Success: 95%+ accuracy on linearly separable data
+- Lesson: "Training transforms random → intelligent!"
+
+**Unlock:** Complete modules 01-04 for Part 1, modules 05-07 for Part 2
 
 ---
 
@@ -214,10 +226,29 @@ def clip_grad_norm(parameters, max_norm)
 
 ---
 
-## 🪜 **Milestone 2: MLP (After Module 07)**
-**Location:** `milestones/02_mlp/`
-**Deliverable:** 2-layer MLP on MNIST, compare to perceptron
-**Success Criteria:** >95% accuracy on MNIST
+## 🪜 **Milestone 2: XOR Crisis 1969 (After Module 07)**
+**Location:** `milestones/02_xor_crisis_1969/`
+**File:** `perceptron_xor_fails.py`
+
+**Deliverable:**
+- Try training perceptron on XOR problem (4 points!)
+- Train for 1000+ epochs... stuck at ~50%
+- Visualize why: XOR is NOT linearly separable
+- Show decision boundary can't separate the points
+
+**What Students Learn:**
+- Training works (we proved it in M1)
+- But architecture has fundamental limitations
+- Single layer = can only learn linear decision boundaries
+- Historical context: Minsky's 1969 proof killed AI research for a decade
+
+**Success Criteria:**
+- Perceptron trains but never exceeds 60% on XOR
+- Visualization clearly shows the limitation
+- Student understands WHY it fails (not linearly separable)
+
+**Emotional Beat:** "Wait... training doesn't solve everything?"
+
 **Unlock:** Complete modules 05-07 + integration test
 
 ---
@@ -276,11 +307,30 @@ class BatchNorm2d:
 
 ---
 
-## 🪜 **Milestone 3: CNN (After Module 09)**
-**Location:** `milestones/03_cnn/`
-**Deliverable:** 3-layer CNN on CIFAR-10, visualize filters
-**Success Criteria:** >75% accuracy on CIFAR-10
-**Unlock:** Complete modules 08-09 + integration test
+## 🪜 **Milestone 3: MLP Revival 1986 (After Module 07)**
+**Location:** `milestones/03_mlp_revival_1986/`
+**Files:** `mlp_xor.py`, `mlp_mnist.py`
+
+**Deliverable:**
+- Add ONE hidden layer to solve XOR → 100% accuracy!
+- Train MLP on MNIST → 95%+ accuracy
+- Compare to perceptron failure: depth changes everything
+- Visualize curved decision boundary for XOR
+
+**What Students Learn:**
+- Hidden layers enable non-linear decision boundaries
+- Backpropagation + depth = AI renaissance
+- Same training algorithm (backprop) works for any depth
+- Historical context: Rumelhart's 1986 paper revived the field
+
+**Success Criteria:**
+- MLP solves XOR: 100% accuracy
+- MLP on MNIST: >95% accuracy
+- Student understands power of depth
+
+**Emotional Beat:** "ONE hidden layer changes everything!"
+
+**Unlock:** Complete modules 05-07 + integration test
 
 ---
 
@@ -400,11 +450,30 @@ def attention_with_cache(Q, K, V, cache, layer_idx, seq_pos) -> Tensor
 
 ---
 
-## 🪜 **Milestone 4: TinyGPT (After Module 14)**
-**Location:** `milestones/04_tinygpt/`
-**Deliverable:** Character-level GPT on Shakespeare, generate text
-**Success Criteria:** Perplexity < 2.0, coherent generation
-**Unlock:** Complete modules 10-14 + integration test
+## 🪜 **Milestone 4: CNN Revolution 1998 (After Module 09)**
+**Location:** `milestones/04_cnn_revolution_1998/`
+**File:** `lecun_cifar10.py`
+
+**Deliverable:**
+- Build LeNet-style CNN for CIFAR-10
+- Convolutional layers exploit spatial structure
+- Visualize learned filters (edge detectors, etc.)
+- Compare to MLP: fewer parameters, better accuracy
+
+**What Students Learn:**
+- Spatial inductive bias matters for vision
+- Convolutions share weights across space
+- Pooling provides translation invariance
+- Historical context: LeCun's CNN revolutionized computer vision
+
+**Success Criteria:**
+- CNN on CIFAR-10: >75% accuracy
+- Visualizations show meaningful filters
+- Student understands spatial structure
+
+**Emotional Beat:** "It SEES patterns in images!"
+
+**Unlock:** Complete modules 08-09 + integration test
 
 ---
 
@@ -519,13 +588,56 @@ def plot_pareto_frontier(results: pd.DataFrame)
 
 ---
 
-## 🪜 **Milestone 5: Systems Capstone (After Module 19)**
-**Location:** `milestones/05_systems_capstone/`
-**Deliverable:** Profile and optimize CNN vs TinyGPT
-- Apply quantization and pruning
-- Generate comparison report
-- Show accuracy vs speed trade-offs
-**Success Criteria:** 2× speedup with <5% accuracy loss
+## 🪜 **Milestone 5: Transformer Era 2017 (After Module 14)**
+**Location:** `milestones/05_transformer_era_2017/`
+**File:** `vaswani_shakespeare.py`
+
+**Deliverable:**
+- Build character-level GPT on Shakespeare corpus
+- Self-attention captures long-range dependencies
+- Generate coherent text samples
+- Compare to RNN: attention > recurrence
+
+**What Students Learn:**
+- Attention mechanism enables parallelization
+- Positional encoding for sequence order
+- Autoregressive generation with KV caching
+- Historical context: "Attention is all you need" changed NLP forever
+
+**Success Criteria:**
+- Perplexity < 2.0 on Shakespeare
+- Generated text is coherent (subjective)
+- Student understands attention mechanism
+
+**Emotional Beat:** "It writes like Shakespeare!"
+
+**Unlock:** Complete modules 10-14 + integration test
+
+---
+
+## 🪜 **Milestone 6: Systems Age 2024 (After Module 19)**
+**Location:** `milestones/06_systems_age_2024/`
+**File:** `optimize_models.py`
+
+**Deliverable:**
+- Profile CNN (M4) and GPT (M5) for bottlenecks
+- Apply quantization (INT8) and pruning (50% sparsity)
+- Benchmark before/after optimization
+- Generate performance comparison report
+
+**What Students Learn:**
+- Profiling reveals true bottlenecks
+- Quantization: 4× memory reduction, minimal accuracy loss
+- Pruning: Structured vs unstructured sparsity
+- Modern ML is systems engineering
+
+**Success Criteria:**
+- 2× speedup with <5% accuracy loss
+- Comprehensive benchmark report
+- Student understands systems trade-offs
+
+**Emotional Beat:** "I made production AI!"
+
 **Unlock:** Complete modules 15-19 + integration test
 
 ---
@@ -569,11 +681,11 @@ def plot_pareto_frontier(results: pd.DataFrame)
 
 ## 🚀 Implementation Order
 
-1. **Phase 1:** Modules 01-04 → Milestone 1 (Perceptron)
-2. **Phase 2:** Modules 05-07 → Milestone 2 (MLP)
-3. **Phase 3:** Modules 08-09 → Milestone 3 (CNN)
-4. **Phase 4:** Modules 10-14 → Milestone 4 (TinyGPT)
-5. **Phase 5:** Modules 15-19 → Milestone 5 (Systems)
+1. **Phase 1:** Modules 01-04 → Milestone 1 Part 1 (Perceptron forward pass)
+2. **Phase 2:** Modules 05-07 → Milestones 1 Part 2, 2, 3 (Training, Crisis, Revival)
+3. **Phase 3:** Modules 08-09 → Milestone 4 (CNN)
+4. **Phase 4:** Modules 10-14 → Milestone 5 (Transformers)
+5. **Phase 5:** Modules 15-19 → Milestone 6 (Systems)
 
 ---
 
