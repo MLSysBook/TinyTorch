@@ -254,10 +254,10 @@ def main():
     console.print("[bold]📊 The Results:[/bold]\n")
     
     table = Table(title="Training Outcome", box=box.ROUNDED)
-    table.add_column("Metric", style="cyan", width=20)
-    table.add_column("Before Training", style="yellow")
-    table.add_column("After Training", style="green")
-    table.add_column("Improvement", style="magenta")
+    table.add_column("Metric", style="cyan", width=18)
+    table.add_column("Before Training", style="yellow", width=16)
+    table.add_column("After Training", style="green", width=16)
+    table.add_column("Improvement", style="magenta", width=14)
     
     table.add_row(
         "Accuracy",
