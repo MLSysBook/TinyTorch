@@ -43,7 +43,6 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), '../..'))
 from tinytorch import Tensor, SGD, CrossEntropyLoss, enable_autograd
 from tinytorch.core.spatial import Conv2d, MaxPool2d
 from tinytorch.core.layers import Linear, ReLU
-from tinytorch.core.activations import Sigmoid
 from tinytorch.data.loader import DataLoader, TensorDataset
 
 console = Console()
@@ -58,18 +57,17 @@ enable_autograd()
 
 def load_digits_dataset():
     """
-    Load the sklearn 8x8 digits dataset.
+    Load the 8x8 digits dataset from local file.
     
     Returns 1,797 grayscale images of handwritten digits (0-9).
     Each image is 8×8 pixels, perfect for quick CNN demonstrations.
     """
-    from sklearn.datasets import load_digits
+    # Load from the local data file (same as MLP milestone uses)
+    data_path = os.path.join(os.path.dirname(__file__), '../03_mlp_revival_1986/data/digits_8x8.npz')
+    data = np.load(data_path)
     
-    digits = load_digits()
-    
-    # Normalize to [0, 1]
-    images = digits.images / 16.0  # Original range is [0, 16]
-    labels = digits.target
+    images = data['images']  # (1797, 8, 8)
+    labels = data['labels']  # (1797,)
     
     # Split into train/test (80/20)
     n_train = int(0.8 * len(images))
@@ -270,7 +268,7 @@ def train_cnn():
     
     # Hyperparameters
     console.print("\n[bold]⚙️  Training Configuration:[/bold]")
-    epochs = 50
+    epochs = 20  # Reduced for demo speed (explicit loops are slow!)
     batch_size = 32
     learning_rate = 0.01
     
@@ -313,7 +311,7 @@ def train_cnn():
         history["loss"].append(avg_loss)
         history["accuracy"].append(accuracy)
         
-        if (epoch + 1) % 10 == 0:
+        if (epoch + 1) % 5 == 0:  # Print every 5 epochs
             console.print(f"Epoch {epoch+1:3d}/{epochs}  Loss: {avg_loss:.4f}  Accuracy: {accuracy:.1f}%")
     
     training_time = time.time() - start_time
