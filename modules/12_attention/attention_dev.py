@@ -67,9 +67,38 @@ import math
 import time
 from typing import Optional, Tuple, List
 
-# Import from our previous modules
-from modules.01_tensor.tensor_dev import Tensor
-from modules.03_layers.layers_dev import Linear
+# Smart import system for development and production compatibility
+import sys
+import os
+
+if 'tinytorch' in sys.modules:
+    # Production: Import from installed package
+    from tinytorch.core.tensor import Tensor
+    from tinytorch.core.layers import Linear
+else:
+    # Development: Import from local module files
+    try:
+        # Try to find the current directory
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+    except NameError:
+        # Fallback when __file__ is not available (e.g., in exec context)
+        current_dir = os.getcwd()
+
+    # Import Tensor from Module 01
+    tensor_module_path = os.path.join(current_dir, '..', '01_tensor')
+    sys.path.insert(0, tensor_module_path)
+    try:
+        from tensor_dev import Tensor
+    finally:
+        sys.path.pop(0)
+
+    # Import Linear from Module 03
+    layers_module_path = os.path.join(current_dir, '..', '03_layers')
+    sys.path.insert(0, layers_module_path)
+    try:
+        from layers_dev import Linear
+    finally:
+        sys.path.pop(0)
 
 # %% [markdown]
 """

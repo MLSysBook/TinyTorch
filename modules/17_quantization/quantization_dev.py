@@ -70,23 +70,56 @@ import matplotlib.pyplot as plt
 from typing import Tuple, Dict, List, Optional
 import warnings
 
-# Import from previous modules
-from pathlib import Path
+# Smart import system for development and production compatibility
 import sys
-module_dir = Path(__file__).parent.parent
-sys.path.append(str(module_dir))
+import os
 
-try:
+if 'tinytorch' in sys.modules:
+    # Production: Import from installed package
     from tinytorch.core.tensor import Tensor
     from tinytorch.core.layers import Linear, Sequential
     from tinytorch.core.activations import ReLU
     from tinytorch.profiling.profiler import Profiler
-except ImportError:
-    # Fallback for development
-    print("📦 Note: Using development imports")
-    exec(open(module_dir / "01_tensor" / "tensor_dev.py").read())
-    exec(open(module_dir / "03_layers" / "layers_dev.py").read())
-    exec(open(module_dir / "02_activations" / "activations_dev.py").read())
+else:
+    # Development: Import from local module files
+    try:
+        # Try to find the current directory
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+    except NameError:
+        # Fallback when __file__ is not available (e.g., in exec context)
+        current_dir = os.getcwd()
+
+    # Import Tensor from Module 01
+    tensor_module_path = os.path.join(current_dir, '..', '01_tensor')
+    sys.path.insert(0, tensor_module_path)
+    try:
+        from tensor_dev import Tensor
+    finally:
+        sys.path.pop(0)
+
+    # Import from Module 03 layers
+    layers_module_path = os.path.join(current_dir, '..', '03_layers')
+    sys.path.insert(0, layers_module_path)
+    try:
+        from layers_dev import Linear, Sequential
+    finally:
+        sys.path.pop(0)
+
+    # Import from Module 02 activations
+    activations_module_path = os.path.join(current_dir, '..', '02_activations')
+    sys.path.insert(0, activations_module_path)
+    try:
+        from activations_dev import ReLU
+    finally:
+        sys.path.pop(0)
+
+    # Create dummy profiler if needed
+    class Profiler:
+        """Dummy profiler class for development."""
+        def count_parameters(self, model):
+            return 0
+        def measure_memory(self, model, input_shape):
+            return {"total": 0}
 
 print("✅ Quantization module imports complete")
 
