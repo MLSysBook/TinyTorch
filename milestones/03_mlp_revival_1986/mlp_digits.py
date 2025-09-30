@@ -167,6 +167,115 @@ def evaluate_accuracy(model, images, labels):
     return accuracy, predictions
 
 
+def compare_batch_sizes(train_images, train_labels, test_images, test_labels):
+    """
+    Compare different batch sizes to show DataLoader's impact on training.
+    
+    This demonstrates a key systems trade-off in ML:
+    - Larger batches: Faster throughput (fewer Python loops)
+    - Smaller batches: More gradient updates per epoch
+    """
+    import time
+    
+    console.print(Panel.fit(
+        "[bold cyan]🔬 Systems Experiment: Batch Size Impact[/bold cyan]\n\n"
+        "[dim]Let's explore how batch size affects training speed and learning.\n"
+        "This shows YOUR DataLoader in action![/dim]",
+        title="⚙️ DataLoader Capabilities",
+        border_style="yellow"
+    ))
+    
+    batch_sizes = [16, 64, 256]
+    epochs = 5  # Quick experiment
+    results = []
+    
+    for batch_size in batch_sizes:
+        console.print(f"\n[bold]Testing batch_size={batch_size}[/bold]")
+        
+        # Create DataLoader with this batch size
+        train_dataset = TensorDataset(train_images, train_labels)
+        train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
+        
+        console.print(f"  Batches per epoch: {len(train_loader)}")
+        
+        # Create fresh model
+        model = DigitMLP(input_size=64, hidden_size=32, num_classes=10)
+        optimizer = SGD(model.parameters(), lr=0.01)
+        loss_fn = CrossEntropyLoss()
+        
+        # Time the training
+        start_time = time.time()
+        
+        for epoch in range(epochs):
+            for batch_images, batch_labels in train_loader:
+                logits = model.forward(batch_images)
+                loss = loss_fn(logits, batch_labels)
+                loss.backward()
+                optimizer.step()
+                optimizer.zero_grad()
+        
+        elapsed = time.time() - start_time
+        
+        # Evaluate
+        final_acc, _ = evaluate_accuracy(model, test_images, test_labels)
+        
+        # Calculate throughput
+        total_samples = len(train_dataset.features) * epochs
+        samples_per_sec = total_samples / elapsed
+        updates = len(train_loader) * epochs
+        
+        results.append({
+            'batch_size': batch_size,
+            'time': elapsed,
+            'accuracy': final_acc,
+            'updates': updates,
+            'throughput': samples_per_sec
+        })
+        
+        console.print(f"  Time: {elapsed:.1f}s, Accuracy: {final_acc:.1f}%")
+    
+    # Show comparison table
+    console.print("\n")
+    table = Table(title="📊 Batch Size Comparison", box=box.ROUNDED)
+    table.add_column("Batch Size", style="cyan", justify="center")
+    table.add_column("Training Time", style="green")
+    table.add_column("Gradient Updates", style="yellow", justify="center")
+    table.add_column("Accuracy", style="magenta")
+    table.add_column("Throughput", style="blue")
+    
+    for r in results:
+        table.add_row(
+            str(r['batch_size']),
+            f"{r['time']:.1f}s",
+            str(r['updates']),
+            f"{r['accuracy']:.1f}%",
+            f"{r['throughput']:.0f} samples/s"
+        )
+    
+    console.print(table)
+    
+    # Key insights
+    console.print("\n")
+    console.print(Panel.fit(
+        "[bold]💡 Key Systems Insights:[/bold]\n\n"
+        "[green]✓ Larger batches process data faster[/green] (fewer Python loops)\n"
+        "[green]✓ Smaller batches give more gradient updates[/green] (more optimization steps)\n"
+        "[green]✓ Throughput vs update frequency trade-off[/green]\n\n"
+        "[bold]What This Shows:[/bold]\n"
+        f"  • Batch 16:  Slowest but {results[0]['updates']} updates\n"
+        f"  • Batch 64:  Balanced - {results[1]['updates']} updates\n"
+        f"  • Batch 256: Fastest but only {results[2]['updates']} updates\n\n"
+        "[bold]🚀 Production Tip:[/bold] In real systems, batch size is limited by:\n"
+        "  • GPU memory (larger batches need more VRAM)\n"
+        "  • Gradient noise (tiny batches → unstable training)\n"
+        "  • Sweet spot: Usually 32-128 for most tasks\n\n"
+        "[dim]YOUR DataLoader makes experimenting with this trivial -\n"
+        "just change one number and the whole pipeline adapts![/dim]",
+        title="⚙️ DataLoader Impact",
+        border_style="cyan"
+    ))
+
+
 def train_mlp():
     """Train MLP on digit recognition task."""
     console.print(Panel.fit(
@@ -294,6 +403,13 @@ def train_mlp():
         border_style="green",
         box=box.DOUBLE
     ))
+    
+    # Optional: Batch size experiment
+    console.print("\n")
+    run_experiment = input("\n🔬 Run batch size experiment? (y/n): ").lower().strip() == 'y'
+    
+    if run_experiment:
+        compare_batch_sizes(train_images, train_labels, test_images, test_labels)
 
 
 if __name__ == "__main__":
