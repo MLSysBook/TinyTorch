@@ -195,6 +195,7 @@ This ensures consistent behavior across different tokenization strategies.
 """
 
 # %% nbgrader={"grade": false, "grade_id": "base-tokenizer", "solution": true}
+#| export
 class Tokenizer:
     """
     Base tokenizer class providing the interface for all tokenizers.
@@ -303,6 +304,7 @@ Result: "hello"
 """
 
 # %% nbgrader={"grade": false, "grade_id": "char-tokenizer", "solution": true}
+#| export
 class CharTokenizer(Tokenizer):
     """
     Character-level tokenizer that treats each character as a separate token.
@@ -513,6 +515,7 @@ BPE discovers natural word boundaries and common patterns automatically!
 """
 
 # %% nbgrader={"grade": false, "grade_id": "bpe-tokenizer", "solution": true}
+#| export
 class BPETokenizer(Tokenizer):
     """
     Byte Pair Encoding (BPE) tokenizer that learns subword units.
