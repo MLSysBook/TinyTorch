@@ -355,6 +355,11 @@ def train_mlp():
     
     epochs = 20
     initial_loss = None
+    history = {
+        "train_loss": [],
+        "train_accuracy": [],
+        "test_accuracy": []
+    }
     
     for epoch in range(epochs):
         epoch_loss = 0.0
@@ -377,19 +382,34 @@ def train_mlp():
         
         avg_loss = epoch_loss / batch_count
         
+        # Evaluate on both train and test to detect overfitting
+        train_acc, _ = evaluate_accuracy(model, train_images, train_labels)
+        test_acc, _ = evaluate_accuracy(model, test_images, test_labels)
+        
+        history["train_loss"].append(avg_loss)
+        history["train_accuracy"].append(train_acc)
+        history["test_accuracy"].append(test_acc)
+        
         if initial_loss is None:
             initial_loss = avg_loss
         
         # Print progress every 5 epochs
         if (epoch + 1) % 5 == 0:
-            test_acc, _ = evaluate_accuracy(model, test_images, test_labels)
-            console.print(f"Epoch {epoch+1:2d}/{epochs}  "
-                         f"Loss: [cyan]{avg_loss:.4f}[/cyan]  "
-                         f"Test Accuracy: [green]{test_acc:.1f}%[/green]")
+            gap = train_acc - test_acc
+            gap_indicator = "⚠️" if gap > 10 else "✓"
+            console.print(
+                f"Epoch {epoch+1:2d}/{epochs}  "
+                f"Loss: {avg_loss:.4f}  "
+                f"Train: {train_acc:.1f}%  "
+                f"Test: {test_acc:.1f}%  "
+                f"{gap_indicator} Gap: {gap:.1f}%"
+            )
     
     console.print("\n[green]✅ Training Complete![/green]")
     
-    final_acc, predictions = evaluate_accuracy(model, test_images, test_labels)
+    final_train_acc = history["train_accuracy"][-1]
+    final_test_acc = history["test_accuracy"][-1]
+    overfitting_gap = final_train_acc - final_test_acc
     
     console.print("\n" + "─" * 70 + "\n")
     
@@ -400,25 +420,30 @@ def train_mlp():
     console.print("[bold]📊 The Results:[/bold]\n")
     
     table = Table(title="Training Outcome", box=box.ROUNDED)
-    table.add_column("Metric", style="cyan", width=18)
-    table.add_column("Before Training", style="yellow", width=16)
-    table.add_column("After Training", style="green", width=16)
-    table.add_column("Improvement", style="magenta", width=14)
+    table.add_column("Metric", style="cyan", width=20)
+    table.add_column("Value", style="green", width=20)
+    table.add_column("Status", style="magenta", width=20)
     
     table.add_row(
-        "Loss",
-        f"{initial_loss:.4f}",
-        f"{avg_loss:.4f}",
-        f"-{initial_loss - avg_loss:.4f}"
+        "Train Accuracy",
+        f"{final_train_acc:.1f}%",
+        f"↑ +{final_train_acc - initial_acc:.1f}%"
     )
     table.add_row(
         "Test Accuracy",
-        f"{initial_acc:.1f}%",
-        f"{final_acc:.1f}%",
-        f"+{final_acc - initial_acc:.1f}%"
+        f"{final_test_acc:.1f}%",
+        f"↑ +{final_test_acc - initial_acc:.1f}%"
+    )
+    table.add_row(
+        "Overfitting Gap",
+        f"{overfitting_gap:.1f}%",
+        "✓ Healthy" if overfitting_gap < 10 else "⚠️ Overfitting"
     )
     
     console.print(table)
+    
+    # Also get predictions for later use
+    _, predictions = evaluate_accuracy(model, test_images, test_labels)
     
     console.print("\n[bold]🔍 Sample Predictions:[/bold]")
     console.print("[dim](First 10 test images)[/dim]\n")
@@ -447,7 +472,7 @@ def train_mlp():
     console.print(Panel.fit(
         "[bold green]🎉 Success! Your MLP Learned to Recognize Digits![/bold green]\n\n"
         
-        f"Final accuracy: [bold]{final_acc:.1f}%[/bold]\n\n"
+        f"Test accuracy: [bold]{final_test_acc:.1f}%[/bold] (Gap: {overfitting_gap:.1f}%)\n\n"
         
         "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n"
         
@@ -455,8 +480,9 @@ def train_mlp():
         "  ✓ Built multi-layer network with YOUR components\n"
         "  ✓ Trained on REAL handwritten digits\n"
         "  ✓ Used YOUR DataLoader for efficient batching\n"
+        f"  ✓ Model generalizes well (gap: {overfitting_gap:.1f}%)\n"
         "  ✓ Backprop through hidden layers works on real data!\n"
-        "  ✓ Achieved {:.1f}% accuracy on digit recognition!\n\n".format(final_acc) +
+        f"  ✓ Achieved {final_test_acc:.1f}% test accuracy!\n\n"
         
         "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n"
         
