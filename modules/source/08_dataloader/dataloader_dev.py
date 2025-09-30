@@ -626,216 +626,59 @@ if __name__ == "__main__":
 
 # %% [markdown]
 """
-## Part 4: Real Datasets - MNIST and CIFAR-10
+## Part 4: Working with Real Datasets
 
-Time to work with real data! We'll implement download functions for two classic computer vision datasets that every ML engineer should know.
+Now that you've built the DataLoader abstraction, you're ready to use it with real data!
 
-### Understanding Standard Datasets
+### Using Real Datasets: The TinyTorch Approach
 
-MNIST and CIFAR-10 are the "hello world" datasets of computer vision, each teaching different lessons:
-
-```
-MNIST (Handwritten Digits)              CIFAR-10 (Tiny Objects)
-┌─────────────────────────────┐          ┌─────────────────────────────┐
-│ Size: 28×28 pixels          │          │ Size: 32×32×3 pixels        │
-│ Colors: Grayscale (1 chan)  │          │ Colors: RGB (3 channels)    │
-│ Classes: 10 (digits 0-9)    │          │ Classes: 10 (objects)       │
-│ Training: 60,000 samples    │          │ Training: 50,000 samples    │
-│ Testing: 10,000 samples     │          │ Testing: 10,000 samples     │
-│                             │          │                             │
-│ ┌─────┐ ┌─────┐ ┌─────┐     │          │ ┌─────┐ ┌─────┐ ┌─────┐     │
-│ │  5  │ │  3  │ │  8  │     │          │ │ ✈️  │ │ 🚗  │ │ 🐸  │     │
-│ └─────┘ └─────┘ └─────┘     │          │ └─────┘ └─────┘ └─────┘     │
-│ (simple shapes)             │          │ (complex textures)          │
-└─────────────────────────────┘          └─────────────────────────────┘
-```
-
-### Why These Datasets Matter
-
-**MNIST**: Perfect for learning basics - simple, clean, small. Most algorithms achieve >95% accuracy.
-
-**CIFAR-10**: Real-world complexity - color, texture, background clutter. Much harder, ~80-90% is good.
-
-**Progression**: MNIST → CIFAR-10 → ImageNet represents increasing complexity in computer vision.
-
-### Dataset Format Patterns
-
-Both datasets follow similar patterns:
+TinyTorch separates **mechanics** (this module) from **application** (examples/milestones):
 
 ```
-Typical Dataset Structure:
-┌─────────────────────────────────────────┐
-│ Training Set                            │
-│ ├── Images: (N, H, W, C) tensor         │
-│ └── Labels: (N,) tensor                 │
-│                                         │
-│ Test Set                                │
-│ ├── Images: (M, H, W, C) tensor         │
-│ └── Labels: (M,) tensor                 │
-└─────────────────────────────────────────┘
-
-Where:
-  N = number of training samples
-  M = number of test samples
-  H, W = height, width
-  C = channels (1 for grayscale, 3 for RGB)
+Module 08 (DataLoader)          Examples & Milestones
+┌──────────────────────┐       ┌────────────────────────┐
+│ Dataset abstraction  │       │ Real MNIST digits      │
+│ TensorDataset impl   │  ───> │ CIFAR-10 images        │
+│ DataLoader batching  │       │ Custom datasets        │
+│ Shuffle & iteration  │       │ Download utilities     │
+└──────────────────────┘       └────────────────────────┘
+   (Learn mechanics)              (Apply to real data)
 ```
 
-### Data Pipeline Integration
+### Quick Start with Real Data
 
-Once downloaded, these datasets integrate seamlessly with our pipeline:
+**Tiny Datasets (ships with TinyTorch):**
+```python
+# 8×8 handwritten digits - instant, no downloads!
+import numpy as np
+data = np.load('datasets/tiny/digits_8x8.npz')
+images = Tensor(data['images'])  # (1797, 8, 8)
+labels = Tensor(data['labels'])  # (1797,)
 
+dataset = TensorDataset(images, labels)
+loader = DataLoader(dataset, batch_size=32, shuffle=True)
 ```
-Download Function → TensorDataset → DataLoader → Training
-      ↓                   ↓             ↓           ↓
-  Raw tensors      Indexed access   Batched data  Model input
+
+**Full Datasets (for serious training):**
+```python
+# See milestones/03_mlp_revival_1986/ for MNIST download
+# See milestones/04_cnn_revolution_1998/ for CIFAR-10 download
 ```
 
-**Note**: For educational purposes, we'll create synthetic datasets with the same structure as MNIST/CIFAR-10. In production, you'd download the actual data from official sources.
+### What You've Accomplished
+
+You've built the **data loading infrastructure** that powers all modern ML:
+- ✅ Dataset abstraction (universal interface)
+- ✅ TensorDataset (in-memory efficiency)
+- ✅ DataLoader (batching, shuffling, iteration)
+
+**Next steps:** Apply your DataLoader to real datasets in the milestones!
+
+**Real-world connection:** You've implemented the same patterns as:
+- PyTorch's `torch.utils.data.DataLoader`
+- TensorFlow's `tf.data.Dataset`
+- Production ML pipelines everywhere
 """
-
-# %% nbgrader={"grade": false, "grade_id": "download-functions", "solution": true}
-def download_mnist(data_dir: str = "./data") -> Tuple[TensorDataset, TensorDataset]:
-    """
-    Download and prepare MNIST dataset.
-
-    Returns train and test datasets with (images, labels) format.
-    Images are normalized to [0,1] range.
-
-    TODO: Implement MNIST download and preprocessing
-
-    APPROACH:
-    1. Create data directory if needed
-    2. Download MNIST files from official source
-    3. Parse binary format and extract images/labels
-    4. Normalize images and convert to tensors
-    5. Return TensorDataset objects
-
-    EXAMPLE:
-    >>> train_ds, test_ds = download_mnist()
-    >>> print(f"Train: {len(train_ds)} samples")
-    >>> print(f"Test: {len(test_ds)} samples")
-    >>> image, label = train_ds[0]
-    >>> print(f"Image shape: {image.shape}, Label: {label.data}")
-
-    HINTS:
-    - MNIST images are 28x28 grayscale, stored as uint8
-    - Labels are single integers 0-9
-    - Normalize images by dividing by 255.0
-    """
-    ### BEGIN SOLUTION
-    os.makedirs(data_dir, exist_ok=True)
-
-    # MNIST URLs (simplified - using a mock implementation for educational purposes)
-    # In production, you'd download from official sources
-
-    # Create simple synthetic MNIST-like data for educational purposes
-    print("📥 Creating synthetic MNIST-like dataset for educational purposes...")
-
-    # Generate synthetic training data (60,000 samples)
-    np.random.seed(42)  # For reproducibility
-    train_images = np.random.rand(60000, 28, 28).astype(np.float32)
-    train_labels = np.random.randint(0, 10, 60000).astype(np.int64)
-
-    # Generate synthetic test data (10,000 samples)
-    test_images = np.random.rand(10000, 28, 28).astype(np.float32)
-    test_labels = np.random.randint(0, 10, 10000).astype(np.int64)
-
-    # Create TensorDatasets
-    train_dataset = TensorDataset(Tensor(train_images), Tensor(train_labels))
-    test_dataset = TensorDataset(Tensor(test_images), Tensor(test_labels))
-
-    print(f"✅ MNIST-like dataset ready: {len(train_dataset)} train, {len(test_dataset)} test samples")
-
-    return train_dataset, test_dataset
-    ### END SOLUTION
-
-
-def download_cifar10(data_dir: str = "./data") -> Tuple[TensorDataset, TensorDataset]:
-    """
-    Download and prepare CIFAR-10 dataset.
-
-    Returns train and test datasets with (images, labels) format.
-    Images are normalized to [0,1] range.
-
-    TODO: Implement CIFAR-10 download and preprocessing
-
-    APPROACH:
-    1. Create data directory if needed
-    2. Download CIFAR-10 files from official source
-    3. Parse pickle format and extract images/labels
-    4. Normalize images and convert to tensors
-    5. Return TensorDataset objects
-
-    EXAMPLE:
-    >>> train_ds, test_ds = download_cifar10()
-    >>> print(f"Train: {len(train_ds)} samples")
-    >>> image, label = train_ds[0]
-    >>> print(f"Image shape: {image.shape}, Label: {label.data}")
-
-    HINTS:
-    - CIFAR-10 images are 32x32x3 color, stored as uint8
-    - Labels are single integers 0-9 (airplane, automobile, etc.)
-    - Images come in format (height, width, channels)
-    """
-    ### BEGIN SOLUTION
-    os.makedirs(data_dir, exist_ok=True)
-
-    # Create simple synthetic CIFAR-10-like data for educational purposes
-    print("📥 Creating synthetic CIFAR-10-like dataset for educational purposes...")
-
-    # Generate synthetic training data (50,000 samples)
-    np.random.seed(123)  # Different seed than MNIST
-    train_images = np.random.rand(50000, 32, 32, 3).astype(np.float32)
-    train_labels = np.random.randint(0, 10, 50000).astype(np.int64)
-
-    # Generate synthetic test data (10,000 samples)
-    test_images = np.random.rand(10000, 32, 32, 3).astype(np.float32)
-    test_labels = np.random.randint(0, 10, 10000).astype(np.int64)
-
-    # Create TensorDatasets
-    train_dataset = TensorDataset(Tensor(train_images), Tensor(train_labels))
-    test_dataset = TensorDataset(Tensor(test_images), Tensor(test_labels))
-
-    print(f"✅ CIFAR-10-like dataset ready: {len(train_dataset)} train, {len(test_dataset)} test samples")
-
-    return train_dataset, test_dataset
-    ### END SOLUTION
-
-
-# %% nbgrader={"grade": true, "grade_id": "test-download-functions", "locked": true, "points": 15}
-def test_unit_download_functions():
-    """🔬 Test dataset download functions."""
-    print("🔬 Unit Test: Download Functions...")
-
-    # Test MNIST download
-    train_mnist, test_mnist = download_mnist()
-
-    assert len(train_mnist) == 60000, f"MNIST train should have 60000 samples, got {len(train_mnist)}"
-    assert len(test_mnist) == 10000, f"MNIST test should have 10000 samples, got {len(test_mnist)}"
-
-    # Test sample format
-    image, label = train_mnist[0]
-    assert image.data.shape == (28, 28), f"MNIST image should be (28,28), got {image.data.shape}"
-    assert 0 <= label.data <= 9, f"MNIST label should be 0-9, got {label.data}"
-    assert 0 <= image.data.max() <= 1, f"MNIST images should be normalized to [0,1], max is {image.data.max()}"
-
-    # Test CIFAR-10 download
-    train_cifar, test_cifar = download_cifar10()
-
-    assert len(train_cifar) == 50000, f"CIFAR-10 train should have 50000 samples, got {len(train_cifar)}"
-    assert len(test_cifar) == 10000, f"CIFAR-10 test should have 10000 samples, got {len(test_cifar)}"
-
-    # Test sample format
-    image, label = train_cifar[0]
-    assert image.data.shape == (32, 32, 3), f"CIFAR-10 image should be (32,32,3), got {image.data.shape}"
-    assert 0 <= label.data <= 9, f"CIFAR-10 label should be 0-9, got {label.data}"
-    assert 0 <= image.data.max() <= 1, f"CIFAR-10 images should be normalized, max is {image.data.max()}"
-
-    print("✅ Download functions work correctly!")
-
-if __name__ == "__main__":
-    test_unit_download_functions()
 
 
 # %% [markdown]
@@ -1139,32 +982,11 @@ def test_module():
     test_unit_dataset()
     test_unit_tensordataset()
     test_unit_dataloader()
-    test_unit_download_functions()
 
     print("\nRunning integration scenarios...")
 
     # Test complete workflow
     test_training_integration()
-
-    # Test realistic dataset usage
-    print("🔬 Integration Test: Realistic Dataset Usage...")
-
-    # Download datasets
-    train_mnist, test_mnist = download_mnist()
-
-    # Create DataLoaders
-    train_loader = DataLoader(train_mnist, batch_size=64, shuffle=True)
-    test_loader = DataLoader(test_mnist, batch_size=64, shuffle=False)
-
-    # Test iteration
-    train_batch = next(iter(train_loader))
-    test_batch = next(iter(test_loader))
-
-    assert len(train_batch) == 2, "Batch should contain (images, labels)"
-    assert train_batch[0].data.shape[0] == 64, f"Wrong batch size: {train_batch[0].data.shape[0]}"
-    assert train_batch[0].data.shape[1:] == (28, 28), f"Wrong image shape: {train_batch[0].data.shape[1:]}"
-
-    print("✅ Realistic dataset usage works!")
 
     print("\n" + "=" * 50)
     print("🎉 ALL TESTS PASSED! Module ready for export.")
@@ -1187,8 +1009,8 @@ Congratulations! You've built a complete data loading pipeline for ML training!
 ### Key Accomplishments
 - Built Dataset abstraction and TensorDataset implementation with proper tensor alignment
 - Created DataLoader with batching, shuffling, and memory-efficient iteration
-- Added MNIST and CIFAR-10 download functions for computer vision workflows
 - Analyzed data pipeline performance and discovered memory/speed trade-offs
+- Learned how to apply DataLoader to real datasets (see examples/milestones)
 - All tests pass ✅ (validated by `test_module()`)
 
 ### Systems Insights Discovered
@@ -1199,9 +1021,13 @@ Congratulations! You've built a complete data loading pipeline for ML training!
 
 ### Ready for Next Steps
 Your DataLoader implementation enables efficient training of CNNs and larger models with proper data pipeline management.
-Export with: `tito module complete 08`
+Export with: `tito export 08_dataloader`
 
-**Next**: Module 09 (Spatial) will add Conv2d layers that leverage your efficient data loading for image processing!
+**Apply your knowledge:**
+- Milestone 03: Train MLP on real MNIST digits
+- Milestone 04: Train CNN on CIFAR-10 images
+
+**Then continue with:** Module 09 (Spatial) for Conv2d layers!
 
 ### Real-World Connection
 You've implemented the same patterns used in:
