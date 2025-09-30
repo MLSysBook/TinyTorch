@@ -449,31 +449,27 @@ class ExportCommand(BaseCommand):
             }
 
     def _convert_py_to_notebook(self, module_path: Path) -> bool:
-        """Convert .py dev file to .ipynb using Jupytext with integrity checking."""
+        """Convert .py dev file to .ipynb using Jupytext - always regenerate from Python source."""
         module_name = module_path.name
         short_name = module_name[3:] if module_name.startswith(tuple(f"{i:02d}_" for i in range(100))) else module_name
         
         dev_file = module_path / f"{short_name}_dev.py"
         if not dev_file.exists():
+            self.console.print(f"[red]❌ Python file not found: {dev_file}[/red]")
             return False
         
         notebook_file = module_path / f"{short_name}_dev.ipynb"
         
-        # Check if notebook is newer than .py file
+        # Always regenerate notebook from Python file (Python is source of truth)
+        self.console.print(f"[dim]📄 Source: {dev_file.name} → Target: {notebook_file.name}[/dim]")
+        
         if notebook_file.exists():
-            py_mtime = dev_file.stat().st_mtime
-            nb_mtime = notebook_file.stat().st_mtime
-            if nb_mtime > py_mtime:
-                # Still validate existing notebook
-                validation = self._validate_notebook_integrity(notebook_file)
-                if not validation["valid"]:
-                    self.console.print(f"[yellow]⚠️  Existing notebook has integrity issues: {', '.join(validation['issues'])}[/yellow]")
-                    self.console.print("[yellow]Regenerating notebook...[/yellow]")
-                else:
-                    return True  # Notebook is up to date and valid
+            self.console.print(f"[dim]🔄 Overwriting existing notebook (Python file is source of truth)[/dim]")
+        else:
+            self.console.print(f"[dim]✨ Creating new notebook from Python file[/dim]")
         
         try:
-            # Try to find jupytext in virtual environment first
+            # Prefer venv jupytext, fallback to system if needed
             jupytext_path = "jupytext"
             
             # Get the project root directory (where .venv should be)
@@ -481,13 +477,27 @@ class ExportCommand(BaseCommand):
             venv_jupytext = project_root / ".venv" / "bin" / "jupytext"
             
             if venv_jupytext.exists():
-                jupytext_path = str(venv_jupytext)
+                # Test venv jupytext first
+                test_result = subprocess.run([str(venv_jupytext), "--version"], 
+                                           capture_output=True, text=True)
+                if test_result.returncode == 0:
+                    jupytext_path = str(venv_jupytext)
+                    self.console.print(f"[dim]🔧 Using venv jupytext: {venv_jupytext}[/dim]")
+                else:
+                    self.console.print(f"[dim]⚠️  Venv jupytext has issues, falling back to system[/dim]")
+                    self.console.print(f"[dim]🔧 Using system jupytext: {jupytext_path}[/dim]")
+            else:
+                self.console.print(f"[dim]🔧 Using system jupytext: {jupytext_path}[/dim]")
+            
+            self.console.print(f"[dim]⚙️  Running: {jupytext_path} --to ipynb {dev_file.name}[/dim]")
             
             result = subprocess.run([
                 jupytext_path, "--to", "ipynb", str(dev_file)
             ], capture_output=True, text=True, cwd=project_root)
             
             if result.returncode == 0:
+                self.console.print(f"[dim]✅ Jupytext conversion successful[/dim]")
+                
                 # Validate the generated notebook
                 validation = self._validate_notebook_integrity(notebook_file)
                 if not validation["valid"]:
@@ -503,13 +513,21 @@ class ExportCommand(BaseCommand):
                 
                 # Show notebook stats
                 stats = validation["stats"]
-                self.console.print(f"[dim]📊 Notebook: {stats.get('total_cells', 0)} cells "
+                self.console.print(f"[dim]📊 Generated notebook: {stats.get('total_cells', 0)} cells "
                                  f"({stats.get('code_cells', 0)} code, {stats.get('markdown_cells', 0)} markdown)[/dim]")
                 
                 return True
-            
-            return False
+            else:
+                self.console.print(f"[red]❌ Jupytext failed with return code {result.returncode}[/red]")
+                if result.stderr:
+                    self.console.print(f"[red]Error: {result.stderr.strip()}[/red]")
+                return False
+                
         except FileNotFoundError:
+            self.console.print(f"[red]❌ Jupytext not found. Install with: pip install jupytext[/red]")
+            return False
+        except Exception as e:
+            self.console.print(f"[red]❌ Conversion error: {e}[/red]")
             return False
     
     def _convert_all_modules(self) -> list:
@@ -555,20 +573,16 @@ class ExportCommand(BaseCommand):
                     
                     return 1
                 
-                # Check if notebook exists, convert if needed
+                # Always convert Python file to notebook (Python file is source of truth)
                 short_name = module_name[3:] if module_name.startswith(tuple(f"{i:02d}_" for i in range(100))) else module_name
                 notebook_file = module_path / f"{short_name}_dev.ipynb"
                 
-                if notebook_file.exists():
-                    console.print(f"📝 Using existing notebook: {notebook_file.name}")
-                    exported_notebooks.append(str(notebook_file))
-                else:
-                    console.print(f"📝 Converting {module_name} Python file to notebook...")
-                    if not self._convert_py_to_notebook(module_path):
-                        console.print(Panel(f"[red]❌ Failed to convert .py file to notebook for {module_name}. Is jupytext installed?[/red]", 
-                                          title="Conversion Error", border_style="red"))
-                        return 1
-                    exported_notebooks.append(str(notebook_file))
+                console.print(f"📝 Converting {module_name} Python file to notebook...")
+                if not self._convert_py_to_notebook(module_path):
+                    console.print(Panel(f"[red]❌ Failed to convert .py file to notebook for {module_name}. Is jupytext installed?[/red]", 
+                                      title="Conversion Error", border_style="red"))
+                    return 1
+                exported_notebooks.append(str(notebook_file))
             
             console.print(f"🔄 Exporting {len(exported_notebooks)} notebooks to tinytorch package...")
             
@@ -576,14 +590,25 @@ class ExportCommand(BaseCommand):
             success_count = 0
             for notebook_path in exported_notebooks:
                 try:
+                    notebook_name = Path(notebook_path).name
+                    console.print(f"[dim]🔄 Exporting {notebook_name} to tinytorch package...[/dim]")
+                    
                     cmd = ["nbdev_export", "--path", notebook_path]
+                    console.print(f"[dim]⚙️  Running: nbdev_export --path {notebook_name}[/dim]")
+                    
                     result = subprocess.run(cmd, capture_output=True, text=True, cwd=Path.cwd())
                     if result.returncode == 0:
                         success_count += 1
-                        console.print(f"✅ Exported: {Path(notebook_path).name}")
+                        console.print(f"✅ Exported: {notebook_name}")
+                        if result.stdout.strip():
+                            console.print(f"[dim]📝 {result.stdout.strip()}[/dim]")
                     else:
-                        console.print(f"❌ Failed to export: {Path(notebook_path).name}")
-                        console.print(f"   Error: {result.stderr.strip()}")
+                        console.print(f"❌ Failed to export: {notebook_name}")
+                        console.print(f"   Return code: {result.returncode}")
+                        if result.stderr.strip():
+                            console.print(f"   Error: {result.stderr.strip()}")
+                        if result.stdout.strip():
+                            console.print(f"   Output: {result.stdout.strip()}")
                 except Exception as e:
                     console.print(f"❌ Error exporting {Path(notebook_path).name}: {e}")
             
