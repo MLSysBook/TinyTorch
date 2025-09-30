@@ -893,17 +893,18 @@ def enable_autograd():
             self.grad = np.zeros_like(self.data)
         
         # Handle broadcasting: sum gradient to match self.data shape
+        # This happens when operations broadcast tensors (e.g., adding bias to batch)
         if gradient.shape != self.grad.shape:
-            # Sum over broadcasted dimensions
-            # This handles cases like bias gradients that get broadcast
-            ndims_added = len(gradient.shape) - len(self.grad.shape)
-            for i in range(ndims_added):
-                gradient = np.sum(gradient, axis=0)
-            for i, (grad_dim, self_dim) in enumerate(zip(gradient.shape, self.grad.shape)):
-                if self_dim == 1 and grad_dim > 1:
-                    gradient = np.sum(gradient, axis=i, keepdims=True)
-                elif self_dim != grad_dim:
-                    gradient = np.sum(gradient, axis=i, keepdims=True)
+            # Step 1: Remove extra leading dimensions added during forward pass
+            # Example: gradient (batch_size, features) → self.grad (features,)
+            while gradient.ndim > self.grad.ndim:
+                gradient = gradient.sum(axis=0)
+            
+            # Step 2: Sum over dimensions that were size-1 in original tensor
+            # Example: bias with shape (1,) broadcast to (batch_size,) during forward
+            for i in range(gradient.ndim):
+                if self.grad.shape[i] == 1 and gradient.shape[i] != 1:
+                    gradient = gradient.sum(axis=i, keepdims=True)
         
         self.grad += gradient
 
