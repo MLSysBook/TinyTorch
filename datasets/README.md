@@ -2,6 +2,31 @@
 
 This directory contains datasets for TinyTorch examples and training.
 
+## Directory Structure
+
+```
+datasets/
+├── tiny/           ← Tiny datasets shipped with repo (~100KB each)
+│   └── digits_8x8.npz (1,797 samples, 67KB)
+├── mnist/          ← Full MNIST (downloaded, gitignored)
+├── cifar10/        ← Full CIFAR-10 (downloaded, gitignored)
+└── download_*.py   ← Download scripts for large datasets
+```
+
+## Quick Start
+
+**For learning (instant, offline):**
+```python
+# Use tiny shipped datasets
+import numpy as np
+data = np.load('datasets/tiny/digits_8x8.npz')
+```
+
+**For serious training (download once):**
+```bash
+python datasets/download_mnist.py
+```
+
 ## MNIST Dataset
 
 The `mnist/` directory should contain the MNIST or Fashion-MNIST dataset files:
