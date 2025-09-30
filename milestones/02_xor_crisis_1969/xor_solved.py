@@ -194,8 +194,6 @@ def train_network(model, X, y, epochs=500, lr=0.5):
         if (epoch + 1) % 100 == 0:
             console.print(f"Epoch {epoch+1:3d}/{epochs}  Loss: {loss.data:.4f}  Accuracy: {accuracy:.1%}")
     
-    console.print("\n[bold green]✅ Training Complete - XOR Solved![/bold green]\n")
-    
     return history
 
 
@@ -219,10 +217,10 @@ def evaluate_and_celebrate(model, X, y, history):
     console.print("[bold]📊 The Results:[/bold]\n")
     
     table = Table(title="Training Outcome", box=box.ROUNDED)
-    table.add_column("Metric", style="cyan", width=20)
-    table.add_column("Before Training", style="yellow")
-    table.add_column("After Training", style="green")
-    table.add_column("Improvement", style="magenta")
+    table.add_column("Metric", style="cyan", width=18)
+    table.add_column("Before Training", style="yellow", width=16)
+    table.add_column("After Training", style="green", width=16)
+    table.add_column("Improvement", style="magenta", width=14)
     
     loss_improvement = f"-{initial_loss - final_loss:.4f}"
     acc_improvement = f"+{final_acc - initial_acc:.1%}"
