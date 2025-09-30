@@ -61,15 +61,6 @@ from tinytorch.core.layers import Linear, Sequential  # What makes predictions
 - **Integration:** Works seamlessly with layers for complete prediction-to-error workflow
 """
 
-# %% nbgrader={"grade": false, "grade_id": "imports", "solution": true}
-#| default_exp core.losses
-#| export
-
-import numpy as np
-import matplotlib.pyplot as plt
-import time
-from typing import Optional
-
 # %% [markdown]
 """
 ## 📋 Module Prerequisites & Setup
@@ -85,7 +76,14 @@ This module builds on previous TinyTorch components. Here's what we need and why
 The `import_previous_module()` function below helps us cleanly import components from previous modules during development and testing.
 """
 
-# %%
+# %% nbgrader={"grade": false, "grade_id": "setup", "solution": true}
+#| default_exp core.losses
+
+import numpy as np
+import matplotlib.pyplot as plt
+import time
+from typing import Optional
+
 def import_previous_module(module_name: str, component_name: str):
     import sys
     import os
@@ -259,6 +257,7 @@ Both give the same result, but the stable version never overflows!
 """
 
 # %% nbgrader={"grade": false, "grade_id": "log_softmax", "solution": true}
+#| export
 def log_softmax(x: Tensor, dim: int = -1) -> Tensor:
     """
     Compute log-softmax with numerical stability.
@@ -387,6 +386,7 @@ Error Sensitivity Comparison:
 """
 
 # %% nbgrader={"grade": false, "grade_id": "mse_loss", "solution": true}
+#| export
 class MSELoss:
     """Mean Squared Error loss for regression tasks."""
 
@@ -559,6 +559,7 @@ Uses: CrossEntropyLoss            Uses: BinaryCrossEntropyLoss
 """
 
 # %% nbgrader={"grade": false, "grade_id": "cross_entropy_loss", "solution": true}
+#| export
 class CrossEntropyLoss:
     """Cross-entropy loss for multi-class classification."""
 
@@ -756,6 +757,7 @@ Message: "Be confident about positive class, uncertain is okay,
 """
 
 # %% nbgrader={"grade": false, "grade_id": "binary_cross_entropy_loss", "solution": true}
+#| export
 class BinaryCrossEntropyLoss:
     """Binary cross-entropy loss for binary classification."""
 

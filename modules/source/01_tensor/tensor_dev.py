@@ -223,6 +223,7 @@ Tensor wraps with: shape=(2,3), size=6, dtype=int64
 """
 
 # %% nbgrader={"grade": false, "grade_id": "tensor-class", "solution": true}
+#| export
 class Tensor:
     """Educational tensor that grows with student knowledge.
 
