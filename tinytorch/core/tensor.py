@@ -14,660 +14,466 @@
 # ║  🎓 LEARNING TIP: Work in modules/source/ - that's where real development    ║
 # ║     happens! The tinytorch/ directory is just the compiled output.           ║
 # ╚═══════════════════════════════════════════════════════════════════════════════╝
-
 # %% auto 0
-__all__ = ['Tensor', 'Parameter']
+__all__ = ['Tensor']
 
-# %% ../../modules/02_tensor/tensor_dev.ipynb 1
+# %% ../../modules/source/01_tensor/tensor_dev.ipynb 1
 import numpy as np
-import sys
-from typing import Union, Tuple, Optional, Any
 
-# %% ../../modules/02_tensor/tensor_dev.ipynb 3
+# %% ../../modules/source/01_tensor/tensor_dev.ipynb 6
 class Tensor:
-    """
-    TinyTorch Tensor: N-dimensional array with ML operations.
+    """Educational tensor that grows with student knowledge.
 
-    The fundamental data structure for all TinyTorch operations.
-    Wraps NumPy arrays with ML-specific functionality.
+    This class starts simple but includes dormant features for future modules:
+    - requires_grad: Will be used for automatic differentiation (Module 05)
+    - grad: Will store computed gradients (Module 05)
+    - backward(): Will compute gradients (Module 05)
+
+    For now, focus on: data, shape, and basic operations.
     """
 
-    def __init__(self, data: Any, dtype: Optional[str] = None, requires_grad: bool = False):
+    def __init__(self, data, requires_grad=False):
         """
         Create a new tensor from data.
 
-        Args:
-            data: Input data (scalar, list, or numpy array)
-            dtype: Data type ('float32', 'int32', etc.). Defaults to auto-detect.
-            requires_grad: Whether this tensor needs gradients for training. Defaults to False.
+        TODO: Initialize tensor attributes
 
-        TODO: Implement tensor creation with proper type handling.
-
-        STEP-BY-STEP:
-        1. Check if data is a scalar (int/float) - convert to numpy array
-        2. Check if data is a list - convert to numpy array  
-        3. Check if data is already a numpy array - use as-is
-        4. Apply dtype conversion if specified
-        5. Store the result in self._data
+        APPROACH:
+        1. Convert data to NumPy array - handles lists, scalars, etc.
+        2. Store shape and size for quick access
+        3. Set up gradient tracking (dormant until Module 05)
 
         EXAMPLE:
-        Tensor(5) → stores np.array(5)
-        Tensor([1, 2, 3]) → stores np.array([1, 2, 3])
-        Tensor(np.array([1, 2, 3])) → stores the array directly
+        >>> tensor = Tensor([1, 2, 3])
+        >>> print(tensor.data)
+        [1 2 3]
+        >>> print(tensor.shape)
+        (3,)
 
-        HINTS:
-        - Use isinstance() to check data types
-        - Use np.array() for conversion
-        - Handle dtype parameter for type conversion
-        - Store the array in self._data
+        HINT: np.array() handles type conversion automatically
         """
         ### BEGIN SOLUTION
-        # Convert input to numpy array
-        if isinstance(data, (int, float, np.number)):
-            # Handle Python and NumPy scalars
-            if dtype is None:
-                # Auto-detect type: int for integers, float32 for floats
-                if isinstance(data, int) or (isinstance(data, np.number) and np.issubdtype(type(data), np.integer)):
-                    dtype = 'int32'
-                else:
-                    dtype = 'float32'
-            self._data = np.array(data, dtype=dtype)
-        elif isinstance(data, list):
-            # Let NumPy auto-detect type, then convert if needed
-            temp_array = np.array(data)
-            if dtype is None:
-                # Use NumPy's auto-detected type, but prefer float32 for floats
-                if temp_array.dtype == np.float64:
-                    dtype = 'float32'
-                else:
-                    dtype = str(temp_array.dtype)
-            self._data = np.array(data, dtype=dtype)
-        elif isinstance(data, np.ndarray):
-            # Already a numpy array
-            if dtype is None:
-                # Keep existing dtype, but prefer float32 for float64
-                if data.dtype == np.float64:
-                    dtype = 'float32'
-                else:
-                    dtype = str(data.dtype)
-            self._data = data.astype(dtype) if dtype != data.dtype else data.copy()
-        elif isinstance(data, Tensor):
-            # Input is another Tensor - extract its data
-            if dtype is None:
-                # Keep existing dtype, but prefer float32 for float64
-                if data.data.dtype == np.float64:
-                    dtype = 'float32'
-                else:
-                    dtype = str(data.data.dtype)
-            self._data = data.data.astype(dtype) if dtype != str(data.data.dtype) else data.data.copy()
-        else:
-            # Try to convert unknown types
-            self._data = np.array(data, dtype=dtype)
+        # Core tensor data - always present
+        self.data = np.array(data, dtype=np.float32)  # Consistent float32 for ML
+        self.shape = self.data.shape
+        self.size = self.data.size
+        self.dtype = self.data.dtype
 
-        # Initialize gradient tracking attributes
+        # Gradient features (dormant until Module 05)
         self.requires_grad = requires_grad
-        self.grad = None if requires_grad else None
-        self._grad_fn = None
-        ### END SOLUTION
-
-    @property
-    def data(self) -> np.ndarray:
-        """
-        Access underlying numpy array.
-
-        TODO: Return the stored numpy array.
-
-        STEP-BY-STEP IMPLEMENTATION:
-        1. Access the internal _data attribute
-        2. Return the numpy array directly
-        3. This provides access to underlying data for NumPy operations
-
-        LEARNING CONNECTIONS:
-        Real-world relevance:
-        - PyTorch: tensor.numpy() converts to NumPy for visualization/analysis
-        - TensorFlow: tensor.numpy() enables integration with scientific Python
-        - Production: Data scientists need to access raw arrays for debugging
-        - Performance: Direct access avoids copying for read-only operations
-
-        HINT: Return self._data (the array you stored in __init__)
-        """
-        ### BEGIN SOLUTION
-        return self._data
-        ### END SOLUTION
-    
-    @data.setter
-    def data(self, value: Union[np.ndarray, 'Tensor']) -> None:
-        """
-        Set the underlying data of the tensor.
-        
-        Args:
-            value: New data (numpy array or Tensor)
-        """
-        if isinstance(value, Tensor):
-            self._data = value._data.copy()
-        else:
-            self._data = np.array(value)
-
-    @property
-    def shape(self) -> Tuple[int, ...]:
-        """
-        Get tensor shape.
-
-        TODO: Return the shape of the stored numpy array.
-
-        STEP-BY-STEP IMPLEMENTATION:
-        1. Access the _data attribute (the NumPy array)
-        2. Get the shape property from the NumPy array
-        3. Return the shape tuple directly
-
-        LEARNING CONNECTIONS:
-        Real-world relevance:
-        - Neural networks: Layer compatibility requires matching shapes
-        - Computer vision: Image shape (height, width, channels) determines architecture
-        - NLP: Sequence length and vocabulary size affect model design
-        - Debugging: Shape mismatches are the #1 cause of ML errors
-
-        HINT: Use .shape attribute of the numpy array
-        EXAMPLE: Tensor([1, 2, 3]).shape should return (3,)
-        """
-        ### BEGIN SOLUTION
-        return self._data.shape
-        ### END SOLUTION
-
-    @property
-    def size(self) -> int:
-        """
-        Get total number of elements.
-
-        TODO: Return the total number of elements in the tensor.
-
-        STEP-BY-STEP IMPLEMENTATION:
-        1. Access the _data attribute (the NumPy array)
-        2. Get the size property from the NumPy array
-        3. Return the total element count as an integer
-
-        LEARNING CONNECTIONS:
-        Real-world relevance:
-        - Memory planning: Calculate RAM requirements for large tensors
-        - Model architecture: Determine parameter counts for layers
-        - Performance optimization: Size affects computation time
-        - Batch processing: Total elements determines vectorization efficiency
-
-        HINT: Use .size attribute of the numpy array
-        EXAMPLE: Tensor([1, 2, 3]).size should return 3
-        """
-        ### BEGIN SOLUTION
-        return self._data.size
-        ### END SOLUTION
-
-    @property
-    def dtype(self) -> np.dtype:
-        """
-        Get data type as numpy dtype.
-
-        TODO: Return the data type of the stored numpy array.
-
-        STEP-BY-STEP IMPLEMENTATION:
-        1. Access the _data attribute (the NumPy array)
-        2. Get the dtype property from the NumPy array
-        3. Return the NumPy dtype object directly
-
-        LEARNING CONNECTIONS:
-        Real-world relevance:
-        - Precision vs speed: float32 is faster, float64 more accurate
-        - Memory optimization: int8 uses 1/4 memory of int32
-        - GPU compatibility: Some operations only work with specific types
-        - Model deployment: Mobile/edge devices prefer smaller data types
-
-        HINT: Use .dtype attribute of the numpy array
-        EXAMPLE: Tensor([1, 2, 3]).dtype should return dtype('int32')
-        """
-        ### BEGIN SOLUTION
-        return self._data.dtype
-        ### END SOLUTION
-
-    def __repr__(self) -> str:
-        """
-        String representation.
-
-        TODO: Create a clear string representation of the tensor.
-
-        STEP-BY-STEP IMPLEMENTATION:
-        1. Convert the numpy array to a list using .tolist()
-        2. Get shape and dtype information from properties
-        3. Format as "Tensor([data], shape=shape, dtype=dtype)"
-        4. Return the formatted string
-
-        LEARNING CONNECTIONS:
-        Real-world relevance:
-        - Debugging: Clear tensor representation speeds debugging
-        - Jupyter notebooks: Good __repr__ improves data exploration
-        - Logging: Production systems log tensor info for monitoring
-        - Education: Students understand tensors better with clear output
-
-        APPROACH:
-        1. Convert the numpy array to a list for readable output
-        2. Include the shape and dtype information
-        3. Format: "Tensor([data], shape=shape, dtype=dtype)"
-
-        EXAMPLE:
-        Tensor([1, 2, 3]) → "Tensor([1, 2, 3], shape=(3,), dtype=int32)"
-
-        HINTS:
-        - Use .tolist() to convert numpy array to list
-        - Include shape and dtype information
-        - Keep format consistent and readable
-        """
-        ### BEGIN SOLUTION
-        return f"Tensor({self._data.tolist()}, shape={self.shape}, dtype={self.dtype})"
-        ### END SOLUTION
-
-    def add(self, other: 'Tensor') -> 'Tensor':
-        """
-        Add two tensors element-wise.
-
-        TODO: Implement tensor addition.
-
-        STEP-BY-STEP IMPLEMENTATION:
-        1. Extract numpy arrays from both tensors
-        2. Use NumPy's + operator for element-wise addition
-        3. Create a new Tensor object with the result
-        4. Return the new tensor
-
-        LEARNING CONNECTIONS:
-        Real-world relevance:
-        - Neural networks: Adding bias terms to linear layer outputs
-        - Residual connections: skip connections in ResNet architectures
-        - Gradient updates: Adding computed gradients to parameters
-        - Ensemble methods: Combining predictions from multiple models
-
-        APPROACH:
-        1. Add the numpy arrays using +
-        2. Return a new Tensor with the result
-        3. Handle broadcasting automatically
-
-        EXAMPLE:
-        Tensor([1, 2]) + Tensor([3, 4]) → Tensor([4, 6])
-
-        HINTS:
-        - Use self._data + other._data
-        - Return Tensor(result)
-        - NumPy handles broadcasting automatically
-        """
-        ### BEGIN SOLUTION
-        result = self._data + other._data
-        return Tensor(result)
-        ### END SOLUTION
-
-    def multiply(self, other: 'Tensor') -> 'Tensor':
-        """
-        Multiply two tensors element-wise.
-
-        TODO: Implement tensor multiplication.
-
-        STEP-BY-STEP IMPLEMENTATION:
-        1. Extract numpy arrays from both tensors
-        2. Use NumPy's * operator for element-wise multiplication
-        3. Create a new Tensor object with the result
-        4. Return the new tensor
-
-        LEARNING CONNECTIONS:
-        Real-world relevance:
-        - Activation functions: Element-wise operations like ReLU masking
-        - Attention mechanisms: Element-wise scaling in transformer models
-        - Feature scaling: Multiplying features by learned scaling factors
-        - Gating: Element-wise gating in LSTM and GRU cells
-
-        APPROACH:
-        1. Multiply the numpy arrays using *
-        2. Return a new Tensor with the result
-        3. Handle broadcasting automatically
-
-        EXAMPLE:
-        Tensor([1, 2]) * Tensor([3, 4]) → Tensor([3, 8])
-
-        HINTS:
-        - Use self._data * other._data
-        - Return Tensor(result)
-        - This is element-wise, not matrix multiplication
-        """
-        ### BEGIN SOLUTION
-        result = self._data * other._data
-        return Tensor(result)
-        ### END SOLUTION
-
-    def __add__(self, other: Union['Tensor', int, float]) -> 'Tensor':
-        """
-        Addition operator: tensor + other
-
-        TODO: Implement + operator for tensors.
-
-        STEP-BY-STEP IMPLEMENTATION:
-        1. Check if other is a Tensor object
-        2. If Tensor, call the add() method directly
-        3. If scalar, convert to Tensor then call add()
-        4. Return the result from add() method
-
-        LEARNING CONNECTIONS:
-        Real-world relevance:
-        - Natural syntax: tensor + scalar enables intuitive code
-        - Broadcasting: Adding scalars to tensors is common in ML
-        - Operator overloading: Python's magic methods enable math-like syntax
-        - API design: Clean interfaces reduce cognitive load for researchers
-
-        APPROACH:
-        1. If other is a Tensor, use tensor addition
-        2. If other is a scalar, convert to Tensor first
-        3. Return the result
-
-        EXAMPLE:
-        Tensor([1, 2]) + Tensor([3, 4]) → Tensor([4, 6])
-        Tensor([1, 2]) + 5 → Tensor([6, 7])
-        """
-        ### BEGIN SOLUTION
-        if isinstance(other, Tensor):
-            return self.add(other)
-        else:
-            return self.add(Tensor(other))
-        ### END SOLUTION
-
-    def __mul__(self, other: Union['Tensor', int, float]) -> 'Tensor':
-        """
-        Multiplication operator: tensor * other
-
-        TODO: Implement * operator for tensors.
-
-        STEP-BY-STEP IMPLEMENTATION:
-        1. Check if other is a Tensor object
-        2. If Tensor, call the multiply() method directly
-        3. If scalar, convert to Tensor then call multiply()
-        4. Return the result from multiply() method
-
-        LEARNING CONNECTIONS:
-        Real-world relevance:
-        - Scaling features: tensor * learning_rate for gradient updates
-        - Masking: tensor * mask for attention mechanisms
-        - Regularization: tensor * dropout_mask during training
-        - Normalization: tensor * scale_factor in batch normalization
-
-        APPROACH:
-        1. If other is a Tensor, use tensor multiplication
-        2. If other is a scalar, convert to Tensor first
-        3. Return the result
-
-        EXAMPLE:
-        Tensor([1, 2]) * Tensor([3, 4]) → Tensor([3, 8])
-        Tensor([1, 2]) * 3 → Tensor([3, 6])
-        """
-        ### BEGIN SOLUTION
-        if isinstance(other, Tensor):
-            return self.multiply(other)
-        else:
-            return self.multiply(Tensor(other))
-        ### END SOLUTION
-
-    def __sub__(self, other: Union['Tensor', int, float]) -> 'Tensor':
-        """
-        Subtraction operator: tensor - other
-
-        TODO: Implement - operator for tensors.
-
-        STEP-BY-STEP IMPLEMENTATION:
-        1. Check if other is a Tensor object
-        2. If Tensor, subtract other._data from self._data
-        3. If scalar, subtract scalar directly from self._data
-        4. Create new Tensor with result and return
-
-        LEARNING CONNECTIONS:
-        Real-world relevance:
-        - Gradient computation: parameter - learning_rate * gradient
-        - Residual connections: output - skip_connection in some architectures
-        - Error calculation: predicted - actual for loss computation
-        - Centering data: tensor - mean for zero-centered inputs
-
-        APPROACH:
-        1. Convert other to Tensor if needed
-        2. Subtract using numpy arrays
-        3. Return new Tensor with result
-
-        EXAMPLE:
-        Tensor([5, 6]) - Tensor([1, 2]) → Tensor([4, 4])
-        Tensor([5, 6]) - 1 → Tensor([4, 5])
-        """
-        ### BEGIN SOLUTION
-        if isinstance(other, Tensor):
-            result = self._data - other._data
-        else:
-            result = self._data - other
-        return Tensor(result)
-        ### END SOLUTION
-
-    def __truediv__(self, other: Union['Tensor', int, float]) -> 'Tensor':
-        """
-        Division operator: tensor / other
-
-        TODO: Implement / operator for tensors.
-
-        STEP-BY-STEP IMPLEMENTATION:
-        1. Check if other is a Tensor object
-        2. If Tensor, divide self._data by other._data
-        3. If scalar, divide self._data by scalar directly
-        4. Create new Tensor with result and return
-
-        LEARNING CONNECTIONS:
-        Real-world relevance:
-        - Normalization: tensor / std_deviation for standard scaling
-        - Learning rate decay: parameter / decay_factor over time
-        - Probability computation: counts / total_counts for frequencies
-        - Temperature scaling: logits / temperature in softmax functions
-
-        APPROACH:
-        1. Convert other to Tensor if needed
-        2. Divide using numpy arrays
-        3. Return new Tensor with result
-
-        EXAMPLE:
-        Tensor([6, 8]) / Tensor([2, 4]) → Tensor([3, 2])
-        Tensor([6, 8]) / 2 → Tensor([3, 4])
-        """
-        ### BEGIN SOLUTION
-        if isinstance(other, Tensor):
-            result = self._data / other._data
-        else:
-            result = self._data / other
-        return Tensor(result)
-        ### END SOLUTION
-
-    def mean(self) -> 'Tensor':
-        """Computes the mean of the tensor's elements."""
-        return Tensor(np.mean(self.data))
-
-    def matmul(self, other: 'Tensor') -> 'Tensor':
-        """
-        Perform matrix multiplication between two tensors.
-
-        TODO: Implement matrix multiplication.
-
-        STEP-BY-STEP IMPLEMENTATION:
-        1. Extract numpy arrays from both tensors
-        2. Use np.matmul() for proper matrix multiplication
-        3. Create new Tensor object with the result
-        4. Return the new tensor
-
-        LEARNING CONNECTIONS:
-        Real-world relevance:
-        - Linear layers: input @ weight matrices in neural networks
-        - Transformer attention: Q @ K^T for attention scores
-        - CNN convolutions: Implemented as matrix multiplications
-        - Batch processing: Matrix ops enable parallel computation
-
-        APPROACH:
-        1. Use np.matmul() to perform matrix multiplication
-        2. Return a new Tensor with the result
-        3. Handle broadcasting automatically
-
-        EXAMPLE:
-        Tensor([[1, 2], [3, 4]]) @ Tensor([[5, 6], [7, 8]]) → Tensor([[19, 22], [43, 50]])
-
-        HINTS:
-        - Use np.matmul(self._data, other._data)
-        - Return Tensor(result)
-        - This is matrix multiplication, not element-wise multiplication
-        """
-        ### BEGIN SOLUTION
-        result = np.matmul(self._data, other._data)
-        return Tensor(result)
-        ### END SOLUTION
-
-    def __matmul__(self, other: 'Tensor') -> 'Tensor':
-        """
-        Matrix multiplication operator: tensor @ other
-
-        Enables the @ operator for matrix multiplication, providing
-        clean syntax for neural network operations.
-        """
-        return self.matmul(other)
-
-    def backward(self, gradient=None):
-        """
-        Compute gradients for this tensor and propagate backward.
-
-        This is a stub for now - full implementation in Module 09 (Autograd).
-        For now, just accumulates gradients if requires_grad=True.
-
-        Args:
-            gradient: Gradient from upstream. If None, assumes scalar with grad=1
-        """
-        if not self.requires_grad:
-            return
-
-        if gradient is None:
-            # Scalar case - gradient is 1
-            gradient = Tensor(np.ones_like(self._data))
-
-        # Accumulate gradients
-        if self.grad is None:
-            self.grad = gradient
-        else:
-            self.grad = self.grad + gradient
-    
-    def zero_grad(self):
-        """
-        Reset gradients to None. Used by optimizers before backward pass.
-        
-        This method is called by optimizers to clear gradients before
-        computing new ones, preventing gradient accumulation across batches.
-        """
         self.grad = None
+        ### END SOLUTION
 
-    def reshape(self, *shape: int) -> 'Tensor':
+    def __repr__(self):
+        """String representation of tensor for debugging."""
+        grad_info = f", requires_grad={self.requires_grad}" if self.requires_grad else ""
+        return f"Tensor(data={self.data}, shape={self.shape}{grad_info})"
+
+    def __str__(self):
+        """Human-readable string representation."""
+        return f"Tensor({self.data})"
+
+    def numpy(self):
+        """Return the underlying NumPy array."""
+        return self.data
+
+    # nbgrader={\"grade\": false, \"grade_id\": \"addition-impl\", \"solution\": true}
+    def __add__(self, other):
         """
-        Return a new tensor with the same data but different shape.
+        Add two tensors element-wise with broadcasting support.
 
-        Args:
-            *shape: New shape dimensions. Use -1 for automatic sizing.
+        TODO: Implement tensor addition with automatic broadcasting
 
-        Returns:
-            New Tensor with reshaped data
+        APPROACH:
+        1. Handle both Tensor and scalar inputs
+        2. Use NumPy's broadcasting for automatic shape alignment
+        3. Return new Tensor with result (don't modify self)
 
-        Example:
-            tensor.reshape(2, -1)  # Reshape to 2 rows, auto columns
-            tensor.reshape(4, 3)   # Reshape to 4x3 matrix
+        EXAMPLE:
+        >>> a = Tensor([1, 2, 3])
+        >>> b = Tensor([4, 5, 6])
+        >>> result = a + b
+        >>> print(result.data)
+        [5. 7. 9.]
+
+        BROADCASTING EXAMPLE:
+        >>> matrix = Tensor([[1, 2], [3, 4]])  # Shape: (2, 2)
+        >>> vector = Tensor([10, 20])          # Shape: (2,)
+        >>> result = matrix + vector           # Broadcasting: (2,2) + (2,) → (2,2)
+        >>> print(result.data)
+        [[11. 22.]
+         [13. 24.]]
+
+        HINTS:
+        - Use isinstance() to check if other is a Tensor
+        - NumPy handles broadcasting automatically with +
+        - Always return a new Tensor, don't modify self
+        - Preserve gradient tracking for future modules
         """
-        reshaped_data = self._data.reshape(*shape)
+        ### BEGIN SOLUTION
+        if isinstance(other, Tensor):
+            # Tensor + Tensor: let NumPy handle broadcasting
+            result_data = self.data + other.data
+        else:
+            # Tensor + scalar: NumPy broadcasts automatically
+            result_data = self.data + other
+
+        # Create new tensor with result
+        result = Tensor(result_data)
+
+        # Preserve gradient tracking if either operand requires gradients
+        if hasattr(self, 'requires_grad') and hasattr(other, 'requires_grad'):
+            result.requires_grad = self.requires_grad or (isinstance(other, Tensor) and other.requires_grad)
+        elif hasattr(self, 'requires_grad'):
+            result.requires_grad = self.requires_grad
+
+        return result
+        ### END SOLUTION
+
+    # nbgrader={"grade": false, "grade_id": "more-arithmetic", "solution": true}
+    def __sub__(self, other):
+        """
+        Subtract two tensors element-wise.
+
+        Common use: Centering data (x - mean), computing differences for loss functions.
+        """
+        if isinstance(other, Tensor):
+            return Tensor(self.data - other.data)
+        else:
+            return Tensor(self.data - other)
+
+    def __mul__(self, other):
+        """
+        Multiply two tensors element-wise (NOT matrix multiplication).
+
+        Common use: Scaling features, applying masks, gating mechanisms in neural networks.
+        Note: This is * operator, not @ (which will be matrix multiplication).
+        """
+        if isinstance(other, Tensor):
+            return Tensor(self.data * other.data)
+        else:
+            return Tensor(self.data * other)
+
+    def __truediv__(self, other):
+        """
+        Divide two tensors element-wise.
+
+        Common use: Normalization (x / std), converting counts to probabilities.
+        """
+        if isinstance(other, Tensor):
+            return Tensor(self.data / other.data)
+        else:
+            return Tensor(self.data / other)
+
+    # nbgrader={"grade": false, "grade_id": "matmul-impl", "solution": true}
+    def matmul(self, other):
+        """
+        Matrix multiplication of two tensors.
+
+        TODO: Implement matrix multiplication using np.dot with proper validation
+
+        APPROACH:
+        1. Validate inputs are Tensors
+        2. Check dimension compatibility (inner dimensions must match)
+        3. Use np.dot for optimized computation
+        4. Return new Tensor with result
+
+        EXAMPLE:
+        >>> a = Tensor([[1, 2], [3, 4]])  # 2×2
+        >>> b = Tensor([[5, 6], [7, 8]])  # 2×2
+        >>> result = a.matmul(b)          # 2×2 result
+        >>> # Result: [[1×5+2×7, 1×6+2×8], [3×5+4×7, 3×6+4×8]] = [[19, 22], [43, 50]]
+
+        SHAPE RULES:
+        - (M, K) @ (K, N) → (M, N)  ✓ Valid
+        - (M, K) @ (J, N) → Error   ✗ K ≠ J
+
+        COMPLEXITY: O(M×N×K) for (M×K) @ (K×N) matrices
+
+        HINTS:
+        - np.dot handles the optimization for us
+        - Check self.shape[-1] == other.shape[-2] for compatibility
+        - Provide clear error messages for debugging
+        """
+        ### BEGIN SOLUTION
+        if not isinstance(other, Tensor):
+            raise TypeError(f"Expected Tensor for matrix multiplication, got {type(other)}")
+
+        # Handle edge cases
+        if self.shape == () or other.shape == ():
+            # Scalar multiplication
+            return Tensor(self.data * other.data)
+
+        # For matrix multiplication, we need at least 1D tensors
+        if len(self.shape) == 0 or len(other.shape) == 0:
+            return Tensor(self.data * other.data)
+
+        # Check dimension compatibility for matrix multiplication
+        if len(self.shape) >= 2 and len(other.shape) >= 2:
+            if self.shape[-1] != other.shape[-2]:
+                raise ValueError(
+                    f"Cannot perform matrix multiplication: {self.shape} @ {other.shape}. "
+                    f"Inner dimensions must match: {self.shape[-1]} ≠ {other.shape[-2]}. "
+                    f"💡 HINT: For (M,K) @ (K,N) → (M,N), the K dimensions must be equal."
+                )
+        elif len(self.shape) == 1 and len(other.shape) == 2:
+            # Vector @ Matrix
+            if self.shape[0] != other.shape[0]:
+                raise ValueError(
+                    f"Cannot multiply vector {self.shape} with matrix {other.shape}. "
+                    f"Vector length {self.shape[0]} must match matrix rows {other.shape[0]}."
+                )
+        elif len(self.shape) == 2 and len(other.shape) == 1:
+            # Matrix @ Vector
+            if self.shape[1] != other.shape[0]:
+                raise ValueError(
+                    f"Cannot multiply matrix {self.shape} with vector {other.shape}. "
+                    f"Matrix columns {self.shape[1]} must match vector length {other.shape[0]}."
+                )
+
+        # Perform optimized matrix multiplication
+        result_data = np.dot(self.data, other.data)
+        return Tensor(result_data)
+        ### END SOLUTION
+
+    # nbgrader={"grade": false, "grade_id": "shape-ops", "solution": true}
+    def reshape(self, *shape):
+        """
+        Reshape tensor to new dimensions.
+
+        TODO: Implement tensor reshaping with validation
+
+        APPROACH:
+        1. Handle different calling conventions: reshape(2, 3) vs reshape((2, 3))
+        2. Validate total elements remain the same
+        3. Use NumPy's reshape for the actual operation
+        4. Return new Tensor (keep immutability)
+
+        EXAMPLE:
+        >>> tensor = Tensor([1, 2, 3, 4, 5, 6])  # Shape: (6,)
+        >>> reshaped = tensor.reshape(2, 3)      # Shape: (2, 3)
+        >>> print(reshaped.data)
+        [[1. 2. 3.]
+         [4. 5. 6.]]
+
+        COMMON USAGE:
+        >>> # Flatten for MLP input
+        >>> image = Tensor(np.random.rand(3, 32, 32))  # (channels, height, width)
+        >>> flattened = image.reshape(-1)              # (3072,) - all pixels in vector
+        >>>
+        >>> # Prepare batch for convolution
+        >>> batch = Tensor(np.random.rand(32, 784))    # (batch, features)
+        >>> images = batch.reshape(32, 1, 28, 28)      # (batch, channels, height, width)
+
+        HINTS:
+        - Handle both reshape(2, 3) and reshape((2, 3)) calling styles
+        - Check np.prod(new_shape) == self.size for validation
+        - Use descriptive error messages for debugging
+        """
+        ### BEGIN SOLUTION
+        # Handle both reshape(2, 3) and reshape((2, 3)) calling conventions
+        if len(shape) == 1 and isinstance(shape[0], (tuple, list)):
+            new_shape = tuple(shape[0])
+        else:
+            new_shape = shape
+
+        # Handle -1 for automatic dimension inference (like NumPy)
+        if -1 in new_shape:
+            if new_shape.count(-1) > 1:
+                raise ValueError("Can only specify one unknown dimension with -1")
+
+            # Calculate the unknown dimension
+            known_size = 1
+            unknown_idx = new_shape.index(-1)
+            for i, dim in enumerate(new_shape):
+                if i != unknown_idx:
+                    known_size *= dim
+
+            unknown_dim = self.size // known_size
+            new_shape = list(new_shape)
+            new_shape[unknown_idx] = unknown_dim
+            new_shape = tuple(new_shape)
+
+        # Validate total elements remain the same
+        if np.prod(new_shape) != self.size:
+            raise ValueError(
+                f"Cannot reshape tensor of size {self.size} to shape {new_shape}. "
+                f"Total elements must match: {self.size} ≠ {np.prod(new_shape)}. "
+                f"💡 HINT: Make sure new_shape dimensions multiply to {self.size}"
+            )
+
+        # Reshape the data (NumPy handles the memory layout efficiently)
+        reshaped_data = np.reshape(self.data, new_shape)
         return Tensor(reshaped_data)
+        ### END SOLUTION
 
+    def transpose(self, dim0=None, dim1=None):
+        """
+        Transpose tensor dimensions.
 
-# # Testing Your Implementation
-# 
-# Now let's test our tensor implementation with comprehensive tests that validate all functionality.
+        TODO: Implement tensor transposition
 
-# ### 🧪 Unit Test: Tensor Creation
-# 
-# Let's test your tensor creation implementation right away! This gives you immediate feedback on whether your `__init__` method works correctly.
-# 
-# **This is a unit test** - it tests one specific function (tensor creation) in isolation.
+        APPROACH:
+        1. Handle default case (transpose last two dimensions)
+        2. Handle specific dimension swapping
+        3. Use NumPy's transpose with proper axis specification
+        4. Return new Tensor
 
-# %% ../../modules/02_tensor/tensor_dev.ipynb 14
-def Parameter(data, dtype=None):
-    """
-    Convenience function for creating trainable tensors.
+        EXAMPLE:
+        >>> matrix = Tensor([[1, 2, 3], [4, 5, 6]])  # (2, 3)
+        >>> transposed = matrix.transpose()          # (3, 2)
+        >>> print(transposed.data)
+        [[1. 4.]
+         [2. 5.]
+         [3. 6.]]
 
-    This is equivalent to Tensor(data, requires_grad=True) but provides
-    cleaner syntax for neural network parameters.
+        NEURAL NETWORK USAGE:
+        >>> # Weight matrix transpose for backward pass
+        >>> W = Tensor([[0.1, 0.2], [0.3, 0.4], [0.5, 0.6]])  # (3, 2)
+        >>> W_T = W.transpose()  # (2, 3) - for gradient computation
+        >>>
+        >>> # Attention mechanism
+        >>> Q = Tensor([[1, 2], [3, 4]])  # queries (2, 2)
+        >>> K = Tensor([[5, 6], [7, 8]])  # keys (2, 2)
+        >>> attention_scores = Q.matmul(K.transpose())  # Q @ K^T
 
-    Args:
-        data: Input data (scalar, list, or numpy array)
-        dtype: Data type ('float32', 'int32', etc.). Defaults to auto-detect.
+        HINTS:
+        - Default: transpose last two dimensions (most common case)
+        - Use np.transpose() with axes parameter
+        - Handle 1D tensors gracefully (transpose is identity)
+        """
+        ### BEGIN SOLUTION
+        if dim0 is None and dim1 is None:
+            # Default: transpose last two dimensions
+            if len(self.shape) < 2:
+                # For 1D tensors, transpose is identity operation
+                return Tensor(self.data.copy())
+            else:
+                # Transpose last two dimensions (most common in ML)
+                axes = list(range(len(self.shape)))
+                axes[-2], axes[-1] = axes[-1], axes[-2]
+                transposed_data = np.transpose(self.data, axes)
+        else:
+            # Specific dimensions to transpose
+            if dim0 is None or dim1 is None:
+                raise ValueError("Both dim0 and dim1 must be specified for specific dimension transpose")
 
-    Returns:
-        Tensor with requires_grad=True
+            # Validate dimensions exist
+            if dim0 >= len(self.shape) or dim1 >= len(self.shape) or dim0 < 0 or dim1 < 0:
+                raise ValueError(
+                    f"Dimension out of range for tensor with shape {self.shape}. "
+                    f"Got dim0={dim0}, dim1={dim1}, but tensor has {len(self.shape)} dimensions."
+                )
 
-    Examples:
-        weight = Parameter(np.random.randn(784, 128))  # Neural network weight
-        bias = Parameter(np.zeros(128))                # Neural network bias
-    """
-    return Tensor(data, dtype=dtype, requires_grad=True)
+            # Create axes list and swap the specified dimensions
+            axes = list(range(len(self.shape)))
+            axes[dim0], axes[dim1] = axes[dim1], axes[dim0]
+            transposed_data = np.transpose(self.data, axes)
 
+        return Tensor(transposed_data)
+        ### END SOLUTION
 
-# # MODULE SUMMARY: Tensor Foundation
-# 
-# Congratulations! You've successfully implemented the fundamental data structure that powers all machine learning:
-# 
-# ## What You've Built
-# - **Tensor Class**: N-dimensional array wrapper with professional interfaces
-# - **Core Operations**: Creation, property access, and arithmetic operations
-# - **Shape Management**: Automatic shape tracking and validation
-# - **Data Types**: Proper NumPy integration and type handling
-# - **Foundation**: The building block for all subsequent TinyTorch modules
-# 
-# ## Key Learning Outcomes
-# - **Understanding**: How tensors work as the foundation of machine learning
-# - **Implementation**: Built tensor operations from scratch
-# - **Professional patterns**: Clean APIs, proper error handling, comprehensive testing
-# - **Real-world connection**: Understanding PyTorch/TensorFlow tensor foundations
-# - **Systems thinking**: Building reliable, reusable components
-# 
-# ## Mathematical Foundations Mastered
-# - **N-dimensional arrays**: Shape, size, and dimensionality concepts
-# - **Element-wise operations**: Addition, subtraction, multiplication, division
-# - **Broadcasting**: Understanding how operations work with different shapes
-# - **Memory management**: Efficient data storage and access patterns
-# 
-# ## Professional Skills Developed
-# - **API design**: Clean, intuitive interfaces for tensor operations
-# - **Error handling**: Graceful handling of invalid operations and edge cases
-# - **Testing methodology**: Comprehensive validation of tensor functionality
-# - **Documentation**: Clear, educational documentation with examples
-# 
-# ## Ready for Advanced Applications
-# Your tensor implementation now enables:
-# - **Neural Networks**: Foundation for all layer implementations
-# - **Automatic Differentiation**: Gradient computation through computational graphs
-# - **Complex Models**: CNNs, RNNs, Transformers - all built on tensors
-# - **Real Applications**: Training models on real datasets
-# 
-# ## Connection to Real ML Systems
-# Your implementation mirrors production systems:
-# - **PyTorch**: `torch.Tensor` provides identical functionality
-# - **TensorFlow**: `tf.Tensor` implements similar concepts
-# - **NumPy**: `numpy.ndarray` serves as the foundation
-# - **Industry Standard**: Every major ML framework uses these exact principles
-# 
-# ## The Power of Tensors
-# You've built the fundamental data structure of modern AI:
-# - **Universality**: Tensors represent all data: images, text, audio, video
-# - **Efficiency**: Vectorized operations enable fast computation
-# - **Scalability**: Handles everything from single numbers to massive matrices
-# - **Flexibility**: Foundation for any mathematical operation
-# 
-# ## What's Next
-# Your tensor implementation is the foundation for:
-# - **Activations**: Nonlinear functions that enable complex learning
-# - **Layers**: Linear transformations and neural network building blocks
-# - **Networks**: Composing layers into powerful architectures
-# - **Training**: Optimizing networks to solve real problems
-# 
-# **Next Module**: Activation functions - adding the nonlinearity that makes neural networks powerful!
-# 
-# You've built the foundation of modern AI. Now let's add the mathematical functions that enable machines to learn complex patterns!
+    # nbgrader={"grade": false, "grade_id": "reduction-ops", "solution": true}
+    def sum(self, axis=None, keepdims=False):
+        """
+        Sum tensor along specified axis.
+
+        TODO: Implement tensor sum with axis control
+
+        APPROACH:
+        1. Use NumPy's sum with axis parameter
+        2. Handle axis=None (sum all elements) vs specific axis
+        3. Support keepdims to maintain shape for broadcasting
+        4. Return new Tensor with result
+
+        EXAMPLE:
+        >>> tensor = Tensor([[1, 2], [3, 4]])
+        >>> total = tensor.sum()          # Sum all elements: 10
+        >>> col_sum = tensor.sum(axis=0)  # Sum columns: [4, 6]
+        >>> row_sum = tensor.sum(axis=1)  # Sum rows: [3, 7]
+
+        NEURAL NETWORK USAGE:
+        >>> # Batch loss computation
+        >>> batch_losses = Tensor([0.1, 0.3, 0.2, 0.4])  # Individual losses
+        >>> total_loss = batch_losses.sum()               # Total: 1.0
+        >>> avg_loss = batch_losses.mean()                # Average: 0.25
+        >>>
+        >>> # Global average pooling
+        >>> feature_maps = Tensor(np.random.rand(32, 256, 7, 7))  # (batch, channels, h, w)
+        >>> global_features = feature_maps.sum(axis=(2, 3))       # (batch, channels)
+
+        HINTS:
+        - np.sum handles all the complexity for us
+        - axis=None sums all elements (returns scalar)
+        - axis=0 sums along first dimension, axis=1 along second, etc.
+        - keepdims=True preserves dimensions for broadcasting
+        """
+        ### BEGIN SOLUTION
+        result = np.sum(self.data, axis=axis, keepdims=keepdims)
+        return Tensor(result)
+        ### END SOLUTION
+
+    def mean(self, axis=None, keepdims=False):
+        """
+        Compute mean of tensor along specified axis.
+
+        Common usage: Batch normalization, loss averaging, global pooling.
+        """
+        ### BEGIN SOLUTION
+        result = np.mean(self.data, axis=axis, keepdims=keepdims)
+        return Tensor(result)
+        ### END SOLUTION
+
+    def max(self, axis=None, keepdims=False):
+        """
+        Find maximum values along specified axis.
+
+        Common usage: Max pooling, finding best predictions, activation clipping.
+        """
+        ### BEGIN SOLUTION
+        result = np.max(self.data, axis=axis, keepdims=keepdims)
+        return Tensor(result)
+        ### END SOLUTION
+
+    # nbgrader={"grade": false, "grade_id": "gradient-placeholder", "solution": true}
+    def backward(self):
+        """
+        Compute gradients (implemented in Module 05: Autograd).
+
+        TODO: Placeholder implementation for gradient computation
+
+        STUDENT NOTE:
+        This method exists but does nothing until Module 05: Autograd.
+        Don't worry about it for now - focus on the basic tensor operations.
+
+        In Module 05, we'll implement:
+        - Gradient computation via chain rule
+        - Automatic differentiation
+        - Backpropagation through operations
+        - Computation graph construction
+
+        FUTURE IMPLEMENTATION PREVIEW:
+        ```python
+        def backward(self, gradient=None):
+            # Module 05 will implement:
+            # 1. Set gradient for this tensor
+            # 2. Propagate to parent operations
+            # 3. Apply chain rule recursively
+            # 4. Accumulate gradients properly
+            pass
+        ```
+
+        CURRENT BEHAVIOR:
+        >>> x = Tensor([1, 2, 3], requires_grad=True)
+        >>> y = x * 2
+        >>> y.sum().backward()  # Calls this method - does nothing
+        >>> print(x.grad)      # Still None
+        None
+        """
+        ### BEGIN SOLUTION
+        # Placeholder - will be implemented in Module 05
+        # For now, just ensure it doesn't crash when called
+        # This allows students to experiment with gradient syntax
+        # without getting confusing errors about missing methods
+        pass
+        ### END SOLUTION

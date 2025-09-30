@@ -276,7 +276,11 @@ class Tensor:
         """Human-readable string representation."""
         return f"Tensor({self.data})"
 
-    # %% nbgrader={"grade": false, "grade_id": "addition-impl", "solution": true}
+    def numpy(self):
+        """Return the underlying NumPy array."""
+        return self.data
+
+    # nbgrader={\"grade\": false, \"grade_id\": \"addition-impl\", \"solution\": true}
     def __add__(self, other):
         """
         Add two tensors element-wise with broadcasting support.
@@ -329,7 +333,7 @@ class Tensor:
         return result
         ### END SOLUTION
 
-    # %% nbgrader={"grade": false, "grade_id": "more-arithmetic", "solution": true}
+    # nbgrader={"grade": false, "grade_id": "more-arithmetic", "solution": true}
     def __sub__(self, other):
         """
         Subtract two tensors element-wise.
@@ -364,7 +368,7 @@ class Tensor:
         else:
             return Tensor(self.data / other)
 
-    # %% nbgrader={"grade": false, "grade_id": "matmul-impl", "solution": true}
+    # nbgrader={"grade": false, "grade_id": "matmul-impl", "solution": true}
     def matmul(self, other):
         """
         Matrix multiplication of two tensors.
@@ -435,7 +439,7 @@ class Tensor:
         return Tensor(result_data)
         ### END SOLUTION
 
-    # %% nbgrader={"grade": false, "grade_id": "shape-ops", "solution": true}
+    # nbgrader={"grade": false, "grade_id": "shape-ops", "solution": true}
     def reshape(self, *shape):
         """
         Reshape tensor to new dimensions.
@@ -572,7 +576,7 @@ class Tensor:
         return Tensor(transposed_data)
         ### END SOLUTION
 
-    # %% nbgrader={"grade": false, "grade_id": "reduction-ops", "solution": true}
+    # nbgrader={"grade": false, "grade_id": "reduction-ops", "solution": true}
     def sum(self, axis=None, keepdims=False):
         """
         Sum tensor along specified axis.
@@ -634,7 +638,7 @@ class Tensor:
         return Tensor(result)
         ### END SOLUTION
 
-    # %% nbgrader={"grade": false, "grade_id": "gradient-placeholder", "solution": true}
+    # nbgrader={"grade": false, "grade_id": "gradient-placeholder", "solution": true}
     def backward(self):
         """
         Compute gradients (implemented in Module 05: Autograd).

@@ -65,12 +65,9 @@ import numpy as np
 import sys
 import os
 
-# Import dependencies from other modules
-sys.path.append(os.path.join(os.path.dirname(__file__), '..', '01_tensor'))
-from tensor_dev import Tensor
-
-sys.path.append(os.path.join(os.path.dirname(__file__), '..', '02_activations'))
-from activations_dev import ReLU, Sigmoid
+# Import dependencies from tinytorch package
+from tinytorch.core.tensor import Tensor
+from tinytorch.core.activations import ReLU, Sigmoid
 
 # %% [markdown]
 """
@@ -267,6 +264,10 @@ class Linear:
 
         return output
         ### END SOLUTION
+
+    def __call__(self, x):
+        """Allows the layer to be called like a function."""
+        return self.forward(x)
 
     def parameters(self):
         """

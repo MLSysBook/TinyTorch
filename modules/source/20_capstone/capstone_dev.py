@@ -394,6 +394,7 @@ Let's implement this step by step, starting with the core TinyGPT class that orc
 """
 
 # %% nbgrader={"grade": false, "grade_id": "tinygpt_architecture", "solution": true}
+#| export
 class TinyGPT:
     """
     Complete GPT implementation integrating all TinyTorch modules.
@@ -896,6 +897,7 @@ Let's implement the complete training infrastructure that makes all of this work
 """
 
 # %% nbgrader={"grade": false, "grade_id": "training_pipeline", "solution": true}
+#| export
 class TinyGPTTrainer:
     """
     Complete training pipeline integrating optimizers, schedulers, and monitoring.
@@ -1599,6 +1601,7 @@ Let's implement the complete pipeline class that orchestrates this entire proces
 """
 
 # %% nbgrader={"grade": false, "grade_id": "complete_pipeline", "solution": true}
+#| export
 class CompleteTinyGPTPipeline:
     """
     End-to-end ML pipeline demonstrating integration of all 19 modules.

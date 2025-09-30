@@ -78,6 +78,7 @@ The `import_previous_module()` function below helps us cleanly import components
 
 # %% nbgrader={"grade": false, "grade_id": "setup", "solution": true}
 #| default_exp core.losses
+#| export
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -91,8 +92,10 @@ def import_previous_module(module_name: str, component_name: str):
     module = __import__(f"{module_name.split('_')[1]}_dev")
     return getattr(module, component_name)
 
-# Import from previous modules using our helper
-Tensor = import_previous_module('01_tensor', 'Tensor')
+# Import from tinytorch package
+from tinytorch.core.tensor import Tensor
+from tinytorch.core.layers import Linear
+from tinytorch.core.activations import ReLU
 
 # %% [markdown]
 """
@@ -257,7 +260,6 @@ Both give the same result, but the stable version never overflows!
 """
 
 # %% nbgrader={"grade": false, "grade_id": "log_softmax", "solution": true}
-#| export
 def log_softmax(x: Tensor, dim: int = -1) -> Tensor:
     """
     Compute log-softmax with numerical stability.
@@ -1286,11 +1288,6 @@ def test_module():
 
     # Test realistic end-to-end scenario with previous modules
     print("🔬 Integration Test: Realistic training scenario...")
-
-    # Import components from previous modules using standardized helper
-    Tensor = import_previous_module('01_tensor', 'Tensor')
-    Linear = import_previous_module('03_layers', 'Linear')
-    ReLU = import_previous_module('02_activations', 'ReLU')
 
     # Simulate a complete prediction -> loss computation pipeline
 

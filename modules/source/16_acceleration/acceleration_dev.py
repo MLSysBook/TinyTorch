@@ -681,6 +681,7 @@ N = parameter count, A = activation memory
 """
 
 # %% nbgrader={"grade": false, "grade_id": "mixed-precision-trainer", "solution": true}
+#| export
 class MixedPrecisionTrainer:
     """
     Mixed precision trainer with automatic loss scaling.

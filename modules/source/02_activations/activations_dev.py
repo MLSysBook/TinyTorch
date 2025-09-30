@@ -74,21 +74,15 @@ The `import_previous_module()` function below helps us cleanly import components
 
 # %% nbgrader={"grade": false, "grade_id": "setup", "solution": true}
 #| default_exp core.activations
+#| export
 
 import numpy as np
 from typing import Optional
 import sys
 import os
 
-def import_previous_module(module_name: str, component_name: str):
-    import sys
-    import os
-    sys.path.append(os.path.join(os.path.dirname(__file__), '..', module_name))
-    module = __import__(f"{module_name.split('_')[1]}_dev")
-    return getattr(module, component_name)
 
-# Import from previous modules using our helper
-Tensor = import_previous_module('01_tensor', 'Tensor')
+# Import will be in export cell
 
 # %% [markdown]
 """
@@ -197,6 +191,8 @@ Sigmoid Curve:
 
 # %% nbgrader={"grade": false, "grade_id": "sigmoid-impl", "solution": true}
 #| export
+from tinytorch.core.tensor import Tensor
+
 class Sigmoid:
     """
     Sigmoid activation: σ(x) = 1/(1 + e^(-x))
@@ -230,6 +226,10 @@ class Sigmoid:
         result = 1.0 / (1.0 + np.exp(-x.data))
         return Tensor(result)
         ### END SOLUTION
+
+    def __call__(self, x: Tensor) -> Tensor:
+        """Allows the activation to be called like a function."""
+        return self.forward(x)
 
     def backward(self, grad: Tensor) -> Tensor:
         """Compute gradient (implemented in Module 05)."""

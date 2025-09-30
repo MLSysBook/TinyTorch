@@ -443,6 +443,7 @@ Input Tensor: (batch=2, seq=3, features=4)
 """
 
 # %% nbgrader={"grade": false, "grade_id": "layer-norm", "solution": true}
+#| export
 class LayerNorm:
     """
     Layer Normalization for transformer blocks.
@@ -640,6 +641,7 @@ GELU is smoother and provides better gradients for language modeling.
 """
 
 # %% nbgrader={"grade": false, "grade_id": "mlp", "solution": true}
+#| export
 class MLP:
     """
     Multi-Layer Perceptron (Feed-Forward Network) for transformer blocks.
@@ -1131,6 +1133,7 @@ GPT-4 (estimated):
 """
 
 # %% nbgrader={"grade": false, "grade_id": "gpt", "solution": true}
+#| export
 class GPT:
     """
     Complete GPT (Generative Pre-trained Transformer) model.

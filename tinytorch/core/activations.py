@@ -17,21 +17,18 @@
 # %% auto 0
 __all__ = ['Sigmoid', 'ReLU', 'Tanh', 'GELU', 'Softmax']
 
-# %% ../../modules/source/02_activations/activations_dev.ipynb 2
+# %% ../../modules/source/02_activations/activations_dev.ipynb 3
 import numpy as np
 from typing import Optional
 import sys
 import os
 
-# Import our Tensor class - try from package first, then from local module
-try:
-    from tinytorch.core.tensor import Tensor
-except ImportError:
-    # For development, import from local tensor module
-    sys.path.append(os.path.join(os.path.dirname(__file__), '..', '01_tensor'))
-    from tensor_dev import Tensor
 
-# %% ../../modules/source/02_activations/activations_dev.ipynb 7
+# Import will be in export cell
+
+# %% ../../modules/source/02_activations/activations_dev.ipynb 8
+from .tensor import Tensor
+
 class Sigmoid:
     """
     Sigmoid activation: σ(x) = 1/(1 + e^(-x))
@@ -66,11 +63,15 @@ class Sigmoid:
         return Tensor(result)
         ### END SOLUTION
 
+    def __call__(self, x: Tensor) -> Tensor:
+        """Allows the activation to be called like a function."""
+        return self.forward(x)
+
     def backward(self, grad: Tensor) -> Tensor:
         """Compute gradient (implemented in Module 05)."""
         pass  # Will implement backward pass in Module 05
 
-# %% ../../modules/source/02_activations/activations_dev.ipynb 11
+# %% ../../modules/source/02_activations/activations_dev.ipynb 12
 class ReLU:
     """
     ReLU activation: f(x) = max(0, x)
@@ -108,7 +109,7 @@ class ReLU:
         """Compute gradient (implemented in Module 05)."""
         pass  # Will implement backward pass in Module 05
 
-# %% ../../modules/source/02_activations/activations_dev.ipynb 15
+# %% ../../modules/source/02_activations/activations_dev.ipynb 16
 class Tanh:
     """
     Tanh activation: f(x) = (e^x - e^(-x))/(e^x + e^(-x))
@@ -146,7 +147,7 @@ class Tanh:
         """Compute gradient (implemented in Module 05)."""
         pass  # Will implement backward pass in Module 05
 
-# %% ../../modules/source/02_activations/activations_dev.ipynb 19
+# %% ../../modules/source/02_activations/activations_dev.ipynb 20
 class GELU:
     """
     GELU activation: f(x) = x * Φ(x) ≈ x * Sigmoid(1.702 * x)
@@ -189,7 +190,7 @@ class GELU:
         """Compute gradient (implemented in Module 05)."""
         pass  # Will implement backward pass in Module 05
 
-# %% ../../modules/source/02_activations/activations_dev.ipynb 23
+# %% ../../modules/source/02_activations/activations_dev.ipynb 24
 class Softmax:
     """
     Softmax activation: f(x_i) = e^(x_i) / Σ(e^(x_j))
