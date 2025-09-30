@@ -730,7 +730,9 @@ You've built the **data loading infrastructure** that powers all modern ML:
 """
 ## Part 5: Systems Analysis - Data Pipeline Performance
 
-Now let's analyze our data pipeline like production ML engineers. Understanding where time and memory go is crucial for building systems that scale.
+**Note:** This section provides performance analysis tools for understanding DataLoader behavior. The analysis functions are defined below but not run automatically. To explore performance characteristics, uncomment and run `analyze_dataloader_performance()` or `analyze_memory_usage()` manually.
+
+Now let's understand data pipeline performance like production ML engineers. Understanding where time and memory go is crucial for building systems that scale.
 
 ### The Performance Question: Where Does Time Go?
 
