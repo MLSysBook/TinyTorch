@@ -1345,25 +1345,8 @@ def test_module():
 # Test function defined above, will be called in main block
 
 # %%
-if __name__ == "__main__":
-    print("🚀 Running Autograd module...")
-
-    # Run all unit tests
-    test_unit_function_base()
-    test_unit_operation_functions()
-    test_unit_tensor_autograd()
-
-    # Run demonstration functions
-    demonstrate_complex_computation_graph()
-
-    # Run analysis functions
-    analyze_autograd_memory()
-    analyze_gradient_computation()
-
-    # Run comprehensive module test
-    test_module()
-
-    print("✅ Module validation complete!")
+# Run comprehensive module test
+test_module()
 
 
 # %% [markdown]

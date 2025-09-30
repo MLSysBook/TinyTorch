@@ -1667,29 +1667,9 @@ def test_module():
     print("🎉 ALL TESTS PASSED! Module ready for export.")
     print("Run: tito module complete 09")
 
-# Integration test will be called in main execution
-
 # %% nbgrader={"grade": false, "grade_id": "main-execution", "solution": true}
-
-if __name__ == "__main__":
-    print("🚀 Running Spatial Operations module...")
-
-    # Run all unit tests
-    print("\n🔬 Running Unit Tests...")
-    test_unit_conv2d()
-    test_unit_pooling()
-    test_unit_simple_cnn()
-
-    # Run systems analysis
-    print("\n📊 Running Systems Analysis...")
-    analyze_convolution_complexity()
-    analyze_pooling_effects()
-
-    # Run final integration test
-    print("\n🧪 Running Integration Test...")
-    test_module()
-
-    print("✅ Module validation complete!")
+# Run comprehensive module test
+test_module()
 
 
 # %% [markdown]

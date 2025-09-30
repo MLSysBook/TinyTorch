@@ -1307,25 +1307,8 @@ def test_module():
 # test_module()  # Moved to main guard
 
 # %% nbgrader={"grade": false, "grade_id": "main", "locked": false, "solution": false}
-if __name__ == "__main__":
-    print("🚀 Running Training module...")
-
-    # Run all unit tests
-    test_unit_cosine_schedule()
-    test_unit_clip_grad_norm()
-    test_unit_trainer()
-
-    # Run demonstrations
-    demonstrate_complete_training()
-
-    # Run analysis functions
-    analyze_training_memory()
-    analyze_batch_size_effects()
-
-    # Run final integration test
-    test_module()
-
-    print("✅ Module validation complete!")
+# Run comprehensive module test
+test_module()
 
 # %% [markdown]
 """

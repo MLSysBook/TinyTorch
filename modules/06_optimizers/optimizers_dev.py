@@ -1408,26 +1408,8 @@ def test_module():
     print("Run: tito module complete 06_optimizers")
 
 # %%
-if __name__ == "__main__":
-    print("🚀 Running Optimizers module...")
-
-    # Run all unit tests
-    test_unit_optimizer_base()
-    test_unit_sgd_optimizer()
-    test_unit_adam_optimizer()
-    test_unit_adamw_optimizer()
-
-    # Run integration demonstrations
-    demonstrate_optimizer_integration()
-
-    # Run analysis functions
-    analyze_optimizer_memory_usage()
-    analyze_optimizer_convergence_behavior()
-
-    # Run final module test
-    test_module()
-
-    print("✅ Module validation complete!")
+# Run comprehensive module test
+test_module()
 
 # %% [markdown]
 """

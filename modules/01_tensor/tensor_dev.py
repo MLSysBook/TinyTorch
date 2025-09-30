@@ -1636,26 +1636,8 @@ def test_module():
     print("🎉 ALL TESTS PASSED! Module ready for export.")
     print("Run: tito module complete 01_tensor")
 
-# test_module()  # Moved to main block
-
-# %%
-if __name__ == "__main__":
-    print("🚀 Running Tensor Foundation module...")
-
-    # Run all unit tests
-    test_unit_tensor_creation()
-    test_unit_arithmetic_operations()
-    test_unit_matrix_multiplication()
-    test_unit_shape_manipulation()
-    test_unit_reduction_operations()
-
-    # Run integration demo
-    demonstrate_tensor_integration()
-
-    # Run final module test
-    test_module()
-
-    print("✅ Module validation complete!")
+# Run comprehensive module test
+test_module()
 
 
 # %% [markdown]
