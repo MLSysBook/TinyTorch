@@ -1691,43 +1691,6 @@ if __name__ == "__main__":
 
     print("✅ Module validation complete!")
 
-# %% [markdown]
-"""
-## 🤔 ML Systems Thinking: Spatial Processing
-
-### Question 1: Convolution Complexity Analysis
-You implemented Conv2d with explicit 6-nested loops showing the full computational complexity.
-
-For a convolution with input (1, 3, 224, 224), kernel (64, 3, 5, 5), stride=1, padding=2:
-- How many multiply-accumulate (MAC) operations are performed? _____
-- If each MAC takes 1 nanosecond, how long does this convolution take? _____ milliseconds
-- How does this compare to a 3×3 kernel with the same channel configuration? _____ times faster/slower
-
-### Question 2: Memory Layout and Caching
-Your pooling implementation accesses memory in a specific pattern.
-
-For MaxPool2d with kernel_size=2, stride=2 on a (1, 128, 512, 512) input:
-- How many bytes of input data are accessed? _____ MB
-- What percentage of accessed data is reused between adjacent pooling windows? _____%
-- Why might this memory access pattern be cache-friendly? _____
-
-### Question 3: Architectural Trade-offs
-You built a SimpleCNN that reduces spatial dimensions while increasing channels.
-
-Starting with (3, 32, 32) input becoming (32, 8, 8) features:
-- What's the ratio of spatial reduction? _____ (H×W reduction factor)
-- What's the ratio of channel expansion? _____ (channel increase factor)
-- How many total parameters are in your Conv1 layer? _____ parameters
-- If you replaced both Conv layers with one Dense layer from input to final features, how many parameters would that require? _____ parameters (hint: 3×32×32 → 32×8×8)
-
-### Question 4: Systems Optimization Insights
-Your complexity analysis revealed why certain optimizations matter.
-
-Comparing 3×3 vs 7×7 kernels on the same input:
-- The 7×7 kernel requires approximately _____ times more computation
-- Modern architectures often replace 7×7 kernels with what pattern? _____
-- Why do depthwise separable convolutions become attractive for mobile deployment? _____
-"""
 
 # %% [markdown]
 """
