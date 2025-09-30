@@ -223,8 +223,15 @@ class Sigmoid:
         """
         ### BEGIN SOLUTION
         # Apply sigmoid: 1 / (1 + exp(-x))
-        result = 1.0 / (1.0 + np.exp(-x.data))
-        return Tensor(result)
+        result_data = 1.0 / (1.0 + np.exp(-x.data))
+        result = Tensor(result_data)
+        
+        # Track gradients if autograd is enabled and input requires_grad
+        if SigmoidBackward is not None and x.requires_grad:
+            result.requires_grad = True
+            result._grad_fn = SigmoidBackward(x, result)
+        
+        return result
         ### END SOLUTION
 
     def __call__(self, x: Tensor) -> Tensor:
