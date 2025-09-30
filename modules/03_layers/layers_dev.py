@@ -336,7 +336,8 @@ def test_unit_linear_layer():
 
     print("✅ Linear layer works correctly!")
 
-# Test will be run in main block
+if __name__ == "__main__":
+    test_unit_linear_layer()
 
 
 
@@ -545,7 +546,8 @@ def test_unit_dropout_layer():
 
     print("✅ Dropout layer works correctly!")
 
-# Test will be run in main block
+if __name__ == "__main__":
+    test_unit_dropout_layer()
 
 # %% [markdown]
 """
@@ -886,7 +888,8 @@ def test_module():
     print("Run: tito module complete 03_layers")
 
 # Run comprehensive module test
-test_module()
+if __name__ == "__main__":
+    test_module()
 
 
 # %% [markdown]

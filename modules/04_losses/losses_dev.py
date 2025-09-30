@@ -301,6 +301,8 @@ def test_unit_log_softmax():
 
     print("✅ log_softmax works correctly with numerical stability!")
 
+if __name__ == "__main__":
+    test_unit_log_softmax()
 
 # %% [markdown]
 """
@@ -448,6 +450,8 @@ def test_unit_mse_loss():
 
     print("✅ MSELoss works correctly!")
 
+if __name__ == "__main__":
+    test_unit_mse_loss()
 
 # %% [markdown]
 """
@@ -627,6 +631,8 @@ def test_unit_cross_entropy_loss():
 
     print("✅ CrossEntropyLoss works correctly!")
 
+if __name__ == "__main__":
+    test_unit_cross_entropy_loss()
 
 # %% [markdown]
 """
@@ -822,6 +828,8 @@ def test_unit_binary_cross_entropy_loss():
 
     print("✅ BinaryCrossEntropyLoss works correctly!")
 
+if __name__ == "__main__":
+    test_unit_binary_cross_entropy_loss()
 
 # %% [markdown]
 """
@@ -1301,7 +1309,8 @@ def test_module():
 
 # %%
 # Run comprehensive module test
-test_module()
+if __name__ == "__main__":
+    test_module()
 
 
 # %% [markdown]
