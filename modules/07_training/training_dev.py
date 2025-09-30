@@ -253,7 +253,7 @@ def test_unit_cosine_schedule():
 
     print("✅ CosineSchedule works correctly!")
 
-test_unit_cosine_schedule()
+# test_unit_cosine_schedule()  # Moved to main guard
 
 # %% [markdown]
 """
@@ -394,7 +394,7 @@ def test_unit_clip_grad_norm():
 
     print("✅ Gradient clipping works correctly!")
 
-test_unit_clip_grad_norm()
+# test_unit_clip_grad_norm()  # Moved to main guard
 
 # %% [markdown]
 """
@@ -806,7 +806,7 @@ def test_unit_trainer():
 
     print(f"✅ Trainer works correctly! Final loss: {loss:.4f}")
 
-test_unit_trainer()
+# test_unit_trainer()  # Moved to main guard
 
 # %% [markdown]
 """
@@ -955,7 +955,7 @@ def demonstrate_complete_training():
     print("\n✅ Complete training pipeline works perfectly!")
     print("🎓 Ready for real neural network training!")
 
-demonstrate_complete_training()
+# demonstrate_complete_training()  # Moved to main guard
 
 # %% [markdown]
 """
@@ -1053,7 +1053,7 @@ def analyze_training_memory():
     print("• Activation memory depends on batch size and can be reduced with gradient checkpointing")
     print("• Training typically requires 3-4× more memory than inference")
 
-analyze_training_memory()
+# analyze_training_memory()  # Moved to main guard
 
 # %% [markdown]
 """
@@ -1150,7 +1150,7 @@ def analyze_batch_size_effects():
     print("• Larger batches mean fewer steps per epoch but potentially slower convergence")
     print("• Sweet spot often around 32-64 for most models, balancing all factors")
 
-analyze_batch_size_effects()
+# analyze_batch_size_effects()  # Moved to main guard
 
 # %% [markdown]
 """
@@ -1304,13 +1304,27 @@ def test_module():
     print("🎉 ALL TESTS PASSED! Module ready for export.")
     print("Run: tito module complete 07")
 
-# Call the integration test
-test_module()
+# test_module()  # Moved to main guard
 
 # %% nbgrader={"grade": false, "grade_id": "main", "locked": false, "solution": false}
 if __name__ == "__main__":
     print("🚀 Running Training module...")
-    test_module()  # Run the comprehensive test
+
+    # Run all unit tests
+    test_unit_cosine_schedule()
+    test_unit_clip_grad_norm()
+    test_unit_trainer()
+
+    # Run demonstrations
+    demonstrate_complete_training()
+
+    # Run analysis functions
+    analyze_training_memory()
+    analyze_batch_size_effects()
+
+    # Run final integration test
+    test_module()
+
     print("✅ Module validation complete!")
 
 # %% [markdown]
