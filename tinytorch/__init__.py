@@ -3,11 +3,19 @@ __version__ = "0.1.0"
 # Import core functionality
 from . import core
 
-# Make common components easily accessible (only what exists)
+# Make common components easily accessible at top level
 from .core.tensor import Tensor
+from .core.layers import Linear, Dropout
+from .core.activations import Sigmoid, ReLU, Tanh, GELU, Softmax
+from .core.losses import MSELoss, CrossEntropyLoss, BinaryCrossEntropyLoss
+from .core.optimizers import SGD, AdamW
 
-# Export main public API (only what works)
+# Export main public API
 __all__ = [
     'core',
-    'Tensor'
+    'Tensor',
+    'Linear', 'Dropout',
+    'Sigmoid', 'ReLU', 'Tanh', 'GELU', 'Softmax',
+    'MSELoss', 'CrossEntropyLoss', 'BinaryCrossEntropyLoss',
+    'SGD', 'AdamW'
 ]
