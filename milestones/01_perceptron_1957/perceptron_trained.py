@@ -178,18 +178,32 @@ def evaluate_model(model, X, y):
 def main():
     """Main training pipeline."""
     
-    # 1. OPENING - Historical Context
+    # ═══════════════════════════════════════════════════════════════════════
+    # ACT 1: THE CHALLENGE 🎯
+    # ═══════════════════════════════════════════════════════════════════════
+    
     console.print(Panel.fit(
         "[bold cyan]🎯 1957 - The First Neural Network[/bold cyan]\n\n"
-        "[dim]Watch gradient descent transform random weights into intelligence![/dim]\n"
-        "[dim]Frank Rosenblatt's perceptron - the spark that started it all.[/dim]",
+        "[dim]Can a machine learn from examples to classify data?[/dim]\n"
+        "[dim]Frank Rosenblatt's perceptron attempts to answer this![/dim]",
         title="🔥 1957 Perceptron Revolution",
         border_style="cyan",
         box=box.DOUBLE
     ))
     
-    # 2. ARCHITECTURE - Visual Understanding
-    console.print("\n[bold]🏗️ Architecture:[/bold]")
+    console.print("\n[bold]📊 The Data:[/bold]")
+    X, y = generate_data(n_samples=100, seed=42)
+    console.print("  • Dataset: Linearly separable 2D points")
+    console.print(f"  • Samples: {len(X.data)} (50 per class)")
+    console.print("  • Challenge: Learn decision boundary from examples")
+    
+    console.print("\n" + "─" * 70 + "\n")
+    
+    # ═══════════════════════════════════════════════════════════════════════
+    # ACT 2: THE SETUP 🏗️
+    # ═══════════════════════════════════════════════════════════════════════
+    
+    console.print("[bold]🏗️ The Architecture:[/bold]")
     console.print("""
     ┌─────────────┐    ┌──────────────┐    ┌──────────┐
     │   Input     │    │   Weights    │    │  Output  │
@@ -197,34 +211,49 @@ def main():
     │  2 features │    │   + bias     │    │ binary   │
     └─────────────┘    └──────────────┘    └──────────┘
     """)
-    console.print("  • Single-layer perceptron (simplest possible network)")
-    console.print("  • Input: 2 features")
-    console.print("  • Output: 1 binary decision (0 or 1)")
-    console.print("  • Total parameters: 3 (2 weights + 1 bias)\n")
     
-    # 3. STEPS - Numbered Training Process
-    console.print("[bold yellow]Step 1:[/bold yellow] Generate linearly separable data...")
-    X, y = generate_data(n_samples=100, seed=42)  # Fixed seed for reproducibility
-    console.print(f"  ✓ Created {len(X.data)} samples (50 per class)")
+    console.print("[bold]🔧 Components:[/bold]")
+    console.print("  • Single layer: Maps 2D input → 1D output")
+    console.print("  • Linear transformation: Weighted sum")
+    console.print("  • Total parameters: 3 (2 weights + 1 bias)")
     
-    console.print("\n[bold yellow]Step 2:[/bold yellow] Create perceptron with random weights...")
+    console.print("\n[bold]⚙️ Hyperparameters:[/bold]")
+    console.print("  • Learning rate: 0.1")
+    console.print("  • Epochs: 100")
+    console.print("  • Optimizer: Gradient descent")
+    
+    console.print("\n" + "─" * 70 + "\n")
+    
+    # ═══════════════════════════════════════════════════════════════════════
+    # ACT 3: THE EXPERIMENT 🔬
+    # ═══════════════════════════════════════════════════════════════════════
+    
     model = Perceptron(input_size=2, output_size=1)
     acc_before, w_before, b_before, _ = evaluate_model(model, X, y)
-    console.print(f"  Initial weights: w₁={w_before.flatten()[0]:.3f}, w₂={w_before.flatten()[1]:.3f}, b={b_before.flatten()[0]:.3f}")
-    console.print(f"  ❌ Accuracy BEFORE training: {acc_before:.1%} (random guessing)")
     
-    console.print("\n[bold yellow]Step 3:[/bold yellow] Training with gradient descent...")
-    console.print("  Epochs: 100, Learning rate: 0.1")
+    console.print("[bold]📌 Before Training:[/bold]")
+    console.print(f"  Initial accuracy: {acc_before:.1%} (random guessing)")
+    console.print(f"  Weights: w₁={w_before.flatten()[0]:.3f}, w₂={w_before.flatten()[1]:.3f}, b={b_before.flatten()[0]:.3f}")
+    console.print("  Model has random weights - no knowledge yet!")
+    
+    console.print("\n[bold]🔥 Training in Progress...[/bold]")
+    console.print("[dim](Watch gradient descent optimize the weights!)[/dim]\n")
+    
     history = train_perceptron(model, X, y, epochs=100, lr=0.1)
     
-    console.print("\n[bold yellow]Step 4:[/bold yellow] Evaluate trained model...")
-    acc_after, w_after, b_after, predictions = evaluate_model(model, X, y)
-    console.print(f"  Final weights: w₁={w_after.flatten()[0]:.3f}, w₂={w_after.flatten()[1]:.3f}, b={b_after.flatten()[0]:.3f}")
-    console.print(f"  ✅ Accuracy AFTER training: {acc_after:.1%}")
+    console.print("\n[green]✅ Training Complete![/green]")
     
-    # 4. RESULTS TABLE - Before/After Comparison
-    console.print("\n")
-    table = Table(title="🎯 Training Results", box=box.ROUNDED)
+    acc_after, w_after, b_after, predictions = evaluate_model(model, X, y)
+    
+    console.print("\n" + "─" * 70 + "\n")
+    
+    # ═══════════════════════════════════════════════════════════════════════
+    # ACT 4: THE DIAGNOSIS 📊
+    # ═══════════════════════════════════════════════════════════════════════
+    
+    console.print("[bold]📊 The Results:[/bold]\n")
+    
+    table = Table(title="Training Outcome", box=box.ROUNDED)
     table.add_column("Metric", style="cyan", width=20)
     table.add_column("Before Training", style="yellow")
     table.add_column("After Training", style="green")
@@ -260,8 +289,9 @@ def main():
     
     console.print(table)
     
-    # 5. SAMPLE PREDICTIONS - Real Outputs
-    console.print("\n[bold]Sample Predictions:[/bold]")
+    console.print("\n[bold]🔍 Sample Predictions:[/bold]")
+    console.print("[dim](First 10 samples - seeing is believing!)[/dim]\n")
+    
     n_samples = min(10, len(y.data))
     for i in range(n_samples):
         true_val = int(y.data.flatten()[i])
@@ -270,25 +300,56 @@ def main():
         color = "green" if pred_val == true_val else "red"
         console.print(f"  {status} True: {true_val}, Predicted: {pred_val}", style=color)
     
-    # 6. CELEBRATION - Victory!
-    console.print("\n")
+    console.print("\n[bold]💡 Key Insights:[/bold]")
+    console.print("  • The model LEARNED from data (not programmed!)")
+    console.print(f"  • Weights changed: random → optimized values")
+    console.print("  • Simple gradient descent found the solution")
+    
+    console.print("\n" + "─" * 70 + "\n")
+    
+    # ═══════════════════════════════════════════════════════════════════════
+    # ACT 5: THE REFLECTION 🌟
+    # ═══════════════════════════════════════════════════════════════════════
+    
+    console.print("")
     if acc_after >= 0.9:
         console.print(Panel.fit(
             "[bold green]🎉 Success! Your Perceptron Learned to Classify![/bold green]\n\n"
+            
             f"Final accuracy: [bold]{acc_after:.1%}[/bold]\n\n"
+            
+            "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n"
+            
             "[bold]💡 What YOU Just Accomplished:[/bold]\n"
-            "  • Built the FIRST neural network (1957 Rosenblatt)\n"
-            "  • Implemented forward pass with YOUR Tensor\n"
-            "  • Added gradient descent training loop\n"
-            "  • Watched random weights → learned solution!\n\n"
-            "[bold]🔑 Key Insight:[/bold] The architecture is simple (~10 lines).\n"
-            "The magic is the TRAINING LOOP:\n"
-            "  1️⃣  Forward → 2️⃣  Loss → 3️⃣  Backward → 4️⃣  Update\n\n"
-            "[bold]📌 Note:[/bold] This single-layer perceptron can only solve\n"
-            "linearly separable problems.\n\n"
-            "[dim]Next: Milestone 02 shows what happens when data ISN'T\n"
+            "  ✓ Built the FIRST neural network (1957 Rosenblatt)\n"
+            "  ✓ Implemented forward pass with YOUR Tensor\n"
+            "  ✓ Used gradient descent to optimize weights\n"
+            "  ✓ Watched machine learning happen in real-time!\n\n"
+            
+            "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n"
+            
+            "[bold]🎓 Why This Matters:[/bold]\n"
+            "  This is the FOUNDATION of all neural networks.\n"
+            "  Every model from GPT-4 to AlphaGo uses this same core idea:\n"
+            "  Adjust weights via gradients to minimize error.\n\n"
+            
+            "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n"
+            
+            "[bold]📌 The Key Insight:[/bold]\n"
+            "  The architecture is simple (~10 lines of code).\n"
+            "  The MAGIC is the training loop:\n"
+            "    Forward → Loss → Backward → Update\n"
+            "  \n"
+            "  [yellow]Limitation:[/yellow] Single layers can only solve\n"
+            "  linearly separable problems.\n\n"
+            
+            "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n"
+            
+            "[bold]🚀 What's Next:[/bold]\n"
+            "[dim]Milestone 02 shows what happens when data ISN'T\n"
             "linearly separable... the 17-year AI Winter begins![/dim]",
-            title="🌟 1957 Perceptron Recreated",
+            
+            title="🌟 1957 Perceptron Complete",
             border_style="green",
             box=box.DOUBLE
         ))
