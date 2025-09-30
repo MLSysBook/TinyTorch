@@ -16,6 +16,19 @@ Journey through 40+ years of ML breakthroughs by building each era yourself: **1
 
 **📖 See [Complete ML Evolution Timeline](chapters/00-introduction.html#the-ml-evolution-story-youll-experience)** for the full historical context and technical progression.
 
+## 🏆 Prove Your Mastery Through History
+
+As you complete modules, unlock **historical milestone demonstrations** that prove what you've built works! From Rosenblatt's 1957 perceptron to modern CNNs achieving 75%+ accuracy on CIFAR-10, each milestone recreates a breakthrough using YOUR implementations:
+
+- **🧠 1957: Perceptron** - First trainable network with YOUR Linear layer
+- **⚡ 1969: XOR Solution** - Multi-layer networks with YOUR autograd
+- **🔢 1986: MNIST MLP** - Backpropagation achieving 95%+ with YOUR optimizers
+- **🖼️ 1998: CIFAR-10 CNN** - Spatial intelligence with YOUR Conv2d (75%+ accuracy!)
+- **🤖 2017: Transformers** - Language generation with YOUR attention
+- **⚡ 2024: Systems Age** - Production optimization with YOUR profiling
+
+**📖 See [Journey Through ML History](chapters/milestones-overview.html)** for complete milestone details and requirements.
+
 ## Why Build Instead of Use?
 
 The difference between using a library and understanding a system is the difference between being limited by tools and being empowered to create them. When you build from scratch, you transform from a framework user into a systems engineer:
