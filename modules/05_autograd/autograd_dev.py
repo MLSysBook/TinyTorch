@@ -36,7 +36,7 @@ By the end of this module, you will:
 3. Build computation graphs for automatic differentiation
 4. Test gradient correctness and chain rule implementation
 
-**CRITICAL**: This module doesn't create a new Tensor class - it enhances the existing one!
+**CRITICAL**: This module enhances the existing Tensor class by implementing its dormant gradient features!
 
 Let's awaken the gradient engine!
 
@@ -63,10 +63,10 @@ from tinytorch.core.tensor import Tensor  # Enhanced with gradients from this mo
 
 import numpy as np
 from typing import List, Optional, Callable
-
-# Import the existing Tensor class to enhance it
 import sys
 import os
+
+# Import the modern Tensor class
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', '01_tensor'))
 from tensor_dev import Tensor
 
@@ -788,15 +788,15 @@ Gradient Flow (Backward):
 """
 
 # %% nbgrader={"grade": false, "grade_id": "tensor-enhancements", "solution": true}
-def enhance_tensor_with_autograd():
+def implement_tensor_backward_method():
     """
-    Enhance the existing Tensor class with autograd capabilities.
+    Implement the backward method for the Tensor class.
 
-    CRITICAL: We're enhancing the existing class, not creating a new one!
-    This maintains compatibility with all previous modules.
+    CRITICAL: We modify the Tensor class in place to activate gradient features.
+    The dormant features are now brought to life!
     """
 
-    def backward(self):
+    def backward_implementation(self, gradient=None):
         """
         Compute gradients for this tensor and all tensors in its computation graph.
 
@@ -818,18 +818,24 @@ def enhance_tensor_with_autograd():
         if not self.requires_grad:
             return
 
-        # If no gradient function, this is a leaf node - initialize gradient
-        if self.grad is None:
+        # Initialize gradient if this is the starting point
+        if gradient is None:
             if self.data.shape == ():
                 # Scalar tensor
-                self.grad = np.array(1.0)
+                gradient = np.array(1.0)
             else:
                 # Non-scalar: gradient should be ones of same shape
-                self.grad = np.ones_like(self.data)
+                gradient = np.ones_like(self.data)
+
+        # Accumulate gradient
+        if self.grad is None:
+            self.grad = gradient
+        else:
+            self.grad = self.grad + gradient
 
         # If this tensor has a gradient function, propagate backwards
         if hasattr(self, 'grad_fn') and self.grad_fn is not None:
-            grads = self.grad_fn.backward(self.grad)
+            grads = self.grad_fn.backward(gradient)
 
             # grads could be a single gradient or tuple of gradients
             if not isinstance(grads, tuple):
@@ -838,112 +844,117 @@ def enhance_tensor_with_autograd():
             # Propagate to input tensors
             if hasattr(self.grad_fn, 'inputs'):
                 for tensor, grad in zip(self.grad_fn.inputs, grads):
-                    if tensor.requires_grad:
-                        if tensor.grad is None:
-                            tensor.grad = grad
-                        else:
-                            tensor.grad = tensor.grad + grad
-
-                        # Continue backward pass
-                        tensor.backward()
+                    if isinstance(tensor, Tensor) and tensor.requires_grad:
+                        tensor.backward(grad)
         ### END SOLUTION
 
-    def new_add(self, other):
-        """
-        Enhanced addition that tracks gradients.
+    # Replace the placeholder backward method with the real implementation
+    Tensor.backward = backward_implementation
+    print("🚀 Tensor backward method activated!")
 
-        TODO: Implement addition with gradient tracking
-        """
-        ### BEGIN SOLUTION
-        # Use the gradient-tracking function
-        add_func = AddFunction()
-        result_data = add_func.forward(self, other)
+# Activate the backward method
+implement_tensor_backward_method()
 
-        # Create result tensor
+def create_gradient_tracking_tensor(data, requires_grad, grad_fn=None, inputs=None):
+    """
+    Helper function to create tensors with gradient tracking.
+
+    This function helps operations create result tensors that properly
+    track gradients and maintain the computation graph.
+    """
+    result = Tensor(data, requires_grad=requires_grad)
+
+    if requires_grad and grad_fn is not None:
+        result.grad_fn = grad_fn
+        if inputs is not None:
+            grad_fn.inputs = inputs
+
+    return result
+
+def enhance_tensor_operations():
+    """
+    Enhance existing Tensor operations to support gradient tracking.
+
+    This modifies the existing methods to use gradient-tracking functions
+    when requires_grad=True.
+    """
+
+    # Store original methods
+    original_add = Tensor.__add__
+    original_mul = Tensor.__mul__
+    original_matmul = Tensor.matmul
+    original_sum = Tensor.sum
+
+    def gradient_aware_add(self, other):
+        """
+        Addition that tracks gradients when needed.
+        """
+        # Check if gradient tracking is needed
         requires_grad = self.requires_grad or (isinstance(other, Tensor) and other.requires_grad)
-        result = Tensor(result_data, requires_grad=requires_grad)
 
-        # Track computation graph
         if requires_grad:
-            result.grad_fn = add_func
-            add_func.inputs = [self, other] if isinstance(other, Tensor) else [self]
+            # Use gradient-tracking version
+            add_func = AddFunction()
+            result_data = add_func.forward(self, other)
+            inputs = [self, other] if isinstance(other, Tensor) else [self]
+            return create_gradient_tracking_tensor(result_data, requires_grad, add_func, inputs)
+        else:
+            # Use original method (no gradient tracking)
+            return original_add(self, other)
 
-        return result
-        ### END SOLUTION
-
-    def new_mul(self, other):
+    def gradient_aware_mul(self, other):
         """
-        Enhanced multiplication that tracks gradients.
-
-        TODO: Implement multiplication with gradient tracking
+        Multiplication that tracks gradients when needed.
         """
-        ### BEGIN SOLUTION
-        mul_func = MulFunction()
-        result_data = mul_func.forward(self, other)
-
         requires_grad = self.requires_grad or (isinstance(other, Tensor) and other.requires_grad)
-        result = Tensor(result_data, requires_grad=requires_grad)
 
         if requires_grad:
-            result.grad_fn = mul_func
-            mul_func.inputs = [self, other] if isinstance(other, Tensor) else [self]
+            mul_func = MulFunction()
+            result_data = mul_func.forward(self, other)
+            inputs = [self, other] if isinstance(other, Tensor) else [self]
+            return create_gradient_tracking_tensor(result_data, requires_grad, mul_func, inputs)
+        else:
+            return original_mul(self, other)
 
-        return result
-        ### END SOLUTION
-
-    def new_matmul(self, other):
+    def gradient_aware_matmul(self, other):
         """
-        Enhanced matrix multiplication that tracks gradients.
-
-        TODO: Implement matmul with gradient tracking
+        Matrix multiplication that tracks gradients when needed.
         """
-        ### BEGIN SOLUTION
         if not isinstance(other, Tensor):
-            raise TypeError(f"Expected Tensor, got {type(other)}")
-
-        matmul_func = MatmulFunction()
-        result_data = matmul_func.forward(self, other)
+            raise TypeError(f"Expected Tensor for matrix multiplication, got {type(other)}")
 
         requires_grad = self.requires_grad or other.requires_grad
-        result = Tensor(result_data, requires_grad=requires_grad)
 
         if requires_grad:
-            result.grad_fn = matmul_func
-            matmul_func.inputs = [self, other]
+            matmul_func = MatmulFunction()
+            result_data = matmul_func.forward(self, other)
+            inputs = [self, other]
+            return create_gradient_tracking_tensor(result_data, requires_grad, matmul_func, inputs)
+        else:
+            return original_matmul(self, other)
 
-        return result
-        ### END SOLUTION
-
-    def new_sum(self, axis=None, keepdims=False):
+    def gradient_aware_sum(self, axis=None, keepdims=False):
         """
-        Enhanced sum that tracks gradients.
-
-        TODO: Implement sum with gradient tracking
+        Sum that tracks gradients when needed.
         """
-        ### BEGIN SOLUTION
-        sum_func = SumFunction()
-        result_data = sum_func.forward(self, axis, keepdims)
-
-        result = Tensor(result_data, requires_grad=self.requires_grad)
-
         if self.requires_grad:
-            result.grad_fn = sum_func
-            sum_func.inputs = [self]
+            sum_func = SumFunction()
+            result_data = sum_func.forward(self, axis, keepdims)
+            inputs = [self]
+            return create_gradient_tracking_tensor(result_data, self.requires_grad, sum_func, inputs)
+        else:
+            return original_sum(self, axis, keepdims)
 
-        return result
-        ### END SOLUTION
+    # Replace methods with gradient-aware versions
+    Tensor.__add__ = gradient_aware_add
+    Tensor.__mul__ = gradient_aware_mul
+    Tensor.matmul = gradient_aware_matmul
+    Tensor.sum = gradient_aware_sum
 
-    # Apply the enhancements to the Tensor class
-    Tensor.backward = backward
-    Tensor.__add__ = new_add
-    Tensor.__mul__ = new_mul
-    Tensor.matmul = new_matmul
-    Tensor.sum = new_sum
+    print("🚀 Tensor operations enhanced with gradient tracking!")
 
-    print("🚀 Tensor class enhanced with autograd capabilities!")
-
-# Apply the enhancements
-enhance_tensor_with_autograd()
+# Enhance the operations
+enhance_tensor_operations()
 
 # %% [markdown]
 """
@@ -1094,7 +1105,8 @@ def demonstrate_complex_computation_graph():
     print(f"After linear 1: {z1.data}")
 
     # Simple ReLU (for now, until we implement proper ReLU autograd)
-    a1 = z1 * (z1.data > 0).astype(float)  # Manual ReLU approximation
+    a1_data = np.maximum(0, z1.data)  # Manual ReLU
+    a1 = Tensor(a1_data, requires_grad=True)
     print(f"After ReLU: {a1.data}")
 
     z2 = a1.matmul(W2) + b2  # Linear layer 2

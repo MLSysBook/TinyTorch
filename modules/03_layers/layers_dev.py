@@ -62,35 +62,12 @@ from tinytorch.core.activations import ReLU, Sigmoid  # Module 02 - intelligence
 #| default_exp core.layers
 
 import numpy as np
+import sys
+import os
 
-# Import from previous modules
-# Note: In the full package, these would be imports like:
-# from tinytorch.core.tensor import Tensor
-# For development, we'll create a minimal Tensor class
-class Tensor:
-    """Minimal Tensor class for layer development - imports from Module 01 in practice."""
-    def __init__(self, data, requires_grad=False):
-        self.data = np.array(data)
-        self.shape = self.data.shape
-        self.size = self.data.size
-        self.requires_grad = requires_grad
-        self.grad = None
-
-    def __add__(self, other):
-        if isinstance(other, Tensor):
-            return Tensor(self.data + other.data)
-        return Tensor(self.data + other)
-
-    def __mul__(self, other):
-        if isinstance(other, Tensor):
-            return Tensor(self.data * other.data)
-        return Tensor(self.data * other)
-
-    def matmul(self, other):
-        return Tensor(np.dot(self.data, other.data))
-
-    def __repr__(self):
-        return f"Tensor(data={self.data}, shape={self.shape})"
+# Import the proper Tensor class from Module 01
+sys.path.append(os.path.join(os.path.dirname(__file__), '..', '01_tensor'))
+from tensor_dev import Tensor
 
 # %% [markdown]
 """
