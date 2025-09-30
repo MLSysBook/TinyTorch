@@ -215,7 +215,7 @@ class Sigmoid:
         EXAMPLE:
         >>> sigmoid = Sigmoid()
         >>> x = Tensor([-2, 0, 2])
-        >>> result = sigmoid.forward(x)
+        >>> result = sigmoid(x)
         >>> print(result.data)
         [0.119, 0.5, 0.881]  # All values between 0 and 1
 
@@ -330,7 +330,7 @@ class ReLU:
         EXAMPLE:
         >>> relu = ReLU()
         >>> x = Tensor([-2, -1, 0, 1, 2])
-        >>> result = relu.forward(x)
+        >>> result = relu(x)
         >>> print(result.data)
         [0, 0, 0, 1, 2]  # Negative values become 0, positive unchanged
 
@@ -448,7 +448,7 @@ class Tanh:
         EXAMPLE:
         >>> tanh = Tanh()
         >>> x = Tensor([-2, 0, 2])
-        >>> result = tanh.forward(x)
+        >>> result = tanh(x)
         >>> print(result.data)
         [-0.964, 0.0, 0.964]  # Range (-1, 1), symmetric around 0
 
@@ -573,7 +573,7 @@ class GELU:
         EXAMPLE:
         >>> gelu = GELU()
         >>> x = Tensor([-1, 0, 1])
-        >>> result = gelu.forward(x)
+        >>> result = gelu(x)
         >>> print(result.data)
         [-0.159, 0.0, 0.841]  # Smooth, like ReLU but differentiable everywhere
 
@@ -697,7 +697,7 @@ class Softmax:
         EXAMPLE:
         >>> softmax = Softmax()
         >>> x = Tensor([1, 2, 3])
-        >>> result = softmax.forward(x)
+        >>> result = softmax(x)
         >>> print(result.data)
         [0.090, 0.245, 0.665]  # Sums to 1.0, larger inputs get higher probability
 
@@ -862,7 +862,7 @@ def test_module():
     softmax = Softmax()
 
     # Test different dimensions
-    result_last = softmax.forward(data_3d, dim=-1)
+    result_last = softmax(data_3d, dim=-1)
     assert result_last.shape == (2, 2, 3), "Softmax should preserve shape"
 
     # Check that last dimension sums to 1
