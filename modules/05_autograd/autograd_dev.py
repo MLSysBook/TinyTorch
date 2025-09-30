@@ -6,43 +6,39 @@
 #       format_name: percent
 #       format_version: '1.3'
 #       jupytext_version: 1.17.1
+#   kernelspec:
+#     display_name: Python 3 (ipykernel)
+#     language: python
+#     name: python3
 # ---
 
 # %% [markdown]
 """
-# Autograd - Automatic Differentiation Engine
+# Module 05: Autograd - Awakening the Gradient Engine
 
-Welcome to Autograd! You'll build automatic differentiation step by step, giving your Tensor class the ability to compute gradients automatically for neural network training.
+Welcome to Module 05! Today you'll bring gradients to life and unlock automatic differentiation.
 
-## 🔗 Building on Previous Learning
-**What You Built Before**:
-- Module 01 (Setup): Development environment ready
-- Module 02 (Tensor): Complete tensor operations with math
-- Module 03 (Activations): Functions that add intelligence to networks
-- Module 04 (Losses): Functions that measure learning progress
-
-**What's Working**: Your tensors can do math, activations, and loss calculations perfectly!
-
-**The Gap**: Your tensors can't learn - they have no memory of how gradients flow backward through computations.
-
-**This Module's Solution**: Enhance your existing Tensor class with gradient tracking abilities, step by step.
+## 🔗 Prerequisites & Progress
+**You've Built**: Tensor operations, activations, layers, and loss functions
+**You'll Build**: The autograd system that computes gradients automatically
+**You'll Enable**: Learning! Training! The ability to optimize neural networks!
 
 **Connection Map**:
 ```
-Math Operations → Smart Operations → Learning Operations
-(Pure Tensors)   (+ Autograd)      (+ Optimizers)
+Modules 01-04 → Autograd → Training (Module 06-07)
+(forward pass) (backward pass) (learning loops)
 ```
 
 ## Learning Objectives
-1. **Incremental Enhancement**: Add gradient tracking without breaking existing code
-2. **Chain Rule Mastery**: Understand how gradients flow through complex expressions
-3. **Systems Understanding**: Memory and performance implications of automatic differentiation
-4. **Professional Skills**: How to enhance software systems safely
+By the end of this module, you will:
+1. Implement the backward() method for Tensor to enable gradient computation
+2. Create a Function base class for operation tracking
+3. Build computation graphs for automatic differentiation
+4. Test gradient correctness and chain rule implementation
 
-## Build → Test → Use
-1. **Build**: Six incremental steps, each immediately testable
-2. **Test**: Frequent validation with clear success indicators
-3. **Use**: Enable gradient-based optimization for training
+**CRITICAL**: This module doesn't create a new Tensor class - it enhances the existing one!
+
+Let's awaken the gradient engine!
 
 ## 📦 Where This Code Lives in the Final Package
 
@@ -51,1181 +47,1184 @@ Math Operations → Smart Operations → Learning Operations
 
 ```python
 # Final package structure:
-from tinytorch.core.autograd import Tensor  # Enhanced Tensor with gradients
-from tinytorch.core.tensor import Tensor    # Your original pure Tensor (backup)
-
-# Your enhanced Tensor can do everything:
-x = Tensor([1, 2, 3], requires_grad=True)   # New gradient capability
-y = x + 2                                   # Same math operations
-y.backward()                                # New gradient computation
+from tinytorch.core.autograd import Function  # This module - gradient computation
+from tinytorch.core.tensor import Tensor  # Enhanced with gradients from this module
 ```
 
 **Why this matters:**
-- **Learning:** Experience incremental software enhancement with immediate feedback
-- **Production:** How real ML systems add features without breaking existing functionality
-- **Professional Practice:** Safe software evolution patterns used in industry
-- **Integration:** Your enhanced Tensor works with all previous modules
+- **Learning:** Complete autograd system enabling automatic differentiation
+- **Production:** PyTorch-style computational graph and backward pass
+- **Consistency:** All gradient operations in core.autograd
+- **Integration:** Enhances existing Tensor without breaking anything
 """
 
-# %%
+# %% nbgrader={"grade": false, "grade_id": "imports", "solution": true}
 #| default_exp core.autograd
 
-#| export
 import numpy as np
+from typing import List, Optional, Callable
+
+# Import the existing Tensor class to enhance it
 import sys
-from typing import Union, List, Optional, Callable, Any
-
-# Import the pure Tensor class from Module 02
-try:
-    from tinytorch.core.tensor import Tensor as BaseTensor
-except ImportError:
-    # For development, import from local modules
-    import os
-    sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', '02_tensor'))
-    from tensor_dev import Tensor as BaseTensor
-
-# %%
-print("🔥 TinyTorch Autograd Module")
-print(f"NumPy version: {np.__version__}")
-print(f"Python version: {sys.version_info.major}.{sys.version_info.minor}")
-print("Ready to enhance Tensor with gradients!")
+import os
+sys.path.append(os.path.join(os.path.dirname(__file__), '..', '01_tensor'))
+from tensor_dev import Tensor
 
 # %% [markdown]
 """
-## Step 1: Teaching Our Tensor to Remember Gradients
+## 1. Introduction: What is Automatic Differentiation?
 
-Our Tensor class from Module 02 is perfect for storing data and doing math. But for training neural networks, we need it to remember how gradients flow backward through computations.
+Automatic differentiation (autograd) is the magic that makes neural networks learn. Instead of manually computing gradients for every parameter, autograd tracks operations and automatically computes gradients via the chain rule.
 
-Think of it like teaching someone to remember the steps of a recipe so they can explain it later to others.
-
-### Gradient Memory Structure
-
+### The Challenge
+In Module 04, you implemented a loss function. To train a model, you need:
 ```
-                  Tensor Object
-    ┌──────────────────────────────────┐
-    │  data: [1.0, 2.0, 3.0]           │ ← Original tensor data
-    │  requires_grad: True              │ ← Should track gradients?
-    │  grad: None → [∇₁, ∇₂, ∇₃]       │ ← Accumulated gradients
-    │  grad_fn: None → <AddBackward>    │ ← How to propagate backward
-    └──────────────────────────────────┘
-                        │
-                        ▼
-              Computation Graph Node
-            ┌─────────────────────────┐
-            │   grad_fn stores:       │
-            │   • Parent tensors      │
-            │   • Backward function   │
-            │   • Local derivatives   │
-            └─────────────────────────┘
+Loss = f(W₃, f(W₂, f(W₁, x)))
+∂Loss/∂W₁ = ?  ∂Loss/∂W₂ = ?  ∂Loss/∂W₃ = ?
 ```
 
-### What We're Adding
+Manual gradient computation becomes impossible for complex models with millions of parameters.
 
-We need three pieces of memory for our Tensor:
+### The Solution: Computational Graphs
+```
+Forward Pass:  x → Linear₁ → ReLU → Linear₂ → Loss
+Backward Pass: ∇x ← ∇Linear₁ ← ∇ReLU ← ∇Linear₂ ← ∇Loss
+```
 
-1. **Should I remember?** (`requires_grad`) - Like asking "should I pay attention to gradients?"
-2. **What did I learn?** (`grad`) - The accumulated gradient information
-3. **How do I teach others?** (`grad_fn`) - Function to pass gradients backward
+**Complete Autograd Process Visualization:**
+```
+┌─ FORWARD PASS ──────────────────────────────────────────────┐
+│                                                             │
+│ x ──┬── W₁ ──┐                                              │
+│     │        ├──[Linear₁]──→ z₁ ──[ReLU]──→ a₁ ──┬── W₂ ──┐ │
+│     └── b₁ ──┘                               │        ├─→ Loss
+│                                              └── b₂ ──┘ │
+│                                                             │
+└─ COMPUTATION GRAPH BUILT ──────────────────────────────────┘
+                             │
+                             ▼
+┌─ BACKWARD PASS ─────────────────────────────────────────────┐
+│                                                             │
+│∇x ←┬← ∇W₁ ←┐                                               │
+│    │       ├←[Linear₁]←─ ∇z₁ ←[ReLU]← ∇a₁ ←┬← ∇W₂ ←┐      │
+│    └← ∇b₁ ←┘                             │       ├← ∇Loss  │
+│                                          └← ∇b₂ ←┘      │
+│                                                             │
+└─ GRADIENTS COMPUTED ───────────────────────────────────────┘
 
-These three attributes will transform our mathematical Tensor into a learning-capable Tensor.
+Key Insight: Each [operation] stores how to compute its backward pass.
+The chain rule automatically flows gradients through the entire graph.
+```
 
-### Why Start Here?
-
-Before we can compute any gradients, we need places to store them. This is the foundation - like preparing notebooks before a lecture.
+Each operation records how to compute its backward pass. The chain rule connects them all.
 """
 
-# %% nbgrader={"grade": false, "grade_id": "tensor-gradient-attributes", "solution": true}
-#| export
-class Tensor(BaseTensor):
-    """
-    Enhanced Tensor with gradient tracking capabilities.
+# %% [markdown]
+"""
+## 2. Foundations: The Chain Rule in Action
 
-    Inherits all functionality from BaseTensor and adds gradient memory.
+### Mathematical Foundation
+For composite functions: f(g(x)), the derivative is:
+```
+df/dx = (df/dg) × (dg/dx)
+```
+
+### Computational Graph Example
+```
+Simple computation: L = (x * y + 5)²
+
+Forward Pass:
+  x=2 ──┐
+        ├──[×]──→ z=6 ──[+5]──→ w=11 ──[²]──→ L=121
+  y=3 ──┘
+
+Backward Pass (Chain Rule in Action):
+  ∂L/∂x = ∂L/∂w × ∂w/∂z × ∂z/∂x
+        = 2w  ×  1  ×  y
+        = 2(11) × 1 × 3 = 66
+
+  ∂L/∂y = ∂L/∂w × ∂w/∂z × ∂z/∂y
+        = 2w  ×  1  ×  x
+        = 2(11) × 1 × 2 = 44
+
+Gradient Flow Visualization:
+  ∇x=66 ←──┐
+           ├──[×]←── ∇z=22 ←──[+]←── ∇w=22 ←──[²]←── ∇L=1
+  ∇y=44 ←──┘
+```
+
+### Memory Layout During Backpropagation
+```
+Computation Graph Memory Structure:
+┌─────────────────────────────────────────────────────────┐
+│ Forward Pass (stored for backward)                      │
+├─────────────────────────────────────────────────────────┤
+│ Node 1: x=2 (leaf, requires_grad=True) │ grad: None→66  │
+│ Node 2: y=3 (leaf, requires_grad=True) │ grad: None→44  │
+│ Node 3: z=x*y (MulFunction)            │ grad: None→22  │
+│         saved: (x=2, y=3)              │ inputs: [x,y]  │
+│ Node 4: w=z+5 (AddFunction)            │ grad: None→22  │
+│         saved: (z=6, 5)                │ inputs: [z]    │
+│ Node 5: L=w² (PowFunction)             │ grad: 1        │
+│         saved: (w=11)                  │ inputs: [w]    │
+└─────────────────────────────────────────────────────────┘
+
+Memory Cost: 2× parameters (data + gradients) + graph overhead
+```
+"""
+
+# %% [markdown]
+"""
+## 3. Implementation: Building the Autograd Engine
+
+Let's implement the autograd system step by step. We'll enhance the existing Tensor class and create supporting infrastructure.
+
+### The Function Architecture
+
+Every differentiable operation needs two things:
+1. **Forward pass**: Compute the result
+2. **Backward pass**: Compute gradients for inputs
+
+```
+Function Class Design:
+┌─────────────────────────────────────┐
+│ Function (Base Class)               │
+├─────────────────────────────────────┤
+│ • save_for_backward()  ← Store data │
+│ • forward()           ← Compute     │
+│ • backward()          ← Gradients   │
+└─────────────────────────────────────┘
+          ↑
+    ┌─────┴─────┬─────────┬──────────┐
+    │           │         │          │
+┌───▼────┐ ┌────▼───┐ ┌───▼────┐ ┌───▼────┐
+│  Add   │ │  Mul   │ │ Matmul │ │  Sum   │
+│Function│ │Function│ │Function│ │Function│
+└────────┘ └────────┘ └────────┘ └────────┘
+```
+
+Each operation inherits from Function and implements specific gradient rules.
+"""
+
+# %% [markdown]
+"""
+### Function Base Class - The Foundation of Autograd
+
+The Function class is the foundation that makes autograd possible. Every differentiable operation (addition, multiplication, etc.) inherits from this class.
+
+**Why Functions Matter:**
+- They remember inputs needed for backward pass
+- They implement forward computation
+- They implement gradient computation via backward()
+- They connect to form computation graphs
+
+**The Pattern:**
+```
+Forward:  inputs → Function.forward() → output
+Backward: grad_output → Function.backward() → grad_inputs
+```
+
+This pattern enables the chain rule to flow gradients through complex computations.
+"""
+
+# %% nbgrader={"grade": false, "grade_id": "function-base", "solution": true}
+class Function:
+    """
+    Base class for differentiable operations.
+
+    Every operation that needs gradients (add, multiply, matmul, etc.)
+    will inherit from this class.
     """
 
-    def __init__(self, data, dtype=None, requires_grad=False):
+    def __init__(self):
+        """Initialize function with empty input tracking."""
+        self.inputs = []
+        self.saved_tensors = []
+
+    def save_for_backward(self, *tensors):
         """
-        Initialize Tensor with gradient tracking support.
+        Save tensors needed for backward pass.
 
-        TODO: Add gradient tracking attributes to existing Tensor
-
-        APPROACH:
-        1. Call parent __init__ to preserve all existing functionality
-        2. Add requires_grad boolean for gradient tracking control
-        3. Add grad attribute to store accumulated gradients (starts as None)
-        4. Add grad_fn attribute to store backward function (starts as None)
+        TODO: Store tensors that backward() will need
 
         EXAMPLE:
-        >>> t = Tensor([1, 2, 3], requires_grad=True)
-        >>> print(t.requires_grad)  # True - ready to track gradients
-        >>> print(t.grad)          # None - no gradients accumulated yet
-        >>> print(t.grad_fn)       # None - no backward function yet
-
-        HINT: This is just storage - we're not computing anything yet
+        In multiplication: y = a * b
+        We need to save 'a' and 'b' because:
+        ∂y/∂a = b and ∂y/∂b = a
         """
         ### BEGIN SOLUTION
-        # Call parent constructor to preserve all existing functionality
-        super().__init__(data, dtype)
+        self.saved_tensors = tensors
+        ### END SOLUTION
 
-        # Add gradient tracking attributes
-        self.requires_grad = requires_grad
-        self.grad = None        # Will store accumulated gradients
-        self.grad_fn = None     # Will store backward propagation function
+    def forward(self, *inputs):
+        """
+        Compute forward pass.
+
+        TODO: Implement in subclasses
+        This should be overridden by each specific operation.
+        """
+        raise NotImplementedError("Forward pass must be implemented by subclasses")
+
+    def backward(self, grad_output):
+        """
+        Compute backward pass.
+
+        TODO: Implement in subclasses
+
+        APPROACH:
+        1. Take gradient flowing backward (grad_output)
+        2. Apply chain rule with local gradients
+        3. Return gradients for inputs
+        """
+        raise NotImplementedError("Backward pass must be implemented by subclasses")
+
+# %% [markdown]
+"""
+### 🔬 Unit Test: Function Base Class
+This test validates our Function base class works correctly.
+**What we're testing**: Function initialization and interface
+**Why it matters**: Foundation for all differentiable operations
+**Expected**: Proper initialization and save_for_backward functionality
+"""
+
+# %% nbgrader={"grade": true, "grade_id": "test-function-base", "locked": true, "points": 10}
+def test_unit_function_base():
+    """🔬 Test Function base class."""
+    print("🔬 Unit Test: Function Base Class...")
+
+    # Test initialization
+    func = Function()
+    assert func.inputs == []
+    assert func.saved_tensors == []
+
+    # Test save_for_backward
+    tensor1 = Tensor([1, 2, 3])
+    tensor2 = Tensor([4, 5, 6])
+    func.save_for_backward(tensor1, tensor2)
+    assert len(func.saved_tensors) == 2
+    assert func.saved_tensors[0] is tensor1
+    assert func.saved_tensors[1] is tensor2
+
+    print("✅ Function base class works correctly!")
+
+test_unit_function_base()
+
+# %% [markdown]
+"""
+### Operation Functions - Implementing Gradient Rules
+
+Now we'll implement specific operations that compute gradients correctly. Each operation has mathematical rules for how gradients flow backward.
+
+**Gradient Flow Visualization:**
+```
+Addition (z = a + b):
+    ∂z/∂a = 1    ∂z/∂b = 1
+
+    a ──┐           grad_a ←──┐
+        ├─[+]─→ z          ├─[+]←── grad_z
+    b ──┘           grad_b ←──┘
+
+Multiplication (z = a * b):
+    ∂z/∂a = b    ∂z/∂b = a
+
+    a ──┐           grad_a = grad_z * b
+        ├─[×]─→ z
+    b ──┘           grad_b = grad_z * a
+
+Matrix Multiplication (Z = A @ B):
+    ∂Z/∂A = grad_Z @ B.T
+    ∂Z/∂B = A.T @ grad_Z
+
+    A ──┐           grad_A = grad_Z @ B.T
+        ├─[@]─→ Z
+    B ──┘           grad_B = A.T @ grad_Z
+```
+
+Each operation stores the inputs it needs for computing gradients.
+"""
+
+# %% [markdown]
+"""
+### AddFunction - Gradient Rules for Addition
+
+Addition is the simplest gradient operation: gradients flow unchanged to both inputs.
+
+**Mathematical Principle:**
+```
+If z = a + b, then:
+∂z/∂a = 1  (gradient of z w.r.t. a)
+∂z/∂b = 1  (gradient of z w.r.t. b)
+
+By chain rule:
+∂Loss/∂a = ∂Loss/∂z × ∂z/∂a = grad_output × 1 = grad_output
+∂Loss/∂b = ∂Loss/∂z × ∂z/∂b = grad_output × 1 = grad_output
+```
+
+**Broadcasting Challenge:**
+When tensors have different shapes, NumPy broadcasts automatically in forward pass,
+but we must "unbroadcast" gradients in backward pass to match original shapes.
+"""
+
+# %% nbgrader={"grade": false, "grade_id": "operation-functions", "solution": true}
+class AddFunction(Function):
+    """Gradient computation for tensor addition."""
+
+    def forward(self, a, b):
+        """
+        Forward pass: compute a + b
+
+        TODO: Implement addition forward pass
+        """
+        ### BEGIN SOLUTION
+        # Save inputs for backward pass (shapes might be needed)
+        self.save_for_backward(a, b)
+
+        # Compute addition
+        if isinstance(b, Tensor):
+            result = a.data + b.data
+        else:
+            result = a.data + b
+
+        return result
+        ### END SOLUTION
+
+    def backward(self, grad_output):
+        """
+        Backward pass: compute gradients for addition
+
+        TODO: Implement addition backward pass
+
+        MATH: If z = a + b, then ∂z/∂a = 1 and ∂z/∂b = 1
+        So: ∂loss/∂a = ∂loss/∂z × 1 = grad_output
+            ∂loss/∂b = ∂loss/∂z × 1 = grad_output
+
+        BROADCASTING CHALLENGE:
+        If shapes differ, we need to sum gradients appropriately
+        """
+        ### BEGIN SOLUTION
+        a, b = self.saved_tensors
+
+        # Gradient for 'a' - same shape as grad_output initially
+        grad_a = grad_output
+
+        # Gradient for 'b' - same as grad_output initially
+        grad_b = grad_output
+
+        # Handle broadcasting: if original shapes differed, sum gradients
+        # For tensor + scalar case
+        if not isinstance(b, Tensor):
+            grad_b = np.sum(grad_output)
+        else:
+            # Handle shape differences due to broadcasting
+            if a.shape != grad_output.shape:
+                # Sum out added dimensions and squeeze
+                grad_a = _handle_broadcasting_backward(grad_a, a.shape)
+
+            if b.shape != grad_output.shape:
+                grad_b = _handle_broadcasting_backward(grad_b, b.shape)
+
+        return grad_a, grad_b
         ### END SOLUTION
 
 # %% [markdown]
 """
-### 🧪 Test Step 1: Verify Gradient Memory
-This test confirms our Tensor can remember gradient information
+### MulFunction - Gradient Rules for Element-wise Multiplication
+
+Element-wise multiplication follows the product rule of calculus.
+
+**Mathematical Principle:**
+```
+If z = a * b (element-wise), then:
+∂z/∂a = b  (gradient w.r.t. a equals the other input)
+∂z/∂b = a  (gradient w.r.t. b equals the other input)
+
+By chain rule:
+∂Loss/∂a = grad_output * b
+∂Loss/∂b = grad_output * a
+```
+
+**Visual Example:**
+```
+Forward:  a=[2,3] * b=[4,5] = z=[8,15]
+Backward: grad_z=[1,1]
+          grad_a = grad_z * b = [1,1] * [4,5] = [4,5]
+          grad_b = grad_z * a = [1,1] * [2,3] = [2,3]
+```
 """
 
-# %%
-def test_step1_gradient_attributes():
-    """Test that Tensor has gradient memory capabilities."""
-    print("🔬 Step 1 Test: Gradient Memory...")
+class MulFunction(Function):
+    """Gradient computation for tensor multiplication."""
 
-    # Test tensor with gradient tracking enabled
-    x = Tensor([1.0, 2.0, 3.0], requires_grad=True)
+    def forward(self, a, b):
+        """
+        Forward pass: compute a * b (element-wise)
 
-    # Verify all gradient attributes exist and have correct initial values
-    assert hasattr(x, 'requires_grad'), "Tensor should have requires_grad attribute"
-    assert x.requires_grad == True, "requires_grad should be True when requested"
-    assert x.grad is None, "grad should start as None"
-    assert x.grad_fn is None, "grad_fn should start as None"
+        TODO: Implement multiplication forward pass
+        """
+        ### BEGIN SOLUTION
+        self.save_for_backward(a, b)
 
-    # Test tensor without gradient tracking
-    y = Tensor([4.0, 5.0, 6.0], requires_grad=False)
-    assert y.requires_grad == False, "requires_grad should be False by default"
-
-    # Verify existing functionality still works
-    z = x + y  # Should work exactly like before
-    assert hasattr(z, 'data'), "Enhanced tensor should still have data"
-
-    print("✅ Success! Your Tensor now has gradient memory!")
-    print(f"  • Gradient tracking: {x.requires_grad}")
-    print(f"  • Initial gradients: {x.grad}")
-    print(f"  • Backward function: {x.grad_fn}")
-
-test_step1_gradient_attributes()
-
-# %% [markdown]
-"""
-## Step 2: Teaching Our Tensor to Learn (Backward Method)
-
-Now that our Tensor has memory for gradients, we need to teach it how to accumulate gradients when they flow backward from later computations.
-
-Think of this like teaching someone to collect feedback from others and combine it with what they already know.
-
-### Gradient Flow Visualization
-
-```
-    Forward Pass (Building Graph):        Backward Pass (Computing Gradients):
-
-    x ──────┐                            x.grad ←──── gradient
-             │                                   │
-             ├─► [Operation] ──► result          │
-             │                     │             │
-    y ──────┘                     │             │
-                                   ▼             │
-                            result.backward() ───┘
-                                   │
-                                   ▼
-                            y.grad ←──── gradient
-```
-
-### The Backward Method
-
-The `backward()` method will:
-1. **Check if learning is enabled** (requires_grad must be True)
-2. **Accumulate gradients** (add new gradients to existing ones)
-3. **Propagate backwards** (tell earlier computations about the gradients)
-
-```
-    Gradient Accumulation Pattern:
-
-    First call: tensor.grad = None
-                tensor.backward([1.0])
-                tensor.grad = [1.0]    ← Store first gradient
-
-    Second call: tensor.backward([0.5])
-                 tensor.grad = [1.5]   ← Accumulate: [1.0] + [0.5]
-
-    Third call:  tensor.backward([2.0])
-                 tensor.grad = [3.5]   ← Accumulate: [1.5] + [2.0]
-```
-
-This is the heart of learning - how information flows backward to update our understanding.
-
-### Why Accumulation Matters
-
-Neural networks often compute multiple losses that all depend on the same parameters. We need to collect ALL the gradients, not just the last one.
-"""
-
-# %% nbgrader={"grade": false, "grade_id": "tensor-backward-method", "solution": true}
-def backward(self, gradient=None):
-    """
-    Accumulate gradients and propagate them backward through computation.
-
-    TODO: Implement gradient accumulation and backward propagation
-
-    APPROACH:
-    1. Check if this tensor requires gradients (error if not)
-    2. Set default gradient for scalar outputs (ones_like for scalars)
-    3. Accumulate gradient: first time = store, subsequent = add
-    4. Propagate backward through grad_fn if it exists
-
-    EXAMPLE:
-    >>> x = Tensor([2.0], requires_grad=True)
-    >>> x.grad = None  # No gradients yet
-    >>> x.backward([1.0])  # First gradient
-    >>> print(x.grad)  # [1.0]
-    >>> x.backward([0.5])  # Accumulate second gradient
-    >>> print(x.grad)  # [1.5] - accumulated!
-
-    HINTS:
-    - Default gradient for scalars should be ones_like(self.data)
-    - Use += for accumulation, but handle None case first
-    - Only call grad_fn if it exists (not None)
-    """
-    ### BEGIN SOLUTION
-    # Check if this tensor should accumulate gradients
-    if not self.requires_grad:
-        raise RuntimeError("Tensor doesn't require gradients - set requires_grad=True")
-
-    # Set default gradient for scalar outputs
-    if gradient is None:
-        if self.data.size == 1:  # Scalar output
-            gradient = np.ones_like(self.data)
+        if isinstance(b, Tensor):
+            result = a.data * b.data
         else:
-            raise RuntimeError("gradient must be specified for non-scalar tensors")
+            result = a.data * b
 
-    # Accumulate gradients: first time or add to existing
-    if self.grad is None:
-        self.grad = np.array(gradient)  # First gradient
-    else:
-        self.grad = self.grad + gradient  # Accumulate
+        return result
+        ### END SOLUTION
 
-    # Propagate gradients backward through computation graph
-    if self.grad_fn is not None:
-        self.grad_fn(gradient)
-    ### END SOLUTION
+    def backward(self, grad_output):
+        """
+        Backward pass: compute gradients for multiplication
 
-# Add the backward method to our Tensor class
-Tensor.backward = backward
+        TODO: Implement multiplication backward pass
 
-# %% [markdown]
-"""
-### 🧪 Test Step 2: Verify Learning Ability
-This test confirms our Tensor can accumulate gradients properly
-"""
+        MATH: If z = a * b, then:
+        ∂z/∂a = b and ∂z/∂b = a
+        So: ∂loss/∂a = grad_output * b
+            ∂loss/∂b = grad_output * a
+        """
+        ### BEGIN SOLUTION
+        a, b = self.saved_tensors
 
-# %%
-def test_step2_backward_method():
-    """Test that Tensor can accumulate gradients."""
-    print("🔬 Step 2 Test: Learning Ability...")
+        if isinstance(b, Tensor):
+            grad_a = grad_output * b.data
+            grad_b = grad_output * a.data
 
-    # Test basic gradient accumulation
-    x = Tensor([2.0], requires_grad=True)
+            # Handle broadcasting
+            if a.shape != grad_output.shape:
+                grad_a = _handle_broadcasting_backward(grad_a, a.shape)
+            if b.shape != grad_output.shape:
+                grad_b = _handle_broadcasting_backward(grad_b, b.shape)
+        else:
+            # b is a scalar
+            grad_a = grad_output * b
+            grad_b = np.sum(grad_output * a.data)
 
-    # First gradient
-    x.backward(np.array([1.0]))
-    assert np.allclose(x.grad, [1.0]), f"First gradient failed: expected [1.0], got {x.grad}"
-
-    # Second gradient should accumulate
-    x.backward(np.array([0.5]))
-    assert np.allclose(x.grad, [1.5]), f"Accumulation failed: expected [1.5], got {x.grad}"
-
-    # Test default gradient for scalars
-    y = Tensor([3.0], requires_grad=True)
-    y.backward()  # No gradient specified - should use default
-    assert np.allclose(y.grad, [1.0]), f"Default gradient failed: expected [1.0], got {y.grad}"
-
-    # Test error for non-gradient tensor
-    z = Tensor([4.0], requires_grad=False)
-    try:
-        z.backward([1.0])
-        assert False, "Should have raised error for non-gradient tensor"
-    except RuntimeError:
-        pass  # Expected error
-
-    print("✅ Success! Your Tensor can now learn from gradients!")
-    print(f"  • Accumulation works: {x.grad}")
-    print(f"  • Default gradients work: {y.grad}")
-
-test_step2_backward_method()
+        return grad_a, grad_b
+        ### END SOLUTION
 
 # %% [markdown]
 """
-## Step 3: Smart Addition (x + y Learns!)
+### MatmulFunction - Gradient Rules for Matrix Multiplication
 
-Now we'll make addition smart - when two tensors are added, the result should remember how to flow gradients back to both inputs.
+Matrix multiplication has more complex gradient rules based on matrix calculus.
 
-Think of this like a conversation between three people: when C = A + B, and someone gives feedback to C, C knows to pass that same feedback to both A and B.
-
-### Addition Gradient Flow
-
+**Mathematical Principle:**
 ```
-    Forward Pass:                 Backward Pass:
-
-    x(2.0) ────┐                 x.grad ←── 1.0
-               ├─► [+] ──► z(5.0)         ↑
-    y(3.0) ────┘              │           │
-                               ▼           │
-                        z.backward(1.0) ───┘
-                               │
-                               ▼
-                        y.grad ←── 1.0
-
-    Addition Rule: ∂z/∂x = 1, ∂z/∂y = 1
-    Both inputs receive the same gradient!
+If Z = A @ B (matrix multiplication), then:
+∂Z/∂A = grad_Z @ B.T
+∂Z/∂B = A.T @ grad_Z
 ```
 
-### Mathematical Foundation
-
-For addition z = x + y:
-- ∂z/∂x = 1 (changing x by 1 changes z by 1)
-- ∂z/∂y = 1 (changing y by 1 changes z by 1)
-
-So gradients flow unchanged to both inputs: grad_x = grad_z, grad_y = grad_z
-
-### Computation Graph Building
-
+**Why These Rules Work:**
 ```
-    Enhanced Addition Process:
-
-    1. Compute: z.data = x.data + y.data    (math as before)
-
-    2. If gradients needed:
-       z.requires_grad = True
-       z.grad_fn = lambda grad: {
-           x.backward(grad)  ← Send same gradient to x
-           y.backward(grad)  ← Send same gradient to y
-       }
-
-    3. Result: z remembers how to teach x and y!
+For element Z[i,j] = Σ_k A[i,k] * B[k,j]
+∂Z[i,j]/∂A[i,k] = B[k,j]  ← This gives us grad_Z @ B.T
+∂Z[i,j]/∂B[k,j] = A[i,k]  ← This gives us A.T @ grad_Z
 ```
 
-### Why Enhancement, Not Replacement
-
-We're enhancing the existing `__add__` method, not replacing it. The math stays the same - we just add gradient tracking on top.
+**Dimension Analysis:**
+```
+Forward:  A(m×k) @ B(k×n) = Z(m×n)
+Backward: grad_Z(m×n) @ B.T(n×k) = grad_A(m×k) ✓
+          A.T(k×m) @ grad_Z(m×n) = grad_B(k×n) ✓
+```
 """
 
-# %% nbgrader={"grade": false, "grade_id": "enhanced-addition", "solution": true}
-# Store the original addition method so we can enhance it
-_original_add = Tensor.__add__
+class MatmulFunction(Function):
+    """Gradient computation for matrix multiplication."""
 
-def enhanced_add(self, other):
-    """
-    Enhanced addition with automatic gradient tracking.
+    def forward(self, a, b):
+        """
+        Forward pass: compute a @ b (matrix multiplication)
 
-    TODO: Add gradient tracking to existing addition operation
+        TODO: Implement matmul forward pass
+        """
+        ### BEGIN SOLUTION
+        self.save_for_backward(a, b)
+        result = np.dot(a.data, b.data)
+        return result
+        ### END SOLUTION
 
-    APPROACH:
-    1. Do the original math (call _original_add)
-    2. If either input tracks gradients, result should too
-    3. Create grad_fn that sends gradients back to both inputs
-    4. Remember: for addition, both inputs get the same gradient
+    def backward(self, grad_output):
+        """
+        Backward pass: compute gradients for matrix multiplication
 
-    EXAMPLE:
-    >>> x = Tensor([2.0], requires_grad=True)
-    >>> y = Tensor([3.0], requires_grad=True)
-    >>> z = x + y  # Enhanced addition
-    >>> z.backward()
-    >>> print(x.grad)  # [1.0] - same as gradient flowing to z
-    >>> print(y.grad)  # [1.0] - same as gradient flowing to z
+        TODO: Implement matmul backward pass
 
-    HINTS:
-    - Use _original_add for the math computation
-    - Check if other has requires_grad attribute (might be scalar)
-    - Addition rule: ∂(a+b)/∂a = 1, ∂(a+b)/∂b = 1
-    """
-    ### BEGIN SOLUTION
-    # Do the original math - this preserves all existing functionality
-    original_result = _original_add(self, other)
+        MATH: If Z = A @ B, then:
+        ∂Z/∂A = grad_output @ B.T
+        ∂Z/∂B = A.T @ grad_output
+        """
+        ### BEGIN SOLUTION
+        a, b = self.saved_tensors
 
-    # Create a new enhanced Tensor with the result data to ensure it has gradient capabilities
-    result = Tensor(original_result.data, requires_grad=False)
+        # Gradient w.r.t. a: grad_output @ b.T
+        grad_a = np.dot(grad_output, b.data.T)
 
-    # Check if either input requires gradients
-    other_requires_grad = hasattr(other, 'requires_grad') and other.requires_grad
-    needs_grad = self.requires_grad or other_requires_grad
+        # Gradient w.r.t. b: a.T @ grad_output
+        grad_b = np.dot(a.data.T, grad_output)
 
-    if needs_grad:
-        # Result should track gradients
-        result.requires_grad = True
-
-        # Create backward function for gradient propagation
-        def grad_fn(gradient):
-            """Send gradients back to both inputs (addition rule)."""
-            # For addition: ∂(a+b)/∂a = 1, so gradient flows unchanged
-            if self.requires_grad:
-                self.backward(gradient)
-            if other_requires_grad:
-                other.backward(gradient)
-
-        # Attach the backward function to the result
-        result.grad_fn = grad_fn
-
-    return result
-    ### END SOLUTION
-
-# Replace the addition method with our enhanced version
-Tensor.__add__ = enhanced_add
+        return grad_a, grad_b
+        ### END SOLUTION
 
 # %% [markdown]
 """
-### 🧪 Test Step 3: Verify Smart Addition
-This test confirms addition automatically tracks gradients
+### SumFunction - Gradient Rules for Reduction Operations
+
+Sum operations reduce tensor dimensions, so gradients must be broadcast back.
+
+**Mathematical Principle:**
+```
+If z = sum(a), then ∂z/∂a[i] = 1 for all i
+Gradient is broadcasted from scalar result back to input shape.
+```
+
+**Gradient Broadcasting Examples:**
+```
+Case 1: Full sum
+  Forward:  a=[1,2,3] → sum() → z=6 (scalar)
+  Backward: grad_z=1 → broadcast → grad_a=[1,1,1]
+
+Case 2: Axis sum
+  Forward:  a=[[1,2],[3,4]] → sum(axis=0) → z=[4,6]
+  Backward: grad_z=[1,1] → broadcast → grad_a=[[1,1],[1,1]]
+
+Case 3: Keepdims
+  Forward:  a=[[1,2],[3,4]] → sum(axis=0,keepdims=True) → z=[[4,6]]
+  Backward: grad_z=[[1,1]] → broadcast → grad_a=[[1,1],[1,1]]
+```
 """
 
-# %%
-def test_step3_smart_addition():
-    """Test that addition tracks gradients automatically."""
-    print("🔬 Step 3 Test: Smart Addition...")
+class SumFunction(Function):
+    """Gradient computation for tensor sum."""
 
-    # Test basic addition with gradients
-    x = Tensor([2.0], requires_grad=True)
-    y = Tensor([3.0], requires_grad=True)
-    z = x + y
+    def forward(self, a, axis=None, keepdims=False):
+        """
+        Forward pass: compute tensor sum
 
-    # Verify forward pass
-    assert np.allclose(z.data, [5.0]), f"Addition math failed: expected [5.0], got {z.data}"
+        TODO: Implement sum forward pass
+        """
+        ### BEGIN SOLUTION
+        self.save_for_backward(a)
+        self.axis = axis
+        self.keepdims = keepdims
+        self.input_shape = a.shape
 
-    # Verify gradient tracking is enabled
-    assert z.requires_grad == True, "Result should require gradients when inputs do"
-    assert z.grad_fn is not None, "Result should have backward function"
+        result = np.sum(a.data, axis=axis, keepdims=keepdims)
+        return result
+        ### END SOLUTION
 
-    # Test backward pass
-    z.backward()
-    assert np.allclose(x.grad, [1.0]), f"x gradient failed: expected [1.0], got {x.grad}"
-    assert np.allclose(y.grad, [1.0]), f"y gradient failed: expected [1.0], got {y.grad}"
+    def backward(self, grad_output):
+        """
+        Backward pass: compute gradients for sum
 
-    # Test addition with scalar (no gradients)
-    a = Tensor([1.0], requires_grad=True)
-    b = a + 5.0  # Adding scalar
-    b.backward()
-    assert np.allclose(a.grad, [1.0]), "Gradient should flow through scalar addition"
+        TODO: Implement sum backward pass
 
-    # Test backward compatibility - no gradients
-    p = Tensor([1.0])  # No requires_grad
-    q = Tensor([2.0])  # No requires_grad
-    r = p + q
-    assert not hasattr(r, 'requires_grad') or not r.requires_grad, "Should not track gradients by default"
+        MATH: If z = sum(a), then ∂z/∂a[i] = 1 for all i
+        So gradient is broadcast back to original shape
+        """
+        ### BEGIN SOLUTION
+        # Sum distributes gradient to all input elements
+        # Need to broadcast grad_output back to input shape
 
-    print("✅ Success! Addition is now gradient-aware!")
-    print(f"  • Forward: {x.data} + {y.data} = {z.data}")
-    print(f"  • Backward: x.grad = {x.grad}, y.grad = {y.grad}")
+        if self.axis is None:
+            # Summed all elements - broadcast scalar back to input shape
+            grad_a = np.full(self.input_shape, grad_output)
+        else:
+            # Summed along specific axis - need to broadcast properly
+            grad_a = grad_output
 
-test_step3_smart_addition()
-
-# %% [markdown]
-"""
-## Step 4: Smart Multiplication (x * y Learns!)
-
-Now we'll enhance multiplication with gradient tracking. This is more interesting than addition because of the product rule.
-
-Think of multiplication like mixing ingredients: when you change one ingredient, the effect depends on how much of the other ingredient you have.
-
-### Multiplication Gradient Flow
-
-```
-    Forward Pass:                    Backward Pass:
-
-    x(2.0) ────┐                    x.grad ←── grad × y.data = 1.0 × 3.0 = 3.0
-               ├─► [×] ──► z(6.0)           ↑
-    y(3.0) ────┘              │             │
-                               ▼             │
-                        z.backward(1.0) ─────┘
-                               │
-                               ▼
-                        y.grad ←── grad × x.data = 1.0 × 2.0 = 2.0
-
-    Product Rule: ∂z/∂x = y, ∂z/∂y = x
-    Each input's gradient depends on the OTHER input's value!
-```
-
-### Mathematical Foundation - The Product Rule
-
-For multiplication z = x * y:
-- ∂z/∂x = y (changing x is multiplied by y's current value)
-- ∂z/∂y = x (changing y is multiplied by x's current value)
-
-```
-    Why Product Rule Matters:
-
-    If x = 2.0, y = 3.0, then z = 6.0
-
-    Small change in x: x + 0.1 = 2.1
-    New result: 2.1 × 3.0 = 6.3
-    Change in z: 6.3 - 6.0 = 0.3 = 0.1 × 3.0 ← Scaled by y!
-
-    Small change in y: y + 0.1 = 3.1
-    New result: 2.0 × 3.1 = 6.2
-    Change in z: 6.2 - 6.0 = 0.2 = 0.1 × 2.0 ← Scaled by x!
-```
-
-This means we need to remember the input values to compute gradients correctly.
-
-### Why This Matters
-
-Multiplication is everywhere in neural networks:
-- Linear layers: output = input * weights
-- Attention mechanisms: attention_scores * values
-- Element-wise operations in activations
-
-Getting multiplication gradients right is crucial for training.
-"""
-
-# %% nbgrader={"grade": false, "grade_id": "enhanced-multiplication", "solution": true}
-# Store the original multiplication method
-_original_mul = Tensor.__mul__
-
-def enhanced_mul(self, other):
-    """
-    Enhanced multiplication with automatic gradient tracking.
-
-    TODO: Add gradient tracking to multiplication using product rule
-
-    APPROACH:
-    1. Do the original math (call _original_mul)
-    2. If either input tracks gradients, result should too
-    3. Create grad_fn using product rule: ∂(a*b)/∂a = b, ∂(a*b)/∂b = a
-    4. Handle both Tensor and scalar multiplication
-
-    EXAMPLE:
-    >>> x = Tensor([2.0], requires_grad=True)
-    >>> y = Tensor([3.0], requires_grad=True)
-    >>> z = x * y  # z = [6.0]
-    >>> z.backward()
-    >>> print(x.grad)  # [3.0] - gradient is y's value
-    >>> print(y.grad)  # [2.0] - gradient is x's value
-
-    HINTS:
-    - Product rule: ∂(a*b)/∂a = b, ∂(a*b)/∂b = a
-    - Remember to handle scalars (use .data if available, else use directly)
-    - Gradients are: grad_x = gradient * other, grad_y = gradient * self
-    """
-    ### BEGIN SOLUTION
-    # Do the original math - preserves existing functionality
-    original_result = _original_mul(self, other)
-
-    # Create a new enhanced Tensor with the result data to ensure it has gradient capabilities
-    result = Tensor(original_result.data, requires_grad=False)
-
-    # Check if either input requires gradients
-    other_requires_grad = hasattr(other, 'requires_grad') and other.requires_grad
-    needs_grad = self.requires_grad or other_requires_grad
-
-    if needs_grad:
-        # Result should track gradients
-        result.requires_grad = True
-
-        # Create backward function using product rule
-        def grad_fn(gradient):
-            """Apply product rule for multiplication gradients."""
-            if self.requires_grad:
-                # ∂(a*b)/∂a = b, so gradient flows as: gradient * b
-                if hasattr(other, 'data'):
-                    self_grad = gradient * other.data
+            # If keepdims=False, we need to expand the summed dimensions
+            if not self.keepdims:
+                if isinstance(self.axis, int):
+                    grad_a = np.expand_dims(grad_a, self.axis)
                 else:
-                    self_grad = gradient * other  # other is scalar
-                self.backward(self_grad)
+                    for ax in sorted(self.axis):
+                        grad_a = np.expand_dims(grad_a, ax)
 
-            if other_requires_grad:
-                # ∂(a*b)/∂b = a, so gradient flows as: gradient * a
-                other_grad = gradient * self.data
-                other.backward(other_grad)
+            # Broadcast to input shape
+            grad_a = np.broadcast_to(grad_a, self.input_shape)
 
-        # Attach the backward function to the result
-        result.grad_fn = grad_fn
+        return grad_a
+        ### END SOLUTION
 
-    return result
-    ### END SOLUTION
-
-# Replace multiplication method with enhanced version
-Tensor.__mul__ = enhanced_mul
-
-# %% [markdown]
-"""
-### 🧪 Test Step 4: Verify Smart Multiplication
-This test confirms multiplication uses the product rule correctly
-"""
-
-# %%
-def test_step4_smart_multiplication():
-    """Test that multiplication tracks gradients with product rule."""
-    print("🔬 Step 4 Test: Smart Multiplication...")
-
-    # Test basic multiplication with gradients
-    x = Tensor([2.0], requires_grad=True)
-    y = Tensor([3.0], requires_grad=True)
-    z = x * y
-
-    # Verify forward pass
-    assert np.allclose(z.data, [6.0]), f"Multiplication math failed: expected [6.0], got {z.data}"
-
-    # Test backward pass with product rule
-    z.backward()
-    assert np.allclose(x.grad, [3.0]), f"x gradient failed: expected [3.0] (y's value), got {x.grad}"
-    assert np.allclose(y.grad, [2.0]), f"y gradient failed: expected [2.0] (x's value), got {y.grad}"
-
-    # Test multiplication by scalar
-    a = Tensor([4.0], requires_grad=True)
-    b = a * 2.0  # Multiply by scalar
-    b.backward()
-    assert np.allclose(a.grad, [2.0]), f"Scalar multiplication failed: expected [2.0], got {a.grad}"
-
-    # Test more complex values
-    p = Tensor([1.5], requires_grad=True)
-    q = Tensor([2.5], requires_grad=True)
-    r = p * q  # Should be 3.75
-
-    assert np.allclose(r.data, [3.75]), f"Complex multiplication failed: expected [3.75], got {r.data}"
-    r.backward()
-    assert np.allclose(p.grad, [2.5]), f"Complex p gradient failed: expected [2.5], got {p.grad}"
-    assert np.allclose(q.grad, [1.5]), f"Complex q gradient failed: expected [1.5], got {q.grad}"
-
-    print("✅ Success! Multiplication follows the product rule!")
-    print(f"  • Forward: {x.data} * {y.data} = {z.data}")
-    print(f"  • Product rule: x.grad = {x.grad}, y.grad = {y.grad}")
-
-test_step4_smart_multiplication()
-
-# %% [markdown]
-"""
-## Step 5: Chain Rule Magic (Complex Expressions Work!)
-
-Now comes the magic moment - combining our smart operations to see the chain rule work automatically through complex expressions.
-
-When you build expressions like `z = (x + y) * (x - y)`, each operation tracks gradients locally, and they automatically chain together. This is what makes deep learning possible!
-
-Think of it like a telephone game where each person (operation) passes the message (gradient) backward, and everyone modifies it according to their local rule.
-
-### Complex Computation Graph
-
-```
-    Forward Pass: f(x,y) = (x + y) * (x - y)
-
-    x(3.0) ────┬─► [+] ──► t₁(5.0) ──┐
-               │                      ├─► [×] ──► result(5.0)
-    y(2.0) ────┼─► [+] ──────────────┘  ↑
-               │                         │
-               └─► [-] ──► t₂(1.0) ──────┘
-
-    Backward Pass: Chain rule flows gradients backward
-
-    result.backward(1.0)
-                    │
-                    ▼
-            [×] applies product rule:
-            t₁.backward(1.0 × t₂.data) = t₁.backward(1.0)
-            t₂.backward(1.0 × t₁.data) = t₂.backward(5.0)
-                    │                         │
-                    ▼                         ▼
-            [+] sends to both:        [-] sends with signs:
-            x.backward(1.0)           x.backward(5.0)
-            y.backward(1.0)           y.backward(-5.0)
-                    │                         │
-                    ▼                         ▼
-            Final gradients (accumulated):
-            x.grad = 1.0 + 5.0 = 6.0  ← Matches ∂(x²-y²)/∂x = 2x = 6.0
-            y.grad = 1.0 + (-5.0) = -4.0 ← Matches ∂(x²-y²)/∂y = -2y = -4.0
-```
-
-### The Chain Rule in Action
-
-For f(x,y) = (x + y) * (x - y) = x² - y²:
-1. Addition: passes gradients unchanged
-2. Subtraction: passes gradients (first unchanged, second negated)
-3. Multiplication: applies product rule
-4. Chain rule: combines all effects automatically
-
-Expected final gradients:
-- ∂f/∂x = 2x (derivative of x² - y²)
-- ∂f/∂y = -2y (derivative of x² - y²)
-
-### Gradient Accumulation in Action
-
-```
-    Notice how x appears in BOTH addition and subtraction:
-
-    x ──┬─► [+] ──► contributes to t₁
-        │
-        └─► [-] ──► contributes to t₂
-
-    During backward pass:
-    • Addition path contributes: x.grad += 1.0
-    • Subtraction path contributes: x.grad += 5.0
-    • Total: x.grad = 6.0 ← Automatic accumulation!
-
-    This is why we need gradient accumulation - same parameter
-    can contribute to loss through multiple paths!
-```
-
-### Why This Is Revolutionary
-
-You don't need to derive gradients manually anymore! The system automatically:
-- Tracks every operation
-- Applies local gradient rules
-- Chains them together correctly
-"""
-
-# %% nbgrader={"grade": false, "grade_id": "enhanced-subtraction", "solution": true}
-# We need subtraction to complete our operations set
-_original_sub = getattr(Tensor, '__sub__', None)
-
-def enhanced_sub(self, other):
+def _handle_broadcasting_backward(grad, target_shape):
     """
-    Enhanced subtraction with automatic gradient tracking.
+    Helper function to handle gradient broadcasting.
 
-    TODO: Add gradient tracking to subtraction
-
-    APPROACH:
-    1. Compute subtraction (may need to implement if not in base class)
-    2. For gradients: ∂(a-b)/∂a = 1, ∂(a-b)/∂b = -1
-    3. First input gets gradient unchanged, second gets negative gradient
-
-    HINTS:
-    - Subtraction rule: ∂(a-b)/∂a = 1, ∂(a-b)/∂b = -1
-    - Handle case where base class might not have subtraction
-    - Use np.subtract or manual computation if needed
+    When forward pass used broadcasting, we need to sum gradients
+    back to the original tensor's shape.
     """
     ### BEGIN SOLUTION
-    # Compute subtraction (implement if not available)
-    if _original_sub is not None:
-        original_result = _original_sub(self, other)
-        result = Tensor(original_result.data, requires_grad=False)
-    else:
-        # Implement subtraction manually
-        if hasattr(other, 'data'):
-            result_data = self.data - other.data
-        else:
-            result_data = self.data - other
-        result = Tensor(result_data, requires_grad=False)
+    # Start with the gradient
+    result = grad
 
-    # Check if either input requires gradients
-    other_requires_grad = hasattr(other, 'requires_grad') and other.requires_grad
-    needs_grad = self.requires_grad or other_requires_grad
+    # Sum out dimensions that were broadcasted (added dimensions)
+    # If target has fewer dimensions, sum out the leading dimensions
+    while len(result.shape) > len(target_shape):
+        result = np.sum(result, axis=0)
 
-    if needs_grad:
-        result.requires_grad = True
-
-        def grad_fn(gradient):
-            """Apply subtraction gradient rule."""
-            if self.requires_grad:
-                # ∂(a-b)/∂a = 1, gradient flows unchanged
-                self.backward(gradient)
-            if other_requires_grad:
-                # ∂(a-b)/∂b = -1, gradient is negated
-                other.backward(-gradient)
-
-        result.grad_fn = grad_fn
+    # For dimensions that were size 1 in target but expanded in grad
+    for i, (grad_dim, target_dim) in enumerate(zip(result.shape, target_shape)):
+        if target_dim == 1 and grad_dim > 1:
+            result = np.sum(result, axis=i, keepdims=True)
 
     return result
     ### END SOLUTION
 
-# Add subtraction method to Tensor
-Tensor.__sub__ = enhanced_sub
+# %% [markdown]
+"""
+### 🔬 Unit Test: Operation Functions
+This test validates our operation functions compute gradients correctly.
+**What we're testing**: Forward and backward passes for each operation
+**Why it matters**: These are the building blocks of autograd
+**Expected**: Correct gradients that satisfy mathematical definitions
+"""
+
+# %% nbgrader={"grade": true, "grade_id": "test-operation-functions", "locked": true, "points": 15}
+def test_unit_operation_functions():
+    """🔬 Test operation functions."""
+    print("🔬 Unit Test: Operation Functions...")
+
+    # Test AddFunction
+    add_func = AddFunction()
+    a = Tensor([1, 2, 3])
+    b = Tensor([4, 5, 6])
+    result = add_func.forward(a, b)
+    expected = np.array([5, 7, 9])
+    assert np.allclose(result, expected)
+
+    grad_output = np.array([1, 1, 1])
+    grad_a, grad_b = add_func.backward(grad_output)
+    assert np.allclose(grad_a, grad_output)
+    assert np.allclose(grad_b, grad_output)
+
+    # Test MulFunction
+    mul_func = MulFunction()
+    result = mul_func.forward(a, b)
+    expected = np.array([4, 10, 18])
+    assert np.allclose(result, expected)
+
+    grad_a, grad_b = mul_func.backward(grad_output)
+    assert np.allclose(grad_a, b.data)  # grad w.r.t a = b
+    assert np.allclose(grad_b, a.data)  # grad w.r.t b = a
+
+    # Test MatmulFunction
+    matmul_func = MatmulFunction()
+    a_mat = Tensor([[1, 2], [3, 4]])
+    b_mat = Tensor([[5, 6], [7, 8]])
+    result = matmul_func.forward(a_mat, b_mat)
+    expected = np.array([[19, 22], [43, 50]])
+    assert np.allclose(result, expected)
+
+    grad_output = np.ones((2, 2))
+    grad_a, grad_b = matmul_func.backward(grad_output)
+    assert grad_a.shape == a_mat.shape
+    assert grad_b.shape == b_mat.shape
+
+    print("✅ Operation functions work correctly!")
+
+test_unit_operation_functions()
 
 # %% [markdown]
 """
-### 🧪 Test Step 5: Verify Chain Rule Magic
-This test confirms complex expressions compute gradients automatically
+### Enhancing Tensor with Autograd Capabilities
 
-**What we're testing**: The computation graph from our diagram above
-**Expected behavior**: Gradients flow backward through multiple paths and accumulate correctly
-**Success criteria**: Final gradients match analytical derivatives of f(x,y) = x² - y²
-"""
+Now we'll enhance the existing Tensor class to use these gradient functions and build computation graphs automatically.
 
-# %%
-def test_step5_chain_rule_magic():
-    """Test that complex expressions automatically chain gradients."""
-    print("🔬 Step 5 Test: Chain Rule Magic...")
+**Computation Graph Formation:**
+```
+Before Autograd:             After Autograd:
+  x → operation → y           x → [Function] → y
+                                     ↓
+                               Stores operation
+                               for backward pass
+```
 
-    # Test complex expression: (x + y) * (x - y) = x² - y²
-    x = Tensor([3.0], requires_grad=True)
-    y = Tensor([2.0], requires_grad=True)
+**The Enhancement Strategy:**
+1. **Add backward() method** - Triggers gradient computation
+2. **Enhance operations** - Replace simple ops with gradient-tracking versions
+3. **Track computation graphs** - Each tensor remembers how it was created
+4. **Maintain compatibility** - All existing code continues to work
 
-    # Build computation graph step by step
-    sum_part = x + y      # 3 + 2 = 5
-    diff_part = x - y     # 3 - 2 = 1
-    result = sum_part * diff_part  # 5 * 1 = 5
-
-    # Verify forward computation
-    expected_forward = 3.0**2 - 2.0**2  # x² - y² = 9 - 4 = 5
-    assert np.allclose(result.data, [expected_forward]), f"Forward failed: expected [{expected_forward}], got {result.data}"
-
-    # Test the magic - backward propagation
-    result.backward()
-
-    # Expected gradients for f(x,y) = x² - y²
-    expected_x_grad = 2 * 3.0  # ∂(x²-y²)/∂x = 2x = 6
-    expected_y_grad = -2 * 2.0  # ∂(x²-y²)/∂y = -2y = -4
-
-    assert np.allclose(x.grad, [expected_x_grad]), f"x gradient failed: expected [{expected_x_grad}], got {x.grad}"
-    assert np.allclose(y.grad, [expected_y_grad]), f"y gradient failed: expected [{expected_y_grad}], got {y.grad}"
-
-    # Test another complex expression: 2*x*y + x
-    a = Tensor([2.0], requires_grad=True)
-    b = Tensor([3.0], requires_grad=True)
-
-    expr = (a * b) * 2.0 + a  # 2*a*b + a = 2*2*3 + 2 = 14
-
-    assert np.allclose(expr.data, [14.0]), f"Complex expression failed: expected [14.0], got {expr.data}"
-
-    expr.backward()
-    # ∂(2ab + a)/∂a = 2b + 1 = 2*3 + 1 = 7
-    # ∂(2ab + a)/∂b = 2a = 2*2 = 4
-    assert np.allclose(a.grad, [7.0]), f"Complex a gradient failed: expected [7.0], got {a.grad}"
-    assert np.allclose(b.grad, [4.0]), f"Complex b gradient failed: expected [4.0], got {b.grad}"
-
-    print("✅ Success! Chain rule works automatically!")
-    print(f"  • Expression: (x + y) * (x - y) = x² - y²")
-    print(f"  • Forward: {result.data}")
-    print(f"  • Gradients: ∂f/∂x = {x.grad}, ∂f/∂y = {y.grad}")
-    print("🎉 Your tensors can now learn through any expression!")
-
-test_step5_chain_rule_magic()
-
-# %% [markdown]
-"""
-## Step 6: Integration Testing (Complete Victory!)
-
-Time to celebrate! Let's test our complete autograd system with realistic neural network scenarios to make sure everything works together perfectly.
-
-We'll test scenarios that mirror what happens in real neural networks:
-- Linear transformations (matrix operations)
-- Activation functions
-- Loss computations
-- Complex multi-step computations
-
-This validates that your autograd system is ready to train real neural networks!
-
-### What Makes This Special
-
-Your autograd implementation now provides the foundation for all neural network training:
-- **Forward Pass**: Tensors compute values and build computation graphs
-- **Backward Pass**: Gradients flow automatically through any expression
-- **Parameter Updates**: Optimizers will use these gradients to update weights
-
-You've built the core engine that powers modern deep learning!
+**Critical Design Decision:**
+We enhance the EXISTING Tensor class rather than creating a new one.
+This means:
+- ✅ All previous modules continue working unchanged
+- ✅ No import changes needed
+- ✅ Gradients are "opt-in" via requires_grad=True
+- ✅ No confusion between Tensor types
 """
 
 # %% [markdown]
 """
-### 🧪 Final Integration Test: Complete Autograd Validation
-This comprehensive test validates your entire autograd system
+### The Backward Pass Algorithm
+
+The backward() method implements reverse-mode automatic differentiation.
+
+**Algorithm Visualization:**
+```
+Computation Graph (Forward):
+  x₁ ──┐
+       ├─[op₁]── z₁ ──┐
+  x₂ ──┘              ├─[op₂]── y
+  x₃ ──────[op₃]── z₂ ──┘
+
+Gradient Flow (Backward):
+  ∇x₁ ←──┐
+         ├─[op₁.backward()]← ∇z₁ ←──┐
+  ∇x₂ ←──┘                      ├─[op₂.backward()]← ∇y
+  ∇x₃ ←────[op₃.backward()]← ∇z₂ ←──┘
+```
+
+**Backward Pass Steps:**
+1. Start from output tensor (∇y = 1)
+2. For each operation in reverse order:
+   - Apply chain rule: ∇inputs = operation.backward(∇output)
+   - Accumulate gradients (handle shared variables)
+   - Continue to parent tensors
+3. Gradients accumulate in tensor.grad attributes
 """
 
-# %%
-def test_step6_integration_complete():
-    """Complete integration test of autograd system."""
-    print("🧪 STEP 6: COMPLETE INTEGRATION TEST")
-    print("=" * 50)
-
-    # Test 1: Neural network linear layer simulation
-    print("1️⃣ Testing Linear Layer Simulation...")
-    weights = Tensor([[0.5, -0.3], [0.2, 0.8]], requires_grad=True)
-    inputs = Tensor([[1.0, 2.0]], requires_grad=True)
-    bias = Tensor([[0.1, -0.1]], requires_grad=True)
-
-    # Simulate: output = input @ weights + bias
-    linear_output = inputs * weights + bias  # Element-wise for simplicity
-    loss = linear_output * linear_output  # Squared for loss
-
-    # Sum all elements for scalar loss (simplified)
-    final_loss = loss  # In real networks, we'd sum across batch
-    # For testing, we'll provide gradients for the non-scalar tensor
-    final_loss.backward(np.ones_like(final_loss.data))
-
-    # Verify all parameters have gradients
-    assert weights.grad is not None, "Weights should have gradients"
-    assert inputs.grad is not None, "Inputs should have gradients"
-    assert bias.grad is not None, "Bias should have gradients"
-    print("   ✅ Linear layer gradients computed successfully")
-
-    # Test 2: Multi-step computation
-    print("2️⃣ Testing Multi-Step Computation...")
-    x = Tensor([1.0], requires_grad=True)
-    y = Tensor([2.0], requires_grad=True)
-    z = Tensor([3.0], requires_grad=True)
-
-    # Complex expression: ((x * y) + z) * (x - y)
-    step1 = x * y         # 1 * 2 = 2
-    step2 = step1 + z     # 2 + 3 = 5
-    step3 = x - y         # 1 - 2 = -1
-    result = step2 * step3  # 5 * (-1) = -5
-
-    assert np.allclose(result.data, [-5.0]), f"Multi-step forward failed: expected [-5.0], got {result.data}"
-
-    result.backward()
-
-    # All variables should have gradients
-    assert x.grad is not None, "x should have gradients from multi-step"
-    assert y.grad is not None, "y should have gradients from multi-step"
-    assert z.grad is not None, "z should have gradients from multi-step"
-    print("   ✅ Multi-step computation gradients work")
-
-    # Test 3: Gradient accumulation across multiple losses
-    print("3️⃣ Testing Gradient Accumulation...")
-    param = Tensor([1.0], requires_grad=True)
-
-    # First loss: param * 2
-    loss1 = param * 2.0
-    loss1.backward()
-    first_grad = param.grad.copy()
-
-    # Second loss: param * 3 (should accumulate)
-    loss2 = param * 3.0
-    loss2.backward()
-
-    expected_total = first_grad + 3.0
-    assert np.allclose(param.grad, expected_total), f"Accumulation failed: expected {expected_total}, got {param.grad}"
-    print("   ✅ Gradient accumulation works correctly")
-
-    # Test 4: Backward compatibility
-    print("4️⃣ Testing Backward Compatibility...")
-    # Operations without gradients should work exactly as before
-    a = Tensor([1, 2, 3])  # No requires_grad
-    b = Tensor([4, 5, 6])  # No requires_grad
-    c = a + b
-    d = a * b
-    e = a - b
-
-    # Should work without any gradient tracking
-    assert not (hasattr(c, 'requires_grad') and c.requires_grad), "Non-grad tensors shouldn't track gradients"
-    print("   ✅ Backward compatibility maintained")
-
-    # Test 5: Error handling
-    print("5️⃣ Testing Error Handling...")
-    non_grad_tensor = Tensor([1.0], requires_grad=False)
-    try:
-        non_grad_tensor.backward()
-        assert False, "Should have raised error for non-gradient tensor"
-    except RuntimeError:
-        print("   ✅ Proper error handling for non-gradient tensors")
-
-    print("\n" + "=" * 50)
-    print("🎉 COMPLETE SUCCESS! ALL INTEGRATION TESTS PASSED!")
-    print("\n🚀 Your Autograd System Achievements:")
-    print("   • ✅ Gradient tracking for all operations")
-    print("   • ✅ Automatic chain rule through complex expressions")
-    print("   • ✅ Gradient accumulation for multiple losses")
-    print("   • ✅ Backward compatibility with existing code")
-    print("   • ✅ Proper error handling and validation")
-    print("   • ✅ Ready for neural network training!")
-
-    print("\n🔗 Ready for Next Module:")
-    print("   Module 06 (Optimizers) will use these gradients")
-    print("   to update neural network parameters automatically!")
-
-test_step6_integration_complete()
-
-# %% [markdown]
-"""
-## 🔍 Systems Analysis: Autograd Memory and Performance
-
-Now that your autograd system is complete, let's analyze its behavior to understand memory usage patterns and performance characteristics that matter in real ML systems.
-
-### Memory Layout Analysis
-
-```
-    Tensor Without Gradients:        Tensor With Gradients:
-    ┌─────────────────┐             ┌─────────────────────────────────┐
-    │ data: [1,2,3]   │             │ data: [1,2,3]          8 bytes  │
-    │ shape: (3,)     │             │ shape: (3,)            8 bytes  │
-    │ dtype: float64  │             │ dtype: float64         8 bytes  │
-    └─────────────────┘             │ requires_grad: True    1 byte   │
-         ~24 bytes                  │ grad: [∇₁,∇₂,∇₃]       8 bytes  │
-                                    │ grad_fn: <Function>    8 bytes  │
-                                    └─────────────────────────────────┘
-                                             ~41 bytes
-
-    Memory Overhead: ~2x per tensor + computation graph storage
-```
-
-### Computation Graph Memory Growth
-
-```
-    Expression Depth vs Memory Usage:
-
-    Simple: z = x + y
-    Memory: 3 tensors (x, y, z)
-
-    Medium: z = (x + y) * (x - y)
-    Memory: 5 tensors (x, y, x+y, x-y, result)
-
-    Deep: z = ((x + y) * w₁ + b₁) * w₂ + b₂
-    Memory: 7 tensors + intermediate results
-
-    Pattern: Memory = O(expression_depth)
-
-    Production Issue: 50-layer network = 50+ intermediate tensors
-    until backward() is called and graph is freed!
-```
-
-**Analysis Focus**: Memory overhead, computational complexity, and scaling behavior of gradient computation
-"""
-
-# %%
-def analyze_autograd_behavior():
+# %% nbgrader={"grade": false, "grade_id": "tensor-enhancements", "solution": true}
+def enhance_tensor_with_autograd():
     """
-    📊 SYSTEMS MEASUREMENT: Autograd Performance Analysis
+    Enhance the existing Tensor class with autograd capabilities.
 
-    Analyze memory usage and computational overhead of gradient tracking.
+    CRITICAL: We're enhancing the existing class, not creating a new one!
+    This maintains compatibility with all previous modules.
     """
-    print("📊 AUTOGRAD SYSTEMS ANALYSIS")
-    print("=" * 40)
+
+    def backward(self):
+        """
+        Compute gradients for this tensor and all tensors in its computation graph.
+
+        TODO: Implement the backward pass
+
+        APPROACH:
+        1. Check if this tensor requires gradients
+        2. Initialize gradient if starting point
+        3. Traverse computation graph backwards
+        4. Apply chain rule at each step
+
+        EXAMPLE:
+        >>> x = Tensor([2.0], requires_grad=True)
+        >>> y = x * 3
+        >>> y.backward()
+        >>> print(x.grad)  # Should be [3.0]
+        """
+        ### BEGIN SOLUTION
+        if not self.requires_grad:
+            return
+
+        # If no gradient function, this is a leaf node - initialize gradient
+        if self.grad is None:
+            if self.data.shape == ():
+                # Scalar tensor
+                self.grad = np.array(1.0)
+            else:
+                # Non-scalar: gradient should be ones of same shape
+                self.grad = np.ones_like(self.data)
+
+        # If this tensor has a gradient function, propagate backwards
+        if hasattr(self, 'grad_fn') and self.grad_fn is not None:
+            grads = self.grad_fn.backward(self.grad)
+
+            # grads could be a single gradient or tuple of gradients
+            if not isinstance(grads, tuple):
+                grads = (grads,)
+
+            # Propagate to input tensors
+            if hasattr(self.grad_fn, 'inputs'):
+                for tensor, grad in zip(self.grad_fn.inputs, grads):
+                    if tensor.requires_grad:
+                        if tensor.grad is None:
+                            tensor.grad = grad
+                        else:
+                            tensor.grad = tensor.grad + grad
+
+                        # Continue backward pass
+                        tensor.backward()
+        ### END SOLUTION
+
+    def new_add(self, other):
+        """
+        Enhanced addition that tracks gradients.
+
+        TODO: Implement addition with gradient tracking
+        """
+        ### BEGIN SOLUTION
+        # Use the gradient-tracking function
+        add_func = AddFunction()
+        result_data = add_func.forward(self, other)
+
+        # Create result tensor
+        requires_grad = self.requires_grad or (isinstance(other, Tensor) and other.requires_grad)
+        result = Tensor(result_data, requires_grad=requires_grad)
+
+        # Track computation graph
+        if requires_grad:
+            result.grad_fn = add_func
+            add_func.inputs = [self, other] if isinstance(other, Tensor) else [self]
+
+        return result
+        ### END SOLUTION
+
+    def new_mul(self, other):
+        """
+        Enhanced multiplication that tracks gradients.
+
+        TODO: Implement multiplication with gradient tracking
+        """
+        ### BEGIN SOLUTION
+        mul_func = MulFunction()
+        result_data = mul_func.forward(self, other)
+
+        requires_grad = self.requires_grad or (isinstance(other, Tensor) and other.requires_grad)
+        result = Tensor(result_data, requires_grad=requires_grad)
+
+        if requires_grad:
+            result.grad_fn = mul_func
+            mul_func.inputs = [self, other] if isinstance(other, Tensor) else [self]
+
+        return result
+        ### END SOLUTION
+
+    def new_matmul(self, other):
+        """
+        Enhanced matrix multiplication that tracks gradients.
+
+        TODO: Implement matmul with gradient tracking
+        """
+        ### BEGIN SOLUTION
+        if not isinstance(other, Tensor):
+            raise TypeError(f"Expected Tensor, got {type(other)}")
+
+        matmul_func = MatmulFunction()
+        result_data = matmul_func.forward(self, other)
+
+        requires_grad = self.requires_grad or other.requires_grad
+        result = Tensor(result_data, requires_grad=requires_grad)
+
+        if requires_grad:
+            result.grad_fn = matmul_func
+            matmul_func.inputs = [self, other]
+
+        return result
+        ### END SOLUTION
+
+    def new_sum(self, axis=None, keepdims=False):
+        """
+        Enhanced sum that tracks gradients.
+
+        TODO: Implement sum with gradient tracking
+        """
+        ### BEGIN SOLUTION
+        sum_func = SumFunction()
+        result_data = sum_func.forward(self, axis, keepdims)
+
+        result = Tensor(result_data, requires_grad=self.requires_grad)
+
+        if self.requires_grad:
+            result.grad_fn = sum_func
+            sum_func.inputs = [self]
+
+        return result
+        ### END SOLUTION
+
+    # Apply the enhancements to the Tensor class
+    Tensor.backward = backward
+    Tensor.__add__ = new_add
+    Tensor.__mul__ = new_mul
+    Tensor.matmul = new_matmul
+    Tensor.sum = new_sum
+
+    print("🚀 Tensor class enhanced with autograd capabilities!")
+
+# Apply the enhancements
+enhance_tensor_with_autograd()
+
+# %% [markdown]
+"""
+### 🔬 Unit Test: Tensor Autograd Enhancement
+This test validates our enhanced Tensor class computes gradients correctly.
+**What we're testing**: Gradient computation and chain rule implementation
+**Why it matters**: This is the core of automatic differentiation
+**Expected**: Correct gradients for various operations and computation graphs
+"""
+
+# %% nbgrader={"grade": true, "grade_id": "test-tensor-autograd", "locked": true, "points": 20}
+def test_unit_tensor_autograd():
+    """🔬 Test Tensor autograd enhancement."""
+    print("🔬 Unit Test: Tensor Autograd Enhancement...")
+
+    # Test simple gradient computation
+    x = Tensor([2.0], requires_grad=True)
+    y = x * 3
+    z = y + 1  # z = 3x + 1, so dz/dx = 3
+
+    z.backward()
+    assert np.allclose(x.grad, [3.0]), f"Expected [3.0], got {x.grad}"
+
+    # Test matrix multiplication gradients
+    a = Tensor([[1.0, 2.0]], requires_grad=True)  # 1x2
+    b = Tensor([[3.0], [4.0]], requires_grad=True)  # 2x1
+    c = a.matmul(b)  # 1x1, result = [[11.0]]
+
+    c.backward()
+    assert np.allclose(a.grad, [[3.0, 4.0]]), f"Expected [[3.0, 4.0]], got {a.grad}"
+    assert np.allclose(b.grad, [[1.0], [2.0]]), f"Expected [[1.0], [2.0]], got {b.grad}"
+
+    # Test computation graph with multiple operations
+    x = Tensor([1.0, 2.0], requires_grad=True)
+    y = x * 2      # y = [2, 4]
+    z = y.sum()    # z = 6
+
+    z.backward()
+    assert np.allclose(x.grad, [2.0, 2.0]), f"Expected [2.0, 2.0], got {x.grad}"
+
+    print("✅ Tensor autograd enhancement works correctly!")
+
+test_unit_tensor_autograd()
+
+# %% [markdown]
+"""
+## 4. Integration: Building Complex Computation Graphs
+
+Let's test how our autograd system handles complex neural network computations.
+
+### Complex Computation Graph Example
+
+Neural networks create complex computation graphs with shared parameters and multiple paths.
+
+**Detailed Neural Network Computation Graph:**
+```
+Forward Pass with Function Tracking:
+                    x (input)
+                    │ requires_grad=True
+           ┌────────▼────────┐
+           │ MatmulFunction  │ stores: (x, W₁)
+           │   h₁ = x @ W₁   │
+           └────────┬────────┘
+                    │ grad_fn=MatmulFunction
+           ┌────────▼────────┐
+           │  AddFunction    │ stores: (h₁, b₁)
+           │  z₁ = h₁ + b₁   │
+           └────────┬────────┘
+                    │ grad_fn=AddFunction
+           ┌────────▼────────┐
+           │  ReLU (manual)  │ Note: We'll implement
+           │ a₁ = max(0,z₁)  │ ReLUFunction later
+           └────────┬────────┘
+                    │
+           ┌────────▼────────┐
+           │ MatmulFunction  │ stores: (a₁, W₂)
+           │   h₂ = a₁ @ W₂  │
+           └────────┬────────┘
+                    │ grad_fn=MatmulFunction
+           ┌────────▼────────┐
+           │  AddFunction    │ stores: (h₂, b₂)
+           │   y = h₂ + b₂   │ (final output)
+           └─────────────────┘
+
+Backward Pass Chain Rule Application:
+                   ∇x ←─────────────────────────────┐
+                                                     │
+    ┌─────────────────────────────────────────────────────────┐
+    │ MatmulFunction.backward(∇h₁):                           │
+    │   ∇x = ∇h₁ @ W₁.T                                      │
+    │   ∇W₁ = x.T @ ∇h₁                                      │
+    └─────────────────┬───────────────────────────────────────┘
+                      │
+    ┌─────────────────▼───────────────────────────────────────┐
+    │ AddFunction.backward(∇z₁):                              │
+    │   ∇h₁ = ∇z₁  (gradient passes through unchanged)       │
+    │   ∇b₁ = ∇z₁                                            │
+    └─────────────────┬───────────────────────────────────────┘
+                      │
+    ┌─────────────────▼───────────────────────────────────────┐
+    │ Manual ReLU backward:                                   │
+    │   ∇z₁ = ∇a₁ * (z₁ > 0)  (zero out negative gradients) │
+    └─────────────────┬───────────────────────────────────────┘
+                      │
+    ┌─────────────────▼───────────────────────────────────────┐
+    │ MatmulFunction.backward(∇h₂):                           │
+    │   ∇a₁ = ∇h₂ @ W₂.T                                     │
+    │   ∇W₂ = a₁.T @ ∇h₂                                     │
+    └─────────────────┬───────────────────────────────────────┘
+                      │
+    ┌─────────────────▼───────────────────────────────────────┐
+    │ AddFunction.backward(∇y):                               │
+    │   ∇h₂ = ∇y  (gradient passes through unchanged)        │
+    │   ∇b₂ = ∇y                                             │
+    └─────────────────────────────────────────────────────────┘
+```
+
+**Key Autograd Concepts:**
+1. **Function Chaining**: Each operation creates a Function that stores inputs
+2. **Gradient Accumulation**: Multiple paths to a parameter accumulate gradients
+3. **Automatic Traversal**: backward() walks the graph in reverse topological order
+4. **Chain Rule**: Local gradients multiply according to calculus rules
+"""
+
+# %% nbgrader={"grade": false, "grade_id": "complex-graph-demo", "solution": true}
+def demonstrate_complex_computation_graph():
+    """
+    Demonstrate autograd on a complex computation graph.
+
+    This simulates a simple neural network forward and backward pass:
+    y = ReLU(x @ W1 + b1) @ W2 + b2
+    """
+    print("🔗 Integration Demo: Complex Computation Graph")
+    print("Simulating neural network: y = ReLU(x @ W1 + b1) @ W2 + b2")
+
+    # Create inputs with gradient tracking
+    x = Tensor([[1.0, 2.0, 3.0]], requires_grad=True)  # 1x3 input
+    W1 = Tensor([[0.1, 0.2], [0.3, 0.4], [0.5, 0.6]], requires_grad=True)  # 3x2 weights
+    b1 = Tensor([[0.1, 0.2]], requires_grad=True)  # 1x2 bias
+    W2 = Tensor([[0.7], [0.8]], requires_grad=True)  # 2x1 weights
+    b2 = Tensor([[0.1]], requires_grad=True)  # 1x1 bias
+
+    print(f"Input x: {x.data}")
+    print(f"W1 shape: {W1.shape}, W2 shape: {W2.shape}")
+
+    # Forward pass
+    z1 = x.matmul(W1) + b1  # Linear layer 1
+    print(f"After linear 1: {z1.data}")
+
+    # Simple ReLU (for now, until we implement proper ReLU autograd)
+    a1 = z1 * (z1.data > 0).astype(float)  # Manual ReLU approximation
+    print(f"After ReLU: {a1.data}")
+
+    z2 = a1.matmul(W2) + b2  # Linear layer 2
+    print(f"Final output: {z2.data}")
+
+    # Backward pass
+    z2.backward()
+
+    print(f"∂L/∂x: {x.grad}")
+    print(f"∂L/∂W1: {W1.grad}")
+    print(f"∂L/∂W2: {W2.grad}")
+
+    return z2
+
+demonstrate_complex_computation_graph()
+
+# %% [markdown]
+"""
+## 5. Systems Analysis: Memory and Performance of Autograd
+
+Understanding the computational and memory costs of automatic differentiation.
+
+### Autograd Memory Architecture
+
+**Memory Layout Comparison:**
+```
+Forward-Only Mode:
+┌─────────────┐
+│ Parameters  │ 4N bytes (float32)
+└─────────────┘
+
+Autograd Mode:
+┌─────────────┐
+│ Parameters  │ 4N bytes
+├─────────────┤
+│ Gradients   │ 4N bytes (additional)
+├─────────────┤
+│ Graph Nodes │ Variable overhead
+├─────────────┤
+│ Activations │ Depends on graph depth
+└─────────────┘
+Total: ~2-3× forward memory
+```
+
+**Computation Graph Memory Growth:**
+```
+Shallow Network (3 layers):
+  Graph: x → W₁ → ReLU → W₂ → ReLU → W₃ → loss
+  Memory: Base + 3 × (weights + activations)
+
+Deep Network (50 layers):
+  Graph: x → [W₁...W₅₀] → loss
+  Memory: Base + 50 × (weights + activations)
+
+Gradient Checkpointing (optimization):
+  Store only every K layers, recompute others
+  Memory: Base + K × (weights + activations)
+  Time: +20% compute, -80% memory
+```
+"""
+
+# %% nbgrader={"grade": false, "grade_id": "analyze-autograd-memory", "solution": true}
+def analyze_autograd_memory():
+    """📊 Analyze memory usage of autograd vs no-grad computation."""
+    print("📊 Analyzing Autograd Memory Usage...")
+
+    # Test different tensor sizes
+    sizes = [100, 500, 1000]
+
+    for size in sizes:
+        # Forward-only computation
+        x_no_grad = Tensor(np.random.randn(size, size), requires_grad=False)
+        y_no_grad = Tensor(np.random.randn(size, size), requires_grad=False)
+        z_no_grad = x_no_grad.matmul(y_no_grad)
+
+        # Forward + backward computation
+        x_grad = Tensor(np.random.randn(size, size), requires_grad=True)
+        y_grad = Tensor(np.random.randn(size, size), requires_grad=True)
+        z_grad = x_grad.matmul(y_grad)
+
+        # Memory analysis
+        no_grad_elements = x_no_grad.size + y_no_grad.size + z_no_grad.size
+        grad_elements = x_grad.size + y_grad.size + z_grad.size
+        grad_storage = x_grad.size + y_grad.size  # For gradients
+
+        print(f"Size {size}×{size}:")
+        print(f"  No grad: {no_grad_elements:,} elements")
+        print(f"  With grad: {grad_elements + grad_storage:,} elements")
+        print(f"  Memory overhead: {grad_storage / no_grad_elements:.1%}")
+
+    print("\n💡 Autograd Memory Pattern:")
+    print("- Each parameter tensor needs gradient storage (2× memory)")
+    print("- Computation graph nodes add overhead")
+    print("- Trade-off: 2× memory for automatic gradients")
+
+analyze_autograd_memory()
+
+# %% nbgrader={"grade": false, "grade_id": "analyze-gradient-computation", "solution": true}
+def analyze_gradient_computation():
+    """📊 Analyze computational cost of gradient computation."""
+    print("📊 Analyzing Gradient Computation Cost...")
 
     import time
 
-    # Test 1: Memory overhead analysis
-    print("💾 Memory Overhead Analysis:")
+    # Test computation times
+    size = 500
+    x = Tensor(np.random.randn(size, size), requires_grad=True)
+    y = Tensor(np.random.randn(size, size), requires_grad=True)
 
-    # Create tensors with and without gradient tracking
-    size = 1000
-    data = np.random.randn(size)
+    # Time forward pass
+    start_time = time.time()
+    z = x.matmul(y)
+    forward_time = time.time() - start_time
 
-    # Non-gradient tensor
-    no_grad_tensor = Tensor(data.copy(), requires_grad=False)
+    # Time backward pass
+    start_time = time.time()
+    z.backward()
+    backward_time = time.time() - start_time
 
-    # Gradient tensor
-    grad_tensor = Tensor(data.copy(), requires_grad=True)
+    print(f"Matrix size: {size}×{size}")
+    print(f"Forward pass: {forward_time:.4f}s")
+    print(f"Backward pass: {backward_time:.4f}s")
+    print(f"Backward/Forward ratio: {backward_time/forward_time:.1f}×")
 
-    print(f"   Tensor size: {size} elements")
-    print(f"   Base tensor: data only")
-    print(f"   Gradient tensor: data + grad storage + grad_fn")
-    print(f"   Memory overhead: ~3x (data + grad + computation graph)")
+    print(f"\n💡 Gradient Computation Analysis:")
+    print(f"- Forward: O(n³) matrix multiplication")
+    print(f"- Backward: 2× O(n³) operations (gradients for both inputs)")
+    print(f"- Total training cost: ~3× forward-only computation")
 
-    # Test 2: Computational overhead
-    print("\n⚡ Computational Overhead Analysis:")
-
-    x_no_grad = Tensor([2.0] * 100, requires_grad=False)
-    y_no_grad = Tensor([3.0] * 100, requires_grad=False)
-
-    x_grad = Tensor([2.0] * 100, requires_grad=True)
-    y_grad = Tensor([3.0] * 100, requires_grad=True)
-
-    # Time operations without gradients
-    start = time.perf_counter()
-    for _ in range(1000):
-        z = x_no_grad + y_no_grad
-        z = z * x_no_grad
-    no_grad_time = time.perf_counter() - start
-
-    # Time operations with gradients (forward only)
-    start = time.perf_counter()
-    for _ in range(1000):
-        z = x_grad + y_grad
-        z = z * x_grad
-    grad_forward_time = time.perf_counter() - start
-
-    print(f"   Operations without gradients: {no_grad_time*1000:.2f}ms")
-    print(f"   Operations with gradients: {grad_forward_time*1000:.2f}ms")
-    print(f"   Forward pass overhead: {grad_forward_time/no_grad_time:.1f}x")
-
-    print("\n   Performance Visualization:")
-    print("   ┌──────────────────────────────────────────────┐")
-    print("   │ Operation Timeline (forward pass)             │")
-    print("   ├──────────────────────────────────────────────┤")
-    print("   │ No gradients:  [████████████]                 │")
-    print("   │ With gradients: [████████████████████████]     │")
-    print("   │                 ↑ Math      ↑ Graph building │")
-    print("   └──────────────────────────────────────────────┘")
-
-    # Test 3: Expression complexity scaling
-    print("\n📈 Expression Complexity Scaling:")
-
-    def time_expression(depth, with_gradients=True):
-        """Time increasingly complex expressions."""
-        x = Tensor([2.0], requires_grad=with_gradients)
-        y = Tensor([3.0], requires_grad=with_gradients)
-
-        start = time.perf_counter()
-        result = x
-        for i in range(depth):
-            result = result + y
-            result = result * x
-
-        if with_gradients:
-            result.backward()
-
-        return time.perf_counter() - start
-
-    depths = [1, 5, 10, 20]
-    for depth in depths:
-        time_no_grad = time_expression(depth, False)
-        time_with_grad = time_expression(depth, True)
-        overhead = time_with_grad / time_no_grad
-
-        print(f"   Depth {depth:2d}: {time_no_grad*1000:.1f}ms → {time_with_grad*1000:.1f}ms ({overhead:.1f}x overhead)")
-
-    # Test 4: Gradient accumulation patterns
-    print("\n🔄 Gradient Accumulation Patterns:")
-
-    param = Tensor([1.0], requires_grad=True)
-
-    # Single large gradient vs multiple small gradients
-    param.grad = None
-    start = time.perf_counter()
-    large_loss = param * 100.0
-    large_loss.backward()
-    large_grad_time = time.perf_counter() - start
-    large_grad_value = param.grad.copy()
-
-    param.grad = None
-    start = time.perf_counter()
-    for i in range(100):
-        small_loss = param * 1.0
-        small_loss.backward()
-    small_grad_time = time.perf_counter() - start
-
-    print(f"   Single large gradient: {large_grad_time*1000:.3f}ms → grad={large_grad_value}")
-    print(f"   100 small gradients: {small_grad_time*1000:.3f}ms → grad={param.grad}")
-    print(f"   Accumulation overhead: {small_grad_time/large_grad_time:.1f}x")
-
-    print("\n   Gradient Accumulation Pattern:")
-    print("   ┌──────────────────────────────────────────────────────┐")
-    print("   │ Multiple Loss Sources → Same Parameter:              │")
-    print("   ├──────────────────────────────────────────────────────┤")
-    print("   │                                                      │")
-    print("   │ Loss₁ ──→ grad₁(2.0) ──┐                           │")
-    print("   │                         ├─[+]→ param.grad = 5.0     │")
-    print("   │ Loss₂ ──→ grad₂(3.0) ──┘                           │")
-    print("   │                                                      │")
-    print("   │ Real Example: Same embedding used in encoder         │")
-    print("   │ AND decoder gets gradients from both paths!         │")
-    print("   └──────────────────────────────────────────────────────┘")
-
-    print("\n💡 AUTOGRAD INSIGHTS:")
-    print("   ┌───────────────────────────────────────────────────────────┐")
-    print("   │ Autograd Performance Characteristics                        │")
-    print("   ├───────────────────────────────────────────────────────────┤")
-    print("   │ Memory Usage:                                               │")
-    print("   │   • Base tensor: 1x (data only)                           │")
-    print("   │   • Gradient tensor: 2x (data + gradients)                │")
-    print("   │   • Computation graph: +O(depth) intermediate tensors      │")
-    print("   │                                                             │")
-    print("   │ Computational Overhead:                                     │")
-    print("   │   • Forward pass: ~2x (math + graph building)             │")
-    print("   │   • Backward pass: ~1x additional                         │")
-    print("   │   • Total training: ~3x vs inference-only                 │")
-    print("   │                                                             │")
-    print("   │ Scaling Behavior:                                           │")
-    print("   │   • Expression depth: O(n) memory growth                  │")
-    print("   │   • Gradient accumulation: O(1) per accumulation          │")
-    print("   │   • Deep networks: Memory freed after backward()          │")
-    print("   └───────────────────────────────────────────────────────────┘")
-    print("")
-    print("   🚀 Production Implications:")
-    print("   • Memory: Gradient tracking doubles memory usage (data + gradients)")
-    print("   • Forward pass: ~2x computational overhead for gradient graph building")
-    print("   • Backward pass: Additional ~1x computation time")
-    print("   • Expression depth: Overhead scales linearly with computation graph depth")
-    print("   • Gradient accumulation: Small overhead per accumulation operation")
-    print("   • Production impact: Why PyTorch offers torch.no_grad() for inference!")
-
-analyze_autograd_behavior()
+analyze_gradient_computation()
 
 # %% [markdown]
 """
@@ -1234,26 +1233,98 @@ analyze_autograd_behavior()
 Final validation that everything works together correctly.
 """
 
-# %%
+# %% nbgrader={"grade": true, "grade_id": "module-integration", "locked": true, "points": 25}
 def test_module():
     """
-    Comprehensive test of entire autograd module functionality.
+    Comprehensive test of entire module functionality.
 
     This final test runs before module summary to ensure:
-    - All components work correctly
-    - Integration with existing tensor operations
-    - Ready for use in neural network training
+    - All unit tests pass
+    - Autograd works for complex computation graphs
+    - Module is ready for integration with TinyTorch
     """
     print("🧪 RUNNING MODULE INTEGRATION TEST")
     print("=" * 50)
 
-    print("Running all unit tests...")
-    test_step1_gradient_attributes()
-    test_step2_backward_method()
-    test_step3_smart_addition()
-    test_step4_smart_multiplication()
-    test_step5_chain_rule_magic()
-    test_step6_integration_complete()
+    # Run all unit tests
+    print("Running unit tests...")
+    test_unit_function_base()
+    test_unit_operation_functions()
+    test_unit_tensor_autograd()
+
+    print("\nRunning integration scenarios...")
+
+    # Test 1: Multi-layer computation graph
+    print("🔬 Integration Test: Multi-layer Neural Network...")
+
+    # Create a 3-layer computation: x -> Linear -> Linear -> Linear -> loss
+    x = Tensor([[1.0, 2.0]], requires_grad=True)
+    W1 = Tensor([[0.5, 0.3, 0.1], [0.2, 0.4, 0.6]], requires_grad=True)
+    b1 = Tensor([[0.1, 0.2, 0.3]], requires_grad=True)
+
+    # First layer
+    h1 = x.matmul(W1) + b1
+    assert h1.shape == (1, 3)
+    assert h1.requires_grad == True
+
+    # Second layer
+    W2 = Tensor([[0.1], [0.2], [0.3]], requires_grad=True)
+    h2 = h1.matmul(W2)
+    assert h2.shape == (1, 1)
+
+    # Compute simple loss (just square the output for testing)
+    loss = h2 * h2
+
+    # Backward pass
+    loss.backward()
+
+    # Verify all parameters have gradients
+    assert x.grad is not None
+    assert W1.grad is not None
+    assert b1.grad is not None
+    assert W2.grad is not None
+    assert x.grad.shape == x.shape
+    assert W1.grad.shape == W1.shape
+
+    print("✅ Multi-layer neural network gradients work!")
+
+    # Test 2: Gradient accumulation
+    print("🔬 Integration Test: Gradient Accumulation...")
+
+    x = Tensor([2.0], requires_grad=True)
+
+    # First computation
+    y1 = x * 3
+    y1.backward()
+    first_grad = x.grad.copy()
+
+    # Second computation (should accumulate)
+    y2 = x * 5
+    y2.backward()
+
+    assert np.allclose(x.grad, first_grad + 5.0), "Gradients should accumulate"
+    print("✅ Gradient accumulation works!")
+
+    # Test 3: Complex mathematical operations
+    print("🔬 Integration Test: Complex Operations...")
+
+    a = Tensor([[1.0, 2.0], [3.0, 4.0]], requires_grad=True)
+    b = Tensor([[2.0, 1.0], [1.0, 2.0]], requires_grad=True)
+
+    # Complex computation: ((a @ b) + a) * b
+    temp1 = a.matmul(b)  # Matrix multiplication
+    temp2 = temp1 + a    # Addition
+    result = temp2 * b   # Element-wise multiplication
+    final = result.sum() # Sum reduction
+
+    final.backward()
+
+    assert a.grad is not None
+    assert b.grad is not None
+    assert a.grad.shape == a.shape
+    assert b.grad.shape == b.shape
+
+    print("✅ Complex mathematical operations work!")
 
     print("\n" + "=" * 50)
     print("🎉 ALL TESTS PASSED! Module ready for export.")
@@ -1269,367 +1340,86 @@ if __name__ == "__main__":
 
 # %% [markdown]
 """
-## 🤔 ML Systems Thinking: Interactive Questions
+## 🤔 ML Systems Thinking: Autograd Systems
 
-### Question 1: Memory Management in Gradient Computation
-
-Your autograd implementation stores references to input tensors through grad_fn closures. In a deep neural network with 50 layers, each layer creates intermediate tensors with gradient functions.
-
-```
-    Memory Growth in Deep Networks:
-
-    Layer 1: x₁ → f₁(x₁) → h₁  ░░░░░░░░░░░░░░░░░░░░░░░░░░┐
-             ↑               ↑                            │
-             └─ stored ──────┘ h₁.grad_fn keeps x₁ alive │
-                                                          │
-    Layer 2: h₁ → f₂(h₁) → h₂  ░░░░░░░░░░░░░░░░░░░░░░░░░┐ │
-             ↑               ↑                          │ │
-             └─ stored ──────┘ h₂.grad_fn keeps h₁ alive │ │
-                                                        │ │
-    ...                                                 │ │
-                                                        │ │
-    Layer 50: h₄₉ → f₅₀(h₄₉) → h₅₀                      │ │
-                                ↑                       │ │
-                                └─ loss.backward() ────┼─┼─┐
-                                                        │ │ │
-    Peak Memory: All h₁, h₂, ..., h₄₉ kept alive       │ │ │
-    until backward() traverses the entire graph! ──────┘ │ │
-                                                          │ │
-    After backward(): Memory freed in reverse order ─────┘ │
-                     (Python garbage collection)          │
-                                                          │
-    Memory = O(network_depth) until backward() completes ─┘
-```
-
-**Analysis Task**: Examine how your gradient tracking affects memory usage patterns.
-
-**Specific Questions**:
-- How does memory usage scale with network depth in your implementation?
-- What happens to memory when you call `backward()` on the final loss?
-- Why do production frameworks implement "gradient checkpointing"?
-
-**Implementation Connection**: Look at how your `grad_fn` closures capture references to input tensors and consider memory implications for deep networks.
+Now that you've implemented automatic differentiation, let's explore the systems implications.
 """
 
-# %% nbgrader={"grade": true, "grade_id": "memory-management", "locked": false, "points": 10, "schema_version": 3, "solution": true, "task": false}
+# %% nbgrader={"grade": false, "grade_id": "systems-q1", "solution": true}
+# %% [markdown]
 """
-TODO: Analyze memory management in your gradient computation system.
+### Question 1: Memory Trade-offs in Autograd
+Your autograd implementation requires storing computation graphs and gradients.
 
-Consider how your grad_fn closures store references to input tensors and
-how this affects memory usage in deep networks.
+**a) Memory Scaling**: For a neural network with 10M parameters, autograd requires storing:
+- Parameters: 10M × 4 bytes = 40MB
+- Gradients: 10M × 4 bytes = 40MB
+- Computation graph: _____ additional memory (estimate the overhead)
+
+**b) Memory vs. Compute Trade-off**: What's the alternative to storing the full computation graph, and what are the trade-offs?
+
+*Consider: gradient checkpointing, recomputation strategies, and memory-time trade-offs*
 """
-### BEGIN SOLUTION
-# Memory management analysis:
 
-# 1. Memory scaling with network depth:
-# - Each operation creates a tensor with grad_fn that references input tensors
-# - In 50-layer network: 50 intermediate tensors + their grad_fn closures
-# - Each grad_fn keeps input tensors alive in memory
-# - Memory grows O(depth) for intermediate activations
+# %% nbgrader={"grade": false, "grade_id": "systems-q2", "solution": true}
+# %% [markdown]
+"""
+### Question 2: Computational Complexity Analysis
+Your backward pass computes gradients for every operation in reverse order.
 
-# 2. Memory behavior during backward():
-# - Forward pass: Builds computation graph, keeps all intermediates
-# - Backward pass: Traverses graph but doesn't immediately free memory
-# - Python's garbage collector frees tensors after no references remain
-# - Peak memory occurs at end of forward pass
+**a) Time Complexity**: For a matrix multiplication of size (N×N) @ (N×N), you measured that backward takes ~2× forward time. Why exactly 2×?
 
-# 3. Gradient checkpointing solution:
-# - Trade compute for memory: store only subset of activations
-# - Recompute intermediate activations during backward pass
-# - Reduces memory from O(depth) to O(sqrt(depth))
-# - Essential for training very deep networks
+**b) Scaling Behavior**: In a transformer with L layers, each doing attention (O(n²)) and MLPs (O(n)), how does backward pass time scale with:
+- Sequence length n: _____
+- Number of layers L: _____
 
-# Production implementations:
-# - PyTorch: torch.utils.checkpoint for gradient checkpointing
-# - TensorFlow: tf.recompute_grad decorator
-# - Custom: Clear computation graph after backward pass
+*Think about: chain rule propagation, operation complexity, and total computational graph*
+"""
 
-# Memory optimization strategies:
-# 1. In-place operations where mathematically safe
-# 2. Clear gradients regularly: param.grad = None
-# 3. Use torch.no_grad() for inference
-# 4. Implement custom backward functions for memory efficiency
-### END SOLUTION
+# %% nbgrader={"grade": false, "grade_id": "systems-q3", "solution": true}
+# %% [markdown]
+"""
+### Question 3: Numerical Stability in Gradients
+Your implementation accumulates gradients through multiple operations.
+
+**a) Gradient Explosion**: In a very deep network (100+ layers), gradients can grow exponentially. What specific part of your chain rule implementation could cause this?
+
+**b) Gradient Vanishing**: Conversely, what operations tend to make gradients shrink to zero, and how does this relate to your backward functions?
+
+*Consider: multiplication chains, activation functions, and numerical precision limits*
+"""
+
+# %% nbgrader={"grade": false, "grade_id": "systems-q4", "solution": true}
+# %% [markdown]
+"""
+### Question 4: Production Autograd Optimizations
+Your implementation prioritizes clarity over performance. Real systems need optimizations.
+
+**a) Graph Optimization**: PyTorch and other frameworks optimize computation graphs before execution. What redundancies in your implementation could be eliminated?
+
+**b) Memory Efficiency**: What specific autograd memory optimizations could reduce the 2× memory overhead you measured?
+
+*Think about: graph fusion, in-place operations, gradient checkpointing, and smart memory management*
+"""
 
 # %% [markdown]
 """
-### Question 2: Computational Graph Optimization
+## 🎯 MODULE SUMMARY: Autograd Engine
 
-Your autograd system builds computation graphs dynamically. Each operation creates a new tensor with its own grad_fn.
+Congratulations! You've built the gradient engine that makes neural networks learn!
 
-**Analysis Task**: Identify opportunities for optimizing computational graphs to reduce overhead.
+### Key Accomplishments
+- Implemented Function base class for tracking differentiable operations
+- Enhanced existing Tensor class with backward() method (no new classes!)
+- Built computation graph tracking for automatic differentiation
+- Created operation functions (Add, Mul, Matmul, Sum) with correct gradients
+- Tested complex multi-layer computation graphs with gradient propagation
+- All tests pass ✅ (validated by `test_module()`)
 
-**Specific Questions**:
-- Which operations could be fused together to reduce intermediate tensor creation?
-- How would operator fusion affect gradient computation correctness?
-- What trade-offs exist between graph complexity and performance?
+### Ready for Next Steps
+Your autograd implementation enables optimization! The dormant gradient features from Module 01 are now fully active. Every tensor can track gradients, every operation builds computation graphs, and backward() computes gradients automatically.
 
-**Implementation Connection**: Examine your operation functions and consider where computation could be optimized while maintaining gradient correctness.
-"""
+Export with: `tito module complete 05_autograd`
 
-# %% nbgrader={"grade": true, "grade_id": "graph-optimization", "locked": false, "points": 10, "schema_version": 3, "solution": true, "task": false}
-"""
-TODO: Design computational graph optimizations for your autograd system.
-
-Consider how operations could be fused or optimized while maintaining
-gradient correctness.
-"""
-### BEGIN SOLUTION
-# Computational graph optimization strategies:
-
-# 1. Operation fusion opportunities:
-# Current: z = (x + y) * w creates 2 tensors (intermediate + result)
-# Optimized: Single "fused_add_mul" operation creates 1 tensor
-
-def fused_add_multiply(x, y, w):
-    """Fused operation: (x + y) * w"""
-    # Direct computation without intermediate tensor
-    result_data = (x.data + y.data) * w.data
-    result = Tensor(result_data, requires_grad=True)
-
-    def grad_fn(gradient):
-        if x.requires_grad:
-            x.backward(gradient * w.data)  # Chain rule
-        if y.requires_grad:
-            y.backward(gradient * w.data)
-        if w.requires_grad:
-            w.backward(gradient * (x.data + y.data))
-
-    result.grad_fn = grad_fn
-    return result
-
-# 2. Safe fusion patterns:
-# - Element-wise operations: add + mul + relu → single kernel
-# - Linear operations: matmul + bias_add → single operation
-# - Activation chains: sigmoid + multiply → swish activation
-
-# 3. Gradient correctness preservation:
-# - Fusion must preserve mathematical equivalence
-# - Chain rule application remains identical
-# - Numerical stability must be maintained
-
-# 4. Trade-offs analysis:
-# Memory: Fewer intermediate tensors reduces memory usage
-# Compute: Fused operations can be more cache-efficient
-# Complexity: Harder to debug fused operations
-# Flexibility: Less modular, harder to optimize individual ops
-
-# 5. Production techniques:
-# - TensorFlow XLA: Ahead-of-time fusion optimization
-# - PyTorch JIT: Runtime graph optimization
-# - ONNX: Graph optimization passes for deployment
-# - Custom CUDA kernels: Maximum performance for common patterns
-
-# Example optimization for common pattern:
-class OptimizedLinear:
-    def forward(x, weight, bias):
-        # Fused: matmul + bias_add + activation
-        return activation(x @ weight + bias)  # Single backward pass
-
-# Memory-efficient alternative:
-class CheckpointedOperation:
-    def forward(inputs):
-        # Store only inputs, recompute intermediate during backward
-        return complex_computation(inputs)
-### END SOLUTION
-
-# %% [markdown]
-"""
-### Question 3: Gradient Flow Analysis
-
-In your autograd implementation, gradients flow backward through the computation graph via the chain rule.
-
-```
-    Gradient Magnitude Changes Through Operations:
-
-    Addition Preserves Magnitudes:           Multiplication Scales Magnitudes:
-    ┌─────────────────────────────┐         ┌─────────────────────────────────┐
-    │ x(0.1) ──┐                 │         │ x(0.1) ──┐                     │
-    │          ├─[+]─→ z(10.1)   │         │          ├─[×]─→ z(1.0)       │
-    │ y(10.0) ─┘     ↑           │         │ y(10.0) ─┘     ↑               │
-    │                │           │         │                │               │
-    │                grad=1.0    │         │                grad=1.0        │
-    │                ↓           │         │                ↓               │
-    │ x.grad ←─ 1.0 (unchanged)  │         │ x.grad ←─ 10.0 (scaled by y!) │
-    │ y.grad ←─ 1.0 (unchanged)  │         │ y.grad ←─ 0.1 (scaled by x!)  │
-    └─────────────────────────────┘         └─────────────────────────────────┘
-
-    Deep Network Gradient Flow Problems:
-
-    Vanishing Gradients:                    Exploding Gradients:
-    ┌──────────────────────────────┐       ┌──────────────────────────────┐
-    │ Layer 1: grad ← 1.0          │       │ Layer 1: grad ← 1.0          │
-    │         ↓ ×0.1 (small weight)│       │         ↓ ×3.0 (large weight)│
-    │ Layer 2: grad ← 0.1          │       │ Layer 2: grad ← 3.0          │
-    │         ↓ ×0.1               │       │         ↓ ×3.0               │
-    │ Layer 3: grad ← 0.01         │       │ Layer 3: grad ← 9.0          │
-    │         ↓ ×0.1               │       │         ↓ ×3.0               │
-    │ Layer 4: grad ← 0.001        │       │ Layer 4: grad ← 27.0         │
-    │         ↓                    │       │         ↓                    │
-    │ Final: grad ≈ 0 (vanished!)  │       │ Final: grad → ∞ (exploded!)  │
-    └──────────────────────────────┘       └──────────────────────────────┘
-```
-
-**Analysis Task**: Analyze how gradient magnitudes change as they flow through different types of operations.
-
-**Specific Questions**:
-- How do gradients change magnitude when flowing through multiplication vs addition?
-- What causes vanishing or exploding gradients in deep networks?
-- How would you detect and mitigate gradient flow problems?
-
-**Implementation Connection**: Consider how your product rule implementation in multiplication affects gradient magnitudes compared to your addition implementation.
-"""
-
-# %% nbgrader={"grade": true, "grade_id": "gradient-flow", "locked": false, "points": 10, "schema_version": 3, "solution": true, "task": false}
-"""
-TODO: Analyze gradient flow patterns in your autograd implementation.
-
-Examine how different operations affect gradient magnitudes and identify
-potential gradient flow problems.
-"""
-### BEGIN SOLUTION
-# Gradient flow analysis:
-
-# 1. Gradient magnitude changes by operation:
-
-# Addition: z = x + y
-# ∂z/∂x = 1, ∂z/∂y = 1
-# Gradients pass through unchanged - magnitude preserved
-
-# Multiplication: z = x * y
-# ∂z/∂x = y, ∂z/∂y = x
-# Gradients scaled by other operand - magnitude can grow/shrink dramatically
-
-# Example analysis:
-def analyze_gradient_flow():
-    x = Tensor([0.1], requires_grad=True)  # Small value
-    y = Tensor([10.0], requires_grad=True)  # Large value
-
-    # Addition preserves gradients
-    z1 = x + y
-    z1.backward()
-    print(f"Addition: x.grad={x.grad}, y.grad={y.grad}")  # Both [1.0]
-
-    x.grad = None; y.grad = None
-
-    # Multiplication scales gradients
-    z2 = x * y
-    z2.backward()
-    print(f"Multiplication: x.grad={x.grad}, y.grad={y.grad}")  # [10.0], [0.1]
-
-# 2. Vanishing gradient causes:
-# - Many multiplications by small values (< 1.0)
-# - Deep networks: gradient = ∏(∂Li/∂Li-1) → 0 as depth increases
-# - Activation functions with small derivatives (sigmoid saturation)
-
-# 3. Exploding gradient causes:
-# - Many multiplications by large values (> 1.0)
-# - Poor weight initialization
-# - High learning rates
-
-# 4. Detection strategies:
-def detect_gradient_problems(model_parameters):
-    """Detect vanishing/exploding gradients"""
-    grad_norms = []
-    for param in model_parameters:
-        if param.grad is not None:
-            grad_norm = np.linalg.norm(param.grad)
-            grad_norms.append(grad_norm)
-
-    max_norm = max(grad_norms) if grad_norms else 0
-    min_norm = min(grad_norms) if grad_norms else 0
-
-    if max_norm > 10.0:
-        print("⚠️  Exploding gradients detected!")
-    if max_norm < 1e-6:
-        print("⚠️  Vanishing gradients detected!")
-
-    return grad_norms
-
-# 5. Mitigation strategies:
-# Gradient clipping for exploding gradients:
-def clip_gradients(parameters, max_norm=1.0):
-    total_norm = 0
-    for param in parameters:
-        if param.grad is not None:
-            total_norm += np.sum(param.grad ** 2)
-    total_norm = np.sqrt(total_norm)
-
-    if total_norm > max_norm:
-        clip_factor = max_norm / total_norm
-        for param in parameters:
-            if param.grad is not None:
-                param.grad = param.grad * clip_factor
-
-# Better weight initialization for vanishing gradients:
-# - Xavier/Glorot initialization
-# - He initialization for ReLU networks
-# - Layer normalization to control activations
-
-# Architectural solutions:
-# - Skip connections (ResNet)
-# - LSTM gates for sequences
-# - Careful activation function choice (ReLU vs sigmoid)
-### END SOLUTION
-
-# %% [markdown]
-"""
-## 🎯 MODULE SUMMARY: Autograd - Incremental Automatic Differentiation
-
-Congratulations! You've built a complete automatic differentiation system through six manageable steps!
-
-### What You've Accomplished
-✅ **Step-by-Step Enhancement**: Added gradient tracking to existing Tensor class without breaking any functionality
-✅ **Gradient Memory**: Tensors now store gradients and backward functions (Step 1-2)
-✅ **Smart Operations**: Addition, multiplication, and subtraction automatically track gradients (Steps 3-4)
-✅ **Chain Rule Magic**: Complex expressions compute gradients automatically through the entire computation graph (Step 5)
-✅ **Complete Integration**: Full autograd system ready for neural network training (Step 6)
-✅ **Systems Understanding**: Memory overhead analysis and performance characteristics
-
-### Key Learning Outcomes
-- **Incremental Development**: How to enhance complex systems step by step with immediate validation
-- **Chain Rule Implementation**: Automatic gradient computation through mathematical expressions
-- **Software Architecture**: Safe enhancement of existing classes without breaking functionality
-- **Memory Management**: Understanding computational graph storage and gradient accumulation patterns
-- **Production Insights**: How real ML frameworks implement automatic differentiation
-
-### Technical Foundations Mastered
-- **Gradient Tracking**: `requires_grad`, `grad`, and `grad_fn` attributes for automatic differentiation
-- **Backward Propagation**: Automatic chain rule application through computation graphs
-- **Product Rule**: Correct gradient computation for multiplication operations
-- **Gradient Accumulation**: Proper handling of multiple backward passes
-- **Error Handling**: Robust validation for gradient computation requirements
-
-### Professional Skills Developed
-- **Incremental Enhancement**: Adding complex features through small, testable steps
-- **Immediate Feedback**: Validating each enhancement before proceeding to next step
-- **Backward Compatibility**: Ensuring existing functionality remains intact
-- **Systems Analysis**: Understanding memory and performance implications of design choices
-
-### Ready for Advanced Applications
-Your enhanced Tensor class enables:
-- **Neural Network Training**: Automatic gradient computation for parameter updates
-- **Optimization Algorithms**: Foundation for SGD, Adam, and other optimizers (Module 06)
-- **Complex Architectures**: Support for any differentiable computation graph
-- **Research Applications**: Building and experimenting with novel ML architectures
-
-### Connection to Real ML Systems
-Your incremental approach mirrors production development:
-- **PyTorch Evolution**: Similar step-by-step enhancement from pure tensors to autograd-capable tensors
-- **TensorFlow 2.0**: Eager execution with automatic differentiation follows similar patterns
-- **Professional Development**: Industry standard for adding complex features safely
-- **Debugging Friendly**: Step-by-step approach makes gradient computation errors easier to trace
-
-### Performance Characteristics Discovered
-- **Memory Overhead**: ~2x memory usage (data + gradients + computation graph)
-- **Computational Overhead**: ~2x forward pass time for gradient graph building
-- **Scaling Behavior**: Linear scaling with computation graph depth
-- **Optimization Opportunities**: Operation fusion and gradient checkpointing potential
-
-### Next Steps
-1. **Export your module**: `tito module complete 05_autograd`
-2. **Validate integration**: All previous tensor operations still work + new gradient features
-3. **Ready for Module 06**: Optimizers will use these gradients to train neural networks!
-
-**🚀 Achievement Unlocked**: You've mastered incremental software enhancement - building complex systems through small, immediately rewarding steps. This is exactly how professional ML engineers develop production systems!
+**Next**: Module 06 will add optimizers (SGD, Adam) that use these gradients to actually train neural networks!
 """

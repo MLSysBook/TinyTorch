@@ -6,2999 +6,1517 @@
 #       format_name: percent
 #       format_version: '1.3'
 #       jupytext_version: 1.17.1
+#   kernelspec:
+#     display_name: Python 3 (ipykernel)
+#     language: python
+#     name: python3
 # ---
 
 # %% [markdown]
 """
-# Optimizers - Making Networks Learn Efficiently
+# Module 06: Optimizers - Sophisticated Learning Algorithms
 
-Welcome to Optimizers! You'll implement the algorithms that actually make neural networks learn!
+Welcome to Module 06! You'll build optimizers that enable neural networks to learn from gradients using sophisticated algorithms.
 
-## LINK Building on Previous Learning
-**What You Built Before**:
-- Module 02 (Tensor): Data structures that hold parameters
-- Module 06 (Autograd): Automatic gradient computation
-
-**What's Working**: You can compute gradients for any computation graph automatically!
-
-**The Gap**: Gradients tell you the direction to improve, but not HOW to update parameters efficiently.
-
-**This Module's Solution**: Implement SGD, Momentum, and Adam to update parameters intelligently.
+## 🔗 Prerequisites & Progress
+**You've Built**: Tensor with gradients (Modules 01-05)
+**You'll Build**: SGD, Adam, and AdamW optimizers with sophisticated momentum and adaptive learning
+**You'll Enable**: Modern optimization algorithms that power state-of-the-art neural networks
 
 **Connection Map**:
 ```
-Autograd -> Optimizers -> Training Loop
-(gradL/gradθ)   (θ = θ - αgrad)  (iterate until convergence)
+Gradients → Optimizers → Training
+(Module 05)  (Module 06)  (Module 07)
 ```
 
-## Learning Goals (Your 5-Point Framework)
-- Systems understanding: Memory/performance/scaling implications of different optimizers
-- Core implementation skill: Build SGD and Adam from mathematical foundations
-- Pattern/abstraction mastery: Understand optimizer base class patterns
-- Framework connections: See how your implementations match PyTorch's optim module
-- Optimization trade-offs: When to use SGD vs Adam vs other optimizers
+## Learning Objectives
+By the end of this module, you will:
+1. Implement SGD with momentum for stable gradient descent
+2. Build Adam optimizer with adaptive learning rates
+3. Create AdamW optimizer with decoupled weight decay
+4. Understand memory and computational trade-offs in optimization algorithms
 
-## Build -> Use -> Reflect
-1. **Build**: Complete SGD and Adam optimizers with proper state management
-2. **Use**: Train neural networks and compare convergence behavior
-3. **Reflect**: Why do some optimizers work better and use different memory?
+Let's get started!
 
-## Systems Reality Check
-TIP **Production Context**: PyTorch's Adam uses numerically stable variants and can scale learning rates automatically
-SPEED **Performance Insight**: Adam stores momentum + velocity for every parameter = 3* memory overhead vs SGD
-"""
+## 📦 Where This Code Lives in the Final Package
 
-# %% nbgrader={"grade": false, "grade_id": "optimizers-imports", "locked": false, "schema_version": 3, "solution": false, "task": false}
-#| default_exp core.optimizers
-
-#| export
-import numpy as np
-import sys
-import os
-from typing import List, Dict, Any, Optional, Union
-from collections import defaultdict
-
-# Helper function to set up import paths
-def setup_import_paths():
-    """Set up import paths for development modules."""
-    import sys
-    import os
-    
-    # Add module directories to path
-    base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    tensor_dir = os.path.join(base_dir, '01_tensor')
-    autograd_dir = os.path.join(base_dir, '06_autograd')
-    
-    if tensor_dir not in sys.path:
-        sys.path.append(tensor_dir)
-    if autograd_dir not in sys.path:
-        sys.path.append(autograd_dir)
-
-# Import our existing components
-try:
-    from tinytorch.core.tensor import Tensor
-    from tinytorch.core.autograd import Variable
-except ImportError:
-    # For development, try local imports
-    try:
-        setup_import_paths()
-        from tensor_dev import Tensor
-        from autograd_dev import Variable
-    except ImportError:
-        # Create simplified fallback classes for basic gradient operations
-        print("Warning: Using simplified classes for basic gradient operations")
-        
-        class Tensor:
-            def __init__(self, data):
-                self.data = np.array(data)
-                self.shape = self.data.shape
-            
-            def __str__(self):
-                return f"Tensor({self.data})"
-        
-        class Variable:
-            def __init__(self, data, requires_grad=True):
-                if isinstance(data, (int, float)):
-                    self.data = Tensor([data])
-                else:
-                    self.data = Tensor(data)
-                self.requires_grad = requires_grad
-                self.grad = None
-            
-            def zero_grad(self):
-                """Reset gradients to None (basic operation from Module 6)"""
-                self.grad = None
-            
-            def __str__(self):
-                return f"Variable({self.data.data})"
-
-# %% nbgrader={"grade": false, "grade_id": "optimizers-setup", "locked": false, "schema_version": 3, "solution": false, "task": false}
-print("FIRE TinyTorch Optimizers Module")
-print(f"NumPy version: {np.__version__}")
-print(f"Python version: {sys.version_info.major}.{sys.version_info.minor}")
-print("Ready to build optimization algorithms!")
-
-# %% 
-#| export
-def get_param_data(param):
-    """Get parameter data in consistent format."""
-    if hasattr(param, 'data') and hasattr(param.data, 'data'):
-        return param.data.data
-    elif hasattr(param, 'data'):
-        return param.data
-    else:
-        return param
-
-#| export
-def set_param_data(param, new_data):
-    """Set parameter data in consistent format."""
-    if hasattr(param, 'data') and hasattr(param.data, 'data'):
-        param.data.data = new_data
-    elif hasattr(param, 'data'):
-        param.data = new_data
-    else:
-        param = new_data
-
-#| export  
-def get_grad_data(param):
-    """Get gradient data in consistent format."""
-    if param.grad is None:
-        return None
-    if hasattr(param.grad, 'data') and hasattr(param.grad.data, 'data'):
-        return param.grad.data.data
-    elif hasattr(param.grad, 'data'):
-        return param.grad.data
-    else:
-        return param.grad
-
-# %% [markdown]
-"""
-## PACKAGE Where This Code Lives in the Final Package
-
-**Learning Side:** You work in `modules/source/07_optimizers/optimizers_dev.py`  
-**Building Side:** Code exports to `tinytorch.core.optimizers`
+**Learning Side:** You work in modules/06_optimizers/optimizers_dev.py
+**Building Side:** Code exports to tinytorch.core.optimizers
 
 ```python
 # Final package structure:
-from tinytorch.core.optimizers import SGD, Adam, StepLR  # The optimization engines!
-from tinytorch.core.autograd import Variable  # Gradient computation
-from tinytorch.core.tensor import Tensor  # Data structures
+from tinytorch.core.optimizers import SGD, Adam, AdamW  # This module
+from tinytorch.core.tensor import Tensor  # Foundation from Module 01
+from tinytorch.core.layers import Linear  # Layers from Module 03
 ```
 
 **Why this matters:**
-- **Learning:** Focused module for understanding optimization algorithms
-- **Production:** Proper organization like PyTorch's `torch.optim`
-- **Consistency:** All optimization algorithms live together in `core.optimizers`
-- **Foundation:** Enables effective neural network training
+- **Learning:** Complete optimization system for modern neural network training
+- **Production:** Proper organization like PyTorch's torch.optim with all optimization algorithms together
+- **Consistency:** All optimization logic and parameter updating in core.optimizers
+- **Integration:** Works seamlessly with gradients from Module 05 for complete training capability
 """
+
+# %% nbgrader={"grade": false, "grade_id": "imports", "solution": true}
+#| default_exp core.optimizers
+
+import numpy as np
+from typing import List, Union, Optional, Dict, Any
+
+# Import Tensor from Module 01 (now with gradient support from Module 05)
+try:
+    from tinytorch.core.tensor import Tensor
+except ImportError:
+    # For development, assume we have the enhanced Tensor
+    import sys
+    import os
+    sys.path.append(os.path.join(os.path.dirname(__file__), '..', '01_tensor'))
+    from tensor_dev import Tensor
 
 # %% [markdown]
 """
-## What Are Optimizers?
+## 1. Introduction: What are Optimizers?
 
-### Visual: The Optimization Landscape
-```
-High-dimensional loss surface (imagine in 3D):
+Optimizers are the engines that drive neural network learning. They take gradients computed from your loss function and use them to update model parameters toward better solutions. Think of optimization as navigating a complex landscape where you're trying to find the lowest valley (minimum loss).
 
-    Loss
-     ^
-     |     +-+     +-+
-     |    /   \\   /   \\     <- Local minima
-     |   /     \\ /     \\
-     |  /       \\/       \\
-     | /                 \\
-     |/                   \
-     +--------------------------> Parameters
+### The Optimization Challenge
 
-SGD path:     ↘↗↘↗↘↗↘     (oscillating)
-Adam path:    ↘->->->->●      (smooth to optimum)
-```
-
-### The Problem: How to Navigate Parameter Space
-Neural networks learn by updating millions of parameters using gradients:
-```
-parameter_new = parameter_old - learning_rate * gradient
-```
-
-But **naive gradient descent** has problems:
-- **Slow convergence**: Takes many steps to reach optimum
-- **Oscillation**: Bounces around valleys without making progress
-- **Poor scaling**: Same learning rate for all parameters
-
-### The Solution: Smart Optimization Algorithms
-**Optimizers** intelligently navigate loss landscapes:
-- **Momentum**: Build velocity to accelerate in consistent directions
-- **Adaptive rates**: Different learning rates for different parameters
-- **Second-order info**: Use curvature to guide updates
-
-### Real-World Impact
-- **SGD**: Foundation of neural network training, still used for large models
-- **Adam**: Default optimizer for most deep learning (transformers, CNNs)
-- **Learning rate scheduling**: Critical for training stability and performance
-"""
-
-# %% [markdown]
-"""
-## Step 1: Understanding Gradient Descent
-
-### Visual: Gradient Descent Dynamics
-```
-Loss Landscape Cross-Section:
-
-    Loss
-     ^
-     |      /\
-     |     /  \\
-     |    /    \\
-     |   /      \\    <- We want to reach bottom
-     |  /        \\
-     | / Current  \
-     |/  position  \
-     +------●-------\\--> Parameters
-            ^
-        Gradient points ↗ (uphill)
-        So we move ↙ (downhill)
-```
-
-### Mathematical Foundation
-**Gradient descent** finds minimum by following negative gradient:
+Imagine you're hiking in dense fog, trying to reach the bottom of a valley. You can only feel the slope under your feet (the gradient), but you can't see where you're going. Different optimization strategies are like different hiking approaches:
 
 ```
-θ_{t+1} = θ_t - α gradf(θ_t)
+Loss Landscape (2D visualization):
+       🏔️
+      /  \\
+   🚶 /    \\
+    /      \\
+   /   🎯   \\  ← Global minimum (goal)
+  /          \\
+ 🏔️          🏔️
+
+Challenge: Navigate to 🎯 using only local slope information!
 ```
+
+### Our Optimizer Toolkit
+
+**SGD (Stochastic Gradient Descent)**
+- Strategy: Always step downhill
+- Problem: Can get stuck oscillating in narrow valleys
+- Solution: Add momentum to "coast" through oscillations
+
+**Adam (Adaptive Moment Estimation)**
+- Strategy: Adapt step size for each parameter individually
+- Advantage: Different learning rates for different dimensions
+- Key Insight: Some directions need big steps, others need small steps
+
+**AdamW (Adam with Weight Decay)**
+- Strategy: Adam + proper regularization
+- Fix: Separates optimization from regularization
+- Result: Better generalization and training stability
+
+### The Mathematics Behind Movement
+
+At its core, optimization follows: **θ_new = θ_old - α * direction**
 
 Where:
-- θ: Parameters we optimize  
-- α: Learning rate (step size)
-- gradf(θ): Gradient (slope) at current position
+- `θ` = parameters (your position in the landscape)
+- `α` = step size (learning rate)
+- `direction` = where to step (gradient-based)
 
-### Learning Rate Visualization
-```
-Learning Rate Effects:
-
-Too Large (α = 1.0):          Just Right (α = 0.1):        Too Small (α = 0.01):
-    ●->->->->->->->->->->●                     ●->●->●->●->●->●                 ●->●->●->●->●->...->●
-   Start      Overshoot           Start      Target          Start      Very slow
-
-```
-
-### Why Gradient Descent Works
-1. **Gradients point uphill**: Negative gradient leads to minimum
-2. **Iterative improvement**: Each step reduces loss (locally)
-3. **Local convergence**: Finds nearby minimum with proper learning rate
-4. **Scalable**: Works with millions of parameters
-
-Let's implement this foundation!
-"""
-
-# %% nbgrader={"grade": false, "grade_id": "gradient-descent-function", "locked": false, "schema_version": 3, "solution": true, "task": false}
-#| export
-def gradient_descent_step(parameter: Variable, learning_rate: float) -> None:
-    """
-    Perform one step of gradient descent on a parameter.
-    
-    Args:
-        parameter: Variable with gradient information
-        learning_rate: How much to update parameter
-    
-    TODO: Implement basic gradient descent parameter update.
-    
-    STEP-BY-STEP IMPLEMENTATION:
-    1. Check if parameter has a gradient
-    2. Get current parameter value and gradient
-    3. Update parameter: new_value = old_value - learning_rate * gradient
-    4. Update parameter data with new value
-    5. Handle edge cases (no gradient, invalid values)
-    
-    EXAMPLE USAGE:
-    ```python
-    # Parameter with gradient
-    w = Variable(2.0, requires_grad=True)
-    w.grad = Variable(0.5)  # Gradient from loss
-    
-    # Update parameter
-    gradient_descent_step(w, learning_rate=0.1)
-    # w.data now contains: 2.0 - 0.1 * 0.5 = 1.95
-    ```
-    
-    IMPLEMENTATION HINTS:
-    - Check if parameter.grad is not None
-    - Use parameter.grad.data.data to get gradient value
-    - Update parameter.data with new Tensor
-    - Don't modify gradient (it's used for logging)
-    
-    LEARNING CONNECTIONS:
-    - This is the foundation of all neural network training
-    - PyTorch's optimizer.step() does exactly this
-    - The learning rate determines convergence speed
-    """
-    ### BEGIN SOLUTION
-    if parameter.grad is not None:
-        # Get current parameter value and gradient
-        current_value = parameter.data.data
-        gradient_value = parameter.grad.data.data
-        
-        # Update parameter: new_value = old_value - learning_rate * gradient
-        new_value = current_value - learning_rate * gradient_value
-        
-        # Update parameter data
-        parameter.data = Tensor(new_value)
-    ### END SOLUTION
-
-# %% [markdown]
-"""
-### TEST Unit Test: Gradient Descent Step
-
-Let's test your gradient descent implementation right away! This is the foundation of all optimization algorithms.
-
-**This is a unit test** - it tests one specific function (gradient_descent_step) in isolation.
-"""
-
-# %% nbgrader={"grade": true, "grade_id": "test-gradient-descent", "locked": true, "points": 10, "schema_version": 3, "solution": false, "task": false}
-def test_unit_gradient_descent_step():
-    """Unit test for the basic gradient descent parameter update."""
-    print("🔬 Unit Test: Gradient Descent Step...")
-    
-    # Test basic parameter update
-    try:
-        w = Variable(2.0, requires_grad=True)
-        w.grad = Variable(0.5)  # Positive gradient
-        
-        original_value = w.data.data.item()
-        gradient_descent_step(w, learning_rate=0.1)
-        new_value = w.data.data.item()
-        
-        expected_value = original_value - 0.1 * 0.5  # 2.0 - 0.05 = 1.95
-        assert abs(new_value - expected_value) < 1e-6, f"Expected {expected_value}, got {new_value}"
-        print("PASS Basic parameter update works")
-        
-    except Exception as e:
-        print(f"FAIL Basic parameter update failed: {e}")
-        raise
-
-    # Test with negative gradient
-    try:
-        w2 = Variable(1.0, requires_grad=True)
-        w2.grad = Variable(-0.2)  # Negative gradient
-        
-        gradient_descent_step(w2, learning_rate=0.1)
-        expected_value2 = 1.0 - 0.1 * (-0.2)  # 1.0 + 0.02 = 1.02
-        assert abs(w2.data.data.item() - expected_value2) < 1e-6, "Negative gradient test failed"
-        print("PASS Negative gradient handling works")
-        
-    except Exception as e:
-        print(f"FAIL Negative gradient handling failed: {e}")
-        raise
-
-    # Test with no gradient (should not update)
-    try:
-        w3 = Variable(3.0, requires_grad=True)
-        w3.grad = None
-        original_value3 = w3.data.data.item()
-        
-        gradient_descent_step(w3, learning_rate=0.1)
-        assert w3.data.data.item() == original_value3, "Parameter with no gradient should not update"
-        print("PASS No gradient case works")
-        
-    except Exception as e:
-        print(f"FAIL No gradient case failed: {e}")
-        raise
-
-    print("TARGET Gradient descent step behavior:")
-    print("   Updates parameters in negative gradient direction")
-    print("   Uses learning rate to control step size")  
-    print("   Skips updates when gradient is None")
-    print("PROGRESS Progress: Gradient Descent Step OK")
-
-# PASS IMPLEMENTATION CHECKPOINT: Basic gradient descent complete
-
-# THINK PREDICTION: How do you think learning rate affects convergence speed?
-# Your guess: _______
-
-# MAGNIFY SYSTEMS INSIGHT #1: Learning Rate Impact Analysis
-def analyze_learning_rate_effects():
-    """Analyze how learning rate affects parameter updates."""
-    try:
-        print("MAGNIFY SYSTEMS INSIGHT: Learning Rate Effects")
-        print("=" * 50)
-        
-        # Create test parameter with fixed gradient
-        param = Variable(1.0, requires_grad=True)
-        param.grad = Variable(0.1)  # Fixed gradient of 0.1
-        
-        learning_rates = [0.01, 0.1, 0.5, 1.0, 2.0]
-        
-        print(f"Starting parameter value: {param.data.data.item():.3f}")
-        print(f"Fixed gradient: {param.grad.data.data.item():.3f}")
-        print("\nLearning Rate Effects:")
-        
-        for lr in learning_rates:
-            # Reset parameter
-            param.data.data = np.array(1.0)
-            
-            # Apply update
-            gradient_descent_step(param, learning_rate=lr)
-            
-            new_value = param.data.data.item()
-            step_size = abs(1.0 - new_value)
-            
-            print(f"LR = {lr:4.2f}: {1.0:.3f} -> {new_value:.3f} (step size: {step_size:.3f})")
-            
-            if lr >= 1.0:
-                print(f"         WARNING️  Large LR = overshooting behavior!")
-        
-        print("\nTIP KEY INSIGHTS:")
-        print("• Small LR (0.01): Safe but slow progress")
-        print("• Medium LR (0.1): Good balance of speed and stability") 
-        print("• Large LR (1.0+): Risk of overshooting minimum")
-        print("• LR selection affects training speed vs stability trade-off")
-        
-        # TIP WHY THIS MATTERS: Learning rate is often the most important hyperparameter.
-        # Too small = slow training, too large = unstable training or divergence.
-        
-    except Exception as e:
-        print(f"WARNING️ Error in learning rate analysis: {e}")
-
-# Analyze learning rate effects
-analyze_learning_rate_effects()
-
-# %% [markdown]
-"""
-## Step 2: SGD with Momentum
-
-### Visual: Why Momentum Helps
-```
-Loss Landscape with Narrow Valley:
-
-Without Momentum:               With Momentum:
-    ↗ ↙ ↗ ↙ ↗ ↙                     ↗ -> -> -> -> ->
-   / \\ / \\ / \\                     /           \\
-  /   X   X   \\                   /             \\
- /oscillating  \\                 /  smooth path  \\
-/    slowly     \\               /    to optimum   \\
-
-Momentum accumulates velocity: v = βv + g
-Then updates: θ = θ - αv
-```
-
-### Mathematical Foundation
-**SGD with Momentum** adds velocity to accelerate convergence:
-
-```
-v_t = β v_{t-1} + gradL(θ_t)      <- Accumulate velocity
-θ_{t+1} = θ_t - α v_t          <- Update with velocity
-```
-
-Where:
-- v_t: Velocity (momentum term)
-- β: Momentum coefficient (typically 0.9)
-- α: Learning rate
-
-### Momentum Dynamics Visualization
-```
-Gradient History:    [0.1, 0.1, 0.1, 0.1, 0.1]  <- Consistent direction
-Without momentum:    [0.1, 0.1, 0.1, 0.1, 0.1]  <- Same steps
-With momentum:       [0.1, 0.19, 0.27, 0.34, 0.41] <- Accelerating!
-
-Momentum Coefficient Effects:
-β = 0.0:  No momentum (regular SGD)
-β = 0.5:  Light momentum (some acceleration)  
-β = 0.9:  Strong momentum (significant acceleration)
-β = 0.99: Very strong momentum (risk of overshooting)
-```
-
-### Why Momentum Works
-1. **Acceleration**: Builds speed in consistent directions
-2. **Dampening**: Reduces oscillations in changing directions  
-3. **Memory**: Remembers previous gradient directions
-4. **Robustness**: Less sensitive to noisy gradients
-
-### Real-World Applications
-- **Computer Vision**: Training ResNet, VGG networks
-- **Large-scale training**: Often preferred over Adam for huge models
-- **Classic choice**: Still used when Adam fails to converge
-- **Fine-tuning**: Good for transfer learning scenarios
+But sophisticated optimizers do much more than basic gradient descent!
 """
 
 # %% [markdown]
 """
-### THINK Assessment Question: Momentum Understanding
+## 2. Foundations: Mathematical Background
 
-**Understanding momentum's role in optimization:**
+### Understanding Momentum: The Physics of Optimization
 
-In a narrow valley loss landscape, vanilla SGD oscillates between valley walls. How does momentum help solve this problem, and what's the mathematical intuition behind the velocity accumulation formula `v_t = β v_{t-1} + gradL(θ_t)`?
+Momentum in optimization works like momentum in physics. A ball rolling down a hill doesn't immediately change direction when it hits a small bump - it has momentum that carries it forward.
 
-Consider a sequence of gradients: [0.1, -0.1, 0.1, -0.1, 0.1] (oscillating). Show how momentum with β=0.9 transforms this into smoother updates.
+```
+Without Momentum (SGD):           With Momentum:
+     ↓                                ↘️
+  ←  •  →  ← oscillation           →  •  → smooth path
+     ↑                                ↙️
+
+Narrow valley problem:            Momentum solution:
+|\     /|                        |\     /|
+| \ • / | ← ping-pong             | \ •→/ | ← smoother
+|  \ /  |   motion                |  \ /  |   descent
+|   ●   |                        |   ●   |
+```
+
+**SGD with Momentum Formula:**
+```
+velocity = β * previous_velocity + (1-β) * current_gradient
+parameter = parameter - learning_rate * velocity
+
+Where β ≈ 0.9 means "90% memory of previous direction"
+```
+
+### Adam: Adaptive Learning for Each Parameter
+
+Adam solves a key problem: different parameters need different learning rates. Imagine adjusting the focus and zoom on a camera - you need fine control for focus but coarse control for zoom.
+
+```
+Parameter Landscape (2 dimensions):
+
+   param2
+     ^
+     |
+   😞|    steep gradient
+     |    (needs small steps)
+     |
+  ---+--●--→ param1
+     |     \\
+     |      \\ gentle gradient
+     |       \\ (needs big steps)
+
+Adam Solution: Automatic step size per parameter!
+```
+
+**Adam's Two-Memory System:**
+
+1. **First Moment (m)**: "Which direction am I usually going?"
+   - `m = β₁ * old_m + (1-β₁) * gradient`
+   - Like momentum, but for direction
+
+2. **Second Moment (v)**: "How big are my gradients usually?"
+   - `v = β₂ * old_v + (1-β₂) * gradient²`
+   - Tracks gradient magnitude
+
+3. **Adaptive Update**:
+   - `step_size = m / √v`
+   - Big gradients → smaller steps
+   - Small gradients → relatively bigger steps
+
+### AdamW: Fixing Weight Decay
+
+Adam has a subtle bug in how it applies weight decay (regularization). AdamW fixes this:
+
+```
+Adam (incorrect):               AdamW (correct):
+gradient += weight_decay * param    [compute gradient update]
+update_param_with_gradient()        param -= learning_rate * gradient_update
+                                   param *= (1 - weight_decay)  ← separate!
+
+Why it matters:
+- Adam: Weight decay affected by adaptive learning rates
+- AdamW: Weight decay is consistent regardless of gradients
+```
 """
 
-# %% nbgrader={"grade": true, "grade_id": "momentum-understanding", "locked": false, "points": 8, "schema_version": 3, "solution": true, "task": false}
+# %% [markdown]
 """
-YOUR MOMENTUM ANALYSIS:
+## 3. Implementation: Building Optimizers
 
-TODO: Explain how momentum helps in narrow valleys and demonstrate the velocity calculation.
+Now we'll implement each optimizer step by step, following the pattern: understand the algorithm → implement it → test it immediately. Each optimizer builds on the foundation of the previous one.
 
-Key points to address:
-- Why does vanilla SGD oscillate in narrow valleys?
-- How does momentum accumulation smooth out oscillations?
-- Calculate velocity sequence for oscillating gradients [0.1, -0.1, 0.1, -0.1, 0.1] with β=0.9
-- What happens to the effective update directions with momentum?
+### Implementation Strategy
 
-GRADING RUBRIC:
-- Identifies oscillation problem in narrow valleys (2 points)
-- Explains momentum's smoothing mechanism (2 points)  
-- Correctly calculates velocity sequence (2 points)
-- Shows understanding of exponential moving average effect (2 points)
+```
+Optimizer Base Class
+    ↓
+SGD (foundation algorithm)
+    ↓
+SGD + Momentum (reduce oscillations)
+    ↓
+Adam (adaptive learning rates)
+    ↓
+AdamW (proper weight decay)
+```
 """
 
-### BEGIN SOLUTION
-# Momentum helps solve oscillation by accumulating velocity as an exponential moving average of gradients.
-# In narrow valleys, vanilla SGD gets stuck oscillating between walls because gradients alternate direction.
-# 
-# For oscillating gradients [0.1, -0.1, 0.1, -0.1, 0.1] with β=0.9:
-# v₀ = 0
-# v₁ = 0.9*0 + 0.1 = 0.1
-# v₂ = 0.9*0.1 + (-0.1) = 0.09 - 0.1 = -0.01
-# v₃ = 0.9*(-0.01) + 0.1 = -0.009 + 0.1 = 0.091  
-# v₄ = 0.9*0.091 + (-0.1) = 0.082 - 0.1 = -0.018
-# v₅ = 0.9*(-0.018) + 0.1 = -0.016 + 0.1 = 0.084
-#
-# The oscillating gradients average out through momentum, creating much smaller, smoother updates
-# instead of large oscillations. This allows progress along the valley bottom rather than bouncing between walls.
-### END SOLUTION
-
-# %% nbgrader={"grade": false, "grade_id": "sgd-class", "locked": false, "schema_version": 3, "solution": true, "task": false}
-#| export
-class SGD:
+# %% nbgrader={"grade": false, "grade_id": "optimizer-base", "solution": true}
+class Optimizer:
     """
-    SGD Optimizer with Momentum Support
-    
-    Implements stochastic gradient descent with optional momentum for improved convergence.
-    Momentum accumulates velocity to accelerate in consistent directions and dampen oscillations.
-    
-    Mathematical Update Rules:
-    Without momentum: θ = θ - αgradθ
-    With momentum: v = βv + gradθ, θ = θ - αv
-    
-    SYSTEMS INSIGHT - Memory Usage:
-    SGD stores only parameters list, learning rate, and optionally momentum buffers.
-    Memory usage: O(1) per parameter without momentum, O(P) with momentum (P = parameters).
-    Much more memory efficient than Adam which needs O(2P) for momentum + velocity.
+    Base class for all optimizers.
+
+    This class defines the common interface that all optimizers must implement:
+    - zero_grad(): Clear gradients from parameters
+    - step(): Update parameters based on gradients
     """
-    
-    def __init__(self, parameters: List[Variable], learning_rate: float = 0.01, momentum: float = 0.0):
+
+    def __init__(self, params: List[Tensor]):
         """
-        Initialize SGD optimizer with optional momentum.
-        
-        Args:
-            parameters: List of Variables to optimize
-            learning_rate: Learning rate for gradient steps (default: 0.01)
-            momentum: Momentum coefficient for velocity accumulation (default: 0.0)
-        
-        TODO: Store optimizer parameters and initialize momentum buffers.
-        
+        Initialize optimizer with parameters to optimize.
+
+        TODO: Set up the parameter list for optimization
+
         APPROACH:
-        1. Store parameters, learning rate, and momentum coefficient
-        2. Initialize momentum buffers if momentum > 0
-        3. Set up state tracking for momentum terms
-        
+        1. Store parameters as a list for iteration
+        2. Validate that all parameters require gradients
+        3. Initialize step counter for algorithms that need it
+
         EXAMPLE:
-        ```python
-        # SGD without momentum (vanilla)
-        optimizer = SGD([w, b], learning_rate=0.01)
-        
-        # SGD with momentum (recommended)
-        optimizer = SGD([w, b], learning_rate=0.01, momentum=0.9)
-        ```
+        >>> linear = Linear(784, 128)
+        >>> optimizer = SGD(linear.parameters(), lr=0.01)
+
+        HINT: Check that each parameter has requires_grad=True
         """
         ### BEGIN SOLUTION
-        self.parameters = parameters
-        self.learning_rate = learning_rate
-        self.momentum = momentum
-        
-        # Initialize momentum buffers if momentum is used
-        self.momentum_buffers = {}
-        if momentum > 0:
-            for i, param in enumerate(parameters):
-                self.momentum_buffers[id(param)] = None
+        # Validate and store parameters
+        if not isinstance(params, list):
+            params = list(params)
+
+        # Check that parameters require gradients
+        for i, param in enumerate(params):
+            if not isinstance(param, Tensor):
+                raise TypeError(f"Parameter {i} must be a Tensor, got {type(param)}")
+            if not param.requires_grad:
+                raise ValueError(f"Parameter {i} does not require gradients. Set requires_grad=True.")
+
+        self.params = params
+        self.step_count = 0  # For algorithms that need step counting
         ### END SOLUTION
-    
-    def step(self) -> None:
+
+    def zero_grad(self):
         """
-        Perform one optimization step with optional momentum.
-        
-        TODO: Implement SGD parameter updates with momentum support.
-        
+        Clear gradients from all parameters.
+
+        TODO: Reset all parameter gradients to None
+
         APPROACH:
         1. Iterate through all parameters
-        2. For each parameter with gradient:
-           a. If momentum > 0: update velocity buffer
-           b. Apply parameter update using velocity or direct gradient
-        3. Handle momentum buffer initialization and updates
-        
-        MATHEMATICAL FORMULATION:
-        Without momentum: θ = θ - αgradθ
-        With momentum: v = βv + gradθ, θ = θ - αv
-        
-        IMPLEMENTATION HINTS:
-        - Check if param.grad exists before using it
-        - Initialize momentum buffer with first gradient if None
-        - Use momentum coefficient to blend old and new gradients
-        - Apply learning rate to final update
+        2. Set each parameter's grad to None
+
+        EXAMPLE:
+        >>> optimizer.zero_grad()  # Clears all gradients
+        >>> assert param.grad is None for param in optimizer.params
+
+        WHY: Gradients accumulate by default, so we need to clear them between batches
         """
         ### BEGIN SOLUTION
-        for param in self.parameters:
-            grad_data = get_grad_data(param)
-            if grad_data is not None:
-                current_data = get_param_data(param)
-                
-                if self.momentum > 0:
-                    # SGD with momentum
-                    param_id = id(param)
-                    
-                    if self.momentum_buffers[param_id] is None:
-                        # Initialize momentum buffer with first gradient
-                        velocity = grad_data
-                    else:
-                        # Update velocity: v = βv + gradθ
-                        velocity = self.momentum * self.momentum_buffers[param_id] + grad_data
-                    
-                    # Store updated velocity
-                    self.momentum_buffers[param_id] = velocity
-                    
-                    # Update parameter: θ = θ - αv
-                    new_data = current_data - self.learning_rate * velocity
-                else:
-                    # Vanilla SGD: θ = θ - αgradθ
-                    new_data = current_data - self.learning_rate * grad_data
-                
-                set_param_data(param, new_data)
-        ### END SOLUTION
-    
-    def zero_grad(self) -> None:
-        """
-        Zero out gradients for all parameters.
-        
-        TODO: Clear all gradients to prepare for the next backward pass.
-        
-        APPROACH:
-        1. Iterate through all parameters
-        2. Set gradient to None for each parameter
-        3. This prevents gradient accumulation from previous steps
-        
-        IMPLEMENTATION HINTS:
-        - Set param.grad = None for each parameter
-        - Don't clear momentum buffers (they persist across steps)
-        - This is essential before each backward pass
-        """
-        ### BEGIN SOLUTION
-        for param in self.parameters:
+        for param in self.params:
             param.grad = None
         ### END SOLUTION
 
+    def step(self):
+        """
+        Update parameters based on gradients.
+
+        This is abstract - each optimizer implements its own update rule.
+        """
+        raise NotImplementedError("Subclasses must implement step()")
+
 # %% [markdown]
 """
-### TEST Unit Test: SGD Optimizer
-
-Let's test your SGD optimizer implementation! This includes both vanilla SGD and momentum variants.
-
-**This is a unit test** - it tests the SGD class in isolation.
+### 🔬 Unit Test: Base Optimizer
+This test validates our base Optimizer class works correctly.
+**What we're testing**: Parameter validation and zero_grad functionality
+**Why it matters**: Foundation for all specific optimizer implementations
+**Expected**: Proper parameter storage and gradient clearing
 """
 
-# %% nbgrader={"grade": true, "grade_id": "test-sgd", "locked": true, "points": 15, "schema_version": 3, "solution": false, "task": false}
-def test_unit_sgd_optimizer():
-    """Unit test for SGD optimizer with momentum support."""
-    print("🔬 Unit Test: SGD Optimizer...")
-    
+# %% nbgrader={"grade": true, "grade_id": "test-optimizer-base", "locked": true, "points": 10}
+def test_unit_optimizer_base():
+    """🔬 Test base Optimizer functionality."""
+    print("🔬 Unit Test: Base Optimizer...")
+
     # Create test parameters
-    w1 = Variable(1.0, requires_grad=True)
-    w2 = Variable(2.0, requires_grad=True)
-    b = Variable(0.5, requires_grad=True)
-    
-    # Test vanilla SGD (no momentum)
-    optimizer = SGD([w1, w2, b], learning_rate=0.1, momentum=0.0)
-    
-    # Test initialization
-    try:
-        assert optimizer.learning_rate == 0.1, "Learning rate should be stored correctly"
-        assert optimizer.momentum == 0.0, "Momentum should be stored correctly"
-        assert len(optimizer.parameters) == 3, "Should store all 3 parameters"
-        print("PASS Initialization works correctly")
-        
-    except Exception as e:
-        print(f"FAIL Initialization failed: {e}")
-        raise
-    
+    param1 = Tensor([1.0, 2.0], requires_grad=True)
+    param2 = Tensor([[3.0, 4.0], [5.0, 6.0]], requires_grad=True)
+
+    # Add some gradients
+    param1.grad = Tensor([0.1, 0.2])
+    param2.grad = Tensor([[0.3, 0.4], [0.5, 0.6]])
+
+    # Create optimizer
+    optimizer = Optimizer([param1, param2])
+
+    # Test parameter storage
+    assert len(optimizer.params) == 2
+    assert optimizer.params[0] is param1
+    assert optimizer.params[1] is param2
+    assert optimizer.step_count == 0
+
     # Test zero_grad
+    optimizer.zero_grad()
+    assert param1.grad is None
+    assert param2.grad is None
+
+    # Test error handling
     try:
-        w1.grad = Variable(0.1)
-        w2.grad = Variable(0.2)
-        b.grad = Variable(0.05)
-        
-        optimizer.zero_grad()
-        
-        assert w1.grad is None, "Gradient should be None after zero_grad"
-        assert w2.grad is None, "Gradient should be None after zero_grad"
-        assert b.grad is None, "Gradient should be None after zero_grad"
-        print("PASS zero_grad() works correctly")
-        
-    except Exception as e:
-        print(f"FAIL zero_grad() failed: {e}")
-        raise
-    
-    # Test vanilla SGD step
-    try:
-        w1.grad = Variable(0.1)
-        w2.grad = Variable(0.2)
-        b.grad = Variable(0.05)
-        
-        # Store original values
-        original_w1 = w1.data.data.item()
-        original_w2 = w2.data.data.item()
-        original_b = b.data.data.item()
-        
-        optimizer.step()
-        
-        # Check updates: param = param - lr * grad
-        expected_w1 = original_w1 - 0.1 * 0.1  # 1.0 - 0.01 = 0.99
-        expected_w2 = original_w2 - 0.1 * 0.2  # 2.0 - 0.02 = 1.98
-        expected_b = original_b - 0.1 * 0.05   # 0.5 - 0.005 = 0.495
-        
-        assert abs(w1.data.data.item() - expected_w1) < 1e-6, f"w1 update failed"
-        assert abs(w2.data.data.item() - expected_w2) < 1e-6, f"w2 update failed"
-        assert abs(b.data.data.item() - expected_b) < 1e-6, f"b update failed"
-        print("PASS Vanilla SGD step works correctly")
-        
-    except Exception as e:
-        print(f"FAIL Vanilla SGD step failed: {e}")
-        raise
-    
+        bad_param = Tensor([1.0], requires_grad=False)
+        Optimizer([bad_param])
+        assert False, "Should have raised ValueError"
+    except ValueError as e:
+        assert "does not require gradients" in str(e)
+
+    print("✅ Base Optimizer works correctly!")
+
+test_unit_optimizer_base()
+
+# %% [markdown]
+"""
+## SGD - Stochastic Gradient Descent
+
+SGD is the foundation of neural network optimization. It implements the simple but powerful idea: "move in the direction opposite to the gradient."
+
+### Why SGD Works
+
+Gradients point uphill (toward higher loss). To minimize loss, we go downhill:
+
+```
+Loss Surface (side view):
+
+    Loss
+     ^
+     |
+  📈 |     current position
+     |    /
+     |   • ← you are here
+     |  / \
+     | /   \ gradient points uphill
+     |/     \
+     ●-------\--→ parameters
+      \        \
+       \        ↘️ SGD steps downhill
+        \        (opposite to gradient)
+         \⭐ ← goal (minimum loss)
+```
+
+### The Oscillation Problem
+
+Pure SGD can get trapped oscillating in narrow valleys:
+
+```
+Narrow valley (top view):
+  \     /
+   \   /   ← steep sides
+    \ /
+  4← • →2  ← SGD bounces back and forth
+    / \
+   1   3   instead of going down the valley
+  /     \
+ ●       \
+ goal     \
+```
+
+### Momentum Solution
+
+Momentum remembers the direction you were going and continues in that direction:
+
+```
+With momentum:
+  \     /
+   \   /
+    \ /
+     •  ← smooth path down the valley
+    / ↓
+   /   ↓
+  ●    ↓  momentum carries us through oscillations
+ goal
+```
+
+**Implementation:** SGD keeps a "velocity" buffer that accumulates momentum.
+"""
+
+# %% nbgrader={"grade": false, "grade_id": "sgd-optimizer", "solution": true}
+class SGD(Optimizer):
+    """
+    Stochastic Gradient Descent with momentum.
+
+    SGD is the foundational optimization algorithm that moves parameters
+    in the direction opposite to gradients. With momentum, it remembers
+    previous updates to reduce oscillations and accelerate convergence.
+    """
+
+    def __init__(self, params: List[Tensor], lr: float = 0.01, momentum: float = 0.0, weight_decay: float = 0.0):
+        """
+        Initialize SGD optimizer.
+
+        TODO: Set up SGD with momentum and weight decay
+
+        APPROACH:
+        1. Call parent constructor to set up parameters
+        2. Store learning rate, momentum, and weight decay
+        3. Initialize momentum buffers for each parameter
+
+        EXAMPLE:
+        >>> optimizer = SGD(model.parameters(), lr=0.01, momentum=0.9)
+
+        HINTS:
+        - Momentum buffers should be initialized as None
+        - They'll be created lazily on first step
+        """
+        ### BEGIN SOLUTION
+        super().__init__(params)
+
+        self.lr = lr
+        self.momentum = momentum
+        self.weight_decay = weight_decay
+
+        # Initialize momentum buffers (created lazily)
+        self.momentum_buffers = [None for _ in self.params]
+        ### END SOLUTION
+
+    def step(self):
+        """
+        Perform SGD update step with momentum.
+
+        TODO: Implement SGD parameter update with momentum
+
+        APPROACH:
+        1. For each parameter with gradients:
+           a. Apply weight decay if specified
+           b. Update momentum buffer
+           c. Update parameter using momentum
+
+        FORMULA:
+        - With weight decay: grad = grad + weight_decay * param
+        - Momentum: v = momentum * v_prev + grad
+        - Update: param = param - lr * v
+
+        HINTS:
+        - Skip parameters without gradients
+        - Initialize momentum buffers on first use
+        - Use in-place operations to save memory
+        """
+        ### BEGIN SOLUTION
+        for i, param in enumerate(self.params):
+            if param.grad is None:
+                continue
+
+            # Get gradient
+            grad = param.grad.data
+
+            # Apply weight decay
+            if self.weight_decay != 0:
+                grad = grad + self.weight_decay * param.data
+
+            # Update momentum buffer
+            if self.momentum != 0:
+                if self.momentum_buffers[i] is None:
+                    # Initialize momentum buffer
+                    self.momentum_buffers[i] = np.zeros_like(param.data)
+
+                # Update momentum: v = momentum * v_prev + grad
+                self.momentum_buffers[i] = self.momentum * self.momentum_buffers[i] + grad
+                grad = self.momentum_buffers[i]
+
+            # Update parameter: param = param - lr * grad
+            param.data = param.data - self.lr * grad
+
+        # Increment step counter
+        self.step_count += 1
+        ### END SOLUTION
+
+# %% [markdown]
+"""
+### 🔬 Unit Test: SGD Optimizer
+This test validates our SGD implementation works correctly.
+**What we're testing**: SGD updates with and without momentum
+**Why it matters**: Core optimization algorithm used in neural network training
+**Expected**: Correct parameter updates following SGD formulas
+"""
+
+# %% nbgrader={"grade": true, "grade_id": "test-sgd", "locked": true, "points": 15}
+def test_unit_sgd_optimizer():
+    """🔬 Test SGD optimizer implementation."""
+    print("🔬 Unit Test: SGD Optimizer...")
+
+    # Test basic SGD without momentum
+    param = Tensor([1.0, 2.0], requires_grad=True)
+    param.grad = Tensor([0.1, 0.2])
+
+    optimizer = SGD([param], lr=0.1)
+    original_data = param.data.copy()
+
+    optimizer.step()
+
+    # Expected: param = param - lr * grad = [1.0, 2.0] - 0.1 * [0.1, 0.2] = [0.99, 1.98]
+    expected = original_data - 0.1 * param.grad.data
+    assert np.allclose(param.data, expected)
+    assert optimizer.step_count == 1
+
     # Test SGD with momentum
-    try:
-        w_momentum = Variable(1.0, requires_grad=True)
-        optimizer_momentum = SGD([w_momentum], learning_rate=0.1, momentum=0.9)
-        
-        # First step
-        w_momentum.grad = Variable(0.1)
-        optimizer_momentum.step()
-        
-        # Should be: v₁ = 0.9*0 + 0.1 = 0.1, θ₁ = 1.0 - 0.1*0.1 = 0.99
-        expected_first = 1.0 - 0.1 * 0.1
-        assert abs(w_momentum.data.data.item() - expected_first) < 1e-6, "First momentum step failed"
-        
-        # Second step with same gradient
-        w_momentum.grad = Variable(0.1)
-        optimizer_momentum.step()
-        
-        # Should be: v₂ = 0.9*0.1 + 0.1 = 0.19, θ₂ = 0.99 - 0.1*0.19 = 0.971
-        expected_second = expected_first - 0.1 * 0.19
-        assert abs(w_momentum.data.data.item() - expected_second) < 1e-6, "Second momentum step failed"
-        
-        print("PASS Momentum SGD works correctly")
-        
-    except Exception as e:
-        print(f"FAIL Momentum SGD failed: {e}")
-        raise
+    param2 = Tensor([1.0, 2.0], requires_grad=True)
+    param2.grad = Tensor([0.1, 0.2])
 
-    print("TARGET SGD optimizer behavior:")
-    print("   Vanilla SGD: Direct gradient-based updates")
-    print("   Momentum SGD: Accumulates velocity for smoother convergence")
-    print("   Memory efficient: O(1) without momentum, O(P) with momentum")
-    print("PROGRESS Progress: SGD Optimizer OK")
+    optimizer_momentum = SGD([param2], lr=0.1, momentum=0.9)
 
-# PASS IMPLEMENTATION CHECKPOINT: SGD with momentum complete
+    # First step: v = 0.9 * 0 + [0.1, 0.2] = [0.1, 0.2]
+    optimizer_momentum.step()
+    expected_first = np.array([1.0, 2.0]) - 0.1 * np.array([0.1, 0.2])
+    assert np.allclose(param2.data, expected_first)
 
-# THINK PREDICTION: How much faster will momentum SGD converge compared to vanilla SGD?
-# Your guess: ____x faster
+    # Second step with same gradient
+    param2.grad = Tensor([0.1, 0.2])
+    optimizer_momentum.step()
+    # v = 0.9 * [0.1, 0.2] + [0.1, 0.2] = [0.19, 0.38]
+    expected_momentum = np.array([0.19, 0.38])
+    expected_second = expected_first - 0.1 * expected_momentum
+    assert np.allclose(param2.data, expected_second, rtol=1e-5)
 
-# MAGNIFY SYSTEMS INSIGHT #2: SGD vs Momentum Convergence Analysis  
-def analyze_sgd_momentum_convergence():
-    """Compare convergence behavior of vanilla SGD vs momentum SGD."""
-    try:
-        print("MAGNIFY SYSTEMS INSIGHT: SGD vs Momentum Convergence")
-        print("=" * 55)
-        
-        # Simulate optimization on quadratic function: f(x) = (x-3)²
-        def simulate_optimization(optimizer_name, optimizer, start_x=0.0, steps=10):
-            x = Variable(start_x, requires_grad=True)
-            optimizer.parameters = [x]
-            
-            losses = []
-            positions = []
-            
-            for step in range(steps):
-                # Compute loss and gradient for f(x) = (x-3)²
-                target = 3.0
-                current_pos = x.data.data.item()
-                loss = (current_pos - target) ** 2
-                gradient = 2 * (current_pos - target)
-                
-                losses.append(loss)
-                positions.append(current_pos)
-                
-                # Set gradient and update
-                x.grad = Variable(gradient)
-                optimizer.step()
-                x.grad = None
-            
-            return losses, positions
-        
-        # Compare optimizers
-        start_position = 0.0
-        learning_rate = 0.1
-        
-        sgd_vanilla = SGD([], learning_rate=learning_rate, momentum=0.0)
-        sgd_momentum = SGD([], learning_rate=learning_rate, momentum=0.9)
-        
-        vanilla_losses, vanilla_positions = simulate_optimization("Vanilla SGD", sgd_vanilla, start_position)
-        momentum_losses, momentum_positions = simulate_optimization("Momentum SGD", sgd_momentum, start_position)
-        
-        print(f"Optimizing f(x) = (x-3)² starting from x={start_position}")
-        print(f"Learning rate: {learning_rate}")
-        print(f"Target position: 3.0")
-        print()
-        
-        print("Step | Vanilla SGD | Momentum SGD | Speedup")
-        print("-" * 45)
-        for i in range(min(8, len(vanilla_positions))):
-            vanilla_pos = vanilla_positions[i]
-            momentum_pos = momentum_positions[i] 
-            
-            # Calculate distance to target
-            vanilla_dist = abs(vanilla_pos - 3.0)
-            momentum_dist = abs(momentum_pos - 3.0)
-            speedup = vanilla_dist / (momentum_dist + 1e-8)
-            
-            print(f"{i:4d} | {vanilla_pos:10.4f} | {momentum_pos:11.4f} | {speedup:6.2f}x")
-        
-        # Final convergence analysis
-        final_vanilla_error = abs(vanilla_positions[-1] - 3.0)
-        final_momentum_error = abs(momentum_positions[-1] - 3.0)
-        overall_speedup = final_vanilla_error / (final_momentum_error + 1e-8)
-        
-        print(f"\nFinal Results:")
-        print(f"Vanilla SGD error:  {final_vanilla_error:.6f}")
-        print(f"Momentum SGD error: {final_momentum_error:.6f}")
-        print(f"Overall speedup:    {overall_speedup:.2f}x")
-        
-        print("\nTIP KEY INSIGHTS:")
-        print("• Momentum accumulates velocity over time")
-        print("• Faster convergence in consistent gradient directions")
-        print("• Smoother trajectory with less oscillation")
-        print("• Trade-off: slight memory overhead for velocity storage")
-        
-        # TIP WHY THIS MATTERS: Momentum can significantly accelerate training,
-        # especially for problems with consistent gradient directions or narrow valleys.
-        
-    except Exception as e:
-        print(f"WARNING️ Error in convergence analysis: {e}")
+    # Test weight decay
+    param3 = Tensor([1.0, 2.0], requires_grad=True)
+    param3.grad = Tensor([0.1, 0.2])
 
-# Analyze SGD vs momentum convergence
-analyze_sgd_momentum_convergence()
+    optimizer_wd = SGD([param3], lr=0.1, weight_decay=0.01)
+    optimizer_wd.step()
 
-# MAGNIFY SYSTEMS INSIGHT: Convergence Visualization
-def visualize_optimizer_convergence():
-    """
-    Create visual comparison of optimizer convergence curves.
+    # grad_with_decay = [0.1, 0.2] + 0.01 * [1.0, 2.0] = [0.11, 0.22]
+    expected_wd = np.array([1.0, 2.0]) - 0.1 * np.array([0.11, 0.22])
+    assert np.allclose(param3.data, expected_wd)
 
-    This function demonstrates convergence patterns by training on a simple
-    quadratic loss function and plotting actual loss curves.
+    print("✅ SGD optimizer works correctly!")
 
-    WHY THIS MATTERS: Visualizing convergence helps understand:
-    - When to stop training (convergence detection)
-    - Which optimizer converges faster for your problem
-    - How learning rate affects convergence speed
-    - When oscillations indicate instability
-    """
-    try:
-        print("\n" + "=" * 50)
-        print("📊 CONVERGENCE VISUALIZATION ANALYSIS")
-        print("=" * 50)
-
-        # Simple quadratic loss function: f(x) = (x - 2)^2 + 1
-        # Global minimum at x = 2, minimum value = 1
-        def quadratic_loss(x_val):
-            """Simple quadratic with known minimum."""
-            return (x_val - 2.0) ** 2 + 1.0
-
-        def compute_gradient(x_val):
-            """Gradient of quadratic: 2(x - 2)"""
-            return 2.0 * (x_val - 2.0)
-
-        # Training parameters
-        epochs = 50
-        learning_rate = 0.1
-
-        # Initialize parameters for each optimizer
-        x_sgd = Variable(np.array([5.0]), requires_grad=True)  # Start far from minimum
-        x_momentum = Variable(np.array([5.0]), requires_grad=True)
-        x_adam = Variable(np.array([5.0]), requires_grad=True)
-
-        # Create optimizers (Note: Adam may not be available in all contexts)
-        sgd_optimizer = SGD([x_sgd], learning_rate=learning_rate)
-        momentum_optimizer = SGD([x_momentum], learning_rate=learning_rate, momentum=0.9)
-        # Use a simple mock Adam for demonstration if actual Adam class not available
-        try:
-            adam_optimizer = Adam([x_adam], learning_rate=learning_rate)
-        except NameError:
-            # Mock Adam behavior for visualization
-            adam_optimizer = SGD([x_adam], learning_rate=learning_rate * 0.7)  # Slightly different LR
-
-        # Store convergence history
-        sgd_losses = []
-        momentum_losses = []
-        adam_losses = []
-        sgd_params = []
-        momentum_params = []
-        adam_params = []
-
-        # Training simulation
-        for epoch in range(epochs):
-            # SGD training step
-            sgd_optimizer.zero_grad()
-            sgd_val = float(x_sgd.data.flat[0]) if hasattr(x_sgd.data, 'flat') else float(x_sgd.data)
-            x_sgd.grad = np.array([compute_gradient(sgd_val)])
-            sgd_optimizer.step()
-            sgd_loss = quadratic_loss(sgd_val)
-            sgd_losses.append(sgd_loss)
-            sgd_params.append(sgd_val)
-
-            # Momentum SGD training step
-            momentum_optimizer.zero_grad()
-            momentum_val = float(x_momentum.data.flat[0]) if hasattr(x_momentum.data, 'flat') else float(x_momentum.data)
-            x_momentum.grad = np.array([compute_gradient(momentum_val)])
-            momentum_optimizer.step()
-            momentum_loss = quadratic_loss(momentum_val)
-            momentum_losses.append(momentum_loss)
-            momentum_params.append(momentum_val)
-
-            # Adam training step
-            adam_optimizer.zero_grad()
-            adam_val = float(x_adam.data.flat[0]) if hasattr(x_adam.data, 'flat') else float(x_adam.data)
-            x_adam.grad = np.array([compute_gradient(adam_val)])
-            adam_optimizer.step()
-            adam_loss = quadratic_loss(adam_val)
-            adam_losses.append(adam_loss)
-            adam_params.append(adam_val)
-
-        # ASCII Plot Generation (since matplotlib not available)
-        print("\nPROGRESS CONVERGENCE CURVES (Loss vs Epoch)")
-        print("-" * 50)
-
-        # Find convergence points (within 1% of minimum)
-        target_loss = 1.01  # 1% above minimum of 1.0
-
-        def find_convergence_epoch(losses, target):
-            for i, loss in enumerate(losses):
-                if loss <= target:
-                    return i
-            return len(losses)  # Never converged
-
-        sgd_conv = find_convergence_epoch(sgd_losses, target_loss)
-        momentum_conv = find_convergence_epoch(momentum_losses, target_loss)
-        adam_conv = find_convergence_epoch(adam_losses, target_loss)
-
-        # Simple ASCII visualization
-        print(f"Epochs to convergence (loss < {target_loss:.3f}):")
-        print(f"  SGD:              {sgd_conv:2d} epochs")
-        print(f"  SGD + Momentum:   {momentum_conv:2d} epochs")
-        print(f"  Adam:             {adam_conv:2d} epochs")
-
-        # Show loss progression at key epochs
-        epochs_to_show = [0, 10, 20, 30, 40, 49]
-        print(f"\nLoss progression:")
-        print("Epoch  |   SGD   | Momentum|  Adam   ")
-        print("-------|---------|---------|--------")
-        for epoch in epochs_to_show:
-            if epoch < len(sgd_losses):
-                print(f"  {epoch:2d}   | {sgd_losses[epoch]:7.3f} | {momentum_losses[epoch]:7.3f} | {adam_losses[epoch]:7.3f}")
-
-        # Final parameter values
-        print(f"\nFinal parameter values (target: 2.000):")
-        print(f"  SGD:              {sgd_params[-1]:.3f}")
-        print(f"  SGD + Momentum:   {momentum_params[-1]:.3f}")
-        print(f"  Adam:             {adam_params[-1]:.3f}")
-
-        # Convergence insights
-        print(f"\nMAGNIFY CONVERGENCE INSIGHTS:")
-        print(f"• SGD: {'Steady' if sgd_conv < epochs else 'Slow'} convergence")
-        print(f"• Momentum: {'Accelerated' if momentum_conv < sgd_conv else 'Similar'} convergence")
-        print(f"• Adam: {'Adaptive' if adam_conv < max(sgd_conv, momentum_conv) else 'Standard'} convergence")
-
-        # Systems implications
-        print(f"\nTIP SYSTEMS IMPLICATIONS:")
-        print(f"• Early stopping: Could stop training at epoch {min(sgd_conv, momentum_conv, adam_conv)}")
-        print(f"• Resource efficiency: Faster convergence = less compute time")
-        print(f"• Memory trade-off: Adam's 3* memory may be worth faster convergence")
-        print(f"• Learning rate sensitivity: Different optimizers need different LRs")
-
-        return {
-            'sgd_losses': sgd_losses,
-            'momentum_losses': momentum_losses,
-            'adam_losses': adam_losses,
-            'convergence_epochs': {'sgd': sgd_conv, 'momentum': momentum_conv, 'adam': adam_conv}
-        }
-
-    except Exception as e:
-        print(f"WARNING️ Error in convergence visualization: {e}")
-        return None
-
-# Visualize optimizer convergence patterns
-visualize_optimizer_convergence()
+test_unit_sgd_optimizer()
 
 # %% [markdown]
 """
-## Step 3: Adam - Adaptive Learning Rates
+## Adam - Adaptive Moment Estimation
 
-### Visual: Adam's Adaptive Magic
-```
-Parameter Update Landscape:
+Adam solves a fundamental problem with SGD: different parameters often need different learning rates. Think of tuning a complex system where some knobs need gentle adjustments and others need bold changes.
 
-Parameter 1 (large gradients):      Parameter 2 (small gradients):
-    grad = [1.0, 0.9, 1.1, 0.8]          grad = [0.01, 0.02, 0.01, 0.01]
-    
-SGD (fixed LR=0.1):                 SGD (fixed LR=0.1):
-    Updates: [0.1, 0.09, 0.11, 0.08]     Updates: [0.001, 0.002, 0.001, 0.001]
-    ↳ Large steps                        ↳ Tiny steps (too slow!)
+### The Parameter Scaling Problem
 
-Adam (adaptive):                    Adam (adaptive):
-    Updates: [~0.05, ~0.05, ~0.05]      Updates: [~0.02, ~0.02, ~0.02]
-    ↳ Moderated steps                    ↳ Boosted steps
-
-Result: Adam automatically adjusts learning rate per parameter!
-```
-
-### Mathematical Foundation
-**Adam** combines momentum + adaptive learning rates:
+Consider a neural network with both embedding weights and output weights:
 
 ```
-First moment:  m_t = β₁ m_{t-1} + (1-β₁) gradθ_t      <- Like momentum
-Second moment: v_t = β₂ v_{t-1} + (1-β₂) gradθ_t²     <- Gradient variance
+Parameter Sensitivity Landscape:
 
-Bias correction:
-m̂_t = m_t / (1 - β₁ᵗ)    <- Correct momentum bias
-v̂_t = v_t / (1 - β₂ᵗ)    <- Correct variance bias
+  output_weight                 embedding_weight
+       ↑                              ↑
+       |                              |
+    😱 |  steep cliff                  |  🐌 gentle slope
+       |  (needs tiny steps)          |  (needs big steps)
+       |                              |
+    ━━━●━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━●━━━→
 
-Update: θ_t = θ_{t-1} - α m̂_t / (sqrtv̂_t + ε)
+Same learning rate = disaster!
+• Small LR: output weights learn fast, embeddings crawl
+• Large LR: embeddings learn well, output weights explode
 ```
 
-### Adam Algorithm Visualization
+### Adam's Adaptive Solution
+
+Adam automatically adjusts learning rates by tracking two statistics:
+
 ```
-Adam State Machine:
+1. MOMENTUM (first moment): "Which way am I usually going?"
+   m = 0.9 * old_direction + 0.1 * current_gradient
 
-    Gradients -> [First Moment] -> Momentum (like SGD)
-       v              v
-    Squared  -> [Second Moment] -> Variance estimate  
-       v              v
-    [Bias Correction] -> [Combine] -> Adaptive Update
-                           v
-                    Parameter Update
+   Visualization:
+   old: →→→→
+   new:     ↗️
+   m:   →→→↗️  (weighted average)
+
+2. SCALE (second moment): "How big are my steps usually?"
+   v = 0.999 * old_scale + 0.001 * (current_gradient)²
+
+   Big gradients → bigger v → smaller effective steps
+   Small gradients → smaller v → bigger effective steps
+
+3. ADAPTIVE UPDATE:
+   step = momentum / √scale
+   param = param - learning_rate * step
 ```
 
-### Why Adam Works
-1. **Momentum**: Accelerates in consistent directions (first moment)
-2. **Adaptation**: Adjusts learning rate per parameter (second moment)
-3. **Bias correction**: Fixes initialization bias in early steps
-4. **Robustness**: Works well across many problem types
+### Bias Correction: The Cold Start Problem
 
-### Memory Trade-off Visualization
+Adam starts with m=0 and v=0, which creates a bias toward zero initially:
+
 ```
-Memory Usage per Parameter:
+Without bias correction:    With bias correction:
 
-SGD:        [Parameter] -> 1* memory
-SGD+Mom:    [Parameter][Momentum] -> 2* memory  
-Adam:       [Parameter][Momentum][Velocity] -> 3* memory
+Step 1: m = 0.9*0 + 0.1*g    Step 1: m̂ = m / (1-0.9¹) = m / 0.1
+       = 0.1*g (too small!)           = g (correct!)
 
-For 100M parameter model:
-SGD:     400MB (parameters only)
-Adam:   1200MB (3* memory overhead!)
+Step 2: m = 0.9*0.1*g + 0.1*g Step 2: m̂ = m / (1-0.9²) = m / 0.19
+       = 0.19*g (still small)         ≈ g (better!)
 ```
+
+**Key Insight:** Adam is like having an automatic transmission that adjusts gear ratios for each parameter individually.
 """
 
-# %% [markdown]
-"""
-### THINK Assessment Question: Adam's Adaptive Mechanism
-
-**Understanding Adam's adaptive learning rates:**
-
-Adam computes per-parameter learning rates using second moments (gradient variance). Explain why this adaptation helps optimization and analyze the bias correction terms.
-
-Given gradients g = [0.1, 0.01] and learning rate α = 0.001, calculate the first few Adam updates with β₁=0.9, β₂=0.999, ε=1e-8. Show how the adaptive mechanism gives different effective learning rates to the two parameters.
-"""
-
-# %% nbgrader={"grade": true, "grade_id": "adam-mechanism", "locked": false, "points": 10, "schema_version": 3, "solution": true, "task": false}
-"""
-YOUR ADAM ANALYSIS:
-
-TODO: Explain Adam's adaptive mechanism and calculate the first few updates.
-
-Key points to address:
-- Why does adaptive learning rate help optimization?
-- What do first and second moments capture?
-- Why is bias correction necessary?
-- Calculate m₁, v₁, m̂₁, v̂₁ for both parameters after first update
-- Show how effective learning rates differ between parameters
-
-GRADING RUBRIC:
-- Explains adaptive learning rate benefits (2 points)
-- Understands first/second moment meaning (2 points)
-- Explains bias correction necessity (2 points)
-- Correctly calculates Adam updates (3 points)
-- Shows effective learning rate differences (1 point)
-"""
-
-### BEGIN SOLUTION
-# Adam adapts learning rates per parameter using gradient variance (second moment).
-# Large gradients -> large variance -> smaller effective LR (prevents overshooting)
-# Small gradients -> small variance -> larger effective LR (accelerates progress)
-#
-# For gradients g = [0.1, 0.01], α = 0.001, β₁=0.9, β₂=0.999:
-#
-# Parameter 1 (g=0.1):
-# m₁ = 0.9*0 + 0.1*0.1 = 0.01
-# v₁ = 0.999*0 + 0.001*0.01 = 0.00001  
-# m̂₁ = 0.01/(1-0.9¹) = 0.01/0.1 = 0.1
-# v̂₁ = 0.00001/(1-0.999¹) = 0.00001/0.001 = 0.01
-# Update₁ = -0.001 * 0.1/sqrt(0.01 + 1e-8) ~= -0.001
-#
-# Parameter 2 (g=0.01):  
-# m₁ = 0.9*0 + 0.1*0.01 = 0.001
-# v₁ = 0.999*0 + 0.001*0.0001 = 0.0000001
-# m̂₁ = 0.001/0.1 = 0.01
-# v̂₁ = 0.0000001/0.001 = 0.0001
-# Update₁ = -0.001 * 0.01/sqrt(0.0001 + 1e-8) ~= -0.001
-#
-# Both get similar effective updates despite 10* gradient difference!
-# Bias correction prevents small initial estimates from causing tiny updates.
-### END SOLUTION
-
-# %% nbgrader={"grade": false, "grade_id": "adam-class", "locked": false, "schema_version": 3, "solution": true, "task": false}
-#| export
-class Adam:
+# %% nbgrader={"grade": false, "grade_id": "adam-optimizer", "solution": true}
+class Adam(Optimizer):
     """
-    Adam Optimizer - Adaptive Moment Estimation
-    
-    Combines momentum (first moment) with adaptive learning rates (second moment).
-    Adjusts learning rate per parameter based on gradient history and variance.
-    
-    Mathematical Update Rules:
-    m_t = β₁ m_{t-1} + (1-β₁) gradθ_t          <- First moment (momentum)
-    v_t = β₂ v_{t-1} + (1-β₂) gradθ_t²         <- Second moment (variance)
-    m̂_t = m_t / (1 - β₁ᵗ)                  <- Bias correction
-    v̂_t = v_t / (1 - β₂ᵗ)                  <- Bias correction  
-    θ_t = θ_{t-1} - α m̂_t / (sqrtv̂_t + ε)    <- Adaptive update
-    
-    SYSTEMS INSIGHT - Memory Usage:
-    Adam stores first moment + second moment for each parameter = 3* memory vs SGD.
-    For large models, this memory overhead can be limiting factor.
-    Trade-off: Better convergence vs higher memory requirements.
+    Adam optimizer with adaptive learning rates.
+
+    Adam computes individual adaptive learning rates for different parameters
+    from estimates of first and second moments of the gradients.
+    This makes it effective for problems with sparse gradients or noisy data.
     """
-    
-    def __init__(self, parameters: List[Variable], learning_rate: float = 0.001, 
-                 beta1: float = 0.9, beta2: float = 0.999, epsilon: float = 1e-8):
+
+    def __init__(self, params: List[Tensor], lr: float = 0.001, betas: tuple = (0.9, 0.999), eps: float = 1e-8, weight_decay: float = 0.0):
         """
         Initialize Adam optimizer.
-        
-        Args:
-            parameters: List of Variables to optimize
-            learning_rate: Learning rate (default: 0.001, lower than SGD)
-            beta1: First moment decay rate (default: 0.9)
-            beta2: Second moment decay rate (default: 0.999)
-            epsilon: Small constant for numerical stability (default: 1e-8)
-        
-        TODO: Initialize Adam optimizer with momentum and adaptive learning rate tracking.
-        
+
+        TODO: Set up Adam with adaptive learning rates
+
         APPROACH:
-        1. Store all hyperparameters
-        2. Initialize first moment (momentum) buffers for each parameter
-        3. Initialize second moment (variance) buffers for each parameter
-        4. Set timestep counter for bias correction
-        
+        1. Call parent constructor
+        2. Store hyperparameters (lr, betas, eps, weight_decay)
+        3. Initialize first and second moment buffers
+
+        PARAMETERS:
+        - lr: Learning rate (default: 0.001)
+        - betas: Coefficients for computing running averages (default: (0.9, 0.999))
+        - eps: Small constant for numerical stability (default: 1e-8)
+        - weight_decay: L2 penalty coefficient (default: 0.0)
+
         EXAMPLE:
-        ```python
-        # Standard Adam optimizer
-        optimizer = Adam([w, b], learning_rate=0.001)
-        
-        # Custom Adam with different betas
-        optimizer = Adam([w, b], learning_rate=0.01, beta1=0.9, beta2=0.99)
-        ```
-        
-        IMPLEMENTATION HINTS:
-        - Use defaultdict or manual dictionary for state storage
-        - Initialize state lazily (on first use) or pre-allocate
-        - Remember to track timestep for bias correction
+        >>> optimizer = Adam(model.parameters(), lr=0.001, betas=(0.9, 0.999))
         """
         ### BEGIN SOLUTION
-        self.parameters = parameters
-        self.learning_rate = learning_rate
-        self.beta1 = beta1
-        self.beta2 = beta2
-        self.epsilon = epsilon
-        
-        # State tracking
-        self.state = {}
-        self.t = 0  # Timestep for bias correction
-        
-        # Initialize state for each parameter
-        for param in parameters:
-            self.state[id(param)] = {
-                'm': None,  # First moment (momentum)
-                'v': None   # Second moment (variance)
-            }
+        super().__init__(params)
+
+        self.lr = lr
+        self.beta1, self.beta2 = betas
+        self.eps = eps
+        self.weight_decay = weight_decay
+
+        # Initialize moment buffers (created lazily)
+        self.m_buffers = [None for _ in self.params]  # First moment (mean)
+        self.v_buffers = [None for _ in self.params]  # Second moment (variance)
         ### END SOLUTION
-    
-    def step(self) -> None:
+
+    def step(self):
         """
-        Perform one Adam optimization step.
-        
-        TODO: Implement Adam parameter updates with bias correction.
-        
+        Perform Adam update step.
+
+        TODO: Implement Adam parameter update with adaptive learning rates
+
         APPROACH:
-        1. Increment timestep for bias correction
-        2. For each parameter with gradient:
-           a. Get or initialize first/second moment buffers
-           b. Update first moment: m = β₁m + (1-β₁)g
-           c. Update second moment: v = β₂v + (1-β₂)g²
-           d. Apply bias correction: m̂ = m/(1-β₁ᵗ), v̂ = v/(1-β₂ᵗ)
-           e. Update parameter: θ = θ - α m̂/(sqrtv̂ + ε)
-        
-        MATHEMATICAL IMPLEMENTATION:
-        m_t = β₁ m_{t-1} + (1-β₁) gradθ_t
-        v_t = β₂ v_{t-1} + (1-β₂) gradθ_t²
-        m̂_t = m_t / (1 - β₁ᵗ)
-        v̂_t = v_t / (1 - β₂ᵗ)
-        θ_t = θ_{t-1} - α m̂_t / (sqrtv̂_t + ε)
-        
-        IMPLEMENTATION HINTS:
-        - Increment self.t at the start
-        - Initialize moments with first gradient if None
-        - Use np.sqrt for square root operation
-        - Handle numerical stability with epsilon
+        1. For each parameter with gradients:
+           a. Apply weight decay if specified
+           b. Update first moment estimate (momentum of gradient)
+           c. Update second moment estimate (momentum of squared gradient)
+           d. Compute bias-corrected moments
+           e. Update parameter using adaptive learning rate
+
+        FORMULAS:
+        - m_t = β₁ * m_{t-1} + (1-β₁) * g_t
+        - v_t = β₂ * v_{t-1} + (1-β₂) * g_t²
+        - m̂_t = m_t / (1-β₁^t)
+        - v̂_t = v_t / (1-β₂^t)
+        - θ_t = θ_{t-1} - lr * m̂_t / (√v̂_t + ε)
+
+        HINTS:
+        - Initialize buffers as zeros on first use
+        - Use step_count for bias correction
+        - Square gradients element-wise for second moment
         """
         ### BEGIN SOLUTION
-        self.t += 1  # Increment timestep
-        
-        for param in self.parameters:
-            grad_data = get_grad_data(param)
-            if grad_data is not None:
-                current_data = get_param_data(param)
-                param_id = id(param)
-                
-                # Get or initialize state
-                if self.state[param_id]['m'] is None:
-                    self.state[param_id]['m'] = np.zeros_like(grad_data)
-                    self.state[param_id]['v'] = np.zeros_like(grad_data)
-                
-                state = self.state[param_id]
-                
-                # Update first moment (momentum): m = β₁m + (1-β₁)g
-                state['m'] = self.beta1 * state['m'] + (1 - self.beta1) * grad_data
-                
-                # Update second moment (variance): v = β₂v + (1-β₂)g²
-                state['v'] = self.beta2 * state['v'] + (1 - self.beta2) * (grad_data ** 2)
-                
-                # Bias correction
-                m_hat = state['m'] / (1 - self.beta1 ** self.t)
-                v_hat = state['v'] / (1 - self.beta2 ** self.t)
-                
-                # Parameter update: θ = θ - α m̂/(sqrtv̂ + ε)
-                new_data = current_data - self.learning_rate * m_hat / (np.sqrt(v_hat) + self.epsilon)
-                
-                set_param_data(param, new_data)
-        ### END SOLUTION
-    
-    def zero_grad(self) -> None:
-        """
-        Zero out gradients for all parameters.
-        
-        TODO: Clear all gradients to prepare for the next backward pass.
-        
-        APPROACH:
-        1. Iterate through all parameters
-        2. Set gradient to None for each parameter
-        3. Don't clear Adam state (momentum and variance persist)
-        
-        IMPLEMENTATION HINTS:
-        - Set param.grad = None for each parameter
-        - Adam state (m, v) should persist across optimization steps
-        - Only gradients are cleared, not the optimizer's internal state
-        """
-        ### BEGIN SOLUTION
-        for param in self.parameters:
-            param.grad = None
+        # Increment step counter first (needed for bias correction)
+        self.step_count += 1
+
+        for i, param in enumerate(self.params):
+            if param.grad is None:
+                continue
+
+            # Get gradient
+            grad = param.grad.data
+
+            # Apply weight decay
+            if self.weight_decay != 0:
+                grad = grad + self.weight_decay * param.data
+
+            # Initialize buffers if needed
+            if self.m_buffers[i] is None:
+                self.m_buffers[i] = np.zeros_like(param.data)
+                self.v_buffers[i] = np.zeros_like(param.data)
+
+            # Update biased first moment estimate
+            self.m_buffers[i] = self.beta1 * self.m_buffers[i] + (1 - self.beta1) * grad
+
+            # Update biased second moment estimate
+            self.v_buffers[i] = self.beta2 * self.v_buffers[i] + (1 - self.beta2) * (grad ** 2)
+
+            # Compute bias correction
+            bias_correction1 = 1 - self.beta1 ** self.step_count
+            bias_correction2 = 1 - self.beta2 ** self.step_count
+
+            # Compute bias-corrected moments
+            m_hat = self.m_buffers[i] / bias_correction1
+            v_hat = self.v_buffers[i] / bias_correction2
+
+            # Update parameter
+            param.data = param.data - self.lr * m_hat / (np.sqrt(v_hat) + self.eps)
         ### END SOLUTION
 
 # %% [markdown]
 """
-### TEST Unit Test: Adam Optimizer
-
-Let's test your Adam optimizer implementation! This tests the complete adaptive learning rate mechanism.
-
-**This is a unit test** - it tests the Adam class with bias correction and adaptive updates.
+### 🔬 Unit Test: Adam Optimizer
+This test validates our Adam implementation works correctly.
+**What we're testing**: Adam updates with adaptive learning rates and bias correction
+**Why it matters**: Most popular optimizer for modern neural networks
+**Expected**: Correct parameter updates following Adam formulas
 """
 
-# %% nbgrader={"grade": true, "grade_id": "test-adam", "locked": true, "points": 20, "schema_version": 3, "solution": false, "task": false}
+# %% nbgrader={"grade": true, "grade_id": "test-adam", "locked": true, "points": 20}
 def test_unit_adam_optimizer():
-    """Unit test for Adam optimizer implementation."""
+    """🔬 Test Adam optimizer implementation."""
     print("🔬 Unit Test: Adam Optimizer...")
-    
-    # Create test parameters
-    w = Variable(1.0, requires_grad=True)
-    b = Variable(0.5, requires_grad=True)
-    
-    # Create Adam optimizer
-    optimizer = Adam([w, b], learning_rate=0.001, beta1=0.9, beta2=0.999, epsilon=1e-8)
-    
-    # Test initialization
-    try:
-        assert optimizer.learning_rate == 0.001, "Learning rate should be stored correctly"
-        assert optimizer.beta1 == 0.9, "Beta1 should be stored correctly"
-        assert optimizer.beta2 == 0.999, "Beta2 should be stored correctly"
-        assert optimizer.epsilon == 1e-8, "Epsilon should be stored correctly"
-        assert optimizer.t == 0, "Timestep should start at 0"
-        print("PASS Initialization works correctly")
-        
-    except Exception as e:
-        print(f"FAIL Initialization failed: {e}")
-        raise
-    
-    # Test zero_grad
-    try:
-        w.grad = Variable(0.1)
-        b.grad = Variable(0.05)
-        
-        optimizer.zero_grad()
-        
-        assert w.grad is None, "Gradient should be None after zero_grad"
-        assert b.grad is None, "Gradient should be None after zero_grad"
-        print("PASS zero_grad() works correctly")
-        
-    except Exception as e:
-        print(f"FAIL zero_grad() failed: {e}")
-        raise
-    
-    # Test first Adam step with bias correction
-    try:
-        w.grad = Variable(0.1)
-        b.grad = Variable(0.05)
-        
-        # Store original values
-        original_w = w.data.data.item()
-        original_b = b.data.data.item()
-        
-        optimizer.step()
-        
-        # After first step, timestep should be 1
-        assert optimizer.t == 1, "Timestep should be 1 after first step"
-        
-        # Check that parameters were updated (exact values depend on bias correction)
-        new_w = w.data.data.item()
-        new_b = b.data.data.item()
-        
-        assert new_w != original_w, "w should be updated after step"
-        assert new_b != original_b, "b should be updated after step"
-        
-        # Check that state was initialized
-        w_id = id(w)
-        b_id = id(b)
-        assert w_id in optimizer.state, "w state should be initialized"
-        assert b_id in optimizer.state, "b state should be initialized"
-        assert optimizer.state[w_id]['m'] is not None, "First moment should be initialized"
-        assert optimizer.state[w_id]['v'] is not None, "Second moment should be initialized"
-        
-        print("PASS First Adam step works correctly")
-        
-    except Exception as e:
-        print(f"FAIL First Adam step failed: {e}")
-        raise
-    
-    # Test second Adam step (momentum accumulation)
-    try:
-        w.grad = Variable(0.1)  # Same gradient
-        b.grad = Variable(0.05)
-        
-        # Store values before second step
-        before_second_w = w.data.data.item()
-        before_second_b = b.data.data.item()
-        
-        optimizer.step()
-        
-        # After second step, timestep should be 2
-        assert optimizer.t == 2, "Timestep should be 2 after second step"
-        
-        # Parameters should continue updating
-        after_second_w = w.data.data.item()
-        after_second_b = b.data.data.item()
-        
-        assert after_second_w != before_second_w, "w should continue updating"
-        assert after_second_b != before_second_b, "b should continue updating"
-        
-        print("PASS Second Adam step works correctly")
-        
-    except Exception as e:
-        print(f"FAIL Second Adam step failed: {e}")
-        raise
-    
-    # Test adaptive behavior (different gradients should get different effective learning rates)
-    try:
-        w_large = Variable(1.0, requires_grad=True)
-        w_small = Variable(1.0, requires_grad=True)
-        
-        optimizer_adaptive = Adam([w_large, w_small], learning_rate=0.1)
-        
-        # Large gradient vs small gradient
-        w_large.grad = Variable(1.0)    # Large gradient
-        w_small.grad = Variable(0.01)   # Small gradient
-        
-        original_large = w_large.data.data.item()
-        original_small = w_small.data.data.item()
-        
-        optimizer_adaptive.step()
-        
-        update_large = abs(w_large.data.data.item() - original_large)
-        update_small = abs(w_small.data.data.item() - original_small)
-        
-        # Both should get reasonable updates despite very different gradients
-        assert update_large > 0, "Large gradient parameter should update"
-        assert update_small > 0, "Small gradient parameter should update"
-        
-        print("PASS Adaptive learning rates work correctly")
-        
-    except Exception as e:
-        print(f"FAIL Adaptive learning rates failed: {e}")
-        raise
 
-    print("TARGET Adam optimizer behavior:")
-    print("   Combines momentum (first moment) with adaptive learning rates (second moment)")
-    print("   Bias correction prevents small updates in early training steps")
-    print("   Automatically adjusts effective learning rate per parameter")
-    print("   Memory overhead: 3* parameters (original + momentum + variance)")
-    print("PROGRESS Progress: Adam Optimizer OK")
+    # Test basic Adam functionality
+    param = Tensor([1.0, 2.0], requires_grad=True)
+    param.grad = Tensor([0.1, 0.2])
 
-# PASS IMPLEMENTATION CHECKPOINT: Adam optimizer complete
+    optimizer = Adam([param], lr=0.01, betas=(0.9, 0.999), eps=1e-8)
+    original_data = param.data.copy()
 
-# THINK PREDICTION: Which optimizer will use more memory - SGD with momentum or Adam?
-# Your guess: Adam uses ____x more memory than SGD
+    # First step
+    optimizer.step()
 
-# MAGNIFY SYSTEMS INSIGHT #3: Optimizer Memory Usage Analysis
-def analyze_optimizer_memory():
-    """Analyze memory usage patterns across different optimizers."""
-    try:
-        print("MAGNIFY SYSTEMS INSIGHT: Optimizer Memory Usage")
-        print("=" * 50)
-        
-        # Simulate memory usage for different model sizes
-        param_counts = [1000, 10000, 100000, 1000000]  # 1K to 1M parameters
-        
-        print("Memory Usage Analysis (Float32 = 4 bytes per parameter)")
-        print("=" * 60)
-        print(f"{'Parameters':<12} {'SGD':<10} {'SGD+Mom':<10} {'Adam':<10} {'Adam/SGD':<10}")
-        print("-" * 60)
-        
-        for param_count in param_counts:
-            # Memory calculations (in bytes)
-            sgd_memory = param_count * 4  # Just parameters
-            sgd_momentum_memory = param_count * 4 * 2  # Parameters + momentum
-            adam_memory = param_count * 4 * 3  # Parameters + momentum + variance
-            
-            # Convert to MB for readability
-            sgd_mb = sgd_memory / (1024 * 1024)
-            sgd_mom_mb = sgd_momentum_memory / (1024 * 1024)
-            adam_mb = adam_memory / (1024 * 1024)
-            
-            ratio = adam_memory / sgd_memory
-            
-            print(f"{param_count:<12,} {sgd_mb:<8.1f}MB {sgd_mom_mb:<8.1f}MB {adam_mb:<8.1f}MB {ratio:<8.1f}x")
-        
-        print()
-        print("Real-World Model Examples:")
-        print("-" * 40)
-        
-        # Real model examples
-        models = [
-            ("Small CNN", 100_000),
-            ("ResNet-18", 11_700_000),
-            ("BERT-Base", 110_000_000),
-            ("GPT-2", 1_500_000_000),
-            ("GPT-3", 175_000_000_000)
-        ]
-        
-        for model_name, params in models:
-            sgd_gb = (params * 4) / (1024**3)
-            adam_gb = (params * 12) / (1024**3)  # 3x memory
-            
-            print(f"{model_name:<12}: SGD {sgd_gb:>6.1f}GB, Adam {adam_gb:>6.1f}GB")
-            
-            if adam_gb > 16:  # Typical GPU memory
-                print(f"              WARNING️  Adam exceeds typical GPU memory!")
-        
-        print("\nTIP KEY INSIGHTS:")
-        print("• SGD: O(P) memory (just parameters)")
-        print("• SGD+Momentum: O(2P) memory (parameters + momentum)")
-        print("• Adam: O(3P) memory (parameters + momentum + variance)")
-        print("• Memory becomes limiting factor for large models")
-        print("• Why some teams use SGD for billion-parameter models")
-        
-        print("\n🏭 PRODUCTION IMPLICATIONS:")
-        print("• Choose optimizer based on memory constraints")
-        print("• Adam better for most tasks, SGD for memory-limited scenarios")
-        print("• Consider memory-efficient variants (AdaFactor, 8-bit Adam)")
-        
-        # TIP WHY THIS MATTERS: For large models, memory is often the bottleneck.
-        # Understanding optimizer memory overhead is crucial for production deployments.
-        
-    except Exception as e:
-        print(f"WARNING️ Error in memory analysis: {e}")
+    # Manually compute expected values
+    grad = np.array([0.1, 0.2])
 
-# Analyze optimizer memory usage
-analyze_optimizer_memory()
+    # First moment: m = 0.9 * 0 + 0.1 * grad = 0.1 * grad
+    m = 0.1 * grad
+
+    # Second moment: v = 0.999 * 0 + 0.001 * grad^2 = 0.001 * grad^2
+    v = 0.001 * (grad ** 2)
+
+    # Bias correction
+    bias_correction1 = 1 - 0.9 ** 1  # = 0.1
+    bias_correction2 = 1 - 0.999 ** 1  # = 0.001
+
+    m_hat = m / bias_correction1  # = grad
+    v_hat = v / bias_correction2  # = grad^2
+
+    # Update
+    expected = original_data - 0.01 * m_hat / (np.sqrt(v_hat) + 1e-8)
+
+    assert np.allclose(param.data, expected, rtol=1e-6)
+    assert optimizer.step_count == 1
+
+    # Test second step to verify moment accumulation
+    param.grad = Tensor([0.1, 0.2])
+    optimizer.step()
+
+    # Should have updated moments
+    assert optimizer.m_buffers[0] is not None
+    assert optimizer.v_buffers[0] is not None
+    assert optimizer.step_count == 2
+
+    # Test with weight decay
+    param2 = Tensor([1.0, 2.0], requires_grad=True)
+    param2.grad = Tensor([0.1, 0.2])
+
+    optimizer_wd = Adam([param2], lr=0.01, weight_decay=0.01)
+    optimizer_wd.step()
+
+    # Weight decay should modify the effective gradient
+    # grad_with_decay = [0.1, 0.2] + 0.01 * [1.0, 2.0] = [0.11, 0.22]
+    # The exact computation is complex, but we can verify parameter changed
+    assert not np.array_equal(param2.data, np.array([1.0, 2.0]))
+
+    print("✅ Adam optimizer works correctly!")
+
+test_unit_adam_optimizer()
 
 # %% [markdown]
 """
-## Step 3.5: Gradient Clipping and Numerical Stability
+## AdamW - Adam with Decoupled Weight Decay
 
-### Why Gradient Clipping Matters
+AdamW fixes a subtle but important bug in Adam's weight decay implementation. The bug affects how regularization interacts with adaptive learning rates.
 
-**The Problem**: Large gradients can destabilize training, especially in RNNs or very deep networks:
+### The Adam Weight Decay Bug
+
+In standard Adam, weight decay is added to gradients before the adaptive scaling:
 
 ```
-Normal Training:
-    Gradient: [-0.1, 0.2, -0.05] -> Update: [-0.01, 0.02, -0.005] OK
+Adam's approach (problematic):
+1. gradient = computed_gradient + weight_decay * parameter
+2. m = β₁ * m + (1-β₁) * gradient
+3. v = β₂ * v + (1-β₂) * gradient²
+4. step = m / √v
+5. parameter = parameter - learning_rate * step
 
-Exploding Gradients:
-    Gradient: [-15.0, 23.0, -8.0] -> Update: [-1.5, 2.3, -0.8] FAIL Too large!
-
-Result: Parameters jump far from optimum, loss explodes
+Problem: Weight decay gets "adapted" by the learning rate scaling!
 ```
 
-### Visual: Gradient Clipping in Action
+### Why This Matters
+
+Weight decay should be a consistent regularization force, but Adam makes it inconsistent:
+
 ```
-Gradient Landscape:
+Parameter Update Comparison:
 
-    Loss
-     ^
-     |     +- Clipping threshold (e.g., 1.0)
-     |    /
-     |   /
-     |  /   Original gradient (magnitude = 2.5)
-     | /    Clipped gradient (magnitude = 1.0)
-     |/
-     +-------> Parameters
+Large gradients → small adaptive LR → weak weight decay effect
+Small gradients → large adaptive LR → strong weight decay effect
 
-Clipping: gradient = gradient * (threshold / ||gradient||) if ||gradient|| > threshold
+This is backwards! We want consistent regularization.
 ```
 
-### Mathematical Foundation
-**Gradient Norm Clipping**:
+### AdamW's Fix: Decoupled Weight Decay
+
+AdamW separates gradient-based updates from weight decay:
+
 ```
-1. Compute gradient norm: ||g|| = sqrt(g₁² + g₂² + ... + gₙ²)
-2. If ||g|| > threshold:
-   g_clipped = g * (threshold / ||g||)
-3. Else: g_clipped = g
+AdamW's approach (correct):
+1. m = β₁ * m + (1-β₁) * pure_gradient  ← NO weight decay here
+2. v = β₂ * v + (1-β₂) * pure_gradient²
+3. step = m / √v
+4. parameter = parameter - learning_rate * step        ← gradient update
+5. parameter = parameter * (1 - weight_decay_rate)    ← separate decay
+
+Result: Consistent regularization independent of gradient magnitudes!
 ```
 
-**Why This Works**:
-- Preserves gradient direction (most important for optimization)
-- Limits magnitude to prevent parameter jumps
-- Allows adaptive threshold based on problem characteristics
+### Visual Comparison
+
+```
+Adam weight decay:               AdamW weight decay:
+
+gradient ──┐                    gradient ──→ adaptive ──→ param
+           ├─→ adaptive ──→ param                  update
+weight ────┘   scaling
+decay
+                                weight ─────────→ param
+                                decay           shrinkage
+
+Coupled (inconsistent)          Decoupled (consistent)
+```
+
+**Key Insight:** AdamW treats optimization and regularization as separate, independent processes, leading to better training dynamics and generalization.
 """
 
-# %% nbgrader={"grade": false, "grade_id": "gradient-clipping", "locked": false, "schema_version": 3, "solution": true, "task": false}
-#| export
-def clip_gradients(parameters: List[Variable], max_norm: float = 1.0) -> float:
+# %% nbgrader={"grade": false, "grade_id": "adamw-optimizer", "solution": true}
+class AdamW(Optimizer):
     """
-    Clip gradients by global norm to prevent exploding gradients.
+    AdamW optimizer with decoupled weight decay.
 
-    Args:
-        parameters: List of Variables with gradients
-        max_norm: Maximum allowed gradient norm (default: 1.0)
-
-    Returns:
-        float: The original gradient norm before clipping
-
-    TODO: Implement gradient clipping by global norm.
-
-    APPROACH:
-    1. Calculate total gradient norm across all parameters
-    2. If norm exceeds max_norm, scale all gradients proportionally
-    3. Return original norm for monitoring
-
-    EXAMPLE:
-    >>> x = Variable(np.array([1.0]), requires_grad=True)
-    >>> x.grad = np.array([5.0])  # Large gradient
-    >>> norm = clip_gradients([x], max_norm=1.0)
-    >>> print(f"Original norm: {norm}, Clipped gradient: {x.grad}")
-    Original norm: 5.0, Clipped gradient: [1.0]
-
-    PRODUCTION NOTE: All major frameworks include gradient clipping.
-    PyTorch: torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm)
+    AdamW fixes a bug in Adam's weight decay implementation by decoupling
+    weight decay from the gradient-based update. This leads to better
+    regularization and is the preferred version for most applications.
     """
-    ### BEGIN SOLUTION
-    # Calculate total gradient norm
-    total_norm = 0.0
-    for param in parameters:
-        if param.grad is not None:
-            param_norm = np.linalg.norm(param.grad)
-            total_norm += param_norm ** 2
 
-    total_norm = np.sqrt(total_norm)
-
-    # Apply clipping if necessary
-    if total_norm > max_norm:
-        clip_coef = max_norm / total_norm
-        for param in parameters:
-            if param.grad is not None:
-                param.grad = param.grad * clip_coef
-
-    return total_norm
-    ### END SOLUTION
-
-# MAGNIFY SYSTEMS INSIGHT: Numerical Stability Analysis
-def analyze_numerical_stability():
-    """
-    Demonstrate gradient clipping effects and numerical issues at scale.
-
-    This analysis shows why gradient clipping is essential for stable training,
-    especially in production systems with large models and diverse data.
-    """
-    try:
-        print("\n" + "=" * 50)
-        print("🔧 NUMERICAL STABILITY ANALYSIS")
-        print("=" * 50)
-
-        # Create parameters with different gradient magnitudes
-        param1 = Variable(np.array([1.0]), requires_grad=True)
-        param2 = Variable(np.array([0.5]), requires_grad=True)
-        param3 = Variable(np.array([2.0]), requires_grad=True)
-
-        # Simulate different gradient scenarios
-        scenarios = [
-            ("Normal gradients", [0.1, 0.2, -0.15]),
-            ("Large gradients", [5.0, -3.0, 8.0]),
-            ("Exploding gradients", [50.0, -30.0, 80.0])
-        ]
-
-        print("Gradient Clipping Scenarios:")
-        print("Scenario         | Original Norm | Clipped Norm | Reduction")
-        print("-----------------|---------------|--------------|----------")
-
-        for scenario_name, gradients in scenarios:
-            # Set gradients
-            param1.grad = np.array([gradients[0]])
-            param2.grad = np.array([gradients[1]])
-            param3.grad = np.array([gradients[2]])
-
-            # Clip gradients
-            original_norm = clip_gradients([param1, param2, param3], max_norm=1.0)
-
-            # Calculate new norm
-            new_norm = 0.0
-            for param in [param1, param2, param3]:
-                if param.grad is not None:
-                    new_norm += np.linalg.norm(param.grad) ** 2
-            new_norm = np.sqrt(new_norm)
-
-            reduction = (original_norm - new_norm) / original_norm * 100 if original_norm > 0 else 0
-
-            print(f"{scenario_name:<16} | {original_norm:>11.2f} | {new_norm:>10.2f} | {reduction:>7.1f}%")
-
-        # Demonstrate numerical precision issues
-        print(f"\nMAGNIFY NUMERICAL PRECISION ISSUES:")
-
-        # Very small numbers (underflow risk)
-        small_grad = 1e-8
-        print(f"• Very small gradient: {small_grad:.2e}")
-        print(f"  Adam epsilon (1e-8) prevents division by zero in denominator")
-
-        # Very large numbers (overflow risk)
-        large_grad = 1e6
-        print(f"• Very large gradient: {large_grad:.2e}")
-        print(f"  Gradient clipping prevents parameter explosion")
-
-        # Floating point precision
-        print(f"• Float32 precision: ~7 decimal digits")
-        print(f"  Large parameters + small gradients = precision loss")
-
-        # Production implications
-        print(f"\nTIP PRODUCTION IMPLICATIONS:")
-        print(f"• Mixed precision (float16/float32) requires careful gradient scaling")
-        print(f"• Distributed training amplifies numerical issues across GPUs")
-        print(f"• Gradient accumulation may need norm rescaling")
-        print(f"• Learning rate scheduling affects gradient scale requirements")
-
-        # Scale analysis
-        print(f"\n📊 SCALE ANALYSIS:")
-        model_sizes = [
-            ("Small model", 1e6, "1M parameters"),
-            ("Medium model", 100e6, "100M parameters"),
-            ("Large model", 7e9, "7B parameters"),
-            ("Very large model", 175e9, "175B parameters")
-        ]
-
-        for name, params, desc in model_sizes:
-            # Estimate memory for gradients at different precisions
-            fp32_mem = params * 4 / 1e9  # bytes to GB
-            fp16_mem = params * 2 / 1e9
-
-            print(f"  {desc}:")
-            print(f"    Gradient memory (FP32): {fp32_mem:.1f} GB")
-            print(f"    Gradient memory (FP16): {fp16_mem:.1f} GB")
-
-            # When clipping becomes critical
-            if params > 1e9:
-                print(f"    WARNING️  Gradient clipping CRITICAL for stability")
-            elif params > 100e6:
-                print(f"    📊 Gradient clipping recommended")
-            else:
-                print(f"    PASS Standard gradients usually stable")
-
-    except Exception as e:
-        print(f"WARNING️ Error in numerical stability analysis: {e}")
-
-# Analyze gradient clipping and numerical stability
-analyze_numerical_stability()
-
-# %% [markdown]
-"""
-## Step 4: Learning Rate Scheduling
-
-### Visual: Learning Rate Scheduling Effects
-```
-Learning Rate Over Time:
-
-Constant LR:
-LR  +----------------------------------------
-    | α = 0.01 (same throughout training)
-    +-----------------------------------------> Steps
-
-Step Decay:
-LR  +---------+
-    | α = 0.01 |
-    |          +---------+
-    | α = 0.001|         |
-    |          |         +---------------------
-    |          | α = 0.0001
-    +----------+---------+----------------------> Steps
-              step1     step2
-
-Exponential Decay:
-LR  +-\
-    |   \\
-    |    \\__
-    |       \\__
-    |          \\____
-    |               \\________
-    +-------------------------------------------> Steps
-```
-
-### Why Learning Rate Scheduling Matters
-**Problem**: Fixed learning rate throughout training is suboptimal:
-- **Early training**: Need larger LR to make progress quickly
-- **Late training**: Need smaller LR to fine-tune and not overshoot optimum
-
-**Solution**: Adaptive learning rate schedules:
-- **Step decay**: Reduce LR at specific milestones
-- **Exponential decay**: Gradually reduce LR over time
-- **Cosine annealing**: Smooth reduction with periodic restarts
-
-### Mathematical Foundation
-**Step Learning Rate Scheduler**:
-```
-LR(epoch) = initial_lr * gamma^⌊epoch / step_size⌋
-```
-
-Where:
-- initial_lr: Starting learning rate
-- gamma: Multiplicative factor (e.g., 0.1)
-- step_size: Epochs between reductions
-
-### Scheduling Strategy Visualization
-```
-Training Progress with Different Schedules:
-
-High LR Phase (Exploration):
-    Loss landscape exploration
-    ↙ ↘ ↙ ↘ (large steps, finding good regions)
-
-Medium LR Phase (Convergence):
-    v v v (steady progress toward minimum)
-
-Low LR Phase (Fine-tuning):
-    v v (small adjustments, precision optimization)
-```
-"""
-
-# %% [markdown]
-"""
-### THINK Assessment Question: Learning Rate Scheduling Strategy
-
-**Understanding when and why to adjust learning rates:**
-
-You're training a neural network and notice the loss plateaus after 50 epochs, then starts oscillating around a value. Design a learning rate schedule to address this issue.
-
-Explain what causes loss plateaus and oscillations, and why reducing learning rate helps. Compare step decay vs exponential decay for this scenario.
-"""
-
-# %% nbgrader={"grade": true, "grade_id": "lr-scheduling", "locked": false, "points": 8, "schema_version": 3, "solution": true, "task": false}
-"""
-YOUR LEARNING RATE SCHEDULING ANALYSIS:
-
-TODO: Explain loss plateaus/oscillations and design an appropriate LR schedule.
-
-Key points to address:
-- What causes loss plateaus in neural network training?
-- Why do oscillations occur and how does LR reduction help?
-- Design a specific schedule: when to reduce, by how much?
-- Compare step decay vs exponential decay for this scenario
-- Consider practical implementation details
-
-GRADING RUBRIC:
-- Explains loss plateau and oscillation causes (2 points)
-- Understands how LR reduction addresses issues (2 points)
-- Designs reasonable LR schedule with specific values (2 points)
-- Compares scheduling strategies appropriately (2 points)
-"""
-
-### BEGIN SOLUTION
-# Loss plateaus occur when the learning rate is too small to make significant progress,
-# while oscillations happen when LR is too large, causing overshooting around the minimum.
-#
-# For loss plateau at epoch 50 with oscillations:
-# 1. Plateau suggests we're near a local minimum but LR is too large for fine-tuning
-# 2. Oscillations confirm overshooting - need smaller steps
-#
-# Proposed schedule:
-# - Epochs 0-49: LR = 0.01 (initial exploration)
-# - Epochs 50-99: LR = 0.001 (reduce by 10x when plateau detected)
-# - Epochs 100+: LR = 0.0001 (final fine-tuning)
-#
-# Step decay vs Exponential:
-# - Step decay: Sudden reductions allow quick adaptation to new regime
-# - Exponential: Smooth transitions but may be too gradual for plateau situations
-# 
-# For plateaus, step decay is better as it provides immediate adjustment to the
-# learning dynamics when stagnation is detected.
-### END SOLUTION
-
-# %% nbgrader={"grade": false, "grade_id": "step-scheduler", "locked": false, "schema_version": 3, "solution": true, "task": false}
-#| export
-class StepLR:
-    """
-    Step Learning Rate Scheduler
-    
-    Reduces learning rate by a factor (gamma) every step_size epochs.
-    This helps neural networks converge better by using high learning rates
-    initially for fast progress, then lower rates for fine-tuning.
-    
-    Mathematical Formula:
-    LR(epoch) = initial_lr * gamma^⌊epoch / step_size⌋
-    
-    SYSTEMS INSIGHT - Training Dynamics:
-    Learning rate scheduling is crucial for training stability and final performance.
-    Proper scheduling can improve final accuracy by 1-5% and reduce training time.
-    Most production training pipelines use some form of LR scheduling.
-    """
-    
-    def __init__(self, optimizer: Union[SGD, Adam], step_size: int, gamma: float = 0.1):
+    def __init__(self, params: List[Tensor], lr: float = 0.001, betas: tuple = (0.9, 0.999), eps: float = 1e-8, weight_decay: float = 0.01):
         """
-        Initialize step learning rate scheduler.
-        
-        Args:
-            optimizer: SGD or Adam optimizer to schedule
-            step_size: Number of epochs between LR reductions
-            gamma: Multiplicative factor for LR reduction (default: 0.1)
-        
-        TODO: Initialize scheduler with optimizer and decay parameters.
-        
-        APPROACH:
-        1. Store reference to optimizer
-        2. Store scheduling parameters (step_size, gamma)
-        3. Save initial learning rate for calculations
-        4. Initialize epoch counter
-        
-        EXAMPLE:
-        ```python
-        optimizer = SGD([w, b], learning_rate=0.01)
-        scheduler = StepLR(optimizer, step_size=30, gamma=0.1)
-        
-        # Training loop:
-        for epoch in range(100):
-            train_one_epoch()
-            scheduler.step()  # Update learning rate
-        ```
-        
-        IMPLEMENTATION HINTS:
-        - Store initial_lr from optimizer.learning_rate
-        - Keep track of current epoch for step calculations
-        - Maintain reference to optimizer for LR updates
-        """
-        ### BEGIN SOLUTION
-        self.optimizer = optimizer
-        self.step_size = step_size
-        self.gamma = gamma
-        self.initial_lr = optimizer.learning_rate
-        self.current_epoch = 0
-        ### END SOLUTION
-    
-    def step(self) -> None:
-        """
-        Update learning rate based on current epoch.
-        
-        TODO: Implement step LR scheduling logic.
-        
-        APPROACH:
-        1. Increment current epoch counter
-        2. Calculate new learning rate using step formula
-        3. Update optimizer's learning rate
-        4. Optionally log the learning rate change
-        
-        MATHEMATICAL IMPLEMENTATION:
-        LR(epoch) = initial_lr * gamma^⌊epoch / step_size⌋
-        
-        EXAMPLE BEHAVIOR:
-        initial_lr=0.01, step_size=30, gamma=0.1:
-        - Epochs 0-29: LR = 0.01
-        - Epochs 30-59: LR = 0.001  
-        - Epochs 60-89: LR = 0.0001
-        
-        IMPLEMENTATION HINTS:
-        - Use integer division (//) for step calculation
-        - Update optimizer.learning_rate directly
-        - Consider numerical precision for very small LRs
-        """
-        ### BEGIN SOLUTION
-        # Calculate number of LR reductions based on current epoch
-        decay_steps = self.current_epoch // self.step_size
-        
-        # Apply step decay formula
-        new_lr = self.initial_lr * (self.gamma ** decay_steps)
-        
-        # Update optimizer learning rate
-        self.optimizer.learning_rate = new_lr
-        
-        # Increment epoch counter for next call
-        self.current_epoch += 1
-        ### END SOLUTION
-    
-    def get_lr(self) -> float:
-        """
-        Get current learning rate without updating.
-        
-        TODO: Return current learning rate based on epoch.
-        
-        APPROACH:
-        1. Calculate current LR using step formula
-        2. Return the value without side effects
-        3. Useful for logging and monitoring
-        
-        IMPLEMENTATION HINTS:
-        - Use same formula as step() but don't increment epoch
-        - Return the calculated learning rate value
-        """
-        ### BEGIN SOLUTION
-        decay_steps = self.current_epoch // self.step_size
-        return self.initial_lr * (self.gamma ** decay_steps)
-        ### END SOLUTION
+        Initialize AdamW optimizer.
 
-# %% [markdown]
-"""
-### TEST Unit Test: Learning Rate Scheduler
-
-Let's test your learning rate scheduler implementation! This ensures proper LR decay over epochs.
-
-**This is a unit test** - it tests the StepLR scheduler in isolation.
-"""
-
-# %% nbgrader={"grade": true, "grade_id": "test-step-scheduler", "locked": true, "points": 10, "schema_version": 3, "solution": false, "task": false}
-def test_unit_step_scheduler():
-    """Unit test for step learning rate scheduler."""
-    print("🔬 Unit Test: Step Learning Rate Scheduler...")
-    
-    # Create optimizer and scheduler
-    w = Variable(1.0, requires_grad=True)
-    optimizer = SGD([w], learning_rate=0.01)
-    scheduler = StepLR(optimizer, step_size=10, gamma=0.1)
-    
-    # Test initialization
-    try:
-        assert scheduler.step_size == 10, "Step size should be stored correctly"
-        assert scheduler.gamma == 0.1, "Gamma should be stored correctly"
-        assert scheduler.initial_lr == 0.01, "Initial LR should be stored correctly"
-        assert scheduler.current_epoch == 0, "Should start at epoch 0"
-        print("PASS Initialization works correctly")
-        
-    except Exception as e:
-        print(f"FAIL Initialization failed: {e}")
-        raise
-    
-    # Test get_lr before any steps
-    try:
-        initial_lr = scheduler.get_lr()
-        assert initial_lr == 0.01, f"Initial LR should be 0.01, got {initial_lr}"
-        print("PASS get_lr() works correctly")
-        
-    except Exception as e:
-        print(f"FAIL get_lr() failed: {e}")
-        raise
-    
-    # Test LR updates over multiple epochs
-    try:
-        # First 10 epochs should maintain initial LR
-        for epoch in range(10):
-            scheduler.step()
-            current_lr = optimizer.learning_rate
-            expected_lr = 0.01  # No decay yet
-            assert abs(current_lr - expected_lr) < 1e-10, f"Epoch {epoch+1}: expected {expected_lr}, got {current_lr}"
-        
-        print("PASS First 10 epochs maintain initial LR")
-        
-        # Epoch 11 should trigger first decay
-        scheduler.step()  # Epoch 11
-        current_lr = optimizer.learning_rate
-        expected_lr = 0.01 * 0.1  # First decay
-        assert abs(current_lr - expected_lr) < 1e-10, f"First decay: expected {expected_lr}, got {current_lr}"
-        
-        print("PASS First LR decay works correctly")
-        
-        # Continue to second decay point
-        for epoch in range(9):  # Epochs 12-20
-            scheduler.step()
-        
-        scheduler.step()  # Epoch 21
-        current_lr = optimizer.learning_rate
-        expected_lr = 0.01 * (0.1 ** 2)  # Second decay
-        assert abs(current_lr - expected_lr) < 1e-10, f"Second decay: expected {expected_lr}, got {current_lr}"
-        
-        print("PASS Second LR decay works correctly")
-        
-    except Exception as e:
-        print(f"FAIL LR decay failed: {e}")
-        raise
-    
-    # Test with different parameters
-    try:
-        optimizer2 = Adam([w], learning_rate=0.001)
-        scheduler2 = StepLR(optimizer2, step_size=5, gamma=0.5)
-        
-        # Test 5 steps
-        for _ in range(5):
-            scheduler2.step()
-        
-        scheduler2.step()  # 6th step should trigger decay
-        current_lr = optimizer2.learning_rate
-        expected_lr = 0.001 * 0.5
-        assert abs(current_lr - expected_lr) < 1e-10, f"Custom params: expected {expected_lr}, got {current_lr}"
-        
-        print("PASS Custom parameters work correctly")
-        
-    except Exception as e:
-        print(f"FAIL Custom parameters failed: {e}")
-        raise
-
-    print("TARGET Step LR scheduler behavior:")
-    print("   Reduces learning rate by gamma every step_size epochs")
-    print("   Enables fast initial training with gradual fine-tuning")
-    print("   Essential for achieving optimal model performance")
-    print("PROGRESS Progress: Learning Rate Scheduling OK")
-
-# PASS IMPLEMENTATION CHECKPOINT: Learning rate scheduling complete
-
-# THINK PREDICTION: How much will proper LR scheduling improve final model accuracy?
-# Your guess: ____% improvement
-
-# MAGNIFY SYSTEMS INSIGHT #4: Learning Rate Schedule Impact Analysis
-def analyze_lr_schedule_impact():
-    """Analyze the impact of learning rate scheduling on training dynamics."""
-    try:
-        print("MAGNIFY SYSTEMS INSIGHT: Learning Rate Schedule Impact")
-        print("=" * 55)
-        
-        # Simulate training with different LR strategies
-        def simulate_training_progress(lr_schedule_name, lr_values, epochs=50):
-            """Simulate loss progression with given LR schedule."""
-            loss = 1.0  # Starting loss
-            losses = []
-            
-            for epoch, lr in enumerate(lr_values[:epochs]):
-                # Simulate loss reduction (simplified model)
-                # Higher LR = faster initial progress but less precision
-                # Lower LR = slower progress but better fine-tuning
-                
-                if loss > 0.1:  # Early training - LR matters more
-                    progress = lr * 0.1 * (1.0 - loss * 0.1)  # Faster with higher LR
-                else:  # Late training - precision matters more  
-                    progress = lr * 0.05 / (1.0 + lr * 10)  # Better with lower LR
-                
-                loss = max(0.01, loss - progress)  # Minimum achievable loss
-                losses.append(loss)
-            
-            return losses
-        
-        # Different LR strategies
-        epochs = 50
-        
-        # Strategy 1: Constant LR
-        constant_lr = [0.01] * epochs
-        
-        # Strategy 2: Step decay
-        step_lr = []
-        for epoch in range(epochs):
-            if epoch < 20:
-                step_lr.append(0.01)
-            elif epoch < 40:
-                step_lr.append(0.001)
-            else:
-                step_lr.append(0.0001)
-        
-        # Strategy 3: Exponential decay
-        exponential_lr = [0.01 * (0.95 ** epoch) for epoch in range(epochs)]
-        
-        # Simulate training
-        constant_losses = simulate_training_progress("Constant", constant_lr)
-        step_losses = simulate_training_progress("Step Decay", step_lr)
-        exp_losses = simulate_training_progress("Exponential", exponential_lr)
-        
-        print("Learning Rate Strategy Comparison:")
-        print("=" * 40)
-        print(f"{'Epoch':<6} {'Constant':<10} {'Step':<10} {'Exponential':<12}")
-        print("-" * 40)
-        
-        checkpoints = [5, 15, 25, 35, 45]
-        for epoch in checkpoints:
-            const_loss = constant_losses[epoch-1]
-            step_loss = step_losses[epoch-1]  
-            exp_loss = exp_losses[epoch-1]
-            
-            print(f"{epoch:<6} {const_loss:<10.4f} {step_loss:<10.4f} {exp_loss:<12.4f}")
-        
-        # Final results analysis
-        final_constant = constant_losses[-1]
-        final_step = step_losses[-1]
-        final_exp = exp_losses[-1]
-        
-        print(f"\nFinal Loss Comparison:")
-        print(f"Constant LR:     {final_constant:.6f}")
-        print(f"Step Decay:      {final_step:.6f} ({((final_constant-final_step)/final_constant*100):+.1f}%)")
-        print(f"Exponential:     {final_exp:.6f} ({((final_constant-final_exp)/final_constant*100):+.1f}%)")
-        
-        # Convergence speed analysis
-        target_loss = 0.1
-        
-        def find_convergence_epoch(losses, target):
-            for i, loss in enumerate(losses):
-                if loss <= target:
-                    return i + 1
-            return len(losses)
-        
-        const_convergence = find_convergence_epoch(constant_losses, target_loss)
-        step_convergence = find_convergence_epoch(step_losses, target_loss)
-        exp_convergence = find_convergence_epoch(exp_losses, target_loss)
-        
-        print(f"\nConvergence Speed (to reach loss = {target_loss}):")
-        print(f"Constant LR:     {const_convergence} epochs")
-        print(f"Step Decay:      {step_convergence} epochs ({const_convergence-step_convergence:+d} epochs)")
-        print(f"Exponential:     {exp_convergence} epochs ({const_convergence-exp_convergence:+d} epochs)")
-        
-        print("\nTIP KEY INSIGHTS:")
-        print("• Proper LR scheduling improves final performance by 1-5%")
-        print("• Step decay provides clear phase transitions (explore -> converge -> fine-tune)")
-        print("• Exponential decay offers smooth transitions but may converge slower")
-        print("• LR scheduling often as important as optimizer choice")
-        
-        print("\n🏭 PRODUCTION BEST PRACTICES:")
-        print("• Most successful models use LR scheduling")
-        print("• Common pattern: high LR -> reduce at plateaus -> final fine-tuning")
-        print("• Monitor validation loss to determine schedule timing")
-        print("• Cosine annealing popular for transformer training")
-        
-        # TIP WHY THIS MATTERS: Learning rate scheduling is one of the most impactful
-        # hyperparameter choices. It can mean the difference between good and great model performance.
-        
-    except Exception as e:
-        print(f"WARNING️ Error in LR schedule analysis: {e}")
-
-# Analyze learning rate schedule impact
-analyze_lr_schedule_impact()
-
-# %% [markdown]
-"""
-## Step 4.5: Advanced Learning Rate Schedulers
-
-### Why More Scheduler Variety?
-
-Different training scenarios benefit from different LR patterns:
-
-```
-Training Scenario -> Optimal Scheduler:
-
-• Image Classification: Cosine annealing for smooth convergence
-• Language Models: Exponential decay with warmup
-• Fine-tuning: Step decay at specific milestones
-• Research/Exploration: Cosine with restarts for multiple trials
-```
-
-### Visual: Advanced Scheduler Patterns
-```
-Learning Rate Over Time:
-
-StepLR:        ------+     +-----+     +--
-               ░░░░░░|░░░░░|░░░░░|░░░░░|░
-               ░░░░░░+-----+░░░░░+-----+░
-
-Exponential:   --\
-               ░░░\
-               ░░░░\
-               ░░░░░\\
-
-Cosine:        --\\   /--\\   /--\\   /--
-               ░░░\\ /░░░░\\ /░░░░\\ /░░░
-               ░░░░\\/░░░░░░\\/░░░░░░\\/░░
-
-Epoch:         0   10   20   30   40   50
-```
-"""
-
-# %% nbgrader={"grade": false, "grade_id": "exponential-scheduler", "locked": false, "schema_version": 3, "solution": true, "task": false}
-#| export
-class ExponentialLR:
-    """
-    Exponential Learning Rate Scheduler
-
-    Decays learning rate exponentially every epoch: LR(epoch) = initial_lr * gamma^epoch
-
-    Provides smooth, continuous decay popular in research and fine-tuning scenarios.
-    Unlike StepLR's sudden drops, exponential provides gradual reduction.
-
-    Mathematical Formula:
-    LR(epoch) = initial_lr * gamma^epoch
-
-    SYSTEMS INSIGHT - Smooth Convergence:
-    Exponential decay provides smoother convergence than step decay but requires
-    careful gamma tuning. Too aggressive (gamma < 0.9) can reduce LR too quickly.
-    """
-
-    def __init__(self, optimizer: Union[SGD, Adam], gamma: float = 0.95):
-        """
-        Initialize exponential learning rate scheduler.
-
-        Args:
-            optimizer: SGD or Adam optimizer to schedule
-            gamma: Decay factor per epoch (default: 0.95)
-
-        TODO: Initialize exponential scheduler.
+        TODO: Set up AdamW with decoupled weight decay
 
         APPROACH:
-        1. Store optimizer reference
-        2. Store gamma decay factor
-        3. Save initial learning rate
-        4. Initialize epoch counter
+        1. Call parent constructor
+        2. Store hyperparameters (note higher default weight_decay)
+        3. Initialize moment buffers like Adam
+
+        KEY DIFFERENCE from Adam:
+        - Weight decay is applied directly to parameters, not added to gradients
+        - This provides better regularization behavior
 
         EXAMPLE:
-        >>> optimizer = Adam([param], learning_rate=0.01)
-        >>> scheduler = ExponentialLR(optimizer, gamma=0.95)
-        >>> # LR decays by 5% each epoch
+        >>> optimizer = AdamW(model.parameters(), lr=0.001, weight_decay=0.01)
         """
         ### BEGIN SOLUTION
-        self.optimizer = optimizer
-        self.gamma = gamma
-        self.initial_lr = optimizer.learning_rate
-        self.current_epoch = 0
+        super().__init__(params)
+
+        self.lr = lr
+        self.beta1, self.beta2 = betas
+        self.eps = eps
+        self.weight_decay = weight_decay
+
+        # Initialize moment buffers (same as Adam)
+        self.m_buffers = [None for _ in self.params]
+        self.v_buffers = [None for _ in self.params]
         ### END SOLUTION
 
-    def step(self) -> None:
+    def step(self):
         """
-        Update learning rate exponentially.
+        Perform AdamW update step with decoupled weight decay.
 
-        TODO: Apply exponential decay to learning rate.
+        TODO: Implement AdamW parameter update
 
         APPROACH:
-        1. Calculate new LR using exponential formula
-        2. Update optimizer's learning rate
-        3. Increment epoch counter
+        1. For each parameter with gradients:
+           a. Update moments using gradients (NOT modified by weight decay)
+           b. Compute bias-corrected moments
+           c. Apply gradient-based update
+           d. Apply weight decay directly to parameters
+
+        KEY DIFFERENCE from Adam:
+        - Weight decay: θ_t = θ_t - lr * weight_decay * θ_t (applied after gradient update)
+        - NOT: grad = grad + weight_decay * param (Adam's incorrect approach)
+
+        FORMULAS:
+        - Same moment updates as Adam (using unmodified gradients)
+        - Gradient update: θ_t = θ_{t-1} - lr * m̂_t / (√v̂_t + ε)
+        - Weight decay: θ_t = θ_t * (1 - lr * weight_decay)
+
+        HINT: Apply weight decay after gradient update for proper decoupling
         """
         ### BEGIN SOLUTION
-        new_lr = self.initial_lr * (self.gamma ** self.current_epoch)
-        self.optimizer.learning_rate = new_lr
-        self.current_epoch += 1
+        # Increment step counter first
+        self.step_count += 1
+
+        for i, param in enumerate(self.params):
+            if param.grad is None:
+                continue
+
+            # Get gradient (NOT modified by weight decay)
+            grad = param.grad.data
+
+            # Initialize buffers if needed
+            if self.m_buffers[i] is None:
+                self.m_buffers[i] = np.zeros_like(param.data)
+                self.v_buffers[i] = np.zeros_like(param.data)
+
+            # Update moments using pure gradients
+            self.m_buffers[i] = self.beta1 * self.m_buffers[i] + (1 - self.beta1) * grad
+            self.v_buffers[i] = self.beta2 * self.v_buffers[i] + (1 - self.beta2) * (grad ** 2)
+
+            # Compute bias correction
+            bias_correction1 = 1 - self.beta1 ** self.step_count
+            bias_correction2 = 1 - self.beta2 ** self.step_count
+
+            # Compute bias-corrected moments
+            m_hat = self.m_buffers[i] / bias_correction1
+            v_hat = self.v_buffers[i] / bias_correction2
+
+            # Apply gradient-based update
+            param.data = param.data - self.lr * m_hat / (np.sqrt(v_hat) + self.eps)
+
+            # Apply decoupled weight decay
+            if self.weight_decay != 0:
+                param.data = param.data * (1 - self.lr * self.weight_decay)
         ### END SOLUTION
-
-    def get_lr(self) -> float:
-        """Get current learning rate without updating."""
-        ### BEGIN SOLUTION
-        return self.initial_lr * (self.gamma ** self.current_epoch)
-        ### END SOLUTION
-
-# %% nbgrader={"grade": false, "grade_id": "cosine-scheduler", "locked": false, "schema_version": 3, "solution": true, "task": false}
-#| export
-class CosineAnnealingLR:
-    """
-    Cosine Annealing Learning Rate Scheduler
-
-    Uses cosine function to smoothly reduce learning rate from max to min over T_max epochs.
-    Popular in transformer training and competitions for better final performance.
-
-    Mathematical Formula:
-    LR(epoch) = lr_min + (lr_max - lr_min) * (1 + cos(π * epoch / T_max)) / 2
-
-    SYSTEMS INSIGHT - Natural Exploration Pattern:
-    Cosine annealing mimics natural exploration patterns - starts aggressive,
-    gradually reduces with smooth transitions. Often yields better final accuracy
-    than step or exponential decay in deep learning applications.
-    """
-
-    def __init__(self, optimizer: Union[SGD, Adam], T_max: int, eta_min: float = 0.0):
-        """
-        Initialize cosine annealing scheduler.
-
-        Args:
-            optimizer: SGD or Adam optimizer to schedule
-            T_max: Maximum number of epochs for one cycle
-            eta_min: Minimum learning rate (default: 0.0)
-
-        TODO: Initialize cosine annealing scheduler.
-
-        APPROACH:
-        1. Store optimizer and cycle parameters
-        2. Save initial LR as maximum LR
-        3. Store minimum LR
-        4. Initialize epoch counter
-
-        EXAMPLE:
-        >>> optimizer = SGD([param], learning_rate=0.1)
-        >>> scheduler = CosineAnnealingLR(optimizer, T_max=50, eta_min=0.001)
-        >>> # LR follows cosine curve from 0.1 to 0.001 over 50 epochs
-        """
-        ### BEGIN SOLUTION
-        self.optimizer = optimizer
-        self.T_max = T_max
-        self.eta_min = eta_min
-        self.eta_max = optimizer.learning_rate  # Initial LR as max
-        self.current_epoch = 0
-        ### END SOLUTION
-
-    def step(self) -> None:
-        """
-        Update learning rate using cosine annealing.
-
-        TODO: Apply cosine annealing formula.
-
-        APPROACH:
-        1. Calculate cosine factor: (1 + cos(π * epoch / T_max)) / 2
-        2. Interpolate between min and max LR
-        3. Update optimizer's learning rate
-        4. Increment epoch (with cycling)
-        """
-        ### BEGIN SOLUTION
-        import math
-
-        # Cosine annealing formula
-        cosine_factor = (1 + math.cos(math.pi * (self.current_epoch % self.T_max) / self.T_max)) / 2
-        new_lr = self.eta_min + (self.eta_max - self.eta_min) * cosine_factor
-
-        self.optimizer.learning_rate = new_lr
-        self.current_epoch += 1
-        ### END SOLUTION
-
-    def get_lr(self) -> float:
-        """Get current learning rate without updating."""
-        ### BEGIN SOLUTION
-        import math
-        cosine_factor = (1 + math.cos(math.pi * (self.current_epoch % self.T_max) / self.T_max)) / 2
-        return self.eta_min + (self.eta_max - self.eta_min) * cosine_factor
-        ### END SOLUTION
-
-# MAGNIFY SYSTEMS INSIGHT: Advanced Scheduler Comparison
-def analyze_advanced_schedulers():
-    """
-    Compare advanced learning rate schedulers across different training scenarios.
-
-    This analysis demonstrates how scheduler choice affects training dynamics
-    and shows when to use each type in production systems.
-    """
-    try:
-        print("\n" + "=" * 50)
-        print("🔄 ADVANCED SCHEDULER ANALYSIS")
-        print("=" * 50)
-
-        # Create mock optimizer for testing
-        param = Variable(np.array([1.0]), requires_grad=True)
-
-        # Initialize different schedulers
-        optimizers = {
-            'step': SGD([param], learning_rate=0.1),
-            'exponential': SGD([param], learning_rate=0.1),
-            'cosine': SGD([param], learning_rate=0.1)
-        }
-
-        schedulers = {
-            'step': StepLR(optimizers['step'], step_size=20, gamma=0.1),
-            'exponential': ExponentialLR(optimizers['exponential'], gamma=0.95),
-            'cosine': CosineAnnealingLR(optimizers['cosine'], T_max=50, eta_min=0.001)
-        }
-
-        # Simulate learning rate progression
-        epochs = 50
-        lr_history = {name: [] for name in schedulers.keys()}
-
-        for epoch in range(epochs):
-            for name, scheduler in schedulers.items():
-                lr_history[name].append(scheduler.get_lr())
-                scheduler.step()
-
-        # Display learning rate progression
-        print("Learning Rate Progression (first 10 epochs):")
-        print("Epoch  |   Step   | Exponential| Cosine  ")
-        print("-------|----------|------------|----------")
-        for epoch in range(min(10, epochs)):
-            step_lr = lr_history['step'][epoch]
-            exp_lr = lr_history['exponential'][epoch]
-            cos_lr = lr_history['cosine'][epoch]
-            print(f"  {epoch:2d}   | {step_lr:8.4f} | {exp_lr:10.4f} | {cos_lr:8.4f}")
-
-        # Analyze final learning rates
-        print(f"\nFinal Learning Rates (epoch {epochs-1}):")
-        for name in schedulers.keys():
-            final_lr = lr_history[name][-1]
-            print(f"  {name.capitalize():<12}: {final_lr:.6f}")
-
-        # Scheduler characteristics
-        print(f"\nMAGNIFY SCHEDULER CHARACTERISTICS:")
-        print(f"• Step: Sudden drops, good for milestone-based training")
-        print(f"• Exponential: Smooth decay, good for fine-tuning")
-        print(f"• Cosine: Natural curve, excellent for final convergence")
-
-        # Production use cases
-        print(f"\nTIP PRODUCTION USE CASES:")
-        print(f"• Image Classification: Cosine annealing (ImageNet standard)")
-        print(f"• Language Models: Exponential with warmup (BERT, GPT)")
-        print(f"• Transfer Learning: Step decay at validation plateaus")
-        print(f"• Research: Cosine with restarts for hyperparameter search")
-
-        # Performance implications
-        print(f"\n📊 PERFORMANCE IMPLICATIONS:")
-        print(f"• Cosine often improves final accuracy by 0.5-2%")
-        print(f"• Exponential provides most stable training")
-        print(f"• Step decay requires careful timing but very effective")
-        print(f"• All schedulers help prevent overfitting vs constant LR")
-
-        return lr_history
-
-    except Exception as e:
-        print(f"WARNING️ Error in advanced scheduler analysis: {e}")
-        return None
-
-# Analyze advanced scheduler comparison
-analyze_advanced_schedulers()
 
 # %% [markdown]
 """
-## Step 5: Integration - Complete Training Example
-
-### Visual: Complete Training Pipeline
-```
-Training Loop Architecture:
-
-Data -> Forward Pass -> Loss Computation
-  ^         v              v
-  |    Predictions    Gradients (Autograd)
-  |         ^              v
-  +--- Parameters <- Optimizer Updates
-            ^              v
-       LR Scheduler  -> Learning Rate
-```
-
-### Complete Training Pattern
-```python
-# Standard ML training pattern
-optimizer = Adam(model.parameters(), lr=0.001)
-scheduler = StepLR(optimizer, step_size=30, gamma=0.1)
-
-for epoch in range(num_epochs):
-    for batch in dataloader:
-        # Forward pass
-        predictions = model(batch.inputs)
-        loss = loss_function(predictions, batch.targets)
-        
-        # Backward pass  
-        optimizer.zero_grad()  # Clear gradients
-        loss.backward()        # Compute gradients
-        optimizer.step()       # Update parameters
-    
-    scheduler.step()  # Update learning rate
-```
-
-### Training Dynamics Visualization
-```
-Training Progress Over Time:
-
-Loss    |
-        |\\
-        | \\
-        |  \\__
-        |     \\__    <- LR reductions
-        |        \\____
-        |             \____
-        +--------------------------> Epochs
-
-Learning | 0.01 +-----+
-Rate     |      |     | 0.001 +---+
-         |      |     +-------┤   | 0.0001
-         |      |             +---+
-         +------+----------------------> Epochs
-```
-
-This integration shows how all components work together for effective neural network training.
+### 🔬 Unit Test: AdamW Optimizer
+This test validates our AdamW implementation with decoupled weight decay.
+**What we're testing**: AdamW updates with proper weight decay decoupling
+**Why it matters**: State-of-the-art optimizer for transformer models
+**Expected**: Correct separation of gradient updates and weight decay
 """
 
-# %% nbgrader={"grade": false, "grade_id": "training-integration", "locked": false, "schema_version": 3, "solution": true, "task": false}
-#| export
-def train_simple_model(parameters: List[Variable], optimizer, scheduler, 
-                      loss_function, num_epochs: int = 20, verbose: bool = True):
-    """
-    Complete training loop integrating optimizer, scheduler, and loss computation.
-    
-    Args:
-        parameters: Model parameters to optimize
-        optimizer: SGD or Adam optimizer instance
-        scheduler: Learning rate scheduler (optional)
-        loss_function: Function that computes loss and gradients
-        num_epochs: Number of training epochs
-        verbose: Whether to print training progress
-    
-    Returns:
-        Training history with losses and learning rates
-    
-    TODO: Implement complete training loop with optimizer and scheduler integration.
-    
-    APPROACH:
-    1. Initialize training history tracking
-    2. For each epoch:
-       a. Compute loss and gradients using loss_function
-       b. Update parameters using optimizer
-       c. Update learning rate using scheduler
-       d. Track metrics and progress
-    3. Return complete training history
-    
-    INTEGRATION POINTS:
-    - Optimizer: handles parameter updates
-    - Scheduler: manages learning rate decay  
-    - Loss function: computes gradients for backpropagation
-    - History tracking: enables training analysis
-    
-    EXAMPLE USAGE:
-    ```python
-    # Set up components
-    w = Variable(1.0, requires_grad=True)
-    optimizer = Adam([w], learning_rate=0.01)
-    scheduler = StepLR(optimizer, step_size=10, gamma=0.1)
-    
-    def simple_loss():
-        loss = (w.data.data - 3.0) ** 2  # Target value = 3
-        w.grad = Variable(2 * (w.data.data - 3.0))  # Derivative
-        return loss
-    
-    # Train the model
-    history = train_simple_model([w], optimizer, scheduler, simple_loss)
-    ```
-    
-    IMPLEMENTATION HINTS:
-    - Call optimizer.zero_grad() before loss computation
-    - Call optimizer.step() after gradients are computed
-    - Call scheduler.step() at end of each epoch
-    - Track both loss values and learning rates
-    - Handle optional scheduler (might be None)
-    """
-    ### BEGIN SOLUTION
-    history = {
-        'losses': [],
-        'learning_rates': [],
-        'epochs': []
-    }
-    
-    if verbose:
-        print("ROCKET Starting training...")
-        print(f"Optimizer: {type(optimizer).__name__}")
-        print(f"Scheduler: {type(scheduler).__name__ if scheduler else 'None'}")
-        print(f"Epochs: {num_epochs}")
-        print("-" * 50)
-    
-    for epoch in range(num_epochs):
-        # Clear gradients from previous iteration
-        optimizer.zero_grad()
-        
-        # Compute loss and gradients
-        loss = loss_function()
-        
-        # Update parameters using optimizer
-        optimizer.step()
-        
-        # Update learning rate using scheduler (if provided)
-        if scheduler is not None:
-            scheduler.step()
-        
-        # Track training metrics
-        current_lr = optimizer.learning_rate
-        history['losses'].append(loss)
-        history['learning_rates'].append(current_lr)
-        history['epochs'].append(epoch + 1)
-        
-        # Print progress
-        if verbose and (epoch + 1) % 5 == 0:
-            print(f"Epoch {epoch + 1:3d}: Loss = {loss:.6f}, LR = {current_lr:.6f}")
-    
-    if verbose:
-        print("-" * 50)
-        print(f"PASS Training completed!")
-        print(f"Final loss: {history['losses'][-1]:.6f}")
-        print(f"Final LR: {history['learning_rates'][-1]:.6f}")
-    
-    return history
-    ### END SOLUTION
+# %% nbgrader={"grade": true, "grade_id": "test-adamw", "locked": true, "points": 20}
+def test_unit_adamw_optimizer():
+    """🔬 Test AdamW optimizer implementation."""
+    print("🔬 Unit Test: AdamW Optimizer...")
+
+    # Test AdamW vs Adam difference in weight decay
+    # Create identical parameters for comparison
+    param_adam = Tensor([1.0, 2.0], requires_grad=True)
+    param_adamw = Tensor([1.0, 2.0], requires_grad=True)
+
+    param_adam.grad = Tensor([0.1, 0.2])
+    param_adamw.grad = Tensor([0.1, 0.2])
+
+    # Create optimizers with same settings
+    adam = Adam([param_adam], lr=0.01, weight_decay=0.01)
+    adamw = AdamW([param_adamw], lr=0.01, weight_decay=0.01)
+
+    # Take one step
+    adam.step()
+    adamw.step()
+
+    # Results should be different due to weight decay implementation
+    assert not np.allclose(param_adam.data, param_adamw.data, rtol=1e-6)
+
+    # Test AdamW basic functionality
+    param = Tensor([1.0, 2.0], requires_grad=True)
+    param.grad = Tensor([0.1, 0.2])
+
+    optimizer = AdamW([param], lr=0.01, weight_decay=0.01)
+    original_data = param.data.copy()
+
+    optimizer.step()
+
+    # Parameter should have changed
+    assert not np.array_equal(param.data, original_data)
+    assert optimizer.step_count == 1
+
+    # Test that moment buffers are created
+    assert optimizer.m_buffers[0] is not None
+    assert optimizer.v_buffers[0] is not None
+
+    # Test zero weight decay behaves like Adam
+    param1 = Tensor([1.0, 2.0], requires_grad=True)
+    param2 = Tensor([1.0, 2.0], requires_grad=True)
+
+    param1.grad = Tensor([0.1, 0.2])
+    param2.grad = Tensor([0.1, 0.2])
+
+    adam_no_wd = Adam([param1], lr=0.01, weight_decay=0.0)
+    adamw_no_wd = AdamW([param2], lr=0.01, weight_decay=0.0)
+
+    adam_no_wd.step()
+    adamw_no_wd.step()
+
+    # Should be very similar (within numerical precision)
+    assert np.allclose(param1.data, param2.data, rtol=1e-10)
+
+    print("✅ AdamW optimizer works correctly!")
+
+test_unit_adamw_optimizer()
 
 # %% [markdown]
 """
-### TEST Unit Test: Training Integration
+## 4. Integration: Bringing It Together
 
-Let's test your complete training integration! This validates that all components work together.
+Now let's see how our optimizers perform in realistic scenarios. We'll compare their behavior on the same optimization problem to understand their different characteristics.
 
-**This is an integration test** - it tests how optimizers, schedulers, and training loops interact.
+### Optimizer Behavior Comparison
+
+Each optimizer takes a different approach to the same problem:
+
+```
+Optimization Problem: Find minimum of f(x) = x²
+
+SGD approach:        Adam approach:        AdamW approach:
+  ↓                    ↓                     ↓
+ x ──→ minimize       x ──→ minimize       x ──→ minimize
+  ↑                    ↑                     ↑
+fixed LR           adaptive LR          adaptive LR + decay
+```
 """
 
-# %% nbgrader={"grade": true, "grade_id": "test-training-integration", "locked": true, "points": 15, "schema_version": 3, "solution": false, "task": false}
-def test_unit_training():
-    """Integration test for complete training loop."""
-    print("🔬 Unit Test: Training Integration...")
-    
-    # Create a simple optimization problem: minimize (x - 5)²
-    x = Variable(0.0, requires_grad=True)
-    target = 5.0
-    
-    def quadratic_loss():
-        """Simple quadratic loss function with known optimum."""
-        current_x = x.data.data.item()
-        loss = (current_x - target) ** 2
-        gradient = 2 * (current_x - target)
-        x.grad = Variable(gradient)
-        return loss
-    
-    # Test with SGD + Step scheduler
-    try:
-        optimizer = SGD([x], learning_rate=0.1)
-        scheduler = StepLR(optimizer, step_size=10, gamma=0.1)
-        
-        # Reset parameter
-        x.data.data = np.array(0.0)
-        
-        history = train_simple_model([x], optimizer, scheduler, quadratic_loss, 
-                                   num_epochs=20, verbose=False)
-        
-        # Check training progress
-        assert len(history['losses']) == 20, "Should track all epochs"
-        assert len(history['learning_rates']) == 20, "Should track LR for all epochs"
-        assert history['losses'][0] > history['losses'][-1], "Loss should decrease"
-        
-        # Check LR scheduling
-        assert history['learning_rates'][0] == 0.1, "Initial LR should be 0.1"
-        print(f"Debug: LR at index 10 = {history['learning_rates'][10]}, expected = 0.01")
-        assert abs(history['learning_rates'][10] - 0.01) < 1e-10, "LR should decay after step_size"
-        
-        print("PASS SGD + StepLR integration works correctly")
-        
-    except Exception as e:
-        print(f"FAIL SGD + StepLR integration failed: {e}")
-        raise
-    
-    # Test with Adam optimizer (basic convergence check)
-    try:
-        x.data.data = np.array(0.0)  # Reset
-        optimizer_adam = Adam([x], learning_rate=0.01)
-        
-        history_adam = train_simple_model([x], optimizer_adam, None, quadratic_loss,
-                                        num_epochs=15, verbose=False)
-        
-        # Check Adam basic functionality
-        assert len(history_adam['losses']) == 15, "Should track all epochs"
-        assert history_adam['losses'][0] > history_adam['losses'][-1], "Loss should decrease with Adam"
-        
-        print("PASS Adam integration works correctly")
-        
-    except Exception as e:
-        print(f"FAIL Adam integration failed: {e}")
-        raise
-    
-    # Test convergence to correct solution
-    try:
-        final_x = x.data.data.item()
-        error = abs(final_x - target)
-        print(f"Final x: {final_x}, target: {target}, error: {error}")
-        # Relaxed convergence test - optimizers are working but convergence depends on many factors
-        assert error < 10.0, f"Should show some progress toward target {target}, got {final_x}"
-        
-        print("PASS Shows optimization progress")
-        
-    except Exception as e:
-        print(f"FAIL Convergence test failed: {e}")
-        raise
-    
-    # Test training history format
-    try:
-        required_keys = ['losses', 'learning_rates', 'epochs']
-        for key in required_keys:
-            assert key in history, f"History should contain '{key}'"
-        
-        # Check consistency
-        n_epochs = len(history['losses'])
-        assert len(history['learning_rates']) == n_epochs, "LR history length mismatch"
-        assert len(history['epochs']) == n_epochs, "Epoch history length mismatch"
-        
-        print("PASS Training history format is correct")
-        
-    except Exception as e:
-        print(f"FAIL History format test failed: {e}")
-        raise
+# %% nbgrader={"grade": false, "grade_id": "integration-demo", "solution": true}
+def demonstrate_optimizer_integration():
+    """
+    Demonstrate optimizers working with neural network parameters.
 
-    print("TARGET Training integration behavior:")
-    print("   Coordinates optimizer, scheduler, and loss computation")
-    print("   Tracks complete training history for analysis")
-    print("   Supports both SGD and Adam with optional scheduling")
-    print("   Provides foundation for real neural network training")
-    print("PROGRESS Progress: Training Integration OK")
+    This simulates a training step with different optimizers to show
+    how they affect parameter updates differently.
+    """
+    print("🔗 Integration Demo: Optimizer Comparison")
+    print("Simulating one training step with different optimizers")
 
-# Final system checkpoint and readiness verification
-print("\nTARGET OPTIMIZATION SYSTEM STATUS:")
-print("PASS Gradient Descent: Foundation algorithm implemented")
-print("PASS SGD with Momentum: Accelerated convergence algorithm")  
-print("PASS Adam Optimizer: Adaptive learning rate algorithm")
-print("PASS Learning Rate Scheduling: Dynamic LR adjustment")
-print("PASS Training Integration: Complete pipeline ready")
-print("\nROCKET Ready for neural network training!")
+    # Create identical "network" parameters for comparison
+    # Simulating weights and biases of a simple linear layer
+
+    def create_params():
+        """Create identical parameter sets for fair comparison."""
+        W = Tensor([[0.1, 0.2, 0.3], [0.4, 0.5, 0.6]], requires_grad=True)
+        b = Tensor([0.1, 0.2], requires_grad=True)
+        return W, b
+
+    # Create identical gradients (simulating computed gradients)
+    def add_gradients(W, b):
+        """Add identical gradients to parameters."""
+        W.grad = Tensor([[0.01, 0.02, 0.03], [0.04, 0.05, 0.06]])
+        b.grad = Tensor([0.01, 0.02])
+
+    # Test SGD
+    print("\n📊 SGD Update:")
+    W_sgd, b_sgd = create_params()
+    add_gradients(W_sgd, b_sgd)
+    sgd = SGD([W_sgd, b_sgd], lr=0.1, momentum=0.9)
+
+    print(f"Before: W={W_sgd.data[0, 0]:.6f}, b={b_sgd.data[0]:.6f}")
+    sgd.step()
+    print(f"After:  W={W_sgd.data[0, 0]:.6f}, b={b_sgd.data[0]:.6f}")
+
+    # Test Adam
+    print("\n📊 Adam Update:")
+    W_adam, b_adam = create_params()
+    add_gradients(W_adam, b_adam)
+    adam = Adam([W_adam, b_adam], lr=0.01)
+
+    print(f"Before: W={W_adam.data[0, 0]:.6f}, b={b_adam.data[0]:.6f}")
+    adam.step()
+    print(f"After:  W={W_adam.data[0, 0]:.6f}, b={b_adam.data[0]:.6f}")
+
+    # Test AdamW
+    print("\n📊 AdamW Update:")
+    W_adamw, b_adamw = create_params()
+    add_gradients(W_adamw, b_adamw)
+    adamw = AdamW([W_adamw, b_adamw], lr=0.01, weight_decay=0.01)
+
+    print(f"Before: W={W_adamw.data[0, 0]:.6f}, b={b_adamw.data[0]:.6f}")
+    adamw.step()
+    print(f"After:  W={W_adamw.data[0, 0]:.6f}, b={b_adamw.data[0]:.6f}")
+
+    print("\n💡 Notice how different optimizers make different updates!")
+    print("- SGD: Large, direct steps")
+    print("- Adam: Smaller, adaptive steps")
+    print("- AdamW: Similar to Adam but with weight decay effects")
+
+demonstrate_optimizer_integration()
 
 # %% [markdown]
 """
-## Comprehensive Testing - All Components
+## 5. Systems Analysis: Optimizer Performance and Memory
 
-This section runs all unit tests to validate the complete optimizer implementation.
+Different optimizers have very different resource requirements. Understanding these trade-offs is crucial for production ML systems.
+
+### Memory Usage Patterns
+
+```
+Optimizer Memory Requirements (per parameter):
+
+SGD:           Adam/AdamW:
+┌────────┐     ┌────────┐
+│ param  │     │ param  │
+├────────┤     ├────────┤
+│momentum│     │   m    │ ← first moment
+└────────┘     ├────────┤
+               │   v    │ ← second moment
+               └────────┘
+
+2× memory       3× memory
+```
+
+### Computational Complexity
+
+```
+Per-step Operations:
+
+SGD:                     Adam:
+• 1 multiplication       • 3 multiplications
+• 1 addition            • 4 additions
+• 1 subtraction         • 1 subtraction
+                        • 1 square root
+                        • 1 division
+
+O(n) simple ops         O(n) complex ops
+```
 """
 
-# %% nbgrader={"grade": false, "grade_id": "comprehensive-tests", "locked": false, "schema_version": 3, "solution": false, "task": false}
-def test_all_optimizers():
-    """Run all optimizer tests to validate complete implementation."""
-    print("TEST Running Comprehensive Optimizer Tests...")
+# %% nbgrader={"grade": false, "grade_id": "optimizer-analysis", "solution": true}
+def analyze_optimizer_memory_usage():
+    """📊 Analyze memory usage of different optimizers."""
+    print("📊 Analyzing Optimizer Memory Usage...")
+
+    # Create test parameters of different sizes
+    param_sizes = [1000, 10000, 100000]  # 1K, 10K, 100K parameters
+
+    print("Optimizer Memory Analysis (per parameter tensor):")
     print("=" * 60)
-    
-    try:
-        # Core implementation tests
-        test_unit_gradient_descent_step()
-        test_unit_sgd_optimizer() 
-        test_unit_adam_optimizer()
-        test_unit_step_scheduler()
-        test_unit_training()
-        
-        print("\n" + "=" * 60)
-        print("CELEBRATE ALL OPTIMIZER TESTS PASSED!")
-        print("PASS Gradient descent foundation working")
-        print("PASS SGD with momentum implemented correctly")
-        print("PASS Adam adaptive learning rates functional")
-        print("PASS Learning rate scheduling operational")
-        print("PASS Complete training integration successful")
-        print("\nROCKET Optimizer system ready for neural network training!")
-        
-    except Exception as e:
-        print(f"\nFAIL Optimizer test failed: {e}")
-        print("🔧 Please fix implementation before proceeding")
-        raise
+    print(f"{'Size':<10} {'SGD':<10} {'Adam':<10} {'AdamW':<10} {'Ratio':<10}")
+    print("-" * 60)
 
-if __name__ == "__main__":
-    print("TEST Running core optimizer tests...")
-    
-    # Core understanding tests (REQUIRED)
-    test_unit_gradient_descent_step()
+    for size in param_sizes:
+        # Create parameter
+        param = Tensor(np.random.randn(size), requires_grad=True)
+        param.grad = Tensor(np.random.randn(size))
+
+        # SGD memory (parameter + momentum buffer)
+        sgd = SGD([param], momentum=0.9)
+        sgd.step()  # Initialize buffers
+        sgd_memory = size * 2  # param + momentum buffer
+
+        # Adam memory (parameter + 2 moment buffers)
+        param_adam = Tensor(np.random.randn(size), requires_grad=True)
+        param_adam.grad = Tensor(np.random.randn(size))
+        adam = Adam([param_adam])
+        adam.step()  # Initialize buffers
+        adam_memory = size * 3  # param + m_buffer + v_buffer
+
+        # AdamW memory (same as Adam)
+        adamw_memory = adam_memory
+
+        # Memory ratio (Adam/SGD)
+        ratio = adam_memory / sgd_memory
+
+        print(f"{size:<10} {sgd_memory:<10} {adam_memory:<10} {adamw_memory:<10} {ratio:.1f}x")
+
+    print("\n💡 Key Insights:")
+    print("- SGD: 2× parameter memory (momentum buffer)")
+    print("- Adam/AdamW: 3× parameter memory (two moment buffers)")
+    print("- Memory scales linearly with model size")
+    print("- Trade-off: More memory for better convergence")
+
+analyze_optimizer_memory_usage()
+
+# %% nbgrader={"grade": false, "grade_id": "optimizer-convergence", "solution": true}
+def analyze_optimizer_convergence_behavior():
+    """📊 Analyze convergence behavior of different optimizers."""
+    print("📊 Analyzing Optimizer Convergence Behavior...")
+
+    # Simulate optimization of a quadratic function: f(x) = 0.5 * x^2
+    # Optimal solution: x* = 0, gradient = x
+
+    def quadratic_loss(x):
+        """Simple quadratic function for optimization testing."""
+        return 0.5 * (x ** 2).sum()
+
+    def compute_gradient(x):
+        """Gradient of quadratic function: df/dx = x."""
+        return x.copy()
+
+    # Starting point
+    x_start = np.array([5.0, -3.0, 2.0])  # Far from optimum [0, 0, 0]
+
+    # Test different optimizers
+    optimizers_to_test = [
+        ("SGD", SGD, {"lr": 0.1}),
+        ("SGD+Momentum", SGD, {"lr": 0.1, "momentum": 0.9}),
+        ("Adam", Adam, {"lr": 0.1}),
+        ("AdamW", AdamW, {"lr": 0.1, "weight_decay": 0.01})
+    ]
+
+    print("Convergence Analysis (quadratic function f(x) = 0.5 * x²):")
+    print("=" * 70)
+    print(f"{'Optimizer':<15} {'Step 0':<12} {'Step 5':<12} {'Step 10':<12} {'Final Loss':<12}")
+    print("-" * 70)
+
+    for name, optimizer_class, kwargs in optimizers_to_test:
+        # Reset parameter
+        param = Tensor(x_start.copy(), requires_grad=True)
+        optimizer = optimizer_class([param], **kwargs)
+
+        losses = []
+
+        # Run optimization for 10 steps
+        for step in range(11):
+            # Compute loss and gradient
+            loss = quadratic_loss(param.data)
+            param.grad = Tensor(compute_gradient(param.data))
+
+            losses.append(loss)
+
+            # Update parameters
+            if step < 10:  # Don't update after last evaluation
+                optimizer.step()
+                optimizer.zero_grad()
+
+        # Format results
+        step0 = f"{losses[0]:.6f}"
+        step5 = f"{losses[5]:.6f}"
+        step10 = f"{losses[10]:.6f}"
+        final = f"{losses[10]:.6f}"
+
+        print(f"{name:<15} {step0:<12} {step5:<12} {step10:<12} {final:<12}")
+
+    print("\n💡 Key Insights:")
+    print("- SGD: Steady progress but can be slow")
+    print("- SGD+Momentum: Faster convergence, less oscillation")
+    print("- Adam: Adaptive rates help with different parameter scales")
+    print("- AdamW: Similar to Adam with regularization effects")
+
+analyze_optimizer_convergence_behavior()
+
+# %% [markdown]
+"""
+## 🧪 Module Integration Test
+
+Final validation that everything works together correctly.
+"""
+
+# %% nbgrader={"grade": true, "grade_id": "module-integration", "locked": true, "points": 25}
+def test_module():
+    """
+    Comprehensive test of entire module functionality.
+
+    This final test runs before module summary to ensure:
+    - All unit tests pass
+    - Functions work together correctly
+    - Module is ready for integration with TinyTorch
+    """
+    print("🧪 RUNNING MODULE INTEGRATION TEST")
+    print("=" * 50)
+
+    # Run all unit tests
+    print("Running unit tests...")
+    test_unit_optimizer_base()
     test_unit_sgd_optimizer()
     test_unit_adam_optimizer()
-    test_unit_step_scheduler()
-    test_unit_training()
-    
-    print("\n" + "=" * 60)
-    print("🔬 SYSTEMS INSIGHTS ANALYSIS")
-    print("=" * 60)
-    
-    # Execute systems insights functions (CRITICAL for learning objectives)
-    analyze_learning_rate_effects()
-    analyze_sgd_momentum_convergence()
-    visualize_optimizer_convergence()
-    analyze_optimizer_memory()
-    analyze_numerical_stability()
-    analyze_lr_schedule_impact()
-    analyze_advanced_schedulers()
-    
-    print("PASS Core tests passed!")
+    test_unit_adamw_optimizer()
+
+    print("\nRunning integration scenarios...")
+
+    # Test realistic neural network optimization scenario
+    print("🔬 Integration Test: Multi-layer Network Optimization...")
+
+    # Create parameters for a 2-layer network
+    # Layer 1: 3 inputs -> 4 hidden
+    W1 = Tensor(np.random.randn(3, 4) * 0.1, requires_grad=True)
+    b1 = Tensor(np.zeros(4), requires_grad=True)
+
+    # Layer 2: 4 hidden -> 2 outputs
+    W2 = Tensor(np.random.randn(4, 2) * 0.1, requires_grad=True)
+    b2 = Tensor(np.zeros(2), requires_grad=True)
+
+    params = [W1, b1, W2, b2]
+
+    # Add realistic gradients
+    W1.grad = Tensor(np.random.randn(3, 4) * 0.01)
+    b1.grad = Tensor(np.random.randn(4) * 0.01)
+    W2.grad = Tensor(np.random.randn(4, 2) * 0.01)
+    b2.grad = Tensor(np.random.randn(2) * 0.01)
+
+    # Test all optimizers on same network
+    optimizers = [
+        SGD(params, lr=0.01, momentum=0.9),
+        Adam([p for p in params], lr=0.001),  # Fresh param list for Adam
+        AdamW([p for p in params], lr=0.001, weight_decay=0.01)  # Fresh param list for AdamW
+    ]
+
+    # Save original parameter values
+    original_params = [p.data.copy() for p in params]
+
+    # Test SGD
+    optimizers[0].step()
+    sgd_params = [p.data.copy() for p in params]
+
+    # Restore parameters and test Adam
+    for i, p in enumerate(params):
+        p.data = original_params[i].copy()
+        # Re-add gradients since they may have been modified
+        if i == 0:
+            p.grad = Tensor(np.random.randn(3, 4) * 0.01)
+        elif i == 1:
+            p.grad = Tensor(np.random.randn(4) * 0.01)
+        elif i == 2:
+            p.grad = Tensor(np.random.randn(4, 2) * 0.01)
+        else:
+            p.grad = Tensor(np.random.randn(2) * 0.01)
+
+    # Update parameter references for Adam
+    optimizers[1].params = params
+    optimizers[1].step()
+    adam_params = [p.data.copy() for p in params]
+
+    # Restore parameters and test AdamW
+    for i, p in enumerate(params):
+        p.data = original_params[i].copy()
+        # Re-add gradients
+        if i == 0:
+            p.grad = Tensor(np.random.randn(3, 4) * 0.01)
+        elif i == 1:
+            p.grad = Tensor(np.random.randn(4) * 0.01)
+        elif i == 2:
+            p.grad = Tensor(np.random.randn(4, 2) * 0.01)
+        else:
+            p.grad = Tensor(np.random.randn(2) * 0.01)
+
+    # Update parameter references for AdamW
+    optimizers[2].params = params
+    optimizers[2].step()
+    adamw_params = [p.data.copy() for p in params]
+
+    # Verify parameters changed differently for each optimizer
+    for i in range(len(params)):
+        # Parameters should be different from original
+        assert not np.array_equal(sgd_params[i], original_params[i])
+        assert not np.array_equal(adam_params[i], original_params[i])
+        assert not np.array_equal(adamw_params[i], original_params[i])
+
+        # Different optimizers should produce different results
+        assert not np.allclose(sgd_params[i], adam_params[i], rtol=1e-6)
+
+    print("✅ Multi-layer network optimization works!")
+
+    # Test optimizer state management
+    print("🔬 Integration Test: Optimizer State Management...")
+
+    param = Tensor([1.0, 2.0], requires_grad=True)
+    param.grad = Tensor([0.1, 0.2])
+
+    optimizer = Adam([param], lr=0.001)
+
+    # First step should initialize buffers
+    optimizer.step()
+    assert optimizer.m_buffers[0] is not None
+    assert optimizer.v_buffers[0] is not None
+    assert optimizer.step_count == 1
+
+    # Zero grad should clear gradients but preserve optimizer state
+    optimizer.zero_grad()
+    assert param.grad is None
+    assert optimizer.m_buffers[0] is not None  # State preserved
+    assert optimizer.step_count == 1  # Step count preserved
+
+    print("✅ Optimizer state management works!")
+
+    print("\n" + "=" * 50)
+    print("🎉 ALL TESTS PASSED! Module ready for export.")
+    print("Run: tito module complete 06_optimizers")
+
+test_module()
+
+# %%
+if __name__ == "__main__":
+    print("🚀 Running Optimizers module...")
+    test_module()
+    print("✅ Module validation complete!")
 
 # %% [markdown]
 """
-## THINK ML Systems Thinking: Interactive Questions
+## 🤔 ML Systems Thinking: Interactive Questions
 
-*Complete these after implementing the optimizers to reflect on systems implications*
+Now that you've built sophisticated optimization algorithms, let's reflect on the systems implications of your implementation.
+"""
+
+# %% nbgrader={"grade": false, "grade_id": "systems-q1", "solution": true}
+# %% [markdown]
+"""
+### Question 1: Memory Scaling in Large Models
+Your Adam optimizer uses 3× the memory of parameters (param + m_buffer + v_buffer).
+
+**a) Model Scale Impact**: For a 7B parameter model (like a small language model):
+- SGD memory overhead: _____ GB (assuming float32 parameters)
+- Adam memory overhead: _____ GB
+- Total training memory: _____ GB
+
+**b) Memory Optimization**: What strategies could reduce Adam's memory usage while preserving its adaptive benefits?
+
+*Think about: gradient accumulation, mixed precision, gradient checkpointing, and parameter sharing*
+"""
+
+# %% nbgrader={"grade": false, "grade_id": "systems-q2", "solution": true}
+# %% [markdown]
+"""
+### Question 2: AdamW vs Adam Weight Decay
+You implemented two different weight decay approaches.
+
+**a) Mathematical Difference**: In Adam, you add `weight_decay * param` to gradients. In AdamW, you apply `param = param * (1 - lr * weight_decay)` after the gradient update. Why does this matter?
+
+**b) Practical Impact**: How might this difference affect:
+- Learning rate scheduling?
+- Hyperparameter tuning?
+- Model regularization effectiveness?
+
+*Consider: how weight decay interacts with adaptive learning rates*
+"""
+
+# %% nbgrader={"grade": false, "grade_id": "systems-q3", "solution": true}
+# %% [markdown]
+"""
+### Question 3: Optimizer Selection in Production
+You built three optimizers with different computational costs.
+
+**a) Training Costs**: Rank SGD, Adam, and AdamW by:
+- Memory usage per parameter: _____
+- Computation per step: _____
+- Convergence speed: _____
+
+**b) Production Decision**: When training a transformer for 1 week on expensive GPUs, what factors would determine your optimizer choice?
+
+*Think about: wall-clock time, hardware utilization, final model quality, and cost per training run*
+"""
+
+# %% nbgrader={"grade": false, "grade_id": "systems-q4", "solution": true}
+# %% [markdown]
+"""
+### Question 4: Gradient Processing Patterns
+Your optimizers process gradients differently - SGD uses them directly, while Adam smooths them over time.
+
+**a) Gradient Noise**: In batch training, gradients from different batches can vary significantly. How does this affect:
+- SGD convergence behavior?
+- Adam's moment estimates?
+- Required batch sizes for stable training?
+
+**b) Systems Design**: If you had to implement gradient compression (reducing communication in distributed training), how would it affect each optimizer differently?
+
+*Consider: gradient sparsity, compression error accumulation, and adaptive learning rates*
 """
 
 # %% [markdown]
 """
-### Question 1: Optimizer Memory and Performance Trade-offs
+## 🎯 MODULE SUMMARY: Optimizers
 
-**Context**: Your optimizer implementations show clear memory trade-offs: SGD uses O(P) memory, while Adam uses O(3P) memory for the same number of parameters. You've also seen different convergence characteristics through your implementations.
+Congratulations! You've built sophisticated optimization algorithms that power modern neural network training!
 
-**Reflection Question**: Analyze the memory vs convergence trade-offs in your optimizer implementations. For a model with 1 billion parameters, calculate the memory overhead for each optimizer and design a strategy for optimizer selection based on memory constraints. How would you modify your implementations to handle memory-limited scenarios while maintaining convergence benefits?
+### Key Accomplishments
+- Built SGD optimizer with momentum for stable gradient descent and oscillation reduction
+- Implemented Adam optimizer with adaptive learning rates and bias correction for different parameter scales
+- Created AdamW optimizer with decoupled weight decay for proper regularization
+- Analyzed memory trade-offs: SGD (2×), Adam/AdamW (3× parameter memory)
+- All tests pass ✅ (validated by `test_module()`)
 
-Think about: memory scaling patterns, gradient accumulation strategies, mixed precision optimizers, and convergence speed vs memory usage.
+### Ready for Next Steps
+Your optimizer implementations enable sophisticated neural network training! With gradients from Module 05 and optimizers from Module 06, you're ready to build complete training loops.
 
-*Target length: 150-250 words*
-"""
+Export with: `tito module complete 06_optimizers`
 
-# %% nbgrader={"grade": true, "grade_id": "question-1-memory-tradeoffs", "locked": false, "points": 8, "schema_version": 3, "solution": true, "task": false}
-"""
-YOUR REFLECTION ON OPTIMIZER MEMORY TRADE-OFFS:
-
-TODO: Replace this text with your thoughtful analysis of memory vs convergence trade-offs.
-
-Consider addressing:
-- Memory calculations for 1B parameter model with different optimizers
-- When would you choose SGD vs Adam based on memory constraints?
-- How could you modify implementations for memory-limited scenarios?
-- What strategies balance convergence speed with memory usage?
-- How do production systems handle these trade-offs?
-
-Write a systems analysis connecting your optimizer implementations to real memory constraints.
-
-GRADING RUBRIC (Instructor Use):
-- Calculates memory usage correctly for different optimizers (2 points)
-- Understands trade-offs between convergence speed and memory (2 points)  
-- Proposes practical strategies for memory-limited scenarios (2 points)
-- Shows systems thinking about production optimizer selection (2 points)
-- Clear reasoning connecting implementation to real constraints (bonus points for deep understanding)
-"""
-
-### BEGIN SOLUTION
-# Student response area - instructor will replace this section during grading setup
-# This is a manually graded question requiring analysis of optimizer memory trade-offs
-# Students should demonstrate understanding of memory scaling and practical constraints
-### END SOLUTION
-
-# %% [markdown]
-"""
-### Question 2: Learning Rate Scheduling and Training Dynamics
-
-**Context**: Your learning rate scheduler implementation demonstrates how adaptive LR affects training dynamics. You've seen through your analysis functions how different schedules impact convergence speed and final performance.
-
-**Reflection Question**: Extend your StepLR scheduler to handle plateau detection - automatically reducing learning rate when loss plateaus for multiple epochs. Design the plateau detection logic and explain how this adaptive scheduling improves upon fixed step schedules. How would you integrate this with your Adam optimizer's existing adaptive mechanism? 
-
-Think about: plateau detection criteria, interaction with Adam's per-parameter adaptation, validation loss monitoring, and early stopping integration.
-
-*Target length: 150-250 words*
-"""
-
-# %% nbgrader={"grade": true, "grade_id": "question-2-adaptive-scheduling", "locked": false, "points": 8, "schema_version": 3, "solution": true, "task": false}
-"""
-YOUR REFLECTION ON ADAPTIVE LEARNING RATE SCHEDULING:
-
-TODO: Replace this text with your thoughtful response about plateau-based LR scheduling.
-
-Consider addressing:
-- How would you detect loss plateaus in your scheduler implementation?
-- What's the interaction between LR scheduling and Adam's adaptive rates?
-- How should plateau detection integrate with validation monitoring?
-- What are the benefits over fixed step scheduling?
-- How would this work in production training pipelines?
-
-Write a systems analysis showing how to extend your scheduler implementations.
-
-GRADING RUBRIC (Instructor Use):
-- Designs reasonable plateau detection logic (2 points)
-- Understands interaction with Adam's adaptive mechanism (2 points)
-- Considers validation monitoring and early stopping (2 points)
-- Shows systems thinking about production training (2 points)
-- Clear technical reasoning with implementation insights (bonus points for deep understanding)
-"""
-
-### BEGIN SOLUTION
-# Student response area - instructor will replace this section during grading setup
-# This is a manually graded question requiring understanding of adaptive scheduling
-# Students should demonstrate knowledge of plateau detection and LR scheduling integration
-### END SOLUTION
-
-# %% [markdown]
-"""
-### Question 3: Production Optimizer Selection and Monitoring
-
-**Context**: Your optimizer implementations provide the foundation for production ML training, but real systems require monitoring, hyperparameter tuning, and adaptive selection based on model characteristics and training dynamics.
-
-**Reflection Question**: Design a production optimizer monitoring system that tracks your SGD and Adam implementations in real-time training. What metrics would you collect from your optimizers, how would you detect training instability, and when would you automatically switch between optimizers? Consider how gradient norms, learning rate effectiveness, and convergence patterns inform optimizer selection.
-
-Think about: gradient monitoring, convergence detection, automatic hyperparameter tuning, and optimizer switching strategies.
-
-*Target length: 150-250 words*
-"""
-
-# %% nbgrader={"grade": true, "grade_id": "question-3-production-monitoring", "locked": false, "points": 8, "schema_version": 3, "solution": true, "task": false}
-"""
-YOUR REFLECTION ON PRODUCTION OPTIMIZER MONITORING:
-
-TODO: Replace this text with your thoughtful response about production optimizer systems.
-
-Consider addressing:
-- What metrics would you collect from your optimizer implementations?
-- How would you detect training instability or poor convergence?
-- When and how would you automatically switch between SGD and Adam?
-- How would you integrate optimizer monitoring with MLOps pipelines?
-- What role does gradient monitoring play in optimizer selection?
-
-Write a systems analysis connecting your implementations to production training monitoring.
-
-GRADING RUBRIC (Instructor Use):
-- Identifies relevant optimizer monitoring metrics (2 points)
-- Understands training instability detection (2 points)
-- Designs practical optimizer switching strategies (2 points)
-- Shows systems thinking about production integration (2 points)
-- Clear systems reasoning with monitoring insights (bonus points for deep understanding)
-"""
-
-### BEGIN SOLUTION
-# Student response area - instructor will replace this section during grading setup
-# This is a manually graded question requiring understanding of production optimizer monitoring
-# Students should demonstrate knowledge of training monitoring and optimizer selection strategies
-### END SOLUTION
-
-# %% [markdown]
-"""
-## TARGET MODULE SUMMARY: Optimization Algorithms
-
-Congratulations! You've successfully implemented the algorithms that make neural networks learn efficiently:
-
-### What You've Accomplished
-PASS **Gradient Descent Foundation**: 50+ lines implementing the core parameter update mechanism
-PASS **SGD with Momentum**: Complete optimizer class with velocity accumulation for accelerated convergence
-PASS **Adam Optimizer**: Advanced adaptive learning rates with first/second moment estimation and bias correction
-PASS **Learning Rate Scheduling**: StepLR, ExponentialLR, and CosineAnnealingLR schedulers for diverse training scenarios
-PASS **Gradient Clipping**: Numerical stability features preventing exploding gradients in deep networks
-PASS **Convergence Visualization**: Real loss curve analysis comparing optimizer convergence patterns
-PASS **Training Integration**: Complete training loop coordinating optimizer, scheduler, and loss computation
-PASS **Systems Analysis**: Memory profiling, numerical stability analysis, and advanced scheduler comparisons
-
-### Key Learning Outcomes
-- **Optimization fundamentals**: How gradient-based algorithms navigate loss landscapes to find optima
-- **Mathematical foundations**: Momentum accumulation, adaptive learning rates, bias correction, and numerical stability
-- **Systems insights**: Memory vs convergence trade-offs, gradient clipping for stability, scheduler variety for different scenarios
-- **Professional skills**: Building production-ready optimizers with advanced features matching PyTorch's design patterns
-
-### Mathematical Foundations Mastered
-- **Gradient Descent**: θ = θ - αgradθ (foundation of all neural network training)
-- **SGD Momentum**: v = βv + gradθ, θ = θ - αv (acceleration through velocity accumulation)
-- **Adam Algorithm**: Adaptive moments with bias correction for per-parameter learning rates
-- **Gradient Clipping**: ||g||₂ normalization preventing exploding gradients in deep networks
-- **Advanced Scheduling**: Step, exponential, and cosine annealing patterns for optimal convergence
-
-### Professional Skills Developed
-- **Algorithm implementation**: Building optimizers from mathematical specifications to working code
-- **Systems engineering**: Understanding memory overhead, performance characteristics, and scaling behavior
-- **Integration patterns**: Coordinating optimizers, schedulers, and training loops in production pipelines
-
-### Ready for Advanced Applications
-Your optimizer implementations now enable:
-- **Neural network training**: Complete training pipelines with multiple optimizers and advanced scheduling
-- **Stable deep learning**: Gradient clipping and numerical stability for very deep networks
-- **Convergence analysis**: Visual tools for comparing optimizer performance across training scenarios
-- **Production deployment**: Memory-aware optimizer selection with advanced scheduler variety
-- **Research applications**: Foundation for implementing state-of-the-art optimization algorithms
-
-### Connection to Real ML Systems
-Your implementations mirror production systems:
-- **PyTorch**: `torch.optim.SGD`, `torch.optim.Adam`, and `torch.optim.lr_scheduler` use identical mathematical formulations
-- **TensorFlow**: `tf.keras.optimizers` implements the same algorithms and scheduling patterns
-- **Gradient Clipping**: `torch.nn.utils.clip_grad_norm_()` uses your exact clipping implementation
-- **Industry Standard**: Every major ML framework uses these exact optimization algorithms and stability features
-
-### Next Steps
-1. **Export your module**: `tito module complete 07_optimizers`
-2. **Validate integration**: `tito test --module optimizers`
-3. **Explore advanced features**: Experiment with different momentum coefficients and learning rates
-4. **Ready for Module 08**: Build complete training loops with your optimizers!
-
-**ROCKET Achievement Unlocked**: Your optimization algorithms form the learning engine that transforms gradients into intelligence!
+**Next**: Module 07 will add training loops, learning rate scheduling, and checkpointing for complete end-to-end neural network training!
 """
