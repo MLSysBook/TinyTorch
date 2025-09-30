@@ -232,7 +232,7 @@ def compare_batch_sizes(train_images, train_labels, test_images, test_labels):
             'throughput': samples_per_sec
         })
         
-        console.print(f"  Time: {elapsed:.1f}s, Accuracy: {final_acc:.1f}%")
+        console.print(f"  Time: {elapsed*1000:.0f}ms, Accuracy: {final_acc:.1f}%")
     
     # Show comparison table
     console.print("\n")
@@ -246,7 +246,7 @@ def compare_batch_sizes(train_images, train_labels, test_images, test_labels):
     for r in results:
         table.add_row(
             str(r['batch_size']),
-            f"{r['time']:.1f}s",
+            f"{r['time']*1000:.0f}ms",
             str(r['updates']),
             f"{r['accuracy']:.1f}%",
             f"{r['throughput']:.0f} samples/s"
