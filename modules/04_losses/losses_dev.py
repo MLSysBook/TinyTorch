@@ -1300,26 +1300,8 @@ def test_module():
 
 
 # %%
-if __name__ == "__main__":
-    print("🚀 Running Losses module...")
-
-    # Run all unit tests
-    test_unit_log_softmax()
-    test_unit_mse_loss()
-    test_unit_cross_entropy_loss()
-    test_unit_binary_cross_entropy_loss()
-
-    # Run integration and analysis functions
-    mse_result, ce_result, bce_result = compare_loss_behaviors()
-    analyze_loss_sensitivity()
-    analyze_numerical_stability()
-    analyze_loss_memory()
-    analyze_production_patterns()
-
-    # Final module test
-    test_module()
-
-    print("✅ Module validation complete!")
+# Run comprehensive module test
+test_module()
 
 
 # %% [markdown]
