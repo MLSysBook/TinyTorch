@@ -185,6 +185,7 @@ Linear(784, 256) Parameters:
 """
 
 # %% nbgrader={"grade": false, "grade_id": "linear-layer", "solution": true}
+#| export
 class Linear:
     """
     Linear (fully connected) layer: y = xW + b
@@ -403,6 +404,7 @@ Computational Overhead: Minimal (element-wise operations)
 """
 
 # %% nbgrader={"grade": false, "grade_id": "dropout-layer", "solution": true}
+#| export
 class Dropout:
     """
     Dropout layer for regularization.
