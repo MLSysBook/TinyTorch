@@ -245,39 +245,39 @@ def main():
     
     console.print(table)
     
-    # Final message
+    # Celebratory summary
+    console.print("\n")
     if acc_after >= 0.9:
         console.print(Panel.fit(
-            "[bold green]🎉 SUCCESS![/bold green]\n\n"
-            f"Your perceptron achieved {acc_after:.1%} accuracy!\n"
-            "The model LEARNED to classify the data correctly.\n\n"
-            "[dim]Same architecture as forward_pass.py - just add training![/dim]",
+            "[bold green]🎉 Success! Your Perceptron Learned to Classify![/bold green]\n\n"
+            f"Final accuracy: [bold]{acc_after:.1%}[/bold]\n\n"
+            "[bold]💡 What YOU Just Accomplished:[/bold]\n"
+            "  • Built the FIRST neural network (1957 Rosenblatt)\n"
+            "  • Implemented forward pass with YOUR Tensor\n"
+            "  • Added gradient descent training loop\n"
+            "  • Watched random weights → learned solution!\n\n"
+            "[bold]🔑 Key Insight:[/bold] The architecture is simple (~10 lines).\n"
+            "The magic is the TRAINING LOOP:\n"
+            "  1️⃣  Forward → 2️⃣  Loss → 3️⃣  Backward → 4️⃣  Update\n\n"
+            "[bold]📌 Note:[/bold] This single-layer perceptron can only solve\n"
+            "linearly separable problems.\n\n"
+            "[dim]Next: Milestone 02 shows what happens when data ISN'T\n"
+            "linearly separable... the 17-year AI Winter begins![/dim]",
+            title="🌟 1957 Perceptron Recreated",
             border_style="green",
             box=box.DOUBLE
         ))
     else:
         console.print(Panel.fit(
             "[bold yellow]⚠️  Training in Progress[/bold yellow]\n\n"
-            f"Current accuracy: {acc_after:.1%}\n"
-            "Try more epochs or different learning rate.\n\n"
-            "[dim]The model is learning but needs more training.[/dim]",
-            border_style="yellow"
+            f"Current accuracy: {acc_after:.1%}\n\n"
+            "Your perceptron is learning but needs more training.\n"
+            "Try: More epochs (500+) or different learning rate (0.5).\n\n"
+            "[dim]The gradient descent algorithm is working - just needs more steps![/dim]",
+            title="🔄 Learning in Progress",
+            border_style="yellow",
+            box=box.DOUBLE
         ))
-    
-    # Key insight
-    console.print("\n")
-    console.print(Panel.fit(
-        "[bold]💡 KEY INSIGHT: The Power of Learning[/bold]\n\n"
-        "The architecture is trivial (~10 lines of code).\n"
-        "The magic is in the TRAINING LOOP:\n\n"
-        "  1️⃣  Forward pass: Make predictions\n"
-        "  2️⃣  Compute loss: Measure error\n"
-        "  3️⃣  Backward pass: Calculate gradients (Module 05)\n"
-        "  4️⃣  Update weights: Move toward better solution (Module 06)\n"
-        "  5️⃣  Repeat: Until convergence (Module 07)\n\n"
-        "[dim]This same pattern scales from perceptrons → GPT-4![/dim]",
-        border_style="blue"
-    ))
 
 
 if __name__ == "__main__":
