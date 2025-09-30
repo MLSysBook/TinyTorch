@@ -1,5 +1,5 @@
 """
-Integration test for Module 16: TinyGPT
+Integration test for Module 15: TinyGPT
 Tests language model components and GPT-style transformer integration.
 """
 

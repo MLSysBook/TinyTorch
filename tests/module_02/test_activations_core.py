@@ -1,5 +1,5 @@
 """
-Module 03: Activations - Core Functionality Tests
+Module 02: Activations - Core Functionality Tests
 Tests activation functions that enable non-linear neural networks
 """
 

@@ -1,5 +1,5 @@
 """
-Module 09: Autograd - Core Functionality Tests
+Module 08: Autograd - Core Functionality Tests
 Tests automatic differentiation and computational graphs
 """
 

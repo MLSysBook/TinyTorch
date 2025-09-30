@@ -1,5 +1,5 @@
 """
-Module 04: Layers - Integration Tests
+Module 03: Layers - Integration Tests
 Tests that Layer base class enables building neural network components
 """
 

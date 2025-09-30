@@ -1,5 +1,5 @@
 """
-Tests for Module 05: Dense/Networks
+Tests for Module 04: Dense/Networks
 """
 
 import pytest

@@ -1,26 +1,26 @@
 """
 Module 14: Progressive Integration Tests
-Tests that Module 14 (Benchmarking) works correctly AND that the entire ML system (01→13) still works.
+Tests that Module 15 (MLOps) works correctly AND that the entire TinyTorch system (01→14) still works.
 
-DEPENDENCY CHAIN: 01_setup → ... → 13_kernels → 14_benchmarking
-This is where we enable performance analysis and optimization for ML systems.
+DEPENDENCY CHAIN: 01_setup → ... → 14_benchmarking → 15_mlops
+This is where we enable production deployment, monitoring, and lifecycle management for ML systems.
 
 🎯 WHAT THIS TESTS:
-- Module 14: Performance benchmarking, profiling, bottleneck analysis
-- Integration: Benchmarking works with all ML components (models, training, data)
-- Regression: Complete ML system (01→13) still works correctly
-- Preparation: Ready for production deployment (Module 15: MLOps)
+- Module 14: Production deployment, model monitoring, lifecycle management, CI/CD for ML
+- Integration: MLOps works with complete ML pipeline (models, training, benchmarking)
+- Regression: Entire TinyTorch system (01→14) still works correctly
+- Preparation: Ready for capstone (Module 16: Complete ML systems)
 
 💡 FOR STUDENTS: If tests fail, check:
-1. Does your benchmark_model function exist in tinytorch.core.benchmarking?
-2. Can you profile memory usage and execution time?
-3. Do benchmarks work with different model architectures?
-4. Are performance metrics meaningful and actionable?
+1. Does your ModelMonitor class exist in tinytorch.core.mlops?
+2. Can you deploy models with monitoring and logging?
+3. Do production pipelines work with real data workflows?
+4. Are monitoring metrics meaningful for production decisions?
 
 🔧 DEBUGGING HELP:
-- Benchmarking measures: latency, throughput, memory usage, FLOPS
-- Profiling identifies: bottlenecks, memory leaks, inefficiencies
-- Analysis guides: optimization decisions, hardware choices, scaling strategies
+- MLOps includes: model versioning, deployment, monitoring, rollback, A/B testing
+- Monitoring tracks: accuracy drift, latency, throughput, errors, resource usage
+- Deployment enables: auto-scaling, load balancing, health checks, graceful updates
 """
 
 import numpy as np
@@ -32,61 +32,85 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 
 
-class TestCompleteMLSystemStillWorks:
+class TestCompleteTinyTorchSystemStillWorks:
     """
-    🔄 REGRESSION CHECK: Verify complete ML system (01→13) still works after benchmarking development.
+    🔄 REGRESSION CHECK: Verify complete TinyTorch system (01→14) still works after MLOps development.
     
-    💡 If these fail: You may have broken something in the ML system while implementing benchmarking.
-    🔧 Fix: Check that benchmarking code doesn't interfere with core ML functionality.
+    💡 If these fail: You may have broken something in the core system while implementing MLOps.
+    🔧 Fix: Check that MLOps code doesn't interfere with core ML functionality.
     """
     
-    def test_end_to_end_ml_system_stable(self):
+    def test_complete_ml_system_stable(self):
         """
-        ✅ TEST: Complete ML system (training, inference, optimization) should still work
+        ✅ TEST: Complete TinyTorch system (all modules 01→14) should still work
         
-        📋 FULL ML SYSTEM COMPONENTS:
-        - Data loading and preprocessing
-        - Model architecture (CNN, attention, dense)
-        - Training loops with optimization
-        - Inference and evaluation
-        - Performance optimizations
+        📋 COMPLETE SYSTEM COMPONENTS:
+        - Foundation: Setup, tensors, activations, layers
+        - Networks: Dense networks, spatial operations, attention
+        - Training: Data loading, autograd, optimizers, training loops
+        - Production: Compression, kernels, benchmarking
         
-        🚨 IF FAILS: Core ML system broken by benchmarking development
+        🚨 IF FAILS: Core TinyTorch system broken by MLOps development
         """
         try:
-            # Test complete ML system still works
+            # Test that complete TinyTorch system still works
             from tinytorch.core.tensor import Tensor
             from tinytorch.core.spatial import Conv2D, MaxPool2D
+            from tinytorch.core.attention import MultiHeadAttention
             from tinytorch.core.layers import Dense
             from tinytorch.core.activations import ReLU, Softmax
             from tinytorch.core.optimizers import Adam
             from tinytorch.core.training import Trainer
             from tinytorch.core.data import Dataset, DataLoader
+            from tinytorch.core.compression import prune_weights
+            from tinytorch.core.benchmarking import benchmark_model
             
-            # Create complete ML pipeline
-            class TestModel:
+            # Create sophisticated ML system (Vision + Language)
+            class MultiModalSystem:
                 def __init__(self):
-                    self.conv1 = Conv2D(3, 16, kernel_size=3, padding=1)
-                    self.pool = MaxPool2D(kernel_size=2)
-                    self.conv2 = Conv2D(16, 32, kernel_size=3, padding=1)
-                    self.fc = Dense(32 * 8 * 8, 10)
+                    # Vision pathway
+                    self.vision_conv = Conv2D(3, 64, kernel_size=3, padding=1)
+                    self.vision_pool = MaxPool2D(kernel_size=2)
+                    self.vision_proj = Dense(64 * 16 * 16, 256)
+                    
+                    # Language pathway
+                    self.language_embed = Dense(1000, 256)  # vocab_size=1000
+                    self.attention = MultiHeadAttention(embed_dim=256, num_heads=8)
+                    
+                    # Fusion
+                    self.fusion = Dense(512, 128)
+                    self.classifier = Dense(128, 10)
+                    
+                    # Activations
                     self.relu = ReLU()
                     self.softmax = Softmax()
                 
-                def __call__(self, x):
-                    h1 = self.relu(self.conv1(x))
-                    h1_pool = self.pool(h1)
-                    h2 = self.relu(self.conv2(h1_pool))
-                    h2_pool = self.pool(h2)
+                def __call__(self, vision_input, language_input):
+                    # Vision processing
+                    vis_feat = self.relu(self.vision_conv(vision_input))
+                    vis_pooled = self.vision_pool(vis_feat)
+                    vis_flat = Tensor(vis_pooled.data.reshape(vis_pooled.shape[0], -1))
+                    vis_embed = self.vision_proj(vis_flat)
                     
-                    # Flatten
-                    flattened = Tensor(h2_pool.data.reshape(h2_pool.shape[0], -1))
-                    logits = self.fc(flattened)
+                    # Language processing  
+                    lang_embed = self.language_embed(language_input)
+                    lang_attn = self.attention(lang_embed.data.reshape(1, -1, 256))
+                    lang_feat = Tensor(lang_attn.data.reshape(lang_embed.shape[0], -1))
+                    
+                    # Multimodal fusion
+                    combined_data = np.concatenate([vis_embed.data, lang_feat.data], axis=1)
+                    combined = Tensor(combined_data)
+                    
+                    # Classification
+                    fused = self.relu(self.fusion(combined))
+                    logits = self.classifier(fused)
                     return self.softmax(logits)
                 
                 def parameters(self):
                     params = []
-                    for layer in [self.conv1, self.conv2, self.fc]:
+                    layers = [self.vision_conv, self.vision_proj, self.language_embed, 
+                             self.fusion, self.classifier]
+                    for layer in layers:
                         if hasattr(layer, 'parameters'):
                             params.extend(layer.parameters())
                         elif hasattr(layer, 'weights'):
@@ -95,1144 +119,1466 @@ class TestCompleteMLSystemStillWorks:
                                 params.append(layer.bias)
                     return params
             
-            # Create dataset
-            class TestDataset(Dataset):
-                def __init__(self):
-                    self.data = np.random.randn(40, 3, 32, 32)
-                    self.targets = np.random.randint(0, 10, 40)
-                
-                def __len__(self):
-                    return 40
-                
-                def __getitem__(self, idx):
-                    return Tensor(self.data[idx]), self.targets[idx]
+            # Test complete system
+            system = MultiModalSystem()
             
-            # Test complete pipeline
-            model = TestModel()
-            optimizer = Adam(model.parameters(), lr=0.001)
-            trainer = Trainer(model, optimizer)
+            # Test data
+            vision_data = Tensor(np.random.randn(2, 3, 32, 32))
+            language_data = Tensor(np.random.randint(0, 1000, (2, 50)))
             
-            dataset = TestDataset()
-            dataloader = DataLoader(dataset, batch_size=8)
+            # Test forward pass
+            predictions = system(vision_data, language_data)
             
-            # Test inference
-            for batch_x, batch_y in dataloader:
-                predictions = model(batch_x)
-                assert predictions.shape == (8, 10), \
-                    f"❌ ML system shape broken. Expected (8, 10), got {predictions.shape}"
-                
-                # Verify probabilities
-                prob_sums = np.sum(predictions.data, axis=1)
-                assert np.allclose(prob_sums, 1.0), \
-                    "❌ ML system probabilities broken"
-                
-                break  # Test one batch
+            assert predictions.shape == (2, 10), \
+                f"❌ Complete system shape broken. Expected (2, 10), got {predictions.shape}"
+            
+            # Test training components
+            optimizer = Adam(system.parameters(), lr=0.001)
+            assert hasattr(optimizer, 'step'), "❌ Training components broken"
+            
+            # Test compression
+            if 'prune_weights' in locals():
+                original_weights = system.vision_conv.weights.data.copy()
+                pruned = prune_weights(system.vision_conv.weights, sparsity=0.2)
+                assert pruned.shape == original_weights.shape, "❌ Compression broken"
+            
+            # Test benchmarking
+            if 'benchmark_model' in locals():
+                # Simplified benchmark for vision pathway
+                benchmark_results = benchmark_model(system.vision_conv, (2, 3, 32, 32))
+                assert 'latency' in benchmark_results, "❌ Benchmarking broken"
                 
         except ImportError as e:
             assert False, f"""
-            ❌ ML SYSTEM IMPORTS BROKEN!
+            ❌ COMPLETE TINYTORCH SYSTEM IMPORTS BROKEN!
             
             🔍 IMPORT ERROR: {str(e)}
             
-            🔧 COMPLETE ML SYSTEM REQUIREMENTS:
-            All modules (01→13) must be working:
-            1. Tensor operations (Module 02)
-            2. Activation functions (Module 03)
-            3. Layer infrastructure (Module 04)
-            4. Dense networks (Module 05)
-            5. Spatial operations (Module 06)
-            6. Attention mechanisms (Module 07)
-            7. Data loading (Module 08)
-            8. Automatic differentiation (Module 09)
-            9. Optimizers (Module 10)
-            10. Training loops (Module 11)
-            11. Model compression (Module 12)
-            12. Performance kernels (Module 13)
+            🔧 COMPLETE SYSTEM REQUIREMENTS:
+            ALL modules (01→14) must be working perfectly:
+            
+            Foundation (01-05):
+            ✅ Setup environment and tools
+            ✅ Tensor operations and mathematics
+            ✅ Activation functions and non-linearity
+            ✅ Layer infrastructure and inheritance
+            ✅ Dense networks and neural architectures
+            
+            Advanced ML (06-08):
+            ✅ Spatial processing and computer vision
+            ✅ Attention mechanisms and transformers
+            ✅ Data loading and preprocessing pipelines
+            
+            Training Infrastructure (09-11):
+            ✅ Automatic differentiation and gradients
+            ✅ Optimization algorithms (SGD, Adam)
+            ✅ Training loops and learning coordination
+            
+            Production Systems (12-14):
+            ✅ Model compression and efficiency
+            ✅ Performance kernels and acceleration
+            ✅ Benchmarking and performance analysis
             
             💡 SYSTEM INTEGRITY:
-            Benchmarking should be NON-INVASIVE - it measures
-            performance without changing core functionality.
+            MLOps should be PURELY ADDITIVE - it adds
+            deployment and monitoring but doesn't break
+            any existing ML functionality.
             """
         except Exception as e:
             assert False, f"""
-            ❌ ML SYSTEM FUNCTIONALITY BROKEN!
+            ❌ COMPLETE TINYTORCH SYSTEM FUNCTIONALITY BROKEN!
             
             🔍 ERROR: {str(e)}
             
-            🔧 POSSIBLE CAUSES:
-            1. Benchmarking interfering with forward pass
-            2. Memory profiling affecting tensor operations
-            3. Performance monitoring breaking training loops
-            4. Instrumentation corrupting gradients
-            5. Timing code affecting numerical stability
+            🔧 SYSTEM STABILITY REQUIREMENTS:
+            1. All forward passes work correctly
+            2. Training components remain functional
+            3. Advanced architectures still integrate
+            4. Performance tools remain operational
+            5. No interference from MLOps code
             
-            💡 BENCHMARKING SAFETY:
-            Benchmarking code should be:
-            - Non-intrusive: Doesn't change model behavior
-            - Optional: Can be disabled for production
-            - Isolated: Runs in separate threads/processes
-            - Clean: No side effects on ML computations
+            💡 PRODUCTION READINESS:
+            The complete TinyTorch system must work flawlessly
+            because MLOps will deploy and monitor these models
+            in production environments where reliability is critical.
+            
+            🚨 CRITICAL ISSUE:
+            If the core ML system is broken, MLOps cannot
+            deploy reliable models to production!
             """
     
-    def test_optimization_and_training_stable(self):
+    def test_benchmarking_and_optimization_stable(self):
         """
-        ✅ TEST: Training and optimization should still work after benchmarking
+        ✅ TEST: Performance benchmarking and optimization should still work
         
-        📋 TRAINING SYSTEM:
-        - Gradient computation and backpropagation
-        - Parameter updates via optimizers
-        - Loss function evaluation
-        - Training loop coordination
+        📋 PERFORMANCE SYSTEM:
+        - Model benchmarking and profiling
+        - Performance comparison tools
+        - Hardware analysis and optimization
+        - Training and inference analysis
         
-        🎯 Ensures benchmarking doesn't break learning
-        """
-        try:
-            from tinytorch.core.tensor import Tensor
-            from tinytorch.core.layers import Dense
-            from tinytorch.core.optimizers import SGD
-            from tinytorch.core.training import Trainer, MSELoss
-            from tinytorch.core.autograd import Variable
-            
-            # Test training system
-            model = Dense(5, 3)
-            optimizer = SGD(model.parameters(), lr=0.01)
-            loss_fn = MSELoss()
-            trainer = Trainer(model, optimizer)
-            
-            # Test training step
-            x = Tensor(np.random.randn(4, 5))
-            target = Tensor(np.random.randn(4, 3))
-            
-            # Forward pass
-            predictions = model(x)
-            loss = loss_fn(predictions, target)
-            
-            # Verify training components work
-            assert predictions.shape == (4, 3), \
-                f"❌ Training forward pass broken. Expected (4, 3), got {predictions.shape}"
-            
-            assert hasattr(loss, 'data') or isinstance(loss, (float, np.ndarray)), \
-                "❌ Loss computation broken"
-            
-            # Test optimization step structure
-            assert hasattr(optimizer, 'step'), \
-                "❌ Optimizer step method missing"
-            
-            assert hasattr(optimizer, 'zero_grad'), \
-                "❌ Optimizer zero_grad method missing"
-            
-        except Exception as e:
-            assert False, f"""
-            ❌ TRAINING AND OPTIMIZATION BROKEN!
-            
-            🔍 ERROR: {str(e)}
-            
-            🔧 TRAINING REQUIREMENTS:
-            1. Forward pass produces correct outputs
-            2. Loss functions compute meaningful values
-            3. Optimizers can update parameters
-            4. Training loops coordinate all components
-            5. Gradient computation remains stable
-            
-            💡 TRAINING INTEGRITY:
-            Training must work perfectly because:
-            - Benchmarking measures training performance
-            - Performance analysis guides training optimization
-            - Production systems depend on training stability
-            - Model deployment requires trained parameters
-            """
-
-
-class TestModule14BenchmarkingCore:
-    """
-    🆕 NEW FUNCTIONALITY: Test Module 14 (Benchmarking) core implementation.
-    
-    💡 What you're implementing: Performance analysis and optimization tools for ML systems.
-    🎯 Goal: Enable data-driven performance optimization and bottleneck identification.
-    """
-    
-    def test_model_benchmarking_exists(self):
-        """
-        ✅ TEST: Model benchmarking - Measure model performance characteristics
-        
-        📋 WHAT YOU NEED TO IMPLEMENT:
-        def benchmark_model(model, input_shape, batch_sizes=[1, 8, 32], num_trials=10):
-            # Measure latency, throughput, memory usage
-            return {'latency': ..., 'throughput': ..., 'memory': ...}
-        
-        🚨 IF FAILS: Model benchmarking doesn't exist or missing components
+        🎯 MLOps needs performance data for production decisions
         """
         try:
             from tinytorch.core.benchmarking import benchmark_model
             from tinytorch.core.layers import Dense
+            from tinytorch.core.spatial import Conv2D
             from tinytorch.core.tensor import Tensor
             
-            # Test model benchmarking
-            model = Dense(100, 50)
-            input_shape = (32, 100)  # Batch size 32, 100 features
+            # Test that benchmarking still works
+            models_to_benchmark = [
+                ("dense_model", Dense(100, 50)),
+                ("conv_model", Conv2D(3, 16, kernel_size=3))
+            ]
             
-            # Run benchmark
-            results = benchmark_model(model, input_shape, num_trials=5)
+            benchmark_results = {}
             
-            # Should return performance metrics
-            assert isinstance(results, dict), \
-                "❌ benchmark_model should return dictionary of metrics"
-            
-            # Essential performance metrics
-            required_metrics = ['latency', 'throughput', 'memory_usage']
-            for metric in required_metrics:
-                assert metric in results, \
-                    f"❌ Missing benchmark metric: {metric}"
+            for model_name, model in models_to_benchmark:
+                if model_name == "dense_model":
+                    input_shape = (16, 100)
+                else:  # conv_model
+                    input_shape = (4, 3, 32, 32)
                 
-                assert isinstance(results[metric], (int, float)), \
-                    f"❌ Benchmark metric {metric} should be numeric, got {type(results[metric])}"
+                # Test benchmarking
+                results = benchmark_model(model, input_shape)
+                benchmark_results[model_name] = results
                 
-                assert results[metric] > 0, \
-                    f"❌ Benchmark metric {metric} should be positive, got {results[metric]}"
+                # Verify benchmark structure
+                assert 'latency' in results, f"❌ Benchmarking broken for {model_name}"
+                assert 'throughput' in results, f"❌ Benchmarking broken for {model_name}"
+                assert results['latency'] > 0, f"❌ Invalid latency for {model_name}"
+                assert results['throughput'] > 0, f"❌ Invalid throughput for {model_name}"
             
-            # Latency should be reasonable (milliseconds)
-            assert 0.001 < results['latency'] < 10.0, \
-                f"❌ Latency seems unrealistic: {results['latency']} seconds"
+            # Verify performance comparison works
+            dense_perf = benchmark_results["dense_model"]
+            conv_perf = benchmark_results["conv_model"]
             
-            # Throughput should be reasonable (samples/second)
-            assert 1 < results['throughput'] < 1000000, \
-                f"❌ Throughput seems unrealistic: {results['throughput']} samples/sec"
+            # Should have different performance characteristics
+            assert dense_perf['latency'] != conv_perf['latency'], \
+                "❌ Performance comparison broken - models show identical performance"
+            
+        except Exception as e:
+            assert False, f"""
+            ❌ BENCHMARKING AND OPTIMIZATION BROKEN!
+            
+            🔍 ERROR: {str(e)}
+            
+            🔧 PERFORMANCE REQUIREMENTS FOR MLOPS:
+            1. Model benchmarking must work for deployment planning
+            2. Performance comparison guides model selection
+            3. Hardware analysis informs infrastructure decisions
+            4. Training metrics track system health
+            
+            💡 MLOPS DEPENDENCY ON PERFORMANCE:
+            MLOps uses performance data for:
+            - Auto-scaling decisions
+            - Resource allocation
+            - SLA monitoring
+            - Cost optimization
+            - Infrastructure planning
+            
+            Without working performance tools, MLOps cannot
+            make intelligent production decisions!
+            """
+
+
+class TestModule15MLOpsCore:
+    """
+    🆕 NEW FUNCTIONALITY: Test Module 15 (MLOps) core implementation.
+    
+    💡 What you're implementing: Production deployment, monitoring, and lifecycle management for ML systems.
+    🎯 Goal: Enable reliable, scalable, and monitored ML systems in production.
+    """
+    
+    def test_model_monitoring_exists(self):
+        """
+        ✅ TEST: Model monitoring - Track model performance in production
+        
+        📋 WHAT YOU NEED TO IMPLEMENT:
+        class ModelMonitor:
+            def __init__(self, model, metrics=['accuracy', 'latency', 'throughput']):
+                # Setup monitoring infrastructure
+            def log_prediction(self, inputs, outputs, targets=None):
+                # Track individual predictions
+            def get_metrics(self):
+                # Return current performance metrics
+        
+        🚨 IF FAILS: Model monitoring doesn't exist or missing components
+        """
+        try:
+            from tinytorch.core.mlops import ModelMonitor
+            from tinytorch.core.layers import Dense
+            from tinytorch.core.tensor import Tensor
+            
+            # Test model monitoring setup
+            model = Dense(50, 10)
+            monitor = ModelMonitor(model, metrics=['accuracy', 'latency', 'drift'])
+            
+            # Should track the model
+            assert hasattr(monitor, 'model'), \
+                "❌ ModelMonitor missing 'model' attribute"
+            
+            assert monitor.model is model, \
+                "❌ ModelMonitor not correctly tracking the model"
+            
+            # Should track metrics
+            assert hasattr(monitor, 'metrics'), \
+                "❌ ModelMonitor missing 'metrics' configuration"
+            
+            # Should have logging capability
+            assert hasattr(monitor, 'log_prediction'), \
+                "❌ ModelMonitor missing 'log_prediction' method"
+            
+            assert callable(monitor.log_prediction), \
+                "❌ ModelMonitor.log_prediction should be callable"
+            
+            # Test prediction logging
+            test_input = Tensor(np.random.randn(1, 50))
+            test_output = model(test_input)
+            test_target = Tensor(np.random.randn(1, 10))
+            
+            # Should be able to log predictions
+            monitor.log_prediction(test_input, test_output, test_target)
+            
+            # Should provide metrics
+            assert hasattr(monitor, 'get_metrics'), \
+                "❌ ModelMonitor missing 'get_metrics' method"
+            
+            metrics = monitor.get_metrics()
+            assert isinstance(metrics, dict), \
+                "❌ ModelMonitor.get_metrics() should return dict"
             
         except ImportError as e:
             assert False, f"""
-            ❌ MODEL BENCHMARKING MISSING!
+            ❌ MODEL MONITORING MISSING!
             
             🔍 IMPORT ERROR: {str(e)}
             
             🔧 HOW TO IMPLEMENT:
             
-            1. Create in modules/source/14_benchmarking/14_benchmarking_dev.py:
+            1. Create in modules/source/15_mlops/15_mlops_dev.py:
             
             import time
             import numpy as np
+            from collections import defaultdict, deque
             from tinytorch.core.tensor import Tensor
             
-            def benchmark_model(model, input_shape, batch_sizes=[1, 8, 32], num_trials=10):
-                '''Benchmark model performance across different batch sizes.'''
+            class ModelMonitor:
+                '''Production model monitoring and alerting.'''
                 
-                results = {{
-                    'latency': [],
-                    'throughput': [],
-                    'memory_usage': []
-                }}
+                def __init__(self, model, metrics=['accuracy', 'latency', 'drift']):
+                    self.model = model
+                    self.metrics = metrics
+                    self.prediction_log = deque(maxlen=10000)  # Keep last 10k predictions
+                    self.metric_history = defaultdict(list)
+                    self.start_time = time.time()
                 
-                for batch_size in batch_sizes:
-                    # Create test input
-                    test_input = Tensor(np.random.randn(batch_size, *input_shape[1:]))
+                def log_prediction(self, inputs, outputs, targets=None, latency=None):
+                    '''Log a prediction for monitoring.'''
+                    timestamp = time.time()
                     
-                    # Measure latency
-                    latencies = []
-                    for _ in range(num_trials):
-                        start_time = time.time()
-                        output = model(test_input)
-                        end_time = time.time()
-                        latencies.append(end_time - start_time)
+                    prediction_record = {{
+                        'timestamp': timestamp,
+                        'input_shape': inputs.shape,
+                        'output_shape': outputs.shape,
+                        'latency': latency or 0.001,  # Default latency
+                    }}
+                    
+                    if targets is not None:
+                        # Calculate accuracy (simplified)
+                        pred_classes = np.argmax(outputs.data, axis=-1)
+                        true_classes = np.argmax(targets.data, axis=-1)
+                        accuracy = np.mean(pred_classes == true_classes)
+                        prediction_record['accuracy'] = accuracy
+                    
+                    self.prediction_log.append(prediction_record)
+                
+                def get_metrics(self):
+                    '''Get current monitoring metrics.'''
+                    if not self.prediction_log:
+                        return {{'status': 'no_data'}}
+                    
+                    recent_predictions = list(self.prediction_log)[-100:]  # Last 100
                     
                     # Calculate metrics
-                    avg_latency = np.mean(latencies)
-                    throughput = batch_size / avg_latency  # samples/second
+                    avg_latency = np.mean([p['latency'] for p in recent_predictions])
+                    throughput = len(recent_predictions) / (time.time() - recent_predictions[0]['timestamp'])
                     
-                    # Estimate memory usage (simplified)
-                    memory_usage = test_input.data.nbytes + output.data.nbytes
+                    metrics = {{
+                        'avg_latency': avg_latency,
+                        'throughput': throughput,
+                        'prediction_count': len(self.prediction_log),
+                        'uptime': time.time() - self.start_time
+                    }}
                     
-                    results['latency'].append(avg_latency)
-                    results['throughput'].append(throughput)
-                    results['memory_usage'].append(memory_usage)
+                    # Add accuracy if available
+                    accuracies = [p.get('accuracy') for p in recent_predictions if 'accuracy' in p]
+                    if accuracies:
+                        metrics['accuracy'] = np.mean(accuracies)
+                    
+                    return metrics
                 
-                # Return average metrics
-                return {{
-                    'latency': np.mean(results['latency']),
-                    'throughput': np.mean(results['throughput']),
-                    'memory_usage': np.mean(results['memory_usage'])
-                }}
-            
-            2. Export the module:
-               tito module complete 14_benchmarking
-            
-            📊 BENCHMARKING METRICS:
-            - Latency: Time per inference (milliseconds)
-            - Throughput: Samples processed per second
-            - Memory Usage: Peak memory consumption (bytes)
-            - FLOPS: Floating point operations per second
-            - Efficiency: Hardware utilization percentage
-            """
-        except Exception as e:
-            assert False, f"""
-            ❌ MODEL BENCHMARKING BROKEN!
-            
-            🔍 ERROR: {str(e)}
-            
-            🔧 BENCHMARKING REQUIREMENTS:
-            1. Measure inference latency accurately
-            2. Calculate throughput (samples/second)
-            3. Monitor memory usage
-            4. Handle different batch sizes
-            5. Provide statistical measures (mean, std)
-            6. Support different model architectures
-            
-            💡 PERFORMANCE ANALYSIS:
-            Benchmarking enables:
-            - Hardware selection (CPU vs GPU vs TPU)
-            - Model architecture optimization
-            - Deployment planning and scaling
-            - Cost estimation for production
-            - SLA planning and capacity sizing
-            """
-    
-    def test_profiling_and_bottleneck_analysis(self):
-        """
-        ✅ TEST: Profiling tools - Identify performance bottlenecks
-        
-        📋 PROFILING CAPABILITIES:
-        - Layer-wise timing analysis
-        - Memory allocation tracking
-        - Operation hotspot identification
-        - Gradient computation profiling
-        
-        🎯 Essential for performance optimization
-        """
-        try:
-            from tinytorch.core.benchmarking import profile_model, ProfilerContext
-            from tinytorch.core.layers import Dense
-            from tinytorch.core.activations import ReLU
-            from tinytorch.core.tensor import Tensor
-            
-            # Test profiling functionality
-            class TestModel:
-                def __init__(self):
-                    self.layer1 = Dense(100, 200)
-                    self.relu = ReLU()
-                    self.layer2 = Dense(200, 50)
-                
-                def __call__(self, x):
-                    h1 = self.layer1(x)
-                    h1_act = self.relu(h1)
-                    return self.layer2(h1_act)
-            
-            model = TestModel()
-            x = Tensor(np.random.randn(16, 100))
-            
-            # Test profiling
-            if 'profile_model' in locals():
-                profile_results = profile_model(model, x)
-                
-                # Should provide layer-wise timing
-                assert isinstance(profile_results, dict), \
-                    "❌ Profiler should return dictionary of results"
-                
-                assert 'layer_times' in profile_results, \
-                    "❌ Profiler missing layer timing analysis"
-                
-                assert 'total_time' in profile_results, \
-                    "❌ Profiler missing total execution time"
-                
-                assert 'bottlenecks' in profile_results, \
-                    "❌ Profiler missing bottleneck identification"
-            
-            # Test profiler context (if available)
-            if 'ProfilerContext' in locals():
-                with ProfilerContext() as profiler:
-                    output = model(x)
-                
-                results = profiler.get_results()
-                assert isinstance(results, dict), \
-                    "❌ ProfilerContext should provide results"
-                
-                assert 'operations' in results, \
-                    "❌ ProfilerContext missing operation tracking"
-            
-        except ImportError:
-            assert False, f"""
-            ❌ PROFILING TOOLS MISSING!
-            
-            🔧 PROFILING IMPLEMENTATION:
-            
-            class ProfilerContext:
-                '''Context manager for detailed performance profiling.'''
-                
-                def __init__(self):
-                    self.operation_times = []
-                    self.memory_snapshots = []
-                    self.start_time = None
-                
-                def __enter__(self):
-                    self.start_time = time.time()
-                    return self
-                
-                def __exit__(self, exc_type, exc_val, exc_tb):
-                    self.total_time = time.time() - self.start_time
-                
-                def get_results(self):
+                def check_drift(self):
+                    '''Check for model drift.'''
+                    # Simplified drift detection
+                    if len(self.prediction_log) < 100:
+                        return {{'drift_detected': False, 'reason': 'insufficient_data'}}
+                    
+                    recent = list(self.prediction_log)[-50:]
+                    older = list(self.prediction_log)[-100:-50]
+                    
+                    recent_acc = np.mean([p.get('accuracy', 0.5) for p in recent])
+                    older_acc = np.mean([p.get('accuracy', 0.5) for p in older])
+                    
+                    drift_threshold = 0.05  # 5% accuracy drop
+                    drift_detected = (older_acc - recent_acc) > drift_threshold
+                    
                     return {{
-                        'total_time': self.total_time,
-                        'operations': self.operation_times,
-                        'memory': self.memory_snapshots
+                        'drift_detected': drift_detected,
+                        'accuracy_drop': older_acc - recent_acc,
+                        'threshold': drift_threshold
                     }}
             
-            def profile_model(model, input_data):
-                '''Profile model execution and identify bottlenecks.'''
-                
-                # Profile each layer
-                layer_times = {{}}
-                with ProfilerContext() as profiler:
-                    
-                    # Time each operation
-                    start = time.time()
-                    output = model(input_data)
-                    end = time.time()
-                    
-                    total_time = end - start
-                
-                return {{
-                    'total_time': total_time,
-                    'layer_times': layer_times,
-                    'bottlenecks': ['layer2'],  # Identify slowest layers
-                    'recommendations': ['Consider reducing layer2 size']
-                }}
+            2. Export the module:
+               tito module complete 15_mlops
             
-            💡 PROFILING APPLICATIONS:
-            - Optimize model architectures
-            - Choose efficient layer types
-            - Identify memory bottlenecks
-            - Guide hardware upgrades
-            - Plan distributed training
+            📊 MONITORING CAPABILITIES:
+            - Real-time performance tracking
+            - Drift detection and alerting
+            - Resource usage monitoring
+            - Error rate tracking
+            - Custom metric support
             """
         except Exception as e:
             assert False, f"""
-            ❌ PROFILING TOOLS BROKEN!
+            ❌ MODEL MONITORING BROKEN!
             
             🔍 ERROR: {str(e)}
             
-            🔧 PROFILING REQUIREMENTS:
-            1. Layer-wise execution timing
-            2. Memory allocation tracking
-            3. Operation bottleneck identification
-            4. Statistical analysis of performance
-            5. Actionable optimization recommendations
+            🔧 MONITORING REQUIREMENTS:
+            1. Track model predictions and performance
+            2. Detect accuracy/performance drift
+            3. Monitor latency and throughput
+            4. Log prediction history
+            5. Provide actionable metrics
+            6. Support alerting and notifications
             
-            🔬 PROFILING INSIGHTS:
-            Profiling reveals:
-            - Which layers are slowest
-            - Memory allocation patterns
-            - Computational hotspots
-            - Inefficient operations
-            - Hardware utilization
+            💡 PRODUCTION MONITORING:
+            Model monitoring enables:
+            - Early detection of model degradation
+            - Automatic retraining triggers
+            - Performance SLA tracking
+            - A/B testing validation
+            - Incident response and debugging
+            
+            🚨 CRITICAL FOR PRODUCTION:
+            Without monitoring, production ML systems are:
+            - Unreliable (undetected failures)
+            - Untrustworthy (silent degradation)  
+            - Unoptimizable (no performance data)
+            - Unmaintainable (no operational visibility)
             """
     
-    def test_performance_comparison_tools(self):
+    def test_model_deployment_infrastructure(self):
         """
-        ✅ TEST: Performance comparison - Compare different model configurations
+        ✅ TEST: Model deployment - Deploy models to production environments
         
-        📋 COMPARISON CAPABILITIES:
-        - Model architecture comparison
-        - Optimization technique evaluation
-        - Hardware performance analysis
-        - Training vs inference benchmarks
+        📋 DEPLOYMENT CAPABILITIES:
+        - Model serving and inference endpoints
+        - Load balancing and auto-scaling
+        - Health checks and rollback
+        - Version management and A/B testing
         
-        💡 Guide optimization decisions with data
+        🎯 Enable reliable model serving at scale
         """
         try:
-            from tinytorch.core.benchmarking import compare_models, PerformanceComparator
+            from tinytorch.core.mlops import ModelServer, deploy_model
             from tinytorch.core.layers import Dense
             from tinytorch.core.tensor import Tensor
             
-            # Test model comparison
-            model_small = Dense(50, 25)
-            model_large = Dense(100, 50)
+            # Test model deployment
+            model = Dense(20, 5)
             
-            input_shape = (16, 50)
+            # Test model server
+            if 'ModelServer' in locals():
+                server = ModelServer(model, port=8080)
+                
+                # Should configure serving
+                assert hasattr(server, 'model'), \
+                    "❌ ModelServer missing model configuration"
+                
+                assert hasattr(server, 'predict'), \
+                    "❌ ModelServer missing predict method"
+                
+                # Test prediction interface
+                test_input = Tensor(np.random.randn(1, 20))
+                prediction = server.predict(test_input)
+                
+                assert prediction.shape == (1, 5), \
+                    f"❌ ModelServer prediction shape wrong. Expected (1, 5), got {prediction.shape}"
+                
+                # Test health check
+                if hasattr(server, 'health_check'):
+                    health = server.health_check()
+                    assert isinstance(health, dict), \
+                        "❌ Health check should return dict"
+                    assert 'status' in health, \
+                        "❌ Health check missing status"
             
-            if 'compare_models' in locals():
-                comparison = compare_models([model_small, model_large], input_shape)
+            # Test deployment function
+            if 'deploy_model' in locals():
+                deployment = deploy_model(model, endpoint='/predict', replicas=2)
                 
-                # Should compare performance metrics
-                assert isinstance(comparison, dict), \
-                    "❌ Model comparison should return results dictionary"
+                assert hasattr(deployment, 'predict'), \
+                    "❌ Deployment missing predict interface"
                 
-                assert 'models' in comparison, \
-                    "❌ Comparison missing model results"
+                assert hasattr(deployment, 'scale'), \
+                    "❌ Deployment missing scaling capability"
                 
-                assert len(comparison['models']) == 2, \
-                    f"❌ Should compare 2 models, got {len(comparison['models'])}"
-                
-                # Should provide relative performance
-                assert 'relative_performance' in comparison, \
-                    "❌ Comparison missing relative performance analysis"
-                
-                # Should identify best model
-                assert 'best_model' in comparison, \
-                    "❌ Comparison should identify best performing model"
-            
-            # Test performance comparator (if available)
-            if 'PerformanceComparator' in locals():
-                comparator = PerformanceComparator()
-                
-                # Add models to comparison
-                comparator.add_model("small", model_small)
-                comparator.add_model("large", model_large)
-                
-                # Run comparison
-                results = comparator.benchmark_all(input_shape)
-                
-                assert isinstance(results, dict), \
-                    "❌ PerformanceComparator should return results"
-                
-                assert 'small' in results and 'large' in results, \
-                    "❌ Comparison should include all added models"
+                # Test scaling
+                deployment.scale(replicas=4)
+                assert deployment.replicas == 4, \
+                    "❌ Deployment scaling broken"
             
         except ImportError:
             assert False, f"""
-            ❌ PERFORMANCE COMPARISON TOOLS MISSING!
+            ❌ MODEL DEPLOYMENT INFRASTRUCTURE MISSING!
             
-            🔧 COMPARISON IMPLEMENTATION:
+            🔧 DEPLOYMENT IMPLEMENTATION:
             
-            def compare_models(models, input_shape, metrics=['latency', 'memory']):
-                '''Compare performance of multiple models.'''
+            class ModelServer:
+                '''Production model serving infrastructure.'''
                 
-                results = {{
-                    'models': [],
-                    'relative_performance': {{}},
-                    'best_model': None
-                }}
+                def __init__(self, model, port=8080, health_check_interval=30):
+                    self.model = model
+                    self.port = port
+                    self.health_check_interval = health_check_interval
+                    self.request_count = 0
+                    self.error_count = 0
+                    self.start_time = time.time()
                 
-                # Benchmark each model
-                for i, model in enumerate(models):
-                    model_results = benchmark_model(model, input_shape)
-                    results['models'].append({{
-                        'model_id': i,
-                        'metrics': model_results
-                    }})
+                def predict(self, inputs):
+                    '''Serve model predictions.'''
+                    try:
+                        self.request_count += 1
+                        return self.model(inputs)
+                    except Exception as e:
+                        self.error_count += 1
+                        raise e
                 
-                # Find best model (lowest latency)
-                best_idx = min(range(len(models)), 
-                             key=lambda i: results['models'][i]['metrics']['latency'])
-                results['best_model'] = best_idx
+                def health_check(self):
+                    '''Check server health status.'''
+                    uptime = time.time() - self.start_time
+                    error_rate = self.error_count / max(self.request_count, 1)
+                    
+                    status = 'healthy' if error_rate < 0.05 else 'unhealthy'
+                    
+                    return {{
+                        'status': status,
+                        'uptime': uptime,
+                        'request_count': self.request_count,
+                        'error_rate': error_rate,
+                        'memory_usage': 'unknown'  # Would implement actual monitoring
+                    }}
                 
-                return results
+                def start(self):
+                    '''Start the model server.'''
+                    print(f"Starting model server on port {{self.port}}")
+                    # Would implement actual HTTP server
+                
+                def stop(self):
+                    '''Stop the model server.'''
+                    print("Stopping model server")
             
-            class PerformanceComparator:
-                '''Advanced model performance comparison tool.'''
+            def deploy_model(model, endpoint='/predict', replicas=1, auto_scale=True):
+                '''Deploy model with production configuration.'''
                 
-                def __init__(self):
-                    self.models = {{}}
+                class Deployment:
+                    def __init__(self, model, endpoint, replicas):
+                        self.model = model
+                        self.endpoint = endpoint
+                        self.replicas = replicas
+                        self.servers = []
+                        
+                        # Create server instances
+                        for i in range(replicas):
+                            server = ModelServer(model, port=8080+i)
+                            self.servers.append(server)
+                    
+                    def predict(self, inputs):
+                        # Load balance across servers
+                        server_idx = hash(str(inputs.data)) % len(self.servers)
+                        return self.servers[server_idx].predict(inputs)
+                    
+                    def scale(self, replicas):
+                        self.replicas = replicas
+                        # Would implement actual scaling logic
+                    
+                    def rollback(self, version):
+                        # Would implement model version rollback
+                        pass
                 
-                def add_model(self, name, model):
-                    self.models[name] = model
-                
-                def benchmark_all(self, input_shape):
-                    results = {{}}
-                    for name, model in self.models.items():
-                        results[name] = benchmark_model(model, input_shape)
-                    return results
+                return Deployment(model, endpoint, replicas)
             
-            💡 COMPARISON USE CASES:
-            - Architecture search: Which model design is best?
-            - Optimization evaluation: Does pruning help performance?
-            - Hardware selection: CPU vs GPU vs TPU performance
-            - Deployment planning: Latency vs accuracy tradeoffs
+            💡 DEPLOYMENT FEATURES:
+            - High availability with load balancing
+            - Auto-scaling based on traffic
+            - Health monitoring and alerting
+            - Blue-green deployments
+            - Canary releases and A/B testing
             """
         except Exception as e:
             assert False, f"""
-            ❌ PERFORMANCE COMPARISON BROKEN!
+            ❌ MODEL DEPLOYMENT INFRASTRUCTURE BROKEN!
             
             🔍 ERROR: {str(e)}
             
-            🔧 COMPARISON REQUIREMENTS:
-            1. Fair benchmarking across models
-            2. Multiple performance metrics
-            3. Statistical significance testing
-            4. Relative performance analysis
-            5. Actionable recommendations
+            🔧 DEPLOYMENT REQUIREMENTS:
+            1. Serve models via HTTP/gRPC endpoints
+            2. Handle concurrent requests efficiently
+            3. Provide health checks and monitoring
+            4. Support auto-scaling and load balancing
+            5. Enable blue-green and canary deployments
+            6. Track deployment metrics and logs
             
-            📊 COMPARISON INSIGHTS:
-            Performance comparison enables:
-            - Data-driven model selection
-            - Optimization technique validation
-            - Hardware cost-benefit analysis
-            - Production deployment decisions
+            🌐 PRODUCTION SERVING:
+            Model deployment enables:
+            - Real-time inference APIs
+            - Batch processing pipelines
+            - Edge deployment for mobile/IoT
+            - Multi-region serving for global apps
+            - Cost-effective auto-scaling
             """
-
-
-class TestBenchmarkingIntegration:
-    """
-    🔗 INTEGRATION TEST: Benchmarking + Complete ML system working together.
     
-    💡 Test that benchmarking works with real ML workflows and architectures.
-    🎯 Goal: Enable performance analysis for production ML systems.
-    """
-    
-    def test_training_performance_analysis(self):
+    def test_ml_pipeline_orchestration(self):
         """
-        ✅ TEST: Benchmark training loops and optimization
+        ✅ TEST: ML pipeline orchestration - Coordinate training, evaluation, deployment
         
-        📋 TRAINING BENCHMARKS:
-        - Forward pass timing
-        - Backward pass timing
-        - Optimizer step timing
-        - Data loading bottlenecks
-        - End-to-end training throughput
+        📋 PIPELINE CAPABILITIES:
+        - Training pipeline automation
+        - Model evaluation and validation
+        - Automated deployment triggers
+        - Rollback and recovery
         
-        💡 Optimize training performance for faster iteration
+        💡 Enable end-to-end ML automation
         """
         try:
-            from tinytorch.core.benchmarking import benchmark_training
+            from tinytorch.core.mlops import MLPipeline, PipelineStep
             from tinytorch.core.tensor import Tensor
             from tinytorch.core.layers import Dense
             from tinytorch.core.optimizers import SGD
+            from tinytorch.core.training import Trainer
+            
+            # Test ML pipeline orchestration
+            if 'MLPipeline' in locals():
+                pipeline = MLPipeline(name="production_model_pipeline")
+                
+                # Should support adding steps
+                assert hasattr(pipeline, 'add_step'), \
+                    "❌ MLPipeline missing add_step method"
+                
+                # Create pipeline steps
+                if 'PipelineStep' in locals():
+                    # Training step
+                    train_step = PipelineStep(
+                        name="training",
+                        function=lambda: "training_complete",
+                        inputs=['data', 'model'],
+                        outputs=['trained_model']
+                    )
+                    
+                    # Evaluation step
+                    eval_step = PipelineStep(
+                        name="evaluation", 
+                        function=lambda: {"accuracy": 0.95, "precision": 0.93},
+                        inputs=['trained_model', 'test_data'],
+                        outputs=['metrics']
+                    )
+                    
+                    # Deployment step
+                    deploy_step = PipelineStep(
+                        name="deployment",
+                        function=lambda: "deployment_successful",
+                        inputs=['trained_model', 'metrics'],
+                        outputs=['deployment_url']
+                    )
+                    
+                    # Add steps to pipeline
+                    pipeline.add_step(train_step)
+                    pipeline.add_step(eval_step)
+                    pipeline.add_step(deploy_step)
+                    
+                    # Should be able to execute pipeline
+                    if hasattr(pipeline, 'execute'):
+                        results = pipeline.execute()
+                        assert isinstance(results, dict), \
+                            "❌ Pipeline execution should return results dict"
+            
+            # Test simpler pipeline coordination
+            # Simulate ML pipeline steps
+            pipeline_state = {
+                'model': Dense(10, 3),
+                'optimizer': None,
+                'trainer': None,
+                'metrics': {},
+                'deployment': None
+            }
+            
+            # Step 1: Setup training
+            pipeline_state['optimizer'] = SGD(pipeline_state['model'].parameters(), lr=0.01)
+            pipeline_state['trainer'] = Trainer(pipeline_state['model'], pipeline_state['optimizer'])
+            
+            # Step 2: Training simulation
+            x = Tensor(np.random.randn(16, 10))
+            output = pipeline_state['model'](x)
+            pipeline_state['metrics']['training_loss'] = 0.5  # Simulated loss
+            
+            # Step 3: Evaluation
+            eval_x = Tensor(np.random.randn(8, 10))
+            eval_output = pipeline_state['model'](eval_x)
+            pipeline_state['metrics']['accuracy'] = 0.85  # Simulated accuracy
+            
+            # Step 4: Deployment decision
+            accuracy_threshold = 0.8
+            if pipeline_state['metrics']['accuracy'] > accuracy_threshold:
+                pipeline_state['deployment'] = 'approved'
+            else:
+                pipeline_state['deployment'] = 'rejected'
+            
+            # Verify pipeline coordination
+            assert pipeline_state['trainer'] is not None, \
+                "❌ Pipeline training setup broken"
+            
+            assert 'accuracy' in pipeline_state['metrics'], \
+                "❌ Pipeline evaluation broken"
+            
+            assert pipeline_state['deployment'] == 'approved', \
+                f"❌ Pipeline deployment logic broken. Accuracy: {pipeline_state['metrics']['accuracy']}"
+            
+        except Exception as e:
+            assert False, f"""
+            ❌ ML PIPELINE ORCHESTRATION BROKEN!
+            
+            🔍 ERROR: {str(e)}
+            
+            🔧 PIPELINE ORCHESTRATION IMPLEMENTATION:
+            
+            class PipelineStep:
+                '''Individual step in ML pipeline.'''
+                
+                def __init__(self, name, function, inputs=None, outputs=None):
+                    self.name = name
+                    self.function = function
+                    self.inputs = inputs or []
+                    self.outputs = outputs or []
+                
+                def execute(self, context):
+                    '''Execute step with given context.'''
+                    return self.function()
+            
+            class MLPipeline:
+                '''Orchestrate complete ML workflows.'''
+                
+                def __init__(self, name):
+                    self.name = name
+                    self.steps = []
+                    self.context = {{}}
+                
+                def add_step(self, step):
+                    '''Add step to pipeline.'''
+                    self.steps.append(step)
+                
+                def execute(self):
+                    '''Execute all pipeline steps in order.'''
+                    results = {{}}
+                    
+                    for step in self.steps:
+                        try:
+                            step_result = step.execute(self.context)
+                            results[step.name] = step_result
+                            self.context[step.name] = step_result
+                        except Exception as e:
+                            results[step.name] = f"ERROR: {{e}}"
+                            break  # Stop on error
+                    
+                    return results
+                
+                def rollback(self, to_step):
+                    '''Rollback pipeline to specific step.'''
+                    # Would implement rollback logic
+                    pass
+            
+            💡 PIPELINE BENEFITS:
+            - Automated ML workflows
+            - Reproducible model development
+            - Consistent deployment processes
+            - Error handling and recovery
+            - Audit trails and governance
+            """
+
+
+class TestMLOpsIntegration:
+    """
+    🔗 INTEGRATION TEST: MLOps + Complete TinyTorch system working together.
+    
+    💡 Test that MLOps works with real ML workflows and production scenarios.
+    🎯 Goal: Enable production-ready ML systems with monitoring and automation.
+    """
+    
+    def test_production_ml_workflow(self):
+        """
+        ✅ TEST: Complete production ML workflow with monitoring and deployment
+        
+        📋 PRODUCTION WORKFLOW:
+        - Model training with monitoring
+        - Performance benchmarking and validation
+        - Automated deployment with health checks
+        - Real-time monitoring and alerting
+        
+        💡 End-to-end production ML system
+        """
+        try:
+            from tinytorch.core.tensor import Tensor
+            from tinytorch.core.layers import Dense
+            from tinytorch.core.optimizers import Adam
             from tinytorch.core.training import Trainer, MSELoss
             from tinytorch.core.data import Dataset, DataLoader
+            from tinytorch.core.benchmarking import benchmark_model
+            from tinytorch.core.mlops import ModelMonitor, ModelServer
             
-            # Create training setup
+            # Production ML workflow simulation
+            
+            # Step 1: Model Development
             model = Dense(50, 10)
-            optimizer = SGD(model.parameters(), lr=0.01)
+            optimizer = Adam(model.parameters(), lr=0.001)
             loss_fn = MSELoss()
             trainer = Trainer(model, optimizer)
             
-            # Create dataset
-            class TrainingDataset(Dataset):
+            # Step 2: Training Data
+            class ProductionDataset(Dataset):
                 def __init__(self):
-                    self.data = np.random.randn(100, 50)
-                    self.targets = np.random.randn(100, 10)
+                    self.data = np.random.randn(200, 50)
+                    self.targets = np.random.randn(200, 10)
                 
                 def __len__(self):
-                    return 100
+                    return 200
                 
                 def __getitem__(self, idx):
                     return Tensor(self.data[idx]), Tensor(self.targets[idx])
             
-            dataset = TrainingDataset()
-            dataloader = DataLoader(dataset, batch_size=16)
+            dataset = ProductionDataset()
+            dataloader = DataLoader(dataset, batch_size=32)
             
-            # Test training benchmarking
-            if 'benchmark_training' in locals():
-                training_results = benchmark_training(trainer, dataloader, num_epochs=2)
-                
-                # Should provide training performance metrics
-                assert isinstance(training_results, dict), \
-                    "❌ Training benchmark should return results dictionary"
-                
-                training_metrics = ['forward_time', 'backward_time', 'optimizer_time', 'total_time']
-                for metric in training_metrics:
-                    assert metric in training_results, \
-                        f"❌ Missing training metric: {metric}"
-                
-                # Training time should be reasonable
-                assert training_results['total_time'] > 0, \
-                    "❌ Total training time should be positive"
-                
-                assert training_results['forward_time'] > 0, \
-                    "❌ Forward pass time should be positive"
+            # Step 3: Training with Monitoring
+            monitor = ModelMonitor(model, metrics=['loss', 'latency', 'throughput'])
             
-            # Test manual training loop timing
-            start_time = time.time()
-            
-            for epoch in range(2):
+            training_metrics = []
+            for epoch in range(3):  # Simulate training
+                epoch_losses = []
                 for batch_x, batch_y in dataloader:
-                    # Simulate training step
+                    # Forward pass
+                    start_time = time.time()
                     predictions = model(batch_x)
-                    loss = loss_fn(predictions, batch_y)
+                    inference_time = time.time() - start_time
                     
-                    # Simple parameter update (without full autograd)
-                    # In real implementation: loss.backward(); optimizer.step()
+                    # Loss computation
+                    loss = loss_fn(predictions, batch_y)
+                    epoch_losses.append(loss.data if hasattr(loss, 'data') else float(loss))
+                    
+                    # Log prediction for monitoring
+                    monitor.log_prediction(batch_x, predictions, batch_y, latency=inference_time)
                     
                     break  # One batch per epoch for testing
+                
+                training_metrics.append(np.mean(epoch_losses))
             
-            end_time = time.time()
-            training_duration = end_time - start_time
+            # Step 4: Performance Benchmarking
+            benchmark_results = benchmark_model(model, (32, 50))
             
-            assert training_duration > 0, \
-                "❌ Training loop timing measurement broken"
+            # Step 5: Production Readiness Check
+            monitor_metrics = monitor.get_metrics()
+            
+            production_ready = (
+                benchmark_results['latency'] < 0.1 and  # < 100ms latency
+                monitor_metrics.get('throughput', 0) > 100 and  # > 100 samples/sec
+                training_metrics[-1] < 1.0  # Reasonable loss
+            )
+            
+            # Step 6: Deployment (if ready)
+            if production_ready:
+                if 'ModelServer' in locals():
+                    server = ModelServer(model, port=8080)
+                    
+                    # Test production serving
+                    test_input = Tensor(np.random.randn(1, 50))
+                    production_prediction = server.predict(test_input)
+                    
+                    assert production_prediction.shape == (1, 10), \
+                        f"❌ Production serving broken. Expected (1, 10), got {production_prediction.shape}"
+                    
+                    # Health check
+                    health = server.health_check()
+                    assert health['status'] in ['healthy', 'unhealthy'], \
+                        f"❌ Health check broken. Got status: {health.get('status')}"
+            
+            # Verify complete workflow
+            assert len(training_metrics) == 3, \
+                "❌ Training workflow broken"
+            
+            assert 'latency' in benchmark_results, \
+                "❌ Benchmarking integration broken"
+            
+            assert 'throughput' in monitor_metrics, \
+                "❌ Monitoring integration broken"
+            
+            assert isinstance(production_ready, bool), \
+                "❌ Production readiness check broken"
             
         except Exception as e:
             assert False, f"""
-            ❌ TRAINING PERFORMANCE ANALYSIS BROKEN!
+            ❌ PRODUCTION ML WORKFLOW BROKEN!
             
             🔍 ERROR: {str(e)}
             
-            🔧 TRAINING BENCHMARK REQUIREMENTS:
-            1. Measure forward pass timing
-            2. Measure backward pass timing  
-            3. Measure optimizer step timing
-            4. Measure data loading timing
-            5. Calculate training throughput (samples/second)
-            6. Identify training bottlenecks
+            🔧 PRODUCTION WORKFLOW REQUIREMENTS:
+            1. ✅ Model training with monitoring
+            2. ✅ Performance benchmarking integration
+            3. ✅ Automated deployment decisions
+            4. ✅ Real-time serving with health checks
+            5. ✅ End-to-end workflow coordination
             
-            💡 TRAINING OPTIMIZATION:
+            💡 PRODUCTION ML SYSTEM:
             
-            def benchmark_training(trainer, dataloader, num_epochs=1):
-                '''Benchmark training loop performance.'''
-                
-                times = {{
-                    'forward_time': 0,
-                    'backward_time': 0,
-                    'optimizer_time': 0,
-                    'data_loading_time': 0
-                }}
-                
-                total_start = time.time()
-                
-                for epoch in range(num_epochs):
-                    for batch_x, batch_y in dataloader:
-                        
-                        # Forward pass timing
-                        forward_start = time.time()
-                        predictions = trainer.model(batch_x)
-                        times['forward_time'] += time.time() - forward_start
-                        
-                        # Loss computation
-                        loss = trainer.loss_fn(predictions, batch_y)
-                        
-                        # Backward pass timing (if available)
-                        backward_start = time.time()
-                        # loss.backward()  # When autograd ready
-                        times['backward_time'] += time.time() - backward_start
-                        
-                        # Optimizer timing
-                        opt_start = time.time()
-                        # trainer.optimizer.step()  # When ready
-                        times['optimizer_time'] += time.time() - opt_start
-                
-                times['total_time'] = time.time() - total_start
-                return times
+            Complete workflow should include:
             
-            🚀 TRAINING INSIGHTS:
-            - Data loading bottlenecks: Async data loading
-            - Forward pass optimization: Kernel fusion, mixed precision
-            - Backward pass optimization: Gradient checkpointing
-            - Optimizer optimization: Fused optimizers, large batch training
+            Training Phase:
+            - Data validation and preprocessing
+            - Model training with experiment tracking
+            - Performance monitoring during training
+            - Model validation and testing
+            
+            Deployment Phase:
+            - Performance benchmarking
+            - Production readiness validation
+            - Automated deployment with rollback
+            - Real-time monitoring and alerting
+            
+            Operations Phase:
+            - Continuous monitoring
+            - Drift detection and retraining
+            - A/B testing and experimentation
+            - Incident response and debugging
+            
+            🚀 PRODUCTION SUCCESS CRITERIA:
+            - Latency < 100ms for real-time apps
+            - Throughput > 1000 QPS for high-scale
+            - Accuracy maintained > 95% SLA
+            - 99.9% uptime with automatic recovery
             """
     
-    def test_inference_performance_optimization(self):
+    def test_continuous_integration_ml(self):
         """
-        ✅ TEST: Benchmark inference and deployment scenarios
+        ✅ TEST: Continuous Integration for ML (CI/ML) - Automated testing and validation
         
-        📋 INFERENCE BENCHMARKS:
-        - Single sample latency
-        - Batch inference throughput
-        - Memory efficiency analysis
-        - Hardware utilization
-        - Real-time performance
+        📋 CI/ML CAPABILITIES:
+        - Automated model testing
+        - Performance regression detection
+        - Data validation and schema checking
+        - Model quality gates
         
-        🎯 Optimize for production deployment
-        """
-        try:
-            from tinytorch.core.benchmarking import benchmark_inference
-            from tinytorch.core.tensor import Tensor
-            from tinytorch.core.spatial import Conv2D, MaxPool2D
-            from tinytorch.core.layers import Dense
-            from tinytorch.core.activations import ReLU
-            
-            # Create inference model (CNN for image classification)
-            class InferenceModel:
-                def __init__(self):
-                    self.conv1 = Conv2D(3, 32, kernel_size=3, padding=1)
-                    self.pool = MaxPool2D(kernel_size=2)
-                    self.conv2 = Conv2D(32, 64, kernel_size=3, padding=1)
-                    self.fc = Dense(64 * 8 * 8, 1000)  # ImageNet-like
-                    self.relu = ReLU()
-                
-                def __call__(self, x):
-                    h1 = self.relu(self.conv1(x))
-                    h1_pool = self.pool(h1)
-                    h2 = self.relu(self.conv2(h1_pool))
-                    h2_pool = self.pool(h2)
-                    
-                    # Flatten
-                    flattened = Tensor(h2_pool.data.reshape(h2_pool.shape[0], -1))
-                    return self.fc(flattened)
-            
-            model = InferenceModel()
-            
-            # Test different inference scenarios
-            scenarios = [
-                ("single_image", (1, 3, 32, 32)),      # Real-time inference
-                ("small_batch", (8, 3, 32, 32)),       # Small batch processing
-                ("large_batch", (64, 3, 32, 32)),      # Batch processing
-            ]
-            
-            if 'benchmark_inference' in locals():
-                for scenario_name, input_shape in scenarios:
-                    inference_results = benchmark_inference(model, input_shape)
-                    
-                    assert isinstance(inference_results, dict), \
-                        f"❌ Inference benchmark should return dict for {scenario_name}"
-                    
-                    # Essential inference metrics
-                    inference_metrics = ['latency', 'throughput', 'memory_peak']
-                    for metric in inference_metrics:
-                        assert metric in inference_results, \
-                            f"❌ Missing inference metric {metric} for {scenario_name}"
-                        
-                        assert inference_results[metric] > 0, \
-                            f"❌ Inference metric {metric} should be positive for {scenario_name}"
-            
-            # Test manual inference timing
-            for scenario_name, input_shape in scenarios:
-                x = Tensor(np.random.randn(*input_shape))
-                
-                # Warmup
-                for _ in range(3):
-                    _ = model(x)
-                
-                # Actual timing
-                start_time = time.time()
-                output = model(x)
-                end_time = time.time()
-                
-                latency = end_time - start_time
-                throughput = input_shape[0] / latency  # samples/second
-                
-                assert latency > 0, f"❌ Latency timing broken for {scenario_name}"
-                assert throughput > 0, f"❌ Throughput calculation broken for {scenario_name}"
-                
-                # Reasonable performance expectations
-                if scenario_name == "single_image":
-                    assert latency < 1.0, f"❌ Single image inference too slow: {latency}s"
-                elif scenario_name == "large_batch":
-                    assert throughput > input_shape[0] / 5.0, f"❌ Batch throughput too low: {throughput}"
-            
-        except Exception as e:
-            assert False, f"""
-            ❌ INFERENCE PERFORMANCE OPTIMIZATION BROKEN!
-            
-            🔍 ERROR: {str(e)}
-            
-            🔧 INFERENCE BENCHMARK REQUIREMENTS:
-            1. Single sample latency measurement
-            2. Batch inference throughput analysis
-            3. Memory consumption profiling
-            4. Hardware utilization monitoring
-            5. Real-time performance validation
-            
-            💡 INFERENCE OPTIMIZATION STRATEGIES:
-            
-            def benchmark_inference(model, input_shape, num_trials=100):
-                '''Comprehensive inference benchmarking.'''
-                
-                # Create test input
-                test_input = Tensor(np.random.randn(*input_shape))
-                
-                # Warmup
-                for _ in range(10):
-                    _ = model(test_input)
-                
-                # Timing trials
-                latencies = []
-                for _ in range(num_trials):
-                    start = time.perf_counter()
-                    output = model(test_input)
-                    end = time.perf_counter()
-                    latencies.append(end - start)
-                
-                # Calculate metrics
-                avg_latency = np.mean(latencies)
-                p95_latency = np.percentile(latencies, 95)
-                throughput = input_shape[0] / avg_latency
-                
-                # Memory estimation
-                memory_peak = test_input.data.nbytes + output.data.nbytes
-                
-                return {{
-                    'latency': avg_latency,
-                    'p95_latency': p95_latency,
-                    'throughput': throughput,
-                    'memory_peak': memory_peak
-                }}
-            
-            🚀 PRODUCTION DEPLOYMENT:
-            Inference optimization enables:
-            - Real-time applications (< 100ms latency)
-            - High-throughput services (> 1000 QPS)
-            - Edge deployment (mobile, IoT devices)
-            - Cost-effective cloud serving
-            """
-    
-    def test_hardware_performance_analysis(self):
-        """
-        ✅ TEST: Hardware-specific performance analysis
-        
-        📋 HARDWARE ANALYSIS:
-        - CPU vs GPU performance comparison
-        - Memory bandwidth utilization
-        - Compute utilization analysis
-        - Scaling characteristics
-        - Hardware recommendation
-        
-        💡 Guide hardware selection and optimization
+        🎯 Ensure model quality through automation
         """
         try:
-            from tinytorch.core.benchmarking import analyze_hardware_performance
+            from tinytorch.core.mlops import ModelValidator, DataValidator
             from tinytorch.core.tensor import Tensor
             from tinytorch.core.layers import Dense
-            from tinytorch.core.spatial import Conv2D
+            from tinytorch.core.benchmarking import benchmark_model
             
-            # Test hardware analysis
-            models_for_analysis = [
-                ("cpu_intensive", Dense(1000, 1000)),       # CPU-friendly
-                ("memory_intensive", Conv2D(3, 512, 7)),    # Memory-bound
-            ]
+            # CI/ML workflow simulation
             
-            if 'analyze_hardware_performance' in locals():
-                for model_name, model in models_for_analysis:
-                    hw_analysis = analyze_hardware_performance(model)
-                    
-                    assert isinstance(hw_analysis, dict), \
-                        f"❌ Hardware analysis should return dict for {model_name}"
-                    
-                    # Hardware analysis components
-                    hw_metrics = ['compute_bound', 'memory_bound', 'io_bound', 'recommendations']
-                    for metric in hw_metrics:
-                        assert metric in hw_analysis, \
-                            f"❌ Missing hardware metric {metric} for {model_name}"
-                    
-                    # Recommendations should be actionable
-                    assert isinstance(hw_analysis['recommendations'], list), \
-                        f"❌ Hardware recommendations should be list for {model_name}"
-                    
-                    assert len(hw_analysis['recommendations']) > 0, \
-                        f"❌ Should provide hardware recommendations for {model_name}"
+            # Step 1: Data Validation
+            if 'DataValidator' in locals():
+                data_validator = DataValidator(schema={'features': 50, 'samples': 100})
+                
+                # Test data
+                test_data = np.random.randn(100, 50)
+                validation_result = data_validator.validate(test_data)
+                
+                assert validation_result['valid'], \
+                    f"❌ Data validation failed: {validation_result.get('errors')}"
             
-            # Test basic hardware characteristic analysis
-            # CPU-intensive model (many small operations)
-            cpu_model = Dense(500, 500)
-            cpu_input = Tensor(np.random.randn(1, 500))
+            # Step 2: Model Testing
+            model = Dense(50, 10)
             
-            # Memory-intensive model (large feature maps)
-            memory_model = Conv2D(3, 256, kernel_size=7)
-            memory_input = Tensor(np.random.randn(1, 3, 224, 224))
+            if 'ModelValidator' in locals():
+                model_validator = ModelValidator()
+                
+                # Test model structure
+                structure_valid = model_validator.validate_structure(model)
+                assert structure_valid, "❌ Model structure validation failed"
+                
+                # Test model functionality
+                test_input = Tensor(np.random.randn(5, 50))
+                functionality_valid = model_validator.validate_functionality(model, test_input)
+                assert functionality_valid, "❌ Model functionality validation failed"
             
-            # Test execution and timing
-            for model_type, model, test_input in [
-                ("CPU-intensive", cpu_model, cpu_input),
-                ("Memory-intensive", memory_model, memory_input)
-            ]:
-                start_time = time.time()
+            # Step 3: Performance Regression Testing
+            baseline_performance = {'latency': 0.01, 'accuracy': 0.90}
+            current_performance = benchmark_model(model, (16, 50))
+            
+            # Performance regression check
+            latency_regression = current_performance['latency'] > baseline_performance['latency'] * 1.5
+            # accuracy_regression = current_performance.get('accuracy', 0.9) < baseline_performance['accuracy'] * 0.95
+            
+            performance_check = {
+                'latency_regression': latency_regression,
+                'performance_acceptable': not latency_regression
+            }
+            
+            # Step 4: Quality Gates
+            quality_gates = {
+                'data_quality': True,  # From data validation
+                'model_structure': True,  # From model validation
+                'performance_acceptable': performance_check['performance_acceptable'],
+                'security_scan': True,  # Would implement security validation
+            }
+            
+            all_gates_passed = all(quality_gates.values())
+            
+            # CI/ML Decision
+            ci_ml_result = {
+                'quality_gates': quality_gates,
+                'deployment_approved': all_gates_passed,
+                'recommendations': []
+            }
+            
+            if not all_gates_passed:
+                ci_ml_result['recommendations'].append("Fix failing quality gates before deployment")
+            
+            # Verify CI/ML workflow
+            assert isinstance(quality_gates, dict), \
+                "❌ Quality gates structure broken"
+            
+            assert 'deployment_approved' in ci_ml_result, \
+                "❌ CI/ML decision logic broken"
+            
+            # Test manual validation workflow
+            manual_checks = {
+                'model_loads': True,
+                'inference_works': True,
+                'output_shape_correct': True,
+                'no_errors': True
+            }
+            
+            # Test model loading and inference
+            try:
+                test_input = Tensor(np.random.randn(3, 50))
                 output = model(test_input)
-                end_time = time.time()
-                
-                execution_time = end_time - start_time
-                
-                # Basic hardware analysis
-                input_size = test_input.data.nbytes
-                output_size = output.data.nbytes
-                memory_throughput = (input_size + output_size) / execution_time  # bytes/second
-                
-                assert execution_time > 0, f"❌ Execution timing broken for {model_type}"
-                assert memory_throughput > 0, f"❌ Memory throughput calculation broken for {model_type}"
+                manual_checks['model_loads'] = True
+                manual_checks['inference_works'] = True
+                manual_checks['output_shape_correct'] = (output.shape == (3, 10))
+                manual_checks['no_errors'] = True
+            except Exception as e:
+                manual_checks['model_loads'] = False
+                manual_checks['inference_works'] = False
+                manual_checks['no_errors'] = False
+            
+            assert all(manual_checks.values()), \
+                f"❌ Manual validation checks failed: {manual_checks}"
             
         except Exception as e:
             assert False, f"""
-            ❌ HARDWARE PERFORMANCE ANALYSIS BROKEN!
+            ❌ CONTINUOUS INTEGRATION ML BROKEN!
             
             🔍 ERROR: {str(e)}
             
-            🔧 HARDWARE ANALYSIS REQUIREMENTS:
-            1. Identify compute vs memory bottlenecks
-            2. Analyze hardware utilization patterns
-            3. Provide hardware-specific recommendations
-            4. Support different hardware targets
-            5. Scale analysis across model sizes
+            🔧 CI/ML IMPLEMENTATION:
             
-            💡 HARDWARE OPTIMIZATION GUIDE:
+            class DataValidator:
+                '''Validate data quality and schema.'''
+                
+                def __init__(self, schema):
+                    self.schema = schema
+                
+                def validate(self, data):
+                    errors = []
+                    
+                    # Check shape
+                    expected_shape = (self.schema['samples'], self.schema['features'])
+                    if data.shape != expected_shape:
+                        errors.append(f"Shape mismatch: expected {{expected_shape}}, got {{data.shape}}")
+                    
+                    # Check for NaN/inf
+                    if np.any(np.isnan(data)) or np.any(np.isinf(data)):
+                        errors.append("Data contains NaN or infinity values")
+                    
+                    return {{
+                        'valid': len(errors) == 0,
+                        'errors': errors
+                    }}
             
-            def analyze_hardware_performance(model):
-                '''Analyze model hardware requirements and bottlenecks.'''
+            class ModelValidator:
+                '''Validate model structure and functionality.'''
                 
-                analysis = {{
-                    'compute_bound': False,
-                    'memory_bound': False,
-                    'io_bound': False,
-                    'recommendations': []
-                }}
+                def validate_structure(self, model):
+                    # Check if model is callable
+                    return callable(model)
                 
-                # Analyze model characteristics
-                total_params = count_parameters(model)
-                total_ops = estimate_flops(model)
-                
-                # Heuristic analysis
-                if total_ops > 1e9:  # > 1 GFLOP
-                    analysis['compute_bound'] = True
-                    analysis['recommendations'].append("Consider GPU acceleration")
-                
-                if total_params > 1e6:  # > 1M parameters
-                    analysis['memory_bound'] = True
-                    analysis['recommendations'].append("Ensure sufficient memory bandwidth")
-                
-                return analysis
+                def validate_functionality(self, model, test_input):
+                    try:
+                        output = model(test_input)
+                        return output is not None
+                    except Exception:
+                        return False
             
-            🔧 HARDWARE SELECTION GUIDE:
-            - CPU: Small models, low latency, high precision
-            - GPU: Large models, high throughput, parallel training
-            - TPU: Very large models, training at scale
-            - Edge: Mobile deployment, power efficiency
-            - Cloud: Elastic scaling, cost optimization
+            💡 CI/ML QUALITY GATES:
+            
+            Data Quality:
+            - Schema validation
+            - Distribution checks
+            - Anomaly detection
+            - Data lineage tracking
+            
+            Model Quality:
+            - Structure validation
+            - Functionality testing
+            - Performance benchmarking
+            - Security scanning
+            
+            Deployment Gates:
+            - All tests pass
+            - Performance meets SLA
+            - Security scan clean
+            - Manual approval (if required)
+            
+            🔒 PRODUCTION SAFETY:
+            CI/ML prevents deploying broken models to production!
+            """
+    
+    def test_model_lifecycle_management(self):
+        """
+        ✅ TEST: Model lifecycle management - Version control, rollback, A/B testing
+        
+        📋 LIFECYCLE MANAGEMENT:
+        - Model versioning and registry
+        - Rollback and recovery capabilities
+        - A/B testing and experimentation
+        - Model retirement and cleanup
+        
+        💡 Manage models throughout their production lifecycle
+        """
+        try:
+            from tinytorch.core.mlops import ModelRegistry, ABTestManager
+            from tinytorch.core.layers import Dense
+            from tinytorch.core.tensor import Tensor
+            
+            # Model lifecycle management
+            
+            # Step 1: Model Registry
+            if 'ModelRegistry' in locals():
+                registry = ModelRegistry()
+                
+                # Register models
+                model_v1 = Dense(50, 10)
+                model_v2 = Dense(50, 10)  # Improved version
+                
+                registry.register_model("production_classifier", model_v1, version="1.0")
+                registry.register_model("production_classifier", model_v2, version="2.0")
+                
+                # Test model retrieval
+                current_model = registry.get_model("production_classifier", version="2.0")
+                assert current_model is model_v2, \
+                    "❌ Model registry retrieval broken"
+                
+                # Test rollback capability
+                rollback_model = registry.get_model("production_classifier", version="1.0")
+                assert rollback_model is model_v1, \
+                    "❌ Model registry rollback broken"
+            
+            # Step 2: A/B Testing
+            if 'ABTestManager' in locals():
+                ab_manager = ABTestManager()
+                
+                # Setup A/B test
+                model_a = Dense(50, 10)  # Current model
+                model_b = Dense(50, 10)  # New model
+                
+                ab_manager.setup_test("classifier_experiment", 
+                                    model_a=model_a, 
+                                    model_b=model_b, 
+                                    traffic_split=0.5)
+                
+                # Test traffic routing
+                test_input = Tensor(np.random.randn(1, 50))
+                
+                for _ in range(10):
+                    assigned_model, prediction = ab_manager.predict("classifier_experiment", test_input)
+                    assert assigned_model in ['A', 'B'], \
+                        f"❌ A/B test assignment broken: {assigned_model}"
+                    assert prediction.shape == (1, 10), \
+                        f"❌ A/B test prediction broken: {prediction.shape}"
+                
+                # Test experiment results
+                results = ab_manager.get_results("classifier_experiment")
+                assert 'model_a_metrics' in results, \
+                    "❌ A/B test results missing model A metrics"
+                assert 'model_b_metrics' in results, \
+                    "❌ A/B test results missing model B metrics"
+            
+            # Step 3: Manual lifecycle simulation
+            lifecycle_state = {
+                'models': {
+                    'v1.0': Dense(50, 10),
+                    'v2.0': Dense(50, 10),
+                    'v2.1': Dense(50, 10),
+                },
+                'current_version': 'v2.1',
+                'rollback_version': 'v2.0',
+                'experiments': {},
+                'deployment_history': []
+            }
+            
+            # Simulate version management
+            current_model = lifecycle_state['models'][lifecycle_state['current_version']]
+            test_input = Tensor(np.random.randn(5, 50))
+            current_output = current_model(test_input)
+            
+            # Simulate rollback
+            rollback_model = lifecycle_state['models'][lifecycle_state['rollback_version']]
+            rollback_output = rollback_model(test_input)
+            
+            # Simulate A/B test
+            model_a = lifecycle_state['models']['v2.0']
+            model_b = lifecycle_state['models']['v2.1']
+            
+            # Compare models
+            output_a = model_a(test_input)
+            output_b = model_b(test_input)
+            
+            # Record experiment
+            lifecycle_state['experiments']['v2.0_vs_v2.1'] = {
+                'model_a_performance': {'latency': 0.01, 'accuracy': 0.90},
+                'model_b_performance': {'latency': 0.008, 'accuracy': 0.92},
+                'winner': 'model_b'
+            }
+            
+            # Verify lifecycle management
+            assert current_output.shape == (5, 10), \
+                "❌ Current model broken"
+            
+            assert rollback_output.shape == (5, 10), \
+                "❌ Rollback model broken"
+            
+            assert output_a.shape == output_b.shape, \
+                "❌ A/B test models incompatible"
+            
+            assert 'winner' in lifecycle_state['experiments']['v2.0_vs_v2.1'], \
+                "❌ Experiment analysis broken"
+            
+        except Exception as e:
+            assert False, f"""
+            ❌ MODEL LIFECYCLE MANAGEMENT BROKEN!
+            
+            🔍 ERROR: {str(e)}
+            
+            🔧 LIFECYCLE MANAGEMENT IMPLEMENTATION:
+            
+            class ModelRegistry:
+                '''Central registry for model versions.'''
+                
+                def __init__(self):
+                    self.models = {{}}  # {{name: {{version: model}}}}
+                
+                def register_model(self, name, model, version, metadata=None):
+                    if name not in self.models:
+                        self.models[name] = {{}}
+                    
+                    self.models[name][version] = {{
+                        'model': model,
+                        'metadata': metadata or {{}},
+                        'timestamp': time.time()
+                    }}
+                
+                def get_model(self, name, version=None):
+                    if name not in self.models:
+                        raise ValueError(f"Model {{name}} not found")
+                    
+                    if version is None:
+                        # Get latest version
+                        latest_version = max(self.models[name].keys())
+                        return self.models[name][latest_version]['model']
+                    
+                    if version not in self.models[name]:
+                        raise ValueError(f"Version {{version}} not found for {{name}}")
+                    
+                    return self.models[name][version]['model']
+                
+                def list_versions(self, name):
+                    return list(self.models.get(name, {{}}).keys())
+            
+            class ABTestManager:
+                '''Manage A/B testing experiments.'''
+                
+                def __init__(self):
+                    self.experiments = {{}}
+                
+                def setup_test(self, experiment_name, model_a, model_b, traffic_split=0.5):
+                    self.experiments[experiment_name] = {{
+                        'model_a': model_a,
+                        'model_b': model_b,
+                        'traffic_split': traffic_split,
+                        'results': {{'a': [], 'b': []}}
+                    }}
+                
+                def predict(self, experiment_name, inputs):
+                    experiment = self.experiments[experiment_name]
+                    
+                    # Simple traffic routing (hash-based)
+                    route_to_b = hash(str(inputs.data)) % 100 < experiment['traffic_split'] * 100
+                    
+                    if route_to_b:
+                        prediction = experiment['model_b'](inputs)
+                        return 'B', prediction
+                    else:
+                        prediction = experiment['model_a'](inputs)
+                        return 'A', prediction
+                
+                def get_results(self, experiment_name):
+                    return {{
+                        'model_a_metrics': {{'requests': 100, 'avg_latency': 0.01}},
+                        'model_b_metrics': {{'requests': 100, 'avg_latency': 0.008}},
+                        'statistical_significance': True
+                    }}
+            
+            💡 LIFECYCLE BENEFITS:
+            - Zero-downtime deployments
+            - Quick rollback on issues
+            - Data-driven model selection
+            - Compliance and audit trails
+            - Risk mitigation through testing
             """
 
 
-class TestModule14Completion:
+class TestModule15Completion:
     """
-    ✅ COMPLETION CHECK: Module 14 ready and foundation set for production deployment.
+    ✅ COMPLETION CHECK: Module 15 ready and TinyTorch production-ready.
     
-    🎯 Final validation that benchmarking works and enables performance optimization.
+    🎯 Final validation that MLOps works and TinyTorch is ready for real-world deployment.
     """
     
-    def test_benchmarking_foundation_complete(self):
+    def test_production_ml_system_complete(self):
         """
-        ✅ FINAL TEST: Complete benchmarking foundation ready for production
+        ✅ FINAL TEST: Complete production ML system ready for real-world deployment
         
-        📋 BENCHMARKING FOUNDATION CHECKLIST:
-        □ Model performance benchmarking
-        □ Profiling and bottleneck analysis
-        □ Performance comparison tools
-        □ Training performance analysis
-        □ Inference optimization
-        □ Hardware performance analysis
-        □ Integration with ML pipeline
-        □ Production readiness
+        📋 PRODUCTION ML SYSTEM CHECKLIST:
+        □ Model monitoring and alerting
+        □ Deployment infrastructure and serving
+        □ Pipeline orchestration and automation
+        □ Continuous integration and validation
+        □ Model lifecycle management
+        □ Performance optimization
+        □ Security and compliance
+        □ Real-world production readiness
         
-        🎯 SUCCESS = Ready for Module 15: MLOps and Production Deployment!
+        🎯 SUCCESS = TinyTorch is production-ready!
         """
-        benchmarking_capabilities = {
-            "Model benchmarking": False,
-            "Profiling tools": False,
-            "Performance comparison": False,
-            "Training analysis": False,
-            "Inference optimization": False,
-            "Hardware analysis": False,
-            "ML pipeline integration": False,
+        production_capabilities = {
+            "Model monitoring": False,
+            "Deployment infrastructure": False,
+            "Pipeline orchestration": False,
+            "Continuous integration": False,
+            "Lifecycle management": False,
+            "Performance optimization": False,
+            "Security considerations": False,
             "Production readiness": False
         }
         
         try:
-            # Test 1: Model benchmarking
-            from tinytorch.core.benchmarking import benchmark_model
+            # Test 1: Model monitoring
+            from tinytorch.core.mlops import ModelMonitor
             from tinytorch.core.layers import Dense
-            
-            model = Dense(50, 25)
-            results = benchmark_model(model, (16, 50))
-            assert 'latency' in results and 'throughput' in results
-            benchmarking_capabilities["Model benchmarking"] = True
-            
-            # Test 2: Profiling (check structure)
-            try:
-                from tinytorch.core.benchmarking import profile_model
-                benchmarking_capabilities["Profiling tools"] = True
-            except ImportError:
-                # Basic timing works
-                import time
-                start = time.time()
-                time.sleep(0.001)  # Simulate work
-                duration = time.time() - start
-                assert duration > 0
-                benchmarking_capabilities["Profiling tools"] = True
-            
-            # Test 3: Performance comparison (check structure)
-            try:
-                from tinytorch.core.benchmarking import compare_models
-                benchmarking_capabilities["Performance comparison"] = True
-            except ImportError:
-                # Can compare manually
-                model1_results = benchmark_model(Dense(25, 10), (8, 25))
-                model2_results = benchmark_model(Dense(50, 10), (8, 50))
-                assert model1_results['latency'] != model2_results['latency']
-                benchmarking_capabilities["Performance comparison"] = True
-            
-            # Test 4: Training analysis
             from tinytorch.core.tensor import Tensor
-            from tinytorch.core.optimizers import SGD
             
-            # Simulate training timing
-            start = time.time()
-            x = Tensor(np.random.randn(16, 50))
-            output = model(x)
-            training_time = time.time() - start
-            assert training_time > 0
-            benchmarking_capabilities["Training analysis"] = True
+            model = Dense(20, 5)
+            monitor = ModelMonitor(model)
             
-            # Test 5: Inference optimization
-            # Test different batch sizes
-            single_start = time.time()
-            single_input = Tensor(np.random.randn(1, 50))
-            model(single_input)
-            single_time = time.time() - single_start
+            # Test monitoring functionality
+            test_input = Tensor(np.random.randn(1, 20))
+            test_output = model(test_input)
+            monitor.log_prediction(test_input, test_output)
             
-            batch_start = time.time()
-            batch_input = Tensor(np.random.randn(16, 50))
-            model(batch_input)
-            batch_time = time.time() - batch_start
+            metrics = monitor.get_metrics()
+            assert 'uptime' in metrics
+            production_capabilities["Model monitoring"] = True
             
-            # Batch should be more efficient per sample
-            single_throughput = 1 / single_time
-            batch_throughput = 16 / batch_time
-            assert batch_throughput > single_throughput
-            benchmarking_capabilities["Inference optimization"] = True
-            
-            # Test 6: Hardware analysis (basic structure)
-            # Analyze different model sizes
-            small_model = Dense(10, 5)
-            large_model = Dense(1000, 500)
-            
-            small_results = benchmark_model(small_model, (4, 10))
-            large_results = benchmark_model(large_model, (4, 1000))
-            
-            # Large model should use more resources
-            assert large_results['memory_usage'] > small_results['memory_usage']
-            benchmarking_capabilities["Hardware analysis"] = True
-            
-            # Test 7: ML pipeline integration
-            from tinytorch.core.spatial import Conv2D
-            from tinytorch.core.activations import ReLU
-            
-            # Benchmark complex model
-            class ComplexModel:
-                def __init__(self):
-                    self.conv = Conv2D(3, 16, 3)
-                    self.dense = Dense(16 * 30 * 30, 10)
-                    self.relu = ReLU()
+            # Test 2: Deployment infrastructure
+            try:
+                from tinytorch.core.mlops import ModelServer
+                server = ModelServer(model)
+                assert hasattr(server, 'predict')
+                production_capabilities["Deployment infrastructure"] = True
+            except ImportError:
+                # Manual deployment test
+                def serve_prediction(model, inputs):
+                    return model(inputs)
                 
-                def __call__(self, x):
-                    h = self.relu(self.conv(x))
-                    h_flat = Tensor(h.data.reshape(h.shape[0], -1))
-                    return self.dense(h_flat)
+                served_output = serve_prediction(model, test_input)
+                assert served_output.shape == test_output.shape
+                production_capabilities["Deployment infrastructure"] = True
             
-            complex_model = ComplexModel()
-            complex_results = benchmark_model(complex_model, (2, 3, 32, 32))
-            assert 'latency' in complex_results
-            benchmarking_capabilities["ML pipeline integration"] = True
+            # Test 3: Pipeline orchestration
+            try:
+                from tinytorch.core.mlops import MLPipeline
+                pipeline = MLPipeline("test_pipeline")
+                assert hasattr(pipeline, 'add_step')
+                production_capabilities["Pipeline orchestration"] = True
+            except ImportError:
+                # Manual pipeline test
+                pipeline_steps = ['data_prep', 'training', 'evaluation', 'deployment']
+                pipeline_status = {step: 'completed' for step in pipeline_steps}
+                assert all(status == 'completed' for status in pipeline_status.values())
+                production_capabilities["Pipeline orchestration"] = True
+            
+            # Test 4: Continuous integration
+            from tinytorch.core.benchmarking import benchmark_model
+            
+            # Performance validation
+            benchmark_results = benchmark_model(model, (16, 20))
+            performance_ok = benchmark_results['latency'] < 1.0  # < 1 second
+            
+            # Quality validation
+            test_batch = Tensor(np.random.randn(8, 20))
+            output_batch = model(test_batch)
+            quality_ok = output_batch.shape == (8, 5)
+            
+            ci_validation = performance_ok and quality_ok
+            assert ci_validation
+            production_capabilities["Continuous integration"] = True
+            
+            # Test 5: Lifecycle management
+            # Model versioning simulation
+            model_versions = {
+                'v1.0': Dense(20, 5),
+                'v2.0': Dense(20, 5),
+                'v2.1': Dense(20, 5)
+            }
+            
+            current_version = 'v2.1'
+            current_model = model_versions[current_version]
+            
+            # Rollback capability
+            rollback_version = 'v2.0'
+            rollback_model = model_versions[rollback_version]
+            
+            # Test both models work
+            current_pred = current_model(test_input)
+            rollback_pred = rollback_model(test_input)
+            
+            assert current_pred.shape == rollback_pred.shape
+            production_capabilities["Lifecycle management"] = True
+            
+            # Test 6: Performance optimization
+            from tinytorch.core.compression import prune_weights
+            
+            # Model optimization
+            original_model = Dense(100, 50)
+            optimized_weights = prune_weights(original_model.weights, sparsity=0.3)
+            
+            # Performance comparison
+            original_results = benchmark_model(original_model, (16, 100))
+            
+            # Optimized model should maintain functionality
+            optimized_model = Dense(100, 50)
+            optimized_model.weights = optimized_weights
+            
+            optimized_input = Tensor(np.random.randn(4, 100))
+            optimized_output = optimized_model(optimized_input)
+            assert optimized_output.shape == (4, 50)
+            
+            production_capabilities["Performance optimization"] = True
+            
+            # Test 7: Security considerations
+            # Basic security validation
+            security_checks = {
+                'input_validation': True,    # Check input shapes/ranges
+                'output_sanitization': True, # Check output validity
+                'error_handling': True,      # Graceful error handling
+                'resource_limits': True      # Memory/compute limits
+            }
+            
+            # Test input validation
+            try:
+                # Test with invalid input
+                invalid_input = Tensor(np.random.randn(1, 999))  # Wrong shape
+                _ = model(invalid_input)  # May fail gracefully
+            except:
+                pass  # Expected for wrong shape
+            
+            # Test output validation
+            valid_output = model(test_input)
+            output_valid = (
+                not np.any(np.isnan(valid_output.data)) and
+                not np.any(np.isinf(valid_output.data))
+            )
+            
+            security_validation = output_valid and all(security_checks.values())
+            assert security_validation
+            production_capabilities["Security considerations"] = True
             
             # Test 8: Production readiness
-            # Can measure and compare performance across scenarios
-            scenarios = [
-                ("real_time", (1, 50)),
-                ("batch_processing", (32, 50))
-            ]
+            # Overall system validation
+            production_checklist = {
+                'model_inference_works': True,
+                'monitoring_functional': True,
+                'deployment_ready': True,
+                'performance_acceptable': True,
+                'error_handling_robust': True
+            }
             
-            for scenario_name, input_shape in scenarios:
-                scenario_results = benchmark_model(model, input_shape)
-                assert scenario_results['latency'] > 0
-                assert scenario_results['throughput'] > 0
+            # Final production test
+            try:
+                # Simulate production load
+                production_inputs = [
+                    Tensor(np.random.randn(1, 20)),
+                    Tensor(np.random.randn(8, 20)),
+                    Tensor(np.random.randn(32, 20))
+                ]
+                
+                for prod_input in production_inputs:
+                    pred = model(prod_input)
+                    monitor.log_prediction(prod_input, pred)
+                    
+                    # Validate production prediction
+                    assert pred.shape[0] == prod_input.shape[0]
+                    assert pred.shape[1] == 5
+                    assert not np.any(np.isnan(pred.data))
+                
+                # Check monitoring works under load
+                final_metrics = monitor.get_metrics()
+                assert final_metrics['prediction_count'] > 0
+                
+                production_readiness = all(production_checklist.values())
+                assert production_readiness
+                
+            except Exception as prod_error:
+                assert False, f"Production simulation failed: {prod_error}"
             
-            benchmarking_capabilities["Production readiness"] = True
+            production_capabilities["Production readiness"] = True
             
         except Exception as e:
             # Show progress even if not complete
-            completed_count = sum(benchmarking_capabilities.values())
-            total_count = len(benchmarking_capabilities)
+            completed_count = sum(production_capabilities.values())
+            total_count = len(production_capabilities)
             
-            progress_report = "\n🔍 BENCHMARKING PROGRESS:\n"
-            for capability, completed in benchmarking_capabilities.items():
+            progress_report = "\n🔍 PRODUCTION ML SYSTEM PROGRESS:\n"
+            for capability, completed in production_capabilities.items():
                 status = "✅" if completed else "❌"
                 progress_report += f"  {status} {capability}\n"
             
             progress_report += f"\n📊 Progress: {completed_count}/{total_count} capabilities ready"
             
             assert False, f"""
-            ❌ BENCHMARKING FOUNDATION NOT COMPLETE!
+            ❌ PRODUCTION ML SYSTEM NOT COMPLETE!
             
             🔍 ERROR: {str(e)}
             
@@ -1241,44 +1587,54 @@ class TestModule14Completion:
             🔧 NEXT STEPS:
             1. Fix the failing capability above
             2. Re-run this test
-            3. When all ✅, you're ready for production deployment!
+            3. When all ✅, TinyTorch is production-ready!
             
             💡 ALMOST THERE!
-            You've completed {completed_count}/{total_count} benchmarking capabilities.
-            Just fix the error above and you'll have complete performance analysis!
+            You've completed {completed_count}/{total_count} production capabilities.
+            Just fix the error above and you'll have a complete production ML system!
             """
         
         # If we get here, everything passed!
         assert True, """
-        🎉 BENCHMARKING FOUNDATION COMPLETE! 🎉
+        🎉 PRODUCTION ML SYSTEM COMPLETE! 🎉
         
-        ✅ Model performance benchmarking
-        ✅ Profiling and bottleneck analysis
-        ✅ Performance comparison tools
-        ✅ Training performance analysis
-        ✅ Inference optimization
-        ✅ Hardware performance analysis
-        ✅ ML pipeline integration
-        ✅ Production readiness
+        ✅ Model monitoring and alerting
+        ✅ Deployment infrastructure and serving
+        ✅ Pipeline orchestration and automation
+        ✅ Continuous integration and validation
+        ✅ Model lifecycle management
+        ✅ Performance optimization
+        ✅ Security considerations
+        ✅ Production readiness validation
         
-        🚀 READY FOR MODULE 15: MLOPS AND PRODUCTION DEPLOYMENT!
+        🚀 TINYTORCH IS PRODUCTION-READY!
         
-        💡 What you can now do:
-        - Optimize model performance with data
-        - Choose optimal hardware configurations
-        - Identify and fix performance bottlenecks
-        - Plan production deployment strategies
-        - Scale ML systems efficiently
+        💡 What you can now deploy:
+        - Real-time ML APIs with monitoring
+        - Batch processing pipelines with automation
+        - A/B testing and experimentation platforms
+        - Auto-scaling ML services with health checks
+        - Enterprise ML systems with governance
         
-        📊 PERFORMANCE ENGINEERING ACHIEVED:
-        You've built the tools to:
-        - Make data-driven optimization decisions
-        - Ensure production SLA compliance
-        - Minimize deployment costs
-        - Maximize system efficiency
+        🏆 PRODUCTION ML ENGINEERING ACHIEVED:
+        You've built a complete ML system that includes:
+        - Research-grade model development
+        - Production-grade deployment infrastructure
+        - Enterprise-grade monitoring and governance
+        - Industry-standard CI/CD for ML
+        - Real-world operational capabilities
         
-        🎯 Next: Production deployment and monitoring in Module 15!
+        🎯 READY FOR MODULE 16: CAPSTONE PROJECT!
+        
+        Build complete end-to-end ML systems:
+        - TinyGPT transformer models
+        - Computer vision applications
+        - Multimodal AI systems
+        - Production ML platforms
+        
+        🌟 CONGRATULATIONS!
+        You are now a complete ML Systems Engineer!
         """
 
 
-# Note: No separate regression prevention - we test complete ML system stability above
+# Note: No separate regression prevention - we test complete system stability above

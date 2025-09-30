@@ -1,5 +1,5 @@
 """
-Module 04: Layers - Core Functionality Tests
+Module 03: Layers - Core Functionality Tests
 Tests the Layer base class and fundamental layer operations
 """
 

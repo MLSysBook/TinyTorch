@@ -1,5 +1,5 @@
 """
-Module 02: Tensor - Integration Tests
+Module 01: Tensor - Integration Tests
 Tests that Tensor works as foundation for all other modules
 """
 
