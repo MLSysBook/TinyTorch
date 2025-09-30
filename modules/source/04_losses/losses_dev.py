@@ -50,8 +50,6 @@ Let's measure prediction quality!
 ```python
 # Final package structure:
 from tinytorch.core.losses import MSELoss, CrossEntropyLoss, BinaryCrossEntropyLoss, log_softmax  # This module
-from tinytorch.core.tensor import Tensor  # Foundation
-from tinytorch.core.layers import Linear, Sequential  # What makes predictions
 ```
 
 **Why this matters:**
@@ -433,6 +431,10 @@ class MSELoss:
         return Tensor(mse)
         ### END SOLUTION
 
+    def __call__(self, predictions: Tensor, targets: Tensor) -> Tensor:
+        """Allows the loss function to be called like a function."""
+        return self.forward(predictions, targets)
+
     def backward(self) -> Tensor:
         """
         Compute gradients (implemented in Module 05: Autograd).
@@ -609,6 +611,10 @@ class CrossEntropyLoss:
 
         return Tensor(cross_entropy)
         ### END SOLUTION
+
+    def __call__(self, logits: Tensor, targets: Tensor) -> Tensor:
+        """Allows the loss function to be called like a function."""
+        return self.forward(logits, targets)
 
     def backward(self) -> Tensor:
         """
@@ -807,6 +813,10 @@ class BinaryCrossEntropyLoss:
 
         return Tensor(bce_loss)
         ### END SOLUTION
+
+    def __call__(self, predictions: Tensor, targets: Tensor) -> Tensor:
+        """Allows the loss function to be called like a function."""
+        return self.forward(predictions, targets)
 
     def backward(self) -> Tensor:
         """
