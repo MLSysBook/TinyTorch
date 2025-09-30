@@ -6,2840 +6,1796 @@
 #       format_name: percent
 #       format_version: '1.3'
 #       jupytext_version: 1.17.1
+#   kernelspec:
+#     display_name: Python 3 (ipykernel)
+#     language: python
+#     name: python3
 # ---
 
 # %% [markdown]
 """
-# Transformers - Complete Transformer Architecture Implementation
+# Module 13: Transformers - Complete Transformer Architecture
 
-Welcome to the Transformers module! You'll implement complete transformer blocks with LayerNorm, residual connections, and feed-forward networks, building the architecture that powers modern language models like GPT and BERT.
+Welcome to Module 13! You're about to build the complete transformer architecture that powers modern language models like GPT.
 
-## Learning Goals
-- Systems understanding: How transformer blocks scale memory and computation with model depth
-- Core implementation skill: Build complete transformer architectures with proper normalization
-- Pattern recognition: Understand how residual connections enable training of deep transformer models
-- Framework connection: See how your implementations match production transformer systems
-- Performance insight: Learn how transformer layer memory accumulation affects model deployment
+## 🔗 Prerequisites & Progress
+**You've Built**: Tensors, activations, layers, attention mechanisms, embeddings, and all foundational components
+**You'll Build**: TransformerBlock, complete GPT architecture, and autoregressive generation
+**You'll Enable**: Full language model training and text generation capabilities
 
-## Build -> Use -> Reflect
-1. **Build**: LayerNorm, transformer blocks, and complete transformer models
-2. **Use**: Process sequences through multi-layer transformer architectures
-3. **Reflect**: How do transformer design choices affect scalability and training dynamics?
+**Connection Map**:
+```
+Attention + Layers + Embeddings → Transformers → GPT Architecture
+(sequence processing) (building blocks) (complete model) (language generation)
+```
 
-## What You'll Achieve
-By the end of this module, you'll understand:
-- Deep technical understanding of how transformer blocks enable powerful sequence modeling
-- Practical capability to implement complete transformer architectures with proper layer organization
-- Systems insight into how transformer depth affects memory usage and training efficiency
-- Performance consideration of how layer normalization and residual connections affect convergence
-- Connection to production systems like GPT's transformer blocks and their optimization techniques
+## Learning Objectives
+By the end of this module, you will:
+1. Implement complete TransformerBlock with attention, MLP, and layer normalization
+2. Build full GPT architecture with multiple transformer blocks
+3. Add autoregressive text generation capability
+4. Understand parameter scaling in large language models
+5. Test transformer components and generation pipeline
 
-## Systems Reality Check
-TIP **Production Context**: GPT-3 has 96 transformer layers, each with 12k-dimensional representations and complex memory management
-SPEED **Performance Note**: Transformer layer memory accumulates linearly with depth - deep models require careful activation checkpointing
-"""
+Let's get started!
 
-# %% nbgrader={"grade": false, "grade_id": "transformers-imports", "locked": false, "schema_version": 3, "solution": false, "task": false}
-#| default_exp core.transformers
+## 📦 Where This Code Lives in the Final Package
 
-#| export
-import math
-import numpy as np
-import os
-import sys
-from typing import Union, List, Optional, Tuple, Dict
-
-# Clean development imports - no fake implementations, proper dependency management
-
-# Local development imports - clean dependency resolution
-def _import_from_module_dev(module_name, class_names):
-    """Import classes from development module files during development."""
-    module_path = os.path.join(os.path.dirname(__file__), '..', module_name)
-    sys.path.insert(0, module_path)
-    try:
-        if module_name == '01_tensor':
-            from tensor_dev import Tensor
-            return {'Tensor': Tensor}
-        elif module_name == '12_attention':
-            from attention_dev import ScaledDotProductAttention, MultiHeadAttention, KVCache
-            return {
-                'ScaledDotProductAttention': ScaledDotProductAttention,
-                'MultiHeadAttention': MultiHeadAttention,
-                'KVCache': KVCache
-            }
-        elif module_name == '11_embeddings':
-            from embeddings_dev import Embedding, PositionalEncoding
-            return {'Embedding': Embedding, 'PositionalEncoding': PositionalEncoding}
-        else:
-            # Return empty dict if module not found - will use mocks below
-            return {}
-    finally:
-        sys.path.pop(0)
-
-# Import required classes - production style import management
-if 'tinytorch' in sys.modules:
-    # Production: Import from installed package
-    from tinytorch.core.tensor import Tensor
-    from tinytorch.core.attention import ScaledDotProductAttention, MultiHeadAttention, KVCache
-    from tinytorch.core.embeddings import Embedding, PositionalEncoding
-else:
-    # Development: Import from local modules
-    tensor_imports = _import_from_module_dev('01_tensor', ['Tensor'])
-    Tensor = tensor_imports['Tensor']
-    
-    attention_imports = _import_from_module_dev('12_attention',
-                                               ['ScaledDotProductAttention', 'MultiHeadAttention', 'KVCache'])
-    if attention_imports:
-        ScaledDotProductAttention = attention_imports['ScaledDotProductAttention']
-        MultiHeadAttention = attention_imports['MultiHeadAttention']
-        KVCache = attention_imports['KVCache']
-    else:
-        # Mock classes for standalone testing
-        class ScaledDotProductAttention:
-            def __init__(self, *args, **kwargs): pass
-        class MultiHeadAttention:
-            def __init__(self, *args, **kwargs): pass
-        class KVCache:
-            def __init__(self, *args, **kwargs): pass
-
-    embedding_imports = _import_from_module_dev('11_embeddings', ['Embedding', 'PositionalEncoding'])
-    if embedding_imports:
-        Embedding = embedding_imports['Embedding']
-        PositionalEncoding = embedding_imports['PositionalEncoding']
-    else:
-        # Mock classes for standalone testing
-        class Embedding:
-            def __init__(self, *args, **kwargs): pass
-        class PositionalEncoding:
-            def __init__(self, *args, **kwargs): pass
-
-# %% nbgrader={"grade": false, "grade_id": "transformers-welcome", "locked": false, "schema_version": 3, "solution": false, "task": false}
-print("🏗️ TinyTorch Transformers Module")
-print(f"NumPy version: {np.__version__}")
-print("Ready to build complete transformer architectures!")
-
-# %% [markdown]
-"""
-## PACKAGE Where This Code Lives in the Final Package
-
-**Learning Side:** You work in `modules/source/14_transformers/transformers_dev.py`  
-**Building Side:** Code exports to `tinytorch.core.transformers`
+**Learning Side:** You work in modules/13_transformers/transformers_dev.py
+**Building Side:** Code exports to tinytorch.models.transformer
 
 ```python
 # Final package structure:
-from tinytorch.core.transformers import LayerNorm, TransformerBlock, Transformer
-from tinytorch.core.attention import MultiHeadAttention  # Previous module
-from tinytorch.core.embeddings import Embedding, PositionalEncoding  # Foundation
+from tinytorch.models.transformer import TransformerBlock, GPT  # This module
+from tinytorch.core.tensor import Tensor  # Module 01 - foundation
+from tinytorch.core.layers import Linear, Sequential, Dropout  # Module 03 - building blocks
+from tinytorch.core.attention import MultiHeadAttention  # Module 12 - attention mechanism
+from tinytorch.text.embeddings import Embedding, PositionalEncoding  # Module 11 - representations
 ```
 
 **Why this matters:**
-- **Learning:** Focused modules for deep understanding
-- **Production:** Proper organization like PyTorch's transformer implementations
-- **Consistency:** All transformer components live together in `core.transformers`
-- **Integration:** Works seamlessly with attention, embeddings, and tokenization systems
+- **Learning:** Complete transformer system showcasing how all components work together
+- **Production:** Matches PyTorch's transformer implementation with proper model organization
+- **Consistency:** All transformer components and generation logic in models.transformer
+- **Integration:** Demonstrates the power of modular design by combining all previous modules
+"""
+
+# %% nbgrader={"grade": false, "grade_id": "imports", "solution": true}
+#| default_exp models.transformer
+
+import numpy as np
+import math
+from typing import Optional, List
+
+# Minimal implementations for development - in practice these import from previous modules
+class Tensor:
+    """Minimal Tensor class for transformer development - imports from Module 01 in practice."""
+    def __init__(self, data, requires_grad=False):
+        self.data = np.array(data)
+        self.shape = self.data.shape
+        self.size = self.data.size
+        self.requires_grad = requires_grad
+        self.grad = None
+
+    def __add__(self, other):
+        if isinstance(other, Tensor):
+            return Tensor(self.data + other.data)
+        return Tensor(self.data + other)
+
+    def __mul__(self, other):
+        if isinstance(other, Tensor):
+            return Tensor(self.data * other.data)
+        return Tensor(self.data * other)
+
+    def matmul(self, other):
+        return Tensor(np.dot(self.data, other.data))
+
+    def sum(self, axis=None, keepdims=False):
+        return Tensor(self.data.sum(axis=axis, keepdims=keepdims))
+
+    def mean(self, axis=None, keepdims=False):
+        return Tensor(self.data.mean(axis=axis, keepdims=keepdims))
+
+    def reshape(self, *shape):
+        return Tensor(self.data.reshape(shape))
+
+    def __repr__(self):
+        return f"Tensor(data={self.data}, shape={self.shape})"
+
+class Linear:
+    """Minimal Linear layer - imports from Module 03 in practice."""
+    def __init__(self, in_features, out_features, bias=True):
+        # Xavier/Glorot initialization
+        std = math.sqrt(2.0 / (in_features + out_features))
+        self.weight = Tensor(np.random.normal(0, std, (in_features, out_features)))
+        self.bias = Tensor(np.zeros(out_features)) if bias else None
+
+    def forward(self, x):
+        output = x.matmul(self.weight)
+        if self.bias is not None:
+            output = output + self.bias
+        return output
+
+    def parameters(self):
+        params = [self.weight]
+        if self.bias is not None:
+            params.append(self.bias)
+        return params
+
+class MultiHeadAttention:
+    """Minimal MultiHeadAttention - imports from Module 12 in practice."""
+    def __init__(self, embed_dim, num_heads):
+        assert embed_dim % num_heads == 0
+        self.embed_dim = embed_dim
+        self.num_heads = num_heads
+        self.head_dim = embed_dim // num_heads
+
+        self.q_proj = Linear(embed_dim, embed_dim)
+        self.k_proj = Linear(embed_dim, embed_dim)
+        self.v_proj = Linear(embed_dim, embed_dim)
+        self.out_proj = Linear(embed_dim, embed_dim)
+
+    def forward(self, x, mask=None):
+        batch_size, seq_len, embed_dim = x.shape
+
+        # Linear projections
+        Q = self.q_proj.forward(x)
+        K = self.k_proj.forward(x)
+        V = self.v_proj.forward(x)
+
+        # Reshape for multi-head attention
+        Q = Q.reshape(batch_size, seq_len, self.num_heads, self.head_dim)
+        K = K.reshape(batch_size, seq_len, self.num_heads, self.head_dim)
+        V = V.reshape(batch_size, seq_len, self.num_heads, self.head_dim)
+
+        # Transpose to (batch_size, num_heads, seq_len, head_dim)
+        Q = Tensor(np.transpose(Q.data, (0, 2, 1, 3)))
+        K = Tensor(np.transpose(K.data, (0, 2, 1, 3)))
+        V = Tensor(np.transpose(V.data, (0, 2, 1, 3)))
+
+        # Scaled dot-product attention
+        scores = Tensor(np.matmul(Q.data, np.transpose(K.data, (0, 1, 3, 2))))
+        scores = scores * (1.0 / math.sqrt(self.head_dim))
+
+        # Apply causal mask for autoregressive generation
+        if mask is not None:
+            scores = Tensor(scores.data + mask.data)
+
+        # Softmax
+        attention_weights = self._softmax(scores)
+
+        # Apply attention to values
+        out = Tensor(np.matmul(attention_weights.data, V.data))
+
+        # Transpose back and reshape
+        out = Tensor(np.transpose(out.data, (0, 2, 1, 3)))
+        out = out.reshape(batch_size, seq_len, embed_dim)
+
+        # Final linear projection
+        return self.out_proj.forward(out)
+
+    def _softmax(self, x):
+        """Numerically stable softmax."""
+        exp_x = Tensor(np.exp(x.data - np.max(x.data, axis=-1, keepdims=True)))
+        return Tensor(exp_x.data / np.sum(exp_x.data, axis=-1, keepdims=True))
+
+    def parameters(self):
+        params = []
+        params.extend(self.q_proj.parameters())
+        params.extend(self.k_proj.parameters())
+        params.extend(self.v_proj.parameters())
+        params.extend(self.out_proj.parameters())
+        return params
+
+class Embedding:
+    """Minimal Embedding layer - imports from Module 11 in practice."""
+    def __init__(self, vocab_size, embed_dim):
+        self.vocab_size = vocab_size
+        self.embed_dim = embed_dim
+        # Initialize with small random values
+        self.weight = Tensor(np.random.normal(0, 0.02, (vocab_size, embed_dim)))
+
+    def forward(self, indices):
+        # Simple embedding lookup
+        return Tensor(self.weight.data[indices.data])
+
+    def parameters(self):
+        return [self.weight]
+
+def gelu(x):
+    """GELU activation function."""
+    return Tensor(0.5 * x.data * (1 + np.tanh(np.sqrt(2 / np.pi) * (x.data + 0.044715 * x.data**3))))
+
+# %% [markdown]
+"""
+## 1. Introduction: What are Transformers?
+
+Transformers are the revolutionary architecture that powers modern AI language models like GPT, ChatGPT, and Claude. The key breakthrough is **self-attention**, which allows every token in a sequence to directly interact with every other token, creating rich contextual understanding.
+
+### The Transformer Revolution
+
+Before transformers, language models used RNNs or CNNs that processed text sequentially or locally. Transformers changed everything by processing all positions in parallel while maintaining global context.
+
+### Complete GPT Architecture Overview
+
+```
+Input: "Hello world"  →  [Token IDs: 15496, 1917]
+           ↓
+    ┌─────────────────────────────────────────────┐
+    │ EMBEDDING LAYER                             │
+    │ ┌─────────────┐    ┌──────────────────────┐ │
+    │ │Token Embed  │ +  │ Positional Embed     │ │
+    │ │[15496→vec]  │    │[pos_0→vec, pos_1→vec]│ │
+    │ └─────────────┘    └──────────────────────┘ │
+    └─────────────────────────────────────────────┘
+           ↓
+    ┌─────────────────────────────────────────────┐
+    │ TRANSFORMER BLOCK 1                         │
+    │                                             │
+    │  Input → LayerNorm → MultiHeadAttention     │
+    │    ↓                        ↓               │
+    │    └────── Residual Add ←────┘               │
+    │    ↓                                        │
+    │  Result → LayerNorm → MLP (Feed Forward)    │
+    │    ↓                     ↓                  │
+    │    └──── Residual Add ←──┘                  │
+    └─────────────────────────────────────────────┘
+           ↓
+    ┌─────────────────────────────────────────────┐
+    │ TRANSFORMER BLOCK 2                         │
+    │             ... (same structure)            │
+    └─────────────────────────────────────────────┘
+           ↓
+         ... (more blocks)
+           ↓
+    ┌─────────────────────────────────────────────┐
+    │ OUTPUT HEAD                                 │
+    │ Final LayerNorm → Linear → Vocabulary Logits│
+    └─────────────────────────────────────────────┘
+           ↓
+Output: [Prob("Hello"), Prob("world"), Prob("!"), ...]
+```
+
+### Why Transformers Dominate
+
+**Parallel Processing**: Unlike RNNs that process tokens one by one, transformers process all positions simultaneously. This makes training much faster.
+
+**Global Context**: Every token can directly attend to every other token in the sequence, capturing long-range dependencies that RNNs struggle with.
+
+**Scalability**: Performance predictably improves with more parameters and data. This enabled the scaling laws that led to GPT-3, GPT-4, and beyond.
+
+**Residual Connections**: Allow training very deep networks (100+ layers) by providing gradient highways.
+
+### The Building Blocks We'll Implement
+
+1. **LayerNorm**: Stabilizes training by normalizing activations
+2. **Multi-Layer Perceptron (MLP)**: Provides non-linear transformation
+3. **TransformerBlock**: Combines attention + MLP with residuals
+4. **GPT**: Complete model with embeddings and generation capability
 """
 
 # %% [markdown]
 """
-## What are Transformers?
+## 2. Foundations: Essential Transformer Mathematics
 
-### The Architecture Revolution
-Transformers revolutionized AI by replacing recurrent connections with attention mechanisms:
+### Layer Normalization: The Stability Engine
 
-**Traditional RNN/LSTM:**
+Layer Normalization is crucial for training deep transformer networks. Unlike batch normalization (which normalizes across the batch), layer norm normalizes across the feature dimension for each individual sample.
+
 ```
-h₁ -> h₂ -> h₃ -> h₄  (Sequential processing)
-```
+Mathematical Formula:
+output = (x - μ) / σ * γ + β
 
-**Transformer:**
-```
-All positions attend to all positions simultaneously (Parallel processing)
-```
-
-### Transformer Block Components
-Each transformer block contains:
-
-1. **Multi-Head Self-Attention**: Captures sequence relationships
-2. **Layer Normalization**: Stabilizes training of deep networks
-3. **Residual Connections**: Enables gradient flow through many layers
-4. **Position-wise Feed-Forward**: Applies non-linear transformations
-
-### The Complete Architecture
-```
-Input Embeddings + Positional Encoding
-    v
-[Transformer Block] * N layers
-    v
-Output Layer (Language Modeling Head)
+where:
+  μ = mean(x, axis=features)     # Mean across feature dimension
+  σ = sqrt(var(x) + ε)          # Standard deviation + small epsilon
+  γ = learnable scale parameter  # Initialized to 1.0
+  β = learnable shift parameter  # Initialized to 0.0
 ```
 
-### Systems Trade-offs
-- **Layer depth**: More layers = more capacity, more memory
-- **Attention heads**: More heads = richer representations, more computation
-- **Feed-forward size**: Larger FFN = more parameters, better performance
-- **Layer normalization**: Pre-norm vs post-norm affects training dynamics
+**Why Layer Norm Works:**
+- **Independence**: Each sample normalized independently (good for variable batch sizes)
+- **Stability**: Prevents internal covariate shift that breaks training
+- **Gradient Flow**: Helps gradients flow better through deep networks
+
+### Residual Connections: The Gradient Highway
+
+Residual connections are the secret to training deep networks. They create "gradient highways" that allow information to flow directly through the network.
+
+```
+Residual Pattern in Transformers:
+┌─────────────────────────────────────────────┐
+│ Pre-Norm Architecture (Modern Standard):    │
+│                                             │
+│ x → LayerNorm → MultiHeadAttention → + x   │
+│ │                                      ↑    │
+│ │              residual connection     │    │
+│ └──────────────────────────────────────┘    │
+│ │                                           │
+│ x → LayerNorm → MLP → + x                   │
+│ │                 ↑     ↑                   │
+│ │   residual connection │                   │
+│ └───────────────────────┘                   │
+└─────────────────────────────────────────────┘
+```
+
+**Gradient Flow Visualization:**
+```
+Backward Pass Without Residuals:    With Residuals:
+Loss                                Loss
+ │ gradients get smaller             │ gradients stay strong
+ ↓ at each layer                    ↓ via residual paths
+Layer N  ← tiny gradients          Layer N  ← strong gradients
+ │                                  │     ↗ (direct path)
+ ↓                                  ↓   ↗
+Layer 2  ← vanishing                Layer 2  ← strong gradients
+ │                                  │     ↗
+ ↓                                  ↓   ↗
+Layer 1  ← gone!                   Layer 1  ← strong gradients
+```
+
+### Feed-Forward Network (MLP): The Thinking Layer
+
+The MLP provides the actual "thinking" in each transformer block. It's a simple two-layer network with a specific expansion pattern.
+
+```
+MLP Architecture:
+Input (embed_dim) → Linear → GELU → Linear → Output (embed_dim)
+       512           2048      2048    512
+                   (4x expansion)
+
+Mathematical Formula:
+FFN(x) = Linear₂(GELU(Linear₁(x)))
+       = W₂ · GELU(W₁ · x + b₁) + b₂
+
+where:
+  W₁: (embed_dim, 4*embed_dim)  # Expansion matrix
+  W₂: (4*embed_dim, embed_dim)  # Contraction matrix
+  GELU: smooth activation function (better than ReLU for language)
+```
+
+**Why 4x Expansion?**
+- **Capacity**: More parameters = more representation power
+- **Non-linearity**: GELU activation creates complex transformations
+- **Information Bottleneck**: Forces the model to compress useful information
+
+### The Complete Transformer Block Data Flow
+
+```
+Input Tensor (batch, seq_len, embed_dim)
+          ↓
+    ┌─────────────────────────────────────┐
+    │ ATTENTION SUB-LAYER                 │
+    │                                     │
+    │ x₁ = LayerNorm(x₀)                  │
+    │ attention_out = MultiHeadAttn(x₁)   │
+    │ x₂ = x₀ + attention_out  (residual) │
+    └─────────────────────────────────────┘
+          ↓
+    ┌─────────────────────────────────────┐
+    │ MLP SUB-LAYER                       │
+    │                                     │
+    │ x₃ = LayerNorm(x₂)                  │
+    │ mlp_out = MLP(x₃)                   │
+    │ x₄ = x₂ + mlp_out    (residual)     │
+    └─────────────────────────────────────┘
+          ↓
+Output Tensor (batch, seq_len, embed_dim)
+```
+
+**Key Insight**: Each sub-layer (attention and MLP) gets a "clean" normalized input but adds its contribution to the residual stream. This creates a stable training dynamic.
 """
 
 # %% [markdown]
 """
-## Layer Normalization Implementation
+## 3. Implementation: Building Transformer Components
 
-Layer normalization is crucial for training stable transformers. Unlike batch normalization, it normalizes across the feature dimension for each sample independently.
+Now we'll implement each transformer component with a clear understanding of their role in the overall architecture. We'll follow the pattern: **Explanation → Implementation → Test** for each component.
+
+Each component serves a specific purpose:
+- **LayerNorm**: Stabilizes training and normalizes activations
+- **MLP**: Provides non-linear transformation and "thinking" capacity
+- **TransformerBlock**: Combines attention with MLP using residual connections
+- **GPT**: Complete autoregressive language model for text generation
 """
 
 # %% [markdown]
 """
-## TARGET Building Transformer Components
+### Understanding Layer Normalization
 
-### Transformer Architecture Overview
+Layer Normalization is the foundation of stable transformer training. Unlike batch normalization, it normalizes each sample independently across its feature dimensions.
 
-Before implementing individual components, let's visualize how they fit together:
+#### Why Layer Norm is Essential
 
-```
-Transformer Architecture:
+Without normalization, deep networks suffer from "internal covariate shift" - the distribution of inputs to each layer changes during training, making learning unstable.
 
-+-----------------------------------------------------+
-|                   Input Tokens                      |
-+-----------------+-----------------------------------+
-                  |
-+-----------------v-----------------------------------+
-|              Token Embeddings                       |
-|            + Positional Encoding                    |
-+-----------------+-----------------------------------+
-                  |
-+-----------------v-----------------------------------+
-|               Layer 1                               |
-|  +---------------------------------------------+    |
-|  |         Multi-Head Attention                |    |
-|  |    +-------+ +-------+ +-------+           |    |
-|  |    |Head 1 | |Head 2 | |Head n |  ->  Concat|    |
-|  |    +-------+ +-------+ +-------+           |    |
-|  +---------------------------------------------+    |
-|                        |                            |
-|                        v                            |
-|                 +-------------+                     |
-|            +----| Add & Norm  |<----+               |
-|            |    +-------------+     | Residual      |
-|            |                        | Connection    |
-|            v                        |               |
-|  +---------------------------------+ |               |
-|  |     Position-wise FFN           | |               |
-|  |   Linear -> ReLU -> Linear        | |               |
-|  +---------------------------------+ |               |
-|                        |              |               |
-|                        v              |               |
-|                 +-------------+       |               |
-|                 | Add & Norm  |<------+               |
-|                 +-------------+                       |
-+-----------------+-----------------------------------+
-                  |
-                  v
-    +-------------------------------------+
-    |          Layer 2, 3, ..., N        |  (Same structure)
-    +-------------------------------------+
-                  |
-                  v
-    +-------------------------------------+
-    |         Output Projection           |
-    |      Linear(embed_dim, vocab_size)  |
-    +-------------------------------------+
-```
-
-### Memory Layout Visualization
+#### Layer Norm Visualization
 
 ```
-Transformer Memory Organization:
-
-+-------------------------------------------------+
-|                Model Parameters                 |
-+-------------------------------------------------┤
-| Token Embeddings    | vocab * embed_dim         | <- 70% of parameters
-| Position Encodings  | max_seq * embed_dim       |   (for large vocab)
-| N * Transformer Layers:                         |
-|   + Multi-Head Attn | 4 * embed_dim²           | <- 25% of parameters  
-|   + Feed-Forward    | 2 * embed_dim * ffn_dim  |   (per layer)
-|   + Layer Norms     | 2 * embed_dim            |
-| Output Projection   | embed_dim * vocab_size    | <- Same as embeddings
-+-------------------------------------------------+
-
-Activation Memory (Forward Pass):
-+-------------------------------------------------+
-| Input: batch * seq_len * embed_dim             | <- Base memory unit
-| Attention Scores: batch * heads * seq * seq    | <- O(seq²) scaling!
-| Layer Outputs: N * batch * seq * embed_dim     | <- Linear with depth
-| Gradients: 2* parameter memory                  | <- Training overhead
-+-------------------------------------------------+
-
-For GPT-3 scale (175B parameters):
-- Parameters: 700GB (fp32) / 350GB (fp16)
-- Activations: ~10GB per batch (seq_len=2048)
-- Total training memory: ~1TB per GPU!
+Input Tensor: (batch=2, seq=3, features=4)
+┌──────────────────────────────────────────┐
+│ Sample 1: [[1.0, 2.0, 3.0, 4.0],        │
+│            [5.0, 6.0, 7.0, 8.0],        │
+│            [9.0, 10., 11., 12.]]         │
+│                                          │
+│ Sample 2: [[13., 14., 15., 16.],         │
+│            [17., 18., 19., 20.],         │
+│            [21., 22., 23., 24.]]         │
+└──────────────────────────────────────────┘
+          ↓ Layer Norm (across features for each position)
+┌──────────────────────────────────────────┐
+│ Each position normalized to mean=0, std=1│
+│ Sample 1: [[-1.34, -0.45, 0.45, 1.34],  │
+│            [-1.34, -0.45, 0.45, 1.34],  │
+│            [-1.34, -0.45, 0.45, 1.34]]  │
+│                                          │
+│ Sample 2: [[-1.34, -0.45, 0.45, 1.34],  │
+│            [-1.34, -0.45, 0.45, 1.34],  │
+│            [-1.34, -0.45, 0.45, 1.34]]  │
+└──────────────────────────────────────────┘
+          ↓ Apply learnable scale (γ) and shift (β)
+┌──────────────────────────────────────────┐
+│ Final Output: γ * normalized + β         │
+└──────────────────────────────────────────┘
 ```
+
+#### Key Properties
+- **Per-sample normalization**: Each sequence position normalized independently
+- **Learnable parameters**: γ (scale) and β (shift) allow the model to recover any desired distribution
+- **Gradient friendly**: Helps gradients flow smoothly through deep networks
 """
 
-# %% nbgrader={"grade": false, "grade_id": "layer-norm", "locked": false, "schema_version": 3, "solution": true, "task": false}
-#| export
+# %% nbgrader={"grade": false, "grade_id": "layer-norm", "solution": true}
 class LayerNorm:
     """
-    Layer Normalization for transformers.
-    
-    Normalizes across the feature dimension (last axis) for each sample,
-    making training more stable and enabling deeper networks.
+    Layer Normalization for transformer blocks.
+
+    Normalizes across the feature dimension (last axis) for each sample independently,
+    unlike batch normalization which normalizes across the batch dimension.
     """
-    
-    def __init__(self, normalized_shape: Union[int, Tuple[int]], eps: float = 1e-5):
+
+    def __init__(self, normalized_shape, eps=1e-5):
         """
-        Initialize layer normalization with learnable parameters.
-        
-        Layer normalization is CRITICAL for stable transformer training - it normalizes
-        activations across feature dimensions, preventing internal covariate shift.
-        
-        TODO: Implement layer normalization initialization.
-        
-        APPROACH (3-Step LayerNorm Setup):
-        1. Store normalization configuration because shape validation is essential
-        2. Initialize learnable parameters because scale/shift enable model flexibility  
-        3. Set up optimization tracking because these parameters need gradient updates
-        
-        MATHEMATICAL FOUNDATION:
-        LayerNorm(x) = γ * (x - μ) / σ + β
-        
-        Where:
-        - μ = mean across feature dimensions
-        - σ = std across feature dimensions  
-        - γ = learnable scale parameter (initialized to 1)
-        - β = learnable shift parameter (initialized to 0)
-        
-        EXAMPLE (LayerNorm Operation):
-        >>> ln = LayerNorm(512)  # For 512-dim embeddings
-        >>> x = Tensor(np.random.randn(32, 100, 512))  # batch * seq * embed
-        >>> normalized = ln(x)
-        >>> print(f"Mean: {normalized.data.mean(axis=-1)[0,0]:.6f}")  # ~0
-        >>> print(f"Std: {normalized.data.std(axis=-1)[0,0]:.6f}")    # ~1
-        
-        HINTS (Critical Implementation Details):
-        - Validate normalized_shape to prevent runtime errors
-        - Initialize gamma=1, beta=0 for identity transform initially
-        - Use eps=1e-5 to prevent division by zero
-        - Track parameters for optimizer updates
-        
-        Args:
-            normalized_shape: Shape of features to normalize (e.g., embedding_dim)
-            eps: Small value for numerical stability
-        """
-        ### BEGIN SOLUTION
-        # Input validation
-        if isinstance(normalized_shape, int):
-            if normalized_shape <= 0:
-                raise ValueError(f"normalized_shape must be positive, got {normalized_shape}")
-            self.normalized_shape = (normalized_shape,)
-        else:
-            if any(dim <= 0 for dim in normalized_shape):
-                raise ValueError(f"All dimensions in normalized_shape must be positive, got {normalized_shape}")
-            self.normalized_shape = tuple(normalized_shape)
-        
-        if eps <= 0:
-            raise ValueError(f"eps must be positive, got {eps}")
-        self.eps = eps
-        
-        # Initialize learnable parameters
-        # Gamma (scale): initialized to ones
-        # Beta (bias): initialized to zeros
-        self.gamma = Tensor(np.ones(self.normalized_shape))
-        self.beta = Tensor(np.zeros(self.normalized_shape))
-        
-        # Track parameters for optimization
-        self.parameters = [self.gamma, self.beta]
-        ### END SOLUTION
-    
-    def forward(self, x: Tensor) -> Tensor:
-        """
-        Apply layer normalization to input tensor.
-        
-        TODO: Implement layer normalization forward pass.
-        
-        STEP-BY-STEP IMPLEMENTATION:
-        1. Calculate mean across feature dimensions
-        2. Calculate standard deviation across feature dimensions
-        3. Normalize: (x - mean) / (std + eps)
-        4. Apply learnable scale and shift: gamma * normalized + beta
-        
-        NUMERICAL STABILITY:
-        - Add eps to variance before taking sqrt
-        - Use unbiased variance calculation
-        
+        Initialize LayerNorm with learnable parameters.
+
+        TODO: Set up normalization parameters
+
+        APPROACH:
+        1. Store the shape to normalize over (usually embed_dim)
+        2. Initialize learnable scale (gamma) and shift (beta) parameters
+        3. Set small epsilon for numerical stability
+
         EXAMPLE:
-        layer_norm = LayerNorm(256)
-        x = Tensor(np.random.randn(32, 128, 256))  # (batch, seq, features)
-        normalized = layer_norm.forward(x)  # Same shape as input
-        
-        Args:
-            x: Input tensor with shape (..., *normalized_shape)
-            
-        Returns:
-            Normalized tensor with same shape as input
+        >>> ln = LayerNorm(512)  # For 512-dimensional embeddings
+        >>> x = Tensor(np.random.randn(2, 10, 512))  # (batch, seq, features)
+        >>> normalized = ln.forward(x)
+        >>> # Each (2, 10) sample normalized independently across 512 features
+
+        HINTS:
+        - gamma should start at 1.0 (identity scaling)
+        - beta should start at 0.0 (no shift)
+        - eps prevents division by zero in variance calculation
         """
         ### BEGIN SOLUTION
-        # Input validation
-        if len(x.shape) < len(self.normalized_shape):
-            raise ValueError(
-                f"Input has {len(x.shape)} dimensions, but normalized_shape "
-                f"requires at least {len(self.normalized_shape)} dimensions"
-            )
-        
-        # Check that the last dimensions match normalized_shape
-        input_norm_shape = x.shape[-len(self.normalized_shape):]
-        if input_norm_shape != self.normalized_shape:
-            raise ValueError(
-                f"Input shape {input_norm_shape} doesn't match "
-                f"normalized_shape {self.normalized_shape}"
-            )
-        
-        # Step 1: Determine which axes to normalize over (the last len(normalized_shape) axes)
-        input_ndim = len(x.shape)
-        norm_ndim = len(self.normalized_shape)
-        # We normalize over the last 'norm_ndim' dimensions
-        start_axis = input_ndim - norm_ndim
-        axes_to_normalize = tuple(range(start_axis, input_ndim))
-        
-        # Step 2: Calculate statistics (mean and variance)
-        mean = np.mean(x.data, axis=axes_to_normalize, keepdims=True)
-        variance = np.var(x.data, axis=axes_to_normalize, keepdims=True)
-        
-        # Step 3: Normalize (subtract mean, divide by std)
-        std = np.sqrt(variance + self.eps)  # Add eps for numerical stability
-        normalized_input = (x.data - mean) / std
-        
-        # Step 4: Apply learnable scale and shift parameters
-        scaled_output = self._apply_scale_and_shift(normalized_input, x.shape)
-        
-        return Tensor(scaled_output)
+        self.normalized_shape = normalized_shape
+        self.eps = eps
+
+        # Learnable parameters: scale and shift
+        self.gamma = Tensor(np.ones(normalized_shape))  # Scale parameter
+        self.beta = Tensor(np.zeros(normalized_shape))  # Shift parameter
         ### END SOLUTION
-    
-    def _prepare_parameter_for_broadcast(self, param: Tensor, input_shape: tuple) -> np.ndarray:
+
+    def forward(self, x):
         """
-        Reshape parameter tensor to be broadcastable with input.
-        
-        This helper method makes the broadcasting logic clearer by separating
-        the complex reshape operation into a dedicated function.
-        
-        Args:
-            param: Parameter tensor (gamma or beta)
-            input_shape: Shape of the input tensor
-            
-        Returns:
-            Reshaped parameter array ready for broadcasting
-        """
-        # Calculate how many batch dimensions we need to add
-        batch_dims = len(input_shape) - len(self.normalized_shape)
-        
-        # Create broadcast shape: [1, 1, ..., 1, *normalized_shape]
-        # The number of 1s equals the number of batch dimensions
-        broadcast_shape = [1] * batch_dims + list(self.normalized_shape)
-        
-        return param.data.reshape(broadcast_shape)
-    
-    def _apply_scale_and_shift(self, normalized: np.ndarray, input_shape: tuple) -> np.ndarray:
-        """
-        Apply learnable gamma (scale) and beta (shift) parameters.
-        
-        This method handles the broadcasting logic for applying the learnable
-        parameters to the normalized input.
-        
-        Args:
-            normalized: Normalized input array
-            input_shape: Shape of the original input tensor
-            
-        Returns:
-            Scaled and shifted output array
-        """
-        # Prepare parameters for broadcasting with the input
-        gamma_broadcast = self._prepare_parameter_for_broadcast(self.gamma, input_shape)
-        beta_broadcast = self._prepare_parameter_for_broadcast(self.beta, input_shape)
-        
-        # Apply transformation: gamma * normalized + beta
-        return gamma_broadcast * normalized + beta_broadcast
-    
-    def __call__(self, x: Tensor) -> Tensor:
-        """Make the class callable."""
-        return self.forward(x)
-    
-    def get_memory_usage(self) -> Dict[str, float]:
-        """
-        Calculate memory usage of layer normalization parameters.
-        
-        This function is PROVIDED to show memory analysis.
-        """
-        # Parameter memory
-        param_memory_mb = sum(param.data.nbytes for param in self.parameters) / (1024 * 1024)
-        
-        return {
-            'parameter_memory_mb': param_memory_mb,
-            'total_parameters': sum(param.data.size for param in self.parameters),
-            'normalized_shape': self.normalized_shape
-        }
+        Apply layer normalization.
 
-# %% [markdown]
-"""
-### TEST Test Your Layer Normalization Implementation
+        TODO: Implement layer normalization formula
 
-Once you implement the LayerNorm methods above, run this cell to test it:
-"""
+        APPROACH:
+        1. Compute mean and variance across the last dimension
+        2. Normalize: (x - mean) / sqrt(variance + eps)
+        3. Apply learnable scale and shift: gamma * normalized + beta
 
-# %% nbgrader={"grade": true, "grade_id": "test-layer-norm-immediate", "locked": true, "points": 15, "schema_version": 3, "solution": false, "task": false}
-def test_unit_layer_norm():
-    """Unit test for layer normalization."""
-    print("🔬 Unit Test: Layer Normalization...")
-    
-    # Test 1: Basic functionality
-    embed_dim = 256
-    layer_norm = LayerNorm(embed_dim)
-    
-    # Verify initialization
-    assert layer_norm.normalized_shape == (embed_dim,), "Should store normalized shape"
-    assert len(layer_norm.parameters) == 2, "Should have gamma and beta parameters"
-    assert layer_norm.gamma.shape == (embed_dim,), "Gamma should match normalized shape"
-    assert layer_norm.beta.shape == (embed_dim,), "Beta should match normalized shape"
-    
-    # Verify parameter initialization
-    assert np.allclose(layer_norm.gamma.data, 1.0), "Gamma should be initialized to ones"
-    assert np.allclose(layer_norm.beta.data, 0.0), "Beta should be initialized to zeros"
-    
-    # Test 2: Forward pass with 2D input
-    batch_size = 16
-    x_2d = Tensor(np.random.randn(batch_size, embed_dim))
-    output_2d = layer_norm.forward(x_2d)
-    
-    assert output_2d.shape == x_2d.shape, "Output shape should match input shape"
-    
-    # Test 3: Forward pass with 3D input (typical transformer use)
-    seq_length = 32
-    x_3d = Tensor(np.random.randn(batch_size, seq_length, embed_dim))
-    output_3d = layer_norm.forward(x_3d)
-    
-    assert output_3d.shape == x_3d.shape, "3D output shape should match input shape"
-    
-    # Test 4: Normalization properties
-    # For each sample, the normalized features should have ~zero mean and ~unit variance
-    for i in range(batch_size):
-        for j in range(seq_length):
-            sample_output = output_3d.data[i, j, :]
-            sample_mean = np.mean(sample_output)
-            sample_var = np.var(sample_output)
-            
-            assert abs(sample_mean) < 1e-4, f"Normalized mean should be ~0, got {sample_mean}"
-            assert abs(sample_var - 1.0) < 1e-4, f"Normalized variance should be ~1, got {sample_var}"
-    
-    # Test 5: Different normalized shapes
-    multi_dim_shape = (64, 4)  # Multi-dimensional normalization
-    layer_norm_multi = LayerNorm(multi_dim_shape)
-    
-    x_multi = Tensor(np.random.randn(8, 32, 64, 4))
-    output_multi = layer_norm_multi.forward(x_multi)
-    
-    assert output_multi.shape == x_multi.shape, "Multi-dim normalization should preserve shape"
-    
-    # Test 6: Callable interface
-    output_callable = layer_norm(x_3d)
-    assert np.allclose(output_callable.data, output_3d.data), "Callable interface should work"
-    
-    # Test 7: Numerical stability with extreme values
-    extreme_x = Tensor(np.ones((4, embed_dim)) * 1e6)  # Very large values
-    extreme_output = layer_norm.forward(extreme_x)
-    
-    assert not np.any(np.isnan(extreme_output.data)), "Should handle extreme values without NaN"
-    assert not np.any(np.isinf(extreme_output.data)), "Should handle extreme values without inf"
-    
-    # Test 8: Memory usage calculation
-    memory_stats = layer_norm.get_memory_usage()
-    assert 'parameter_memory_mb' in memory_stats, "Should provide memory statistics"
-    assert memory_stats['total_parameters'] == 2 * embed_dim, "Should count gamma and beta parameters"
-    
-    print("PASS Layer normalization tests passed!")
-    print(f"PASS Properly normalizes across feature dimensions")
-    print(f"PASS Handles 2D and 3D inputs correctly")
-    print(f"PASS Maintains ~0 mean and ~1 variance after normalization")
-    print(f"PASS Parameter memory: {memory_stats['parameter_memory_mb']:.4f}MB")
+        MATHEMATICAL FORMULA:
+        y = (x - μ) / σ * γ + β
+        where μ = mean(x), σ = sqrt(var(x) + ε)
 
-# Test function defined (called in main block)
-
-# %% [markdown]
-"""
-## Position-wise Feed-Forward Network
-
-Each transformer block contains a position-wise feed-forward network that applies the same transformation to each position independently.
-
-### Feed-Forward Network Architecture
-
-```
-Position-wise FFN Structure:
-
-Input: (batch, seq_len, embed_dim)
-   |
-   v
-+-------------------------------------------+
-|              Linear Layer 1                 |
-|          embed_dim -> hidden_dim             |  <- Expansion
-|        W1: (embed_dim, hidden_dim)           |    (usually 4x)
-|        b1: (hidden_dim,)                     |
-+-------------------------------------------+
-   |
-   v
-+-------------------------------------------+
-|                ReLU                      |  <- Nonlinearity
-|             max(0, x)                    |    (makes it powerful)
-+-------------------------------------------+
-   |
-   v
-+-------------------------------------------+
-|              Linear Layer 2                 |
-|          hidden_dim -> embed_dim             |  <- Compression
-|        W2: (hidden_dim, embed_dim)           |    (back to original)
-|        b2: (embed_dim,)                      |
-+-------------------------------------------+
-   |
-   v
-Output: (batch, seq_len, embed_dim)
-```
-
-### Parameter Count Analysis
-
-```
-FFN Parameter Breakdown:
-
-For embed_dim=512, hidden_dim=2048:
-
-+----------------------------------------------+
-| W1: 512 * 2048 = 1,048,576 parameters     |  <- 67% of FFN
-| b1: 2048 parameters                      |
-| W2: 2048 * 512 = 1,048,576 parameters     |  <- 67% of FFN
-| b2: 512 parameters                       |
-+----------------------------------------------┤
-| Total: 2,099,712 parameters              |
-| Memory (fp32): 8.4 MB                   |
-+----------------------------------------------+
-
-Scaling: Parameters ∝ embed_dim * hidden_dim
-Typical ratio: hidden_dim = 4 * embed_dim
--> FFN params ∝ 8 * embed_dim²
-```
-
-### Computational Pattern
-
-```
-FFN applies the same transformation to EVERY position independently:
-
-Position 0: [e0_0, e0_1, ..., e0_d] -> FFN -> [o0_0, o0_1, ..., o0_d]
-Position 1: [e1_0, e1_1, ..., e1_d] -> FFN -> [o1_0, o1_1, ..., o1_d]
-    ...            ...                      ...            ...
-Position N: [eN_0, eN_1, ..., eN_d] -> FFN -> [oN_0, oN_1, ..., oN_d]
-
-This is why it's called "position-wise" - each position gets the same treatment!
-```
-"""
-
-# %% nbgrader={"grade": false, "grade_id": "feed-forward", "locked": false, "schema_version": 3, "solution": true, "task": false}
-#| export
-class PositionwiseFeedForward:
-    """
-    Position-wise feed-forward network used in transformer blocks.
-    
-    Applies the same feed-forward network to each position in the sequence:
-    FFN(x) = max(0, xW₁ + b₁)W₂ + b₂
-    """
-    
-    def __init__(self, embed_dim: int, hidden_dim: int, dropout: float = 0.0):
-        """
-        Initialize position-wise feed-forward network.
-        
-        TODO: Implement feed-forward network initialization.
-        
-        STEP-BY-STEP IMPLEMENTATION:
-        1. Store network configuration
-        2. Initialize weight matrices and bias vectors for two linear layers
-        3. Set up parameter tracking for optimization
-        4. Store dropout rate for training
-        
-        ARCHITECTURE:
-        - Input: (batch, seq_len, embed_dim)
-        - Linear 1: embed_dim -> hidden_dim
-        - ReLU activation
-        - Linear 2: hidden_dim -> embed_dim
-        - Output: (batch, seq_len, embed_dim)
-        
-        PARAMETER INITIALIZATION:
-        Use Xavier/Glorot initialization for stable training
-        
-        Args:
-            embed_dim: Embedding dimension (input and output size)
-            hidden_dim: Hidden layer dimension (typically 4 * embed_dim)
-            dropout: Dropout rate for regularization
+        HINT: Use keepdims=True to maintain tensor dimensions for broadcasting
         """
         ### BEGIN SOLUTION
+        # Compute statistics across last dimension (features)
+        mean = x.mean(axis=-1, keepdims=True)
+
+        # Compute variance: E[(x - μ)²]
+        diff = Tensor(x.data - mean.data)
+        variance = Tensor((diff.data ** 2).mean(axis=-1, keepdims=True))
+
+        # Normalize
+        std = Tensor(np.sqrt(variance.data + self.eps))
+        normalized = Tensor((x.data - mean.data) / std.data)
+
+        # Apply learnable transformation
+        output = normalized * self.gamma + self.beta
+        return output
+        ### END SOLUTION
+
+    def parameters(self):
+        """Return learnable parameters."""
+        return [self.gamma, self.beta]
+
+# %% [markdown]
+"""
+### 🔬 Unit Test: Layer Normalization
+This test validates our LayerNorm implementation works correctly.
+**What we're testing**: Normalization statistics and parameter learning
+**Why it matters**: Essential for transformer stability and training
+**Expected**: Mean ≈ 0, std ≈ 1 after normalization, learnable parameters work
+"""
+
+# %% nbgrader={"grade": true, "grade_id": "test-layer-norm", "locked": true, "points": 10}
+def test_unit_layer_norm():
+    """🔬 Test LayerNorm implementation."""
+    print("🔬 Unit Test: Layer Normalization...")
+
+    # Test basic normalization
+    ln = LayerNorm(4)
+    x = Tensor([[1.0, 2.0, 3.0, 4.0], [5.0, 6.0, 7.0, 8.0]])  # (2, 4)
+
+    normalized = ln.forward(x)
+
+    # Check output shape
+    assert normalized.shape == (2, 4)
+
+    # Check normalization properties (approximately)
+    # For each sample, mean should be close to 0, std close to 1
+    for i in range(2):
+        sample_mean = np.mean(normalized.data[i])
+        sample_std = np.std(normalized.data[i])
+        assert abs(sample_mean) < 1e-5, f"Mean should be ~0, got {sample_mean}"
+        assert abs(sample_std - 1.0) < 1e-4, f"Std should be ~1, got {sample_std}"
+
+    # Test parameter shapes
+    params = ln.parameters()
+    assert len(params) == 2
+    assert params[0].shape == (4,)  # gamma
+    assert params[1].shape == (4,)  # beta
+
+    print("✅ LayerNorm works correctly!")
+
+test_unit_layer_norm()
+
+# %% [markdown]
+"""
+### Understanding the Multi-Layer Perceptron (MLP)
+
+The MLP is where the "thinking" happens in each transformer block. It's a simple feed-forward network that provides non-linear transformation capacity.
+
+#### The Role of MLP in Transformers
+
+While attention handles relationships between tokens, the MLP processes each position independently, adding computational depth and non-linearity.
+
+#### MLP Architecture and Information Flow
+
+```
+Information Flow Through MLP:
+
+Input: (batch, seq_len, embed_dim=512)
+         ↓
+┌─────────────────────────────────────────────┐
+│ Linear Layer 1: Expansion                   │
+│ Weight: (512, 2048)  Bias: (2048,)         │
+│ Output: (batch, seq_len, 2048)              │
+└─────────────────────────────────────────────┘
+         ↓
+┌─────────────────────────────────────────────┐
+│ GELU Activation                             │
+│ Smooth, differentiable activation           │
+│ Better than ReLU for language modeling     │
+└─────────────────────────────────────────────┘
+         ↓
+┌─────────────────────────────────────────────┐
+│ Linear Layer 2: Contraction                 │
+│ Weight: (2048, 512)  Bias: (512,)          │
+│ Output: (batch, seq_len, 512)               │
+└─────────────────────────────────────────────┘
+         ↓
+Output: (batch, seq_len, embed_dim=512)
+```
+
+#### Why 4x Expansion?
+
+```
+Parameter Count Analysis:
+
+Embed Dim: 512
+MLP Hidden: 2048 (4x expansion)
+
+Parameters:
+- Linear1: 512 × 2048 + 2048 = 1,050,624
+- Linear2: 2048 × 512 + 512 = 1,049,088
+- Total MLP: ~2.1M parameters
+
+For comparison:
+- Attention (same embed_dim): ~1.5M parameters
+- MLP has MORE parameters → more computational capacity
+```
+
+#### GELU vs ReLU
+
+```
+Activation Function Comparison:
+
+ReLU(x) = max(0, x)        # Hard cutoff at 0
+         ┌────
+         │
+    ─────┘
+         0
+
+GELU(x) ≈ x * Φ(x)         # Smooth, probabilistic
+         ╭────
+        ╱
+    ───╱
+      ╱
+     0
+
+GELU is smoother and provides better gradients for language modeling.
+```
+"""
+
+# %% nbgrader={"grade": false, "grade_id": "mlp", "solution": true}
+class MLP:
+    """
+    Multi-Layer Perceptron (Feed-Forward Network) for transformer blocks.
+
+    Standard pattern: Linear -> GELU -> Linear with expansion ratio of 4:1.
+    This provides the non-linear transformation in each transformer block.
+    """
+
+    def __init__(self, embed_dim, hidden_dim=None, dropout_prob=0.1):
+        """
+        Initialize MLP with two linear layers.
+
+        TODO: Set up the feed-forward network layers
+
+        APPROACH:
+        1. First layer expands from embed_dim to hidden_dim (usually 4x larger)
+        2. Second layer projects back to embed_dim
+        3. Use GELU activation (smoother than ReLU, preferred in transformers)
+
+        EXAMPLE:
+        >>> mlp = MLP(512)  # Will create 512 -> 2048 -> 512 network
+        >>> x = Tensor(np.random.randn(2, 10, 512))
+        >>> output = mlp.forward(x)
+        >>> assert output.shape == (2, 10, 512)
+
+        HINT: Standard transformer MLP uses 4x expansion (hidden_dim = 4 * embed_dim)
+        """
+        ### BEGIN SOLUTION
+        if hidden_dim is None:
+            hidden_dim = 4 * embed_dim  # Standard 4x expansion
+
         self.embed_dim = embed_dim
         self.hidden_dim = hidden_dim
-        self.dropout = dropout
-        
-        # Initialize weights using Xavier initialization
-        # W1: embed_dim -> hidden_dim
-        xavier_bound_1 = math.sqrt(6.0 / (embed_dim + hidden_dim))
-        self.w1 = Tensor(np.random.uniform(-xavier_bound_1, xavier_bound_1, (embed_dim, hidden_dim)))
-        self.b1 = Tensor(np.zeros(hidden_dim))
-        
-        # W2: hidden_dim -> embed_dim
-        xavier_bound_2 = math.sqrt(6.0 / (hidden_dim + embed_dim))
-        self.w2 = Tensor(np.random.uniform(-xavier_bound_2, xavier_bound_2, (hidden_dim, embed_dim)))
-        self.b2 = Tensor(np.zeros(embed_dim))
-        
-        # Track parameters for optimization
-        self.parameters = [self.w1, self.b1, self.w2, self.b2]
+
+        # Two-layer feed-forward network
+        self.linear1 = Linear(embed_dim, hidden_dim)
+        self.linear2 = Linear(hidden_dim, embed_dim)
         ### END SOLUTION
-    
-    def forward(self, x: Tensor) -> Tensor:
+
+    def forward(self, x):
         """
-        Apply position-wise feed-forward transformation.
-        
-        TODO: Implement feed-forward forward pass.
-        
-        STEP-BY-STEP IMPLEMENTATION:
-        1. Apply first linear transformation: x @ W1 + b1
-        2. Apply ReLU activation: max(0, linear1)
-        3. Apply second linear transformation: relu @ W2 + b2
-        4. Return result with same shape as input
-        
-        MATHEMATICAL FORMULATION:
-        hidden = ReLU(x @ W1 + b1)
-        output = hidden @ W2 + b2
-        
-        Args:
-            x: Input tensor with shape (batch_size, seq_len, embed_dim)
-            
-        Returns:
-            Output tensor with shape (batch_size, seq_len, embed_dim)
+        Forward pass through MLP.
+
+        TODO: Implement the feed-forward computation
+
+        APPROACH:
+        1. First linear transformation: embed_dim -> hidden_dim
+        2. Apply GELU activation (smooth, differentiable)
+        3. Second linear transformation: hidden_dim -> embed_dim
+
+        COMPUTATION FLOW:
+        x -> Linear -> GELU -> Linear -> output
+
+        HINT: GELU activation is implemented above as a function
         """
         ### BEGIN SOLUTION
-        # Reshape input for matrix multiplication if needed
-        original_shape = x.shape
-        if len(x.shape) == 3:
-            batch_size, seq_len, embed_dim = x.shape
-            # Reshape to (batch_size * seq_len, embed_dim) for efficient computation
-            x_reshaped = x.data.reshape(-1, embed_dim)
-        else:
-            x_reshaped = x.data
-        
-        # First linear transformation: x @ W1 + b1
-        hidden = np.matmul(x_reshaped, self.w1.data) + self.b1.data
-        
-        # ReLU activation
-        hidden_relu = np.maximum(0, hidden)
-        
-        # Second linear transformation: hidden @ W2 + b2
-        output = np.matmul(hidden_relu, self.w2.data) + self.b2.data
-        
-        # Reshape back to original shape
-        if len(original_shape) == 3:
-            output = output.reshape(original_shape)
-        
-        return Tensor(output)
+        # First linear layer with expansion
+        hidden = self.linear1.forward(x)
+
+        # GELU activation
+        hidden = gelu(hidden)
+
+        # Second linear layer back to original size
+        output = self.linear2.forward(hidden)
+
+        return output
         ### END SOLUTION
-    
-    def __call__(self, x: Tensor) -> Tensor:
-        """Make the class callable."""
-        return self.forward(x)
-    
-    def get_memory_usage(self) -> Dict[str, float]:
-        """
-        Calculate memory usage of feed-forward parameters.
-        
-        This function is PROVIDED to show memory analysis.
-        """
-        # Parameter memory
-        param_memory_mb = sum(param.data.nbytes for param in self.parameters) / (1024 * 1024)
-        
-        # Calculate parameter counts
-        w1_params = self.embed_dim * self.hidden_dim
-        w2_params = self.hidden_dim * self.embed_dim
-        bias_params = self.hidden_dim + self.embed_dim
-        total_params = w1_params + w2_params + bias_params
-        
-        return {
-            'parameter_memory_mb': param_memory_mb,
-            'total_parameters': total_params,
-            'w1_parameters': w1_params,
-            'w2_parameters': w2_params,
-            'bias_parameters': bias_params,
-            'embed_dim': self.embed_dim,
-            'hidden_dim': self.hidden_dim
-        }
+
+    def parameters(self):
+        """Return all learnable parameters."""
+        params = []
+        params.extend(self.linear1.parameters())
+        params.extend(self.linear2.parameters())
+        return params
 
 # %% [markdown]
 """
-### TEST Test Your Feed-Forward Network Implementation
-
-Once you implement the PositionwiseFeedForward methods above, run this cell to test it:
+### 🔬 Unit Test: MLP (Feed-Forward Network)
+This test validates our MLP implementation works correctly.
+**What we're testing**: Shape preservation and parameter counting
+**Why it matters**: MLP provides the non-linear transformation in transformers
+**Expected**: Input/output shapes match, correct parameter count
 """
 
-# %% nbgrader={"grade": true, "grade_id": "test-feed-forward-immediate", "locked": true, "points": 15, "schema_version": 3, "solution": false, "task": false}
-def test_unit_feed_forward():
-    """Unit test for position-wise feed-forward network."""
-    print("🔬 Unit Test: Position-wise Feed-Forward Network...")
-    
-    # Test configuration
-    embed_dim = 256
-    hidden_dim = 1024  # Typical 4x expansion
-    ffn = PositionwiseFeedForward(embed_dim=embed_dim, hidden_dim=hidden_dim)
-    
-    # Verify initialization
-    assert ffn.embed_dim == embed_dim, "Should store embedding dimension"
-    assert ffn.hidden_dim == hidden_dim, "Should store hidden dimension"
-    assert len(ffn.parameters) == 4, "Should have W1, b1, W2, b2 parameters"
-    
-    # Verify parameter shapes
-    assert ffn.w1.shape == (embed_dim, hidden_dim), f"W1 should be ({embed_dim}, {hidden_dim})"
-    assert ffn.b1.shape == (hidden_dim,), f"b1 should be ({hidden_dim},)"
-    assert ffn.w2.shape == (hidden_dim, embed_dim), f"W2 should be ({hidden_dim}, {embed_dim})"
-    assert ffn.b2.shape == (embed_dim,), f"b2 should be ({embed_dim},)"
-    
-    # Test forward pass with 3D input (typical transformer use)
-    batch_size = 8
-    seq_len = 32
-    x_3d = Tensor(np.random.randn(batch_size, seq_len, embed_dim))
-    output_3d = ffn.forward(x_3d)
-    
-    expected_shape = (batch_size, seq_len, embed_dim)
-    assert output_3d.shape == expected_shape, f"Expected shape {expected_shape}, got {output_3d.shape}"
-    
-    # Test forward pass with 2D input
-    x_2d = Tensor(np.random.randn(batch_size, embed_dim))
-    output_2d = ffn.forward(x_2d)
-    
-    expected_2d_shape = (batch_size, embed_dim)
-    assert output_2d.shape == expected_2d_shape, f"Expected 2D shape {expected_2d_shape}, got {output_2d.shape}"
-    
-    # Test that FFN is applied position-wise (same transformation at each position)
-    # Extract two positions from the sequence
-    pos_1_input = Tensor(x_3d.data[:, 0, :])  # First position
-    pos_2_input = Tensor(x_3d.data[:, 1, :])  # Second position
-    
-    pos_1_output = ffn.forward(pos_1_input)
-    pos_2_output = ffn.forward(pos_2_input)
-    
-    # Compare with full sequence output (with reasonable tolerance)
-    assert np.allclose(pos_1_output.data, output_3d.data[:, 0, :], atol=1e-6), "Position 0 should match individual processing"
-    assert np.allclose(pos_2_output.data, output_3d.data[:, 1, :], atol=1e-6), "Position 1 should match individual processing"
-    
-    # Test ReLU activation (some outputs should be zero for negative intermediate values)
-    # Create input that will definitely produce some negative values after first linear layer
-    negative_input = Tensor(-np.ones((4, embed_dim)) * 10)  # Very negative input
-    negative_output = ffn.forward(negative_input)
-    
-    # Not all outputs should be negative (ReLU should clip some values)
-    assert not np.all(negative_output.data < 0), "ReLU should prevent all outputs from being negative"
-    
-    # Test callable interface
-    output_callable = ffn(x_3d)
-    assert np.allclose(output_callable.data, output_3d.data), "Callable interface should work"
-    
-    # Test different hidden dimensions
-    for test_hidden_dim in [512, 2048]:
-        test_ffn = PositionwiseFeedForward(embed_dim=embed_dim, hidden_dim=test_hidden_dim)
-        test_output = test_ffn.forward(x_3d)
-        assert test_output.shape == expected_shape, f"Should work with hidden_dim={test_hidden_dim}"
-    
-    # Test memory usage calculation
-    memory_stats = ffn.get_memory_usage()
-    assert 'parameter_memory_mb' in memory_stats, "Should provide memory statistics"
-    
-    # Verify parameter counts
-    expected_w1_params = embed_dim * hidden_dim
-    expected_w2_params = hidden_dim * embed_dim
-    expected_total = expected_w1_params + expected_w2_params + hidden_dim + embed_dim
-    
-    assert memory_stats['w1_parameters'] == expected_w1_params, "Should count W1 parameters correctly"
-    assert memory_stats['w2_parameters'] == expected_w2_params, "Should count W2 parameters correctly"
-    assert memory_stats['total_parameters'] == expected_total, "Should count total parameters correctly"
-    
-    print("PASS Position-wise feed-forward tests passed!")
-    print(f"PASS Handles 2D and 3D inputs correctly")
-    print(f"PASS Position-wise processing verified")
-    print(f"PASS ReLU activation working properly")
-    print(f"PASS Total parameters: {memory_stats['total_parameters']:,}")
-    print(f"PASS Parameter memory: {memory_stats['parameter_memory_mb']:.2f}MB")
+# %% nbgrader={"grade": true, "grade_id": "test-mlp", "locked": true, "points": 10}
+def test_unit_mlp():
+    """🔬 Test MLP implementation."""
+    print("🔬 Unit Test: MLP (Feed-Forward Network)...")
 
-# Test function defined (called in main block)
+    # Test MLP with standard 4x expansion
+    embed_dim = 64
+    mlp = MLP(embed_dim)
+
+    # Test forward pass
+    batch_size, seq_len = 2, 10
+    x = Tensor(np.random.randn(batch_size, seq_len, embed_dim))
+    output = mlp.forward(x)
+
+    # Check shape preservation
+    assert output.shape == (batch_size, seq_len, embed_dim)
+
+    # Check hidden dimension is 4x
+    assert mlp.hidden_dim == 4 * embed_dim
+
+    # Test parameter counting
+    params = mlp.parameters()
+    expected_params = 4  # 2 weights + 2 biases
+    assert len(params) == expected_params
+
+    # Test custom hidden dimension
+    custom_mlp = MLP(embed_dim, hidden_dim=128)
+    assert custom_mlp.hidden_dim == 128
+
+    print("✅ MLP works correctly!")
+
+test_unit_mlp()
 
 # %% [markdown]
 """
-## Transformer Block Implementation
+### Understanding the Complete Transformer Block
 
-Now let's build the complete transformer block that combines multi-head attention, layer normalization, and position-wise feed-forward networks with residual connections.
+The TransformerBlock is the core building unit of GPT and other transformer models. It combines self-attention with feed-forward processing using a carefully designed residual architecture.
+
+#### Pre-Norm vs Post-Norm Architecture
+
+Modern transformers use "pre-norm" architecture where LayerNorm comes BEFORE the sub-layers, not after. This provides better training stability.
+
+```
+Pre-Norm Architecture (What We Implement):
+┌─────────────────────────────────────────────────────────┐
+│                     INPUT (x)                          │
+│                       │                                │
+│       ┌───────────────┴───────────────┐                │
+│       │                               │                │
+│       ▼                               │                │
+│  LayerNorm                            │                │
+│       │                               │                │
+│       ▼                               │                │
+│ MultiHeadAttention                    │                │
+│       │                               │                │
+│       └───────────────┬───────────────┘                │
+│                       │           (residual connection) │
+│                       ▼                                │
+│                  x + attention                         │
+│                       │                                │
+│       ┌───────────────┴───────────────┐                │
+│       │                               │                │
+│       ▼                               │                │
+│  LayerNorm                            │                │
+│       │                               │                │
+│       ▼                               │                │
+│      MLP                              │                │
+│       │                               │                │
+│       └───────────────┬───────────────┘                │
+│                       │           (residual connection) │
+│                       ▼                                │
+│                   x + mlp                              │
+│                       │                                │
+│                       ▼                                │
+│                    OUTPUT                              │
+└─────────────────────────────────────────────────────────┘
+```
+
+#### Why Pre-Norm Works Better
+
+**Training Stability**: LayerNorm before operations provides clean, normalized inputs to attention and MLP layers.
+
+**Gradient Flow**: Residual connections carry gradients directly from output to input, bypassing the normalized operations.
+
+**Deeper Networks**: Pre-norm enables training much deeper networks (100+ layers) compared to post-norm.
+
+#### Information Processing in Transformer Block
+
+```
+Step-by-Step Data Transformation:
+
+1. Input Processing:
+   x₀: (batch, seq_len, embed_dim) # Original input
+
+2. Attention Sub-layer:
+   x₁ = LayerNorm(x₀)               # Normalize input
+   attn_out = MultiHeadAttn(x₁)     # Self-attention
+   x₂ = x₀ + attn_out               # Residual connection
+
+3. MLP Sub-layer:
+   x₃ = LayerNorm(x₂)               # Normalize again
+   mlp_out = MLP(x₃)                # Feed-forward
+   x₄ = x₂ + mlp_out                # Final residual
+
+4. Output:
+   return x₄                        # Ready for next block
+```
+
+#### Residual Stream Concept
+
+Think of the residual connections as a "stream" that carries information through the network:
+
+```
+Residual Stream Flow:
+
+Layer 1: [original embeddings] ─┐
+                                 ├─→ + attention info ─┐
+Attention adds information ──────┘                      │
+                                                        ├─→ + MLP info ─┐
+MLP adds information ───────────────────────────────────┘               │
+                                                                        │
+Layer 2: carries accumulated information ──────────────────────────────┘
+```
+
+Each layer adds information to this stream rather than replacing it, creating a rich representation.
 """
 
-# %% nbgrader={"grade": false, "grade_id": "transformer-block", "locked": false, "schema_version": 3, "solution": true, "task": false}
-#| export
+# %% nbgrader={"grade": false, "grade_id": "transformer-block", "solution": true}
 class TransformerBlock:
     """
-    Complete transformer block with self-attention and feed-forward layers.
-    
-    Combines multi-head self-attention, layer normalization, residual connections,
-    and position-wise feed-forward networks into the standard transformer architecture.
-    
-    SUPPORTS KV CACHING (Module 19 integration):
-    - Forward method accepts optional past_key_value parameter for caching
-    - Returns new key-value pairs when caching is enabled
-    - Backward compatible: works with or without caching
+    Complete Transformer Block with self-attention, MLP, and residual connections.
+
+    This is the core building block of GPT and other transformer models.
+    Each block processes the input sequence and passes it to the next block.
     """
-    
-    def __init__(self, embed_dim: int, num_heads: int, hidden_dim: int, 
-                 dropout: float = 0.0, pre_norm: bool = True):
+
+    def __init__(self, embed_dim, num_heads, mlp_ratio=4, dropout_prob=0.1):
         """
-        Initialize transformer block with all components.
-        
-        TODO: Implement transformer block initialization.
-        
-        STEP-BY-STEP IMPLEMENTATION:
-        1. Store block configuration
-        2. Create multi-head attention layer
-        3. Create two layer normalization layers (for attention and FFN)
-        4. Create position-wise feed-forward network
-        5. Set up parameter tracking from all sub-components
-        
-        ARCHITECTURE CHOICE: Pre-norm vs Post-norm
-        - Pre-norm: LayerNorm -> Attention -> Residual (more stable)
-        - Post-norm: Attention -> LayerNorm -> Residual (original paper)
-        
-        Args:
-            embed_dim: Embedding dimension
-            num_heads: Number of attention heads
-            hidden_dim: Feed-forward hidden dimension (typically 4 * embed_dim)
-            dropout: Dropout rate for regularization
-            pre_norm: Whether to use pre-normalization (recommended)
+        Initialize a complete transformer block.
+
+        TODO: Set up all components of the transformer block
+
+        APPROACH:
+        1. Multi-head self-attention for sequence modeling
+        2. First layer normalization (pre-norm architecture)
+        3. MLP with specified expansion ratio
+        4. Second layer normalization
+
+        TRANSFORMER BLOCK ARCHITECTURE:
+        x → LayerNorm → MultiHeadAttention → + (residual) →
+            LayerNorm → MLP → + (residual) → output
+
+        EXAMPLE:
+        >>> block = TransformerBlock(embed_dim=512, num_heads=8)
+        >>> x = Tensor(np.random.randn(2, 10, 512))  # (batch, seq, embed)
+        >>> output = block.forward(x)
+        >>> assert output.shape == (2, 10, 512)
+
+        HINT: We use pre-norm architecture (LayerNorm before attention/MLP)
         """
         ### BEGIN SOLUTION
         self.embed_dim = embed_dim
         self.num_heads = num_heads
-        self.hidden_dim = hidden_dim
-        self.dropout = dropout
-        self.pre_norm = pre_norm
-        
+
         # Multi-head self-attention
-        self.attention = MultiHeadAttention(embed_dim=embed_dim, num_heads=num_heads)
-        
-        # Layer normalization layers
-        self.norm1 = LayerNorm(embed_dim)  # For attention
-        self.norm2 = LayerNorm(embed_dim)  # For feed-forward
-        
-        # Position-wise feed-forward network
-        self.ffn = PositionwiseFeedForward(embed_dim=embed_dim, hidden_dim=hidden_dim, dropout=dropout)
-        
-        # Collect all parameters from sub-components
-        self.parameters = []
-        if hasattr(self.attention, 'parameters'):
-            self.parameters.extend(self.attention.parameters)
-        self.parameters.extend(self.norm1.parameters)
-        self.parameters.extend(self.norm2.parameters)
-        self.parameters.extend(self.ffn.parameters)
+        self.attention = MultiHeadAttention(embed_dim, num_heads)
+
+        # Layer normalizations (pre-norm architecture)
+        self.ln1 = LayerNorm(embed_dim)  # Before attention
+        self.ln2 = LayerNorm(embed_dim)  # Before MLP
+
+        # Feed-forward network
+        hidden_dim = int(embed_dim * mlp_ratio)
+        self.mlp = MLP(embed_dim, hidden_dim)
         ### END SOLUTION
-    
-    def forward(self, x: Tensor, mask: Optional[Tensor] = None,
-                return_attention_weights: bool = False, past_key_value: Optional[Tuple[Tensor, Tensor]] = None) -> Union[Tensor, Tuple[Tensor, Tensor], Tuple[Tensor, Tuple[Tensor, Tensor]], Tuple[Tensor, Tensor, Tuple[Tensor, Tensor]]]:
+
+    def forward(self, x, mask=None):
         """
-        Process input through complete transformer block.
-        
-        TODO: Implement transformer block forward pass.
-        
-        STEP-BY-STEP IMPLEMENTATION (Pre-norm):
-        1. Self-attention with residual: x + attention(norm1(x))
-        2. Feed-forward with residual: attn_out + ffn(norm2(attn_out))
-        3. Return final output (and optionally attention weights)
-        
+        Forward pass through transformer block.
+
+        TODO: Implement the complete transformer block computation
+
+        APPROACH:
+        1. Apply layer norm, then self-attention, then add residual
+        2. Apply layer norm, then MLP, then add residual
+        3. Return the transformed sequence
+
+        COMPUTATION FLOW:
+        x → ln1 → attention → + x → ln2 → mlp → + → output
+
         RESIDUAL CONNECTIONS:
-        Essential for training deep networks - allow gradients to flow directly
-        
-        Args:
-            x: Input tensor with shape (batch_size, seq_len, embed_dim)
-            mask: Optional attention mask
-            return_attention_weights: Whether to return attention weights
-            past_key_value: Optional cached key-value pair from previous forward pass
-            
-        Returns:
-            Transformer block output with same shape as input
-            Optionally also attention weights
-            Optionally also new key-value pair for caching (if past_key_value provided)
+        These are crucial for training deep networks - they allow gradients
+        to flow directly through the network during backpropagation.
+
+        HINT: Store intermediate results to add residual connections properly
         """
         ### BEGIN SOLUTION
-        if self.pre_norm:
-            # Pre-normalization: LayerNorm before attention/FFN
-            
-            # Self-attention with residual connection
-            norm1_x = self.norm1(x)
-            
-            # Handle KV caching - try to pass past_key_value to attention if supported
-            if past_key_value is not None:
-                # Try to use KV caching - gracefully fall back if not supported
-                try:
-                    if return_attention_weights:
-                        attn_result = self.attention.forward(
-                            norm1_x, norm1_x, norm1_x, mask=mask, return_attention_weights=True, past_key_value=past_key_value
-                        )
-                        if len(attn_result) == 3:
-                            # attention returned (output, weights, new_key_value)
-                            attn_output, attn_weights, new_key_value = attn_result
-                        else:
-                            # fallback: attention doesn't support caching yet
-                            attn_output, attn_weights = attn_result
-                            new_key_value = None
-                    else:
-                        attn_result = self.attention.forward(norm1_x, norm1_x, norm1_x, mask=mask, past_key_value=past_key_value)
-                        if isinstance(attn_result, tuple) and len(attn_result) == 2:
-                            # attention returned (output, new_key_value)
-                            attn_output, new_key_value = attn_result
-                        else:
-                            # fallback: attention doesn't support caching yet
-                            attn_output = attn_result
-                            new_key_value = None
-                except TypeError:
-                    # Attention layer doesn't support past_key_value yet - fall back to standard behavior
-                    if return_attention_weights:
-                        attn_output, attn_weights = self.attention.forward(
-                            norm1_x, norm1_x, norm1_x, mask=mask, return_attention_weights=True
-                        )
-                    else:
-                        attn_output = self.attention.forward(norm1_x, norm1_x, norm1_x, mask=mask)
-                    new_key_value = None
-            else:
-                # Standard behavior (no caching)
-                if return_attention_weights:
-                    attn_output, attn_weights = self.attention.forward(
-                        norm1_x, norm1_x, norm1_x, mask=mask, return_attention_weights=True
-                    )
-                else:
-                    attn_output = self.attention.forward(norm1_x, norm1_x, norm1_x, mask=mask)
-                new_key_value = None
-            
-            # Residual connection
-            x = Tensor(x.data + attn_output.data)
-            
-            # Feed-forward with residual connection
-            norm2_x = self.norm2(x)
-            ffn_output = self.ffn.forward(norm2_x)
-            
-            # Residual connection
-            output = Tensor(x.data + ffn_output.data)
-            
-        else:
-            # Post-normalization: LayerNorm after attention/FFN (original transformer)
-            
-            # Self-attention with residual connection
-            # Handle KV caching - try to pass past_key_value to attention if supported
-            if past_key_value is not None:
-                # Try to use KV caching - gracefully fall back if not supported
-                try:
-                    if return_attention_weights:
-                        attn_result = self.attention.forward(
-                            x, x, x, mask=mask, return_attention_weights=True, past_key_value=past_key_value
-                        )
-                        if len(attn_result) == 3:
-                            # attention returned (output, weights, new_key_value)
-                            attn_output, attn_weights, new_key_value = attn_result
-                        else:
-                            # fallback: attention doesn't support caching yet
-                            attn_output, attn_weights = attn_result
-                            new_key_value = None
-                    else:
-                        attn_result = self.attention.forward(x, x, x, mask=mask, past_key_value=past_key_value)
-                        if isinstance(attn_result, tuple) and len(attn_result) == 2:
-                            # attention returned (output, new_key_value)
-                            attn_output, new_key_value = attn_result
-                        else:
-                            # fallback: attention doesn't support caching yet
-                            attn_output = attn_result
-                            new_key_value = None
-                except TypeError:
-                    # Attention layer doesn't support past_key_value yet - fall back to standard behavior
-                    if return_attention_weights:
-                        attn_output, attn_weights = self.attention.forward(
-                            x, x, x, mask=mask, return_attention_weights=True
-                        )
-                    else:
-                        attn_output = self.attention.forward(x, x, x, mask=mask)
-                    new_key_value = None
-            else:
-                # Standard behavior (no caching)
-                if return_attention_weights:
-                    attn_output, attn_weights = self.attention.forward(
-                        x, x, x, mask=mask, return_attention_weights=True
-                    )
-                else:
-                    attn_output = self.attention.forward(x, x, x, mask=mask)
-                new_key_value = None
-            
-            # Residual + LayerNorm
-            attn_residual = Tensor(x.data + attn_output.data)
-            norm1_output = self.norm1(attn_residual)
-            
-            # Feed-forward with residual connection
-            ffn_output = self.ffn.forward(norm1_output)
-            
-            # Residual + LayerNorm
-            ffn_residual = Tensor(norm1_output.data + ffn_output.data)
-            output = self.norm2(ffn_residual)
-        
-        # Return appropriate tuple based on what was requested
-        if past_key_value is not None:
-            # KV caching is enabled
-            if return_attention_weights:
-                return output, attn_weights, new_key_value
-            else:
-                return output, new_key_value
-        else:
-            # Standard behavior (backward compatible)
-            if return_attention_weights:
-                return output, attn_weights
-            else:
-                return output
+        # First sub-layer: Multi-head self-attention with residual connection
+        # Pre-norm: LayerNorm before attention
+        normed1 = self.ln1.forward(x)
+        attention_out = self.attention.forward(normed1, mask)
+
+        # Residual connection
+        x = x + attention_out
+
+        # Second sub-layer: MLP with residual connection
+        # Pre-norm: LayerNorm before MLP
+        normed2 = self.ln2.forward(x)
+        mlp_out = self.mlp.forward(normed2)
+
+        # Residual connection
+        output = x + mlp_out
+
+        return output
         ### END SOLUTION
-    
-    def __call__(self, x: Tensor, mask: Optional[Tensor] = None,
-                 return_attention_weights: bool = False, past_key_value: Optional[Tuple[Tensor, Tensor]] = None) -> Union[Tensor, Tuple[Tensor, Tensor], Tuple[Tensor, Tuple[Tensor, Tensor]], Tuple[Tensor, Tensor, Tuple[Tensor, Tensor]]]:
-        """Make the class callable."""
-        return self.forward(x, mask, return_attention_weights, past_key_value)
-    
-    def get_memory_usage(self) -> Dict[str, float]:
-        """
-        Calculate memory usage of transformer block components.
-        
-        This function is PROVIDED to show memory analysis.
-        """
-        # Get memory usage from components
-        if hasattr(self.attention, 'get_memory_usage'):
-            attention_memory = self.attention.get_memory_usage()['total_parameter_memory_mb']
-        else:
-            attention_memory = 0.0
-        
-        norm1_memory = self.norm1.get_memory_usage()['parameter_memory_mb']
-        norm2_memory = self.norm2.get_memory_usage()['parameter_memory_mb']
-        ffn_memory = self.ffn.get_memory_usage()['parameter_memory_mb']
-        
-        total_memory = attention_memory + norm1_memory + norm2_memory + ffn_memory
-        total_params = len(self.parameters) if hasattr(self, 'parameters') else 0
-        
-        return {
-            'total_memory_mb': total_memory,
-            'attention_memory_mb': attention_memory,
-            'norm_memory_mb': norm1_memory + norm2_memory,
-            'ffn_memory_mb': ffn_memory,
-            'total_parameters': sum(p.data.size for p in self.parameters) if hasattr(self, 'parameters') else 0,
-            'embed_dim': self.embed_dim,
-            'num_heads': self.num_heads,
-            'hidden_dim': self.hidden_dim,
-            'pre_norm': self.pre_norm
-        }
+
+    def parameters(self):
+        """Return all learnable parameters."""
+        params = []
+        params.extend(self.attention.parameters())
+        params.extend(self.ln1.parameters())
+        params.extend(self.ln2.parameters())
+        params.extend(self.mlp.parameters())
+        return params
 
 # %% [markdown]
 """
-### TEST Test Your Transformer Block Implementation
-
-Once you implement the TransformerBlock methods above, run this cell to test it:
+### 🔬 Unit Test: Transformer Block
+This test validates our complete TransformerBlock implementation.
+**What we're testing**: Shape preservation, residual connections, parameter counting
+**Why it matters**: This is the core component that will be stacked to create GPT
+**Expected**: Input/output shapes match, all components work together
 """
 
-# %% nbgrader={"grade": true, "grade_id": "test-transformer-block-immediate", "locked": true, "points": 20, "schema_version": 3, "solution": false, "task": false}
+# %% nbgrader={"grade": true, "grade_id": "test-transformer-block", "locked": true, "points": 15}
 def test_unit_transformer_block():
-    """Unit test for transformer block."""
+    """🔬 Test TransformerBlock implementation."""
     print("🔬 Unit Test: Transformer Block...")
-    
-    # Test configuration
-    embed_dim = 256
-    num_heads = 8
-    hidden_dim = 1024
-    transformer_block = TransformerBlock(
-        embed_dim=embed_dim, 
-        num_heads=num_heads, 
-        hidden_dim=hidden_dim,
-        pre_norm=True
-    )
-    
-    # Verify initialization
-    assert transformer_block.embed_dim == embed_dim, "Should store embedding dimension"
-    assert transformer_block.num_heads == num_heads, "Should store number of heads"
-    assert transformer_block.hidden_dim == hidden_dim, "Should store hidden dimension"
-    assert transformer_block.pre_norm == True, "Should store normalization type"
-    
-    # Verify components exist
-    assert hasattr(transformer_block, 'attention'), "Should have attention layer"
-    assert hasattr(transformer_block, 'norm1'), "Should have first norm layer"
-    assert hasattr(transformer_block, 'norm2'), "Should have second norm layer"
-    assert hasattr(transformer_block, 'ffn'), "Should have feed-forward network"
-    
-    # Test forward pass
-    batch_size = 4
-    seq_len = 16
-    x = Tensor(np.random.randn(batch_size, seq_len, embed_dim))
-    
-    output = transformer_block.forward(x)
-    expected_shape = (batch_size, seq_len, embed_dim)
-    assert output.shape == expected_shape, f"Expected shape {expected_shape}, got {output.shape}"
-    
-    # Test with attention weights return
-    output_with_attn, attn_weights = transformer_block.forward(x, return_attention_weights=True)
-    
-    assert output_with_attn.shape == expected_shape, "Output with attention should have correct shape"
-    expected_attn_shape = (batch_size, num_heads, seq_len, seq_len)
-    assert attn_weights.shape == expected_attn_shape, f"Expected attention shape {expected_attn_shape}, got {attn_weights.shape}"
-    
-    # Test with causal mask
-    causal_mask = np.triu(np.ones((seq_len, seq_len)), k=1)
-    causal_mask = 1 - causal_mask  # Convert to attention mask
-    
-    masked_output, masked_attn = transformer_block.forward(
-        x, mask=Tensor(causal_mask), return_attention_weights=True
-    )
-    
-    assert masked_output.shape == expected_shape, "Masked output should have correct shape"
-    
-    # Verify causal masking works
-    for head in range(num_heads):
-        for i in range(seq_len):
-            for j in range(i+1, seq_len):
-                assert np.all(masked_attn.data[:, head, i, j] < 1e-5), \
-                    f"Position ({i},{j}) should be masked in head {head}"
-    
-    # Test residual connections by checking that output is different from pure attention
-    # If we zero out the input, residual connections should preserve some information
-    zero_input = Tensor(np.zeros((batch_size, seq_len, embed_dim)))
-    zero_output = transformer_block.forward(zero_input)
-    
-    # Output should not be exactly zero due to biases and layer norm parameters
-    # But might be close to zero for zero input with proper normalization
-    output_magnitude = np.mean(np.abs(zero_output.data))
-    assert output_magnitude < 10.0, f"Output magnitude {output_magnitude} seems reasonable for zero input"
-    
-    # Test post-normalization variant
-    post_norm_block = TransformerBlock(
-        embed_dim=embed_dim, 
-        num_heads=num_heads, 
-        hidden_dim=hidden_dim,
-        pre_norm=False
-    )
-    
-    post_norm_output = post_norm_block.forward(x)
-    assert post_norm_output.shape == expected_shape, "Post-norm should produce correct shape"
-    
-    # Pre-norm and post-norm should produce different outputs
-    pre_norm_output = transformer_block.forward(x)
-    assert not np.allclose(pre_norm_output.data, post_norm_output.data), \
-        "Pre-norm and post-norm should produce different outputs"
-    
-    # Test callable interface
-    output_callable = transformer_block(x)
-    assert np.allclose(output_callable.data, output.data), "Callable interface should work"
-    
-    # Test different configurations
-    for test_heads in [4, 16]:
-        if embed_dim % test_heads == 0:
-            test_block = TransformerBlock(embed_dim=embed_dim, num_heads=test_heads, hidden_dim=hidden_dim)
-            test_output = test_block.forward(x)
-            assert test_output.shape == expected_shape, f"Should work with {test_heads} heads"
-    
-    # Test memory usage calculation
-    memory_stats = transformer_block.get_memory_usage()
-    assert 'total_memory_mb' in memory_stats, "Should provide memory statistics"
-    assert memory_stats['total_memory_mb'] > 0, "Should have positive memory usage"
-    assert memory_stats['total_parameters'] > 0, "Should count parameters"
-    
-    print("PASS Transformer block tests passed!")
-    print(f"PASS Pre-norm and post-norm architectures work correctly")
-    print(f"PASS Residual connections preserve information flow")
-    print(f"PASS Causal masking works across all attention heads")
-    print(f"PASS Total parameters: {memory_stats['total_parameters']:,}")
-    print(f"PASS Total memory: {memory_stats['total_memory_mb']:.2f}MB")
 
-# Test function defined (called in main block)
+    # Test transformer block
+    embed_dim = 64
+    num_heads = 4
+    block = TransformerBlock(embed_dim, num_heads)
+
+    # Test forward pass
+    batch_size, seq_len = 2, 8
+    x = Tensor(np.random.randn(batch_size, seq_len, embed_dim))
+    output = block.forward(x)
+
+    # Check shape preservation
+    assert output.shape == (batch_size, seq_len, embed_dim)
+
+    # Test with causal mask (for autoregressive generation)
+    mask = Tensor(np.triu(np.ones((seq_len, seq_len)) * -np.inf, k=1))
+    masked_output = block.forward(x, mask)
+    assert masked_output.shape == (batch_size, seq_len, embed_dim)
+
+    # Test parameter counting
+    params = block.parameters()
+    expected_components = 4  # attention, ln1, ln2, mlp parameters
+    assert len(params) > expected_components  # Should have parameters from all components
+
+    # Test different configurations
+    large_block = TransformerBlock(embed_dim=128, num_heads=8, mlp_ratio=2)
+    assert large_block.mlp.hidden_dim == 256  # 128 * 2
+
+    print("✅ TransformerBlock works correctly!")
+
+test_unit_transformer_block()
 
 # %% [markdown]
 """
-## Complete Transformer Model
+### Understanding the Complete GPT Architecture
 
-Finally, let's build a complete transformer model that can be used for language modeling tasks like text generation.
+GPT (Generative Pre-trained Transformer) is the complete language model that combines all our components into a text generation system. It's designed for **autoregressive** generation - predicting the next token based on all previous tokens.
+
+#### GPT's Autoregressive Nature
+
+GPT generates text one token at a time, using all previously generated tokens as context:
+
+```
+Autoregressive Generation Process:
+
+Step 1: "The cat" → model predicts → "sat"
+Step 2: "The cat sat" → model predicts → "on"
+Step 3: "The cat sat on" → model predicts → "the"
+Step 4: "The cat sat on the" → model predicts → "mat"
+
+Result: "The cat sat on the mat"
+```
+
+#### Complete GPT Architecture
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                     GPT ARCHITECTURE                       │
+│                                                             │
+│ Input: Token IDs [15496, 1917, ...]                        │
+│                    │                                        │
+│ ┌──────────────────┴──────────────────┐                    │
+│ │          EMBEDDING LAYER            │                    │
+│ │  ┌─────────────┐  ┌─────────────────┐│                    │
+│ │  │Token Embed  │+│Position Embed   ││                    │
+│ │  │vocab→vector ││ │sequence→vector  ││                    │
+│ │  └─────────────┘  └─────────────────┘│                    │
+│ └──────────────────┬──────────────────┘                    │
+│                    │                                        │
+│ ┌──────────────────┴──────────────────┐                    │
+│ │        TRANSFORMER BLOCK 1          │                    │
+│ │ ┌─────────┐  ┌─────────┐  ┌───────┐ │                    │
+│ │ │LayerNorm│→│Attention│→│  +x   │ │                    │
+│ │ └─────────┘  └─────────┘  └───┬───┘ │                    │
+│ │                               │     │                    │
+│ │ ┌─────────┐  ┌─────────┐  ┌───▼───┐ │                    │
+│ │ │LayerNorm│→│   MLP   │→│  +x   │ │                    │
+│ │ └─────────┘  └─────────┘  └───────┘ │                    │
+│ └──────────────────┬──────────────────┘                    │
+│                    │                                        │
+│         ... (more transformer blocks) ...                  │
+│                    │                                        │
+│ ┌──────────────────┴──────────────────┐                    │
+│ │         OUTPUT HEAD                 │                    │
+│ │ ┌─────────┐  ┌─────────────────────┐ │                    │
+│ │ │LayerNorm│→│Linear(embed→vocab)  │ │                    │
+│ │ └─────────┘  └─────────────────────┘ │                    │
+│ └──────────────────┬──────────────────┘                    │
+│                    │                                        │
+│ Output: Vocabulary Logits [0.1, 0.05, 0.8, ...]           │
+└─────────────────────────────────────────────────────────────┘
+```
+
+#### Causal Masking for Autoregressive Training
+
+During training, GPT sees the entire sequence but must not "cheat" by looking at future tokens:
+
+```
+Causal Attention Mask:
+
+Sequence: ["The", "cat", "sat", "on"]
+Positions:  0     1     2     3
+
+Attention Matrix (what each position can see):
+     0   1   2   3
+ 0 [ ✓   ✗   ✗   ✗ ]  # "The" only sees itself
+ 1 [ ✓   ✓   ✗   ✗ ]  # "cat" sees "The" and itself
+ 2 [ ✓   ✓   ✓   ✗ ]  # "sat" sees "The", "cat", itself
+ 3 [ ✓   ✓   ✓   ✓ ]  # "on" sees all previous tokens
+
+Implementation: Upper triangular matrix with -∞
+[[  0, -∞, -∞, -∞],
+ [  0,   0, -∞, -∞],
+ [  0,   0,   0, -∞],
+ [  0,   0,   0,   0]]
+```
+
+#### Generation Temperature Control
+
+Temperature controls the randomness of generation:
+
+```
+Temperature Effects:
+
+Original logits: [1.0, 2.0, 3.0]
+
+Temperature = 0.1 (Conservative):
+Scaled: [10.0, 20.0, 30.0] → Sharp distribution
+Probs: [0.00, 0.00, 1.00] → Always picks highest
+
+Temperature = 1.0 (Balanced):
+Scaled: [1.0, 2.0, 3.0] → Moderate distribution
+Probs: [0.09, 0.24, 0.67] → Weighted sampling
+
+Temperature = 2.0 (Creative):
+Scaled: [0.5, 1.0, 1.5] → Flatter distribution
+Probs: [0.18, 0.33, 0.49] → More random
+```
+
+#### Model Scaling and Parameters
+
+```
+GPT Model Size Scaling:
+
+Tiny GPT (our implementation):
+- embed_dim: 64, layers: 2, heads: 4
+- Parameters: ~50K
+- Use case: Learning and experimentation
+
+GPT-2 Small:
+- embed_dim: 768, layers: 12, heads: 12
+- Parameters: 117M
+- Use case: Basic text generation
+
+GPT-3:
+- embed_dim: 12,288, layers: 96, heads: 96
+- Parameters: 175B
+- Use case: Advanced language understanding
+
+GPT-4 (estimated):
+- embed_dim: ~16,384, layers: ~120, heads: ~128
+- Parameters: ~1.7T
+- Use case: Reasoning and multimodal tasks
+```
 """
 
-# %% nbgrader={"grade": false, "grade_id": "transformer-model", "locked": false, "schema_version": 3, "solution": true, "task": false}
-#| export
-class Transformer:
+# %% nbgrader={"grade": false, "grade_id": "gpt", "solution": true}
+class GPT:
     """
-    Complete transformer model for language processing.
-    
-    Stacks multiple transformer blocks with token embeddings and positional
-    encoding to create a complete language model architecture.
-    
-    SUPPORTS KV CACHING (Module 19 integration):
-    - Forward method accepts optional past_key_values parameter for caching
-    - Generate method supports use_cache parameter for efficient generation
-    - Returns new key-value pairs when caching is enabled
-    - Backward compatible: works with or without caching
+    Complete GPT (Generative Pre-trained Transformer) model.
+
+    This combines embeddings, positional encoding, multiple transformer blocks,
+    and a language modeling head for text generation.
     """
-    
-    def __init__(self, vocab_size: int, embed_dim: int, num_heads: int, 
-                 num_layers: int, hidden_dim: int, max_seq_length: int = 1024,
-                 dropout: float = 0.0, pre_norm: bool = True):
+
+    def __init__(self, vocab_size, embed_dim, num_layers, num_heads, max_seq_len=1024):
         """
-        Initialize complete transformer model.
-        
-        TODO: Implement transformer model initialization.
-        
-        STEP-BY-STEP IMPLEMENTATION:
-        1. Store model configuration
-        2. Create token embedding layer
-        3. Create positional encoding
-        4. Create stack of transformer blocks
-        5. Create output projection layer (for language modeling)
-        6. Set up parameter tracking from all components
-        
-        LANGUAGE MODELING HEAD:
-        Final linear layer that projects hidden states to vocabulary logits
-        
-        Args:
-            vocab_size: Size of vocabulary
-            embed_dim: Embedding dimension
-            num_heads: Number of attention heads per layer
-            num_layers: Number of transformer blocks
-            hidden_dim: Feed-forward hidden dimension
-            max_seq_length: Maximum sequence length for positional encoding
-            dropout: Dropout rate
-            pre_norm: Whether to use pre-normalization
+        Initialize complete GPT model.
+
+        TODO: Set up all components of the GPT architecture
+
+        APPROACH:
+        1. Token embedding layer to convert tokens to vectors
+        2. Positional embedding to add position information
+        3. Stack of transformer blocks (the main computation)
+        4. Final layer norm and language modeling head
+
+        GPT ARCHITECTURE:
+        tokens → embedding → + pos_embedding →
+                transformer_blocks → layer_norm → lm_head → logits
+
+        EXAMPLE:
+        >>> model = GPT(vocab_size=1000, embed_dim=256, num_layers=6, num_heads=8)
+        >>> tokens = Tensor(np.random.randint(0, 1000, (2, 10)))  # (batch, seq)
+        >>> logits = model.forward(tokens)
+        >>> assert logits.shape == (2, 10, 1000)  # (batch, seq, vocab)
+
+        HINTS:
+        - Positional embeddings are learned, not fixed sinusoidal
+        - Final layer norm stabilizes training
+        - Language modeling head shares weights with token embedding (tie_weights)
         """
         ### BEGIN SOLUTION
         self.vocab_size = vocab_size
         self.embed_dim = embed_dim
-        self.num_heads = num_heads
         self.num_layers = num_layers
-        self.hidden_dim = hidden_dim
-        self.max_seq_length = max_seq_length
-        self.dropout = dropout
-        self.pre_norm = pre_norm
-        
-        # Token embedding layer
-        self.token_embedding = Embedding(vocab_size=vocab_size, embedding_dim=embed_dim)
-        
-        # Positional encoding
-        self.pos_encoding = PositionalEncoding(embedding_dim=embed_dim, max_seq_length=max_seq_length)
-        
+        self.num_heads = num_heads
+        self.max_seq_len = max_seq_len
+
+        # Token and positional embeddings
+        self.token_embedding = Embedding(vocab_size, embed_dim)
+        self.position_embedding = Embedding(max_seq_len, embed_dim)
+
         # Stack of transformer blocks
-        self.transformer_blocks = []
+        self.blocks = []
         for _ in range(num_layers):
-            block = TransformerBlock(
-                embed_dim=embed_dim,
-                num_heads=num_heads,
-                hidden_dim=hidden_dim,
-                dropout=dropout,
-                pre_norm=pre_norm
-            )
-            self.transformer_blocks.append(block)
-        
-        # Final layer normalization (for pre-norm architecture)
-        if pre_norm:
-            self.final_norm = LayerNorm(embed_dim)
-        else:
-            self.final_norm = None
-        
+            block = TransformerBlock(embed_dim, num_heads)
+            self.blocks.append(block)
+
+        # Final layer normalization
+        self.ln_f = LayerNorm(embed_dim)
+
         # Language modeling head (projects to vocabulary)
-        xavier_bound = math.sqrt(6.0 / (embed_dim + vocab_size))
-        self.lm_head = Tensor(np.random.uniform(-xavier_bound, xavier_bound, (embed_dim, vocab_size)))
-        
-        # Collect all parameters
-        self.parameters = []
-        if hasattr(self.token_embedding, 'parameters'):
-            self.parameters.extend(self.token_embedding.parameters)
-        
-        for block in self.transformer_blocks:
-            if hasattr(block, 'parameters'):
-                self.parameters.extend(block.parameters)
-        
-        if self.final_norm:
-            self.parameters.extend(self.final_norm.parameters)
-        
-        self.parameters.append(self.lm_head)
+        self.lm_head = Linear(embed_dim, vocab_size, bias=False)
         ### END SOLUTION
-    
-    def forward(self, input_ids: Tensor, mask: Optional[Tensor] = None,
-                return_attention_weights: bool = False, past_key_values: Optional[List[Tuple[Tensor, Tensor]]] = None) -> Union[Tensor, Tuple[Tensor, List[Tensor]], Tuple[Tensor, List[Tuple[Tensor, Tensor]]], Tuple[Tensor, List[Tensor], List[Tuple[Tensor, Tensor]]]]:
+
+    def forward(self, tokens):
         """
-        Process input through complete transformer model.
-        
-        TODO: Implement transformer model forward pass.
-        
-        STEP-BY-STEP IMPLEMENTATION:
-        1. Convert token IDs to embeddings
-        2. Add positional encoding
-        3. Process through all transformer blocks
-        4. Apply final normalization (if pre-norm)
-        5. Apply language modeling head
-        6. Return logits (and optionally attention weights)
-        
-        Args:
-            input_ids: Token indices with shape (batch_size, seq_len)
-            mask: Optional attention mask
-            return_attention_weights: Whether to return all attention weights
-            past_key_values: Optional list of cached key-value pairs from previous forward pass
-            
-        Returns:
-            Logits with shape (batch_size, seq_len, vocab_size)
-            Optionally also list of attention weights from each layer
-            Optionally also list of new key-value pairs for caching (if past_key_values provided)
+        Forward pass through GPT model.
+
+        TODO: Implement the complete GPT forward pass
+
+        APPROACH:
+        1. Get token embeddings and positional embeddings
+        2. Add them together (broadcasting handles different shapes)
+        3. Pass through all transformer blocks sequentially
+        4. Apply final layer norm and language modeling head
+
+        COMPUTATION FLOW:
+        tokens → embed + pos_embed → blocks → ln_f → lm_head → logits
+
+        CAUSAL MASKING:
+        For autoregressive generation, we need to prevent tokens from
+        seeing future tokens. This is handled by the attention mask.
+
+        HINT: Create position indices as range(seq_len) for positional embedding
         """
         ### BEGIN SOLUTION
+        batch_size, seq_len = tokens.shape
+
         # Token embeddings
-        embeddings = self.token_embedding.forward(input_ids)
-        
-        # Add positional encoding
-        x = self.pos_encoding.forward(embeddings)
-        
-        # Process through transformer blocks
-        all_attention_weights = []
-        new_key_values = []
-        
-        for i, block in enumerate(self.transformer_blocks):
-            # Get past key-value for this layer if available
-            past_key_value = past_key_values[i] if past_key_values is not None else None
-            
-            if past_key_values is not None:
-                # KV caching enabled
-                if return_attention_weights:
-                    result = block.forward(x, mask=mask, return_attention_weights=True, past_key_value=past_key_value)
-                    if len(result) == 3:
-                        x, attn_weights, new_key_value = result
-                        all_attention_weights.append(attn_weights)
-                        new_key_values.append(new_key_value)
-                    else:
-                        # Fallback if block doesn't support KV caching yet
-                        x, attn_weights = result
-                        all_attention_weights.append(attn_weights)
-                        new_key_values.append(None)
-                else:
-                    result = block.forward(x, mask=mask, past_key_value=past_key_value)
-                    if isinstance(result, tuple) and len(result) == 2:
-                        x, new_key_value = result
-                        new_key_values.append(new_key_value)
-                    else:
-                        # Fallback if block doesn't support KV caching yet
-                        x = result
-                        new_key_values.append(None)
-            else:
-                # Standard behavior (backward compatible)
-                if return_attention_weights:
-                    x, attn_weights = block.forward(x, mask=mask, return_attention_weights=True)
-                    all_attention_weights.append(attn_weights)
-                else:
-                    x = block.forward(x, mask=mask)
-        
-        # Final layer normalization (for pre-norm)
-        if self.final_norm:
-            x = self.final_norm.forward(x)
-        
+        token_emb = self.token_embedding.forward(tokens)
+
+        # Positional embeddings
+        positions = Tensor(np.arange(seq_len).reshape(1, seq_len))
+        pos_emb = self.position_embedding.forward(positions)
+
+        # Combine embeddings
+        x = token_emb + pos_emb
+
+        # Create causal mask for autoregressive generation
+        mask = self._create_causal_mask(seq_len)
+
+        # Pass through transformer blocks
+        for block in self.blocks:
+            x = block.forward(x, mask)
+
+        # Final layer normalization
+        x = self.ln_f.forward(x)
+
         # Language modeling head
-        # x: (batch_size, seq_len, embed_dim)
-        # lm_head: (embed_dim, vocab_size)
-        # output: (batch_size, seq_len, vocab_size)
-        
-        batch_size, seq_len, embed_dim = x.shape
-        x_reshaped = x.data.reshape(-1, embed_dim)  # (batch_size * seq_len, embed_dim)
-        logits_reshaped = np.matmul(x_reshaped, self.lm_head.data)  # (batch_size * seq_len, vocab_size)
-        logits = logits_reshaped.reshape(batch_size, seq_len, self.vocab_size)
-        
-        # Return appropriate tuple based on what was requested
-        if past_key_values is not None:
-            # KV caching is enabled
-            if return_attention_weights:
-                return Tensor(logits), all_attention_weights, new_key_values
-            else:
-                return Tensor(logits), new_key_values
-        else:
-            # Standard behavior (backward compatible)
-            if return_attention_weights:
-                return Tensor(logits), all_attention_weights
-            else:
-                return Tensor(logits)
+        logits = self.lm_head.forward(x)
+
+        return logits
         ### END SOLUTION
-    
-    def __call__(self, input_ids: Tensor, mask: Optional[Tensor] = None,
-                 return_attention_weights: bool = False, past_key_values: Optional[List[Tuple[Tensor, Tensor]]] = None) -> Union[Tensor, Tuple[Tensor, List[Tensor]], Tuple[Tensor, List[Tuple[Tensor, Tensor]]], Tuple[Tensor, List[Tensor], List[Tuple[Tensor, Tensor]]]]:
-        """Make the class callable."""
-        return self.forward(input_ids, mask, return_attention_weights, past_key_values)
-    
-    def generate(self, input_ids: Tensor, max_new_tokens: int = 50, 
-                temperature: float = 1.0, use_cache: bool = False) -> Tensor:
+
+    def _create_causal_mask(self, seq_len):
+        """Create causal mask to prevent attending to future positions."""
+        ### BEGIN SOLUTION
+        # Upper triangular matrix filled with -inf
+        mask = np.triu(np.ones((seq_len, seq_len)) * -np.inf, k=1)
+        return Tensor(mask)
+        ### END SOLUTION
+
+    def generate(self, prompt_tokens, max_new_tokens=50, temperature=1.0):
         """
         Generate text autoregressively.
-        
-        This function is PROVIDED to show text generation capability.
-        
-        Args:
-            input_ids: Input token IDs with shape (batch_size, seq_len)
-            max_new_tokens: Maximum number of new tokens to generate
-            temperature: Temperature for sampling (higher = more random)
-            use_cache: Whether to use KV caching for faster generation
-            
-        Returns:
-            Generated token IDs with shape (batch_size, original_seq_len + generated_tokens)
-        """
-        batch_size, current_seq_len = input_ids.shape
-        
-        if current_seq_len >= self.max_seq_length:
-            raise ValueError(f"Input sequence length {current_seq_len} exceeds max {self.max_seq_length}")
-        
-        generated_ids = input_ids.data.copy()
-        past_key_values = None  # Initialize cache for KV caching
-        
-        for step in range(max_new_tokens):
-            if use_cache and step > 0:
-                # For subsequent steps with caching, only process the last token
-                current_input = Tensor(generated_ids[:, -1:])  # Only last token
-                # No mask needed for single token
-                current_mask = None
-            else:
-                # First step or no caching: process full sequence
-                current_input = Tensor(generated_ids)
-                # Create causal mask
-                seq_len = generated_ids.shape[1]
-                causal_mask = np.triu(np.ones((seq_len, seq_len)), k=1)
-                causal_mask = 1 - causal_mask
-                current_mask = Tensor(causal_mask)
-            
-            # Forward pass with optional caching
-            if use_cache:
-                result = self.forward(current_input, mask=current_mask, past_key_values=past_key_values)
-                if isinstance(result, tuple) and len(result) == 2:
-                    logits, past_key_values = result
-                else:
-                    # Fallback if caching not fully implemented yet
-                    logits = result
-                    past_key_values = None
-            else:
-                logits = self.forward(current_input, mask=current_mask)
-            
-            # Get logits for last position
-            last_logits = logits.data[:, -1, :]  # (batch_size, vocab_size)
-            
-            # Apply temperature
-            last_logits = last_logits / temperature
-            
-            # Sample next token (using simple sampling)
-            # Convert to probabilities
-            exp_logits = np.exp(last_logits - np.max(last_logits, axis=-1, keepdims=True))
-            probs = exp_logits / np.sum(exp_logits, axis=-1, keepdims=True)
-            
-            # Sample from distribution
-            next_tokens = []
-            for i in range(batch_size):
-                next_token = np.random.choice(self.vocab_size, p=probs[i])
-                next_tokens.append(next_token)
-            
-            next_tokens = np.array(next_tokens).reshape(batch_size, 1)
-            
-            # Append to sequence
-            generated_ids = np.concatenate([generated_ids, next_tokens], axis=1)
-            
-            # Stop if we reach max sequence length
-            if generated_ids.shape[1] >= self.max_seq_length:
-                break
-        
-        return Tensor(generated_ids)
-    
-    def get_memory_usage(self) -> Dict[str, float]:
-        """
-        Calculate memory usage of complete transformer model.
-        
-        This function is PROVIDED to show memory analysis.
-        """
-        # Token embedding memory
-        if hasattr(self.token_embedding, 'get_memory_usage'):
-            embedding_memory = self.token_embedding.get_memory_usage()['total_memory_mb']
-        else:
-            embedding_memory = self.vocab_size * self.embed_dim * 4 / (1024 * 1024)
-        
-        # Transformer blocks memory
-        block_memory = 0
-        if self.transformer_blocks:
-            single_block_memory = self.transformer_blocks[0].get_memory_usage()['total_memory_mb']
-            block_memory = single_block_memory * self.num_layers
-        
-        # Final norm memory
-        final_norm_memory = 0
-        if self.final_norm:
-            final_norm_memory = self.final_norm.get_memory_usage()['parameter_memory_mb']
-        
-        # Language modeling head memory
-        lm_head_memory = self.lm_head.data.nbytes / (1024 * 1024)
-        
-        total_memory = embedding_memory + block_memory + final_norm_memory + lm_head_memory
-        total_params = sum(p.data.size for p in self.parameters) if hasattr(self, 'parameters') else 0
-        
-        return {
-            'total_memory_mb': total_memory,
-            'embedding_memory_mb': embedding_memory,
-            'transformer_blocks_memory_mb': block_memory,
-            'lm_head_memory_mb': lm_head_memory,
-            'total_parameters': total_params,
-            'vocab_size': self.vocab_size,
-            'embed_dim': self.embed_dim,
-            'num_layers': self.num_layers,
-            'num_heads': self.num_heads,
-            'hidden_dim': self.hidden_dim
-        }
 
-# %% [markdown]
-"""
-### TEST Test Your Complete Transformer Implementation
+        TODO: Implement autoregressive text generation
 
-Once you implement the Transformer methods above, run this cell to test it:
-"""
+        APPROACH:
+        1. Start with prompt tokens
+        2. For each new position:
+           - Run forward pass to get logits
+           - Sample next token from logits
+           - Append to sequence
+        3. Return generated sequence
 
-# %% nbgrader={"grade": true, "grade_id": "test-transformer-model-immediate", "locked": true, "points": 25, "schema_version": 3, "solution": false, "task": false}
-def test_unit_transformer_model():
-    """Unit test for complete transformer model."""
-    print("🔬 Unit Test: Complete Transformer Model...")
-    
-    # Test configuration
-    vocab_size = 1000
-    embed_dim = 256
-    num_heads = 8
-    num_layers = 4
-    hidden_dim = 512
-    max_seq_length = 128
-    
-    transformer = Transformer(
-        vocab_size=vocab_size,
-        embed_dim=embed_dim,
-        num_heads=num_heads,
-        num_layers=num_layers,
-        hidden_dim=hidden_dim,
-        max_seq_length=max_seq_length,
-        pre_norm=True
-    )
-    
-    # Verify initialization
-    assert transformer.vocab_size == vocab_size, "Should store vocabulary size"
-    assert transformer.embed_dim == embed_dim, "Should store embedding dimension"
-    assert transformer.num_layers == num_layers, "Should store number of layers"
-    assert len(transformer.transformer_blocks) == num_layers, "Should create correct number of blocks"
-    
-    # Verify components exist
-    assert hasattr(transformer, 'token_embedding'), "Should have token embedding"
-    assert hasattr(transformer, 'pos_encoding'), "Should have positional encoding"
-    assert hasattr(transformer, 'lm_head'), "Should have language modeling head"
-    
-    # Test forward pass with token IDs
-    batch_size = 4
-    seq_len = 32
-    input_ids = np.random.randint(0, vocab_size, (batch_size, seq_len))
-    input_tensor = Tensor(input_ids)
-    
-    logits = transformer.forward(input_tensor)
-    expected_shape = (batch_size, seq_len, vocab_size)
-    assert logits.shape == expected_shape, f"Expected shape {expected_shape}, got {logits.shape}"
-    
-    # Test with attention weights return
-    logits_with_attn, all_attention_weights = transformer.forward(input_tensor, return_attention_weights=True)
-    
-    assert logits_with_attn.shape == expected_shape, "Logits with attention should have correct shape"
-    assert len(all_attention_weights) == num_layers, f"Should return attention weights from {num_layers} layers"
-    
-    for i, attn_weights in enumerate(all_attention_weights):
-        expected_attn_shape = (batch_size, num_heads, seq_len, seq_len)
-        assert attn_weights.shape == expected_attn_shape, \
-            f"Layer {i} attention should have shape {expected_attn_shape}, got {attn_weights.shape}"
-    
-    # Test with causal mask
-    causal_mask = np.triu(np.ones((seq_len, seq_len)), k=1)
-    causal_mask = 1 - causal_mask  # Convert to attention mask
-    
-    masked_logits, masked_attention = transformer.forward(
-        input_tensor, mask=Tensor(causal_mask), return_attention_weights=True
-    )
-    
-    assert masked_logits.shape == expected_shape, "Masked logits should have correct shape"
-    
-    # Verify causal masking propagates through all layers
-    for layer_idx, attn_weights in enumerate(masked_attention):
-        for head in range(num_heads):
-            for i in range(seq_len):
-                for j in range(i+1, seq_len):
-                    assert np.all(attn_weights.data[:, head, i, j] < 1e-5), \
-                        f"Layer {layer_idx}, head {head}: position ({i},{j}) should be masked"
-    
-    # Test callable interface
-    logits_callable = transformer(input_tensor)
-    assert np.allclose(logits_callable.data, logits.data), "Callable interface should work"
-    
-    # Test text generation capability
-    print("  Testing text generation...")
-    start_tokens = Tensor(np.random.randint(0, vocab_size, (2, 8)))  # 2 sequences, 8 tokens each
-    generated = transformer.generate(start_tokens, max_new_tokens=10, temperature=1.0)
-    
-    expected_gen_shape = (2, 18)  # 8 original + 10 new tokens
-    assert generated.shape == expected_gen_shape, f"Generated shape should be {expected_gen_shape}, got {generated.shape}"
-    
-    # Verify original tokens are preserved
-    assert np.array_equal(generated.data[:, :8], start_tokens.data), "Original tokens should be preserved"
-    
-    # Test different model configurations
-    small_transformer = Transformer(
-        vocab_size=500, embed_dim=128, num_heads=4, num_layers=2, hidden_dim=256
-    )
-    
-    small_input = Tensor(np.random.randint(0, 500, (2, 16)))
-    small_logits = small_transformer.forward(small_input)
-    expected_small_shape = (2, 16, 500)
-    assert small_logits.shape == expected_small_shape, "Small transformer should work"
-    
-    # Test pre-norm vs post-norm
-    post_norm_transformer = Transformer(
-        vocab_size=vocab_size, embed_dim=embed_dim, num_heads=num_heads,
-        num_layers=2, hidden_dim=hidden_dim, pre_norm=False
-    )
-    
-    post_norm_logits = post_norm_transformer.forward(input_tensor)
-    pre_norm_logits = Transformer(
-        vocab_size=vocab_size, embed_dim=embed_dim, num_heads=num_heads,
-        num_layers=2, hidden_dim=hidden_dim, pre_norm=True
-    ).forward(input_tensor)
-    
-    assert not np.allclose(post_norm_logits.data, pre_norm_logits.data), \
-        "Pre-norm and post-norm should produce different outputs"
-    
-    # Test memory usage calculation
-    memory_stats = transformer.get_memory_usage()
-    assert 'total_memory_mb' in memory_stats, "Should provide memory statistics"
-    assert memory_stats['total_memory_mb'] > 0, "Should have positive memory usage"
-    assert memory_stats['total_parameters'] > 0, "Should count parameters"
-    
-    # Verify memory breakdown
-    assert memory_stats['embedding_memory_mb'] > 0, "Should have embedding memory"
-    assert memory_stats['transformer_blocks_memory_mb'] > 0, "Should have transformer block memory"
-    assert memory_stats['lm_head_memory_mb'] > 0, "Should have language modeling head memory"
-    
-    print("PASS Complete transformer model tests passed!")
-    print(f"PASS Forward pass produces correct logit shapes")
-    print(f"PASS Causal masking works across all {num_layers} layers")
-    print(f"PASS Text generation capability verified")
-    print(f"PASS Total parameters: {memory_stats['total_parameters']:,}")
-    print(f"PASS Total memory: {memory_stats['total_memory_mb']:.2f}MB")
-    print(f"PASS Pre-norm and post-norm architectures work correctly")
+        AUTOREGRESSIVE GENERATION:
+        At each step, the model predicts the next token based on all
+        previous tokens. This is how GPT generates coherent text.
 
-# Test function defined (called in main block)
+        EXAMPLE:
+        >>> model = GPT(vocab_size=100, embed_dim=64, num_layers=2, num_heads=4)
+        >>> prompt = Tensor([[1, 2, 3]])  # Some token sequence
+        >>> generated = model.generate(prompt, max_new_tokens=5)
+        >>> assert generated.shape[1] == 3 + 5  # original + new tokens
 
-# %% [markdown]
-"""
-## TARGET ML Systems: Performance Analysis & Transformer Scaling
-
-Now let's develop systems engineering skills by analyzing transformer performance and understanding how model depth and width affect memory usage and computational requirements.
-
-### **Learning Outcome**: *"I understand how transformer architecture choices affect scalability, memory usage, and production deployment constraints"*
-"""
-
-# %% nbgrader={"grade": false, "grade_id": "transformer-profiler", "locked": false, "schema_version": 3, "solution": true, "task": false}
-#| export
-import time
-
-class TransformerProfiler:
-    """
-    Performance profiling toolkit for transformer architectures.
-    
-    Helps ML engineers understand computational costs, memory scaling,
-    and architectural trade-offs in transformer-based models.
-    """
-    
-    def __init__(self):
-        self.results = {}
-    
-    def measure_scaling_with_depth(self, base_config: Dict, layer_counts: List[int]) -> Dict:
-        """
-        Measure how transformer performance scales with number of layers.
-        
-        TODO: Implement transformer depth scaling measurement.
-        
-        STEP-BY-STEP IMPLEMENTATION:
-        1. Create transformers with different layer counts
-        2. Measure memory usage and computation time for each
-        3. Calculate scaling patterns (should be linear with depth)
-        4. Analyze parameter growth and memory requirements
-        5. Return comprehensive scaling analysis
-        
-        EXPECTED SCALING:
-        - Parameters: Linear with depth
-        - Memory: Linear with depth  
-        - Computation: Linear with depth
-        - Quality: Generally improves with depth (to a point)
-        
-        Args:
-            base_config: Base transformer configuration
-            layer_counts: List of layer counts to test
-            
-        Returns:
-            Dictionary with scaling analysis results
+        HINT: Use np.random.choice with temperature for sampling
         """
         ### BEGIN SOLUTION
-        scaling_results = {}
-        
-        # Test input
-        batch_size = 4
-        seq_len = 32
-        vocab_size = base_config['vocab_size']
-        test_input = Tensor(np.random.randint(0, vocab_size, (batch_size, seq_len)))
-        
-        for num_layers in layer_counts:
-            # Create transformer with this depth
-            transformer = Transformer(
-                vocab_size=base_config['vocab_size'],
-                embed_dim=base_config['embed_dim'],
-                num_heads=base_config['num_heads'],
-                num_layers=num_layers,
-                hidden_dim=base_config['hidden_dim'],
-                max_seq_length=base_config.get('max_seq_length', 128)
-            )
-            
-            # Measure memory usage
-            memory_stats = transformer.get_memory_usage()
-            
-            # Measure computation time
-            start_time = time.time()
-            logits = transformer.forward(test_input)
-            end_time = time.time()
-            
-            computation_time_ms = (end_time - start_time) * 1000
-            
-            # Calculate throughput
-            total_tokens = batch_size * seq_len
-            tokens_per_second = total_tokens / (end_time - start_time) if end_time > start_time else 0
-            
-            scaling_results[num_layers] = {
-                'num_layers': num_layers,
-                'total_parameters': memory_stats['total_parameters'],
-                'total_memory_mb': memory_stats['total_memory_mb'],
-                'computation_time_ms': computation_time_ms,
-                'tokens_per_second': tokens_per_second,
-                'memory_per_layer_mb': memory_stats['transformer_blocks_memory_mb'] / num_layers if num_layers > 0 else 0,
-                'parameters_per_layer': (memory_stats['total_parameters'] - 
-                                       base_config['vocab_size'] * base_config['embed_dim'] * 2) // num_layers if num_layers > 0 else 0
-            }
-        
-        return scaling_results
+        current_tokens = Tensor(prompt_tokens.data.copy())
+
+        for _ in range(max_new_tokens):
+            # Get logits for current sequence
+            logits = self.forward(current_tokens)
+
+            # Get logits for last position (next token prediction)
+            last_logits = logits.data[:, -1, :]  # (batch_size, vocab_size)
+
+            # Apply temperature scaling
+            scaled_logits = last_logits / temperature
+
+            # Convert to probabilities (softmax)
+            exp_logits = np.exp(scaled_logits - np.max(scaled_logits, axis=-1, keepdims=True))
+            probs = exp_logits / np.sum(exp_logits, axis=-1, keepdims=True)
+
+            # Sample next token
+            next_token = np.array([[np.random.choice(self.vocab_size, p=probs[0])]])
+
+            # Append to sequence
+            current_tokens = Tensor(np.concatenate([current_tokens.data, next_token], axis=1))
+
+        return current_tokens
         ### END SOLUTION
-    
-    def analyze_width_vs_depth_tradeoffs(self, base_params: int, configurations: List[Dict]) -> Dict:
-        """
-        Compare different ways to allocate a fixed parameter budget.
-        
-        This function is PROVIDED to show parameter allocation analysis.
-        """
-        print(f"📊 WIDTH vs DEPTH TRADE-OFF ANALYSIS")
-        print(f"Target parameter budget: ~{base_params:,} parameters")
-        print("=" * 70)
-        
-        results = {}
-        
-        # Test input
-        batch_size = 4
-        seq_len = 32
-        test_input = Tensor(np.random.randint(0, 1000, (batch_size, seq_len)))
-        
-        print(f"{'Config':<15} {'Layers':<7} {'Embed':<6} {'Heads':<6} {'Hidden':<7} {'Params':<12} {'Time (ms)':<10} {'Memory'}")
-        print("-" * 80)
-        
-        for i, config in enumerate(configurations):
-            try:
-                # Create transformer
-                transformer = Transformer(
-                    vocab_size=1000,  # Fixed vocab size
-                    embed_dim=config['embed_dim'],
-                    num_heads=config['num_heads'],
-                    num_layers=config['num_layers'],
-                    hidden_dim=config['hidden_dim'],
-                    max_seq_length=128
-                )
-                
-                # Get actual parameter count
-                memory_stats = transformer.get_memory_usage()
-                actual_params = memory_stats['total_parameters']
-                
-                # Measure performance
-                start_time = time.time()
-                logits = transformer.forward(test_input)
-                computation_time = (time.time() - start_time) * 1000
-                
-                config_name = f"Config_{i+1}"
-                results[config_name] = {
-                    'config': config,
-                    'actual_parameters': actual_params,
-                    'computation_time_ms': computation_time,
-                    'memory_mb': memory_stats['total_memory_mb'],
-                    'parameter_efficiency': abs(actual_params - base_params) / base_params
-                }
-                
-                print(f"{config_name:<15} {config['num_layers']:<7} {config['embed_dim']:<6} "
-                      f"{config['num_heads']:<6} {config['hidden_dim']:<7} {actual_params:<12,} "
-                      f"{computation_time:<10.2f} {memory_stats['total_memory_mb']:.1f}MB")
-                
-            except Exception as e:
-                print(f"{config_name:<15} ERROR: {str(e)[:50]}")
-        
-        # Analysis
-        print(f"\nTIP TRADE-OFF INSIGHTS:")
-        print(f"   - Deeper models: Better at learning complex patterns, more sequential")
-        print(f"   - Wider models: More parallelizable, can capture diverse features")
-        print(f"   - More heads: Richer attention patterns, more computation")
-        print(f"   - Hidden dimension: Affects FFN capacity, major parameter contributor")
-        
-        return results
-    
-    def simulate_production_scaling(self, model_sizes: List[str]) -> Dict:
-        """
-        Simulate memory and computation requirements for production model sizes.
-        
-        This function is PROVIDED to show production scaling analysis.
-        """
-        print(f"\n🏭 PRODUCTION MODEL SCALING SIMULATION")
-        print("=" * 60)
-        
-        # Production model configurations (simplified)
-        size_configs = {
-            'Small': {'vocab_size': 50000, 'embed_dim': 512, 'num_heads': 8, 'num_layers': 6, 'hidden_dim': 2048},
-            'Medium': {'vocab_size': 50000, 'embed_dim': 768, 'num_heads': 12, 'num_layers': 12, 'hidden_dim': 3072},
-            'Large': {'vocab_size': 50000, 'embed_dim': 1024, 'num_heads': 16, 'num_layers': 24, 'hidden_dim': 4096},
-            'XL': {'vocab_size': 50000, 'embed_dim': 1280, 'num_heads': 20, 'num_layers': 36, 'hidden_dim': 5120}
-        }
-        
-        results = {}
-        
-        print(f"{'Model Size':<12} {'Parameters':<12} {'Memory (GB)':<12} {'Training GPU':<12} {'Inference'}")
-        print("-" * 70)
-        
-        for size in model_sizes:
-            if size not in size_configs:
-                continue
-                
-            config = size_configs[size]
-            
-            # Estimate parameters
-            # Embedding: vocab_size * embed_dim * 2 (input + output)
-            embedding_params = config['vocab_size'] * config['embed_dim'] * 2
-            
-            # Per layer: 
-            # - Attention: 4 * embed_dim^2 (Q, K, V, O projections)
-            # - FFN: 2 * embed_dim * hidden_dim + embed_dim + hidden_dim (weights + biases)
-            # - LayerNorm: 2 * embed_dim * 2 (two norms per layer)
-            attention_params_per_layer = 4 * config['embed_dim'] ** 2
-            ffn_params_per_layer = 2 * config['embed_dim'] * config['hidden_dim'] + config['embed_dim'] + config['hidden_dim']
-            norm_params_per_layer = 4 * config['embed_dim']
-            
-            layer_params = attention_params_per_layer + ffn_params_per_layer + norm_params_per_layer
-            total_params = embedding_params + layer_params * config['num_layers']
-            
-            # Estimate memory (parameters + activations + gradients for training)
-            param_memory_gb = total_params * 4 / (1024**3)  # 4 bytes per float32
-            
-            # Training memory: parameters + gradients + optimizer states + activations
-            training_memory_gb = param_memory_gb * 4  # Rough estimate (param + grad + 2x optimizer states)
-            
-            # Inference memory: just parameters + activations
-            inference_memory_gb = param_memory_gb * 1.5  # Parameters + activation memory
-            
-            # GPU requirements (very rough estimates)
-            if training_memory_gb < 24:
-                training_gpu = "Single RTX 4090"
-            elif training_memory_gb < 80:
-                training_gpu = "Single A100"
-            else:
-                training_gpu = "Multi-GPU"
-            
-            if inference_memory_gb < 12:
-                inference_req = "RTX 4060 Ti"
-            elif inference_memory_gb < 24:
-                inference_req = "RTX 4090"
-            else:
-                inference_req = "A100+"
-            
-            results[size] = {
-                'config': config,
-                'total_parameters': total_params,
-                'training_memory_gb': training_memory_gb,
-                'inference_memory_gb': inference_memory_gb,
-                'training_gpu_req': training_gpu,
-                'inference_gpu_req': inference_req
-            }
-            
-            print(f"{size:<12} {total_params/1e6:.1f}M {training_memory_gb:.1f} {training_gpu:<12} {inference_req}")
-        
-        print(f"\nPROGRESS SCALING OBSERVATIONS:")
-        print(f"   - Model size grows super-linearly with dimension increases")
-        print(f"   - Memory requirements dominate deployment decisions")
-        print(f"   - Training requires 3-4x more memory than inference")
-        print(f"   - Multi-GPU becomes necessary for large models")
-        
-        return results
 
-def analyze_transformer_system_design():
-    """
-    Comprehensive analysis of transformer system design choices and trade-offs.
-    
-    This function is PROVIDED to show systems-level design thinking.
-    """
-    print("🏗️ TRANSFORMER SYSTEM DESIGN ANALYSIS")
-    print("=" * 60)
-    
-    # Architecture decision analysis
-    design_choices = {
-        'Layer Normalization': {
-            'Pre-norm': {'stability': 'High', 'training': 'Easier', 'performance': 'Good'},
-            'Post-norm': {'stability': 'Lower', 'training': 'Harder', 'performance': 'Potentially better'}
-        },
-        'Attention Patterns': {
-            'Full attention': {'complexity': 'O(N²)', 'quality': 'Best', 'scalability': 'Limited'},
-            'Sparse attention': {'complexity': 'O(NsqrtN)', 'quality': 'Good', 'scalability': 'Better'},
-            'Linear attention': {'complexity': 'O(N)', 'quality': 'Reduced', 'scalability': 'Excellent'}
-        },
-        'Feed-Forward Size': {
-            '2x embed_dim': {'parameters': 'Low', 'capacity': 'Limited', 'speed': 'Fast'},
-            '4x embed_dim': {'parameters': 'Standard', 'capacity': 'Good', 'speed': 'Medium'},
-            '8x embed_dim': {'parameters': 'High', 'capacity': 'High', 'speed': 'Slow'}
-        }
-    }
-    
-    print("TARGET ARCHITECTURAL DESIGN CHOICES:")
-    for category, choices in design_choices.items():
-        print(f"\n{category}:")
-        for choice, properties in choices.items():
-            prop_str = ", ".join([f"{k}: {v}" for k, v in properties.items()])
-            print(f"   - {choice}: {prop_str}")
-    
-    # Memory scaling analysis
-    print(f"\n📊 MEMORY SCALING PATTERNS:")
-    print(f"Component breakdown for typical transformer:")
-    print(f"   - Token embeddings: vocab_size * embed_dim parameters")
-    print(f"   - Position encodings: 0 parameters (sinusoidal) or seq_len * embed_dim (learned)")
-    print(f"   - Attention layers: 4 * embed_dim² parameters per layer")
-    print(f"   - Feed-forward: 2 * embed_dim * hidden_dim parameters per layer")
-    print(f"   - Layer normalization: 2 * embed_dim parameters per layer")
-    print(f"   - Output projection: embed_dim * vocab_size parameters")
-    
-    print(f"\n🔧 OPTIMIZATION STRATEGIES:")
-    optimization_techniques = [
-        "Gradient checkpointing: Trade computation for memory",
-        "Mixed precision training: Use FP16 for 2x memory reduction",
-        "Parameter sharing: Share weights across layers",
-        "Sparse attention: Reduce quadratic scaling",
-        "Model parallelism: Distribute layers across GPUs",
-        "Pipeline parallelism: Process different batch elements on different GPUs",
-        "Activation checkpointing: Recompute activations instead of storing"
-    ]
-    
-    for technique in optimization_techniques:
-        print(f"   - {technique}")
-    
-    print(f"\nTARGET PRODUCTION DEPLOYMENT CONSIDERATIONS:")
-    deployment_factors = [
-        "Batch size: Larger batches improve GPU utilization but increase memory",
-        "Sequence length: Quadratic impact on attention memory",
-        "Model depth: Linear impact on memory and computation",
-        "Model width: Quadratic impact on attention parameters",
-        "Precision: FP32 vs FP16 vs INT8 trade-offs",
-        "Hardware: GPU memory and compute capabilities",
-        "Latency requirements: Real-time vs batch processing",
-        "Throughput requirements: Tokens per second targets"
-    ]
-    
-    for factor in deployment_factors:
-        print(f"   - {factor}")
+    def parameters(self):
+        """Return all learnable parameters."""
+        params = []
+        params.extend(self.token_embedding.parameters())
+        params.extend(self.position_embedding.parameters())
+
+        for block in self.blocks:
+            params.extend(block.parameters())
+
+        params.extend(self.ln_f.parameters())
+        params.extend(self.lm_head.parameters())
+
+        return params
 
 # %% [markdown]
 """
-### TEST Test: Transformer Performance Analysis
-
-Let's test our transformer profiler with realistic scaling scenarios.
+### 🔬 Unit Test: GPT Model
+This test validates our complete GPT implementation.
+**What we're testing**: Model forward pass, shape consistency, generation capability
+**Why it matters**: This is the complete language model that ties everything together
+**Expected**: Correct output shapes, generation works, parameter counting
 """
 
-# %% nbgrader={"grade": false, "grade_id": "test-transformer-profiler", "locked": false, "schema_version": 3, "solution": false, "task": false}
-def test_transformer_profiler():
-    """Test transformer profiler with various scenarios."""
-    print("🔬 Unit Test: Transformer Performance Profiler...")
-    
-    profiler = TransformerProfiler()
-    
-    # Test depth scaling measurement
-    base_config = {
-        'vocab_size': 500,
-        'embed_dim': 128,
-        'num_heads': 4,
-        'hidden_dim': 256
-    }
-    
-    layer_counts = [1, 2, 4]
-    depth_results = profiler.measure_scaling_with_depth(base_config, layer_counts)
-    
-    # Verify depth scaling results
-    assert len(depth_results) == len(layer_counts), f"Should test {len(layer_counts)} layer counts"
-    
-    for num_layers in layer_counts:
-        assert num_layers in depth_results, f"Should include results for {num_layers} layers"
-        result = depth_results[num_layers]
-        
-        # Verify required metrics
-        required_keys = ['num_layers', 'total_parameters', 'total_memory_mb', 
-                        'computation_time_ms', 'tokens_per_second']
-        for key in required_keys:
-            assert key in result, f"Missing metric: {key} for {num_layers} layers"
-            assert isinstance(result[key], (int, float)), f"Invalid type for {key}"
-        
-        # Verify reasonable values
-        assert result['num_layers'] == num_layers, "Should store correct layer count"
-        assert result['total_parameters'] > 0, "Should have positive parameter count"
-        assert result['total_memory_mb'] > 0, "Should have positive memory usage"
-    
-    # Test that parameters and memory scale roughly linearly with depth
-    if len(layer_counts) >= 2:
-        shallow = depth_results[layer_counts[0]]
-        deep = depth_results[layer_counts[-1]]
-        
-        layer_ratio = deep['num_layers'] / shallow['num_layers']
-        param_ratio = deep['total_parameters'] / shallow['total_parameters']
-        memory_ratio = deep['total_memory_mb'] / shallow['total_memory_mb']
-        
-        # Allow some deviation due to fixed costs (embeddings, etc.)
-        assert 1.0 < param_ratio < layer_ratio * 2, f"Parameters should scale sub-linearly, got {param_ratio:.2f}"
-        assert 1.0 < memory_ratio < layer_ratio * 2, f"Memory should scale sub-linearly, got {memory_ratio:.2f}"
-    
-    print("PASS Depth scaling measurement test passed")
-    
-    # Test width vs depth analysis
-    configurations = [
-        {'embed_dim': 128, 'num_heads': 4, 'num_layers': 4, 'hidden_dim': 256},
-        {'embed_dim': 256, 'num_heads': 8, 'num_layers': 2, 'hidden_dim': 512},
-    ]
-    
-    width_depth_results = profiler.analyze_width_vs_depth_tradeoffs(100000, configurations)
-    
-    # Verify width vs depth results
-    assert len(width_depth_results) > 0, "Should analyze at least one configuration"
-    
-    for config_name, result in width_depth_results.items():
-        assert 'config' in result, "Should include configuration"
-        assert 'actual_parameters' in result, "Should count actual parameters"
-        assert 'computation_time_ms' in result, "Should measure computation time"
-        assert result['actual_parameters'] > 0, "Should have positive parameter count"
-    
-    print("PASS Width vs depth analysis test passed")
-    
-    # Test production scaling simulation
-    production_results = profiler.simulate_production_scaling(['Small', 'Medium'])
-    
-    # Verify production scaling results
-    for size, result in production_results.items():
-        assert 'config' in result, "Should include model configuration"
-        assert 'total_parameters' in result, "Should estimate total parameters"
-        assert 'training_memory_gb' in result, "Should estimate training memory"
-        assert 'inference_memory_gb' in result, "Should estimate inference memory"
-        
-        # Verify reasonable scaling
-        assert result['total_parameters'] > 1e6, "Should have millions of parameters"
-        assert result['training_memory_gb'] > result['inference_memory_gb'], "Training should require more memory"
-    
-    print("PASS Production scaling simulation test passed")
-    print("TARGET Transformer Profiler: All tests passed!")
+# %% nbgrader={"grade": true, "grade_id": "test-gpt", "locked": true, "points": 20}
+def test_unit_gpt():
+    """🔬 Test GPT model implementation."""
+    print("🔬 Unit Test: GPT Model...")
 
-# Test function defined (called in main block)
+    # Test small GPT model
+    vocab_size = 100
+    embed_dim = 64
+    num_layers = 2
+    num_heads = 4
 
-# %% [markdown]
-"""
-## Integration Testing: Complete Language Model Pipeline
+    model = GPT(vocab_size, embed_dim, num_layers, num_heads)
 
-Let's test the complete pipeline from tokenization through transformer processing:
-"""
+    # Test forward pass
+    batch_size, seq_len = 2, 8
+    tokens = Tensor(np.random.randint(0, vocab_size, (batch_size, seq_len)))
+    logits = model.forward(tokens)
 
-# %% nbgrader={"grade": false, "grade_id": "test-transformer-integration", "locked": false, "schema_version": 3, "solution": false, "task": false}
-def test_complete_language_model_pipeline():
-    """Test complete language model pipeline integration."""
-    print("TEST Integration Test: Complete Language Model Pipeline...")
-    
-    # Create a small but complete language model
-    vocab_size = 1000
-    embed_dim = 256
-    num_heads = 8
-    num_layers = 4
-    hidden_dim = 512
-    max_seq_length = 64
-    
-    print(f"  Creating transformer with {num_layers} layers, {embed_dim} dimensions...")
-    transformer = Transformer(
-        vocab_size=vocab_size,
-        embed_dim=embed_dim,
-        num_heads=num_heads,
-        num_layers=num_layers,
-        hidden_dim=hidden_dim,
-        max_seq_length=max_seq_length
-    )
-    
-    # Test 1: Basic text processing pipeline
-    print("  Testing basic text processing pipeline...")
-    batch_size = 4
-    seq_len = 32
-    
-    # Simulate tokenized input
-    input_ids = np.random.randint(0, vocab_size, (batch_size, seq_len))
-    input_tensor = Tensor(input_ids)
-    
-    # Forward pass
-    logits = transformer.forward(input_tensor)
+    # Check output shape
     expected_shape = (batch_size, seq_len, vocab_size)
-    assert logits.shape == expected_shape, f"Expected {expected_shape}, got {logits.shape}"
-    
-    # Test that logits are reasonable (not all zeros/inf/nan)
-    assert not np.all(logits.data == 0), "Logits should not all be zero"
-    assert not np.any(np.isinf(logits.data)), "Logits should not contain inf"
-    assert not np.any(np.isnan(logits.data)), "Logits should not contain nan"
-    
-    print(f"    Forward pass successful: {logits.shape}")
-    
-    # Test 2: Language modeling with causal mask
-    print("  Testing language modeling with causal attention...")
-    causal_mask = np.triu(np.ones((seq_len, seq_len)), k=1)
-    causal_mask = 1 - causal_mask  # Convert to attention mask
-    
-    masked_logits, all_attention = transformer.forward(
-        input_tensor, mask=Tensor(causal_mask), return_attention_weights=True
-    )
-    
-    assert len(all_attention) == num_layers, f"Should return attention from {num_layers} layers"
-    
-    # Verify causal masking works across all layers
-    for layer_idx, attn_weights in enumerate(all_attention):
-        # Check a few positions to ensure masking works
-        for i in range(min(5, seq_len)):
-            for j in range(i+1, min(i+5, seq_len)):
-                future_attention = attn_weights.data[:, :, i, j]  # All heads, all batches
-                assert np.all(future_attention < 1e-5), \
-                    f"Layer {layer_idx}: future attention at ({i},{j}) should be ~0"
-    
-    print(f"    Causal masking verified across all layers")
-    
-    # Test 3: Text generation
-    print("  Testing autoregressive text generation...")
-    # Start with a shorter sequence for generation
-    gen_start = Tensor(np.random.randint(0, vocab_size, (2, 8)))
-    generated = transformer.generate(gen_start, max_new_tokens=8, temperature=1.0)
-    
-    expected_gen_shape = (2, 16)  # 8 start + 8 generated
-    assert generated.shape == expected_gen_shape, f"Expected {expected_gen_shape}, got {generated.shape}"
-    
-    # Verify original tokens preserved
-    assert np.array_equal(generated.data[:, :8], gen_start.data), "Should preserve original tokens"
-    
-    # Verify new tokens are valid
-    new_tokens = generated.data[:, 8:]
-    assert np.all(new_tokens >= 0), "Generated tokens should be >= 0"
-    assert np.all(new_tokens < vocab_size), f"Generated tokens should be < {vocab_size}"
-    
-    print(f"    Generated {new_tokens.shape[1]} new tokens successfully")
-    
-    # Test 4: Different sequence lengths
-    print("  Testing variable sequence lengths...")
-    for test_seq_len in [16, 32, 48]:
-        if test_seq_len > max_seq_length:
-            continue
-            
-        test_input = Tensor(np.random.randint(0, vocab_size, (2, test_seq_len)))
-        test_logits = transformer.forward(test_input)
-        
-        expected_test_shape = (2, test_seq_len, vocab_size)
-        assert test_logits.shape == expected_test_shape, f"Failed for seq_len {test_seq_len}"
-    
-    print(f"    Variable sequence lengths work correctly")
-    
-    # Test 5: Memory usage analysis
-    print("  Analyzing memory usage...")
-    memory_stats = transformer.get_memory_usage()
-    
-    print(f"    Model parameters: {memory_stats['total_parameters']:,}")
-    print(f"    Model memory: {memory_stats['total_memory_mb']:.1f}MB")
-    print(f"    Embedding memory: {memory_stats['embedding_memory_mb']:.1f}MB")
-    print(f"    Transformer blocks: {memory_stats['transformer_blocks_memory_mb']:.1f}MB")
-    print(f"    LM head: {memory_stats['lm_head_memory_mb']:.1f}MB")
-    
-    # Verify memory breakdown makes sense
-    component_memory = (memory_stats['embedding_memory_mb'] + 
-                       memory_stats['transformer_blocks_memory_mb'] + 
-                       memory_stats['lm_head_memory_mb'])
-    
-    # Allow small difference due to final norm layer
-    memory_diff = abs(memory_stats['total_memory_mb'] - component_memory)
-    assert memory_diff < 1.0, f"Memory breakdown doesn't add up: {memory_diff:.2f}MB difference"
-    
-    # Test 6: Performance characteristics
-    print("  Testing performance characteristics...")
-    
-    # Time multiple forward passes
-    num_iterations = 5
-    start_time = time.time()
-    
-    for _ in range(num_iterations):
-        _ = transformer.forward(input_tensor)
-    
-    total_time = time.time() - start_time
-    avg_time_per_forward = total_time / num_iterations
-    tokens_per_second = (batch_size * seq_len) / avg_time_per_forward
-    
-    print(f"    Average forward pass: {avg_time_per_forward*1000:.2f}ms")
-    print(f"    Processing speed: {tokens_per_second:.0f} tokens/second")
-    
-    # Verify reasonable performance
-    assert avg_time_per_forward < 1.0, "Forward pass should be < 1 second"
-    assert tokens_per_second > 50, "Should process > 50 tokens/second"
-    
-    # Test 7: Gradient flow (simulated)
-    print("  Testing gradient flow through layers...")
-    
-    # Create slightly different inputs to test sensitivity
-    input_1 = Tensor(input_ids.copy())
-    input_2 = Tensor(input_ids.copy())
-    input_2.data[0, 0] = (input_2.data[0, 0] + 1) % vocab_size  # Change one token
-    
-    logits_1 = transformer.forward(input_1)
-    logits_2 = transformer.forward(input_2)
-    
-    # Outputs should be different (model is sensitive to input changes)
-    output_diff = np.mean(np.abs(logits_1.data - logits_2.data))
-    assert output_diff > 1e-6, f"Model should be sensitive to input changes, diff: {output_diff}"
-    
-    # But not too different (model should be stable)
-    assert output_diff < 100, f"Model should be stable, large diff: {output_diff}"
-    
-    print(f"    Model shows appropriate sensitivity to input changes")
-    
-    print("PASS Complete language model pipeline integration test passed!")
-    print(f"PASS Forward pass, masking, generation, and performance verified")
-    print(f"PASS Model processes {tokens_per_second:.0f} tokens/second")
-    print(f"PASS Memory footprint: {memory_stats['total_memory_mb']:.1f}MB")
+    assert logits.shape == expected_shape
 
-# Test function defined (called in main block)
+    # Test generation
+    prompt = Tensor(np.random.randint(0, vocab_size, (1, 5)))
+    generated = model.generate(prompt, max_new_tokens=3)
+
+    # Check generation shape
+    assert generated.shape == (1, 8)  # 5 prompt + 3 new tokens
+
+    # Test parameter counting
+    params = model.parameters()
+    assert len(params) > 10  # Should have many parameters from all components
+
+    # Test different model sizes
+    larger_model = GPT(vocab_size=200, embed_dim=128, num_layers=4, num_heads=8)
+    test_tokens = Tensor(np.random.randint(0, 200, (1, 10)))
+    larger_logits = larger_model.forward(test_tokens)
+    assert larger_logits.shape == (1, 10, 200)
+
+    print("✅ GPT model works correctly!")
+
+test_unit_gpt()
 
 # %% [markdown]
 """
-## Main Execution Block
+## 4. Integration: Complete Transformer Workflow
 
-All transformer tests and demonstrations are run from here when the module is executed directly:
+Now that we've built all the components, let's see how they work together in a complete language modeling pipeline. This demonstrates the full power of the transformer architecture.
+
+### The Language Modeling Pipeline
+
+```
+Complete Workflow Visualization:
+
+1. Text Input:
+   "hello world" → Tokenization → [15496, 1917]
+
+2. Model Processing:
+   [15496, 1917]
+        ↓ Token Embedding
+   [[0.1, 0.5, ...], [0.3, -0.2, ...]]  # Vector representations
+        ↓ + Position Embedding
+   [[0.2, 0.7, ...], [0.1, -0.4, ...]]  # With position info
+        ↓ Transformer Block 1
+   [[0.3, 0.2, ...], [0.5, -0.1, ...]]  # After attention + MLP
+        ↓ Transformer Block 2
+   [[0.1, 0.9, ...], [0.7, 0.3, ...]]   # Further processed
+        ↓ Final LayerNorm + LM Head
+   [[0.1, 0.05, 0.8, ...], [...]]       # Probability over vocab
+
+3. Generation:
+   Model predicts next token: "!" (token 33)
+   New sequence: "hello world!"
+```
+
+This integration demo will show:
+- **Character-level tokenization** for simplicity
+- **Forward pass** through all components
+- **Autoregressive generation** in action
+- **Temperature effects** on creativity
 """
 
-# %% nbgrader={"grade": false, "grade_id": "transformers-main", "locked": false, "schema_version": 3, "solution": false, "task": false}
+# %% nbgrader={"grade": false, "grade_id": "integration-demo", "solution": true}
+def demonstrate_transformer_integration():
+    """
+    Demonstrate complete transformer pipeline.
+
+    This simulates training a small language model on a simple vocabulary.
+    """
+    print("🔗 Integration Demo: Complete Language Model Pipeline")
+    print("Building a mini-GPT for character-level text generation")
+
+    # Create a small vocabulary (character-level)
+    vocab = list("abcdefghijklmnopqrstuvwxyz .")
+    vocab_size = len(vocab)
+    char_to_idx = {char: i for i, char in enumerate(vocab)}
+    idx_to_char = {i: char for i, char in enumerate(vocab)}
+
+    print(f"Vocabulary size: {vocab_size}")
+    print(f"Characters: {''.join(vocab)}")
+
+    # Create model
+    model = GPT(
+        vocab_size=vocab_size,
+        embed_dim=64,
+        num_layers=2,
+        num_heads=4,
+        max_seq_len=32
+    )
+
+    # Sample text encoding
+    text = "hello world."
+    tokens = [char_to_idx[char] for char in text]
+    input_tokens = Tensor(np.array([tokens]))
+
+    print(f"\nOriginal text: '{text}'")
+    print(f"Tokenized: {tokens}")
+    print(f"Input shape: {input_tokens.shape}")
+
+    # Forward pass
+    logits = model.forward(input_tokens)
+    print(f"Output logits shape: {logits.shape}")
+    print(f"Each position predicts next token from {vocab_size} possibilities")
+
+    # Generation demo
+    prompt_text = "hello"
+    prompt_tokens = [char_to_idx[char] for char in prompt_text]
+    prompt = Tensor(np.array([prompt_tokens]))
+
+    print(f"\nGeneration demo:")
+    print(f"Prompt: '{prompt_text}'")
+
+    generated = model.generate(prompt, max_new_tokens=8, temperature=1.0)
+    generated_text = ''.join([idx_to_char[idx] for idx in generated.data[0]])
+
+    print(f"Generated: '{generated_text}'")
+    print("(Note: Untrained model produces random text)")
+
+    return model
+
+demonstrate_transformer_integration()
+
+# %% [markdown]
+"""
+## 5. Systems Analysis: Parameter Scaling and Memory
+
+Transformer models scale dramatically with size, leading to both opportunities and challenges. Let's analyze the computational and memory requirements to understand why training large language models requires massive infrastructure.
+
+### The Scaling Laws Revolution
+
+One of the key discoveries in modern AI is that transformer performance follows predictable scaling laws:
+
+```
+Scaling Laws Pattern:
+Performance ∝ Parameters^α × Data^β × Compute^γ
+
+where α ≈ 0.7, β ≈ 0.8, γ ≈ 0.5
+
+This means:
+- 10× more parameters → ~5× better performance
+- 10× more data → ~6× better performance
+- 10× more compute → ~3× better performance
+```
+
+### Memory Scaling Analysis
+
+Memory requirements grow in different ways for different components:
+
+```
+Memory Scaling by Component:
+
+1. Parameter Memory (Linear with model size):
+   - Embeddings: vocab_size × embed_dim
+   - Transformer blocks: ~4 × embed_dim²
+   - Total: O(embed_dim²)
+
+2. Attention Memory (Quadratic with sequence length):
+   - Attention matrices: batch × heads × seq_len²
+   - This is why long context is expensive!
+   - Total: O(seq_len²)
+
+3. Activation Memory (Linear with batch size):
+   - Forward pass activations for backprop
+   - Scales with: batch × seq_len × embed_dim
+   - Total: O(batch_size)
+```
+
+### The Attention Memory Wall
+
+```
+Attention Memory Wall Visualization:
+
+Sequence Length vs Memory Usage:
+
+1K tokens:   [▓] 16 MB      # Manageable
+2K tokens:   [▓▓▓▓] 64 MB   # 4× memory (quadratic!)
+4K tokens:   [▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓] 256 MB  # 16× memory
+8K tokens:   [████████████████████████████████] 1 GB   # 64× memory
+16K tokens:  ████████████████████████████████████████████████████████████████ 4 GB
+32K tokens:  ████████████████████████████████████████████████████████████████████████████████████████████████████████████████ 16 GB
+
+This is why:
+- GPT-3 context: 2K tokens
+- GPT-4 context: 8K tokens (32K in turbo)
+- Claude-3: 200K tokens (requires special techniques!)
+```
+"""
+
+# %% nbgrader={"grade": false, "grade_id": "analyze-scaling", "solution": true}
+def analyze_parameter_scaling():
+    """📊 Analyze how parameter count scales with model dimensions."""
+    print("📊 Analyzing Parameter Scaling in Transformers...")
+    print("Understanding why model size affects performance and cost\n")
+
+    # Test different model sizes
+    configs = [
+        {"name": "Tiny", "embed_dim": 64, "num_layers": 2, "num_heads": 4},
+        {"name": "Small", "embed_dim": 128, "num_layers": 4, "num_heads": 8},
+        {"name": "Medium", "embed_dim": 256, "num_layers": 8, "num_heads": 16},
+        {"name": "Large", "embed_dim": 512, "num_layers": 12, "num_heads": 16},
+    ]
+
+    vocab_size = 50000  # Typical vocabulary size
+
+    for config in configs:
+        model = GPT(
+            vocab_size=vocab_size,
+            embed_dim=config["embed_dim"],
+            num_layers=config["num_layers"],
+            num_heads=config["num_heads"]
+        )
+
+        # Count parameters
+        total_params = 0
+        for param in model.parameters():
+            total_params += param.size
+
+        # Calculate memory requirements (4 bytes per float32 parameter)
+        memory_mb = (total_params * 4) / (1024 * 1024)
+
+        print(f"{config['name']} Model:")
+        print(f"  Parameters: {total_params:,}")
+        print(f"  Memory: {memory_mb:.1f} MB")
+        print(f"  Embed dim: {config['embed_dim']}, Layers: {config['num_layers']}")
+        print()
+
+    print("💡 Parameter scaling is roughly quadratic with embedding dimension")
+    print("🚀 Real GPT-3 has 175B parameters, requiring ~350GB memory!")
+
+analyze_parameter_scaling()
+
+# %% nbgrader={"grade": false, "grade_id": "analyze-attention-memory", "solution": true}
+def analyze_attention_memory():
+    """📊 Analyze attention memory complexity with sequence length."""
+    print("📊 Analyzing Attention Memory Complexity...")
+    print("Why long context is expensive and how it scales\n")
+
+    embed_dim = 512
+    num_heads = 8
+    batch_size = 4
+
+    # Test different sequence lengths
+    sequence_lengths = [128, 256, 512, 1024, 2048]
+
+    print("Attention Matrix Memory Usage:")
+    print("Seq Len | Attention Matrix Size | Memory (MB)")
+    print("-" * 45)
+
+    for seq_len in sequence_lengths:
+        # Attention matrix is (batch_size, num_heads, seq_len, seq_len)
+        attention_elements = batch_size * num_heads * seq_len * seq_len
+
+        # 4 bytes per float32
+        memory_bytes = attention_elements * 4
+        memory_mb = memory_bytes / (1024 * 1024)
+
+        print(f"{seq_len:6d} | {seq_len}×{seq_len} × {batch_size}×{num_heads} | {memory_mb:8.1f}")
+
+    print()
+    print("💡 Attention memory grows quadratically with sequence length")
+    print("🚀 This is why techniques like FlashAttention are crucial for long sequences")
+
+analyze_attention_memory()
+
+# %% [markdown]
+"""
+## 🧪 Module Integration Test
+
+Final validation that everything works together correctly.
+"""
+
+# %% nbgrader={"grade": true, "grade_id": "module-integration", "locked": true, "points": 25}
 def test_module():
-    """Run all unit tests for this module."""
-    print("🧪 TESTING MODULE: Transformers")
+    """
+    Comprehensive test of entire module functionality.
+
+    This final test runs before module summary to ensure:
+    - All unit tests pass
+    - Functions work together correctly
+    - Module is ready for integration with TinyTorch
+    """
+    print("🧪 RUNNING MODULE INTEGRATION TEST")
     print("=" * 50)
 
     # Run all unit tests
+    print("Running unit tests...")
     test_unit_layer_norm()
-    test_unit_feed_forward()
+    test_unit_mlp()
     test_unit_transformer_block()
-    test_unit_transformer_model()
-    test_transformer_profiler()
-    test_complete_language_model_pipeline()
+    test_unit_gpt()
+
+    print("\nRunning integration scenarios...")
+
+    # Test complete transformer training scenario
+    print("🔬 Integration Test: Full Training Pipeline...")
+
+    # Create model and data
+    vocab_size = 50
+    embed_dim = 64
+    num_layers = 2
+    num_heads = 4
+
+    model = GPT(vocab_size, embed_dim, num_layers, num_heads)
+
+    # Test batch processing
+    batch_size = 3
+    seq_len = 16
+    tokens = Tensor(np.random.randint(0, vocab_size, (batch_size, seq_len)))
+
+    # Forward pass
+    logits = model.forward(tokens)
+    assert logits.shape == (batch_size, seq_len, vocab_size)
+
+    # Test generation with different temperatures
+    prompt = Tensor(np.random.randint(0, vocab_size, (1, 8)))
+
+    # Conservative generation
+    conservative = model.generate(prompt, max_new_tokens=5, temperature=0.1)
+    assert conservative.shape == (1, 13)
+
+    # Creative generation
+    creative = model.generate(prompt, max_new_tokens=5, temperature=2.0)
+    assert creative.shape == (1, 13)
+
+    # Test parameter counting consistency
+    total_params = sum(param.size for param in model.parameters())
+    assert total_params > 1000  # Should have substantial parameters
+
+    print("✅ Full transformer pipeline works!")
 
     print("\n" + "=" * 50)
-    print("✅ ALL TESTS PASSED! Module ready for export.")
+    print("🎉 ALL TESTS PASSED! Module ready for export.")
     print("Run: tito module complete 13_transformers")
 
+test_module()
+
+# %%
 if __name__ == "__main__":
+    print("🚀 Running Transformers module...")
     test_module()
-    
-    print("\n" + "="*60)
-    print("MAGNIFY TRANSFORMER SYSTEMS ANALYSIS")
-    print("="*60)
-    
-    # Performance analysis
-    profiler = TransformerProfiler()
-    
-    # Test transformer scaling with different depths
-    print("PROGRESS TRANSFORMER DEPTH SCALING ANALYSIS:")
-    base_config = {
-        'vocab_size': 1000,
-        'embed_dim': 256,
-        'num_heads': 8,
-        'hidden_dim': 1024
-    }
-    
-    layer_counts = [2, 4, 8, 12]
-    depth_results = profiler.measure_scaling_with_depth(base_config, layer_counts)
-    
-    # Analyze scaling patterns
-    print(f"\n{'Layers':<7} {'Parameters':<12} {'Memory (MB)':<12} {'Time (ms)':<10} {'Tokens/sec':<10}")
-    print("-" * 60)
-    
-    for num_layers in layer_counts:
-        result = depth_results[num_layers]
-        print(f"{num_layers:<7} {result['total_parameters']:<12,} {result['total_memory_mb']:<12.1f} "
-              f"{result['computation_time_ms']:<10.2f} {result['tokens_per_second']:<10.0f}")
-    
-    # Width vs depth trade-off analysis
-    print("\n" + "="*60)
-    configurations = [
-        {'embed_dim': 256, 'num_heads': 8, 'num_layers': 8, 'hidden_dim': 1024},  # Deep & narrow
-        {'embed_dim': 512, 'num_heads': 16, 'num_layers': 4, 'hidden_dim': 2048}, # Wide & shallow
-        {'embed_dim': 384, 'num_heads': 12, 'num_layers': 6, 'hidden_dim': 1536}, # Balanced
-    ]
-    
-    width_depth_results = profiler.analyze_width_vs_depth_tradeoffs(2000000, configurations)
-    
-    # Production scaling simulation
-    print("\n" + "="*60)
-    production_results = profiler.simulate_production_scaling(['Small', 'Medium', 'Large'])
-    
-    # Systems design analysis
-    print("\n" + "="*60)
-    analyze_transformer_system_design()
-    
-    # Demonstrate realistic language model setup
-    print("\n" + "="*60)
-    print("🏗️ REALISTIC LANGUAGE MODEL DEMONSTRATION")
-    print("="*60)
-    
-    # Create a realistic small language model
-    vocab_size = 5000
-    embed_dim = 512
-    num_heads = 8
-    num_layers = 6
-    hidden_dim = 2048
-    max_seq_length = 256
-    
-    print(f"Language model configuration:")
-    print(f"  Vocabulary: {vocab_size:,} tokens")
-    print(f"  Embedding dimension: {embed_dim}")
-    print(f"  Attention heads: {num_heads}")
-    print(f"  Transformer layers: {num_layers}")
-    print(f"  Feed-forward dimension: {hidden_dim}")
-    print(f"  Max sequence length: {max_seq_length}")
-    
-    # Create the model
-    language_model = Transformer(
-        vocab_size=vocab_size,
-        embed_dim=embed_dim,
-        num_heads=num_heads,
-        num_layers=num_layers,
-        hidden_dim=hidden_dim,
-        max_seq_length=max_seq_length,
-        pre_norm=True
-    )
-    
-    # Analyze model characteristics
-    memory_stats = language_model.get_memory_usage()
-    
-    print(f"\nModel characteristics:")
-    print(f"  Total parameters: {memory_stats['total_parameters']:,}")
-    print(f"  Model size: {memory_stats['total_memory_mb']:.1f}MB")
-    print(f"  Embedding table: {memory_stats['embedding_memory_mb']:.1f}MB ({memory_stats['embedding_memory_mb']/memory_stats['total_memory_mb']*100:.1f}%)")
-    print(f"  Transformer layers: {memory_stats['transformer_blocks_memory_mb']:.1f}MB ({memory_stats['transformer_blocks_memory_mb']/memory_stats['total_memory_mb']*100:.1f}%)")
-    print(f"  Output projection: {memory_stats['lm_head_memory_mb']:.1f}MB ({memory_stats['lm_head_memory_mb']/memory_stats['total_memory_mb']*100:.1f}%)")
-    
-    # Performance simulation
-    batch_size = 8
-    seq_len = 128
-    test_input = Tensor(np.random.randint(0, vocab_size, (batch_size, seq_len)))
-    
-    start_time = time.time()
-    logits = language_model.forward(test_input)
-    forward_time = time.time() - start_time
-    
-    tokens_per_second = (batch_size * seq_len) / forward_time
-    
-    print(f"\nPerformance simulation:")
-    print(f"  Batch size: {batch_size}, Sequence length: {seq_len}")
-    print(f"  Forward pass time: {forward_time*1000:.2f}ms")
-    print(f"  Throughput: {tokens_per_second:.0f} tokens/second")
-    print(f"  Memory for batch: {logits.data.nbytes/(1024*1024):.1f}MB")
-    
-    # Text generation example
-    print(f"\nText generation example:")
-    start_sequence = Tensor(np.random.randint(0, vocab_size, (1, 10)))
-    generated = language_model.generate(start_sequence, max_new_tokens=20, temperature=0.8)
-    
-    print(f"  Input sequence: {start_sequence.data[0].tolist()}")
-    print(f"  Generated tokens: {generated.data[0, 10:].tolist()}")
-    print(f"  Generation completed successfully")
-    
-    # Scaling predictions
-    print(f"\nScaling analysis:")
-    current_params = memory_stats['total_parameters']
-    
-    # Estimate for different scales
-    scaling_factors = [2, 5, 10]
-    for factor in scaling_factors:
-        scaled_params = current_params * factor
-        scaled_memory_gb = memory_stats['total_memory_mb'] * factor / 1024
-        
-        print(f"  {factor}x scale: {scaled_params/1e6:.0f}M params, ~{scaled_memory_gb:.1f}GB memory")
-    
-# MAGNIFY SYSTEMS INSIGHT: Final Transformer Memory Scaling Analysis
-def analyze_transformer_memory_scaling_final():
-    """Comprehensive analysis of transformer memory scaling patterns."""
-    try:
-        print("\n" + "="*70)
-        print("PROGRESS TRANSFORMER MEMORY SCALING ANALYSIS")
-        print("="*70)
-
-        # Test sequence length scaling (the quadratic bottleneck)
-        print("MAGNIFY SEQUENCE LENGTH SCALING (Quadratic Alert!)")
-        embed_dim = 512
-        num_heads = 8
-
-        # Create attention mechanism for scaling analysis
-        attention = MultiHeadAttention(embed_dim=embed_dim, num_heads=num_heads)
-
-        seq_lengths = [128, 256, 512, 1024]
-        batch_size = 8
-
-        print(f"{'Seq Length':<12} {'Memory (MB)':<12} {'Time (ms)':<12} {'Memory/Token':<15}")
-        print("-" * 60)
-
-        for seq_len in seq_lengths:
-            # Create dummy input
-            input_tensor = Tensor(np.random.randn(batch_size, seq_len, embed_dim))
-
-            # Measure memory and time
-            import time
-            start_time = time.time()
-
-            # Forward pass
-            output = attention.forward(input_tensor, input_tensor, input_tensor)
-
-            end_time = time.time()
-
-            # Calculate metrics
-            memory_mb = output.data.nbytes / (1024 * 1024)
-            time_ms = (end_time - start_time) * 1000
-            memory_per_token = memory_mb / (batch_size * seq_len) * 1024  # KB per token
-
-            print(f"{seq_len:<12} {memory_mb:<12.2f} {time_ms:<12.2f} {memory_per_token:<15.2f}")
-
-            # Break early if too slow
-            if time_ms > 5000:  # 5 seconds
-                print("⚠️ Stopping analysis - sequence too long for this demo")
-                break
-
-        # Model size scaling analysis
-        print(f"\nTARGET MODEL SIZE SCALING:")
-        configs = [
-            ("Small", 128, 4, 4),
-            ("Medium", 256, 8, 6),
-            ("Large", 512, 16, 12),
-            ("XL", 1024, 32, 24)
-        ]
-
-        print(f"{'Model':<8} {'Embed Dim':<10} {'Heads':<6} {'Layers':<8} {'Parameters':<12} {'Memory (GB)':<12}")
-        print("-" * 70)
-
-        for name, embed_dim, num_heads, num_layers in configs:
-            # Estimate parameters
-            attention_params = num_layers * 4 * embed_dim * embed_dim  # Q, K, V, O projections
-            ffn_params = num_layers * 2 * embed_dim * (4 * embed_dim)  # Up and down projections
-            embed_params = 5000 * embed_dim  # Vocabulary embeddings
-            norm_params = num_layers * 2 * embed_dim  # Layer norms
-
-            total_params = attention_params + ffn_params + embed_params + norm_params
-            memory_gb = total_params * 4 / (1024**3)  # 4 bytes per parameter
-
-            print(f"{name:<8} {embed_dim:<10} {num_heads:<6} {num_layers:<8} {total_params:<12,} {memory_gb:<12.2f}")
-
-        print(f"\nTIP SCALING INSIGHTS:")
-        print(f"   - Attention memory scales O(N²) with sequence length")
-        print(f"   - Model parameters scale O(embed_dim²) for attention layers")
-        print(f"   - FFN parameters scale O(embed_dim * ffn_dim) - usually dominant")
-        print(f"   - Activation memory depends on batch size and sequence length")
-        print(f"   - Training requires ~3x more memory than inference")
-
-    except Exception as e:
-        print(f"⚠️ Error in memory scaling analysis: {e}")
-
-    print("\n" + "="*60)
-    print("TARGET TRANSFORMERS MODULE COMPLETE!")
-    print("="*60)
-    print("All transformer tests passed!")
-    print("Complete language model architecture implemented!")
-    print("Ready for production deployment and optimization!")
-
-def analyze_transformer_memory_scaling_final_placeholder():
-    """Comprehensive analysis of transformer memory scaling patterns."""
-    try:
-        print("\n" + "="*70)
-        print("PROGRESS TRANSFORMER MEMORY SCALING ANALYSIS")
-        print("="*70)
-        
-        # Test sequence length scaling (the quadratic bottleneck)
-        print("MAGNIFY SEQUENCE LENGTH SCALING (Quadratic Alert!)")
-        embed_dim = 512
-        num_heads = 8
-        batch_size = 16
-        
-        seq_lengths = [128, 256, 512, 1024, 2048]
-        
-        print(f"{'Seq Len':<8} {'Input (MB)':<11} {'Attention (MB)':<14} {'Total (MB)':<11} {'Scale Factor':<12}")
-        print("-" * 65)
-        
-        base_memory = None
-        for seq_len in seq_lengths:
-            # Input activation memory: batch * seq * embed
-            input_memory = batch_size * seq_len * embed_dim * 4 / (1024**2)
-            
-            # Attention matrix memory: batch * heads * seq * seq (the killer!)
-            attention_memory = batch_size * num_heads * seq_len * seq_len * 4 / (1024**2)
-            
-            total_memory = input_memory + attention_memory
-            
-            if base_memory is None:
-                base_memory = total_memory
-                scale_factor = 1.0
-            else:
-                scale_factor = total_memory / base_memory
-            
-            print(f"{seq_len:<8} {input_memory:<11.2f} {attention_memory:<14.2f} {total_memory:<11.2f} {scale_factor:<12.2f}")
-        
-        print(f"\nWARNING️  QUADRATIC SCALING ALERT: 2* sequence = 4* attention memory!")
-        
-        # Model size comparison
-        print(f"\nMAGNIFY MODEL SIZE COMPARISON (Parameter Count)")
-        configs = [
-            ("GPT-2 Small", 50257, 768, 12, 12, 3072),
-            ("GPT-2 Medium", 50257, 1024, 24, 16, 4096),
-            ("GPT-2 Large", 50257, 1280, 36, 20, 5120),
-            ("GPT-3", 50257, 12288, 96, 96, 49152),
-        ]
-        
-        print(f"{'Model':<12} {'Embed':<6} {'Layers':<7} {'Params':<12} {'Memory (GB)':<12}")
-        print("-" * 60)
-        
-        for name, vocab, embed, layers, heads, hidden in configs:
-            # Rough parameter calculation
-            # Embeddings: vocab * embed + output projection (often tied)
-            embedding_params = vocab * embed
-            # Transformer blocks: roughly 12 * embed^2 per block
-            block_params = layers * 12 * embed * embed
-            total_params = embedding_params + block_params
-            memory_gb = total_params * 4 / (1024**3)  # fp32
-            
-            params_str = f"{total_params/1e9:.1f}B" if total_params > 1e9 else f"{total_params/1e6:.0f}M"
-            print(f"{name:<12} {embed:<6} {layers:<7} {params_str:<12} {memory_gb:<12.1f}")
-        
-        print(f"\n📊 SCALING INSIGHTS:")
-        print(f"   - Sequence length: O(N²) scaling due to attention matrices")
-        print(f"   - Model parameters: O(embed_dim²) dominates for transformer blocks")
-        print(f"   - Vocabulary size: O(vocab_size) can dominate total parameters")
-        print(f"   - Training memory: 4-16* parameter memory (gradients + optimizer)")
-        
-        print(f"\nTIP PRODUCTION IMPLICATIONS:")
-        print(f"   - Attention memory limits sequence length in practice")
-        print(f"   - Large vocabularies dominate parameter count")
-        print(f"   - Deep models need careful memory management")
-        print(f"   - Modern techniques address these bottlenecks:")
-        print(f"     • Sparse/Linear attention for long sequences")
-        print(f"     • Gradient checkpointing for deep models")
-        print(f"     • Model parallelism for large parameters")
-        print(f"     • Mixed precision for memory efficiency")
-        
-    except Exception as e:
-        print(f"WARNING️ Error in scaling analysis: {e}")
+    print("✅ Module validation complete!")
 
 # %% [markdown]
 """
-## THINK ML Systems Thinking: Interactive Questions
+## 🤔 ML Systems Thinking: Transformer Architecture
 
-Now that you've built complete transformer architectures, let's connect this work to broader ML systems challenges. These questions help you think critically about how transformer design choices affect production deployment and system performance.
+Now that you've built a complete transformer model, let's reflect on the systems implications and design decisions.
+"""
 
-Take time to reflect thoughtfully on each question - your insights will help you understand how transformer architectures connect to real-world ML systems engineering.
+# %% nbgrader={"grade": false, "grade_id": "systems-q1", "solution": true}
+# %% [markdown]
+"""
+### Question 1: Attention Complexity Analysis
+You implemented multi-head attention that computes attention matrices of size (batch, heads, seq_len, seq_len).
+
+**a) Memory Scaling**: For GPT-4 scale (context length 8192, batch size 16, 96 attention heads):
+- Attention matrix elements: _____ (calculate: 16 × 96 × 8192 × 8192)
+- Memory in GB (4 bytes/float): _____ GB per layer
+- For 96 layers: _____ GB total just for attention matrices
+
+**b) Why Quadratic Matters**: If processing costs $0.01 per GB, what's the cost difference between:
+- 1K context: $_____
+- 8K context: $_____
+- 32K context: $_____
+
+*Think about: Why long-context models are expensive, and why FlashAttention matters*
+"""
+
+# %% nbgrader={"grade": false, "grade_id": "systems-q2", "solution": true}
+# %% [markdown]
+"""
+### Question 2: Parameter Distribution Analysis
+Your GPT model has parameters in embeddings, transformer blocks, and the language head.
+
+**a) Parameter Breakdown**: For a model with vocab_size=50K, embed_dim=1024, num_layers=24:
+- Token embedding: _____ parameters (vocab_size × embed_dim)
+- Each transformer block: approximately _____ parameters
+- Language head: _____ parameters
+- Total model: approximately _____ parameters
+
+**b) Memory During Training**: Training requires storing:
+- Parameters (model weights)
+- Gradients (same size as parameters)
+- Optimizer states (2-3× parameters for Adam)
+- Activations (depends on batch size and sequence length)
+
+For your calculated model size, estimate total training memory: _____ GB
+
+*Consider: Why training large models requires hundreds of GPUs*
+"""
+
+# %% nbgrader={"grade": false, "grade_id": "systems-q3", "solution": true}
+# %% [markdown]
+"""
+### Question 3: Autoregressive Generation Bottlenecks
+Your generate() method runs the full model forward pass for each new token.
+
+**a) Generation Inefficiency**: To generate 100 tokens with a 24-layer model:
+- Token 1: _____ layer computations (24 layers × 1 position)
+- Token 2: _____ layer computations (24 layers × 2 positions)
+- Token 100: _____ layer computations (24 layers × 100 positions)
+- Total: _____ layer computations
+
+**b) KV-Cache Optimization**: With KV-caching, each new token only needs:
+- _____ layer computations (just the new position)
+- This reduces computation by approximately _____× for 100 tokens
+
+*Think about: Why inference optimization matters for production deployment*
+"""
+
+# %% nbgrader={"grade": false, "grade_id": "systems-q4", "solution": true}
+# %% [markdown]
+"""
+### Question 4: Pre-norm vs Post-norm Architecture
+You implemented pre-norm (LayerNorm before attention/MLP) rather than post-norm (LayerNorm after).
+
+**a) Training Stability**: Pre-norm helps with gradient flow because:
+- Residual connections pass _____ gradients directly through the network
+- LayerNorm before operations provides _____ input distributions
+- This enables training _____ networks compared to post-norm
+
+**b) Performance Trade-offs**:
+- Pre-norm: Better training stability, but slightly _____ final performance
+- Post-norm: Better performance when it trains, but requires _____ learning rates
+- Most modern large models use _____ because scale requires stability
+
+*Consider: Why architectural choices become more important at scale*
 """
 
 # %% [markdown]
 """
-### Question 1: Transformer Memory and Performance Trade-offs
+## 🎯 MODULE SUMMARY: Transformers
 
-**Context**: Your transformer implementations reveal how architectural choices affect memory usage and computational complexity. In your TransformerBlock implementation, you saw how FFN parameters dominate (67% of block parameters), while attention creates O(N²) memory scaling with sequence length. Your memory scaling analysis showed quadratic growth with sequence length.
+Congratulations! You've built the complete transformer architecture that powers modern language models!
 
-**Reflection Question**: Analyze the memory and performance trade-offs in your transformer architecture. Based on your parameter counting and memory analysis, how would you modify your TransformerBlock implementation to handle sequences 4* longer while staying within the same memory budget? Consider the attention matrix scaling you observed (quadratic with sequence length) and the FFN parameter dominance you measured. What specific changes to your MultiHeadAttention and PositionwiseFeedForward classes would enable more efficient long-sequence processing, and how would these modifications affect the residual connections and layer normalization in your transformer blocks?
+### Key Accomplishments
+- Built LayerNorm for stable training across deep networks
+- Implemented MLP (feed-forward) networks with GELU activation
+- Created complete TransformerBlock with self-attention, residual connections, and pre-norm architecture
+- Built full GPT model with embeddings, positional encoding, and autoregressive generation
+- Analyzed parameter scaling and attention memory complexity
+- All tests pass ✅ (validated by `test_module()`)
 
-Think about: attention matrix memory scaling, FFN parameter reduction strategies, efficient residual connection patterns, and layer normalization placement optimization.
+### Ready for Next Steps
+Your transformer implementation is the foundation for modern language models! This architecture enables:
+- **Training**: Learn patterns from massive text datasets
+- **Generation**: Produce coherent, contextual text
+- **Transfer Learning**: Fine-tune for specific tasks
+- **Scaling**: Grow to billions of parameters for emergent capabilities
 
-*Target length: 150-300 words*
-"""
+Export with: `tito module complete 13_transformers`
 
-# %% nbgrader={"grade": true, "grade_id": "question-1-architecture-optimization", "locked": false, "points": 10, "schema_version": 3, "solution": true, "task": false}
-"""
-YOUR REFLECTION ON TRANSFORMER ARCHITECTURE OPTIMIZATION:
-
-TODO: Replace this text with your thoughtful response about transformer architecture optimization for diverse deployment scenarios.
-
-Consider addressing:
-- How would you allocate parameter budgets across depth, width, and attention heads for different scenarios?
-- What architecture search strategies would you use to optimize within hardware constraints?
-- How would you implement adaptive model scaling that adjusts to available resources?
-- What approaches would you use to maintain model quality across different deployment environments?
-- How would you balance latency, throughput, and resource constraints in architectural decisions?
-
-Write a strategic analysis connecting your transformer implementations to real architecture optimization challenges.
-
-GRADING RUBRIC (Instructor Use):
-- Demonstrates understanding of transformer architecture trade-offs and optimization (3 points)
-- Designs practical approaches to parameter allocation and architecture search (3 points)
-- Addresses adaptive scaling and hardware-aware optimization (2 points)
-- Shows systems thinking about production deployment optimization (2 points)
-- Clear strategic reasoning with architecture optimization insights (bonus points for innovative approaches)
-"""
-
-### BEGIN SOLUTION
-# Student response area - instructor will replace this section during grading setup
-# This is a manually graded question requiring strategic analysis of transformer architecture optimization
-# Students should demonstrate understanding of architecture design and production deployment challenges
-### END SOLUTION
-
-# %% [markdown]
-"""
-### Question 2: Transformer Block Stacking and Gradient Flow
-
-**Context**: Your Transformer class demonstrates how multiple TransformerBlock instances are stacked to create deep language models. Your implementation uses pre-norm layer normalization and residual connections in each block. The parameter breakdown you analyzed shows how memory scales linearly with depth, but training dynamics become more complex with deeper stacks.
-
-**Reflection Question**: Examine the gradient flow implications of your transformer block stacking approach. In your TransformerBlock.forward() implementation, you use pre-norm style (LayerNorm before sublayers) with residual connections. How does this design choice affect gradient flow compared to post-norm alternatives? If you needed to stack 96 transformer blocks (GPT-3 scale) using your current implementation, what modifications to your layer normalization placement and residual connection patterns would ensure stable training? Analyze how the "Add & Norm" pattern in your implementation enables or constrains very deep transformer training.
-
-Think about: gradient flow through deep stacks, pre-norm vs post-norm trade-offs, residual connection effectiveness, and layer normalization stability patterns.
-
-*Target length: 150-300 words*
-"""
-
-# %% nbgrader={"grade": true, "grade_id": "question-2-training-inference-systems", "locked": false, "points": 10, "schema_version": 3, "solution": true, "task": false}
-"""
-YOUR REFLECTION ON TRANSFORMER TRAINING AND INFERENCE SYSTEM DESIGN:
-
-TODO: Replace this text with your thoughtful response about transformer training and inference system architecture.
-
-Consider addressing:
-- How would you design distributed training for billion-parameter transformers with memory constraints?
-- What strategies would you use for efficient inference serving with millisecond latency requirements?
-- How would you manage model deployment across heterogeneous hardware environments?
-- What approaches would you use to maintain numerical stability during distributed training?
-- How would you ensure consistent inference performance across different deployment targets?
-
-Write a system design analysis connecting your transformer implementation to large-scale training and serving challenges.
-
-GRADING RUBRIC (Instructor Use):
-- Shows understanding of distributed training and inference serving challenges (3 points)
-- Designs practical approaches to memory management and latency optimization (3 points)
-- Addresses heterogeneous deployment and numerical stability considerations (2 points)
-- Demonstrates systems thinking about training-inference system coordination (2 points)
-- Clear system design reasoning with scalability insights (bonus points for comprehensive system architecture)
-"""
-
-### BEGIN SOLUTION
-# Student response area - instructor will replace this section during grading setup
-# This is a manually graded question requiring system design for transformer training and inference
-# Students should demonstrate knowledge of distributed systems and production deployment architecture
-### END SOLUTION
-
-# %% [markdown]
-"""
-### Question 3: Complete Transformer Memory Optimization 
-
-**Context**: Your complete Transformer model integrates token embeddings, positional encoding, stacked transformer blocks, and output projection. Your parameter breakdown analysis revealed that token embeddings often dominate parameter count (70%+ for large vocabularies), while activation memory scales with both model depth and sequence length.
-
-**Reflection Question**: Design memory optimization strategies for your complete transformer implementation. Based on your parameter breakdown showing embedding dominance and memory scaling analysis revealing quadratic attention costs, how would you modify your Transformer class to support models with 100K vocabulary and 4K sequence lengths within limited memory? Consider the token embedding weight sharing you implemented, the attention matrix memory scaling you measured, and the activation checkpointing opportunities in your transformer block stack. What specific changes to your forward() method and parameter organization would enable efficient training and inference at scale?
-
-Think about: embedding compression techniques, attention memory reduction, activation checkpointing strategies, and parameter sharing optimization.
-
-*Target length: 150-300 words*
-"""
-
-# %% nbgrader={"grade": true, "grade_id": "question-3-production-deployment", "locked": false, "points": 10, "schema_version": 3, "solution": true, "task": false}
-"""
-YOUR REFLECTION ON TRANSFORMER OPTIMIZATION AND PRODUCTION DEPLOYMENT:
-
-TODO: Replace this text with your thoughtful response about transformer production deployment system design.
-
-Consider addressing:
-- How would you implement end-to-end optimization spanning tokenization through generation?
-- What strategies would you use for efficient model serving with dynamic batching and request routing?
-- How would you enable seamless model updates without service interruption?
-- What approaches would you use to maintain pipeline modularity while optimizing holistically?
-- How would you support diverse model variants and fine-tuned versions in production?
-
-Write a deployment analysis connecting your transformer implementation to complete production system optimization.
-
-GRADING RUBRIC (Instructor Use):
-- Understands end-to-end optimization and production deployment challenges (3 points)
-- Designs practical approaches to model serving and continuous deployment (3 points)
-- Addresses modularity and system integration considerations (2 points)
-- Shows systems thinking about holistic pipeline optimization (2 points)
-- Clear deployment reasoning with production optimization insights (bonus points for innovative system design)
-"""
-
-### BEGIN SOLUTION
-# Student response area - instructor will replace this section during grading setup
-# This is a manually graded question requiring understanding of production transformer deployment optimization
-# Students should demonstrate knowledge of end-to-end system design and continuous deployment strategies
-### END SOLUTION
-
-# %% [markdown]
-"""
-## TARGET MODULE SUMMARY: Transformers
-
-Congratulations! You have successfully implemented complete transformer architectures that power modern language models:
-
-### PASS What You Have Built
-- **Layer Normalization**: Stable normalization for deep transformer training
-- **Position-wise Feed-Forward**: Non-linear transformations applied to each sequence position
-- **Transformer Blocks**: Complete transformer layers with attention, normalization, and residual connections
-- **Complete Transformer**: Full language model with embeddings, multiple layers, and generation capability
-- **Text Generation**: Autoregressive generation with proper causal masking
-- **🆕 Performance Analysis**: Comprehensive scaling analysis and architectural optimization tools
-- **🆕 Production Insights**: Understanding of real-world transformer deployment challenges
-
-### PASS Key Learning Outcomes
-- **Understanding**: How transformer blocks enable powerful sequence modeling through attention and feed-forward layers
-- **Implementation**: Built complete transformer architectures with proper layer organization and residual connections
-- **Systems Insight**: How transformer depth affects memory usage, training efficiency, and model capacity
-- **Performance Engineering**: Measured and analyzed transformer scaling characteristics and optimization opportunities
-- **Production Context**: Understanding transformer deployment challenges and architectural trade-offs
-
-### PASS Technical Mastery
-- **Layer Normalization**: Stabilizing deep network training with proper feature normalization
-- **Residual Connections**: Enabling gradient flow through deep transformer architectures
-- **Pre-norm vs Post-norm**: Understanding normalization placement effects on training stability
-- **Parameter Scaling**: Understanding how transformer parameters scale with architectural choices
-- **🆕 Generation Systems**: Autoregressive text generation with causal attention patterns
-
-### PASS Professional Skills Developed
-- **Systems Architecture**: Designing complete transformer systems for production scale
-- **Memory Engineering**: Understanding transformer memory scaling (O(N²) attention, parameter distribution)
-- **Computational Assessment**: Parameter counting, memory analysis, and production-scale calculations
-- **Performance Analysis**: Measuring and improving transformer computation and memory efficiency
-- **Integration Design**: Building complete language processing pipelines from tokenization to generation
-
-### PASS Ready for Next Steps
-Your transformer implementations and analysis provide the foundation for:
-- **Advanced Language Models**: GPT, BERT, and other transformer-based architectures
-- **Multi-modal Models**: Extending transformers to vision, audio, and other modalities
-- **Production Optimization**: Memory optimization, distributed training, and efficient inference
-- **Scale Analysis**: Understanding memory bottlenecks from small models to GPT-3 scale (175B parameters)
-- **🧠 AI Applications**: Real-world language processing applications and services
-
-### LINK Connection to Real ML Systems
-Your implementations mirror production systems:
-- **GPT Architecture**: Your transformer matches GPT's decoder-only architecture
-- **BERT Components**: Layer normalization and attention mechanisms used in BERT
-- **Production Optimization**: Understanding of memory scaling, batching, and generation optimization
-- **Industry Applications**: Foundation for all modern language model deployments
-
-### TARGET The Complete Language Model
-You have built the architecture that transformed AI:
-- **Before**: RNNs and CNNs limited by sequential processing and local dependencies
-- **After**: Transformers enable parallel processing and global attention across entire sequences
-
-**Achievement Unlocked**: You now understand every component of modern language models from tokenization through generation, plus the computational trade-offs that determine their deployment constraints!
-
-Your complete transformer implementation provides the foundation for understanding and building modern AI systems. You've mastered the architecture that powers ChatGPT, GPT-4, BERT, and countless other AI applications - and the computational analysis skills to deploy them efficiently.
-
-From discrete tokens to continuous embeddings, from attention mechanisms to complete language generation - you've built the entire pipeline that enables machines to understand and generate human language.
-
-**🏆 Congratulations on mastering transformer architecture and computational analysis!**
+**Next**: Module 14 will add KV-caching for efficient generation, optimizing the autoregressive inference you just implemented!
 """
