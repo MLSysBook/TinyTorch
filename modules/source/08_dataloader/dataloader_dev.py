@@ -874,7 +874,7 @@ def analyze_dataloader_performance():
     print("• Memory usage scales linearly with batch size")
     print("🚀 Production tip: Balance batch size with GPU memory limits")
 
-# analyze_dataloader_performance()  # Moved to main block
+# analyze_dataloader_performance()  # Optional: Run manually for performance insights
 
 
 def analyze_memory_usage():
@@ -918,7 +918,7 @@ def analyze_memory_usage():
     print(f"  Large batch (512×784): {large_bytes / 1024:.1f} KB")
     print(f"  Ratio: {large_bytes / small_bytes:.1f}×")
 
-# analyze_memory_usage()  # Moved to main block
+# analyze_memory_usage()  # Optional: Run manually for memory insights
 
 
 # %% [markdown]
@@ -998,8 +998,6 @@ def test_training_integration():
     assert epoch_samples == len(train_dataset), f"Expected {len(train_dataset)}, processed {epoch_samples}"
 
     print("✅ Training integration works correctly!")
-
-# test_training_integration()  # Moved to main block
 
 
 # %% [markdown]
