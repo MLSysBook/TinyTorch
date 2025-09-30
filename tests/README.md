@@ -1,67 +1,99 @@
-# 🧪 TinyTorch Integration Tests
+# TinyTorch Test Suite
 
-## ⚠️ **CRITICAL DIRECTORY - DO NOT DELETE**
+Comprehensive testing organized by purpose and scope.
 
-This directory contains **17 integration test files** that verify cross-module functionality across the entire TinyTorch system. These tests represent significant development effort and are essential for:
+## Test Organization
 
-- **Module integration validation**
-- **Cross-component compatibility**  
-- **Real-world ML pipeline testing**
-- **System-level regression detection**
+### 📦 Module Tests (`XX_modulename/`)
+**Purpose**: Test individual module functionality  
+**Scope**: Single module, isolated behavior  
+**Example**: `01_tensor/test_progressive_integration.py`
 
-## 📁 **Test Structure**
-- `test_*_integration.py` - Cross-module integration tests
-- `test_utils.py` - Shared testing utilities
-- `test_integration_report.md` - Test documentation
+These tests validate that each module works correctly in isolation.
 
-## 🧪 **Integration Test Coverage**
+### 🔗 Integration Tests (`integration/`)
+**Purpose**: Test cross-module interactions  
+**Scope**: Multiple modules working together  
+**Files**:
+- `test_gradient_flow.py` - **CRITICAL**: Validates gradients flow through entire training stack
+- `test_end_to_end_training.py` - Full training loops (TODO)
+- `test_module_compatibility.py` - Module interfaces (TODO)
 
-### Foundation Integration
-- `test_tensor_activations_integration.py` - Tensor + Activations
-- `test_layers_networks_integration.py` - Layers + Dense Networks
-- `test_tensor_autograd_integration.py` - Tensor + Autograd
+**Why this matters**: 
+- Catches bugs that unit tests miss
+- Validates the "seams" between modules
+- Ensures training actually works end-to-end
 
-### Architecture Integration  
-- `test_tensor_attention_integration.py` - **NEW**: Tensor + Attention mechanisms
-- `test_attention_pipeline_integration.py` - **NEW**: Complete transformer-like pipelines
-- `test_tensor_cnn_integration.py` - Tensor + Spatial/CNN
-- `test_cnn_networks_integration.py` - Spatial + Dense Networks
-- `test_cnn_pipeline_integration.py` - Complete CNN pipelines
+### 🐛 Debugging Tests (`debugging/`)
+**Purpose**: Catch common student pitfalls  
+**Scope**: Pedagogical - teaches debugging  
+**Files**:
+- `test_gradient_vanishing.py` - Detect/diagnose vanishing gradients (TODO)
+- `test_gradient_explosion.py` - Detect/diagnose exploding gradients (TODO)
+- `test_common_mistakes.py` - "Did you forget backward()?" style tests (TODO)
 
-### Training & Data Integration
-- `test_dataloader_tensor_integration.py` - DataLoader + Tensor
-- `test_training_integration.py` - Complete training workflows
-- `test_ml_pipeline_integration.py` - End-to-end ML pipelines
+**Philosophy**: When these tests fail, the error message should teach the student what went wrong and how to fix it.
 
-### Inference Serving Integration
-- `test_compression_integration.py` - Model compression
-- `test_kernels_integration.py` - Custom operations
-- `test_benchmarking_integration.py` - Performance measurement
-- `test_mlops_integration.py` - Deployment and serving
+### ⚡ Autograd Edge Cases (`05_autograd/`)
+**Purpose**: Stress-test autograd system  
+**Scope**: Autograd internals and edge cases  
+**Files**:
+- `test_broadcasting.py` - Broadcasting gradient bugs (TODO)
+- `test_computation_graph.py` - Graph construction edge cases (TODO)
+- `test_backward_edge_cases.py` - Numerical stability, etc. (TODO)
 
-## 🔧 **Usage**
+## Running Tests
+
+### All tests
 ```bash
-# Run all integration tests
 pytest tests/ -v
-
-# Run specific module integration
-pytest tests/test_tensor_attention_integration.py -v
-pytest tests/test_attention_pipeline_integration.py -v
-
-# Run attention-related tests
-pytest tests/ -k "attention" -v
 ```
 
-## 🚨 **Recovery Instructions**
-If accidentally deleted:
+### Integration tests only (recommended for debugging training issues)
 ```bash
-git checkout HEAD -- tests/
-git status  # Verify recovery
+pytest tests/integration/ -v
 ```
 
-## 📊 **Test Coverage**
-These integration tests complement the inline tests in each module's `*_dev.py` files, providing comprehensive system validation with focus on:
-- **Real component integration** (not mocks)
-- **Cross-module compatibility**
-- **Realistic ML workflows** (classification, seq2seq, transformers)
-- **Performance and scalability** 
+### Specific test
+```bash
+pytest tests/integration/test_gradient_flow.py -v
+```
+
+### Run without pytest
+```bash
+python tests/integration/test_gradient_flow.py
+```
+
+## Test Philosophy
+
+1. **Integration tests catch real bugs**: The gradient flow test caught the exact bugs that prevented training
+2. **Descriptive names**: Test names should explain what they test
+3. **Good error messages**: When tests fail, students should understand why
+4. **Pedagogical value**: Tests teach correct usage patterns
+
+## Adding New Tests
+
+When adding a test, ask:
+- **Is it testing one module?** → Put in `XX_modulename/`
+- **Is it testing modules working together?** → Put in `integration/`
+- **Is it teaching debugging?** → Put in `debugging/`
+- **Is it an autograd edge case?** → Put in `05_autograd/`
+
+## Most Important Tests
+
+🔥 **Must pass before merging**:
+- `integration/test_gradient_flow.py` - If this fails, training is broken
+
+📚 **Module validation**:
+- Each module's inline tests (in `modules/source/`)
+- Module-specific tests in `tests/XX_modulename/`
+
+## Test Coverage Goals
+
+- ✅ All tensor operations have gradient tests
+- ✅ All layers compute gradients correctly  
+- ✅ All activations integrate with autograd
+- ✅ All loss functions compute gradients
+- ✅ All optimizers update parameters
+- ⏳ End-to-end training converges (TODO)
+- ⏳ Common pitfalls are detected (TODO)
