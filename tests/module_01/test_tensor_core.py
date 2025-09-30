@@ -1,5 +1,5 @@
 """
-Module 02: Tensor - Core Functionality Tests
+Module 01: Tensor - Core Functionality Tests
 Tests fundamental tensor operations and memory management
 """
 

@@ -1,9 +1,9 @@
 """
 Module 11: Progressive Integration Tests
-Tests that Module 11 (Training) works correctly AND that the entire prior stack works.
+Tests that Module 12 (Compression) works correctly AND that the entire prior stack works.
 
-DEPENDENCY CHAIN: 01_setup → 02_tensor → 03_activations → 04_layers → 05_dense → 06_spatial → 07_attention → 08_dataloader → 09_autograd → 10_optimizers → 11_training
-This is where we enable complete end-to-end training loops.
+DEPENDENCY CHAIN: 01_setup → 02_tensor → 03_activations → 04_layers → 05_dense → 06_spatial → 07_attention → 08_dataloader → 09_autograd → 10_optimizers → 11_training → 12_compression
+This is where we enable model compression and efficiency techniques.
 """
 
 import numpy as np
@@ -15,549 +15,561 @@ sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 
 
 class TestPriorStackStillWorking:
-    """Quick regression checks that prior modules (01→10) still work."""
+    """Quick regression checks that prior modules (01→11) still work."""
     
-    def test_complete_ml_pipeline_stable(self):
-        """Verify complete ML pipeline remains stable."""
+    def test_complete_training_pipeline_stable(self):
+        """Verify complete training pipeline remains stable."""
         # Environment (Module 01)
         assert sys.version_info >= (3, 8), "Foundation broken: Python version"
         
-        # Complete pipeline should work
+        # Complete training should work
         try:
             from tinytorch.core.tensor import Tensor
             from tinytorch.core.layers import Dense
-            from tinytorch.core.data import Dataset, DataLoader
             from tinytorch.core.optimizers import SGD
-            
-            # All components should be available
-            layer = Dense(5, 2)
-            optimizer = SGD(layer.parameters(), lr=0.01)
-            
-            # Basic functionality should work
-            x = Tensor(np.random.randn(3, 5))
-            output = layer(x)
-            assert output.shape == (3, 2), "ML pipeline broken"
-            
-        except ImportError:
-            assert True, "ML pipeline not implemented yet"
-    
-    def test_optimization_stable(self):
-        """Verify Module 10 (Optimizers) still works."""
-        try:
-            from tinytorch.core.optimizers import SGD, Adam
-            from tinytorch.core.layers import Dense
-            
-            # Optimizers should work
-            layer = Dense(3, 1)
-            sgd = SGD(layer.parameters(), lr=0.01)
-            adam = Adam(layer.parameters(), lr=0.001)
-            
-            assert hasattr(sgd, 'step'), "Optimizers broken: SGD step"
-            assert hasattr(adam, 'step'), "Optimizers broken: Adam step"
-            
-        except ImportError:
-            assert True, "Optimizers not implemented yet"
-
-
-class TestModule11TrainingCore:
-    """Test Module 11 (Training) core functionality."""
-    
-    def test_training_loop_creation(self):
-        """Test basic training loop functionality."""
-        try:
             from tinytorch.core.training import Trainer
-            from tinytorch.core.layers import Dense
-            from tinytorch.core.optimizers import SGD
-            from tinytorch.core.data import Dataset, DataLoader
             
-            # Create model and optimizer
-            model = Dense(10, 3)
+            # All training components should be available
+            model = Dense(8, 3)
             optimizer = SGD(model.parameters(), lr=0.01)
-            
-            # Create simple dataset
-            class SimpleDataset(Dataset):
-                def __init__(self):
-                    self.data = np.random.randn(20, 10)
-                    self.targets = np.random.randint(0, 3, 20)
-                
-                def __len__(self):
-                    return 20
-                
-                def __getitem__(self, idx):
-                    return self.data[idx], self.targets[idx]
-            
-            dataset = SimpleDataset()
-            dataloader = DataLoader(dataset, batch_size=4)
-            
-            # Create trainer
             trainer = Trainer(model, optimizer)
             
-            # Should have training methods
-            assert hasattr(trainer, 'train') or hasattr(trainer, 'fit'), "Trainer broken: No train method"
+            # Basic training functionality should work
+            x = Tensor(np.random.randn(4, 8))
+            output = model(x)
+            assert output.shape == (4, 3), "Training pipeline broken"
             
         except ImportError:
-            assert True, "Training loop not implemented yet"
+            assert True, "Training pipeline not implemented yet"
     
-    def test_loss_function_support(self):
-        """Test loss function integration."""
+    def test_advanced_features_stable(self):
+        """Verify advanced modules (07→11) still work."""
         try:
-            from tinytorch.core.training import CrossEntropyLoss, MSELoss
+            from tinytorch.core.attention import MultiHeadAttention
+            from tinytorch.core.spatial import Conv2D
+            from tinytorch.core.data import DataLoader
+            from tinytorch.core.optimizers import Adam
+            
+            # Advanced features should work
+            attention = MultiHeadAttention(embed_dim=64, num_heads=8)
+            conv = Conv2D(in_channels=3, out_channels=16, kernel_size=3)
+            optimizer = Adam([np.array([1.0])], lr=0.001)
+            
+            assert hasattr(attention, 'forward'), "Advanced features broken: Attention"
+            assert hasattr(conv, 'forward'), "Advanced features broken: Spatial"
+            assert hasattr(optimizer, 'step'), "Advanced features broken: Optimizers"
+            
+        except ImportError:
+            assert True, "Advanced features not implemented yet"
+
+
+class TestModule12CompressionCore:
+    """Test Module 12 (Compression) core functionality."""
+    
+    def test_quantization_creation(self):
+        """Test quantization techniques."""
+        try:
+            from tinytorch.core.compression import Quantizer, quantize_weights
+            from tinytorch.core.layers import Dense
             from tinytorch.core.tensor import Tensor
             
-            # Test MSE loss
-            mse = MSELoss()
-            pred = Tensor(np.array([1.0, 2.0, 3.0]))
-            target = Tensor(np.array([1.5, 2.5, 2.5]))
+            # Create model to quantize
+            layer = Dense(10, 5)
             
-            loss = mse(pred, target)
-            assert hasattr(loss, 'data') or isinstance(loss, (float, np.ndarray)), "MSE loss broken"
-            
-            # Test CrossEntropy loss (if implemented)
-            if 'CrossEntropyLoss' in locals():
-                ce = CrossEntropyLoss()
-                logits = Tensor(np.random.randn(4, 3))  # 4 samples, 3 classes
-                targets = np.array([0, 1, 2, 1])  # Class indices
+            # Test weight quantization
+            if 'quantize_weights' in locals():
+                quantized_weights = quantize_weights(layer.weights, bits=8)
                 
-                ce_loss = ce(logits, targets)
-                assert hasattr(ce_loss, 'data') or isinstance(ce_loss, (float, np.ndarray)), "CrossEntropy loss broken"
+                # Quantized weights should have different range
+                assert quantized_weights.shape == layer.weights.shape, "Quantization shape broken"
+                
+                # Should reduce precision
+                unique_orig = len(np.unique(layer.weights.data.flatten()))
+                unique_quant = len(np.unique(quantized_weights.data.flatten()))
+                
+                # Quantized should have fewer unique values (unless already very sparse)
+                if unique_orig > 256:
+                    assert unique_quant <= 256, "8-bit quantization not working"
+            
+            # Test quantizer object
+            if 'Quantizer' in locals():
+                quantizer = Quantizer(bits=8, method='linear')
+                
+                assert hasattr(quantizer, 'quantize'), "Quantizer broken: No quantize method"
+                assert hasattr(quantizer, 'dequantize'), "Quantizer broken: No dequantize method"
                 
         except ImportError:
-            assert True, "Loss functions not implemented yet"
+            assert True, "Quantization not implemented yet"
     
-    def test_metrics_computation(self):
-        """Test training metrics computation."""
+    def test_pruning_techniques(self):
+        """Test weight pruning and sparsity."""
         try:
-            from tinytorch.core.training import accuracy, compute_metrics
+            from tinytorch.core.compression import prune_weights, MagnitudePruner
+            from tinytorch.core.layers import Dense
+            
+            # Create model to prune
+            layer = Dense(20, 10)
+            original_weights = layer.weights.data.copy()
+            
+            # Test magnitude-based pruning
+            if 'prune_weights' in locals():
+                pruned_weights = prune_weights(layer.weights, sparsity=0.5)
+                
+                # Should have ~50% zeros
+                zero_count = np.sum(pruned_weights.data == 0)
+                total_count = pruned_weights.data.size
+                sparsity_ratio = zero_count / total_count
+                
+                assert 0.4 <= sparsity_ratio <= 0.6, "Pruning sparsity not ~50%"
+                
+                # Non-zero weights should be unchanged
+                non_zero_mask = pruned_weights.data != 0
+                original_non_zero = original_weights[non_zero_mask]
+                pruned_non_zero = pruned_weights.data[non_zero_mask]
+                
+                # Remaining weights should be the largest magnitude ones
+                assert len(original_non_zero) == len(pruned_non_zero), "Pruning mask broken"
+            
+            # Test structured pruning
+            if 'MagnitudePruner' in locals():
+                pruner = MagnitudePruner(sparsity=0.3, structured=True)
+                
+                assert hasattr(pruner, 'prune'), "Structured pruner broken: No prune method"
+                assert hasattr(pruner, 'sparsity'), "Structured pruner broken: No sparsity"
+                
+        except ImportError:
+            assert True, "Pruning techniques not implemented yet"
+    
+    def test_knowledge_distillation(self):
+        """Test knowledge distillation compression."""
+        try:
+            from tinytorch.core.compression import DistillationLoss, KnowledgeDistiller
+            from tinytorch.core.layers import Dense
             from tinytorch.core.tensor import Tensor
             
-            # Test accuracy computation
-            predictions = Tensor(np.array([[0.1, 0.9], [0.8, 0.2], [0.3, 0.7]]))
-            targets = np.array([1, 0, 1])  # True class indices
+            # Teacher and student models
+            teacher = Dense(10, 5)  # Large model
+            student = Dense(10, 5)  # Smaller model (same size for simplicity)
             
-            acc = accuracy(predictions, targets)
-            assert isinstance(acc, (float, np.ndarray)), "Accuracy computation broken"
-            assert 0.0 <= acc <= 1.0, "Accuracy not in valid range"
+            # Test distillation loss
+            if 'DistillationLoss' in locals():
+                distill_loss = DistillationLoss(temperature=3.0, alpha=0.7)
+                
+                # Teacher and student outputs
+                x = Tensor(np.random.randn(4, 10))
+                teacher_output = teacher(x)
+                student_output = student(x)
+                targets = np.random.randint(0, 5, 4)
+                
+                # Compute distillation loss
+                loss = distill_loss(student_output, teacher_output, targets)
+                
+                assert hasattr(loss, 'data') or isinstance(loss, (float, np.ndarray)), "Distillation loss broken"
             
-            # Test comprehensive metrics
-            if 'compute_metrics' in locals():
-                metrics = compute_metrics(predictions, targets)
-                assert isinstance(metrics, dict), "Metrics should return dict"
-                assert 'accuracy' in metrics, "Metrics missing accuracy"
+            # Test knowledge distiller
+            if 'KnowledgeDistiller' in locals():
+                distiller = KnowledgeDistiller(teacher, student, temperature=4.0)
+                
+                assert hasattr(distiller, 'distill'), "Knowledge distiller broken: No distill method"
+                assert hasattr(distiller, 'teacher'), "Knowledge distiller broken: No teacher"
+                assert hasattr(distiller, 'student'), "Knowledge distiller broken: No student"
                 
         except ImportError:
-            assert True, "Metrics computation not implemented yet"
+            assert True, "Knowledge distillation not implemented yet"
 
 
 class TestProgressiveStackIntegration:
-    """Test that the complete stack (01→11) works together."""
+    """Test that the complete stack (01→12) works together."""
     
-    def test_end_to_end_training(self):
-        """Test complete end-to-end training process."""
+    def test_compressed_model_training(self):
+        """Test training with compressed models."""
         try:
             from tinytorch.core.tensor import Tensor
             from tinytorch.core.layers import Dense
-            from tinytorch.core.activations import ReLU, Softmax
             from tinytorch.core.optimizers import SGD
-            from tinytorch.core.training import Trainer, CrossEntropyLoss
+            from tinytorch.core.training import Trainer
+            from tinytorch.core.compression import prune_weights, quantize_weights
             from tinytorch.core.data import Dataset, DataLoader
             
-            # Create complete model
-            class SimpleModel:
-                def __init__(self):
-                    self.layer1 = Dense(10, 16)
-                    self.relu = ReLU()
-                    self.layer2 = Dense(16, 3)
-                    self.softmax = Softmax()
-                
-                def __call__(self, x):
-                    h = self.relu(self.layer1(x))
-                    logits = self.layer2(h)
-                    return self.softmax(logits)
-                
-                def parameters(self):
-                    params = []
-                    if hasattr(self.layer1, 'parameters'):
-                        params.extend(self.layer1.parameters())
-                    if hasattr(self.layer2, 'parameters'):
-                        params.extend(self.layer2.parameters())
-                    return params
+            # Create model
+            model = Dense(20, 5)
             
-            # Create dataset
-            class TrainingDataset(Dataset):
-                def __init__(self):
-                    self.data = np.random.randn(50, 10)
-                    self.targets = np.random.randint(0, 3, 50)
-                
-                def __len__(self):
-                    return 50
-                
-                def __getitem__(self, idx):
-                    return Tensor(self.data[idx]), self.targets[idx]
+            # Apply compression
+            if 'prune_weights' in locals():
+                model.weights = prune_weights(model.weights, sparsity=0.3)
             
-            # Setup training
-            model = SimpleModel()
+            if 'quantize_weights' in locals():
+                model.weights = quantize_weights(model.weights, bits=8)
+            
+            # Training with compressed model
             optimizer = SGD(model.parameters(), lr=0.01)
-            loss_fn = CrossEntropyLoss()
+            trainer = Trainer(model, optimizer)
             
-            dataset = TrainingDataset()
-            dataloader = DataLoader(dataset, batch_size=8)
+            # Test forward pass with compressed model
+            x = Tensor(np.random.randn(8, 20))
+            output = model(x)
             
-            # Training loop (simplified)
-            for epoch in range(2):  # Just 2 epochs for testing
-                for batch_x, batch_y in dataloader:
-                    # Forward pass
-                    predictions = model(batch_x)
-                    loss = loss_fn(predictions, batch_y)
-                    
-                    # Backward pass (if available)
-                    if hasattr(loss, 'backward'):
-                        optimizer.zero_grad()
-                        loss.backward()
-                        optimizer.step()
-                    
-                    # Verify shapes
-                    assert predictions.shape[0] == len(batch_y), "Training batch size mismatch"
-                    break  # Test one batch per epoch
+            assert output.shape == (8, 5), "Compressed model training broken"
             
-            assert True, "End-to-end training successful"
-            
+            # Should still be trainable
+            if hasattr(trainer, 'train'):
+                assert True, "Compressed model is trainable"
+                
         except ImportError:
-            assert True, "End-to-end training not ready yet"
+            assert True, "Compressed model training not ready yet"
     
-    def test_cnn_training_pipeline(self):
-        """Test CNN training with spatial operations."""
+    def test_cnn_compression_pipeline(self):
+        """Test compression with CNN models."""
         try:
-            from tinytorch.core.spatial import Conv2D, MaxPool2D
+            from tinytorch.core.spatial import Conv2D
             from tinytorch.core.layers import Dense
-            from tinytorch.core.activations import ReLU
-            from tinytorch.core.optimizers import Adam
-            from tinytorch.core.data import Dataset, DataLoader
+            from tinytorch.core.compression import prune_weights, quantize_weights
             from tinytorch.core.tensor import Tensor
             
             # CNN model
-            class SimpleCNN:
-                def __init__(self):
-                    self.conv1 = Conv2D(in_channels=3, out_channels=16, kernel_size=3)
-                    self.pool = MaxPool2D(kernel_size=2)
-                    self.relu = ReLU()
-                    self.fc = Dense(16 * 15 * 15, 5)  # Approximate size
-                
-                def __call__(self, x):
-                    h = self.relu(self.conv1(x))
-                    h = self.pool(h)
-                    # Flatten (simplified)
-                    h_flat = h.reshape(h.shape[0], -1)
-                    return self.fc(h_flat)
-                
-                def parameters(self):
-                    params = []
-                    for module in [self.conv1, self.fc]:
-                        if hasattr(module, 'parameters'):
-                            params.extend(module.parameters())
-                    return params
+            conv1 = Conv2D(in_channels=3, out_channels=16, kernel_size=3)
+            fc = Dense(16 * 30 * 30, 10)  # Approximate size
             
-            # Image dataset
-            class ImageDataset(Dataset):
-                def __init__(self):
-                    self.data = np.random.randn(20, 3, 32, 32)
-                    self.targets = np.random.randint(0, 5, 20)
-                
-                def __len__(self):
-                    return 20
-                
-                def __getitem__(self, idx):
-                    return Tensor(self.data[idx]), self.targets[idx]
+            # Apply compression to CNN
+            if 'prune_weights' in locals() and hasattr(conv1, 'weights'):
+                conv1.weights = prune_weights(conv1.weights, sparsity=0.4)
             
-            # Setup CNN training
-            cnn_model = SimpleCNN()
-            optimizer = Adam(cnn_model.parameters(), lr=0.001)
+            if 'quantize_weights' in locals():
+                fc.weights = quantize_weights(fc.weights, bits=8)
             
-            dataset = ImageDataset()
-            dataloader = DataLoader(dataset, batch_size=4)
+            # Test compressed CNN forward pass
+            x = Tensor(np.random.randn(2, 3, 32, 32))
             
-            # Test CNN training step
-            for batch_x, batch_y in dataloader:
-                assert batch_x.shape == (4, 3, 32, 32), "CNN input shape broken"
-                
-                # Forward pass
-                if hasattr(cnn_model.conv1, '__call__'):
-                    predictions = cnn_model(batch_x)
-                    assert len(predictions.shape) == 2, "CNN output shape broken"
-                
-                break  # Test one batch
+            if hasattr(conv1, '__call__'):
+                conv_out = conv1(x)
+                # Should work with compressed weights
+                assert len(conv_out.shape) == 4, "Compressed CNN broken"
                 
         except ImportError:
-            assert True, "CNN training pipeline not ready yet"
+            assert True, "CNN compression pipeline not ready yet"
+    
+    def test_attention_compression(self):
+        """Test compression with attention mechanisms."""
+        try:
+            from tinytorch.core.attention import MultiHeadAttention
+            from tinytorch.core.compression import prune_weights, quantize_weights
+            from tinytorch.core.tensor import Tensor
+            
+            # Attention mechanism
+            attention = MultiHeadAttention(embed_dim=64, num_heads=8)
+            
+            # Apply compression to attention weights
+            if hasattr(attention, 'query_proj') and hasattr(attention.query_proj, 'weights'):
+                if 'prune_weights' in locals():
+                    attention.query_proj.weights = prune_weights(attention.query_proj.weights, sparsity=0.2)
+                
+                if 'quantize_weights' in locals():
+                    attention.key_proj.weights = quantize_weights(attention.key_proj.weights, bits=8)
+            
+            # Test compressed attention
+            seq_len, batch_size, embed_dim = 10, 4, 64
+            x = Tensor(np.random.randn(seq_len, batch_size, embed_dim))
+            
+            if hasattr(attention, '__call__'):
+                output = attention(x)
+                assert output.shape == x.shape, "Compressed attention broken"
+                
+        except ImportError:
+            assert True, "Attention compression not ready yet"
 
 
-class TestAdvancedTrainingFeatures:
-    """Test advanced training features and techniques."""
+class TestEfficiencyAndPerformance:
+    """Test efficiency gains from compression techniques."""
     
-    def test_validation_loop(self):
-        """Test validation during training."""
+    def test_memory_reduction(self):
+        """Test memory reduction from compression."""
         try:
-            from tinytorch.core.training import Trainer
-            from tinytorch.core.layers import Dense
-            from tinytorch.core.optimizers import SGD
-            from tinytorch.core.data import Dataset, DataLoader
-            
-            # Model and optimizer
-            model = Dense(5, 2)
-            optimizer = SGD(model.parameters(), lr=0.01)
-            
-            # Train and validation datasets
-            class Dataset(Dataset):
-                def __init__(self, size):
-                    self.data = np.random.randn(size, 5)
-                    self.targets = np.random.randint(0, 2, size)
-                
-                def __len__(self):
-                    return len(self.data)
-                
-                def __getitem__(self, idx):
-                    return self.data[idx], self.targets[idx]
-            
-            train_dataset = Dataset(30)
-            val_dataset = Dataset(10)
-            
-            train_loader = DataLoader(train_dataset, batch_size=5)
-            val_loader = DataLoader(val_dataset, batch_size=5)
-            
-            # Trainer with validation
-            trainer = Trainer(model, optimizer)
-            
-            if hasattr(trainer, 'validate') or hasattr(trainer, 'evaluate'):
-                # Should be able to run validation
-                assert True, "Validation capability available"
-            
-        except ImportError:
-            assert True, "Validation loop not ready yet"
-    
-    def test_checkpointing_and_early_stopping(self):
-        """Test model checkpointing and early stopping."""
-        try:
-            from tinytorch.core.training import Trainer, ModelCheckpoint, EarlyStopping
-            from tinytorch.core.layers import Dense
-            from tinytorch.core.optimizers import SGD
-            
-            model = Dense(5, 1)
-            optimizer = SGD(model.parameters(), lr=0.01)
-            
-            # Checkpointing
-            if 'ModelCheckpoint' in locals():
-                checkpoint = ModelCheckpoint(filepath='model.pth', save_best=True)
-                assert hasattr(checkpoint, 'save'), "Checkpointing broken"
-            
-            # Early stopping
-            if 'EarlyStopping' in locals():
-                early_stop = EarlyStopping(patience=5, min_delta=0.001)
-                assert hasattr(early_stop, 'check'), "Early stopping broken"
-            
-            # Training with callbacks
-            trainer = Trainer(model, optimizer)
-            if hasattr(trainer, 'callbacks'):
-                trainer.callbacks = [checkpoint, early_stop]
-                
-        except ImportError:
-            assert True, "Advanced training features not ready yet"
-    
-    def test_learning_rate_scheduling(self):
-        """Test learning rate scheduling during training."""
-        try:
-            from tinytorch.core.training import LRScheduler, StepLR
-            from tinytorch.core.optimizers import SGD
+            from tinytorch.core.compression import prune_weights, quantize_weights
             from tinytorch.core.layers import Dense
             
-            model = Dense(5, 1)
-            optimizer = SGD(model.parameters(), lr=0.1)
+            # Large model for memory testing
+            large_model = Dense(1000, 500)
+            original_size = large_model.weights.data.nbytes
             
-            # Learning rate scheduler
-            if 'StepLR' in locals():
-                scheduler = StepLR(optimizer, step_size=10, gamma=0.5)
+            # Test pruning memory reduction
+            if 'prune_weights' in locals():
+                pruned_weights = prune_weights(large_model.weights, sparsity=0.7)
                 
-                initial_lr = optimizer.lr
+                # Memory might not reduce immediately (dense storage)
+                # but sparsity should be achieved
+                zero_ratio = np.sum(pruned_weights.data == 0) / pruned_weights.data.size
+                assert zero_ratio >= 0.6, "Pruning not achieving target sparsity"
+            
+            # Test quantization memory reduction
+            if 'quantize_weights' in locals():
+                quantized_weights = quantize_weights(large_model.weights, bits=8)
                 
-                # Step the scheduler
-                for _ in range(15):
-                    if hasattr(scheduler, 'step'):
-                        scheduler.step()
+                # 8-bit should use less memory than 32-bit (if properly implemented)
+                assert quantized_weights.shape == large_model.weights.shape, "Quantization shape changed"
                 
-                # Learning rate should have decreased
-                if hasattr(optimizer, 'lr'):
-                    final_lr = optimizer.lr
-                    assert final_lr < initial_lr, "Learning rate scheduling not working"
+                # Check if data type changed
+                if hasattr(quantized_weights, 'dtype'):
+                    # Should be using smaller data type
+                    assert True, "Quantization applied successfully"
                     
         except ImportError:
-            assert True, "Learning rate scheduling not ready yet"
-
-
-class TestProductionTrainingFeatures:
-    """Test production-ready training features."""
+            assert True, "Memory reduction testing not ready yet"
     
-    def test_distributed_training_support(self):
-        """Test distributed training capabilities."""
+    def test_inference_speedup(self):
+        """Test inference speedup from compression."""
         try:
-            from tinytorch.core.training import DistributedTrainer
+            from tinytorch.core.compression import prune_weights, quantize_weights
+            from tinytorch.core.layers import Dense
+            from tinytorch.core.tensor import Tensor
+            import time
+            
+            # Model for speed testing
+            model = Dense(500, 200)
+            
+            # Apply compression
+            if 'prune_weights' in locals():
+                compressed_model = Dense(500, 200)
+                compressed_model.weights = prune_weights(model.weights, sparsity=0.8)
+                
+                # Test inference time (simplified)
+                x = Tensor(np.random.randn(100, 500))
+                
+                # Time original model
+                start = time.time()
+                for _ in range(10):
+                    _ = model(x)
+                original_time = time.time() - start
+                
+                # Time compressed model
+                start = time.time()
+                for _ in range(10):
+                    _ = compressed_model(x)
+                compressed_time = time.time() - start
+                
+                # Compressed should be at least as fast (might be faster with sparse ops)
+                assert compressed_time <= original_time * 1.2, "Compression significantly slower"
+                
+        except ImportError:
+            assert True, "Inference speedup testing not ready yet"
+    
+    def test_model_size_reduction(self):
+        """Test model size reduction techniques."""
+        try:
+            from tinytorch.core.compression import compress_model, ModelCompressor
+            from tinytorch.core.layers import Dense
+            
+            # Model to compress
+            model = Dense(100, 50)
+            original_param_count = model.weights.data.size
+            if hasattr(model, 'bias') and model.bias is not None:
+                original_param_count += model.bias.data.size
+            
+            # Test model compression
+            if 'compress_model' in locals():
+                compressed_model = compress_model(model, compression_ratio=0.5)
+                
+                # Should have fewer effective parameters
+                if hasattr(compressed_model, 'compression_ratio'):
+                    assert compressed_model.compression_ratio <= 0.6, "Compression ratio not achieved"
+            
+            # Test model compressor
+            if 'ModelCompressor' in locals():
+                compressor = ModelCompressor(pruning_ratio=0.4, quantization_bits=8)
+                
+                compressed_model = compressor.compress(model)
+                
+                # Should maintain model interface
+                assert hasattr(compressed_model, 'forward') or callable(compressed_model), "Compressed model interface broken"
+                
+        except ImportError:
+            assert True, "Model size reduction not ready yet"
+
+
+class TestProductionCompressionFeatures:
+    """Test production-ready compression features."""
+    
+    def test_gradual_pruning(self):
+        """Test gradual pruning during training."""
+        try:
+            from tinytorch.core.compression import GradualPruner
             from tinytorch.core.layers import Dense
             from tinytorch.core.optimizers import SGD
             
-            model = Dense(10, 3)
+            model = Dense(50, 20)
             optimizer = SGD(model.parameters(), lr=0.01)
             
-            # Distributed trainer (if available)
-            if 'DistributedTrainer' in locals():
-                dist_trainer = DistributedTrainer(model, optimizer, world_size=1, rank=0)
-                assert hasattr(dist_trainer, 'train'), "Distributed training broken"
-            
+            # Gradual pruner
+            if 'GradualPruner' in locals():
+                pruner = GradualPruner(
+                    initial_sparsity=0.0,
+                    final_sparsity=0.8,
+                    begin_step=100,
+                    end_step=1000
+                )
+                
+                # Should gradually increase sparsity
+                sparsity_100 = pruner.get_sparsity(step=100)
+                sparsity_500 = pruner.get_sparsity(step=500)
+                sparsity_1000 = pruner.get_sparsity(step=1000)
+                
+                assert sparsity_100 <= sparsity_500 <= sparsity_1000, "Gradual pruning not gradual"
+                assert sparsity_1000 >= 0.7, "Final sparsity not reached"
+                
         except ImportError:
-            assert True, "Distributed training not ready yet"
+            assert True, "Gradual pruning not ready yet"
     
-    def test_mixed_precision_training(self):
-        """Test mixed precision training support."""
+    def test_mixed_precision_compression(self):
+        """Test combination of compression with mixed precision."""
         try:
+            from tinytorch.core.compression import MixedPrecisionCompressor
             from tinytorch.core.training import Trainer
             from tinytorch.core.layers import Dense
             from tinytorch.core.optimizers import Adam
             
-            model = Dense(20, 10)
+            model = Dense(30, 10)
             optimizer = Adam(model.parameters(), lr=0.001)
             
-            # Mixed precision trainer
-            trainer = Trainer(model, optimizer, mixed_precision=True)
-            
-            if hasattr(trainer, 'mixed_precision'):
-                assert trainer.mixed_precision == True, "Mixed precision not enabled"
+            # Mixed precision + compression
+            if 'MixedPrecisionCompressor' in locals():
+                compressor = MixedPrecisionCompressor(
+                    fp16_layers=['linear'],
+                    pruning_ratio=0.3
+                )
+                
+                compressed_model = compressor.compress(model)
+                trainer = Trainer(compressed_model, optimizer, mixed_precision=True)
+                
+                # Should support both compression and mixed precision
+                assert hasattr(trainer, 'mixed_precision'), "Mixed precision support broken"
                 
         except ImportError:
-            assert True, "Mixed precision training not ready yet"
+            assert True, "Mixed precision compression not ready yet"
     
-    def test_gradient_accumulation(self):
-        """Test gradient accumulation for large effective batch sizes."""
+    def test_compression_aware_training(self):
+        """Test compression-aware training techniques."""
         try:
-            from tinytorch.core.training import Trainer
+            from tinytorch.core.compression import CompressionAwareTrainer
             from tinytorch.core.layers import Dense
             from tinytorch.core.optimizers import SGD
             
-            model = Dense(10, 3)
+            model = Dense(40, 15)
             optimizer = SGD(model.parameters(), lr=0.01)
             
-            # Trainer with gradient accumulation
-            trainer = Trainer(model, optimizer, accumulate_grad_batches=4)
-            
-            if hasattr(trainer, 'accumulate_grad_batches'):
-                assert trainer.accumulate_grad_batches == 4, "Gradient accumulation not set"
+            # Compression-aware training
+            if 'CompressionAwareTrainer' in locals():
+                trainer = CompressionAwareTrainer(
+                    model, optimizer,
+                    pruning_schedule={'start': 100, 'end': 500, 'frequency': 50},
+                    quantization={'bits': 8, 'start_epoch': 10}
+                )
+                
+                # Should handle compression during training
+                assert hasattr(trainer, 'pruning_schedule'), "Compression-aware training broken"
+                assert hasattr(trainer, 'quantization'), "Quantization scheduling broken"
                 
         except ImportError:
-            assert True, "Gradient accumulation not ready yet"
+            assert True, "Compression-aware training not ready yet"
 
 
 class TestRegressionPrevention:
-    """Ensure previous modules still work after Module 11 development."""
+    """Ensure previous modules still work after Module 12 development."""
     
-    def test_no_complete_pipeline_regression(self):
-        """Verify complete ML pipeline (01→10) unchanged."""
-        # Core functionality should remain stable
+    def test_no_training_regression(self):
+        """Verify training pipeline (01→11) unchanged."""
+        # Core training functionality should remain stable
         assert sys.version_info.major >= 3, "Foundation: Python detection broken"
         
-        # Complete pipeline should still work
+        # Training pipeline should still work
         try:
             from tinytorch.core.tensor import Tensor
             from tinytorch.core.layers import Dense
             from tinytorch.core.optimizers import SGD
-            from tinytorch.core.data import Dataset
+            from tinytorch.core.training import Trainer
             
-            # All pipeline components should work
-            layer = Dense(3, 2)
-            optimizer = SGD(layer.parameters(), lr=0.01)
+            # Complete training pipeline should work
+            model = Dense(5, 3)
+            optimizer = SGD(model.parameters(), lr=0.01)
+            trainer = Trainer(model, optimizer)
             
-            x = Tensor(np.random.randn(1, 3))
-            output = layer(x)
-            assert output.shape == (1, 2), "Pipeline regression: Forward pass broken"
+            x = Tensor(np.random.randn(2, 5))
+            output = model(x)
+            assert output.shape == (2, 3), "Training regression: Forward pass broken"
             
         except ImportError:
             import numpy as np
-            assert np.random is not None, "Pipeline regression: Basic functionality broken"
+            assert np.random is not None, "Training regression: Basic functionality broken"
     
-    def test_no_optimization_regression(self):
-        """Verify optimization (10) and data loading (08) unchanged."""
+    def test_no_advanced_features_regression(self):
+        """Verify advanced features (07→11) unchanged."""
         try:
-            from tinytorch.core.optimizers import SGD, Adam
-            from tinytorch.core.data import Dataset, DataLoader
+            from tinytorch.core.attention import MultiHeadAttention
+            from tinytorch.core.spatial import Conv2D
+            from tinytorch.core.optimizers import Adam
+            from tinytorch.core.data import Dataset
             
-            # Optimizers should still work
-            class DummyModule:
-                def parameters(self):
-                    return [np.array([1.0, 2.0])]
+            # Advanced features should still work
+            attention = MultiHeadAttention(embed_dim=32, num_heads=4)
+            conv = Conv2D(in_channels=1, out_channels=8, kernel_size=3)
+            optimizer = Adam([np.array([1.0])], lr=0.001)
             
-            module = DummyModule()
-            sgd = SGD(module.parameters(), lr=0.01)
-            adam = Adam(module.parameters(), lr=0.001)
-            
-            assert hasattr(sgd, 'step'), "Optimization regression: SGD broken"
-            assert hasattr(adam, 'step'), "Optimization regression: Adam broken"
+            assert hasattr(attention, 'forward'), "Advanced regression: Attention broken"
+            assert hasattr(conv, 'forward'), "Advanced regression: Spatial broken"
+            assert hasattr(optimizer, 'step'), "Advanced regression: Optimization broken"
             
             # Data loading should still work
             class TestDataset(Dataset):
                 def __len__(self):
-                    return 5
+                    return 3
                 def __getitem__(self, idx):
                     return idx, idx * 2
             
             dataset = TestDataset()
-            dataloader = DataLoader(dataset, batch_size=2)
-            assert len(dataset) == 5, "Data regression: Dataset broken"
+            assert len(dataset) == 3, "Advanced regression: Data loading broken"
             
         except ImportError:
             # Basic functionality should work
             import numpy as np
-            assert np is not None, "Optimization/Data regression: Basic functionality broken"
+            assert np is not None, "Advanced regression: Basic functionality broken"
     
     def test_progressive_stability(self):
-        """Test the progressive stack is stable through training."""
-        # Stack should be stable through: Setup → ... → Optimizers → Training
+        """Test the progressive stack is stable through compression."""
+        # Stack should be stable through: Setup → ... → Training → Compression
         
         # Setup level
         import numpy as np
         assert np is not None, "Setup level broken"
         
-        # Complete ML pipeline level (if available)
+        # Complete training pipeline level (if available)
         try:
             from tinytorch.core.tensor import Tensor
             from tinytorch.core.layers import Dense
             from tinytorch.core.optimizers import SGD
+            from tinytorch.core.training import Trainer
             
-            # Complete training components should work together
-            model = Dense(5, 2)
+            # Complete training system should work
+            model = Dense(8, 4)
             optimizer = SGD(model.parameters(), lr=0.01)
+            trainer = Trainer(model, optimizer)
             
-            x = Tensor(np.random.randn(3, 5))
+            x = Tensor(np.random.randn(3, 8))
             output = model(x)
-            assert output.shape == (3, 2), "ML pipeline level broken"
+            assert output.shape == (3, 4), "Training pipeline level broken"
             
         except ImportError:
             pass  # Not implemented yet
         
-        # Training level (if available)
+        # Compression level (if available)
         try:
-            from tinytorch.core.training import Trainer
+            from tinytorch.core.compression import prune_weights
             
-            class DummyModel:
-                def parameters(self):
-                    return [np.array([1.0])]
-            
-            class DummyOptimizer:
-                def __init__(self, params, lr):
-                    self.lr = lr
-                def step(self):
-                    pass
-                def zero_grad(self):
-                    pass
-            
-            model = DummyModel()
-            optimizer = DummyOptimizer(model.parameters(), 0.01)
-            trainer = Trainer(model, optimizer)
-            
-            assert hasattr(trainer, 'train') or hasattr(trainer, 'fit'), "Training level broken"
-            
+            # Compression should work with existing tensors
+            weights = np.random.randn(10, 5)
+            if 'prune_weights' in locals():
+                pruned = prune_weights(weights, sparsity=0.5)
+                assert pruned.shape == weights.shape, "Compression level broken"
+            else:
+                # Basic compression concepts should work
+                assert True, "Basic compression ready"
+                
         except ImportError:
             pass  # Not implemented yet
