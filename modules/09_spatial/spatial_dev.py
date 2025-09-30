@@ -75,20 +75,37 @@ if 'tinytorch' in sys.modules:
 else:
     # Development: Import from local module files
     # Import Tensor from Module 01
-    tensor_module_path = os.path.join(os.path.dirname(__file__), '..', '..', '01_tensor')
+    try:
+        # Try to find the current directory
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+    except NameError:
+        # Fallback when __file__ is not available (e.g., in exec context)
+        current_dir = os.getcwd()
+
+    tensor_module_path = os.path.join(current_dir, '..', '01_tensor')
     sys.path.insert(0, tensor_module_path)
     try:
         from tensor_dev import Tensor
     finally:
         sys.path.pop(0)
 
-    # Import Module from layers
-    layers_module_path = os.path.join(os.path.dirname(__file__), '..', '..', 'tinytorch', 'core')
-    sys.path.insert(0, layers_module_path)
-    try:
-        from layers import Module
-    finally:
-        sys.path.pop(0)
+    # Create a simple Module base class for inheritance
+    class Module:
+        """Simple base class for neural network modules."""
+        def __init__(self):
+            pass
+
+        def forward(self, x):
+            raise NotImplementedError("Subclasses must implement forward()")
+
+        def parameters(self):
+            """Return list of parameters for this module."""
+            params = []
+            for attr_name in dir(self):
+                attr = getattr(self, attr_name)
+                if hasattr(attr, 'data') and hasattr(attr, 'requires_grad'):
+                    params.append(attr)
+            return params
 
 # %% [markdown]
 """
