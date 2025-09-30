@@ -1,84 +1,145 @@
 # ⊕ XOR Problem (1969) - Minsky & Papert
 
-## What This Demonstrates
-The "impossible" problem that killed neural networks for a decade! Shows why hidden layers are essential for non-linear problems.
+## Historical Significance
+
+In 1969, Marvin Minsky and Seymour Papert published "Perceptrons," mathematically proving that single-layer perceptrons **cannot** solve the XOR problem. This revelation killed neural network research funding for over a decade - the infamous "AI Winter."
+
+In 1986, Rumelhart, Hinton, and Williams published the backpropagation algorithm for multi-layer networks, and XOR became trivial. This milestone recreates both the crisis and the solution using YOUR TinyTorch!
 
 ## Prerequisites
-Complete these TinyTorch modules first:
-- Module 02 (Tensor) - Data structures
-- Module 03 (Activations) - ReLU activation
-- Module 04 (Layers) - Linear layers
-- Module 06 (Autograd) - Backward propagation
 
-## 🚀 Quick Start
+Complete these TinyTorch modules first:
+
+**For Part 1 (xor_crisis.py):**
+- Module 01 (Tensor)
+- Module 02 (Activations) 
+- Module 03 (Layers)
+- Module 04 (Losses)
+- Module 05 (Autograd)
+- Module 06 (Optimizers)
+
+**For Part 2 (xor_solved.py):**
+- All of the above ✓
+
+## Quick Start
+
+### Part 1: The Crisis (1969)
+Watch a single-layer perceptron **fail** to learn XOR:
 
 ```bash
-# Solve XOR with hidden layers
-python minsky_xor_problem.py
-
-# Test architecture only
-python minsky_xor_problem.py --test-only
-
-# More training epochs for better accuracy
-python minsky_xor_problem.py --epochs 2000
+python milestones/02_xor_crisis_1969/xor_crisis.py
 ```
 
-## 📊 Dataset Information
+**Expected:** ~50% accuracy (random guessing) - proves Minsky was right!
 
-### XOR Truth Table
-```
-x1 | x2 | XOR
----|----|----- 
-0  | 0  | 0 (same → 0)
-0  | 1  | 1 (diff → 1)
-1  | 0  | 1 (diff → 1)
-1  | 1  | 0 (same → 0)
+### Part 2: The Solution (1986)
+Watch a multi-layer network **solve** the "impossible" problem:
+
+```bash
+python milestones/02_xor_crisis_1969/xor_solved.py
 ```
 
-### Generated XOR Data
-- **Size**: 1,000 samples with slight noise
-- **Property**: NOT linearly separable
-- **No Download Required**: Generated on-the-fly
+**Expected:** 75%+ accuracy (problem solved!) - proves hidden layers work!
 
-## 🏗️ Architecture
+## The XOR Problem
+
+### What is XOR?
+
+XOR (Exclusive OR) outputs 1 when inputs **differ**, 0 when they're the **same**:
+
 ```
-Input (2) → Linear (2→4) → ReLU → Linear (4→1) → Sigmoid → Output
-              ↑                      ↑
-         Hidden Layer!          Output Layer
-```
-
-The hidden layer is the KEY - it learns features that make XOR separable!
-
-## 📈 Expected Results
-- **Training Time**: ~1 minute
-- **Accuracy**: 90%+ (non-linear problem solved!)
-- **Parameters**: 17 (compared to perceptron's 3)
-
-## 💡 Historical Significance
-- **1969**: Minsky proved single-layer perceptrons can't solve XOR
-- **AI Winter**: Neural network research stopped for a decade
-- **1986**: Backprop + hidden layers solved it (what YOU built!)
-- **Insight**: Depth enables non-linear decision boundaries
-
-## 🎨 Why XOR is Special
-```
-Single Layer Fails:          Multi-Layer Succeeds:
-   
-1 │ ○      ●                Hidden units learn:
-  │  ╲                       - Unit 1: x1 AND NOT x2
-  │   ╲ (No line works!)     - Unit 2: x2 AND NOT x1
-0 │ ●  ╲   ○                Then combine: Unit1 OR Unit2
-  └───────────
-    0      1
+┌────┬────┬─────┐
+│ x₁ │ x₂ │ XOR │
+├────┼────┼─────┤
+│ 0  │ 0  │  0  │ ← same
+│ 0  │ 1  │  1  │ ← different
+│ 1  │ 0  │  1  │ ← different
+│ 1  │ 1  │  0  │ ← same
+└────┴────┴─────┘
 ```
 
-## 🔧 Command Line Options
-- `--test-only`: Test architecture without training
-- `--epochs N`: Training epochs (default: 1000)
-- `--visualize`: Show XOR visualization (default: True)
+### Why It's Impossible for Single Layers
 
-## 📚 What You Learn
-- Why neural networks need hidden layers
-- How non-linearity (ReLU) enables complex functions
-- YOUR autograd handles multi-layer backprop
-- Foundation principle for all deep learning
+The problem is **non-linearly separable** - no single straight line can separate the points:
+
+```
+Visual Representation:
+
+1 │ ○ (0,1)    ● (1,1)      Try drawing a line:
+  │   [1]       [0]          ANY line fails!
+  │
+0 │ ● (0,0)    ○ (1,0)       
+  │   [0]       [1]         
+  └─────────────────
+    0          1
+```
+
+This fundamental limitation ended the first era of neural networks.
+
+## The Solution
+
+Hidden layers create a **new feature space** where XOR becomes linearly separable!
+
+### Original 1986 Architecture
+```
+Input (2) → Hidden (2) + Sigmoid → Output (1) + Sigmoid
+
+Total: Only 9 parameters!
+```
+
+The 2 hidden units learn:
+- `h₁ ≈ x₁ AND NOT x₂`
+- `h₂ ≈ x₂ AND NOT x₁`
+- `output ≈ h₁ OR h₂` = XOR
+
+### Our Implementation
+```
+Input (2) → Hidden (4-8) + ReLU → Output (1) + Sigmoid
+
+Modern activation, slightly larger for robustness
+```
+
+## Expected Results
+
+### Part 1: The Crisis
+- **Accuracy:** ~50% (random guessing)
+- **Loss:** Stuck around 0.69 (not decreasing)
+- **Weights:** Don't converge to meaningful values
+- **Conclusion:** Single-layer perceptrons **cannot** solve XOR
+
+### Part 2: The Solution
+- **Accuracy:** 75-100% (problem solved!)
+- **Loss:** Decreases to ~0.35 or lower
+- **Weights:** Learn meaningful features
+- **Conclusion:** Multi-layer networks **can** solve XOR
+
+## What You Learn
+
+1. **Why depth matters** - Hidden layers enable non-linear functions
+2. **Historical context** - The XOR crisis that stopped AI research
+3. **The breakthrough** - Backpropagation through hidden layers
+4. **Your autograd works!** - Multi-layer gradients flow correctly
+
+## Files in This Milestone
+
+- `xor_crisis.py` - Single-layer perceptron **failing** on XOR (1969 crisis)
+- `xor_solved.py` - Multi-layer network **solving** XOR (1986 breakthrough)
+- `README.md` - This file
+
+## Historical Timeline
+
+- **1969:** Minsky & Papert prove single-layer networks can't solve XOR
+- **1970-1986:** AI Winter - 17 years of minimal neural network research
+- **1986:** Rumelhart, Hinton, Williams publish backpropagation for multi-layer nets
+- **1986+:** AI Renaissance begins
+- **TODAY:** Deep learning powers GPT, AlphaGo, autonomous vehicles, etc.
+
+## Next Steps
+
+After completing this milestone:
+
+- **Milestone 03:** MLP Revival (1986) - Train deeper networks on real data
+- **Module 08:** DataLoaders for batch processing
+- **Module 09:** CNNs for image recognition
+
+Every modern AI architecture builds on what you just learned - hidden layers + backpropagation!
