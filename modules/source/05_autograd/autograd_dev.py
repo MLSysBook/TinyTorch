@@ -735,6 +735,7 @@ class BCEBackward(Function):
 
 
 # %% nbgrader={"grade": false, "grade_id": "enable-autograd", "solution": true}
+#| export
 def enable_autograd():
     """
     Enable gradient tracking for all Tensor operations.
