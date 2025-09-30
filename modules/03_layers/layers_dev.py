@@ -20,7 +20,7 @@ Welcome to Module 03! You're about to build the fundamental building blocks that
 
 ## 🔗 Prerequisites & Progress
 **You've Built**: Tensor class (Module 01) with all operations and activations (Module 02)
-**You'll Build**: Linear layers, Sequential composition, and Dropout regularization
+**You'll Build**: Linear layers and Dropout regularization
 **You'll Enable**: Multi-layer neural networks, trainable parameters, and forward passes
 
 **Connection Map**:
@@ -32,10 +32,9 @@ Tensor → Activations → Layers → Networks
 ## Learning Objectives
 By the end of this module, you will:
 1. Implement Linear layers with proper weight initialization
-2. Build Sequential containers for chaining operations
-3. Add Dropout for regularization during training
-4. Understand parameter management and counting
-5. Test layer composition and shape preservation
+2. Add Dropout for regularization during training
+3. Understand parameter management and counting
+4. Test individual layer components
 
 Let's get started!
 
@@ -46,7 +45,7 @@ Let's get started!
 
 ```python
 # Final package structure:
-from tinytorch.core.layers import Linear, Sequential, Dropout  # This module
+from tinytorch.core.layers import Linear, Dropout  # This module
 from tinytorch.core.tensor import Tensor  # Module 01 - foundation
 from tinytorch.core.activations import ReLU, Sigmoid  # Module 02 - intelligence
 ```
@@ -76,7 +75,6 @@ from tensor_dev import Tensor
 Neural network layers are the fundamental building blocks that transform data as it flows through a network. Each layer performs a specific computation:
 
 - **Linear layers** apply learned transformations: `y = xW + b`
-- **Sequential containers** chain multiple operations together
 - **Dropout layers** randomly zero elements for regularization
 
 Think of layers as processing stations in a factory:
@@ -111,11 +109,12 @@ Random initialization is crucial for breaking symmetry:
 ### Parameter Counting
 ```
 Linear(784, 256): 784 × 256 + 256 = 200,960 parameters
-Sequential([
-    Linear(784, 256),  # 200,960 params
-    ReLU(),            # 0 params
-    Linear(256, 10)    # 2,570 params
-])                     # Total: 203,530 params
+
+Manual composition:
+    layer1 = Linear(784, 256)  # 200,960 params
+    activation = ReLU()        # 0 params
+    layer2 = Linear(256, 10)   # 2,570 params
+                               # Total: 203,530 params
 ```
 
 Memory usage: 4 bytes/param × 203,530 = ~814KB for weights alone
@@ -125,11 +124,10 @@ Memory usage: 4 bytes/param × 203,530 = ~814KB for weights alone
 """
 ## 3. Implementation: Building Layer Foundation
 
-Let's build our layer system step by step. We'll implement three essential layer types:
+Let's build our layer system step by step. We'll implement two essential layer types:
 
 1. **Linear Layer** - The workhorse of neural networks
-2. **Sequential Container** - Chains layers together
-3. **Dropout Layer** - Prevents overfitting
+2. **Dropout Layer** - Prevents overfitting
 
 ### Key Design Principles:
 - All methods defined INSIDE classes (no monkey-patching)
@@ -340,189 +338,9 @@ def test_unit_linear_layer():
 
 # Test will be run in main block
 
-# %% [markdown]
-"""
-### 🔗 Sequential Container - Chaining Operations Together
 
-The Sequential container is like a assembly line for data processing. It takes multiple layers and applies them one after another, passing the output of each layer as input to the next.
 
-### Why Sequential Matters
 
-Most neural networks are **sequential compositions** of simpler operations. Instead of manually calling each layer, Sequential automates the process and manages the data flow.
-
-### Architecture Visualization
-```
-Sequential Network Flow:
-
-Input Data          Layer 1            Layer 2            Layer 3         Output
-[32, 784]    →    Linear(784,256)  →  ReLU()  →      Linear(256,10)   →  [32, 10]
-  MNIST            Feature           Non-linear        Classification      Class
-  Images          Extraction         Activation         Layer             Scores
-    ↓                 ↓                 ↓                 ↓                 ↓
-"What do I see?" → "Extract edges" → "Activate patterns" → "Classify" → "It's a 7!"
-```
-
-### Sequential vs Manual Chaining
-```
-# Manual approach (tedious and error-prone):
-def forward(x):
-    x = layer1.forward(x)
-    x = layer2.forward(x)
-    x = layer3.forward(x)
-    return x
-
-# Sequential approach (clean and automatic):
-model = Sequential(layer1, layer2, layer3)
-output = model.forward(x)
-```
-
-### Parameter Management
-```
-Sequential Parameter Collection:
-┌─────────────────┐
-│ Layer 1: Linear │ → params: [weight1, bias1]
-├─────────────────┤
-│ Layer 2: ReLU   │ → params: [] (no learnable params)
-├─────────────────┤
-│ Layer 3: Linear │ → params: [weight3, bias3]
-└─────────────────┘
-         ↓
-  model.parameters() = [weight1, bias1, weight3, bias3]
-```
-"""
-
-# %% nbgrader={"grade": false, "grade_id": "sequential-container", "solution": true}
-class Sequential:
-    """
-    Sequential container for chaining multiple layers.
-
-    Applies layers in order: output = layer_n(...layer_2(layer_1(input)))
-    This is the most common way to build neural networks.
-    """
-
-    def __init__(self, *layers):
-        """
-        Initialize sequential container with list of layers.
-
-        TODO: Store layers for sequential application
-
-        EXAMPLE:
-        >>> model = Sequential(
-        ...     Linear(784, 128),
-        ...     ReLU(),  # Would be from Module 02
-        ...     Linear(128, 10)
-        ... )
-        """
-        ### BEGIN SOLUTION
-        self.layers = list(layers)
-        ### END SOLUTION
-
-    def forward(self, x):
-        """
-        Forward pass through all layers in sequence.
-
-        TODO: Apply each layer to the output of the previous layer
-
-        APPROACH:
-        1. Start with input x
-        2. Apply each layer in order
-        3. Return final output
-
-        EXAMPLE:
-        >>> x = Tensor(np.random.randn(32, 784))
-        >>> output = model.forward(x)  # Goes through Linear -> ReLU -> Linear
-        """
-        ### BEGIN SOLUTION
-        output = x
-        for layer in self.layers:
-            output = layer.forward(output)
-        return output
-        ### END SOLUTION
-
-    def parameters(self):
-        """
-        Return all parameters from all layers.
-
-        TODO: Collect parameters from all layers that have them
-
-        APPROACH:
-        1. Iterate through layers
-        2. Check if layer has parameters() method
-        3. Collect all parameters into single list
-        """
-        ### BEGIN SOLUTION
-        all_params = []
-        for layer in self.layers:
-            if hasattr(layer, 'parameters'):
-                all_params.extend(layer.parameters())
-        return all_params
-        ### END SOLUTION
-
-    def __len__(self):
-        """Return number of layers."""
-        return len(self.layers)
-
-    def __getitem__(self, idx):
-        """Access layer by index."""
-        return self.layers[idx]
-
-    def __repr__(self):
-        """String representation showing all layers."""
-        layer_strs = [f"  ({i}): {layer}" for i, layer in enumerate(self.layers)]
-        return f"Sequential(\n" + "\n".join(layer_strs) + "\n)"
-
-# %% [markdown]
-"""
-### 🔬 Unit Test: Sequential Container
-This test validates our Sequential container works correctly.
-**What we're testing**: Layer chaining, parameter collection, forward pass
-**Why it matters**: Enables building multi-layer neural networks
-**Expected**: Correct data flow, parameter aggregation, shape preservation
-"""
-
-# %% nbgrader={"grade": true, "grade_id": "test-sequential", "locked": true, "points": 15}
-def test_unit_sequential_container():
-    """🔬 Test Sequential container implementation."""
-    print("🔬 Unit Test: Sequential Container...")
-
-    # Create simple mock activation for testing
-    class MockReLU:
-        def forward(self, x):
-            return Tensor(np.maximum(0, x.data))
-        def __repr__(self):
-            return "ReLU()"
-
-    # Test sequential creation
-    model = Sequential(
-        Linear(784, 128),
-        MockReLU(),
-        Linear(128, 10)
-    )
-
-    assert len(model) == 3
-    assert isinstance(model[0], Linear)
-    assert isinstance(model[1], MockReLU)
-    assert isinstance(model[2], Linear)
-
-    # Test forward pass
-    x = Tensor(np.random.randn(32, 784))
-    output = model.forward(x)
-    assert output.shape == (32, 10), f"Expected shape (32, 10), got {output.shape}"
-
-    # Test parameter collection (should have params from Linear layers only)
-    params = model.parameters()
-    expected_params = 4  # 2 weights + 2 biases from 2 Linear layers
-    assert len(params) == expected_params, f"Expected {expected_params} parameters, got {len(params)}"
-
-    # Verify parameters are from correct layers
-    layer1_params = model[0].parameters()
-    layer3_params = model[2].parameters()
-    expected_param_count = len(layer1_params) + len(layer3_params)
-    assert len(params) == expected_param_count
-
-    print("✅ Sequential container works correctly!")
-
-# Test will be run in main block
 
 # %% [markdown]
 """
@@ -733,7 +551,7 @@ def test_unit_dropout_layer():
 """
 ## 4. Integration: Bringing It Together
 
-Now that we've built all three layer types, let's see how they work together to create a complete neural network architecture. We'll build a realistic 3-layer MLP for MNIST digit classification.
+Now that we've built both layer types, let's see how they work together to create a complete neural network architecture. We'll manually compose a realistic 3-layer MLP for MNIST digit classification.
 
 ### Network Architecture Visualization
 ```
@@ -755,25 +573,25 @@ Data Flow:
 
 ### Parameter Count Analysis
 ```
-Parameter Breakdown:
+Parameter Breakdown (Manual Layer Composition):
 ┌─────────────────────────────────────────────────────────────┐
-│ Layer 1: Linear(784 → 256)                                 │
+│ layer1 = Linear(784 → 256)                               │
 │   Weights: 784 × 256 = 200,704 params                      │
 │   Bias:    256 params                                       │
 │   Subtotal: 200,960 params                                  │
 ├─────────────────────────────────────────────────────────────┤
-│ Layer 2: ReLU + Dropout                                     │
+│ activation1 = ReLU(), dropout1 = Dropout(0.5)              │
 │   Parameters: 0 (no learnable weights)                      │
 ├─────────────────────────────────────────────────────────────┤
-│ Layer 3: Linear(256 → 128)                                 │
+│ layer2 = Linear(256 → 128)                               │
 │   Weights: 256 × 128 = 32,768 params                       │
 │   Bias:    128 params                                       │
 │   Subtotal: 32,896 params                                   │
 ├─────────────────────────────────────────────────────────────┤
-│ Layer 4: ReLU + Dropout                                     │
+│ activation2 = ReLU(), dropout2 = Dropout(0.3)              │
 │   Parameters: 0 (no learnable weights)                      │
 ├─────────────────────────────────────────────────────────────┤
-│ Layer 5: Linear(128 → 10)                                  │
+│ layer3 = Linear(128 → 10)                                │
 │   Weights: 128 × 10 = 1,280 params                         │
 │   Bias:    10 params                                        │
 │   Subtotal: 1,290 params                                    │
@@ -786,12 +604,12 @@ Parameter Breakdown:
 # %% nbgrader={"grade": false, "grade_id": "integration-demo", "solution": true}
 def demonstrate_layer_integration():
     """
-    Demonstrate layers working together in a realistic neural network.
+    Demonstrate layers working together with manual composition.
 
-    This simulates a 3-layer MLP for MNIST classification:
+    This shows how individual layer components work together:
     784 → 256 → 128 → 10
     """
-    print("🔗 Integration Demo: 3-Layer MLP")
+    print("🔗 Integration Demo: Manual Layer Composition")
     print("Architecture: 784 → 256 → 128 → 10 (MNIST classifier)")
 
     # Create mock activation for demonstration
@@ -803,39 +621,50 @@ def demonstrate_layer_integration():
         def __repr__(self):
             return "ReLU()"
 
-    # Build the network
-    model = Sequential(
-        Linear(784, 256),   # Input layer
-        MockReLU(),         # Activation
-        Dropout(0.5),       # Regularization
-        Linear(256, 128),   # Hidden layer
-        MockReLU(),         # Activation
-        Dropout(0.3),       # Less aggressive dropout
-        Linear(128, 10)     # Output layer
-    )
+    # Build individual layers
+    layer1 = Linear(784, 256)   # Input layer
+    activation1 = MockReLU()    # Activation
+    dropout1 = Dropout(0.5)     # Regularization
+    layer2 = Linear(256, 128)   # Hidden layer
+    activation2 = MockReLU()    # Activation
+    dropout2 = Dropout(0.3)     # Less aggressive dropout
+    layer3 = Linear(128, 10)    # Output layer
 
-    print(f"\nModel architecture:")
-    print(model)
+    print(f"\nLayers:")
+    print(f"  Layer 1: {layer1}")
+    print(f"  Activation 1: {activation1}")
+    print(f"  Dropout 1: {dropout1}")
+    print(f"  Layer 2: {layer2}")
+    print(f"  Activation 2: {activation2}")
+    print(f"  Dropout 2: {dropout2}")
+    print(f"  Layer 3: {layer3}")
 
     # Test forward pass with MNIST-like data
     batch_size = 32
     x = Tensor(np.random.randn(batch_size, 784))
     print(f"\nInput shape: {x.shape}")
 
-    # Forward pass
-    output = model.forward(x)
+    # Manual forward pass (explicit layer chaining)
+    x = layer1.forward(x)
+    x = activation1.forward(x)
+    x = dropout1.forward(x)
+    x = layer2.forward(x)
+    x = activation2.forward(x)
+    x = dropout2.forward(x)
+    output = layer3.forward(x)
+
     print(f"Output shape: {output.shape}")
 
     # Count parameters
-    params = model.parameters()
-    total_params = sum(p.size for p in params)
+    all_params = layer1.parameters() + layer2.parameters() + layer3.parameters()
+    total_params = sum(p.size for p in all_params)
     print(f"\nTotal parameters: {total_params:,}")
 
     # Break down by layer
     print("\nParameter breakdown:")
-    layer1_params = sum(p.size for p in model[0].parameters())  # Linear(784, 256)
-    layer2_params = sum(p.size for p in model[3].parameters())  # Linear(256, 128)
-    layer3_params = sum(p.size for p in model[6].parameters())  # Linear(128, 10)
+    layer1_params = sum(p.size for p in layer1.parameters())
+    layer2_params = sum(p.size for p in layer2.parameters())
+    layer3_params = sum(p.size for p in layer3.parameters())
 
     print(f"  Layer 1 (784→256): {layer1_params:,} params")
     print(f"  Layer 2 (256→128): {layer2_params:,} params")
@@ -845,7 +674,7 @@ def demonstrate_layer_integration():
     memory_mb = total_params * 4 / (1024 * 1024)  # 4 bytes per float32
     print(f"\nMemory usage: ~{memory_mb:.1f} MB (weights only)")
 
-    return model, output
+    return output
 
 # Integration demo will be run in main block
 
@@ -889,7 +718,7 @@ Layer Operation Complexity:
 │   Bias Addition: O(batch × out_features)                    │
 │   Dominant: Matrix multiplication                           │
 ├─────────────────────────────────────────────────────────────┤
-│ Sequential Forward Pass:                                     │
+│ Multi-layer Forward Pass:                                   │
 │   Sum of all layer complexities                             │
 │   Memory: Peak of all intermediate activations              │
 ├─────────────────────────────────────────────────────────────┤
@@ -925,8 +754,8 @@ def analyze_layer_memory():
 
         print(f"({in_feat:4d}, {out_feat:4d}) → {weight_memory/1024:7.1f} KB → {bias_memory/1024:6.1f} KB → {total_memory/1024:7.1f} KB")
 
-    # Analyze Sequential memory scaling
-    print("\n💡 Sequential Model Memory Scaling:")
+    # Analyze multi-layer memory scaling
+    print("\n💡 Multi-layer Model Memory Scaling:")
     hidden_sizes = [128, 256, 512, 1024, 2048]
 
     for hidden_size in hidden_sizes:
@@ -993,12 +822,11 @@ def test_module():
     # Run all unit tests
     print("Running unit tests...")
     test_unit_linear_layer()
-    test_unit_sequential_container()
     test_unit_dropout_layer()
 
     print("\nRunning integration scenarios...")
 
-    # Test realistic neural network construction
+    # Test realistic neural network construction with manual composition
     print("🔬 Integration Test: Multi-layer Network...")
 
     # Create mock activation for integration test
@@ -1010,39 +838,46 @@ def test_module():
         def __repr__(self):
             return "MockActivation()"
 
-    # Build a complete 3-layer network
-    network = Sequential(
-        Linear(784, 128),
-        MockActivation(),
-        Dropout(0.5),
-        Linear(128, 64),
-        MockActivation(),
-        Dropout(0.3),
-        Linear(64, 10)
-    )
+    # Build individual layers for manual composition
+    layer1 = Linear(784, 128)
+    activation1 = MockActivation()
+    dropout1 = Dropout(0.5)
+    layer2 = Linear(128, 64)
+    activation2 = MockActivation()
+    dropout2 = Dropout(0.3)
+    layer3 = Linear(64, 10)
 
-    # Test end-to-end forward pass
+    # Test end-to-end forward pass with manual composition
     batch_size = 16
     x = Tensor(np.random.randn(batch_size, 784))
 
-    # Forward pass
-    output = network.forward(x)
+    # Manual forward pass
+    x = layer1.forward(x)
+    x = activation1.forward(x)
+    x = dropout1.forward(x)
+    x = layer2.forward(x)
+    x = activation2.forward(x)
+    x = dropout2.forward(x)
+    output = layer3.forward(x)
+
     assert output.shape == (batch_size, 10), f"Expected output shape ({batch_size}, 10), got {output.shape}"
 
-    # Test parameter counting
-    params = network.parameters()
-    expected_layers_with_params = 3  # Three Linear layers
-    linear_layers = [layer for layer in network.layers if isinstance(layer, Linear)]
-    total_expected_params = sum(len(layer.parameters()) for layer in linear_layers)
-    assert len(params) == total_expected_params, f"Expected {total_expected_params} parameters, got {len(params)}"
+    # Test parameter counting from individual layers
+    all_params = layer1.parameters() + layer2.parameters() + layer3.parameters()
+    expected_params = 6  # 3 weights + 3 biases from 3 Linear layers
+    assert len(all_params) == expected_params, f"Expected {expected_params} parameters, got {len(all_params)}"
 
     # Test all parameters have requires_grad=True
-    for param in params:
+    for param in all_params:
         assert param.requires_grad == True, "All parameters should have requires_grad=True"
 
-    # Test dropout in inference mode
-    output_train = network.forward(x)  # Default training=True in our simplified version
-    # Note: In full implementation, we'd test training vs inference mode
+    # Test individual layer functionality
+    test_x = Tensor(np.random.randn(4, 784))
+    # Test dropout in training vs inference
+    dropout_test = Dropout(0.5)
+    train_output = dropout_test.forward(test_x, training=True)
+    infer_output = dropout_test.forward(test_x, training=False)
+    assert np.array_equal(test_x.data, infer_output.data), "Inference mode should pass through unchanged"
 
     print("✅ Multi-layer network integration works!")
 
@@ -1062,13 +897,13 @@ Congratulations! You've built the fundamental building blocks that make neural n
 
 ### Key Accomplishments
 - Built Linear layers with proper Xavier initialization and parameter management
-- Implemented Sequential containers for chaining operations with automatic parameter collection
 - Created Dropout layers for regularization with training/inference mode handling
+- Demonstrated manual layer composition for building neural networks
 - Analyzed memory scaling and computational complexity of layer operations
 - All tests pass ✅ (validated by `test_module()`)
 
 ### Ready for Next Steps
-Your layer implementation enables building complete neural networks! The Linear layer provides learnable transformations, Sequential chains them together, and Dropout prevents overfitting.
+Your layer implementation enables building complete neural networks! The Linear layer provides learnable transformations, manual composition chains them together, and Dropout prevents overfitting.
 
 Export with: `tito module complete 03_layers`
 
