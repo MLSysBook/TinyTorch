@@ -79,8 +79,6 @@ The `import_previous_module()` function below helps us cleanly import components
 #| export
 
 import numpy as np
-import matplotlib.pyplot as plt
-import time
 from typing import Optional
 
 def import_previous_module(module_name: str, component_name: str):
