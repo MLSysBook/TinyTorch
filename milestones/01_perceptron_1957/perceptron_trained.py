@@ -178,42 +178,57 @@ def evaluate_model(model, X, y):
 def main():
     """Main training pipeline."""
     
-    # Introduction
+    # 1. OPENING - Historical Context
     console.print(Panel.fit(
-        "[bold cyan]The Perceptron - WITH TRAINING[/bold cyan]\n\n"
-        "[dim]Watch the SAME architecture learn through gradient descent![/dim]\n"
-        "[dim]Random weights → Intelligent predictions in ~30 seconds[/dim]",
+        "[bold cyan]🎯 1957 - The First Neural Network[/bold cyan]\n\n"
+        "[dim]Watch gradient descent transform random weights into intelligence![/dim]\n"
+        "[dim]Frank Rosenblatt's perceptron - the spark that started it all.[/dim]",
+        title="🔥 1957 Perceptron Revolution",
         border_style="cyan",
         box=box.DOUBLE
     ))
     
-    # Generate data
-    console.print("\n[bold]Step 1:[/bold] Generating linearly separable data...")
+    # 2. ARCHITECTURE - Visual Understanding
+    console.print("\n[bold]🏗️ Architecture:[/bold]")
+    console.print("""
+    ┌─────────────┐    ┌──────────────┐    ┌──────────┐
+    │   Input     │    │   Weights    │    │  Output  │
+    │   (x₁, x₂)  │───▶│ w₁·x₁ + w₂·x₂│───▶│    ŷ     │
+    │  2 features │    │   + bias     │    │ binary   │
+    └─────────────┘    └──────────────┘    └──────────┘
+    """)
+    console.print("  • Single-layer perceptron (simplest possible network)")
+    console.print("  • Input: 2 features")
+    console.print("  • Output: 1 binary decision (0 or 1)")
+    console.print("  • Total parameters: 3 (2 weights + 1 bias)\n")
+    
+    # 3. STEPS - Numbered Training Process
+    console.print("[bold yellow]Step 1:[/bold yellow] Generate linearly separable data...")
     X, y = generate_data(n_samples=100, seed=42)  # Fixed seed for reproducibility
     console.print(f"  ✓ Created {len(X.data)} samples (50 per class)")
     
-    # Create model
-    console.print("\n[bold]Step 2:[/bold] Creating perceptron with random weights...")
+    console.print("\n[bold yellow]Step 2:[/bold yellow] Create perceptron with random weights...")
     model = Perceptron(input_size=2, output_size=1)
-    
-    # Evaluate BEFORE training
     acc_before, w_before, b_before, _ = evaluate_model(model, X, y)
+    console.print(f"  Initial weights: w₁={w_before.flatten()[0]:.3f}, w₂={w_before.flatten()[1]:.3f}, b={b_before.flatten()[0]:.3f}")
     console.print(f"  ❌ Accuracy BEFORE training: {acc_before:.1%} (random guessing)")
     
-    # Train the model
-    console.print("\n[bold]Step 3:[/bold] Training with gradient descent...")
+    console.print("\n[bold yellow]Step 3:[/bold yellow] Training with gradient descent...")
+    console.print("  Epochs: 100, Learning rate: 0.1")
     history = train_perceptron(model, X, y, epochs=100, lr=0.1)
     
-    # Evaluate AFTER training
+    console.print("\n[bold yellow]Step 4:[/bold yellow] Evaluate trained model...")
     acc_after, w_after, b_after, predictions = evaluate_model(model, X, y)
+    console.print(f"  Final weights: w₁={w_after.flatten()[0]:.3f}, w₂={w_after.flatten()[1]:.3f}, b={b_after.flatten()[0]:.3f}")
+    console.print(f"  ✅ Accuracy AFTER training: {acc_after:.1%}")
     
-    # Show transformation
+    # 4. RESULTS TABLE - Before/After Comparison
     console.print("\n")
-    table = Table(title="🎯 The Transformation", box=box.ROUNDED)
-    table.add_column("Metric", style="cyan")
-    table.add_column("Before Training", style="red")
-    table.add_column("After Training", style="green", justify="right")
-    table.add_column("Improvement", justify="center")
+    table = Table(title="🎯 Training Results", box=box.ROUNDED)
+    table.add_column("Metric", style="cyan", width=20)
+    table.add_column("Before Training", style="yellow")
+    table.add_column("After Training", style="green")
+    table.add_column("Improvement", style="magenta")
     
     table.add_row(
         "Accuracy",
@@ -245,7 +260,17 @@ def main():
     
     console.print(table)
     
-    # Celebratory summary
+    # 5. SAMPLE PREDICTIONS - Real Outputs
+    console.print("\n[bold]Sample Predictions:[/bold]")
+    n_samples = min(10, len(y.data))
+    for i in range(n_samples):
+        true_val = int(y.data.flatten()[i])
+        pred_val = int(predictions.data.flatten()[i])
+        status = "✓" if pred_val == true_val else "✗"
+        color = "green" if pred_val == true_val else "red"
+        console.print(f"  {status} True: {true_val}, Predicted: {pred_val}", style=color)
+    
+    # 6. CELEBRATION - Victory!
     console.print("\n")
     if acc_after >= 0.9:
         console.print(Panel.fit(
