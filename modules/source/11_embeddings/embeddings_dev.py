@@ -201,6 +201,7 @@ Now let's build the core embedding layer that performs efficient token-to-vector
 """
 
 # %% nbgrader={"grade": false, "grade_id": "embedding-class", "solution": true}
+#| export
 class Embedding:
     """
     Learnable embedding layer that maps token indices to dense vectors.
@@ -402,6 +403,7 @@ Let's build trainable positional embeddings that can learn position-specific pat
 """
 
 # %% nbgrader={"grade": false, "grade_id": "positional-encoding", "solution": true}
+#| export
 class PositionalEncoding:
     """
     Learnable positional encoding layer.
