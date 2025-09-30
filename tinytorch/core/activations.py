@@ -37,7 +37,7 @@ class Sigmoid:
         EXAMPLE:
         >>> sigmoid = Sigmoid()
         >>> x = Tensor([-2, 0, 2])
-        >>> result = sigmoid.forward(x)
+        >>> result = sigmoid(x)
         >>> print(result.data)
         [0.119, 0.5, 0.881]  # All values between 0 and 1
 
@@ -79,7 +79,7 @@ class ReLU:
         EXAMPLE:
         >>> relu = ReLU()
         >>> x = Tensor([-2, -1, 0, 1, 2])
-        >>> result = relu.forward(x)
+        >>> result = relu(x)
         >>> print(result.data)
         [0, 0, 0, 1, 2]  # Negative values become 0, positive unchanged
 
@@ -90,6 +90,10 @@ class ReLU:
         result = np.maximum(0, x.data)
         return Tensor(result)
         ### END SOLUTION
+
+    def __call__(self, x: Tensor) -> Tensor:
+        """Allows the activation to be called like a function."""
+        return self.forward(x)
 
     def backward(self, grad: Tensor) -> Tensor:
         """Compute gradient (implemented in Module 05)."""
@@ -117,7 +121,7 @@ class Tanh:
         EXAMPLE:
         >>> tanh = Tanh()
         >>> x = Tensor([-2, 0, 2])
-        >>> result = tanh.forward(x)
+        >>> result = tanh(x)
         >>> print(result.data)
         [-0.964, 0.0, 0.964]  # Range (-1, 1), symmetric around 0
 
@@ -128,6 +132,10 @@ class Tanh:
         result = np.tanh(x.data)
         return Tensor(result)
         ### END SOLUTION
+
+    def __call__(self, x: Tensor) -> Tensor:
+        """Allows the activation to be called like a function."""
+        return self.forward(x)
 
     def backward(self, grad: Tensor) -> Tensor:
         """Compute gradient (implemented in Module 05)."""
@@ -157,7 +165,7 @@ class GELU:
         EXAMPLE:
         >>> gelu = GELU()
         >>> x = Tensor([-1, 0, 1])
-        >>> result = gelu.forward(x)
+        >>> result = gelu(x)
         >>> print(result.data)
         [-0.159, 0.0, 0.841]  # Smooth, like ReLU but differentiable everywhere
 
@@ -171,6 +179,10 @@ class GELU:
         result = x.data * sigmoid_part
         return Tensor(result)
         ### END SOLUTION
+
+    def __call__(self, x: Tensor) -> Tensor:
+        """Allows the activation to be called like a function."""
+        return self.forward(x)
 
     def backward(self, grad: Tensor) -> Tensor:
         """Compute gradient (implemented in Module 05)."""
@@ -201,7 +213,7 @@ class Softmax:
         EXAMPLE:
         >>> softmax = Softmax()
         >>> x = Tensor([1, 2, 3])
-        >>> result = softmax.forward(x)
+        >>> result = softmax(x)
         >>> print(result.data)
         [0.090, 0.245, 0.665]  # Sums to 1.0, larger inputs get higher probability
 
@@ -225,6 +237,10 @@ class Softmax:
         result = exp_values / exp_sum
         return Tensor(result)
         ### END SOLUTION
+
+    def __call__(self, x: Tensor, dim: int = -1) -> Tensor:
+        """Allows the activation to be called like a function."""
+        return self.forward(x, dim)
 
     def backward(self, grad: Tensor) -> Tensor:
         """Compute gradient (implemented in Module 05)."""
