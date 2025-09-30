@@ -256,6 +256,7 @@ Both give the same result, but the stable version never overflows!
 """
 
 # %% nbgrader={"grade": false, "grade_id": "log_softmax", "solution": true}
+#| export
 def log_softmax(x: Tensor, dim: int = -1) -> Tensor:
     """
     Compute log-softmax with numerical stability.

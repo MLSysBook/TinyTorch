@@ -153,6 +153,14 @@ datasets/*
 !datasets/tiny/
 !datasets/README.md
 !datasets/download_*.py
+
+# Milestone datasets (downloaded, not committed)
+milestones/datasets/
+milestones/*/data/*.gz
+milestones/*/data/mnist/
+milestones/*/data/cifar*/
+# BUT allow small .npz datasets in milestone data folders
+!milestones/*/data/*.npz
 *.csv
 # *.npz  - Don't ignore .npz globally, some are tiny datasets
 *.npy

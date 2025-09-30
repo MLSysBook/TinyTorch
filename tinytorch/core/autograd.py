@@ -16,7 +16,7 @@
 # ╚═══════════════════════════════════════════════════════════════════════════════╝
 # %% auto 0
 __all__ = ['Function', 'AddBackward', 'MulBackward', 'MatmulBackward', 'SumBackward', 'ReLUBackward', 'SigmoidBackward',
-           'MSEBackward', 'BCEBackward', 'enable_autograd']
+           'MSEBackward', 'BCEBackward', 'CrossEntropyBackward', 'enable_autograd']
 
 # %% ../../modules/source/05_autograd/autograd_dev.ipynb 1
 import numpy as np
@@ -350,6 +350,51 @@ class BCEBackward(Function):
         return None,
 
 # %% ../../modules/source/05_autograd/autograd_dev.ipynb 24
+class CrossEntropyBackward(Function):
+    """
+    Gradient computation for Cross-Entropy Loss.
+    
+    CrossEntropy: L = -mean(log_softmax(logits)[targets])
+    
+    The gradient with respect to logits is remarkably elegant:
+    ∂L/∂logits = (softmax(logits) - one_hot(targets)) / N
+    
+    This is one of the most beautiful results in machine learning:
+    - The gradient is simply the difference between predictions and targets
+    - It naturally scales with how wrong we are
+    - It's numerically stable when computed via softmax
+    """
+    
+    def __init__(self, logits, targets):
+        """Initialize with logits and target class indices."""
+        super().__init__(logits)
+        self.targets_data = targets.data.astype(int)
+        self.batch_size = logits.data.shape[0]
+        self.num_classes = logits.data.shape[1]
+    
+    def apply(self, grad_output):
+        """Compute gradient for cross-entropy loss."""
+        logits, = self.saved_tensors
+        
+        if isinstance(logits, Tensor) and logits.requires_grad:
+            # Compute softmax probabilities
+            # Using stable softmax: subtract max for numerical stability
+            logits_data = logits.data
+            max_logits = np.max(logits_data, axis=1, keepdims=True)
+            exp_logits = np.exp(logits_data - max_logits)
+            softmax = exp_logits / np.sum(exp_logits, axis=1, keepdims=True)
+            
+            # Create one-hot encoding of targets
+            one_hot = np.zeros((self.batch_size, self.num_classes), dtype=np.float32)
+            one_hot[np.arange(self.batch_size), self.targets_data] = 1.0
+            
+            # Gradient: (softmax - one_hot) / batch_size
+            grad = (softmax - one_hot) / self.batch_size
+            
+            return grad * grad_output,
+        return None,
+
+# %% ../../modules/source/05_autograd/autograd_dev.ipynb 25
 def enable_autograd():
     """
     Enable gradient tracking for all Tensor operations.
@@ -551,13 +596,14 @@ def enable_autograd():
     # Patch activations and losses to track gradients
     try:
         from tinytorch.core.activations import Sigmoid, ReLU
-        from tinytorch.core.losses import BinaryCrossEntropyLoss, MSELoss
+        from tinytorch.core.losses import BinaryCrossEntropyLoss, MSELoss, CrossEntropyLoss
         
         # Store original methods
         _original_sigmoid_forward = Sigmoid.forward
         _original_relu_forward = ReLU.forward
         _original_bce_forward = BinaryCrossEntropyLoss.forward
         _original_mse_forward = MSELoss.forward
+        _original_ce_forward = CrossEntropyLoss.forward
         
         def tracked_sigmoid_forward(self, x):
             """Sigmoid with gradient tracking."""
@@ -614,11 +660,35 @@ def enable_autograd():
             
             return result
         
+        def tracked_ce_forward(self, logits, targets):
+            """Cross-entropy loss with gradient tracking."""
+            from tinytorch.core.losses import log_softmax
+            
+            # Compute log-softmax for numerical stability
+            log_probs = log_softmax(logits, dim=-1)
+            
+            # Select log-probabilities for correct classes
+            batch_size = logits.shape[0]
+            target_indices = targets.data.astype(int)
+            selected_log_probs = log_probs.data[np.arange(batch_size), target_indices]
+            
+            # Return negative mean
+            ce_loss = -np.mean(selected_log_probs)
+            
+            result = Tensor(ce_loss)
+            
+            if logits.requires_grad:
+                result.requires_grad = True
+                result._grad_fn = CrossEntropyBackward(logits, targets)
+            
+            return result
+        
         # Install patched methods
         Sigmoid.forward = tracked_sigmoid_forward
         ReLU.forward = tracked_relu_forward
         BinaryCrossEntropyLoss.forward = tracked_bce_forward
         MSELoss.forward = tracked_mse_forward
+        CrossEntropyLoss.forward = tracked_ce_forward
         
     except ImportError:
         # Activations/losses not yet available (happens during module development)
