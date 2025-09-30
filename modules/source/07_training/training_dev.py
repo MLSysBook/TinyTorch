@@ -41,15 +41,12 @@ Let's get started!
 
 ## 📦 Where This Code Lives in the Final Package
 
-**Learning Side:** You work in modules/07_training/training_dev.py
-**Building Side:** Code exports to tinytorch.core.training
+**Learning Side:** You work in `modules/07_training/training_dev.py`  
+**Building Side:** Code exports to `tinytorch.core.training`
 
 ```python
-# Final package structure:
-from tinytorch.core.training import Trainer, CosineSchedule, clip_grad_norm  # This module
-from tinytorch.core.tensor import Tensor  # Foundation (Module 01)
-from tinytorch.core.optimizers import SGD, AdamW  # Parameter updates (Module 06)
-from tinytorch.core.losses import CrossEntropyLoss  # Error measurement (Module 04)
+# How to use this module:
+from tinytorch.core.training import Trainer, CosineSchedule, clip_grad_norm
 ```
 
 **Why this matters:**
@@ -845,6 +842,13 @@ Final validation that everything works together correctly.
 
 
 
+
+def import_previous_module(module_name: str, component_name: str):
+    import sys
+    import os
+    sys.path.append(os.path.join(os.path.dirname(__file__), '..', module_name))
+    module = __import__(f"{module_name.split('_')[1]}_dev")
+    return getattr(module, component_name)
 
 # %% [markdown]
 """

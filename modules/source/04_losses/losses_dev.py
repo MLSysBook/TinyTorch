@@ -70,13 +70,31 @@ import matplotlib.pyplot as plt
 import time
 from typing import Optional
 
-# Import from previous modules
-### BEGIN SOLUTION
-import sys
-import os
-sys.path.append(os.path.join(os.path.dirname(__file__), '..', '01_tensor'))
-from tensor_dev import Tensor
-### END SOLUTION
+# %% [markdown]
+"""
+## 📋 Module Prerequisites & Setup
+
+This module builds on previous TinyTorch components. Here's what we need and why:
+
+**Required Components:**
+- **Tensor** (Module 01): Foundation for all loss computations
+- **Linear** (Module 03): For testing loss functions with realistic predictions  
+- **ReLU** (Module 02): For building test networks that generate realistic outputs
+
+**Integration Helper:**
+The `import_previous_module()` function below helps us cleanly import components from previous modules during development and testing.
+"""
+
+# %%
+def import_previous_module(module_name: str, component_name: str):
+    import sys
+    import os
+    sys.path.append(os.path.join(os.path.dirname(__file__), '..', module_name))
+    module = __import__(f"{module_name.split('_')[1]}_dev")
+    return getattr(module, component_name)
+
+# Import from previous modules using our helper
+Tensor = import_previous_module('01_tensor', 'Tensor')
 
 # %% [markdown]
 """
@@ -1241,6 +1259,7 @@ def analyze_production_patterns():
 Final validation that everything works together correctly.
 """
 
+
 # %% nbgrader={"grade": true, "grade_id": "test_module", "locked": true, "points": 20}
 def test_module():
     """
@@ -1263,8 +1282,13 @@ def test_module():
 
     print("\nRunning integration scenarios...")
 
-    # Test realistic end-to-end scenario
+    # Test realistic end-to-end scenario with previous modules
     print("🔬 Integration Test: Realistic training scenario...")
+
+    # Import components from previous modules using standardized helper
+    Tensor = import_previous_module('01_tensor', 'Tensor')
+    Linear = import_previous_module('03_layers', 'Linear')
+    ReLU = import_previous_module('02_activations', 'ReLU')
 
     # Simulate a complete prediction -> loss computation pipeline
 
