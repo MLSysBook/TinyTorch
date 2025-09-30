@@ -357,7 +357,7 @@ def test_unit_tensordataset():
 
     # Test basic functionality
     features = Tensor([[1, 2], [3, 4], [5, 6]])  # 3 samples, 2 features
-    labels = Tensor([0, 1, 0])                    # 3 labels
+    labels = Tensor([0, 1, 0])                   # 3 labels
 
     dataset = TensorDataset(features, labels)
 
@@ -645,6 +645,45 @@ Module 08 (DataLoader)          Examples & Milestones
    (Learn mechanics)              (Apply to real data)
 ```
 
+### Understanding Image Data
+
+**What does image data actually look like?**
+
+Images are just 2D arrays of numbers (pixels). Here are actual 8×8 handwritten digits:
+
+```
+Digit "5" (8×8):        Digit "3" (8×8):        Digit "8" (8×8):
+ 0  0 12 13  5  0  0  0   0  0 11 12  0  0  0  0   0  0 10 14  8  1  0  0
+ 0  0 13 15 10  0  0  0   0  2 16 16 16  7  0  0   0  0 16 15 15  9  0  0
+ 0  3 15 13 16  7  0  0   0  0  8 16  8  0  0  0   0  0 15  5  5 13  0  0
+ 0  8 13  6 15  4  0  0   0  0  0 12 13  0  0  0   0  1 16  5  5 13  0  0
+ 0  0  0  6 16  5  0  0   0  0  1 16 15  9  0  0   0  6 16 16 16 16  1  0
+ 0  0  5 15 16  9  0  0   0  0 14 16 16 16  7  0   1 16  3  1  1 15  1  0
+ 0  0  9 16  9  0  0  0   0  5 16  8  8 16  0  0   0  9 16 16 16 15  0  0
+ 0  0  0  0  0  0  0  0   0  3 16 16 16 12  0  0   0  0  0  0  0  0  0  0
+
+Visual representation:           
+░█████░          ░█████░          ░█████░
+░█░░░█░          ░░░░░█░          █░░░░█░
+░░░░█░░          ░░███░░          ░█████░
+░░░█░░░          ░░░░█░░          █░░░░█░
+░░█░░░░          ░█████░          ░█████░
+```
+
+**Shape transformations in DataLoader:**
+
+```
+Individual Sample (from Dataset):
+  image: (8, 8)      ← Single 8×8 image
+  label: scalar      ← Single digit (0-9)
+
+After DataLoader batching (batch_size=32):
+  images: (32, 8, 8)  ← Stack of 32 images
+  labels: (32,)       ← Array of 32 labels
+  
+This is what your model sees during training!
+```
+
 ### Quick Start with Real Data
 
 **Tiny Datasets (ships with TinyTorch):**
@@ -657,12 +696,18 @@ labels = Tensor(data['labels'])  # (1797,)
 
 dataset = TensorDataset(images, labels)
 loader = DataLoader(dataset, batch_size=32, shuffle=True)
+
+# Each batch contains real digit images!
+for batch_images, batch_labels in loader:
+    # batch_images: (32, 8, 8) - 32 digit images
+    # batch_labels: (32,) - their labels (0-9)
+    break
 ```
 
 **Full Datasets (for serious training):**
 ```python
-# See milestones/03_mlp_revival_1986/ for MNIST download
-# See milestones/04_cnn_revolution_1998/ for CIFAR-10 download
+# See milestones/03_mlp_revival_1986/ for MNIST download (28×28 images)
+# See milestones/04_cnn_revolution_1998/ for CIFAR-10 download (32×32×3 images)
 ```
 
 ### What You've Accomplished
