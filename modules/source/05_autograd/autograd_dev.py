@@ -702,6 +702,34 @@ class SigmoidBackward(Function):
         return None,
 
 
+# %% nbgrader={"grade": false, "grade_id": "mse-backward", "solution": true}
+#| export
+class MSEBackward(Function):
+    """
+    Gradient computation for Mean Squared Error Loss.
+    
+    MSE: L = mean((predictions - targets)²)
+    Derivative: ∂L/∂predictions = 2 * (predictions - targets) / N
+    """
+    
+    def __init__(self, predictions, targets):
+        """Initialize with predictions and targets."""
+        super().__init__(predictions)
+        self.targets_data = targets.data
+        self.num_samples = np.size(targets.data)
+    
+    def apply(self, grad_output):
+        """Compute gradient for MSE loss."""
+        predictions, = self.saved_tensors
+        
+        if isinstance(predictions, Tensor) and predictions.requires_grad:
+            # Gradient: 2 * (predictions - targets) / N
+            grad = 2.0 * (predictions.data - self.targets_data) / self.num_samples
+            
+            return grad * grad_output,
+        return None,
+
+
 # %% nbgrader={"grade": false, "grade_id": "bce-backward", "solution": true}
 #| export
 class BCEBackward(Function):
@@ -937,11 +965,12 @@ def enable_autograd():
     # Patch activations and losses to track gradients
     try:
         from tinytorch.core.activations import Sigmoid
-        from tinytorch.core.losses import BinaryCrossEntropyLoss
+        from tinytorch.core.losses import BinaryCrossEntropyLoss, MSELoss
         
         # Store original methods
         _original_sigmoid_forward = Sigmoid.forward
         _original_bce_forward = BinaryCrossEntropyLoss.forward
+        _original_mse_forward = MSELoss.forward
         
         def tracked_sigmoid_forward(self, x):
             """Sigmoid with gradient tracking."""
@@ -972,9 +1001,25 @@ def enable_autograd():
             
             return result
         
+        def tracked_mse_forward(self, predictions, targets):
+            """MSE loss with gradient tracking."""
+            # Compute MSE loss
+            diff = predictions.data - targets.data
+            squared_diff = diff ** 2
+            mse = np.mean(squared_diff)
+            
+            result = Tensor(mse)
+            
+            if predictions.requires_grad:
+                result.requires_grad = True
+                result._grad_fn = MSEBackward(predictions, targets)
+            
+            return result
+        
         # Install patched methods
         Sigmoid.forward = tracked_sigmoid_forward
         BinaryCrossEntropyLoss.forward = tracked_bce_forward
+        MSELoss.forward = tracked_mse_forward
         
     except ImportError:
         # Activations/losses not yet available (happens during module development)

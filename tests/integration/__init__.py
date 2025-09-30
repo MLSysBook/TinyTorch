@@ -1,12 +1,14 @@
 """
-Integration tests for TinyTorch modules.
+Integration tests for TinyTorch.
 
-These tests verify that individual modules integrate correctly with the package:
-- Export correctly to the package
-- Can be imported without errors  
-- Basic functionality works
-- Don't conflict with other modules
+These tests validate that multiple modules work together correctly.
+They catch issues that unit tests miss, like:
+- Gradient flow through entire training pipelines
+- Module compatibility and interface contracts
+- End-to-end training scenarios
 
-This is different from checkpoint tests which validate complete capabilities.
-Integration tests are quick validation that runs after every module completion.
+Critical for catching bugs like:
+- Missing autograd integration
+- Shape mismatches in broadcasting
+- Optimizer parameter updates
 """
