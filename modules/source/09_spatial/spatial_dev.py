@@ -66,59 +66,14 @@ import sys
 import os
 import time
 
-# Import dependencies from other modules
-sys.path.append(os.path.join(os.path.dirname(__file__), '..', '01_tensor'))
-from tensor_dev import Tensor
-
-sys.path.append(os.path.join(os.path.dirname(__file__), '..', '03_layers'))
-from layers_dev import Module
-
-# Note: Keeping simplified implementations for reference during development
-class _SimplifiedTensor:
-        """Simplified tensor for spatial operations development."""
-
-        def __init__(self, data, requires_grad=False):
-            self.data = np.array(data, dtype=np.float32)
-            self.shape = self.data.shape
-            self.requires_grad = requires_grad
-            self.grad = None
-
-        def __repr__(self):
-            return f"Tensor(shape={self.shape}, data=\n{self.data})"
-
-        def __add__(self, other):
-            if isinstance(other, Tensor):
-                return Tensor(self.data + other.data)
-            return Tensor(self.data + other)
-
-        def __mul__(self, other):
-            if isinstance(other, Tensor):
-                return Tensor(self.data * other.data)
-            return Tensor(self.data * other)
-
-        def sum(self):
-            return Tensor(np.sum(self.data))
-
-        def mean(self):
-            return Tensor(np.mean(self.data))
-
-    # Create a simple Module base class for inheritance
-    class Module:
-        """Simple base class for neural network modules."""
-        def __init__(self):
-            pass
-
-        def forward(self, x):
-            raise NotImplementedError("Subclasses must implement forward()")
-
-        def parameters(self):
-            """Return list of parameters for this module."""
-            params = []
-            for attr_name in dir(self):
-                attr = getattr(self, attr_name)
-                if hasattr(attr, 'data') and hasattr(attr, 'requires_grad'):
-                    params.append(attr)
-            return params
+# Import dependencies from tinytorch package
+try:
+    # Try package imports first (for installed package)
+    from tinytorch.core.tensor import Tensor
+except ImportError:
+    # Fall back to development imports (for local development)
+    sys.path.append(os.path.join(os.path.dirname(__file__), '..', '01_tensor'))
+    from tensor_dev import Tensor
 
 # %% [markdown]
 """
@@ -346,7 +301,7 @@ This reveals why convolution is expensive: O(B×C_out×H×W×K_h×K_w×C_in) ope
 
 #| export
 
-class Conv2d(Module):
+class Conv2d:
     """
     2D Convolution layer for spatial feature extraction.
 
@@ -731,7 +686,7 @@ For input (1, 64, 224, 224) with 2×2 pooling:
 
 #| export
 
-class MaxPool2d(Module):
+class MaxPool2d:
     """
     2D Max Pooling layer for spatial dimension reduction.
 
@@ -928,7 +883,7 @@ Memory access pattern identical to MaxPool, just different aggregation!
 
 #| export
 
-class AvgPool2d(Module):
+class AvgPool2d:
     """
     2D Average Pooling layer for spatial dimension reduction.
 
@@ -1420,7 +1375,7 @@ spanning 7×7 regions of original image!
 
 #| export
 
-class SimpleCNN(Module):
+class SimpleCNN:
     """
     Simple CNN demonstrating spatial operations integration.
 
