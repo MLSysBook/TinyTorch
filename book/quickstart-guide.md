@@ -106,6 +106,23 @@ After completing your first modules:
 
 </div>
 
+## 🏆 Unlock Historical Milestones
+
+As you progress, **prove what you've built** by recreating history's greatest ML breakthroughs:
+
+<div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 2rem; border-radius: 0.5rem; margin: 1.5rem 0; color: white;">
+
+**After Module 04**: Build **Rosenblatt's 1957 Perceptron** - the first trainable neural network  
+**After Module 06**: Solve the **1969 XOR Crisis** with multi-layer networks  
+**After Module 08**: Achieve **95%+ accuracy on MNIST** with 1986 backpropagation  
+**After Module 09**: Hit **75%+ on CIFAR-10** with 1998 CNNs - your North Star goal! 🎯
+
+**📖 See [Journey Through ML History](chapters/milestones-overview.html)** for complete milestone demonstrations.
+
+</div>
+
+**Why Milestones Matter**: These aren't toy demos - they're historically significant achievements proving YOUR implementations work at production scale!
+
 ## 🎯 What You Just Accomplished
 
 In 15 minutes, you've:
