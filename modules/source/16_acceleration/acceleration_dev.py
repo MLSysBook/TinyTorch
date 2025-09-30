@@ -44,16 +44,12 @@ Let's optimize for speed!
 
 ## 📦 Where This Code Lives in the Final Package
 
-**Learning Side:** You work in modules/16_acceleration/acceleration_dev.py
-**Building Side:** Code exports to tinytorch.optimization.acceleration
+**Learning Side:** You work in `modules/16_acceleration/acceleration_dev.py`  
+**Building Side:** Code exports to `tinytorch.optimization.acceleration`
 
 ```python
-# Final package structure:
-from tinytorch.optimization.acceleration import (
-    vectorized_matmul, fused_gelu, MixedPrecisionTrainer
-)  # This module
-from tinytorch.profiling.profiler import Profiler  # Module 15
-from tinytorch.core.tensor import Tensor  # Foundation
+# How to use this module:
+from tinytorch.optimization.acceleration import vectorized_matmul, fused_gelu, MixedPrecisionTrainer
 ```
 
 **Why this matters:**

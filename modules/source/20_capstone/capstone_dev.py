@@ -44,17 +44,12 @@ This capstone represents the culmination of your journey from basic tensors to a
 """
 ## 📦 Where This Code Lives in the Final Package
 
-**Learning Side:** You work in modules/20_capstone/capstone_dev.py
-**Building Side:** Code exports to tinytorch.applications.tinygpt
+**Learning Side:** You work in `modules/20_capstone/capstone_dev.py`  
+**Building Side:** Code exports to `tinytorch.applications.tinygpt`
 
 ```python
-# Final package structure:
-from tinytorch.applications.tinygpt import TinyGPT, FullPipeline  # This module
-from tinytorch.core.tensor import Tensor  # Module 01
-from tinytorch.core.layers import Linear, Sequential  # Module 03
-from tinytorch.models.transformer import GPT, TransformerBlock  # Module 13
-from tinytorch.optimization.quantization import quantize_model  # Module 17
-from tinytorch.benchmarking.benchmark import Benchmark  # Module 19
+# How to use this module:
+from tinytorch.applications.tinygpt import TinyGPT, FullPipeline
 ```
 
 **Why this matters:**

@@ -40,14 +40,12 @@ Let's transform tokens into intelligence!
 
 ## 📦 Where This Code Lives in the Final Package
 
-**Learning Side:** You work in modules/11_embeddings/embeddings_dev.py
-**Building Side:** Code exports to tinytorch.text.embeddings
+**Learning Side:** You work in `modules/11_embeddings/embeddings_dev.py`  
+**Building Side:** Code exports to `tinytorch.text.embeddings`
 
 ```python
-# Final package structure:
-from tinytorch.text.embeddings import Embedding, PositionalEncoding, create_sinusoidal_embeddings  # This module
-from tinytorch.core.tensor import Tensor  # Foundation (Module 01)
-from tinytorch.core.layers import Linear  # Dependencies (Module 03)
+# How to use this module:
+from tinytorch.text.embeddings import Embedding, PositionalEncoding, create_sinusoidal_embeddings
 ```
 
 **Why this matters:**
