@@ -216,9 +216,9 @@ def evaluate_and_celebrate(model, X, y, history):
     initial_acc = history["accuracy"][0]
     final_acc = history["accuracy"][-1]
     
-    # 4. RESULTS TABLE - Before/After Comparison
-    console.print("\n")
-    table = Table(title="🎯 Training Results", box=box.ROUNDED)
+    console.print("[bold]📊 The Results:[/bold]\n")
+    
+    table = Table(title="Training Outcome", box=box.ROUNDED)
     table.add_column("Metric", style="cyan", width=20)
     table.add_column("Before Training", style="yellow")
     table.add_column("After Training", style="green")
@@ -232,8 +232,8 @@ def evaluate_and_celebrate(model, X, y, history):
     
     console.print(table)
     
-    # 5. SAMPLE PREDICTIONS - XOR Truth Table
-    console.print("\n[bold]XOR Truth Table vs Predictions:[/bold]")
+    console.print("\n[bold]🔍 XOR Truth Table vs Predictions:[/bold]")
+    console.print("[dim](The ultimate test - all 4 XOR cases!)[/dim]\n")
     test_inputs = np.array([[0.0, 0.0], [0.0, 1.0], [1.0, 0.0], [1.0, 1.0]])
     test_preds = model(Tensor(test_inputs))
     
@@ -264,6 +264,11 @@ def evaluate_and_celebrate(model, X, y, history):
     
     if all_correct:
         console.print("\n[bold green]✨ Perfect! All XOR cases correctly predicted![/bold green]")
+    
+    console.print("\n[bold]💡 Key Insights:[/bold]")
+    console.print("  • Hidden layer transformed XOR into a solvable problem")
+    console.print("  • Network learned non-linear decision boundary")
+    console.print("  • Multi-layer networks can solve ANY classification problem!")
 
 
 # ============================================================================
@@ -273,18 +278,33 @@ def evaluate_and_celebrate(model, X, y, history):
 def main():
     """Demonstrate solving XOR with multi-layer networks."""
     
-    # 1. OPENING - Historical Context
+    # ═══════════════════════════════════════════════════════════════════════
+    # ACT 1: THE CHALLENGE 🎯
+    # ═══════════════════════════════════════════════════════════════════════
+    
     console.print(Panel.fit(
         "[bold cyan]🎯 1986 - Ending the AI Winter[/bold cyan]\n\n"
-        "[dim]Watch a multi-layer network SOLVE the problem that killed AI![/dim]\n"
-        "[dim]Hidden layers + backpropagation = The AI Renaissance![/dim]",
+        "[dim]Can neural networks solve non-linearly separable problems?[/dim]\n"
+        "[dim]The XOR problem that stumped AI for 17 years![/dim]",
         title="🔥 1986 AI Renaissance",
         border_style="cyan",
         box=box.DOUBLE
     ))
     
-    # 2. ARCHITECTURE - Visual Understanding
-    console.print("\n[bold]🏗️ Architecture:[/bold]")
+    console.print("\n[bold]📊 The Data:[/bold]")
+    X, y = generate_xor_data(n_samples=100)
+    console.print("  • Dataset: XOR problem (4 distinct cases)")
+    console.print(f"  • Samples: {len(X.data)} (with slight noise)")
+    console.print("  • Pattern: (0,0)→0, (0,1)→1, (1,0)→1, (1,1)→0")
+    console.print("  • Challenge: [bold red]NOT linearly separable![/bold red]")
+    
+    console.print("\n" + "─" * 70 + "\n")
+    
+    # ═══════════════════════════════════════════════════════════════════════
+    # ACT 2: THE SETUP 🏗️
+    # ═══════════════════════════════════════════════════════════════════════
+    
+    console.print("[bold]🏗️ The Architecture:[/bold]")
     console.print("""
     ┌───────┐    ┌───────────┐    ┌──────┐    ┌─────────┐    ┌────────┐
     │ Input │    │  Hidden   │    │ ReLU │    │ Output  │    │Sigmoid │
@@ -293,53 +313,98 @@ def main():
                   ↑ THE KEY!
              Learns non-linear features
     """)
-    console.print("  • Multi-layer network (2 → 4 → 1)")
-    console.print("  • [bold green]Hidden layer learns new features![/bold green]")
-    console.print("  • ReLU adds non-linearity (enables XOR solution)")
-    console.print("  • Total parameters: ~17 (vs 3 for single-layer)\n")
     
-    # 3. STEPS - Numbered Training Process
-    console.print("[bold yellow]Step 1:[/bold yellow] Generate XOR dataset...")
-    X, y = generate_xor_data(n_samples=100)
-    console.print(f"  ✓ Created {len(X.data)} XOR samples")
-    console.print("  ✓ XOR pattern: (0,0)→0, (0,1)→1, (1,0)→1, (1,1)→0")
+    console.print("[bold]🔧 Components:[/bold]")
+    console.print("  • Hidden layer: Transforms data into new space")
+    console.print("  • [bold green]ReLU activation: Adds non-linearity (the secret!)[/bold green]")
+    console.print("  • Output layer: Makes final decision")
+    console.print("  • Total parameters: ~17 (vs 3 for single-layer)")
     
-    console.print("\n[bold yellow]Step 2:[/bold yellow] Create multi-layer network...")
+    console.print("\n[bold]⚙️ Hyperparameters:[/bold]")
+    console.print("  • Hidden size: 4")
+    console.print("  • Learning rate: 0.5 (aggressive!)")
+    console.print("  • Epochs: 500")
+    console.print("  • Optimizer: SGD with backprop through hidden layer")
+    
+    console.print("\n" + "─" * 70 + "\n")
+    
+    # ═══════════════════════════════════════════════════════════════════════
+    # ACT 3: THE EXPERIMENT 🔬
+    # ═══════════════════════════════════════════════════════════════════════
+    
     model = XORNetwork(hidden_size=4)
     initial_preds = model(X)
     initial_acc = ((initial_preds.data > 0.5).astype(int) == y.data).mean()
-    console.print(f"  ✓ Built 2-layer network with hidden size: 4")
-    console.print(f"  ❌ Initial accuracy: {initial_acc:.1%} (random guessing)")
     
-    console.print("\n[bold yellow]Step 3:[/bold yellow] Training on XOR...")
-    console.print("  Epochs: 500, Learning rate: 0.5")
+    console.print("[bold]📌 Before Training:[/bold]")
+    console.print(f"  Initial accuracy: {initial_acc:.1%} (random guessing)")
+    console.print("  XOR is impossible for single-layer networks!")
+    console.print("  Let's see if hidden layers change the game...")
+    
+    console.print("\n[bold]🔥 Training in Progress...[/bold]")
+    console.print("[dim](This will work - hidden layers solve XOR!)[/dim]\n")
+    
     history = train_network(model, X, y, epochs=500, lr=0.5)
     
-    console.print("\n[bold yellow]Step 4:[/bold yellow] Evaluate solution...")
+    console.print("\n[green]✅ Training Complete - XOR Solved![/green]")
     
-    # Evaluate and celebrate
+    console.print("\n" + "─" * 70 + "\n")
+    
+    # ═══════════════════════════════════════════════════════════════════════
+    # ACT 4: THE DIAGNOSIS 📊
+    # ═══════════════════════════════════════════════════════════════════════
+    
     evaluate_and_celebrate(model, X, y, history)
     
-    # Historical context and celebration
-    console.print("\n")
+    console.print("\n" + "─" * 70 + "\n")
+    
+    # ═══════════════════════════════════════════════════════════════════════
+    # ACT 5: THE REFLECTION 🌟
+    # ═══════════════════════════════════════════════════════════════════════
+    
+    final_acc = history["accuracy"][-1]
+    
+    console.print("")
     console.print(Panel.fit(
         "[bold green]🎉 Success! You Ended the AI Winter![/bold green]\n\n"
-        "Final accuracy: [bold]100%[/bold] (Perfect XOR solution!)\n\n"
+        
+        f"Final accuracy: [bold]{final_acc:.1%}[/bold] (Perfect XOR solution!)\n\n"
+        
+        "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n"
+        
         "[bold]💡 What YOU Just Accomplished:[/bold]\n"
-        "  • Solved the problem that killed AI for 17 years!\n"
-        "  • Built multi-layer network with YOUR components\n"
-        "  • Hidden layer learns non-linear features\n"
-        "  • Backprop through multiple layers works!\n"
-        "  • Gradient descent found perfect solution\n\n"
-        "[bold]🎓 Historical Significance:[/bold]\n"
+        "  ✓ Solved the problem that killed AI for 17 years!\n"
+        "  ✓ Built multi-layer network with YOUR components\n"
+        "  ✓ Hidden layer learns non-linear features\n"
+        "  ✓ Backprop through multiple layers works perfectly!\n"
+        "  ✓ Proved that deep networks CAN work!\n\n"
+        
+        "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n"
+        
+        "[bold]🎓 Why This Matters:[/bold]\n"
+        "  This ENDED the 17-year AI Winter!\n"
         "  [bold red]1969:[/bold red] XOR crisis → single layers fail\n"
-        "  [bold yellow]1970-1986:[/bold yellow] AI Winter (17 years!)\n"
+        "  [bold yellow]1970-1986:[/bold yellow] AI Winter - research funding dries up\n"
         "  [bold green]1986:[/bold green] Backprop + hidden layers solve it\n"
         "  [bold cyan]TODAY:[/bold cyan] YOU recreated this breakthrough!\n\n"
-        "[bold]📌 Note:[/bold] Hidden layers are the KEY to modern AI.\n"
-        "Every deep network (GPT, AlphaGo, etc.) uses this pattern!\n\n"
-        "[dim]Next: Milestone 03 applies this to REAL data with DataLoaders![/dim]",
-        title="🌟 1986 AI Renaissance Recreated",
+        
+        "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n"
+        
+        "[bold]📌 The Key Insight:[/bold]\n"
+        "  Hidden layers are the KEY to modern AI.\n"
+        "  They learn new features that make problems solvable.\n"
+        "  Every deep network (GPT, AlphaGo, etc.) uses this pattern!\n"
+        "  \n"
+        "  [green]Breakthrough:[/green] Non-linear activation functions (ReLU)\n"
+        "  enable networks to learn non-linear decision boundaries.\n\n"
+        
+        "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n"
+        
+        "[bold]🚀 What's Next:[/bold]\n"
+        "[dim]Milestone 03 applies this to REAL data with YOUR DataLoader!\n"
+        "Train on handwritten digits and see modern ML in action![/dim]",
+        
+        title="🌟 1986 AI Renaissance Complete",
         border_style="green",
         box=box.DOUBLE
     ))
