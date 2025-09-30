@@ -477,6 +477,10 @@ class Dropout:
         return Tensor(output_data)
         ### END SOLUTION
 
+    def __call__(self, x, training=True):
+        """Allows the layer to be called like a function."""
+        return self.forward(x, training)
+
     def parameters(self):
         """Dropout has no parameters."""
         return []
