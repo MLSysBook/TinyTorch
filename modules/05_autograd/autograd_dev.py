@@ -307,7 +307,7 @@ def test_unit_function_base():
 
     print("✅ Function base class works correctly!")
 
-test_unit_function_base()
+# Test function defined above, will be called in main block
 
 # %% [markdown]
 """
@@ -725,7 +725,7 @@ def test_unit_operation_functions():
 
     print("✅ Operation functions work correctly!")
 
-test_unit_operation_functions()
+# Test function defined above, will be called in main block
 
 # %% [markdown]
 """
@@ -997,7 +997,7 @@ def test_unit_tensor_autograd():
 
     print("✅ Tensor autograd enhancement works correctly!")
 
-test_unit_tensor_autograd()
+# Test function defined above, will be called in main block
 
 # %% [markdown]
 """
@@ -1121,7 +1121,7 @@ def demonstrate_complex_computation_graph():
 
     return z2
 
-demonstrate_complex_computation_graph()
+# Function defined above, will be called in main block
 
 # %% [markdown]
 """
@@ -1202,7 +1202,7 @@ def analyze_autograd_memory():
     print("- Computation graph nodes add overhead")
     print("- Trade-off: 2× memory for automatic gradients")
 
-analyze_autograd_memory()
+# Function defined above, will be called in main block
 
 # %% nbgrader={"grade": false, "grade_id": "analyze-gradient-computation", "solution": true}
 def analyze_gradient_computation():
@@ -1236,7 +1236,7 @@ def analyze_gradient_computation():
     print(f"- Backward: 2× O(n³) operations (gradients for both inputs)")
     print(f"- Total training cost: ~3× forward-only computation")
 
-analyze_gradient_computation()
+# Function defined above, will be called in main block
 
 # %% [markdown]
 """
@@ -1342,12 +1342,27 @@ def test_module():
     print("🎉 ALL TESTS PASSED! Module ready for export.")
     print("Run: tito module complete 05_autograd")
 
-test_module()
+# Test function defined above, will be called in main block
 
 # %%
 if __name__ == "__main__":
     print("🚀 Running Autograd module...")
+
+    # Run all unit tests
+    test_unit_function_base()
+    test_unit_operation_functions()
+    test_unit_tensor_autograd()
+
+    # Run demonstration functions
+    demonstrate_complex_computation_graph()
+
+    # Run analysis functions
+    analyze_autograd_memory()
+    analyze_gradient_computation()
+
+    # Run comprehensive module test
     test_module()
+
     print("✅ Module validation complete!")
 
 # %% [markdown]

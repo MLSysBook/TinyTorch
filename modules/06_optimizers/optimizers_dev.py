@@ -345,8 +345,6 @@ def test_unit_optimizer_base():
 
     print("✅ Base Optimizer works correctly!")
 
-test_unit_optimizer_base()
-
 # %% [markdown]
 """
 ## SGD - Stochastic Gradient Descent
@@ -561,8 +559,6 @@ def test_unit_sgd_optimizer():
     assert np.allclose(param3.data, expected_wd)
 
     print("✅ SGD optimizer works correctly!")
-
-test_unit_sgd_optimizer()
 
 # %% [markdown]
 """
@@ -807,8 +803,6 @@ def test_unit_adam_optimizer():
 
     print("✅ Adam optimizer works correctly!")
 
-test_unit_adam_optimizer()
-
 # %% [markdown]
 """
 ## AdamW - Adam with Decoupled Weight Decay
@@ -1045,8 +1039,6 @@ def test_unit_adamw_optimizer():
 
     print("✅ AdamW optimizer works correctly!")
 
-test_unit_adamw_optimizer()
-
 # %% [markdown]
 """
 ## 4. Integration: Bringing It Together
@@ -1128,8 +1120,6 @@ def demonstrate_optimizer_integration():
     print("- SGD: Large, direct steps")
     print("- Adam: Smaller, adaptive steps")
     print("- AdamW: Similar to Adam but with weight decay effects")
-
-demonstrate_optimizer_integration()
 
 # %% [markdown]
 """
@@ -1214,8 +1204,6 @@ def analyze_optimizer_memory_usage():
     print("- Memory scales linearly with model size")
     print("- Trade-off: More memory for better convergence")
 
-analyze_optimizer_memory_usage()
-
 # %% nbgrader={"grade": false, "grade_id": "optimizer-convergence", "solution": true}
 def analyze_optimizer_convergence_behavior():
     """📊 Analyze convergence behavior of different optimizers."""
@@ -1281,8 +1269,6 @@ def analyze_optimizer_convergence_behavior():
     print("- SGD+Momentum: Faster convergence, less oscillation")
     print("- Adam: Adaptive rates help with different parameter scales")
     print("- AdamW: Similar to Adam with regularization effects")
-
-analyze_optimizer_convergence_behavior()
 
 # %% [markdown]
 """
@@ -1421,12 +1407,26 @@ def test_module():
     print("🎉 ALL TESTS PASSED! Module ready for export.")
     print("Run: tito module complete 06_optimizers")
 
-test_module()
-
 # %%
 if __name__ == "__main__":
     print("🚀 Running Optimizers module...")
+
+    # Run all unit tests
+    test_unit_optimizer_base()
+    test_unit_sgd_optimizer()
+    test_unit_adam_optimizer()
+    test_unit_adamw_optimizer()
+
+    # Run integration demonstrations
+    demonstrate_optimizer_integration()
+
+    # Run analysis functions
+    analyze_optimizer_memory_usage()
+    analyze_optimizer_convergence_behavior()
+
+    # Run final module test
     test_module()
+
     print("✅ Module validation complete!")
 
 # %% [markdown]

@@ -250,7 +250,7 @@ def test_unit_sigmoid():
 
     print("✅ Sigmoid works correctly!")
 
-test_unit_sigmoid()
+# test_unit_sigmoid()  # Moved to main block
 
 # %% [markdown]
 """
@@ -366,7 +366,7 @@ def test_unit_relu():
 
     print("✅ ReLU works correctly!")
 
-test_unit_relu()
+# test_unit_relu()  # Moved to main block
 
 # %% [markdown]
 """
@@ -480,7 +480,7 @@ def test_unit_tanh():
 
     print("✅ Tanh works correctly!")
 
-test_unit_tanh()
+# test_unit_tanh()  # Moved to main block
 
 # %% [markdown]
 """
@@ -603,7 +603,7 @@ def test_unit_gelu():
 
     print("✅ GELU works correctly!")
 
-test_unit_gelu()
+# test_unit_gelu()  # Moved to main block
 
 # %% [markdown]
 """
@@ -742,7 +742,7 @@ def test_unit_softmax():
 
     print("✅ Softmax works correctly!")
 
-test_unit_softmax()
+# test_unit_softmax()  # Moved to main block
 
 # %% [markdown]
 """
@@ -785,7 +785,7 @@ def demonstrate_activations():
     softmax_result = softmax.forward(test_input)
     print(f"Softmax : {np.round(softmax_result.data, 3)} (sum = {np.sum(softmax_result.data):.1f})")
 
-demonstrate_activations()
+# demonstrate_activations()  # Moved to main block
 
 # %% [markdown]
 """
@@ -883,12 +883,25 @@ def test_module():
     print("🎉 ALL TESTS PASSED! Module ready for export.")
     print("Run: tito module complete 02")
 
-test_module()
+# test_module()  # Moved to main block
 
 # %%
 if __name__ == "__main__":
     print("🚀 Running Activations module...")
+
+    # Run individual unit tests
+    test_unit_sigmoid()
+    test_unit_relu()
+    test_unit_tanh()
+    test_unit_gelu()
+    test_unit_softmax()
+
+    # Demonstrate all activations working together
+    demonstrate_activations()
+
+    # Run comprehensive module test
     test_module()
+
     print("✅ Module validation complete!")
 
 # %% [markdown]

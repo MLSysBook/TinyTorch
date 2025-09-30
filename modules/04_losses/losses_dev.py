@@ -301,7 +301,6 @@ def test_unit_log_softmax():
 
     print("✅ log_softmax works correctly with numerical stability!")
 
-test_unit_log_softmax()
 
 # %% [markdown]
 """
@@ -449,7 +448,6 @@ def test_unit_mse_loss():
 
     print("✅ MSELoss works correctly!")
 
-test_unit_mse_loss()
 
 # %% [markdown]
 """
@@ -629,7 +627,6 @@ def test_unit_cross_entropy_loss():
 
     print("✅ CrossEntropyLoss works correctly!")
 
-test_unit_cross_entropy_loss()
 
 # %% [markdown]
 """
@@ -825,7 +822,6 @@ def test_unit_binary_cross_entropy_loss():
 
     print("✅ BinaryCrossEntropyLoss works correctly!")
 
-test_unit_binary_cross_entropy_loss()
 
 # %% [markdown]
 """
@@ -920,7 +916,6 @@ def compare_loss_behaviors():
 
     return mse.data, ce.data, bce.data
 
-mse_result, ce_result, bce_result = compare_loss_behaviors()
 
 # %% nbgrader={"grade": false, "grade_id": "loss_sensitivity", "solution": true}
 def analyze_loss_sensitivity():
@@ -975,7 +970,6 @@ def analyze_loss_sensitivity():
     print("   - BCE grows logarithmically, heavily penalizing wrong confident predictions")
     print("   - Both encourage correct predictions but with different curvatures")
 
-analyze_loss_sensitivity()
 
 # %% [markdown]
 """
@@ -1082,7 +1076,6 @@ def analyze_numerical_stability():
     print("   Without it: exp(700) would cause overflow in standard softmax")
     print("   With it: We can handle arbitrarily large logits safely")
 
-analyze_numerical_stability()
 
 # %% nbgrader={"grade": false, "grade_id": "analyze_loss_memory", "solution": true}
 def analyze_loss_memory():
@@ -1129,7 +1122,6 @@ def analyze_loss_memory():
     print("   - Intermediate activations (softmax) double CE memory")
     print(f"   - For batch=1024, CE needs {ce_memory:.1f}MB just for loss computation")
 
-analyze_loss_memory()
 
 # %% [markdown]
 """
@@ -1232,7 +1224,6 @@ def analyze_production_patterns():
     print("   - Numerical stability becomes critical at scale (FP16 training)")
     print("   - Loss computation is often <5% of total training time")
 
-analyze_production_patterns()
 
 # %% [markdown]
 """
@@ -1307,13 +1298,27 @@ def test_module():
     print("🎉 ALL TESTS PASSED! Module ready for export.")
     print("Run: tito module complete 04")
 
-# Call before module summary
-test_module()
 
 # %%
 if __name__ == "__main__":
     print("🚀 Running Losses module...")
+
+    # Run all unit tests
+    test_unit_log_softmax()
+    test_unit_mse_loss()
+    test_unit_cross_entropy_loss()
+    test_unit_binary_cross_entropy_loss()
+
+    # Run integration and analysis functions
+    mse_result, ce_result, bce_result = compare_loss_behaviors()
+    analyze_loss_sensitivity()
+    analyze_numerical_stability()
+    analyze_loss_memory()
+    analyze_production_patterns()
+
+    # Final module test
     test_module()
+
     print("✅ Module validation complete!")
 
 # %% [markdown]
