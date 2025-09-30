@@ -1041,9 +1041,9 @@ def analyze_advanced_caching_strategies():
     """📊 Explore advanced caching strategies and production trade-offs."""
     print("📊 Advanced KV Caching Strategies Analysis...")
 
-    # Configuration for large-scale analysis
-    seq_len, batch_size = 2048, 16
-    num_layers, num_heads, head_dim = 32, 32, 128  # GPT-3 scale
+    # Configuration for large-scale analysis (reduced for educational demonstration)
+    seq_len, batch_size = 512, 4
+    num_layers, num_heads, head_dim = 12, 16, 64  # Realistic scale for demonstration
 
     print("\n=== Memory Footprint by Precision ===")
 
@@ -1067,8 +1067,8 @@ def analyze_advanced_caching_strategies():
     print("\n=== Sliding Window Analysis ===")
 
     # Compare different window sizes for memory usage
-    full_seq_len = 8192  # Very long sequence
-    window_sizes = [512, 1024, 2048, 4096]
+    full_seq_len = 2048  # Realistic long sequence for demonstration
+    window_sizes = [256, 512, 1024, 2048]
 
     print("Window Size | Memory vs Full | Tokens Lost | Use Case")
     print("-" * 60)
@@ -1096,7 +1096,7 @@ def analyze_advanced_caching_strategies():
 
     # Analyze how caching scales across multiple GPUs
     gpu_configs = [1, 2, 4, 8]
-    large_batch = 64  # Large batch for serving
+    large_batch = 16  # Reasonable batch for demonstration
 
     print("GPUs | Batch/GPU | Cache/GPU | Total Memory | Throughput")
     print("-" * 60)
@@ -1114,9 +1114,9 @@ def analyze_advanced_caching_strategies():
 
     scenarios = [
         ("Real-time Chat", 512, 1, "Low latency critical"),
-        ("Code Completion", 1024, 8, "IDE integration"),
-        ("Batch Translation", 2048, 32, "High throughput"),
-        ("Long Document", 4096, 4, "Context preservation")
+        ("Code Completion", 1024, 4, "IDE integration"),
+        ("Batch Translation", 2048, 8, "High throughput"),
+        ("Long Document", 2048, 4, "Context preservation")
     ]
 
     print("Scenario         | Max Len | Batch | Memory  | Optimal Strategy")
