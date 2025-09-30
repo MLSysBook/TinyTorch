@@ -62,18 +62,8 @@ from tinytorch.core.spatial import Conv2d, MaxPool2d, AvgPool2d
 
 #| export
 import numpy as np
-import sys
-import os
-import time
 
-# Import dependencies from tinytorch package
-try:
-    # Try package imports first (for installed package)
-    from tinytorch.core.tensor import Tensor
-except ImportError:
-    # Fall back to development imports (for local development)
-    sys.path.append(os.path.join(os.path.dirname(__file__), '..', '01_tensor'))
-    from tensor_dev import Tensor
+from tinytorch.core.tensor import Tensor
 
 # %% [markdown]
 """
