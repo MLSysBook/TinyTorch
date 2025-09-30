@@ -64,6 +64,7 @@ import numpy as np
 from rich.console import Console
 from rich.table import Table
 from rich.panel import Panel
+from rich import box
 
 # Add project root to path
 sys.path.insert(0, os.getcwd())
@@ -80,8 +81,6 @@ console = Console()
 
 def generate_xor_data(n_samples=100):
     """Generate XOR dataset with slight noise."""
-    console.print("\n[bold]Step 1:[/bold] Generating XOR dataset...")
-    
     # Generate each XOR case with repetition
     samples_per_case = n_samples // 4
     
@@ -108,10 +107,6 @@ def generate_xor_data(n_samples=100):
     indices = np.random.permutation(n_samples)
     X = X[indices]
     y = y[indices]
-    
-    console.print(f"  ✓ Created [bold]{n_samples}[/bold] XOR samples")
-    console.print(f"  ✓ Problem: [bold yellow]NOT linearly separable[/bold yellow]")
-    console.print(f"  ✓ Solution: [bold green]Use hidden layers![/bold green]")
     
     return Tensor(X), Tensor(y)
 
