@@ -670,6 +670,31 @@ Enhanced: x + y → addition + gradient tracking (if requires_grad=True)
 This approach follows PyTorch 2.0 style - clean, modern, and educational.
 """
 
+# %% nbgrader={"grade": false, "grade_id": "relu-backward", "solution": true}
+#| export
+class ReLUBackward(Function):
+    """
+    Gradient computation for ReLU activation.
+    
+    ReLU: f(x) = max(0, x)
+    Derivative: f'(x) = 1 if x > 0, else 0
+    """
+    
+    def __init__(self, input_tensor):
+        """Initialize with input tensor."""
+        super().__init__(input_tensor)
+    
+    def apply(self, grad_output):
+        """Compute gradient for ReLU."""
+        tensor, = self.saved_tensors
+        
+        if isinstance(tensor, Tensor) and tensor.requires_grad:
+            # ReLU gradient: 1 if x > 0, else 0
+            relu_grad = (tensor.data > 0).astype(np.float32)
+            return grad_output * relu_grad,
+        return None,
+
+
 # %% nbgrader={"grade": false, "grade_id": "sigmoid-backward", "solution": true}
 #| export
 class SigmoidBackward(Function):
@@ -964,11 +989,12 @@ def enable_autograd():
 
     # Patch activations and losses to track gradients
     try:
-        from tinytorch.core.activations import Sigmoid
+        from tinytorch.core.activations import Sigmoid, ReLU
         from tinytorch.core.losses import BinaryCrossEntropyLoss, MSELoss
         
         # Store original methods
         _original_sigmoid_forward = Sigmoid.forward
+        _original_relu_forward = ReLU.forward
         _original_bce_forward = BinaryCrossEntropyLoss.forward
         _original_mse_forward = MSELoss.forward
         
@@ -980,6 +1006,17 @@ def enable_autograd():
             if x.requires_grad:
                 result.requires_grad = True
                 result._grad_fn = SigmoidBackward(x, result)
+            
+            return result
+        
+        def tracked_relu_forward(self, x):
+            """ReLU with gradient tracking."""
+            result_data = np.maximum(0, x.data)
+            result = Tensor(result_data)
+            
+            if x.requires_grad:
+                result.requires_grad = True
+                result._grad_fn = ReLUBackward(x)
             
             return result
         
@@ -1018,6 +1055,7 @@ def enable_autograd():
         
         # Install patched methods
         Sigmoid.forward = tracked_sigmoid_forward
+        ReLU.forward = tracked_relu_forward
         BinaryCrossEntropyLoss.forward = tracked_bce_forward
         MSELoss.forward = tracked_mse_forward
         

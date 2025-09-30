@@ -15,8 +15,8 @@
 # ║     happens! The tinytorch/ directory is just the compiled output.           ║
 # ╚═══════════════════════════════════════════════════════════════════════════════╝
 # %% auto 0
-__all__ = ['Function', 'AddBackward', 'MulBackward', 'MatmulBackward', 'SumBackward', 'SigmoidBackward', 'MSEBackward',
-           'BCEBackward', 'enable_autograd']
+__all__ = ['Function', 'AddBackward', 'MulBackward', 'MatmulBackward', 'SumBackward', 'ReLUBackward', 'SigmoidBackward',
+           'MSEBackward', 'BCEBackward', 'enable_autograd']
 
 # %% ../../modules/source/05_autograd/autograd_dev.ipynb 1
 import numpy as np
@@ -241,6 +241,29 @@ class SumBackward(Function):
         return None,
 
 # %% ../../modules/source/05_autograd/autograd_dev.ipynb 20
+class ReLUBackward(Function):
+    """
+    Gradient computation for ReLU activation.
+    
+    ReLU: f(x) = max(0, x)
+    Derivative: f'(x) = 1 if x > 0, else 0
+    """
+    
+    def __init__(self, input_tensor):
+        """Initialize with input tensor."""
+        super().__init__(input_tensor)
+    
+    def apply(self, grad_output):
+        """Compute gradient for ReLU."""
+        tensor, = self.saved_tensors
+        
+        if isinstance(tensor, Tensor) and tensor.requires_grad:
+            # ReLU gradient: 1 if x > 0, else 0
+            relu_grad = (tensor.data > 0).astype(np.float32)
+            return grad_output * relu_grad,
+        return None,
+
+# %% ../../modules/source/05_autograd/autograd_dev.ipynb 21
 class SigmoidBackward(Function):
     """
     Gradient computation for sigmoid activation.
@@ -270,7 +293,7 @@ class SigmoidBackward(Function):
             return grad_output * sigmoid_grad,
         return None,
 
-# %% ../../modules/source/05_autograd/autograd_dev.ipynb 21
+# %% ../../modules/source/05_autograd/autograd_dev.ipynb 22
 class MSEBackward(Function):
     """
     Gradient computation for Mean Squared Error Loss.
@@ -296,7 +319,7 @@ class MSEBackward(Function):
             return grad * grad_output,
         return None,
 
-# %% ../../modules/source/05_autograd/autograd_dev.ipynb 22
+# %% ../../modules/source/05_autograd/autograd_dev.ipynb 23
 class BCEBackward(Function):
     """
     Gradient computation for Binary Cross-Entropy Loss.
@@ -326,7 +349,7 @@ class BCEBackward(Function):
             return grad * grad_output,
         return None,
 
-# %% ../../modules/source/05_autograd/autograd_dev.ipynb 23
+# %% ../../modules/source/05_autograd/autograd_dev.ipynb 24
 def enable_autograd():
     """
     Enable gradient tracking for all Tensor operations.
@@ -527,11 +550,12 @@ def enable_autograd():
 
     # Patch activations and losses to track gradients
     try:
-        from tinytorch.core.activations import Sigmoid
+        from tinytorch.core.activations import Sigmoid, ReLU
         from tinytorch.core.losses import BinaryCrossEntropyLoss, MSELoss
         
         # Store original methods
         _original_sigmoid_forward = Sigmoid.forward
+        _original_relu_forward = ReLU.forward
         _original_bce_forward = BinaryCrossEntropyLoss.forward
         _original_mse_forward = MSELoss.forward
         
@@ -543,6 +567,17 @@ def enable_autograd():
             if x.requires_grad:
                 result.requires_grad = True
                 result._grad_fn = SigmoidBackward(x, result)
+            
+            return result
+        
+        def tracked_relu_forward(self, x):
+            """ReLU with gradient tracking."""
+            result_data = np.maximum(0, x.data)
+            result = Tensor(result_data)
+            
+            if x.requires_grad:
+                result.requires_grad = True
+                result._grad_fn = ReLUBackward(x)
             
             return result
         
@@ -581,6 +616,7 @@ def enable_autograd():
         
         # Install patched methods
         Sigmoid.forward = tracked_sigmoid_forward
+        ReLU.forward = tracked_relu_forward
         BinaryCrossEntropyLoss.forward = tracked_bce_forward
         MSELoss.forward = tracked_mse_forward
         
