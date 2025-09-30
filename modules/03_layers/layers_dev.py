@@ -603,82 +603,6 @@ Parameter Breakdown (Manual Layer Composition):
 ```
 """
 
-# %% nbgrader={"grade": false, "grade_id": "integration-demo", "solution": true}
-def demonstrate_layer_integration():
-    """
-    Demonstrate layers working together with manual composition.
-
-    This shows how individual layer components work together:
-    784 → 256 → 128 → 10
-    """
-    print("🔗 Integration Demo: Manual Layer Composition")
-    print("Architecture: 784 → 256 → 128 → 10 (MNIST classifier)")
-
-    # Create mock activation for demonstration
-    class MockReLU:
-        def forward(self, x):
-            return Tensor(np.maximum(0, x.data))
-        def parameters(self):
-            return []
-        def __repr__(self):
-            return "ReLU()"
-
-    # Build individual layers
-    layer1 = Linear(784, 256)   # Input layer
-    activation1 = MockReLU()    # Activation
-    dropout1 = Dropout(0.5)     # Regularization
-    layer2 = Linear(256, 128)   # Hidden layer
-    activation2 = MockReLU()    # Activation
-    dropout2 = Dropout(0.3)     # Less aggressive dropout
-    layer3 = Linear(128, 10)    # Output layer
-
-    print(f"\nLayers:")
-    print(f"  Layer 1: {layer1}")
-    print(f"  Activation 1: {activation1}")
-    print(f"  Dropout 1: {dropout1}")
-    print(f"  Layer 2: {layer2}")
-    print(f"  Activation 2: {activation2}")
-    print(f"  Dropout 2: {dropout2}")
-    print(f"  Layer 3: {layer3}")
-
-    # Test forward pass with MNIST-like data
-    batch_size = 32
-    x = Tensor(np.random.randn(batch_size, 784))
-    print(f"\nInput shape: {x.shape}")
-
-    # Manual forward pass (explicit layer chaining)
-    x = layer1.forward(x)
-    x = activation1.forward(x)
-    x = dropout1.forward(x)
-    x = layer2.forward(x)
-    x = activation2.forward(x)
-    x = dropout2.forward(x)
-    output = layer3.forward(x)
-
-    print(f"Output shape: {output.shape}")
-
-    # Count parameters
-    all_params = layer1.parameters() + layer2.parameters() + layer3.parameters()
-    total_params = sum(p.size for p in all_params)
-    print(f"\nTotal parameters: {total_params:,}")
-
-    # Break down by layer
-    print("\nParameter breakdown:")
-    layer1_params = sum(p.size for p in layer1.parameters())
-    layer2_params = sum(p.size for p in layer2.parameters())
-    layer3_params = sum(p.size for p in layer3.parameters())
-
-    print(f"  Layer 1 (784→256): {layer1_params:,} params")
-    print(f"  Layer 2 (256→128): {layer2_params:,} params")
-    print(f"  Layer 3 (128→10):  {layer3_params:,} params")
-
-    # Memory estimate
-    memory_mb = total_params * 4 / (1024 * 1024)  # 4 bytes per float32
-    print(f"\nMemory usage: ~{memory_mb:.1f} MB (weights only)")
-
-    return output
-
-# Integration demo will be run in main block
 
 # %% [markdown]
 """
@@ -831,21 +755,16 @@ def test_module():
     # Test realistic neural network construction with manual composition
     print("🔬 Integration Test: Multi-layer Network...")
 
-    # Create mock activation for integration test
-    class MockActivation:
-        def forward(self, x):
-            return Tensor(np.maximum(0, x.data))  # ReLU-like
-        def parameters(self):
-            return []
-        def __repr__(self):
-            return "MockActivation()"
+    # Import real activation from module 02
+    sys.path.append(os.path.join(os.path.dirname(__file__), '..', '02_activations'))
+    from activations_dev import ReLU
 
     # Build individual layers for manual composition
     layer1 = Linear(784, 128)
-    activation1 = MockActivation()
+    activation1 = ReLU()
     dropout1 = Dropout(0.5)
     layer2 = Linear(128, 64)
-    activation2 = MockActivation()
+    activation2 = ReLU()
     dropout2 = Dropout(0.3)
     layer3 = Linear(64, 10)
 

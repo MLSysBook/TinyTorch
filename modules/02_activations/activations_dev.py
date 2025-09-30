@@ -756,41 +756,6 @@ if __name__ == "__main__":
 Now let's test how all our activation functions work together and understand their different behaviors.
 """
 
-# %% nbgrader={"grade": false, "grade_id": "activation-demo", "solution": true}
-def demonstrate_activations():
-    """
-    Demonstrate all activation functions with the same input.
-
-    This shows how different activations transform the same data differently.
-    """
-    print("🎭 Activation Function Showcase")
-    print("=" * 50)
-
-    # Create test input with range of values
-    test_input = Tensor([-3, -1, 0, 1, 3])
-    print(f"Input: {test_input.data}")
-    print()
-
-    # Test each activation
-    activations = {
-        'Sigmoid': Sigmoid(),
-        'ReLU': ReLU(),
-        'Tanh': Tanh(),
-        'GELU': GELU(),
-    }
-
-    for name, activation in activations.items():
-        result = activation.forward(test_input)
-        print(f"{name:>8}: {np.round(result.data, 3)}")
-
-    # Softmax (different because it normalizes across all values)
-    print()
-    print("Softmax transforms the vector into probabilities:")
-    softmax = Softmax()
-    softmax_result = softmax.forward(test_input)
-    print(f"Softmax : {np.round(softmax_result.data, 3)} (sum = {np.sum(softmax_result.data):.1f})")
-
-# demonstrate_activations()  # Moved to main block
 
 # %% [markdown]
 """
