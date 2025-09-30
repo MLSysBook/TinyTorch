@@ -944,6 +944,9 @@ def test_unit_complete_embedding_system():
         scale_embeddings=True
     )
 
+    # Use same weights to ensure fair comparison
+    embed_scaled.token_embedding.weight = embed_none.token_embedding.weight
+
     output_scaled = embed_scaled.forward(tokens)
     output_unscaled = embed_none.forward(tokens)
 
