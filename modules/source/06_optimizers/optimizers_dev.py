@@ -40,14 +40,12 @@ Let's get started!
 
 ## 📦 Where This Code Lives in the Final Package
 
-**Learning Side:** You work in modules/06_optimizers/optimizers_dev.py
-**Building Side:** Code exports to tinytorch.core.optimizers
+**Learning Side:** You work in `modules/06_optimizers/optimizers_dev.py`  
+**Building Side:** Code exports to `tinytorch.core.optimizers`
 
 ```python
-# Final package structure:
-from tinytorch.core.optimizers import SGD, Adam, AdamW  # This module
-from tinytorch.core.tensor import Tensor  # Foundation from Module 01
-from tinytorch.core.layers import Linear  # Layers from Module 03
+# How to use this module:
+from tinytorch.core.optimizers import SGD, Adam, AdamW
 ```
 
 **Why this matters:**
@@ -1226,6 +1224,13 @@ def analyze_optimizer_convergence_behavior():
 Final validation that everything works together correctly.
 """
 
+def import_previous_module(module_name: str, component_name: str):
+    import sys
+    import os
+    sys.path.append(os.path.join(os.path.dirname(__file__), '..', module_name))
+    module = __import__(f"{module_name.split('_')[1]}_dev")
+    return getattr(module, component_name)
+
 # %% nbgrader={"grade": true, "grade_id": "module-integration", "locked": true, "points": 25}
 def test_module():
     """
@@ -1250,6 +1255,12 @@ def test_module():
 
     # Test realistic neural network optimization scenario
     print("🔬 Integration Test: Multi-layer Network Optimization...")
+
+    # Import components from previous modules using standardized helper
+    Tensor = import_previous_module('01_tensor', 'Tensor')
+    Linear = import_previous_module('03_layers', 'Linear')
+    ReLU = import_previous_module('02_activations', 'ReLU')
+    MSELoss = import_previous_module('04_losses', 'MSELoss')
 
     # Create parameters for a 2-layer network
     # Layer 1: 3 inputs -> 4 hidden

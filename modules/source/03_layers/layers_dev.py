@@ -736,6 +736,13 @@ def analyze_layer_performance():
 Final validation that everything works together correctly.
 """
 
+def import_previous_module(module_name: str, component_name: str):
+    import sys
+    import os
+    sys.path.append(os.path.join(os.path.dirname(__file__), '..', module_name))
+    module = __import__(f"{module_name.split('_')[1]}_dev")
+    return getattr(module, component_name)
+
 # %% nbgrader={"grade": true, "grade_id": "module-integration", "locked": true, "points": 20}
 def test_module():
     """
@@ -759,9 +766,8 @@ def test_module():
     # Test realistic neural network construction with manual composition
     print("🔬 Integration Test: Multi-layer Network...")
 
-    # Import real activation from module 02
-    sys.path.append(os.path.join(os.path.dirname(__file__), '..', '02_activations'))
-    from activations_dev import ReLU
+    # Import real activation from module 02 using standardized helper
+    ReLU = import_previous_module('02_activations', 'ReLU')
 
     # Build individual layers for manual composition
     layer1 = Linear(784, 128)

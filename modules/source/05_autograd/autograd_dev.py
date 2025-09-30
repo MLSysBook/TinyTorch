@@ -45,9 +45,8 @@ By the end of this module, you will:
 **Building Side:** Code exports to `tinytorch.core.autograd`
 
 ```python
-# Final package structure:
+# How to use this module:
 from tinytorch.core.autograd import Function, enable_autograd
-from tinytorch.core.tensor import Tensor  # Enhanced with gradients!
 ```
 
 **Why this matters:**
@@ -1080,3 +1079,10 @@ Export with: `tito module complete 05_autograd`
 
 The gradient engine is alive! Neural networks can now learn! 🔥
 """
+
+def import_previous_module(module_name: str, component_name: str):
+    import sys
+    import os
+    sys.path.append(os.path.join(os.path.dirname(__file__), '..', module_name))
+    module = __import__(f"{module_name.split('_')[1]}_dev")
+    return getattr(module, component_name)
