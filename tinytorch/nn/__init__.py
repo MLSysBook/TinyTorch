@@ -34,8 +34,9 @@ while this infrastructure provides the clean API they expect from PyTorch.
 """
 
 # Import layers from core (these contain the student implementations)  
-from ..core.layers import Linear, Module  # Use the same Module class as layers
-from ..core.spatial import Conv2d
+from ..core.layers import Linear, ReLU, Dropout
+from ..core.activations import Sigmoid
+from ..core.spatial import Conv2d, MaxPool2d, AvgPool2d
 
 # Import transformer components
 from ..core.embeddings import Embedding, PositionalEncoding
