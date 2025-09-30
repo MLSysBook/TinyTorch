@@ -34,18 +34,19 @@ import numpy as np
 sys.path.insert(0, os.getcwd())
 
 # Import TinyTorch components YOU BUILT!
-from tinytorch.core.tensor import Tensor
-from tinytorch.core.layers import Linear
-from tinytorch.core.activations import Sigmoid
+from tinytorch import Tensor, Linear, Sigmoid, BinaryCrossEntropyLoss, SGD
 
-# For training (Modules 04-06)
+# Check if training modules are available
 try:
-    from tinytorch.core.losses import BinaryCrossEntropyLoss
-    from tinytorch.core.optimizers import SGD
+    # Test that all components work
+    _test_linear = Linear(2, 1)
+    _test_sigmoid = Sigmoid()
+    _test_loss = BinaryCrossEntropyLoss()
+    _test_opt = SGD([_test_linear.weight], lr=0.1)
     TRAINING_AVAILABLE = True
-except ImportError as e:
+except Exception as e:
     print(f"⚠️  Training modules not available: {e}")
-    print("Please complete Modules 04-06 first!")
+    print("Please complete Modules 01-06 first!")
     TRAINING_AVAILABLE = False
     sys.exit(1)
 
