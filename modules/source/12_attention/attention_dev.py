@@ -313,6 +313,7 @@ Step-by-Step Attention Computation:
 """
 
 # %% nbgrader={"grade": false, "grade_id": "attention-function", "locked": false, "solution": true}
+#| export
 def scaled_dot_product_attention(Q: Tensor, K: Tensor, V: Tensor, mask: Optional[Tensor] = None) -> Tuple[Tensor, Tensor]:
     """
     Compute scaled dot-product attention.
@@ -526,6 +527,7 @@ This parallelization allows the model to attend to different representation subs
 """
 
 # %% nbgrader={"grade": false, "grade_id": "multihead-attention", "locked": false, "solution": true}
+#| export
 class MultiHeadAttention:
     """
     Multi-head attention mechanism.

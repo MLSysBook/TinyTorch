@@ -853,6 +853,7 @@ Each layer adds information to this stream rather than replacing it, creating a 
 """
 
 # %% nbgrader={"grade": false, "grade_id": "transformer-block", "solution": true}
+#| export
 class TransformerBlock:
     """
     Complete Transformer Block with self-attention, MLP, and residual connections.
