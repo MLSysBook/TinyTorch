@@ -6,700 +6,937 @@
 #       format_name: percent
 #       format_version: '1.3'
 #       jupytext_version: 1.17.1
+#   kernelspec:
+#     display_name: Python 3 (ipykernel)
+#     language: python
+#     name: python3
 # ---
 
 # %% [markdown]
 """
-# Activations - Nonlinear Intelligence for Neural Networks
+# Activations - Intelligence Through Nonlinearity
 
-Welcome to Activations! You'll implement the essential functions that enable neural networks to learn complex patterns.
+Welcome to Activations! Today you'll add the secret ingredient that makes neural networks intelligent: **nonlinearity**.
 
-## 🔗 Building on Previous Learning
-**What You Built Before**:
-- Module 01 (Tensor): N-dimensional arrays with broadcasting
-
-**The Gap**: Linear operations stacked together remain linear - limiting networks to simple patterns.
-
-**This Module's Solution**: Implement ReLU and Softmax activation functions that add nonlinearity, enabling complex learning.
+## 🔗 Prerequisites & Progress
+**You've Built**: Tensor with data manipulation and basic operations
+**You'll Build**: Activation functions that add nonlinearity to transformations
+**You'll Enable**: Neural networks with the ability to learn complex patterns
 
 **Connection Map**:
 ```
-Tensor → Activations → Neural Networks
-(data)    (intelligence)  (complex learning)
+Tensor → Activations → Layers
+(data)   (intelligence) (architecture)
 ```
 
 ## Learning Objectives
-1. **Core Implementation**: Build ReLU and Softmax activation functions
-2. **Conceptual Understanding**: How nonlinearity enables complex pattern learning
-3. **Testing Skills**: Validate activation functions with comprehensive tests
-4. **Integration Knowledge**: Connect activations to neural network systems
+By the end of this module, you will:
+1. Implement 5 core activation functions (Sigmoid, ReLU, Tanh, GELU, Softmax)
+2. Understand how nonlinearity enables neural network intelligence
+3. Test activation behaviors and output ranges
+4. Connect activations to real neural network components
 
-## Build → Test → Use
-1. **Build**: Implement essential activation functions
-2. **Test**: Validate correctness and properties
-3. **Use**: Apply in neural network contexts
+Let's add intelligence to your tensors!
 """
 
-# In[ ]:
+# %% [markdown]
+"""
+## 📦 Where This Code Lives in the Final Package
 
+**Learning Side:** You work in modules/02_activations/activations_dev.py
+**Building Side:** Code exports to tinytorch.core.activations
+
+```python
+# Final package structure:
+from tinytorch.core.activations import Sigmoid, ReLU, Tanh, GELU, Softmax  # This module
+from tinytorch.core.tensor import Tensor  # Foundation (Module 01)
+```
+
+**Why this matters:**
+- **Learning:** Complete activation system in one focused module for deep understanding
+- **Production:** Proper organization like PyTorch's torch.nn.functional with all activation operations together
+- **Consistency:** All activation functions and behaviors in core.activations
+- **Integration:** Works seamlessly with Tensor for complete nonlinear transformations
+"""
+
+# %% nbgrader={"grade": false, "grade_id": "setup", "solution": true}
 #| default_exp core.activations
 
-#| export
 import numpy as np
-import os
-import sys
+from typing import Optional
 
-# Import our tensor foundation
+# Import Tensor from Module 01
 try:
     from tinytorch.core.tensor import Tensor
 except ImportError:
-    # For development - import from local modules
-    sys.path.append(os.path.join(os.path.dirname(__file__), '..', '01_tensor'))
-    from tensor_dev import Tensor
+    # Fallback for development - create a basic Tensor class
+    class Tensor:
+        def __init__(self, data, requires_grad=False):
+            self.data = np.array(data)
+            self.shape = self.data.shape
+            self.requires_grad = requires_grad
+            self.grad = None
 
-# In[ ]:
-
-print("🔥 TinyTorch Activations Module")
-print(f"NumPy version: {np.__version__}")
-print(f"Python version: {sys.version_info.major}.{sys.version_info.minor}")
-print("Ready to build essential activation functions!")
+        def backward(self):
+            pass
 
 # %% [markdown]
 """
-## The Intelligence Layer: How Nonlinearity Enables Learning
+## 1. Introduction - What Makes Neural Networks Intelligent?
 
-Without activation functions, neural networks are just fancy linear algebra. No matter how many layers you stack, they can only learn straight lines. Activation functions add the "intelligence" that enables neural networks to learn curves, patterns, and complex relationships.
+Consider two scenarios:
 
-### The Linearity Problem
-
+**Without Activations (Linear Only):**
 ```
-Linear Network (No Activations):
-Input → Linear → Linear → Linear → Output
-  x   →  Ax    →  B(Ax) →C(B(Ax)) = (CBA)x
-
-Result: Still just a linear function!
-Cannot learn: curves, XOR, complex patterns
+Input → Linear Transform → Output
+[1, 2] → [3, 4] → [11]  # Just weighted sum
 ```
 
-### The Nonlinearity Solution
-
+**With Activations (Nonlinear):**
 ```
-Nonlinear Network (With Activations):
-Input → Linear → ReLU → Linear → ReLU → Output
-  x   →  Ax    → max(0,Ax) → B(·) → max(0,B(·))
-
-Result: Can approximate ANY function!
-Can learn: curves, XOR, images, language
+Input → Linear → Activation → Linear → Activation → Output
+[1, 2] → [3, 4] → [3, 4] → [7] → [7] → Complex Pattern!
 ```
 
-### ReLU: The Intelligence Function
+The magic happens in those activation functions. They introduce **nonlinearity** - the ability to curve, bend, and create complex decision boundaries instead of just straight lines.
 
-ReLU (Rectified Linear Unit) is the most important function in modern AI:
+### Why Nonlinearity Matters
 
+Without activation functions, stacking multiple linear layers is pointless:
 ```
-ReLU Function: f(x) = max(0, x)
-
-   y
-   ▲
-   │   ╱
-   │  ╱  (positive values unchanged)
-   │ ╱
-───┼─────────▶ x
-   │ 0      (negative values → 0)
-   │
-
-Key Properties:
-• Computationally cheap: just comparison and zero
-• Gradient friendly: derivative is 0 or 1
-• Solves vanishing gradients: keeps signal strong
-• Enables deep networks: 100+ layers possible
+Linear(Linear(x)) = Linear(x)  # Same as single layer!
 ```
 
-### Softmax: The Probability Converter
-
-Softmax transforms any numbers into valid probabilities:
-
+With activation functions, each layer can learn increasingly complex patterns:
 ```
-Raw Scores → Softmax → Probabilities
-[2.0, 1.0, 0.1] → [0.66, 0.24, 0.10]
-                   ↑    ↑    ↑
-                   Sum = 1.0 ✓
-                   All ≥ 0   ✓
-                   Larger in → Larger out ✓
-
-Formula: softmax(xᵢ) = exp(xᵢ) / Σⱼ exp(xⱼ)
-
-Use Case: Classification ("What percentage dog vs cat?")
+Layer 1: Simple edges and lines
+Layer 2: Curves and shapes
+Layer 3: Complex objects and concepts
 ```
+
+This is how deep networks build intelligence from simple mathematical operations.
 """
 
 # %% [markdown]
 """
-## Part 1: ReLU - The Foundation of Modern Deep Learning
+## 2. Mathematical Foundations
 
-ReLU transformed deep learning from a curiosity to the technology powering modern AI. Before ReLU, deep networks suffered from vanishing gradients and couldn't learn effectively beyond a few layers. ReLU's simple yet brilliant design solved this problem.
+Each activation function serves a different purpose in neural networks:
 
-### ReLU in Action: Element-wise Processing
+### The Five Essential Activations
 
-```
-Input Tensor:           After ReLU:
-┌─────────────────┐    ┌─────────────────┐
-│ -2.1   0.5   3.2│    │  0.0   0.5   3.2│
-│  1.7  -0.8   2.1│ →  │  1.7   0.0   2.1│
-│ -1.0   4.0  -0.3│    │  0.0   4.0   0.0│
-└─────────────────┘    └─────────────────┘
-      ↓                      ↓
-Negative → 0            Positive → unchanged
-```
+1. **Sigmoid**: Maps to (0, 1) - perfect for probabilities
+2. **ReLU**: Removes negatives - creates sparsity and efficiency
+3. **Tanh**: Maps to (-1, 1) - zero-centered for better training
+4. **GELU**: Smooth ReLU - modern choice for transformers
+5. **Softmax**: Creates probability distributions - essential for classification
 
-### The Dead Neuron Problem
-
-```
-ReLU can "kill" neurons permanently:
-
-Neuron with weights that produce only negative outputs:
-Input: [1, 2, 3] → Linear: weights*input = -5.2 → ReLU: 0
-Input: [4, 1, 2] → Linear: weights*input = -2.8 → ReLU: 0
-Input: [0, 5, 1] → Linear: weights*input = -1.1 → ReLU: 0
-
-Result: Neuron outputs 0 forever (no learning signal)
-This is why proper weight initialization matters!
-```
-
-### Why ReLU Works Better Than Alternatives
-
-```
-Sigmoid: f(x) = 1/(1 + e^(-x))
-Problem: Gradients vanish for |x| > 3
-
-Tanh: f(x) = tanh(x)
-Problem: Gradients vanish for |x| > 2
-
-ReLU: f(x) = max(0, x)
-Solution: Gradient is exactly 1 for x > 0 (no vanishing!)
-```
-
-Now let's implement this game-changing function:
+Let's implement each one with clear explanations and immediate testing!
 """
 
-# %% nbgrader={"grade": false, "grade_id": "relu-class", "solution": true}
+# %% [markdown]
+"""
+## 3. Implementation - Building Activation Functions
 
-#| export
-class ReLU:
-    """
-    ReLU Activation Function: f(x) = max(0, x)
+### 🏗️ Implementation Pattern
 
-    Zeros out negative values, preserves positive values.
-    Essential for modern deep learning.
+Each activation follows this structure:
+```python
+class ActivationName:
+    def forward(self, x: Tensor) -> Tensor:
+        # Apply mathematical transformation
+        # Return new Tensor with result
+
+    def backward(self, grad: Tensor) -> Tensor:
+        # Stub for Module 05 - gradient computation
+        pass
+```
+"""
+
+# %% [markdown]
+"""
+## Sigmoid - The Probability Gatekeeper
+
+Sigmoid maps any real number to the range (0, 1), making it perfect for probabilities and binary decisions.
+
+### Mathematical Definition
+```
+σ(x) = 1/(1 + e^(-x))
+```
+
+### Visual Behavior
+```
+Input:  [-3, -1,  0,  1,  3]
+         ↓   ↓   ↓   ↓   ↓  Sigmoid Function
+Output: [0.05, 0.27, 0.5, 0.73, 0.95]
+```
+
+### ASCII Visualization
+```
+Sigmoid Curve:
+    1.0 ┤     ╭─────
+        │    ╱
+    0.5 ┤   ╱
+        │  ╱
+    0.0 ┤─╱─────────
+       -3  0  3
+```
+
+**Why Sigmoid matters**: In binary classification, we need outputs between 0 and 1 to represent probabilities. Sigmoid gives us exactly that!
+"""
+
+# %% nbgrader={"grade": false, "grade_id": "sigmoid-impl", "solution": true}
+class Sigmoid:
     """
-    
-    def forward(self, x):
+    Sigmoid activation: σ(x) = 1/(1 + e^(-x))
+
+    Maps any real number to (0, 1) range.
+    Perfect for probabilities and binary classification.
+    """
+
+    def forward(self, x: Tensor) -> Tensor:
         """
-        Apply ReLU activation: f(x) = max(0, x)
+        Apply sigmoid activation element-wise.
 
-        Args:
-            x (Tensor): Input tensor
-
-        Returns:
-            Tensor: Output with negatives zeroed
-
-        TODO: Implement ReLU using numpy's maximum function
+        TODO: Implement sigmoid function
 
         APPROACH:
-        1. Validate input is a Tensor
-        2. Use np.maximum(0, x.data) for vectorized operation
-        3. Return new Tensor with result
+        1. Apply sigmoid formula: 1 / (1 + exp(-x))
+        2. Use np.exp for exponential
+        3. Return result wrapped in new Tensor
 
         EXAMPLE:
-            >>> relu = ReLU()
-            >>> x = Tensor([[-1.0, 1.0]])
-            >>> y = relu.forward(x)
-            >>> print(y.data)  # [[0.0, 1.0]]
+        >>> sigmoid = Sigmoid()
+        >>> x = Tensor([-2, 0, 2])
+        >>> result = sigmoid.forward(x)
+        >>> print(result.data)
+        [0.119, 0.5, 0.881]  # All values between 0 and 1
+
+        HINT: Use np.exp(-x.data) for numerical stability
         """
         ### BEGIN SOLUTION
-        # Input validation
-        if not isinstance(x, Tensor):
-            raise TypeError(f"Expected Tensor, got {type(x)}")
+        # Apply sigmoid: 1 / (1 + exp(-x))
+        result = 1.0 / (1.0 + np.exp(-x.data))
+        return Tensor(result)
+        ### END SOLUTION
 
-        # Check for empty tensor
-        if x.data.size == 0:
-            return Tensor(np.array([]))
+    def backward(self, grad: Tensor) -> Tensor:
+        """Compute gradient (implemented in Module 05)."""
+        pass  # Will implement backward pass in Module 05
 
-        # Check for NaN or infinite values
-        if np.any(np.isnan(x.data)) or np.any(np.isinf(x.data)):
-            raise ValueError("Input tensor contains NaN or infinite values")
+# %% [markdown]
+"""
+### 🔬 Unit Test: Sigmoid
+This test validates sigmoid activation behavior.
+**What we're testing**: Sigmoid maps inputs to (0, 1) range
+**Why it matters**: Ensures proper probability-like outputs
+**Expected**: All outputs between 0 and 1, sigmoid(0) = 0.5
+"""
 
-        # Vectorized element-wise maximum with 0
-        # This is the exact operation that revolutionized deep learning!
+# %% nbgrader={"grade": true, "grade_id": "test-sigmoid", "locked": true, "points": 10}
+def test_unit_sigmoid():
+    """🔬 Test Sigmoid implementation."""
+    print("🔬 Unit Test: Sigmoid...")
+
+    sigmoid = Sigmoid()
+
+    # Test basic cases
+    x = Tensor([0.0])
+    result = sigmoid.forward(x)
+    assert np.allclose(result.data, [0.5]), f"sigmoid(0) should be 0.5, got {result.data}"
+
+    # Test range property - all outputs should be in (0, 1)
+    x = Tensor([-10, -1, 0, 1, 10])
+    result = sigmoid.forward(x)
+    assert np.all(result.data > 0) and np.all(result.data < 1), "All sigmoid outputs should be in (0, 1)"
+
+    # Test specific values
+    x = Tensor([-1000, 1000])  # Extreme values
+    result = sigmoid.forward(x)
+    assert np.allclose(result.data[0], 0, atol=1e-10), "sigmoid(-∞) should approach 0"
+    assert np.allclose(result.data[1], 1, atol=1e-10), "sigmoid(+∞) should approach 1"
+
+    print("✅ Sigmoid works correctly!")
+
+test_unit_sigmoid()
+
+# %% [markdown]
+"""
+## ReLU - The Sparsity Creator
+
+ReLU (Rectified Linear Unit) is the most popular activation function. It simply removes negative values, creating sparsity that makes neural networks more efficient.
+
+### Mathematical Definition
+```
+f(x) = max(0, x)
+```
+
+### Visual Behavior
+```
+Input:  [-2, -1,  0,  1,  2]
+         ↓   ↓   ↓   ↓   ↓  ReLU Function
+Output: [ 0,  0,  0,  1,  2]
+```
+
+### ASCII Visualization
+```
+ReLU Function:
+        ╱
+    2  ╱
+      ╱
+    1╱
+    ╱
+   ╱
+  ╱
+─┴─────
+-2  0  2
+```
+
+**Why ReLU matters**: By zeroing negative values, ReLU creates sparsity (many zeros) which makes computation faster and helps prevent overfitting.
+"""
+
+# %% nbgrader={"grade": false, "grade_id": "relu-impl", "solution": true}
+class ReLU:
+    """
+    ReLU activation: f(x) = max(0, x)
+
+    Sets negative values to zero, keeps positive values unchanged.
+    Most popular activation for hidden layers.
+    """
+
+    def forward(self, x: Tensor) -> Tensor:
+        """
+        Apply ReLU activation element-wise.
+
+        TODO: Implement ReLU function
+
+        APPROACH:
+        1. Use np.maximum(0, x.data) for element-wise max with zero
+        2. Return result wrapped in new Tensor
+
+        EXAMPLE:
+        >>> relu = ReLU()
+        >>> x = Tensor([-2, -1, 0, 1, 2])
+        >>> result = relu.forward(x)
+        >>> print(result.data)
+        [0, 0, 0, 1, 2]  # Negative values become 0, positive unchanged
+
+        HINT: np.maximum handles element-wise maximum automatically
+        """
+        ### BEGIN SOLUTION
+        # Apply ReLU: max(0, x)
         result = np.maximum(0, x.data)
         return Tensor(result)
         ### END SOLUTION
-    
-    def forward_(self, x):
-        """
-        Apply ReLU in-place (modifies original tensor).
 
-        Args:
-            x (Tensor): Input tensor to modify
-
-        Returns:
-            Tensor: Same tensor object (modified)
-        """
-        ### BEGIN SOLUTION
-        if not isinstance(x, Tensor):
-            raise TypeError(f"Expected Tensor, got {type(x)}")
-        if x.data.size == 0:
-            return x
-        if np.any(np.isnan(x.data)) or np.any(np.isinf(x.data)):
-            raise ValueError("Input tensor contains NaN or infinite values")
-        np.maximum(0, x.data, out=x.data)
-        return x
-        ### END SOLUTION
-    
-    def __call__(self, x):
-        """Make ReLU callable: relu(x) instead of relu.forward(x)"""
-        return self.forward(x)
-
-# ✅ IMPLEMENTATION CHECKPOINT: ReLU class complete
+    def backward(self, grad: Tensor) -> Tensor:
+        """Compute gradient (implemented in Module 05)."""
+        pass  # Will implement backward pass in Module 05
 
 # %% [markdown]
 """
-## Testing ReLU Implementation
-
-### 🧪 Unit Test: ReLU Activation
-This test validates our ReLU implementation with various input scenarios
-
-**What we're testing**: ReLU's core behavior - zero negatives, preserve positives
-**Why it matters**: ReLU must work perfectly for neural networks to learn
-**Expected**: All negative values become 0, positive values unchanged
-
-### ReLU Test Cases Visualization
-
-```
-Test Case 1 - Basic Functionality:
-Input:  [-2, -1,  0,  1,  2]
-Output: [ 0,  0,  0,  1,  2]
-         ↑   ↑   ↑   ↑   ↑
-         ✓   ✓   ✓   ✓   ✓
-      (all negatives → 0, positives preserved)
-
-Test Case 2 - Matrix Processing:
-Input:  [[-1.5,  2.3],    Output: [[0.0, 2.3],
-         [ 0.0, -3.7]]             [0.0, 0.0]]
-
-Test Case 3 - Edge Cases:
-• Very large positive: 1e6 → 1e6 (no overflow)
-• Very small negative: -1e-6 → 0 (proper handling)
-• Zero exactly: 0.0 → 0.0 (boundary condition)
-```
+### 🔬 Unit Test: ReLU
+This test validates ReLU activation behavior.
+**What we're testing**: ReLU zeros negative values, preserves positive
+**Why it matters**: ReLU's sparsity helps neural networks train efficiently
+**Expected**: Negative → 0, positive unchanged, zero → 0
 """
 
-def test_unit_relu_activation():
-    """
-    Test ReLU activation function.
-
-    Validates that ReLU zeros negatives and preserves positives.
-    """
-    print("🔬 Unit Test: ReLU Activation...")
+# %% nbgrader={"grade": true, "grade_id": "test-relu", "locked": true, "points": 10}
+def test_unit_relu():
+    """🔬 Test ReLU implementation."""
+    print("🔬 Unit Test: ReLU...")
 
     relu = ReLU()
 
-    # Basic functionality test
-    test_input = Tensor([[-2, -1, 0, 1, 2]])
-    result = relu(test_input)
-    expected = np.array([[0, 0, 0, 1, 2]])
+    # Test mixed positive/negative values
+    x = Tensor([-2, -1, 0, 1, 2])
+    result = relu.forward(x)
+    expected = [0, 0, 0, 1, 2]
+    assert np.allclose(result.data, expected), f"ReLU failed, expected {expected}, got {result.data}"
 
-    assert np.array_equal(result.data, expected), f"ReLU failed: expected {expected}, got {result.data}"
+    # Test all negative
+    x = Tensor([-5, -3, -1])
+    result = relu.forward(x)
+    assert np.allclose(result.data, [0, 0, 0]), "ReLU should zero all negative values"
 
-    # 2D tensor test
-    matrix_input = Tensor([[-1, 2], [3, -4]])
-    matrix_result = relu(matrix_input)
-    expected_matrix = np.array([[0, 2], [3, 0]])
+    # Test all positive
+    x = Tensor([1, 3, 5])
+    result = relu.forward(x)
+    assert np.allclose(result.data, [1, 3, 5]), "ReLU should preserve all positive values"
 
-    assert np.array_equal(matrix_result.data, expected_matrix), "ReLU should work with 2D tensors"
+    # Test sparsity property
+    x = Tensor([-1, -2, -3, 1])
+    result = relu.forward(x)
+    zeros = np.sum(result.data == 0)
+    assert zeros == 3, f"ReLU should create sparsity, got {zeros} zeros out of 4"
 
-    # In-place operation test
-    inplace_input = Tensor([[-1, 0, 1]])
-    relu.forward_(inplace_input)
-    expected_inplace = np.array([[0, 0, 1]])
+    print("✅ ReLU works correctly!")
 
-    assert np.array_equal(inplace_input.data, expected_inplace), "In-place ReLU should modify original tensor"
-
-    print("✅ ReLU activation tests passed!")
-
-# Test immediately after implementation
-test_unit_relu_activation()
+test_unit_relu()
 
 # %% [markdown]
 """
-## Part 2: Softmax - Converting Scores to Probabilities
+## Tanh - The Zero-Centered Alternative
 
-Softmax is the bridge between raw neural network outputs and human-interpretable probabilities. It takes any vector of real numbers and transforms it into a valid probability distribution where all values sum to 1.0.
+Tanh (hyperbolic tangent) is like sigmoid but centered around zero, mapping inputs to (-1, 1). This zero-centering helps with gradient flow during training.
 
-### The Probability Transformation Process
-
+### Mathematical Definition
 ```
-Step 1: Raw Neural Network Outputs (can be any values)
-Raw scores: [2.0, 1.0, 0.1]
-
-Step 2: Exponentiation (makes everything positive)
-exp([2.0, 1.0, 0.1]) = [7.39, 2.72, 1.10]
-
-Step 3: Normalization (makes sum = 1.0)
-[7.39, 2.72, 1.10] / (7.39+2.72+1.10) = [0.66, 0.24, 0.10]
-                     ↑                      ↑     ↑     ↑
-                   Sum: 11.21              Total: 1.00 ✓
+f(x) = (e^x - e^(-x))/(e^x + e^(-x))
 ```
 
-### Softmax in Classification
-
+### Visual Behavior
 ```
-Neural Network for Image Classification:
-                    Raw Scores      Softmax      Interpretation
-Input: Dog Image → [2.1, 0.3, -0.8] → [0.75, 0.18, 0.07] → 75% Dog
-                    ↑    ↑     ↑        ↑     ↑     ↑         18% Cat
-                   Dog  Cat   Bird     Dog   Cat   Bird       7% Bird
-
-Key Properties:
-• Larger inputs get exponentially larger probabilities
-• Never produces negative probabilities
-• Always sums to exactly 1.0
-• Differentiable (can backpropagate gradients)
+Input:  [-2,  0,  2]
+         ↓   ↓   ↓  Tanh Function
+Output: [-0.96, 0, 0.96]
 ```
 
-### The Numerical Stability Problem
-
+### ASCII Visualization
 ```
-Raw Softmax Formula: softmax(xᵢ) = exp(xᵢ) / Σⱼ exp(xⱼ)
-
-Problem with large numbers:
-Input: [1000, 999, 998]
-exp([1000, 999, 998]) = [∞, ∞, ∞]  ← Overflow!
-
-Solution - Subtract max before exp:
-x_stable = x - max(x)
-Input: [1000, 999, 998] - 1000 = [0, -1, -2]
-exp([0, -1, -2]) = [1.00, 0.37, 0.14] ← Stable!
+Tanh Curve:
+    1 ┤     ╭─────
+      │    ╱
+    0 ┤───╱─────
+      │  ╱
+   -1 ┤─╱───────
+     -3  0  3
 ```
 
-Now let's implement this essential function:
+**Why Tanh matters**: Unlike sigmoid, tanh outputs are centered around zero, which can help gradients flow better through deep networks.
 """
 
-# %% nbgrader={"grade": false, "grade_id": "softmax-class", "solution": true}
+# %% nbgrader={"grade": false, "grade_id": "tanh-impl", "solution": true}
+class Tanh:
+    """
+    Tanh activation: f(x) = (e^x - e^(-x))/(e^x + e^(-x))
 
-#| export
+    Maps any real number to (-1, 1) range.
+    Zero-centered alternative to sigmoid.
+    """
+
+    def forward(self, x: Tensor) -> Tensor:
+        """
+        Apply tanh activation element-wise.
+
+        TODO: Implement tanh function
+
+        APPROACH:
+        1. Use np.tanh(x.data) for hyperbolic tangent
+        2. Return result wrapped in new Tensor
+
+        EXAMPLE:
+        >>> tanh = Tanh()
+        >>> x = Tensor([-2, 0, 2])
+        >>> result = tanh.forward(x)
+        >>> print(result.data)
+        [-0.964, 0.0, 0.964]  # Range (-1, 1), symmetric around 0
+
+        HINT: NumPy provides np.tanh function
+        """
+        ### BEGIN SOLUTION
+        # Apply tanh using NumPy
+        result = np.tanh(x.data)
+        return Tensor(result)
+        ### END SOLUTION
+
+    def backward(self, grad: Tensor) -> Tensor:
+        """Compute gradient (implemented in Module 05)."""
+        pass  # Will implement backward pass in Module 05
+
+# %% [markdown]
+"""
+### 🔬 Unit Test: Tanh
+This test validates tanh activation behavior.
+**What we're testing**: Tanh maps inputs to (-1, 1) range, zero-centered
+**Why it matters**: Zero-centered activations can help with gradient flow
+**Expected**: All outputs in (-1, 1), tanh(0) = 0, symmetric behavior
+"""
+
+# %% nbgrader={"grade": true, "grade_id": "test-tanh", "locked": true, "points": 10}
+def test_unit_tanh():
+    """🔬 Test Tanh implementation."""
+    print("🔬 Unit Test: Tanh...")
+
+    tanh = Tanh()
+
+    # Test zero
+    x = Tensor([0.0])
+    result = tanh.forward(x)
+    assert np.allclose(result.data, [0.0]), f"tanh(0) should be 0, got {result.data}"
+
+    # Test range property - all outputs should be in (-1, 1)
+    x = Tensor([-10, -1, 0, 1, 10])
+    result = tanh.forward(x)
+    assert np.all(result.data >= -1) and np.all(result.data <= 1), "All tanh outputs should be in [-1, 1]"
+
+    # Test symmetry: tanh(-x) = -tanh(x)
+    x = Tensor([2.0])
+    pos_result = tanh.forward(x)
+    x_neg = Tensor([-2.0])
+    neg_result = tanh.forward(x_neg)
+    assert np.allclose(pos_result.data, -neg_result.data), "tanh should be symmetric: tanh(-x) = -tanh(x)"
+
+    # Test extreme values
+    x = Tensor([-1000, 1000])
+    result = tanh.forward(x)
+    assert np.allclose(result.data[0], -1, atol=1e-10), "tanh(-∞) should approach -1"
+    assert np.allclose(result.data[1], 1, atol=1e-10), "tanh(+∞) should approach 1"
+
+    print("✅ Tanh works correctly!")
+
+test_unit_tanh()
+
+# %% [markdown]
+"""
+## GELU - The Smooth Modern Choice
+
+GELU (Gaussian Error Linear Unit) is a smooth approximation to ReLU that's become popular in modern architectures like transformers. Unlike ReLU's sharp corner, GELU is smooth everywhere.
+
+### Mathematical Definition
+```
+f(x) = x * Φ(x) ≈ x * Sigmoid(1.702 * x)
+```
+Where Φ(x) is the cumulative distribution function of standard normal distribution.
+
+### Visual Behavior
+```
+Input:  [-1,  0,  1]
+         ↓   ↓   ↓  GELU Function
+Output: [-0.16, 0, 0.84]
+```
+
+### ASCII Visualization
+```
+GELU Function:
+        ╱
+    1  ╱
+      ╱
+     ╱
+    ╱
+   ╱ ↙ (smooth curve, no sharp corner)
+  ╱
+─┴─────
+-2  0  2
+```
+
+**Why GELU matters**: Used in GPT, BERT, and other transformers. The smoothness helps with optimization compared to ReLU's sharp corner.
+"""
+
+# %% nbgrader={"grade": false, "grade_id": "gelu-impl", "solution": true}
+class GELU:
+    """
+    GELU activation: f(x) = x * Φ(x) ≈ x * Sigmoid(1.702 * x)
+
+    Smooth approximation to ReLU, used in modern transformers.
+    Where Φ(x) is the cumulative distribution function of standard normal.
+    """
+
+    def forward(self, x: Tensor) -> Tensor:
+        """
+        Apply GELU activation element-wise.
+
+        TODO: Implement GELU approximation
+
+        APPROACH:
+        1. Use approximation: x * sigmoid(1.702 * x)
+        2. Compute sigmoid part: 1 / (1 + exp(-1.702 * x))
+        3. Multiply by x element-wise
+        4. Return result wrapped in new Tensor
+
+        EXAMPLE:
+        >>> gelu = GELU()
+        >>> x = Tensor([-1, 0, 1])
+        >>> result = gelu.forward(x)
+        >>> print(result.data)
+        [-0.159, 0.0, 0.841]  # Smooth, like ReLU but differentiable everywhere
+
+        HINT: The 1.702 constant comes from √(2/π) approximation
+        """
+        ### BEGIN SOLUTION
+        # GELU approximation: x * sigmoid(1.702 * x)
+        # First compute sigmoid part
+        sigmoid_part = 1.0 / (1.0 + np.exp(-1.702 * x.data))
+        # Then multiply by x
+        result = x.data * sigmoid_part
+        return Tensor(result)
+        ### END SOLUTION
+
+    def backward(self, grad: Tensor) -> Tensor:
+        """Compute gradient (implemented in Module 05)."""
+        pass  # Will implement backward pass in Module 05
+
+# %% [markdown]
+"""
+### 🔬 Unit Test: GELU
+This test validates GELU activation behavior.
+**What we're testing**: GELU provides smooth ReLU-like behavior
+**Why it matters**: GELU is used in modern transformers like GPT and BERT
+**Expected**: Smooth curve, GELU(0) ≈ 0, positive values preserved roughly
+"""
+
+# %% nbgrader={"grade": true, "grade_id": "test-gelu", "locked": true, "points": 10}
+def test_unit_gelu():
+    """🔬 Test GELU implementation."""
+    print("🔬 Unit Test: GELU...")
+
+    gelu = GELU()
+
+    # Test zero (should be approximately 0)
+    x = Tensor([0.0])
+    result = gelu.forward(x)
+    assert np.allclose(result.data, [0.0], atol=1e-10), f"GELU(0) should be ≈0, got {result.data}"
+
+    # Test positive values (should be roughly preserved)
+    x = Tensor([1.0])
+    result = gelu.forward(x)
+    assert result.data[0] > 0.8, f"GELU(1) should be ≈0.84, got {result.data[0]}"
+
+    # Test negative values (should be small but not zero)
+    x = Tensor([-1.0])
+    result = gelu.forward(x)
+    assert result.data[0] < 0 and result.data[0] > -0.2, f"GELU(-1) should be ≈-0.16, got {result.data[0]}"
+
+    # Test smoothness property (no sharp corners like ReLU)
+    x = Tensor([-0.001, 0.0, 0.001])
+    result = gelu.forward(x)
+    # Values should be close to each other (smooth)
+    diff1 = abs(result.data[1] - result.data[0])
+    diff2 = abs(result.data[2] - result.data[1])
+    assert diff1 < 0.01 and diff2 < 0.01, "GELU should be smooth around zero"
+
+    print("✅ GELU works correctly!")
+
+test_unit_gelu()
+
+# %% [markdown]
+"""
+## Softmax - The Probability Distributor
+
+Softmax converts any vector into a valid probability distribution. All outputs are positive and sum to exactly 1.0, making it essential for multi-class classification.
+
+### Mathematical Definition
+```
+f(x_i) = e^(x_i) / Σ(e^(x_j))
+```
+
+### Visual Behavior
+```
+Input:  [1, 2, 3]
+         ↓  ↓  ↓  Softmax Function
+Output: [0.09, 0.24, 0.67]  # Sum = 1.0
+```
+
+### ASCII Visualization
+```
+Softmax Transform:
+Raw scores: [1, 2, 3, 4]
+           ↓ Exponential ↓
+          [2.7, 7.4, 20.1, 54.6]
+           ↓ Normalize ↓
+          [0.03, 0.09, 0.24, 0.64]  ← Sum = 1.0
+```
+
+**Why Softmax matters**: In multi-class classification, we need outputs that represent probabilities for each class. Softmax guarantees valid probabilities.
+"""
+
+# %% nbgrader={"grade": false, "grade_id": "softmax-impl", "solution": true}
 class Softmax:
     """
-    Softmax Activation Function: f(x_i) = e^(x_i) / Σ(e^(x_j))
+    Softmax activation: f(x_i) = e^(x_i) / Σ(e^(x_j))
 
-    Converts any vector into a probability distribution.
-    Essential for classification tasks.
+    Converts any vector to a probability distribution.
+    Sum of all outputs equals 1.0.
     """
-    
-    def __init__(self, dim=-1):
-        """
-        Initialize Softmax with dimension specification.
-        
-        Args:
-            dim (int): Dimension along which to apply softmax.
-                      -1 means last dimension (most common)
-                      0 means first dimension, etc.
-                      
-        Examples:
-            Softmax(dim=-1)  # Apply along last dimension (default)
-            Softmax(dim=0)   # Apply along first dimension
-            Softmax(dim=1)   # Apply along second dimension
-        """
-        self.dim = dim
-    
-    def forward(self, x):
-        """
-        Apply Softmax activation with numerical stability.
 
-        Args:
-            x (Tensor): Input tensor containing scores
-
-        Returns:
-            Tensor: Probability distribution (sums to 1)
+    def forward(self, x: Tensor, dim: int = -1) -> Tensor:
+        """
+        Apply softmax activation along specified dimension.
 
         TODO: Implement numerically stable softmax
 
         APPROACH:
-        1. Validate input is a Tensor
-        2. Subtract max for numerical stability
-        3. Compute exponentials: np.exp(x_stable)
-        4. Normalize by sum to create probabilities
+        1. Subtract max for numerical stability: x - max(x)
+        2. Compute exponentials: exp(x - max(x))
+        3. Sum along dimension: sum(exp_values)
+        4. Divide: exp_values / sum
+        5. Return result wrapped in new Tensor
 
         EXAMPLE:
-            >>> softmax = Softmax()
-            >>> x = Tensor([[1.0, 2.0, 3.0]])
-            >>> y = softmax.forward(x)
-            >>> print(np.sum(y.data))  # 1.0
+        >>> softmax = Softmax()
+        >>> x = Tensor([1, 2, 3])
+        >>> result = softmax.forward(x)
+        >>> print(result.data)
+        [0.090, 0.245, 0.665]  # Sums to 1.0, larger inputs get higher probability
+
+        HINTS:
+        - Use np.max(x.data, axis=dim, keepdims=True) for max
+        - Use np.sum(exp_values, axis=dim, keepdims=True) for sum
+        - The max subtraction prevents overflow in exponentials
         """
         ### BEGIN SOLUTION
-        # Input validation
-        if not isinstance(x, Tensor):
-            raise TypeError(f"Expected Tensor, got {type(x)}")
+        # Numerical stability: subtract max to prevent overflow
+        x_max = np.max(x.data, axis=dim, keepdims=True)
+        x_shifted = x.data - x_max
 
-        # Check for empty tensor
-        if x.data.size == 0:
-            raise ValueError("Cannot apply softmax to empty tensor")
+        # Compute exponentials
+        exp_values = np.exp(x_shifted)
 
-        # Check for NaN values (infinite values are handled by max subtraction)
-        if np.any(np.isnan(x.data)):
-            raise ValueError("Input tensor contains NaN values")
+        # Sum along dimension
+        exp_sum = np.sum(exp_values, axis=dim, keepdims=True)
 
-        # Step 1: Numerical stability - subtract maximum value
-        # This prevents exp(large_number) from overflowing to infinity
-        max_vals = np.max(x.data, axis=self.dim, keepdims=True)
-        x_stable = x.data - max_vals
-
-        # Step 2: Compute exponentials of stable values
-        exp_vals = np.exp(x_stable)
-
-        # Step 3: Normalize to create probability distribution
-        sum_exp = np.sum(exp_vals, axis=self.dim, keepdims=True)
-
-        # Handle edge case where sum is zero (shouldn't happen with valid input)
-        if np.any(sum_exp == 0):
-            raise ValueError("Softmax normalization resulted in zero sum")
-
-        result = exp_vals / sum_exp
-
+        # Normalize to get probabilities
+        result = exp_values / exp_sum
         return Tensor(result)
         ### END SOLUTION
-    
-    def __call__(self, x):
-        """Make Softmax callable: softmax(x) instead of softmax.forward(x)"""
-        return self.forward(x)
 
-# ✅ IMPLEMENTATION CHECKPOINT: Softmax class complete
+    def backward(self, grad: Tensor) -> Tensor:
+        """Compute gradient (implemented in Module 05)."""
+        pass  # Will implement backward pass in Module 05
 
 # %% [markdown]
 """
-## Testing Softmax Implementation
-
-### 🧪 Unit Test: Softmax Activation
-This test validates our Softmax implementation for correctness and numerical stability
-
-**What we're testing**: Softmax probability distribution properties
-**Why it matters**: Softmax must create valid probabilities for classification
-**Expected**: All outputs ≥ 0, sum to 1.0, numerically stable with large inputs
-
-### Softmax Test Cases Visualization
-
-```
-Test Case 1 - Basic Probability Distribution:
-Input:  [1.0, 2.0, 3.0]
-Output: [0.09, 0.24, 0.67]  ← Sum = 1.00 ✓, All ≥ 0 ✓
-         ↑     ↑     ↑
-      e^1/Σ e^2/Σ e^3/Σ    (largest input gets largest probability)
-
-Test Case 2 - Numerical Stability:
-Input:  [1000, 999, 998]     ← Would cause overflow without stability trick
-Output: [0.67, 0.24, 0.09]   ← Still produces valid probabilities!
-
-Test Case 3 - Edge Cases:
-• All equal inputs: [1, 1, 1] → [0.33, 0.33, 0.33] (uniform distribution)
-• One dominant: [10, 0, 0] → [≈1.0, ≈0.0, ≈0.0] (winner-take-all)
-• Negative inputs: [-1, -2, -3] → [0.67, 0.24, 0.09] (still works!)
-
-Test Case 4 - Batch Processing:
-Input Matrix:  [[1, 2, 3],     Output Matrix: [[0.09, 0.24, 0.67],
-                [4, 5, 6]]  →                  [0.09, 0.24, 0.67]]
-                ↑                               ↑
-            Each row processed independently   Each row sums to 1.0
-```
+### 🔬 Unit Test: Softmax
+This test validates softmax activation behavior.
+**What we're testing**: Softmax creates valid probability distributions
+**Why it matters**: Essential for multi-class classification outputs
+**Expected**: Outputs sum to 1.0, all values in (0, 1), largest input gets highest probability
 """
 
-def test_unit_softmax_activation():
-    """
-    Test Softmax activation function.
-
-    Validates that Softmax creates valid probability distributions.
-    """
-    print("🔬 Unit Test: Softmax Activation...")
+# %% nbgrader={"grade": true, "grade_id": "test-softmax", "locked": true, "points": 10}
+def test_unit_softmax():
+    """🔬 Test Softmax implementation."""
+    print("🔬 Unit Test: Softmax...")
 
     softmax = Softmax()
 
-    # Basic probability distribution test
-    test_input = Tensor([[1.0, 2.0, 3.0]])
-    result = softmax(test_input)
+    # Test basic probability properties
+    x = Tensor([1, 2, 3])
+    result = softmax.forward(x)
 
-    # Check outputs sum to 1
-    sum_result = np.sum(result.data, axis=-1)
-    assert np.allclose(sum_result, 1.0), f"Softmax should sum to 1, got {sum_result}"
-    assert np.all(result.data >= 0), "Softmax outputs should be non-negative"
+    # Should sum to 1
+    assert np.allclose(np.sum(result.data), 1.0), f"Softmax should sum to 1, got {np.sum(result.data)}"
 
-    # Numerical stability test with large values
-    large_input = Tensor([[1000.0, 1001.0, 1002.0]])
-    large_result = softmax(large_input)
+    # All values should be positive
+    assert np.all(result.data > 0), "All softmax values should be positive"
 
-    assert not np.any(np.isnan(large_result.data)), "Should handle large values without NaN"
-    assert np.allclose(np.sum(large_result.data, axis=-1), 1.0), "Large values should still sum to 1"
+    # All values should be less than 1
+    assert np.all(result.data < 1), "All softmax values should be less than 1"
 
-    # Batch processing test
-    batch_input = Tensor([[1.0, 2.0], [3.0, 4.0]])
-    batch_result = softmax(batch_input)
-    row_sums = np.sum(batch_result.data, axis=-1)
-    assert np.allclose(row_sums, [1.0, 1.0]), "Each batch item should sum to 1"
+    # Largest input should get largest output
+    max_input_idx = np.argmax(x.data)
+    max_output_idx = np.argmax(result.data)
+    assert max_input_idx == max_output_idx, "Largest input should get largest softmax output"
 
-    print("✅ Softmax activation tests passed!")
+    # Test numerical stability with large numbers
+    x = Tensor([1000, 1001, 1002])  # Would overflow without max subtraction
+    result = softmax.forward(x)
+    assert np.allclose(np.sum(result.data), 1.0), "Softmax should handle large numbers"
+    assert not np.any(np.isnan(result.data)), "Softmax should not produce NaN"
+    assert not np.any(np.isinf(result.data)), "Softmax should not produce infinity"
 
-# Test immediately after implementation
-test_unit_softmax_activation()
+    # Test with 2D tensor (batch dimension)
+    x = Tensor([[1, 2], [3, 4]])
+    result = softmax.forward(x, dim=-1)  # Softmax along last dimension
+    assert result.shape == (2, 2), "Softmax should preserve input shape"
+    # Each row should sum to 1
+    row_sums = np.sum(result.data, axis=-1)
+    assert np.allclose(row_sums, [1.0, 1.0]), "Each row should sum to 1"
 
-# ✅ IMPLEMENTATION CHECKPOINT: Both ReLU and Softmax complete
+    print("✅ Softmax works correctly!")
 
-# In[ ]:
+test_unit_softmax()
 
 # %% [markdown]
 """
-## Integration Testing: Activations in Neural Network Context
+## 4. Integration - Bringing It Together
 
-Let's test these activations in realistic neural network scenarios
+Now let's test how all our activation functions work together and understand their different behaviors.
 """
 
-def test_unit_activation_pipeline():
-    """Test activations working together in a neural network pipeline."""
-    print("🔬 Unit Test: Activation Pipeline...")
+# %% nbgrader={"grade": false, "grade_id": "activation-demo", "solution": true}
+def demonstrate_activations():
+    """
+    Demonstrate all activation functions with the same input.
 
-    relu = ReLU()
+    This shows how different activations transform the same data differently.
+    """
+    print("🎭 Activation Function Showcase")
+    print("=" * 50)
+
+    # Create test input with range of values
+    test_input = Tensor([-3, -1, 0, 1, 3])
+    print(f"Input: {test_input.data}")
+    print()
+
+    # Test each activation
+    activations = {
+        'Sigmoid': Sigmoid(),
+        'ReLU': ReLU(),
+        'Tanh': Tanh(),
+        'GELU': GELU(),
+    }
+
+    for name, activation in activations.items():
+        result = activation.forward(test_input)
+        print(f"{name:>8}: {np.round(result.data, 3)}")
+
+    # Softmax (different because it normalizes across all values)
+    print()
+    print("Softmax transforms the vector into probabilities:")
     softmax = Softmax()
+    softmax_result = softmax.forward(test_input)
+    print(f"Softmax : {np.round(softmax_result.data, 3)} (sum = {np.sum(softmax_result.data):.1f})")
 
-    # Test neural network pipeline
-    hidden_output = Tensor([[-2.0, -1.0, 0.0, 1.0, 2.0]])
-    hidden_activated = relu(hidden_output)
-    expected_relu = np.array([[0.0, 0.0, 0.0, 1.0, 2.0]])
-
-    assert np.array_equal(hidden_activated.data, expected_relu), "ReLU should zero negatives"
-
-    # Classification with Softmax
-    class_logits = Tensor([[2.0, 1.0, 0.1]])
-    class_probabilities = softmax(class_logits)
-
-    assert np.allclose(np.sum(class_probabilities.data, axis=-1), 1.0), "Softmax should sum to 1"
-    assert np.all(class_probabilities.data >= 0), "Probabilities should be non-negative"
-
-    print("✅ Activation pipeline works correctly!")
-
-# Test pipeline functionality
-test_unit_activation_pipeline()
-
-# In[ ]:
+demonstrate_activations()
 
 # %% [markdown]
 """
-## Integration Test: Realistic Neural Network Pipeline
+### Understanding the Output Patterns
 
-Test activations in a complete neural network forward pass simulation
+From the demonstration above, notice how each activation serves a different purpose:
+
+**Sigmoid**: Squashes everything to (0, 1) - good for probabilities
+**ReLU**: Zeros negatives, keeps positives - creates sparsity
+**Tanh**: Like sigmoid but centered at zero (-1, 1) - better gradient flow
+**GELU**: Smooth ReLU-like behavior - modern choice for transformers
+**Softmax**: Converts to probability distribution - sum equals 1
+
+These different behaviors make each activation suitable for different parts of neural networks.
 """
 
+# %% [markdown]
+"""
+## 🧪 Module Integration Test
+
+Final validation that everything works together correctly.
+"""
+
+# %% nbgrader={"grade": true, "grade_id": "module-test", "locked": true, "points": 20}
 def test_module():
-    """Complete module test covering all activation functionality."""
-    print("🔬 Complete Module Test: All Activations...")
+    """
+    Comprehensive test of entire module functionality.
 
-    # Test individual components
-    test_unit_relu_activation()
-    test_unit_softmax_activation()
-    test_unit_activation_pipeline()
+    This final test runs before module summary to ensure:
+    - All unit tests pass
+    - Functions work together correctly
+    - Module is ready for integration with TinyTorch
+    """
+    print("🧪 RUNNING MODULE INTEGRATION TEST")
+    print("=" * 50)
 
-    # Test error handling
+    # Run all unit tests
+    print("Running unit tests...")
+    test_unit_sigmoid()
+    test_unit_relu()
+    test_unit_tanh()
+    test_unit_gelu()
+    test_unit_softmax()
+
+    print("\nRunning integration scenarios...")
+
+    # Test 1: All activations preserve tensor properties
+    print("🔬 Integration Test: Tensor property preservation...")
+    test_data = Tensor([[1, -1], [2, -2]])  # 2D tensor
+
+    activations = [Sigmoid(), ReLU(), Tanh(), GELU()]
+    for activation in activations:
+        result = activation.forward(test_data)
+        assert result.shape == test_data.shape, f"Shape not preserved by {activation.__class__.__name__}"
+        assert isinstance(result, Tensor), f"Output not Tensor from {activation.__class__.__name__}"
+
+    print("✅ All activations preserve tensor properties!")
+
+    # Test 2: Softmax works with different dimensions
+    print("🔬 Integration Test: Softmax dimension handling...")
+    data_3d = Tensor([[[1, 2, 3], [4, 5, 6]], [[7, 8, 9], [10, 11, 12]]])  # (2, 2, 3)
+    softmax = Softmax()
+
+    # Test different dimensions
+    result_last = softmax.forward(data_3d, dim=-1)
+    assert result_last.shape == (2, 2, 3), "Softmax should preserve shape"
+
+    # Check that last dimension sums to 1
+    last_dim_sums = np.sum(result_last.data, axis=-1)
+    assert np.allclose(last_dim_sums, 1.0), "Last dimension should sum to 1"
+
+    print("✅ Softmax handles different dimensions correctly!")
+
+    # Test 3: Activation chaining (simulating neural network)
+    print("🔬 Integration Test: Activation chaining...")
+
+    # Simulate: Input → Linear → ReLU → Linear → Softmax (like a simple network)
+    x = Tensor([[-1, 0, 1, 2]])  # Batch of 1, 4 features
+
+    # Apply ReLU (hidden layer activation)
     relu = ReLU()
-    try:
-        relu("not a tensor")
-        assert False, "Should raise TypeError"
-    except TypeError:
-        pass  # Expected
+    hidden = relu.forward(x)
 
-    print("\n✅ Complete module test passed!")
-    print("✅ All activation functions working correctly")
-    print("✅ Ready for neural network integration")
+    # Apply Softmax (output layer activation)
+    softmax = Softmax()
+    output = softmax.forward(hidden)
 
-# Test complete module
+    # Verify the chain
+    assert hidden.data[0, 0] == 0, "ReLU should zero negative input"
+    assert np.allclose(np.sum(output.data), 1.0), "Final output should be probability distribution"
+
+    print("✅ Activation chaining works correctly!")
+
+    print("\n" + "=" * 50)
+    print("🎉 ALL TESTS PASSED! Module ready for export.")
+    print("Run: tito module complete 02")
+
 test_module()
 
-# In[ ]:
-
-# Main execution block - all tests run when module is executed directly
+# %%
 if __name__ == "__main__":
-    print("\n" + "="*50)
-    print("🚀 RUNNING ACTIVATION TESTS")
-    print("="*50)
-
-    # Run complete module test
+    print("🚀 Running Activations module...")
     test_module()
-
-    print("\n" + "="*50)
-    print("🎉 ACTIVATION MODULE COMPLETE!")
-    print("="*50)
-    print("✅ ReLU: Simple and effective nonlinearity")
-    print("✅ Softmax: Converts scores to probabilities")
-    print("💡 Ready to build neural network layers!")
-
-    print(f"\n🎯 Module 02 (Activations) Complete!")
-    print(f"Next: Module 03 - Neural Network Layers!")
+    print("✅ Module validation complete!")
 
 # %% [markdown]
 """
-## 🤔 ML Systems Thinking: Interactive Questions
+## 🤔 ML Systems Thinking: Activation Functions
 
-### Question 1: Activation Function Choice
+### Question 1: Sparsity and Efficiency
+Your ReLU implementation zeros out negative values.
+If you have a tensor with 1000 elements and 60% are negative:
+- How many elements become zero after ReLU? _____ elements
+- What's the sparsity percentage? _____ %
+- Why might this sparsity be beneficial for neural networks? _____
 
-**Context**: You implemented ReLU (simple max operation) and Softmax (exponentials + normalization).
+### Question 2: Memory Usage Patterns
+You implemented 5 activation functions that each create new Tensor objects.
+If your input tensor uses 4MB of memory:
+- How much memory do you use after applying ReLU? _____ MB
+- How much memory do you use after applying Softmax? _____ MB
+- What happens to the original tensor's memory? _____
 
-**Question**: For a mobile neural network with limited compute, analyze the trade-offs between ReLU and Softmax. Consider computational cost, memory usage, and when each is essential.
-
-**YOUR ANALYSIS:**
-
-[Student response area]
-
-### Question 2: Numerical Stability
-
-**Context**: Your Softmax subtracts the maximum value before computing exponentials.
-
-**Question**: Why is this numerical stability crucial? How do small errors in activations affect deep network training?
-
-**YOUR ANALYSIS:**
-
-[Student response area]
+### Question 3: Numerical Stability
+Your Softmax implementation subtracts the maximum value before computing exponentials.
+For inputs [1000, 1001, 1002]:
+- What would happen without max subtraction? _____
+- Why does subtracting max help? _____
+- What's the mathematical reason this doesn't change the result? _____
 """
 
 # %% [markdown]
 """
-## 🎯 MODULE SUMMARY: Essential Activations
+## 🎯 MODULE SUMMARY: Activations
 
-Congratulations! You've implemented the essential activation functions for neural networks:
+Congratulations! You've built the intelligence engine of neural networks!
 
-### What You've Accomplished
-✅ **ReLU Implementation**: The activation function that revolutionized deep learning
-✅ **Softmax Implementation**: Converts any vector to a probability distribution
-✅ **Testing Framework**: Comprehensive validation of activation properties
-✅ **Pipeline Integration**: Demonstrated activations working in neural network contexts
-
-### Key Learning Outcomes
-- **Nonlinearity Understanding**: How activation functions enable complex pattern learning
-- **Numerical Implementation**: Building mathematically correct and stable algorithms
-- **Error Handling**: Robust implementations that handle edge cases gracefully
-- **Systems Integration**: Components that work together in larger systems
-
-### Mathematical Foundations Mastered
-- **ReLU**: f(x) = max(0, x) - simple yet powerful nonlinearity
-- **Softmax**: Converting scores to probabilities with numerical stability
-- **Probability Theory**: Understanding valid probability distributions
+### Key Accomplishments
+- Built 5 core activation functions with distinct behaviors and use cases
+- Implemented forward passes for Sigmoid, ReLU, Tanh, GELU, and Softmax
+- Discovered how nonlinearity enables complex pattern learning
+- All tests pass ✅ (validated by `test_module()`)
 
 ### Ready for Next Steps
-Your activation implementations enable:
-- **Neural Network Layers**: Combining with linear transformations
-- **Classification**: Converting network outputs to interpretable probabilities
-- **Deep Learning**: Training networks with many layers
+Your activation implementations enable neural network layers to learn complex, nonlinear patterns instead of just linear transformations.
 
-### Connection to Real Systems
-- **PyTorch**: Your implementations mirror `torch.nn.ReLU()` and `torch.nn.Softmax()`
-- **Production**: Same mathematical foundations with hardware optimizations
+Export with: `tito module complete 02`
 
-### Next Steps
-Ready for Module 03: Neural Network Layers - combining your activations with linear transformations!
-
-**Forward Momentum**: You've built the nonlinear intelligence that makes neural networks powerful!
+**Next**: Module 03 will combine your Tensors and Activations to build complete neural network Layers!
 """

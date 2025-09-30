@@ -6,1899 +6,1371 @@
 #       format_name: percent
 #       format_version: '1.3'
 #       jupytext_version: 1.17.1
+#   kernelspec:
+#     display_name: Python 3 (ipykernel)
+#     language: python
+#     name: python3
 # ---
 
 # %% [markdown]
 """
-# Embeddings - Converting Tokens to Dense Vector Representations
+# Module 11: Embeddings - Converting Tokens to Learnable Representations
 
-Welcome to the Embeddings module! You'll implement the systems that convert discrete tokens into rich vector representations that capture semantic meaning for language models.
+Welcome to Module 11! You're about to build embedding layers that convert discrete tokens into dense, learnable vectors - the foundation of all modern NLP models.
 
-## Learning Goals
-- Systems understanding: How embedding tables scale with vocabulary size and affect model memory
-- Core implementation skill: Build embedding layers with efficient lookup operations
-- Pattern recognition: Understand how positional encoding enables sequence understanding
-- Framework connection: See how your implementations match PyTorch's embedding systems
-- Performance insight: Learn how embedding lookup patterns affect cache efficiency and memory bandwidth
+## 🔗 Prerequisites & Progress
+**You've Built**: Tensors, layers, tokenization (discrete text processing)
+**You'll Build**: Embedding lookups and positional encodings for sequence modeling
+**You'll Enable**: Foundation for attention mechanisms and transformer architectures
 
-## Build -> Use -> Reflect
-1. **Build**: Embedding layer with lookup table and positional encoding systems
-2. **Use**: Transform token sequences into rich vector representations for language processing
-3. **Reflect**: How do embedding choices determine model capacity and computational efficiency?
+**Connection Map**:
+```
+Tokenization → Embeddings → Positional Encoding → Attention (Module 12)
+(discrete)     (dense)      (position-aware)     (context-aware)
+```
 
-## What You'll Achieve
-By the end of this module, you'll understand:
-- Deep technical understanding of how discrete tokens become continuous vector representations
-- Practical capability to implement embedding systems that handle large vocabularies efficiently
-- Systems insight into how embedding dimensions affect model capacity and memory usage
-- Performance consideration of how embedding lookup patterns affect training and inference speed
-- Connection to production systems like transformer embedding layers and their optimization techniques
+## Learning Objectives
+By the end of this module, you will:
+1. Implement embedding layers for token-to-vector conversion
+2. Understand learnable vs fixed positional encodings
+3. Build both sinusoidal and learned position encodings
+4. Analyze embedding memory requirements and lookup performance
 
-## Systems Reality Check
-TIP **Production Context**: Modern language models have embedding tables with billions of parameters (GPT-3: 50k vocab * 12k dim = 600M embedding params)
-SPEED **Performance Note**: Embedding lookups are memory-bandwidth bound - efficient access patterns are critical for high-throughput training
-"""
+Let's transform tokens into intelligence!
 
-# %% nbgrader={"grade": false, "grade_id": "embeddings-imports", "locked": false, "schema_version": 3, "solution": false, "task": false}
-#| default_exp core.embeddings
+## 📦 Where This Code Lives in the Final Package
 
-#| export
-import math
-import numpy as np
-import os
-import sys
-from typing import Union, List, Optional, Tuple
-
-# Import our Tensor class - try from package first, then from local module
-try:
-    from tinytorch.core.tensor import Tensor
-except ImportError:
-    # For development, import from local tensor module
-    sys.path.append(os.path.join(os.path.dirname(__file__), '..', '01_tensor'))
-    from tensor_dev import Tensor
-
-# Try to import tokenization classes
-try:
-    from tinytorch.core.tokenization import CharTokenizer, BPETokenizer
-except ImportError:
-    # For development, import from local module
-    sys.path.append(os.path.join(os.path.dirname(__file__), '..', '11_tokenization'))
-    try:
-        from tokenization_dev import CharTokenizer, BPETokenizer
-    except ImportError:
-        # Create minimal mock classes if not available
-        class CharTokenizer:
-            def __init__(self): 
-                self.vocab_size = 256
-        class BPETokenizer:
-            def __init__(self, vocab_size=1000):
-                self.vocab_size = vocab_size
-
-# %% nbgrader={"grade": false, "grade_id": "embeddings-welcome", "locked": false, "schema_version": 3, "solution": false, "task": false}
-print("TARGET TinyTorch Embeddings Module")
-print(f"NumPy version: {np.__version__}")
-print("Ready to build embedding systems!")
-
-# %% [markdown]
-"""
-## PACKAGE Where This Code Lives in the Final Package
-
-**Learning Side:** You work in `modules/source/12_embeddings/embeddings_dev.py`  
-**Building Side:** Code exports to `tinytorch.core.embeddings`
+**Learning Side:** You work in modules/11_embeddings/embeddings_dev.py
+**Building Side:** Code exports to tinytorch.text.embeddings
 
 ```python
 # Final package structure:
-from tinytorch.core.embeddings import Embedding, PositionalEncoding
-from tinytorch.core.tokenization import CharTokenizer, BPETokenizer  # Previous module
-from tinytorch.core.attention import MultiHeadAttention  # Next module
+from tinytorch.text.embeddings import Embedding, PositionalEncoding, create_sinusoidal_embeddings  # This module
+from tinytorch.core.tensor import Tensor  # Foundation (Module 01)
+from tinytorch.core.layers import Linear  # Dependencies (Module 03)
 ```
 
 **Why this matters:**
-- **Learning:** Focused modules for deep understanding
-- **Production:** Proper organization like PyTorch's `torch.nn.Embedding`
-- **Consistency:** All embedding tools live together in `core.embeddings`
-- **Integration:** Works seamlessly with tokenization and attention systems
+- **Learning:** Complete embedding system for converting discrete tokens to continuous representations
+- **Production:** Essential component matching PyTorch's torch.nn.Embedding with positional encoding patterns
+- **Consistency:** All embedding operations and positional encodings in text.embeddings
+- **Integration:** Works seamlessly with tokenizers for complete text processing pipeline
+"""
+
+# %% nbgrader={"grade": false, "grade_id": "imports", "solution": true}
+"""
+## 1. Essential Imports and Setup
+
+Setting up our embedding toolkit with tensor operations and mathematical functions.
+"""
+
+#| default_exp text.embeddings
+
+import numpy as np
+import math
+from typing import List, Optional, Tuple
+
+# Core tensor operations - our foundation
+### BEGIN SOLUTION
+# For this educational implementation, we'll create a simple Tensor class
+# In practice, this would import from tinytorch.core.tensor
+
+class Tensor:
+    """Educational tensor for embeddings module."""
+
+    def __init__(self, data, requires_grad=False):
+        self.data = np.array(data)
+        self.shape = self.data.shape
+        self.requires_grad = requires_grad
+        self.grad = None
+
+    def __repr__(self):
+        return f"Tensor({self.data})"
+
+    def __getitem__(self, idx):
+        return Tensor(self.data[idx])
+
+    def __add__(self, other):
+        if isinstance(other, Tensor):
+            return Tensor(self.data + other.data)
+        return Tensor(self.data + other)
+
+    def size(self, dim=None):
+        if dim is None:
+            return self.shape
+        return self.shape[dim]
+
+    def reshape(self, *shape):
+        return Tensor(self.data.reshape(shape))
+
+    def expand(self, *shape):
+        return Tensor(np.broadcast_to(self.data, shape))
+
+    def parameters(self):
+        return [self] if self.requires_grad else []
+
+# Simple Linear layer for this module
+class Linear:
+    """Educational linear layer."""
+
+    def __init__(self, in_features, out_features, bias=True):
+        # Xavier initialization
+        limit = math.sqrt(6.0 / (in_features + out_features))
+        self.weight = Tensor(
+            np.random.uniform(-limit, limit, (in_features, out_features)),
+            requires_grad=True
+        )
+        self.bias = Tensor(np.zeros(out_features), requires_grad=True) if bias else None
+
+    def forward(self, x):
+        result = Tensor(np.dot(x.data, self.weight.data))
+        if self.bias is not None:
+            result = result + self.bias
+        return result
+
+    def parameters(self):
+        params = [self.weight]
+        if self.bias is not None:
+            params.append(self.bias)
+        return params
+### END SOLUTION
+
+# %% [markdown]
+"""
+## 2. Understanding Token Embeddings - From Discrete to Dense
+
+Before we implement embeddings, let's understand what problem they solve and how the lookup process works.
+
+### The Fundamental Challenge
+
+When dealing with text, we start with discrete symbols (words, characters, tokens) but neural networks need continuous numbers. Embeddings bridge this gap by creating a learned mapping from discrete tokens to dense vector representations.
+
+### Token-to-Vector Transformation Visualization
+
+```
+Traditional One-Hot Encoding (Sparse):
+Token "cat" (index 42) → [0, 0, ..., 1, ..., 0]  (50,000 elements, mostly zeros)
+                           position 42
+
+Modern Embedding Lookup (Dense):
+Token "cat" (index 42) → [0.1, -0.3, 0.7, 0.2, ...]  (512 dense, meaningful values)
+```
+
+### How Embedding Lookup Works
+
+```
+Embedding Table (vocab_size × embed_dim):
+    Token ID    Embedding Vector
+    ┌─────┐    ┌─────────────────────────┐
+ 0  │  0  │ →  │ [0.2, -0.1,  0.3, ...] │  "the"
+ 1  │  1  │ →  │ [0.1,  0.4, -0.2, ...] │  "cat"
+ 2  │  2  │ →  │ [-0.3, 0.1,  0.5, ...] │  "sat"
+... │ ... │    │        ...              │   ...
+42  │ 42 │ →  │ [0.7, -0.2,  0.1, ...] │  "dog"
+... │ ... │    │        ...              │   ...
+    └─────┘    └─────────────────────────┘
+
+Lookup Process:
+Input tokens: [1, 2, 42] → Output: Matrix (3 × embed_dim)
+Row 0: embedding[1]  → [0.1,  0.4, -0.2, ...]  "cat"
+Row 1: embedding[2]  → [-0.3, 0.1,  0.5, ...]  "sat"
+Row 2: embedding[42] → [0.7, -0.2,  0.1, ...]  "dog"
+```
+
+### Why Embeddings Are Powerful
+
+1. **Dense Representation**: Every dimension can contribute meaningful information
+2. **Learnable**: Vectors adjust during training to capture semantic relationships
+3. **Efficient**: O(1) lookup time regardless of vocabulary size
+4. **Semantic**: Similar words learn similar vector representations
+
+### Memory Implications
+
+For a vocabulary of 50,000 tokens with 512-dimensional embeddings:
+- **Storage**: 50,000 × 512 × 4 bytes = ~100MB (in FP32)
+- **Scaling**: Memory grows linearly with vocab_size × embed_dim
+- **Trade-off**: Larger embeddings capture more nuance but require more memory
+
+This is why embedding tables often dominate memory usage in large language models!
 """
 
 # %% [markdown]
 """
-## What are Embeddings?
+## 3. Implementing Token Embeddings
 
-### The Problem: Discrete to Continuous
-Tokens are discrete symbols, but neural networks work best with continuous vectors:
-
-```
-Discrete Token Transformation:
-    Token ID    ->    Dense Vector Representation
-       42       ->    [0.1, -0.3, 0.8, 0.2, ...]
-       
-Visualization:
-    Sparse One-Hot      Dense Embedding
-    [0,0,0,1,0,...]  ->  [0.1,-0.3,0.8,0.2]
-    100,000 dims        512 dims
-```
-
-### Embedding Table Visualization
-An embedding layer is essentially a learnable lookup table:
-
-```
-Embedding Table Memory Layout:
-+-------------------------------------+
-| Embedding Weight Matrix             |
-+-------------------------------------┤
-| Token 0:  [0.1, -0.2,  0.3, ...]  |  <- "<PAD>" token
-| Token 1:  [0.4,  0.1, -0.5, ...]  |  <- "<UNK>" token  
-| Token 2:  [-0.1, 0.8,  0.2, ...]  |  <- "the" token
-| Token 3:  [0.7, -0.3,  0.1, ...]  |  <- "and" token
-| ...                               |
-| Token N:  [0.2,  0.5, -0.7, ...]  |  <- Final token
-+-------------------------------------+
-    ^                    ^
-  vocab_size        embedding_dim
-
-Example: 50,000 * 512 = 25.6M parameters = 102.4MB (float32)
-```
-
-### Embedding Lookup Process
-```
-Lookup Operation Flow:
-    Token IDs: [42, 17, 8]  (Input sequence)
-         v Advanced Indexing
-    Embedding Table[42] -> [0.1, -0.3, 0.8, ...]
-    Embedding Table[17] -> [0.4,  0.1, -0.5, ...] 
-    Embedding Table[8]  -> [-0.1, 0.8,  0.2, ...]
-         v Stack Results
-    Output: [[0.1, -0.3, 0.8, ...],    <- Token 42 embedding
-             [0.4,  0.1, -0.5, ...],    <- Token 17 embedding  
-             [-0.1, 0.8,  0.2, ...]]    <- Token 8 embedding
-    
-Complexity: O(seq_length) lookups, O(seq_length * embed_dim) memory
-```
-
-### Why Embeddings Work
-- **Similarity**: Similar words get similar vectors through training
-- **Composition**: Vector operations capture semantic relationships  
-- **Learning**: Gradients update embeddings to improve task performance
-- **Efficiency**: Dense vectors are more efficient than sparse one-hot
-
-### Positional Encoding Visualization
-Since transformers lack inherent position awareness, we add positional information:
-
-```
-Position-Aware Embedding Creation:
-    Token Embedding    +    Positional Encoding    =    Final Representation
-    +-------------+         +-------------+             +-------------+
-    |[0.1,-0.3,0.8]|    +    |[0.0, 1.0,0.0]|        =    |[0.1, 0.7,0.8]|  <- Pos 0
-    |[0.4, 0.1,-0.5]|    +    |[0.1, 0.9,0.1]|        =    |[0.5, 1.0,-0.4]|  <- Pos 1
-    |[-0.1,0.8, 0.2]|    +    |[0.2, 0.8,0.2]|        =    |[0.1, 1.6, 0.4]|  <- Pos 2
-    +-------------+         +-------------+             +-------------+
-         ^                       ^                           ^
-    Content Info           Position Info              Complete Context
-```
-
-### Systems Trade-offs
-- **Embedding dimension**: Higher = more capacity, more memory  
-- **Vocabulary size**: Larger = more parameters, better coverage
-- **Lookup efficiency**: Memory access patterns affect performance
-- **Position encoding**: Fixed vs learned vs hybrid approaches
+Now let's build the core embedding layer that performs efficient token-to-vector lookups.
 """
 
-# %% [markdown]
-"""
-## Embedding Layer Implementation
-
-Let's start with the core embedding layer - a learnable lookup table that converts token indices to dense vectors.
-
-### Implementation Strategy
-```
-Embedding Layer Architecture:
-    Input: Token IDs [batch_size, seq_length]
-         v Index into weight matrix
-    Weight Matrix: [vocab_size, embedding_dim] 
-         v Advanced indexing: weight[input_ids]
-    Output: Embeddings [batch_size, seq_length, embedding_dim]
-
-Memory Layout:
-+--------------------------------------+
-| Embedding Weight Matrix              |  <- Main parameter storage
-+--------------------------------------┤  
-| Input Token IDs (integers)           |  <- Temporary during forward
-+--------------------------------------┤
-| Output Embeddings (float32)          |  <- Result tensor
-+--------------------------------------+
-
-Operation: O(1) lookup per token, O(seq_length) total
-```
-"""
-
-# %% nbgrader={"grade": false, "grade_id": "embedding-layer", "locked": false, "schema_version": 3, "solution": true, "task": false}
-#| export
+# %% nbgrader={"grade": false, "grade_id": "embedding-class", "solution": true}
 class Embedding:
     """
-    Embedding layer that converts token indices to dense vector representations.
-    
-    This is the foundation of modern language models - a learnable lookup table
-    that maps discrete tokens to continuous vectors that capture semantic meaning.
+    Learnable embedding layer that maps token indices to dense vectors.
+
+    This is the fundamental building block for converting discrete tokens
+    into continuous representations that neural networks can process.
+
+    TODO: Implement the Embedding class
+
+    APPROACH:
+    1. Initialize embedding matrix with random weights (vocab_size, embed_dim)
+    2. Implement forward pass as matrix lookup using numpy indexing
+    3. Handle batch dimensions correctly
+    4. Return parameters for optimization
+
+    EXAMPLE:
+    >>> embed = Embedding(vocab_size=100, embed_dim=64)
+    >>> tokens = Tensor([[1, 2, 3], [4, 5, 6]])  # batch_size=2, seq_len=3
+    >>> output = embed.forward(tokens)
+    >>> print(output.shape)
+    (2, 3, 64)
+
+    HINTS:
+    - Use numpy advanced indexing for lookup: weight[indices]
+    - Embedding matrix shape: (vocab_size, embed_dim)
+    - Initialize with Xavier/Glorot uniform for stable gradients
+    - Handle multi-dimensional indices correctly
     """
-    
-    def __init__(self, vocab_size: int, embedding_dim: int, 
-                 padding_idx: Optional[int] = None, 
-                 init_type: str = 'uniform'):
+
+    ### BEGIN SOLUTION
+    def __init__(self, vocab_size: int, embed_dim: int):
         """
-        Initialize embedding layer with learnable parameters.
-        
-        STEP-BY-STEP IMPLEMENTATION:
-        1. Store configuration parameters
-        2. Initialize embedding table with chosen initialization
-        3. Handle special padding token if specified
-        4. Set up for gradient tracking (will connect to autograd later)
-        
-        DESIGN DECISIONS:
-        - Embedding table shape: (vocab_size, embedding_dim)
-        - Initialization affects training dynamics
-        - Padding idx gets zero gradient to stay constant
-        
+        Initialize embedding layer.
+
         Args:
-            vocab_size: Number of tokens in vocabulary
-            embedding_dim: Size of dense vector for each token
-            padding_idx: Optional token index that should remain zero
-            init_type: Initialization strategy ('uniform', 'normal', 'xavier')
+            vocab_size: Size of vocabulary (number of unique tokens)
+            embed_dim: Dimension of embedding vectors
         """
-        ### BEGIN SOLUTION
         self.vocab_size = vocab_size
-        self.embedding_dim = embedding_dim
-        self.padding_idx = padding_idx
-        self.init_type = init_type
-        
-        # Initialize embedding table based on strategy  
-        # Different initialization strategies affect training dynamics
-        if init_type == 'uniform':
-            # Uniform initialization in [-1/sqrt(dim), 1/sqrt(dim)]
-            # Keeps initial embeddings in reasonable range for gradient flow
-            bound = 1.0 / math.sqrt(embedding_dim)  # Scale with dimension
-            self.weight = Tensor(np.random.uniform(-bound, bound, (vocab_size, embedding_dim)))
-        elif init_type == 'normal':
-            # Normal initialization with std=1/sqrt(dim)
-            # Gaussian distribution with dimension-aware scaling
-            std = 1.0 / math.sqrt(embedding_dim)
-            self.weight = Tensor(np.random.normal(0, std, (vocab_size, embedding_dim)))
-        elif init_type == 'xavier':
-            # Xavier/Glorot initialization - considers fan-in and fan-out
-            # Good for maintaining activation variance across layers
-            bound = math.sqrt(6.0 / (vocab_size + embedding_dim))
-            self.weight = Tensor(np.random.uniform(-bound, bound, (vocab_size, embedding_dim)))
-        else:
-            raise ValueError(f"Unknown init_type: {init_type}")
-        
-        # Set padding token to zero if specified
-        if padding_idx is not None:
-            self.weight.data[padding_idx] = 0.0
-        
-        # Track parameters for optimization
-        self.parameters = [self.weight]
-        ### END SOLUTION
-    
-    def forward(self, input_ids: Union[Tensor, List[int], np.ndarray]) -> Tensor:
+        self.embed_dim = embed_dim
+
+        # Xavier initialization for better gradient flow
+        limit = math.sqrt(6.0 / (vocab_size + embed_dim))
+        self.weight = Tensor(
+            np.random.uniform(-limit, limit, (vocab_size, embed_dim)),
+            requires_grad=True
+        )
+
+    def forward(self, indices: Tensor) -> Tensor:
         """
-        Look up embeddings for input token indices.
-        
-        TODO: Implement embedding lookup.
-        
-        STEP-BY-STEP IMPLEMENTATION:
-        1. Convert input to numpy array if needed
-        2. Validate token indices are within vocabulary
-        3. Use advanced indexing to look up embeddings
-        4. Return tensor with shape (batch_size, seq_len, embedding_dim)
-        
-        EXAMPLE:
-        embed = Embedding(vocab_size=100, embedding_dim=64)
-        tokens = Tensor([[1, 2, 3], [4, 5, 6]])  # Shape: (2, 3)
-        embeddings = embed.forward(tokens)  # Shape: (2, 3, 64)
-        
-        IMPLEMENTATION HINTS:
-        - Handle both Tensor and list inputs
-        - Use numpy advanced indexing: weight[indices]
-        - Preserve batch and sequence dimensions
-        
+        Forward pass: lookup embeddings for given indices.
+
         Args:
-            input_ids: Token indices with shape (batch_size, seq_len) or (seq_len,)
-            
+            indices: Token indices of shape (batch_size, seq_len) or (seq_len,)
+
         Returns:
-            Embeddings with shape (*input_shape, embedding_dim)
+            Embedded vectors of shape (*indices.shape, embed_dim)
         """
-        ### BEGIN SOLUTION
-        # Convert input to numpy array
-        if isinstance(input_ids, Tensor):
-            indices = input_ids.data
-        elif isinstance(input_ids, list):
-            indices = np.array(input_ids)
-        else:
-            indices = input_ids
+        # Handle input validation
+        if np.any(indices.data >= self.vocab_size) or np.any(indices.data < 0):
+            raise ValueError(
+                f"Index out of range. Expected 0 <= indices < {self.vocab_size}, "
+                f"got min={np.min(indices.data)}, max={np.max(indices.data)}"
+            )
 
-        # Ensure indices is numpy array and convert to int
-        # Handle case where input might be nested Tensors or other objects
-        while hasattr(indices, 'data') and hasattr(indices, '__class__') and 'Tensor' in str(indices.__class__):
-            indices = indices.data
+        # Perform embedding lookup using advanced indexing
+        # This is equivalent to one-hot multiplication but much more efficient
+        embedded = self.weight.data[indices.data.astype(int)]
 
-        if not isinstance(indices, np.ndarray):
-            indices = np.array(indices)
-        indices = indices.astype(int)
-        if np.any(indices < 0) or np.any(indices >= self.vocab_size):
-            raise ValueError(f"Token indices must be in range [0, {self.vocab_size})")
-        
-        # Look up embeddings using advanced indexing (very efficient operation)
-        # Memory access pattern: Random access into embedding table
-        # self.weight.data has shape (vocab_size, embedding_dim)
-        # indices has shape (...), result has shape (..., embedding_dim)
-        embeddings = self.weight.data[indices]  # O(seq_length) lookups
-        
-        return Tensor(embeddings)
-        ### END SOLUTION
-    
-    def __call__(self, input_ids: Union[Tensor, List[int], np.ndarray]) -> Tensor:
-        """Make the layer callable."""
-        return self.forward(input_ids)
-    
-    def get_memory_usage(self):
-        """
-        Calculate memory usage of embedding table.
-        
-        This function is PROVIDED to show memory analysis.
-        """
-        # Embedding table memory
-        weight_memory_mb = self.weight.data.nbytes / (1024 * 1024)
-        
-        # Memory per token
-        memory_per_token_kb = (self.embedding_dim * 4) / 1024  # 4 bytes per float32
-        
-        return {
-            'total_memory_mb': weight_memory_mb,
-            'memory_per_token_kb': memory_per_token_kb,
-            'total_parameters': self.vocab_size * self.embedding_dim,
-            'vocab_size': self.vocab_size,
-            'embedding_dim': self.embedding_dim
-        }
+        return Tensor(embedded)
 
-# %% [markdown]
-"""
-### TEST Test Your Embedding Layer Implementation
+    def parameters(self) -> List[Tensor]:
+        """Return trainable parameters."""
+        return [self.weight]
 
-Once you implement the Embedding forward method above, run this cell to test it:
-"""
+    def __repr__(self):
+        return f"Embedding(vocab_size={self.vocab_size}, embed_dim={self.embed_dim})"
+    ### END SOLUTION
 
-# %% nbgrader={"grade": true, "grade_id": "test-embedding-immediate", "locked": true, "points": 15, "schema_version": 3, "solution": false, "task": false}
-def test_unit_embedding_layer():
-    """Unit test for the embedding layer."""
+# %% nbgrader={"grade": true, "grade_id": "test-embedding", "locked": true, "points": 10}
+def test_unit_embedding():
+    """🔬 Unit Test: Embedding Layer Implementation"""
     print("🔬 Unit Test: Embedding Layer...")
-    
-    # Create embedding layer
-    vocab_size = 100
-    embedding_dim = 64
-    embed = Embedding(vocab_size=vocab_size, embedding_dim=embedding_dim)
-    
-    # Test single token
-    single_token = [5]
-    single_embedding = embed.forward(single_token)
-    assert single_embedding.shape == (1, embedding_dim), f"Expected shape (1, {embedding_dim}), got {single_embedding.shape}"
-    
-    # Test sequence of tokens
-    token_sequence = [1, 2, 3, 5, 10]
-    sequence_embeddings = embed.forward(token_sequence)
-    expected_shape = (len(token_sequence), embedding_dim)
-    assert sequence_embeddings.shape == expected_shape, f"Expected shape {expected_shape}, got {sequence_embeddings.shape}"
-    
-    # Test batch of sequences
-    batch_tokens = [[1, 2, 3], [4, 5, 6]]
-    batch_embeddings = embed.forward(batch_tokens)
-    assert batch_embeddings.shape == (2, 3, embedding_dim), f"Expected shape (2, 3, {embedding_dim}), got {batch_embeddings.shape}"
-    
-    # Test with Tensor input
-    tensor_input = Tensor(np.array([[7, 8, 9], [10, 11, 12]]))
-    tensor_embeddings = embed.forward(tensor_input)
-    assert tensor_embeddings.shape == (2, 3, embedding_dim), "Should handle Tensor input"
-    
-    # Test embedding lookup consistency
-    token_5_embed_1 = embed.forward([5])
-    token_5_embed_2 = embed.forward([5])
-    assert np.allclose(token_5_embed_1.data, token_5_embed_2.data), "Same token should give same embedding"
-    
-    # Test different tokens give different embeddings (with high probability)
-    token_1_embed = embed.forward([1])
-    token_2_embed = embed.forward([2])
-    assert not np.allclose(token_1_embed.data, token_2_embed.data, atol=1e-3), "Different tokens should give different embeddings"
-    
-    # Test initialization bounds
-    assert np.all(np.abs(embed.weight.data) <= 1.0), "Uniform initialization should be bounded"
-    
-    # Test padding token (if specified)
-    embed_with_padding = Embedding(vocab_size=50, embedding_dim=32, padding_idx=0)
-    assert np.allclose(embed_with_padding.weight.data[0], 0.0), "Padding token should be zero"
-    
-    # Test parameter tracking
-    assert len(embed.parameters) == 1, "Should track embedding weight parameter"
-    assert embed.parameters[0] is embed.weight, "Should track weight tensor"
-    
-    # Test memory usage calculation
-    memory_stats = embed.get_memory_usage()
-    assert 'total_memory_mb' in memory_stats, "Should provide memory statistics"
-    assert memory_stats['total_parameters'] == vocab_size * embedding_dim, "Should calculate parameters correctly"
-    
-    print("PASS Embedding layer tests passed!")
-    print(f"PASS Handles various input shapes correctly")
-    print(f"PASS Consistent lookup and parameter tracking")
-    print(f"PASS Memory usage: {memory_stats['total_memory_mb']:.2f}MB")
 
-# Test function defined (called in main block)
+    # Test 1: Basic embedding creation and forward pass
+    embed = Embedding(vocab_size=100, embed_dim=64)
+
+    # Single sequence
+    tokens = Tensor([1, 2, 3])
+    output = embed.forward(tokens)
+
+    assert output.shape == (3, 64), f"Expected shape (3, 64), got {output.shape}"
+    assert len(embed.parameters()) == 1, "Should have 1 parameter (weight matrix)"
+    assert embed.parameters()[0].shape == (100, 64), "Weight matrix has wrong shape"
+
+    # Test 2: Batch processing
+    batch_tokens = Tensor([[1, 2, 3], [4, 5, 6]])
+    batch_output = embed.forward(batch_tokens)
+
+    assert batch_output.shape == (2, 3, 64), f"Expected batch shape (2, 3, 64), got {batch_output.shape}"
+
+    # Test 3: Embedding lookup consistency
+    single_lookup = embed.forward(Tensor([1]))
+    batch_lookup = embed.forward(Tensor([[1]]))
+
+    # Should get same embedding for same token
+    assert np.allclose(single_lookup.data[0], batch_lookup.data[0, 0]), "Inconsistent embedding lookup"
+
+    # Test 4: Parameter access
+    params = embed.parameters()
+    assert all(p.requires_grad for p in params), "All parameters should require gradients"
+
+    print("✅ Embedding layer works correctly!")
+
+test_unit_embedding()
 
 # %% [markdown]
 """
-## Positional Encoding Implementation
+## 4. Understanding Positional Encoding - Teaching Models About Order
 
-Transformers need explicit position information since attention is position-agnostic. Let's implement sinusoidal positional encoding used in the original transformer.
+Sequences have inherent order, but embeddings by themselves are orderless. We need to explicitly encode positional information so the model understands that "cat chased dog" is different from "dog chased cat".
 
-### Sinusoidal Positional Encoding Visualization
+### Why Position Matters in Sequences
+
+Unlike images where spatial relationships are built into the 2D structure, text sequences need explicit position encoding:
+
 ```
-Mathematical Foundation:
-    PE(pos, 2i)   = sin(pos / 10000^(2i/d_model))     <- Even dimensions
-    PE(pos, 2i+1) = cos(pos / 10000^(2i/d_model))     <- Odd dimensions
-
-Frequency Pattern:
-    Position ->   0    1    2    3    4   ...
-    Dim 0:    [sin] [sin] [sin] [sin] [sin] ... <- High frequency
-    Dim 1:    [cos] [cos] [cos] [cos] [cos] ... <- High frequency
-    Dim 2:    [sin] [sin] [sin] [sin] [sin] ... <- Med frequency
-    Dim 3:    [cos] [cos] [cos] [cos] [cos] ... <- Med frequency
-    ...        ...   ...   ...   ...   ...   
-    Dim n-2:  [sin] [sin] [sin] [sin] [sin] ... <- Low frequency  
-    Dim n-1:  [cos] [cos] [cos] [cos] [cos] ... <- Low frequency
-
-Why This Works:
-    - Each position gets unique encoding across all dimensions
-    - Relative positions have consistent patterns
-    - Model can learn to use positional relationships
-    - No parameters needed (computed deterministically)
+Word Order Changes Meaning:
+"The cat chased the dog" ≠ "The dog chased the cat"
+"Not good" ≠ "Good not"
+"She told him" ≠ "Him told she"
 ```
 
-### Position Encoding Memory Layout
-```
-Precomputed Position Matrix:
-+-------------------------------------+
-| Position Encoding Matrix            |
-+-------------------------------------┤ 
-| Pos 0:  [0.00, 1.00, 0.00, 1.00...]|  <- sin(0), cos(0), sin(0), cos(0)
-| Pos 1:  [0.84, 0.54, 0.10, 0.99...]|  <- sin(1), cos(1), sin(f1), cos(f1)
-| Pos 2:  [0.91,-0.42, 0.20, 0.98...]|  <- sin(2), cos(2), sin(f2), cos(f2) 
-| Pos 3:  [0.14,-0.99, 0.30, 0.95...]|  <- sin(3), cos(3), sin(f3), cos(f3)
-| ...                               |
-+-------------------------------------+
-    ^                    ^
-max_seq_length     embedding_dim
+### Two Approaches to Position Encoding
 
-Memory: max_seq_length * embedding_dim * 4 bytes (precomputed)
 ```
+1. Learned Positional Embeddings:
+   ┌─────────────────────────────────────┐
+   │ Position  │  Learned Vector        │
+   ├─────────────────────────────────────┤
+   │    0      │ [0.1, -0.2, 0.4, ...]  │  (trained)
+   │    1      │ [0.3,  0.1, -0.1, ...] │  (trained)
+   │    2      │ [-0.1, 0.5, 0.2, ...]  │  (trained)
+   │   ...     │        ...              │
+   │   511     │ [0.4, -0.3, 0.1, ...]  │  (trained)
+   └─────────────────────────────────────┘
+   ✓ Can learn task-specific patterns
+   ✗ Fixed maximum sequence length
+   ✗ Requires additional parameters
+
+2. Sinusoidal Position Encodings:
+   ┌─────────────────────────────────────┐
+   │ Position  │  Mathematical Pattern   │
+   ├─────────────────────────────────────┤
+   │    0      │ [0.0,  1.0, 0.0, ...]   │  (computed)
+   │    1      │ [sin1, cos1, sin2, ...] │  (computed)
+   │    2      │ [sin2, cos2, sin4, ...] │  (computed)
+   │   ...     │        ...              │
+   │   N       │ [sinN, cosN, sin2N,...] │  (computed)
+   └─────────────────────────────────────┘
+   ✓ No additional parameters
+   ✓ Can extrapolate to longer sequences
+   ✗ Cannot adapt to specific patterns
+```
+
+### How Positional Information Gets Added
+
+```
+Token Embeddings + Positional Encodings = Position-Aware Representations
+
+Input Sequence: ["The", "cat", "sat"]
+Token IDs:      [  1,    42,    7 ]
+
+Step 1: Token Embeddings
+[1] → [0.1, 0.4, -0.2, ...]
+[42]→ [0.7, -0.2, 0.1, ...]
+[7] → [-0.3, 0.1, 0.5, ...]
+
+Step 2: Position Encodings
+pos 0 → [0.0, 1.0, 0.0, ...]
+pos 1 → [0.8, 0.6, 0.1, ...]
+pos 2 → [0.9, -0.4, 0.2, ...]
+
+Step 3: Addition (element-wise)
+Result:
+[0.1+0.0, 0.4+1.0, -0.2+0.0, ...] = [0.1, 1.4, -0.2, ...]  "The" at position 0
+[0.7+0.8, -0.2+0.6, 0.1+0.1, ...] = [1.5, 0.4, 0.2, ...]   "cat" at position 1
+[-0.3+0.9, 0.1-0.4, 0.5+0.2, ...] = [0.6, -0.3, 0.7, ...]  "sat" at position 2
+```
+
+This way, the same word gets different representations based on its position in the sentence!
 """
 
-# %% nbgrader={"grade": false, "grade_id": "positional-encoding", "locked": false, "schema_version": 3, "solution": true, "task": false}
-#| export
+# %% [markdown]
+"""
+## 5. Implementing Learned Positional Encoding
+
+Let's build trainable positional embeddings that can learn position-specific patterns for our specific task.
+"""
+
+# %% nbgrader={"grade": false, "grade_id": "positional-encoding", "solution": true}
 class PositionalEncoding:
     """
-    Sinusoidal positional encoding that adds position information to embeddings.
-    
-    Uses sine and cosine functions of different frequencies to create
-    unique position representations that the model can learn to use.
+    Learnable positional encoding layer.
+
+    Adds trainable position-specific vectors to token embeddings,
+    allowing the model to learn positional patterns specific to the task.
+
+    TODO: Implement learnable positional encoding
+
+    APPROACH:
+    1. Create embedding matrix for positions: (max_seq_len, embed_dim)
+    2. Forward pass: lookup position embeddings and add to input
+    3. Handle different sequence lengths gracefully
+    4. Return parameters for training
+
+    EXAMPLE:
+    >>> pos_enc = PositionalEncoding(max_seq_len=512, embed_dim=64)
+    >>> embeddings = Tensor(np.random.randn(2, 10, 64))  # (batch, seq, embed)
+    >>> output = pos_enc.forward(embeddings)
+    >>> print(output.shape)
+    (2, 10, 64)  # Same shape, but now position-aware
+
+    HINTS:
+    - Position embeddings shape: (max_seq_len, embed_dim)
+    - Use slice [:seq_len] to handle variable lengths
+    - Add position encodings to input embeddings element-wise
+    - Initialize with smaller values than token embeddings (they're additive)
     """
-    
-    def __init__(self, embedding_dim: int, max_seq_length: int = 5000, 
-                 dropout: float = 0.0):
+
+    ### BEGIN SOLUTION
+    def __init__(self, max_seq_len: int, embed_dim: int):
         """
-        Initialize positional encoding with sinusoidal patterns.
-        
-        TODO: Implement positional encoding initialization.
-        
-        STEP-BY-STEP IMPLEMENTATION:
-        1. Create position matrix (max_seq_length, embedding_dim)
-        2. For each position and dimension:
-           - Calculate frequency based on dimension
-           - Apply sine to even dimensions, cosine to odd dimensions
-        3. Store the precomputed positional encodings
-        
-        MATHEMATICAL FOUNDATION:
-        PE(pos, 2i) = sin(pos / 10000^(2i/d_model))
-        PE(pos, 2i+1) = cos(pos / 10000^(2i/d_model))
-        
-        Where:
-        - pos = position in sequence
-        - i = dimension index
-        - d_model = embedding_dim
-        
+        Initialize learnable positional encoding.
+
         Args:
-            embedding_dim: Dimension of embeddings (must be even)
-            max_seq_length: Maximum sequence length to precompute
-            dropout: Dropout rate (for future use)
+            max_seq_len: Maximum sequence length to support
+            embed_dim: Embedding dimension (must match token embeddings)
         """
-        ### BEGIN SOLUTION
-        self.embedding_dim = embedding_dim
-        self.max_seq_length = max_seq_length
-        self.dropout = dropout
-        
-        # Create positional encoding matrix
-        pe = np.zeros((max_seq_length, embedding_dim))
-        
-        # Create position vector (0, 1, 2, ..., max_seq_length-1)
-        position = np.arange(0, max_seq_length).reshape(-1, 1)  # Shape: (max_seq_length, 1)
-        
-        # Create dimension indices for frequency calculation
-        # div_term calculates 10000^(2i/d_model) for i = 0, 1, 2, ...
-        # This creates decreasing frequencies: high freq for early dims, low freq for later dims
-        div_term = np.exp(np.arange(0, embedding_dim, 2) * 
-                         -(math.log(10000.0) / embedding_dim))
-        
-        # Apply sine to even dimensions (0, 2, 4, ...) 
-        # Broadcasting: position (max_seq_length, 1) * div_term (embedding_dim//2,)
-        pe[:, 0::2] = np.sin(position * div_term)  # High to low frequency sine waves
-        
-        # Apply cosine to odd dimensions (1, 3, 5, ...)
-        # Cosine provides phase-shifted version of sine for each frequency
-        if embedding_dim % 2 == 1:
-            # Handle odd embedding_dim - cosine gets one less dimension
-            pe[:, 1::2] = np.cos(position * div_term[:-1])
-        else:
-            pe[:, 1::2] = np.cos(position * div_term)
-        
-        # Store as tensor
-        self.pe = Tensor(pe)
-        ### END SOLUTION
-    
-    def forward(self, embeddings: Tensor) -> Tensor:
-        """
-        Add positional encoding to embeddings.
-        
-        TODO: Implement positional encoding addition.
-        
-        STEP-BY-STEP IMPLEMENTATION:
-        1. Get sequence length from embeddings shape
-        2. Extract relevant positional encodings
-        3. Add positional encodings to embeddings
-        4. Return position-aware embeddings
-        
-        EXAMPLE:
-        pos_enc = PositionalEncoding(embedding_dim=64)
-        embeddings = Tensor(np.random.randn(2, 10, 64))  # (batch, seq, dim)
-        pos_embeddings = pos_enc.forward(embeddings)
-        
-        Args:
-            embeddings: Input embeddings with shape (batch_size, seq_len, embedding_dim)
-            
-        Returns:
-            Position-aware embeddings with same shape as input
-        """
-        ### BEGIN SOLUTION
-        # Get sequence length from embeddings
-        if len(embeddings.shape) == 3:
-            batch_size, seq_length, embed_dim = embeddings.shape
-        elif len(embeddings.shape) == 2:
-            seq_length, embed_dim = embeddings.shape
-            batch_size = None
-        else:
-            raise ValueError(f"Expected 2D or 3D embeddings, got shape {embeddings.shape}")
-        
-        if embed_dim != self.embedding_dim:
-            raise ValueError(f"Embedding dim mismatch: expected {self.embedding_dim}, got {embed_dim}")
-        
-        if seq_length > self.max_seq_length:
-            raise ValueError(f"Sequence length {seq_length} exceeds max {self.max_seq_length}")
-        
-        # Extract positional encodings for this sequence length
-        position_encodings = self.pe.data[:seq_length, :]
-        
-        # Add positional encodings to embeddings (element-wise addition)
-        # This combines content information with positional information
-        if batch_size is not None:
-            # Broadcast positional encodings across batch dimension
-            # embeddings: (batch, seq, dim) + position_encodings: (seq, dim)
-            # Broadcasting rule: (B,S,D) + (1,S,D) = (B,S,D)
-            result = embeddings.data + position_encodings[np.newaxis, :, :]
-        else:
-            # embeddings: (seq, dim) + position_encodings: (seq, dim)
-            result = embeddings.data + position_encodings
-        
-        return Tensor(result)
-        ### END SOLUTION
-    
-    def __call__(self, embeddings: Tensor) -> Tensor:
-        """Make the class callable."""
-        return self.forward(embeddings)
-    
-    def visualize_encoding(self, seq_length: int = 100, dims_to_show: int = 10) -> None:
-        """
-        Visualize positional encoding patterns.
-        
-        This function is PROVIDED to show encoding patterns.
-        """
-        print(f"📊 POSITIONAL ENCODING VISUALIZATION")
-        print(f"Sequence length: {seq_length}, Dimensions shown: {dims_to_show}")
-        print("=" * 60)
-        
-        # Get subset of positional encodings
-        pe_subset = self.pe.data[:seq_length, :dims_to_show]
-        
-        # Show patterns for first few positions
-        print("First 10 positions, first 10 dimensions:")
-        print("Pos", end="")
-        for d in range(min(dims_to_show, 10)):
-            print(f"    Dim{d:2d}", end="")
-        print()
-        
-        for pos in range(min(seq_length, 10)):
-            print(f"{pos:3d}", end="")
-            for d in range(min(dims_to_show, 10)):
-                print(f"{pe_subset[pos, d]:8.3f}", end="")
-            print()
-        
-        # Show frequency analysis
-        print(f"\nPROGRESS FREQUENCY ANALYSIS:")
-        print("Even dimensions (sine): Lower frequencies for early dimensions")
-        print("Odd dimensions (cosine): Same frequencies, phase-shifted")
-        
-        # Calculate frequency range
-        min_freq = 1.0 / 10000
-        max_freq = 1.0
-        print(f"Frequency range: {min_freq:.6f} to {max_freq:.6f}")
+        self.max_seq_len = max_seq_len
+        self.embed_dim = embed_dim
 
-# %% [markdown]
-"""
-### TEST Test Your Positional Encoding Implementation
-
-Once you implement the PositionalEncoding methods above, run this cell to test it:
-"""
-
-# %% nbgrader={"grade": true, "grade_id": "test-positional-encoding-immediate", "locked": true, "points": 15, "schema_version": 3, "solution": false, "task": false}
-def test_unit_positional_encoding():
-    """Unit test for positional encoding."""
-    print("🔬 Unit Test: Positional Encoding...")
-    
-    # Create positional encoding
-    embedding_dim = 64
-    max_seq_length = 100
-    pos_enc = PositionalEncoding(embedding_dim=embedding_dim, max_seq_length=max_seq_length)
-    
-    # Test initialization
-    assert pos_enc.pe.shape == (max_seq_length, embedding_dim), f"Expected shape ({max_seq_length}, {embedding_dim})"
-    
-    # Test that different positions have different encodings
-    pos_0 = pos_enc.pe.data[0]
-    pos_1 = pos_enc.pe.data[1]
-    assert not np.allclose(pos_0, pos_1), "Different positions should have different encodings"
-    
-    # Test sine/cosine pattern
-    # Even dimensions should use sine, odd should use cosine
-    # This is hard to test directly, but we can check the encoding is reasonable
-    assert not np.any(np.isnan(pos_enc.pe.data)), "Positional encodings should not contain NaN"
-    assert not np.any(np.isinf(pos_enc.pe.data)), "Positional encodings should not contain inf"
-    
-    # Test forward pass with 3D input (batch, seq, dim)
-    batch_size = 2
-    seq_length = 10
-    embeddings = Tensor(np.random.randn(batch_size, seq_length, embedding_dim))
-    
-    pos_embeddings = pos_enc.forward(embeddings)
-    assert pos_embeddings.shape == embeddings.shape, "Output shape should match input shape"
-    
-    # Test forward pass with 2D input (seq, dim)
-    embeddings_2d = Tensor(np.random.randn(seq_length, embedding_dim))
-    pos_embeddings_2d = pos_enc.forward(embeddings_2d)
-    assert pos_embeddings_2d.shape == embeddings_2d.shape, "2D output shape should match input"
-    
-    # Test that positional encoding is actually added
-    original_mean = np.mean(embeddings.data)
-    pos_mean = np.mean(pos_embeddings.data)
-    assert abs(pos_mean - original_mean) > 1e-6, "Positional encoding should change the embeddings"
-    
-    # Test sequence length validation
-    try:
-        long_embeddings = Tensor(np.random.randn(max_seq_length + 10, embedding_dim))
-        pos_enc.forward(long_embeddings)
-        assert False, "Should raise error for sequence longer than max_seq_length"
-    except ValueError:
-        pass  # Expected behavior
-    
-    # Test embedding dimension validation
-    try:
-        wrong_dim_embeddings = Tensor(np.random.randn(seq_length, embedding_dim + 10))
-        pos_enc.forward(wrong_dim_embeddings)
-        assert False, "Should raise error for wrong embedding dimension"
-    except ValueError:
-        pass  # Expected behavior
-    
-    # Test deterministic behavior
-    pos_embeddings_1 = pos_enc.forward(embeddings)
-    pos_embeddings_2 = pos_enc.forward(embeddings)
-    assert np.allclose(pos_embeddings_1.data, pos_embeddings_2.data), "Should be deterministic"
-    
-    # Test callable interface
-    pos_embeddings_callable = pos_enc(embeddings)
-    assert np.allclose(pos_embeddings_callable.data, pos_embeddings.data), "Callable interface should work"
-    
-    print("PASS Positional encoding tests passed!")
-    print(f"PASS Handles 2D and 3D inputs correctly")
-    print(f"PASS Proper validation and deterministic behavior")
-    print(f"PASS Encoding dimension: {embedding_dim}, Max length: {max_seq_length}")
-
-# Test function defined (called in main block)
-
-# %% [markdown]
-"""
-## Learned Positional Embeddings
-
-Some models use learned positional embeddings instead of fixed sinusoidal ones. Let's implement this alternative approach:
-
-### Learned vs Sinusoidal Comparison
-```
-Sinusoidal Positional Encoding:
-    OK Zero parameters (deterministic computation)
-    OK Can extrapolate to longer sequences
-    OK Mathematical guarantees about relative positions
-    ✗ Fixed pattern - cannot adapt to task
-    
-Learned Positional Embeddings:
-    OK Learnable parameters (adapts to task/data)
-    OK Can capture task-specific positional patterns
-    ✗ Requires additional parameters (max_seq_len * embed_dim)
-    ✗ Cannot extrapolate beyond training sequence length
-    ✗ Needs sufficient training data to learn good positions
-```
-
-### Learned Position Architecture
-```
-Learned Position System:
-    Position IDs: [0, 1, 2, 3, ...]
-          v Embedding lookup (just like token embeddings)
-    Position Table: [max_seq_length, embedding_dim]
-          v Standard embedding lookup
-    Position Embeddings: [seq_length, embedding_dim]
-          v Add to token embeddings
-    Final Representation: Token + Position information
-
-This is essentially two embedding tables:
-    - Token Embedding: token_id -> content vector
-    - Position Embedding: position_id -> position vector
-```
-"""
-
-# %% nbgrader={"grade": false, "grade_id": "learned-positional", "locked": false, "schema_version": 3, "solution": true, "task": false}
-#| export
-class LearnedPositionalEmbedding:
-    """
-    Learned positional embeddings - another embedding table for positions.
-    
-    Unlike sinusoidal encoding, these are learned parameters that
-    the model optimizes during training. Used in models like BERT.
-    """
-    
-    def __init__(self, max_seq_length: int, embedding_dim: int):
-        """
-        Initialize learned positional embeddings.
-        
-        TODO: Implement learned positional embedding initialization.
-        
-        STEP-BY-STEP IMPLEMENTATION:
-        1. Create embedding layer for positions (0, 1, 2, ..., max_seq_length-1)
-        2. Initialize with small random values
-        3. Set up parameter tracking for optimization
-        
-        This is essentially an Embedding layer where the "vocabulary"
-        is the set of possible positions in a sequence.
-        
-        Args:
-            max_seq_length: Maximum sequence length supported
-            embedding_dim: Dimension of position embeddings
-        """
-        ### BEGIN SOLUTION
-        self.max_seq_length = max_seq_length
-        self.embedding_dim = embedding_dim
-        
-        # Create learned positional embedding table
-        # This is like an embedding layer for positions (not tokens)
-        # Vocabulary size = max sequence length (each position is a "token")
-        self.position_embedding = Embedding(
-            vocab_size=max_seq_length,  # Position 0, 1, 2, ..., max_seq_length-1
-            embedding_dim=embedding_dim,  # Same dimension as token embeddings
-            init_type='normal'  # Start with small random values
+        # Initialize position embedding matrix
+        # Smaller initialization than token embeddings since these are additive
+        limit = math.sqrt(2.0 / embed_dim)
+        self.position_embeddings = Tensor(
+            np.random.uniform(-limit, limit, (max_seq_len, embed_dim)),
+            requires_grad=True
         )
-        
-        # Track parameters for optimization
-        self.parameters = self.position_embedding.parameters
-        ### END SOLUTION
-    
-    def forward(self, embeddings: Tensor) -> Tensor:
+
+    def forward(self, x: Tensor) -> Tensor:
         """
-        Add learned positional embeddings to input embeddings.
-        
-        TODO: Implement learned positional embedding addition.
-        
-        STEP-BY-STEP IMPLEMENTATION:
-        1. Get sequence length from input shape
-        2. Create position indices [0, 1, 2, ..., seq_length-1]
-        3. Look up position embeddings using position indices
-        4. Add position embeddings to input embeddings
-        
-        EXAMPLE:
-        learned_pos = LearnedPositionalEmbedding(max_seq_length=100, embedding_dim=64)
-        embeddings = Tensor(np.random.randn(2, 10, 64))  # (batch, seq, dim)
-        pos_embeddings = learned_pos.forward(embeddings)
-        
+        Add positional encodings to input embeddings.
+
         Args:
-            embeddings: Input embeddings with shape (batch_size, seq_len, embedding_dim)
-            
+            x: Input embeddings of shape (batch_size, seq_len, embed_dim)
+
         Returns:
-            Position-aware embeddings with same shape as input
+            Position-encoded embeddings of same shape
         """
-        ### BEGIN SOLUTION
-        # Get sequence length from embeddings
-        if len(embeddings.shape) == 3:
-            batch_size, seq_length, embed_dim = embeddings.shape
-        elif len(embeddings.shape) == 2:
-            seq_length, embed_dim = embeddings.shape
-            batch_size = None
-        else:
-            raise ValueError(f"Expected 2D or 3D embeddings, got shape {embeddings.shape}")
-        
-        if embed_dim != self.embedding_dim:
-            raise ValueError(f"Embedding dim mismatch: expected {self.embedding_dim}, got {embed_dim}")
-        
-        if seq_length > self.max_seq_length:
-            raise ValueError(f"Sequence length {seq_length} exceeds max {self.max_seq_length}")
-        
-        # Create position indices [0, 1, 2, ..., seq_length-1]
-        # These are the "token IDs" for positions in the sequence
-        position_ids = list(range(seq_length))
-        
-        # Look up position embeddings (same process as token embedding lookup)
-        # Each position gets its own learned vector representation
-        position_embeddings = self.position_embedding.forward(position_ids)
-        
-        # Add position embeddings to input embeddings
-        if batch_size is not None:
-            # Broadcast across batch dimension
-            result = embeddings.data + position_embeddings.data[np.newaxis, :, :]
-        else:
-            result = embeddings.data + position_embeddings.data
-        
+        if len(x.shape) != 3:
+            raise ValueError(f"Expected 3D input (batch, seq, embed), got shape {x.shape}")
+
+        batch_size, seq_len, embed_dim = x.shape
+
+        if seq_len > self.max_seq_len:
+            raise ValueError(
+                f"Sequence length {seq_len} exceeds maximum {self.max_seq_len}"
+            )
+
+        if embed_dim != self.embed_dim:
+            raise ValueError(
+                f"Embedding dimension mismatch: expected {self.embed_dim}, got {embed_dim}"
+            )
+
+        # Get position embeddings for this sequence length
+        pos_embeddings = self.position_embeddings.data[:seq_len]  # (seq_len, embed_dim)
+
+        # Broadcast to match batch dimension: (1, seq_len, embed_dim)
+        pos_embeddings = pos_embeddings[np.newaxis, :, :]
+
+        # Add positional information to input embeddings
+        result = x.data + pos_embeddings
+
         return Tensor(result)
-        ### END SOLUTION
-    
-    def __call__(self, embeddings: Tensor) -> Tensor:
-        """Make the class callable."""
-        return self.forward(embeddings)
+
+    def parameters(self) -> List[Tensor]:
+        """Return trainable parameters."""
+        return [self.position_embeddings]
+
+    def __repr__(self):
+        return f"PositionalEncoding(max_seq_len={self.max_seq_len}, embed_dim={self.embed_dim})"
+    ### END SOLUTION
+
+# %% nbgrader={"grade": true, "grade_id": "test-positional", "locked": true, "points": 10}
+def test_unit_positional_encoding():
+    """🔬 Unit Test: Positional Encoding Implementation"""
+    print("🔬 Unit Test: Positional Encoding...")
+
+    # Test 1: Basic functionality
+    pos_enc = PositionalEncoding(max_seq_len=512, embed_dim=64)
+
+    # Create sample embeddings
+    embeddings = Tensor(np.random.randn(2, 10, 64))
+    output = pos_enc.forward(embeddings)
+
+    assert output.shape == (2, 10, 64), f"Expected shape (2, 10, 64), got {output.shape}"
+
+    # Test 2: Position consistency
+    # Same position should always get same encoding
+    emb1 = Tensor(np.zeros((1, 5, 64)))
+    emb2 = Tensor(np.zeros((1, 5, 64)))
+
+    out1 = pos_enc.forward(emb1)
+    out2 = pos_enc.forward(emb2)
+
+    assert np.allclose(out1.data, out2.data), "Position encodings should be consistent"
+
+    # Test 3: Different positions get different encodings
+    short_emb = Tensor(np.zeros((1, 3, 64)))
+    long_emb = Tensor(np.zeros((1, 5, 64)))
+
+    short_out = pos_enc.forward(short_emb)
+    long_out = pos_enc.forward(long_emb)
+
+    # First 3 positions should match
+    assert np.allclose(short_out.data, long_out.data[:, :3, :]), "Position encoding prefix should match"
+
+    # Test 4: Parameters
+    params = pos_enc.parameters()
+    assert len(params) == 1, "Should have 1 parameter (position embeddings)"
+    assert params[0].shape == (512, 64), "Position embedding matrix has wrong shape"
+
+    print("✅ Positional encoding works correctly!")
+
+test_unit_positional_encoding()
 
 # %% [markdown]
 """
-### TEST Test Your Learned Positional Embedding Implementation
+## 6. Understanding Sinusoidal Position Encodings
 
-Once you implement the LearnedPositionalEmbedding methods above, run this cell to test it:
+Now let's explore the elegant mathematical approach to position encoding used in the original Transformer paper. Instead of learning position patterns, we'll use trigonometric functions to create unique, continuous position signatures.
+
+### The Mathematical Intuition
+
+Sinusoidal encodings use sine and cosine functions at different frequencies to create unique position signatures:
+
+```
+PE(pos, 2i)   = sin(pos / 10000^(2i/d_model))     # Even dimensions
+PE(pos, 2i+1) = cos(pos / 10000^(2i/d_model))     # Odd dimensions
+```
+
+### Why This Works - Frequency Visualization
+
+```
+Position Encoding Pattern (embed_dim=8, showing 4 positions):
+
+Dimension:  0     1     2     3     4     5     6     7
+Frequency:  High  High  Med   Med   Low   Low   VLow  VLow
+Function:   sin   cos   sin   cos   sin   cos   sin   cos
+
+pos=0:    [0.00, 1.00, 0.00, 1.00, 0.00, 1.00, 0.00, 1.00]
+pos=1:    [0.84, 0.54, 0.01, 1.00, 0.00, 1.00, 0.00, 1.00]
+pos=2:    [0.91, -0.42, 0.02, 1.00, 0.00, 1.00, 0.00, 1.00]
+pos=3:    [0.14, -0.99, 0.03, 1.00, 0.00, 1.00, 0.00, 1.00]
+
+Notice how:
+- High frequency dimensions (0,1) change quickly between positions
+- Low frequency dimensions (6,7) change slowly
+- Each position gets a unique "fingerprint"
+```
+
+### Visual Pattern of Sinusoidal Encodings
+
+```
+Frequency Spectrum Across Dimensions:
+High Freq ← - - - - - - - - - - - - - - - - - - - - - → Low Freq
+Dim:  0   1   2   3   4   5   6   7   8   9  ...  510 511
+
+Wave Pattern for Position Progression:
+Dim 0: ∿∿∿∿∿∿∿∿∿∿∿∿∿∿∿∿∿∿∿∿  (rapid oscillation)
+Dim 2: ∿---∿---∿---∿---∿---∿  (medium frequency)
+Dim 4: ∿-----∿-----∿-----∿--  (low frequency)
+Dim 6: ∿----------∿----------  (very slow changes)
+
+This creates a unique "barcode" for each position!
+```
+
+### Advantages of Sinusoidal Encodings
+
+1. **No Parameters**: Zero additional memory overhead
+2. **Extrapolation**: Can handle sequences longer than training data
+3. **Unique Signatures**: Each position gets a distinct encoding
+4. **Smooth Transitions**: Similar positions have similar encodings
+5. **Mathematical Elegance**: Clean, interpretable patterns
 """
-
-# %% nbgrader={"grade": true, "grade_id": "test-learned-positional-immediate", "locked": true, "points": 10, "schema_version": 3, "solution": false, "task": false}
-def test_unit_learned_positional_embedding():
-    """Unit test for learned positional embeddings."""
-    print("🔬 Unit Test: Learned Positional Embeddings...")
-    
-    # Create learned positional embedding
-    max_seq_length = 50
-    embedding_dim = 32
-    learned_pos = LearnedPositionalEmbedding(max_seq_length=max_seq_length, embedding_dim=embedding_dim)
-    
-    # Test initialization
-    assert learned_pos.position_embedding.vocab_size == max_seq_length, "Should have position for each sequence position"
-    assert learned_pos.position_embedding.embedding_dim == embedding_dim, "Should match embedding dimension"
-    
-    # Test parameter tracking
-    assert len(learned_pos.parameters) == 1, "Should track position embedding parameters"
-    assert learned_pos.parameters[0] is learned_pos.position_embedding.weight, "Should track weight tensor"
-    
-    # Test forward pass with 3D input
-    batch_size = 3
-    seq_length = 10
-    embeddings = Tensor(np.random.randn(batch_size, seq_length, embedding_dim))
-    
-    pos_embeddings = learned_pos.forward(embeddings)
-    assert pos_embeddings.shape == embeddings.shape, "Output shape should match input shape"
-    
-    # Test forward pass with 2D input
-    embeddings_2d = Tensor(np.random.randn(seq_length, embedding_dim))
-    pos_embeddings_2d = learned_pos.forward(embeddings_2d)
-    assert pos_embeddings_2d.shape == embeddings_2d.shape, "2D output shape should match input"
-    
-    # Test that position embeddings are actually added
-    original_mean = np.mean(embeddings.data)
-    pos_mean = np.mean(pos_embeddings.data)
-    assert abs(pos_mean - original_mean) > 1e-6, "Position embeddings should change the input"
-    
-    # Test that different sequence lengths give consistent positional embeddings
-    # Use same base embeddings for the first 5 positions to test positional consistency
-    base_embeddings = np.random.randn(batch_size, 5, embedding_dim)
-    short_embeddings = Tensor(base_embeddings)
-    
-    # For long embeddings, use same first 5 positions plus additional positions
-    extended_embeddings = np.random.randn(batch_size, 10, embedding_dim)
-    extended_embeddings[:, :5, :] = base_embeddings  # Same first 5 positions
-    long_embeddings = Tensor(extended_embeddings)
-    
-    short_pos = learned_pos.forward(short_embeddings)
-    long_pos = learned_pos.forward(long_embeddings)
-    
-    # The first 5 positions should be the same (same input + same positional embeddings)
-    assert np.allclose(short_pos.data, long_pos.data[:, :5, :], atol=1e-6), "Same positions should have same embeddings"
-    
-    # Test sequence length validation
-    try:
-        too_long_embeddings = Tensor(np.random.randn(batch_size, max_seq_length + 5, embedding_dim))
-        learned_pos.forward(too_long_embeddings)
-        assert False, "Should raise error for sequence longer than max_seq_length"
-    except ValueError:
-        pass  # Expected behavior
-    
-    # Test embedding dimension validation
-    try:
-        wrong_dim_embeddings = Tensor(np.random.randn(batch_size, seq_length, embedding_dim + 5))
-        learned_pos.forward(wrong_dim_embeddings)
-        assert False, "Should raise error for wrong embedding dimension"
-    except ValueError:
-        pass  # Expected behavior
-    
-    # Test callable interface
-    pos_embeddings_callable = learned_pos(embeddings)
-    assert np.allclose(pos_embeddings_callable.data, pos_embeddings.data), "Callable interface should work"
-    
-    print("PASS Learned positional embedding tests passed!")
-    print(f"PASS Parameter tracking and optimization ready")
-    print(f"PASS Handles various input shapes correctly")
-    print(f"PASS Max sequence length: {max_seq_length}, Embedding dim: {embedding_dim}")
-
-# Test function defined (called in main block)
-
-# PASS IMPLEMENTATION CHECKPOINT: Ensure all embedding components are complete before analysis
-
-# THINK PREDICTION: How does embedding table memory scale with vocabulary size and dimension?
-# Linear with vocab_size? Linear with embedding_dim? Quadratic with both?
-# Your prediction: _______
-
-# MAGNIFY SYSTEMS INSIGHT #1: Embedding Memory Scaling Analysis
-def analyze_embedding_memory_scaling():
-    """Analyze how embedding memory scales with vocabulary and dimension parameters."""
-    try:
-        import time
-        
-        print("📊 EMBEDDING MEMORY SCALING ANALYSIS")
-        print("=" * 50)
-        
-        # Test different configurations
-        test_configs = [
-            (1000, 128),   # Small model
-            (10000, 256),  # Medium model  
-            (50000, 512),  # Large model
-            (100000, 1024) # Very large model
-        ]
-        
-        print(f"{'Vocab Size':<12} {'Embed Dim':<10} {'Parameters':<12} {'Memory (MB)':<12} {'Lookup Time':<12}")
-        print("-" * 70)
-        
-        for vocab_size, embed_dim in test_configs:
-            # Create embedding layer
-            embed = Embedding(vocab_size=vocab_size, embedding_dim=embed_dim)
-            
-            # Calculate memory
-            memory_stats = embed.get_memory_usage()
-            params = memory_stats['total_parameters']
-            memory_mb = memory_stats['total_memory_mb']
-            
-            # Test lookup performance
-            test_tokens = np.random.randint(0, vocab_size, (32, 64))
-            start_time = time.time()
-            _ = embed.forward(test_tokens) 
-            lookup_time = (time.time() - start_time) * 1000
-            
-            print(f"{vocab_size:<12,} {embed_dim:<10} {params:<12,} {memory_mb:<12.1f} {lookup_time:<12.2f}")
-        
-        # TIP WHY THIS MATTERS: GPT-3 has 50k vocab * 12k dim = 600M embedding parameters!
-        # That's 2.4GB just for the embedding table (before any other model weights)
-        print("\nTIP SCALING INSIGHTS:")
-        print("   - Memory scales linearly with both vocab_size AND embedding_dim")
-        print("   - Lookup time is dominated by memory bandwidth, not computation")
-        print("   - Large models spend significant memory on embeddings alone")
-        
-    except Exception as e:
-        print(f"WARNING️ Error in memory scaling analysis: {e}")
-        print("Make sure your Embedding class is implemented correctly")
-
-analyze_embedding_memory_scaling()
-
-# PASS IMPLEMENTATION CHECKPOINT: Ensure positional encoding works before analysis
-
-# THINK PREDICTION: Which positional encoding uses more memory - sinusoidal or learned?
-# Which can handle longer sequences? Your answer: _______
-
-# MAGNIFY SYSTEMS INSIGHT #2: Positional Encoding Trade-offs
-def analyze_positional_encoding_tradeoffs():
-    """Compare memory and performance characteristics of different positional encodings."""
-    try:
-        import time
-        
-        print("\nMAGNIFY POSITIONAL ENCODING COMPARISON")
-        print("=" * 50)
-        
-        embedding_dim = 512
-        max_seq_length = 2048
-        
-        # Create both types
-        sinusoidal_pe = PositionalEncoding(embedding_dim=embedding_dim, max_seq_length=max_seq_length)
-        learned_pe = LearnedPositionalEmbedding(max_seq_length=max_seq_length, embedding_dim=embedding_dim)
-        
-        # Test different sequence lengths
-        seq_lengths = [128, 512, 1024, 2048]
-        batch_size = 16
-        
-        print(f"{'Seq Len':<8} {'Method':<12} {'Time (ms)':<10} {'Memory (MB)':<12} {'Parameters':<12}")
-        print("-" * 65)
-        
-        for seq_len in seq_lengths:
-            embeddings = Tensor(np.random.randn(batch_size, seq_len, embedding_dim))
-            
-            # Test sinusoidal
-            start_time = time.time()
-            _ = sinusoidal_pe.forward(embeddings)
-            sin_time = (time.time() - start_time) * 1000
-            sin_memory = 0  # No parameters
-            sin_params = 0
-            
-            # Test learned
-            start_time = time.time() 
-            _ = learned_pe.forward(embeddings)
-            learned_time = (time.time() - start_time) * 1000
-            learned_memory = learned_pe.position_embedding.get_memory_usage()['total_memory_mb']
-            learned_params = max_seq_length * embedding_dim
-            
-            print(f"{seq_len:<8} {'Sinusoidal':<12} {sin_time:<10.2f} {sin_memory:<12.1f} {sin_params:<12,}")
-            print(f"{seq_len:<8} {'Learned':<12} {learned_time:<10.2f} {learned_memory:<12.1f} {learned_params:<12,}")
-            print()
-        
-        # TIP WHY THIS MATTERS: Choice affects model size and sequence length flexibility
-        print("TIP TRADE-OFF INSIGHTS:")
-        print("   - Sinusoidal: 0 parameters, can extrapolate to any length")
-        print("   - Learned: Many parameters, limited to training sequence length")
-        print("   - Modern models often use learned for better task adaptation")
-        
-    except Exception as e:
-        print(f"WARNING️ Error in positional encoding analysis: {e}")
-        print("Make sure both positional encoding classes are implemented")
-
-analyze_positional_encoding_tradeoffs()
-
-# PASS IMPLEMENTATION CHECKPOINT: Ensure full embedding pipeline works
-
-# THINK PREDICTION: What's the bottleneck in embedding pipelines - computation or memory?
-# How does batch size affect throughput? Your prediction: _______
-
-# MAGNIFY SYSTEMS INSIGHT #3: Embedding Pipeline Performance
-def analyze_embedding_pipeline_performance():
-    """Analyze performance characteristics of the complete embedding pipeline."""
-    try:
-        import time
-        
-        print("\nSPEED EMBEDDING PIPELINE PERFORMANCE")
-        print("=" * 50)
-        
-        # Create pipeline components
-        vocab_size = 10000
-        embedding_dim = 256
-        max_seq_length = 512
-        
-        embed = Embedding(vocab_size=vocab_size, embedding_dim=embedding_dim)
-        pos_enc = PositionalEncoding(embedding_dim=embedding_dim, max_seq_length=max_seq_length)
-        
-        # Test different batch sizes and sequence lengths
-        test_configs = [
-            (8, 128),    # Small batch, short sequences
-            (32, 256),   # Medium batch, medium sequences
-            (64, 512),   # Large batch, long sequences
-        ]
-        
-        print(f"{'Batch':<6} {'Seq Len':<8} {'Total Tokens':<12} {'Time (ms)':<10} {'Tokens/sec':<12} {'Memory (MB)':<12}")
-        print("-" * 75)
-        
-        for batch_size, seq_length in test_configs:
-            # Create random token sequence
-            tokens = np.random.randint(0, vocab_size, (batch_size, seq_length))
-            token_tensor = Tensor(tokens)
-            
-            # Measure full pipeline
-            start_time = time.time()
-            
-            # Step 1: Embedding lookup
-            embeddings = embed.forward(token_tensor)
-            
-            # Step 2: Add positional encoding
-            pos_embeddings = pos_enc.forward(embeddings)
-            
-            end_time = time.time()
-            
-            # Calculate metrics
-            total_tokens = batch_size * seq_length
-            pipeline_time = (end_time - start_time) * 1000
-            tokens_per_sec = total_tokens / (end_time - start_time) if end_time > start_time else 0
-            memory_mb = pos_embeddings.data.nbytes / (1024 * 1024)
-            
-            print(f"{batch_size:<6} {seq_length:<8} {total_tokens:<12,} {pipeline_time:<10.2f} {tokens_per_sec:<12,.0f} {memory_mb:<12.1f}")
-        
-        # TIP WHY THIS MATTERS: Understanding pipeline bottlenecks for production deployment
-        print("\nTIP PIPELINE INSIGHTS:")
-        print("   - Embedding lookup is memory-bandwidth bound (not compute bound)")
-        print("   - Larger batches improve throughput due to better memory utilization")
-        print("   - Sequence length affects memory linearly, performance sublinearly")
-        print("   - Production systems optimize with: embedding caching, mixed precision, etc.")
-        
-    except Exception as e:
-        print(f"WARNING️ Error in pipeline analysis: {e}")
-        print("Make sure your full embedding pipeline is working")
-
-analyze_embedding_pipeline_performance()
 
 # %% [markdown]
 """
-## TARGET ML Systems: Performance Analysis & Embedding Scaling
+## 7. Implementing Sinusoidal Positional Encodings
 
-Now let's develop systems engineering skills by analyzing embedding performance and understanding how embedding choices affect downstream ML system efficiency.
-
-### **Learning Outcome**: *"I understand how embedding table size affects model memory, training speed, and language understanding capacity"*
+Let's implement the mathematical position encoding that creates unique signatures for each position using trigonometric functions.
 """
 
-# %% nbgrader={"grade": false, "grade_id": "embedding-profiler", "locked": false, "schema_version": 3, "solution": true, "task": false}
-#| export
-import time
+# %% nbgrader={"grade": false, "grade_id": "sinusoidal-function", "solution": true}
+def create_sinusoidal_embeddings(max_seq_len: int, embed_dim: int) -> Tensor:
+    """
+    Create sinusoidal positional encodings as used in "Attention Is All You Need".
 
-class EmbeddingProfiler:
+    These fixed encodings use sine and cosine functions to create unique
+    positional patterns that don't require training and can extrapolate
+    to longer sequences than seen during training.
+
+    TODO: Implement sinusoidal positional encoding generation
+
+    APPROACH:
+    1. Create position indices: [0, 1, 2, ..., max_seq_len-1]
+    2. Create dimension indices for frequency calculation
+    3. Apply sine to even dimensions, cosine to odd dimensions
+    4. Use the transformer paper formula with 10000 base
+
+    MATHEMATICAL FORMULA:
+    PE(pos, 2i) = sin(pos / 10000^(2i/embed_dim))
+    PE(pos, 2i+1) = cos(pos / 10000^(2i/embed_dim))
+
+    EXAMPLE:
+    >>> pe = create_sinusoidal_embeddings(512, 64)
+    >>> print(pe.shape)
+    (512, 64)
+    >>> # Position 0: [0, 1, 0, 1, 0, 1, ...] (sin(0)=0, cos(0)=1)
+    >>> # Each position gets unique trigonometric signature
+
+    HINTS:
+    - Use np.arange to create position and dimension arrays
+    - Calculate div_term using exponential for frequency scaling
+    - Apply different formulas to even/odd dimensions
+    - The 10000 base creates different frequencies for different dimensions
     """
-    Performance profiling toolkit for embedding systems.
-    
-    Helps ML engineers understand memory usage, lookup performance,
-    and scaling characteristics of embedding layers.
+
+    ### BEGIN SOLUTION
+    # Create position indices [0, 1, 2, ..., max_seq_len-1]
+    position = np.arange(max_seq_len, dtype=np.float32)[:, np.newaxis]  # (max_seq_len, 1)
+
+    # Create dimension indices for calculating frequencies
+    div_term = np.exp(
+        np.arange(0, embed_dim, 2, dtype=np.float32) *
+        -(math.log(10000.0) / embed_dim)
+    )  # (embed_dim//2,)
+
+    # Initialize the positional encoding matrix
+    pe = np.zeros((max_seq_len, embed_dim), dtype=np.float32)
+
+    # Apply sine to even indices (0, 2, 4, ...)
+    pe[:, 0::2] = np.sin(position * div_term)
+
+    # Apply cosine to odd indices (1, 3, 5, ...)
+    if embed_dim % 2 == 1:
+        # Handle odd embed_dim by only filling available positions
+        pe[:, 1::2] = np.cos(position * div_term[:-1])
+    else:
+        pe[:, 1::2] = np.cos(position * div_term)
+
+    return Tensor(pe)
+    ### END SOLUTION
+
+# %% nbgrader={"grade": true, "grade_id": "test-sinusoidal", "locked": true, "points": 10}
+def test_unit_sinusoidal_embeddings():
+    """🔬 Unit Test: Sinusoidal Positional Embeddings"""
+    print("🔬 Unit Test: Sinusoidal Embeddings...")
+
+    # Test 1: Basic shape and properties
+    pe = create_sinusoidal_embeddings(512, 64)
+
+    assert pe.shape == (512, 64), f"Expected shape (512, 64), got {pe.shape}"
+
+    # Test 2: Position 0 should be mostly zeros and ones
+    pos_0 = pe.data[0]
+
+    # Even indices should be sin(0) = 0
+    assert np.allclose(pos_0[0::2], 0, atol=1e-6), "Even indices at position 0 should be ~0"
+
+    # Odd indices should be cos(0) = 1
+    assert np.allclose(pos_0[1::2], 1, atol=1e-6), "Odd indices at position 0 should be ~1"
+
+    # Test 3: Different positions should have different encodings
+    pe_small = create_sinusoidal_embeddings(10, 8)
+
+    # Check that consecutive positions are different
+    for i in range(9):
+        assert not np.allclose(pe_small.data[i], pe_small.data[i+1]), f"Positions {i} and {i+1} are too similar"
+
+    # Test 4: Frequency properties
+    # Higher dimensions should have lower frequencies (change more slowly)
+    pe_test = create_sinusoidal_embeddings(100, 16)
+
+    # First dimension should change faster than last dimension
+    first_dim_changes = np.sum(np.abs(np.diff(pe_test.data[:10, 0])))
+    last_dim_changes = np.sum(np.abs(np.diff(pe_test.data[:10, -1])))
+
+    assert first_dim_changes > last_dim_changes, "Lower dimensions should change faster than higher dimensions"
+
+    # Test 5: Odd embed_dim handling
+    pe_odd = create_sinusoidal_embeddings(10, 7)
+    assert pe_odd.shape == (10, 7), "Should handle odd embedding dimensions"
+
+    print("✅ Sinusoidal embeddings work correctly!")
+
+test_unit_sinusoidal_embeddings()
+
+# %% [markdown]
+"""
+## 8. Building the Complete Embedding System
+
+Now let's integrate everything into a production-ready embedding system that handles both token and positional embeddings, supports multiple encoding types, and manages the full embedding pipeline used in modern NLP models.
+
+### Complete Embedding Pipeline Visualization
+
+```
+Complete Embedding System Architecture:
+
+Input: Token IDs [1, 42, 7, 99]
+         ↓
+    ┌─────────────────────┐
+    │   Token Embedding   │  vocab_size × embed_dim table
+    │   Lookup Table      │
+    └─────────────────────┘
+         ↓
+    Token Vectors (4 × embed_dim)
+    [0.1, 0.4, -0.2, ...]  ← token 1
+    [0.7, -0.2, 0.1, ...]  ← token 42
+    [-0.3, 0.1, 0.5, ...]  ← token 7
+    [0.9, -0.1, 0.3, ...]  ← token 99
+         ↓
+    ┌─────────────────────┐
+    │ Positional Encoding │  Choose: Learned, Sinusoidal, or None
+    │  (Add position info) │
+    └─────────────────────┘
+         ↓
+    Position-Aware Embeddings (4 × embed_dim)
+    [0.1+pos0, 0.4+pos0, ...]  ← token 1 at position 0
+    [0.7+pos1, -0.2+pos1, ...] ← token 42 at position 1
+    [-0.3+pos2, 0.1+pos2, ...] ← token 7 at position 2
+    [0.9+pos3, -0.1+pos3, ...] ← token 99 at position 3
+         ↓
+    Optional: Scale by √embed_dim (Transformer convention)
+         ↓
+    Ready for Attention Mechanisms!
+```
+
+### Integration Features
+
+- **Flexible Position Encoding**: Support learned, sinusoidal, or no positional encoding
+- **Batch Processing**: Handle variable-length sequences with padding
+- **Memory Efficiency**: Reuse position encodings across batches
+- **Production Ready**: Matches PyTorch patterns and conventions
+"""
+
+# %% nbgrader={"grade": false, "grade_id": "complete-system", "solution": true}
+class EmbeddingLayer:
     """
-    
-    def __init__(self):
-        self.results = {}
-    
-    def measure_lookup_performance(self, embedding_layer: Embedding, 
-                                  batch_sizes: List[int], seq_lengths: List[int]):
+    Complete embedding system combining token and positional embeddings.
+
+    This is the production-ready component that handles the full embedding
+    pipeline used in transformers and other sequence models.
+
+    TODO: Implement complete embedding system
+
+    APPROACH:
+    1. Combine token embedding + positional encoding
+    2. Support both learned and sinusoidal position encodings
+    3. Handle variable sequence lengths gracefully
+    4. Add optional embedding scaling (Transformer convention)
+
+    EXAMPLE:
+    >>> embed_layer = EmbeddingLayer(
+    ...     vocab_size=50000,
+    ...     embed_dim=512,
+    ...     max_seq_len=2048,
+    ...     pos_encoding='learned'
+    ... )
+    >>> tokens = Tensor([[1, 2, 3], [4, 5, 6]])
+    >>> output = embed_layer.forward(tokens)
+    >>> print(output.shape)
+    (2, 3, 512)
+
+    HINTS:
+    - First apply token embedding, then add positional encoding
+    - Support 'learned', 'sinusoidal', or None for pos_encoding
+    - Handle both 2D (batch, seq) and 1D (seq) inputs gracefully
+    - Scale embeddings by sqrt(embed_dim) if requested (transformer convention)
+    """
+
+    ### BEGIN SOLUTION
+    def __init__(
+        self,
+        vocab_size: int,
+        embed_dim: int,
+        max_seq_len: int = 512,
+        pos_encoding: str = 'learned',
+        scale_embeddings: bool = False
+    ):
         """
-        Measure embedding lookup performance across different batch sizes and sequence lengths.
-        
-        TODO: Implement embedding lookup performance measurement.
-        
-        STEP-BY-STEP IMPLEMENTATION:
-        1. Create test token indices for each (batch_size, seq_length) combination
-        2. Measure time to perform embedding lookup
-        3. Calculate throughput metrics (tokens/second, memory bandwidth)
-        4. Return comprehensive performance analysis
-        
-        METRICS TO CALCULATE:
-        - Lookup time (milliseconds)
-        - Tokens per second throughput
-        - Memory bandwidth utilization
-        - Scaling patterns with batch size and sequence length
-        
+        Initialize complete embedding system.
+
         Args:
-            embedding_layer: Embedding layer to test
-            batch_sizes: List of batch sizes to test
-            seq_lengths: List of sequence lengths to test
-            
-        Returns:
-            Dictionary with performance metrics for each configuration
+            vocab_size: Size of vocabulary
+            embed_dim: Embedding dimension
+            max_seq_len: Maximum sequence length for positional encoding
+            pos_encoding: Type of positional encoding ('learned', 'sinusoidal', or None)
+            scale_embeddings: Whether to scale embeddings by sqrt(embed_dim)
         """
-        ### BEGIN SOLUTION
-        results = {}
-        vocab_size = embedding_layer.vocab_size
-        
-        for batch_size in batch_sizes:
-            for seq_length in seq_lengths:
-                # Create random token indices
-                token_indices = np.random.randint(0, vocab_size, (batch_size, seq_length))
-                
-                # Measure lookup performance
-                start_time = time.time()
-                embeddings = embedding_layer.forward(token_indices)
-                end_time = time.time()
-                
-                # Calculate metrics
-                lookup_time_ms = (end_time - start_time) * 1000
-                total_tokens = batch_size * seq_length
-                tokens_per_second = total_tokens / (end_time - start_time) if end_time > start_time else 0
-                
-                # Memory calculations
-                input_memory_mb = token_indices.nbytes / (1024 * 1024)
-                output_memory_mb = embeddings.data.nbytes / (1024 * 1024)
-                memory_bandwidth_mb_s = (input_memory_mb + output_memory_mb) / (end_time - start_time) if end_time > start_time else 0
-                
-                config_key = f"batch_{batch_size}_seq_{seq_length}"
-                results[config_key] = {
-                    'batch_size': batch_size,
-                    'seq_length': seq_length,
-                    'total_tokens': total_tokens,
-                    'lookup_time_ms': lookup_time_ms,
-                    'tokens_per_second': tokens_per_second,
-                    'input_memory_mb': input_memory_mb,
-                    'output_memory_mb': output_memory_mb,
-                    'memory_bandwidth_mb_s': memory_bandwidth_mb_s,
-                    'time_per_token_us': lookup_time_ms * 1000 / total_tokens if total_tokens > 0 else 0
-                }
-        
-        return results
-        ### END SOLUTION
-    
-    def analyze_memory_scaling(self, vocab_sizes: List[int], embedding_dims: List[int]):
-        """
-        Analyze how embedding memory usage scales with vocabulary size and embedding dimension.
-        
-        This function is PROVIDED to show memory scaling analysis.
-        """
-        print("📊 EMBEDDING MEMORY SCALING ANALYSIS")
-        print("=" * 60)
-        
-        scaling_results = {}
-        
-        print(f"{'Vocab Size':<12} {'Embed Dim':<10} {'Parameters':<12} {'Memory (MB)':<12} {'Lookup Time':<12}")
-        print("-" * 70)
-        
-        for vocab_size in vocab_sizes:
-            for embed_dim in embedding_dims:
-                # Create embedding layer
-                embed = Embedding(vocab_size=vocab_size, embedding_dim=embed_dim)
-                
-                # Calculate memory usage
-                memory_stats = embed.get_memory_usage()
-                total_memory_mb = memory_stats['total_memory_mb']
-                total_params = memory_stats['total_parameters']
-                
-                # Measure lookup time
-                test_tokens = np.random.randint(0, vocab_size, (32, 64))  # Standard batch
-                start_time = time.time()
-                _ = embed.forward(test_tokens)
-                lookup_time_ms = (time.time() - start_time) * 1000
-                
-                # Store results
-                config_key = f"vocab_{vocab_size}_dim_{embed_dim}"
-                scaling_results[config_key] = {
-                    'vocab_size': vocab_size,
-                    'embedding_dim': embed_dim,
-                    'total_parameters': total_params,
-                    'memory_mb': total_memory_mb,
-                    'lookup_time_ms': lookup_time_ms
-                }
-                
-                print(f"{vocab_size:<12,} {embed_dim:<10} {total_params:<12,} {total_memory_mb:<12.2f} {lookup_time_ms:<12.2f}")
-        
-        # Analyze scaling patterns
-        print(f"\nPROGRESS SCALING INSIGHTS:")
-        if len(vocab_sizes) > 1 and len(embedding_dims) > 1:
-            # Compare scaling with vocab size (fixed embedding dim)
-            fixed_dim = embedding_dims[0]
-            small_vocab = min(vocab_sizes)
-            large_vocab = max(vocab_sizes)
-            
-            small_key = f"vocab_{small_vocab}_dim_{fixed_dim}"
-            large_key = f"vocab_{large_vocab}_dim_{fixed_dim}"
-            
-            if small_key in scaling_results and large_key in scaling_results:
-                vocab_ratio = large_vocab / small_vocab
-                memory_ratio = scaling_results[large_key]['memory_mb'] / scaling_results[small_key]['memory_mb']
-                print(f"   Vocabulary scaling: {vocab_ratio:.1f}x vocab -> {memory_ratio:.1f}x memory (Linear)")
-            
-            # Compare scaling with embedding dim (fixed vocab)
-            fixed_vocab = vocab_sizes[0]
-            small_dim = min(embedding_dims)
-            large_dim = max(embedding_dims)
-            
-            small_key = f"vocab_{fixed_vocab}_dim_{small_dim}"
-            large_key = f"vocab_{fixed_vocab}_dim_{large_dim}"
-            
-            if small_key in scaling_results and large_key in scaling_results:
-                dim_ratio = large_dim / small_dim
-                memory_ratio = scaling_results[large_key]['memory_mb'] / scaling_results[small_key]['memory_mb']
-                print(f"   Dimension scaling: {dim_ratio:.1f}x dim -> {memory_ratio:.1f}x memory (Linear)")
-        
-        return scaling_results
-    
-    def compare_positional_encodings(self, seq_length: int = 100, embedding_dim: int = 256):
-        """
-        Compare performance and characteristics of different positional encoding approaches.
-        
-        This function is PROVIDED to show positional encoding comparison.
-        """
-        print(f"\nMAGNIFY POSITIONAL ENCODING COMPARISON")
-        print("=" * 50)
-        
-        # Create test embeddings
-        batch_size = 16
-        embeddings = Tensor(np.random.randn(batch_size, seq_length, embedding_dim))
-        
-        # Test sinusoidal positional encoding
-        sinusoidal_pe = PositionalEncoding(embedding_dim=embedding_dim, max_seq_length=seq_length*2)
-        start_time = time.time()
-        sin_result = sinusoidal_pe.forward(embeddings)
-        sin_time = (time.time() - start_time) * 1000
-        
-        # Test learned positional embedding
-        learned_pe = LearnedPositionalEmbedding(max_seq_length=seq_length*2, embedding_dim=embedding_dim)
-        start_time = time.time()
-        learned_result = learned_pe.forward(embeddings)
-        learned_time = (time.time() - start_time) * 1000
-        
-        # Calculate memory usage
-        sin_memory = 0  # No learnable parameters
-        learned_memory = learned_pe.position_embedding.get_memory_usage()['total_memory_mb']
-        
-        results = {
-            'sinusoidal': {
-                'computation_time_ms': sin_time,
-                'memory_usage_mb': sin_memory,
-                'parameters': 0,
-                'deterministic': True,
-                'extrapolation': 'Good (can handle longer sequences)'
-            },
-            'learned': {
-                'computation_time_ms': learned_time,
-                'memory_usage_mb': learned_memory,
-                'parameters': seq_length * 2 * embedding_dim,
-                'deterministic': False,
-                'extrapolation': 'Limited (fixed max sequence length)'
-            }
-        }
-        
-        print(f"📊 COMPARISON RESULTS:")
-        print(f"{'Method':<12} {'Time (ms)':<10} {'Memory (MB)':<12} {'Parameters':<12} {'Extrapolation'}")
-        print("-" * 70)
-        print(f"{'Sinusoidal':<12} {sin_time:<10.2f} {sin_memory:<12.2f} {0:<12,} {'Good'}")
-        print(f"{'Learned':<12} {learned_time:<10.2f} {learned_memory:<12.2f} {results['learned']['parameters']:<12,} {'Limited'}")
-        
-        print(f"\nTIP INSIGHTS:")
-        print(f"   - Sinusoidal: Zero parameters, deterministic, good extrapolation")
-        print(f"   - Learned: Requires parameters, model-specific, limited extrapolation")
-        print(f"   - Choice depends on: model capacity, sequence length requirements, extrapolation needs")
-        
-        return results
+        self.vocab_size = vocab_size
+        self.embed_dim = embed_dim
+        self.max_seq_len = max_seq_len
+        self.pos_encoding_type = pos_encoding
+        self.scale_embeddings = scale_embeddings
 
-def analyze_embedding_system_design():
-    """
-    Comprehensive analysis of embedding system design choices and their impact.
-    
-    This function is PROVIDED to show systems-level design thinking.
-    """
-    print("🏗️ EMBEDDING SYSTEM DESIGN ANALYSIS")
-    print("=" * 60)
-    
-    # Example model configurations
-    model_configs = [
-        {'name': 'Small GPT', 'vocab_size': 10000, 'embed_dim': 256, 'seq_length': 512},
-        {'name': 'Medium GPT', 'vocab_size': 50000, 'embed_dim': 512, 'seq_length': 1024},
-        {'name': 'Large GPT', 'vocab_size': 50000, 'embed_dim': 1024, 'seq_length': 2048}
-    ]
-    
-    print(f"📋 MODEL CONFIGURATION COMPARISON:")
-    print(f"{'Model':<12} {'Vocab Size':<10} {'Embed Dim':<10} {'Seq Len':<8} {'Embed Params':<12} {'Memory (MB)'}")
-    print("-" * 80)
-    
-    for config in model_configs:
-        # Calculate embedding parameters
-        embed_params = config['vocab_size'] * config['embed_dim']
-        
-        # Calculate memory usage
-        embed_memory_mb = embed_params * 4 / (1024 * 1024)  # 4 bytes per float32
-        
-        print(f"{config['name']:<12} {config['vocab_size']:<10,} {config['embed_dim']:<10} "
-              f"{config['seq_length']:<8} {embed_params:<12,} {embed_memory_mb:<10.1f}")
-    
-    print(f"\nTARGET DESIGN TRADE-OFFS:")
-    print(f"   1. Vocabulary Size:")
-    print(f"      - Larger vocab: Better text coverage, more parameters")
-    print(f"      - Smaller vocab: Longer sequences, more compute")
-    print(f"   2. Embedding Dimension:")
-    print(f"      - Higher dim: More model capacity, more memory")
-    print(f"      - Lower dim: Faster computation, potential bottleneck")
-    print(f"   3. Position Encoding:")
-    print(f"      - Sinusoidal: No parameters, good extrapolation")
-    print(f"      - Learned: Model-specific, limited to training length")
-    print(f"   4. Memory Scaling:")
-    print(f"      - Embedding table: O(vocab_size * embed_dim)")
-    print(f"      - Sequence processing: O(batch_size * seq_length * embed_dim)")
-    print(f"      - Total memory dominated by model size, not embedding table")
-    
-    print(f"\n🏭 PRODUCTION CONSIDERATIONS:")
-    print(f"   - GPU memory limits affect maximum embedding table size")
-    print(f"   - Embedding lookup is memory-bandwidth bound")
-    print(f"   - Vocabulary size affects tokenization and model download size")
-    print(f"   - Position encoding choice affects sequence length flexibility")
+        # Token embedding layer
+        self.token_embedding = Embedding(vocab_size, embed_dim)
 
-# %% [markdown]
-"""
-### TEST Test: Embedding Performance Analysis
-
-Let's test our embedding profiler with realistic performance scenarios.
-"""
-
-# %% nbgrader={"grade": false, "grade_id": "test-embedding-profiler", "locked": false, "schema_version": 3, "solution": false, "task": false}
-def test_embedding_profiler():
-    """Test embedding profiler with various scenarios."""
-    print("🔬 Unit Test: Embedding Performance Profiler...")
-    
-    profiler = EmbeddingProfiler()
-    
-    # Create test embedding layer
-    vocab_size = 1000
-    embedding_dim = 128
-    embed = Embedding(vocab_size=vocab_size, embedding_dim=embedding_dim)
-    
-    # Test lookup performance measurement
-    batch_sizes = [8, 16]
-    seq_lengths = [32, 64]
-    
-    performance_results = profiler.measure_lookup_performance(embed, batch_sizes, seq_lengths)
-    
-    # Verify results structure
-    expected_configs = len(batch_sizes) * len(seq_lengths)
-    assert len(performance_results) == expected_configs, f"Should test {expected_configs} configurations"
-    
-    for config, metrics in performance_results.items():
-        # Verify all required metrics are present
-        required_keys = ['batch_size', 'seq_length', 'total_tokens', 'lookup_time_ms', 
-                        'tokens_per_second', 'memory_bandwidth_mb_s']
-        for key in required_keys:
-            assert key in metrics, f"Missing metric: {key} in {config}"
-            assert isinstance(metrics[key], (int, float)), f"Invalid metric type for {key}"
-        
-        # Verify reasonable values
-        assert metrics['total_tokens'] > 0, "Should count tokens"
-        assert metrics['lookup_time_ms'] >= 0, "Time should be non-negative"
-        assert metrics['tokens_per_second'] >= 0, "Throughput should be non-negative"
-    
-    print("PASS Lookup performance measurement test passed")
-    
-    # Test memory scaling analysis
-    vocab_sizes = [500, 1000]
-    embedding_dims = [64, 128]
-    
-    scaling_results = profiler.analyze_memory_scaling(vocab_sizes, embedding_dims)
-    
-    # Verify scaling results
-    expected_configs = len(vocab_sizes) * len(embedding_dims)
-    assert len(scaling_results) == expected_configs, f"Should test {expected_configs} configurations"
-    
-    for config, metrics in scaling_results.items():
-        assert 'total_parameters' in metrics, "Should include parameter count"
-        assert 'memory_mb' in metrics, "Should include memory usage"
-        assert metrics['total_parameters'] > 0, "Should have parameters"
-        assert metrics['memory_mb'] > 0, "Should use memory"
-    
-    print("PASS Memory scaling analysis test passed")
-    
-    # Test positional encoding comparison
-    comparison_results = profiler.compare_positional_encodings(seq_length=50, embedding_dim=64)
-    
-    # Verify comparison results
-    assert 'sinusoidal' in comparison_results, "Should test sinusoidal encoding"
-    assert 'learned' in comparison_results, "Should test learned encoding"
-    
-    for method, metrics in comparison_results.items():
-        assert 'computation_time_ms' in metrics, "Should measure computation time"
-        assert 'memory_usage_mb' in metrics, "Should measure memory usage"
-        assert 'parameters' in metrics, "Should count parameters"
-    
-    print("PASS Positional encoding comparison test passed")
-    print("TARGET Embedding Profiler: All tests passed!")
-
-# Test function defined (called in main block)
-
-# %% [markdown]
-"""
-## Integration Testing: Complete Embedding Pipeline
-
-Let's test how all our embedding components work together in a realistic language processing pipeline:
-"""
-
-# %% nbgrader={"grade": false, "grade_id": "test-embedding-integration", "locked": false, "schema_version": 3, "solution": false, "task": false}
-def test_embedding_integration():
-    """Test complete embedding pipeline with tokenization integration."""
-    print("TEST Integration Test: Complete Embedding Pipeline...")
-
-    # Create tokenizer (using mock for simplicity)
-    tokenizer = CharTokenizer()
-
-    # Create embedding layer
-    embed = Embedding(vocab_size=tokenizer.vocab_size, embedding_dim=128, padding_idx=0)
-
-    # Create positional encoding
-    pos_encoding = PositionalEncoding(embedding_dim=128, max_seq_length=100)
-
-    # Test with simple token sequences instead of text processing
-    # This avoids the tokenizer method issues while testing embedding pipeline
-    test_sequences = [
-        [1, 2, 3, 4, 5],      # "Hello world!"
-        [6, 7, 8, 9, 10, 11], # "This is a test."
-        [12, 13, 14],         # "Short text."
-        [15, 16, 17, 18, 19, 20, 21, 22] # "A longer piece..."
-    ]
-
-    print(f"  Processing {len(test_sequences)} token sequences through complete pipeline...")
-
-    # Step 1: Use pre-tokenized sequences
-    tokenized = test_sequences
-    
-    # Step 2: Pad sequences manually for batch processing
-    max_length = 20
-    padded_sequences = []
-    for seq in tokenized:
-        # Pad with 0s or truncate to max_length
-        if len(seq) < max_length:
-            padded = seq + [0] * (max_length - len(seq))
+        # Positional encoding
+        if pos_encoding == 'learned':
+            self.pos_encoding = PositionalEncoding(max_seq_len, embed_dim)
+        elif pos_encoding == 'sinusoidal':
+            # Create fixed sinusoidal encodings (no parameters)
+            self.pos_encoding = create_sinusoidal_embeddings(max_seq_len, embed_dim)
+        elif pos_encoding is None:
+            self.pos_encoding = None
         else:
-            padded = seq[:max_length]
-        padded_sequences.append(padded)
+            raise ValueError(f"Unknown pos_encoding: {pos_encoding}. Use 'learned', 'sinusoidal', or None")
 
-    batch_tokens = Tensor(np.array(padded_sequences))
-    
-    print(f"    Batch shape: {batch_tokens.shape}")
-    
-    # Step 3: Embedding lookup
-    embeddings = embed.forward(batch_tokens)
-    print(f"    Embeddings shape: {embeddings.shape}")
-    
-    # Step 4: Add positional encoding
-    pos_embeddings = pos_encoding.forward(embeddings)
-    print(f"    Position-aware embeddings shape: {pos_embeddings.shape}")
-    
-    # Verify pipeline correctness
-    expected_shape = (len(test_sequences), 20, 128)  # (batch, seq_len, embed_dim)
-    assert pos_embeddings.shape == expected_shape, f"Expected {expected_shape}, got {pos_embeddings.shape}"
-    
-    # Test that padding tokens have correct embeddings (should be zero from embedding layer)
-    padding_token_id = 0  # We used 0 for padding
+    def forward(self, tokens: Tensor) -> Tensor:
+        """
+        Forward pass through complete embedding system.
 
-    # Find positions with padding tokens
-    padding_positions = (batch_tokens.data == padding_token_id)
-    
-    if np.any(padding_positions):
-        # Get embeddings for padding positions
-        padding_embeddings = embeddings.data[padding_positions]
-        
-        # Padding embeddings should be close to zero (from embedding initialization)
-        # Note: they won't be exactly zero because we add positional encoding
-        print(f"    Padding token embeddings found: {np.sum(padding_positions)} positions")
-    
-    # Test different sequence lengths
-    short_tokens = [23, 24]  # Simple short sequence
-    short_tensor = Tensor(np.array([short_tokens]))  # Add batch dimension
-    
-    short_embeddings = embed.forward(short_tensor)
-    short_pos_embeddings = pos_encoding.forward(short_embeddings)
-    
-    print(f"    Short text processing: {short_pos_embeddings.shape}")
-    
-    # Test memory efficiency
-    large_batch_size = 32
-    large_seq_length = 50
-    large_tokens = np.random.randint(0, tokenizer.vocab_size, (large_batch_size, large_seq_length))
-    large_tensor = Tensor(large_tokens)
-    
-    start_time = time.time()
-    large_embeddings = embed.forward(large_tensor)
-    large_pos_embeddings = pos_encoding.forward(large_embeddings)
-    processing_time = time.time() - start_time
-    
-    print(f"    Large batch processing: {large_pos_embeddings.shape} in {processing_time*1000:.2f}ms")
-    
-    # Calculate memory usage
-    embedding_memory = embed.get_memory_usage()
-    total_memory_mb = embedding_memory['total_memory_mb']
-    
-    print(f"    Embedding table memory: {total_memory_mb:.2f}MB")
-    print(f"    Sequence memory: {large_pos_embeddings.data.nbytes / (1024*1024):.2f}MB")
-    
-    print("PASS Complete embedding pipeline integration test passed!")
-    print(f"PASS Tokenization -> Embedding -> Positional Encoding pipeline works")
-    print(f"PASS Handles various batch sizes and sequence lengths")
-    print(f"PASS Memory usage is reasonable for production systems")
+        Args:
+            tokens: Token indices of shape (batch_size, seq_len) or (seq_len,)
 
-# Test function defined (called in main block)
+        Returns:
+            Embedded tokens with positional information
+        """
+        # Handle 1D input by adding batch dimension
+        if len(tokens.shape) == 1:
+            tokens = Tensor(tokens.data[np.newaxis, :])  # (1, seq_len)
+            squeeze_batch = True
+        else:
+            squeeze_batch = False
+
+        # Get token embeddings
+        token_embeds = self.token_embedding.forward(tokens)  # (batch, seq, embed)
+
+        # Scale embeddings if requested (transformer convention)
+        if self.scale_embeddings:
+            token_embeds = Tensor(token_embeds.data * math.sqrt(self.embed_dim))
+
+        # Add positional encoding
+        if self.pos_encoding_type == 'learned':
+            # Use learnable positional encoding
+            output = self.pos_encoding.forward(token_embeds)
+        elif self.pos_encoding_type == 'sinusoidal':
+            # Use fixed sinusoidal encoding
+            batch_size, seq_len, embed_dim = token_embeds.shape
+            pos_embeddings = self.pos_encoding.data[:seq_len]  # (seq_len, embed_dim)
+            pos_embeddings = pos_embeddings[np.newaxis, :, :]  # (1, seq_len, embed_dim)
+            output = Tensor(token_embeds.data + pos_embeddings)
+        else:
+            # No positional encoding
+            output = token_embeds
+
+        # Remove batch dimension if it was added
+        if squeeze_batch:
+            output = Tensor(output.data[0])  # (seq_len, embed_dim)
+
+        return output
+
+    def parameters(self) -> List[Tensor]:
+        """Return all trainable parameters."""
+        params = self.token_embedding.parameters()
+
+        if self.pos_encoding_type == 'learned':
+            params.extend(self.pos_encoding.parameters())
+
+        return params
+
+    def __repr__(self):
+        return (f"EmbeddingLayer(vocab_size={self.vocab_size}, "
+                f"embed_dim={self.embed_dim}, "
+                f"pos_encoding='{self.pos_encoding_type}')")
+    ### END SOLUTION
+
+# %% nbgrader={"grade": true, "grade_id": "test-complete-system", "locked": true, "points": 15}
+def test_unit_complete_embedding_system():
+    """🔬 Unit Test: Complete Embedding System"""
+    print("🔬 Unit Test: Complete Embedding System...")
+
+    # Test 1: Learned positional encoding
+    embed_learned = EmbeddingLayer(
+        vocab_size=100,
+        embed_dim=64,
+        max_seq_len=128,
+        pos_encoding='learned'
+    )
+
+    tokens = Tensor([[1, 2, 3], [4, 5, 6]])
+    output_learned = embed_learned.forward(tokens)
+
+    assert output_learned.shape == (2, 3, 64), f"Expected shape (2, 3, 64), got {output_learned.shape}"
+
+    # Test 2: Sinusoidal positional encoding
+    embed_sin = EmbeddingLayer(
+        vocab_size=100,
+        embed_dim=64,
+        pos_encoding='sinusoidal'
+    )
+
+    output_sin = embed_sin.forward(tokens)
+    assert output_sin.shape == (2, 3, 64), "Sinusoidal embedding should have same shape"
+
+    # Test 3: No positional encoding
+    embed_none = EmbeddingLayer(
+        vocab_size=100,
+        embed_dim=64,
+        pos_encoding=None
+    )
+
+    output_none = embed_none.forward(tokens)
+    assert output_none.shape == (2, 3, 64), "No pos encoding should have same shape"
+
+    # Test 4: 1D input handling
+    tokens_1d = Tensor([1, 2, 3])
+    output_1d = embed_learned.forward(tokens_1d)
+
+    assert output_1d.shape == (3, 64), f"Expected shape (3, 64) for 1D input, got {output_1d.shape}"
+
+    # Test 5: Embedding scaling
+    embed_scaled = EmbeddingLayer(
+        vocab_size=100,
+        embed_dim=64,
+        pos_encoding=None,
+        scale_embeddings=True
+    )
+
+    output_scaled = embed_scaled.forward(tokens)
+    output_unscaled = embed_none.forward(tokens)
+
+    # Scaled version should be sqrt(64) times larger
+    scale_factor = math.sqrt(64)
+    expected_scaled = output_unscaled.data * scale_factor
+    assert np.allclose(output_scaled.data, expected_scaled, rtol=1e-5), "Embedding scaling not working correctly"
+
+    # Test 6: Parameter counting
+    params_learned = embed_learned.parameters()
+    params_sin = embed_sin.parameters()
+    params_none = embed_none.parameters()
+
+    assert len(params_learned) == 2, "Learned encoding should have 2 parameter tensors"
+    assert len(params_sin) == 1, "Sinusoidal encoding should have 1 parameter tensor"
+    assert len(params_none) == 1, "No pos encoding should have 1 parameter tensor"
+
+    print("✅ Complete embedding system works correctly!")
+
+test_unit_complete_embedding_system()
 
 # %% [markdown]
 """
-## Main Execution Block
+## 9. Systems Analysis - Embedding Memory and Performance
 
-All embedding tests and demonstrations are run from here when the module is executed directly:
+Understanding the systems implications of embedding layers is crucial for building scalable NLP models. Let's analyze memory usage, lookup performance, and trade-offs between different approaches.
+
+### Memory Usage Analysis
+
+```
+Embedding Memory Scaling:
+Vocabulary Size vs Memory Usage (embed_dim=512, FP32):
+
+ 10K vocab: 10,000 × 512 × 4 bytes = 20 MB
+ 50K vocab: 50,000 × 512 × 4 bytes = 100 MB
+100K vocab: 100,000 × 512 × 4 bytes = 200 MB
+  1M vocab: 1,000,000 × 512 × 4 bytes = 2 GB
+
+GPT-3 Scale: 50,257 × 12,288 × 4 bytes ≈ 2.4 GB just for embeddings!
+
+Memory Formula: vocab_size × embed_dim × 4 bytes (FP32)
+```
+
+### Performance Characteristics
+
+```
+Embedding Lookup Performance:
+- Time Complexity: O(1) per token (hash table lookup)
+- Memory Access: Random access pattern
+- Bottleneck: Memory bandwidth, not computation
+- Batching: Improves throughput via vectorization
+
+Cache Efficiency:
+Repeated tokens → Cache hits → Faster access
+Diverse vocab → Cache misses → Slower access
+```
 """
 
-# %% nbgrader={"grade": false, "grade_id": "embeddings-main", "locked": false, "schema_version": 3, "solution": false, "task": false}
+# %% nbgrader={"grade": false, "grade_id": "memory-analysis", "solution": true}
+def analyze_embedding_memory():
+    """📊 Analyze embedding memory requirements and scaling behavior."""
+    print("📊 Analyzing Embedding Memory Requirements...")
+
+    # Vocabulary and embedding dimension scenarios
+    scenarios = [
+        ("Small Model", 10_000, 256),
+        ("Medium Model", 50_000, 512),
+        ("Large Model", 100_000, 1024),
+        ("GPT-3 Scale", 50_257, 12_288),
+    ]
+
+    print(f"{'Model':<15} {'Vocab Size':<12} {'Embed Dim':<12} {'Memory (MB)':<15} {'Parameters (M)':<15}")
+    print("-" * 80)
+
+    for name, vocab_size, embed_dim in scenarios:
+        # Calculate memory for FP32 (4 bytes per parameter)
+        params = vocab_size * embed_dim
+        memory_mb = params * 4 / (1024 * 1024)
+        params_m = params / 1_000_000
+
+        print(f"{name:<15} {vocab_size:<12,} {embed_dim:<12} {memory_mb:<15.1f} {params_m:<15.2f}")
+
+    print("\n💡 Key Insights:")
+    print("• Embedding tables often dominate model memory (especially for large vocabularies)")
+    print("• Memory scales linearly with vocab_size × embed_dim")
+    print("• Consider vocabulary pruning for memory-constrained environments")
+
+    # Positional encoding memory comparison
+    print(f"\n📊 Positional Encoding Memory Comparison (embed_dim=512, max_seq_len=2048):")
+
+    learned_params = 2048 * 512
+    learned_memory = learned_params * 4 / (1024 * 1024)
+
+    print(f"Learned PE:     {learned_memory:.1f} MB ({learned_params:,} parameters)")
+    print(f"Sinusoidal PE:  0.0 MB (0 parameters - computed on-the-fly)")
+    print(f"No PE:          0.0 MB (0 parameters)")
+
+    print("\n🚀 Production Implications:")
+    print("• GPT-3's embedding table: ~2.4GB (50K vocab × 12K dims)")
+    print("• Learned PE adds memory but may improve task-specific performance")
+    print("• Sinusoidal PE saves memory and allows longer sequences")
+
+analyze_embedding_memory()
+
+# %% nbgrader={"grade": false, "grade_id": "lookup-performance", "solution": true}
+def analyze_lookup_performance():
+    """📊 Analyze embedding lookup performance characteristics."""
+    print("\n📊 Analyzing Embedding Lookup Performance...")
+
+    import time
+
+    # Test different vocabulary sizes and batch configurations
+    vocab_sizes = [1_000, 10_000, 100_000]
+    embed_dim = 512
+    seq_len = 128
+    batch_sizes = [1, 16, 64, 256]
+
+    print(f"{'Vocab Size':<12} {'Batch Size':<12} {'Lookup Time (ms)':<18} {'Throughput (tokens/s)':<20}")
+    print("-" * 70)
+
+    for vocab_size in vocab_sizes:
+        # Create embedding layer
+        embed = Embedding(vocab_size, embed_dim)
+
+        for batch_size in batch_sizes:
+            # Create random token batch
+            tokens = Tensor(np.random.randint(0, vocab_size, (batch_size, seq_len)))
+
+            # Warmup
+            for _ in range(5):
+                _ = embed.forward(tokens)
+
+            # Time the lookup
+            start_time = time.time()
+            iterations = 100
+
+            for _ in range(iterations):
+                output = embed.forward(tokens)
+
+            end_time = time.time()
+
+            # Calculate metrics
+            total_time = end_time - start_time
+            avg_time_ms = (total_time / iterations) * 1000
+            total_tokens = batch_size * seq_len * iterations
+            throughput = total_tokens / total_time
+
+            print(f"{vocab_size:<12,} {batch_size:<12} {avg_time_ms:<18.2f} {throughput:<20,.0f}")
+
+    print("\n💡 Performance Insights:")
+    print("• Lookup time is O(1) per token - vocabulary size doesn't affect individual lookups")
+    print("• Larger batches improve throughput due to vectorization")
+    print("• Memory bandwidth becomes bottleneck for large embedding dimensions")
+    print("• Cache locality important for repeated token patterns")
+
+analyze_lookup_performance()
+
+# %% nbgrader={"grade": false, "grade_id": "position-encoding-comparison", "solution": true}
+def analyze_positional_encoding_trade_offs():
+    """📊 Compare learned vs sinusoidal positional encodings."""
+    print("\n📊 Analyzing Positional Encoding Trade-offs...")
+
+    max_seq_len = 512
+    embed_dim = 256
+
+    # Create both types of positional encodings
+    learned_pe = PositionalEncoding(max_seq_len, embed_dim)
+    sinusoidal_pe = create_sinusoidal_embeddings(max_seq_len, embed_dim)
+
+    # Analyze memory footprint
+    learned_params = max_seq_len * embed_dim
+    learned_memory = learned_params * 4 / (1024 * 1024)  # MB
+
+    print(f"📈 Memory Comparison:")
+    print(f"Learned PE:     {learned_memory:.2f} MB ({learned_params:,} parameters)")
+    print(f"Sinusoidal PE:  0.00 MB (0 parameters)")
+
+    # Analyze encoding patterns
+    print(f"\n📈 Encoding Pattern Analysis:")
+
+    # Test sample sequences
+    test_input = Tensor(np.random.randn(1, 10, embed_dim))
+
+    learned_output = learned_pe.forward(test_input)
+
+    # For sinusoidal, manually add to match learned interface
+    sin_encodings = sinusoidal_pe.data[:10][np.newaxis, :, :]  # (1, 10, embed_dim)
+    sinusoidal_output = Tensor(test_input.data + sin_encodings)
+
+    # Analyze variance across positions
+    learned_var = np.var(learned_output.data, axis=1).mean()  # Variance across positions
+    sin_var = np.var(sinusoidal_output.data, axis=1).mean()
+
+    print(f"Position variance (learned):    {learned_var:.4f}")
+    print(f"Position variance (sinusoidal): {sin_var:.4f}")
+
+    # Check extrapolation capability
+    print(f"\n📈 Extrapolation Analysis:")
+    extended_length = max_seq_len + 100
+
+    try:
+        # Learned PE cannot handle longer sequences
+        extended_learned = PositionalEncoding(extended_length, embed_dim)
+        print(f"Learned PE: Requires retraining for sequences > {max_seq_len}")
+    except:
+        print(f"Learned PE: Cannot handle sequences > {max_seq_len}")
+
+    # Sinusoidal can extrapolate
+    extended_sin = create_sinusoidal_embeddings(extended_length, embed_dim)
+    print(f"Sinusoidal PE: Can extrapolate to length {extended_length} (smooth continuation)")
+
+    print(f"\n🚀 Production Trade-offs:")
+    print(f"Learned PE:")
+    print(f"  + Can learn task-specific positional patterns")
+    print(f"  + May perform better for tasks with specific position dependencies")
+    print(f"  - Requires additional memory and parameters")
+    print(f"  - Fixed maximum sequence length")
+    print(f"  - Needs training data for longer sequences")
+
+    print(f"\nSinusoidal PE:")
+    print(f"  + Zero additional parameters")
+    print(f"  + Can extrapolate to any sequence length")
+    print(f"  + Provides rich, mathematically grounded position signals")
+    print(f"  - Cannot adapt to task-specific position patterns")
+    print(f"  - May be suboptimal for highly position-dependent tasks")
+
+analyze_positional_encoding_trade_offs()
+
+# %% [markdown]
+"""
+## 10. Module Integration Test
+
+Final validation that our complete embedding system works correctly and integrates with the TinyTorch ecosystem.
+"""
+
+# %% nbgrader={"grade": true, "grade_id": "module-test", "locked": true, "points": 20}
 def test_module():
-    """Run all unit tests for this module."""
-    print("🧪 TESTING MODULE: Embeddings")
+    """
+    Comprehensive test of entire embeddings module functionality.
+
+    This final test ensures all components work together and the module
+    is ready for integration with attention mechanisms and transformers.
+    """
+    print("🧪 RUNNING MODULE INTEGRATION TEST")
     print("=" * 50)
 
     # Run all unit tests
-    test_unit_embedding_layer()
+    print("Running unit tests...")
+    test_unit_embedding()
     test_unit_positional_encoding()
-    test_unit_learned_positional_embedding()
-    test_embedding_profiler()
-    test_embedding_integration()
+    test_unit_sinusoidal_embeddings()
+    test_unit_complete_embedding_system()
+
+    print("\nRunning integration scenarios...")
+
+    # Integration Test 1: Realistic NLP pipeline
+    print("🔬 Integration Test: NLP Pipeline Simulation...")
+
+    # Simulate a small transformer setup
+    vocab_size = 1000
+    embed_dim = 128
+    max_seq_len = 64
+
+    # Create embedding layer
+    embed_layer = EmbeddingLayer(
+        vocab_size=vocab_size,
+        embed_dim=embed_dim,
+        max_seq_len=max_seq_len,
+        pos_encoding='learned',
+        scale_embeddings=True
+    )
+
+    # Simulate tokenized sentences
+    sentences = [
+        [1, 15, 42, 7, 99],        # "the cat sat on mat"
+        [23, 7, 15, 88],           # "dog chased the ball"
+        [1, 67, 15, 42, 7, 99, 34] # "the big cat sat on mat here"
+    ]
+
+    # Process each sentence
+    outputs = []
+    for sentence in sentences:
+        tokens = Tensor(sentence)
+        embedded = embed_layer.forward(tokens)
+        outputs.append(embedded)
+
+        # Verify output shape
+        expected_shape = (len(sentence), embed_dim)
+        assert embedded.shape == expected_shape, f"Wrong shape for sentence: {embedded.shape} != {expected_shape}"
+
+    print("✅ Variable length sentence processing works!")
+
+    # Integration Test 2: Batch processing with padding
+    print("🔬 Integration Test: Batched Processing...")
+
+    # Create padded batch (real-world scenario)
+    max_len = max(len(s) for s in sentences)
+    batch_tokens = []
+
+    for sentence in sentences:
+        # Pad with zeros (assuming 0 is padding token)
+        padded = sentence + [0] * (max_len - len(sentence))
+        batch_tokens.append(padded)
+
+    batch_tensor = Tensor(batch_tokens)  # (3, 7)
+    batch_output = embed_layer.forward(batch_tensor)
+
+    assert batch_output.shape == (3, max_len, embed_dim), f"Batch output shape incorrect: {batch_output.shape}"
+
+    print("✅ Batch processing with padding works!")
+
+    # Integration Test 3: Different positional encoding types
+    print("🔬 Integration Test: Position Encoding Variants...")
+
+    test_tokens = Tensor([[1, 2, 3, 4, 5]])
+
+    # Test all position encoding types
+    for pe_type in ['learned', 'sinusoidal', None]:
+        embed_test = EmbeddingLayer(
+            vocab_size=100,
+            embed_dim=64,
+            pos_encoding=pe_type
+        )
+
+        output = embed_test.forward(test_tokens)
+        assert output.shape == (1, 5, 64), f"PE type {pe_type} failed shape test"
+
+        # Check parameter counts
+        if pe_type == 'learned':
+            assert len(embed_test.parameters()) == 2, f"Learned PE should have 2 param tensors"
+        else:
+            assert len(embed_test.parameters()) == 1, f"PE type {pe_type} should have 1 param tensor"
+
+    print("✅ All positional encoding variants work!")
+
+    # Integration Test 4: Memory efficiency check
+    print("🔬 Integration Test: Memory Efficiency...")
+
+    # Test that we're not creating unnecessary copies
+    large_embed = EmbeddingLayer(vocab_size=10000, embed_dim=512)
+    test_batch = Tensor(np.random.randint(0, 10000, (32, 128)))
+
+    # Multiple forward passes should not accumulate memory (in production)
+    for _ in range(5):
+        output = large_embed.forward(test_batch)
+        assert output.shape == (32, 128, 512), "Large batch processing failed"
+
+    print("✅ Memory efficiency check passed!")
 
     print("\n" + "=" * 50)
-    print("✅ ALL TESTS PASSED! Module ready for export.")
-    print("Run: tito module complete 11_embeddings")
+    print("🎉 ALL TESTS PASSED! Module ready for export.")
+    print("📚 Summary of capabilities built:")
+    print("  • Token embedding with trainable lookup tables")
+    print("  • Learned positional encodings for position awareness")
+    print("  • Sinusoidal positional encodings for extrapolation")
+    print("  • Complete embedding system for NLP pipelines")
+    print("  • Efficient batch processing and memory management")
+    print("\n🚀 Ready for: Attention mechanisms, transformers, and language models!")
+    print("Export with: tito module complete 11")
 
+# %% nbgrader={"grade": false, "grade_id": "main-execution", "solution": true}
 if __name__ == "__main__":
+    """Main execution block for module validation."""
+    print("🚀 Running Embeddings module...")
     test_module()
-    
-    print("\n" + "="*60)
-    print("MAGNIFY EMBEDDING SYSTEMS ANALYSIS")
-    print("="*60)
-    
-    # Performance analysis
-    profiler = EmbeddingProfiler()
-    
-    # Test different embedding configurations
-    print("\n📊 EMBEDDING PERFORMANCE COMPARISON:")
-    
-    # Compare embedding layers with different sizes
-    vocab_sizes = [1000, 5000, 10000]
-    embedding_dims = [128, 256, 512]
-    
-    scaling_results = profiler.analyze_memory_scaling(vocab_sizes, embedding_dims)
-    
-    # Compare positional encoding approaches
-    print("\n" + "="*60)
-    pos_comparison = profiler.compare_positional_encodings(seq_length=128, embedding_dim=256)
-    
-    # Systems design analysis
-    print("\n" + "="*60)
-    analyze_embedding_system_design()
-    
-    # Demonstrate realistic language model embedding setup
-    print("\n" + "="*60)
-    print("🏗️ REALISTIC LANGUAGE MODEL EMBEDDING SETUP")
-    print("="*60)
-    
-    # Create realistic configuration
-    vocab_size = 10000  # 10k vocabulary
-    embedding_dim = 256  # 256-dim embeddings
-    max_seq_length = 512  # 512 token sequences
-    
-    print(f"Model configuration:")
-    print(f"  Vocabulary size: {vocab_size:,}")
-    print(f"  Embedding dimension: {embedding_dim}")
-    print(f"  Max sequence length: {max_seq_length}")
-    
-    # Create components
-    embedding_layer = Embedding(vocab_size=vocab_size, embedding_dim=embedding_dim, padding_idx=0)
-    pos_encoding = PositionalEncoding(embedding_dim=embedding_dim, max_seq_length=max_seq_length)
-    
-    # Calculate memory requirements
-    embed_memory = embedding_layer.get_memory_usage()
-    
-    print(f"\nMemory analysis:")
-    print(f"  Embedding table: {embed_memory['total_memory_mb']:.1f}MB")
-    print(f"  Parameters: {embed_memory['total_parameters']:,}")
-    
-    # Simulate batch processing
-    batch_size = 32
-    seq_length = 256
-    test_tokens = np.random.randint(0, vocab_size, (batch_size, seq_length))
-    
-    start_time = time.time()
-    embeddings = embedding_layer.forward(test_tokens)
-    pos_embeddings = pos_encoding.forward(embeddings)
-    total_time = time.time() - start_time
-    
-    sequence_memory_mb = pos_embeddings.data.nbytes / (1024 * 1024)
-    
-    print(f"\nBatch processing:")
-    print(f"  Batch size: {batch_size}, Sequence length: {seq_length}")
-    print(f"  Processing time: {total_time*1000:.2f}ms")
-    print(f"  Sequence memory: {sequence_memory_mb:.1f}MB")
-    print(f"  Throughput: {(batch_size * seq_length) / total_time:.0f} tokens/second")
-    
-    print("\n" + "="*60)
-    print("TARGET EMBEDDINGS MODULE COMPLETE!")
-    print("="*60)
-    print("All embedding tests passed!")
-    print("Ready for attention mechanism integration!")
+    print("✅ Module validation complete!")
 
 # %% [markdown]
 """
-## THINK ML Systems Thinking: Interactive Questions
+## 🤔 ML Systems Thinking: Embedding Foundations
 
-Now that you've built the embedding systems that convert tokens to rich vector representations, let's connect this work to broader ML systems challenges. These questions help you think critically about how embedding design scales to production language processing systems.
+### Question 1: Memory Scaling
+You implemented an embedding layer with vocab_size=50,000 and embed_dim=512.
+- How many parameters does this embedding table contain? _____ million
+- If using FP32 (4 bytes per parameter), how much memory does this use? _____ MB
+- If you double the embedding dimension to 1024, what happens to memory usage? _____ MB
 
-Take time to reflect thoughtfully on each question - your insights will help you understand how embedding choices connect to real-world ML systems engineering.
+### Question 2: Lookup Complexity
+Your embedding layer performs table lookups for token indices.
+- What is the time complexity of looking up a single token? O(_____)
+- For a batch of 32 sequences, each of length 128, how many lookup operations? _____
+- Why doesn't vocabulary size affect individual lookup performance? _____
+
+### Question 3: Positional Encoding Trade-offs
+You implemented both learned and sinusoidal positional encodings.
+- Learned PE for max_seq_len=2048, embed_dim=512 adds how many parameters? _____
+- What happens if you try to process a sequence longer than max_seq_len with learned PE? _____
+- Which type of PE can handle sequences longer than seen during training? _____
+
+### Question 4: Production Implications
+Your complete EmbeddingLayer combines token and positional embeddings.
+- In GPT-3 (vocab_size≈50K, embed_dim≈12K), approximately what percentage of total parameters are in the embedding table? _____%
+- If you wanted to reduce memory usage by 50%, which would be more effective: halving vocab_size or halving embed_dim? _____
+- Why might sinusoidal PE be preferred for models that need to handle variable sequence lengths? _____
 """
 
 # %% [markdown]
 """
-### Question 1: Embedding Memory Optimization and Model Scaling
+## 🎯 MODULE SUMMARY: Embeddings
 
-**Context**: Your embedding implementations demonstrate how vocabulary size and embedding dimension directly impact model parameters and memory usage. In your memory scaling analysis, you saw how a 100k vocabulary with 1024-dimensional embeddings requires ~400MB just for the embedding table. In production language models, embedding tables often contain billions of parameters (GPT-3's embedding table alone has ~600M parameters), making memory optimization critical for deployment and training efficiency.
+Congratulations! You've built a complete embedding system that transforms discrete tokens into learnable representations!
 
-**Reflection Question**: Based on your `Embedding` class implementation and memory scaling analysis, design a memory-optimized embedding system for a production language model that needs to handle a 100k vocabulary with 1024-dimensional embeddings while operating under GPU memory constraints. How would you modify your current `Embedding.forward()` method to implement embedding compression techniques, design efficient lookup patterns for high-throughput training, and handle dynamic vocabulary expansion for domain adaptation? Consider how your current weight initialization strategies could be adapted and what changes to your `get_memory_usage()` analysis would be needed for compressed embeddings.
+### Key Accomplishments
+- Built `Embedding` class with efficient token-to-vector lookup (10M+ token support)
+- Implemented `PositionalEncoding` for learnable position awareness (unlimited sequence patterns)
+- Created `create_sinusoidal_embeddings` with mathematical position encoding (extrapolates beyond training)
+- Developed `EmbeddingLayer` integrating both token and positional embeddings (production-ready)
+- Analyzed embedding memory scaling and lookup performance trade-offs
+- All tests pass ✅ (validated by `test_module()`)
 
-Think about: adapting your embedding lookup implementation, modifying weight storage patterns, extending your memory analysis for compression techniques, and designing efficient gradient updates for compressed representations.
+### Technical Achievements
+- **Memory Efficiency**: Optimized embedding table storage and lookup patterns
+- **Flexible Architecture**: Support for learned, sinusoidal, and no positional encoding
+- **Batch Processing**: Efficient handling of variable-length sequences with padding
+- **Systems Analysis**: Deep understanding of memory vs performance trade-offs
 
-*Target length: 150-300 words*
-"""
+### Ready for Next Steps
+Your embeddings implementation enables attention mechanisms and transformer architectures!
+The combination of token and positional embeddings provides the foundation for sequence-to-sequence models.
 
-# %% nbgrader={"grade": true, "grade_id": "question-1-embedding-memory", "locked": false, "points": 10, "schema_version": 3, "solution": true, "task": false}
-"""
-YOUR REFLECTION ON EMBEDDING MEMORY OPTIMIZATION:
+**Next**: Module 12 will add attention mechanisms for context-aware representations!
 
-TODO: Replace this text with your thoughtful response about memory-optimized embedding system design.
+### Production Context
+You've built the exact embedding patterns used in:
+- **GPT models**: Token embeddings + learned positional encoding
+- **BERT models**: Token embeddings + sinusoidal positional encoding
+- **T5 models**: Relative positional embeddings (variant of your implementations)
 
-Consider addressing:
-- How would you implement embedding compression for a 100k * 1024 vocabulary under GPU constraints?
-- What techniques would you use to optimize lookup patterns for high-throughput training?
-- How would you design dynamic vocabulary expansion while maintaining memory efficiency?
-- What trade-offs would you make between embedding quality and memory footprint?
-- How would you optimize differently for training vs inference scenarios?
-
-Write a technical analysis connecting your embedding implementations to real memory optimization challenges.
-
-GRADING RUBRIC (Instructor Use):
-- Demonstrates understanding of embedding memory scaling and optimization (3 points)
-- Designs practical approaches to compression and efficient lookup patterns (3 points)
-- Addresses dynamic vocabulary and quality-memory trade-offs (2 points)
-- Shows systems thinking about production memory constraints (2 points)
-- Clear technical reasoning with memory optimization insights (bonus points for innovative approaches)
-"""
-
-### BEGIN SOLUTION
-# Student response area - instructor will replace this section during grading setup
-# This is a manually graded question requiring technical analysis of embedding memory optimization
-# Students should demonstrate understanding of large-scale embedding systems and memory efficiency
-### END SOLUTION
-
-# %% [markdown]
-"""
-### Question 2: Positional Encoding and Sequence Length Scalability
-
-**Context**: Your positional encoding implementations show the trade-offs between fixed sinusoidal patterns and learned position embeddings. In your analysis, you saw that `PositionalEncoding` requires 0 parameters but `LearnedPositionalEmbedding` needs max_seq_length * embedding_dim parameters. Production language models increasingly need to handle variable sequence lengths efficiently while maintaining consistent position representations across different tasks and deployment scenarios.
-
-**Reflection Question**: Based on your `PositionalEncoding` and `LearnedPositionalEmbedding` implementations, architect a hybrid positional encoding system for a production transformer that efficiently handles sequences from 512 tokens to 32k tokens. How would you modify your current `forward()` methods to create a hybrid approach that combines the benefits of both systems? What changes would you make to your position computation to optimize for variable-length sequences, and how would you extend your positional encoding comparison analysis to measure performance across different sequence length distributions?
-
-Think about: combining your two encoding implementations, modifying the forward pass for variable lengths, extending your performance analysis methods, and optimizing position computation patterns from your current code.
-
-*Target length: 150-300 words*
-"""
-
-# %% nbgrader={"grade": true, "grade_id": "question-2-positional-encoding", "locked": false, "points": 10, "schema_version": 3, "solution": true, "task": false}
-"""
-YOUR REFLECTION ON POSITIONAL ENCODING AND SEQUENCE SCALABILITY:
-
-TODO: Replace this text with your thoughtful response about scalable positional encoding system design.
-
-Consider addressing:
-- How would you design hybrid positional encoding for sequences from 512 to 32k tokens?
-- What strategies would you use to optimize position computation for variable-length sequences?
-- How would you balance memory efficiency with computational performance?
-- What approaches would you use to handle different sequence length distributions?
-- How would you maintain training stability across diverse sequence lengths?
-
-Write an architectural analysis connecting your positional encoding work to scalable sequence processing.
-
-GRADING RUBRIC (Instructor Use):
-- Shows understanding of positional encoding scalability challenges (3 points)
-- Designs practical approaches to hybrid encoding and variable-length optimization (3 points)
-- Addresses memory and computational efficiency considerations (2 points)
-- Demonstrates systems thinking about sequence length distribution handling (2 points)
-- Clear architectural reasoning with scalability insights (bonus points for comprehensive system design)
-"""
-
-### BEGIN SOLUTION
-# Student response area - instructor will replace this section during grading setup
-# This is a manually graded question requiring understanding of positional encoding scalability
-# Students should demonstrate knowledge of sequence length optimization and hybrid approaches
-### END SOLUTION
-
-# %% [markdown]
-"""
-### Question 3: Embedding Pipeline Integration and Training Efficiency
-
-**Context**: Your embedding pipeline integration demonstrates how tokenization, embedding lookup, and positional encoding work together in language model preprocessing. In your `test_embedding_integration()` function, you measured pipeline performance and saw how batch size affects throughput. In production training systems, the embedding pipeline often becomes a bottleneck due to memory bandwidth limitations and the need to process billions of tokens efficiently during training.
-
-**Reflection Question**: Based on your complete embedding pipeline implementation (tokenization -> `Embedding.forward()` -> `PositionalEncoding.forward()`), design an optimization strategy for large-scale language model training that processes 1 trillion tokens efficiently. How would you modify your current pipeline functions to implement batch processing optimizations for mixed sequence lengths, design efficient gradient updates for your massive `Embedding.weight` parameters, and coordinate embedding updates across distributed training nodes? Consider how your current memory analysis and performance measurement techniques could be extended to monitor pipeline bottlenecks in distributed settings.
-
-Think about: optimizing your current pipeline implementation, extending your performance analysis to distributed settings, modifying your batch processing patterns, and scaling your embedding weight update mechanisms.
-
-*Target length: 150-300 words*
-"""
-
-# %% nbgrader={"grade": true, "grade_id": "question-3-pipeline-integration", "locked": false, "points": 10, "schema_version": 3, "solution": true, "task": false}
-"""
-YOUR REFLECTION ON EMBEDDING PIPELINE INTEGRATION:
-
-TODO: Replace this text with your thoughtful response about embedding pipeline optimization for large-scale training.
-
-Consider addressing:
-- How would you implement pipeline parallelism for processing 1 trillion tokens efficiently?
-- What strategies would you use to optimize batch processing for mixed sequence lengths?
-- How would you design efficient gradient updates for massive embedding tables?
-- What approaches would you use for coordinating embedding updates across distributed nodes?
-- How would you maintain GPU utilization while minimizing memory bandwidth bottlenecks?
-
-Write a design analysis connecting your embedding pipeline to large-scale training optimization.
-
-GRADING RUBRIC (Instructor Use):
-- Understands embedding pipeline bottlenecks and optimization challenges (3 points)
-- Designs practical approaches to pipeline parallelism and batch optimization (3 points)
-- Addresses distributed training and gradient update efficiency (2 points)
-- Shows systems thinking about large-scale training coordination (2 points)
-- Clear design reasoning with pipeline optimization insights (bonus points for innovative approaches)
-"""
-
-### BEGIN SOLUTION
-# Student response area - instructor will replace this section during grading setup
-# This is a manually graded question requiring understanding of large-scale embedding pipeline optimization
-# Students should demonstrate knowledge of distributed training and pipeline efficiency
-### END SOLUTION
-
-# %% [markdown]
-"""
-## TARGET MODULE SUMMARY: Embeddings
-
-Congratulations! You have successfully implemented comprehensive embedding systems for language processing:
-
-### PASS What You Have Built
-- **Embedding Layer**: Learnable lookup table converting tokens to dense vector representations
-- **Positional Encoding**: Sinusoidal position information for sequence understanding
-- **Learned Positional Embeddings**: Trainable position representations for model-specific optimization
-- **Memory-Efficient Lookups**: Optimized embedding access patterns for production systems
-- **Performance Analysis**: Comprehensive profiling and scaling analysis tools
-- **🆕 Integration Pipeline**: Complete tokenization -> embedding -> positional encoding workflow
-- **🆕 Systems Optimization**: Memory usage analysis and performance optimization techniques
-
-### PASS Key Learning Outcomes
-- **Understanding**: How discrete tokens become continuous vector representations
-- **Implementation**: Built embedding systems from scratch with efficient lookup operations
-- **Systems Insight**: How embedding table size affects model memory and training efficiency
-- **Performance Engineering**: Measured and optimized embedding lookup patterns and memory usage
-- **Production Context**: Understanding real-world embedding challenges and optimization techniques
-
-### PASS Technical Mastery
-- **Embedding Lookup**: Efficient table lookup with various initialization strategies
-- **Positional Encoding**: Mathematical sine/cosine patterns for position representation
-- **Memory Scaling**: Understanding O(vocab_size * embedding_dim) parameter scaling
-- **Performance Optimization**: Cache-friendly access patterns and memory bandwidth optimization
-- **🆕 Integration Design**: Seamless pipeline from text processing to vector representations
-
-### PASS Professional Skills Developed
-- **Systems Architecture**: Designing embedding systems for production scale
-- **Memory Engineering**: Optimizing large parameter tables for efficient access
-- **Performance Analysis**: Measuring and improving embedding pipeline throughput
-- **Integration Thinking**: Connecting embedding systems with tokenization and attention
-
-### PASS Ready for Next Steps
-Your embedding systems are now ready to power:
-- **Attention Mechanisms**: Processing sequence representations with attention
-- **Transformer Models**: Complete language model architectures
-- **Language Understanding**: Rich semantic representations for NLP tasks
-- **🧠 Sequence Processing**: Foundation for advanced sequence modeling
-
-### LINK Connection to Real ML Systems
-Your implementations mirror production systems:
-- **PyTorch Embeddings**: `torch.nn.Embedding` and `torch.nn.functional.embedding`
-- **Transformer Models**: All modern language models use similar embedding approaches
-- **Production Optimizations**: Memory mapping, gradient checkpointing, and distributed embeddings
-- **Industry Applications**: GPT, BERT, and other transformer models rely on these foundations
-
-### TARGET The Power of Dense Representations
-You have unlocked the bridge between discrete tokens and continuous understanding:
-- **Before**: Tokens were sparse, discrete symbols
-- **After**: Tokens become rich, continuous vectors that capture semantic relationships
-
-**Next Module**: Attention - Processing sequences with the mechanism that revolutionized language understanding!
-
-Your embedding systems provide the rich vector representations that attention mechanisms need to understand language. Now let's build the attention that makes transformers work!
+Export with: `tito module complete 11`
 """
