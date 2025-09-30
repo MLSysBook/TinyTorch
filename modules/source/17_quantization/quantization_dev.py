@@ -47,14 +47,12 @@ Let's make models 4× smaller!
 """
 ## 📦 Where This Code Lives in the Final Package
 
-**Learning Side:** You work in modules/17_quantization/quantization_dev.py
-**Building Side:** Code exports to tinytorch.optimization.quantization
+**Learning Side:** You work in `modules/17_quantization/quantization_dev.py`  
+**Building Side:** Code exports to `tinytorch.optimization.quantization`
 
 ```python
-# Final package structure:
+# How to use this module:
 from tinytorch.optimization.quantization import quantize_int8, QuantizedLinear, quantize_model
-from tinytorch.core.tensor import Tensor
-from tinytorch.core.layers import Linear
 ```
 
 **Why this matters:**
