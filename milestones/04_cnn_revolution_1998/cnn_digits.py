@@ -232,26 +232,23 @@ def train_cnn():
     # ACT 2: THE SETUP 🏗️
     # ═══════════════════════════════════════════════════════════════════════
     
-    console.print("[bold]🏗️  The CNN Architecture:[/bold]\n")
+    console.print("[bold]🏗️  The Architecture:[/bold]")
+    console.print("""
+    ┌──────────┐    ┌──────────┐    ┌──────┐    ┌─────────┐    ┌─────────┐    ┌────────┐
+    │  Input   │    │  Conv2d  │    │ ReLU │    │MaxPool2d│    │ Flatten │    │ Linear │
+    │ 1×8×8    │───▶│  1→8     │───▶│      │───▶│  2×2    │───▶│ 8×3×3   │───▶│ 72→10  │
+    │          │    │  3×3     │    │      │    │         │    │  =72    │    │        │
+    └──────────┘    └──────────┘    └──────┘    └─────────┘    └─────────┘    └────────┘
+                    ↑ Detects                   ↑ Spatial
+                    local patterns              downsampling
+    """)
     
-    architecture_text = """[cyan]Layer Flow:[/cyan]
-    Input (1×8×8)
-      ↓
-    Conv2d(1→8, 3×3)  ← Detect edges, curves
-      ↓
-    ReLU              ← Nonlinearity
-      ↓
-    MaxPool(2×2)      ← Downsample, translation invariance
-      ↓
-    Flatten(8×3×3=72)
-      ↓
-    Linear(72→10)     ← Classification
-    
-    [yellow]Key Insight:[/yellow]
-    Conv layers share weights across space
-    → 100× fewer params than MLP!"""
-    
-    console.print(Panel(architecture_text, title="Architecture", border_style="blue", box=box.ROUNDED))
+    console.print("[bold]🔧 Components:[/bold]")
+    console.print("  • Conv layer: Detects local patterns (edges, curves)")
+    console.print("  • ReLU: Non-linear activation")
+    console.print("  • MaxPool: Spatial downsampling + translation invariance")
+    console.print("  • Linear: Final classification (72 → 10 classes)")
+    console.print("  • [bold cyan]Key insight: Shared weights → 100× fewer params![/bold cyan]")
     
     # Create model
     console.print("\n🧠 Building Convolutional Neural Network...")
