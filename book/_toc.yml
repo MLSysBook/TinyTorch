@@ -75,6 +75,11 @@ parts:
   - file: chapters/14-benchmarking
     title: "19. Benchmarking"
 
+- caption: 🏆 Historical Milestones
+  chapters:
+  - file: chapters/milestones-overview
+    title: "Journey Through ML History"
+
 - caption: 🏅 Community & Competition
   chapters:
   - file: leaderboard
