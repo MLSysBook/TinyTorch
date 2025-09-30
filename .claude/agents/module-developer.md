@@ -480,8 +480,7 @@ def test_tensor_autograd():
 ### **MANDATORY Final Four Sections (FIXED ORDER)**
 7. **Module Integration Test** - `test_module()` (Final validation before summary)
 8. **Main Execution Block** - `if __name__ == "__main__":` (Entry point execution)
-9. **ML Systems Thinking** - Interactive NBGrader questions (focused on current module)
-10. **Module Summary** - Achievement reflection with context (ALWAYS LAST)
+9. **Module Summary** - Achievement reflection with context (ALWAYS LAST)
 
 ### **Testing Flow Throughout Module**
 - **Parts 1-2**: Brief explanation only (no testing)
@@ -1432,38 +1431,7 @@ if __name__ == "__main__":
     print("✅ Module validation complete!")
 ```
 
-**3. ML Systems Thinking Questions (Part 9):**
-
-### **🤔 Critical: Questions Must Use Only Current Knowledge**
-
-**Questions MUST be based ONLY on:**
-- What the student just implemented in THIS module
-- Concepts from PREVIOUS modules they've completed
-- General programming/math knowledge
-
-**Example for Module 01 (Tensor):**
-```markdown
-## 🤔 ML Systems Thinking: Tensor Foundations
-
-### Question 1: Memory Layout Impact
-You implemented a Tensor class that wraps NumPy arrays.
-If you have a tensor of shape (1000, 1000) with float32 data:
-- How many MB of memory does this use? _____ MB
-- If you create 100 of these tensors, what's the total memory? _____ MB
-
-### Question 2: Broadcasting Efficiency
-Your add() method uses NumPy broadcasting.
-When adding tensors of shapes (1000, 1) and (1000, 1000):
-- How many actual additions are performed? _____
-- How many values are stored in memory for the result? _____
-```
-
-**NEVER ask about:**
-- Concepts from future modules (gradients, layers, networks, training)
-- Specific architectures they haven't learned (CNNs, transformers, attention)
-- Optimization techniques not yet covered (backprop, SGD, Adam)
-
-**4. Then Module Summary (Part 10):**
+**3. Then Module Summary:**
 
 ### **Simple Module Summary (150-200 words)**
 ```markdown
