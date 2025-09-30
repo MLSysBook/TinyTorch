@@ -1329,46 +1329,6 @@ if __name__ == "__main__":
 
 # %% [markdown]
 """
-## 🤔 ML Systems Thinking: Training Infrastructure
-
-### Question 1: Memory Scaling
-You implemented a Trainer class that handles forward and backward passes.
-For a model with 100M parameters using Adam optimizer:
-- How much memory do the parameters use? _____ GB (assuming float32)
-- How much additional memory does Adam require? _____ GB
-- What's the total training memory overhead vs inference? _____ x
-
-### Question 2: Batch Size Trade-offs
-Your training loop supports gradient accumulation.
-If your GPU can fit batch_size=16 but you want effective_batch_size=64:
-- How many accumulation steps do you need? _____
-- How does this affect training speed? _____ (faster/slower/same)
-- How does this affect memory usage? _____ (more/less/same)
-
-### Question 3: Learning Rate Scheduling
-You implemented CosineSchedule that starts at max_lr and ends at min_lr.
-For max_lr=0.1, min_lr=0.001, total_epochs=100:
-- What's the learning rate at epoch 25? _____ (approximately)
-- Why does cosine scheduling work better than constant LR? _____
-- When would you use linear decay instead? _____
-
-### Question 4: Gradient Clipping
-Your clip_grad_norm function prevents exploding gradients.
-If gradients have global norm 5.0 and max_norm=1.0:
-- What's the clipping coefficient? _____
-- How does this affect gradient direction? _____ (changes/preserves)
-- Which models benefit most from gradient clipping? _____
-
-### Question 5: Checkpointing Strategy
-You implemented save/load checkpoint functionality.
-For long-running training (days/weeks):
-- How often should you save checkpoints? _____
-- What happens if training crashes at 90% completion without checkpoints? _____
-- Why save optimizer state, not just model weights? _____
-"""
-
-# %% [markdown]
-"""
 ## 🎯 MODULE SUMMARY: Training
 
 Congratulations! You've built a complete training infrastructure that can orchestrate the entire machine learning training process!

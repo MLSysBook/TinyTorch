@@ -1190,44 +1190,6 @@ if __name__ == "__main__":
     print("✅ Module validation complete!")
 
 
-# %% [markdown]
-"""
-## 🤔 ML Systems Thinking: Data Pipeline Design
-
-### Question 1: Memory vs Speed Trade-offs
-You implemented DataLoader with different batch sizes.
-If you have 10GB of GPU memory and each sample uses 1MB:
-- Maximum batch size before out-of-memory: _____ samples
-- If you use batch size 32 instead of maximum, how much memory is unused? _____ GB
-
-### Question 2: Shuffling Impact
-Your DataLoader has shuffle=True option.
-For a dataset with 50,000 samples and batch_size=100:
-- How many batches per epoch? _____
-- If you shuffle every epoch for 10 epochs, how many different batch combinations are possible? _____
-- Why is shuffling important for training? _____
-
-### Question 3: Data Pipeline Bottlenecks
-You measured DataLoader performance across different configurations.
-If loading data takes 0.1 seconds per batch and forward pass takes 0.05 seconds:
-- What percentage of time is spent on data loading? _____%
-- How would you optimize this pipeline? _____
-- What happens to training speed if you increase workers from 1 to 4? _____
-
-### Question 4: Dataset Design Patterns
-You implemented both Dataset and TensorDataset classes.
-For a text dataset with variable-length sequences:
-- Would TensorDataset work directly? Yes/No: _____
-- What preprocessing would you need? _____
-- How would batching work with different sequence lengths? _____
-
-### Question 5: Production Scaling
-Your implementation works for thousands of samples.
-For training on 1 million samples with distributed training across 8 GPUs:
-- How would you split the dataset? _____
-- What happens to effective batch size? _____
-- How does shuffling work across multiple machines? _____
-"""
 
 
 # %% [markdown]

@@ -904,31 +904,6 @@ if __name__ == "__main__":
 
     print("✅ Module validation complete!")
 
-# %% [markdown]
-"""
-## 🤔 ML Systems Thinking: Activation Functions
-
-### Question 1: Sparsity and Efficiency
-Your ReLU implementation zeros out negative values.
-If you have a tensor with 1000 elements and 60% are negative:
-- How many elements become zero after ReLU? _____ elements
-- What's the sparsity percentage? _____ %
-- Why might this sparsity be beneficial for neural networks? _____
-
-### Question 2: Memory Usage Patterns
-You implemented 5 activation functions that each create new Tensor objects.
-If your input tensor uses 4MB of memory:
-- How much memory do you use after applying ReLU? _____ MB
-- How much memory do you use after applying Softmax? _____ MB
-- What happens to the original tensor's memory? _____
-
-### Question 3: Numerical Stability
-Your Softmax implementation subtracts the maximum value before computing exponentials.
-For inputs [1000, 1001, 1002]:
-- What would happen without max subtraction? _____
-- Why does subtracting max help? _____
-- What's the mathematical reason this doesn't change the result? _____
-"""
 
 # %% [markdown]
 """

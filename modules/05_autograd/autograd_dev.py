@@ -1365,69 +1365,6 @@ if __name__ == "__main__":
 
     print("✅ Module validation complete!")
 
-# %% [markdown]
-"""
-## 🤔 ML Systems Thinking: Autograd Systems
-
-Now that you've implemented automatic differentiation, let's explore the systems implications.
-"""
-
-# %% nbgrader={"grade": false, "grade_id": "systems-q1", "solution": true}
-# %% [markdown]
-"""
-### Question 1: Memory Trade-offs in Autograd
-Your autograd implementation requires storing computation graphs and gradients.
-
-**a) Memory Scaling**: For a neural network with 10M parameters, autograd requires storing:
-- Parameters: 10M × 4 bytes = 40MB
-- Gradients: 10M × 4 bytes = 40MB
-- Computation graph: _____ additional memory (estimate the overhead)
-
-**b) Memory vs. Compute Trade-off**: What's the alternative to storing the full computation graph, and what are the trade-offs?
-
-*Consider: gradient checkpointing, recomputation strategies, and memory-time trade-offs*
-"""
-
-# %% nbgrader={"grade": false, "grade_id": "systems-q2", "solution": true}
-# %% [markdown]
-"""
-### Question 2: Computational Complexity Analysis
-Your backward pass computes gradients for every operation in reverse order.
-
-**a) Time Complexity**: For a matrix multiplication of size (N×N) @ (N×N), you measured that backward takes ~2× forward time. Why exactly 2×?
-
-**b) Scaling Behavior**: In a transformer with L layers, each doing attention (O(n²)) and MLPs (O(n)), how does backward pass time scale with:
-- Sequence length n: _____
-- Number of layers L: _____
-
-*Think about: chain rule propagation, operation complexity, and total computational graph*
-"""
-
-# %% nbgrader={"grade": false, "grade_id": "systems-q3", "solution": true}
-# %% [markdown]
-"""
-### Question 3: Numerical Stability in Gradients
-Your implementation accumulates gradients through multiple operations.
-
-**a) Gradient Explosion**: In a very deep network (100+ layers), gradients can grow exponentially. What specific part of your chain rule implementation could cause this?
-
-**b) Gradient Vanishing**: Conversely, what operations tend to make gradients shrink to zero, and how does this relate to your backward functions?
-
-*Consider: multiplication chains, activation functions, and numerical precision limits*
-"""
-
-# %% nbgrader={"grade": false, "grade_id": "systems-q4", "solution": true}
-# %% [markdown]
-"""
-### Question 4: Production Autograd Optimizations
-Your implementation prioritizes clarity over performance. Real systems need optimizations.
-
-**a) Graph Optimization**: PyTorch and other frameworks optimize computation graphs before execution. What redundancies in your implementation could be eliminated?
-
-**b) Memory Efficiency**: What specific autograd memory optimizations could reduce the 2× memory overhead you measured?
-
-*Think about: graph fusion, in-place operations, gradient checkpointing, and smart memory management*
-"""
 
 # %% [markdown]
 """
