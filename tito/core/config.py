@@ -5,7 +5,7 @@ Configuration management for TinyTorch CLI.
 import os
 import sys
 from pathlib import Path
-from typing import Dict, Any, Optional, List
+from typing import Dict, Any, Optional, List, Union
 from dataclasses import dataclass
 
 
@@ -56,7 +56,7 @@ class CLIConfig:
             bin_dir=project_root / 'bin'
         )
     
-    def validate(self, venv_path=Optional[Path]) -> List[str]:
+    def validate(self, venv_path: Union[Path, str]='.venv') -> List[str]:
         """Validate the configuration and return any issues."""
         issues = []
         
