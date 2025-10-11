@@ -8,6 +8,7 @@ from pathlib import Path
 from typing import Dict, Any, Optional, List
 from dataclasses import dataclass
 
+
 @dataclass
 class CLIConfig:
     """Configuration for TinyTorch CLI."""
@@ -55,7 +56,7 @@ class CLIConfig:
             bin_dir=project_root / 'bin'
         )
     
-    def validate(self) -> List[str]:
+    def validate(self, venv_path=Optional[Path]) -> List[str]:
         """Validate the configuration and return any issues."""
         issues = []
         
@@ -73,10 +74,10 @@ class CLIConfig:
             # Method 3: Check for sys.real_prefix (older Python versions)
             hasattr(sys, 'real_prefix') or
             # Method 4: Check if .venv directory exists and packages are available
-            (Path('.venv').exists() and self._packages_available())
+            (venv_path.exists() and self._packages_available())
         )
         if not in_venv:
-            issues.append("Virtual environment not activated. Run: source .venv/bin/activate")
+            issues.append(f"Virtual environment not activated. Run: source {venv_path}/bin/activate")
         
         # Check required directories
         if not self.assignments_dir.exists():
