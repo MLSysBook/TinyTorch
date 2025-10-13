@@ -7,11 +7,18 @@
 [![Documentation](https://img.shields.io/badge/docs-jupyter_book-orange.svg)](https://mlsysbook.github.io/TinyTorch/)
 ![Status](https://img.shields.io/badge/status-active-success.svg)
 
-> 🚧 **Work in Progress** - We're actively developing TinyTorch for Spring 2025! All core modules are complete and tested. Join us in building the future of ML systems education.
+---
+> 🚧 **This Project is Actively Under Development**
+>
+> TinyTorch is not yet complete. Modules, docs, and examples are being added and refined weekly.  
+> A stable release is planned for **end of this year**.  
+> Expect rapid updates, occasional breaks, and lots of new content.
+> You are welcome to skim this web
+---
 
 ## 📖 Table of Contents
 - [Why TinyTorch?](#why-tinytorch)
-- [What You'll Build](#what-youll-build) - Including the **CIFAR-10 North Star Goal**
+- [What You'll Build](#what-youll-build) - Including several north star goals
 - [Quick Start](#quick-start) - Get running in 5 minutes
 - [Learning Journey](#learning-journey) - 20 progressive modules
 - [Learning Progression & Checkpoints](#learning-progression--checkpoints) - 21 capability checkpoints
@@ -188,48 +195,12 @@ model.fit(X, y)  # Magic happens
 - **Debugging Skills** - Fix problems at any level of the stack
 - **Production Ready** - Learn patterns used in real ML systems
 
-## Learning Progression & Checkpoints
-
-### 16-Checkpoint Capability System
-
-Track your progress through **capability-based checkpoints** that validate your ML systems knowledge:
-
-```bash
-# Check your current progress
-tito checkpoint status
-
-# See your capability development timeline
-tito checkpoint timeline
-```
-
-**Checkpoint Progression:**
-- **00-02**: Foundation (Environment, Tensors, Activations)
-- **03-07**: Core Networks (Layers, Losses, Autograd, Optimizers, Training)
-- **08-10**: Computer Vision (Spatial ops, DataLoaders, Real datasets)
-- **11-14**: Language Models (Tokenization, Embeddings, Attention, Transformers)
-- **15**: Capstone (Complete end-to-end ML systems)
-
-Each checkpoint asks: **"Can I build this capability from scratch?"** with hands-on validation.
-
-### Module Completion Workflow
-
-```bash
-# Complete a module (automatic export + testing)
-tito module complete 01_tensor
-
-# This automatically:
-# 1. Exports your implementation to the tinytorch package
-# 2. Runs the corresponding capability checkpoint test
-# 3. Shows your achievement and suggests next steps
-```  
-
 ## Key Features
 
 ### Essential-Only Design
 - **Focus on What Matters**: ReLU + Softmax (not 20 activation functions)
 - **Production Relevance**: Adam + SGD (the optimizers you actually use)
 - **Core ML Systems**: Memory profiling, performance analysis, scaling insights
-- **Real Applications**: CIFAR-10 CNNs, not toy examples
 
 ### For Students
 - **Interactive Demos**: Rich CLI visualizations for every concept
