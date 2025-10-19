@@ -7,18 +7,11 @@
 [![Documentation](https://img.shields.io/badge/docs-jupyter_book-orange.svg)](https://mlsysbook.github.io/TinyTorch/)
 ![Status](https://img.shields.io/badge/status-active-success.svg)
 
----
-> 🚧 **This Project is Actively Under Development**
->
-> TinyTorch is not yet complete. Modules, docs, and examples are being added and refined weekly.  
-> A stable release is planned for **end of this year**.  
-> Expect rapid updates, occasional breaks, and lots of new content.
-> You are welcome to skim this web
----
+> 🚧 **Work in Progress** - We're actively developing TinyTorch for Spring 2025! Core modules (01-09) are complete and tested. Transformer modules (10-14) in active development on `transformers-integration` branch. Join us in building the future of ML systems education.
 
 ## 📖 Table of Contents
 - [Why TinyTorch?](#why-tinytorch)
-- [What You'll Build](#what-youll-build) - Including several north star goals
+- [What You'll Build](#what-youll-build) - Including the **CIFAR-10 North Star Goal**
 - [Quick Start](#quick-start) - Get running in 5 minutes
 - [Learning Journey](#learning-journey) - 20 progressive modules
 - [Learning Progression & Checkpoints](#learning-progression--checkpoints) - 21 capability checkpoints
@@ -58,17 +51,26 @@ A **complete ML framework** capable of:
 TinyTorch/
 ├── modules/           # 🏗️ YOUR workspace - implement ML systems here
 │   ├── source/
-│   │   ├── 01_setup/      # Module 00: Environment setup
-│   │   ├── 02_tensor/     # Module 01: Tensor operations from scratch
-│   │   ├── 03_activations/# Module 02: ReLU, Softmax activations
-│   │   ├── 04_layers/     # Module 03: Linear layers, Module system
-│   │   ├── 05_losses/     # Module 04: MSE, CrossEntropy losses
-│   │   ├── 06_autograd/   # Module 05: Automatic differentiation
-│   │   ├── 07_optimizers/ # Module 06: SGD, Adam optimizers
-│   │   ├── 08_training/   # Module 07: Complete training loops
-│   │   ├── 09_spatial/    # Module 08: Conv2d, MaxPool2d, CNNs
-│   │   ├── 08_dataloader/ # Module 09: Efficient data pipelines
-│   │   └── ...            # Additional modules
+│   │   ├── 01_tensor/        # Module 01: Tensor operations from scratch
+│   │   ├── 02_activations/   # Module 02: ReLU, Softmax activations
+│   │   ├── 03_layers/        # Module 03: Linear layers, Module system
+│   │   ├── 04_losses/        # Module 04: MSE, CrossEntropy losses
+│   │   ├── 05_autograd/      # Module 05: Automatic differentiation
+│   │   ├── 06_optimizers/    # Module 06: SGD, Adam optimizers
+│   │   ├── 07_training/      # Module 07: Complete training loops
+│   │   ├── 08_dataloader/    # Module 08: Efficient data pipelines
+│   │   ├── 09_spatial/       # Module 09: Conv2d, MaxPool2d, CNNs
+│   │   ├── 10_tokenization/  # Module 10: Text processing
+│   │   ├── 11_embeddings/    # Module 11: Token & positional embeddings
+│   │   ├── 12_attention/     # Module 12: Multi-head attention
+│   │   ├── 13_transformers/  # Module 13: Complete transformer blocks
+│   │   ├── 14_kvcaching/     # Module 14: KV-cache optimization
+│   │   ├── 15_profiling/     # Module 15: Performance analysis
+│   │   ├── 16_acceleration/  # Module 16: Hardware optimization
+│   │   ├── 17_quantization/  # Module 17: Model compression
+│   │   ├── 18_compression/   # Module 18: Pruning & distillation
+│   │   ├── 19_benchmarking/  # Module 19: Performance measurement
+│   │   └── 20_capstone/      # Module 20: Complete ML systems
 │
 ├── milestones/        # 🏆 Historical ML evolution - prove what you built!
 │   ├── 01_perceptron_1957/   # Rosenblatt's first trainable network
@@ -113,7 +115,7 @@ pip install -r requirements.txt
 pip install -e .
 
 # Start learning
-cd modules/01_tensor
+cd modules/source/01_tensor
 jupyter lab tensor_dev.py
 
 # Track progress
@@ -124,7 +126,7 @@ tito checkpoint status
 
 ### 20 Progressive Modules
 
-#### Part I: Neural Network Foundations (Modules 1-8)
+#### Part I: Neural Network Foundations (Modules 1-7)
 Build and train neural networks from scratch
 
 | Module | Topic | What You Build | ML Systems Learning |
@@ -136,35 +138,35 @@ Build and train neural networks from scratch
 | 05 | Autograd | Automatic differentiation engine | **Computational graphs**, memory management, gradient flow |
 | 06 | Optimizers | SGD + Adam (essential optimizers) | **Memory efficiency** (Adam uses 3x memory), convergence |
 | 07 | Training | Complete training loops + evaluation | **Training dynamics**, checkpoints, monitoring systems |
-| 08 | Spatial | Conv2d + MaxPool2d + CNN operations | **Parameter scaling**, spatial locality, convolution efficiency |
 
-**Milestone Achievement**: Train XOR solver and MNIST classifier after Module 8
+**Milestone Achievement**: Train XOR solver and MNIST classifier after Module 7
 
 ---
 
-#### Part II: Computer Vision (Modules 9-10)
+#### Part II: Computer Vision (Modules 8-9)
 Build CNNs that classify real images
 
 | Module | Topic | What You Build | ML Systems Learning |
 |--------|-------|----------------|-------------------|
-| 09 | DataLoader | Efficient data pipelines + CIFAR-10 | **Batch processing**, memory-mapped I/O, data pipeline bottlenecks |
-| 10 | Tokenization | Text processing + vocabulary | **Vocabulary scaling**, tokenization bottlenecks, sequence processing |
+| 08 | DataLoader | Efficient data pipelines + CIFAR-10 | **Batch processing**, memory-mapped I/O, data pipeline bottlenecks |
+| 09 | Spatial | Conv2d + MaxPool2d + CNN operations | **Parameter scaling**, spatial locality, convolution efficiency |
 
 **Milestone Achievement**: CIFAR-10 CNN with 75%+ accuracy
 
 ---
 
-#### Part III: Language Models (Modules 11-14)
+#### Part III: Language Models (Modules 10-14)
 Build transformers that generate text
 
 | Module | Topic | What You Build | ML Systems Learning |
 |--------|-------|----------------|-------------------|
-| 11 | Tokenization | Text processing + vocabulary | **Vocabulary scaling** (memory vs sequence length), tokenization bottlenecks |
-| 12 | Embeddings | Token embeddings + positional encoding | **Embedding tables** (vocab × dim parameters), lookup performance |
-| 13 | Attention | Multi-head attention mechanisms | **O(N²) scaling**, memory bottlenecks, attention optimization |
-| 14 | Transformers | Complete transformer blocks | **Layer scaling**, memory requirements, architectural trade-offs |
+| 10 | Tokenization | Text processing + vocabulary | **Vocabulary scaling**, tokenization bottlenecks, sequence processing |
+| 11 | Embeddings | Token embeddings + positional encoding | **Embedding tables** (vocab × dim parameters), lookup performance |
+| 12 | Attention | Multi-head attention mechanisms | **O(N²) scaling**, memory bottlenecks, attention optimization |
+| 13 | Transformers | Complete transformer blocks | **Layer scaling**, memory requirements, architectural trade-offs |
+| 14 | KV-Caching | Inference optimization for transformers | **Memory vs compute trade-offs**, cache management, generation efficiency |
 
-**Milestone Achievement**: TinyGPT language generation
+**Milestone Achievement**: TinyGPT language generation with optimized inference
 
 ---
 
@@ -177,10 +179,10 @@ Profile, optimize, and benchmark ML systems
 | 16 | Acceleration | Hardware optimization + cache-friendly algorithms | **Cache hierarchies**, memory access patterns, **vectorization vs loops** |
 | 17 | Quantization | Model compression + precision reduction | **Precision trade-offs** (FP32→INT8), memory reduction, accuracy preservation |
 | 18 | Compression | Pruning + knowledge distillation | **Sparsity patterns**, parameter reduction, **compression ratios** |
-| 19 | Caching | Memory optimization + KV caching | **Memory vs compute trade-offs**, cache management, generation efficiency |
-| 20 | Benchmarking | **TinyMLPerf competition framework** | **Competitive optimization**, relative performance metrics, innovation scoring |
+| 19 | Benchmarking | Performance measurement + TinyMLPerf competition | **Competitive optimization**, relative performance metrics, innovation scoring |
+| 20 | Capstone | Complete end-to-end ML systems project | **Integration**, production deployment, **real-world ML engineering** |
 
-**Milestone Achievement**: TinyMLPerf optimization competition
+**Milestone Achievement**: TinyMLPerf optimization competition & portfolio capstone project
 
 ---
 
@@ -208,12 +210,49 @@ model.fit(X, y)  # Magic happens
 - **Debugging Skills** - Fix problems at any level of the stack
 - **Production Ready** - Learn patterns used in real ML systems
 
+## Learning Progression & Checkpoints
+
+### Capability-Based Learning System
+
+Track your progress through **capability-based checkpoints** that validate your ML systems knowledge:
+
+```bash
+# Check your current progress
+tito checkpoint status
+
+# See your capability development timeline
+tito checkpoint timeline
+```
+
+**Checkpoint Progression:**
+- **01-02**: Foundation (Tensors, Activations)
+- **03-07**: Core Networks (Layers, Losses, Autograd, Optimizers, Training)
+- **08-09**: Computer Vision (DataLoaders, Spatial ops - unlocks CIFAR-10 @ 75%+)
+- **10-14**: Language Models (Tokenization, Embeddings, Attention, Transformers, KV-Caching)
+- **15-19**: System Optimization (Profiling, Acceleration, Quantization, Compression, Benchmarking)
+- **20**: Capstone (Complete end-to-end ML systems)
+
+Each checkpoint asks: **"Can I build this capability from scratch?"** with hands-on validation.
+
+### Module Completion Workflow
+
+```bash
+# Complete a module (automatic export + testing)
+tito module complete 01_tensor
+
+# This automatically:
+# 1. Exports your implementation to the tinytorch package
+# 2. Runs the corresponding capability checkpoint test
+# 3. Shows your achievement and suggests next steps
+```  
+
 ## Key Features
 
 ### Essential-Only Design
 - **Focus on What Matters**: ReLU + Softmax (not 20 activation functions)
 - **Production Relevance**: Adam + SGD (the optimizers you actually use)
 - **Core ML Systems**: Memory profiling, performance analysis, scaling insights
+- **Real Applications**: CIFAR-10 CNNs, not toy examples
 
 ### For Students
 - **Interactive Demos**: Rich CLI visualizations for every concept
@@ -238,7 +277,7 @@ python perceptron_trained.py
 # Rosenblatt's first trainable neural network
 # YOUR Linear layer + Sigmoid recreates history!
 ```
-**Requirements**: Modules 02-04 (Tensor, Activations, Layers)  
+**Requirements**: Modules 01-04 (Tensor, Activations, Layers, Losses)  
 **Achievement**: Binary classification with gradient descent
 
 ---
@@ -250,12 +289,12 @@ python xor_solved.py
 # Solve Minsky's XOR challenge with hidden layers
 # YOUR autograd enables multi-layer learning!
 ```
-**Requirements**: Modules 02-06 (+ Losses, Autograd)  
+**Requirements**: Modules 01-06 (+ Autograd, Optimizers)  
 **Achievement**: Non-linear problem solving
 
 ---
 
-### 🔢 03. MLP Revival (1986) - After Module 08
+### 🔢 03. MLP Revival (1986) - After Module 07
 ```bash
 cd milestones/03_mlp_revival_1986
 python mlp_digits.py     # 8x8 digit classification
@@ -263,7 +302,7 @@ python mlp_mnist.py      # Full MNIST dataset
 # Backpropagation revolution on real vision!
 # YOUR training loops achieve 95%+ accuracy
 ```
-**Requirements**: Modules 02-08 (+ Optimizers, Training)  
+**Requirements**: Modules 01-07 (+ Training)  
 **Achievement**: Real computer vision with MLPs
 
 ---
@@ -276,7 +315,7 @@ python lecun_cifar10.py  # Natural images (CIFAR-10)
 # LeCun's CNNs achieve 75%+ on CIFAR-10!
 # YOUR Conv2d + MaxPool2d unlock spatial intelligence
 ```
-**Requirements**: Modules 02-09 (+ Spatial, DataLoader)  
+**Requirements**: Modules 01-09 (+ DataLoader, Spatial)  
 **Achievement**: **🎯 North Star - CIFAR-10 @ 75%+ accuracy**
 
 ---
@@ -288,7 +327,7 @@ python vaswani_shakespeare.py
 # Attention mechanisms for language modeling
 # YOUR attention implementation generates text!
 ```
-**Requirements**: Modules 02-13 (+ Tokenization, Embeddings, Attention, Transformers)  
+**Requirements**: Modules 01-13 (+ Tokenization, Embeddings, Attention, Transformers)  
 **Achievement**: Language generation with self-attention
 
 ---
@@ -300,7 +339,7 @@ python optimize_models.py
 # Profile, optimize, and benchmark YOUR framework
 # Compete on TinyMLPerf leaderboard!
 ```
-**Requirements**: Modules 02-19 (Full optimization suite)  
+**Requirements**: Modules 01-19 (Full optimization suite)  
 **Achievement**: Production-grade ML systems engineering
 
 ---
@@ -329,16 +368,18 @@ tito checkpoint test 05  # Autograd checkpoint
 tito module complete 01_tensor  # Exports and tests
 
 # Run comprehensive validation
-python tests/run_all_modules.py
+pytest tests/
 ```
 
-- **20 modules** passing all tests with 100% health status
-- **21 capability checkpoints** tracking learning progress
-- **Complete optimization pipeline** from profiling to benchmarking
-- **TinyMLPerf competition framework** for performance excellence
-- **KISS principle design** for clear, maintainable code
-- **Streamlined development**: 7-agent workflow for efficient coordination
-- **Essential-only features**: Focus on what's used in production ML systems  
+**Current Status**:
+- ✅ **20 complete modules** (01 Tensor → 20 Capstone)
+- ✅ **6 historical milestones** (1957 Perceptron → 2024 Systems Age)
+- ✅ **Capability-based checkpoints** tracking learning progress
+- ✅ **Complete optimization pipeline** from profiling to benchmarking
+- ✅ **TinyMLPerf competition framework** for performance excellence
+- ✅ **KISS principle design** for clear, maintainable code
+- ✅ **Essential-only features**: Focus on what's used in production ML systems
+- 🚧 **Active development**: Transformer integration (modules 10-14) on `transformers-integration` branch  
 
 ## 📚 Documentation & Resources
 
@@ -418,7 +459,7 @@ Special thanks to students and contributors who helped refine this educational f
 - ✅ **Real achievements** - Train CNNs on CIFAR-10 to 75%+ accuracy
 - ✅ **Systems thinking** - Understand memory, performance, and scaling
 - ✅ **Production relevance** - Learn patterns from PyTorch and TensorFlow
-- ✅ **Immediate validation** - 21 capability checkpoints track progress
+- ✅ **Immediate validation** - 20 capability checkpoints track progress
 
 ### Your Learning Journey
 1. **Week 1-2**: Foundation (Tensors, Activations, Layers)
@@ -431,7 +472,7 @@ Special thanks to students and contributors who helped refine this educational f
 ```bash
 git clone https://github.com/mlsysbook/TinyTorch.git
 cd TinyTorch && source setup.sh
-cd modules/01_tensor && jupyter lab tensor_dev.py
+cd modules/source/01_tensor && jupyter lab tensor_dev.py
 ```
 
 ---

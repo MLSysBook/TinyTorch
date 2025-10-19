@@ -113,26 +113,26 @@ class _SimplifiedTensor:
             exp_values = np.exp(shifted)
             return Tensor(exp_values / np.sum(exp_values, axis=axis, keepdims=True))
 
-    # Simplified Linear layer for development
-    class Linear:
-        """Simplified linear layer for attention projections."""
+# Simplified Linear layer for development
+class _SimplifiedLinear:
+    """Simplified linear layer for attention projections."""
 
-        def __init__(self, in_features, out_features):
-            self.in_features = in_features
-            self.out_features = out_features
-            # Initialize weights and bias (simplified Xavier initialization)
-            self.weight = Tensor(np.random.randn(in_features, out_features) * np.sqrt(2.0 / in_features))
-            self.bias = Tensor(np.zeros(out_features))
+    def __init__(self, in_features, out_features):
+        self.in_features = in_features
+        self.out_features = out_features
+        # Initialize weights and bias (simplified Xavier initialization)
+        self.weight = Tensor(np.random.randn(in_features, out_features) * np.sqrt(2.0 / in_features))
+        self.bias = Tensor(np.zeros(out_features))
 
-        def forward(self, x):
-            """Forward pass: y = xW + b"""
-            output = x.matmul(self.weight)
-            # Add bias (broadcast across batch and sequence dimensions)
-            return Tensor(output.data + self.bias.data)
+    def forward(self, x):
+        """Forward pass: y = xW + b"""
+        output = x.matmul(self.weight)
+        # Add bias (broadcast across batch and sequence dimensions)
+        return Tensor(output.data + self.bias.data)
 
-        def parameters(self):
-            """Return list of parameters for this layer."""
-            return [self.weight, self.bias]
+    def parameters(self):
+        """Return list of parameters for this layer."""
+        return [self.weight, self.bias]
 
 # %% [markdown]
 """
