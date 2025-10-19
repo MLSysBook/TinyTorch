@@ -35,6 +35,10 @@ html:
   # Custom styling
   extra_css:
     - _static/custom.css
+
+  # Custom JavaScript
+  extra_js:
+    - _static/wip-banner.js
   
   # Favicon configuration
   favicon: "_static/favicon.svg"

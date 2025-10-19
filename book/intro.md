@@ -1,3 +1,24 @@
+<div id="wip-banner" class="wip-banner">
+  <div class="wip-banner-content">
+    <div class="wip-banner-title">
+      <span class="icon">🚧</span>
+      <span class="icon">⚠️</span>
+      <span>Under Construction - Active Development</span>
+      <span class="icon">🔨</span>
+      <span class="icon">🚧</span>
+    </div>
+    <div class="wip-banner-description">
+      TinyTorch is under active construction! We're building in public and sharing our progress for early feedback. Expect frequent updates, changes, and improvements as we develop the framework together with the community.
+    </div>
+    <button id="wip-banner-toggle" class="wip-banner-toggle" title="Collapse banner">
+      <i class="fas fa-chevron-up"></i>
+    </button>
+    <button id="wip-banner-close" class="wip-banner-close" title="Dismiss banner">
+      ×
+    </button>
+  </div>
+</div>
+
 # TinyTorch: Build ML Systems from Scratch
 
 <h2 style="background: linear-gradient(135deg, #E74C3C 0%, #E67E22 50%, #F39C12 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; text-align: center; font-size: 2.5rem; margin: 3rem 0;">
