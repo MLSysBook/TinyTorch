@@ -54,9 +54,8 @@ class ExportCommand(BaseCommand):
         return "Export notebook code to Python package"
 
     def add_arguments(self, parser: ArgumentParser) -> None:
-        group = parser.add_mutually_exclusive_group(required=False)
-        group.add_argument("modules", nargs="*", help="Export specific modules (e.g., 01_tensor 02_activations)")
-        group.add_argument("--all", action="store_true", help="Export all modules")
+        parser.add_argument("modules", nargs="*", help="Export specific modules (e.g., 01_tensor 02_activations)")
+        parser.add_argument("--all", action="store_true", help="Export all modules")
         parser.add_argument("--from-release", action="store_true", help="Export from release directory (student version) instead of source")
         parser.add_argument("--test-checkpoint", action="store_true", help="Run checkpoint test after successful export")
 
