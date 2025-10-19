@@ -60,7 +60,7 @@ jobs:
         pip install -r requirements.txt  # Install all dependencies including rich
         pip install -e .  # Install tito CLI in virtual environment
         # Use tito to generate content and build book
-        tito book build
+        python -m tito.main book build
         
     - name: Upload book artifact
       uses: actions/upload-pages-artifact@v3
