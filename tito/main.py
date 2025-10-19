@@ -76,6 +76,7 @@ class TinyTorchCLI:
             'leaderboard': LeaderboardCommand,
             'olympics': OlympicsCommand,
             # Convenience commands
+            'notebooks': NotebooksCommand,
             'export': ExportCommand,
             'test': TestCommand,
             'book': BookCommand,
