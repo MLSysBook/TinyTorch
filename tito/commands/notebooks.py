@@ -45,7 +45,11 @@ class NotebooksCommand(BaseCommand):
     def validate_args(self, args: Namespace) -> None:
         """Validate notebooks command arguments."""
         if args.module:
-            module_file = self.config.modules_dir / args.module / f"{args.module}_dev.py"
+            # Look in modules/source/ subdirectory
+            source_dir = self.config.modules_dir / 'source'
+            if not source_dir.exists():
+                source_dir = self.config.modules_dir
+            module_file = source_dir / args.module / f"{args.module}_dev.py"
             if not module_file.exists():
                 raise ModuleNotFoundError(
                     f"Module '{args.module}' not found or no {args.module}_dev.py file"
@@ -54,7 +58,13 @@ class NotebooksCommand(BaseCommand):
     def _find_dev_files(self) -> List[Path]:
         """Find all *_dev.py files in modules directory."""
         dev_files = []
-        for module_dir in self.config.modules_dir.iterdir():
+        # Look in modules/source/ subdirectory
+        source_dir = self.config.modules_dir / 'source'
+        if not source_dir.exists():
+            # Fallback to modules_dir directly
+            source_dir = self.config.modules_dir
+        
+        for module_dir in source_dir.iterdir():
             if module_dir.is_dir():
                 dev_py = module_dir / f"{module_dir.name}_dev.py"
                 if dev_py.exists():
@@ -93,7 +103,11 @@ class NotebooksCommand(BaseCommand):
         
         # Find files to convert
         if args.module:
-            dev_files = [self.config.modules_dir / args.module / f"{args.module}_dev.py"]
+            # Look in modules/source/ subdirectory
+            source_dir = self.config.modules_dir / 'source'
+            if not source_dir.exists():
+                source_dir = self.config.modules_dir
+            dev_files = [source_dir / args.module / f"{args.module}_dev.py"]
             self.console.print(f"🔄 Building notebook for module: {args.module}")
         else:
             dev_files = self._find_dev_files()
