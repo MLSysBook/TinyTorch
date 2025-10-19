@@ -72,20 +72,20 @@ jobs:
     - name: Test notebook conversion (dry run)
       run: |
         source .venv/bin/activate
-        python -m tito.main module notebooks --dry-run
+        python -m tito.main notebooks --dry-run
     
     - name: Test conversion of specific modules
       run: |
         source .venv/bin/activate
         # Test tensor module
         if [ -f "modules/source/02_tensor/tensor_dev.py" ]; then
-          python -m tito.main module notebooks --module 02_tensor
+          python -m tito.main notebooks --module 02_tensor
           [ -f "modules/source/02_tensor/tensor_dev.ipynb" ] && echo "✓ Tensor notebook created"
         fi
         
         # Test activations module  
         if [ -f "modules/source/03_activations/activations_dev.py" ]; then
-          python -m tito.main module notebooks --module 03_activations
+          python -m tito.main notebooks --module 03_activations
           [ -f "modules/source/03_activations/activations_dev.ipynb" ] && echo "✓ Activations notebook created"
         fi
     
@@ -110,7 +110,7 @@ jobs:
         find modules/source -name "*.ipynb" -delete
         
         # Test converting all modules at once
-        python -m tito.main module notebooks
+        python -m tito.main notebooks
         
         # Check that notebooks were created
         notebook_count=$(find modules/source -name "*.ipynb" | wc -l)
@@ -149,7 +149,7 @@ jobs:
         echo "Testing complete student workflow..."
         
         # Convert a module to notebook
-        python -m tito.main module notebooks --module 03_activations
+        python -m tito.main notebooks --module 03_activations
         
         # Verify notebook exists and is valid
         [ -f "modules/source/03_activations/activations_dev.ipynb" ] && echo "✓ Student can create notebooks"
