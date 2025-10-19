@@ -32,7 +32,7 @@ jobs:
         python-version: ${{ matrix.python-version }}
     
     - name: Cache pip dependencies
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: ~/.cache/pip
         key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
@@ -118,7 +118,7 @@ jobs:
         [ "$notebook_count" -gt 0 ] && echo "✓ Batch conversion successful"
     
     - name: Archive generated notebooks
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       if: always()
       with:
         name: generated-notebooks-python-${{ matrix.python-version }}
