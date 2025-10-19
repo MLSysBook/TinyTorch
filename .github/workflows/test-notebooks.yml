@@ -99,18 +99,7 @@ jobs:
         for notebook in modules/source/*/*.ipynb; do
           if [ -f "$notebook" ]; then
             echo "Validating $notebook"
-            python -c "
-import json
-try:
-    with open('$notebook') as f:
-        nb = json.load(f)
-    assert 'cells' in nb, 'No cells found'
-    assert len(nb['cells']) > 0, 'Empty notebook'
-    print('✓ $notebook is valid')
-except Exception as e:
-    print('✗ $notebook validation failed:', e)
-    exit(1)
-            "
+            python -c 'import json; nb = json.load(open("'"$notebook"'")); assert "cells" in nb and len(nb["cells"]) > 0; print("✓ '"$notebook"' is valid")'
           fi
         done
     
