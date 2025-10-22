@@ -477,7 +477,7 @@ class ExportCommand(BaseCommand):
             
             # Get the project root directory (where .venv should be)
             project_root = Path(__file__).parent.parent.parent
-            venv_jupytext = project_root / ".venv" / "bin" / "jupytext"
+            venv_jupytext = self.venv_path / "bin" / "jupytext"
             
             if venv_jupytext.exists():
                 # Test venv jupytext first
