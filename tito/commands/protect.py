@@ -194,6 +194,7 @@ echo "✅ No auto-generated files being committed"
         vscode_dir = Path(".vscode")
         vscode_dir.mkdir(exist_ok=True)
         
+        python_default_interpreter = str(self.venv_path) + "/bin/python"
         vscode_settings = {
             "_comment_protection": "🛡️ TinyTorch Student Protection",
             "files.readonlyInclude": {
@@ -204,7 +205,7 @@ echo "✅ No auto-generated files being committed"
             "files.decorations.badges": True,
             "explorer.decorations.colors": True,
             "explorer.decorations.badges": True,
-            "python.defaultInterpreterPath": "./.venv/bin/python",
+            "python.defaultInterpreterPath": python_default_interpreter,
             "python.terminal.activateEnvironment": True
         }
         

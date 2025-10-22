@@ -409,8 +409,8 @@ class HelpCommand(BaseCommand):
             "```bash\n"
             "git clone https://github.com/mlsysbook/TinyTorch.git\n"
             "cd TinyTorch\n"
-            "python -m venv .venv\n"
-            "source .venv/bin/activate  # Windows: .venv\\Scripts\\activate\n"
+            f"python -m venv {self.venv_path}\n"
+            f"source {self.venv_path}/bin/activate  # Windows: .venv\\Scripts\\activate\n"
             "pip install -r requirements.txt\n"
             "pip install -e .\n"
             "```",

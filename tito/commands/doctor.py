@@ -41,8 +41,7 @@ class DoctorCommand(BaseCommand):
         env_table.add_row("Python", "[green]✅ OK[/green]", f"{sys.version.split()[0]} ({sys.platform})")
         
         # Virtual environment - check if it exists and if we're using it
-        venv_path = Path(".venv")
-        venv_exists = venv_path.exists()
+        venv_exists = self.venv_path.exists()
         in_venv = (
             # Method 1: Check VIRTUAL_ENV environment variable (most reliable for activation)
             os.environ.get('VIRTUAL_ENV') is not None or
@@ -58,7 +57,7 @@ class DoctorCommand(BaseCommand):
             venv_status = "[yellow]✅ Ready (Not Active)[/yellow]"
         else:
             venv_status = "[red]❌ Not Found[/red]"
-        env_table.add_row("Virtual Environment", venv_status, ".venv")
+        env_table.add_row("Virtual Environment", venv_status, f"{self.venv_path}")
         
         # Dependencies
         dependencies = [
