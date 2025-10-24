@@ -69,10 +69,7 @@ import re
 from collections import defaultdict, Counter
 
 # Import only Module 01 (Tensor) - this module has minimal dependencies
-import sys
-import os
-sys.path.append(os.path.join(os.path.dirname(__file__), '..', '01_tensor'))
-from tensor_dev import Tensor
+from tinytorch.core.tensor import Tensor
 
 # %% [markdown]
 """

@@ -127,44 +127,7 @@ Real-world performance wins:
 # %% nbgrader={"grade": false, "grade_id": "tensor-import", "solution": true}
 # Import required dependencies
 ### BEGIN SOLUTION
-# Import tensor from our implementation
-import sys
-import os
-sys.path.append('/Users/VJ/GitHub/TinyTorch')
-
-try:
-    # Import from the modules directory structure
-    import importlib.util
-    spec = importlib.util.spec_from_file_location("tensor_dev", "/Users/VJ/GitHub/TinyTorch/modules/01_tensor/tensor_dev.py")
-    tensor_module = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(tensor_module)
-    Tensor = tensor_module.Tensor
-except ImportError:
-    # Fallback for testing
-    class Tensor:
-        def __init__(self, data, requires_grad=False):
-            self.data = np.array(data, dtype=np.float32)
-            self.shape = self.data.shape
-            self.requires_grad = requires_grad
-            self.grad = None
-
-        def __add__(self, other):
-            return Tensor(self.data + other.data)
-
-        def __mul__(self, other):
-            return Tensor(self.data * other.data)
-
-        def matmul(self, other):
-            return Tensor(np.dot(self.data, other.data))
-
-        def reshape(self, *shape):
-            return Tensor(self.data.reshape(shape))
-
-        def sum(self, axis=None):
-            return Tensor(self.data.sum(axis=axis))
-
-        def backward(self):
-            pass
+from tinytorch.core.tensor import Tensor
 ### END SOLUTION
 
 # %% [markdown]

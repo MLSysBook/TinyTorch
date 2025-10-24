@@ -67,27 +67,9 @@ from collections import defaultdict
 import gc
 
 # Import our TinyTorch components for profiling
-import sys
-import os
-sys.path.append(os.path.join(os.path.dirname(__file__), '..', '01_tensor'))
-sys.path.append(os.path.join(os.path.dirname(__file__), '..', '03_layers'))
-sys.path.append(os.path.join(os.path.dirname(__file__), '..', '09_spatial'))
-
-# For testing purposes - in real package these would be proper imports
-try:
-    from tensor_dev import Tensor
-    from layers_dev import Linear, Sequential
-    from spatial_dev import Conv2d
-except ImportError:
-    # Fallback - create minimal implementations for testing
-    class Tensor:
-        def __init__(self, data):
-            self.data = np.array(data)
-            self.shape = self.data.shape
-        def __mul__(self, other):
-            return Tensor(self.data * other.data)
-        def sum(self):
-            return Tensor(np.sum(self.data))
+from tinytorch.core.tensor import Tensor
+from tinytorch.core.layers import Linear
+from tinytorch.core.spatial import Conv2d
 
 # %% [markdown]
 """
