@@ -63,15 +63,10 @@ from tinytorch.core.attention import scaled_dot_product_attention, MultiHeadAtte
 import numpy as np
 import math
 import time
-import sys
-import os
 from typing import Optional, Tuple, List
 
 # Import dependencies from other modules
-sys.path.append(os.path.join(os.path.dirname(__file__), '..', '01_tensor'))
 from tinytorch.core.tensor import Tensor
-
-sys.path.append(os.path.join(os.path.dirname(__file__), '..', '03_layers'))
 from tinytorch.core.layers import Linear
 
 # Note: Keeping simplified implementations for reference during development
