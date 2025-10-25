@@ -74,18 +74,14 @@ parts:
     title: "18. KV Caching"
   - file: chapters/19-benchmarking
     title: "19. Benchmarking"
+
+- caption: 🏅 Competition
+  chapters:
   - file: chapters/20-capstone
-    title: "20. Capstone"
+    title: "20. AI Olympics"
 
-- caption: 🏆 Historical Milestones
+- caption: 🌍 Community
   chapters:
-  - file: chapters/milestones
-    title: "Journey Through ML History"
-
-- caption: 🏅 Community
-  chapters:
-  - file: leaderboard
-    title: "Leaderboard"
   - file: community
     title: "Ecosystem"
 
