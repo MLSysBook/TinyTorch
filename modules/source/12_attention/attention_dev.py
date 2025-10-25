@@ -137,10 +137,10 @@ Query: "What information do I need?"
 
 Keys: "What information is available at each position?"
 ┌─────────────────────────────────────┐
-│ K₁: [0.2, 0.7, 0.1, 0.4]           │ ← Key 1 (description of position 1)
-│ K₂: [0.1, 0.9, 0.2, 0.1]           │ ← Key 2 (description of position 2)
-│ K₃: [0.3, 0.1, 0.8, 0.3]           │ ← Key 3 (description of position 3)
-│ K₄: [0.4, 0.2, 0.1, 0.9]           │ ← Key 4 (description of position 4)
+│ K₁: [0.2, 0.7, 0.1, 0.4]            │ ← Key 1 (description of position 1)
+│ K₂: [0.1, 0.9, 0.2, 0.1]            │ ← Key 2 (description of position 2)
+│ K₃: [0.3, 0.1, 0.8, 0.3]            │ ← Key 3 (description of position 3)
+│ K₄: [0.4, 0.2, 0.1, 0.9]            │ ← Key 4 (description of position 4)
 └─────────────────────────────────────┘
 
 Values: "What actual content can I retrieve?"
@@ -420,7 +420,7 @@ Multi-head attention runs multiple attention "heads" in parallel, each learning 
 │ SINGLE HEAD ATTENTION (Limited Representation):                         │
 │ ┌─────────────────────────────────────────────────────────────────────┐ │
 │ │ Input (512) → [Linear] → Q,K,V (512) → [Attention] → Output (512)   │ │
-│ │                  ↑           ↑            ↑            ↑           │ │
+│ │                  ↑           ↑            ↑            ↑            │ │
 │ │            Single proj  Full dimensions  One head   Limited focus   │ │
 │ └─────────────────────────────────────────────────────────────────────┘ │
 │                                                                         │
@@ -432,14 +432,14 @@ Multi-head attention runs multiple attention "heads" in parallel, each learning 
 │ │      ↓                                                              │ │
 │ │ [Split into 8 heads] → 8 × 64 dimensions per head                   │ │
 │ │      ↓                                                              │ │
-│ │ Head₁: Q₁(64) ⊗ K₁(64) → Attention₁ → Output₁(64)  │ Syntax focus │ │
-│ │ Head₂: Q₂(64) ⊗ K₂(64) → Attention₂ → Output₂(64)  │ Semantic     │ │
-│ │ Head₃: Q₃(64) ⊗ K₃(64) → Attention₃ → Output₃(64)  │ Position     │ │
-│ │ Head₄: Q₄(64) ⊗ K₄(64) → Attention₄ → Output₄(64)  │ Long-range   │ │
-│ │ Head₅: Q₅(64) ⊗ K₅(64) → Attention₅ → Output₅(64)  │ Local deps   │ │
-│ │ Head₆: Q₆(64) ⊗ K₆(64) → Attention₆ → Output₆(64)  │ Coreference  │ │
-│ │ Head₇: Q₇(64) ⊗ K₇(64) → Attention₇ → Output₇(64)  │ Composition  │ │
-│ │ Head₈: Q₈(64) ⊗ K₈(64) → Attention₈ → Output₈(64)  │ Global view  │ │
+│ │ Head₁: Q₁(64) ⊗ K₁(64) → Attention₁ → Output₁(64)  │ Syntax focus   │ │
+│ │ Head₂: Q₂(64) ⊗ K₂(64) → Attention₂ → Output₂(64)  │ Semantic       │ │
+│ │ Head₃: Q₃(64) ⊗ K₃(64) → Attention₃ → Output₃(64)  │ Position       │ │
+│ │ Head₄: Q₄(64) ⊗ K₄(64) → Attention₄ → Output₄(64)  │ Long-range     │ │
+│ │ Head₅: Q₅(64) ⊗ K₅(64) → Attention₅ → Output₅(64)  │ Local deps     │ │
+│ │ Head₆: Q₆(64) ⊗ K₆(64) → Attention₆ → Output₆(64)  │ Coreference    │ │
+│ │ Head₇: Q₇(64) ⊗ K₇(64) → Attention₇ → Output₇(64)  │ Composition    │ │
+│ │ Head₈: Q₈(64) ⊗ K₈(64) → Attention₈ → Output₈(64)  │ Global view    │ │
 │ │      ↓                                                              │ │
 │ │ [Concatenate] → 8 × 64 = 512 dimensions                             │ │
 │ │      ↓                                                              │ │
@@ -865,8 +865,8 @@ Example Attention Patterns in Language:
 1. Local Syntax Attention:
    "The quick brown fox"
    The → quick (determiner-adjective)
-   quick → brown (adjective-adjective)
-   brown → fox (adjective-noun)
+         quick → brown (adjective-adjective)
+                 brown → fox (adjective-noun)
 
 2. Long-Range Coreference:
    "John went to the store. He bought milk."

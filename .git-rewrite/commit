@@ -1,0 +1,14 @@
+tree af356816b90ce169e24c32e8f093f94b2cd0a497
+parent 30f1d5aa287312a298874af27e9f6ce03d03b966
+author Vijay Janapa Reddi <vj@eecs.harvard.edu> 1758663709 -0400
+committer Vijay Janapa Reddi <vj@eecs.harvard.edu> 1758663709 -0400
+
+Complete Module 3 Activations: Add in-place operations for memory efficiency
+
+- Add in-place activation functions (relu_, sigmoid_, tanh_, softmax_)
+- Implement direct tensor modification to save memory (~50% reduction)
+- Add comprehensive testing for correctness and memory verification
+- Include performance profiling and comparison methods
+- Add educational content on memory efficiency and production patterns
+- Follow PyTorch convention for in-place operations (function_)
+- Complete module to 100% with all functionality implemented
