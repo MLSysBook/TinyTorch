@@ -1,0 +1,13 @@
+861cc9e8b58c71c2aa633b28dddfdb2e41d2c57e commit	refs/heads/dev
+86df1a12231c5e28490313b75947f4dd2d1a9078 commit	refs/heads/examples-fixes
+3f05acee4c804dc69148c7f23f89d3d327ddfddb commit	refs/heads/main
+ed52d8ac592ca15c7e043175951ebca36e60e0a0 commit	refs/heads/update-attention-module
+4d70e308ff3f077b3698580250e7761e2fb76f2a commit	refs/heads/update-embeddings-module
+861cc9e8b58c71c2aa633b28dddfdb2e41d2c57e commit	refs/heads/update-transformer-era-milestone
+1c338a5937b721145c62bb8c0550ef314550bd8e commit	refs/heads/update-transformers-module
+3a1b08fd9b6b46ba7ece910249a57e83191b1120 commit	refs/remotes/origin/HEAD
+3a1b08fd9b6b46ba7ece910249a57e83191b1120 commit	refs/remotes/origin/dev
+3f05acee4c804dc69148c7f23f89d3d327ddfddb commit	refs/remotes/origin/main
+4d27b8f1a128b03dac7cbfae9c64f0073c41421e commit	refs/remotes/origin/training-fixes
+8f88d57193ac6f9d11eb6d79c46f939216628545 commit	refs/stash
+c02a7537dac94d81a5fde9333e184d1fc8692f0e tag	refs/tags/passing-core-tests
