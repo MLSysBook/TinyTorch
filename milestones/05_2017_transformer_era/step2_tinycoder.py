@@ -28,7 +28,7 @@ sys.path.insert(0, project_root)
 
 from tinytorch.core.tensor import Tensor
 from tinytorch.text.tokenization import BPETokenizer
-from tinytorch.text.embeddings import Embedding, PositionalEncoding
+from tinytorch.core.embeddings import Embedding, PositionalEncoding
 from tinytorch.core.attention import MultiHeadAttention
 from tinytorch.models.transformer import TransformerBlock, LayerNorm
 from tinytorch.core.layers import Linear
@@ -45,7 +45,7 @@ class TinyCoder:
         
         # Token + position embeddings
         self.token_embedding = Embedding(vocab_size, embed_dim)
-        self.pos_encoding = PositionalEncoding(embed_dim, max_length)
+        self.pos_encoding = PositionalEncoding(max_length, embed_dim)
         
         # Transformer blocks
         self.blocks = []
@@ -62,9 +62,8 @@ class TinyCoder:
         B, T = idx.shape
         
         # Token + positional embeddings
-        tok_emb = self.token_embedding(idx)
-        pos_emb = self.pos_encoding(tok_emb)
-        x = tok_emb + pos_emb
+        tok_emb = self.token_embedding.forward(idx)
+        x = self.pos_encoding.forward(tok_emb)
         
         # Transformer blocks
         for block in self.blocks:
