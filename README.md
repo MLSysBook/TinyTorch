@@ -2,10 +2,17 @@
 
 **Build ML Systems From First Principles**
 
+<!-- Core Badges -->
 ![Python](https://img.shields.io/badge/python-3.8+-blue.svg)
 ![License](https://img.shields.io/badge/license-MIT-green.svg)
 [![Documentation](https://img.shields.io/badge/docs-jupyter_book-orange.svg)](https://mlsysbook.github.io/TinyTorch/)
 ![Status](https://img.shields.io/badge/status-active-success.svg)
+
+<!-- Activity Badges -->
+![Last Commit](https://img.shields.io/github/last-commit/MLSysBook/TinyTorch)
+![Commit Activity](https://img.shields.io/github/commit-activity/m/MLSysBook/TinyTorch)
+![GitHub Stars](https://img.shields.io/github/stars/MLSysBook/TinyTorch?style=social)
+![Contributors](https://img.shields.io/github/contributors/MLSysBook/TinyTorch)
 
 > 🚧 **Work in Progress** - Actively developing TinyTorch for Spring 2025! All 20 core modules (01-20) are implemented but still being debugged and tested. Core foundation modules (01-09) are stable. Transformer and optimization modules (10-20) are functional but undergoing refinement. Join us in building the future of ML systems education.
 
