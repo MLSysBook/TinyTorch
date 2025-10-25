@@ -7,7 +7,7 @@
 [![Documentation](https://img.shields.io/badge/docs-jupyter_book-orange.svg)](https://mlsysbook.github.io/TinyTorch/)
 ![Status](https://img.shields.io/badge/status-active-success.svg)
 
-> 🚧 **Work in Progress** - We're actively developing TinyTorch for Spring 2025! Core modules (01-09) are complete and tested. Transformer modules (10-14) in active development on `transformers-integration` branch. Join us in building the future of ML systems education.
+> 🚧 **Work in Progress** - We're actively developing TinyTorch for Spring 2025! Core modules (01-09) are complete and tested. Transformer modules (10-14) in active development right now. 
 
 ## 📖 Table of Contents
 - [Why TinyTorch?](#why-tinytorch)
