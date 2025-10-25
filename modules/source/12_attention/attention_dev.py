@@ -44,7 +44,7 @@ Let's get started!
 
 ## 📦 Where This Code Lives in the Final Package
 
-**Learning Side:** You work in `modules/12_attention/attention_dev.py`  
+**Learning Side:** You work in `modules/12_attention/attention_dev.py`
 **Building Side:** Code exports to `tinytorch.core.attention`
 
 ```python
@@ -59,75 +59,15 @@ from tinytorch.core.attention import scaled_dot_product_attention, MultiHeadAtte
 - **Integration:** Works seamlessly with embeddings for complete sequence processing pipelines
 """
 
-# %% nbgrader={"grade": false, "grade_id": "imports", "locked": false, "solution": true}
+# %%
 import numpy as np
 import math
 import time
 from typing import Optional, Tuple, List
 
-# Import dependencies from other modules
+# Import dependencies from previous modules - following TinyTorch dependency chain
 from tinytorch.core.tensor import Tensor
 from tinytorch.core.layers import Linear
-
-# Note: Keeping simplified implementations for reference during development
-class _SimplifiedTensor:
-        """Simplified tensor for attention operations development."""
-
-        def __init__(self, data, requires_grad=False):
-            self.data = np.array(data, dtype=np.float32)
-            self.shape = self.data.shape
-            self.requires_grad = requires_grad
-            self.grad = None
-
-        def __repr__(self):
-            return f"Tensor(shape={self.shape}, data=\n{self.data})"
-
-        def __add__(self, other):
-            if isinstance(other, Tensor):
-                return Tensor(self.data + other.data)
-            return Tensor(self.data + other)
-
-        def __mul__(self, other):
-            if isinstance(other, Tensor):
-                return Tensor(self.data * other.data)
-            return Tensor(self.data * other)
-
-        def sum(self, axis=None):
-            return Tensor(np.sum(self.data, axis=axis))
-
-        def mean(self, axis=None):
-            return Tensor(np.mean(self.data, axis=axis))
-
-        def matmul(self, other):
-            return Tensor(np.matmul(self.data, other.data))
-
-        def softmax(self, axis=-1):
-            """Apply softmax along specified axis."""
-            # Subtract max for numerical stability
-            shifted = self.data - np.max(self.data, axis=axis, keepdims=True)
-            exp_values = np.exp(shifted)
-            return Tensor(exp_values / np.sum(exp_values, axis=axis, keepdims=True))
-
-# Simplified Linear layer for development
-class _SimplifiedLinear:
-    """Simplified linear layer for attention projections."""
-
-    def __init__(self, in_features, out_features):
-        self.in_features = in_features
-        self.out_features = out_features
-        # Initialize weights and bias (simplified Xavier initialization)
-        self.weight = Tensor(np.random.randn(in_features, out_features) * np.sqrt(2.0 / in_features))
-        self.bias = Tensor(np.zeros(out_features))
-
-    def forward(self, x):
-        """Forward pass: y = xW + b"""
-        output = x.matmul(self.weight)
-        # Add bias (broadcast across batch and sequence dimensions)
-        return Tensor(output.data + self.bias.data)
-
-    def parameters(self):
-        """Return list of parameters for this layer."""
-        return [self.weight, self.bias]
 
 # %% [markdown]
 """
@@ -307,7 +247,8 @@ Step-by-Step Attention Computation:
 ```
 """
 
-# %% nbgrader={"grade": false, "grade_id": "attention-function", "locked": false, "solution": true}
+# %% nbgrader={"grade": false, "grade_id": "attention-function", "solution": true}
+#| export
 def scaled_dot_product_attention(Q: Tensor, K: Tensor, V: Tensor, mask: Optional[Tensor] = None) -> Tuple[Tensor, Tensor]:
     """
     Compute scaled dot-product attention.
@@ -443,7 +384,9 @@ def test_unit_scaled_dot_product_attention():
 
     print("✅ scaled_dot_product_attention works correctly!")
 
-test_unit_scaled_dot_product_attention()
+# Run test immediately when developing this module
+if __name__ == "__main__":
+    test_unit_scaled_dot_product_attention()
 
 # %% [markdown]
 """
@@ -470,22 +413,46 @@ Multi-head attention runs multiple attention "heads" in parallel, each learning 
 ### Understanding Multi-Head Architecture
 
 ```
-Single-Head vs Multi-Head Attention:
-
-SINGLE HEAD (Limited):
-Input → [Linear] → Q,K,V → [Attention] → Output
-         512×512         512×512         512
-
-MULTI-HEAD (Rich):
-Input → [Linear] → Q₁,K₁,V₁ → [Attention₁] → Head₁ (64 dims)
-     → [Linear] → Q₂,K₂,V₂ → [Attention₂] → Head₂ (64 dims)
-     → [Linear] → Q₃,K₃,V₃ → [Attention₃] → Head₃ (64 dims)
-     ...
-     → [Linear] → Q₈,K₈,V₈ → [Attention₈] → Head₈ (64 dims)
-                                              ↓
-                                        [Concatenate]
-                                              ↓
-                                        [Linear Mix] → Output (512)
+┌─────────────────────────────────────────────────────────────────────────┐
+│ SINGLE-HEAD vs MULTI-HEAD ATTENTION ARCHITECTURE                        │
+├─────────────────────────────────────────────────────────────────────────┤
+│                                                                         │
+│ SINGLE HEAD ATTENTION (Limited Representation):                         │
+│ ┌─────────────────────────────────────────────────────────────────────┐ │
+│ │ Input (512) → [Linear] → Q,K,V (512) → [Attention] → Output (512)   │ │
+│ │                  ↑           ↑            ↑            ↑           │ │
+│ │            Single proj  Full dimensions  One head   Limited focus   │ │
+│ └─────────────────────────────────────────────────────────────────────┘ │
+│                                                                         │
+│ MULTI-HEAD ATTENTION (Rich Parallel Processing):                        │
+│ ┌─────────────────────────────────────────────────────────────────────┐ │
+│ │ Input (512)                                                         │ │
+│ │      ↓                                                              │ │
+│ │ [Q/K/V Projections] → 512 dimensions each                           │ │
+│ │      ↓                                                              │ │
+│ │ [Split into 8 heads] → 8 × 64 dimensions per head                   │ │
+│ │      ↓                                                              │ │
+│ │ Head₁: Q₁(64) ⊗ K₁(64) → Attention₁ → Output₁(64)  │ Syntax focus │ │
+│ │ Head₂: Q₂(64) ⊗ K₂(64) → Attention₂ → Output₂(64)  │ Semantic     │ │
+│ │ Head₃: Q₃(64) ⊗ K₃(64) → Attention₃ → Output₃(64)  │ Position     │ │
+│ │ Head₄: Q₄(64) ⊗ K₄(64) → Attention₄ → Output₄(64)  │ Long-range   │ │
+│ │ Head₅: Q₅(64) ⊗ K₅(64) → Attention₅ → Output₅(64)  │ Local deps   │ │
+│ │ Head₆: Q₆(64) ⊗ K₆(64) → Attention₆ → Output₆(64)  │ Coreference  │ │
+│ │ Head₇: Q₇(64) ⊗ K₇(64) → Attention₇ → Output₇(64)  │ Composition  │ │
+│ │ Head₈: Q₈(64) ⊗ K₈(64) → Attention₈ → Output₈(64)  │ Global view  │ │
+│ │      ↓                                                              │ │
+│ │ [Concatenate] → 8 × 64 = 512 dimensions                             │ │
+│ │      ↓                                                              │ │
+│ │ [Output Linear] → Final representation (512)                        │ │
+│ └─────────────────────────────────────────────────────────────────────┘ │
+│                                                                         │
+│ Key Benefits of Multi-Head:                                             │
+│ • Parallel specialization across different relationship types           │
+│ • Same total parameters, distributed across multiple focused heads      │
+│ • Each head can learn distinct attention patterns                       │
+│ • Enables rich, multifaceted understanding of sequences                 │
+│                                                                         │
+└─────────────────────────────────────────────────────────────────────────┘
 ```
 
 ### The Multi-Head Process Detailed
@@ -520,7 +487,7 @@ Each head can specialize in different patterns:
 This parallelization allows the model to attend to different representation subspaces simultaneously.
 """
 
-# %% nbgrader={"grade": false, "grade_id": "multihead-attention", "locked": false, "solution": true}
+# %% nbgrader={"grade": false, "grade_id": "multihead-attention", "solution": true}
 #| export
 class MultiHeadAttention:
     """
@@ -718,7 +685,9 @@ def test_unit_multihead_attention():
 
     print("✅ MultiHeadAttention works correctly!")
 
-test_unit_multihead_attention()
+# Run test immediately when developing this module
+if __name__ == "__main__":
+    test_unit_multihead_attention()
 
 # %% [markdown]
 """
@@ -770,7 +739,7 @@ Just for attention matrices!
 ```
 """
 
-# %% nbgrader={"grade": false, "grade_id": "attention-complexity", "locked": false, "solution": true}
+# %% nbgrader={"grade": false, "grade_id": "attention-complexity", "solution": true}
 def analyze_attention_complexity():
     """📊 Analyze attention computational complexity and memory scaling."""
     print("📊 Analyzing Attention Complexity...")
@@ -798,7 +767,7 @@ def analyze_attention_complexity():
     print(f"\n💡 Attention memory scales as O(n²) with sequence length")
     print(f"🚀 For seq_len=1024, attention matrix alone needs {(1024*1024*4)/1024/1024:.1f} MB")
 
-# %% nbgrader={"grade": false, "grade_id": "attention-timing", "locked": false, "solution": true}
+# %% nbgrader={"grade": false, "grade_id": "attention-timing", "solution": true}
 def analyze_attention_timing():
     """📊 Measure attention computation time vs sequence length."""
     print("\n📊 Analyzing Attention Timing...")
@@ -916,7 +885,7 @@ Example Attention Patterns in Language:
 Let's see these patterns emerge in our implementation.
 """
 
-# %% nbgrader={"grade": false, "grade_id": "attention-scenarios", "locked": false, "solution": true}
+# %% nbgrader={"grade": false, "grade_id": "attention-scenarios", "solution": true}
 def test_attention_scenarios():
     """Test attention mechanisms in realistic scenarios."""
     print("🔬 Testing Attention Scenarios...")
@@ -998,7 +967,9 @@ def test_attention_scenarios():
 
     print("\n✅ All attention scenarios work correctly!")
 
-test_attention_scenarios()
+# Run test immediately when developing this module
+if __name__ == "__main__":
+    test_attention_scenarios()
 
 # %% [markdown]
 """
@@ -1031,7 +1002,7 @@ The attention matrices you see here are the foundation of model interpretability
 
 # %% [markdown]
 """
-## 🧪 Module Integration Test
+## 6. Module Integration Test
 
 Final validation that everything works together correctly.
 """
@@ -1064,8 +1035,9 @@ def test_module():
     print("🎉 ALL TESTS PASSED! Module ready for export.")
     print("Run: tito module complete 12")
 
-# Call before module summary
-test_module()
+# Run comprehensive module test when executed directly
+if __name__ == "__main__":
+    test_module()
 
 # %%
 if __name__ == "__main__":
@@ -1133,7 +1105,7 @@ Congratulations! You've built the attention mechanism that revolutionized deep l
 Your attention implementation is the core mechanism that enables modern language models!
 Export with: `tito module complete 12`
 
-**Next**: Module 13 will combine attention with feed-forward layers to build complete transformer blocks, leading to GPT-style language models!
+**Next**: Module 13 will combine attention with feed-forward layers to build complete transformer blocks!
 
 ### What You Just Built Powers
 - **GPT models**: Your attention mechanism is the exact pattern used in ChatGPT and GPT-4
