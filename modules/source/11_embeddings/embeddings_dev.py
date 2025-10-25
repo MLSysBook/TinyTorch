@@ -55,10 +55,11 @@ from tinytorch.text.embeddings import Embedding, PositionalEncoding, create_sinu
 - **Integration:** Works seamlessly with tokenizers for complete text processing pipeline
 """
 
+# %%
 #| default_exp text.embeddings
-#| export
 
 # %%
+#| export
 import numpy as np
 import math
 from typing import List, Optional, Tuple
