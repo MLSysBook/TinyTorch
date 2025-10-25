@@ -68,10 +68,10 @@ import math
 from typing import Optional, List
 
 # Import from previous modules - following proper dependency chain
+# Note: Actual imports happen in try/except blocks below with fallback implementations
 from tinytorch.core.tensor import Tensor
 from tinytorch.core.layers import Linear
-from tinytorch.core.embeddings import Embedding
-from tinytorch.core.attention import MultiHeadAttention
+# MultiHeadAttention import happens in try/except below
 
 # For development, we'll use minimal implementations if imports fail
 try:
@@ -150,13 +150,13 @@ except ImportError:
             self.v_proj = Linear(embed_dim, embed_dim)
             self.out_proj = Linear(embed_dim, embed_dim)
 
-        def forward(self, x, mask=None):
-            batch_size, seq_len, embed_dim = x.shape
+        def forward(self, query, key, value, mask=None):
+            batch_size, seq_len, embed_dim = query.shape
 
             # Linear projections
-            Q = self.q_proj.forward(x)
-            K = self.k_proj.forward(x)
-            V = self.v_proj.forward(x)
+            Q = self.q_proj.forward(query)
+            K = self.k_proj.forward(key)
+            V = self.v_proj.forward(value)
 
             # Reshape for multi-head attention
             Q = Q.reshape(batch_size, seq_len, self.num_heads, self.head_dim)
@@ -213,7 +213,7 @@ except ImportError:
             self.weight = Tensor(np.random.normal(0, 0.02, (vocab_size, embed_dim)))
 
         def forward(self, indices):
-            return Tensor(self.weight.data[indices.data])
+            return Tensor(self.weight.data[indices.data.astype(int)])
 
         def parameters(self):
             return [self.weight]
