@@ -7,7 +7,7 @@
 [![Documentation](https://img.shields.io/badge/docs-jupyter_book-orange.svg)](https://mlsysbook.github.io/TinyTorch/)
 ![Status](https://img.shields.io/badge/status-active-success.svg)
 
-> 🚧 **Work in Progress** - We're actively developing TinyTorch for Spring 2025! Core modules (01-09) are complete and tested. Transformer modules (10-14) in active development right now. 
+> 🚧 **Work in Progress** - Actively developing TinyTorch for Spring 2025! All 20 core modules (01-20) are implemented but still being debugged and tested. Core foundation modules (01-09) are stable. Transformer and optimization modules (10-20) are functional but undergoing refinement. Join us in building the future of ML systems education.
 
 ## 📖 Table of Contents
 - [Why TinyTorch?](#why-tinytorch)
@@ -224,15 +224,15 @@ tito checkpoint status
 tito checkpoint timeline
 ```
 
-**Checkpoint Progression:**
-- **01-02**: Foundation (Tensors, Activations)
+**Module Progression:**
+- **01-02**: Foundation (Tensor, Activations)
 - **03-07**: Core Networks (Layers, Losses, Autograd, Optimizers, Training)
-- **08-09**: Computer Vision (DataLoaders, Spatial ops - unlocks CIFAR-10 @ 75%+)
+- **08-09**: Computer Vision (DataLoader, Spatial ops - unlocks CIFAR-10 @ 75%+)
 - **10-14**: Language Models (Tokenization, Embeddings, Attention, Transformers, KV-Caching)
 - **15-19**: System Optimization (Profiling, Acceleration, Quantization, Compression, Benchmarking)
 - **20**: Capstone (Complete end-to-end ML systems)
 
-Each checkpoint asks: **"Can I build this capability from scratch?"** with hands-on validation.
+Each module asks: **"Can I build this capability from scratch?"** with hands-on validation.
 
 ### Module Completion Workflow
 
@@ -270,46 +270,46 @@ tito module complete 01_tensor
 
 As you complete modules, unlock historical ML milestones demonstrating YOUR implementations:
 
-### 🧠 01. Perceptron (1957) - After Module 04
+### 🧠 01. Perceptron (1957) - After Module 03
 ```bash
-cd milestones/01_perceptron_1957
+cd milestones/01_1957_perceptron
 python perceptron_trained.py
 # Rosenblatt's first trainable neural network
 # YOUR Linear layer + Sigmoid recreates history!
 ```
-**Requirements**: Modules 01-04 (Tensor, Activations, Layers, Losses)  
+**Requirements**: Modules 01-03 (Tensor, Activations, Layers)  
 **Achievement**: Binary classification with gradient descent
 
 ---
 
-### ⚡ 02. XOR Crisis (1969) - After Module 06
+### ⚡ 02. XOR Crisis (1969) - After Module 05
 ```bash
-cd milestones/02_xor_crisis_1969
+cd milestones/02_1969_xor_crisis
 python xor_solved.py
 # Solve Minsky's XOR challenge with hidden layers
 # YOUR autograd enables multi-layer learning!
 ```
-**Requirements**: Modules 01-06 (+ Autograd, Optimizers)  
+**Requirements**: Modules 01-05 (+ Autograd)  
 **Achievement**: Non-linear problem solving
 
 ---
 
 ### 🔢 03. MLP Revival (1986) - After Module 07
 ```bash
-cd milestones/03_mlp_revival_1986
+cd milestones/03_1986_mlp_revival
 python mlp_digits.py     # 8x8 digit classification
 python mlp_mnist.py      # Full MNIST dataset
 # Backpropagation revolution on real vision!
 # YOUR training loops achieve 95%+ accuracy
 ```
-**Requirements**: Modules 01-07 (+ Training)  
+**Requirements**: Modules 01-07 (+ Optimizers, Training)  
 **Achievement**: Real computer vision with MLPs
 
 ---
 
 ### 🖼️ 04. CNN Revolution (1998) - After Module 09
 ```bash
-cd milestones/04_cnn_revolution_1998
+cd milestones/04_1998_cnn_revolution
 python cnn_digits.py     # Spatial features on digits
 python lecun_cifar10.py  # Natural images (CIFAR-10)
 # LeCun's CNNs achieve 75%+ on CIFAR-10!
@@ -322,7 +322,7 @@ python lecun_cifar10.py  # Natural images (CIFAR-10)
 
 ### 🤖 05. Transformer Era (2017) - After Module 13
 ```bash
-cd milestones/05_transformer_era_2017
+cd milestones/05_2017_transformer_era
 python vaswani_shakespeare.py
 # Attention mechanisms for language modeling
 # YOUR attention implementation generates text!
@@ -334,7 +334,7 @@ python vaswani_shakespeare.py
 
 ### ⚡ 06. Systems Age (2024) - After Module 19
 ```bash
-cd milestones/06_systems_age_2024
+cd milestones/06_2024_systems_age
 python optimize_models.py
 # Profile, optimize, and benchmark YOUR framework
 # Compete on TinyMLPerf leaderboard!
@@ -372,14 +372,14 @@ pytest tests/
 ```
 
 **Current Status**:
-- ✅ **20 complete modules** (01 Tensor → 20 Capstone)
+- ✅ **20 modules implemented** (01 Tensor → 20 Capstone) - all code exists
 - ✅ **6 historical milestones** (1957 Perceptron → 2024 Systems Age)
-- ✅ **Capability-based checkpoints** tracking learning progress
-- ✅ **Complete optimization pipeline** from profiling to benchmarking
-- ✅ **TinyMLPerf competition framework** for performance excellence
+- ✅ **Foundation modules stable** (01-09): Tensor through Spatial operations
+- 🚧 **Transformer modules functional** (10-14): Tokenization through KV-Caching - undergoing testing
+- 🚧 **Optimization modules functional** (15-20): Profiling through Capstone - undergoing testing
 - ✅ **KISS principle design** for clear, maintainable code
 - ✅ **Essential-only features**: Focus on what's used in production ML systems
-- 🚧 **Active development**: Transformer integration (modules 10-14) on `transformers-integration` branch  
+- 🎯 **Target: Spring 2025** - Active debugging and refinement in progress  
 
 ## 📚 Documentation & Resources
 
@@ -455,11 +455,11 @@ Special thanks to students and contributors who helped refine this educational f
 
 ### What Makes TinyTorch Different?
 - ✅ **Essential-only features** - Focus on what's actually used in production
-- ✅ **Complete implementation** - Build every component from scratch
-- ✅ **Real achievements** - Train CNNs on CIFAR-10 to 75%+ accuracy
+- 🚧 **Complete implementation** - Build every component from scratch (20 modules in development)
+- 🎯 **Real achievements** - Train CNNs on CIFAR-10 to 75%+ accuracy (target)
 - ✅ **Systems thinking** - Understand memory, performance, and scaling
 - ✅ **Production relevance** - Learn patterns from PyTorch and TensorFlow
-- ✅ **Immediate validation** - 20 capability checkpoints track progress
+- ✅ **Progressive learning** - 20 modules from tensors to transformers to optimization
 
 ### Your Learning Journey
 1. **Week 1-2**: Foundation (Tensors, Activations, Layers)
