@@ -1,0 +1,7 @@
+Fix Module 2 Tensor: Add sum/transpose operations and fix test standards
+
+- Add sum() method for tensor element summation (needed by later modules)
+- Add transpose property (T) for tensor transposition (required for matrix ops)
+- Fix testing standards: Wrap all tests in test_ functions
+- Maintain educational testing pattern with immediate test execution
+- Follow TESTING_STANDARDS.md requirements for function wrapping
