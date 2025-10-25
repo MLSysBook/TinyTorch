@@ -73,12 +73,12 @@ TinyTorch/
 │   │   └── 20_capstone/      # Module 20: Complete ML systems
 │
 ├── milestones/        # 🏆 Historical ML evolution - prove what you built!
-│   ├── 01_perceptron_1957/   # Rosenblatt's first trainable network
-│   ├── 02_xor_crisis_1969/   # Minsky's challenge & multi-layer solution
-│   ├── 03_mlp_revival_1986/  # Backpropagation & MNIST digits
-│   ├── 04_cnn_revolution_1998/ # LeCun's CNNs & CIFAR-10
-│   ├── 05_transformer_era_2017/ # Attention mechanisms & language
-│   └── 06_systems_age_2024/  # Modern optimization & profiling
+│   ├── 01_1957_perceptron/   # Rosenblatt's first trainable network
+│   ├── 02_1969_xor_crisis/   # Minsky's challenge & multi-layer solution
+│   ├── 03_1986_mlp_revival/  # Backpropagation & MNIST digits
+│   ├── 04_1998_cnn_revolution/ # LeCun's CNNs & CIFAR-10
+│   ├── 05_2017_transformer_era/ # Attention mechanisms & language
+│   └── 06_2024_systems_age/  # Modern optimization & profiling
 │
 ├── tinytorch/         # 📦 Generated package (auto-built from your work)
 │   ├── core/          # Your tensor, autograd implementations

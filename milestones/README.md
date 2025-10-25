@@ -28,7 +28,7 @@ These examples demonstrate the **evolutionary progression of neural networks** f
 
 ## 📅 **Historical Timeline & Module Mapping**
 
-### **🧠 Perceptron 1957** - `perceptron_1957/`
+### **🧠 Perceptron 1957** - `01_1957_perceptron/`
 **After Modules 2-4** • *Foundation Building*
 
 ```
@@ -51,7 +51,7 @@ Input → Linear → Sigmoid → Binary Output
 
 ---
 
-### **⚡ XOR Problem 1969** - `xor_1969/`
+### **⚡ XOR Problem 1969** - `02_1969_xor_crisis/`
 **After Modules 2-6** • *Breaking Limitations*
 
 ```
@@ -74,7 +74,7 @@ Input → Linear → ReLU → Linear → Output
 
 ---
 
-### **🔢 MNIST MLP 1986** - `mnist_mlp_1986/`
+### **🔢 MNIST MLP 1986** - `03_1986_mlp_revival/`
 **After Modules 2-8** • *Real Vision Problems*
 
 ```
@@ -97,7 +97,7 @@ Images → Flatten → Linear → ReLU → Linear → ReLU → Linear → Classe
 
 ---
 
-### **🖼️ CIFAR CNN Modern** - `cifar_cnn_modern/`
+### **🖼️ CIFAR CNN Modern** - `04_1998_cnn_revolution/`
 **After Modules 2-10** • *Spatial Understanding*
 
 ```
@@ -120,7 +120,7 @@ Images → Conv → ReLU → Pool → Conv → ReLU → Pool → Flatten → Lin
 
 ---
 
-### **🤖 TinyGPT 2018** - `gpt_2018/`
+### **🤖 Transformer Era 2017** - `05_2017_transformer_era/`
 **After Modules 2-14** • *Language Understanding*
 
 ```
@@ -202,23 +202,22 @@ for hidden_size in [64, 128, 256, 512]:
 ## 📂 **File Structure**
 
 ```
-examples/
-├── README.md                    # This file - milestone overview
-├── perceptron_1957/
-│   └── rosenblatt_perceptron.py # First trainable neural network
-├── xor_1969/
-│   └── minsky_xor_problem.py    # Non-linear problem solving
-├── mnist_mlp_1986/
-│   └── train_mlp.py             # Real vision with multi-layer networks
-├── cifar_cnn_modern/
-│   ├── train_cnn.py             # Spatial feature extraction with CNNs
-│   └── data/                    # CIFAR-10 dataset
-├── gpt_2018/
-│   └── train_gpt.py             # Language modeling with transformers
-└── pretrained/
-    ├── mnist_mlp_weights.npz    # Pre-trained weights for quick demos
-    ├── cifar10_cnn_weights.npz
-    └── xor_weights.npz
+milestones/
+├── README.md                     # This file - milestone overview
+├── 01_1957_perceptron/
+│   └── perceptron_trained.py    # First trainable neural network
+├── 02_1969_xor_crisis/
+│   └── xor_solved.py            # Non-linear problem solving
+├── 03_1986_mlp_revival/
+│   ├── mlp_digits.py            # 8x8 digits  
+│   └── mlp_mnist.py             # Full MNIST with multi-layer networks
+├── 04_1998_cnn_revolution/
+│   ├── cnn_digits.py            # Spatial features on digits
+│   └── lecun_cifar10.py         # CIFAR-10 with CNNs
+├── 05_2017_transformer_era/
+│   └── vaswani_shakespeare.py   # Language modeling with transformers
+└── 06_2024_systems_age/
+    └── optimize_models.py       # Modern ML engineering
 ```
 
 ---
@@ -252,31 +251,34 @@ cd /path/to/TinyTorch
 Test architecture and imports without waiting for downloads:
 ```bash
 # Test what you've built so far
-python examples/perceptron_1957/rosenblatt_perceptron.py --test-only
-python examples/xor_1969/minsky_xor_problem.py --test-only
+cd milestones
+python 01_1957_perceptron/perceptron_trained.py
+python 02_1969_xor_crisis/xor_solved.py
 ```
 
 #### **🎯 Full Milestone Demonstrations**
 
 ```bash
+cd milestones
+
 # After Module 04 - Foundation (30 seconds)
-python examples/perceptron_1957/rosenblatt_perceptron.py
+python 01_1957_perceptron/perceptron_trained.py
 # Demonstrates: YOU built Linear layers + activation functions
 
 # After Module 06 - Autograd (1 minute)  
-python examples/xor_1969/minsky_xor_problem.py
+python 02_1969_xor_crisis/xor_solved.py
 # Demonstrates: YOU built gradient computation + training loops
 
 # After Module 08 - Training (2-3 minutes + MNIST download)
-python examples/mnist_mlp_1986/train_mlp.py
+python 03_1986_mlp_revival/mlp_mnist.py
 # Demonstrates: YOU built complete vision pipeline
 
-# After Module 10 - DataLoader + Spatial (3-5 minutes + CIFAR download)
-python examples/cifar_cnn_modern/train_cnn.py  
+# After Module 09 - Spatial (3-5 minutes + CIFAR download)
+python 04_1998_cnn_revolution/lecun_cifar10.py  
 # Demonstrates: YOU built convolutional networks
 
-# After Module 14 - Transformers (5-10 minutes)
-python examples/gpt_2018/train_gpt.py
+# After Module 13 - Transformers (5-10 minutes)
+python 05_2017_transformer_era/vaswani_shakespeare.py
 # Demonstrates: YOU built attention mechanisms + language models
 ```
 
@@ -385,4 +387,4 @@ By completing all milestone examples, students will:
 
 **Remember**: These aren't just coding exercises - they're journeys through the history of AI that prepare you for the future of ML systems engineering.
 
-🚀 **Start your journey**: `python examples/perceptron_1957/rosenblatt_perceptron.py`
+🚀 **Start your journey**: `cd milestones && python 01_1957_perceptron/perceptron_trained.py`

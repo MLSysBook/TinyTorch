@@ -27,65 +27,67 @@ parts:
 
 - caption: 🧱 Building Blocks
   chapters:
-  - file: chapters/02-tensor
+  - file: chapters/01-tensor
     title: "01. Tensor"
-  - file: chapters/03-activations
+  - file: chapters/02-activations
     title: "02. Activations"
-  - file: chapters/04-layers
+  - file: chapters/03-layers
     title: "03. Layers"
-  - file: chapters/05-dense
+  - file: chapters/04-losses
     title: "04. Losses"
 
 - caption: 🧠 Learning Systems
   chapters:
-  - file: chapters/09-autograd
+  - file: chapters/05-autograd
     title: "05. Autograd"
-  - file: chapters/10-optimizers
+  - file: chapters/06-optimizers
     title: "06. Optimizers"
-  - file: chapters/11-training
+  - file: chapters/07-training
     title: "07. Training"
-  - file: chapters/06-spatial
+  - file: chapters/08-spatial
     title: "08. Spatial"
 
 - caption: 🏗️ Neural Architectures
   chapters:
-  - file: chapters/08-dataloader
+  - file: chapters/09-dataloader
     title: "09. DataLoader"
-  - file: chapters/11-tokenization
+  - file: chapters/10-tokenization
     title: "10. Tokenization"
-  - file: chapters/12-embeddings
+  - file: chapters/11-embeddings
     title: "11. Embeddings"
-  - file: chapters/07-attention
+  - file: chapters/12-attention
     title: "12. Attention"
-  - file: chapters/16-tinygpt
+  - file: chapters/13-transformers
     title: "13. Transformers"
 
 - caption: ⚡ Performance Optimization
   chapters:
-  - file: chapters/15-profiling
+  - file: chapters/14-profiling
     title: "14. Profiling"
-  - file: chapters/13-kernels
+  - file: chapters/15-acceleration
     title: "15. Acceleration"
-  - file: chapters/17-quantization
+  - file: chapters/16-quantization
     title: "16. Quantization"
-  - file: chapters/12-compression
+  - file: chapters/17-compression
     title: "17. Compression"
-  - file: chapters/19-caching
+  - file: chapters/18-caching
     title: "18. KV Caching"
-  - file: chapters/14-benchmarking
+  - file: chapters/19-benchmarking
     title: "19. Benchmarking"
+  - file: chapters/20-capstone
+    title: "20. Capstone"
 
 - caption: 🏆 Historical Milestones
   chapters:
-  - file: chapters/milestones-overview
+  - file: chapters/milestones
     title: "Journey Through ML History"
 
-- caption: 🏅 Community & Competition
+- caption: 🏅 Community
   chapters:
   - file: leaderboard
     title: "Leaderboard"
-  - file: competitions
-    title: "Competitions"
+  - file: community
+    title: "Ecosystem"
 
 - caption: 🛠️ Resources & Tools
   chapters:

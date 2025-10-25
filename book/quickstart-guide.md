@@ -117,7 +117,7 @@ As you progress, **prove what you've built** by recreating history's greatest ML
 **After Module 08**: Achieve **95%+ accuracy on MNIST** with 1986 backpropagation  
 **After Module 09**: Hit **75%+ on CIFAR-10** with 1998 CNNs - your North Star goal! 🎯
 
-**📖 See [Journey Through ML History](chapters/milestones-overview.html)** for complete milestone demonstrations.
+**📖 See [Journey Through ML History](chapters/milestones.html)** for complete milestone demonstrations.
 
 </div>
 

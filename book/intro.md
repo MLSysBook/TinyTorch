@@ -48,7 +48,7 @@ As you complete modules, unlock **historical milestone demonstrations** that pro
 - **🤖 2017: Transformers** - Language generation with YOUR attention
 - **⚡ 2024: Systems Age** - Production optimization with YOUR profiling
 
-**📖 See [Journey Through ML History](chapters/milestones-overview.html)** for complete milestone details and requirements.
+**📖 See [Journey Through ML History](chapters/milestones.html)** for complete milestone details and requirements.
 
 ## Why Build Instead of Use?
 
