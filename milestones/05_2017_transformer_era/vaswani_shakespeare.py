@@ -93,14 +93,14 @@ from tinytorch.core.layers import Linear
 from tinytorch.core.activations import ReLU, Softmax
 from tinytorch.core.optimizers import Adam
 from tinytorch.core.attention import MultiHeadAttention
-from tinytorch.core.transformers import LayerNorm, TransformerBlock
+from tinytorch.models.transformer import LayerNorm, TransformerBlock
 from tinytorch.core.embeddings import Embedding, PositionalEncoding
 
 class TinyGPT:
     def __init__(self, vocab_size, embed_dim, max_length, num_heads, num_layers):
         # Token representation
         self.embedding = Embedding(vocab_size, embed_dim)
-        self.pos_encoding = PositionalEncoding(embed_dim, max_length)
+        self.pos_encoding = PositionalEncoding(max_length, embed_dim)
 
         # Transformer stack
         self.layers = []
@@ -134,8 +134,8 @@ class TinyGPT:
 
     def forward(self, x):
         # Convert tokens to contextual vectors
-        x = self.embedding(x)        # tokens → vectors (Module 12)
-        x = self.pos_encoding(x)     # add position info (Module 12)
+        x = self.embedding.forward(x)        # tokens → vectors (Module 11)
+        x = self.pos_encoding.forward(x)     # add position info (Module 11)
         
         # Process through transformer layers
         for layer in self.layers:
