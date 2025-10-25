@@ -231,8 +231,8 @@ Every component follows this pattern:
 
 ### Choose Your Module
 **New to ML frameworks?** → Start with [Setup](../chapters/01-setup.md)
-**Have ML experience?** → Jump to [Tensors](../chapters/02-tensor.md)
-**Want to see the vision?** → Try [Activations](../chapters/03-activations.md)
+**Have ML experience?** → Jump to [Tensors](../chapters/01-tensor.md)
+**Want to see the vision?** → Try [Activations](../chapters/02-activations.md)
 
 ### Get Help
 - **💬 Discussions**: GitHub Discussions for questions
