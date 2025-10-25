@@ -67,6 +67,9 @@ instance/
 docs/_build/
 _docs/
 
+# Jupyter Book build artifacts
+book/_build/
+
 # PyBuilder
 target/
 
