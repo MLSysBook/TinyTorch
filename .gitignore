@@ -135,6 +135,18 @@ checkpoints/
 experiments/
 runs/
 wandb/
+progress.json
+
+# Development/debug scripts in root (should be in tests/)
+cleanup_*.py
+debug_*.py
+fix_*.py
+minimal_*.py
+*_working.py
+*_test_framework.py
+performance_analysis.py
+quick_*_test.py
+test_*_simple.py
 
 # nbdev specific - we keep notebooks and exported Python code
 # Everything else is auto-generated and shouldn't be tracked
