@@ -316,7 +316,7 @@ def train_shakespeare_gpt(model, train_loader, dataset, epochs=5, learning_rate=
             for b in range(batch_size):
                 for s in range(seq_length):
                     targets_one_hot[b, s, int(targets_np[b, s])] = 1.0
-            
+
             # Softmax + cross entropy
             exp_logits = np.exp(logits_np - np.max(logits_np, axis=2, keepdims=True))
             softmax = exp_logits / np.sum(exp_logits, axis=2, keepdims=True)

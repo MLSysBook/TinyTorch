@@ -139,6 +139,7 @@ class MLP:
 
         # Two-layer feed-forward network
         self.linear1 = Linear(embed_dim, hidden_dim)
+        self.gelu = GELU()  # Use GELU activation from activations module
         self.linear2 = Linear(hidden_dim, embed_dim)
         ### END SOLUTION
 
@@ -162,8 +163,8 @@ class MLP:
         # First linear layer with expansion
         hidden = self.linear1.forward(x)
 
-        # GELU activation
-        hidden = gelu(hidden)
+        # GELU activation (YOUR activation from Module 03!)
+        hidden = self.gelu.forward(hidden)
 
         # Second linear layer back to original size
         output = self.linear2.forward(hidden)
@@ -252,7 +253,7 @@ class TransformerBlock:
         # Pre-norm: LayerNorm before attention
         normed1 = self.ln1.forward(x)
         # Self-attention: query, key, value are all the same (normed1)
-        attention_out = self.attention.forward(normed1, normed1, normed1, mask)
+        attention_out = self.attention.forward(normed1, mask)
 
         # Residual connection
         x = x + attention_out
