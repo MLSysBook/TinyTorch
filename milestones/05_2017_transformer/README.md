@@ -4,63 +4,20 @@
 
 ## 🎯 What You'll Build
 
-Three progressively impressive demos:
+A character-level transformer trained on Shakespeare's works - the classic "hello world" of language modeling!
 
-### Step 1: Quick Validation (5 minutes)
-**File**: `step1_quick_validation.py`  
-**Goal**: Verify transformer pipeline works
-
-```bash
-python step1_quick_validation.py
-```
-
-**What it does**:
-- Trains on simple repeating text ("hello world")
-- Proves modules 10-13 are connected correctly
-- Quick sanity check before bigger demos
-
-**Success**: Generates "hello world" pattern
-
----
-
-### Step 2: TinyCoder (15 minutes) 🔥
-**File**: `step2_tinycoder.py`  
-**Goal**: Code completion like GitHub Copilot!
+### Shakespeare Text Generation
+**File**: `vaswani_shakespeare.py`  
+**Goal**: Build a transformer that generates Shakespeare-style text
 
 ```bash
-python step2_tinycoder.py
-```
-
-**What it does**:
-- Trains on YOUR TinyTorch Python code
-- Learns code patterns (def, class, self, etc.)
-- Generates syntactically valid Python completions
-
-**Demo**:
-```python
-Input:  'def forward(self, x):'
-Output: 'def forward(self, x):\n    return self.layer(x)'
-
-Input:  'import '
-Output: 'import numpy as np'
-```
-
-**Epic moment**: "I built GitHub Copilot!"
-
----
-
-### Step 3: Shakespeare (15 minutes)
-**File**: `step3_shakespeare.py`  
-**Goal**: Traditional text generation demo
-
-```bash
-python step3_shakespeare.py
+python vaswani_shakespeare.py
 ```
 
 **What it does**:
 - Downloads Tiny Shakespeare dataset
-- Trains character-level transformer
-- Generates Shakespeare-style text
+- Trains character-level transformer (YOUR implementation!)
+- Generates coherent Shakespeare-style text
 
 **Demo**:
 ```
@@ -68,8 +25,6 @@ Prompt: 'To be or not to be,'
 Output: 'To be or not to be, that is the question
          Whether tis nobler in the mind to suffer...'
 ```
-
-**Classic**: Traditional "hello world" for language models
 
 ---
 
@@ -82,34 +37,18 @@ Complete these TinyTorch modules:
 - ✅ Module 12: Attention
 - ✅ Module 13: Transformers
 
-### Run in Order
+### Run the Example
 
 ```bash
-# 1. Quick validation (5 min)
-python step1_quick_validation.py
-
-# 2. Code completion (15 min) - THE EPIC ONE
-python step2_tinycoder.py
-
-# 3. Shakespeare (15 min) - traditional demo
-python step3_shakespeare.py
+# Train transformer on Shakespeare (15-20 min)
+python vaswani_shakespeare.py
 ```
-
----
-
-## 📊 What Each Demo Teaches
-
-| Demo | Dataset | Tokenizer | Time | Epic Factor | What You Learn |
-|------|---------|-----------|------|-------------|----------------|
-| **Step 1** | Simple text | CharTokenizer | 5 min | ⭐⭐ | Pipeline works |
-| **Step 2** | TinyTorch code | BPETokenizer | 15 min | ⭐⭐⭐⭐⭐ | YOU built Copilot! |
-| **Step 3** | Shakespeare | CharTokenizer | 15 min | ⭐⭐⭐⭐ | Language modeling |
 
 ---
 
 ## 🎓 Learning Outcomes
 
-After completing these milestones, you'll understand:
+After completing this milestone, you'll understand:
 
 ### Technical Mastery
 - ✅ How tokenization bridges text and numbers
@@ -248,11 +187,12 @@ model = TinyGPT(
 
 You've succeeded when:
 
-**Step 1**: Model generates repeating pattern  
-**Step 2**: Code completions are syntactically valid  
-**Step 3**: Shakespeare text is coherent (even if not perfect)
+✅ Model trains without errors  
+✅ Loss decreases over training epochs  
+✅ Generated Shakespeare text is coherent (even if not perfect)  
+✅ You can generate text with custom prompts  
 
-**Don't expect perfection!** Production models train for months on massive data. Your demos prove you understand the architecture!
+**Don't expect perfection!** Production models train for months on massive data. Your demo proves you understand the architecture!
 
 ---
 
@@ -285,4 +225,4 @@ The transformer architecture you implemented powers:
 
 ---
 
-**Ready to generate some text?** Start with `step1_quick_validation.py`!
+**Ready to generate some text?** Run `python vaswani_shakespeare.py`!
