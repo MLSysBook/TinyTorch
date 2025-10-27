@@ -40,8 +40,16 @@ By the end of this module, you will:
 Let's get started!
 """
 
+# %%
 #| default_exp models.transformer
+
+# %%
 #| export
+import numpy as np
+from tinytorch.core.tensor import Tensor
+from tinytorch.core.layers import Linear
+from tinytorch.core.attention import MultiHeadAttention
+from tinytorch.core.activations import GELU
 
 # %% [markdown]
 """
