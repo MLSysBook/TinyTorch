@@ -334,7 +334,7 @@ def train_tinystories_gpt(model, train_loader, dataset, epochs=5, learning_rate=
                 console.print(f"    [dim]Processing first batch... (this may take a moment)[/dim]")
             
             # Forward pass with YOUR Transformer
-            logits = model.forward(batch_input)  # YOUR attention mechanism!
+            logits = model(batch_input)  # YOUR attention mechanism!
             
             # Reshape for loss computation: (batch, seq, vocab) -> (batch*seq, vocab)
             # IMPORTANT: Use Tensor.reshape() to preserve computation graph!
@@ -393,7 +393,7 @@ def generate_text(model, dataset, prompt="To be or not", max_length=200, tempera
         
         # Forward pass
         input_tensor = Tensor(np.array([input_seq], dtype=np.int32))
-        logits = model.forward(input_tensor)
+        logits = model(input_tensor)
         
         # Get logits for last position
         logits_np = np.array(logits.data.data if hasattr(logits.data, 'data') else logits.data)
@@ -550,7 +550,7 @@ def main():
         console.print("\n[bold yellow]🧪 ARCHITECTURE TEST MODE[/bold yellow]")
         # Test with minimal data
         test_input = Tensor(np.random.randint(0, dataset.vocab_size, (1, args.seq_length), dtype=np.int32))
-        test_output = model.forward(test_input)
+        test_output = model(test_input)
         console.print(f"[green]✅ Forward pass successful! Output shape: {test_output.data.shape}[/green]")
         console.print(f"[green]✅ YOUR Transformer + DataLoader work together![/green]")
         return

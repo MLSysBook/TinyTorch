@@ -636,6 +636,10 @@ class MultiHeadAttention:
         return output
         ### END SOLUTION
 
+    def __call__(self, x: Tensor, mask: Optional[Tensor] = None) -> Tensor:
+        """Allows the attention layer to be called like a function."""
+        return self.forward(x, mask)
+
     def parameters(self) -> List[Tensor]:
         """
         Return all trainable parameters.

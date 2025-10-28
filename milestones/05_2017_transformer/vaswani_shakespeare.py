@@ -218,15 +218,15 @@ class TinyGPT:
     def forward(self, x):
         """Forward pass through YOUR transformer stack."""
         # Convert tokens to contextual vectors
-        x = self.embedding.forward(x)        # Module 11: char → vectors
-        x = self.pos_encoding.forward(x)     # Module 11: add position info
+        x = self.embedding(x)        # Module 11: char → vectors
+        x = self.pos_encoding(x)     # Module 11: add position info
         
         # Process through transformer layers
         for layer in self.layers:
-            x = layer.forward(x)  # Module 13: Attention → FFN
+            x = layer(x)  # Module 13: Attention → FFN
         
         # Generate predictions
-        x = self.layer_norm.forward(x)       # Module 13: final norm
+        x = self.layer_norm(x)       # Module 13: final norm
 
         # Reshape for Linear layer - KEEP COMPUTATION GRAPH!
         batch_size, seq_len, embed_dim = x.shape
@@ -327,7 +327,7 @@ def train_shakespeare_gpt(model, train_loader, dataset, epochs=5, learning_rate=
                 console.print(f"    [dim]Processing first batch... (this may take a moment)[/dim]")
             
             # Forward pass with YOUR Transformer
-            logits = model.forward(batch_input)  # YOUR attention mechanism!
+            logits = model(batch_input)  # YOUR attention mechanism!
             
             # Reshape for loss computation: (batch, seq, vocab) -> (batch*seq, vocab)
             # IMPORTANT: Use Tensor.reshape() to preserve computation graph!
@@ -336,7 +336,7 @@ def train_shakespeare_gpt(model, train_loader, dataset, epochs=5, learning_rate=
             targets_1d = batch_target.reshape(-1)
             
             # Compute loss with YOUR CrossEntropyLoss (connects to autograd!)
-            loss = loss_fn.forward(logits_2d, targets_1d)  # Module 04 + Module 05!
+            loss = loss_fn(logits_2d, targets_1d)  # Module 04 + Module 05!
             loss_value = float(loss.data)
             
             # Backward pass with YOUR autograd
@@ -385,7 +385,7 @@ def generate_text(model, dataset, prompt="To be or not", max_length=200, tempera
         
         # Forward pass
         input_tensor = Tensor(np.array([input_seq], dtype=np.int32))
-        logits = model.forward(input_tensor)
+        logits = model(input_tensor)
         
         # Get logits for last position
         logits_np = np.array(logits.data.data if hasattr(logits.data, 'data') else logits.data)
@@ -528,7 +528,7 @@ def main():
         console.print("\n[bold yellow]🧪 ARCHITECTURE TEST MODE[/bold yellow]")
         # Test with minimal data
         test_input = Tensor(np.random.randint(0, dataset.vocab_size, (1, args.seq_length), dtype=np.int32))
-        test_output = model.forward(test_input)
+        test_output = model(test_input)
         console.print(f"[green]✅ Forward pass successful! Output shape: {test_output.data.shape}[/green]")
         console.print(f"[green]✅ YOUR Transformer + DataLoader work together![/green]")
         return

@@ -203,7 +203,7 @@ def train_mnist_mlp(model, train_data, train_labels,
             targets = Tensor(batch_y)
             
             # Forward pass with YOUR model
-            outputs = model.forward(inputs)
+            outputs = model(inputs)
             
             # Compute loss with YOUR loss function
             loss = loss_fn.forward(outputs, targets)
@@ -258,7 +258,7 @@ def test_mnist_mlp(model, test_data, test_labels):
         
         # Test with YOUR network
         inputs = Tensor(batch_X)  # Module 02: YOUR Tensor!
-        outputs = model.forward(inputs)  # YOUR forward pass!
+        outputs = model(inputs)  # YOUR forward pass!
         
         outputs_np = np.array(outputs.data.data if hasattr(outputs.data, 'data') else outputs.data)
         predictions = np.argmax(outputs_np, axis=1)
@@ -394,7 +394,7 @@ def main():
     if args.test_only:
         print("\n🧪 ARCHITECTURE TEST MODE")
         test_input = Tensor(train_data[:5])  # Module 02: YOUR Tensor!
-        test_output = model.forward(test_input)  # YOUR architecture!
+        test_output = model(test_input)  # YOUR architecture!
         print(f"✅ Forward pass successful! Output shape: {test_output.data.shape}")
         print("✅ YOUR deep MLP architecture works!")
         return
