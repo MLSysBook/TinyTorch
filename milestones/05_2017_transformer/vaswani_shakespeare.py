@@ -45,10 +45,10 @@ that generates Shakespeare-style text - proving YOUR attention mechanism works!
     ║  │                       Feed Forward Network                             │  ║
     ║  │              Module 04: Linear → ReLU → Linear                         │  ║
     ║  └────────────────────────────────────────────────────────────────────────┘  ║
-    ║                                  ▲                                            ║
+    ║                                  ▲                                           ║
     ║  ┌────────────────────────────────────────────────────────────────────────┐  ║
     ║  │                    Multi-Head Self-Attention                           │  ║
-    ║  │           Module 12: Query·Key^T·Value across all positions           │  ║
+    ║  │           Module 12: Query·Key^T·Value across all positions            │  ║
     ║  └────────────────────────────────────────────────────────────────────────┘  ║
     ╚══════════════════════════════════════════════════════════════════════════════╝
                                             ▲
@@ -96,17 +96,14 @@ from tinytorch.core.tensor import Tensor                    # Module 02: YOU bui
 from tinytorch.core.layers import Linear                    # Module 04: YOU built this!
 from tinytorch.core.activations import ReLU, Softmax        # Module 03: YOU built this!
 from tinytorch.core.optimizers import Adam                  # Module 08: YOU built this!
+from tinytorch.core.losses import CrossEntropyLoss          # Module 04: YOU built this!
 from tinytorch.core.attention import MultiHeadAttention     # Module 12: YOU built this!
 from tinytorch.models.transformer import LayerNorm, TransformerBlock  # Module 13: YOU built this!
 from tinytorch.text.embeddings import Embedding, PositionalEncoding   # Module 11: YOU built this!
 from tinytorch.data.loader import DataLoader, Dataset   # Module 08: YOU built this!
 
 # Import dataset manager
-try:
-    from data_manager import DatasetManager
-except ImportError:
-    sys.path.append(os.path.join(project_root, 'milestones'))
-    from data_manager import DatasetManager
+from data_manager import DatasetManager
 
 
 class ShakespeareDataset(Dataset):
@@ -198,6 +195,7 @@ class TinyGPT:
         params = []
         # Embedding parameters
         params.extend([self.embedding.weight])
+        params.extend(self.pos_encoding.parameters())  # Add positional encoding params!
         # Transformer block parameters
         for layer in self.layers:
             if hasattr(layer, 'parameters'):
@@ -208,6 +206,11 @@ class TinyGPT:
         # Output projection parameters
         params.extend([self.layer_norm.gamma, self.layer_norm.beta])
         params.extend([self.output_proj.weight, self.output_proj.bias])
+        
+        # Ensure all parameters have requires_grad=True
+        for param in params:
+            param.requires_grad = True
+        
         return params
 
     def forward(self, x):
@@ -223,19 +226,15 @@ class TinyGPT:
         # Generate predictions
         x = self.layer_norm.forward(x)       # Module 13: final norm
 
-        # Reshape for Linear layer
-        x_np = np.array(x.data.data if hasattr(x.data, 'data') else x.data)
-        batch_size, seq_len, embed_dim = x_np.shape
-        x_2d_np = x_np.reshape(batch_size * seq_len, embed_dim)
-        x_2d = Tensor(x_2d_np)
+        # Reshape for Linear layer - KEEP COMPUTATION GRAPH!
+        batch_size, seq_len, embed_dim = x.shape
+        x_2d = x.reshape(batch_size * seq_len, embed_dim)  # Use Tensor.reshape()
 
         # Apply output projection
         logits_2d = self.output_proj(x_2d)   # Module 04: vocab predictions
 
-        # Reshape back
-        logits_2d_np = np.array(logits_2d.data.data if hasattr(logits_2d.data, 'data') else logits_2d.data)
-        logits_np = logits_2d_np.reshape(batch_size, seq_len, self.vocab_size)
-        logits = Tensor(logits_np)
+        # Reshape back - KEEP COMPUTATION GRAPH!
+        logits = logits_2d.reshape(batch_size, seq_len, self.vocab_size)  # Use Tensor.reshape()
         
         return logits
 
@@ -303,9 +302,11 @@ def train_shakespeare_gpt(model, train_loader, dataset, epochs=5, learning_rate=
     console.print(f"  Batch size: [cyan]{train_loader.batch_size}[/cyan]")
     console.print(f"  YOUR DataLoader (Module 08) handles batching!")
     console.print(f"  YOUR Adam optimizer (Module 08)")
+    console.print(f"  YOUR CrossEntropyLoss (Module 04) with autograd!")
     
-    # YOUR optimizer
-    optimizer = Adam(model.parameters(), learning_rate=learning_rate)
+    # YOUR optimizer and loss function
+    optimizer = Adam(model.parameters(), lr=learning_rate)
+    loss_fn = CrossEntropyLoss()  # YOUR loss function with autograd!
     
     for epoch in range(epochs):
         console.print(f"\n  [bold]Epoch {epoch+1}/{epochs}:[/bold]")
@@ -317,27 +318,20 @@ def train_shakespeare_gpt(model, train_loader, dataset, epochs=5, learning_rate=
             if batch_idx >= 100:  # Demo mode - limit batches
                 break
             
+            if batch_idx == 0:
+                console.print(f"    [dim]Processing first batch... (this may take a moment)[/dim]")
+            
             # Forward pass with YOUR Transformer
             logits = model.forward(batch_input)  # YOUR attention mechanism!
             
-            # Language modeling loss
-            logits_np = np.array(logits.data.data if hasattr(logits.data, 'data') else logits.data)
-            targets_np = np.array(batch_target.data.data if hasattr(batch_target.data, 'data') else batch_target.data)
+            # Reshape for loss computation: (batch, seq, vocab) -> (batch*seq, vocab)
+            batch_size, seq_length, vocab_size = logits.shape
+            logits_2d = Tensor(logits.data.reshape(batch_size * seq_length, vocab_size))
+            targets_1d = Tensor(batch_target.data.reshape(-1))
             
-            batch_size, seq_length = targets_np.shape
-            vocab_size = logits_np.shape[-1]
-            
-            # Cross-entropy loss
-            targets_one_hot = np.zeros((batch_size, seq_length, vocab_size))
-            for b in range(batch_size):
-                for s in range(seq_length):
-                    targets_one_hot[b, s, int(targets_np[b, s])] = 1.0
-
-            # Softmax + cross entropy
-            exp_logits = np.exp(logits_np - np.max(logits_np, axis=2, keepdims=True))
-            softmax = exp_logits / np.sum(exp_logits, axis=2, keepdims=True)
-            loss_value = -np.mean(np.sum(targets_one_hot * np.log(softmax + 1e-8), axis=2))
-            loss = Tensor([loss_value])
+            # Compute loss with YOUR CrossEntropyLoss (connects to autograd!)
+            loss = loss_fn.forward(logits_2d, targets_1d)  # Module 04 + Module 05!
+            loss_value = float(loss.data)
             
             # Backward pass with YOUR autograd
             optimizer.zero_grad()  # Module 08!
@@ -492,17 +486,11 @@ def main():
     console.print("\n[bold]📥 Loading Shakespeare corpus...[/bold]")
     data_manager = DatasetManager()
     
-    try:
-        text = data_manager.get_shakespeare()
-        
-        if args.quick_test:
-            text = text[:10000]  # Use small subset for testing
-            console.print("  [dim](Using subset for quick testing)[/dim]")
-            
-    except Exception as e:
-        console.print(f"[yellow]⚠️  Shakespeare download failed: {e}[/yellow]")
-        console.print("  [dim]Using synthetic text for demonstration...[/dim]")
-        text = "To be or not to be, that is the question. " * 100
+    text = data_manager.get_shakespeare()
+    
+    if args.quick_test:
+        text = text[:10000]  # Use small subset for testing
+        console.print("  [dim](Using subset for quick testing)[/dim]")
     
     # Step 2: Create Dataset and DataLoader using YOUR Module 08!
     console.print(f"\n[bold]📦 Creating YOUR Dataset and DataLoader (Module 08)...[/bold]")

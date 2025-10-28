@@ -63,7 +63,7 @@ def load_digits_dataset():
     Each image is 8×8 pixels, perfect for quick CNN demonstrations.
     """
     # Load from the local data file (same as MLP milestone uses)
-    data_path = os.path.join(os.path.dirname(__file__), '../03_mlp_revival_1986/data/digits_8x8.npz')
+    data_path = os.path.join(os.path.dirname(__file__), '../03_1986_mlp/data/digits_8x8.npz')
     data = np.load(data_path)
     
     images = data['images']  # (1797, 8, 8)
