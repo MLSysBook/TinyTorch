@@ -506,7 +506,7 @@ def train_tinytalks_gpt(model, dataset, optimizer, criterion, epochs=20, batch_s
             batch_target = Tensor(np.array(batch_targets))
             
             # Forward pass
-            logits = model(batch_input)
+            logits = model.forward(batch_input)
             
             # Reshape for loss computation: (batch, seq, vocab) → (batch*seq, vocab)
             # IMPORTANT: Use Tensor.reshape() to preserve computation graph!
