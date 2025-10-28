@@ -298,7 +298,19 @@ class Embedding:
         # This is equivalent to one-hot multiplication but much more efficient
         embedded = self.weight.data[indices.data.astype(int)]
 
-        return Tensor(embedded)
+        # Create result tensor
+        result = Tensor(embedded, requires_grad=self.weight.requires_grad)
+        
+        # Attach gradient function (students learned this in Module 05!)
+        if self.weight.requires_grad:
+            from tinytorch.core.autograd import EmbeddingBackward
+            result._grad_fn = EmbeddingBackward(self.weight, indices)
+
+        return result
+
+    def __call__(self, indices: Tensor) -> Tensor:
+        """Allows the embedding to be called like a function."""
+        return self.forward(indices)
 
     def parameters(self) -> List[Tensor]:
         """Return trainable parameters."""
@@ -462,16 +474,23 @@ class PositionalEncoding:
                 f"Embedding dimension mismatch: expected {self.embed_dim}, got {embed_dim}"
             )
 
-        # Get position embeddings for this sequence length
-        pos_embeddings = self.position_embeddings.data[:seq_len]  # (seq_len, embed_dim)
+        # Get position embeddings for this sequence length (slice using .data for efficiency)
+        pos_embeddings_data = self.position_embeddings.data[:seq_len]  # (seq_len, embed_dim)
 
         # Broadcast to match batch dimension: (1, seq_len, embed_dim)
-        pos_embeddings = pos_embeddings[np.newaxis, :, :]
+        pos_embeddings_data = pos_embeddings_data[np.newaxis, :, :]
+        
+        # Wrap in Tensor to preserve requires_grad
+        pos_embeddings = Tensor(pos_embeddings_data, requires_grad=self.position_embeddings.requires_grad)
 
-        # Add positional information to input embeddings
-        result = x.data + pos_embeddings
+        # Add positional information using Tensor operation to preserve gradients!
+        result = x + pos_embeddings
 
-        return Tensor(result)
+        return result
+
+    def __call__(self, x: Tensor) -> Tensor:
+        """Allows the positional encoding to be called like a function."""
+        return self.forward(x)
 
     def parameters(self) -> List[Tensor]:
         """Return trainable parameters."""
@@ -902,6 +921,10 @@ class EmbeddingLayer:
             output = Tensor(output.data[0])  # (seq_len, embed_dim)
 
         return output
+
+    def __call__(self, tokens: Tensor) -> Tensor:
+        """Allows the embedding layer to be called like a function."""
+        return self.forward(tokens)
 
     def parameters(self) -> List[Tensor]:
         """Return all trainable parameters."""

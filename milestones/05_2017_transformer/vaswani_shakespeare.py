@@ -18,6 +18,7 @@ that generates Shakespeare-style text - proving YOUR attention mechanism works!
   Module 03 (Activations)  : YOUR ReLU in feed-forward networks
   Module 04 (Layers)       : YOUR Linear layers
   Module 08 (Optimizers)   : YOUR Adam optimizer
+  Module 10 (Tokenization) : YOUR CharTokenizer for text→numbers
   Module 11 (Embeddings)   : YOUR token & positional embeddings
   Module 12 (Attention)    : YOUR multi-head self-attention
   Module 13 (Transformers) : YOUR LayerNorm + TransformerBlock
@@ -45,10 +46,10 @@ that generates Shakespeare-style text - proving YOUR attention mechanism works!
     ║  │                       Feed Forward Network                             │  ║
     ║  │              Module 04: Linear → ReLU → Linear                         │  ║
     ║  └────────────────────────────────────────────────────────────────────────┘  ║
-    ║                                  ▲                                            ║
+    ║                                  ▲                                           ║
     ║  ┌────────────────────────────────────────────────────────────────────────┐  ║
     ║  │                    Multi-Head Self-Attention                           │  ║
-    ║  │           Module 12: Query·Key^T·Value across all positions           │  ║
+    ║  │           Module 12: Query·Key^T·Value across all positions            │  ║
     ║  └────────────────────────────────────────────────────────────────────────┘  ║
     ╚══════════════════════════════════════════════════════════════════════════════╝
                                             ▲
@@ -69,10 +70,10 @@ that generates Shakespeare-style text - proving YOUR attention mechanism works!
 
 📊 EXPECTED PERFORMANCE:
 - Dataset: ~1MB Shakespeare corpus (40,000 lines)
-- Training time: 5-10 minutes (demonstration mode)
+- Training time: 45-60 minutes (proper training)
 - Vocabulary: ~65 unique characters
-- Expected: Coherent (if not perfect) Shakespeare-style text
-- Parameters: ~500K (small by modern standards!)
+- Expected: Good Shakespeare-style text with proper structure
+- Parameters: ~2.5M (balanced for character-level tasks)
 """
 
 import sys
@@ -80,32 +81,37 @@ import os
 import numpy as np
 import argparse
 import time
+from rich.console import Console
+from rich.panel import Panel
+from rich.table import Table
+from rich import box
 
 # Add project root to path
 project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(project_root)
+
+console = Console()
 
 # Import TinyTorch components YOU BUILT!
 from tinytorch.core.tensor import Tensor                    # Module 02: YOU built this!
 from tinytorch.core.layers import Linear                    # Module 04: YOU built this!
 from tinytorch.core.activations import ReLU, Softmax        # Module 03: YOU built this!
 from tinytorch.core.optimizers import Adam                  # Module 08: YOU built this!
+from tinytorch.core.losses import CrossEntropyLoss          # Module 04: YOU built this!
+from tinytorch.text.tokenization import CharTokenizer       # Module 10: YOU built this!
+from tinytorch.text.embeddings import Embedding, PositionalEncoding   # Module 11: YOU built this!
 from tinytorch.core.attention import MultiHeadAttention     # Module 12: YOU built this!
 from tinytorch.models.transformer import LayerNorm, TransformerBlock  # Module 13: YOU built this!
-from tinytorch.text.embeddings import Embedding, PositionalEncoding   # Module 11: YOU built this!
 from tinytorch.data.loader import DataLoader, Dataset   # Module 08: YOU built this!
 
 # Import dataset manager
-try:
-    from data_manager import DatasetManager
-except ImportError:
-    sys.path.append(os.path.join(project_root, 'milestones'))
-    from data_manager import DatasetManager
+from data_manager import DatasetManager
 
 
 class ShakespeareDataset(Dataset):
     """
-    Character-level Shakespeare dataset using YOUR Dataset interface!
+    Character-level Shakespeare dataset using YOUR Dataset interface (Module 08)
+    and YOUR CharTokenizer (Module 10)!
     
     Tokenizes text into characters and creates sequences for language modeling.
     """
@@ -118,14 +124,13 @@ class ShakespeareDataset(Dataset):
             text: Raw Shakespeare text
             seq_length: Length of input sequences
         """
-        # Build character vocabulary
-        self.chars = sorted(list(set(text)))
-        self.vocab_size = len(self.chars)
-        self.char_to_idx = {ch: i for i, ch in enumerate(self.chars)}
-        self.idx_to_char = {i: ch for i, ch in enumerate(self.chars)}
+        # Use YOUR CharTokenizer from Module 10!
+        self.tokenizer = CharTokenizer()
+        self.tokenizer.build_vocab([text])  # Build vocabulary from Shakespeare corpus
+        self.vocab_size = self.tokenizer.vocab_size
         
-        # Convert text to indices
-        self.data = [self.char_to_idx[ch] for ch in text]
+        # Convert text to indices using YOUR tokenizer!
+        self.data = self.tokenizer.encode(text)
         self.seq_length = seq_length
         
         # Calculate number of sequences
@@ -145,8 +150,8 @@ class ShakespeareDataset(Dataset):
         return self.num_sequences
     
     def decode(self, indices):
-        """Convert indices back to text."""
-        return ''.join([self.idx_to_char[int(idx)] for idx in indices])
+        """Convert indices back to text using YOUR tokenizer!"""
+        return self.tokenizer.decode(indices)
 
 
 class TinyGPT:
@@ -157,17 +162,15 @@ class TinyGPT:
     """
     
     def __init__(self, vocab_size, embed_dim, max_length, num_heads, num_layers):
-        print("🧠 Building TinyGPT with YOUR TinyTorch modules...")
-        
         # Token representation
         self.embedding = Embedding(vocab_size, embed_dim)           # Module 11!
         self.pos_encoding = PositionalEncoding(max_length, embed_dim)  # Module 11!
 
         # Transformer stack
         self.layers = []
-        hidden_dim = embed_dim * 4  # Standard 4x expansion in FFN
+        mlp_ratio = 4  # Standard 4x expansion in FFN (embed_dim * 4)
         for _ in range(num_layers):
-            block = TransformerBlock(embed_dim, num_heads, hidden_dim)  # Module 13!
+            block = TransformerBlock(embed_dim, num_heads, mlp_ratio)  # Module 13!
             self.layers.append(block)
 
         # Output head
@@ -176,13 +179,11 @@ class TinyGPT:
         
         self.vocab_size = vocab_size
         self.embed_dim = embed_dim
+        self.num_layers = num_layers
+        self.num_heads = num_heads
         
         # Calculate parameters
         self.total_params = self._count_parameters()
-        
-        print(f"   Architecture: {num_layers} layers, {num_heads} heads, {embed_dim}-dim embeddings")
-        print(f"   Vocabulary: {vocab_size} characters")
-        print(f"   Total parameters: {self.total_params:,} (YOUR components!)")
     
     def _count_parameters(self):
         """Count total parameters in model."""
@@ -196,6 +197,7 @@ class TinyGPT:
         params = []
         # Embedding parameters
         params.extend([self.embedding.weight])
+        params.extend(self.pos_encoding.parameters())  # Add positional encoding params!
         # Transformer block parameters
         for layer in self.layers:
             if hasattr(layer, 'parameters'):
@@ -206,45 +208,60 @@ class TinyGPT:
         # Output projection parameters
         params.extend([self.layer_norm.gamma, self.layer_norm.beta])
         params.extend([self.output_proj.weight, self.output_proj.bias])
+        
+        # Ensure all parameters have requires_grad=True
+        for param in params:
+            param.requires_grad = True
+        
         return params
 
     def forward(self, x):
         """Forward pass through YOUR transformer stack."""
         # Convert tokens to contextual vectors
-        x = self.embedding.forward(x)        # Module 11: char → vectors
-        x = self.pos_encoding.forward(x)     # Module 11: add position info
+        x = self.embedding(x)        # Module 11: char → vectors
+        x = self.pos_encoding(x)     # Module 11: add position info
         
         # Process through transformer layers
         for layer in self.layers:
-            x = layer.forward(x)  # Module 13: Attention → FFN
+            x = layer(x)  # Module 13: Attention → FFN
         
         # Generate predictions
-        x = self.layer_norm.forward(x)       # Module 13: final norm
+        x = self.layer_norm(x)       # Module 13: final norm
 
-        # Reshape for Linear layer
-        x_np = np.array(x.data.data if hasattr(x.data, 'data') else x.data)
-        batch_size, seq_len, embed_dim = x_np.shape
-        x_2d_np = x_np.reshape(batch_size * seq_len, embed_dim)
-        x_2d = Tensor(x_2d_np)
+        # Reshape for Linear layer - KEEP COMPUTATION GRAPH!
+        batch_size, seq_len, embed_dim = x.shape
+        x_2d = x.reshape(batch_size * seq_len, embed_dim)  # Use Tensor.reshape()
 
         # Apply output projection
         logits_2d = self.output_proj(x_2d)   # Module 04: vocab predictions
 
-        # Reshape back
-        logits_2d_np = np.array(logits_2d.data.data if hasattr(logits_2d.data, 'data') else logits_2d.data)
-        logits_np = logits_2d_np.reshape(batch_size, seq_len, self.vocab_size)
-        logits = Tensor(logits_np)
+        # Reshape back - KEEP COMPUTATION GRAPH!
+        logits = logits_2d.reshape(batch_size, seq_len, self.vocab_size)  # Use Tensor.reshape()
         
         return logits
 
 
 def visualize_transformer():
     """Show how transformers process text sequences."""
-    print("\n" + "="*70)
-    print("🤖 VISUALIZING TRANSFORMER TEXT GENERATION:")
-    print("="*70)
+    console.print("")
+    console.print(Panel.fit(
+        "[bold]In 2017, 'Attention Is All You Need' Changed Everything[/bold]\n\n"
+        "[yellow]The Problem:[/yellow]\n"
+        "RNNs process sequences one step at a time\n"
+        "Can't parallelize → slow training on long sequences\n"
+        "Struggle with long-range dependencies\n\n"
+        "[green]The Innovation:[/green]\n"
+        "Transformers: Attention mechanisms process ENTIRE sequences in parallel\n"
+        "  • Self-attention: Every token attends to every other token\n"
+        "  • Multi-head attention: Learn multiple attention patterns\n"
+        "  • Positional encoding: Preserve sequence order\n\n"
+        "[bold]Can attention alone match RNN performance?[/bold]",
+        title="🎯 ACT 1: THE CHALLENGE",
+        border_style="cyan",
+        box=box.DOUBLE
+    ))
     
-    print("""
+    console.print("""
     How YOUR Transformer Sees Text:      What It Learns:
     
     Input: "To be or not to be"          Layer 1 (Attention):
@@ -280,48 +297,47 @@ def visualize_transformer():
     print("="*70)
 
 
-def train_shakespeare_gpt(model, train_loader, dataset, epochs=5, learning_rate=0.001):
+def train_shakespeare_gpt(model, train_loader, dataset, epochs=5, learning_rate=0.01):
     """Train TinyGPT using YOUR complete training system with DataLoader!"""
-    print("\n🚀 Training Shakespeare TinyGPT with YOUR TinyTorch!")
-    print(f"   Dataset: {len(train_loader.dataset):,} character sequences")
-    print(f"   Batch size: {train_loader.batch_size}")
-    print(f"   YOUR DataLoader (Module 08) handles batching!")
-    print(f"   YOUR Adam optimizer (Module 08)")
+    console.print("\n[bold]🚀 Training Shakespeare TinyGPT with YOUR TinyTorch![/bold]")
+    console.print(f"  Dataset: [cyan]{len(train_loader.dataset):,}[/cyan] character sequences")
+    console.print(f"  Batch size: [cyan]{train_loader.batch_size}[/cyan]")
+    console.print(f"  Learning rate: [cyan]{learning_rate}[/cyan] (1e-2, optimal for 4.8M param model)")
+    console.print(f"  YOUR DataLoader (Module 08) handles batching!")
+    console.print(f"  YOUR Adam optimizer (Module 08)")
+    console.print(f"  YOUR CrossEntropyLoss (Module 04) with autograd!")
     
-    # YOUR optimizer
-    optimizer = Adam(model.parameters(), learning_rate=learning_rate)
+    # YOUR optimizer and loss function
+    # Using 1e-2 learning rate (optimal for our 4.8M param model, validated by debug script)
+    # Note: Large models (100M+) use 3e-4, but smaller models need higher LR
+    optimizer = Adam(model.parameters(), lr=learning_rate)
+    loss_fn = CrossEntropyLoss()  # YOUR loss function with autograd!
     
     for epoch in range(epochs):
-        print(f"\n   Epoch {epoch+1}/{epochs}:")
+        console.print(f"\n  [bold]Epoch {epoch+1}/{epochs}:[/bold]")
         epoch_loss = 0
         batch_count = 0
         
         # Use YOUR DataLoader to iterate through batches!
         for batch_idx, (batch_input, batch_target) in enumerate(train_loader):
-            if batch_idx >= 100:  # Demo mode - limit batches
+            if batch_idx >= 500:  # Training mode - process more batches
                 break
             
+            if batch_idx == 0:
+                console.print(f"    [dim]Processing first batch... (this may take a moment)[/dim]")
+            
             # Forward pass with YOUR Transformer
-            logits = model.forward(batch_input)  # YOUR attention mechanism!
+            logits = model(batch_input)  # YOUR attention mechanism!
             
-            # Language modeling loss
-            logits_np = np.array(logits.data.data if hasattr(logits.data, 'data') else logits.data)
-            targets_np = np.array(batch_target.data.data if hasattr(batch_target.data, 'data') else batch_target.data)
+            # Reshape for loss computation: (batch, seq, vocab) -> (batch*seq, vocab)
+            # IMPORTANT: Use Tensor.reshape() to preserve computation graph!
+            batch_size, seq_length, vocab_size = logits.shape
+            logits_2d = logits.reshape(batch_size * seq_length, vocab_size)
+            targets_1d = batch_target.reshape(-1)
             
-            batch_size, seq_length = targets_np.shape
-            vocab_size = logits_np.shape[-1]
-            
-            # Cross-entropy loss
-            targets_one_hot = np.zeros((batch_size, seq_length, vocab_size))
-            for b in range(batch_size):
-                for s in range(seq_length):
-                    targets_one_hot[b, s, int(targets_np[b, s])] = 1.0
-            
-            # Softmax + cross entropy
-            exp_logits = np.exp(logits_np - np.max(logits_np, axis=2, keepdims=True))
-            softmax = exp_logits / np.sum(exp_logits, axis=2, keepdims=True)
-            loss_value = -np.mean(np.sum(targets_one_hot * np.log(softmax + 1e-8), axis=2))
-            loss = Tensor([loss_value])
+            # Compute loss with YOUR CrossEntropyLoss (connects to autograd!)
+            loss = loss_fn(logits_2d, targets_1d)  # Module 04 + Module 05!
+            loss_value = float(loss.data)
             
             # Backward pass with YOUR autograd
             optimizer.zero_grad()  # Module 08!
@@ -333,11 +349,11 @@ def train_shakespeare_gpt(model, train_loader, dataset, epochs=5, learning_rate=
             
             # Progress
             if (batch_idx + 1) % 20 == 0:
-                print(f"   Batch {batch_idx+1}: Loss = {loss_value:.4f}")
+                console.print(f"    Batch {batch_idx+1}: Loss = [cyan]{loss_value:.4f}[/cyan]")
         
         # Epoch summary
         avg_loss = epoch_loss / max(1, batch_count)
-        print(f"   → Epoch Complete: Avg Loss = {avg_loss:.4f} (YOUR Transformer learning!)")
+        console.print(f"    → Epoch Complete: Avg Loss = [bold cyan]{avg_loss:.4f}[/bold cyan] (YOUR Transformer learning!)")
     
     return model
 
@@ -348,15 +364,15 @@ def generate_text(model, dataset, prompt="To be or not", max_length=200, tempera
     
     This is autoregressive generation: predict next char, add it, repeat.
     """
-    print("\n✨ TEXT GENERATION DEMO - THE PAYOFF!")
-    print("="*70)
+    console.print("\n[bold]✨ TEXT GENERATION DEMO - THE PAYOFF![/bold]")
+    console.print("="*70)
     
     # Convert prompt to indices
     prompt_indices = [dataset.char_to_idx[ch] for ch in prompt if ch in dataset.char_to_idx]
     generated = prompt_indices.copy()
     
-    print(f"📝 Prompt: \"{prompt}\"")
-    print(f"🎯 Generating {max_length} characters...\n")
+    console.print(f"📝 Prompt: [cyan]\"{prompt}\"[/cyan]")
+    console.print(f"🎯 Generating [cyan]{max_length}[/cyan] characters...\n")
     
     # Generate character by character
     for _ in range(max_length):
@@ -369,7 +385,7 @@ def generate_text(model, dataset, prompt="To be or not", max_length=200, tempera
         
         # Forward pass
         input_tensor = Tensor(np.array([input_seq], dtype=np.int32))
-        logits = model.forward(input_tensor)
+        logits = model(input_tensor)
         
         # Get logits for last position
         logits_np = np.array(logits.data.data if hasattr(logits.data, 'data') else logits.data)
@@ -387,45 +403,50 @@ def generate_text(model, dataset, prompt="To be or not", max_length=200, tempera
     # Decode to text
     generated_text = dataset.decode(generated)
     
-    print("📖 Generated Text:")
-    print("─" * 70)
-    print(generated_text)
-    print("─" * 70)
+    console.print("[bold]📖 Generated Text:[/bold]")
+    console.print("─" * 70)
+    console.print(f"[green]{generated_text}[/green]")
+    console.print("─" * 70)
     
     return generated_text
 
 
 def analyze_transformer_systems(model):
     """Analyze YOUR Transformer from an ML systems perspective."""
-    print("\n🔬 SYSTEMS ANALYSIS of YOUR Transformer Implementation:")
-    
-    print(f"\n   Model Architecture:")
-    print(f"   • Parameters: {model.total_params:,} weights")
-    print(f"   • Embedding dim: {model.embed_dim}")
-    print(f"   • Vocabulary: {model.vocab_size} characters")
-    
-    print(f"\n   Computational Complexity:")
-    print(f"   • Attention: O(n²·d) where n=sequence, d=dimension")
-    print(f"   • Self-attention allows parallel processing (vs RNN sequential)")
-    print(f"   • YOUR implementation: Pure Python + NumPy")
-    
-    print(f"\n   Memory Requirements:")
-    print(f"   • Parameters: {model.total_params * 4 / 1024:.1f} KB")
-    print(f"   • Attention matrices: O(n²) per layer")
-    print(f"   • YOUR TinyTorch tracks gradients automatically")
-    
-    print(f"\n   🏛️ Transformer Evolution:")
-    print(f"   • 2017: Vaswani et al. 'Attention Is All You Need'")
-    print(f"   • 2018: BERT (bidirectional), GPT (autoregressive)")
-    print(f"   • 2020: GPT-3 (175B params, same architecture!)")
-    print(f"   • 2022: ChatGPT (YOUR architecture at massive scale)")
-    print(f"   • YOUR TinyGPT: Core principles that power them all!")
-    
-    print(f"\n   💡 Why Transformers Dominate:")
-    print(f"   • Parallelizable (vs sequential RNNs)")
-    print(f"   • Long-range dependencies (attention sees everything)")
-    print(f"   • Scalable (architecture works from 1M to 175B params)")
-    print(f"   • YOUR implementation demonstrates all of these!")
+    console.print("")
+    console.print(Panel.fit(
+        f"[bold]Model Architecture:[/bold]\n"
+        f"  • Parameters: [cyan]{model.total_params:,}[/cyan] weights\n"
+        f"  • Embedding dim: [cyan]{model.embed_dim}[/cyan]\n"
+        f"  • Vocabulary: [cyan]{model.vocab_size}[/cyan] characters\n\n"
+        
+        "[bold]Computational Complexity:[/bold]\n"
+        "  • Attention: O(n²·d) where n=sequence, d=dimension\n"
+        "  • Self-attention allows parallel processing (vs RNN sequential)\n"
+        "  • YOUR implementation: Pure Python + NumPy\n\n"
+        
+        f"[bold]Memory Requirements:[/bold]\n"
+        f"  • Parameters: [cyan]{model.total_params * 4 / 1024:.1f} KB[/cyan]\n"
+        "  • Attention matrices: O(n²) per layer\n"
+        "  • YOUR TinyTorch tracks gradients automatically\n\n"
+        
+        "[bold]🏛️ Transformer Evolution:[/bold]\n"
+        "  • 2017: Vaswani et al. 'Attention Is All You Need'\n"
+        "  • 2018: BERT (bidirectional), GPT (autoregressive)\n"
+        "  • 2020: GPT-3 (175B params, same architecture!)\n"
+        "  • 2022: ChatGPT (YOUR architecture at massive scale)\n"
+        "  • YOUR TinyGPT: Core principles that power them all!\n\n"
+        
+        "[bold]💡 Why Transformers Dominate:[/bold]\n"
+        "  • Parallelizable (vs sequential RNNs)\n"
+        "  • Long-range dependencies (attention sees everything)\n"
+        "  • Scalable (architecture works from 1M to 175B params)\n"
+        "  • YOUR implementation demonstrates all of these!",
+        
+        title="🔬 SYSTEMS ANALYSIS",
+        border_style="cyan",
+        box=box.DOUBLE
+    ))
 
 
 def main():
@@ -434,17 +455,17 @@ def main():
     parser = argparse.ArgumentParser(description='Shakespeare Transformer 2017')
     parser.add_argument('--test-only', action='store_true',
                        help='Test architecture only')
-    parser.add_argument('--epochs', type=int, default=5,
-                       help='Training epochs (demo mode)')
+    parser.add_argument('--epochs', type=int, default=20,
+                       help='Training epochs')
     parser.add_argument('--batch-size', type=int, default=32,
                        help='Batch size')
-    parser.add_argument('--seq-length', type=int, default=64,
+    parser.add_argument('--seq-length', type=int, default=128,
                        help='Sequence length')
-    parser.add_argument('--embed-dim', type=int, default=128,
+    parser.add_argument('--embed-dim', type=int, default=256,
                        help='Embedding dimension')
-    parser.add_argument('--num-layers', type=int, default=4,
+    parser.add_argument('--num-layers', type=int, default=6,
                        help='Number of transformer layers')
-    parser.add_argument('--num-heads', type=int, default=4,
+    parser.add_argument('--num-heads', type=int, default=8,
                        help='Number of attention heads')
     parser.add_argument('--visualize', action='store_true', default=True,
                        help='Show transformer visualization')
@@ -452,41 +473,41 @@ def main():
                        help='Use small subset for testing')
     args = parser.parse_args()
     
-    print("🎯 Shakespeare Transformer - Text Generation with YOUR Attention!")
-    print("   Historical significance: Attention revolutionized sequence modeling")
-    print("   YOUR achievement: Generate Shakespeare-style text")
-    print("   Components used: YOUR complete transformer system (Modules 2-13)")
+    console.print("")
+    console.print(Panel.fit(
+        "[bold cyan]Shakespeare Transformer - Text Generation with YOUR Attention![/bold cyan]\n\n"
+        "[yellow]Historical significance:[/yellow] Attention revolutionized sequence modeling\n"
+        "[green]YOUR achievement:[/green] Generate Shakespeare-style text\n"
+        "[cyan]Components used:[/cyan] YOUR complete NLP pipeline (Modules 2, 3, 4, 8, 10, 11, 12, 13)",
+        title="🎯 Milestone 05: Transformer Era (2017)",
+        border_style="cyan",
+        box=box.DOUBLE
+    ))
     
     # Visualization
     if args.visualize:
         visualize_transformer()
     
     # Step 1: Load Shakespeare dataset
-    print("\n📥 Loading Shakespeare corpus...")
+    console.print("\n[bold]📥 Loading Shakespeare corpus...[/bold]")
     data_manager = DatasetManager()
     
-    try:
-        text = data_manager.get_shakespeare()
-        
-        if args.quick_test:
-            text = text[:10000]  # Use small subset for testing
-            print("   (Using subset for quick testing)")
-            
-    except Exception as e:
-        print(f"⚠️  Shakespeare download failed: {e}")
-        print("   Using synthetic text for demonstration...")
-        text = "To be or not to be, that is the question. " * 100
+    text = data_manager.get_shakespeare()
+    
+    if args.quick_test:
+        text = text[:10000]  # Use small subset for testing
+        console.print("  [dim](Using subset for quick testing)[/dim]")
     
     # Step 2: Create Dataset and DataLoader using YOUR Module 08!
-    print(f"\n📦 Creating YOUR Dataset and DataLoader (Module 08)...")
+    console.print(f"\n[bold]📦 Creating YOUR Dataset and DataLoader (Module 08)...[/bold]")
     dataset = ShakespeareDataset(text, seq_length=args.seq_length)
     
     # YOUR DataLoader handles batching and shuffling!
     train_loader = DataLoader(dataset, batch_size=args.batch_size, shuffle=True)
     
-    print(f"   Vocabulary: {dataset.vocab_size} unique characters")
-    print(f"   Characters: '{dataset.decode(list(range(min(20, dataset.vocab_size))))}...'")
-    print(f"   DataLoader: {len(dataset):,} sequences, batch_size={args.batch_size}")
+    console.print(f"  Vocabulary: [cyan]{dataset.vocab_size}[/cyan] unique characters")
+    console.print(f"  Characters: [dim]'{dataset.decode(list(range(min(20, dataset.vocab_size))))}...'[/dim]")
+    console.print(f"  DataLoader: [cyan]{len(dataset):,}[/cyan] sequences, batch_size=[cyan]{args.batch_size}[/cyan]")
     
     # Step 3: Build Transformer
     model = TinyGPT(
@@ -497,13 +518,19 @@ def main():
         num_layers=args.num_layers
     )
     
+    # Display model info
+    console.print("\n[bold]🧠 Building TinyGPT with YOUR TinyTorch...[/bold]")
+    console.print(f"  Architecture: [cyan]{args.num_layers}[/cyan] layers, [cyan]{args.num_heads}[/cyan] heads, [cyan]{args.embed_dim}[/cyan]-dim embeddings")
+    console.print(f"  Vocabulary: [cyan]{dataset.vocab_size}[/cyan] characters")
+    console.print(f"  Total parameters: [bold cyan]{model.total_params:,}[/bold cyan] (YOUR components!)")
+    
     if args.test_only:
-        print("\n🧪 ARCHITECTURE TEST MODE")
+        console.print("\n[bold yellow]🧪 ARCHITECTURE TEST MODE[/bold yellow]")
         # Test with minimal data
         test_input = Tensor(np.random.randint(0, dataset.vocab_size, (1, args.seq_length), dtype=np.int32))
-        test_output = model.forward(test_input)
-        print(f"✅ Forward pass successful! Output shape: {test_output.data.shape}")
-        print("✅ YOUR Transformer + DataLoader work together!")
+        test_output = model(test_input)
+        console.print(f"[green]✅ Forward pass successful! Output shape: {test_output.data.shape}[/green]")
+        console.print(f"[green]✅ YOUR Transformer + DataLoader work together![/green]")
         return
     
     # Step 4: Train using YOUR DataLoader
@@ -515,33 +542,41 @@ def main():
     generated = generate_text(model, dataset, prompt="To be or not", max_length=200)
     
     # Additional generation examples
-    print("\n🎭 More Generation Examples:")
-    print("─" * 70)
+    console.print("\n[bold]🎭 More Generation Examples:[/bold]")
+    console.print("─" * 70)
     
     prompts = ["ROMEO:", "The king", "What is"]
     for prompt in prompts:
         if all(ch in dataset.char_to_idx for ch in prompt):
-            print(f"\nPrompt: \"{prompt}\"")
+            console.print(f"\n[cyan]Prompt: \"{prompt}\"[/cyan]")
             gen = generate_text(model, dataset, prompt=prompt, max_length=100, temperature=0.8)
     
     # Step 6: Systems Analysis
     analyze_transformer_systems(model)
     
-    print(f"\n⏱️  Training time: {train_time:.1f} seconds")
-    print(f"   Sequences/sec: {len(dataset) * args.epochs / train_time:.0f}")
+    console.print(f"\n[bold]⏱️  Training time:[/bold] [cyan]{train_time:.1f}[/cyan] seconds")
+    console.print(f"  Sequences/sec: [cyan]{len(dataset) * args.epochs / train_time:.0f}[/cyan]")
     
-    print("\n✅ SUCCESS! Shakespeare Transformer Milestone Complete!")
-    print("\n🎓 What YOU Accomplished:")
-    print("   • YOUR attention mechanism processes sequences in parallel")
-    print("   • YOUR transformer captures long-range text dependencies")
-    print("   • YOUR DataLoader efficiently batches character sequences")
-    print("   • YOUR TinyGPT generates coherent text!")
-    print("   • YOUR complete language modeling system works!")
-    
-    print("\n🚀 Next Steps:")
-    print("   • Continue to Module 14 (KV-Caching) for 3x faster inference")
-    print("   • YOUR transformer architecture scales to GPT-scale models")
-    print("   • This is the foundation of ChatGPT, GPT-4, and all modern LLMs!")
+    console.print("")
+    console.print(Panel.fit(
+        "[bold green]✅ SUCCESS! Shakespeare Transformer Milestone Complete![/bold green]\n\n"
+        
+        "[bold]🎓 What YOU Accomplished:[/bold]\n"
+        "  • YOUR attention mechanism processes sequences in parallel\n"
+        "  • YOUR transformer captures long-range text dependencies\n"
+        "  • YOUR DataLoader efficiently batches character sequences\n"
+        "  • YOUR TinyGPT generates coherent text!\n"
+        "  • YOUR complete language modeling system works!\n\n"
+        
+        "[bold]🚀 Next Steps:[/bold]\n"
+        "  • Continue to Module 14 (KV-Caching) for 3x faster inference\n"
+        "  • YOUR transformer architecture scales to GPT-scale models\n"
+        "  • This is the foundation of ChatGPT, GPT-4, and all modern LLMs!",
+        
+        title="🌟 2017 Transformer Revolution Complete",
+        border_style="green",
+        box=box.DOUBLE
+    ))
 
 if __name__ == "__main__":
     main()

@@ -23,6 +23,7 @@ from ..core.tensor import Tensor
 from ..core.layers import Linear
 from ..core.attention import MultiHeadAttention
 from ..core.activations import GELU
+from ..text.embeddings import Embedding, PositionalEncoding
 
 # %% ../../modules/source/13_transformers/transformers_dev.ipynb 9
 class LayerNorm:
@@ -60,8 +61,8 @@ class LayerNorm:
         self.eps = eps
 
         # Learnable parameters: scale and shift
-        self.gamma = Tensor(np.ones(normalized_shape))  # Scale parameter
-        self.beta = Tensor(np.zeros(normalized_shape))  # Shift parameter
+        self.gamma = Tensor(np.ones(normalized_shape), requires_grad=True)  # Scale parameter
+        self.beta = Tensor(np.zeros(normalized_shape), requires_grad=True)  # Shift parameter
         ### END SOLUTION
 
     def forward(self, x):
@@ -86,17 +87,24 @@ class LayerNorm:
         mean = x.mean(axis=-1, keepdims=True)
 
         # Compute variance: E[(x - μ)²]
-        diff = Tensor(x.data - mean.data)
-        variance = Tensor((diff.data ** 2).mean(axis=-1, keepdims=True))
+        # Use Tensor operations to preserve computation graph!
+        diff = x - mean
+        variance = (diff * diff).mean(axis=-1, keepdims=True)
 
-        # Normalize
-        std = Tensor(np.sqrt(variance.data + self.eps))
-        normalized = Tensor((x.data - mean.data) / std.data)
+        # Normalize - use Tensor operations to preserve gradients!
+        # Add eps as a Tensor for proper gradient flow
+        eps_tensor = Tensor(np.array(self.eps), requires_grad=False)
+        std = Tensor(np.sqrt(variance.data + self.eps), requires_grad=variance.requires_grad)
+        normalized = (x - mean) / std
 
         # Apply learnable transformation
         output = normalized * self.gamma + self.beta
         return output
         ### END SOLUTION
+
+    def __call__(self, x):
+        """Allows the layer norm to be called like a function."""
+        return self.forward(x)
 
     def parameters(self):
         """Return learnable parameters."""
@@ -139,6 +147,7 @@ class MLP:
 
         # Two-layer feed-forward network
         self.linear1 = Linear(embed_dim, hidden_dim)
+        self.gelu = GELU()  # Use GELU activation from activations module
         self.linear2 = Linear(hidden_dim, embed_dim)
         ### END SOLUTION
 
@@ -162,14 +171,18 @@ class MLP:
         # First linear layer with expansion
         hidden = self.linear1.forward(x)
 
-        # GELU activation
-        hidden = gelu(hidden)
+        # GELU activation (YOUR activation from Module 03!)
+        hidden = self.gelu.forward(hidden)
 
         # Second linear layer back to original size
         output = self.linear2.forward(hidden)
 
         return output
         ### END SOLUTION
+
+    def __call__(self, x):
+        """Allows the MLP to be called like a function."""
+        return self.forward(x)
 
     def parameters(self):
         """Return all learnable parameters."""
@@ -252,7 +265,7 @@ class TransformerBlock:
         # Pre-norm: LayerNorm before attention
         normed1 = self.ln1.forward(x)
         # Self-attention: query, key, value are all the same (normed1)
-        attention_out = self.attention.forward(normed1, normed1, normed1, mask)
+        attention_out = self.attention.forward(normed1, mask)
 
         # Residual connection
         x = x + attention_out
@@ -267,6 +280,10 @@ class TransformerBlock:
 
         return output
         ### END SOLUTION
+
+    def __call__(self, x, mask=None):
+        """Allows the transformer block to be called like a function."""
+        return self.forward(x, mask)
 
     def parameters(self):
         """Return all learnable parameters."""
@@ -446,6 +463,10 @@ class GPT:
 
         return current_tokens
         ### END SOLUTION
+
+    def __call__(self, tokens):
+        """Allows the GPT model to be called like a function."""
+        return self.forward(tokens)
 
     def parameters(self):
         """Return all learnable parameters."""
