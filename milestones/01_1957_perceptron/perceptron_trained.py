@@ -36,20 +36,6 @@ sys.path.insert(0, os.getcwd())
 # Import TinyTorch components YOU BUILT!
 from tinytorch import Tensor, Linear, Sigmoid, BinaryCrossEntropyLoss, SGD
 
-# Check if training modules are available
-try:
-    # Test that all components work
-    _test_linear = Linear(2, 1)
-    _test_sigmoid = Sigmoid()
-    _test_loss = BinaryCrossEntropyLoss()
-    _test_opt = SGD([_test_linear.weight], lr=0.1)
-    TRAINING_AVAILABLE = True
-except Exception as e:
-    print(f"⚠️  Training modules not available: {e}")
-    print("Please complete Modules 01-06 first!")
-    TRAINING_AVAILABLE = False
-    sys.exit(1)
-
 # Rich for beautiful output
 from rich.console import Console
 from rich.panel import Panel
@@ -367,8 +353,4 @@ def main():
 
 
 if __name__ == "__main__":
-    if not TRAINING_AVAILABLE:
-        console.print("[red]Cannot run: Training modules not available[/red]")
-        sys.exit(1)
-    
     main()

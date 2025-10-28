@@ -63,7 +63,7 @@ def load_digits_dataset():
     Each image is 8×8 pixels, perfect for quick CNN demonstrations.
     """
     # Load from the local data file (same as MLP milestone uses)
-    data_path = os.path.join(os.path.dirname(__file__), '../03_mlp_revival_1986/data/digits_8x8.npz')
+    data_path = os.path.join(os.path.dirname(__file__), '../03_1986_mlp/data/digits_8x8.npz')
     data = np.load(data_path)
     
     images = data['images']  # (1797, 8, 8)
@@ -158,7 +158,7 @@ def train_epoch(model, dataloader, criterion, optimizer):
     
     for batch_images, batch_labels in dataloader:
         # Forward pass
-        logits = model.forward(batch_images)
+        logits = model(batch_images)
         loss = criterion.forward(logits, batch_labels)
         
         # Backward pass
@@ -176,7 +176,7 @@ def train_epoch(model, dataloader, criterion, optimizer):
 
 def evaluate_accuracy(model, images, labels):
     """Evaluate model accuracy on a dataset."""
-    logits = model.forward(images)
+    logits = model(images)
     predictions = np.argmax(logits.data, axis=1)
     accuracy = 100.0 * np.mean(predictions == labels.data)
     avg_loss = np.mean((predictions - labels.data) ** 2)
@@ -374,7 +374,7 @@ def train_cnn():
     # Sample predictions
     console.print("\n[bold]🔍 Sample Predictions:[/bold]")
     sample_images = Tensor(test_images.data[:10])  # First 10 test samples
-    logits = model.forward(sample_images)
+    logits = model(sample_images)
     predictions = np.argmax(logits.data, axis=1)
     
     samples_table = Table(show_header=True, box=box.SIMPLE)

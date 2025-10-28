@@ -245,18 +245,21 @@ class Softmax:
         """
         ### BEGIN SOLUTION
         # Numerical stability: subtract max to prevent overflow
-        x_max = np.max(x.data, axis=dim, keepdims=True)
-        x_shifted = x.data - x_max
+        # Use Tensor operations to preserve gradient flow!
+        x_max_data = np.max(x.data, axis=dim, keepdims=True)
+        x_max = Tensor(x_max_data, requires_grad=False)  # max is not differentiable in this context
+        x_shifted = x - x_max  # Tensor subtraction!
 
-        # Compute exponentials
-        exp_values = np.exp(x_shifted)
+        # Compute exponentials (NumPy operation, but wrapped in Tensor)
+        exp_values = Tensor(np.exp(x_shifted.data), requires_grad=x_shifted.requires_grad)
 
-        # Sum along dimension
-        exp_sum = np.sum(exp_values, axis=dim, keepdims=True)
+        # Sum along dimension (Tensor operation)
+        exp_sum_data = np.sum(exp_values.data, axis=dim, keepdims=True)
+        exp_sum = Tensor(exp_sum_data, requires_grad=exp_values.requires_grad)
 
-        # Normalize to get probabilities
+        # Normalize to get probabilities (Tensor division!)
         result = exp_values / exp_sum
-        return Tensor(result)
+        return result
         ### END SOLUTION
 
     def __call__(self, x: Tensor, dim: int = -1) -> Tensor:
