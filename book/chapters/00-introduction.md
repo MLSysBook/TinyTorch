@@ -141,95 +141,119 @@ output = model(input)                    # YOU know exactly how this works
 
 ---
 
-## What You'll Achieve: Complete ML Systems Mastery
+## What You'll Achieve: Tier-by-Tier Mastery
 
-### Immediate Achievements (Modules 1-8)
-By Module 8, you'll have built a complete neural network framework from scratch:
+### 🏗️ After Foundation Tier (Modules 01-07)
+Build a complete neural network framework from mathematical first principles:
 
 ```python
 # YOUR implementation training real networks on real data
 model = Sequential([
-    Linear(784, 128),    # Your linear layer
-    ReLU(),              # Your activation function  
-    Linear(128, 64),     # Your architecture design
+    Linear(784, 128),    # Your linear algebra implementation
+    ReLU(),              # Your activation function
+    Linear(128, 64),     # Your gradient-aware layers
     ReLU(),              # Your nonlinearity
-    Linear(64, 10)       # Your final classifier
+    Linear(64, 10)       # Your classification head
 ])
 
-# YOUR training loop using YOUR optimizer
-optimizer = Adam(model.parameters(), lr=0.001)  # Your Adam implementation
-for batch in dataloader:  # Your data loading
-    output = model(batch.x)                     # Your forward pass
-    loss = CrossEntropyLoss()(output, batch.y)  # Your loss function
-    loss.backward()                             # Your backpropagation
+# YOUR complete training system
+optimizer = Adam(model.parameters(), lr=0.001)  # Your optimization algorithm
+for batch in dataloader:  # Your data management
+    output = model(batch.x)                     # Your forward computation
+    loss = CrossEntropyLoss()(output, batch.y)  # Your loss calculation
+    loss.backward()                             # YOUR backpropagation engine
     optimizer.step()                            # Your parameter updates
 ```
 
-**Result: 95%+ accuracy on MNIST using 100% your own code.**
+**🎯 Foundation Achievement**: 95%+ accuracy on MNIST using 100% your own mathematical implementations
 
-### Advanced Capabilities (Modules 9-14)
-- **Computer Vision**: CNNs achieving 75%+ accuracy on CIFAR-10
-- **Language Models**: TinyGPT built using 95% of your vision components
-- **Universal Architecture**: Same mathematical foundations power all modern AI
+### 🧠 After Intelligence Tier (Modules 08-13)
+- **Computer Vision Mastery**: CNNs achieving 75%+ accuracy on CIFAR-10 with YOUR convolution implementations
+- **Language Understanding**: Transformers generating coherent text using YOUR attention mechanisms
+- **Universal Architecture**: Discover why the SAME mathematical principles work for vision AND language
+- **AI Breakthrough Recreation**: Implement the architectures that created the modern AI revolution
 
-### Production Systems (Modules 15-20)
-- **Performance Engineering**: Profile, measure, and optimize ML systems
-- **Memory Optimization**: Understand and implement compression techniques
-- **Hardware Acceleration**: Build efficient kernels and vectorized operations
-- **TinyMLPerf Competition**: Compete with optimized implementations
+### ⚡ After Optimization Tier (Modules 14-20)
+- **Production Performance**: Systems optimized for <100ms inference latency using YOUR profiling tools
+- **Memory Efficiency**: Models compressed to 25% original size with YOUR quantization implementations
+- **Hardware Acceleration**: Kernels achieving 10x speedups through YOUR vectorization techniques
+- **Competition Ready**: TinyMLPerf submissions competitive with industry implementations
 
 ---
 
 ## The ML Evolution Story You'll Experience
 
-TinyTorch follows the actual historical progression of machine learning breakthroughs:
+TinyTorch's three-tier structure follows the actual historical progression of machine learning breakthroughs:
 
-### 🧠 Era 1: Foundation (1980s) - Modules 1-8
-**The Beginning**: Perceptrons and multi-layer networks
-- Build tensor operations and automatic differentiation
-- Implement gradient-based optimization (SGD, Adam)
-- **Achievement**: Train MLPs to 95%+ accuracy on MNIST
+### 🏗️ Foundation Era (1980s-1990s) → Foundation Tier
+**The Beginning**: Mathematical foundations that started it all
+- **1986 Breakthrough**: Backpropagation enables multi-layer networks
+- **Your Implementation**: Build automatic differentiation and gradient-based optimization
+- **Historical Milestone**: Train MLPs to 95%+ accuracy on MNIST using YOUR autograd engine
 
-### 👁️ Era 2: Spatial Intelligence (1989-2012) - Modules 9-10  
-**The Revolution**: Convolutional neural networks
-- Add spatial processing with Conv2d and pooling operations
-- Build efficient data pipelines for real-world datasets
-- **Achievement**: Train CNNs to 75%+ accuracy on CIFAR-10
+### 🧠 Intelligence Era (1990s-2010s) → Intelligence Tier
+**The Revolution**: Specialized architectures for vision and language
+- **1998 Breakthrough**: CNNs revolutionize computer vision (LeCun's LeNet)
+- **2017 Breakthrough**: Transformers unify vision and language ("Attention is All You Need")
+- **Your Implementation**: Build CNNs achieving 75%+ on CIFAR-10, then transformers for text generation
+- **Historical Milestone**: Recreate both revolutions using YOUR spatial and attention implementations
 
-### 🗣️ Era 3: Universal Architecture (2017-Present) - Modules 11-14
-**The Unification**: Transformers for vision AND language
-- Implement attention mechanisms and positional embeddings
-- Build TinyGPT using your existing vision infrastructure
-- **Achievement**: Language generation with 95% component reuse
+### ⚡ Optimization Era (2010s-Present) → Optimization Tier
+**The Engineering**: Production systems that scale to billions of users
+- **2020s Breakthrough**: Efficient inference enables real-time LLMs (GPT, ChatGPT)
+- **Your Implementation**: Build KV-caching, quantization, and production optimizations
+- **Historical Milestone**: Deploy systems competitive in TinyMLPerf benchmarks
 
-### ⚡ Era 4: Production Systems (Present) - Modules 15-20
-**The Engineering**: Optimized, deployable ML systems
-- Profile performance and identify bottlenecks
-- Implement compression, quantization, and acceleration
-- **Achievement**: TinyMLPerf competition-ready implementations
+**Why This Progression Matters**: You'll understand not just modern AI, but WHY it evolved this way. Each tier builds essential capabilities that inform the next, just like ML history itself.
 
 ---
 
-## Systems Engineering Focus: Why It Matters
+## Systems Engineering Focus: Why Tiers Matter
 
-Traditional ML courses focus on **algorithms**. TinyTorch focuses on **systems**.
+Traditional ML courses teach algorithms in isolation. TinyTorch's tier structure teaches **systems thinking** - how components interact to create production ML systems.
 
-### What Traditional Courses Teach:
-- "Use `torch.optim.Adam` for optimization"
-- "Transformers use attention mechanisms"  
-- "Larger models generally perform better"
+### Traditional Linear Approach:
+```
+Module 1: Tensors → Module 2: Layers → Module 3: Training → ...
+```
+**Problem**: Students learn components but miss system interactions
 
-### What TinyTorch Teaches:
-- "Why Adam consumes 3× more memory than SGD and when that matters in production"
-- "How attention scales O(N²) with sequence length and limits context windows"
-- "How to profile memory usage and identify training bottlenecks"
+### TinyTorch Tier Approach:
+```
+🏗️ Foundation Tier: Build mathematical infrastructure
+🧠 Intelligence Tier: Compose intelligent architectures
+⚡ Optimization Tier: Deploy at production scale
+```
+**Advantage**: Each tier builds complete, working systems with clear progression
 
-### Career Impact
-After TinyTorch, you become the team member who:
-- **Debugs performance issues**: "Your convolution is memory-bound, not compute-bound"
-- **Optimizes production systems**: "We can use gradient accumulation to train with less GPU memory"
-- **Implements custom operations**: "I'll write a custom kernel for this novel architecture"
-- **Designs system architecture**: "Here's why this model won't scale and how to fix it"
+### What Traditional Courses Teach vs. TinyTorch Tiers:
+
+**Traditional**: "Use `torch.optim.Adam` for optimization"
+**Foundation Tier**: "Why Adam needs 3× more memory than SGD and how to implement both from mathematical first principles"
+
+**Traditional**: "Transformers use attention mechanisms"
+**Intelligence Tier**: "How attention creates O(N²) scaling, why this limits context windows, and how to implement efficient attention yourself"
+
+**Traditional**: "Deploy models with TensorFlow Serving"
+**Optimization Tier**: "How to profile bottlenecks, implement KV-caching for 10× speedup, and compete in production benchmarks"
+
+### Career Impact by Tier
+After each tier, you become the team member who:
+
+**🏗️ Foundation Tier Graduate**:
+- Debugs gradient flow issues: "Your ReLU is causing dead neurons"
+- Implements custom optimizers: "I'll build a variant of Adam for this use case"
+- Understands memory patterns: "Batch size 64 hits your GPU memory limit here"
+
+**🧠 Intelligence Tier Graduate**:
+- Designs novel architectures: "We can adapt transformers for this computer vision task"
+- Optimizes attention patterns: "This attention bottleneck is why your model won't scale to longer sequences"
+- Bridges vision and language: "The same mathematical principles work for both domains"
+
+**⚡ Optimization Tier Graduate**:
+- Deploys production systems: "I can get us from 500ms to 50ms inference latency"
+- Leads performance optimization: "Here's our memory bottleneck and my 3-step plan to fix it"
+- Competes at industry scale: "Our optimizations achieve TinyMLPerf benchmark performance"
 
 ---
 
@@ -254,165 +278,159 @@ After TinyTorch, you become the team member who:
 
 ---
 
-## Ready to Begin?
+## 🚀 Start Your Journey
 
-You're about to embark on a journey that will transform how you think about machine learning systems. Instead of using black-box frameworks, you'll understand every component from the ground up.
+<div style="background: #f8f9fa; padding: 2rem; border-radius: 0.5rem; margin: 2rem 0; text-align: center;">
+<h3 style="margin: 0 0 1rem 0; color: #495057;">Begin Building ML Systems</h3>
+<p style="margin: 0 0 1.5rem 0; color: #6c757d;">Choose your starting point based on your goals and time commitment</p>
+<a href="../quickstart-guide.html" style="display: inline-block; background: #007bff; color: white; padding: 0.75rem 1.5rem; border-radius: 0.25rem; text-decoration: none; font-weight: 500; margin-right: 1rem;">15-Minute Start →</a>
+<a href="01-setup.html" style="display: inline-block; background: #28a745; color: white; padding: 0.75rem 1.5rem; border-radius: 0.25rem; text-decoration: none; font-weight: 500;">Foundation Tier →</a>
+</div>
 
-**Next Step**: [Module 01: Setup](01-setup.md) - Configure your development environment and build your first TinyTorch function.
+**Next Steps**:
+- **New to TinyTorch**: Start with [Quick Start Guide](../quickstart-guide.html) for immediate hands-on experience
+- **Ready to Commit**: Begin [Module 01: Setup](01-setup.html) to configure your development environment
+- **Teaching a Course**: Review [Instructor Guide](../usage-paths/classroom-use.html) for classroom integration
 
-```{admonition} Your Learning Journey Awaits
+```{admonition} Your Three-Tier Journey Awaits
 :class: tip
-By the end of this course, you'll have built a complete ML framework that rivals educational implementations like MiniTorch and micrograd, while achieving production-level results:
-- **95%+ accuracy on MNIST** (handwritten digit recognition)
-- **75%+ accuracy on CIFAR-10** (real-world image classification)  
-- **TinyGPT language generation** (modern transformer architecture)
-- **TinyMLPerf competition entries** (optimized systems performance)
+By completing all three tiers, you'll have built a complete ML framework that rivals production implementations:
 
-All using code you wrote yourself, from scratch.
+**🏗️ Foundation Tier Achievement**: 95%+ accuracy on MNIST with YOUR mathematical implementations
+**🧠 Intelligence Tier Achievement**: 75%+ accuracy on CIFAR-10 AND coherent text generation
+**⚡ Optimization Tier Achievement**: Production systems competitive in TinyMLPerf benchmarks
+
+All using code you wrote yourself, from mathematical first principles to production optimization.
 ```
 
 ---
 
-## Complete Learning Timeline & Course Structure
+### 🏗️ FOUNDATION TIER (Modules 01-07)
+**Building Blocks of ML Systems • 6-8 weeks • All Prerequisites for Neural Networks**
 
-### Capability Progression: Foundation to Production
+<div style="background: #f8f9fd; border: 1px solid #e0e7ff; padding: 2rem; border-radius: 0.5rem; margin: 2rem 0;">
 
-```{mermaid}
-:align: center
+**What You'll Learn**: Build the mathematical and computational infrastructure that powers all neural networks. Master tensor operations, gradient computation, and optimization algorithms.
 
-timeline
-    title TinyTorch Capability Development: Building ML Systems
+**Prerequisites**: Python programming, basic linear algebra (matrix multiplication)
 
-    section Foundation Capabilities
-        Environment Setup     : Checkpoint 00 Complete
-                             : Configure development environment
-                             : Verify dependencies
+**Career Connection**: Foundation skills required for ML Infrastructure Engineer, Research Engineer, Framework Developer roles
 
-        Tensor Operations     : Checkpoint 01 Complete
-                             : N-dimensional arrays
-                             : Mathematical foundations
+**Time Investment**: ~20 hours total (3 hours/week for 6-8 weeks)
 
-    section Core Learning
-        Neural Intelligence   : Checkpoint 02 Complete
-                             : Nonlinear activations
-                             : ReLU, Sigmoid, Softmax
-
-        Network Building     : Checkpoint 03 Complete
-                             : Layer abstractions
-                             : Forward propagation
-
-    section Training Systems
-        Gradient Computation  : Checkpoint 05 Complete
-                             : Automatic differentiation
-                             : Backpropagation mechanics
-
-        Optimization         : Checkpoint 06 Complete
-                             : SGD, Adam algorithms
-                             : Learning rate scheduling
-
-    section Advanced Architectures
-        Computer Vision      : Checkpoint 08 Complete
-                             : Convolutional operations
-                             : Spatial feature extraction
-
-        Language Processing  : Checkpoint 12 Complete
-                             : Attention mechanisms
-                             : Transformer architectures
-
-    section Production Systems
-        Performance Analysis : Checkpoint 14 Complete
-                             : Profiling and optimization
-                             : Bottleneck identification
-
-        Complete Mastery     : Checkpoint 15 Complete
-                             : End-to-end ML systems
-                             : Production deployment
-```
-
-### Part I: Core Foundations (Modules 1-8)
-**Focus: Neural Network Fundamentals | 8 weeks**
-
-| Week | Module | Core Capability | Implementation Focus | Checkpoint Unlocked |
-|------|--------|-----------------|---------------------|--------------------|
-| 1 | Setup | Environment Configuration | Development environment setup | 00: Environment |
-| 2 | Tensor | Mathematical Foundations | N-dimensional arrays with gradients | 01: Foundation |
-| 3 | Activations | Neural Intelligence | ReLU, Sigmoid, Softmax functions | 02: Intelligence |
-| 4 | Layers | Network Components | Linear layers and module system | 03: Components |
-| 5 | Losses | Learning Measurement | MSE, CrossEntropy loss functions | 04: Networks |
-| 6 | Autograd | Gradient Computation | Automatic differentiation engine | 05: Learning |
-| 7 | Optimizers | Parameter Updates | SGD, Adam optimization algorithms | 06: Optimization |
-| 8 | Training | Complete Systems | End-to-end training loops | 07: Training |
-
-**Capability Milestone**: After Module 8, you have complete neural network training capability!
-
----
-
-### Part II: Computer Vision (Modules 9-10)
-**Focus: Spatial Processing | 2 weeks**
-
-| Week | Module | Core Capability | Implementation Focus | Checkpoint Unlocked |
-|------|--------|-----------------|---------------------|--------------------|
-| 9 | Spatial | Spatial Processing | Conv2d, MaxPool2d operations | 08: Vision |
-| 10 | DataLoader | Data Management | Efficient data loading pipelines | 09: Data |
-
-**Capability Milestone**: Computer vision systems with spatial feature processing!
-
----
-
-### Part III: Language Processing (Modules 11-14)
-**Focus: Sequence Understanding | 4 weeks**
-
-| Week | Module | Core Capability | Implementation Focus | Checkpoint Unlocked |
-|------|--------|-----------------|---------------------|--------------------|
-| 11 | Tokenization | Text Processing | Vocabulary and token systems | 10: Language |
-| 12 | Embeddings | Representation Learning | Token and positional encodings | 11: Representation |
-| 13 | Attention | Sequence Understanding | Multi-head attention mechanisms | 12: Attention |
-| 14 | Transformers | Architecture Mastery | Complete transformer blocks | 13: Architecture |
-
-**Capability Milestone**: Complete language understanding and generation systems!
-
----
-
-### Part IV: Production Systems (Modules 15-20)
-**Focus: Performance Optimization | 6 weeks**
-
-| Week | Module | Core Capability | Implementation Focus | Checkpoint Unlocked |
-|------|--------|-----------------|---------------------|--------------------|
-| 15 | Profiling | Performance Analysis | Memory and compute profiling | 14: Systems |
-| 16 | Acceleration | Hardware Optimization | Vectorization and caching | |
-| 17 | Quantization | Model Compression | INT8 inference optimization | |
-| 18 | Compression | Size Optimization | Pruning and distillation | |
-| 19 | Caching | Memory Management | KV-cache for generation | |
-| 20 | Capstone | Complete Mastery | End-to-end ML systems | 15: Mastery |
-
-**Final Capability**: Complete ML systems engineering mastery!
-
----
-
-## 📈 8-Week Learning Progression Overview
-
-For a quick visual overview of the main learning phases:
-
-<div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin: 2rem 0;">
-
-<div style="background: #fef5e7; border-left: 4px solid #f6ad55; padding: 1rem;">
-<h4 style="margin: 0 0 0.5rem 0; color: #c05621;">Weeks 1-2: Mathematical Foundations</h4>
-<p style="font-size: 0.85rem; margin: 0;">Implement tensor operations, understand memory layout, build arithmetic foundations. Core mathematical building blocks.</p>
 </div>
 
-<div style="background: #e6fffa; border-left: 4px solid #4fd1c7; padding: 1rem;">
-<h4 style="margin: 0 0 0.5rem 0; color: #234e52;">Weeks 3-4: Neural Network Components</h4>
-<p style="font-size: 0.85rem; margin: 0;">Linear transformations, activation functions, loss functions. Build the mathematical components of neural computation.</p>
+| Module | Component | Core Capability | Real-World Connection |
+|--------|-----------|-----------------|----------------------|
+| **01** | **Tensor** | Data structures and operations | NumPy, PyTorch tensors |
+| **02** | **Activations** | Nonlinear functions | ReLU, attention activations |
+| **03** | **Layers** | Linear transformations | `nn.Linear`, dense layers |
+| **04** | **Losses** | Optimization objectives | CrossEntropy, MSE loss |
+| **05** | **Autograd** | Automatic differentiation | PyTorch autograd engine |
+| **06** | **Optimizers** | Parameter updates | Adam, SGD optimizers |
+| **07** | **Training** | Complete training loops | Model.fit(), training scripts |
+
+**🎯 Tier Milestone**: Train neural networks achieving **95%+ accuracy on MNIST** using 100% your own implementations!
+
+**Skills Gained**:
+- Understand memory layout and computational graphs
+- Debug gradient flow and numerical stability issues
+- Implement any optimization algorithm from research papers
+- Build custom neural network architectures from scratch
+
+---
+
+### 🧠 INTELLIGENCE TIER (Modules 08-13)
+**Modern AI Algorithms • 4-6 weeks • Vision + Language Architectures**
+
+<div style="background: #fef7ff; border: 1px solid #f3e8ff; padding: 2rem; border-radius: 0.5rem; margin: 2rem 0;">
+
+**What You'll Learn**: Implement the architectures powering modern AI: convolutional networks for vision and transformers for language. Discover why the same mathematical principles work across domains.
+
+**Prerequisites**: Foundation Tier complete (Modules 01-07)
+
+**Career Connection**: Computer Vision Engineer, NLP Engineer, AI Research Scientist, ML Product Manager roles
+
+**Time Investment**: ~25 hours total (4-6 hours/week for 4-6 weeks)
+
 </div>
 
-<div style="background: #f0fff4; border-left: 4px solid #9ae6b4; padding: 1rem;">
-<h4 style="margin: 0 0 0.5rem 0; color: #22543d;">Weeks 5-6: Learning Algorithms</h4>
-<p style="font-size: 0.85rem; margin: 0;">Automatic differentiation, optimization algorithms, training procedures. Understand how neural networks learn.</p>
+| Module | Component | Core Capability | Real-World Connection |
+|--------|-----------|-----------------|----------------------|
+| **08** | **Spatial** | Convolutions and regularization | CNNs, ResNet, computer vision |
+| **09** | **DataLoader** | Batch processing | PyTorch DataLoader, tf.data |
+| **10** | **Tokenization** | Text preprocessing | BERT tokenizer, GPT tokenizer |
+| **11** | **Embeddings** | Representation learning | Word2Vec, positional encodings |
+| **12** | **Attention** | Information routing | Multi-head attention, self-attention |
+| **13** | **Transformers** | Modern architectures | GPT, BERT, Vision Transformer |
+
+**🎯 Tier Milestone**: Achieve **75%+ accuracy on CIFAR-10** with CNNs AND generate coherent text with transformers!
+
+**Skills Gained**:
+- Understand why convolution works for spatial data
+- Implement attention mechanisms from scratch
+- Build transformer architectures for any domain
+- Debug sequence modeling and attention patterns
+
+---
+
+### ⚡ OPTIMIZATION TIER (Modules 14-20)
+**Production & Performance • 4-6 weeks • Deploy and Scale ML Systems**
+
+<div style="background: #f0fdfa; border: 1px solid #a7f3d0; padding: 2rem; border-radius: 0.5rem; margin: 2rem 0;">
+
+**What You'll Learn**: Transform research models into production systems. Master profiling, optimization, and deployment techniques used by companies like OpenAI, Google, and Meta.
+
+**Prerequisites**: Intelligence Tier complete (Modules 08-13)
+
+**Career Connection**: ML Systems Engineer, Performance Engineer, MLOps Engineer, Senior ML Engineer roles
+
+**Time Investment**: ~30 hours total (5-7 hours/week for 4-6 weeks)
+
 </div>
 
-<div style="background: #faf5ff; border-left: 4px solid #b794f6; padding: 1rem;">
-<h4 style="margin: 0 0 0.5rem 0; color: #553c9a;">Weeks 7-8: Systems Engineering</h4>
-<p style="font-size: 0.85rem; margin: 0;">Performance analysis, computational kernels, benchmarking. Study the engineering principles behind ML systems.</p>
+| Module | Component | Core Capability | Real-World Connection |
+|--------|-----------|-----------------|----------------------|
+| **14** | **Profiling** | Performance analysis | PyTorch Profiler, TensorBoard |
+| **15** | **Acceleration** | Speed improvements | CUDA kernels, vectorization |
+| **16** | **Quantization** | Memory efficiency | INT8 inference, model compression |
+| **17** | **Compression** | Model optimization | Pruning, distillation, ONNX |
+| **18** | **Caching** | Memory management | KV-cache for generation |
+| **19** | **Benchmarking** | Measurement systems | MLPerf, production monitoring |
+| **20** | **Capstone** | Full system integration | End-to-end ML pipeline |
+
+**🎯 Tier Milestone**: Build **production-ready systems** competitive in TinyMLPerf benchmarks!
+
+**Skills Gained**:
+- Profile memory usage and identify bottlenecks
+- Implement efficient inference optimizations
+- Deploy models with <100ms latency requirements
+- Design scalable ML system architectures
+
+---
+
+## 🎯 Learning Path Recommendations
+
+### Choose Your Learning Style
+
+<div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin: 2rem 0;">
+
+<div style="background: #fff7ed; border: 1px solid #fdba74; padding: 1.5rem; border-radius: 0.5rem;">
+<h4 style="margin: 0 0 1rem 0; color: #c2410c;">🚀 Complete Builder</h4>
+<p style="margin: 0 0 1rem 0; font-size: 0.9rem;">Implement every component from scratch</p>
+<p style="margin: 0; font-size: 0.85rem; color: #6b7280;"><strong>Time:</strong> 14-18 weeks<br><strong>Ideal for:</strong> CS students, aspiring ML engineers</p>
+</div>
+
+<div style="background: #f0f9ff; border: 1px solid #7dd3fc; padding: 1.5rem; border-radius: 0.5rem;">
+<h4 style="margin: 0 0 1rem 0; color: #0284c7;">⚡ Focused Explorer</h4>
+<p style="margin: 0 0 1rem 0; font-size: 0.9rem;">Pick one tier based on your goals</p>
+<p style="margin: 0; font-size: 0.85rem; color: #6b7280;"><strong>Time:</strong> 4-8 weeks<br><strong>Ideal for:</strong> Working professionals, specific skill gaps</p>
+</div>
+
+<div style="background: #f0fdf4; border: 1px solid #86efac; padding: 1.5rem; border-radius: 0.5rem;">
+<h4 style="margin: 0 0 1rem 0; color: #166534;">📚 Guided Learner</h4>
+<p style="margin: 0 0 1rem 0; font-size: 0.9rem;">Study implementations with hands-on exercises</p>
+<p style="margin: 0; font-size: 0.85rem; color: #6b7280;"><strong>Time:</strong> 8-12 weeks<br><strong>Ideal for:</strong> Self-directed learners, bootcamp graduates</p>
 </div>
 
 </div>
