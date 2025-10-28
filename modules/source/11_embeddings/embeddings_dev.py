@@ -298,8 +298,15 @@ class Embedding:
         # This is equivalent to one-hot multiplication but much more efficient
         embedded = self.weight.data[indices.data.astype(int)]
 
-        # Preserve requires_grad so autograd can track this operation!
-        return Tensor(embedded, requires_grad=self.weight.requires_grad)
+        # Create result tensor
+        result = Tensor(embedded, requires_grad=self.weight.requires_grad)
+        
+        # Attach gradient function (students learned this in Module 05!)
+        if self.weight.requires_grad:
+            from tinytorch.core.autograd import EmbeddingBackward
+            result._grad_fn = EmbeddingBackward(self.weight, indices)
+        
+        return result
 
     def parameters(self) -> List[Tensor]:
         """Return trainable parameters."""
