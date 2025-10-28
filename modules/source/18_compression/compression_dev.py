@@ -117,6 +117,10 @@ class Linear:
             output = output + self.bias
         return output
 
+    def __call__(self, x):
+        """Allows the linear layer to be called like a function."""
+        return self.forward(x)
+
     def parameters(self):
         params = [self.weight]
         if self.bias is not None:
@@ -132,6 +136,10 @@ class Sequential:
         for layer in self.layers:
             x = layer.forward(x)
         return x
+
+    def __call__(self, x):
+        """Allows the sequential container to be called like a function."""
+        return self.forward(x)
 
     def parameters(self):
         params = []

@@ -305,8 +305,12 @@ class Embedding:
         if self.weight.requires_grad:
             from tinytorch.core.autograd import EmbeddingBackward
             result._grad_fn = EmbeddingBackward(self.weight, indices)
-        
+
         return result
+
+    def __call__(self, indices: Tensor) -> Tensor:
+        """Allows the embedding to be called like a function."""
+        return self.forward(indices)
 
     def parameters(self) -> List[Tensor]:
         """Return trainable parameters."""
@@ -483,6 +487,10 @@ class PositionalEncoding:
         result = x + pos_embeddings
 
         return result
+
+    def __call__(self, x: Tensor) -> Tensor:
+        """Allows the positional encoding to be called like a function."""
+        return self.forward(x)
 
     def parameters(self) -> List[Tensor]:
         """Return trainable parameters."""
@@ -913,6 +921,10 @@ class EmbeddingLayer:
             output = Tensor(output.data[0])  # (seq_len, embed_dim)
 
         return output
+
+    def __call__(self, tokens: Tensor) -> Tensor:
+        """Allows the embedding layer to be called like a function."""
+        return self.forward(tokens)
 
     def parameters(self) -> List[Tensor]:
         """Return all trainable parameters."""
