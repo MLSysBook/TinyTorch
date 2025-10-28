@@ -50,6 +50,7 @@ from tinytorch.core.tensor import Tensor
 from tinytorch.core.layers import Linear
 from tinytorch.core.attention import MultiHeadAttention
 from tinytorch.core.activations import GELU
+from tinytorch.text.embeddings import Embedding, PositionalEncoding
 
 # %% [markdown]
 """
@@ -404,8 +405,8 @@ class LayerNorm:
         self.eps = eps
 
         # Learnable parameters: scale and shift
-        self.gamma = Tensor(np.ones(normalized_shape))  # Scale parameter
-        self.beta = Tensor(np.zeros(normalized_shape))  # Shift parameter
+        self.gamma = Tensor(np.ones(normalized_shape), requires_grad=True)  # Scale parameter
+        self.beta = Tensor(np.zeros(normalized_shape), requires_grad=True)  # Shift parameter
         ### END SOLUTION
 
     def forward(self, x):

@@ -999,6 +999,58 @@ class SigmoidBackward(Function):
         return None,
 
 
+# %% nbgrader={"grade": false, "grade_id": "softmax-backward", "solution": true}
+#| export
+class SoftmaxBackward(Function):
+    """
+    Gradient computation for softmax activation.
+    
+    Softmax: softmax(x)[i] = exp(x[i]) / sum(exp(x))
+    Derivative: ∂softmax/∂x[i] = softmax[i] * (δ[i,j] - softmax[j])
+    
+    For gradient computation:
+    grad_x[i] = softmax[i] * (grad_y[i] - sum(grad_y * softmax))
+    
+    **Key Insight:** The gradient depends on all elements of softmax due to
+    the normalization, not just the element being differentiated.
+    """
+    
+    def __init__(self, input_tensor, output_tensor, dim=-1):
+        """
+        Initialize with input, output, and dimension.
+        
+        Args:
+            input_tensor: Original input to softmax
+            output_tensor: Output of softmax (needed for gradient)
+            dim: Dimension along which softmax was applied
+        """
+        super().__init__(input_tensor)
+        self.output_data = output_tensor.data
+        self.dim = dim
+    
+    def apply(self, grad_output):
+        """
+        Compute gradient for softmax.
+        
+        Mathematical formula:
+        ∂L/∂x[i] = softmax[i] * (∂L/∂y[i] - sum_j(∂L/∂y[j] * softmax[j]))
+        
+        This can be vectorized as:
+        grad_x = softmax * (grad_y - sum(grad_y * softmax, keepdims=True))
+        """
+        tensor, = self.saved_tensors
+        
+        if isinstance(tensor, Tensor) and tensor.requires_grad:
+            # Compute sum(grad_output * softmax) along the softmax dimension
+            sum_term = np.sum(grad_output * self.output_data, axis=self.dim, keepdims=True)
+            
+            # Softmax gradient: softmax * (grad_output - sum_term)
+            grad_x = self.output_data * (grad_output - sum_term)
+            
+            return (grad_x,)
+        return (None,)
+
+
 # %% nbgrader={"grade": false, "grade_id": "mse-backward", "solution": true}
 #| export
 class MSEBackward(Function):
@@ -1408,12 +1460,13 @@ def enable_autograd():
 
     # Patch activations and losses to track gradients
     try:
-        from tinytorch.core.activations import Sigmoid, ReLU
+        from tinytorch.core.activations import Sigmoid, ReLU, Softmax
         from tinytorch.core.losses import BinaryCrossEntropyLoss, MSELoss, CrossEntropyLoss
         
         # Store original methods
         _original_sigmoid_forward = Sigmoid.forward
         _original_relu_forward = ReLU.forward
+        _original_softmax_forward = Softmax.forward
         _original_bce_forward = BinaryCrossEntropyLoss.forward
         _original_mse_forward = MSELoss.forward
         _original_ce_forward = CrossEntropyLoss.forward
@@ -1437,6 +1490,18 @@ def enable_autograd():
             if x.requires_grad:
                 result.requires_grad = True
                 result._grad_fn = ReLUBackward(x)
+            
+            return result
+        
+        def tracked_softmax_forward(self, x, dim=-1):
+            """Softmax with gradient tracking."""
+            # Call original forward to get result using Tensor operations
+            result = _original_softmax_forward(self, x, dim=dim)
+            
+            # Attach the correct gradient function
+            if x.requires_grad:
+                result.requires_grad = True
+                result._grad_fn = SoftmaxBackward(x, result, dim)
             
             return result
         
@@ -1499,6 +1564,7 @@ def enable_autograd():
         # Install patched methods
         Sigmoid.forward = tracked_sigmoid_forward
         ReLU.forward = tracked_relu_forward
+        Softmax.forward = tracked_softmax_forward
         BinaryCrossEntropyLoss.forward = tracked_bce_forward
         MSELoss.forward = tracked_mse_forward
         CrossEntropyLoss.forward = tracked_ce_forward
