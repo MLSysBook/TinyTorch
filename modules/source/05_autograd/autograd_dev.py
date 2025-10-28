@@ -688,6 +688,53 @@ class TransposeBackward(Function):
 
         return (grad_x,)
 
+# %% nbgrader={"grade": false, "grade_id": "permute-backward", "solution": true}
+#| export
+class PermuteBackward(Function):
+    """
+    Gradient computation for arbitrary axis permutation (general transpose).
+    
+    **Mathematical Rule:** If Y = X.permute(axes), then:
+    - ∂Y/∂X = grad_Y.permute(inverse_axes)
+    
+    **Example:** If axes = (0, 2, 1, 3), the inverse is (0, 2, 1, 3) (self-inverse).
+    More generally, if axes = (2, 0, 1), the inverse is (1, 2, 0).
+    
+    **Key Insight:** To reverse a permutation, we need to know where each axis went.
+    If axis i went to position axes[i], then in the inverse, position axes[i] should go to i.
+    
+    **Applications:** Multi-head attention uses (0, 2, 1, 3) to rearrange heads.
+    """
+
+    def __init__(self, tensor, axes):
+        """
+        Args:
+            tensor: Input tensor
+            axes: Tuple of axis indices defining the permutation
+        """
+        super().__init__(tensor)
+        self.axes = axes
+        # Compute inverse permutation: if axes[i] = j, then inverse_axes[j] = i
+        self.inverse_axes = tuple(np.argsort(axes))
+
+    def apply(self, grad_output):
+        """
+        Compute gradient for permutation.
+        
+        The gradient is permuted back using the inverse permutation.
+        
+        **Mathematical Foundation:**
+        - ∂(X.permute(axes))/∂X = grad_output.permute(inverse_axes)
+        """
+        x, = self.saved_tensors
+        grad_x = None
+
+        if isinstance(x, Tensor) and x.requires_grad:
+            # Permute gradient back to original axis order
+            grad_x = np.transpose(grad_output, self.inverse_axes)
+
+        return (grad_x,)
+
 # %% nbgrader={"grade": false, "grade_id": "embedding-backward", "solution": true}
 #| export
 class EmbeddingBackward(Function):
@@ -1048,6 +1095,52 @@ class SoftmaxBackward(Function):
             grad_x = self.output_data * (grad_output - sum_term)
             
             return (grad_x,)
+        return (None,)
+
+
+# %% nbgrader={"grade": false, "grade_id": "gelu-backward", "solution": true}
+#| export
+class GELUBackward(Function):
+    """
+    Gradient computation for GELU activation.
+    
+    GELU: f(x) = x * Φ(x) where Φ is the CDF of standard normal
+    Approximation: gelu(x) ≈ 0.5 * x * (1 + tanh(√(2/π) * (x + 0.044715 * x³)))
+    
+    **Key Insight:** GELU is smoother than ReLU, providing non-zero gradients
+    for negative values, which helps training deep networks.
+    """
+    
+    def __init__(self, input_tensor):
+        """Initialize with input tensor."""
+        super().__init__(input_tensor)
+    
+    def apply(self, grad_output):
+        """
+        Compute gradient for GELU.
+        
+        Mathematical formula (using approximation):
+        ∂gelu/∂x ≈ 0.5 * (1 + tanh(...)) + 0.5 * x * sech²(...) * (...)
+        
+        Simplified: We compute the derivative numerically or use the formula.
+        """
+        tensor, = self.saved_tensors
+        
+        if isinstance(tensor, Tensor) and tensor.requires_grad:
+            x = tensor.data
+            # GELU derivative approximation
+            # Using the tanh approximation: gelu(x) ≈ 0.5 * x * (1 + tanh(sqrt(2/pi) * (x + 0.044715 * x^3)))
+            sqrt_2_over_pi = np.sqrt(2.0 / np.pi)
+            x_cubed = x ** 3
+            tanh_arg = sqrt_2_over_pi * (x + 0.044715 * x_cubed)
+            tanh_out = np.tanh(tanh_arg)
+            sech_squared = 1 - tanh_out ** 2
+            
+            # Derivative: 0.5 * (1 + tanh(...)) + 0.5 * x * sech²(...) * d(tanh_arg)/dx
+            d_tanh_arg = sqrt_2_over_pi * (1 + 0.134145 * x ** 2)
+            gelu_grad = 0.5 * (1 + tanh_out) + 0.5 * x * sech_squared * d_tanh_arg
+            
+            return (grad_output * gelu_grad,)
         return (None,)
 
 
@@ -1460,13 +1553,14 @@ def enable_autograd():
 
     # Patch activations and losses to track gradients
     try:
-        from tinytorch.core.activations import Sigmoid, ReLU, Softmax
+        from tinytorch.core.activations import Sigmoid, ReLU, Softmax, GELU
         from tinytorch.core.losses import BinaryCrossEntropyLoss, MSELoss, CrossEntropyLoss
         
         # Store original methods
         _original_sigmoid_forward = Sigmoid.forward
         _original_relu_forward = ReLU.forward
         _original_softmax_forward = Softmax.forward
+        _original_gelu_forward = GELU.forward
         _original_bce_forward = BinaryCrossEntropyLoss.forward
         _original_mse_forward = MSELoss.forward
         _original_ce_forward = CrossEntropyLoss.forward
@@ -1502,6 +1596,18 @@ def enable_autograd():
             if x.requires_grad:
                 result.requires_grad = True
                 result._grad_fn = SoftmaxBackward(x, result, dim)
+            
+            return result
+        
+        def tracked_gelu_forward(self, x):
+            """GELU with gradient tracking."""
+            # Call original forward to get result
+            result = _original_gelu_forward(self, x)
+            
+            # Attach the correct gradient function
+            if x.requires_grad:
+                result.requires_grad = True
+                result._grad_fn = GELUBackward(x)
             
             return result
         
@@ -1565,6 +1671,7 @@ def enable_autograd():
         Sigmoid.forward = tracked_sigmoid_forward
         ReLU.forward = tracked_relu_forward
         Softmax.forward = tracked_softmax_forward
+        GELU.forward = tracked_gelu_forward
         BinaryCrossEntropyLoss.forward = tracked_bce_forward
         MSELoss.forward = tracked_mse_forward
         CrossEntropyLoss.forward = tracked_ce_forward
