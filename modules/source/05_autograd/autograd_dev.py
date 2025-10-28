@@ -688,6 +688,109 @@ class TransposeBackward(Function):
 
         return (grad_x,)
 
+# %% nbgrader={"grade": false, "grade_id": "embedding-backward", "solution": true}
+#| export
+class EmbeddingBackward(Function):
+    """
+    Gradient computation for embedding lookup operation.
+    
+    **Mathematical Rule:** If Y = Embedding[indices], then:
+    - ∂Loss/∂Embedding[i] = sum of all gradients where index==i
+    
+    **Key Insight:** Embedding lookup is a gather operation. The backward
+    is a scatter operation that accumulates gradients to the embedding weights.
+    
+    **Applications:** Word embeddings, positional embeddings, token embeddings
+    in transformers.
+    """
+
+    def __init__(self, weight, indices):
+        """
+        Args:
+            weight: Embedding weight matrix
+            indices: Indices used for lookup
+        """
+        super().__init__(weight)
+        self.indices = indices
+
+    def apply(self, grad_output):
+        """
+        Compute gradient for embedding lookup.
+        
+        Args:
+            grad_output: Gradient flowing backward from output
+            
+        Returns:
+            Tuple with single gradient for weight tensor
+            
+        **Mathematical Foundation:**
+        - ∂(Embedding[indices])/∂Embedding = scatter gradients to selected rows
+        - Multiple indices can point to same embedding → gradients accumulate
+        """
+        weight, = self.saved_tensors
+        grad_weight = None
+
+        if isinstance(weight, Tensor) and weight.requires_grad:
+            # Initialize gradient with zeros
+            grad_weight = np.zeros_like(weight.data)
+            
+            # Scatter gradients back to embedding weights
+            # np.add.at accumulates gradients for repeated indices
+            indices_flat = self.indices.data.astype(int).flatten()
+            grad_output_reshaped = grad_output.reshape(-1, grad_output.shape[-1])
+            
+            np.add.at(grad_weight, indices_flat, grad_output_reshaped)
+
+        return (grad_weight,)
+
+# %% nbgrader={"grade": false, "grade_id": "reshape-backward", "solution": true}
+#| export
+class ReshapeBackward(Function):
+    """
+    Gradient computation for reshape operation.
+    
+    **Mathematical Rule:** If Y = X.reshape(new_shape), then:
+    - ∂Y/∂X = grad_Y.reshape(X.shape)
+    
+    **Key Insight:** Reshape just rearranges the same elements.
+    The gradient is simply reshaped back to the original shape!
+    
+    **Applications:** Flattening tensors for linear layers, reshaping
+    between convolutional and dense layers.
+    """
+
+    def __init__(self, tensor, original_shape):
+        """
+        Args:
+            tensor: Input tensor
+            original_shape: Shape before reshape
+        """
+        super().__init__(tensor)
+        self.original_shape = original_shape
+
+    def apply(self, grad_output):
+        """
+        Compute gradient for reshape.
+        
+        Args:
+            grad_output: Gradient flowing backward from output
+            
+        Returns:
+            Tuple with single gradient for input tensor
+            
+        **Mathematical Foundation:**
+        - ∂(X.reshape(...))/∂X = grad_output.reshape(X.shape)
+        - Just reshape the gradient back!
+        """
+        x, = self.saved_tensors
+        grad_x = None
+
+        if isinstance(x, Tensor) and x.requires_grad:
+            # Reshape gradient back to original shape
+            grad_x = grad_output.reshape(self.original_shape)
+
+        return (grad_x,)
+
 # %% [markdown]
 """
 ### SumBackward - Gradient Rules for Reduction Operations
@@ -1046,6 +1149,7 @@ def enable_autograd():
     _original_div = Tensor.__truediv__
     _original_matmul = Tensor.matmul if hasattr(Tensor, 'matmul') else None
     _original_transpose = Tensor.transpose if hasattr(Tensor, 'transpose') else None
+    _original_reshape = Tensor.reshape if hasattr(Tensor, 'reshape') else None
 
     # Enhanced operations that track gradients
     def tracked_add(self, other):
@@ -1137,6 +1241,28 @@ def enable_autograd():
         if self.requires_grad:
             result.requires_grad = True
             result._grad_fn = TransposeBackward(self, dim0, dim1)
+
+        return result
+
+    def tracked_reshape(self, *shape):
+        """
+        Reshape with gradient tracking.
+        
+        Enhances the original reshape method to build computation graphs
+        when requires_grad=True for the input.
+        """
+        original_shape = self.shape
+        
+        if _original_reshape:
+            result = _original_reshape(self, *shape)
+        else:
+            # Fallback if reshape doesn't exist
+            result = Tensor(self.data.reshape(*shape))
+
+        # Track gradient if needed
+        if self.requires_grad:
+            result.requires_grad = True
+            result._grad_fn = ReshapeBackward(self, original_shape)
 
         return result
 
@@ -1275,6 +1401,7 @@ def enable_autograd():
     Tensor.__truediv__ = tracked_div
     Tensor.matmul = tracked_matmul
     Tensor.transpose = tracked_transpose
+    Tensor.reshape = tracked_reshape
     Tensor.sum = sum_op
     Tensor.backward = backward
     Tensor.zero_grad = zero_grad
