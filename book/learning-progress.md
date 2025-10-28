@@ -22,23 +22,21 @@ Use TinyTorch's 21-checkpoint system to monitor your capability development. Tra
 
 ## Your Learning Path Overview
 
-TinyTorch organizes learning through four major phases, each building essential ML systems capabilities:
+TinyTorch organizes learning through **three pedagogically-motivated tiers**, each building essential ML systems capabilities:
 
-**📖 See [Complete Course Structure](chapters/00-introduction.html)** for the full learning timeline and detailed module descriptions.
+**📖 See [Three-Tier Learning Structure](chapters/00-introduction.html#three-tier-learning-pathway-build-complete-ml-systems)** for detailed tier breakdown, time estimates, and learning outcomes.
 
 ## Student Learning Journey
 
-### Typical Student Progression
-- **Week 1-2**: Foundation capabilities (Environment, Tensors, Activations)
-- **Week 3-4**: Core learning systems (Layers, Losses, Autograd)
-- **Week 5-6**: Training and optimization (Optimizers, Training loops)
-- **Week 7-8**: Advanced architectures (Spatial processing, Attention)
-- **Week 9-12**: Production systems (Profiling, Optimization, Deployment)
+### Typical Student Progression by Tier
+- **🏗️ Foundation Tier (6-8 weeks)**: Build mathematical infrastructure - tensors, autograd, optimizers, training loops
+- **🧠 Intelligence Tier (4-6 weeks)**: Implement modern AI architectures - CNNs for vision, transformers for language
+- **⚡ Optimization Tier (4-6 weeks)**: Deploy production systems - profiling, quantization, acceleration
 
 ### Study Approaches
-- **Full Implementation** (8-12 weeks): Build every component from scratch
-- **Guided Study** (4-6 weeks): Study solution notebooks with implementation exercises
-- **Quick Exploration** (2 weeks): Focus on key concepts with provided implementations
+- **Complete Builder** (14-18 weeks): Implement all three tiers from scratch
+- **Focused Explorer** (4-8 weeks): Pick specific tiers based on your goals
+- **Guided Learner** (8-12 weeks): Study implementations with hands-on exercises
 
 **📖 See [Quick Start Guide](quickstart-guide.html)** for immediate hands-on experience with your first module.
 
