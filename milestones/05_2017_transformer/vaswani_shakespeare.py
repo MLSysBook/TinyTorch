@@ -168,9 +168,9 @@ class TinyGPT:
 
         # Transformer stack
         self.layers = []
-        hidden_dim = embed_dim * 4  # Standard 4x expansion in FFN
+        mlp_ratio = 4  # Standard 4x expansion in FFN (embed_dim * 4)
         for _ in range(num_layers):
-            block = TransformerBlock(embed_dim, num_heads, hidden_dim)  # Module 13!
+            block = TransformerBlock(embed_dim, num_heads, mlp_ratio)  # Module 13!
             self.layers.append(block)
 
         # Output head
