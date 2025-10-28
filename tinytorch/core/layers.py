@@ -194,8 +194,8 @@ class Dropout:
             return x
 
         if self.p == 1.0:
-            # Drop everything
-            return Tensor(np.zeros_like(x.data))
+            # Drop everything (preserve requires_grad for gradient flow)
+            return Tensor(np.zeros_like(x.data), requires_grad=x.requires_grad if hasattr(x, 'requires_grad') else False)
 
         # During training, apply dropout
         keep_prob = 1.0 - self.p
@@ -203,9 +203,13 @@ class Dropout:
         # Create random mask: True where we keep elements
         mask = np.random.random(x.data.shape) < keep_prob
 
-        # Apply mask and scale to maintain expected value
-        output_data = (x.data * mask) / keep_prob
-        return Tensor(output_data)
+        # Apply mask and scale using Tensor operations to preserve gradients!
+        mask_tensor = Tensor(mask.astype(np.float32), requires_grad=False)  # Mask doesn't need gradients
+        scale = Tensor(np.array(1.0 / keep_prob), requires_grad=False)
+        
+        # Use Tensor operations: x * mask * scale
+        output = x * mask_tensor * scale
+        return output
         ### END SOLUTION
 
     def __call__(self, x, training=True):

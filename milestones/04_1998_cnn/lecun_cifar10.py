@@ -90,11 +90,7 @@ from tinytorch.core.optimizers import Adam            # Module 07: YOU built thi
 from tinytorch.core.dataloader import DataLoader, Dataset  # Module 10: YOU built this!
 
 # Import dataset manager
-try:
-    from examples.data_manager import DatasetManager
-except ImportError:
-    sys.path.append(os.path.join(project_root, 'examples'))
-    from data_manager import DatasetManager
+from data_manager import DatasetManager
 
 class CIFARDataset(Dataset):
     """Custom CIFAR-10 Dataset using YOUR Dataset interface from Module 10!"""
@@ -245,7 +241,7 @@ def train_cifar_cnn(model, train_loader, epochs=3, learning_rate=0.001):
                 break
             
             # Forward pass with YOUR CNN
-            outputs = model.forward(batch_data)  # YOUR spatial features!
+            outputs = model(batch_data)  # YOUR spatial features!
             
             # Manual cross-entropy loss
             batch_size = len(batch_labels.data)
@@ -305,7 +301,7 @@ def test_cifar_cnn(model, test_loader, class_names):
         if batch_idx >= 20:  # Demo mode - limit batches
             break
         
-        outputs = model.forward(batch_data)
+        outputs = model(batch_data)
 
         outputs_np = np.array(outputs.data.data if hasattr(outputs.data, 'data') else outputs.data)
         predictions = np.argmax(outputs_np, axis=1)
@@ -414,24 +410,15 @@ def main():
     print("\n📥 Loading CIFAR-10 dataset...")
     data_manager = DatasetManager()
     
-    try:
-        (train_data, train_labels), (test_data, test_labels) = data_manager.get_cifar10()
-        print(f"✅ Loaded {len(train_data)} training, {len(test_data)} test images")
-        
-        if args.quick_test:
-            train_data = train_data[:1000]
-            train_labels = train_labels[:1000]
-            test_data = test_data[:500]
-            test_labels = test_labels[:500]
-            print("   (Using subset for quick testing)")
-            
-    except Exception as e:
-        print(f"⚠️  CIFAR-10 download failed: {e}")
-        print("   Using synthetic data for architecture testing...")
-        train_data = np.random.randn(100, 3, 32, 32).astype(np.float32)
-        train_labels = np.random.randint(0, 10, 100).astype(np.int64)
-        test_data = np.random.randn(20, 3, 32, 32).astype(np.float32)
-        test_labels = np.random.randint(0, 10, 20).astype(np.int64)
+    (train_data, train_labels), (test_data, test_labels) = data_manager.get_cifar10()
+    print(f"✅ Loaded {len(train_data)} training, {len(test_data)} test images")
+    
+    if args.quick_test:
+        train_data = train_data[:1000]
+        train_labels = train_labels[:1000]
+        test_data = test_data[:500]
+        test_labels = test_labels[:500]
+        print("   (Using subset for quick testing)")
     
     # Step 2: Create Datasets and DataLoaders using YOUR Module 10!
     print("\n📦 Creating YOUR Dataset and DataLoader (Module 10)...")
@@ -460,7 +447,7 @@ def main():
 
         # Test with single sample from minimal DataLoader
         for batch_data, batch_labels in mini_loader:
-            test_output = model.forward(batch_data)
+            test_output = model(batch_data)
             print(f"✅ Forward pass successful! Shape: {test_output.data.shape}")
             print("✅ YOUR CNN + DataLoader work together!")
             break
